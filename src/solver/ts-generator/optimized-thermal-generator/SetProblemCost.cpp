@@ -15,10 +15,6 @@ void OptimizedThermalGenerator::setProblemCost()
     setProblemEnsCost(objective);
     setProblemSpillCost(objective);
     setProblemPowerCost(objective);
-    setProblemPowerCostPerGroup();
-    setProblemPowerCostPerArea();
-    setProblemPowerCostPerCluster();
-    setProblemPowerCostPerUnit();
 
     objective->SetMinimization();
 
@@ -49,27 +45,85 @@ void OptimizedThermalGenerator::setProblemSpillCost(MPObjective* objective)
 
 void OptimizedThermalGenerator::setProblemPowerCost(MPObjective* objective)
 {
-
+    // loop per day
+    for (int day = 0; day < timeHorizon_; ++day)
+    {
+        setProblemPowerCostPerGroup(objective, day);
+    }
+    return;
 }
 
-void OptimizedThermalGenerator::setProblemPowerCostPerGroup()
+void OptimizedThermalGenerator::setProblemPowerCostPerGroup(MPObjective* objective, int day)
 {
-
+    // loop per area inside maintenance group
+    for (const auto& entryWeightMap : maintenanceGroup_)
+    {
+        const auto& area = *(entryWeightMap.first);
+        setProblemPowerCostPerArea(area, objective, day);
+    }
+    return;
 }
 
-void OptimizedThermalGenerator::setProblemPowerCostPerArea()
+void OptimizedThermalGenerator::setProblemPowerCostPerArea(const Data::Area& area,
+                                                           MPObjective* objective,
+                                                           int day)
 {
+    // loop per thermal clusters inside the area
+    for (auto it = area.thermal.list.mapping.begin(); it != area.thermal.list.mapping.end(); ++it)
+    {
+        const auto& cluster = *(it->second);
 
+        // we do not check if cluster.optimizeMaintenance = true here
+        // we add all the clusters Power inside maintenance group
+        if (!checkClusterExist(cluster))
+            continue;
+
+        setProblemPowerCostPerCluster(area, cluster, objective, day);
+    }
+    return;
 }
 
-void OptimizedThermalGenerator::setProblemPowerCostPerCluster()
+void OptimizedThermalGenerator::setProblemPowerCostPerCluster(const Data::Area& area,
+                                                              const Data::ThermalCluster& cluster,
+                                                              MPObjective* objective,
+                                                              int day)
 {
+    /*
+    ** Unit cost can be directly set,
+    ** Or calculated using Fuel Cost, Co2 cost, Fuel Eff and V&O Cost.
 
+    ** In second case we also need information which year it is (to choose proper TS number, and
+    also what hour it is)
+    ** we need price per day (so averaging the hourly values)
+    ** this is NOT calculated prior to the simulation - so if we only want to run ts-gen, we cannot
+    get this info just yet
+    ** using:
+    ** getMarginalCost(uint serieIndex, uint hourInTheYear) or
+    ** getMarketBidCost(uint hourInTheYear, uint year)
+    ** TODO CR27: maybe for phase-II
+    ** for now just disable this option but take into account the thermalModulationCost!!
+    */
+
+    // double unitPowerCost = calculateUnitPowerCost(area, cluster, day + optSett.firstDay);
+    double unitPowerCost = 15.4;
+    // loop per unit inside the cluster
+    for (int unit = 0; unit < cluster.unitCount; ++unit)
+    {
+        setProblemPowerCostPerUnit(area, cluster, unit, unitPowerCost, objective, day);
+    }
+    return;
 }
 
-void OptimizedThermalGenerator::setProblemPowerCostPerUnit()
+void OptimizedThermalGenerator::setProblemPowerCostPerUnit(const Data::Area& area,
+                                                           const Data::ThermalCluster& cluster,
+                                                           int unitIndex,
+                                                           double cost,
+                                                           MPObjective* objective,
+                                                           int day)
 {
-
+    objective->SetCoefficient(var.day[day].areaMap[&area].clusterMap[&cluster].unitMap[unitIndex].P,
+                              cost);
+    return;
 }
 
 void OptimizedThermalGenerator::printObjectiveFunction(MPObjective* objective)

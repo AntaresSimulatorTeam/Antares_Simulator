@@ -46,10 +46,18 @@ private:
     void setProblemEnsCost(MPObjective* objective);
     void setProblemSpillCost(MPObjective* objective);
     void setProblemPowerCost(MPObjective* objective);
-    void setProblemPowerCostPerGroup();
-    void setProblemPowerCostPerArea();
-    void setProblemPowerCostPerCluster();
-    void setProblemPowerCostPerUnit();
+    void setProblemPowerCostPerGroup(MPObjective* objective, int day);
+    void setProblemPowerCostPerArea(const Data::Area& area, MPObjective* objective, int day);
+    void setProblemPowerCostPerCluster(const Data::Area& area,
+                                       const Data::ThermalCluster& cluster,
+                                       MPObjective* objective,
+                                       int day);
+    void setProblemPowerCostPerUnit(const Data::Area& area,
+                                    const Data::ThermalCluster& cluster,
+                                    int unitIndex,
+                                    double powerCost,
+                                    MPObjective* objective,
+                                    int day);
     void printObjectiveFunction(MPObjective* objective);
 
     void solveProblem();
