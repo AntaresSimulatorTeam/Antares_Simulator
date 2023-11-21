@@ -285,6 +285,22 @@ std::array<double, DAYS_PER_YEAR> OptimizedThermalGenerator::calculateMaxUnitOut
     return maxOutputDailyValues;
 }
 
+double OptimizedThermalGenerator::calculateUnitPowerCost(const Data::Area& area,
+                                                         const Data::ThermalCluster& cluster,
+                                                         int day)
+{
+    if (cluster.costgeneration == Data::useCostTimeseries)
+    {
+        logs.warning()
+          << "Cluster: " << cluster.getFullName()
+          << " has Cost generation set to: Use cost timeseries. Option not suported yet. "
+             "Cost set to zero.";
+        return 0.;
+    }
+    // TODO CR27: return proper mean daily value
+    return 15.55;
+}
+
 // calculate parameters methods - per cluster-Unit
 int OptimizedThermalGenerator::calculateUnitEarliestStartOfFirstMaintenance(
   Data::ThermalCluster& cluster,
