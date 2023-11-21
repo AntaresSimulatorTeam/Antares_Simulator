@@ -24,7 +24,7 @@ private:
     // optimization problem construction methods
     void buildProblemVariables(const OptProblemSettings& optSett);
     void countVariables();
-    void allocateOptimizationProblemVariablesStruct(const OptProblemSettings& optSett);
+    void allocateOptimizationProblemVariablesStruct();
     void buildEnsAndSpillageVariables(const OptProblemSettings& optSett);
     void buildUnitPowerOutputVariables(const OptProblemSettings& optSett);
     void buildStartEndMntVariables(const OptProblemSettings& optSett);
@@ -81,15 +81,14 @@ private:
     std::pair<int, int> calculateTimeHorizonAndStep();
     std::pair<double, double> calculateMaintenanceGroupENSandSpillageCost();
     void calculateResidualLoad();
+    void setClusterDailyValues();
 
     // calculate parameters methods - per cluster
     uint calculateNumberOfMaintenances(const Data::ThermalCluster& cluster, uint timeHorizon);
     uint calculateAverageMaintenanceDuration(Data::ThermalCluster& cluster);
     static std::array<double, DAYS_PER_YEAR> calculateMaxUnitOutput(const Data::ThermalCluster& cluster);
     static std::array<double, DAYS_PER_YEAR> calculateAvrUnitDailyCost(const Data::ThermalCluster& cluster);
-
-    void setClusterDailyValues();
-
+    // getters
     double getUnitPowerCost(const Data::ThermalCluster& cluster, int optimizationDay);
     double getUnitPowerOutput(const Data::ThermalCluster& cluster, int optimizationDay);
 

@@ -11,7 +11,7 @@ void OptimizedThermalGenerator::buildProblemVariables(const OptProblemSettings& 
     // this is now just dummy optimization problem
     countVariables();
     
-    allocateOptimizationProblemVariablesStruct(optSett);
+    allocateOptimizationProblemVariablesStruct();
     buildEnsAndSpillageVariables(optSett);
     buildUnitPowerOutputVariables(optSett);
     buildStartEndMntVariables(optSett);
@@ -76,8 +76,7 @@ void OptimizedThermalGenerator::countVariables()
 }
 
 // populate OptimizationProblemVariables struct
-void OptimizedThermalGenerator::allocateOptimizationProblemVariablesStruct(
-  const OptProblemSettings& optSett)
+void OptimizedThermalGenerator::allocateOptimizationProblemVariablesStruct()
 {
     // loop per day - fill in structure
     for (int day = 0; day < timeHorizon_; ++day)

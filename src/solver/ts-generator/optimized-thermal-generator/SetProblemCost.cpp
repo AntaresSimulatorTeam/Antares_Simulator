@@ -93,22 +93,6 @@ void OptimizedThermalGenerator::setProblemPowerCostPerCluster(const OptProblemSe
                                                               const Data::Area& area,
                                                               const Data::ThermalCluster& cluster)
 {
-    /*
-    ** Unit cost can be directly set,
-    ** Or calculated using Fuel Cost, Co2 cost, Fuel Eff and V&O Cost.
-
-    ** In second case we also need information which year it is (to choose proper TS number, and
-    also what hour it is)
-    ** we need price per day (so averaging the hourly values)
-    ** this is NOT calculated prior to the simulation - so if we only want to run ts-gen, we cannot
-    get this info just yet
-    ** using:
-    ** getMarginalCost(uint serieIndex, uint hourInTheYear) or
-    ** getMarketBidCost(uint hourInTheYear, uint year)
-    ** TODO CR27: maybe for phase-II
-    ** for now just disable this option but take into account the thermalModulationCost!!
-    */
-
     double unitPowerCost = getUnitPowerCost(cluster, day + optSett.firstDay);
     // loop per unit inside the cluster
     for (int unit = 0; unit < cluster.unitCount; ++unit)

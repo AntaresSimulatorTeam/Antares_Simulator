@@ -236,6 +236,33 @@ void OptimizedThermalGenerator::calculateResidualLoad()
     maintenanceGroup_.setUsedResidualLoadTS(refValue);
 }
 
+void OptimizedThermalGenerator::setClusterDailyValues()
+{
+    for (const auto& entryWeightMap : maintenanceGroup_)
+    {
+        const auto& area = *(entryWeightMap.first);
+        auto& areaVariables = dailyClusterData.areaMap;
+        areaVariables[&area] = DailyClusterDataPerArea();
+        // loop per thermal clusters inside the area - fill in the structure
+        for (auto it = area.thermal.list.mapping.begin(); it != area.thermal.list.mapping.end();
+             ++it)
+        {
+            const auto& cluster = *(it->second);
+
+            // we do not check if cluster.optimizeMaintenance = true here
+            // we add all the clusters Power inside maintenance group
+            if (!checkClusterExist(cluster))
+                continue;
+
+            auto& clusterVariables = areaVariables[&area].clusterMap;
+            clusterVariables[&cluster] = DailyClusterDataPerCluster();
+            clusterVariables[&cluster].maxPower = calculateMaxUnitOutput(cluster);
+            clusterVariables[&cluster].unitCost = calculateAvrUnitDailyCost(cluster);
+        }
+    }
+    return;
+}
+
 // calculate parameters methods - per cluster
 uint OptimizedThermalGenerator::calculateNumberOfMaintenances(const Data::ThermalCluster& cluster,
                                                               uint timeHorizon)
@@ -308,36 +335,25 @@ std::array<double, DAYS_PER_YEAR> OptimizedThermalGenerator::calculateAvrUnitDai
     return avrCostDailyValues;
 }
 
-void OptimizedThermalGenerator::setClusterDailyValues()
-{
-    for (const auto& entryWeightMap : maintenanceGroup_)
-    {
-        const auto& area = *(entryWeightMap.first);
-        auto& areaVariables = dailyClusterData.areaMap;
-        areaVariables[&area] = DailyClusterDataPerArea();
-        // loop per thermal clusters inside the area - fill in the structure
-        for (auto it = area.thermal.list.mapping.begin(); it != area.thermal.list.mapping.end();
-             ++it)
-        {
-            const auto& cluster = *(it->second);
-
-            // we do not check if cluster.optimizeMaintenance = true here
-            // we add all the clusters Power inside maintenance group
-            if (!checkClusterExist(cluster))
-                continue;
-
-            auto& clusterVariables = areaVariables[&area].clusterMap;
-            clusterVariables[&cluster] = DailyClusterDataPerCluster();
-            clusterVariables[&cluster].maxPower = calculateMaxUnitOutput(cluster);
-            clusterVariables[&cluster].unitCost = calculateAvrUnitDailyCost(cluster);
-        }
-    }
-    return;
-}
-
 double OptimizedThermalGenerator::getUnitPowerCost(const Data::ThermalCluster& cluster,
                                                    int optimizationDay)
 {
+    /*
+    ** Unit cost can be directly set,
+    ** Or calculated using Fuel Cost, Co2 cost, Fuel Eff and V&O Cost.
+
+    ** In second case we also need information which year it is (to choose proper TS number, and
+    also what hour it is)
+    ** we need price per day (so averaging the hourly values)
+    ** this is NOT calculated prior to the simulation - so if we only want to run ts-gen, we cannot
+    get this info just yet
+    ** using:
+    ** getMarginalCost(uint serieIndex, uint hourInTheYear) or
+    ** getMarketBidCost(uint hourInTheYear, uint year)
+    ** TODO CR27: maybe for phase-II
+    ** for now just disable this option but take into account the thermalModulationCost!!
+    */
+
     if (cluster.costgeneration == Data::useCostTimeseries)
     {
         logs.warning()
