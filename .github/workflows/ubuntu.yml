@@ -125,6 +125,54 @@ jobs:
         name: test-log
         path: ${{ github.workspace }}/_build/Testing/Temporary/LastTest.log
 
+    - name: Installer .deb creation
+      run: |
+           cd _build
+           cpack -G DEB
+
+    - name: .tar.gz creation
+      run: |
+           cd _build
+           cpack -G TGZ
+
+    - name: Solver archive creation
+      run: |
+           cd _build
+           cmake --install . --prefix install
+           pushd .
+           cd install/bin
+           tar czf ../../antares-solver_ubuntu20.04.tar.gz antares-*-solver libsirius_solver.so
+           popd
+           rm -rf install
+
+    - name: Installer archive upload push
+      uses: actions/upload-artifact@v3
+      with:
+        path: _build/*.tar.gz
+
+    - name: Installer deb upload push
+      uses: actions/upload-artifact@v3
+      with:
+        path: _build/*.deb
+
+  publish_assets:
+    name: Publish assets
+    needs: build
+    runs-on: ${{needs.build.outputs.os}}
+    steps:
+    - name: Download all artifacts
+      if: ${{ env.IS_RELEASE == 'true' }}
+      uses: actions/download-artifact@v3
+
+
+    - name: Publish assets
+      if: ${{ env.IS_RELEASE == 'true' }}
+      uses: alexellis/upload-assets@0.4.0
+      env:
+          GITHUB_TOKEN: ${{ github.token }}
+      with:
+          asset_paths: '["*/*.tar.gz", "*/*.deb"]'
+
     # simtest
     - name: Read simtest version
       id: simtest-version
@@ -197,50 +245,3 @@ jobs:
         batch-name: long-tests-3
         os: ${{ matrix.test-platform }}
 
-    - name: Installer .deb creation
-      run: |
-           cd _build
-           cpack -G DEB
-
-    - name: .tar.gz creation
-      run: |
-           cd _build
-           cpack -G TGZ
-
-    - name: Solver archive creation
-      run: |
-           cd _build
-           cmake --install . --prefix install
-           pushd .
-           cd install/bin
-           tar czf ../../antares-solver_ubuntu20.04.tar.gz antares-*-solver libsirius_solver.so
-           popd
-           rm -rf install
-
-    - name: Installer archive upload push
-      uses: actions/upload-artifact@v3
-      with:
-        path: _build/*.tar.gz
-
-    - name: Installer deb upload push
-      uses: actions/upload-artifact@v3
-      with:
-        path: _build/*.deb
-
-  publish_assets:
-    name: Publish assets
-    needs: build
-    runs-on: ${{needs.build.outputs.os}}
-    steps:
-    - name: Download all artifacts
-      if: ${{ env.IS_RELEASE == 'true' }}
-      uses: actions/download-artifact@v3
-
-
-    - name: Publish assets
-      if: ${{ env.IS_RELEASE == 'true' }}
-      uses: alexellis/upload-assets@0.4.0
-      env:
-          GITHUB_TOKEN: ${{ github.token }}
-      with:
-          asset_paths: '["*/*.tar.gz", "*/*.deb"]'
