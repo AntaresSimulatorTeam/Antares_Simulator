@@ -126,11 +126,9 @@ void HydroMaxTimeSeriesReader::copyDailyMaxPumpingEnergy() const
 
 bool HydroMaxTimeSeriesReader::read(const AnyString& folder, bool usedBySolver)
 {
-    bool ret = true;
-
-    ret = loadDailyMaxPowersAndEnergies(folder, usedBySolver) && ret;
+    bool ret = loadDailyMaxPowersAndEnergies(folder, usedBySolver) && ret;
     copyDailyMaxEnergy();
-    hydro_.series->buildMaxPowerFromDailyTS(dailyMaxPumpAndGen[genMaxP], dailyMaxPumpAndGen[pumpMaxP]);
+    hydro_.series->buildHourlyMaxPowerFromDailyTS(dailyMaxPumpAndGen[genMaxP], dailyMaxPumpAndGen[pumpMaxP]);
 
     return ret;
 }

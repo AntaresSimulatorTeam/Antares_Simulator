@@ -915,8 +915,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             HydroMaxTimeSeriesReader reader(area.hydro, area.id.to<std::string>(), area.name.to<std::string>());
             ret = reader.read(buffer, study.usedByTheSolver) && ret;
         }
-
-        if (study.header.version >= 870)
+        else
         {
             buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "series";
             ret = hydroSeries->LoadMaxPower(area.id, buffer) && ret;
