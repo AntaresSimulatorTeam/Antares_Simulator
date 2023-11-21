@@ -43,6 +43,15 @@ private:
     void setMaxUnitOutputConstraints();
 
     void setProblemCost();
+    void setProblemEnsCost(MPObjective* objective);
+    void setProblemSpillCost(MPObjective* objective);
+    void setProblemPowerCost(MPObjective* objective);
+    void setProblemPowerCostPerGroup();
+    void setProblemPowerCostPerArea();
+    void setProblemPowerCostPerCluster();
+    void setProblemPowerCostPerUnit();
+    void printObjectiveFunction(MPObjective* objective);
+
     void solveProblem();
     void resetProblem();
 
