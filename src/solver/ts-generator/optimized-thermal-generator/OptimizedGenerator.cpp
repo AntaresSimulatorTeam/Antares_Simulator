@@ -307,20 +307,31 @@ std::array<double, DAYS_PER_YEAR> OptimizedThermalGenerator::calculateAvrUnitDai
     return avrCostDailyValues;
 }
 
-double OptimizedThermalGenerator::returnUnitPowerCost(std::array<double, DAYS_PER_YEAR> dailyCost,
-                                                      int optimizationDay)
+double OptimizedThermalGenerator::getUnitPowerCost(const Data::ThermalCluster& cluster,
+                                                   int optimizationDay)
 {
-    // if (cluster.costgeneration == Data::useCostTimeseries)
-    // {
-    //     logs.warning()
-    //       << "Cluster: " << cluster.getFullName()
-    //       << " has Cost generation set to: Use cost timeseries. Option not suported yet. "
-    //          "Cost set to zero.";
-    //     return 0.;
-    // }
+    if (cluster.costgeneration == Data::useCostTimeseries)
+    {
+        logs.warning()
+          << "Cluster: " << cluster.getFullName()
+          << " has Cost generation set to: Use cost timeseries. Option not suported yet. "
+             "Cost set to zero.";
+        return 0.;
+    }
 
     int realDay = dayOfTheYear(optimizationDay);
-    return dailyCost[realDay];
+    auto unitCost
+      = dailyClusterData.areaMap[cluster.parentArea].clusterMap[&cluster].unitCost[realDay];
+    return unitCost;
+}
+
+double OptimizedThermalGenerator::getUnitPowerOutput(const Data::ThermalCluster& cluster,
+                                                     int optimizationDay)
+{
+    int realDay = dayOfTheYear(optimizationDay);
+    auto unitOutput
+      = dailyClusterData.areaMap[cluster.parentArea].clusterMap[&cluster].maxPower[realDay];
+    return unitOutput;
 }
 
 // calculate parameters methods - per cluster-Unit

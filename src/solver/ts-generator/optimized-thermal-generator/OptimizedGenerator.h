@@ -87,7 +87,9 @@ private:
     uint calculateAverageMaintenanceDuration(Data::ThermalCluster& cluster);
     std::array<double, DAYS_PER_YEAR> calculateMaxUnitOutput(Data::ThermalCluster& cluster);
     std::array<double, DAYS_PER_YEAR> calculateAvrUnitDailyCost(const Data::ThermalCluster& cluster);
-    double returnUnitPowerCost(std::array<double, DAYS_PER_YEAR> dailyCost, int optimizationDay);
+
+    double getUnitPowerCost(const Data::ThermalCluster& cluster, int optimizationDay);
+    double getUnitPowerOutput(const Data::ThermalCluster& cluster, int optimizationDay);
 
     // calculate parameters methods - per cluster-Unit
     int calculateUnitEarliestStartOfFirstMaintenance(Data::ThermalCluster& cluster, uint unitIndex);
