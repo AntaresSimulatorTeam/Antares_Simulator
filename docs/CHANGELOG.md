@@ -7,6 +7,13 @@ Antares Changelog
 * Solver logs can be enabled either by the command-line option (--solver-logs) or in the generaldata.ini by setting solver-logs = true under the optimization section [(#1717)](https://github.com/AntaresSimulatorTeam/Antares_Simulator/pull/1717)
 
 
+8.8.0-rc4 (11/2023)
+--------------------
+## Bugfixes
+* Take variable status (integer/continuous) into account for MILP (#1778)
+* Named MPS - fix duplicated "ranged" binding constraints (#1569)
+* Fix output variable PROFIT for thermal clusters (#1767)
+
 8.8.0-rc3 (11/2023)
 --------------------
 ## Bugfixes
