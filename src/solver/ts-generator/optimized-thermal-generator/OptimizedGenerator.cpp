@@ -285,9 +285,9 @@ std::array<double, DAYS_PER_YEAR> OptimizedThermalGenerator::calculateMaxUnitOut
     return maxOutputDailyValues;
 }
 
-double OptimizedThermalGenerator::calculateUnitPowerCost(const Data::Area& area,
-                                                         const Data::ThermalCluster& cluster,
-                                                         int day)
+double OptimizedThermalGenerator::returnUnitPowerCost(const Data::Area& area,
+                                                      const Data::ThermalCluster& cluster,
+                                                      int day)
 {
     if (cluster.costgeneration == Data::useCostTimeseries)
     {

@@ -86,9 +86,9 @@ private:
     uint calculateNumberOfMaintenances(const Data::ThermalCluster& cluster, uint timeHorizon);
     uint calculateAverageMaintenanceDuration(Data::ThermalCluster& cluster);
     std::array<double, DAYS_PER_YEAR> calculateMaxUnitOutput(Data::ThermalCluster& cluster);
-    double calculateUnitPowerCost(const Data::Area& area,
-                                  const Data::ThermalCluster& cluster,
-                                  int day);
+    double returnUnitPowerCost(const Data::Area& area,
+                               const Data::ThermalCluster& cluster,
+                               int day);
 
     // calculate parameters methods - per cluster-Unit
     int calculateUnitEarliestStartOfFirstMaintenance(Data::ThermalCluster& cluster, uint unitIndex);
@@ -120,6 +120,7 @@ private:
     double ensCost_;
     double spillCost_;
     std::array<double, DAYS_PER_YEAR> residualLoadDailyValues_;
+    DailyClusterData dailyClusterData;
     OptimizationProblemVariables var;
 
     // MPSolver instance

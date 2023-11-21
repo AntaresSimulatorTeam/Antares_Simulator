@@ -55,4 +55,31 @@ struct OptimizationProblemVariables
     std::vector<OptimizationProblemVariablesPerDay> day;
 };
 
+// it is better to immediately calculate and populate structures
+// that will store information about:
+// for each area and each cluster:
+// daily arrays with info about:
+// daily MaxUnitOutput and
+// daily UnitPowerCost
+// so inside optimization problem we just retrieve these data
+// not re-calculate them over and over again
+
+struct DailyClusterDataPerCluster
+{
+    std::array<double, DAYS_PER_YEAR> maxPower;
+    std::array<double, DAYS_PER_YEAR> unitCost;
+};
+
+struct DailyClusterDataPerArea
+{
+    // number of elements in the map is total number of cluster in area
+    std::map<const Data::ThermalCluster*, DailyClusterDataPerCluster> clusterMap;
+};
+
+struct DailyClusterData
+{
+    // number of elements in the map is total number of areas in maintenance group
+    std::map<const Data::Area*, DailyClusterDataPerArea> areaMap;
+};
+
 } // namespace Antares::Solver::TSGenerator
