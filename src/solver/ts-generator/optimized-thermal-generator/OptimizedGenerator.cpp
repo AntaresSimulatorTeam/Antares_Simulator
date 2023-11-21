@@ -285,20 +285,42 @@ std::array<double, DAYS_PER_YEAR> OptimizedThermalGenerator::calculateMaxUnitOut
     return maxOutputDailyValues;
 }
 
-double OptimizedThermalGenerator::returnUnitPowerCost(const Data::Area& area,
-                                                      const Data::ThermalCluster& cluster,
-                                                      int day)
+std::array<double, DAYS_PER_YEAR> OptimizedThermalGenerator::calculateAvrUnitDailyCost(
+  const Data::ThermalCluster& cluster)
 {
-    if (cluster.costgeneration == Data::useCostTimeseries)
+    std::array<double, DAYS_PER_YEAR> avrCostDailyValues = {};
+    std::array<double, HOURS_PER_YEAR> costHourlyValues = {};
+
+    // transfer to array
+    for (std::size_t row = 0; row < HOURS_PER_YEAR; ++row)
     {
-        logs.warning()
-          << "Cluster: " << cluster.getFullName()
-          << " has Cost generation set to: Use cost timeseries. Option not suported yet. "
-             "Cost set to zero.";
-        return 0.;
+        costHourlyValues[row]
+          = cluster.modulation[Data::ThermalModulation::thermalModulationMarketBid][row];
     }
-    // TODO CR27: return proper mean daily value
-    return 15.55;
+
+    avrCostDailyValues = calculateDailySums(costHourlyValues);
+    // multiply by per unit/cluster market bid cost + average this on 24 hours
+    for (double& num : avrCostDailyValues)
+    {
+        num *= cluster.marketBidCost / 24.0;
+    }
+    return avrCostDailyValues;
+}
+
+double OptimizedThermalGenerator::returnUnitPowerCost(std::array<double, DAYS_PER_YEAR> dailyCost,
+                                                      int optimizationDay)
+{
+    // if (cluster.costgeneration == Data::useCostTimeseries)
+    // {
+    //     logs.warning()
+    //       << "Cluster: " << cluster.getFullName()
+    //       << " has Cost generation set to: Use cost timeseries. Option not suported yet. "
+    //          "Cost set to zero.";
+    //     return 0.;
+    // }
+
+    int realDay = dayOfTheYear(optimizationDay);
+    return dailyCost[realDay];
 }
 
 // calculate parameters methods - per cluster-Unit

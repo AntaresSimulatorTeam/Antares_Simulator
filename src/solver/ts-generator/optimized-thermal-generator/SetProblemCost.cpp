@@ -109,7 +109,8 @@ void OptimizedThermalGenerator::setProblemPowerCostPerCluster(const OptProblemSe
     ** for now just disable this option but take into account the thermalModulationCost!!
     */
 
-    double unitPowerCost = returnUnitPowerCost(area, cluster, day + optSett.firstDay);
+    auto dailyUnitPowerCost = calculateAvrUnitDailyCost(cluster);
+    double unitPowerCost = returnUnitPowerCost(dailyUnitPowerCost, day + optSett.firstDay);
     // loop per unit inside the cluster
     for (int unit = 0; unit < cluster.unitCount; ++unit)
     {
