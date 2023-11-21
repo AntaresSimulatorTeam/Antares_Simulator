@@ -116,6 +116,7 @@ void OptimizedThermalGenerator::setMaintenanceGroupParameters()
     residualLoadDailyValues_ = calculateDailySums(maintenanceGroup_.getUsedResidualLoadTS());
     std::tie(ensCost_, spillCost_) = calculateMaintenanceGroupENSandSpillageCost();
     std::tie(timeStep_, timeHorizon_) = calculateTimeHorizonAndStep();
+    setClusterDailyValues();
 }
 
 bool OptimizedThermalGenerator::checkMaintenanceGroupParameters()
@@ -264,7 +265,7 @@ uint OptimizedThermalGenerator::calculateAverageMaintenanceDuration(Data::Therma
 }
 
 std::array<double, DAYS_PER_YEAR> OptimizedThermalGenerator::calculateMaxUnitOutput(
-  Data::ThermalCluster& cluster)
+  const Data::ThermalCluster& cluster)
 {
     std::array<double, DAYS_PER_YEAR> maxOutputDailyValues = {};
     std::array<double, HOURS_PER_YEAR> maxOutputHourlyValues = {};
@@ -305,6 +306,33 @@ std::array<double, DAYS_PER_YEAR> OptimizedThermalGenerator::calculateAvrUnitDai
         num *= cluster.marketBidCost / 24.0;
     }
     return avrCostDailyValues;
+}
+
+void OptimizedThermalGenerator::setClusterDailyValues()
+{
+    for (const auto& entryWeightMap : maintenanceGroup_)
+    {
+        const auto& area = *(entryWeightMap.first);
+        auto& areaVariables = dailyClusterData.areaMap;
+        areaVariables[&area] = DailyClusterDataPerArea();
+        // loop per thermal clusters inside the area - fill in the structure
+        for (auto it = area.thermal.list.mapping.begin(); it != area.thermal.list.mapping.end();
+             ++it)
+        {
+            const auto& cluster = *(it->second);
+
+            // we do not check if cluster.optimizeMaintenance = true here
+            // we add all the clusters Power inside maintenance group
+            if (!checkClusterExist(cluster))
+                continue;
+
+            auto& clusterVariables = areaVariables[&area].clusterMap;
+            clusterVariables[&cluster] = DailyClusterDataPerCluster();
+            clusterVariables[&cluster].maxPower = calculateMaxUnitOutput(cluster);
+            clusterVariables[&cluster].unitCost = calculateAvrUnitDailyCost(cluster);
+        }
+    }
+    return;
 }
 
 double OptimizedThermalGenerator::getUnitPowerCost(const Data::ThermalCluster& cluster,
