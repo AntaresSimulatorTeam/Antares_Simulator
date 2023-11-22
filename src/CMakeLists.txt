@@ -316,8 +316,9 @@ include(cmake/common-settings.cmake)
 add_subdirectory(config)
 
 # Configure config.h with current ANTARES version
+message("PLOP " ${CMAKE_CURRENT_SOURCE_DIR})
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/config/config.h.in"
-		"${CMAKE_CURRENT_SOURCE_DIR}/include/antares/config/config.h")
+		"${CMAKE_CURRENT_SOURCE_DIR}/config/include/antares/config/config.h")
 
 # Yuni Framework
 configure_file("cmake/ProfileBuild.template.cmake" "ext/yuni/src/ProfileBuild.cmake")
