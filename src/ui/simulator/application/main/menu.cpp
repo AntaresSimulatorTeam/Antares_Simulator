@@ -33,16 +33,15 @@
 #include "../../toolbox/resources.h"
 #include "internal-data.h"
 #include "internal-ids.h"
-#include "../../../../config.h"
+#include <antares/config/config.h>
 #include "antares/antares/antares.h"
 #include <ui/common/component/frame/registry.h>
 #include "application/study.h"
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Forms
+
+namespace Antares::Forms
 {
 wxMenuBar* ApplWnd::createMenu()
 {
@@ -764,5 +763,5 @@ void ApplWnd::evtOnViewNodalOptimization(wxCommandEvent&)
     pNotebook->select(wxT("nodal"));
 }
 
-} // namespace Forms
-} // namespace Antares
+} // namespace Antares::Forms
+
