@@ -23,11 +23,11 @@ public:
 
 struct OptimizationProblemVariablesPerUnit
 {
-    MPVariable* P = nullptr;; // index of P[t][u] variable
+    MPVariable* P = nullptr;; // pointer to P[t][u] variable
 
     // number of elements in the vector is total number of maintenances of unit
-    std::vector<MPVariable*> start; // index of s[t][u][m] variable
-    std::vector<MPVariable*> end;   // index of e[t][u][m] variable
+    std::vector<MPVariable*> start; // pointer to s[t][u][m] variable
+    std::vector<MPVariable*> end;   // pointer to e[t][u][m] variable
 };
 
 struct OptimizationProblemVariablesPerCluster
@@ -44,8 +44,8 @@ struct OptimizationProblemVariablesPerArea
 
 struct OptimizationProblemVariablesPerDay
 {
-    MPVariable* Ens = nullptr;   // index of ENS[t] variable
-    MPVariable* Spill = nullptr;; // index of Spillage[t] variable
+    MPVariable* Ens = nullptr;   // pointer to ENS[t] variable
+    MPVariable* Spill = nullptr;; // pointer to Spillage[t] variable
     // number of elements in the map is total number of areas in optimization problem
     std::map<const Data::Area*, OptimizationProblemVariablesPerArea> areaMap;
 };
