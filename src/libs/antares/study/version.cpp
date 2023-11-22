@@ -21,7 +21,7 @@
 
 #include "antares/study/study.h"
 #include "antares/study/version.h"
-#include "../../../config.h" //used to get versionFromCMake
+#include <antares/config/config.h>
 
 using namespace Yuni;
 using namespace Antares::Data;

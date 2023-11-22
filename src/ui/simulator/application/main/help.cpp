@@ -24,7 +24,7 @@
 #include "../main.h"
 #include "../menus.h"
 #include "antares/study/study.h"
-#include "../../../config.h"
+#include <antares/config/config.h>
 #include "../../toolbox/resources.h"
 #include "../../windows/aboutbox.h"
 #include "../../toolbox/dispatcher/study.h"
