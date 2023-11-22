@@ -63,10 +63,11 @@ private:
     void setEnsAndSpillageBounds();
     void setUnitPowerOutputBounds();
     void setStartEndMntBounds();
-    void setFirstMntStartBounds();
-    void setFirstMntStartBounds(const Data::Area& area);
-    void setFirstMntStartBounds(const Data::ThermalCluster& cluster);
-    void setAllMntMustStartBounds();
+    void fixBounds();
+    void fixBounds(const Data::Area& area);
+    void fixBounds(const Data::ThermalCluster& cluster);
+    void fixBoundsStartFirstMnt(const Data::ThermalCluster& cluster, int unit);
+    void fixBoundsEndOfMnt(const Data::ThermalCluster& cluster, int unit, int totalMntNum);
 
     void buildProblemConstraints();
     void buildLoadBalanceConstraints();
