@@ -47,7 +47,71 @@ void OptimizedThermalGenerator::setStartEndMntBounds()
 // start[tauUpper][u][1] = 1
 void OptimizedThermalGenerator::setFirstMntStartBounds()
 {
+    // loop per areas inside maintenance group
+    for (const auto& entryWeightMap : maintenanceGroup_)
+    {
+        const auto& area = *(entryWeightMap.first);
+        setFirstMntStartBounds(area);
+    }
     return;
+}
+
+void OptimizedThermalGenerator::setFirstMntStartBounds(const Data::Area& area)
+{
+    for (auto it = area.thermal.list.mapping.begin(); it != area.thermal.list.mapping.end(); ++it)
+    {
+        const auto& cluster = *(it->second);
+
+        // check if cluster exist, do we generate + optimizeMaintenance
+        // create start end variables only for these clusters
+        bool createStartEndVar = checkClusterExist(cluster)
+                                 && cluster.doWeGenerateTS(globalThermalTSgeneration_)
+                                 && cluster.optimizeMaintenance;
+        if (!createStartEndVar)
+            continue;
+    }
+}
+
+void OptimizedThermalGenerator::setFirstMntStartBounds(const Data::ThermalCluster& cluster)
+{
+    // loop per units inside the cluster
+    for (int unit = 0; unit < cluster.unitCount; ++unit)
+    {
+        int earliestStartOfFirstMaintenance
+          = calculateUnitEarliestStartOfFirstMaintenance(cluster, unit);
+        int latestStartOfFirstMaintenance
+          = calculateUnitLatestStartOfFirstMaintenance(cluster, unit);
+
+        // TODO CR27:
+        // lets assume for now that when calling two calculate methods above
+        // that we already did the recalculation of cluster.daysSinceLastMaintenance[unitIndex]
+        // values if necessary!
+
+        //
+        // We assume here that vector "start" has member [0]
+        // meaning: for each unit we assume we have at least one maintenance
+        // this assumption is ok - since method calculateNumberOfMaintenances()
+        // will never return number bellow 2
+
+        if (earliestStartOfFirstMaintenance >= 1)
+        {
+            // start[tauLower-1][u][1] = 0
+            var.day[earliestStartOfFirstMaintenance - 1]
+              .areaMap[cluster.parentArea]
+              .clusterMap[&cluster]
+              .unitMap[unit]
+              .start[0]
+              ->SetBounds(0.0, 0.0);
+        }
+
+        // start[tauUpper][u][1] = 1
+        var.day[latestStartOfFirstMaintenance]
+          .areaMap[cluster.parentArea]
+          .clusterMap[&cluster]
+          .unitMap[unit]
+          .start[0]
+          ->SetBounds(1.0, 1.0);
+    }
 }
 
 // BOUNDS/CONSTRAINTS per units and per maintenance - constraint-per-each-unit+mnt[t-fixed=0/T][u][m]
