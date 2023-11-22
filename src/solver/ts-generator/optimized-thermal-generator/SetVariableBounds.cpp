@@ -13,6 +13,7 @@ void OptimizedThermalGenerator::setVariableBounds()
     setStartEndMntBounds();
     setFirstMntStartBounds();
     setAllMntMustStartBounds();
+    printAllVariables();
 }
 
 // BOUNDS per each day - bounds-per-each-day[t] - ENS[t] >= 0, Spill[t] >= 0
@@ -69,6 +70,8 @@ void OptimizedThermalGenerator::setFirstMntStartBounds(const Data::Area& area)
                                  && cluster.optimizeMaintenance;
         if (!createStartEndVar)
             continue;
+
+        setFirstMntStartBounds(cluster);
     }
 }
 
