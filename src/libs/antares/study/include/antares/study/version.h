@@ -28,6 +28,7 @@
 #define __ANTARES_LIBS_STUDY_VERSION_H__
 
 #include <yuni/yuni.h>
+#include <string>
 
 namespace Antares::Data
 {
