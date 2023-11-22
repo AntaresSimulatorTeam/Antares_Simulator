@@ -16,7 +16,7 @@ void OptimizedThermalGenerator::setMaintenanceGroupParameters()
     residualLoadDailyValues_ = calculateDailySums(maintenanceGroup_.getUsedResidualLoadTS());
     std::tie(ensCost_, spillCost_) = calculateMaintenanceGroupENSandSpillageCost();
     std::tie(timeStep_, timeHorizon_) = calculateTimeHorizonAndStep();
-    setClusterDailyValues();
+    setClusterData();
 }
 
 bool OptimizedThermalGenerator::checkMaintenanceGroupParameters()
@@ -52,7 +52,8 @@ std::pair<int, int> OptimizedThermalGenerator::calculateTimeHorizonAndStep()
              ++it)
         {
             const auto& cluster = *(it->second);
-            if (cluster.doWeGenerateTS(globalThermalTSgeneration_) && cluster.optimizeMaintenance)
+            if (checkClusterExist(cluster) && cluster.doWeGenerateTS(globalThermalTSgeneration_)
+                && cluster.optimizeMaintenance)
             {
                 averageDurationBetweenMaintenances.push_back(cluster.interPoPeriod);
             }
@@ -136,7 +137,7 @@ void OptimizedThermalGenerator::calculateResidualLoad()
     maintenanceGroup_.setUsedResidualLoadTS(refValue);
 }
 
-void OptimizedThermalGenerator::setClusterDailyValues()
+void OptimizedThermalGenerator::setClusterData()
 {
     for (const auto& entryWeightMap : maintenanceGroup_)
     {

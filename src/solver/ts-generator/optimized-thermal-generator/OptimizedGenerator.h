@@ -125,7 +125,7 @@ private:
     std::pair<int, int> calculateTimeHorizonAndStep();
     std::pair<double, double> calculateMaintenanceGroupENSandSpillageCost();
     void calculateResidualLoad();
-    void setClusterDailyValues();
+    void setClusterData();
 
     // calculate parameters methods - per cluster
     int calculateNumberOfMaintenances(const Data::ThermalCluster& cluster, int timeHorizon);
