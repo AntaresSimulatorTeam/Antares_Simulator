@@ -60,7 +60,6 @@ void OptimizedThermalGenerator::fixBounds(const Data::ThermalCluster& cluster)
 }
 
 // Bounds for the start of the first maintenance
-// BOUNDS/CONSTRAINTS per units - constraint-per-each-unit[t-fixed][u][m-fixed]
 // first maintenance must start between tauLower and tauUpper
 // start[tauLower-1][u][1] = 0
 // start[tauUpper][u][1] = 1
@@ -100,11 +99,7 @@ void OptimizedThermalGenerator::fixBoundsStartFirstMnt(const Data::ThermalCluste
 }
 
 // Ensure that units with max average duration between maintenances start their second maintenance
-// End of the maintenance on the first day
-// BOUNDS/CONSTRAINTS per units and per maintenance -
-// constraint-per-each-unit+mnt[t-fixed=0/T][u][m] end[0][u][q] = 0 // no maintenance can end in
-// first day start[T][u][q] = 1 // T - end Day (simulation end) // all maintenance must start till
-// last day
+// start[T][u][q] = 1
 void OptimizedThermalGenerator::fixBoundsEndOfMnt(const Data::ThermalCluster& cluster,
                                                   int unit,
                                                   int totalMntNum)
@@ -112,6 +107,13 @@ void OptimizedThermalGenerator::fixBoundsEndOfMnt(const Data::ThermalCluster& cl
     // loop per maintenances of unit
     for (int mnt = 0; mnt < totalMntNum; ++mnt)
     {
+        // start[T][u][q] = 1
+        var.day[timeHorizon_ - 1]
+          .areaMap[cluster.parentArea]
+          .clusterMap[&cluster]
+          .unitMap[unit]
+          .start[mnt]
+          ->SetBounds(1.0, 1.0);
     }
 
     return;
