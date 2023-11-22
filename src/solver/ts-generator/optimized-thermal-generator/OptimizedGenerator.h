@@ -58,12 +58,20 @@ private:
                                    int totalMntNumber);
 
     // functions to fix bounds of some variables
-    void setVariableBounds();
+    void fixVariableBounds();
     void fixBounds();
     void fixBounds(const Data::Area& area);
     void fixBounds(const Data::ThermalCluster& cluster);
-    void fixBoundsStartFirstMnt(const Data::ThermalCluster& cluster, int unit);
-    void fixBoundsEndOfMnt(const Data::ThermalCluster& cluster, int unit, int totalMntNum);
+    void fixBounds(const Data::ThermalCluster& cluster,
+                   int unit,
+                   int totalMntNum,
+                   int avrMntDuration);
+    void fixBoundsFirstMnt(const Data::ThermalCluster& cluster, int unit);
+    void fixBoundsStartSecondMnt(const Data::ThermalCluster& cluster, int unit, int mnt);
+    void fixBoundsMntEnd(const Data::ThermalCluster& cluster,
+                         int unit,
+                         int mnt,
+                         int avrMntDuration);
 
     // functions to build problem constraints
     void buildProblemConstraints();
@@ -121,7 +129,7 @@ private:
 
     // calculate parameters methods - per cluster
     int calculateNumberOfMaintenances(const Data::ThermalCluster& cluster, int timeHorizon);
-    uint calculateAverageMaintenanceDuration(Data::ThermalCluster& cluster);
+    int calculateAverageMaintenanceDuration(const Data::ThermalCluster& cluster);
     static std::array<double, DAYS_PER_YEAR> calculateMaxUnitOutput(const Data::ThermalCluster& cluster);
     static std::array<double, DAYS_PER_YEAR> calculateAvrUnitDailyCost(const Data::ThermalCluster& cluster);
     // getters

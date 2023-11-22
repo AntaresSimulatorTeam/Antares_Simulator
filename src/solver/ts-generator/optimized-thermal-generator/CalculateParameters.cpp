@@ -184,7 +184,7 @@ int OptimizedThermalGenerator::calculateNumberOfMaintenances(const Data::Thermal
     return std::max(timeHorizon / cluster.interPoPeriod, minNumberOfMaintenances); // floor
 }
 
-uint OptimizedThermalGenerator::calculateAverageMaintenanceDuration(Data::ThermalCluster& cluster)
+int OptimizedThermalGenerator::calculateAverageMaintenanceDuration(const Data::ThermalCluster& cluster)
 {
     double sum = 0.0;
     for (std::size_t row = 0; row < DAYS_PER_YEAR; ++row)

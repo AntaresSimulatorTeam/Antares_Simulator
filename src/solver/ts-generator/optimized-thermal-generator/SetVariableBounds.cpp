@@ -6,7 +6,7 @@
 
 namespace Antares::Solver::TSGenerator
 {
-void OptimizedThermalGenerator::setVariableBounds()
+void OptimizedThermalGenerator::fixVariableBounds()
 {
     fixBounds();
     printAllVariables();
@@ -38,8 +38,8 @@ void OptimizedThermalGenerator::fixBounds(const Data::Area& area)
         // check if cluster exist, do we generate + optimizeMaintenance
         // create start end variables only for these clusters
         bool existStartEndVar = checkClusterExist(cluster)
-                                 && cluster.doWeGenerateTS(globalThermalTSgeneration_)
-                                 && cluster.optimizeMaintenance;
+                                && cluster.doWeGenerateTS(globalThermalTSgeneration_)
+                                && cluster.optimizeMaintenance;
         if (!existStartEndVar)
             continue;
 
@@ -50,12 +50,13 @@ void OptimizedThermalGenerator::fixBounds(const Data::Area& area)
 void OptimizedThermalGenerator::fixBounds(const Data::ThermalCluster& cluster)
 {
     int totalMntNumber = calculateNumberOfMaintenances(cluster, timeHorizon_);
+    int avrMntDuration = calculateAverageMaintenanceDuration(cluster);
 
     // loop per units inside the cluster
     for (int unit = 0; unit < cluster.unitCount; ++unit)
     {
-        fixBoundsStartFirstMnt(cluster, unit);
-        fixBoundsEndOfMnt(cluster, unit, totalMntNumber);
+        fixBoundsFirstMnt(cluster, unit);
+        fixBounds(cluster, unit, totalMntNumber, avrMntDuration);
     }
 }
 
@@ -63,8 +64,7 @@ void OptimizedThermalGenerator::fixBounds(const Data::ThermalCluster& cluster)
 // first maintenance must start between tauLower and tauUpper
 // start[tauLower-1][u][1] = 0
 // start[tauUpper][u][1] = 1
-void OptimizedThermalGenerator::fixBoundsStartFirstMnt(const Data::ThermalCluster& cluster,
-                                                       int unit)
+void OptimizedThermalGenerator::fixBoundsFirstMnt(const Data::ThermalCluster& cluster, int unit)
 {
     int earliestStartOfFirstMaintenance
       = calculateUnitEarliestStartOfFirstMaintenance(cluster, unit);
@@ -98,25 +98,51 @@ void OptimizedThermalGenerator::fixBoundsStartFirstMnt(const Data::ThermalCluste
     return;
 }
 
-// Ensure that units with max average duration between maintenances start their second maintenance
-// start[T][u][q] = 1
-void OptimizedThermalGenerator::fixBoundsEndOfMnt(const Data::ThermalCluster& cluster,
-                                                  int unit,
-                                                  int totalMntNum)
+void OptimizedThermalGenerator::fixBounds(const Data::ThermalCluster& cluster,
+                                          int unit,
+                                          int totalMntNum,
+                                          int avrMntDuration)
 {
     // loop per maintenances of unit
     for (int mnt = 0; mnt < totalMntNum; ++mnt)
     {
-        // start[T][u][q] = 1
-        var.day[timeHorizon_ - 1]
-          .areaMap[cluster.parentArea]
-          .clusterMap[&cluster]
-          .unitMap[unit]
-          .start[mnt]
-          ->SetBounds(1.0, 1.0);
+        fixBoundsStartSecondMnt(cluster, unit, mnt);
+        fixBoundsMntEnd(cluster, unit, mnt, avrMntDuration);
     }
 
     return;
+}
+
+// Ensure that units with max average duration between maintenances start their second maintenance
+// start[T][u][q] = 1
+void OptimizedThermalGenerator::fixBoundsStartSecondMnt(const Data::ThermalCluster& cluster,
+                                                        int unit,
+                                                        int mnt)
+{
+    var.day[timeHorizon_ - 1]
+      .areaMap[cluster.parentArea]
+      .clusterMap[&cluster]
+      .unitMap[unit]
+      .start[mnt]
+      ->SetBounds(1.0, 1.0);
+}
+
+// End of the maintenance can't happen before average maintenance duration
+// end[T = [0, average_maintenance_duration_per_unit]][u][q] = 0
+void OptimizedThermalGenerator::fixBoundsMntEnd(const Data::ThermalCluster& cluster,
+                                                int unit,
+                                                int mnt,
+                                                int avrMntDuration)
+{
+    for (int day = 0; day < avrMntDuration; ++day)
+    {
+        var.day[day]
+          .areaMap[cluster.parentArea]
+          .clusterMap[&cluster]
+          .unitMap[unit]
+          .end[mnt]
+          ->SetBounds(0.0, 0.0);
+    }
 }
 
 } // namespace Antares::Solver::TSGenerator
