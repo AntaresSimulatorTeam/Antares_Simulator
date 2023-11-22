@@ -280,9 +280,15 @@ message(STATUS "OR-Tools tag ${ORTOOLS_TAG}")
   FetchContent_MakeAvailable(ortools)
 endif()
 
-find_package(minizip)
+find_package(minizip QUIET)
 
 if(NOT minizip_FOUND OR BUILD_MINIZIP)
+	if (NOT minizip_FOUND)
+		message("minizip not found, downloading")
+	endif ()
+	if (BUILD_MINIZIP)
+		message("BUILD_MINIZIP set, downloading")
+	endif ()
     # Repository + tag
     set(MZ_REPOSITORY "https://github.com/zlib-ng/minizip-ng.git")
     set(MZ_TAG "4.0.1")
