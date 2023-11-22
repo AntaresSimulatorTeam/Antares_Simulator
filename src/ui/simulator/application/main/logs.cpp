@@ -27,7 +27,7 @@
 #include <ui/common/wx-wrapper.h>
 #include "../main.h"
 #include "../../windows/studylogs.h"
-#include "../../../config.h"
+#include <antares/config/config.h>
 #include <stdio.h>
 #include <time.h>
 #include <wx/stdpaths.h>
