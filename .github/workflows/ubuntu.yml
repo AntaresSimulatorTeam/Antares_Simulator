@@ -114,6 +114,15 @@ jobs:
         path: 'simtest.json'
         prop_path: 'version'
 
+    - name: Run parallel tests
+      if: ${{ env.IS_PUSH == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: short-tests
+        os: ${{ matrix.test-platform }}
+        variant: "parallel"
+
     - name: Run named mps tests
       if: ${{ env.IS_PUSH == 'true' }}
       uses: ./.github/workflows/run-tests
