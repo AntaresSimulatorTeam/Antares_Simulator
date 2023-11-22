@@ -29,7 +29,7 @@
 #include <yuni/core/string.h>
 #include "antares/study/study.h"
 #include "antares/study/version.h"
-#include "../../../config.h"
+#include <antares/config/config.h>
 
 using namespace Yuni;
 
