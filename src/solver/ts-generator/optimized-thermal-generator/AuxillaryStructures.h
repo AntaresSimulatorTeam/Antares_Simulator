@@ -19,6 +19,9 @@ public:
 
     int firstDay;
     int lastDay;
+    int scenario;
+
+    bool solved = true;
 };
 
 struct OptimizationProblemVariablesPerUnit
