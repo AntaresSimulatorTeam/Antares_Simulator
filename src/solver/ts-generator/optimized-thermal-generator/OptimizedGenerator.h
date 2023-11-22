@@ -135,6 +135,8 @@ private:
     // getters
     double getUnitPowerCost(const Data::ThermalCluster& cluster, int optimizationDay);
     double getUnitPowerOutput(const Data::ThermalCluster& cluster, int optimizationDay);
+    int getNumberOfMaintenances(const Data::ThermalCluster& cluster);
+    int getAverageMaintenanceDuration(const Data::ThermalCluster& cluster);
 
     // calculate parameters methods - per cluster-Unit
     int calculateUnitEarliestStartOfFirstMaintenance(const Data::ThermalCluster& cluster,

@@ -159,6 +159,11 @@ void OptimizedThermalGenerator::setClusterDailyValues()
             clusterVariables[&cluster].maxPower = calculateMaxUnitOutput(cluster);
             clusterVariables[&cluster].unitCost = calculateAvrUnitDailyCost(cluster);
 
+            clusterVariables[&cluster].numberOfMaintenances
+              = calculateNumberOfMaintenances(cluster, timeHorizon_);
+            clusterVariables[&cluster].averageMaintenanceDuration
+              = calculateAverageMaintenanceDuration(cluster);
+
             // since we will be updating daysSinceLastMaintenance values
             // lets create a copy here - this is copy by value!
             clusterVariables[&cluster].daysSinceLastMnt = cluster.daysSinceLastMaintenance;
@@ -280,6 +285,18 @@ double OptimizedThermalGenerator::getUnitPowerOutput(const Data::ThermalCluster&
     auto unitOutput
       = dailyClusterData.areaMap[cluster.parentArea].clusterMap[&cluster].maxPower[realDay];
     return unitOutput;
+}
+
+int OptimizedThermalGenerator::getNumberOfMaintenances(const Data::ThermalCluster& cluster)
+{
+    return dailyClusterData.areaMap[cluster.parentArea].clusterMap[&cluster].numberOfMaintenances;
+}
+
+int OptimizedThermalGenerator::getAverageMaintenanceDuration(const Data::ThermalCluster& cluster)
+{
+    return dailyClusterData.areaMap[cluster.parentArea]
+      .clusterMap[&cluster]
+      .averageMaintenanceDuration;
 }
 
 // calculate parameters methods - per cluster-Unit
