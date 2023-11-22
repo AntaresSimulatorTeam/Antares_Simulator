@@ -23,17 +23,18 @@ class OptimizedThermalGenerator : public GeneratorTempData
 private:
     // optimization problem construction methods
 
+    // dummy function - to be deleted
     void countVariables();
 
+    // functions to allocate variable structure
     void allocateVarStruct();
     void allocateVarStruct(int day);
     void allocateVarStruct(int day, const Data::Area& area);
     void allocateVarStruct(int day, const Data::ThermalCluster& cluster);
 
+    // functions to build problem variables
     void buildProblemVariables(const OptProblemSettings& optSett);
-
     void buildEnsAndSpillageVariables(const OptProblemSettings& optSett);
-
     void buildUnitPowerOutputVariables(const OptProblemSettings& optSett);
     void buildUnitPowerOutputVariables(const OptProblemSettings& optSett, int day);
     void buildUnitPowerOutputVariables(const OptProblemSettings& optSett,
@@ -42,7 +43,6 @@ private:
     void buildUnitPowerOutputVariables(const OptProblemSettings& optSett,
                                        int day,
                                        const Data::ThermalCluster& cluster);
-
     void buildStartEndMntVariables(const OptProblemSettings& optSett);
     void buildStartEndMntVariables(const OptProblemSettings& optSett, int day);
     void buildStartEndMntVariables(const OptProblemSettings& optSett,
@@ -57,21 +57,21 @@ private:
                                    int unit,
                                    int totalMntNumber);
 
-    void printAllVariables(); // for debug purpose only!
-
+    // functions to fix bounds of some variables
     void setVariableBounds();
-
     void fixBounds();
     void fixBounds(const Data::Area& area);
     void fixBounds(const Data::ThermalCluster& cluster);
     void fixBoundsStartFirstMnt(const Data::ThermalCluster& cluster, int unit);
     void fixBoundsEndOfMnt(const Data::ThermalCluster& cluster, int unit, int totalMntNum);
 
+    // functions to build problem constraints
     void buildProblemConstraints();
     void buildLoadBalanceConstraints();
     void setStartEndMntLogicConstraints();
     void setMaxUnitOutputConstraints();
 
+    // functions to set problem objective function
     void setProblemCost(const OptProblemSettings& optSett);
     void setProblemEnsCost(MPObjective* objective);
     void setProblemSpillCost(MPObjective* objective);
@@ -93,19 +93,25 @@ private:
                              int unitIndex,
                              double powerCost);
 
-    void printObjectiveFunction(MPObjective* objective);
-
+    // solve problem and check if optimal solution found
     bool solveProblem(OptProblemSettings& optSett);
+    
+    // reset problem and variable structure
     void resetProblem();
 
+    // collect and store results from firstDay-lastDay
     void appendStepResults();
 
-    // optimization problem - methods - private
+    // print functions for debugging
+    void printAllVariables(); // for debug purpose only!
+    void printObjectiveFunction(MPObjective* objective);
+
+    // Functions called in main method:
     void allocateWhereToWriteTs();
     bool runOptimizationProblem(OptProblemSettings& optSett);
     void saveScenarioResults(const OptProblemSettings& optSett);
 
-    // calculate parameters methods - per maintenance group
+    // Calculate parameters methods - per maintenance group
     void setMaintenanceGroupParameters();
     bool checkMaintenanceGroupParameters();
     std::pair<int, int> calculateTimeHorizonAndStep();
@@ -195,7 +201,8 @@ public:
 
     ~OptimizedThermalGenerator() = default;
 
-    // optimization problem - methods - public
+    // Main functions - loop per scenarios and through the scenario length step by step 
+    // (moving window)
     void GenerateOptimizedThermalTimeSeries();
 };
 
