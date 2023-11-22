@@ -71,11 +71,6 @@ void OptimizedThermalGenerator::fixBoundsStartFirstMnt(const Data::ThermalCluste
       = calculateUnitEarliestStartOfFirstMaintenance(cluster, unit);
     int latestStartOfFirstMaintenance = calculateUnitLatestStartOfFirstMaintenance(cluster, unit);
 
-    // TODO CR27:
-    // lets assume for now that when calling two calculate methods above
-    // that we already did the recalculation of cluster.daysSinceLastMaintenance[unitIndex]
-    // values if necessary!
-
     //
     // We assume here that vector "start" has member [0]
     // meaning: for each unit we assume we have at least one maintenance
