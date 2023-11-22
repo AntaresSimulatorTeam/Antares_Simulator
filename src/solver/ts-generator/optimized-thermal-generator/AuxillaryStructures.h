@@ -68,6 +68,7 @@ struct DailyClusterDataPerCluster
 {
     std::array<double, DAYS_PER_YEAR> maxPower;
     std::array<double, DAYS_PER_YEAR> unitCost;
+    std::vector<int> daysSinceLastMnt;
 };
 
 struct DailyClusterDataPerArea

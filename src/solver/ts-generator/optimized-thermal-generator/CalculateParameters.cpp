@@ -158,6 +158,10 @@ void OptimizedThermalGenerator::setClusterDailyValues()
             clusterVariables[&cluster] = DailyClusterDataPerCluster();
             clusterVariables[&cluster].maxPower = calculateMaxUnitOutput(cluster);
             clusterVariables[&cluster].unitCost = calculateAvrUnitDailyCost(cluster);
+
+            // since we will be updating daysSinceLastMaintenance values
+            // lets create a copy here - this is copy by value!
+            clusterVariables[&cluster].daysSinceLastMnt = cluster.daysSinceLastMaintenance;
         }
     }
     return;
@@ -299,7 +303,10 @@ int OptimizedThermalGenerator::calculateUnitEarliestStartOfFirstMaintenance(
 
     if (unitIndex < cluster.daysSinceLastMaintenance.size())
     {
-        return (cluster.interPoPeriod - cluster.daysSinceLastMaintenance[unitIndex]
+        return (cluster.interPoPeriod
+                - dailyClusterData.areaMap[cluster.parentArea]
+                    .clusterMap[&cluster]
+                    .daysSinceLastMnt[unitIndex]
                 - cluster.poWindows);
     }
     else
@@ -323,9 +330,12 @@ int OptimizedThermalGenerator::calculateUnitLatestStartOfFirstMaintenance(
         // cluster.poWindows is positive or zero
         // however we will make sure it does not surpass timeHorizon_ - 1 value
 
-        return std::min(
-          cluster.interPoPeriod - cluster.daysSinceLastMaintenance[unitIndex] + cluster.poWindows,
-          timeHorizon_ - 1);
+        return std::min(cluster.interPoPeriod
+                          - dailyClusterData.areaMap[cluster.parentArea]
+                              .clusterMap[&cluster]
+                              .daysSinceLastMnt[unitIndex]
+                          + cluster.poWindows,
+                        timeHorizon_ - 1);
     }
     else
     {
