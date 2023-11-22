@@ -95,14 +95,15 @@ private:
 
     void printObjectiveFunction(MPObjective* objective);
 
-    void solveProblem();
+    bool solveProblem(OptProblemSettings& optSett);
     void resetProblem();
 
-    void runOptimizationProblem(const OptProblemSettings& optSett);
+    void appendStepResults();
 
     // optimization problem - methods - private
-    void createOptimizationProblemPerGroup(const OptProblemSettings& optSett);
-    void createOptimizationProblemPerCluster(const Data::Area& area, Data::ThermalCluster& cluster);
+    void allocateWhereToWriteTs();
+    bool runOptimizationProblem(OptProblemSettings& optSett);
+    void saveScenarioResults(const OptProblemSettings& optSett);
 
     // calculate parameters methods - per maintenance group
     void setMaintenanceGroupParameters();
@@ -126,6 +127,7 @@ private:
                                                      uint unitIndex);
     int calculateUnitLatestStartOfFirstMaintenance(const Data::ThermalCluster& cluster,
                                                    uint unitIndex);
+    void reCalculateDaysSinceLastMnt(const OptProblemSettings& optSett);
 
     // auxillary functions
     static std::array<double, DAYS_PER_YEAR> calculateDailySums(

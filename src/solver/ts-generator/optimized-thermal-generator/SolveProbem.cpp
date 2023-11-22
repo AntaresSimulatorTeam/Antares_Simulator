@@ -6,18 +6,46 @@
 
 namespace Antares::Solver::TSGenerator
 {
-// call all methods    
-void OptimizedThermalGenerator::runOptimizationProblem(const OptProblemSettings& optSett)
+// call all methods
+bool OptimizedThermalGenerator::runOptimizationProblem(OptProblemSettings& optSett)
 {
+    reCalculateDaysSinceLastMnt(optSett);
     buildProblemVariables(optSett);
     setVariableBounds();
     buildProblemConstraints();
     setProblemCost(optSett);
-    solveProblem();
+    if (!solveProblem(optSett))
+    {
+        resetProblem();
+        return false;
+    }
+    appendStepResults();
     resetProblem();
+    return true;
 }
+
 // retrieve and check the results if optimization was successful
-void OptimizedThermalGenerator::solveProblem()
+bool OptimizedThermalGenerator::solveProblem(OptProblemSettings& optSett)
+{
+    // Solve the problem
+    const MPSolver::ResultStatus result_status = solver.Solve();
+
+    if (result_status != MPSolver::OPTIMAL)
+    {
+        // If not optimal, print that optimization failed
+        optSett.solved = false;
+        logs.warning() << "Maintenance group: " << maintenanceGroup_.name()
+                       << ". Scenario Num: " << optSett.scenario
+                       << ". Optimization failed in step: " << optSett.firstDay << ".Day - "
+                       << optSett.lastDay << ".Day. This scenario wont have generated timeseries";
+        return false;
+    }
+    return true;
+}
+
+// TODO CR27: move this method somewhere else
+// collect and store results form firstDay-lastDay
+void OptimizedThermalGenerator::appendStepResults()
 {
     return;
 }

@@ -346,6 +346,21 @@ int OptimizedThermalGenerator::calculateUnitLatestStartOfFirstMaintenance(
     }
 }
 
+// re-calculate parameters
+void OptimizedThermalGenerator::reCalculateDaysSinceLastMnt(const OptProblemSettings& optSett)
+{
+    if (optSett.scenario == 0 && optSett.firstDay == 0)
+        return;
+    if (optSett.scenario != 0 && optSett.firstDay == 0)
+    {
+        // we are back in first step, but not first scenario we have messed up our values
+        // we need to re-do
+        // clusterVariables[&cluster].daysSinceLastMnt = cluster.daysSinceLastMaintenance;
+        // for all areas and clusters
+    }
+    // TODO CR27: re-calculate days since last maintenance inputs if necessary
+}
+
 // auxillary functions - for parameter calculations
 std::array<double, DAYS_PER_YEAR> OptimizedThermalGenerator::calculateDailySums(
   const std::array<double, HOURS_PER_YEAR>& hourlyValues)
