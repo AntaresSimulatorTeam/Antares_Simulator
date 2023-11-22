@@ -24,12 +24,9 @@
 #include <yuni/yuni.h>
 #include <antares/study/xcast/xcast.h>
 #include <antares/logs/logs.h>
+#include <antares/study/study.h>
 
-namespace Antares
-{
-namespace TSGenerator
-{
-namespace XCast
+namespace Antares::TSGenerator::XCast
 {
 template<class PredicateT>
 void StudyData::loadFromStudy(Data::Study& study,
@@ -53,8 +50,9 @@ void StudyData::loadFromStudy(Data::Study& study,
     reloadDataFromAreaList(correlation);
 }
 
-} // namespace XCast
-} // namespace TSGenerator
-} // namespace Antares
+} // namespace Antares::TSGenerator::XCast
+
+
+
 
 #endif // __ANTARES_SOLVER_TS_GENERATOR_XCAST_STUDY_DATA_HXX__
