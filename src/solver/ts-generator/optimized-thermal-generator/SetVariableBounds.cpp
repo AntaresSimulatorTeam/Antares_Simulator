@@ -37,10 +37,10 @@ void OptimizedThermalGenerator::fixBounds(const Data::Area& area)
 
         // check if cluster exist, do we generate + optimizeMaintenance
         // create start end variables only for these clusters
-        bool createStartEndVar = checkClusterExist(cluster)
+        bool existStartEndVar = checkClusterExist(cluster)
                                  && cluster.doWeGenerateTS(globalThermalTSgeneration_)
                                  && cluster.optimizeMaintenance;
-        if (!createStartEndVar)
+        if (!existStartEndVar)
             continue;
 
         fixBounds(cluster);
