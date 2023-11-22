@@ -303,11 +303,12 @@ int OptimizedThermalGenerator::calculateUnitEarliestStartOfFirstMaintenance(
 
     if (unitIndex < cluster.daysSinceLastMaintenance.size())
     {
-        return (cluster.interPoPeriod
-                - dailyClusterData.areaMap[cluster.parentArea]
-                    .clusterMap[&cluster]
-                    .daysSinceLastMnt[unitIndex]
-                - cluster.poWindows);
+        return std::min(cluster.interPoPeriod
+                          - dailyClusterData.areaMap[cluster.parentArea]
+                              .clusterMap[&cluster]
+                              .daysSinceLastMnt[unitIndex]
+                          - cluster.poWindows,
+                        timeHorizon_ - 1);
     }
     else
     {
