@@ -11,7 +11,7 @@
 #include <antares/exception/AssertionError.hpp>
 
 // static const std::string mntPlSolverName = "cbc";
-static const uint minNumberOfMaintenances = 2;
+static const int minNumberOfMaintenances = 2;
 
 using namespace operations_research;
 
@@ -113,7 +113,7 @@ private:
     void setClusterDailyValues();
 
     // calculate parameters methods - per cluster
-    uint calculateNumberOfMaintenances(const Data::ThermalCluster& cluster, uint timeHorizon);
+    int calculateNumberOfMaintenances(const Data::ThermalCluster& cluster, int timeHorizon);
     uint calculateAverageMaintenanceDuration(Data::ThermalCluster& cluster);
     static std::array<double, DAYS_PER_YEAR> calculateMaxUnitOutput(const Data::ThermalCluster& cluster);
     static std::array<double, DAYS_PER_YEAR> calculateAvrUnitDailyCost(const Data::ThermalCluster& cluster);

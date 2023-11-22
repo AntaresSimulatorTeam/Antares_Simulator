@@ -164,8 +164,8 @@ void OptimizedThermalGenerator::setClusterDailyValues()
 }
 
 // calculate parameters methods - per cluster
-uint OptimizedThermalGenerator::calculateNumberOfMaintenances(const Data::ThermalCluster& cluster,
-                                                              uint timeHorizon)
+int OptimizedThermalGenerator::calculateNumberOfMaintenances(const Data::ThermalCluster& cluster,
+                                                              int timeHorizon)
 {
     // timeHorizon cannot be 0. The whole maintenance group would be skipped if this happened
     // on the other hand interPoPeriod can be 0. So we say at least 2 maintenance if this happens
@@ -177,7 +177,7 @@ uint OptimizedThermalGenerator::calculateNumberOfMaintenances(const Data::Therma
         return minNumberOfMaintenances;
     }
 
-    return timeHorizon / cluster.interPoPeriod; // floor
+    return std::max(timeHorizon / cluster.interPoPeriod, minNumberOfMaintenances); // floor
 }
 
 uint OptimizedThermalGenerator::calculateAverageMaintenanceDuration(Data::ThermalCluster& cluster)
