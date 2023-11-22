@@ -83,11 +83,11 @@ void OptimizedThermalGenerator::allocateVarStruct()
     {
         // fill the variable structure
         var.day.push_back(OptimizationProblemVariablesPerDay());
-        allocateVarStructPerGroup(day);
+        allocateVarStruct(day);
     }
 }
 
-void OptimizedThermalGenerator::allocateVarStructPerGroup(int day)
+void OptimizedThermalGenerator::allocateVarStruct(int day)
 {
     // loop per areas inside maintenance group
     for (const auto& entryWeightMap : maintenanceGroup_)
@@ -95,11 +95,11 @@ void OptimizedThermalGenerator::allocateVarStructPerGroup(int day)
         const auto& area = *(entryWeightMap.first);
         auto& areaVariables = var.day[day].areaMap;
         areaVariables[&area] = OptimizationProblemVariablesPerArea();
-        allocateVarStructPerArea(day, area);
+        allocateVarStruct(day, area);
     }
 }
 
-void OptimizedThermalGenerator::allocateVarStructPerArea(int day, const Data::Area& area)
+void OptimizedThermalGenerator::allocateVarStruct(int day, const Data::Area& area)
 {
     // loop per thermal clusters inside the area
     for (auto it = area.thermal.list.mapping.begin(); it != area.thermal.list.mapping.end(); ++it)
@@ -113,12 +113,11 @@ void OptimizedThermalGenerator::allocateVarStructPerArea(int day, const Data::Ar
 
         auto& clusterVariables = var.day[day].areaMap[&area].clusterMap;
         clusterVariables[&cluster] = OptimizationProblemVariablesPerCluster();
-        allocateVarStructPerCluster(day, cluster);
+        allocateVarStruct(day, cluster);
     }
 }
 
-void OptimizedThermalGenerator::allocateVarStructPerCluster(int day,
-                                                            const Data::ThermalCluster& cluster)
+void OptimizedThermalGenerator::allocateVarStruct(int day, const Data::ThermalCluster& cluster)
 {
     // loop per unit inside the cluster
     for (int unit = 0; unit < cluster.unitCount; ++unit)
@@ -154,27 +153,25 @@ void OptimizedThermalGenerator::buildUnitPowerOutputVariables(const OptProblemSe
     // loop per day
     for (int day = 0; day < timeHorizon_; ++day)
     {
-        buildUnitPowerOutputVariablesPerGroup(optSett, day);
+        buildUnitPowerOutputVariables(optSett, day);
     }
     return;
 }
 
-void OptimizedThermalGenerator::buildUnitPowerOutputVariablesPerGroup(
-  const OptProblemSettings& optSett,
-  int day)
+void OptimizedThermalGenerator::buildUnitPowerOutputVariables(const OptProblemSettings& optSett,
+                                                              int day)
 {
     // loop per areas inside maintenance group
     for (const auto& entryWeightMap : maintenanceGroup_)
     {
         const auto& area = *(entryWeightMap.first);
-        buildUnitPowerOutputVariablesPerArea(optSett, day, area);
+        buildUnitPowerOutputVariables(optSett, day, area);
     }
 }
 
-void OptimizedThermalGenerator::buildUnitPowerOutputVariablesPerArea(
-  const OptProblemSettings& optSett,
-  int day,
-  const Data::Area& area)
+void OptimizedThermalGenerator::buildUnitPowerOutputVariables(const OptProblemSettings& optSett,
+                                                              int day,
+                                                              const Data::Area& area)
 {
     // loop per thermal clusters inside the area
     for (auto it = area.thermal.list.mapping.begin(); it != area.thermal.list.mapping.end(); ++it)
@@ -186,14 +183,13 @@ void OptimizedThermalGenerator::buildUnitPowerOutputVariablesPerArea(
         if (!checkClusterExist(cluster))
             continue;
 
-        buildUnitPowerOutputVariablesPerCluster(optSett, day, cluster);
+        buildUnitPowerOutputVariables(optSett, day, cluster);
     }
 }
 
-void OptimizedThermalGenerator::buildUnitPowerOutputVariablesPerCluster(
-  const OptProblemSettings& optSett,
-  int day,
-  const Data::ThermalCluster& cluster)
+void OptimizedThermalGenerator::buildUnitPowerOutputVariables(const OptProblemSettings& optSett,
+                                                              int day,
+                                                              const Data::ThermalCluster& cluster)
 {
     // loop per units inside the cluster
     for (int unit = 0; unit < cluster.unitCount; ++unit)
@@ -214,25 +210,25 @@ void OptimizedThermalGenerator::buildStartEndMntVariables(const OptProblemSettin
     // loop per day
     for (int day = 0; day < timeHorizon_; ++day)
     {
-        buildStartEndMntVariablesPerGroup(optSett, day);
+        buildStartEndMntVariables(optSett, day);
     }
     return;
 }
 
-void OptimizedThermalGenerator::buildStartEndMntVariablesPerGroup(const OptProblemSettings& optSett,
-                                                                  int day)
+void OptimizedThermalGenerator::buildStartEndMntVariables(const OptProblemSettings& optSett,
+                                                          int day)
 {
     // loop per areas inside maintenance group
     for (const auto& entryWeightMap : maintenanceGroup_)
     {
         const auto& area = *(entryWeightMap.first);
-        buildStartEndMntVariablesPerArea(optSett, day, area);
+        buildStartEndMntVariables(optSett, day, area);
     }
 }
 
-void OptimizedThermalGenerator::buildStartEndMntVariablesPerArea(const OptProblemSettings& optSett,
-                                                                 int day,
-                                                                 const Data ::Area& area)
+void OptimizedThermalGenerator::buildStartEndMntVariables(const OptProblemSettings& optSett,
+                                                          int day,
+                                                          const Data ::Area& area)
 {
     // loop per thermal clusters inside the area
     for (auto it = area.thermal.list.mapping.begin(); it != area.thermal.list.mapping.end(); ++it)
@@ -247,29 +243,27 @@ void OptimizedThermalGenerator::buildStartEndMntVariablesPerArea(const OptProble
         if (!createStartEndVar)
             continue;
 
-        buildStartEndMntVariablesPerCluster(optSett, day, cluster);
+        buildStartEndMntVariables(optSett, day, cluster);
     }
 }
 
-void OptimizedThermalGenerator::buildStartEndMntVariablesPerCluster(
-  const OptProblemSettings& optSett,
-  int day,
-  const Data ::ThermalCluster& cluster)
+void OptimizedThermalGenerator::buildStartEndMntVariables(const OptProblemSettings& optSett,
+                                                          int day,
+                                                          const Data ::ThermalCluster& cluster)
 {
     int totalMntNumber = calculateNumberOfMaintenances(cluster, timeHorizon_);
     // loop per units inside the cluster
     for (int unit = 0; unit < cluster.unitCount; ++unit)
     {
-        buildStartEndMntVariablesPerUnit(optSett, day, cluster, unit, totalMntNumber);
+        buildStartEndMntVariables(optSett, day, cluster, unit, totalMntNumber);
     }
 }
 
-void OptimizedThermalGenerator::buildStartEndMntVariablesPerUnit(
-  const OptProblemSettings& optSett,
-  int day,
-  const Data ::ThermalCluster& cluster,
-  int unit,
-  int totalMntNumber)
+void OptimizedThermalGenerator::buildStartEndMntVariables(const OptProblemSettings& optSett,
+                                                          int day,
+                                                          const Data ::ThermalCluster& cluster,
+                                                          int unit,
+                                                          int totalMntNumber)
 {
     // loop per maintenances per unit
     for (int mnt = 0; mnt < totalMntNumber; ++mnt)
