@@ -61,7 +61,7 @@ jobs:
     - name: Build
       run: |
            source /opt/rh/gcc-toolset-9/enable
-           cmake --build _build --config Release -j2
+           cmake --build _build --config Release -j$(nproc)
 
     - name: Run unit and end-to-end tests
       if: ${{ env.IS_PUSH == 'true' }}
