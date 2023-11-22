@@ -49,8 +49,8 @@ void OptimizedThermalGenerator::fixBounds(const Data::Area& area)
 
 void OptimizedThermalGenerator::fixBounds(const Data::ThermalCluster& cluster)
 {
-    int totalMntNumber = calculateNumberOfMaintenances(cluster, timeHorizon_);
-    int avrMntDuration = calculateAverageMaintenanceDuration(cluster);
+    int totalMntNumber = getNumberOfMaintenances(cluster);
+    int avrMntDuration = getAverageMaintenanceDuration(cluster);
 
     // loop per units inside the cluster
     for (int unit = 0; unit < cluster.unitCount; ++unit)
