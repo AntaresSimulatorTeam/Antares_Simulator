@@ -18,6 +18,7 @@ set(SRC_OPTIMIZEDGENERATORS
 	optimized-thermal-generator/pre-scenario-builder.cpp
 	optimized-thermal-generator/OptimizedGenerator.h
 	optimized-thermal-generator/OptimizedGenerator.cpp
+	optimized-thermal-generator/CalculateParameters.cpp
 	optimized-thermal-generator/CreateVariables.cpp
 	optimized-thermal-generator/SetVariableBounds.cpp
 	optimized-thermal-generator/SetProblemConstraints.cpp
