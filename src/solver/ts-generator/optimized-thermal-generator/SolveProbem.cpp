@@ -9,18 +9,15 @@ namespace Antares::Solver::TSGenerator
 // call all methods
 bool OptimizedThermalGenerator::runOptimizationProblem(OptProblemSettings& optSett)
 {
+    resetProblem();
     reCalculateDaysSinceLastMnt(optSett);
     buildProblemVariables(optSett);
     setVariableBounds();
     buildProblemConstraints();
     setProblemCost(optSett);
     if (!solveProblem(optSett))
-    {
-        resetProblem();
         return false;
-    }
     appendStepResults();
-    resetProblem();
     return true;
 }
 
