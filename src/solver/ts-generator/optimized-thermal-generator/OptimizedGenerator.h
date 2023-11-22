@@ -22,12 +22,41 @@ class OptimizedThermalGenerator : public GeneratorTempData
 {
 private:
     // optimization problem construction methods
-    void buildProblemVariables(const OptProblemSettings& optSett);
+
     void countVariables();
-    void allocateOptimizationProblemVariablesStruct();
+
+    void allocateVarStruct();
+    void allocateVarStructPerGroup(int day);
+    void allocateVarStructPerArea(int day, const Data::Area& area);
+    void allocateVarStructPerCluster(int day, const Data::ThermalCluster& cluster);
+
+    void buildProblemVariables(const OptProblemSettings& optSett);
+
     void buildEnsAndSpillageVariables(const OptProblemSettings& optSett);
+
     void buildUnitPowerOutputVariables(const OptProblemSettings& optSett);
+    void buildUnitPowerOutputVariablesPerGroup(const OptProblemSettings& optSett, int day);
+    void buildUnitPowerOutputVariablesPerArea(const OptProblemSettings& optSett,
+                                              int day,
+                                              const Data::Area& area);
+    void buildUnitPowerOutputVariablesPerCluster(const OptProblemSettings& optSett,
+                                                 int day,
+                                                 const Data::ThermalCluster& cluster);
+
     void buildStartEndMntVariables(const OptProblemSettings& optSett);
+    void buildStartEndMntVariablesPerGroup(const OptProblemSettings& optSett, int day);
+    void buildStartEndMntVariablesPerArea(const OptProblemSettings& optSett,
+                                          int day,
+                                          const Data ::Area& area);
+    void buildStartEndMntVariablesPerCluster(const OptProblemSettings& optSett,
+                                             int day,
+                                             const Data ::ThermalCluster& cluster);
+    void buildStartEndMntVariablesPerUnit(const OptProblemSettings& optSett,
+                                          int day,
+                                          const Data ::ThermalCluster& cluster,
+                                          int unit,
+                                          int totalMntNumber);
+
     void printAllVariables(); // for debug purpose only!
 
     void setVariableBounds();
