@@ -64,6 +64,8 @@ private:
     void setUnitPowerOutputBounds();
     void setStartEndMntBounds();
     void setFirstMntStartBounds();
+    void setFirstMntStartBounds(const Data::Area& area);
+    void setFirstMntStartBounds(const Data::ThermalCluster& cluster);
     void setAllMntMustStartBounds();
 
     void buildProblemConstraints();
@@ -121,8 +123,10 @@ private:
     double getUnitPowerOutput(const Data::ThermalCluster& cluster, int optimizationDay);
 
     // calculate parameters methods - per cluster-Unit
-    int calculateUnitEarliestStartOfFirstMaintenance(Data::ThermalCluster& cluster, uint unitIndex);
-    int calculateUnitLatestStartOfFirstMaintenance(Data::ThermalCluster& cluster, uint unitIndex);
+    int calculateUnitEarliestStartOfFirstMaintenance(const Data::ThermalCluster& cluster,
+                                                     uint unitIndex);
+    int calculateUnitLatestStartOfFirstMaintenance(const Data::ThermalCluster& cluster,
+                                                   uint unitIndex);
 
     // auxillary functions
     static std::array<double, DAYS_PER_YEAR> calculateDailySums(

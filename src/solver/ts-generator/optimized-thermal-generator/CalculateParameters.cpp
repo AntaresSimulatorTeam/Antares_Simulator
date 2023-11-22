@@ -280,15 +280,23 @@ double OptimizedThermalGenerator::getUnitPowerOutput(const Data::ThermalCluster&
 
 // calculate parameters methods - per cluster-Unit
 int OptimizedThermalGenerator::calculateUnitEarliestStartOfFirstMaintenance(
-  Data::ThermalCluster& cluster,
+  const Data::ThermalCluster& cluster,
   uint unitIndex)
 {
     // earliest start of the first maintenance of unit u (beginning of the window, can be negative):
     // let it return negative value - if it returns negative value we wont implement constraint:
     // s[tauLower-1][u][1] = 0
-    // TODO CR27: if the approach above breaks the solver
+
+    // TODO CR27:
+    // if the approach above breaks the solver
     // we force the start of the first maintenance to be after day=0
     // s[fixed = 0][u][1] = 0
+
+    // TODO CR27:
+    // we need to store cluster.daysSinceLastMaintenance[unitIndex]
+    // somewhere locally - since we need to update the values after each timeStep_
+    // and we do not want to change values inside "cluster" that will later be used for UI & txt
+
     if (unitIndex < cluster.daysSinceLastMaintenance.size())
     {
         return (cluster.interPoPeriod - cluster.daysSinceLastMaintenance[unitIndex]
@@ -303,7 +311,7 @@ int OptimizedThermalGenerator::calculateUnitEarliestStartOfFirstMaintenance(
 }
 
 int OptimizedThermalGenerator::calculateUnitLatestStartOfFirstMaintenance(
-  Data::ThermalCluster& cluster,
+  const Data::ThermalCluster& cluster,
   uint unitIndex)
 {
     // latest start of the first maintenance of unit u (end of the window, must be positive):
@@ -313,10 +321,11 @@ int OptimizedThermalGenerator::calculateUnitLatestStartOfFirstMaintenance(
         // cluster.interPoPeriod - cluster.daysSinceLastMaintenance[unitIndex] - is always positive
         // or zero
         // cluster.poWindows is positive or zero
-        // so std::max is not necessary but I will keep it for now
-        return std::max(
+        // however we will make sure it does not surpass timeHorizon_ - 1 value
+
+        return std::min(
           cluster.interPoPeriod - cluster.daysSinceLastMaintenance[unitIndex] + cluster.poWindows,
-          0);
+          timeHorizon_ - 1);
     }
     else
     {
