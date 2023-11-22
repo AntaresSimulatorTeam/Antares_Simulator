@@ -8,33 +8,8 @@ namespace Antares::Solver::TSGenerator
 {
 void OptimizedThermalGenerator::setVariableBounds()
 {
-    setEnsAndSpillageBounds();
-    setUnitPowerOutputBounds();
-    setStartEndMntBounds();
     fixBounds();
     printAllVariables();
-}
-
-// BOUNDS per each day - bounds-per-each-day[t] - ENS[t] >= 0, Spill[t] >= 0
-void OptimizedThermalGenerator::setEnsAndSpillageBounds()
-{
-    // no need for this - defined when creating the Ens & Spill variables
-    return;
-}
-
-// BOUNDS per day and per each unit - bounds-per-each-day+unit[t][u] - P[t][u] >= 0
-void OptimizedThermalGenerator::setUnitPowerOutputBounds()
-{
-    // no need for this - defined when creating the P variables
-    return;
-}
-
-// BOUNDS per day, per each unit and per each mnt - bounds-per-each-day+unit+mnt[t][u][m]
-// - s[t][u][m]-> [0, 1] and e[t][u][m]-> [0, 1]
-void OptimizedThermalGenerator::setStartEndMntBounds()
-{
-    // no need for this - defined when creating the Start & End variables
-    return;
 }
 
 // TODO CR27: see if to make this bound or constraint -

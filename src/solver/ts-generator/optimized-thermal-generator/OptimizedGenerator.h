@@ -60,9 +60,7 @@ private:
     void printAllVariables(); // for debug purpose only!
 
     void setVariableBounds();
-    void setEnsAndSpillageBounds();
-    void setUnitPowerOutputBounds();
-    void setStartEndMntBounds();
+
     void fixBounds();
     void fixBounds(const Data::Area& area);
     void fixBounds(const Data::ThermalCluster& cluster);
