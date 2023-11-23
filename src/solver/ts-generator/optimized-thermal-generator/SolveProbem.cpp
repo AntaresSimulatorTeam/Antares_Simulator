@@ -13,7 +13,7 @@ bool OptimizedThermalGenerator::runOptimizationProblem(OptProblemSettings& optSe
     reCalculateDaysSinceLastMnt(optSett);
     buildProblemVariables(optSett);
     fixBounds();
-    buildProblemConstraints();
+    buildProblemConstraints(optSett);
     setProblemCost(optSett);
     if (!solveProblem(optSett))
         return false;

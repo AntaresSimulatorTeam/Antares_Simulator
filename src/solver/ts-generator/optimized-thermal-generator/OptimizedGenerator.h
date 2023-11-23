@@ -75,8 +75,15 @@ private:
                          int avrMntDuration);
 
     // functions to build problem constraints
-    void buildProblemConstraints();
-    void buildLoadBalanceConstraints();
+    void buildProblemConstraints(const OptProblemSettings& optSett);
+    void setLoadBalanceConstraints(const OptProblemSettings& optSett);
+    void setLoadBalanceConstraints(const OptProblemSettings& optSett, int& day);
+    void insertEnsVars(MPConstraint* ct, int day);
+    void insertSpillVars(MPConstraint* ct, int day);
+    void insertPowerVars(MPConstraint* ct, int day);
+    void insertPowerVars(MPConstraint* ct, int day, const Data::Area& area);
+    void insertPowerVars(MPConstraint* ct, int day, const Data::ThermalCluster& cluster);
+    void insertPowerVars(MPConstraint* ct, int day, const Data::ThermalCluster& cluster, int unit);
     void setStartEndMntLogicConstraints();
     void setMaxUnitOutputConstraints();
 
@@ -114,6 +121,7 @@ private:
     // print functions for debugging
     void printAllVariables(); // for debug purpose only!
     void printObjectiveFunction(MPObjective* objective);
+    void printConstraints();
 
     // Functions called in main method:
     void allocateWhereToWriteTs();
