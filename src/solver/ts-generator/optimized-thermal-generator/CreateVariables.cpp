@@ -150,27 +150,15 @@ void OptimizedThermalGenerator::buildEnsAndSpillageVariables(const OptProblemSet
 // create VARIABLES per day and per cluster-unit - P[t][u]
 void OptimizedThermalGenerator::buildUnitPowerOutputVariables(const OptProblemSettings& optSett)
 {
-    // loop per day
-    for (int day = 0; day < timeHorizon_; ++day)
-    {
-        buildUnitPowerOutputVariables(optSett, day);
-    }
-    return;
-}
-
-void OptimizedThermalGenerator::buildUnitPowerOutputVariables(const OptProblemSettings& optSett,
-                                                              int day)
-{
     // loop per areas inside maintenance group
     for (const auto& entryWeightMap : maintenanceGroup_)
     {
         const auto& area = *(entryWeightMap.first);
-        buildUnitPowerOutputVariables(optSett, day, area);
+        buildUnitPowerOutputVariables(optSett, area);
     }
 }
 
 void OptimizedThermalGenerator::buildUnitPowerOutputVariables(const OptProblemSettings& optSett,
-                                                              int day,
                                                               const Data::Area& area)
 {
     // loop per thermal clusters inside the area
@@ -183,16 +171,26 @@ void OptimizedThermalGenerator::buildUnitPowerOutputVariables(const OptProblemSe
         if (!checkClusterExist(cluster))
             continue;
 
-        buildUnitPowerOutputVariables(optSett, day, cluster);
+        buildUnitPowerOutputVariables(optSett, cluster);
     }
 }
 
 void OptimizedThermalGenerator::buildUnitPowerOutputVariables(const OptProblemSettings& optSett,
-                                                              int day,
                                                               const Data::ThermalCluster& cluster)
 {
     // loop per units inside the cluster
     for (int unit = 0; unit < cluster.unitCount; ++unit)
+    {
+        buildUnitPowerOutputVariables(optSett, cluster, unit);
+    }
+}
+
+void OptimizedThermalGenerator::buildUnitPowerOutputVariables(const OptProblemSettings& optSett,
+                                                              const Data::ThermalCluster& cluster,
+                                                              int unit)
+{
+    // loop per day
+    for (int day = 0; day < timeHorizon_; ++day)
     {
         // add P[t][u] variables
         var.day[day].areaMap[cluster.parentArea].clusterMap[&cluster].unitMap[unit].P
@@ -202,6 +200,8 @@ void OptimizedThermalGenerator::buildUnitPowerOutputVariables(const OptProblemSe
                                 + cluster.getFullName().to<std::string>() + "."
                                 + std::to_string(unit) + "]");
     }
+
+    return;
 }
 
 // create VARIABLES per day, per cluster-unit and per maintenance - s[t][u][m] & e[t][u][m]

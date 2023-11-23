@@ -36,13 +36,12 @@ private:
     void buildProblemVariables(const OptProblemSettings& optSett);
     void buildEnsAndSpillageVariables(const OptProblemSettings& optSett);
     void buildUnitPowerOutputVariables(const OptProblemSettings& optSett);
-    void buildUnitPowerOutputVariables(const OptProblemSettings& optSett, int day);
+    void buildUnitPowerOutputVariables(const OptProblemSettings& optSett, const Data::Area& area);
     void buildUnitPowerOutputVariables(const OptProblemSettings& optSett,
-                                       int day,
-                                       const Data::Area& area);
-    void buildUnitPowerOutputVariables(const OptProblemSettings& optSett,
-                                       int day,
                                        const Data::ThermalCluster& cluster);
+    void buildUnitPowerOutputVariables(const OptProblemSettings& optSett,
+                                       const Data::ThermalCluster& cluster,
+                                       int day);
     void buildStartEndMntVariables(const OptProblemSettings& optSett);
     void buildStartEndMntVariables(const OptProblemSettings& optSett, int day);
     void buildStartEndMntVariables(const OptProblemSettings& optSett,
