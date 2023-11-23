@@ -70,7 +70,7 @@ struct OptimizationProblemVariables
 struct DailyClusterDataPerCluster
 {
     std::array<double, DAYS_PER_YEAR> maxPower;
-    std::array<double, DAYS_PER_YEAR> unitCost;
+    std::array<double, DAYS_PER_YEAR> avgCost;
     std::vector<int> daysSinceLastMnt;
     int numberOfMaintenances;
     int averageMaintenanceDuration;

@@ -158,7 +158,7 @@ void OptimizedThermalGenerator::setClusterData()
             auto& clusterVariables = areaVariables[&area].clusterMap;
             clusterVariables[&cluster] = DailyClusterDataPerCluster();
             clusterVariables[&cluster].maxPower = calculateMaxUnitOutput(cluster);
-            clusterVariables[&cluster].unitCost = calculateAvrUnitDailyCost(cluster);
+            clusterVariables[&cluster].avgCost = calculateAvrUnitDailyCost(cluster);
 
             clusterVariables[&cluster].numberOfMaintenances
               = calculateNumberOfMaintenances(cluster, timeHorizon_);
@@ -245,8 +245,9 @@ std::array<double, DAYS_PER_YEAR> OptimizedThermalGenerator::calculateAvrUnitDai
     return avrCostDailyValues;
 }
 
-double OptimizedThermalGenerator::getUnitPowerCost(const Data::ThermalCluster& cluster,
-                                                   int optimizationDay)
+// Getters
+double OptimizedThermalGenerator::getPowerCost(const Data::ThermalCluster& cluster,
+                                               int optimizationDay)
 {
     /*
     ** Unit cost can be directly set,
@@ -273,19 +274,22 @@ double OptimizedThermalGenerator::getUnitPowerCost(const Data::ThermalCluster& c
         return 0.;
     }
 
-    int realDay = dayOfTheYear(optimizationDay);
-    auto unitCost
-      = dailyClusterData.areaMap[cluster.parentArea].clusterMap[&cluster].unitCost[realDay];
-    return unitCost;
+    return dailyClusterData.areaMap[cluster.parentArea]
+      .clusterMap[&cluster]
+      .avgCost[dayOfTheYear(optimizationDay)];
 }
 
-double OptimizedThermalGenerator::getUnitPowerOutput(const Data::ThermalCluster& cluster,
-                                                     int optimizationDay)
+double OptimizedThermalGenerator::getPowerOutput(const Data::ThermalCluster& cluster,
+                                                 int optimizationDay)
 {
-    int realDay = dayOfTheYear(optimizationDay);
-    auto unitOutput
-      = dailyClusterData.areaMap[cluster.parentArea].clusterMap[&cluster].maxPower[realDay];
-    return unitOutput;
+    return dailyClusterData.areaMap[cluster.parentArea]
+      .clusterMap[&cluster]
+      .maxPower[dayOfTheYear(optimizationDay)];
+}
+
+double OptimizedThermalGenerator::getResidualLoad(int optimizationDay)
+{
+    return residualLoadDailyValues_[dayOfTheYear(optimizationDay)];
 }
 
 int OptimizedThermalGenerator::getNumberOfMaintenances(const Data::ThermalCluster& cluster)
@@ -298,6 +302,12 @@ int OptimizedThermalGenerator::getAverageMaintenanceDuration(const Data::Thermal
     return dailyClusterData.areaMap[cluster.parentArea]
       .clusterMap[&cluster]
       .averageMaintenanceDuration;
+}
+
+int OptimizedThermalGenerator::getAverageDurationBetweenMaintenances(
+  const Data::ThermalCluster& cluster)
+{
+    return cluster.interPoPeriod;
 }
 
 // calculate parameters methods - per cluster-Unit

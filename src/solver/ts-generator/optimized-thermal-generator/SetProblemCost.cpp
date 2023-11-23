@@ -7,7 +7,7 @@
 namespace Antares::Solver::TSGenerator
 {
 // create OBJECTIVE FUNCTION - sum through [t] and sum through [u]
-// sum[days]{ EnsCost*Ens[day] + SpillCost[day] + sum[units][ UnitCost*P[t][u] ] }
+// sum[days]{ EnsCost*Ens[day] + SpillCost[day] + sum[units][ avgCost*P[t][u] ] }
 void OptimizedThermalGenerator::setProblemCost(const OptProblemSettings& optSett)
 {
     MPObjective* objective = solver.MutableObjective();
@@ -93,7 +93,7 @@ void OptimizedThermalGenerator::setProblemPowerCost(const OptProblemSettings& op
                                                     const Data::Area& area,
                                                     const Data::ThermalCluster& cluster)
 {
-    double unitPowerCost = getUnitPowerCost(cluster, day + optSett.firstDay);
+    double unitPowerCost = getPowerCost(cluster, day + optSett.firstDay);
     // loop per unit inside the cluster
     for (int unit = 0; unit < cluster.unitCount; ++unit)
     {
