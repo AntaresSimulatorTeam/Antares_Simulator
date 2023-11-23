@@ -11,18 +11,18 @@ set(SRC
         name_translator.cpp
         include/antares/solver/utils/opt_period_string_generator.h
         opt_period_string_generator.cpp
-        )
+)
 
 add_library(utils ${SRC})
 add_library(Antares::solverUtils ALIAS utils)
-if(NOT MSVC)
+if (NOT MSVC)
     target_compile_options(utils
             PUBLIC
             "-Wno-unused-variable")
-else()
+else ()
     #set(CMAKE_C_FLAGS_DEBUG   "${CMAKE_C_FLAGS} /wd 4101") # unused local variable
     #set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS} /wd 4101") # unused local variable
-endif()
+endif ()
 target_link_libraries(utils
         PUBLIC
         ortools::ortools
@@ -30,9 +30,13 @@ target_link_libraries(utils
         Antares::study
         Antares::result_writer #ortools_utils.h
         antares-core #enum.h
-        )
+)
 
 target_include_directories(utils
-            PUBLIC
+        PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+)
+
+install(DIRECTORY include/antares
+        DESTINATION "include"
 )

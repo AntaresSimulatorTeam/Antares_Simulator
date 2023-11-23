@@ -194,3 +194,6 @@ target_link_libraries(antares-solver-variable-info
         Antares::study
 )
 
+install(DIRECTORY include/antares
+        DESTINATION "include"
+)
