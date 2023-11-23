@@ -15,7 +15,6 @@ add_library(Antares::object ALIAS object)
 target_link_libraries(object
         PUBLIC
         antares-core
-        PRIVATE
         yuni-static-core
         yuni-static-uuid
 )
