@@ -49,20 +49,27 @@ OrtoolsLogHandler& OrtoolsLogHandler::operator=(const OrtoolsLogHandler& other)
 }
 void OrtoolsLogHandler::init()
 {
+    std::filesystem::path log_file = logs.logfile().c_str();
+    auto log_directory = log_file.parent_path();
+    auto myid = std::this_thread::get_id();
+    std::stringstream ss;
+    ss << myid;
+    auto log_file_per_thread = log_directory / (std::string("thread_") + ss.str() + ".log");
+
     if (solver_name_ == COIN)
     {
-        std::filesystem::path log_file = logs.logfile().c_str();
-
 #ifdef __linux__
-        if (log_file.empty() || (file_pointer = fopen(log_file.string().c_str(), "a+")) == nullptr)
+        if (log_file_per_thread.empty()
+            || (file_pointer = fopen(log_file_per_thread.string().c_str(), "a+")) == nullptr)
 #elif _WIN32
-        if (log_file.empty()
-            || (file_pointer = _fsopen(log_file.string().c_str(), "a+", _SH_DENYNO)) == nullptr)
+        if (log_file_per_thread.empty()
+            || (file_pointer = _fsopen(log_file_per_thread.string().c_str(), "a+", _SH_DENYNO))
+                 == nullptr)
 #endif
         {
             // logs.error()
             std::cerr << "Invalid log file name passed as parameter: "
-                      << std::quoted(log_file.string()) << std::endl;
+                      << std::quoted(log_file_per_thread.string()) << std::endl;
         }
         else
         {
@@ -71,12 +78,6 @@ void OrtoolsLogHandler::init()
     }
     else
     {
-        std::filesystem::path log_file = logs.logfile().c_str();
-        auto log_directory = log_file.parent_path();
-        auto myid = std::this_thread::get_id();
-        std::stringstream ss;
-        ss << myid;
-        auto log_file_per_thread = log_directory / (std::string("thread_") + ss.str() + ".log");
         log_writer_.open(log_file_per_thread, std::ofstream::out | std::ofstream::app);
     }
 }
