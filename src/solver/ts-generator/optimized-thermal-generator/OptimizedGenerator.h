@@ -57,7 +57,6 @@ private:
                                    int totalMntNumber);
 
     // functions to fix bounds of some variables
-    void fixVariableBounds();
     void fixBounds();
     void fixBounds(const Data::Area& area);
     void fixBounds(const Data::ThermalCluster& cluster);

@@ -6,11 +6,6 @@
 
 namespace Antares::Solver::TSGenerator
 {
-void OptimizedThermalGenerator::fixVariableBounds()
-{
-    fixBounds();
-    printAllVariables();
-}
 
 // TODO CR27: see if to make this bound or constraint -
 // it is definitely easier to do set it as a fix bound -
