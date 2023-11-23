@@ -96,8 +96,8 @@ private:
     // log_streams.push_back(&log_writer);
     FILE* file_pointer = nullptr;
     std::string solver_name_;
-    std::filesystem::path& log_directory_ = ".";
-    std::filesystem::path& log_file_per_thread_ = "";
+    std::filesystem::path log_directory_ = ".";
+    std::filesystem::path log_file_per_thread_ = "";
 };
 class Nomenclature
 {
