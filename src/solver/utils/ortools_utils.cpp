@@ -34,8 +34,8 @@ namespace Optimization
 {
 
 OrtoolsLogHandler::OrtoolsLogHandler(const std::string& solver_name,
-                                     const std::filesystem::path& logs_directory) :
- solver_name_(solver_name), logs_directory_(logs_directory)
+                                     const std::filesystem::path& log_directory) :
+ solver_name_(solver_name), log_directory_(log_directory)
 {
     init();
 }
@@ -48,7 +48,7 @@ OrtoolsLogHandler& OrtoolsLogHandler::operator=(const OrtoolsLogHandler& other)
     }
 
     solver_name_ = other.solver_name_;
-    logs_directory_ = other.logs_directory_;
+    log_directory_ = other.log_directory_;
     init();
     return *this;
 }

@@ -64,10 +64,10 @@ class OrtoolsLogHandler : public LogHandlerInterface
 public:
     // tmp test with std::cout
     explicit OrtoolsLogHandler(const std::string& solverName,
-                               const std::filesystem::path& logs_directory);
+                               const std::filesystem::path& log_directory);
 
     explicit OrtoolsLogHandler(const OrtoolsLogHandler& other) :
-     OrtoolsLogHandler(other.solver_name_, other.logs_directory_)
+     OrtoolsLogHandler(other.solver_name_, other.log_directory_)
     {
     }
 
