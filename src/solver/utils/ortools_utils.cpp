@@ -44,7 +44,6 @@ OrtoolsLogHandler& OrtoolsLogHandler::operator=(const OrtoolsLogHandler& other)
     {
         return *this;
     }
-    solver_name_ = other.solver_name_;
     init();
     return *this;
 }
