@@ -214,12 +214,8 @@ static void extract_from_MPSolver(MPSolver* solver,
 
 std::string generateTempPath(const std::string& filename)
 {
-    namespace fs = std::filesystem;
-    std::ostringstream tmpPath;
-    tmpPath << fs::temp_directory_path().string() << Yuni::IO::SeparatorAsString << filename;
-    return tmpPath.str();
+    return (std::filesystem::temp_directory_path() / filename).string().c_str();
 }
-
 void removeTemporaryFile(const std::string& tmpPath)
 {
     namespace fs = std::filesystem;
