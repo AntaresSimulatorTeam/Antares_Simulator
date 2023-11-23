@@ -20,3 +20,7 @@ target_include_directories(series
 install(DIRECTORY include/antares
         DESTINATION "include"
 )
+
+install(DIRECTORY include/antares
+        DESTINATION "include"
+)

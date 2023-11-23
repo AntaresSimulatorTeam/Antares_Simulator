@@ -28,3 +28,7 @@ target_include_directories(${PROJ}
         PRIVATE
         $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/libs>
 )
+
+install(DIRECTORY include/antares
+        DESTINATION "include"
+)
