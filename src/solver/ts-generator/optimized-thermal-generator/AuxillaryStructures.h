@@ -24,6 +24,14 @@ public:
     bool solved = true;
 };
 
+// TODO CR27:
+// maybe for refactoring create a vector of structs called units
+// each unit struct will contain pointer to area/cluster/int unitIndex/ bool createStartEnd
+// pointer to var P*, vector of pointers to var start<*> & end<*>
+// then loop just through that vector + loop per time step
+// not loop nesting into day-area-cluster-unit
+// maybe better ?@!
+
 struct OptimizationProblemVariablesPerUnit
 {
     MPVariable* P = nullptr;; // pointer to P[t][u] variable
