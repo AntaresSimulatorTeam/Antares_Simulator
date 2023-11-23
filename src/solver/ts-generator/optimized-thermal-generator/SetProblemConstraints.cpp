@@ -94,6 +94,8 @@ void OptimizedThermalGenerator::insertPowerVars(MPConstraint* ct,
       var.day[day].areaMap[cluster.parentArea].clusterMap[&cluster].unitMap[unit].P, 1.0);
 }
 
+//////////////////////////////
+
 // CONSTRAINTS per days, per units and per maintenance - constraint-per-each-day+unit+mnt[t][u][m]
 void OptimizedThermalGenerator::setStartEndMntLogicConstraints()
 {
@@ -166,6 +168,14 @@ void OptimizedThermalGenerator::setMaxUnitOutputConstraints(const OptProblemSett
     MPConstraint* ct = solver.MakeRowConstraint(0.0 - deltaSolver, maxPower + deltaSolver, ctName);
 
     insertPowerVars(ct, day, cluster, unit); // re-using this method on purpose!
+
+    // we add sum[per-q](s[t][u][q]-e[t][u][q])
+    // only if we have defined variables start and end for the units
+    // note we already passed check: !checkClusterExist(cluster)
+    // so here we just check if the cluster is involved in maintenance planing
+    if (!(cluster.doWeGenerateTS(globalThermalTSgeneration_) && cluster.optimizeMaintenance))
+        return;
+
     insertStartSum(ct, day, cluster, unit, maxPower);
     insertEndSum(ct, day, cluster, unit, maxPower);
 }
