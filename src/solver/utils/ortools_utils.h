@@ -62,7 +62,8 @@ namespace Optimization
 class OrtoolsLogHandler : public LogHandlerInterface
 {
 public:
-    // tmp test with std::cout
+        // TODO won't work in ci, needs ortools update
+    // see https://github.com/rte-france/or-tools/pull/112
     explicit OrtoolsLogHandler(const std::string& solverName,
                                const std::filesystem::path& log_directory);
 
@@ -87,13 +88,8 @@ public:
 
 private:
     void init();
-    // TODO won't work in ci, needs ortools update
-    // see https://github.com/rte-france/or-tools/pull/112
 
-    // // TODO
     std::ofstream log_writer_;
-    // log_writer.open(log_file_per_thread, std::ofstream::out | std::ofstream::app);
-    // log_streams.push_back(&log_writer);
     FILE* file_pointer = nullptr;
     std::string solver_name_;
     std::filesystem::path log_directory_ = ".";

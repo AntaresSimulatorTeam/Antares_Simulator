@@ -36,7 +36,6 @@ extern "C"
 {
 #include "spx_definition_arguments.h"
 #include "spx_fonctions.h"
-#include "sirius_callback.h"
 #include "srs_api.h"
 }
 
@@ -96,12 +95,6 @@ struct SimplexResult
     long long solveTime = 0;
     mpsWriterFactory mps_writer_factory;
 };
-int SiriusCallback_function(void* caller, const char* sMsg, int nLen, SIRIUS_LOGLEVEL log_level)
-{
-    auto* stdcout = reinterpret_cast<std::ostream*>(caller);
-    (*stdcout) << sMsg;
-    return 0;
-}
 static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
                                           PROBLEME_HEBDO* problemeHebdo,
                                           Optimization::PROBLEME_SIMPLEXE_NOMME& Probleme,
@@ -225,13 +218,6 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
     Probleme.CoutsReduits = ProblemeAResoudre->CoutsReduits.data();
 
     Probleme.NombreDeContraintesCoupes = 0;
-    // this must be done in Sirius
-    // auto call_back = (callback_function)Probleme.callback;
-    // call_back = SiriusCallback_function;
-    // SPXsetcbmessage(ProbSpx, SiriusCallback_function, &std::cout, SIRIUS_INFO);
-    /* postponed */ //    SPLXsetcbmessage(&Probleme, SiriusCallback_function, &std::cout,
-                    //    SIRIUS_INFO);
-                    // Probleme.caller = &std::cout;
 
     if (options.useOrtools)
     {
@@ -326,7 +312,6 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
                                                    problemeHebdo->solverLogs);
 
     bool PremierPassage = true;
-    // tmp
     std::filesystem::path log_file = logs.logfile().c_str();
     auto log_directory = log_file.parent_path();
     OrtoolsLogHandler ortools_logger(options.solverName, log_directory);
