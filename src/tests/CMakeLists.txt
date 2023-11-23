@@ -67,7 +67,7 @@ if(Python3_Interpreter_FOUND)
 
       add_test(
         NAME parallel
-        COMMAND Python3::Interpreter -m pytest -m json --solver-path=$<TARGET_FILE:antares-solver> --parallel
+        COMMAND Python3::Interpreter -m pytest -m json --solver-path=$<TARGET_FILE:antares-solver> --force-parallel
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/run-study-tests"
         )
 
