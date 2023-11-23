@@ -86,7 +86,29 @@ private:
     void insertPowerVars(MPConstraint* ct, int day, const Data::ThermalCluster& cluster);
     void insertPowerVars(MPConstraint* ct, int day, const Data::ThermalCluster& cluster, int unit);
     void setStartEndMntLogicConstraints();
-    void setMaxUnitOutputConstraints();
+    void setMaxUnitOutputConstraints(const OptProblemSettings& optSett);
+    void setMaxUnitOutputConstraints(const OptProblemSettings& optSett, int& day);
+    void setMaxUnitOutputConstraints(const OptProblemSettings& optSett,
+                                     int day,
+                                     const Data::Area& area);
+    void setMaxUnitOutputConstraints(const OptProblemSettings& optSett,
+                                     int day,
+                                     const Data::ThermalCluster& cluster);
+    void setMaxUnitOutputConstraints(const OptProblemSettings& optSett,
+                                     int day,
+                                     const Data::ThermalCluster& cluster,
+                                     int unit,
+                                     double maxOutput);
+    void insertStartSum(MPConstraint* ct,
+                        int day,
+                        const Data::ThermalCluster& cluster,
+                        int unit,
+                        double maxPower);
+    void insertEndSum(MPConstraint* ct,
+                      int day,
+                      const Data::ThermalCluster& cluster,
+                      int unit,
+                      double maxPower);
 
     // functions to set problem objective function
     void setProblemCost(const OptProblemSettings& optSett);
