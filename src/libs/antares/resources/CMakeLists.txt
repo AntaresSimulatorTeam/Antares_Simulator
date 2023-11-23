@@ -1,6 +1,6 @@
 set(PROJ resources)
 set(HEADERS
-    include/antares/resources/resources.h
+        include/antares/resources/resources.h
 )
 set(SRC_RESOURCES
         ${HEADERS}
@@ -21,4 +21,8 @@ target_link_libraries(${PROJ}
 target_include_directories(${PROJ}
         PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+)
+
+install(DIRECTORY include/antares
+        DESTINATION "include"
 )

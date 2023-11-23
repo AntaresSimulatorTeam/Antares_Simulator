@@ -22,3 +22,7 @@ target_link_libraries(checks
         Antares::study # cpp -> area
         antares-core
 )
+
+install(DIRECTORY include/antares
+        DESTINATION "include"
+)

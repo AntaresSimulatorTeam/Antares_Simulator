@@ -288,7 +288,7 @@ add_library(study ${SRC_ALL})
 add_library(Antares::study ALIAS study)
 
 target_link_libraries(study
-    PUBLIC
+        PUBLIC
         Boost::boost
         yuni-static-core
         Antares::array #xcast
@@ -305,19 +305,19 @@ target_link_libraries(study
         Antares::series
         antares-core
         antares-solver-simulation
-    PRIVATE
+        PRIVATE
         Antares::exception
         Antares::benchmarking
         antares-solver-variable
 )
 
 target_include_directories(study
-             PUBLIC
+        PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 
         # Make more than just study visible but it's the lesser evil for now
 )
 
-install(DIRECTORY   include/antares
+install(DIRECTORY include/antares
         DESTINATION "include"
 )

@@ -67,3 +67,7 @@ target_link_libraries(antares-core
 )
 
 import_std_libs(antares-core)
+
+install(DIRECTORY include/antares
+        DESTINATION "include"
+)
