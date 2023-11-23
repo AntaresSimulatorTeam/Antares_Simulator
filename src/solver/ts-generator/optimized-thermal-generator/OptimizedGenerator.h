@@ -12,7 +12,7 @@
 
 // static const std::string mntPlSolverName = "cbc";
 static const int minNumberOfMaintenances = 2;
-static const double deltaSolver = 10e-3;
+static const double solverDelta = 10e-4;
 
 using namespace operations_research;
 
@@ -85,7 +85,32 @@ private:
     void insertPowerVars(MPConstraint* ct, int day, const Data::Area& area);
     void insertPowerVars(MPConstraint* ct, int day, const Data::ThermalCluster& cluster);
     void insertPowerVars(MPConstraint* ct, int day, const Data::ThermalCluster& cluster, int unit);
-    void setStartEndMntLogicConstraints();
+    void setStartEndMntLogicConstraints(const OptProblemSettings& optSett);
+    void setStartEndMntLogicConstraints(const OptProblemSettings& optSett, const Data::Area& area);
+    void setStartEndMntLogicConstraints(const OptProblemSettings& optSett,
+                                        const Data::ThermalCluster& cluster);
+    void setStartEndMntLogicConstraints(const OptProblemSettings& optSett,
+                                        const Data::ThermalCluster& cluster,
+                                        int unit);
+    void setEndOfMaintenanceEventBasedOnAverageDurationOfMaintenanceEvent(
+      const OptProblemSettings& optSett,
+      const Data::ThermalCluster& cluster,
+      int unit,
+      int mnt);
+    void setUpFollowingMaintenanceBasedOnAverageDurationBetweenMaintenanceEvents(
+      const OptProblemSettings& optSett,
+      const Data::ThermalCluster& cluster,
+      int unit,
+      int mnt);
+    void setOnceStartIsSetToOneItWillBeOneUntilEndOfOptimizationTimeHorizon(
+      const OptProblemSettings& optSett,
+      const Data::ThermalCluster& cluster,
+      int unit,
+      int mnt);
+    void setNextMaintenanceCanNotStartBeforePreviousMaintenance(const OptProblemSettings& optSett,
+                                                                const Data::ThermalCluster& cluster,
+                                                                int unit,
+                                                                int mnt);
     void setMaxUnitOutputConstraints(const OptProblemSettings& optSett);
     void setMaxUnitOutputConstraints(const OptProblemSettings& optSett, int& day);
     void setMaxUnitOutputConstraints(const OptProblemSettings& optSett,
@@ -211,7 +236,7 @@ private:
 
     // MPSolver instance
     MPSolver solver;
-    double infinity;
+    double solverInfinity;
 
 public:
     explicit OptimizedThermalGenerator(Data::Study& study,
@@ -241,7 +266,7 @@ public:
         // params.SetIntegerParam(MPSolverParameters::PRESOLVE, 0);
         
         // set solver infinity
-        infinity = solver.infinity();
+        solverInfinity = solver.infinity();
     }
 
     ~OptimizedThermalGenerator() = default;

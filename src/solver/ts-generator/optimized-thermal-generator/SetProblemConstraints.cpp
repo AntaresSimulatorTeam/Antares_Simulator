@@ -9,7 +9,7 @@ namespace Antares::Solver::TSGenerator
 void OptimizedThermalGenerator::buildProblemConstraints(const OptProblemSettings& optSett)
 {
     setLoadBalanceConstraints(optSett);
-    setStartEndMntLogicConstraints();
+    setStartEndMntLogicConstraints(optSett);
     setMaxUnitOutputConstraints(optSett);
     printConstraints();
 }
@@ -97,10 +97,179 @@ void OptimizedThermalGenerator::insertPowerVars(MPConstraint* ct,
 //////////////////////////////
 
 // CONSTRAINTS per days, per units and per maintenance - constraint-per-each-day+unit+mnt[t][u][m]
-void OptimizedThermalGenerator::setStartEndMntLogicConstraints()
+void OptimizedThermalGenerator::setStartEndMntLogicConstraints(const OptProblemSettings& optSett)
 {
+    // loop per areas inside maintenance group
+    for (const auto& entryWeightMap : maintenanceGroup_)
+    {
+        const auto& area = *(entryWeightMap.first);
+        setStartEndMntLogicConstraints(optSett, area);
+    }
+}
+
+void OptimizedThermalGenerator::setStartEndMntLogicConstraints(const OptProblemSettings& optSett,
+                                                               const Data::Area& area)
+{
+    // loop per thermal clusters inside the area
+    for (const auto& clusterEntry : area.thermal.list.mapping)
+    {
+        const auto& cluster = *(clusterEntry.second);
+
+        // check if cluster exist, do we generate + optimizeMaintenance
+        // create constraints only if start/end actually exist
+        bool createStartEndVar = checkClusterExist(cluster)
+                                 && cluster.doWeGenerateTS(globalThermalTSgeneration_)
+                                 && cluster.optimizeMaintenance;
+        if (!createStartEndVar)
+            continue;
+
+        setStartEndMntLogicConstraints(optSett, cluster);
+    }
+}
+
+void OptimizedThermalGenerator::setStartEndMntLogicConstraints(const OptProblemSettings& optSett,
+                                                               const Data::ThermalCluster& cluster)
+{
+    // loop per units inside the cluster
+    for (int unit = 0; unit < cluster.unitCount; ++unit)
+    {
+        setStartEndMntLogicConstraints(optSett, cluster, unit);
+    }
+}
+
+void OptimizedThermalGenerator::setStartEndMntLogicConstraints(const OptProblemSettings& optSett,
+                                                               const Data::ThermalCluster& cluster,
+                                                               int unit)
+{
+    int totalMntNumber = getNumberOfMaintenances(cluster);
+    // loop per maintenances per unit
+    for (int mnt = 0; mnt < totalMntNumber; ++mnt)
+    {
+        setEndOfMaintenanceEventBasedOnAverageDurationOfMaintenanceEvent(
+          optSett, cluster, unit, mnt);
+        setOnceStartIsSetToOneItWillBeOneUntilEndOfOptimizationTimeHorizon(
+          optSett, cluster, unit, mnt);
+    }
+
+    // loop per maintenances per unit - except last one
+    for (int mnt = 0; mnt < totalMntNumber - 1; ++mnt)
+    {
+        setUpFollowingMaintenanceBasedOnAverageDurationBetweenMaintenanceEvents(
+          optSett, cluster, unit, mnt);
+        setNextMaintenanceCanNotStartBeforePreviousMaintenance(optSett, cluster, unit, mnt);
+    }
+}
+
+void OptimizedThermalGenerator::setEndOfMaintenanceEventBasedOnAverageDurationOfMaintenanceEvent(
+  const OptProblemSettings& optSett,
+  const Data::ThermalCluster& cluster,
+  int unit,
+  int mnt)
+{
+    int averageMaintenanceDuration = getAverageMaintenanceDuration(cluster);
+    for (int day = 0; day < timeHorizon_ - averageMaintenanceDuration; ++day)
+    {
+        std::string ctName = "E[t+Mu][u][q] = S[t][u][q] -> ["
+                             + std::to_string(day + optSett.firstDay) + "]["
+                             + cluster.getFullName().to<std::string>() + "." + std::to_string(unit)
+                             + "][" + std::to_string(mnt) + "]";
+        MPConstraint* ct = solver.MakeRowConstraint(0.0, 0.0, ctName);
+
+        ct->SetCoefficient(var.day[day + averageMaintenanceDuration]
+                             .areaMap[cluster.parentArea]
+                             .clusterMap[&cluster]
+                             .unitMap[unit]
+                             .end[mnt],
+                           1.0);
+        ct->SetCoefficient(
+          var.day[day].areaMap[cluster.parentArea].clusterMap[&cluster].unitMap[unit].start[mnt],
+          -1.0);
+    }
     return;
 }
+
+void OptimizedThermalGenerator::
+  setUpFollowingMaintenanceBasedOnAverageDurationBetweenMaintenanceEvents(
+    const OptProblemSettings& optSett,
+    const Data::ThermalCluster& cluster,
+    int unit,
+    int mnt)
+{
+    int averageDurationBetweenMaintenances = getAverageDurationBetweenMaintenances(cluster);
+    for (int day = 0; day < timeHorizon_ - averageDurationBetweenMaintenances; ++day)
+    {
+        std::string ctName = "S[t+Tu][u][q+1] = E[t][u][q] -> ["
+                             + std::to_string(day + optSett.firstDay) + "]["
+                             + cluster.getFullName().to<std::string>() + "." + std::to_string(unit)
+                             + "][" + std::to_string(mnt) + "]";
+        MPConstraint* ct = solver.MakeRowConstraint(0.0, 0.0, ctName);
+
+        ct->SetCoefficient(var.day[day + averageDurationBetweenMaintenances]
+                             .areaMap[cluster.parentArea]
+                             .clusterMap[&cluster]
+                             .unitMap[unit]
+                             .start[mnt + 1],
+                           1.0);
+        ct->SetCoefficient(
+          var.day[day].areaMap[cluster.parentArea].clusterMap[&cluster].unitMap[unit].end[mnt],
+          -1.0);
+    }
+    return;
+}
+
+void OptimizedThermalGenerator::setOnceStartIsSetToOneItWillBeOneUntilEndOfOptimizationTimeHorizon(
+  const OptProblemSettings& optSett,
+  const Data::ThermalCluster& cluster,
+  int unit,
+  int mnt)
+{
+    for (int day = 0; day < timeHorizon_ - 1; ++day)
+    {
+        std::string ctName = "S[t+1][u][q] >= S[t][u][q] -> ["
+                             + std::to_string(day + optSett.firstDay) + "]["
+                             + cluster.getFullName().to<std::string>() + "." + std::to_string(unit)
+                             + "][" + std::to_string(mnt) + "]";
+        MPConstraint* ct = solver.MakeRowConstraint(0.0 - solverDelta, solverInfinity, ctName);
+
+        ct->SetCoefficient(var.day[day + 1]
+                             .areaMap[cluster.parentArea]
+                             .clusterMap[&cluster]
+                             .unitMap[unit]
+                             .start[mnt],
+                           1.0);
+        ct->SetCoefficient(
+          var.day[day].areaMap[cluster.parentArea].clusterMap[&cluster].unitMap[unit].start[mnt],
+          -1.0);
+    }
+    return;
+}
+
+void OptimizedThermalGenerator::setNextMaintenanceCanNotStartBeforePreviousMaintenance(
+  const OptProblemSettings& optSett,
+  const Data::ThermalCluster& cluster,
+  int unit,
+  int mnt)
+{
+    for (int day = 0; day < timeHorizon_; ++day)
+    {
+        std::string ctName = "S[t][u][q] >= S[t][u][q+1] -> ["
+                             + std::to_string(day + optSett.firstDay) + "]["
+                             + cluster.getFullName().to<std::string>() + "." + std::to_string(unit)
+                             + "][" + std::to_string(mnt) + "]";
+        MPConstraint* ct = solver.MakeRowConstraint(0.0 - solverDelta, solverInfinity, ctName);
+
+        ct->SetCoefficient(
+          var.day[day].areaMap[cluster.parentArea].clusterMap[&cluster].unitMap[unit].start[mnt],
+          1.0);
+        ct->SetCoefficient(
+          var.day[day].areaMap[cluster.parentArea].clusterMap[&cluster].unitMap[unit].start[mnt
+                                                                                            + 1],
+          -1.0);
+    }
+    return;
+}
+
+//////////////////////////////
 
 // Maximum outputs of the units
 // CONSTRAINTS per days and per units - constraint-per-each-day+unit[t][u][m-sum per m]
@@ -165,7 +334,7 @@ void OptimizedThermalGenerator::setMaxUnitOutputConstraints(const OptProblemSett
     std::string ctName = "MaxPowerOutputConstraint[" + std::to_string(optimizationDay) + "]["
                          + cluster.getFullName().to<std::string>() + "." + std::to_string(unit)
                          + "]";
-    MPConstraint* ct = solver.MakeRowConstraint(0.0 - deltaSolver, maxPower + deltaSolver, ctName);
+    MPConstraint* ct = solver.MakeRowConstraint(0.0 - solverDelta, maxPower + solverDelta, ctName);
 
     insertPowerVars(ct, day, cluster, unit); // re-using this method on purpose!
 

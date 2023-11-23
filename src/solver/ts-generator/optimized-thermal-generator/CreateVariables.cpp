@@ -40,7 +40,7 @@ void OptimizedThermalGenerator::countVariables()
     x->SetLB(1.5);
 
     // Define constraints
-    MPConstraint* const ct = solver.MakeRowConstraint(12.0, infinity, "ct");
+    MPConstraint* const ct = solver.MakeRowConstraint(12.0, solverInfinity, "ct");
     ct->SetCoefficient(x, 1.5);
     ct->SetCoefficient(y, 2.0);
 
@@ -134,14 +134,14 @@ void OptimizedThermalGenerator::buildEnsAndSpillageVariables(const OptProblemSet
     {
         // add ENS variables
         var.day[day].Ens = solver.MakeNumVar(
-          0.0, infinity, "ENS_[" + std::to_string(day + optSett.firstDay) + "]");
+          0.0, solverInfinity, "ENS_[" + std::to_string(day + optSett.firstDay) + "]");
     }
 
     for (int day = 0; day < timeHorizon_; ++day)
     {
         // add Spillage variables
         var.day[day].Spill = solver.MakeNumVar(
-          0.0, infinity, "Spill_[" + std::to_string(day + optSett.firstDay) + "]");
+          0.0, solverInfinity, "Spill_[" + std::to_string(day + optSett.firstDay) + "]");
     }
 
     return;
@@ -195,7 +195,7 @@ void OptimizedThermalGenerator::buildUnitPowerOutputVariables(const OptProblemSe
         // add P[t][u] variables
         var.day[day].areaMap[cluster.parentArea].clusterMap[&cluster].unitMap[unit].P
           = solver.MakeNumVar(0.0,
-                              infinity,
+                              solverInfinity,
                               "P_[" + std::to_string(day + optSett.firstDay) + "]["
                                 + cluster.getFullName().to<std::string>() + "."
                                 + std::to_string(unit) + "]");
