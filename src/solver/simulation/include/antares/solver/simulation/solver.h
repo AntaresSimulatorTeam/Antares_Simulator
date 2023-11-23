@@ -39,7 +39,7 @@
 #include "solver.data.h"
 #include "solver.utils.h"
 #include "antares/solver/hydro/management/management.h"
-#include "OutputWriter.h"
+#include "antares/solver/simulation/OutputWriter.h"
 
 #include <antares/writer/writer_factory.h>
 

@@ -27,11 +27,11 @@
 
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
-#include "LpsFromAntares.h"
+#include "antares/solver/simulation/LpsFromAntares.h"
 
 #include <antares/logs/logs.h>
 #include "antares/solver/utils/filename.h"
-#include "OutputWriter.h"
+#include "antares/solver/simulation/OutputWriter.h"
 
 using namespace Antares;
 using namespace Yuni;

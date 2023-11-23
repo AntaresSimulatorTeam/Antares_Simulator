@@ -34,7 +34,7 @@
 #include <antares/exception/InitializationError.hpp>
 #include "antares/solver/variable/print.h"
 #include <yuni/io/io.h>
-#include "OutputWriter.h"
+#include "antares/solver/simulation/OutputWriter.h"
 #include "antares/solver/simulation/timeseries-numbers.h"
 #include "antares/solver/simulation/apply-scenario.h"
 #include <antares/antares/fatal-error.h>
@@ -44,7 +44,7 @@
 
 #include <yuni/core/system/suspend.h>
 #include <yuni/job/job.h>
-#include "LpsFromAntares.h"
+#include "antares/solver/simulation/LpsFromAntares.h"
 #include <fstream>
 #include <boost/archive/text_oarchive.hpp>
 

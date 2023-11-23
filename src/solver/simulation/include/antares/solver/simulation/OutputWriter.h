@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "LpsFromAntares.h"
+#include "antares/solver/simulation/LpsFromAntares.h"
 namespace Antares
 {
 namespace Solver

@@ -46,8 +46,8 @@ set(SRC_SIMULATION
         TimeSeriesNumbersWriter.cpp
         include/antares/solver/simulation/BindingConstraintsTimeSeriesNumbersWriter.h
         OutputWriter.cpp
-        OutputWriter.h
-        LpsFromAntares.h
+        include/antares/solver/simulation/OutputWriter.h
+        include/antares/solver/simulation/LpsFromAntares.h
         LpsFromAntares.cpp
 )
 source_group("simulation" FILES ${SRC_SIMULATION})

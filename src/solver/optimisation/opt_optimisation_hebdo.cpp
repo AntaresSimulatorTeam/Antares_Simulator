@@ -34,7 +34,7 @@
 #include <antares/antares/fatal-error.h>
 #include <antares/logs/logs.h>
 #include <antares/exception/UnfeasibleProblemError.hpp>
-#include "OutputWriter.h"
+#include "antares/solver/simulation/OutputWriter.h"
 
 extern "C"
 {

@@ -29,7 +29,7 @@
 #include <algorithm>
 
 #include "antares/solver/simulation/simulation.h"
-#include "optimisation/LpsFromAntares.h"
+#include "antares/solver/simulation/LpsFromAntares.h"
 
 
 using namespace Antares::Check;
@@ -496,4 +496,3 @@ Application::~Application()
     }
 }
 } // namespace Solver
-} // namespace Antares

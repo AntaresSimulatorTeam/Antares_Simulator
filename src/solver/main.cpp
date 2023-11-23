@@ -140,11 +140,6 @@ int main(int argc, char** argv)
         application.execute();
         application.outputWriter_.PrintMe();
 
-    auto path = std::string(application.pStudy->folder.c_str()) + "/fichierDeSerialisation";
-    std::ofstream ofs(path);
-    boost::archive::text_oarchive oa(ofs);
-    oa << lps;
-
         application.writeExectutionInfo();
 
         // to avoid a bug from wxExecute, we should wait a little before returning
