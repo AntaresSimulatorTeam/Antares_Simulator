@@ -114,6 +114,7 @@ void OptimizedThermalGenerator::printConstraints()
     {
         const MPConstraint* const constraint = solver.constraint(i);
         std::cout << "**** Constraint " << i + 1 << " ****" << std::endl;
+        std::cout << "Name: " << constraint->name() << std::endl;
         std::cout << "Lower Bound: " << constraint->lb() << std::endl;
         std::cout << "Upper Bound: " << constraint->ub() << std::endl;
 
