@@ -63,10 +63,11 @@ class OrtoolsLogHandler : public LogHandlerInterface
 {
 public:
     // tmp test with std::cout
-    explicit OrtoolsLogHandler(const std::string& solverName);
+    explicit OrtoolsLogHandler(const std::string& solverName,
+                               const std::filesystem::path& logs_directory);
 
     explicit OrtoolsLogHandler(const OrtoolsLogHandler& other) :
-     OrtoolsLogHandler(other.solver_name_)
+     OrtoolsLogHandler(other.solver_name_, other.logs_directory_)
     {
     }
 
@@ -82,6 +83,8 @@ public:
         return file_pointer;
     }
 
+    void copy_log(Solver::IResultWriter& writer) const;
+
 private:
     void init();
     // TODO won't work in ci, needs ortools update
@@ -93,6 +96,8 @@ private:
     // log_streams.push_back(&log_writer);
     FILE* file_pointer = nullptr;
     std::string solver_name_;
+    std::filesystem::path& log_directory_ = ".";
+    std::filesystem::path& log_file_per_thread_ = "";
 };
 class Nomenclature
 {

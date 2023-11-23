@@ -327,7 +327,7 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
 
     bool PremierPassage = true;
     // tmp
-    OrtoolsLogHandler ortools_logger(options.solverName);
+    OrtoolsLogHandler ortools_logger(options.solverName, logs.logfile().c_str());
     struct SimplexResult simplexResult = OPT_TryToCallSimplex(options,
                                                               problemeHebdo,
                                                               Probleme,
@@ -421,6 +421,7 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
 
         return false;
     }
-
+    // copy log file(s)
+    ortools_logger.copy_log(writer);
     return true;
 }

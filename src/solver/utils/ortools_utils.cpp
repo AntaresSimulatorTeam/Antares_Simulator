@@ -33,7 +33,9 @@ namespace Antares
 namespace Optimization
 {
 
-OrtoolsLogHandler::OrtoolsLogHandler(const std::string& solver_name) : solver_name_(solver_name)
+OrtoolsLogHandler::OrtoolsLogHandler(const std::string& solver_name,
+                                     const std::filesystem::path& logs_directory) :
+ solver_name_(solver_name), logs_directory_(logs_directory)
 {
     init();
 }
@@ -44,32 +46,33 @@ OrtoolsLogHandler& OrtoolsLogHandler::operator=(const OrtoolsLogHandler& other)
     {
         return *this;
     }
+
+    solver_name_ = other.solver_name_;
+    logs_directory_ = other.logs_directory_;
     init();
     return *this;
 }
 void OrtoolsLogHandler::init()
 {
-    std::filesystem::path log_file = logs.logfile().c_str();
-    auto log_directory = log_file.parent_path();
     auto myid = std::this_thread::get_id();
     std::stringstream ss;
     ss << myid;
-    auto log_file_per_thread = log_directory / (std::string("thread_") + ss.str() + ".log");
+    log_file_per_thread_ = log_directory_ / (std::string("thread_") + ss.str() + ".log");
 
     if (solver_name_ == COIN)
     {
 #ifdef __linux__
-        if (log_file_per_thread.empty()
-            || (file_pointer = fopen(log_file_per_thread.string().c_str(), "a+")) == nullptr)
+        if (log_file_per_thread_.empty()
+            || (file_pointer = fopen(log_file_per_thread_.string().c_str(), "a+")) == nullptr)
 #elif _WIN32
-        if (log_file_per_thread.empty()
-            || (file_pointer = _fsopen(log_file_per_thread.string().c_str(), "a+", _SH_DENYNO))
+        if (log_file_per_thread_.empty()
+            || (file_pointer = _fsopen(log_file_per_thread_.string().c_str(), "a+", _SH_DENYNO))
                  == nullptr)
 #endif
         {
             // logs.error()
             std::cerr << "Invalid log file name passed as parameter: "
-                      << std::quoted(log_file_per_thread.string()) << std::endl;
+                      << std::quoted(log_file_per_thread_.string()) << std::endl;
         }
         else
         {
@@ -78,7 +81,7 @@ void OrtoolsLogHandler::init()
     }
     else
     {
-        log_writer_.open(log_file_per_thread, std::ofstream::out | std::ofstream::app);
+        log_writer_.open(log_file_per_thread_, std::ofstream::out | std::ofstream::app);
     }
 }
 
@@ -89,6 +92,14 @@ OrtoolsLogHandler::~OrtoolsLogHandler()
         fclose(file_pointer);
         file_pointer = nullptr;
     }
+}
+
+void OrtoolsLogHandler::copy_log(Solver::IResultWriter& writer) const
+{
+    auto log_file_per_thread = log_file_per_thread_.string().c_str();
+    auto tmp_path_log_per_thread = generateTempPath(log_file_per_thread);
+    writer.addEntryFromFile(log_file_per_thread, tmp_path_log_per_thread);
+    removeTemporaryFile(tmp_path_log_per_thread);
 }
 
 ProblemSimplexeNommeConverter::ProblemSimplexeNommeConverter(
