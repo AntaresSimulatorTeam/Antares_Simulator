@@ -33,16 +33,63 @@ namespace Antares
 namespace Optimization
 {
 
-OrtoolsLogHandler::OrtoolsLogHandler()
+OrtoolsLogHandler::OrtoolsLogHandler(const std::string& solver_name) : solver_name_(solver_name)
 {
-    std::filesystem::path log_file = logs.logfile().c_str();
-    auto log_directory = log_file.parent_path();
-    auto myid = std::this_thread::get_id();
-    std::stringstream ss;
-    ss << myid;
-    auto log_file_per_thread = log_directory / (std::string("thread_") + ss.str() + ".log");
-    log_writer_.open(log_file_per_thread, std::ofstream::out | std::ofstream::app);
+    init();
 }
+
+OrtoolsLogHandler& OrtoolsLogHandler::operator=(const OrtoolsLogHandler& other)
+{
+    if (this == &other)
+    {
+        return *this;
+    }
+    init();
+    return *this;
+}
+void OrtoolsLogHandler::init()
+{
+    if (solver_name_ == COIN)
+    {
+        std::filesystem::path log_file = logs.logfile().c_str();
+
+#ifdef __linux__
+        if (log_file.empty() || (file_pointer = fopen(log_file.string().c_str(), "a+")) == nullptr)
+#elif _WIN32
+        if (log_file.empty()
+            || (file_pointer = _fsopen(log_file.string().c_str(), "a+", _SH_DENYNO)) == nullptr)
+#endif
+        {
+            // logs.error()
+            std::cerr << "Invalid log file name passed as parameter: "
+                      << std::quoted(log_file.string()) << std::endl;
+        }
+        else
+        {
+            setvbuf(file_pointer, nullptr, _IONBF, 0);
+        }
+    }
+    else
+    {
+        std::filesystem::path log_file = logs.logfile().c_str();
+        auto log_directory = log_file.parent_path();
+        auto myid = std::this_thread::get_id();
+        std::stringstream ss;
+        ss << myid;
+        auto log_file_per_thread = log_directory / (std::string("thread_") + ss.str() + ".log");
+        log_writer_.open(log_file_per_thread, std::ofstream::out | std::ofstream::app);
+    }
+}
+
+OrtoolsLogHandler::~OrtoolsLogHandler()
+{
+    if (file_pointer)
+    {
+        fclose(file_pointer);
+        file_pointer = nullptr;
+    }
+}
+
 ProblemSimplexeNommeConverter::ProblemSimplexeNommeConverter(
   const std::string& solverName,
   const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe) :
@@ -380,12 +427,11 @@ void ORTOOLS_LibererProbleme(MPSolver* solver)
 {
     delete solver;
 }
-
 const std::map<std::string, struct OrtoolsUtils::SolverNames> OrtoolsUtils::solverMap
-  = {{"xpress", {"xpress_lp", "xpress"}},
-     {"sirius", {"sirius_lp", "sirius"}},
-     {"coin", {"clp", "cbc"}},
-     {"glpk", {"glpk_lp", "glpk"}}};
+  = {{XPRESS, {XPRESS_LP, XPRESS}},
+     {SIRIUS, {SIRIUS_LP, SIRIUS}},
+     {COIN, {CLP, CBC}},
+     {GLPK, {GLPK_LP, GLPK}}};
 
 std::list<std::string> getAvailableOrtoolsSolverName()
 {

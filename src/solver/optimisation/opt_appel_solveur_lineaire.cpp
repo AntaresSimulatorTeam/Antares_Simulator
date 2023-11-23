@@ -229,8 +229,9 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
     // auto call_back = (callback_function)Probleme.callback;
     // call_back = SiriusCallback_function;
     // SPXsetcbmessage(ProbSpx, SiriusCallback_function, &std::cout, SIRIUS_INFO);
-    SPLXsetcbmessage(&Probleme, SiriusCallback_function, &std::cout, SIRIUS_INFO);
-    // Probleme.caller = &std::cout;
+    /* postponed */ //    SPLXsetcbmessage(&Probleme, SiriusCallback_function, &std::cout,
+                    //    SIRIUS_INFO);
+                    // Probleme.caller = &std::cout;
 
     if (options.useOrtools)
     {
@@ -326,7 +327,7 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
 
     bool PremierPassage = true;
     // tmp
-    OrtoolsLogHandler ortools_logger;
+    OrtoolsLogHandler ortools_logger(options.solverName);
     struct SimplexResult simplexResult = OPT_TryToCallSimplex(options,
                                                               problemeHebdo,
                                                               Probleme,

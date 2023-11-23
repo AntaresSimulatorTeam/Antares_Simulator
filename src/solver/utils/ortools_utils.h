@@ -12,6 +12,16 @@
 
 using namespace operations_research;
 
+const std::string XPRESS = "xpress";
+const std::string XPRESS_LP = "xpress_lp";
+const std::string SIRIUS = "sirius";
+const std::string SIRIUS_LP = "sirius_lp";
+const std::string GLPK = "glpk";
+const std::string GLPK_LP = "glpk_lp";
+const std::string COIN = "coin";
+const std::string CBC = "cbc";
+const std::string CLP = "clp";
+
 void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver,
                                                    Antares::Solver::IResultWriter& writer,
                                                    const std::string& filename);
@@ -53,13 +63,27 @@ class OrtoolsLogHandler : public LogHandlerInterface
 {
 public:
     // tmp test with std::cout
-    explicit OrtoolsLogHandler();
+    explicit OrtoolsLogHandler(const std::string& solverName);
+
+    explicit OrtoolsLogHandler(const OrtoolsLogHandler& other) :
+     OrtoolsLogHandler(other.solver_name_)
+    {
+    }
+
+    OrtoolsLogHandler& operator=(const OrtoolsLogHandler& other);
+    ~OrtoolsLogHandler();
     void message(const char* msg, int nLen = 0) override
     {
         log_writer_ << std::setw(nLen) << msg << std::endl;
     }
 
+    FILE* where_to_write()
+    {
+        return file_pointer;
+    }
+
 private:
+    void init();
     // TODO won't work in ci, needs ortools update
     // see https://github.com/rte-france/or-tools/pull/112
 
@@ -67,6 +91,8 @@ private:
     std::ofstream log_writer_;
     // log_writer.open(log_file_per_thread, std::ofstream::out | std::ofstream::app);
     // log_streams.push_back(&log_writer);
+    FILE* file_pointer = nullptr;
+    std::string solver_name_;
 };
 class Nomenclature
 {
