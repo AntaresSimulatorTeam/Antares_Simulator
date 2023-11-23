@@ -43,18 +43,21 @@ private:
                                        const Data::ThermalCluster& cluster,
                                        int day);
     void buildStartEndMntVariables(const OptProblemSettings& optSett);
-    void buildStartEndMntVariables(const OptProblemSettings& optSett, int day);
+    void buildStartEndMntVariables(const OptProblemSettings& optSett, const Data ::Area& area);
     void buildStartEndMntVariables(const OptProblemSettings& optSett,
-                                   int day,
-                                   const Data ::Area& area);
-    void buildStartEndMntVariables(const OptProblemSettings& optSett,
-                                   int day,
                                    const Data ::ThermalCluster& cluster);
     void buildStartEndMntVariables(const OptProblemSettings& optSett,
-                                   int day,
                                    const Data ::ThermalCluster& cluster,
                                    int unit,
                                    int totalMntNumber);
+    void buildStartVariables(const OptProblemSettings& optSett,
+                             const Data ::ThermalCluster& cluster,
+                             int unit,
+                             int mnt);
+    void buildEndVariables(const OptProblemSettings& optSett,
+                           const Data ::ThermalCluster& cluster,
+                           int unit,
+                           int mnt);
 
     // functions to fix bounds of some variables
     void fixBounds();
