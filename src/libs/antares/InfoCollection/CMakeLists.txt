@@ -21,17 +21,6 @@ target_link_libraries(${PROJ}
 
 target_include_directories(${PROJ}
         PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/libs> #study
-        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/libs/antares/date> #parameters -> date
-        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/libs/antares/array> #links
-        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/libs/antares/logs> #study -> binding constraint -> matrix -> jit
-        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/libs/antares/io> #study -> binding constraint -> matrix
-        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/libs/antares/writer> #study
-        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/libs/antares/exception> #enum -> exception
-        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/libs/antares/jit> # something,something -> jit
-        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/libs/antares/memory/include> #study -> BC -> link -> memory
-        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/libs/antares/inifile> #study -> inifile
-        PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 
