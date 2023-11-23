@@ -171,6 +171,7 @@ void OptimizedThermalGenerator::setMaxUnitOutputConstraints(const OptProblemSett
 
     // we add sum[per-q](s[t][u][q]-e[t][u][q])
     // only if we have defined variables start and end for the units
+    // if not we ebd up with: 0 <= P <= Pmax
     // note we already passed check: !checkClusterExist(cluster)
     // so here we just check if the cluster is involved in maintenance planing
     if (!(cluster.doWeGenerateTS(globalThermalTSgeneration_) && cluster.optimizeMaintenance))
