@@ -12,6 +12,7 @@
 
 // static const std::string mntPlSolverName = "cbc";
 static const int minNumberOfMaintenances = 2;
+static const double deltaSolver = 10e-3;
 
 using namespace operations_research;
 
