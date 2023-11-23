@@ -119,7 +119,7 @@ jobs:
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
-        batch-name: short-tests
+        batch-name: valid-parallel
         os: ${{ matrix.test-platform }}
         variant: "parallel"
 
