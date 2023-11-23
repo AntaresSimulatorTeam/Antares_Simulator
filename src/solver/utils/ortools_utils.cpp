@@ -96,10 +96,8 @@ OrtoolsLogHandler::~OrtoolsLogHandler()
 
 void OrtoolsLogHandler::copy_log(Solver::IResultWriter& writer) const
 {
-    auto log_file_per_thread = log_file_per_thread_.string().c_str();
-    auto tmp_path_log_per_thread = generateTempPath(log_file_per_thread);
-    writer.addEntryFromFile(log_file_per_thread, tmp_path_log_per_thread);
-    removeTemporaryFile(tmp_path_log_per_thread);
+    writer.addEntryFromFile(log_file_per_thread_.filename().string().c_str(),
+                            log_file_per_thread_.string().c_str());
 }
 
 ProblemSimplexeNommeConverter::ProblemSimplexeNommeConverter(
