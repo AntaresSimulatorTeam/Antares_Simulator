@@ -167,9 +167,10 @@ private:
     void appendStepResults();
 
     // print functions for debugging
-    void printAllVariables(); // for debug purpose only!
+    void printAllVariables();
     void printObjectiveFunction(MPObjective* objective);
     void printConstraints();
+    void printProblemVarAndResults();
 
     // Functions called in main method:
     void allocateWhereToWriteTs();

@@ -381,26 +381,4 @@ void OptimizedThermalGenerator::insertEndSum(MPConstraint* ct,
     }
 }
 
-void OptimizedThermalGenerator::printConstraints()
-{
-    const int num_constraints = solver.NumConstraints();
-
-    for (int i = 0; i < num_constraints; ++i)
-    {
-        const MPConstraint* const constraint = solver.constraint(i);
-        std::cout << "**** Constraint " << i + 1 << " ****" << std::endl;
-        std::cout << "Name: " << constraint->name() << std::endl;
-        std::cout << "Lower Bound: " << constraint->lb() << std::endl;
-        std::cout << "Upper Bound: " << constraint->ub() << std::endl;
-
-        for (const auto& term : constraint->terms())
-        {
-            const MPVariable* const var = term.first;
-            const double coefficient = term.second;
-            std::cout << var->name() << ": " << coefficient << std::endl;
-        }
-        std::cout << "------------------------" << std::endl;
-    }
-}
-
 } // namespace Antares::Solver::TSGenerator

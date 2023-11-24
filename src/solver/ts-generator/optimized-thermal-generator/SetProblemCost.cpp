@@ -18,8 +18,6 @@ void OptimizedThermalGenerator::setProblemCost(const OptProblemSettings& optSett
 
     objective->SetMinimization();
 
-    printObjectiveFunction(objective);
-
     return;
 }
 
@@ -111,16 +109,6 @@ void OptimizedThermalGenerator::setProblemPowerCost(MPObjective* objective,
 {
     objective->SetCoefficient(var.day[day].areaMap[&area].clusterMap[&cluster].unitMap[unitIndex].P,
                               cost);
-    return;
-}
-
-void OptimizedThermalGenerator::printObjectiveFunction(MPObjective* objective)
-{
-    for (MPVariable* variable : solver.variables())
-    {
-        std::cout << variable->name() << ": " << objective->GetCoefficient(variable) << std::endl;
-    }
-    std::cout << std::endl;
     return;
 }
 

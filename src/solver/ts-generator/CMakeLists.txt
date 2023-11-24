@@ -25,6 +25,7 @@ set(SRC_OPTIMIZEDGENERATORS
 	optimized-thermal-generator/SetProblemCost.cpp
 	optimized-thermal-generator/ResetProblem.cpp
 	optimized-thermal-generator/SolveProbem.cpp
+	optimized-thermal-generator/PrintProblemVarRes.cpp
 
 )
 source_group("ts-generator\\optimized-thermal-generator" FILES ${SRC_OPTIMIZEDGENERATORS})

@@ -297,18 +297,4 @@ void OptimizedThermalGenerator::buildEndVariables(const OptProblemSettings& optS
     return;
 }
 
-void OptimizedThermalGenerator::printAllVariables()
-{
-    for (MPVariable* const variable : solver.variables())
-    {
-        std::cout << "Variable: " << variable->name() << ", "
-                  << "Lower bound: " << variable->lb() << ", "
-                  << "Upper bound: " << variable->ub() << std::endl;
-    }
-
-    std::cout << "total number of variables is: " << solver.NumVariables() << std::endl;
-
-    return;
-}
-
 } // namespace Antares::Solver::TSGenerator

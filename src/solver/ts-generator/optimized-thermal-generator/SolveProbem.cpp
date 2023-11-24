@@ -17,6 +17,7 @@ bool OptimizedThermalGenerator::runOptimizationProblem(OptProblemSettings& optSe
     setProblemCost(optSett);
     if (!solveProblem(optSett))
         return false;
+    printProblemVarAndResults();
     appendStepResults();
     return true;
 }
