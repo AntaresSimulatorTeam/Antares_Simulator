@@ -15,7 +15,6 @@ void OptimizedThermalGenerator::buildProblemVariables(const OptProblemSettings& 
     buildEnsAndSpillageVariables(optSett);
     buildUnitPowerOutputVariables(optSett);
     buildStartEndMntVariables(optSett);
-    printAllVariables();
 }
 
 void OptimizedThermalGenerator::countVariables()

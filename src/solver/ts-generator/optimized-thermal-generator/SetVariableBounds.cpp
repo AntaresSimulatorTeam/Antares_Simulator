@@ -79,7 +79,7 @@ void OptimizedThermalGenerator::fixBoundsFirstMnt(const Data::ThermalCluster& cl
           .clusterMap[&cluster]
           .unitMap[unit]
           .start[0]
-          ->SetBounds(0.0, 0.0);
+          ->SetBounds(0.0, 0.0); //inclusive range
     }
 
     // start[tauUpper][u][1] = 1
@@ -88,7 +88,7 @@ void OptimizedThermalGenerator::fixBoundsFirstMnt(const Data::ThermalCluster& cl
       .clusterMap[&cluster]
       .unitMap[unit]
       .start[0]
-      ->SetBounds(1.0, 1.0);
+      ->SetBounds(1.0, 1.0); //inclusive range 
 
     return;
 }

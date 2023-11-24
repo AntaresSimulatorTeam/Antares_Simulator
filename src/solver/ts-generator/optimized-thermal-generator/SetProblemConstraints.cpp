@@ -11,7 +11,6 @@ void OptimizedThermalGenerator::buildProblemConstraints(const OptProblemSettings
     setLoadBalanceConstraints(optSett);
     setStartEndMntLogicConstraints(optSett);
     setMaxUnitOutputConstraints(optSett);
-    printConstraints();
 }
 
 // load balance CONSTRAINTS - constraint-per-each-day[t] - we have sum through [u] inside of it
