@@ -242,14 +242,11 @@ public:
         tsTitle_ = ts_to_tsTitle.at(ts);
     }
     ~IntraModalConsistencyChecker() = default;
-    bool check();
+    bool checkTSconsistency();
     uint getTimeSeriesNumber()
     {
         return nbTimeseries_;
     }
-
-private:
-    bool checkTSconsistency();
 
 private:
     areaNumberOfTSretriever* tsCounter_;
@@ -257,14 +254,6 @@ private:
     uint nbTimeseries_ = 0;
     string tsTitle_;
 };
-
-bool IntraModalConsistencyChecker::check()
-{
-    
-    if (not checkTSconsistency())
-        return false;
-    return true;
-}
 
 bool IntraModalConsistencyChecker::checkTSconsistency()
 {
@@ -325,7 +314,7 @@ bool checkIntraModalConsistency(array<uint, timeSeriesCount>& nbTimeseriesByMode
         if (isTSintramodal[indexTS])
         {
             IntraModalConsistencyChecker intraModalchecker(tsKind, tsRetriever, study);
-            if (!intraModalchecker.check())
+            if (!intraModalchecker.checkTSconsistency())
                 return false;
             nbTimeseriesByMode[indexTS] = intraModalchecker.getTimeSeriesNumber();
         }
