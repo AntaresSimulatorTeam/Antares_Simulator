@@ -9,7 +9,7 @@
 
 #include <iostream>
 #include <fstream>
-#include <stdio.h>
+#include <cmath>
 
 namespace utf = boost::unit_test;
 
@@ -368,6 +368,30 @@ BOOST_AUTO_TEST_CASE(file_with_rows_of_different_size___load_succeeds__column_re
 	BOOST_REQUIRE_EQUAL(mtx.entry[1][1], 4.5);
 	BOOST_REQUIRE_EQUAL(mtx.entry[2][1], 9.7);
 }
+
+// 1.f.
+BOOST_AUTO_TEST_CASE(load_nan_succeeds)
+{
+	Clob* fake_buffer = new Clob;
+	// 5.2  6.1  NaN
+	// 1.3  4.5  9.7
+	fake_buffer->append("5.2\t6.1\tnan\n1.3\t4.5\t9.7\n");
+
+	Matrix_mock_load_to_buffer<double, double> mtx;
+	BOOST_CHECK(mtx.loadFromCSVFile("path/to/a/file", 2, 2, Matrix<>::optNeverFails, fake_buffer));
+
+	delete fake_buffer;
+
+	BOOST_REQUIRE_EQUAL(mtx.width, 3);
+	BOOST_REQUIRE_EQUAL(mtx.height, 2);
+	BOOST_REQUIRE_EQUAL(mtx.entry[0][0], 5.2);
+	BOOST_REQUIRE_EQUAL(mtx.entry[1][0], 6.1);
+	BOOST_REQUIRE(std::isnan(mtx.entry[2][0]));
+	BOOST_REQUIRE_EQUAL(mtx.entry[0][1], 1.3);
+	BOOST_REQUIRE_EQUAL(mtx.entry[1][1], 4.5);
+	BOOST_REQUIRE_EQUAL(mtx.entry[2][1], 9.7);
+}
+
 
 // 1.f.
 BOOST_AUTO_TEST_CASE(file_with_columns_of_different_size___load_succeeds__row_not_resized)
