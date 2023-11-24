@@ -69,7 +69,7 @@ inline void ResizeGeneratedTimeSeries(Data::AreaList& areas, Data::Parameters& p
             auto& cluster = *(it->second);
             bool globalThermalTSgeneration = params.timeSeriesToRefresh & Data::timeSeriesThermal;
             if (cluster.doWeGenerateTS(globalThermalTSgeneration))
-                cluster.series.timeSeries.resize(params.nbTimeSeriesThermal, HOURS_PER_YEAR);
+                cluster.series.timeSeries.reset(params.nbTimeSeriesThermal, HOURS_PER_YEAR);
         }
     }
 }
