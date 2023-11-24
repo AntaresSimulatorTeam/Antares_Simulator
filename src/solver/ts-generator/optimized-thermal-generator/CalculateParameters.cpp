@@ -142,8 +142,8 @@ void OptimizedThermalGenerator::setClusterData()
     for (const auto& entryWeightMap : maintenanceGroup_)
     {
         const auto& area = *(entryWeightMap.first);
-        auto& areaVariables = dailyClusterData.areaMap;
-        areaVariables[&area] = DailyClusterDataPerArea();
+        auto& areaVariables = maintenanceData.areaMap;
+        areaVariables[&area] = AreaData();
         // loop per thermal clusters inside the area - fill in the structure
         for (auto it = area.thermal.list.mapping.begin(); it != area.thermal.list.mapping.end();
              ++it)
@@ -156,7 +156,7 @@ void OptimizedThermalGenerator::setClusterData()
                 continue;
 
             auto& clusterVariables = areaVariables[&area].clusterMap;
-            clusterVariables[&cluster] = DailyClusterDataPerCluster();
+            clusterVariables[&cluster] = ClusterData();
             clusterVariables[&cluster].maxPower = calculateMaxUnitOutput(cluster);
             clusterVariables[&cluster].avgCost = calculateAvrUnitDailyCost(cluster);
 
@@ -175,7 +175,7 @@ void OptimizedThermalGenerator::setClusterData()
 
 // calculate parameters methods - per cluster
 int OptimizedThermalGenerator::calculateNumberOfMaintenances(const Data::ThermalCluster& cluster,
-                                                              int timeHorizon)
+                                                             int timeHorizon)
 {
     // timeHorizon cannot be 0. The whole maintenance group would be skipped if this happened
     // on the other hand interPoPeriod can be 0. So we say at least 2 maintenance if this happens
@@ -190,7 +190,8 @@ int OptimizedThermalGenerator::calculateNumberOfMaintenances(const Data::Thermal
     return std::max(timeHorizon / cluster.interPoPeriod, minNumberOfMaintenances); // floor
 }
 
-int OptimizedThermalGenerator::calculateAverageMaintenanceDuration(const Data::ThermalCluster& cluster)
+int OptimizedThermalGenerator::calculateAverageMaintenanceDuration(
+  const Data::ThermalCluster& cluster)
 {
     double sum = 0.0;
     for (std::size_t row = 0; row < DAYS_PER_YEAR; ++row)
@@ -274,7 +275,7 @@ double OptimizedThermalGenerator::getPowerCost(const Data::ThermalCluster& clust
         return 0.;
     }
 
-    return dailyClusterData.areaMap[cluster.parentArea]
+    return maintenanceData.areaMap[cluster.parentArea]
       .clusterMap[&cluster]
       .avgCost[dayOfTheYear(optimizationDay)];
 }
@@ -282,7 +283,7 @@ double OptimizedThermalGenerator::getPowerCost(const Data::ThermalCluster& clust
 double OptimizedThermalGenerator::getPowerOutput(const Data::ThermalCluster& cluster,
                                                  int optimizationDay)
 {
-    return dailyClusterData.areaMap[cluster.parentArea]
+    return maintenanceData.areaMap[cluster.parentArea]
       .clusterMap[&cluster]
       .maxPower[dayOfTheYear(optimizationDay)];
 }
@@ -294,12 +295,12 @@ double OptimizedThermalGenerator::getResidualLoad(int optimizationDay)
 
 int OptimizedThermalGenerator::getNumberOfMaintenances(const Data::ThermalCluster& cluster)
 {
-    return dailyClusterData.areaMap[cluster.parentArea].clusterMap[&cluster].numberOfMaintenances;
+    return maintenanceData.areaMap[cluster.parentArea].clusterMap[&cluster].numberOfMaintenances;
 }
 
 int OptimizedThermalGenerator::getAverageMaintenanceDuration(const Data::ThermalCluster& cluster)
 {
-    return dailyClusterData.areaMap[cluster.parentArea]
+    return maintenanceData.areaMap[cluster.parentArea]
       .clusterMap[&cluster]
       .averageMaintenanceDuration;
 }
@@ -332,7 +333,7 @@ int OptimizedThermalGenerator::calculateUnitEarliestStartOfFirstMaintenance(
     if (unitIndex < cluster.daysSinceLastMaintenance.size())
     {
         return std::min(cluster.interPoPeriod
-                          - dailyClusterData.areaMap[cluster.parentArea]
+                          - maintenanceData.areaMap[cluster.parentArea]
                               .clusterMap[&cluster]
                               .daysSinceLastMnt[unitIndex]
                           - cluster.poWindows,
@@ -360,7 +361,7 @@ int OptimizedThermalGenerator::calculateUnitLatestStartOfFirstMaintenance(
         // however we will make sure it does not surpass timeHorizon_ - 1 value
 
         return std::min(cluster.interPoPeriod
-                          - dailyClusterData.areaMap[cluster.parentArea]
+                          - maintenanceData.areaMap[cluster.parentArea]
                               .clusterMap[&cluster]
                               .daysSinceLastMnt[unitIndex]
                           + cluster.poWindows,

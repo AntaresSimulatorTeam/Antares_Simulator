@@ -75,7 +75,7 @@ struct OptimizationProblemVariables
 // so inside optimization problem we just retrieve these data
 // not re-calculate them over and over again
 
-struct DailyClusterDataPerCluster
+struct ClusterData
 {
     std::array<double, DAYS_PER_YEAR> maxPower;
     std::array<double, DAYS_PER_YEAR> avgCost;
@@ -84,16 +84,16 @@ struct DailyClusterDataPerCluster
     int averageMaintenanceDuration;
 };
 
-struct DailyClusterDataPerArea
+struct AreaData
 {
     // number of elements in the map is total number of cluster in area
-    std::map<const Data::ThermalCluster*, DailyClusterDataPerCluster> clusterMap;
+    std::map<const Data::ThermalCluster*, ClusterData> clusterMap;
 };
 
-struct DailyClusterData
+struct MaintenanceData
 {
     // number of elements in the map is total number of areas in maintenance group
-    std::map<const Data::Area*, DailyClusterDataPerArea> areaMap;
+    std::map<const Data::Area*, AreaData> areaMap;
 };
 
 } // namespace Antares::Solver::TSGenerator

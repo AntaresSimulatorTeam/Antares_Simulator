@@ -230,7 +230,7 @@ private:
     double ensCost_;
     double spillCost_;
     std::array<double, DAYS_PER_YEAR> residualLoadDailyValues_;
-    DailyClusterData dailyClusterData;
+    MaintenanceData maintenanceData;
     OptimizationProblemVariables var;
 
     // MPSolver instance
