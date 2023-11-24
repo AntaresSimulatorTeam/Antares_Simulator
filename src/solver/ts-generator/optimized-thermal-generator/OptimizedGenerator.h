@@ -24,9 +24,6 @@ class OptimizedThermalGenerator : public GeneratorTempData
 private:
     // optimization problem construction methods
 
-    // dummy function - to be deleted
-    void countVariables();
-
     // functions to allocate variable structure
     void allocateVarStruct();
     void allocateVarStruct(int day);
@@ -170,6 +167,7 @@ private:
     void printAllVariables();
     void printObjectiveFunction(MPObjective* objective);
     void printConstraints();
+    void printResults();
     void printProblemVarAndResults();
 
     // Functions called in main method:

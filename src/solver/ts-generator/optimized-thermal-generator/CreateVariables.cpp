@@ -8,70 +8,10 @@ namespace Antares::Solver::TSGenerator
 {
 void OptimizedThermalGenerator::buildProblemVariables(const OptProblemSettings& optSett)
 {
-    // this is now just dummy optimization problem
-    countVariables();
-
     allocateVarStruct();
     buildEnsAndSpillageVariables(optSett);
     buildUnitPowerOutputVariables(optSett);
     buildStartEndMntVariables(optSett);
-}
-
-void OptimizedThermalGenerator::countVariables()
-{
-    /*
-    TEST optimization
-    minimize:
-    * 3x - y
-    subject to:
-    * 1.5 x + 2 y >= 12
-    * 0 <= x <= 3
-    * 0 <= y <= 5
-    * x - linear variable
-    * y - integer variable
-    */
-
-    // Define variables and at the same time Boundaries
-    MPVariable* x = solver.MakeNumVar(0.0, 3.0, "x");
-    MPVariable* y = solver.MakeIntVar(0.0, 5.0, "y");
-
-    // redefine lower bound - just do not make x - constant
-    x->SetLB(1.5);
-
-    // Define constraints
-    MPConstraint* const ct = solver.MakeRowConstraint(12.0, solverInfinity, "ct");
-    ct->SetCoefficient(x, 1.5);
-    ct->SetCoefficient(y, 2.0);
-
-    // Define objective function
-    MPObjective* const objective = solver.MutableObjective();
-    objective->SetCoefficient(x, 3);
-    objective->SetCoefficient(y, -1);
-    objective->SetMinimization();
-
-    // Count the number of variables in the solver
-    int numVariables = solver.NumVariables();
-    // Count the number of constraints in the solver
-    int numConstraints = solver.NumConstraints();
-
-    // Solve the problem
-    const MPSolver::ResultStatus result_status = solver.Solve();
-
-    if (result_status != MPSolver::OPTIMAL)
-    {
-        // If not optimal, print that optimization failed
-        logs.info() << "The problem does not have an optimal solution.\n";
-        return;
-    }
-    // Access and print the results
-    printf("Optimal objective value = %.2f\n", objective->Value());
-    printf("x = %.2f\n", x->solution_value());
-    printf("y = %.2f\n", y->solution_value());
-
-    // Clear the solver to reset it for the new problem
-    solver.Clear();
-
-    return;
 }
 
 // populate OptimizationProblemVariables struct
