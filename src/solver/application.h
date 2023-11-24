@@ -52,9 +52,6 @@ public:
     void resetProcessPriority() const;
 
     void writeExectutionInfo();
-
-    void installSignalHandlers() const;
-
 private:
     /*!
     ** \brief Reset the log filename and open it
