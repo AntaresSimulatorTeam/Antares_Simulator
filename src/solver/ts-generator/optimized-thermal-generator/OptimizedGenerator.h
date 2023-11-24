@@ -275,4 +275,9 @@ public:
     void GenerateOptimizedThermalTimeSeries();
 };
 
+// Declare the auxiliary function outside the class 
+// Debug & Test purpose - to be removed
+template<typename T>
+void printColumnToFile(const std::vector<std::vector<T>>& data);
+
 } // namespace Antares::Solver::TSGenerator
