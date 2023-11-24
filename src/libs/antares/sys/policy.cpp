@@ -252,14 +252,6 @@ void Close()
     }
 }
 
-bool HasKey(const PolicyKey& key)
-{
-    // avoid concurrent changes
-    MutexLocker locker(gsMutex);
-
-    return (not key.empty() and entries and entries->find(key) != entries->end());
-}
-
 bool Read(String& out, const PolicyKey& key)
 {
     // avoid concurrent changes
@@ -330,39 +322,6 @@ void DumpToString(Clob& out)
     }
 }
 
-void DumpToStdOut()
-{
-    // avoid concurrent changes
-    MutexLocker locker(gsMutex);
-
-    if (!entries or entries->empty())
-        return;
-
-    // The end of the container
-    const PolicyMap::const_iterator end = entries->end();
-
-    // Find the longest key length
-    uint maxlen = 0;
-    {
-        for (PolicyMap::const_iterator i = entries->begin(); i != end; ++i)
-        {
-            uint len = i->first.size();
-            if (len > maxlen)
-                maxlen = len;
-        }
-    }
-
-    maxlen += 3; // spaces after the key
-    PolicyKey row;
-
-    for (PolicyMap::const_iterator i = entries->begin(); i != end; ++i)
-    {
-        row = i->first;
-        row.resize(maxlen, " ");
-        std::cout << "  " << row << ": " << i->second << '\n';
-    }
-}
-
 void DumpToLogs()
 {
     // avoid concurrent changes
@@ -388,10 +347,9 @@ void CheckRootPrefix(const char* argv0)
     // avoid concurrent changes
     MutexLocker locker(gsMutex);
 
-    if (!entries)
+    if (entries == nullptr)
         return;
-    auto i = entries->find("force_root_prefix");
-    if (i != entries->end() and not i->second.empty())
+    if (auto i = entries->find("force_root_prefix"); i != entries->end() and not i->second.empty())
     {
         AnyString adapter = argv0;
         if (IO::IsAbsolute(adapter))
