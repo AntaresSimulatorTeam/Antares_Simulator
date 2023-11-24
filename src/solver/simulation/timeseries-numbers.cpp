@@ -272,16 +272,8 @@ bool IntraModalConsistencyChecker::checkTSconsistency()
                      << "'s numbers of time-series are not equal for all areas";
         return false;
     }
-
-    auto result = find_if(listNumberTS.begin(), listNumberTS.end(), [](uint x) { return x != 1; });
-    if (result == listNumberTS.end())
-    { // All elements are equal to 1 or list is empty
-        nbTimeseries_ = 1;
-    }
-    else
-    {
-        nbTimeseries_ = *result;
-    }
+    // At this point, all elements are identical and/or 1
+    nbTimeseries_ = *(std::min_element(listNumberTS.begin(), listNumberTS.end()));
     return true;
 }
 
