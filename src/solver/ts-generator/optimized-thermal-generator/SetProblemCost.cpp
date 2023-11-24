@@ -24,9 +24,9 @@ void OptimizedThermalGenerator::setProblemCost(const OptProblemSettings& optSett
 void OptimizedThermalGenerator::setProblemEnsCost(MPObjective* objective)
 {
     // loop per day
-    for (int day = 0; day < timeHorizon_; ++day)
+    for (const auto day : var.day)
     {
-        objective->SetCoefficient(var.day[day].Ens, ensCost_);
+        objective->SetCoefficient(day.Ens, ensCost_);
     }
     return;
 }
@@ -34,9 +34,9 @@ void OptimizedThermalGenerator::setProblemEnsCost(MPObjective* objective)
 void OptimizedThermalGenerator::setProblemSpillCost(MPObjective* objective)
 {
     // loop per day
-    for (int day = 0; day < timeHorizon_; ++day)
+    for (const auto day : var.day)
     {
-        objective->SetCoefficient(var.day[day].Spill, spillCost_);
+        objective->SetCoefficient(day.Spill, spillCost_);
     }
     return;
 }
@@ -71,9 +71,9 @@ void OptimizedThermalGenerator::setProblemPowerCost(const OptProblemSettings& op
                                                     const Data::Area& area)
 {
     // loop per thermal clusters inside the area
-    for (auto it = area.thermal.list.mapping.begin(); it != area.thermal.list.mapping.end(); ++it)
+    for (const auto& clusterEntry : area.thermal.list.mapping)
     {
-        const auto& cluster = *(it->second);
+        const auto& cluster = *(clusterEntry.second);
 
         // we do not check if cluster.optimizeMaintenance = true here
         // we add all the clusters Power inside maintenance group

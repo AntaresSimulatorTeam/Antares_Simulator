@@ -26,9 +26,9 @@ void OptimizedThermalGenerator::fixBounds()
 void OptimizedThermalGenerator::fixBounds(const Data::Area& area)
 {
     // loop per thermal clusters inside the area
-    for (auto it = area.thermal.list.mapping.begin(); it != area.thermal.list.mapping.end(); ++it)
+    for (const auto& clusterEntry : area.thermal.list.mapping)
     {
-        const auto& cluster = *(it->second);
+        const auto& cluster = *(clusterEntry.second);
 
         // check if cluster exist, do we generate + optimizeMaintenance
         // create start end variables only for these clusters

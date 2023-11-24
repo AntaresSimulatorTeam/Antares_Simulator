@@ -41,9 +41,9 @@ void OptimizedThermalGenerator::allocateVarStruct(int day)
 void OptimizedThermalGenerator::allocateVarStruct(int day, const Data::Area& area)
 {
     // loop per thermal clusters inside the area
-    for (auto it = area.thermal.list.mapping.begin(); it != area.thermal.list.mapping.end(); ++it)
+    for (const auto& clusterEntry : area.thermal.list.mapping)
     {
-        const auto& cluster = *(it->second);
+        const auto& cluster = *(clusterEntry.second);
 
         // we do not check if cluster.optimizeMaintenance = true here
         // we add all the clusters Power inside maintenance group
@@ -101,9 +101,9 @@ void OptimizedThermalGenerator::buildUnitPowerOutputVariables(const OptProblemSe
                                                               const Data::Area& area)
 {
     // loop per thermal clusters inside the area
-    for (auto it = area.thermal.list.mapping.begin(); it != area.thermal.list.mapping.end(); ++it)
+    for (const auto& clusterEntry : area.thermal.list.mapping)
     {
-        const auto& cluster = *(it->second);
+        const auto& cluster = *(clusterEntry.second);
 
         // we do not check if cluster.optimizeMaintenance = true here
         // we add all the clusters Power inside maintenance group
@@ -158,9 +158,9 @@ void OptimizedThermalGenerator::buildStartEndMntVariables(const OptProblemSettin
                                                           const Data ::Area& area)
 {
     // loop per thermal clusters inside the area
-    for (auto it = area.thermal.list.mapping.begin(); it != area.thermal.list.mapping.end(); ++it)
+    for (const auto& clusterEntry : area.thermal.list.mapping)
     {
-        const auto& cluster = *(it->second);
+        const auto& cluster = *(clusterEntry.second);
 
         // check if cluster exist, do we generate + optimizeMaintenance
         // create start end variables only for these clusters
