@@ -29,7 +29,7 @@ class study_run:
         if self.named_mps_problems:
             command.append('--named-mps-problems')
         if self.parallel:
-            command.append('--force-parallel=' + str(os.cpu_count()))
+            command.append('--force-parallel=2')
         process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
         process.communicate()
 
