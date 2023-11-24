@@ -145,10 +145,9 @@ void OptimizedThermalGenerator::setClusterData()
         auto& areaVariables = maintenanceData.areaMap;
         areaVariables[&area] = AreaData();
         // loop per thermal clusters inside the area - fill in the structure
-        for (auto it = area.thermal.list.mapping.begin(); it != area.thermal.list.mapping.end();
-             ++it)
+        for (const auto& clusterEntry : area.thermal.list.mapping)
         {
-            const auto& cluster = *(it->second);
+            const auto& cluster = *(clusterEntry.second);
 
             // we do not check if cluster.optimizeMaintenance = true here
             // we add all the clusters Power inside maintenance group
@@ -179,6 +178,7 @@ int OptimizedThermalGenerator::calculateNumberOfMaintenances(const Data::Thermal
 {
     // timeHorizon cannot be 0. The whole maintenance group would be skipped if this happened
     // on the other hand interPoPeriod can be 0. So we say at least 2 maintenance if this happens
+    // actually this cannot happen because checkMaintenanceGroupParameters() will kill it by now
     if (cluster.interPoPeriod == 0)
     {
         logs.warning() << "Cluster: " << cluster.getFullName()
@@ -198,7 +198,9 @@ int OptimizedThermalGenerator::calculateAverageMaintenanceDuration(
     {
         sum += cluster.prepro->data[Data::PreproThermal::poDuration][row];
     }
-
+    // poDuration in Antares cannot be below 1.0
+    // so it is redundant to check here if return value is above 1.0
+    // that is why I did not use std::max()
     return sum / static_cast<double>(DAYS_PER_YEAR);
 }
 
