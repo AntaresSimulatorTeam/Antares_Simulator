@@ -37,7 +37,7 @@ void OptimizedThermalGenerator::GenerateOptimizedThermalTimeSeries()
             optSett.lastDay += timeStep_;
             optSett.isFirstStep = false;
         }
-        saveScenarioResults(optSett);
+        postScenarioOptimization(optSett);
     }
 }
 
@@ -67,31 +67,6 @@ void OptimizedThermalGenerator::allocateWhereToWriteTs()
         }
     }
     return;
-}
-
-void OptimizedThermalGenerator::saveScenarioResults(const OptProblemSettings& optSett)
-{
-    // do not save if optimization failed at some step
-    if (!optSett.solved)
-        return;
-
-    // create a method to calculate all the Cluster outputs in MW
-    // using vectors of std::pairs per each cluster-unit
-    // that will contain maintenance start and duration
-
-    // save results
-
-    int colSaveFrom = optSett.scenario * scenarioLength_;
-    int colSaveTo = colSaveFrom + scenarioLength_ - 1;
-
-    // loop through all areas and clusters and write results
-
-    /*
-    // do not forget archive!!
-    if (archive)
-        writeResultsToDisk(area, cluster);
-
-    */
 }
 
 } // namespace Antares::Solver::TSGenerator

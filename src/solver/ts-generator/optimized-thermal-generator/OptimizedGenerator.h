@@ -103,9 +103,6 @@ private:
     // reset problem and variable structure
     void resetProblem();
 
-    // collect and store results from firstDay-lastDay
-    void appendStepResults();
-
     // print functions for debugging
     void printAllVariables();
     void printObjectiveFunction(MPObjective* objective);
@@ -116,7 +113,13 @@ private:
     // Functions called in main method:
     void allocateWhereToWriteTs();
     bool runOptimizationProblem(OptProblemSettings& optSett);
+
+    // post-scenario optimization methods
+    void postScenarioOptimization(OptProblemSettings& optSett);
+    void calculateScenarioResults(const OptProblemSettings& optSett);
     void saveScenarioResults(const OptProblemSettings& optSett);
+
+    // post-timeStep optimization methods
 
     // Calculate parameters methods - per maintenance group
     void setMaintenanceGroupParameters();

@@ -18,7 +18,7 @@ bool OptimizedThermalGenerator::runOptimizationProblem(OptProblemSettings& optSe
     if (!solveProblem(optSett))
         return false;
     printProblemVarAndResults();
-    appendStepResults();
+    // appendStepResults();
     return true;
 }
 
@@ -39,13 +39,6 @@ bool OptimizedThermalGenerator::solveProblem(OptProblemSettings& optSett)
         return false;
     }
     return true;
-}
-
-// TODO CR27: move this method somewhere else
-// collect and store results form firstDay-lastDay
-void OptimizedThermalGenerator::appendStepResults()
-{
-    return;
 }
 
 } // namespace Antares::Solver::TSGenerator
