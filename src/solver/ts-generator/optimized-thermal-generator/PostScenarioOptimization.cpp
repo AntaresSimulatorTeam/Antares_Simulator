@@ -35,9 +35,16 @@ void OptimizedThermalGenerator::saveScenarioResults(const OptProblemSettings& op
     // loop through all areas and clusters and write results
 
     /*
-    // do not forget archive!!
+    // this is not even post scenario optimization
+    // we do this after all the scenarios !!!
+    
+    if (derated)
+        cluster.series.timeSeries.averageTimeseries();
+
     if (archive)
         writeResultsToDisk(area, cluster);
+
+    cluster.calculationOfSpinning();
 
     */
 }
