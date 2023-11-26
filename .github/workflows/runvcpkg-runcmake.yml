@@ -86,17 +86,21 @@ jobs:
           path: 'antares-deps-version.json'
           prop_path: 'antares_deps_version'
 
-      - name: setpreset
+      - name: setpreset ub
         shell: bash 
         run: |
-          [[ ${{ matrix.os}} == 'ubuntu-latest' ]] 
           echo "configurePreset=ninja-multi-vcpkg" >> $GITHUB_ENV
           echo "configubuildPreset=ninja-multi-vcpkg" >> $GITHUB_ENV
           echo "archive_type=tgz" >> $GITHUB_ENV
-          [[ ${{ matrix.os}}  == 'windows-latest' ]] 
+        if: matrix.os == 'ubuntu-latest'
+        
+        - name: setpreset Win
+          shell: bash 
+          run: |
           echo "configurePreset=msbuild-vcpkg" >> $GITHUB_ENV
           echo "configubuildPreset=msbuild-vcpkg" >> $GITHUB_ENV
           echo "archive_type=zip" >> $GITHUB_ENV
+        if: matrix.os == 'windows-latest'
         
       - name: Download pre-compiled librairies (win)
         if: matrix.os == 'windows-latest'
