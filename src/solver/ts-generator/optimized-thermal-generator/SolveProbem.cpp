@@ -10,7 +10,6 @@ namespace Antares::Solver::TSGenerator
 bool OptimizedThermalGenerator::runOptimizationProblem(OptProblemSettings& optSett)
 {
     resetProblem();
-    reCalculateDaysSinceLastMnt(optSett);
     buildProblemVariables(optSett);
     fixBounds();
     buildProblemConstraints(optSett);
@@ -18,7 +17,7 @@ bool OptimizedThermalGenerator::runOptimizationProblem(OptProblemSettings& optSe
     if (!solveProblem(optSett))
         return false;
     printProblemVarAndResults();
-    // appendStepResults();
+    postTimeStepOptimization(optSett);
     return true;
 }
 

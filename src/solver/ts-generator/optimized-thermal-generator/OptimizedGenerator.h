@@ -120,6 +120,9 @@ private:
     void saveScenarioResults(const OptProblemSettings& optSett);
 
     // post-timeStep optimization methods
+    void postTimeStepOptimization(OptProblemSettings& optSett);
+    void appendTimeStepResults(const OptProblemSettings& optSett);
+    void reCalculateDaysSinceLastMnt(const OptProblemSettings& optSett);
 
     // Calculate parameters methods - per maintenance group
     void setMaintenanceGroupParameters();
@@ -150,7 +153,6 @@ private:
                                                      uint unitIndex);
     int calculateUnitLatestStartOfFirstMaintenance(const Data::ThermalCluster& cluster,
                                                    uint unitIndex);
-    void reCalculateDaysSinceLastMnt(const OptProblemSettings& optSett);
 
     // auxillary functions
     static std::array<double, DAYS_PER_YEAR> calculateDailySums(
