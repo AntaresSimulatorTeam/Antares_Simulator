@@ -86,8 +86,20 @@ jobs:
           path: 'antares-deps-version.json'
           prop_path: 'antares_deps_version'
 
+      - name: setpreset
+        shell: bash 
+        run: |
+          [[ matrix.os == 'ubuntu-latest' ]] 
+          echo "configurePreset=ninja-multi-vcpkg" >> $GITHUB_ENV
+          echo "configubuildPreset=ninja-multi-vcpkg" >> $GITHUB_ENV
+          echo "archive_type=tgz" >> $GITHUB_ENV
+          [[ matrix.os  == 'windows-latest' ]] 
+          echo "configurePreset=msbuild-vcpkg" >> $GITHUB_ENV
+          echo "configubuildPreset=msbuild-vcpkg" >> $GITHUB_ENV
+          echo "archive_type=zip" >> $GITHUB_ENV
+
       - name: Download pre-compiled librairies
-        uses: ./.github/workflows/download-extract-precompiled-libraries-zip
+        uses: ./.github/workflows/download-extract-precompiled-libraries-${{env.archive_type}}
         with:
           antares-deps-version: ${{steps.antares-deps-version.outputs.prop}}
           os: ${{matrix.os}}
@@ -120,16 +132,6 @@ jobs:
       - name: Prints output of run-vcpkg's action.
         run: echo "root='${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }}', triplet='${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_DEFAULT_TRIPLET_OUT }}' "
       
-      - name: setpreset
-        shell: bash 
-        run: |
-          [[ matrix.os == 'ubuntu-latest' ]] 
-          echo "configurePreset=ninja-multi-vcpkg" >> $GITHUB_ENV
-          echo "configubuildPreset=ninja-multi-vcpkg" >> $GITHUB_ENV
-          [[ matrix.os  == 'windows-latest' ]] 
-          echo "configurePreset=msbuild-vcpkg" >> $GITHUB_ENV
-          echo "configubuildPreset=msbuild-vcpkg" >> $GITHUB_ENV
-
 
       - name: Run CMake-Config-Build (Release configuration)
         uses: lukka/run-cmake@v10
