@@ -3,6 +3,7 @@
 //
 
 #include "OptimizedGenerator.h"
+#include "AuxillaryFreeFunctions.h"
 
 namespace Antares::Solver::TSGenerator
 {
