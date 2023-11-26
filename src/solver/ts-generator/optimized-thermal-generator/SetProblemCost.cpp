@@ -24,9 +24,9 @@ void OptimizedThermalGenerator::setProblemCost(const OptProblemSettings& optSett
 void OptimizedThermalGenerator::setProblemEnsCost(MPObjective* objective)
 {
     // loop per day
-    for (const auto day : var.day)
+    for (const auto& ens : vars.ens)
     {
-        objective->SetCoefficient(day.Ens, ensCost_);
+        objective->SetCoefficient(ens, ensCost_);
     }
     return;
 }
@@ -34,9 +34,9 @@ void OptimizedThermalGenerator::setProblemEnsCost(MPObjective* objective)
 void OptimizedThermalGenerator::setProblemSpillCost(MPObjective* objective)
 {
     // loop per day
-    for (const auto day : var.day)
+    for (const auto& spill : vars.spill)
     {
-        objective->SetCoefficient(day.Spill, spillCost_);
+        objective->SetCoefficient(spill, spillCost_);
     }
     return;
 }
@@ -44,71 +44,25 @@ void OptimizedThermalGenerator::setProblemSpillCost(MPObjective* objective)
 void OptimizedThermalGenerator::setProblemPowerCost(const OptProblemSettings& optSett,
                                                     MPObjective* objective)
 {
+    // loop per units
+    for (const auto& unit : vars.clusterUnits)
+    {
+        setProblemPowerCost(optSett, objective, unit);
+    }
+    return;
+}
+
+void OptimizedThermalGenerator::setProblemPowerCost(const OptProblemSettings& optSett,
+                                                    MPObjective* objective,
+                                                    const Unit& unit)
+{
     // loop per day
-    for (int day = 0; day < timeHorizon_; ++day)
+    for (int day = 0; day < unit.P.size(); ++day)
     {
-        setProblemPowerCost(optSett, objective, day);
+        double unitPowerCost = getPowerCost(*(unit.parentCluster), day + optSett.firstDay);
+        objective->SetCoefficient(unit.P[day], unitPowerCost);
     }
-    return;
-}
 
-void OptimizedThermalGenerator::setProblemPowerCost(const OptProblemSettings& optSett,
-                                                    MPObjective* objective,
-                                                    int day)
-{
-    // loop per area inside maintenance group
-    for (const auto& entryWeightMap : maintenanceGroup_)
-    {
-        const auto& area = *(entryWeightMap.first);
-        setProblemPowerCost(optSett, objective, day, area);
-    }
-    return;
-}
-
-void OptimizedThermalGenerator::setProblemPowerCost(const OptProblemSettings& optSett,
-                                                    MPObjective* objective,
-                                                    int day,
-                                                    const Data::Area& area)
-{
-    // loop per thermal clusters inside the area
-    for (const auto& clusterEntry : area.thermal.list.mapping)
-    {
-        const auto& cluster = *(clusterEntry.second);
-
-        // we do not check if cluster.optimizeMaintenance = true here
-        // we add all the clusters Power inside maintenance group
-        if (!checkClusterExist(cluster))
-            continue;
-
-        setProblemPowerCost(optSett, objective, day, area, cluster);
-    }
-    return;
-}
-
-void OptimizedThermalGenerator::setProblemPowerCost(const OptProblemSettings& optSett,
-                                                    MPObjective* objective,
-                                                    int day,
-                                                    const Data::Area& area,
-                                                    const Data::ThermalCluster& cluster)
-{
-    double unitPowerCost = getPowerCost(cluster, day + optSett.firstDay);
-    // loop per unit inside the cluster
-    for (int unit = 0; unit < cluster.unitCount; ++unit)
-    {
-        setProblemPowerCost(objective, day, area, cluster, unit, unitPowerCost);
-    }
-    return;
-}
-
-void OptimizedThermalGenerator::setProblemPowerCost(MPObjective* objective,
-                                                    int day,
-                                                    const Data::Area& area,
-                                                    const Data::ThermalCluster& cluster,
-                                                    int unitIndex,
-                                                    double cost)
-{
-    objective->SetCoefficient(var.day[day].areaMap[&area].clusterMap[&cluster].unitMap[unitIndex].P,
-                              cost);
     return;
 }
 

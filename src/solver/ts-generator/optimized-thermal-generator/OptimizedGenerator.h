@@ -24,12 +24,6 @@ class OptimizedThermalGenerator : public GeneratorTempData
 private:
     // optimization problem construction methods
 
-    // functions to allocate variable structure
-    void allocateVarStruct();
-    void allocateVarStruct(int day);
-    void allocateVarStruct(int day, const Data::Area& area);
-    void allocateVarStruct(int day, const Data::ThermalCluster& cluster);
-
     // functions to build problem variables
     void buildProblemVariables(const OptProblemSettings& optSett);
     void buildEnsAndSpillageVariables(const OptProblemSettings& optSett);
@@ -39,38 +33,29 @@ private:
                                        const Data::ThermalCluster& cluster);
     void buildUnitPowerOutputVariables(const OptProblemSettings& optSett,
                                        const Data::ThermalCluster& cluster,
-                                       int day);
-    void buildStartEndMntVariables(const OptProblemSettings& optSett);
-    void buildStartEndMntVariables(const OptProblemSettings& optSett, const Data ::Area& area);
+                                       int unit);
     void buildStartEndMntVariables(const OptProblemSettings& optSett,
-                                   const Data ::ThermalCluster& cluster);
-    void buildStartEndMntVariables(const OptProblemSettings& optSett,
-                                   const Data ::ThermalCluster& cluster,
+                                   const Data::ThermalCluster& cluster,
                                    int unit,
-                                   int totalMntNumber);
+                                   Unit& unitRef);
     void buildStartVariables(const OptProblemSettings& optSett,
                              const Data ::ThermalCluster& cluster,
                              int unit,
+                             Unit& unitRef,
                              int mnt);
     void buildEndVariables(const OptProblemSettings& optSett,
                            const Data ::ThermalCluster& cluster,
                            int unit,
+                           Unit& unitRef,
                            int mnt);
 
     // functions to fix bounds of some variables
     void fixBounds();
-    void fixBounds(const Data::Area& area);
-    void fixBounds(const Data::ThermalCluster& cluster);
-    void fixBounds(const Data::ThermalCluster& cluster,
-                   int unit,
-                   int totalMntNum,
-                   int avrMntDuration);
-    void fixBoundsFirstMnt(const Data::ThermalCluster& cluster, int unit);
-    void fixBoundsStartSecondMnt(const Data::ThermalCluster& cluster, int unit, int mnt);
-    void fixBoundsMntEnd(const Data::ThermalCluster& cluster,
-                         int unit,
-                         int mnt,
-                         int avrMntDuration);
+    void fixBounds(const Unit& unit);
+    void fixBounds(const Unit& unit, int averageMaintenanceDuration);
+    void fixBoundsFirstMnt(const Unit& unit);
+    void fixBoundsStartSecondMnt(const Unit& unit, int mnt);
+    void fixBoundsMntEnd(const Unit& unit, int mnt, int averageMaintenanceDuration);
 
     // functions to build problem constraints
     void buildProblemConstraints(const OptProblemSettings& optSett);
@@ -79,84 +64,42 @@ private:
     void insertEnsVars(MPConstraint* ct, int day);
     void insertSpillVars(MPConstraint* ct, int day);
     void insertPowerVars(MPConstraint* ct, int day);
-    void insertPowerVars(MPConstraint* ct, int day, const Data::Area& area);
-    void insertPowerVars(MPConstraint* ct, int day, const Data::ThermalCluster& cluster);
-    void insertPowerVars(MPConstraint* ct, int day, const Data::ThermalCluster& cluster, int unit);
+    void insertPowerVars(MPConstraint* ct, int day, const Unit& unit);
     void setStartEndMntLogicConstraints(const OptProblemSettings& optSett);
-    void setStartEndMntLogicConstraints(const OptProblemSettings& optSett, const Data::Area& area);
-    void setStartEndMntLogicConstraints(const OptProblemSettings& optSett,
-                                        const Data::ThermalCluster& cluster);
-    void setStartEndMntLogicConstraints(const OptProblemSettings& optSett,
-                                        const Data::ThermalCluster& cluster,
-                                        int unit);
+    void setStartEndMntLogicConstraints(const OptProblemSettings& optSett, const Unit& unit);
     void setEndOfMaintenanceEventBasedOnAverageDurationOfMaintenanceEvent(
       const OptProblemSettings& optSett,
-      const Data::ThermalCluster& cluster,
-      int unit,
+      const Unit& unit,
       int mnt);
     void setUpFollowingMaintenanceBasedOnAverageDurationBetweenMaintenanceEvents(
       const OptProblemSettings& optSett,
-      const Data::ThermalCluster& cluster,
-      int unit,
+      const Unit& unit,
       int mnt);
     void setOnceStartIsSetToOneItWillBeOneUntilEndOfOptimizationTimeHorizon(
       const OptProblemSettings& optSett,
-      const Data::ThermalCluster& cluster,
-      int unit,
+      const Unit& unit,
       int mnt);
     void setNextMaintenanceCanNotStartBeforePreviousMaintenance(const OptProblemSettings& optSett,
-                                                                const Data::ThermalCluster& cluster,
-                                                                int unit,
+                                                                const Unit& cluster,
                                                                 int mnt);
     void setMaxUnitOutputConstraints(const OptProblemSettings& optSett);
     void setMaxUnitOutputConstraints(const OptProblemSettings& optSett, int& day);
-    void setMaxUnitOutputConstraints(const OptProblemSettings& optSett,
-                                     int day,
-                                     const Data::Area& area);
-    void setMaxUnitOutputConstraints(const OptProblemSettings& optSett,
-                                     int day,
-                                     const Data::ThermalCluster& cluster);
-    void setMaxUnitOutputConstraints(const OptProblemSettings& optSett,
-                                     int day,
-                                     const Data::ThermalCluster& cluster,
-                                     int unit,
-                                     double maxOutput);
-    void insertStartSum(MPConstraint* ct,
-                        int day,
-                        const Data::ThermalCluster& cluster,
-                        int unit,
-                        double maxPower);
-    void insertEndSum(MPConstraint* ct,
-                      int day,
-                      const Data::ThermalCluster& cluster,
-                      int unit,
-                      double maxPower);
+    void setMaxUnitOutputConstraints(const OptProblemSettings& optSett, int day, const Unit& unit);
+    void insertStartSum(MPConstraint* ct, int day, const Unit& unit, double maxPower);
+    void insertEndSum(MPConstraint* ct, int day, const Unit& cluster, double maxPower);
 
     // functions to set problem objective function
     void setProblemCost(const OptProblemSettings& optSett);
     void setProblemEnsCost(MPObjective* objective);
     void setProblemSpillCost(MPObjective* objective);
     void setProblemPowerCost(const OptProblemSettings& optSett, MPObjective* objective);
-    void setProblemPowerCost(const OptProblemSettings& optSett, MPObjective* objective, int day);
     void setProblemPowerCost(const OptProblemSettings& optSett,
                              MPObjective* objective,
-                             int day,
-                             const Data::Area& area);
-    void setProblemPowerCost(const OptProblemSettings& optSett,
-                             MPObjective* objective,
-                             int day,
-                             const Data::Area& area,
-                             const Data::ThermalCluster& cluster);
-    void setProblemPowerCost(MPObjective* objective,
-                             int day,
-                             const Data::Area& area,
-                             const Data::ThermalCluster& cluster,
-                             int unitIndex,
-                             double powerCost);
+                             const Unit& unit);
 
     // solve problem and check if optimal solution found
     bool solveProblem(OptProblemSettings& optSett);
-    
+
     // reset problem and variable structure
     void resetProblem();
 
@@ -186,8 +129,10 @@ private:
     // calculate parameters methods - per cluster
     int calculateNumberOfMaintenances(const Data::ThermalCluster& cluster, int timeHorizon);
     int calculateAverageMaintenanceDuration(const Data::ThermalCluster& cluster);
-    static std::array<double, DAYS_PER_YEAR> calculateMaxUnitOutput(const Data::ThermalCluster& cluster);
-    static std::array<double, DAYS_PER_YEAR> calculateAvrUnitDailyCost(const Data::ThermalCluster& cluster);
+    static std::array<double, DAYS_PER_YEAR> calculateMaxUnitOutput(
+      const Data::ThermalCluster& cluster);
+    static std::array<double, DAYS_PER_YEAR> calculateAvrUnitDailyCost(
+      const Data::ThermalCluster& cluster);
 
     // getters
     double getPowerCost(const Data::ThermalCluster& cluster, int optimizationDay);
@@ -231,7 +176,7 @@ private:
     double spillCost_;
     std::array<double, DAYS_PER_YEAR> residualLoadDailyValues_;
     MaintenanceData maintenanceData;
-    OptimizationProblemVariables var;
+    OptimizationProblemVariables vars;
 
     // MPSolver instance
     MPSolver solver;
@@ -257,27 +202,27 @@ public:
         // Solver Settings
         // MP solver parameters / TODD CR27: do we change this -
         // I would keep it on default values for the time being
-        
+
         // Access solver parameters
         MPSolverParameters params;
         // Set parameter values
         // params.SetIntegerParam(MPSolverParameters::SCALING, 0);
         // params.SetIntegerParam(MPSolverParameters::PRESOLVE, 0);
-        
+
         // set solver infinity
         solverInfinity = solver.infinity();
     }
 
     ~OptimizedThermalGenerator() = default;
 
-    // Main functions - loop per scenarios and through the scenario length step by step 
+    // Main functions - loop per scenarios and through the scenario length step by step
     // (moving window)
     void GenerateOptimizedThermalTimeSeries();
 };
 
-// Declare the auxiliary function outside the class 
+// Declare the auxiliary function outside the class
 // Debug & Test purpose - to be removed
 template<typename T>
-void printColumnToFile(const std::vector<std::vector<T>>& data);
+void printColumnToFile(const std::vector<std::vector<T>>& data, const std::string& filename);
 
 } // namespace Antares::Solver::TSGenerator

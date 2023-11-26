@@ -10,7 +10,9 @@ void OptimizedThermalGenerator::resetProblem()
 {
     // Clear the solver to reset it for the new problem
     solver.Clear();
-    var.day.clear();
+    vars.ens.clear();
+    vars.spill.clear();
+    vars.clusterUnits.clear();
     return;
 }
 

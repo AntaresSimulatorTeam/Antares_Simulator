@@ -142,8 +142,8 @@ void OptimizedThermalGenerator::setClusterData()
     for (const auto& entryWeightMap : maintenanceGroup_)
     {
         const auto& area = *(entryWeightMap.first);
-        auto& areaVariables = maintenanceData.areaMap;
-        areaVariables[&area] = AreaData();
+        auto& areaData = maintenanceData.areaMap;
+        areaData[&area] = AreaData();
         // loop per thermal clusters inside the area - fill in the structure
         for (const auto& clusterEntry : area.thermal.list.mapping)
         {
@@ -154,19 +154,19 @@ void OptimizedThermalGenerator::setClusterData()
             if (!checkClusterExist(cluster))
                 continue;
 
-            auto& clusterVariables = areaVariables[&area].clusterMap;
-            clusterVariables[&cluster] = ClusterData();
-            clusterVariables[&cluster].maxPower = calculateMaxUnitOutput(cluster);
-            clusterVariables[&cluster].avgCost = calculateAvrUnitDailyCost(cluster);
+            auto& clusterData = areaData[&area].clusterMap;
+            clusterData[&cluster] = ClusterData();
+            clusterData[&cluster].maxPower = calculateMaxUnitOutput(cluster);
+            clusterData[&cluster].avgCost = calculateAvrUnitDailyCost(cluster);
 
-            clusterVariables[&cluster].numberOfMaintenances
+            clusterData[&cluster].numberOfMaintenances
               = calculateNumberOfMaintenances(cluster, timeHorizon_);
-            clusterVariables[&cluster].averageMaintenanceDuration
+            clusterData[&cluster].averageMaintenanceDuration
               = calculateAverageMaintenanceDuration(cluster);
 
             // since we will be updating daysSinceLastMaintenance values
             // lets create a copy here - this is copy by value!
-            clusterVariables[&cluster].daysSinceLastMnt = cluster.daysSinceLastMaintenance;
+            clusterData[&cluster].daysSinceLastMnt = cluster.daysSinceLastMaintenance;
         }
     }
     return;

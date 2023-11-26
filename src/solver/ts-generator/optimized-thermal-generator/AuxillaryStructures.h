@@ -12,6 +12,7 @@ using namespace operations_research;
 namespace Antares::Solver::TSGenerator
 {
 
+// this class stores data about optimization problem settings
 class OptProblemSettings final
 {
 public:
@@ -24,57 +25,47 @@ public:
     bool solved = true;
 };
 
-// TODO CR27:
-// maybe for refactoring create a vector of structs called units
-// each unit struct will contain pointer to area/cluster/int unitIndex/ bool createStartEnd
-// pointer to var P*, vector of pointers to var start<*> & end<*>
-// then loop just through that vector + loop per time step
-// not loop nesting into day-area-cluster-unit
-// maybe better ?@!
-
-struct OptimizationProblemVariablesPerUnit
+// this structure stores the data about optimization problem variables
+struct Maintenances
 {
-    MPVariable* P = nullptr;; // pointer to P[t][u] variable
-
-    // number of elements in the vector is total number of maintenances of unit
-    std::vector<MPVariable*> start; // pointer to s[t][u][m] variable
-    std::vector<MPVariable*> end;   // pointer to e[t][u][m] variable
+    // number of elements in the vector is number of days in optimization problem
+    std::vector<MPVariable*> start; // pointer to s[u][m][t] variables
+    std::vector<MPVariable*> end;   // pointer to e[u][m][t] variables
 };
 
-struct OptimizationProblemVariablesPerCluster
+struct Unit
 {
-    // number of elements in the vector is total number of units in cluster
-    std::vector<OptimizationProblemVariablesPerUnit> unitMap;
+    // inputs
+    const Data::ThermalCluster* parentCluster;
+    int index;
+    bool createStartEndVariables;
+
+    // solver variables
+
+    // number of elements in the vector is number of days in optimization problem
+    std::vector<MPVariable*> P; // pointers to P[u][t] variables
+
+    // number of elements in the vector is total maintenances of unit
+    std::vector<Maintenances> maintenances;
 };
 
-struct OptimizationProblemVariablesPerArea
-{
-    // number of elements in the map is total number of clusters in area
-    std::map<const Data::ThermalCluster*, OptimizationProblemVariablesPerCluster> clusterMap;
-};
-
-struct OptimizationProblemVariablesPerDay
-{
-    MPVariable* Ens = nullptr;   // pointer to ENS[t] variable
-    MPVariable* Spill = nullptr;; // pointer to Spillage[t] variable
-    // number of elements in the map is total number of areas in optimization problem
-    std::map<const Data::Area*, OptimizationProblemVariablesPerArea> areaMap;
-};
 struct OptimizationProblemVariables
 {
-    // number of elements in the vector is total number of days in optimization problem
-    std::vector<OptimizationProblemVariablesPerDay> day;
+    // number of elements in the vector is number units (areas*cluster*units)
+    std::vector<Unit> clusterUnits;
+
+    // number of elements in the vector is number of days in optimization problem
+    std::vector<MPVariable*> ens;   // pointers to Ens[t] variables
+    std::vector<MPVariable*> spill; // pointers to Spill[t] variables
 };
 
 // it is better to immediately calculate and populate structures
-// that will store information about:
-// for each area and each cluster:
-// daily arrays with info about:
-// daily MaxUnitOutput and
-// daily UnitPowerCost
+// that will store information about clusters
 // so inside optimization problem we just retrieve these data
 // not re-calculate them over and over again
 
+// this structure stores cluster input data (optimization parameters) 
+// that stays the same during optimizationS
 struct ClusterData
 {
     std::array<double, DAYS_PER_YEAR> maxPower;
