@@ -35,6 +35,7 @@ void OptimizedThermalGenerator::GenerateOptimizedThermalTimeSeries()
             // Update the time values for the next iteration
             optSett.firstDay += timeStep_;
             optSett.lastDay += timeStep_;
+            optSett.isFirstStep = false;
         }
         saveScenarioResults(optSett);
     }
