@@ -25,7 +25,7 @@
       "platform": "ubuntu"
     },
     {
-      "name": "libboost-test-dev",
+      "name": "wxwidgets",
       "platform": "ubuntu"
     }
   ]
