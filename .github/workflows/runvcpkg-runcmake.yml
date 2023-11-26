@@ -99,7 +99,7 @@ jobs:
           echo "archive_type=zip" >> $GITHUB_ENV
 
       - name: Download pre-compiled librairies
-        uses: ./.github/workflows/download-extract-precompiled-libraries-${{env.archive_type}}
+        uses: ./.github/workflows/download-extract-precompiled-libraries-${{ env.archive_type }}
         with:
           antares-deps-version: ${{steps.antares-deps-version.outputs.prop}}
           os: ${{matrix.os}}
