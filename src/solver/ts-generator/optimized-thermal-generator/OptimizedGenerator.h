@@ -148,8 +148,6 @@ private:
     void setClusterData();
 
     // calculate parameters methods - per cluster
-    int calculateNumberOfMaintenances(const Data::ThermalCluster& cluster, int timeHorizon);
-    int calculateAverageMaintenanceDuration(const Data::ThermalCluster& cluster);
     static std::array<double, DAYS_PER_YEAR> calculateMaxUnitOutput(
       const Data::ThermalCluster& cluster);
     static std::array<double, DAYS_PER_YEAR> calculateAvrUnitDailyCost(
@@ -268,5 +266,9 @@ std::array<double, HOURS_PER_YEAR> calculateAverageRenewableTs(
   const Data::Area& area);
 std::array<double, HOURS_PER_YEAR> calculateAverageRenewableTsAggregated(const Data::Area& area);
 std::array<double, HOURS_PER_YEAR> calculateAverageRenewableTsClusters(const Data::Area& area);
+
+// calculate parameters methods - per cluster
+int calculateNumberOfMaintenances(const Data::ThermalCluster& cluster, int timeHorizon);
+int calculateAverageMaintenanceDuration(const Data::ThermalCluster& cluster);
 
 } // namespace Antares::Solver::TSGenerator

@@ -173,37 +173,6 @@ void OptimizedThermalGenerator::setClusterData()
 }
 
 // calculate parameters methods - per cluster
-int OptimizedThermalGenerator::calculateNumberOfMaintenances(const Data::ThermalCluster& cluster,
-                                                             int timeHorizon)
-{
-    // timeHorizon cannot be 0. The whole maintenance group would be skipped if this happened
-    // on the other hand interPoPeriod can be 0. So we say at least 2 maintenance if this happens
-    // actually this cannot happen because checkMaintenanceGroupParameters() will kill it by now
-    if (cluster.interPoPeriod == 0)
-    {
-        logs.warning() << "Cluster: " << cluster.getFullName()
-                       << "has interPoPeriod = 0. Number of maintenances for all units inside this "
-                          "cluster will be set to 2";
-        return minNumberOfMaintenances;
-    }
-
-    return std::max(timeHorizon / cluster.interPoPeriod, minNumberOfMaintenances); // floor
-}
-
-int OptimizedThermalGenerator::calculateAverageMaintenanceDuration(
-  const Data::ThermalCluster& cluster)
-{
-    double sum = 0.0;
-    for (std::size_t row = 0; row < DAYS_PER_YEAR; ++row)
-    {
-        sum += cluster.prepro->data[Data::PreproThermal::poDuration][row];
-    }
-    // poDuration in Antares cannot be below 1.0
-    // so it is redundant to check here if return value is above 1.0
-    // that is why I did not use std::max()
-    return sum / static_cast<double>(DAYS_PER_YEAR);
-}
-
 std::array<double, DAYS_PER_YEAR> OptimizedThermalGenerator::calculateMaxUnitOutput(
   const Data::ThermalCluster& cluster)
 {
@@ -505,6 +474,36 @@ bool checkClusterExist(const Data::ThermalCluster& cluster)
 int dayOfTheYear(int optimizationDay)
 {
     return optimizationDay % DAYS_PER_YEAR;
+}
+
+// calculate parameters methods - per cluster
+int calculateNumberOfMaintenances(const Data::ThermalCluster& cluster, int timeHorizon)
+{
+    // timeHorizon cannot be 0. The whole maintenance group would be skipped if this happened
+    // on the other hand interPoPeriod can be 0. So we say at least 2 maintenance if this happens
+    // actually this cannot happen because checkMaintenanceGroupParameters() will kill it by now
+    if (cluster.interPoPeriod == 0)
+    {
+        logs.warning() << "Cluster: " << cluster.getFullName()
+                       << "has interPoPeriod = 0. Number of maintenances for all units inside this "
+                          "cluster will be set to 2";
+        return minNumberOfMaintenances;
+    }
+
+    return std::max(timeHorizon / cluster.interPoPeriod, minNumberOfMaintenances); // floor
+}
+
+int calculateAverageMaintenanceDuration(const Data::ThermalCluster& cluster)
+{
+    double sum = 0.0;
+    for (std::size_t row = 0; row < DAYS_PER_YEAR; ++row)
+    {
+        sum += cluster.prepro->data[Data::PreproThermal::poDuration][row];
+    }
+    // poDuration in Antares cannot be below 1.0
+    // so it is redundant to check here if return value is above 1.0
+    // that is why I did not use std::max()
+    return sum / static_cast<double>(DAYS_PER_YEAR);
 }
 
 } // namespace Antares::Solver::TSGenerator
