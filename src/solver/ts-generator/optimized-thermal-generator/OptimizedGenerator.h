@@ -147,12 +147,6 @@ private:
     void calculateResidualLoad();
     void setClusterData();
 
-    // calculate parameters methods - per cluster
-    static std::array<double, DAYS_PER_YEAR> calculateMaxUnitOutput(
-      const Data::ThermalCluster& cluster);
-    static std::array<double, DAYS_PER_YEAR> calculateAvrUnitDailyCost(
-      const Data::ThermalCluster& cluster);
-
     // getters
     double getPowerCost(const Data::ThermalCluster& cluster, int optimizationDay);
     double getPowerOutput(const Data::ThermalCluster& cluster, int optimizationDay);
@@ -186,10 +180,6 @@ private:
     phase two - idea for refactoring -
     make MaintenanceData a class
     and then move all methods for optimization problem parameters calculation to that class
-    in addition lots of parameters calculation methods
-    (all auxillary functions + calculate parameters methods - per cluster 
-    + calculate Average time-series functions)
-    do not need to be class - methods - just make them free functions!
     */
     MaintenanceData maintenanceData;
     /*
@@ -270,5 +260,7 @@ std::array<double, HOURS_PER_YEAR> calculateAverageRenewableTsClusters(const Dat
 // calculate parameters methods - per cluster
 int calculateNumberOfMaintenances(const Data::ThermalCluster& cluster, int timeHorizon);
 int calculateAverageMaintenanceDuration(const Data::ThermalCluster& cluster);
+std::array<double, DAYS_PER_YEAR> calculateMaxUnitOutput(const Data::ThermalCluster& cluster);
+std::array<double, DAYS_PER_YEAR> calculateAvrUnitDailyCost(const Data::ThermalCluster& cluster);
 
 } // namespace Antares::Solver::TSGenerator

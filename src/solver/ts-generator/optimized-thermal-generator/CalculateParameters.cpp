@@ -172,51 +172,6 @@ void OptimizedThermalGenerator::setClusterData()
     return;
 }
 
-// calculate parameters methods - per cluster
-std::array<double, DAYS_PER_YEAR> OptimizedThermalGenerator::calculateMaxUnitOutput(
-  const Data::ThermalCluster& cluster)
-{
-    std::array<double, DAYS_PER_YEAR> maxOutputDailyValues = {};
-    std::array<double, HOURS_PER_YEAR> maxOutputHourlyValues = {};
-
-    // transfer to array
-    for (std::size_t row = 0; row < HOURS_PER_YEAR; ++row)
-    {
-        maxOutputHourlyValues[row]
-          = cluster.modulation[Data::ThermalModulation::thermalModulationCapacity][row];
-    }
-
-    maxOutputDailyValues = calculateDailySums(maxOutputHourlyValues);
-    // multiply by per unit power (nominal capacity)
-    for (double& num : maxOutputDailyValues)
-    {
-        num *= cluster.nominalCapacity;
-    }
-    return maxOutputDailyValues;
-}
-
-std::array<double, DAYS_PER_YEAR> OptimizedThermalGenerator::calculateAvrUnitDailyCost(
-  const Data::ThermalCluster& cluster)
-{
-    std::array<double, DAYS_PER_YEAR> avrCostDailyValues = {};
-    std::array<double, HOURS_PER_YEAR> costHourlyValues = {};
-
-    // transfer to array
-    for (std::size_t row = 0; row < HOURS_PER_YEAR; ++row)
-    {
-        costHourlyValues[row]
-          = cluster.modulation[Data::ThermalModulation::thermalModulationMarketBid][row];
-    }
-
-    avrCostDailyValues = calculateDailySums(costHourlyValues);
-    // multiply by per unit/cluster market bid cost + average this on 24 hours
-    for (double& num : avrCostDailyValues)
-    {
-        num *= cluster.marketBidCost / 24.0;
-    }
-    return avrCostDailyValues;
-}
-
 // Getters
 double OptimizedThermalGenerator::getPowerCost(const Data::ThermalCluster& cluster,
                                                int optimizationDay)
@@ -506,4 +461,45 @@ int calculateAverageMaintenanceDuration(const Data::ThermalCluster& cluster)
     return sum / static_cast<double>(DAYS_PER_YEAR);
 }
 
+std::array<double, DAYS_PER_YEAR> calculateMaxUnitOutput(const Data::ThermalCluster& cluster)
+{
+    std::array<double, DAYS_PER_YEAR> maxOutputDailyValues = {};
+    std::array<double, HOURS_PER_YEAR> maxOutputHourlyValues = {};
+
+    // transfer to array
+    for (std::size_t row = 0; row < HOURS_PER_YEAR; ++row)
+    {
+        maxOutputHourlyValues[row]
+          = cluster.modulation[Data::ThermalModulation::thermalModulationCapacity][row];
+    }
+
+    maxOutputDailyValues = calculateDailySums(maxOutputHourlyValues);
+    // multiply by per unit power (nominal capacity)
+    for (double& num : maxOutputDailyValues)
+    {
+        num *= cluster.nominalCapacity;
+    }
+    return maxOutputDailyValues;
+}
+
+std::array<double, DAYS_PER_YEAR> calculateAvrUnitDailyCost(const Data::ThermalCluster& cluster)
+{
+    std::array<double, DAYS_PER_YEAR> avrCostDailyValues = {};
+    std::array<double, HOURS_PER_YEAR> costHourlyValues = {};
+
+    // transfer to array
+    for (std::size_t row = 0; row < HOURS_PER_YEAR; ++row)
+    {
+        costHourlyValues[row]
+          = cluster.modulation[Data::ThermalModulation::thermalModulationMarketBid][row];
+    }
+
+    avrCostDailyValues = calculateDailySums(costHourlyValues);
+    // multiply by per unit/cluster market bid cost + average this on 24 hours
+    for (double& num : avrCostDailyValues)
+    {
+        num *= cluster.marketBidCost / 24.0;
+    }
+    return avrCostDailyValues;
+}
 } // namespace Antares::Solver::TSGenerator
