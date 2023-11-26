@@ -169,14 +169,6 @@ private:
     int calculateUnitLatestStartOfFirstMaintenance(const Data::ThermalCluster& cluster,
                                                    uint unitIndex);
 
-    // calculate Average time-series functions
-    std::array<double, HOURS_PER_YEAR> calculateAverageLoadTs(const Data::Area& area);
-    std::array<double, HOURS_PER_YEAR> calculateAverageRorTs(const Data::Area& area);
-    std::array<double, HOURS_PER_YEAR> calculateAverageRenewableTs(const Data::Area& area);
-    std::array<double, HOURS_PER_YEAR> calculateAverageRenewableTsAggregated(
-      const Data::Area& area);
-    std::array<double, HOURS_PER_YEAR> calculateAverageRenewableTsClusters(const Data::Area& area);
-
   /* ===================END-CALCULATE-OPTIMIZATION-PARAMETERS=================== */
 
   /* ===================CLASS-VARIABLES=================== */
@@ -267,5 +259,14 @@ std::array<double, HOURS_PER_YEAR> calculateAverageTs(const Matrix<double>& tsVa
                                                       const Matrix<uint32_t>& tsNumbers);
 bool checkClusterExist(const Data::ThermalCluster& cluster);
 int dayOfTheYear(int optimizationDay);
+
+// calculate Average time-series functions
+std::array<double, HOURS_PER_YEAR> calculateAverageLoadTs(const Data::Area& area);
+std::array<double, HOURS_PER_YEAR> calculateAverageRorTs(const Data::Area& area);
+std::array<double, HOURS_PER_YEAR> calculateAverageRenewableTs(
+  const Data::Parameters::RenewableGeneration modelingType,
+  const Data::Area& area);
+std::array<double, HOURS_PER_YEAR> calculateAverageRenewableTsAggregated(const Data::Area& area);
+std::array<double, HOURS_PER_YEAR> calculateAverageRenewableTsClusters(const Data::Area& area);
 
 } // namespace Antares::Solver::TSGenerator
