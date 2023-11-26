@@ -79,7 +79,7 @@ void OptimizedThermalGenerator::buildUnitPowerOutputVariables(const OptProblemSe
     // add new Unit
     vars.clusterUnits.push_back(Unit());
 
-    // but we do not know the total count
+    // but we do not know the total unit count
     // so always retrieve the last one
     auto& unitRef = vars.clusterUnits.back();
 
@@ -87,6 +87,11 @@ void OptimizedThermalGenerator::buildUnitPowerOutputVariables(const OptProblemSe
     unitRef.parentCluster = &cluster;
     unitRef.index = unit; // local count inside the cluster
     unitRef.createStartEndVariables = true;
+
+    // if we are in the first step
+    // lets add Unit, with inputs, to the scenarioResults
+    if (optSett.isFirstStep)
+        scenarioResults.push_back(vars.clusterUnits.back());
 
     // loop per day
     for (int day = 0; day < timeHorizon_; ++day)
@@ -104,6 +109,7 @@ void OptimizedThermalGenerator::buildUnitPowerOutputVariables(const OptProblemSe
     if (!(cluster.doWeGenerateTS(globalThermalTSgeneration_) && cluster.optimizeMaintenance))
     {
         unitRef.createStartEndVariables = false;
+        scenarioResults.back().createStartEndVariables = false;
         return;
     }
 
