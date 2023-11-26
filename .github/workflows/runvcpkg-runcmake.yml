@@ -138,6 +138,7 @@ jobs:
 
       - name: Enable git longpaths
         run:  git config --system core.longpaths true
+        if: matrix.os == 'windows-latest'
 
         
       - name: List $RUNNER_WORKSPACE before build
