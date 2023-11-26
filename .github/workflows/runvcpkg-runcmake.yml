@@ -97,15 +97,23 @@ jobs:
           echo "configurePreset=msbuild-vcpkg" >> $GITHUB_ENV
           echo "configubuildPreset=msbuild-vcpkg" >> $GITHUB_ENV
           echo "archive_type=zip" >> $GITHUB_ENV
-
+        
       - name: Download pre-compiled librairies
-        uses: ./.github/workflows/download-extract-precompiled-libraries-${{ env.archive_type }}
+        if: matrix.os == 'windows-latest'
+        uses: ./.github/workflows/download-extract-precompiled-libraries-zip
         with:
           antares-deps-version: ${{steps.antares-deps-version.outputs.prop}}
           os: ${{matrix.os}}
           ortools-url: ${{env.ORTOOLS_URL}}
           ortools-dir: ${{env.ORTOOLS_DIR}}
-
+        if: matrix.os == 'ubuntu-latest'
+        uses: ./.github/workflows/download-extract-precompiled-libraries-tgz
+        with:
+          antares-deps-version: ${{steps.antares-deps-version.outputs.prop}}
+          os: ${{matrix.os}}
+          ortools-url: ${{env.ORTOOLS_URL}}
+          ortools-dir: ${{env.ORTOOLS_DIR}}
+          
       - name: Setup Python 3.12
         uses: actions/setup-python@v4
         id: setup-python
