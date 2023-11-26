@@ -93,10 +93,10 @@ jobs:
           echo "configubuildPreset=ninja-multi-vcpkg" >> $GITHUB_ENV
           echo "archive_type=tgz" >> $GITHUB_ENV
         if: matrix.os == 'ubuntu-latest'
-        
-        - name: setpreset Win
-          shell: bash 
-          run: |
+
+      - name: setpreset Win
+        shell: bash 
+        run: |
           echo "configurePreset=msbuild-vcpkg" >> $GITHUB_ENV
           echo "configubuildPreset=msbuild-vcpkg" >> $GITHUB_ENV
           echo "archive_type=zip" >> $GITHUB_ENV
