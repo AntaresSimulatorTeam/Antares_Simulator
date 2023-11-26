@@ -26,7 +26,7 @@ public:
     bool isFirstStep = true;
 };
 
-// this structure stores the data about optimization problem variables
+// this structure stores the data about optimization problem variables and results
 struct Maintenances
 {
     // number of elements in the vector is number of days in optimization problem

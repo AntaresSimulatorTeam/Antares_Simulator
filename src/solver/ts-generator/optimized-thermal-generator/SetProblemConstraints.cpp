@@ -78,6 +78,8 @@ void OptimizedThermalGenerator::setStartEndMntLogicConstraints(const OptProblemS
     // loop per maintenances per unit
     for (int mnt = 0; mnt < unit.maintenances.size(); ++mnt)
     {
+        assert(unit.maintenances[mnt].start.size() == timeHorizon_);
+        assert(unit.maintenances[mnt].end.size() == timeHorizon_);
         setEndOfMaintenanceEventBasedOnAverageDurationOfMaintenanceEvent(optSett, unit, mnt);
         setOnceStartIsSetToOneItWillBeOneUntilEndOfOptimizationTimeHorizon(optSett, unit, mnt);
     }
