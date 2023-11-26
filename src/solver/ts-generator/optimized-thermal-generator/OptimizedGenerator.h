@@ -169,14 +169,6 @@ private:
     int calculateUnitLatestStartOfFirstMaintenance(const Data::ThermalCluster& cluster,
                                                    uint unitIndex);
 
-    // auxillary functions
-    static std::array<double, DAYS_PER_YEAR> calculateDailySums(
-      const std::array<double, HOURS_PER_YEAR>& hourlyValues);
-    std::array<double, HOURS_PER_YEAR> calculateAverageTs(const Matrix<double>& tsValue,
-                                                          const Matrix<uint32_t>& tsNumbers);
-    bool checkClusterExist(const Data::ThermalCluster& cluster);
-    int dayOfTheYear(int optimizationDay);
-
     // calculate Average time-series functions
     std::array<double, HOURS_PER_YEAR> calculateAverageLoadTs(const Data::Area& area);
     std::array<double, HOURS_PER_YEAR> calculateAverageRorTs(const Data::Area& area);
@@ -267,5 +259,13 @@ public:
 // Debug & Test purpose - to be removed
 template<typename T>
 void printColumnToFile(const std::vector<std::vector<T>>& data, const std::string& filename);
+
+// auxillary functions
+std::array<double, DAYS_PER_YEAR> calculateDailySums(
+  const std::array<double, HOURS_PER_YEAR>& hourlyValues);
+std::array<double, HOURS_PER_YEAR> calculateAverageTs(const Matrix<double>& tsValue,
+                                                      const Matrix<uint32_t>& tsNumbers);
+bool checkClusterExist(const Data::ThermalCluster& cluster);
+int dayOfTheYear(int optimizationDay);
 
 } // namespace Antares::Solver::TSGenerator

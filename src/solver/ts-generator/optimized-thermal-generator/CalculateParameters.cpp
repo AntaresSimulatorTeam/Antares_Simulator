@@ -377,68 +377,6 @@ int OptimizedThermalGenerator::calculateUnitLatestStartOfFirstMaintenance(
     }
 }
 
-// auxillary functions - for parameter calculations
-std::array<double, DAYS_PER_YEAR> OptimizedThermalGenerator::calculateDailySums(
-  const std::array<double, HOURS_PER_YEAR>& hourlyValues)
-{
-    std::array<double, DAYS_PER_YEAR> dailyValues;
-    auto hours_iter = hourlyValues.begin();
-
-    for (double& day_sum : dailyValues)
-    {
-        day_sum = std::accumulate(hours_iter, hours_iter + 24, 0.0);
-        hours_iter += 24;
-    }
-
-    return dailyValues;
-}
-
-std::array<double, HOURS_PER_YEAR> OptimizedThermalGenerator::calculateAverageTs(
-  const Matrix<double>& tsValue,
-  const Matrix<uint32_t>& tsNumbers)
-{
-    // define array
-    std::array<double, HOURS_PER_YEAR> averageTs = {};
-    // calculate sum
-    for (std::size_t year = 0; year < tsNumbers.height; ++year)
-    {
-        for (std::size_t row = 0; row < HOURS_PER_YEAR; ++row)
-        {
-            averageTs[row] += tsValue[tsNumbers[0][year]][row];
-        }
-    }
-    // calculate mean
-    for (std::size_t row = 0; row < HOURS_PER_YEAR; ++row)
-    {
-        averageTs[row] = averageTs[row] / tsNumbers.height;
-    }
-    // return
-    return averageTs;
-}
-
-bool OptimizedThermalGenerator::checkClusterExist(const Data::ThermalCluster& cluster)
-{
-    if (!cluster.prepro)
-    {
-        logs.error() << "Cluster: " << cluster.getFullName()
-                     << ": The timeseries will not be regenerated. All data "
-                        "related to the ts-generator for "
-                     << "'thermal' have been released.";
-        return false;
-    }
-
-    if (0 == cluster.unitCount || 0 == cluster.nominalCapacity)
-    {
-        return false;
-    }
-    return true;
-}
-
-int OptimizedThermalGenerator::dayOfTheYear(int optimizationDay)
-{
-    return optimizationDay % DAYS_PER_YEAR;
-}
-
 // calculate Average time-series functions
 std::array<double, HOURS_PER_YEAR> OptimizedThermalGenerator::calculateAverageLoadTs(
   const Data::Area& area)
@@ -509,6 +447,67 @@ std::array<double, HOURS_PER_YEAR> OptimizedThermalGenerator::calculateAverageRe
     {
         return calculateAverageRenewableTsClusters(area);
     }
+}
+
+// auxillary functions - for parameter calculations
+std::array<double, DAYS_PER_YEAR> calculateDailySums(
+  const std::array<double, HOURS_PER_YEAR>& hourlyValues)
+{
+    std::array<double, DAYS_PER_YEAR> dailyValues;
+    auto hours_iter = hourlyValues.begin();
+
+    for (double& day_sum : dailyValues)
+    {
+        day_sum = std::accumulate(hours_iter, hours_iter + 24, 0.0);
+        hours_iter += 24;
+    }
+
+    return dailyValues;
+}
+
+std::array<double, HOURS_PER_YEAR> calculateAverageTs(const Matrix<double>& tsValue,
+                                                      const Matrix<uint32_t>& tsNumbers)
+{
+    // define array
+    std::array<double, HOURS_PER_YEAR> averageTs = {};
+    // calculate sum
+    for (std::size_t year = 0; year < tsNumbers.height; ++year)
+    {
+        for (std::size_t row = 0; row < HOURS_PER_YEAR; ++row)
+        {
+            averageTs[row] += tsValue[tsNumbers[0][year]][row];
+        }
+    }
+    // calculate mean
+    for (std::size_t row = 0; row < HOURS_PER_YEAR; ++row)
+    {
+        averageTs[row] = averageTs[row] / tsNumbers.height;
+    }
+    // return
+    return averageTs;
+}
+
+bool checkClusterExist(const Data::ThermalCluster& cluster)
+{
+    if (!cluster.prepro)
+    {
+        logs.error() << "Cluster: " << cluster.getFullName()
+                     << ": The timeseries will not be regenerated. All data "
+                        "related to the ts-generator for "
+                     << "'thermal' have been released.";
+        return false;
+    }
+
+    if (0 == cluster.unitCount || 0 == cluster.nominalCapacity)
+    {
+        return false;
+    }
+    return true;
+}
+
+int dayOfTheYear(int optimizationDay)
+{
+    return optimizationDay % DAYS_PER_YEAR;
 }
 
 } // namespace Antares::Solver::TSGenerator
