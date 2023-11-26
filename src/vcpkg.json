@@ -27,6 +27,6 @@
     {
       "name": "libboost-test-dev",
       "platform": "ubuntu"
-    },
+    }
   ]
 }
