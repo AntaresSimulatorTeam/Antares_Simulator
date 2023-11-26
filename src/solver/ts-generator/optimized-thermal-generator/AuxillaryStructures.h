@@ -23,6 +23,7 @@ public:
     int scenario;
 
     bool solved = true;
+    bool isFirstStep = true;
 };
 
 // this structure stores the data about optimization problem variables
@@ -47,6 +48,17 @@ struct Unit
 
     // number of elements in the vector is total maintenances of unit
     std::vector<Maintenances> maintenances;
+
+    // results
+    // we will store results in the same structure
+    // however we need separate instance of this struct
+    // since the object that stores optimization variables is cleared after each timeStep
+    // and the results need to be saved/appended for each timeStep
+
+    // number of elements in the vector is number of maintenances
+    // first element of the pair is start of the maintenance
+    // second element of the pair is randomly drawn maintenance duration
+    std::vector<std::vector<std::pair<int, int>>> maintenanceResults;
 };
 
 struct OptimizationProblemVariables
@@ -59,12 +71,12 @@ struct OptimizationProblemVariables
     std::vector<MPVariable*> spill; // pointers to Spill[t] variables
 };
 
-// it is better to immediately calculate and populate structures
+// it is better to immediately calculate and populate structure
 // that will store information about clusters
-// so inside optimization problem we just retrieve these data
+// so inside optimization problem we just retrieve these data with getters
 // not re-calculate them over and over again
 
-// this structure stores cluster input data (optimization parameters) 
+// this structure stores cluster input data (optimization parameters)
 // that stays the same during optimizationS
 struct ClusterData
 {
