@@ -22,7 +22,8 @@ namespace Antares::Solver::TSGenerator
 class OptimizedThermalGenerator : public GeneratorTempData
 {
 private:
-    // optimization problem construction methods
+    
+  /* ===================OPTIMIZATION=================== */
 
     // functions to build problem variables
     void buildProblemVariables(const OptProblemSettings& optSett);
@@ -110,9 +111,18 @@ private:
     void printResults();
     void printProblemVarAndResults();
 
+
+  /* ===================END-OPTIMIZATION=================== */
+
+  /* ===================MAIN=================== */
+
     // Functions called in main method:
     void allocateWhereToWriteTs();
     bool runOptimizationProblem(OptProblemSettings& optSett);
+
+  /* ===================END-MAIN=================== */
+
+  /* ===================POST-OPTIMIZATION=================== */
 
     // post-scenario optimization methods
     void postScenarioOptimization(OptProblemSettings& optSett);
@@ -124,6 +134,10 @@ private:
     void postTimeStepOptimization(OptProblemSettings& optSett);
     void appendTimeStepResults(const OptProblemSettings& optSett);
     void reCalculateDaysSinceLastMnt(const OptProblemSettings& optSett);
+
+  /* ===================END-POST-OPTIMIZATION=================== */
+
+  /* ===================CALCULATE-OPTIMIZATION-PARAMETERS=================== */
 
     // Calculate parameters methods - per maintenance group
     void setMaintenanceGroupParameters();
@@ -171,6 +185,10 @@ private:
       const Data::Area& area);
     std::array<double, HOURS_PER_YEAR> calculateAverageRenewableTsClusters(const Data::Area& area);
 
+  /* ===================END-CALCULATE-OPTIMIZATION-PARAMETERS=================== */
+
+  /* ===================CLASS-VARIABLES=================== */
+
     // variables
     Data::MaintenanceGroup& maintenanceGroup_;
     bool globalThermalTSgeneration_;
@@ -188,6 +206,8 @@ private:
     // MPSolver instance
     MPSolver solver;
     double solverInfinity;
+
+  /* ===================END-CLASS-VARIABLES=================== */
 
 public:
     explicit OptimizedThermalGenerator(Data::Study& study,
