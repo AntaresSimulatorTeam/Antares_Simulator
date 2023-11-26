@@ -15,6 +15,7 @@ void OptimizedThermalGenerator::postScenarioOptimization(OptProblemSettings& opt
 
     calculateScenarioResults(optSett);
     saveScenarioResults(optSett);
+    resetResultStorage();
 
     return;
 }
@@ -39,6 +40,12 @@ void OptimizedThermalGenerator::saveScenarioResults(const OptProblemSettings& op
         writeResultsToDisk(area, cluster);
 
     */
+}
+
+void OptimizedThermalGenerator::resetResultStorage()
+{
+    scenarioResults.clear();
+    return;
 }
 
 } // namespace Antares::Solver::TSGenerator

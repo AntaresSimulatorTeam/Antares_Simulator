@@ -118,6 +118,7 @@ private:
     void postScenarioOptimization(OptProblemSettings& optSett);
     void calculateScenarioResults(const OptProblemSettings& optSett);
     void saveScenarioResults(const OptProblemSettings& optSett);
+    void resetResultStorage();
 
     // post-timeStep optimization methods
     void postTimeStepOptimization(OptProblemSettings& optSett);
@@ -182,6 +183,7 @@ private:
     std::array<double, DAYS_PER_YEAR> residualLoadDailyValues_;
     MaintenanceData maintenanceData;
     OptimizationProblemVariables vars;
+    std::vector<Unit> scenarioResults;
 
     // MPSolver instance
     MPSolver solver;
