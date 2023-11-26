@@ -205,7 +205,8 @@ private:
     make MaintenanceData a class
     and then move all methods for optimization problem parameters calculation to that class
     in addition lots of parameters calculation methods
-    (all auxillary functions + calculate parameters methods - per cluster)
+    (all auxillary functions + calculate parameters methods - per cluster 
+    + calculate Average time-series functions)
     do not need to be class - methods - just make them free functions!
     */
     MaintenanceData maintenanceData;
