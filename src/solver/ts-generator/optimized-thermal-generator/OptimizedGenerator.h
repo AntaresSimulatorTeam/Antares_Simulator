@@ -199,7 +199,21 @@ private:
     double ensCost_;
     double spillCost_;
     std::array<double, DAYS_PER_YEAR> residualLoadDailyValues_;
+    /*
+    TODO CR27:
+    phase two - idea for refactoring -
+    make MaintenanceData a class
+    and then move all methods for optimization problem parameters calculation to that class
+    in addition lots of parameters calculation methods
+    (all auxillary functions + calculate parameters methods - per cluster)
+    do not need to be class - methods - just make them free functions!
+    */
     MaintenanceData maintenanceData;
+    /*
+    TODO CR27:
+    same for OptimizationProblemVariables - maybe new class
+    and move optimization methods away from here 
+    */
     OptimizationProblemVariables vars;
     std::vector<Unit> scenarioResults;
 
