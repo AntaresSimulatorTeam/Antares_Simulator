@@ -220,7 +220,8 @@ public:
 
     ~OptimizedThermalGenerator() = default;
 
-    // Main functions - loop per scenarios and through the scenario length step by step
+    // Main functions - loop per scenarios and 
+    // through the scenario length step by step
     // (moving window)
     void GenerateOptimizedThermalTimeSeries();
 };
