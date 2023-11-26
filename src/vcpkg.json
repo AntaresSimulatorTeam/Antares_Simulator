@@ -21,11 +21,11 @@
     },
 
     {
-      "name": "libwxgtk3.0-gtk3-dev",
+      "name": "wxwidgets",
       "platform": "ubuntu"
     },
     {
-      "name": "wxwidgets",
+      "name": "libboost-test-dev",
       "platform": "ubuntu"
     }
   ]
