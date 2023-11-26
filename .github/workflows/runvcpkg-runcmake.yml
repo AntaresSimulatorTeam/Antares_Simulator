@@ -51,7 +51,7 @@ jobs:
           submodules: true
 
       - name: Pre-requisites
-        if: ${{ matrix.os }} == 'windows-latest'
+        if: matrix.os == 'windows-latest'
         shell: cmd
         run: |
             choco install wget unzip zip --no-progress
