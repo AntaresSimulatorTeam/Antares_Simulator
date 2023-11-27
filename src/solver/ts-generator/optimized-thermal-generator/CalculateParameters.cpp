@@ -48,10 +48,9 @@ std::pair<int, int> OptimizedThermalGenerator::calculateTimeHorizonAndStep()
     for (const auto& entryWeightMap : maintenanceGroup_)
     {
         const auto& area = *(entryWeightMap.first);
-        for (auto it = area.thermal.list.mapping.begin(); it != area.thermal.list.mapping.end();
-             ++it)
+        for (const auto& clusterEntry : area.thermal.list.mapping)
         {
-            const auto& cluster = *(it->second);
+            const auto& cluster = *(clusterEntry.second);
             if (checkClusterExist(cluster) && cluster.doWeGenerateTS(globalThermalTSgeneration_)
                 && cluster.optimizeMaintenance)
             {
