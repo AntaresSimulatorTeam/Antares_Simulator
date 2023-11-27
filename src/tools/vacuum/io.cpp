@@ -42,7 +42,7 @@ bool RemoveFile(const String& filename, uint64_t size)
     if (dry || IO::errNone == IO::File::Delete(filename))
     {
         ++IOFilesDeleted;
-        IOBytesDeleted += (Atomic::Int<>::Type)size;
+        IOBytesDeleted += size;
         return true;
     }
     return false;
