@@ -16,7 +16,7 @@
     },
 
     {
-      "name": "uuid-dev",
+      "name": "uuid",
       "platform": "linux"
     },
 
@@ -25,7 +25,7 @@
       "platform": "linux"
     },
     {
-      "name": "libboost-test-dev",
+      "name": "boost-test",
       "platform": "linux"
     }
   ]
