@@ -89,6 +89,10 @@ struct ClusterData
     std::vector<int> daysSinceLastMnt;
     int numberOfMaintenances;
     int averageMaintenanceDuration;
+
+    // for random generator
+    double AP[366];
+    double BP[366];
 };
 
 struct AreaData

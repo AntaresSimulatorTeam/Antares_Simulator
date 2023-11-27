@@ -167,6 +167,13 @@ void OptimizedThermalGenerator::setClusterData()
             // since we will be updating daysSinceLastMaintenance values
             // lets create a copy here - this is copy by value!
             clusterData[&cluster].daysSinceLastMnt = cluster.daysSinceLastMaintenance;
+
+            // random generator
+            prepareIndispoFromLaw(cluster.plannedLaw,
+                                  cluster.plannedVolatility,
+                                  clusterData[&cluster].AP,
+                                  clusterData[&cluster].BP,
+                                  cluster.prepro->data[Data::PreproThermal::poDuration]);
         }
     }
     return;

@@ -22,11 +22,6 @@ void OptimizedThermalGenerator::appendTimeStepResults(const OptProblemSettings& 
     // and then randomly generate maintenance duration
     // and create std::pairs - of start_day + mnt_duration
 
-    const Data::ThermalCluster* nextCluster = nullptr;
-    double* POD;
-    Data::ThermalLaw p_law;
-    double p_volatility;
-
     // loop per units
     for (std::size_t unitIndexTotal = 0; unitIndexTotal < vars.clusterUnits.size();
          ++unitIndexTotal)
@@ -50,17 +45,7 @@ void OptimizedThermalGenerator::appendTimeStepResults(const OptProblemSettings& 
         assert(readResultUnit.index == storeResultUnit.index
                && "Read and Store Units do not point to the same unit index.");
 
-        // we should prepare data for random maintenance generator
-        // once per Cluster, NOT once per UNIT
-        // so let's avoid generating same data over and over again for each unit
-        if (nextCluster != readResultUnit.parentCluster)
-        {
-            nextCluster = readResultUnit.parentCluster;
-            POD = nextCluster->prepro->data[Data::PreproThermal::poDuration];
-            p_law = nextCluster->plannedLaw;
-            p_volatility = nextCluster->plannedVolatility;
-            prepareIndispoFromLaw(p_law, p_volatility, ap, bp, POD);
-        }
+        auto& cluster = *(readResultUnit.parentCluster);
 
         // loop per maintenances of unit
 
@@ -81,9 +66,16 @@ void OptimizedThermalGenerator::appendTimeStepResults(const OptProblemSettings& 
             int dayInTheYearStart
               = dayOfTheYear(globalMaintenanceStart); // TODO CR27: check this with Hugo!
 
-            int PODOfTheDay = (int)POD[dayInTheYearStart];
+            int PODOfTheDay
+              = (int)cluster.prepro->data[Data::PreproThermal::poDuration][dayInTheYearStart];
+            double app = maintenanceData.areaMap[cluster.parentArea]
+                           .clusterMap[&cluster]
+                           .AP[dayInTheYearStart];
+            double bpp = maintenanceData.areaMap[cluster.parentArea]
+                           .clusterMap[&cluster]
+                           .BP[dayInTheYearStart];
             int maintenanceDuration = durationGenerator(
-              p_law, PODOfTheDay, p_volatility, ap[dayInTheYearStart], bp[dayInTheYearStart]);
+              cluster.plannedLaw, PODOfTheDay, cluster.plannedVolatility, app, bpp);
 
             storeResultUnit.maintenanceResults.push_back(
               std::make_pair(globalMaintenanceStart, maintenanceDuration));
@@ -104,8 +96,8 @@ void OptimizedThermalGenerator::reCalculateDaysSinceLastMnt(const OptProblemSett
         // we need to re-do
         // clusterVariables[&cluster].daysSinceLastMnt = cluster.daysSinceLastMaintenance;
         // for all areas and clusters
+
     }
-    // TODO CR27: re-calculate days since last maintenance inputs if necessary
 }
 
 } // namespace Antares::Solver::TSGenerator
