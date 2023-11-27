@@ -210,10 +210,4 @@ std::array<double, DAYS_PER_YEAR> calculateAvrUnitDailyCost(const Data::ThermalC
     return avrCostDailyValues;
 }
 
-// post timeStep_ optimization functions
-void prepareRandomMaintenanceDurationData(const Data::ThermalCluster& cluster)
-{
-    return;
-}
-
 } // namespace Antares::Solver::TSGenerator

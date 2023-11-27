@@ -23,6 +23,9 @@ void OptimizedThermalGenerator::appendTimeStepResults(const OptProblemSettings& 
     // and create std::pairs - of start_day + mnt_duration
 
     const Data::ThermalCluster* nextCluster = nullptr;
+    double* POD;
+    Data::ThermalLaw p_law;
+    double p_volatility;
 
     // loop per units
     for (std::size_t unitIndexTotal = 0; unitIndexTotal < vars.clusterUnits.size();
@@ -47,23 +50,15 @@ void OptimizedThermalGenerator::appendTimeStepResults(const OptProblemSettings& 
         assert(readResultUnit.index == storeResultUnit.index
                && "Read and Store Units do not point to the same unit index.");
 
-        // prepare data for random maintenance generator
-        const auto& cluster = *(readResultUnit.parentCluster);
-        const auto& preproData = *(cluster.prepro);
-        const auto& POD = preproData.data[Data::PreproThermal::poDuration];
-        auto p_law = cluster.plannedLaw;
-        double p_volatility = cluster.plannedVolatility;
-        prepareRandomMaintenanceDurationData(cluster);
-        prepareIndispoFromLaw(p_law, p_volatility, ap, bp, POD);
-
         // we should prepare data for random maintenance generator
         // once per Cluster, NOT once per UNIT
         // so let's avoid generating same data over and over again for each unit
         if (nextCluster != readResultUnit.parentCluster)
         {
             nextCluster = readResultUnit.parentCluster;
-
-            prepareRandomMaintenanceDurationData(cluster);
+            POD = nextCluster->prepro->data[Data::PreproThermal::poDuration];
+            p_law = nextCluster->plannedLaw;
+            p_volatility = nextCluster->plannedVolatility;
             prepareIndispoFromLaw(p_law, p_volatility, ap, bp, POD);
         }
 
@@ -83,12 +78,12 @@ void OptimizedThermalGenerator::appendTimeStepResults(const OptProblemSettings& 
                 continue;
 
             int globalMaintenanceStart = localMaintenanceStart + optSett.firstDay;
-            int dayInTheYear
+            int dayInTheYearStart
               = dayOfTheYear(globalMaintenanceStart); // TODO CR27: check this with Hugo!
 
-            int PODOfTheDay = (int)POD[dayInTheYear];
+            int PODOfTheDay = (int)POD[dayInTheYearStart];
             int maintenanceDuration = durationGenerator(
-              p_law, PODOfTheDay, p_volatility, ap[dayInTheYear], bp[dayInTheYear]);
+              p_law, PODOfTheDay, p_volatility, ap[dayInTheYearStart], bp[dayInTheYearStart]);
 
             storeResultUnit.maintenanceResults.push_back(
               std::make_pair(globalMaintenanceStart, maintenanceDuration));
