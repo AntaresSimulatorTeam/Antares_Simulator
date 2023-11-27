@@ -26,10 +26,13 @@ std::array<double, HOURS_PER_YEAR> calculateAverageRenewableTs(
 std::array<double, HOURS_PER_YEAR> calculateAverageRenewableTsAggregated(const Data::Area& area);
 std::array<double, HOURS_PER_YEAR> calculateAverageRenewableTsClusters(const Data::Area& area);
 
-// calculate parameters methods - per cluster
+// calculate parameters functions - per cluster
 int calculateNumberOfMaintenances(const Data::ThermalCluster& cluster, int timeHorizon);
 int calculateAverageMaintenanceDuration(const Data::ThermalCluster& cluster);
 std::array<double, DAYS_PER_YEAR> calculateMaxUnitOutput(const Data::ThermalCluster& cluster);
 std::array<double, DAYS_PER_YEAR> calculateAvrUnitDailyCost(const Data::ThermalCluster& cluster);
+
+// post-time step optimization - functions
+int findFirstOne(const std::vector<int> vector, int limit);
 
 } // namespace Antares::Solver::TSGenerator

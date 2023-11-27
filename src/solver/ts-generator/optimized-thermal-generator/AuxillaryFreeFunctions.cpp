@@ -210,4 +210,28 @@ std::array<double, DAYS_PER_YEAR> calculateAvrUnitDailyCost(const Data::ThermalC
     return avrCostDailyValues;
 }
 
+// post-time step optimization - functions
+int findFirstOne(const std::vector<int> vector, int limit)
+{
+    // this functions finds first 1 in a vector and returns its index
+    // if no 1, return -1
+    // because 0 is a valid output - maintenance starts on first day
+
+    for (int i = 0; i < vector.size(); ++i)
+    {
+        if (vector[i] == 1)
+        {
+            if (i < limit)
+            {
+                return i;
+            }
+            else
+            {
+                break;
+            }
+        }
+    }
+    return -1;
+}
+
 } // namespace Antares::Solver::TSGenerator

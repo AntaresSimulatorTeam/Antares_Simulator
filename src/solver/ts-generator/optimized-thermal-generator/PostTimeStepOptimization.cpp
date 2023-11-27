@@ -17,6 +17,12 @@ void OptimizedThermalGenerator::postTimeStepOptimization(OptProblemSettings& opt
 // save/append optimization results form range 0-timeStep
 void OptimizedThermalGenerator::appendTimeStepResults(const OptProblemSettings& optSett)
 {
+    // we have vectors of start (zeros and ones)
+    // lets convert that into maintenance start day vector
+    // and then randomly generate maintenance duration
+    // and create std::pairs - of start_day + mnt_duration
+    
+    
     return;
 }
 
