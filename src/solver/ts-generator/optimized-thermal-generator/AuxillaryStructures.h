@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "OptimizedGenerator.h"
+#include "ortools/linear_solver/linear_solver.h"
 #include "../../../src/libs/antares/study/area/area.h"
 
 using namespace operations_research;
@@ -32,6 +32,10 @@ struct Maintenances
     // number of elements in the vector is number of days in optimization problem
     std::vector<MPVariable*> start; // pointer to s[u][m][t] variables
     std::vector<MPVariable*> end;   // pointer to e[u][m][t] variables
+
+    // methods
+    int startDay(int limit) const;
+    std::vector<int> getStartSolutionValues() const;
 };
 
 struct Unit
@@ -58,7 +62,7 @@ struct Unit
     // number of elements in the vector is number of maintenances
     // first element of the pair is start of the maintenance
     // second element of the pair is randomly drawn maintenance duration
-    std::vector<std::vector<std::pair<int, int>>> maintenanceResults;
+    std::vector<std::pair<int, int>> maintenanceResults;
 };
 
 struct OptimizationProblemVariables
