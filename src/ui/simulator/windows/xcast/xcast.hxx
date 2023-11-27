@@ -42,7 +42,7 @@ namespace Antares
 {
 namespace Window
 {
-template<enum Data::TimeSeries T>
+template<enum Data::TimeSeriesType T>
 XCast<T>::XCast(wxWindow* parent, Toolbox::InputSelector::Area* notifier) :
  wxPanel(parent, wxID_ANY), pNotifier(notifier), pArea(nullptr)
 {
@@ -189,13 +189,13 @@ XCast<T>::XCast(wxWindow* parent, Toolbox::InputSelector::Area* notifier) :
     pPageGeneral->select();
 }
 
-template<enum Data::TimeSeries T>
+template<enum Data::TimeSeriesType T>
 inline XCast<T>::~XCast()
 {
     ObserverAncestorType::destroyBoundEvents();
 }
 
-template<enum Data::TimeSeries T>
+template<enum Data::TimeSeriesType T>
 void XCast<T>::onUpdateDistribution(wxCommandEvent& evt)
 {
     wxChoice* obj = (wxChoice*)evt.GetEventObject();
@@ -220,7 +220,7 @@ void XCast<T>::onUpdateDistribution(wxCommandEvent& evt)
     }
 }
 
-template<enum Data::TimeSeries T>
+template<enum Data::TimeSeriesType T>
 void XCast<T>::onUpdateConversion(wxCommandEvent& evt)
 {
     if (!pArea)
@@ -238,7 +238,7 @@ void XCast<T>::onUpdateConversion(wxCommandEvent& evt)
     }
 }
 
-template<enum Data::TimeSeries T>
+template<enum Data::TimeSeriesType T>
 void XCast<T>::onUpdateTSTranslationUse(wxCommandEvent& evt)
 {
     wxChoice* obj = (wxChoice*)evt.GetEventObject();
@@ -260,21 +260,21 @@ void XCast<T>::onUpdateTSTranslationUse(wxCommandEvent& evt)
     }
 }
 
-template<enum Data::TimeSeries T>
+template<enum Data::TimeSeriesType T>
 inline void XCast<T>::selectDefaultPage()
 {
     if (pPageGeneral)
         pPageGeneral->select();
 }
 
-template<enum Data::TimeSeries T>
+template<enum Data::TimeSeriesType T>
 void XCast<T>::onStudyClosed()
 {
     pArea = nullptr;
     selectDefaultPage();
 }
 
-template<enum Data::TimeSeries T>
+template<enum Data::TimeSeriesType T>
 void XCast<T>::onAreaChanged(Data::Area* area)
 {
     using namespace Yuni;
@@ -308,7 +308,7 @@ void XCast<T>::onAreaChanged(Data::Area* area)
     useTranslation->SetSelection(0);
 }
 
-template<enum Data::TimeSeries T>
+template<enum Data::TimeSeriesType T>
 void XCast<T>::onInstalledCapacityChanged(wxCommandEvent& evt)
 {
     if (!pArea)

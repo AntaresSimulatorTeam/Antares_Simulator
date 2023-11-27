@@ -2,12 +2,12 @@ cmake_minimum_required(VERSION 3.14) # FetchContent_MakeAvailable
 
 # Version
 set(ANTARES_VERSION_HI	      8)
-set(ANTARES_VERSION_LO	      7)
+set(ANTARES_VERSION_LO	      8)
 set(ANTARES_VERSION_REVISION  0)
 
 # Beta release
-set(ANTARES_BETA 3)
-set(ANTARES_RC 0)
+set(ANTARES_BETA 0)
+set(ANTARES_RC 3)
 
 set(ANTARES_VERSION_YEAR      2023)
 
@@ -178,11 +178,14 @@ endif ()
 option(BUILD_UI "Build antares ui simulator" ON)
 message(STATUS "Build antares ui simulator: ${BUILD_UI}")
 
+option(BUILD_TOOLS "Build antares tools" OFF)
+message(STATUS "Build antares tools: ${BUILD_TOOLS}")
+
 option(BUILD_ORTOOLS "Build OR-Tools" OFF)
-message(STATUS "Build OR-Tools ${BUILD_ORTOOLS}")
+message(STATUS "Build OR-Tools: ${BUILD_ORTOOLS}")
 
 option(BUILD_MINIZIP "Build minizip" OFF)
-message(STATUS "Build minizip ${BUILD_MINIZIP}")
+message(STATUS "Build minizip: ${BUILD_MINIZIP}")
 
 #Define install directory
 if (NOT DEPS_INSTALL_DIR)
@@ -222,6 +225,9 @@ add_subdirectory(antares-deps)
 
 #Add needed definition in case of external dependencies compilation
 include (antares-deps/cmake/additionnal-definitions.cmake)
+
+#Boost header libraries
+find_package(Boost REQUIRED)
 
 #TODO : Add ZLIB if  VCPKG used why is this needed
 if (VCPKG_TOOLCHAIN) 
@@ -279,7 +285,7 @@ find_package(minizip)
 if(NOT minizip_FOUND OR BUILD_MINIZIP)
     # Repository + tag
     set(MZ_REPOSITORY "https://github.com/zlib-ng/minizip-ng.git")
-    set(MZ_TAG "3.0.7")
+    set(MZ_TAG "4.0.1")
     # CMake flags
     set(MZ_LZMA "OFF" CACHE INTERNAL "")
     set(MZ_ZSTD "OFF" CACHE INTERNAL "")
@@ -326,7 +332,9 @@ add_subdirectory(solver)	#antares solver and all associated libs
 add_subdirectory(analyzer)	#antares analyser
 
 # Tools
+if (BUILD_TOOLS)
 add_subdirectory(tools)	#All antares tools
+endif()
 
 # Tests
 # 	Not setting BUILD_TESTING as a command line argument is equivalent to use -DBUILD_TESTING=OFF
@@ -428,7 +436,7 @@ else()
 	set(CPACK_PACKAGE_VERSION_MINOR ${ANTARES_VERSION_LO})
 	set(CPACK_PACKAGE_VERSION_PATCH ${ANTARES_VERSION_REVISION}${ANTARES_VERSION_TAG})
 
-	set(CPACK_DEBIAN_PACKAGE_DEPENDS "libwxgtk3.0-gtk3-0v5")
+	set(CPACK_DEBIAN_PACKAGE_DEPENDS "libwxgtk3.0-gtk3-0v5 | libwxgtk3.2-dev")
     set(CPACK_RPM_PACKAGE_REQUIRES "wxGTK3")
     set(CPACK_RPM_PACKAGE_AUTOREQPROV "0")
 

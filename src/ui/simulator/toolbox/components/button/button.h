@@ -28,7 +28,6 @@
 #define __ANTARES_TOOLBOX_COMPONENTS_BUTTON_BUTTON_H__
 
 #include <yuni/yuni.h>
-#include <antares/wx-wrapper.h>
 #include <wx/bitmap.h>
 #include <ui/common/component/panel.h>
 #include <vector>
@@ -192,7 +191,7 @@ public:
     virtual void onMouseLeave() override;
 
     //! Click up
-    virtual void onMouseUp(wxMouseEvent& evt);
+    virtual void onMouseUp(wxMouseEvent& evt) override;
 
 protected:
     //! Preload the Icon

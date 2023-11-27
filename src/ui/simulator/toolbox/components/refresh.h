@@ -27,7 +27,7 @@
 #ifndef __ANTARES_TOOLBOX_COMPONENTS_REFRESH_H__
 #define __ANTARES_TOOLBOX_COMPONENTS_REFRESH_H__
 
-#include <antares/wx-wrapper.h>
+class wxWindow;
 
 namespace Antares
 {

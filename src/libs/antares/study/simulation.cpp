@@ -32,7 +32,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "simulation.h"
-#include "../logs.h"
+#include <antares/logs/logs.h>
 
 using namespace Yuni;
 
@@ -68,13 +68,13 @@ bool SimulationComments::saveToFolder(const AnyString& folder) const
     return false;
 }
 
-void SimulationComments::saveUsingWriter(Solver::IResultWriter::Ptr writer,
+void SimulationComments::saveUsingWriter(Solver::IResultWriter& writer,
                                          const AnyString& folder) const
 {
     String b = folder;
     b << SEP << "comments.txt";
     std::string comments_copy = comments.c_str();
-    writer->addEntryFromBuffer(b.c_str(), comments_copy);
+    writer.addEntryFromBuffer(b.c_str(), comments_copy);
 }
 
 bool SimulationComments::loadFromFolder(const StudyLoadOptions& options)
@@ -88,7 +88,7 @@ bool SimulationComments::loadFromFolder(const StudyLoadOptions& options)
     return true;
 }
 
-Yuni::uint64 SimulationComments::memoryUsage() const
+uint64_t SimulationComments::memoryUsage() const
 {
     return name.capacity() + comments.capacity();
 }

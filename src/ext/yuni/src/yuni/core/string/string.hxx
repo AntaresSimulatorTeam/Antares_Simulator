@@ -120,25 +120,25 @@ inline CString<ChunkSizeT, ExpandableT>::CString(bool value)
 }
 
 template<uint ChunkSizeT, bool ExpandableT>
-inline CString<ChunkSizeT, ExpandableT>::CString(yint64 value)
+inline CString<ChunkSizeT, ExpandableT>::CString(int64_t value)
 {
     assign(value);
 }
 
 template<uint ChunkSizeT, bool ExpandableT>
-inline CString<ChunkSizeT, ExpandableT>::CString(yint32 value)
+inline CString<ChunkSizeT, ExpandableT>::CString(int32_t value)
 {
     assign(value);
 }
 
 template<uint ChunkSizeT, bool ExpandableT>
-inline CString<ChunkSizeT, ExpandableT>::CString(yuint64 value)
+inline CString<ChunkSizeT, ExpandableT>::CString(uint64_t value)
 {
     assign(value);
 }
 
 template<uint ChunkSizeT, bool ExpandableT>
-inline CString<ChunkSizeT, ExpandableT>::CString(yuint32 value)
+inline CString<ChunkSizeT, ExpandableT>::CString(uint32_t value)
 {
     assign(value);
 }
@@ -3191,6 +3191,25 @@ inline bool CString<ChunkSizeT, ExpandableT>::append(const wchar_t* wbuffer, Siz
     // reset the final zero just in case
     resize(AncestorType::size);
     return false;
+}
+
+template<uint ChunkSizeT, bool ExpandableT>
+CString<ChunkSizeT, ExpandableT>::CString(const std::string& rhs):
+    CString(rhs.c_str())
+{
+}
+
+template<uint ChunkSizeT, bool ExpandableT>
+CString<ChunkSizeT, ExpandableT>&
+CString<ChunkSizeT, ExpandableT>::operator=(const std::string& rhs)
+{
+    return (*this = rhs.c_str());
+}
+
+template<uint ChunkSizeT, bool ExpandableT>
+CString<ChunkSizeT, ExpandableT>::operator std::string() const
+{
+    return this->c_str();
 }
 
 } // namespace Yuni

@@ -146,7 +146,7 @@ void UIRuntimeInfo::reloadBindingConstraints()
     }
 }
 
-uint64 UIRuntimeInfo::memoryUsage() const
+uint64_t UIRuntimeInfo::memoryUsage() const
 {
     return sizeof(UIRuntimeInfo) + sizeof(AreaLink*) * pLink.size();
 }

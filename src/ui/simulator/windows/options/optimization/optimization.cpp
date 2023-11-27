@@ -35,7 +35,7 @@
 #include "../../../application/study.h"
 #include "../../../windows/message.h"
 #include <ui/common/component/panel.h>
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 
 using namespace Yuni;
 
@@ -113,7 +113,7 @@ Optimization::Optimization(wxWindow* parent) :
     SetLabel(wxT("Optimization preferences"));
     SetTitle(wxT("Optimization preferences"));
 
-    auto& study = *Data::Study::Current::Get();
+    auto& study = *GetCurrentStudy();
 
     // Background color
     wxColour defaultBgColor = GetBackgroundColour();
@@ -377,7 +377,7 @@ void Optimization::onClose(void*)
 
 void Optimization::onResetToDefault(void*)
 {
-    auto studyptr = Data::Study::Current::Get();
+    auto studyptr = GetCurrentStudy();
     if (!(!studyptr))
     {
         Window::Message message(this,
@@ -419,7 +419,7 @@ void Optimization::onInternalMotion(wxMouseEvent&)
 
 void Optimization::refresh()
 {
-    auto studyptr = Data::Study::Current::Get();
+    auto studyptr = GetCurrentStudy();
     if (!studyptr)
         return;
     // The current study
@@ -626,7 +626,7 @@ void Optimization::onSelectModeIgnore(wxCommandEvent&)
 
 void Optimization::onSelectSimplexDay(wxCommandEvent&)
 {
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     if (!(!study))
     {
         if (study->parameters.simplexOptimizationRange != Data::sorDay)
@@ -640,7 +640,7 @@ void Optimization::onSelectSimplexDay(wxCommandEvent&)
 
 void Optimization::onSelectSimplexWeek(wxCommandEvent&)
 {
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     if (!(!study))
     {
         if (study->parameters.simplexOptimizationRange != Data::sorWeek)
@@ -654,7 +654,7 @@ void Optimization::onSelectSimplexWeek(wxCommandEvent&)
 
 void Optimization::setTransmissionCapacity(Data::GlobalTransmissionCapacities newCapacity)
 {
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     if (study && study->parameters.transmissionCapacities != newCapacity)
     {
         study->parameters.transmissionCapacities = newCapacity;
@@ -674,7 +674,7 @@ void Optimization::onSelectTransmissionCapacity(wxCommandEvent&)
 // -----------------------------------
 void Optimization::onSelectExportMPS(const Data::mpsExportStatus& mps_export_status)
 {
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     if (!(!study))
     {
         if (study->parameters.include.exportMPS != mps_export_status)
@@ -692,7 +692,7 @@ void Optimization::onSelectExportMPS(const Data::mpsExportStatus& mps_export_sta
 void Optimization::onSelectUnfeasibleBehavior(
   const Data::UnfeasibleProblemBehavior& unfeasibleProblemBehavior)
 {
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     if (!(!study))
     {
         if (study->parameters.include.unfeasibleProblemBehavior != unfeasibleProblemBehavior)

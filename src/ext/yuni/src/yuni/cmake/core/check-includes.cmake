@@ -1,8 +1,3 @@
-
-
-# stdint.h
-check_include_file(stdint.h YUNI_HAS_STDINT_H)
-
 # stdio.h
 check_include_file(stdio.h YUNI_HAS_STDIO_H)
 

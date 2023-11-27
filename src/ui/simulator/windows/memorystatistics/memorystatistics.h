@@ -27,7 +27,6 @@
 #ifndef __ANTARES_APPLICATION_MEMORYSTATISTICS_MEMORYSTATISTICS_H__
 #define __ANTARES_APPLICATION_MEMORYSTATISTICS_MEMORYSTATISTICS_H__
 
-#include <antares/wx-wrapper.h>
 #include <wx/dialog.h>
 #include "private.h"
 

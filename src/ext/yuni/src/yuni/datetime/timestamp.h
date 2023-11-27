@@ -22,7 +22,7 @@ namespace DateTime
 ** A timestamp is a time in seconds since 0 hours, 0 minutes, 0 seconds,
 ** January 1, 1970, Coordinated Universal Time.
 */
-typedef /*time_t*/ sint64 Timestamp;
+typedef /*time_t*/ int64_t Timestamp;
 
 /*!
 ** \brief Get the current timestamp (in seconds since epoch)

@@ -27,7 +27,6 @@
 #ifndef __ANTARES_WINDOWS_OUTPUT_LAYER_H__
 #define __ANTARES_WINDOWS_OUTPUT_LAYER_H__
 
-#include <antares/wx-wrapper.h>
 #include "../../application/study.h"
 #include "fwd.h"
 

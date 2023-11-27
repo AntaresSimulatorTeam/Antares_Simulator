@@ -24,24 +24,19 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-
-#include <math.h>
-#include "opt_structure_probleme_a_resoudre.h"
-
 #include "../simulation/simulation.h"
 #include "../simulation/sim_structure_donnees.h"
 #include "../simulation/sim_extern_variables_globales.h"
 
-#include <yuni/io/file.h>
 #include "opt_fonctions.h"
 
 #define ZERO 1.e-2
 
 void OPT_InitialiserLesPminHebdo(PROBLEME_HEBDO* problemeHebdo)
 {
-    int NombreDePasDeTempsProblemeHebdo = problemeHebdo->NombreDePasDeTempsRef;
+    int NombreDePasDeTempsProblemeHebdo = problemeHebdo->NombreDePasDeTemps;
 
-    for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+    for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
         const PALIERS_THERMIQUES& PaliersThermiquesDuPays
           = problemeHebdo->PaliersThermiquesDuPays[pays];
@@ -51,12 +46,12 @@ void OPT_InitialiserLesPminHebdo(PROBLEME_HEBDO* problemeHebdo)
         {
             const std::vector<double>& PuissanceMinDuPalierThermique
               = PuissanceDisponibleEtCout[palier].PuissanceMinDuPalierThermique;
-            std::vector<double>& PuissanceMinDuPalierThermique_SV
-              = PuissanceDisponibleEtCout[palier].PuissanceMinDuPalierThermique_SV;
+            std::vector<double>& PuissanceMinDuPalierThermiqueRef
+              = PuissanceDisponibleEtCout[palier].PuissanceMinDuPalierThermiqueRef;
 
             for (int pdt = 0; pdt < NombreDePasDeTempsProblemeHebdo; pdt++)
             {
-                PuissanceMinDuPalierThermique_SV[pdt] = PuissanceMinDuPalierThermique[pdt];
+                PuissanceMinDuPalierThermiqueRef[pdt] = PuissanceMinDuPalierThermique[pdt];
             }
         }
     }

@@ -20,7 +20,6 @@ public:
     ~RenewableClusterList();
     // Overriden virtual methods
     YString typeID() const override;
-    void estimateMemoryUsage(StudyMemoryUsage&) const override;
     bool loadFromFolder(const AnyString& folder, Area* area);
     bool saveToFolder(const AnyString& folder) const override;
 }; // class RenewableClusterList

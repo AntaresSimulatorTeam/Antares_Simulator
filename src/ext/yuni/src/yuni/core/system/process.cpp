@@ -20,12 +20,12 @@
 
 namespace Yuni
 {
-uint64 ProcessID()
+uint64_t ProcessID()
 {
 #if defined(YUNI_OS_WINDOWS)
-    return (uint64)GetCurrentProcessId();
+    return (uint64_t)GetCurrentProcessId();
 #else
-    return (uint64)getpid();
+    return (uint64_t)getpid();
 #endif
 }
 

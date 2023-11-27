@@ -566,10 +566,10 @@ private:
     std::vector<bool> colRowCaption;
     // The result matrix
     Matrix<double> ops;
-    Matrix<uint8> cellStatus;
+    Matrix<uint8_t> cellStatus;
     MatrixType headerColumns;
     MatrixType headerRows;
-    std::vector<uint8> precision;
+    std::vector<uint8_t> precision;
 }; // class JobAggregator
 
 class DataAreaOrLink : public Panel::IData

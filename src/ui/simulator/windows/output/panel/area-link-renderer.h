@@ -27,7 +27,6 @@
 #ifndef __ANTARES_WINDOWS_OUTPUT_PANEL_AREA_LINK_RENDERER_H__
 #define __ANTARES_WINDOWS_OUTPUT_PANEL_AREA_LINK_RENDERER_H__
 
-#include <antares/wx-wrapper.h>
 #include "../../../toolbox/components/datagrid/renderer.h"
 #include <yuni/core/string.h>
 #include <antares/array/matrix.h>

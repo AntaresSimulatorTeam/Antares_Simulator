@@ -27,40 +27,28 @@
 
 #include "h2o2_j_donnees_mensuelles.h"
 
-void H2O2_J_InitialiserLesBornesdesVariables(DONNEES_MENSUELLES_ETENDUES* DonneesMensuelles,
+void H2O2_J_InitialiserLesBornesdesVariables(DONNEES_MENSUELLES_ETENDUES& DonneesMensuelles,
                                              int NumeroDeProbleme)
 {
-    int Pdt;
-    int NbPdt;
-    int Var;
-    double* Xmax;
-    double* Xmin;
+    const auto& TurbineMax = DonneesMensuelles.TurbineMax;
+    const auto& TurbineMin = DonneesMensuelles.TurbineMin;
 
-    int* NumeroVar_Turbine;
+    auto& ProblemeHydrauliqueEtendu = DonneesMensuelles.ProblemeHydrauliqueEtendu;
 
-    double* TurbineMax = DonneesMensuelles->TurbineMax;
-    const double* TurbineMin = DonneesMensuelles->TurbineMin;
+    int NbPdt = ProblemeHydrauliqueEtendu.NbJoursDUnProbleme[NumeroDeProbleme];
 
-    PROBLEME_HYDRAULIQUE_ETENDU* ProblemeHydrauliqueEtendu;
-    CORRESPONDANCE_DES_VARIABLES_PB_ETENDU* CorrespondanceDesVariables;
-    PROBLEME_LINEAIRE_ETENDU_PARTIE_VARIABLE* ProblemeLineaireEtenduPartieVariable;
+    auto& CorrespondanceDesVariables
+      = ProblemeHydrauliqueEtendu.CorrespondanceDesVariables[NumeroDeProbleme];
+    auto& ProblemeLineaireEtenduPartieVariable
+      = ProblemeHydrauliqueEtendu.ProblemeLineaireEtenduPartieVariable[NumeroDeProbleme];
 
-    ProblemeHydrauliqueEtendu = DonneesMensuelles->ProblemeHydrauliqueEtendu;
+    auto& NumeroVar_Turbine = CorrespondanceDesVariables.NumeroVar_Turbine;
 
-    NbPdt = ProblemeHydrauliqueEtendu->NbJoursDUnProbleme[NumeroDeProbleme];
-
-    CorrespondanceDesVariables
-      = ProblemeHydrauliqueEtendu->CorrespondanceDesVariables[NumeroDeProbleme];
-    ProblemeLineaireEtenduPartieVariable
-      = ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable[NumeroDeProbleme];
-
-    NumeroVar_Turbine = CorrespondanceDesVariables->NumeroVar_Turbine;
-
-    Xmax = ProblemeLineaireEtenduPartieVariable->Xmax;
-    Xmin = ProblemeLineaireEtenduPartieVariable->Xmin;
-    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    auto& Xmax = ProblemeLineaireEtenduPartieVariable.Xmax;
+    auto& Xmin = ProblemeLineaireEtenduPartieVariable.Xmin;
+    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
-        Var = NumeroVar_Turbine[Pdt];
+        int Var = NumeroVar_Turbine[Pdt];
         Xmax[Var] = TurbineMax[Pdt];
         Xmin[Var] = TurbineMin[Pdt];
     }

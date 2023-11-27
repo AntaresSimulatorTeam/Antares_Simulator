@@ -60,7 +60,7 @@ protected:
     virtual Flow onFile(const String& filename,
                         const String& parent,
                         const String& name,
-                        uint64 size)
+                        uint64_t size)
       = 0;
 
     virtual Flow onError(const String& filename) = 0;

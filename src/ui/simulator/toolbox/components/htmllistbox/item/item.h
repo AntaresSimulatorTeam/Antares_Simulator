@@ -27,9 +27,10 @@
 #ifndef __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_ITEM_H__
 #define __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_ITEM_H__
 
-#include <antares/wx-wrapper.h>
 
 #include <memory>
+#include <vector>
+#include <wx/wx.h>
 
 namespace Antares
 {

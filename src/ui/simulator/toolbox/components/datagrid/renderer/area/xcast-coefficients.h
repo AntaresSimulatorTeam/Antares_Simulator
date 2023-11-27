@@ -27,7 +27,6 @@
 #ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_XCAST_COEFFICIENTS_H__
 #define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_XCAST_COEFFICIENTS_H__
 
-#include <antares/wx-wrapper.h>
 #include "../area.h"
 #include "../matrix.h"
 
@@ -39,7 +38,7 @@ namespace Datagrid
 {
 namespace Renderer
 {
-template<enum Data::TimeSeries T>
+template<enum Data::TimeSeriesType T>
 class XCastCoefficients final : public Renderer::Matrix<float>, public Renderer::ARendererArea
 {
 public:

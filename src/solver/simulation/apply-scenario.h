@@ -27,7 +27,7 @@
 #ifndef __SOLVER_SIMULATION_APPLY_SCENARIO_H__
 #define __SOLVER_SIMULATION_APPLY_SCENARIO_H__
 
-#include <antares/study.h>
+#include <antares/study/study.h>
 
 namespace Antares::Solver
 {

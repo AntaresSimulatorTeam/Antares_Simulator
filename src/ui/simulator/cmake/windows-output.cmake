@@ -38,11 +38,11 @@ set(SRC_UI_OUTPUT_PROVIDERS
 		windows/output/provider/output-comparison.cpp
 )
 
-add_Library(libantares-ui-windows-output
+add_Library(antares-ui-windows-output
 		${SRC_UI_WINDOWS_OUTPUT}
 		${SRC_UI_OUTPUT_PROVIDERS})
 
-target_link_libraries(libantares-ui-windows-output  PRIVATE ${wxWidgets_LIBRARIES})
-target_link_libraries(libantares-ui-windows-output  PRIVATE libantares-ui-common)
+target_link_libraries(antares-ui-windows-output  PRIVATE ${wxWidgets_LIBRARIES})
+target_link_libraries(antares-ui-windows-output  PRIVATE antares-ui-common)
 
  

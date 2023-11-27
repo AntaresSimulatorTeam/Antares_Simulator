@@ -3,13 +3,14 @@
 //
 
 #include "BindingConstraintsTimeSeriesNumbersWriter.h"
+#include "antares/study/binding_constraint/BindingConstraintGroupRepository.h"
 #include <cstdint>
 #include <filesystem>
 #include <utility>
 
 namespace Antares::Solver::Simulation {
-BindingConstraintsTimeSeriesNumbersWriter::BindingConstraintsTimeSeriesNumbersWriter(std::shared_ptr<Antares::Solver::IResultWriter> writer)
-: writer_(std::move(writer))
+BindingConstraintsTimeSeriesNumbersWriter::BindingConstraintsTimeSeriesNumbersWriter(IResultWriter& writer)
+: writer_(writer)
 {
 
 }
@@ -26,8 +27,8 @@ namespace // anonymous
 } // anonymous namespace
 
 // TODO : remove duplication
-static void genericStoreTimeseriesNumbers(const Solver::IResultWriter::Ptr& writer,
-                                          const Matrix<Yuni::uint32>& timeseriesNumbers,
+static void genericStoreTimeseriesNumbers(Solver::IResultWriter& writer,
+                                          const Matrix<uint32_t>& timeseriesNumbers,
                                           const std::string& id,
                                           const std::string& directory)
 {
@@ -42,14 +43,14 @@ static void genericStoreTimeseriesNumbers(const Solver::IResultWriter::Ptr& writ
                                    predicate, // predicate
                                    true);     // save even if all coeffs are zero
 
-    writer->addEntryFromBuffer(path.string(), buffer);
+    writer.addEntryFromBuffer(path.string(), buffer);
 }
 
-void BindingConstraintsTimeSeriesNumbersWriter::write(const Data::BindingConstraintsRepository &list) {
-    for (auto const& [group, timeSeries]: list.TimeSeriesNumbers()) {
+void BindingConstraintsTimeSeriesNumbersWriter::write(const Data::BindingConstraintGroupRepository &bindingConstraintGroupRepository) {
+    for (auto const& group: bindingConstraintGroupRepository) {
         genericStoreTimeseriesNumbers(writer_,
-                                      timeSeries.timeseriesNumbers,
-                                      group,
+                                      group->timeseriesNumbers,
+                                      group->name(),
                                       "bindingconstraints");
     }
 

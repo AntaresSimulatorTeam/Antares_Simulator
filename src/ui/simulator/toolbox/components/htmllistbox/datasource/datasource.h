@@ -27,8 +27,8 @@
 #ifndef __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_DATASOURCE_H__
 #define __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_DATASOURCE_H__
 
-#include <antares/wx-wrapper.h>
 #include <map>
+#include <wx/wx.h>
 
 namespace Antares
 {

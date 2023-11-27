@@ -1,4 +1,4 @@
-#include "LoadingError.hpp"
+#include "antares/exception/LoadingError.hpp"
 
 namespace Antares
 {
@@ -37,8 +37,7 @@ InvalidOptimizationRange::InvalidOptimizationRange() :
 }
 
 InvalidSimulationMode::InvalidSimulationMode() :
- LoadingError(
-   "Only one simulation mode is allowed: --expansion, --economy, --adequacy")
+ LoadingError("Only one simulation mode is allowed: --expansion, --economy, --adequacy")
 {
 }
 
@@ -70,6 +69,16 @@ InvalidNumberOfMCYears::InvalidNumberOfMCYears(uint nbYears) :
 
 IncompatibleParallelOptions::IncompatibleParallelOptions() :
  LoadingError("Options --parallel and --force-parallel are incompatible")
+{
+}
+
+IncompatibleMILPWithoutOrtools::IncompatibleMILPWithoutOrtools() :
+ LoadingError("Unit Commitment mode 'milp' must be used with an OR-Tools solver ")
+{
+}
+
+IncompatibleMILPOrtoolsSolver::IncompatibleMILPOrtoolsSolver() :
+ LoadingError("'milp' mode does not work with OR-Tools using Sirius solver")
 {
 }
 
@@ -147,9 +156,13 @@ IncompatibleOutputOptions::IncompatibleOutputOptions(const std::string& text) : 
 {
 }
 
-IncompatibleFuelOrCo2CostColumns::IncompatibleFuelOrCo2CostColumns() :
- LoadingError(
-   "Number of columns for Fuel & CO2 Cost can be one or same as number of TS in Availability")
+IncompatibleCO2CostColumns::IncompatibleCO2CostColumns() :
+ LoadingError("Number of columns for CO2 Cost can be one or same as number of TS in Availability")
+{
+}
+
+IncompatibleFuelCostColumns::IncompatibleFuelCostColumns() :
+ LoadingError("Number of columns for Fuel Cost can be one or same as number of TS in Availability")
 {
 }
 

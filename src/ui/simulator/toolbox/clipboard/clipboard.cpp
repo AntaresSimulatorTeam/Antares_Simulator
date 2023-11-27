@@ -25,7 +25,6 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include <antares/wx-wrapper.h>
 #include "clipboard.h"
 #include <yuni/core/math.h>
 #include "../locales.h"

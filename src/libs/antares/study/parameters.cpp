@@ -33,15 +33,13 @@
 #include <list>    // std::list
 #include <sstream> // std::stringstream
 
-#include "../constants.h"
 #include "parameters.h"
+#include <antares/constants.h>
 #include <antares/inifile/inifile.h>
-#include "../logs.h"
+#include <antares/logs/logs.h>
 #include "load-options.h"
-#include <limits.h>
-#include <antares/study/memory-usage.h>
+#include <climits>
 #include "../solver/variable/economy/all.h"
-#include "../solver/optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h"
 
 #include <antares/exception/AssertionError.hpp>
 #include <antares/Enum.hxx>
@@ -304,7 +302,7 @@ void Parameters::reset()
     power.fluctuations = lssFreeModulations;
     shedding.policy = shpShavePeaks;
 
-    unitCommitment.ucMode = ucHeuristic;
+    unitCommitment.ucMode = ucHeuristicFast;
     nbCores.ncMode = ncAvg;
     renewableGeneration.rgModelling = rgAggregated;
 
@@ -326,6 +324,7 @@ void Parameters::reset()
     include.exportMPS = mpsExportStatus::NO_EXPORT;
     include.exportStructure = false;
     namedProblems = false;
+    solverLogs = false;
 
     include.unfeasibleProblemBehavior = UnfeasibleProblemBehavior::ERROR_MPS;
 
@@ -347,7 +346,7 @@ void Parameters::reset()
     resetSeeds();
 }
 
-bool Parameters::isTSGeneratedByPrepro(const TimeSeries ts) const
+bool Parameters::isTSGeneratedByPrepro(const TimeSeriesType ts) const
 {
     return (timeSeriesToGenerate & ts);
 }
@@ -628,6 +627,11 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
     {
         return stringToGlobalTransmissionCapacities(value, d.transmissionCapacities);
     }
+
+    if (key == "solver-logs")
+    {
+        return value.to<bool>(d.solverLogs);
+    }
     return false;
 }
 static bool SGDIntLoadFamily_AdqPatch(Parameters& d,
@@ -732,7 +736,7 @@ static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
         }
         logs.warning() << "parameters: invalid unit commitment mode. Got '" << value
                        << "'. reset to fast mode";
-        d.unitCommitment.ucMode = ucHeuristic;
+        d.unitCommitment.ucMode = ucHeuristicFast;
         return false;
     }
     // Renewable generation modelling
@@ -842,10 +846,11 @@ static bool SGDIntLoadFamily_Playlist(Parameters& d,
     }
     return false;
 }
+
 static bool SGDIntLoadFamily_VariablesSelection(Parameters& d,
                                                 const String& key,
                                                 const String& value,
-                                                const String&)
+                                                const String& original)
 {
     if (key == "selected_vars_reset")
     {
@@ -857,7 +862,10 @@ static bool SGDIntLoadFamily_VariablesSelection(Parameters& d,
     {
         // Check if the read output variable exists
         if (not d.variablesPrintInfo.exists(value.to<std::string>()))
+        {
+            logs.warning() << "Output variable `" << original << "` does not exist";
             return false;
+        }
 
         bool is_var_printed = (key == "select_var +");
         d.variablesPrintInfo.setPrintStatus(value.to<std::string>(), is_var_printed);
@@ -953,8 +961,6 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
     // Reset inner data
     reset();
     // A temporary buffer, used for the values in lowercase
-    String value;
-    String sectionName;
     using Callback = bool (*)(
       Parameters&,   // [out] Parameter object to load the data into
       const String&, // [in] Key, comes left to the '=' sign in the .ini file
@@ -977,7 +983,7 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
     // Foreach section on the ini file...
     for (auto* section = ini.firstSection; section; section = section->next)
     {
-        sectionName = section->name;
+        String sectionName = section->name;
         sectionName.toLower();
         try
         {
@@ -998,7 +1004,7 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
             if (!firstKeyLetterIsValid(p->key))
                 continue;
             // We convert the key and the value into the lower case format
-            value = p->value;
+            String value = p->value;
             value.toLower();
 
             // Deal with the current property
@@ -1065,6 +1071,7 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
     ortoolsSolver = options.ortoolsSolver;
 
     namedProblems = options.namedProblems;
+    solverLogs = options.solverLogs || solverLogs;
 
     // Attempt to fix bad values if any
     fixBadValues();
@@ -1077,7 +1084,7 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
     if (options.usedByTheSolver)
         prepareForSimulation(options);
 
-    if (options.mpsToExport)
+    if (options.mpsToExport || options.namedProblems)
     {
         this->include.exportMPS = mpsExportStatus::EXPORT_BOTH_OPTIMS;
     }
@@ -1090,7 +1097,7 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
 void Parameters::fixRefreshIntervals()
 {
     using T = std::
-      tuple<uint& /* refreshInterval */, enum TimeSeries /* ts */, const std::string /* label */>;
+      tuple<uint& /* refreshInterval */, enum TimeSeriesType /* ts */, const std::string /* label */>;
     const std::list<T> timeSeriesToCheck = {{refreshIntervalLoad, timeSeriesLoad, "load"},
                                             {refreshIntervalSolar, timeSeriesSolar, "solar"},
                                             {refreshIntervalHydro, timeSeriesHydro, "hydro"},
@@ -1164,7 +1171,7 @@ void Parameters::fixBadValues()
         nbTimeSeriesSolar = 1;
 }
 
-Yuni::uint64 Parameters::memoryUsage() const
+uint64_t Parameters::memoryUsage() const
 {
     return sizeof(Parameters) + yearsWeight.size() * sizeof(double)
            + yearsFilter.size(); // vector of bools, 1 bit per coefficient
@@ -1344,18 +1351,13 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
     std::vector<std::string> excluded_vars;
     renewableGeneration.addExcludedVariables(excluded_vars);
     adqPatchParams.addExcludedVariables(excluded_vars);
+    unitCommitment.addExcludedVariables(excluded_vars);
 
     variablesPrintInfo.prepareForSimulation(thematicTrimming, excluded_vars);
 
     switch (mode)
     {
     case stdmEconomy:
-    {
-        // The year-by-year mode might have been requested from the command line
-        if (options.forceYearByYear)
-            yearByYear = true;
-        break;
-    }
     case stdmAdequacy:
     {
         // The year-by-year mode might have been requested from the command line
@@ -1484,6 +1486,9 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
     {
         logs.info() << "  :: The problems will contain named variables and constraints";
     }
+    // indicated whether solver logs will be printed
+    logs.info() << "  :: Printing solver logs : " << (solverLogs ? "True" : "False");
+    
 }
 
 void Parameters::resetPlaylist(uint nbOfYears)
@@ -1508,8 +1513,8 @@ void Parameters::saveToINI(IniFile& ini) const
         }
 
         // Calendar
-        section->add("horizon  ", horizon);
-        section->add("nbYears  ", nbYears);
+        section->add("horizon", horizon);
+        section->add("nbYears", nbYears);
         section->add("simulation.start", simulationDays.first + 1); // starts from 1
         section->add("simulation.end", simulationDays.end);         // starts from 1
         section->add("january.1st", Date::DayOfTheWeekToString(dayOfThe1stJanuary));
@@ -1529,11 +1534,11 @@ void Parameters::saveToINI(IniFile& ini) const
 
         // Time series
         ParametersSaveTimeSeries(section, "generate", timeSeriesToGenerate);
-        section->add("nbTimeSeriesLoad    ", nbTimeSeriesLoad);
-        section->add("nbTimeSeriesHydro   ", nbTimeSeriesHydro);
-        section->add("nbTimeSeriesWind    ", nbTimeSeriesWind);
-        section->add("nbTimeSeriesThermal ", nbTimeSeriesThermal);
-        section->add("nbTimeSeriesSolar   ", nbTimeSeriesSolar);
+        section->add("nbTimeSeriesLoad", nbTimeSeriesLoad);
+        section->add("nbTimeSeriesHydro", nbTimeSeriesHydro);
+        section->add("nbTimeSeriesWind", nbTimeSeriesWind);
+        section->add("nbTimeSeriesThermal", nbTimeSeriesThermal);
+        section->add("nbTimeSeriesSolar", nbTimeSeriesSolar);
 
         // Refresh
         ParametersSaveTimeSeries(section, "refreshTimeSeries", timeSeriesToRefresh);
@@ -1599,6 +1604,7 @@ void Parameters::saveToINI(IniFile& ini) const
         // Unfeasible problem behavior
         section->add("include-unfeasible-problem-behavior",
                      Enum::toString(include.unfeasibleProblemBehavior));
+        section->add("solver-logs", solverLogs);
     }
 
     // Adequacy patch
@@ -1797,5 +1803,26 @@ bool Parameters::RenewableGeneration::isAggregated() const
 bool Parameters::RenewableGeneration::isClusters() const
 {
     return rgModelling == Antares::Data::rgClusters;
+}
+
+// Some variables rely on dual values & marginal costs
+void Parameters::UCMode::addExcludedVariables(std::vector<std::string>& out) const
+{
+    // These variables rely on dual values & marginal costs
+    // these don't really make sense for MILP problems
+    // TODO : solve a LP problem with fixed values for integer variables
+    //        extract values for dual variables & marginal costs from LP problem
+    const static std::vector<std::string> milpExclude = {{"MARG. COST"},
+                                                         {"BC. MARG. COST"},
+                                                         {"CONG. FEE (ALG.)"},
+                                                         {"CONG. FEE (ABS.)"},
+                                                         {"MRG. PRICE"},
+                                                         {"STS Cashflow By Cluster"},
+                                                         {"Profit by plant"}};
+
+    if (ucMode == ucMILP)
+    {
+        out.insert(out.end(), milpExclude.begin(), milpExclude.end());
+    }
 }
 } // namespace Antares::Data

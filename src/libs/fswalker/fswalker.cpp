@@ -38,7 +38,7 @@
 #include <algorithm>
 #include "registry.inc.hxx"
 #include "filejob.inc.hxx"
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 
 using namespace Yuni;
 using namespace Antares;
@@ -95,8 +95,8 @@ protected:
 
     bool triggerFileEvent(const String& filename,
                           const String& parent,
-                          sint64 modified,
-                          uint64 size);
+                          int64_t modified,
+                          uint64_t size);
 
     void waitForAllJobs() const;
 
@@ -254,8 +254,8 @@ void WalkerThread::run()
 
 bool WalkerThread::triggerFileEvent(const String& filename,
                                     const String& parent,
-                                    sint64 modified,
-                                    uint64 size)
+                                    int64_t modified,
+                                    uint64_t size)
 {
     assert(pFileJob != NULL);
 

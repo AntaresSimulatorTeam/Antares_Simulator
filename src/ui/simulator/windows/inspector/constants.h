@@ -1,6 +1,6 @@
 #pragma once
 
-#include <antares/wx-wrapper.h>
+#include <wx/wx.h>
 
 namespace Antares
 {

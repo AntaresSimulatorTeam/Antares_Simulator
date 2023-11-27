@@ -27,7 +27,6 @@
 #ifndef __ANTARES_APPLICATION_WINDOWS_CALENDAR_CALENDAR_H__
 #define __ANTARES_APPLICATION_WINDOWS_CALENDAR_CALENDAR_H__
 
-#include <antares/wx-wrapper.h>
 #include <wx/dialog.h>
 #include "../../toolbox/components/button.h"
 

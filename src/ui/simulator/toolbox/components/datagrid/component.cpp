@@ -25,7 +25,6 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include <antares/wx-wrapper.h>
 #include <antares/array/matrix.h>
 #include <yuni/io/file.h>
 #ifndef YUNI_OS_WINDOWS
@@ -366,7 +365,7 @@ void InternalState::applyLayerFiltering()
     if (pLayerFilter)
     {
         auto text = pLayerFilter->GetValue();
-        auto study = Data::Study::Current::Get();
+        auto study = GetCurrentStudy();
         auto layerListEnd = study->layers.end();
         auto layerIt = study->layers.begin();
         layerIt++; // ignore the first layer (All)
@@ -599,7 +598,7 @@ void InternalState::createAllInternalControls(const CreateOptions& flags)
 
 void InternalState::onPickDate(Button&, wxMenu&, void*)
 {
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     if (!study)
         return;
 
@@ -1482,7 +1481,7 @@ void Component::onModifyAll(void*)
 
 void Component::onComboUpdated(wxCommandEvent& /* evt */)
 {
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     if (!study)
         return;
 

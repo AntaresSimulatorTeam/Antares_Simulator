@@ -25,25 +25,14 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include <antares/antares.h>
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 #include <antares/resources/resources.h>
-#include <map>
 #include <iostream>
-#include <yuni/core/string.h>
-#include <yuni/core/string/wstring.h>
 #include <yuni/core/getopt.h>
-#include "../../ui/common/winmain.hxx"
+#include <antares/args/args_to_utf8.h>
 #include <antares/version.h>
-#include <antares/sys/appdata.h>
-#include <yuni/core/system/environment.h>
-#include <yuni/core/system/process.h>
 #include <yuni/core/system/username.h>
-#include <yuni/core/system/cpu.h>
-#include <yuni/core/system/memory.h>
-#include <antares/sys/hostname.hxx>
 #include <antares/locale.h>
-#include "../../../config.h"
 #include <antares/sys/policy.h>
 
 using namespace Yuni;
@@ -55,8 +44,8 @@ int main(int argc, char* argv[])
     InitializeDefaultLocale();
 
     logs.applicationName("config");
-    argv = AntaresGetUTF8Arguments(argc, argv);
-
+    IntoUTF8ArgsTranslator toUTF8ArgsTranslator(argc, argv);
+    std::tie(argc, argv) = toUTF8ArgsTranslator.convert();
     // Initializing the toolbox
     Antares::Resources::Initialize(argc, argv, true);
 

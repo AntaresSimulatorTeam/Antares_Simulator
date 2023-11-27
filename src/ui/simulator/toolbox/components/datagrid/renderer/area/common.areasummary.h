@@ -27,7 +27,6 @@
 
 #pragma once
 
-#include <antares/wx-wrapper.h>
 #include "../../renderer.h"
 #include "../../../../input/area.h"
 #include "../../../../../application/study.h"

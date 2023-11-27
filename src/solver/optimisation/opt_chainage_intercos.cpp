@@ -25,8 +25,6 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "opt_structure_probleme_a_resoudre.h"
-
 #include "../simulation/simulation.h"
 #include "../simulation/sim_extern_variables_globales.h"
 
@@ -34,13 +32,13 @@
 
 void OPT_ChainagesDesIntercoPartantDUnNoeud(PROBLEME_HEBDO* problemeHebdo)
 {
-    for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+    for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
         problemeHebdo->IndexDebutIntercoOrigine[pays] = -1;
         problemeHebdo->IndexDebutIntercoExtremite[pays] = -1;
     }
 
-    for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
+    for (uint32_t interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
     {
         int noeudOrigine = problemeHebdo->PaysOrigineDeLInterconnexion[interco];
         int index = problemeHebdo->IndexDebutIntercoOrigine[noeudOrigine];

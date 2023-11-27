@@ -76,7 +76,7 @@ void Node::createANewAreaIfNotAlreadyAttached()
         // Creating a new Area
         Data::AreaName sFl;
         wxStringToString(pCaption, sFl);
-        pAttachedArea = study->areaAdd(sFl);
+        pAttachedArea = study->areaAdd(sFl, true);
         pCaption = wxStringFromUTF8(pAttachedArea->name);
         study->uiinfo->reload();
         MarkTheStudyAsModified();

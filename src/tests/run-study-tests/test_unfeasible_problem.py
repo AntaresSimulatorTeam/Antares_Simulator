@@ -65,4 +65,3 @@ def test_unfeasible_problem_01__warning_dry(study_path, check_runner):
                                           checks_on_weeks=warnings_on_weeks,
                                           simulation=check_runner.get_simulation()))
     check_runner.run(checks)
-

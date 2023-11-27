@@ -32,13 +32,14 @@
 #include <yuni/core/noncopyable.h>
 #include <stdlib.h>
 #include <antares/study/parameters/adq-patch-params.h>
-#include "../../array/matrix.h"
+#include <antares/array/matrix.h>
 #include "../parts/parts.h"
 #include <vector>
 #include <set>
 #include "links.h"
 #include "ui.h"
-#include "antares/study/parameters/adq-patch-params.h"
+#include "constants.h"
+#include "antares/study/filter.h"
 
 namespace Antares
 {
@@ -74,14 +75,14 @@ public:
     **
     ** \param name The name of the area
     */
-    explicit Area(const AnyString& name, uint nbParallelYears);
+    explicit Area(const AnyString& name);
     /*!
     ** \brief Constructor
     **
     ** \param name Name of the area
     ** \param id id of the area
     */
-    Area(const AnyString& name, const AnyString& id, uint nbParallelYears, uint indx = (uint)-1);
+    Area(const AnyString& name, const AnyString& id);
     /*!
     ** \brief Destructor
     */
@@ -141,7 +142,7 @@ public:
     /*!
     ** \brief Ensure all data are created
     */
-    void ensureAllDataAreCreated();
+    void createMissingData();
 
     /*!
     ** \brief Reset all values to their default one
@@ -187,12 +188,12 @@ public:
     /*!
     ** \brief Get the amount of memory currently used by the area
     */
-    Yuni::uint64 memoryUsage() const;
+    uint64_t memoryUsage() const;
 
     /*!
     ** \brief Try to estimate the amount of memory required by the area for a simulation
     */
-    void estimateMemoryUsage(StudyMemoryUsage&) const;
+
     //@}
 
     //! \name Thermal clusters min stable power validity checking
@@ -208,9 +209,9 @@ public:
     /*!
     ** \brief Get the XCast data according a given time-series type
     */
-    template<enum TimeSeries T>
+    template<enum TimeSeriesType T>
     XCast* xcastData();
-    template<enum TimeSeries T>
+    template<enum TimeSeriesType T>
     const XCast* xcastData() const;
 
 public:
@@ -221,9 +222,7 @@ public:
     //! Name of the area in lowercase format
     AreaName id;
     //! Index of the area  - only valid when already added to an area list
-    uint index;
-    //! Enabled
-    bool enabled;
+    uint index = (uint)(-1);
     //! Use adequacy patch for this area
     AdequacyPatch::AdequacyPatchMode adequacyPatchMode = AdequacyPatch::physicalAreaOutsideAdqPatch;
     /*@}*/
@@ -288,34 +287,31 @@ public:
     //! \name Nodal Optimization
     //@{
     //! Nodal optimization (see AreaNodalOptimization)
-    uint nodalOptimization;
+    uint nodalOptimization = anoAll;
     //@}
 
     //! \name Spread
     //@{
     //! Spread for the unsupplied energy cost
-    double spreadUnsuppliedEnergyCost;
+    double spreadUnsuppliedEnergyCost = 0.;
     //! Spread for the spilled energy cost
-    double spreadSpilledEnergyCost;
+    double spreadSpilledEnergyCost = 0.;
     //@}
 
     //! \name Output filtering
     //@{
     //! Print results for the area in the simulation synthesis
-    uint filterSynthesis;
+    uint filterSynthesis = filterAll;
     //! Print results for the area in the year-by-year mode
-    uint filterYearByYear;
+    uint filterYearByYear = filterAll;
     //@}
 
     //! \name UI
     //@{
     //! Information for the UI
-    AreaUI* ui;
+    AreaUI* ui = nullptr;
     //@}
-
-    // Number of years actually run in parallel
-    uint nbYearsInParallel;
-
+    
     //! \name Dynamic
     //@{
     /*!
@@ -332,11 +328,13 @@ public:
     ** A non-zero value if the missing data must be loaded from HDD for the next
     ** save (only valid if JIT enabled).
     */
-    mutable bool invalidateJIT;
+    mutable bool invalidateJIT = false;
     //@}
 
 private:
     void internalInitialize();
+    void createMissingTimeSeries();
+    void createMissingPrepros();
 
 
 }; // class Area
@@ -659,7 +657,7 @@ public:
     /*!
     ** \brief Try to estimate the amount of memory required by the class for a simulation
     */
-    void estimateMemoryUsage(StudyMemoryUsage&) const;
+
 
     /*!
     ** \brief Get the average amount of memory currently used by each area
@@ -669,7 +667,7 @@ public:
     /*!
     ** \brief Get the amount of memory currently used by the class
     */
-    Yuni::uint64 memoryUsage() const;
+    uint64_t memoryUsage() const;
 
     /*!
     ** \brief Update the name id set
@@ -772,7 +770,7 @@ Area* AreaListFindPtr(AreaList* l, const Area* ptr);
 ** \param name The name of the area
 ** \return A valid pointer to the area if successful, NULL otherwise
 */
-Area* AreaListAddFromName(AreaList& list, const AnyString& name, uint nbParallelYears);
+Area* addAreaToListOfAreas(AreaList& list, const AnyString& name);
 
 /*!
 ** \brief Add an area in the list from a given name
@@ -784,8 +782,7 @@ Area* AreaListAddFromName(AreaList& list, const AnyString& name, uint nbParallel
 */
 Area* AreaListAddFromNames(AreaList& list,
                            const AnyString& name,
-                           const AnyString& lname,
-                           uint nbParallelYears);
+                           const AnyString& lname);
 
 /*!
 ** \brief Try to establish a link between two areas
@@ -799,29 +796,14 @@ AreaLink* AreaListAddLink(AreaList* l, const char area[], const char with[], boo
 void AreaListClearAllLinks(AreaList* l);
 
 /*!
-** \brief Ensure data for load time-series are initialized
-*/
-void AreaListEnsureDataLoadTimeSeries(AreaList* l);
-
-/*!
 ** \brief Ensure data for load prepro are initialized
 */
 void AreaListEnsureDataLoadPrepro(AreaList* l);
 
 /*!
-** \brief Ensure data for load time-series are initialized
-*/
-void AreaListEnsureDataSolarTimeSeries(AreaList* l);
-
-/*!
 ** \brief Ensure data for solar prepro are initialized
 */
 void AreaListEnsureDataSolarPrepro(AreaList* l);
-
-/*!
-** \brief Ensure data for wind time-series are initialized
-*/
-void AreaListEnsureDataWindTimeSeries(AreaList* l);
 
 /*!
 ** \brief Ensure data for wind prepro are initialized
@@ -838,15 +820,6 @@ void AreaListEnsureDataHydroTimeSeries(AreaList* l);
 */
 void AreaListEnsureDataHydroPrepro(AreaList* l);
 
-/*!
-** \brief Ensure data for thermal time-series are initialized
-*/
-void AreaListEnsureDataThermalTimeSeries(AreaList* l);
-
-/*!
-** \brief Ensure data for renewable time-series are initialized
-*/
-void AreaListEnsureDataRenewableTimeSeries(AreaList* l);
 
 /*!
 ** \brief Ensure data for thermal prepro are initialized
@@ -866,6 +839,5 @@ inline bool CheckForbiddenCharacterInAreaName(const AnyString& name)
 
 #include "../load-options.h"
 #include "area.hxx"
-#include "list.hxx"
 
 #endif // __ANTARES_LIBS_STUDY_AREAS_H__

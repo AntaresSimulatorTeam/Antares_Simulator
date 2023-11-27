@@ -1,6 +1,9 @@
 #include <cassert>
 
 #include "constraint.h"
+#include <sstream>
+#include <iomanip>
+#include <algorithm>
 
 namespace Antares
 {
@@ -39,6 +42,48 @@ double Constraint::getSlackValue() const
     return mSlackValue;
 }
 
+class StringIsNotWellFormated : public std::runtime_error
+{
+public:
+    StringIsNotWellFormated(const std::string& error_message) : std::runtime_error(error_message)
+    {
+    }
+};
+
+std::string StringBetweenAngleBrackets(const std::string& str)
+{
+    const auto& begin = str.begin();
+    const auto& end = str.end();
+
+    auto left = std::find(begin, end, '<');
+
+    if (left == end)
+    {
+        std::ostringstream stream;
+        stream << std::string("Error the string: ") << std::quoted(str)
+               << " does not contains the left angle bracket " << std::quoted("<");
+        throw StringIsNotWellFormated(stream.str());
+    }
+
+    auto right = std::find(begin, end, '>');
+    if (right == end)
+    {
+        std::ostringstream stream;
+        stream << std::string("Error the string: ") << std::quoted(str)
+               << " does not contains the right angle bracket " << std::quoted(">");
+        throw StringIsNotWellFormated(stream.str());
+    }
+
+    if (std::distance(left, right) <= 1)
+    {
+        std::ostringstream stream;
+        stream << std::string("Error the string: ") << std::quoted(str) << " must be of format  "
+               << std::quoted("*<str>*");
+        throw StringIsNotWellFormated(stream.str());
+    }
+    return std::string(left + 1, right);
+}
+
 std::string Constraint::getAreaName() const
 {
     if ((getType() == ConstraintType::binding_constraint_hourly)
@@ -47,7 +92,7 @@ std::string Constraint::getAreaName() const
     {
         return "<none>";
     }
-    return mItems.at(2);
+    return StringBetweenAngleBrackets(mItems.at(1));
 }
 
 std::string Constraint::getTimeStepInYear() const
@@ -56,44 +101,34 @@ std::string Constraint::getTimeStepInYear() const
     {
     case ConstraintType::binding_constraint_hourly:
     case ConstraintType::binding_constraint_daily:
-        return mItems.at(2);
     case ConstraintType::fictitious_load:
     case ConstraintType::hydro_reservoir_level:
-        return mItems.at(1);
+        return StringBetweenAngleBrackets (mItems.at(mItems.size()-2));
     default:
         return "-1";
     }
 }
 
-static ConstraintType bindingConstraintPeriodicity(const std::string& in)
-{
-    if (in == "hourly")
-    {
-        return ConstraintType::binding_constraint_hourly;
-    }
-    if (in == "daily")
-    {
-        return ConstraintType::binding_constraint_daily;
-    }
-    if (in == "weekly")
-    {
-        return ConstraintType::binding_constraint_weekly;
-    }
-    return ConstraintType::none;
-}
-
 ConstraintType Constraint::getType() const
 {
     assert(mItems.size() > 1);
-    if (mItems.at(0) == "bc")
+    if (mItems.at(1) == "hourly")
     {
-        return bindingConstraintPeriodicity(mItems.at(1));
+        return ConstraintType::binding_constraint_hourly;
     }
-    if (mItems.at(0) == "fict_load")
+    if (mItems.at(1) == "daily")
+    {
+        return ConstraintType::binding_constraint_daily;
+    }
+    if (mItems.at(1) == "weekly")
+    {
+        return ConstraintType::binding_constraint_weekly;
+    }
+    if (mItems.at(0) == "FictiveLoads")
     {
         return ConstraintType::fictitious_load;
     }
-    if (mItems.at(0) == "hydro_level")
+    if (mItems.at(0) == "AreaHydroLevel")
     {
         return ConstraintType::hydro_reservoir_level;
     }
@@ -106,9 +141,8 @@ std::string Constraint::getBindingConstraintName() const
     {
     case ConstraintType::binding_constraint_hourly:
     case ConstraintType::binding_constraint_daily:
-        return mItems.at(3);
     case ConstraintType::binding_constraint_weekly:
-        return mItems.at(2);
+        return mItems.at(0);
     default:
         return "<unknown>";
     }

@@ -17,8 +17,11 @@ source_group("constraints-builder" FILES ${SRC_CBUILDER})
 #
 # --- Library VARIABLES ---
 #
-add_library(libantares-solver-constraints-builder
+add_library(antares-solver-constraints-builder
 		${SRC_CBUILDER} )
 
 
-target_link_libraries(libantares-solver-constraints-builder PRIVATE libantares-core)
+target_link_libraries(antares-solver-constraints-builder PRIVATE antares-core
+	PUBLIC
+		Antares::study
+)

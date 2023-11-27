@@ -36,11 +36,11 @@ INSTALL(EXPORT antares-batchrun
 )
 
 set(BATCHRUN_LIBS
-		libantares-core
-		libantares-core-calendar
+		antares-core #local.h
 		yuni-static-core
-		inifile
 		${CMAKE_THREADS_LIBS_INIT}
+		Antares::args_helper
+		Antares::study
 )
 
 target_link_libraries(${execname}

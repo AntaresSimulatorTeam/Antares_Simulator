@@ -27,7 +27,7 @@
 #ifndef __ANTARES_TOOLBOX_E_EXECUTE_H__
 #define __ANTARES_TOOLBOX_E_EXECUTE_H__
 
-#include <antares/wx-wrapper.h>
+#include <wx/wx.h>
 
 namespace Antares
 {

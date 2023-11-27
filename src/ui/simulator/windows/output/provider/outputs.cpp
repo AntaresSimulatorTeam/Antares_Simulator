@@ -33,7 +33,6 @@
 #include "../content.h"
 #include "../../../toolbox/resources.h"
 #include <antares/study/study.h>
-#include <antares/study/memory-usage.h>
 
 #include <memory>
 

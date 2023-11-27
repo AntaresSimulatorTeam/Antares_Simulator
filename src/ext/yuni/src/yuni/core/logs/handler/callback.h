@@ -11,6 +11,7 @@
 #pragma once
 #include "../null.h"
 #include "../../event/event.h"
+#include "yuni/core/logs/verbosity.h"
 
 namespace Yuni
 {

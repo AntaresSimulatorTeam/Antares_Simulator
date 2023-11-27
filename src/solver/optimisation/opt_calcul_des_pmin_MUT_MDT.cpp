@@ -32,7 +32,6 @@
 #include "../simulation/sim_structure_donnees.h"
 #include "../simulation/sim_extern_variables_globales.h"
 
-#include <yuni/io/file.h>
 #include "opt_fonctions.h"
 
 constexpr double ZERO_PMIN = 1.e-2;
@@ -99,7 +98,7 @@ void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(PROBLEME_HEBDO* problemeH
     std::vector<int>& NbGrpCourbeGuide = problemeHebdo->NbGrpCourbeGuide;
     std::vector<int>& NbGrpOpt = problemeHebdo->NbGrpOpt;
 
-    for (int Pays = 0; Pays < problemeHebdo->NombreDePays; ++Pays)
+    for (uint32_t Pays = 0; Pays < problemeHebdo->NombreDePays; ++Pays)
     {
         const RESULTATS_HORAIRES& ResultatsHoraires = problemeHebdo->ResultatsHoraires[Pays];
         const PALIERS_THERMIQUES& PaliersThermiquesDuPays

@@ -69,7 +69,7 @@ bool renewableScBuilderRenderer::cellValue(int x, int y, const String& value)
         assert((uint)y < pRules->renewable[selectedArea()->index].width());
         assert((uint)x < pRules->renewable[selectedArea()->index].height());
         uint val = fromStringToTSnumber(value);
-        pRules->renewable[selectedArea()->index].set(
+        pRules->renewable[selectedArea()->index].setTSnumber(
           selectedArea()->renewable.list.byIndex[y], x, val);
         return true;
     }

@@ -34,8 +34,8 @@
 #include <yuni/job/queue/q-event.h>
 #include <antares/antares.h>
 #include <fswalker/fswalker.h>
-#include <antares/logs.h>
-#include "../../ui/common/winmain.hxx"
+#include <antares/logs/logs.h>
+#include <antares/args/args_to_utf8.h>
 #include <antares/version.h>
 #include <antares/locale.h>
 #include "modified-inode.h"
@@ -52,7 +52,7 @@ static inline double Round2ndPlace(double v)
     return v / 100.;
 }
 
-static void NotifyDuration(sint64 duration)
+static void NotifyDuration(int64_t duration)
 {
     switch (duration)
     {
@@ -67,7 +67,7 @@ static void NotifyDuration(sint64 duration)
     }
 }
 
-static void NotifyBytesDeleted(uint64 bytes)
+static void NotifyBytesDeleted(uint64_t bytes)
 {
     String message;
 
@@ -111,7 +111,7 @@ static void NotifyBytesDeleted(uint64 bytes)
     logs.info() << message;
 }
 
-static void NotifyFilesDeleted(uint64 count)
+static void NotifyFilesDeleted(uint64_t count)
 {
     switch (count)
     {
@@ -126,7 +126,7 @@ static void NotifyFilesDeleted(uint64 count)
     }
 }
 
-static void NotifyFoldersDeleted(uint64 count)
+static void NotifyFoldersDeleted(uint64_t count)
 {
     switch (count)
     {
@@ -143,7 +143,7 @@ static void NotifyFoldersDeleted(uint64 count)
 
 static void NotifyStatistics(const String& logprefix,
                              const FSWalker::Statistics& stats,
-                             uint64 duration)
+                             uint64_t duration)
 {
     String message;
 
@@ -191,7 +191,7 @@ namespace // anonymous
 class DirectoryCleanerJob : public Job::IJob
 {
 public:
-    DirectoryCleanerJob(const String& directory, sint64 dateLimit) :
+    DirectoryCleanerJob(const String& directory, int64_t dateLimit) :
      directory(directory), dateLimit(dateLimit)
     {
     }
@@ -203,7 +203,7 @@ public:
     //! The directory to clean
     String directory;
     //! The lower date limit
-    sint64 dateLimit;
+    int64_t dateLimit;
 
 protected:
     virtual void onExecute()
@@ -247,7 +247,8 @@ int main(int argc, char** argv)
     InitializeDefaultLocale();
 
     logs.applicationName("vacuum");
-    argv = AntaresGetUTF8Arguments(argc, argv);
+    IntoUTF8ArgsTranslator toUTF8ArgsTranslator(argc, argv);
+    std::tie(argc, argv) = toUTF8ArgsTranslator.convert();
     String::Vector optInput;
     String::Vector optEachFolderIn;
     uint optMaxDays = 90; // days
@@ -359,8 +360,8 @@ int main(int argc, char** argv)
     logs.info();
     NotifyDuration(DateTime::Now() - starttime);
     NotifyBytesDeleted(IOBytesDeleted);
-    NotifyFilesDeleted((uint64)IOFilesDeleted);
-    NotifyFoldersDeleted((uint64)IOFoldersDeleted);
+    NotifyFilesDeleted((uint64_t)IOFilesDeleted);
+    NotifyFoldersDeleted((uint64_t)IOFoldersDeleted);
 
     logs.info();
     logs.info() << "exiting gracefully";

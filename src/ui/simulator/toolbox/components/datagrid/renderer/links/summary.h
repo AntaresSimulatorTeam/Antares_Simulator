@@ -27,7 +27,6 @@
 #ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_LINKS_SUMMARY_H__
 #define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_LINKS_SUMMARY_H__
 
-#include <antares/wx-wrapper.h>
 #include "../../renderer.h"
 #include <yuni/core/event.h>
 #include "../../../../../application/study.h"

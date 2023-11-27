@@ -99,13 +99,13 @@ public:
     Variant(const NullPtr&);
 
     //! Constructs a Variant based on an integer.
-    Variant(sint32 rhs);
+    Variant(int32_t rhs);
     //! Constructs a Variant based on an integer.
-    Variant(sint64 rhs);
+    Variant(int64_t rhs);
     //! Constructs a Variant based on an integer.
-    Variant(uint32 rhs);
+    Variant(uint32_t rhs);
     //! Constructs a Variant based on an integer.
-    Variant(uint64 rhs);
+    Variant(uint64_t rhs);
     //! Constructs a Variant based on an integer.
     Variant(float rhs);
     //! Constructs a Variant based on an integer.
@@ -130,14 +130,14 @@ public:
     //@{
     //! Assignment from an existing Variant
     void assign(const Variant& rhs);
-    //! Assignment from standard type (uint32)
-    void assign(uint32 rhs);
-    //! Assignment from standard type (sint32)
-    void assign(sint32 rhs);
-    //! Assignment from standard type (uint64)
-    void assign(uint64 rhs);
-    //! Assignment from standard type (sint64)
-    void assign(sint64 rhs);
+    //! Assignment from standard type (uint32_t)
+    void assign(uint32_t rhs);
+    //! Assignment from standard type (int32_t)
+    void assign(int32_t rhs);
+    //! Assignment from standard type (uint64_t)
+    void assign(uint64_t rhs);
+    //! Assignment from standard type (int64_t)
+    void assign(int64_t rhs);
     //! Assignment from standard type (char)
     void assign(char rhs);
     //! Assignment from standard type (bool)

@@ -61,7 +61,7 @@ private:
     void theProcessHasStopped(bool killed, int exitstatus);
 
     //! Get the current timestamp according the requested precision
-    sint64 currentTime() const;
+    int64_t currentTime() const;
 
 private:
     typedef char* CharPtr;
@@ -98,8 +98,8 @@ private:
     //! Flag to determine whether the process was killed or not
     bool pKilled;
 
-    sint64 pStartTime;
-    sint64 pEndTime;
+    int64_t pStartTime;
+    int64_t pEndTime;
 
     //! Duration precision
     const DurationPrecision pDurationPrecision;
@@ -129,7 +129,7 @@ inline Program::ThreadMonitor::~ThreadMonitor()
 {
 }
 
-inline sint64 Program::ThreadMonitor::currentTime() const
+inline int64_t Program::ThreadMonitor::currentTime() const
 {
     switch (pDurationPrecision)
     {
@@ -176,7 +176,7 @@ void Program::ThreadMonitor::theProcessHasStopped(bool killed, int exitstatus)
     }
 
     // execution time for the sub-process
-    sint64 duration = (pEndTime >= pStartTime) ? (pEndTime - pStartTime) : 0;
+    int64_t duration = (pEndTime >= pStartTime) ? (pEndTime - pStartTime) : 0;
 
     // Making sure that the process ID is invalid
     {
@@ -308,7 +308,7 @@ bool Program::execute(uint timeout)
     return processReady;
 }
 
-int Program::wait(sint64* duration)
+int Program::wait(int64_t* duration)
 {
     ProcessSharedInfo::Ptr envptr = pEnv;
     if (YUNI_UNLIKELY(!envptr))

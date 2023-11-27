@@ -27,7 +27,6 @@
 #ifndef __ANTARES_APPLICATION_WINDOW_CLEANER_H__
 #define __ANTARES_APPLICATION_WINDOW_CLEANER_H__
 
-#include <antares/wx-wrapper.h>
 #include <yuni/thread/thread.h>
 #include <yuni/thread/mutex.h>
 #include <wx/panel.h>

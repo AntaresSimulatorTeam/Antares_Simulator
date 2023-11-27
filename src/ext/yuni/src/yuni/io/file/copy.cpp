@@ -72,7 +72,7 @@ Error Copy(const AnyString& from, const AnyString& to, bool overwrite)
 
     // Generic implementation
     char* buffer = new char[size];
-    uint64 numRead;
+    uint64_t numRead;
     while ((numRead = fromFile.read(buffer, size)) != 0)
     {
         if (numRead != toFile.write(buffer, numRead))

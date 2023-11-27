@@ -27,8 +27,7 @@
 #ifndef __ANTARES_APPLICATION_WINDOWS_SAVEAS_H__
 #define __ANTARES_APPLICATION_WINDOWS_SAVEAS_H__
 
-#include <antares/wx-wrapper.h>
-#include <antares/study.h>
+#include <antares/study/study.h>
 #include "../application/study.h"
 
 #include <wx/sizer.h>

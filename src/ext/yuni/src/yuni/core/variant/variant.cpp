@@ -26,36 +26,36 @@ VariantInnerType Variant::type() const
     return (not pData) ? variantTNil : pData->type();
 }
 
-void Variant::assign(uint32 rhs)
+void Variant::assign(uint32_t rhs)
 {
     if (pShareContent and !(!pData))
         pData->assign(rhs);
     else
-        pData = new Private::Variant::Data<uint32>(rhs);
+        pData = new Private::Variant::Data<uint32_t>(rhs);
 }
 
-void Variant::assign(sint32 rhs)
+void Variant::assign(int32_t rhs)
 {
     if (pShareContent and !(!pData))
         pData->assign(rhs);
     else
-        pData = new Private::Variant::Data<sint32>(rhs);
+        pData = new Private::Variant::Data<int32_t>(rhs);
 }
 
-void Variant::assign(uint64 rhs)
+void Variant::assign(uint64_t rhs)
 {
     if (pShareContent and !(!pData))
         pData->assign(rhs);
     else
-        pData = new Private::Variant::Data<uint64>(rhs);
+        pData = new Private::Variant::Data<uint64_t>(rhs);
 }
 
-void Variant::assign(sint64 rhs)
+void Variant::assign(int64_t rhs)
 {
     if (pShareContent and !(!pData))
         pData->assign(rhs);
     else
-        pData = new Private::Variant::Data<sint64>(rhs);
+        pData = new Private::Variant::Data<int64_t>(rhs);
 }
 
 void Variant::assign(char rhs)

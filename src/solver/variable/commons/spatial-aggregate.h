@@ -28,7 +28,7 @@
 #define __SOLVER_VARIABLE_ECONOMY_SPATIAL_AGGREGATE_H__
 
 #include "../variable.h"
-// #include <antares/logs.h>	// In case it is needed
+// #include <antares/logs/logs.h>	// In case it is needed
 
 namespace Antares
 {
@@ -55,12 +55,12 @@ struct MultipleCaptionProxy
 template<class VCardT>
 struct MultipleCaptionProxy<0, VCardT>
 {
-    static std::string Caption(const uint indx)
+    static std::string Caption(const uint)
     {
         return "";
     }
 
-    static std::string Unit(const uint indx)
+    static std::string Unit(const uint)
     {
         return "";
     }
@@ -69,12 +69,12 @@ struct MultipleCaptionProxy<0, VCardT>
 template<class VCardT>
 struct MultipleCaptionProxy<1, VCardT>
 {
-    static std::string Caption(const uint indx)
+    static std::string Caption(const uint)
     {
         return "";
     }
 
-    static std::string Unit(const uint indx)
+    static std::string Unit(const uint)
     {
         return "";
     }
@@ -83,12 +83,12 @@ struct MultipleCaptionProxy<1, VCardT>
 template<class VCardT>
 struct MultipleCaptionProxy<Category::dynamicColumns, VCardT>
 {
-    static std::string Caption(const uint indx)
+    static std::string Caption(const uint)
     {
         return "";
     }
 
-    static std::string Unit(const uint indx)
+    static std::string Unit(const uint)
     {
         return "";
     }

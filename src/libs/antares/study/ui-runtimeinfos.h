@@ -30,7 +30,7 @@
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
 #include "fwd.h"
-#include "area.h"
+#include "area/area.h"
 #include "binding_constraint/BindingConstraint.h"
 
 namespace Antares
@@ -133,7 +133,7 @@ public:
 
     uint visibleLinksCount(uint layerID);
 
-    Yuni::uint64 memoryUsage() const;
+    uint64_t memoryUsage() const;
 
 public:
     //! Areas ordered by their name + links ordered by their name

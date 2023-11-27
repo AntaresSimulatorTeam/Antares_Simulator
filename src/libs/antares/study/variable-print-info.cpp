@@ -28,7 +28,7 @@
 #include "variable-print-info.h"
 #include <algorithm>
 #include <assert.h>
-#include <antares/study.h>
+#include <antares/study/study.h>
 #include "../solver/variable/categories.h"
 
 using namespace Antares::Solver::Variable;

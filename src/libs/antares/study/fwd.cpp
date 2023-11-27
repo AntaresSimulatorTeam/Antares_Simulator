@@ -264,8 +264,10 @@ UnitCommitmentMode StringToUnitCommitmentMode(const AnyString& text)
     s.trim();
     s.toLower();
     if (s == "fast")
-        return ucHeuristic;
-    if (s == "accurate") // mixed integer linear problem
+        return ucHeuristicFast;
+    if (s == "accurate")
+        return ucHeuristicAccurate;
+    if (s == "milp") // mixed integer linear problem
         return ucMILP;
 
     return ucUnknown;
@@ -275,10 +277,12 @@ const char* UnitCommitmentModeToCString(UnitCommitmentMode ucommitment)
 {
     switch (ucommitment)
     {
-    case ucHeuristic:
+    case ucHeuristicFast:
         return "fast";
-    case ucMILP:
+    case ucHeuristicAccurate:
         return "accurate"; // (slow)
+    case ucMILP:
+        return "milp"; // (possibly very slow)
     case ucUnknown:
         return "";
     }

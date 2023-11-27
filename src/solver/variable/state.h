@@ -206,8 +206,6 @@ public:
     //! Probleme Hebdo
     PROBLEME_HEBDO* problemeHebdo;
 
-    //! The timeseries indexes for the current area
-    NUMERO_CHRONIQUES_TIREES_PAR_PAYS* timeseriesIndex;
     //! Study mode: economy / adequacy
     Data::StudyMode studyMode;
     //! Study unit commitment mode: fast(ucHeuristic) / accurate(ucMILP)
@@ -221,7 +219,7 @@ public:
     /*!
     ** \brief Flag to know if the simplex has been used for the current week
     */
-    bool simplexHasBeenRan;
+    bool simplexRunNeeded;
 
     // Annual costs to be printed in output into separate files
     // -----------------------------------------------------------------

@@ -91,10 +91,10 @@ void ByAlphaOrder::refresh(const wxString& search)
 {
     pParent.clear();
 
-    if (Data::Study::Current::Valid())
+    if (CurrentIsValid())
     {
         BindingConstraintList l;
-        GetBindingConstraintList(*Data::Study::Current::Get(), l, search);
+        GetBindingConstraintList(*GetCurrentStudy(), l, search);
         if (!l.empty())
         {
             l.sort(SortAlphaOrder());
@@ -122,10 +122,10 @@ void ByAlphaReverseOrder::refresh(const wxString& search)
 {
     pParent.clear();
 
-    if (Data::Study::Current::Valid())
+    if (CurrentIsValid())
     {
         BindingConstraintList l;
-        GetBindingConstraintList(*Data::Study::Current::Get(), l, search);
+        GetBindingConstraintList(*GetCurrentStudy(), l, search);
         if (!l.empty())
         {
             l.sort(SortAlphaReverseOrder());

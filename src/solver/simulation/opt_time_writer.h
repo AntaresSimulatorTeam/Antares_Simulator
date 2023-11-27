@@ -25,20 +25,20 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #pragma once
-#include <i_writer.h>
+#include <antares/writer/i_writer.h>
 
 #include "simulation.h"
 
 class OptimizationStatisticsWriter
 {
 public:
-    OptimizationStatisticsWriter(Antares::Solver::IResultWriter::Ptr writer, uint year);
     void addTime(uint week, double opt_1_ms, double opt_2_ms, double update_ms);
+    OptimizationStatisticsWriter(Antares::Solver::IResultWriter& writer, uint year);
     void finalize();
 
 private:
     void printHeader();
     Yuni::Clob pBuffer;
     uint pYear;
-    Antares::Solver::IResultWriter::Ptr pWriter;
+    Antares::Solver::IResultWriter& pWriter;
 };

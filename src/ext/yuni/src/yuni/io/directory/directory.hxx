@@ -29,8 +29,8 @@ namespace Directory
 inline bool DummyCopyUpdateEvent(Yuni::IO::Directory::CopyState,
                                  const String&,
                                  const String&,
-                                 uint64,
-                                 uint64)
+                                 uint64_t,
+                                 uint64_t)
 {
     return true;
 }

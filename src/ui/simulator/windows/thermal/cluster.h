@@ -27,7 +27,6 @@
 #ifndef __ANTARES_APPLICATION_WINDOW_THERMAL_COMMON_H__
 #define __ANTARES_APPLICATION_WINDOW_THERMAL_COMMON_H__
 
-#include <antares/wx-wrapper.h>
 #include <ui/common/component/panel.h>
 #include "../../toolbox/components/datagrid/component.h"
 #include "../../toolbox/input/thermal-cluster.h"

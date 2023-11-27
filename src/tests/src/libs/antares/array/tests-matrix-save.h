@@ -12,7 +12,7 @@ using namespace Antares;
 
 struct TSNumbersPredicate
 {
-	uint32 operator () (uint32 value) const
+	uint32_t operator () (uint32_t value) const
 	{
 		return value + 1;
 	}

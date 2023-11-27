@@ -26,7 +26,7 @@ namespace Antares
 {
 namespace Statistics
 {
-void HasReadFromDisk(Yuni::uint64 /* size */)
+void HasReadFromDisk(uint64_t /* size */)
 {
 }
 } // namespace Statistics
@@ -68,7 +68,7 @@ public:
     {
     }
 
-    ~fake_buffer_factory(){};
+    ~fake_buffer_factory() = default;
 
     void matrix_to_build_buffer_with(Matrix_easy_to_fill<T, ReadWriteT>* mtx)
     {

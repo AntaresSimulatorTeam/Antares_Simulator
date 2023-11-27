@@ -1,5 +1,28 @@
 # Study format changes
 This is a list of all recent changes that came with new Antares Simulator features. The main goal of this document is to lower the costs of changing existing interfaces, both GUI and scripts.
+## v8.9.0
+### Input
+### Solver logs
+* Solver logs can be enabled either by the command-line option (--solver-logs) or in the generaldata.ini file by setting solver-logs = true under the optimization section.
+
+## v8.8.0
+### Input
+#### Short-term storage
+If no value is specified for `initiallevel`, then a default value of 50% is used. Note that this value is used only if `initialleveloptim=false`, and that `false` is the default value for `initialleveloptim`.
+
+#### Experimental "MILP" mode
+New value `milp` for existing property `other preferences/unit-commitment-mode` in file **settings/generaldata.ini**.
+
+Using this property requires OR-Tools and a MILP solver (XPRESS, COIN)
+
+```
+antares-8.8-solver --use-ortools --ortools-solver coin|xpress ...
+```
+
+### Output
+### Cashflow by short-term storage
+In existing file **details-STstorage-&lt;period&gt;.txt** (mc-all & mc-ind), add a new column for each ST storage object, named "STS Cashflow By Cluster", in EURO.
+
 ## v8.7.0
 ### Input
 #### Scenarized RHS for binding constraints
@@ -24,11 +47,11 @@ This line is not mandatory for every group & MC year. If absent, the TS number w
 #### Thermal cluster new properties
 For each thermal cluster, in existing file **input/thermal/clusters/&lt;area&gt;/list.ini**, under existing sections **&lt;cluster&gt;**, following properties added: 
 
-* `costgeneration` [string] can take values `useCostTimeseries` or be excluded from the section if `Set manually` is selected (default behavior).
-* `efficiency` [float] excluded from the section if default value 100 is selected (default behavior).
-* `variableomcost` [float] excluded from the section if default value 0 is selected (default behavior).
+* `costgeneration` [string] can take values `useCostTimeseries` or be excluded from the section if `SetManually` is selected (default behavior).
+* `efficiency` [float] between 0-100 (default = 100). Unit is "percentage".
+* `variableomcost` [float] excluded from the section if default value 0 is selected (default behavior). Unit is Euro / MWh
 
-For each thermal cluster, new files added **input/thermal/prepro/&lt;area&gt;/&lt;cluster&gt;/CO2Cost.txt** and **input/thermal/series/&lt;area&gt;/&lt;cluster&gt;/fuelCost.txt**. **fuelCost.txt** and **CO2Cost.txt** must either have one column, or the same number of columns as existing file **series.txt** (availability)
+For each thermal cluster, new files added **input/thermal/series/&lt;area&gt;/&lt;cluster&gt;/CO2Cost.txt** and **input/thermal/series/&lt;area&gt;/&lt;cluster&gt;/fuelCost.txt**. **fuelCost.txt** and **CO2Cost.txt** must either have one column, or the same number of columns as existing file **series.txt** (availability). The number of rows for these new matrices is 8760.
 
 ### Output
 #### Scenarized RHS for binding constraints
@@ -41,7 +64,7 @@ Add directory **bindingconstraints** to output directory **ts-numbers**. For eve
 * For each area, add directory **input/st-storage/clusters/&lt;area id&gt;/list.ini**
 * This file contains the multiple sections whose name is ignored. Each section contains these properties:
     * `name` [str]
-    * `group` [str]. Possible values: "PSP_open", "PSP_closed", "Pondage", "Battery", "Other_1", ... , "Other_5". Default Other_1
+    * `group` [str]. Possible values: "PSP_open", "PSP_closed", "Pondage", "Battery", "Other1", ... , "Other5". Default Other1
     * `efficiency` [double] in range 0-1
     * `reservoircapacity` [double] &gt; 0
     * `initiallevel` [double] in range 0-1

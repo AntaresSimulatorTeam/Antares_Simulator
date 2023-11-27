@@ -27,7 +27,6 @@
 #ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_THERMALPREPRO_H__
 #define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_THERMALPREPRO_H__
 
-#include <antares/wx-wrapper.h>
 #include "../../../../input/thermal-cluster.h"
 #include "../matrix.h"
 #include <antares/study/parts/thermal/prepro.h>

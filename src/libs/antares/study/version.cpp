@@ -44,9 +44,7 @@ enum
 YUNI_STATIC_ASSERT((uint)versionFromCMake == (uint)Antares::Data::versionLatest,
                    DiscrepancyBetweenCMakeVersionAndAntaresVersion);
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 
 static inline Version StudyFormatCheck(const String& headerFile)
@@ -75,7 +73,9 @@ const char* VersionToCStr(const Version v)
     switch (v)
     {
     case versionFutur:
-        return ">8.7";
+        return ">8.8";
+    case version880:
+        return "8.8";
     case version870:
         return "8.7";
     case version860:
@@ -113,7 +113,9 @@ const wchar_t* VersionToWStr(const Version v)
     switch (v)
     {
     case versionFutur:
-        return L">8.7";
+        return L">8.8";
+    case version880:
+        return L"8.8";
     case version870:
         return L"8.7";
     case version860:
@@ -149,6 +151,8 @@ Version VersionIntToVersion(uint version)
     // The list should remain ordered in the reverse order for performance reasons
     switch (version)
     {
+    case 880:
+        return version880;
     case 870:
         return version870;
     case 860:
@@ -209,5 +213,5 @@ Version StudyTryToFindTheVersion(const AnyString& folder)
 bool StudyVersion::isStudyLatestVersion(std::string studyFolder) const {
     return StudyTryToFindTheVersion(studyFolder) == versionLatest;
 }
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+

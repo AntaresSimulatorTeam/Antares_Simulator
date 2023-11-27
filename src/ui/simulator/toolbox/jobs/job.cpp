@@ -26,7 +26,6 @@
 */
 
 #include <yuni/yuni.h>
-#include <antares/wx-wrapper.h>
 #include <yuni/thread/thread.h>
 #include <yuni/core/math.h>
 
@@ -156,12 +155,12 @@ public:
         Part& part = pParts[year][s];
 
         //
-        pGlobalValue -= (uint64)part.value;
+        pGlobalValue -= (uint64_t)part.value;
         pCurrentTaskPercent = value;
         if (pCurrentTaskPercent >= 100.)
             pCurrentTaskPercent = 0.;
         part.value = (uint)((double)part.weight * (value / 100.));
-        pGlobalValue += (uint64)part.value;
+        pGlobalValue += (uint64_t)part.value;
 
         // return the percent
         return (pGlobalValue * 100.) / pMaxValue;
@@ -208,7 +207,7 @@ public:
 
         // Avoid division by 0
         if (!pMaxValue)
-            pMaxValue = (uint64)-1;
+            pMaxValue = (uint64_t)-1;
     }
 
 protected:
@@ -233,9 +232,9 @@ protected:
 
 private:
     //! The curren progression
-    uint64 pGlobalValue;
+    uint64_t pGlobalValue;
     //! The maximum reachable value
-    uint64 pMaxValue;
+    uint64_t pMaxValue;
     //!
     double pCurrentTaskPercent;
     //! All parts
@@ -529,8 +528,8 @@ public:
 
     virtual void Notify()
     {
-        uint64 r = Statistics::ReadFromDisk();
-        uint64 w = Statistics::WrittenToDisk();
+        uint64_t r = Statistics::ReadFromDisk();
+        uint64_t w = Statistics::WrittenToDisk();
         bool hasR = (r >= 1024);
         bool hasW = (w >= 1024);
 

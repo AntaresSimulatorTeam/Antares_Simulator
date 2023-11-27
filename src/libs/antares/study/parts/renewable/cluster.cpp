@@ -30,12 +30,12 @@
 #include <yuni/core/math.h>
 #include <cassert>
 #include <cmath>
+#include <boost/algorithm/string/case_conv.hpp>
 #include "../../study.h"
-#include "../../memory-usage.h"
 #include "cluster.h"
 #include <antares/inifile/inifile.h>
-#include "../../../logs.h"
-#include "../../../utils.h"
+#include <antares/logs/logs.h>
+#include <antares/utils/utils.h>
 
 using namespace Yuni;
 using namespace Antares;
@@ -51,11 +51,6 @@ Data::RenewableCluster::RenewableCluster(Area* parent) :
 {
     // assert
     assert(parent and "A parent for a renewable dispatchable cluster can not be null");
-}
-
-Data::RenewableCluster::~RenewableCluster()
-{
-    delete series;
 }
 
 uint RenewableCluster::groupId() const
@@ -82,14 +77,10 @@ void Data::RenewableCluster::copyFrom(const RenewableCluster& cluster)
     // ts-mode
     tsMode = cluster.tsMode;
 
-    // Making sure that the data related to the timeseries are present
-    if (not series)
-        series = new DataSeriesCommon();
-
     // timseries
-    series->timeSeries = cluster.series->timeSeries;
-    cluster.series->timeSeries.unloadFromMemory();
-    series->timeseriesNumbers.clear();
+    series.timeSeries = cluster.series.timeSeries;
+    cluster.series.timeSeries.unloadFromMemory();
+    series.timeseriesNumbers.clear();
 
     // The parent must be invalidated to make sure that the clusters are really
     // re-written at the next 'Save' from the user interface.
@@ -97,78 +88,51 @@ void Data::RenewableCluster::copyFrom(const RenewableCluster& cluster)
         parentArea->forceReload();
 }
 
+const std::map < RenewableCluster::RenewableGroup, const char* > groupToName =
+{
+    {RenewableCluster::thermalSolar, "solar thermal"},
+    {RenewableCluster::PVSolar, "solar pv"},
+    {RenewableCluster::rooftopSolar, "solar rooftop"},
+    {RenewableCluster::windOnShore, "wind onshore"},
+    {RenewableCluster::windOffShore,"wind offshore"},
+    {RenewableCluster::renewableOther1, "other res 1"},
+    {RenewableCluster::renewableOther2, "other res 2"},
+    {RenewableCluster::renewableOther3, "other res 3"},
+    {RenewableCluster::renewableOther4, "other res 4"}
+};
+
 void Data::RenewableCluster::setGroup(Data::ClusterName newgrp)
 {
-    if (not newgrp)
+    if (newgrp.empty())
     {
         groupID = renewableOther1;
         pGroup.clear();
         return;
     }
     pGroup = newgrp;
-    newgrp.toLower();
+    boost::to_lower(newgrp);
 
-    if (newgrp == "solar thermal")
+    for (const auto& [group, name] : groupToName)
     {
-        groupID = thermalSolar;
-        return;
+        if (newgrp == name)
+        {
+            groupID = group;
+            return;
+        }        
     }
-    if (newgrp == "solar pv")
-    {
-        groupID = PVSolar;
-        return;
-    }
-    if (newgrp == "solar rooftop")
-    {
-        groupID = rooftopSolar;
-        return;
-    }
-    if (newgrp == "wind onshore")
-    {
-        groupID = windOnShore;
-        return;
-    }
-    if (newgrp == "wind offshore")
-    {
-        groupID = windOffShore;
-        return;
-    }
-    if (newgrp == "other renewable 1")
-    {
-        groupID = renewableOther1;
-        return;
-    }
-    if (newgrp == "other renewable 2")
-    {
-        groupID = renewableOther2;
-        return;
-    }
-    if (newgrp == "other renewable 3")
-    {
-        groupID = renewableOther3;
-        return;
-    }
-    if (newgrp == "other renewable 4")
-    {
-        groupID = renewableOther4;
-        return;
-    }
+
     // assigning a default value
     groupID = renewableOther1;
 }
 
 bool Data::RenewableCluster::forceReload(bool reload) const
 {
-    bool ret = true;
-    if (series)
-        ret = series->forceReload(reload) and ret;
-    return ret;
+    return series.forceReload(reload);
 }
 
 void Data::RenewableCluster::markAsModified() const
 {
-    if (series)
-        series->markAsModified();
+    series.markAsModified();
 }
 
 void Data::RenewableCluster::reset()
@@ -194,34 +158,6 @@ bool Data::RenewableCluster::integrityCheck()
         ret = false;
     }
     return ret;
-}
-
-const char* Data::RenewableCluster::GroupName(enum RenewableGroup grp)
-{
-    switch (grp)
-    {
-    case windOffShore:
-        return "Wind offshore";
-    case windOnShore:
-        return "Wind onshore";
-    case thermalSolar:
-        return "Solar thermal";
-    case PVSolar:
-        return "Solar PV";
-    case rooftopSolar:
-        return "Solar rooftop";
-    case renewableOther1:
-        return "Other RES 1";
-    case renewableOther2:
-        return "Other RES 2";
-    case renewableOther3:
-        return "Other RES 3";
-    case renewableOther4:
-        return "Other RES 4";
-    case groupMax:
-        return "";
-    }
-    return "";
 }
 
 bool Data::RenewableCluster::setTimeSeriesModeFromString(const YString& value)
@@ -251,14 +187,12 @@ YString Data::RenewableCluster::getTimeSeriesModeAsString() const
     return "unknown";
 }
 
-double RenewableCluster::valueAtTimeStep(uint timeSeriesIndex, uint timeStepIndex) const
+double RenewableCluster::valueAtTimeStep(uint year, uint hourInYear) const
 {
     if (!enabled)
         return 0.;
 
-    assert(timeStepIndex < series->timeSeries.height);
-    assert(timeSeriesIndex < series->timeSeries.width);
-    const double tsValue = series->timeSeries[timeSeriesIndex][timeStepIndex];
+    const double tsValue = series.getCoefficient(year, hourInYear);
     switch (tsMode)
     {
     case powerGeneration:
@@ -269,11 +203,10 @@ double RenewableCluster::valueAtTimeStep(uint timeSeriesIndex, uint timeStepInde
     return 0.;
 }
 
-uint64 RenewableCluster::memoryUsage() const
+uint64_t RenewableCluster::memoryUsage() const
 {
-    uint64 amount = sizeof(RenewableCluster);
-    if (series)
-        amount += DataSeriesMemoryUsage(series);
+    uint64_t amount = sizeof(RenewableCluster);
+    amount += series.memoryUsage();
     return amount;
 }
 

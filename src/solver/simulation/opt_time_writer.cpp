@@ -28,7 +28,7 @@
 #include <filesystem>
 
 OptimizationStatisticsWriter::OptimizationStatisticsWriter(
-  Antares::Solver::IResultWriter::Ptr writer,
+  Antares::Solver::IResultWriter& writer,
   uint year) :
   pYear(year), pWriter(writer)
 {
@@ -49,6 +49,5 @@ void OptimizationStatisticsWriter::finalize()
 {
     using path = std::filesystem::path;
     const path filename = path("optimization") / "week-by-week" / ("year_" + std::to_string(pYear) + ".txt");
-    if (pWriter)
-        pWriter->addEntryFromBuffer(filename.string(), pBuffer);
+    pWriter.addEntryFromBuffer(filename.string(), pBuffer);
 }

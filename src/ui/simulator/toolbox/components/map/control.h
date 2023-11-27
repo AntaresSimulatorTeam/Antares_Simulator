@@ -27,7 +27,6 @@
 #ifndef __ANTARES_TOOLBOX_MAP_CONTROL_H__
 #define __ANTARES_TOOLBOX_MAP_CONTROL_H__
 
-#include <antares/wx-wrapper.h>
 #include <wx/scrolwin.h>
 #include "nodes/node.h"
 #include "manager.h"

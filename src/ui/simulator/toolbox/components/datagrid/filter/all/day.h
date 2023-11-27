@@ -27,9 +27,8 @@
 #ifndef __ANTARES_TOOLBOX_COMPONENTS_DATAGRID_FILTER_ALL_DAY_H__
 #define __ANTARES_TOOLBOX_COMPONENTS_DATAGRID_FILTER_ALL_DAY_H__
 
-#include <antares/wx-wrapper.h>
 #include "../filter.h"
-#include <antares/date.h>
+#include <antares/date/date.h>
 
 namespace Antares
 {
@@ -85,7 +84,7 @@ public:
     virtual bool rowIsValid(int row) const
     {
         // TODO Do not use global study
-        auto studyptr = Data::Study::Current::Get();
+        auto studyptr = GetCurrentStudy();
         if (!studyptr)
             return false;
         auto& study = *studyptr;

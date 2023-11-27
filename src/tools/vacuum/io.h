@@ -54,7 +54,7 @@ extern std::unordered_set<YString> inputFolders;
 **
 ** No I/O operations will be performed if in dry mode
 */
-bool RemoveFile(const YString& filename, yuint64 size);
+bool RemoveFile(const YString& filename, uint64_t size);
 
 /*!
 ** \brief Try to remove a folder if empty

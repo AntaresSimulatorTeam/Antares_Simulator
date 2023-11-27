@@ -27,9 +27,8 @@
 #ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_CORRELATION_H__
 #define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_CORRELATION_H__
 
-#include <antares/wx-wrapper.h>
 #include "../../renderer.h"
-#include <antares/study.h>
+#include <antares/study/study.h>
 #include <map>
 #include <yuni/core/bind.h>
 #include <yuni/core/event.h>
@@ -164,7 +163,7 @@ public:
 
     virtual bool valid() const;
 
-    void reloadDistributionLawsFromStudy(Data::TimeSeries ts);
+    void reloadDistributionLawsFromStudy(Data::TimeSeriesType ts);
 
     /*!
     ** \brief Reset internal variables according the current study

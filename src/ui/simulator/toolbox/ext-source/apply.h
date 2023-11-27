@@ -28,9 +28,9 @@
 #define __ANTARES_TOOLBOX_EXT_SOURCE_APPLY_H__
 
 #include <yuni/yuni.h>
-#include <antares/study.h>
-#include <antares/study/action/action.h>
-#include <antares/study/action/context.h>
+#include <antares/study/study.h>
+#include <action/action.h>
+#include <action/context.h>
 
 namespace Antares
 {

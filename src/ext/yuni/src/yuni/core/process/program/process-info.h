@@ -69,7 +69,7 @@ public:
     //! Thread
     ThreadPtr thread;
     //! Duration in seconds
-    sint64 duration;
+    int64_t duration;
     //! Duration precision
     DurationPrecision durationPrecision;
     //! Timeout

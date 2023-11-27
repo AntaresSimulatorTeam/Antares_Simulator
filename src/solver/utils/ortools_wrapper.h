@@ -1,6 +1,7 @@
 #ifndef __ORTOOLS_WRAPPER__
 #define __ORTOOLS_WRAPPER__
 
+#include <string>
 #include "named_problem.h"
 
 using namespace operations_research;
@@ -9,7 +10,8 @@ MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probl
                            MPSolver* ProbSpx,
                            bool keepBasis);
 
-MPSolver* ORTOOLS_ConvertIfNeeded(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
+MPSolver* ORTOOLS_ConvertIfNeeded(const std::string& solverName,
+                                  const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
                                   MPSolver* solver);
 
 void ORTOOLS_ModifierLeVecteurCouts(MPSolver* ProbSpx, const double* costs, int nbVar);

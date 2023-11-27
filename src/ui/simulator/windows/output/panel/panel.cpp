@@ -360,7 +360,7 @@ void Panel::onProceed(void*)
     assert(this && "Invalid this");
     if (!pLabelMessage || !pButton)
         return;
-    if (not Data::Study::Current::Valid())
+    if (not CurrentStudyIsValid())
         return;
 
     pButton->Enable(false);
@@ -395,7 +395,7 @@ void Panel::runMerge()
 
 void Panel::executeAggregator()
 {
-    if (not pComponent || not Data::Study::Current::Valid())
+    if (not pComponent || not CurrentStudyIsValid())
         return;
 
     // Where is our program ?

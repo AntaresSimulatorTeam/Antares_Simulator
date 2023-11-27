@@ -28,7 +28,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "jit.h"
+#include "antares/jit/jit.h"
 
 bool JIT::enabled = false;
 

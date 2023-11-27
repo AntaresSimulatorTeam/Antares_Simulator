@@ -15,9 +15,9 @@ set(SRC_UI_MESSAGES
 		windows/version.cpp
 
 )
-add_Library(libantares-ui-messages ${SRC_UI_MESSAGES})
+add_Library(antares-ui-messages ${SRC_UI_MESSAGES})
 
 
-target_link_libraries(libantares-ui-messages PUBLIC ${wxWidgets_LIBRARIES})
-target_link_libraries(libantares-ui-messages PRIVATE libantares-core libantares-ui-common)
+target_link_libraries(antares-ui-messages PUBLIC ${wxWidgets_LIBRARIES})
+target_link_libraries(antares-ui-messages PRIVATE antares-core antares-ui-common)
 

@@ -27,18 +27,9 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_SOLAR_PREPRO_HXX__
 #define __ANTARES_LIBS_STUDY_PARTS_SOLAR_PREPRO_HXX__
 
-namespace Antares
+namespace Antares::Data::Solar
 {
-namespace Data
-{
-namespace Solar
-{
-inline void Prepro::estimateMemoryUsage(StudyMemoryUsage& u) const
-{
-    xcast.estimateMemoryUsage(u);
-}
-
-inline Yuni::uint64 Prepro::memoryUsage() const
+inline uint64_t Prepro::memoryUsage() const
 {
     return xcast.memoryUsage();
 }
@@ -58,8 +49,8 @@ inline void Prepro::resetToDefault()
     xcast.resetToDefaultValues();
 }
 
-} // namespace Solar
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data::Solar
+
+
 
 #endif // __ANTARES_LIBS_STUDY_PARTS_SOLAR_PREPRO_H__

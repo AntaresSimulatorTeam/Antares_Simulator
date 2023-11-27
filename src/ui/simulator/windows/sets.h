@@ -27,7 +27,6 @@
 #ifndef __ANTARES_APPLICATION_WINDOWS_SETS_H__
 #define __ANTARES_APPLICATION_WINDOWS_SETS_H__
 
-#include <antares/wx-wrapper.h>
 #include <ui/common/component/panel.h>
 #include <wx/richtext/richtextctrl.h>
 #include <wx/richtext/richtextstyles.h>

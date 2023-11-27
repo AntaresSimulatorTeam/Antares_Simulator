@@ -1,0 +1,43 @@
+name: GitHub Pages
+
+on:
+  push:
+    branches:
+      - develop  # Set a branch name to trigger deployment
+
+jobs:
+  deploy:
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true  # Fetch Hugo themes (true OR recursive)
+          fetch-depth: 0    # Fetch all history for .GitInfo and .Lastmod
+
+      - name: theme
+        run: |
+             git clone https://github.com/jothepro/doxygen-awesome-css.git
+             cd doxygen-awesome-css
+             git checkout v2.2.1
+             
+      - name: Doxygen
+        uses: mattnotmitt/doxygen-action@1.9.5
+        with:
+          doxyfile-path:  docs/Doxyfile
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        # If you're changing the branch from main,
+        # also change the `main` in `refs/heads/main`
+        # below accordingly.
+        if: github.ref == 'refs/heads/develop'
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./html
+
+          
+          

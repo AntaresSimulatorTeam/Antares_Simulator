@@ -38,9 +38,9 @@ const String& IteratorDataParentName(const IteratorData*);
 
 const String& IteratorDataName(const IteratorData*);
 
-uint64 IteratorDataSize(const IteratorData*);
+uint64_t IteratorDataSize(const IteratorData*);
 
-sint64 IteratorDataModified(const IteratorData*);
+int64_t IteratorDataModified(const IteratorData*);
 
 bool IteratorDataIsFolder(const IteratorData*);
 

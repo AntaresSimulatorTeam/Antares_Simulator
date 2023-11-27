@@ -278,15 +278,13 @@ public:
         assert(state.link != NULL);
         const auto& linkDirectCapa = state.link->directCapacities;
         const auto& linkIndirectCapa = state.link->indirectCapacities;
-        const int tsIndex = NumeroChroniquesTireesParInterconnexion[numSpace][state.link->index]
-                              .TransmissionCapacities;
         // CONG. PROB +
         if (state.ntc.ValeurDuFlux[state.link->index]
-            > +linkDirectCapa.entry[tsIndex][state.hourInTheYear] - 10e-6)
+            > +linkDirectCapa.getCoefficient(state.year, state.hourInTheYear) - 10e-6)
             pValuesForTheCurrentYear[numSpace][0].hour[state.hourInTheYear] += 100.0 * ratio;
         // CONG. PROB -
         if (state.ntc.ValeurDuFlux[state.link->index]
-            < -linkIndirectCapa.entry[tsIndex][state.hourInTheYear] + 10e-6)
+            < -linkIndirectCapa.getCoefficient(state.year, state.hourInTheYear) + 10e-6)
             pValuesForTheCurrentYear[numSpace][1].hour[state.hourInTheYear] += 100.0 * ratio;
 
         // Next item in the list

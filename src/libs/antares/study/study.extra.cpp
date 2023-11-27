@@ -38,11 +38,6 @@ namespace Data
 // The path to the Icon file to use when writing a study
 String StudyIconFile;
 
-void Study::releaseAllLocks()
-{
-    // Do nothing for now
-}
-
 void Study::scenarioRulesCreate()
 {
     // releasing the previous instance of the scenario builder
@@ -84,7 +79,7 @@ void Study::scenarioRulesLoadIfNotAvailable()
     }
 }
 
-bool Study::areaFindNameForANewArea(AreaName& out, const AreaName& basename)
+bool Study::modifyAreaNameIfAlreadyTaken(AreaName& out, const AreaName& basename)
 {
     out = basename;
     AreaName id = out;

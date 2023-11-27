@@ -125,9 +125,9 @@ inline void Spotlight::IItem::addTag(const StringT& text)
 
 template<class StringT>
 inline void Spotlight::IItem::addTag(const StringT& text,
-                                     Yuni::uint8 r,
-                                     Yuni::uint8 g,
-                                     Yuni::uint8 b)
+                                     uint8_t r,
+                                     uint8_t g,
+                                     uint8_t b)
 {
     pLeftTags.push_back(std::make_shared<Tag>(text, r, g, b));
 }
@@ -140,9 +140,9 @@ inline void Spotlight::IItem::addRightTag(const StringT& text)
 
 template<class StringT>
 inline void Spotlight::IItem::addRightTag(const StringT& text,
-                                          Yuni::uint8 r,
-                                          Yuni::uint8 g,
-                                          Yuni::uint8 b)
+                                          uint8_t r,
+                                          uint8_t g,
+                                          uint8_t b)
 {
     pRightTags.push_back(std::make_shared<Tag>(text, r, g, b));
 }

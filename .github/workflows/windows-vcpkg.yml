@@ -10,6 +10,8 @@ on:
       - issue-*
       - release/*
       - doc/*
+  schedule:
+    - cron: '21 2 * * *'
 
 jobs:
   windows:
@@ -29,6 +31,7 @@ jobs:
       VCPKG_ROOT: ${{ github.workspace }}/vcpkg
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
       ORTOOLS_URL: "https://github.com/rte-france/or-tools/releases/download/v9.5-rte2.0/ortools_cxx_windows-latest_static_sirius.zip"
+      RUN_EXTENDED_TESTS: ${{ github.event_name == 'schedule'}}
 
     steps:
     - uses: actions/checkout@v3
@@ -37,6 +40,24 @@ jobs:
       shell: cmd
       run: |
           choco install wget unzip zip --no-progress
+
+    # Downloads ccache, and copies it to "cl.exe" in order to trick cmake into using it,
+    # see ccache wiki for background on using it with MSVC:
+    # https://github.com/ccache/ccache/wiki/MS-Visual-Studio
+    - name: Install ccache
+      shell: bash
+      run: |
+        wget https://github.com/ccache/ccache/releases/download/v4.8.3/ccache-4.8.3-windows-x86_64.zip -O ccache.zip
+        unzip ccache.zip
+        rm ccache.zip
+        mv ccache-4.8.3-windows-x86_64 ccache
+        cp ccache/ccache.exe ccache/cl.exe
+        echo "${GITHUB_WORKSPACE}/ccache" >> $GITHUB_PATH
+
+    - name: ccache
+      uses: hendrikmuhs/ccache-action@v1.2
+      with:
+        key: windows
 
     - name : Init VCPKG submodule
       run: |
@@ -82,18 +103,20 @@ jobs:
         ortools-url: ${{env.ORTOOLS_URL}}
         ortools-dir: ${{env.ORTOOLS_DIR}}
 
-    - name: Setup Python 3.11
+    - name: Setup Python 3.12
       uses: actions/setup-python@v4
+      id: setup-python
       with:
         architecture: 'x64'
-        python-version: '3.11'
+        python-version: '3.12'
 
     - name: Install pip dependencies if necessary
       run: pip install -r src/tests/examples/requirements.txt
 
     - name: Init submodule
       run: |
-           git submodule update --init --recursive src
+        git submodule update --init src/antares-deps
+        git submodule update --init --remote src/tests/resources/Antares_Simulator_Tests
 
     - name: Enable git longpaths
       run:  git config --system core.longpaths true
@@ -108,7 +131,10 @@ jobs:
            -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }} \
            -DCMAKE_BUILD_TYPE=release \
            -DBUILD_TESTING=ON  \
-           -DBUILD_not_system=OFF
+           -DBUILD_TOOLS=ON \
+           -DBUILD_not_system=OFF \
+           -DPython3_EXECUTABLE='${{ steps.setup-python.outputs.python-path }}' \
+           -DCMAKE_VS_GLOBALS="CLToolExe=cl.exe;CLToolPath=${GITHUB_WORKSPACE}/ccache;TrackFileAccess=false;UseMultiToolTask=true;DebugInformationFormat=OldStyle"
 
     - name: Build
       shell: bash
@@ -118,7 +144,7 @@ jobs:
     - name: Run unfeasibility-related tests
       run: |
            cd _build
-           ctest -C Release --output-on-failure -R unfeasible
+           ctest -C Release --output-on-failure -R "^unfeasible$"
 
     - name: Run unit and end-to-end tests
       run: |
@@ -148,6 +174,14 @@ jobs:
         path: 'simtest.json'
         prop_path: 'version'
 
+    - name: Run named mps tests
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: valid-named-mps
+        os: ${{ matrix.test-platform }}
+        variant: "named-mps"
+
     - name: Run tests for adequacy patch (CSR)
       uses: ./.github/workflows/run-tests
       with:
@@ -169,6 +203,14 @@ jobs:
         batch-name: valid-v860
         os: ${{ matrix.test-platform }}
 
+    - name: Run tests introduced in v870
+      if: ${{ env.IS_PUSH == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: valid-v870
+        os: ${{ matrix.test-platform }}
+
     - name: Run short-tests
       uses: ./.github/workflows/run-tests
       with:
@@ -181,6 +223,38 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: valid-mps
+        os: ${{ matrix.test-platform }}
+
+    - name: Run medium-tests
+      if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: medium-tests
+        os: ${{ matrix.test-platform }}
+
+    - name: Run long-tests-1
+      if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: long-tests-1
+        os: ${{ matrix.test-platform }}
+
+    - name: Run long-tests-2
+      if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: long-tests-2
+        os: ${{ matrix.test-platform }}
+
+    - name: Run long-tests-3
+      if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: long-tests-3
         os: ${{ matrix.test-platform }}
 
     - name: Solver archive creation

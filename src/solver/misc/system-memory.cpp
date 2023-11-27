@@ -26,7 +26,7 @@
 */
 
 #include "system-memory.h"
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 #include <yuni/core/system/memory.h>
 
 using namespace Yuni;

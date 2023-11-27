@@ -25,7 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "logs.h"
+#include "antares/logs/logs.h"
 
 namespace Antares
 {

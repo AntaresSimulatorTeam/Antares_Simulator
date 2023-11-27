@@ -34,11 +34,11 @@
 // Export de la structure des LPs
 ////////////////////////////////////////////////////////////////////
 
-void OPT_ExportInterco(const Antares::Solver::IResultWriter::Ptr writer,
+void OPT_ExportInterco(Antares::Solver::IResultWriter& writer,
                        PROBLEME_HEBDO* problemeHebdo)
 {
     Yuni::Clob Flot;
-    for (int i(0); i < problemeHebdo->NombreDInterconnexions; ++i)
+    for (uint32_t i(0); i < problemeHebdo->NombreDInterconnexions; ++i)
     {
         Flot.appendFormat("%d %d %d\n",
                           i,
@@ -47,18 +47,18 @@ void OPT_ExportInterco(const Antares::Solver::IResultWriter::Ptr writer,
     }
     // TODO[FOM] "interco.txt"
     std::string filename = "interco-1-1.txt";
-    writer->addEntryFromBuffer(filename, Flot);
+    writer.addEntryFromBuffer(filename, Flot);
 }
 
-void OPT_ExportAreaName(Antares::Solver::IResultWriter::Ptr writer,
-                        const Antares::Data::AreaList& areas)
+void OPT_ExportAreaName(Antares::Solver::IResultWriter& writer,
+                        const std::vector<const char*>& areaNames)
 {
     // TODO[FOM] "area.txt"
     std::string filename = "area-1-1.txt";
     Yuni::Clob Flot;
-    for (uint i = 0; i < areas.size(); ++i)
+    for (const char* name: areaNames)
     {
-        Flot.appendFormat("%s\n", areas[i]->name.c_str());
+        Flot.appendFormat("%s\n", name);
     }
-    writer->addEntryFromBuffer(filename, Flot);
+    writer.addEntryFromBuffer(filename, Flot);
 }

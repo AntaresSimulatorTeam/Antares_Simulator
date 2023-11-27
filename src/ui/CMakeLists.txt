@@ -23,4 +23,5 @@ endif()
 
 add_subdirectory(common)	#All UI libraries
 add_subdirectory(simulator)	#Simulator application
+add_subdirectory(action)    #Async action handler
 

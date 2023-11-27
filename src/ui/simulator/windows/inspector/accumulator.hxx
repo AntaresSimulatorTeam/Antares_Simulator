@@ -114,6 +114,49 @@ public:
                                                            PredicateT::TextColor(*i));
         }
     }
+
+    template<class ListT>
+    static void ApplyGreyColor(wxPGProperty* property_MargCost,
+                               wxPGProperty* property_OperCost,
+                               wxPGProperty* property_FuelEff,
+                               wxPGProperty* property_VarOMcost,
+                               const ListT& list)
+    {
+        assert(list.size() != 0);
+        assert(property_MargCost != NULL);
+        assert(property_OperCost != NULL);
+        assert(property_FuelEff != NULL);
+        assert(property_VarOMcost != NULL);
+        if (list.size() == 1)
+        {
+            auto study = *list.begin();
+            property_MargCost->GetGrid()->EnableProperty(property_MargCost->GetBaseName(),
+                                                         PredicateT::Enable(study));
+            property_OperCost->GetGrid()->EnableProperty(property_OperCost->GetBaseName(),
+                                                         PredicateT::Enable(study));
+            property_FuelEff->GetGrid()->EnableProperty(property_FuelEff->GetBaseName(),
+                                                        !PredicateT::Enable(study));
+            property_VarOMcost->GetGrid()->EnableProperty(property_VarOMcost->GetBaseName(),
+                                                          !PredicateT::Enable(study));
+        }
+        else
+        {
+            auto i = list.cbegin();
+            const auto end = list.cend();
+            ++i;
+            for (; i != end; ++i)
+            {
+                property_MargCost->GetGrid()->EnableProperty(property_MargCost->GetBaseName(),
+                                                             PredicateT::Enable(*i));
+                property_OperCost->GetGrid()->EnableProperty(property_OperCost->GetBaseName(),
+                                                             PredicateT::Enable(*i));
+                property_FuelEff->GetGrid()->EnableProperty(property_FuelEff->GetBaseName(),
+                                                            !PredicateT::Enable(*i));
+                property_VarOMcost->GetGrid()->EnableProperty(property_VarOMcost->GetBaseName(),
+                                                              !PredicateT::Enable(*i));
+            }
+        }
+    }
 };
 
 struct PAreaColor
@@ -892,6 +935,17 @@ struct PClusterMarginalCost
     static wxString ConvertToString(const Type v)
     {
         return DoubleToWxString(v);
+    }
+};
+
+struct PClusterMarginalCostEnable
+{
+    static bool Enable(Data::ThermalCluster* cluster)
+    {
+        if (cluster->costgeneration == Data::useCostTimeseries)
+            return false;
+
+        return true;
     }
 };
 

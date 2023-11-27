@@ -29,9 +29,7 @@
 
 #include <yuni/yuni.h>
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 /*!
 ** \brief Version of a study
@@ -63,7 +61,10 @@ enum Version
     version850 = 850,
     //! Study version 8.6
     version860 = 860,
+    //! Study version 8.7
     version870 = 870,
+    //! Study version 8.8
+    version880 = 880,
 
     // Constants
     //! A more recent version that we can't handle
@@ -71,7 +72,7 @@ enum Version
 
 };
 
-constexpr Version versionLatest = version870;
+constexpr Version versionLatest = version880;
 
 /*!
 ** \brief Try to determine the version of a study
@@ -110,7 +111,7 @@ class StudyVersion {
 public:
     [[nodiscard]] bool isStudyLatestVersion(std::string studyFolder) const;
 };
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+
 
 #endif // __ANTARES_LIBS_STUDY_VERSION_H__

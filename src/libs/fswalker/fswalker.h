@@ -51,8 +51,8 @@ using OnDirectoryEvent = Flow (*)(const YString& path, bool empty, void* user);
 //! A file has been found
 using OnFileEvent = void (*)(const YString& filename,
                              const YString& parent,
-                             yint64 modified,
-                             yuint64 size,
+                             int64_t modified,
+                             uint64_t size,
                              void* user);
 //! Event for dispatching a new job
 using DispatchJobEvent = Yuni::Bind<void(IJob::Ptr job)>;

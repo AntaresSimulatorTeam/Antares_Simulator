@@ -66,7 +66,7 @@ public:
     ** \param year  A year
     ** \param value The new hydro level
     */
-    void set(uint index, uint year, double value);
+    void setTSnumber(uint index, uint year, double value);
     //@}
 
     uint width() const;
@@ -87,7 +87,7 @@ private:
 
 // class hydroLevelsData : inline functions
 
-inline void hydroLevelsData::set(uint areaindex, uint year, double value)
+inline void hydroLevelsData::setTSnumber(uint areaindex, uint year, double value)
 {
     assert(areaindex < pHydroLevelsRules.width);
     if (year < pHydroLevelsRules.height)

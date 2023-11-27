@@ -25,29 +25,26 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "memory.h"
 #include <yuni/io/directory.h>
 #include <yuni/core/system/windows.hdr.h>
 #include <yuni/core/system/environment.h>
-#include <yuni/io/directory/info.h>
-#include <yuni/core/system/windows.hdr.h>
-#include "../logs.h"
+#include <antares/logs/logs.h>
 #ifndef YUNI_OS_WINDOWS
 #include <unistd.h>
 #include <sys/types.h>
-#include <stdio.h>
+#include <cstdio>
 #include <fcntl.h>
 #include <sys/mman.h>
-#include <errno.h>
+#include <cerrno>
 // man 2 kill
 #include <sys/types.h>
-#include <signal.h>
+#include <csignal>
 #endif
 #ifdef YUNI_OS_WINDOWS
 #include <WinIoCtl.h>
 #endif
-#include "../study/memory-usage.h"
-#include "../sys/policy.h"
+#include "antares/memory/memory.h"
+#include <antares/sys/policy.h>
 #include <yuni/core/system/process.h>
 
 using namespace Yuni;
@@ -56,7 +53,8 @@ using namespace Yuni;
 
 namespace Antares
 {
-/*extern*/ Memory memory;
+/*extern*/
+Memory memory;
 
 namespace // anonymous
 {
@@ -117,21 +115,6 @@ bool Memory::initializeTemporaryFolder()
         pCacheFolder.clear();
     }
     return true;
-}
-
-void Memory::EstimateMemoryUsage(size_t bytes,
-                                 uint count,
-                                 Data::StudyMemoryUsage& u,
-                                 bool duplicateForParallelYears)
-{
-    size_t total = bytes * count;
-    if (duplicateForParallelYears)
-        total = total * u.nbYearsParallel;
-
-    if (u.gatheringInformationsForInput)
-        u.requiredMemoryForInput += total;
-    else
-        u.requiredMemoryForOutput += total;
 }
 
 void Memory::displayInfo() const

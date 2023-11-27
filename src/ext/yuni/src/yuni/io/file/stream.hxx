@@ -121,7 +121,7 @@ inline uint Stream::write(bool value)
     return value ? (uint)::fwrite("true", 4, 1, pFd) : (uint)::fwrite("false", 5, 1, pFd);
 }
 
-inline uint Stream::write(bool value, uint64 maxsize)
+inline uint Stream::write(bool value, uint64_t maxsize)
 {
     return value
              ? (uint)::fwrite("true", (4 < maxsize) ? 4 : static_cast<size_t>(maxsize), 1, pFd)
@@ -139,7 +139,7 @@ inline uint Stream::write(float value)
     return static_cast<uint>(::fwrite(string.c_str(), 1, string.size(), pFd));
 }
 
-inline uint Stream::write(float value, uint64 maxsize)
+inline uint Stream::write(float value, uint64_t maxsize)
 {
     ShortString64 string(value);
     return static_cast<uint>(
@@ -155,7 +155,7 @@ inline uint Stream::write(double value)
     return static_cast<uint>(::fwrite(string.c_str(), 1, string.size(), pFd));
 }
 
-inline uint Stream::write(double value, uint64 maxsize)
+inline uint Stream::write(double value, uint64_t maxsize)
 {
     ShortString128 string(value);
     return (uint)::fwrite(string.c_str(),
@@ -164,13 +164,13 @@ inline uint Stream::write(double value, uint64 maxsize)
                           pFd);
 }
 
-inline uint Stream::write(sint16 value)
+inline uint Stream::write(int16_t value)
 {
     ShortString32 string(value);
     return (uint)::fwrite(string.c_str(), 1, string.size(), pFd);
 }
 
-inline uint Stream::write(sint16 value, uint64 maxsize)
+inline uint Stream::write(int16_t value, uint64_t maxsize)
 {
     ShortString32 string(value);
     return (uint)::fwrite(string.c_str(),
@@ -179,13 +179,13 @@ inline uint Stream::write(sint16 value, uint64 maxsize)
                           pFd);
 }
 
-inline uint Stream::write(sint32 value)
+inline uint Stream::write(int32_t value)
 {
     ShortString32 string(value);
     return (uint)::fwrite(string.c_str(), 1, string.size(), pFd);
 }
 
-inline uint Stream::write(sint32 value, uint64 maxsize)
+inline uint Stream::write(int32_t value, uint64_t maxsize)
 {
     ShortString32 string(value);
     return (uint)::fwrite(string.c_str(),
@@ -194,13 +194,13 @@ inline uint Stream::write(sint32 value, uint64 maxsize)
                           pFd);
 }
 
-inline uint Stream::write(sint64 value)
+inline uint Stream::write(int64_t value)
 {
     ShortString32 string(value);
     return (uint)::fwrite(string.c_str(), 1, string.size(), pFd);
 }
 
-inline uint Stream::write(sint64 value, uint64 maxsize)
+inline uint Stream::write(int64_t value, uint64_t maxsize)
 {
     ShortString32 string(value);
     return (uint)::fwrite(string.c_str(),
@@ -209,13 +209,13 @@ inline uint Stream::write(sint64 value, uint64 maxsize)
                           pFd);
 }
 
-inline uint Stream::write(uint16 value)
+inline uint Stream::write(uint16_t value)
 {
     ShortString32 string(value);
     return (uint)::fwrite(string.c_str(), 1, string.size(), pFd);
 }
 
-inline uint Stream::write(uint16 value, uint64 maxsize)
+inline uint Stream::write(uint16_t value, uint64_t maxsize)
 {
     ShortString32 string(value);
     return (uint)::fwrite(string.c_str(),
@@ -224,13 +224,13 @@ inline uint Stream::write(uint16 value, uint64 maxsize)
                           pFd);
 }
 
-inline uint Stream::write(uint32 value)
+inline uint Stream::write(uint32_t value)
 {
     ShortString32 string(value);
     return (uint)::fwrite(string.c_str(), 1, string.size(), pFd);
 }
 
-inline uint Stream::write(uint32 value, uint64 maxsize)
+inline uint Stream::write(uint32_t value, uint64_t maxsize)
 {
     ShortString32 string(value);
     return (uint)::fwrite(string.c_str(),
@@ -239,13 +239,13 @@ inline uint Stream::write(uint32 value, uint64 maxsize)
                           pFd);
 }
 
-inline uint Stream::write(uint64 value)
+inline uint Stream::write(uint64_t value)
 {
     ShortString32 string(value);
     return (uint)::fwrite(string.c_str(), 1, string.size(), pFd);
 }
 
-inline uint Stream::write(uint64 value, uint64 maxsize)
+inline uint Stream::write(uint64_t value, uint64_t maxsize)
 {
     ShortString32 string(value);
     return static_cast<uint>(
@@ -256,22 +256,22 @@ inline uint Stream::write(uint64 value, uint64 maxsize)
 }
 
 template<class U>
-inline uint64 Stream::write(const U& buffer)
+inline uint64_t Stream::write(const U& buffer)
 {
     String string(buffer);
-    return (uint64)::fwrite(string.c_str(), 1, string.size(), pFd);
+    return (uint64_t)::fwrite(string.c_str(), 1, string.size(), pFd);
 }
 
-inline uint Stream::write(char buffer, uint64 maxsize)
+inline uint Stream::write(char buffer, uint64_t maxsize)
 {
     return (maxsize != 0) ? ((EOF != ::fputc(static_cast<int>(buffer), pFd)) ? 1 : 0) : 0;
 }
 
 template<class U>
-inline uint64 Stream::write(const U& buffer, uint64 maxsize)
+inline uint64_t Stream::write(const U& buffer, uint64_t maxsize)
 {
     String string(buffer);
-    return (uint64)::fwrite(string.c_str(),
+    return (uint64_t)::fwrite(string.c_str(),
                             1,
                             string.size() > maxsize ? static_cast<size_t>(maxsize) : string.size(),
                             pFd);
@@ -309,10 +309,10 @@ inline Stream& Stream::operator<<(const U& u)
 }
 
 template<uint CSizeT, bool ExpT>
-inline uint64 Stream::read(CString<CSizeT, ExpT>& buffer, uint64 size)
+inline uint64_t Stream::read(CString<CSizeT, ExpT>& buffer, uint64_t size)
 {
     assert(pFd and "File not opened");
-    assert(size <= static_cast<uint64>(2 * 1024) * 1024u * 1024u);
+    assert(size <= static_cast<uint64_t>(2 * 1024) * 1024u * 1024u);
     if (0 == size)
         return 0;
 
@@ -342,7 +342,7 @@ inline uint64 Stream::read(CString<CSizeT, ExpT>& buffer, uint64 size)
 }
 
 template<uint ChunkSizeT, bool ExpandableT>
-inline uint64 Stream::chunkRead(CString<ChunkSizeT, ExpandableT>& buffer)
+inline uint64_t Stream::chunkRead(CString<ChunkSizeT, ExpandableT>& buffer)
 {
     // Resizing the buffer
     buffer.reserve(buffer.chunkSize);
@@ -353,7 +353,7 @@ inline uint64 Stream::chunkRead(CString<ChunkSizeT, ExpandableT>& buffer)
     typedef CString<ChunkSizeT, ExpandableT> StringType;
     typedef typename StringType::Char C;
     // Reading the file
-    const uint64 result = ::fread(buffer.data(), 1, sizeof(C) * buffer.chunkSize, pFd);
+    const uint64_t result = ::fread(buffer.data(), 1, sizeof(C) * buffer.chunkSize, pFd);
     // Setting the good size, because we may have read less than asked
     if (result < buffer.size())
         buffer.truncate(static_cast<typename StringType::Size>(result));

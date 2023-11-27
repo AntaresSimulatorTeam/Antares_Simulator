@@ -27,7 +27,6 @@
 #ifndef __ANTARES_TOOLBOX_FILTER_ALL_ANY_H__
 #define __ANTARES_TOOLBOX_FILTER_ALL_ANY_H__
 
-#include <antares/wx-wrapper.h>
 #include "../filter.h"
 
 namespace Antares

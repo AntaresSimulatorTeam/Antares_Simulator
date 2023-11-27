@@ -35,7 +35,7 @@ int countConstraints(const PROBLEME_HEBDO* problemeHebdo)
     int numberOfConstraints = 0;
     // constraint: Flow = Flow_direct - Flow_indirect (+ loop flow) for links between nodes of
     // type 2.
-    for (int Interco = 0; Interco < problemeHebdo->NombreDInterconnexions; Interco++)
+    for (uint32_t Interco = 0; Interco < problemeHebdo->NombreDInterconnexions; Interco++)
     {
         if (problemeHebdo->adequacyPatchRuntimeData->originAreaMode[Interco]
               == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch
@@ -50,7 +50,7 @@ int countConstraints(const PROBLEME_HEBDO* problemeHebdo)
     // - spillage(node A) =
     // ENS_init(node A) + net_position_init(node A) – spillage_init(node A)
     // for all areas inside adequacy patch
-    for (int Area = 0; Area < problemeHebdo->NombreDePays; ++Area)
+    for (uint32_t Area = 0; Area < problemeHebdo->NombreDePays; ++Area)
     {
         if (problemeHebdo->adequacyPatchRuntimeData->areaMode[Area]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
@@ -58,7 +58,7 @@ int countConstraints(const PROBLEME_HEBDO* problemeHebdo)
     }
     // Special case of the hourly binding constraints
     const auto MatrixBindingConstraints = problemeHebdo->MatriceDesContraintesCouplantes;
-    for (int CntCouplante = 0; CntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
+    for (uint32_t CntCouplante = 0; CntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
          CntCouplante++)
     {
         if (MatrixBindingConstraints[CntCouplante].TypeDeContrainteCouplante == CONTRAINTE_HORAIRE)
@@ -71,7 +71,7 @@ int countVariables(const PROBLEME_HEBDO* problemeHebdo)
 {
     int numberOfVariables = 0;
     // variables: ENS of each area inside adq patch
-    for (int area = 0; area < problemeHebdo->NombreDePays; ++area)
+    for (uint32_t area = 0; area < problemeHebdo->NombreDePays; ++area)
     {
         // Only ENS for areas inside adq patch are considered as variables
         if (problemeHebdo->adequacyPatchRuntimeData->areaMode[area]
@@ -79,7 +79,7 @@ int countVariables(const PROBLEME_HEBDO* problemeHebdo)
             numberOfVariables += 2; // ENS, spilled energy
     }
 
-    for (int Interco = 0; Interco < problemeHebdo->NombreDInterconnexions; Interco++)
+    for (uint32_t Interco = 0; Interco < problemeHebdo->NombreDInterconnexions; Interco++)
     {
         // only consider link between 2 and 2
         if (problemeHebdo->adequacyPatchRuntimeData->originAreaMode[Interco]

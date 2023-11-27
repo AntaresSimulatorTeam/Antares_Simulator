@@ -45,8 +45,8 @@ struct timezone
 
 struct timeval
 {
-    sint64 tv_sec;
-    sint64 tv_usec;
+    int64_t tv_sec;
+    int64_t tv_usec;
 };
 
 YUNI_DECL int gettimeofday(struct timeval* tv, struct timezone* tz);

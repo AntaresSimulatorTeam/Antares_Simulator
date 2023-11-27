@@ -27,7 +27,8 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_HYDRO_TIMESERIES_H__
 #define __ANTARES_LIBS_STUDY_PARTS_HYDRO_TIMESERIES_H__
 
-#include "../../../array/matrix.h"
+#include <antares/series/series.h>
+#include <antares/array/matrix.h>
 #include "../../fwd.h"
 
 namespace Antares
@@ -48,12 +49,17 @@ public:
     DataSeriesHydro();
     //@}
 
+    void copyGenerationTS(const DataSeriesHydro& source);
+
     //! \name Data
     //@{
     /*!
     ** \brief Reset all data, as if it were a new area
     */
     void reset();
+
+    void resizeRORandSTORAGE(unsigned int width);
+    void resizeGenerationTS(unsigned int w, unsigned int h);
 
     /*!
     ** \brief Load all data not already loaded
@@ -93,11 +99,11 @@ public:
     /*!
     ** \brief Get the size (bytes) in memory occupied by a `DataSeriesHydro` structure
     */
-    Yuni::uint64 memoryUsage() const;
+    uint64_t memoryUsage() const;
     /*!
     ** \brief Try to estimate the amount of memory required for launching a simulation
     */
-    void estimateMemoryUsage(StudyMemoryUsage&) const;
+
     //@}
 
     /*!
@@ -112,7 +118,7 @@ public:
 
     ** (it was DAYS_PER_YEAR before 3.9)
     */
-    Matrix<double, Yuni::sint32> ror;
+    TimeSeries ror;
 
     /*!
     ** \brief Mod (MW)
@@ -120,14 +126,21 @@ public:
     ** Merely a matrix of TimeSeriesCount * 365 values
     ** This matrix is not used in `adequation` mode.
     */
-    Matrix<double, Yuni::sint32> storage;
+    TimeSeries storage;
 
     /*!
     ** \brief Minimum Generation (MW)
     **
     ** Merely a matrix of TimeSeriesCount * HOURS_PER_YEAR values
     */
-    Matrix<double, Yuni::sint32> mingen;
+    TimeSeries mingen;
+
+    unsigned int TScount() const { return count; };
+
+    /*!
+    ** \brief Monte-Carlo
+    */
+    Matrix<uint32_t> timeseriesNumbers;
 
     /*!
     ** \brief The number of time-series
@@ -137,18 +150,12 @@ public:
     ** (for example using `fatal.width` and `mod.width` in the same routine, it might
     ** indicate that the two values are not strictly equal)
     */
-    uint count;
-
-    /*!
-    ** \brief Monte-Carlo
-    */
-    Matrix<Yuni::uint32> timeseriesNumbers;
+private:
+    uint count = 0;
 
 }; // class DataSeriesHydro
 
 } // namespace Data
 } // namespace Antares
-
-#include "series.hxx"
 
 #endif /* __ANTARES_LIBS_STUDY_PARTS_HYDRO_TIMESERIES_H__ */

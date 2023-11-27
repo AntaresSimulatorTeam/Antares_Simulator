@@ -118,7 +118,7 @@ Flow TraverseUnixFolder(const String& filename, Options& opts, IDetachedThread* 
             {
                 // The node is a file
                 switch (
-                  opts.self->onFile(newFilename, filename, newName, static_cast<uint64>(s.st_size)))
+                  opts.self->onFile(newFilename, filename, newName, static_cast<uint64_t>(s.st_size)))
                 {
                 case Yuni::IO::flowContinue:
                     break;
@@ -244,7 +244,7 @@ Flow TraverseWindowsFolder(const String& filename,
                 filesize.LowPart = data.nFileSizeLow;
                 filesize.HighPart = data.nFileSizeHigh;
                 switch (
-                  opts.self->onFile(newFilename, filename, newName, (uint64)(filesize.QuadPart)))
+                  opts.self->onFile(newFilename, filename, newName, (uint64_t)(filesize.QuadPart)))
                 {
                 case Yuni::IO::flowContinue:
                     break;

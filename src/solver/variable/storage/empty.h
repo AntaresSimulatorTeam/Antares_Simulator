@@ -76,14 +76,9 @@ protected:
         // Does nothing
     }
 
-    static Yuni::uint64 memoryUsage()
+    static uint64_t memoryUsage()
     {
         return 0;
-    }
-
-    static void EstimateMemoryUsage(Data::StudyMemoryUsage&)
-    {
-        // Does nothing
     }
 
     template<template<class, int> class DecoratorT>

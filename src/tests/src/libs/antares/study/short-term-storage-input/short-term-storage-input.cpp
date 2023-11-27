@@ -1,8 +1,9 @@
 #define BOOST_TEST_MODULE "test short term storage"
+#define BOOST_TEST_DYN_LINK
 
 #define WIN32_LEAN_AND_MEAN
 
-#include <boost/test/included/unit_test.hpp>
+#include <boost/test/unit_test.hpp>
 #include <yuni/io/file.h>
 #include <filesystem>
 #include <fstream>
@@ -161,9 +162,9 @@ struct Fixture
 // Tests section
 // ==================
 
-BOOST_FIXTURE_TEST_SUITE(s, Fixture)
+BOOST_AUTO_TEST_SUITE(s)
 
-BOOST_AUTO_TEST_CASE(check_vector_sizes)
+BOOST_FIXTURE_TEST_CASE(check_vector_sizes, Fixture)
 {
     resizeFillVectors(series, 0.0, 12);
     BOOST_CHECK(!series.validate());
@@ -172,7 +173,7 @@ BOOST_AUTO_TEST_CASE(check_vector_sizes)
     BOOST_CHECK(series.validate());
 }
 
-BOOST_AUTO_TEST_CASE(check_series_folder_loading)
+BOOST_FIXTURE_TEST_CASE(check_series_folder_loading, Fixture)
 {
     createFileSeries(1.0, 8760);
 
@@ -182,7 +183,7 @@ BOOST_AUTO_TEST_CASE(check_series_folder_loading)
         && series.upperRuleCurve[1343] == 1);
 }
 
-BOOST_AUTO_TEST_CASE(check_series_folder_loading_different_values)
+BOOST_FIXTURE_TEST_CASE(check_series_folder_loading_different_values, Fixture)
 {
     createFileSeries(8760);
 
@@ -190,7 +191,7 @@ BOOST_AUTO_TEST_CASE(check_series_folder_loading_different_values)
     BOOST_CHECK(series.validate());
 }
 
-BOOST_AUTO_TEST_CASE(check_series_folder_loading_negative_value)
+BOOST_FIXTURE_TEST_CASE(check_series_folder_loading_negative_value, Fixture)
 {
     createFileSeries(-247.0, 8760);
 
@@ -198,7 +199,7 @@ BOOST_AUTO_TEST_CASE(check_series_folder_loading_negative_value)
     BOOST_CHECK(!series.validate());
 }
 
-BOOST_AUTO_TEST_CASE(check_series_folder_loading_too_big)
+BOOST_FIXTURE_TEST_CASE(check_series_folder_loading_too_big, Fixture)
 {
     createFileSeries(1.0, 9000);
 
@@ -206,7 +207,7 @@ BOOST_AUTO_TEST_CASE(check_series_folder_loading_too_big)
     BOOST_CHECK(series.validate());
 }
 
-BOOST_AUTO_TEST_CASE(check_series_folder_loading_too_small)
+BOOST_FIXTURE_TEST_CASE(check_series_folder_loading_too_small, Fixture)
 {
     createFileSeries(1.0, 100);
 
@@ -214,25 +215,25 @@ BOOST_AUTO_TEST_CASE(check_series_folder_loading_too_small)
     BOOST_CHECK(!series.validate());
 }
 
-BOOST_AUTO_TEST_CASE(check_series_folder_loading_empty)
+BOOST_FIXTURE_TEST_CASE(check_series_folder_loading_empty, Fixture)
 {
     BOOST_CHECK(series.loadFromFolder(folder));
     BOOST_CHECK(!series.validate());
 }
 
-BOOST_AUTO_TEST_CASE(check_series_vector_fill)
+BOOST_FIXTURE_TEST_CASE(check_series_vector_fill, Fixture)
 {
     series.fillDefaultSeriesIfEmpty();
     BOOST_CHECK(series.validate());
 }
 
-BOOST_AUTO_TEST_CASE(check_cluster_series_vector_fill)
+BOOST_FIXTURE_TEST_CASE(check_cluster_series_vector_fill, Fixture)
 {
     BOOST_CHECK(cluster.loadSeries(folder));
     BOOST_CHECK(cluster.series->validate());
 }
 
-BOOST_AUTO_TEST_CASE(check_cluster_series_load_vector)
+BOOST_FIXTURE_TEST_CASE(check_cluster_series_load_vector, Fixture)
 {
     createFileSeries(0.5, 8760);
 
@@ -243,7 +244,7 @@ BOOST_AUTO_TEST_CASE(check_cluster_series_load_vector)
         && cluster.series->lowerRuleCurve[6392] == 0.5);
 }
 
-BOOST_AUTO_TEST_CASE(check_container_properties_load)
+BOOST_FIXTURE_TEST_CASE(check_container_properties_load, Fixture)
 {
     createIniFile();
 
@@ -253,7 +254,7 @@ BOOST_AUTO_TEST_CASE(check_container_properties_load)
     removeIniFile();
 }
 
-BOOST_AUTO_TEST_CASE(check_container_properties_wrong_value)
+BOOST_FIXTURE_TEST_CASE(check_container_properties_wrong_value, Fixture)
 {
     createIniFileWrongValue();
 
@@ -263,7 +264,7 @@ BOOST_AUTO_TEST_CASE(check_container_properties_wrong_value)
     removeIniFile();
 }
 
-BOOST_AUTO_TEST_CASE(check_container_properties_empty_file)
+BOOST_FIXTURE_TEST_CASE(check_container_properties_empty_file, Fixture)
 {
     createEmptyIniFile();
 
@@ -272,7 +273,7 @@ BOOST_AUTO_TEST_CASE(check_container_properties_empty_file)
     removeIniFile();
 }
 
-BOOST_AUTO_TEST_CASE(check_file_save)
+BOOST_FIXTURE_TEST_CASE(check_file_save, Fixture)
 {
     createIniFile();
 
@@ -287,7 +288,7 @@ BOOST_AUTO_TEST_CASE(check_file_save)
     removeIniFile();
 }
 
-BOOST_AUTO_TEST_CASE(check_series_save)
+BOOST_FIXTURE_TEST_CASE(check_series_save, Fixture)
 {
     resizeFillVectors(series, 0.123456789, 8760);
 

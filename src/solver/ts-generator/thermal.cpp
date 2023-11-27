@@ -31,17 +31,14 @@
 #include <yuni/core/math.h>
 #include <yuni/core/string.h>
 
-#include <antares/study.h>
-#include <antares/logs.h>
-#include <antares/emergency.h>
-#include <i_writer.h>
+#include <antares/study/study.h>
+#include <antares/logs/logs.h>
+#include <antares/writer/i_writer.h>
 
 #include "../simulation/simulation.h"
 #include "../simulation/sim_structure_donnees.h"
 #include "../simulation/sim_structure_probleme_economique.h"
-#include "../simulation/sim_structure_probleme_adequation.h"
 #include "../simulation/sim_extern_variables_globales.h"
-#include "../aleatoire/alea_fonctions.h"
 
 using namespace Yuni;
 
@@ -62,7 +59,7 @@ class GeneratorTempData final
 public:
     GeneratorTempData(Data::Study& study,
                       Solver::Progression::Task& progr,
-                      IResultWriter::Ptr writer);
+                      IResultWriter& writer);
 
     void prepareOutputFoldersForAllAreas(uint year);
 
@@ -92,59 +89,42 @@ private:
                                const T& duration);
 
 private:
-    uint nbHoursPerYear;
-
-    const uint daysPerYear;
+    const uint nbHoursPerYear = HOURS_PER_YEAR;
+    const uint daysPerYear = DAYS_PER_YEAR;
 
     MersenneTwister& rndgenerator;
 
     double AVP[366];
-
     enum
     {
-
         Log_size = 4000
     };
-
     int LOG[Log_size];
-
     int LOGP[Log_size];
 
     double lf[366];
     double lp[366];
-
     double ff[366];
-
     double pp[366];
-
     double af[366];
-
     double ap[366];
-
     double bf[366];
-
     double bp[366];
-
     double FPOW[366][102];
-
     double PPOW[366][102];
 
     String pTempFilename;
-
     Solver::Progression::Task& pProgression;
-
-    IResultWriter::Ptr pWriter;
+    IResultWriter& pWriter;
 };
 
 GeneratorTempData::GeneratorTempData(Data::Study& study,
                                      Solver::Progression::Task& progr,
-                                     IResultWriter::Ptr writer) :
- study(study),
- nbHoursPerYear(study.runtime->nbHoursPerYear),
- daysPerYear(study.runtime->nbDaysPerYear),
- rndgenerator(study.runtime->random[Data::seedTsGenThermal]),
- pProgression(progr),
- pWriter(writer)
+                                     IResultWriter& writer) :
+    study(study),
+    rndgenerator(study.runtime->random[Data::seedTsGenThermal]),
+    pProgression(progr),
+    pWriter(writer)
 {
     auto& parameters = study.parameters;
 
@@ -165,16 +145,15 @@ void GeneratorTempData::writeResultsToDisk(const Data::Area& area,
         pTempFilename.clear() << "ts-generator" << SEP << "thermal" << SEP << "mc-" << currentYear
                               << SEP << area.id << SEP << cluster.id() << ".txt";
 
-        assert(cluster.series);
         enum
         {
             precision = 0
         };
 
         std::string buffer;
-        cluster.series->timeSeries.saveToBuffer(buffer, precision);
+        cluster.series.timeSeries.saveToBuffer(buffer, precision);
 
-        pWriter->addEntryFromBuffer(pTempFilename.c_str(), buffer);
+        pWriter.addEntryFromBuffer(pTempFilename.c_str(), buffer);
     }
 
     ++pProgression;
@@ -268,19 +247,18 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
         return;
     }
 
-    assert(cluster.series);
     assert(cluster.prepro);
 
     if (0 == cluster.unitCount or 0 == cluster.nominalCapacity)
     {
-        cluster.series->timeSeries.reset(1, nbHoursPerYear);
+        cluster.series.timeSeries.reset(1, nbHoursPerYear);
 
         if (archive)
             writeResultsToDisk(area, cluster);
         return;
     }
 
-    cluster.series->timeSeries.resize(nbThermalTimeseries, nbHoursPerYear);
+    cluster.series.timeSeries.resize(nbThermalTimeseries, nbHoursPerYear);
 
     const auto& preproData = *(cluster.prepro);
 
@@ -375,7 +353,7 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
 
     auto& modulation = cluster.modulation[Data::thermalModulationCapacity];
 
-    Matrix<>::ColumnType* dstSeries = nullptr;
+    double* dstSeries = nullptr;
 
     const uint tsCount = nbThermalTimeseries + 2;
     for (uint tsIndex = 0; tsIndex != tsCount; ++tsIndex)
@@ -383,7 +361,7 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
         uint hour = 0;
 
         if (tsIndex > 1)
-            dstSeries = &cluster.series->timeSeries[tsIndex - 2];
+            dstSeries = cluster.series.timeSeries[tsIndex - 2];
 
         for (uint dayInTheYear = 0; dayInTheYear < daysPerYear; ++dayInTheYear)
         {
@@ -615,7 +593,7 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
                 double AVPDayInTheYear = AVP[dayInTheYear];
                 for (uint h = 0; h != 24; ++h)
                 {
-                    (*dstSeries)[hour] = Math::Round(AVPDayInTheYear * modulation[hour]);
+                    dstSeries[hour] = Math::Round(AVPDayInTheYear * modulation[hour]);
                     ++hour;
                 }
             }
@@ -623,7 +601,7 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
     }
 
     if (derated)
-        cluster.series->timeSeries.averageTimeseries();
+        cluster.series.timeSeries.averageTimeseries();
 
     if (archive)
         writeResultsToDisk(area, cluster);
@@ -636,7 +614,7 @@ bool GenerateThermalTimeSeries(Data::Study& study,
                                uint year,
                                bool globalThermalTSgeneration,
                                bool refreshTSonCurrentYear,
-                               Antares::Solver::IResultWriter::Ptr writer)
+                               Antares::Solver::IResultWriter& writer)
 {
     logs.info();
     logs.info() << "Generating the thermal time-series";

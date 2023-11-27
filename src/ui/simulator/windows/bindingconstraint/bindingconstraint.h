@@ -27,7 +27,6 @@
 #ifndef __ANTARES_APPLICATION_WINDOW_BINDING_CONSTRAINT_H__
 #define __ANTARES_APPLICATION_WINDOW_BINDING_CONSTRAINT_H__
 
-#include <antares/wx-wrapper.h>
 #include "../../toolbox/components/notebook/notebook.h"
 #include "../../toolbox/components/datagrid/component.h"
 #include "../../toolbox/input/bindingconstraint.h"

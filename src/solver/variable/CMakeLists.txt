@@ -107,6 +107,7 @@ set(SRC_VARIABLE_ECONOMY
 		economy/STStorageInjectionByCluster.h
 		economy/STStorageWithdrawalByCluster.h
 		economy/STStorageLevelsByCluster.h
+		economy/STStorageCashFlowByCluster.h
 		economy/unsupliedEnergy.h
 		economy/domesticUnsuppliedEnergy.h
 		economy/localMatchingRuleViolations.h
@@ -149,18 +150,24 @@ source_group("variable\\economy" FILES ${SRC_VARIABLE_ECONOMY})
 #
 # --- Library VARIABLES ---
 #
-add_library(libantares-solver-variable
+add_library(antares-solver-variable
 		${SRC_VARIABLE}
 		${SRC_VARIABLE_COMMON}
 		${SRC_VARIABLE_STORAGE}
 		${SRC_VARIABLE_ADEQUACY}
 		${SRC_VARIABLE_ECONOMY}  )
 
-target_include_directories(libantares-solver-variable PUBLIC .)
-target_link_libraries(libantares-solver-variable PRIVATE libantares-core)
+target_include_directories(antares-solver-variable
+		PRIVATE
+		${CMAKE_SOURCE_DIR}/libs
+		PUBLIC
+		.)
+target_link_libraries(antares-solver-variable PRIVATE antares-core
+	Antares::study
+)
 
 
-add_library(libantares-solver-variable-info
+add_library(antares-solver-variable-info
 		adequacy/all.h
 		economy/all.h
 		economy/area.memory-estimation.cpp
@@ -172,5 +179,11 @@ add_library(libantares-solver-variable-info
 		surveyresults/data.h
 		surveyresults/surveyresults.cpp
 )
-target_link_libraries(libantares-solver-variable-info PRIVATE libantares-core result_writer)
+target_include_directories(antares-solver-variable-info
+		PRIVATE
+		${CMAKE_SOURCE_DIR}/libs
+)
+target_link_libraries(antares-solver-variable-info PRIVATE antares-core
+	Antares::study
+)
 

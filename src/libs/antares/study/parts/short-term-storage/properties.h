@@ -63,7 +63,7 @@ public:
     // Not optional   Reservoir capacity in MWh, >= 0
     std::optional<double> reservoirCapacity;
     // Initial level, <= 1
-    std::optional<double> initialLevel;
+    double initialLevel = initiallevelDefault;
     // Bool to optimise or not initial level
     bool initialLevelOptim = false;
     // Efficiency factor between 0 and 1
@@ -74,5 +74,7 @@ public:
     std::string name;
 
     static const std::map<std::string, enum Group> ST_STORAGE_PROPERTY_GROUP_ENUM;
+private:
+    static constexpr double initiallevelDefault = .5;
 };
 } // namespace Antares::Data::ShortTermStorage

@@ -27,10 +27,9 @@
 #ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_CONNECTION_H__
 #define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_CONNECTION_H__
 
-#include <antares/wx-wrapper.h>
 #include "../../../input/connection.h"
 #include "../renderer.h"
-#include <antares/date.h>
+#include <antares/date/date.h>
 #include "matrix.h"
 #include <yuni/core/event.h>
 

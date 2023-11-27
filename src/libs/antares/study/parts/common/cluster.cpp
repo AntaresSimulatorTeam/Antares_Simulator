@@ -4,11 +4,9 @@
 
 #include "cluster.h"
 #include "../../study.h"
-#include "../../../utils.h"
+#include <antares/utils/utils.h>
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 Cluster::Cluster(Area* parent) :
  unitCount(0),
@@ -17,8 +15,7 @@ Cluster::Cluster(Area* parent) :
  index(0),
  nominalCapacity(0.),
  areaWideIndex((uint)-1),
- series(nullptr)
-
+ series(tsNumbers)
 {
 }
 
@@ -63,7 +60,7 @@ int Cluster::saveDataSeriesToFolder(const AnyString& folder) const
         {
             int ret = 1;
             buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "series.txt";
-            ret = series->timeSeries.saveToCSVFile(buffer, precision()) && ret;
+            ret = series.timeSeries.saveToCSVFile(buffer, precision()) && ret;
 
             return ret;
         }
@@ -81,12 +78,12 @@ int Cluster::loadDataSeriesFromFolder(Study& s, const AnyString& folder)
         int ret = 1;
         buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "series."
                        << s.inputExtension;
-        ret = series->timeSeries.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &s.dataBuffer) && ret;
+        ret = series.timeSeries.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &s.dataBuffer) && ret;
 
         if (s.usedByTheSolver && s.parameters.derated)
-            series->timeSeries.averageTimeseries();
+            series.timeSeries.averageTimeseries();
 
-        series->timeseriesNumbers.clear();
+        series.timeseriesNumbers.clear();
 
         return ret;
     }
@@ -111,10 +108,7 @@ void Cluster::reset()
     enabled = true;
     nominalCapacity = 0.;
 
-    if (not series)
-        series = new DataSeriesCommon();
-
-    series->timeSeries.reset(1, HOURS_PER_YEAR);
+    series.timeSeries.reset(1, HOURS_PER_YEAR);
 }
 
 bool CompareClusterName::operator()(const Cluster* s1, const Cluster* s2) const
@@ -122,5 +116,5 @@ bool CompareClusterName::operator()(const Cluster* s1, const Cluster* s2) const
     return (s1->getFullName() < s2->getFullName());
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+

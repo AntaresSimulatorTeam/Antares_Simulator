@@ -28,7 +28,6 @@
 #define __ANTARES_TOOLBOX_MAP_TOOLS_TOOL_H__
 
 #include <vector>
-#include <antares/wx-wrapper.h>
 #include "../drawingcontext.h"
 
 namespace Antares

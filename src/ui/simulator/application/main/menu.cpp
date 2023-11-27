@@ -627,7 +627,7 @@ void ApplWnd::evtOnOpenRecentsClearHistory(wxCommandEvent&)
 
 void ApplWnd::evtOnOpenStudyFolderInExplorer(wxCommandEvent&)
 {
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     if (!(!study))
     {
         if (System::windows)

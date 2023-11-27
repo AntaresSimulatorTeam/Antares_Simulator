@@ -1,4 +1,4 @@
-add_library(libantares-ui-component-htmllistbox
+add_library(antares-ui-component-htmllistbox
 		# HTMLListbox
 		toolbox/components/htmllistbox/component.h
 		toolbox/components/htmllistbox/component.hxx
@@ -42,5 +42,5 @@ add_library(libantares-ui-component-htmllistbox
 	)
 
 
-target_link_libraries(libantares-ui-component-htmllistbox  PUBLIC ${wxWidgets_LIBRARIES})
-target_link_libraries(libantares-ui-component-htmllistbox PRIVATE libantares-core libantares-ui-common)
+target_link_libraries(antares-ui-component-htmllistbox  PUBLIC ${wxWidgets_LIBRARIES})
+target_link_libraries(antares-ui-component-htmllistbox PRIVATE antares-core antares-ui-common)

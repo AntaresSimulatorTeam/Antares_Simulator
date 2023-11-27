@@ -25,6 +25,9 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include <antares/writer/writer_factory.h>
+#include <antares/benchmarking/DurationCollector.h>
+
 #include <cassert>
 #include "application.h"
 #include "main.h"
@@ -33,12 +36,11 @@
 #include <wx/image.h>
 #include <wx/app.h>
 #include "../toolbox/resources.h"
-#include <antares/hostinfo.h>
+#include <antares/logs/hostinfo.h>
 #include <yuni/io/file.h>
 #include <antares/jit.h>
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 #include <antares/memory/memory.h>
-#include <antares/emergency.h>
 #include <wx/config.h>
 #include "../windows/message.h"
 #include <antares/sys/appdata.h>
@@ -141,6 +143,37 @@ static void OnNotifyStudyClosed()
     // logs.info() << "notify study closing immediatly";
 }
 
+static void AbortProgram(int code)
+{
+    {
+        // Releasing all locks held by the study
+        auto currentStudy = GetCurrentStudy();
+
+        // Importing logs
+        if (!logs.logfile())
+        {
+            logs.fatal() << "Aborting now. (warning: no file log available)";
+            logs.warning() << "No log file available";
+        }
+        else
+        {
+            Benchmarking::NullDurationCollector duration_collector;
+            auto resultWriter = Antares::Solver::resultWriterFactory(
+                currentStudy->parameters.resultFormat,
+                currentStudy->folderOutput,
+                currentStudy->pQueueService,
+                duration_collector);
+
+            if (!(!currentStudy))
+                currentStudy->importLogsToOutputFolder(*resultWriter);
+            logs.error() << "Aborting now. See logs for more details";
+        }
+        // release currentStudy
+    }
+
+    exit(code);
+}
+
 static void NotEnoughMemory()
 {
     // Displaying a message in its own scope to make it is released
@@ -154,7 +187,7 @@ static void NotEnoughMemory()
         message.showModal();
     }
     logs.error() << "Not enough memory. aborting.";
-    AntaresSolverEmergencyShutdown(42);
+    AbortProgram(42);
 }
 
 #ifndef YUNI_OS_WINDOWS

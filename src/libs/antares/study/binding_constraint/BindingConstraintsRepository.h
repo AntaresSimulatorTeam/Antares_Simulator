@@ -51,12 +51,6 @@ public:
     template<class PredicateT>
     void each(const PredicateT& predicate) const;
 
-    /*!
-    ** \brief Iterate through all enabled constraints (const)
-    */
-    template<class PredicateT>
-    void eachEnabled(const PredicateT& predicate) const;
-
     iterator begin();
     [[nodiscard]] const_iterator begin() const;
 
@@ -137,17 +131,12 @@ public:
     /*!
     ** \brief Convert all weekly constraints into daily ones
     */
-    void mutateWeeklyConstraintsIntoDailyOnes();
+    void changeConstraintsWeeklyToDaily();
 
     /*!
     ** \brief Get the memory usage
     */
-    [[nodiscard]] yuint64 memoryUsage() const;
-
-    /*!
-    ** \brief Estimate
-    */
-    void estimateMemoryUsage(Data::StudyMemoryUsage& u) const;
+    [[nodiscard]] uint64_t memoryUsage() const;
 
     /*!
     ** \brief Invalidate all matrices of all binding constraints
@@ -159,21 +148,9 @@ public:
     */
     void markAsModified() const;
 
-    [[nodiscard]] const std::map<std::string, Data::BindingConstraintTimeSeriesNumbers, std::less<>>& TimeSeriesNumbers() const {
-        return groupToTimeSeriesNumbers;
-    }
-    void resizeAllTimeseriesNumbers(unsigned nb_years);
-
-    void fixTSNumbersWhenWidthIsOne();
-
     static std::vector<std::shared_ptr<BindingConstraint>> LoadBindingConstraint(EnvForLoading env);
 
-    template<class ListBindingConstraints>
-    [[nodiscard]] static unsigned int NumberOfTimeseries(const ListBindingConstraints &list, const std::string &group_name);
-
-    std::map<std::string, Data::BindingConstraintTimeSeriesNumbers, std::less<>> groupToTimeSeriesNumbers;
-
-    [[nodiscard]] std::vector<std::shared_ptr<BindingConstraint>> enabled() const;
+    [[nodiscard]] std::vector<std::shared_ptr<BindingConstraint>> activeContraints() const;
 
     [[nodiscard]] std::vector<uint> getIndicesForInequalityBindingConstraints() const;
 
@@ -182,15 +159,9 @@ private:
     bool internalSaveToFolder(Data::BindingConstraintSaver::EnvForSaving& env) const;
 
     //! All constraints
-    Data::BindingConstraintsRepository::Vector pList;
+    Data::BindingConstraintsRepository::Vector constraints_;
 
-    void initializeTsNumbers();
-
-    [[nodiscard]] Yuni::uint64 timeSeriesNumberMemoryUsage() const;
-
-    [[nodiscard]] bool checkTimeSeriesWidthConsistency() const;
-
-    mutable std::optional<std::vector<std::shared_ptr<BindingConstraint>>> enabledConstraints_;
+    mutable std::optional<std::vector<std::shared_ptr<BindingConstraint>>> activeConstraints_;
 };
 
 struct WhoseNameContains final

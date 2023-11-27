@@ -29,7 +29,7 @@
 
 #include <yuni/yuni.h>
 #include <ui/common/component/spotlight.h>
-#include <antares/study.h>
+#include <antares/study/study.h>
 
 #include <memory>
 

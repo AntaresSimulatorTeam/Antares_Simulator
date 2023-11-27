@@ -42,15 +42,15 @@
         {                                                                              \
         }                                                                              \
         /*! Constructor from a fundamental value */                                    \
-        CLASS(const sint16 u) : AbstractType(u)                                        \
+        CLASS(const int16_t u) : AbstractType(u)                                        \
         {                                                                              \
         }                                                                              \
         /*! Constructor from a fundamental value */                                    \
-        CLASS(const sint32 u) : AbstractType(u)                                        \
+        CLASS(const int32_t u) : AbstractType(u)                                        \
         {                                                                              \
         }                                                                              \
         /*! Constructor from a fundamental value */                                    \
-        CLASS(const sint64 u) : AbstractType(u)                                        \
+        CLASS(const int64_t u) : AbstractType(u)                                        \
         {                                                                              \
         }                                                                              \
         /*! Constructor from a fundamental value */                                    \
@@ -58,11 +58,11 @@
         {                                                                              \
         }                                                                              \
         /*! Constructor from a fundamental value */                                    \
-        CLASS(const uint32 u) : AbstractType(u)                                        \
+        CLASS(const uint32_t u) : AbstractType(u)                                        \
         {                                                                              \
         }                                                                              \
         /*! Constructor from a fundamental value */                                    \
-        CLASS(const uint64 u) : AbstractType(u)                                        \
+        CLASS(const uint64_t u) : AbstractType(u)                                        \
         {                                                                              \
         }                                                                              \
         /*! Constructor from a fundamental value */                                    \
@@ -82,15 +82,15 @@
         /*! \name Operator `=` */                                                      \
         /*@{*/                                                                         \
         /*! Builtin types */                                                           \
-        AbstractType& operator=(const sint16 u)                                        \
+        AbstractType& operator=(const int16_t u)                                        \
         {                                                                              \
             return AbstractType::operator=(u);                                         \
         }                                                                              \
-        AbstractType& operator=(const sint32 u)                                        \
+        AbstractType& operator=(const int32_t u)                                        \
         {                                                                              \
             return AbstractType::operator=(u);                                         \
         }                                                                              \
-        AbstractType& operator=(const sint64 u)                                        \
+        AbstractType& operator=(const int64_t u)                                        \
         {                                                                              \
             return AbstractType::operator=(u);                                         \
         }                                                                              \
@@ -98,11 +98,11 @@
         {                                                                              \
             return AbstractType::operator=(u);                                         \
         }                                                                              \
-        AbstractType& operator=(const uint32 u)                                        \
+        AbstractType& operator=(const uint32_t u)                                        \
         {                                                                              \
             return AbstractType::operator=(u);                                         \
         }                                                                              \
-        AbstractType& operator=(const uint64 u)                                        \
+        AbstractType& operator=(const uint64_t u)                                        \
         {                                                                              \
             return AbstractType::operator=(u);                                         \
         }                                                                              \

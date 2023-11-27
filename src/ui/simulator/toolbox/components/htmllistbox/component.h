@@ -27,7 +27,6 @@
 #ifndef __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_COMPONENT_H__
 #define __ANTARES_TOOLBOX_COMPONENT_HTMLLISTBOX_COMPONENT_H__
 
-#include <antares/wx-wrapper.h>
 #include <wx/htmllbox.h>
 #include "item/item.h"
 #include "sort.h"

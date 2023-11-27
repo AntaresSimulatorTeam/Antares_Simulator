@@ -102,7 +102,7 @@ public:
 inline void FindAllLogFiles(MapFileList& filelist, wxRegEx& regex, const AnyString& folder)
 {
     filelist.clear();
-    uint64 totalSize = 0u;
+    uint64_t totalSize = 0u;
 
     if (not folder.empty())
     {
@@ -300,7 +300,7 @@ bool FileListProvider::onSelect(const Spotlight::IItem::Vector&)
 
 void FileListProvider::refreshFileList(bool showAll)
 {
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     wxRegEx regex(wxT("([a-zA-Z_]+)-([0-9]{8})-([0-9]{6})\\.log"));
     String folder;
     pAllSimuLogs.clear();
@@ -383,7 +383,7 @@ protected:
             logs.error() << "File not found: " << pFilename;
             return;
         }
-        const uint64 filesize = IO::File::Size(pFilename);
+        const uint64_t filesize = IO::File::Size(pFilename);
 
         bool shouldReopenLogFile = false;
         // Closing the current log file, to be able to open it

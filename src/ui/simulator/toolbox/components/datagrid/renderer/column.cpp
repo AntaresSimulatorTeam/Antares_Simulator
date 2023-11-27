@@ -58,7 +58,7 @@ namespace Renderer
 // -------------------
 // Base column class
 // -------------------
-Column::Column(Antares::Data::TimeSeries ts, const wxString& caption) :
+Column::Column(Antares::Data::TimeSeriesType ts, const wxString& caption) :
  tsKind_(ts), caption_(caption)
 {
 }
@@ -86,7 +86,7 @@ Column::~Column()
 // -------------------- -
 // Classic column
 // ---------------------
-classicColumn::classicColumn(TimeSeries ts, const wxString& caption) : Column(ts, caption)
+classicColumn::classicColumn(TimeSeriesType ts, const wxString& caption) : Column(ts, caption)
 {
     cells_ = {new_check_allocation<blankCell>(),
               new_check_allocation<readyMadeTSstatus>(tsKind_),

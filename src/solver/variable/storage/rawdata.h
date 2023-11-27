@@ -28,7 +28,7 @@
 #define __SOLVER_VARIABLE_STORAGE_RAWDATA_H__
 
 #include <yuni/yuni.h>
-#include <antares/study.h>
+#include <antares/study/study.h>
 #include "intermediate.h"
 
 namespace Antares

@@ -46,7 +46,7 @@ struct InternalType<char> final
     };
 };
 template<>
-struct InternalType<sint32> final
+struct InternalType<int32_t> final
 {
     enum
     {
@@ -54,7 +54,7 @@ struct InternalType<sint32> final
     };
 };
 template<>
-struct InternalType<sint64> final
+struct InternalType<int64_t> final
 {
     enum
     {
@@ -62,7 +62,7 @@ struct InternalType<sint64> final
     };
 };
 template<>
-struct InternalType<uint32> final
+struct InternalType<uint32_t> final
 {
     enum
     {
@@ -70,7 +70,7 @@ struct InternalType<uint32> final
     };
 };
 template<>
-struct InternalType<uint64> final
+struct InternalType<uint64_t> final
 {
     enum
     {
@@ -147,16 +147,16 @@ public:
         return nullptr;
     }
 
-    //! assign uint32
+    //! assign uint32_t
     virtual void assignList(const IDataHolder::Vector&) = 0;
-    //! assign uint32
-    virtual void assign(uint32 n) = 0;
-    //! assign sint32
-    virtual void assign(sint32 n) = 0;
-    //! assign uint64
-    virtual void assign(uint64 n) = 0;
-    //! assign sint64
-    virtual void assign(sint64 n) = 0;
+    //! assign uint32_t
+    virtual void assign(uint32_t n) = 0;
+    //! assign int32_t
+    virtual void assign(int32_t n) = 0;
+    //! assign uint64_t
+    virtual void assign(uint64_t n) = 0;
+    //! assign int64_t
+    virtual void assign(int64_t n) = 0;
     //! assign double
     virtual void assign(double n) = 0;
     //! assign string
@@ -166,16 +166,16 @@ public:
     //! assign char
     virtual void assign(char n) = 0;
 
-    //! add uint32
+    //! add uint32_t
     virtual void addList(const IDataHolder::Vector&) = 0;
-    //! add uint32
-    virtual void add(uint32 n) = 0;
-    //! add sint32
-    virtual void add(sint32 n) = 0;
-    //! add uint64
-    virtual void add(uint64 n) = 0;
-    //! add sint64
-    virtual void add(sint64 n) = 0;
+    //! add uint32_t
+    virtual void add(uint32_t n) = 0;
+    //! add int32_t
+    virtual void add(int32_t n) = 0;
+    //! add uint64_t
+    virtual void add(uint64_t n) = 0;
+    //! add int64_t
+    virtual void add(int64_t n) = 0;
     //! add double
     virtual void add(double n) = 0;
     //! add string
@@ -185,14 +185,14 @@ public:
     //! add char
     virtual void add(char n) = 0;
 
-    //! sub uint32
-    virtual void sub(uint32 n) = 0;
-    //! sub sint32
-    virtual void sub(sint32 n) = 0;
-    //! sub uint64
-    virtual void sub(uint64 n) = 0;
-    //! sub sint64
-    virtual void sub(sint64 n) = 0;
+    //! sub uint32_t
+    virtual void sub(uint32_t n) = 0;
+    //! sub int32_t
+    virtual void sub(int32_t n) = 0;
+    //! sub uint64_t
+    virtual void sub(uint64_t n) = 0;
+    //! sub int64_t
+    virtual void sub(int64_t n) = 0;
     //! sub double
     virtual void sub(double n) = 0;
     //! sub string
@@ -202,14 +202,14 @@ public:
     //! sub char
     virtual void sub(char n) = 0;
 
-    //! mult uint32
-    virtual void mult(uint32 n) = 0;
-    //! mult sint32
-    virtual void mult(sint32 n) = 0;
-    //! mult uint64
-    virtual void mult(uint64 n) = 0;
-    //! mult sint64
-    virtual void mult(sint64 n) = 0;
+    //! mult uint32_t
+    virtual void mult(uint32_t n) = 0;
+    //! mult int32_t
+    virtual void mult(int32_t n) = 0;
+    //! mult uint64_t
+    virtual void mult(uint64_t n) = 0;
+    //! mult int64_t
+    virtual void mult(int64_t n) = 0;
     //! mult double
     virtual void mult(double n) = 0;
     //! mult bool
@@ -219,14 +219,14 @@ public:
     //! mult string
     virtual void mult(const String& n) = 0;
 
-    //! div uint32
-    virtual void div(uint32 n) = 0;
-    //! div sint32
-    virtual void div(sint32 n) = 0;
-    //! div uint64
-    virtual void div(uint64 n) = 0;
-    //! div sint64
-    virtual void div(sint64 n) = 0;
+    //! div uint32_t
+    virtual void div(uint32_t n) = 0;
+    //! div int32_t
+    virtual void div(int32_t n) = 0;
+    //! div uint64_t
+    virtual void div(uint64_t n) = 0;
+    //! div int64_t
+    virtual void div(int64_t n) = 0;
     //! div double
     virtual void div(double n) = 0;
     //! div bool
@@ -236,14 +236,14 @@ public:
     //! div string
     virtual void div(const String& n) = 0;
 
-    //! is equals to uint32
-    virtual bool isEquals(uint32 n) const = 0;
-    //! is equals to sint32
-    virtual bool isEquals(sint32 n) const = 0;
-    //! is equals to uint64
-    virtual bool isEquals(uint64 n) const = 0;
-    //! is equals to sint64
-    virtual bool isEquals(sint64 n) const = 0;
+    //! is equals to uint32_t
+    virtual bool isEquals(uint32_t n) const = 0;
+    //! is equals to int32_t
+    virtual bool isEquals(int32_t n) const = 0;
+    //! is equals to uint64_t
+    virtual bool isEquals(uint64_t n) const = 0;
+    //! is equals to int64_t
+    virtual bool isEquals(int64_t n) const = 0;
     //! is equals to double
     virtual bool isEquals(double n) const = 0;
     //! is equals to bool
@@ -315,10 +315,10 @@ public:
     //@{
     virtual bool convertFrom(char v) = 0;
     virtual bool convertFrom(bool v) = 0;
-    virtual bool convertFrom(sint32 v) = 0;
-    virtual bool convertFrom(uint32 v) = 0;
-    virtual bool convertFrom(sint64 v) = 0;
-    virtual bool convertFrom(uint64 v) = 0;
+    virtual bool convertFrom(int32_t v) = 0;
+    virtual bool convertFrom(uint32_t v) = 0;
+    virtual bool convertFrom(int64_t v) = 0;
+    virtual bool convertFrom(uint64_t v) = 0;
     virtual bool convertFrom(double v) = 0;
     virtual bool convertFrom(const String& v) = 0;
     virtual bool convertFrom(const IDataHolder::Vector& v) = 0;
@@ -434,24 +434,24 @@ public:
         return Converter<char, TargetType>::Value(v, result);
     }
 
-    virtual bool convertFrom(sint32 v) override
+    virtual bool convertFrom(int32_t v) override
     {
-        return Converter<sint32, TargetType>::Value(v, result);
+        return Converter<int32_t, TargetType>::Value(v, result);
     }
 
-    virtual bool convertFrom(uint32 v) override
+    virtual bool convertFrom(uint32_t v) override
     {
-        return Converter<uint32, TargetType>::Value(v, result);
+        return Converter<uint32_t, TargetType>::Value(v, result);
     }
 
-    virtual bool convertFrom(sint64 v) override
+    virtual bool convertFrom(int64_t v) override
     {
-        return Converter<sint64, TargetType>::Value(v, result);
+        return Converter<int64_t, TargetType>::Value(v, result);
     }
 
-    virtual bool convertFrom(uint64 v) override
+    virtual bool convertFrom(uint64_t v) override
     {
-        return Converter<uint64, TargetType>::Value(v, result);
+        return Converter<uint64_t, TargetType>::Value(v, result);
     }
 
     virtual bool convertFrom(double v) override
@@ -537,19 +537,19 @@ protected:
     virtual void assignList(const IDataHolder::Vector&) override
     {
     }
-    virtual void assign(uint32 n) override
+    virtual void assign(uint32_t n) override
     {
         pValue = (T)n;
     }
-    virtual void assign(sint32 n) override
+    virtual void assign(int32_t n) override
     {
         pValue = (T)n;
     }
-    virtual void assign(uint64 n) override
+    virtual void assign(uint64_t n) override
     {
         pValue = (T)n;
     }
-    virtual void assign(sint64 n) override
+    virtual void assign(int64_t n) override
     {
         pValue = (T)n;
     }
@@ -573,19 +573,19 @@ protected:
     virtual void addList(const IDataHolder::Vector&) override
     {
     }
-    virtual void add(uint32 n) override
+    virtual void add(uint32_t n) override
     {
         pValue += (T)n;
     }
-    virtual void add(sint32 n) override
+    virtual void add(int32_t n) override
     {
         pValue += (T)n;
     }
-    virtual void add(uint64 n) override
+    virtual void add(uint64_t n) override
     {
         pValue += (T)n;
     }
-    virtual void add(sint64 n) override
+    virtual void add(int64_t n) override
     {
         pValue += (T)n;
     }
@@ -606,19 +606,19 @@ protected:
         pValue += (T)n;
     }
 
-    virtual void sub(uint32 n) override
+    virtual void sub(uint32_t n) override
     {
         pValue -= (T)n;
     }
-    virtual void sub(sint32 n) override
+    virtual void sub(int32_t n) override
     {
         pValue -= (T)n;
     }
-    virtual void sub(uint64 n) override
+    virtual void sub(uint64_t n) override
     {
         pValue -= (T)n;
     }
-    virtual void sub(sint64 n) override
+    virtual void sub(int64_t n) override
     {
         pValue -= (T)n;
     }
@@ -639,19 +639,19 @@ protected:
         pValue -= (T)n;
     }
 
-    virtual void mult(uint32 n) override
+    virtual void mult(uint32_t n) override
     {
         pValue *= (T)n;
     }
-    virtual void mult(sint32 n) override
+    virtual void mult(int32_t n) override
     {
         pValue *= (T)n;
     }
-    virtual void mult(uint64 n) override
+    virtual void mult(uint64_t n) override
     {
         pValue *= (T)n;
     }
-    virtual void mult(sint64 n) override
+    virtual void mult(int64_t n) override
     {
         pValue *= (T)n;
     }
@@ -671,19 +671,19 @@ protected:
         pValue *= n.to<T>();
     }
 
-    virtual void div(uint32 n) override
+    virtual void div(uint32_t n) override
     {
         pValue /= (T)n;
     }
-    virtual void div(sint32 n) override
+    virtual void div(int32_t n) override
     {
         pValue /= (T)n;
     }
-    virtual void div(uint64 n) override
+    virtual void div(uint64_t n) override
     {
         pValue /= (T)n;
     }
-    virtual void div(sint64 n) override
+    virtual void div(int64_t n) override
     {
         pValue /= (T)n;
     }
@@ -703,19 +703,19 @@ protected:
         pValue /= n.to<T>();
     }
 
-    virtual bool isEquals(uint32 n) const override
+    virtual bool isEquals(uint32_t n) const override
     {
         return Math::Equals(pValue, (T)n);
     }
-    virtual bool isEquals(sint32 n) const override
+    virtual bool isEquals(int32_t n) const override
     {
         return Math::Equals(pValue, (T)n);
     }
-    virtual bool isEquals(uint64 n) const override
+    virtual bool isEquals(uint64_t n) const override
     {
         return Math::Equals(pValue, (T)n);
     }
-    virtual bool isEquals(sint64 n) const override
+    virtual bool isEquals(int64_t n) const override
     {
         return Math::Equals(pValue, (T)n);
     }
@@ -811,19 +811,19 @@ protected:
     virtual void assignList(const IDataHolder::Vector&) override
     {
     }
-    virtual void assign(uint32 n) override
+    virtual void assign(uint32_t n) override
     {
         pValue = (T)n;
     }
-    virtual void assign(sint32 n) override
+    virtual void assign(int32_t n) override
     {
         pValue = (T)n;
     }
-    virtual void assign(uint64 n) override
+    virtual void assign(uint64_t n) override
     {
         pValue = (T)n;
     }
-    virtual void assign(sint64 n) override
+    virtual void assign(int64_t n) override
     {
         pValue = (T)n;
     }
@@ -847,19 +847,19 @@ protected:
     virtual void addList(const IDataHolder::Vector&) override
     {
     }
-    virtual void add(uint32 n) override
+    virtual void add(uint32_t n) override
     {
         pValue += (T)n;
     }
-    virtual void add(sint32 n) override
+    virtual void add(int32_t n) override
     {
         pValue += (T)n;
     }
-    virtual void add(uint64 n) override
+    virtual void add(uint64_t n) override
     {
         pValue += (T)n;
     }
-    virtual void add(sint64 n) override
+    virtual void add(int64_t n) override
     {
         pValue += (T)n;
     }
@@ -880,19 +880,19 @@ protected:
         pValue += (T)n;
     }
 
-    virtual void sub(uint32 n) override
+    virtual void sub(uint32_t n) override
     {
         pValue -= (T)n;
     }
-    virtual void sub(sint32 n) override
+    virtual void sub(int32_t n) override
     {
         pValue -= (T)n;
     }
-    virtual void sub(uint64 n) override
+    virtual void sub(uint64_t n) override
     {
         pValue -= (T)n;
     }
-    virtual void sub(sint64 n) override
+    virtual void sub(int64_t n) override
     {
         pValue -= (T)n;
     }
@@ -913,19 +913,19 @@ protected:
         pValue -= (T)n;
     }
 
-    virtual void mult(uint32 n) override
+    virtual void mult(uint32_t n) override
     {
         pValue *= (T)n;
     }
-    virtual void mult(sint32 n) override
+    virtual void mult(int32_t n) override
     {
         pValue *= (T)n;
     }
-    virtual void mult(uint64 n) override
+    virtual void mult(uint64_t n) override
     {
         pValue *= (T)n;
     }
-    virtual void mult(sint64 n) override
+    virtual void mult(int64_t n) override
     {
         pValue *= (T)n;
     }
@@ -945,19 +945,19 @@ protected:
         pValue *= n.to<T>();
     }
 
-    virtual void div(uint32 n) override
+    virtual void div(uint32_t n) override
     {
         pValue /= (T)n;
     }
-    virtual void div(sint32 n) override
+    virtual void div(int32_t n) override
     {
         pValue /= (T)n;
     }
-    virtual void div(uint64 n) override
+    virtual void div(uint64_t n) override
     {
         pValue /= (T)n;
     }
-    virtual void div(sint64 n) override
+    virtual void div(int64_t n) override
     {
         pValue /= (T)n;
     }
@@ -977,19 +977,19 @@ protected:
         pValue /= n.to<T>();
     }
 
-    virtual bool isEquals(uint32 n) const override
+    virtual bool isEquals(uint32_t n) const override
     {
         return pValue == (T)n;
     }
-    virtual bool isEquals(sint32 n) const override
+    virtual bool isEquals(int32_t n) const override
     {
         return pValue == (T)n;
     }
-    virtual bool isEquals(uint64 n) const override
+    virtual bool isEquals(uint64_t n) const override
     {
         return pValue == (T)n;
     }
-    virtual bool isEquals(sint64 n) const override
+    virtual bool isEquals(int64_t n) const override
     {
         return pValue == (T)n;
     }
@@ -1085,19 +1085,19 @@ protected:
     virtual void assignList(const IDataHolder::Vector&) override
     {
     }
-    virtual void assign(sint32 n) override
+    virtual void assign(int32_t n) override
     {
         pValue = (n != 0);
     }
-    virtual void assign(uint32 n) override
+    virtual void assign(uint32_t n) override
     {
         pValue = (n != 0);
     }
-    virtual void assign(sint64 n) override
+    virtual void assign(int64_t n) override
     {
         pValue = (n != 0);
     }
-    virtual void assign(uint64 n) override
+    virtual void assign(uint64_t n) override
     {
         pValue = (n != 0);
     }
@@ -1121,22 +1121,22 @@ protected:
     virtual void addList(const IDataHolder::Vector&) override
     {
     }
-    virtual void add(sint32 n) override
+    virtual void add(int32_t n) override
     {
         if (n)
             pValue = true;
     }
-    virtual void add(uint32 n) override
+    virtual void add(uint32_t n) override
     {
         if (n)
             pValue = true;
     }
-    virtual void add(sint64 n) override
+    virtual void add(int64_t n) override
     {
         if (n)
             pValue = true;
     }
-    virtual void add(uint64 n) override
+    virtual void add(uint64_t n) override
     {
         if (n)
             pValue = true;
@@ -1162,22 +1162,22 @@ protected:
             pValue = true;
     }
 
-    virtual void sub(sint32 n) override
+    virtual void sub(int32_t n) override
     {
         if (n)
             pValue = false;
     }
-    virtual void sub(uint32 n) override
+    virtual void sub(uint32_t n) override
     {
         if (n)
             pValue = false;
     }
-    virtual void sub(sint64 n) override
+    virtual void sub(int64_t n) override
     {
         if (n)
             pValue = false;
     }
-    virtual void sub(uint64 n) override
+    virtual void sub(uint64_t n) override
     {
         if (n)
             pValue = false;
@@ -1203,22 +1203,22 @@ protected:
             pValue = false;
     }
 
-    virtual void mult(uint32 n) override
+    virtual void mult(uint32_t n) override
     {
         if (!n)
             pValue = false;
     }
-    virtual void mult(sint32 n) override
+    virtual void mult(int32_t n) override
     {
         if (!n)
             pValue = false;
     }
-    virtual void mult(uint64 n) override
+    virtual void mult(uint64_t n) override
     {
         if (!n)
             pValue = false;
     }
-    virtual void mult(sint64 n) override
+    virtual void mult(int64_t n) override
     {
         if (!n)
             pValue = false;
@@ -1242,16 +1242,16 @@ protected:
             pValue = false;
     }
 
-    virtual void div(uint32) override
+    virtual void div(uint32_t) override
     {
     }
-    virtual void div(sint32) override
+    virtual void div(int32_t) override
     {
     }
-    virtual void div(uint64) override
+    virtual void div(uint64_t) override
     {
     }
-    virtual void div(sint64) override
+    virtual void div(int64_t) override
     {
     }
     virtual void div(double) override
@@ -1267,19 +1267,19 @@ protected:
     {
     }
 
-    virtual bool isEquals(uint32 n) const override
+    virtual bool isEquals(uint32_t n) const override
     {
         return pValue == (n != 0);
     }
-    virtual bool isEquals(sint32 n) const override
+    virtual bool isEquals(int32_t n) const override
     {
         return pValue == (n != 0);
     }
-    virtual bool isEquals(uint64 n) const override
+    virtual bool isEquals(uint64_t n) const override
     {
         return pValue == (n != 0);
     }
-    virtual bool isEquals(sint64 n) const override
+    virtual bool isEquals(int64_t n) const override
     {
         return pValue == (n != 0);
     }

@@ -86,18 +86,15 @@ void annualCostsStatistics::endStandardDeviations()
     updateTime.endStandardDeviation();
 };
 
-void annualCostsStatistics::writeToOutput(IResultWriter::Ptr writer)
+void annualCostsStatistics::writeToOutput(IResultWriter& writer)
 {
-    if (!writer)
-        return;
-
     writeSystemCostToOutput(writer);
     writeCriterionCostsToOutput(writer);
     writeOptimizationTimeToOutput(writer);
     writeUpdateTimes(writer);
 }
 
-void annualCostsStatistics::writeSystemCostToOutput(IResultWriter::Ptr writer)
+void annualCostsStatistics::writeSystemCostToOutput(IResultWriter& writer)
 {
     Yuni::Clob buffer;
     buffer << "EXP : " << round_to_closer_int(systemCost.costAverage) << "\n";
@@ -105,10 +102,10 @@ void annualCostsStatistics::writeSystemCostToOutput(IResultWriter::Ptr writer)
     buffer << "MIN : " << round_to_closer_int(systemCost.costMin) << "\n";
     buffer << "MAX : " << round_to_closer_int(systemCost.costMax) << "\n";
 
-    writer->addEntryFromBuffer(systemCostFilename, buffer);
+    writer.addEntryFromBuffer(systemCostFilename, buffer);
 }
 
-void annualCostsStatistics::writeCriterionCostsToOutput(IResultWriter::Ptr writer)
+void annualCostsStatistics::writeCriterionCostsToOutput(IResultWriter& writer)
 {
     Yuni::Clob buffer;
     buffer << to_scientific(criterionCost1.costAverage) << "\n";
@@ -121,10 +118,10 @@ void annualCostsStatistics::writeCriterionCostsToOutput(IResultWriter::Ptr write
     buffer << to_scientific(criterionCost2.costMin) << "\n";
     buffer << to_scientific(criterionCost2.costMax) << "\n";
 
-    writer->addEntryFromBuffer(criterionsCostsFilename, buffer);
+    writer.addEntryFromBuffer(criterionsCostsFilename, buffer);
 }
 
-void annualCostsStatistics::writeUpdateTimes(IResultWriter::Ptr writer)
+void annualCostsStatistics::writeUpdateTimes(IResultWriter& writer)
 {
     Yuni::Clob buffer;
     buffer << "EXP (ms) : " << updateTime.costAverage << "\n";
@@ -132,10 +129,10 @@ void annualCostsStatistics::writeUpdateTimes(IResultWriter::Ptr writer)
     buffer << "MIN (ms) : " << updateTime.costMin << "\n";
     buffer << "MAX (ms) : " << updateTime.costMax << "\n";
 
-    writer->addEntryFromBuffer(updateTimeFilename, buffer);
+    writer.addEntryFromBuffer(updateTimeFilename, buffer);
 }
 
-void annualCostsStatistics::writeOptimizationTimeToOutput(IResultWriter::Ptr writer)
+void annualCostsStatistics::writeOptimizationTimeToOutput(IResultWriter& writer)
 {
     Yuni::Clob buffer;
     buffer << "First optimization :\n";
@@ -150,7 +147,7 @@ void annualCostsStatistics::writeOptimizationTimeToOutput(IResultWriter::Ptr wri
     buffer << "MIN (ms) : " << optimizationTime2.costMin << "\n";
     buffer << "MAX (ms) : " << optimizationTime2.costMax << "\n";
 
-    writer->addEntryFromBuffer(optimizationTimeFilename, buffer);
+    writer.addEntryFromBuffer(optimizationTimeFilename, buffer);
 }
 std::string annualCostsStatistics::round_to_closer_int(const double d)
 {

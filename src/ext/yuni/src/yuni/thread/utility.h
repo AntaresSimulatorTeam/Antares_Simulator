@@ -76,7 +76,7 @@ Thread::Timer::Ptr every(uint ms, const Bind<bool()>& callback, bool autostart =
 **
 ** int main()
 ** {
-**	auto timer = every(1000, false, [&] (uint64 elapsed) -> bool {
+**	auto timer = every(1000, false, [&] (uint64_t elapsed) -> bool {
 **		std::cout << elapsed << "ms since the last time" << std::endl;
 **		return true; // continue looping
 **	});
@@ -94,7 +94,7 @@ Thread::Timer::Ptr every(uint ms, const Bind<bool()>& callback, bool autostart =
 */
 Thread::Timer::Ptr every(uint ms,
                          bool precise,
-                         const Bind<bool(uint64 /*elapsed*/)>& callback,
+                         const Bind<bool(uint64_t /*elapsed*/)>& callback,
                          bool autostart = true);
 
 } // namespace Yuni

@@ -79,7 +79,7 @@ void CommonProperties::onClusterChanged(Data::RenewableCluster* cluster)
 {
     if (cluster)
     {
-        auto data = std::make_shared<Window::Inspector::InspectorData>(Data::Study::Current::Get());
+        auto data = std::make_shared<Window::Inspector::InspectorData>(GetCurrentStudy());
         data->RnClusters.insert(cluster);
         pUpdateInfoAboutPlant(data);
     }

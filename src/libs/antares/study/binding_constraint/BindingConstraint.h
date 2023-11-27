@@ -33,11 +33,10 @@
 #include "../../constants.h"
 #include "../area/links.h"
 #include "../parts/thermal/cluster.h"
-#include "../../array/matrix.h"
-#include "../../inifile/inifile.h"
+#include <antares/array/matrix.h>
+#include <antares/inifile/inifile.h>
 #include "EnvForLoading.h"
 #include "antares/study/filter.h"
-#include "BindingConstraintTimeSeriesNumbers.h"
 #include "BindingConstraintStructures.h"
 #include <memory>
 #include <utility>
@@ -144,12 +143,16 @@ public:
     ** \brief Get the name of the binding constraint
     */
     const ConstraintName& name() const;
+
     /*!
     ** \brief Set the name of the binding constraint
-    **
-    ** The ID will be changed in the same time
     */
     void name(const AnyString& newname);
+
+    /*!
+    ** \brief Set the pId of the binding constraint
+    */
+    void pId(const AnyString& name);
 
     /*!
     ** \brief Get the ID of the binding constraint
@@ -190,6 +193,7 @@ public:
     //@}
 
     bool skipped() const;
+    bool isActive() const;
 
     //Ref to prevent copy. const ref to prevent modification.
     const Matrix<>& RHSTimeSeries() const;
@@ -282,14 +286,6 @@ public:
     ** \brief Get how many thermal clusters the binding constraint contains
     */
     uint clusterCount() const;
-
-    /*!
-    ** \brief Get how many thermal clusters the binding constraint contains
-    */
-    uint enabledClusterCount() const;
-
-    //@}
-
     //@}
 
     //! \name Type of the binding constraint
@@ -302,7 +298,7 @@ public:
     /*!
     ** \brief Set the type of the binding constraint
     */
-    void mutateTypeWithoutCheck(Type t);
+    void setTimeGranularity(Type t);
     //@}
 
     //! \name Operator
@@ -348,7 +344,7 @@ public:
     /*!
     ** \brief Get the memory usage
     */
-    Yuni::uint64 memoryUsage() const;
+    uint64_t memoryUsage() const;
     //@}
 
     /*!
@@ -414,11 +410,12 @@ private:
     //! Comments
     YString pComments;
     //! Group
-    std::string group_;
+    std::string group_ = "default";
 
     void clear();
 
     void copyFrom(BindingConstraint const *original);
+
 }; // class BindingConstraint
 
 // class BindConstList

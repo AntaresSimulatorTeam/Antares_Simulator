@@ -9,4 +9,4 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
-#include "logs/logs.h"
+#include <antares/logs/logs.h>

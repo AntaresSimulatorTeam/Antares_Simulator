@@ -1,23 +1,21 @@
+#include <boost/algorithm/string/case_conv.hpp>
 #include "cluster_list.h"
-#include "../../../utils.h"
+#include <antares/utils/utils.h>
 #include "../../study.h"
-#include "../../area.h"
 
 using namespace Yuni;
 namespace // anonymous
 {
 struct TSNumbersPredicate
 {
-    uint32 operator()(uint32 value) const
+    uint32_t operator()(uint32_t value) const
     {
         return value + 1;
     }
 };
 } // namespace
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 using namespace Antares;
 
@@ -153,11 +151,11 @@ void ClusterList<ClusterT>::resizeAllTimeseriesNumbers(uint n)
     {
         if (0 == n)
         {
-            each([&](Cluster& cluster) { cluster.series->timeseriesNumbers.clear(); });
+            each([&](Cluster& cluster) { cluster.series.timeseriesNumbers.clear(); });
         }
         else
         {
-            each([&](Cluster& cluster) { cluster.series->timeseriesNumbers.resize(1, n); });
+            each([&](Cluster& cluster) { cluster.series.timeseriesNumbers.resize(1, n); });
         }
     }
 }
@@ -165,7 +163,7 @@ void ClusterList<ClusterT>::resizeAllTimeseriesNumbers(uint n)
 #define SEP IO::Separator
 
 template<class ClusterT>
-void ClusterList<ClusterT>::storeTimeseriesNumbers(Solver::IResultWriter::Ptr writer) const
+void ClusterList<ClusterT>::storeTimeseriesNumbers(Solver::IResultWriter& writer) const
 {
     if (cluster.empty())
         return;
@@ -178,8 +176,8 @@ void ClusterList<ClusterT>::storeTimeseriesNumbers(Solver::IResultWriter::Ptr wr
         path.clear() << "ts-numbers" << SEP << typeID() << SEP << cluster.parentArea->id << SEP
                      << cluster.id() << ".txt";
         ts_content.clear(); // We must clear ts_content here, since saveToBuffer does not do it.
-        cluster.series->timeseriesNumbers.saveToBuffer(ts_content, 0, true, predicate, true);
-        writer->addEntryFromBuffer(path.c_str(), ts_content);
+        cluster.series.timeseriesNumbers.saveToBuffer(ts_content, 0, true, predicate, true);
+        writer.addEntryFromBuffer(path.c_str(), ts_content);
     });
 }
 
@@ -226,9 +224,9 @@ typename ClusterList<ClusterT>::SharedPtr ClusterList<ClusterT>::add(
 }
 
 template<class ClusterT>
-Yuni::uint64 ClusterList<ClusterT>::memoryUsage() const
+uint64_t ClusterList<ClusterT>::memoryUsage() const
 {
-    uint64 ret = sizeof(ClusterList) + (2 * sizeof(void*)) * this->size();
+    uint64_t ret = sizeof(ClusterList) + (2 * sizeof(void*)) * this->size();
 
     each([&](const ClusterT& cluster) { ret += cluster.memoryUsage(); });
     return ret;
@@ -237,7 +235,7 @@ Yuni::uint64 ClusterList<ClusterT>::memoryUsage() const
 template<class ClusterT>
 bool ClusterList<ClusterT>::rename(Data::ClusterName idToFind, Data::ClusterName newName)
 {
-    if (not idToFind or newName.empty())
+    if (idToFind.empty() or newName.empty())
         return false;
 
     // Internal:
@@ -247,7 +245,7 @@ bool ClusterList<ClusterT>::rename(Data::ClusterName idToFind, Data::ClusterName
     // Consequently, the parameters `idToFind` and `newName` shall not be `const &`.
 
     // Making sure that the id is lowercase
-    idToFind.toLower();
+    boost::to_lower(idToFind);
 
     // The new ID
     Data::ClusterName newID;
@@ -340,8 +338,7 @@ int ClusterList<ClusterT>::saveDataSeriesToFolder(const AnyString& folder) const
     for (auto it = cluster.begin(); it != end; ++it)
     {
         auto& cluster = *(it->second);
-        if (cluster.series)
-            ret = cluster.saveDataSeriesToFolder(folder) and ret;
+        ret = cluster.saveDataSeriesToFolder(folder) and ret;
     }
     return ret;
 }
@@ -359,67 +356,31 @@ int ClusterList<ClusterT>::saveDataSeriesToFolder(const AnyString& folder, const
     for (auto it = cluster.begin(); it != end; ++it)
     {
         auto& cluster = *(it->second);
-        if (cluster.series)
-        {
-            logs.info() << msg << "  " << (ticks * 100 / (1 + this->cluster.size()))
-                        << "% complete";
-            ret = cluster.saveDataSeriesToFolder(folder) and ret;
-        }
+        logs.info() << msg << "  " << (ticks * 100 / (1 + this->cluster.size()))
+            << "% complete";
+        ret = cluster.saveDataSeriesToFolder(folder) and ret;
         ++ticks;
     }
     return ret;
 }
 
-template<>
-int ClusterList<ThermalCluster>::loadDataSeriesFromFolder(Study& s,
-                                                          const StudyLoadOptions& options,
-                                                          const AnyString& folder)
-{
-    if (empty())
-        return 1;
-
-    int ret = 1;
-
-    each([&ret, &options, &s, &folder](ThermalCluster& c) {
-        if (c.series)
-            ret = c.loadDataSeriesFromFolder(s, folder) and ret;
-
-        ++options.progressTicks;
-        options.pushProgressLogs();
-    });
-    return ret;
-}
-
-template<>
-int ClusterList<RenewableCluster>::loadDataSeriesFromFolder(Study& s,
-                                                            const StudyLoadOptions& options,
-                                                            const AnyString& folder)
-{
-    if (empty())
-        return 1;
-
-    int ret = 1;
-
-    each([&](Cluster& cluster) {
-        if (cluster.series)
-            ret = cluster.loadDataSeriesFromFolder(s, folder) and ret;
-
-        ++options.progressTicks;
-        options.pushProgressLogs();
-    });
-    return ret;
-}
-
 template<class ClusterT>
-void ClusterList<ClusterT>::ensureDataTimeSeries()
+int ClusterList<ClusterT>::loadDataSeriesFromFolder(Study& s,
+                                                    const StudyLoadOptions& options,
+                                                    const AnyString& folder)
 {
-    auto end = cluster.end();
-    for (auto it = cluster.begin(); it != end; ++it)
-    {
-        SharedPtr cluster = it->second;
-        if (not cluster->series)
-            cluster->series = new DataSeriesCommon();
-    }
+    if (empty())
+        return 1;
+
+    int ret = 1;
+
+    each([&](ClusterT& c) {
+        ret = c.loadDataSeriesFromFolder(s, folder) and ret;
+
+        ++options.progressTicks;
+        options.pushProgressLogs();
+    });
+    return ret;
 }
 
 template<class ClusterT>
@@ -448,5 +409,5 @@ void ClusterList<ClusterT>::retrieveTotalCapacityAndUnitCount(double& total, uin
 template class ClusterList<ThermalCluster>;
 template class ClusterList<RenewableCluster>;
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+

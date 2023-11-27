@@ -8,29 +8,23 @@ const std::string AREA_SEP = "$$";
 class TargetVectorUpdater
 {
 public:
-    TargetVectorUpdater(bool isRenamingProcessed, std::vector<std::string>& target) :
-     target_(target), isRenamingProcessed_(isRenamingProcessed)
+    explicit TargetVectorUpdater(std::vector<std::string>& target) : target_(target)
     {
     }
 
     void UpdateTargetAtIndex(const std::string& full_name, unsigned int index)
     {
-        if (isRenamingProcessed_)
-        {
-            target_[index] = full_name;
-        }
+        target_[index] = full_name;
     }
 
 private:
     std::vector<std::string>& target_;
-    bool isRenamingProcessed_;
 };
 
 class Namer
 {
 public:
-    Namer(std::vector<std::string>& target, bool namedProblems) :
-     targetUpdater_(namedProblems, target)
+    explicit Namer(std::vector<std::string>& target) : targetUpdater_(target)
     {
     }
 

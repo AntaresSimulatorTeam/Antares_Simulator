@@ -48,8 +48,8 @@ NodeType TypeOf(const AnyString& filename, bool followSymLink = true);
 ** \return True if it exists, false otherwise
 */
 NodeType FetchFileStatus(const AnyString& filename,
-                         yuint64& size,
-                         yint64& lastModified,
+                         uint64_t& size,
+                         int64_t& lastModified,
                          bool followSymLink = true);
 
 } // namespace IO

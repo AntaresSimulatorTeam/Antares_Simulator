@@ -35,11 +35,6 @@ namespace Antares
 namespace Resources
 {
 /*!
-** \brief Write the root folder into the log file
-*/
-void WriteRootFolderToLogs();
-
-/*!
 ** \brief Get the full path of a resource file
 **
 ** \param relFileName The filename of the resource, relative to the resource folder

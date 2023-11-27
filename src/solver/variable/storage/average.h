@@ -163,17 +163,9 @@ protected:
         NextType::template buildDigest<VCardT>(report, digestLevel, dataLevel);
     }
 
-    Yuni::uint64 memoryUsage() const
+    uint64_t memoryUsage() const
     {
         return avgdata.dynamicMemoryUsage() + NextType::memoryUsage();
-    }
-
-    static void EstimateMemoryUsage(Antares::Data::StudyMemoryUsage& u)
-    {
-        Antares::Memory::EstimateMemoryUsage(sizeof(double), maxHoursInAYear, u, false);
-        u.requiredMemoryForOutput += u.years * sizeof(double);
-        u.takeIntoConsiderationANewTimeserieForDiskOutput();
-        NextType::EstimateMemoryUsage(u);
     }
 
     template<template<class, int> class DecoratorT>

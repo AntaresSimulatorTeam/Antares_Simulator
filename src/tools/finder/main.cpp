@@ -25,11 +25,11 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 #include <antares/study/finder.h>
 #include <yuni/core/getopt.h>
-#include "../../ui/common/winmain.hxx"
-#include <antares/utils.h>
+#include <antares/args/args_to_utf8.h>
+#include <antares/utils/utils.h>
 #include <antares/version.h>
 #include <antares/locale.h>
 
@@ -73,8 +73,8 @@ int main(int argc, char* argv[])
     InitializeDefaultLocale();
 
     logs.applicationName("finder");
-    argv = AntaresGetUTF8Arguments(argc, argv);
-
+    IntoUTF8ArgsTranslator toUTF8ArgsTranslator(argc, argv);
+    std::tie(argc, argv) = toUTF8ArgsTranslator.convert();
     Yuni::String::Vector optInput;
     bool optExtra = false;
     bool optCSV = false;

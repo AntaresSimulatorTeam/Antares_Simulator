@@ -25,17 +25,15 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "correlation.h"
+#include "antares/correlation/correlation.h"
 #include "antares/study/study.h"
 #include "antares/study/area/area.h"
-#include "antares/array/matrix.h"
+#include <antares/array/matrix.h>
 
 using namespace Yuni;
 using namespace Antares;
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 static inline void InterAreaCorrelationSetValue(Matrix<>& m,
                                                 const char filename[],
@@ -584,9 +582,9 @@ void Correlation::retrieveMontlyMatrixArray(const Matrix<>* array[12]) const
     }
 }
 
-Yuni::uint64 Correlation::memoryUsage() const
+uint64_t Correlation::memoryUsage() const
 {
-    Yuni::uint64 r = sizeof(Correlation);
+    uint64_t r = sizeof(Correlation);
     if (annual)
         r += annual->memoryUsage();
     if (monthly)
@@ -595,19 +593,6 @@ Yuni::uint64 Correlation::memoryUsage() const
             r += monthly[i].memoryUsage();
     }
     return r;
-}
-
-void Correlation::estimateMemoryUsage(StudyMemoryUsage& u) const
-{
-    if (pMode == modeAnnual)
-    {
-        Matrix<>::EstimateMemoryUsage(u, u.study.areas.size(), u.study.areas.size());
-    }
-    else
-    {
-        for (uint i = 0; i != 12; ++i)
-            Matrix<>::EstimateMemoryUsage(u, u.study.areas.size(), u.study.areas.size());
-    }
 }
 
 bool Correlation::forceReload(bool reload) const
@@ -730,5 +715,5 @@ void Correlation::copyFrom(const Correlation& source,
     }
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+

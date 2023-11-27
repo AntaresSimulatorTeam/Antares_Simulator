@@ -28,7 +28,7 @@
 #pragma once
 
 #include "item.h"
-#include <antares/study.h>
+#include <antares/study/study.h>
 
 #include <memory>
 

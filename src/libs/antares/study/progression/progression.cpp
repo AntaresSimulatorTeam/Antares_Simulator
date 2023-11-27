@@ -27,7 +27,7 @@
 
 #include "progression.h"
 #include "../study.h"
-#include "../../logs.h"
+#include <antares/logs/logs.h>
 
 using namespace Yuni;
 
@@ -153,7 +153,7 @@ Progression::~Progression()
     pProgressMeter.stop();
 }
 
-bool Progression::saveToFile(const Yuni::String& filename, IResultWriter::Ptr writer)
+bool Progression::saveToFile(const Yuni::String& filename, IResultWriter& writer)
 {
     Yuni::Clob buffer;
     MutexLocker locker(pProgressMeter.mutex);
@@ -174,7 +174,7 @@ bool Progression::saveToFile(const Yuni::String& filename, IResultWriter::Ptr wr
             }
         }
     }
-    writer->addEntryFromBuffer(filename.c_str(), buffer);
+    writer.addEntryFromBuffer(filename.c_str(), buffer);
     logs.info() << LOG_UI_PROGRESSION_MAP << filename;
     return true;
 }

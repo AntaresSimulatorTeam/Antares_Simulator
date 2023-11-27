@@ -27,7 +27,6 @@
 #ifndef __ANTARES_TOOLBOX_INPUT_BINDING_CONSTRAINT_BINDING_CONSTRAINT_H__
 #define __ANTARES_TOOLBOX_INPUT_BINDING_CONSTRAINT_BINDING_CONSTRAINT_H__
 
-#include <antares/wx-wrapper.h>
 #include <yuni/core/event.h>
 #include <antares/study/constraint.h>
 #include "../input.h"

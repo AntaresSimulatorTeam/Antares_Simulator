@@ -18,45 +18,27 @@ std::shared_ptr<OptPeriodStringGenerator> createOptPeriodAsString(bool isOptimiz
 
 std::string createOptimizationFilename(
   const std::string& title,
-  std::shared_ptr<OptPeriodStringGenerator> optPeriodStringGenerator,
+  const OptPeriodStringGenerator& optPeriodStringGenerator,
   unsigned int optNumber,
   const std::string& extension)
 {
     std::ostringstream outputFile;
     outputFile << title.c_str() << "-";
-    outputFile << optPeriodStringGenerator->to_string();
+    outputFile << optPeriodStringGenerator.to_string();
     outputFile << "--optim-nb-" << std::to_string(optNumber);
     outputFile << "." << extension.c_str();
 
     return outputFile.str();
 }
 
-std::string createCriterionFilename(
-  std::shared_ptr<OptPeriodStringGenerator> optPeriodStringGenerator,
-  const unsigned int optNumber)
+std::string createCriterionFilename(const OptPeriodStringGenerator& optPeriodStringGenerator,
+                                    const unsigned int optNumber)
 {
     return createOptimizationFilename("criterion", optPeriodStringGenerator, optNumber, "txt");
 }
 
-std::string createMPSfilename(std::shared_ptr<OptPeriodStringGenerator> optPeriodStringGenerator,
+std::string createMPSfilename(const OptPeriodStringGenerator& optPeriodStringGenerator,
                               const unsigned int optNumber)
 {
     return createOptimizationFilename("problem", optPeriodStringGenerator, optNumber, "mps");
-}
-// TODO[FOM] Remove this function
-std::string getFilenameWithExtension(const YString& prefix,
-                                     const YString& extension,
-                                     uint year,
-                                     uint week,
-                                     uint optNumber)
-{
-    std::ostringstream outputFile;
-    outputFile << prefix.c_str() << "-" << std::to_string(year + 1) << "-"
-               << std::to_string(week + 1);
-
-    if (optNumber)
-        outputFile << "--optim-nb-" << std::to_string(optNumber);
-
-    outputFile << "." << extension.c_str();
-    return outputFile.str();
 }

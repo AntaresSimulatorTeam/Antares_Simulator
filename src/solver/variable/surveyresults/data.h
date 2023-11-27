@@ -30,8 +30,8 @@
 #include <yuni/yuni.h>
 #include "../constants.h"
 #include <yuni/core/string.h>
-#include <antares/study.h>
-#include <i_writer.h>
+#include <antares/study/study.h>
+#include <antares/writer/i_writer.h>
 
 namespace Antares
 {
@@ -57,7 +57,7 @@ public:
     ** It is composed by several files to completely describe the system
     ** and provide a good support for Excel macros.
     */
-    void exportGridInfos(IResultWriter::Ptr writer);
+    void exportGridInfos(IResultWriter& writer);
 
 public:
     //! The current column index

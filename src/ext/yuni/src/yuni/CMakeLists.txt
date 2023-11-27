@@ -193,4 +193,3 @@ file("WRITE" "${CMAKE_CURRENT_BINARY_DIR}/../compiler-flags-release-cxx" "${CMAK
 file("WRITE" "${CMAKE_CURRENT_BINARY_DIR}/../compiler-flags-debug-cc"    "${CMAKE_C_FLAGS_DEBUG}")
 file("WRITE" "${CMAKE_CURRENT_BINARY_DIR}/../compiler-flags-release-cc"  "${CMAKE_C_FLAGS_RELEASE}")
 
-

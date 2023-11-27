@@ -154,7 +154,7 @@ public:
             pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);
 
         // Set the associated binding constraint
-        associatedBC_ = study.bindingConstraints.enabled()[bindConstraintGlobalIndex_];
+        associatedBC_ = study.bindingConstraints.activeContraints()[bindConstraintGlobalIndex_];
 
         NextType::initializeFromStudy(study);
     }
@@ -305,7 +305,7 @@ public:
     }
 
     Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
-      unsigned int column,
+      unsigned int,
       unsigned int numSpace) const
     {
         return pValuesForTheCurrentYear[numSpace].hour;

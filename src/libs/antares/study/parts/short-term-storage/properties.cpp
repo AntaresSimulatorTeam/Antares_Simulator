@@ -25,7 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 #include <stdexcept>
 
 #include "properties.h"
@@ -99,7 +99,7 @@ bool Properties::loadKey(const IniFile::Property* p)
         return p->value.to<std::string>(this->name);
 
     if (p->key == "initiallevel")
-        return valueForOptional(this->initialLevel);
+        return p->value.to<double>(this->initialLevel);
 
     if (p->key == "initialleveloptim")
         return p->value.to<bool>(this->initialLevelOptim);
@@ -206,29 +206,18 @@ bool Properties::validate()
         efficiencyFactor = 1;
     }
 
-    // reset initialLevel value to show we're optimising it
-    if (initialLevelOptim)
+    if (initialLevel < 0)
     {
-        logs.info() << "Optimizing initial level";
-        initialLevel.reset();
+        initialLevel = initiallevelDefault;
+        logs.warning() << "initiallevel for cluster: " << name << " should be positive, value has been set to " << initialLevel;
+
     }
 
-    if (!initialLevelOptim && !initialLevel.has_value())
-        logs.error() << "Initial level not optimized and no value provided, aborting";
-
-    if (initialLevel.has_value())
+    if (initialLevel > 1)
     {
-        if (initialLevel < 0)
-        {
-            logs.warning() << "initiallevel for cluster: " << name << " should be positive";
-            initialLevel = 0;
-        }
+        initialLevel = initiallevelDefault;
+        logs.warning() << "initiallevel for cluster: " << name << " should be inferior to 1, value has been set to " << initialLevel;
 
-        if (initialLevel > 1)
-        {
-            logs.warning() << "initiallevel for cluster: " << name << " should be inferior to 1";
-            initialLevel = 1;
-        }
     }
 
     return true;

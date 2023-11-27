@@ -27,6 +27,7 @@
 
 #include "cluster-item.h"
 #include "../../../resources.h"
+#include "wx-wrapper.h"
 
 using namespace Yuni;
 

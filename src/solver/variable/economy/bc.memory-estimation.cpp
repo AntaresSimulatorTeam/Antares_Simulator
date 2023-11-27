@@ -25,7 +25,6 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include <antares/study/memory-usage.h>
 #include "all.h"
 
 using bc_next_type = Solver::Variable::Economy::VariablesPerBindingConstraints;

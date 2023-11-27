@@ -27,7 +27,6 @@
 #ifndef __ANTARES_WINDOWS_OUTPUT_PANEL_PANEL_H__
 #define __ANTARES_WINDOWS_OUTPUT_PANEL_PANEL_H__
 
-#include <antares/wx-wrapper.h>
 #include <ui/common/component/panel.h>
 #include "../fwd.h"
 #include <vector>

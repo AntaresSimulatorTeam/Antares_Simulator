@@ -69,7 +69,7 @@ bool thermalScBuilderRenderer::cellValue(int x, int y, const String& value)
         assert((uint)y < pRules->thermal[selectedArea()->index].width());
         assert((uint)x < pRules->thermal[selectedArea()->index].height());
         uint val = fromStringToTSnumber(value);
-        pRules->thermal[selectedArea()->index].set(selectedArea()->thermal.list.byIndex[y], x, val);
+        pRules->thermal[selectedArea()->index].setTSnumber(selectedArea()->thermal.list.byIndex[y], x, val);
         return true;
     }
     return false;

@@ -34,24 +34,24 @@ namespace Yuni
 namespace Thread
 {
 #ifndef YUNI_NO_THREAD_SAFE
-uint64 ID()
+uint64_t ID()
 {
 #ifdef YUNI_HAS_PTHREAD_GETTHREADID_NP
-    return (uint64)pthread_getthreadid_np();
+    return (uint64_t)pthread_getthreadid_np();
 #else
 
 #ifdef YUNI_OS_MAC
-    return (uint64)pthread_self();
+    return (uint64_t)pthread_self();
 #else
 #ifndef YUNI_OS_WINDOWS
 #ifdef YUNI_OS_LINUX
-    return (uint64)syscall(SYS_gettid);
+    return (uint64_t)syscall(SYS_gettid);
 #else
     // man : The pthread_self() function returns the thread ID of the calling thread
-    return (uint64)pthread_self();
+    return (uint64_t)pthread_self();
 #endif
 #else
-    return (uint64)GetCurrentThreadId();
+    return (uint64_t)GetCurrentThreadId();
 #endif
 #endif
 
@@ -61,7 +61,7 @@ uint64 ID()
 
 #else
 
-uint64 ID()
+uint64_t ID()
 {
     return 0;
 }

@@ -29,7 +29,7 @@
 
 #include "datasource.h"
 #include <yuni/core/event.h>
-#include <antares/study.h>
+#include <antares/study/study.h>
 #include "../item/cluster-item.h"
 
 using namespace Antares::Component::HTMLListbox::Item;

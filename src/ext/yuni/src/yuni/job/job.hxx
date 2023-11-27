@@ -17,7 +17,7 @@ namespace Job
 {
 inline enum Job::State IJob::state() const
 {
-    return (enum Job::State)((sint32)pState);
+    return (enum Job::State)((int32_t)pState);
 }
 
 inline bool IJob::idle() const

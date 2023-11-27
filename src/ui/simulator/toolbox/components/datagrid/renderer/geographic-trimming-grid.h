@@ -73,8 +73,8 @@ protected:
 class areasTrimmingGrid : public geographicTrimmingGrid
 {
 public:
-    areasTrimmingGrid(){};
-    ~areasTrimmingGrid(){};
+    areasTrimmingGrid() = default;
+    ~areasTrimmingGrid() = default;
 
 private:
     uint gridSize() const;
@@ -87,8 +87,8 @@ private:
 class linksTrimmingGrid : public geographicTrimmingGrid
 {
 public:
-    linksTrimmingGrid(){};
-    ~linksTrimmingGrid(){};
+    linksTrimmingGrid() = default;
+    ~linksTrimmingGrid() = default;
 
 private:
     uint gridSize() const;

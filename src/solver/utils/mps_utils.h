@@ -27,7 +27,8 @@ public:
     {
     }
     I_MPS_writer() = default;
-    virtual void runIfNeeded(Solver::IResultWriter::Ptr writer, const std::string& filename) = 0;
+    virtual ~I_MPS_writer() = default;
+    virtual void runIfNeeded(Solver::IResultWriter& writer, const std::string& filename) = 0;
 
 protected:
     uint current_optim_number_ = 0;
@@ -37,7 +38,7 @@ class fullMPSwriter final : public I_MPS_writer
 {
 public:
     fullMPSwriter(PROBLEME_SIMPLEXE_NOMME* named_splx_problem, uint currentOptimNumber);
-    void runIfNeeded(Solver::IResultWriter::Ptr writer, const std::string& filename) override;
+    void runIfNeeded(Solver::IResultWriter& writer, const std::string& filename) override;
 
 private:
     PROBLEME_SIMPLEXE_NOMME* named_splx_problem_ = nullptr;
@@ -46,8 +47,9 @@ private:
 class fullOrToolsMPSwriter : public I_MPS_writer
 {
 public:
+    virtual ~fullOrToolsMPSwriter() = default;
     fullOrToolsMPSwriter(MPSolver* solver, uint currentOptimNumber);
-    void runIfNeeded(Solver::IResultWriter::Ptr writer, const std::string& filename) override;
+    void runIfNeeded(Solver::IResultWriter& writer, const std::string& filename) override;
 
 private:
     MPSolver* solver_ = nullptr;
@@ -56,8 +58,9 @@ private:
 class nullMPSwriter : public I_MPS_writer
 {
 public:
+    virtual ~nullMPSwriter() = default;
     using I_MPS_writer::I_MPS_writer;
-    void runIfNeeded(Solver::IResultWriter::Ptr /*writer*/,
+    void runIfNeeded(Solver::IResultWriter& /*writer*/,
                      const std::string& /*filename*/) override
     {
         // Does nothing
@@ -67,6 +70,7 @@ public:
 class mpsWriterFactory
 {
 public:
+    virtual ~mpsWriterFactory() = default;
     mpsWriterFactory(Data::mpsExportStatus exportMPS,
                      bool exportMPSOnError,
                      const int current_optim_number,

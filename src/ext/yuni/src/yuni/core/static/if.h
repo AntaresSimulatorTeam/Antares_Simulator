@@ -26,7 +26,7 @@ namespace Static
 ** class IntWrapper
 ** {
 ** public:
-**     typedef typename Yuni::Static::If<x86_64, int64, int32>::Type  IntType;
+**     typedef typename Yuni::Static::If<x86_64, int64, int32_t>::Type  IntType;
 **
 ** };
 ** \endcode

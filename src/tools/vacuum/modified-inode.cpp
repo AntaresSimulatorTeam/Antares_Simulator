@@ -29,7 +29,7 @@
 #include "modified-inode.h"
 #include <yuni/datetime/timestamp.h>
 #include <yuni/io/file.h>
-#include <antares/logs.h>
+#include <antares/logs/logs.h>
 #include <unordered_set>
 #include <yuni/core/noncopyable.h>
 #include "io.h"
@@ -56,12 +56,12 @@ public:
     void pushToLogs();
 
 public:
-    sint64 dateLimit;
+    int64_t dateLimit;
 
     Mutex mutex;
-    uint64 bytesDeleted;
-    uint64 filesDeleted;
-    uint64 foldersDeleted;
+    uint64_t bytesDeleted;
+    uint64_t filesDeleted;
+    uint64_t foldersDeleted;
     std::unordered_set<String> pathsToDeleteIfEmpty;
 
     //! delayed Entries to push into logs
@@ -94,7 +94,7 @@ void UserData::syncBeforeRelease()
     if (not dry && not pathsToDeleteIfEmpty.empty())
     {
         String folder;
-        uint64 folderRemovedCount = 0;
+        uint64_t folderRemovedCount = 0;
         foreach (auto& path, pathsToDeleteIfEmpty)
         {
             if (not RemoveDirectoryIfEmpty(path))
@@ -146,8 +146,8 @@ void UserData::syncBeforeRelease()
 
 static void OnFileEvent(const String& filename,
                         const String& parent,
-                        sint64 modified,
-                        uint64 size,
+                        int64_t modified,
+                        uint64_t size,
                         void* user)
 {
     if (not(modified < ((UserData*)user)->dateLimit))
@@ -242,7 +242,7 @@ void ModifiedINode::userdataDestroy(void* userdata)
     }
 }
 
-ModifiedINode::ModifiedINode(yint64 dateLimit) :
+ModifiedINode::ModifiedINode(int64_t dateLimit) :
  bytesDeleted(), filesDeleted(), foldersDeleted(), pDateLimit(dateLimit), pQueue()
 {
 }

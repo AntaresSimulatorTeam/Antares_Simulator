@@ -44,7 +44,7 @@ void ApplyCustomScenario(Data::Study& study)
     if (study.scenarioRules)
     {
         Data::ScenarioBuilder::Rules::Ptr rules = study.scenarioRules->find(id);
-        if (!(!rules))
+        if (rules)
         {
             rules->apply();
         }

@@ -17,12 +17,4 @@ This software suite has been tested under:
 - [Build](3-Build.md)
 - [Tests](4-Tests.md)
 - [Installer creation](5-Installer-creation.md)
-
-[ubuntu_precompiled_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Ubuntu%20CI%20(pre-compiled)/badge.svg
-[ubuntu_precompiled_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Ubuntu%20CI%20(pre-compiled)"
-
-[windows_precompiled_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Windows%20CI%20(VCPKG%20and%20pre-compiled)/badge.svg
-[windows_precompiled_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Windows%20CI%20(VCPKG%20and%20pre-compiled)"
-
-[centos_precompiled_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Centos7%20CI%20(pre-compiled)/badge.svg
-[centos_precompiled_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Centos7%20CI%20(pre-compiled)"
+- [Developer advice](6-dev-advice.md)

@@ -30,7 +30,7 @@
 #include <yuni/yuni.h>
 #include <memory>
 #include "antares/study/binding_constraint/BindingConstraintsRepository.h"
-#include <antares/study.h>
+#include <antares/study/study.h>
 
 namespace Antares
 {

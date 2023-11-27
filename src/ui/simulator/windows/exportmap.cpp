@@ -93,7 +93,7 @@ ExportMap::ExportMap(wxFrame* parent) :
           wxDefaultPosition,
           wxDefaultSize,
           wxCLOSE_BOX | wxCAPTION | wxFRAME_FLOAT_ON_PARENT | wxCLIP_CHILDREN),
- pStudy(Data::Study::Current::Get()),
+ pStudy(GetCurrentStudy()),
  pGridSizer(nullptr),
  pParentProperties(nullptr),
  pMapName(nullptr),

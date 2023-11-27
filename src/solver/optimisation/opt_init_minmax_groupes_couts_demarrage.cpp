@@ -25,8 +25,6 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "opt_structure_probleme_a_resoudre.h"
-
 #include "../simulation/simulation.h"
 #include "../simulation/sim_structure_donnees.h"
 #include "../simulation/sim_extern_variables_globales.h"
@@ -38,7 +36,7 @@ void OPT_InitialiserNombreMinEtMaxDeGroupesCoutsDeDemarrage(PROBLEME_HEBDO* prob
     if (!problemeHebdo->OptimisationAvecCoutsDeDemarrage)
         return;
 
-    for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+    for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
         const PALIERS_THERMIQUES& PaliersThermiquesDuPays
           = problemeHebdo->PaliersThermiquesDuPays[pays];
@@ -47,10 +45,10 @@ void OPT_InitialiserNombreMinEtMaxDeGroupesCoutsDeDemarrage(PROBLEME_HEBDO* prob
 
         for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
         {
-            const std::vector<double>& PuissanceDisponibleDuPalierThermiqueRef_SV
-              = PuissanceDisponibleEtCout[index].PuissanceDisponibleDuPalierThermiqueRef_SV;
-            const std::vector<double>& PuissanceMinDuPalierThermique_SV
-              = PuissanceDisponibleEtCout[index].PuissanceMinDuPalierThermique_SV;
+            const std::vector<double>& PuissanceDisponibleDuPalierThermiqueRef
+              = PuissanceDisponibleEtCout[index].PuissanceDisponibleDuPalierThermiqueRef;
+            const std::vector<double>& PuissanceMinDuPalierThermiqueRef
+              = PuissanceDisponibleEtCout[index].PuissanceMinDuPalierThermiqueRef;
             std::vector<int>& NombreMaxDeGroupesEnMarcheDuPalierThermique
               = PuissanceDisponibleEtCout[index].NombreMaxDeGroupesEnMarcheDuPalierThermique;
             std::vector<int>& NombreMinDeGroupesEnMarcheDuPalierThermique
@@ -64,11 +62,11 @@ void OPT_InitialiserNombreMinEtMaxDeGroupesCoutsDeDemarrage(PROBLEME_HEBDO* prob
                 if (TailleUnitaireDUnGroupeDuPalierThermique != 0)
                 {
                     NombreMaxDeGroupesEnMarcheDuPalierThermique[pdtHebdo]
-                      = (int)ceil(PuissanceDisponibleDuPalierThermiqueRef_SV[pdtHebdo]
+                      = (int)ceil(PuissanceDisponibleDuPalierThermiqueRef[pdtHebdo]
                                   / TailleUnitaireDUnGroupeDuPalierThermique);
 
                     NombreMinDeGroupesEnMarcheDuPalierThermique[pdtHebdo]
-                      = (int)ceil(PuissanceMinDuPalierThermique_SV[pdtHebdo]
+                      = (int)ceil(PuissanceMinDuPalierThermiqueRef[pdtHebdo]
                                   / TailleUnitaireDUnGroupeDuPalierThermique);
                 }
                 else

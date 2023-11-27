@@ -34,7 +34,7 @@ geographicTrimming::geographicTrimming(
     assert(parent);
 
     // The current study
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
 
     // Title of the Form
     SetLabel(wxT("Areas trimming"));

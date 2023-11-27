@@ -1,7 +1,6 @@
 #ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_SELECT_VARIABLES_H__
 #define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_SELECT_VARIABLES_H__
 
-#include <antares/wx-wrapper.h>
 #include "../renderer.h"
 #include "../../../../application/study.h"
 

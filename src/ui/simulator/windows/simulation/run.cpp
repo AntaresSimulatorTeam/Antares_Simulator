@@ -32,7 +32,6 @@
 #include <yuni/core/system/process.h>
 #include <yuni/io/file.h>
 #include <antares/study/parameters.h>
-#include <antares/study/memory-usage.h>
 
 #include <wx/stattext.h>
 #include <wx/button.h>
@@ -119,7 +118,7 @@ public:
 
     void Notify() override
     {
-        pForm.estimateMemoryUsage();
+
     }
 
 private:
@@ -206,10 +205,7 @@ Run::Run(wxWindow* parent, bool preproOnly) :
     assert(parent);
 
     // Informations about the study
-    auto& study = *Data::Study::Current::Get();
-
-    pThread = study.createThreadToEstimateInputMemoryUsage();
-    pThread->start();
+    auto& study = *GetCurrentStudy();
 
     // The main sizer
     auto* mnSizer = new wxBoxSizer(wxVERTICAL);
@@ -355,9 +351,9 @@ Run::Run(wxWindow* parent, bool preproOnly) :
     // When opening the Run window, the solver mode is default.
     // Therefore, the number of cores must be set (back) to the value associated with default mode
     // (== 1).
-    uint& minNbCores = Data::Study::Current::Get()
+    uint& minNbCores = GetCurrentStudy()
                          ->minNbYearsInParallel; // For run window's simulation cores field.
-    uint& maxNbCores = Data::Study::Current::Get()->maxNbYearsInParallel; // For RAM estimation
+    uint& maxNbCores = GetCurrentStudy()->maxNbYearsInParallel; // For RAM estimation
     minNbCores = 1;
     maxNbCores = 1;
 
@@ -431,8 +427,6 @@ Run::Run(wxWindow* parent, bool preproOnly) :
 
     updateNbCores();
 
-    estimateMemoryUsage();
-
     pTimer = new ResourcesInfoTimer(*this);
     pTimer->Start(150);
 
@@ -460,101 +454,6 @@ Run::~Run()
         pThread->stop();
         pThread = nullptr;
     }
-}
-
-void Run::estimateMemoryUsage()
-{
-    if (pTimer)
-        pTimer->Stop();
-
-    pWarnAboutMemoryLimit = false;
-    pWarnAboutDiskLimit = false;
-
-    auto studyptr = Data::Study::Current::Get();
-    // The study
-    if (!studyptr)
-        return;
-    auto& study = *studyptr;
-
-    // flag to know if the gui has been updated, to avoid a call to Layout,
-    // and to avoid flickering
-    bool guiUpdated = false;
-
-    const bool updating = (!pTimer or (pThread->started()));
-    if (not updating)
-    {
-        // Total of memory available on the system
-        uint64 memFree = System::Memory::Available();
-        uint64 diskFree = DiskFreeSpace(study.folder);
-
-        Data::StudyMemoryUsage m(study);
-        if (pPreproOnly->GetValue())
-            m.years = 0;
-
-        m.estimate();
-
-        uint64 amountNeeded = m.requiredMemory;
-        pWarnAboutMemoryLimit = memFree < amountNeeded;
-        pWarnAboutDiskLimit = (diskFree != (uint64)-1)
-                              and (not study.folder.empty() and (diskFree < m.requiredDiskSpace));
-
-        wxString s;
-        s = wxT("   ~");
-        BytesToStringW(s, amountNeeded);
-        UpdateLabel(guiUpdated, pLblEstimation, s);
-
-        s = wxT("/  ");
-        BytesToStringW(s, memFree) << wxT(" available");
-        UpdateLabel(guiUpdated, pLblEstimationAvailable, s);
-
-        s = wxT("  ");
-        switch (featuresAlias[pFeatureIndex])
-        {
-        case Solver::parallel:
-        case Solver::standard:
-        {
-            s << wxT(" < ");
-            BytesToStringW(s, m.requiredDiskSpace);
-            break;
-        }
-        default:
-            break;
-        }
-        UpdateLabel(guiUpdated, pLblDiskEstimation, s);
-
-        // Free space
-        s.clear();
-        if (diskFree != (uint64)-1)
-        {
-            s = wxT("/  ");
-            BytesToStringW(s, diskFree) << wxT(" available");
-        }
-        UpdateLabel(guiUpdated, pLblDiskEstimationAvailable, s);
-    }
-    else
-    {
-        UpdateLabel(guiUpdated, pLblEstimation, wxEmptyString);
-        UpdateLabel(guiUpdated, pLblDiskEstimation, wxEmptyString);
-        UpdateLabel(guiUpdated, pLblEstimationAvailable, wxT("updating..."));
-        UpdateLabel(guiUpdated, pLblDiskEstimationAvailable, wxT("updating..."));
-        pWarnAboutMemoryLimit = false;
-        pWarnAboutDiskLimit = false;
-    }
-
-    // rebuild the layout
-    if (guiUpdated)
-    {
-        auto* sizer = pBigDaddy->GetSizer();
-        if (sizer)
-            sizer->Layout();
-        sizer = GetSizer();
-        if (sizer)
-            sizer->Layout();
-    }
-
-    // Restoring the timer
-    if (pTimer)
-        pTimer->Start(updating ? 500 : timerInterval);
 }
 
 void Run::onCancel(void*)
@@ -655,7 +554,7 @@ int Run::checkForLowResources()
 
 void Run::onRun(void*)
 {
-    if (not Data::Study::Current::Valid())
+    if (not CurrentStudyIsValid())
         return;
 
     bool canNotifyUserForLowResources = true;
@@ -691,9 +590,6 @@ void Run::onRun(void*)
             return;
         }
     }
-
-    // Memory limit
-    estimateMemoryUsage();
 
     if (canNotifyUserForLowResources and 1 == checkForLowResources())
         return;
@@ -740,7 +636,7 @@ void Run::onRun(void*)
     Hide();
 
     // Run the simulation
-    RunSimulationOnTheStudy(Data::Study::Current::Get(),
+    RunSimulationOnTheStudy(GetCurrentStudy(),
                             simulationName,
                             commentFile,
                             pIgnoreWarnings->GetValue(),                     // Ignore warnings
@@ -761,7 +657,6 @@ void Run::onRun(void*)
 void Run::evtOnPreprocessorsOnlyClick(wxCommandEvent&)
 {
     updateMonteCarloYears();
-    estimateMemoryUsage();
 }
 
 void Run::updateMonteCarloYears()
@@ -776,9 +671,9 @@ void Run::updateMonteCarloYears()
     }
     else
     {
-        if (Data::Study::Current::Valid())
+        if (CurrentStudyIsValid())
         {
-            uint y = Data::Study::Current::Get()->parameters.nbYears;
+            uint y = GetCurrentStudy()->parameters.nbYears;
             if (y)
             {
                 pMonteCarloYears->SetLabel(wxString() << y);
@@ -816,15 +711,15 @@ void Run::updateNbCores()
     assert(pNbCores);
     assert(pBtnRun);
 
-    if (Data::Study::Current::Valid())
+    if (CurrentStudyIsValid())
     {
         // Minimum number of years in a set of parallel years (reduction from raw number of cores
         // chosen by user).
-        uint minNbCores = Data::Study::Current::Get()->minNbYearsInParallel;
+        uint minNbCores = GetCurrentStudy()->minNbYearsInParallel;
 
         // Number of cores before any reduction, that is based on nb of cores level (advanced
         // parameters)
-        uint nbCoresRaw = Data::Study::Current::Get()->nbYearsParallelRaw;
+        uint nbCoresRaw = GetCurrentStudy()->nbYearsParallelRaw;
 
         if (minNbCores)
         {
@@ -890,12 +785,12 @@ void Run::onSelectMode(wxCommandEvent& evt)
     // of cores is set to 1)
 
     // Needed For RAM estimation
-    uint& maxNbCores = Data::Study::Current::Get()->maxNbYearsInParallel;
-    uint maxNbCoresParallelMode = Data::Study::Current::Get()->maxNbYearsInParallel_save;
+    uint& maxNbCores = GetCurrentStudy()->maxNbYearsInParallel;
+    uint maxNbCoresParallelMode = GetCurrentStudy()->maxNbYearsInParallel_save;
 
     // Needed for run window's simulation cores field
-    uint& minNbCores = Data::Study::Current::Get()->minNbYearsInParallel;
-    uint minNbCoresParallelMode = Data::Study::Current::Get()->minNbYearsInParallel_save;
+    uint& minNbCores = GetCurrentStudy()->minNbYearsInParallel;
+    uint minNbCoresParallelMode = GetCurrentStudy()->minNbYearsInParallel_save;
 
     if (featuresAlias[pFeatureIndex] == Solver::parallel)
     {
@@ -913,9 +808,6 @@ void Run::onSelectMode(wxCommandEvent& evt)
         pTitleSimCores->Hide();
         pOptionSpacer->Show(true);
     }
-
-    // Update the estimation of the memory consumption
-    estimateMemoryUsage();
 
     // Update the nb of cores in the Run window
     updateNbCores();

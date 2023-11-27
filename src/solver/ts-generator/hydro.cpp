@@ -26,15 +26,10 @@
 */
 
 #include <yuni/yuni.h>
-#include "../simulation/sim_structure_probleme_economique.h"
-#include "../simulation/sim_structure_probleme_adequation.h"
 #include "../simulation/sim_extern_variables_globales.h"
-#include "../aleatoire/alea_fonctions.h"
-#include <antares/benchmarking.h>
-#include <antares/emergency.h>
-#include <antares/logs.h>
-#include <antares/study.h>
-#include <i_writer.h>
+#include <antares/benchmarking/DurationCollector.h>
+#include <antares/fatal-error.h>
+#include <antares/writer/i_writer.h>
 #include "../misc/cholesky.h"
 #include "../misc/matrix-dp-make.h"
 
@@ -54,11 +49,7 @@ namespace TSGenerator
 static void PreproHydroInitMatrices(Data::Study& study, uint tsCount)
 {
     study.areas.each([&](Data::Area& area) {
-        auto& hydroseries = *(area.hydro.series);
-
-        hydroseries.ror.resize(tsCount, HOURS_PER_YEAR);
-        hydroseries.storage.resize(tsCount, DAYS_PER_YEAR);
-        hydroseries.count = tsCount;
+        area.hydro.series->resizeRORandSTORAGE(tsCount);
     });
 }
 
@@ -80,7 +71,7 @@ static void PreproRoundAllEntriesPlusDerated(Data::Study& study)
     });
 }
 
-bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, IResultWriter::Ptr writer)
+bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, IResultWriter& writer)
 {
     logs.info() << "Generating the hydro time-series";
 
@@ -110,8 +101,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, IResultWriter
                                   QCHOLTemp,
                                   true))
     {
-        logs.error() << "TS Generator: Hydro: Invalid correlation matrix";
-        AntaresSolverEmergencyShutdown();
+        throw FatalError("TS Generator: Hydro: Invalid correlation matrix");
     }
 
     Matrix<double> CORRE;
@@ -147,7 +137,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, IResultWriter
         {
             logs.warning() << " TS Generator: Hydro correlation matrix was shrinked by " << r;
             if (r < 0.)
-                AntaresSolverEmergencyShutdown();
+                throw FatalError("TS Generator: r must be positive");
         }
     }
 
@@ -163,7 +153,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, IResultWriter
     for (uint i = 0; i != DIM; ++i)
         NORM[i] = 0.;
 
-    uint nbTimeseries = studyRTI.parameters->nbTimeSeriesHydro;
+    uint nbTimeseries = study.parameters.nbTimeSeriesHydro;
 
     PreproHydroInitMatrices(study, nbTimeseries);
 
@@ -189,7 +179,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, IResultWriter
             auto& area = *(study.areas.byIndex[i / 12]);
             auto& prepro = *area.hydro.prepro;
             auto& series = *area.hydro.series;
-            auto& ror = series.ror[l];
+            auto ror = series.ror[l];
 
             auto& colExpectation = prepro.data[Data::PreproHydro::expectation];
             auto& colStdDeviation = prepro.data[Data::PreproHydro::stdDeviation];
@@ -201,7 +191,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, IResultWriter
             uint realmonth = calendar.months[month].realmonth;
             uint daysPerMonth = calendar.months[month].days;
 
-            assert(l < series.ror.width);
+            assert(l < series.ror.timeSeries.width);
             assert(not Math::NaN(colPOW[realmonth]));
 
             if (month == 0)
@@ -305,16 +295,16 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, IResultWriter
 
                 {
                     std::string buffer;
-                    area.hydro.series->ror.saveToBuffer(buffer, precision);
+                    area.hydro.series->ror.timeSeries.saveToBuffer(buffer, precision);
                     output.clear() << study.buffer << SEP << "ror.txt";
-                    writer->addEntryFromBuffer(output.c_str(), buffer);
+                    writer.addEntryFromBuffer(output.c_str(), buffer);
                 }
 
                 {
                     std::string buffer;
-                    area.hydro.series->storage.saveToBuffer(buffer, precision);
+                    area.hydro.series->storage.timeSeries.saveToBuffer(buffer, precision);
                     output.clear() << study.buffer << SEP << "storage.txt";
-                    writer->addEntryFromBuffer(output.c_str(), buffer);
+                    writer.addEntryFromBuffer(output.c_str(), buffer);
                 }
                 ++progression;
             });

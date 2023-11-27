@@ -27,7 +27,6 @@
 #ifndef __ANTARES_APPLICATION_WINDOWS_HYDRO_LOCALDATAHYDRO_H__
 #define __ANTARES_APPLICATION_WINDOWS_HYDRO_LOCALDATAHYDRO_H__
 
-#include <antares/wx-wrapper.h>
 #include "../../toolbox/input/area.h"
 #include "../../toolbox/components/notebook/notebook.h"
 #include <ui/common/component/panel.h>

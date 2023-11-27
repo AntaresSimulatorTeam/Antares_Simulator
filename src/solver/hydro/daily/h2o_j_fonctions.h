@@ -28,39 +28,31 @@
 #ifndef __SOLVER_H2O_J_FONCTIONS__
 #define __SOLVER_H2O_J_FONCTIONS__
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
+DONNEES_MENSUELLES* H2O_J_Instanciation(void);
 
-    DONNEES_MENSUELLES* H2O_J_Instanciation(void);
-
-    void H2O_J_OptimiserUnMois(DONNEES_MENSUELLES*);
-    void H2O_J_Free(DONNEES_MENSUELLES*);
-    void H2O_J_ConstruireLesContraintes(int,
-                                        int*,
-                                        int,
-                                        int,
-                                        int*,
-                                        char*,
-                                        int*,
-                                        double*,
-                                        int*,
-                                        CORRESPONDANCE_DES_CONTRAINTES*);
-    void H2O_j_ConstruireLesVariables(int,
-                                      int*,
-                                      double*,
-                                      double*,
-                                      int*,
-                                      double**,
-                                      CORRESPONDANCE_DES_VARIABLES*);
-    void H2O_J_InitialiserLesBornesdesVariables(DONNEES_MENSUELLES*, int);
-    void H2O_J_InitialiserLeSecondMembre(DONNEES_MENSUELLES*, int);
-    void H2O_J_ResoudreLeProblemeLineaire(DONNEES_MENSUELLES*, int);
-    void H2O_J_LisserLesSurTurbines(DONNEES_MENSUELLES*, int);
-    void H2O_J_AjouterBruitAuCout(DONNEES_MENSUELLES*);
-#ifdef __cplusplus
-}
-#endif
+void H2O_J_OptimiserUnMois(DONNEES_MENSUELLES*);
+void H2O_J_Free(DONNEES_MENSUELLES*);
+void H2O_J_ConstruireLesContraintes(int,
+                                    std::vector<int>&,
+                                    int,
+                                    int,
+                                    std::vector<int>&,
+                                    std::vector<char>&,
+                                    std::vector<int>&,
+                                    std::vector<double>&,
+                                    std::vector<int>&,
+                                    CORRESPONDANCE_DES_CONTRAINTES&);
+void H2O_j_ConstruireLesVariables(int,
+                                  std::vector<int>&,
+                                  std::vector<double>&,
+                                  std::vector<double>&,
+                                  std::vector<int>&,
+                                  std::vector<double*>&,
+                                  CORRESPONDANCE_DES_VARIABLES&);
+void H2O_J_InitialiserLesBornesdesVariables(DONNEES_MENSUELLES*, int);
+void H2O_J_InitialiserLeSecondMembre(DONNEES_MENSUELLES*, int);
+void H2O_J_ResoudreLeProblemeLineaire(DONNEES_MENSUELLES*, int);
+void H2O_J_LisserLesSurTurbines(DONNEES_MENSUELLES*, int);
+void H2O_J_AjouterBruitAuCout(DONNEES_MENSUELLES&);
 
 #endif /* __SOLVER_H2O_J_FONCTIONS__ */

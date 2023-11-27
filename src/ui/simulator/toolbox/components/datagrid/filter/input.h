@@ -27,7 +27,6 @@
 #ifndef __ANTARES_TOOLBOX_FILTER_INPUT_H__
 #define __ANTARES_TOOLBOX_FILTER_INPUT_H__
 
-#include <antares/wx-wrapper.h>
 #include <wx/choice.h>
 #include "filter.h"
 #include "component/panel.h"

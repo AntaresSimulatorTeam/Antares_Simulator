@@ -29,8 +29,8 @@ INSTALL(EXPORT antares-config
 )
 
 set(CONFIG_LIBS
-		libantares-core
 		yuni-static-core
+		Antares::args_helper
 		${CMAKE_THREADS_LIBS_INIT}
 )
 
@@ -43,7 +43,9 @@ target_include_directories(${execname}
 target_link_libraries(${execname}
 		PRIVATE
 			${CONFIG_LIBS}
-			array
+			Antares::array
+			Antares::sys
+		antares-core #ressource.h
 		)
 
 import_std_libs(${execname})

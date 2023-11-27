@@ -10,7 +10,10 @@ inputs:
   os:
     description: 'OS used for github action'
     required: true
-
+  variant:
+    description: 'launch specific test'
+    required: false
+    default: "json"
 runs:
   using: "composite"
   steps:
@@ -27,7 +30,7 @@ runs:
     shell: bash {0}
     run: |
            cd _build
-           ctest -C Release --output-on-failure -R json
+           ctest -C Release --output-on-failure -R ${{inputs.variant}}
            echo "RET_CODE=$?" >> $GITHUB_ENV
 
   - name: Clean batches

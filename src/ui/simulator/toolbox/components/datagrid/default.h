@@ -27,7 +27,6 @@
 #ifndef __ANTARES_TOOLBOX_COMPONENT_DATAGRID_DEFAULT_H__
 #define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_DEFAULT_H__
 
-#include <antares/wx-wrapper.h>
 
 namespace Antares
 {

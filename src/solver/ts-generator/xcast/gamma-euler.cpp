@@ -26,11 +26,10 @@
 */
 
 #include <yuni/yuni.h>
-#include <antares/study.h>
+#include <antares/study/study.h>
 #include "xcast.h"
 #include <yuni/core/math.h>
-#include <antares/logs.h>
-#include <antares/emergency.h>
+#include <antares/logs/logs.h>
 #include <iostream>
 
 using namespace Yuni;

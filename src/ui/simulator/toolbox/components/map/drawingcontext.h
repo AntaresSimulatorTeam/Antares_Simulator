@@ -27,7 +27,6 @@
 #ifndef __ANTARES_TOOLBOX_MAP_DRAWING_CONTEXT_H__
 #define __ANTARES_TOOLBOX_MAP_DRAWING_CONTEXT_H__
 
-#include <antares/wx-wrapper.h>
 #include <wx/dc.h>
 #include <map>
 #include "nodes/node.h"

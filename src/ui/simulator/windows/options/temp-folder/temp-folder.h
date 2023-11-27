@@ -27,7 +27,6 @@
 #ifndef __ANTARES_APPLICATION_WINDOWS_OPTIONS_TEMP_FOLDER_H__
 #define __ANTARES_APPLICATION_WINDOWS_OPTIONS_TEMP_FOLDER_H__
 
-#include <antares/wx-wrapper.h>
 #include <wx/dialog.h>
 #include <wx/button.h>
 #include <wx/stattext.h>

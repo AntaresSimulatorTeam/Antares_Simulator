@@ -25,10 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #include "study.h"
-#include <yuni/io/file.h>
-#include <yuni/io/directory.h>
 #include <yuni/core/system/environment.h>
-#include <antares/study/area.h>
+#include <antares/study/area/area.h>
 #include <antares/inifile/inifile.h>
 #include <antares/io/statistics.h>
 
@@ -40,11 +38,10 @@
 #include <antares/solver.h>
 #include "../toolbox/execute/execute.h"
 #include "../windows/message.h"
-#include <antares/date.h>
+#include <antares/date/date.h>
 #include "../windows/saveas.h"
 #include "main.h"
 #include "menus.h"
-#include <map>
 #include "../windows/inspector/inspector.h"
 #include <ui/common/lock.h>
 
@@ -52,7 +49,6 @@
 #include "wait.h"
 #include <wx/busyinfo.h>
 #include <ui/common/wx-wrapper.h>
-#include "../toolbox/dispatcher/study.h"
 
 #include "../windows/startupwizard.h"
 #include <yuni/core/system/cpu.h>
@@ -128,7 +124,7 @@ Data::Output::List ListOfOutputsForTheCurrentStudy;
 
 bool gStudyHasBeenModified = true;
 
-volatile uint64 gInMemoryRevisionIncrement = 0;
+volatile uint64_t gInMemoryRevisionIncrement = 0;
 
 inline static void ResetLastOpenedFilepath()
 {
@@ -141,7 +137,7 @@ inline static void ResetLastOpenedFilepath()
 
 static void TheSimulationIsComplete(const wxString& duration)
 {
-    if (IsGUIAboutToQuit() || !Data::Study::Current::Valid())
+    if (IsGUIAboutToQuit() || !CurrentStudyIsValid())
         return;
     auto* mainFrm = Forms::ApplWnd::Instance();
     if (mainFrm)
@@ -234,7 +230,7 @@ protected:
 
         // We have a valid study. Go ahead
         // Keeping the study somewhere
-        Data::Study::Current::Set(study);
+        SetCurrentStudy(study);
 
         // The loading of the study may disable the Just-In-Time mecanism
         // (to ensure compatibility with old studies)
@@ -419,8 +415,8 @@ protected:
     bool onCopyFile(IO::Directory::CopyState state,
                     const String&,
                     const String&,
-                    uint64 count,
-                    uint64 total)
+                    uint64_t count,
+                    uint64_t total)
     {
         if (0 == (--pCount))
         {
@@ -564,20 +560,20 @@ bool CanPerformMemoryFlush()
     return !gMemoryFlushRefCount;
 }
 
-uint64 StudyInMemoryRevisionID()
+uint64_t StudyInMemoryRevisionID()
 {
     return gInMemoryRevisionIncrement;
 }
 
 void MarkTheStudyAsModified(const Data::Study::Ptr& study)
 {
-    if (!(!study) and study == Data::Study::Current::Get())
+    if (!(!study) and study == GetCurrentStudy())
         MarkTheStudyAsModified();
 }
 
 void MarkTheStudyAsModified()
 {
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     if (!(!study))
     {
         ++gInMemoryRevisionIncrement;
@@ -600,7 +596,7 @@ void MarkTheStudyAsModified()
 
 void ResetTheModifierState(bool v)
 {
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     gInMemoryRevisionIncrement = 0;
     gStudyHasBeenModified = v;
     if (!study)
@@ -627,7 +623,7 @@ bool CloseTheStudy(bool updateGUI)
 
     // keeping a reference to the current study to avoid unwanted
     // deletion
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
 
     if (!study or !Forms::ApplWnd::Instance())
         return false;
@@ -667,7 +663,7 @@ bool CloseTheStudy(bool updateGUI)
 
     // Deferencing pointer - We have to keep the data stored by
     // the study valid for a bit more longer
-    Data::Study::Current::Set(nullptr);
+    SetCurrentStudy(nullptr);
 
     // Notice that the simulation'settings have changed
     SystemParameterHaveChanged = true;
@@ -718,7 +714,7 @@ void NewStudy()
     study->createAsNew();
 
     // reset the new current study
-    Data::Study::Current::Set(study);
+    SetCurrentStudy(study);
 
     ListOfOutputsForTheCurrentStudy.clear();
 
@@ -745,7 +741,7 @@ void NewStudy()
 
 SaveResult SaveStudy()
 {
-    auto studyptr = Data::Study::Current::Get();
+    auto studyptr = GetCurrentStudy();
     if (!studyptr or !Forms::ApplWnd::Instance())
         return svsCancel;
 
@@ -863,11 +859,11 @@ SaveResult SaveStudy()
 
 SaveResult SaveStudyAs(const String& path, bool copyoutput, bool copyuserdata, bool copylogs)
 {
-    if (!Data::Study::Current::Valid() || path.empty())
+    if (!CurrentStudyIsValid() || path.empty())
         return svsCancel;
 
     // alias to the current study
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     // alias to the main form
     auto& mainFrm = *Forms::ApplWnd::Instance();
 
@@ -934,11 +930,11 @@ SaveResult ExportMap(const Yuni::String& path,
                      int nbSplitParts,
                      Antares::Map::mapImageFormat format)
 {
-    if (!Data::Study::Current::Valid() || path.empty())
+    if (!CurrentStudyIsValid() || path.empty())
         return svsCancel;
 
     // alias to the current study
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     // alias to the main form
     auto& mainFrm = *Forms::ApplWnd::Instance();
 
@@ -989,7 +985,7 @@ void UpdateGUIFromStudyState()
 {
     auto* mainform = Forms::ApplWnd::Instance();
     if (mainform)
-        mainform->requestUpdateGUIAfterStudyIO(Data::Study::Current::Valid());
+        mainform->requestUpdateGUIAfterStudyIO(CurrentStudyIsValid());
 }
 
 void OpenStudyFromFolder(wxString folder)
@@ -1045,9 +1041,9 @@ void OpenStudyFromFolder(wxString folder)
     // enabling the logs
     mainFrm.endUpdateLogs();
 
-    if (Data::Study::Current::Valid())
+    if (CurrentStudyIsValid())
     {
-        auto study = Data::Study::Current::Get();
+        auto study = GetCurrentStudy();
         if (!study->folder.empty())
         {
             Menu::AddRecentFile(mainFrm.menuRecentFiles(),
@@ -1060,7 +1056,7 @@ void OpenStudyFromFolder(wxString folder)
         // GUIFlagInvalidateAreas = true;
         wxWindowUpdateLocker updater(&mainFrm);
         OnStudyLoaded();
-        auto studyptr = Data::Study::Current::Get();
+        auto studyptr = GetCurrentStudy();
         if (!(!studyptr)) // should never be null
             OnStudyChanged(*studyptr);
     }
@@ -1073,11 +1069,17 @@ void OpenStudyFromFolder(wxString folder)
 
 void StudyRefreshCalendar()
 {
-    auto studyptr = Data::Study::Current::Get();
-    if (!(!studyptr))
+    auto studyptr = GetCurrentStudy();
+    if (studyptr)
     {
-        studyptr->calendar.reset(studyptr->parameters);
-        studyptr->calendarOutput.reset(studyptr->parameters);
+        studyptr->calendar.reset({studyptr->parameters.dayOfThe1stJanuary,
+                                  studyptr->parameters.firstWeekday,
+                                  studyptr->parameters.firstMonthInYear,
+                                  studyptr->parameters.leapYear});
+        studyptr->calendarOutput.reset({studyptr->parameters.dayOfThe1stJanuary,
+                                        studyptr->parameters.firstWeekday,
+                                        studyptr->parameters.firstMonthInYear,
+                                        studyptr->parameters.leapYear});
     }
 }
 
@@ -1256,7 +1258,7 @@ void RunSimulationOnTheStudy(Data::Study::Ptr study,
         mainFrm.requestUpdateGUIAfterStudyIO(true);
         OnStudyEndUpdate();
 
-        auto studyptr = Data::Study::Current::Get();
+        auto studyptr = GetCurrentStudy();
         if (!(!studyptr)) // should never be null
             OnStudyChanged(*studyptr);
     }
@@ -1276,7 +1278,7 @@ void RefreshListOfOutputsForTheCurrentStudy()
     if (IsGUIAboutToQuit())
         return;
 
-    auto study = Data::Study::Current::Get();
+    auto study = GetCurrentStudy();
     Data::Output::RetrieveListFromStudy(ListOfOutputsForTheCurrentStudy, study);
 
     auto* mainfrm = Forms::ApplWnd::Instance();
@@ -1289,7 +1291,7 @@ bool StudyRenameArea(Data::Area* area, const AnyString& newname, Data::Study* st
     if (!area || newname.empty())
         return false;
 
-    auto currentstudy = Data::Study::Current::Get();
+    auto currentstudy = GetCurrentStudy();
     if (!study)
         study = currentstudy.get();
     if (!study)
@@ -1331,6 +1333,23 @@ bool StudyRenameArea(Data::Area* area, const AnyString& newname, Data::Study* st
             return true;
     }
     return false;
+}
+
+static std::shared_ptr<Data::Study> CURRENT_STUDY;
+
+void SetCurrentStudy(std::shared_ptr<Data::Study> study)
+{
+    CURRENT_STUDY = study;
+}
+
+std::shared_ptr<Data::Study> GetCurrentStudy()
+{
+    return CURRENT_STUDY;
+}
+
+bool CurrentStudyIsValid()
+{
+    return !(!CURRENT_STUDY);
 }
 
 } // namespace Antares

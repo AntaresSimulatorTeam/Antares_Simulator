@@ -29,8 +29,13 @@
 
 #include <vector>
 #include <map>
-#include <i_writer.h>
+#include <antares/writer/i_writer.h>
 #include <antares/study/fwd.h>
+#include <limits>   // For std numeric_limits
+#include <sstream>  // For ostringstream
+#include <iomanip>  // For setprecision
+#include <yuni/yuni.h>
+
 
 namespace Antares::Solver::Simulation
 {
@@ -98,13 +103,13 @@ public:
     annualCostsStatistics();
     void setNbPerformedYears(uint n);
     void endStandardDeviations();
-    void writeToOutput(IResultWriter::Ptr writer);
+    void writeToOutput(IResultWriter& writer);
 
 private:
-    void writeSystemCostToOutput(IResultWriter::Ptr writer);
-    void writeCriterionCostsToOutput(IResultWriter::Ptr writer);
-    void writeUpdateTimes(IResultWriter::Ptr writer);
-    void writeOptimizationTimeToOutput(IResultWriter::Ptr writer);
+    void writeSystemCostToOutput(IResultWriter& writer);
+    void writeCriterionCostsToOutput(IResultWriter& writer);
+    void writeUpdateTimes(IResultWriter& writer);
+    void writeOptimizationTimeToOutput(IResultWriter& writer);
     std::string round_to_closer_int(const double d);
 
 public:

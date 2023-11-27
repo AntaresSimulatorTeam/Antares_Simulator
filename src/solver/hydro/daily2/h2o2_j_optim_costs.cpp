@@ -28,7 +28,7 @@
 #include "h2o2_j_donnees_optimisation.h"
 #include "antares/study/fwd.h"
 
-Hydro_problem_costs::Hydro_problem_costs(const Data::Study& study)
+Hydro_problem_costs::Hydro_problem_costs(const Data::Parameters& parameters)
 {
     noiseGenerator.reset(Constants::seed);
     end_days_levels = -1. / 32.;
@@ -36,7 +36,7 @@ Hydro_problem_costs::Hydro_problem_costs(const Data::Study& study)
     deviations = 1.;
     violations = 68.;
 
-    switch (study.parameters.hydroHeuristicPolicy.hhPolicy)
+    switch (parameters.hydroHeuristicPolicy.hhPolicy)
     {
     case Data::hhpMaximizeGeneration:
         waste = 33 * 68.;

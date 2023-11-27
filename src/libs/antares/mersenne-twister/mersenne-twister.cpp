@@ -30,7 +30,7 @@
 ** SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "mersenne-twister.h"
+#include "antares/mersenne-twister/mersenne-twister.h"
 #include <cassert>
 
 #define MATRIX_A 0x9908b0dfUL   // constant vector a
@@ -52,7 +52,7 @@ MersenneTwister::~MersenneTwister()
 
 void MersenneTwister::reset(uint seed)
 {
-    assert(sizeof(uint) == sizeof(uint32)
+    assert(sizeof(uint) == sizeof(uint32_t)
            && "This version of mersenne twister is dedicated to 32bits words");
     mt[0] = seed & 0xffffffffUL;
     for (mti = 1; mti < periodN; ++mti)
@@ -69,8 +69,8 @@ void MersenneTwister::reset(uint seed)
 
 MersenneTwister::Value MersenneTwister::next() const
 {
-    uint32 y;
-    static const uint32 mag01[2] = {0x0UL, MATRIX_A};
+    uint32_t y;
+    static const uint32_t mag01[2] = {0x0UL, MATRIX_A};
 
     // mag01[x] = x * MATRIX_A  for x=0,1
     if (mti >= periodN) // generate N words at one time

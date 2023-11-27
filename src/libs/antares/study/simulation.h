@@ -28,7 +28,7 @@
 #define __ANTARES_LIBS_STUDY_SIMULATION_H__
 
 #include <yuni/yuni.h>
-#include <i_writer.h>
+#include <antares/writer/i_writer.h>
 #include "fwd.h"
 
 namespace Antares
@@ -65,10 +65,10 @@ public:
     */
     bool saveToFolder(const AnyString& folder) const;
 
-    void saveUsingWriter(Solver::IResultWriter::Ptr writer, const AnyString& folder) const;
+    void saveUsingWriter(Solver::IResultWriter& writer, const AnyString& folder) const;
 
     //! Get (in bytes) the amount of memory used by the class
-    Yuni::uint64 memoryUsage() const;
+    uint64_t memoryUsage() const;
 
 public:
     //! Comments

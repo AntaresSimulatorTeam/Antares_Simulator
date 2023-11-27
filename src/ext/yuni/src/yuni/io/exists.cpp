@@ -32,8 +32,8 @@ namespace IO
 namespace // anonymous
 {
 static inline NodeType Stat(const AnyString& filename,
-                            yuint64& outSize,
-                            yint64& lastModified,
+                            uint64_t& outSize,
+                            int64_t& lastModified,
                             bool followSymLink)
 {
     assert(not filename.empty());
@@ -85,7 +85,7 @@ static inline NodeType Stat(const AnyString& filename,
         if (0 == ret)
         {
             lastModified = s.st_mtime;
-            outSize = (uint64)s.st_size;
+            outSize = (uint64_t)s.st_size;
 
             if (0 != S_ISREG(s.st_mode))
                 return Yuni::IO::typeFile;
@@ -108,15 +108,15 @@ static inline NodeType Stat(const AnyString& filename,
 
 NodeType TypeOf(const AnyString& filename, bool followSymLink)
 {
-    yuint64 size; // useless
-    yint64 lastModified;
+    uint64_t size; // useless
+    int64_t lastModified;
     return (YUNI_LIKELY(not filename.empty())) ? Stat(filename, size, lastModified, followSymLink)
                                                : IO::typeUnknown;
 }
 
 NodeType FetchFileStatus(const AnyString& filename,
-                         yuint64& size,
-                         yint64& lastModified,
+                         uint64_t& size,
+                         int64_t& lastModified,
                          bool followSymLink)
 {
     size = 0u;

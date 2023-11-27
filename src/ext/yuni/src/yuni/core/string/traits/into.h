@@ -369,20 +369,20 @@ public:
         }                                                                               \
     }
 
-YUNI_CORE_EXTENSION_ISTRING_TO_NUMERIC(sint16, strtol);
-YUNI_CORE_EXTENSION_ISTRING_TO_NUMERIC(sint32, strtol);
+YUNI_CORE_EXTENSION_ISTRING_TO_NUMERIC(int16_t, strtol);
+YUNI_CORE_EXTENSION_ISTRING_TO_NUMERIC(int32_t, strtol);
 #ifdef YUNI_OS_MSVC
-YUNI_CORE_EXTENSION_ISTRING_TO_NUMERIC(sint64, _strtoi64);
+YUNI_CORE_EXTENSION_ISTRING_TO_NUMERIC(int64_t, _strtoi64);
 #else
-YUNI_CORE_EXTENSION_ISTRING_TO_NUMERIC(sint64, strtoll);
+YUNI_CORE_EXTENSION_ISTRING_TO_NUMERIC(int64_t, strtoll);
 #endif
 
-YUNI_CORE_EXTENSION_ISTRING_TO_NUMERIC(uint16, strtoul);
-YUNI_CORE_EXTENSION_ISTRING_TO_NUMERIC(uint32, strtoul);
+YUNI_CORE_EXTENSION_ISTRING_TO_NUMERIC(uint16_t, strtoul);
+YUNI_CORE_EXTENSION_ISTRING_TO_NUMERIC(uint32_t, strtoul);
 #ifdef YUNI_OS_MSVC
-YUNI_CORE_EXTENSION_ISTRING_TO_NUMERIC(uint64, _strtoui64);
+YUNI_CORE_EXTENSION_ISTRING_TO_NUMERIC(uint64_t, _strtoui64);
 #else
-YUNI_CORE_EXTENSION_ISTRING_TO_NUMERIC(uint64, strtoull);
+YUNI_CORE_EXTENSION_ISTRING_TO_NUMERIC(uint64_t, strtoull);
 #endif
 
 #ifdef YUNI_HAS_LONG
@@ -575,8 +575,8 @@ public:
     template<class StringT>
     static bool Perform(const StringT& s, const void*& out)
     {
-        Static::If<sizeof(void*) == 4, uint32, uint64>::Type p;
-        if (Into<uint32>::Perform(s, p))
+        Static::If<sizeof(void*) == 4, uint32_t, uint64_t>::Type p;
+        if (Into<uint32_t>::Perform(s, p))
         {
             out = reinterpret_cast<void*>(p);
             return true;
@@ -588,8 +588,8 @@ public:
     template<class StringT>
     static void* Perform(const StringT& s)
     {
-        return reinterpret_cast<void*>((sizeof(void*) == 4) ? Into<uint32>::Perform(s)
-                                                            : Into<uint64>::Perform(s));
+        return reinterpret_cast<void*>((sizeof(void*) == 4) ? Into<uint32_t>::Perform(s)
+                                                            : Into<uint64_t>::Perform(s));
     }
 };
 

@@ -55,7 +55,7 @@ Panel::Panel(Component::Notebook* parent) :
  pNotebookThermalCluster(nullptr),
  pAreaForThermalCommonData(nullptr),
  pAreaSelector(nullptr),
- pStudyRevisionIncrement((Yuni::uint64)-1)
+ pStudyRevisionIncrement((uint64_t)-1)
 {
     // A sizer for our panel
     wxSizer* mainsizer = new wxBoxSizer(wxVERTICAL);
@@ -121,12 +121,12 @@ Panel::Panel(Component::Notebook* parent) :
         pageThermalTimeSeriesFuelCost = subbook->add(
           new Component::Datagrid::Component(
             subbook, new Component::Datagrid::Renderer::TimeSeriesThermalClusterFuelCost(subbook, tag)),
-          wxT("Fuel Cost [€/GJ]"));
+          wxT("Fuel Cost [\u20AC/GJ]"));
 
         pageThermalTimeSeriesCO2Cost = subbook->add(
           new Component::Datagrid::Component(
             subbook, new Component::Datagrid::Renderer::TimeSeriesThermalClusterCO2Cost(subbook, tag)),
-          wxT("CO2 Cost [€/ton]"));
+          wxT("CO2 Cost [\u20AC/ton]"));
 
         // Availability (ex Time Series)
         pageThermalTimeSeries = subbook->add(
@@ -162,7 +162,7 @@ void Panel::onPageChanged(Component::Notebook::Page& page)
 {
     if (&page == pageThermalClusterList)
     {
-        Yuni::uint64 revID = StudyInMemoryRevisionID();
+        uint64_t revID = StudyInMemoryRevisionID();
         if (revID != pStudyRevisionIncrement)
         {
             Data::Area* area = pAreaForThermalCommonData;

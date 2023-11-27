@@ -1,12 +1,14 @@
 #define BOOST_TEST_MODULE test-lib-antares-matrix tests
+#define BOOST_TEST_DYN_LINK
 
 #define WIN32_LEAN_AND_MEAN
 
-#include <boost/test/included/unit_test.hpp>
+#include <boost/test/unit_test.hpp>
 
 #include "tests-matrix-load.h"
 
 #include <iostream>
+#include <fstream>
 #include <stdio.h>
 
 namespace utf = boost::unit_test;

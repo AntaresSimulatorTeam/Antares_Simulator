@@ -262,6 +262,9 @@ public:
     //! Copy constructor
     CString(const CString& rhs);
 
+    //! Conversion constructor for transition purpose
+    CString(const std::string& rhs);
+
     //! Constructor with a null-terminated string
     CString(const char* const text);
 
@@ -359,14 +362,14 @@ public:
 
     //! Constructor with a default boolean
     CString(bool value);
-    //! Constructor with a int32
-    CString(yint32 value);
+    //! Constructor with a int32_t
+    CString(int32_t value);
     //! Constructor with a int64
-    CString(yint64 value);
-    //! Constructor with a uint32
-    CString(yuint32 value);
-    //! Constructor with a uint64
-    CString(yuint64 value);
+    CString(int64_t value);
+    //! Constructor with a uint32_t
+    CString(uint32_t value);
+    //! Constructor with a uint64_t
+    CString(uint64_t value);
     //! Constructor with a float
     CString(float value);
     //! Constructor with a double
@@ -2035,6 +2038,11 @@ public:
     //! The operator `=` (assign)
     template<class U>
     CString& operator=(const U& rhs);
+
+    //! Assignment for transition purpose
+    CString& operator=(const std::string& rhs);
+    //! Conversion for transition purpose
+    operator std::string() const;
 
 #ifdef YUNI_HAS_CPP_MOVE
     //! Move operator
