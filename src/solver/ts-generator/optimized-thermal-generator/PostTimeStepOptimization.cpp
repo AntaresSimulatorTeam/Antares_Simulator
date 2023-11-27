@@ -22,6 +22,8 @@ void OptimizedThermalGenerator::appendTimeStepResults(const OptProblemSettings& 
     // and then randomly generate maintenance duration
     // and create std::pairs - of start_day + mnt_duration
 
+    const Data::ThermalCluster* nextCluster = nullptr;
+
     // loop per units
     for (std::size_t unitIndexTotal = 0; unitIndexTotal < vars.clusterUnits.size();
          ++unitIndexTotal)
@@ -45,11 +47,31 @@ void OptimizedThermalGenerator::appendTimeStepResults(const OptProblemSettings& 
         assert(readResultUnit.index == storeResultUnit.index
                && "Read and Store Units do not point to the same unit index.");
 
+        // prepare data for random maintenance generator
+        const auto& cluster = *(readResultUnit.parentCluster);
+        const auto& preproData = *(cluster.prepro);
+        const auto& POD = preproData.data[Data::PreproThermal::poDuration];
+        auto p_law = cluster.plannedLaw;
+        double p_volatility = cluster.plannedVolatility;
+        prepareRandomMaintenanceDurationData(cluster);
+        prepareIndispoFromLaw(p_law, p_volatility, ap, bp, POD);
+
+        // we should prepare data for random maintenance generator
+        // once per Cluster, NOT once per UNIT
+        // so let's avoid generating same data over and over again for each unit
+        if (nextCluster != readResultUnit.parentCluster)
+        {
+            nextCluster = readResultUnit.parentCluster;
+
+            prepareRandomMaintenanceDurationData(cluster);
+            prepareIndispoFromLaw(p_law, p_volatility, ap, bp, POD);
+        }
+
         // loop per maintenances of unit
 
         // TODO CR27: do we even have to loop through maintenances
         // or only see if first maintenance start before timeStep_
-        // rest (second, third) maintenances will definitely happen after timeStep_ ?! 
+        // rest (second, third) maintenances will definitely happen after timeStep_ ?!
         // Talk with Hugo
 
         // if createStartEndVariables for the readResultUnit is false
@@ -59,8 +81,15 @@ void OptimizedThermalGenerator::appendTimeStepResults(const OptProblemSettings& 
             int localMaintenanceStart = readResultUnit.maintenances[mnt].startDay(timeStep_);
             if (localMaintenanceStart == -1)
                 continue;
+
             int globalMaintenanceStart = localMaintenanceStart + optSett.firstDay;
-            int maintenanceDuration = 50; // dummy
+            int dayInTheYear
+              = dayOfTheYear(globalMaintenanceStart); // TODO CR27: check this with Hugo!
+
+            int PODOfTheDay = (int)POD[dayInTheYear];
+            int maintenanceDuration = durationGenerator(
+              p_law, PODOfTheDay, p_volatility, ap[dayInTheYear], bp[dayInTheYear]);
+
             storeResultUnit.maintenanceResults.push_back(
               std::make_pair(globalMaintenanceStart, maintenanceDuration));
         }
