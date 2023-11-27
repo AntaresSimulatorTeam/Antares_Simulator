@@ -33,7 +33,7 @@ using namespace Antares;
 
 Progress progressBar;
 uint Progress::Total = 0;
-Atomic::Int<> Progress::Current = 0;
+std::atomic<int> Progress::Current = 0;
 
 Progress::Progress() : state(stReading), pCompleted(false), pLastPercent(0)
 {
