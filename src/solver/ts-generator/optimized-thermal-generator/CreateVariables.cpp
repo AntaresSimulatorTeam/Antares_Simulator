@@ -109,7 +109,8 @@ void OptimizedThermalGenerator::buildUnitPowerOutputVariables(const OptProblemSe
     if (!(cluster.doWeGenerateTS(globalThermalTSgeneration_) && cluster.optimizeMaintenance))
     {
         unitRef.createStartEndVariables = false;
-        scenarioResults.back().createStartEndVariables = false;
+        if (optSett.isFirstStep)
+            scenarioResults.back().createStartEndVariables = false;
         return;
     }
 
