@@ -27,15 +27,6 @@ static std::string to_scientific(const double d)
 
 namespace Antares::Solver::Simulation
 {
-// costStatistics
-costStatistics::costStatistics() :
- costAverage(0.),
- costStdDeviation(0.),
- costMin(std::numeric_limits<double>::max()),
- costMax(0.),
- nbPerformedYears(0)
-{
-}
 
 void costStatistics::setNbPerformedYears(uint n)
 {
@@ -105,7 +96,7 @@ void annualCostsStatistics::writeSystemCostToOutput(IResultWriter& writer)
     writer.addEntryFromBuffer(systemCostFilename, buffer);
 }
 
-void annualCostsStatistics::writeCriterionCostsToOutput(IResultWriter& writer)
+void annualCostsStatistics::writeCriterionCostsToOutput(IResultWriter& writer) const
 {
     Yuni::Clob buffer;
     buffer << to_scientific(criterionCost1.costAverage) << "\n";
@@ -121,7 +112,7 @@ void annualCostsStatistics::writeCriterionCostsToOutput(IResultWriter& writer)
     writer.addEntryFromBuffer(criterionsCostsFilename, buffer);
 }
 
-void annualCostsStatistics::writeUpdateTimes(IResultWriter& writer)
+void annualCostsStatistics::writeUpdateTimes(IResultWriter& writer) const
 {
     Yuni::Clob buffer;
     buffer << "EXP (ms) : " << updateTime.costAverage << "\n";
@@ -132,7 +123,7 @@ void annualCostsStatistics::writeUpdateTimes(IResultWriter& writer)
     writer.addEntryFromBuffer(updateTimeFilename, buffer);
 }
 
-void annualCostsStatistics::writeOptimizationTimeToOutput(IResultWriter& writer)
+void annualCostsStatistics::writeOptimizationTimeToOutput(IResultWriter& writer) const
 {
     Yuni::Clob buffer;
     buffer << "First optimization :\n";

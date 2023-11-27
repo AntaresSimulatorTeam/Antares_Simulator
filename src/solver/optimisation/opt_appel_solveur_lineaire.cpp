@@ -94,7 +94,7 @@ struct SimplexResult
 {
     bool success = false;
     long long solveTime = 0;
-    double updateTime = 0;
+    long long updateTime = 0;
     mpsWriterFactory mps_writer_factory;
 };
 
@@ -117,7 +117,7 @@ static SimplexResult OPT_TryToCallSimplex(
     assert(opt >= 0 && opt < 2);
     OptimizationStatistics& optimizationStatistics = problemeHebdo->optimizationStatistics[opt];
 
-    double updateTime = 0;
+    long long updateTime = 0;
     if (!PremierPassage)
     {
         ProbSpx = nullptr;

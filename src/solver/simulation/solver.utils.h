@@ -80,21 +80,20 @@ public:
 class costStatistics
 {
 public:
-    costStatistics();
     void setNbPerformedYears(uint n);
     void addCost(const double cost);
     void endStandardDeviation();
 
 public:
     // System costs statistics
-    double costAverage;
-    double costStdDeviation;
-    double costMin;
-    double costMax;
+    double costAverage = 0.;
+    double costStdDeviation = 0.;
+    double costMin = std::numeric_limits<double>::max();
+    double costMax = 0.;
 
 private:
     // Total number of performed years in the study
-    uint nbPerformedYears;
+    uint nbPerformedYears = 0.;
 };
 
 class annualCostsStatistics
@@ -107,9 +106,9 @@ public:
 
 private:
     void writeSystemCostToOutput(IResultWriter& writer);
-    void writeCriterionCostsToOutput(IResultWriter& writer);
-    void writeUpdateTimes(IResultWriter& writer);
-    void writeOptimizationTimeToOutput(IResultWriter& writer);
+    void writeCriterionCostsToOutput(IResultWriter& writer) const;
+    void writeUpdateTimes(IResultWriter& writer) const;
+    void writeOptimizationTimeToOutput(IResultWriter& writer) const;
     std::string round_to_closer_int(const double d);
 
 public:
