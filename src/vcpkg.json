@@ -16,7 +16,7 @@
     },
 
     {
-      "name": "uuid",
+      "name": "libuuid",
       "platform": "linux"
     },
 
