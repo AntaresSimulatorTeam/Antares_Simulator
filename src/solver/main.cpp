@@ -27,6 +27,8 @@
 #include <yuni/core/system/suspend.h>
 
 #include <antares/logs/logs.h>
+#include "antares/resources/resources.h"
+#include "antares/sys/policy.h"
 #include "application.h"
 #include <antares/args/args_to_utf8.h>
 
@@ -106,8 +108,15 @@ void logAbortion()
     }
 }
 
-}
+} // namespace
 
+void initialize_resources(int argc, char** argv)
+{ // Load the local policy settings
+    LocalPolicy::Open();
+    LocalPolicy::CheckRootPrefix(argv[0]);
+
+    Resources::Initialize(argc, argv);
+}
 /*!
 ** \brief main
 */
@@ -129,6 +138,9 @@ int main(int argc, char** argv)
         // Getting real UTF8 arguments
         IntoUTF8ArgsTranslator toUTF8ArgsTranslator(argc, argv);
         std::tie(argc, argv) = toUTF8ArgsTranslator.convert();
+
+        initialize_resources(argc, argv);
+
         Antares::Solver::Application application;
         application.prepare(argc, argv);
         application.execute();

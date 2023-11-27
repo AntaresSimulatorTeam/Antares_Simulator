@@ -48,12 +48,6 @@ void Application::prepare(int argc, char* argv[])
     pArgc = argc;
     pArgv = argv;
 
-    // Load the local policy settings
-    LocalPolicy::Open();
-    LocalPolicy::CheckRootPrefix(argv[0]);
-
-    Resources::Initialize(argc, argv);
-
     // Options
     Data::StudyLoadOptions options;
     options.usedByTheSolver = true;
