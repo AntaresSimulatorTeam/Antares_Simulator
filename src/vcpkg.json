@@ -17,16 +17,16 @@
 
     {
       "name": "uuid-dev",
-      "platform": "ubuntu"
+      "platform": "linux"
     },
 
     {
       "name": "wxwidgets",
-      "platform": "ubuntu"
+      "platform": "linux"
     },
     {
       "name": "libboost-test-dev",
-      "platform": "ubuntu"
+      "platform": "linux"
     }
   ]
 }
