@@ -135,13 +135,19 @@ private:
     void postTimeStepOptimization(OptProblemSettings& optSett);
     void appendTimeStepResults(const OptProblemSettings& optSett);
     void reCalculateDaysSinceLastMnt(const OptProblemSettings& optSett);
+    void reSetDaysSinceLastMnt();
+    int reCalculateDaysSinceLastMnt(const OptProblemSettings& optSett,
+                                    const Unit& unit,
+                                    bool maintenanceHappened,
+                                    int lastMaintenanceStart,
+                                    int lastMaintenanceDuration);
 
-  /* ===================END-POST-OPTIMIZATION=================== */
+      /* ===================END-POST-OPTIMIZATION=================== */
 
-  /* ===================CALCULATE-OPTIMIZATION-PARAMETERS=================== */
+      /* ===================CALCULATE-OPTIMIZATION-PARAMETERS=================== */
 
-    // Calculate parameters methods - per maintenance group
-    void setMaintenanceGroupParameters();
+      // Calculate parameters methods - per maintenance group
+      void setMaintenanceGroupParameters();
     bool checkMaintenanceGroupParameters();
     std::pair<int, int> calculateTimeHorizonAndStep();
     std::pair<double, double> calculateMaintenanceGroupENSandSpillageCost();

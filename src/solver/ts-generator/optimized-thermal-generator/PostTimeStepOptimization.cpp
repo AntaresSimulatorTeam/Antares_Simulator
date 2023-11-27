@@ -86,18 +86,76 @@ void OptimizedThermalGenerator::appendTimeStepResults(const OptProblemSettings& 
 }
 
 // re-calculate parameters
+void OptimizedThermalGenerator::reSetDaysSinceLastMnt()
+{
+    // we are back in first step, but not first scenario
+    // we have messed up our values
+    // we need to re-do
+    // clusterVariables[&cluster].daysSinceLastMnt = cluster.daysSinceLastMaintenance;
+    // for all areas and clusters
+    for (auto& area : maintenanceData.areaMap)
+    {
+        for (auto& cluster : area.second.clusterMap)
+        {
+            cluster.second.daysSinceLastMnt = cluster.first->daysSinceLastMaintenance;
+        }
+    }
+    return;
+}
+
 void OptimizedThermalGenerator::reCalculateDaysSinceLastMnt(const OptProblemSettings& optSett)
 {
     if (optSett.scenario == 0 && optSett.isFirstStep)
         return;
     if (optSett.scenario != 0 && optSett.isFirstStep)
-    {
-        // we are back in first step, but not first scenario we have messed up our values
-        // we need to re-do
-        // clusterVariables[&cluster].daysSinceLastMnt = cluster.daysSinceLastMaintenance;
-        // for all areas and clusters
+        reSetDaysSinceLastMnt();
 
+    // re-calculate days since last maintenance inputs if necessary
+    for (const auto& unit : scenarioResults)
+    {
+        int newDaysSinceLastMaintenance = 0;
+        bool maintenanceHappened = false;
+
+        if (unit.maintenanceResults.empty())
+        {
+            newDaysSinceLastMaintenance
+              = reCalculateDaysSinceLastMnt(optSett, unit, maintenanceHappened, 0, 0);
+        }
+
+        int lastMaintenanceStart = unit.maintenanceResults.back().first;
+        // check if maintenance happened in the observed timeStep
+        // remember maintenanceResults - stores all the maintenances
+        // last maintenance may be from some earlier timeStep
+        if (lastMaintenanceStart < optSett.firstDay)
+        {
+            newDaysSinceLastMaintenance
+              = reCalculateDaysSinceLastMnt(optSett, unit, maintenanceHappened, 0, 0);
+        }
+
+        maintenanceHappened = true;
+        int lastMaintenanceDuration = unit.maintenanceResults.back().second;
+        newDaysSinceLastMaintenance = reCalculateDaysSinceLastMnt(
+          optSett, unit, maintenanceHappened, lastMaintenanceStart, lastMaintenanceDuration);
+
+        maintenanceData.areaMap[unit.parentCluster->parentArea]
+          .clusterMap[unit.parentCluster]
+          .daysSinceLastMnt[unit.index]
+          = newDaysSinceLastMaintenance;
     }
+}
+
+int OptimizedThermalGenerator::reCalculateDaysSinceLastMnt(const OptProblemSettings& optSett,
+                                                           const Unit& unit,
+                                                           bool maintenanceHappened,
+                                                           int lastMaintenanceStart,
+                                                           int lastMaintenanceDuration)
+{
+    if (maintenanceHappened)
+        return std::max(
+          0, optSett.firstDay + timeStep_ - (lastMaintenanceStart + lastMaintenanceDuration));
+    else
+        return timeStep_ + unit.parentCluster->daysSinceLastMaintenance[unit.index];
+    // this can lead LatestStartOfFirstMaintenance to negative!!
 }
 
 } // namespace Antares::Solver::TSGenerator
