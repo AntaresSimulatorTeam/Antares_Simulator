@@ -32,7 +32,7 @@
 class OptimizationStatisticsWriter
 {
 public:
-    void addTime(uint week, double opt_1_ms, double opt_2_ms, double update_ms);
+    void addTime(uint week, double opt_1_ms, double opt_2_ms, double update_ms1, double update_ms2);
     OptimizationStatisticsWriter(Antares::Solver::IResultWriter& writer, uint year);
     void finalize();
 

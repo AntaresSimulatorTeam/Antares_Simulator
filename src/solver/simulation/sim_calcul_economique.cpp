@@ -410,7 +410,8 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
         problem.coutOptimalSolution2[opt] = 0.;
         problem.tempsResolution1[opt] = 0.;
         problem.tempsResolution2[opt] = 0.;
-        problem.tempsUpdate[opt] = 0.;
+        problem.tempsUpdate1[opt] = 0.;
+        problem.tempsUpdate2[opt] = 0.;
     }
 
     for (uint k = 0; k < studyruntime.interconnectionsCount(); ++k)

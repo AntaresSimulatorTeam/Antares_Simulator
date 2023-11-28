@@ -326,6 +326,7 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
     }
 
     long long solveTime = simplexResult.solveTime;
+    long long updateTime = simplexResult.updateTime;
 
     if (ProblemeAResoudre->ExistenceDUneSolution == OUI_SPX)
     {
@@ -354,12 +355,13 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
         {
             problemeHebdo->coutOptimalSolution1[NumIntervalle] = CoutOpt;
             problemeHebdo->tempsResolution1[NumIntervalle] = solveTime;
+            problemeHebdo->tempsUpdate1[NumIntervalle] = updateTime;
         }
         else
         {
             problemeHebdo->coutOptimalSolution2[NumIntervalle] = CoutOpt;
             problemeHebdo->tempsResolution2[NumIntervalle] = solveTime;
-            problemeHebdo->tempsUpdate[NumIntervalle] = simplexResult.updateTime;
+            problemeHebdo->tempsUpdate2[NumIntervalle] = updateTime;
         }
         for (int Cnt = 0; Cnt < ProblemeAResoudre->NombreDeContraintes; Cnt++)
         {

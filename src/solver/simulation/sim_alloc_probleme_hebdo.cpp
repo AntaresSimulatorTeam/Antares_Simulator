@@ -147,7 +147,8 @@ void SIM_AllocationProblemeDonneesGenerales(PROBLEME_HEBDO& problem,
 
     problem.tempsResolution1.assign(7, 0.);
     problem.tempsResolution2.assign(7, 0.);
-    problem.tempsUpdate.assign(7, 0.);
+    problem.tempsUpdate1.assign(7, 0.);
+    problem.tempsUpdate2.assign(7, 0.);
 }
 
 void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
