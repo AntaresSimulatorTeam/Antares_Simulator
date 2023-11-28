@@ -130,12 +130,12 @@ private:
     void calculateScenarioResults(const OptProblemSettings& optSett);
     void saveScenarioResults(const OptProblemSettings& optSett);
     void resetResultStorage();
+    void reSetDaysSinceLastMnt();
     void writeTsResults();
 
     // post-timeStep optimization methods
     void postTimeStepOptimization(OptProblemSettings& optSett);
     void appendTimeStepResults(const OptProblemSettings& optSett);
-    void reSetDaysSinceLastMnt();
     void reCalculateDaysSinceLastMnt(const OptProblemSettings& optSett);
     void reCalculateDaysSinceLastMnt(const OptProblemSettings& optSett, const Unit& unit);
     int reCalculateDaysSinceLastMnt(const OptProblemSettings& optSett,

@@ -16,6 +16,7 @@ void OptimizedThermalGenerator::postScenarioOptimization(OptProblemSettings& opt
     calculateScenarioResults(optSett);
     saveScenarioResults(optSett);
     resetResultStorage();
+    reSetDaysSinceLastMnt();
 
     return;
 }
@@ -86,6 +87,24 @@ void OptimizedThermalGenerator::resetResultStorage()
         for (auto& cluster : area.second.clusterMap)
         {
             cluster.second.availableClusterDailyPower.clear();
+        }
+    }
+    return;
+}
+
+void OptimizedThermalGenerator::reSetDaysSinceLastMnt()
+{
+    // we are back in first step, but not first scenario
+    // we have messed up our values
+    // we need to re-do
+    // daysSinceLastMaintenance = cluster.originalRandomlyGeneratedDaysSinceLastMaintenance;
+    // for all areas and clusters
+    for (auto& area : maintenanceData.areaMap)
+    {
+        for (auto& cluster : area.second.clusterMap)
+        {
+            cluster.second.daysSinceLastMaintenance
+              = cluster.first->originalRandomlyGeneratedDaysSinceLastMaintenance;
         }
     }
     return;

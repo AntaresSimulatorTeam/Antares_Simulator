@@ -86,31 +86,9 @@ void OptimizedThermalGenerator::appendTimeStepResults(const OptProblemSettings& 
 }
 
 // re-calculate parameters
-void OptimizedThermalGenerator::reSetDaysSinceLastMnt()
-{
-    // we are back in first step, but not first scenario
-    // we have messed up our values
-    // we need to re-do
-    // daysSinceLastMaintenance = cluster.originalRandomlyGeneratedDaysSinceLastMaintenance;
-    // for all areas and clusters
-    for (auto& area : maintenanceData.areaMap)
-    {
-        for (auto& cluster : area.second.clusterMap)
-        {
-            cluster.second.daysSinceLastMaintenance
-              = cluster.first->originalRandomlyGeneratedDaysSinceLastMaintenance;
-        }
-    }
-    return;
-}
 
 void OptimizedThermalGenerator::reCalculateDaysSinceLastMnt(const OptProblemSettings& optSett)
 {
-    if (optSett.scenario == 0 && optSett.isFirstStep)
-        return;
-    if (optSett.scenario != 0 && optSett.isFirstStep)
-        reSetDaysSinceLastMnt();
-
     // re-calculate days since last maintenance inputs if necessary
     for (const auto& unit : scenarioResults)
     {
