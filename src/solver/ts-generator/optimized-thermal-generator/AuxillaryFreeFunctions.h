@@ -32,4 +32,6 @@ int calculateAverageMaintenanceDuration(const Data::ThermalCluster& cluster);
 std::array<double, DAYS_PER_YEAR> calculateMaxUnitOutput(const Data::ThermalCluster& cluster);
 std::array<double, DAYS_PER_YEAR> calculateAvrUnitDailyCost(const Data::ThermalCluster& cluster);
 
+// post -optimization functions
+std::array<double, HOURS_PER_YEAR> expandAndMean(const std::array<double, DAYS_PER_YEAR>& inputArray);
 } // namespace Antares::Solver::TSGenerator

@@ -1,7 +1,9 @@
 //
 // Created by milos on 14/11/23.
 //
-
+#include <array>
+#include <numeric>
+#include <algorithm>
 #include "OptimizedGenerator.h"
 #include "AuxillaryFreeFunctions.h"
 
@@ -210,4 +212,20 @@ std::array<double, DAYS_PER_YEAR> calculateAvrUnitDailyCost(const Data::ThermalC
     return avrCostDailyValues;
 }
 
+// post -optimization functions
+std::array<double, HOURS_PER_YEAR> expandAndMean(
+  const std::array<double, DAYS_PER_YEAR>& inputArray)
+{
+    std::array<double, HOURS_PER_YEAR> outputArray;
+
+    auto outputIter = outputArray.begin();
+    for (auto value : inputArray)
+    {
+        double meanValue = value / 24.0;
+        std::fill(outputIter, outputIter + 24, meanValue);
+        outputIter += 24;
+    }
+
+    return outputArray;
+}
 } // namespace Antares::Solver::TSGenerator

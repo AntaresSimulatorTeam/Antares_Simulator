@@ -44,4 +44,30 @@ std::vector<int> Maintenances::getStartSolutionValues() const
     return solutionValues;
 }
 
+std::vector<std::array<double, DAYS_PER_YEAR>> Unit::availableDailyPower(int tsCount) const
+{
+    std::vector<std::array<double, DAYS_PER_YEAR>> result(tsCount,
+                                                          std::array<double, DAYS_PER_YEAR>{});
+    for (auto& arr : result)
+    {
+        arr.fill(100.0); // Set each array to the value 100.0
+    }
+
+    for (const auto& maintenance : maintenanceResults)
+    {
+        int start = maintenance.first;
+        int duration = maintenance.second;
+
+        int end = start + duration;
+        if (end > DAYS_PER_YEAR)
+            end = DAYS_PER_YEAR;
+
+        for (int i = start; i < end; ++i)
+        {
+            result[0][i] = 0.0; // Assuming index is in range [0, 8760)
+        }
+    }
+    return result;
+}
+
 } // namespace Antares::Solver::TSGenerator

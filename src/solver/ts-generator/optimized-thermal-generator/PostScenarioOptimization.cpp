@@ -22,6 +22,10 @@ void OptimizedThermalGenerator::postScenarioOptimization(OptProblemSettings& opt
 
 void OptimizedThermalGenerator::calculateScenarioResults(const OptProblemSettings& optSett)
 {
+    // for each unit we have now scenarioResults
+    // which contains std::pairs of all [maintenanceStart, maintenanceDuration]
+    // lets transfer that into arrays of UNIT availability
+
     return;
 }
 
