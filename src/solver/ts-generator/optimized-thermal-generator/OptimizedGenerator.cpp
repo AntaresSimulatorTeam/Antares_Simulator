@@ -45,14 +45,13 @@ void OptimizedThermalGenerator::GenerateOptimizedThermalTimeSeries()
 void OptimizedThermalGenerator::allocateWhereToWriteTs()
 {
     // loop per areas inside maintenance group
-    for (const auto& entryWeightMap : maintenanceGroup_)
+    for (auto& entryWeightMap : maintenanceGroup_)
     {
-        const auto& area = *(entryWeightMap.first);
+        auto& area = *(entryWeightMap.first);
         // loop per thermal clusters inside the area
-        for (auto it = area.thermal.list.mapping.begin(); it != area.thermal.list.mapping.end();
-             ++it)
+        for (auto& clusterEntry : area.thermal.list.mapping)
         {
-            auto& cluster = *(it->second);
+            auto& cluster = *(clusterEntry.second);
 
             // check if cluster exist, do we generate + optimizeMaintenance
             // create start end variables only for these clusters
