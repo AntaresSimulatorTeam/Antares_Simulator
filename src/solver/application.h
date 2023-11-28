@@ -97,7 +97,7 @@ private:
     void prepareWriter(const Antares::Data::Study& study,
                        Benchmarking::IDurationCollector& duration_collector);
 
-    void WriteComment(Data::Study& study);
+    void writeComment(Data::Study& study);
 }; // class Application
 } // namespace Antares::Solver
 

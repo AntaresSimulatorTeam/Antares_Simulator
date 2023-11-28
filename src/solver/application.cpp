@@ -399,7 +399,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
         if (!study.checkForFilenameLimits(true))
             throw Error::InvalidFileName();
 
-        WriteComment(study);
+        writeComment(study);
     }
 
     // Runtime data dedicated for the solver
@@ -415,7 +415,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     // Random-numbers generators
     initializeRandomNumberGenerators();
 }
-void Application::WriteComment(Data::Study& study)
+void Application::writeComment(Data::Study& study)
 {
     study.buffer.clear() << "simulation-comments.txt";
 
