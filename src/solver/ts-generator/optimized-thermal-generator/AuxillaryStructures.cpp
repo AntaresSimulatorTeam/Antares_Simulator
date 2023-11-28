@@ -44,10 +44,12 @@ std::vector<int> Maintenances::getStartSolutionValues() const
     return solutionValues;
 }
 
-std::vector<double> Unit::availableDailyPower(int tsCount) const
+void Unit::calculateAvailableDailyPower(int tsCount)
 {
     int totalDays = tsCount * DAYS_PER_YEAR;
-    std::vector<double> result(totalDays, 10);
+    double maxPower = parentCluster->nominalCapacity;
+    availableDailyPower.resize(totalDays);
+    std::fill(availableDailyPower.begin(), availableDailyPower.end(), maxPower);
 
     for (const auto& maintenance : maintenanceResults)
     {
@@ -60,10 +62,9 @@ std::vector<double> Unit::availableDailyPower(int tsCount) const
 
         for (int mnt = start; mnt < end; ++mnt)
         {
-            result[mnt] = 0.0;
+            availableDailyPower[mnt] = 0.0;
         }
     }
-    return result;
 }
 
 } // namespace Antares::Solver::TSGenerator

@@ -63,9 +63,10 @@ struct Unit
     // first element of the pair is start of the maintenance
     // second element of the pair is randomly drawn maintenance duration
     std::vector<std::pair<int, int>> maintenanceResults;
+    std::vector<double> availableDailyPower;
 
     // methods
-    std::vector<double> availableDailyPower(int tsCount) const;
+    void calculateAvailableDailyPower(int tsCount);
 };
 
 struct OptimizationProblemVariables
