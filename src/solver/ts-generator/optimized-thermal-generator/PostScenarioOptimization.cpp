@@ -32,6 +32,35 @@ void OptimizedThermalGenerator::calculateScenarioResults(const OptProblemSetting
         unit.calculateAvailableDailyPower(scenarioLength_);
     }
 
+    // now lets get CLUSTER availability by summing up UNIT availability
+
+    // fill in with zeros
+    for (auto& area : maintenanceData.areaMap)
+    {
+        for (auto& cluster : area.second.clusterMap)
+        {
+            cluster.second.availableClusterDailyPower.resize(scenarioLength_ * DAYS_PER_YEAR);
+        }
+    }
+
+    // add one by one unit availability
+    for (auto& unit : scenarioResults)
+    {
+        auto& availableClusterDailyPower = maintenanceData.areaMap[unit.parentCluster->parentArea]
+                                             .clusterMap[unit.parentCluster]
+                                             .availableClusterDailyPower;
+
+        std::transform(availableClusterDailyPower.begin(),
+                       availableClusterDailyPower.end(),
+                       unit.availableDailyPower.begin(),
+                       availableClusterDailyPower.begin(),
+                       std::plus<double>());
+    }
+
+    // do not convert to hourly values yet
+    // why waste memory - convert to hourly just before writing to ts
+    // and then delete - local variable
+
     return;
 }
 
@@ -47,7 +76,18 @@ void OptimizedThermalGenerator::saveScenarioResults(const OptProblemSettings& op
 
 void OptimizedThermalGenerator::resetResultStorage()
 {
+    // clear units result structure
     scenarioResults.clear();
+    // clear cluster result structure
+    // do not clear whole maintenanceData
+    // we store input data here as well
+    for (auto& area : maintenanceData.areaMap)
+    {
+        for (auto& cluster : area.second.clusterMap)
+        {
+            cluster.second.availableClusterDailyPower.clear();
+        }
+    }
     return;
 }
 

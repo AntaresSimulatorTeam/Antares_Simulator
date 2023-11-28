@@ -56,13 +56,16 @@ struct Unit
     // results
     // we will store results in the same structure
     // however we need separate instance of this struct
-    // since the object that stores optimization variables is cleared after each timeStep
-    // and the results need to be saved/appended for each timeStep
+    // since the object that stores optimization variables is cleared after each optimization
+    // and the results need to be saved/appended for all optimizations (time steps)
 
-    // number of elements in the vector is number of maintenances
+    // number of elements in the vector is TOTAL number of maintenances
+    // all the maintenances after all the time steps - not just one optimization
     // first element of the pair is start of the maintenance
     // second element of the pair is randomly drawn maintenance duration
     std::vector<std::pair<int, int>> maintenanceResults;
+    // after all the maintenances are determined
+    // we calculate UNIT availability - we do this once after all optimizations
     std::vector<double> availableDailyPower;
 
     // methods
@@ -86,8 +89,11 @@ struct OptimizationProblemVariables
 
 // this structure stores cluster input data (optimization parameters)
 // that stays the same during optimizationS
+// also temporary stores cluster output/results for one scenario
 struct ClusterData
 {
+    // input data
+    // calculated once before all loops
     std::array<double, DAYS_PER_YEAR> maxPower;
     std::array<double, DAYS_PER_YEAR> avgCost;
     std::vector<int> daysSinceLastMaintenance;
@@ -97,6 +103,12 @@ struct ClusterData
     // for random generator
     double AP[366];
     double BP[366];
+
+    // scenario results
+    // temporary store scenario results
+    // before writing them to output
+    // reset after each scenario
+    std::vector<double> availableClusterDailyPower;
 };
 
 struct AreaData
