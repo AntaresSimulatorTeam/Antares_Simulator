@@ -61,9 +61,9 @@ void Unit::calculateAvailableDailyPower(int tsCount)
         if (end > totalDays)
             end = totalDays;
 
-        for (int mnt = start; mnt < end; ++mnt)
+        for (int day = start; day < end; ++day)
         {
-            availableDailyPower[mnt] = 0.0;
+            availableDailyPower[day] = 0.0;
         }
     }
 }
