@@ -32,7 +32,6 @@ private:
     void buildProblemVariables(const OptProblemSettings& optSett);
     void buildEnsAndSpillageVariables(const OptProblemSettings& optSett);
     void buildUnitPowerOutputVariables(const OptProblemSettings& optSett);
-    void buildUnitPowerOutputVariables(const OptProblemSettings& optSett, const Data::Area& area);
     void buildUnitPowerOutputVariables(const OptProblemSettings& optSett,
                                        const Data::ThermalCluster& cluster);
     void buildUnitPowerOutputVariables(const OptProblemSettings& optSett,

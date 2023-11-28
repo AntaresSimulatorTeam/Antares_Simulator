@@ -28,36 +28,17 @@ void OptimizedThermalGenerator::buildEnsAndSpillageVariables(const OptProblemSet
         vars.spill.push_back(solver.MakeNumVar(
           0.0, solverInfinity, "Spill_[" + std::to_string(day + optSett.firstDay) + "]"));
     }
-
     return;
 }
 
 // create VARIABLES per day and per cluster-unit - P[u][t]
+
 void OptimizedThermalGenerator::buildUnitPowerOutputVariables(const OptProblemSettings& optSett)
 {
-    // loop per areas inside maintenance group
-    for (const auto& entryWeightMap : maintenanceGroup_)
-    {
-        const auto& area = *(entryWeightMap.first);
-        buildUnitPowerOutputVariables(optSett, area);
-    }
-}
-
-void OptimizedThermalGenerator::buildUnitPowerOutputVariables(const OptProblemSettings& optSett,
-                                                              const Data::Area& area)
-{
     // loop per thermal clusters inside the area
-    for (const auto& clusterEntry : area.thermal.list.mapping)
+    for (const auto& clusterEntry : maintenanceData)
     {
-        const auto& cluster = *(clusterEntry.second);
-
-        // we do not check if cluster.optimizeMaintenance = true here
-        // we add all the clusters Power inside maintenance group
-        // into optimization problem
-        // we will exclude only start & end variables if optimizeMaintenance = false
-        if (!checkClusterExist(cluster))
-            continue;
-
+        const auto& cluster = *(clusterEntry.first);
         buildUnitPowerOutputVariables(optSett, cluster);
     }
 }
