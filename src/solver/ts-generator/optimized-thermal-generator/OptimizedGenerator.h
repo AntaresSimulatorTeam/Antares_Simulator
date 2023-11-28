@@ -22,9 +22,11 @@ namespace Antares::Solver::TSGenerator
 
 class OptimizedThermalGenerator : public GeneratorTempData
 {
+    using MaintenanceClusterStorage = std::map<const Data::ThermalCluster*, ClusterData>;
+    using ScenarioResults = std::vector<Unit>;
+
 private:
-    
-  /* ===================OPTIMIZATION=================== */
+    /* ===================OPTIMIZATION=================== */
 
     // functions to build problem variables
     void buildProblemVariables(const OptProblemSettings& optSett);
@@ -112,18 +114,17 @@ private:
     void printResults();
     void printProblemVarAndResults();
 
+    /* ===================END-OPTIMIZATION=================== */
 
-  /* ===================END-OPTIMIZATION=================== */
-
-  /* ===================MAIN=================== */
+    /* ===================MAIN=================== */
 
     // Functions called in main method:
     void allocateWhereToWriteTs();
     bool runOptimizationProblem(OptProblemSettings& optSett);
 
-  /* ===================END-MAIN=================== */
+    /* ===================END-MAIN=================== */
 
-  /* ===================POST-OPTIMIZATION=================== */
+    /* ===================POST-OPTIMIZATION=================== */
 
     // post-scenario optimization methods
     void postScenarioOptimization(OptProblemSettings& optSett);
@@ -170,9 +171,9 @@ private:
     int calculateUnitLatestStartOfFirstMaintenance(const Data::ThermalCluster& cluster,
                                                    uint unitIndex);
 
-  /* ===================END-CALCULATE-OPTIMIZATION-PARAMETERS=================== */
+    /* ===================END-CALCULATE-OPTIMIZATION-PARAMETERS=================== */
 
-  /* ===================CLASS-VARIABLES=================== */
+    /* ===================CLASS-VARIABLES=================== */
 
     // variables
     Data::MaintenanceGroup& maintenanceGroup_;
@@ -184,26 +185,20 @@ private:
     double ensCost_;
     double spillCost_;
     std::array<double, DAYS_PER_YEAR> residualLoadDailyValues_;
-    /*
-    TODO CR27:
-    phase two - idea for refactoring -
-    make MaintenanceData a class
-    and then move all methods for optimization problem parameters calculation to that class
-    */
-    MaintenanceData maintenanceData;
+    MaintenanceClusterStorage maintenanceData;
     /*
     TODO CR27:
     same for OptimizationProblemVariables - maybe new class
-    and move optimization methods away from here 
+    and move optimization methods away from here
     */
     OptimizationProblemVariables vars;
-    std::vector<Unit> scenarioResults;
+    ScenarioResults scenarioResults;
 
     // MPSolver instance
     MPSolver solver;
     double solverInfinity;
 
-  /* ===================END-CLASS-VARIABLES=================== */
+    /* ===================END-CLASS-VARIABLES=================== */
 
 public:
     explicit OptimizedThermalGenerator(Data::Study& study,
@@ -238,7 +233,7 @@ public:
 
     ~OptimizedThermalGenerator() = default;
 
-    // Main functions - loop per scenarios and 
+    // Main functions - loop per scenarios and
     // through the scenario length step by step
     // (moving window)
     void GenerateOptimizedThermalTimeSeries();

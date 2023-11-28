@@ -36,20 +36,16 @@ void OptimizedThermalGenerator::calculateScenarioResults(const OptProblemSetting
     // now lets get CLUSTER availability by summing up UNIT availability
 
     // fill in with zeros
-    for (auto& area : maintenanceData.areaMap)
+    for (auto& cluster : maintenanceData)
     {
-        for (auto& cluster : area.second.clusterMap)
-        {
-            cluster.second.availableClusterDailyPower.resize(scenarioLength_ * DAYS_PER_YEAR);
-        }
+        cluster.second.availableClusterDailyPower.resize(scenarioLength_ * DAYS_PER_YEAR);
     }
 
     // add one by one unit availability
     for (auto& unit : scenarioResults)
     {
-        auto& availableClusterDailyPower = maintenanceData.areaMap[unit.parentCluster->parentArea]
-                                             .clusterMap[unit.parentCluster]
-                                             .availableClusterDailyPower;
+        auto& availableClusterDailyPower
+          = maintenanceData[unit.parentCluster].availableClusterDailyPower;
 
         std::transform(availableClusterDailyPower.begin(),
                        availableClusterDailyPower.end(),
@@ -82,13 +78,12 @@ void OptimizedThermalGenerator::resetResultStorage()
     // clear cluster result structure
     // do not clear whole maintenanceData
     // we store input data here as well
-    for (auto& area : maintenanceData.areaMap)
+
+    for (auto& cluster : maintenanceData)
     {
-        for (auto& cluster : area.second.clusterMap)
-        {
-            cluster.second.availableClusterDailyPower.clear();
-        }
+        cluster.second.availableClusterDailyPower.clear();
     }
+
     return;
 }
 
@@ -99,14 +94,13 @@ void OptimizedThermalGenerator::reSetDaysSinceLastMnt()
     // we need to re-do
     // daysSinceLastMaintenance = cluster.originalRandomlyGeneratedDaysSinceLastMaintenance;
     // for all areas and clusters
-    for (auto& area : maintenanceData.areaMap)
+
+    for (auto& cluster : maintenanceData)
     {
-        for (auto& cluster : area.second.clusterMap)
-        {
-            cluster.second.daysSinceLastMaintenance
-              = cluster.first->originalRandomlyGeneratedDaysSinceLastMaintenance;
-        }
+        cluster.second.daysSinceLastMaintenance
+          = cluster.first->originalRandomlyGeneratedDaysSinceLastMaintenance;
     }
+
     return;
 }
 
@@ -116,7 +110,7 @@ void OptimizedThermalGenerator::writeTsResults()
 {
     // we need to loop through all the clusters
     // and write the results
-    // it would be much easier to loop using MaintenanceData structure
+    // it would be much easier to loop using maintenanceData
     // inside of it we already excluded all the non-important clusters
     // however it is const Data::ThermalCluster*
     // so we cannot modify cluster values

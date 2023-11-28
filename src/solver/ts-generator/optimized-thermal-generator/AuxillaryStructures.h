@@ -111,16 +111,5 @@ struct ClusterData
     std::vector<double> availableClusterDailyPower;
 };
 
-struct AreaData
-{
-    // number of elements in the map is total number of cluster in area
-    std::map<const Data::ThermalCluster*, ClusterData> clusterMap;
-};
-
-struct MaintenanceData
-{
-    // number of elements in the map is total number of areas in maintenance group
-    std::map<const Data::Area*, AreaData> areaMap;
-};
 
 } // namespace Antares::Solver::TSGenerator

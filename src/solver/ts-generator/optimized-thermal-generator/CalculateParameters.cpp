@@ -141,8 +141,6 @@ void OptimizedThermalGenerator::setClusterData()
     for (const auto& entryWeightMap : maintenanceGroup_)
     {
         const auto& area = *(entryWeightMap.first);
-        auto& areaData = maintenanceData.areaMap;
-        areaData[&area] = AreaData();
         // loop per thermal clusters inside the area - fill in the structure
         for (const auto& clusterEntry : area.thermal.list.mapping)
         {
@@ -153,26 +151,25 @@ void OptimizedThermalGenerator::setClusterData()
             if (!checkClusterExist(cluster))
                 continue;
 
-            auto& clusterData = areaData[&area].clusterMap;
-            clusterData[&cluster] = ClusterData();
-            clusterData[&cluster].maxPower = calculateMaxUnitOutput(cluster);
-            clusterData[&cluster].avgCost = calculateAvrUnitDailyCost(cluster);
+            maintenanceData[&cluster] = ClusterData();
+            maintenanceData[&cluster].maxPower = calculateMaxUnitOutput(cluster);
+            maintenanceData[&cluster].avgCost = calculateAvrUnitDailyCost(cluster);
 
-            clusterData[&cluster].numberOfMaintenances
+            maintenanceData[&cluster].numberOfMaintenances
               = calculateNumberOfMaintenances(cluster, timeHorizon_);
-            clusterData[&cluster].averageMaintenanceDuration
+            maintenanceData[&cluster].averageMaintenanceDuration
               = calculateAverageMaintenanceDuration(cluster);
 
             // since we will be updating daysSinceLastMaintenance values
             // lets create a copy here - this is copy by value!
-            clusterData[&cluster].daysSinceLastMaintenance
+            maintenanceData[&cluster].daysSinceLastMaintenance
               = cluster.originalRandomlyGeneratedDaysSinceLastMaintenance;
 
             // random generator
             prepareIndispoFromLaw(cluster.plannedLaw,
                                   cluster.plannedVolatility,
-                                  clusterData[&cluster].AP,
-                                  clusterData[&cluster].BP,
+                                  maintenanceData[&cluster].AP,
+                                  maintenanceData[&cluster].BP,
                                   cluster.prepro->data[Data::PreproThermal::poDuration]);
         }
     }
@@ -208,17 +205,13 @@ double OptimizedThermalGenerator::getPowerCost(const Data::ThermalCluster& clust
         return 0.;
     }
 
-    return maintenanceData.areaMap[cluster.parentArea]
-      .clusterMap[&cluster]
-      .avgCost[dayOfTheYear(optimizationDay)];
+    return maintenanceData[&cluster].avgCost[dayOfTheYear(optimizationDay)];
 }
 
 double OptimizedThermalGenerator::getPowerOutput(const Data::ThermalCluster& cluster,
                                                  int optimizationDay)
 {
-    return maintenanceData.areaMap[cluster.parentArea]
-      .clusterMap[&cluster]
-      .maxPower[dayOfTheYear(optimizationDay)];
+    return maintenanceData[&cluster].maxPower[dayOfTheYear(optimizationDay)];
 }
 
 double OptimizedThermalGenerator::getResidualLoad(int optimizationDay)
@@ -228,14 +221,12 @@ double OptimizedThermalGenerator::getResidualLoad(int optimizationDay)
 
 int OptimizedThermalGenerator::getNumberOfMaintenances(const Data::ThermalCluster& cluster)
 {
-    return maintenanceData.areaMap[cluster.parentArea].clusterMap[&cluster].numberOfMaintenances;
+    return maintenanceData[&cluster].numberOfMaintenances;
 }
 
 int OptimizedThermalGenerator::getAverageMaintenanceDuration(const Data::ThermalCluster& cluster)
 {
-    return maintenanceData.areaMap[cluster.parentArea]
-      .clusterMap[&cluster]
-      .averageMaintenanceDuration;
+    return maintenanceData[&cluster].averageMaintenanceDuration;
 }
 
 int OptimizedThermalGenerator::getAverageDurationBetweenMaintenances(
@@ -253,8 +244,7 @@ int OptimizedThermalGenerator::calculateUnitEarliestStartOfFirstMaintenance(
     // let it return negative value - if it returns negative value we wont implement constraint:
     // s[u][0][tauLower-1] = 0
 
-    auto& daysSinceLastMaintenance
-      = maintenanceData.areaMap[cluster.parentArea].clusterMap[&cluster].daysSinceLastMaintenance;
+    auto& daysSinceLastMaintenance = maintenanceData[&cluster].daysSinceLastMaintenance;
 
     if (unitIndex < daysSinceLastMaintenance.size())
     {
@@ -274,8 +264,7 @@ int OptimizedThermalGenerator::calculateUnitLatestStartOfFirstMaintenance(
 {
     // latest start of the first maintenance of unit u (end of the window, must be positive):
 
-    auto& daysSinceLastMaintenance
-      = maintenanceData.areaMap[cluster.parentArea].clusterMap[&cluster].daysSinceLastMaintenance;
+    auto& daysSinceLastMaintenance = maintenanceData[&cluster].daysSinceLastMaintenance;
 
     if (unitIndex < daysSinceLastMaintenance.size())
     {
