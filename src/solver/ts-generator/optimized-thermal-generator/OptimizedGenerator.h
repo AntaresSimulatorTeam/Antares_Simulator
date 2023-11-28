@@ -130,6 +130,7 @@ private:
     void calculateScenarioResults(const OptProblemSettings& optSett);
     void saveScenarioResults(const OptProblemSettings& optSett);
     void resetResultStorage();
+    void writeTsResults();
 
     // post-timeStep optimization methods
     void postTimeStepOptimization(OptProblemSettings& optSett);

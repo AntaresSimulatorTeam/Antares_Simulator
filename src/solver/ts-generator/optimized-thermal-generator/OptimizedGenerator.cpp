@@ -39,6 +39,7 @@ void OptimizedThermalGenerator::GenerateOptimizedThermalTimeSeries()
         }
         postScenarioOptimization(optSett);
     }
+    writeTsResults();
 }
 
 void OptimizedThermalGenerator::allocateWhereToWriteTs()

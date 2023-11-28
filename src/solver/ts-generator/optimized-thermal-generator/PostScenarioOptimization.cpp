@@ -32,26 +32,47 @@ void OptimizedThermalGenerator::saveScenarioResults(const OptProblemSettings& op
     int colSaveFrom = optSett.scenario * scenarioLength_;
     int colSaveTo = colSaveFrom + scenarioLength_ - 1;
 
-    // loop through all areas and clusters and write results
-
-    /*
-    // this is not even post scenario optimization
-    // we do this after all the scenarios !!!
-    
-    if (derated)
-        cluster.series.timeSeries.averageTimeseries();
-
-    if (archive)
-        writeResultsToDisk(area, cluster);
-
-    cluster.calculationOfSpinning();
-
-    */
+    // loop through all areas and clusters and write results for one scenario
 }
 
 void OptimizedThermalGenerator::resetResultStorage()
 {
     scenarioResults.clear();
+    return;
+}
+
+// this method is called at the very end
+// after all time-steps and scenarios
+void OptimizedThermalGenerator::writeTsResults()
+{
+    // we need to loop through all the clusters
+    // and write the results
+    // it would be much easier to loop using MaintenanceData structure
+    // inside of it we already excluded all the non-important clusters
+    // however it is const Data::ThermalCluster*
+    // so we cannot modify cluster values
+
+    for (auto& entryWeightMap : maintenanceGroup_)
+    {
+        auto& area = *(entryWeightMap.first);
+
+        for (auto& clusterEntry : area.thermal.list.mapping)
+        {
+            auto& cluster = *(clusterEntry.second);
+
+            if (!(checkClusterExist(cluster) && cluster.doWeGenerateTS(globalThermalTSgeneration_)
+                  && cluster.optimizeMaintenance))
+                continue;
+
+            if (derated)
+                cluster.series.timeSeries.averageTimeseries();
+
+            if (archive)
+                writeResultsToDisk(area, cluster);
+
+            cluster.calculationOfSpinning();
+        }
+    }
     return;
 }
 
