@@ -24,7 +24,13 @@ void OptimizedThermalGenerator::calculateScenarioResults(const OptProblemSetting
 {
     // for each unit we have now scenarioResults
     // which contains std::pairs of all [maintenanceStart, maintenanceDuration]
-    // lets transfer that into arrays of UNIT availability
+    // lets transfer that into vectors of UNIT availability
+
+    // loop per units
+    for (auto& unit : scenarioResults)
+    {
+        unit.calculateAvailableDailyPower(scenarioLength_);
+    }
 
     return;
 }
