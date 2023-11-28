@@ -86,7 +86,7 @@ struct ClusterData
 {
     std::array<double, DAYS_PER_YEAR> maxPower;
     std::array<double, DAYS_PER_YEAR> avgCost;
-    std::vector<int> daysSinceLastMnt;
+    std::vector<int> daysSinceLastMaintenance;
     int numberOfMaintenances;
     int averageMaintenanceDuration;
 

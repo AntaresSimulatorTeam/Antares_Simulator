@@ -91,13 +91,14 @@ void OptimizedThermalGenerator::reSetDaysSinceLastMnt()
     // we are back in first step, but not first scenario
     // we have messed up our values
     // we need to re-do
-    // clusterVariables[&cluster].daysSinceLastMnt = cluster.daysSinceLastMaintenance;
+    // daysSinceLastMaintenance = cluster.originalRandomlyGeneratedDaysSinceLastMaintenance;
     // for all areas and clusters
     for (auto& area : maintenanceData.areaMap)
     {
         for (auto& cluster : area.second.clusterMap)
         {
-            cluster.second.daysSinceLastMnt = cluster.first->daysSinceLastMaintenance;
+            cluster.second.daysSinceLastMaintenance
+              = cluster.first->originalRandomlyGeneratedDaysSinceLastMaintenance;
         }
     }
     return;
@@ -139,7 +140,7 @@ void OptimizedThermalGenerator::reCalculateDaysSinceLastMnt(const OptProblemSett
 
         maintenanceData.areaMap[unit.parentCluster->parentArea]
           .clusterMap[unit.parentCluster]
-          .daysSinceLastMnt[unit.index]
+          .daysSinceLastMaintenance[unit.index]
           = newDaysSinceLastMaintenance;
     }
 }
@@ -154,7 +155,8 @@ int OptimizedThermalGenerator::reCalculateDaysSinceLastMnt(const OptProblemSetti
         return std::max(
           0, optSett.firstDay + timeStep_ - (lastMaintenanceStart + lastMaintenanceDuration));
     else
-        return timeStep_ + unit.parentCluster->daysSinceLastMaintenance[unit.index];
+        return timeStep_
+               + unit.parentCluster->originalRandomlyGeneratedDaysSinceLastMaintenance[unit.index];
     // this can lead LatestStartOfFirstMaintenance to negative!!
 }
 

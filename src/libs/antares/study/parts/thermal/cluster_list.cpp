@@ -563,7 +563,7 @@ bool ThermalClusterList::generateRandomDaysSinceLastMaintenance(Study& study)
 
         for (uint unitIndex = 0; unitIndex < c->unitCount; ++unitIndex)
         {
-            c->daysSinceLastMaintenance.push_back(
+            c->originalRandomlyGeneratedDaysSinceLastMaintenance.push_back(
               (uint32_t)(floor(random[seedTsGenThermal].next() * c->interPoPeriod)));
         }
     }

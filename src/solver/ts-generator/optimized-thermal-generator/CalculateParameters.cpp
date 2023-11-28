@@ -165,7 +165,8 @@ void OptimizedThermalGenerator::setClusterData()
 
             // since we will be updating daysSinceLastMaintenance values
             // lets create a copy here - this is copy by value!
-            clusterData[&cluster].daysSinceLastMnt = cluster.daysSinceLastMaintenance;
+            clusterData[&cluster].daysSinceLastMaintenance
+              = cluster.originalRandomlyGeneratedDaysSinceLastMaintenance;
 
             // random generator
             prepareIndispoFromLaw(cluster.plannedLaw,
@@ -250,26 +251,14 @@ int OptimizedThermalGenerator::calculateUnitEarliestStartOfFirstMaintenance(
 {
     // earliest start of the first maintenance of unit u (beginning of the window, can be negative):
     // let it return negative value - if it returns negative value we wont implement constraint:
-    // s[tauLower-1][u][1] = 0
+    // s[u][0][tauLower-1] = 0
 
-    // TODO CR27:
-    // if the approach above breaks the solver
-    // we force the start of the first maintenance to be after day=0
-    // s[fixed = 0][u][1] = 0
+    auto& daysSinceLastMaintenance
+      = maintenanceData.areaMap[cluster.parentArea].clusterMap[&cluster].daysSinceLastMaintenance;
 
-    // TODO CR27:
-    // we need to store cluster.daysSinceLastMaintenance[unitIndex]
-    // somewhere locally - since we need to update the values after each timeStep_
-    // and we do not want to change values inside "cluster" that will later be used for UI & txt
-
-    if (unitIndex < cluster.daysSinceLastMaintenance.size())
+    if (unitIndex < daysSinceLastMaintenance.size())
     {
-        return std::min(cluster.interPoPeriod
-                          - maintenanceData.areaMap[cluster.parentArea]
-                              .clusterMap[&cluster]
-                              .daysSinceLastMnt[unitIndex]
-                          - cluster.poWindows,
-                        timeHorizon_ - 1);
+        return (cluster.interPoPeriod - daysSinceLastMaintenance[unitIndex] - cluster.poWindows);
     }
     else
     {
@@ -284,20 +273,24 @@ int OptimizedThermalGenerator::calculateUnitLatestStartOfFirstMaintenance(
   uint unitIndex)
 {
     // latest start of the first maintenance of unit u (end of the window, must be positive):
-    if (unitIndex < cluster.daysSinceLastMaintenance.size())
+
+    auto& daysSinceLastMaintenance
+      = maintenanceData.areaMap[cluster.parentArea].clusterMap[&cluster].daysSinceLastMaintenance;
+
+    if (unitIndex < daysSinceLastMaintenance.size())
     {
-        // this cannot be negative:
-        // cluster.interPoPeriod - cluster.daysSinceLastMaintenance[unitIndex] - is always positive
+        // this cannot be negative: FIRST STEP ONLY
+        // cluster.interPoPeriod -
+        // cluster.originalRandomlyGeneratedDaysSinceLastMaintenance[unitIndex] - is always positive
         // or zero
         // cluster.poWindows is positive or zero
         // however we will make sure it does not surpass timeHorizon_ - 1 value
+        // AFTER FIRST STEP it can go to negative value
 
-        return std::min(cluster.interPoPeriod
-                          - maintenanceData.areaMap[cluster.parentArea]
-                              .clusterMap[&cluster]
-                              .daysSinceLastMnt[unitIndex]
-                          + cluster.poWindows,
-                        timeHorizon_ - 1);
+        return std::min(
+          std::max(0,
+                   cluster.interPoPeriod - daysSinceLastMaintenance[unitIndex] + cluster.poWindows),
+          timeHorizon_ - 1);
     }
     else
     {

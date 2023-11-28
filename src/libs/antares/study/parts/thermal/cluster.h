@@ -303,10 +303,10 @@ public:
     //! PO windows (+/- days) // Acceptable maintenance window (+/- N days, 0 as default value)
     int poWindows = 0;
     // TODO CR27: keep this here for now
-    // maybe create something like PreproThermal for Maintenance - and move everything there!!! 
+    // maybe create something like PreproThermal for Maintenance - and move everything there!!!
     // days since last maintenance - random int number between 0-interPoPeriod
     // defined per each unit of the cluster
-    std::vector<int> daysSinceLastMaintenance;
+    std::vector<int> originalRandomlyGeneratedDaysSinceLastMaintenance;
 
     //! \name Costs
     //  Marginal (€/MWh)     MA
