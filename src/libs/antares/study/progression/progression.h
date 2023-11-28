@@ -79,7 +79,7 @@ private:
         //! The total number of ticks to achieve
         int maxTickCount;
         //! The current number of ticks
-        std::atomic<int32_t> tickCount;
+        std::atomic<int> tickCount;
         //! The last number of ticks, to reduce the log verbosity
         int lastTickCount;
         // Caption to use when displaying logs

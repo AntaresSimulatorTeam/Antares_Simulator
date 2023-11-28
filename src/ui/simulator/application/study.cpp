@@ -69,7 +69,7 @@ String LastPathForOpeningAFile;
 wxString gLastOpenedStudyFolder;
 
 //! Ref counter to allow memory flush
-std::atomic<int32_t> gMemoryFlushRefCount = 0;
+std::atomic<int> gMemoryFlushRefCount = 0;
 
 Event<void()> OnStudyClosed;
 Event<void()> OnStudyLoaded;

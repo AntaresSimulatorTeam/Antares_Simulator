@@ -76,7 +76,7 @@ private:
     const wxString pCommand;
     const wxString pWDirectory;
     //! Get if the job is
-    std::atomic<int32_t> pRunning;
+    std::atomic<int> pRunning;
     //! runtime Informations about the process which will be executed
     JobProcess* pProcess;
     //! The original directory

@@ -31,9 +31,9 @@
 
 namespace Antares
 {
-static std::atomic<int32_t> gGUIFlushRefCount = 0;
+static std::atomic<int> gGUIFlushRefCount = 0;
 
-static std::atomic<int32_t> GUIIsAboutToQuitFlag = false;
+static std::atomic<int> GUIIsAboutToQuitFlag = false;
 
 bool IsGUIAboutToQuit()
 {

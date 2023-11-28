@@ -40,7 +40,7 @@ class Walker;
 class WalkerThread;
 
 //! Internal job counter
-using InternalJobCounter = std::shared_ptr<std::atomic<int32_t>>;
+using InternalJobCounter = std::shared_ptr<std::atomic<int>>;
 
 class IJob : public Yuni::Job::IJob
 {

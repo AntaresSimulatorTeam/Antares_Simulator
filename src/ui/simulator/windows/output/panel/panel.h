@@ -157,7 +157,7 @@ private:
 
     //! The total number of panels currently calling loadDataFromFile
     // This method is often an async call
-    static std::atomic<int32_t> pPanelsInCallingLoadDataFromFile;
+    static std::atomic<int> pPanelsInCallingLoadDataFromFile;
 
 }; // class Panel
 

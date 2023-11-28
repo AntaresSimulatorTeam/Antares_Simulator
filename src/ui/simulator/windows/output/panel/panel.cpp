@@ -49,7 +49,7 @@ namespace Private
 {
 namespace OutputViewerData
 {
-std::atomic<int32_t> Panel::pPanelsInCallingLoadDataFromFile = 0;
+std::atomic<int> Panel::pPanelsInCallingLoadDataFromFile = 0;
 
 namespace // anonymous
 {

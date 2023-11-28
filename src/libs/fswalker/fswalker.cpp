@@ -135,7 +135,7 @@ private:
 
 WalkerThread::WalkerThread(Statistics& stats) : pFileJob(nullptr), pOriginalStatistics(stats)
 {
-    pJobCounter = std::make_shared<std::atomic<int32_t>>();
+    pJobCounter = std::make_shared<std::atomic<int>>();
     pShouldStop = false;
 
     MutexLocker locker(gsMutex);
