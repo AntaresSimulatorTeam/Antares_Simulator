@@ -27,10 +27,11 @@
 #ifndef __STUDY_OUTPUT_AGGREGATOR_OUTPUT_H__
 #define __STUDY_OUTPUT_AGGREGATOR_OUTPUT_H__
 
-#include <yuni/yuni.h>
 #include <yuni/core/string.h>
 #include <set>
 #include <memory>
+#include <atomic>
+
 #include "result.h"
 
 class Output final
@@ -69,7 +70,7 @@ public:
     //! All columns to extract
     const Yuni::String::Vector columns;
     //! The number of errors
-    Yuni::Atomic::Int<> errors;
+    std::atomic<int> errors;
 
     //! Results
     ResultsForAllStudyItems results;
