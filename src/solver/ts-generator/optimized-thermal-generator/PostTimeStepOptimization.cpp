@@ -114,35 +114,41 @@ void OptimizedThermalGenerator::reCalculateDaysSinceLastMnt(const OptProblemSett
     // re-calculate days since last maintenance inputs if necessary
     for (const auto& unit : scenarioResults)
     {
-        int newDaysSinceLastMaintenance = 0;
-        bool maintenanceHappened = false;
-
-        if (unit.maintenanceResults.empty())
-        {
-            newDaysSinceLastMaintenance
-              = reCalculateDaysSinceLastMnt(optSett, unit, maintenanceHappened, 0, 0);
-        }
-
-        int lastMaintenanceStart = unit.maintenanceResults.back().first;
-        // check if maintenance happened in the observed timeStep
-        // remember maintenanceResults - stores all the maintenances
-        // last maintenance may be from some earlier timeStep
-        if (lastMaintenanceStart < optSett.firstDay)
-        {
-            newDaysSinceLastMaintenance
-              = reCalculateDaysSinceLastMnt(optSett, unit, maintenanceHappened, 0, 0);
-        }
-
-        maintenanceHappened = true;
-        int lastMaintenanceDuration = unit.maintenanceResults.back().second;
-        newDaysSinceLastMaintenance = reCalculateDaysSinceLastMnt(
-          optSett, unit, maintenanceHappened, lastMaintenanceStart, lastMaintenanceDuration);
-
-        maintenanceData.areaMap[unit.parentCluster->parentArea]
-          .clusterMap[unit.parentCluster]
-          .daysSinceLastMaintenance[unit.index]
-          = newDaysSinceLastMaintenance;
+        reCalculateDaysSinceLastMnt(optSett, unit);
     }
+}
+
+void OptimizedThermalGenerator::reCalculateDaysSinceLastMnt(const OptProblemSettings& optSett,
+                                                            const Unit& unit)
+{
+    auto& daysSinceLastMaintenance = maintenanceData.areaMap[unit.parentCluster->parentArea]
+                                       .clusterMap[unit.parentCluster]
+                                       .daysSinceLastMaintenance[unit.index];
+    bool maintenanceHappened = false;
+
+    if (unit.maintenanceResults.empty())
+    {
+        daysSinceLastMaintenance
+          = reCalculateDaysSinceLastMnt(optSett, unit, maintenanceHappened, 0, 0);
+        return;
+    }
+
+    int lastMaintenanceStart = unit.maintenanceResults.back().first;
+    // check if maintenance happened in the observed timeStep
+    // remember maintenanceResults - stores all the maintenances
+    // last maintenance may be from some earlier timeStep
+    if (lastMaintenanceStart < optSett.firstDay)
+    {
+        daysSinceLastMaintenance
+          = reCalculateDaysSinceLastMnt(optSett, unit, maintenanceHappened, 0, 0);
+        return;
+    }
+
+    maintenanceHappened = true;
+    int lastMaintenanceDuration = unit.maintenanceResults.back().second;
+    daysSinceLastMaintenance = reCalculateDaysSinceLastMnt(
+      optSett, unit, maintenanceHappened, lastMaintenanceStart, lastMaintenanceDuration);
+    return;
 }
 
 int OptimizedThermalGenerator::reCalculateDaysSinceLastMnt(const OptProblemSettings& optSett,
