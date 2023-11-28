@@ -65,11 +65,9 @@ void OptimizedThermalGenerator::saveScenarioResults(const OptProblemSettings& op
 {
     // loop through all clusters and write results
     // for one scenario into designated columns
-    // daily results are in maintenanceData.availableClusterDailyPower
-    // convert to hourly values and store in cluster ts
 
     int colSaveFrom = optSett.scenario * scenarioLength_;
-    int colSaveTo = colSaveFrom + scenarioLength_ - 1;
+    int colSaveTo = colSaveFrom + scenarioLength_;
 
     // using on purpose this double loop
     // because looping through maintenanceData we cannot change cluster
@@ -93,9 +91,28 @@ void OptimizedThermalGenerator::saveScenarioResults(const OptProblemSettings& op
     return;
 }
 
-void OptimizedThermalGenerator::saveScenarioResults(int from, int to, Data::ThermalCluster& cluster)
+void OptimizedThermalGenerator::saveScenarioResults(int fromCol,
+                                                    int toCol,
+                                                    Data::ThermalCluster& cluster)
 {
-    cluster.series.timeSeries.fill(777.); // dummy for now
+    // daily results are in maintenanceData.availableClusterDailyPower
+    // convert to hourly values and store in cluster ts
+    // we assume that vector availableClusterDailyPower has:
+    // scenarioLength_ * DAYS_PER_YEAR element
+    // that we need to store inside columns from-to
+
+    auto& availability = maintenanceData[&cluster].availableClusterDailyPower;
+    assert((toCol - fromCol) * DAYS_PER_YEAR == availability.size());
+
+    int vctCol = 0;
+    for (int col = fromCol; col < toCol; ++col)
+    {
+        for (int row = 0; row < HOURS_PER_YEAR; ++row)
+        {
+            cluster.series.timeSeries[col][row] = availability[vctCol * 365 + (int)(row / 24)];
+        }
+        vctCol++;
+    }
 }
 
 void OptimizedThermalGenerator::resetResultStorage()

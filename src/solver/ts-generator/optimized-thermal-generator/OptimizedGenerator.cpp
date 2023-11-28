@@ -63,7 +63,6 @@ void OptimizedThermalGenerator::allocateWhereToWriteTs()
 
             // allocate space
             cluster.series.timeSeries.reset(nbThermalTimeseries, 8760);
-            cluster.series.timeSeries.fill(777.); // dummy for now
         }
     }
     return;
