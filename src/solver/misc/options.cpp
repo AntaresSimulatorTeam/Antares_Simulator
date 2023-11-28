@@ -32,18 +32,11 @@
 
 #include <antares/logs/logs.h>
 #include <antares/study/study.h>
-#include <cassert>
-#include <string.h>
-#include <limits>
-#include <algorithm>
 
 #include "options.h"
 #include "../config.h"
 
-#include "../../config.h"
-
 #include <antares/exception/AssertionError.hpp>
-#include <antares/exception/LoadingError.hpp>
 #include <antares/Enum.hpp>
 #include <antares/constants.h>
 
