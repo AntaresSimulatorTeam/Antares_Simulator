@@ -65,7 +65,7 @@ struct Unit
     std::vector<std::pair<int, int>> maintenanceResults;
 
     // methods
-    std::vector<std::array<double, DAYS_PER_YEAR>> availableDailyPower(int tsCount) const;
+    std::vector<double> availableDailyPower(int tsCount) const;
 };
 
 struct OptimizationProblemVariables

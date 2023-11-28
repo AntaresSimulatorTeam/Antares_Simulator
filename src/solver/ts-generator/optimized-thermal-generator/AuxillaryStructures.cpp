@@ -44,14 +44,10 @@ std::vector<int> Maintenances::getStartSolutionValues() const
     return solutionValues;
 }
 
-std::vector<std::array<double, DAYS_PER_YEAR>> Unit::availableDailyPower(int tsCount) const
+std::vector<double> Unit::availableDailyPower(int tsCount) const
 {
-    std::vector<std::array<double, DAYS_PER_YEAR>> result(tsCount,
-                                                          std::array<double, DAYS_PER_YEAR>{});
-    for (auto& arr : result)
-    {
-        arr.fill(100.0); // Set each array to the value 100.0
-    }
+    int totalDays = tsCount * DAYS_PER_YEAR;
+    std::vector<double> result(totalDays, 10);
 
     for (const auto& maintenance : maintenanceResults)
     {
@@ -59,12 +55,12 @@ std::vector<std::array<double, DAYS_PER_YEAR>> Unit::availableDailyPower(int tsC
         int duration = maintenance.second;
 
         int end = start + duration;
-        if (end > DAYS_PER_YEAR)
-            end = DAYS_PER_YEAR;
+        if (end > totalDays)
+            end = totalDays;
 
-        for (int i = start; i < end; ++i)
+        for (int mnt = start; mnt < end; ++mnt)
         {
-            result[0][i] = 0.0; // Assuming index is in range [0, 8760)
+            result[mnt] = 0.0;
         }
     }
     return result;
