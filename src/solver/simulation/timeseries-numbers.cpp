@@ -113,22 +113,13 @@ static bool GenerateDeratedMode(Study& study)
 class areaNumberOfTSretriever
 {
 public:
-    areaNumberOfTSretriever(Study& study) : study_(study)
-    {
-    }
     virtual std::vector<uint> getAreaTimeSeriesNumber(const Area& area) = 0;
-
-protected:
-    Study& study_;
 };
 
 class loadAreaNumberOfTSretriever : public areaNumberOfTSretriever
 {
 public:
-    loadAreaNumberOfTSretriever(Study& study) : areaNumberOfTSretriever(study)
-    {
-    }
-    std::vector<uint> getAreaTimeSeriesNumber(const Area& area)
+    std::vector<uint> getAreaTimeSeriesNumber(const Area& area) override
     {
         std::vector<uint> to_return = {area.load.series.timeSeries.width};
         return to_return;
@@ -138,10 +129,7 @@ public:
 class hydroAreaNumberOfTSretriever : public areaNumberOfTSretriever
 {
 public:
-    hydroAreaNumberOfTSretriever(Study& study) : areaNumberOfTSretriever(study)
-    {
-    }
-    std::vector<uint> getAreaTimeSeriesNumber(const Area& area)
+    std::vector<uint> getAreaTimeSeriesNumber(const Area& area) override
     {
         std::vector<uint> to_return = {area.hydro.series->TScount()};
         return to_return;
@@ -151,10 +139,7 @@ public:
 class windAreaNumberOfTSretriever : public areaNumberOfTSretriever
 {
 public:
-    windAreaNumberOfTSretriever(Study& study) : areaNumberOfTSretriever(study)
-    {
-    }
-    std::vector<uint> getAreaTimeSeriesNumber(const Area& area)
+    std::vector<uint> getAreaTimeSeriesNumber(const Area& area) override
     {
         std::vector<uint> to_return = {area.wind.series.timeSeries.width};
         return to_return;
@@ -164,10 +149,7 @@ public:
 class solarAreaNumberOfTSretriever : public areaNumberOfTSretriever
 {
 public:
-    solarAreaNumberOfTSretriever(Study& study) : areaNumberOfTSretriever(study)
-    {
-    }
-    std::vector<uint> getAreaTimeSeriesNumber(const Area& area)
+    std::vector<uint> getAreaTimeSeriesNumber(const Area& area) override
     {
         std::vector<uint> to_return = {area.solar.series.timeSeries.width};
         return to_return;
@@ -177,10 +159,7 @@ public:
 class thermalAreaNumberOfTSretriever : public areaNumberOfTSretriever
 {
 public:
-    thermalAreaNumberOfTSretriever(Study& study) : areaNumberOfTSretriever(study)
-    {
-    }
-    std::vector<uint> getAreaTimeSeriesNumber(const Area& area)
+    std::vector<uint> getAreaTimeSeriesNumber(const Area& area) override
     {
         std::vector<uint> to_return;
         uint clusterCount = (uint)area.thermal.clusterCount();
@@ -196,10 +175,7 @@ public:
 class renewClustersAreaNumberOfTSretriever : public areaNumberOfTSretriever
 {
 public:
-    renewClustersAreaNumberOfTSretriever(Study& study) : areaNumberOfTSretriever(study)
-    {
-    }
-    std::vector<uint> getAreaTimeSeriesNumber(const Area& area)
+    std::vector<uint> getAreaTimeSeriesNumber(const Area& area) override
     {
         std::vector<uint> to_return;
         uint clusterCount = (uint)area.renewable.clusterCount();
@@ -215,7 +191,6 @@ public:
 class areaLinksTransCapaNumberOfTSretriever : public areaNumberOfTSretriever
 {
 public:
-    using areaNumberOfTSretriever::areaNumberOfTSretriever;
     virtual ~areaLinksTransCapaNumberOfTSretriever() = default;
     std::vector<uint> getAreaTimeSeriesNumber(const Area& area) override
     {
@@ -286,16 +261,16 @@ bool checkIntraModalConsistency(array<uint, timeSeriesCount>& nbTimeseriesByMode
     // the number of time series inside an area
     using mapTStoRetriever = map<TimeSeriesType, shared_ptr<areaNumberOfTSretriever>>;
     mapTStoRetriever ts_to_numberOfTSretrievers;
-    ts_to_numberOfTSretrievers[timeSeriesLoad] = make_shared<loadAreaNumberOfTSretriever>(study);
-    ts_to_numberOfTSretrievers[timeSeriesHydro] = make_shared<hydroAreaNumberOfTSretriever>(study);
-    ts_to_numberOfTSretrievers[timeSeriesWind] = make_shared<windAreaNumberOfTSretriever>(study);
-    ts_to_numberOfTSretrievers[timeSeriesSolar] = make_shared<solarAreaNumberOfTSretriever>(study);
+    ts_to_numberOfTSretrievers[timeSeriesLoad] = make_shared<loadAreaNumberOfTSretriever>();
+    ts_to_numberOfTSretrievers[timeSeriesHydro] = make_shared<hydroAreaNumberOfTSretriever>();
+    ts_to_numberOfTSretrievers[timeSeriesWind] = make_shared<windAreaNumberOfTSretriever>();
+    ts_to_numberOfTSretrievers[timeSeriesSolar] = make_shared<solarAreaNumberOfTSretriever>();
     ts_to_numberOfTSretrievers[timeSeriesThermal]
-      = make_shared<thermalAreaNumberOfTSretriever>(study);
+      = make_shared<thermalAreaNumberOfTSretriever>();
     ts_to_numberOfTSretrievers[timeSeriesRenewable]
-      = make_shared<renewClustersAreaNumberOfTSretriever>(study);
+      = make_shared<renewClustersAreaNumberOfTSretriever>();
     ts_to_numberOfTSretrievers[timeSeriesTransmissionCapacities]
-      = make_shared<areaLinksTransCapaNumberOfTSretriever>(study);
+      = make_shared<areaLinksTransCapaNumberOfTSretriever>();
 
     // Loop over TS kind and check intra-modal consistency
     mapTStoRetriever::iterator it = ts_to_numberOfTSretrievers.begin();
