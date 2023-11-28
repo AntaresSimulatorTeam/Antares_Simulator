@@ -3,7 +3,7 @@ name: GitHub Pages
 on:
   push:
     branches:
-      - docs/dark-mode-switch  # Set a branch name to trigger deployment
+      - develop  # Set a branch name to trigger deployment
 
 jobs:
   deploy:
@@ -36,7 +36,7 @@ jobs:
         # also change the `main` in `refs/heads/main`
         # below accordingly.
         # /!\ tmp 
-        if: github.ref == 'refs/heads/docs/dark-mode-switch'
+        if: github.ref == 'refs/heads/develop'
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./html
