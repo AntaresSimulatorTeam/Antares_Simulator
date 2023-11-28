@@ -63,12 +63,39 @@ void OptimizedThermalGenerator::calculateScenarioResults(const OptProblemSetting
 
 void OptimizedThermalGenerator::saveScenarioResults(const OptProblemSettings& optSett)
 {
-    // save results
+    // loop through all clusters and write results
+    // for one scenario into designated columns
+    // daily results are in maintenanceData.availableClusterDailyPower
+    // convert to hourly values and store in cluster ts
 
     int colSaveFrom = optSett.scenario * scenarioLength_;
     int colSaveTo = colSaveFrom + scenarioLength_ - 1;
 
-    // loop through all areas and clusters and write results for one scenario
+    // using on purpose this double loop
+    // because looping through maintenanceData we cannot change cluster
+    // const Data::ThermalCluster*
+    for (auto& entryWeightMap : maintenanceGroup_)
+    {
+        auto& area = *(entryWeightMap.first);
+        for (auto& clusterEntry : area.thermal.list.mapping)
+        {
+            auto& cluster = *(clusterEntry.second);
+            bool genTS = checkClusterExist(cluster)
+                         && cluster.doWeGenerateTS(globalThermalTSgeneration_)
+                         && cluster.optimizeMaintenance;
+            if (!genTS)
+                continue;
+
+            // write results
+            saveScenarioResults(colSaveFrom, colSaveTo, cluster);
+        }
+    }
+    return;
+}
+
+void OptimizedThermalGenerator::saveScenarioResults(int from, int to, Data::ThermalCluster& cluster)
+{
+    cluster.series.timeSeries.fill(777.); // dummy for now
 }
 
 void OptimizedThermalGenerator::resetResultStorage()

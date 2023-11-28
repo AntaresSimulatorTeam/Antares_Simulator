@@ -129,6 +129,7 @@ private:
     void postScenarioOptimization(OptProblemSettings& optSett);
     void calculateScenarioResults(const OptProblemSettings& optSett);
     void saveScenarioResults(const OptProblemSettings& optSett);
+    void saveScenarioResults(int from, int to, Data::ThermalCluster& cluster);
     void resetResultStorage();
     void reSetDaysSinceLastMnt();
     void writeTsResults();
