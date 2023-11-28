@@ -113,6 +113,7 @@ static bool GenerateDeratedMode(Study& study)
 class areaNumberOfTSretriever
 {
 public:
+    virtual ~areaNumberOfTSretriever() = default;
     virtual std::vector<uint> getAreaTimeSeriesNumber(const Area& area) = 0;
 };
 
@@ -191,7 +192,6 @@ public:
 class areaLinksTransCapaNumberOfTSretriever : public areaNumberOfTSretriever
 {
 public:
-    virtual ~areaLinksTransCapaNumberOfTSretriever() = default;
     std::vector<uint> getAreaTimeSeriesNumber(const Area& area) override
     {
         std::vector<uint> to_return;
