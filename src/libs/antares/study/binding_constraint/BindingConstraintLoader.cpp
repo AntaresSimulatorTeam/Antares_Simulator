@@ -152,19 +152,6 @@ std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintLoader::load(En
                      << "]: Invalid operator [less,greater,equal,both]";
         return {};
     }
-    if (bc->group_.empty())
-    {
-        if (env.version >= version870)
-        {
-            logs.error() << env.iniFilename << ": in [" << env.section->name
-                         << "]: Missing mandatory binding constraint group";
-            return {};
-        }
-        else // In studies versions < 870, binding constraints have no group. From version 870, antares requires constraints to have a group.
-        {
-            bc->group_ = "default";
-        }
-    }
 
     // The binding constraint can not be enabled if there is no weight in the table
     if (bc->pLinkWeights.empty() && bc->pClusterWeights.empty())
@@ -184,10 +171,10 @@ std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintLoader::load(En
     {
         auto greater_bc = std::make_shared<BindingConstraint>();
         greater_bc->copyFrom(bc.get());
-        greater_bc->name(bc->name());
+        greater_bc->name(bc->name() + "_sup");
         greater_bc->pID = bc->pID;
         greater_bc->operatorType(BindingConstraint::opGreater);
-
+        bc->name(bc->name() + "_inf");
         bc->operatorType(BindingConstraint::opLess);
 
         if (loadTimeSeries(env, bc.get()) && loadTimeSeries(env, greater_bc.get()))

@@ -905,7 +905,7 @@ void ISimulation<Impl>::computeAnnualCostsStatistics(
     }
 }
 
-static void logPerformedYearsInAset(setOfParallelYears& set)
+static inline void logPerformedYearsInAset(setOfParallelYears& set)
 {
     logs.info() << "parallel batch size : " << set.nbYears << " (" << set.nbPerformedYears
                 << " perfomed)";

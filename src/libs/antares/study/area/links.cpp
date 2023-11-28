@@ -64,8 +64,8 @@ AreaLink::AreaLink() :
  from(nullptr),
  with(nullptr),
  parameters(fhlMax, HOURS_PER_YEAR),
- directCapacities(1, HOURS_PER_YEAR),
- indirectCapacities(1, HOURS_PER_YEAR),
+ directCapacities(timeseriesNumbers),
+ indirectCapacities(timeseriesNumbers),
  useLoopFlow(false),
  usePST(false),
  useHurdlesCost(false),
@@ -80,6 +80,8 @@ AreaLink::AreaLink() :
  style(stPlain),
  linkWidth(1)
 {
+    directCapacities.reset();
+    indirectCapacities.reset();
 }
 
 AreaLink::~AreaLink()
@@ -131,11 +133,11 @@ bool AreaLink::linkLoadTimeSeries_for_version_820_and_later(const AnyString& fol
 
     // Read link's direct capacities time series
     filename.clear() << capacitiesFolder << SEP << with->id << "_direct.txt";
-    success = directCapacities.loadFromCSVFile(filename, 1, HOURS_PER_YEAR) && success;
+    success = directCapacities.loadFromFile(filename, false) && success;
 
     // Read link's indirect capacities time series
     filename.clear() << capacitiesFolder << SEP << with->id << "_indirect.txt";
-    success = indirectCapacities.loadFromCSVFile(filename, 1, HOURS_PER_YEAR) && success;
+    success = indirectCapacities.loadFromFile(filename, false) && success;
 
     return success;
 }
@@ -210,8 +212,8 @@ void AreaLink::detach()
 void AreaLink::resetToDefaultValues()
 {
     parameters.reset(fhlMax, HOURS_PER_YEAR, true);
-    directCapacities.reset(1, HOURS_PER_YEAR, true);
-    indirectCapacities.reset(1, HOURS_PER_YEAR, true);
+    directCapacities.reset();
+    indirectCapacities.reset();
 
     for (uint i = 0; i != HOURS_PER_YEAR; ++i)
     {
@@ -262,7 +264,7 @@ void AreaLink::reverse()
     indirectCapacities.forceReload(true);
 
     // invert NTC values
-    directCapacities.swap(indirectCapacities);
+    directCapacities.timeSeries.swap(indirectCapacities.timeSeries);
 
     directCapacities.markAsModified();
     indirectCapacities.markAsModified();
@@ -482,8 +484,8 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
         if (study.usedByTheSolver)
         {
             // Short names for link's properties
-            const uint nbDirectTS = link.directCapacities.width;
-            const uint nbIndirectTS = link.indirectCapacities.width;
+            const uint nbDirectTS = link.directCapacities.timeSeries.width;
+            const uint nbIndirectTS = link.indirectCapacities.timeSeries.width;
             if (nbDirectTS != nbIndirectTS)
             {
                 logLinkDataCheckErrorDirectIndirect(
@@ -499,8 +501,8 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
 
             for (uint indexTS = 0; indexTS < nbDirectTS; ++indexTS)
             {
-                auto& directCapacities = link.directCapacities[indexTS];
-                auto& indirectCapacities = link.indirectCapacities[indexTS];
+                const double* directCapacities = link.directCapacities[indexTS];
+                const double* indirectCapacities = link.indirectCapacities[indexTS];
 
                 // Checks on direct capacities
                 for (int h = 0; h < HOURS_PER_YEAR; h++)
@@ -590,8 +592,8 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
             case Data::LocalTransmissionCapacities::null:
             {
                 // Ignore transmission capacities
-                link.directCapacities.zero();
-                link.indirectCapacities.zero();
+                link.directCapacities.timeSeries.zero();
+                link.indirectCapacities.timeSeries.zero();
                 break;
             }
             case Data::LocalTransmissionCapacities::infinite:
@@ -636,12 +638,12 @@ bool saveAreaLinksTimeSeriesToFolder(const Area* area, const char* const folder)
 
         // Save direct capacities time series
         filename.clear() << capacitiesFolder << SEP << link.with->id << "_direct.txt";
-        success = link.directCapacities.saveToCSVFile(filename, 6, false, true) && success;
+        success = link.directCapacities.saveToFile(filename, true) && success;
 
         // Save indirect capacities time series
 
         filename.clear() << capacitiesFolder << SEP << link.with->id << "_indirect.txt";
-        success = link.indirectCapacities.saveToCSVFile(filename, 6, false, true) && success;
+        success = link.indirectCapacities.saveToFile(filename, true) && success;
     }
 
     return success;
@@ -726,8 +728,8 @@ uint64_t AreaLink::memoryUsage() const
 {
     uint64_t to_return = sizeof(AreaLink);
     to_return += parameters.valuesMemoryUsage();
-    to_return += directCapacities.valuesMemoryUsage();
-    to_return += indirectCapacities.valuesMemoryUsage();
+    to_return += directCapacities.memoryUsage();
+    to_return += indirectCapacities.memoryUsage();
 
     return to_return;
 }
