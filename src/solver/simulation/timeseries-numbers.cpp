@@ -292,8 +292,7 @@ bool checkIntraModalConsistency(array<uint, timeSeriesCount>& nbTimeseriesByMode
 }
 
 bool checkInterModalConsistencyForArea(Area& area,
-                                       const array<bool, timeSeriesCount>& isTSintermodal,
-                                       Study& study)
+                                       const array<bool, timeSeriesCount>& isTSintermodal)
 {
     // 1. Making a list of TS numbers :
     //    In this list, we put the numbers of TS of every "inter-modal" mode over the current area.
@@ -301,8 +300,6 @@ bool checkInterModalConsistencyForArea(Area& area,
 
     // The list containing the numbers of TS of every "inter-modal" mode over the current area
     std::vector<uint> listNumberTsOverArea;
-
-    auto& parameters = study.parameters;
 
     // Load : Add load's number of TS in area ...
     int indexTS = ts_to_tsIndex.at(timeSeriesLoad);
@@ -841,7 +838,7 @@ bool TimeSeriesNumbers::Generate(Study& study)
         for (auto i = study.areas.begin(); i != end; ++i)
         {
             auto& area = *(i->second);
-            if (not checkInterModalConsistencyForArea(area, isTSintermodal, study))
+            if (not checkInterModalConsistencyForArea(area, isTSintermodal))
                 return false;
 
             Matrix<uint32_t>* tsNumbersMtx
