@@ -45,6 +45,7 @@
 #include <yuni/job/job.h>
 
 #include "antares/concurrency/concurrency.h"
+#include "antares/checks/include/antares/checks/checkLoadedInputData.h"
 
 namespace Antares::Solver::Simulation
 {
@@ -286,6 +287,8 @@ inline ISimulation<Impl>::~ISimulation()
 template<class Impl>
 void ISimulation<Impl>::run()
 {
+    Check::checkCO2CostColumnNumber(study.areas);
+
     study.computePThetaInfForThermalClusters();
 
     pNbMaxPerformedYearsInParallel = study.maxNbYearsInParallel;
