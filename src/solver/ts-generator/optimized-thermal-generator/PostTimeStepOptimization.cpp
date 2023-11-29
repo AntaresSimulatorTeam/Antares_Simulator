@@ -103,19 +103,10 @@ void OptimizedThermalGenerator::reCalculateDaysSinceLastMnt(const OptProblemSett
         return;
     }
 
-    int lastMaintenanceStart = unit.maintenanceResults.back().first;
-    // check if maintenance happened in the observed timeStep
-    // remember maintenanceResults - stores all the maintenances
-    // last maintenance may be from some earlier timeStep
-    if (lastMaintenanceStart < optSett.firstDay)
-    {
-        daysSinceLastMaintenance
-          = reCalculateDaysSinceLastMnt(optSett, unit, maintenanceHappened, 0, 0);
-        return;
-    }
-
     maintenanceHappened = true;
+    int lastMaintenanceStart = unit.maintenanceResults.back().first;
     int lastMaintenanceDuration = unit.maintenanceResults.back().second;
+
     daysSinceLastMaintenance = reCalculateDaysSinceLastMnt(
       optSett, unit, maintenanceHappened, lastMaintenanceStart, lastMaintenanceDuration);
     return;
@@ -127,13 +118,16 @@ int OptimizedThermalGenerator::reCalculateDaysSinceLastMnt(const OptProblemSetti
                                                            int lastMaintenanceStart,
                                                            int lastMaintenanceDuration)
 {
+    int nextOptimizationFirstDay = optSett.firstDay + timeStep_;
     if (maintenanceHappened)
         return std::max(
-          0, optSett.firstDay + timeStep_ - (lastMaintenanceStart + lastMaintenanceDuration));
+          0, nextOptimizationFirstDay - (lastMaintenanceStart + lastMaintenanceDuration));
+    // we let this go into negative value
+    // it will only move the maintenance in the next optimization
+    // further away from start
     else
-        return timeStep_
+        return nextOptimizationFirstDay
                + unit.parentCluster->originalRandomlyGeneratedDaysSinceLastMaintenance[unit.index];
-    // this can lead LatestStartOfFirstMaintenance to negative!!
 }
 
 } // namespace Antares::Solver::TSGenerator
