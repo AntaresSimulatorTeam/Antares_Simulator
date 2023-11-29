@@ -125,6 +125,7 @@ int OptimizedThermalGenerator::reCalculateDaysSinceLastMnt(const OptProblemSetti
     // we let this go into negative value
     // it will only move the maintenance in the next optimization
     // further away from start
+    // TODO CR27: no we don't! It broke the solver - we keep std::max for now!
     else
         return nextOptimizationFirstDay
                + unit.parentCluster->originalRandomlyGeneratedDaysSinceLastMaintenance[unit.index];
