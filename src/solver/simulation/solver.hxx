@@ -281,33 +281,39 @@ inline void ISimulation<Impl>::checkWriter() const
 
 template<class Impl>
 inline ISimulation<Impl>::~ISimulation()
+= default;
+
+template<class Impl>
+void ISimulation<Impl>::performChecks()
 {
+    auto parameters = &(this->study.parameters);
+    Check::checkSimplexRangeHydroPricing(parameters->simplexOptimizationRange,
+                                         parameters->hydroPricing.hpMode);
+
+    Check::checkSimplexRangeUnitCommitmentMode(parameters->simplexOptimizationRange,
+                                               parameters->unitCommitment.ucMode);
+
+    Check::checkSimplexRangeHydroHeuristic(parameters->simplexOptimizationRange, this->study.areas);
+
+    if (parameters->adqPatchParams.enabled)
+        parameters->adqPatchParams.checkAdqPatchParams(parameters->mode,
+                                                        this->study.areas,
+                                                        parameters->include.hurdleCosts);
+
+    bool tsGenThermal
+      = (0 != (parameters->timeSeriesToGenerate & Data::timeSeriesThermal));
+
+    Check::checkMinStablePower(tsGenThermal, this->study.areas);
+
+    Check::checkFuelCostColumnNumber(this->study.areas);
+    Check::checkCO2CostColumnNumber(this->study.areas);
 }
+
 
 template<class Impl>
 void ISimulation<Impl>::run()
 {
-    auto pParameters = &(study.parameters);
-    Check::checkSimplexRangeHydroPricing(pParameters->simplexOptimizationRange,
-                                  pParameters->hydroPricing.hpMode);
-
-    Check::checkSimplexRangeUnitCommitmentMode(pParameters->simplexOptimizationRange,
-                                        pParameters->unitCommitment.ucMode);
-
-    Check::checkSimplexRangeHydroHeuristic(pParameters->simplexOptimizationRange, study.areas);
-
-    if (pParameters->adqPatchParams.enabled)
-        pParameters->adqPatchParams.checkAdqPatchParams(pParameters->mode,
-                                                        study.areas,
-                                                        pParameters->include.hurdleCosts);
-
-    bool tsGenThermal
-      = (0 != (pParameters->timeSeriesToGenerate & Antares::Data::TimeSeriesType::timeSeriesThermal));
-
-    Check::checkMinStablePower(tsGenThermal, study.areas);
-
-    Check::checkFuelCostColumnNumber(study.areas);
-    Check::checkCO2CostColumnNumber(study.areas);
+    performChecks();
 
     study.computePThetaInfForThermalClusters();
 

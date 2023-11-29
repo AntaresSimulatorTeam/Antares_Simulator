@@ -79,6 +79,8 @@ public:
     */
     void run();
 
+    void performChecks();
+
     /*!
     ** \brief Export the results to disk
     **
@@ -151,7 +153,7 @@ private:
 
 private:
     //! Some temporary to avoid performing useless complex checks
-    Solver::Private::Simulation::CacheData pData;
+    Solver::Private::Simulation::CacheData pData{};
     //!
     uint pNbYearsReallyPerformed;
     //! Max number of years performed in parallel
@@ -175,7 +177,9 @@ public:
     //! Result writer
     Antares::Solver::IResultWriter& pResultWriter;
 
-}; // class ISimulation
+};
+
+// class ISimulation
 } // namespace Antares::Solver::Simulation
 
 #include "solver.hxx"
