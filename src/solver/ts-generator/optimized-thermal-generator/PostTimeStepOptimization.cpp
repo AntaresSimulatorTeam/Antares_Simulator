@@ -47,24 +47,21 @@ void OptimizedThermalGenerator::appendTimeStepResults(const OptProblemSettings& 
 
         auto& cluster = *(readResultUnit.parentCluster);
 
-        // loop per maintenances of unit
-
-        // TODO CR27: do we even have to loop through maintenances
-        // or only see if first maintenance start before timeStep_
-        // rest (second, third) maintenances will definitely happen after timeStep_ ?!
-        // Talk with Hugo
-
         // if createStartEndVariables for the readResultUnit is false
         // maintenances.size() is going to be zero - so in a way there is our check
-        for (int mnt = 0; mnt < readResultUnit.maintenances.size(); ++mnt)
+        if (readResultUnit.maintenances.empty())
+            continue;
+
+        // NO need to loop through maintenances
+        // only one maintenance can happen in the timeStep_
+        // TODO CR27: in phase-II we may change this and looping will be necessary
         {
-            int localMaintenanceStart = readResultUnit.maintenances[mnt].startDay(timeStep_);
+            int localMaintenanceStart = readResultUnit.maintenances[0].startDay(timeStep_);
             if (localMaintenanceStart == -1)
                 continue;
 
             int globalMaintenanceStart = localMaintenanceStart + optSett.firstDay;
-            int dayInTheYearStart
-              = dayOfTheYear(globalMaintenanceStart); // TODO CR27: check this with Hugo!
+            int dayInTheYearStart = dayOfTheYear(globalMaintenanceStart);
 
             int PODOfTheDay
               = (int)cluster.prepro->data[Data::PreproThermal::poDuration][dayInTheYearStart];
