@@ -40,9 +40,13 @@ void OptimizationStatisticsWriter::printHeader()
     pBuffer << "# Week Optimization_1_ms Optimization_2_ms Update_ms1 Update_ms2\n";
 }
 
-void OptimizationStatisticsWriter::addTime(uint week, double opt_1_ms, double opt_2_ms, double update_ms1, double update_ms2)
+void OptimizationStatisticsWriter::addTime(uint week, TIME_MEASURE& timeMeasure)
 {
-    pBuffer << week << " " << opt_1_ms << " " << opt_2_ms << " " << update_ms1 << " " << update_ms2 <<"\n";
+    pBuffer << week
+        << " " << timeMeasure.tempsResolution1
+        << " " << timeMeasure.tempsResolution2
+        << " " << timeMeasure.updateTime1
+        << " " << timeMeasure.updateTime2 <<"\n";
 }
 
 void OptimizationStatisticsWriter::finalize()

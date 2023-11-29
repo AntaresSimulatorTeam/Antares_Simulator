@@ -27,12 +27,13 @@
 #pragma once
 #include <antares/writer/i_writer.h>
 
+#include "sim_structure_probleme_economique.h"
 #include "simulation.h"
 
 class OptimizationStatisticsWriter
 {
 public:
-    void addTime(uint week, double opt_1_ms, double opt_2_ms, double update_ms1, double update_ms2);
+    void addTime(uint week, TIME_MEASURE& timeMeasure);
     OptimizationStatisticsWriter(Antares::Solver::IResultWriter& writer, uint year);
     void finalize();
 
