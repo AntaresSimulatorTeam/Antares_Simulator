@@ -148,9 +148,13 @@ void OptimizedThermalGenerator::printMaintenances(OptProblemSettings& optSett)
     std::vector<std::vector<int>> dataToPrint;
     for (auto& unit : scenarioResults)
     {
+        std::vector<int> RED;
+        RED.push_back(9999);
+        RED.push_back(9999);
+        dataToPrint.push_back(RED);
         for (auto& mnt : unit.maintenanceResults)
         {
-            std::vector<int> RED;
+            RED.clear();
             RED.push_back(mnt.first);
             RED.push_back(mnt.second);
             dataToPrint.push_back(RED);
@@ -161,6 +165,27 @@ void OptimizedThermalGenerator::printMaintenances(OptProblemSettings& optSett)
                            + std::to_string(optSett.firstDay) + "-Maintenances.csv";
 
     printColumnToFile<int>(dataToPrint, fileName);
+}
+
+void OptimizedThermalGenerator::printAvailability(OptProblemSettings& optSett)
+{
+    std::vector<std::vector<double>> dataToPrint;
+
+    for (int day = 0; day != scenarioLength_ * 365; ++day)
+    {
+        std::vector<double> RED;
+        for (auto& cluster : maintenanceData)
+        {
+            RED.push_back(cluster.second.availableClusterDailyPower[day]);
+        }
+
+        dataToPrint.push_back(RED);
+    }
+
+    std::string fileName = "/home/milos/Documents/RTEi/01-Antares/04-TestModels/"
+                           + std::to_string(optSett.firstDay) + "-Availability.csv";
+
+    printColumnToFile<double>(dataToPrint, fileName);
 }
 
 // Define the auxiliary function outside the class

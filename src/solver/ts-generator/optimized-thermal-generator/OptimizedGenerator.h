@@ -113,6 +113,7 @@ private:
     void printResults(OptProblemSettings& optSett);
     void printProblemVarAndResults(OptProblemSettings& optSett);
     void printMaintenances(OptProblemSettings& optSett);
+    void printAvailability(OptProblemSettings& optSett);
 
     /* ===================END-OPTIMIZATION=================== */
 
