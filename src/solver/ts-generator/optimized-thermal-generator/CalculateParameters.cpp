@@ -153,11 +153,18 @@ void OptimizedThermalGenerator::setClusterData()
 
             // create struct
             maintenanceData[&cluster] = ClusterData();
+
             // static Inputs
             maintenanceData[&cluster].staticInputs.maxPower = calculateMaxUnitOutput(cluster);
             maintenanceData[&cluster].staticInputs.avgCost = calculateAvrUnitDailyCost(cluster);
             maintenanceData[&cluster].staticInputs.averageMaintenanceDuration
               = calculateAverageMaintenanceDuration(cluster);
+
+            // dynamic inputs -- must calculate before number of maintenance
+            maintenanceData[&cluster].dynamicInputs.daysSinceLastMaintenance
+              = cluster.originalRandomlyGeneratedDaysSinceLastMaintenance;
+
+            // back to static input data
             maintenanceData[&cluster].staticInputs.numberOfMaintenancesFirstStep
               = calculateNumberOfMaintenances(cluster);
             // static inputs for random generator
@@ -167,9 +174,7 @@ void OptimizedThermalGenerator::setClusterData()
                                   maintenanceData[&cluster].staticInputs.BP,
                                   cluster.prepro->data[Data::PreproThermal::poDuration]);
 
-            // dynamic inputs
-            maintenanceData[&cluster].dynamicInputs.daysSinceLastMaintenance
-              = cluster.originalRandomlyGeneratedDaysSinceLastMaintenance;
+            // back to dynamic inputs
             maintenanceData[&cluster].dynamicInputs.numberOfMaintenances
               = maintenanceData[&cluster].staticInputs.numberOfMaintenancesFirstStep;
         }
@@ -293,7 +298,7 @@ std::vector<int> OptimizedThermalGenerator::calculateNumberOfMaintenances(
                    - getAverageDurationBetweenMaintenances(cluster))
                   / (getAverageDurationBetweenMaintenances(cluster)
                      + getAverageMaintenanceDuration(cluster));
-        numberOfMaintenances[unit] = 1 + div;
+        numberOfMaintenances[unit] = std::max(1 + div, minNumberOfMaintenances);
     }
 
     return numberOfMaintenances;
