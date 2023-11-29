@@ -32,7 +32,7 @@ jobs:
     - name: Install libraries
       run: |
            dnf install -y epel-release git cmake wget rpm-build redhat-lsb-core
-           dnf install -y unzip libuuid-devel boost-test boost-devel gcc-toolset-9-toolchain zlib-devel
+           dnf install -y unzip libuuid-devel boost-test boost-devel gcc-toolset-10-toolchain zlib-devel
 
     - name: Checkout
       run: |
@@ -49,7 +49,7 @@ jobs:
 
     - name: Configure
       run: |
-           source /opt/rh/gcc-toolset-9/enable
+           source /opt/rh/gcc-toolset-10/enable
            cmake -B _build -S src \
              -DCMAKE_BUILD_TYPE=release \
              -DBUILD_TESTING=ON \
@@ -58,7 +58,7 @@ jobs:
 
     - name: Build
       run: |
-           source /opt/rh/gcc-toolset-9/enable
+           source /opt/rh/gcc-toolset-10/enable
            cmake --build _build --config Release -j$(nproc)
 
     - name: Run unit and end-to-end tests
