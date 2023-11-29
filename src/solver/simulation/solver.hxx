@@ -287,6 +287,10 @@ template<class Impl>
 void ISimulation<Impl>::performChecks()
 {
     auto parameters = &(this->study.parameters);
+
+    Check::checkOrtoolsUsage(
+      parameters->unitCommitment.ucMode, parameters->ortoolsUsed, parameters->ortoolsSolver);
+
     Check::checkSimplexRangeHydroPricing(parameters->simplexOptimizationRange,
                                          parameters->hydroPricing.hpMode);
 
