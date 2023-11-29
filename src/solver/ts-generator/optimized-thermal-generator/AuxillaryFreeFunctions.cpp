@@ -141,22 +141,6 @@ int dayOfTheYear(int optimizationDay)
 }
 
 // calculate parameters methods - per cluster
-int calculateNumberOfMaintenances(const Data::ThermalCluster& cluster, int timeHorizon)
-{
-    // timeHorizon cannot be 0. The whole maintenance group would be skipped if this happened
-    // on the other hand interPoPeriod can be 0. So we say at least 2 maintenance if this happens
-    // actually this cannot happen because checkMaintenanceGroupParameters() will kill it by now
-    if (cluster.interPoPeriod == 0)
-    {
-        logs.warning() << "Cluster: " << cluster.getFullName()
-                       << "has interPoPeriod = 0. Number of maintenances for all units inside this "
-                          "cluster will be set to 2";
-        return minNumberOfMaintenances;
-    }
-
-    return std::max(timeHorizon / cluster.interPoPeriod, minNumberOfMaintenances); // floor
-}
-
 int calculateAverageMaintenanceDuration(const Data::ThermalCluster& cluster)
 {
     double sum = 0.0;

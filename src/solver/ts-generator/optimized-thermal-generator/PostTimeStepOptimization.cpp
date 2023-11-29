@@ -65,8 +65,8 @@ void OptimizedThermalGenerator::appendTimeStepResults(const OptProblemSettings& 
 
             int PODOfTheDay
               = (int)cluster.prepro->data[Data::PreproThermal::poDuration][dayInTheYearStart];
-            double app = maintenanceData[&cluster].AP[dayInTheYearStart];
-            double bpp = maintenanceData[&cluster].BP[dayInTheYearStart];
+            double app = maintenanceData[&cluster].staticInputs.AP[dayInTheYearStart];
+            double bpp = maintenanceData[&cluster].staticInputs.BP[dayInTheYearStart];
             int maintenanceDuration = durationGenerator(
               cluster.plannedLaw, PODOfTheDay, cluster.plannedVolatility, app, bpp);
 
@@ -93,7 +93,7 @@ void OptimizedThermalGenerator::reCalculateDaysSinceLastMnt(const OptProblemSett
                                                             const Unit& unit)
 {
     auto& daysSinceLastMaintenance
-      = maintenanceData[unit.parentCluster].daysSinceLastMaintenance[unit.index];
+      = maintenanceData[unit.parentCluster].dynamicInputs.daysSinceLastMaintenance[unit.index];
     bool maintenanceHappened = false;
 
     if (unit.maintenanceResults.empty())

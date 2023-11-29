@@ -151,27 +151,27 @@ void OptimizedThermalGenerator::setClusterData()
             if (!checkClusterExist(cluster))
                 continue;
 
+            // create struct
             maintenanceData[&cluster] = ClusterData();
-            maintenanceData[&cluster].maxPower = calculateMaxUnitOutput(cluster);
-            maintenanceData[&cluster].avgCost = calculateAvrUnitDailyCost(cluster);
-
-            maintenanceData[&cluster].numberOfMaintenances
-              = calculateNumberOfMaintenances(cluster, timeHorizon_);
-            maintenanceData[&cluster].averageMaintenanceDuration
+            // static Inputs
+            maintenanceData[&cluster].staticInputs.maxPower = calculateMaxUnitOutput(cluster);
+            maintenanceData[&cluster].staticInputs.avgCost = calculateAvrUnitDailyCost(cluster);
+            maintenanceData[&cluster].staticInputs.averageMaintenanceDuration
               = calculateAverageMaintenanceDuration(cluster);
-
-            // since we will be updating daysSinceLastMaintenance values
-            // after every optimization
-            // lets create a copy here - this is copy by value!
-            maintenanceData[&cluster].daysSinceLastMaintenance
-              = cluster.originalRandomlyGeneratedDaysSinceLastMaintenance;
-
-            // random generator
+            maintenanceData[&cluster].staticInputs.numberOfMaintenancesFirstStep
+              = calculateNumberOfMaintenances(cluster);
+            // static inputs for random generator
             prepareIndispoFromLaw(cluster.plannedLaw,
                                   cluster.plannedVolatility,
-                                  maintenanceData[&cluster].AP,
-                                  maintenanceData[&cluster].BP,
+                                  maintenanceData[&cluster].staticInputs.AP,
+                                  maintenanceData[&cluster].staticInputs.BP,
                                   cluster.prepro->data[Data::PreproThermal::poDuration]);
+
+            // dynamic inputs
+            maintenanceData[&cluster].dynamicInputs.daysSinceLastMaintenance
+              = cluster.originalRandomlyGeneratedDaysSinceLastMaintenance;
+            maintenanceData[&cluster].dynamicInputs.numberOfMaintenances
+              = maintenanceData[&cluster].staticInputs.numberOfMaintenancesFirstStep;
         }
     }
     return;
@@ -206,13 +206,13 @@ double OptimizedThermalGenerator::getPowerCost(const Data::ThermalCluster& clust
         return 0.;
     }
 
-    return maintenanceData[&cluster].avgCost[dayOfTheYear(optimizationDay)];
+    return maintenanceData[&cluster].staticInputs.avgCost[dayOfTheYear(optimizationDay)];
 }
 
 double OptimizedThermalGenerator::getPowerOutput(const Data::ThermalCluster& cluster,
                                                  int optimizationDay)
 {
-    return maintenanceData[&cluster].maxPower[dayOfTheYear(optimizationDay)];
+    return maintenanceData[&cluster].staticInputs.maxPower[dayOfTheYear(optimizationDay)];
 }
 
 double OptimizedThermalGenerator::getResidualLoad(int optimizationDay)
@@ -220,14 +220,15 @@ double OptimizedThermalGenerator::getResidualLoad(int optimizationDay)
     return residualLoadDailyValues_[dayOfTheYear(optimizationDay)];
 }
 
-int OptimizedThermalGenerator::getNumberOfMaintenances(const Data::ThermalCluster& cluster)
+int OptimizedThermalGenerator::getNumberOfMaintenances(const Data::ThermalCluster& cluster,
+                                                       int unit)
 {
-    return maintenanceData[&cluster].numberOfMaintenances;
+    return maintenanceData[&cluster].dynamicInputs.numberOfMaintenances[unit];
 }
 
 int OptimizedThermalGenerator::getAverageMaintenanceDuration(const Data::ThermalCluster& cluster)
 {
-    return maintenanceData[&cluster].averageMaintenanceDuration;
+    return maintenanceData[&cluster].staticInputs.averageMaintenanceDuration;
 }
 
 int OptimizedThermalGenerator::getAverageDurationBetweenMaintenances(
@@ -245,7 +246,8 @@ int OptimizedThermalGenerator::calculateUnitEarliestStartOfFirstMaintenance(
     // let it return negative value - if it returns negative value we wont implement constraint:
     // s[u][0][tauLower-1] = 0
 
-    auto& daysSinceLastMaintenance = maintenanceData[&cluster].daysSinceLastMaintenance;
+    auto& daysSinceLastMaintenance
+      = maintenanceData[&cluster].dynamicInputs.daysSinceLastMaintenance;
 
     if (unitIndex < daysSinceLastMaintenance.size())
     {
@@ -263,10 +265,11 @@ int OptimizedThermalGenerator::calculateUnitLatestStartOfFirstMaintenance(
   const Data::ThermalCluster& cluster,
   uint unitIndex)
 {
-    // latest start of the first maintenance of unit u, must be positive - 
+    // latest start of the first maintenance of unit u, must be positive -
     // FIRST STEP ONLY!
 
-    auto& daysSinceLastMaintenance = maintenanceData[&cluster].daysSinceLastMaintenance;
+    auto& daysSinceLastMaintenance
+      = maintenanceData[&cluster].dynamicInputs.daysSinceLastMaintenance;
 
     if (unitIndex < daysSinceLastMaintenance.size())
     {
@@ -289,6 +292,27 @@ int OptimizedThermalGenerator::calculateUnitLatestStartOfFirstMaintenance(
                      << " does not have unit: " << unitIndex;
         return 0;
     }
+}
+
+std::vector<int> OptimizedThermalGenerator::calculateNumberOfMaintenances(
+  const Data::ThermalCluster& cluster)
+{
+    // if (cluster.interPoPeriod + maintenanceData[&cluster].staticInputs.averageMaintenanceDuration
+    //     == 0)
+    // {
+    //     logs.warning() << "Cluster: " << cluster.getFullName()
+    //                    << "has interPoPeriod = 0. Number of maintenances for all units inside
+    //                    this "
+    //                       "cluster will be set to 2";
+    //     return minNumberOfMaintenances;
+    // }
+
+    std::vector<int> numberOfMaintenances;
+    numberOfMaintenances.resize(cluster.unitCount);
+    int value = std::max(2, timeHorizon_ / cluster.interPoPeriod);
+    std::fill(numberOfMaintenances.begin(), numberOfMaintenances.end(), value);
+
+    return numberOfMaintenances;
 }
 
 } // namespace Antares::Solver::TSGenerator

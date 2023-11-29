@@ -19,6 +19,7 @@ void OptimizedThermalGenerator::postScenarioOptimization(OptProblemSettings& opt
     printAvailability(optSett);
     resetResultStorage();
     reSetDaysSinceLastMnt();
+    reSetNumberOfMaintenances();
 
     return;
 }
@@ -40,14 +41,14 @@ void OptimizedThermalGenerator::calculateScenarioResults()
     // fill in with zeros
     for (auto& cluster : maintenanceData)
     {
-        cluster.second.availableClusterDailyPower.resize(scenarioLength_ * DAYS_PER_YEAR);
+        cluster.second.dynamicResults.availableClusterDailyPower.resize(scenarioLength_ * DAYS_PER_YEAR);
     }
 
     // add one by one unit availability
     for (auto& unit : scenarioResults)
     {
         auto& availableClusterDailyPower
-          = maintenanceData[unit.parentCluster].availableClusterDailyPower;
+          = maintenanceData[unit.parentCluster].dynamicResults.availableClusterDailyPower;
 
         std::transform(availableClusterDailyPower.begin(),
                        availableClusterDailyPower.end(),
@@ -103,7 +104,7 @@ void OptimizedThermalGenerator::saveScenarioResults(int fromCol,
     // scenarioLength_ * DAYS_PER_YEAR element
     // that we need to store inside columns from-to
 
-    auto& availability = maintenanceData[&cluster].availableClusterDailyPower;
+    auto& availability = maintenanceData[&cluster].dynamicResults.availableClusterDailyPower;
     assert((toCol - fromCol) * DAYS_PER_YEAR == availability.size());
 
     int vctCol = 0;
@@ -127,7 +128,7 @@ void OptimizedThermalGenerator::resetResultStorage()
 
     for (auto& cluster : maintenanceData)
     {
-        cluster.second.availableClusterDailyPower.clear();
+        cluster.second.dynamicResults.availableClusterDailyPower.clear();
     }
 
     return;
@@ -137,14 +138,27 @@ void OptimizedThermalGenerator::reSetDaysSinceLastMnt()
 {
     // we are back in first step, but not first scenario
     // we have messed up our values
-    // we need to re-do
-    // daysSinceLastMaintenance = cluster.originalRandomlyGeneratedDaysSinceLastMaintenance;
-    // for all areas and clusters
+    // we need to reset
 
     for (auto& cluster : maintenanceData)
     {
-        cluster.second.daysSinceLastMaintenance
+        cluster.second.dynamicInputs.daysSinceLastMaintenance
           = cluster.first->originalRandomlyGeneratedDaysSinceLastMaintenance;
+    }
+
+    return;
+}
+
+void OptimizedThermalGenerator::reSetNumberOfMaintenances()
+{
+    // we are back in first step, but not first scenario
+    // we have messed up our values
+    // we need to reset
+
+    for (auto& cluster : maintenanceData)
+    {
+        cluster.second.dynamicInputs.numberOfMaintenances
+          = cluster.second.staticInputs.numberOfMaintenancesFirstStep;
     }
 
     return;

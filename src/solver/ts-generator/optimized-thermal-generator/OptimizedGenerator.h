@@ -134,6 +134,7 @@ private:
     void saveScenarioResults(int fromCol, int toCol, Data::ThermalCluster& cluster);
     void resetResultStorage();
     void reSetDaysSinceLastMnt();
+    void reSetNumberOfMaintenances();
     void writeTsResults();
 
     // post-timeStep optimization methods
@@ -163,7 +164,7 @@ private:
     double getPowerCost(const Data::ThermalCluster& cluster, int optimizationDay);
     double getPowerOutput(const Data::ThermalCluster& cluster, int optimizationDay);
     double getResidualLoad(int optimizationDay);
-    int getNumberOfMaintenances(const Data::ThermalCluster& cluster);
+    int getNumberOfMaintenances(const Data::ThermalCluster& cluster, int unit);
     int getAverageMaintenanceDuration(const Data::ThermalCluster& cluster);
     int getAverageDurationBetweenMaintenances(const Data::ThermalCluster& cluster);
 
@@ -172,6 +173,7 @@ private:
                                                      uint unitIndex);
     int calculateUnitLatestStartOfFirstMaintenance(const Data::ThermalCluster& cluster,
                                                    uint unitIndex);
+    std::vector<int> calculateNumberOfMaintenances(const Data::ThermalCluster& cluster);
 
     /* ===================END-CALCULATE-OPTIMIZATION-PARAMETERS=================== */
 

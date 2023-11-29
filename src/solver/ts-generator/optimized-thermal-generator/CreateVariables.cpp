@@ -105,7 +105,7 @@ void OptimizedThermalGenerator::buildStartEndMntVariables(const OptProblemSettin
                                                           int unit,
                                                           Unit& unitRef)
 {
-    int totalMntNumber = getNumberOfMaintenances(cluster);
+    int totalMntNumber = getNumberOfMaintenances(cluster, unit);
     // loop per maintenances per unit
     for (int mnt = 0; mnt < totalMntNumber; ++mnt)
     {

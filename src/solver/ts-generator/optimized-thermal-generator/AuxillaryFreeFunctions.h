@@ -27,7 +27,6 @@ std::array<double, HOURS_PER_YEAR> calculateAverageRenewableTsAggregated(const D
 std::array<double, HOURS_PER_YEAR> calculateAverageRenewableTsClusters(const Data::Area& area);
 
 // calculate parameters functions - per cluster
-int calculateNumberOfMaintenances(const Data::ThermalCluster& cluster, int timeHorizon);
 int calculateAverageMaintenanceDuration(const Data::ThermalCluster& cluster);
 std::array<double, DAYS_PER_YEAR> calculateMaxUnitOutput(const Data::ThermalCluster& cluster);
 std::array<double, DAYS_PER_YEAR> calculateAvrUnitDailyCost(const Data::ThermalCluster& cluster);

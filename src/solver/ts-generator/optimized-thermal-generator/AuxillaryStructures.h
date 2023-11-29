@@ -90,20 +90,31 @@ struct OptimizationProblemVariables
 // this structure stores cluster input data (optimization parameters)
 // that stays the same during optimizationS
 // also temporary stores cluster output/results for one scenario
-struct ClusterData
+
+struct StaticInputs
 {
-    // input data
+    // static input data
     // calculated once before all loops
     std::array<double, DAYS_PER_YEAR> maxPower;
     std::array<double, DAYS_PER_YEAR> avgCost;
-    std::vector<int> daysSinceLastMaintenance;
-    int numberOfMaintenances;
+    std::vector<int> numberOfMaintenancesFirstStep;
     int averageMaintenanceDuration;
 
     // for random generator
     double AP[366];
     double BP[366];
+};
 
+struct DynamicInputs
+{
+    // dynamic input data
+    // re-calculated after each optimization time-step
+    std::vector<int> daysSinceLastMaintenance;
+    std::vector<int> numberOfMaintenances;
+};
+
+struct DynamicResults
+{
     // scenario results
     // temporary store scenario results
     // before writing them to output
@@ -111,5 +122,11 @@ struct ClusterData
     std::vector<double> availableClusterDailyPower;
 };
 
+struct ClusterData
+{
+    StaticInputs staticInputs;
+    DynamicInputs dynamicInputs;
+    DynamicResults dynamicResults;
+};
 
 } // namespace Antares::Solver::TSGenerator

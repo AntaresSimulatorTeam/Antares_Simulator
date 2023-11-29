@@ -176,7 +176,7 @@ void OptimizedThermalGenerator::printAvailability(OptProblemSettings& optSett)
         std::vector<double> RED;
         for (auto& cluster : maintenanceData)
         {
-            RED.push_back(cluster.second.availableClusterDailyPower[day]);
+            RED.push_back(cluster.second.dynamicResults.availableClusterDailyPower[day]);
         }
 
         dataToPrint.push_back(RED);
