@@ -147,6 +147,7 @@ private:
                                     bool maintenanceHappened,
                                     int lastMaintenanceStart,
                                     int lastMaintenanceDuration);
+    void reCalculateNumberOfMaintenances();
 
     /* ===================END-POST-OPTIMIZATION=================== */
 

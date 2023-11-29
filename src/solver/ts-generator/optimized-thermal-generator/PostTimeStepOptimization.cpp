@@ -11,6 +11,7 @@ void OptimizedThermalGenerator::postTimeStepOptimization(OptProblemSettings& opt
 {
     appendTimeStepResults(optSett);
     reCalculateDaysSinceLastMnt(optSett);
+    reCalculateNumberOfMaintenances();
     return;
 }
 
@@ -129,6 +130,16 @@ int OptimizedThermalGenerator::reCalculateDaysSinceLastMnt(const OptProblemSetti
     else
         return nextOptimizationFirstDay
                + unit.parentCluster->originalRandomlyGeneratedDaysSinceLastMaintenance[unit.index];
+}
+
+void OptimizedThermalGenerator::reCalculateNumberOfMaintenances()
+{
+    // re-calculate days since last maintenance inputs if necessary
+    for (auto& cluster : maintenanceData)
+    {
+        cluster.second.dynamicInputs.numberOfMaintenances
+          = calculateNumberOfMaintenances(*(cluster.first));
+    }
 }
 
 } // namespace Antares::Solver::TSGenerator
