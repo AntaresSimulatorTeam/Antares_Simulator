@@ -206,7 +206,7 @@ void Application::execute()
     memoryReport.interval(1000 * 60 * 5); // 5 minutes
     memoryReport.start();
 
-    pStudy->computePThetaInfForThermalClusters();
+
 
     // Run the simulation
     switch (pStudy->runtime->mode)

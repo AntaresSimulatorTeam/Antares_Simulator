@@ -286,6 +286,8 @@ inline ISimulation<Impl>::~ISimulation()
 template<class Impl>
 void ISimulation<Impl>::run()
 {
+    study.computePThetaInfForThermalClusters();
+
     pNbMaxPerformedYearsInParallel = study.maxNbYearsInParallel;
 
     // Initialize all data
