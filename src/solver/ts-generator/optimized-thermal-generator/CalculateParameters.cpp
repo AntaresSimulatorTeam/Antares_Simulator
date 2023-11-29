@@ -237,6 +237,12 @@ int OptimizedThermalGenerator::getAverageDurationBetweenMaintenances(
     return cluster.interPoPeriod;
 }
 
+int OptimizedThermalGenerator::getDaysSinceLastMaintenance(const Data::ThermalCluster& cluster,
+                                                           int unit)
+{
+    return maintenanceData[&cluster].dynamicInputs.daysSinceLastMaintenance[unit];
+}
+
 // calculate parameters methods - per cluster-Unit
 int OptimizedThermalGenerator::calculateUnitEarliestStartOfFirstMaintenance(
   const Data::ThermalCluster& cluster,
@@ -246,19 +252,8 @@ int OptimizedThermalGenerator::calculateUnitEarliestStartOfFirstMaintenance(
     // let it return negative value - if it returns negative value we wont implement constraint:
     // s[u][0][tauLower-1] = 0
 
-    auto& daysSinceLastMaintenance
-      = maintenanceData[&cluster].dynamicInputs.daysSinceLastMaintenance;
-
-    if (unitIndex < daysSinceLastMaintenance.size())
-    {
-        return (cluster.interPoPeriod - daysSinceLastMaintenance[unitIndex] - cluster.poWindows);
-    }
-    else
-    {
-        logs.error() << "Cluster: " << cluster.getFullName()
-                     << " does not have unit: " << unitIndex;
-        return 0;
-    }
+    return (getAverageDurationBetweenMaintenances(cluster)
+            - getDaysSinceLastMaintenance(cluster, unitIndex) - cluster.poWindows);
 }
 
 int OptimizedThermalGenerator::calculateUnitLatestStartOfFirstMaintenance(
@@ -268,49 +263,38 @@ int OptimizedThermalGenerator::calculateUnitLatestStartOfFirstMaintenance(
     // latest start of the first maintenance of unit u, must be positive -
     // FIRST STEP ONLY!
 
-    auto& daysSinceLastMaintenance
-      = maintenanceData[&cluster].dynamicInputs.daysSinceLastMaintenance;
+    // cannot be negative: FIRST STEP ONLY
+    // cluster.interPoPeriod -
+    // cluster.originalRandomlyGeneratedDaysSinceLastMaintenance[unitIndex] - is always positive
+    // or zero
+    // cluster.poWindows is positive or zero
+    // however we will make sure it does not surpass timeHorizon_ - 1 value
+    // AFTER FIRST STEP it can go to negative value - so we will floor it to zero
 
-    if (unitIndex < daysSinceLastMaintenance.size())
-    {
-        // cannot be negative: FIRST STEP ONLY
-        // cluster.interPoPeriod -
-        // cluster.originalRandomlyGeneratedDaysSinceLastMaintenance[unitIndex] - is always positive
-        // or zero
-        // cluster.poWindows is positive or zero
-        // however we will make sure it does not surpass timeHorizon_ - 1 value
-        // AFTER FIRST STEP it can go to negative value - so we will floor it to zero
-
-        return std::min(
-          std::max(0,
-                   cluster.interPoPeriod - daysSinceLastMaintenance[unitIndex] + cluster.poWindows),
-          timeHorizon_ - 1);
-    }
-    else
-    {
-        logs.error() << "Cluster: " << cluster.getFullName()
-                     << " does not have unit: " << unitIndex;
-        return 0;
-    }
+    return std::min(
+      std::max(0,
+               getAverageDurationBetweenMaintenances(cluster)
+                 - getDaysSinceLastMaintenance(cluster, unitIndex) + cluster.poWindows),
+      timeHorizon_ - 1);
 }
 
 std::vector<int> OptimizedThermalGenerator::calculateNumberOfMaintenances(
   const Data::ThermalCluster& cluster)
 {
-    // if (cluster.interPoPeriod + maintenanceData[&cluster].staticInputs.averageMaintenanceDuration
-    //     == 0)
-    // {
-    //     logs.warning() << "Cluster: " << cluster.getFullName()
-    //                    << "has interPoPeriod = 0. Number of maintenances for all units inside
-    //                    this "
-    //                       "cluster will be set to 2";
-    //     return minNumberOfMaintenances;
-    // }
+    // getAverageMaintenanceDuration must be at least 1
+    // so we do not need to check if div / 0
 
     std::vector<int> numberOfMaintenances;
     numberOfMaintenances.resize(cluster.unitCount);
-    int value = std::max(2, timeHorizon_ / cluster.interPoPeriod);
-    std::fill(numberOfMaintenances.begin(), numberOfMaintenances.end(), value);
+
+    for (int unit = 0; unit != cluster.unitCount; ++unit)
+    {
+        int div = (timeHorizon_ + getDaysSinceLastMaintenance(cluster, unit)
+                   - getAverageDurationBetweenMaintenances(cluster))
+                  / (getAverageDurationBetweenMaintenances(cluster)
+                     + getAverageMaintenanceDuration(cluster));
+        numberOfMaintenances[unit] = 1 + div;
+    }
 
     return numberOfMaintenances;
 }
