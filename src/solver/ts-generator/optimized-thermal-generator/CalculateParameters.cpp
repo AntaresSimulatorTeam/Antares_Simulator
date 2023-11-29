@@ -262,7 +262,8 @@ int OptimizedThermalGenerator::calculateUnitLatestStartOfFirstMaintenance(
   const Data::ThermalCluster& cluster,
   uint unitIndex)
 {
-    // latest start of the first maintenance of unit u (end of the window, must be positive):
+    // latest start of the first maintenance of unit u (end of the window, must be positive - 
+    // FIRST STEP ONLY):
 
     auto& daysSinceLastMaintenance = maintenanceData[&cluster].daysSinceLastMaintenance;
 
@@ -274,7 +275,7 @@ int OptimizedThermalGenerator::calculateUnitLatestStartOfFirstMaintenance(
         // or zero
         // cluster.poWindows is positive or zero
         // however we will make sure it does not surpass timeHorizon_ - 1 value
-        // AFTER FIRST STEP it can go to negative value
+        // AFTER FIRST STEP it can go to negative value - so we will floor it to zero
 
         return std::min(
           std::max(0,

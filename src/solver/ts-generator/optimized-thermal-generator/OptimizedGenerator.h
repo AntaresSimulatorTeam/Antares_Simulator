@@ -186,12 +186,13 @@ private:
     double ensCost_;
     double spillCost_;
     std::array<double, DAYS_PER_YEAR> residualLoadDailyValues_;
-    MaintenanceClusterStorage maintenanceData;
     /*
     TODO CR27:
-    same for OptimizationProblemVariables - maybe new class
-    and move optimization methods away from here
+    make MaintenanceClusterStorage and
+    OptimizationProblemVariables new classes
+    and move their methods away from here
     */
+    MaintenanceClusterStorage maintenanceData;
     OptimizationProblemVariables vars;
     ScenarioResults scenarioResults;
 

@@ -492,13 +492,13 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
         }
     }
 
-    if (derated) // TMP.INFO CR27: derated mode - averaging - keep it like this!
+    if (derated)
         cluster.series.timeSeries.averageTimeseries();
 
     if (archive)
         writeResultsToDisk(area, cluster);
 
-    cluster.calculationOfSpinning(); // TODO CR27 // do we still need to call this function?!
+    cluster.calculationOfSpinning();
 }
 
 } // namespace Antares::Solver::TSGenerator

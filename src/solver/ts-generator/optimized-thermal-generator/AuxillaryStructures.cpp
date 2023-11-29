@@ -47,7 +47,6 @@ std::vector<int> Maintenances::getStartSolutionValues() const
 void Unit::calculateAvailableDailyPower(int tsCount)
 {
     int totalDays = tsCount * DAYS_PER_YEAR;
-    // TODO CR27: ask Hugo. Do we take nom capacity or dailyPower. - and then later do mean for hourly values
     double maxPower = parentCluster->nominalCapacity;
     availableDailyPower.resize(totalDays);
     std::fill(availableDailyPower.begin(), availableDailyPower.end(), maxPower);
