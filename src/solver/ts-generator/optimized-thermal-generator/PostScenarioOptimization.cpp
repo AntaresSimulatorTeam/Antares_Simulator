@@ -13,7 +13,7 @@ void OptimizedThermalGenerator::postScenarioOptimization(OptProblemSettings& opt
     if (!optSett.solved)
         return;
 
-    calculateScenarioResults(optSett);
+    calculateScenarioResults();
     saveScenarioResults(optSett);
     printMaintenances(optSett);
     resetResultStorage();
@@ -22,7 +22,7 @@ void OptimizedThermalGenerator::postScenarioOptimization(OptProblemSettings& opt
     return;
 }
 
-void OptimizedThermalGenerator::calculateScenarioResults(const OptProblemSettings& optSett)
+void OptimizedThermalGenerator::calculateScenarioResults()
 {
     // for each unit we have now scenarioResults
     // which contains std::pairs of all [maintenanceStart, maintenanceDuration]

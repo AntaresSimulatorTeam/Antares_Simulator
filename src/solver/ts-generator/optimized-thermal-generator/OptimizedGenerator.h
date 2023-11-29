@@ -128,7 +128,7 @@ private:
 
     // post-scenario optimization methods
     void postScenarioOptimization(OptProblemSettings& optSett);
-    void calculateScenarioResults(const OptProblemSettings& optSett);
+    void calculateScenarioResults();
     void saveScenarioResults(const OptProblemSettings& optSett);
     void saveScenarioResults(int fromCol, int toCol, Data::ThermalCluster& cluster);
     void resetResultStorage();
