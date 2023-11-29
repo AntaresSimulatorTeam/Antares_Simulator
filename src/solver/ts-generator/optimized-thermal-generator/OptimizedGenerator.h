@@ -110,9 +110,9 @@ private:
     void printAllVariables();
     void printObjectiveFunction(MPObjective* objective);
     void printConstraints();
-    void printResults();
-    void printProblemVarAndResults();
-    void printMaintenances();
+    void printResults(OptProblemSettings& optSett);
+    void printProblemVarAndResults(OptProblemSettings& optSett);
+    void printMaintenances(OptProblemSettings& optSett);
 
     /* ===================END-OPTIMIZATION=================== */
 

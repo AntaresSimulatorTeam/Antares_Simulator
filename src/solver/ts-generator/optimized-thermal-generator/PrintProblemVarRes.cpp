@@ -12,12 +12,12 @@
 
 namespace Antares::Solver::TSGenerator
 {
-void OptimizedThermalGenerator::printProblemVarAndResults()
+void OptimizedThermalGenerator::printProblemVarAndResults(OptProblemSettings& optSett)
 {
     printAllVariables();
     printConstraints();
     printObjectiveFunction(solver.MutableObjective());
-    printResults();
+    printResults(optSett);
 }
 
 void OptimizedThermalGenerator::printAllVariables()
@@ -100,7 +100,7 @@ void OptimizedThermalGenerator::printObjectiveFunction(MPObjective* objective)
     return;
 }
 
-void OptimizedThermalGenerator::printResults()
+void OptimizedThermalGenerator::printResults(OptProblemSettings& optSett)
 {
     std::vector<std::vector<double>> dataToPrint;
 
@@ -135,13 +135,15 @@ void OptimizedThermalGenerator::printResults()
 
     printf("Optimal objective value = %.2f\n", solver.MutableObjective()->Value());
 
-    printColumnToFile<double>(
-      dataToPrint, "/home/milos/Documents/RTEi/01-Antares/04-TestModels/REFACTOR-CR27-Results.csv");
+    std::string fileName = "/home/milos/Documents/RTEi/01-Antares/04-TestModels/"
+                           + std::to_string(optSett.firstDay) + "-Results.csv";
+
+    printColumnToFile<double>(dataToPrint, fileName);
 
     return;
 }
 
-void OptimizedThermalGenerator::printMaintenances()
+void OptimizedThermalGenerator::printMaintenances(OptProblemSettings& optSett)
 {
     std::vector<std::vector<int>> dataToPrint;
     for (auto& unit : scenarioResults)
@@ -155,9 +157,10 @@ void OptimizedThermalGenerator::printMaintenances()
         }
     }
 
-    printColumnToFile<int>(
-      dataToPrint,
-      "/home/milos/Documents/RTEi/01-Antares/04-TestModels/REFACTOR-CR27-Maintenances.csv");
+    std::string fileName = "/home/milos/Documents/RTEi/01-Antares/04-TestModels/"
+                           + std::to_string(optSett.firstDay) + "-Maintenances.csv";
+
+    printColumnToFile<int>(dataToPrint, fileName);
 }
 
 // Define the auxiliary function outside the class
