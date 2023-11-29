@@ -141,6 +141,25 @@ void OptimizedThermalGenerator::printResults()
     return;
 }
 
+void OptimizedThermalGenerator::printMaintenances()
+{
+    std::vector<std::vector<int>> dataToPrint;
+    for (auto& unit : scenarioResults)
+    {
+        for (auto& mnt : unit.maintenanceResults)
+        {
+            std::vector<int> RED;
+            RED.push_back(mnt.first);
+            RED.push_back(mnt.second);
+            dataToPrint.push_back(RED);
+        }
+    }
+
+    printColumnToFile<int>(
+      dataToPrint,
+      "/home/milos/Documents/RTEi/01-Antares/04-TestModels/REFACTOR-CR27-Maintenances.csv");
+}
+
 // Define the auxiliary function outside the class
 template<typename T>
 void printColumnToFile(const std::vector<std::vector<T>>& data, const std::string& filename)

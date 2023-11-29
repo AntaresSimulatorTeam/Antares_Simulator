@@ -15,6 +15,7 @@ void OptimizedThermalGenerator::postScenarioOptimization(OptProblemSettings& opt
 
     calculateScenarioResults(optSett);
     saveScenarioResults(optSett);
+    printMaintenances();
     resetResultStorage();
     reSetDaysSinceLastMnt();
 

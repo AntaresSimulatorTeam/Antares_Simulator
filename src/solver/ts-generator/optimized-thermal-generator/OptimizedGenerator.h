@@ -112,6 +112,7 @@ private:
     void printConstraints();
     void printResults();
     void printProblemVarAndResults();
+    void printMaintenances();
 
     /* ===================END-OPTIMIZATION=================== */
 
