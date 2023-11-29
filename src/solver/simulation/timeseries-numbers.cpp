@@ -122,8 +122,7 @@ class loadAreaNumberOfTSretriever : public areaNumberOfTSretriever
 public:
     std::vector<uint> getAreaTimeSeriesNumber(const Area& area) override
     {
-        std::vector<uint> to_return = {area.load.series.timeSeries.width};
-        return to_return;
+        return { area.load.series.timeSeries.width };
     }
 };
 
@@ -132,8 +131,7 @@ class hydroAreaNumberOfTSretriever : public areaNumberOfTSretriever
 public:
     std::vector<uint> getAreaTimeSeriesNumber(const Area& area) override
     {
-        std::vector<uint> to_return = {area.hydro.series->TScount()};
-        return to_return;
+        return { area.hydro.series->TScount() };
     }
 };
 
@@ -142,8 +140,7 @@ class windAreaNumberOfTSretriever : public areaNumberOfTSretriever
 public:
     std::vector<uint> getAreaTimeSeriesNumber(const Area& area) override
     {
-        std::vector<uint> to_return = {area.wind.series.timeSeries.width};
-        return to_return;
+        return { area.wind.series.timeSeries.width };
     }
 };
 
@@ -152,8 +149,7 @@ class solarAreaNumberOfTSretriever : public areaNumberOfTSretriever
 public:
     std::vector<uint> getAreaTimeSeriesNumber(const Area& area) override
     {
-        std::vector<uint> to_return = {area.solar.series.timeSeries.width};
-        return to_return;
+        return { area.solar.series.timeSeries.width };
     }
 };
 
