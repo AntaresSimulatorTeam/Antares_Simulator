@@ -127,26 +127,6 @@ void Application::prepare(int argc, char* argv[])
     checkOrtoolsUsage(
       pParameters->unitCommitment.ucMode, pParameters->ortoolsUsed, pParameters->ortoolsSolver);
 
-    checkSimplexRangeHydroPricing(pParameters->simplexOptimizationRange,
-                                  pParameters->hydroPricing.hpMode);
-
-    checkSimplexRangeUnitCommitmentMode(pParameters->simplexOptimizationRange,
-                                        pParameters->unitCommitment.ucMode);
-
-    checkSimplexRangeHydroHeuristic(pParameters->simplexOptimizationRange, pStudy->areas);
-
-    if (pParameters->adqPatchParams.enabled)
-        pParameters->adqPatchParams.checkAdqPatchParams(pParameters->mode,
-                                                        pStudy->areas,
-                                                        pParameters->include.hurdleCosts);
-
-    bool tsGenThermal
-      = (0 != (pParameters->timeSeriesToGenerate & Antares::Data::TimeSeriesType::timeSeriesThermal));
-
-    checkMinStablePower(tsGenThermal, pStudy->areas);
-
-    checkFuelCostColumnNumber(pStudy->areas);
-
     // Start the progress meter
     pStudy->initializeProgressMeter(pSettings.tsGeneratorsOnly);
     if (pSettings.noOutput)

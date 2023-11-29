@@ -287,6 +287,26 @@ inline ISimulation<Impl>::~ISimulation()
 template<class Impl>
 void ISimulation<Impl>::run()
 {
+    auto pParameters = &(study.parameters);
+    Check::checkSimplexRangeHydroPricing(pParameters->simplexOptimizationRange,
+                                  pParameters->hydroPricing.hpMode);
+
+    Check::checkSimplexRangeUnitCommitmentMode(pParameters->simplexOptimizationRange,
+                                        pParameters->unitCommitment.ucMode);
+
+    Check::checkSimplexRangeHydroHeuristic(pParameters->simplexOptimizationRange, study.areas);
+
+    if (pParameters->adqPatchParams.enabled)
+        pParameters->adqPatchParams.checkAdqPatchParams(pParameters->mode,
+                                                        study.areas,
+                                                        pParameters->include.hurdleCosts);
+
+    bool tsGenThermal
+      = (0 != (pParameters->timeSeriesToGenerate & Antares::Data::TimeSeriesType::timeSeriesThermal));
+
+    Check::checkMinStablePower(tsGenThermal, study.areas);
+
+    Check::checkFuelCostColumnNumber(study.areas);
     Check::checkCO2CostColumnNumber(study.areas);
 
     study.computePThetaInfForThermalClusters();
