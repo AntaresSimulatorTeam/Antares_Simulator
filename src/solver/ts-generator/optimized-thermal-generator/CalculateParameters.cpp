@@ -161,6 +161,7 @@ void OptimizedThermalGenerator::setClusterData()
               = calculateAverageMaintenanceDuration(cluster);
 
             // since we will be updating daysSinceLastMaintenance values
+            // after every optimization
             // lets create a copy here - this is copy by value!
             maintenanceData[&cluster].daysSinceLastMaintenance
               = cluster.originalRandomlyGeneratedDaysSinceLastMaintenance;
@@ -262,14 +263,14 @@ int OptimizedThermalGenerator::calculateUnitLatestStartOfFirstMaintenance(
   const Data::ThermalCluster& cluster,
   uint unitIndex)
 {
-    // latest start of the first maintenance of unit u (end of the window, must be positive - 
-    // FIRST STEP ONLY):
+    // latest start of the first maintenance of unit u, must be positive - 
+    // FIRST STEP ONLY!
 
     auto& daysSinceLastMaintenance = maintenanceData[&cluster].daysSinceLastMaintenance;
 
     if (unitIndex < daysSinceLastMaintenance.size())
     {
-        // this cannot be negative: FIRST STEP ONLY
+        // cannot be negative: FIRST STEP ONLY
         // cluster.interPoPeriod -
         // cluster.originalRandomlyGeneratedDaysSinceLastMaintenance[unitIndex] - is always positive
         // or zero
