@@ -599,8 +599,8 @@ struct PROBLEME_HEBDO
 
     std::vector<double> tempsResolution1;
     std::vector<double> tempsResolution2;
-    std::vector<double> tempsUpdate1;
-    std::vector<double> tempsUpdate2;
+    std::vector<double> updateTime1;
+    std::vector<double> updateTime2;
 
     /* Unused for now, will be used in future revisions */
 #if 0

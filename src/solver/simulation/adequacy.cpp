@@ -343,8 +343,8 @@ bool Adequacy::year(Progression::Task& progression,
         optWriter.addTime(w,
                           pProblemesHebdo[numSpace].tempsResolution1[0],
                           pProblemesHebdo[numSpace].tempsResolution2[0],
-                          pProblemesHebdo[numSpace].tempsUpdate1[0],
-                          pProblemesHebdo[numSpace].tempsUpdate2[0]);
+                          pProblemesHebdo[numSpace].updateTime1[0],
+                          pProblemesHebdo[numSpace].updateTime2[0]);
 
         ++progression;
     }

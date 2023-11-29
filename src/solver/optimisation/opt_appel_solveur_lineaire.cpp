@@ -355,13 +355,13 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
         {
             problemeHebdo->coutOptimalSolution1[NumIntervalle] = CoutOpt;
             problemeHebdo->tempsResolution1[NumIntervalle] = solveTime;
-            problemeHebdo->tempsUpdate1[NumIntervalle] = updateTime;
+            problemeHebdo->updateTime1[NumIntervalle] = updateTime;
         }
         else
         {
             problemeHebdo->coutOptimalSolution2[NumIntervalle] = CoutOpt;
             problemeHebdo->tempsResolution2[NumIntervalle] = solveTime;
-            problemeHebdo->tempsUpdate2[NumIntervalle] = updateTime;
+            problemeHebdo->updateTime2[NumIntervalle] = updateTime;
         }
         for (int Cnt = 0; Cnt < ProblemeAResoudre->NombreDeContraintes; Cnt++)
         {
