@@ -188,6 +188,7 @@ void OptimizedThermalGenerator::setMaintenanceGroupParameters()
     std::tie(par.ensCost_, par.spillCost_) = calculateMaintenanceGroupENSandSpillageCost();
     par.timeStep_ = calculateTimeStep();
     par.timeHorizon_ = calculateTimeHorizon();
+    par.timeHorizonFirstStep_ = par.timeHorizon_;
     // calculateDependantClusterData
     // uses timeHorizon_ so it is important we calculate timeHorizon_ first
     calculateDependantClusterData();

@@ -19,6 +19,7 @@ void OptimizedThermalGenerator::postScenarioOptimization(OptProblemSettings& opt
     printAvailability(optSett); // to be removed
     resetResultStorage();
     reSetDaysSinceLastMnt();
+    reSetTimeHorizon();
     reSetNumberOfMaintenances();
 
     return;
@@ -146,6 +147,16 @@ void OptimizedThermalGenerator::reSetDaysSinceLastMnt()
           = cluster.first->originalRandomlyGeneratedDaysSinceLastMaintenance;
     }
 
+    return;
+}
+
+void OptimizedThermalGenerator::reSetTimeHorizon()
+{
+    // we are back in first step, but not first scenario
+    // we have messed up our values
+    // we need to reset
+
+    par.timeHorizon_ = par.timeHorizonFirstStep_;
     return;
 }
 

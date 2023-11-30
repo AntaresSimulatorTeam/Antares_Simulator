@@ -134,6 +134,7 @@ private:
     void resetResultStorage();
     void reSetDaysSinceLastMnt();
     void reSetNumberOfMaintenances();
+    void reSetTimeHorizon();
     void writeTsResults();
 
     // post-timeStep optimization methods
