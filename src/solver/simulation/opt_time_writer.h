@@ -25,6 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #pragma once
+#include <sstream>
 #include <antares/writer/i_writer.h>
 
 #include "sim_structure_probleme_economique.h"
@@ -39,7 +40,7 @@ public:
 
 private:
     void printHeader();
-    Yuni::Clob pBuffer;
+    std::ostringstream pBuffer;
     uint pYear;
     Antares::Solver::IResultWriter& pWriter;
 };
