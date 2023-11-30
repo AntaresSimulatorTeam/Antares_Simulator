@@ -11,6 +11,7 @@ void OptimizedThermalGenerator::postTimeStepOptimization(OptProblemSettings& opt
 {
     appendTimeStepResults(optSett);
     reCalculateDaysSinceLastMnt(optSett);
+    reCalculateTimeHorizon();
     reCalculateNumberOfMaintenances();
     return;
 }
@@ -130,6 +131,11 @@ int OptimizedThermalGenerator::reCalculateDaysSinceLastMnt(const OptProblemSetti
     else
         return nextOptimizationFirstDay
                + unit.parentCluster->originalRandomlyGeneratedDaysSinceLastMaintenance[unit.index];
+}
+
+void OptimizedThermalGenerator::reCalculateTimeHorizon()
+{
+    par.timeHorizon_ = calculateTimeHorizon();
 }
 
 void OptimizedThermalGenerator::reCalculateNumberOfMaintenances()
