@@ -26,7 +26,6 @@ public:
     bool isFirstStep = true;
 };
 
-// this structure stores the data about optimization problem variables and results
 struct Maintenances
 {
     // number of elements in the vector is number of days in optimization problem
@@ -72,7 +71,8 @@ struct Unit
     void calculateAvailableDailyPower(int tsCount);
 };
 
-struct OptimizationProblemVariables
+// this structure stores the data about optimization problem variables and results
+struct OptimizationVariables
 {
     // number of elements in the vector is number units (areas*cluster*units)
     std::vector<Unit> clusterUnits;
@@ -127,6 +127,17 @@ struct ClusterData
     StaticInputs staticInputs;
     DynamicInputs dynamicInputs;
     DynamicResults dynamicResults;
+};
+
+struct OptimizationParameters
+{
+    int timeHorizon_;
+    int timeStep_;
+    double ensCost_;
+    double spillCost_;
+    std::array<double, DAYS_PER_YEAR> residualLoadDailyValues_;
+
+    std::map<const Data::ThermalCluster*, ClusterData> clusterData;
 };
 
 } // namespace Antares::Solver::TSGenerator

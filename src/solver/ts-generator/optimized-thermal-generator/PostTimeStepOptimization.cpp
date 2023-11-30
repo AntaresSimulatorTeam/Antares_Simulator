@@ -57,7 +57,7 @@ void OptimizedThermalGenerator::appendTimeStepResults(const OptProblemSettings& 
         // only one maintenance can happen in the timeStep_
         // TODO CR27: in phase-II we may change this and looping will be necessary
         {
-            int localMaintenanceStart = readResultUnit.maintenances[0].startDay(timeStep_);
+            int localMaintenanceStart = readResultUnit.maintenances[0].startDay(par.timeStep_);
             if (localMaintenanceStart == -1)
                 continue;
 
@@ -66,8 +66,8 @@ void OptimizedThermalGenerator::appendTimeStepResults(const OptProblemSettings& 
 
             int PODOfTheDay
               = (int)cluster.prepro->data[Data::PreproThermal::poDuration][dayInTheYearStart];
-            double app = maintenanceData[&cluster].staticInputs.AP[dayInTheYearStart];
-            double bpp = maintenanceData[&cluster].staticInputs.BP[dayInTheYearStart];
+            double app = par.clusterData[&cluster].staticInputs.AP[dayInTheYearStart];
+            double bpp = par.clusterData[&cluster].staticInputs.BP[dayInTheYearStart];
             int maintenanceDuration = durationGenerator(
               cluster.plannedLaw, PODOfTheDay, cluster.plannedVolatility, app, bpp);
 
@@ -94,7 +94,7 @@ void OptimizedThermalGenerator::reCalculateDaysSinceLastMnt(const OptProblemSett
                                                             const Unit& unit)
 {
     auto& daysSinceLastMaintenance
-      = maintenanceData[unit.parentCluster].dynamicInputs.daysSinceLastMaintenance[unit.index];
+      = par.clusterData[unit.parentCluster].dynamicInputs.daysSinceLastMaintenance[unit.index];
     bool maintenanceHappened = false;
 
     if (unit.maintenanceResults.empty())
@@ -119,7 +119,7 @@ int OptimizedThermalGenerator::reCalculateDaysSinceLastMnt(const OptProblemSetti
                                                            int lastMaintenanceStart,
                                                            int lastMaintenanceDuration)
 {
-    int nextOptimizationFirstDay = optSett.firstDay + timeStep_;
+    int nextOptimizationFirstDay = optSett.firstDay + par.timeStep_;
     if (maintenanceHappened)
         return std::max(
           0, nextOptimizationFirstDay - (lastMaintenanceStart + lastMaintenanceDuration));
@@ -135,7 +135,7 @@ int OptimizedThermalGenerator::reCalculateDaysSinceLastMnt(const OptProblemSetti
 void OptimizedThermalGenerator::reCalculateNumberOfMaintenances()
 {
     // re-calculate days since last maintenance inputs if necessary
-    for (auto& cluster : maintenanceData)
+    for (auto& cluster : par.clusterData)
     {
         cluster.second.dynamicInputs.numberOfMaintenances
           = calculateNumberOfMaintenances(*(cluster.first));

@@ -15,14 +15,14 @@ void OptimizedThermalGenerator::buildProblemVariables(const OptProblemSettings& 
 // create VARIABLES per day - ENS[t], Spill[t]
 void OptimizedThermalGenerator::buildEnsAndSpillageVariables(const OptProblemSettings& optSett)
 {
-    for (int day = 0; day < timeHorizon_; ++day)
+    for (int day = 0; day < par.timeHorizon_; ++day)
     {
         // add ENS[t] variables
         vars.ens.push_back(solver.MakeNumVar(
           0.0, solverInfinity, "ENS_[" + std::to_string(day + optSett.firstDay) + "]"));
     }
 
-    for (int day = 0; day < timeHorizon_; ++day)
+    for (int day = 0; day < par.timeHorizon_; ++day)
     {
         // add Spillage[t] variables
         vars.spill.push_back(solver.MakeNumVar(
@@ -36,7 +36,7 @@ void OptimizedThermalGenerator::buildEnsAndSpillageVariables(const OptProblemSet
 void OptimizedThermalGenerator::buildUnitPowerOutputVariables(const OptProblemSettings& optSett)
 {
     // loop per thermal clusters inside the area
-    for (const auto& clusterEntry : maintenanceData)
+    for (const auto& clusterEntry : par.clusterData)
     {
         const auto& cluster = *(clusterEntry.first);
         buildUnitPowerOutputVariables(optSett, cluster);
@@ -75,7 +75,7 @@ void OptimizedThermalGenerator::buildUnitPowerOutputVariables(const OptProblemSe
         scenarioResults.push_back(vars.clusterUnits.back());
 
     // loop per day
-    for (int day = 0; day < timeHorizon_; ++day)
+    for (int day = 0; day < par.timeHorizon_; ++day)
     {
         // add P[u][t] variables
         unitRef.P.push_back(solver.MakeNumVar(0.0,
@@ -122,7 +122,7 @@ void OptimizedThermalGenerator::buildStartVariables(const OptProblemSettings& op
                                                     int mnt)
 {
     // loop per day
-    for (int day = 0; day < timeHorizon_; ++day)
+    for (int day = 0; day < par.timeHorizon_; ++day)
     {
         // add start[u][m][t] variables
         unitRef.maintenances.back().start.push_back(solver.MakeIntVar(
@@ -141,7 +141,7 @@ void OptimizedThermalGenerator::buildEndVariables(const OptProblemSettings& optS
                                                   int mnt)
 {
     // loop per day
-    for (int day = 0; day < timeHorizon_; ++day)
+    for (int day = 0; day < par.timeHorizon_; ++day)
     {
         // add end[u][m][t] variables
         unitRef.maintenances.back().end.push_back(solver.MakeIntVar(

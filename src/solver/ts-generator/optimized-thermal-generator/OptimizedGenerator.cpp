@@ -22,7 +22,7 @@ void OptimizedThermalGenerator::GenerateOptimizedThermalTimeSeries()
     {
         OptProblemSettings optSett;
         optSett.firstDay = 0;
-        optSett.lastDay = timeHorizon_;
+        optSett.lastDay = par.timeHorizon_;
         optSett.scenario = scenarioIndex;
 
         // loop till the end of scenario length
@@ -33,8 +33,8 @@ void OptimizedThermalGenerator::GenerateOptimizedThermalTimeSeries()
                 break;
 
             // Update the time values for the next iteration
-            optSett.firstDay += timeStep_;
-            optSett.lastDay += timeStep_;
+            optSett.firstDay += par.timeStep_;
+            optSett.lastDay += par.timeStep_;
             optSett.isFirstStep = false;
         }
         postScenarioOptimization(optSett);

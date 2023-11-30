@@ -16,7 +16,7 @@ void OptimizedThermalGenerator::buildProblemConstraints(const OptProblemSettings
 // load balance CONSTRAINTS - constraint-per-each-day[t] - we have sum through [u] inside of it
 void OptimizedThermalGenerator::setLoadBalanceConstraints(const OptProblemSettings& optSett)
 {
-    for (int day = 0; day < timeHorizon_; ++day)
+    for (int day = 0; day < par.timeHorizon_; ++day)
     {
         setLoadBalanceConstraints(optSett, day);
     }
@@ -78,8 +78,8 @@ void OptimizedThermalGenerator::setStartEndMntLogicConstraints(const OptProblemS
     // loop per maintenances per unit
     for (int mnt = 0; mnt < unit.maintenances.size(); ++mnt)
     {
-        assert(unit.maintenances[mnt].start.size() == timeHorizon_);
-        assert(unit.maintenances[mnt].end.size() == timeHorizon_);
+        assert(unit.maintenances[mnt].start.size() == par.timeHorizon_);
+        assert(unit.maintenances[mnt].end.size() == par.timeHorizon_);
         setEndOfMaintenanceEventBasedOnAverageDurationOfMaintenanceEvent(optSett, unit, mnt);
         setOnceStartIsSetToOneItWillBeOneUntilEndOfOptimizationTimeHorizon(optSett, unit, mnt);
     }
@@ -99,7 +99,7 @@ void OptimizedThermalGenerator::setEndOfMaintenanceEventBasedOnAverageDurationOf
 {
     const auto& cluster = *(unit.parentCluster);
     int averageMaintenanceDuration = getAverageMaintenanceDuration(cluster);
-    for (int day = 0; day < timeHorizon_ - averageMaintenanceDuration; ++day)
+    for (int day = 0; day < par.timeHorizon_ - averageMaintenanceDuration; ++day)
     {
         std::string ctName = "E[u][q][t+Mu] = S[u][q][t] -> ["
                              + cluster.getFullName().to<std::string>() + "."
@@ -121,7 +121,7 @@ void OptimizedThermalGenerator::
 {
     const auto& cluster = *(unit.parentCluster);
     int averageDurationBetweenMaintenances = getAverageDurationBetweenMaintenances(cluster);
-    for (int day = 0; day < timeHorizon_ - averageDurationBetweenMaintenances; ++day)
+    for (int day = 0; day < par.timeHorizon_ - averageDurationBetweenMaintenances; ++day)
     {
         std::string ctName = "S[u][q+1][t+Tu] = E[u][q][t] -> ["
                              + cluster.getFullName().to<std::string>() + "."
@@ -142,7 +142,7 @@ void OptimizedThermalGenerator::setOnceStartIsSetToOneItWillBeOneUntilEndOfOptim
   int mnt)
 {
     const auto& cluster = *(unit.parentCluster);
-    for (int day = 0; day < timeHorizon_ - 1; ++day)
+    for (int day = 0; day < par.timeHorizon_ - 1; ++day)
     {
         std::string ctName = "S[u][q][t+1] >= S[u][q][t] -> ["
                              + cluster.getFullName().to<std::string>() + "."
@@ -162,7 +162,7 @@ void OptimizedThermalGenerator::setNextMaintenanceCanNotStartBeforePreviousMaint
   int mnt)
 {
     const auto& cluster = *(unit.parentCluster);
-    for (int day = 0; day < timeHorizon_; ++day)
+    for (int day = 0; day < par.timeHorizon_; ++day)
     {
         std::string ctName = "S[u][q][t] >= S[u][q+1][t] -> ["
                              + cluster.getFullName().to<std::string>() + "."
@@ -180,7 +180,7 @@ void OptimizedThermalGenerator::setNextMaintenanceCanNotStartBeforePreviousMaint
 // CONSTRAINTS per days and per units - constraint-per-each-day+unit[t][u][m-sum per m]
 void OptimizedThermalGenerator::setMaxUnitOutputConstraints(const OptProblemSettings& optSett)
 {
-    for (int day = 0; day < timeHorizon_; ++day)
+    for (int day = 0; day < par.timeHorizon_; ++day)
     {
         setMaxUnitOutputConstraints(optSett, day);
     }

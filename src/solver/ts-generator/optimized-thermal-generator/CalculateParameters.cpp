@@ -13,15 +13,15 @@ void OptimizedThermalGenerator::setMaintenanceGroupParameters()
     // timeHorizon, timeStep ENS and Spillage are defined per one MaintenanceGroup
     // Residual Load (or reference value) array is defined per one MaintenanceGroup
     calculateResidualLoad();
-    residualLoadDailyValues_ = calculateDailySums(maintenanceGroup_.getUsedResidualLoadTS());
-    std::tie(ensCost_, spillCost_) = calculateMaintenanceGroupENSandSpillageCost();
-    std::tie(timeStep_, timeHorizon_) = calculateTimeHorizonAndStep();
+    par.residualLoadDailyValues_ = calculateDailySums(maintenanceGroup_.getUsedResidualLoadTS());
+    std::tie(par.ensCost_, par.spillCost_) = calculateMaintenanceGroupENSandSpillageCost();
+    std::tie(par.timeStep_, par.timeHorizon_) = calculateTimeHorizonAndStep();
     setClusterData();
 }
 
 bool OptimizedThermalGenerator::checkMaintenanceGroupParameters()
 {
-    if (timeStep_ == 0)
+    if (par.timeStep_ == 0)
     {
         logs.info() << "Maintenance group: " << maintenanceGroup_.name()
                     << ": The timeseries generation will be skiped:  timeStep = 0. It is possible "
@@ -29,7 +29,7 @@ bool OptimizedThermalGenerator::checkMaintenanceGroupParameters()
                        "planning, or at least one cluster has interPoPeriod = 0";
         return false;
     }
-    if (timeHorizon_ == 0)
+    if (par.timeHorizon_ == 0)
     {
         logs.info()
           << "Maintenance group: " << maintenanceGroup_.name()
@@ -152,31 +152,31 @@ void OptimizedThermalGenerator::setClusterData()
                 continue;
 
             // create struct
-            maintenanceData[&cluster] = ClusterData();
+            par.clusterData[&cluster] = ClusterData();
 
             // static Inputs
-            maintenanceData[&cluster].staticInputs.maxPower = calculateMaxUnitOutput(cluster);
-            maintenanceData[&cluster].staticInputs.avgCost = calculateAvrUnitDailyCost(cluster);
-            maintenanceData[&cluster].staticInputs.averageMaintenanceDuration
+            par.clusterData[&cluster].staticInputs.maxPower = calculateMaxUnitOutput(cluster);
+            par.clusterData[&cluster].staticInputs.avgCost = calculateAvrUnitDailyCost(cluster);
+            par.clusterData[&cluster].staticInputs.averageMaintenanceDuration
               = calculateAverageMaintenanceDuration(cluster);
 
             // dynamic inputs -- must calculate before number of maintenance
-            maintenanceData[&cluster].dynamicInputs.daysSinceLastMaintenance
+            par.clusterData[&cluster].dynamicInputs.daysSinceLastMaintenance
               = cluster.originalRandomlyGeneratedDaysSinceLastMaintenance;
 
             // back to static input data
-            maintenanceData[&cluster].staticInputs.numberOfMaintenancesFirstStep
+            par.clusterData[&cluster].staticInputs.numberOfMaintenancesFirstStep
               = calculateNumberOfMaintenances(cluster);
             // static inputs for random generator
             prepareIndispoFromLaw(cluster.plannedLaw,
                                   cluster.plannedVolatility,
-                                  maintenanceData[&cluster].staticInputs.AP,
-                                  maintenanceData[&cluster].staticInputs.BP,
+                                  par.clusterData[&cluster].staticInputs.AP,
+                                  par.clusterData[&cluster].staticInputs.BP,
                                   cluster.prepro->data[Data::PreproThermal::poDuration]);
 
             // back to dynamic inputs
-            maintenanceData[&cluster].dynamicInputs.numberOfMaintenances
-              = maintenanceData[&cluster].staticInputs.numberOfMaintenancesFirstStep;
+            par.clusterData[&cluster].dynamicInputs.numberOfMaintenances
+              = par.clusterData[&cluster].staticInputs.numberOfMaintenancesFirstStep;
         }
     }
     return;
@@ -211,29 +211,29 @@ double OptimizedThermalGenerator::getPowerCost(const Data::ThermalCluster& clust
         return 0.;
     }
 
-    return maintenanceData[&cluster].staticInputs.avgCost[dayOfTheYear(optimizationDay)];
+    return par.clusterData[&cluster].staticInputs.avgCost[dayOfTheYear(optimizationDay)];
 }
 
 double OptimizedThermalGenerator::getPowerOutput(const Data::ThermalCluster& cluster,
                                                  int optimizationDay)
 {
-    return maintenanceData[&cluster].staticInputs.maxPower[dayOfTheYear(optimizationDay)];
+    return par.clusterData[&cluster].staticInputs.maxPower[dayOfTheYear(optimizationDay)];
 }
 
 double OptimizedThermalGenerator::getResidualLoad(int optimizationDay)
 {
-    return residualLoadDailyValues_[dayOfTheYear(optimizationDay)];
+    return par.residualLoadDailyValues_[dayOfTheYear(optimizationDay)];
 }
 
 int OptimizedThermalGenerator::getNumberOfMaintenances(const Data::ThermalCluster& cluster,
                                                        int unit)
 {
-    return maintenanceData[&cluster].dynamicInputs.numberOfMaintenances[unit];
+    return par.clusterData[&cluster].dynamicInputs.numberOfMaintenances[unit];
 }
 
 int OptimizedThermalGenerator::getAverageMaintenanceDuration(const Data::ThermalCluster& cluster)
 {
-    return maintenanceData[&cluster].staticInputs.averageMaintenanceDuration;
+    return par.clusterData[&cluster].staticInputs.averageMaintenanceDuration;
 }
 
 int OptimizedThermalGenerator::getAverageDurationBetweenMaintenances(
@@ -245,7 +245,7 @@ int OptimizedThermalGenerator::getAverageDurationBetweenMaintenances(
 int OptimizedThermalGenerator::getDaysSinceLastMaintenance(const Data::ThermalCluster& cluster,
                                                            int unit)
 {
-    return maintenanceData[&cluster].dynamicInputs.daysSinceLastMaintenance[unit];
+    return par.clusterData[&cluster].dynamicInputs.daysSinceLastMaintenance[unit];
 }
 
 // calculate parameters methods - per cluster-Unit
@@ -280,7 +280,7 @@ int OptimizedThermalGenerator::calculateUnitLatestStartOfFirstMaintenance(
       std::max(0,
                getAverageDurationBetweenMaintenances(cluster)
                  - getDaysSinceLastMaintenance(cluster, unitIndex) + cluster.poWindows),
-      timeHorizon_ - 1);
+      par.timeHorizon_ - 1);
 }
 
 std::vector<int> OptimizedThermalGenerator::calculateNumberOfMaintenances(
@@ -294,11 +294,12 @@ std::vector<int> OptimizedThermalGenerator::calculateNumberOfMaintenances(
 
     for (int unit = 0; unit != cluster.unitCount; ++unit)
     {
-        int div = (timeHorizon_ + getDaysSinceLastMaintenance(cluster, unit)
+        int div = (par.timeHorizon_ + getDaysSinceLastMaintenance(cluster, unit)
                    - getAverageDurationBetweenMaintenances(cluster))
                   / (getAverageDurationBetweenMaintenances(cluster)
                      + getAverageMaintenanceDuration(cluster));
-        numberOfMaintenances[unit] = std::max(1 + div, minNumberOfMaintenances); // TODO CR27: keep here min=2 did not see it in python
+        numberOfMaintenances[unit] = std::max(
+          1 + div, minNumberOfMaintenances); // TODO CR27: keep here min=2 did not see it in python
     }
 
     return numberOfMaintenances;

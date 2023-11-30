@@ -22,8 +22,7 @@ namespace Antares::Solver::TSGenerator
 
 class OptimizedThermalGenerator : public GeneratorTempData
 {
-    using MaintenanceClusterStorage = std::map<const Data::ThermalCluster*, ClusterData>;
-    using ScenarioResults = std::vector<Unit>;
+    using OptimizationResults = std::vector<Unit>;
 
 private:
     /* ===================OPTIMIZATION=================== */
@@ -185,20 +184,10 @@ private:
     bool globalThermalTSgeneration_;
     int scenarioLength_;
     int scenarioNumber_;
-    int timeHorizon_;
-    int timeStep_;
-    double ensCost_;
-    double spillCost_;
-    std::array<double, DAYS_PER_YEAR> residualLoadDailyValues_;
-    /*
-    TODO CR27:
-    make MaintenanceClusterStorage and
-    OptimizationProblemVariables new classes
-    and move their methods away from here
-    */
-    MaintenanceClusterStorage maintenanceData;
-    OptimizationProblemVariables vars;
-    ScenarioResults scenarioResults;
+
+    OptimizationParameters par;
+    OptimizationVariables vars;
+    OptimizationResults scenarioResults;
 
     // MPSolver instance
     MPSolver solver;

@@ -26,7 +26,7 @@ void OptimizedThermalGenerator::setProblemEnsCost(MPObjective* objective)
     // loop per day
     for (const auto& ens : vars.ens)
     {
-        objective->SetCoefficient(ens, ensCost_);
+        objective->SetCoefficient(ens, par.ensCost_);
     }
     return;
 }
@@ -36,7 +36,7 @@ void OptimizedThermalGenerator::setProblemSpillCost(MPObjective* objective)
     // loop per day
     for (const auto& spill : vars.spill)
     {
-        objective->SetCoefficient(spill, spillCost_);
+        objective->SetCoefficient(spill, par.spillCost_);
     }
     return;
 }

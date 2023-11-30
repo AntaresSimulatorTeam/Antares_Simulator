@@ -78,7 +78,7 @@ void OptimizedThermalGenerator::fixBounds(const Unit& unit, int averageMaintenan
 // start[u][q][T] = 1
 void OptimizedThermalGenerator::fixBoundsStartSecondMnt(const Unit& unit, int mnt)
 {
-    unit.maintenances[mnt].start[timeHorizon_ - 1]->SetBounds(1.0, 1.0);
+    unit.maintenances[mnt].start[par.timeHorizon_ - 1]->SetBounds(1.0, 1.0);
 }
 
 // End of the maintenance can't happen before average maintenance duration

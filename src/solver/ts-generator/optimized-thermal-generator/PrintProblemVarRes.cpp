@@ -174,7 +174,7 @@ void OptimizedThermalGenerator::printAvailability(OptProblemSettings& optSett)
     for (int day = 0; day != scenarioLength_ * 365; ++day)
     {
         std::vector<double> RED;
-        for (auto& cluster : maintenanceData)
+        for (auto& cluster : par.clusterData)
         {
             RED.push_back(cluster.second.dynamicResults.availableDailyPower[day]);
         }

@@ -39,7 +39,7 @@ void OptimizedThermalGenerator::calculateScenarioResults()
     // now lets get CLUSTER availability by summing up UNIT availability
 
     // fill in with zeros
-    for (auto& cluster : maintenanceData)
+    for (auto& cluster : par.clusterData)
     {
         cluster.second.dynamicResults.availableDailyPower.resize(scenarioLength_ * DAYS_PER_YEAR);
     }
@@ -48,7 +48,7 @@ void OptimizedThermalGenerator::calculateScenarioResults()
     for (auto& unit : scenarioResults)
     {
         auto& availableDailyPower
-          = maintenanceData[unit.parentCluster].dynamicResults.availableDailyPower;
+          = par.clusterData[unit.parentCluster].dynamicResults.availableDailyPower;
 
         std::transform(availableDailyPower.begin(),
                        availableDailyPower.end(),
@@ -73,7 +73,7 @@ void OptimizedThermalGenerator::saveScenarioResults(const OptProblemSettings& op
     int colSaveTo = colSaveFrom + scenarioLength_;
 
     // using on purpose this double loop
-    // because looping through maintenanceData we cannot change cluster
+    // because looping through par.clusterData we cannot change cluster
     // const Data::ThermalCluster*
     for (auto& entryWeightMap : maintenanceGroup_)
     {
@@ -98,13 +98,13 @@ void OptimizedThermalGenerator::saveScenarioResults(int fromCol,
                                                     int toCol,
                                                     Data::ThermalCluster& cluster)
 {
-    // daily results are in maintenanceData.availableDailyPower
+    // daily results are in par.clusterData.availableDailyPower
     // convert to hourly values and store in cluster ts
     // we assume that vector availableDailyPower has:
     // scenarioLength_ * DAYS_PER_YEAR element
     // that we need to store inside columns from-to
 
-    auto& availability = maintenanceData[&cluster].dynamicResults.availableDailyPower;
+    auto& availability = par.clusterData[&cluster].dynamicResults.availableDailyPower;
     assert((toCol - fromCol) * DAYS_PER_YEAR == availability.size());
 
     int vctCol = 0;
@@ -123,10 +123,10 @@ void OptimizedThermalGenerator::resetResultStorage()
     // clear units result structure
     scenarioResults.clear();
     // clear cluster result structure
-    // do not clear whole maintenanceData
+    // do not clear whole par.clusterData
     // we store input data here as well
 
-    for (auto& cluster : maintenanceData)
+    for (auto& cluster : par.clusterData)
     {
         cluster.second.dynamicResults.availableDailyPower.clear();
     }
@@ -140,7 +140,7 @@ void OptimizedThermalGenerator::reSetDaysSinceLastMnt()
     // we have messed up our values
     // we need to reset
 
-    for (auto& cluster : maintenanceData)
+    for (auto& cluster : par.clusterData)
     {
         cluster.second.dynamicInputs.daysSinceLastMaintenance
           = cluster.first->originalRandomlyGeneratedDaysSinceLastMaintenance;
@@ -155,7 +155,7 @@ void OptimizedThermalGenerator::reSetNumberOfMaintenances()
     // we have messed up our values
     // we need to reset
 
-    for (auto& cluster : maintenanceData)
+    for (auto& cluster : par.clusterData)
     {
         cluster.second.dynamicInputs.numberOfMaintenances
           = cluster.second.staticInputs.numberOfMaintenancesFirstStep;
@@ -170,7 +170,7 @@ void OptimizedThermalGenerator::writeTsResults()
 {
     // we need to loop through all the clusters
     // and write the results
-    // it would be much easier to loop using maintenanceData
+    // it would be much easier to loop using par.clusterData
     // inside of it we already excluded all the non-important clusters
     // however it is const Data::ThermalCluster*
     // so we cannot modify cluster values
