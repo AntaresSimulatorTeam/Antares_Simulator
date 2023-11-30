@@ -354,14 +354,14 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
         if (optimizationNumber == PREMIERE_OPTIMISATION)
         {
             problemeHebdo->coutOptimalSolution1[NumIntervalle] = CoutOpt;
-            problemeHebdo->timeMeasure.tempsResolution1[NumIntervalle] = solveTime;
-            problemeHebdo->timeMeasure.updateTime1[NumIntervalle] = updateTime;
+            problemeHebdo->timeMeasure.tempsResolution1 = solveTime;
+            problemeHebdo->timeMeasure.updateTime1 = updateTime;
         }
         else
         {
             problemeHebdo->coutOptimalSolution2[NumIntervalle] = CoutOpt;
-            problemeHebdo->timeMeasure.tempsResolution2[NumIntervalle] = solveTime;
-            problemeHebdo->timeMeasure.updateTime2[NumIntervalle] = updateTime;
+            problemeHebdo->timeMeasure.tempsResolution2 = solveTime;
+            problemeHebdo->timeMeasure.updateTime2 = updateTime;
         }
         for (int Cnt = 0; Cnt < ProblemeAResoudre->NombreDeContraintes; Cnt++)
         {

@@ -144,11 +144,6 @@ void SIM_AllocationProblemeDonneesGenerales(PROBLEME_HEBDO& problem,
 
     problem.coutOptimalSolution1.assign(7, 0.);
     problem.coutOptimalSolution2.assign(7, 0.);
-
-    problem.timeMeasure.tempsResolution1.assign(7, 0.);
-    problem.timeMeasure.tempsResolution2.assign(7, 0.);
-    problem.timeMeasure.updateTime1.assign(7, 0.);
-    problem.timeMeasure.updateTime2.assign(7, 0.);
 }
 
 void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,

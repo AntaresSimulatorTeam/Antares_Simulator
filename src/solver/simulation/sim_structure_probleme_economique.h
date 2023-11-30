@@ -472,10 +472,10 @@ struct COUTS_DE_TRANSPORT
 
 struct TIME_MEASURE
 {
-    std::vector<double> tempsResolution1;
-    std::vector<double> tempsResolution2;
-    std::vector<double> updateTime1;
-    std::vector<double> updateTime2;
+    double tempsResolution1;
+    double tempsResolution2;
+    double updateTime1;
+    double updateTime2;
 };
 
 struct VARIABLES_DUALES_INTERCONNEXIONS
