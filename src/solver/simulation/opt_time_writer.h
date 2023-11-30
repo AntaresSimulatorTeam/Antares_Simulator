@@ -34,7 +34,7 @@
 class OptimizationStatisticsWriter
 {
 public:
-    void addTime(uint week, TIME_MEASURE& timeMeasure);
+    void addTime(uint week, const TIME_MEASURE& timeMeasure);
     OptimizationStatisticsWriter(Antares::Solver::IResultWriter& writer, uint year);
     void finalize();
 
