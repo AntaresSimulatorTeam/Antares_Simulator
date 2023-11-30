@@ -132,6 +132,7 @@ struct ClusterData
 struct OptimizationParameters
 {
     int timeHorizon_;
+    int timeHorizonFirstStep_;
     int timeStep_;
     double ensCost_;
     double spillCost_;
