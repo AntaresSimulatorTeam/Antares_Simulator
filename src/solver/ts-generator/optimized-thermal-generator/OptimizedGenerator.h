@@ -153,12 +153,15 @@ private:
     /* ===================CALCULATE-OPTIMIZATION-PARAMETERS=================== */
 
     // Calculate parameters methods - per maintenance group
+    void allocateClusterData();
+    void calculateNonDependantClusterData();
+    void calculateResidualLoad();
+    std::pair<double, double> calculateMaintenanceGroupENSandSpillageCost();
+    int calculateTimeStep();
+    int calculateTimeHorizon();
+    void calculateDependantClusterData();
     void setMaintenanceGroupParameters();
     bool checkMaintenanceGroupParameters();
-    std::pair<int, int> calculateTimeHorizonAndStep();
-    std::pair<double, double> calculateMaintenanceGroupENSandSpillageCost();
-    void calculateResidualLoad();
-    void setClusterData();
 
     // getters
     double getPowerCost(const Data::ThermalCluster& cluster, int optimizationDay);
