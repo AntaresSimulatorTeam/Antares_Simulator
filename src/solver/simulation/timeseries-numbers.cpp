@@ -798,7 +798,7 @@ bool TimeSeriesNumbers::Generate(Study& study)
 
     for (uint year = 0; year < years; ++year)
     {
-        // Intra-modal TS : draw and store TS numbres
+        // Intra-modal TS : draw and store TS numbers
         drawTSnumbersForIntraModal(
           intramodal_draws, isTSintramodal, nbTimeseriesByMode, study.runtime->random);
         storeTSnumbersForIntraModal(intramodal_draws, isTSintramodal, year, study.areas);
