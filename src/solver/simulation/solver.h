@@ -36,7 +36,7 @@
 #include "../variable/state.h"
 #include "../misc/options.h"
 #include "solver.data.h"
-#include "solver.utils.h"
+#include "solver_utils.h"
 #include "../hydro/management/management.h"
 
 #include <antares/writer/writer_factory.h>

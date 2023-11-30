@@ -40,7 +40,7 @@ void OptimizationStatisticsWriter::printHeader()
     pBuffer << "# Week Optimization_1_ms Optimization_2_ms Update_ms1 Update_ms2\n";
 }
 
-void OptimizationStatisticsWriter::addTime(uint week, TIME_MEASURE& timeMeasure)
+void OptimizationStatisticsWriter::addTime(uint week, const TIME_MEASURE& timeMeasure)
 {
     pBuffer << week
         << " " << timeMeasure.tempsResolution1

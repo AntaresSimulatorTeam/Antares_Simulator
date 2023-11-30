@@ -229,15 +229,15 @@ public:
     // That is : Somme(h in Y)[ Somme(a in areas)(OV. COST[h,a])  +  Somme(l in links)(HURDLE
     // COST[h,l]) ]
     double annualSystemCost = 0.;
-    // Sum of the weekly optimal costs over the year (first optimisation step)
+    /// Sum of the weekly optimal costs over the year (first optimisation step)
     double optimalSolutionCost1 = 0.;
-    // Sum of the weekly optimal costs over the year (second optimisation step)
+    /// Sum of the weekly optimal costs over the year (second optimisation step)
     double optimalSolutionCost2 = 0.;
-    // Average time spent in first optimization over the year (ms)
+    /// Average time spent in first optimization over the year (ms)
     double averageOptimizationTime1 = 0.;
-    // Average time spent in second optimization over the year (ms)
+    /// Average time spent in second optimization over the year (ms)
     double averageOptimizationTime2 = 0.;
-    // TODO describe
+    /// Average time spent updating the problem over the year (ms)
     double averageUpdateTime = 0.;
     // -----------------------------------------------------------------
 }; // class State
