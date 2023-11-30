@@ -40,7 +40,7 @@
 #include "../ts-generator/generator.h"
 #include "opt_time_writer.h"
 #include "../hydro/management.h" // Added for use of randomReservoirLevel(...)
-#include "../ts-generator/optimized-thermal-generator/pre-scenario-builder.h"
+#include "../ts-generator/optimized-thermal-generator/Aux/pre-scenario-builder.h"
 
 #include <yuni/core/system/suspend.h>
 #include <yuni/job/job.h>

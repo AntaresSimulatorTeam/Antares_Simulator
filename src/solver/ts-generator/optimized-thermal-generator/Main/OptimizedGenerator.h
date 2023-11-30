@@ -5,10 +5,10 @@
 #pragma once
 
 #include "ortools/linear_solver/linear_solver.h"
-#include "../randomized-thermal-generator/RandomizedGenerator.h"
-#include "../../../libs/antares/study/maintenance_planning/MaintenanceGroup.h"
-#include "AuxillaryStructures.h"
-#include "AuxillaryFreeFunctions.h"
+#include "../../randomized-thermal-generator/RandomizedGenerator.h"
+#include "../../../../libs/antares/study/maintenance_planning/MaintenanceGroup.h"
+#include "../Aux/AuxillaryStructures.h"
+#include "../Aux/AuxillaryFreeFunctions.h"
 #include <antares/exception/AssertionError.hpp>
 
 // static const std::string mntPlSolverName = "cbc";

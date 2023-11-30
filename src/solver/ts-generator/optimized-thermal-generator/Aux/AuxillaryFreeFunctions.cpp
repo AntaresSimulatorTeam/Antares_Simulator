@@ -4,8 +4,8 @@
 #include <array>
 #include <numeric>
 #include <algorithm>
-#include "OptimizedGenerator.h"
-#include "AuxillaryFreeFunctions.h"
+#include "../Main/OptimizedGenerator.h"
+#include "../Aux/AuxillaryFreeFunctions.h"
 
 namespace Antares::Solver::TSGenerator
 {

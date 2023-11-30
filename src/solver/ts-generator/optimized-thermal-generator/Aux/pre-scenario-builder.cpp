@@ -4,8 +4,8 @@
 
 #include <antares/fatal-error.h>
 #include "pre-scenario-builder.h"
-#include "../../simulation/apply-scenario.h"
-#include "../../simulation/timeseries-numbers.h"
+#include "../../../simulation/apply-scenario.h"
+#include "../../../simulation/timeseries-numbers.h"
 
 namespace Antares::Solver
 {
