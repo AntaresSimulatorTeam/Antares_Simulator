@@ -472,10 +472,10 @@ struct COUTS_DE_TRANSPORT
 
 struct TIME_MEASURE
 {
-    long long tempsResolution1;
-    long long tempsResolution2;
-    long long updateTime1;
-    long long updateTime2;
+    long tempsResolution1;
+    long tempsResolution2;
+    long updateTime1;
+    long updateTime2;
 };
 
 struct VARIABLES_DUALES_INTERCONNEXIONS

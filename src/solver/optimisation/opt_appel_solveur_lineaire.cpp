@@ -75,7 +75,7 @@ public:
         end_ = clock::now();
     }
 
-    double duration_ms() const
+    long duration_ms() const
     {
         return std::chrono::duration_cast<std::chrono::milliseconds>(end_ - start_).count();
     }
@@ -93,8 +93,8 @@ private:
 struct SimplexResult
 {
     bool success = false;
-    double solveTime = 0;
-    double updateTime = 0;
+    long solveTime = 0;
+    long updateTime = 0;
     mpsWriterFactory mps_writer_factory;
 };
 
@@ -117,7 +117,7 @@ static SimplexResult OPT_TryToCallSimplex(
     assert(opt >= 0 && opt < 2);
     OptimizationStatistics& optimizationStatistics = problemeHebdo->optimizationStatistics[opt];
 
-    double updateTime = 0;
+    long updateTime = 0;
     if (!PremierPassage)
     {
         ProbSpx = nullptr;
@@ -259,7 +259,7 @@ static SimplexResult OPT_TryToCallSimplex(
         }
     }
     measure.tick();
-    double solveTime = measure.duration_ms();
+    long solveTime = measure.duration_ms();
     optimizationStatistics.addSolveTime(solveTime);
 
     ProblemeAResoudre->ExistenceDUneSolution = Probleme.ExistenceDUneSolution;
@@ -325,8 +325,8 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
                 optPeriodStringGenerator, PremierPassage, writer);
     }
 
-    long long solveTime = simplexResult.solveTime;
-    long long updateTime = simplexResult.updateTime;
+    long solveTime = simplexResult.solveTime;
+    long updateTime = simplexResult.updateTime;
 
     if (ProblemeAResoudre->ExistenceDUneSolution == OUI_SPX)
     {
