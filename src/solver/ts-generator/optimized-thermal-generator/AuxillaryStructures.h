@@ -119,7 +119,7 @@ struct DynamicResults
     // temporary store scenario results
     // before writing them to output
     // reset after each scenario
-    std::vector<double> availableClusterDailyPower;
+    std::vector<double> availableDailyPower;
 };
 
 struct ClusterData

@@ -41,19 +41,19 @@ void OptimizedThermalGenerator::calculateScenarioResults()
     // fill in with zeros
     for (auto& cluster : maintenanceData)
     {
-        cluster.second.dynamicResults.availableClusterDailyPower.resize(scenarioLength_ * DAYS_PER_YEAR);
+        cluster.second.dynamicResults.availableDailyPower.resize(scenarioLength_ * DAYS_PER_YEAR);
     }
 
     // add one by one unit availability
     for (auto& unit : scenarioResults)
     {
-        auto& availableClusterDailyPower
-          = maintenanceData[unit.parentCluster].dynamicResults.availableClusterDailyPower;
+        auto& availableDailyPower
+          = maintenanceData[unit.parentCluster].dynamicResults.availableDailyPower;
 
-        std::transform(availableClusterDailyPower.begin(),
-                       availableClusterDailyPower.end(),
+        std::transform(availableDailyPower.begin(),
+                       availableDailyPower.end(),
                        unit.availableDailyPower.begin(),
-                       availableClusterDailyPower.begin(),
+                       availableDailyPower.begin(),
                        std::plus<double>());
     }
 
@@ -98,13 +98,13 @@ void OptimizedThermalGenerator::saveScenarioResults(int fromCol,
                                                     int toCol,
                                                     Data::ThermalCluster& cluster)
 {
-    // daily results are in maintenanceData.availableClusterDailyPower
+    // daily results are in maintenanceData.availableDailyPower
     // convert to hourly values and store in cluster ts
-    // we assume that vector availableClusterDailyPower has:
+    // we assume that vector availableDailyPower has:
     // scenarioLength_ * DAYS_PER_YEAR element
     // that we need to store inside columns from-to
 
-    auto& availability = maintenanceData[&cluster].dynamicResults.availableClusterDailyPower;
+    auto& availability = maintenanceData[&cluster].dynamicResults.availableDailyPower;
     assert((toCol - fromCol) * DAYS_PER_YEAR == availability.size());
 
     int vctCol = 0;
@@ -128,7 +128,7 @@ void OptimizedThermalGenerator::resetResultStorage()
 
     for (auto& cluster : maintenanceData)
     {
-        cluster.second.dynamicResults.availableClusterDailyPower.clear();
+        cluster.second.dynamicResults.availableDailyPower.clear();
     }
 
     return;
