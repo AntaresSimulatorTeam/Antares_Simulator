@@ -173,27 +173,6 @@ int OptimizedThermalGenerator::calculateTimeHorizon()
     return 0;
 }
 
-// calculate parameters methods
-void OptimizedThermalGenerator::setMaintenanceGroupParameters()
-{
-    // it is crucial that we allocateClusterData
-    // and calculate NonDependantClusterData
-    // since later methods expect this to be filled
-    // and values available
-    allocateClusterData();
-    calculateNonDependantClusterData();
-    //
-    calculateResidualLoad();
-    par.residualLoadDailyValues_ = calculateDailySums(maintenanceGroup_.getUsedResidualLoadTS());
-    std::tie(par.ensCost_, par.spillCost_) = calculateMaintenanceGroupENSandSpillageCost();
-    par.timeStep_ = calculateTimeStep();
-    par.timeHorizon_ = calculateTimeHorizon();
-    par.timeHorizonFirstStep_ = par.timeHorizon_;
-    // calculateDependantClusterData
-    // uses timeHorizon_ so it is important we calculate timeHorizon_ first
-    calculateDependantClusterData();
-}
-
 void OptimizedThermalGenerator::calculateDependantClusterData()
 {
     for (auto& clusterEntry : par.clusterData)
@@ -217,6 +196,26 @@ void OptimizedThermalGenerator::calculateDependantClusterData()
         data.dynamicInputs.numberOfMaintenances = data.staticInputs.numberOfMaintenancesFirstStep;
     }
     return;
+}
+
+void OptimizedThermalGenerator::setMaintenanceGroupParameters()
+{
+    // it is crucial that we allocateClusterData
+    // and calculate NonDependantClusterData
+    // since later methods expect this to be filled
+    // and values available
+    allocateClusterData();
+    calculateNonDependantClusterData();
+    //
+    calculateResidualLoad();
+    par.residualLoadDailyValues_ = calculateDailySums(maintenanceGroup_.getUsedResidualLoadTS());
+    std::tie(par.ensCost_, par.spillCost_) = calculateMaintenanceGroupENSandSpillageCost();
+    par.timeStep_ = calculateTimeStep();
+    par.timeHorizon_ = calculateTimeHorizon();
+    par.timeHorizonFirstStep_ = par.timeHorizon_;
+    // calculateDependantClusterData
+    // uses timeHorizon_ so it is important we calculate timeHorizon_ first
+    calculateDependantClusterData();
 }
 
 bool OptimizedThermalGenerator::checkMaintenanceGroupParameters()
@@ -308,7 +307,7 @@ int OptimizedThermalGenerator::getDaysSinceLastMaintenance(const Data::ThermalCl
     return par.clusterData[&cluster].dynamicInputs.daysSinceLastMaintenance[unit];
 }
 
-// calculate parameters methods - per cluster-Unit
+// calculate parameters methods - per cluster-Unit or just Cluster
 int OptimizedThermalGenerator::calculateUnitEarliestStartOfFirstMaintenance(
   const Data::ThermalCluster& cluster,
   uint unitIndex)
