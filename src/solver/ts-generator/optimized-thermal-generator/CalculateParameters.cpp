@@ -298,7 +298,7 @@ std::vector<int> OptimizedThermalGenerator::calculateNumberOfMaintenances(
                    - getAverageDurationBetweenMaintenances(cluster))
                   / (getAverageDurationBetweenMaintenances(cluster)
                      + getAverageMaintenanceDuration(cluster));
-        numberOfMaintenances[unit] = std::max(1 + div, minNumberOfMaintenances);
+        numberOfMaintenances[unit] = std::max(1 + div, minNumberOfMaintenances); // TODO CR27: keep here min=2 did not see it in python
     }
 
     return numberOfMaintenances;
