@@ -413,7 +413,7 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
         if (st_storage_details)
         {
             auto& st_storage_part = results.data.area->shortTermStorage;
-            results.variableCaption = st_storage_part.storagesByIndex[idx]->properties.name;
+            results.variableCaption = st_storage_part.storagesByIndex[idx].properties.name;
             return true;
         }
         return true;
