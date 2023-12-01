@@ -84,7 +84,6 @@ public:
     void addCost(const double cost);
     void endStandardDeviation();
 
-public:
     // System costs statistics
     double costAverage = 0.;
     double costStdDeviation = 0.;
@@ -99,6 +98,14 @@ private:
 class annualCostsStatistics
 {
 public:
+    // Costs
+    costStatistics systemCost;
+    costStatistics criterionCost1;
+    costStatistics criterionCost2;
+    costStatistics optimizationTime1;
+    costStatistics optimizationTime2;
+    costStatistics updateTime;
+
     annualCostsStatistics();
     void setNbPerformedYears(uint n);
     void endStandardDeviations();
@@ -111,16 +118,6 @@ private:
     void writeOptimizationTimeToOutput(IResultWriter& writer) const;
     std::string round_to_closer_int(const double d);
 
-public:
-    // Costs
-    costStatistics systemCost;
-    costStatistics criterionCost1;
-    costStatistics criterionCost2;
-    costStatistics optimizationTime1;
-    costStatistics optimizationTime2;
-    costStatistics updateTime;
-
-private:
     char conversionBuffer[256]; // Used to round a double to the closer integer
 };
 
@@ -218,7 +215,6 @@ public:
         }
     }
 
-public:
     // General data
     uint pNbAreas;
     Data::PowerFluctuations pPowerFluctuations;
@@ -266,7 +262,6 @@ public:
         yearNumberToIndex.clear();
     }
 
-public:
     uint pMaxNbPerformedYears;
     yearRandomNumbers* pYears;
 
@@ -296,7 +291,6 @@ public:
         return index;
     }
 
-private:
     double value;
     uint index;
 };
