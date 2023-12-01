@@ -34,7 +34,6 @@ struct Maintenances
 
     // methods
     int startDay(int limit) const;
-    std::vector<int> getStartSolutionValues() const;
 };
 
 struct Unit

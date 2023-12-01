@@ -13,15 +13,14 @@ int Maintenances::startDay(int limit) const
     // if no 1, return -1
     // because 0 is a valid output - maintenance starts on first day
 
-    auto vector = getStartSolutionValues();
-
-    for (int i = 0; i < vector.size(); ++i)
+    for (int day = 0; day < start.size(); ++day)
     {
-        if (vector[i] == 1)
+        int value = static_cast<int>(start[day]->solution_value());
+        if (value == 1)
         {
-            if (i < limit)
+            if (day < limit)
             {
-                return i;
+                return day;
             }
             else
             {
@@ -30,18 +29,6 @@ int Maintenances::startDay(int limit) const
         }
     }
     return -1;
-}
-
-std::vector<int> Maintenances::getStartSolutionValues() const
-{
-    std::vector<int> solutionValues;
-
-    for (const auto& variable : start)
-    {
-        solutionValues.push_back(static_cast<int>(variable->solution_value()));
-    }
-
-    return solutionValues;
 }
 
 void Unit::calculateAvailableDailyPower(int tsCount)
