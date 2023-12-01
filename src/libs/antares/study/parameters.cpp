@@ -348,6 +348,7 @@ void Parameters::reset()
     include.exportMPS = mpsExportStatus::NO_EXPORT;
     include.exportStructure = false;
     namedProblems = false;
+    solverLogs = false;
 
     include.unfeasibleProblemBehavior = UnfeasibleProblemBehavior::ERROR_MPS;
 
@@ -649,6 +650,11 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
     if (key == "transmission-capacities")
     {
         return stringToGlobalTransmissionCapacities(value, d.transmissionCapacities);
+    }
+
+    if (key == "solver-logs")
+    {
+        return value.to<bool>(d.solverLogs);
     }
     return false;
 }
@@ -1106,6 +1112,7 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
     ortoolsSolver = options.ortoolsSolver;
 
     namedProblems = options.namedProblems;
+    solverLogs = options.solverLogs || solverLogs;
 
     // Attempt to fix bad values if any
     fixBadValues();
@@ -1520,6 +1527,9 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
     {
         logs.info() << "  :: The problems will contain named variables and constraints";
     }
+    // indicated whether solver logs will be printed
+    logs.info() << "  :: Printing solver logs : " << (solverLogs ? "True" : "False");
+    
 }
 
 void Parameters::resetPlaylist(uint nbOfYears)
@@ -1635,6 +1645,7 @@ void Parameters::saveToINI(IniFile& ini) const
         // Unfeasible problem behavior
         section->add("include-unfeasible-problem-behavior",
                      Enum::toString(include.unfeasibleProblemBehavior));
+        section->add("solver-logs", solverLogs);
     }
 
     // Adequacy patch

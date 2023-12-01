@@ -32,6 +32,7 @@
 #include <yuni/core/string.h>
 #include "../fwd.h"
 #include <antares/array/matrix.h>
+#include <antares/series/series.h>
 #include <antares/writer/i_writer.h>
 #include <set>
 
@@ -144,8 +145,8 @@ public:
     **
     */
     Matrix<> parameters;
-    Matrix<> directCapacities;
-    Matrix<> indirectCapacities;
+    TimeSeries directCapacities;
+    TimeSeries indirectCapacities;
 
     //! Monte-Carlo
     Matrix<uint32_t> timeseriesNumbers;

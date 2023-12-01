@@ -113,4 +113,4 @@ target_link_libraries(test-utils
 		yuni-static-core
 )
 add_test(NAME test-utils COMMAND test-utils)
-
+set_property(TEST test-utils PROPERTY LABELS unit)

@@ -40,6 +40,11 @@ namespace Variable
 {
 class State;
 }
+
+double randomReservoirLevel(double min, double avg, double max, MersenneTwister& random);
+double BetaVariable(double a, double b, MersenneTwister &random);
+double GammaVariable(double a, MersenneTwister &random);
+
 } // namespace Solver
 
 enum
@@ -94,8 +99,7 @@ typedef struct
     //de jour (en cas de gestion des reservoirs).
 } VENTILATION_HYDRO_RESULTS_BY_AREA;
 
-// vector of [numSpace][area]
-using ALL_HYDRO_VENTILATION_RESULTS = std::vector<std::vector<VENTILATION_HYDRO_RESULTS_BY_AREA>>;
+using HYDRO_VENTILATION_RESULTS = std::vector<VENTILATION_HYDRO_RESULTS_BY_AREA>;
 
 
 class HydroManagement final
@@ -107,39 +111,35 @@ public:
                     unsigned int maxNbYearsInParallel,
                     Solver::IResultWriter& resultWriter);
 
-    ~HydroManagement();
-
-    double randomReservoirLevel(double min, double avg, double max);
-
     //! Perform the hydro ventilation
     void makeVentilation(double* randomReservoirLevel,
-                        Solver::Variable::State& state,
-                        uint y,
-                        uint numSpace);
+                         Solver::Variable::State& state,
+                         uint y,
+                         uint numSpace);
 
-    ALL_HYDRO_VENTILATION_RESULTS& ventilationResults() { return ventilationResults_; }
+    const HYDRO_VENTILATION_RESULTS& ventilationResults() { return ventilationResults_; }
 
 private:
     //! Prepare inflows scaling for each area
-    void prepareInflowsScaling(uint numSpace, uint year);
+    void prepareInflowsScaling(uint year);
     //! Prepare minimum generation scaling for each area
-    void minGenerationScaling(uint numSpace, uint year) const;
+    void minGenerationScaling(uint year);
     //! check Monthly minimum generation is lower than available inflows
-    bool checkMonthlyMinGeneration(uint numSpace, uint year, const Data::Area& area) const;
+    bool checkMonthlyMinGeneration(uint year, const Data::Area& area) const;
     //! check Yearly minimum generation is lower than available inflows
-    bool checkYearlyMinGeneration(uint numSpace, uint year, const Data::Area& area) const;
+    bool checkYearlyMinGeneration(uint year, const Data::Area& area) const;
     //! check Weekly minimum generation is lower than available inflows
     bool checkWeeklyMinGeneration(uint year, const Data::Area& area) const;
     //! check Hourly minimum generation is lower than available inflows
     bool checkHourlyMinGeneration(uint year, const Data::Area& area) const;
     //! check minimum generation is lower than available inflows
-    bool checkMinGeneration(uint numSpace, uint year) const;
+    bool checkMinGeneration(uint year) const;
     //! Prepare the net demand for each area
     void prepareNetDemand(uint numSpace, uint year, Data::StudyMode mode);
     //! Prepare the effective demand for each area
-    void prepareEffectiveDemand(uint numSpace);
+    void prepareEffectiveDemand();
     //! Monthly Optimal generations
-    void prepareMonthlyOptimalGenerations(double* random_reservoir_level, uint y, uint numSpace);
+    void prepareMonthlyOptimalGenerations(double* random_reservoir_level, uint y);
 
     //! Monthly target generations
     // note: inflows may have two different types, if in swap mode or not
@@ -154,26 +154,17 @@ private:
                                         Data::Area& area,
                                         uint y,
                                         uint numSpace);
-    //@}
 
-    //! \name Utilities
-    //@{
-    //! Beta variable
-    double BetaVariable(double a, double b);
-    //! Gamma variable
-    double GammaVariable(double a);
-    //@}
 
 private:
-    TmpDataByArea** tmpDataByArea_;
+    std::vector<TmpDataByArea> tmpDataByArea_;
     const Data::AreaList& areas_;
     const Date::Calendar& calendar_;
     const Data::Parameters& parameters_;
-    MersenneTwister random_;
     unsigned int maxNbYearsInParallel_ = 0;
     Solver::IResultWriter& resultWriter_;
 
-    ALL_HYDRO_VENTILATION_RESULTS ventilationResults_;
+    HYDRO_VENTILATION_RESULTS ventilationResults_;
 }; // class HydroManagement
 } // namespace Antares
 

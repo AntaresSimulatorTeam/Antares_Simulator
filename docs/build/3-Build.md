@@ -1,8 +1,8 @@
 # Build
-Before build, make sure that dependencies are installed (see [here](2-Dependencies-install.md) for more informations)
+Before build, make sure that dependencies are installed (see [here](2-Dependencies-install.md) for more informations).
 
-## Environnement settings
-On Centos enable `devtoolset-9` and `rh-git227`:
+## Environment settings
+On CentOS enable `devtoolset-9` and `rh-git227`:
 ```
 scl enable devtoolset-9 bash
 source /opt/rh/rh-git227/enable
@@ -19,12 +19,12 @@ git submodule update --init src/antares-deps
     ```
     cmake -B _build -S [antares_src] -DVCPKG_ROOT=[vcpkg_root] -DVCPKG_TARGET_TRIPLET=[vcpkg-triplet] -DCMAKE_BUILD_TYPE=release
     ```
-=== "Centos"
+=== "CentOS"
 
     ```
     cmake3 -B _build -S [antares_src] -DCMAKE_BUILD_TYPE=release
     ```
-=== "Ubuntu"
+=== "Ubuntu/Debian"
 
     ```
     cmake -B _build -S [antares_src] -DCMAKE_BUILD_TYPE=release
@@ -42,7 +42,7 @@ Here is a list of available CMake configure option :
 |`BUILD_TESTING`| Enable test build (default `OFF`)|
 |`BUILD_ORTOOLS`| Enable build for OR-Tools and its dependencies (requires an Internet connecton)|
 
-Additionnal options for windows
+Additional options for windows
 
 |Option |Description |
 |:-------|-------|
@@ -55,15 +55,17 @@ Additionnal options for windows
     ```
     cmake --build _build --config release -j8
     ```
-=== "Centos"
+=== "CentOS"
 
     ```
     cmake3 --build _build --config release -j8
     ```
-=== "Ubuntu"
+=== "Ubuntu/Debian"
 
     ```
     cmake --build _build --config release -j8
     ```
 Note :
-> Compilation can be done on several processor with ```-j``` option.
+> Compilation can be done on several processors with `-j` option.
+
+The final GUI file can be executed at `_build/ui/simulator/antares-8.7-ui-simulator`

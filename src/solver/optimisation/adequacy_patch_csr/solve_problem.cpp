@@ -235,7 +235,7 @@ void CSR_DEBUG_HANDLE(const PROBLEME_POINT_INTERIEUR& Probleme)
     }
 }
 
-void handleInteriorPointError(const PROBLEME_POINT_INTERIEUR& Probleme,
+void handleInteriorPointError([[maybe_unused]] const PROBLEME_POINT_INTERIEUR& Probleme,
                               int hour,
                               uint weekNb,
                               int yearNb)

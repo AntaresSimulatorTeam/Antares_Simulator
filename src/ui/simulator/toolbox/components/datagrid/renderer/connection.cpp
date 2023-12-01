@@ -228,8 +228,8 @@ void connectionParameters::setMatrix(Data::AreaLink* link)
 {
     matrix(link ? &(link->parameters) : nullptr);
 
-    direct_ntc_ = link ? &(link->directCapacities) : nullptr;
-    indirect_ntc_ = link ? &(link->indirectCapacities) : nullptr;
+    direct_ntc_ = link ? &(link->directCapacities.timeSeries) : nullptr;
+    indirect_ntc_ = link ? &(link->indirectCapacities.timeSeries) : nullptr;
 }
 
 // ===========================
@@ -274,7 +274,7 @@ connectionNTCdirect::connectionNTCdirect(wxWindow* parent,
 }
 void connectionNTCdirect::setMatrix(Data::AreaLink* link)
 {
-    matrix(link ? &(link->directCapacities) : nullptr);
+    matrix(link ? &(link->directCapacities.timeSeries) : nullptr);
     mLoopFlowData = link ? &(link->parameters[Data::fhlLoopFlow]) : nullptr;
 }
 
@@ -294,7 +294,7 @@ connectionNTCindirect::connectionNTCindirect(wxWindow* parent,
 }
 void connectionNTCindirect::setMatrix(Data::AreaLink* link)
 {
-    matrix(link ? &(link->indirectCapacities) : nullptr);
+    matrix(link ? &(link->indirectCapacities.timeSeries) : nullptr);
     mLoopFlowData = link ? &(link->parameters[Data::fhlLoopFlow]) : nullptr;
 }
 

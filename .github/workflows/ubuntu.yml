@@ -127,7 +127,7 @@ jobs:
       if: ${{ env.IS_PUSH == 'true' }}
       run: |
            cd _build
-           ctest -C Release --output-on-failure -R unfeasible
+           ctest -C Release --output-on-failure -R "^unfeasible$"
 
     - name: Run unit and end-to-end tests
       if: ${{ env.IS_PUSH == 'true' }}
@@ -164,6 +164,14 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: valid-v860
+        os: ${{ matrix.test-platform }}
+
+    - name: Run tests introduced in v870
+      if: ${{ env.IS_PUSH == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: valid-v870
         os: ${{ matrix.test-platform }}
 
     - name: Run short-tests
