@@ -41,7 +41,7 @@ void OptimizedThermalGenerator::GenerateOptimizedThermalTimeSeries()
         printMaintenances(optSett); // to be removed
         printAvailability(optSett); // to be removed
     }
-    par.writeTsResults();
+    writeTsResults();
 }
 
 void OptimizedThermalGenerator::allocateWhereToWriteTs()

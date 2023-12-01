@@ -154,7 +154,6 @@ public:
     void reSetDaysSinceLastMnt();
     void reSetNumberOfMaintenances();
     void reSetTimeHorizon();
-    void writeTsResults();
 
     /* ===================END-POST-OPTIMIZATION=================== */
 };

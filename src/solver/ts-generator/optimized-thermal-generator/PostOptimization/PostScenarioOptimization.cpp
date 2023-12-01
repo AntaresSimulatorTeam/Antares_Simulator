@@ -176,7 +176,7 @@ void OptimizationParameters::reSetNumberOfMaintenances()
 
 // this method is called at the very end
 // after all time-steps and scenarios
-void OptimizationParameters::writeTsResults()
+void OptimizedThermalGenerator::writeTsResults()
 {
     // we need to loop through all the clusters
     // and write the results

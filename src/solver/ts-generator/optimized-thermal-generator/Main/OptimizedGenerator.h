@@ -122,6 +122,7 @@ private:
     // Functions called in main method:
     void allocateWhereToWriteTs();
     bool runOptimizationProblem(OptProblemSettings& optSett);
+    void writeTsResults();
 
     /* ===================END-MAIN=================== */
 
