@@ -12,15 +12,15 @@
 
 namespace Antares::Solver::TSGenerator
 {
-void OptimizedThermalGenerator::printProblemVarAndResults(OptProblemSettings& optSett)
+void OptimizationParameters::printProblemVarAndResults(OptProblemSettings& optSett, MPSolver& solver)
 {
-    printAllVariables();
-    printConstraints();
-    printObjectiveFunction(solver.MutableObjective());
-    printResults(optSett);
+    printAllVariables(solver);
+    printConstraints(solver);
+    printObjectiveFunction(solver.MutableObjective(), solver);
+    printResults(optSett, solver);
 }
 
-void OptimizedThermalGenerator::printAllVariables()
+void OptimizationParameters::printAllVariables(MPSolver& solver)
 {
     std::vector<std::vector<std::string>> dataToPrint;
 
@@ -42,7 +42,7 @@ void OptimizedThermalGenerator::printAllVariables()
     return;
 }
 
-void OptimizedThermalGenerator::printConstraints()
+void OptimizationParameters::printConstraints(MPSolver& solver)
 {
     const int num_constraints = solver.NumConstraints();
     std::vector<std::vector<std::string>> dataToPrint;
@@ -82,7 +82,7 @@ void OptimizedThermalGenerator::printConstraints()
       "/home/milos/Documents/RTEi/01-Antares/04-TestModels/REFACTOR-CR27-Constraints.csv");
 }
 
-void OptimizedThermalGenerator::printObjectiveFunction(MPObjective* objective)
+void OptimizationParameters::printObjectiveFunction(MPObjective* objective, MPSolver& solver)
 {
     std::vector<std::vector<std::string>> dataToPrint;
     for (MPVariable* variable : solver.variables())
@@ -100,22 +100,22 @@ void OptimizedThermalGenerator::printObjectiveFunction(MPObjective* objective)
     return;
 }
 
-void OptimizedThermalGenerator::printResults(OptProblemSettings& optSett)
+void OptimizationParameters::printResults(OptProblemSettings& optSett, MPSolver& solver)
 {
     std::vector<std::vector<double>> dataToPrint;
 
     // loop per day
-    for (auto day = 0; day != vars.ens.size(); ++day)
+    for (auto day = 0; day != vars_.ens.size(); ++day)
     {
         // row vector
         std::vector<double> RED;
 
         // ens and spill
-        RED.push_back(vars.ens[day]->solution_value());
-        RED.push_back(vars.spill[day]->solution_value());
+        RED.push_back(vars_.ens[day]->solution_value());
+        RED.push_back(vars_.spill[day]->solution_value());
 
         // powers + start/end
-        for (const auto& unit : vars.clusterUnits)
+        for (const auto& unit : vars_.clusterUnits)
         {
             // powers
             if (unit.P[day] != nullptr)
@@ -143,10 +143,10 @@ void OptimizedThermalGenerator::printResults(OptProblemSettings& optSett)
     return;
 }
 
-void OptimizedThermalGenerator::printMaintenances(OptProblemSettings& optSett)
+void OptimizationParameters::printMaintenances(OptProblemSettings& optSett)
 {
     std::vector<std::vector<int>> dataToPrint;
-    for (auto& unit : scenarioResults)
+    for (auto& unit : scenarioResults_)
     {
         std::vector<int> RED;
         RED.push_back(9999);
@@ -167,14 +167,14 @@ void OptimizedThermalGenerator::printMaintenances(OptProblemSettings& optSett)
     printColumnToFile<int>(dataToPrint, fileName);
 }
 
-void OptimizedThermalGenerator::printAvailability(OptProblemSettings& optSett)
+void OptimizationParameters::printAvailability(OptProblemSettings& optSett)
 {
     std::vector<std::vector<double>> dataToPrint;
 
     for (int day = 0; day != scenarioLength_ * 365; ++day)
     {
         std::vector<double> RED;
-        for (auto& cluster : par.clusterData)
+        for (auto& cluster : clusterData)
         {
             RED.push_back(cluster.second.dynamicResults.availableDailyPower[day]);
         }

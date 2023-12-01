@@ -156,6 +156,15 @@ public:
     void reSetTimeHorizon();
 
     /* ===================END-POST-OPTIMIZATION=================== */
+
+    /* ===================PRINT-DEBUG-ONLY-TO-BE-REMOVED=================== */
+    void printAllVariables(MPSolver& solver);
+    void printObjectiveFunction(MPObjective* objective, MPSolver& solver);
+    void printConstraints(MPSolver& solver);
+    void printResults(OptProblemSettings& optSett,MPSolver& solver);
+    void printProblemVarAndResults(OptProblemSettings& optSett, MPSolver& solver);
+    void printMaintenances(OptProblemSettings& optSett);
+    void printAvailability(OptProblemSettings& optSett);
 };
 
 } // namespace Antares::Solver::TSGenerator

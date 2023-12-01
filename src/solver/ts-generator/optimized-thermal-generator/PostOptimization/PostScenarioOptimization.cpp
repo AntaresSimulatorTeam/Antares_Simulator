@@ -15,6 +15,8 @@ void OptimizationParameters::postScenarioOptimization(OptProblemSettings& optSet
 
     calculateScenarioResults();
     saveScenarioResults(optSett);
+    printMaintenances(optSett); // to be removed
+    printAvailability(optSett); // to be removed
     resetResultStorage();
     reSetDaysSinceLastMnt();
     reSetTimeHorizon();
