@@ -116,7 +116,6 @@ private:
     void writeCriterionCostsToOutput(IResultWriter& writer) const;
     void writeUpdateTimes(IResultWriter& writer) const;
     void writeOptimizationTimeToOutput(IResultWriter& writer) const;
-    std::string round_to_closer_int(const double d);
 };
 
 class yearRandomNumbers
