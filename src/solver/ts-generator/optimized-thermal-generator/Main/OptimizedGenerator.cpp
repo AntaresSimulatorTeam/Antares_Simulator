@@ -38,6 +38,7 @@ void OptimizedThermalGenerator::GenerateOptimizedThermalTimeSeries()
             optSett.isFirstStep = false;
         }
         par.postScenarioOptimization(optSett);
+        ++progression_;
         printMaintenances(optSett); // to be removed
         printAvailability(optSett); // to be removed
     }

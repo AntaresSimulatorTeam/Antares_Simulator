@@ -141,7 +141,7 @@ private:
     // MPSolver instance
     MPSolver solver;
     double solverInfinity;
-
+    Solver::Progression::Task& progression_;
     /* ===================END-CLASS-VARIABLES=================== */
 
 public:
@@ -153,6 +153,7 @@ public:
                                        IResultWriter& writer) :
      GeneratorTempData(study, progr, writer),
      maintenanceGroup_(maintenanceGroup),
+     progression_(progr),
      par(study, maintenanceGroup, globalThermalTSgeneration, vars, scenarioResults, progr, writer),
      solver(MPSolver("MaintenancePlanning", MPSolver::CBC_MIXED_INTEGER_PROGRAMMING))
     {
