@@ -161,7 +161,7 @@ public:
     void printAllVariables(MPSolver& solver);
     void printObjectiveFunction(MPObjective* objective, MPSolver& solver);
     void printConstraints(MPSolver& solver);
-    void printResults(OptProblemSettings& optSett,MPSolver& solver);
+    void printResults(OptProblemSettings& optSett, MPSolver& solver);
     void printProblemVarAndResults(OptProblemSettings& optSett, MPSolver& solver);
     void printMaintenances(OptProblemSettings& optSett);
     void printAvailability(OptProblemSettings& optSett);
