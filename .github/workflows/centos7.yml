@@ -5,7 +5,7 @@ on:
     types: [created]
   push:
     branches:
-      - develop
+      - "*"
   schedule:
     - cron: '21 2 * * *'
 
@@ -61,7 +61,7 @@ jobs:
            -DCMAKE_C_COMPILER_LAUNCHER=ccache \
            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
            -DDEPS_INSTALL_DIR=/rte-antares-deps-Release \
-           -DCMAKE_BUILD_TYPE=release \
+           -DCMAKE_BUILD_TYPE=RelWithDebInfo \
            -DBUILD_TESTING=ON \
            -DBUILD_not_system=OFF \
            -DBUILD_TOOLS=OFF \
@@ -72,7 +72,7 @@ jobs:
       run: |
            source /opt/rh/devtoolset-9/enable
            source /opt/rh/rh-git227/enable
-           cmake3 --build _build --config Release -j2
+           cmake3 --build _build --config RelWithDebInfo -j2
            ccache -s
 
     - name: Installer .rpm creation
