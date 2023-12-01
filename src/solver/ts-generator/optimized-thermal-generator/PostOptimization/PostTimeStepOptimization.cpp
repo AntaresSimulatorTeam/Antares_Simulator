@@ -8,10 +8,10 @@ namespace Antares::Solver::TSGenerator
 {
 
 void OptimizationParameters::postTimeStepOptimization(OptProblemSettings& optSett,
-                                                      const OptimizationVariables& readResultsFrom,
+                                                      const OptimizationVariables& stepResults,
                                                       OptimizationResults& scenarioResults)
 {
-    appendTimeStepResults(optSett, readResultsFrom, scenarioResults);
+    appendTimeStepResults(optSett, stepResults, scenarioResults);
     reCalculateDaysSinceLastMnt(optSett, scenarioResults);
     reCalculateTimeHorizon();
     reCalculateNumberOfMaintenances();
@@ -20,7 +20,7 @@ void OptimizationParameters::postTimeStepOptimization(OptProblemSettings& optSet
 
 // save/append optimization results form range 0-timeStep
 void OptimizationParameters::appendTimeStepResults(const OptProblemSettings& optSett,
-                                                   const OptimizationVariables& readResultsFrom,
+                                                   const OptimizationVariables& stepResults,
                                                    OptimizationResults& scenarioResults)
 {
     // we have vectors of start (zeros and ones)
@@ -29,7 +29,7 @@ void OptimizationParameters::appendTimeStepResults(const OptProblemSettings& opt
     // and create std::pairs - of start_day + mnt_duration
 
     // loop per units
-    for (std::size_t unitIndexTotal = 0; unitIndexTotal < readResultsFrom.clusterUnits.size();
+    for (std::size_t unitIndexTotal = 0; unitIndexTotal < stepResults.clusterUnits.size();
          ++unitIndexTotal)
     {
         // Unit-unitIndexTotal - is index in a vector of all the units (area * cluster * units)
@@ -43,7 +43,7 @@ void OptimizationParameters::appendTimeStepResults(const OptProblemSettings& opt
         // and just loop
         // assert parentCluster and index
 
-        const auto& readResultUnit = readResultsFrom.clusterUnits[unitIndexTotal];
+        const auto& readResultUnit = stepResults.clusterUnits[unitIndexTotal];
         auto& storeResultUnit = scenarioResults[unitIndexTotal];
 
         assert(readResultUnit.parentCluster == storeResultUnit.parentCluster

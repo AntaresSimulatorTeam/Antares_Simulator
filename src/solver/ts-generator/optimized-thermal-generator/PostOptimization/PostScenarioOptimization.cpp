@@ -7,7 +7,8 @@
 namespace Antares::Solver::TSGenerator
 {
 
-void OptimizationParameters::postScenarioOptimization(OptProblemSettings& optSett, OptimizationResults& scenarioResults)
+void OptimizationParameters::postScenarioOptimization(OptProblemSettings& optSett,
+                                                      OptimizationResults& scenarioResults)
 {
     // do not save if optimization failed at some step
     if (!optSett.solved)
@@ -94,8 +95,8 @@ void OptimizationParameters::saveScenarioResults(const OptProblemSettings& optSe
 }
 
 void OptimizationParameters::saveScenarioResults(int fromCol,
-                                                    int toCol,
-                                                    Data::ThermalCluster& cluster)
+                                                 int toCol,
+                                                 Data::ThermalCluster& cluster)
 {
     // daily results are in clusterData.availableDailyPower
     // convert to hourly values and store in cluster ts

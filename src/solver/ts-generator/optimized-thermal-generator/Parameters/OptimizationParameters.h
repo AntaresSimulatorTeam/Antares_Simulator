@@ -16,8 +16,10 @@ namespace Antares::Solver::TSGenerator
 // not re-calculate them over and over again
 
 // this structure stores cluster input data (optimization parameters)
-// that stays the same during optimizationS
-// also temporary stores cluster output/results for one scenario
+// that stays the same during optimization - static inputs
+// that are updated after each optimization - dynamic inputs
+// the structure also temporary stores scenario results
+// output/results for one scenario
 
 struct StaticInputs
 {
@@ -90,7 +92,8 @@ public:
 
     std::map<const Data::ThermalCluster*, ClusterData> clusterData;
 
-    // Calculate parameters methods - per maintenance group
+    /* ===================CALCULATE-PARAMETERS-MAIN=================== */
+
     void allocateClusterData();
     void calculateNonDependantClusterData();
     void calculateResidualLoad();
@@ -101,7 +104,16 @@ public:
     void setMaintenanceGroupParameters();
     bool checkMaintenanceGroupParameters();
 
-    // getters
+    /* ===================CALCULATE-PARAMETERS-PER CLUSTER/UNIT=================== */
+
+    int calculateUnitEarliestStartOfFirstMaintenance(const Data::ThermalCluster& cluster,
+                                                     uint unitIndex);
+    int calculateUnitLatestStartOfFirstMaintenance(const Data::ThermalCluster& cluster,
+                                                   uint unitIndex);
+    std::vector<int> calculateNumberOfMaintenances(const Data::ThermalCluster& cluster);
+
+    /* ===================GETTERS=================== */
+
     double getPowerCost(const Data::ThermalCluster& cluster, int optimizationDay);
     double getPowerOutput(const Data::ThermalCluster& cluster, int optimizationDay);
     double getResidualLoad(int optimizationDay);
@@ -109,32 +121,16 @@ public:
     int getAverageDurationBetweenMaintenances(const Data::ThermalCluster& cluster);
     int getNumberOfMaintenances(const Data::ThermalCluster& cluster, int unit);
     int getDaysSinceLastMaintenance(const Data::ThermalCluster& cluster, int unit);
-    // re-calculate parameters methods - per cluster-Unit
-    int calculateUnitEarliestStartOfFirstMaintenance(const Data::ThermalCluster& cluster,
-                                                     uint unitIndex);
-    int calculateUnitLatestStartOfFirstMaintenance(const Data::ThermalCluster& cluster,
-                                                   uint unitIndex);
-    std::vector<int> calculateNumberOfMaintenances(const Data::ThermalCluster& cluster);
 
     /* ===================POST-OPTIMIZATION=================== */
 
-    // post-scenario optimization methods
-    void postScenarioOptimization(OptProblemSettings& optSett, OptimizationResults& scenarioResults);
-    void calculateScenarioResults(OptimizationResults& scenarioResults);
-    void saveScenarioResults(const OptProblemSettings& optSett);
-    void saveScenarioResults(int fromCol, int toCol, Data::ThermalCluster& cluster);
-    void resetResultStorage(OptimizationResults& scenarioResults);
-    void reSetDaysSinceLastMnt();
-    void reSetNumberOfMaintenances();
-    void reSetTimeHorizon();
-    void writeTsResults();
+    /* ===================AFTER-EACH-TIME-STEP=================== */
 
-    // post-timeStep optimization methods
     void postTimeStepOptimization(OptProblemSettings& optSett,
-                                  const OptimizationVariables& readResultsFrom,
+                                  const OptimizationVariables& stepResults,
                                   OptimizationResults& scenarioResults);
     void appendTimeStepResults(const OptProblemSettings& optSett,
-                               const OptimizationVariables& readResultsFrom,
+                               const OptimizationVariables& stepResults,
                                OptimizationResults& scenarioResults);
     void reCalculateDaysSinceLastMnt(const OptProblemSettings& optSett,
                                      OptimizationResults& scenarioResults);
@@ -146,6 +142,19 @@ public:
                                     int lastMaintenanceDuration);
     void reCalculateTimeHorizon();
     void reCalculateNumberOfMaintenances();
+
+    /* ===================AFTER-EACH-SCENARIO=================== */
+
+    void postScenarioOptimization(OptProblemSettings& optSett,
+                                  OptimizationResults& scenarioResults);
+    void calculateScenarioResults(OptimizationResults& scenarioResults);
+    void saveScenarioResults(const OptProblemSettings& optSett);
+    void saveScenarioResults(int fromCol, int toCol, Data::ThermalCluster& cluster);
+    void resetResultStorage(OptimizationResults& scenarioResults);
+    void reSetDaysSinceLastMnt();
+    void reSetNumberOfMaintenances();
+    void reSetTimeHorizon();
+    void writeTsResults();
 
     /* ===================END-POST-OPTIMIZATION=================== */
 };
