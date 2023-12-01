@@ -158,12 +158,6 @@ public:
     explicit IncompatibleDailyOptHeuristicForArea(const Antares::Data::AreaName& name);
 };
 
-class WritingProgressFile : public LoadingError
-{
-public:
-    explicit WritingProgressFile(const Yuni::String& study);
-};
-
 class InvalidParametersForThermalClusters : public LoadingError
 {
 public:

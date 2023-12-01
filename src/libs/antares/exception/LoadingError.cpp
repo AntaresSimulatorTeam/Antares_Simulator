@@ -99,11 +99,6 @@ IncompatibleDailyOptHeuristicForArea::IncompatibleDailyOptHeuristicForArea(
 {
 }
 
-WritingProgressFile::WritingProgressFile(const Yuni::String& file) :
- LoadingError(std::string("I/O error: impossible to write ") + file.c_str())
-{
-}
-
 std::string InvalidParametersForThermalClusters::buildMessage(
   const std::map<int, Yuni::String>& clusterNames) const
 {
