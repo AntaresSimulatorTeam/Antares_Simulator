@@ -117,8 +117,6 @@ private:
     void writeUpdateTimes(IResultWriter& writer) const;
     void writeOptimizationTimeToOutput(IResultWriter& writer) const;
     std::string round_to_closer_int(const double d);
-
-    char conversionBuffer[256]; // Used to round a double to the closer integer
 };
 
 class yearRandomNumbers

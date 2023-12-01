@@ -5,6 +5,7 @@
 #include <sstream>
 #include <iomanip>
 #include <yuni/io/file.h>
+#include <cmath>
 
 #define SEP Yuni::IO::Separator
 
@@ -40,7 +41,7 @@ void costStatistics::addCost(const double cost)
     costAverage += cost / nbPerformedYears;
 
     // Standard deviation
-    costStdDeviation += cost * cost / nbPerformedYears;
+costStdDeviation += cost * cost / nbPerformedYears;
 
     // Min and Max
     if (cost < costMin)
@@ -87,13 +88,14 @@ void annualCostsStatistics::writeToOutput(IResultWriter& writer)
 
 void annualCostsStatistics::writeSystemCostToOutput(IResultWriter& writer)
 {
-    std::string buffer;
-    buffer += "EXP : " + round_to_closer_int(systemCost.costAverage) + '\n';
-    buffer += "STD : " + round_to_closer_int(systemCost.costStdDeviation) + '\n';
-    buffer += "MIN : " + round_to_closer_int(systemCost.costMin) + '\n';
-    buffer += "MAX : " + round_to_closer_int(systemCost.costMax) + '\n';
+    std::ostringstream buffer;
+    buffer << "EXP : " << std::round(systemCost.costAverage) << '\n';
+    buffer << "STD : " << std::round(systemCost.costStdDeviation) << '\n';
+    buffer << "MIN : " << std::round(systemCost.costMin) << '\n';
+    buffer << "MAX : " << std::round(systemCost.costMax) << '\n';
 
-    writer.addEntryFromBuffer(systemCostFilename, buffer);
+    std::string s = buffer.str();
+    writer.addEntryFromBuffer(systemCostFilename, s);
 }
 
 void annualCostsStatistics::writeCriterionCostsToOutput(IResultWriter& writer) const
@@ -142,14 +144,5 @@ void annualCostsStatistics::writeOptimizationTimeToOutput(IResultWriter& writer)
     std::string s = buffer.str();
     writer.addEntryFromBuffer(optimizationTimeFilename, s);
 }
-std::string annualCostsStatistics::round_to_closer_int(const double d)
-{
-#ifdef YUNI_OS_MSVC
-    ::sprintf_s(conversionBuffer, sizeof(conversionBuffer), "%.0f", d);
-#else
-    ::snprintf(conversionBuffer, sizeof(conversionBuffer), "%.0f", d);
-#endif
-    std::string rnd(conversionBuffer);
-    return rnd;
-}
+
 } // namespace Antares::Solver::Simulation
