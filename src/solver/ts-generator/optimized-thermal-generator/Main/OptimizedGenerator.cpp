@@ -13,8 +13,8 @@ namespace Antares::Solver::TSGenerator
 void OptimizedThermalGenerator::GenerateOptimizedThermalTimeSeries()
 {
     allocateWhereToWriteTs();
-    setMaintenanceGroupParameters();
-    if (!checkMaintenanceGroupParameters())
+    par.setMaintenanceGroupParameters();
+    if (!par.checkMaintenanceGroupParameters())
         return;
 
     // loop through all scenarios

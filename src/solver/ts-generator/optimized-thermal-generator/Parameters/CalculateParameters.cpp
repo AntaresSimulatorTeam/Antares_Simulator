@@ -8,7 +8,7 @@ namespace Antares::Solver::TSGenerator
 {
 
 // methods are ordered in the line of execution order
-void OptimizedThermalGenerator::allocateClusterData()
+void OptimizationParameters::allocateClusterData()
 {
     // loop all areas in maintenance group
     for (const auto& entryWeightMap : maintenanceGroup_)
@@ -22,14 +22,14 @@ void OptimizedThermalGenerator::allocateClusterData()
                 continue;
 
             // create struct
-            par.clusterData[&cluster] = ClusterData();
+            clusterData[&cluster] = ClusterData();
         }
     }
 }
 
-void OptimizedThermalGenerator::calculateNonDependantClusterData()
+void OptimizationParameters::calculateNonDependantClusterData()
 {
-    for (auto& clusterEntry : par.clusterData)
+    for (auto& clusterEntry : clusterData)
     {
         auto& data = clusterEntry.second;
         const auto& cluster = *(clusterEntry.first);
@@ -58,7 +58,7 @@ void OptimizedThermalGenerator::calculateNonDependantClusterData()
     }
 }
 
-void OptimizedThermalGenerator::calculateResidualLoad()
+void OptimizationParameters::calculateResidualLoad()
 {
     // create reference value arrays
     std::array<double, HOURS_PER_YEAR> refValueLoad = {};
@@ -81,7 +81,7 @@ void OptimizedThermalGenerator::calculateResidualLoad()
 
         auto tmpLoad = calculateAverageLoadTs(area);
         auto tmpRor = calculateAverageRorTs(area);
-        auto tmpRenewable = calculateAverageRenewableTs(study.parameters.renewableGeneration, area);
+        auto tmpRenewable = calculateAverageRenewableTs(modelingType_, area);
 
         for (std::size_t row = 0; row < HOURS_PER_YEAR; ++row)
         {
@@ -97,7 +97,7 @@ void OptimizedThermalGenerator::calculateResidualLoad()
     maintenanceGroup_.setUsedResidualLoadTS(refValue);
 }
 
-std::pair<double, double> OptimizedThermalGenerator::calculateMaintenanceGroupENSandSpillageCost()
+std::pair<double, double> OptimizationParameters::calculateMaintenanceGroupENSandSpillageCost()
 {
     std::vector<int> ensVector = {};
     std::vector<int> spillageVector = {};
@@ -121,10 +121,10 @@ std::pair<double, double> OptimizedThermalGenerator::calculateMaintenanceGroupEN
     return std::make_pair(0, 0);
 }
 
-int OptimizedThermalGenerator::calculateTimeStep()
+int OptimizationParameters::calculateTimeStep()
 {
     std::vector<int> averageDurationBetweenMaintenances = {};
-    for (const auto& clusterEntry : par.clusterData)
+    for (const auto& clusterEntry : clusterData)
     {
         const auto& cluster = *(clusterEntry.first);
         if (cluster.doWeGenerateTS(globalThermalTSgeneration_) && cluster.optimizeMaintenance)
@@ -145,10 +145,10 @@ int OptimizedThermalGenerator::calculateTimeStep()
     return 0;
 }
 
-int OptimizedThermalGenerator::calculateTimeHorizon()
+int OptimizationParameters::calculateTimeHorizon()
 {
     std::vector<int> timeHorizonVector = {};
-    for (const auto& clusterEntry : par.clusterData)
+    for (const auto& clusterEntry : clusterData)
     {
         const auto& cluster = *(clusterEntry.first);
         if (!(cluster.doWeGenerateTS(globalThermalTSgeneration_) && cluster.optimizeMaintenance))
@@ -173,9 +173,9 @@ int OptimizedThermalGenerator::calculateTimeHorizon()
     return 0;
 }
 
-void OptimizedThermalGenerator::calculateDependantClusterData()
+void OptimizationParameters::calculateDependantClusterData()
 {
-    for (auto& clusterEntry : par.clusterData)
+    for (auto& clusterEntry : clusterData)
     {
         auto& data = clusterEntry.second;
         const auto& cluster = *(clusterEntry.first);
@@ -198,7 +198,7 @@ void OptimizedThermalGenerator::calculateDependantClusterData()
     return;
 }
 
-void OptimizedThermalGenerator::setMaintenanceGroupParameters()
+void OptimizationParameters::setMaintenanceGroupParameters()
 {
     // it is crucial that we allocateClusterData
     // and calculate NonDependantClusterData
@@ -208,19 +208,19 @@ void OptimizedThermalGenerator::setMaintenanceGroupParameters()
     calculateNonDependantClusterData();
     //
     calculateResidualLoad();
-    par.residualLoadDailyValues_ = calculateDailySums(maintenanceGroup_.getUsedResidualLoadTS());
-    std::tie(par.ensCost_, par.spillCost_) = calculateMaintenanceGroupENSandSpillageCost();
-    par.timeStep_ = calculateTimeStep();
-    par.timeHorizon_ = calculateTimeHorizon();
-    par.timeHorizonFirstStep_ = par.timeHorizon_;
+    residualLoadDailyValues_ = calculateDailySums(maintenanceGroup_.getUsedResidualLoadTS());
+    std::tie(ensCost_, spillCost_) = calculateMaintenanceGroupENSandSpillageCost();
+    timeStep_ = calculateTimeStep();
+    timeHorizon_ = calculateTimeHorizon();
+    timeHorizonFirstStep_ = timeHorizon_;
     // calculateDependantClusterData
     // uses timeHorizon_ so it is important we calculate timeHorizon_ first
     calculateDependantClusterData();
 }
 
-bool OptimizedThermalGenerator::checkMaintenanceGroupParameters()
+bool OptimizationParameters::checkMaintenanceGroupParameters()
 {
-    if (par.timeStep_ == 0)
+    if (timeStep_ == 0)
     {
         logs.info() << "Maintenance group: " << maintenanceGroup_.name()
                     << ": The timeseries generation will be skiped:  timeStep = 0. It is possible "
@@ -228,7 +228,7 @@ bool OptimizedThermalGenerator::checkMaintenanceGroupParameters()
                        "planning, or at least one cluster has interPoPeriod = 0";
         return false;
     }
-    if (par.timeHorizon_ == 0)
+    if (timeHorizon_ == 0)
     {
         logs.info()
           << "Maintenance group: " << maintenanceGroup_.name()

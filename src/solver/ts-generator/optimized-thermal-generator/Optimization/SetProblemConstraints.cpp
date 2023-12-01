@@ -28,7 +28,7 @@ void OptimizedThermalGenerator::setLoadBalanceConstraints(const OptProblemSettin
 {
     int optimizationDay = day + optSett.firstDay;
     std::string ctName = "LoadBalanceConstraint[" + std::to_string(optimizationDay) + "]";
-    double residualLoad = getResidualLoad(optimizationDay);
+    double residualLoad = par.getResidualLoad(optimizationDay);
     MPConstraint* ct = solver.MakeRowConstraint(residualLoad, residualLoad, ctName);
 
     insertPowerVars(ct, day);
@@ -98,7 +98,7 @@ void OptimizedThermalGenerator::setEndOfMaintenanceEventBasedOnAverageDurationOf
   int mnt)
 {
     const auto& cluster = *(unit.parentCluster);
-    int averageMaintenanceDuration = getAverageMaintenanceDuration(cluster);
+    int averageMaintenanceDuration = par.getAverageMaintenanceDuration(cluster);
     for (int day = 0; day < par.timeHorizon_ - averageMaintenanceDuration; ++day)
     {
         std::string ctName = "E[u][q][t+Mu] = S[u][q][t] -> ["
@@ -120,7 +120,7 @@ void OptimizedThermalGenerator::
     int mnt)
 {
     const auto& cluster = *(unit.parentCluster);
-    int averageDurationBetweenMaintenances = getAverageDurationBetweenMaintenances(cluster);
+    int averageDurationBetweenMaintenances = par.getAverageDurationBetweenMaintenances(cluster);
     for (int day = 0; day < par.timeHorizon_ - averageDurationBetweenMaintenances; ++day)
     {
         std::string ctName = "S[u][q+1][t+Tu] = E[u][q][t] -> ["
@@ -202,7 +202,7 @@ void OptimizedThermalGenerator::setMaxUnitOutputConstraints(const OptProblemSett
 {
     const auto& cluster = *(unit.parentCluster);
     int optimizationDay = day + optSett.firstDay;
-    double maxPower = getPowerOutput(cluster, optimizationDay);
+    double maxPower = par.getPowerOutput(cluster, optimizationDay);
 
     std::string ctName = "MaxPowerOutputConstraint[" + cluster.getFullName().to<std::string>() + "."
                          + std::to_string(unit.index) + "][" + std::to_string(optimizationDay)

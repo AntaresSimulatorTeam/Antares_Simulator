@@ -135,7 +135,7 @@ int OptimizedThermalGenerator::reCalculateDaysSinceLastMnt(const OptProblemSetti
 
 void OptimizedThermalGenerator::reCalculateTimeHorizon()
 {
-    par.timeHorizon_ = calculateTimeHorizon();
+    par.timeHorizon_ = par.calculateTimeHorizon();
 }
 
 void OptimizedThermalGenerator::reCalculateNumberOfMaintenances()
@@ -144,7 +144,7 @@ void OptimizedThermalGenerator::reCalculateNumberOfMaintenances()
     for (auto& cluster : par.clusterData)
     {
         cluster.second.dynamicInputs.numberOfMaintenances
-          = calculateNumberOfMaintenances(*(cluster.first));
+          = par.calculateNumberOfMaintenances(*(cluster.first));
     }
 }
 

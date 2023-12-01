@@ -7,7 +7,7 @@
 namespace Antares::Solver::TSGenerator
 {
 
-int OptimizedThermalGenerator::calculateUnitEarliestStartOfFirstMaintenance(
+int OptimizationParameters::calculateUnitEarliestStartOfFirstMaintenance(
   const Data::ThermalCluster& cluster,
   uint unitIndex)
 {
@@ -19,7 +19,7 @@ int OptimizedThermalGenerator::calculateUnitEarliestStartOfFirstMaintenance(
             - getDaysSinceLastMaintenance(cluster, unitIndex) - cluster.poWindows);
 }
 
-int OptimizedThermalGenerator::calculateUnitLatestStartOfFirstMaintenance(
+int OptimizationParameters::calculateUnitLatestStartOfFirstMaintenance(
   const Data::ThermalCluster& cluster,
   uint unitIndex)
 {
@@ -38,10 +38,10 @@ int OptimizedThermalGenerator::calculateUnitLatestStartOfFirstMaintenance(
       std::max(0,
                getAverageDurationBetweenMaintenances(cluster)
                  - getDaysSinceLastMaintenance(cluster, unitIndex) + cluster.poWindows),
-      par.timeHorizon_ - 1);
+      timeHorizon_ - 1);
 }
 
-std::vector<int> OptimizedThermalGenerator::calculateNumberOfMaintenances(
+std::vector<int> OptimizationParameters::calculateNumberOfMaintenances(
   const Data::ThermalCluster& cluster)
 {
     // getAverageMaintenanceDuration must be at least 1
@@ -52,7 +52,7 @@ std::vector<int> OptimizedThermalGenerator::calculateNumberOfMaintenances(
 
     for (int unit = 0; unit != cluster.unitCount; ++unit)
     {
-        int div = (par.timeHorizon_ + getDaysSinceLastMaintenance(cluster, unit)
+        int div = (timeHorizon_ + getDaysSinceLastMaintenance(cluster, unit)
                    - getAverageDurationBetweenMaintenances(cluster))
                   / (getAverageDurationBetweenMaintenances(cluster)
                      + getAverageMaintenanceDuration(cluster));

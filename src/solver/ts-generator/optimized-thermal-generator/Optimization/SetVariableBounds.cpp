@@ -27,7 +27,7 @@ void OptimizedThermalGenerator::fixBounds(const Unit& unit)
     if (!unit.createStartEndVariables)
         return;
 
-    int averageMaintenanceDuration = getAverageMaintenanceDuration(*(unit.parentCluster));
+    int averageMaintenanceDuration = par.getAverageMaintenanceDuration(*(unit.parentCluster));
 
     fixBoundsFirstMnt(unit);
     fixBounds(unit, averageMaintenanceDuration);
@@ -40,9 +40,9 @@ void OptimizedThermalGenerator::fixBounds(const Unit& unit)
 void OptimizedThermalGenerator::fixBoundsFirstMnt(const Unit& unit)
 {
     int earliestStartOfFirstMaintenance
-      = calculateUnitEarliestStartOfFirstMaintenance(*(unit.parentCluster), unit.index);
+      = par.calculateUnitEarliestStartOfFirstMaintenance(*(unit.parentCluster), unit.index);
     int latestStartOfFirstMaintenance
-      = calculateUnitLatestStartOfFirstMaintenance(*(unit.parentCluster), unit.index);
+      = par.calculateUnitLatestStartOfFirstMaintenance(*(unit.parentCluster), unit.index);
 
     //
     // We assume here that vector "maintenance" has member [0]

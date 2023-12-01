@@ -9,6 +9,7 @@
 #include "../../../../libs/antares/study/maintenance_planning/MaintenanceGroup.h"
 #include "../Aux/AuxillaryStructures.h"
 #include "../Aux/AuxillaryFreeFunctions.h"
+#include "../Parameters/OptimizationParameters.h"
 #include <antares/exception/AssertionError.hpp>
 
 // static const std::string mntPlSolverName = "cbc";
@@ -152,35 +153,7 @@ private:
 
     /* ===================END-POST-OPTIMIZATION=================== */
 
-    /* ===================CALCULATE-OPTIMIZATION-PARAMETERS=================== */
 
-    // Calculate parameters methods - per maintenance group
-    void allocateClusterData();
-    void calculateNonDependantClusterData();
-    void calculateResidualLoad();
-    std::pair<double, double> calculateMaintenanceGroupENSandSpillageCost();
-    int calculateTimeStep();
-    int calculateTimeHorizon();
-    void calculateDependantClusterData();
-    void setMaintenanceGroupParameters();
-    bool checkMaintenanceGroupParameters();
-
-    // getters
-    double getPowerCost(const Data::ThermalCluster& cluster, int optimizationDay);
-    double getPowerOutput(const Data::ThermalCluster& cluster, int optimizationDay);
-    double getResidualLoad(int optimizationDay);
-    int getAverageMaintenanceDuration(const Data::ThermalCluster& cluster);
-    int getAverageDurationBetweenMaintenances(const Data::ThermalCluster& cluster);
-    int getNumberOfMaintenances(const Data::ThermalCluster& cluster, int unit);
-    int getDaysSinceLastMaintenance(const Data::ThermalCluster& cluster, int unit);
-    // re-calculate parameters methods - per cluster-Unit
-    int calculateUnitEarliestStartOfFirstMaintenance(const Data::ThermalCluster& cluster,
-                                                     uint unitIndex);
-    int calculateUnitLatestStartOfFirstMaintenance(const Data::ThermalCluster& cluster,
-                                                   uint unitIndex);
-    std::vector<int> calculateNumberOfMaintenances(const Data::ThermalCluster& cluster);
-
-    /* ===================END-CALCULATE-OPTIMIZATION-PARAMETERS=================== */
 
     /* ===================CLASS-VARIABLES=================== */
 
@@ -209,6 +182,7 @@ public:
                                        IResultWriter& writer) :
      GeneratorTempData(study, progr, writer),
      maintenanceGroup_(maintenanceGroup),
+     par(study, maintenanceGroup, globalThermalTSgeneration, progr, writer),
      solver(MPSolver("MaintenancePlanning", MPSolver::CBC_MIXED_INTEGER_PROGRAMMING))
     {
         currentYear = year;

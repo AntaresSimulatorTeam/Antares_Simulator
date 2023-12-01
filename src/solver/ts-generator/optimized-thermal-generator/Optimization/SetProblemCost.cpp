@@ -59,7 +59,7 @@ void OptimizedThermalGenerator::setProblemPowerCost(const OptProblemSettings& op
     // loop per day
     for (int day = 0; day < unit.P.size(); ++day)
     {
-        double unitPowerCost = getPowerCost(*(unit.parentCluster), day + optSett.firstDay);
+        double unitPowerCost = par.getPowerCost(*(unit.parentCluster), day + optSett.firstDay);
         objective->SetCoefficient(unit.P[day], unitPowerCost);
     }
 

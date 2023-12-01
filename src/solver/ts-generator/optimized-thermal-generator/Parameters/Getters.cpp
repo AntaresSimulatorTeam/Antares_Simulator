@@ -7,8 +7,8 @@
 namespace Antares::Solver::TSGenerator
 {
 // Getters
-double OptimizedThermalGenerator::getPowerCost(const Data::ThermalCluster& cluster,
-                                               int optimizationDay)
+double OptimizationParameters::getPowerCost(const Data::ThermalCluster& cluster,
+                                            int optimizationDay)
 {
     /*
     ** Unit cost can be directly set,
@@ -35,41 +35,40 @@ double OptimizedThermalGenerator::getPowerCost(const Data::ThermalCluster& clust
         return 0.;
     }
 
-    return par.clusterData[&cluster].staticInputs.avgCost[dayOfTheYear(optimizationDay)];
+    return clusterData[&cluster].staticInputs.avgCost[dayOfTheYear(optimizationDay)];
 }
 
-double OptimizedThermalGenerator::getPowerOutput(const Data::ThermalCluster& cluster,
-                                                 int optimizationDay)
+double OptimizationParameters::getPowerOutput(const Data::ThermalCluster& cluster,
+                                              int optimizationDay)
 {
-    return par.clusterData[&cluster].staticInputs.maxPower[dayOfTheYear(optimizationDay)];
+    return clusterData[&cluster].staticInputs.maxPower[dayOfTheYear(optimizationDay)];
 }
 
-double OptimizedThermalGenerator::getResidualLoad(int optimizationDay)
+double OptimizationParameters::getResidualLoad(int optimizationDay)
 {
-    return par.residualLoadDailyValues_[dayOfTheYear(optimizationDay)];
+    return residualLoadDailyValues_[dayOfTheYear(optimizationDay)];
 }
 
-int OptimizedThermalGenerator::getNumberOfMaintenances(const Data::ThermalCluster& cluster,
-                                                       int unit)
+int OptimizationParameters::getNumberOfMaintenances(const Data::ThermalCluster& cluster, int unit)
 {
-    return par.clusterData[&cluster].dynamicInputs.numberOfMaintenances[unit];
+    return clusterData[&cluster].dynamicInputs.numberOfMaintenances[unit];
 }
 
-int OptimizedThermalGenerator::getAverageMaintenanceDuration(const Data::ThermalCluster& cluster)
+int OptimizationParameters::getAverageMaintenanceDuration(const Data::ThermalCluster& cluster)
 {
-    return par.clusterData[&cluster].staticInputs.averageMaintenanceDuration;
+    return clusterData[&cluster].staticInputs.averageMaintenanceDuration;
 }
 
-int OptimizedThermalGenerator::getAverageDurationBetweenMaintenances(
+int OptimizationParameters::getAverageDurationBetweenMaintenances(
   const Data::ThermalCluster& cluster)
 {
     return cluster.interPoPeriod;
 }
 
-int OptimizedThermalGenerator::getDaysSinceLastMaintenance(const Data::ThermalCluster& cluster,
-                                                           int unit)
+int OptimizationParameters::getDaysSinceLastMaintenance(const Data::ThermalCluster& cluster,
+                                                        int unit)
 {
-    return par.clusterData[&cluster].dynamicInputs.daysSinceLastMaintenance[unit];
+    return clusterData[&cluster].dynamicInputs.daysSinceLastMaintenance[unit];
 }
 
 } // namespace Antares::Solver::TSGenerator

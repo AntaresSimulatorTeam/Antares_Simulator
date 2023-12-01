@@ -16,6 +16,7 @@ namespace Antares::Solver::TSGenerator
 
 class GeneratorTempData
 {
+    friend class OptimizationParameters;
     friend class OptimizedThermalGenerator;
 
 public:

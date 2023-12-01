@@ -21,6 +21,7 @@ set(SRC_OPTIMIZEDGENERATORS
 	optimized-thermal-generator/Aux/pre-scenario-builder.cpp
 	optimized-thermal-generator/Main/OptimizedGenerator.h
 	optimized-thermal-generator/Main/OptimizedGenerator.cpp
+	optimized-thermal-generator/Parameters/OptimizationParameters.h
 	optimized-thermal-generator/Parameters/CalculateParameters.cpp
 	optimized-thermal-generator/Parameters/CalculateParametersPerCluster.cpp
 	optimized-thermal-generator/Parameters/Getters.cpp
