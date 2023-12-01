@@ -7,21 +7,17 @@
 namespace Antares::Solver::TSGenerator
 {
 
-void OptimizationParameters::postTimeStepOptimization(OptProblemSettings& optSett,
-                                                      const OptimizationVariables& stepResults,
-                                                      OptimizationResults& scenarioResults)
+void OptimizationParameters::postTimeStepOptimization(OptProblemSettings& optSett)
 {
-    appendTimeStepResults(optSett, stepResults, scenarioResults);
-    reCalculateDaysSinceLastMnt(optSett, scenarioResults);
+    appendTimeStepResults(optSett);
+    reCalculateDaysSinceLastMnt(optSett);
     reCalculateTimeHorizon();
     reCalculateNumberOfMaintenances();
     return;
 }
 
 // save/append optimization results form range 0-timeStep
-void OptimizationParameters::appendTimeStepResults(const OptProblemSettings& optSett,
-                                                   const OptimizationVariables& stepResults,
-                                                   OptimizationResults& scenarioResults)
+void OptimizationParameters::appendTimeStepResults(const OptProblemSettings& optSett)
 {
     // we have vectors of start (zeros and ones)
     // lets convert that into maintenance start day vector
@@ -29,7 +25,7 @@ void OptimizationParameters::appendTimeStepResults(const OptProblemSettings& opt
     // and create std::pairs - of start_day + mnt_duration
 
     // loop per units
-    for (std::size_t unitIndexTotal = 0; unitIndexTotal < stepResults.clusterUnits.size();
+    for (std::size_t unitIndexTotal = 0; unitIndexTotal < vars_.clusterUnits.size();
          ++unitIndexTotal)
     {
         // Unit-unitIndexTotal - is index in a vector of all the units (area * cluster * units)
@@ -43,8 +39,8 @@ void OptimizationParameters::appendTimeStepResults(const OptProblemSettings& opt
         // and just loop
         // assert parentCluster and index
 
-        const auto& readResultUnit = stepResults.clusterUnits[unitIndexTotal];
-        auto& storeResultUnit = scenarioResults[unitIndexTotal];
+        const auto& readResultUnit = vars_.clusterUnits[unitIndexTotal];
+        auto& storeResultUnit = scenarioResults_[unitIndexTotal];
 
         assert(readResultUnit.parentCluster == storeResultUnit.parentCluster
                && "Read and Store Units do not point to the same parent cluster.");
@@ -86,11 +82,10 @@ void OptimizationParameters::appendTimeStepResults(const OptProblemSettings& opt
 
 // re-calculate parameters
 
-void OptimizationParameters::reCalculateDaysSinceLastMnt(const OptProblemSettings& optSett,
-                                                         OptimizationResults& scenarioResults)
+void OptimizationParameters::reCalculateDaysSinceLastMnt(const OptProblemSettings& optSett)
 {
     // re-calculate days since last maintenance inputs if necessary
-    for (const auto& unit : scenarioResults)
+    for (const auto& unit : scenarioResults_)
     {
         reCalculateDaysSinceLastMnt(optSett, unit);
     }

@@ -37,7 +37,7 @@ void OptimizedThermalGenerator::GenerateOptimizedThermalTimeSeries()
             optSett.lastDay = optSett.firstDay + par.timeHorizon_;
             optSett.isFirstStep = false;
         }
-        par.postScenarioOptimization(optSett, scenarioResults);
+        par.postScenarioOptimization(optSett);
         printMaintenances(optSett); // to be removed
         printAvailability(optSett); // to be removed
     }

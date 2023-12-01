@@ -7,16 +7,15 @@
 namespace Antares::Solver::TSGenerator
 {
 
-void OptimizationParameters::postScenarioOptimization(OptProblemSettings& optSett,
-                                                      OptimizationResults& scenarioResults)
+void OptimizationParameters::postScenarioOptimization(OptProblemSettings& optSett)
 {
     // do not save if optimization failed at some step
     if (!optSett.solved)
         return;
 
-    calculateScenarioResults(scenarioResults);
+    calculateScenarioResults();
     saveScenarioResults(optSett);
-    resetResultStorage(scenarioResults);
+    resetResultStorage();
     reSetDaysSinceLastMnt();
     reSetTimeHorizon();
     reSetNumberOfMaintenances();
@@ -24,14 +23,14 @@ void OptimizationParameters::postScenarioOptimization(OptProblemSettings& optSet
     return;
 }
 
-void OptimizationParameters::calculateScenarioResults(OptimizationResults& scenarioResults)
+void OptimizationParameters::calculateScenarioResults()
 {
-    // for each unit we have now scenarioResults
+    // for each unit we have now scenarioResults_
     // which contains std::pairs of all [maintenanceStart, maintenanceDuration]
     // lets transfer that into vectors of UNIT availability
 
     // loop per units
-    for (auto& unit : scenarioResults)
+    for (auto& unit : scenarioResults_)
     {
         unit.calculateAvailableDailyPower(scenarioLength_);
     }
@@ -45,7 +44,7 @@ void OptimizationParameters::calculateScenarioResults(OptimizationResults& scena
     }
 
     // add one by one unit availability
-    for (auto& unit : scenarioResults)
+    for (auto& unit : scenarioResults_)
     {
         auto& availableDailyPower
           = clusterData[unit.parentCluster].dynamicResults.availableDailyPower;
@@ -118,10 +117,10 @@ void OptimizationParameters::saveScenarioResults(int fromCol,
     }
 }
 
-void OptimizationParameters::resetResultStorage(OptimizationResults& scenarioResults)
+void OptimizationParameters::resetResultStorage()
 {
     // clear units result structure
-    scenarioResults.clear();
+    scenarioResults_.clear();
     // clear cluster result structure
     // do not clear whole clusterData
     // we store input data here as well

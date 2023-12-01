@@ -67,19 +67,25 @@ public:
     explicit OptimizationParameters(Data::Study& study,
                                     Data::MaintenanceGroup& maintenanceGroup,
                                     bool globalThermalTSgeneration,
+                                    OptimizationVariables& vars,
+                                    OptimizationResults& scenarioResults,
                                     Solver::Progression::Task& progr,
                                     IResultWriter& writer) :
      GeneratorTempData(study, progr, writer),
      maintenanceGroup_(maintenanceGroup),
-     modelingType_(study.parameters.renewableGeneration)
+     globalThermalTSgeneration_(globalThermalTSgeneration),
+     modelingType_(study.parameters.renewableGeneration),
+     vars_(vars),
+     scenarioResults_(scenarioResults)
     {
-        globalThermalTSgeneration_ = globalThermalTSgeneration;
     }
 
 private:
     Data::MaintenanceGroup& maintenanceGroup_;
-    Data::Parameters::RenewableGeneration& modelingType_;
-    bool globalThermalTSgeneration_;
+    const Data::Parameters::RenewableGeneration& modelingType_;
+    const bool globalThermalTSgeneration_;
+    const OptimizationVariables& vars_;
+    OptimizationResults& scenarioResults_;
 
 public:
     int scenarioLength_;
@@ -126,14 +132,9 @@ public:
 
     /* ===================AFTER-EACH-TIME-STEP=================== */
 
-    void postTimeStepOptimization(OptProblemSettings& optSett,
-                                  const OptimizationVariables& stepResults,
-                                  OptimizationResults& scenarioResults);
-    void appendTimeStepResults(const OptProblemSettings& optSett,
-                               const OptimizationVariables& stepResults,
-                               OptimizationResults& scenarioResults);
-    void reCalculateDaysSinceLastMnt(const OptProblemSettings& optSett,
-                                     OptimizationResults& scenarioResults);
+    void postTimeStepOptimization(OptProblemSettings& optSett);
+    void appendTimeStepResults(const OptProblemSettings& optSett);
+    void reCalculateDaysSinceLastMnt(const OptProblemSettings& optSett);
     void reCalculateDaysSinceLastMnt(const OptProblemSettings& optSett, const Unit& unit);
     int reCalculateDaysSinceLastMnt(const OptProblemSettings& optSett,
                                     const Unit& unit,
@@ -145,12 +146,11 @@ public:
 
     /* ===================AFTER-EACH-SCENARIO=================== */
 
-    void postScenarioOptimization(OptProblemSettings& optSett,
-                                  OptimizationResults& scenarioResults);
-    void calculateScenarioResults(OptimizationResults& scenarioResults);
+    void postScenarioOptimization(OptProblemSettings& optSett);
+    void calculateScenarioResults();
     void saveScenarioResults(const OptProblemSettings& optSett);
     void saveScenarioResults(int fromCol, int toCol, Data::ThermalCluster& cluster);
-    void resetResultStorage(OptimizationResults& scenarioResults);
+    void resetResultStorage();
     void reSetDaysSinceLastMnt();
     void reSetNumberOfMaintenances();
     void reSetTimeHorizon();

@@ -153,7 +153,7 @@ public:
                                        IResultWriter& writer) :
      GeneratorTempData(study, progr, writer),
      maintenanceGroup_(maintenanceGroup),
-     par(study, maintenanceGroup, globalThermalTSgeneration, progr, writer),
+     par(study, maintenanceGroup, globalThermalTSgeneration, vars, scenarioResults, progr, writer),
      solver(MPSolver("MaintenancePlanning", MPSolver::CBC_MIXED_INTEGER_PROGRAMMING))
     {
         currentYear = year;
