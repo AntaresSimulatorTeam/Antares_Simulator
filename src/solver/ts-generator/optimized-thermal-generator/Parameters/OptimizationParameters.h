@@ -152,8 +152,8 @@ public:
     void saveScenarioResults(int fromCol, int toCol, Data::ThermalCluster& cluster);
     void resetResultStorage();
     void reSetDaysSinceLastMnt();
-    void reSetNumberOfMaintenances();
     void reSetTimeHorizon();
+    void reSetNumberOfMaintenances();
 
     /* ===================END-POST-OPTIMIZATION=================== */
 
