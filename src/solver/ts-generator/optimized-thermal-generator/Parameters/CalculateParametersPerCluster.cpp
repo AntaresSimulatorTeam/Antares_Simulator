@@ -50,6 +50,9 @@ std::vector<int> OptimizationParameters::calculateNumberOfMaintenances(
     std::vector<int> numberOfMaintenances;
     numberOfMaintenances.resize(cluster.unitCount);
 
+    if (!(cluster.doWeGenerateTS(globalThermalTSgeneration_) && cluster.optimizeMaintenance))
+        return numberOfMaintenances;
+
     for (int unit = 0; unit != cluster.unitCount; ++unit)
     {
         int div = (timeHorizon_ + getDaysSinceLastMaintenance(cluster, unit)

@@ -23,6 +23,11 @@ void OptimizationParameters::allocateClusterData()
 
             // create struct
             clusterData[&cluster] = ClusterData();
+            clusterData[&cluster].maintenanceEnabled
+              = (cluster.doWeGenerateTS(globalThermalTSgeneration_) && cluster.optimizeMaintenance);
+            clusterData[&cluster].staticInputs = StaticInputs();
+            clusterData[&cluster].dynamicInputs = DynamicInputs();
+            clusterData[&cluster].dynamicResults = DynamicResults();
         }
     }
 }
@@ -40,6 +45,10 @@ void OptimizationParameters::calculateNonDependantClusterData()
         // cause their values are used for calculating other parameters
         data.staticInputs.maxPower = calculateMaxUnitOutput(cluster);
         data.staticInputs.avgCost = calculateAvrUnitDailyCost(cluster);
+
+        if (!data.maintenanceEnabled)
+            continue;
+
         data.staticInputs.averageMaintenanceDuration = calculateAverageMaintenanceDuration(cluster);
         // static inputs for random generator
         prepareIndispoFromLaw(cluster.plannedLaw,
@@ -180,6 +189,8 @@ void OptimizationParameters::calculateDependantClusterData()
         auto& data = clusterEntry.second;
         const auto& cluster = *(clusterEntry.first);
 
+        if (!data.maintenanceEnabled)
+            continue;
         /*
         calculateNumberOfMaintenances uses:
         averageMaintenanceDuration

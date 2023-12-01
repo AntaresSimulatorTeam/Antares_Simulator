@@ -54,6 +54,7 @@ struct DynamicResults
 
 struct ClusterData
 {
+    bool maintenanceEnabled;
     StaticInputs staticInputs;
     DynamicInputs dynamicInputs;
     DynamicResults dynamicResults;

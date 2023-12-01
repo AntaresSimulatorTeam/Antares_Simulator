@@ -94,6 +94,9 @@ void OptimizationParameters::reCalculateDaysSinceLastMnt(const OptProblemSetting
 void OptimizationParameters::reCalculateDaysSinceLastMnt(const OptProblemSettings& optSett,
                                                          const Unit& unit)
 {
+    if (!unit.createStartEndVariables)
+        return;
+
     auto& daysSinceLastMaintenance
       = clusterData[unit.parentCluster].dynamicInputs.daysSinceLastMaintenance[unit.index];
     bool maintenanceHappened = false;
