@@ -7,17 +7,21 @@
 namespace Antares::Solver::TSGenerator
 {
 
-void OptimizedThermalGenerator::postTimeStepOptimization(OptProblemSettings& optSett)
+void OptimizationParameters::postTimeStepOptimization(OptProblemSettings& optSett,
+                                                      const OptimizationVariables& readResultsFrom,
+                                                      OptimizationResults& scenarioResults)
 {
-    appendTimeStepResults(optSett);
-    reCalculateDaysSinceLastMnt(optSett);
+    appendTimeStepResults(optSett, readResultsFrom, scenarioResults);
+    reCalculateDaysSinceLastMnt(optSett, scenarioResults);
     reCalculateTimeHorizon();
     reCalculateNumberOfMaintenances();
     return;
 }
 
 // save/append optimization results form range 0-timeStep
-void OptimizedThermalGenerator::appendTimeStepResults(const OptProblemSettings& optSett)
+void OptimizationParameters::appendTimeStepResults(const OptProblemSettings& optSett,
+                                                   const OptimizationVariables& readResultsFrom,
+                                                   OptimizationResults& scenarioResults)
 {
     // we have vectors of start (zeros and ones)
     // lets convert that into maintenance start day vector
@@ -25,7 +29,7 @@ void OptimizedThermalGenerator::appendTimeStepResults(const OptProblemSettings& 
     // and create std::pairs - of start_day + mnt_duration
 
     // loop per units
-    for (std::size_t unitIndexTotal = 0; unitIndexTotal < vars.clusterUnits.size();
+    for (std::size_t unitIndexTotal = 0; unitIndexTotal < readResultsFrom.clusterUnits.size();
          ++unitIndexTotal)
     {
         // Unit-unitIndexTotal - is index in a vector of all the units (area * cluster * units)
@@ -39,7 +43,7 @@ void OptimizedThermalGenerator::appendTimeStepResults(const OptProblemSettings& 
         // and just loop
         // assert parentCluster and index
 
-        const auto& readResultUnit = vars.clusterUnits[unitIndexTotal];
+        const auto& readResultUnit = readResultsFrom.clusterUnits[unitIndexTotal];
         auto& storeResultUnit = scenarioResults[unitIndexTotal];
 
         assert(readResultUnit.parentCluster == storeResultUnit.parentCluster
@@ -58,7 +62,7 @@ void OptimizedThermalGenerator::appendTimeStepResults(const OptProblemSettings& 
         // only one maintenance can happen in the timeStep_
         // TODO CR27: in phase-II we may change this and looping will be necessary
         {
-            int localMaintenanceStart = readResultUnit.maintenances[0].startDay(par.timeStep_);
+            int localMaintenanceStart = readResultUnit.maintenances[0].startDay(timeStep_);
             if (localMaintenanceStart == -1)
                 continue;
 
@@ -67,8 +71,8 @@ void OptimizedThermalGenerator::appendTimeStepResults(const OptProblemSettings& 
 
             int PODOfTheDay
               = (int)cluster.prepro->data[Data::PreproThermal::poDuration][dayInTheYearStart];
-            double app = par.clusterData[&cluster].staticInputs.AP[dayInTheYearStart];
-            double bpp = par.clusterData[&cluster].staticInputs.BP[dayInTheYearStart];
+            double app = clusterData[&cluster].staticInputs.AP[dayInTheYearStart];
+            double bpp = clusterData[&cluster].staticInputs.BP[dayInTheYearStart];
             int maintenanceDuration = durationGenerator(
               cluster.plannedLaw, PODOfTheDay, cluster.plannedVolatility, app, bpp);
 
@@ -82,7 +86,8 @@ void OptimizedThermalGenerator::appendTimeStepResults(const OptProblemSettings& 
 
 // re-calculate parameters
 
-void OptimizedThermalGenerator::reCalculateDaysSinceLastMnt(const OptProblemSettings& optSett)
+void OptimizationParameters::reCalculateDaysSinceLastMnt(const OptProblemSettings& optSett,
+                                                         OptimizationResults& scenarioResults)
 {
     // re-calculate days since last maintenance inputs if necessary
     for (const auto& unit : scenarioResults)
@@ -91,11 +96,11 @@ void OptimizedThermalGenerator::reCalculateDaysSinceLastMnt(const OptProblemSett
     }
 }
 
-void OptimizedThermalGenerator::reCalculateDaysSinceLastMnt(const OptProblemSettings& optSett,
-                                                            const Unit& unit)
+void OptimizationParameters::reCalculateDaysSinceLastMnt(const OptProblemSettings& optSett,
+                                                         const Unit& unit)
 {
     auto& daysSinceLastMaintenance
-      = par.clusterData[unit.parentCluster].dynamicInputs.daysSinceLastMaintenance[unit.index];
+      = clusterData[unit.parentCluster].dynamicInputs.daysSinceLastMaintenance[unit.index];
     bool maintenanceHappened = false;
 
     if (unit.maintenanceResults.empty())
@@ -114,13 +119,13 @@ void OptimizedThermalGenerator::reCalculateDaysSinceLastMnt(const OptProblemSett
     return;
 }
 
-int OptimizedThermalGenerator::reCalculateDaysSinceLastMnt(const OptProblemSettings& optSett,
-                                                           const Unit& unit,
-                                                           bool maintenanceHappened,
-                                                           int lastMaintenanceStart,
-                                                           int lastMaintenanceDuration)
+int OptimizationParameters::reCalculateDaysSinceLastMnt(const OptProblemSettings& optSett,
+                                                        const Unit& unit,
+                                                        bool maintenanceHappened,
+                                                        int lastMaintenanceStart,
+                                                        int lastMaintenanceDuration)
 {
-    int nextOptimizationFirstDay = optSett.firstDay + par.timeStep_;
+    int nextOptimizationFirstDay = optSett.firstDay + timeStep_;
     if (maintenanceHappened)
         return std::max(
           0, nextOptimizationFirstDay - (lastMaintenanceStart + lastMaintenanceDuration));
@@ -133,18 +138,18 @@ int OptimizedThermalGenerator::reCalculateDaysSinceLastMnt(const OptProblemSetti
                + unit.parentCluster->originalRandomlyGeneratedDaysSinceLastMaintenance[unit.index];
 }
 
-void OptimizedThermalGenerator::reCalculateTimeHorizon()
+void OptimizationParameters::reCalculateTimeHorizon()
 {
-    par.timeHorizon_ = par.calculateTimeHorizon();
+    timeHorizon_ = calculateTimeHorizon();
 }
 
-void OptimizedThermalGenerator::reCalculateNumberOfMaintenances()
+void OptimizationParameters::reCalculateNumberOfMaintenances()
 {
     // re-calculate days since last maintenance inputs if necessary
-    for (auto& cluster : par.clusterData)
+    for (auto& cluster : clusterData)
     {
         cluster.second.dynamicInputs.numberOfMaintenances
-          = par.calculateNumberOfMaintenances(*(cluster.first));
+          = calculateNumberOfMaintenances(*(cluster.first));
     }
 }
 

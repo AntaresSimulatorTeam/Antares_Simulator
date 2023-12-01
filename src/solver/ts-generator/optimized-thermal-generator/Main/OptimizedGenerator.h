@@ -125,36 +125,6 @@ private:
 
     /* ===================END-MAIN=================== */
 
-    /* ===================POST-OPTIMIZATION=================== */
-
-    // post-scenario optimization methods
-    void postScenarioOptimization(OptProblemSettings& optSett);
-    void calculateScenarioResults();
-    void saveScenarioResults(const OptProblemSettings& optSett);
-    void saveScenarioResults(int fromCol, int toCol, Data::ThermalCluster& cluster);
-    void resetResultStorage();
-    void reSetDaysSinceLastMnt();
-    void reSetNumberOfMaintenances();
-    void reSetTimeHorizon();
-    void writeTsResults();
-
-    // post-timeStep optimization methods
-    void postTimeStepOptimization(OptProblemSettings& optSett);
-    void appendTimeStepResults(const OptProblemSettings& optSett);
-    void reCalculateDaysSinceLastMnt(const OptProblemSettings& optSett);
-    void reCalculateDaysSinceLastMnt(const OptProblemSettings& optSett, const Unit& unit);
-    int reCalculateDaysSinceLastMnt(const OptProblemSettings& optSett,
-                                    const Unit& unit,
-                                    bool maintenanceHappened,
-                                    int lastMaintenanceStart,
-                                    int lastMaintenanceDuration);
-    void reCalculateTimeHorizon();
-    void reCalculateNumberOfMaintenances();
-
-    /* ===================END-POST-OPTIMIZATION=================== */
-
-
-
     /* ===================CLASS-VARIABLES=================== */
 
     // variables
@@ -190,6 +160,7 @@ public:
         scenarioLength_ = study.parameters.maintenancePlanning.getScenarioLength();
         scenarioNumber_ = study.parameters.maintenancePlanning.getScenarioNumber();
         nbThermalTimeseries = scenarioLength_ * scenarioNumber_;
+        par.scenarioLength_ = scenarioLength_;
 
         // Solver Settings
         // MP solver parameters / TODD CR27: do we change this -

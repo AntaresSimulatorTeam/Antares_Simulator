@@ -59,6 +59,8 @@ struct ClusterData
 
 class OptimizationParameters : public GeneratorTempData
 {
+    using OptimizationResults = std::vector<Unit>;
+
 public:
     explicit OptimizationParameters(Data::Study& study,
                                     Data::MaintenanceGroup& maintenanceGroup,
@@ -78,6 +80,7 @@ private:
     bool globalThermalTSgeneration_;
 
 public:
+    int scenarioLength_;
     int timeHorizon_;
     int timeHorizonFirstStep_;
     int timeStep_;
@@ -112,6 +115,39 @@ public:
     int calculateUnitLatestStartOfFirstMaintenance(const Data::ThermalCluster& cluster,
                                                    uint unitIndex);
     std::vector<int> calculateNumberOfMaintenances(const Data::ThermalCluster& cluster);
+
+    /* ===================POST-OPTIMIZATION=================== */
+
+    // post-scenario optimization methods
+    void postScenarioOptimization(OptProblemSettings& optSett, OptimizationResults& scenarioResults);
+    void calculateScenarioResults(OptimizationResults& scenarioResults);
+    void saveScenarioResults(const OptProblemSettings& optSett);
+    void saveScenarioResults(int fromCol, int toCol, Data::ThermalCluster& cluster);
+    void resetResultStorage(OptimizationResults& scenarioResults);
+    void reSetDaysSinceLastMnt();
+    void reSetNumberOfMaintenances();
+    void reSetTimeHorizon();
+    void writeTsResults();
+
+    // post-timeStep optimization methods
+    void postTimeStepOptimization(OptProblemSettings& optSett,
+                                  const OptimizationVariables& readResultsFrom,
+                                  OptimizationResults& scenarioResults);
+    void appendTimeStepResults(const OptProblemSettings& optSett,
+                               const OptimizationVariables& readResultsFrom,
+                               OptimizationResults& scenarioResults);
+    void reCalculateDaysSinceLastMnt(const OptProblemSettings& optSett,
+                                     OptimizationResults& scenarioResults);
+    void reCalculateDaysSinceLastMnt(const OptProblemSettings& optSett, const Unit& unit);
+    int reCalculateDaysSinceLastMnt(const OptProblemSettings& optSett,
+                                    const Unit& unit,
+                                    bool maintenanceHappened,
+                                    int lastMaintenanceStart,
+                                    int lastMaintenanceDuration);
+    void reCalculateTimeHorizon();
+    void reCalculateNumberOfMaintenances();
+
+    /* ===================END-POST-OPTIMIZATION=================== */
 };
 
 } // namespace Antares::Solver::TSGenerator
