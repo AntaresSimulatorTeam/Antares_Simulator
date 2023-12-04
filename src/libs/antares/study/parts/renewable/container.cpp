@@ -63,11 +63,8 @@ void PartRenewable::prepareAreaWideIndexes()
     // And init the areaWideIndex (unique index for a given area)
     if (list.empty())
     {
-        clusters.clear();
         return;
     }
-
-    clusters.assign(list.size(), nullptr);
 
     auto end = list.end();
     uint idx = 0;
@@ -75,7 +72,6 @@ void PartRenewable::prepareAreaWideIndexes()
     {
         RenewableCluster* t = i->second.get();
         t->areaWideIndex = idx;
-        clusters[idx] = t;
         ++idx;
     }
 }
@@ -107,7 +103,6 @@ uint PartRenewable::removeDisabledClusters()
 void PartRenewable::reset()
 {
     list.clear();
-    clusters.clear();
 }
 
 } // namespace Data

@@ -97,22 +97,6 @@ public:
     //! List of all renewable clusters (enabled and disabled)
     RenewableClusterList list;
 
-    /*!
-    ** \brief All clusters for the area
-    **
-    ** This variable is only available at runtime from the solver.
-    ** It is initialized in the same time that the runtime data.
-    **
-    ** This list is mainly used to ensure the same order of the
-    ** renewable clusters in the outputs.
-    */
-    std::vector<RenewableCluster*> clusters;
-    //! How many clusters have we got ?
-    // Only available from the solver
-    inline size_t clusterCount() const
-    {
-        return clusters.size();
-    }
 }; // class PartRenewable
 
 } // namespace Data

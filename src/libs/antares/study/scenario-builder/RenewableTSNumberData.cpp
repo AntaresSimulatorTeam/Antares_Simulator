@@ -29,13 +29,13 @@ bool renewableTSNumberData::apply(Study& study)
     Area& area = *(study.areas.byIndex[pArea->index]);
     // The total number of clusters for the area
     // WARNING: We may have some renewable clusters with the `mustrun` option
-    auto clusterCount = (uint)area.renewable.clusterCount();
 
     const uint tsGenCountRenewable = get_tsGenCount(study);
 
-    for (uint clusterIndex = 0; clusterIndex != clusterCount; ++clusterIndex)
+    uint clusterIndex = 0;
+    for (auto& c : area.renewable.list)
     {
-        auto& cluster = *(area.renewable.clusters[clusterIndex]);
+        auto& cluster = *c.second;
         // alias to the current column
         assert(clusterIndex < pTSNumberRules.width);
         const auto& col = pTSNumberRules[clusterIndex];
@@ -43,6 +43,7 @@ bool renewableTSNumberData::apply(Study& study)
         logprefix.clear() << "Renewable: area '" << area.name << "', cluster: '" << cluster.name()
                           << "': ";
         ret = ApplyToMatrix(errors, logprefix, cluster.series, col, tsGenCountRenewable) && ret;
+        clusterIndex++;
     }
     return ret;
 }

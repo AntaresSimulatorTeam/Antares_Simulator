@@ -100,9 +100,9 @@ static bool GenerateDeratedMode(Study& study)
             cluster.series.timeseriesNumbers.zero();
         }
 
-        for (uint i = 0; i != area.renewable.clusterCount(); ++i)
+        for (auto& c : area.renewable.list)
         {
-            auto& cluster = *(area.renewable.clusters[i]);
+            auto& cluster = *c.second;
             cluster.series.timeseriesNumbers.zero();
         }
     });
@@ -229,10 +229,9 @@ public:
     std::vector<uint> getAreaTimeSeriesNumber(const Area& area)
     {
         std::vector<uint> to_return;
-        uint clusterCount = (uint)area.renewable.clusterCount();
-        for (uint i = 0; i != clusterCount; ++i)
+        for (auto& c : area.renewable.list)
         {
-            auto& cluster = *(area.renewable.clusters[i]);
+            auto& cluster = *c.second;
             to_return.push_back(cluster.series.timeSeries.width);
         }
         return to_return;
@@ -448,10 +447,9 @@ bool checkInterModalConsistencyForArea(Area& area,
     indexTS = ts_to_tsIndex.at(timeSeriesRenewable);
     if (isTSintermodal[indexTS])
     {
-        const uint clusterCount = (uint)area.renewable.clusterCount();
-        for (uint j = 0; j != clusterCount; ++j)
+        for (auto& c : area.renewable.list)
         {
-            auto& cluster = *(area.renewable.clusters[j]);
+            auto& cluster = *c.second;
             uint nbTimeSeries = cluster.series.timeSeries.width;
             listNumberTsOverArea.push_back(nbTimeSeries);
         }
@@ -753,8 +751,8 @@ Matrix<uint32_t>* getFirstTSnumberInterModalMatrixFoundInArea(
                  && area.thermal.clusterCount() > 0)
             tsNumbersMtx = &(area.thermal.clusters[0]->series.timeseriesNumbers);
         else if (isTSintermodal[ts_to_tsIndex.at(timeSeriesRenewable)]
-                 && area.renewable.clusterCount() > 0)
-            tsNumbersMtx = &(area.renewable.clusters[0]->series.timeseriesNumbers);
+                 && area.renewable.list.size() > 0)
+            tsNumbersMtx = &(area.renewable.list.byIndex[0]->series.timeseriesNumbers);
     }
     assert(tsNumbersMtx);
 
@@ -799,10 +797,9 @@ void applyMatrixDrawsToInterModalModesInArea(Matrix<uint32_t>* tsNumbersMtx,
         }
         if (isTSintermodal[ts_to_tsIndex.at(timeSeriesRenewable)])
         {
-            uint clusterCount = (uint)area.renewable.clusterCount();
-            for (uint i = 0; i != clusterCount; ++i)
+            for (auto& c : area.renewable.list)
             {
-                auto& cluster = *(area.renewable.clusters[i]);
+                auto& cluster = *c.second;
                 assert(year < cluster.series.timeseriesNumbers.height);
                 cluster.series.timeseriesNumbers[0][year] = draw;
             }
@@ -850,15 +847,13 @@ static void fixTSNumbersWhenWidthIsOne(Study& study)
                       });
 
         // Renewables
-        std::for_each(area.renewable.clusters.cbegin(),
-                      area.renewable.clusters.cend(),
-                      [&years](Data::RenewableCluster* cluster)
-
-                      {
-                          fixTSNumbersSingleAreaSingleMode(cluster->series.timeseriesNumbers,
-                                                           cluster->series.timeSeries.width,
-                                                           years);
-                      });
+        for (auto& c : area.renewable.list)
+        {
+            auto& cluster = c.second;
+            fixTSNumbersSingleAreaSingleMode(cluster->series.timeseriesNumbers,
+                    cluster->series.timeSeries.width,
+                    years);
+        }
 
         // NTC
         std::for_each(area.links.cbegin(),
