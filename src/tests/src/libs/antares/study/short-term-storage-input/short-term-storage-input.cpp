@@ -255,6 +255,7 @@ BOOST_FIXTURE_TEST_CASE(check_container_properties_enabled_load, Fixture)
     auto& properties = container.storagesByIndex[0]->properties;
 
     BOOST_CHECK(properties.enabled);
+    BOOST_CHECK_EQUAL(container.count(), 1);
     BOOST_CHECK(properties.validate());
 
     removeIniFile();
@@ -269,6 +270,7 @@ BOOST_FIXTURE_TEST_CASE(check_container_properties_disabled_load, Fixture)
     auto& properties = container.storagesByIndex[0]->properties;
 
     BOOST_CHECK(!properties.enabled);
+    BOOST_CHECK_EQUAL(container.count(), 0);
     BOOST_CHECK(properties.validate());
 
     removeIniFile();
