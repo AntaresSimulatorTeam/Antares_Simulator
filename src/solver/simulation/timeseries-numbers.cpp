@@ -196,7 +196,6 @@ public:
         {
             const auto& link = *(it->second);
             to_return.push_back(link.directCapacities.width);
-            to_return.push_back(link.indirectCapacities.width);
         }
         return to_return;
     }
@@ -390,6 +389,13 @@ void drawTSnumbersForIntraModal(array<uint32_t, timeSeriesCount>& intramodal_dra
     }
 }
 
+static uint possiblyZeroWhenIntraModal(uint draw, uint tsWidth)
+{
+    if (tsWidth == 1)
+        return 0;
+    return draw;
+}
+
 void storeTSnumbersForIntraModal(const array<uint32_t, timeSeriesCount>& intramodal_draws,
                                  const array<bool, timeSeriesCount>& isTSintramodal,
                                  uint year,
@@ -403,7 +409,9 @@ void storeTSnumbersForIntraModal(const array<uint32_t, timeSeriesCount>& intramo
         int indexTS = ts_to_tsIndex.at(timeSeriesLoad);
 
         if (isTSintramodal[indexTS])
-            area.load.series.timeseriesNumbers[0][year] = intramodal_draws[indexTS];
+            area.load.series.timeseriesNumbers[0][year] = 
+                possiblyZeroWhenIntraModal(intramodal_draws[indexTS],
+                                           area.load.series.timeSeries.width);
 
         // -------------
         // Solar ...
@@ -412,7 +420,8 @@ void storeTSnumbersForIntraModal(const array<uint32_t, timeSeriesCount>& intramo
         indexTS = ts_to_tsIndex.at(timeSeriesSolar);
 
         if (isTSintramodal[indexTS])
-            area.solar.series.timeseriesNumbers[0][year] = intramodal_draws[indexTS];
+            area.solar.series.timeseriesNumbers[0][year] = 
+                possiblyZeroWhenIntraModal(intramodal_draws[indexTS], area.solar.series.timeSeries.width);
 
         // -------------
         // Wind ...
@@ -421,7 +430,8 @@ void storeTSnumbersForIntraModal(const array<uint32_t, timeSeriesCount>& intramo
         indexTS = ts_to_tsIndex.at(timeSeriesWind);
 
         if (isTSintramodal[indexTS])
-            area.wind.series.timeseriesNumbers[0][year] = intramodal_draws[indexTS];
+            area.wind.series.timeseriesNumbers[0][year] = 
+                possiblyZeroWhenIntraModal(intramodal_draws[indexTS], area.wind.series.timeSeries.width);
 
         // -------------
         // Hydro ...
@@ -430,7 +440,8 @@ void storeTSnumbersForIntraModal(const array<uint32_t, timeSeriesCount>& intramo
         indexTS = ts_to_tsIndex.at(timeSeriesHydro);
 
         if (isTSintramodal[indexTS])
-            area.hydro.series->timeseriesNumbers[0][year] = intramodal_draws[indexTS];
+            area.hydro.series->timeseriesNumbers[0][year] = 
+                possiblyZeroWhenIntraModal(intramodal_draws[indexTS], area.hydro.series->TScount());
 
         // -------------
         // Thermal ...
@@ -444,7 +455,8 @@ void storeTSnumbersForIntraModal(const array<uint32_t, timeSeriesCount>& intramo
             {
                 ThermalClusterList::SharedPtr cluster = i->second;
                 if (cluster->enabled)
-                    cluster->series.timeseriesNumbers[0][year] = intramodal_draws[indexTS];
+                    cluster->series.timeseriesNumbers[0][year] = 
+                        possiblyZeroWhenIntraModal(intramodal_draws[indexTS], cluster->series.timeSeries.width);
             }
         }
 
@@ -460,7 +472,8 @@ void storeTSnumbersForIntraModal(const array<uint32_t, timeSeriesCount>& intramo
             {
                 RenewableClusterList::SharedPtr cluster = j->second;
                 if (cluster->enabled)
-                    cluster->series.timeseriesNumbers[0][year] = intramodal_draws[indexTS];
+                    cluster->series.timeseriesNumbers[0][year] = 
+                        possiblyZeroWhenIntraModal(intramodal_draws[indexTS], cluster->series.timeSeries.width);
             }
         }
 
@@ -474,7 +487,8 @@ void storeTSnumbersForIntraModal(const array<uint32_t, timeSeriesCount>& intramo
             for (auto it = area.links.begin(); it != area.links.end(); ++it)
             {
                 auto& link = *(it->second);
-                link.timeseriesNumbers[0][year] = intramodal_draws[indexTS];
+                link.timeseriesNumbers[0][year] = 
+                    possiblyZeroWhenIntraModal(intramodal_draws[indexTS], link.directCapacities.width);
             }
         }
     });
