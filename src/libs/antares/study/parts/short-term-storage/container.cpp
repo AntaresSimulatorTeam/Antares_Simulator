@@ -109,6 +109,10 @@ bool STStorageInput::saveDataSeriesToFolder(const std::string& folder) const
 
 std::size_t STStorageInput::count() const
 {
-    return storagesByIndex.size();
+  return std::count_if(storagesByIndex.begin(),
+                       storagesByIndex.end(),
+                       [](const STStorageCluster* st) {
+                           return st->properties.enabled;
+                       });
 }
 } // namespace Antares::Data::ShortTermStorage

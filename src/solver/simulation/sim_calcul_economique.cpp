@@ -53,6 +53,9 @@ static void importShortTermStorages(
         int storageIndex = 0;
         for (auto st : areas[areaIndex]->shortTermStorage.storagesByIndex)
         {
+            if (!st->properties.enabled)
+                continue;
+
             ::ShortTermStorage::PROPERTIES& toInsert = ShortTermStorageOut[areaIndex][storageIndex];
             toInsert.clusterGlobalIndex = clusterGlobalIndex;
 

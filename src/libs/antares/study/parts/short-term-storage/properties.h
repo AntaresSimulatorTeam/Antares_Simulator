@@ -73,6 +73,9 @@ public:
     // cluster name
     std::string name;
 
+    // Enabled ?
+    bool enabled;
+
     static const std::map<std::string, enum Group> ST_STORAGE_PROPERTY_GROUP_ENUM;
 private:
     static constexpr double initiallevelDefault = .5;

@@ -40,7 +40,7 @@ public:
     bool createSTStorageClustersFromIniFile(const std::string& path);
     // 2. Read ALL series
     bool loadSeriesFromFolder(const std::string& folder) const;
-    // Number of ST storages
+    // Number of enabled ST storages, ignoring disabled ST storages
     std::size_t count() const;
 
     bool saveToFolder(const std::string& folder) const;

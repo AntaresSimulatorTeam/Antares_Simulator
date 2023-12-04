@@ -115,6 +115,9 @@ bool Properties::loadKey(const IniFile::Property* p)
         return false;
     }
 
+    if (p->key == "enabled")
+       return p->value.to<bool>(this->enabled);
+
     return false;
 }
 
@@ -147,7 +150,7 @@ bool Properties::saveToFolder(const std::string& folder) const
 
     s->add("efficiency", this->efficiencyFactor);
     s->add("initialleveloptim", this->initialLevelOptim);
-
+    s->add("enabled", this->enabled);
 
     return ini.save(pathIni);
 }
