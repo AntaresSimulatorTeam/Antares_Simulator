@@ -34,6 +34,7 @@
 #include <action/action.h>
 #include "../components/progressbar.h"
 #include <atomic>
+#include <mutex>
 
 namespace Antares
 {
@@ -99,7 +100,7 @@ private:
     wxTimer* pTimer;
 
     Yuni::Thread::IThread* pThread;
-    Yuni::Mutex pMutex;
+    std::mutex pMutex;
     std::atomic<int> pGUINeedRefresh;
     std::atomic<int> pProgression;
     std::atomic<int> pProgressionMax;

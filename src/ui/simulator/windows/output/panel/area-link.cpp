@@ -127,7 +127,7 @@ protected:
         {
             // file lock
             auto mutex = ProvideLockingForFileLocking(filename);
-            Yuni::MutexLocker locker(*mutex);
+            std::lock_guard<std::mutex> locker(*mutex);
             if (not shouldAbort)
                 success = pMatrix->loadFromCSVFile(filename, 1, 0, options);
         }
@@ -281,7 +281,7 @@ protected:
             {
                 // file lock
                 auto mutex = ProvideLockingForFileLocking(filename);
-                Yuni::MutexLocker locker(*mutex);
+                std::lock_guard<std::mutex> locker(*mutex);
                 if (shouldAbort)
                     return;
                 success = rawdata.loadFromCSVFile(filename, 1, 0, options);

@@ -65,14 +65,14 @@ std::future<void> AddTask(Yuni::Job::QueueService& threadPool,
 }
 
 void FutureSet::add(TaskFuture&& f) {
-    std::lock_guard lock(mutex_);
+    std::lock_guard<std::mutex> lock(mutex_);
     futures_.push_back(std::move(f));
 }
 
 void FutureSet::join() {
     std::vector<TaskFuture> toBeJoined;
     {
-        std::lock_guard lock(mutex_);
+        std::lock_guard<std::mutex> lock(mutex_);
         std::swap(futures_, toBeJoined);
     }
     for (auto& f: toBeJoined) {

@@ -26,6 +26,7 @@
 */
 
 #include "antares/sys/policy.h"
+#include <mutex>
 #include <map>
 #include <yuni/io/file.h>
 #include "antares/sys/appdata.h"
@@ -56,8 +57,7 @@ using PolicyMap = std::map<PolicyKey, String>;
 //! All entries
 static PolicyMap* entries = nullptr;
 
-//! Mutex for policy entries
-static Mutex gsMutex;
+static std::mutex gsMutex;//!< Mutex for policy entries
 
 template<class StringT>
 static void OpenFromINIFileWL(const String& filename, const StringT& hostname)
@@ -168,7 +168,7 @@ static inline void ExpansionWL()
 bool Open(bool expandEntries)
 {
     // avoid concurrent changes
-    MutexLocker locker(gsMutex);
+    std::lock_guard<std::mutex> locker(gsMutex);
 
     if (localPoliciesOpened)
         return true;
@@ -239,7 +239,7 @@ bool Open(bool expandEntries)
 void Close()
 {
     // avoid concurrent changes
-    MutexLocker locker(gsMutex);
+    std::lock_guard<std::mutex> locker(gsMutex);
 
     if (localPoliciesOpened)
     {
@@ -255,7 +255,7 @@ void Close()
 bool HasKey(const PolicyKey& key)
 {
     // avoid concurrent changes
-    MutexLocker locker(gsMutex);
+    std::lock_guard<std::mutex> locker(gsMutex);
 
     return (not key.empty() and entries and entries->find(key) != entries->end());
 }
@@ -263,7 +263,7 @@ bool HasKey(const PolicyKey& key)
 bool Read(String& out, const PolicyKey& key)
 {
     // avoid concurrent changes
-    MutexLocker locker(gsMutex);
+    std::lock_guard<std::mutex> locker(gsMutex);
 
     if (not key.empty() and entries)
     {
@@ -281,7 +281,7 @@ bool Read(String& out, const PolicyKey& key)
 bool ReadAsBool(const PolicyKey& key, bool defval)
 {
     // avoid concurrent changes
-    MutexLocker locker(gsMutex);
+    std::lock_guard<std::mutex> locker(gsMutex);
 
     if (not key.empty() and entries)
     {
@@ -299,7 +299,7 @@ bool ReadAsBool(const PolicyKey& key, bool defval)
 void DumpToString(Clob& out)
 {
     // avoid concurrent changes
-    MutexLocker locker(gsMutex);
+    std::lock_guard<std::mutex> locker(gsMutex);
 
     if (!entries or entries->empty())
         return;
@@ -333,7 +333,7 @@ void DumpToString(Clob& out)
 void DumpToStdOut()
 {
     // avoid concurrent changes
-    MutexLocker locker(gsMutex);
+    std::lock_guard<std::mutex> locker(gsMutex);
 
     if (!entries or entries->empty())
         return;
@@ -366,7 +366,7 @@ void DumpToStdOut()
 void DumpToLogs()
 {
     // avoid concurrent changes
-    MutexLocker locker(gsMutex);
+    std::lock_guard<std::mutex> locker(gsMutex);
 
     if (not entries or entries->empty())
     {
@@ -386,7 +386,7 @@ void DumpToLogs()
 void CheckRootPrefix(const char* argv0)
 {
     // avoid concurrent changes
-    MutexLocker locker(gsMutex);
+    std::lock_guard<std::mutex> locker(gsMutex);
 
     if (!entries)
         return;

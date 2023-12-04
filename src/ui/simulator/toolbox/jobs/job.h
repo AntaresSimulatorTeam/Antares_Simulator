@@ -43,6 +43,7 @@
 #include "../create.h"
 #include <ui/common/component/panel.h>
 
+#include <mutex>
 #include <atomic>
 #include <list>
 
@@ -291,8 +292,8 @@ private:
     wxString pMessage;
     wxString pSubMessage;
 
-    Yuni::Mutex pMutex;
-    Yuni::Mutex pErrorMutex;
+    std::mutex pMutex;
+    std::mutex pErrorMutex;
 
     PartList* pPartList;
 

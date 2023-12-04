@@ -25,6 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include <mutex>
 #include <yuni/yuni.h>
 #include <yuni/job/job.h>
 #include <yuni/job/queue/service.h>
@@ -50,7 +51,7 @@ using DispatcherServiceType = Yuni::Job::QueueService;
 static DispatcherServiceType gDispatcher;
 
 static LinkedList<Yuni::Job::IJob::Ptr> gGUIDispatcherList;
-static Yuni::Mutex gGUIMutex;
+static std::mutex gGUIMutex;
 
 class JobDelay final : public Yuni::Job::IJob
 {
@@ -144,7 +145,7 @@ void Wait()
 
 bool Empty()
 {
-    Yuni::MutexLocker locker(Antares::Dispatcher::gGUIMutex);
+    std::lock_guard<std::mutex> locker(Antares::Dispatcher::gGUIMutex);
     return Antares::Dispatcher::gGUIDispatcherList.empty();
 }
 

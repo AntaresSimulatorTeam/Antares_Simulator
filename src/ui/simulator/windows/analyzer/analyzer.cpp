@@ -189,7 +189,7 @@ protected:
 
 private:
     AnalyzerWizard& pForm;
-    Mutex pDataMutex;
+    std::mutex pDataMutex;
     String pFolder;
     AnalyzerWizard::FileMappingPtr pMapping;
 

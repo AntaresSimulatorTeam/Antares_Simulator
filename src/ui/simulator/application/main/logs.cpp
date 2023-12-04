@@ -54,7 +54,7 @@ public:
 using WaitingLogEntries = std::vector<LogInfo*>;
 
 WaitingLogEntries waitingLogEntry;
-Yuni::Mutex logMutex;
+std::mutex logMutex;
 
 std::atomic<int> logUpdateCount;
 

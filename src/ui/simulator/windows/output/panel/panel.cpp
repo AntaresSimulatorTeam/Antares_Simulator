@@ -53,8 +53,8 @@ std::atomic<int> Panel::pPanelsInCallingLoadDataFromFile = 0;
 
 namespace // anonymous
 {
-static std::map<YString, std::shared_ptr<Yuni::Mutex>> mutexForFiles;
-static Yuni::Mutex mutexToAccessToLockFiles;
+static std::map<YString, std::shared_ptr<std::mutex>> mutexForFiles;
+static std::mutex mutexToAccessToLockFiles;
 
 static inline void DefaultBckColour(Antares::Component::Panel* panel)
 {
@@ -478,18 +478,18 @@ void Panel::executeAggregator()
     delete exec;
 }
 
-std::shared_ptr<Yuni::Mutex> ProvideLockingForFileLocking(const YString& filename)
+std::shared_ptr<std::mutex> ProvideLockingForFileLocking(const YString& filename)
 {
-    Yuni::MutexLocker locker(mutexToAccessToLockFiles);
+    std::lock_guard<std::mutex> locker(mutexToAccessToLockFiles);
     auto& ptr = mutexForFiles[filename];
     if (!ptr)
-        ptr = std::make_shared<Yuni::Mutex>();
+        ptr = std::make_shared<std::mutex>();
     return ptr;
 }
 
 void ClearAllMutexForFileLocking()
 {
-    Yuni::MutexLocker locker(mutexToAccessToLockFiles);
+    std::lock_guard locker(mutexToAccessToLockFiles);
     mutexForFiles.clear();
 }
 

@@ -35,6 +35,7 @@
 #include <antares/array/matrix.h>
 #include <yuni/core/event.h>
 
+#include <mutex>
 #include <memory>
 #include <atomic>
 
@@ -148,8 +149,7 @@ private:
     wxWindow* pButton;
     bool pShouldRebuildMessage;
 
-    //! Mutex
-    Yuni::Mutex pMutex;
+    std::mutex pMutex;
     //! Data
     IData* pData;
     //! Filename currently used
@@ -169,7 +169,7 @@ private:
 ** This variable is cleared when the study is closed or the user get back
 ** to the input
 */
-std::shared_ptr<Yuni::Mutex> ProvideLockingForFileLocking(const YString& filename);
+std::shared_ptr<std::mutex> ProvideLockingForFileLocking(const YString& filename);
 
 /*!
 ** \brief Clear all mutex for file locking

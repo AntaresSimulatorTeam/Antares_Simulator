@@ -27,6 +27,7 @@
 #ifndef __ANTARES_WINDOWS_OUTPUT_OUTPUT_H__
 #define __ANTARES_WINDOWS_OUTPUT_OUTPUT_H__
 
+#include <mutex>
 #include <ui/common/component/panel.h>
 #include "../../application/study.h"
 #include "../../toolbox/components/button.h"
@@ -378,8 +379,7 @@ private:
 
     //! \name Background process
     //@{
-    //! Mutex
-    Yuni::Mutex pMutex;
+    std::mutex pMutex;
     //! Jobs
     Antares::Private::OutputViewerData::JobVector pJobs;
     //! All already prepared outputs

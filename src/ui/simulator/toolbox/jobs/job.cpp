@@ -25,6 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include <mutex>
 #include <yuni/yuni.h>
 #include <yuni/thread/thread.h>
 #include <yuni/core/math.h>
@@ -374,7 +375,7 @@ private:
     bool pUseProgression;
     Job& pJob;
     wxDateTime pStartTime;
-    Yuni::Mutex pMutex;
+    std::mutex pMutex;
     PartList& pParts;
 
 }; // class TimerElapsedTime
@@ -480,7 +481,7 @@ private:
 class MessageFlusherTimer final : public wxTimer
 {
 public:
-    MessageFlusherTimer(const wxString& messageBuffer, wxStaticText* label, Yuni::Mutex& mutex) :
+    MessageFlusherTimer(const wxString& messageBuffer, wxStaticText* label, std::mutex& mutex) :
      wxTimer(), pMessageBuffer(messageBuffer), pLabel(label), pMutex(mutex)
     {
         assert(pLabel != NULL);
@@ -493,7 +494,7 @@ public:
     virtual void Notify()
     {
         {
-            Yuni::MutexLocker locker(pMutex);
+            std::lock_guard<std::mutex> locker(pMutex);
             // We use .c_str() here to force the copy of the string
             if (pStrCopy == pMessageBuffer)
                 return;
@@ -509,8 +510,7 @@ private:
     wxString pStrCopy;
     //! GUI label
     wxStaticText* pLabel;
-    //! Mutex
-    Yuni::Mutex& pMutex;
+    std::mutex& pMutex;
 
 }; // class MessageFlusherTimer
 

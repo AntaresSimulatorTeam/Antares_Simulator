@@ -156,7 +156,7 @@ Progression::~Progression()
 bool Progression::saveToFile(const Yuni::String& filename, IResultWriter& writer)
 {
     Yuni::Clob buffer;
-    MutexLocker locker(pProgressMeter.mutex);
+    std::lock_guard<std::mutex> locker(pProgressMeter.mutex);
     {
         uint year;
         const Part::Map::const_iterator end = pProgressMeter.parts.end();
