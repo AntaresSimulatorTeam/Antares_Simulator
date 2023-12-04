@@ -74,7 +74,7 @@ public:
     std::string name;
 
     // Enabled ?
-    bool enabled;
+    bool enabled = true;
 
     static const std::map<std::string, enum Group> ST_STORAGE_PROPERTY_GROUP_ENUM;
 private:
