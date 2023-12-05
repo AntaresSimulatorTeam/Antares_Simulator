@@ -369,13 +369,6 @@ void drawTSnumbersForIntraModal(array<uint32_t, timeSeriesCount>& intramodal_dra
     }
 }
 
-static uint possiblyZeroWhenIntraModal(uint draw, uint tsWidth)
-{
-    if (tsWidth == 1)
-        return 0;
-    return draw;
-}
-
 void storeTSnumbersForIntraModal(const array<uint32_t, timeSeriesCount>& intramodal_draws,
                                  const array<bool, timeSeriesCount>& isTSintramodal,
                                  uint year,
@@ -388,10 +381,8 @@ void storeTSnumbersForIntraModal(const array<uint32_t, timeSeriesCount>& intramo
         assert(year < area.load.series.timeseriesNumbers.height);
         int indexTS = ts_to_tsIndex.at(timeSeriesLoad);
 
-        if (isTSintramodal[indexTS])
-            area.load.series.timeseriesNumbers[0][year] = 
-                possiblyZeroWhenIntraModal(intramodal_draws[indexTS],
-                                           area.load.series.timeSeries.width);
+        if (isTSintramodal[indexTS] && area.load.series.timeSeries.width > 1)
+            area.load.series.timeseriesNumbers[0][year] = intramodal_draws[indexTS];
 
         // -------------
         // Solar ...
@@ -399,9 +390,8 @@ void storeTSnumbersForIntraModal(const array<uint32_t, timeSeriesCount>& intramo
         assert(year < area.solar.series.timeseriesNumbers.height);
         indexTS = ts_to_tsIndex.at(timeSeriesSolar);
 
-        if (isTSintramodal[indexTS])
-            area.solar.series.timeseriesNumbers[0][year] = 
-                possiblyZeroWhenIntraModal(intramodal_draws[indexTS], area.solar.series.timeSeries.width);
+        if (isTSintramodal[indexTS] && area.solar.series.timeSeries.width > 1)
+            area.solar.series.timeseriesNumbers[0][year] = intramodal_draws[indexTS];
 
         // -------------
         // Wind ...
@@ -409,9 +399,8 @@ void storeTSnumbersForIntraModal(const array<uint32_t, timeSeriesCount>& intramo
         assert(year < area.wind.series.timeseriesNumbers.height);
         indexTS = ts_to_tsIndex.at(timeSeriesWind);
 
-        if (isTSintramodal[indexTS])
-            area.wind.series.timeseriesNumbers[0][year] = 
-                possiblyZeroWhenIntraModal(intramodal_draws[indexTS], area.wind.series.timeSeries.width);
+        if (isTSintramodal[indexTS] && area.wind.series.timeSeries.width > 1)
+            area.wind.series.timeseriesNumbers[0][year] = intramodal_draws[indexTS];
 
         // -------------
         // Hydro ...
@@ -419,9 +408,8 @@ void storeTSnumbersForIntraModal(const array<uint32_t, timeSeriesCount>& intramo
         assert(year < area.hydro.series->timeseriesNumbers.height);
         indexTS = ts_to_tsIndex.at(timeSeriesHydro);
 
-        if (isTSintramodal[indexTS])
-            area.hydro.series->timeseriesNumbers[0][year] = 
-                possiblyZeroWhenIntraModal(intramodal_draws[indexTS], area.hydro.series->TScount());
+        if (isTSintramodal[indexTS] && area.hydro.series->TScount() > 1)
+            area.hydro.series->timeseriesNumbers[0][year] = intramodal_draws[indexTS];
 
         // -------------
         // Thermal ...
@@ -434,9 +422,8 @@ void storeTSnumbersForIntraModal(const array<uint32_t, timeSeriesCount>& intramo
             for (auto i = area.thermal.list.mapping.begin(); i != end_th_clusters; ++i)
             {
                 ThermalClusterList::SharedPtr cluster = i->second;
-                if (cluster->enabled)
-                    cluster->series.timeseriesNumbers[0][year] = 
-                        possiblyZeroWhenIntraModal(intramodal_draws[indexTS], cluster->series.timeSeries.width);
+                if (cluster->enabled && cluster->series.timeSeries.width > 1)
+                    cluster->series.timeseriesNumbers[0][year] = intramodal_draws[indexTS];
             }
         }
 
@@ -451,9 +438,8 @@ void storeTSnumbersForIntraModal(const array<uint32_t, timeSeriesCount>& intramo
             for (auto j = area.renewable.list.cluster.begin(); j != end_rn_clusters; ++j)
             {
                 RenewableClusterList::SharedPtr cluster = j->second;
-                if (cluster->enabled)
-                    cluster->series.timeseriesNumbers[0][year] = 
-                        possiblyZeroWhenIntraModal(intramodal_draws[indexTS], cluster->series.timeSeries.width);
+                if (cluster->enabled && cluster->series.timeSeries.width > 1)
+                    cluster->series.timeseriesNumbers[0][year] = intramodal_draws[indexTS];
             }
         }
 
@@ -467,8 +453,8 @@ void storeTSnumbersForIntraModal(const array<uint32_t, timeSeriesCount>& intramo
             for (auto it = area.links.begin(); it != area.links.end(); ++it)
             {
                 auto& link = *(it->second);
-                link.timeseriesNumbers[0][year] = 
-                    possiblyZeroWhenIntraModal(intramodal_draws[indexTS], link.directCapacities.width);
+                if (link.directCapacities.width > 1)
+                    link.timeseriesNumbers[0][year] = intramodal_draws[indexTS];
             }
         }
     });
@@ -578,17 +564,10 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
             {
                 auto& link = *(it->second);
                 const uint nbTimeSeries = link.directCapacities.width;
-                if (nbTimeSeries == 1)
-                {
-                    // Random generator (mersenne-twister) must not be called here
-                    // in order to avoid a shift in the random generator results
-                    // that would cause a change of Antares results
-                    link.timeseriesNumbers[0][year] = 0;
-                }
-                else
+                if (nbTimeSeries > 1)
                 {
                     link.timeseriesNumbers[0][year] = (uint32_t)(
-                      floor(study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries));
+                        floor(study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries));
                 }
             }
         }
@@ -598,8 +577,7 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
     {
         const auto nbTimeSeries = group->numberOfTimeseries();
         auto& groupTsNumber = group->timeseriesNumbers[0][year];
-        groupTsNumber = 0;
-        if (nbTimeSeries != 1)
+        if (nbTimeSeries > 1)   
         {
             groupTsNumber = (uint32_t)(floor(study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries));
         }
