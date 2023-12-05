@@ -236,11 +236,22 @@ void DataSeriesHydro::reset()
     count = 1;
 }
 
-void DataSeriesHydro::resizeRORandSTORAGE(unsigned int width)
+void DataSeriesHydro::resize_ROR_STORAGE_MINGEN_whenGeneratedTS(unsigned int newWidth)
 {
-    ror.resize(width, HOURS_PER_YEAR);
-    storage.resize(width, DAYS_PER_YEAR);
-    count = width;
+    ror.resize(newWidth, HOURS_PER_YEAR);
+    storage.resize(newWidth, DAYS_PER_YEAR);
+
+    // Resizing mingen : new extra columns are copies of the first column.
+    //    Note that mingen has necessarily one column at least, by construction
+    uint mingenOriginalSize = mingen.timeSeries.width;
+    mingen.timeSeries.resizeWithoutDataLost(newWidth, mingen.timeSeries.height);
+    if (mingenOriginalSize < newWidth)
+    {
+        for (uint col = mingenOriginalSize; col < newWidth; ++col)
+            mingen.timeSeries.pasteToColumn(col, mingen[0]);
+    }
+
+    count = newWidth;
 }
 
 void DataSeriesHydro::resizeGenerationTS(unsigned int w, unsigned int h)
