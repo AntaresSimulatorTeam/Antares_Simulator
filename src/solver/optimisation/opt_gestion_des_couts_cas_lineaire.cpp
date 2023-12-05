@@ -339,8 +339,8 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
 
     if (problemeHebdo->OptimisationAvecCoutsDeDemarrage)
     {
-        OPT_InitialiserLesCoutsLineaireCoutsDeDemarrage(
-          problemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle);
+        OPT_InitialiserLesCoutsLineaireCoutsDeDemarrage(problemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle);
+        OPT_InitialiserLesCoutsLineaireRampesThermiques(problemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle);
     }
 
     return;

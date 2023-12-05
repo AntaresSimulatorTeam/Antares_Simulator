@@ -479,6 +479,11 @@ void Data::ThermalCluster::reset()
     marketBidCost = 0.;
     variableomcost = 0.;
     costsTimeSeries.resize(1, CostsTimeSeries());
+    powerIncreaseCost = 0;
+    powerDecreaseCost = 0;
+
+    maxUpwardPowerRampingRate = 0;
+    maxDownwardPowerRampingRate = 0;
 
     // modulation
     modulation.resize(thermalModulationMax, HOURS_PER_YEAR);
@@ -607,6 +612,36 @@ bool Data::ThermalCluster::integrityCheck()
             minStablePower = nominalCapacity;
             ret = false;
     }*/
+
+    // ramping
+    if (maxUpwardPowerRampingRate <= 0)
+    {
+        logs.error() << "Thermal cluster: " << parentArea->name << '/' << pName
+                     << ": The maximum upward power ramping rate must greater than zero.";
+        maxUpwardPowerRampingRate = 1.;
+        ret = false;
+    }
+    if (maxDownwardPowerRampingRate <= 0)
+    {
+        logs.error() << "Thermal cluster: " << parentArea->name << '/' << pName
+                     << ": The maximum downward power ramping rate must greater than zero.";
+        maxDownwardPowerRampingRate = 1.;
+        ret = false;
+    }
+    if (powerIncreaseCost < 0)
+    {
+        logs.error() << "Thermal cluster: " << parentArea->name << '/' << pName
+                     << ": The ramping power increase cost must be positive or null.";
+        powerIncreaseCost = 0.;
+        ret = false;
+    }
+    if (powerDecreaseCost < 0)
+    {
+        logs.error() << "Thermal cluster: " << parentArea->name << '/' << pName
+                     << ": The ramping power decrease cost must be positive or null.";
+        powerDecreaseCost = 0.;
+        ret = false;
+    }
 
     return ret;
 }

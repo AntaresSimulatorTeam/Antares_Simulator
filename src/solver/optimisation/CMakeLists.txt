@@ -38,6 +38,11 @@ set(RTESOLVER_OPT
 		opt_decompte_variables_et_contraintes_couts_demarrage.cpp
 		opt_init_minmax_groupes_couts_demarrage.cpp
 		opt_nombre_min_groupes_demarres_couts_demarrage.cpp
+		opt_construction_contraintes_rampes_thermiques.cpp
+		opt_decompte_variables_et_contraintes_rampes_thermiques.cpp
+		opt_construction_variables_rampes_thermiques.cpp
+		opt_gestion_des_bornes_rampes_thermiques.cpp
+		opt_gestion_des_couts_rampes_thermiques.cpp
 		opt_export_structure.h
 		opt_export_structure.cpp
 		base_weekly_optimization.h
@@ -119,7 +124,12 @@ set(RTESOLVER_OPT
 		constraints/NbDispUnitsMinBoundSinceMinUpTime.cpp
 		constraints/MinDownTime.h
 		constraints/MinDownTime.cpp
-
+		constraints/RampingIncreaseRate.h
+		constraints/RampingIncreaseRate.cpp
+		constraints/RampingDecreaseRate.h
+		constraints/RampingDecreaseRate.cpp
+		constraints/PowerOutputVariation.h
+		constraints/PowerOutputVariation.cpp
 	)
 
 

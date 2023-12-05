@@ -90,8 +90,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
                 const auto& clusterName = PaliersThermiquesDuPays.NomsDesPaliersThermiques[index];
                 CorrespondanceVarNativesVarOptim.NumeroDeVariableDuPalierThermique[palier]
                   = NombreDeVariables;
-                ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
-                  = VARIABLE_BORNEE_DES_DEUX_COTES;
+                ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
                 variableNamer.DispatchableProduction(NombreDeVariables, clusterName);
                 NombreDeVariables++;
             }
@@ -265,8 +264,8 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
 
     if (problemeHebdo->OptimisationAvecCoutsDeDemarrage)
     {
-        OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarrage(problemeHebdo,
-                                                                                      false);
+        OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarrage(problemeHebdo, false);
+        OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireRampesThermiques(problemeHebdo, false);
     }
 
     return;

@@ -185,6 +185,10 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
 
         variablesMapping.NumeroDeVariableDuPalierThermique
           .assign(study.runtime->thermalPlantTotalCount, 0);
+        variablesMapping.powerRampingIncreaseIndex
+          .assign(study.runtime->thermalPlantTotalCount, 0);
+        variablesMapping.powerRampingDecreaseIndex
+          .assign(study.runtime->thermalPlantTotalCount, 0);
         variablesMapping.NumeroDeVariablesDeLaProdHyd
           .assign(nbPays, 0);
         variablesMapping.NumeroDeVariablesDePompage
@@ -379,6 +383,12 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
         problem.PaliersThermiquesDuPays[k].DureeMinimaleDArretDUnGroupeDuPalierThermique
          .assign(nbPaliers, 0);
         problem.PaliersThermiquesDuPays[k].NomsDesPaliersThermiques.resize(nbPaliers);
+
+        problem.PaliersThermiquesDuPays[k].downwardRampingCost.assign(
+          nbPaliers, 0);
+        problem.PaliersThermiquesDuPays[k].upwardRampingCost.assign(nbPaliers, 0);
+        problem.PaliersThermiquesDuPays[k].maxUpwardPowerRampingRate.assign(nbPaliers, 0);
+        problem.PaliersThermiquesDuPays[k].maxDownwardPowerRampingRate.assign(nbPaliers, 0);
 
         problem.CaracteristiquesHydrauliques[k].CntEnergieH2OParIntervalleOptimise
           .assign(7, 0.);

@@ -301,6 +301,14 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
             pbPalier.DureeMinimaleDArretDUnGroupeDuPalierThermique[clusterIndex]
               = cluster.minDownTime;
 
+            pbPalier.upwardRampingCost[clusterIndex]
+              = cluster.powerIncreaseCost;
+            pbPalier.downwardRampingCost[clusterIndex] = cluster.powerDecreaseCost;
+            pbPalier.maxDownwardPowerRampingRate[clusterIndex] = cluster.maxDownwardPowerRampingRate;
+            pbPalier.maxUpwardPowerRampingRate[clusterIndex] = cluster.maxUpwardPowerRampingRate;
+
+
+
             pbPalier.PmaxDUnGroupeDuPalierThermique[clusterIndex]
               = cluster.nominalCapacityWithSpinning;
             pbPalier.pminDUnGroupeDuPalierThermique[clusterIndex]
