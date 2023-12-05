@@ -184,6 +184,7 @@ void ClusterList<ClusterT>::rebuildIndex()
     if (not empty())
     {
         uint indx = 0;
+        byIndex.resize(size());
         for (auto i = cluster.begin(); i != cluster.end(); ++i)
         {
             auto cluster = i->second.get();
