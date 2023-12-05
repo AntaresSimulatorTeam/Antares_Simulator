@@ -58,7 +58,7 @@ public:
     */
     void reset();
 
-    void resetGenerationTS(unsigned int width);
+    void resizeRORandSTORAGE(unsigned int width);
     void resizeGenerationTS(unsigned int w, unsigned int h);
 
     /*!

@@ -236,11 +236,10 @@ void DataSeriesHydro::reset()
     count = 1;
 }
 
-void DataSeriesHydro::resetGenerationTS(unsigned int width)
+void DataSeriesHydro::resizeRORandSTORAGE(unsigned int width)
 {
-    ror.reset(width, HOURS_PER_YEAR);
-    storage.reset(width, DAYS_PER_YEAR);
-    mingen.reset(width, HOURS_PER_YEAR);
+    ror.resize(width, HOURS_PER_YEAR);
+    storage.resize(width, DAYS_PER_YEAR);
     count = width;
 }
 

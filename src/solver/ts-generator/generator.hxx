@@ -59,7 +59,7 @@ inline void ResizeGeneratedTimeSeries(Data::AreaList& areas, Data::Parameters& p
         // Hydro
         if (params.timeSeriesToRefresh & Data::timeSeriesHydro)
         {
-            area.hydro.series->resetGenerationTS(params.nbTimeSeriesHydro);
+            area.hydro.series->resizeRORandSTORAGE(params.nbTimeSeriesHydro);
         }
 
         // Thermal
