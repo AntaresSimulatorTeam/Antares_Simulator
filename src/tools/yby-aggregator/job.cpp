@@ -33,7 +33,7 @@ using namespace Yuni;
 using namespace Antares;
 
 /*extern*/ Job::QueueService queueService;
-static Atomic::Int<> gNbJobs = 0;
+static std::atomic<int> gNbJobs = 0;
 
 #define SEP IO::Separator
 

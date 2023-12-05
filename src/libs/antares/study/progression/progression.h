@@ -27,12 +27,12 @@
 #ifndef __ANTARES_LIBS_SOLVER_SIMULATION_PROGRESSION_H__
 #define __ANTARES_LIBS_SOLVER_SIMULATION_PROGRESSION_H__
 
-#include <yuni/yuni.h>
 #include <yuni/core/singleton.h>
 #include <yuni/thread/timer.h>
 #include <map>
 #include <list>
 #include <vector>
+#include <atomic>
 #include "../fwd.h"
 #include <yuni/io/file.h>
 #include <antares/writer/i_writer.h>
@@ -79,7 +79,7 @@ private:
         //! The total number of ticks to achieve
         int maxTickCount;
         //! The current number of ticks
-        Yuni::Atomic::Int<32> tickCount;
+        std::atomic<int> tickCount;
         //! The last number of ticks, to reduce the log verbosity
         int lastTickCount;
         // Caption to use when displaying logs

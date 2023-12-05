@@ -25,11 +25,11 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include <yuni/yuni.h>
 #include <yuni/core/system/suspend.h>
 #include "execute.h"
 #include "../jobs.h"
 #include <iostream>
+#include <atomic>
 #include <wx/process.h>
 #include <wx/txtstrm.h>
 #include <wx/utils.h>
@@ -76,7 +76,7 @@ private:
     const wxString pCommand;
     const wxString pWDirectory;
     //! Get if the job is
-    Atomic::Int<32> pRunning;
+    std::atomic<int> pRunning;
     //! runtime Informations about the process which will be executed
     JobProcess* pProcess;
     //! The original directory
