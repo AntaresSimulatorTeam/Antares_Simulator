@@ -65,6 +65,12 @@ public:
 
     bool forceZipOutput = false;
 
+    //! Solver options
+    bool presolve = false;
+    bool scaling = false;
+    bool useBasisOptim1 = true;
+    bool useBasisOptim2 = true;
+
     void checkAndSetStudyFolder(Yuni::String folder);
     void reset();
 }; // class Settings

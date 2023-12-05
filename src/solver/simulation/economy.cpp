@@ -39,9 +39,7 @@ using Antares::Constants::nbHoursInAWeek;
 namespace Antares::Solver::Simulation
 {
 Economy::Economy(Data::Study& study, IResultWriter& resultWriter) :
-    study(study),
-    preproOnly(false),
-    resultWriter(resultWriter)
+ study(study), preproOnly(false), resultWriter(resultWriter)
 {
 }
 
@@ -87,16 +85,16 @@ bool Economy::simulationBegin()
             }
 
             auto options = createOptimizationOptions(study);
-            weeklyOptProblems_[numSpace] =
-                Antares::Solver::Optimization::WeeklyOptimization::create(
-                                                    study,
-                                                    options,
-                                                    study.parameters.adqPatchParams,
-                                                    &pProblemesHebdo[numSpace],
-                                                    numSpace,
-                                                    resultWriter);
-            postProcessesList_[numSpace] =
-                interfacePostProcessList::create(study.parameters.adqPatchParams,
+            weeklyOptProblems_[numSpace]
+              = Antares::Solver::Optimization::WeeklyOptimization::create(
+                study,
+                options,
+                study.parameters.adqPatchParams,
+                &pProblemesHebdo[numSpace],
+                numSpace,
+                resultWriter);
+            postProcessesList_[numSpace]
+              = interfacePostProcessList::create(study.parameters.adqPatchParams,
                                                  &pProblemesHebdo[numSpace],
                                                  numSpace,
                                                  study.areas,
@@ -113,7 +111,6 @@ bool Economy::simulationBegin()
     pNbWeeks = study.parameters.simulationDays.numberOfWeeks();
     return true;
 }
-
 
 bool Economy::year(Progression::Task& progression,
                    Variable::State& state,
@@ -143,11 +140,18 @@ bool Economy::year(Progression::Task& progression,
         pProblemesHebdo[numSpace].weekInTheYear = state.weekInTheYear = w;
         pProblemesHebdo[numSpace].HeureDansLAnnee = hourInTheYear;
 
-        ::SIM_RenseignementProblemeHebdo(study, pProblemesHebdo[numSpace], state.weekInTheYear,
-                                         numSpace, hourInTheYear, hydroVentilationResults);
+        ::SIM_RenseignementProblemeHebdo(study,
+                                         pProblemesHebdo[numSpace],
+                                         state.weekInTheYear,
+                                         numSpace,
+                                         hourInTheYear,
+                                         hydroVentilationResults);
 
-        BuildThermalPartOfWeeklyProblem(study, pProblemesHebdo[numSpace],
-                                        hourInTheYear, randomForYear.pThermalNoisesByArea, state.year);
+        BuildThermalPartOfWeeklyProblem(study,
+                                        pProblemesHebdo[numSpace],
+                                        hourInTheYear,
+                                        randomForYear.pThermalNoisesByArea,
+                                        state.year);
 
         // Reinit optimisation if needed
         pProblemesHebdo[numSpace].ReinitOptimisation = reinitOptim;

@@ -39,6 +39,10 @@ struct OptimizationOptions
 {
     bool useOrtools;
     std::string solverName;
+    bool presolve;
+    bool scaling;
+    bool useBasisOptim1;
+    bool useBasisOptim2;
 };
 
 }

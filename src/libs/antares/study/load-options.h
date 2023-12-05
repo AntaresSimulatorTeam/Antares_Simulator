@@ -93,6 +93,12 @@ public:
     //! THe solver name, sirius is the default
     std::string ortoolsSolver = "sirius";
 
+    //! Solver options
+    bool presolve = false;
+    bool scaling = false;
+    bool useBasisOptim1 = true;
+    bool useBasisOptim2 = true;
+
     //! Temporary string for passing log message
     mutable Yuni::String logMessage;
     //! Porgression, tick count

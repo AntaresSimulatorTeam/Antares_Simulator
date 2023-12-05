@@ -8,7 +8,12 @@ using namespace operations_research;
 
 MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
                            MPSolver* ProbSpx,
-                           bool keepBasis);
+                           bool keepBasis,
+                           const int optimizationNumber,
+                           bool presolve,
+                           bool scaling,
+                           bool useBasisOptim1,
+                           bool useBasisOptim2);
 
 MPSolver* ORTOOLS_ConvertIfNeeded(const std::string& solverName,
                                   const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,

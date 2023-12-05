@@ -530,6 +530,12 @@ public:
     // solver logs
     bool solverLogs;
 
+    // Solver parametrization
+    bool presolve;
+    bool scaling;
+    bool useBasisOptim1;
+    bool useBasisOptim2;
+
 private:
     //! Load data from an INI file
     bool loadFromINI(const IniFile& ini, uint version, const StudyLoadOptions& options);

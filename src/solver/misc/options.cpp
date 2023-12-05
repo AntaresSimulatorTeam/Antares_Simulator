@@ -193,6 +193,22 @@ std::unique_ptr<GetOpt::Parser> CreateParser(Settings& settings,
     parser->addFlag(
       options.displayVersion, 'v', "version", "Print the version of antares-solver and exit");
 
+    // --presolve
+    parser->addFlag(
+      options.presolve, ' ', "presolve", "Activate presolve for solver.");
+
+    // --scaling
+    parser->addFlag(
+      options.scaling, ' ', "scaling", "Activate scaling for solver (only available for Xpress).");
+    
+    // --use-basis-optim-1
+    parser->addFlag(
+      options.useBasisOptim1, ' ', "use-basis-optim-1", "Activate warm start for optim 1.");
+    
+    // --use-basis-optim-2
+    parser->addFlag(
+      options.useBasisOptim2, ' ', "use-basis-optim-2", "Activate warm start for optim 2.");
+
     // The last argument is the study folder.
     // Unlike all other arguments, it does not need to be given after a --flag.
     parser->remainingArguments(options.studyFolder);
