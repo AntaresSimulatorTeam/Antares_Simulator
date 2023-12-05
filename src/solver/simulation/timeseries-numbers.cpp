@@ -617,14 +617,11 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
     for (auto& group: study.bindingConstraintsGroups)
     {
         const auto nbTimeSeries = group->numberOfTimeseries();
-        auto& value = group->timeseriesNumbers[0][year];
-        if (nbTimeSeries == 1)
+        auto& groupTsNumber = group->timeseriesNumbers[0][year];
+        groupTsNumber = 0;
+        if (nbTimeSeries != 1)
         {
-            value = 0;
-        }
-        else
-        {
-            value  = (uint32_t)(floor(study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries));
+            groupTsNumber = (uint32_t)(floor(study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries));
         }
     }
 }

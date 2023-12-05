@@ -38,8 +38,6 @@ using namespace Yuni;
 namespace Antares::Data
 {
 
-const double TimeSeries::emptyColumn[] = {0};
-
 TimeSeries::TimeSeries(numbers& tsNumbers) : timeseriesNumbers(tsNumbers)
 {}
 
