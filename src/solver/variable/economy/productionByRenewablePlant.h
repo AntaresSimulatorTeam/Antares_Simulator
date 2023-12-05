@@ -277,9 +277,8 @@ public:
 
     void hourForEachArea(State& state, unsigned int numSpace)
     {
-        for (const auto& c : state.area->renewable.list)
+        for (const auto& [name, renewableCluster]  : state.area->renewable.list)
         {
-            const auto& renewableCluster = c.second;
             double renewableClusterProduction = renewableCluster->valueAtTimeStep(state.year, state.hourInTheYear);
 
             pValuesForTheCurrentYear[numSpace][renewableCluster->areaWideIndex].hour[state.hourInTheYear]
