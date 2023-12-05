@@ -660,68 +660,6 @@ void applyMatrixDrawsToInterModalModesInArea(Matrix<uint32_t>* tsNumbersMtx,
     }
 }
 
-// Set tsNumbers to 1 for all years if only one TS is present
-static void fixTSNumbersSingleAreaSingleMode(Matrix<uint32_t>& tsNumbers, uint width, uint years)
-{
-    if (width == 1)
-    {
-        for (uint year = 0; year < years; year++)
-        {
-            tsNumbers[0][year] = 0;
-        }
-    }
-}
-
-static void fixTSNumbersWhenWidthIsOne(Study& study)
-{
-    const uint years = 1 + study.runtime->rangeLimits.year[rangeEnd];
-
-    study.areas.each([&years](Area& area) {
-        // Load
-        fixTSNumbersSingleAreaSingleMode(
-                area.load.series.timeseriesNumbers, area.load.series.timeSeries.width, years);
-        // Solar
-        fixTSNumbersSingleAreaSingleMode(
-                area.solar.series.timeseriesNumbers, area.solar.series.timeSeries.width, years);
-        // Wind
-        fixTSNumbersSingleAreaSingleMode(
-                area.wind.series.timeseriesNumbers, area.wind.series.timeSeries.width, years);
-        // Hydro
-        fixTSNumbersSingleAreaSingleMode(
-          area.hydro.series->timeseriesNumbers, area.hydro.series->TScount(), years);
-
-        // Thermal
-        std::for_each(area.thermal.clusters.cbegin(),
-                      area.thermal.clusters.cend(),
-                      [&years](Data::ThermalCluster* cluster) {
-                          fixTSNumbersSingleAreaSingleMode(cluster->series.timeseriesNumbers,
-                                                           cluster->series.timeSeries.width,
-                                                           years);
-                      });
-
-        // Renewables
-        std::for_each(area.renewable.clusters.cbegin(),
-                      area.renewable.clusters.cend(),
-                      [&years](Data::RenewableCluster* cluster)
-
-                      {
-                          fixTSNumbersSingleAreaSingleMode(cluster->series.timeseriesNumbers,
-                                                           cluster->series.timeSeries.width,
-                                                           years);
-                      });
-
-        // NTC
-        std::for_each(area.links.cbegin(),
-                      area.links.cend(),
-                      [&years](const std::pair<Data::AreaName, Data::AreaLink*>& it) {
-                          auto link = it.second;
-                          fixTSNumbersSingleAreaSingleMode(
-                            link->timeseriesNumbers, link->directCapacities.width, years);
-                      });
-    });
-    study.bindingConstraintsGroups.fixTSNumbersWhenWidthIsOne();
-}
-
 bool TimeSeriesNumbers::checkAllElementsIdenticalOrOne(const std::vector<uint>& w)
 {
     std::vector<uint> removedOnes;
@@ -821,7 +759,6 @@ void TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(Data::Study& study, IRes
 
     if (study.parameters.storeTimeseriesNumbers)
     {
-        // fixTSNumbersWhenWidthIsOne(study);
         study.storeTimeSeriesNumbers<TimeSeriesType::timeSeriesLoad>(resultWriter);
         study.storeTimeSeriesNumbers<TimeSeriesType::timeSeriesSolar>(resultWriter);
         study.storeTimeSeriesNumbers<TimeSeriesType::timeSeriesHydro>(resultWriter);

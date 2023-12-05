@@ -58,12 +58,6 @@ namespace Antares::Data {
         });
     }
 
-    void BindingConstraintGroupRepository::fixTSNumbersWhenWidthIsOne() {
-        std::for_each(groups_.begin(), groups_.end(), [](auto& group) {
-            group->fixTSNumbersWhenWidthIsOne();
-        });
-    }
-
     BindingConstraintGroup* BindingConstraintGroupRepository::operator[](const std::string& name) const {
         if (auto group = std::find_if(groups_.begin(), groups_.end(), [&name](auto& group_of_constraint) {
                                         return group_of_constraint->name() == name;

@@ -22,8 +22,6 @@ public:
 
     void resizeAllTimeseriesNumbers(unsigned nb_years);
 
-    void fixTSNumbersWhenWidthIsOne();
-
     BindingConstraintGroup* operator[](const std::string& name) const;
 
     using iterator = std::vector<std::unique_ptr<BindingConstraintGroup>>::iterator;
