@@ -58,12 +58,6 @@ void Application::prepare(int argc, char* argv[])
     pArgc = argc;
     pArgv = argv;
 
-    // Load the local policy settings
-    LocalPolicy::Open();
-    LocalPolicy::CheckRootPrefix(argv[0]);
-
-    Resources::Initialize(argc, argv);
-
     // Options
     Data::StudyLoadOptions options;
     options.usedByTheSolver = true;
@@ -225,7 +219,7 @@ void Application::execute()
     if (!pStudy)
         return;
 
-    processCaption(Yuni::String() << "antares: running \"" << pStudy->header.caption << "\"");
+    //processCaption(Yuni::String() << "antares: running \"" << pStudy->header.caption << "\"");
 
     SystemMemoryLogger memoryReport;
     memoryReport.interval(1000 * 60 * 5); // 5 minutes
@@ -298,7 +292,7 @@ void Application::prepareWriter(Antares::Data::Study& study,
 
 void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
 {
-    processCaption(Yuni::String() << "antares: loading \"" << pSettings.studyFolder << "\"");
+    //processCaption(Yuni::String() << "antares: loading \"" << pSettings.studyFolder << "\"");
     auto& study = *pStudy;
 
     // Name of the simulation
