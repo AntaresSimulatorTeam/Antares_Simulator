@@ -100,7 +100,7 @@ StudyFinder::StudyFinder() : pLycos(nullptr)
 {
 }
 
-StudyFinder::StudyFinder(const StudyFinder&) : ThreadingPolicy(), pLycos(nullptr)
+StudyFinder::StudyFinder(const StudyFinder&) : pLycos(nullptr)
 {
 }
 
@@ -115,28 +115,28 @@ StudyFinder::~StudyFinder()
 
 void StudyFinder::stop(uint timeout)
 {
-    ThreadingPolicy::MutexLocker locker(*this);
+    std::lock_guard<std::mutex> locker(mutex);
     if (pLycos)
         pLycos->stop(timeout);
 }
 
 void StudyFinder::wait()
 {
-    ThreadingPolicy::MutexLocker locker(*this);
+    std::lock_guard<std::mutex> locker(mutex);
     if (pLycos)
         pLycos->wait();
 }
 
 void StudyFinder::wait(uint timeout)
 {
-    ThreadingPolicy::MutexLocker locker(*this);
+    std::lock_guard<std::mutex> locker(mutex);
     if (pLycos)
         pLycos->wait(timeout);
 }
 
 void StudyFinder::lookup(const Yuni::String::Vector& folder)
 {
-    ThreadingPolicy::MutexLocker locker(*this);
+    std::lock_guard<std::mutex> locker(mutex);
     if (pLycos)
         pLycos->stop(10000);
     else
@@ -152,7 +152,7 @@ void StudyFinder::lookup(const Yuni::String::Vector& folder)
 
 void StudyFinder::lookup(const Yuni::String::List& folder)
 {
-    ThreadingPolicy::MutexLocker locker(*this);
+    std::lock_guard<std::mutex> locker(mutex);
     if (pLycos)
         pLycos->stop(10000);
     else
@@ -167,7 +167,7 @@ void StudyFinder::lookup(const Yuni::String::List& folder)
 
 void StudyFinder::lookup(const String& folder)
 {
-    ThreadingPolicy::MutexLocker locker(*this);
+    std::lock_guard<std::mutex> locker(mutex);
     if (pLycos)
         pLycos->stop(10000);
     else

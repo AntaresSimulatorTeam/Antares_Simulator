@@ -27,12 +27,10 @@
 #ifndef __ANTARES_LIB_OBJECT_H__
 #define __ANTARES_LIB_OBJECT_H__
 
-#include "../antares.h"
 #include <yuni/string.h>
-#include <yuni/core/smartptr/intrusive.h>
 #include "ref.h"
-#include "intrusive-reference.h"
 #include <atomic>
+#include <mutex>
 
 namespace Antares
 {
@@ -42,29 +40,8 @@ namespace Antares
 ** \note An object is disabled by default to avoid race conditions
 **  in future algorithms (race condtions while initializing for example)
 */
-class IObject : public Yuni::IIntrusiveSmartPtr<IObject>
+class IObject
 {
-public:
-    //! Ancestor
-    using Ancestor = Yuni::IIntrusiveSmartPtr<IObject>;
-    //! The current threading policy
-    using ThreadingPolicy = Ancestor::ThreadingPolicy;
-
-    /*!
-    ** \brief Class Helper to determine the most suitable smart pointer for a class
-    **   according the current threading policy
-    */
-    template<class U>
-    class SmartPtr
-    {
-    public:
-        //! The most suitable smart pointer for T
-        using Ptr = typename Ancestor::template SmartPtrType<U>::Ptr;
-    };
-
-    //! The most suitable smart pointer for the this class
-    using Ptr = Ancestor::SmartPtrType<IObject>::Ptr;
-
 public:
     //! \name Identifiers
     //@{
@@ -126,16 +103,11 @@ protected:
     //@}
 
 protected:
-    //! The most suitable type for a bool
-    using EnableType
-      = Yuni::Static::If<ThreadingPolicy::threadSafe, std::atomic<int>, bool>::ResultType;
+    const Ref pOID;//!< Object Identifier
+    YString pCaption;//!< Caption
 
-    //! Object Identifier
-    const Ref pOID;
-    //! Caption
-    YString pCaption;
-    //! If the object is enabled. Disabled by default
-    EnableType pEnabled;
+    std::atomic_bool pEnabled=false;//!< If the object is enabled. Disabled by default
+    mutable std::mutex mutex;
 
 }; // class IObject
 

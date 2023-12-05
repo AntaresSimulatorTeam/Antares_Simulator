@@ -1,6 +1,4 @@
 set(SRC_OBJECT
-        intrusive-reference.h
-        intrusive-reference.hxx
         object.h
         object.hxx
         object.cpp

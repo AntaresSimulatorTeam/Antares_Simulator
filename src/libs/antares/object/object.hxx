@@ -24,8 +24,8 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_LIB_OBJECT_HXX__
-#define __ANTARES_LIB_OBJECT_HXX__
+#pragma once
+#include "object.h"
 
 namespace Antares
 {
@@ -36,7 +36,7 @@ inline const Ref& IObject::oid() const
 
 inline YString IObject::caption() const
 {
-    ThreadingPolicy::MutexLocker locker(*this);
+    std::lock_guard<std::mutex> locker(mutex);
     return pCaption;
 }
 
@@ -56,5 +56,3 @@ inline void IObject::onRelease() const
 }
 
 } // namespace Antares
-
-#endif // __ANTARES_LIB_OBJECT_HXX__
