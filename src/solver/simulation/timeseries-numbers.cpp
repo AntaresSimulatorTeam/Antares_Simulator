@@ -821,7 +821,7 @@ void TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(Data::Study& study, IRes
 
     if (study.parameters.storeTimeseriesNumbers)
     {
-        fixTSNumbersWhenWidthIsOne(study);
+        // fixTSNumbersWhenWidthIsOne(study);
         study.storeTimeSeriesNumbers<TimeSeriesType::timeSeriesLoad>(resultWriter);
         study.storeTimeSeriesNumbers<TimeSeriesType::timeSeriesSolar>(resultWriter);
         study.storeTimeSeriesNumbers<TimeSeriesType::timeSeriesHydro>(resultWriter);
