@@ -9,13 +9,6 @@ namespace Antares
 {
 namespace Data
 {
-RenewableClusterList::~RenewableClusterList()
-{
-}
-
-RenewableClusterList::RenewableClusterList()
-{
-}
 
 YString RenewableClusterList::typeID() const
 {
