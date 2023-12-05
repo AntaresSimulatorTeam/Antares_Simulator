@@ -277,14 +277,14 @@ void Area::resizeAllTimeseriesNumbers(uint n)
     }
     else
     {
-        load.series.timeseriesNumbers.resize(1, n);
-        solar.series.timeseriesNumbers.resize(1, n);
-        wind.series.timeseriesNumbers.resize(1, n);
-        hydro.series->timeseriesNumbers.resize(1, n);
+        load.series.timeseriesNumbers.reset(1, n);
+        solar.series.timeseriesNumbers.reset(1, n);
+        wind.series.timeseriesNumbers.reset(1, n);
+        hydro.series->timeseriesNumbers.reset(1, n);
         for (auto& namedLink : links)
         {
             AreaLink* link = namedLink.second;
-            link->timeseriesNumbers.resize(1, n);
+            link->timeseriesNumbers.reset(1, n);
         }
     }
     thermal.resizeAllTimeseriesNumbers(n);

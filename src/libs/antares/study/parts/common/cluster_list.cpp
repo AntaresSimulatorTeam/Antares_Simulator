@@ -155,7 +155,7 @@ void ClusterList<ClusterT>::resizeAllTimeseriesNumbers(uint n)
         }
         else
         {
-            each([&](Cluster& cluster) { cluster.series.timeseriesNumbers.resize(1, n); });
+            each([&](Cluster& cluster) { cluster.series.timeseriesNumbers.reset(1, n); });
         }
     }
 }

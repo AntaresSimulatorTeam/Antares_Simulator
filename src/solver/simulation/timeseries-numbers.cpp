@@ -87,26 +87,6 @@ static bool GenerateDeratedMode(Study& study)
     logs.info() << "  :: using the `derated` mode";
     if (study.parameters.useCustomScenario)
         logs.warning() << "The derated mode is enabled. The custom building mode will be ignored";
-
-    study.areas.each([&](Area& area) {
-        area.load.series.timeseriesNumbers.zero();
-        area.solar.series.timeseriesNumbers.zero();
-        area.wind.series.timeseriesNumbers.zero();
-        area.hydro.series->timeseriesNumbers.zero();
-
-        for (uint i = 0; i != area.thermal.clusterCount(); ++i)
-        {
-            auto& cluster = *(area.thermal.clusters[i]);
-            cluster.series.timeseriesNumbers.zero();
-        }
-
-        for (uint i = 0; i != area.renewable.clusterCount(); ++i)
-        {
-            auto& cluster = *(area.renewable.clusters[i]);
-            cluster.series.timeseriesNumbers.zero();
-        }
-    });
-
     return true;
 }
 
