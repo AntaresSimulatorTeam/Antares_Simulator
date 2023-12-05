@@ -220,7 +220,7 @@ public:
 
 public:
     //! All clusters by their index
-    ClusterT** byIndex;
+    std::vector<ClusterT*> byIndex;
     //! All clusters
     Map cluster;
 

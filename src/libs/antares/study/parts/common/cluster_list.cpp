@@ -95,7 +95,7 @@ bool ClusterList<ClusterT>::exists(const Data::ClusterName& id) const
 }
 
 template<class ClusterT>
-Data::ClusterList<ClusterT>::ClusterList() : byIndex(nullptr), groupCount(ClusterT::groupMax, 0)
+Data::ClusterList<ClusterT>::ClusterList() : groupCount(ClusterT::groupMax, 0)
 {
 }
 
@@ -109,12 +109,7 @@ Data::ClusterList<ClusterT>::~ClusterList()
 template<class ClusterT>
 void ClusterList<ClusterT>::clear()
 {
-    if (byIndex)
-    {
-        delete[] byIndex;
-        byIndex = nullptr;
-    }
-
+    byIndex.clear();
     if (not cluster.empty())
         cluster.clear();
 }
@@ -184,16 +179,12 @@ void ClusterList<ClusterT>::storeTimeseriesNumbers(Solver::IResultWriter& writer
 template<class ClusterT>
 void ClusterList<ClusterT>::rebuildIndex()
 {
-    delete[] byIndex;
+    byIndex.clear();
 
     if (not empty())
     {
         uint indx = 0;
-        using ClusterWeakPtr = ClusterT*;
-        byIndex = new ClusterWeakPtr[size()];
-
-        auto end = cluster.end();
-        for (auto i = cluster.begin(); i != end; ++i)
+        for (auto i = cluster.begin(); i != cluster.end(); ++i)
         {
             auto cluster = i->second.get();
             byIndex[indx] = cluster;
@@ -201,8 +192,6 @@ void ClusterList<ClusterT>::rebuildIndex()
             ++indx;
         }
     }
-    else
-        byIndex = nullptr;
 }
 
 template<class ClusterT>
