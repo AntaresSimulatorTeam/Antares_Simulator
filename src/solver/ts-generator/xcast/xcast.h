@@ -35,9 +35,9 @@
 #include "studydata.h"
 #include <yuni/core/noncopyable.h>
 
+using namespace Antares::Solver;
+
 namespace Antares
-{
-namespace Solver
 {
 namespace TSGenerator
 {
@@ -257,7 +257,6 @@ private:
 
 } // namespace XCast
 } // namespace TSGenerator
-} // namespace Solver
 } // namespace Antares
 
 #include "xcast.hxx"

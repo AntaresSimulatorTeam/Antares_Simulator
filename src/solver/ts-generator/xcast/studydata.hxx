@@ -33,8 +33,6 @@
 
 namespace Antares
 {
-namespace Solver
-{
 namespace TSGenerator
 {
 namespace XCast
@@ -63,7 +61,6 @@ void StudyData::loadFromStudy(Data::Study& study,
 
 } // namespace XCast
 } // namespace TSGenerator
-} // namespace Solver
 } // namespace Antares
 
 #endif // __ANTARES_SOLVER_TS_GENERATOR_XCAST_STUDY_DATA_HXX__

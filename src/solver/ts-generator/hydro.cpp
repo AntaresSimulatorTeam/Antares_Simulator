@@ -40,9 +40,9 @@ using namespace Yuni;
 
 #define EPSILON ((double)1.0e-9)
 
+using namespace Antares::Solver;
+
 namespace Antares
-{
-namespace Solver
 {
 namespace TSGenerator
 {
@@ -69,7 +69,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, IResultWriter
 {
     logs.info() << "Generating the hydro time-series";
 
-    Progression::Task progression(study, currentYear, Solver::Progression::sectTSGHydro);
+    Progression::Task progression(study, currentYear, Progression::sectTSGHydro);
 
     auto& studyRTI = *(study.runtime);
     auto& calendar = study.calendar;
@@ -309,5 +309,4 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, IResultWriter
 }
 
 } // namespace TSGenerator
-} // namespace Solver
 } // namespace Antares

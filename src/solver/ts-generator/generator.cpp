@@ -1,14 +1,12 @@
 #include "generator.h"
 
-namespace Antares::Solver::TSGenerator
+namespace Antares::TSGenerator
 {
 
 void ResizeGeneratedTimeSeries(Data::AreaList& areas, Data::Parameters& params)
 {
-    for (auto i = areas.begin(); i != areas.end(); ++i)
+    areas.each([&](Data::Area& area)
     {
-        auto& area = *(i->second);
-
         // Load
         if (params.timeSeriesToRefresh & Data::timeSeriesLoad)
         {
@@ -42,7 +40,7 @@ void ResizeGeneratedTimeSeries(Data::AreaList& areas, Data::Parameters& params)
             if (cluster.doWeGenerateTS(globalThermalTSgeneration))
                 cluster.series.timeSeries.reset(params.nbTimeSeriesThermal, HOURS_PER_YEAR);
         }
-    }
+    });
 }
 
 void DestroyAll(Data::Study& study)
@@ -54,4 +52,4 @@ void DestroyAll(Data::Study& study)
     Destroy<Data::timeSeriesThermal>(study, (uint)-1);
 }
 
-} // Antares::Solver::TSGenerator
+} // Antares::TSGenerator

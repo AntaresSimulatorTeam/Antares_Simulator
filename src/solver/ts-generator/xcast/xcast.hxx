@@ -29,8 +29,6 @@
 
 namespace Antares
 {
-namespace Solver
-{
 namespace TSGenerator
 {
 namespace XCast
@@ -43,7 +41,6 @@ inline void XCast::loadFromStudy(const Data::Correlation& correlation, Predicate
 
 } // namespace XCast
 } // namespace TSGenerator
-} // namespace Solver
 } // namespace Antares
 
 #endif // __ANTARES_SOLVER_TS_GENERATOR_XCAST_XCAST_HXX__

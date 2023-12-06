@@ -48,8 +48,6 @@ using namespace Yuni;
 
 namespace Antares
 {
-namespace Solver
-{
 namespace TSGenerator
 {
 namespace
@@ -59,7 +57,7 @@ class GeneratorTempData final
 public:
     GeneratorTempData(Data::Study& study,
                       Solver::Progression::Task& progr,
-                      IResultWriter& writer);
+                      Solver::IResultWriter& writer);
 
     void prepareOutputFoldersForAllAreas(uint year);
 
@@ -114,12 +112,12 @@ private:
 
     String pTempFilename;
     Solver::Progression::Task& pProgression;
-    IResultWriter& pWriter;
+    Solver::IResultWriter& pWriter;
 };
 
 GeneratorTempData::GeneratorTempData(Data::Study& study,
                                      Solver::Progression::Task& progr,
-                                     IResultWriter& writer) :
+                                     Solver::IResultWriter& writer) :
     study(study),
     rndgenerator(study.runtime->random[Data::seedTsGenThermal]),
     pProgression(progr),
@@ -640,5 +638,4 @@ bool GenerateThermalTimeSeries(Data::Study& study,
 }
 
 } // namespace TSGenerator
-} // namespace Solver
 } // namespace Antares

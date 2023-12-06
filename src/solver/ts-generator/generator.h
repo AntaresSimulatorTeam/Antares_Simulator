@@ -35,7 +35,7 @@
 #include <antares/writer/i_writer.h>
 #include "xcast/xcast.h"
 
-namespace Antares::Solver::TSGenerator
+namespace Antares::TSGenerator
 {
 
 void ResizeGeneratedTimeSeries(Data::AreaList& areas, Data::Parameters& params);
@@ -63,7 +63,7 @@ void DestroyAll(Data::Study& study);
 template<enum Data::TimeSeriesType T>
 void Destroy(Data::Study& study, uint year);
 
-} // namespace Antares::Solver::TSGenerator
+} // namespace Antares::TSGenerator
 
 #include "generator.hxx"
 

@@ -29,7 +29,7 @@
 
 #include <antares/logs/logs.h>
 
-namespace Antares::Solver::TSGenerator
+namespace Antares::TSGenerator
 {
 
 // forward declaration
@@ -145,6 +145,6 @@ void Destroy(Data::Study& study, uint year)
     }
 }
 
-} // namespace Antares::Solver::TSGenerator
+} // namespace Antares::TSGenerator
 
 #endif // __ANTARES_SOLVER_timeSeries_GENERATOR_HXX__

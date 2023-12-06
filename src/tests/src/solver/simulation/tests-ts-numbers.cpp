@@ -127,7 +127,7 @@ BOOST_AUTO_TEST_CASE(two_areas_with_5_ready_made_ts_on_load___check_intra_modal_
 	area_2->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 	area_2->load.series.timeSeries.resize(5, 1);
 
-	Solver::TSGenerator::ResizeGeneratedTimeSeries(study->areas, study->parameters);
+	TSGenerator::ResizeGeneratedTimeSeries(study->areas, study->parameters);
 	BOOST_CHECK(Generate(*study));
 
 	// intra-modal for load : drawn TS numbers in all areas must be equal
@@ -153,7 +153,7 @@ static bool intermodal_load_two_areas(unsigned width_area_1, unsigned width_area
 	area_2->load.series.timeSeries.resize(width_area_2, 1);
 	area_2->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
-	Solver::TSGenerator::ResizeGeneratedTimeSeries(study->areas, study->parameters);
+	TSGenerator::ResizeGeneratedTimeSeries(study->areas, study->parameters);
 	return Generate(*study);
 }
 
@@ -200,7 +200,7 @@ BOOST_AUTO_TEST_CASE(two_areas_3_thermal_clusters_with_same_number_of_ready_made
 
 	area_2->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
-	Solver::TSGenerator::ResizeGeneratedTimeSeries(study->areas, study->parameters);
+	TSGenerator::ResizeGeneratedTimeSeries(study->areas, study->parameters);
 	BOOST_CHECK(Generate(*study));
 
 	// TS number checks
@@ -239,7 +239,7 @@ BOOST_AUTO_TEST_CASE(two_areas_2_thermal_clusters_with_respectively_4_4_ready_ma
 
 	area_2->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
-	Solver::TSGenerator::ResizeGeneratedTimeSeries(study->areas, study->parameters);
+	TSGenerator::ResizeGeneratedTimeSeries(study->areas, study->parameters);
 	BOOST_CHECK(Generate(*study));
 
 	// TS number checks
@@ -280,7 +280,7 @@ BOOST_AUTO_TEST_CASE(two_areas_3_thermal_clusters_with_different_number_of_ready
 
 	area_2->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
-	Solver::TSGenerator::ResizeGeneratedTimeSeries(study->areas, study->parameters);
+	TSGenerator::ResizeGeneratedTimeSeries(study->areas, study->parameters);
 	BOOST_CHECK(not Generate(*study));
 }
 
@@ -317,7 +317,7 @@ BOOST_AUTO_TEST_CASE(two_areas_3_renew_clusters_with_same_number_of_ready_made_t
 
 	area_2->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
-	Solver::TSGenerator::ResizeGeneratedTimeSeries(study->areas, study->parameters);
+	TSGenerator::ResizeGeneratedTimeSeries(study->areas, study->parameters);
 	BOOST_CHECK(Generate(*study));
 
 	// TS number checks
@@ -357,7 +357,7 @@ BOOST_AUTO_TEST_CASE(two_areas_2_renew_clusters_with_respectively_4_4_ready_made
 
 	area_2->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
-	Solver::TSGenerator::ResizeGeneratedTimeSeries(study->areas, study->parameters);
+	TSGenerator::ResizeGeneratedTimeSeries(study->areas, study->parameters);
 	BOOST_CHECK(Generate(*study));
 
 	// TS number checks
@@ -399,7 +399,7 @@ BOOST_AUTO_TEST_CASE(two_areas_3_renew_clusters_with_different_number_of_ready_m
 
 	area_2->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
-	Solver::TSGenerator::ResizeGeneratedTimeSeries(study->areas, study->parameters);
+	TSGenerator::ResizeGeneratedTimeSeries(study->areas, study->parameters);
 	BOOST_CHECK(not Generate(*study));
 }
 
@@ -437,7 +437,7 @@ BOOST_AUTO_TEST_CASE(one_area__load_wind_thermal_are_turned_to_inter_modal__same
 
 	area->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
-	Solver::TSGenerator::ResizeGeneratedTimeSeries(study->areas, study->parameters);
+	TSGenerator::ResizeGeneratedTimeSeries(study->areas, study->parameters);
 	BOOST_CHECK(Generate(*study));
 
 	// TS number checks
@@ -477,7 +477,7 @@ BOOST_AUTO_TEST_CASE(one_area__load_wind_thermal_are_turned_to_inter_modal__same
 
 	area->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
-	Solver::TSGenerator::ResizeGeneratedTimeSeries(study->areas, study->parameters);
+	TSGenerator::ResizeGeneratedTimeSeries(study->areas, study->parameters);
 	BOOST_CHECK(Generate(*study));
 
 	// TS number checks
@@ -517,7 +517,7 @@ BOOST_AUTO_TEST_CASE(one_area__load_wind_thermal_are_turned_to_inter_modal__diff
 
 	area->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
-	Solver::TSGenerator::ResizeGeneratedTimeSeries(study->areas, study->parameters);
+	TSGenerator::ResizeGeneratedTimeSeries(study->areas, study->parameters);
 	BOOST_CHECK(not Generate(*study));
 }
 
@@ -546,7 +546,7 @@ BOOST_AUTO_TEST_CASE(one_area__load_renewable_are_turned_to_inter_modal__same_nb
 
 	area->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
-	Solver::TSGenerator::ResizeGeneratedTimeSeries(study->areas, study->parameters);
+	TSGenerator::ResizeGeneratedTimeSeries(study->areas, study->parameters);
 	BOOST_CHECK(Generate(*study));
 
 	// TS number checks
@@ -578,7 +578,7 @@ BOOST_AUTO_TEST_CASE(one_area__load_renewable_are_turned_to_inter_modal__differe
 
 	area->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
-	Solver::TSGenerator::ResizeGeneratedTimeSeries(study->areas, study->parameters);
+	TSGenerator::ResizeGeneratedTimeSeries(study->areas, study->parameters);
 	BOOST_CHECK(not Generate(*study));
 }
 
@@ -606,7 +606,7 @@ BOOST_AUTO_TEST_CASE(one_area__load_renewable_are_turned_to_inter_modal_with_res
 
 	area->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
-	Solver::TSGenerator::ResizeGeneratedTimeSeries(study->areas, study->parameters);
+	TSGenerator::ResizeGeneratedTimeSeries(study->areas, study->parameters);
 	BOOST_CHECK(Generate(*study));
 }
 
@@ -661,7 +661,7 @@ BOOST_AUTO_TEST_CASE(load_wind_thermal_in_intra_and_inter_modal____check_all_ts_
 
 	area_2->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
-	Solver::TSGenerator::ResizeGeneratedTimeSeries(study->areas, study->parameters);
+	TSGenerator::ResizeGeneratedTimeSeries(study->areas, study->parameters);
 	BOOST_CHECK(Generate(*study));
 
 	// TS number checks : all intra-modal & inter-modal modes have get the same ts number :
@@ -715,7 +715,7 @@ BOOST_AUTO_TEST_CASE(check_all_drawn_ts_numbers_are_bounded_between_0_and_nb_of_
     bc->RHSTimeSeries().resize(42, 1);
     study->bindingConstraintsGroups.resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
-	Solver::TSGenerator::ResizeGeneratedTimeSeries(study->areas, study->parameters);
+	TSGenerator::ResizeGeneratedTimeSeries(study->areas, study->parameters);
 	BOOST_CHECK(Generate(*study));
 
 	// TS number checks : each energy drawn ts numbers are up-bounded with the number of TS of the related energy
