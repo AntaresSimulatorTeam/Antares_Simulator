@@ -6,6 +6,7 @@ project(ts-generator)
 set(SRC_GENERATORS
 	generator.h
 	generator.hxx
+	generator.cpp
 	thermal.cpp
 	hydro.cpp
 )

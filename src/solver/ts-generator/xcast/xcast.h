@@ -30,6 +30,7 @@
 #include <yuni/yuni.h>
 #include <antares/study/fwd.h>
 #include <antares/mersenne-twister/mersenne-twister.h>
+#include <antares/study/progression/progression.h>
 #include <antares/writer/i_writer.h>
 #include "studydata.h"
 #include <yuni/core/noncopyable.h>
