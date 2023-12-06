@@ -33,7 +33,6 @@
 #include <antares/fatal-error.h>
 #include <antares/memory/memory.h>
 #include <antares/locale.h>
-#include <array>
 
 using namespace Antares;
 using namespace Yuni;
@@ -114,7 +113,6 @@ void logAbortion()
 */
 int main(int argc, char** argv)
 {
-    auto plop = std::to_array({3,4});
     try {
 
         logs.info(ANTARES_LOGO);
