@@ -418,10 +418,8 @@ void storeTSnumbersForIntraModal(const array<uint32_t, timeSeriesCount>& intramo
 
         if (isTSintramodal[indexTS])
         {
-            auto end_th_clusters = area.thermal.list.mapping.end();
-            for (auto i = area.thermal.list.mapping.begin(); i != end_th_clusters; ++i)
+            for (auto [_, cluster] : area.thermal.list.mapping)
             {
-                ThermalClusterList::SharedPtr cluster = i->second;
                 if (cluster->enabled && cluster->series.timeSeries.width > 1)
                     cluster->series.timeseriesNumbers[0][year] = intramodal_draws[indexTS];
             }

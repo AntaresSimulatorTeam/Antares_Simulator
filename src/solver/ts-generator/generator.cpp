@@ -32,13 +32,11 @@ void ResizeGeneratedTimeSeries(Data::AreaList& areas, Data::Parameters& params)
         }
 
         // Thermal
-        auto end = area.thermal.list.mapping.end();
-        for (auto it = area.thermal.list.mapping.begin(); it != end; ++it)
+        for (auto [_, cluster] : area.thermal.list.mapping)
         {
-            auto& cluster = *(it->second);
             bool globalThermalTSgeneration = params.timeSeriesToRefresh & Data::timeSeriesThermal;
-            if (cluster.doWeGenerateTS(globalThermalTSgeneration))
-                cluster.series.timeSeries.reset(params.nbTimeSeriesThermal, HOURS_PER_YEAR);
+            if (cluster->doWeGenerateTS(globalThermalTSgeneration))
+                cluster->series.timeSeries.reset(params.nbTimeSeriesThermal, HOURS_PER_YEAR);
         }
     });
 }
