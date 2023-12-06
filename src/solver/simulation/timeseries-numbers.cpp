@@ -175,7 +175,7 @@ public:
         for (auto it = area.links.begin(); it != area.links.end(); ++it)
         {
             const auto& link = *(it->second);
-            to_return.push_back(link.directCapacities.width);
+            to_return.push_back(link.directCapacities.timeSeries.width);
         }
         return to_return;
     }
@@ -453,7 +453,7 @@ void storeTSnumbersForIntraModal(const array<uint32_t, timeSeriesCount>& intramo
             for (auto it = area.links.begin(); it != area.links.end(); ++it)
             {
                 auto& link = *(it->second);
-                if (link.directCapacities.width > 1)
+                if (link.directCapacities.timeSeries.width > 1)
                     link.timeseriesNumbers[0][year] = intramodal_draws[indexTS];
             }
         }
@@ -563,7 +563,7 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
             for (auto it = area.links.begin(); it != area.links.end(); ++it)
             {
                 auto& link = *(it->second);
-                const uint nbTimeSeries = link.directCapacities.width;
+                const uint nbTimeSeries = link.directCapacities.timeSeries.width;
                 if (nbTimeSeries > 1)
                 {
                     link.timeseriesNumbers[0][year] = (uint32_t)(

@@ -458,6 +458,7 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
           .assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].debordementsHoraires
           .assign(NombreDePasDeTemps, 0.);
+
         problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout.resize(nbPaliers);
         problem.ResultatsHoraires[k].ProductionThermique.resize(NombreDePasDeTemps);
 

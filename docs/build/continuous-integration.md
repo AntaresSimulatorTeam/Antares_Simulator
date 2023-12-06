@@ -5,9 +5,9 @@ Here is a description of workflow with their associated status :
 
 | OS     |  .yml | Description | Status |
 |:-------|--------|--------|------|
-| Ubuntu  |`ubuntu-system.yml`|Compilation with system libraries (apt-get) and pre-compiled not system libraries use| [![Status][ubuntu_precompiled_svg]][ubuntu_precompiled_link] |
-| Ubuntu  |`ubuntu-system-deps-build.yml`|Compilation with system libraries (apt-get) and not system libraries compilation| [![Status][ubuntu_deps_build_svg]][ubuntu_deps_build_link] |
-| Ubuntu  |`ubuntu-release.yml`|Compilation with system libraries (apt-get) and not system libraries compilation for release creation| [![Status][ubuntu_release_svg]][ubuntu_release_link]
+| Ubuntu  |`ubuntu-system.yml`|Compilation with system libraries (apt) and pre-compiled not system libraries use| [![Status][ubuntu_precompiled_svg]][ubuntu_precompiled_link] |
+| Ubuntu  |`ubuntu-system-deps-build.yml`|Compilation with system libraries (apt) and not system libraries compilation| [![Status][ubuntu_deps_build_svg]][ubuntu_deps_build_link] |
+| Ubuntu  |`ubuntu-release.yml`|Compilation with system libraries (apt) and not system libraries compilation for release creation| [![Status][ubuntu_release_svg]][ubuntu_release_link]
 | Windows  |`windows-vcpkg.yml`|Compilation with VCPKG use and pre-compiled not system libraries use| [![Status][windows_precompiled_svg]][windows_precompiled_link] |
 | Windows  |`windows-pre-compiled-only.yml`|Compilation without VCPKG and with pre-compiled libraries use| [![Status][windows_precompiled_only_svg]][windows_precompiled_only_link] |
 | Windows  |`windows-vcpkg.yml`|Compilation with VCPKG use and pre-compiled not system libraries use for release creation| [![Status][windows_release_svg]][windows_release_link] |

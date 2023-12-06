@@ -443,7 +443,6 @@ StudyRuntimeInfos::~StudyRuntimeInfos()
 #ifndef NDEBUG
 void StudyRangeLimits::checkIntegrity() const
 {
-    assert(this != nullptr);
     assert(hour[rangeBegin] <= hour[rangeEnd]);
     assert(day[rangeBegin] <= day[rangeEnd]);
     assert(hour[rangeBegin] < 9000); // arbitrary value

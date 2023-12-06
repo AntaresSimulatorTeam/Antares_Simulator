@@ -39,6 +39,7 @@
 #include "../../../application/wait.h"
 
 #include <memory>
+#include <atomic>
 
 using namespace Yuni;
 
@@ -48,7 +49,7 @@ namespace Private
 {
 namespace OutputViewerData
 {
-Yuni::Atomic::Int<32> Panel::pPanelsInCallingLoadDataFromFile = 0;
+std::atomic<int> Panel::pPanelsInCallingLoadDataFromFile = 0;
 
 namespace // anonymous
 {

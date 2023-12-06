@@ -13,7 +13,7 @@
 
 namespace Antares::Solver
 {
-class Application : public Yuni::IEventObserver<Application, Yuni::Policy::SingleThreaded>
+class Application final : public Yuni::IEventObserver<Application, Yuni::Policy::SingleThreaded>
 {
 public:
     //! \name Constructor & Destructor

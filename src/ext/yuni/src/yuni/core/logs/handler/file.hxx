@@ -61,7 +61,7 @@ void File<NextHandler>::internalDecoratorWriteWL(LoggerT& logger, const AnyStrin
 {
     if (pFile.opened())
     {
-        typedef typename LoggerT::DecoratorsType DecoratorsType;
+        using DecoratorsType = typename LoggerT::DecoratorsType;
         // Append the message to the file
         logger.DecoratorsType::template internalDecoratorAddPrefix<File, VerbosityType>(pFile, s);
 

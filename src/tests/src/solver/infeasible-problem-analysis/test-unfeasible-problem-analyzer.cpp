@@ -68,7 +68,7 @@ public:
 
     ~AnalysisMock() override = default;
 
-    void run(operations_research::MPSolver *problem) override
+    void run(operations_research::MPSolver *) override
     {
         hasRun_ = true;
         hasDetectedInfeasibilityCause_ = shouldDetectCause_;
@@ -99,6 +99,7 @@ BOOST_AUTO_TEST_CASE(analyzer_should_call_analysis_and_print_detected_issues)
     bool hasPrinted1 = false;
     bool hasRun2 = false;
     bool hasPrinted2 = false;
+    // Vector is moved, iterators are invalidated. Can't hold references to element to get values.
     std::vector<std::unique_ptr<UnfeasibilityAnalysis>> analysis;
     analysis.push_back(std::make_unique<AnalysisMock>(false, hasRun1, hasPrinted1));
     analysis.push_back(std::make_unique<AnalysisMock>(true, hasRun2, hasPrinted2));

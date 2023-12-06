@@ -84,7 +84,7 @@ bool CBuilder::checkValidityOfNodalLoopFlow(linkInfo* linkInfo, size_t hour)
 {
     Data::AreaLink* link = linkInfo->ptr;
 
-    for (uint tsIndex = 0; tsIndex < link->indirectCapacities.width; ++tsIndex)
+    for (uint tsIndex = 0; tsIndex < link->indirectCapacities.timeSeries.width; ++tsIndex)
     {
         if ((-1.0 * link->indirectCapacities[tsIndex][hour]
                     > link->parameters[Data::fhlLoopFlow][hour])
