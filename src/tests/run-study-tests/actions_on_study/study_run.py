@@ -1,14 +1,16 @@
 import subprocess
+import os
 from pathlib import Path
 from utils.assertions import check
 
 class study_run:
-    def __init__(self, study_path, solver_path, use_ortools, ortools_solver, named_mps_problems):
+    def __init__(self, study_path, solver_path, use_ortools, ortools_solver, named_mps_problems, parallel):
         self.study_path = study_path
         self.solver_path = solver_path
         self.use_ortools = use_ortools
         self.ortools_solver = ortools_solver
         self.named_mps_problems = named_mps_problems
+        self.parallel = parallel
         self.raise_exception_on_failure = True
         self.return_code = 0
 
@@ -26,6 +28,8 @@ class study_run:
             command.append('--ortools-solver=' + self.ortools_solver)
         if self.named_mps_problems:
             command.append('--named-mps-problems')
+        if self.parallel:
+            command.append('--force-parallel=2')
         process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
         process.communicate()
 

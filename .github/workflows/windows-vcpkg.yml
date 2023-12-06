@@ -211,6 +211,15 @@ jobs:
         batch-name: valid-v870
         os: ${{ matrix.test-platform }}
 
+    - name: Run parallel tests
+      if: ${{ env.IS_PUSH == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: valid-parallel
+        os: ${{ matrix.test-platform }}
+        variant: "parallel"
+
     - name: Run short-tests
       uses: ./.github/workflows/run-tests
       with:

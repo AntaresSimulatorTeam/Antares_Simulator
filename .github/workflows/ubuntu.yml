@@ -103,7 +103,7 @@ jobs:
 
     - name: Build
       run: |
-             cmake --build _build --config release -j2
+             cmake --build _build --config release -j$(nproc)
 
 
     # simtest
@@ -113,6 +113,7 @@ jobs:
       with:
         path: 'simtest.json'
         prop_path: 'version'
+
 
     - name: Run named mps tests
       if: ${{ env.IS_PUSH == 'true' }}
@@ -173,6 +174,15 @@ jobs:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: valid-v870
         os: ${{ matrix.test-platform }}
+
+    - name: Run parallel tests
+      if: ${{ env.IS_PUSH == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: valid-parallel
+        os: ${{ matrix.test-platform }}
+        variant: "parallel"
 
     - name: Run short-tests
       if: ${{ env.IS_PUSH == 'true' }}
