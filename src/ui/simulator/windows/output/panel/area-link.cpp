@@ -36,6 +36,7 @@
 #include <ui/common/lock.h>
 #include <memory>
 #include <limits>
+#include <atomic>
 
 using namespace Yuni;
 
@@ -105,7 +106,7 @@ public:
     //! Loading options
     uint options;
     //!
-    Atomic::Int<> shouldAbort;
+    std::atomic<int> shouldAbort;
 
 protected:
     virtual void onExecute()
@@ -212,7 +213,7 @@ public:
     //! Filename to load
     String::Vector filenames;
     //!
-    Atomic::Int<> shouldAbort;
+    std::atomic<int> shouldAbort;
 
 protected:
     enum
