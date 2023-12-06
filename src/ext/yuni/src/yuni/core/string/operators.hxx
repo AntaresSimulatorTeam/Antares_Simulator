@@ -109,6 +109,44 @@ inline Yuni::CString<SizeT, ExpT> operator+(const Yuni::CString<SizeT, ExpT>& rh
     return Yuni::CString<SizeT, ExpT>(rhs) += u;
 }
 
+template<uint SizeT, bool ExpT>
+inline bool operator==(const char* lhs, const Yuni::CString<SizeT, ExpT>& rhs)
+{
+    return rhs.equals(lhs);
+}
+
+template<uint SizeT, bool ExpT>
+inline bool operator!=(const char* lhs, const Yuni::CString<SizeT, ExpT>& rhs)
+{
+    return !rhs.equals(lhs);
+}
+
+template<int N, uint SizeT, bool ExpT>
+inline bool operator==(const char lhs[N], const Yuni::CString<SizeT, ExpT>& rhs)
+{
+    return rhs.equals(lhs);
+}
+
+template<int N, uint SizeT, bool ExpT>
+inline bool operator!=(const char lhs[N], const Yuni::CString<SizeT, ExpT>& rhs)
+{
+    return !rhs.equals(lhs);
+}
+
+template<class TraitsT, class AllocT, uint SizeT, bool ExpT>
+inline bool operator==(const std::basic_string<char, TraitsT, AllocT>& lhs,
+                       const Yuni::CString<SizeT, ExpT>& rhs)
+{
+    return rhs.equals(lhs);
+}
+
+template<class TraitsT, class AllocT, uint SizeT, bool ExpT>
+inline bool operator!=(const std::basic_string<char, TraitsT, AllocT>& lhs,
+                       const Yuni::CString<SizeT, ExpT>& rhs)
+{
+    return !rhs.equals(lhs);
+}
+
 inline bool operator==(const AnyString& mbs, Yuni::UTF8::Char c)
 {
     return c.size() == mbs.size() && c == mbs.utf8begin().value();
