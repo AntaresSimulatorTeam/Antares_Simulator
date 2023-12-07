@@ -6,6 +6,7 @@
 
 #include <antares/writer/i_writer.h>
 
+#include <algorithm>
 #include <vector>
 #include <memory>
 
@@ -25,6 +26,8 @@ public:
     using SharedPtr = typename std::shared_ptr<ClusterT>;
     // Map container
     using Map = typename std::map<ClusterName, SharedPtr>;
+    // Vector container
+    using Vect = typename std::vector<SharedPtr>;
     //! iterator
     using iterator = typename Map::iterator;
     //! const iterator
@@ -51,12 +54,8 @@ public:
     template<class PredicateT>
     void each(const PredicateT& predicate)
     {
-        auto end = cluster.cend();
-        for (auto i = cluster.cbegin(); i != end; ++i)
-        {
-            auto& it = *(i->second);
-            predicate(it);
-        }
+        for (auto& c : cluster)
+            predicate(*c);
     }
     /*!
     ** \brief Iterate through all clusters (const)
@@ -64,12 +63,8 @@ public:
     template<class PredicateT>
     void each(const PredicateT& predicate) const
     {
-        auto end = cluster.end();
-        for (auto i = cluster.begin(); i != end; ++i)
-        {
-            const auto& it = *(i->second);
-            predicate(it);
-        }
+        for (const auto& c : cluster)
+            predicate(*c);
     }
 
     //! \name Cluster management
@@ -222,7 +217,7 @@ public:
     //! All clusters by their index
     std::vector<ClusterT*> byIndex;
     //! All clusters
-    Map cluster;
+    Vect cluster;
 
     // thermal, renewable, etc.
     virtual YString typeID() const = 0;

@@ -86,12 +86,10 @@ void ClusterList<ClusterT>::remove(iterator i)
 template<class ClusterT>
 bool ClusterList<ClusterT>::exists(const Data::ClusterName& id) const
 {
-    if (not cluster.empty())
-    {
-        auto element = cluster.find(id);
-        return (element != cluster.end());
-    }
-    return false;
+    auto& it = find_if(cluster.begin(), cluster.end(),
+        [&id](const ClusterT& c) { return c.id == id; });
+
+    return it != cluster.end();
 }
 
 template<class ClusterT>
@@ -136,6 +134,16 @@ ClusterT* ClusterList<ClusterT>::find(const ClusterT* p)
             return i->second.get();
     }
     return nullptr;
+}
+
+template<class ClusterT>
+typename ClusterList<ClusterT>::SharedPtr ClusterList<ClusterT>::find(
+  const ClusterList<ClusterT>::SharedPtr& p)
+{
+    auto& it = find_if(cluster.begin(), cluster.end(),
+        [&id](const ClusterT& c) { return c.id == id; });
+
+    return (it != cluster.end()) ? *it : nullptr;
 }
 
 template<class ClusterT>
@@ -195,6 +203,8 @@ void ClusterList<ClusterT>::rebuildIndex()
     }
 }
 
+
+
 template<class ClusterT>
 typename ClusterList<ClusterT>::SharedPtr ClusterList<ClusterT>::add(
   const ClusterList<ClusterT>::SharedPtr& newcluster)
@@ -202,7 +212,7 @@ typename ClusterList<ClusterT>::SharedPtr ClusterList<ClusterT>::add(
     if (newcluster)
     {
         if (exists(newcluster->id()))
-            return cluster[newcluster->id()];
+            return this->find(*newcluster);
 
         newcluster->index = (uint)size();
         cluster[newcluster->id()] = newcluster;
