@@ -268,7 +268,7 @@ bool DataSeriesHydro::LoadMaxPower(const AreaName& areaID, const AnyString& fold
     return ret;
 }
 
-void DataSeriesHydro::buildMaxPowerFromDailyTS(const Matrix<double>::ColumnType& DailyMaxGenPower,
+void DataSeriesHydro::buildHourlyMaxPowerFromDailyTS(const Matrix<double>::ColumnType& DailyMaxGenPower,
                                                const Matrix<double>::ColumnType& DailyMaxPumpPower)
 {
     maxPowerTScount_ = 1;

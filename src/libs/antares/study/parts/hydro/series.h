@@ -86,7 +86,7 @@ public:
     // Loading hydro max generation and mqx pumping TS's
     bool LoadMaxPower(const AreaName& areaID, const AnyString& folder);
 
-    void buildMaxPowerFromDailyTS(const Matrix<double>::ColumnType& DailyMaxGenPower,
+    void buildHourlyMaxPowerFromDailyTS(const Matrix<double>::ColumnType& DailyMaxGenPower,
                                   const Matrix<double>::ColumnType& DailyMaxPumpPower);
 
     /*!
