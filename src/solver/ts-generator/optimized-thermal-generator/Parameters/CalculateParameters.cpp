@@ -241,14 +241,24 @@ bool OptimizationParameters::checkMaintenanceGroupParameters()
     }
     if (timeHorizon_ <= 0)
     {
-        logs.info()
-          << "Maintenance group: " << maintenanceGroup_.name()
-          << ": The timeseries generation will be skiped:  timeHorizon = 0. It is possible "
-             "that the maintenance group has no clusters designated for maintenance "
-             "planning, or all clusters have interPoPeriod = 0";
+        logs.info() << "Maintenance group: " << maintenanceGroup_.name()
+                    << ": The timeseries generation will be skiped:  timeHorizon <= 0";
         return false;
     }
     // add some more check here if necessary!
+    return true;
+}
+
+bool OptimizationParameters::checkTimeHorizon(OptProblemSettings& optSett)
+{
+    if (timeHorizon_ <= 0)
+    {
+        logs.info() << "Maintenance group: " << maintenanceGroup_.name()
+                    << ": The timeseries generation will be skiped:  timeHorizon <= 0";
+        optSett.solved = false;
+        return false;
+    }
+
     return true;
 }
 

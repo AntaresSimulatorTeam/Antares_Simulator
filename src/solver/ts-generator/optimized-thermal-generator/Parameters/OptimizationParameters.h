@@ -144,6 +144,7 @@ public:
                                     int lastMaintenanceDuration);
     void reCalculateTimeHorizon();
     void reCalculateNumberOfMaintenances();
+    bool checkTimeHorizon(OptProblemSettings& optSett);
 
     /* ===================AFTER-EACH-SCENARIO=================== */
 

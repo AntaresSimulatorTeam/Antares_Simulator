@@ -18,7 +18,7 @@ bool OptimizedThermalGenerator::runOptimizationProblem(OptProblemSettings& optSe
         return false;
     par.printProblemVarAndResults(optSett, solver); // to be removed
     par.postTimeStepOptimization(optSett);
-    return true;
+    return par.checkTimeHorizon(optSett);
 }
 
 // retrieve and check the results if optimization was successful
