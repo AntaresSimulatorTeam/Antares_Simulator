@@ -125,12 +125,10 @@ int OptimizationParameters::reCalculateDaysSinceLastMnt(const OptProblemSettings
 {
     int nextOptimizationFirstDay = optSett.firstDay + timeStep_;
     if (maintenanceHappened)
-        return std::max(
-          0, nextOptimizationFirstDay - (lastMaintenanceStart + lastMaintenanceDuration));
+        return (nextOptimizationFirstDay - (lastMaintenanceStart + lastMaintenanceDuration));
     // we let this go into negative value
     // it will only move the maintenance in the next optimization
     // further away from start
-    // TODO CR27: no we don't! It broke the solver - we keep std::max for now!
     else
         return nextOptimizationFirstDay
                + unit.parentCluster->originalRandomlyGeneratedDaysSinceLastMaintenance[unit.index];
