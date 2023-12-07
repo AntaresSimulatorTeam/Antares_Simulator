@@ -222,6 +222,15 @@ static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFil
     if (p->key == "startup-cost")
         return p->value.to<double>(cluster.startupCost);
 
+    if (p->key == "power-increase-cost")
+        return p->value.to<double>(cluster.powerIncreaseCost);
+    if (p->key == "power-decrease-cost")
+        return p->value.to<double>(cluster.powerDecreaseCost);
+    if (p->key == "max-upward-power-ramping-rate")
+        return p->value.to<double>(cluster.maxUpwardPowerRampingRate);
+    if (p->key == "max-downward-power-ramping-rate")
+        return p->value.to<double>(cluster.maxDownwardPowerRampingRate);
+
     if (p->key == "unitcount")
         return p->value.to<uint>(cluster.unitCount);
     if (p->key == "volatility.planned")
@@ -405,6 +414,15 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
             if (!Math::Zero(c.variableomcost))
                 s->add("variableomcost", Math::Round(c.variableomcost,3));
 
+            // ramping
+            if (not Math::Zero(c.powerIncreaseCost))
+                s->add("power-increase-cost", Math::Round(c.powerIncreaseCost, 3));
+            if (not Math::Zero(c.powerDecreaseCost))
+                s->add("power-decrease-cost", Math::Round(c.powerDecreaseCost, 3));
+            if (not Math::Zero(c.maxUpwardPowerRampingRate))
+                s->add("max-upward-power-ramping-rate", Math::Round(c.maxUpwardPowerRampingRate, 3));
+            if (not Math::Zero(c.maxDownwardPowerRampingRate))
+                s->add("max-downward-power-ramping-rate", Math::Round(c.maxDownwardPowerRampingRate, 3));
 
             //pollutant factor
             for (auto const& [key, val] : Pollutant::namesToEnum)

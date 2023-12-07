@@ -137,7 +137,11 @@ Data::ThermalCluster::ThermalCluster(Area* parent) :
     forcedLaw(thermalLawUniform),
     plannedLaw(thermalLawUniform),
     PthetaInf(HOURS_PER_YEAR, 0),
-    costsTimeSeries(1, CostsTimeSeries())
+    costsTimeSeries(1, CostsTimeSeries()),
+    maxUpwardPowerRampingRate(0.),
+    maxDownwardPowerRampingRate(0.),
+    powerIncreaseCost(0.),
+    powerDecreaseCost(0.)
 {
     // assert
     assert(parent and "A parent for a thermal dispatchable cluster can not be null");
@@ -181,6 +185,12 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
     minStablePower = cluster.minStablePower;
     minUpTime = cluster.minUpTime;
     minDownTime = cluster.minDownTime;
+
+    // ramping
+    maxUpwardPowerRampingRate = cluster.maxUpwardPowerRampingRate;
+    maxDownwardPowerRampingRate = cluster.maxDownwardPowerRampingRate;
+    powerDecreaseCost = cluster.powerDecreaseCost;
+    powerIncreaseCost = cluster.powerIncreaseCost;
 
     // spinning
     spinning = cluster.spinning;
