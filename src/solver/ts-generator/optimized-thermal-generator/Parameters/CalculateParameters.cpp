@@ -233,7 +233,7 @@ bool OptimizationParameters::checkMaintenanceGroupParameters()
 {
     if (timeStep_ <= 0)
     {
-        logs.info() << "Maintenance group: " << maintenanceGroup_.name()
+        logs.warning() << "Maintenance group: " << maintenanceGroup_.name()
                     << ": The timeseries generation will be skiped:  timeStep = 0. It is possible "
                        "that the maintenance group has no clusters designated for maintenance "
                        "planning, or at least one cluster has interPoPeriod = 0";
@@ -241,7 +241,7 @@ bool OptimizationParameters::checkMaintenanceGroupParameters()
     }
     if (timeHorizon_ <= 0)
     {
-        logs.info() << "Maintenance group: " << maintenanceGroup_.name()
+        logs.warning() << "Maintenance group: " << maintenanceGroup_.name()
                     << ": The timeseries generation will be skiped:  timeHorizon <= 0";
         return false;
     }
@@ -253,8 +253,10 @@ bool OptimizationParameters::checkTimeHorizon(OptProblemSettings& optSett)
 {
     if (timeHorizon_ <= 0)
     {
-        logs.info() << "Maintenance group: " << maintenanceGroup_.name()
-                    << ": The timeseries generation will be skiped:  timeHorizon <= 0";
+        logs.warning() << "Maintenance group: " << maintenanceGroup_.name()
+                       << ". Scenario Num: " << optSett.scenario
+                       << ". Optimization stopped in step: " << optSett.firstDay << ".Day - "
+                       << optSett.lastDay << ".Day. TimeHorizon <= 0 ";
         optSett.solved = false;
         return false;
     }
