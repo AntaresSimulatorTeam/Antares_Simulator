@@ -61,6 +61,19 @@ std::vector<int> OptimizationParameters::calculateNumberOfMaintenances(
                   / (getAverageDurationBetweenMaintenances(cluster)
                      + getAverageMaintenanceDuration(cluster));
         numberOfMaintenances[unit] = std::max(1 + div, minNumberOfMaintenances);
+
+        // Exclude Edge case:
+        // first maintenance starts in day 0 + last maintenance starts last day of Horizon
+        // and breaks the solver - can only happen for number of maintenances > 2
+        int earliestStart
+          = std::max(0, calculateUnitEarliestStartOfFirstMaintenance(cluster, unit));
+        int lastMaintenanceStart = earliestStart
+                                   + (numberOfMaintenances[unit] - 1)
+                                       * (getAverageDurationBetweenMaintenances(cluster)
+                                          + getAverageMaintenanceDuration(cluster));
+
+        if (lastMaintenanceStart >= timeHorizon_)
+            numberOfMaintenances[unit]--;
     }
 
     return numberOfMaintenances;
