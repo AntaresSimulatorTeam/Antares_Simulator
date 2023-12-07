@@ -15,8 +15,9 @@ int OptimizationParameters::calculateUnitEarliestStartOfFirstMaintenance(
     // let it return negative value - if it returns negative value we wont implement constraint:
     // s[u][0][tauLower-1] = 0
 
-    return (getAverageDurationBetweenMaintenances(cluster)
-            - getDaysSinceLastMaintenance(cluster, unitIndex) - cluster.poWindows);
+    return std::min(getAverageDurationBetweenMaintenances(cluster)
+                      - getDaysSinceLastMaintenance(cluster, unitIndex) - cluster.poWindows,
+                    timeHorizon_ - 1);
 }
 
 int OptimizationParameters::calculateUnitLatestStartOfFirstMaintenance(
@@ -59,8 +60,7 @@ std::vector<int> OptimizationParameters::calculateNumberOfMaintenances(
                    - getAverageDurationBetweenMaintenances(cluster))
                   / (getAverageDurationBetweenMaintenances(cluster)
                      + getAverageMaintenanceDuration(cluster));
-        numberOfMaintenances[unit] = std::max(
-          1 + div, minNumberOfMaintenances); // TODO CR27: keep here min=2 did not see it in python
+        numberOfMaintenances[unit] = std::max(1 + div, minNumberOfMaintenances);
     }
 
     return numberOfMaintenances;

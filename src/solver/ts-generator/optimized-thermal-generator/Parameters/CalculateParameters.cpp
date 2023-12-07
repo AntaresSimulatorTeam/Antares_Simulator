@@ -231,7 +231,7 @@ void OptimizationParameters::setMaintenanceGroupParameters()
 
 bool OptimizationParameters::checkMaintenanceGroupParameters()
 {
-    if (timeStep_ == 0)
+    if (timeStep_ <= 0)
     {
         logs.info() << "Maintenance group: " << maintenanceGroup_.name()
                     << ": The timeseries generation will be skiped:  timeStep = 0. It is possible "
@@ -239,7 +239,7 @@ bool OptimizationParameters::checkMaintenanceGroupParameters()
                        "planning, or at least one cluster has interPoPeriod = 0";
         return false;
     }
-    if (timeHorizon_ == 0)
+    if (timeHorizon_ <= 0)
     {
         logs.info()
           << "Maintenance group: " << maintenanceGroup_.name()
