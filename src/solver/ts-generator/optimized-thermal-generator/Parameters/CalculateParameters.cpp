@@ -256,7 +256,8 @@ bool OptimizationParameters::checkTimeHorizon(OptProblemSettings& optSett)
         logs.warning() << "Maintenance group: " << maintenanceGroup_.name()
                        << ". Scenario Num: " << optSett.scenario
                        << ". Optimization stopped in step: " << optSett.firstDay << ".Day - "
-                       << optSett.lastDay << ".Day. TimeHorizon <= 0 ";
+                       << optSett.lastDay
+                       << ".Day. TimeHorizon <= 0. This scenario wont have generated timeseries";
         optSett.solved = false;
         return false;
     }
