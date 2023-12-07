@@ -10,13 +10,14 @@ namespace Antares::Solver::TSGenerator
 void OptimizationParameters::postScenarioOptimization(OptProblemSettings& optSett)
 {
     // do not save if optimization failed at some step
-    if (!optSett.solved)
-        return;
+    if (optSett.solved)
+    {
+        calculateScenarioResults();
+        saveScenarioResults(optSett);
+        printMaintenances(optSett); // to be removed
+        printAvailability(optSett); // to be removed
+    }
 
-    calculateScenarioResults();
-    saveScenarioResults(optSett);
-    printMaintenances(optSett); // to be removed
-    printAvailability(optSett); // to be removed
     resetResultStorage();
     reSetDaysSinceLastMnt();
     reSetTimeHorizon();
