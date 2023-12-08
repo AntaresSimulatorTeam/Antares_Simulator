@@ -158,6 +158,15 @@ jobs:
         batch-name: valid-v830
         os: ${{ matrix.test-platform }}
 
+    - name: Run MILP with CBC
+      if: ${{ env.IS_PUSH == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: valid-milp
+        variant: "milp-cbc"
+        os: ${{ matrix.test-platform }}
+
     - name: Run tests introduced in v860
       if: ${{ env.IS_PUSH == 'true' }}
       uses: ./.github/workflows/run-tests
