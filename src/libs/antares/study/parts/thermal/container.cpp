@@ -40,7 +40,6 @@ namespace Antares
 {
 namespace Data
 {
-using NamedCluster = std::pair<ClusterName, ThermalClusterList::SharedPtr>;
 
 PartThermal::PartThermal() : unsuppliedEnergyCost(0.), spilledEnergyCost(0.)
 {
@@ -76,14 +75,11 @@ void PartThermal::prepareAreaWideIndexes()
 
     clusters.assign(list.size(), nullptr);
 
-    auto end = list.end();
     uint idx = 0;
-    for (auto i = list.begin(); i != end; ++i)
+    for (const auto& cluster : list)
     {
-        ThermalCluster* t = i->second.get();
-        t->areaWideIndex = idx;
-        clusters[idx] = t;
-        ++idx;
+        cluster->areaWideIndex = idx;
+        clusters[idx++] = cluster.get();
     }
 }
 
@@ -99,10 +95,9 @@ uint PartThermal::prepareClustersInMustRunMode()
     do
     {
         mustContinue = false;
-        auto end = list.end();
-        for (auto i = list.begin(); i != end; ++i)
+        for (auto i = list.begin(); i != list.end(); ++i)
         {
-            if ((i->second)->mustrun)
+            if ((*i)->mustrun)
             {
                 // Detaching the thermal cluster from the main list...
                 std::shared_ptr<ThermalCluster> cluster = list.detach(i);
@@ -148,8 +143,8 @@ uint PartThermal::removeDisabledClusters()
 
     for (auto& it : list)
     {
-        if (!it.second->enabled)
-            disabledClusters.push_back(it.first);
+        if (!it->enabled)
+            disabledClusters.push_back(it->id());
     }
 
     for (const auto& cluster : disabledClusters)
@@ -175,16 +170,16 @@ void PartThermal::reset()
 bool PartThermal::hasForcedTimeseriesGeneration() const
 {
     using Behavior = LocalTSGenerationBehavior;
-    return std::any_of(list.begin(), list.end(), [](const NamedCluster& namedCluster) {
-        return namedCluster.second->tsGenBehavior == Behavior::forceGen;
+    return std::any_of(list.begin(), list.end(), [](const ThermalClusterList::SharedPtr& cluster) {
+        return cluster->tsGenBehavior == Behavior::forceGen;
     });
 }
 
 bool PartThermal::hasForcedNoTimeseriesGeneration() const
 {
     using Behavior = LocalTSGenerationBehavior;
-    return std::any_of(list.begin(), list.end(), [](const NamedCluster& namedCluster) {
-        return namedCluster.second->tsGenBehavior == Behavior::forceNoGen;
+    return std::any_of(list.begin(), list.end(), [](const ThermalClusterList::SharedPtr& cluster) {
+        return cluster->tsGenBehavior == Behavior::forceNoGen;
     });
 }
 
