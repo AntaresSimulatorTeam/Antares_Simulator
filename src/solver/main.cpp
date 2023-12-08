@@ -41,7 +41,7 @@ using namespace Yuni;
 
 namespace {
 
-const char* const GPL_ANNOUNCEMENT
+const char* const MPL_ANNOUNCEMENT
   = "Copyright 2007-2023 RTE  - Authors: The Antares_Simulator Team \n"
     "\n"
     "Antares_Simulator is free software : you can redistribute it and / or modify\n"
@@ -116,7 +116,7 @@ int main(int argc, char** argv)
     try {
 
         logs.info(ANTARES_LOGO);
-        logs.info(GPL_ANNOUNCEMENT);
+        logs.info(MPL_ANNOUNCEMENT);
         // Name of the running application for the logger
         logs.applicationName("solver");
 
