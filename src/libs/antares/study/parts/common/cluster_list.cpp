@@ -92,10 +92,11 @@ void ClusterList<ClusterT>::remove(iterator i)
 template<class ClusterT>
 bool ClusterList<ClusterT>::exists(const Data::ClusterName& id) const
 {
-    const auto& it = find_if(cluster.begin(), cluster.end(),
-        [&id](const ClusterT& c) { return c.id() == id; });
+    for (const auto& c : cluster)
+        if (c->id() == id)
+            return true;
 
-    return it != cluster.end();
+    return false;
 }
 
 template<class ClusterT>
@@ -196,12 +197,10 @@ void ClusterList<ClusterT>::rebuildIndex()
     {
         uint indx = 0;
         byIndex.resize(size());
-        for (auto i = cluster.begin(); i != cluster.end(); ++i)
+        for (auto& c : cluster)
         {
-            auto cluster = i->second.get();
-            byIndex[indx] = cluster;
-            cluster->index = indx;
-            ++indx;
+            byIndex[indx] = c.get();
+            c->index = indx++;
         }
     }
 }
@@ -306,7 +305,7 @@ template<class ClusterT>
 bool ClusterList<ClusterT>::remove(const Data::ClusterName& id)
 {
     const auto& it = find_if(cluster.begin(), cluster.end(),
-        [&id](const ClusterT& c) { return c.id() == id; });
+        [&id](const SharedPtr& c) { return c->id() == id; });
 
     if (it == cluster.end())
         return false;
@@ -328,16 +327,13 @@ template<class ClusterT>
 int ClusterList<ClusterT>::saveDataSeriesToFolder(const AnyString& folder) const
 {
     if (empty())
-        return 1;
+        return false;
 
-    int ret = 1;
+    bool ret = true;
 
-    auto end = cluster.end();
-    for (auto it = cluster.begin(); it != end; ++it)
-    {
-        auto& cluster = *(it->second);
-        ret = cluster.saveDataSeriesToFolder(folder) and ret;
-    }
+    for (const auto& c : cluster)
+        ret = c->saveDataSeriesToFolder(folder) && ret;
+
     return ret;
 }
 
@@ -345,18 +341,16 @@ template<class ClusterT>
 int ClusterList<ClusterT>::saveDataSeriesToFolder(const AnyString& folder, const String& msg) const
 {
     if (empty())
-        return 1;
+        return false;
 
-    int ret = 1;
+    bool ret = true;
     uint ticks = 0;
 
-    auto end = cluster.end();
-    for (auto it = cluster.begin(); it != end; ++it)
+    for (const auto& c : cluster)
     {
-        auto& cluster = *(it->second);
         logs.info() << msg << "  " << (ticks * 100 / (1 + this->cluster.size()))
             << "% complete";
-        ret = cluster.saveDataSeriesToFolder(folder) and ret;
+        ret = c->saveDataSeriesToFolder(folder) && ret;
         ++ticks;
     }
     return ret;
@@ -387,19 +381,10 @@ void ClusterList<ClusterT>::retrieveTotalCapacityAndUnitCount(double& total, uin
     total = 0.;
     unitCount = 0;
 
-    if (not cluster.empty())
+    for (const auto& c : cluster)
     {
-        auto end = cluster.cend();
-        for (auto i = cluster.cbegin(); i != end; ++i)
-        {
-            if (not i->second)
-                return;
-
-            // Reference to the thermal cluster
-            auto& cluster = *(i->second);
-            unitCount += cluster.unitCount;
-            total += cluster.unitCount * cluster.nominalCapacity;
-        }
+        unitCount += c->unitCount;
+        total += c->unitCount * c->nominalCapacity;
     }
 }
 
