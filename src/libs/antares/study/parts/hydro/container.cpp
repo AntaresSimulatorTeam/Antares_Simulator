@@ -135,7 +135,7 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
           area.hydro.reservoirCapacity = 0.;
           area.hydro.pumpingEfficiency = 1.;
 
-          if (study.header.version >= 870)
+          if (study.header.version >= 890)
           {
               // GUI part patch :
               // We need to know, when estimating the RAM required by the solver, if the current
