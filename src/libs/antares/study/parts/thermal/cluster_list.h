@@ -58,8 +58,6 @@ public:
     void enableMustrunForEveryone();
     //@}
 
-    bool remove(const ClusterName& id) override;
-
     Map mapping;
 
     /*!

@@ -278,31 +278,8 @@ void ThermalClusterList::calculationOfSpinning()
 
 void ThermalClusterList::reverseCalculationOfSpinning()
 {
-    auto end = cluster.end();
-    for (auto it = cluster.begin(); it != end; ++it)
-    {
-        auto& cluster = *(it->second);
-        cluster.reverseCalculationOfSpinning();
-    }
-}
-
-bool ThermalClusterList::remove(const ClusterName& id)
-{
-    auto i = cluster.find(id);
-    if (i == cluster.end())
-        return false;
-
-    // Getting the pointer on the cluster
-    SharedPtr c = i->second;
-
-    // Removing it from the list
-    cluster.erase(i);
-    // Invalidating the parent area
-    c->parentArea->forceReload();
-
-    // Rebuilding the index
-    rebuildIndex();
-    return true;
+    for (const auto& c : cluster)
+        c->reverseCalculationOfSpinning();
 }
 
 void ThermalClusterList::enableMustrunForEveryone()
@@ -313,13 +290,9 @@ void ThermalClusterList::enableMustrunForEveryone()
 
 void ThermalClusterList::ensureDataPrepro()
 {
-    auto end = cluster.end();
-    for (auto it = cluster.begin(); it != end; ++it)
-    {
-        auto c = it->second;
-        if (not c->prepro)
+    for (const auto& c : cluster)
+        if (!c->prepro)
             c->prepro = new PreproThermal(c);
-    }
 }
 
 bool ThermalClusterList::saveToFolder(const AnyString& folder) const
@@ -485,7 +458,7 @@ bool ThermalClusterList::loadPreproFromFolder(Study& study,
     Clob buffer;
     bool ret = true;
 
-    for (auto& [name, c] : cluster)
+    for (const auto& c : cluster)
     {
         if (c->prepro)
         {
@@ -518,7 +491,7 @@ bool ThermalClusterList::loadEconomicCosts(Study& study, const AnyString& folder
     Clob buffer;
     bool ret = true;
 
-    for (auto& [name, c] : cluster)
+    for (const auto& c : cluster)
     {
         assert(c->parentArea and "cluster: invalid parent area");
         buffer.clear() << folder << SEP << c->parentArea->id << SEP << c->id();

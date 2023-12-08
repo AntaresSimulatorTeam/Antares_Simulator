@@ -1128,12 +1128,8 @@ void Study::destroyAllWindTSGeneratorData()
 void Study::destroyAllThermalTSGeneratorData()
 {
     areas.each([&](Data::Area& area) {
-        auto pend = area.thermal.list.end();
-        for (auto j = area.thermal.list.begin(); j != pend; ++j)
-        {
-            ThermalCluster& cluster = *(j->second);
-            FreeAndNil(cluster.prepro);
-        }
+        for (const auto& cluster : area.thermal.list)
+            FreeAndNil(cluster->prepro);
     });
 }
 
