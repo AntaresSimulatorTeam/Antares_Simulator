@@ -324,11 +324,9 @@ private:
         if (VariablesStatsByDataLevel<NextT, Category::thermalAggregate>::count)
         {
             auto& area = *results.data.area;
-            auto end = area.thermal.list.end();
-            for (auto i = area.thermal.list.begin(); i != end; ++i)
+            for (const auto& cluster : area.thermal.list)
             {
-                auto& cluster = *i;
-                results.data.thermalCluster = &cluster;
+                results.data.thermalCluster = cluster.get();
 
                 logs.info() << "Exporting results : " << area.name << " :: " << cluster->name();
                 // The new output
