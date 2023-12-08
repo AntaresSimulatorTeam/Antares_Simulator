@@ -58,15 +58,21 @@ typename ClusterList<ClusterT>::const_iterator ClusterList<ClusterT>::end() cons
 template<class ClusterT>
 const ClusterT* ClusterList<ClusterT>::find(const Data::ClusterName& id) const
 {
-    auto i = cluster.find(id);
-    return (i != cluster.end()) ? i->second.get() : nullptr;
+    for (const auto& c : cluster)
+        if (c->id() == id)
+            return c.get();
+
+    return nullptr;
 }
 
 template<class ClusterT>
 ClusterT* ClusterList<ClusterT>::find(const Data::ClusterName& id)
 {
-    auto i = cluster.find(id);
-    return (i != cluster.end()) ? i->second.get() : nullptr;
+    for (auto& c : cluster)
+        if (c->id() == id)
+            return c.get();
+
+    return nullptr;
 }
 
 template<class ClusterT>
@@ -86,8 +92,8 @@ void ClusterList<ClusterT>::remove(iterator i)
 template<class ClusterT>
 bool ClusterList<ClusterT>::exists(const Data::ClusterName& id) const
 {
-    auto& it = find_if(cluster.begin(), cluster.end(),
-        [&id](const ClusterT& c) { return c.id == id; });
+    const auto& it = find_if(cluster.begin(), cluster.end(),
+        [&id](const ClusterT& c) { return c.id() == id; });
 
     return it != cluster.end();
 }
@@ -115,35 +121,32 @@ void ClusterList<ClusterT>::clear()
 template<class ClusterT>
 const ClusterT* ClusterList<ClusterT>::find(const ClusterT* p) const
 {
-    auto end = cluster.end();
-    for (auto i = cluster.begin(); i != end; ++i)
-    {
-        if (p == i->second.get())
-            return i->second.get();
-    }
+    for (const auto& c : cluster)
+        if (c.get() == p)
+            return c.get();
+
     return nullptr;
 }
 
 template<class ClusterT>
 ClusterT* ClusterList<ClusterT>::find(const ClusterT* p)
 {
-    auto end = cluster.end();
-    for (auto i = cluster.begin(); i != end; ++i)
-    {
-        if (p == i->second.get())
-            return i->second.get();
-    }
+    for (auto& c : cluster)
+        if (c.get() == p)
+            return c.get();
+
     return nullptr;
 }
 
 template<class ClusterT>
-typename ClusterList<ClusterT>::SharedPtr ClusterList<ClusterT>::find(
-  const ClusterList<ClusterT>::SharedPtr& p)
+typename ClusterList<ClusterT>::SharedPtr ClusterList<ClusterT>::find
+  (const ClusterList<ClusterT>::SharedPtr& p)
 {
-    auto& it = find_if(cluster.begin(), cluster.end(),
-        [&p](const ClusterT& c) { return c.id == p.id; });
+    for (auto& c : cluster)
+        if (c == p)
+            return c;
 
-    return (it != cluster.end()) ? *it : nullptr;
+    return nullptr;
 }
 
 template<class ClusterT>
@@ -252,11 +255,9 @@ bool ClusterList<ClusterT>::rename(Data::ClusterName idToFind, Data::ClusterName
     Antares::TransformNameIntoID(newName, newID);
 
     // Looking for the renewable cluster in the list
-    auto it = cluster.find(idToFind);
-    if (it == cluster.end())
+    auto* p = this->find(idToFind);
+    if (!p)
         return true;
-
-    SharedPtr p = it->second;
 
     if (idToFind == newID)
     {
@@ -272,10 +273,7 @@ bool ClusterList<ClusterT>::rename(Data::ClusterName idToFind, Data::ClusterName
     if (this->exists(newID))
         return false;
 
-    cluster.erase(it);
-
     p->setName(newName);
-    cluster[newID] = p;
 
     // Invalidate matrices attached to the area
     // It is a bit excessive (all matrices not only those related to the renewable cluster)
@@ -292,32 +290,32 @@ template<class ClusterT>
 bool ClusterList<ClusterT>::forceReload(bool reload) const
 {
     bool ret = true;
-    auto end = cluster.end();
-    for (auto i = cluster.begin(); i != end; ++i)
-        ret = (i->second)->forceReload(reload) and ret;
+    for (const auto& c : cluster)
+        ret = c->forceReload(reload) && ret;
     return ret;
 }
 
 template<class ClusterT>
 void ClusterList<ClusterT>::markAsModified() const
 {
-    auto end = cluster.end();
-    for (auto i = cluster.begin(); i != end; ++i)
-        (i->second)->markAsModified();
+    for (const auto& c : cluster)
+        c->markAsModified();
 }
 
 template<class ClusterT>
 bool ClusterList<ClusterT>::remove(const Data::ClusterName& id)
 {
-    auto i = cluster.find(id);
-    if (i == cluster.end())
+    const auto& it = find_if(cluster.begin(), cluster.end(),
+        [&id](const ClusterT& c) { return c.id() == id; });
+
+    if (it == cluster.end())
         return false;
 
     // Getting the pointer on the cluster
-    SharedPtr c = i->second;
+    SharedPtr c = *it;
 
     // Removing it from the list
-    cluster.erase(i);
+    cluster.erase(it);
     // Invalidating the parent area
     c->parentArea->forceReload();
 
