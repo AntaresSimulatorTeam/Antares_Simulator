@@ -66,11 +66,9 @@ void PartRenewable::prepareAreaWideIndexes()
         return;
     }
 
-    auto end = list.end();
     uint idx = 0;
-    for (auto i = list.begin(); i != end; ++i)
+    for (auto& t : list)
     {
-        RenewableCluster* t = i->second.get();
         t->areaWideIndex = idx;
         ++idx;
     }
@@ -86,8 +84,8 @@ uint PartRenewable::removeDisabledClusters()
 
     for (auto& it : list)
     {
-        if (!it.second->enabled)
-            disabledClusters.push_back(it.first);
+        if (!it->enabled)
+            disabledClusters.push_back(it->id());
     }
 
     for (auto& cluster : disabledClusters)
