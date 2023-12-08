@@ -115,8 +115,7 @@ template<class ClusterT>
 void ClusterList<ClusterT>::clear()
 {
     byIndex.clear();
-    if (not cluster.empty())
-        cluster.clear();
+    cluster.clear();
 }
 
 template<class ClusterT>
@@ -192,7 +191,9 @@ template<class ClusterT>
 void ClusterList<ClusterT>::rebuildIndex()
 {
     byIndex.clear();
-
+    std::sort(cluster.begin(), cluster.end(), [&](const auto& a, const auto& b){
+        return a->id() < b->id();
+    });
     if (not empty())
     {
         uint indx = 0;
