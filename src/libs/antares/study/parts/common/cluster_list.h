@@ -215,8 +215,6 @@ public:
     uint64_t memoryUsage() const;
 
 public:
-    //! All clusters by their index
-    std::vector<ClusterT*> byIndex;
     //! All clusters
     Vect cluster;
 

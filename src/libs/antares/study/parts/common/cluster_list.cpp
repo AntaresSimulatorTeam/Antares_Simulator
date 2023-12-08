@@ -114,7 +114,6 @@ Data::ClusterList<ClusterT>::~ClusterList()
 template<class ClusterT>
 void ClusterList<ClusterT>::clear()
 {
-    byIndex.clear();
     cluster.clear();
 }
 
@@ -190,20 +189,13 @@ void ClusterList<ClusterT>::storeTimeseriesNumbers(Solver::IResultWriter& writer
 template<class ClusterT>
 void ClusterList<ClusterT>::rebuildIndex()
 {
-    byIndex.clear();
     std::sort(cluster.begin(), cluster.end(), [&](const auto& a, const auto& b){
         return a->id() < b->id();
     });
-    if (not empty())
-    {
-        uint indx = 0;
-        byIndex.resize(size());
-        for (auto& c : cluster)
-        {
-            byIndex[indx] = c.get();
-            c->index = indx++;
-        }
-    }
+
+    uint indx = 0;
+    for (auto& c : cluster)
+        c->index = indx++;
 }
 
 

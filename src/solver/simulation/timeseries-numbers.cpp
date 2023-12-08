@@ -747,7 +747,7 @@ Matrix<uint32_t>* getFirstTSnumberInterModalMatrixFoundInArea(
             tsNumbersMtx = &(area.thermal.clusters[0]->series.timeseriesNumbers);
         else if (isTSintermodal[ts_to_tsIndex.at(timeSeriesRenewable)]
                  && area.renewable.list.size() > 0)
-            tsNumbersMtx = &(area.renewable.list.byIndex[0]->series.timeseriesNumbers);
+            tsNumbersMtx = &(area.renewable.list.cluster[0]->series.timeseriesNumbers);
     }
     assert(tsNumbersMtx);
 
