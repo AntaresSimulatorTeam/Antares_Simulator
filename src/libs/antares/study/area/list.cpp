@@ -908,7 +908,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
                 area, study.usedByTheSolver, study.gotFatalError);
         }
 
-        if (study.header.version < 870)
+        if (study.header.version < 890)
         {
             buffer.clear() << study.folderInput << SEP << "hydro";
 

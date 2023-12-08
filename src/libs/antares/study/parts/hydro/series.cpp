@@ -355,7 +355,7 @@ void DataSeriesHydro::resizeTSinDeratedMode(bool derated,
         mingen.averageTimeseries();
     generationTScount_ = 1;
 
-    if (studyVersion >= 870)
+    if (studyVersion >= 890)
     {
         maxHourlyGenPower.averageTimeseries();
         maxHourlyPumpPower.averageTimeseries();
