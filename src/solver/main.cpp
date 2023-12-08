@@ -6,7 +6,7 @@
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
 ** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Free Software Foundation, either version 3 of the License, or
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
 **
 ** There are special exceptions to the terms and conditions of the
@@ -20,7 +20,7 @@
 ** Mozilla Public Licence 2.0 for more details.
 **
 ** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 **
 ** SPDX-License-Identifier: MPL 2.0
 */
@@ -46,7 +46,7 @@ const char* const GPL_ANNOUNCEMENT
     "\n"
     "Antares_Simulator is free software : you can redistribute it and / or modify\n"
     "it under the terms of the Mozilla Public Licence 2.0 as published by\n"
-    "the Free Software Foundation, either version 3 of the License, or\n"
+    "the Mozilla Foundation, either version 2 of the License, or\n"
     "(at your option) any later version.\n"
     "\n"
     "There are special exceptions to the terms and conditions of the\n"
@@ -60,7 +60,7 @@ const char* const GPL_ANNOUNCEMENT
     "Mozilla Public Licence 2.0 for more details.\n"
     "\n"
     "You should have received a copy of the Mozilla Public Licence 2.0\n"
-    "along with Antares_Simulator.If not, see <http://www.gnu.org/licenses/>.\n"
+    "along with Antares_Simulator.If not, see <https://opensource.org/license/mpl-2-0/>.\n"
     "\n";
 
 const char* const ANTARES_LOGO = "\n\n"

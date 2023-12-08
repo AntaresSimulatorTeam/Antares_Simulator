@@ -6,7 +6,7 @@
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
 ** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Free Software Foundation, either version 3 of the License, or
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
 **
 ** There are special exceptions to the terms and conditions of the
@@ -20,7 +20,7 @@
 ** Mozilla Public Licence 2.0 for more details.
 **
 ** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator.  If not, see <http://www.gnu.org/licenses/>.
+** along with Antares_Simulator.  If not, see <https://opensource.org/license/mpl-2-0/>.
 **
 ** SPDX-License-Identifier: MPL 2.0
 */
@@ -801,7 +801,7 @@ the exclusion of warranty; and each file should have at least the
 
         This program is free software: you can redistribute it and/or modify
         it under the terms of the Mozilla Public Licence 2.0 as published by
-        the Free Software Foundation, either version 3 of the License, or
+        the Mozilla Foundation, either version 2 of the License, or
         (at your option) any later version.
 
         This program is distributed in the hope that it will be useful,
