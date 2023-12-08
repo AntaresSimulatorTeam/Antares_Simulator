@@ -656,16 +656,10 @@ void applyMatrixDrawsToInterModalModesInArea(Matrix<uint32_t>* tsNumbersMtx,
     }
 }
 
-bool TimeSeriesNumbers::checkAllElementsIdenticalOrOne(const std::vector<uint>& w)
+bool TimeSeriesNumbers::checkAllElementsIdenticalOrOne(std::vector<uint> w)
 {
-    std::vector<uint> removedOnes;
-    // Remove all 1
-    std::remove_copy(w.begin(), w.end(), std::back_inserter(removedOnes), 1);
-    // Try to find adjacent elements that are pairwise different
-    auto result
-      = std::adjacent_find(removedOnes.begin(), removedOnes.end(), std::not_equal_to<uint>());
-    // Return "no such pair exists"
-    return result == removedOnes.end();
+    auto first_one = std::remove(w.begin(), w.end(), 1); // Reject all 1 to the end
+    return std::adjacent_find(w.begin(), first_one, std::not_equal_to<uint>()) == first_one;
 }
 
 bool TimeSeriesNumbers::Generate(Study& study)
