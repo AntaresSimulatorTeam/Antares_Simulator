@@ -29,9 +29,9 @@ public:
     // Vector container
     using Vect = typename std::vector<SharedPtr>;
     //! iterator
-    using iterator = typename Map::iterator;
+    using iterator = typename Vect::iterator;
     //! const iterator
-    using const_iterator = typename Map::const_iterator;
+    using const_iterator = typename Vect::const_iterator;
 
 public:
     //! \name Constructor & Destructor
@@ -116,6 +116,7 @@ public:
     ** \return A pointer to a cluster. nullptr if not found
     */
     const ClusterT* find(const Data::ClusterName& id) const;
+    SharedPtr find(const ClusterList<ClusterT>::SharedPtr& p);
 
     /*!
     ** \brief Try to find a cluster from its pointer

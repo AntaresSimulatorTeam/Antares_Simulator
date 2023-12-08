@@ -327,14 +327,14 @@ private:
             auto end = area.thermal.list.end();
             for (auto i = area.thermal.list.begin(); i != end; ++i)
             {
-                auto& cluster = *(i->second);
+                auto& cluster = *i;
                 results.data.thermalCluster = &cluster;
 
-                logs.info() << "Exporting results : " << area.name << " :: " << cluster.name();
+                logs.info() << "Exporting results : " << area.name << " :: " << cluster->name();
                 // The new output
                 results.data.output.clear();
                 results.data.output << results.data.originalOutput << SEP << "areas" << SEP
-                                    << area.id << SEP << "thermal" << SEP << cluster.id();
+                                    << area.id << SEP << "thermal" << SEP << cluster->id();
 
                 SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(list, results, numSpace);
             }
