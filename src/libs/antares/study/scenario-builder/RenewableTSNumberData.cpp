@@ -33,7 +33,7 @@ bool renewableTSNumberData::apply(Study& study)
     const uint tsGenCountRenewable = get_tsGenCount(study);
 
     uint clusterIndex = 0;
-    for (const auto& [name, cluster]  : area.renewable.list)
+    for (const auto& cluster : area.renewable.list)
     {
         // alias to the current column
         assert(clusterIndex < pTSNumberRules.width);
