@@ -296,7 +296,7 @@ void Create::createActionsForAStandardAreaCopy(Context& ctx, bool copyPosition)
         auto end = area->thermal.list.end();
         for (auto i = area->thermal.list.begin(); i != end; ++i)
         {
-            *root += StandardActionsToCopyThermalCluster(pOriginalAreaName, i->second->name());
+            *root += StandardActionsToCopyThermalCluster(pOriginalAreaName, (*i)->name());
         }
         *this += root;
     }
