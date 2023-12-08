@@ -22,7 +22,7 @@
 ** You should have received a copy of the GNU General Public License
 ** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
 **
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** SPDX-License-Identifier: MPL 2.0
 */
 #ifndef __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_AREA_ALLOCATION_HYDRO_H__
 #define __ANTARES_LIBS_STUDY_ACTION_HANDLER_ANTARES_AREA_ALLOCATION_HYDRO_H__

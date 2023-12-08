@@ -41,7 +41,7 @@ constexpr size_t OPT_APPEL_SOLVEUR_BUFFER_SIZE = 256;
 ** You should have received a copy of the GNU General Public License
 ** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
 **
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** SPDX-License-Identifier: MPL 2.0
 */
 #include <antares/study/study.h>
 #include <string>
