@@ -5,7 +5,7 @@
 ** This file is part of Antares_Simulator.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
+** it under the terms of the Mozilla Public Licence 2.0 as published by
 ** the Free Software Foundation, either version 3 of the License, or
 ** (at your option) any later version.
 **
@@ -17,9 +17,9 @@
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
+** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator.  If not, see <http://www.gnu.org/licenses/>.
 **
 ** SPDX-License-Identifier: MPL 2.0
@@ -111,14 +111,14 @@ License-Text:
 
 Copyright (C) 2007-2018 RTE
 This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
+it under the terms of the Mozilla Public Licence 2.0 as published by
 the Free Software Foundation; either version 3 of the License, or 
 (at your option) any later version.
 This program is distributed in the hope that it will be useful, but 
 WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU General Public License for more details.
-You should have received a copy of the GNU General Public License 
+See the Mozilla Public Licence 2.0 for more details.
+You should have received a copy of the Mozilla Public Licence 2.0 
 along with this program; if not, see <http://www.gnu.org/licenses>.
 
 In accordance with the terms of section 7 (7. Additional Terms.) of 
@@ -171,15 +171,15 @@ license document, but changing it is not allowed.
 
 ### Preamble
 
-The GNU General Public License is a free, copyleft license for
+The Mozilla Public Licence 2.0 is a free, copyleft license for
 software and other kinds of works.
 
 The licenses for most software and other practical works are designed
 to take away your freedom to share and change the works. By contrast,
-the GNU General Public License is intended to guarantee your freedom
+the Mozilla Public Licence 2.0 is intended to guarantee your freedom
 to share and change all versions of a program--to make sure it remains
 free software for all its users. We, the Free Software Foundation, use
-the GNU General Public License for most of our software; it applies
+the Mozilla Public Licence 2.0 for most of our software; it applies
 also to any other work released this way by its authors. You can apply
 it to your programs, too.
 
@@ -237,7 +237,7 @@ modification follow.
 
 #### 0. Definitions.
 
-"This License" refers to version 3 of the GNU General Public License.
+"This License" refers to version 3 of the Mozilla Public Licence 2.0.
 
 "Copyright" also means copyright-like laws that apply to other kinds
 of works, such as semiconductor masks.
@@ -726,7 +726,7 @@ combination as such.
 #### 14. Revised Versions of this License.
 
 The Free Software Foundation may publish revised and/or new versions
-of the GNU General Public License from time to time. Such new versions
+of the Mozilla Public Licence 2.0 from time to time. Such new versions
 will be similar in spirit to the present version, but may differ in
 detail to address new problems or concerns.
 
@@ -740,7 +740,7 @@ License, you may choose any version ever published by the Free
 Software Foundation.
 
 If the Program specifies that a proxy can decide which future versions
-of the GNU General Public License can be used, that proxy's public
+of the Mozilla Public Licence 2.0 can be used, that proxy's public
 statement of acceptance of a version permanently authorizes you to
 choose that version for the Program.
 
@@ -800,16 +800,16 @@ the exclusion of warranty; and each file should have at least the
         Copyright (C) <year>  <name of author>
 
         This program is free software: you can redistribute it and/or modify
-        it under the terms of the GNU General Public License as published by
+        it under the terms of the Mozilla Public Licence 2.0 as published by
         the Free Software Foundation, either version 3 of the License, or
         (at your option) any later version.
 
         This program is distributed in the hope that it will be useful,
         but WITHOUT ANY WARRANTY; without even the implied warranty of
         MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-        GNU General Public License for more details.
+        Mozilla Public Licence 2.0 for more details.
 
-        You should have received a copy of the GNU General Public License
+        You should have received a copy of the Mozilla Public Licence 2.0
         along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 Also add information on how to contact you by electronic and paper
@@ -833,7 +833,7 @@ school, if any, to sign a "copyright disclaimer" for the program, if
 necessary. For more information on this, and how to apply and follow
 the GNU GPL, see <https://www.gnu.org/licenses/>.
 
-The GNU General Public License does not permit incorporating your
+The Mozilla Public Licence 2.0 does not permit incorporating your
 program into proprietary programs. If your program is a subroutine
 library, you may consider it more useful to permit linking proprietary
 applications with the library. If this is what you want to do, use the

@@ -5,7 +5,7 @@
 ** This file is part of Antares_Simulator.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
+** it under the terms of the Mozilla Public Licence 2.0 as published by
 ** the Free Software Foundation, either version 3 of the License, or
 ** (at your option) any later version.
 **
@@ -17,9 +17,9 @@
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
+** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
 **
 ** SPDX-License-Identifier: MPL 2.0
@@ -45,7 +45,7 @@ const char* const GPL_ANNOUNCEMENT
   = "Copyright 2007-2023 RTE  - Authors: The Antares_Simulator Team \n"
     "\n"
     "Antares_Simulator is free software : you can redistribute it and / or modify\n"
-    "it under the terms of the GNU General Public License as published by\n"
+    "it under the terms of the Mozilla Public Licence 2.0 as published by\n"
     "the Free Software Foundation, either version 3 of the License, or\n"
     "(at your option) any later version.\n"
     "\n"
@@ -57,9 +57,9 @@ const char* const GPL_ANNOUNCEMENT
     "Antares_Simulator is distributed in the hope that it will be useful, \n"
     "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
     "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the\n"
-    "GNU General Public License for more details.\n"
+    "Mozilla Public Licence 2.0 for more details.\n"
     "\n"
-    "You should have received a copy of the GNU General Public License\n"
+    "You should have received a copy of the Mozilla Public Licence 2.0\n"
     "along with Antares_Simulator.If not, see <http://www.gnu.org/licenses/>.\n"
     "\n";
 
