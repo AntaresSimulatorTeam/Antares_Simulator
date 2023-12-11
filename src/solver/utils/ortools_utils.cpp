@@ -63,10 +63,10 @@ void OrtoolsLogHandler::init()
     {
 #ifdef __linux__
         if (log_file_per_thread_.empty()
-            || (file_pointer = fopen(log_file_per_thread_.string().c_str(), "a+")) == nullptr)
+            || (file_pointer_ = fopen(log_file_per_thread_.string().c_str(), "a+")) == nullptr)
 #elif _WIN32
         if (log_file_per_thread_.empty()
-            || (file_pointer = _fsopen(log_file_per_thread_.string().c_str(), "a+", _SH_DENYNO))
+            || (file_pointer_ = _fsopen(log_file_per_thread_.string().c_str(), "a+", _SH_DENYNO))
                  == nullptr)
 #endif
         {
@@ -76,7 +76,7 @@ void OrtoolsLogHandler::init()
         }
         else
         {
-            setvbuf(file_pointer, nullptr, _IONBF, 0);
+            setvbuf(file_pointer_, nullptr, _IONBF, 0);
         }
     }
     else
@@ -87,10 +87,10 @@ void OrtoolsLogHandler::init()
 
 OrtoolsLogHandler::~OrtoolsLogHandler()
 {
-    if (file_pointer)
+    if (file_pointer_)
     {
-        fclose(file_pointer);
-        file_pointer = nullptr;
+        fclose(file_pointer_);
+        file_pointer_ = nullptr;
     }
 }
 
