@@ -6,7 +6,7 @@ MaxPumpingData MaxPumpingGroup::GetMaxPumpingData()
             .NumeroDeContrainteMaxPompage = problemeHebdo_->NumeroDeContrainteMaxPompage};
 }
 
-void MaxPumpingGroup::Build()
+void MaxPumpingGroup::buildConstraints()
 {
     auto maxPumpingData = GetMaxPumpingData();
     MaxPumping maxPumping(builder_, maxPumpingData);

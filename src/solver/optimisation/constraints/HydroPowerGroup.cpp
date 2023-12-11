@@ -9,7 +9,7 @@ HydroPowerData HydroPowerGroup::GetHydroPowerDataFromProblemHebdo()
       .NumeroDeContrainteEnergieHydraulique = problemeHebdo_->NumeroDeContrainteEnergieHydraulique};
 }
 
-void HydroPowerGroup::Build()
+void HydroPowerGroup::buildConstraints()
 {
     auto hydroPowerData = GetHydroPowerDataFromProblemHebdo();
     HydroPower hydroPower(builder_, hydroPowerData);

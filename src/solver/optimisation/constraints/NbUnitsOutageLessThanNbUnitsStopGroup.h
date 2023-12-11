@@ -13,7 +13,7 @@ class NbUnitsOutageLessThanNbUnitsStopGroup : public AbstractStartUpCostsGroup
 public:
     using AbstractStartUpCostsGroup::AbstractStartUpCostsGroup;
 
-        void Build() override;
+        void buildConstraints() override;
 
 private:
     NbUnitsOutageLessThanNbUnitsStopData GetNbUnitsOutageLessThanNbUnitsStopDataFromProblemHebdo();

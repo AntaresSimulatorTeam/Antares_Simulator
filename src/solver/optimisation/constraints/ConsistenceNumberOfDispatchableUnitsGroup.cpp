@@ -5,7 +5,7 @@
  * @brief build ConsistenceNumberOfDispatchableUnits constraints with
  * respect to default order
  */
-void ConsistenceNumberOfDispatchableUnitsGroup::Build()
+void ConsistenceNumberOfDispatchableUnitsGroup::buildConstraints()
 {
     auto data = GetStartUpCostsDataFromProblemHebdo();
     ConsistenceNumberOfDispatchableUnits consistenceNumberOfDispatchableUnits(builder_, data);

@@ -13,7 +13,7 @@ class MinDownTimeGroup : public AbstractStartUpCostsGroup
 public:
     using AbstractStartUpCostsGroup::AbstractStartUpCostsGroup;
 
-        void Build() override;
+        void buildConstraints() override;
 
 private:
     MinDownTimeData GetMinDownTimeDataFromProblemHebdo();

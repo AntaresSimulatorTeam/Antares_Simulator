@@ -6,7 +6,7 @@ AreaHydroLevelData AreaHydroLevelGroup::GetAreaHydroLevelData()
             .CaracteristiquesHydrauliques = problemeHebdo_->CaracteristiquesHydrauliques};
 }
 
-void AreaHydroLevelGroup::Build()
+void AreaHydroLevelGroup::buildConstraints()
 {
     auto areaHydroLevelData = GetAreaHydroLevelData();
     AreaHydroLevel areaHydroLevel(builder_, areaHydroLevelData);

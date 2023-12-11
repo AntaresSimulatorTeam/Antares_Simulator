@@ -7,7 +7,7 @@ class ExchangeBalanceGroup : public ConstraintGroup
 public:
     using ConstraintGroup::ConstraintGroup;
 
-    void Build() override;
+    void buildConstraints() override;
 
 private:
     ExchangeBalanceData GetExchangeBalanceDataFromProblemHebdo();

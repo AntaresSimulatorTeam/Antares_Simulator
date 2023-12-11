@@ -4,7 +4,7 @@
  * @brief build P{min,max}DispatchableGeneration constraints with
  * respect to default order
  */
-void PMinMaxDispatchableGenerationGroup::Build()
+void PMinMaxDispatchableGenerationGroup::buildConstraints()
 {
     auto data = GetStartUpCostsDataFromProblemHebdo();
     PMaxDispatchableGeneration pMaxDispatchableGeneration(builder_, data);

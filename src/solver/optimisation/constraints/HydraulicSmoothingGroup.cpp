@@ -3,7 +3,7 @@
 #include "HydroPowerSmoothingUsingVariationMaxDown.h"
 #include "HydroPowerSmoothingUsingVariationMaxUp.h"
 
-void HydraulicSmoothingGroup::Build()
+void HydraulicSmoothingGroup::buildConstraints()
 {
     HydroPowerSmoothingUsingVariationSum hydroPowerSmoothingUsingVariationSum(builder_);
     HydroPowerSmoothingUsingVariationMaxDown hydroPowerSmoothingUsingVariationMaxDown(builder_);

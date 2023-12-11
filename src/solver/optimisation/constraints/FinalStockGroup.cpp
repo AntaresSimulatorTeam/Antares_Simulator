@@ -14,7 +14,7 @@ FinalStockExpressionData FinalStockGroup::GetFinalStockExpressionData()
             = problemeHebdo_->NumeroDeContrainteExpressionStockFinal};
 }
 
-void FinalStockGroup::Build()
+void FinalStockGroup::buildConstraints()
 {
     auto finalStockEquivalentData = GetFinalStockEquivalentData();
     FinalStockEquivalent finalStockEquivalent(builder_, finalStockEquivalentData);
