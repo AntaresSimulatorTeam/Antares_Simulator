@@ -4,6 +4,8 @@ on:
   release:
     types: [created]
   push:
+    - branches:
+        - develop
   schedule:
     - cron: '21 2 * * *'
 
