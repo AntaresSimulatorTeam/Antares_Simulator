@@ -92,11 +92,9 @@ void ClusterList<ClusterT>::remove(iterator i)
 template<class ClusterT>
 bool ClusterList<ClusterT>::exists(const Data::ClusterName& id) const
 {
-    for (const auto& c : cluster)
-        if (c->id() == id)
-            return true;
-
-    return false;
+    return std::any_of(cluster.begin(), cluster.end(), [&id](const auto& c){
+        return c->id() == id;
+    });
 }
 
 template<class ClusterT>

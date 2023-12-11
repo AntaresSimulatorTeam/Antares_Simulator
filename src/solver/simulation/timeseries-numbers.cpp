@@ -792,7 +792,7 @@ void applyMatrixDrawsToInterModalModesInArea(Matrix<uint32_t>* tsNumbersMtx,
         }
         if (isTSintermodal[ts_to_tsIndex.at(timeSeriesRenewable)])
         {
-            for (auto& cluster : area.renewable.list)
+            for (const auto& cluster : area.renewable.list)
             {
                 assert(year < cluster->series.timeseriesNumbers.height);
                 cluster->series.timeseriesNumbers[0][year] = draw;

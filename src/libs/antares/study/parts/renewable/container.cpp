@@ -67,7 +67,7 @@ void PartRenewable::prepareAreaWideIndexes()
     }
 
     uint idx = 0;
-    for (auto& t : list)
+    for (const auto& t : list)
     {
         t->areaWideIndex = idx;
         ++idx;

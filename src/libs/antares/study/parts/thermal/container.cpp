@@ -79,7 +79,8 @@ void PartThermal::prepareAreaWideIndexes()
     for (const auto& cluster : list)
     {
         cluster->areaWideIndex = idx;
-        clusters[idx++] = cluster.get();
+        clusters[idx] = cluster.get();
+        ++idx;
     }
 }
 
