@@ -243,7 +243,7 @@ public:
 
     ConstraintBuilder& NegativeUnsuppliedEnergy(unsigned int index, double coeff);
 
-    ConstraintBuilder& LayerStorage(unsigned area, unsigned layer, double coeff, );
+    ConstraintBuilder& LayerStorage(unsigned area, unsigned layer, double coeff);
     //@}
 
     class ConstraintBuilderInvalidOperator : public std::runtime_error

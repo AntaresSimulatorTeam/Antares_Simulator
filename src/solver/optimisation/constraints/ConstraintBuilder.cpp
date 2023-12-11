@@ -161,13 +161,13 @@ ConstraintBuilder& ConstraintBuilder::FinalStorage(unsigned int index, double co
 
 ConstraintBuilder& ConstraintBuilder::PositiveUnsuppliedEnergy(unsigned int index, double coeff)
 {
-    AddVariable(GetVariableManager(offset, delta).PositiveUnsuppliedEnergy(index), coeff);
+    AddVariable(GetVariableManager(0, 0).PositiveUnsuppliedEnergy(index), coeff);
     return *this;
 }
 
 ConstraintBuilder& ConstraintBuilder::NegativeUnsuppliedEnergy(unsigned int index, double coeff)
 {
-    AddVariable(GetVariableManager(offset, delta).NegativeUnsuppliedEnergy(index), coeff);
+    AddVariable(GetVariableManager(0, 0).NegativeUnsuppliedEnergy(index), coeff);
     return *this;
 }
 
@@ -177,7 +177,7 @@ ConstraintBuilder& ConstraintBuilder::LayerStorage(unsigned area,
                                                          int offset,
                                                          int delta)
 {
-    AddVariable(GetVariableManager(offset, delta).LayerStorage(area, layer), coeff);
+    AddVariable(GetVariableManager(0, 0).LayerStorage(area, layer), coeff);
     return *this;
 }
 
