@@ -117,7 +117,7 @@ ConstraintBuilder& ConstraintBuilder::ShortTermStorageLevel(unsigned int index, 
     return *this;
 }
 
-ConstraintBuilder& ConstraintBuilder::HydProd(unsigned int index, double coeffs)
+ConstraintBuilder& ConstraintBuilder::HydProd(unsigned int index, double coeff)
 {
     AddVariable(GetVariableManager(0, 0).HydProd(index), coeff);
     return *this;
