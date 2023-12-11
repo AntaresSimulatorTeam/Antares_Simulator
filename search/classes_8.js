@@ -25,7 +25,7 @@ var searchData=
   ['incompatibleoptrangeucmode_22',['IncompatibleOptRangeUCMode',['../classAntares_1_1Error_1_1IncompatibleOptRangeUCMode.html',1,'Antares::Error']]],
   ['incompatibleoutputoptions_23',['IncompatibleOutputOptions',['../classAntares_1_1Error_1_1IncompatibleOutputOptions.html',1,'Antares::Error']]],
   ['incompatibleparalleloptions_24',['IncompatibleParallelOptions',['../classAntares_1_1Error_1_1IncompatibleParallelOptions.html',1,'Antares::Error']]],
-  ['incompatiblestudymodeforadqpatch_25',['IncompatibleStudyModeForAdqPatch',['../classAntares_1_1Error_1_1IncompatibleStudyModeForAdqPatch.html',1,'Antares::Error']]],
+  ['incompatiblesimulationmodeforadqpatch_25',['IncompatibleSimulationModeForAdqPatch',['../classAntares_1_1Error_1_1IncompatibleSimulationModeForAdqPatch.html',1,'Antares::Error']]],
   ['infeasibleproblemreport_26',['InfeasibleProblemReport',['../classAntares_1_1Optimization_1_1InfeasibleProblemReport.html',1,'Antares::Optimization']]],
   ['inflowpattern_27',['InflowPattern',['../classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1InflowPattern.html',1,'Antares::Component::Datagrid::Renderer']]],
   ['inflows_28',['Inflows',['../classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Inflows.html',1,'Antares::Solver::Variable::Economy']]],

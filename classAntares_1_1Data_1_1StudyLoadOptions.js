@@ -6,7 +6,7 @@ var classAntares_1_1Data_1_1StudyLoadOptions =
     [ "enableParallel", "classAntares_1_1Data_1_1StudyLoadOptions.html#a834a970868e5de806c652fe44e12d772", null ],
     [ "forceDerated", "classAntares_1_1Data_1_1StudyLoadOptions.html#a997e3591f935d1e56d3a375045f292bb", null ],
     [ "forceExpansion", "classAntares_1_1Data_1_1StudyLoadOptions.html#a6ff537954d7b91f846c582246f30cbb9", null ],
-    [ "forceMode", "classAntares_1_1Data_1_1StudyLoadOptions.html#af9e2ba4a58617382cb7a2a496f646017", null ],
+    [ "forceMode", "classAntares_1_1Data_1_1StudyLoadOptions.html#ad09650f60d3f5d0cfb9457ab4bc659e5", null ],
     [ "forceParallel", "classAntares_1_1Data_1_1StudyLoadOptions.html#a55b89e7b19a8e8c0db2cdc78442b61a7", null ],
     [ "forceYearByYear", "classAntares_1_1Data_1_1StudyLoadOptions.html#a4875ece3163e52e25ac0efdd7faf12e9", null ],
     [ "ignoreConstraints", "classAntares_1_1Data_1_1StudyLoadOptions.html#a59fea6741a9c51f256d82c7ba740b7f5", null ],

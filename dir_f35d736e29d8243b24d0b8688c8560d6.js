@@ -34,6 +34,5 @@ var dir_f35d736e29d8243b24d0b8688c8560d6 =
     [ "jit.h", "jit_8h_source.html", null ],
     [ "locale.h", "locale_8h_source.html", null ],
     [ "solver.h", "libs_2antares_2solver_8h_source.html", null ],
-    [ "version.h", "libs_2antares_2version_8h_source.html", null ],
-    [ "xpansion.h", "xpansion_8h_source.html", null ]
+    [ "version.h", "libs_2antares_2version_8h_source.html", null ]
 ];

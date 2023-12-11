@@ -1,6 +1,5 @@
 var NAVTREEINDEX10 =
 {
-"classAntares_1_1Data_1_1ThermalCluster.html#a8af7d95b5e9805d840d4c9b091073910":[4,0,0,3,53,12],
 "classAntares_1_1Data_1_1ThermalCluster.html#a8f7dac9bfc16e1ec8d1563774db81dd8":[4,0,0,3,53,33],
 "classAntares_1_1Data_1_1ThermalCluster.html#a999d0635a7c99242d4c383658872eef2":[4,0,0,3,53,11],
 "classAntares_1_1Data_1_1ThermalCluster.html#a9ccf00212f5fc4d36edb9997946a048a":[4,0,0,3,53,26],
@@ -150,7 +149,7 @@ var NAVTREEINDEX10 =
 "classAntares_1_1Error_1_1IncompatibleOptRangeUCMode.html":[4,0,0,5,9],
 "classAntares_1_1Error_1_1IncompatibleOutputOptions.html":[4,0,0,5,10],
 "classAntares_1_1Error_1_1IncompatibleParallelOptions.html":[4,0,0,5,11],
-"classAntares_1_1Error_1_1IncompatibleStudyModeForAdqPatch.html":[4,0,0,5,12],
+"classAntares_1_1Error_1_1IncompatibleSimulationModeForAdqPatch.html":[4,0,0,5,12],
 "classAntares_1_1Error_1_1InvalidFileName.html":[4,0,0,5,13],
 "classAntares_1_1Error_1_1InvalidNumberOfMCYears.html":[4,0,0,5,14],
 "classAntares_1_1Error_1_1InvalidOptimizationRange.html":[4,0,0,5,15],
@@ -249,5 +248,6 @@ var NAVTREEINDEX10 =
 "classAntares_1_1Graph_1_1Grid.html#a7004065219923b83a5e2ee13978c4f3f":[4,0,0,8,1,5],
 "classAntares_1_1Graph_1_1Grid.html#a81b4bd6ed76dfa7c52cc997bac5c9632":[4,0,0,8,1,1],
 "classAntares_1_1Graph_1_1Grid.html#a8c78613a5185e59c1abca88c6707a810":[4,0,0,8,1,7],
-"classAntares_1_1Graph_1_1Grid.html#aa4238e0a26f7805f5ca49368ace7af3f":[4,0,0,8,1,11]
+"classAntares_1_1Graph_1_1Grid.html#aa4238e0a26f7805f5ca49368ace7af3f":[4,0,0,8,1,11],
+"classAntares_1_1Graph_1_1Grid.html#ab24958f2e08e120a2e6f869be8f3b242":[4,0,0,8,1,9]
 };

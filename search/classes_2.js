@@ -48,7 +48,7 @@ var searchData=
   ['compare_5fmps_5ffiles_45',['compare_mps_files',['../classcompare__mps__files_1_1compare__mps__files.html',1,'compare_mps_files']]],
   ['compareareaname_46',['CompareAreaName',['../structAntares_1_1Data_1_1CompareAreaName.html',1,'Antares::Data']]],
   ['comparebindingconstraintname_47',['CompareBindingConstraintName',['../structAntares_1_1Data_1_1CompareBindingConstraintName.html',1,'Antares::Data']]],
-  ['comparebystudymode_48',['CompareByStudyMode',['../structAntares_1_1Forms_1_1CompareByStudyMode.html',1,'Antares::Forms']]],
+  ['comparebysimulationmode_48',['CompareBySimulationMode',['../structAntares_1_1Forms_1_1CompareBySimulationMode.html',1,'Antares::Forms']]],
   ['comparebytimestamp_49',['CompareByTimestamp',['../structAntares_1_1Forms_1_1CompareByTimestamp.html',1,'Antares::Forms']]],
   ['compareclustername_50',['CompareClusterName',['../structAntares_1_1Data_1_1CompareClusterName.html',1,'Antares::Data']]],
   ['comparedesc_51',['CompareDesc',['../classAntares_1_1Window_1_1CompareDesc.html',1,'Antares::Window']]],

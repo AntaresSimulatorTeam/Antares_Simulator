@@ -1,6 +1,5 @@
 var NAVTREEINDEX24 =
 {
-"structAntares_1_1Window_1_1Inspector_1_1PAdequacyPatchMode.html":[4,0,0,16,1,9],
 "structAntares_1_1Window_1_1Inspector_1_1PAreaColor.html":[4,0,0,16,1,10],
 "structAntares_1_1Window_1_1Inspector_1_1PAreaColor_1_1Color.html":[4,0,0,16,1,10,0],
 "structAntares_1_1Window_1_1Inspector_1_1PAreaFiltering.html":[4,0,0,16,1,11],
@@ -52,17 +51,17 @@ var NAVTREEINDEX24 =
 "structAntares_1_1Window_1_1Inspector_1_1PLinkStyle.html":[4,0,0,16,1,56],
 "structAntares_1_1Window_1_1Inspector_1_1PLinkWidth.html":[4,0,0,16,1,57],
 "structAntares_1_1Window_1_1Inspector_1_1PRnClusterTSMode.html":[4,0,0,16,1,58],
-"structAntares_1_1Window_1_1Inspector_1_1PStudy1stJanuary.html":[4,0,0,16,1,59],
-"structAntares_1_1Window_1_1Inspector_1_1PStudyBuildingMode.html":[4,0,0,16,1,60],
-"structAntares_1_1Window_1_1Inspector_1_1PStudyCalBegin.html":[4,0,0,16,1,61],
-"structAntares_1_1Window_1_1Inspector_1_1PStudyCalEnd.html":[4,0,0,16,1,62],
-"structAntares_1_1Window_1_1Inspector_1_1PStudyCalendarMonth.html":[4,0,0,16,1,63],
-"structAntares_1_1Window_1_1Inspector_1_1PStudyCalendarWeek.html":[4,0,0,16,1,64],
-"structAntares_1_1Window_1_1Inspector_1_1PStudyGeographicTrimming.html":[4,0,0,16,1,65],
-"structAntares_1_1Window_1_1Inspector_1_1PStudyHorizon.html":[4,0,0,16,1,66],
-"structAntares_1_1Window_1_1Inspector_1_1PStudyLeapYear.html":[4,0,0,16,1,67],
-"structAntares_1_1Window_1_1Inspector_1_1PStudyMCScenarios.html":[4,0,0,16,1,68],
-"structAntares_1_1Window_1_1Inspector_1_1PStudyMode.html":[4,0,0,16,1,69],
+"structAntares_1_1Window_1_1Inspector_1_1PSimulationMode.html":[4,0,0,16,1,59],
+"structAntares_1_1Window_1_1Inspector_1_1PStudy1stJanuary.html":[4,0,0,16,1,60],
+"structAntares_1_1Window_1_1Inspector_1_1PStudyBuildingMode.html":[4,0,0,16,1,61],
+"structAntares_1_1Window_1_1Inspector_1_1PStudyCalBegin.html":[4,0,0,16,1,62],
+"structAntares_1_1Window_1_1Inspector_1_1PStudyCalEnd.html":[4,0,0,16,1,63],
+"structAntares_1_1Window_1_1Inspector_1_1PStudyCalendarMonth.html":[4,0,0,16,1,64],
+"structAntares_1_1Window_1_1Inspector_1_1PStudyCalendarWeek.html":[4,0,0,16,1,65],
+"structAntares_1_1Window_1_1Inspector_1_1PStudyGeographicTrimming.html":[4,0,0,16,1,66],
+"structAntares_1_1Window_1_1Inspector_1_1PStudyHorizon.html":[4,0,0,16,1,67],
+"structAntares_1_1Window_1_1Inspector_1_1PStudyLeapYear.html":[4,0,0,16,1,68],
+"structAntares_1_1Window_1_1Inspector_1_1PStudyMCScenarios.html":[4,0,0,16,1,69],
 "structAntares_1_1Window_1_1Inspector_1_1PStudyPlaylist.html":[4,0,0,16,1,70],
 "structAntares_1_1Window_1_1Inspector_1_1PStudySynthesis.html":[4,0,0,16,1,71],
 "structAntares_1_1Window_1_1Inspector_1_1PStudyThematicTrimming.html":[4,0,0,16,1,72],
@@ -249,5 +248,6 @@ var NAVTREEINDEX24 =
 "unfeasible-pb-analyzer_8h_source.html":[5,0,0,2,2,4],
 "unload-data_8h_source.html":[5,0,0,5,0,0,0,2,7],
 "unload-data_8hxx_source.html":[5,0,0,5,0,0,0,2,8],
-"unsupliedEnergy_8h_source.html":[5,0,0,2,9,2,39]
+"unsupliedEnergy_8h_source.html":[5,0,0,2,9,2,39],
+"updater_8hxx_source.html":[5,0,0,1,0,21,8,16]
 };

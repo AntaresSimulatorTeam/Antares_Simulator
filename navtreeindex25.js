@@ -1,6 +1,5 @@
 var NAVTREEINDEX25 =
 {
-"updater_8hxx_source.html":[5,0,0,1,0,21,8,16],
 "utils_8hxx_source.html":[5,0,0,1,0,23,0,0,0,1],
 "validator_8h_source.html":[5,0,0,5,2,1,15],
 "variable-collector_8h_source.html":[5,0,0,5,2,2,10,1,2],
@@ -38,7 +37,6 @@ var NAVTREEINDEX25 =
 "xcast-k_8hxx_source.html":[5,0,0,5,2,1,1,1,1,1,23],
 "xcast-translation_8h_source.html":[5,0,0,5,2,1,1,1,1,1,24],
 "xcast-translation_8hxx_source.html":[5,0,0,5,2,1,1,1,1,1,25],
-"xpansion_8h_source.html":[5,0,0,1,0,35],
 "zip__writer_8h_source.html":[5,0,0,1,0,24,1,2],
 "zip__writer_8hxx_source.html":[5,0,0,1,0,24,1,3]
 };
