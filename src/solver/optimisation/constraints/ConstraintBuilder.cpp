@@ -149,7 +149,7 @@ ConstraintBuilder& ConstraintBuilder::HydroLevel(unsigned int index, double coef
 
 ConstraintBuilder& ConstraintBuilder::Overflow(unsigned int index, double coeff)
 {
-    AddVariable(GetVariableManager(offset, delta).Overflow(index), coeff);
+    AddVariable(GetVariableManager(0, 0).Overflow(index), coeff);
     return *this;
 }
 
@@ -171,11 +171,7 @@ ConstraintBuilder& ConstraintBuilder::NegativeUnsuppliedEnergy(unsigned int inde
     return *this;
 }
 
-ConstraintBuilder& ConstraintBuilder::LayerStorage(unsigned area,
-                                                         unsigned layer,
-                                                         double coeff,
-                                                         int offset,
-                                                         int delta)
+ConstraintBuilder& ConstraintBuilder::LayerStorage(unsigned area, unsigned layer, double coeff)
 {
     AddVariable(GetVariableManager(0, 0).LayerStorage(area, layer), coeff);
     return *this;
