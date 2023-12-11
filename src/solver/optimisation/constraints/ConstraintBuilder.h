@@ -213,7 +213,7 @@ public:
 
     ConstraintBuilder& NumberBreakingDownDispatchableUnits(unsigned int index, double coeff);
 
-    ConstraintBuilder& NTCDirect(unsigned int index, double coeff);
+    ConstraintBuilder& NTCDirect(unsigned int index, double coeff, int offset = 0, int delta = 0);
 
     ConstraintBuilder& IntercoDirectCost(unsigned int index, double coeff);
 
