@@ -37,8 +37,8 @@ namespace Antares::Data::ShortTermStorage
 class STStorageCluster
 {
 public:
-    bool validate();
     bool enabled() const;
+    bool validate() const;
 
     bool loadFromSection(const IniFile::Section& section);
     bool loadSeries(const std::string& folder) const;
@@ -49,7 +49,7 @@ public:
     std::string id;
 
     std::shared_ptr<Series> series = std::make_shared<Series>();
-    Properties properties;
+    mutable Properties properties;
 
 };
 } // namespace Antares::Data::ShortTermStorage

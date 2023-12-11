@@ -252,7 +252,7 @@ BOOST_FIXTURE_TEST_CASE(check_container_properties_enabled_load, Fixture)
 
     BOOST_CHECK(container.createSTStorageClustersFromIniFile(folder));
 
-    auto& properties = container.storagesByIndex[0]->properties;
+    auto& properties = container.storagesByIndex[0].properties;
 
     BOOST_CHECK(properties.enabled);
     BOOST_CHECK_EQUAL(container.count(), 1);
@@ -267,7 +267,7 @@ BOOST_FIXTURE_TEST_CASE(check_container_properties_disabled_load, Fixture)
 
     BOOST_CHECK(container.createSTStorageClustersFromIniFile(folder));
 
-    auto& properties = container.storagesByIndex[0]->properties;
+    auto& properties = container.storagesByIndex[0].properties;
 
     BOOST_CHECK(!properties.enabled);
     BOOST_CHECK_EQUAL(container.count(), 0);
@@ -281,7 +281,7 @@ BOOST_FIXTURE_TEST_CASE(check_container_properties_wrong_value, Fixture)
     createIniFileWrongValue();
 
     BOOST_CHECK(container.createSTStorageClustersFromIniFile(folder));
-    BOOST_CHECK(!container.storagesByIndex[0]->properties.validate());
+    BOOST_CHECK(!container.storagesByIndex[0].properties.validate());
 
     removeIniFile();
 }

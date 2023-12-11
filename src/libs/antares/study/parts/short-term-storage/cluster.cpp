@@ -68,7 +68,7 @@ bool STStorageCluster::enabled() const
     return properties.enabled;
 }
 
-bool STStorageCluster::validate()
+bool STStorageCluster::validate() const
 {
     logs.debug() << "Validating properties and series for st storage: " << id;
     return properties.validate() && series->validate();
