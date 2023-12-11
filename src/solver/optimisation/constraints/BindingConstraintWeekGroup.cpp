@@ -10,7 +10,7 @@ BindingConstraintWeekData BindingConstraintWeekGroup::GetBindingConstraintWeekDa
                 .NumeroDeContrainteDesContraintesCouplantes};
 }
 
-void BindingConstraintWeekGroup::buildConstraints()
+void BindingConstraintWeekGroup::BuildConstraints()
 {
     auto bindingConstraintWeekData = GetBindingConstraintWeekDataFromProblemHebdo();
     BindingConstraintWeek bindingConstraintWeek(builder_, bindingConstraintWeekData);

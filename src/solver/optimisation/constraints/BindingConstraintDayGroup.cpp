@@ -11,7 +11,7 @@ BindingConstraintDayData BindingConstraintDayGroup::GetBindingConstraintDayDataF
             .NumeroDeJourDuPasDeTemps = problemeHebdo_->NumeroDeJourDuPasDeTemps};
 }
 
-void BindingConstraintDayGroup::buildConstraints()
+void BindingConstraintDayGroup::BuildConstraints()
 {
     auto bindingConstraintDayData = GetBindingConstraintDayDataFromProblemHebdo();
     BindingConstraintDay bindingConstraintDay(builder_, bindingConstraintDayData);

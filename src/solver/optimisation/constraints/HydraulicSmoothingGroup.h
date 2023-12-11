@@ -7,7 +7,7 @@ public:
     using ConstraintGroup::ConstraintGroup;
 
     
-    void buildConstraints() override;
+    void BuildConstraints() override;
 
 private:
 };

@@ -12,7 +12,7 @@ public:
     {
     }
 
-    virtual void buildConstraints() = 0;
+    virtual void BuildConstraints() = 0;
     PROBLEME_HEBDO* problemeHebdo_;
     ConstraintBuilder& builder_;
 };

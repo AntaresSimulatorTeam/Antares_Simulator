@@ -12,7 +12,7 @@ NbUnitsOutageLessThanNbUnitsStopData
  * @brief build NbUnitsOutageLessThanNbUnitsStopGroup constraints with
  * respect to default order
  */
-void NbUnitsOutageLessThanNbUnitsStopGroup::buildConstraints()
+void NbUnitsOutageLessThanNbUnitsStopGroup::BuildConstraints()
 {
     auto data = GetNbUnitsOutageLessThanNbUnitsStopDataFromProblemHebdo();
     NbUnitsOutageLessThanNbUnitsStop nbUnitsOutageLessThanNbUnitsStop(builder_, data);

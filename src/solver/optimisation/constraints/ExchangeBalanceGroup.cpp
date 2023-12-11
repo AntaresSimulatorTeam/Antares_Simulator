@@ -9,7 +9,7 @@ ExchangeBalanceData ExchangeBalanceGroup::GetExchangeBalanceDataFromProblemHebdo
             .NumeroDeContrainteDeSoldeDEchange = problemeHebdo_->NumeroDeContrainteDeSoldeDEchange};
 }
 
-void ExchangeBalanceGroup::buildConstraints()
+void ExchangeBalanceGroup::BuildConstraints()
 {
     auto data = GetExchangeBalanceDataFromProblemHebdo();
     ExchangeBalance exchangeBalance(builder_, data);

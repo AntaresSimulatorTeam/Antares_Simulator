@@ -42,7 +42,7 @@ BindingConstraintHourData Group1::GetBindingConstraintHourData()
        .PaliersThermiquesDuPays = problemeHebdo_->PaliersThermiquesDuPays};
 }
 
-void Group1::buildConstraints()
+void Group1::BuildConstraints()
 {
     auto areaBalanceData = GetAreaBalanceData();
     AreaBalance areaBalance(builder_, areaBalanceData);

@@ -12,5 +12,5 @@ class ConsistenceNumberOfDispatchableUnitsGroup : public AbstractStartUpCostsGro
 public:
     using AbstractStartUpCostsGroup::AbstractStartUpCostsGroup;
 
-    void buildConstraints() override;
+    void BuildConstraints() override;
 };
