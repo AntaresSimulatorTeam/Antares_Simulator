@@ -204,18 +204,16 @@ template<class ClusterT>
 typename ClusterList<ClusterT>::SharedPtr ClusterList<ClusterT>::add(
   const ClusterList<ClusterT>::SharedPtr& newcluster)
 {
-    if (newcluster)
-    {
-        if (exists(newcluster->id()))
-            return this->find(newcluster);
+    if (!newcluster)
+        return nullptr;
 
-        newcluster->index = (uint)size();
-        cluster.push_back(newcluster);
-        ++(groupCount[newcluster->groupId()]);
-        rebuildIndex();
-        return cluster.back();
-    }
-    return nullptr;
+    if (exists(newcluster->id()))
+        return this->find(newcluster);
+
+    cluster.push_back(newcluster);
+    ++(groupCount[newcluster->groupId()]);
+    rebuildIndex();
+    return newcluster;
 }
 
 template<class ClusterT>
