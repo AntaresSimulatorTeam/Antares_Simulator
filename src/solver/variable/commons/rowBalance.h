@@ -166,7 +166,7 @@ public:
                        area->miscGen.entry[Data::fhhRowBalance],
                        sizeof(double) * height);
 
-        if (study->parameters.mode == Data::stdmAdequacy)
+        if (study->parameters.mode == Data::SimulationMode::Adequacy)
         {
             for (unsigned int h = 0; h != height; ++h)
                 pValuesForTheCurrentYear.hour[h]

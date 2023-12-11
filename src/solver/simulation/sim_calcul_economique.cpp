@@ -83,7 +83,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
 
     auto& parameters = study.parameters;
 
-    problem.Expansion = parameters.expansion;
+    problem.Expansion = (parameters.mode == Data::SimulationMode::Expansion);
     problem.firstWeekOfSimulation = false;
 
     problem.hydroHotStart

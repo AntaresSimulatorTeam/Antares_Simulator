@@ -937,7 +937,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         ret = area.thermal.list.loadEconomicCosts(study, buffer) && ret;
 
         // In adequacy mode, all thermal clusters must be in 'mustrun' mode
-        if (study.usedByTheSolver && study.parameters.mode == stdmAdequacy)
+        if (study.usedByTheSolver && study.parameters.mode == SimulationMode::Adequacy)
             area.thermal.list.enableMustrunForEveryone();
     }
 

@@ -376,7 +376,7 @@ bool HydroManagement::checkMinGeneration(uint year) const
     return ret;
 }
 
-void HydroManagement::prepareNetDemand(uint numSpace, uint year, Data::StudyMode mode)
+void HydroManagement::prepareNetDemand(uint numSpace, uint year, Data::SimulationMode mode)
 {
     areas_.each([this, &year, &numSpace, &mode](const Data::Area& area) {
         uint z = area.index;
@@ -403,7 +403,7 @@ void HydroManagement::prepareNetDemand(uint numSpace, uint year, Data::StudyMode
                 netdemand = + loadSeries[hour]
                             - windSeries[hour] - scratchpad.miscGenSum[hour]
                             - solarSeries[hour] - ror[hour]
-                            - ((mode != Data::stdmAdequacy) ? scratchpad.mustrunSum[hour]
+                            - ((mode != Data::SimulationMode::Adequacy) ? scratchpad.mustrunSum[hour]
                                                              : scratchpad.originalMustrunSum[hour]);
             }
 
@@ -412,7 +412,7 @@ void HydroManagement::prepareNetDemand(uint numSpace, uint year, Data::StudyMode
             {
                 netdemand = loadSeries[hour]
                             - scratchpad.miscGenSum[hour] - ror[hour]
-                            - ((mode != Data::stdmAdequacy) ? scratchpad.mustrunSum[hour]
+                            - ((mode != Data::SimulationMode::Adequacy) ? scratchpad.mustrunSum[hour]
                                                              : scratchpad.originalMustrunSum[hour]);
 
                 area.renewable.list.each([&](const Antares::Data::RenewableCluster& cluster) {

@@ -44,7 +44,7 @@ StudyLoadOptions::StudyLoadOptions() :
  simplexOptimizationRange(sorUnknown),
  mpsToExport(false),
  ignoreConstraints(false),
- forceMode(stdmUnknown),
+ forceMode(SimulationMode::Unknown),
  enableParallel(false),
  forceParallel(false),
  maxNbYearsInParallel(0),
@@ -74,11 +74,11 @@ void StudyLoadOptions::checkForceSimulationMode()
         throw Error::InvalidSimulationMode();
     }
     if (forceExpansion)
-        forceMode = stdmExpansion;
+        forceMode = SimulationMode::Expansion;
     else if (forceEconomy)
-        forceMode = stdmEconomy;
+        forceMode = SimulationMode::Economy;
     else if (forceAdequacy)
-        forceMode = stdmAdequacy;
+        forceMode = SimulationMode::Adequacy;
 }
 } // namespace Data
 } // namespace Antares

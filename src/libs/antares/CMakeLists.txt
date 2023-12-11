@@ -26,7 +26,6 @@ set(SRC
     config.h
     constants.h
 	constants.cpp
-    xpansion.h
 	# Misc
 
 	locale.h
