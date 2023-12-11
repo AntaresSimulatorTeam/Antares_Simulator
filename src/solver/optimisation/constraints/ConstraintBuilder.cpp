@@ -111,9 +111,12 @@ ConstraintBuilder& ConstraintBuilder::ShortTermStorageWithdrawal(unsigned int in
     return *this;
 }
 
-ConstraintBuilder& ConstraintBuilder::ShortTermStorageLevel(unsigned int index, double coeff)
+ConstraintBuilder& ConstraintBuilder::ShortTermStorageLevel(unsigned int index,
+                                                            double coeff,
+                                                            int offset,
+                                                            int delta)
 {
-    AddVariable(GetVariableManager(0, 0).ShortTermStorageLevel(index), coeff);
+    AddVariable(GetVariableManager(offset, delta).ShortTermStorageLevel(index), coeff);
     return *this;
 }
 
