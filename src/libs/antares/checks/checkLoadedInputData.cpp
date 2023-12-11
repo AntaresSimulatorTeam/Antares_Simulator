@@ -221,9 +221,14 @@ void checkMaintenancePlanningSettings(const Antares::Data::Parameters* parameter
 
 void checkMaintenancePlanningTsNum(const Antares::Data::Parameters* parameters)
 {
-    if (parameters->maintenancePlanning.getScenarioLength()
-          * parameters->maintenancePlanning.getScenarioNumber()
-        != parameters->nbTimeSeriesThermal)
+    bool activeThermalTSGenAndMntPlanning
+      = (parameters->maintenancePlanning.isOptimized()
+         && (parameters->timeSeriesToGenerate & Antares::Data::timeSeriesThermal));
+
+    if (activeThermalTSGenAndMntPlanning
+        && parameters->maintenancePlanning.getScenarioLength()
+               * parameters->maintenancePlanning.getScenarioNumber()
+             != parameters->nbTimeSeriesThermal)
         throw Error::IncompatibleMaintenancePlanningTsNum();
 }
 
