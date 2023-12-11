@@ -56,15 +56,17 @@ std::vector<int> OptimizationParameters::calculateNumberOfMaintenances(
 
     for (int unit = 0; unit != cluster.unitCount; ++unit)
     {
-        int div = (timeHorizon_ + getDaysSinceLastMaintenance(cluster, unit)
+        int div = (timeHorizon_
+                   + std::min(getAverageDurationBetweenMaintenances(cluster) - 1,
+                              getDaysSinceLastMaintenance(cluster, unit))
                    - getAverageDurationBetweenMaintenances(cluster))
                   / (getAverageDurationBetweenMaintenances(cluster)
                      + getAverageMaintenanceDuration(cluster));
         numberOfMaintenances[unit] = std::max(1 + div, minNumberOfMaintenances);
 
-        // Exclude Edge case:
-        // first maintenance starts in day 0 + last maintenance starts last day of Horizon
-        // and breaks the solver - can only happen for number of maintenances > 2
+        // Exclude Edge cases:
+        // the above fix should take care of this
+        // but leave it for now till I am 100% sure!
         int earliestStart
           = std::max(0, calculateUnitEarliestStartOfFirstMaintenance(cluster, unit));
         int lastMaintenanceStart = earliestStart
