@@ -38,8 +38,9 @@ class STStorageCluster
 {
 public:
     bool validate();
-    bool loadFromSection(const IniFile::Section& section);
+    bool enabled() const;
 
+    bool loadFromSection(const IniFile::Section& section);
     bool loadSeries(const std::string& folder) const;
 
     bool saveProperties(const std::string& path) const;
