@@ -43,36 +43,21 @@ void OptimizedThermalGenerator::fixBoundsFirstMnt(const Unit& unit)
       = par.calculateUnitEarliestStartOfFirstMaintenance(*(unit.parentCluster), unit.index);
     int latestStartOfFirstMaintenance
       = par.calculateUnitLatestStartOfFirstMaintenance(*(unit.parentCluster), unit.index);
-    const auto& cluster = *(unit.parentCluster);
-    std::string ctName;
+
     //
     // We assume here that vector "maintenance" has member [0]
     // meaning: for each unit we assume we have at least one maintenance
     // this assumption is ok - since method calculateNumberOfMaintenances()
     // will never return number bellow 2
 
-    // we will fix the bounds using new constrains
-    // I tried to avoid adding new constraints to the problem
-    // by fixing variables bounds ->SetBounds
-    // but it worked fine for some cases and for some other crashed the solver
-    // so safer option is with new constraints
-
     if (earliestStartOfFirstMaintenance >= 1)
     {
         // start[u][0][tauLower-1] = 0
-        // unit.maintenances[0].start[earliestStartOfFirstMaintenance - 1]->SetBounds(0.0, 0.0);
-        ctName = "start[u][0][tauLower-1] = 0 -> [" + cluster.getFullName().to<std::string>() + "."
-                 + std::to_string(unit.index) + "]";
-        MPConstraint* ct = solver.MakeRowConstraint(0., 0., ctName);
-        ct->SetCoefficient(unit.maintenances[0].start[earliestStartOfFirstMaintenance - 1], 1.0);
+        unit.maintenances[0].start[earliestStartOfFirstMaintenance - 1]->SetBounds(0.0, 0.0);
     }
 
     // start[u][0][tauUpper] = 1
-    // unit.maintenances[0].start[latestStartOfFirstMaintenance]->SetBounds(1.0, 1.0);
-    ctName = "start[u][0][tauUpper] = 1 -> [" + cluster.getFullName().to<std::string>() + "."
-             + std::to_string(unit.index) + "]";
-    MPConstraint* ct = solver.MakeRowConstraint(1.0, 1.0, ctName);
-    ct->SetCoefficient(unit.maintenances[0].start[latestStartOfFirstMaintenance], 1.0);
+    unit.maintenances[0].start[latestStartOfFirstMaintenance]->SetBounds(1.0, 1.0);
 
     return;
 }
@@ -93,12 +78,7 @@ void OptimizedThermalGenerator::fixBounds(const Unit& unit, int averageMaintenan
 // start[u][q][T] = 1
 void OptimizedThermalGenerator::fixBoundsStartSecondMnt(const Unit& unit, int mnt)
 {
-    // unit.maintenances[mnt].start[par.timeHorizon_ - 1]->SetBounds(1.0, 1.0);
-    const auto& cluster = *(unit.parentCluster);
-    std::string ctName = "start[u][q][T] = 1 -> [" + cluster.getFullName().to<std::string>() + "."
-                         + std::to_string(unit.index) + "][" + std::to_string(mnt) + "][T]";
-    MPConstraint* ct = solver.MakeRowConstraint(1.0, 1.0, ctName);
-    ct->SetCoefficient(unit.maintenances[mnt].start[par.timeHorizon_ - 1], 1.0);
+    unit.maintenances[mnt].start[par.timeHorizon_ - 1]->SetBounds(1.0, 1.0);
 }
 
 // End of the maintenance can't happen before average maintenance duration
@@ -107,16 +87,9 @@ void OptimizedThermalGenerator::fixBoundsMntEnd(const Unit& unit,
                                                 int mnt,
                                                 int averageMaintenanceDuration)
 {
-    const auto& cluster = *(unit.parentCluster);
-    std::string ctName;
     for (int day = 0; day < averageMaintenanceDuration; ++day)
     {
-        // unit.maintenances[mnt].end[day]->SetBounds(0.0, 0.0);
-        ctName = "end[u][q][T = [0-average_maintenance_duration_per_unit]] = 0 -> ["
-                 + cluster.getFullName().to<std::string>() + "." + std::to_string(unit.index) + "]["
-                 + std::to_string(mnt) + "][" + std::to_string(day) + "]";
-        MPConstraint* ct = solver.MakeRowConstraint(0.0, 0.0, ctName);
-        ct->SetCoefficient(unit.maintenances[mnt].end[day], 1.0);
+        unit.maintenances[mnt].end[day]->SetBounds(0.0, 0.0);
     }
 }
 
