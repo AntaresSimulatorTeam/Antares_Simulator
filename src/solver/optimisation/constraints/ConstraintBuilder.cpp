@@ -83,8 +83,8 @@ ConstraintBuilder& ConstraintBuilder::NumberBreakingDownDispatchableUnits(unsign
 
 ConstraintBuilder& ConstraintBuilder::NTCDirect(unsigned int index,
                                                 double coeff,
-                                                int offset = 0,
-                                                int delta = 0)
+                                                int offset,
+                                                int delta)
 {
     AddVariable(GetVariableManager(offset, delta).NTCDirect(index), coeff);
     return *this;
