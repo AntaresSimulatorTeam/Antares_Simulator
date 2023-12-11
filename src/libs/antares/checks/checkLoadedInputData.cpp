@@ -219,4 +219,12 @@ void checkMaintenancePlanningSettings(const Antares::Data::Parameters* parameter
         throw Error::IncompatibleMaintenancePlanningUsage();
 }
 
+void checkMaintenancePlanningTsNum(const Antares::Data::Parameters* parameters)
+{
+    if (parameters->maintenancePlanning.getScenarioLength()
+          * parameters->maintenancePlanning.getScenarioNumber()
+        != parameters->nbTimeSeriesThermal)
+        throw Error::IncompatibleMaintenancePlanningTsNum();
+}
+
 } // namespace Antares::Check

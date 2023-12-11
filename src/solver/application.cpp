@@ -165,6 +165,7 @@ void Application::prepare(int argc, char* argv[])
     checkCO2CostColumnNumber(pStudy->areas);
 
     checkMaintenancePlanningSettings(pParameters);
+    checkMaintenancePlanningTsNum(pParameters);
 
     // Start the progress meter
     pStudy->initializeProgressMeter(pSettings.tsGeneratorsOnly);

@@ -172,5 +172,11 @@ IncompatibleMaintenancePlanningUsage::IncompatibleMaintenancePlanningUsage() :
 {
 }
 
+IncompatibleMaintenancePlanningTsNum::IncompatibleMaintenancePlanningTsNum() :
+ LoadingError("When generating thermal time series using Maintenance Planning, scenario length "
+              "* scenario number must be equal to number of thermal ts in Stochastic TS")
+{
+}
+
 } // namespace Error
 } // namespace Antares

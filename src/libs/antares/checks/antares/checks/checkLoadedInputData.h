@@ -47,5 +47,6 @@ void checkFuelCostColumnNumber(const Antares::Data::AreaList& areas);
 void checkCO2CostColumnNumber(const Antares::Data::AreaList& areas);
 
 void checkMaintenancePlanningSettings(const Antares::Data::Parameters* parameters);
+void checkMaintenancePlanningTsNum(const Antares::Data::Parameters* parameters);
 
 } // namespace Antares::Check
