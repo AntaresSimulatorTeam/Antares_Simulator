@@ -357,8 +357,8 @@ $(document).ready(function(){initNavTree('STStorageWithdrawalByCluster_8h_source
 <div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>            <span class="keywordflow">for</span> (uint clusterIndex = 0; clusterIndex &lt; nbClusters_; ++clusterIndex)</div>
 <div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>            {</div>
 <div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>                <span class="comment">// Write the data for the current year</span></div>
-<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>                <span class="keyword">const</span> <span class="keyword">auto</span>* cluster = shortTermStorage.storagesByIndex[clusterIndex];</div>
-<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>                results.variableCaption = cluster-&gt;properties.name;</div>
+<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>                <span class="keyword">const</span> <span class="keyword">auto</span>&amp; cluster = shortTermStorage.storagesByIndex[clusterIndex];</div>
+<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>                results.variableCaption = cluster.properties.name;</div>
 <div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>                results.variableUnit = <a class="code hl_function" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTstorageWithdrawalByCluster.html#a8aa7fe98f6adb2ed12c5c6374951cf7b">VCardType::Unit</a>();</div>
 <div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>                pValuesForTheCurrentYear[numSpace][clusterIndex].template buildAnnualSurveyReport&lt;VCardType&gt;(</div>
 <div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span>                    results, fileLevel, precision);</div>

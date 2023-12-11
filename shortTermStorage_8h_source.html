@@ -314,8 +314,8 @@ $(document).ready(function(){initNavTree('shortTermStorage_8h_source.html',''); 
 <div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>        <span class="keyword">using namespace </span>Antares::Data::ShortTermStorage;</div>
 <div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>        <span class="keywordflow">for</span> (uint stsIndex = 0; stsIndex &lt; state.area-&gt;shortTermStorage.count(); stsIndex++)</div>
 <div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>        {</div>
-<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>            <span class="keyword">const</span> <span class="keyword">auto</span>* cluster = state.area-&gt;shortTermStorage.storagesByIndex[stsIndex];</div>
-<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>            <span class="keyword">const</span> uint group = groupIndex(cluster-&gt;properties.group);</div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>            <span class="keyword">const</span> <span class="keyword">auto</span>&amp; cluster = state.area-&gt;shortTermStorage.storagesByIndex[stsIndex];</div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>            <span class="keyword">const</span> uint group = groupIndex(cluster.properties.group);</div>
 <div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span> </div>
 <div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>            <span class="comment">// Injection</span></div>
 <div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>            pValuesForTheCurrentYear[numSpace][3 * group][state.hourInTheYear]</div>
