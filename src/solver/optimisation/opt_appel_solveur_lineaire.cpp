@@ -93,8 +93,7 @@ private:
 struct SimplexResult
 {
     bool success = false;
-    long solveTime = 0;
-    long updateTime = 0;
+    TIME_MEASURE timeMeasure;
     mpsWriterFactory mps_writer_factory;
 };
 
@@ -116,8 +115,7 @@ static SimplexResult OPT_TryToCallSimplex(
     const int opt = optimizationNumber - 1;
     assert(opt >= 0 && opt < 2);
     OptimizationStatistics& optimizationStatistics = problemeHebdo->optimizationStatistics[opt];
-
-    long updateTime = 0;
+    TIME_MEASURE timeMeasure;
     if (!PremierPassage)
     {
         ProbSpx = nullptr;
@@ -178,8 +176,8 @@ static SimplexResult OPT_TryToCallSimplex(
                                                   ProblemeAResoudre->NombreDeContraintes);
             }
             updateMeasure.tick();
-            optimizationStatistics.addUpdateTime(updateMeasure.duration_ms());
-            updateTime += updateMeasure.duration_ms();
+            timeMeasure.updateTime = updateMeasure.duration_ms();
+            optimizationStatistics.addUpdateTime(timeMeasure.updateTime);
         }
     }
 
@@ -259,8 +257,8 @@ static SimplexResult OPT_TryToCallSimplex(
         }
     }
     measure.tick();
-    long solveTime = measure.duration_ms();
-    optimizationStatistics.addSolveTime(solveTime);
+    timeMeasure.solveTime = measure.duration_ms();
+    optimizationStatistics.addSolveTime(timeMeasure.solveTime);
 
     ProblemeAResoudre->ExistenceDUneSolution = Probleme.ExistenceDUneSolution;
     if (ProblemeAResoudre->ExistenceDUneSolution != OUI_SPX && PremierPassage)
@@ -283,7 +281,7 @@ static SimplexResult OPT_TryToCallSimplex(
             {
                 logs.info() << " solver: resetting";
             }
-            return {.success=false, .solveTime=solveTime, .updateTime=updateTime,
+            return {.success=false, .timeMeasure=timeMeasure,
                     .mps_writer_factory=mps_writer_factory};
         }
 
@@ -292,7 +290,7 @@ static SimplexResult OPT_TryToCallSimplex(
             throw FatalError("Internal error: insufficient memory");
         }
     }
-    return {.success=true, .solveTime=solveTime, .updateTime=updateTime,
+    return {.success=true, .timeMeasure=timeMeasure,
             .mps_writer_factory=mps_writer_factory};
 }
 
@@ -314,7 +312,7 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
 
     bool PremierPassage = true;
 
-    struct SimplexResult simplexResult =
+    SimplexResult simplexResult =
         OPT_TryToCallSimplex(options, problemeHebdo, Probleme, NumIntervalle, optimizationNumber,
                 optPeriodStringGenerator, PremierPassage, writer);
 
@@ -324,9 +322,6 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
         simplexResult = OPT_TryToCallSimplex(options, problemeHebdo, Probleme,  NumIntervalle, optimizationNumber,
                 optPeriodStringGenerator, PremierPassage, writer);
     }
-
-    long solveTime = simplexResult.solveTime;
-    long updateTime = simplexResult.updateTime;
 
     if (ProblemeAResoudre->ExistenceDUneSolution == OUI_SPX)
     {
@@ -351,17 +346,20 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
                 *pt = ProblemeAResoudre->CoutsReduits[i];
         }
 
+        {
+            const int opt = optimizationNumber - 1;
+            assert(opt >= 0 && opt < 2);
+            problemeHebdo->timeMeasure[opt] = simplexResult.timeMeasure;
+        }
+
+        // TODO remove this if..else
         if (optimizationNumber == PREMIERE_OPTIMISATION)
         {
             problemeHebdo->coutOptimalSolution1[NumIntervalle] = CoutOpt;
-            problemeHebdo->timeMeasure.tempsResolution1 = solveTime;
-            problemeHebdo->timeMeasure.updateTime1 = updateTime;
         }
         else
         {
             problemeHebdo->coutOptimalSolution2[NumIntervalle] = CoutOpt;
-            problemeHebdo->timeMeasure.tempsResolution2 = solveTime;
-            problemeHebdo->timeMeasure.updateTime2 = updateTime;
         }
         for (int Cnt = 0; Cnt < ProblemeAResoudre->NombreDeContraintes; Cnt++)
         {
