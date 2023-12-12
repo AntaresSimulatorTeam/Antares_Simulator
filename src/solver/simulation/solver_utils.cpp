@@ -41,7 +41,7 @@ void costStatistics::addCost(const double cost)
     costAverage += cost / nbPerformedYears;
 
     // Standard deviation
-costStdDeviation += cost * cost / nbPerformedYears;
+    costStdDeviation += cost * cost / nbPerformedYears;
 
     // Min and Max
     if (cost < costMin)
