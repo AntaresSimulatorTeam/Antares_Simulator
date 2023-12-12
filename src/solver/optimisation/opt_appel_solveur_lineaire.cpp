@@ -351,17 +351,20 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
                 *pt = ProblemeAResoudre->CoutsReduits[i];
         }
 
+        {
+            const int opt = optimizationNumber - 1;
+            assert(opt >= 0 && opt < 2);
+            problemeHebdo->timeMeasure[opt].solveTime = solveTime;
+            problemeHebdo->timeMeasure[opt].updateTime = updateTime;
+        }
+        // TODO remove this if..else
         if (optimizationNumber == PREMIERE_OPTIMISATION)
         {
             problemeHebdo->coutOptimalSolution1[NumIntervalle] = CoutOpt;
-            problemeHebdo->timeMeasure.tempsResolution1 = solveTime;
-            problemeHebdo->timeMeasure.updateTime1 = updateTime;
         }
         else
         {
             problemeHebdo->coutOptimalSolution2[NumIntervalle] = CoutOpt;
-            problemeHebdo->timeMeasure.tempsResolution2 = solveTime;
-            problemeHebdo->timeMeasure.updateTime2 = updateTime;
         }
         for (int Cnt = 0; Cnt < ProblemeAResoudre->NombreDeContraintes; Cnt++)
         {
