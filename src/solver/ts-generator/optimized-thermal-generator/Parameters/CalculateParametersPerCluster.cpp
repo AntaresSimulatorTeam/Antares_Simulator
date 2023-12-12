@@ -63,19 +63,6 @@ std::vector<int> OptimizationParameters::calculateNumberOfMaintenances(
                   / (getAverageDurationBetweenMaintenances(cluster)
                      + getAverageMaintenanceDuration(cluster));
         numberOfMaintenances[unit] = std::max(1 + div, minNumberOfMaintenances);
-
-        // Exclude Edge cases:
-        // the above fix should take care of this
-        // but leave it for now till I am 100% sure!
-        int earliestStart
-          = std::max(0, calculateUnitEarliestStartOfFirstMaintenance(cluster, unit));
-        int lastMaintenanceStart = earliestStart
-                                   + (numberOfMaintenances[unit] - 1)
-                                       * (getAverageDurationBetweenMaintenances(cluster)
-                                          + getAverageMaintenanceDuration(cluster));
-
-        if (lastMaintenanceStart >= timeHorizon_)
-            numberOfMaintenances[unit]--;
     }
 
     return numberOfMaintenances;
