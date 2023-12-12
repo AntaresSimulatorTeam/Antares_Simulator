@@ -472,8 +472,8 @@ struct COUTS_DE_TRANSPORT
 
 struct TIME_MEASURE
 {
-    long solveTime;
-    long updateTime;
+    long solveTime = 0;
+    long updateTime = 0;
 };
 
 using TIME_MEASURES = std::array<TIME_MEASURE, 2>;
