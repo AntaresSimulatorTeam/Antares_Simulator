@@ -68,8 +68,8 @@ void Management::createComponents()
 
     const wxSize ourDefaultSize(55, wxDefaultSize.GetHeight());
 
-    constexpr auto right = (wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-    constexpr auto left = (wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+    const auto right = (wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+    const auto left = (wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
     auto* pGrid = new wxFlexGridSizer(6, 0, 8);
     sizer->Add(pGrid, 0, wxALL, 15);
