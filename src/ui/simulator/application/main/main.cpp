@@ -809,7 +809,7 @@ void ApplWnd::title(const wxString& s)
     wxString t;
     if (StudyHasBeenModified())
         t << wxT("* ");
-    t << (s.IsEmpty() ? wxT("<untitled>") : s) << wxT(" - Antares Simulator")
+    t << (s.IsEmpty() ? wxString(wxT("<untitled>")) : s) << wxT(" - Antares Simulator")
 #ifndef NDEBUG
       << wxT(" - DEVELOPER PREVIEW")
 #endif

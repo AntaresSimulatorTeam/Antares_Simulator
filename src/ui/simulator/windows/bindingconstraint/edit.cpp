@@ -273,7 +273,7 @@ void BindingConstraintInfoEditor::onSave(void*)
 
     if (pConstraint)
     {
-        if (not newname.empty() and pConstraint->name() != newname)
+        if (not newname.empty() and pConstraint->name() != Data::ConstraintName(newname))
         {
             if (not study.bindingConstraints.rename(pConstraint, newname))
             {
