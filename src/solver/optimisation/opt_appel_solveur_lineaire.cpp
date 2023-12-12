@@ -43,8 +43,8 @@ extern "C"
 #include <antares/logs/logs.h>
 #include <antares/fatal-error.h>
 
-#include "../utils/mps_utils.h"
-#include "../utils/filename.h"
+#include "antares/solver/utils/mps_utils.h"
+#include "antares/solver/utils/filename.h"
 
 #include "../infeasible-problem-analysis/unfeasible-pb-analyzer.h"
 #include "../infeasible-problem-analysis/variables-bounds-consistency.h"

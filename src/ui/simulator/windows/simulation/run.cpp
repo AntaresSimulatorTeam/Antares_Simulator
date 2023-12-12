@@ -56,15 +56,11 @@
 #include <antares/config.h>
 #include <antares/Enum.hpp>
 
-#include <solver/utils/ortools_utils.h>
+#include <antares/solver/utils/ortools_utils.h>
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Window
-{
-namespace Simulation
+namespace Antares::Window::Simulation
 {
 enum
 {
@@ -834,6 +830,6 @@ void Run::onOrtoolsCheckboxChanged(wxCommandEvent& WXUNUSED(event))
         sizer->Fit(this);
 }
 
-} // namespace Simulation
-} // namespace Window
-} // namespace Antares
+} // namespace Antares::Window::Simulation
+
+

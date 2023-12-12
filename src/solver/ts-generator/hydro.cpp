@@ -30,8 +30,8 @@
 #include <antares/benchmarking/DurationCollector.h>
 #include <antares/fatal-error.h>
 #include <antares/writer/i_writer.h>
-#include "../misc/cholesky.h"
-#include "../misc/matrix-dp-make.h"
+#include "antares/solver/misc/cholesky.h"
+#include "antares/solver/misc/matrix-dp-make.h"
 
 using namespace Antares;
 using namespace Yuni;
