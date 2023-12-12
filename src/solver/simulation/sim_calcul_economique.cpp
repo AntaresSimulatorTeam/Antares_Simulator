@@ -53,7 +53,7 @@ static void importShortTermStorages(
         int storageIndex = 0;
         for (auto st : areas[areaIndex]->shortTermStorage.storagesByIndex)
         {
-            if (!st->enabled())
+            if (!st.enabled())
                 continue;
 
             ::ShortTermStorage::PROPERTIES& toInsert = ShortTermStorageOut[areaIndex][storageIndex];
