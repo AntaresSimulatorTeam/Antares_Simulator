@@ -26,7 +26,6 @@
 */
 
 #include "management.h"
-#include <wx/stattext.h>
 #include <wx/defs.h>
 #include <wx/statline.h>
 
