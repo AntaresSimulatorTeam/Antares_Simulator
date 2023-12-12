@@ -95,12 +95,12 @@ var NAVTREEINDEX =
 "classAntares_1_1Window_1_1OutputViewer_1_1SpotlightProvider.html#a7b502e9b2b16aa33369617029dc49757",
 "classIProvider.html#a5b343392ab876cdf80bd72eb02ab6d2e",
 "control_8h_source.html",
-"dir_f0800fc495482c581e54bbff12fc1fa1.html",
-"libs_2antares_2config_8h_source.html",
-"scBuilderDataInterface_8h_source.html",
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ShortTermStorageByGroup_1_1Statistics.html",
-"structAntares_1_1Window_1_1Inspector_1_1PAreaColor.html",
-"utils_8hxx_source.html"
+"dir_e9a9943fb622a9630a61c5d56fdc9845.html",
+"jobs_8h_source.html",
+"results_8hxx_source.html",
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Price_1_1Statistics.html",
+"structAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1Parameter_1_1Value.html",
+"ui_2simulator_2windows_2sets_8h_source.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
