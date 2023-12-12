@@ -1,7 +1,7 @@
 #
 # Common FLAGS for all compilers
 #
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 
 set(COMMON_GCC_FLAGS "-Wall -W -Wextra -Wfatal-errors")
 if (NOT WIN32)
