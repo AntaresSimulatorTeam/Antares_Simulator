@@ -48,8 +48,6 @@ namespace TSGenerator
 namespace XCast
 {
 
-const unsigned int nbHoursADay = 24;
-
 enum
 {
     alpha = Data::XCast::dataCoeffAlpha,
@@ -153,7 +151,7 @@ void XCast::applyTransferFunction(PredicateT& predicate)
             }
 
             dailyResults = DATA[s];
-            for (h = 0; h != nbHoursADay; ++h)
+            for (h = 0; h != HOURS_PER_DAY; ++h)
             {
                 for (i = 0; i != tf.width; ++i)
                 {
@@ -385,8 +383,6 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
 
     if (pNeverInitialized)
     {
-        const uint nbHours = 8760;
-
         loadFromStudy(predicate.correlation(study), predicate);
 
         allocateTemporaryData();
@@ -408,7 +404,7 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
 
     if (study.areas.size() > pData.localareas.size())
         progression
-          += (nbTimeseries_ * 365) * ((uint)study.areas.size() - (uint)pData.localareas.size());
+          += (nbTimeseries_ * DAYS_PER_YEAR) * ((uint)study.areas.size() - (uint)pData.localareas.size());
 
     if (processCount == 0)
     {
@@ -477,7 +473,7 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
                     MA[s] = +std::numeric_limits<float>::max();
                 }
                 }
-                memcpy(FO[s], xcastdata.K[realmonth], sizeof(float) * nbHoursADay);
+                memcpy(FO[s], xcastdata.K[realmonth], sizeof(float) * HOURS_PER_DAY);
             }
 
             uint nbDaysPerMonth = study.calendar.months[month].days;
@@ -492,7 +488,7 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
                 {
                     float* dailyResults = DATA[s];
 
-                    for (uint h = 0; h != nbHoursADay; ++h)
+                    for (uint h = 0; h != HOURS_PER_DAY; ++h)
                     {
                         assert(0 == Math::Infinite(dailyResults[h]) && "Infinite value");
                     }
@@ -510,10 +506,10 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
 
                     auto& column = srcData.translation[0];
                     float* dailyResults = DATA[s];
-                    assert(hourInTheYear + nbHoursADay <= srcData.translation.height
+                    assert(hourInTheYear + HOURS_PER_DAY <= srcData.translation.height
                            && "Bound checking");
 
-                    for (uint h = 0; h != nbHoursADay; ++h)
+                    for (uint h = 0; h != HOURS_PER_DAY; ++h)
                     {
                         assert(0 == Math::Infinite(dailyResults[h]) && "Infinite value");
                         dailyResults[h] += (float)column[hourInTheYear + h];
@@ -528,7 +524,7 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
                 {
                     float* dailyResults = DATA[s];
 
-                    for (uint h = 0; h != nbHoursADay; ++h)
+                    for (uint h = 0; h != HOURS_PER_DAY; ++h)
                     {
                         assert(0 == Math::Infinite(dailyResults[h]) && "Infinite value");
                     }
@@ -547,7 +543,7 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
                     auto& column = series.column(tsIndex);
                     float* dailyResults = DATA[s];
 
-                    for (uint h = 0; h != nbHoursADay; ++h)
+                    for (uint h = 0; h != HOURS_PER_DAY; ++h)
                     {
                         assert(0 == Math::Infinite(dailyResults[h]) && "Infinite value");
                         dailyResults[h] *= (float)srcData.capacity;
@@ -555,21 +551,21 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
 
                     if (srcData.useTranslation == Data::XCast::tsTranslationAfterConversion)
                     {
-                        assert(hourInTheYear + nbHoursADay <= srcData.translation.height
+                        assert(hourInTheYear + HOURS_PER_DAY <= srcData.translation.height
                                && "Bound checking");
                         auto& tsavg = srcData.translation[0];
-                        for (uint h = 0; h != nbHoursADay; ++h)
+                        for (uint h = 0; h != HOURS_PER_DAY; ++h)
                             dailyResults[h] += (float)tsavg[hourInTheYear + h];
                     }
 
-                    assert(hourInTheYear + nbHoursADay <= series.height && "Bound checking");
-                    for (uint h = 0; h != nbHoursADay; ++h)
+                    assert(hourInTheYear + HOURS_PER_DAY <= series.height && "Bound checking");
+                    for (uint h = 0; h != HOURS_PER_DAY; ++h)
                         column[hourInTheYear + h] = Math::Round(dailyResults[h]);
 
                     ++progression;
                 }
 
-                hourInTheYear += nbHoursADay;
+                hourInTheYear += HOURS_PER_DAY;
 
                 pNewMonth = false;
             }

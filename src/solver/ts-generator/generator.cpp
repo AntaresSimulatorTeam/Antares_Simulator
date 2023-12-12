@@ -32,9 +32,9 @@ void ResizeGeneratedTimeSeries(Data::AreaList& areas, Data::Parameters& params)
         }
 
         // Thermal
+        bool globalThermalTSgeneration = params.timeSeriesToRefresh & Data::timeSeriesThermal;
         for (auto [_, cluster] : area.thermal.list.mapping)
         {
-            bool globalThermalTSgeneration = params.timeSeriesToRefresh & Data::timeSeriesThermal;
             if (cluster->doWeGenerateTS(globalThermalTSgeneration))
                 cluster->series.timeSeries.reset(params.nbTimeSeriesThermal, HOURS_PER_YEAR);
         }

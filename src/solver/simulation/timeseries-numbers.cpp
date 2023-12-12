@@ -90,14 +90,14 @@ static bool GenerateDeratedMode(Study& study)
     return true;
 }
 
-class areaNumberOfTSretriever
+class AreaNumberOfTSretriever
 {
 public:
-    virtual ~areaNumberOfTSretriever() = default;
+    virtual ~AreaNumberOfTSretriever() = default;
     virtual std::vector<uint> getAreaTimeSeriesNumber(const Area& area) = 0;
 };
 
-class loadAreaNumberOfTSretriever : public areaNumberOfTSretriever
+class LoadAreaNumberOfTSretriever : public AreaNumberOfTSretriever
 {
 public:
     std::vector<uint> getAreaTimeSeriesNumber(const Area& area) override
@@ -106,7 +106,7 @@ public:
     }
 };
 
-class hydroAreaNumberOfTSretriever : public areaNumberOfTSretriever
+class HydroAreaNumberOfTSretriever : public AreaNumberOfTSretriever
 {
 public:
     std::vector<uint> getAreaTimeSeriesNumber(const Area& area) override
@@ -115,7 +115,7 @@ public:
     }
 };
 
-class windAreaNumberOfTSretriever : public areaNumberOfTSretriever
+class WindAreaNumberOfTSretriever : public AreaNumberOfTSretriever
 {
 public:
     std::vector<uint> getAreaTimeSeriesNumber(const Area& area) override
@@ -124,7 +124,7 @@ public:
     }
 };
 
-class solarAreaNumberOfTSretriever : public areaNumberOfTSretriever
+class SolarAreaNumberOfTSretriever : public AreaNumberOfTSretriever
 {
 public:
     std::vector<uint> getAreaTimeSeriesNumber(const Area& area) override
@@ -133,7 +133,7 @@ public:
     }
 };
 
-class thermalAreaNumberOfTSretriever : public areaNumberOfTSretriever
+class ThermalAreaNumberOfTSretriever : public AreaNumberOfTSretriever
 {
 public:
     std::vector<uint> getAreaTimeSeriesNumber(const Area& area) override
@@ -149,7 +149,7 @@ public:
     }
 };
 
-class renewClustersAreaNumberOfTSretriever : public areaNumberOfTSretriever
+class RenewClustersAreaNumberOfTSretriever : public AreaNumberOfTSretriever
 {
 public:
     std::vector<uint> getAreaTimeSeriesNumber(const Area& area) override
@@ -165,7 +165,7 @@ public:
     }
 };
 
-class areaLinksTransCapaNumberOfTSretriever : public areaNumberOfTSretriever
+class AreaLinksTransCapaNumberOfTSretriever : public AreaNumberOfTSretriever
 {
 public:
     std::vector<uint> getAreaTimeSeriesNumber(const Area& area) override
@@ -185,7 +185,7 @@ class IntraModalConsistencyChecker
 {
 public:
     IntraModalConsistencyChecker(const TimeSeriesType ts,
-                                 areaNumberOfTSretriever* tsCounter,
+                                 AreaNumberOfTSretriever* tsCounter,
                                  Study& study) :
         tsCounter_(tsCounter), study_(study)
     {
@@ -199,7 +199,7 @@ public:
     }
 
 private:
-    areaNumberOfTSretriever* tsCounter_;
+    AreaNumberOfTSretriever* tsCounter_;
     Study& study_;
     uint nbTimeseries_ = 0;
     string tsTitle_;
@@ -234,25 +234,25 @@ bool checkIntraModalConsistency(array<uint, timeSeriesCount>& nbTimeseriesByMode
 {
     // Initialization of a map associating a time-series to an object that retrieves
     // the number of time series inside an area
-    using mapTStoRetriever = map<TimeSeriesType, shared_ptr<areaNumberOfTSretriever>>;
+    using mapTStoRetriever = map<TimeSeriesType, shared_ptr<AreaNumberOfTSretriever>>;
     mapTStoRetriever ts_to_numberOfTSretrievers;
-    ts_to_numberOfTSretrievers[timeSeriesLoad] = make_shared<loadAreaNumberOfTSretriever>();
-    ts_to_numberOfTSretrievers[timeSeriesHydro] = make_shared<hydroAreaNumberOfTSretriever>();
-    ts_to_numberOfTSretrievers[timeSeriesWind] = make_shared<windAreaNumberOfTSretriever>();
-    ts_to_numberOfTSretrievers[timeSeriesSolar] = make_shared<solarAreaNumberOfTSretriever>();
+    ts_to_numberOfTSretrievers[timeSeriesLoad] = make_shared<LoadAreaNumberOfTSretriever>();
+    ts_to_numberOfTSretrievers[timeSeriesHydro] = make_shared<HydroAreaNumberOfTSretriever>();
+    ts_to_numberOfTSretrievers[timeSeriesWind] = make_shared<WindAreaNumberOfTSretriever>();
+    ts_to_numberOfTSretrievers[timeSeriesSolar] = make_shared<SolarAreaNumberOfTSretriever>();
     ts_to_numberOfTSretrievers[timeSeriesThermal]
-      = make_shared<thermalAreaNumberOfTSretriever>();
+      = make_shared<ThermalAreaNumberOfTSretriever>();
     ts_to_numberOfTSretrievers[timeSeriesRenewable]
-      = make_shared<renewClustersAreaNumberOfTSretriever>();
+      = make_shared<RenewClustersAreaNumberOfTSretriever>();
     ts_to_numberOfTSretrievers[timeSeriesTransmissionCapacities]
-      = make_shared<areaLinksTransCapaNumberOfTSretriever>();
+      = make_shared<AreaLinksTransCapaNumberOfTSretriever>();
 
     // Loop over TS kind and check intra-modal consistency
     mapTStoRetriever::iterator it = ts_to_numberOfTSretrievers.begin();
     for (; it != ts_to_numberOfTSretrievers.end(); ++it)
     {
         const TimeSeriesType tsKind = it->first;
-        areaNumberOfTSretriever* tsRetriever = (it->second).get();
+        AreaNumberOfTSretriever* tsRetriever = (it->second).get();
         int indexTS = ts_to_tsIndex.at(it->first);
         if (isTSintramodal[indexTS])
         {
