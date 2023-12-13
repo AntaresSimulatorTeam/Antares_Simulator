@@ -55,12 +55,12 @@ struct MultipleCaptionProxy
 template<class VCardT>
 struct MultipleCaptionProxy<0, VCardT>
 {
-    static std::string Caption(const uint indx)
+    static std::string Caption(const uint)
     {
         return "";
     }
 
-    static std::string Unit(const uint indx)
+    static std::string Unit(const uint)
     {
         return "";
     }
@@ -69,12 +69,12 @@ struct MultipleCaptionProxy<0, VCardT>
 template<class VCardT>
 struct MultipleCaptionProxy<1, VCardT>
 {
-    static std::string Caption(const uint indx)
+    static std::string Caption(const uint)
     {
         return "";
     }
 
-    static std::string Unit(const uint indx)
+    static std::string Unit(const uint)
     {
         return "";
     }
@@ -83,12 +83,12 @@ struct MultipleCaptionProxy<1, VCardT>
 template<class VCardT>
 struct MultipleCaptionProxy<Category::dynamicColumns, VCardT>
 {
-    static std::string Caption(const uint indx)
+    static std::string Caption(const uint)
     {
         return "";
     }
 
-    static std::string Unit(const uint indx)
+    static std::string Unit(const uint)
     {
         return "";
     }

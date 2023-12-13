@@ -57,6 +57,11 @@ public:
         return NomDesContraintes;
     }
 
+    bool IntegerVariable(size_t idx) const
+    {
+        return VariablesEntieres[idx];
+    }
+
     bool SolverLogs() const
     {
         return solverLogs_;

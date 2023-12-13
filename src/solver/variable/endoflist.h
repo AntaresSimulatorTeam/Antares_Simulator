@@ -154,7 +154,7 @@ public:
     };
 
     template<class V>
-    void yearEndSpatialAggregates(V&, unsigned int, uint numSpace)
+    void yearEndSpatialAggregates(V&, unsigned int, uint)
     {
     }
 

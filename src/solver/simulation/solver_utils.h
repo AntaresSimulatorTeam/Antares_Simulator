@@ -28,16 +28,14 @@
 #define __SOLVER_SIMULATION_SOLVER_UTILS_H__
 
 #include <vector>
-#include <iostream> // For std namespace
+#include <map>
+#include <antares/writer/i_writer.h>
+#include <antares/study/fwd.h>
 #include <limits>   // For std numeric_limits
 #include <sstream>  // For ostringstream
 #include <iomanip>  // For setprecision
-// #include <stdio.h>
 #include <yuni/yuni.h>
 
-#include <antares/writer/i_writer.h>
-
-#define SEP Yuni::IO::Separator
 
 namespace Antares::Solver::Simulation
 {
@@ -82,155 +80,23 @@ public:
 class costStatistics
 {
 public:
-    costStatistics() :
-     costAverage(0.),
-     costStdDeviation(0.),
-     costMin(std::numeric_limits<double>::max()),
-     costMax(0.),
-     nbPerformedYears(0)
-    {
-    }
+    void setNbPerformedYears(uint n);
+    void addCost(const double cost);
+    void endStandardDeviation();
 
-    void setNbPerformedYears(uint n)
-    {
-        assert(n);
-        nbPerformedYears = n;
-    }
-
-    void addCost(const double cost)
-    {
-        // Average
-        costAverage += cost / nbPerformedYears;
-
-        // Standard deviation
-        costStdDeviation += cost * cost / nbPerformedYears;
-
-        // Min and Max
-        if (cost < costMin)
-            costMin = cost;
-        if (cost > costMax)
-            costMax = cost;
-    }
-
-    void endStandardDeviation()
-    {
-        costStdDeviation = Yuni::Math::SquareRoot(costStdDeviation - costAverage * costAverage);
-    }
-
-public:
     // System costs statistics
-    double costAverage;
-    double costStdDeviation;
-    double costMin;
-    double costMax;
+    double costAverage = 0.;
+    double costStdDeviation = 0.;
+    double costMin = std::numeric_limits<double>::max();
+    double costMax = 0.;
 
 private:
     // Total number of performed years in the study
-    uint nbPerformedYears;
+    uint nbPerformedYears = 0.;
 };
 
 class annualCostsStatistics
 {
-public:
-    annualCostsStatistics() :
-     systemCostFilename("annualSystemCost.txt"),
-     criterionsCostsFilename("checkIntegrity.txt"),
-     optimizationTimeFilename("timeStatistics.txt")
-    {
-    }
-
-    void setNbPerformedYears(uint n)
-    {
-        systemCost.setNbPerformedYears(n);
-        criterionCost1.setNbPerformedYears(n);
-        criterionCost2.setNbPerformedYears(n);
-        optimizationTime1.setNbPerformedYears(n);
-        optimizationTime2.setNbPerformedYears(n);
-    };
-
-    void endStandardDeviations()
-    {
-        systemCost.endStandardDeviation();
-        criterionCost1.endStandardDeviation();
-        criterionCost2.endStandardDeviation();
-        optimizationTime1.endStandardDeviation();
-        optimizationTime2.endStandardDeviation();
-    };
-
-    void writeToOutput(IResultWriter& writer)
-    {
-        writeSystemCostToOutput(writer);
-        writeCriterionCostsToOutput(writer);
-        writeOptimizationTimeToOutput(writer);
-    }
-
-    std::string to_scientific(const double d)
-    {
-        std::ostringstream stream;
-        stream << std::scientific;
-        stream << std::setprecision(14);
-        stream << d;
-
-        return stream.str();
-    }
-
-    std::string round_to_closer_int(const double d)
-    {
-#ifdef YUNI_OS_MSVC
-        ::sprintf_s(conversionBuffer, sizeof(conversionBuffer), "%.0f", d);
-#else
-        ::snprintf(conversionBuffer, sizeof(conversionBuffer), "%.0f", d);
-#endif
-        std::string rnd(conversionBuffer);
-        return rnd;
-    }
-
-private:
-    void writeSystemCostToOutput(IResultWriter& writer)
-    {
-        Yuni::Clob buffer;
-        buffer << "EXP : " << round_to_closer_int(systemCost.costAverage) << "\n";
-        buffer << "STD : " << round_to_closer_int(systemCost.costStdDeviation) << "\n";
-        buffer << "MIN : " << round_to_closer_int(systemCost.costMin) << "\n";
-        buffer << "MAX : " << round_to_closer_int(systemCost.costMax) << "\n";
-
-        writer.addEntryFromBuffer(systemCostFilename, buffer);
-    }
-
-    void writeCriterionCostsToOutput(IResultWriter& writer)
-    {
-        Yuni::Clob buffer;
-        buffer << to_scientific(criterionCost1.costAverage) << "\n";
-        buffer << to_scientific(criterionCost1.costStdDeviation) << "\n";
-        buffer << to_scientific(criterionCost1.costMin) << "\n";
-        buffer << to_scientific(criterionCost1.costMax) << "\n";
-
-        buffer << to_scientific(criterionCost2.costAverage) << "\n";
-        buffer << to_scientific(criterionCost2.costStdDeviation) << "\n";
-        buffer << to_scientific(criterionCost2.costMin) << "\n";
-        buffer << to_scientific(criterionCost2.costMax) << "\n";
-
-        writer.addEntryFromBuffer(criterionsCostsFilename, buffer);
-    }
-
-    void writeOptimizationTimeToOutput(IResultWriter& writer)
-    {
-        Yuni::Clob buffer;
-        buffer << "First optimization :\n";
-        buffer << "EXP (ms) : " << optimizationTime1.costAverage << "\n";
-        buffer << "STD (ms) : " << optimizationTime1.costStdDeviation << "\n";
-        buffer << "MIN (ms) : " << optimizationTime1.costMin << "\n";
-        buffer << "MAX (ms) : " << optimizationTime1.costMax << "\n";
-
-        buffer << "Second optimization :\n";
-        buffer << "EXP (ms) : " << optimizationTime2.costAverage << "\n";
-        buffer << "STD (ms) : " << optimizationTime2.costStdDeviation << "\n";
-        buffer << "MIN (ms) : " << optimizationTime2.costMin << "\n";
-        buffer << "MAX (ms) : " << optimizationTime2.costMax << "\n";
-
-        writer.addEntryFromBuffer(optimizationTimeFilename, buffer);
-    }
-
 public:
     // Costs
     costStatistics systemCost;
@@ -238,12 +104,18 @@ public:
     costStatistics criterionCost2;
     costStatistics optimizationTime1;
     costStatistics optimizationTime2;
+    costStatistics updateTime;
+
+    annualCostsStatistics();
+    void setNbPerformedYears(uint n);
+    void endStandardDeviations();
+    void writeToOutput(IResultWriter& writer);
 
 private:
-    const std::string systemCostFilename;
-    const std::string criterionsCostsFilename;
-    const std::string optimizationTimeFilename;
-    char conversionBuffer[256]; // Used to round a double to the closer integer
+    void writeSystemCostToOutput(IResultWriter& writer);
+    void writeCriterionCostsToOutput(IResultWriter& writer) const;
+    void writeUpdateTimes(IResultWriter& writer) const;
+    void writeOptimizationTimeToOutput(IResultWriter& writer) const;
 };
 
 class yearRandomNumbers
@@ -340,7 +212,6 @@ public:
         }
     }
 
-public:
     // General data
     uint pNbAreas;
     Data::PowerFluctuations pPowerFluctuations;
@@ -388,7 +259,6 @@ public:
         yearNumberToIndex.clear();
     }
 
-public:
     uint pMaxNbPerformedYears;
     yearRandomNumbers* pYears;
 
@@ -418,7 +288,6 @@ public:
         return index;
     }
 
-private:
     double value;
     uint index;
 };
@@ -428,7 +297,7 @@ struct compareHydroCostsNoises
 {
     inline bool operator()(const hydroCostNoise& hcnr1, const hydroCostNoise& hcnr2) const
     {
-        return (std::abs(hcnr1.getValue()) < std::abs(hcnr2.getValue())) ? true : false;
+        return std::abs(hcnr1.getValue()) < std::abs(hcnr2.getValue());
     }
 };
 } // namespace Antares::Solver::Simulation

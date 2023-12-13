@@ -126,6 +126,7 @@ protected:
 class loadAreaNumberOfTSretriever : public areaNumberOfTSretriever
 {
 public:
+    virtual ~loadAreaNumberOfTSretriever() = default;
     loadAreaNumberOfTSretriever(Study& study) : areaNumberOfTSretriever(study)
     {
     }
@@ -143,6 +144,7 @@ public:
 class hydroAreaNumberOfTSretriever : public areaNumberOfTSretriever
 {
 public:
+    virtual ~hydroAreaNumberOfTSretriever() = default;
     hydroAreaNumberOfTSretriever(Study& study) : areaNumberOfTSretriever(study)
     {
     }
@@ -160,6 +162,7 @@ public:
 class windAreaNumberOfTSretriever : public areaNumberOfTSretriever
 {
 public:
+    virtual ~windAreaNumberOfTSretriever() = default;
     windAreaNumberOfTSretriever(Study& study) : areaNumberOfTSretriever(study)
     {
     }
@@ -177,6 +180,7 @@ public:
 class solarAreaNumberOfTSretriever : public areaNumberOfTSretriever
 {
 public:
+    virtual ~solarAreaNumberOfTSretriever() = default;
     solarAreaNumberOfTSretriever(Study& study) : areaNumberOfTSretriever(study)
     {
     }
@@ -194,6 +198,7 @@ public:
 class thermalAreaNumberOfTSretriever : public areaNumberOfTSretriever
 {
 public:
+    virtual ~thermalAreaNumberOfTSretriever() = default;
     thermalAreaNumberOfTSretriever(Study& study) : areaNumberOfTSretriever(study)
     {
     }
@@ -217,6 +222,7 @@ public:
 class renewClustersAreaNumberOfTSretriever : public areaNumberOfTSretriever
 {
 public:
+    virtual ~renewClustersAreaNumberOfTSretriever() = default;
     renewClustersAreaNumberOfTSretriever(Study& study) : areaNumberOfTSretriever(study)
     {
     }
@@ -249,8 +255,8 @@ public:
         for (auto it = area.links.begin(); it != area.links.end(); ++it)
         {
             const auto& link = *(it->second);
-            to_return.push_back(link.directCapacities.width);
-            to_return.push_back(link.indirectCapacities.width);
+            to_return.push_back(link.directCapacities.timeSeries.width);
+            to_return.push_back(link.indirectCapacities.timeSeries.width);
         }
         return to_return;
     }
@@ -696,7 +702,7 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
             for (auto it = area.links.begin(); it != area.links.end(); ++it)
             {
                 auto& link = *(it->second);
-                const uint nbTimeSeries = link.directCapacities.width;
+                const uint nbTimeSeries = link.directCapacities.timeSeries.width;
                 if (nbTimeSeries == 1)
                 {
                     // Random generator (mersenne-twister) must not be called here
@@ -860,7 +866,7 @@ static void fixTSNumbersWhenWidthIsOne(Study& study)
                       [&years](const std::pair<Data::AreaName, Data::AreaLink*>& it) {
                           auto link = it.second;
                           fixTSNumbersSingleAreaSingleMode(
-                            link->timeseriesNumbers, link->directCapacities.width, years);
+                            link->timeseriesNumbers, link->directCapacities.timeSeries.width, years);
                       });
     });
     study.bindingConstraintsGroups.fixTSNumbersWhenWidthIsOne();

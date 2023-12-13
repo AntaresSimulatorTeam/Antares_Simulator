@@ -121,7 +121,7 @@ bool Economy::year(Progression::Task& progression,
                    yearRandomNumbers& randomForYear,
                    std::list<uint>& failedWeekList,
                    bool isFirstPerformedYearOfSimulation,
-                   const ALL_HYDRO_VENTILATION_RESULTS& hydroVentilationResults,
+                   const HYDRO_VENTILATION_RESULTS& hydroVentilationResults,
                    OptimizationStatisticsWriter& optWriter)
 {
     // No failed week at year start
@@ -187,9 +187,7 @@ bool Economy::year(Progression::Task& progression,
                 state.optimalSolutionCost1 += pProblemesHebdo[numSpace].coutOptimalSolution1[opt];
                 state.optimalSolutionCost2 += pProblemesHebdo[numSpace].coutOptimalSolution2[opt];
             }
-            optWriter.addTime(w,
-                              pProblemesHebdo[numSpace].tempsResolution1[0],
-                              pProblemesHebdo[numSpace].tempsResolution2[0]);
+            optWriter.addTime(w, pProblemesHebdo[numSpace].timeMeasure);
         }
         catch (Data::AssertionError& ex)
         {

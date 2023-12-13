@@ -41,6 +41,24 @@ jobs:
       run: |
           choco install wget unzip zip --no-progress
 
+    # Downloads ccache, and copies it to "cl.exe" in order to trick cmake into using it,
+    # see ccache wiki for background on using it with MSVC:
+    # https://github.com/ccache/ccache/wiki/MS-Visual-Studio
+    - name: Install ccache
+      shell: bash
+      run: |
+        wget https://github.com/ccache/ccache/releases/download/v4.8.3/ccache-4.8.3-windows-x86_64.zip -O ccache.zip
+        unzip ccache.zip
+        rm ccache.zip
+        mv ccache-4.8.3-windows-x86_64 ccache
+        cp ccache/ccache.exe ccache/cl.exe
+        echo "${GITHUB_WORKSPACE}/ccache" >> $GITHUB_PATH
+
+    - name: ccache
+      uses: hendrikmuhs/ccache-action@v1.2
+      with:
+        key: windows
+
     - name : Init VCPKG submodule
       run: |
           git submodule update --init vcpkg
@@ -115,7 +133,8 @@ jobs:
            -DBUILD_TESTING=ON  \
            -DBUILD_TOOLS=ON \
            -DBUILD_not_system=OFF \
-           -DPython3_EXECUTABLE='${{ steps.setup-python.outputs.python-path }}'
+           -DPython3_EXECUTABLE='${{ steps.setup-python.outputs.python-path }}' \
+           -DCMAKE_VS_GLOBALS="CLToolExe=cl.exe;CLToolPath=${GITHUB_WORKSPACE}/ccache;TrackFileAccess=false;UseMultiToolTask=true;DebugInformationFormat=OldStyle"
 
     - name: Build
       shell: bash
@@ -184,6 +203,14 @@ jobs:
         batch-name: valid-v860
         os: ${{ matrix.test-platform }}
 
+    - name: Run tests introduced in v870
+      if: ${{ env.IS_PUSH == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: valid-v870
+        os: ${{ matrix.test-platform }}
+
     - name: Run short-tests
       uses: ./.github/workflows/run-tests
       with:
@@ -197,6 +224,15 @@ jobs:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: valid-mps
         os: ${{ matrix.test-platform }}
+
+    - name: Run parallel tests
+      if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: valid-parallel
+        os: ${{ matrix.test-platform }}
+        variant: "parallel"
 
     - name: Run medium-tests
       if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}

@@ -25,7 +25,9 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "../application.h"
+#include "antares/application/application.h"
+#include <yuni/core/preprocessor/capabilities.h>
+
 #ifdef YUNI_OS_WINDOWS
 #include <yuni/core/system/windows.hdr.h>
 #include <yuni/core/system/cpu.h>

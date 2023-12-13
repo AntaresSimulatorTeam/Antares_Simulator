@@ -187,25 +187,24 @@ struct PAreaColor
     }
 };
 
-struct PStudyMode
+struct PSimulationMode
 {
-    using Type = Data::StudyMode;
+    using Type = Data::SimulationMode;
     static Type Value(const Data::Study::Ptr& study)
     {
-        return (!(!study) ? study->parameters.mode : Data::stdmEconomy);
+        return (!(!study) ? study->parameters.mode : Data::SimulationMode::Economy);
     }
     static wxString ConvertToString(const Type v)
     {
         switch (v)
         {
-        case Data::stdmEconomy:
+        case Data::SimulationMode::Economy:
             return wxT("Economy");
-        case Data::stdmAdequacy:
+        case Data::SimulationMode::Adequacy:
             return wxT("Adequacy");
-        case Data::stdmExpansion:
+        case Data::SimulationMode::Expansion:
             return wxT("Expansion");
-        case Data::stdmUnknown:
-        case Data::stdmMax:
+        case Data::SimulationMode::Unknown:
             return wxEmptyString;
         }
         return wxEmptyString;

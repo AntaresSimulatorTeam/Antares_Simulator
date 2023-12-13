@@ -91,7 +91,7 @@ public:
     //! Date/time when the simulation has been launched
     int64_t timestamp;
     //! Mode (economy/adequacy/other)
-    Data::StudyMode mode;
+    Data::SimulationMode mode;
     //! Tag for storing a wx menu id
     int menuID;
     //! Tag for storing a wx menu id (from the menu `output`)

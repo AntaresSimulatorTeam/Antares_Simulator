@@ -55,6 +55,9 @@
 
 #include "main/internal-data.h"
 #include "antares/study/ui-runtimeinfos.h"
+#include "antares/utils/utils.h"
+
+#include <atomic>
 
 using namespace Yuni;
 
@@ -67,7 +70,7 @@ String LastPathForOpeningAFile;
 wxString gLastOpenedStudyFolder;
 
 //! Ref counter to allow memory flush
-Atomic::Int<32> gMemoryFlushRefCount = 0;
+std::atomic<int> gMemoryFlushRefCount = 0;
 
 Event<void()> OnStudyClosed;
 Event<void()> OnStudyLoaded;

@@ -29,7 +29,7 @@
 #include "opt_fonctions.h"
 
 #include <antares/logs/logs.h>
-#include "../utils/filename.h"
+#include "antares/solver/utils/filename.h"
 #include "LinearProblemMatrix.h"
 #include "constraints/constraint_builder_utils.h"
 using namespace Antares;
@@ -111,8 +111,7 @@ bool runWeeklyOptimization(const OptimizationOptions& options,
                                  writer))
             return false;
 
-        if (problemeHebdo->ExportMPS != Data::mpsExportStatus::NO_EXPORT
-            || problemeHebdo->Expansion)
+        if (problemeHebdo->ExportMPS != Data::mpsExportStatus::NO_EXPORT)
         {
             double optimalSolutionCost
               = OPT_ObjectiveFunctionResult(problemeHebdo, numeroDeLIntervalle, optimizationNumber);
@@ -135,7 +134,6 @@ void runThermalHeuristic(PROBLEME_HEBDO* problemeHebdo)
     }
 }
 } // namespace
-
 
 bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                               PROBLEME_HEBDO* problemeHebdo,

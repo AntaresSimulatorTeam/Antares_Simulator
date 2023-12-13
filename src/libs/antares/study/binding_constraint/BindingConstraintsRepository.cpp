@@ -11,6 +11,7 @@
 #include <antares/study/study.h>
 #include "BindingConstraintLoader.h"
 #include "BindingConstraintSaver.h"
+#include "antares/utils/utils.h"
 
 void Data::BindingConstraintsRepository::clear()
 {
@@ -90,6 +91,7 @@ std::shared_ptr<BindingConstraint> BindingConstraintsRepository::add(const AnySt
 {
     auto bc = std::make_shared<BindingConstraint>();
     bc->name(name);
+    bc->pId(name);
     constraints_.push_back(bc);
     std::sort(constraints_.begin(), constraints_.end(), compareConstraints);
     return bc;
@@ -122,6 +124,7 @@ bool BindingConstraintsRepository::rename(BindingConstraint *bc, const AnyString
         return false;
     }
     bc->name(name);
+    bc->pId(name);
     JIT::Invalidate(bc->RHSTimeSeries().jit);
     return true;
 }
