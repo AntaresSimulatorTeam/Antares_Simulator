@@ -280,10 +280,10 @@ public:
             const auto& shortTermStorage = results.data.area->shortTermStorage;
 
             // Write the data for the current year
-            for (uint clusterIndex = 0; clusterIndex < nbClusters_; ++clusterIndex)
+            uint clusterIndex = 0;
+            for (const auto& cluster : shortTermStorage.storagesByIndex)
             {
                 // Write the data for the current year
-                const auto& cluster = shortTermStorage.storagesByIndex[clusterIndex];
                 if (!cluster.enabled())
                     continue;
 
@@ -291,6 +291,8 @@ public:
                 results.variableUnit = VCardType::Unit();
                 pValuesForTheCurrentYear[numSpace][clusterIndex].template buildAnnualSurveyReport<VCardType>(
                     results, fileLevel, precision);
+
+                clusterIndex++;
             }
         }
     }
