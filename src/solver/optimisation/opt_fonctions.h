@@ -129,6 +129,15 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HE
 void OPT_DecompteDesVariablesEtDesContraintesCoutsDeDemarrage(PROBLEME_HEBDO*);
 void OPT_InitialiserNombreMinEtMaxDeGroupesCoutsDeDemarrage(PROBLEME_HEBDO*);
 void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO*);
+
+void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireRampesThermiques(PROBLEME_HEBDO*, bool);
+void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireRampesThermiques(PROBLEME_HEBDO*, bool);
+void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireRampesThermiques(PROBLEME_HEBDO*, const int, const int);
+void OPT_DecompteDesVariablesEtDesContraintesRampesThermiques(PROBLEME_HEBDO*);
+void OPT_InitialiserLesCoutsLineaireRampesThermiques(PROBLEME_HEBDO*, const int, const int);
+void OPT_InitialiserLeSecondMembreDuProblemeLineaireRampesThermiques(PROBLEME_HEBDO*, int, int);
+
+
 double OPT_SommeDesPminThermiques(const PROBLEME_HEBDO*, int, uint);
 
 #endif /* __SOLVER_OPTIMISATION_FUNCTIONS_H__ */

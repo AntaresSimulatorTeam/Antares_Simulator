@@ -58,6 +58,25 @@ ConstraintBuilder& ConstraintBuilder::DispatchableProduction(unsigned int index,
                                                              int delta)
 {
     AddVariable(GetVariableManager(offset, delta).DispatchableProduction(index), coeff);
+    // logs.info() << "dispatchable production idx " << GetVariableManager(offset, delta).DispatchableProduction(index);
+    return *this;
+}
+
+ConstraintBuilder& ConstraintBuilder::ProductionDecreaseAboveMin(unsigned int index,
+                                                                 double coeff,
+                                                                 int offset,
+                                                                 int delta)
+{
+    AddVariable(GetVariableManager(offset, delta).ProductionDecreaseAboveMin(index), coeff);
+    return *this;
+}
+
+ConstraintBuilder& ConstraintBuilder::ProductionIncreaseAboveMin(unsigned int index,
+                                                                 double coeff,
+                                                                 int offset,
+                                                                 int delta)
+{
+    AddVariable(GetVariableManager(offset, delta).ProductionIncreaseAboveMin(index), coeff);
     return *this;
 }
 

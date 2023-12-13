@@ -47,6 +47,9 @@
 #include "constraints/AreaHydroLevel.h"
 #include "constraints/FinalStockEquivalent.h"
 #include "constraints/FinalStockExpression.h"
+#include "constraints/RampingDecreaseRate.h"
+#include "constraints/RampingIncreaseRate.h"
+#include "constraints/PowerOutputVariation.h"
 
 #include <antares/study/study.h>
 
@@ -188,10 +191,14 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
         finalStockExpression.add(pays);
     }
 
+    logs.info() << "adding ramping constraints";
+
+ 
+
     if (problemeHebdo->OptimisationAvecCoutsDeDemarrage)
     {
-        OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(problemeHebdo,
-                                                                                false);
+        OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(problemeHebdo,false);
+        OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireRampesThermiques(problemeHebdo,false);
     }
 
     // Export structure

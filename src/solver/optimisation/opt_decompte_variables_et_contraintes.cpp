@@ -50,9 +50,7 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
 
     for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        ProblemeAResoudre->NombreDeVariables
-          += problemeHebdo->PaliersThermiquesDuPays[pays].NombreDePaliersThermiques;
-
+        ProblemeAResoudre->NombreDeVariables += problemeHebdo->PaliersThermiquesDuPays[pays].NombreDePaliersThermiques;
         mxPaliers += problemeHebdo->PaliersThermiquesDuPays[pays].NombreDePaliersThermiques;
 
         if (problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable)
@@ -260,6 +258,7 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
     if (problemeHebdo->OptimisationAvecCoutsDeDemarrage)
     {
         OPT_DecompteDesVariablesEtDesContraintesCoutsDeDemarrage(problemeHebdo);
+        OPT_DecompteDesVariablesEtDesContraintesRampesThermiques(problemeHebdo);
     }
 
     return mxPaliers;
