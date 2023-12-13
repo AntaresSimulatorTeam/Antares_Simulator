@@ -67,9 +67,9 @@ void PartRenewable::prepareAreaWideIndexes()
     }
 
     uint idx = 0;
-    for (const auto& t : list)
+    for (const auto& cluster : list)
     {
-        t->areaWideIndex = idx;
+        cluster->areaWideIndex = idx;
         ++idx;
     }
 }
@@ -80,22 +80,15 @@ uint PartRenewable::removeDisabledClusters()
     if (list.empty())
         return 0;
 
-    std::vector<ClusterName> disabledClusters;
+    auto firstClusterToRemove = std::remove_if(list.begin(), list.end(), [] (auto& cluster) {
+        return !cluster->enabled;
+    });
 
-    for (auto& it : list)
-    {
-        if (!it->enabled)
-            disabledClusters.push_back(it->id());
-    }
+    list.cluster.erase(firstClusterToRemove , list.end()); // Actually remove the disabled clusters
 
-    for (auto& cluster : disabledClusters)
-        list.remove(cluster);
+    list.rebuildIndex();
 
-    const auto count = disabledClusters.size();
-    if (count)
-        list.rebuildIndex();
-
-    return count;
+    return list.size();
 }
 
 void PartRenewable::reset()
