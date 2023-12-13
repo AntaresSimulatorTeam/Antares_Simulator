@@ -24,8 +24,6 @@ class ClusterList
 public:
     // Shared pointer
     using SharedPtr = typename std::shared_ptr<ClusterT>;
-    // Map container
-    using Map = typename std::map<ClusterName, SharedPtr>;
     // Vector container
     using Vect = typename std::vector<SharedPtr>;
     //! iterator
@@ -118,13 +116,7 @@ public:
     const ClusterT* find(const Data::ClusterName& id) const;
     SharedPtr find(const ClusterList<ClusterT>::SharedPtr& p);
 
-    /*!
-    ** \brief Try to find a cluster from its pointer
-    **
-    ** \param  p Pointer of the cluster to find
-    ** \return A pointer to a cluster. nullptr if not found
-    */
-    ClusterT* find(const ClusterT* p);
+
     /*!
     ** \brief Try to find a cluster from its pointer (const)
     **
@@ -230,13 +222,13 @@ public:
     */
     std::vector<uint> groupCount;
 
-    int loadDataSeriesFromFolder(Study& study,
+    bool loadDataSeriesFromFolder(Study& study,
                                  const StudyLoadOptions& options,
                                  const AnyString& folder);
 
-    int saveDataSeriesToFolder(const AnyString& folder) const;
+    bool saveDataSeriesToFolder(const AnyString& folder) const;
 
-    int saveDataSeriesToFolder(const AnyString& folder, const YString& msg) const;
+    bool saveDataSeriesToFolder(const AnyString& folder, const YString& msg) const;
 
     virtual bool saveToFolder(const AnyString& folder) const = 0;
 

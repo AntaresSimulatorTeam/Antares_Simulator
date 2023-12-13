@@ -13,6 +13,9 @@ namespace Data
 class ThermalClusterList : public ClusterList<ThermalCluster>
 {
 public:
+    // Map container
+    using Map = typename std::map<ClusterName, std::shared_ptr<ThermalCluster>>;
+
     // Overriden pure virtual methods
     YString typeID() const override;
 

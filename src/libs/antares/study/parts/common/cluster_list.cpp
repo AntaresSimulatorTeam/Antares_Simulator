@@ -125,15 +125,6 @@ const ClusterT* ClusterList<ClusterT>::find(const ClusterT* p) const
     return nullptr;
 }
 
-template<class ClusterT>
-ClusterT* ClusterList<ClusterT>::find(const ClusterT* p)
-{
-    for (auto& c : cluster)
-        if (c.get() == p)
-            return c.get();
-
-    return nullptr;
-}
 
 template<class ClusterT>
 typename ClusterList<ClusterT>::SharedPtr ClusterList<ClusterT>::find
@@ -187,7 +178,7 @@ void ClusterList<ClusterT>::storeTimeseriesNumbers(Solver::IResultWriter& writer
 template<class ClusterT>
 void ClusterList<ClusterT>::rebuildIndex()
 {
-    std::sort(cluster.begin(), cluster.end(), [&](const auto& a, const auto& b){
+    std::sort(cluster.begin(), cluster.end(), [](const auto& a, const auto& b){
         return a->id() < b->id();
     });
 
@@ -243,31 +234,31 @@ bool ClusterList<ClusterT>::rename(Data::ClusterName idToFind, Data::ClusterName
     Antares::TransformNameIntoID(newName, newID);
 
     // Looking for the renewable cluster in the list
-    auto* p = this->find(idToFind);
-    if (!p)
+    auto* cluster_ptr = this->find(idToFind);
+    if (!cluster_ptr)
         return true;
 
     if (idToFind == newID)
     {
-        p->setName(newName);
+        cluster_ptr->setName(newName);
         return true;
     }
 
     // The name is the same. Aborting nicely.
-    if (p->name() == newName)
+    if (cluster_ptr->name() == newName)
         return true;
 
     // Already exist
     if (this->exists(newID))
         return false;
 
-    p->setName(newName);
+    cluster_ptr->setName(newName);
 
     // Invalidate matrices attached to the area
     // It is a bit excessive (all matrices not only those related to the renewable cluster)
     // will be rewritten but currently it is the less error-prone.
-    if (p->parentArea)
-        (p->parentArea)->invalidateJIT = true;
+    if (cluster_ptr->parentArea)
+        (cluster_ptr->parentArea)->invalidateJIT = true;
 
     // Rebuilding the index
     rebuildIndex();
@@ -293,6 +284,7 @@ void ClusterList<ClusterT>::markAsModified() const
 template<class ClusterT>
 bool ClusterList<ClusterT>::remove(const Data::ClusterName& id)
 {
+    // using find_if to get an iterator and use erase later
     const auto& it = find_if(cluster.begin(), cluster.end(),
         [&id](const SharedPtr& c) { return c->id() == id; });
 
@@ -313,10 +305,10 @@ bool ClusterList<ClusterT>::remove(const Data::ClusterName& id)
 }
 
 template<class ClusterT>
-int ClusterList<ClusterT>::saveDataSeriesToFolder(const AnyString& folder) const
+bool ClusterList<ClusterT>::saveDataSeriesToFolder(const AnyString& folder) const
 {
     if (empty())
-        return false;
+        return true;
 
     bool ret = true;
 
@@ -327,10 +319,10 @@ int ClusterList<ClusterT>::saveDataSeriesToFolder(const AnyString& folder) const
 }
 
 template<class ClusterT>
-int ClusterList<ClusterT>::saveDataSeriesToFolder(const AnyString& folder, const String& msg) const
+bool ClusterList<ClusterT>::saveDataSeriesToFolder(const AnyString& folder, const String& msg) const
 {
     if (empty())
-        return false;
+        return true;
 
     bool ret = true;
     uint ticks = 0;
@@ -346,14 +338,14 @@ int ClusterList<ClusterT>::saveDataSeriesToFolder(const AnyString& folder, const
 }
 
 template<class ClusterT>
-int ClusterList<ClusterT>::loadDataSeriesFromFolder(Study& s,
+bool ClusterList<ClusterT>::loadDataSeriesFromFolder(Study& s,
                                                     const StudyLoadOptions& options,
                                                     const AnyString& folder)
 {
     if (empty())
-        return 1;
+        return true;
 
-    int ret = 1;
+    bool ret = true;
 
     each([&](ClusterT& c) {
         ret = c.loadDataSeriesFromFolder(s, folder) and ret;
