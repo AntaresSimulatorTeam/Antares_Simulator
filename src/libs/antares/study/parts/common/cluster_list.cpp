@@ -367,6 +367,23 @@ void ClusterList<ClusterT>::retrieveTotalCapacityAndUnitCount(double& total, uin
     }
 }
 
+template<class ClusterT>
+uint ClusterList<ClusterT>::removeDisabledClusters()
+{
+    // nothing to do if there is no cluster available
+    if (empty())
+        return 0;
+
+    auto firstClusterToRemove = std::remove_if(cluster.begin(), cluster.end(), [] (auto& c) {
+        return !c->enabled;
+    });
+
+    cluster.erase(firstClusterToRemove , cluster.end()); // Actually remove the disabled clusters
+
+    rebuildIndex();
+
+    return size();
+}
 // Force template instantiation
 template class ClusterList<ThermalCluster>;
 template class ClusterList<RenewableCluster>;

@@ -74,23 +74,6 @@ void PartRenewable::prepareAreaWideIndexes()
     }
 }
 
-uint PartRenewable::removeDisabledClusters()
-{
-    // nothing to do if there is no cluster available
-    if (list.empty())
-        return 0;
-
-    auto firstClusterToRemove = std::remove_if(list.begin(), list.end(), [] (auto& cluster) {
-        return !cluster->enabled;
-    });
-
-    list.cluster.erase(firstClusterToRemove , list.end()); // Actually remove the disabled clusters
-
-    list.rebuildIndex();
-
-    return list.size();
-}
-
 void PartRenewable::reset()
 {
     list.clear();

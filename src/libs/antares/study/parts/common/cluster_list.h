@@ -245,6 +245,19 @@ public:
     ** \endcode
     */
     void retrieveTotalCapacityAndUnitCount(double& total, uint& unitCount) const;
+
+    /*!
+    ** \brief Removes disabled clusters
+    **
+    ** All clusters with the flag 'enabled' turned to false will be removed from 'list'.
+    ** As a consequence, they will no longer be seen as thermal clusters
+    ** from the solver's point of view.
+    ** \warning This method should only be used from the solver
+    **
+    ** \return The number of disabled clusters found
+    */
+    uint removeDisabledClusters();
+
     //@}
 }; // class ClusterList
 } // namespace Data

@@ -134,30 +134,6 @@ uint PartThermal::prepareClustersInMustRunMode()
     return count;
 }
 
-uint PartThermal::removeDisabledClusters()
-{
-    // nothing to do if there is no cluster available
-    if (list.empty())
-        return 0;
-
-    std::vector<ClusterName> disabledClusters;
-
-    for (auto& it : list)
-    {
-        if (!it->enabled)
-            disabledClusters.push_back(it->id());
-    }
-
-    for (const auto& cluster : disabledClusters)
-        list.remove(cluster);
-
-    const auto count = disabledClusters.size();
-    if (count)
-        list.rebuildIndex();
-
-    return count;
-}
-
 void PartThermal::reset()
 {
     unsuppliedEnergyCost = 0.;
