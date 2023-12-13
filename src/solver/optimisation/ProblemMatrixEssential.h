@@ -43,7 +43,7 @@ public:
     {
         for (auto& group : constraintgroups_)
         {
-            group->Build();
+            group->BuildConstraints();
         }
     }
 

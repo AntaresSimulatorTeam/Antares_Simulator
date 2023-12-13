@@ -8,7 +8,7 @@ public:
     using ConstraintGroup::ConstraintGroup;
 
     
-    void Build() override;
+    void BuildConstraints() override;
 
 private:
     BindingConstraintDayData GetBindingConstraintDayDataFromProblemHebdo();

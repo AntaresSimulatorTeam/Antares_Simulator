@@ -205,85 +205,48 @@ public:
                                               int offset = 0,
                                               int delta = 0);
 
-    ConstraintBuilder& NumberOfDispatchableUnits(unsigned int index,
-                                                 double coeff,
-                                                 int offset = 0,
-                                                 int delta = 0);
+    ConstraintBuilder& NumberOfDispatchableUnits(unsigned int index, double coeff);
 
-    ConstraintBuilder& NumberStoppingDispatchableUnits(unsigned int index,
-                                                       double coeff,
-                                                       int offset = 0,
-                                                       int delta = 0);
+    ConstraintBuilder& NumberStoppingDispatchableUnits(unsigned int index, double coeff);
 
-    ConstraintBuilder& NumberStartingDispatchableUnits(unsigned int index,
-                                                       double coeff,
-                                                       int offset = 0,
-                                                       int delta = 0);
+    ConstraintBuilder& NumberStartingDispatchableUnits(unsigned int index, double coeff);
 
-    ConstraintBuilder& NumberBreakingDownDispatchableUnits(unsigned int index,
-                                                           double coeff,
-                                                           int offset = 0,
-
-                                                           int delta = 0);
+    ConstraintBuilder& NumberBreakingDownDispatchableUnits(unsigned int index, double coeff);
 
     ConstraintBuilder& NTCDirect(unsigned int index, double coeff, int offset = 0, int delta = 0);
 
-    ConstraintBuilder& IntercoDirectCost(unsigned int index,
-                                         double coeff,
-                                         int offset = 0,
-                                         int delta = 0);
+    ConstraintBuilder& IntercoDirectCost(unsigned int index, double coeff);
 
-    ConstraintBuilder& IntercoIndirectCost(unsigned int index,
-                                           double coeff,
-                                           int offset = 0,
-                                           int delta = 0);
+    ConstraintBuilder& IntercoIndirectCost(unsigned int index, double coeff);
 
-    ConstraintBuilder& ShortTermStorageInjection(unsigned int index,
-                                                 double coeff,
-                                                 int offset = 0,
-                                                 int delta = 0);
+    ConstraintBuilder& ShortTermStorageInjection(unsigned int index, double coeff);
 
-    ConstraintBuilder& ShortTermStorageWithdrawal(unsigned int index,
-                                                  double coeff,
-                                                  int offset = 0,
-                                                  int delta = 0);
+    ConstraintBuilder& ShortTermStorageWithdrawal(unsigned int index, double coeff);
 
     ConstraintBuilder& ShortTermStorageLevel(unsigned int index,
                                              double coeff,
                                              int offset = 0,
                                              int delta = 0);
 
-    ConstraintBuilder& HydProd(unsigned int index, double coeff, int offset = 0, int delta = 0);
+    ConstraintBuilder& HydProd(unsigned int index, double coeff);
 
-    ConstraintBuilder& HydProdDown(unsigned int index, double coeff, int offset = 0, int delta = 0);
+    ConstraintBuilder& HydProdDown(unsigned int index, double coeff);
 
-    ConstraintBuilder& HydProdUp(unsigned int index, double coeff, int offset = 0, int delta = 0);
+    ConstraintBuilder& HydProdUp(unsigned int index, double coeff);
 
-    ConstraintBuilder& Pumping(unsigned int index, double coeff, int offset = 0, int delta = 0);
+    ConstraintBuilder& Pumping(unsigned int index, double coeff);
 
-    ConstraintBuilder& HydroLevel(unsigned int index, double coeff, int offset = 0, int delta = 0);
+    ConstraintBuilder& HydroLevel(unsigned int index, double coeff);
 
-    ConstraintBuilder& Overflow(unsigned int index, double coeff, int offset = 0, int delta = 0);
+    ConstraintBuilder& Overflow(unsigned int index, double coeff);
 
-    ConstraintBuilder& FinalStorage(unsigned int index,
-                                    double coeff,
-                                    int offset = 0,
-                                    int delta = 0);
+    ConstraintBuilder& FinalStorage(unsigned int index, double coeff);
 
-    ConstraintBuilder& PositiveUnsuppliedEnergy(unsigned int index,
-                                                double coeff,
-                                                int offset = 0,
-                                                int delta = 0);
-    ConstraintBuilder& NegativeUnsuppliedEnergy(unsigned int index,
-                                                double coeff,
-                                                int offset = 0,
-                                                int delta = 0);
+    ConstraintBuilder& PositiveUnsuppliedEnergy(unsigned int index, double coeff);
 
-    ConstraintBuilder& LayerStorage(unsigned area,
-                                    unsigned layer,
-                                    double coeff,
-                                    int offset = 0,
-                                    int delta = 0);
+    ConstraintBuilder& NegativeUnsuppliedEnergy(unsigned int index, double coeff);
+
+    ConstraintBuilder& LayerStorage(unsigned area, unsigned layer, double coeff);
     //@}
 
     class ConstraintBuilderInvalidOperator : public std::runtime_error

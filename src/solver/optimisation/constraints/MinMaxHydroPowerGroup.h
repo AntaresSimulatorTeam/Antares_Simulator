@@ -8,7 +8,7 @@ class MinMaxHydroPowerGroup : public ConstraintGroup
 public:
     using ConstraintGroup::ConstraintGroup;
 
-        void Build() override;
+        void BuildConstraints() override;
 
 private:
     MinHydroPowerData GetMinHydroPowerData();

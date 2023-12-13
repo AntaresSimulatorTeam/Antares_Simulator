@@ -54,185 +54,132 @@ ConstraintBuilder& ConstraintBuilder::DispatchableProduction(unsigned int index,
     return *this;
 }
 
-ConstraintBuilder& ConstraintBuilder::NumberOfDispatchableUnits(unsigned int index,
-                                                                      double coeff,
-                                                                      int offset,
-                                                                      int delta)
+ConstraintBuilder& ConstraintBuilder::NumberOfDispatchableUnits(unsigned int index, double coeff)
 {
-    AddVariable(GetVariableManager(offset, delta).NumberOfDispatchableUnits(index), coeff);
+    AddVariable(GetVariableManager(0, 0).NumberOfDispatchableUnits(index), coeff);
     return *this;
 }
 
 ConstraintBuilder& ConstraintBuilder::NumberStoppingDispatchableUnits(unsigned int index,
-                                                                            double coeff,
-                                                                            int offset,
-                                                                            int delta)
+                                                                      double coeff)
 {
-    AddVariable(GetVariableManager(offset, delta).NumberStoppingDispatchableUnits(index), coeff);
+    AddVariable(GetVariableManager(0, 0).NumberStoppingDispatchableUnits(index), coeff);
     return *this;
 }
 
 ConstraintBuilder& ConstraintBuilder::NumberStartingDispatchableUnits(unsigned int index,
-                                                                            double coeff,
-                                                                            int offset,
-                                                                            int delta)
+                                                                      double coeff)
 {
-    AddVariable(GetVariableManager(offset, delta).NumberStartingDispatchableUnits(index), coeff);
+    AddVariable(GetVariableManager(0, 0).NumberStartingDispatchableUnits(index), coeff);
     return *this;
 }
 
 ConstraintBuilder& ConstraintBuilder::NumberBreakingDownDispatchableUnits(unsigned int index,
-                                                                                double coeff,
-                                                                                int offset,
-                                                                                int delta)
+                                                                          double coeff)
 {
-    AddVariable(GetVariableManager(offset, delta).NumberBreakingDownDispatchableUnits(index),
-                coeff);
+    AddVariable(GetVariableManager(0, 0).NumberBreakingDownDispatchableUnits(index), coeff);
     return *this;
 }
 
 ConstraintBuilder& ConstraintBuilder::NTCDirect(unsigned int index,
-                                                      double coeff,
-                                                      int offset,
-                                                      int delta)
+                                                double coeff,
+                                                int offset,
+                                                int delta)
 {
     AddVariable(GetVariableManager(offset, delta).NTCDirect(index), coeff);
     return *this;
 }
 
-ConstraintBuilder& ConstraintBuilder::IntercoDirectCost(unsigned int index,
-                                                              double coeff,
-                                                              int offset,
-                                                              int delta)
+ConstraintBuilder& ConstraintBuilder::IntercoDirectCost(unsigned int index, double coeff)
 {
-    AddVariable(GetVariableManager(offset, delta).IntercoDirectCost(index), coeff);
+    AddVariable(GetVariableManager(0, 0).IntercoDirectCost(index), coeff);
     return *this;
 }
 
-ConstraintBuilder& ConstraintBuilder::IntercoIndirectCost(unsigned int index,
-                                                                double coeff,
-                                                                int offset,
-                                                                int delta)
+ConstraintBuilder& ConstraintBuilder::IntercoIndirectCost(unsigned int index, double coeff)
 {
-    AddVariable(GetVariableManager(offset, delta).IntercoIndirectCost(index), coeff);
+    AddVariable(GetVariableManager(0, 0).IntercoIndirectCost(index), coeff);
     return *this;
 }
 
-ConstraintBuilder& ConstraintBuilder::ShortTermStorageInjection(unsigned int index,
-                                                                      double coeff,
-                                                                      int offset,
-                                                                      int delta)
+ConstraintBuilder& ConstraintBuilder::ShortTermStorageInjection(unsigned int index, double coeff)
 {
-    AddVariable(GetVariableManager(offset, delta).ShortTermStorageInjection(index), coeff);
+    AddVariable(GetVariableManager(0, 0).ShortTermStorageInjection(index), coeff);
     return *this;
 }
 
-ConstraintBuilder& ConstraintBuilder::ShortTermStorageWithdrawal(unsigned int index,
-                                                                       double coeff,
-                                                                       int offset,
-                                                                       int delta)
+ConstraintBuilder& ConstraintBuilder::ShortTermStorageWithdrawal(unsigned int index, double coeff)
 {
-    AddVariable(GetVariableManager(offset, delta).ShortTermStorageWithdrawal(index), coeff);
+    AddVariable(GetVariableManager(0, 0).ShortTermStorageWithdrawal(index), coeff);
     return *this;
 }
 
 ConstraintBuilder& ConstraintBuilder::ShortTermStorageLevel(unsigned int index,
-                                                                  double coeff,
-                                                                  int offset,
-                                                                  int delta)
+                                                            double coeff,
+                                                            int offset,
+                                                            int delta)
 {
     AddVariable(GetVariableManager(offset, delta).ShortTermStorageLevel(index), coeff);
     return *this;
 }
 
-ConstraintBuilder& ConstraintBuilder::HydProd(unsigned int index,
-                                                    double coeff,
-                                                    int offset,
-                                                    int delta)
+ConstraintBuilder& ConstraintBuilder::HydProd(unsigned int index, double coeff)
 {
-    AddVariable(GetVariableManager(offset, delta).HydProd(index), coeff);
+    AddVariable(GetVariableManager(0, 0).HydProd(index), coeff);
     return *this;
 }
 
-ConstraintBuilder& ConstraintBuilder::HydProdDown(unsigned int index,
-                                                        double coeff,
-                                                        int offset,
-                                                        int delta)
+ConstraintBuilder& ConstraintBuilder::HydProdDown(unsigned int index, double coeff)
 {
-    AddVariable(GetVariableManager(offset, delta).HydProdDown(index), coeff);
+    AddVariable(GetVariableManager(0, 0).HydProdDown(index), coeff);
     return *this;
 }
 
-ConstraintBuilder& ConstraintBuilder::HydProdUp(unsigned int index,
-                                                      double coeff,
-                                                      int offset,
-                                                      int delta)
+ConstraintBuilder& ConstraintBuilder::HydProdUp(unsigned int index, double coeff)
 {
-    AddVariable(GetVariableManager(offset, delta).HydProdUp(index), coeff);
+    AddVariable(GetVariableManager(0, 0).HydProdUp(index), coeff);
     return *this;
 }
 
-ConstraintBuilder& ConstraintBuilder::Pumping(unsigned int index,
-                                                    double coeff,
-                                                    int offset,
-                                                    int delta)
+ConstraintBuilder& ConstraintBuilder::Pumping(unsigned int index, double coeff)
 {
-    AddVariable(GetVariableManager(offset, delta).Pumping(index), coeff);
+    AddVariable(GetVariableManager(0, 0).Pumping(index), coeff);
     return *this;
 }
 
-ConstraintBuilder& ConstraintBuilder::HydroLevel(unsigned int index,
-                                                       double coeff,
-                                                       int offset,
-                                                       int delta)
+ConstraintBuilder& ConstraintBuilder::HydroLevel(unsigned int index, double coeff)
 {
-    AddVariable(GetVariableManager(offset, delta).HydroLevel(index), coeff);
+    AddVariable(GetVariableManager(0, 0).HydroLevel(index), coeff);
     return *this;
 }
 
-ConstraintBuilder& ConstraintBuilder::Overflow(unsigned int index,
-                                                     double coeff,
-                                                     int offset,
-                                                     int delta)
+ConstraintBuilder& ConstraintBuilder::Overflow(unsigned int index, double coeff)
 {
-    AddVariable(GetVariableManager(offset, delta).Overflow(index), coeff);
+    AddVariable(GetVariableManager(0, 0).Overflow(index), coeff);
     return *this;
 }
 
-ConstraintBuilder& ConstraintBuilder::FinalStorage(unsigned int index,
-                                                         double coeff,
-                                                         int offset,
-                                                         int delta)
+ConstraintBuilder& ConstraintBuilder::FinalStorage(unsigned int index, double coeff)
 {
-    AddVariable(GetVariableManager(offset, delta).FinalStorage(index), coeff);
+    AddVariable(GetVariableManager(0, 0).FinalStorage(index), coeff);
     return *this;
 }
 
-ConstraintBuilder& ConstraintBuilder::PositiveUnsuppliedEnergy(unsigned int index,
-                                                                     double coeff,
-                                                                     int offset,
-                                                                     int delta)
+ConstraintBuilder& ConstraintBuilder::PositiveUnsuppliedEnergy(unsigned int index, double coeff)
 {
-    AddVariable(GetVariableManager(offset, delta).PositiveUnsuppliedEnergy(index), coeff);
+    AddVariable(GetVariableManager(0, 0).PositiveUnsuppliedEnergy(index), coeff);
     return *this;
 }
 
-ConstraintBuilder& ConstraintBuilder::NegativeUnsuppliedEnergy(unsigned int index,
-                                                                     double coeff,
-                                                                     int offset,
-                                                                     int delta)
+ConstraintBuilder& ConstraintBuilder::NegativeUnsuppliedEnergy(unsigned int index, double coeff)
 {
-    AddVariable(GetVariableManager(offset, delta).NegativeUnsuppliedEnergy(index), coeff);
+    AddVariable(GetVariableManager(0, 0).NegativeUnsuppliedEnergy(index), coeff);
     return *this;
 }
 
-ConstraintBuilder& ConstraintBuilder::LayerStorage(unsigned area,
-                                                         unsigned layer,
-                                                         double coeff,
-                                                         int offset,
-                                                         int delta)
+ConstraintBuilder& ConstraintBuilder::LayerStorage(unsigned area, unsigned layer, double coeff)
 {
-    AddVariable(GetVariableManager(offset, delta).LayerStorage(area, layer), coeff);
+    AddVariable(GetVariableManager(0, 0).LayerStorage(area, layer), coeff);
     return *this;
 }
 

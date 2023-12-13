@@ -17,7 +17,7 @@ MaxHydroPowerData MinMaxHydroPowerGroup::GetMaxHydroPowerData()
             = problemeHebdo_->NumeroDeContrainteMaxEnergieHydraulique};
 }
 
-void MinMaxHydroPowerGroup::Build()
+void MinMaxHydroPowerGroup::BuildConstraints()
 {
     auto minHydroPowerData = GetMinHydroPowerData();
     MinHydroPower minHydroPower(builder_, minHydroPowerData);

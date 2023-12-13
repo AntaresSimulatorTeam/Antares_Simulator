@@ -12,7 +12,7 @@ NbDispUnitsMinBoundSinceMinUpTimeData
  * @brief build NbUnitsOutageLessThanNbUnitsStopGroup constraints with
  * respect to default order
  */
-void NbDispUnitsMinBoundSinceMinUpTimeGroup::Build()
+void NbDispUnitsMinBoundSinceMinUpTimeGroup::BuildConstraints()
 {
     auto data = GetNbDispUnitsMinBoundSinceMinUpTimeDataFromProblemHebdo();
     NbDispUnitsMinBoundSinceMinUpTime nbDispUnitsMinBoundSinceMinUpTime(builder_, data);

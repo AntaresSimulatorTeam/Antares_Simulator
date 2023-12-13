@@ -13,7 +13,7 @@ public:
     {
     }
 
-        void Build() = 0;
+        void BuildConstraints() = 0;
 
     bool simulation_ = false;
     StartUpCostsData GetStartUpCostsDataFromProblemHebdo();

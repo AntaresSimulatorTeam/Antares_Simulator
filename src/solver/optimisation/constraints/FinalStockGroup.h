@@ -9,7 +9,7 @@ public:
     using ConstraintGroup::ConstraintGroup;
 
     
-    void Build() override;
+    void BuildConstraints() override;
 
 private:
     FinalStockEquivalentData GetFinalStockEquivalentData();

@@ -11,7 +11,7 @@ MinDownTimeData MinDownTimeGroup::GetMinDownTimeDataFromProblemHebdo()
  * @brief build MinDownTime constraints with
  * respect to default order
  */
-void MinDownTimeGroup::Build()
+void MinDownTimeGroup::BuildConstraints()
 {
     auto data = GetMinDownTimeDataFromProblemHebdo();
     MinDownTime minDownTime(builder_, data);
