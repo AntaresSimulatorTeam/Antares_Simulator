@@ -49,45 +49,43 @@ void Cluster::setName(const AnyString& newname)
 }
 
 #define SEP Yuni::IO::Separator
-int Cluster::saveDataSeriesToFolder(const AnyString& folder) const
+bool Cluster::saveDataSeriesToFolder(const AnyString& folder) const
 {
-    if (not folder.empty())
+    if (folder.empty())
+        return true;
+
+    Yuni::Clob buffer;
+
+    buffer.clear() << folder << SEP << parentArea->id << SEP << id();
+    if (Yuni::IO::Directory::Create(buffer))
     {
-        Yuni::Clob buffer;
-
-        buffer.clear() << folder << SEP << parentArea->id << SEP << id();
-        if (Yuni::IO::Directory::Create(buffer))
-        {
-            int ret = 1;
-            buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "series.txt";
-            ret = series.timeSeries.saveToCSVFile(buffer, precision()) && ret;
-
-            return ret;
-        }
-        return 0;
-    }
-    return 1;
-}
-
-int Cluster::loadDataSeriesFromFolder(Study& s, const AnyString& folder)
-{
-    if (not folder.empty())
-    {
-        auto& buffer = s.bufferLoadingTS;
-
-        int ret = 1;
-        buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "series."
-                       << s.inputExtension;
-        ret = series.timeSeries.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &s.dataBuffer) && ret;
-
-        if (s.usedByTheSolver && s.parameters.derated)
-            series.timeSeries.averageTimeseries();
-
-        series.timeseriesNumbers.clear();
+        bool ret = true;
+        buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "series.txt";
+        ret = series.timeSeries.saveToCSVFile(buffer, precision()) && ret;
 
         return ret;
     }
-    return 1;
+    return false;
+}
+
+bool Cluster::loadDataSeriesFromFolder(Study& s, const AnyString& folder)
+{
+    if (folder.empty())
+        return true;
+
+    auto& buffer = s.bufferLoadingTS;
+
+    bool ret = 1;
+    buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "series."
+        << s.inputExtension;
+    ret = series.timeSeries.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &s.dataBuffer) && ret;
+
+    if (s.usedByTheSolver && s.parameters.derated)
+        series.timeSeries.averageTimeseries();
+
+    series.timeseriesNumbers.clear();
+
+    return ret;
 }
 #undef SEP
 
