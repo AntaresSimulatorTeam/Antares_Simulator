@@ -260,6 +260,7 @@ bool listOfFilesAnDirectoriesToKeep(StudyCleaningInfos* infos)
     e.add("settings/constraintbuilder.ini");
     e.add("settings/scenariobuilder.dat");
     e.add("input/bindingconstraints/bindingconstraints.ini");
+    e.add("input/maintenanceplanning/maintenancegroups.ini");
     e.add("input/hydro/hydro.ini");
     e.add("input/areas/list.txt");
     e.add("input/areas/sets.ini");
@@ -311,6 +312,7 @@ bool listOfFilesAnDirectoriesToKeep(StudyCleaningInfos* infos)
     p.add("settings/resources");
     p.add("settings/simulations");
     p.add("input/bindingconstraints");
+    p.add("input/maintenanceplanning");
 
     // Getting all areas
     auto* arealist = new AreaList(*study);
