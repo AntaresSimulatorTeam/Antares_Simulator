@@ -51,12 +51,12 @@ IObject::~IObject()
     // The smart pointer should get rid of this issue.
     // And anyway, it is pointless here the vtable has been already wiped out
     //
-    // std::lock_guard<std::mutex> locker(mutex);
+    // std::lock_guard locker(mutex);
 }
 
 void IObject::caption(const AnyString& text)
 {
-    std::lock_guard<std::mutex> locker(mutex);
+    std::lock_guard locker(mutex);
     pCaption = text;
 }
 

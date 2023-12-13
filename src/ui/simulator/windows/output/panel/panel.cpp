@@ -480,7 +480,7 @@ void Panel::executeAggregator()
 
 std::shared_ptr<std::mutex> ProvideLockingForFileLocking(const YString& filename)
 {
-    std::lock_guard<std::mutex> locker(mutexToAccessToLockFiles);
+    std::lock_guard locker(mutexToAccessToLockFiles);
     auto& ptr = mutexForFiles[filename];
     if (!ptr)
         ptr = std::make_shared<std::mutex>();

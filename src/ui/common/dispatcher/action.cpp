@@ -145,7 +145,7 @@ void Wait()
 
 bool Empty()
 {
-    std::lock_guard<std::mutex> locker(Antares::Dispatcher::gGUIMutex);
+    std::lock_guard locker(Antares::Dispatcher::gGUIMutex);
     return Antares::Dispatcher::gGUIDispatcherList.empty();
 }
 

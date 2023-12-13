@@ -36,7 +36,7 @@ inline const Ref& IObject::oid() const
 
 inline YString IObject::caption() const
 {
-    std::lock_guard<std::mutex> locker(mutex);
+    std::lock_guard locker(mutex);
     return pCaption;
 }
 

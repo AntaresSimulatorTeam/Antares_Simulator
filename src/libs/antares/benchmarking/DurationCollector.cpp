@@ -6,7 +6,7 @@ namespace Benchmarking {
 
 void DurationCollector::addDuration(const std::string& name, int64_t duration)
 {
-    const std::lock_guard<std::mutex> lock(mutex_);
+    const std::lock_guard lock(mutex_);
     duration_items_[name].push_back(duration);
 }
 

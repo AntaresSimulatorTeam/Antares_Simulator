@@ -139,7 +139,7 @@ WalkerThread::WalkerThread(Statistics& stats) : pFileJob(nullptr), pOriginalStat
     pJobCounter = std::make_shared<std::atomic<int>>();
     pShouldStop = false;
 
-    std::lock_guard<std::mutex> locker(gsMutex);
+    std::lock_guard locker(gsMutex);
     if (not queueserviceInitialized)
     {
         queueserviceInitialized = true;

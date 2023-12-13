@@ -494,7 +494,7 @@ public:
     virtual void Notify()
     {
         {
-            std::lock_guard<std::mutex> locker(pMutex);
+            std::lock_guard locker(pMutex);
             // We use .c_str() here to force the copy of the string
             if (pStrCopy == pMessageBuffer)
                 return;

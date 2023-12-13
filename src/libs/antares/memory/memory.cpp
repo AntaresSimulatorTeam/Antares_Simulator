@@ -65,7 +65,7 @@ static std::mutex gMutex;
 
 bool Memory::initializeTemporaryFolder()
 {
-    std::lock_guard<std::mutex> locker(gMutex);
+    std::lock_guard locker(gMutex);
     if (pAlreadyInitialized)
         return true;
 
@@ -129,19 +129,19 @@ void Memory::displayInfo() const
     logs.info() << "  memory pool: system info: page size: " << sysconf(_SC_PAGESIZE);
 #endif
 
-    std::lock_guard<std::mutex> locker(gMutex);
+    std::lock_guard locker(gMutex);
     logs.info() << "  memory pool: cache folder: " << pCacheFolder;
 }
 
 const String& Memory::cacheFolder() const
 {
-    std::lock_guard<std::mutex> locker(gMutex);
+    std::lock_guard locker(gMutex);
     return pCacheFolder;
 }
 
 void Memory::cacheFolder(const AnyString& folder)
 {
-    std::lock_guard<std::mutex> locker(gMutex);
+    std::lock_guard locker(gMutex);
     if (pAllowedToChangeCacheFolder)
         pCacheFolder = folder;
 }

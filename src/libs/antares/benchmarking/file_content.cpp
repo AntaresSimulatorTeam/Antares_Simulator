@@ -18,13 +18,13 @@ FileContent::iterator FileContent::end()
 
 void FileContent::addItemToSection(const string& section, const string& key, int value)
 {
-    std::lock_guard<std::mutex> guard(pSectionsMutex);
+    std::lock_guard guard(pSectionsMutex);
     sections_[section][key] = to_string(value);
 }
 
 void FileContent::addItemToSection(const string& section, const string& key, const string& value)
 {
-    std::lock_guard<std::mutex> guard(pSectionsMutex);
+    std::lock_guard guard(pSectionsMutex);
     sections_[section][key] = value;
 }
 
