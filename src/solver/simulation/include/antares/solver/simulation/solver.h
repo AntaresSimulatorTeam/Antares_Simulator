@@ -37,7 +37,7 @@
 #include "antares/solver/misc/options.h"
 #include "antares/solver/simulation/solver.data.h"
 #include "antares/solver/simulation/solver_utils.h"
-#include "hydro/management/management.h"
+#include "antares/solver/hydro/management/management.h"
 
 #include <antares/writer/writer_factory.h>
 
