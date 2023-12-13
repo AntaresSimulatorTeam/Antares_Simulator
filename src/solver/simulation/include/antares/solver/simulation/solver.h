@@ -27,11 +27,11 @@
 
 #include <yuni/core/string.h>
 #include <yuni/job/queue/service.h>
-#include "../variable/state.h"
+#include "antares/solver/variable/state.h"
 #include "antares/solver/misc/options.h"
 #include "solver.data.h"
-#include "solver_utils.h"
-#include "../hydro/management/management.h"
+#include "antares/solver/simulation/solver_utils.h"
+#include "antares/solver/hydro/management/management.h"
 
 #include <antares/writer/writer_factory.h>
 
