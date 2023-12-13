@@ -23,7 +23,8 @@ set(SRC_SIMULATION
 
 
 		# Solver
-		solver.utils.h
+		solver_utils.h
+		solver_utils.cpp
 		solver.h
 		solver.hxx
 		solver.data.h

@@ -468,8 +468,15 @@ struct COUTS_DE_TRANSPORT
 
     std::vector<double> CoutDeTransportOrigineVersExtremiteRef;
     std::vector<double> CoutDeTransportExtremiteVersOrigineRef;
-
 };
+
+struct TIME_MEASURE
+{
+    long solveTime = 0;
+    long updateTime = 0;
+};
+
+using TIME_MEASURES = std::array<TIME_MEASURE, 2>;
 
 struct VARIABLES_DUALES_INTERCONNEXIONS
 {
@@ -597,8 +604,7 @@ struct PROBLEME_HEBDO
     std::vector<double> coutOptimalSolution1;
     std::vector<double> coutOptimalSolution2;
 
-    std::vector<double> tempsResolution1;
-    std::vector<double> tempsResolution2;
+    TIME_MEASURES timeMeasure;
 
     /* Unused for now, will be used in future revisions */
 #if 0

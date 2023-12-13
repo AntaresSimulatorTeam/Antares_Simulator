@@ -53,6 +53,7 @@ inline void State::startANewYear()
     optimalSolutionCost2 = 0.;
     averageOptimizationTime1 = 0.;
     averageOptimizationTime2 = 0.;
+    averageUpdateTime = 0.;
 }
 
 inline void State::yearEndResetThermal()
