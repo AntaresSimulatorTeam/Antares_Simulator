@@ -11,7 +11,7 @@ var searchData=
   ['alreadyloaded_8',['alreadyLoaded',['../classJIT_1_1Informations.html#aa5d6792c070b958e4bf49436ea0fec90',1,'JIT::Informations']]],
   ['annual_9',['annual',['../classAntares_1_1Data_1_1Correlation.html#aadcd8a077118167d8797443f92d9e5a6',1,'Antares::Data::Correlation']]],
   ['application_10',['application',['../classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1LogEntry.html#a0c2c8c961a0178fe1582789b275276fd',1,'Antares::Component::Datagrid::Renderer::LogEntry']]],
-  ['area_11',['area',['../classAntares_1_1Solver_1_1Variable_1_1State.html#a0531f1e1a845ea1ab8ff7c248b7bf640',1,'Antares::Solver::Variable::State::area()'],['../classAntares_1_1Solver_1_1Variable_1_1Private_1_1SurveyResultsData.html#acae6f489af65d81bf74efd68d71e3a61',1,'Antares::Solver::Variable::Private::SurveyResultsData::area()'],['../classAntares_1_1Action_1_1Context.html#adf7efa75ed2d46c4df84674e37418748',1,'Antares::Action::Context::area()'],['../classAntares_1_1ExtSource_1_1Handler_1_1BuildContext.html#ab6b917117667c8a2ae0f6a4f536132ee',1,'Antares::ExtSource::Handler::BuildContext::area()']]],
+  ['area_11',['area',['../classAntares_1_1Solver_1_1Variable_1_1State.html#a0531f1e1a845ea1ab8ff7c248b7bf640',1,'Antares::Solver::Variable::State::area()'],['../classAntares_1_1ExtSource_1_1Handler_1_1BuildContext.html#ab6b917117667c8a2ae0f6a4f536132ee',1,'Antares::ExtSource::Handler::BuildContext::area()'],['../classAntares_1_1Action_1_1Context.html#adf7efa75ed2d46c4df84674e37418748',1,'Antares::Action::Context::area()'],['../classAntares_1_1Solver_1_1Variable_1_1Private_1_1SurveyResultsData.html#acae6f489af65d81bf74efd68d71e3a61',1,'Antares::Solver::Variable::Private::SurveyResultsData::area()']]],
   ['areaforcecreate_12',['areaForceCreate',['../classAntares_1_1Action_1_1Context.html#a9de130478c8682666819cddf5360e554',1,'Antares::Action::Context']]],
   ['areafromid_13',['areaFromId',['../classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ConstraintsBuilder_1_1Links_1_1Record.html#a5a506e80e0cbdc51afb8dd7988dda13a',1,'Antares::Component::Datagrid::Renderer::ConstraintsBuilder::Links::Record']]],
   ['areaindex_14',['areaIndex',['../classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1Analyzer_1_1Areas_1_1Record.html#a7da4fb0267c295fc480fe9a766961509',1,'Antares::Component::Datagrid::Renderer::Analyzer::Areas::Record']]],
@@ -28,5 +28,8 @@ var searchData=
   ['author_25',['author',['../classAntares_1_1Data_1_1StudyHeader.html#a1dde88024c6dc9b87cbe87dc806b428a',1,'Antares::Data::StudyHeader']]],
   ['autoselectareas_26',['autoselectAreas',['../classAntares_1_1Action_1_1Context.html#ac936be8e9e5a43a267ad2ac071cbc3ad',1,'Antares::Action::Context']]],
   ['autoselectconstraints_27',['autoselectConstraints',['../classAntares_1_1Action_1_1Context.html#ab8fe58efd7c641c09c67d2df2c11193f',1,'Antares::Action::Context']]],
-  ['autoselectlinks_28',['autoselectLinks',['../classAntares_1_1Action_1_1Context.html#a14e7eceb70a008a5acb5b3aa763983b2',1,'Antares::Action::Context']]]
+  ['autoselectlinks_28',['autoselectLinks',['../classAntares_1_1Action_1_1Context.html#a14e7eceb70a008a5acb5b3aa763983b2',1,'Antares::Action::Context']]],
+  ['averageoptimizationtime1_29',['averageOptimizationTime1',['../classAntares_1_1Solver_1_1Variable_1_1State.html#af9e11b52d917e7ad95b27192555504dc',1,'Antares::Solver::Variable::State']]],
+  ['averageoptimizationtime2_30',['averageOptimizationTime2',['../classAntares_1_1Solver_1_1Variable_1_1State.html#a323b6936d7876f116269384595e0f022',1,'Antares::Solver::Variable::State']]],
+  ['averageupdatetime_31',['averageUpdateTime',['../classAntares_1_1Solver_1_1Variable_1_1State.html#a503a83fabb270e2dc0fa0f85fbbfefd6',1,'Antares::Solver::Variable::State']]]
 ];

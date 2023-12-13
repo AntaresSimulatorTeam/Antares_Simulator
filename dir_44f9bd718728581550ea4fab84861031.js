@@ -19,6 +19,6 @@ var dir_44f9bd718728581550ea4fab84861031 =
     [ "solver.data.h", "solver_8data_8h_source.html", null ],
     [ "solver.h", "solver_2simulation_2solver_8h_source.html", null ],
     [ "solver.hxx", "solver_8hxx_source.html", null ],
-    [ "solver.utils.h", "solver_8utils_8h_source.html", null ],
+    [ "solver_utils.h", "solver__utils_8h_source.html", null ],
     [ "timeseries-numbers.h", "timeseries-numbers_8h_source.html", null ]
 ];

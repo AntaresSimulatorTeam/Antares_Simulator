@@ -1,5 +1,10 @@
 var NAVTREEINDEX22 =
 {
+"reservoirlevel_8h_source.html":[5,0,0,2,10,2,30],
+"reservoirlevels_8h_source.html":[5,0,0,5,2,1,1,1,1,1,10],
+"result_8h_source.html":[5,0,0,4,2,6],
+"result__format_8h_source.html":[5,0,0,1,0,24,0,0,1],
+"results_8h_source.html":[5,0,0,2,10,3,12],
 "results_8hxx_source.html":[5,0,0,2,10,3,13],
 "root-node_8h_source.html":[5,0,0,5,0,0,0,3,3],
 "root-node_8hxx_source.html":[5,0,0,5,0,0,0,3,4],
@@ -90,7 +95,7 @@ var NAVTREEINDEX22 =
 "solver_2variable_2variable_8h_source.html":[5,0,0,2,10,24],
 "solver_8data_8h_source.html":[5,0,0,2,7,16],
 "solver_8hxx_source.html":[5,0,0,2,7,18],
-"solver_8utils_8h_source.html":[5,0,0,2,7,19],
+"solver__utils_8h_source.html":[5,0,0,2,7,19],
 "sort_8h_source.html":[5,0,0,5,2,1,1,2,4],
 "spatial-aggregate_8h_source.html":[5,0,0,2,10,1,8],
 "spilledEnergyAfterCSR_8h_source.html":[5,0,0,2,10,2,33],
@@ -244,10 +249,5 @@ var NAVTREEINDEX22 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MiscGenMinusRowPSP_1_1Statistics.html":[4,0,0,12,5,4,23,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnitsByPlant_1_1Statistics.html":[4,0,0,12,5,4,25,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnits_1_1Statistics.html":[4,0,0,12,5,4,24,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCostByDispatchablePlant_1_1Statistics.html":[4,0,0,12,5,4,27,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCost_1_1Statistics.html":[4,0,0,12,5,4,26,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OperatingCost_1_1Statistics.html":[4,0,0,12,5,4,28,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCost_1_1Statistics.html":[4,0,0,12,5,4,29,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Overflows_1_1Statistics.html":[4,0,0,12,5,4,30,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1PSP_1_1Statistics.html":[4,0,0,12,5,4,35,0]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCostByDispatchablePlant_1_1Statistics.html":[4,0,0,12,5,4,27,0]
 };

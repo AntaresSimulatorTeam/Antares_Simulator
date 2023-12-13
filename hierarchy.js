@@ -1226,6 +1226,7 @@ var hierarchy =
       [ "FixtureFull", "structFixtureFull.html", null ]
     ] ],
     [ "Antares::Solver::Variable::ThermalState", "classAntares_1_1Solver_1_1Variable_1_1ThermalState.html", null ],
+    [ "TIME_MEASURE", "structTIME__MEASURE.html", null ],
     [ "TimeMeasurement", "classTimeMeasurement.html", null ],
     [ "Benchmarking::Timer", "classBenchmarking_1_1Timer.html", null ],
     [ "Yuni::Thread::Timer", null, [

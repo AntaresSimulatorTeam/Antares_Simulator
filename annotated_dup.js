@@ -1283,6 +1283,7 @@ var annotated_dup =
     [ "ThermalClusterConfig", "classThermalClusterConfig.html", null ],
     [ "ThermalClusterStudy", "structThermalClusterStudy.html", null ],
     [ "ThermalIniFile", "structThermalIniFile.html", null ],
+    [ "TIME_MEASURE", "structTIME__MEASURE.html", null ],
     [ "TimeMeasurement", "classTimeMeasurement.html", null ],
     [ "TimeSeriesConfigurer", "classTimeSeriesConfigurer.html", null ],
     [ "TimeSeriesFile", "structTimeSeriesFile.html", null ],

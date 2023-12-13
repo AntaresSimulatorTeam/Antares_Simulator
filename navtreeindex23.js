@@ -1,5 +1,10 @@
 var NAVTREEINDEX23 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCost_1_1Statistics.html":[4,0,0,12,5,4,26,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OperatingCost_1_1Statistics.html":[4,0,0,12,5,4,28,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCost_1_1Statistics.html":[4,0,0,12,5,4,29,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Overflows_1_1Statistics.html":[4,0,0,12,5,4,30,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1PSP_1_1Statistics.html":[4,0,0,12,5,4,35,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Price_1_1Statistics.html":[4,0,0,12,5,4,31,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByDispatchablePlant_1_1Statistics.html":[4,0,0,12,5,4,32,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByRenewablePlant_1_1Statistics.html":[4,0,0,12,5,4,33,0],
@@ -244,10 +249,5 @@ var NAVTREEINDEX23 =
 "structAntares_1_1TmpDataByArea.html#a70b0958fc2e191880411dae93371a14c":[4,0,0,46,1],
 "structAntares_1_1TmpDataByArea.html#a7b6e0a1938393057477f02ab3660614a":[4,0,0,46,2],
 "structAntares_1_1TmpDataByArea.html#a8fc25e2e765356b2c3ba921f302bd946":[4,0,0,46,4],
-"structAntares_1_1TmpDataByArea.html#a9a3f3399d54f3e687c38a93aa7e49cdb":[4,0,0,46,13],
-"structAntares_1_1TmpDataByArea.html#aa7b32e05523bf5e6a3bec8b1dba89913":[4,0,0,46,9],
-"structAntares_1_1TmpDataByArea.html#aadb36a358591e209876848395369371b":[4,0,0,46,10],
-"structAntares_1_1TmpDataByArea.html#abbfc60e69d51ef662b077fe36819fb06":[4,0,0,46,12],
-"structAntares_1_1TmpDataByArea.html#ad543aff767a979a1af339997310a2bd0":[4,0,0,46,11],
-"structAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1DataType.html":[4,0,0,14,1,0,1]
+"structAntares_1_1TmpDataByArea.html#a9a3f3399d54f3e687c38a93aa7e49cdb":[4,0,0,46,13]
 };
