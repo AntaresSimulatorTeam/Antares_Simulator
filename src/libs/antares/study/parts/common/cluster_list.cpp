@@ -1,4 +1,5 @@
 #include <boost/algorithm/string/case_conv.hpp>
+#include <numeric>
 #include "cluster_list.h"
 #include <antares/utils/utils.h>
 #include "../../study.h"
@@ -268,10 +269,10 @@ bool ClusterList<ClusterT>::rename(Data::ClusterName idToFind, Data::ClusterName
 template<class ClusterT>
 bool ClusterList<ClusterT>::forceReload(bool reload) const
 {
-    bool ret = true;
-    for (const auto& c : cluster)
-        ret = c->forceReload(reload) && ret;
-    return ret;
+    return std::all_of(cluster.begin(), cluster.end(), [&reload](const auto& c){
+        return c->forceReload(reload);
+    });
+
 }
 
 template<class ClusterT>
@@ -310,12 +311,9 @@ bool ClusterList<ClusterT>::saveDataSeriesToFolder(const AnyString& folder) cons
     if (empty())
         return true;
 
-    bool ret = true;
-
-    for (const auto& c : cluster)
-        ret = c->saveDataSeriesToFolder(folder) && ret;
-
-    return ret;
+    return std::all_of(cluster.begin(), cluster.end(), [&folder](const auto& c){
+        return c->saveDataSeriesToFolder(folder);
+    });
 }
 
 template<class ClusterT>
