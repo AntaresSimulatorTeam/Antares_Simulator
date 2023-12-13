@@ -16,14 +16,9 @@ static const std::string optimizationTimeFilename
 static const std::string updateTimeFilename
   = std::string("optimization") + SEP + "update-durations.txt";
 
-static std::string to_scientific(const double d)
+static std::ostream& toScientific(std::ostream& os)
 {
-    std::ostringstream stream;
-    stream << std::scientific;
-    stream << std::setprecision(14);
-    stream << d;
-
-    return stream.str();
+    return os << std::scientific << std::setprecision(14);
 }
 
 namespace Antares::Solver::Simulation
@@ -100,18 +95,20 @@ void annualCostsStatistics::writeSystemCostToOutput(IResultWriter& writer)
 
 void annualCostsStatistics::writeCriterionCostsToOutput(IResultWriter& writer) const
 {
-    std::string buffer;
-    buffer += to_scientific(criterionCost1.costAverage) + "\n";
-    buffer += to_scientific(criterionCost1.costStdDeviation) + "\n";
-    buffer += to_scientific(criterionCost1.costMin) + "\n";
-    buffer += to_scientific(criterionCost1.costMax) + "\n";
+    using std::endl;
+    std::ostringstream buffer;
+    buffer << toScientific
+           << criterionCost1.costAverage << endl
+           << criterionCost1.costStdDeviation << endl
+           << criterionCost1.costMin << endl
+           << criterionCost1.costMax << endl
+           << criterionCost2.costAverage << endl
+           << criterionCost2.costStdDeviation << endl
+           << criterionCost2.costMin << endl
+           << criterionCost2.costMax << endl;
 
-    buffer += to_scientific(criterionCost2.costAverage) + "\n";
-    buffer += to_scientific(criterionCost2.costStdDeviation) + "\n";
-    buffer += to_scientific(criterionCost2.costMin) + "\n";
-    buffer += to_scientific(criterionCost2.costMax) + "\n";
-
-    writer.addEntryFromBuffer(criterionsCostsFilename, buffer);
+    std::string s = buffer.str(); // TODO allow std::string&& in addEntryFromBuffer
+    writer.addEntryFromBuffer(criterionsCostsFilename, s);
 }
 
 void annualCostsStatistics::writeUpdateTimes(IResultWriter& writer) const
