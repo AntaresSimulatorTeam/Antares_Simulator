@@ -51,6 +51,7 @@ jobs:
            sudo apt-get update
            sudo apt-get install uuid-dev libwxgtk3.0-gtk3-dev
            sudo apt-get install libboost-test-dev
+           sudo apt-get install g++-10 gcc-10
 
     - name: Read antares-deps version
       id: antares-deps-version
@@ -92,7 +93,9 @@ jobs:
       run: |
            cmake -B _build -S src \
            -DCMAKE_C_COMPILER_LAUNCHER=ccache \
+           -DCMAKE_C_COMPILER=/usr/bin/gcc-10 \
            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
+           -DCMAKE_CXX_COMPILER=/usr/bin/g++-10 \
            -DDEPS_INSTALL_DIR=${{github.workspace}}/rte-antares-deps-Release \
            -DCMAKE_BUILD_TYPE=release \
            -DBUILD_TESTING=ON \
@@ -103,7 +106,7 @@ jobs:
 
     - name: Build
       run: |
-             cmake --build _build --config release -j2
+             cmake --build _build --config release -j$(nproc)
 
 
     # simtest
@@ -113,6 +116,7 @@ jobs:
       with:
         path: 'simtest.json'
         prop_path: 'version'
+
 
     - name: Run named mps tests
       if: ${{ env.IS_PUSH == 'true' }}
@@ -197,6 +201,15 @@ jobs:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: adequacy-patch-CSR
         os: ${{ matrix.test-platform }}
+
+    - name: Run parallel tests
+      if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: valid-parallel
+        os: ${{ matrix.test-platform }}
+        variant: "parallel"
 
     - name: Run medium-tests
       if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}

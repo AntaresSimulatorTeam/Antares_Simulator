@@ -26,7 +26,7 @@
 */
 #include "opt_structure_probleme_a_resoudre.h"
 #include "opt_export_structure.h"
-#include "../utils/filename.h"
+#include "antares/solver/utils/filename.h"
 #include "opt_fonctions.h"
 #include "opt_rename_problem.h"
 #include "sim_structure_probleme_economique.h"

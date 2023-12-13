@@ -149,7 +149,7 @@ private:
     wxPGProperty* pPGStudyGrpCalendar;
     wxPGProperty* pPGStudyMCScenarios;
     wxPGProperty* pPGStudyOutputProfile;
-    wxPGProperty* pPGStudyMode;
+    wxPGProperty* pPGSimulationMode;
     wxPGProperty* pPGStudyYears;
     wxPGProperty* pPGStudyCalendarBegin;
     wxPGProperty* pPGStudyCalendarEnd;

@@ -29,7 +29,7 @@
 #include "opt_fonctions.h"
 
 #include <antares/logs/logs.h>
-#include "../utils/filename.h"
+#include "antares/solver/utils/filename.h"
 
 using namespace Antares;
 using namespace Yuni;
@@ -110,8 +110,7 @@ bool runWeeklyOptimization(const OptimizationOptions& options,
                                  writer))
             return false;
 
-        if (problemeHebdo->ExportMPS != Data::mpsExportStatus::NO_EXPORT
-            || problemeHebdo->Expansion)
+        if (problemeHebdo->ExportMPS != Data::mpsExportStatus::NO_EXPORT)
         {
             double optimalSolutionCost
               = OPT_ObjectiveFunctionResult(problemeHebdo, numeroDeLIntervalle, optimizationNumber);

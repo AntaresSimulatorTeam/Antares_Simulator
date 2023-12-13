@@ -26,6 +26,7 @@
 */
 
 #include "job.h"
+#include "antares/utils/utils.h"
 #include <antares/logs/logs.h>
 #include <antares/study/study.h>
 #include <yuni/io/directory/info.h>

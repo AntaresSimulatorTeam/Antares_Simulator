@@ -74,23 +74,17 @@ inline void State::initFromAreaIndex(const unsigned int areaIndex, uint numSpace
     scratchpad = &area->scratchpad[numSpace];
     thermalCluster = nullptr;
 
-    switch (studyMode)
+    switch (simulationMode)
     {
-    case Data::stdmEconomy:
-    {
-        hourlyResults = &problemeHebdo->ResultatsHoraires[areaIndex];
-        break;
-    }
-    case Data::stdmAdequacy:
+    case Data::SimulationMode::Adequacy:
+    case Data::SimulationMode::Economy:
+    case Data::SimulationMode::Expansion:
     {
         hourlyResults = &problemeHebdo->ResultatsHoraires[areaIndex];
         break;
     }
-    case Data::stdmUnknown:
-        break;
-    case Data::stdmExpansion:
-        break;
-    case Data::stdmMax:
+
+    case Data::SimulationMode::Unknown:
         break;
     }
 }

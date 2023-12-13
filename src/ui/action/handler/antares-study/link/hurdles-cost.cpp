@@ -26,15 +26,10 @@
 */
 
 #include "hurdles-cost.h"
+#include "antares/utils/utils.h"
 #include <antares/study/area/constants.h>
 
-namespace Antares
-{
-namespace Action
-{
-namespace AntaresStudy
-{
-namespace Link
+namespace Antares::Action::AntaresStudy::Link
 {
 HurdlesCost::HurdlesCost(const AnyString& fromarea, const AnyString& toarea) :
  pOriginalFromAreaName(fromarea), pOriginalToAreaName(toarea)
@@ -98,7 +93,4 @@ bool HurdlesCost::performWL(Context& ctx)
     return false;
 }
 
-} // namespace Link
-} // namespace AntaresStudy
-} // namespace Action
-} // namespace Antares
+} // namespace Antares::Action::AntaresStudy::Link

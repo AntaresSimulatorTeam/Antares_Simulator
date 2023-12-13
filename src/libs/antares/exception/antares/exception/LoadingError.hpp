@@ -179,10 +179,10 @@ public:
     explicit CommandLineArguments(uint errors);
 };
 
-class IncompatibleStudyModeForAdqPatch : public LoadingError
+class IncompatibleSimulationModeForAdqPatch : public LoadingError
 {
 public:
-    IncompatibleStudyModeForAdqPatch();
+    IncompatibleSimulationModeForAdqPatch();
 };
 
 class NoAreaInsideAdqPatchMode : public LoadingError

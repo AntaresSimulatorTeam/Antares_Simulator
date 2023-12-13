@@ -669,15 +669,16 @@ void Panel::loadDataFromFile()
     // Economy
     switch (output.mode)
     {
-    case Data::stdmEconomy:
+    case Data::SimulationMode::Economy:
         filename << output.path << SEP << "economy" << SEP;
         break;
-    case Data::stdmAdequacy:
+    case Data::SimulationMode::Adequacy:
         filename << output.path << SEP << "adequacy" << SEP;
         break;
-    case Data::stdmExpansion:
-    case Data::stdmUnknown:
-    case Data::stdmMax:
+    case Data::SimulationMode::Expansion:
+        filename << output.path << SEP << "expansion" << SEP;
+        break;
+    case Data::SimulationMode::Unknown:
         filename << output.path << SEP << "unknown" << SEP;
         break;
     }

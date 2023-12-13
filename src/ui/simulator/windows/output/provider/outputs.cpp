@@ -173,15 +173,16 @@ void Outputs::search(Spotlight::IItem::Vector& out,
 
             switch (output->mode)
             {
-            case Data::stdmEconomy:
+            case Data::SimulationMode::Economy:
                 item->addTag("ECO", 162, 178, 197);
                 break;
-            case Data::stdmAdequacy:
+            case Data::SimulationMode::Adequacy:
                 item->addTag("ADQ", 220, 192, 245);
                 break;
-            case Data::stdmUnknown:
-            case Data::stdmExpansion:
-            case Data::stdmMax:
+            case Data::SimulationMode::Expansion:
+                item->addTag("EXP", 220, 192, 245);
+                break;
+            case Data::SimulationMode::Unknown:
                 item->addTag("...", 213, 213, 213);
             }
             int imgIndex = pComponent.imageIndexForOutput(output);
