@@ -18,9 +18,7 @@ static const std::string updateTimeFilename
 
 static std::ostream& toScientific(std::ostream& os)
 {
-    os << std::scientific;
-    os << std::setprecision(14);
-    return os;
+    return os << std::scientific << std::setprecision(14);
 }
 
 namespace Antares::Solver::Simulation
