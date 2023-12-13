@@ -364,7 +364,7 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
 
             // costs
             if (c.costgeneration != setManually)
-                s->add("costgeneration", c.costgeneration);            
+                s->add("costgeneration", c.costgeneration);
             if (not Math::Zero(c.marginalCost))
                 s->add("marginal-cost", Math::Round(c.marginalCost, 3));
             if (not Math::Zero(c.spreadCost))
@@ -462,7 +462,7 @@ bool ThermalClusterList::loadPreproFromFolder(Study& study,
     {
         if (c->prepro)
         {
-            assert(c->parentArea and "cluster: invalid parent area");
+            assert(c->parentArea && "cluster: invalid parent area");
             buffer.clear() << folder << SEP << c->parentArea->id << SEP << c->id();
 
             bool result = c->prepro->loadFromFolder(study, buffer);
@@ -473,9 +473,9 @@ bool ThermalClusterList::loadPreproFromFolder(Study& study,
                 result = c->prepro->normalizeAndCheckNPO();
             }
 
-            ret = result and ret;
+            ret = result && ret;
         }
-        
+
         ++options.progressTicks;
         options.pushProgressLogs();
     }
@@ -488,20 +488,17 @@ bool ThermalClusterList::loadEconomicCosts(Study& study, const AnyString& folder
     if (empty())
         return true;
 
-    Clob buffer;
-    bool ret = true;
 
-    for (const auto& c : cluster)
+    return std::all_of(cluster.begin(), cluster.end(), [&study, folder](const auto& c)
     {
-        assert(c->parentArea and "cluster: invalid parent area");
+        assert(c->parentArea && "cluster: invalid parent area");
+        Clob buffer;
         buffer.clear() << folder << SEP << c->parentArea->id << SEP << c->id();
 
         bool result = c->ecoInput.loadFromFolder(study, buffer);
         c->ComputeCostTimeSeries();
-
-        ret = result && ret;
-    }
-    return ret;
+        return result;
+    });
 }
 
 } // namespace Data
