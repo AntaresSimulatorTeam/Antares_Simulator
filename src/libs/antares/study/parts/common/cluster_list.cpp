@@ -57,19 +57,9 @@ typename ClusterList<ClusterT>::const_iterator ClusterList<ClusterT>::end() cons
 }
 
 template<class ClusterT>
-const ClusterT* ClusterList<ClusterT>::find(const Data::ClusterName& id) const
+ClusterT* ClusterList<ClusterT>::find(const Data::ClusterName& id) const
 {
     for (const auto& c : cluster)
-        if (c->id() == id)
-            return c.get();
-
-    return nullptr;
-}
-
-template<class ClusterT>
-ClusterT* ClusterList<ClusterT>::find(const Data::ClusterName& id)
-{
-    for (auto& c : cluster)
         if (c->id() == id)
             return c.get();
 
@@ -122,18 +112,6 @@ const ClusterT* ClusterList<ClusterT>::find(const ClusterT* p) const
     for (const auto& c : cluster)
         if (c.get() == p)
             return c.get();
-
-    return nullptr;
-}
-
-
-template<class ClusterT>
-typename ClusterList<ClusterT>::SharedPtr ClusterList<ClusterT>::find
-  (const ClusterList<ClusterT>::SharedPtr& p)
-{
-    for (auto& c : cluster)
-        if (c == p)
-            return c;
 
     return nullptr;
 }
@@ -192,13 +170,13 @@ void ClusterList<ClusterT>::rebuildIndex()
 
 template<class ClusterT>
 typename ClusterList<ClusterT>::SharedPtr ClusterList<ClusterT>::add(
-  const ClusterList<ClusterT>::SharedPtr& newcluster)
+    const ClusterList<ClusterT>::SharedPtr newcluster)
 {
     if (!newcluster)
         return nullptr;
 
     if (exists(newcluster->id()))
-        return this->find(newcluster);
+        return newcluster;
 
     cluster.push_back(newcluster);
     ++(groupCount[newcluster->groupId()]);

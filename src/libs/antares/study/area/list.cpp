@@ -1534,8 +1534,8 @@ ThermalCluster* AreaList::findClusterFromINIKey(const AnyString& key)
     Area* parentArea = findFromName(parentName);
     if (parentArea == nullptr)
         return nullptr;
-    ThermalCluster* i = parentArea->thermal.list.find(id);
-    return (i != nullptr) ? i : nullptr;
+    return parentArea->thermal.list.find(id);
+
 }
 
 void AreaList::updateNameIDSet() const

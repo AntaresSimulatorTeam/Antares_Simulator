@@ -79,7 +79,7 @@ public:
     ** \return True if the cluster has been added, false otherwise
     */
 
-    SharedPtr add(const SharedPtr& t);
+    SharedPtr add(const SharedPtr cluster);
     /*!
     ** \brief Detach a cluster represented by an iterator
     **
@@ -101,21 +101,12 @@ public:
     virtual void remove(iterator i);
 
     /*!
-    ** \brief Try to find a cluster from its id
-    **
-    ** \param id ID of the cluster to find
-    ** \return A pointer to a cluster. nullptr if not found
-    */
-    ClusterT* find(const Data::ClusterName& id);
-    /*!
     ** \brief Try to find a cluster from its id (const)
     **
     ** \param id ID of the cluster to find
     ** \return A pointer to a cluster. nullptr if not found
     */
-    const ClusterT* find(const Data::ClusterName& id) const;
-    SharedPtr find(const ClusterList<ClusterT>::SharedPtr& p);
-
+    ClusterT* find(const Data::ClusterName& id) const;
 
     /*!
     ** \brief Try to find a cluster from its pointer (const)
