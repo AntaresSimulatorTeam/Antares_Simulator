@@ -75,12 +75,6 @@ typename std::shared_ptr<ClusterT> ClusterList<ClusterT>::detach(iterator i)
 }
 
 template<class ClusterT>
-void ClusterList<ClusterT>::remove(iterator i)
-{
-    cluster.erase(i);
-}
-
-template<class ClusterT>
 bool ClusterList<ClusterT>::exists(const Data::ClusterName& id) const
 {
     return std::any_of(cluster.begin(), cluster.end(), [&id](const auto& c){

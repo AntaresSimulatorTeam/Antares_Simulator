@@ -91,16 +91,6 @@ public:
     SharedPtr detach(iterator i);
 
     /*!
-    ** \brief Remove a cluster represented by an iterator
-    **
-    ** The cluster will be removed from the list but _not_
-    ** destroyed.
-    ** The iterator should considered as invalid after using this method.
-    ** \return void
-    */
-    virtual void remove(iterator i);
-
-    /*!
     ** \brief Try to find a cluster from its id (const)
     **
     ** \param id ID of the cluster to find
