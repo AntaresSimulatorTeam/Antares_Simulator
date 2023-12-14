@@ -166,8 +166,9 @@ int OptimizationParameters::calculateTimeHorizon()
         {
             int value = 2 * getAverageDurationBetweenMaintenances(cluster)
                         + getAverageMaintenanceDuration(cluster)
-                        - std::min(getAverageDurationBetweenMaintenances(cluster) - 1,
-                                   getDaysSinceLastMaintenance(cluster, unit)) + 1;
+                        - std::min(getAverageDurationBetweenMaintenances(cluster),
+                                   getDaysSinceLastMaintenance(cluster, unit))
+                        + 1;
             timeHorizonVector.push_back(value);
         }
     }
