@@ -47,7 +47,7 @@ public:
         }
     }
 
-    void InitiliazeProblemAResoudreCounters()
+    void InitializeProblemAResoudreCounters()
     {
         auto& ProblemeAResoudre = problemeHebdo_->ProblemeAResoudre;
         ProblemeAResoudre->NombreDeContraintes = 0;

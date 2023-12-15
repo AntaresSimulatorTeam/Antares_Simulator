@@ -70,7 +70,7 @@ void LinearProblemMatrix::ExportStructures()
 
 void LinearProblemMatrix::Run()
 {
-    InitiliazeProblemAResoudreCounters();
+    InitializeProblemAResoudreCounters();
 
     ProblemMatrixEssential::Run();
 

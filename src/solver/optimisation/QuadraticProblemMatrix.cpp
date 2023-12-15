@@ -2,7 +2,7 @@
 
 void QuadraticProblemMatrix::Run()
 {
-    InitiliazeProblemAResoudreCounters();
+    InitializeProblemAResoudreCounters();
 
     ProblemMatrixEssential::Run();
 }
