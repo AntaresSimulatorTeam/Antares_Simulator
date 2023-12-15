@@ -1,19 +1,19 @@
 #include "MinDownTime.h"
 
-void MinDownTime::add(int pays, int cluster, int clusterIndex, int pdt, bool Simulation)
+void MinDownTime::add(int pays, int index, int pdt)
 {
-    const PALIERS_THERMIQUES& PaliersThermiquesDuPays
-      = problemeHebdo->PaliersThermiquesDuPays[pays];
     const int DureeMinimaleDArretDUnGroupeDuPalierThermique
-      = PaliersThermiquesDuPays.DureeMinimaleDArretDUnGroupeDuPalierThermique[clusterIndex];
+      = data.PaliersThermiquesDuPays[pays].DureeMinimaleDArretDUnGroupeDuPalierThermique[index];
+    auto cluster
+      = data.PaliersThermiquesDuPays[pays].NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
 
-    CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
-      = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
-    CorrespondanceCntNativesCntOptim.NumeroDeContrainteDesContraintesDeDureeMinDArret[cluster] = -1;
-    if (!Simulation)
+    data.CorrespondanceCntNativesCntOptim[pdt]
+      .NumeroDeContrainteDesContraintesDeDureeMinDArret[cluster]
+      = -1;
+    if (!data.Simulation)
     {
         int NombreDePasDeTempsPourUneOptimisation
-          = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+          = builder.data.NombreDePasDeTempsPourUneOptimisation;
 
         builder.updateHourWithinWeek(pdt).NumberOfDispatchableUnits(cluster, 1.0);
 
@@ -28,23 +28,23 @@ void MinDownTime::add(int pays, int cluster, int clusterIndex, int pdt, bool Sim
         builder.lessThan();
         if (builder.NumberOfVariables() > 1)
         {
-            CorrespondanceCntNativesCntOptim
+            data.CorrespondanceCntNativesCntOptim[pdt]
               .NumeroDeContrainteDesContraintesDeDureeMinDArret[cluster]
-              = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
-            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes);
-            namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
+              = builder.data.nombreDeContraintes;
+            ConstraintNamer namer(builder.data.NomDesContraintes);
+            namer.UpdateArea(builder.data.NomsDesPays[pays]);
 
-            namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
-            namer.MinDownTime(problemeHebdo->ProblemeAResoudre->NombreDeContraintes,
-                              PaliersThermiquesDuPays.NomsDesPaliersThermiques[clusterIndex]);
+            namer.UpdateTimeStep(builder.data.weekInTheYear * 168 + pdt);
+            namer.MinDownTime(builder.data.nombreDeContraintes,
+                              data.PaliersThermiquesDuPays[pays].NomsDesPaliersThermiques[index]);
 
             builder.build();
         }
     }
     else
     {
-        problemeHebdo->NbTermesContraintesPourLesCoutsDeDemarrage
+        *builder.data.NbTermesContraintesPourLesCoutsDeDemarrage
           += 1 + DureeMinimaleDArretDUnGroupeDuPalierThermique;
-        problemeHebdo->ProblemeAResoudre->NombreDeContraintes++;
+        builder.data.nombreDeContraintes++;
     }
 }

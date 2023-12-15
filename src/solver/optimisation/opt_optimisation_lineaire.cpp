@@ -27,10 +27,12 @@
 
 #include "sim_structure_probleme_economique.h"
 #include "opt_fonctions.h"
+#include "opt_export_structure.h"
 
 #include <antares/logs/logs.h>
 #include "antares/solver/utils/filename.h"
-
+#include "LinearProblemMatrix.h"
+#include "constraints/constraint_builder_utils.h"
 using namespace Antares;
 using namespace Yuni;
 using Antares::Solver::Optimization::OptimizationOptions;
@@ -134,7 +136,6 @@ void runThermalHeuristic(PROBLEME_HEBDO* problemeHebdo)
 }
 } // namespace
 
-
 bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                               PROBLEME_HEBDO* problemeHebdo,
                               const AdqPatchParams& adqPatchParams,
@@ -158,7 +159,11 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
 
     OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(problemeHebdo);
 
-    OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(problemeHebdo, writer);
+    auto builder_data = NewGetConstraintBuilderFromProblemHebdo(problemeHebdo);
+    ConstraintBuilder builder(builder_data);
+    LinearProblemMatrix linearProblemMatrix(problemeHebdo, builder);
+    linearProblemMatrix.Run();
+    OPT_ExportStructures(problemeHebdo, writer);
 
     bool ret = runWeeklyOptimization(
       options, problemeHebdo, adqPatchParams, writer, PREMIERE_OPTIMISATION);
