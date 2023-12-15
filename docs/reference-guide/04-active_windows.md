@@ -247,7 +247,7 @@ Durations are expressed in days and rates belong to [0 , 1].
     - Minimum Up time (hours)
     - Minimum Down time (hours)
     - Default contribution to the spinning reserve (% of nominal capacity)
-    - CO2 tons emitted per electric MWh
+    - tons of different pollutant types (CO2, SO2, etc.) emitted per electric MWh
     - Fuel efficiency (%)
     - Cost generation [Set manually / Use cost timeseries]
     - Marginal operating cost (€/MWh)
