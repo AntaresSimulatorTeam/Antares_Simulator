@@ -59,39 +59,7 @@ void OrtoolsLogHandler::init()
     ss << myid;
     log_file_per_thread_ = log_directory_ / (std::string("thread_") + ss.str() + ".log");
 
-    if (solver_name_ == COIN)
-    {
-#ifdef __linux__
-        if (log_file_per_thread_.empty()
-            || (file_pointer_ = fopen(log_file_per_thread_.string().c_str(), "a+")) == nullptr)
-#elif _WIN32
-        if (log_file_per_thread_.empty()
-            || (file_pointer_ = _fsopen(log_file_per_thread_.string().c_str(), "a+", _SH_DENYNO))
-                 == nullptr)
-#endif
-        {
-            // logs.error()
-            std::cerr << "Invalid log file name passed as parameter: "
-                      << std::quoted(log_file_per_thread_.string()) << std::endl;
-        }
-        else
-        {
-            setvbuf(file_pointer_, nullptr, _IONBF, 0);
-        }
-    }
-    else
-    {
-        log_writer_.open(log_file_per_thread_, std::ofstream::out | std::ofstream::app);
-    }
-}
-
-OrtoolsLogHandler::~OrtoolsLogHandler()
-{
-    if (file_pointer_)
-    {
-        fclose(file_pointer_);
-        file_pointer_ = nullptr;
-    }
+    log_writer_.open(log_file_per_thread_, std::ofstream::out | std::ofstream::app);
 }
 
 void OrtoolsLogHandler::copy_log(Solver::IResultWriter& writer) const

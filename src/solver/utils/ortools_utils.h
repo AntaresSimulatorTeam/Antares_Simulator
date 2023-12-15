@@ -73,24 +73,17 @@ public:
     }
 
     OrtoolsLogHandler& operator=(const OrtoolsLogHandler& other);
-    ~OrtoolsLogHandler();
     void message(const char* msg, int nLen = 0) override
     {
         log_writer_ << std::setw(nLen) << msg << std::endl;
     }
 
-    FILE* where_to_write()
-    {
-        return file_pointer_;
-    }
-
-    void copy_log(Solver::IResultWriter& writer) const;
+      void copy_log(Solver::IResultWriter& writer) const;
 
 private:
     void init();
 
     std::ofstream log_writer_;
-    FILE* file_pointer_ = nullptr;
     std::string solver_name_;
     std::filesystem::path log_directory_ = ".";
     std::filesystem::path log_file_per_thread_ = "";
