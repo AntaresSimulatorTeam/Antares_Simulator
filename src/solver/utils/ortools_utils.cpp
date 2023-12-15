@@ -299,7 +299,8 @@ MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probl
     // Provide an initial simplex basis, if any
     if (warmStart && Probleme->basisExists())
     {
-        solver->SetStartingLpBasisInt(Probleme->StatutDesVariables, Probleme->StatutDesContraintes);
+        solver->SetStartingLpBasis(Probleme->StatutDesVariables,
+                                   Probleme->StatutDesContraintes);
     }
 
     if (solveAndManageStatus(solver, Probleme->ExistenceDUneSolution, params))
@@ -308,8 +309,15 @@ MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probl
         // Save the final simplex basis for next resolutions
         if (warmStart && keepBasis)
         {
-            solver->GetFinalLpBasisInt(Probleme->StatutDesVariables,
-                                       Probleme->StatutDesContraintes);
+            auto& variables = solver->variables();
+            Probleme->StatutDesVariables.resize(variables.size());
+            for (size_t var = 0; var < variables.size(); var++)
+                Probleme->StatutDesVariables[var] = variables[var]->basis_status();
+
+            auto& constraints = solver->constraints();
+            Probleme->StatutDesContraintes.resize(constraints.size());
+            for (size_t cnt = 0; cnt < constraints.size(); cnt++)
+              Probleme->StatutDesContraintes[cnt] = constraints[cnt]->basis_status();
         }
     }
 
