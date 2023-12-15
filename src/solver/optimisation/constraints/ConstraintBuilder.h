@@ -20,7 +20,7 @@ public:
     VariableManager(const CORRESPONDANCES_DES_VARIABLES& nativeOptimVar,
                     const std::vector<int>& NumeroDeVariableStockFinal,
                     const std::vector<std::vector<int>>& NumeroDeVariableDeTrancheDeStock) :
-     nativeOptimVar(nativeOptimVar),
+     nativeOptimVar_(nativeOptimVar),
      NumeroDeVariableStockFinal(NumeroDeVariableStockFinal),
      NumeroDeVariableDeTrancheDeStock(NumeroDeVariableDeTrancheDeStock)
     {
@@ -28,88 +28,90 @@ public:
 
     int DispatchableProduction(unsigned int index) const
     {
-        return nativeOptimVar.NumeroDeVariableDuPalierThermique[index];
+        return nativeOptimVar_.NumeroDeVariableDuPalierThermique[index];
     }
 
     int NumberOfDispatchableUnits(unsigned int index) const
     {
-        return nativeOptimVar.NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[index];
+        return nativeOptimVar_.NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[index];
     }
 
     int NumberStoppingDispatchableUnits(unsigned int index) const
     {
-        return nativeOptimVar.NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique[index];
+        return nativeOptimVar_
+          .NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique[index];
     }
 
     int NumberStartingDispatchableUnits(unsigned int index) const
     {
-        return nativeOptimVar.NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique[index];
+        return nativeOptimVar_
+          .NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique[index];
     }
 
     int NumberBreakingDownDispatchableUnits(unsigned int index) const
     {
-        return nativeOptimVar
+        return nativeOptimVar_
           .NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique[index];
     }
 
     int NTCDirect(unsigned int index) const
     {
-        return nativeOptimVar.NumeroDeVariableDeLInterconnexion[index];
+        return nativeOptimVar_.NumeroDeVariableDeLInterconnexion[index];
     }
 
     int IntercoDirectCost(unsigned int index) const
     {
-        return nativeOptimVar.NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[index];
+        return nativeOptimVar_.NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[index];
     }
 
     int IntercoIndirectCost(unsigned int index) const
     {
-        return nativeOptimVar.NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[index];
+        return nativeOptimVar_.NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[index];
     }
 
     int ShortTermStorageInjection(unsigned int index) const
     {
-        return nativeOptimVar.SIM_ShortTermStorage.InjectionVariable[index];
+        return nativeOptimVar_.SIM_ShortTermStorage.InjectionVariable[index];
     }
 
     int ShortTermStorageWithdrawal(unsigned int index) const
     {
-        return nativeOptimVar.SIM_ShortTermStorage.WithdrawalVariable[index];
+        return nativeOptimVar_.SIM_ShortTermStorage.WithdrawalVariable[index];
     }
 
     int ShortTermStorageLevel(unsigned int index) const
     {
-        return nativeOptimVar.SIM_ShortTermStorage.LevelVariable[index];
+        return nativeOptimVar_.SIM_ShortTermStorage.LevelVariable[index];
     }
 
     int HydProd(unsigned int index) const
     {
-        return nativeOptimVar.NumeroDeVariablesDeLaProdHyd[index];
+        return nativeOptimVar_.NumeroDeVariablesDeLaProdHyd[index];
     }
 
     int HydProdDown(unsigned int index) const
     {
-        return nativeOptimVar.NumeroDeVariablesVariationHydALaBaisse[index];
+        return nativeOptimVar_.NumeroDeVariablesVariationHydALaBaisse[index];
     }
 
     int HydProdUp(unsigned int index) const
     {
-        return nativeOptimVar.NumeroDeVariablesVariationHydALaHausse[index];
+        return nativeOptimVar_.NumeroDeVariablesVariationHydALaHausse[index];
     }
 
     int Pumping(unsigned int index) const
     {
-        return nativeOptimVar.NumeroDeVariablesDePompage[index];
+        return nativeOptimVar_.NumeroDeVariablesDePompage[index];
     }
 
     int HydroLevel(unsigned int index) const
     {
-        return nativeOptimVar.NumeroDeVariablesDeNiveau[index];
+        return nativeOptimVar_.NumeroDeVariablesDeNiveau[index];
     }
 
     int Overflow(unsigned int index) const
     {
-        return nativeOptimVar.NumeroDeVariablesDeDebordement[index];
+        return nativeOptimVar_.NumeroDeVariablesDeDebordement[index];
     }
 
     int FinalStorage(unsigned int index) const
@@ -124,16 +126,16 @@ public:
 
     int PositiveUnsuppliedEnergy(unsigned int index) const
     {
-        return nativeOptimVar.NumeroDeVariableDefaillancePositive[index];
+        return nativeOptimVar_.NumeroDeVariableDefaillancePositive[index];
     }
 
     int NegativeUnsuppliedEnergy(unsigned int index) const
     {
-        return nativeOptimVar.NumeroDeVariableDefaillanceNegative[index];
+        return nativeOptimVar_.NumeroDeVariableDefaillanceNegative[index];
     }
 
 private:
-    const CORRESPONDANCES_DES_VARIABLES& nativeOptimVar;
+    const CORRESPONDANCES_DES_VARIABLES& nativeOptimVar_;
     const std::vector<int>& NumeroDeVariableStockFinal;
     const std::vector<std::vector<int>>& NumeroDeVariableDeTrancheDeStock;
 };
