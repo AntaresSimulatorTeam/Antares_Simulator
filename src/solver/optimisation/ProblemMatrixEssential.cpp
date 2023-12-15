@@ -24,19 +24,24 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#pragma once
-#include "opt_structure_probleme_a_resoudre.h"
-#include "sim_structure_probleme_economique.h"
-#include "constraints/ConstraintGroup.h"
+#include "ProblemMatrixEssential.h"
 
-class ProblemMatrixEssential
+ProblemMatrixEssential::ProblemMatrixEssential(PROBLEME_HEBDO* problemeHebdo) :
+ problemeHebdo_(problemeHebdo)
 {
-public:
-    explicit ProblemMatrixEssential(PROBLEME_HEBDO* problemeHebdo);
+}
 
-    virtual void Run();
+void ProblemMatrixEssential::Run()
+{
+    for (auto& group : constraintgroups_)
+    {
+        group->BuildConstraints();
+    }
+}
 
-    void InitializeProblemAResoudreCounters();
-    PROBLEME_HEBDO* problemeHebdo_;
-    std::vector<ConstraintGroup*> constraintgroups_;
-};
+void ProblemMatrixEssential::InitializeProblemAResoudreCounters()
+{
+    auto& ProblemeAResoudre = problemeHebdo_->ProblemeAResoudre;
+    ProblemeAResoudre->NombreDeContraintes = 0;
+    ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes = 0;
+}

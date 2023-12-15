@@ -127,6 +127,7 @@ set(RTESOLVER_OPT
 		constraints/MinDownTime.cpp
 
 		ProblemMatrixEssential.h
+		ProblemMatrixEssential.cpp
 		LinearProblemMatrixStartUpCosts.h
 		LinearProblemMatrixStartUpCosts.cpp
 		LinearProblemMatrix.h
