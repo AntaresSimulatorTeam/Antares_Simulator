@@ -96,17 +96,31 @@ $(document).ready(function(){initNavTree('NbUnitsOutageLessThanNbUnitsStop_8h_so
 <div class="contents">
 <div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#include &quot;ConstraintBuilder.h&quot;</span></div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno"><a class="line" href="classNbUnitsOutageLessThanNbUnitsStop.html">    7</a></span><span class="keyword">class </span><a class="code hl_class" href="classNbUnitsOutageLessThanNbUnitsStop.html">NbUnitsOutageLessThanNbUnitsStop</a> : <span class="keyword">private</span> <a class="code hl_class" href="classConstraintFactory.html">ConstraintFactory</a></div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span>{</div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>    <span class="keyword">using </span>ConstraintFactory::ConstraintFactory;</div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classNbUnitsOutageLessThanNbUnitsStop.html#a9a12cb323aa7860f2bf886f337adb239">add</a>(<span class="keywordtype">int</span> pays, <span class="keywordtype">int</span> cluster, <span class="keywordtype">int</span> clusterIndex, <span class="keywordtype">int</span> pdt, <span class="keywordtype">bool</span> Simulation);</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>};</div>
-<div class="ttc" id="aclassConstraintFactory_html"><div class="ttname"><a href="classConstraintFactory.html">ConstraintFactory</a></div><div class="ttdef"><b>Definition:</b> ConstraintBuilder.h:358</div></div>
-<div class="ttc" id="aclassNbUnitsOutageLessThanNbUnitsStop_html"><div class="ttname"><a href="classNbUnitsOutageLessThanNbUnitsStop.html">NbUnitsOutageLessThanNbUnitsStop</a></div><div class="ttdef"><b>Definition:</b> NbUnitsOutageLessThanNbUnitsStop.h:8</div></div>
-<div class="ttc" id="aclassNbUnitsOutageLessThanNbUnitsStop_html_a9a12cb323aa7860f2bf886f337adb239"><div class="ttname"><a href="classNbUnitsOutageLessThanNbUnitsStop.html#a9a12cb323aa7860f2bf886f337adb239">NbUnitsOutageLessThanNbUnitsStop::add</a></div><div class="ttdeci">void add(int pays, int cluster, int clusterIndex, int pdt, bool Simulation)</div><div class="ttdoc">Add variables to the constraint and update constraints Matrix.</div><div class="ttdef"><b>Definition:</b> NbUnitsOutageLessThanNbUnitsStop.cpp:3</div></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno"><a class="line" href="structNbUnitsOutageLessThanNbUnitsStopData.html">    3</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structNbUnitsOutageLessThanNbUnitsStopData.html">NbUnitsOutageLessThanNbUnitsStopData</a></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span>{</div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span>    <span class="keyword">const</span> std::vector&lt;PALIERS_THERMIQUES&gt;&amp; PaliersThermiquesDuPays;</div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span>    <span class="keywordtype">bool</span> Simulation;</div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span>    std::vector&lt;CORRESPONDANCES_DES_CONTRAINTES&gt;&amp; CorrespondanceCntNativesCntOptim;</div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span>};</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno"><a class="line" href="classNbUnitsOutageLessThanNbUnitsStop.html">   12</a></span><span class="keyword">class </span><a class="code hl_class" href="classNbUnitsOutageLessThanNbUnitsStop.html">NbUnitsOutageLessThanNbUnitsStop</a> : <span class="keyword">private</span> <a class="code hl_class" href="classConstraintFactory.html">ConstraintFactory</a></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>{</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>    <a class="code hl_class" href="classNbUnitsOutageLessThanNbUnitsStop.html">NbUnitsOutageLessThanNbUnitsStop</a>(<a class="code hl_class" href="classConstraintBuilder.html">ConstraintBuilder</a>&amp; builder,</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>                                     <a class="code hl_struct" href="structNbUnitsOutageLessThanNbUnitsStopData.html">NbUnitsOutageLessThanNbUnitsStopData</a>&amp; data) :</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>     <a class="code hl_class" href="classConstraintFactory.html">ConstraintFactory</a>(builder), data(data)</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>    {</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    }</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classNbUnitsOutageLessThanNbUnitsStop.html#a3744b46a326600cfa20c13008943853e">add</a>(<span class="keywordtype">int</span> pays, <span class="keywordtype">int</span> index, <span class="keywordtype">int</span> pdt);</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    <a class="code hl_struct" href="structNbUnitsOutageLessThanNbUnitsStopData.html">NbUnitsOutageLessThanNbUnitsStopData</a>&amp; data;</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>};</div>
+<div class="ttc" id="aclassConstraintBuilder_html"><div class="ttname"><a href="classConstraintBuilder.html">ConstraintBuilder</a></div><div class="ttdef"><b>Definition:</b> ConstraintBuilder.h:184</div></div>
+<div class="ttc" id="aclassConstraintFactory_html"><div class="ttname"><a href="classConstraintFactory.html">ConstraintFactory</a></div><div class="ttdef"><b>Definition:</b> ConstraintBuilder.h:347</div></div>
+<div class="ttc" id="aclassNbUnitsOutageLessThanNbUnitsStop_html"><div class="ttname"><a href="classNbUnitsOutageLessThanNbUnitsStop.html">NbUnitsOutageLessThanNbUnitsStop</a></div><div class="ttdef"><b>Definition:</b> NbUnitsOutageLessThanNbUnitsStop.h:13</div></div>
+<div class="ttc" id="aclassNbUnitsOutageLessThanNbUnitsStop_html_a3744b46a326600cfa20c13008943853e"><div class="ttname"><a href="classNbUnitsOutageLessThanNbUnitsStop.html#a3744b46a326600cfa20c13008943853e">NbUnitsOutageLessThanNbUnitsStop::add</a></div><div class="ttdeci">void add(int pays, int index, int pdt)</div><div class="ttdoc">Add variables to the constraint and update constraints Matrix.</div><div class="ttdef"><b>Definition:</b> NbUnitsOutageLessThanNbUnitsStop.cpp:3</div></div>
+<div class="ttc" id="astructNbUnitsOutageLessThanNbUnitsStopData_html"><div class="ttname"><a href="structNbUnitsOutageLessThanNbUnitsStopData.html">NbUnitsOutageLessThanNbUnitsStopData</a></div><div class="ttdef"><b>Definition:</b> NbUnitsOutageLessThanNbUnitsStop.h:4</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

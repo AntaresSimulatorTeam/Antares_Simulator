@@ -4,6 +4,8 @@ var dir_58214dbee968e8ac661492141d050741 =
     [ "adequacy_patch_local_matching", "dir_cc6fedb281d78f8fe70ec0908da22553.html", "dir_cc6fedb281d78f8fe70ec0908da22553" ],
     [ "constraints", "dir_d9dfb269c820a68152622c7c27eac6d9.html", "dir_d9dfb269c820a68152622c7c27eac6d9" ],
     [ "base_weekly_optimization.h", "base__weekly__optimization_8h_source.html", null ],
+    [ "LinearProblemMatrix.h", "LinearProblemMatrix_8h_source.html", null ],
+    [ "LinearProblemMatrixStartUpCosts.h", "LinearProblemMatrixStartUpCosts_8h_source.html", null ],
     [ "opt_constants.h", "opt__constants_8h_source.html", null ],
     [ "opt_export_structure.h", "opt__export__structure_8h_source.html", null ],
     [ "opt_fonctions.h", "opt__fonctions_8h_source.html", null ],
@@ -12,5 +14,7 @@ var dir_58214dbee968e8ac661492141d050741 =
     [ "opt_structure_probleme_a_resoudre.h", "opt__structure__probleme__a__resoudre_8h_source.html", null ],
     [ "optim_post_process_list.h", "optim__post__process__list_8h_source.html", null ],
     [ "post_process_commands.h", "post__process__commands_8h_source.html", null ],
+    [ "ProblemMatrixEssential.h", "ProblemMatrixEssential_8h_source.html", null ],
+    [ "QuadraticProblemMatrix.h", "QuadraticProblemMatrix_8h_source.html", null ],
     [ "weekly_optimization.h", "weekly__optimization_8h_source.html", null ]
 ];

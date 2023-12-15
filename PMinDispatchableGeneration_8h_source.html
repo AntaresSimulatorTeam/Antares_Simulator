@@ -100,13 +100,21 @@ $(document).ready(function(){initNavTree('PMinDispatchableGeneration_8h_source.h
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno"><a class="line" href="classPMinDispatchableGeneration.html">    7</a></span><span class="keyword">class </span><a class="code hl_class" href="classPMinDispatchableGeneration.html">PMinDispatchableGeneration</a> : <span class="keyword">private</span> <a class="code hl_class" href="classConstraintFactory.html">ConstraintFactory</a></div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span>{</div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>    <span class="keyword">using </span>ConstraintFactory::ConstraintFactory;</div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classPMinDispatchableGeneration.html#a0d82a984bc98e25d0a51b5ee7c90f5c4">add</a>(<span class="keywordtype">int</span> pays, <span class="keywordtype">int</span> cluster, <span class="keywordtype">int</span> clusterIndex, <span class="keywordtype">int</span> pdt, <span class="keywordtype">bool</span> Simulation);</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>};</div>
-<div class="ttc" id="aclassConstraintFactory_html"><div class="ttname"><a href="classConstraintFactory.html">ConstraintFactory</a></div><div class="ttdef"><b>Definition:</b> ConstraintBuilder.h:358</div></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>    <a class="code hl_class" href="classPMinDispatchableGeneration.html">PMinDispatchableGeneration</a>(<a class="code hl_class" href="classConstraintBuilder.html">ConstraintBuilder</a>&amp; builder, <a class="code hl_struct" href="structStartUpCostsData.html">StartUpCostsData</a>&amp; data) :</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>     <a class="code hl_class" href="classConstraintFactory.html">ConstraintFactory</a>(builder), data(data)</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>    {</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>    }</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classPMinDispatchableGeneration.html#a2d46790c674fec6498eb4a31d948e74a">add</a>(<span class="keywordtype">int</span> pays, <span class="keywordtype">int</span> index, <span class="keywordtype">int</span> pdt);</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    <a class="code hl_struct" href="structStartUpCostsData.html">StartUpCostsData</a>&amp; data;</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>};</div>
+<div class="ttc" id="aclassConstraintBuilder_html"><div class="ttname"><a href="classConstraintBuilder.html">ConstraintBuilder</a></div><div class="ttdef"><b>Definition:</b> ConstraintBuilder.h:184</div></div>
+<div class="ttc" id="aclassConstraintFactory_html"><div class="ttname"><a href="classConstraintFactory.html">ConstraintFactory</a></div><div class="ttdef"><b>Definition:</b> ConstraintBuilder.h:347</div></div>
 <div class="ttc" id="aclassPMinDispatchableGeneration_html"><div class="ttname"><a href="classPMinDispatchableGeneration.html">PMinDispatchableGeneration</a></div><div class="ttdef"><b>Definition:</b> PMinDispatchableGeneration.h:8</div></div>
-<div class="ttc" id="aclassPMinDispatchableGeneration_html_a0d82a984bc98e25d0a51b5ee7c90f5c4"><div class="ttname"><a href="classPMinDispatchableGeneration.html#a0d82a984bc98e25d0a51b5ee7c90f5c4">PMinDispatchableGeneration::add</a></div><div class="ttdeci">void add(int pays, int cluster, int clusterIndex, int pdt, bool Simulation)</div><div class="ttdoc">Add variables to the constraint and update constraints Matrix.</div><div class="ttdef"><b>Definition:</b> PMinDispatchableGeneration.cpp:3</div></div>
+<div class="ttc" id="aclassPMinDispatchableGeneration_html_a2d46790c674fec6498eb4a31d948e74a"><div class="ttname"><a href="classPMinDispatchableGeneration.html#a2d46790c674fec6498eb4a31d948e74a">PMinDispatchableGeneration::add</a></div><div class="ttdeci">void add(int pays, int index, int pdt)</div><div class="ttdoc">Add variables to the constraint and update constraints Matrix.</div><div class="ttdef"><b>Definition:</b> PMinDispatchableGeneration.cpp:3</div></div>
+<div class="ttc" id="astructStartUpCostsData_html"><div class="ttname"><a href="structStartUpCostsData.html">StartUpCostsData</a></div><div class="ttdef"><b>Definition:</b> ConstraintBuilder.h:387</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

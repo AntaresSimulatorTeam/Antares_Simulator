@@ -1,4 +1,4 @@
 var classMinDownTime =
 [
-    [ "add", "classMinDownTime.html#a9cb23cc317e6db573abde8560f82d9f7", null ]
+    [ "add", "classMinDownTime.html#afe857bfb3d11b980e0f053d00e7ee66f", null ]
 ];

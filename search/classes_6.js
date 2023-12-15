@@ -10,5 +10,6 @@ var searchData=
   ['grid_3c_20antares_3a_3adata_3a_3aarea_20_3e_7',['Grid&lt; Antares::Data::Area &gt;',['../classAntares_1_1Graph_1_1Grid.html',1,'Antares::Graph']]],
   ['gridcellattrprovider_8',['GridCellAttrProvider',['../classAntares_1_1Component_1_1Datagrid_1_1GridCellAttrProvider.html',1,'Antares::Component::Datagrid']]],
   ['group_9',['Group',['../classAntares_1_1Component_1_1HTMLListbox_1_1Item_1_1Group.html',1,'Antares::Component::HTMLListbox::Item']]],
-  ['guilocker_10',['GUILocker',['../classAntares_1_1GUILocker.html',1,'Antares']]]
+  ['group1_10',['Group1',['../classGroup1.html',1,'']]],
+  ['guilocker_11',['GUILocker',['../classAntares_1_1GUILocker.html',1,'Antares']]]
 ];

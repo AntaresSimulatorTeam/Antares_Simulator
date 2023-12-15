@@ -14,6 +14,9 @@ var searchData=
   ['error_11',['Error',['../classAntares_1_1Component_1_1HTMLListbox_1_1Item_1_1Error.html',1,'Antares::Component::HTMLListbox::Item']]],
   ['error_12',['error',['../classjson__collector_1_1error.html',1,'json_collector']]],
   ['eventsregistry_13',['EventsRegistry',['../classFSWalker_1_1EventsRegistry.html',1,'FSWalker']]],
-  ['execute_14',['Execute',['../classAntares_1_1Toolbox_1_1Process_1_1Execute.html',1,'Antares::Toolbox::Process']]],
-  ['exportmap_15',['ExportMap',['../classAntares_1_1Window_1_1ExportMap.html',1,'Antares::Window']]]
+  ['exchangebalance_14',['ExchangeBalance',['../classExchangeBalance.html',1,'']]],
+  ['exchangebalancedata_15',['ExchangeBalanceData',['../structExchangeBalanceData.html',1,'']]],
+  ['exchangebalancegroup_16',['ExchangeBalanceGroup',['../classExchangeBalanceGroup.html',1,'']]],
+  ['execute_17',['Execute',['../classAntares_1_1Toolbox_1_1Process_1_1Execute.html',1,'Antares::Toolbox::Process']]],
+  ['exportmap_18',['ExportMap',['../classAntares_1_1Window_1_1ExportMap.html',1,'Antares::Window']]]
 ];

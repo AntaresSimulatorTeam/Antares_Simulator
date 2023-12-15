@@ -111,18 +111,18 @@ Inheritance diagram for MinDownTime:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a9cb23cc317e6db573abde8560f82d9f7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMinDownTime.html#a9cb23cc317e6db573abde8560f82d9f7">add</a> (int pays, int cluster, int clusterIndex, int pdt, bool Simulation)</td></tr>
-<tr class="memdesc:a9cb23cc317e6db573abde8560f82d9f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add variables to the constraint and update constraints Matrix.  <a href="classMinDownTime.html#a9cb23cc317e6db573abde8560f82d9f7">More...</a><br /></td></tr>
-<tr class="separator:a9cb23cc317e6db573abde8560f82d9f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a172fa22e846b495d9ff1835cd0730e71"><td class="memItemLeft" align="right" valign="top"><a id="a172fa22e846b495d9ff1835cd0730e71" name="a172fa22e846b495d9ff1835cd0730e71"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>ConstraintFactory</b> (<a class="el" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a> *problemeHebdo)</td></tr>
-<tr class="separator:a172fa22e846b495d9ff1835cd0730e71"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a66932b16927a7343f291b2cd4056d9c4"><td class="memItemLeft" align="right" valign="top"><a id="a66932b16927a7343f291b2cd4056d9c4" name="a66932b16927a7343f291b2cd4056d9c4"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>MinDownTime</b> (<a class="el" href="classConstraintBuilder.html">ConstraintBuilder</a> &amp;builder, <a class="el" href="structMinDownTimeData.html">MinDownTimeData</a> &amp;data)</td></tr>
+<tr class="separator:a66932b16927a7343f291b2cd4056d9c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afe857bfb3d11b980e0f053d00e7ee66f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMinDownTime.html#afe857bfb3d11b980e0f053d00e7ee66f">add</a> (int pays, int index, int pdt)</td></tr>
+<tr class="memdesc:afe857bfb3d11b980e0f053d00e7ee66f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add variables to the constraint and update constraints Matrix.  <a href="classMinDownTime.html#afe857bfb3d11b980e0f053d00e7ee66f">More...</a><br /></td></tr>
+<tr class="separator:afe857bfb3d11b980e0f053d00e7ee66f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >represent '<a class="el" href="classMinDownTime.html">MinDownTime</a>' Constraint type </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a9cb23cc317e6db573abde8560f82d9f7" name="a9cb23cc317e6db573abde8560f82d9f7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9cb23cc317e6db573abde8560f82d9f7">&#9670;&#160;</a></span>add()</h2>
+<a id="afe857bfb3d11b980e0f053d00e7ee66f" name="afe857bfb3d11b980e0f053d00e7ee66f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afe857bfb3d11b980e0f053d00e7ee66f">&#9670;&#160;</a></span>add()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -137,25 +137,13 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>cluster</em>, </td>
+          <td class="paramname"><em>index</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>clusterIndex</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>pdt</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>Simulation</em>&#160;</td>
+          <td class="paramname"><em>pdt</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
