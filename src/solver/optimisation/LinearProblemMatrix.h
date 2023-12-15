@@ -45,15 +45,11 @@ using namespace Antares::Data;
 class LinearProblemMatrix : public ProblemMatrixEssential
 {
 public:
-    explicit LinearProblemMatrix(PROBLEME_HEBDO* problemeHebdo,
-                                 Solver::IResultWriter& writer,
-                                 ConstraintBuilder& builder);
+    explicit LinearProblemMatrix(PROBLEME_HEBDO* problemeHebdo, ConstraintBuilder& builder);
 
     void Run() override;
-    void ExportStructures();
 
 private:
-    Solver::IResultWriter& writer_;
     ConstraintBuilder& builder_;
     Group1 group1_;
     BindingConstraintDayGroup bindingConstraintDayGroup_;

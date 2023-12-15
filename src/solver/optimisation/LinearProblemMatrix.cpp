@@ -34,11 +34,9 @@
 using namespace Antares::Data;
 
 LinearProblemMatrix::LinearProblemMatrix(PROBLEME_HEBDO* problemeHebdo,
-                                         Solver::IResultWriter& writer,
                                          ConstraintBuilder& builder) :
  ProblemMatrixEssential(problemeHebdo),
  builder_(builder),
- writer_(writer),
  group1_(problemeHebdo, builder),
  bindingConstraintDayGroup_(problemeHebdo, builder),
  bindingConstraintWeekGroup_(problemeHebdo, builder),
@@ -58,14 +56,6 @@ LinearProblemMatrix::LinearProblemMatrix(PROBLEME_HEBDO* problemeHebdo,
                          &maxPumpingGroup_,
                          &areaHydroLevelGroup_,
                          &finalStockGroup_};
-}
-void LinearProblemMatrix::ExportStructures()
-{
-    if (problemeHebdo_->ExportStructure && problemeHebdo_->firstWeekOfSimulation)
-    {
-        OPT_ExportInterco(writer_, problemeHebdo_);
-        OPT_ExportAreaName(writer_, problemeHebdo_->NomsDesPays);
-    }
 }
 
 void LinearProblemMatrix::Run()

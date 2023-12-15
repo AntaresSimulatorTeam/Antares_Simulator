@@ -27,6 +27,7 @@
 
 #include "sim_structure_probleme_economique.h"
 #include "opt_fonctions.h"
+#include "opt_export_structure.h"
 
 #include <antares/logs/logs.h>
 #include "antares/solver/utils/filename.h"
@@ -160,9 +161,9 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
 
     auto builder_data = NewGetConstraintBuilderFromProblemHebdo(problemeHebdo);
     ConstraintBuilder builder(builder_data);
-    LinearProblemMatrix linearProblemMatrix(problemeHebdo, writer, builder);
+    LinearProblemMatrix linearProblemMatrix(problemeHebdo, builder);
     linearProblemMatrix.Run();
-    linearProblemMatrix.ExportStructures();
+    OPT_ExportStructures(problemeHebdo, writer);
 
     bool ret = runWeeklyOptimization(
       options, problemeHebdo, adqPatchParams, writer, PREMIERE_OPTIMISATION);
