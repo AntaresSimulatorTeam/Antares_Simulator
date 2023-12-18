@@ -77,7 +77,7 @@ jobs:
       run: |
            source /opt/rh/devtoolset-10/enable
            source /opt/rh/rh-git227/enable
-           cmake3 --build _build --config Release -j2
+           cmake3 --build _build --config Release -j$(nproc)
            ccache -s
 
     - name: Installer .rpm creation

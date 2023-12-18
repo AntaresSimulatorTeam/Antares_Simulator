@@ -28,6 +28,7 @@
 #include <antares/logs/logs.h>
 #include <yuni/io/file.h>
 #include <filesystem>
+#include <algorithm>
 #include <string>
 
 #include "container.h"
@@ -39,7 +40,7 @@ namespace Antares::Data::ShortTermStorage
 bool STStorageInput::validate() const
 {
     return std::all_of(storagesByIndex.cbegin(), storagesByIndex.cend(), [](auto& cluster) {
-        return cluster->validate();
+        return cluster.validate();
     });
 }
 
@@ -61,12 +62,12 @@ bool STStorageInput::createSTStorageClustersFromIniFile(const std::string& path)
         if (!cluster.loadFromSection(*section))
             return false;
 
-        storagesById.try_emplace(cluster.properties.name, cluster);
+        storagesByIndex.push_back(cluster);
     }
 
-    storagesByIndex.reserve(storagesById.size());
-    for (auto& [id, storage] : storagesById)
-        storagesByIndex.push_back(&storage);
+    std::sort(storagesByIndex.begin(), storagesByIndex.end(), [&](const auto& a, const auto& b){
+        return a.properties.name < b.properties.name;
+    });
 
     return true;
 }
@@ -80,8 +81,8 @@ bool STStorageInput::loadSeriesFromFolder(const std::string& folder) const
 
     for (auto& cluster : storagesByIndex)
     {
-        const std::string buffer(folder + SEP + cluster->id);
-        ret = cluster->loadSeries(buffer) && ret;
+        const std::string buffer(folder + SEP + cluster.id);
+        ret = cluster.loadSeries(buffer) && ret;
     }
 
     return ret;
@@ -95,7 +96,7 @@ bool STStorageInput::saveToFolder(const std::string& folder) const
     logs.notice() << "created empty ini: " << folder + SEP + "list.ini";
 
     return std::all_of(storagesByIndex.cbegin(), storagesByIndex.cend(), [&folder](auto& storage) {
-        return storage->saveProperties(folder);
+        return storage.saveProperties(folder);
     });
 }
 
@@ -103,7 +104,7 @@ bool STStorageInput::saveDataSeriesToFolder(const std::string& folder) const
 {
     Yuni::IO::Directory::Create(folder);
     return std::all_of(storagesByIndex.cbegin(), storagesByIndex.cend(), [&folder](auto& storage) {
-        return storage->saveSeries(folder + SEP + storage->id);
+        return storage.saveSeries(folder + SEP + storage.id);
     });
 }
 

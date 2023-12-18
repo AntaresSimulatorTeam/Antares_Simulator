@@ -27,7 +27,7 @@
 #include <yuni/core/system/suspend.h>
 
 #include <antares/logs/logs.h>
-#include "application.h"
+#include "antares/application/application.h"
 #include <antares/args/args_to_utf8.h>
 
 #include <antares/fatal-error.h>

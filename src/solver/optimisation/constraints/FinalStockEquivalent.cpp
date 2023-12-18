@@ -2,22 +2,21 @@
 
 void FinalStockEquivalent::add(int pays)
 {
-    const auto pdt = problemeHebdo->NombreDePasDeTempsPourUneOptimisation - 1;
-    if (problemeHebdo->CaracteristiquesHydrauliques[pays].AccurateWaterValue
-        && problemeHebdo->CaracteristiquesHydrauliques[pays].DirectLevelAccess)
+    const auto pdt = builder.data.NombreDePasDeTempsPourUneOptimisation - 1;
+    if (data.CaracteristiquesHydrauliques[pays].AccurateWaterValue
+        && data.CaracteristiquesHydrauliques[pays].DirectLevelAccess)
     { /*  equivalence constraint : StockFinal- Niveau[T]= 0*/
 
-        problemeHebdo->NumeroDeContrainteEquivalenceStockFinal[pays]
-          = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
-        ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes);
+        data.NumeroDeContrainteEquivalenceStockFinal[pays] = builder.data.nombreDeContraintes;
+        ConstraintNamer namer(builder.data.NomDesContraintes);
 
-        namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-        namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
-        namer.FinalStockEquivalent(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
+        namer.UpdateArea(builder.data.NomsDesPays[pays]);
+        namer.UpdateTimeStep(builder.data.weekInTheYear * 168 + pdt);
+        namer.FinalStockEquivalent(builder.data.nombreDeContraintes);
 
         builder.updateHourWithinWeek(pdt)
           .FinalStorage(pays, 1.0)
-          .updateHourWithinWeek(problemeHebdo->NombreDePasDeTempsPourUneOptimisation - 1)
+          .updateHourWithinWeek(builder.data.NombreDePasDeTempsPourUneOptimisation - 1)
           .HydroLevel(pays, -1.0)
           .equalTo()
           .build();

@@ -3,20 +3,18 @@
 
 void FictitiousLoad::add(int pdt, int pays)
 {
-    CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim
-      = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
-    CorrespondanceCntNativesCntOptim.NumeroDeContraintePourEviterLesChargesFictives[pays]
-      = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
+    data.CorrespondanceCntNativesCntOptim[pdt].NumeroDeContraintePourEviterLesChargesFictives[pays]
+      = builder.data.nombreDeContraintes;
 
-    ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes);
+    ConstraintNamer namer(builder.data.NomDesContraintes);
 
-    namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
-    namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-    namer.FictiveLoads(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
+    namer.UpdateTimeStep(builder.data.weekInTheYear * 168 + pdt);
+    namer.UpdateArea(builder.data.NomsDesPays[pays]);
+    namer.FictiveLoads(builder.data.nombreDeContraintes);
 
     builder.updateHourWithinWeek(pdt);
-    exportPaliers(*problemeHebdo, builder, pays);
-    auto coeff = problemeHebdo->DefaillanceNegativeUtiliserHydro[pays] ? -1 : 0;
+    ExportPaliers(data.PaliersThermiquesDuPays[pays], builder);
+    auto coeff = data.DefaillanceNegativeUtiliserHydro[pays] ? -1 : 0;
     builder.HydProd(pays, coeff).NegativeUnsuppliedEnergy(pays, 1.0);
 
     builder.lessThan();

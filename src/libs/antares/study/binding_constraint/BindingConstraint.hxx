@@ -26,8 +26,6 @@
 */
 #pragma once
 
-#include <antares/utils/utils.h>
-
 namespace Antares::Data
 {
 inline const ConstraintName& BindingConstraint::name() const
