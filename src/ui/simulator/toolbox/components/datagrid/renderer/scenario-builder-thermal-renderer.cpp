@@ -54,7 +54,7 @@ wxString thermalScBuilderRenderer::rowCaption(int rowIndx) const
         && (uint)rowIndx < selectedArea()->thermal.list.size())
     {
         return wxString() << wxT(" ")
-                          << wxStringFromUTF8(selectedArea()->thermal.list.cluster[rowIndx]->name())
+                          << wxStringFromUTF8(selectedArea()->thermal.list.clusters[rowIndx]->name())
                           << wxT("  ");
     }
     return wxEmptyString;
@@ -69,7 +69,7 @@ bool thermalScBuilderRenderer::cellValue(int x, int y, const String& value)
         assert((uint)y < pRules->thermal[selectedArea()->index].width());
         assert((uint)x < pRules->thermal[selectedArea()->index].height());
         uint val = fromStringToTSnumber(value);
-        pRules->thermal[selectedArea()->index].setTSnumber(selectedArea()->thermal.list.cluster[y].get(), x, val);
+        pRules->thermal[selectedArea()->index].setTSnumber(selectedArea()->thermal.list.clusters[y].get(), x, val);
         return true;
     }
     return false;

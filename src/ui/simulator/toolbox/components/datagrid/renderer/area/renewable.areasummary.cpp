@@ -51,7 +51,7 @@ RenewableClusterSummarySingleArea::~RenewableClusterSummarySingleArea()
 wxString RenewableClusterSummarySingleArea::rowCaption(int rowIndx) const
 {
     if (pArea)
-        return wxStringFromUTF8(pArea->renewable.list.cluster[rowIndx]->name());
+        return wxStringFromUTF8(pArea->renewable.list.clusters[rowIndx]->name());
     return wxEmptyString;
 }
 

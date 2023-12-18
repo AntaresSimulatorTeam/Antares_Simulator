@@ -555,8 +555,8 @@ void storeTSnumbersForIntraModal(const array<uint32_t, timeSeriesCount>& intramo
 
         if (isTSintramodal[indexTS])
         {
-            auto end_rn_clusters = area.renewable.list.cluster.end();
-            for (auto j = area.renewable.list.cluster.begin(); j != end_rn_clusters; ++j)
+            auto end_rn_clusters = area.renewable.list.clusters.end();
+            for (auto j = area.renewable.list.clusters.begin(); j != end_rn_clusters; ++j)
             {
                 RenewableClusterList::SharedPtr cluster = *j;
                 if (cluster->enabled)
@@ -667,8 +667,8 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
         // --------------------------
         indexTS = ts_to_tsIndex.at(timeSeriesRenewable);
 
-        auto end_rn_clusters = area.renewable.list.cluster.end();
-        for (auto j = area.renewable.list.cluster.begin(); j != end_rn_clusters; ++j)
+        auto end_rn_clusters = area.renewable.list.clusters.end();
+        for (auto j = area.renewable.list.clusters.begin(); j != end_rn_clusters; ++j)
         {
             RenewableClusterList::SharedPtr cluster = *j;
             if (not cluster->enabled)
@@ -747,7 +747,7 @@ Matrix<uint32_t>* getFirstTSnumberInterModalMatrixFoundInArea(
             tsNumbersMtx = &(area.thermal.clusters[0]->series.timeseriesNumbers);
         else if (isTSintermodal[ts_to_tsIndex.at(timeSeriesRenewable)]
                  && area.renewable.list.size() > 0)
-            tsNumbersMtx = &(area.renewable.list.cluster[0]->series.timeseriesNumbers);
+            tsNumbersMtx = &(area.renewable.list.clusters[0]->series.timeseriesNumbers);
     }
     assert(tsNumbersMtx);
 

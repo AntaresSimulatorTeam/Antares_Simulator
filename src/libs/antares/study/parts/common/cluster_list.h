@@ -52,7 +52,7 @@ public:
     template<class PredicateT>
     void each(const PredicateT& predicate)
     {
-        for (auto& c : cluster)
+        for (auto& c : clusters)
             predicate(*c);
     }
     /*!
@@ -61,11 +61,11 @@ public:
     template<class PredicateT>
     void each(const PredicateT& predicate) const
     {
-        for (const auto& c : cluster)
+        for (const auto& c : clusters)
             predicate(*c);
     }
 
-    //! \name Cluster management
+    //! \name clusters management
     //@{
     /*!
     ** \brief Destroy all clusters
@@ -73,61 +73,61 @@ public:
     void clear();
 
     /*!
-    ** \brief Add a cluster in the list
+    ** \brief Add a clusters in the list
     **
-    ** \param t The cluster to add
-    ** \return True if the cluster has been added, false otherwise
+    ** \param t The clusters to add
+    ** \return True if the clusters has been added, false otherwise
     */
 
-    SharedPtr add(const SharedPtr cluster);
+    SharedPtr add(const SharedPtr clusters);
     /*!
-    ** \brief Detach a cluster represented by an iterator
+    ** \brief Detach a clusters represented by an iterator
     **
-    ** The cluster will be removed from the list but _not_
+    ** The clusters will be removed from the list but _not_
     ** destroyed.
     ** The iterator should considered as invalid after using this method.
-    ** \return A pointer to the cluster, NULL if an error has occured
+    ** \return A pointer to the clusters, NULL if an error has occured
     */
     SharedPtr detach(iterator i);
 
     /*!
-    ** \brief Try to find a cluster from its id (const)
+    ** \brief Try to find a clusters from its id (const)
     **
-    ** \param id ID of the cluster to find
-    ** \return A pointer to a cluster. nullptr if not found
+    ** \param id ID of the clusters to find
+    ** \return A pointer to a clusters. nullptr if not found
     */
     ClusterT* find(const Data::ClusterName& id) const;
 
     /*!
-    ** \brief Try to find a cluster from its pointer (const)
+    ** \brief Try to find a clusters from its pointer (const)
     **
-    ** \param  p Pointer of the cluster to find
-    ** \return A pointer to a cluster. nullptr if not found
+    ** \param  p Pointer of the clusters to find
+    ** \return A pointer to a clusters. nullptr if not found
     */
     const ClusterT* find(const ClusterT* p) const;
 
     /*!
-    ** \brief Get if a cluster exists
+    ** \brief Get if a clusters exists
     **
-    ** \param id ID of the cluster to find
-    ** \return True if the cluster exists
+    ** \param id ID of the clusters to find
+    ** \return True if the clusters exists
     */
     bool exists(const Data::ClusterName& id) const;
 
     /*!
-    ** \brief Rename a cluster
+    ** \brief Rename a clusters
     **
-    ** \param idToFind ID of the cluster to rename
-    ** \param newName The new name for the cluster
-    ** \return True if the operation succeeded (the cluster has been renamed)
-    **   false otherwise (not found or if another cluster has the same name)
+    ** \param idToFind ID of the clusters to rename
+    ** \param newName The new name for the clusters
+    ** \return True if the operation succeeded (the clusters has been renamed)
+    **   false otherwise (not found or if another clusters has the same name)
     **
     ** The indexes for clusters will be rebuilt.
     */
     bool rename(Data::ClusterName idToFind, Data::ClusterName newName);
 
     /*!
-    ** \brief Remove properly a cluster
+    ** \brief Remove properly a clusters
     */
     virtual bool remove(const Data::ClusterName& id);
 
@@ -167,7 +167,7 @@ public:
     bool forceReload(bool reload = false) const;
 
     /*!
-    ** \brief Mark the cluster as modified
+    ** \brief Mark the clusters as modified
     */
     void markAsModified() const;
 
@@ -175,7 +175,7 @@ public:
     ** \brief Rebuild the index of clusters
     **
     ** As a list of clusters is a hash table, it is not
-    ** possible to directly accees to a cluster from its index.
+    ** possible to directly accees to a clusters from its index.
     ** However an index can be built but it must be re-built when
     ** the hash table is modified.
     */
@@ -189,13 +189,13 @@ public:
 
 public:
     //! All clusters
-    Vect cluster;
+    Vect clusters;
 
     // thermal, renewable, etc.
     virtual YString typeID() const = 0;
 
     /*!
-    ** \brief Number of dispatchable cluster per group
+    ** \brief Number of dispatchable clusters per group
     **
     ** You should rely on these values only after the loading of the study
     ** and until the study is not modified.
@@ -220,9 +220,9 @@ public:
     **
     ** Pseudo code:
     ** \code
-    ** each thermal cluster do
-    ** 	total += cluster{unit count} * cluster{nominal capacity}
-    **	unit  += cluster{unit count}
+    ** each thermal clusters do
+    ** 	total += clusters{unit count} * clusters{nominal capacity}
+    **	unit  += clusters{unit count}
     ** \endcode
     */
     void retrieveTotalCapacityAndUnitCount(double& total, uint& unitCount) const;

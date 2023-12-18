@@ -327,7 +327,7 @@ public:
             for (uint i = 0; i < pSize; ++i)
             {
                 // Write the data for the current year
-                results.variableCaption = renewable.list.cluster[i]->name();
+                results.variableCaption = renewable.list.clusters[i]->name();
                 results.variableUnit = VCardType::Unit();
                 pValuesForTheCurrentYear[numSpace][i].template buildAnnualSurveyReport<VCardType>(
                   results, fileLevel, precision);

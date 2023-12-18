@@ -24,43 +24,43 @@ using namespace Antares;
 template<class ClusterT>
 inline uint ClusterList<ClusterT>::size() const
 {
-    return (uint)cluster.size();
+    return (uint)clusters.size();
 }
 
 template<class ClusterT>
 inline bool ClusterList<ClusterT>::empty() const
 {
-    return cluster.empty();
+    return clusters.empty();
 }
 
 template<class ClusterT>
 typename ClusterList<ClusterT>::iterator ClusterList<ClusterT>::begin()
 {
-    return std::begin(cluster);
+    return std::begin(clusters);
 }
 
 template<class ClusterT>
 typename ClusterList<ClusterT>::const_iterator ClusterList<ClusterT>::begin() const
 {
-    return std::begin(cluster);
+    return std::begin(clusters);
 }
 
 template<class ClusterT>
 typename ClusterList<ClusterT>::iterator ClusterList<ClusterT>::end()
 {
-    return std::end(cluster);
+    return std::end(clusters);
 }
 
 template<class ClusterT>
 typename ClusterList<ClusterT>::const_iterator ClusterList<ClusterT>::end() const
 {
-    return std::end(cluster);
+    return std::end(clusters);
 }
 
 template<class ClusterT>
 ClusterT* ClusterList<ClusterT>::find(const Data::ClusterName& id) const
 {
-    for (const auto& c : cluster)
+    for (const auto& c : clusters)
         if (c->id() == id)
             return c.get();
 
@@ -70,7 +70,7 @@ ClusterT* ClusterList<ClusterT>::find(const Data::ClusterName& id) const
 template<class ClusterT>
 const ClusterT* ClusterList<ClusterT>::find(const ClusterT* p) const
 {
-    for (const auto& c : cluster)
+    for (const auto& c : clusters)
         if (c.get() == p)
             return c.get();
 
@@ -81,14 +81,14 @@ template<class ClusterT>
 typename std::shared_ptr<ClusterT> ClusterList<ClusterT>::detach(iterator i)
 {
     SharedPtr c = *i;
-    cluster.erase(i);
+    clusters.erase(i);
     return c;
 }
 
 template<class ClusterT>
 bool ClusterList<ClusterT>::exists(const Data::ClusterName& id) const
 {
-    return std::ranges::any_of(cluster, [&id](const auto& c){ return c->id() == id; });
+    return std::ranges::any_of(clusters, [&id](const auto& c){ return c->id() == id; });
 }
 
 template<class ClusterT>
@@ -106,14 +106,14 @@ Data::ClusterList<ClusterT>::~ClusterList()
 template<class ClusterT>
 void ClusterList<ClusterT>::clear()
 {
-    cluster.clear();
+    clusters.clear();
 }
 
 template<class ClusterT>
 void ClusterList<ClusterT>::resizeAllTimeseriesNumbers(uint n)
 {
     assert(n < 200000); // arbitrary number
-    if (not cluster.empty())
+    if (not clusters.empty())
     {
         if (0 == n)
         {
@@ -131,7 +131,7 @@ void ClusterList<ClusterT>::resizeAllTimeseriesNumbers(uint n)
 template<class ClusterT>
 void ClusterList<ClusterT>::storeTimeseriesNumbers(Solver::IResultWriter& writer) const
 {
-    if (cluster.empty())
+    if (clusters.empty())
         return;
 
     TSNumbersPredicate predicate;
@@ -150,12 +150,12 @@ void ClusterList<ClusterT>::storeTimeseriesNumbers(Solver::IResultWriter& writer
 template<class ClusterT>
 void ClusterList<ClusterT>::rebuildIndex()
 {
-    std::sort(cluster.begin(), cluster.end(), [](const auto& a, const auto& b){
+    std::sort(clusters.begin(), clusters.end(), [](const auto& a, const auto& b){
         return a->id() < b->id();
     });
 
     uint indx = 0;
-    for (auto& c : cluster)
+    for (auto& c : clusters)
         c->index = indx++;
 }
 
@@ -171,7 +171,7 @@ typename ClusterList<ClusterT>::SharedPtr ClusterList<ClusterT>::add(
     if (exists(newcluster->id()))
         return newcluster;
 
-    cluster.push_back(newcluster);
+    clusters.push_back(newcluster);
     ++(groupCount[newcluster->groupId()]);
     rebuildIndex();
     return newcluster;
@@ -182,7 +182,7 @@ uint64_t ClusterList<ClusterT>::memoryUsage() const
 {
     uint64_t ret = sizeof(ClusterList) + (2 * sizeof(void*)) * this->size();
 
-    each([&](const ClusterT& cluster) { ret += cluster.memoryUsage(); });
+    each([&](const ClusterT& clusters) { ret += clusters.memoryUsage(); });
     return ret;
 }
 
@@ -205,7 +205,7 @@ bool ClusterList<ClusterT>::rename(Data::ClusterName idToFind, Data::ClusterName
     Data::ClusterName newID;
     Antares::TransformNameIntoID(newName, newID);
 
-    // Looking for the renewable cluster in the list
+    // Looking for the renewable clusters in the list
     auto* cluster_ptr = this->find(idToFind);
     if (!cluster_ptr)
         return true;
@@ -227,7 +227,7 @@ bool ClusterList<ClusterT>::rename(Data::ClusterName idToFind, Data::ClusterName
     cluster_ptr->setName(newName);
 
     // Invalidate matrices attached to the area
-    // It is a bit excessive (all matrices not only those related to the renewable cluster)
+    // It is a bit excessive (all matrices not only those related to the renewable clusters)
     // will be rewritten but currently it is the less error-prone.
     if (cluster_ptr->parentArea)
         (cluster_ptr->parentArea)->invalidateJIT = true;
@@ -240,7 +240,7 @@ bool ClusterList<ClusterT>::rename(Data::ClusterName idToFind, Data::ClusterName
 template<class ClusterT>
 bool ClusterList<ClusterT>::forceReload(bool reload) const
 {
-    return std::ranges::all_of(cluster, [&reload](const auto& c){
+    return std::ranges::all_of(clusters, [&reload](const auto& c){
         return c->forceReload(reload);
     });
 
@@ -249,14 +249,14 @@ bool ClusterList<ClusterT>::forceReload(bool reload) const
 template<class ClusterT>
 void ClusterList<ClusterT>::markAsModified() const
 {
-    for (const auto& c : cluster)
+    for (const auto& c : clusters)
         c->markAsModified();
 }
 
 template<class ClusterT>
 bool ClusterList<ClusterT>::remove(const Data::ClusterName& id)
 {
-    auto nbDeletion = std::erase_if(cluster, [&id](const SharedPtr& c) { return c->id() == id; });
+    auto nbDeletion = std::erase_if(clusters, [&id](const SharedPtr& c) { return c->id() == id; });
 
     // Invalidating the parent area
     forceReload();
@@ -270,7 +270,7 @@ bool ClusterList<ClusterT>::remove(const Data::ClusterName& id)
 template<class ClusterT>
 bool ClusterList<ClusterT>::saveDataSeriesToFolder(const AnyString& folder) const
 {
-    return std::all_of(cluster.begin(), cluster.end(), [&folder](const auto& c){
+    return std::all_of(clusters.begin(), clusters.end(), [&folder](const auto& c){
         return c->saveDataSeriesToFolder(folder);
     });
 }
@@ -284,9 +284,9 @@ bool ClusterList<ClusterT>::saveDataSeriesToFolder(const AnyString& folder, cons
     bool ret = true;
     uint ticks = 0;
 
-    for (const auto& c : cluster)
+    for (const auto& c : clusters)
     {
-        logs.info() << msg << "  " << (ticks * 100 / (1 + this->cluster.size()))
+        logs.info() << msg << "  " << (ticks * 100 / (1 + this->clusters.size()))
             << "% complete";
         ret = c->saveDataSeriesToFolder(folder) && ret;
         ++ticks;
@@ -319,7 +319,7 @@ void ClusterList<ClusterT>::retrieveTotalCapacityAndUnitCount(double& total, uin
     total = 0.;
     unitCount = 0;
 
-    for (const auto& c : cluster)
+    for (const auto& c : clusters)
     {
         unitCount += c->unitCount;
         total += c->unitCount * c->nominalCapacity;
@@ -329,11 +329,11 @@ void ClusterList<ClusterT>::retrieveTotalCapacityAndUnitCount(double& total, uin
 template<class ClusterT>
 uint ClusterList<ClusterT>::removeDisabledClusters()
 {
-    // nothing to do if there is no cluster available
+    // nothing to do if there is no clusters available
     if (empty())
         return 0;
 
-    std::erase_if(cluster, [] (auto& c) { return !c->enabled; });
+    std::erase_if(clusters, [] (auto& c) { return !c->enabled; });
 
     rebuildIndex();
 

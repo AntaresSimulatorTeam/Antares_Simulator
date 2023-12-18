@@ -278,7 +278,7 @@ void ThermalClusterList::calculationOfSpinning()
 
 void ThermalClusterList::reverseCalculationOfSpinning()
 {
-    for (const auto& c : cluster)
+    for (const auto& c : clusters)
         c->reverseCalculationOfSpinning();
 }
 
@@ -290,7 +290,7 @@ void ThermalClusterList::enableMustrunForEveryone()
 
 void ThermalClusterList::ensureDataPrepro()
 {
-    for (const auto& c : cluster)
+    for (const auto& c : clusters)
         if (!c->prepro)
             c->prepro = new PreproThermal(c);
 }
@@ -458,7 +458,7 @@ bool ThermalClusterList::loadPreproFromFolder(Study& study,
     Clob buffer;
     bool ret = true;
 
-    for (const auto& c : cluster)
+    for (const auto& c : clusters)
     {
         if (c->prepro)
         {
@@ -489,7 +489,7 @@ bool ThermalClusterList::loadEconomicCosts(Study& study, const AnyString& folder
         return true;
 
 
-    return std::all_of(cluster.begin(), cluster.end(), [&study, folder](const auto& c)
+    return std::all_of(clusters.begin(), clusters.end(), [&study, folder](const auto& c)
     {
         assert(c->parentArea && "cluster: invalid parent area");
         Clob buffer;

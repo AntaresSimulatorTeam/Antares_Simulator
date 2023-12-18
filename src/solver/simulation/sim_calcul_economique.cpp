@@ -285,7 +285,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
 
         for (uint clusterIndex = 0; clusterIndex != area.thermal.list.size(); ++clusterIndex)
         {
-            auto& cluster = *(area.thermal.list.cluster[clusterIndex]);
+            auto& cluster = *(area.thermal.list.clusters[clusterIndex]);
             pbPalier.NumeroDuPalierDansLEnsembleDesPaliersThermiques[clusterIndex]
               = NombrePaliers + clusterIndex;
             pbPalier.TailleUnitaireDUnGroupeDuPalierThermique[clusterIndex]
