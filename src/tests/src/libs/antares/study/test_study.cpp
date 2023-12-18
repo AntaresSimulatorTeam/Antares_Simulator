@@ -53,9 +53,9 @@ BOOST_AUTO_TEST_SUITE(areas_operations)
 BOOST_AUTO_TEST_CASE(area_add)
 {
     Study study;
-    Area* areaA = study.areaAdd("A");
+    const auto areaA = study.areaAdd("A");
     BOOST_CHECK(areaA != nullptr);
-    BOOST_CHECK(areaA->name == "A");
+    BOOST_CHECK_EQUAL(areaA->name, "A");
     BOOST_CHECK(areaA->id == "a");
 }
 
