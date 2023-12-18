@@ -203,7 +203,7 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run parallel tests
-      if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
+      #if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
