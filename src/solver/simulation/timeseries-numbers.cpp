@@ -555,10 +555,8 @@ void storeTSnumbersForIntraModal(const array<uint32_t, timeSeriesCount>& intramo
 
         if (isTSintramodal[indexTS])
         {
-            auto end_rn_clusters = area.renewable.list.clusters.end();
-            for (auto j = area.renewable.list.clusters.begin(); j != end_rn_clusters; ++j)
+            for (auto& cluster : area.renewable.list)
             {
-                RenewableClusterList::SharedPtr cluster = *j;
                 if (cluster->enabled)
                     cluster->series.timeseriesNumbers[0][year] = intramodal_draws[indexTS];
             }
@@ -667,10 +665,8 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
         // --------------------------
         indexTS = ts_to_tsIndex.at(timeSeriesRenewable);
 
-        auto end_rn_clusters = area.renewable.list.clusters.end();
-        for (auto j = area.renewable.list.clusters.begin(); j != end_rn_clusters; ++j)
+        for (auto& cluster : area.renewable.list)
         {
-            RenewableClusterList::SharedPtr cluster = *j;
             if (not cluster->enabled)
                 study.runtime->random[seedTimeseriesNumbers].next();
             else
@@ -747,7 +743,7 @@ Matrix<uint32_t>* getFirstTSnumberInterModalMatrixFoundInArea(
             tsNumbersMtx = &(area.thermal.clusters[0]->series.timeseriesNumbers);
         else if (isTSintermodal[ts_to_tsIndex.at(timeSeriesRenewable)]
                  && area.renewable.list.size() > 0)
-            tsNumbersMtx = &(area.renewable.list.clusters[0]->series.timeseriesNumbers);
+            tsNumbersMtx = &(area.renewable.list[0]->series.timeseriesNumbers);
     }
     assert(tsNumbersMtx);
 

@@ -79,12 +79,12 @@ void renewableTSNumberData::saveToINIFile(const Study& /* study */,
         // Foreach renewable cluster...
         for (uint y = 0; y != pTSNumberRules.height; ++y)
         {
-            const uint val = get(pArea->renewable.list.clusters[index].get(), y);
+            const uint val = get(pArea->renewable.list[index].get(), y);
             // Equals to zero means 'auto', which is the default mode
             if (!val)
                 continue;
             file << prefix << pArea->id << "," << y << ','
-                 << pArea->renewable.list.clusters[index]->id() << " = " << val << '\n';
+                 << pArea->renewable.list[index]->id() << " = " << val << '\n';
         }
     }
 }

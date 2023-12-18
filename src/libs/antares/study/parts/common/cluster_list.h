@@ -150,9 +150,6 @@ public:
     */
     uint64_t memoryUsage() const;
 
-    /// The vector containing the clusters
-    Vect clusters;
-
     /// \name IO functions
     /// @{
     bool loadDataSeriesFromFolder(Study& study,
@@ -189,6 +186,10 @@ public:
     ** \return The number of disabled clusters found
     */
     uint removeDisabledClusters();
+
+protected:
+    /// The vector containing the clusters
+    Vect clusters;
 
 private:
     /// thermal, renewable, etc.
