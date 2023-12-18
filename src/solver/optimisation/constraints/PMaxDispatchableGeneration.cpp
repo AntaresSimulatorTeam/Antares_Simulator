@@ -4,10 +4,10 @@ void PMaxDispatchableGeneration::add(int pays, int index, int pdt)
 {
     if (!data.Simulation)
     {
-        auto cluster = data.PaliersThermiquesDuPays[pays]
-                         .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
         double pmaxDUnGroupeDuPalierThermique
-          = data.PaliersThermiquesDuPays[pays].PmaxDUnGroupeDuPalierThermique[cluster];
+          = data.PaliersThermiquesDuPays[pays].PmaxDUnGroupeDuPalierThermique[index];
+        int cluster = data.PaliersThermiquesDuPays[pays]
+          .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
 
         builder.updateHourWithinWeek(pdt)
           .DispatchableProduction(cluster, 1.0)
