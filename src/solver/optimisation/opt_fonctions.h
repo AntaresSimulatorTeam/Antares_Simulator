@@ -130,12 +130,20 @@ void OPT_DecompteDesVariablesEtDesContraintesCoutsDeDemarrage(PROBLEME_HEBDO*);
 void OPT_InitialiserNombreMinEtMaxDeGroupesCoutsDeDemarrage(PROBLEME_HEBDO*);
 void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO*);
 
-void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireRampesThermiques(PROBLEME_HEBDO*, bool);
-void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireRampesThermiques(PROBLEME_HEBDO*, bool);
-void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireRampesThermiques(PROBLEME_HEBDO*, const int, const int);
-void OPT_DecompteDesVariablesEtDesContraintesRampesThermiques(PROBLEME_HEBDO*);
-void OPT_InitialiserLesCoutsLineaireRampesThermiques(PROBLEME_HEBDO*, const int, const int);
-void OPT_InitialiserLeSecondMembreDuProblemeLineaireRampesThermiques(PROBLEME_HEBDO*, int, int);
+void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireRampesThermiques(
+  PROBLEME_HEBDO* problemeHebdo,
+  bool Simulation);
+void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireRampesThermiques(
+  PROBLEME_HEBDO* problemeHebdo,
+  bool Simulation);
+void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireRampesThermiques(
+  PROBLEME_HEBDO* problemeHebdo,
+  const int PremierPdtDeLIntervalle,
+  const int DernierPdtDeLIntervalle);
+void OPT_DecompteDesVariablesEtDesContraintesRampesThermiques(PROBLEME_HEBDO* problemeHebdo);
+void OPT_InitialiserLesCoutsLineaireRampesThermiques(PROBLEME_HEBDO* problemeHebdo,
+                                                     const int PremierPdtDeLIntervalle,
+                                                     const int DernierPdtDeLIntervalle);
 
 
 double OPT_SommeDesPminThermiques(const PROBLEME_HEBDO*, int, uint);
