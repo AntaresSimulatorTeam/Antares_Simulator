@@ -32,25 +32,13 @@ public:
     ClusterList();
     virtual ~ClusterList();
 
-    //! \name Iterating
-    //@{
-    /*!
-    ** \brief Iterate through all clusters
-    */
-    template<class PredicateT>
-    void each(const PredicateT& predicate)
-    {
-        for (auto& c : clusters)
-            predicate(*c);
-    }
     /*!
     ** \brief Iterate through all clusters (const)
     */
     template<class PredicateT>
     void each(const PredicateT& predicate) const
     {
-        for (const auto& c : clusters)
-            predicate(*c);
+        std::ranges::for_each(clusters, [&predicate](const auto& c) { predicate(*c); });
     }
 
     //! \name clusters management
