@@ -415,13 +415,13 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
                 s->add("variableomcost", Math::Round(c.variableomcost,3));
 
             // ramping
-            if (not Math::Zero(c.powerIncreaseCost))
+            if (c.powerIncreaseCost != 0)
                 s->add("power-increase-cost", Math::Round(c.powerIncreaseCost, 3));
-            if (not Math::Zero(c.powerDecreaseCost))
+            if (c.powerDecreaseCost != 0)
                 s->add("power-decrease-cost", Math::Round(c.powerDecreaseCost, 3));
-            if (not Math::Zero(c.maxUpwardPowerRampingRate))
+            if (c.maxUpwardPowerRampingRate != 0)
                 s->add("max-upward-power-ramping-rate", Math::Round(c.maxUpwardPowerRampingRate, 3));
-            if (not Math::Zero(c.maxDownwardPowerRampingRate))
+            if (c.maxDownwardPowerRampingRate != 0)
                 s->add("max-downward-power-ramping-rate", Math::Round(c.maxDownwardPowerRampingRate, 3));
 
             //pollutant factor

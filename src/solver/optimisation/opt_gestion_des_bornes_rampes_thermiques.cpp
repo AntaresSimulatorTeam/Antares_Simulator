@@ -32,7 +32,6 @@
 #include "../simulation/sim_structure_probleme_economique.h"
 #include "opt_fonctions.h"
 
-using namespace Yuni;
 
 void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireRampesThermiques(PROBLEME_HEBDO* problemeHebdo, const int PremierPdtDeLIntervalle, const int DernierPdtDeLIntervalle)
 {
