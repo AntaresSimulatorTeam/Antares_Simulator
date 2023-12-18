@@ -120,6 +120,8 @@ public:
     iterator end();
     const_iterator end() const;
 
+    SharedPtr& operator[](std::size_t idx) { return clusters[idx]; }
+    const SharedPtr& operator[](std::size_t idx) const { return clusters[idx]; }
     /*!
     ** \brief Resize all matrices dedicated to the sampled timeseries numbers
     **
