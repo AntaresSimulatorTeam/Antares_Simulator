@@ -289,6 +289,17 @@ MPSolver* ORTOOLS_ConvertIfNeeded(const std::string& solverName,
     }
 }
 
+template<class SourceT>
+static void transferBasis(std::vector<operations_research::MPSolver::BasisStatus>& destination,
+                          const SourceT& source)
+{
+    destination.resize(source.size());
+    for (size_t idx = 0; idx < source.size(); idx++)
+    {
+        destination[idx] = source[idx]->basis_status();
+    }
+}
+
 MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
                            MPSolver* solver,
                            bool keepBasis)
@@ -309,15 +320,8 @@ MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probl
         // Save the final simplex basis for next resolutions
         if (warmStart && keepBasis)
         {
-            auto& variables = solver->variables();
-            Probleme->StatutDesVariables.resize(variables.size());
-            for (size_t var = 0; var < variables.size(); var++)
-                Probleme->StatutDesVariables[var] = variables[var]->basis_status();
-
-            auto& constraints = solver->constraints();
-            Probleme->StatutDesContraintes.resize(constraints.size());
-            for (size_t cnt = 0; cnt < constraints.size(); cnt++)
-              Probleme->StatutDesContraintes[cnt] = constraints[cnt]->basis_status();
+            transferBasis(Probleme->StatutDesVariables, solver->variables());
+            transferBasis(Probleme->StatutDesContraintes, solver->constraints());
         }
     }
 
