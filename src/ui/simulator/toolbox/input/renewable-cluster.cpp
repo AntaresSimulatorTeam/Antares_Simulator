@@ -291,7 +291,6 @@ void RenewableCluster::internalDeletePlant(void*)
             Refresh();
             MarkTheStudyAsModified();
             updateInnerValues();
-            pArea->renewable.list.rebuildIndex();
             pArea->renewable.prepareAreaWideIndexes();
             study->uiinfo->reload();
         }

@@ -31,7 +31,6 @@ public:
     //! const iterator
     using const_iterator = typename Vect::const_iterator;
 
-public:
     //! \name Constructor & Destructor
     //@{
     /*!
@@ -171,15 +170,7 @@ public:
     */
     void markAsModified() const;
 
-    /*!
-    ** \brief Rebuild the index of clusters
-    **
-    ** As a list of clusters is a hash table, it is not
-    ** possible to directly accees to a clusters from its index.
-    ** However an index can be built but it must be re-built when
-    ** the hash table is modified.
-    */
-    void rebuildIndex();
+
 
     /*!
     ** \brief Get the size (bytes) occupied in memory by a `ClusterList` structure
@@ -187,7 +178,6 @@ public:
     */
     uint64_t memoryUsage() const;
 
-public:
     //! All clusters
     Vect clusters;
 
@@ -229,6 +219,17 @@ public:
     ** \return The number of disabled clusters found
     */
     uint removeDisabledClusters();
+
+protected:
+    /*!
+    ** \brief Rebuild the index of clusters
+    **
+    ** As a list of clusters is a hash table, it is not
+    ** possible to directly accees to a clusters from its index.
+    ** However an index can be built but it must be re-built when
+    ** the hash table is modified.
+    */
+    void rebuildIndex();
 
     //@}
 }; // class ClusterList

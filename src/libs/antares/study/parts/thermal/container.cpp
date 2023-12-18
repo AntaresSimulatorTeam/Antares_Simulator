@@ -124,13 +124,6 @@ uint PartThermal::prepareClustersInMustRunMode()
         }
     } while (mustContinue);
 
-    // if some thermal cluster has been moved, we must rebuild all the indexes
-    if (count)
-    {
-        list.rebuildIndex();
-        mustrunList.rebuildIndex();
-    }
-
     return count;
 }
 

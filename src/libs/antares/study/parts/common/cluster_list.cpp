@@ -78,6 +78,7 @@ typename std::shared_ptr<ClusterT> ClusterList<ClusterT>::detach(iterator i)
 {
     SharedPtr c = *i;
     clusters.erase(i);
+    rebuildIndex();
     return c;
 }
 
