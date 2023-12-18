@@ -280,9 +280,6 @@ bool ClusterList<ClusterT>::remove(const Data::ClusterName& id)
 template<class ClusterT>
 bool ClusterList<ClusterT>::saveDataSeriesToFolder(const AnyString& folder) const
 {
-    if (empty())
-        return true;
-
     return std::all_of(cluster.begin(), cluster.end(), [&folder](const auto& c){
         return c->saveDataSeriesToFolder(folder);
     });
