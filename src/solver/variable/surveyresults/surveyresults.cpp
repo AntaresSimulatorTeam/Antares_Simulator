@@ -159,10 +159,10 @@ static void ExportGridInfosAreas(const Data::Study& study,
             outThermal << cluster.startupCost << '\t';
             outThermal << cluster.marketBidCost << '\t';
             outThermal << cluster.spreadCost << '\n';
-            outThermal << cluster.powerIncreaseCost << '\n';
-            outThermal << cluster.powerDecreaseCost << '\n';
-            outThermal << cluster.maxUpwardPowerRampingRate << '\n';
-            outThermal << cluster.maxDownwardPowerRampingRate << '\n';
+            outThermal << cluster.ramping.powerIncreaseCost << '\n';
+            outThermal << cluster.ramping.powerDecreaseCost << '\n';
+            outThermal << cluster.ramping.maxUpwardPowerRampingRate << '\n';
+            outThermal << cluster.ramping.maxDownwardPowerRampingRate << '\n';
 
         } // each thermal cluster
     });   // each area

@@ -340,15 +340,30 @@ public:
     double marketBidCost = 0;
     //! Variable O&M cost (euros/MWh)
     double variableomcost = 0;
-    //! Cost of power increase (euros/MW)
-    double powerIncreaseCost = 0;
-    //! Cost of power decrease (euros/MW)
-    double powerDecreaseCost = 0;
 
-    //! Maximum hourly upward power ramping rate (MW/hour)
-    double maxUpwardPowerRampingRate = 0;
-    //! Maximum hourly downward power ramping rate (MW/hour)
-    double maxDownwardPowerRampingRate = 0;
+    struct Ramping
+    {
+        //! Cost of power increase (euros/MW)
+        double powerIncreaseCost;
+        //! Cost of power decrease (euros/MW)
+        double powerDecreaseCost;
+        //! Maximum hourly upward power ramping rate (MW/hour)
+        double maxUpwardPowerRampingRate;
+        //! Maximum hourly downward power ramping rate (MW/hour)
+        double maxDownwardPowerRampingRate;
+
+        Ramping() :
+         powerIncreaseCost(0.),
+         powerDecreaseCost(0.),
+         maxUpwardPowerRampingRate(0.),
+         maxDownwardPowerRampingRate(0.)
+        {
+        }
+
+        void reset();
+        bool checkValidity(Area* area, Data::ClusterName clusterName);
+    };
+    Ramping ramping;
 
     //@}
 

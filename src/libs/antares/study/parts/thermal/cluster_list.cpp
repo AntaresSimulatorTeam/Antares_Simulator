@@ -223,13 +223,13 @@ static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFil
         return p->value.to<double>(cluster.startupCost);
 
     if (p->key == "power-increase-cost")
-        return p->value.to<double>(cluster.powerIncreaseCost);
+        return p->value.to<double>(cluster.ramping.powerIncreaseCost);
     if (p->key == "power-decrease-cost")
-        return p->value.to<double>(cluster.powerDecreaseCost);
+        return p->value.to<double>(cluster.ramping.powerDecreaseCost);
     if (p->key == "max-upward-power-ramping-rate")
-        return p->value.to<double>(cluster.maxUpwardPowerRampingRate);
+        return p->value.to<double>(cluster.ramping.maxUpwardPowerRampingRate);
     if (p->key == "max-downward-power-ramping-rate")
-        return p->value.to<double>(cluster.maxDownwardPowerRampingRate);
+        return p->value.to<double>(cluster.ramping.maxDownwardPowerRampingRate);
 
     if (p->key == "unitcount")
         return p->value.to<uint>(cluster.unitCount);
@@ -415,14 +415,16 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
                 s->add("variableomcost", Math::Round(c.variableomcost,3));
 
             // ramping
-            if (c.powerIncreaseCost != 0)
-                s->add("power-increase-cost", Math::Round(c.powerIncreaseCost, 3));
-            if (c.powerDecreaseCost != 0)
-                s->add("power-decrease-cost", Math::Round(c.powerDecreaseCost, 3));
-            if (c.maxUpwardPowerRampingRate != 0)
-                s->add("max-upward-power-ramping-rate", Math::Round(c.maxUpwardPowerRampingRate, 3));
-            if (c.maxDownwardPowerRampingRate != 0)
-                s->add("max-downward-power-ramping-rate", Math::Round(c.maxDownwardPowerRampingRate, 3));
+            if (c.ramping.powerIncreaseCost != 0)
+                s->add("power-increase-cost", Math::Round(c.ramping.powerIncreaseCost, 3));
+            if (c.ramping.powerDecreaseCost != 0)
+                s->add("power-decrease-cost", Math::Round(c.ramping.powerDecreaseCost, 3));
+            if (c.ramping.maxUpwardPowerRampingRate != 0)
+                s->add("max-upward-power-ramping-rate",
+                       Math::Round(c.ramping.maxUpwardPowerRampingRate, 3));
+            if (c.ramping.maxDownwardPowerRampingRate != 0)
+                s->add("max-downward-power-ramping-rate",
+                       Math::Round(c.ramping.maxDownwardPowerRampingRate, 3));
 
             //pollutant factor
             for (auto const& [key, val] : Pollutant::namesToEnum)

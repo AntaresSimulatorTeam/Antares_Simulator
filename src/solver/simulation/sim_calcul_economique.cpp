@@ -302,10 +302,10 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
               = cluster.minDownTime;
 
             pbPalier.upwardRampingCost[clusterIndex]
-              = cluster.powerIncreaseCost;
-            pbPalier.downwardRampingCost[clusterIndex] = cluster.powerDecreaseCost;
-            pbPalier.maxDownwardPowerRampingRate[clusterIndex] = cluster.maxDownwardPowerRampingRate;
-            pbPalier.maxUpwardPowerRampingRate[clusterIndex] = cluster.maxUpwardPowerRampingRate;
+              = cluster.ramping.powerIncreaseCost;
+            pbPalier.downwardRampingCost[clusterIndex] = cluster.ramping.powerDecreaseCost;
+            pbPalier.maxDownwardPowerRampingRate[clusterIndex] = cluster.ramping.maxDownwardPowerRampingRate;
+            pbPalier.maxUpwardPowerRampingRate[clusterIndex] = cluster.ramping.maxUpwardPowerRampingRate;
 
 
 

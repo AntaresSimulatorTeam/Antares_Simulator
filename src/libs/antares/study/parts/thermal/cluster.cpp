@@ -138,10 +138,7 @@ Data::ThermalCluster::ThermalCluster(Area* parent) :
     plannedLaw(thermalLawUniform),
     PthetaInf(HOURS_PER_YEAR, 0),
     costsTimeSeries(1, CostsTimeSeries()),
-    maxUpwardPowerRampingRate(0.),
-    maxDownwardPowerRampingRate(0.),
-    powerIncreaseCost(0.),
-    powerDecreaseCost(0.)
+    ramping()
 {
     // assert
     assert(parent and "A parent for a thermal dispatchable cluster can not be null");
@@ -187,10 +184,7 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
     minDownTime = cluster.minDownTime;
 
     // ramping
-    maxUpwardPowerRampingRate = cluster.maxUpwardPowerRampingRate;
-    maxDownwardPowerRampingRate = cluster.maxDownwardPowerRampingRate;
-    powerDecreaseCost = cluster.powerDecreaseCost;
-    powerIncreaseCost = cluster.powerIncreaseCost;
+    ramping = cluster.ramping;
 
     // spinning
     spinning = cluster.spinning;
@@ -489,11 +483,9 @@ void Data::ThermalCluster::reset()
     marketBidCost = 0.;
     variableomcost = 0.;
     costsTimeSeries.resize(1, CostsTimeSeries());
-    powerIncreaseCost = 0;
-    powerDecreaseCost = 0;
-
-    maxUpwardPowerRampingRate = 0;
-    maxDownwardPowerRampingRate = 0;
+    
+    // ramping
+    ramping.reset();
 
     // modulation
     modulation.resize(thermalModulationMax, HOURS_PER_YEAR);
@@ -624,34 +616,7 @@ bool Data::ThermalCluster::integrityCheck()
     }*/
 
     // ramping
-    if (maxUpwardPowerRampingRate <= 0)
-    {
-        logs.error() << "Thermal cluster: " << parentArea->name << '/' << pName
-                     << ": The maximum upward power ramping rate must greater than zero.";
-        maxUpwardPowerRampingRate = 1.;
-        ret = false;
-    }
-    if (maxDownwardPowerRampingRate <= 0)
-    {
-        logs.error() << "Thermal cluster: " << parentArea->name << '/' << pName
-                     << ": The maximum downward power ramping rate must greater than zero.";
-        maxDownwardPowerRampingRate = 1.;
-        ret = false;
-    }
-    if (powerIncreaseCost < 0)
-    {
-        logs.error() << "Thermal cluster: " << parentArea->name << '/' << pName
-                     << ": The ramping power increase cost must be positive or null.";
-        powerIncreaseCost = 0.;
-        ret = false;
-    }
-    if (powerDecreaseCost < 0)
-    {
-        logs.error() << "Thermal cluster: " << parentArea->name << '/' << pName
-                     << ": The ramping power decrease cost must be positive or null.";
-        powerDecreaseCost = 0.;
-        ret = false;
-    }
+    ret = ramping.checkValidity(parentArea, pName) && ret;
 
     return ret;
 }
@@ -865,6 +830,49 @@ void ThermalCluster::checkAndCorrectAvailability()
 
 bool ThermalCluster::isActive() const {
     return enabled && !mustrun;
+}
+
+void ThermalCluster::Ramping::reset()
+{
+    powerIncreaseCost = 0;
+    powerDecreaseCost = 0;
+    maxUpwardPowerRampingRate = 0;
+    maxDownwardPowerRampingRate = 0;
+}
+
+bool ThermalCluster::Ramping::checkValidity(Area* parentArea, Data::ClusterName clusterName)
+{
+    bool ret = true;
+
+    if (maxUpwardPowerRampingRate <= 0)
+    {
+        logs.error() << "Thermal cluster: " << parentArea->name << '/' << clusterName
+                     << ": The maximum upward power ramping rate must greater than zero.";
+        maxUpwardPowerRampingRate = 1.;
+        ret = false;
+    }
+    if (maxDownwardPowerRampingRate <= 0)
+    {
+        logs.error() << "Thermal cluster: " << parentArea->name << '/' << clusterName
+                     << ": The maximum downward power ramping rate must greater than zero.";
+        maxDownwardPowerRampingRate = 1.;
+        ret = false;
+    }
+    if (powerIncreaseCost < 0)
+    {
+        logs.error() << "Thermal cluster: " << parentArea->name << '/' << clusterName
+                     << ": The ramping power increase cost must be positive or null.";
+        powerIncreaseCost = 0.;
+        ret = false;
+    }
+    if (powerDecreaseCost < 0)
+    {
+        logs.error() << "Thermal cluster: " << parentArea->name << '/' << clusterName
+                     << ": The ramping power decrease cost must be positive or null.";
+        powerDecreaseCost = 0.;
+        ret = false;
+    }
+    return ret;
 }
 
 } // namespace Data
