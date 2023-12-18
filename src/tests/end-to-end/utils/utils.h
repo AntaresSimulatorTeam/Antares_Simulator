@@ -24,7 +24,7 @@
 #include "antares/solver/simulation/economy.h"
 #include "antares/study/scenario-builder/rules.h"
 #include "antares/study/scenario-builder/sets.h"
-#include "simulation.h"
+#include "antares/solver/simulation/simulation.h"
 
 using namespace Antares::Solver;
 using namespace Antares::Solver::Simulation;

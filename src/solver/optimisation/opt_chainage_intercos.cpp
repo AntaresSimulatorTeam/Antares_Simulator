@@ -19,10 +19,10 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "../simulation/simulation.h"
-#include "../simulation/sim_extern_variables_globales.h"
+#include "antares/solver/simulation/simulation.h"
+#include "antares/solver/simulation/sim_extern_variables_globales.h"
 
-#include "opt_fonctions.h"
+#include "antares/solver/optimisation/opt_fonctions.h"
 
 void OPT_ChainagesDesIntercoPartantDUnNoeud(PROBLEME_HEBDO* problemeHebdo)
 {

@@ -192,5 +192,6 @@ target_link_libraries(antares-solver-variable-info
         PRIVATE
         antares-core
         Antares::study
+        antares-solver-simulation
 )
 

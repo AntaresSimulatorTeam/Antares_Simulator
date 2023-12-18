@@ -24,7 +24,7 @@
 #include <antares/study/study.h>
 
 #include "../menus.h"
-#include "antares/study/study.h"
+#include "../study.h"
 
 #include <antares/date/date.h>
 

@@ -19,9 +19,9 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
-#include "../../constraints/ConstraintBuilder.h"
+#include "antares/solver/optimisation/constraints/ConstraintBuilder.h"
 
-#include "../../../simulation/adequacy_patch_runtime_data.h"
+#include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 
 struct CsrBindingConstraintHourData
 {

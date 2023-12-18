@@ -19,27 +19,18 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
+#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
+#include "constraints/ConstraintGroup.h"
 
-#include "opt_structure_probleme_a_resoudre.h"
-
-#include "../simulation/simulation.h"
-#include "../simulation/sim_structure_donnees.h"
-#include "../simulation/sim_extern_variables_globales.h"
-#include "opt_fonctions.h"
-#include "constraints/ExchangeBalanceGroup.h"
-#include "ProblemMatrixEssential.h"
-
-class QuadraticProblemMatrix : public ProblemMatrixEssential
+class ProblemMatrixEssential
 {
 public:
-    QuadraticProblemMatrix(PROBLEME_HEBDO* problem_hebdo, ConstraintBuilder& builder) :
-     ProblemMatrixEssential(problem_hebdo), exchangeBalanceGroup_(problem_hebdo, builder)
-    {
-        constraintgroups_ = {&exchangeBalanceGroup_};
-    }
+    explicit ProblemMatrixEssential(PROBLEME_HEBDO* problemeHebdo);
 
-    void Run() override;
+    virtual void Run();
 
-private:
-    ExchangeBalanceGroup exchangeBalanceGroup_;
+    void InitializeProblemAResoudreCounters();
+    PROBLEME_HEBDO* problemeHebdo_;
+    std::vector<ConstraintGroup*> constraintgroups_;
 };

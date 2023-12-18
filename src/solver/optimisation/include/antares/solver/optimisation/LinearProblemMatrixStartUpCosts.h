@@ -19,11 +19,11 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
-#include "opt_structure_probleme_a_resoudre.h"
-#include "sim_structure_probleme_economique.h"
+#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "constraints/ConstraintGroup.h"
 #include "ProblemMatrixEssential.h"
-#include "opt_structure_probleme_a_resoudre.h"
+#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 
 #include "constraints/PMinMaxDispatchableGenerationGroup.h"
 #include "constraints/ConsistenceNumberOfDispatchableUnitsGroup.h"

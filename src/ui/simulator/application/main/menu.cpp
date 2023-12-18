@@ -22,7 +22,7 @@
 #include "../main.h"
 #include "../menus.h"
 #include "../recentfiles.h"
-#include "antares/study/study.h"
+#include "../study.h"
 #include "../../windows/message.h"
 #include "../../toolbox/resources.h"
 #include "internal-data.h"

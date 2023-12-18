@@ -23,8 +23,8 @@
 #include <antares/benchmarking/DurationCollector.h>
 #include <antares/logs/logs.h>
 #include "antares/application/application.h"
-#include "solver.h"
-#include "economy.h"
+#include "antares/solver/simulation/solver.h"
+#include "antares/solver/simulation/economy.h"
 
 namespace Antares::Solver
 {

@@ -24,7 +24,7 @@
 #include "antares/config/config.h"
 #include "sim_structure_donnees.h"
 #include <antares/study/study.h>
-#include "../solver/hydro/management.h"
+#include "hydro/management.h"
 
 struct PROBLEME_HEBDO;
 

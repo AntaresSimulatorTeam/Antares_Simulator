@@ -20,7 +20,7 @@
 */
 #pragma once
 
-#include "../simulation/base_post_process.h"
+#include "antares/solver/simulation/base_post_process.h"
 
 namespace Antares::Solver::Simulation
 {

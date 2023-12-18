@@ -23,11 +23,11 @@
 
 #include <yuni/yuni.h>
 #include <antares/study/study.h>
-#include "../variable/variable.h"
-#include "../optimisation/opt_fonctions.h"
-#include "../variable/economy/all.h"
+#include "antares/solver/variable/variable.h"
+#include "antares/solver/optimisation/opt_fonctions.h"
+#include "antares/solver/variable/economy/all.h"
 #include <yuni/core/bind.h>
-#include "../variable/economy/dispatchable-generation-margin.h" // for OP.MRG
+#include "antares/solver/variable/economy/dispatchable-generation-margin.h" // for OP.MRG
 
 #include "antares/solver/simulation/solver.h" // for definition of type yearRandomNumbers
 

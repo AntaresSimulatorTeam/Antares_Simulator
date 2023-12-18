@@ -23,7 +23,7 @@
 #include <vector>
 #include <memory>
 
-#include "../simulation/sim_structure_probleme_economique.h"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 using namespace Antares::Data;
 using namespace Antares::Date;

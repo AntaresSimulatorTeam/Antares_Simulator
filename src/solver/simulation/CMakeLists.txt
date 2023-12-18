@@ -54,11 +54,13 @@ source_group("simulation" FILES ${SRC_SIMULATION})
 add_library(antares-solver-simulation
 		${SRC_SIMULATION}  )
 
-target_include_directories(antares-solver-simulation PUBLIC
+target_include_directories(antares-solver-simulation
+		PUBLIC
 		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 
-target_link_libraries(antares-solver-simulation PRIVATE
+target_link_libraries(antares-solver-simulation
+		PRIVATE
 		Antares::infoCollection
 		PUBLIC
 		yuni-static-core

@@ -20,9 +20,8 @@
 */
 
 #include <yuni/yuni.h>
-#include "../simulation/sim_extern_variables_globales.h"
-#include <antares/benchmarking/DurationCollector.h>
-#include <antares/fatal-error.h>
+#include "antares/solver/simulation/sim_extern_variables_globales.h"
+#include <antares/antares/fatal-error.h>
 #include <antares/writer/i_writer.h>
 #include "antares/solver/misc/cholesky.h"
 #include "antares/solver/misc/matrix-dp-make.h"
@@ -34,11 +33,7 @@ using namespace Yuni;
 
 #define EPSILON ((double)1.0e-9)
 
-using namespace Antares::Solver;
-
-namespace Antares
-{
-namespace TSGenerator
+namespace Antares::TSGenerator
 {
 
 static void PreproRoundAllEntriesPlusDerated(Data::Study& study)
@@ -302,5 +297,6 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, IResultWriter
     return true;
 }
 
-} // namespace TSGenerator
-} // namespace Antares
+} // namespace Antares::TSGenerator
+
+

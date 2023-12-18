@@ -20,19 +20,26 @@
 */
 #pragma once
 
-#include "sim_structure_probleme_economique.h"
-#include "../opt_structure_probleme_a_resoudre.h"
-#include "constraint_builder_utils.h"
+#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 
-class ConstraintGroup
+#include "antares/solver/simulation/simulation.h"
+#include "antares/solver/simulation/sim_structure_donnees.h"
+#include "antares/solver/simulation/sim_extern_variables_globales.h"
+#include "antares/solver/optimisation/opt_fonctions.h"
+#include "constraints/ExchangeBalanceGroup.h"
+#include "ProblemMatrixEssential.h"
+
+class QuadraticProblemMatrix : public ProblemMatrixEssential
 {
 public:
-    explicit ConstraintGroup(PROBLEME_HEBDO* problemeHebdo, ConstraintBuilder& builder) :
-     problemeHebdo_(problemeHebdo), builder_(builder)
+    QuadraticProblemMatrix(PROBLEME_HEBDO* problem_hebdo, ConstraintBuilder& builder) :
+     ProblemMatrixEssential(problem_hebdo), exchangeBalanceGroup_(problem_hebdo, builder)
     {
+        constraintgroups_ = {&exchangeBalanceGroup_};
     }
 
-    virtual void BuildConstraints() = 0;
-    PROBLEME_HEBDO* problemeHebdo_;
-    ConstraintBuilder& builder_;
+    void Run() override;
+
+private:
+    ExchangeBalanceGroup exchangeBalanceGroup_;
 };

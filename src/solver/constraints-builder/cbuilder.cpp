@@ -19,8 +19,8 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #include <cmath>
-#include "cbuilder.h"
-#include "grid.h"
+#include "antares/solver/constraints-builder/cbuilder.h"
+#include "antares/solver/constraints-builder/grid.h"
 
 using namespace Yuni;
 

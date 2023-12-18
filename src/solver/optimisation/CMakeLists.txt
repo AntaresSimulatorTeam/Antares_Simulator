@@ -126,48 +126,48 @@ set(RTESOLVER_OPT
 		include/antares/solver/optimisation/constraints/MinDownTime.h
 		constraints/MinDownTime.cpp
 
-		ProblemMatrixEssential.h
+		include/antares/solver/optimisation/ProblemMatrixEssential.h
 		ProblemMatrixEssential.cpp
-		LinearProblemMatrixStartUpCosts.h
+		include/antares/solver/optimisation/LinearProblemMatrixStartUpCosts.h
 		LinearProblemMatrixStartUpCosts.cpp
-		LinearProblemMatrix.h
+		include/antares/solver/optimisation/LinearProblemMatrix.h
 		LinearProblemMatrix.cpp
-		QuadraticProblemMatrix.h
+		include/antares/solver/optimisation/QuadraticProblemMatrix.h
 		QuadraticProblemMatrix.cpp
-		constraints/ConstraintGroup.h
-		constraints/Group1.h
+		include/antares/solver/optimisation/constraints/ConstraintGroup.h
+		include/antares/solver/optimisation/constraints/Group1.h
 		constraints/Group1.cpp
-		constraints/BindingConstraintDayGroup.h
+		include/antares/solver/optimisation/constraints/BindingConstraintDayGroup.h
 		constraints/BindingConstraintDayGroup.cpp
-		constraints/BindingConstraintWeekGroup.h
+		include/antares/solver/optimisation/constraints/BindingConstraintWeekGroup.h
 		constraints/BindingConstraintWeekGroup.cpp
-		constraints/HydroPowerGroup.h
+		include/antares/solver/optimisation/constraints/HydroPowerGroup.h
 		constraints/HydroPowerGroup.cpp
-		constraints/HydraulicSmoothingGroup.h
+		include/antares/solver/optimisation/constraints/HydraulicSmoothingGroup.h
 		constraints/HydraulicSmoothingGroup.cpp
-		constraints/MinMaxHydroPowerGroup.h
+		include/antares/solver/optimisation/constraints/MinMaxHydroPowerGroup.h
 		constraints/MinMaxHydroPowerGroup.cpp
-		constraints/MaxPumpingGroup.h
+		include/antares/solver/optimisation/constraints/MaxPumpingGroup.h
 		constraints/MaxPumpingGroup.cpp
-		constraints/AreaHydroLevelGroup.h
+		include/antares/solver/optimisation/constraints/AreaHydroLevelGroup.h
 		constraints/AreaHydroLevelGroup.cpp
-		constraints/FinalStockGroup.h
+		include/antares/solver/optimisation/constraints/FinalStockGroup.h
 		constraints/FinalStockGroup.cpp
-		constraints/AbstractStartUpCostsGroup.h
+		include/antares/solver/optimisation/constraints/AbstractStartUpCostsGroup.h
 		constraints/AbstractStartUpCostsGroup.cpp
-		constraints/PMinMaxDispatchableGenerationGroup.h
+		include/antares/solver/optimisation/constraints/PMinMaxDispatchableGenerationGroup.h
 		constraints/PMinMaxDispatchableGenerationGroup.cpp
-		constraints/ConsistenceNumberOfDispatchableUnitsGroup.h
+		include/antares/solver/optimisation/constraints/ConsistenceNumberOfDispatchableUnitsGroup.h
 		constraints/ConsistenceNumberOfDispatchableUnitsGroup.cpp
-		constraints/NbUnitsOutageLessThanNbUnitsStopGroup.h
+		include/antares/solver/optimisation/constraints/NbUnitsOutageLessThanNbUnitsStopGroup.h
 		constraints/NbUnitsOutageLessThanNbUnitsStopGroup.cpp
-		constraints/NbDispUnitsMinBoundSinceMinUpTimeGroup.h
+		include/antares/solver/optimisation/constraints/NbDispUnitsMinBoundSinceMinUpTimeGroup.h
 		constraints/NbDispUnitsMinBoundSinceMinUpTimeGroup.cpp
-		constraints/MinDownTimeGroup.h
+		include/antares/solver/optimisation/constraints/MinDownTimeGroup.h
 		constraints/MinDownTimeGroup.cpp
-		constraints/ExchangeBalance.h
+		include/antares/solver/optimisation/constraints/ExchangeBalance.h
 		constraints/ExchangeBalance.cpp
-		constraints/ExchangeBalanceGroup.h
+		include/antares/solver/optimisation/constraints/ExchangeBalanceGroup.h
 		constraints/ExchangeBalanceGroup.cpp
 
 	)

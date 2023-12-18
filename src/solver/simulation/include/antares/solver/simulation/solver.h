@@ -29,9 +29,9 @@
 #include <yuni/job/queue/service.h>
 #include "antares/solver/variable/state.h"
 #include "antares/solver/misc/options.h"
-#include "solver.data.h"
+#include "antares/solver/simulation/solver.data.h"
 #include "antares/solver/simulation/solver_utils.h"
-#include "antares/solver/hydro/management/management.h"
+#include "hydro/management/management.h"
 
 #include <antares/writer/writer_factory.h>
 

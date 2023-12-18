@@ -21,10 +21,8 @@
 
 #include <yuni/yuni.h>
 #include <antares/study/study.h>
-#include "simulation.h"
-#include "sim_structure_donnees.h"
-#include "sim_structure_probleme_economique.h"
-#include "sim_extern_variables_globales.h"
+#include "antares/study/simulation.h"
+#include "antares/solver/simulation/sim_extern_variables_globales.h"
 
 using namespace Antares;
 

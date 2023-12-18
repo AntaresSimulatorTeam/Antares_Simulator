@@ -19,11 +19,11 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "post_process_commands.h"
-#include "../simulation/common-eco-adq.h"
-#include "../simulation/adequacy_patch_runtime_data.h"
-#include "adequacy_patch_local_matching/adequacy_patch_weekly_optimization.h"
-#include "adequacy_patch_csr/adq_patch_curtailment_sharing.h"
+#include "antares/solver/optimisation/post_process_commands.h"
+#include "antares/solver/simulation/common-eco-adq.h"
+#include "antares/solver/simulation/adequacy_patch_runtime_data.h"
+#include "antares/solver/optimisation/adequacy_patch_local_matching/adequacy_patch_weekly_optimization.h"
+#include "antares/solver/optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h"
 
 namespace Antares::Solver::Simulation
 {

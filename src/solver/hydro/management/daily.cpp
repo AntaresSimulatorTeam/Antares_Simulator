@@ -25,7 +25,7 @@
 #include <yuni/io/file.h>
 #include <yuni/io/directory.h>
 #include "management.h"
-#include <antares/fatal-error.h>
+#include <antares/antares/fatal-error.h>
 #include <antares/writer/i_writer.h>
 #include "../daily/h2o_j_donnees_mensuelles.h"
 #include "../daily/h2o_j_fonctions.h"
@@ -35,7 +35,7 @@
 #include <sstream>
 #include <cassert>
 #include <limits>
-#include <variable/state.h>
+#include "antares/solver/variable/state.h"
 #include <array>
 
 using namespace Yuni;
