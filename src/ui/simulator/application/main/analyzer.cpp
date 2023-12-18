@@ -27,7 +27,7 @@
 
 #include "main.h"
 #include <antares/logs/logs.h>
-#include "antares/study/study.h"
+#include "../study.h"
 #include "../../toolbox/execute/execute.h"
 #include "../../windows/message.h"
 #include "../../toolbox/jobs.h"
