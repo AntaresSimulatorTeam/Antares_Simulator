@@ -67,6 +67,16 @@ ClusterT* ClusterList<ClusterT>::find(const Data::ClusterName& id) const
 }
 
 template<class ClusterT>
+const ClusterT* ClusterList<ClusterT>::find(const ClusterT* p) const
+{
+    for (const auto& c : cluster)
+        if (c.get() == p)
+            return c.get();
+
+    return nullptr;
+}
+
+template<class ClusterT>
 typename std::shared_ptr<ClusterT> ClusterList<ClusterT>::detach(iterator i)
 {
     SharedPtr c = *i;
@@ -98,16 +108,6 @@ template<class ClusterT>
 void ClusterList<ClusterT>::clear()
 {
     cluster.clear();
-}
-
-template<class ClusterT>
-const ClusterT* ClusterList<ClusterT>::find(const ClusterT* p) const
-{
-    for (const auto& c : cluster)
-        if (c.get() == p)
-            return c.get();
-
-    return nullptr;
 }
 
 template<class ClusterT>
