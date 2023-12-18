@@ -60,21 +60,17 @@ typename ClusterList<ClusterT>::const_iterator ClusterList<ClusterT>::end() cons
 template<class ClusterT>
 ClusterT* ClusterList<ClusterT>::find(const Data::ClusterName& id) const
 {
-    for (const auto& c : clusters)
-        if (c->id() == id)
-            return c.get();
+    const auto& it = std::ranges::find_if(clusters, [&id](auto& c) { return c->id() == id; });
 
-    return nullptr;
+    return (it != clusters.end()) ? it->get() : nullptr;
 }
 
 template<class ClusterT>
 const ClusterT* ClusterList<ClusterT>::find(const ClusterT* p) const
 {
-    for (const auto& c : clusters)
-        if (c.get() == p)
-            return c.get();
+    const auto& it = std::ranges::find_if(clusters, [&p](const auto& c) { return c->id() == p->id(); });
 
-    return nullptr;
+    return (it != clusters.end()) ? it->get() : nullptr;
 }
 
 template<class ClusterT>
@@ -332,11 +328,11 @@ uint ClusterList<ClusterT>::removeDisabledClusters()
     if (empty())
         return 0;
 
-    std::erase_if(clusters, [] (auto& c) { return !c->enabled; });
+    auto count = std::erase_if(clusters, [] (auto& c) { return !c->enabled; });
 
     rebuildIndex();
 
-    return size();
+    return count;
 }
 // Force template instantiation
 template class ClusterList<ThermalCluster>;

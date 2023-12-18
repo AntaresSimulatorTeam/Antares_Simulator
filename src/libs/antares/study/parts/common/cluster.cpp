@@ -65,7 +65,7 @@ bool Cluster::saveDataSeriesToFolder(const AnyString& folder) const
 
         return ret;
     }
-    return false;
+    return true;
 }
 
 bool Cluster::loadDataSeriesFromFolder(Study& s, const AnyString& folder)
@@ -75,7 +75,7 @@ bool Cluster::loadDataSeriesFromFolder(Study& s, const AnyString& folder)
 
     auto& buffer = s.bufferLoadingTS;
 
-    bool ret = 1;
+    bool ret = true;
     buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "series."
         << s.inputExtension;
     ret = series.timeSeries.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &s.dataBuffer) && ret;
