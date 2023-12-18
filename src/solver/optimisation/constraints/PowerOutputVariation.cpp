@@ -8,25 +8,14 @@ void PowerOutputVariation::add(int pays, int cluster, int clusterIndex, int pdt,
         double maxUpwardPowerRampingRate = PaliersThermiquesDuPays.maxUpwardPowerRampingRate[clusterIndex];
         double pminDUnGroupeDuPalierThermique = PaliersThermiquesDuPays.pminDUnGroupeDuPalierThermique[clusterIndex];
         // constraint : P(t) - P(t-1) - l * M^+(t) - P^+ + P^- = 0
-        if (pdt > 0)
-        {
-            builder.updateHourWithinWeek(pdt)
-              .DispatchableProduction(cluster, 1.0)
-              .DispatchableProduction(cluster, -1.0, -1, problemeHebdo->NombreDePasDeTempsPourUneOptimisation)
-              .NumberStartingDispatchableUnits(cluster, -pminDUnGroupeDuPalierThermique)
-              .ProductionIncreaseAboveMin(cluster, -1.0)
-              .ProductionDecreaseAboveMin(cluster, 1.0)
-              .equalTo();
-        }
-        else
-        {
-            builder.updateHourWithinWeek(pdt)
-              .DispatchableProduction(cluster, 1.0)
-              .NumberStartingDispatchableUnits(cluster, -pminDUnGroupeDuPalierThermique)
-              .ProductionIncreaseAboveMin(cluster, -1.0)
-              .ProductionDecreaseAboveMin(cluster, 1.0)
-              .equalTo();
-        }
+        builder.updateHourWithinWeek(pdt)
+            .DispatchableProduction(cluster, 1.0)
+            .DispatchableProduction(cluster, -1.0, -1, problemeHebdo->NombreDePasDeTempsPourUneOptimisation)
+            .NumberStartingDispatchableUnits(cluster, -pminDUnGroupeDuPalierThermique)
+            .ProductionIncreaseAboveMin(cluster, -1.0)
+            .ProductionDecreaseAboveMin(cluster, 1.0)
+            .equalTo();
+   
         if (builder.NumberOfVariables() > 0)
         {
             ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes);
@@ -40,8 +29,7 @@ void PowerOutputVariation::add(int pays, int cluster, int clusterIndex, int pdt,
     }
     else
     {
-        int add = (pdt == 0) ? 4 : 5;
-        problemeHebdo->NbTermesContraintesPourLesRampes += add;
+        problemeHebdo->NbTermesContraintesPourLesRampes += 5;
         problemeHebdo->ProblemeAResoudre->NombreDeContraintes++;
     }
 }

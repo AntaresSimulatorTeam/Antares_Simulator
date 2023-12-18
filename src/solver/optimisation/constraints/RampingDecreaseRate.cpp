@@ -8,25 +8,14 @@ void RampingDecreaseRate::add(int pays, int cluster, int clusterIndex, int pdt, 
         double maxDownwardPowerRampingRate = PaliersThermiquesDuPays.maxDownwardPowerRampingRate[clusterIndex];
         double pmaxDUnGroupeDuPalierThermique = PaliersThermiquesDuPays.PmaxDUnGroupeDuPalierThermique[clusterIndex];
         // constraint : P(t) - P(t-1) + R^- * M(t) + u * M^-(t) + u * M^--(t) > 0
-        if (pdt > 0)
-        {
-            builder.updateHourWithinWeek(pdt)
-              .DispatchableProduction(cluster, 1.0)
-              .DispatchableProduction(cluster, -1.0, -1, problemeHebdo->NombreDePasDeTempsPourUneOptimisation)
-              .NumberOfDispatchableUnits(cluster, maxDownwardPowerRampingRate)
-              .NumberStoppingDispatchableUnits(cluster, pmaxDUnGroupeDuPalierThermique)
-              .NumberBreakingDownDispatchableUnits(cluster, pmaxDUnGroupeDuPalierThermique)
-              .greaterThan();
-        }
-        else
-        {
-            builder.updateHourWithinWeek(pdt)
-              .DispatchableProduction(cluster, 1.0)
-              .NumberOfDispatchableUnits(cluster, maxDownwardPowerRampingRate)
-              .NumberStoppingDispatchableUnits(cluster, pmaxDUnGroupeDuPalierThermique)
-              .NumberBreakingDownDispatchableUnits(cluster, pmaxDUnGroupeDuPalierThermique)
-              .greaterThan();
-        }
+        builder.updateHourWithinWeek(pdt)
+            .DispatchableProduction(cluster, 1.0)
+            .DispatchableProduction(cluster, -1.0, -1, problemeHebdo->NombreDePasDeTempsPourUneOptimisation)
+            .NumberOfDispatchableUnits(cluster, maxDownwardPowerRampingRate)
+            .NumberStoppingDispatchableUnits(cluster, pmaxDUnGroupeDuPalierThermique)
+            .NumberBreakingDownDispatchableUnits(cluster, pmaxDUnGroupeDuPalierThermique)
+            .greaterThan();
+ 
         if (builder.NumberOfVariables() > 0)
         {
             ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes);
@@ -41,8 +30,7 @@ void RampingDecreaseRate::add(int pays, int cluster, int clusterIndex, int pdt, 
     }
     else
     {
-        int add = (pdt == 0) ? 4 : 5;
-        problemeHebdo->NbTermesContraintesPourLesRampes += add;
+        problemeHebdo->NbTermesContraintesPourLesRampes += 5;
         problemeHebdo->ProblemeAResoudre->NombreDeContraintes++;
     }
 }

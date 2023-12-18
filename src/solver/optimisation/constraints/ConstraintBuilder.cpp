@@ -58,7 +58,6 @@ ConstraintBuilder& ConstraintBuilder::DispatchableProduction(unsigned int index,
                                                              int delta)
 {
     AddVariable(GetVariableManager(offset, delta).DispatchableProduction(index), coeff);
-    // logs.info() << "dispatchable production idx " << GetVariableManager(offset, delta).DispatchableProduction(index);
     return *this;
 }
 
