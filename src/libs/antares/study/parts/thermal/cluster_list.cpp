@@ -145,11 +145,6 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
     return ret;
 }
 
-YString ThermalClusterList::typeID() const
-{
-    return "thermal";
-}
-
 static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFile::Property* p)
 {
     if (p->key.empty())

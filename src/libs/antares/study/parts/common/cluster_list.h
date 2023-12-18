@@ -202,7 +202,7 @@ public:
 
 private:
     /// thermal, renewable, etc.
-    virtual YString typeID() const = 0;
+    std::string typeID = "common";
 
     /// Sort the vector, set index value for each cluster
     void rebuildIndex();

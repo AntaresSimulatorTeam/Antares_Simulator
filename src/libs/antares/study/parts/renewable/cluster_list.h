@@ -16,8 +16,7 @@ namespace Data
 class RenewableClusterList : public ClusterList<RenewableCluster>
 {
 public:
-    // Overriden virtual methods
-    YString typeID() const override;
+    std::string typeID = "renewables";
     bool loadFromFolder(const AnyString& folder, Area* area);
     bool saveToFolder(const AnyString& folder) const override;
 }; // class RenewableClusterList
