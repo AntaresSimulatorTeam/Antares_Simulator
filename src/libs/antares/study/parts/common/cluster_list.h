@@ -15,33 +15,22 @@ namespace Antares
 namespace Data
 {
 /*!
-** \brief List of clusters
+** \brief Generic list of clusters
 ** \ingroup renewableclusters
+** This class implements the base functions for a list of cluster
+** It's used for thermal and renewable clusters
 */
 template<class ClusterT>
 class ClusterList
 {
 public:
-    // Shared pointer
     using SharedPtr = typename std::shared_ptr<ClusterT>;
-    // Vector container
     using Vect = typename std::vector<SharedPtr>;
-    //! iterator
     using iterator = typename Vect::iterator;
-    //! const iterator
     using const_iterator = typename Vect::const_iterator;
 
-    //! \name Constructor & Destructor
-    //@{
-    /*!
-    ** \brief Default constructor
-    */
     ClusterList();
-    /*!
-    ** \brief Destructor
-    */
     virtual ~ClusterList();
-    //@}
 
     //! \name Iterating
     //@{
@@ -133,18 +122,14 @@ public:
     //! Get the number of items in the list
     uint size() const;
 
-    //! Get if the list is empty
+    //! Return true if the list is empty
     bool empty() const;
     //@}
 
-    //! iterator to the begining of the list
     iterator begin();
-    //! iterator to the begining of the list
     const_iterator begin() const;
 
-    //! iterator to the end of the list
     iterator end();
-    //! iterator to the end of the list
     const_iterator end() const;
 
     /*!
@@ -158,8 +143,6 @@ public:
 
     //@}
 
-    //! \name Memory management
-    //@{
     /*!
     ** \brief Invalidate all clusters
     */
@@ -171,19 +154,17 @@ public:
     void markAsModified() const;
 
 
-
     /*!
     ** \brief Get the size (bytes) occupied in memory by a `ClusterList` structure
     ** \return A size (in bytes)
     */
     uint64_t memoryUsage() const;
 
-    //! All clusters
+    /// The vector containing the clusters
     Vect clusters;
 
-    // thermal, renewable, etc.
-    virtual YString typeID() const = 0;
-
+    /// \name IO functions
+    /// @{
     bool loadDataSeriesFromFolder(Study& study,
                                  const StudyLoadOptions& options,
                                  const AnyString& folder);
@@ -193,9 +174,8 @@ public:
     bool saveDataSeriesToFolder(const AnyString& folder, const YString& msg) const;
 
     virtual bool saveToFolder(const AnyString& folder) const = 0;
+    ///@}
 
-    //! \name Informations
-    //@{
     /*!
     ** \brief Retrieve the total capacity and the total unit count
     **
@@ -220,18 +200,13 @@ public:
     */
     uint removeDisabledClusters();
 
-protected:
-    /*!
-    ** \brief Rebuild the index of clusters
-    **
-    ** As a list of clusters is a hash table, it is not
-    ** possible to directly accees to a clusters from its index.
-    ** However an index can be built but it must be re-built when
-    ** the hash table is modified.
-    */
+private:
+    /// thermal, renewable, etc.
+    virtual YString typeID() const = 0;
+
+    /// Sort the vector, set index value for each cluster
     void rebuildIndex();
 
-    //@}
 }; // class ClusterList
 } // namespace Data
 } // namespace Antares
