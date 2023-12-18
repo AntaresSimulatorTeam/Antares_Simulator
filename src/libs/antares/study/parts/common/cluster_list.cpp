@@ -1,4 +1,5 @@
 #include <boost/algorithm/string/case_conv.hpp>
+#include <algorithm>
 #include <numeric>
 #include "cluster_list.h"
 #include <antares/utils/utils.h>
@@ -77,9 +78,7 @@ typename std::shared_ptr<ClusterT> ClusterList<ClusterT>::detach(iterator i)
 template<class ClusterT>
 bool ClusterList<ClusterT>::exists(const Data::ClusterName& id) const
 {
-    return std::any_of(cluster.begin(), cluster.end(), [&id](const auto& c){
-        return c->id() == id;
-    });
+    return std::ranges::any_of(cluster, [&id](const auto& c){ return c->id() == id; });
 }
 
 template<class ClusterT>
@@ -241,7 +240,7 @@ bool ClusterList<ClusterT>::rename(Data::ClusterName idToFind, Data::ClusterName
 template<class ClusterT>
 bool ClusterList<ClusterT>::forceReload(bool reload) const
 {
-    return std::all_of(cluster.begin(), cluster.end(), [&reload](const auto& c){
+    return std::ranges::all_of(cluster, [&reload](const auto& c){
         return c->forceReload(reload);
     });
 
@@ -257,24 +256,15 @@ void ClusterList<ClusterT>::markAsModified() const
 template<class ClusterT>
 bool ClusterList<ClusterT>::remove(const Data::ClusterName& id)
 {
-    // using find_if to get an iterator and use erase later
-    const auto& it = find_if(cluster.begin(), cluster.end(),
-        [&id](const SharedPtr& c) { return c->id() == id; });
+    auto nbDeletion = std::erase_if(cluster, [&id](const SharedPtr& c) { return c->id() == id; });
 
-    if (it == cluster.end())
-        return false;
-
-    // Getting the pointer on the cluster
-    SharedPtr c = *it;
-
-    // Removing it from the list
-    cluster.erase(it);
     // Invalidating the parent area
-    c->parentArea->forceReload();
+    forceReload();
 
     // Rebuilding the index
     rebuildIndex();
-    return true;
+
+    return nbDeletion > 0;
 }
 
 template<class ClusterT>
@@ -346,11 +336,7 @@ uint ClusterList<ClusterT>::removeDisabledClusters()
     if (empty())
         return 0;
 
-    auto firstClusterToRemove = std::remove_if(cluster.begin(), cluster.end(), [] (auto& c) {
-        return !c->enabled;
-    });
-
-    cluster.erase(firstClusterToRemove , cluster.end()); // Actually remove the disabled clusters
+    std::erase_if(cluster, [] (auto& c) { return !c->enabled; });
 
     rebuildIndex();
 
