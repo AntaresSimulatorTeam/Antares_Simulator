@@ -194,15 +194,6 @@ public:
     // thermal, renewable, etc.
     virtual YString typeID() const = 0;
 
-    /*!
-    ** \brief Number of dispatchable clusters per group
-    **
-    ** You should rely on these values only after the loading of the study
-    ** and until the study is not modified.
-    ** These values are modified by 'ClusterListAdd()'
-    */
-    std::vector<uint> groupCount;
-
     bool loadDataSeriesFromFolder(Study& study,
                                  const StudyLoadOptions& options,
                                  const AnyString& folder);

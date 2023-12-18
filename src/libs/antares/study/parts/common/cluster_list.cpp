@@ -92,7 +92,7 @@ bool ClusterList<ClusterT>::exists(const Data::ClusterName& id) const
 }
 
 template<class ClusterT>
-Data::ClusterList<ClusterT>::ClusterList() : groupCount(ClusterT::groupMax, 0)
+Data::ClusterList<ClusterT>::ClusterList()
 {
 }
 
@@ -172,7 +172,6 @@ typename ClusterList<ClusterT>::SharedPtr ClusterList<ClusterT>::add(
         return newcluster;
 
     clusters.push_back(newcluster);
-    ++(groupCount[newcluster->groupId()]);
     rebuildIndex();
     return newcluster;
 }
