@@ -362,6 +362,7 @@ public:
 
         void reset();
         bool checkValidity(Area* area, Data::ClusterName clusterName);
+        std::ostream& operator<<(std::ostream&) const;
     };
     Ramping ramping;
 

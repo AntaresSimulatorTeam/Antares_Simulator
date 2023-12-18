@@ -32,6 +32,7 @@
 #include <antares/logs/logs.h>
 #include <yuni/io/file.h>
 #include <antares/io/file.h>
+#include <sstream>
 
 using namespace Yuni;
 using namespace Antares;
@@ -115,9 +116,7 @@ static void ExportGridInfosAreas(const Data::Study& study,
                                  const Yuni::String& originalOutput,
                                  IResultWriter& writer)
 {
-    Clob out;
-    Clob outLinks;
-    Clob outThermal;
+    std::ostringstream out, outLinks, outThermal;
 
     out << "id\tname\n";
     outLinks << "upstream\tdownstream\n";
@@ -158,23 +157,21 @@ static void ExportGridInfosAreas(const Data::Study& study,
             outThermal << cluster.fixedCost << '\t';
             outThermal << cluster.startupCost << '\t';
             outThermal << cluster.marketBidCost << '\t';
-            outThermal << cluster.spreadCost << '\n';
-            outThermal << cluster.ramping.powerIncreaseCost << '\n';
-            outThermal << cluster.ramping.powerDecreaseCost << '\n';
-            outThermal << cluster.ramping.maxUpwardPowerRampingRate << '\n';
-            outThermal << cluster.ramping.maxDownwardPowerRampingRate << '\n';
+            outThermal << cluster.spreadCost << '\t';
+            outThermal << cluster.ramping << '\n';
 
         } // each thermal cluster
     });   // each area
-    auto add = [&writer, &originalOutput](const YString& filename, Clob&& buffer) {
+    // buffer must be copied since addEntryFromBuffer has no std::string&& variant, unfortunately
+    auto add = [&writer, &originalOutput](const YString& filename, std::string buffer) {
         YString path;
         path << originalOutput << SEP << "grid" << SEP << filename;
         writer.addEntryFromBuffer(path.c_str(), buffer);
     };
 
-    add("areas.txt", std::move(out));
-    add("links.txt", std::move(outLinks));
-    add("thermal.txt", std::move(outThermal));
+    add("areas.txt", out.str());
+    add("links.txt", outLinks.str());
+    add("thermal.txt", outThermal.str());
 }
 
 SurveyResultsData::SurveyResultsData(const Data::Study& s, const String& o) :
