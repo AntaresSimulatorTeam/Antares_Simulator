@@ -1,4 +1,5 @@
-#include "CsrBindingConstraintHour.h"
+
+#include "antares/solver/optimisation/adequacy_patch_csr/constraints/CsrBindingConstraintHour.h"
 
 void CsrBindingConstraintHour::add(int CntCouplante)
 {

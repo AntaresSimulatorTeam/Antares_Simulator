@@ -39,7 +39,7 @@
 #include <antares/antares/fatal-error.h>
 #include "antares/solver/ts-generator/generator.h"
 #include "antares/solver/simulation/opt_time_writer.h"
-#include "hydro/management/management.h" // Added for use of randomReservoirLevel(...)
+#include "antares/solver/hydro/management/management.h" // Added for use of randomReservoirLevel(...)
 
 #include <yuni/core/system/suspend.h>
 #include <yuni/job/job.h>

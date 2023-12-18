@@ -30,8 +30,6 @@
 #include "dailypower.h"
 #include "levelsandvalues.h"
 #include "management.h"
-#include "../../toolbox/components/notebook/notebook.h"
-#include "../../toolbox/components/datagrid/component.h"
 #include "../../toolbox/components/datagrid/renderer/area/timeseries.h"
 #include "../../toolbox/components/datagrid/renderer/area/hydromonthlypower.h"
 

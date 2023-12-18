@@ -26,16 +26,13 @@
 */
 
 #include <vector>
-#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 
-#include "antares/solver/simulation/adequacy_patch_runtime_data.h"
-#include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/optimisation/adequacy_patch_csr/csr_quadratic_problem.h"
 #include "antares/solver/optimisation/adequacy_patch_csr/hourly_csr_problem.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
-#include "constraints/CsrFlowDissociation.h"
-#include "constraints/CsrAreaBalance.h"
-#include "constraints/CsrBindingConstraintHour.h"
+#include "antares/solver/optimisation/adequacy_patch_csr/constraints/CsrFlowDissociation.h"
+#include "antares/solver/optimisation/adequacy_patch_csr/constraints/CsrAreaBalance.h"
+#include "antares/solver/optimisation/adequacy_patch_csr/constraints/CsrBindingConstraintHour.h"
 #include "antares/solver/optimisation/constraints/constraint_builder_utils.h"
 
 using namespace Antares::Data;

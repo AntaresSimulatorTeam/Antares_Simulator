@@ -1,4 +1,5 @@
-#include "CsrFlowDissociation.h"
+
+#include "antares/solver/optimisation/adequacy_patch_csr/constraints/CsrFlowDissociation.h"
 
 void CsrFlowDissociation::add()
 {

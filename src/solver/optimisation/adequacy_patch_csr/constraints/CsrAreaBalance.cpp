@@ -1,4 +1,5 @@
-#include "CsrAreaBalance.h"
+
+#include "antares/solver/optimisation/adequacy_patch_csr/constraints/CsrAreaBalance.h"
 
 void CsrAreaBalance::add()
 {

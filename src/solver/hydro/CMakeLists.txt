@@ -61,6 +61,8 @@ add_library(antares-solver-hydro
         ${SRC_EXT_SOLVER_H2O2_DAILY}
         ${SRC_MANAGEMENT})
 
+add_library(Antares::hydro ALIAS antares-solver-hydro)
+
 target_link_libraries(antares-solver-hydro
         PRIVATE
         model_antares
