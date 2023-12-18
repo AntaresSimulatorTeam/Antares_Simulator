@@ -1,4 +1,4 @@
-#include "HydroPowerSmoothingUsingVariationSum.h"
+#include "antares/solver/optimisation/constraints/HydroPowerSmoothingUsingVariationSum.h"
 
 void HydroPowerSmoothingUsingVariationSum::add(int pays,
                                                const int nombreDePasDeTempsPourUneOptimisation)

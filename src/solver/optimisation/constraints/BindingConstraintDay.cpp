@@ -1,4 +1,4 @@
-#include "BindingConstraintDay.h"
+#include "antares/solver/optimisation/constraints/BindingConstraintDay.h"
 
 void BindingConstraintDay::add(int cntCouplante)
 {

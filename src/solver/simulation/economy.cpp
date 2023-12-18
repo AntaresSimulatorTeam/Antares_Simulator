@@ -25,13 +25,13 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "economy.h"
+#include "antares/solver/simulation/economy.h"
 #include <antares/exception/UnfeasibleProblemError.hpp>
 #include <antares/exception/AssertionError.hpp>
-#include "simulation.h"
-#include "../optimisation/opt_fonctions.h"
-#include "../optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h"
-#include "common-eco-adq.h"
+#include "antares/solver/simulation/simulation.h"
+#include "antares/solver/optimisation/opt_fonctions.h"
+#include "antares/solver/optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h"
+#include "antares/solver/simulation/common-eco-adq.h"
 
 using namespace Yuni;
 using Antares::Constants::nbHoursInAWeek;

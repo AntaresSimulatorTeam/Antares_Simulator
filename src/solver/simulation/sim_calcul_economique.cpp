@@ -32,11 +32,12 @@
 #include <antares/study/area/scratchpad.h>
 
 #include "antares/study/fwd.h"
-#include "simulation.h"
-#include "sim_structure_probleme_economique.h"
-#include "sim_extern_variables_globales.h"
-#include "adequacy_patch_runtime_data.h"
-#include <antares/fatal-error.h>
+#include "antares/study/simulation.h"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
+#include "antares/solver/simulation/sim_extern_variables_globales.h"
+#include "antares/solver/simulation/adequacy_patch_runtime_data.h"
+#include "antares/solver/simulation/simulation.h"
+#include <antares/antares/fatal-error.h>
 
 using namespace Antares;
 using namespace Antares::Data;

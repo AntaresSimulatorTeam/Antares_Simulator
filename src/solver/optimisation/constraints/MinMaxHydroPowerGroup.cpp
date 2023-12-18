@@ -1,4 +1,4 @@
-#include "MinMaxHydroPowerGroup.h"
+#include "antares/solver/optimisation/constraints/MinMaxHydroPowerGroup.h"
 MinHydroPowerData MinMaxHydroPowerGroup::GetMinHydroPowerData()
 {
     return {.CaracteristiquesHydrauliques = problemeHebdo_->CaracteristiquesHydrauliques,

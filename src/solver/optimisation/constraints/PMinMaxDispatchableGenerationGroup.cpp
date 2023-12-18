@@ -1,4 +1,4 @@
-#include "PMinMaxDispatchableGenerationGroup.h"
+#include "antares/solver/optimisation/constraints/PMinMaxDispatchableGenerationGroup.h"
 
 /**
  * @brief build P{min,max}DispatchableGeneration constraints with

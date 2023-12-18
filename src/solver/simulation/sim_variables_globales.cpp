@@ -25,7 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "sim_structure_donnees.h"
-#include "sim_structure_probleme_economique.h"
+#include "antares/solver/simulation/sim_structure_donnees.h"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 std::vector<std::vector<double>> transitMoyenInterconnexionsRecalculQuadratique;

@@ -4,11 +4,11 @@ project(ts-generator)
 # Time-Series Generators
 #
 set(SRC_GENERATORS
-	include/antares/solver/ts-generator/generator.h
-	include/antares/solver/ts-generator/generator.hxx
-    generator.cpp
-	thermal.cpp
-	hydro.cpp
+        include/antares/solver/ts-generator/generator.h
+        include/antares/solver/ts-generator/generator.hxx
+        generator.cpp
+        thermal.cpp
+        hydro.cpp
 )
 source_group("ts-generator" FILES ${SRC_GENERATORS})
 
@@ -34,24 +34,24 @@ set(SRC_XCAST
 source_group("ts-generator\\XCast" FILES ${SRC_XCAST})
 
 
-
 #
 # --- Library VARIABLES ---
 #
 add_library(antares-solver-ts-generator
-				${SRC_GENERATORS}
-				${SRC_XCAST})
+        ${SRC_GENERATORS}
+        ${SRC_XCAST})
 
 target_link_libraries(antares-solver-ts-generator
-		PRIVATE
-		result_writer
-		array
-		benchmarking
-		Antares::study
-		Antares::misc
+        PRIVATE
+        result_writer
+        array
+        benchmarking
+        Antares::study
+        Antares::misc
+		antares-solver-simulation
 )
 
 target_include_directories(antares-solver-ts-generator
-		PUBLIC
-		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )

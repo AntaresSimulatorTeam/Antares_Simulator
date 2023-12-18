@@ -1,4 +1,4 @@
-#include "HydroPowerGroup.h"
+#include "antares/solver/optimisation/constraints/HydroPowerGroup.h"
 
 HydroPowerData HydroPowerGroup::GetHydroPowerDataFromProblemHebdo()
 {

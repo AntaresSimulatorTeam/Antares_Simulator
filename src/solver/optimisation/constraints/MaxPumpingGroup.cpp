@@ -1,4 +1,4 @@
-#include "MaxPumpingGroup.h"
+#include "antares/solver/optimisation/constraints/MaxPumpingGroup.h"
 
 MaxPumpingData MaxPumpingGroup::GetMaxPumpingData()
 {

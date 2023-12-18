@@ -2,7 +2,7 @@
 // Created by marechaljas on 17/03/23.
 //
 
-#include "BindingConstraintsTimeSeriesNumbersWriter.h"
+#include "antares/solver/simulation/BindingConstraintsTimeSeriesNumbersWriter.h"
 #include "antares/study/binding_constraint/BindingConstraintGroupRepository.h"
 #include <cstdint>
 #include <filesystem>

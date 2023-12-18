@@ -24,11 +24,9 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#include "cbuilder.h"
-#include "../../libs/antares/study/area/constants.h"
+#include "antares/solver/constraints-builder/cbuilder.h"
 
 #include <string>
-#include <iostream>
 #include <sstream>
 #include <iomanip>
 

@@ -1,4 +1,4 @@
-#include "BindingConstraintHour.h"
+#include "antares/solver/optimisation/constraints/BindingConstraintHour.h"
 
 void BindingConstraintHour::add(int pdt, int cntCouplante)
 {

@@ -1,4 +1,4 @@
-#include "ExchangeBalance.h"
+#include "antares/solver/optimisation/constraints/ExchangeBalance.h"
 
 void ExchangeBalance::add(uint32_t pays)
 {

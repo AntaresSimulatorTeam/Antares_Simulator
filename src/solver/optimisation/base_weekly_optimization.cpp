@@ -26,9 +26,9 @@
 */
 
 #include <memory>
-#include "base_weekly_optimization.h"
-#include "weekly_optimization.h"
-#include "adequacy_patch_local_matching/adequacy_patch_weekly_optimization.h"
+#include "antares/solver/optimisation/base_weekly_optimization.h"
+#include "antares/solver/optimisation/weekly_optimization.h"
+#include "antares/solver/optimisation/adequacy_patch_local_matching/adequacy_patch_weekly_optimization.h"
 
 using AdqPatchParams = Antares::Data::AdequacyPatch::AdqPatchParams;
 

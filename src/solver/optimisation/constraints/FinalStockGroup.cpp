@@ -1,4 +1,4 @@
-#include "FinalStockGroup.h"
+#include "antares/solver/optimisation/constraints/FinalStockGroup.h"
 
 FinalStockEquivalentData FinalStockGroup::GetFinalStockEquivalentData()
 {

@@ -1,5 +1,5 @@
-#include "BindingConstraintDayGroup.h"
-#include "constraint_builder_utils.h"
+#include "antares/solver/optimisation/constraints/BindingConstraintDayGroup.h"
+#include "antares/solver/optimisation/constraints/constraint_builder_utils.h"
 
 BindingConstraintDayData BindingConstraintDayGroup::GetBindingConstraintDayDataFromProblemHebdo()
 {

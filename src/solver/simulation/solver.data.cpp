@@ -25,7 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "solver.data.h"
+#include "antares/solver/simulation/solver.data.h"
 #include <antares/study/parameters.h>
 
 namespace Antares::Solver::Private::Simulation

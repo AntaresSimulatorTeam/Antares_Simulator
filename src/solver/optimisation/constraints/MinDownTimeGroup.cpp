@@ -1,4 +1,4 @@
-#include "MinDownTimeGroup.h"
+#include "antares/solver/optimisation/constraints/MinDownTimeGroup.h"
 
 MinDownTimeData MinDownTimeGroup::GetMinDownTimeDataFromProblemHebdo()
 {

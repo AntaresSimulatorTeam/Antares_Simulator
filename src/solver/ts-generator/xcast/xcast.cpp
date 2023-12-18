@@ -32,10 +32,8 @@
 #include "antares/solver/ts-generator/xcast/xcast.h"
 #include "antares/solver/ts-generator/xcast/predicate.hxx"
 #include <antares/logs/logs.h>
-#include <antares/fatal-error.h>
+#include <antares/antares/fatal-error.h>
 #include <limits>
-#include <yuni/io/directory.h>
-#include <antares/study/area/constants.h>
 
 using namespace Yuni;
 

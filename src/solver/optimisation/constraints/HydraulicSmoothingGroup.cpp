@@ -1,7 +1,7 @@
-#include "HydraulicSmoothingGroup.h"
-#include "HydroPowerSmoothingUsingVariationSum.h"
-#include "HydroPowerSmoothingUsingVariationMaxDown.h"
-#include "HydroPowerSmoothingUsingVariationMaxUp.h"
+#include "antares/solver/optimisation/constraints/HydraulicSmoothingGroup.h"
+#include "antares/solver/optimisation/constraints/HydroPowerSmoothingUsingVariationSum.h"
+#include "antares/solver/optimisation/constraints/HydroPowerSmoothingUsingVariationMaxDown.h"
+#include "antares/solver/optimisation/constraints/HydroPowerSmoothingUsingVariationMaxUp.h"
 
 void HydraulicSmoothingGroup::BuildConstraints()
 {

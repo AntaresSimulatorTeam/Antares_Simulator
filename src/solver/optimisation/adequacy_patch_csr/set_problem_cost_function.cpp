@@ -25,11 +25,11 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "../solver/optimisation/opt_structure_probleme_a_resoudre.h"
-#include "../simulation/adequacy_patch_runtime_data.h"
+#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
+#include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 
-#include "../solver/optimisation/opt_fonctions.h"
-#include "sim_structure_probleme_economique.h"
+#include "antares/solver/optimisation/opt_fonctions.h"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 namespace
 {

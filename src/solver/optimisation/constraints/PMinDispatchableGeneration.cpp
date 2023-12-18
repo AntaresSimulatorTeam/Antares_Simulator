@@ -1,4 +1,4 @@
-#include "PMinDispatchableGeneration.h"
+#include "antares/solver/optimisation/constraints/PMinDispatchableGeneration.h"
 
 void PMinDispatchableGeneration::add(int pays, int index, int pdt)
 {

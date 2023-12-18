@@ -1,4 +1,4 @@
-#include "ExchangeBalanceGroup.h"
+#include "antares/solver/optimisation/constraints/ExchangeBalanceGroup.h"
 
 ExchangeBalanceData ExchangeBalanceGroup::GetExchangeBalanceDataFromProblemHebdo()
 {

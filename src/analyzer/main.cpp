@@ -29,7 +29,7 @@
 #include <antares/logs/logs.h>
 #include <yuni/core/getopt.h>
 #include <antares/args/args_to_utf8.h>
-#include <antares/version.h>
+#include <antares/antares/version.h>
 #include "atsp/atsp.h"
 #include <antares/logs/hostinfo.h>
 #include <antares/inifile/inifile.h>

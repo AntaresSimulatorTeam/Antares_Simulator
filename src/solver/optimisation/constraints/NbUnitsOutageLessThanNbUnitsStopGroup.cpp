@@ -1,4 +1,4 @@
-#include "NbUnitsOutageLessThanNbUnitsStopGroup.h"
+#include "antares/solver/optimisation/constraints/NbUnitsOutageLessThanNbUnitsStopGroup.h"
 
 NbUnitsOutageLessThanNbUnitsStopData
   NbUnitsOutageLessThanNbUnitsStopGroup::GetNbUnitsOutageLessThanNbUnitsStopDataFromProblemHebdo()

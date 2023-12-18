@@ -24,7 +24,7 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#include "ProblemMatrixEssential.h"
+#include "antares/solver/optimisation/ProblemMatrixEssential.h"
 
 ProblemMatrixEssential::ProblemMatrixEssential(PROBLEME_HEBDO* problemeHebdo) :
  problemeHebdo_(problemeHebdo)

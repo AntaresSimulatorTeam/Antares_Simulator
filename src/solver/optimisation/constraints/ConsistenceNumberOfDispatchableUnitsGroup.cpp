@@ -1,5 +1,5 @@
-#include "ConsistenceNumberOfDispatchableUnitsGroup.h"
-#include "ConsistenceNumberOfDispatchableUnits.h"
+#include "antares/solver/optimisation/constraints/ConsistenceNumberOfDispatchableUnitsGroup.h"
+#include "antares/solver/optimisation/constraints/ConsistenceNumberOfDispatchableUnits.h"
 
 /**
  * @brief build ConsistenceNumberOfDispatchableUnits constraints with

@@ -25,11 +25,11 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "LinearProblemMatrix.h"
-#include "opt_export_structure.h"
+#include "antares/solver/optimisation/LinearProblemMatrix.h"
+#include "antares/solver/optimisation/opt_export_structure.h"
 #include "antares/solver/utils/filename.h"
-#include "opt_fonctions.h"
-#include "LinearProblemMatrixStartUpCosts.h"
+#include "antares/solver/optimisation/opt_fonctions.h"
+#include "antares/solver/optimisation/LinearProblemMatrixStartUpCosts.h"
 
 using namespace Antares::Data;
 

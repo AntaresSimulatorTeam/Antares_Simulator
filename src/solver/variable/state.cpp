@@ -27,7 +27,7 @@
 
 #include <yuni/yuni.h>
 #include <antares/study/study.h>
-#include "state.h"
+#include "antares/solver/variable/state.h"
 
 using namespace Yuni;
 

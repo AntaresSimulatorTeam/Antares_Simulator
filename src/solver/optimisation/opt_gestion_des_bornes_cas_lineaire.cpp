@@ -25,15 +25,13 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "opt_structure_probleme_a_resoudre.h"
+#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 
-#include "../simulation/sim_structure_donnees.h"
-#include "../simulation/sim_structure_probleme_economique.h"
-#include "../simulation/adequacy_patch_runtime_data.h"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
+#include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 
-#include "opt_fonctions.h"
-#include "adequacy_patch_local_matching/adq_patch_local_matching.h"
-#include <yuni/core/math.h>
+#include "antares/solver/optimisation/opt_fonctions.h"
+#include "antares/solver/optimisation/adequacy_patch_local_matching/adq_patch_local_matching.h"
 
 #include "spx_constantes_externes.h"
 

@@ -27,7 +27,6 @@
 
 #include "ntc.h"
 #include <antares/utils/utils.h>
-#include <antares/constants.h>
 
 namespace Antares
 {

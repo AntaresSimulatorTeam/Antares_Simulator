@@ -1,5 +1,5 @@
-#include "BindingConstraintWeekGroup.h"
-#include "constraint_builder_utils.h"
+#include "antares/solver/optimisation/constraints/BindingConstraintWeekGroup.h"
+#include "antares/solver/optimisation/constraints/constraint_builder_utils.h"
 
 BindingConstraintWeekData BindingConstraintWeekGroup::GetBindingConstraintWeekDataFromProblemHebdo()
 {

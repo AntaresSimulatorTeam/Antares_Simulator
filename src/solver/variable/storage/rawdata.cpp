@@ -26,19 +26,11 @@
 */
 
 #include <yuni/yuni.h>
-#include "rawdata.h"
+#include "antares/solver/variable/storage/rawdata.h"
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Variable
-{
-namespace R
-{
-namespace AllYears
+namespace Antares::Solver::Variable::R::AllYears
 {
 RawData::RawData() : hourly(nullptr), year(nullptr), allYears(0.)
 {
@@ -86,8 +78,8 @@ void RawData::merge(unsigned int y, const IntermediateValues& rhs)
     year[y] += rhs.year;
 }
 
-} // namespace AllYears
-} // namespace R
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Variable::R::AllYears
+
+
+
+

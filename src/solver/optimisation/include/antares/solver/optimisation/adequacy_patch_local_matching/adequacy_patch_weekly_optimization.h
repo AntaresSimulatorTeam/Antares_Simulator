@@ -28,8 +28,8 @@
 #pragma once
 
 #include "../base_weekly_optimization.h"
-#include "../simulation/sim_structure_probleme_economique.h"
-#include "../simulation/sim_structure_donnees.h"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
+#include "antares/solver/simulation/sim_structure_donnees.h"
 #include "antares/study/area/area.h"
 
 using Antares::Data::AreaList;

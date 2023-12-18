@@ -25,8 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "all.h"
+#include "antares/solver/variable/adequacy/all.h"
 
 using bc_next_type = Solver::Variable::Adequacy::VariablesPerBindingConstraints;
 
-#include "../bc.memory-estimation.inc.hxx"
+#include "antares/solver/variable/bc.memory-estimation.inc.hxx"

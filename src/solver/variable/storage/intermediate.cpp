@@ -28,15 +28,11 @@
 #include <yuni/yuni.h>
 #include <yuni/core/math.h>
 #include <antares/study/study.h>
-#include "intermediate.h"
+#include "antares/solver/variable/storage/intermediate.h"
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Variable
+namespace Antares::Solver::Variable
 {
 IntermediateValues::IntermediateValues() : pRange(nullptr), calendar(nullptr), year(0.)
 {
@@ -367,6 +363,6 @@ void IntermediateValues::adjustValuesAdequacyWhenRelatedToAPrice()
     year /= pRange->hour[Data::rangeCount];
 }
 
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Variable
+
+

@@ -35,9 +35,9 @@
 #include <utility>
 
 #include "antares/study/fwd.h"
-#include "timeseries-numbers.h"
-#include "ITimeSeriesNumbersWriter.h"
-#include "BindingConstraintsTimeSeriesNumbersWriter.h"
+#include "antares/solver/simulation/timeseries-numbers.h"
+#include "antares/solver/simulation/ITimeSeriesNumbersWriter.h"
+#include "antares/solver/simulation/BindingConstraintsTimeSeriesNumbersWriter.h"
 
 using namespace Yuni;
 using namespace Antares::Data;

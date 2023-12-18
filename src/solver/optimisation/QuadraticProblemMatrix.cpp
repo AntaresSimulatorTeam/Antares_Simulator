@@ -1,4 +1,4 @@
-#include "QuadraticProblemMatrix.h"
+#include "antares/solver/optimisation/QuadraticProblemMatrix.h"
 
 void QuadraticProblemMatrix::Run()
 {

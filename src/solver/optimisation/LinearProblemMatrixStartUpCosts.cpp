@@ -24,7 +24,7 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#include "LinearProblemMatrixStartUpCosts.h"
+#include "antares/solver/optimisation/LinearProblemMatrixStartUpCosts.h"
 using namespace Antares::Data;
 
 LinearProblemMatrixStartUpCosts::LinearProblemMatrixStartUpCosts(PROBLEME_HEBDO* problemeHebdo,

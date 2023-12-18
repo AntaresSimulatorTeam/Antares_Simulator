@@ -1,4 +1,4 @@
-#include "MinDownTime.h"
+#include "antares/solver/optimisation/constraints/MinDownTime.h"
 
 void MinDownTime::add(int pays, int index, int pdt)
 {

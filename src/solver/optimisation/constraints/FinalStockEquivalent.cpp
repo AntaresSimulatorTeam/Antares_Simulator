@@ -1,4 +1,4 @@
-#include "FinalStockEquivalent.h"
+#include "antares/solver/optimisation/constraints/FinalStockEquivalent.h"
 
 void FinalStockEquivalent::add(int pays)
 {

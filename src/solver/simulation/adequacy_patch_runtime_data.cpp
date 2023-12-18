@@ -1,4 +1,4 @@
-#include "adequacy_patch_runtime_data.h"
+#include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 
 namespace
 {

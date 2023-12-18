@@ -1,4 +1,4 @@
-#include "HydroPowerSmoothingUsingVariationMaxDown.h"
+#include "antares/solver/optimisation/constraints/HydroPowerSmoothingUsingVariationMaxDown.h"
 
 void HydroPowerSmoothingUsingVariationMaxDown::add(int pays, int pdt)
 {

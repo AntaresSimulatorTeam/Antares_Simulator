@@ -1,4 +1,4 @@
-#include "Group1.h"
+#include "antares/solver/optimisation/constraints/Group1.h"
 AreaBalanceData Group1::GetAreaBalanceData()
 {
     return {.CorrespondanceCntNativesCntOptim = problemeHebdo_->CorrespondanceCntNativesCntOptim,
