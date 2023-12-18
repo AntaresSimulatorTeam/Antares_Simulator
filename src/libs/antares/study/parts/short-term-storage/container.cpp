@@ -112,8 +112,8 @@ std::size_t STStorageInput::count() const
 {
   return std::count_if(storagesByIndex.begin(),
                        storagesByIndex.end(),
-                       [](const STStorageCluster* st) {
-                           return st->properties.enabled;
+                       [](const STStorageCluster& st) {
+                           return st.properties.enabled;
                        });
 }
 } // namespace Antares::Data::ShortTermStorage
