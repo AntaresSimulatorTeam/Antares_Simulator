@@ -50,7 +50,7 @@ Note that this "standard" feature of Antares makes it possible to assess the pot
 The table below gives an overview of the different reserves available in Antares
 
 | | _Economy_ | _Adequacy_ |
-|:---:|:---:|:---:|:---:|
+|---|------|---|
 | _R0_ | _Yes_ | _Yes_ |
 | _R3_ | _Yes_ | _Yes_ |
 
