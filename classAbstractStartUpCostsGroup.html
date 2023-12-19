@@ -93,7 +93,7 @@ $(document).ready(function(){initNavTree('classAbstractStartUpCostsGroup.html','
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classAbstractStartUpCostsGroup-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">AbstractStartUpCostsGroup Class Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div></div>
 </div><!--header-->
@@ -118,8 +118,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a0640a47d12fe6575ac78e2ce18ac85cd"><td class="memItemLeft" align="right" valign="top"><a id="a0640a47d12fe6575ac78e2ce18ac85cd" name="a0640a47d12fe6575ac78e2ce18ac85cd"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>AbstractStartUpCostsGroup</b> (<a class="el" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a> *problemeHebdo, bool simulation, <a class="el" href="classConstraintBuilder.html">ConstraintBuilder</a> &amp;builder)</td></tr>
 <tr class="separator:a0640a47d12fe6575ac78e2ce18ac85cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a58754ac3e9b4e388d502b1019fea43fa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAbstractStartUpCostsGroup.html#a58754ac3e9b4e388d502b1019fea43fa">BuildConstraints</a> ()=0</td></tr>
-<tr class="separator:a58754ac3e9b4e388d502b1019fea43fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2d6e9f4629d71bc4c88c732be0cb38b9"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAbstractStartUpCostsGroup.html#a2d6e9f4629d71bc4c88c732be0cb38b9">BuildConstraints</a> ()=0</td></tr>
+<tr class="separator:a2d6e9f4629d71bc4c88c732be0cb38b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aecd7549a6c0717047b47a36938ef7451"><td class="memItemLeft" align="right" valign="top"><a id="aecd7549a6c0717047b47a36938ef7451" name="aecd7549a6c0717047b47a36938ef7451"></a>
 <a class="el" href="structStartUpCostsData.html">StartUpCostsData</a>&#160;</td><td class="memItemRight" valign="bottom"><b>GetStartUpCostsDataFromProblemHebdo</b> ()</td></tr>
 <tr class="separator:aecd7549a6c0717047b47a36938ef7451"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -130,11 +130,14 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a58ddff8d2a27e3ec6d9c5ce7ec4cdce9 inherit pub_methods_classConstraintGroup"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConstraintGroup.html#a58ddff8d2a27e3ec6d9c5ce7ec4cdce9">BuildConstraints</a> ()=0</td></tr>
 <tr class="separator:a58ddff8d2a27e3ec6d9c5ce7ec4cdce9 inherit pub_methods_classConstraintGroup"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
-Public Attributes</h2></td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
+Protected Attributes</h2></td></tr>
 <tr class="memitem:a543770dcc22b5ddc595e9204f4e65541"><td class="memItemLeft" align="right" valign="top"><a id="a543770dcc22b5ddc595e9204f4e65541" name="a543770dcc22b5ddc595e9204f4e65541"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>simulation_</b> = false</td></tr>
 <tr class="separator:a543770dcc22b5ddc595e9204f4e65541"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
+Additional Inherited Members</h2></td></tr>
 <tr class="inherit_header pub_attribs_classConstraintGroup"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_classConstraintGroup')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="classConstraintGroup.html">ConstraintGroup</a></td></tr>
 <tr class="memitem:a4909b2ab17806dc431f532d4a10c72a5 inherit pub_attribs_classConstraintGroup"><td class="memItemLeft" align="right" valign="top"><a id="a4909b2ab17806dc431f532d4a10c72a5" name="a4909b2ab17806dc431f532d4a10c72a5"></a>
 <a class="el" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>problemeHebdo_</b></td></tr>
@@ -144,8 +147,8 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>simulation_</b> = fal
 <tr class="separator:a94106bf9d288bce722e810668a9a0883 inherit pub_attribs_classConstraintGroup"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a58754ac3e9b4e388d502b1019fea43fa" name="a58754ac3e9b4e388d502b1019fea43fa"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a58754ac3e9b4e388d502b1019fea43fa">&#9670;&#160;</a></span>BuildConstraints()</h2>
+<a id="a2d6e9f4629d71bc4c88c732be0cb38b9" name="a2d6e9f4629d71bc4c88c732be0cb38b9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2d6e9f4629d71bc4c88c732be0cb38b9">&#9670;&#160;</a></span>BuildConstraints()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -154,7 +157,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>simulation_</b> = fal
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void AbstractStartUpCostsGroup::BuildConstraints </td>
+          <td class="memname">virtual void AbstractStartUpCostsGroup::BuildConstraints </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
