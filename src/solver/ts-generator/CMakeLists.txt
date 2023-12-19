@@ -7,7 +7,7 @@ set(SRC_RANDOMIZEDGENERATORS
 	randomized-thermal-generator/RandomizedGenerator.h
 	randomized-thermal-generator/RandomizedGenerator.cpp
 )
-source_group("ts-generator\\randomized-thermal-generator" FILES ${SRC_RANDOMIZEDGENERATORS})
+source_group("ts-generator\\Randomized-thermal-generator" FILES ${SRC_RANDOMIZEDGENERATORS})
 
 #
 # Optimized-thermal-ts-generator
@@ -37,7 +37,7 @@ set(SRC_OPTIMIZEDGENERATORS
 	optimized-thermal-generator/postoptimization/WriteResults.cpp
 
 )
-source_group("ts-generator\\optimized-thermal-generator" FILES ${SRC_OPTIMIZEDGENERATORS})
+source_group("ts-generator\\Optimized-thermal-generator" FILES ${SRC_OPTIMIZEDGENERATORS})
 
 #
 # Time-Series Generators
