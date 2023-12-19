@@ -31,4 +31,9 @@ int calculateAverageMaintenanceDuration(const Data::ThermalCluster& cluster);
 std::array<double, DAYS_PER_YEAR> calculateMaxUnitOutput(const Data::ThermalCluster& cluster);
 std::array<double, DAYS_PER_YEAR> calculateAvrUnitDailyCost(const Data::ThermalCluster& cluster);
 
+// Declare the auxiliary function outside the class
+// Debug & Test purpose - to be removed
+template<typename T>
+void printColumnToFile(const std::vector<std::vector<T>>& data, const std::string& filename);
+
 } // namespace Antares::Solver::TSGenerator
