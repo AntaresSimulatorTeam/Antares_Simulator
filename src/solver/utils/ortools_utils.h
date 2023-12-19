@@ -69,7 +69,7 @@ public:
                                uint thread_number);
 
     explicit OrtoolsLogHandler(const OrtoolsLogHandler& other) :
-     OrtoolsLogHandler(other.solver_name_, other.log_directory_)
+     OrtoolsLogHandler(other.solver_name_, other.log_directory_, other.thread_number_)
     {
     }
 

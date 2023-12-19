@@ -60,7 +60,7 @@ void OrtoolsLogHandler::init()
     // std::stringstream ss;
     // ss << myid;
     std::ostringstream name;
-    ss << "thread_" << thread_number_ << ".log";
+    name << "thread_" << thread_number_ << ".log";
 
     log_file_per_thread_ = log_directory_ / name.str();
 
