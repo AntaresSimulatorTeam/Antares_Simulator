@@ -169,11 +169,11 @@ void AdqPatchParams::saveToINI(IniFile& ini) const
     curtailmentSharing.addProperties(section);
 }
 
-bool AdqPatchParams::checkAdqPatchParams(const StudyMode studyMode,
+bool AdqPatchParams::checkAdqPatchParams(const SimulationMode simulationMode,
                                          const AreaList& areas,
                                          const bool includeHurdleCostParameters) const
 {
-    checkAdqPatchStudyModeEconomyOnly(studyMode);
+    checkAdqPatchSimulationModeEconomyOnly(simulationMode);
     checkAdqPatchContainsAdqPatchArea(areas);
     checkAdqPatchIncludeHurdleCost(includeHurdleCostParameters);
     checkAdqPatchDisabledLocalMatching();
@@ -182,10 +182,10 @@ bool AdqPatchParams::checkAdqPatchParams(const StudyMode studyMode,
 }
 
 // Adequacy Patch can only be used with Economy Study/Simulation Mode.
-void AdqPatchParams::checkAdqPatchStudyModeEconomyOnly(const StudyMode studyMode) const
+void AdqPatchParams::checkAdqPatchSimulationModeEconomyOnly(const SimulationMode simulationMode) const
 {
-    if (studyMode != StudyMode::stdmEconomy)
-        throw Error::IncompatibleStudyModeForAdqPatch();
+    if (simulationMode != SimulationMode::Economy)
+        throw Error::IncompatibleSimulationModeForAdqPatch();
 }
 
 // When Adequacy Patch is on at least one area must be inside Adequacy patch mode.

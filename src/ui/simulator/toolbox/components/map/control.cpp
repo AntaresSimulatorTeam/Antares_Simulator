@@ -26,6 +26,7 @@
 */
 
 #include <algorithm>
+#include "antares/utils/utils.h"
 #include "control.h"
 #include <wx/dcbuffer.h>
 #include <wx/settings.h>

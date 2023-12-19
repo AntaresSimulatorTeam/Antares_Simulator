@@ -720,7 +720,7 @@ protected:
 */
 extern YString StudyIconFile;
 
-YString StudyCreateOutputPath(StudyMode mode,
+YString StudyCreateOutputPath(SimulationMode mode,
                               ResultFormat fmt,
                               const YString& folder,
                               const YString& label,

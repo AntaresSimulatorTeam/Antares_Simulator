@@ -118,7 +118,7 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
 
 void PrepareDataFromClustersInMustrunMode(Data::Study& study, uint numSpace, uint year)
 {
-    bool inAdequacy = (study.parameters.mode == Data::stdmAdequacy);
+    bool inAdequacy = (study.parameters.mode == Data::SimulationMode::Adequacy);
 
     for (uint i = 0; i < study.areas.size(); ++i)
     {
@@ -467,10 +467,14 @@ void finalizeOptimizationStatistics(PROBLEME_HEBDO& problem,
 {
     auto& firstOptStat = problem.optimizationStatistics[0];
     state.averageOptimizationTime1 = firstOptStat.getAverageSolveTime();
-    firstOptStat.reset();
 
     auto& secondOptStat = problem.optimizationStatistics[1];
     state.averageOptimizationTime2 = secondOptStat.getAverageSolveTime();
+
+    state.averageUpdateTime
+      = firstOptStat.getAverageUpdateTime() + secondOptStat.getAverageUpdateTime();
+
+    firstOptStat.reset();
     secondOptStat.reset();
 }
 

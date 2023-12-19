@@ -41,9 +41,9 @@ namespace Antares
 {
 namespace Forms
 {
-struct CompareByStudyMode final
+struct CompareBySimulationMode final
 {
-    bool operator()(const Data::StudyMode a, const Data::StudyMode b) const
+    bool operator()(const Data::SimulationMode a, const Data::SimulationMode b) const
     {
         return b < a;
     }
@@ -117,14 +117,14 @@ void ApplWnd::refreshMenuOutput()
 
     // NOTE : in some rare cases, it may happen that two simulations have the
     // same timestamp
-    using StudyModeT = Data::StudyMode;
+    using SimulationModeT = Data::SimulationMode;
     using TemporalMap = std::map<int64_t, Data::Output::List, CompareByTimestamp>;
-    using Map = std::map<StudyModeT, TemporalMap, CompareByStudyMode>;
+    using Map = std::map<SimulationModeT, TemporalMap, CompareBySimulationMode>;
 
     // Getting the list of all available outputs
     const Data::Output::List& list = ListOfOutputsForTheCurrentStudy;
-    // The last study mode
-    Data::StudyMode lastMode = Data::stdmUnknown;
+    // The last simulation mode
+    Data::SimulationMode lastMode = Data::SimulationMode::Unknown;
 
     // Informations about the outputs
     Map map;
@@ -219,7 +219,7 @@ void ApplWnd::refreshMenuOutput()
 #ifndef YUNI_OS_WINDOWS
               (!more ? "images/16x16/minibullet_sel.png" : "images/16x16/minibullet.png"),
 #else
-              (((*i)->mode == Data::stdmEconomy) ? "images/misc/economy.png"
+              (((*i)->mode == Data::SimulationMode::Economy) ? "images/misc/economy.png"
                                                  : "images/misc/adequacy.png"),
 #endif
               s,
@@ -273,14 +273,14 @@ void ApplWnd::refreshMenuOutput()
                         // AppendTooManyItems(menu, more);
                         more = 0;
                     }
-                    // if (lastMode != Data::stdmUnknown)
+                    // if (lastMode != Data::SimulationMode::Unknown)
                     //	Menu::CreateEmptyItem(menu);
 
                     lastMode = (*i)->mode;
-                    if (lastMode == Data::stdmUnknown)
-                        lastMode = Data::stdmEconomy;
+                    if (lastMode == Data::SimulationMode::Unknown)
+                        lastMode = Data::SimulationMode::Economy;
                     Menu::CreateGroupItem(menu,
-                                          wxStringFromUTF8(StudyModeToCString(lastMode)),
+                                          wxStringFromUTF8(SimulationModeToCString(lastMode)),
                                           "images/16x16/empty.png");
                     total = 0;
                 }
@@ -308,7 +308,7 @@ void ApplWnd::refreshMenuOutput()
 #ifndef YUNI_OS_WINDOWS
                                                 "images/16x16/minibullet.png",
 #else
-                                                (((*i)->mode == Data::stdmEconomy)
+                                                (((*i)->mode == Data::SimulationMode::Economy)
                                                    ? "images/misc/economy.png"
                                                    : "images/misc/adequacy.png"),
 #endif

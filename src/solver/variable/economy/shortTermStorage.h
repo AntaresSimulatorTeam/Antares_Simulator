@@ -237,8 +237,8 @@ public:
         using namespace Antares::Data::ShortTermStorage;
         for (uint stsIndex = 0; stsIndex < state.area->shortTermStorage.count(); stsIndex++)
         {
-            const auto* cluster = state.area->shortTermStorage.storagesByIndex[stsIndex];
-            const uint group = groupIndex(cluster->properties.group);
+            const auto& cluster = state.area->shortTermStorage.storagesByIndex[stsIndex];
+            const uint group = groupIndex(cluster.properties.group);
 
             // Injection
             pValuesForTheCurrentYear[numSpace][3 * group][state.hourInTheYear]

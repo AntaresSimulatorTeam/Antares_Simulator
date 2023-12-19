@@ -201,13 +201,8 @@ public:
     //! \name Mode
     //@{
     //! Mode of the study (adequacy, economy...)
-    StudyMode mode;
+    SimulationMode mode;
     //@}
-
-    //! \name Expansion
-    //@{
-    //! Expansion flag
-    mutable bool expansion;
 
     //! \name Horizon
     //@{
@@ -562,18 +557,18 @@ private:
 }; // class Parameters
 
 /*!
-** \brief Convert a study mode (enum) into a human readable C-String
+** \brief Convert a simulation mode (enum) into a human readable C-String
 */
-const char* StudyModeToCString(StudyMode mode);
+const char* SimulationModeToCString(SimulationMode mode);
 
 /*!
-** \brief Convert a C-String (lowercase) into a study mode if possible
+** \brief Convert a C-String (lowercase) into a simulation mode if possible
 **
-** \param[out] mode The study mode. It will remain untouched if the conversion failed
+** \param[out] mode The simulation mode. It will remain untouched if the conversion failed
 ** \param Text An arbitrary Text (case insensitive)
 ** \return True if the conversion succeeded, false otherwise
 */
-bool StringToStudyMode(StudyMode& mode, Yuni::CString<20, false> text);
+bool StringToSimulationMode(SimulationMode& mode, Yuni::CString<20, false> text);
 
 } // namespace Antares::Data
 

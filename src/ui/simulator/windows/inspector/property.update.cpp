@@ -1185,13 +1185,13 @@ bool InspectorGrid::onPropertyChanging_S(wxPGProperty*,
         wxStringToString(value.GetString(), s);
         s.toLower();
 
-        Data::StudyMode mode = Data::stdmUnknown;
+        Data::SimulationMode mode = Data::SimulationMode::Unknown;
         if (s == "economy" || s == "0")
-            mode = Data::stdmEconomy;
+            mode = Data::SimulationMode::Economy;
         else if (s == "adequacy" || s == "1")
-            mode = Data::stdmAdequacy;
+            mode = Data::SimulationMode::Adequacy;
         else
-            mode = Data::stdmEconomy;
+            mode = Data::SimulationMode::Economy;
 
         for (; i != end; ++i)
         {

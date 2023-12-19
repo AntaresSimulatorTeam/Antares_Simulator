@@ -72,7 +72,7 @@ AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area)
                 sum += area.miscGen[w][h];
             miscGenSum[h] = sum;
         }
-        if (mode == Data::stdmAdequacy)
+        if (mode == Data::SimulationMode::Adequacy)
         {
             for (uint h = 0; h != area.miscGen.height; ++h)
                 miscGenSum[h] -= area.reserves[Data::fhrPrimaryReserve][h];

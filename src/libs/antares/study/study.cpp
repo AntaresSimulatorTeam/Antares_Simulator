@@ -37,6 +37,7 @@
 #include <climits>
 #include <optional>
 
+#include "antares/utils/utils.h"
 #include "study.h"
 #include "runtime.h"
 #include "scenario-builder/sets.h"
@@ -631,7 +632,7 @@ static std::string getOutputSuffix(ResultFormat fmt)
     }
 }
 
-YString StudyCreateOutputPath(StudyMode mode,
+YString StudyCreateOutputPath(SimulationMode mode,
                               ResultFormat fmt,
                               const YString& outputRoot,
                               const YString& label,
@@ -648,15 +649,16 @@ YString StudyCreateOutputPath(StudyMode mode,
 
     switch (mode)
     {
-    case stdmEconomy:
+    case SimulationMode::Economy:
         folderOutput += "eco";
         break;
-    case stdmAdequacy:
+    case SimulationMode::Adequacy:
         folderOutput += "adq";
         break;
-    case stdmUnknown:
-    case stdmExpansion:
-    case stdmMax:
+    case SimulationMode::Expansion:
+        folderOutput += "exp";
+        break;
+    case SimulationMode::Unknown:
         break;
     }
 
@@ -741,7 +743,7 @@ void Study::saveAboutTheStudy(Solver::IResultWriter& resultWriter)
     f << "[general]";
     f << "\nversion = " << (uint)Data::versionLatest;
     f << "\nname = " << simulationComments.name;
-    f << "\nmode = " << StudyModeToCString(parameters.mode);
+    f << "\nmode = " << SimulationModeToCString(parameters.mode);
     f << "\ndate = " << startTimeStr;
     f << "\ntitle = " << startTimeStr;
     f << "\ntimestamp = " << pStartTime;

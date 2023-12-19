@@ -159,7 +159,7 @@ static void ParametersSaveResultFormat(IniFile::Section* section, ResultFormat f
     }
 }
 
-bool StringToStudyMode(StudyMode& mode, CString<20, false> text)
+bool StringToSimulationMode(SimulationMode& mode, CString<20, false> text)
 {
     if (!text)
         return false;
@@ -173,38 +173,37 @@ bool StringToStudyMode(StudyMode& mode, CString<20, false> text)
     if (text == "economy" || text == "economic")
     {
         // The term `economic` was mis-used in previous versions of antares (<3.4)
-        mode = stdmEconomy;
+        mode = SimulationMode::Economy;
         return true;
     }
     // Adequacy
     if (text == "adequacy")
     {
-        mode = stdmAdequacy;
+        mode = SimulationMode::Adequacy;
         return true;
     }
     // Expansion
     if (text == "expansion")
     {
-        mode = stdmExpansion;
+        mode = SimulationMode::Expansion;
         return true;
     }
     return false;
 }
 
-const char* StudyModeToCString(StudyMode mode)
+const char* SimulationModeToCString(SimulationMode mode)
 {
     switch (mode)
     {
-    case stdmEconomy:
+    case SimulationMode::Economy:
         return "Economy";
-    case stdmAdequacy:
+    case SimulationMode::Adequacy:
         return "Adequacy";
-    case stdmMax:
-    case stdmExpansion:
-    case stdmUnknown:
+    case SimulationMode::Expansion:
+        return "Expansion";
+    default:
         return "Unknown";
     }
-    return "Unknown";
 }
 
 Parameters::Parameters() : noOutput(false)
@@ -215,12 +214,12 @@ Parameters::~Parameters() = default;
 
 bool Parameters::economy() const
 {
-    return mode == stdmEconomy;
+    return mode == SimulationMode::Economy;
 }
 
 bool Parameters::adequacy() const
 {
-    return mode == stdmAdequacy;
+    return mode == SimulationMode::Adequacy;
 }
 
 void Parameters::resetSeeds()
@@ -252,9 +251,7 @@ void Parameters::resetPlayedYears(uint nbOfYears)
 void Parameters::reset()
 {
     // Mode
-    mode = stdmEconomy;
-    // Expansion
-    expansion = false;
+    mode = SimulationMode::Economy;
     // Calendar
     horizon.clear();
 
@@ -471,7 +468,7 @@ static bool SGDIntLoadFamily_General(Parameters& d,
         return value.to(d.leapYear);
 
     if (key == "mode")
-        return StringToStudyMode(d.mode, value);
+        return StringToSimulationMode(d.mode, value);
 
     if (key == "nbyears")
     {
@@ -1080,29 +1077,14 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
     }
 
     // Simulation mode
-    // ... Expansion
-    if (mode == stdmExpansion)
-    {
-        mode = stdmEconomy;
-        expansion = true;
-    }
-
     // ... Enforcing simulation mode
-    if (options.forceMode != stdmUnknown)
+    if (options.forceMode != SimulationMode::Unknown)
     {
-        if (options.forceMode == stdmExpansion)
-        {
-            mode = stdmEconomy;
-            expansion = true;
-        }
-        else
-            mode = options.forceMode;
-
-        logs.info() << "  forcing the simulation mode " << StudyModeToCString(mode);
-        assert(mode != stdmMax && "Invalid simulation mode");
+        mode = options.forceMode;
+        logs.info() << "  forcing the simulation mode " << SimulationModeToCString(mode);
     }
     else
-        logs.info() << "  simulation mode: " << StudyModeToCString(mode);
+        logs.info() << "  simulation mode: " << SimulationModeToCString(mode);
 
     if (options.forceDerated)
         derated = true;
@@ -1398,17 +1380,16 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
 
     switch (mode)
     {
-    case stdmEconomy:
-    case stdmAdequacy:
+    case SimulationMode::Economy:
+    case SimulationMode::Adequacy:
+    case SimulationMode::Expansion:
     {
         // The year-by-year mode might have been requested from the command line
         if (options.forceYearByYear)
             yearByYear = true;
         break;
     }
-    case stdmUnknown:
-    case stdmExpansion:
-    case stdmMax:
+    case SimulationMode::Unknown:
     {
         // The mode year-by-year can not be enabled in adequacy
         yearByYear = false;
@@ -1478,7 +1459,7 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
         exportTimeSeriesInInput = 0;
     }
 
-    if (expansion)
+    if (mode == SimulationMode::Expansion)
         logs.info() << "  :: enabling expansion";
     if (yearByYear)
         logs.info() << "  :: enabling the 'year-by-year' mode";
@@ -1545,13 +1526,7 @@ void Parameters::saveToINI(IniFile& ini) const
         auto* section = ini.addSection("general");
 
         // Mode
-        if (expansion && mode == stdmEconomy)
-            section->add("mode", "Expansion");
-        else
-        {
-            section->add("mode", StudyModeToCString(mode));
-            expansion = false;
-        }
+        section->add("mode", SimulationModeToCString(mode));
 
         // Calendar
         section->add("horizon", horizon);
