@@ -292,6 +292,8 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
 
     // Removing disabled thermal clusters from solver computations
     removeDisabledThermalClustersFromSolverComputations(study);
+
+    // Removing disabled short-term storage objects from solver computations
     removeDisabledShortTermStorageClustersFromSolverComputations(study);
 
     switch (gd.renewableGeneration())
