@@ -110,17 +110,10 @@ template<class ClusterT>
 void ClusterList<ClusterT>::resizeAllTimeseriesNumbers(uint n)
 {
     assert(n < 200000); // arbitrary number
-    if (not clusters.empty())
-    {
-        if (0 == n)
-        {
-            each([&](Cluster& cluster) { cluster.series.timeseriesNumbers.clear(); });
-        }
-        else
-        {
-            each([&](Cluster& cluster) { cluster.series.timeseriesNumbers.resize(1, n); });
-        }
-    }
+    if (n == 0)
+        each([&](Cluster& cluster) { cluster.series.timeseriesNumbers.clear(); });
+    else
+        each([&](Cluster& cluster) { cluster.series.timeseriesNumbers.resize(1, n); });
 }
 
 #define SEP IO::Separator
@@ -128,9 +121,6 @@ void ClusterList<ClusterT>::resizeAllTimeseriesNumbers(uint n)
 template<class ClusterT>
 void ClusterList<ClusterT>::storeTimeseriesNumbers(Solver::IResultWriter& writer) const
 {
-    if (clusters.empty())
-        return;
-
     TSNumbersPredicate predicate;
     Clob path;
     std::string ts_content;
@@ -274,9 +264,6 @@ bool ClusterList<ClusterT>::saveDataSeriesToFolder(const AnyString& folder) cons
 template<class ClusterT>
 bool ClusterList<ClusterT>::saveDataSeriesToFolder(const AnyString& folder, const String& msg) const
 {
-    if (empty())
-        return true;
-
     bool ret = true;
     uint ticks = 0;
 
@@ -295,9 +282,6 @@ bool ClusterList<ClusterT>::loadDataSeriesFromFolder(Study& s,
                                                     const StudyLoadOptions& options,
                                                     const AnyString& folder)
 {
-    if (empty())
-        return true;
-
     bool ret = true;
 
     each([&](ClusterT& c) {
