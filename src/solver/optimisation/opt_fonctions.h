@@ -41,7 +41,8 @@ using OptimizationOptions = Antares::Solver::Optimization::OptimizationOptions;
 void OPT_OptimisationHebdomadaire(const OptimizationOptions& options,
                                   PROBLEME_HEBDO*,
                                   const AdqPatchParams&,
-                                  Antares::Solver::IResultWriter& writer);
+                                  Antares::Solver::IResultWriter& writer,
+                                  uint thread_number);
 void OPT_NumeroDeJourDuPasDeTemps(PROBLEME_HEBDO*);
 void OPT_NumeroDIntervalleOptimiseDuPasDeTemps(PROBLEME_HEBDO*);
 void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBDO*);
@@ -75,7 +76,8 @@ bool ADQ_PATCH_CSR(PROBLEME_ANTARES_A_RESOUDRE&,
 bool OPT_PilotageOptimisationLineaire(const OptimizationOptions& options,
                                       PROBLEME_HEBDO*,
                                       const AdqPatchParams&,
-                                      Antares::Solver::IResultWriter& writer);
+                                      Antares::Solver::IResultWriter& writer,
+                                      uint thread_number);
 void OPT_VerifierPresenceReserveJmoins1(PROBLEME_HEBDO*);
 bool OPT_PilotageOptimisationQuadratique(PROBLEME_HEBDO*);
 
@@ -89,13 +91,15 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
                          int,
                          const int,
                          const OptPeriodStringGenerator&,
-                         Antares::Solver::IResultWriter& writer);
+                         Antares::Solver::IResultWriter& writer,
+                         uint thread_number);
 void OPT_LiberationProblemesSimplexe(const OptimizationOptions& options, const PROBLEME_HEBDO*);
 
 bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                               PROBLEME_HEBDO*,
                               const AdqPatchParams&,
-                              Antares::Solver::IResultWriter& writer);
+                              Antares::Solver::IResultWriter& writer,
+                              uint thread_number);
 void OPT_RestaurerLesDonnees(const PROBLEME_HEBDO*);
 /*------------------------------*/
 

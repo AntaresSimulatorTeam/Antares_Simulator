@@ -41,7 +41,8 @@ DefaultWeeklyOptimization::DefaultWeeklyOptimization(const OptimizationOptions& 
 
 void DefaultWeeklyOptimization::solve()
 {
-    OPT_OptimisationHebdomadaire(options_, problemeHebdo_, adqPatchParams_, writer_);
+    OPT_OptimisationHebdomadaire(
+      options_, problemeHebdo_, adqPatchParams_, writer_, thread_number_);
 }
 
 } // namespace Antares::Solver::Optimization

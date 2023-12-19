@@ -199,7 +199,8 @@ bool Adequacy::year(Progression::Task& progression,
                 OPT_OptimisationHebdomadaire(createOptimizationOptions(study),
                                              &pProblemesHebdo[numSpace],
                                              study.parameters.adqPatchParams,
-                                             resultWriter);
+                                             resultWriter,
+                                             numSpace);
 
                 computingHydroLevels(study.areas, pProblemesHebdo[numSpace], false);
 
@@ -382,7 +383,7 @@ void Adequacy::simulationEnd()
     if (!preproOnly && study.runtime->interconnectionsCount() > 0)
     {
         auto balance = retrieveBalance(study, variables);
-        ComputeFlowQuad(study, pProblemesHebdo[0], balance, pNbWeeks);
+        ComputeFlowQuad(study, pProblemesHebdo[0], balance, pNbWeeks, 0);
     }
 }
 

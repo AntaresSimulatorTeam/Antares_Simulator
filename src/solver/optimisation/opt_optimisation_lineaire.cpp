@@ -66,7 +66,8 @@ bool runWeeklyOptimization(const OptimizationOptions& options,
                            PROBLEME_HEBDO* problemeHebdo,
                            const AdqPatchParams& adqPatchParams,
                            Solver::IResultWriter& writer,
-                           int optimizationNumber)
+                           int optimizationNumber,
+                           uint thread_number)
 {
     const int NombreDePasDeTempsPourUneOptimisation
       = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
@@ -107,7 +108,8 @@ bool runWeeklyOptimization(const OptimizationOptions& options,
                                  numeroDeLIntervalle,
                                  optimizationNumber,
                                  *optPeriodStringGenerator,
-                                 writer))
+                                 writer,
+                                 thread_number))
             return false;
 
         if (problemeHebdo->ExportMPS != Data::mpsExportStatus::NO_EXPORT
@@ -135,11 +137,11 @@ void runThermalHeuristic(PROBLEME_HEBDO* problemeHebdo)
 }
 } // namespace
 
-
 bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                               PROBLEME_HEBDO* problemeHebdo,
                               const AdqPatchParams& adqPatchParams,
-                              Solver::IResultWriter& writer)
+                              Solver::IResultWriter& writer,
+                              uint thread_number)
 {
     if (!problemeHebdo->OptimisationAuPasHebdomadaire)
     {
@@ -162,7 +164,7 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
     OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(problemeHebdo, writer);
 
     bool ret = runWeeklyOptimization(
-      options, problemeHebdo, adqPatchParams, writer, PREMIERE_OPTIMISATION);
+      options, problemeHebdo, adqPatchParams, writer, PREMIERE_OPTIMISATION, thread_number);
 
     // We only need the 2nd optimization when NOT solving with integer variables
     // We also skip the 2nd optimization in the hidden 'Expansion' mode
@@ -172,7 +174,7 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
         // We need to adjust some stuff before running the 2nd optimisation
         runThermalHeuristic(problemeHebdo);
         return runWeeklyOptimization(
-          options, problemeHebdo, adqPatchParams, writer, DEUXIEME_OPTIMISATION);
+          options, problemeHebdo, adqPatchParams, writer, DEUXIEME_OPTIMISATION, thread_number);
     }
     return ret;
 }

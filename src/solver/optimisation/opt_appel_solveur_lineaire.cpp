@@ -300,7 +300,8 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
                          int NumIntervalle,
                          const int optimizationNumber,
                          const OptPeriodStringGenerator& optPeriodStringGenerator,
-                         IResultWriter& writer)
+                         IResultWriter& writer,
+                         uint thread_number)
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
     Optimization::PROBLEME_SIMPLEXE_NOMME Probleme(ProblemeAResoudre->NomDesVariables,
@@ -314,7 +315,7 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
     bool PremierPassage = true;
     std::filesystem::path log_file = logs.logfile().c_str();
     auto log_directory = log_file.parent_path();
-    OrtoolsLogHandler ortools_logger(options.solverName, log_directory);
+    OrtoolsLogHandler ortools_logger(options.solverName, log_directory, thread_number);
     struct SimplexResult simplexResult = OPT_TryToCallSimplex(options,
                                                               problemeHebdo,
                                                               Probleme,

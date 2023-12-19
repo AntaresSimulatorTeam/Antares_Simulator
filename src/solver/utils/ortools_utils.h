@@ -65,7 +65,8 @@ public:
         // TODO won't work in ci, needs ortools update
     // see https://github.com/rte-france/or-tools/pull/112
     explicit OrtoolsLogHandler(const std::string& solverName,
-                               const std::filesystem::path& log_directory);
+                               const std::filesystem::path& log_directory,
+                               uint thread_number);
 
     explicit OrtoolsLogHandler(const OrtoolsLogHandler& other) :
      OrtoolsLogHandler(other.solver_name_, other.log_directory_)
@@ -87,6 +88,7 @@ private:
     std::string solver_name_;
     std::filesystem::path log_directory_ = ".";
     std::filesystem::path log_file_per_thread_ = "";
+    uint thread_number_ = 0;
 };
 
 class Nomenclature

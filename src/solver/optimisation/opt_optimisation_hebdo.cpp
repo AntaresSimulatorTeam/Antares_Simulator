@@ -48,11 +48,13 @@ using Antares::Solver::Optimization::OptimizationOptions;
 void OPT_OptimisationHebdomadaire(const OptimizationOptions& options,
                                   PROBLEME_HEBDO* pProblemeHebdo,
                                   const AdqPatchParams& adqPatchParams,
-                                  Solver::IResultWriter& writer)
+                                  Solver::IResultWriter& writer,
+                                  uint thread_number)
 {
     if (pProblemeHebdo->TypeDOptimisation == OPTIMISATION_LINEAIRE)
     {
-        if (!OPT_PilotageOptimisationLineaire(options, pProblemeHebdo, adqPatchParams, writer))
+        if (!OPT_PilotageOptimisationLineaire(
+              options, pProblemeHebdo, adqPatchParams, writer, thread_number))
         {
             logs.error() << "Linear optimization failed";
             throw UnfeasibleProblemError("Linear optimization failed");

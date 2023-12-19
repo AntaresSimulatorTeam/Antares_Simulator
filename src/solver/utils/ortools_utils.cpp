@@ -34,8 +34,9 @@ namespace Optimization
 {
 
 OrtoolsLogHandler::OrtoolsLogHandler(const std::string& solver_name,
-                                     const std::filesystem::path& log_directory) :
- solver_name_(solver_name), log_directory_(log_directory)
+                                     const std::filesystem::path& log_directory,
+                                     uint thread_number) :
+ solver_name_(solver_name), log_directory_(log_directory), thread_number_(thread_number)
 {
     init();
 }
@@ -49,15 +50,19 @@ OrtoolsLogHandler& OrtoolsLogHandler::operator=(const OrtoolsLogHandler& other)
 
     solver_name_ = other.solver_name_;
     log_directory_ = other.log_directory_;
+    thread_number_ = other.thread_number_;
     init();
     return *this;
 }
 void OrtoolsLogHandler::init()
 {
-    auto myid = std::this_thread::get_id();
-    std::stringstream ss;
-    ss << myid;
-    log_file_per_thread_ = log_directory_ / (std::string("thread_") + ss.str() + ".log");
+    // auto myid = std::this_thread::get_id();
+    // std::stringstream ss;
+    // ss << myid;
+    std::ostringstream name;
+    ss << "thread_" << thread_number_ << ".log";
+
+    log_file_per_thread_ = log_directory_ / name.str();
 
     log_writer_.open(log_file_per_thread_, std::ofstream::out | std::ofstream::app);
 }
