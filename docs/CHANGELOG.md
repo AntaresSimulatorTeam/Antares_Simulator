@@ -33,6 +33,7 @@ Antares Changelog
 ## Bugfixes (reported internally)
 * Fix oracle-linux8 binaries missing compression feature (#1741)
 * Named MPS - fix duplicated "ranged" binding constraints (#1569)
+* Fix save for short term storage objects (#1807)
 * Prevent segfault during simulation, check bounds of scenario builder (#1567)
 * Fix number of links in deprecated output file digest.txt (#1646)
 * Fix unfeasible problem analyzer (#1527)
