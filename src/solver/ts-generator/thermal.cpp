@@ -27,7 +27,7 @@
 
 #include "../simulation/sim_extern_variables_globales.h"
 #include "randomized-thermal-generator/RandomizedGenerator.h"
-#include "optimized-thermal-generator/Main/OptimizedGenerator.h"
+#include "optimized-thermal-generator/main/OptimizedGenerator.h"
 
 namespace Antares::Solver::TSGenerator
 {

@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "../Main/OptimizedGenerator.h"
+#include "../main/OptimizedGenerator.h"
 
 namespace Antares::Solver::TSGenerator
 {

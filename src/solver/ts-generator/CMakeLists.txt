@@ -13,28 +13,28 @@ source_group("ts-generator\\randomized-thermal-generator" FILES ${SRC_RANDOMIZED
 # Optimized-thermal-ts-generator
 #
 set(SRC_OPTIMIZEDGENERATORS
-	optimized-thermal-generator/Aux/AuxillaryStructures.h
-	optimized-thermal-generator/Aux/AuxillaryStructures.cpp
-	optimized-thermal-generator/Aux/AuxillaryFreeFunctions.h
-	optimized-thermal-generator/Aux/AuxillaryFreeFunctions.cpp
-	optimized-thermal-generator/Aux/pre-scenario-builder.h
-	optimized-thermal-generator/Aux/pre-scenario-builder.cpp
-	optimized-thermal-generator/Main/OptimizedGenerator.h
-	optimized-thermal-generator/Main/OptimizedGenerator.cpp
-	optimized-thermal-generator/Parameters/OptimizationParameters.h
-	optimized-thermal-generator/Parameters/CalculateParameters.cpp
-	optimized-thermal-generator/Parameters/CalculateParametersPerCluster.cpp
-	optimized-thermal-generator/Parameters/Getters.cpp
-	optimized-thermal-generator/Optimization/CreateVariables.cpp
-	optimized-thermal-generator/Optimization/SetVariableBounds.cpp
-	optimized-thermal-generator/Optimization/SetProblemConstraints.cpp
-	optimized-thermal-generator/Optimization/SetProblemCost.cpp
-	optimized-thermal-generator/Optimization/ResetProblem.cpp
-	optimized-thermal-generator/Optimization/SolveProbem.cpp
-	optimized-thermal-generator/Optimization/PrintProblemVarRes.cpp
-	optimized-thermal-generator/PostOptimization/PostTimeStepOptimization.cpp
-	optimized-thermal-generator/PostOptimization/PostScenarioOptimization.cpp
-	optimized-thermal-generator/PostOptimization/WriteResults.cpp
+	optimized-thermal-generator/aux/AuxillaryStructures.h
+	optimized-thermal-generator/aux/AuxillaryStructures.cpp
+	optimized-thermal-generator/aux/AuxillaryFreeFunctions.h
+	optimized-thermal-generator/aux/AuxillaryFreeFunctions.cpp
+	optimized-thermal-generator/aux/pre-scenario-builder.h
+	optimized-thermal-generator/aux/pre-scenario-builder.cpp
+	optimized-thermal-generator/main/OptimizedGenerator.h
+	optimized-thermal-generator/main/OptimizedGenerator.cpp
+	optimized-thermal-generator/parameters/OptimizationParameters.h
+	optimized-thermal-generator/parameters/CalculateParameters.cpp
+	optimized-thermal-generator/parameters/CalculateParametersPerCluster.cpp
+	optimized-thermal-generator/parameters/Getters.cpp
+	optimized-thermal-generator/optimization/CreateVariables.cpp
+	optimized-thermal-generator/optimization/SetVariableBounds.cpp
+	optimized-thermal-generator/optimization/SetProblemConstraints.cpp
+	optimized-thermal-generator/optimization/SetProblemCost.cpp
+	optimized-thermal-generator/optimization/ResetProblem.cpp
+	optimized-thermal-generator/optimization/SolveProbem.cpp
+	optimized-thermal-generator/optimization/PrintProblemVarRes.cpp
+	optimized-thermal-generator/postoptimization/PostTimeStepOptimization.cpp
+	optimized-thermal-generator/postoptimization/PostScenarioOptimization.cpp
+	optimized-thermal-generator/postoptimization/WriteResults.cpp
 
 )
 source_group("ts-generator\\optimized-thermal-generator" FILES ${SRC_OPTIMIZEDGENERATORS})

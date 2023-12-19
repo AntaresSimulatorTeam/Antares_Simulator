@@ -8,7 +8,7 @@
 #include <string.h>
 #include <algorithm>
 
-#include "../Main/OptimizedGenerator.h"
+#include "../main/OptimizedGenerator.h"
 
 namespace Antares::Solver::TSGenerator
 {

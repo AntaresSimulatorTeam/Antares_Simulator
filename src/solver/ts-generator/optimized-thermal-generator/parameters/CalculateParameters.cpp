@@ -2,7 +2,7 @@
 // Created by milos on 14/11/23.
 //
 
-#include "../Main/OptimizedGenerator.h"
+#include "../main/OptimizedGenerator.h"
 
 namespace Antares::Solver::TSGenerator
 {

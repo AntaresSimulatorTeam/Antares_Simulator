@@ -5,7 +5,7 @@
 #pragma once
 
 #include "../../randomized-thermal-generator/RandomizedGenerator.h"
-#include "../Main/OptimizedGenerator.h"
+#include "../main/OptimizedGenerator.h"
 
 namespace Antares::Solver::TSGenerator
 {

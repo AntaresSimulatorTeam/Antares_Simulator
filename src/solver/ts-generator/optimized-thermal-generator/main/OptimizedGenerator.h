@@ -7,9 +7,9 @@
 #include "ortools/linear_solver/linear_solver.h"
 #include "../../randomized-thermal-generator/RandomizedGenerator.h"
 #include "../../../../libs/antares/study/maintenance_planning/MaintenanceGroup.h"
-#include "../Aux/AuxillaryStructures.h"
-#include "../Aux/AuxillaryFreeFunctions.h"
-#include "../Parameters/OptimizationParameters.h"
+#include "../aux/AuxillaryStructures.h"
+#include "../aux/AuxillaryFreeFunctions.h"
+#include "../parameters/OptimizationParameters.h"
 #include <antares/exception/AssertionError.hpp>
 
 // static const std::string mntPlSolverName = "cbc";
