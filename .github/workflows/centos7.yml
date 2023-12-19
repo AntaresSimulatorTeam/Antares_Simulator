@@ -5,9 +5,7 @@ on:
     types: [created]
   push:
     branches:
-      - develop
-  schedule:
-    - cron: '21 2 * * *'
+      - "*"
 
 env:
   GITHUB_TOKEN: ${{ github.token }}
