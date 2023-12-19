@@ -96,12 +96,12 @@ uint PartThermal::prepareClustersInMustRunMode()
     do
     {
         mustContinue = false;
-        for (auto i = list.begin(); i != list.end(); ++i)
+        for (auto& c : clusters)
         {
-            if ((*i)->mustrun)
+            if (c->mustrun)
             {
-                // Detaching the thermal cluster from the main list...
-                std::shared_ptr<ThermalCluster> cluster = list.detach(i);
+                list.remove(c->id());
+                std::shared_ptr<ThermalCluster> cluster(c);
                 if (!cluster->enabled)
                     continue;
                 // ...and attaching it into the second list
