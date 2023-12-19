@@ -121,7 +121,7 @@ bool Properties::loadKey(const IniFile::Property* p)
     return false;
 }
 
-void Properties::saveToFolder(IniFile& ini) const
+void Properties::save(IniFile& ini) const
 {
     IniFile::Section* s = ini.addSection(this->name);
 

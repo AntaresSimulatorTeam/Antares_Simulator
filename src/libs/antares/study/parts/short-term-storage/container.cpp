@@ -124,7 +124,7 @@ std::size_t STStorageInput::count() const
 uint STStorageInput::removeDisabledClusters()
 {
     const auto& it = std::remove_if(storagesByIndex.begin(), storagesByIndex.end(),
-        [](const auto& c) { return c.enabled(); });
+        std::mem_fn(&STStorageCluster::enabled));
 
     uint disabledCount = std::distance(it, storagesByIndex.end());
     storagesByIndex.erase(it, storagesByIndex.end());

@@ -86,7 +86,7 @@ bool STStorageCluster::loadSeries(const std::string& folder) const
 
 void STStorageCluster::saveProperties(IniFile& ini) const
 {
-    properties.saveToFolder(ini);
+    properties.save(ini);
 }
 
 bool STStorageCluster::saveSeries(const std::string& path) const
