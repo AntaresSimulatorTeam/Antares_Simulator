@@ -34,6 +34,7 @@
 #include "copper-plate.h"
 #include "unload-data.h"
 #include "filtering.h"
+#include "antares/utils/utils.h"
 
 using namespace Yuni;
 

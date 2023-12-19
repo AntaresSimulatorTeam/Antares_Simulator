@@ -5,7 +5,6 @@
 #pragma once
 
 #include <memory>
-#include <antares/utils/utils.h>
 
 namespace Antares::Data {
 

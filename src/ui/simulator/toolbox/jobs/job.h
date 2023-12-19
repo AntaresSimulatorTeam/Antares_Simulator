@@ -43,6 +43,7 @@
 #include "../create.h"
 #include <ui/common/component/panel.h>
 
+#include <atomic>
 #include <list>
 
 namespace Antares
@@ -262,8 +263,8 @@ private:
     Yuni::String::ListPtr pWarningList;
     Yuni::String::ListPtr pErrorList;
 
-    Yuni::Atomic::Int<> pJobIsRunning;
-    Yuni::Atomic::Int<> pGUICanUpdate;
+    std::atomic<int> pJobIsRunning;
+    std::atomic<int> pGUICanUpdate;
 
     // Event table
     DECLARE_EVENT_TABLE()

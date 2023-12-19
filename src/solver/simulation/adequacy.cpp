@@ -340,9 +340,7 @@ bool Adequacy::year(Progression::Task& progression,
 
         pProblemesHebdo[numSpace].firstWeekOfSimulation = false;
 
-        optWriter.addTime(w,
-                          pProblemesHebdo[numSpace].tempsResolution1[0],
-                          pProblemesHebdo[numSpace].tempsResolution2[0]);
+        optWriter.addTime(w, pProblemesHebdo[numSpace].timeMeasure);
 
         ++progression;
     }

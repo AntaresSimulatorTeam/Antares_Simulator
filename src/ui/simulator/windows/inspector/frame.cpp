@@ -340,7 +340,7 @@ Frame::Frame(wxWindow* parent, bool allowAnyObject) :
     // --- STUDIES ---
     pPGStudyTitle = Group(pg, wxT("GENERAL PARAMETERS"), wxT("study.title"));
     pPGStudyGrpSimulation = Category(pg, wxT("Simulation"), wxT("study.context"));
-    pPGStudyMode = P_ENUM("Mode", "study.mode", studyMode);
+    pPGSimulationMode = P_ENUM("Mode", "study.mode", simulationMode);
     pPGStudyCalendarBegin = P_UINT("First day", "study.cal.begin");
     pPGStudyCalendarEnd = P_UINT("Last day", "study.cal.end");
     pg->SetPropertyEditor(pPGStudyCalendarBegin, wxPG_EDITOR(StudyCalendarBtnEditor));
@@ -743,7 +743,7 @@ void Frame::apply(const InspectorData::Ptr& data)
     if (!hide)
     {
         // Context
-        Accumulator<PStudyMode>::Apply(pPGStudyMode, data->studies);
+        Accumulator<PSimulationMode>::Apply(pPGSimulationMode, data->studies);
         Accumulator<PStudyHorizon>::Apply(pPGStudyHorizon, data->studies);
         Accumulator<PStudyCalendarMonth>::Apply(pPGStudyCalendarMonth, data->studies);
         Accumulator<PStudyCalendarWeek>::Apply(pPGStudyCalendarWeek, data->studies);

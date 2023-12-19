@@ -96,7 +96,7 @@ public:
     StudyRangeLimits rangeLimits;
 
     //! Mode of the simulation
-    StudyMode mode;
+    SimulationMode mode;
 
     //! The number of interconnections
     uint interconnectionsCount() const;
