@@ -16,7 +16,6 @@ bool OptimizedThermalGenerator::runOptimizationProblem(OptProblemSettings& optSe
     setProblemCost(optSett);
     if (!solveProblem(optSett))
         return false;
-    par.printProblemVarAndResults(optSett, solver); // to be removed
     par.postTimeStepOptimization(optSett);
     return par.checkTimeHorizon(optSett);
 }
