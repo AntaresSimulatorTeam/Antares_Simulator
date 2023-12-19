@@ -423,6 +423,13 @@ void StudyRuntimeInfos::removeDisabledRenewableClustersFromSolverComputations(St
     });
 }
 
+void StudyRuntimeInfos::removeDisabledShortTermStorageClustersFromSolverComputations(Study& study)
+{
+    removeClusters(
+      study, "short term storage", [](Area& area)
+      { return area.shortTermStorage.removeDisabledClusters(); });
+}
+
 void StudyRuntimeInfos::removeAllRenewableClustersFromSolverComputations(Study& study)
 {
     removeClusters(

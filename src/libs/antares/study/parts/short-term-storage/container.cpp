@@ -116,4 +116,16 @@ std::size_t STStorageInput::count() const
                            return st.properties.enabled;
                        });
 }
+
+uint STStorageInput::removeDisabledClusters()
+{
+    const auto& it = std::remove_if(storagesByIndex.begin(), storagesByIndex.end(),
+        [](const auto& c) { return c.enabled(); });
+
+    uint count = std::distance(it, storagesByIndex.end());
+    storagesByIndex.erase(it, storagesByIndex.end());
+
+    return count;
+}
+
 } // namespace Antares::Data::ShortTermStorage
