@@ -70,7 +70,7 @@ bool STStorageCluster::enabled() const
 
 bool STStorageCluster::validate() const
 {
-    if (!cluster.enabled)
+    if (!enabled())
         return true;
 
     logs.debug() << "Validating properties and series for st storage: " << id;
@@ -84,9 +84,9 @@ bool STStorageCluster::loadSeries(const std::string& folder) const
     return ret;
 }
 
-bool STStorageCluster::saveProperties(const std::string& path) const
+void STStorageCluster::saveProperties(IniFile& ini) const
 {
-    return properties.saveToFolder(path);
+    properties.saveToFolder(ini);
 }
 
 bool STStorageCluster::saveSeries(const std::string& path) const

@@ -43,7 +43,7 @@ public:
     bool loadFromSection(const IniFile::Section& section);
     bool loadSeries(const std::string& folder) const;
 
-    bool saveProperties(const std::string& path) const;
+    void saveProperties(IniFile& ini) const;
     bool saveSeries(const std::string& path) const;
 
     std::string id;
