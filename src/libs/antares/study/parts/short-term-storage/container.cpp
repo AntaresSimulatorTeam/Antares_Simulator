@@ -122,10 +122,10 @@ uint STStorageInput::removeDisabledClusters()
     const auto& it = std::remove_if(storagesByIndex.begin(), storagesByIndex.end(),
         [](const auto& c) { return c.enabled(); });
 
-    uint count = std::distance(it, storagesByIndex.end());
+    uint disabledCount = std::distance(it, storagesByIndex.end());
     storagesByIndex.erase(it, storagesByIndex.end());
 
-    return count;
+    return disabledCount;
 }
 
 } // namespace Antares::Data::ShortTermStorage
