@@ -1,6 +1,7 @@
 #include "cluster_list.h"
 #include "cluster.h"
 #include "../../study.h"
+#include <ranges>
 
 namespace // anonymous
 {
@@ -406,9 +407,6 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
 
 bool ThermalClusterList::savePreproToFolder(const AnyString& folder) const
 {
-    if (empty())
-        return true;
-
     Clob buffer;
     bool ret = true;
 
@@ -425,9 +423,6 @@ bool ThermalClusterList::savePreproToFolder(const AnyString& folder) const
 
 bool ThermalClusterList::saveEconomicCosts(const AnyString& folder) const
 {
-    if (empty())
-        return true;
-
     Clob buffer;
     bool ret = true;
 
@@ -443,46 +438,37 @@ bool ThermalClusterList::loadPreproFromFolder(Study& study,
                                               const StudyLoadOptions& options,
                                               const AnyString& folder)
 {
-    if (empty())
-        return true;
-
     const bool globalThermalTSgeneration
-      = study.parameters.timeSeriesToGenerate & timeSeriesThermal;
+        = study.parameters.timeSeriesToGenerate & timeSeriesThermal;
 
     Clob buffer;
-    bool ret = true;
-
-    for (const auto& c : clusters)
-    {
-        if (c->prepro)
-        {
-            assert(c->parentArea && "cluster: invalid parent area");
-            buffer.clear() << folder << SEP << c->parentArea->id << SEP << c->id();
-
-            bool result = c->prepro->loadFromFolder(study, buffer);
-
-            if (result && study.usedByTheSolver && c->doWeGenerateTS(globalThermalTSgeneration))
-            {
-                // checking NPO max
-                result = c->prepro->normalizeAndCheckNPO();
-            }
-
-            ret = result && ret;
-        }
-
+    auto hasPrepro = [&](auto c)
+    {   
         ++options.progressTicks;
         options.pushProgressLogs();
-    }
-    return ret;
-}
+        return (bool) c->prepro;
+    };
+    
+    auto loadAndCheckPrepro = [&](auto c)
+    {
+        assert(c->parentArea && "cluster: invalid parent area");
+        buffer.clear() << folder << SEP << c->parentArea->id << SEP << c->id();
 
+        bool result = c->prepro->loadFromFolder(study, buffer);
+
+        if (result && study.usedByTheSolver && c->doWeGenerateTS(globalThermalTSgeneration))
+        {
+            result = c->prepro->normalizeAndCheckNPO();
+        }
+        return result;
+    };
+
+    return std::ranges::all_of(clusters | std::views::filter(hasPrepro),
+                               loadAndCheckPrepro);
+}
 
 bool ThermalClusterList::loadEconomicCosts(Study& study, const AnyString& folder)
 {
-    if (empty())
-        return true;
-
-
     return std::ranges::all_of(clusters, [&study, folder](const auto& c)
     {
         assert(c->parentArea && "cluster: invalid parent area");
