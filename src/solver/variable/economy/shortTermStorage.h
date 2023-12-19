@@ -241,9 +241,6 @@ public:
         uint clusterIndex = 0;
         for (const auto& cluster : shortTermStorage.storagesByIndex)
         {
-            if (!cluster.enabled())
-                continue;
-
             const uint group = groupIndex(cluster.properties.group);
             // Injection
             pValuesForTheCurrentYear[numSpace][3 * group][state.hourInTheYear]

@@ -282,9 +282,6 @@ public:
             for (const auto& cluster : shortTermStorage.storagesByIndex)
             {
                 // Write the data for the current year
-                if (!cluster.enabled())
-                    continue;
-
                 results.variableCaption = cluster.properties.name;
                 results.variableUnit = VCardType::Unit();
                 pValuesForTheCurrentYear[numSpace][clusterIndex]
