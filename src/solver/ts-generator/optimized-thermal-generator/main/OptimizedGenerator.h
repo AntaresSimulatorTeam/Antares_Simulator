@@ -8,7 +8,7 @@
 #include "../../randomized-thermal-generator/RandomizedGenerator.h"
 #include "../../../../libs/antares/study/maintenance_planning/MaintenanceGroup.h"
 #include "../aux/AuxillaryStructures.h"
-#include "../aux/AuxillaryFreeFunctions.h"
+#include "../aux/AuxFreeFun.h"
 #include "../parameters/OptimizationParameters.h"
 #include <antares/exception/AssertionError.hpp>
 

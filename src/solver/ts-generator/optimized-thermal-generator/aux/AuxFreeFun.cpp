@@ -5,7 +5,7 @@
 #include <numeric>
 #include <algorithm>
 #include "../main/OptimizedGenerator.h"
-#include "../aux/AuxillaryFreeFunctions.h"
+#include "../aux/AuxFreeFun.h"
 
 namespace Antares::Solver::TSGenerator
 {
