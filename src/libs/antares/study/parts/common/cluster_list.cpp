@@ -256,7 +256,7 @@ bool ClusterList<ClusterT>::remove(const Data::ClusterName& id)
 template<class ClusterT>
 bool ClusterList<ClusterT>::saveDataSeriesToFolder(const AnyString& folder) const
 {
-    return std::all_of(clusters.begin(), clusters.end(), [&folder](const auto& c){
+    return std::ranges::all_of(clusters, [&folder](const auto& c){
         return c->saveDataSeriesToFolder(folder);
     });
 }
@@ -264,17 +264,15 @@ bool ClusterList<ClusterT>::saveDataSeriesToFolder(const AnyString& folder) cons
 template<class ClusterT>
 bool ClusterList<ClusterT>::saveDataSeriesToFolder(const AnyString& folder, const String& msg) const
 {
-    bool ret = true;
     uint ticks = 0;
 
-    for (const auto& c : clusters)
+    return std::ranges::all_of(clusters, [&](const auto& c)
     {
         logs.info() << msg << "  " << (ticks * 100 / (1 + this->clusters.size()))
             << "% complete";
-        ret = c->saveDataSeriesToFolder(folder) && ret;
         ++ticks;
-    }
-    return ret;
+        return c->saveDataSeriesToFolder(folder);
+    });
 }
 
 template<class ClusterT>
