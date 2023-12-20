@@ -883,5 +883,13 @@ bool ThermalCluster::Ramping::checkValidity(Area* parentArea, Data::ClusterName 
     return ret;
 }
 
+std::ostream& operator<<(std::ostream& os, const ThermalCluster::Ramping& r)
+{
+    return os << r.powerIncreaseCost << '\t'
+              << r.powerDecreaseCost << '\t'
+              << r.maxUpwardPowerRampingRate << '\t'
+              << r.maxDownwardPowerRampingRate;
+}
+
 } // namespace Data
 } // namespace Antares
