@@ -51,22 +51,24 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireRampesThermiques(PROB
 
             for (int index = 0; index < maxThermalPlant; index++)
             {
-                if (PaliersThermiquesDuPays.maxUpwardPowerRampingRate[index] > 0.
-                    && PaliersThermiquesDuPays.maxDownwardPowerRampingRate[index] > 0.
-                    && PaliersThermiquesDuPays.upwardRampingCost[index] >= 0.
-                    && PaliersThermiquesDuPays.downwardRampingCost[index] >= 0.)
+                if (PaliersThermiquesDuPays.clusterRampingVariablesIndex[index] >= 0)
                 {
                     const int palier = PaliersThermiquesDuPays
                                          .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
 
+                    int rampingClusterIndex
+                      = PaliersThermiquesDuPays.clusterRampingVariablesIndex[index];
+
                     int var = CorrespondanceVarNativesVarOptim.powerRampingDecreaseIndex[palier];
                     Xmin[var] = 0;
-                    Xmax[var] = PaliersThermiquesDuPays.maxDownwardPowerRampingRate[index]
+                    Xmax[var]
+                      = PaliersThermiquesDuPays.maxDownwardPowerRampingRate[rampingClusterIndex]
                                 * PaliersThermiquesDuPays.NombreDePaliersThermiques;
 
                     var = CorrespondanceVarNativesVarOptim.powerRampingIncreaseIndex[palier];
                     Xmin[var] = 0;
-                    Xmax[var] = PaliersThermiquesDuPays.maxUpwardPowerRampingRate[index]
+                    Xmax[var]
+                      = PaliersThermiquesDuPays.maxUpwardPowerRampingRate[rampingClusterIndex]
                                 * PaliersThermiquesDuPays.NombreDePaliersThermiques;
                 }
             }

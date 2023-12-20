@@ -5,8 +5,12 @@ void RampingIncreaseRate::add(int pays, int cluster, int clusterIndex, int pdt, 
     if (!Simulation)
     {
         const PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
-        double maxUpwardPowerRampingRate = PaliersThermiquesDuPays.maxUpwardPowerRampingRate[clusterIndex];
-        double pminDUnGroupeDuPalierThermique = PaliersThermiquesDuPays.pminDUnGroupeDuPalierThermique[clusterIndex];
+        int rampingClusterIndex
+          = PaliersThermiquesDuPays.clusterRampingVariablesIndex[clusterIndex];
+        double maxUpwardPowerRampingRate
+          = PaliersThermiquesDuPays.maxUpwardPowerRampingRate[rampingClusterIndex];
+        double pminDUnGroupeDuPalierThermique
+          = PaliersThermiquesDuPays.pminDUnGroupeDuPalierThermique[clusterIndex];
         // constraint : P(t) - P(t-1) - R^+ * M(t) - l * M^+(t) < 0
 
         builder.updateHourWithinWeek(pdt)

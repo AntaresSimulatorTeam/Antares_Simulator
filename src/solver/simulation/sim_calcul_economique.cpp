@@ -282,6 +282,8 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         auto& pbPalier = problem.PaliersThermiquesDuPays[i];
         pbPalier.NombreDePaliersThermiques = area.thermal.list.size();
 
+        uint nRampingCluster = 0;
+
         for (uint clusterIndex = 0; clusterIndex != area.thermal.list.size(); ++clusterIndex)
         {
             auto& cluster = *(area.thermal.list.byIndex[clusterIndex]);
@@ -304,21 +306,16 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
             // ramping (if enabled)
             if (cluster.ramping)
             {
-                pbPalier.upwardRampingCost[clusterIndex]
+                pbPalier.upwardRampingCost[nRampingCluster]
                   = cluster.ramping.value().powerIncreaseCost;
-                pbPalier.downwardRampingCost[clusterIndex]
+                pbPalier.downwardRampingCost[nRampingCluster]
                   = cluster.ramping.value().powerDecreaseCost;
-                pbPalier.maxDownwardPowerRampingRate[clusterIndex]
+                pbPalier.maxDownwardPowerRampingRate[nRampingCluster]
                   = cluster.ramping.value().maxDownwardPowerRampingRate;
-                pbPalier.maxUpwardPowerRampingRate[clusterIndex]
+                pbPalier.maxUpwardPowerRampingRate[nRampingCluster]
                   = cluster.ramping.value().maxUpwardPowerRampingRate;
-            }
-            else
-            {
-                pbPalier.upwardRampingCost[clusterIndex] = -1;
-                pbPalier.downwardRampingCost[clusterIndex] = -1;
-                pbPalier.maxDownwardPowerRampingRate[clusterIndex] = -1;
-                pbPalier.maxUpwardPowerRampingRate[clusterIndex] = -1;
+                pbPalier.clusterRampingVariablesIndex[clusterIndex] = nRampingCluster;
+                nRampingCluster++;
             }
             
             pbPalier.PmaxDUnGroupeDuPalierThermique[clusterIndex]
@@ -329,6 +326,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
                   : cluster.minStablePower;
             pbPalier.NomsDesPaliersThermiques[clusterIndex] = cluster.name().c_str();
         }
+        pbPalier.numberOfRampingCluster = nRampingCluster;
 
         NombrePaliers += area.thermal.list.size();
     }
