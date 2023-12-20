@@ -235,7 +235,8 @@ std::filesystem::path CreateRandomSubDir(const std::filesystem::path& parentDir)
 #endif
     else
     {
-        logs.warning() << "Could not create random subdirectory in " << parentDir.string() << "\n";
+        Antares::logs.warning() << "Could not create random subdirectory in " << parentDir.string()
+                                << "\n";
         return parentDir;
     }
 }
