@@ -31,15 +31,13 @@ void DispatchableMarginPostProcessCmd::execute(const optRuntimeData& opt_runtime
         {
             auto& hourlyResults = problemeHebdo_->ResultatsHoraires[area.index];
 
-            auto end = area.thermal.list.end();
-            for (auto i = area.thermal.list.begin(); i != end; ++i)
+            for (const auto& cluster : area.thermal.list)
             {
-                auto& cluster = *(i->second);
-                const auto& availableProduction = cluster.series.getColumn(year);
+                const auto& availableProduction = cluster->series.getColumn(year);
                 for (uint h = 0; h != nbHoursInWeek; ++h)
                 {
                     double production = hourlyResults.ProductionThermique[h]
-                                          .ProductionThermiqueDuPalier[cluster.index];
+                                          .ProductionThermiqueDuPalier[cluster->index];
                     dtgmrg[h] += availableProduction[h + hourInYear] - production;
                 }
             }

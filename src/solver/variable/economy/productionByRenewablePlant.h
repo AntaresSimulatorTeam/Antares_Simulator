@@ -277,7 +277,7 @@ public:
 
     void hourForEachArea(State& state, unsigned int numSpace)
     {
-        for (const auto& [name, renewableCluster]  : state.area->renewable.list)
+        for (const auto& renewableCluster : state.area->renewable.list)
         {
             double renewableClusterProduction = renewableCluster->valueAtTimeStep(state.year, state.hourInTheYear);
 
@@ -327,7 +327,7 @@ public:
             for (uint i = 0; i < pSize; ++i)
             {
                 // Write the data for the current year
-                results.variableCaption = renewable.list.byIndex[i]->name();
+                results.variableCaption = renewable.list[i]->name();
                 results.variableUnit = VCardType::Unit();
                 pValuesForTheCurrentYear[numSpace][i].template buildAnnualSurveyReport<VCardType>(
                   results, fileLevel, precision);

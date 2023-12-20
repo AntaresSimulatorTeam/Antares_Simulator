@@ -421,8 +421,8 @@ void SpotlightProviderGlobalSelection::search(Spotlight::IItem::Vector& out,
                 auto aEnd = study.areas.end();
                 for (auto itArea = study.areas.begin(); itArea != aEnd; ++itArea)
                 {
-                    if (arealink->id == itArea->first) // this area is in the study (it is visible
-                                                       // at least on layer 0)
+                    if (arealink->id.equals(itArea->first)) // this area is in the study (it is visible
+                                                            // at least on layer 0)
                     {
                         foundInALayer = true;
                         break;
@@ -482,7 +482,7 @@ void SpotlightProviderGlobalSelection::search(Spotlight::IItem::Vector& out,
             auto aEnd = study.areas.end();
             for (auto itArea = study.areas.begin(); itArea != aEnd; ++itArea)
             {
-                if (arealink->id == itArea->first
+                if (arealink->id.equals(itArea->first)
                     && itArea->second->isVisibleOnLayer(
                       layerID)) // this area is in the study (it is visible at least on layer 0)
                 {

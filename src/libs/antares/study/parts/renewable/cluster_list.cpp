@@ -10,12 +10,12 @@ namespace Antares
 namespace Data
 {
 
-YString RenewableClusterList::typeID() const
+#define SEP IO::Separator
+
+std::string RenewableClusterList::typeID() const
 {
     return "renewables";
 }
-
-#define SEP IO::Separator
 
 bool RenewableClusterList::saveToFolder(const AnyString& folder) const
 {
