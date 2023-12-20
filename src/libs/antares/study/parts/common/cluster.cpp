@@ -55,17 +55,12 @@ bool Cluster::saveDataSeriesToFolder(const AnyString& folder) const
         return true;
 
     Yuni::Clob buffer;
-
     buffer.clear() << folder << SEP << parentArea->id << SEP << id();
-    if (Yuni::IO::Directory::Create(buffer))
-    {
-        bool ret = true;
-        buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "series.txt";
-        ret = series.timeSeries.saveToCSVFile(buffer, precision()) && ret;
+    if (!Yuni::IO::Directory::Create(buffer))
+        return true;
 
-        return ret;
-    }
-    return true;
+    buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "series.txt";
+    return series.timeSeries.saveToCSVFile(buffer, precision());
 }
 
 bool Cluster::loadDataSeriesFromFolder(Study& s, const AnyString& folder)
