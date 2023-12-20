@@ -8,13 +8,10 @@ class AbstractStartUpCostsGroup : public ConstraintGroup
 public:
     AbstractStartUpCostsGroup(PROBLEME_HEBDO* problemeHebdo,
                               bool simulation,
-                              ConstraintBuilder& builder) :
-     simulation_(simulation), ConstraintGroup(problemeHebdo, builder)
-    {
-    }
+                              ConstraintBuilder& builder);
 
-        void BuildConstraints() = 0;
-
+    virtual ~AbstractStartUpCostsGroup() = default;
+    void BuildConstraints() override = 0;
     bool simulation_ = false;
     StartUpCostsData GetStartUpCostsDataFromProblemHebdo();
 };
