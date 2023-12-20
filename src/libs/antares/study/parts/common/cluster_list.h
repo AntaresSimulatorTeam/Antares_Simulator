@@ -51,17 +51,7 @@ public:
     ** \param t The cluster to add
     ** \return True if the cluster has been added, false otherwise
     */
-
     SharedPtr add(const SharedPtr clusters);
-    /*!
-    ** \brief Detach a cluster represented by an iterator
-    **
-    ** The cluster will be removed from the list but _not_
-    ** destroyed.
-    ** The iterator should considered as invalid after using this method.
-    ** \return A pointer to the cluster, NULL if an error has occured
-    */
-    SharedPtr detach(iterator i);
 
     /*!
     ** \brief Try to find a cluster from its id (const)

@@ -96,31 +96,31 @@ uint PartThermal::prepareClustersInMustRunMode()
     do
     {
         mustContinue = false;
-        for (auto i = list.begin(); i != list.end(); ++i)
+        for (auto cluster : list)
         {
-            if ((*i)->mustrun)
-            {
-                // Detaching the thermal cluster from the main list...
-                std::shared_ptr<ThermalCluster> cluster = list.detach(i);
-                if (!cluster->enabled)
-                    continue;
-                // ...and attaching it into the second list
-                if (!mustrunList.add(cluster))
-                {
-                    logs.error() << "Impossible to prepare the thermal cluster in 'must-run' mode: "
-                                 << cluster->parentArea->name << "::" << cluster->name();
-                }
-                else
-                {
-                    ++count;
-                    logs.info() << "enabling 'must-run' mode for the cluster  "
-                                << cluster->parentArea->name << "::" << cluster->name();
-                }
+            if (!cluster->mustrun)
+                continue;
 
-                // the iterator has been invalidated, loop again
-                mustContinue = true;
-                break;
+            // Detaching the thermal cluster from the main list...
+            list.remove(cluster->id());
+            if (!cluster->enabled)
+                continue;
+            // ...and attaching it into the second list
+            if (!mustrunList.add(cluster))
+            {
+                logs.error() << "Impossible to prepare the thermal cluster in 'must-run' mode: "
+                    << cluster->parentArea->name << "::" << cluster->name();
             }
+            else
+            {
+                ++count;
+                logs.info() << "enabling 'must-run' mode for the cluster  "
+                    << cluster->parentArea->name << "::" << cluster->name();
+            }
+
+            // the iterator has been invalidated, loop again
+            mustContinue = true;
+            break;
         }
     } while (mustContinue);
 

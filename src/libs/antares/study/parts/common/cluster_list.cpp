@@ -66,15 +66,6 @@ ClusterT* ClusterList<ClusterT>::find(const Data::ClusterName& id) const
 }
 
 template<class ClusterT>
-typename std::shared_ptr<ClusterT> ClusterList<ClusterT>::detach(iterator i)
-{
-    SharedPtr c = *i;
-    clusters.erase(i);
-    rebuildIndex();
-    return c;
-}
-
-template<class ClusterT>
 bool ClusterList<ClusterT>::exists(const Data::ClusterName& id) const
 {
     return std::ranges::any_of(clusters, [&id](const auto& c){ return c->id() == id; });
