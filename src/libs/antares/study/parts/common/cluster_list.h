@@ -29,9 +29,6 @@ public:
     using iterator = typename Vect::iterator;
     using const_iterator = typename Vect::const_iterator;
 
-    ClusterList();
-    virtual ~ClusterList();
-
     /*!
     ** \brief Iterate through all clusters (const)
     */

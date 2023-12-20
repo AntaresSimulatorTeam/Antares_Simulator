@@ -81,18 +81,6 @@ bool ClusterList<ClusterT>::exists(const Data::ClusterName& id) const
 }
 
 template<class ClusterT>
-Data::ClusterList<ClusterT>::ClusterList()
-{
-}
-
-template<class ClusterT>
-Data::ClusterList<ClusterT>::~ClusterList()
-{
-    // deleting all renewable clusters
-    clear();
-}
-
-template<class ClusterT>
 void ClusterList<ClusterT>::clear()
 {
     clusters.clear();
@@ -133,8 +121,6 @@ void ClusterList<ClusterT>::rebuildIndex()
     for (auto& c : clusters)
         c->index = indx++;
 }
-
-
 
 template<class ClusterT>
 typename ClusterList<ClusterT>::SharedPtr ClusterList<ClusterT>::add(
