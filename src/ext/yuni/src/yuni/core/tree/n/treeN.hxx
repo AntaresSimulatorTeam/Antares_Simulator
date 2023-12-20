@@ -451,6 +451,8 @@ inline bool TreeN<T, TP, ChckP, ConvP>::isInvalidated()
     typename ThreadingPolicy::MutexLocker locker(*this);
     return isInvalidatedWL();
 }
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wvolatile"
 
 template<class T, template<class> class TP, template<class> class ChckP, class ConvP>
 inline void TreeN<T, TP, ChckP, ConvP>::addRef() const
@@ -477,6 +479,7 @@ bool TreeN<T, TP, ChckP, ConvP>::release() const
         ref.clearWL();
     return true;
 }
+#pragma GCC diagnostic pop
 
 template<class T, template<class> class TP, template<class> class ChckP, class ConvP>
 inline bool TreeN<T, TP, ChckP, ConvP>::hasIntrusiveSmartPtr() const

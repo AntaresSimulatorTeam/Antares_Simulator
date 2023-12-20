@@ -1463,7 +1463,6 @@ void AreaList::fixOrientationForAllInterconnections(BindingConstraintsRepository
                 // Reference to the link
                 auto& link = *(i->second);
                 // Asserts
-                assert(&link);
                 assert(link.from);
                 assert(link.with);
 

@@ -5,7 +5,13 @@
 
 #include <antares/writer/i_writer.h>
 
+// ignore unused parameters warnings from ortools
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+
 #include "ortools/linear_solver/linear_solver.h"
+
+#pragma GCC diagnostic pop
 
 #include "ortools_wrapper.h"
 
