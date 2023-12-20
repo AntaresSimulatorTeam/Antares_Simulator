@@ -49,61 +49,53 @@ public:
     void clear();
 
     /*!
-    ** \brief Add a clusters in the list
+    ** \brief Add a cluster in the list
     **
-    ** \param t The clusters to add
-    ** \return True if the clusters has been added, false otherwise
+    ** \param t The cluster to add
+    ** \return True if the cluster has been added, false otherwise
     */
 
     SharedPtr add(const SharedPtr clusters);
     /*!
-    ** \brief Detach a clusters represented by an iterator
+    ** \brief Detach a cluster represented by an iterator
     **
-    ** The clusters will be removed from the list but _not_
+    ** The cluster will be removed from the list but _not_
     ** destroyed.
     ** The iterator should considered as invalid after using this method.
-    ** \return A pointer to the clusters, NULL if an error has occured
+    ** \return A pointer to the cluster, NULL if an error has occured
     */
     SharedPtr detach(iterator i);
 
     /*!
-    ** \brief Try to find a clusters from its id (const)
+    ** \brief Try to find a cluster from its id (const)
     **
-    ** \param id ID of the clusters to find
-    ** \return A pointer to a clusters. nullptr if not found
+    ** \param id ID of the cluster to find
+    ** \return A pointer to a cluster. nullptr if not found
     */
     ClusterT* find(const Data::ClusterName& id) const;
 
     /*!
-    ** \brief Try to find a clusters from its pointer (const)
+    ** \brief Get if a cluster exists
     **
-    ** \param  p Pointer of the clusters to find
-    ** \return A pointer to a clusters. nullptr if not found
-    */
-    const ClusterT* find(const ClusterT* p) const;
-
-    /*!
-    ** \brief Get if a clusters exists
-    **
-    ** \param id ID of the clusters to find
-    ** \return True if the clusters exists
+    ** \param id ID of the cluster to find
+    ** \return True if the cluster exists
     */
     bool exists(const Data::ClusterName& id) const;
 
     /*!
-    ** \brief Rename a clusters
+    ** \brief Rename a cluster
     **
-    ** \param idToFind ID of the clusters to rename
-    ** \param newName The new name for the clusters
-    ** \return True if the operation succeeded (the clusters has been renamed)
-    **   false otherwise (not found or if another clusters has the same name)
+    ** \param idToFind ID of the cluster to rename
+    ** \param newName The new name for the cluster
+    ** \return True if the operation succeeded (the cluster has been renamed)
+    **   false otherwise (not found or if another cluster has the same name)
     **
     ** The indexes for clusters will be rebuilt.
     */
     bool rename(Data::ClusterName idToFind, Data::ClusterName newName);
 
     /*!
-    ** \brief Remove properly a clusters
+    ** \brief Remove properly a cluster
     */
     virtual bool remove(const Data::ClusterName& id);
 
