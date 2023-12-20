@@ -100,11 +100,7 @@ void ClusterList<ClusterT>::clear()
 template<class ClusterT>
 void ClusterList<ClusterT>::resizeAllTimeseriesNumbers(uint n)
 {
-    assert(n < 200000); // arbitrary number
-    if (n == 0)
-        each([&](Cluster& cluster) { cluster.series.timeseriesNumbers.clear(); });
-    else
-        each([&](Cluster& cluster) { cluster.series.timeseriesNumbers.resize(1, n); });
+    each([&](Cluster& cluster) { cluster.series.timeseriesNumbers.resize(1, n); });
 }
 
 #define SEP IO::Separator
