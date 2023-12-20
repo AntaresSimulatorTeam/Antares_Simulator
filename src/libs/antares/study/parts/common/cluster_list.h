@@ -56,6 +56,15 @@ public:
     */
 
     SharedPtr add(const SharedPtr clusters);
+    /*!
+    ** \brief Detach a clusters represented by an iterator
+    **
+    ** The clusters will be removed from the list but _not_
+    ** destroyed.
+    ** The iterator should considered as invalid after using this method.
+    ** \return A pointer to the clusters, NULL if an error has occured
+    */
+    SharedPtr detach(iterator i);
 
     /*!
     ** \brief Try to find a clusters from its id (const)
