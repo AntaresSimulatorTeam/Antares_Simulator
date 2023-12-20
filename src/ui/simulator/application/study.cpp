@@ -573,7 +573,8 @@ void MarkTheStudyAsModified(const Data::Study::Ptr& study)
     if (!(!study) and study == GetCurrentStudy())
         MarkTheStudyAsModified();
 }
-
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wvolatile"
 void MarkTheStudyAsModified()
 {
     auto study = GetCurrentStudy();
@@ -596,7 +597,7 @@ void MarkTheStudyAsModified()
         }
     }
 }
-
+#pragma GCC diagnostic pop
 void ResetTheModifierState(bool v)
 {
     auto study = GetCurrentStudy();
