@@ -182,10 +182,10 @@ protected:
     /// The vector containing the clusters
     Vect clusters;
 
-private:
     /// thermal, renewable, etc.
-    std::string typeID = "common";
+    virtual std::string typeID() const = 0;
 
+private:
     /// Sort the vector, set index value for each cluster
     void rebuildIndex();
 

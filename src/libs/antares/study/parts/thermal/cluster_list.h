@@ -13,7 +13,7 @@ namespace Data
 class ThermalClusterList : public ClusterList<ThermalCluster>
 {
 public:
-    std::string typeID = "thermal";
+    std::string typeID() const override;
     // Map container
     using Map = typename std::map<ClusterName, std::shared_ptr<ThermalCluster>>;
 

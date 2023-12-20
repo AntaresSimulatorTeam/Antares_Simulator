@@ -33,6 +33,11 @@ ThermalClusterList::~ThermalClusterList()
 
 #define SEP IO::Separator
 
+std::string ThermalClusterList::typeID() const
+{
+    return "thermal";
+}
+
 static bool ThermalClusterLoadFromSection(const AnyString& filename,
                                           ThermalCluster& cluster,
                                           const IniFile::Section& section);

@@ -12,6 +12,11 @@ namespace Data
 
 #define SEP IO::Separator
 
+std::string RenewableClusterList::typeID() const
+{
+    return "renewables";
+}
+
 bool RenewableClusterList::saveToFolder(const AnyString& folder) const
 {
     // Make sure the folder is created
