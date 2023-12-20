@@ -137,8 +137,7 @@ Data::ThermalCluster::ThermalCluster(Area* parent) :
     forcedLaw(thermalLawUniform),
     plannedLaw(thermalLawUniform),
     PthetaInf(HOURS_PER_YEAR, 0),
-    costsTimeSeries(1, CostsTimeSeries()),
-    ramping()
+    costsTimeSeries(1, CostsTimeSeries())
 {
     // assert
     assert(parent and "A parent for a thermal dispatchable cluster can not be null");
@@ -616,7 +615,16 @@ bool Data::ThermalCluster::integrityCheck()
     }*/
 
     // ramping
-    ret = ramping.checkValidity(parentArea, pName) && ret;
+    if (ramping)
+    {
+        // if the ramping model is ill defined, then we disable the ramping model for this cluster
+        bool ramping_ret = ramping.value().checkValidity(parentArea, pName);
+        if(!ramping_ret)
+        {
+            ramping.reset();
+        }
+        ret = ramping_ret && ret;
+    }
 
     return ret;
 }
@@ -847,29 +855,29 @@ bool ThermalCluster::Ramping::checkValidity(Area* parentArea, Data::ClusterName 
     if (maxUpwardPowerRampingRate <= 0)
     {
         logs.error() << "Thermal cluster: " << parentArea->name << '/' << clusterName
-                     << ": The maximum upward power ramping rate must greater than zero.";
-        maxUpwardPowerRampingRate = 1.;
+                     << ": The maximum upward power ramping rate must greater than zero."
+                     << "Ramping is disabled for this thermal cluster";
         ret = false;
     }
     if (maxDownwardPowerRampingRate <= 0)
     {
         logs.error() << "Thermal cluster: " << parentArea->name << '/' << clusterName
-                     << ": The maximum downward power ramping rate must greater than zero.";
-        maxDownwardPowerRampingRate = 1.;
+                     << ": The maximum downward power ramping rate must greater than zero."
+                     << "Ramping is disabled for this thermal cluster";
         ret = false;
     }
     if (powerIncreaseCost < 0)
     {
         logs.error() << "Thermal cluster: " << parentArea->name << '/' << clusterName
-                     << ": The ramping power increase cost must be positive or null.";
-        powerIncreaseCost = 0.;
+                     << ": The ramping power increase cost must be positive or null."
+                     << "Ramping is disabled for this thermal cluster";
         ret = false;
     }
     if (powerDecreaseCost < 0)
     {
         logs.error() << "Thermal cluster: " << parentArea->name << '/' << clusterName
-                     << ": The ramping power decrease cost must be positive or null.";
-        powerDecreaseCost = 0.;
+                     << ": The ramping power decrease cost must be positive or null."
+                     << "Ramping is disabled for this thermal cluster";
         ret = false;
     }
     return ret;

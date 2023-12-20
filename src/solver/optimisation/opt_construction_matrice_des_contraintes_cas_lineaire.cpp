@@ -190,9 +190,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
         finalStockExpression.add(pays);
     }
-
-    logs.info() << "adding ramping constraints";
-
  
 
     if (problemeHebdo->OptimisationAvecCoutsDeDemarrage)

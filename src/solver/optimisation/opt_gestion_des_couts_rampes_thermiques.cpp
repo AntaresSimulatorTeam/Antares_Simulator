@@ -53,18 +53,27 @@ void OPT_InitialiserLesCoutsLineaireRampesThermiques(PROBLEME_HEBDO* problemeHeb
 
             for (int Index = 0; Index < PaliersThermiquesDuPays.NombreDePaliersThermiques; Index++)
             {
-                int palier  = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[Index];
-
-                var = CorrespondanceVarNativesVarOptim.powerRampingDecreaseIndex[palier];
-                if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
+                if (PaliersThermiquesDuPays.maxUpwardPowerRampingRate[Index] > 0.
+                    && PaliersThermiquesDuPays.maxDownwardPowerRampingRate[Index] > 0.
+                    && PaliersThermiquesDuPays.upwardRampingCost[Index] >= 0.
+                    && PaliersThermiquesDuPays.downwardRampingCost[Index] >= 0.)
                 {
-                    ProblemeAResoudre->CoutLineaire[var] = PaliersThermiquesDuPays.downwardRampingCost[Index];
-                }
+                    int palier = PaliersThermiquesDuPays
+                                   .NumeroDuPalierDansLEnsembleDesPaliersThermiques[Index];
 
-                var = CorrespondanceVarNativesVarOptim.powerRampingIncreaseIndex[palier];
-                if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
-                {
-                    ProblemeAResoudre->CoutLineaire[var] = PaliersThermiquesDuPays.upwardRampingCost[Index];
+                    var = CorrespondanceVarNativesVarOptim.powerRampingDecreaseIndex[palier];
+                    if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
+                    {
+                        ProblemeAResoudre->CoutLineaire[var]
+                          = PaliersThermiquesDuPays.downwardRampingCost[Index];
+                    }
+
+                    var = CorrespondanceVarNativesVarOptim.powerRampingIncreaseIndex[palier];
+                    if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
+                    {
+                        ProblemeAResoudre->CoutLineaire[var]
+                          = PaliersThermiquesDuPays.upwardRampingCost[Index];
+                    }
                 }
             }
         }

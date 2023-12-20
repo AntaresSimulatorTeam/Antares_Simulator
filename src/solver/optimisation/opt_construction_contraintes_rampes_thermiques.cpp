@@ -25,17 +25,24 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireRampesThermiques(PRO
         constraintNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
         for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
         {
-            RampingIncreaseRate rampingIncreaseRate(problemeHebdo);
-            RampingDecreaseRate rampingDecreaseRate(problemeHebdo);
-            PowerOutputVariation powerOutputVariation(problemeHebdo);
-
-            const int palier = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
-
-            for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
+            if (PaliersThermiquesDuPays.maxUpwardPowerRampingRate[index] > 0.
+                && PaliersThermiquesDuPays.maxDownwardPowerRampingRate[index] > 0.
+                && PaliersThermiquesDuPays.upwardRampingCost[index] >= 0.
+                && PaliersThermiquesDuPays.downwardRampingCost[index] >= 0.)
             {
-                rampingIncreaseRate.add(pays, palier, index, pdt, Simulation);
-                rampingDecreaseRate.add(pays, palier, index, pdt, Simulation);
-                powerOutputVariation.add(pays, palier, index, pdt, Simulation);
+                RampingIncreaseRate rampingIncreaseRate(problemeHebdo);
+                RampingDecreaseRate rampingDecreaseRate(problemeHebdo);
+                PowerOutputVariation powerOutputVariation(problemeHebdo);
+
+                const int palier
+                  = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+
+                for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
+                {
+                    rampingIncreaseRate.add(pays, palier, index, pdt, Simulation);
+                    rampingDecreaseRate.add(pays, palier, index, pdt, Simulation);
+                    powerOutputVariation.add(pays, palier, index, pdt, Simulation);
+                }
             }
         }
     }

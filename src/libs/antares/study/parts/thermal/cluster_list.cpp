@@ -222,14 +222,22 @@ static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFil
     if (p->key == "startup-cost")
         return p->value.to<double>(cluster.startupCost);
 
+    // initialize the ramping attributes only if ramping is enabled, else ignore these properties
     if (p->key == "power-increase-cost")
-        return p->value.to<double>(cluster.ramping.powerIncreaseCost);
+        return (cluster.ramping)? p->value.to<double>(cluster.ramping.value().powerIncreaseCost) : true;
     if (p->key == "power-decrease-cost")
-        return p->value.to<double>(cluster.ramping.powerDecreaseCost);
+        return (cluster.ramping) ? p->value.to<double>(cluster.ramping.value().powerDecreaseCost)
+                                 : true;
     if (p->key == "max-upward-power-ramping-rate")
-        return p->value.to<double>(cluster.ramping.maxUpwardPowerRampingRate);
+        return (cluster.ramping)
+                 ? p->value.to<double>(cluster.ramping.value().maxUpwardPowerRampingRate)
+                 : true;
     if (p->key == "max-downward-power-ramping-rate")
-        return p->value.to<double>(cluster.ramping.maxDownwardPowerRampingRate);
+        return (cluster.ramping)
+          ? p->value.to<double>(cluster.ramping.value().maxDownwardPowerRampingRate) : true;
+    // we ignore this property as it was already handled in ThermalClusterLoadFromSection
+    if (p->key == "ramping-enabled")
+        return true;
 
     if (p->key == "unitcount")
         return p->value.to<uint>(cluster.unitCount);
@@ -256,6 +264,16 @@ bool ThermalClusterLoadFromSection(const AnyString& filename,
         return false;
 
     cluster.setName(section.name);
+
+    // initialize the ramping attributes only if ramping-enabled=true
+    auto* rampingEnabledProperty = section.find("ramping-enabled");
+    if(rampingEnabledProperty)
+    {
+        bool rampingEnabled = false;
+        bool attributeOK = rampingEnabledProperty->value.to<bool>(rampingEnabled);
+        if (rampingEnabled && attributeOK)
+            cluster.ramping = ThermalCluster::Ramping();
+    }
 
     if (section.firstProperty)
     {
@@ -414,17 +432,17 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
             if (!Math::Zero(c.variableomcost))
                 s->add("variableomcost", Math::Round(c.variableomcost,3));
 
-            // ramping
-            if (c.ramping.powerIncreaseCost != 0)
-                s->add("power-increase-cost", Math::Round(c.ramping.powerIncreaseCost, 3));
-            if (c.ramping.powerDecreaseCost != 0)
-                s->add("power-decrease-cost", Math::Round(c.ramping.powerDecreaseCost, 3));
-            if (c.ramping.maxUpwardPowerRampingRate != 0)
+            // ramping (only if ramping is enabled)
+            if (c.ramping && c.ramping.value().powerIncreaseCost != 0)
+                s->add("power-increase-cost", Math::Round(c.ramping.value().powerIncreaseCost, 3));
+            if (c.ramping && c.ramping.value().powerDecreaseCost != 0)
+                s->add("power-decrease-cost", Math::Round(c.ramping.value().powerDecreaseCost, 3));
+            if (c.ramping && c.ramping.value().maxUpwardPowerRampingRate != 0)
                 s->add("max-upward-power-ramping-rate",
-                       Math::Round(c.ramping.maxUpwardPowerRampingRate, 3));
-            if (c.ramping.maxDownwardPowerRampingRate != 0)
+                       Math::Round(c.ramping.value().maxUpwardPowerRampingRate, 3));
+            if (c.ramping && c.ramping.value().maxDownwardPowerRampingRate != 0)
                 s->add("max-downward-power-ramping-rate",
-                       Math::Round(c.ramping.maxDownwardPowerRampingRate, 3));
+                       Math::Round(c.ramping.value().maxDownwardPowerRampingRate, 3));
 
             //pollutant factor
             for (auto const& [key, val] : Pollutant::namesToEnum)

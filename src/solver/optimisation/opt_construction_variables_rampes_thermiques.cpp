@@ -26,24 +26,36 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireRampesThermiqu
             variableNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
             for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
             {
-                const int palier = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
-                const auto& clusterName = PaliersThermiquesDuPays.NomsDesPaliersThermiques[index];
-
-                if (!Simulation)
+                if (PaliersThermiquesDuPays.maxUpwardPowerRampingRate[index] > 0.
+                    && PaliersThermiquesDuPays.maxDownwardPowerRampingRate[index] > 0.
+                    && PaliersThermiquesDuPays.upwardRampingCost[index] >= 0.
+                    && PaliersThermiquesDuPays.downwardRampingCost[index] >= 0.)
                 {
-                    CorrespondanceVarNativesVarOptim.powerRampingIncreaseIndex[palier] = NombreDeVariables;
-                    ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
-                    variableNamer.ProductionIncreaseAboveMin(NombreDeVariables, clusterName);
-                }
-                NombreDeVariables++;
+                    const int palier = PaliersThermiquesDuPays
+                                         .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+                    const auto& clusterName
+                      = PaliersThermiquesDuPays.NomsDesPaliersThermiques[index];
 
-                if (!Simulation)
-                {
-                    CorrespondanceVarNativesVarOptim.powerRampingDecreaseIndex[palier] = NombreDeVariables;
-                    ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
-                    variableNamer.ProductionDecreaseAboveMin(NombreDeVariables, clusterName);
+                    if (!Simulation)
+                    {
+                        CorrespondanceVarNativesVarOptim.powerRampingIncreaseIndex[palier]
+                          = NombreDeVariables;
+                        ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
+                          = VARIABLE_BORNEE_DES_DEUX_COTES;
+                        variableNamer.ProductionIncreaseAboveMin(NombreDeVariables, clusterName);
+                    }
+                    NombreDeVariables++;
+
+                    if (!Simulation)
+                    {
+                        CorrespondanceVarNativesVarOptim.powerRampingDecreaseIndex[palier]
+                          = NombreDeVariables;
+                        ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
+                          = VARIABLE_BORNEE_DES_DEUX_COTES;
+                        variableNamer.ProductionDecreaseAboveMin(NombreDeVariables, clusterName);
+                    }
+                    NombreDeVariables++;
                 }
-                NombreDeVariables++;
             }
         }
     }

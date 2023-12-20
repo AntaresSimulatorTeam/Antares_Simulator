@@ -301,14 +301,26 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
             pbPalier.DureeMinimaleDArretDUnGroupeDuPalierThermique[clusterIndex]
               = cluster.minDownTime;
 
-            pbPalier.upwardRampingCost[clusterIndex]
-              = cluster.ramping.powerIncreaseCost;
-            pbPalier.downwardRampingCost[clusterIndex] = cluster.ramping.powerDecreaseCost;
-            pbPalier.maxDownwardPowerRampingRate[clusterIndex] = cluster.ramping.maxDownwardPowerRampingRate;
-            pbPalier.maxUpwardPowerRampingRate[clusterIndex] = cluster.ramping.maxUpwardPowerRampingRate;
-
-
-
+            // ramping (if enabled)
+            if (cluster.ramping)
+            {
+                pbPalier.upwardRampingCost[clusterIndex]
+                  = cluster.ramping.value().powerIncreaseCost;
+                pbPalier.downwardRampingCost[clusterIndex]
+                  = cluster.ramping.value().powerDecreaseCost;
+                pbPalier.maxDownwardPowerRampingRate[clusterIndex]
+                  = cluster.ramping.value().maxDownwardPowerRampingRate;
+                pbPalier.maxUpwardPowerRampingRate[clusterIndex]
+                  = cluster.ramping.value().maxUpwardPowerRampingRate;
+            }
+            else
+            {
+                pbPalier.upwardRampingCost[clusterIndex] = -1;
+                pbPalier.downwardRampingCost[clusterIndex] = -1;
+                pbPalier.maxDownwardPowerRampingRate[clusterIndex] = -1;
+                pbPalier.maxUpwardPowerRampingRate[clusterIndex] = -1;
+            }
+            
             pbPalier.PmaxDUnGroupeDuPalierThermique[clusterIndex]
               = cluster.nominalCapacityWithSpinning;
             pbPalier.pminDUnGroupeDuPalierThermique[clusterIndex]

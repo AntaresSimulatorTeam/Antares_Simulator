@@ -40,6 +40,8 @@
 #include <map>
 #include <memory>
 #include <vector>
+#include <optional>
+
 
 namespace Antares
 {
@@ -363,7 +365,7 @@ public:
         void reset();
         bool checkValidity(Area* area, Data::ClusterName clusterName);
     };
-    Ramping ramping;
+    std::optional<Ramping> ramping;
 
     //@}
 
