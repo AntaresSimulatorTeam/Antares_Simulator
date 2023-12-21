@@ -11,6 +11,7 @@
 #include <antares/study/study.h>
 #include "BindingConstraintLoader.h"
 #include "BindingConstraintSaver.h"
+#include "antares/utils/utils.h"
 
 void Data::BindingConstraintsRepository::clear()
 {

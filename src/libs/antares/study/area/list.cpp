@@ -29,6 +29,7 @@
 #include <yuni/io/file.h>
 #include "../study.h"
 #include <cassert>
+#include "antares/utils/utils.h"
 #include "area.h"
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
@@ -937,7 +938,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         ret = area.thermal.list.loadEconomicCosts(study, buffer) && ret;
 
         // In adequacy mode, all thermal clusters must be in 'mustrun' mode
-        if (study.usedByTheSolver && study.parameters.mode == stdmAdequacy)
+        if (study.usedByTheSolver && study.parameters.mode == SimulationMode::Adequacy)
             area.thermal.list.enableMustrunForEveryone();
     }
 

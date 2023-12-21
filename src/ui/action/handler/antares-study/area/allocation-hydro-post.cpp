@@ -26,6 +26,7 @@
 */
 
 #include "allocation-hydro-post.h"
+#include "antares/utils/utils.h"
 
 namespace Antares
 {
