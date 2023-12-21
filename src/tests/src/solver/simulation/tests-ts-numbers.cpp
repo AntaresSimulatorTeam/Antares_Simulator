@@ -14,14 +14,14 @@ using namespace Antares::Data;
 using namespace Antares::Solver::TimeSeriesNumbers;
 
 
-void initializeStudy(Study::Ptr study)
+void initializeStudy(Study::Ptr study, unsigned int nbYears = 1)
 {
 	study->parameters.derated = false;
 
 	study->runtime = new StudyRuntimeInfos();
 	study->runtime->rangeLimits.year[rangeBegin] = 0;
-	study->runtime->rangeLimits.year[rangeEnd] = 0;
-	study->runtime->rangeLimits.year[rangeCount] = 1;
+	study->runtime->rangeLimits.year[rangeEnd] = nbYears - 1;
+	study->runtime->rangeLimits.year[rangeCount] = nbYears - 1;
 
 	study->parameters.renewableGeneration.toAggregated(); // Default
 
@@ -44,10 +44,7 @@ Area* addAreaToStudy(Study::Ptr study, const std::string& areaName)
 // ===========================
 // Add a cluster to an area
 // ===========================
-template<class ClusterType>
-void addClusterToAreaList(Area* area, std::shared_ptr<ClusterType> cluster);
 
-template<>
 void addClusterToAreaList(Area* area, std::shared_ptr<ThermalCluster> cluster)
 {
 	area->thermal.clusters.push_back(cluster.get());
@@ -55,7 +52,6 @@ void addClusterToAreaList(Area* area, std::shared_ptr<ThermalCluster> cluster)
 	area->thermal.list.mapping[cluster->id()] = cluster;
 }
 
-template<>
 void addClusterToAreaList(Area* area, std::shared_ptr<RenewableCluster> cluster)
 {
 	area->renewable.clusters.push_back(cluster.get());
@@ -133,7 +129,11 @@ BOOST_AUTO_TEST_CASE(two_areas_with_5_ready_made_ts_on_load___check_intra_modal_
 	BOOST_CHECK_EQUAL(area_1->load.series.timeseriesNumbers[0][year], area_2->load.series.timeseriesNumbers[0][year]);
 }
 
-static bool intermodal_load_two_areas(unsigned width_area_1, unsigned width_area_2)
+// =======================
+//	Tests on intra-modal
+// =======================
+
+static bool intramodal_load_two_areas(unsigned width_area_1, unsigned width_area_2)
 {
 	// Creating a study
     auto study = std::make_shared<Study>();
@@ -156,12 +156,12 @@ static bool intermodal_load_two_areas(unsigned width_area_1, unsigned width_area
 
 BOOST_AUTO_TEST_CASE(two_areas_with_respectively_5_and_4_ready_made_ts_on_load___check_intra_modal_consistency_KO)
 {
-    BOOST_CHECK(!intermodal_load_two_areas(5, 4));
+    BOOST_CHECK(!intramodal_load_two_areas(5, 4));
 }
 
 BOOST_AUTO_TEST_CASE(two_areas_with_respectively_5_and_1_ready_made_ts_on_load___check_intra_modal_consistency_OK)
 {
-    BOOST_CHECK(intermodal_load_two_areas(5, 1));
+    BOOST_CHECK(intramodal_load_two_areas(5, 1));
 }
 
 BOOST_AUTO_TEST_CASE(two_areas_3_thermal_clusters_with_same_number_of_ready_made_ts___check_intra_modal_consistency_OK)
@@ -393,6 +393,44 @@ BOOST_AUTO_TEST_CASE(two_areas_3_renew_clusters_with_different_number_of_ready_m
 	area_2->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
 	BOOST_CHECK(not Generate(*study));
+}
+
+BOOST_AUTO_TEST_CASE(check_intra_modal_on_hydro_max_power_time_series)
+{
+	unsigned int nbYears = 3;
+	auto study = std::make_shared<Study>();
+	initializeStudy(study, nbYears);
+
+	study->parameters.intraModal |= timeSeriesHydroMaxPower;
+
+	unsigned int hydroMaxPowerTSsize = 3;
+
+	// Area 1
+	Area* area_1 = addAreaToStudy(study, "Area 1");
+	area_1->hydro.series->resizeMaxPowerTS(hydroMaxPowerTSsize, 1);
+	area_1->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
+
+	// Area 2
+	Area* area_2 = addAreaToStudy(study, "Area 2");
+	area_2->hydro.series->resizeMaxPowerTS(hydroMaxPowerTSsize, 1);
+	area_2->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
+
+	// Area 3
+	Area* area_3 = addAreaToStudy(study, "Area 3");
+	area_3->hydro.series->resizeMaxPowerTS(hydroMaxPowerTSsize, 1);
+	area_3->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
+
+	BOOST_CHECK(Generate(*study));
+
+	for (unsigned int year = 0; year < nbYears; year++)
+	{
+		unsigned int ts_number_1 = area_1->hydro.series->timeseriesNumbersHydroMaxPower[0][year];
+		unsigned int ts_number_2 = area_2->hydro.series->timeseriesNumbersHydroMaxPower[0][year];
+		unsigned int ts_number_3 = area_3->hydro.series->timeseriesNumbersHydroMaxPower[0][year];
+
+		BOOST_CHECK_EQUAL(ts_number_1, ts_number_2);
+		BOOST_CHECK_EQUAL(ts_number_1, ts_number_3);
+	}
 }
 
 // =======================
