@@ -90,7 +90,7 @@ jobs:
         shell: bash 
         run: |
           echo "configurePreset=ninja-multi-vcpkg" >> $GITHUB_ENV
-          echo "configubuildPreset=ninja-multi-vcpkg" >> $GITHUB_ENV
+          echo "buildPreset=ninja-multi-vcpkg" >> $GITHUB_ENV
           echo "archive_type=tgz" >> $GITHUB_ENV
         if: matrix.os == 'ubuntu-latest'
 
@@ -98,7 +98,7 @@ jobs:
         shell: bash 
         run: |
           echo "configurePreset=msbuild-vcpkg" >> $GITHUB_ENV
-          echo "configubuildPreset=msbuild-vcpkg" >> $GITHUB_ENV
+          echo "buildPreset=msbuild-vcpkg" >> $GITHUB_ENV
           echo "archive_type=zip" >> $GITHUB_ENV
         if: matrix.os == 'windows-latest'
         
