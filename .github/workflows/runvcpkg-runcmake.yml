@@ -154,7 +154,7 @@ jobs:
         id: runcmake
         with:
           cmakeListsTxtPath: '${{ github.workspace }}/src/CMakeLists.txt'
-          # configurePresetAdditionalArgs: "['-DPython3_EXECUTABLE=${{ steps.setup-python.outputs.python-path }}']"
+          configurePresetAdditionalArgs: "[`-DPython3_EXECUTABLE=${{ steps.setup-python.outputs.python-path }}`]"
           configurePreset: ${{ env.configurePreset }}
           buildPreset: ${{ env.buildPreset }}
           buildPresetAdditionalArgs: '[`--config Release`]'
