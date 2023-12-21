@@ -79,16 +79,14 @@ BOOST_AUTO_TEST_SUITE(thermal_clusters_operations)
 
 BOOST_FIXTURE_TEST_CASE(thermal_cluster_add, OneAreaStudy)
 {
-    Study study;
-    Area& area = *study.areaAdd("A");
-    auto newCluster = std::make_shared<ThermalCluster>(&area);
+    auto newCluster = std::make_shared<ThermalCluster>(areaA);
     newCluster->setName("Cluster");
     BOOST_CHECK(newCluster->name() == "Cluster");
     BOOST_CHECK(newCluster->id() == "cluster");
 
-    area.thermal.list.add(newCluster);
-    BOOST_CHECK(area.thermal.list.find("cluster") == newCluster.get());
-    BOOST_CHECK(area.thermal.list.find("Cluster") == nullptr);
+    areaA->thermal.list.add(newCluster);
+    BOOST_CHECK(areaA->thermal.list.find("cluster") == newCluster.get());
+    BOOST_CHECK(areaA->thermal.list.find("Cluster") == nullptr);
 }
 
 /*!
