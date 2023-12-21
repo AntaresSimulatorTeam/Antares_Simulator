@@ -56,7 +56,7 @@ BOOST_AUTO_TEST_CASE(area_add)
     const auto areaA = study.areaAdd("A");
     BOOST_CHECK(areaA != nullptr);
     BOOST_CHECK_EQUAL(areaA->name, "A");
-    BOOST_CHECK(areaA->id == "a");
+    BOOST_CHECK_EQUAL(areaA->id, "a");
 }
 
 BOOST_FIXTURE_TEST_CASE(area_rename, OneAreaStudy)
@@ -68,7 +68,7 @@ BOOST_FIXTURE_TEST_CASE(area_rename, OneAreaStudy)
 
 BOOST_FIXTURE_TEST_CASE(area_delete, OneAreaStudy)
 {
-    BOOST_CHECK(study.areas.size() == 1);
+    BOOST_CHECK_EQUAL(study.areas.size(), 1);
     BOOST_CHECK(study.areaDelete(areaA));
     BOOST_CHECK(study.areas.empty());
 }
@@ -81,12 +81,12 @@ BOOST_FIXTURE_TEST_CASE(thermal_cluster_add, OneAreaStudy)
 {
     auto newCluster = std::make_shared<ThermalCluster>(areaA);
     newCluster->setName("Cluster");
-    BOOST_CHECK(newCluster->name() == "Cluster");
-    BOOST_CHECK(newCluster->id() == "cluster");
+    BOOST_CHECK_EQUAL(newCluster->name(), "Cluster");
+    BOOST_CHECK_EQUAL(newCluster->id(), "cluster");
 
     areaA->thermal.list.add(newCluster);
-    BOOST_CHECK(areaA->thermal.list.find("cluster") == newCluster.get());
-    BOOST_CHECK(areaA->thermal.list.find("Cluster") == nullptr);
+    BOOST_CHECK_EQUAL(areaA->thermal.list.find("cluster"), newCluster.get());
+    BOOST_CHECK_EQUAL(areaA->thermal.list.find("Cluster"), nullptr);
 }
 
 /*!
