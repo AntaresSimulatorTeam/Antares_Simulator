@@ -13,7 +13,7 @@ var searchData=
   ['renewable_10',['renewable',['../classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules.html#a196dd0b7824fd2d282cfb6283d43757b',1,'Antares::Data::ScenarioBuilder::Rules']]],
   ['renewablecluster_11',['renewableCluster',['../classAntares_1_1Solver_1_1Variable_1_1State.html#a92081f2c3063cbdecb7b19dc4023827f',1,'Antares::Solver::Variable::State']]],
   ['reserves_12',['reserves',['../classAntares_1_1Data_1_1Area.html#af808f758fbbe3869a941ae43f89fa204',1,'Antares::Data::Area']]],
-  ['reservoircapacity_13',['reservoirCapacity',['../classAntares_1_1Data_1_1PartHydro.html#a0434867ec92f530701a690a1b729be77',1,'Antares::Data::PartHydro']]],
+  ['reservoircapacity_13',['reservoirCapacity',['../classAntares_1_1Data_1_1PartHydro.html#a0434867ec92f530701a690a1b729be77',1,'Antares::Data::PartHydro::reservoirCapacity()'],['../classAntares_1_1Data_1_1ShortTermStorage_1_1Properties.html#aa03d2add5db653fda95a4bcb67b7397d',1,'Antares::Data::ShortTermStorage::Properties::reservoirCapacity()']]],
   ['reservoirlevel_14',['reservoirLevel',['../classAntares_1_1Data_1_1PartHydro.html#aad6f6c5f38e17e347b1c7e3102ac4864',1,'Antares::Data::PartHydro']]],
   ['reservoirmanagement_15',['reservoirManagement',['../classAntares_1_1Data_1_1PartHydro.html#ae7e8bd32e00515c61d8b74bf66895c44',1,'Antares::Data::PartHydro']]],
   ['resspilled_16',['resSpilled',['../classAntares_1_1Solver_1_1Variable_1_1State.html#a88698220c1ac9e8871f25d3cd58ad00b',1,'Antares::Solver::Variable::State']]],

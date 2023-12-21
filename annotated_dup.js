@@ -254,10 +254,10 @@ var annotated_dup =
           [ "windTSNumberData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1windTSNumberData.html", "classAntares_1_1Data_1_1ScenarioBuilder_1_1windTSNumberData" ]
         ] ],
         [ "ShortTermStorage", null, [
-          [ "Properties", "classAntares_1_1Data_1_1ShortTermStorage_1_1Properties.html", null ],
+          [ "Properties", "classAntares_1_1Data_1_1ShortTermStorage_1_1Properties.html", "classAntares_1_1Data_1_1ShortTermStorage_1_1Properties" ],
           [ "Series", "classAntares_1_1Data_1_1ShortTermStorage_1_1Series.html", null ],
           [ "STStorageCluster", "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageCluster.html", null ],
-          [ "STStorageInput", "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageInput.html", null ]
+          [ "STStorageInput", "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageInput.html", "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageInput" ]
         ] ],
         [ "Solar", null, [
           [ "Container", "classAntares_1_1Data_1_1Solar_1_1Container.html", "classAntares_1_1Data_1_1Solar_1_1Container" ],

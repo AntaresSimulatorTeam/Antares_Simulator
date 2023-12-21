@@ -104,15 +104,18 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a891ab2ddecb9962e2f84c94b79560cf1"><td class="memItemLeft" align="right" valign="top"><a id="a891ab2ddecb9962e2f84c94b79560cf1" name="a891ab2ddecb9962e2f84c94b79560cf1"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>validate</b> () const</td></tr>
 <tr class="separator:a891ab2ddecb9962e2f84c94b79560cf1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa3fcf8c5b49e292210462fd5ecf331f5"><td class="memItemLeft" align="right" valign="top"><a id="aa3fcf8c5b49e292210462fd5ecf331f5" name="aa3fcf8c5b49e292210462fd5ecf331f5"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>createSTStorageClustersFromIniFile</b> (const std::string &amp;path)</td></tr>
+<tr class="memitem:aa3fcf8c5b49e292210462fd5ecf331f5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageInput.html#aa3fcf8c5b49e292210462fd5ecf331f5">createSTStorageClustersFromIniFile</a> (const std::string &amp;path)</td></tr>
 <tr class="separator:aa3fcf8c5b49e292210462fd5ecf331f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acb6f907dad2293594dde7498aabcec63"><td class="memItemLeft" align="right" valign="top"><a id="acb6f907dad2293594dde7498aabcec63" name="acb6f907dad2293594dde7498aabcec63"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>loadSeriesFromFolder</b> (const std::string &amp;folder) const</td></tr>
+<tr class="memitem:acb6f907dad2293594dde7498aabcec63"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageInput.html#acb6f907dad2293594dde7498aabcec63">loadSeriesFromFolder</a> (const std::string &amp;folder) const</td></tr>
 <tr class="separator:acb6f907dad2293594dde7498aabcec63"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af2339ee00e3c45b75a44233684dc2daf"><td class="memItemLeft" align="right" valign="top"><a id="af2339ee00e3c45b75a44233684dc2daf" name="af2339ee00e3c45b75a44233684dc2daf"></a>
 std::size_t&#160;</td><td class="memItemRight" valign="bottom"><b>count</b> () const</td></tr>
+<tr class="memdesc:af2339ee00e3c45b75a44233684dc2daf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of enabled ST storages, ignoring disabled ST storages. <br /></td></tr>
 <tr class="separator:af2339ee00e3c45b75a44233684dc2daf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a14dd81b0071c724a97c42f0e56d30b61"><td class="memItemLeft" align="right" valign="top"><a id="a14dd81b0071c724a97c42f0e56d30b61" name="a14dd81b0071c724a97c42f0e56d30b61"></a>
+uint&#160;</td><td class="memItemRight" valign="bottom"><b>removeDisabledClusters</b> ()</td></tr>
+<tr class="memdesc:a14dd81b0071c724a97c42f0e56d30b61"><td class="mdescLeft">&#160;</td><td class="mdescRight">erase disabled cluster from the vector <br /></td></tr>
+<tr class="separator:a14dd81b0071c724a97c42f0e56d30b61"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1793616f047305f6d74cb173d806ea9f"><td class="memItemLeft" align="right" valign="top"><a id="a1793616f047305f6d74cb173d806ea9f" name="a1793616f047305f6d74cb173d806ea9f"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>saveToFolder</b> (const std::string &amp;folder) const</td></tr>
 <tr class="separator:a1793616f047305f6d74cb173d806ea9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -126,6 +129,49 @@ Public Attributes</h2></td></tr>
 std::vector&lt; <a class="el" href="classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageCluster.html">STStorageCluster</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>storagesByIndex</b></td></tr>
 <tr class="separator:abbe239ac6401e131e120989be2d84c9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="aa3fcf8c5b49e292210462fd5ecf331f5" name="aa3fcf8c5b49e292210462fd5ecf331f5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa3fcf8c5b49e292210462fd5ecf331f5">&#9670;&#160;</a></span>createSTStorageClustersFromIniFile()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Antares::Data::ShortTermStorage::STStorageInput::createSTStorageClustersFromIniFile </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>path</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<ol type="1">
+<li>Read list.ini </li>
+</ol>
+
+</div>
+</div>
+<a id="acb6f907dad2293594dde7498aabcec63" name="acb6f907dad2293594dde7498aabcec63"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acb6f907dad2293594dde7498aabcec63">&#9670;&#160;</a></span>loadSeriesFromFolder()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Antares::Data::ShortTermStorage::STStorageInput::loadSeriesFromFolder </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>folder</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<ol type="1">
+<li>Read ALL series </li>
+</ol>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>src/libs/antares/study/parts/short-term-storage/<a class="el" href="libs_2antares_2study_2parts_2short-term-storage_2container_8h_source.html">container.h</a></li>
 <li>src/libs/antares/study/parts/short-term-storage/container.cpp</li>

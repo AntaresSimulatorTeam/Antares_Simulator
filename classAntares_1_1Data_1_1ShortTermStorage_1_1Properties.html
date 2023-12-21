@@ -108,36 +108,48 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>validate</b> ()</td><
 <tr class="memitem:aab82b1f9cfb6f64f238c5dbf2cd057f6"><td class="memItemLeft" align="right" valign="top"><a id="aab82b1f9cfb6f64f238c5dbf2cd057f6" name="aab82b1f9cfb6f64f238c5dbf2cd057f6"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>loadKey</b> (const <a class="el" href="classAntares_1_1IniFile_1_1Property.html">IniFile::Property</a> *p)</td></tr>
 <tr class="separator:aab82b1f9cfb6f64f238c5dbf2cd057f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afe7101c3f5d2ae1e59edf7f842637c14"><td class="memItemLeft" align="right" valign="top"><a id="afe7101c3f5d2ae1e59edf7f842637c14" name="afe7101c3f5d2ae1e59edf7f842637c14"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>saveToFolder</b> (const std::string &amp;folder) const</td></tr>
-<tr class="separator:afe7101c3f5d2ae1e59edf7f842637c14"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6e7855e3b36ea47eb4919594a49eef11"><td class="memItemLeft" align="right" valign="top"><a id="a6e7855e3b36ea47eb4919594a49eef11" name="a6e7855e3b36ea47eb4919594a49eef11"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>save</b> (<a class="el" href="classAntares_1_1IniFile.html">IniFile</a> &amp;ini) const</td></tr>
+<tr class="separator:a6e7855e3b36ea47eb4919594a49eef11"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:aeda24fa94a24c5eee0fd3d54b89041bb"><td class="memItemLeft" align="right" valign="top"><a id="aeda24fa94a24c5eee0fd3d54b89041bb" name="aeda24fa94a24c5eee0fd3d54b89041bb"></a>
 std::optional&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>injectionNominalCapacity</b></td></tr>
+<tr class="memdesc:aeda24fa94a24c5eee0fd3d54b89041bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Not optional Injection nominal capacity, &gt;= 0. <br /></td></tr>
 <tr class="separator:aeda24fa94a24c5eee0fd3d54b89041bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a06bfc85a79608ca5bdca83991e1ded92"><td class="memItemLeft" align="right" valign="top"><a id="a06bfc85a79608ca5bdca83991e1ded92" name="a06bfc85a79608ca5bdca83991e1ded92"></a>
 std::optional&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>withdrawalNominalCapacity</b></td></tr>
+<tr class="memdesc:a06bfc85a79608ca5bdca83991e1ded92"><td class="mdescLeft">&#160;</td><td class="mdescRight">Not optional Withdrawal nominal capacity, &gt;= 0. <br /></td></tr>
 <tr class="separator:a06bfc85a79608ca5bdca83991e1ded92"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa03d2add5db653fda95a4bcb67b7397d"><td class="memItemLeft" align="right" valign="top"><a id="aa03d2add5db653fda95a4bcb67b7397d" name="aa03d2add5db653fda95a4bcb67b7397d"></a>
 std::optional&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>reservoirCapacity</b></td></tr>
+<tr class="memdesc:aa03d2add5db653fda95a4bcb67b7397d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Not optional Reservoir capacity in MWh, &gt;= 0. <br /></td></tr>
 <tr class="separator:aa03d2add5db653fda95a4bcb67b7397d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaf3cc774eab37cb5db7ab8d618ee9c57"><td class="memItemLeft" align="right" valign="top"><a id="aaf3cc774eab37cb5db7ab8d618ee9c57" name="aaf3cc774eab37cb5db7ab8d618ee9c57"></a>
 double&#160;</td><td class="memItemRight" valign="bottom"><b>initialLevel</b> = initiallevelDefault</td></tr>
+<tr class="memdesc:aaf3cc774eab37cb5db7ab8d618ee9c57"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initial level, &lt;= 1. <br /></td></tr>
 <tr class="separator:aaf3cc774eab37cb5db7ab8d618ee9c57"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeb8081e281002ff494c30bd0bb2a42ac"><td class="memItemLeft" align="right" valign="top"><a id="aeb8081e281002ff494c30bd0bb2a42ac" name="aeb8081e281002ff494c30bd0bb2a42ac"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>initialLevelOptim</b> = false</td></tr>
+<tr class="memdesc:aeb8081e281002ff494c30bd0bb2a42ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Bool to optimise or not initial level. <br /></td></tr>
 <tr class="separator:aeb8081e281002ff494c30bd0bb2a42ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a39656473ef02bf1d2ae1ee72a614a00f"><td class="memItemLeft" align="right" valign="top"><a id="a39656473ef02bf1d2ae1ee72a614a00f" name="a39656473ef02bf1d2ae1ee72a614a00f"></a>
 double&#160;</td><td class="memItemRight" valign="bottom"><b>efficiencyFactor</b> = 1</td></tr>
+<tr class="memdesc:a39656473ef02bf1d2ae1ee72a614a00f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Efficiency factor between 0 and 1. <br /></td></tr>
 <tr class="separator:a39656473ef02bf1d2ae1ee72a614a00f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3104c0e67bedcc3b60b8577924100282"><td class="memItemLeft" align="right" valign="top"><a id="a3104c0e67bedcc3b60b8577924100282" name="a3104c0e67bedcc3b60b8577924100282"></a>
 Group&#160;</td><td class="memItemRight" valign="bottom"><b>group</b> = Group::Other1</td></tr>
+<tr class="memdesc:a3104c0e67bedcc3b60b8577924100282"><td class="mdescLeft">&#160;</td><td class="mdescRight">Used to sort outputs. <br /></td></tr>
 <tr class="separator:a3104c0e67bedcc3b60b8577924100282"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab09f8557720004f577be7993dd9fadcb"><td class="memItemLeft" align="right" valign="top"><a id="ab09f8557720004f577be7993dd9fadcb" name="ab09f8557720004f577be7993dd9fadcb"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>name</b></td></tr>
+<tr class="memdesc:ab09f8557720004f577be7993dd9fadcb"><td class="mdescLeft">&#160;</td><td class="mdescRight">cluster name <br /></td></tr>
 <tr class="separator:ab09f8557720004f577be7993dd9fadcb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aefac52d03caf5290a94d0170e5792ddc"><td class="memItemLeft" align="right" valign="top"><a id="aefac52d03caf5290a94d0170e5792ddc" name="aefac52d03caf5290a94d0170e5792ddc"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>enabled</b> = true</td></tr>
+<tr class="memdesc:aefac52d03caf5290a94d0170e5792ddc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enabled ? <br /></td></tr>
+<tr class="separator:aefac52d03caf5290a94d0170e5792ddc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
