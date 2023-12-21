@@ -293,9 +293,6 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     // Removing disabled thermal clusters from solver computations
     removeDisabledThermalClustersFromSolverComputations(study);
 
-    // Removing disabled short-term storage objects from solver computations
-    removeDisabledShortTermStorageClustersFromSolverComputations(study);
-
     switch (gd.renewableGeneration())
     {
     case rgClusters:
@@ -424,13 +421,6 @@ void StudyRuntimeInfos::removeDisabledRenewableClustersFromSolverComputations(St
             area.renewable.prepareAreaWideIndexes();
         return ret;
     });
-}
-
-void StudyRuntimeInfos::removeDisabledShortTermStorageClustersFromSolverComputations(Study& study)
-{
-    removeClusters(
-      study, "short term storage", [](Area& area)
-      { return area.shortTermStorage.removeDisabledClusters(); });
 }
 
 void StudyRuntimeInfos::removeAllRenewableClustersFromSolverComputations(Study& study)

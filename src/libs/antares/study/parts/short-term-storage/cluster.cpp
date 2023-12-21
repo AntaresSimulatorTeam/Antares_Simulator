@@ -63,16 +63,8 @@ bool STStorageCluster::loadFromSection(const IniFile::Section& section)
     return true;
 }
 
-bool STStorageCluster::enabled() const
-{
-    return properties.enabled;
-}
-
 bool STStorageCluster::validate() const
 {
-    if (!enabled())
-        return true;
-
     logs.debug() << "Validating properties and series for st storage: " << id;
     return properties.validate() && series->validate();
 }
@@ -84,9 +76,9 @@ bool STStorageCluster::loadSeries(const std::string& folder) const
     return ret;
 }
 
-void STStorageCluster::saveProperties(IniFile& ini) const
+bool STStorageCluster::saveProperties(const std::string& path) const
 {
-    properties.save(ini);
+    return properties.saveToFolder(path);
 }
 
 bool STStorageCluster::saveSeries(const std::string& path) const

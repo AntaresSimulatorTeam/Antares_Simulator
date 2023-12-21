@@ -138,7 +138,6 @@ private:
     void initializeThermalClustersInMustRunMode(Study& study) const;
     void removeDisabledThermalClustersFromSolverComputations(Study& study);
     void removeDisabledRenewableClustersFromSolverComputations(Study& study);
-    void removeDisabledShortTermStorageClustersFromSolverComputations(Study& study);
     void removeAllRenewableClustersFromSolverComputations(Study& study);
     void disableAllFilters(Study& study);
     void checkThermalTSGeneration(Study& study);
