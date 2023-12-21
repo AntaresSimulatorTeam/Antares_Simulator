@@ -37,13 +37,12 @@ namespace Antares::Data::ShortTermStorage
 class STStorageCluster
 {
 public:
-    bool enabled() const;
     bool validate() const;
-
     bool loadFromSection(const IniFile::Section& section);
+
     bool loadSeries(const std::string& folder) const;
 
-    void saveProperties(IniFile& ini) const;
+    bool saveProperties(const std::string& path) const;
     bool saveSeries(const std::string& path) const;
 
     std::string id;

@@ -235,25 +235,22 @@ public:
     void hourForEachArea(State& state, unsigned int numSpace)
     {
         using namespace Antares::Data::ShortTermStorage;
-        const auto& shortTermStorage = state.area->shortTermStorage;
-
-        // Write the data for the current year
-        uint clusterIndex = 0;
-        for (const auto& cluster : shortTermStorage.storagesByIndex)
+        for (uint stsIndex = 0; stsIndex < state.area->shortTermStorage.count(); stsIndex++)
         {
+            const auto& cluster = state.area->shortTermStorage.storagesByIndex[stsIndex];
             const uint group = groupIndex(cluster.properties.group);
+
             // Injection
             pValuesForTheCurrentYear[numSpace][3 * group][state.hourInTheYear]
-              += state.hourlyResults->ShortTermStorage[state.hourInTheWeek].injection[clusterIndex];
+              += state.hourlyResults->ShortTermStorage[state.hourInTheWeek].injection[stsIndex];
 
             // Withdrawal
             pValuesForTheCurrentYear[numSpace][3 * group + 1][state.hourInTheYear]
-              += state.hourlyResults->ShortTermStorage[state.hourInTheWeek].withdrawal[clusterIndex];
+              += state.hourlyResults->ShortTermStorage[state.hourInTheWeek].withdrawal[stsIndex];
 
             // Levels
             pValuesForTheCurrentYear[numSpace][3 * group + 2][state.hourInTheYear]
-              += state.hourlyResults->ShortTermStorage[state.hourInTheWeek].level[clusterIndex];
-            clusterIndex++;
+              += state.hourlyResults->ShortTermStorage[state.hourInTheWeek].level[stsIndex];
         }
 
         // Next item in the list

@@ -92,16 +92,12 @@ bool STStorageInput::saveToFolder(const std::string& folder) const
 {
     // create empty list.ini if there's no sts in this area
     Yuni::IO::Directory::Create(folder);
-    const std::string pathIni(folder + SEP + "list.ini");
-    IniFile ini;
+    Yuni::IO::File::CreateEmptyFile(folder + SEP + "list.ini");
+    logs.notice() << "created empty ini: " << folder + SEP + "list.ini";
 
-    logs.debug() << "saving file " << pathIni;
-
-    std::for_each(storagesByIndex.cbegin(), storagesByIndex.cend(), [&ini](auto& storage) {
-        return storage.saveProperties(ini);
+    return std::all_of(storagesByIndex.cbegin(), storagesByIndex.cend(), [&folder](auto& storage) {
+        return storage.saveProperties(folder);
     });
-
-    return ini.save(pathIni);
 }
 
 bool STStorageInput::saveDataSeriesToFolder(const std::string& folder) const
@@ -114,22 +110,6 @@ bool STStorageInput::saveDataSeriesToFolder(const std::string& folder) const
 
 std::size_t STStorageInput::count() const
 {
-  return std::count_if(storagesByIndex.begin(),
-                       storagesByIndex.end(),
-                       [](const STStorageCluster& st) {
-                           return st.properties.enabled;
-                       });
+    return storagesByIndex.size();
 }
-
-uint STStorageInput::removeDisabledClusters()
-{
-    const auto& it = std::remove_if(storagesByIndex.begin(), storagesByIndex.end(),
-        [](const auto& c) { return !c.enabled(); });
-
-    uint disabledCount = std::distance(it, storagesByIndex.end());
-    storagesByIndex.erase(it, storagesByIndex.end());
-
-    return disabledCount;
-}
-
 } // namespace Antares::Data::ShortTermStorage
