@@ -41,7 +41,8 @@
         "BUILD_TESTING":"ON",
         "BUILD_TOOLS":"ON", 
         "BUILD_not_system":"OFF",
-        "VCPKG_INSTALLED_DIR": "${sourceDir}/../vcpkg_installed/"
+        "VCPKG_INSTALLED_DIR": "${sourceDir}/../vcpkg_installed/",
+        "Python3_EXECUTABLE": "$env{Python3_EXECUTABLE}"
       }
       
     },
@@ -69,7 +70,8 @@
         "BUILD_TESTING":"ON",
         "BUILD_TOOLS":"ON", 
         "BUILD_not_system":"OFF",
-        "VCPKG_INSTALLED_DIR": "${sourceDir}/../vcpkg_installed/"
+        "VCPKG_INSTALLED_DIR": "${sourceDir}/../vcpkg_installed/",
+        "Python3_EXECUTABLE": "$env{Python3_EXECUTABLE}"
       }
     }
   ],
