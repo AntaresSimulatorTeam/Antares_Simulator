@@ -75,6 +75,80 @@ BOOST_FIXTURE_TEST_CASE(area_delete, OneAreaStudy)
 
 BOOST_AUTO_TEST_SUITE_END() //areas
 
+// Check that disabled objects are indeed removed from computations
+BOOST_AUTO_TEST_SUITE(remove_disabled)
+BOOST_FIXTURE_TEST_CASE(thermal_cluster_delete, OneAreaStudy)
+{
+    auto disabledCluster = std::make_shared<ThermalCluster>(areaA);
+    disabledCluster->setName("Cluster1");
+    disabledCluster->enabled = false;
+
+    areaA->thermal.list.add(disabledCluster);
+    // Check that "Cluster1" is found
+    BOOST_CHECK_EQUAL(areaA->thermal.list.find("cluster1"), disabledCluster.get());
+
+    study.initializeRuntimeInfos(); // This should remove all disabled thermal clusters
+    // Check that "Cluster1" isn't found
+    BOOST_CHECK_EQUAL(areaA->thermal.list.find("cluster1"), nullptr);
+}
+
+BOOST_FIXTURE_TEST_CASE(renewable_cluster_delete, OneAreaStudy)
+{
+    auto disabledCluster = std::make_shared<RenewableCluster>(areaA);
+    disabledCluster->setName("Cluster1");
+    disabledCluster->enabled = false;
+
+    areaA->renewable.list.add(disabledCluster);
+    // Check that "Cluster1" is found
+    BOOST_CHECK_EQUAL(areaA->renewable.list.find("cluster1"), disabledCluster.get());
+
+    study.initializeRuntimeInfos(); // This should remove all disabled renewable clusters
+    // Check that "Cluster1" isn't found
+    BOOST_CHECK_EQUAL(areaA->renewable.list.find("cluster1"), nullptr);
+}
+
+BOOST_FIXTURE_TEST_CASE(short_term_storage_delete, OneAreaStudy)
+{
+    auto& sts = areaA->shortTermStorage.storagesByIndex;
+
+    auto addSTS = [&sts](std::string&& name,
+                         bool enabled)
+    {
+      ShortTermStorage::STStorageCluster cluster;
+      cluster.properties.name = name;
+      cluster.properties.enabled = enabled;
+      sts.push_back(cluster);
+    };
+
+    addSTS("Cluster1", true);
+    addSTS("Cluster2", false);
+
+    auto findDisabledCluster = [&sts](std::string&& name)
+    {
+      return std::find_if(sts.begin(),
+                          sts.end(),
+                          [&name](ShortTermStorage::STStorageCluster& c)
+                          {
+                              return c.properties.name == name;
+                          });
+    };
+
+    // Check that "Cluster1" and "Cluster2" are found
+    BOOST_CHECK(findDisabledCluster("Cluster1") != sts.end()); 
+    BOOST_CHECK(findDisabledCluster("Cluster2") != sts.end()); 
+
+    study.initializeRuntimeInfos(); // This should remove all disabled short-term storages
+
+    // Check that only "Cluster1" is found
+    BOOST_CHECK(findDisabledCluster("Cluster1") != sts.end());
+    BOOST_CHECK(findDisabledCluster("Cluster2") == sts.end());
+
+    // operator<< doesn't exist for iterators, Boost can't generate output in case of failure, so we use BOOST_CHECK instead of BOOST_CHECK_EQUAL
+}
+
+BOOST_AUTO_TEST_SUITE_END() // remove_disabled
+
+
 BOOST_AUTO_TEST_SUITE(thermal_clusters_operations)
 
 BOOST_FIXTURE_TEST_CASE(thermal_cluster_add, OneAreaStudy)
