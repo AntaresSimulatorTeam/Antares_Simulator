@@ -183,7 +183,7 @@ static void extractDualValues(const std::vector<MPConstraint*>& constraints,
   }
 }
 
-static void extract_from_MPSolver(MPSolver* solver,
+static void extract_from_MPSolver(const MPSolver* solver,
                                   Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe)
 {
     assert(solver);
