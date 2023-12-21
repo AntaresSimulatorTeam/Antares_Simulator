@@ -11,7 +11,7 @@ Antares Changelog
 
 ## New features
 * New "cash-flow" variable for ST storage (#1633)
-* Experimental optimization with discrete variables (MILP unit-commitment mode, #670)
+* Experimental optimization with discrete variables (MILP unit-commitment mode #670)
 * Add `enabled` property for ST storage objects, fix bug related to saving ST objects (#1807)
 
 ## Improvements
