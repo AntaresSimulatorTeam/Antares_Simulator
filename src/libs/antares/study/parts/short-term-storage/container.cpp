@@ -96,7 +96,6 @@ bool STStorageInput::saveToFolder(const std::string& folder) const
     IniFile ini;
 
     logs.debug() << "saving file " << pathIni;
-
     std::for_each(storagesByIndex.cbegin(), storagesByIndex.cend(), [&ini](auto& storage) {
         return storage.saveProperties(ini);
     });

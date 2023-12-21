@@ -33,6 +33,7 @@
 #include <wx/dialog.h>
 #include <action/action.h>
 #include "../components/progressbar.h"
+#include <atomic>
 
 namespace Antares
 {
@@ -99,9 +100,9 @@ private:
 
     Yuni::Thread::IThread* pThread;
     Yuni::Mutex pMutex;
-    Yuni::Atomic::Int<> pGUINeedRefresh;
-    Yuni::Atomic::Int<> pProgression;
-    Yuni::Atomic::Int<> pProgressionMax;
+    std::atomic<int> pGUINeedRefresh;
+    std::atomic<int> pProgression;
+    std::atomic<int> pProgressionMax;
 
 }; // class PerformerDialog
 

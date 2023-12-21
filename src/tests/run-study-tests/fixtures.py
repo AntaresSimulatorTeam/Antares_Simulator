@@ -40,8 +40,8 @@ def resultsRemover(study_path):
     return results_remover(study_path)
 
 @pytest.fixture
-def simulation(study_path, solver_path, use_ortools, ortools_solver, named_mps_problems):
-    return study_run(study_path, solver_path, use_ortools, ortools_solver, named_mps_problems)
+def simulation(study_path, solver_path, use_ortools, ortools_solver, named_mps_problems, parallel):
+    return study_run(study_path, solver_path, use_ortools, ortools_solver, named_mps_problems, parallel)
 
 @pytest.fixture(autouse=True)
 def check_runner(simulation, resultsRemover):

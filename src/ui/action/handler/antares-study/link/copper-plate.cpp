@@ -26,14 +26,9 @@
 */
 
 #include "copper-plate.h"
+#include "antares/utils/utils.h"
 
-namespace Antares
-{
-namespace Action
-{
-namespace AntaresStudy
-{
-namespace Link
+namespace Antares::Action::AntaresStudy::Link
 {
 CopperPlate::CopperPlate(const AnyString& fromarea, const AnyString& toarea) :
  pOriginalFromAreaName(fromarea), pOriginalToAreaName(toarea)
@@ -86,7 +81,7 @@ bool CopperPlate::performWL(Context& ctx)
     return false;
 }
 
-} // namespace Link
-} // namespace AntaresStudy
-} // namespace Action
-} // namespace Antares
+} // namespace Antares::Action::AntaresStudy::Link
+
+
+

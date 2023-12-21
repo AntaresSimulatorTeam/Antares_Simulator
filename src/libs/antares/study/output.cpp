@@ -89,7 +89,7 @@ private:
 } // anonymous namespace
 
 Output::Output(const AnyString& folder) :
- version(0), timestamp(0), mode(Data::stdmEconomy), menuID(-1), viewMenuID(-1), outputViewerID(-1)
+ version(0), timestamp(0), mode(Data::SimulationMode::Economy), menuID(-1), viewMenuID(-1), outputViewerID(-1)
 {
     loadFromFolder(folder);
 }
@@ -110,7 +110,7 @@ bool Output::loadFromFolder(const AnyString& folder)
     name.clear();
     path.clear();
     version = 0;
-    mode = Data::stdmUnknown;
+    mode = Data::SimulationMode::Unknown;
 
     // Load the INI file in memory
     IniFile ini;
@@ -152,7 +152,7 @@ bool Output::loadFromFolder(const AnyString& folder)
             {
                 if (p->key == "mode")
                 {
-                    StringToStudyMode(mode, p->value);
+                    StringToSimulationMode(mode, p->value);
                 }
                 else
                 {

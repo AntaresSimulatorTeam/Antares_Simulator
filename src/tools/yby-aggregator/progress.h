@@ -27,10 +27,9 @@
 #ifndef __STUDY_JOB_AGGREGATOR_PROGRESS_H__
 #define __STUDY_JOB_AGGREGATOR_PROGRESS_H__
 
-#include <yuni/yuni.h>
 #include <yuni/thread/timer.h>
-#include <yuni/core/atomic/int.h>
 #include <antares/logs/logs.h>
+#include <atomic>
 
 class Progress final : public Yuni::Thread::Timer
 {
@@ -48,7 +47,7 @@ public:
 
 public:
     //! The number of jobs currently done
-    static Yuni::Atomic::Int<> Current;
+    static std::atomic<int> Current;
     //! The total number of jobs to execute
     static uint Total;
 

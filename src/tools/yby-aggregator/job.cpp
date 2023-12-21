@@ -33,7 +33,7 @@ using namespace Yuni;
 using namespace Antares;
 
 /*extern*/ Job::QueueService queueService;
-static Atomic::Int<> gNbJobs = 0;
+static std::atomic<int> gNbJobs = 0;
 
 #define SEP IO::Separator
 
@@ -378,7 +378,7 @@ bool JobFileReader::prepareJumpTable()
     const DataFile::ShortString& timeLevel = datafile->timeLevel;
     for (uint i = 0; i != list.size(); ++i)
     {
-        if (timeLevel == list[i])
+        if (timeLevel.equals(list[i]))
         {
             startIndex = i + 1;
             break;

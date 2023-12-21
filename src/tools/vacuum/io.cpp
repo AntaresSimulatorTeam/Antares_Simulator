@@ -31,9 +31,9 @@ using namespace Yuni;
 
 /*extern*/ bool dry = true;
 
-/*extern*/ Atomic::Int<> IOBytesDeleted = 0;
-/*extern*/ Atomic::Int<> IOFilesDeleted = 0;
-/*extern*/ Atomic::Int<> IOFoldersDeleted = 0;
+/*extern*/ std::atomic<int> IOBytesDeleted = 0;
+/*extern*/ std::atomic<int> IOFilesDeleted = 0;
+/*extern*/ std::atomic<int> IOFoldersDeleted = 0;
 
 /*extern*/ std::unordered_set<String> inputFolders;
 
@@ -42,7 +42,7 @@ bool RemoveFile(const String& filename, uint64_t size)
     if (dry || IO::errNone == IO::File::Delete(filename))
     {
         ++IOFilesDeleted;
-        IOBytesDeleted += (Atomic::Int<>::Type)size;
+        IOBytesDeleted += size;
         return true;
     }
     return false;
