@@ -156,7 +156,7 @@ static void extractSolutionValues(const std::vector<MPVariable*>& variables,
     int nbVar = problemeSimplexe->NombreDeVariables;
     for (int idxVar = 0; idxVar < nbVar; ++idxVar)
     {
-        auto* var = variables[idxVar];
+        const MPVariable* var = variables[idxVar];
         problemeSimplexe->X[idxVar] = var->solution_value();
     }
 }
@@ -167,7 +167,7 @@ static void extractReducedCosts(const std::vector<MPVariable*>& variables,
     int nbVar = problemeSimplexe->NombreDeVariables;
     for (int idxVar = 0; idxVar < nbVar; ++idxVar)
     {
-        auto* var = variables[idxVar];
+        const MPVariable* var = variables[idxVar];
         problemeSimplexe->CoutsReduits[idxVar] = var->reduced_cost();
     }
 }
@@ -178,7 +178,7 @@ static void extractDualValues(const std::vector<MPConstraint*>& constraints,
   int nbRows = problemeSimplexe->NombreDeContraintes;
   for (int idxRow = 0; idxRow < nbRows; ++idxRow)
   {
-      auto* row = constraints[idxRow];
+      const MPConstraint* row = constraints[idxRow];
       problemeSimplexe->CoutsMarginauxDesContraintes[idxRow] = row->dual_value();
   }
 }
