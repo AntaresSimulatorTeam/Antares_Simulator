@@ -33,20 +33,6 @@
 
 /*--------------------------------------------------------------------------------------*/
 
-namespace Antares::Solver::Optimization {
-
-struct OptimizationOptions
-{
-    bool useOrtools;
-    std::string solverName;
-    bool presolve;
-    bool scaling;
-    bool useBasisOptim1;
-    bool useBasisOptim2;
-};
-
-}
-
 /* Le probleme a resoudre */
 struct PROBLEME_ANTARES_A_RESOUDRE
 {

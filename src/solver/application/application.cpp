@@ -346,26 +346,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     }
 
     //For solver
-    study.parameters.presolve = options.presolve;
-    study.parameters.scaling = options.scaling;
-    study.parameters.useBasisOptim1 = options.useBasisOptim1;
-    study.parameters.useBasisOptim2 = options.useBasisOptim2;
-    if (study.parameters.presolve)
-    {
-        logs.info() << "Presolve activated.";
-    }
-    if (study.parameters.scaling)
-    {
-        logs.info() << "Scaling activated.";
-    }
-    if (study.parameters.useBasisOptim1)
-    {
-        logs.info() << "Hot start for optim 1 activated.";
-    }
-    if (study.parameters.useBasisOptim2)
-    {
-        logs.info() << "Hot start for optim 2 activated.";
-    }
+    study.parameters.optOptions = options.optOptions;
 
     // This settings can only be enabled from the solver
     // Prepare the output for the study

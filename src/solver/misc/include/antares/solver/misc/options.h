@@ -33,6 +33,7 @@
 #include <yuni/core/getopt.h>
 
 #include <antares/study/study.h>
+#include <antares/optimization-options/options.h>
 
 /*!
 ** \brief Command line settings for launching the simulation
@@ -65,12 +66,8 @@ public:
 
     bool forceZipOutput = false;
 
-    //! Solver options
-    bool presolve = false;
-    bool scaling = false;
-    bool useBasisOptim1 = true;
-    bool useBasisOptim2 = true;
-
+    Antares::Solver::Optimization::OptimizationOptions optOptions;
+  
     void checkAndSetStudyFolder(Yuni::String folder);
     void reset();
 }; // class Settings

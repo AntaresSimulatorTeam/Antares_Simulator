@@ -483,12 +483,7 @@ void finalizeOptimizationStatistics(PROBLEME_HEBDO& problem,
 
 OptimizationOptions createOptimizationOptions(const Data::Study& study)
 {
-    return {study.parameters.ortoolsUsed,
-            study.parameters.ortoolsSolver,
-            study.parameters.presolve,
-            study.parameters.scaling,
-            study.parameters.useBasisOptim1,
-            study.parameters.useBasisOptim2};
+    return study.parameters.optOptions;
 }
 
 } // namespace Antares::Solver::Simulation

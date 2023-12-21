@@ -31,6 +31,7 @@
 #include "../simulation/sim_extern_variables_globales.h"
 
 #include "opt_fonctions.h"
+#include <antares/optimization-options/options.h>
 
 using Antares::Solver::Optimization::OptimizationOptions;
 

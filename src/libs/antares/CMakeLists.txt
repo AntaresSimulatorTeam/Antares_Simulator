@@ -22,6 +22,8 @@ add_subdirectory(exception)
 
 add_subdirectory(sys)
 
+add_subdirectory(optimization-options)
+
 set(SRC
     config.h
     constants.h

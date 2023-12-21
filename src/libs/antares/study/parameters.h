@@ -42,6 +42,7 @@
 #include "parameters/adq-patch-params.h"
 
 #include <antares/study/UnfeasibleProblemBehavior.hpp>
+#include <antares/optimization-options/options.h>
 
 namespace Antares::Data
 {
@@ -525,11 +526,8 @@ public:
     // solver logs
     bool solverLogs;
 
-    // Solver parametrization
-    bool presolve;
-    bool scaling;
-    bool useBasisOptim1;
-    bool useBasisOptim2;
+    //! All options related to optimization
+    Antares::Solver::Optimization::OptimizationOptions optOptions;
 
 private:
     //! Load data from an INI file

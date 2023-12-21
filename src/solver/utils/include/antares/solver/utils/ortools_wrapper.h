@@ -2,9 +2,8 @@
 #define __ORTOOLS_WRAPPER__
 
 #include <string>
+#include <antares/optimization-options/options.h>
 #include "named_problem.h"
-//  TODO[FOM] This header is only required for Antares::Solver::Optimization::OptimizationOptions, we should move this definition elsewhere
-#include "../../../../../optimisation/opt_structure_probleme_a_resoudre.h"
 
 using namespace operations_research;
 

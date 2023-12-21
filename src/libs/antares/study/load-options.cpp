@@ -48,12 +48,7 @@ StudyLoadOptions::StudyLoadOptions() :
  enableParallel(false),
  forceParallel(false),
  maxNbYearsInParallel(0),
- usedByTheSolver(false),
- ortoolsUsed(false),
- presolve(false),
- scaling(false),
- useBasisOptim1(false),
- useBasisOptim2(false)
+ usedByTheSolver(false)
 {
 }
 

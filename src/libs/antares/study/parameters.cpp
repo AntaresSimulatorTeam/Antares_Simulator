@@ -1049,8 +1049,8 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
         derated = true;
 
     // Define ortools parameters from options
-    ortoolsUsed = options.ortoolsUsed;
-    ortoolsSolver = options.ortoolsSolver;
+    ortoolsUsed = options.optOptions.useOrtools;
+    ortoolsSolver = options.optOptions.solverName;
 
     namedProblems = options.namedProblems;
     solverLogs = options.solverLogs || solverLogs;
