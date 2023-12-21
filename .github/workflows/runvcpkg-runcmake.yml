@@ -51,7 +51,7 @@ jobs:
           submodules: true
 
       - name: Pre-requisites
-        if: ${{ matrix.os }} == 'windows-latest'
+        if: matrix.os == 'windows-latest'
         shell: cmd
         run: |
             choco install wget unzip zip --no-progress
@@ -86,14 +86,41 @@ jobs:
           path: 'antares-deps-version.json'
           prop_path: 'antares_deps_version'
 
-      - name: Download pre-compiled librairies
+      - name: setpreset ub
+        shell: bash 
+        run: |
+          echo "configurePreset=ninja-multi-vcpkg" >> $GITHUB_ENV
+          echo "configubuildPreset=ninja-multi-vcpkg" >> $GITHUB_ENV
+          echo "archive_type=tgz" >> $GITHUB_ENV
+        if: matrix.os == 'ubuntu-latest'
+
+      - name: setpreset Win
+        shell: bash 
+        run: |
+          echo "configurePreset=msbuild-vcpkg" >> $GITHUB_ENV
+          echo "configubuildPreset=msbuild-vcpkg" >> $GITHUB_ENV
+          echo "archive_type=zip" >> $GITHUB_ENV
+        if: matrix.os == 'windows-latest'
+        
+      - name: Download pre-compiled librairies (win)
+        if: matrix.os == 'windows-latest'
         uses: ./.github/workflows/download-extract-precompiled-libraries-zip
         with:
           antares-deps-version: ${{steps.antares-deps-version.outputs.prop}}
           os: ${{matrix.os}}
           ortools-url: ${{env.ORTOOLS_URL}}
           ortools-dir: ${{env.ORTOOLS_DIR}}
-
+          
+      - name: Download pre-compiled librairies
+        if: matrix.os == 'ubuntu-latest'
+        uses: ./.github/workflows/download-extract-precompiled-libraries-tgz
+        with:
+          antares-deps-version: ${{steps.antares-deps-version.outputs.prop}}
+          #os: ${{matrix.os}}
+          os: ubuntu-20.04
+          ortools-url: ${{env.ORTOOLS_URL}}
+          ortools-dir: ${{env.ORTOOLS_DIR}}
+          
       - name: Setup Python 3.12
         uses: actions/setup-python@v4
         id: setup-python
@@ -111,6 +138,7 @@ jobs:
 
       - name: Enable git longpaths
         run:  git config --system core.longpaths true
+        if: matrix.os == 'windows-latest'
 
         
       - name: List $RUNNER_WORKSPACE before build
@@ -120,16 +148,6 @@ jobs:
       - name: Prints output of run-vcpkg's action.
         run: echo "root='${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }}', triplet='${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_DEFAULT_TRIPLET_OUT }}' "
       
-      - name: setpreset
-        shell: bash 
-        run: |
-          [[ ${{ matrix.os }} == 'ubuntu-latest' ]] 
-          echo "configurePreset=ninja-multi-vcpkg" >> $GITHUB_ENV
-          echo "configubuildPreset=ninja-multi-vcpkg" >> $GITHUB_ENV
-          [[ ${{ matrix.os }} == 'windows-latest' ]] 
-          echo "configurePreset=msbuild-vcpkg" >> $GITHUB_ENV
-          echo "configubuildPreset=msbuild-vcpkg" >> $GITHUB_ENV
-
 
       - name: Run CMake-Config-Build (Release configuration)
         uses: lukka/run-cmake@v10

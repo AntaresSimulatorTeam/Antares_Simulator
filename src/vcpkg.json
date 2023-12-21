@@ -16,17 +16,17 @@
     },
 
     {
-      "name": "uuid-dev",
-      "platform": "ubuntu"
+      "name": "libuuid",
+      "platform": "linux"
     },
 
     {
-      "name": "libwxgtk3.0-gtk3-dev",
-      "platform": "ubuntu"
+      "name": "wxwidgets",
+      "platform": "linux"
     },
     {
-      "name": "libboost-test-dev",
-      "platform": "ubuntu"
-    },
+      "name": "boost-test",
+      "platform": "linux"
+    }
   ]
 }
