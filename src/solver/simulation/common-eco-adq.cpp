@@ -382,31 +382,28 @@ void BuildThermalPartOfWeeklyProblem(Data::Study& study,
 {
     int hourInYear = PasDeTempsDebut;
     const uint nbPays = study.areas.size();
-    for (unsigned hourInWeek = 0; hourInWeek < problem.NombreDePasDeTemps;
-         ++hourInWeek, ++hourInYear)
+    for (unsigned hourInWeek = 0; hourInWeek < problem.NombreDePasDeTemps; ++hourInWeek, ++hourInYear)
     {
         for (uint areaIdx = 0; areaIdx < nbPays; ++areaIdx)
         {
             auto& area = *study.areas.byIndex[areaIdx];
-            area.thermal.list.each(
-              [&](const Data::ThermalCluster& cluster)
-              {
-                  auto& Pt = problem.PaliersThermiquesDuPays[areaIdx]
+            area.thermal.list.each([&](const Data::ThermalCluster& cluster)
+            {
+                    auto& Pt = problem.PaliersThermiquesDuPays[areaIdx]
                                .PuissanceDisponibleEtCout[cluster.index];
 
-                  Pt.CoutHoraireDeProductionDuPalierThermique[hourInWeek]
-                    = cluster.getMarketBidCost(hourInYear, year)
-                      + thermalNoises[areaIdx][cluster.areaWideIndex];
+                    Pt.CoutHoraireDeProductionDuPalierThermique[hourInWeek] =
+                        cluster.getMarketBidCost(hourInYear, year)
+                        + thermalNoises[areaIdx][cluster.areaWideIndex];
 
-                  Pt.PuissanceDisponibleDuPalierThermique[hourInWeek]
-                    = cluster.series.getCoefficient(year, hourInYear);
+                    Pt.PuissanceDisponibleDuPalierThermique[hourInWeek]
+                        = cluster.series.getCoefficient(year, hourInYear);
 
-                  Pt.PuissanceMinDuPalierThermique[hourInWeek]
-                    = (Pt.PuissanceDisponibleDuPalierThermique[hourInWeek]
-                       < cluster.PthetaInf[hourInYear])
+                    Pt.PuissanceMinDuPalierThermique[hourInWeek]
+                        = (Pt.PuissanceDisponibleDuPalierThermique[hourInWeek] < cluster.PthetaInf[hourInYear])
                         ? Pt.PuissanceDisponibleDuPalierThermique[hourInWeek]
                         : cluster.PthetaInf[hourInYear];
-              });
+            });
         }
     }
 
@@ -416,12 +413,11 @@ void BuildThermalPartOfWeeklyProblem(Data::Study& study,
 
         for (uint l = 0; l != area.thermal.list.size(); ++l)
         {
-            problem.PaliersThermiquesDuPays[k]
-              .PuissanceDisponibleEtCout[l]
-              .PuissanceDisponibleDuPalierThermiqueRef
-              = problem.PaliersThermiquesDuPays[k]
-                  .PuissanceDisponibleEtCout[l]
-                  .PuissanceDisponibleDuPalierThermique;
+            problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[l]
+                   .PuissanceDisponibleDuPalierThermiqueRef
+            =
+            problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[l]
+                   .PuissanceDisponibleDuPalierThermique;
         }
     }
 }

@@ -3,6 +3,8 @@
 
 #include <string>
 #include "named_problem.h"
+//  TODO[FOM] This header is only required for Antares::Solver::Optimization::OptimizationOptions, we should move this definition elsewhere
+#include "../../../../../optimisation/opt_structure_probleme_a_resoudre.h"
 
 using namespace operations_research;
 
@@ -10,10 +12,7 @@ MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probl
                            MPSolver* ProbSpx,
                            bool keepBasis,
                            const int optimizationNumber,
-                           bool presolve,
-                           bool scaling,
-                           bool useBasisOptim1,
-                           bool useBasisOptim2);
+                           const Antares::Solver::Optimization::OptimizationOptions& options);
 
 MPSolver* ORTOOLS_ConvertIfNeeded(const std::string& solverName,
                                   const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,

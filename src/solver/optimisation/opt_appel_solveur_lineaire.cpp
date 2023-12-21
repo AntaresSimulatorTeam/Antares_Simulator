@@ -246,10 +246,7 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
                                   solver,
                                   keepBasis,
                                   optimizationNumber,
-                                  options.presolve,
-                                  options.scaling,
-                                  options.useBasisOptim1,
-                                  options.useBasisOptim2);
+                                  options);
         if (solver != nullptr)
         {
             ProblemeAResoudre->ProblemesSpx[NumIntervalle] = (void*)solver;

@@ -39,7 +39,9 @@ using Antares::Constants::nbHoursInAWeek;
 namespace Antares::Solver::Simulation
 {
 Economy::Economy(Data::Study& study, IResultWriter& resultWriter) :
- study(study), preproOnly(false), resultWriter(resultWriter)
+    study(study),
+    preproOnly(false),
+    resultWriter(resultWriter)
 {
 }
 

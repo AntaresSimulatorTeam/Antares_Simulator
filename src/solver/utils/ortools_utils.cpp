@@ -5,16 +5,23 @@
 #include <antares/Enum.hpp>
 #include <filesystem>
 #include "../optimisation/opt_constants.h"
+#include "../optimisation/opt_structure_probleme_a_resoudre.h"
 
 using namespace operations_research;
 
 const char* const XPRESS_PARAMS = "THREADS 1";
 
+using Antares::Solver::Optimization::OptimizationOptions;
+
 // MPSolverParameters's copy constructor is private
-static void setGenericParameters(MPSolverParameters& params, bool presolve, bool scaling)
+static void setGenericParameters(MPSolverParameters& params,
+                                 const OptimizationOptions& options)
 {
-    params.SetIntegerParam(MPSolverParameters::SCALING, scaling);
-    params.SetIntegerParam(MPSolverParameters::PRESOLVE, presolve);
+    params.SetIntegerParam(MPSolverParameters::SCALING, options.scaling);
+    params.SetIntegerParam(MPSolverParameters::PRESOLVE, options.presolve);
+    // TODO
+    // params.SetDoubleParam(MPSolverParameters::PRIMAL_TOLERANCE, primalTolerance);
+    // params.SetDoubleParam(MPSolverParameters::DUAL_TOLERANCE, dualTolerance);
 }
 
 static bool solverSupportsWarmStart(const MPSolver::OptimizationProblemType solverType)
@@ -290,19 +297,21 @@ MPSolver* ORTOOLS_ConvertIfNeeded(const std::string& solverName,
     }
 }
 
+static bool computeUseBasis(const int optimizationNumber,
+                            const OptimizationOptions& options)
+{
+    return (optimizationNumber == PREMIERE_OPTIMISATION && options.useBasisOptim1)
+           || (optimizationNumber == DEUXIEME_OPTIMISATION && options.useBasisOptim2);
+}
 MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
                            MPSolver* solver,
                            bool keepBasis,
                            const int optimizationNumber,
-                           bool presolve,
-                           bool scaling,
-                           bool useBasisOptim1,
-                           bool useBasisOptim2)
+                           const OptimizationOptions& options)
 {
     MPSolverParameters params;
-    setGenericParameters(params, presolve, scaling);
-    const bool useBasis = (optimizationNumber == PREMIERE_OPTIMISATION && useBasisOptim1)
-                          || (optimizationNumber == DEUXIEME_OPTIMISATION && useBasisOptim2);
+    setGenericParameters(params, options);
+    const bool useBasis = computeUseBasis(optimizationNumber, options);
     const bool warmStart = solverSupportsWarmStart(solver->ProblemType()) && useBasis;
     // Provide an initial simplex basis, if any
     if (warmStart && Probleme->basisExists())

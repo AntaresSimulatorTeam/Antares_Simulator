@@ -200,7 +200,7 @@ std::unique_ptr<GetOpt::Parser> CreateParser(Settings& settings,
     // --scaling
     parser->addFlag(
       options.scaling, ' ', "scaling", "Activate scaling for solver (only available for Xpress).");
-    
+
     // --use-basis-optim-1
     parser->addFlag(
       options.useBasisOptim1, ' ', "use-basis-optim-1", "Activate warm start for optim 1.");
