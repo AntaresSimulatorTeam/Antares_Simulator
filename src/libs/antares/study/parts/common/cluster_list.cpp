@@ -114,18 +114,12 @@ void ClusterList<ClusterT>::rebuildIndex()
 }
 
 template<class ClusterT>
-typename ClusterList<ClusterT>::SharedPtr ClusterList<ClusterT>::add(
-    const ClusterList<ClusterT>::SharedPtr newcluster)
+void ClusterList<ClusterT>::add(const SharedPtr newcluster)
 {
-    if (!newcluster)
-        return nullptr;
-
     if (exists(newcluster->id()))
-        return newcluster;
-
+        return;
     clusters.push_back(newcluster);
     rebuildIndex();
-    return newcluster;
 }
 
 template<class ClusterT>

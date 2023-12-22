@@ -160,13 +160,7 @@ bool RenewableClusterList::loadFromFolder(const AnyString& folder, Area* area)
                 cluster->integrityCheck();
 
                 // adding the renewable cluster
-                if (not add(cluster))
-                {
-                    // This error should never happen
-                    logs.error() << "Impossible to add the renewable cluster '" << cluster->name()
-                                 << "'";
-                    continue;
-                }
+                add(cluster);
             }
         }
 

@@ -136,16 +136,10 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
         cluster->integrityCheck();
 
         // adding the thermal cluster
-        auto added = add(cluster);
-        if (not added)
-        {
-            // This error should never happen
-            logs.error() << "Impossible to add the thermal cluster '" << cluster->name()
-                         << "'";
-            continue;
-        }
+        add(cluster);
+        
         // keeping track of the cluster
-        mapping[cluster->id()] = added;
+        mapping[cluster->id()] = cluster;
     }
 
     return ret;

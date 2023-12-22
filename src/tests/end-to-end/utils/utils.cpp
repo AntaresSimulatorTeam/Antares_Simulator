@@ -23,9 +23,9 @@ std::shared_ptr<ThermalCluster> addClusterToArea(Area* area, const std::string& 
     cluster->setName(clusterName);
     cluster->reset();
 
-    auto added = area->thermal.list.add(cluster);
+    area->thermal.list.add(cluster);
 
-    area->thermal.list.mapping[cluster->id()] = added;
+    area->thermal.list.mapping[cluster->id()] = cluster;
     area->thermal.prepareAreaWideIndexes();
 
     return cluster;

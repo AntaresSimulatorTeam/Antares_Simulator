@@ -51,7 +51,7 @@ public:
     ** \param t The cluster to add
     ** \return True if the cluster has been added, false otherwise
     */
-    SharedPtr add(const SharedPtr clusters);
+    void add(const SharedPtr clusters);
 
     /*!
     ** \brief Try to find a cluster from its id (const)

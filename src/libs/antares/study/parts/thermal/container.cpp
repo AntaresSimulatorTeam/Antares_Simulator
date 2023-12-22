@@ -106,17 +106,10 @@ uint PartThermal::prepareClustersInMustRunMode()
             if (!cluster->enabled)
                 continue;
             // ...and attaching it into the second list
-            if (!mustrunList.add(cluster))
-            {
-                logs.error() << "Impossible to prepare the thermal cluster in 'must-run' mode: "
-                    << cluster->parentArea->name << "::" << cluster->name();
-            }
-            else
-            {
-                ++count;
-                logs.info() << "enabling 'must-run' mode for the cluster  "
-                    << cluster->parentArea->name << "::" << cluster->name();
-            }
+            mustrunList.add(cluster);
+            ++count;
+            logs.info() << "enabling 'must-run' mode for the cluster  "
+                        << cluster->parentArea->name << "::" << cluster->name();
 
             // the iterator has been invalidated, loop again
             mustContinue = true;
