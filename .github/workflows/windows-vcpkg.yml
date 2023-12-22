@@ -133,7 +133,7 @@ jobs:
            -DBUILD_TESTING=ON  \
            -DBUILD_TOOLS=ON \
            -DBUILD_not_system=OFF \
-           -DPython3_EXECUTABLE='${{ steps.setup-python.outputs.python-path }}' \
+           -DPython3_EXECUTABLE="${{ env.Python3_ROOT_DIR }}/python.exe" \
            -DCMAKE_VS_GLOBALS="CLToolExe=cl.exe;CLToolPath=${GITHUB_WORKSPACE}/ccache;TrackFileAccess=false;UseMultiToolTask=true;DebugInformationFormat=OldStyle"
 
     - name: Build
