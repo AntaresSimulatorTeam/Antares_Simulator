@@ -114,18 +114,16 @@ $(document).ready(function(){initNavTree('BindingConstraintsRepository_8hxx_sour
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> PredicateT&gt;</div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1BindingConstraintsRepository.html#a6c34c7c2a66f9751344ebfae9d5a2d2b">   20</a></span><span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classAntares_1_1Data_1_1BindingConstraintsRepository.html#a6c34c7c2a66f9751344ebfae9d5a2d2b">BindingConstraintsRepository::each</a>(<span class="keyword">const</span> PredicateT &amp;predicate) {</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    uint count = (uint) constraints_.size();</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    <span class="keywordflow">for</span> (uint i = 0; i != count; ++i)</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>        predicate(*(constraints_[i]));</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>}</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> PredicateT&gt;</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1BindingConstraintsRepository.html#a1b845fa4e595ca9aa33d7f80f9af35b7">   27</a></span><span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classAntares_1_1Data_1_1BindingConstraintsRepository.html#a6c34c7c2a66f9751344ebfae9d5a2d2b">BindingConstraintsRepository::each</a>(<span class="keyword">const</span> PredicateT &amp;predicate)<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    uint count = (uint) constraints_.size();</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    <span class="keywordflow">for</span> (uint i = 0; i != count; ++i)</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>        predicate(*(constraints_[i].get()));</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>}</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>}</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> bc : constraints_)</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>        predicate(*bc);</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>}</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> PredicateT&gt;</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1BindingConstraintsRepository.html#a1b845fa4e595ca9aa33d7f80f9af35b7">   26</a></span><span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classAntares_1_1Data_1_1BindingConstraintsRepository.html#a6c34c7c2a66f9751344ebfae9d5a2d2b">BindingConstraintsRepository::each</a>(<span class="keyword">const</span> PredicateT &amp;predicate)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> bc : constraints_)</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>        predicate(*bc);</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>}</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>}</div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1BindingConstraintsRepository_html_a6c34c7c2a66f9751344ebfae9d5a2d2b"><div class="ttname"><a href="classAntares_1_1Data_1_1BindingConstraintsRepository.html#a6c34c7c2a66f9751344ebfae9d5a2d2b">Antares::Data::BindingConstraintsRepository::each</a></div><div class="ttdeci">void each(const PredicateT &amp;predicate)</div><div class="ttdoc">Iterate through all constraints.</div><div class="ttdef"><b>Definition:</b> BindingConstraintsRepository.hxx:20</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1BindingConstraintsRepository_html_a7e077d964694c2af32ae48e1ac9b4bda"><div class="ttname"><a href="classAntares_1_1Data_1_1BindingConstraintsRepository.html#a7e077d964694c2af32ae48e1ac9b4bda">Antares::Data::BindingConstraintsRepository::size</a></div><div class="ttdeci">uint size() const</div><div class="ttdoc">Get the number of binding constraints.</div><div class="ttdef"><b>Definition:</b> BindingConstraintsRepository.hxx:11</div></div>
 </div><!-- fragment --></div><!-- contents -->
