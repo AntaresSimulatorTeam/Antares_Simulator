@@ -52,7 +52,6 @@ void addClusterToAreaList(Area* area, std::shared_ptr<ThermalCluster> cluster)
 {
 	area->thermal.clusters.push_back(cluster.get());
 	area->thermal.list.add(cluster);
-	area->thermal.list.mapping[cluster->id()] = cluster;
 }
 
 template<>

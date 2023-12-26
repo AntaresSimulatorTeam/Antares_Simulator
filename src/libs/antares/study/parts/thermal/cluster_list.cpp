@@ -137,9 +137,6 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
 
         // adding the thermal cluster
         add(cluster);
-        
-        // keeping track of the cluster
-        mapping[cluster->id()] = cluster;
     }
 
     return ret;

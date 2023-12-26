@@ -59,8 +59,6 @@ public:
     void enableMustrunForEveryone();
     //@}
 
-    Map mapping;
-
     /*!
     ** \brief Ensure data for the prepro are initialized
     ** \ingroup thermalclusters
