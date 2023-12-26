@@ -29,8 +29,9 @@
 #define __SOLVER_SIMULATION_ECO_STRUCTS_H__
 
 #include "../optimisation/opt_structure_probleme_a_resoudre.h"
-#include "../../libs/antares/study/fwd.h"
-#include "../../libs/antares/study/study.h"
+#include <antares/study/fwd.h>
+#include <antares/study/study.h>
+#include <antares/constants.h>
 #include "antares/solver/utils/optimization_statistics.h"
 #include <vector>
 #include <optional>
@@ -163,6 +164,8 @@ struct CONTRAINTES_COUPLANTES
     std::vector<int> OffsetTemporelSurLePalierDispatch;
 
     const char* NomDeLaContrainteCouplante;
+    // Only makes sense for hourly constraints
+    std::vector<bool> enabledAtHour;
 };
 
 namespace ShortTermStorage

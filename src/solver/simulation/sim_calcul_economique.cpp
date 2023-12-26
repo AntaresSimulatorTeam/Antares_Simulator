@@ -238,6 +238,8 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         PtMat.NombreDePaliersDispatchDansLaContrainteCouplante = bc->clusterCount();
         PtMat.NombreDElementsDansLaContrainteCouplante = bc->linkCount() + bc->clusterCount();
         PtMat.NomDeLaContrainteCouplante = bc->name().c_str();
+        // TODO Consider std::move
+        PtMat.enabledAtHour = bc->enabledAtHour;
         switch (bc->type())
         {
         case BindingConstraint::typeHourly:

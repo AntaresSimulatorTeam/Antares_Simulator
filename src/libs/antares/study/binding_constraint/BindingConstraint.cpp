@@ -30,6 +30,7 @@
 #include <vector>
 #include "BindingConstraint.h"
 #include "../study.h"
+#include <antares/constants.h>
 #include "BindingConstraintLoader.h"
 #include "BindingConstraintSaver.h"
 #include "antares/utils/utils.h"
@@ -46,6 +47,10 @@ using namespace Antares;
 #endif
 
 namespace Antares::Data {
+
+BindingConstraint::BindingConstraint() : enabledAtHour(Antares::Constants::nbHoursInAWeek, true)
+{
+}
 
 BindingConstraint::Operator BindingConstraint::StringToOperator(const AnyString& text)
 {
@@ -650,6 +655,9 @@ void BindingConstraint::clearAndReset(const AnyString &name,
     pClusterWeights.clear();
     // Resetting the offsets
     pClusterOffsets.clear();
+
+    // Enabled at hour
+    enabledAtHour.assign(Antares::Constants::nbHoursInAWeek, true);
 
     switch (pType)
     {

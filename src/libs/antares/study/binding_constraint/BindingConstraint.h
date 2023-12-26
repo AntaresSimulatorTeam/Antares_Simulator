@@ -53,6 +53,9 @@ class BindingConstraint final : public Yuni::NonCopyable<BindingConstraint>
     friend class BindingConstraintLoader;
     friend class BindingConstraintSaver;
 public:
+    BindingConstraint();
+    ~BindingConstraint();
+
     enum Type
     {
         //! Unknown status
@@ -128,14 +131,6 @@ public:
     ** \brief Converter a raw string into an operator
     */
     static Operator StringToOperator(const AnyString& text);
-
-    //! \name Constructor & Destructor
-    //@{
-    /*!
-    ** \brief Destructor
-    */
-    ~BindingConstraint();
-    //@}
 
     //! \name / ID
     //@{
@@ -380,6 +375,9 @@ public:
     template<class Env>
     std::string timeSeriesFileName(const Env &env) const;
 
+    //! Hourly binding constraints only
+    // TODO[FOM] Make private ?
+    std::vector<bool> enabledAtHour;
 private:
     //! Raw name
     ConstraintName pName;
