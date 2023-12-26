@@ -44,9 +44,9 @@ std::tuple<double, double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* prob
 /*!
  * Calculate total local matching rule violation per one area, per one hour.
  */
-double LmrViolationAreaHour(const PROBLEME_HEBDO* problemeHebdo,
+double LmrViolationAreaHour(PROBLEME_HEBDO* problemeHebdo,
                             double totalNodeBalance,
-                            const double threshold,
+                            double threshold,
                             int Area,
                             int hour);
 

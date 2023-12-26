@@ -319,10 +319,12 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     problem.LeProblemeADejaEteInstancie = false;
 }
 
-void preparerBindingConstraint(const PROBLEME_HEBDO &problem, int PasDeTempsDebut,
-                               const BindingConstraintsRepository &bindingConstraints,
-                               const BindingConstraintGroupRepository &bcgroups,
-                               const uint weekFirstDay, int pasDeTemps)
+static void prepareBindingConstraint(PROBLEME_HEBDO &problem,
+                                     int PasDeTempsDebut,
+                                     const BindingConstraintsRepository &bindingConstraints,
+                                     const BindingConstraintGroupRepository &bcgroups,
+                                     const uint weekFirstDay,
+                                     int pasDeTemps)
 {
     auto activeContraints = bindingConstraints.activeContraints();
     const auto constraintCount = activeContraints.size();
@@ -573,7 +575,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
     for (unsigned hourInWeek = 0; hourInWeek < problem.NombreDePasDeTemps; ++hourInWeek, ++hourInYear)
     {
 
-        preparerBindingConstraint(problem, PasDeTempsDebut,
+        prepareBindingConstraint(problem, PasDeTempsDebut,
                 study.bindingConstraints, study.bindingConstraintsGroups,
                 weekFirstDay, hourInWeek);
 
