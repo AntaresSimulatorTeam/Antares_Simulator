@@ -3,20 +3,20 @@
 body {
     background-color: white;
     color: black;
-    scrollbar-color: #9CAFD4 #F9FAFC;
+    scrollbar-color: #43A4FF #F3F9FE;
 }
 
 ::-webkit-scrollbar {
-        background-color: #F9FAFC;
+        background-color: #F3F9FE;
 	height: 10px;
         width: 10px;
 }
 ::-webkit-scrollbar-thumb {
-        background-color: #9CAFD4;
+        background-color: #43A4FF;
         border-radius: 8px;
 }
 ::-webkit-scrollbar-corner {
-        background-color: #F9FAFC;
+        background-color: #F3F9FE;
 }
 
 body, table, div, p, dl {
@@ -43,8 +43,8 @@ h1.groupheader {
 }
 
 h2.groupheader {
-	border-bottom: 1px solid #879ECB;
-	color: #354C7B;
+	border-bottom: 1px solid #1F92FF;
+	color: #003B72;
 	font-size: 150%;
 	font-weight: normal;
 	margin-top: 1.75em;
@@ -193,7 +193,7 @@ dt.alphachar{
 }
 
 .classindex dl.odd {
-	background-color: #F8F9FC;
+	background-color: #F1F8FF;
 }
 
 @media(min-width: 1120px) {
@@ -212,13 +212,13 @@ dt.alphachar{
 /* @group Link Styling */
 
 a {
-	color: #3D578C;
+	color: #004789;
 	font-weight: normal;
 	text-decoration: none;
 }
 
 .contents a:visited {
-	color: #4665A2;
+	color: #0057A9;
 }
 
 a:hover {
@@ -233,11 +233,11 @@ a.elRef {
 }
 
 a.code, a.code:visited, a.line, a.line:visited {
-	color: #4665A2;
+	color: #0057A9;
 }
 
 a.codeRef, a.codeRef:visited, a.lineRef, a.lineRef:visited {
-	color: #4665A2;
+	color: #0057A9;
 }
 
 a.code.hl_class { /* style for links to class names in code snippets */ }
@@ -293,8 +293,8 @@ ul {
 }
 
 pre.fragment {
-        border: 1px solid #C4CFE5;
-        background-color: #FBFCFD;
+        border: 1px solid #8DC8FF;
+        background-color: #F8FBFF;
 	color: black;
         padding: 4px 6px;
         margin: 4px 8px 4px 2px;
@@ -310,8 +310,8 @@ div.fragment {
 	padding: 0 0 1px 0; /*Fixed: last line underline overlap border*/
 	margin: 4px 8px 4px 2px;
 	color: black;
-	background-color: #FBFCFD;
-	border: 1px solid #C4CFE5;
+	background-color: #F8FBFF;
+	border: 1px solid #8DC8FF;
 }
 
 div.line {
@@ -362,12 +362,12 @@ span.lineno {
         white-space: pre;
 }
 span.lineno a, span.lineno a:visited {
-	color: #4665A2;
+	color: #0057A9;
 	background-color: #D8D8D8;
 }
 
 span.lineno a:hover {
-	color: #4665A2;
+	color: #0057A9;
 	background-color: #C8C8C8;
 }
 
@@ -453,7 +453,7 @@ img.footer {
 }
 
 .compoundTemplParams {
-	color: #4665A2;
+	color: #0057A9;
 	font-size: 80%;
 	line-height: 120%;
 }
@@ -505,8 +505,8 @@ span.vhdllogic {
 }
 
 blockquote {
-        background-color: #F7F8FB;
-        border-left: 2px solid #9CAFD4;
+        background-color: #EFF7FF;
+        border-left: 2px solid #43A4FF;
         margin: 0 24px 0 4px;
         padding: 0 12px 0 16px;
 }
@@ -520,11 +520,11 @@ td.tiny {
 .dirtab {
 	padding: 4px;
 	border-collapse: collapse;
-	border: 1px solid #2D4068;
+	border: 1px solid #002E5A;
 }
 
 th.dirtab {
-	background-color: #374F7F;
+	background-color: #003E78;
 	color: #FFFFFF;
 	font-weight: bold;
 }
@@ -532,7 +532,7 @@ th.dirtab {
 hr {
 	height: 0px;
 	border: none;
-	border-top: 1px solid #4A6AAA;
+	border-top: 1px solid #005DB5;
 }
 
 hr.footer {
@@ -567,7 +567,7 @@ table.memberdecls {
 .mdescLeft, .mdescRight,
 .memItemLeft, .memItemRight,
 .memTemplItemLeft, .memTemplItemRight, .memTemplParams {
-	background-color: #F9FAFC;
+	background-color: #F3F9FE;
 	border: none;
 	margin: 4px;
 	padding: 1px 0 0 8px;
@@ -579,7 +579,7 @@ table.memberdecls {
 }
 
 .memSeparator {
-        border-bottom: 1px solid #DEE4F0;
+        border-bottom: 1px solid #BDDFFF;
         line-height: 1px;
         margin: 0px;
         padding: 0px;
@@ -594,7 +594,7 @@ table.memberdecls {
 }
 
 .memTemplParams {
-	color: #4665A2;
+	color: #0057A9;
         white-space: nowrap;
 	font-size: 80%;
 }
@@ -607,15 +607,15 @@ table.memberdecls {
 
 .memtitle {
 	padding: 8px;
-	border-top: 1px solid #A8B8D9;
-	border-left: 1px solid #A8B8D9;
-	border-right: 1px solid #A8B8D9;
+	border-top: 1px solid #59AEFF;
+	border-left: 1px solid #59AEFF;
+	border-right: 1px solid #59AEFF;
 	border-top-right-radius: 4px;
 	border-top-left-radius: 4px;
 	margin-bottom: -1px;
 	background-image: url('nav_f.png');
 	background-repeat: repeat-x;
-	background-color: #E2E8F2;
+	background-color: #C6E3FE;
 	line-height: 1.25;
 	font-weight: 300;
 	float:left;
@@ -630,7 +630,7 @@ table.memberdecls {
 
 .memtemplate {
 	font-size: 80%;
-	color: #4665A2;
+	color: #0057A9;
 	font-weight: normal;
 	margin-left: 9px;
 }
@@ -666,14 +666,14 @@ table.memberdecls {
 }
 
 .memproto, dl.reflist dt {
-        border-top: 1px solid #A8B8D9;
-        border-left: 1px solid #A8B8D9;
-        border-right: 1px solid #A8B8D9;
+        border-top: 1px solid #59AEFF;
+        border-left: 1px solid #59AEFF;
+        border-right: 1px solid #59AEFF;
         padding: 6px 0px 6px 0px;
-        color: #253555;
+        color: #002344;
         font-weight: bold;
         text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.9);
-        background-color: #DFE5F1;
+        background-color: #C0E0FF;
         box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.15);
         border-top-right-radius: 4px;
 }
@@ -684,9 +684,9 @@ table.memberdecls {
 }
 
 .memdoc, dl.reflist dd {
-        border-bottom: 1px solid #A8B8D9;
-        border-left: 1px solid #A8B8D9;
-        border-right: 1px solid #A8B8D9;
+        border-bottom: 1px solid #59AEFF;
+        border-left: 1px solid #59AEFF;
+        border-right: 1px solid #59AEFF;
         padding: 6px 10px 2px 10px;
         border-top-width: 0;
         background-image:url('nav_g.png');
@@ -774,11 +774,11 @@ span.mlabels {
 }
 
 span.mlabel {
-        background-color: #728DC1;
-        border-top:1px solid #5373B4;
-        border-left:1px solid #5373B4;
-        border-right:1px solid #C4CFE5;
-        border-bottom:1px solid #C4CFE5;
+        background-color: #0081FA;
+        border-top:1px solid #0067C9;
+        border-left:1px solid #0067C9;
+        border-right:1px solid #8DC8FF;
+        border-bottom:1px solid #8DC8FF;
 	text-shadow: none;
 	color: white;
 	margin-right: 4px;
@@ -797,8 +797,8 @@ span.mlabel {
 
 div.directory {
         margin: 10px 0px;
-        border-top: 1px solid #9CAFD4;
-        border-bottom: 1px solid #9CAFD4;
+        border-top: 1px solid #43A4FF;
+        border-bottom: 1px solid #43A4FF;
         width: 100%;
 }
 
@@ -836,7 +836,7 @@ div.directory {
 
 .directory tr.odd {
 	padding-left: 6px;
-	background-color: #F8F9FC;
+	background-color: #F1F8FF;
 }
 
 .directory tr.even {
@@ -859,11 +859,11 @@ div.directory {
         cursor: pointer;
         padding-left: 2px;
         padding-right: 2px;
-	color: #3D578C;
+	color: #004789;
 }
 
 .arrow {
-    color: #9CAFD4;
+    color: #43A4FF;
     -webkit-user-select: none;
     -khtml-user-select: none;
     -moz-user-select: none;
@@ -884,7 +884,7 @@ div.directory {
     height: 14px;
     width: 16px;
     display: inline-block;
-    background-color: #728DC1;
+    background-color: #0081FA;
     color: white;
     text-align: center;
     border-radius: 4px;
@@ -945,7 +945,7 @@ div.dynheader {
 
 address {
 	font-style: normal;
-	color: #2A3D61;
+	color: #002A52;
 }
 
 table.doxtable caption {
@@ -959,12 +959,12 @@ table.doxtable {
 }
 
 table.doxtable td, table.doxtable th {
-	border: 1px solid #2D4068;
+	border: 1px solid #002E5A;
 	padding: 3px 7px 2px;
 }
 
 table.doxtable th {
-	background-color: #374F7F;
+	background-color: #003E78;
 	color: #FFFFFF;
 	font-size: 110%;
 	padding-bottom: 4px;
@@ -973,7 +973,7 @@ table.doxtable th {
 
 table.fieldtable {
         margin-bottom: 10px;
-        border: 1px solid #A8B8D9;
+        border: 1px solid #59AEFF;
         border-spacing: 0px;
         border-radius: 4px;
         box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.15);
@@ -985,8 +985,8 @@ table.fieldtable {
 
 .fieldtable td.fieldtype, .fieldtable td.fieldname {
         white-space: nowrap;
-        border-right: 1px solid #A8B8D9;
-        border-bottom: 1px solid #A8B8D9;
+        border-right: 1px solid #59AEFF;
+        border-bottom: 1px solid #59AEFF;
         vertical-align: top;
 }
 
@@ -995,7 +995,7 @@ table.fieldtable {
 }
 
 .fieldtable td.fielddoc {
-        border-bottom: 1px solid #A8B8D9;
+        border-bottom: 1px solid #59AEFF;
 }
 
 .fieldtable td.fielddoc p:first-child {
@@ -1013,16 +1013,16 @@ table.fieldtable {
 .fieldtable th {
         background-image: url('nav_f.png');
         background-repeat:repeat-x;
-        background-color: #E2E8F2;
+        background-color: #C6E3FE;
         font-size: 90%;
-        color: #253555;
+        color: #002344;
         padding-bottom: 4px;
         padding-top: 5px;
         text-align:left;
         font-weight: 400;
         border-top-left-radius: 4px;
         border-top-right-radius: 4px;
-        border-bottom: 1px solid #A8B8D9;
+        border-bottom: 1px solid #59AEFF;
 }
 
 
@@ -1044,8 +1044,8 @@ table.fieldtable {
 	background-position: 0 -5px;
 	height:30px;
 	line-height:30px;
-	color:#283A5D;
-	border:solid 1px #C2CDE4;
+	color:#00274D;
+	border:solid 1px #88C5FF;
 	overflow:hidden;
 	margin:0px;
 	padding:0px;
@@ -1060,7 +1060,7 @@ table.fieldtable {
 	background-image:url('bc_s.png');
 	background-repeat:no-repeat;
 	background-position:right;
-	color: #364D7C;
+	color: #003C74;
 }
 
 .navpath li.navelem a
@@ -1069,7 +1069,7 @@ table.fieldtable {
 	display:block;
 	text-decoration: none;
 	outline: none;
-	color: #283A5D;
+	color: #00274D;
 	font-family: 'Lucida Grande',Geneva,Helvetica,Arial,sans-serif;
 	text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.9);
 	text-decoration: none;
@@ -1090,7 +1090,7 @@ table.fieldtable {
         background-image:none;
         background-repeat:no-repeat;
         background-position:right;
-        color: #2A3D61;
+        color: #002A52;
         font-size: 8pt;
 }
 
@@ -1137,9 +1137,9 @@ div.header
 {
         background-image: url('nav_h.png');
         background-repeat:repeat-x;
-	background-color: #F9FAFC;
+	background-color: #F3F9FE;
 	margin:  0px;
-	border-bottom: 1px solid #C4CFE5;
+	border-bottom: 1px solid #8DC8FF;
 }
 
 div.headertitle
@@ -1268,7 +1268,7 @@ dl.section dd {
 	padding: 0px;
 	margin: 0px;
 	width: 100%;
-	border-bottom: 1px solid #5373B4;
+	border-bottom: 1px solid #0067C9;
 	background-color: white;
 }
 
@@ -1307,7 +1307,7 @@ dl.citelist {
 }
 
 dl.citelist dt {
-        color:#334975;
+        color:#00376A;
         float:left;
         font-weight:bold;
         margin-right:10px;
@@ -1323,8 +1323,8 @@ dl.citelist dd {
 
 div.toc {
         padding: 14px 25px;
-        background-color: #F4F6FA;
-        border: 1px solid #D8DFEE;
+        background-color: #EAF5FE;
+        border: 1px solid #B2DAFF;
         border-radius: 7px 7px 7px 7px;
         float: right;
         height: auto;
@@ -1342,7 +1342,7 @@ div.toc li {
 
 div.toc h3 {
         font: bold 12px/1.2 Verdana,'DejaVu Sans',Geneva,sans-serif;
-	color: #4665A2;
+	color: #0057A9;
         border-bottom: 0 none;
         margin: 0;
 }
@@ -1438,7 +1438,7 @@ tr.heading h2 {
 }
 
 #powerTip a {
-	color: #4665A2;
+	color: #0057A9;
 }
 
 #powerTip div.ttname {
@@ -1610,7 +1610,7 @@ table.markdownTable {
 }
 
 table.markdownTable td, table.markdownTable th {
-	border: 1px solid #2D4068;
+	border: 1px solid #002E5A;
 	padding: 3px 7px 2px;
 }
 
@@ -1618,7 +1618,7 @@ table.markdownTable tr {
 }
 
 th.markdownTableHeadLeft, th.markdownTableHeadRight, th.markdownTableHeadCenter, th.markdownTableHeadNone {
-	background-color: #374F7F;
+	background-color: #003E78;
 	color: #FFFFFF;
 	font-size: 110%;
 	padding-bottom: 4px;

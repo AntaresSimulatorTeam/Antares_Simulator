@@ -1,14 +1,39 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.5"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
+<!-- BEGIN opengraph metadata -->
+<meta property="og:title" content="Antares Simulator" />
+<meta property="og:image" content="https://github.com/AntaresSimulatorTeam/Antares_Simulator/blob/develop/docs/assets/antares.png" />
+<meta property="og:description" content="Power System Simulator." />
+<meta property="og:url" content="https://antares-simulator.org/" />
+<!-- END opengraph metadata -->
+<!-- BEGIN twitter metadata -->
+<meta name="twitter:image:src" content="https://github.com/AntaresSimulatorTeam/Antares_Simulator/blob/develop/docs/assets/logo.png" />
+<meta name="twitter:title" content="Antares Simulator" />
+<meta name="twitter:description" content="Power System Simulator." />
+<!-- END twitter metadata -->
 <title>Antares Simulator: How does the automatic testing script system work ?</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="doxygen-awesome-darkmode-toggle.js"></script>
+<script type="text/javascript" src="doxygen-awesome-fragment-copy-button.js"></script>
+<script type="text/javascript" src="doxygen-awesome-paragraph-link.js"></script>
+<script type="text/javascript" src="doxygen-awesome-interactive-toc.js"></script>
+<script type="text/javascript" src="doxygen-awesome-tabs.js"></script>
+<script type="text/javascript" src="toggle-alternative-theme.js"></script>
+<script type="text/javascript">
+    DoxygenAwesomeFragmentCopyButton.init()
+    DoxygenAwesomeDarkModeToggle.init()
+    DoxygenAwesomeParagraphLink.init()
+    DoxygenAwesomeInteractiveToc.init()
+    DoxygenAwesomeTabs.init()
+</script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="navtreedata.js"></script>
@@ -16,19 +41,34 @@
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+<link href="custom.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only-darkmode-toggle.css" rel="stylesheet" type="text/css"/>
+<link href="custom-alternative.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
+<!-- https://github.com/AntaresSimulatorTeam/Antares_Simulator/ -->
+<a href="https://github.com/AntaresSimulatorTeam/Antares_Simulator" class="github-corner" title="View source on GitHub" target="_blank">
+    <svg viewBox="0 0 250 250" width="40" height="40" style="position: absolute; top: 0; border: 0; right: 0; z-index: 99;" aria-hidden="true">
+    <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
 <div id="titlearea">
 <table cellspacing="0" cellpadding="0">
  <tbody>
- <tr id="projectrow">
-  <td id="projectalign">
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Antares Simulator
    </div>
+   <div id="projectbrief">Power System Simulator</div>
   </td>
  </tr>
  </tbody>
@@ -94,7 +134,7 @@ $(document).ready(function(){initNavTree('md_src_tests_run_study_tests_readme.ht
   <div class="headertitle"><div class="title">How does the automatic testing script system work ? </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><h1><a class="anchor" id="autotoc_md1"></a>
+<div class="textblock"><h1><a class="anchor" id="autotoc_md5"></a>
 Introduction</h1>
 <p >Here is an automatic testing python script system.</p>
 <p >This program performs the following :</p><ol type="1">
@@ -104,7 +144,7 @@ Introduction</h1>
 <li>Given the results of the simulation on a study, makes the checks retrieved at step 2 on these results (for instance : make sure current results and reference resuts are identical, check for existence or content of output files,...)</li>
 </ol>
 <p >Note that each study found is supposed to contain the definition of checks performed by scripts after the simulation on the study is completed. So, each study is supposed to contain a file <b>check-config.json</b> for that purpose. This file is build manually for each study.</p>
-<h1><a class="anchor" id="autotoc_md2"></a>
+<h1><a class="anchor" id="autotoc_md6"></a>
 Entry points to the automatic testing script system</h1>
 <p >For now, there are 2 entry points that can be used to run tests automatically.</p><ul>
 <li>test_from_json.py</li>
@@ -113,7 +153,7 @@ Entry points to the automatic testing script system</h1>
 <p >The first one runs tests as we explained above, the second one is a bit different : it does not search for studies, but is given an explicit path to a study. And this study does not contain any check definition under the form of a json file : checks are explicitly defined and supplied in the tests.</p>
 <p >We won't comment the second script, as understanding the first one should ease understanding the second.</p>
 <p ><span style="color:blue">TO DO : maybe we should think of integrating tests on unfeasible problems in the regular testing system ?</span></p>
-<h1><a class="anchor" id="autotoc_md3"></a>
+<h1><a class="anchor" id="autotoc_md7"></a>
 File test_from_json.py</h1>
 <p >Here we examine the second part of script <b>test_from_json.py</b>. Note that The first part is dedicated to finding studies and storing the definition of the checks to be made on results after a simulation is run on studies (recall the <b>check-config.json</b> file). Let's look at the <b>test_from_json.py</b> (second part). </p><div class="fragment"><div class="line">1 <span class="preprocessor">@pytest.mark.json</span></div>
 <div class="line">2 <span class="preprocessor">@pytest.mark.parametrize(&#39;study_path, test_check_data&#39;, json_collector.pairs()</span>, ids=json_collector.testIds())</div>
@@ -124,7 +164,7 @@ File test_from_json.py</h1>
 </div><!-- fragment --><p> The content of this script is quite short, despite all the tests it has to perform. This is partially due to the power of <b>pytest</b> and its features : <b>fixtures</b> and especially <b>parametrization</b>, which is responsible for running a test many times, each time with a different set of arguments.</p>
 <p >In the following, we comment the content of this script. Lines of this scripts are numbered so that they can be refered to whenever we need.</p>
 <p ><b>Line 1</b> : Following tests are marked as a collection, that is belonging to the same category</p>
-<h1><a class="anchor" id="autotoc_md4"></a>
+<h1><a class="anchor" id="autotoc_md8"></a>
 Fixtures</h1>
 <p ><b>pytest</b> comes with the notion of <b>fixture</b>. Fixtures allow executing a piece of code just before a test runs. To take bebefit of a fixture, a test needs to be given this fixture as argument. <a class="el" href="structFixture.html">Fixture</a> themselves can also be given arguments, we'll see how we do it (in the context of the current testing system) when we talk about <b>parametrization</b>. Fixtures return a result to be used in the test. Let's look at a simple test : </p><div class="fragment"><div class="line"><span class="preprocessor">@pytest.fixture</span></div>
 <div class="line"><span class="keyword">def </span>my_fixture():</div>
@@ -153,7 +193,7 @@ Fixtures</h1>
 <div class="line">    <span class="keywordflow">return</span> request.param</div>
 </div><!-- fragment --><p> We'll see at least another example of such feature later on.</p>
 <p >Another trait of fixtures is that they can be nested : a fixture can call other fixtures. <b>fixture 1</b> can have a <b>fixture 2</b> as an argument. This means that, when <b>fixture 1</b> comes to execute, <b>fixture 2</b> is called before execiting <b>fixture 1</b>'s body, and so <b>fixture 1</b> has access to <b>fixture 2</b>'s results during its execution.</p>
-<h1><a class="anchor" id="autotoc_md5"></a>
+<h1><a class="anchor" id="autotoc_md9"></a>
 Tests parametrization</h1>
 <p >Back to script <b>test_from_json.py</b>.</p>
 <p >Let's recall <b>line 2</b> : </p><div class="fragment"><div class="line">2 <span class="preprocessor">@pytest.mark.parametrize(&#39;study_path, test_check_data&#39;, json_collector.pairs()</span>, ids=json_collector.testIds())</div>
@@ -169,11 +209,11 @@ Tests parametrization</h1>
 <p >So, a test is run for each element of this list. It receives the first value of the pair as first argument, and the second value of the pair as second argument. This means that, for each test, fixture <b>study_path</b> receives as argument a path to a study, and that the variable <b>test_check_data</b> is supplied with an object containing all necessary data to performed a check.</p>
 <p >Note : be aware that 2 pairs (study path, checks to do) can have the same study path : several checks can be made on the same study results.</p>
 <p ><span style="color:blue">TO CHECK IN CODE : for a given study, can we have many checks requiring as much as simulation runs ? My guess is yes, but to be checked</span></p>
-<h1><a class="anchor" id="autotoc_md6"></a>
+<h1><a class="anchor" id="autotoc_md10"></a>
 The test's body</h1>
 <p >With the previous explanations in mind, we're can describe what's happening when tests are run.</p>
 <p >So the test is run multiple times due to <b>parametrization</b>. In fact, the test body is executed as many times as there are elements is the list <b>json_collector.pairs()</b>, that is as many studies spotted by the script <b>test_from_json.py</b> (see first part of the script, not commented in this doc). </p>
-<h2><a class="anchor" id="autotoc_md7"></a>
+<h2><a class="anchor" id="autotoc_md11"></a>
 &lt;ins&gt;Run fixtures&lt;/ins&gt;</h2>
 <p >Here we talk about <b>line 3</b> of script <b>test_from_json.py</b>. </p><div class="fragment"><div class="line"><span class="keyword">def </span>test(study_path, test_check_data, check_runner):</div>
 <div class="line">    ...</div>
@@ -198,7 +238,7 @@ The test's body</h1>
 <li>A <b>check handler</b> object is returned to the current test, which will be able to use it under the form of its <b>check_runner</b> argument. We'll see that this <b>check handler</b> is responsible for running the simulation and for cleaning the simulation results after a test is completed.</li>
 </ul>
 <p >Note that the last line here will be executed when the current test ends.</p>
-<h2><a class="anchor" id="autotoc_md8"></a>
+<h2><a class="anchor" id="autotoc_md12"></a>
 &lt;ins&gt;Checks creation factory&lt;/ins&gt;</h2>
 <p >This concerns <b>line 4</b> of script <b>test_from_json.py</b>. </p><div class="fragment"><div class="line">checks = <a class="code hl_namespace" href="namespacecreate__checks.html">create_checks</a>(study_path, test_check_data, simulation=check_runner.get_simulation())</div>
 </div><!-- fragment --><p> Here we create a list of checks to perform on the results of a simulation on the current study is created.</p>
@@ -206,7 +246,7 @@ The test's body</h1>
 <p >For that, <b>create_checks</b> is called, with natural information for a check : the path to the study used to fetch things to check, and te kind of thing to check (in <b>test_check_data</b>). The left argument of <b>create_checks</b> is the simulation previoulsy prepared by fixture <b>check_runner</b>. This simulation is needed for special kinds of check : the ones that need the return code of Antares Simulator just after it has run.</p>
 <p >Note that all checks in that list is an instance of a class necessarily derived from the more general class <b>check_interface</b>. This parent class forced every child to have a method <b>run()</b> and a method <b>name()</b>, so that, when this list is traversed for any reason, a call to the <b>run()</b> or <b>name()</b> method does not fail.</p>
 <p >Note also that, at this stage, the simulation has not been run yet, but will be run at the next line of <b>test_from_json.py</b>.</p>
-<h2><a class="anchor" id="autotoc_md9"></a>
+<h2><a class="anchor" id="autotoc_md13"></a>
 &lt;ins&gt;Running the checks&lt;/ins&gt;</h2>
 <p >This is about <b>line 5</b> of script <b>test_from_json.py</b>. </p><div class="fragment"><div class="line">check_runner.run(checks)</div>
 </div><!-- fragment --><p> This is the place where the script runs:</p><ol type="1">
@@ -214,16 +254,16 @@ The test's body</h1>
 <li>the check(s) to be made on the results of this simulation (also prepared when fixture <b>check_runner</b> runs)</li>
 </ol>
 <p >Indeed the <b>run()</b> method of the <b>check_runner</b> fixture contains these 2 instructions.</p>
-<h2><a class="anchor" id="autotoc_md10"></a>
+<h2><a class="anchor" id="autotoc_md14"></a>
 &lt;ins&gt;End of tests&lt;/ins&gt;</h2>
 <p >As we already saw, the <b>check_runner</b> fixture is a <b>setup/teardown</b> fixture. This means that when each test associated to a study ends, the <b>teardown</b> part of this fixture is run.</p>
 <p >Looking at the content of <b>check_handler.teardown()</b> method, we see what it does :</p><ul>
 <li>It puts back the study's state where it first was. Indeed, some checks modify the studies for their own purpose. The simulation is run with these new study parameters and checks are performed taking into account these changes. If several checks are made on the same study's results, and if every check requires a new simulation run, a tests can fail because a previous one made a change on the study that the current check does not expect. To avoid that, these changes are removed.</li>
 <li>It removes the simulation results. Again, if several checks are made on a study, that may imply as much associated simulation runs, and in these conditions, retrieving some results' data in a study that has several simulation results directories can lead to an unexpected failure in tests.</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md11"></a>
+<h1><a class="anchor" id="autotoc_md15"></a>
 How to add a check on a test ?</h1>
-<h2><a class="anchor" id="autotoc_md12"></a>
+<h2><a class="anchor" id="autotoc_md16"></a>
 What to do ?</h2>
 <ol type="1">
 <li>Create a new python file in the <b>src/tests/run-study-tests/check_on_results</b></li>
@@ -235,17 +275,17 @@ What to do ?</h2>
 </li>
 <li>Add the new check in the <b>check-config.json</b> files you need to.</li>
 </ol>
-<h2><a class="anchor" id="autotoc_md13"></a>
+<h2><a class="anchor" id="autotoc_md17"></a>
 What NOT to do ?</h2>
 <ul>
 <li>When defining the class for your check, do not supply the constructor with treatments that require a simulation run : in the testing script system, the check instances are created before the simulation is run.</li>
 <li>In the <b>json schema</b>, defining your check's grammar in the **"items" &gt; "properties" &gt; "checks" &gt; "properties"** part of is not enough : you must as well declare it in the list of possible checks in the **"items" &gt; "properties" &gt; "checks"**</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md14"></a>
+<h1><a class="anchor" id="autotoc_md18"></a>
 Running the script</h1>
 <div class="fragment"><div class="line">&gt; cd src/tests/run-study-tests</div>
 <div class="line">&gt; python -m pytest -m mps --solver-path=/path/to/the/Antares/solver/antares-x.y-solver.exe</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md15"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md19"></a>
 TO DO</h1>
 <p >Doc : Clarify if a check in the <b>check-config.json</b> can be composed of several sub-checks, and how it works in this case. Code : </p>
 </div></div><!-- contents -->
