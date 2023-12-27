@@ -106,7 +106,6 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
     {
         const uint indx = i + PasDeTempsDebut;
         auto& ntcValues = problem.ValeursDeNTC[i];
-        assert(&ntcValues);
 
         for (uint j = 0; j < study.runtime->interconnectionsCount(); ++j)
         {

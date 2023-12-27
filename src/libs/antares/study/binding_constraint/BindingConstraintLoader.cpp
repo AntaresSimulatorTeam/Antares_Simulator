@@ -306,7 +306,10 @@ bool BindingConstraintLoader::loadTimeSeriesLegacyStudies(
         else if (bindingConstraint->operatorType() == BindingConstraint::opEquality)
             columnNumber = BindingConstraint::Column::columnEquality;
         else
+        {
             logs.error("Cannot load time series of type other that eq/gt/lt");
+            return false;
+        }
 
         bindingConstraint->RHSTimeSeries_.resize(1, height);
         bindingConstraint->RHSTimeSeries_.pasteToColumn(0, intermediate[columnNumber]);
