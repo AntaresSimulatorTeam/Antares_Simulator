@@ -33,6 +33,6 @@ jobs:
     ubuntu:
       name: Release - Ubuntu
       needs: release
-      uses: ./github/workflows/ubuntu.yml
+      uses: ./.github/workflows/ubuntu.yml
       with:
         run-tests: ${{ inputs.run_tests }}
