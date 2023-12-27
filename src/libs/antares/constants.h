@@ -28,7 +28,6 @@
 #ifndef __ANTARES_LIBS_CONSTANTS_H__
 #define __ANTARES_LIBS_CONSTANTS_H__
 
-#include "xpansion.h"
 #include <array>
 
 /*! Name of the app to use into logs */

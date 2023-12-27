@@ -456,7 +456,12 @@ template<class T, template<class> class TP, template<class> class ChckP, class C
 inline void TreeN<T, TP, ChckP, ConvP>::addRef() const
 {
     typename ThreadingPolicy::MutexLocker locker(*this);
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpragmas" // g++-10 has no -Wvolatile, g++-13 does
+#pragma GCC diagnostic ignored "-Wvolatile"
     ++pRefCount;
+#pragma GCC diagnostic pop
+#pragma GCC diagnostic pop
 }
 
 template<class T, template<class> class TP, template<class> class ChckP, class ConvP>
@@ -464,9 +469,13 @@ bool TreeN<T, TP, ChckP, ConvP>::release() const
 {
     typename ThreadingPolicy::MutexLocker locker(*this);
     assert(pRefCount > 0 and "TreeN: invalid reference count");
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpragmas" // g++-10 has no -Wvolatile, g++-13 does
+#pragma GCC diagnostic ignored "-Wvolatile"
     if (--pRefCount != 0)
         return false;
-
+#pragma GCC diagnostic pop
+#pragma GCC diagnostic pop
     // Early clean-up
     // The method 'release' must be const for good code design. But
     // we have to be properly detached from the parent node.
@@ -477,6 +486,7 @@ bool TreeN<T, TP, ChckP, ConvP>::release() const
         ref.clearWL();
     return true;
 }
+
 
 template<class T, template<class> class TP, template<class> class ChckP, class ConvP>
 inline bool TreeN<T, TP, ChckP, ConvP>::hasIntrusiveSmartPtr() const

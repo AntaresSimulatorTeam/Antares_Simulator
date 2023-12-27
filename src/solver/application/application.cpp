@@ -1,4 +1,4 @@
-#include "application.h"
+#include "antares/application/application.h"
 
 #include <antares/sys/policy.h>
 #include <antares/resources/resources.h>
@@ -6,7 +6,6 @@
 #include <antares/fatal-error.h>
 #include <antares/benchmarking/timer.h>
 
-#include <antares/exception/InitializationError.hpp>
 #include <antares/exception/LoadingError.hpp>
 #include <antares/checks/checkLoadedInputData.h>
 #include <antares/version.h>
@@ -14,18 +13,19 @@
 
 #include "signal-handling/public.h"
 
-#include "misc/system-memory.h"
-#include "misc/write-command-line.h"
+#include "antares/solver/misc/system-memory.h"
+#include "antares/solver/misc/write-command-line.h"
 
-#include "utils/ortools_utils.h"
-#include "../config.h"
+#include "antares/solver/utils/ortools_utils.h"
+#include "../../config.h"
+
 #include <antares/infoCollection/StudyInfoCollector.h>
 
-#include <yuni/io/io.h>
 #include <yuni/datetime/timestamp.h>
 #include <yuni/core/process/rename.h>
 
-#include <algorithm>
+
+#include "../simulation/simulation.h"
 
 using namespace Antares::Check;
 
@@ -78,7 +78,6 @@ void Application::prepare(int argc, char* argv[])
         using namespace Yuni::GetOpt;
     case ReturnCode::error:
         throw Error::CommandLineArguments(parser->errors());
-        break;
     case ReturnCode::help:
         // End the program
         pStudy = nullptr;
@@ -180,7 +179,7 @@ void Application::prepare(int argc, char* argv[])
         logs.info() << "  The progression is disabled";
 }
 
-void Application::initializeRandomNumberGenerators()
+void Application::initializeRandomNumberGenerators() const
 {
     logs.info() << "Initializing random number generators...";
     const auto& parameters = pStudy->parameters;
@@ -204,8 +203,6 @@ void Application::onLogMessage(int level, const Yuni::String& /*message*/)
         ++pWarningCount;
         break;
     case Yuni::Logs::Verbosity::Error::level:
-        ++pErrorCount;
-        break;
     case Yuni::Logs::Verbosity::Fatal::level:
         ++pErrorCount;
         break;
@@ -231,10 +228,11 @@ void Application::execute()
     // Run the simulation
     switch (pStudy->runtime->mode)
     {
-    case Data::stdmEconomy:
+    case Data::SimulationMode::Economy:
+    case Data::SimulationMode::Expansion:
         runSimulationInEconomicMode();
         break;
-    case Data::stdmAdequacy:
+    case Data::SimulationMode::Adequacy:
         runSimulationInAdequacyMode();
         break;
     default:
@@ -281,7 +279,7 @@ void Application::processCaption(const Yuni::String& caption)
     pArgv = Yuni::Process::Rename(pArgc, pArgv, caption);
 }
 
-void Application::prepareWriter(Antares::Data::Study& study,
+void Application::prepareWriter(const Antares::Data::Study& study,
                                 Benchmarking::IDurationCollector& duration_collector)
 {
     ioQueueService = std::make_shared<Yuni::Job::QueueService>();
@@ -407,18 +405,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
         if (!study.checkForFilenameLimits(true))
             throw Error::InvalidFileName();
 
-        // comments
-        {
-            study.buffer.clear() << "simulation-comments.txt";
-
-            if (!pSettings.commentFile.empty())
-            {
-                resultWriter->addEntryFromFile(study.buffer.c_str(), pSettings.commentFile.c_str());
-
-                pSettings.commentFile.clear();
-                pSettings.commentFile.shrink();
-            }
-        }
+        writeComment(study);
     }
 
     // Runtime data dedicated for the solver
@@ -433,6 +420,19 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
 
     // Random-numbers generators
     initializeRandomNumberGenerators();
+}
+void Application::writeComment(Data::Study& study)
+{
+    study.buffer.clear() << "simulation-comments.txt";
+
+    if (!this->pSettings.commentFile.empty())
+    {
+        this->resultWriter->addEntryFromFile(study.buffer.c_str(),
+                                             this->pSettings.commentFile.c_str());
+
+        this->pSettings.commentFile.clear();
+        this->pSettings.commentFile.shrink();
+    }
 }
 
 void Application::writeExectutionInfo()
@@ -470,9 +470,12 @@ Application::~Application()
     destroyBoundEvents();
 
     // Release all allocated data
-    if (!(!pStudy))
+    if (pStudy)
     {
-        logs.info() << LOG_UI_SOLVER_DONE;
+        try
+        {
+            logs.info() << LOG_UI_SOLVER_DONE;
+        } catch (...) {}; //Catching log exception
 
         // Copy the log file if a result writer is available
         if (!pStudy->parameters.noOutput && resultWriter)

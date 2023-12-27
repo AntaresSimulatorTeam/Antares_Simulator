@@ -29,20 +29,20 @@ bool renewableTSNumberData::apply(Study& study)
     Area& area = *(study.areas.byIndex[pArea->index]);
     // The total number of clusters for the area
     // WARNING: We may have some renewable clusters with the `mustrun` option
-    auto clusterCount = (uint)area.renewable.clusterCount();
 
     const uint tsGenCountRenewable = get_tsGenCount(study);
 
-    for (uint clusterIndex = 0; clusterIndex != clusterCount; ++clusterIndex)
+    uint clusterIndex = 0;
+    for (const auto& cluster : area.renewable.list)
     {
-        auto& cluster = *(area.renewable.clusters[clusterIndex]);
         // alias to the current column
         assert(clusterIndex < pTSNumberRules.width);
         const auto& col = pTSNumberRules[clusterIndex];
 
-        logprefix.clear() << "Renewable: area '" << area.name << "', cluster: '" << cluster.name()
+        logprefix.clear() << "Renewable: area '" << area.name << "', cluster: '" << cluster->name()
                           << "': ";
-        ret = ApplyToMatrix(errors, logprefix, cluster.series, col, tsGenCountRenewable) && ret;
+        ret = ApplyToMatrix(errors, logprefix, cluster->series, col, tsGenCountRenewable) && ret;
+        clusterIndex++;
     }
     return ret;
 }
@@ -79,12 +79,12 @@ void renewableTSNumberData::saveToINIFile(const Study& /* study */,
         // Foreach renewable cluster...
         for (uint y = 0; y != pTSNumberRules.height; ++y)
         {
-            const uint val = get(pArea->renewable.list.byIndex[index], y);
+            const uint val = get(pArea->renewable.list[index].get(), y);
             // Equals to zero means 'auto', which is the default mode
             if (!val)
                 continue;
             file << prefix << pArea->id << "," << y << ','
-                 << pArea->renewable.list.byIndex[index]->id() << " = " << val << '\n';
+                 << pArea->renewable.list[index]->id() << " = " << val << '\n';
         }
     }
 }
