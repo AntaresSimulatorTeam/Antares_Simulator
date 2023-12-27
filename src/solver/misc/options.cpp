@@ -68,7 +68,7 @@ static std::string availableOrToolsSolversString()
 }
 
 std::unique_ptr<GetOpt::Parser> CreateParser(Settings& settings,
-                                             Antares::Data::StudyLoadOptions& options)
+                                             StudyLoadOptions& options)
 {
     settings.reset();
 
@@ -268,26 +268,18 @@ void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOption
 
 void checkOrtoolsSolver(Data::StudyLoadOptions& options)
 {
-    std::string baseSolver = "sirius";
     if (options.ortoolsUsed)
     {
         const std::list<std::string> availableSolverList = getAvailableOrtoolsSolverName();
-        if (availableSolverList.empty())
-        {
-            throw Error::InvalidSolver(options.ortoolsSolver);
-        }
 
         // Check if solver is available
         bool found
           = (std::find(
                availableSolverList.begin(), availableSolverList.end(), options.ortoolsSolver)
              != availableSolverList.end());
-
         if (!found)
         {
-            logs.warning() << "Invalid ortools-solver option. Got '" << options.ortoolsSolver
-                           << "'. reset to " << baseSolver;
-            options.ortoolsSolver = baseSolver;
+            throw Error::InvalidSolver(options.ortoolsSolver, availableSolverList);
         }
     }
 }

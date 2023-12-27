@@ -28,6 +28,7 @@
 #pragma once
 
 #include <stdexcept>
+#include <list>
 #include <map>
 
 #include <yuni/yuni.h>
@@ -131,7 +132,7 @@ public:
 class InvalidSolver : public LoadingError
 {
 public:
-    explicit InvalidSolver(const std::string& solver);
+    explicit InvalidSolver(const std::string& solver, const std::list<std::string>& availableSolverList);
 };
 
 class InvalidStudy : public LoadingError
