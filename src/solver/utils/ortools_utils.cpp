@@ -386,7 +386,8 @@ const std::map<std::string, struct OrtoolsUtils::SolverNames> OrtoolsUtils::solv
   = {{"xpress", {"xpress_lp", "xpress"}},
      {"sirius", {"sirius_lp", "sirius"}},
      {"coin", {"clp", "cbc"}},
-     {"glpk", {"glpk_lp", "glpk"}}};
+     {"glpk", {"glpk_lp", "glpk"}},
+     {"scip", {"scip", "scip"}}};
 
 std::list<std::string> getAvailableOrtoolsSolverName()
 {
