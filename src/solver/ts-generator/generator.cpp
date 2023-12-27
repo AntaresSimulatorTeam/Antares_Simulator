@@ -8,31 +8,31 @@ void ResizeGeneratedTimeSeries(Data::AreaList& areas, Data::Parameters& params)
     areas.each([&](Data::Area& area)
     {
         // Load
-        if (params.timeSeriesToRefresh & Data::timeSeriesLoad)
+        if (params.timeSeriesToGenerate & Data::timeSeriesLoad)
         {
             area.load.series.timeSeries.reset(params.nbTimeSeriesLoad, HOURS_PER_YEAR);
         }
 
         // Wind
-        if (params.timeSeriesToRefresh & Data::timeSeriesWind)
+        if (params.timeSeriesToGenerate & Data::timeSeriesWind)
         {
             area.wind.series.timeSeries.reset(params.nbTimeSeriesWind, HOURS_PER_YEAR);
         }
 
         // Solar
-        if (params.timeSeriesToRefresh & Data::timeSeriesSolar)
+        if (params.timeSeriesToGenerate & Data::timeSeriesSolar)
         {
             area.solar.series.timeSeries.reset(params.nbTimeSeriesSolar, HOURS_PER_YEAR);
         }
 
         // Hydro
-        if (params.timeSeriesToRefresh & Data::timeSeriesHydro)
+        if (params.timeSeriesToGenerate & Data::timeSeriesHydro)
         {
             area.hydro.series->resize_ROR_STORAGE_MINGEN_whenGeneratedTS(params.nbTimeSeriesHydro);
         }
 
         // Thermal
-        bool globalThermalTSgeneration = params.timeSeriesToRefresh & Data::timeSeriesThermal;
+        bool globalThermalTSgeneration = params.timeSeriesToGenerate & Data::timeSeriesThermal;
         for (auto [_, cluster] : area.thermal.list.mapping)
         {
             if (cluster->doWeGenerateTS(globalThermalTSgeneration))
