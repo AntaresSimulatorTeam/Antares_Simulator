@@ -412,7 +412,7 @@ $(document).ready(function(){initNavTree('sim__structure__probleme__economique_8
 <div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>    std::vector&lt;double&gt; PminDuPalierThermiquePendantUneHeure;</div>
 <div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>    std::vector&lt;double&gt; PminDuPalierThermiquePendantUnJour;</div>
 <div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>    std::vector&lt;int&gt; NumeroDuPalierDansLEnsembleDesPaliersThermiques;</div>
-<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>    <span class="keyword">mutable</span> std::vector&lt;PDISP_ET_COUTS_HORAIRES_PAR_PALIER&gt; PuissanceDisponibleEtCout;</div>
+<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>    std::vector&lt;PDISP_ET_COUTS_HORAIRES_PAR_PALIER&gt; PuissanceDisponibleEtCout;</div>
 <div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span> </div>
 <div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>    std::vector&lt;double&gt; CoutDeDemarrageDUnGroupeDuPalierThermique;</div>
 <div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>    std::vector&lt;double&gt; CoutDArretDUnGroupeDuPalierThermique;</div>
@@ -566,7 +566,7 @@ $(document).ready(function(){initNavTree('sim__structure__probleme__economique_8
 <div class="line"><a id="l00430" name="l00430"></a><span class="lineno">  430</span>{</div>
 <div class="line"><a id="l00431" name="l00431"></a><span class="lineno">  431</span>    std::vector&lt;double&gt; ValeursHorairesDeDefaillancePositive;</div>
 <div class="line"><a id="l00432" name="l00432"></a><span class="lineno">  432</span>    std::vector&lt;double&gt; ValeursHorairesDENS;                  <span class="comment">// adq patch domestic unsupplied energy</span></div>
-<div class="line"><a id="l00433" name="l00433"></a><span class="lineno">  433</span>    <span class="keyword">mutable</span> std::vector&lt;int&gt; ValeursHorairesLmrViolations;    <span class="comment">// adq patch lmr violations</span></div>
+<div class="line"><a id="l00433" name="l00433"></a><span class="lineno">  433</span>    std::vector&lt;int&gt; ValeursHorairesLmrViolations;    <span class="comment">// adq patch lmr violations</span></div>
 <div class="line"><a id="l00434" name="l00434"></a><span class="lineno">  434</span>    std::vector&lt;double&gt; ValeursHorairesSpilledEnergyAfterCSR; <span class="comment">// adq patch spillage after CSR</span></div>
 <div class="line"><a id="l00435" name="l00435"></a><span class="lineno">  435</span>    std::vector&lt;double&gt; ValeursHorairesDtgMrgCsr;             <span class="comment">// adq patch DTG MRG after CSR</span></div>
 <div class="line"><a id="l00436" name="l00436"></a><span class="lineno">  436</span>    std::vector&lt;double&gt; ValeursHorairesDeDefaillancePositiveUp;</div>
@@ -637,9 +637,9 @@ $(document).ready(function(){initNavTree('sim__structure__probleme__economique_8
 <div class="line"><a id="l00501" name="l00501"></a><span class="lineno">  501</span>    uint32_t NombreDInterconnexions = 0;</div>
 <div class="line"><a id="l00502" name="l00502"></a><span class="lineno">  502</span>    std::vector&lt;int&gt; PaysOrigineDeLInterconnexion;</div>
 <div class="line"><a id="l00503" name="l00503"></a><span class="lineno">  503</span>    std::vector&lt;int&gt; PaysExtremiteDeLInterconnexion;</div>
-<div class="line"><a id="l00504" name="l00504"></a><span class="lineno">  504</span>    <span class="keyword">mutable</span> std::vector&lt;COUTS_DE_TRANSPORT&gt; CoutDeTransport;</div>
+<div class="line"><a id="l00504" name="l00504"></a><span class="lineno">  504</span>    std::vector&lt;COUTS_DE_TRANSPORT&gt; CoutDeTransport;</div>
 <div class="line"><a id="l00505" name="l00505"></a><span class="lineno">  505</span> </div>
-<div class="line"><a id="l00506" name="l00506"></a><span class="lineno">  506</span>    <span class="keyword">mutable</span> std::vector&lt;VALEURS_DE_NTC_ET_RESISTANCES&gt; ValeursDeNTC;</div>
+<div class="line"><a id="l00506" name="l00506"></a><span class="lineno">  506</span>    std::vector&lt;VALEURS_DE_NTC_ET_RESISTANCES&gt; ValeursDeNTC;</div>
 <div class="line"><a id="l00507" name="l00507"></a><span class="lineno">  507</span> </div>
 <div class="line"><a id="l00508" name="l00508"></a><span class="lineno">  508</span>    uint32_t NombreDePasDeTemps = 0;</div>
 <div class="line"><a id="l00509" name="l00509"></a><span class="lineno">  509</span>    std::vector&lt;int32_t&gt; NumeroDeJourDuPasDeTemps;</div>
@@ -652,14 +652,14 @@ $(document).ready(function(){initNavTree('sim__structure__probleme__economique_8
 <div class="line"><a id="l00516" name="l00516"></a><span class="lineno">  516</span>    <span class="comment">//TODO same as NombreDePasDeTemps</span></div>
 <div class="line"><a id="l00517" name="l00517"></a><span class="lineno">  517</span>    int32_t NombreDePasDeTempsDUneJournee = 0;</div>
 <div class="line"><a id="l00518" name="l00518"></a><span class="lineno">  518</span> </div>
-<div class="line"><a id="l00519" name="l00519"></a><span class="lineno">  519</span>    <span class="keyword">mutable</span> std::vector&lt;CONSOMMATIONS_ABATTUES&gt; ConsommationsAbattues;</div>
+<div class="line"><a id="l00519" name="l00519"></a><span class="lineno">  519</span>    std::vector&lt;CONSOMMATIONS_ABATTUES&gt; ConsommationsAbattues;</div>
 <div class="line"><a id="l00520" name="l00520"></a><span class="lineno">  520</span> </div>
 <div class="line"><a id="l00521" name="l00521"></a><span class="lineno">  521</span>    std::vector&lt;double&gt; CoutDeDefaillancePositive;</div>
 <div class="line"><a id="l00522" name="l00522"></a><span class="lineno">  522</span>    std::vector&lt;double&gt; CoutDeDefaillanceNegative;</div>
 <div class="line"><a id="l00523" name="l00523"></a><span class="lineno">  523</span>    std::vector&lt;double&gt; CoutDeDefaillanceEnReserve;</div>
 <div class="line"><a id="l00524" name="l00524"></a><span class="lineno">  524</span> </div>
 <div class="line"><a id="l00525" name="l00525"></a><span class="lineno">  525</span>    std::vector&lt;PALIERS_THERMIQUES&gt; PaliersThermiquesDuPays;</div>
-<div class="line"><a id="l00526" name="l00526"></a><span class="lineno">  526</span>    <span class="keyword">mutable</span> std::vector&lt;ENERGIES_ET_PUISSANCES_HYDRAULIQUES&gt; CaracteristiquesHydrauliques;</div>
+<div class="line"><a id="l00526" name="l00526"></a><span class="lineno">  526</span>    std::vector&lt;ENERGIES_ET_PUISSANCES_HYDRAULIQUES&gt; CaracteristiquesHydrauliques;</div>
 <div class="line"><a id="l00527" name="l00527"></a><span class="lineno">  527</span> </div>
 <div class="line"><a id="l00528" name="l00528"></a><span class="lineno">  528</span>    uint32_t NumberOfShortTermStorages = 0;</div>
 <div class="line"><a id="l00529" name="l00529"></a><span class="lineno">  529</span>    <span class="comment">// problemeHebdo-&gt;ShortTermStorage[areaIndex][clusterIndex].capacity;</span></div>
@@ -675,7 +675,7 @@ $(document).ready(function(){initNavTree('sim__structure__probleme__economique_8
 <div class="line"><a id="l00539" name="l00539"></a><span class="lineno">  539</span>    std::vector&lt;std::vector&lt;double&gt;&gt; BruitSurCoutHydraulique;</div>
 <div class="line"><a id="l00540" name="l00540"></a><span class="lineno">  540</span> </div>
 <div class="line"><a id="l00541" name="l00541"></a><span class="lineno">  541</span>    uint32_t NombreDeContraintesCouplantes = 0;</div>
-<div class="line"><a id="l00542" name="l00542"></a><span class="lineno">  542</span>    <span class="keyword">mutable</span> std::vector&lt;CONTRAINTES_COUPLANTES&gt; MatriceDesContraintesCouplantes;</div>
+<div class="line"><a id="l00542" name="l00542"></a><span class="lineno">  542</span>    std::vector&lt;CONTRAINTES_COUPLANTES&gt; MatriceDesContraintesCouplantes;</div>
 <div class="line"><a id="l00543" name="l00543"></a><span class="lineno">  543</span>    std::vector&lt;RESULTATS_CONTRAINTES_COUPLANTES&gt; ResultatsContraintesCouplantes;</div>
 <div class="line"><a id="l00544" name="l00544"></a><span class="lineno">  544</span> </div>
 <div class="line"><a id="l00545" name="l00545"></a><span class="lineno">  545</span>    std::vector&lt;SOLDE_MOYEN_DES_ECHANGES&gt; SoldeMoyenHoraire; <span class="comment">// Used for quadratic opt</span></div>
@@ -697,7 +697,7 @@ $(document).ready(function(){initNavTree('sim__structure__probleme__economique_8
 <div class="line"><a id="l00561" name="l00561"></a><span class="lineno">  561</span>    std::vector&lt;CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES&gt; CorrespondanceCntNativesCntOptimJournalieres;</div>
 <div class="line"><a id="l00562" name="l00562"></a><span class="lineno">  562</span>    <a class="code hl_struct" href="structCORRESPONDANCES__DES__CONTRAINTES__HEBDOMADAIRES.html">CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES</a> CorrespondanceCntNativesCntOptimHebdomadaires;</div>
 <div class="line"><a id="l00563" name="l00563"></a><span class="lineno">  563</span> </div>
-<div class="line"><a id="l00564" name="l00564"></a><span class="lineno">  564</span>    <span class="keyword">mutable</span> std::vector&lt;RESERVE_JMOINS1&gt; ReserveJMoins1;</div>
+<div class="line"><a id="l00564" name="l00564"></a><span class="lineno">  564</span>    std::vector&lt;RESERVE_JMOINS1&gt; ReserveJMoins1;</div>
 <div class="line"><a id="l00565" name="l00565"></a><span class="lineno">  565</span> </div>
 <div class="line"><a id="l00566" name="l00566"></a><span class="lineno">  566</span>    std::vector&lt;int&gt; IndexDebutIntercoOrigine;</div>
 <div class="line"><a id="l00567" name="l00567"></a><span class="lineno">  567</span>    std::vector&lt;int&gt; IndexSuivantIntercoOrigine;</div>
