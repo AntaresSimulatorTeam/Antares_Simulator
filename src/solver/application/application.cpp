@@ -24,6 +24,9 @@
 #include <yuni/datetime/timestamp.h>
 #include <yuni/core/process/rename.h>
 
+
+#include "../simulation/simulation.h"
+
 using namespace Antares::Check;
 
 namespace
