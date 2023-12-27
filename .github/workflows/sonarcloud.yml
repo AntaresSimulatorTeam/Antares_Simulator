@@ -20,7 +20,7 @@ jobs:
     env:
       SONAR_SERVER_URL: "https://sonarcloud.io"
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
-      ORTOOLS_URL: "https://github.com/rte-france/or-tools/releases/download/v9.5-rte2.0/ortools_cxx_ubuntu-20.04_static_sirius.zip"
+      ORTOOLS_URL: "https://github.com/rte-france/or-tools/releases/download/$(cat ortools_tag)/ortools_cxx_ubuntu-20.04_static_sirius.zip"
 
     steps:
       - uses: actions/checkout@v3
