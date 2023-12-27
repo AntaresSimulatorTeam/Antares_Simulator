@@ -372,8 +372,7 @@ var annotated_dup =
         [ "ReadingStudy", "classAntares_1_1Error_1_1ReadingStudy.html", null ],
         [ "RuntimeInfoInitialization", "classAntares_1_1Error_1_1RuntimeInfoInitialization.html", null ],
         [ "StudyFolderDoesNotExist", "classAntares_1_1Error_1_1StudyFolderDoesNotExist.html", null ],
-        [ "WritingPID", "classAntares_1_1Error_1_1WritingPID.html", null ],
-        [ "WritingProgressFile", "classAntares_1_1Error_1_1WritingProgressFile.html", null ]
+        [ "WritingPID", "classAntares_1_1Error_1_1WritingPID.html", null ]
       ] ],
       [ "ExtSource", null, [
         [ "Handler", null, [

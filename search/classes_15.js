@@ -19,6 +19,5 @@ var searchData=
   ['wippanel_16',['WIPPanel',['../classAntares_1_1Component_1_1WIPPanel.html',1,'Antares::Component']]],
   ['wizardheader_17',['WizardHeader',['../classAntares_1_1Toolbox_1_1Components_1_1WizardHeader.html',1,'Antares::Toolbox::Components']]],
   ['writingpid_18',['WritingPID',['../classAntares_1_1Error_1_1WritingPID.html',1,'Antares::Error']]],
-  ['writingprogressfile_19',['WritingProgressFile',['../classAntares_1_1Error_1_1WritingProgressFile.html',1,'Antares::Error']]],
-  ['wxlocalframe_20',['WxLocalFrame',['../classAntares_1_1Component_1_1Frame_1_1WxLocalFrame.html',1,'Antares::Component::Frame']]]
+  ['wxlocalframe_19',['WxLocalFrame',['../classAntares_1_1Component_1_1Frame_1_1WxLocalFrame.html',1,'Antares::Component::Frame']]]
 ];

@@ -1,6 +1,5 @@
 var NAVTREEINDEX22 =
 {
-"overflow_8h_source.html":[8,0,0,2,10,2,23],
 "pages.html":[],
 "panel_8hxx_source.html":[8,0,0,5,2,2,10,0,2],
 "parameter_8h_source.html":[8,0,0,5,2,1,1,1,0,2,0],
@@ -249,5 +248,6 @@ var NAVTREEINDEX22 =
 "structAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html":[7,0,0,12,1,3],
 "structAntares_1_1Solver_1_1Simulation_1_1compareHydroCostsNoises.html":[7,0,0,12,3,5],
 "structAntares_1_1Solver_1_1Simulation_1_1optRuntimeData.html":[7,0,0,12,3,19],
-"structAntares_1_1Solver_1_1Simulation_1_1setOfParallelYears.html":[7,0,0,12,3,22]
+"structAntares_1_1Solver_1_1Simulation_1_1setOfParallelYears.html":[7,0,0,12,3,22],
+"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1OverallCost_1_1Statistics.html":[7,0,0,12,5,0,0,0]
 };
