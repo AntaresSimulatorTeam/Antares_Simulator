@@ -283,7 +283,7 @@ bool IsAbsolute(const AnyString& filename)
 }
 
 template<class StringT>
-static inline void parent_path_impl(StringT& out, const AnyString& path, bool systemDependant)
+static inline void parentPathImpl(StringT& out, const AnyString& path, bool systemDependant)
 {
     AnyString::size_type pos = (systemDependant)
                                  ? path.find_last_of(IO::Constant<char>::Separator)
@@ -294,18 +294,13 @@ static inline void parent_path_impl(StringT& out, const AnyString& path, bool sy
         out.assign(path, pos);
 }
 
-void parent_path(String& out, const AnyString& path, bool systemDependant)
+void parentPath(String& out, const AnyString& path, bool systemDependant)
 {
-    parent_path_impl(out, path, systemDependant);
-}
-
-void parent_path_impl(Clob& out, const AnyString& path, bool systemDependant)
-{
-    parent_path_impl(out, path, systemDependant);
+    parentPathImpl(out, path, systemDependant);
 }
 
 template<class StringT>
-static inline void parent_path(StringT& out, const AnyString& path, bool systemDependant)
+static inline void parentPath(StringT& out, const AnyString& path, bool systemDependant)
 {
     AnyString::size_type pos = (systemDependant)
                                  ? path.find_last_of(IO::Constant<char>::Separator)
@@ -318,12 +313,12 @@ static inline void parent_path(StringT& out, const AnyString& path, bool systemD
 
 void ExtractFileName(String& out, const AnyString& path, bool systemDependant)
 {
-    parent_path(out, path, systemDependant);
+    parentPath(out, path, systemDependant);
 }
 
 void ExtractFileName(Clob& out, const AnyString& path, bool systemDependant)
 {
-    parent_path(out, path, systemDependant);
+    parentPath(out, path, systemDependant);
 }
 
 template<class StringT>
@@ -369,13 +364,13 @@ static inline void ExtractAbsoluteFilePathImpl(StringT& out,
     String tmp;
     if (IsAbsolute(path))
     {
-        parent_path(tmp, path, systemDependant);
+        parentPath(tmp, path, systemDependant);
     }
     else
     {
         String absolute;
         MakeAbsolute(absolute, path);
-        parent_path(tmp, absolute, systemDependant);
+        parentPath(tmp, absolute, systemDependant);
     }
     Normalize(out, tmp);
 }

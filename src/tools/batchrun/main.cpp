@@ -230,7 +230,7 @@ int main(int argc, char* argv[])
 
         // The folder that contains the solver
         String dirname;
-        IO::parent_path(dirname, solver);
+        IO::parentPath(dirname, solver);
 
         String cmd;
 
