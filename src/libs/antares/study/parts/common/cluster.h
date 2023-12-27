@@ -24,10 +24,6 @@ struct CompareClusterName final
 class Cluster
 {
 public:
-    //! Map of renewable clusters
-    using Map = std::map<ClusterName, Cluster*>;
-
-public:
     Cluster(Area* parent);
 
     virtual ~Cluster() = default;
