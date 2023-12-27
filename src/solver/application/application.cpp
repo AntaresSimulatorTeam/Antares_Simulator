@@ -36,11 +36,7 @@ namespace
 {
 void printSolvers()
 {
-    std::cout << "Available solvers :" << std::endl;
-    for (const auto& solver : getAvailableOrtoolsSolverName())
-    {
-        std::cout << solver << std::endl;
-    }
+    std::cout << "Available solvers: " << availableOrToolsSolversString() << std::endl;
 }
 } // namespace
 

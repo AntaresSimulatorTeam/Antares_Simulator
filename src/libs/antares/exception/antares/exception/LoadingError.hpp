@@ -132,7 +132,7 @@ public:
 class InvalidSolver : public LoadingError
 {
 public:
-    explicit InvalidSolver(const std::string& solver, const std::list<std::string>& availableSolverList);
+    explicit InvalidSolver(const std::string& solver, const std::string& availableSolverList);
 };
 
 class InvalidStudy : public LoadingError

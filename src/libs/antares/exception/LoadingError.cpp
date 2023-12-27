@@ -1,6 +1,5 @@
-#include <sstream>
-#include <iomanip>
 #include "antares/exception/LoadingError.hpp"
+#include <sstream>
 
 namespace Antares
 {
@@ -43,19 +42,18 @@ InvalidSimulationMode::InvalidSimulationMode() :
 {
 }
 
-static std::string InvalidSolverHelper(const std::string& solver, const std::list<std::string>& availableSolverList) {
+static std::string InvalidSolverHelper(const std::string& solver, const std::string& availableSolvers)
+{
   std::ostringstream message;
-  message << "Can't use solver '" << solver << "' : it does not match any available OR-Tools solver. Possible choices are ";
-  for (const std::string& avail : availableSolverList)
-  {
-    bool last = &avail == &availableSolverList.back();
-    std::string sep = last ? "." : ", ";
-    message << std::quoted(avail) << sep;
-  }
+  message
+    << "Can't use solver '"
+    << solver
+    << "' : it does not match any available OR-Tools solver. Possible choices are "
+    << availableSolvers;
   return message.str();
 }
 
-InvalidSolver::InvalidSolver(const std::string& solver, const std::list<std::string>& availableSolverList) : LoadingError(InvalidSolverHelper(solver, availableSolverList))
+InvalidSolver::InvalidSolver(const std::string& solver, const std::string& availableSolvers) : LoadingError(InvalidSolverHelper(solver, availableSolvers))
 {
 }
 
