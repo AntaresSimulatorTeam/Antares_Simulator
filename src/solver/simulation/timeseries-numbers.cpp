@@ -428,7 +428,7 @@ void storeTSnumbersForIntraModal(const array<uint32_t, timeSeriesCount>& intramo
 
         if (isTSintramodal[indexTS])
         {
-            for (auto [_, cluster] : area.renewable.list.cluster)
+            for (auto& cluster : area.renewable.list)
             {
                 if (cluster->enabled && cluster->series.timeSeries.width > 1)
                     cluster->series.timeseriesNumbers[0][year] = intramodal_draws[indexTS];
