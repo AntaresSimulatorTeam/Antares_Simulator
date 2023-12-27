@@ -309,7 +309,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     std::exception_ptr loadingException;
     try
     {
-        if (study.loadFromFolder(pSettings.studyFolder, options) && !study.gotFatalError)
+        if (study.loadFromFolder(pSettings.studyFolder, options))
         {
             logs.info() << "The study is loaded.";
             logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
@@ -317,9 +317,6 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
 
         timer.stop();
         pDurationCollector.addDuration("study_loading", timer.get_duration());
-
-        if (study.gotFatalError)
-            throw Error::ReadingStudy();
 
         if (study.areas.empty())
         {
@@ -373,7 +370,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     }
 
     // Errors
-    if (pErrorCount || pWarningCount || study.gotFatalError)
+    if (pErrorCount || pWarningCount)
     {
         if (pErrorCount || !pSettings.ignoreWarningsErrors)
         {

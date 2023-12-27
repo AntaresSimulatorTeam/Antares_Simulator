@@ -133,8 +133,6 @@ void Study::clear()
     ClearAndShrink(folderOutput);
     ClearAndShrink(folderSettings);
     inputExtension.clear();
-
-    gotFatalError = false;
 }
 
 void Study::createAsNew()
