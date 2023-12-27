@@ -1,8 +1,6 @@
 name: Ubuntu CI (push and/or release)
 
 on:
-  release:
-    types: [created]
   push:
     branches:
       - develop
@@ -14,12 +12,17 @@ on:
       - doc/*
   schedule:
     - cron: '21 2 * * *'
+  workflow_call:
+    inputs:
+      run_tests:
+        required: true
+        type: boolean
 
 env:
   GITHUB_TOKEN: ${{ github.token }}
-  IS_RELEASE: ${{ github.event_name == 'release' && github.event.action == 'created' }}
+  IS_RELEASE: ${{ github.event_name == 'workflow_call' }}
   IS_PUSH: ${{ github.event_name == 'push' }}
-  RUN_EXTENDED_TESTS: ${{ github.event_name == 'schedule' || github.event_name == 'release' }}
+  RUN_EXTENDED_TESTS: ${{ github.event_name == 'schedule' || inputs.run_tests }}
 
 jobs:
 
@@ -290,7 +293,6 @@ jobs:
     - name: Download all artifacts
       if: ${{ env.IS_RELEASE == 'true' }}
       uses: actions/download-artifact@v3
-
 
     - name: Publish assets
       if: ${{ env.IS_RELEASE == 'true' }}
