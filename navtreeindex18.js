@@ -1,6 +1,5 @@
 var NAVTREEINDEX18 =
 {
-"classIItem.html#a38aeaf3d9e267fdfae7283471ae088d9":[7,0,117,14],
 "classIItem.html#a4b4ae41d0c5d82e9819e894eb7ec35aa":[7,0,117,8],
 "classIItem.html#a595a5690a0fd82ec02053285fa493ea7":[7,0,117,19],
 "classIItem.html#a5c2c2d7591c7ae44b7831c3c2aa5b2d2":[7,0,117,13],
@@ -249,5 +248,6 @@ var NAVTREEINDEX18 =
 "classfind__output_1_1output__folder__finder.html":[7,0,9,0],
 "classfind__reference_1_1reference__folder__finder.html":[7,0,10,0],
 "classfixtures_1_1check__handler.html":[7,0,11,0],
-"classfullMPSwriter.html":[7,0,103]
+"classfullMPSwriter.html":[7,0,103],
+"classfullOrToolsMPSwriter.html":[7,0,104]
 };

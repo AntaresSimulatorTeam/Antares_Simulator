@@ -228,8 +228,8 @@ var NAVTREEINDEX12 =
 "classAntares_1_1Solver_1_1Application.html#a1017f09dcde5080ada2af4b4172f8138":[7,0,0,12,6,0],
 "classAntares_1_1Solver_1_1Application.html#a4026d1ad4f3a316165d04917797576ce":[7,0,0,12,6,4],
 "classAntares_1_1Solver_1_1Application.html#a5dfa513e02fb50ea8998aa8f552cce50":[7,0,0,12,6,3],
+"classAntares_1_1Solver_1_1Application.html#ab731ee5d76d2df87411284e1c79ff080":[7,0,0,12,6,1],
 "classAntares_1_1Solver_1_1Application.html#ac941ab441ad1379f58b0187287431a96":[7,0,0,12,6,2],
-"classAntares_1_1Solver_1_1Application.html#ada921f499ae810eb47477a0134521728":[7,0,0,12,6,1],
 "classAntares_1_1Solver_1_1EnsureQueueStartedIfNeeded.html":[7,0,0,12,9],
 "classAntares_1_1Solver_1_1IOError.html":[7,0,0,12,13],
 "classAntares_1_1Solver_1_1IResultWriter.html":[7,0,0,12,14],
@@ -237,7 +237,6 @@ var NAVTREEINDEX12 =
 "classAntares_1_1Solver_1_1ImmediateFileResultWriter.html":[7,0,0,12,11],
 "classAntares_1_1Solver_1_1ImmediateFileResultWriter.html#af331f4ce440c90a0b402f9dbd6c67629":[7,0,0,12,11,0],
 "classAntares_1_1Solver_1_1Initialization_1_1Error_1_1NoQueueService.html":[7,0,0,12,0,0,0],
-"classAntares_1_1Solver_1_1Initialization_1_1Error_1_1NoResultWriter.html":[7,0,0,12,0,0,1],
 "classAntares_1_1Solver_1_1IntraModalConsistencyChecker.html":[7,0,0,12,12],
 "classAntares_1_1Solver_1_1NullResultWriter.html":[7,0,0,12,16],
 "classAntares_1_1Solver_1_1Optimization_1_1AdequacyPatchOptimization.html":[7,0,0,12,1,0],
@@ -249,5 +248,6 @@ var NAVTREEINDEX12 =
 "classAntares_1_1Solver_1_1Private_1_1Simulation_1_1CacheData.html#a22a13b21215ab23540ce767fc49fdee8":[7,0,0,12,2,0,0,7],
 "classAntares_1_1Solver_1_1Private_1_1Simulation_1_1CacheData.html#a23e56eb4df7998560ce6197be8cc4de7":[7,0,0,12,2,0,0,3],
 "classAntares_1_1Solver_1_1Private_1_1Simulation_1_1CacheData.html#a371e6bea44340e01ac59fa4e42c4b83b":[7,0,0,12,2,0,0,10],
-"classAntares_1_1Solver_1_1Private_1_1Simulation_1_1CacheData.html#a37d07f1b17f70716d4052d7ebbd47a8f":[7,0,0,12,2,0,0,9]
+"classAntares_1_1Solver_1_1Private_1_1Simulation_1_1CacheData.html#a37d07f1b17f70716d4052d7ebbd47a8f":[7,0,0,12,2,0,0,9],
+"classAntares_1_1Solver_1_1Private_1_1Simulation_1_1CacheData.html#a6210d73b136a7d8cc8c98df0d968c7ba":[7,0,0,12,2,0,0,8]
 };

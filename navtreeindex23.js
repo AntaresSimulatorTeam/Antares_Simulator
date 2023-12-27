@@ -1,8 +1,5 @@
 var NAVTREEINDEX23 =
 {
-"structAntares_1_1Solver_1_1Simulation_1_1compareHydroCostsNoises.html":[7,0,0,12,3,5],
-"structAntares_1_1Solver_1_1Simulation_1_1optRuntimeData.html":[7,0,0,12,3,19],
-"structAntares_1_1Solver_1_1Simulation_1_1setOfParallelYears.html":[7,0,0,12,3,22],
 "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1OverallCost_1_1Statistics.html":[7,0,0,12,5,0,0,0],
 "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1SpilledEnergy_1_1Statistics.html":[7,0,0,12,5,0,1,0],
 "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardOverallCost.html":[7,0,0,12,5,0,2],
@@ -249,5 +246,8 @@ var NAVTREEINDEX23 =
 "structAntares_1_1Solver_1_1Variable_1_1Join_1_1Statistics.html":[7,0,0,12,5,13,0],
 "structAntares_1_1Solver_1_1Variable_1_1LINK__NAMESPACE_1_1Links_1_1Statistics.html":[7,0,0,12,5,5,0,0],
 "structAntares_1_1Solver_1_1Variable_1_1LINK__NAMESPACE_1_1VCardAllLinks.html":[7,0,0,12,5,5,1],
-"structAntares_1_1Solver_1_1Variable_1_1LINK__NAMESPACE_1_1VCardAllLinks.html#a5e6d6d82ddf949aa8a2dafd3cba028a2":[7,0,0,12,5,5,1,0]
+"structAntares_1_1Solver_1_1Variable_1_1LINK__NAMESPACE_1_1VCardAllLinks.html#a5e6d6d82ddf949aa8a2dafd3cba028a2":[7,0,0,12,5,5,1,0],
+"structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat.html":[7,0,0,12,5,14],
+"structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_010_01_4.html":[7,0,0,12,5,15],
+"structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_011_01_4.html":[7,0,0,12,5,16]
 };

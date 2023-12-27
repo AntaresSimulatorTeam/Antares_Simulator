@@ -857,6 +857,9 @@ var hierarchy =
       [ "kirchhoff_pytest.StudyReference", "classkirchhoff__pytest_1_1StudyReference.html", null ]
     ] ],
     [ "Yuni::Policy::ObjectLevelLockable", null, [
+      [ "Antares::IIntrusiveReference< ChildT, TP >", "classAntares_1_1IIntrusiveReference.html", null ]
+    ] ],
+    [ "Yuni::Policy::ObjectLevelLockable", null, [
       [ "Antares::Data::StudyFinder", "classAntares_1_1Data_1_1StudyFinder.html", [
         [ "MyStudyFinder", "classMyStudyFinder.html", null ],
         [ "MyStudyFinder", "classMyStudyFinder.html", null ],
@@ -864,9 +867,6 @@ var hierarchy =
         [ "StudyFinderCleaner", "classStudyFinderCleaner.html", null ]
       ] ],
       [ "Antares::Memory", "classAntares_1_1Memory.html", null ]
-    ] ],
-    [ "Yuni::Policy::ObjectLevelLockable", null, [
-      [ "Antares::IIntrusiveReference< ChildT, TP >", "classAntares_1_1IIntrusiveReference.html", null ]
     ] ],
     [ "Yuni::Policy::ObjectLevelLockableNotRecursive", null, [
       [ "Antares::Toolbox::Jobs::PartList", "classAntares_1_1Toolbox_1_1Jobs_1_1PartList.html", null ]
@@ -1068,7 +1068,6 @@ var hierarchy =
       [ "Antares::Optimization::StringIsNotWellFormated", "classAntares_1_1Optimization_1_1StringIsNotWellFormated.html", null ],
       [ "Antares::Solver::IOError", "classAntares_1_1Solver_1_1IOError.html", null ],
       [ "Antares::Solver::Initialization::Error::NoQueueService", "classAntares_1_1Solver_1_1Initialization_1_1Error_1_1NoQueueService.html", null ],
-      [ "Antares::Solver::Initialization::Error::NoResultWriter", "classAntares_1_1Solver_1_1Initialization_1_1Error_1_1NoResultWriter.html", null ],
       [ "ConstraintBuilder::ConstraintBuilderInvalidOperator", "classConstraintBuilder_1_1ConstraintBuilderInvalidOperator.html", null ]
     ] ],
     [ "ScenarioBuilderRule", "classScenarioBuilderRule.html", null ],

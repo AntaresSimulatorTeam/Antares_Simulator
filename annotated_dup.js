@@ -461,8 +461,7 @@ var annotated_dup =
       [ "Solver", null, [
         [ "Initialization", null, [
           [ "Error", null, [
-            [ "NoQueueService", "classAntares_1_1Solver_1_1Initialization_1_1Error_1_1NoQueueService.html", null ],
-            [ "NoResultWriter", "classAntares_1_1Solver_1_1Initialization_1_1Error_1_1NoResultWriter.html", null ]
+            [ "NoQueueService", "classAntares_1_1Solver_1_1Initialization_1_1Error_1_1NoQueueService.html", null ]
           ] ]
         ] ],
         [ "Optimization", null, [

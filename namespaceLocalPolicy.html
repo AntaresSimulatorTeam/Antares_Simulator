@@ -161,19 +161,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>Close</b> ()</td></tr
 void&#160;</td><td class="memItemRight" valign="bottom"><b>CheckRootPrefix</b> (const char *argv0)</td></tr>
 <tr class="memdesc:aa279d371e5b4e23c77448611eb2f4f04"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check the root prefix, and throws a FatalError if fails. <br /></td></tr>
 <tr class="separator:aa279d371e5b4e23c77448611eb2f4f04"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6070274421605cde8ccd1e58a8ab36eb"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceLocalPolicy.html#a6070274421605cde8ccd1e58a8ab36eb">HasKey</a> (const <a class="el" href="namespaceLocalPolicy.html#a47b0c7226dcf5d16ee301e7bbc468b14">PolicyKey</a> &amp;key)</td></tr>
-<tr class="memdesc:a6070274421605cde8ccd1e58a8ab36eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read an entry from the local policies.  <a href="namespaceLocalPolicy.html#a6070274421605cde8ccd1e58a8ab36eb">More...</a><br /></td></tr>
-<tr class="separator:a6070274421605cde8ccd1e58a8ab36eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3edae9b28d73d8a57ea4104248b95b99"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceLocalPolicy.html#a3edae9b28d73d8a57ea4104248b95b99">Read</a> (YString &amp;out, const <a class="el" href="namespaceLocalPolicy.html#a47b0c7226dcf5d16ee301e7bbc468b14">PolicyKey</a> &amp;key)</td></tr>
 <tr class="memdesc:a3edae9b28d73d8a57ea4104248b95b99"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read the content of a single entry.  <a href="namespaceLocalPolicy.html#a3edae9b28d73d8a57ea4104248b95b99">More...</a><br /></td></tr>
 <tr class="separator:a3edae9b28d73d8a57ea4104248b95b99"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1333fdac82eb04f896ccba5d66b48ad3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceLocalPolicy.html#a1333fdac82eb04f896ccba5d66b48ad3">ReadAsBool</a> (const <a class="el" href="namespaceLocalPolicy.html#a47b0c7226dcf5d16ee301e7bbc468b14">PolicyKey</a> &amp;key, bool defval=false)</td></tr>
 <tr class="memdesc:a1333fdac82eb04f896ccba5d66b48ad3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read the content of a single entry as a bool.  <a href="namespaceLocalPolicy.html#a1333fdac82eb04f896ccba5d66b48ad3">More...</a><br /></td></tr>
 <tr class="separator:a1333fdac82eb04f896ccba5d66b48ad3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a76f768fb904889bdf6b2e750f431a345"><td class="memItemLeft" align="right" valign="top"><a id="a76f768fb904889bdf6b2e750f431a345" name="a76f768fb904889bdf6b2e750f431a345"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>DumpToStdOut</b> ()</td></tr>
-<tr class="memdesc:a76f768fb904889bdf6b2e750f431a345"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dump the entries to the standard output. <br /></td></tr>
-<tr class="separator:a76f768fb904889bdf6b2e750f431a345"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5437ae904734d642b435bd37a8f38e03"><td class="memItemLeft" align="right" valign="top"><a id="a5437ae904734d642b435bd37a8f38e03" name="a5437ae904734d642b435bd37a8f38e03"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>DumpToLogs</b> ()</td></tr>
 <tr class="memdesc:a5437ae904734d642b435bd37a8f38e03"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dump the entries to the logs. <br /></td></tr>
@@ -192,27 +185,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>DumpToString</b> (Clo
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Local policy settings. </p>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a id="a6070274421605cde8ccd1e58a8ab36eb" name="a6070274421605cde8ccd1e58a8ab36eb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6070274421605cde8ccd1e58a8ab36eb">&#9670;&#160;</a></span>HasKey()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool LocalPolicy::HasKey </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="namespaceLocalPolicy.html#a47b0c7226dcf5d16ee301e7bbc468b14">PolicyKey</a> &amp;&#160;</td>
-          <td class="paramname"><em>key</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Read an entry from the local policies. </p>
-<p >If the local policies are not opened, it will always return false </p><dl class="section return"><dt>Returns</dt><dd>True if the entry exists, false otherwise </dd></dl>
-
-</div>
-</div>
 <a id="aeee1fcbcea6a68643d0eb7929e246933" name="aeee1fcbcea6a68643d0eb7929e246933"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aeee1fcbcea6a68643d0eb7929e246933">&#9670;&#160;</a></span>Open()</h2>
 

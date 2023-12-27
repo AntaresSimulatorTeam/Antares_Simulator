@@ -1,6 +1,5 @@
 var NAVTREEINDEX21 =
 {
-"gridhelper_8hxx_source.html":[8,0,0,5,2,1,1,1,6],
 "group__logs.html":[5,0],
 "group__logs.html#gaeeecaed35d419d20ac8985edff942068":[5,0,0],
 "gui_8h_source.html":[8,0,0,5,1,1,3],
@@ -204,16 +203,14 @@ var NAVTREEINDEX21 =
 "name__translator_8h_source.html":[8,0,0,2,9,0,0,0,0,2],
 "named__problem_8h_source.html":[8,0,0,2,9,0,0,0,0,3],
 "namespaceLocalPolicy.html":[6,0,0],
-"namespaceLocalPolicy.html#a1333fdac82eb04f896ccba5d66b48ad3":[6,0,0,9],
-"namespaceLocalPolicy.html#a3edae9b28d73d8a57ea4104248b95b99":[6,0,0,8],
+"namespaceLocalPolicy.html#a1333fdac82eb04f896ccba5d66b48ad3":[6,0,0,7],
+"namespaceLocalPolicy.html#a3edae9b28d73d8a57ea4104248b95b99":[6,0,0,6],
 "namespaceLocalPolicy.html#a47b0c7226dcf5d16ee301e7bbc468b14":[6,0,0,0],
 "namespaceLocalPolicy.html#a5437ae904734d642b435bd37a8f38e03":[6,0,0,3],
-"namespaceLocalPolicy.html#a6070274421605cde8ccd1e58a8ab36eb":[6,0,0,6],
-"namespaceLocalPolicy.html#a76f768fb904889bdf6b2e750f431a345":[6,0,0,4],
-"namespaceLocalPolicy.html#a948cec0d64b3dccb1fb46a257c25ce24":[6,0,0,5],
+"namespaceLocalPolicy.html#a948cec0d64b3dccb1fb46a257c25ce24":[6,0,0,4],
 "namespaceLocalPolicy.html#aa279d371e5b4e23c77448611eb2f4f04":[6,0,0,1],
 "namespaceLocalPolicy.html#ae48d9a3da78c07bbf43d0d97e68f5606":[6,0,0,2],
-"namespaceLocalPolicy.html#aeee1fcbcea6a68643d0eb7929e246933":[6,0,0,7],
+"namespaceLocalPolicy.html#aeee1fcbcea6a68643d0eb7929e246933":[6,0,0,5],
 "namespacemembers.html":[6,1,0],
 "namespacemembers_func.html":[6,1,1],
 "namespacemembers_type.html":[6,1,2],
@@ -249,5 +246,8 @@ var NAVTREEINDEX21 =
 "optimization__statistics_8h_source.html":[8,0,0,2,9,0,0,0,0,5],
 "options_8h_source.html":[8,0,0,2,4,0,0,0,0,4],
 "ortools__utils_8h_source.html":[8,0,0,2,9,0,0,0,0,6],
-"ortools__wrapper_8h_source.html":[8,0,0,2,9,0,0,0,0,7]
+"ortools__wrapper_8h_source.html":[8,0,0,2,9,0,0,0,0,7],
+"output-comparison_8h_source.html":[8,0,0,5,2,2,10,1,0],
+"output_8hxx_source.html":[8,0,0,1,0,21,21],
+"outputs_8h_source.html":[8,0,0,5,2,2,10,1,1]
 };
