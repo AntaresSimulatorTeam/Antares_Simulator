@@ -227,12 +227,10 @@ bool BindingConstraintsRepository::internalSaveToFolder(BindingConstraintSaver::
     bool ret = true;
     uint index = 0;
     auto end = constraints_.end();
-    Yuni::ShortString64 text;
 
     for (auto i = constraints_.begin(); i != end; ++i, ++index)
     {
-        text = index;
-        env.section = ini.addSection(text);
+        env.section = ini.addSection(std::to_string(index));
         ret = Antares::Data::BindingConstraintSaver::saveToEnv(env, i->get()) && ret;
     }
 
