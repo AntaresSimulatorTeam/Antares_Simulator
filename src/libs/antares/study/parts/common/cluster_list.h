@@ -35,7 +35,7 @@ public:
     template<class PredicateT>
     void each(const PredicateT& predicate) const
     {
-        std::ranges::for_each(clusters, [&predicate](const auto& c) { predicate(*c); });
+        std::ranges::for_each(clusters, [&predicate](SharedPtr c) { predicate(*c); });
     }
 
     //! \name clusters management
