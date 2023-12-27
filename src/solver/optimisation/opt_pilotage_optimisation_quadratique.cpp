@@ -29,9 +29,10 @@
 
 #include "../simulation/simulation.h"
 #include "../simulation/sim_extern_variables_globales.h"
+#include "constraints/constraint_builder_utils.h"
 
 #include "opt_fonctions.h"
-
+#include "QuadraticProblemMatrix.h"
 extern "C"
 {
 #include "spx_fonctions.h"
@@ -42,8 +43,9 @@ bool OPT_PilotageOptimisationQuadratique(PROBLEME_HEBDO* problemeHebdo)
     if (!problemeHebdo->LeProblemeADejaEteInstancie)
     {
         OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique(problemeHebdo);
-
-        OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique(problemeHebdo);
+        auto builder_data = NewGetConstraintBuilderFromProblemHebdo(problemeHebdo);
+        ConstraintBuilder builder(builder_data);
+        QuadraticProblemMatrix(problemeHebdo, builder).Run();
 
         problemeHebdo->LeProblemeADejaEteInstancie = true;
     }

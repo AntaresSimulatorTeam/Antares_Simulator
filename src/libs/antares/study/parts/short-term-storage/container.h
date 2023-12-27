@@ -36,18 +36,19 @@ class STStorageInput
 {
 public:
     bool validate() const;
-    // 1. Read list.ini
+    /// 1. Read list.ini
     bool createSTStorageClustersFromIniFile(const std::string& path);
-    // 2. Read ALL series
+    /// 2. Read ALL series
     bool loadSeriesFromFolder(const std::string& folder) const;
-    // Number of ST storages
+    /// Number of enabled ST storages, ignoring disabled ST storages
     std::size_t count() const;
+    /// erase disabled cluster from the vector
+    uint removeDisabledClusters();
+
 
     bool saveToFolder(const std::string& folder) const;
     bool saveDataSeriesToFolder(const std::string& folder) const;
 
-
-    std::vector<STStorageCluster*> storagesByIndex;
-    std::map<std::string, STStorageCluster> storagesById;
+    std::vector<STStorageCluster> storagesByIndex;
 };
 } // namespace Antares::Data::ShortTermStorage

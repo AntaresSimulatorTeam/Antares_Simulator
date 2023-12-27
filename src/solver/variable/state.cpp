@@ -63,16 +63,11 @@ void ThermalState::StateForAnArea::initializeFromArea(const Data::Area& area)
 State::State(Data::Study& s) :
  hourInTheSimulation(0u),
  dispatchableMargin(nullptr),
- studyMode(s.parameters.mode),
+ simulationMode(s.parameters.mode),
  unitCommitmentMode(s.parameters.unitCommitment.ucMode),
  study(s),
  thermal(s.areas),
- simplexRunNeeded(true),
- annualSystemCost(0.),
- optimalSolutionCost1(0.),
- optimalSolutionCost2(0.),
- averageOptimizationTime1(0.),
- averageOptimizationTime2(0.)
+ simplexRunNeeded(true)
 {
 }
 
@@ -108,7 +103,7 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex)
     {
         // otherwise from the solver (most of the time)
 
-        if (studyMode != Data::stdmAdequacy) // Economy
+        if (simulationMode != Data::SimulationMode::Adequacy) // Economy
         {
             thermalClusterPMinOfAGroup
               = problemeHebdo->PaliersThermiquesDuPays[area->index]
@@ -145,7 +140,7 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex)
     }
     initFromThermalClusterIndexProduction(clusterAreaWideIndex);
 
-    if (studyMode != Data::stdmAdequacy)
+    if (simulationMode != Data::SimulationMode::Adequacy)
     {
         // Minimum power of a group of the cluster, one per year for each cluster - from the
         // solver

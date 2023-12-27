@@ -1,4 +1,4 @@
-#include "ortools_utils.h"
+#include "antares/solver/utils/ortools_utils.h"
 
 #include <antares/logs/logs.h>
 #include <antares/exception/AssertionError.hpp>
@@ -156,7 +156,7 @@ static void extractSolutionValues(const std::vector<MPVariable*>& variables,
     int nbVar = problemeSimplexe->NombreDeVariables;
     for (int idxVar = 0; idxVar < nbVar; ++idxVar)
     {
-        auto& var = variables[idxVar];
+        const MPVariable* var = variables[idxVar];
         problemeSimplexe->X[idxVar] = var->solution_value();
     }
 }
@@ -167,7 +167,7 @@ static void extractReducedCosts(const std::vector<MPVariable*>& variables,
     int nbVar = problemeSimplexe->NombreDeVariables;
     for (int idxVar = 0; idxVar < nbVar; ++idxVar)
     {
-        auto& var = variables[idxVar];
+        const MPVariable* var = variables[idxVar];
         problemeSimplexe->CoutsReduits[idxVar] = var->reduced_cost();
     }
 }
@@ -178,12 +178,12 @@ static void extractDualValues(const std::vector<MPConstraint*>& constraints,
   int nbRows = problemeSimplexe->NombreDeContraintes;
   for (int idxRow = 0; idxRow < nbRows; ++idxRow)
   {
-      auto& row = constraints[idxRow];
+      const MPConstraint* row = constraints[idxRow];
       problemeSimplexe->CoutsMarginauxDesContraintes[idxRow] = row->dual_value();
   }
 }
 
-static void extract_from_MPSolver(MPSolver* solver,
+static void extract_from_MPSolver(const MPSolver* solver,
                                   Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe)
 {
     assert(solver);
@@ -196,9 +196,9 @@ static void extract_from_MPSolver(MPSolver* solver,
 
     if (isMIP)
     {
+        // TODO extract dual values & marginal costs from LP with fixed integer variables
         const int nbVar = problemeSimplexe->NombreDeVariables;
         std::fill(problemeSimplexe->CoutsReduits, problemeSimplexe->CoutsReduits + nbVar, 0.);
-
         const int nbRows = problemeSimplexe->NombreDeContraintes;
         std::fill(problemeSimplexe->CoutsMarginauxDesContraintes,
                   problemeSimplexe->CoutsMarginauxDesContraintes + nbRows,
@@ -207,7 +207,6 @@ static void extract_from_MPSolver(MPSolver* solver,
     else
     {
         extractReducedCosts(solver->variables(), problemeSimplexe);
-
         extractDualValues(solver->constraints(), problemeSimplexe);
     }
 }

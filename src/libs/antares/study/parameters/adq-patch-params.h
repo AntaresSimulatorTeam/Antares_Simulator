@@ -116,12 +116,12 @@ struct AdqPatchParams
     void addExcludedVariables(std::vector<std::string>&) const;
     bool updateFromKeyValue(const Yuni::String& key, const Yuni::String& value);
     void saveToINI(IniFile& ini) const;
-    bool checkAdqPatchParams(const StudyMode studyMode,
+    bool checkAdqPatchParams(const SimulationMode simulationMode,
                              const AreaList& areas,
                              const bool includeHurdleCostParameters) const;
 
 
-    void checkAdqPatchStudyModeEconomyOnly(const StudyMode studyMode) const;
+    void checkAdqPatchSimulationModeEconomyOnly(const SimulationMode simulationMode) const;
     void checkAdqPatchContainsAdqPatchArea(const Antares::Data::AreaList& areas) const;
     void checkAdqPatchIncludeHurdleCost(const bool includeHurdleCost) const;
     void checkAdqPatchDisabledLocalMatching() const;

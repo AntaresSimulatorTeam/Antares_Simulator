@@ -127,7 +127,7 @@ CommandLineArguments::CommandLineArguments(uint errors) :
 {
 }
 
-IncompatibleStudyModeForAdqPatch::IncompatibleStudyModeForAdqPatch() :
+IncompatibleSimulationModeForAdqPatch::IncompatibleSimulationModeForAdqPatch() :
  LoadingError("Adequacy Patch can only be used with Economy Simulation Mode")
 {
 }

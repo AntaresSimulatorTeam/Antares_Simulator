@@ -26,15 +26,14 @@
 */
 
 #include "management.h"
-#include <wx/stattext.h>
+#include <wx/defs.h>
+#include <wx/statline.h>
+
 #include "../../toolbox/components/datagrid/renderer/area/hydroprepro.h"
 #include "../../toolbox/components/datagrid/renderer/area/inflowpattern.h"
-#include "../../toolbox/components/datagrid/renderer/area/hydromonthlypower.h"
-#include "../../toolbox/components/button.h"
 #include "../../toolbox/validator.h"
 #include "../../toolbox/create.h"
 #include "../../application/menus.h"
-#include <wx/statline.h>
 
 using namespace Yuni;
 
@@ -69,11 +68,8 @@ void Management::createComponents()
 
     const wxSize ourDefaultSize(55, wxDefaultSize.GetHeight());
 
-    enum
-    {
-        right = wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL,
-        left = wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL,
-    };
+    const auto right = (wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+    const auto left = (wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
     auto* pGrid = new wxFlexGridSizer(6, 0, 8);
     sizer->Add(pGrid, 0, wxALL, 15);

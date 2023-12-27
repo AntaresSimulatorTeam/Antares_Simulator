@@ -27,6 +27,7 @@
 
 #pragma once
 
+#include "../constraints/ConstraintBuilder.h"
 class HourlyCSRProblem;
 
 namespace Antares::Solver::Optimization
@@ -47,9 +48,9 @@ private:
     PROBLEME_ANTARES_A_RESOUDRE& problemeAResoudre_;
     HourlyCSRProblem& hourlyCsrProblem_;
 
-    void setConstraintsOnFlows(std::vector<double>& Pi, std::vector<int>& Colonne);
-    void setNodeBalanceConstraints(std::vector<double>& Pi, std::vector<int>& Colonne);
-    void setBindingConstraints(std::vector<double>& Pi, std::vector<int>& Colonne);
+    void setConstraintsOnFlows(ConstraintBuilder& builder);
+    void setNodeBalanceConstraints(ConstraintBuilder& builder);
+    void setBindingConstraints(ConstraintBuilder& builder);
 };
 
 } //namespace Antares::Solver::Optimization
