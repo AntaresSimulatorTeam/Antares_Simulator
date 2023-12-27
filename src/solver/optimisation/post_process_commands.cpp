@@ -237,7 +237,7 @@ double CurtailmentSharingPostProcessCmd::calculateDensNewAndTotalLmrViolation()
                       .ValeursHorairesDeDefaillanceNegative[hour];
                 // check LMR violations
                 totalLmrViolation += LmrViolationAreaHour(
-                            problemeHebdo_, 
+                            problemeHebdo_,
                             totalNodeBalance, 
                             adqPatchParams_.curtailmentSharing.thresholdDisplayViolations,
                             Area, hour);
