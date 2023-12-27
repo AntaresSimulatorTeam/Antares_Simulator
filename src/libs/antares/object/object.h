@@ -29,10 +29,10 @@
 
 #include "../antares.h"
 #include <yuni/string.h>
-#include <yuni/core/atomic/int.h>
 #include <yuni/core/smartptr/intrusive.h>
 #include "ref.h"
 #include "intrusive-reference.h"
+#include <atomic>
 
 namespace Antares
 {
@@ -105,7 +105,7 @@ public:
     //! \name Events
     //@{
     //! The object is about to be destroyed
-    virtual void onRelease();
+    virtual void onRelease() const;
     //@}
 
 protected:
@@ -128,7 +128,7 @@ protected:
 protected:
     //! The most suitable type for a bool
     using EnableType
-      = Yuni::Static::If<ThreadingPolicy::threadSafe, Yuni::Atomic::Int<>, bool>::ResultType;
+      = Yuni::Static::If<ThreadingPolicy::threadSafe, std::atomic<int>, bool>::ResultType;
 
     //! Object Identifier
     const Ref pOID;

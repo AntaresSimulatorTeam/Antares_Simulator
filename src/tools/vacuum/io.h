@@ -27,7 +27,6 @@
 #ifndef __ANTARES_VACUUM_IO_H__
 #define __ANTARES_VACUUM_IO_H__
 
-#include <yuni/yuni.h>
 #include <yuni/io/file.h>
 #ifndef YUNI_OS_WINDOWS
 #include <unistd.h>
@@ -37,14 +36,16 @@
 #endif
 #include <unordered_set>
 
+#include <atomic>
+
 //! Flag to determine whether we are in dry mode or not
 extern bool dry;
 
 //! Mutex for getting/setting statistics
 
-extern Yuni::Atomic::Int<> IOBytesDeleted;
-extern Yuni::Atomic::Int<> IOFilesDeleted;
-extern Yuni::Atomic::Int<> IOFoldersDeleted;
+extern std::atomic<int> IOBytesDeleted;
+extern std::atomic<int> IOFilesDeleted;
+extern std::atomic<int> IOFoldersDeleted;
 
 //! All inputs folders, which can not be removed
 extern std::unordered_set<YString> inputFolders;

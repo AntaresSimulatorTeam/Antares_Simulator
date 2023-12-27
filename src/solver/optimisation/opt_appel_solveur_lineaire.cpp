@@ -43,11 +43,12 @@ extern "C"
 #include <antares/logs/logs.h>
 #include <antares/fatal-error.h>
 
-#include "../utils/mps_utils.h"
-#include "../utils/filename.h"
+#include "antares/solver/utils/mps_utils.h"
+#include "antares/solver/utils/filename.h"
 
-#include "../infeasible-problem-analysis/problem.h"
-#include "../infeasible-problem-analysis/exceptions.h"
+#include "../infeasible-problem-analysis/unfeasible-pb-analyzer.h"
+#include "../infeasible-problem-analysis/variables-bounds-consistency.h"
+#include "../infeasible-problem-analysis/constraint-slack-analysis.h"
 
 #include <chrono>
 
@@ -74,7 +75,7 @@ public:
         end_ = clock::now();
     }
 
-    long long duration_ms() const
+    long duration_ms() const
     {
         return std::chrono::duration_cast<std::chrono::milliseconds>(end_ - start_).count();
     }
@@ -92,7 +93,7 @@ private:
 struct SimplexResult
 {
     bool success = false;
-    long long solveTime = 0;
+    TIME_MEASURE timeMeasure;
     mpsWriterFactory mps_writer_factory;
 };
 
@@ -114,7 +115,7 @@ static SimplexResult OPT_TryToCallSimplex(
     const int opt = optimizationNumber - 1;
     assert(opt >= 0 && opt < 2);
     OptimizationStatistics& optimizationStatistics = problemeHebdo->optimizationStatistics[opt];
-
+    TIME_MEASURE timeMeasure;
     if (!PremierPassage)
     {
         ProbSpx = nullptr;
@@ -150,7 +151,7 @@ static SimplexResult OPT_TryToCallSimplex(
             Probleme.Contexte = BRANCH_AND_BOUND_OU_CUT_NOEUD;
             Probleme.BaseDeDepartFournie = UTILISER_LA_BASE_DU_PROBLEME_SPX;
 
-            TimeMeasurement measure;
+            TimeMeasurement updateMeasure;
             if (options.useOrtools)
             {
                 ORTOOLS_ModifierLeVecteurCouts(
@@ -174,8 +175,9 @@ static SimplexResult OPT_TryToCallSimplex(
                                                   ProblemeAResoudre->Sens.data(),
                                                   ProblemeAResoudre->NombreDeContraintes);
             }
-            measure.tick();
-            optimizationStatistics.addUpdateTime(measure.duration_ms());
+            updateMeasure.tick();
+            timeMeasure.updateTime = updateMeasure.duration_ms();
+            optimizationStatistics.addUpdateTime(timeMeasure.updateTime);
         }
     }
 
@@ -218,12 +220,6 @@ static SimplexResult OPT_TryToCallSimplex(
     Probleme.CoutsMarginauxDesContraintes = ProblemeAResoudre->CoutsMarginauxDesContraintes.data();
     Probleme.CoutsReduits = ProblemeAResoudre->CoutsReduits.data();
 
-#ifndef NDEBUG
-    Probleme.AffichageDesTraces = ( PremierPassage ? OUI_SPX : NON_SPX );
-#else
-    Probleme.AffichageDesTraces = NON_SPX;
-#endif
-
     Probleme.NombreDeContraintesCoupes = 0;
 
     if (options.useOrtools)
@@ -261,8 +257,8 @@ static SimplexResult OPT_TryToCallSimplex(
         }
     }
     measure.tick();
-    long long solveTime = measure.duration_ms();
-    optimizationStatistics.addSolveTime(solveTime);
+    timeMeasure.solveTime = measure.duration_ms();
+    optimizationStatistics.addSolveTime(timeMeasure.solveTime);
 
     ProblemeAResoudre->ExistenceDUneSolution = Probleme.ExistenceDUneSolution;
     if (ProblemeAResoudre->ExistenceDUneSolution != OUI_SPX && PremierPassage)
@@ -285,7 +281,8 @@ static SimplexResult OPT_TryToCallSimplex(
             {
                 logs.info() << " solver: resetting";
             }
-            return {.success=false, .solveTime=solveTime, .mps_writer_factory=mps_writer_factory};
+            return {.success=false, .timeMeasure=timeMeasure,
+                    .mps_writer_factory=mps_writer_factory};
         }
 
         else
@@ -293,7 +290,8 @@ static SimplexResult OPT_TryToCallSimplex(
             throw FatalError("Internal error: insufficient memory");
         }
     }
-    return {.success=true, .solveTime=solveTime, .mps_writer_factory=mps_writer_factory};
+    return {.success=true, .timeMeasure=timeMeasure,
+            .mps_writer_factory=mps_writer_factory};
 }
 
 bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
@@ -309,11 +307,12 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
                                                    ProblemeAResoudre->VariablesEntieres,
                                                    ProblemeAResoudre->StatutDesVariables,
                                                    ProblemeAResoudre->StatutDesContraintes,
-                                                   problemeHebdo->NamedProblems);
+                                                   problemeHebdo->NamedProblems,
+                                                   problemeHebdo->solverLogs);
 
     bool PremierPassage = true;
 
-    struct SimplexResult simplexResult =
+    SimplexResult simplexResult =
         OPT_TryToCallSimplex(options, problemeHebdo, Probleme, NumIntervalle, optimizationNumber,
                 optPeriodStringGenerator, PremierPassage, writer);
 
@@ -323,8 +322,6 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
         simplexResult = OPT_TryToCallSimplex(options, problemeHebdo, Probleme,  NumIntervalle, optimizationNumber,
                 optPeriodStringGenerator, PremierPassage, writer);
     }
-
-    long long solveTime = simplexResult.solveTime;
 
     if (ProblemeAResoudre->ExistenceDUneSolution == OUI_SPX)
     {
@@ -349,15 +346,20 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
                 *pt = ProblemeAResoudre->CoutsReduits[i];
         }
 
+        {
+            const int opt = optimizationNumber - 1;
+            assert(opt >= 0 && opt < 2);
+            problemeHebdo->timeMeasure[opt] = simplexResult.timeMeasure;
+        }
+
+        // TODO remove this if..else
         if (optimizationNumber == PREMIERE_OPTIMISATION)
         {
             problemeHebdo->coutOptimalSolution1[NumIntervalle] = CoutOpt;
-            problemeHebdo->tempsResolution1[NumIntervalle] = solveTime;
         }
         else
         {
             problemeHebdo->coutOptimalSolution2[NumIntervalle] = CoutOpt;
-            problemeHebdo->tempsResolution2[NumIntervalle] = solveTime;
         }
         for (int Cnt = 0; Cnt < ProblemeAResoudre->NombreDeContraintes; Cnt++)
         {
@@ -375,21 +377,12 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
         }
 
         Probleme.SetUseNamedProblems(true);
-        Optimization::InfeasibleProblemAnalysis analysis(options.solverName, &Probleme);
-        logs.notice() << " Solver: Starting infeasibility analysis...";
-        try
-        {
-            Optimization::InfeasibleProblemReport report = analysis.produceReport();
-            report.prettyPrint();
-        }
-        catch (const Optimization::SlackVariablesEmpty& ex)
-        {
-            logs.error() << ex.what();
-        }
-        catch (const Optimization::ProblemResolutionFailed& ex)
-        {
-            logs.error() << ex.what();
-        }
+
+        auto MPproblem = std::shared_ptr<MPSolver>(ProblemSimplexeNommeConverter(options.solverName, &Probleme).Convert());
+
+        auto analyzer = makeUnfeasiblePbAnalyzer();
+        analyzer->run(MPproblem.get());
+        analyzer->printReport();
 
         auto mps_writer_on_error = simplexResult.mps_writer_factory.createOnOptimizationError();
         const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);

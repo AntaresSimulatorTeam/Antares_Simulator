@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.14) # FetchContent_MakeAvailable
 
 # Version
 set(ANTARES_VERSION_HI	      8)
-set(ANTARES_VERSION_LO	      7)
+set(ANTARES_VERSION_LO	      8)
 set(ANTARES_VERSION_REVISION  0)
 
 # Beta release
@@ -35,7 +35,7 @@ include(CheckCXXCompilerFlag)
 include(CMakeDependentOption)
 include(FetchContent)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 
 if (DEFINED VCPKG_ROOT)
     include(${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake)
@@ -436,7 +436,7 @@ else()
 	set(CPACK_PACKAGE_VERSION_MINOR ${ANTARES_VERSION_LO})
 	set(CPACK_PACKAGE_VERSION_PATCH ${ANTARES_VERSION_REVISION}${ANTARES_VERSION_TAG})
 
-	set(CPACK_DEBIAN_PACKAGE_DEPENDS "libwxgtk3.0-gtk3-0v5")
+	set(CPACK_DEBIAN_PACKAGE_DEPENDS "libwxgtk3.0-gtk3-0v5 | libwxgtk3.2-dev")
     set(CPACK_RPM_PACKAGE_REQUIRES "wxGTK3")
     set(CPACK_RPM_PACKAGE_AUTOREQPROV "0")
 

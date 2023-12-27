@@ -1,9 +1,7 @@
-#include "named_problem.h"
+#include "antares/solver/utils/named_problem.h"
 #include <algorithm>
 
-namespace Antares
-{
-namespace Optimization
+namespace Antares::Optimization
 {
 
 PROBLEME_SIMPLEXE_NOMME::PROBLEME_SIMPLEXE_NOMME(const std::vector<std::string>& NomDesVariables,
@@ -11,15 +9,18 @@ PROBLEME_SIMPLEXE_NOMME::PROBLEME_SIMPLEXE_NOMME(const std::vector<std::string>&
                                                  const std::vector<bool>& VariablesEntieres,
                                                  std::vector<int>& StatutDesVariables,
                                                  std::vector<int>& StatutDesContraintes,
-                                                 bool UseNamedProblems) :
+                                                 bool UseNamedProblems,
+                                                 bool SolverLogs) : PROBLEME_SIMPLEXE(),
 
  NomDesVariables(NomDesVariables),
  NomDesContraintes(NomDesContraintes),
- VariablesEntieres(VariablesEntieres),
+ useNamedProblems_(UseNamedProblems),
+ solverLogs_(SolverLogs),
  StatutDesVariables(StatutDesVariables),
  StatutDesContraintes(StatutDesContraintes),
- useNamedProblems_(UseNamedProblems)
+ VariablesEntieres(VariablesEntieres)
 {
+    AffichageDesTraces = SolverLogs ? OUI_SPX : NON_SPX;
 }
 
 bool PROBLEME_SIMPLEXE_NOMME::isMIP() const
@@ -33,5 +34,4 @@ bool PROBLEME_SIMPLEXE_NOMME::basisExists() const
     return !StatutDesVariables.empty() && !StatutDesContraintes.empty();
 }
 
-} // namespace Optimization
-} // namespace Antares
+} // namespace Antares::Optimization

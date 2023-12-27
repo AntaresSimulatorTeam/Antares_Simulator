@@ -27,6 +27,8 @@
 
 #include "../simulation/simulation.h"
 #include "../simulation/sim_extern_variables_globales.h"
+#include "LinearProblemMatrixStartUpCosts.h"
+#include "constraints/constraint_builder_utils.h"
 
 #include "opt_fonctions.h"
 
@@ -35,7 +37,9 @@ void OPT_DecompteDesVariablesEtDesContraintesCoutsDeDemarrage(PROBLEME_HEBDO* pr
     if (!problemeHebdo->OptimisationAvecCoutsDeDemarrage)
         return;
 
-    OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(problemeHebdo, true);
+    auto builder_data = NewGetConstraintBuilderFromProblemHebdo(problemeHebdo);
+    ConstraintBuilder builder(builder_data);
+    LinearProblemMatrixStartUpCosts(problemeHebdo, true, builder).Run();
 
     OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarrage(problemeHebdo,
                                                                                   true);

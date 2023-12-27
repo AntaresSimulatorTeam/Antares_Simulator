@@ -31,16 +31,15 @@
 
 namespace Antares::Data
 {
-
+/*!
+ ** \class TimeSeries
+ ** \brief This class is used to represent the generic time series
+ **
+ **  The goal is to handle indexing with the time series numbers: getCoefficient()
+ **  and also providing a wrapper for all the Matrix<> functions such as resize()
+ */
 class TimeSeries
 {
-    /*!
-     ** \brief This class is used to represent the generic time series
-     **
-     **  The goal is to handle indexing with the time series numbers: getCoefficient()
-     **  and also providing a wrapper for all the Matrix<> functions such as resize()
-     */
-
 public:
     using numbers = Matrix<uint32_t>;
     using TS = Matrix<double>;
@@ -50,16 +49,13 @@ public:
      ** \brief Load series from a file
      **
      ** \param path path of the file
-     ** \param dataBuffer yuni dependency to use loadFromCSV
      ** \param average used to average timeseries
      ** \return A non-zero value if the operation succeeded, 0 otherwise
      */
     bool loadFromFile(const std::string& path,
-                      Matrix<>::BufferType dataBuffer,
                       const bool average);
     /*!
      ** \brief Save time series to a file
-     ** \ingroup windseries
      **
      ** \param areaID The ID of the area associated to the data series
      ** \param folder The target folder
@@ -70,16 +66,22 @@ public:
                      const std::string& folder,
                      const std::string& prefix) const;
 
+    int saveToFile(const std::string& filename, bool saveEvenIfAllZero) const;
+
     double getCoefficient(uint32_t year, uint32_t timestep) const;
     const double* getColumn(uint32_t year) const;
     uint32_t getSeriesIndex(uint32_t year) const;
 
+    /// \brief overload operator to return a column
+    /// Unlike getColumn() it uses direct indexing and not timeseriesNumbers
     double* operator[](uint32_t index);
 
     void reset();
+    void reset(uint32_t width, uint32_t height);
     void unloadFromMemory() const;
     void roundAllEntries();
     void resize(uint32_t timeSeriesCount, uint32_t timestepCount);
+    void fill(double value);
     void averageTimeseries();
 
     bool forceReload(bool reload = false) const;
@@ -89,7 +91,7 @@ public:
     TS timeSeries;
     numbers& timeseriesNumbers;
 
-    static const double emptyColumn[HOURS_PER_YEAR];
+    static const std::vector<double> emptyColumn; ///< used in getColumn if timeSeries empty
 };
 
 } // namespace Antares::Data

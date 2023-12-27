@@ -19,8 +19,6 @@ set(RTESOLVER_OPT
 		opt_numero_de_jour_du_pas_de_temps.cpp
 		opt_construction_variables_optimisees_quadratique.cpp
 		opt_decompte_variables_et_contraintes.cpp
-		opt_construction_matrice_des_contraintes_cas_quadratique.cpp
-		opt_construction_matrice_des_contraintes_cas_lineaire.cpp
 		opt_construction_matrice_des_contraintes_outils.cpp
 		opt_gestion_des_bornes_cas_lineaire.cpp
 		opt_verification_presence_reserve_jmoins1.cpp
@@ -29,7 +27,6 @@ set(RTESOLVER_OPT
 		opt_liberation_problemes_simplexe.cpp
 		opt_restaurer_les_donnees.cpp
 		opt_gestion_des_couts_cas_quadratique.cpp
-		opt_construction_contraintes_couts_demarrage.cpp
 		opt_construction_variables_couts_demarrages.cpp
 		opt_gestion_des_bornes_couts_demarrage.cpp
 		opt_gestion_des_couts_couts_demarrage.cpp
@@ -66,13 +63,22 @@ set(RTESOLVER_OPT
 		adequacy_patch_csr/csr_quadratic_problem.cpp
 		adequacy_patch_csr/count_constraints_variables.h
 		adequacy_patch_csr/count_constraints_variables.cpp
+		adequacy_patch_csr/constraints/CsrFlowDissociation.h
+		adequacy_patch_csr/constraints/CsrFlowDissociation.cpp
+		adequacy_patch_csr/constraints/CsrAreaBalance.h
+		adequacy_patch_csr/constraints/CsrAreaBalance.cpp
+		adequacy_patch_csr/constraints/CsrBindingConstraintHour.h
+		adequacy_patch_csr/constraints/CsrBindingConstraintHour.cpp
 
 		opt_period_string_generator_base.h
 		opt_rename_problem.h
 		opt_rename_problem.cpp
 
+
 		constraints/ConstraintBuilder.cpp
 		constraints/ConstraintBuilder.h
+		constraints/constraint_builder_utils.cpp
+		constraints/constraint_builder_utils.h
 		constraints/AreaBalance.h
 		constraints/AreaBalance.cpp
 		constraints/FictitiousLoad.h
@@ -119,6 +125,50 @@ set(RTESOLVER_OPT
 		constraints/NbDispUnitsMinBoundSinceMinUpTime.cpp
 		constraints/MinDownTime.h
 		constraints/MinDownTime.cpp
+
+		ProblemMatrixEssential.h
+		ProblemMatrixEssential.cpp
+		LinearProblemMatrixStartUpCosts.h
+		LinearProblemMatrixStartUpCosts.cpp
+		LinearProblemMatrix.h
+		LinearProblemMatrix.cpp
+		QuadraticProblemMatrix.h
+		QuadraticProblemMatrix.cpp
+		constraints/ConstraintGroup.h
+		constraints/Group1.h
+		constraints/Group1.cpp
+		constraints/BindingConstraintDayGroup.h
+		constraints/BindingConstraintDayGroup.cpp
+		constraints/BindingConstraintWeekGroup.h
+		constraints/BindingConstraintWeekGroup.cpp
+		constraints/HydroPowerGroup.h
+		constraints/HydroPowerGroup.cpp
+		constraints/HydraulicSmoothingGroup.h
+		constraints/HydraulicSmoothingGroup.cpp
+		constraints/MinMaxHydroPowerGroup.h
+		constraints/MinMaxHydroPowerGroup.cpp
+		constraints/MaxPumpingGroup.h
+		constraints/MaxPumpingGroup.cpp
+		constraints/AreaHydroLevelGroup.h
+		constraints/AreaHydroLevelGroup.cpp
+		constraints/FinalStockGroup.h
+		constraints/FinalStockGroup.cpp
+		constraints/AbstractStartUpCostsGroup.h
+		constraints/AbstractStartUpCostsGroup.cpp
+		constraints/PMinMaxDispatchableGenerationGroup.h
+		constraints/PMinMaxDispatchableGenerationGroup.cpp
+		constraints/ConsistenceNumberOfDispatchableUnitsGroup.h
+		constraints/ConsistenceNumberOfDispatchableUnitsGroup.cpp
+		constraints/NbUnitsOutageLessThanNbUnitsStopGroup.h
+		constraints/NbUnitsOutageLessThanNbUnitsStopGroup.cpp
+		constraints/NbDispUnitsMinBoundSinceMinUpTimeGroup.h
+		constraints/NbDispUnitsMinBoundSinceMinUpTimeGroup.cpp
+		constraints/MinDownTimeGroup.h
+		constraints/MinDownTimeGroup.cpp
+		constraints/ExchangeBalance.h
+		constraints/ExchangeBalance.cpp
+		constraints/ExchangeBalanceGroup.h
+		constraints/ExchangeBalanceGroup.cpp
 
 	)
 

@@ -143,12 +143,16 @@ public:
     ** \brief Get the name of the binding constraint
     */
     const ConstraintName& name() const;
+
     /*!
     ** \brief Set the name of the binding constraint
-    **
-    ** The ID will be changed in the same time
     */
     void name(const AnyString& newname);
+
+    /*!
+    ** \brief Set the pId of the binding constraint
+    */
+    void pId(const AnyString& name);
 
     /*!
     ** \brief Get the ID of the binding constraint
@@ -406,7 +410,7 @@ private:
     //! Comments
     YString pComments;
     //! Group
-    std::string group_;
+    std::string group_ = "default";
 
     void clear();
 

@@ -71,10 +71,12 @@ public:
     bool mpsToExport;
     //! named problems
     bool namedProblems = false;
+    //! enable solver logs
+    bool solverLogs = false;
     //! Ignore all constraints
     bool ignoreConstraints;
     //! Simulation mode
-    StudyMode forceMode;
+    SimulationMode forceMode;
 
     //! Enables the parallel computation of MC years
     bool enableParallel;

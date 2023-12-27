@@ -1,4 +1,4 @@
-#include "ortools_utils.h"
+#include "antares/solver/utils/ortools_utils.h"
 
 #include <antares/logs/logs.h>
 #include <antares/exception/AssertionError.hpp>
@@ -32,9 +32,9 @@ namespace Antares
 namespace Optimization
 {
 ProblemSimplexeNommeConverter::ProblemSimplexeNommeConverter(
-  const std::string& solverName,
-  const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe) :
- solverName_(solverName), problemeSimplexe_(problemeSimplexe)
+        const std::string& solverName,
+        const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe)
+    : solverName_(solverName), problemeSimplexe_(problemeSimplexe)
 {
     if (problemeSimplexe_->UseNamedProblems())
     {
@@ -49,12 +49,16 @@ MPSolver* ProblemSimplexeNommeConverter::Convert()
     TuneSolverSpecificOptions(solver);
 
     // Create the variables and set objective cost.
-    CopyObjective(solver);
+    CopyVariables(solver);
 
     // Create constraints and set coefs
     CopyRows(solver);
 
     CopyMatrix(solver);
+    if (problemeSimplexe_->SolverLogs())
+    {
+        solver->EnableOutput();
+    }
 
     return solver;
 }
@@ -95,27 +99,24 @@ void ProblemSimplexeNommeConverter::CopyMatrix(const MPSolver* solver)
     }
 }
 
-void ProblemSimplexeNommeConverter::UpdateCoefficient(unsigned idxVar,
-                                                      MPSolver* solver,
-                                                      MPObjective* const objective)
+void ProblemSimplexeNommeConverter::CreateVariable(unsigned idxVar,
+                                                   MPSolver* solver,
+                                                   MPObjective* const objective)
 {
-    double min_l = 0.0;
-    if (problemeSimplexe_->Xmin != NULL) // TODO[FOM] Remove enclosing if ?
-    {
-        min_l = problemeSimplexe_->Xmin[idxVar];
-    }
+    double min_l = problemeSimplexe_->Xmin[idxVar];
     double max_l = problemeSimplexe_->Xmax[idxVar];
-    const MPVariable* var = solver->MakeNumVar(min_l, max_l, variableNameManager_.GetName(idxVar));
+    bool isIntegerVariable = problemeSimplexe_->IntegerVariable(idxVar);
+    const MPVariable* var = solver->MakeVar(min_l, max_l, isIntegerVariable, variableNameManager_.GetName(idxVar));
     objective->SetCoefficient(var, problemeSimplexe_->CoutLineaire[idxVar]);
 }
 
-void ProblemSimplexeNommeConverter::CopyObjective(MPSolver* solver)
+void ProblemSimplexeNommeConverter::CopyVariables(MPSolver* solver)
 
 {
     MPObjective* const objective = solver->MutableObjective();
     for (int idxVar = 0; idxVar < problemeSimplexe_->NombreDeVariables; ++idxVar)
     {
-        UpdateCoefficient(idxVar, solver, objective);
+        CreateVariable(idxVar, solver, objective);
     }
 }
 
@@ -155,7 +156,7 @@ static void extractSolutionValues(const std::vector<MPVariable*>& variables,
     int nbVar = problemeSimplexe->NombreDeVariables;
     for (int idxVar = 0; idxVar < nbVar; ++idxVar)
     {
-        auto& var = variables[idxVar];
+        const MPVariable* var = variables[idxVar];
         problemeSimplexe->X[idxVar] = var->solution_value();
     }
 }
@@ -166,7 +167,7 @@ static void extractReducedCosts(const std::vector<MPVariable*>& variables,
     int nbVar = problemeSimplexe->NombreDeVariables;
     for (int idxVar = 0; idxVar < nbVar; ++idxVar)
     {
-        auto& var = variables[idxVar];
+        const MPVariable* var = variables[idxVar];
         problemeSimplexe->CoutsReduits[idxVar] = var->reduced_cost();
     }
 }
@@ -177,12 +178,12 @@ static void extractDualValues(const std::vector<MPConstraint*>& constraints,
   int nbRows = problemeSimplexe->NombreDeContraintes;
   for (int idxRow = 0; idxRow < nbRows; ++idxRow)
   {
-      auto& row = constraints[idxRow];
+      const MPConstraint* row = constraints[idxRow];
       problemeSimplexe->CoutsMarginauxDesContraintes[idxRow] = row->dual_value();
   }
 }
 
-static void extract_from_MPSolver(MPSolver* solver,
+static void extract_from_MPSolver(const MPSolver* solver,
                                   Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe)
 {
     assert(solver);
@@ -195,9 +196,9 @@ static void extract_from_MPSolver(MPSolver* solver,
 
     if (isMIP)
     {
+        // TODO extract dual values & marginal costs from LP with fixed integer variables
         const int nbVar = problemeSimplexe->NombreDeVariables;
         std::fill(problemeSimplexe->CoutsReduits, problemeSimplexe->CoutsReduits + nbVar, 0.);
-
         const int nbRows = problemeSimplexe->NombreDeContraintes;
         std::fill(problemeSimplexe->CoutsMarginauxDesContraintes,
                   problemeSimplexe->CoutsMarginauxDesContraintes + nbRows,
@@ -206,7 +207,6 @@ static void extract_from_MPSolver(MPSolver* solver,
     else
     {
         extractReducedCosts(solver->variables(), problemeSimplexe);
-
         extractDualValues(solver->constraints(), problemeSimplexe);
     }
 }

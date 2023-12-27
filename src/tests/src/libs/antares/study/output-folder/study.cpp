@@ -51,7 +51,7 @@ BOOST_AUTO_TEST_SUITE(s)
 
 BOOST_FIXTURE_TEST_CASE(economy_legacyfiles_emptylabel, Fixture)
 {
-    StudyMode mode = stdmEconomy;
+    SimulationMode mode = SimulationMode::Economy;
     ResultFormat fmt = legacyFilesDirectories;
     const YString label = "";
     const int64_t startTime = 1;
@@ -63,7 +63,7 @@ BOOST_FIXTURE_TEST_CASE(economy_legacyfiles_emptylabel, Fixture)
 
 BOOST_FIXTURE_TEST_CASE(economy_legacyfiles_label_now, Fixture)
 {
-    StudyMode mode = stdmEconomy;
+    SimulationMode mode = SimulationMode::Economy;
     ResultFormat fmt = legacyFilesDirectories;
     const YString label = "test";
     const int64_t startTime = 1672391667;
@@ -75,7 +75,7 @@ BOOST_FIXTURE_TEST_CASE(economy_legacyfiles_label_now, Fixture)
 
 BOOST_FIXTURE_TEST_CASE(adequacy_legacyfiles_label_now, Fixture)
 {
-    StudyMode mode = stdmAdequacy;
+    SimulationMode mode = SimulationMode::Adequacy;
     ResultFormat fmt = legacyFilesDirectories;
     const YString label = "test";
     const int64_t startTime = 1672391667;
@@ -93,7 +93,7 @@ BOOST_FIXTURE_TEST_CASE(adequacy_legacyfiles_label_now, Fixture)
 
 BOOST_FIXTURE_TEST_CASE(adequacy_zip_label_now, Fixture)
 {
-    StudyMode mode = stdmAdequacy;
+    SimulationMode mode = SimulationMode::Adequacy;
     ResultFormat fmt = zipArchive;
     const YString label = "test";
     const int64_t startTime = 1672391667;

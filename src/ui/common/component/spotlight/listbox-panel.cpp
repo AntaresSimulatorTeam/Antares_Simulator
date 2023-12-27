@@ -222,7 +222,8 @@ void ListboxPanel::onDraw(wxPaintEvent&)
             {
                 auto& item = *(items[i]);
                 auto& group = item.group();
-                if (!(!group) && group != pLastGroupName)
+
+                if (!(!group) && YString(group) != pLastGroupName)
                     pLastGroupName = group;
             }
             continue;
@@ -234,7 +235,7 @@ void ListboxPanel::onDraw(wxPaintEvent&)
         // Draw of the group name if the flag is enabled
         if ((0 != (pFlags & Spotlight::optGroups)))
         {
-            if (!(!group) && group != pLastGroupName)
+            if (!(!group) && YString(group) != pLastGroupName)
             {
                 // Drawing the new group
                 bounds.x = 0;

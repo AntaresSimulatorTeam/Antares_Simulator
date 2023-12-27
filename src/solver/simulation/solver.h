@@ -29,15 +29,14 @@
 
 #include <antares/study/study.h>
 #include <antares/logs/logs.h>
-#include <antares/study/fwd.h> // PowerFluctuations
 #include <antares/benchmarking/DurationCollector.h>
 
 #include <yuni/core/string.h>
 #include <yuni/job/queue/service.h>
 #include "../variable/state.h"
-#include "../misc/options.h"
+#include "antares/solver/misc/options.h"
 #include "solver.data.h"
-#include "solver.utils.h"
+#include "solver_utils.h"
 #include "../hydro/management/management.h"
 
 #include <antares/writer/writer_factory.h>
@@ -124,7 +123,8 @@ private:
     */
     void computeRandomNumbers(randomNumbers& randomForYears,
                               std::vector<uint>& years,
-                              std::map<unsigned int, bool>& isYearPerformed);
+                              std::map<unsigned int, bool>& isYearPerformed,
+                              MersenneTwister& randomHydro);
 
     /*!
     ** \brief Computes statistics on annual (system and solution) costs, to be printed in output
@@ -157,15 +157,13 @@ private:
     uint pNbMaxPerformedYearsInParallel;
     //! Year by year output results
     bool pYearByYear;
-    //! Hydro management
-    HydroManagement hydroManagement;
     //! Hydro hot start
     bool pHydroHotStart;
     //! The first set of parallel year(s) with a performed year was already run ?
     bool pFirstSetParallelWithAPerformedYearWasRun;
 
     //! Statistics about annual (system and solution) costs
-    annualCostsStatistics pAnnualCostsStatistics;
+    annualCostsStatistics pAnnualStatistics;
 
     // Collecting durations inside the simulation
     Benchmarking::IDurationCollector& pDurationCollector;
