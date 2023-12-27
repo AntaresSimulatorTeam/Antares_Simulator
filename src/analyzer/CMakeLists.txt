@@ -54,6 +54,7 @@ target_link_libraries(antares-${ANTARES_PRG_VERSION}-analyzer
 			Antares::args_helper
 			${CMAKE_THREADS_LIBS_INIT}
 		antares-core #local.h
+		Antares::misc
 		PUBLIC
 			Antares::study #atsp -> xcast
 			Antares::sys

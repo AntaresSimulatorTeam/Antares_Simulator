@@ -82,18 +82,6 @@ public:
     uint prepareClustersInMustRunMode();
 
     /*!
-    ** \brief Removes disabled thermal clusters
-    **
-    ** All clusters with the flag 'enabled' turned to false will be removed from 'list'.
-    ** As a consequence, they will no longer be seen as thermal clusters
-    ** from the solver's point of view.
-    ** \warning This method should only be used from the solver
-    **
-    ** \return The number of disabled clusters found
-    */
-    uint removeDisabledClusters();
-
-    /*!
     ** \brief Invalidate all JIT data
     */
     bool forceReload(bool reload) const;

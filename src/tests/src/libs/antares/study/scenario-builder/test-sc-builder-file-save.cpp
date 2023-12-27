@@ -66,7 +66,6 @@ void addClusterToAreaList(Area* area, std::shared_ptr<ThermalCluster> cluster)
 
 void addClusterToAreaList(Area* area, std::shared_ptr<RenewableCluster> cluster)
 {
-    area->renewable.clusters.push_back(cluster.get());
     area->renewable.list.add(cluster);
 }
 

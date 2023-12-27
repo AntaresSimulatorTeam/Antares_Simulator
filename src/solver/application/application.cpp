@@ -1,4 +1,4 @@
-#include "application.h"
+#include "antares/application/application.h"
 
 #include <antares/sys/policy.h>
 #include <antares/resources/resources.h>
@@ -13,10 +13,12 @@
 
 #include "signal-handling/public.h"
 
-#include "misc/system-memory.h"
-#include "misc/write-command-line.h"
+#include "antares/solver/misc/system-memory.h"
+#include "antares/solver/misc/write-command-line.h"
 
-#include "utils/ortools_utils.h"
+#include "antares/solver/utils/ortools_utils.h"
+#include "../../config.h"
+
 #include <antares/infoCollection/StudyInfoCollector.h>
 
 #include <yuni/datetime/timestamp.h>
@@ -223,10 +225,11 @@ void Application::execute()
     // Run the simulation
     switch (pStudy->runtime->mode)
     {
-    case Data::stdmEconomy:
+    case Data::SimulationMode::Economy:
+    case Data::SimulationMode::Expansion:
         runSimulationInEconomicMode();
         break;
-    case Data::stdmAdequacy:
+    case Data::SimulationMode::Adequacy:
         runSimulationInAdequacyMode();
         break;
     default:
@@ -466,7 +469,10 @@ Application::~Application()
     // Release all allocated data
     if (pStudy)
     {
-        logs.info() << LOG_UI_SOLVER_DONE;
+        try
+        {
+            logs.info() << LOG_UI_SOLVER_DONE;
+        } catch (...) {}; //Catching log exception
 
         // Copy the log file if a result writer is available
         if (!pStudy->parameters.noOutput && resultWriter)

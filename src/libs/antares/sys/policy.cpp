@@ -75,7 +75,7 @@ static void OpenFromINIFileWL(const String& filename, const StringT& hostname)
     ini.each([&](const IniFile::Section& section) {
         // This section is dedicated to another host
         if (section.name == "*:*" or section.name == "*:" ANTARES_VERSION
-            or section.name == hostnameAll or section.name == hostnameVersion)
+            or section.name.equals(hostnameAll) or section.name.equals(hostnameVersion))
         {
             section.each([&](const IniFile::Property& property) {
                 key = property.key;

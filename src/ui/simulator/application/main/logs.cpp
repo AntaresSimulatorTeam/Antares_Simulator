@@ -34,6 +34,7 @@
 #include "../../windows/message.h"
 #include "../../toolbox/components/htmllistbox/item/error.h"
 #include "internal-ids.h"
+#include <atomic>
 
 using namespace Yuni;
 
@@ -55,7 +56,7 @@ using WaitingLogEntries = std::vector<LogInfo*>;
 WaitingLogEntries waitingLogEntry;
 Yuni::Mutex logMutex;
 
-Yuni::Atomic::Int<> logUpdateCount;
+std::atomic<int> logUpdateCount;
 
 class LogFlusherTimer final : public wxTimer
 {

@@ -2,7 +2,7 @@
 
 #include <string>
 #include <memory>
-#include "../optimisation/opt_period_string_generator_base.h"
+#include "../../../../../optimisation/opt_period_string_generator_base.h"
 
 std::shared_ptr<OptPeriodStringGenerator> createOptPeriodAsString(bool isOptimizationWeekly,
                                                                   unsigned int day,

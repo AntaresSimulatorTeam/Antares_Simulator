@@ -704,7 +704,7 @@ bool isConstraintSelected(const Yuni::String& constraintName)
     for (auto i = gData->constraints.begin(); i != end; ++i)
     {
         auto constraint = *i;
-        if (constraint->name() == constraintName)
+        if (constraint->name().equals(constraintName))
         {
             return true;
         }

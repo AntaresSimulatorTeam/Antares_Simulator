@@ -51,7 +51,7 @@ RenewableClusterSummarySingleArea::~RenewableClusterSummarySingleArea()
 wxString RenewableClusterSummarySingleArea::rowCaption(int rowIndx) const
 {
     if (pArea)
-        return wxStringFromUTF8(pArea->renewable.list.byIndex[rowIndx]->name());
+        return wxStringFromUTF8(pArea->renewable.list[rowIndx]->name());
     return wxEmptyString;
 }
 
@@ -71,7 +71,7 @@ wxString RenewableClusterSummarySingleArea::columnCaption(int colIndx) const
 wxString RenewableClusterSummarySingleArea::cellValue(int x, int y) const
 {
     Data::RenewableCluster* cluster = (pArea and (uint) y < pArea->renewable.list.size())
-                                        ? pArea->renewable.list.byIndex[y]
+                                        ? pArea->renewable.list[y].get()
                                         : nullptr;
     switch (x)
     {
@@ -90,7 +90,7 @@ wxString RenewableClusterSummarySingleArea::cellValue(int x, int y) const
 double RenewableClusterSummarySingleArea::cellNumericValue(int x, int y) const
 {
     Data::RenewableCluster* cluster = (pArea and (uint) y < pArea->renewable.list.size())
-                                        ? pArea->renewable.list.byIndex[y]
+                                        ? pArea->renewable.list[y].get()
                                         : nullptr;
     // gp : do we wish to have the line empty if cluster disabled
     // if (!cluster->enabled)
@@ -112,7 +112,7 @@ double RenewableClusterSummarySingleArea::cellNumericValue(int x, int y) const
 bool RenewableClusterSummarySingleArea::cellValue(int x, int y, const String& v)
 {
     auto* cluster = (pArea and (uint) y < pArea->renewable.list.size())
-                      ? pArea->renewable.list.byIndex[y]
+                      ? pArea->renewable.list[y].get()
                       : nullptr;
 
     if (cluster)

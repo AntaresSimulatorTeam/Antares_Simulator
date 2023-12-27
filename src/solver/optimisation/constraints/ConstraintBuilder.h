@@ -8,7 +8,7 @@
 
 #include <utility>
 
-namespace Variable
+namespace NewVariable
 {
 
 /*!
@@ -20,7 +20,7 @@ public:
     VariableManager(const CORRESPONDANCES_DES_VARIABLES& nativeOptimVar,
                     const std::vector<int>& NumeroDeVariableStockFinal,
                     const std::vector<std::vector<int>>& NumeroDeVariableDeTrancheDeStock) :
-     nativeOptimVar(nativeOptimVar),
+     nativeOptimVar_(nativeOptimVar),
      NumeroDeVariableStockFinal(NumeroDeVariableStockFinal),
      NumeroDeVariableDeTrancheDeStock(NumeroDeVariableDeTrancheDeStock)
     {
@@ -28,88 +28,90 @@ public:
 
     int DispatchableProduction(unsigned int index) const
     {
-        return nativeOptimVar.NumeroDeVariableDuPalierThermique[index];
+        return nativeOptimVar_.NumeroDeVariableDuPalierThermique[index];
     }
 
     int NumberOfDispatchableUnits(unsigned int index) const
     {
-        return nativeOptimVar.NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[index];
+        return nativeOptimVar_.NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[index];
     }
 
     int NumberStoppingDispatchableUnits(unsigned int index) const
     {
-        return nativeOptimVar.NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique[index];
+        return nativeOptimVar_
+          .NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique[index];
     }
 
     int NumberStartingDispatchableUnits(unsigned int index) const
     {
-        return nativeOptimVar.NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique[index];
+        return nativeOptimVar_
+          .NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique[index];
     }
 
     int NumberBreakingDownDispatchableUnits(unsigned int index) const
     {
-        return nativeOptimVar
+        return nativeOptimVar_
           .NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique[index];
     }
 
     int NTCDirect(unsigned int index) const
     {
-        return nativeOptimVar.NumeroDeVariableDeLInterconnexion[index];
+        return nativeOptimVar_.NumeroDeVariableDeLInterconnexion[index];
     }
 
     int IntercoDirectCost(unsigned int index) const
     {
-        return nativeOptimVar.NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[index];
+        return nativeOptimVar_.NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[index];
     }
 
     int IntercoIndirectCost(unsigned int index) const
     {
-        return nativeOptimVar.NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[index];
+        return nativeOptimVar_.NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[index];
     }
 
     int ShortTermStorageInjection(unsigned int index) const
     {
-        return nativeOptimVar.SIM_ShortTermStorage.InjectionVariable[index];
+        return nativeOptimVar_.SIM_ShortTermStorage.InjectionVariable[index];
     }
 
     int ShortTermStorageWithdrawal(unsigned int index) const
     {
-        return nativeOptimVar.SIM_ShortTermStorage.WithdrawalVariable[index];
+        return nativeOptimVar_.SIM_ShortTermStorage.WithdrawalVariable[index];
     }
 
     int ShortTermStorageLevel(unsigned int index) const
     {
-        return nativeOptimVar.SIM_ShortTermStorage.LevelVariable[index];
+        return nativeOptimVar_.SIM_ShortTermStorage.LevelVariable[index];
     }
 
     int HydProd(unsigned int index) const
     {
-        return nativeOptimVar.NumeroDeVariablesDeLaProdHyd[index];
+        return nativeOptimVar_.NumeroDeVariablesDeLaProdHyd[index];
     }
 
     int HydProdDown(unsigned int index) const
     {
-        return nativeOptimVar.NumeroDeVariablesVariationHydALaBaisse[index];
+        return nativeOptimVar_.NumeroDeVariablesVariationHydALaBaisse[index];
     }
 
     int HydProdUp(unsigned int index) const
     {
-        return nativeOptimVar.NumeroDeVariablesVariationHydALaHausse[index];
+        return nativeOptimVar_.NumeroDeVariablesVariationHydALaHausse[index];
     }
 
     int Pumping(unsigned int index) const
     {
-        return nativeOptimVar.NumeroDeVariablesDePompage[index];
+        return nativeOptimVar_.NumeroDeVariablesDePompage[index];
     }
 
     int HydroLevel(unsigned int index) const
     {
-        return nativeOptimVar.NumeroDeVariablesDeNiveau[index];
+        return nativeOptimVar_.NumeroDeVariablesDeNiveau[index];
     }
 
     int Overflow(unsigned int index) const
     {
-        return nativeOptimVar.NumeroDeVariablesDeDebordement[index];
+        return nativeOptimVar_.NumeroDeVariablesDeDebordement[index];
     }
 
     int FinalStorage(unsigned int index) const
@@ -124,21 +126,47 @@ public:
 
     int PositiveUnsuppliedEnergy(unsigned int index) const
     {
-        return nativeOptimVar.NumeroDeVariableDefaillancePositive[index];
+        return nativeOptimVar_.NumeroDeVariableDefaillancePositive[index];
     }
 
     int NegativeUnsuppliedEnergy(unsigned int index) const
     {
-        return nativeOptimVar.NumeroDeVariableDefaillanceNegative[index];
+        return nativeOptimVar_.NumeroDeVariableDefaillanceNegative[index];
     }
 
 private:
-    const CORRESPONDANCES_DES_VARIABLES& nativeOptimVar;
+    const CORRESPONDANCES_DES_VARIABLES& nativeOptimVar_;
     const std::vector<int>& NumeroDeVariableStockFinal;
     const std::vector<std::vector<int>>& NumeroDeVariableDeTrancheDeStock;
 };
+} // namespace NewVariable
 
-} // namespace Variable
+// TODO God struct should be decomposed
+class ConstraintBuilderData
+{
+public:
+    std::vector<double>& Pi;
+    std::vector<int>& Colonne;
+    int& nombreDeContraintes;
+    int& nombreDeTermesDansLaMatriceDeContrainte;
+    std::vector<int>& IndicesDebutDeLigne;
+    std::vector<double>& CoefficientsDeLaMatriceDesContraintes;
+    std::vector<int>& IndicesColonnes;
+    int& NombreDeTermesAllouesDansLaMatriceDesContraintes; // TODO Check if ref is needed
+    std::vector<int>& NombreDeTermesDesLignes;
+    std::string& Sens;
+    int& IncrementDAllocationMatriceDesContraintes;
+    const std::vector<CORRESPONDANCES_DES_VARIABLES>& CorrespondanceVarNativesVarOptim;
+    const int32_t& NombreDePasDeTempsPourUneOptimisation;
+    const std::vector<int>& NumeroDeVariableStockFinal;
+    const std::vector<std::vector<int>>& NumeroDeVariableDeTrancheDeStock;
+    std::vector<std::string>& NomDesContraintes;
+    const bool& NamedProblems;
+    const std::vector<const char*>& NomsDesPays;
+    const uint32_t& weekInTheYear;
+    const uint32_t& NombreDePasDeTemps;
+    uint32_t* NbTermesContraintesPourLesCoutsDeDemarrage = nullptr;
+};
 
 /*! \verbatim
 this class build up the business object 'Constraint',
@@ -155,12 +183,8 @@ finally the build() method gather all variables and put them into the matrix
 class ConstraintBuilder
 {
 public:
-    ConstraintBuilder(
-      PROBLEME_HEBDO& problemeHebdo,
-      const std::vector<CORRESPONDANCES_DES_VARIABLES>& CorrespondanceVarNativesVarOptim) :
-     problemeHebdo(problemeHebdo),
-     problemeAResoudre(*problemeHebdo.ProblemeAResoudre),
-     varNative(CorrespondanceVarNativesVarOptim)
+    ConstraintBuilder() = delete;
+    explicit ConstraintBuilder(ConstraintBuilderData& data) : data(data)
     {
     }
 
@@ -183,85 +207,48 @@ public:
                                               int offset = 0,
                                               int delta = 0);
 
-    ConstraintBuilder& NumberOfDispatchableUnits(unsigned int index,
-                                                 double coeff,
-                                                 int offset = 0,
-                                                 int delta = 0);
+    ConstraintBuilder& NumberOfDispatchableUnits(unsigned int index, double coeff);
 
-    ConstraintBuilder& NumberStoppingDispatchableUnits(unsigned int index,
-                                                       double coeff,
-                                                       int offset = 0,
-                                                       int delta = 0);
+    ConstraintBuilder& NumberStoppingDispatchableUnits(unsigned int index, double coeff);
 
-    ConstraintBuilder& NumberStartingDispatchableUnits(unsigned int index,
-                                                       double coeff,
-                                                       int offset = 0,
-                                                       int delta = 0);
+    ConstraintBuilder& NumberStartingDispatchableUnits(unsigned int index, double coeff);
 
-    ConstraintBuilder& NumberBreakingDownDispatchableUnits(unsigned int index,
-                                                           double coeff,
-                                                           int offset = 0,
-
-                                                           int delta = 0);
+    ConstraintBuilder& NumberBreakingDownDispatchableUnits(unsigned int index, double coeff);
 
     ConstraintBuilder& NTCDirect(unsigned int index, double coeff, int offset = 0, int delta = 0);
 
-    ConstraintBuilder& IntercoDirectCost(unsigned int index,
-                                         double coeff,
-                                         int offset = 0,
-                                         int delta = 0);
+    ConstraintBuilder& IntercoDirectCost(unsigned int index, double coeff);
 
-    ConstraintBuilder& IntercoIndirectCost(unsigned int index,
-                                           double coeff,
-                                           int offset = 0,
-                                           int delta = 0);
+    ConstraintBuilder& IntercoIndirectCost(unsigned int index, double coeff);
 
-    ConstraintBuilder& ShortTermStorageInjection(unsigned int index,
-                                                 double coeff,
-                                                 int offset = 0,
-                                                 int delta = 0);
+    ConstraintBuilder& ShortTermStorageInjection(unsigned int index, double coeff);
 
-    ConstraintBuilder& ShortTermStorageWithdrawal(unsigned int index,
-                                                  double coeff,
-                                                  int offset = 0,
-                                                  int delta = 0);
+    ConstraintBuilder& ShortTermStorageWithdrawal(unsigned int index, double coeff);
 
     ConstraintBuilder& ShortTermStorageLevel(unsigned int index,
                                              double coeff,
                                              int offset = 0,
                                              int delta = 0);
 
-    ConstraintBuilder& HydProd(unsigned int index, double coeff, int offset = 0, int delta = 0);
+    ConstraintBuilder& HydProd(unsigned int index, double coeff);
 
-    ConstraintBuilder& HydProdDown(unsigned int index, double coeff, int offset = 0, int delta = 0);
+    ConstraintBuilder& HydProdDown(unsigned int index, double coeff);
 
-    ConstraintBuilder& HydProdUp(unsigned int index, double coeff, int offset = 0, int delta = 0);
+    ConstraintBuilder& HydProdUp(unsigned int index, double coeff);
 
-    ConstraintBuilder& Pumping(unsigned int index, double coeff, int offset = 0, int delta = 0);
+    ConstraintBuilder& Pumping(unsigned int index, double coeff);
 
-    ConstraintBuilder& HydroLevel(unsigned int index, double coeff, int offset = 0, int delta = 0);
+    ConstraintBuilder& HydroLevel(unsigned int index, double coeff);
 
-    ConstraintBuilder& Overflow(unsigned int index, double coeff, int offset = 0, int delta = 0);
+    ConstraintBuilder& Overflow(unsigned int index, double coeff);
 
-    ConstraintBuilder& FinalStorage(unsigned int index,
-                                    double coeff,
-                                    int offset = 0,
-                                    int delta = 0);
+    ConstraintBuilder& FinalStorage(unsigned int index, double coeff);
 
-    ConstraintBuilder& PositiveUnsuppliedEnergy(unsigned int index,
-                                                double coeff,
-                                                int offset = 0,
-                                                int delta = 0);
-    ConstraintBuilder& NegativeUnsuppliedEnergy(unsigned int index,
-                                                double coeff,
-                                                int offset = 0,
-                                                int delta = 0);
+    ConstraintBuilder& PositiveUnsuppliedEnergy(unsigned int index, double coeff);
 
-    ConstraintBuilder& LayerStorage(unsigned area,
-                                    unsigned layer,
-                                    double coeff,
-                                    int offset = 0,
-                                    int delta = 0);
+    ConstraintBuilder& NegativeUnsuppliedEnergy(unsigned int index, double coeff);
+
+    ConstraintBuilder& LayerStorage(unsigned area, unsigned layer, double coeff);
     //@}
 
     class ConstraintBuilderInvalidOperator : public std::runtime_error
@@ -331,10 +318,12 @@ public:
         return nombreDeTermes_;
     }
 
+    ConstraintBuilderData& data;
+
 private:
-    PROBLEME_HEBDO& problemeHebdo;
-    PROBLEME_ANTARES_A_RESOUDRE& problemeAResoudre;
-    const std::vector<CORRESPONDANCES_DES_VARIABLES>& varNative;
+    void OPT_ChargerLaContrainteDansLaMatriceDesContraintes();
+
+    void OPT_AugmenterLaTailleDeLaMatriceDesContraintes();
 
     unsigned int hourInWeek_ = 0;
 
@@ -350,34 +339,52 @@ private:
      * @param delta: number of time steps for the variable
      * @return VariableManager object
      */
-    Variable::VariableManager GetVariableManager(int offset = 0, int delta = 0) const;
+    NewVariable::VariableManager GetVariableManager(int offset = 0, int delta = 0) const;
 };
 
 /*! factory class to build a Constraint */
 class ConstraintFactory
 {
 public:
-    explicit ConstraintFactory(PROBLEME_HEBDO* problemeHebdo) :
-     problemeHebdo(problemeHebdo),
-     builder(*problemeHebdo, problemeHebdo->CorrespondanceVarNativesVarOptim)
+    ConstraintFactory() = delete;
+    explicit ConstraintFactory(ConstraintBuilder& builder) : builder(builder)
     {
     }
-
-    PROBLEME_HEBDO* problemeHebdo;
-    ConstraintBuilder builder;
+    ConstraintBuilder& builder;
 };
 
 // Helper functions
-inline void exportPaliers(const PROBLEME_HEBDO& problemeHebdo,
-                          ConstraintBuilder& constraintBuilder,
-                          int pays)
+inline void ExportPaliers(const PALIERS_THERMIQUES& PaliersThermiquesDuPays,
+                          ConstraintBuilder& newConstraintBuilder)
 {
-    const PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo.PaliersThermiquesDuPays[pays];
-
     for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
     {
         const int palier
           = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
-        constraintBuilder.DispatchableProduction(palier, -1.0);
+        newConstraintBuilder.DispatchableProduction(palier, -1.0);
     }
 }
+
+class BindingConstraintData
+{
+public:
+    const char& TypeDeContrainteCouplante;
+    const int& NombreDInterconnexionsDansLaContrainteCouplante;
+    const std::vector<int>& NumeroDeLInterconnexion;
+    const std::vector<double>& PoidsDeLInterconnexion;
+    const std::vector<int>& OffsetTemporelSurLInterco;
+    const int& NombreDePaliersDispatchDansLaContrainteCouplante;
+    const std::vector<int>& PaysDuPalierDispatch;
+    const std::vector<int>& NumeroDuPalierDispatch;
+    const std::vector<double>& PoidsDuPalierDispatch;
+    const std::vector<int>& OffsetTemporelSurLePalierDispatch;
+    const char& SensDeLaContrainteCouplante;
+    const char* const& NomDeLaContrainteCouplante;
+    const std::vector<PALIERS_THERMIQUES>& PaliersThermiquesDuPays;
+};
+
+struct StartUpCostsData
+{
+    const std::vector<PALIERS_THERMIQUES>& PaliersThermiquesDuPays;
+    bool Simulation;
+};

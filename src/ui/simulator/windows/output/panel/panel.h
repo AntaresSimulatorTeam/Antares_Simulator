@@ -36,6 +36,7 @@
 #include <yuni/core/event.h>
 
 #include <memory>
+#include <atomic>
 
 namespace Antares
 {
@@ -156,7 +157,7 @@ private:
 
     //! The total number of panels currently calling loadDataFromFile
     // This method is often an async call
-    static Yuni::Atomic::Int<32> pPanelsInCallingLoadDataFromFile;
+    static std::atomic<int> pPanelsInCallingLoadDataFromFile;
 
 }; // class Panel
 

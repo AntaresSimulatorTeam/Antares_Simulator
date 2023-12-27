@@ -7,7 +7,10 @@
 class PMinDispatchableGeneration : private ConstraintFactory
 {
 public:
-    using ConstraintFactory::ConstraintFactory;
+    PMinDispatchableGeneration(ConstraintBuilder& builder, StartUpCostsData& data) :
+     ConstraintFactory(builder), data(data)
+    {
+    }
 
     /*!
      * @brief Add variables to the constraint and update constraints Matrix
@@ -16,5 +19,8 @@ public:
      * @param pdt : timestep
      * @param Simulation : ---
      */
-    void add(int pays, int cluster, int clusterIndex, int pdt, bool Simulation);
+    void add(int pays, int index, int pdt);
+
+private:
+    StartUpCostsData& data;
 };

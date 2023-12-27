@@ -62,3 +62,9 @@ void OPT_ExportAreaName(Antares::Solver::IResultWriter& writer,
     }
     writer.addEntryFromBuffer(filename, Flot);
 }
+
+void OPT_ExportStructures(PROBLEME_HEBDO* problemeHebdo, Antares::Solver::IResultWriter& writer)
+{
+    OPT_ExportInterco(writer, problemeHebdo);
+    OPT_ExportAreaName(writer, problemeHebdo->NomsDesPays);
+}

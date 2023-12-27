@@ -57,15 +57,15 @@ static void importShortTermStorages(
             toInsert.clusterGlobalIndex = clusterGlobalIndex;
 
             // Properties
-            toInsert.reservoirCapacity = st->properties.reservoirCapacity.value();
-            toInsert.efficiency = st->properties.efficiencyFactor;
-            toInsert.injectionNominalCapacity = st->properties.injectionNominalCapacity.value();
-            toInsert.withdrawalNominalCapacity = st->properties.withdrawalNominalCapacity.value();
-            toInsert.initialLevel = st->properties.initialLevel;
-            toInsert.initialLevelOptim = st->properties.initialLevelOptim;
-            toInsert.name = st->properties.name;
+            toInsert.reservoirCapacity = st.properties.reservoirCapacity.value();
+            toInsert.efficiency = st.properties.efficiencyFactor;
+            toInsert.injectionNominalCapacity = st.properties.injectionNominalCapacity.value();
+            toInsert.withdrawalNominalCapacity = st.properties.withdrawalNominalCapacity.value();
+            toInsert.initialLevel = st.properties.initialLevel;
+            toInsert.initialLevelOptim = st.properties.initialLevelOptim;
+            toInsert.name = st.properties.name;
 
-            toInsert.series = st->series;
+            toInsert.series = st.series;
 
             // TODO add missing properties, or use the same struct
             storageIndex++;
@@ -83,7 +83,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
 
     auto& parameters = study.parameters;
 
-    problem.Expansion = parameters.expansion;
+    problem.Expansion = (parameters.mode == Data::SimulationMode::Expansion);
     problem.firstWeekOfSimulation = false;
 
     problem.hydroHotStart
@@ -285,7 +285,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
 
         for (uint clusterIndex = 0; clusterIndex != area.thermal.list.size(); ++clusterIndex)
         {
-            auto& cluster = *(area.thermal.list.byIndex[clusterIndex]);
+            auto& cluster = *(area.thermal.list[clusterIndex]);
             pbPalier.NumeroDuPalierDansLEnsembleDesPaliersThermiques[clusterIndex]
               = NombrePaliers + clusterIndex;
             pbPalier.TailleUnitaireDUnGroupeDuPalierThermique[clusterIndex]
@@ -408,8 +408,6 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
     {
         problem.coutOptimalSolution1[opt] = 0.;
         problem.coutOptimalSolution2[opt] = 0.;
-        problem.tempsResolution1[opt] = 0.;
-        problem.tempsResolution2[opt] = 0.;
     }
 
     for (uint k = 0; k < studyruntime.interconnectionsCount(); ++k)
@@ -589,8 +587,6 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
             double windSeries = area.wind.series.getCoefficient(year, hourInYear);
             double solarSeries = area.solar.series.getCoefficient(year, hourInYear);
             double rorSeries = area.hydro.series->ror.getCoefficient(year, hourInYear);
-
-            assert(&scratchpad);
 
             double& mustRunGen = problem.AllMustRunGeneration[hourInWeek].AllMustRunGenerationOfArea[k];
             if (parameters.renewableGeneration.isAggregated())
