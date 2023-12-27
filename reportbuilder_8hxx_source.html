@@ -416,152 +416,150 @@ $(document).ready(function(){initNavTree('reportbuilder_8hxx_source.html',''); i
 <div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>        <span class="keywordflow">if</span> (VariablesStatsByDataLevel&lt;NextT, Category::thermalAggregate&gt;::count)</div>
 <div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>        {</div>
 <div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>            <span class="keyword">auto</span>&amp; area = *results.data.area;</div>
-<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>            <span class="keyword">auto</span> end = area.thermal.list.end();</div>
-<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>            <span class="keywordflow">for</span> (<span class="keyword">auto</span> i = area.thermal.list.begin(); i != end; ++i)</div>
-<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>            {</div>
-<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>                <span class="keyword">auto</span>&amp; cluster = *(i-&gt;second);</div>
-<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>                results.data.thermalCluster = &amp;cluster;</div>
-<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span> </div>
-<div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span>                logs.info() &lt;&lt; <span class="stringliteral">&quot;Exporting results : &quot;</span> &lt;&lt; area.name &lt;&lt; <span class="stringliteral">&quot; :: &quot;</span> &lt;&lt; cluster.name();</div>
-<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>                <span class="comment">// The new output</span></div>
-<div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>                results.data.output.clear();</div>
-<div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span>                results.data.output &lt;&lt; results.data.originalOutput &lt;&lt; SEP &lt;&lt; <span class="stringliteral">&quot;areas&quot;</span> &lt;&lt; SEP</div>
-<div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>                                    &lt;&lt; area.id &lt;&lt; SEP &lt;&lt; <span class="stringliteral">&quot;thermal&quot;</span> &lt;&lt; SEP &lt;&lt; cluster.id();</div>
-<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span> </div>
-<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>                SurveyReportBuilderFile&lt;GlobalT, NextT, CDataLevel&gt;::Run(list, results, numSpace);</div>
-<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>            }</div>
-<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>        }</div>
-<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>    }</div>
-<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span> </div>
-<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> RunForEachLink(<span class="keyword">const</span> ListType&amp; list, SurveyResults&amp; results, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace)</div>
-<div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span>    {</div>
-<div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span>        <span class="keyword">using namespace </span>Yuni;</div>
-<div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span> </div>
-<div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span>        <span class="comment">// No need to do anything for any link here if no link variables were selected.</span></div>
-<div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span>        uint selectedLinkVarsCount</div>
-<div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span>          = results.data.study.parameters.variablesPrintInfo.getNbSelectedLinkVars();</div>
-<div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span>        <span class="keywordflow">if</span> (!selectedLinkVarsCount)</div>
-<div class="line"><a id="l00352" name="l00352"></a><span class="lineno">  352</span>            <span class="keywordflow">return</span>;</div>
-<div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span> </div>
-<div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span>        <span class="keywordtype">int</span> count_int = VariablesStatsByDataLevel&lt;NextT, Category::link&gt;::count;</div>
-<div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span>        <span class="keywordflow">if</span> (count_int)</div>
-<div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span>        {</div>
-<div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span>            <span class="keyword">auto</span>&amp; area = *results.data.area;</div>
-<div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span>            <span class="keyword">auto</span> end = area.links.end();</div>
-<div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span>            <span class="keywordflow">for</span> (<span class="keyword">auto</span> i = area.links.begin(); i != end; ++i)</div>
-<div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span>            {</div>
-<div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span>                <span class="comment">// The link</span></div>
-<div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span>                <span class="keyword">auto</span>&amp; link = *(i-&gt;second);</div>
-<div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span>                results.data.link = &amp;link;</div>
-<div class="line"><a id="l00364" name="l00364"></a><span class="lineno">  364</span> </div>
-<div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span>                <span class="comment">// Skipping the creation of a result directory if it is meant to be empty.</span></div>
-<div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span>                <span class="comment">// ... Getting few indicators value before deciding if we skip the results directory</span></div>
-<div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span>                <span class="comment">// creation.</span></div>
-<div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span>                <span class="keywordtype">bool</span> printingSynthesis</div>
-<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span>                  = GlobalT; <span class="comment">// Are we printing synthesis or year-by-year results ?</span></div>
-<div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span>                <span class="keywordtype">bool</span> filterAllYearByYear = !(link.filterYearByYear &amp; Data::filterAll);</div>
-<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span>                <span class="keywordtype">bool</span> filterAllSynthesis = !(link.filterSynthesis &amp; Data::filterAll);</div>
-<div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span> </div>
-<div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span>                <span class="comment">// ... Do we skip the current link&#39;s result directory creation because no results</span></div>
-<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span>                <span class="comment">// were asked</span></div>
-<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span>                <span class="comment">//     in the inspector for the current link ?</span></div>
-<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span>                <span class="keywordtype">bool</span> skipDirectory = (!printingSynthesis &amp;&amp; filterAllYearByYear)</div>
-<div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span>                                     || (printingSynthesis &amp;&amp; filterAllSynthesis);</div>
-<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span> </div>
-<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span>                <span class="keywordflow">if</span> (!skipDirectory)</div>
-<div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>                {</div>
-<div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>                    Antares::logs.info() &lt;&lt; <span class="stringliteral">&quot;Exporting results : &quot;</span> &lt;&lt; area.name &lt;&lt; <span class="stringliteral">&quot; - &quot;</span></div>
-<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span>                                         &lt;&lt; results.data.link-&gt;with-&gt;name;</div>
-<div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span>                    <span class="comment">// The new output</span></div>
-<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>                    results.data.output.clear();</div>
-<div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span>                    results.data.output &lt;&lt; results.data.originalOutput &lt;&lt; SEP &lt;&lt; <span class="stringliteral">&quot;links&quot;</span> &lt;&lt; SEP</div>
-<div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span>                                        &lt;&lt; area.id &lt;&lt; <span class="stringliteral">&quot; - &quot;</span> &lt;&lt; results.data.link-&gt;with-&gt;id;</div>
-<div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span>                    SurveyReportBuilderFile&lt;GlobalT, NextT, CDataLevel&gt;::Run(</div>
-<div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span>                      list, results, numSpace);</div>
-<div class="line"><a id="l00389" name="l00389"></a><span class="lineno">  389</span>                }</div>
-<div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span>            }</div>
-<div class="line"><a id="l00391" name="l00391"></a><span class="lineno">  391</span>        }</div>
-<div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span>    }</div>
-<div class="line"><a id="l00393" name="l00393"></a><span class="lineno">  393</span> </div>
-<div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> RunForEachSetOfAreas(<span class="keyword">const</span> ListType&amp; list,</div>
-<div class="line"><a id="l00395" name="l00395"></a><span class="lineno">  395</span>                                     SurveyResults&amp; results,</div>
-<div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span>                                     <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace)</div>
-<div class="line"><a id="l00397" name="l00397"></a><span class="lineno">  397</span>    {</div>
-<div class="line"><a id="l00398" name="l00398"></a><span class="lineno">  398</span>        <span class="keyword">using namespace </span>::Antares;</div>
-<div class="line"><a id="l00399" name="l00399"></a><span class="lineno">  399</span>        <span class="keyword">using namespace </span>::Yuni;</div>
-<div class="line"><a id="l00400" name="l00400"></a><span class="lineno">  400</span> </div>
-<div class="line"><a id="l00401" name="l00401"></a><span class="lineno">  401</span>        <span class="comment">// No need to do anything for any district (set of areas) here if no zonal variables were</span></div>
-<div class="line"><a id="l00402" name="l00402"></a><span class="lineno">  402</span>        <span class="comment">// selected.</span></div>
-<div class="line"><a id="l00403" name="l00403"></a><span class="lineno">  403</span>        uint selectedZonalVarsCount</div>
-<div class="line"><a id="l00404" name="l00404"></a><span class="lineno">  404</span>          = results.data.study.parameters.variablesPrintInfo.getNbSelectedZonalVars();</div>
-<div class="line"><a id="l00405" name="l00405"></a><span class="lineno">  405</span>        <span class="keywordflow">if</span> (!selectedZonalVarsCount)</div>
-<div class="line"><a id="l00406" name="l00406"></a><span class="lineno">  406</span>            <span class="keywordflow">return</span>;</div>
-<div class="line"><a id="l00407" name="l00407"></a><span class="lineno">  407</span> </div>
-<div class="line"><a id="l00408" name="l00408"></a><span class="lineno">  408</span>        results.data.area = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00409" name="l00409"></a><span class="lineno">  409</span>        results.data.thermalCluster = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00410" name="l00410"></a><span class="lineno">  410</span>        results.data.link = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00411" name="l00411"></a><span class="lineno">  411</span> </div>
-<div class="line"><a id="l00412" name="l00412"></a><span class="lineno">  412</span>        <span class="comment">// alias to the set of sets of areas</span></div>
-<div class="line"><a id="l00413" name="l00413"></a><span class="lineno">  413</span>        <span class="keyword">const</span> <a class="code hl_typedef" href="classAntares_1_1Data_1_1Study.html#aefafb3d3540ad2908a14efdf0c312938">Data::Study::SetsOfAreas</a>&amp; sets = results.data.study.setsOfAreas;</div>
-<div class="line"><a id="l00414" name="l00414"></a><span class="lineno">  414</span> </div>
-<div class="line"><a id="l00415" name="l00415"></a><span class="lineno">  415</span>        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> indx = 0;</div>
-<div class="line"><a id="l00416" name="l00416"></a><span class="lineno">  416</span>        <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i = 0; i != sets.size(); ++i)</div>
-<div class="line"><a id="l00417" name="l00417"></a><span class="lineno">  417</span>        {</div>
-<div class="line"><a id="l00418" name="l00418"></a><span class="lineno">  418</span>            <span class="keywordflow">if</span> (!sets.hasOutput(i) || !sets.resultSize(i))</div>
-<div class="line"><a id="l00419" name="l00419"></a><span class="lineno">  419</span>                <span class="keywordflow">continue</span>;</div>
-<div class="line"><a id="l00420" name="l00420"></a><span class="lineno">  420</span> </div>
-<div class="line"><a id="l00421" name="l00421"></a><span class="lineno">  421</span>            logs.info() &lt;&lt; <span class="stringliteral">&quot;Exporting results : &quot;</span> &lt;&lt; sets.caption(i);</div>
-<div class="line"><a id="l00422" name="l00422"></a><span class="lineno">  422</span>            <span class="comment">// The new output</span></div>
-<div class="line"><a id="l00423" name="l00423"></a><span class="lineno">  423</span>            results.data.output.clear();</div>
-<div class="line"><a id="l00424" name="l00424"></a><span class="lineno">  424</span>            results.data.output &lt;&lt; results.data.originalOutput &lt;&lt; SEP &lt;&lt; <span class="stringliteral">&quot;areas&quot;</span> &lt;&lt; SEP &lt;&lt; <span class="stringliteral">&quot;@ &quot;</span></div>
-<div class="line"><a id="l00425" name="l00425"></a><span class="lineno">  425</span>                                &lt;&lt; sets.nameByIndex(i);</div>
-<div class="line"><a id="l00426" name="l00426"></a><span class="lineno">  426</span> </div>
-<div class="line"><a id="l00427" name="l00427"></a><span class="lineno">  427</span>            results.data.setOfAreasIndex = indx++;</div>
-<div class="line"><a id="l00428" name="l00428"></a><span class="lineno">  428</span>            SurveyReportBuilderFile&lt;GlobalT, NextT, CDataLevel&gt;::Run(list, results, numSpace);</div>
-<div class="line"><a id="l00429" name="l00429"></a><span class="lineno">  429</span>        }</div>
-<div class="line"><a id="l00430" name="l00430"></a><span class="lineno">  430</span>    }</div>
-<div class="line"><a id="l00431" name="l00431"></a><span class="lineno">  431</span> </div>
-<div class="line"><a id="l00432" name="l00432"></a><span class="lineno">  432</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> RunForEachBindingConstraint(<span class="keyword">const</span> ListType&amp; list,</div>
-<div class="line"><a id="l00433" name="l00433"></a><span class="lineno">  433</span>                                            SurveyResults&amp; results,</div>
-<div class="line"><a id="l00434" name="l00434"></a><span class="lineno">  434</span>                                            <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace)</div>
-<div class="line"><a id="l00435" name="l00435"></a><span class="lineno">  435</span>    {</div>
-<div class="line"><a id="l00436" name="l00436"></a><span class="lineno">  436</span>        <span class="keyword">using namespace </span>Yuni;</div>
-<div class="line"><a id="l00437" name="l00437"></a><span class="lineno">  437</span> </div>
-<div class="line"><a id="l00438" name="l00438"></a><span class="lineno">  438</span>        <span class="comment">// Generating the report for each binding constraint</span></div>
-<div class="line"><a id="l00439" name="l00439"></a><span class="lineno">  439</span>        <span class="keywordflow">if</span> (CDataLevel &amp; Category::bindingConstraint)</div>
-<div class="line"><a id="l00440" name="l00440"></a><span class="lineno">  440</span>        {</div>
-<div class="line"><a id="l00441" name="l00441"></a><span class="lineno">  441</span>            logs.info() &lt;&lt; <span class="stringliteral">&quot;Exporting results : binding constraints&quot;</span>;</div>
-<div class="line"><a id="l00442" name="l00442"></a><span class="lineno">  442</span>            <span class="comment">// The new output</span></div>
-<div class="line"><a id="l00443" name="l00443"></a><span class="lineno">  443</span>            results.data.output.clear();</div>
-<div class="line"><a id="l00444" name="l00444"></a><span class="lineno">  444</span>            results.data.output &lt;&lt; results.data.originalOutput &lt;&lt; SEP &lt;&lt; <span class="stringliteral">&quot;binding_constraints&quot;</span>;</div>
-<div class="line"><a id="l00445" name="l00445"></a><span class="lineno">  445</span>            SurveyReportBuilderFile&lt;GlobalT, NextT, CDataLevel&gt;::Run(list, results, numSpace);</div>
-<div class="line"><a id="l00446" name="l00446"></a><span class="lineno">  446</span>        }</div>
-<div class="line"><a id="l00447" name="l00447"></a><span class="lineno">  447</span>    }</div>
+<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>            <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; cluster : area.thermal.list)</div>
+<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>            {</div>
+<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>                results.data.thermalCluster = cluster.get();</div>
+<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span> </div>
+<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>                logs.info() &lt;&lt; <span class="stringliteral">&quot;Exporting results : &quot;</span> &lt;&lt; area.name &lt;&lt; <span class="stringliteral">&quot; :: &quot;</span> &lt;&lt; cluster-&gt;name();</div>
+<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>                <span class="comment">// The new output</span></div>
+<div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span>                results.data.output.clear();</div>
+<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>                results.data.output &lt;&lt; results.data.originalOutput &lt;&lt; SEP &lt;&lt; <span class="stringliteral">&quot;areas&quot;</span> &lt;&lt; SEP</div>
+<div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>                                    &lt;&lt; area.id &lt;&lt; SEP &lt;&lt; <span class="stringliteral">&quot;thermal&quot;</span> &lt;&lt; SEP &lt;&lt; cluster-&gt;id();</div>
+<div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span> </div>
+<div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>                SurveyReportBuilderFile&lt;GlobalT, NextT, CDataLevel&gt;::Run(list, results, numSpace);</div>
+<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>            }</div>
+<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>        }</div>
+<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>    }</div>
+<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span> </div>
+<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> RunForEachLink(<span class="keyword">const</span> ListType&amp; list, SurveyResults&amp; results, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace)</div>
+<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span>    {</div>
+<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>        <span class="keyword">using namespace </span>Yuni;</div>
+<div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span> </div>
+<div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span>        <span class="comment">// No need to do anything for any link here if no link variables were selected.</span></div>
+<div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span>        uint selectedLinkVarsCount</div>
+<div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span>          = results.data.study.parameters.variablesPrintInfo.getNbSelectedLinkVars();</div>
+<div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span>        <span class="keywordflow">if</span> (!selectedLinkVarsCount)</div>
+<div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span>            <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span> </div>
+<div class="line"><a id="l00352" name="l00352"></a><span class="lineno">  352</span>        <span class="keywordtype">int</span> count_int = VariablesStatsByDataLevel&lt;NextT, Category::link&gt;::count;</div>
+<div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span>        <span class="keywordflow">if</span> (count_int)</div>
+<div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span>        {</div>
+<div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span>            <span class="keyword">auto</span>&amp; area = *results.data.area;</div>
+<div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span>            <span class="keyword">auto</span> end = area.links.end();</div>
+<div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span>            <span class="keywordflow">for</span> (<span class="keyword">auto</span> i = area.links.begin(); i != end; ++i)</div>
+<div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span>            {</div>
+<div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span>                <span class="comment">// The link</span></div>
+<div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span>                <span class="keyword">auto</span>&amp; link = *(i-&gt;second);</div>
+<div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span>                results.data.link = &amp;link;</div>
+<div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span> </div>
+<div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span>                <span class="comment">// Skipping the creation of a result directory if it is meant to be empty.</span></div>
+<div class="line"><a id="l00364" name="l00364"></a><span class="lineno">  364</span>                <span class="comment">// ... Getting few indicators value before deciding if we skip the results directory</span></div>
+<div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span>                <span class="comment">// creation.</span></div>
+<div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span>                <span class="keywordtype">bool</span> printingSynthesis</div>
+<div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span>                  = GlobalT; <span class="comment">// Are we printing synthesis or year-by-year results ?</span></div>
+<div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span>                <span class="keywordtype">bool</span> filterAllYearByYear = !(link.filterYearByYear &amp; Data::filterAll);</div>
+<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span>                <span class="keywordtype">bool</span> filterAllSynthesis = !(link.filterSynthesis &amp; Data::filterAll);</div>
+<div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span> </div>
+<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span>                <span class="comment">// ... Do we skip the current link&#39;s result directory creation because no results</span></div>
+<div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span>                <span class="comment">// were asked</span></div>
+<div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span>                <span class="comment">//     in the inspector for the current link ?</span></div>
+<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span>                <span class="keywordtype">bool</span> skipDirectory = (!printingSynthesis &amp;&amp; filterAllYearByYear)</div>
+<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span>                                     || (printingSynthesis &amp;&amp; filterAllSynthesis);</div>
+<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span> </div>
+<div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span>                <span class="keywordflow">if</span> (!skipDirectory)</div>
+<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span>                {</div>
+<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span>                    Antares::logs.info() &lt;&lt; <span class="stringliteral">&quot;Exporting results : &quot;</span> &lt;&lt; area.name &lt;&lt; <span class="stringliteral">&quot; - &quot;</span></div>
+<div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>                                         &lt;&lt; results.data.link-&gt;with-&gt;name;</div>
+<div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>                    <span class="comment">// The new output</span></div>
+<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span>                    results.data.output.clear();</div>
+<div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span>                    results.data.output &lt;&lt; results.data.originalOutput &lt;&lt; SEP &lt;&lt; <span class="stringliteral">&quot;links&quot;</span> &lt;&lt; SEP</div>
+<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>                                        &lt;&lt; area.id &lt;&lt; <span class="stringliteral">&quot; - &quot;</span> &lt;&lt; results.data.link-&gt;with-&gt;id;</div>
+<div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span>                    SurveyReportBuilderFile&lt;GlobalT, NextT, CDataLevel&gt;::Run(</div>
+<div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span>                      list, results, numSpace);</div>
+<div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span>                }</div>
+<div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span>            }</div>
+<div class="line"><a id="l00389" name="l00389"></a><span class="lineno">  389</span>        }</div>
+<div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span>    }</div>
+<div class="line"><a id="l00391" name="l00391"></a><span class="lineno">  391</span> </div>
+<div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> RunForEachSetOfAreas(<span class="keyword">const</span> ListType&amp; list,</div>
+<div class="line"><a id="l00393" name="l00393"></a><span class="lineno">  393</span>                                     SurveyResults&amp; results,</div>
+<div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span>                                     <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace)</div>
+<div class="line"><a id="l00395" name="l00395"></a><span class="lineno">  395</span>    {</div>
+<div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span>        <span class="keyword">using namespace </span>::Antares;</div>
+<div class="line"><a id="l00397" name="l00397"></a><span class="lineno">  397</span>        <span class="keyword">using namespace </span>::Yuni;</div>
+<div class="line"><a id="l00398" name="l00398"></a><span class="lineno">  398</span> </div>
+<div class="line"><a id="l00399" name="l00399"></a><span class="lineno">  399</span>        <span class="comment">// No need to do anything for any district (set of areas) here if no zonal variables were</span></div>
+<div class="line"><a id="l00400" name="l00400"></a><span class="lineno">  400</span>        <span class="comment">// selected.</span></div>
+<div class="line"><a id="l00401" name="l00401"></a><span class="lineno">  401</span>        uint selectedZonalVarsCount</div>
+<div class="line"><a id="l00402" name="l00402"></a><span class="lineno">  402</span>          = results.data.study.parameters.variablesPrintInfo.getNbSelectedZonalVars();</div>
+<div class="line"><a id="l00403" name="l00403"></a><span class="lineno">  403</span>        <span class="keywordflow">if</span> (!selectedZonalVarsCount)</div>
+<div class="line"><a id="l00404" name="l00404"></a><span class="lineno">  404</span>            <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00405" name="l00405"></a><span class="lineno">  405</span> </div>
+<div class="line"><a id="l00406" name="l00406"></a><span class="lineno">  406</span>        results.data.area = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00407" name="l00407"></a><span class="lineno">  407</span>        results.data.thermalCluster = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00408" name="l00408"></a><span class="lineno">  408</span>        results.data.link = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00409" name="l00409"></a><span class="lineno">  409</span> </div>
+<div class="line"><a id="l00410" name="l00410"></a><span class="lineno">  410</span>        <span class="comment">// alias to the set of sets of areas</span></div>
+<div class="line"><a id="l00411" name="l00411"></a><span class="lineno">  411</span>        <span class="keyword">const</span> <a class="code hl_typedef" href="classAntares_1_1Data_1_1Study.html#aefafb3d3540ad2908a14efdf0c312938">Data::Study::SetsOfAreas</a>&amp; sets = results.data.study.setsOfAreas;</div>
+<div class="line"><a id="l00412" name="l00412"></a><span class="lineno">  412</span> </div>
+<div class="line"><a id="l00413" name="l00413"></a><span class="lineno">  413</span>        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> indx = 0;</div>
+<div class="line"><a id="l00414" name="l00414"></a><span class="lineno">  414</span>        <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i = 0; i != sets.size(); ++i)</div>
+<div class="line"><a id="l00415" name="l00415"></a><span class="lineno">  415</span>        {</div>
+<div class="line"><a id="l00416" name="l00416"></a><span class="lineno">  416</span>            <span class="keywordflow">if</span> (!sets.hasOutput(i) || !sets.resultSize(i))</div>
+<div class="line"><a id="l00417" name="l00417"></a><span class="lineno">  417</span>                <span class="keywordflow">continue</span>;</div>
+<div class="line"><a id="l00418" name="l00418"></a><span class="lineno">  418</span> </div>
+<div class="line"><a id="l00419" name="l00419"></a><span class="lineno">  419</span>            logs.info() &lt;&lt; <span class="stringliteral">&quot;Exporting results : &quot;</span> &lt;&lt; sets.caption(i);</div>
+<div class="line"><a id="l00420" name="l00420"></a><span class="lineno">  420</span>            <span class="comment">// The new output</span></div>
+<div class="line"><a id="l00421" name="l00421"></a><span class="lineno">  421</span>            results.data.output.clear();</div>
+<div class="line"><a id="l00422" name="l00422"></a><span class="lineno">  422</span>            results.data.output &lt;&lt; results.data.originalOutput &lt;&lt; SEP &lt;&lt; <span class="stringliteral">&quot;areas&quot;</span> &lt;&lt; SEP &lt;&lt; <span class="stringliteral">&quot;@ &quot;</span></div>
+<div class="line"><a id="l00423" name="l00423"></a><span class="lineno">  423</span>                                &lt;&lt; sets.nameByIndex(i);</div>
+<div class="line"><a id="l00424" name="l00424"></a><span class="lineno">  424</span> </div>
+<div class="line"><a id="l00425" name="l00425"></a><span class="lineno">  425</span>            results.data.setOfAreasIndex = indx++;</div>
+<div class="line"><a id="l00426" name="l00426"></a><span class="lineno">  426</span>            SurveyReportBuilderFile&lt;GlobalT, NextT, CDataLevel&gt;::Run(list, results, numSpace);</div>
+<div class="line"><a id="l00427" name="l00427"></a><span class="lineno">  427</span>        }</div>
+<div class="line"><a id="l00428" name="l00428"></a><span class="lineno">  428</span>    }</div>
+<div class="line"><a id="l00429" name="l00429"></a><span class="lineno">  429</span> </div>
+<div class="line"><a id="l00430" name="l00430"></a><span class="lineno">  430</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> RunForEachBindingConstraint(<span class="keyword">const</span> ListType&amp; list,</div>
+<div class="line"><a id="l00431" name="l00431"></a><span class="lineno">  431</span>                                            SurveyResults&amp; results,</div>
+<div class="line"><a id="l00432" name="l00432"></a><span class="lineno">  432</span>                                            <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace)</div>
+<div class="line"><a id="l00433" name="l00433"></a><span class="lineno">  433</span>    {</div>
+<div class="line"><a id="l00434" name="l00434"></a><span class="lineno">  434</span>        <span class="keyword">using namespace </span>Yuni;</div>
+<div class="line"><a id="l00435" name="l00435"></a><span class="lineno">  435</span> </div>
+<div class="line"><a id="l00436" name="l00436"></a><span class="lineno">  436</span>        <span class="comment">// Generating the report for each binding constraint</span></div>
+<div class="line"><a id="l00437" name="l00437"></a><span class="lineno">  437</span>        <span class="keywordflow">if</span> (CDataLevel &amp; Category::bindingConstraint)</div>
+<div class="line"><a id="l00438" name="l00438"></a><span class="lineno">  438</span>        {</div>
+<div class="line"><a id="l00439" name="l00439"></a><span class="lineno">  439</span>            logs.info() &lt;&lt; <span class="stringliteral">&quot;Exporting results : binding constraints&quot;</span>;</div>
+<div class="line"><a id="l00440" name="l00440"></a><span class="lineno">  440</span>            <span class="comment">// The new output</span></div>
+<div class="line"><a id="l00441" name="l00441"></a><span class="lineno">  441</span>            results.data.output.clear();</div>
+<div class="line"><a id="l00442" name="l00442"></a><span class="lineno">  442</span>            results.data.output &lt;&lt; results.data.originalOutput &lt;&lt; SEP &lt;&lt; <span class="stringliteral">&quot;binding_constraints&quot;</span>;</div>
+<div class="line"><a id="l00443" name="l00443"></a><span class="lineno">  443</span>            SurveyReportBuilderFile&lt;GlobalT, NextT, CDataLevel&gt;::Run(list, results, numSpace);</div>
+<div class="line"><a id="l00444" name="l00444"></a><span class="lineno">  444</span>        }</div>
+<div class="line"><a id="l00445" name="l00445"></a><span class="lineno">  445</span>    }</div>
+<div class="line"><a id="l00446" name="l00446"></a><span class="lineno">  446</span> </div>
+<div class="line"><a id="l00447" name="l00447"></a><span class="lineno">  447</span>}; <span class="comment">// class SurveyReportBuilder</span></div>
 <div class="line"><a id="l00448" name="l00448"></a><span class="lineno">  448</span> </div>
-<div class="line"><a id="l00449" name="l00449"></a><span class="lineno">  449</span>}; <span class="comment">// class SurveyReportBuilder</span></div>
-<div class="line"><a id="l00450" name="l00450"></a><span class="lineno">  450</span> </div>
-<div class="line"><a id="l00451" name="l00451"></a><span class="lineno">  451</span><span class="keyword">template</span>&lt;<span class="keywordtype">bool</span> GlobalT, <span class="keyword">class</span> NextT&gt;</div>
-<div class="line"><a id="l00452" name="l00452"></a><span class="lineno">  452</span><span class="keyword">class </span>SurveyReportBuilder&lt;GlobalT, NextT, 2 * Category::maxDataLevel&gt;</div>
-<div class="line"><a id="l00453" name="l00453"></a><span class="lineno">  453</span>{</div>
-<div class="line"><a id="l00454" name="l00454"></a><span class="lineno">  454</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00455" name="l00455"></a><span class="lineno">  455</span>    <span class="keyword">using </span>ListType = NextT;</div>
-<div class="line"><a id="l00456" name="l00456"></a><span class="lineno">  456</span>    <span class="comment">// Dead end</span></div>
-<div class="line"><a id="l00457" name="l00457"></a><span class="lineno">  457</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> Run(<span class="keyword">const</span> ListType&amp;, SurveyResults&amp;, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span>)</div>
-<div class="line"><a id="l00458" name="l00458"></a><span class="lineno">  458</span>    {</div>
-<div class="line"><a id="l00459" name="l00459"></a><span class="lineno">  459</span>    }</div>
-<div class="line"><a id="l00460" name="l00460"></a><span class="lineno">  460</span>};</div>
+<div class="line"><a id="l00449" name="l00449"></a><span class="lineno">  449</span><span class="keyword">template</span>&lt;<span class="keywordtype">bool</span> GlobalT, <span class="keyword">class</span> NextT&gt;</div>
+<div class="line"><a id="l00450" name="l00450"></a><span class="lineno">  450</span><span class="keyword">class </span>SurveyReportBuilder&lt;GlobalT, NextT, 2 * Category::maxDataLevel&gt;</div>
+<div class="line"><a id="l00451" name="l00451"></a><span class="lineno">  451</span>{</div>
+<div class="line"><a id="l00452" name="l00452"></a><span class="lineno">  452</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00453" name="l00453"></a><span class="lineno">  453</span>    <span class="keyword">using </span>ListType = NextT;</div>
+<div class="line"><a id="l00454" name="l00454"></a><span class="lineno">  454</span>    <span class="comment">// Dead end</span></div>
+<div class="line"><a id="l00455" name="l00455"></a><span class="lineno">  455</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> Run(<span class="keyword">const</span> ListType&amp;, SurveyResults&amp;, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span>)</div>
+<div class="line"><a id="l00456" name="l00456"></a><span class="lineno">  456</span>    {</div>
+<div class="line"><a id="l00457" name="l00457"></a><span class="lineno">  457</span>    }</div>
+<div class="line"><a id="l00458" name="l00458"></a><span class="lineno">  458</span>};</div>
+<div class="line"><a id="l00459" name="l00459"></a><span class="lineno">  459</span> </div>
+<div class="line"><a id="l00460" name="l00460"></a><span class="lineno">  460</span>} <span class="comment">// Anonymous namespace</span></div>
 <div class="line"><a id="l00461" name="l00461"></a><span class="lineno">  461</span> </div>
-<div class="line"><a id="l00462" name="l00462"></a><span class="lineno">  462</span>} <span class="comment">// Anonymous namespace</span></div>
-<div class="line"><a id="l00463" name="l00463"></a><span class="lineno">  463</span> </div>
-<div class="line"><a id="l00464" name="l00464"></a><span class="lineno">  464</span>} <span class="comment">// namespace Container</span></div>
-<div class="line"><a id="l00465" name="l00465"></a><span class="lineno">  465</span>} <span class="comment">// namespace Variable</span></div>
-<div class="line"><a id="l00466" name="l00466"></a><span class="lineno">  466</span>} <span class="comment">// namespace Solver</span></div>
-<div class="line"><a id="l00467" name="l00467"></a><span class="lineno">  467</span>} <span class="comment">// namespace Antares</span></div>
-<div class="line"><a id="l00468" name="l00468"></a><span class="lineno">  468</span> </div>
-<div class="line"><a id="l00469" name="l00469"></a><span class="lineno">  469</span><span class="comment">// cleanup</span></div>
-<div class="line"><a id="l00470" name="l00470"></a><span class="lineno">  470</span><span class="preprocessor">#undef SEP</span></div>
-<div class="line"><a id="l00471" name="l00471"></a><span class="lineno">  471</span> </div>
-<div class="line"><a id="l00472" name="l00472"></a><span class="lineno">  472</span><span class="preprocessor">#endif </span><span class="comment">// __SOLVER_VARIABLE_SURVEYRESULTS_REPORT_BUILDER_HXX__</span></div>
+<div class="line"><a id="l00462" name="l00462"></a><span class="lineno">  462</span>} <span class="comment">// namespace Container</span></div>
+<div class="line"><a id="l00463" name="l00463"></a><span class="lineno">  463</span>} <span class="comment">// namespace Variable</span></div>
+<div class="line"><a id="l00464" name="l00464"></a><span class="lineno">  464</span>} <span class="comment">// namespace Solver</span></div>
+<div class="line"><a id="l00465" name="l00465"></a><span class="lineno">  465</span>} <span class="comment">// namespace Antares</span></div>
+<div class="line"><a id="l00466" name="l00466"></a><span class="lineno">  466</span> </div>
+<div class="line"><a id="l00467" name="l00467"></a><span class="lineno">  467</span><span class="comment">// cleanup</span></div>
+<div class="line"><a id="l00468" name="l00468"></a><span class="lineno">  468</span><span class="preprocessor">#undef SEP</span></div>
+<div class="line"><a id="l00469" name="l00469"></a><span class="lineno">  469</span> </div>
+<div class="line"><a id="l00470" name="l00470"></a><span class="lineno">  470</span><span class="preprocessor">#endif </span><span class="comment">// __SOLVER_VARIABLE_SURVEYRESULTS_REPORT_BUILDER_HXX__</span></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Study_html_aefafb3d3540ad2908a14efdf0c312938"><div class="ttname"><a href="classAntares_1_1Data_1_1Study.html#aefafb3d3540ad2908a14efdf0c312938">Antares::Data::Study::SetsOfAreas</a></div><div class="ttdeci">Antares::Data::Sets&lt; SingleSetOfAreas &gt; SetsOfAreas</div><div class="ttdoc">Multiple sets of areas.</div><div class="ttdef"><b>Definition:</b> study.h:81</div></div>
 <div class="ttc" id="aclassVariable_html"><div class="ttname"><a href="classVariable.html">Variable</a></div><div class="ttdef"><b>Definition:</b> variable.h:31</div></div>
 </div><!-- fragment --></div><!-- contents -->

@@ -8,7 +8,6 @@ var classAntares_1_1Data_1_1PartThermal =
     [ "markAsModified", "classAntares_1_1Data_1_1PartThermal.html#a4f7ae58622c4129b343fd0594e796cc9", null ],
     [ "prepareAreaWideIndexes", "classAntares_1_1Data_1_1PartThermal.html#a4527f14222bfb87735492b018072da78", null ],
     [ "prepareClustersInMustRunMode", "classAntares_1_1Data_1_1PartThermal.html#a345d9d630de218837194f99310b6e04d", null ],
-    [ "removeDisabledClusters", "classAntares_1_1Data_1_1PartThermal.html#ae2bf9522e8d88ac9873d7ce1cbc293c6", null ],
     [ "reset", "classAntares_1_1Data_1_1PartThermal.html#aa83b93167e9a5fa69a42cd127f805e29", null ],
     [ "resizeAllTimeseriesNumbers", "classAntares_1_1Data_1_1PartThermal.html#ac656f617002e63782796bb945d1bc20a", null ],
     [ "clusters", "classAntares_1_1Data_1_1PartThermal.html#a3df550d23988be2e4810baff737aa188", null ],

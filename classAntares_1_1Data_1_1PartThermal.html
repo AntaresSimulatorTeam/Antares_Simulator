@@ -136,9 +136,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>reset</b> ()</td></tr
 <tr class="memitem:a345d9d630de218837194f99310b6e04d"><td class="memItemLeft" align="right" valign="top">uint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1PartThermal.html#a345d9d630de218837194f99310b6e04d">prepareClustersInMustRunMode</a> ()</td></tr>
 <tr class="memdesc:a345d9d630de218837194f99310b6e04d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prepare all thermal clusters in the 'mustrun' mode.  <a href="classAntares_1_1Data_1_1PartThermal.html#a345d9d630de218837194f99310b6e04d">More...</a><br /></td></tr>
 <tr class="separator:a345d9d630de218837194f99310b6e04d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae2bf9522e8d88ac9873d7ce1cbc293c6"><td class="memItemLeft" align="right" valign="top">uint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1PartThermal.html#ae2bf9522e8d88ac9873d7ce1cbc293c6">removeDisabledClusters</a> ()</td></tr>
-<tr class="memdesc:ae2bf9522e8d88ac9873d7ce1cbc293c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes disabled thermal clusters.  <a href="classAntares_1_1Data_1_1PartThermal.html#ae2bf9522e8d88ac9873d7ce1cbc293c6">More...</a><br /></td></tr>
-<tr class="separator:ae2bf9522e8d88ac9873d7ce1cbc293c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af5e1cf78b05689eb07bdcaec2da06439"><td class="memItemLeft" align="right" valign="top"><a id="af5e1cf78b05689eb07bdcaec2da06439" name="af5e1cf78b05689eb07bdcaec2da06439"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>forceReload</b> (bool reload) const</td></tr>
 <tr class="memdesc:af5e1cf78b05689eb07bdcaec2da06439"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invalidate all <a class="el" href="classJIT.html">JIT</a> data. <br /></td></tr>
@@ -201,27 +198,6 @@ size_t&#160;</td><td class="memItemRight" valign="bottom"><b>clusterCount</b> ()
 <p>Prepare all thermal clusters in the 'mustrun' mode. </p>
 <p >All clusters with the flag will be moved to the container 'mustrunList'. As a consequence, they will no longer be seen as thermal clusters from the solver's point of view. </p><dl class="section warning"><dt>Warning</dt><dd>This method should only be used from the solver</dd></dl>
 <dl class="section return"><dt>Returns</dt><dd>The number of clusters found in 'must-run' mode </dd></dl>
-
-</div>
-</div>
-<a id="ae2bf9522e8d88ac9873d7ce1cbc293c6" name="ae2bf9522e8d88ac9873d7ce1cbc293c6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae2bf9522e8d88ac9873d7ce1cbc293c6">&#9670;&#160;</a></span>removeDisabledClusters()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint Antares::Data::PartThermal::removeDisabledClusters </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Removes disabled thermal clusters. </p>
-<p >All clusters with the flag 'enabled' turned to false will be removed from 'list'. As a consequence, they will no longer be seen as thermal clusters from the solver's point of view. </p><dl class="section warning"><dt>Warning</dt><dd>This method should only be used from the solver</dd></dl>
-<dl class="section return"><dt>Returns</dt><dd>The number of disabled clusters found </dd></dl>
 
 </div>
 </div>
