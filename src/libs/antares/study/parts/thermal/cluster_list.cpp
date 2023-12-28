@@ -42,9 +42,14 @@ static bool ThermalClusterLoadFromSection(const AnyString& filename,
                                           ThermalCluster& cluster,
                                           const IniFile::Section& section);
 
+bool ThermalClusterList::alreadyInAllClusters(std::string clusterId)
+{
+    return std::ranges::any_of(allClusters, [&clusterId](const auto& c) { return c->id() == clusterId; });
+}
+
 void ThermalClusterList::addToCompleteList(std::shared_ptr<ThermalCluster> cluster)
 {
-    if (exists(cluster->id()))
+    if (alreadyInAllClusters(cluster->id()))
         return;
     allClusters.push_back(cluster);
 }

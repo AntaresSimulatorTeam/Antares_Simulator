@@ -284,10 +284,8 @@ void PrepareRandomNumbers(Data::Study& study,
         //-----------------------------
         // Thermal noises
         //-----------------------------
-        auto end = area.thermal.list.mapping.end();
-        for (auto it = area.thermal.list.mapping.begin(); it != end; ++it)
+        for (auto cluster : area.thermal.list.allClusters)
         {
-            auto cluster = it->second;
             if (!cluster->enabled)
                 continue;
             uint clusterIndex = cluster->areaWideIndex;
