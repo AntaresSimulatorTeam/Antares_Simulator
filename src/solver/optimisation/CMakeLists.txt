@@ -74,6 +74,7 @@ set(RTESOLVER_OPT
 		opt_rename_problem.h
 		opt_rename_problem.cpp
 
+        opt_generic_object.cpp
 
 		constraints/ConstraintBuilder.cpp
 		constraints/ConstraintBuilder.h
