@@ -27,6 +27,7 @@ runs:
            wget https://github.com/AntaresSimulatorTeam/antares-deps/releases/download/v${{inputs.antares-deps-version}}/rte-antares-deps-${{inputs.os}}-${{inputs.buildtype}}.zip
            unzip rte-antares-deps-${{inputs.os}}-${{inputs.buildtype}}.zip
            rm -rf rte-antares-deps-${{inputs.os}}-${{inputs.buildtype}}.zip
+           echo "${GITHUB_WORKSPACE}/rte-antares-deps-Release/bin" >> $GITHUB_PATH
 
   - name: Download & extract OR-Tools
     shell: bash
