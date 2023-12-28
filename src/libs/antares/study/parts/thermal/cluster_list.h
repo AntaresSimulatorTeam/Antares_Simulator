@@ -14,8 +14,6 @@ class ThermalClusterList : public ClusterList<ThermalCluster>
 {
 public:
     std::string typeID() const override;
-    // Map container
-    using Map = typename std::map<ClusterName, std::shared_ptr<ThermalCluster>>;
 
     /*!
     ** \brief Get the size (bytes) occupied in memory by a `ThermalClusterList` structure
@@ -63,8 +61,6 @@ public:
     void sortCompleteList();
 
     std::vector<std::shared_ptr<ThermalCluster>> allClusters;
-
-    Map mapping;
 
     /*!
     ** \brief Ensure data for the prepro are initialized
