@@ -42,6 +42,20 @@ static bool ThermalClusterLoadFromSection(const AnyString& filename,
                                           ThermalCluster& cluster,
                                           const IniFile::Section& section);
 
+void ThermalClusterList::addToCompleteList(std::shared_ptr<ThermalCluster> cluster)
+{
+    if (exists(cluster->id()))
+        return;
+    allClusters.push_back(cluster);
+}
+
+void ThermalClusterList::sortCompleteList()
+{
+    std::sort(allClusters.begin(), allClusters.end(), [](const auto& a, const auto& b) {
+        return a->id() < b->id();
+        });
+}
+
 bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, Area* area)
 {
     assert(area and "A parent area is required");
@@ -137,11 +151,12 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
 
         // adding the thermal cluster
         add(cluster);
+        addToCompleteList(cluster);
         
         // keeping track of the cluster
         mapping[cluster->id()] = cluster;
     }
-
+    sortCompleteList();
     return ret;
 }
 

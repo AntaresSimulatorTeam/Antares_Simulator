@@ -58,6 +58,10 @@ public:
     */
     void enableMustrunForEveryone();
     //@}
+    void addToCompleteList(std::shared_ptr<ThermalCluster> cluster);
+    void sortCompleteList();
+
+    std::vector<std::shared_ptr<ThermalCluster>> allClusters;
 
     Map mapping;
 
