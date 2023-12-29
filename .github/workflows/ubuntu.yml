@@ -21,7 +21,7 @@ on:
 env:
   GITHUB_TOKEN: ${{ github.token }}
   IS_RELEASE: ${{ github.event_name == 'workflow_call' }}
-  RUN_SIMPLE_TESTS: ${{ github.event_name == 'push' || inputs.run-tests }}
+  RUN_SIMPLE_TESTS: ${{ github.event_name == 'push' || inputs.run-tests == 'true' }}
   RUN_EXTENDED_TESTS: ${{ github.event_name == 'schedule' || inputs.run-tests == 'true' }}
 
 jobs:
@@ -141,14 +141,6 @@ jobs:
       run: |
            cd _build
            ctest -C ${{ matrix.buildtype }} --output-on-failure -L "unit|end-to-end"
-
-    - name: Run kirchhoff constraints tests
-      if: ${{ false }}
-      shell: bash
-      run: |
-           tar xvf src/tests/kirchhoff-cbuilder/reference.tar.gz -C src/tests/kirchhoff-cbuilder/
-           cd _build
-           ctest -C Release --output-on-failure -R kirchhoff
 
     - name: Upload logs for failed tests
       if: ${{ failure() }}
