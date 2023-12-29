@@ -284,10 +284,8 @@ void PrepareRandomNumbers(Data::Study& study,
         //-----------------------------
         // Thermal noises
         //-----------------------------
-        for (auto cluster : area.thermal.list.allClusters)
+        for (auto cluster : area.thermal.list.each_enabled())
         {
-            if (!cluster->enabled)
-                continue;
             uint clusterIndex = cluster->areaWideIndex;
             double& rnd = randomForYear.pThermalNoisesByArea[indexArea][clusterIndex];
             double randomClusterProdCost(0.);

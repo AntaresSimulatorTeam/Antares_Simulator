@@ -242,6 +242,9 @@ public:
 
     //! Mustrun
     bool mustrun;
+    bool isNotMustRun() { return not mustrun; }
+    bool isEnabled() { return enabled; }
+
     //! Mustrun (as it were at the loading of the data)
     //
     // This value might differ from mustrun, because `mustrun` might be

@@ -1,7 +1,6 @@
 #include "cluster_list.h"
 #include "cluster.h"
 #include "../../study.h"
-#include <ranges>
 
 namespace // anonymous
 {

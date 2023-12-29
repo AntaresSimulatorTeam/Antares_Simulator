@@ -1,6 +1,8 @@
 #pragma once
 
+#include <ranges>
 #include "../common/cluster_list.h"
+#include "cluster.h"
 
 namespace Antares
 {
@@ -56,6 +58,11 @@ public:
     */
     void enableMustrunForEveryone();
     //@}
+    auto each_enabled() { return allClusters | std::views::filter(std::mem_fn(&ThermalCluster::isEnabled)); }
+    auto each_not_mustrun() { return allClusters | std::views::filter(std::mem_fn(&ThermalCluster::isNotMustRun)); }
+    auto each_enabled_and_not_mustrun() { return allClusters | std::views::filter(&ThermalCluster::isEnabled)
+                                                             | std::views::filter(&ThermalCluster::isNotMustRun); }
+
     void addToCompleteList(std::shared_ptr<ThermalCluster> cluster);
     bool alreadyInAllClusters(std::string clusterName);
     void sortCompleteList();
