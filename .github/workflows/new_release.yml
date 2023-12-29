@@ -35,4 +35,4 @@ jobs:
       needs: release
       uses: ./.github/workflows/ubuntu.yml
       with:
-        run-tests: ${{ inputs.run_tests }}
+        run-tests: ${{ inputs.run-tests }}
