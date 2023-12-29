@@ -434,8 +434,10 @@ void HydroManagement::prepareEffectiveDemand()
             auto realmonth = calendar_.months[month].realmonth;
 
             double effectiveDemand = 0;
-            area.hydro.allocation.eachNonNull([&]([[maybe_unused]] unsigned areaindex, double value) {
-                effectiveDemand += data.DLN[day] * value;
+            // area.hydro.allocation is indexed by area index
+            area.hydro.allocation.eachNonNull([&](unsigned areaIndex, double value) {
+                const auto* area = areas_.byIndex[areaIndex];
+                effectiveDemand += tmpDataByArea_[area].DLN[day] * value;
             });
 
             assert(!Math::NaN(effectiveDemand) && "nan value detected for effectiveDemand");
