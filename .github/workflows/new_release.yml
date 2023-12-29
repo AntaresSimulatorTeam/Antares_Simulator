@@ -1,0 +1,38 @@
+name: Create new release
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: "Release tag"
+        required: true
+      release_name:
+        description: "Release name"
+        required: true
+      run-tests:
+        description: "Run all tests (true/false)"
+        required: true
+jobs:
+    release:
+      runs-on: ubuntu-20.04
+      outputs:
+        url: ${{ steps.create_release.outputs.upload_url }}
+      steps:
+        - name: Release creation
+          uses: actions/create-release@v1
+          id: create_release
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          with:
+            tag_name: ${{ github.event.inputs.release_tag }}
+            release_name: ${{ github.event.inputs.release_name }}
+            body: |
+              Please complete description
+
+
+    ubuntu:
+      name: Release - Ubuntu
+      needs: release
+      uses: ./.github/workflows/ubuntu.yml
+      with:
+        run-tests: ${{ inputs.run_tests }}
