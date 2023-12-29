@@ -20,7 +20,7 @@ on:
 
 env:
   GITHUB_TOKEN: ${{ github.token }}
-  IS_RELEASE: ${{ github.event_name == 'workflow_call' }}
+  IS_RELEASE: ${{ github.event_name == 'workflow_dispatch' }}
   RUN_SIMPLE_TESTS: ${{ github.event_name == 'push' || inputs.run-tests == 'true' }}
   RUN_EXTENDED_TESTS: ${{ github.event_name == 'schedule' || inputs.run-tests == 'true' }}
 
@@ -277,19 +277,10 @@ jobs:
       with:
         path: _build/*.deb
 
-  publish_assets:
-    name: Publish assets
-    needs: build
-    runs-on: ${{needs.build.outputs.os}}
-    steps:
-    - name: Download all artifacts
-      if: ${{ env.IS_RELEASE == 'true' }}
-      uses: actions/download-artifact@v3
-
     - name: Publish assets
       if: ${{ env.IS_RELEASE == 'true' }}
       uses: alexellis/upload-assets@0.4.0
       env:
           GITHUB_TOKEN: ${{ github.token }}
       with:
-          asset_paths: '["*/*.tar.gz", "*/*.deb"]'
+          asset_paths: '["_build/*.tar.gz", "_build/*.deb"]'
