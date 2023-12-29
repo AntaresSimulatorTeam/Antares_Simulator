@@ -22,7 +22,7 @@ env:
   GITHUB_TOKEN: ${{ github.token }}
   IS_RELEASE: ${{ github.event_name == 'workflow_call' }}
   RUN_SIMPLE_TESTS: ${{ github.event_name == 'push' || inputs.run-tests }}
-  RUN_EXTENDED_TESTS: ${{ github.event_name == 'schedule' || inputs.run-tests }}
+  RUN_EXTENDED_TESTS: ${{ github.event_name == 'schedule' || inputs.run-tests == 'true' }}
 
 jobs:
 
