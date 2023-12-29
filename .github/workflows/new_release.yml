@@ -14,7 +14,7 @@ on:
         required: true
 jobs:
     release:
-      runs-on: ubuntu-latest
+      runs-on: ubuntu-20.04
       outputs:
         url: ${{ steps.create_release.outputs.upload_url }}
       steps:
