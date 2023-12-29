@@ -63,10 +63,6 @@ public:
     auto each_enabled_and_not_mustrun() { return allClusters | std::views::filter(&ThermalCluster::isEnabled)
                                                              | std::views::filter(&ThermalCluster::isNotMustRun); }
 
-    void addToCompleteList(std::shared_ptr<ThermalCluster> cluster);
-    bool alreadyInAllClusters(std::string clusterName);
-    void sortCompleteList();
-
     std::vector<std::shared_ptr<ThermalCluster>> allClusters;
 
     /*!
@@ -95,6 +91,13 @@ public:
     bool saveEconomicCosts(const AnyString& folder) const;
 
     bool saveToFolder(const AnyString& folder) const override;
+
+    void addToCompleteList(std::shared_ptr<ThermalCluster> cluster);
+    void sortCompleteList();
+    void giveIndicesToClusters();
+
+private:
+    bool alreadyInAllClusters(std::string clusterName);
 }; // class ThermalClusterList
 } // namespace Data
 } // namespace Antares

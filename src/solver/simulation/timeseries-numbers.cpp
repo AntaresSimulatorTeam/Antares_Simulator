@@ -539,10 +539,9 @@ void storeTSnumbersForIntraModal(const array<uint32_t, timeSeriesCount>& intramo
 
         if (isTSintramodal[indexTS])
         {
-            for (auto cluster : area.thermal.list.allClusters)
+            for (auto cluster : area.thermal.list.each_enabled())
             {
-                if (cluster->enabled)
-                    cluster->series.timeseriesNumbers[0][year] = intramodal_draws[indexTS];
+                cluster->series.timeseriesNumbers[0][year] = intramodal_draws[indexTS];
             }
         }
 
