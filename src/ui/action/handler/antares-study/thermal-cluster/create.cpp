@@ -183,6 +183,7 @@ bool Create::performWL(Context& ctx)
             ctx.cluster->reset();
             (ctx.area)->thermal.list.add(std::shared_ptr<Data::ThermalCluster>(ctx.cluster));
             (ctx.area)->thermal.prepareAreaWideIndexes();
+            (ctx.area)->thermal.list.giveIndicesToClusters();
         }
         else
         {

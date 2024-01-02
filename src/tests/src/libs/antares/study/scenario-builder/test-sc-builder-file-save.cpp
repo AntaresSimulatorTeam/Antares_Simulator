@@ -150,6 +150,9 @@ struct commonFixture
         area_1->thermal.prepareAreaWideIndexes();
         area_2->thermal.prepareAreaWideIndexes();
         area_3->thermal.prepareAreaWideIndexes();
+        area_1->thermal.list.giveIndicesToClusters();
+        area_2->thermal.list.giveIndicesToClusters();
+        area_3->thermal.list.giveIndicesToClusters();
 
         // Add renewable clusters
         rnCluster_21 = addClusterToArea<RenewableCluster>(area_2, "rn-cluster-21");

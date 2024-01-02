@@ -166,6 +166,7 @@ BOOST_FIXTURE_TEST_CASE(checkCo2_checkCO2CostColumnNumber_OK, FixtureFull)
     cluster->series.timeSeries.reset(3, 8760);
 
     area->thermal.prepareAreaWideIndexes();
+    area->thermal.list.giveIndicesToClusters();
 
     auto& ecoInput = cluster->ecoInput;
     ecoInput.co2cost.reset(3, 8760);
@@ -181,6 +182,7 @@ BOOST_FIXTURE_TEST_CASE(checkCo2_checkCO2CostColumnNumber_KO, FixtureFull)
     cluster->series.timeSeries.reset(3, 8760);
 
     area->thermal.prepareAreaWideIndexes();
+    area->thermal.list.giveIndicesToClusters();
 
     auto& ecoInput = cluster->ecoInput;
     ecoInput.co2cost.reset(2, 8760);
@@ -197,6 +199,7 @@ BOOST_FIXTURE_TEST_CASE(checkFuelAndCo2_checkColumnNumber_OK, FixtureFull)
     cluster->series.timeSeries.reset(3, 8760);
 
     area->thermal.prepareAreaWideIndexes();
+    area->thermal.list.giveIndicesToClusters();
 
     cluster->ecoInput.fuelcost.reset(3, 8760);
     cluster->ecoInput.co2cost.reset(3, 8760);

@@ -58,10 +58,13 @@ public:
     */
     void enableMustrunForEveryone();
     //@}
-    auto each_enabled() { return allClusters | std::views::filter(std::mem_fn(&ThermalCluster::isEnabled)); }
-    auto each_not_mustrun() { return allClusters | std::views::filter(std::mem_fn(&ThermalCluster::isNotMustRun)); }
-    auto each_enabled_and_not_mustrun() { return allClusters | std::views::filter(&ThermalCluster::isEnabled)
-                                                             | std::views::filter(&ThermalCluster::isNotMustRun); }
+    auto each_enabled() const { return allClusters | std::views::filter(&ThermalCluster::isEnabled); }
+    auto each_not_mustrun() const { return allClusters | std::views::filter(&ThermalCluster::isNotMustRun); }
+    auto each_enabled_and_not_mustrun() const 
+    {   
+        return allClusters | std::views::filter(&ThermalCluster::isEnabled)
+                           | std::views::filter(&ThermalCluster::isNotMustRun); 
+    }
 
     std::vector<std::shared_ptr<ThermalCluster>> allClusters;
 
