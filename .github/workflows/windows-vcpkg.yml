@@ -12,6 +12,18 @@ on:
       - doc/*
   schedule:
     - cron: '21 2 * * *'
+  workflow_call:
+    inputs:
+      run-tests:
+        required: true
+        type: boolean
+
+env:
+  GITHUB_TOKEN: ${{ github.token }}
+  IS_RELEASE: ${{ github.event_name == 'workflow_dispatch' }}
+  RUN_SIMPLE_TESTS: ${{ github.event_name == 'push' || inputs.run-tests == 'true' }}
+  RUN_EXTENDED_TESTS: ${{ github.event_name == 'schedule' || inputs.run-tests == 'true' }}
+
 
 jobs:
   windows:
@@ -31,7 +43,6 @@ jobs:
       VCPKG_ROOT: ${{ github.workspace }}/vcpkg
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
       ORTOOLS_URL: "https://github.com/rte-france/or-tools/releases/download/v9.5-rte2.0/ortools_cxx_windows-latest_static_sirius.zip"
-      RUN_EXTENDED_TESTS: ${{ github.event_name == 'schedule'}}
 
     steps:
     - uses: actions/checkout@v3
@@ -140,13 +151,31 @@ jobs:
       shell: bash
       run: |
            cmake --build _build --config release -j2
+    # simtest
+    - name: Read simtest version
+      id: simtest-version
+      uses: notiz-dev/github-action-json-property@release
+      with:
+        path: 'simtest.json'
+        prop_path: 'version'
+
+    - name: Run named mps tests
+      if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: valid-named-mps
+        os: ${{ matrix.test-platform }}
+        variant: "named-mps"
 
     - name: Run unfeasibility-related tests
+      if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
       run: |
            cd _build
            ctest -C Release --output-on-failure -R "^unfeasible$"
 
     - name: Run unit and end-to-end tests
+      if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
       run: |
            cd _build
            ctest -C ${{ matrix.buildtype }} --output-on-failure -L "unit|end-to-end" -LE ortools
@@ -158,23 +187,9 @@ jobs:
         name: MPS-diff
         path: ${{ github.workspace }}/src/tests/mps
 
-    # simtest
-    - name: Read simtest version
-      id: simtest-version
-      uses: notiz-dev/github-action-json-property@release
-      with:
-        path: 'simtest.json'
-        prop_path: 'version'
-
-    - name: Run named mps tests
-      uses: ./.github/workflows/run-tests
-      with:
-        simtest-tag: ${{steps.simtest-version.outputs.prop}}
-        batch-name: valid-named-mps
-        os: ${{ matrix.test-platform }}
-        variant: "named-mps"
-
+    
     - name: Run tests for adequacy patch (CSR)
+      if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
@@ -182,6 +197,7 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run tests about infinity on BCs RHS
+      if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
@@ -189,7 +205,7 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run MILP with CBC
-      if: ${{ env.IS_PUSH == 'true' }}
+      if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
@@ -198,6 +214,7 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run tests introduced in v860
+      if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
@@ -205,7 +222,7 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run tests introduced in v870
-      if: ${{ env.IS_PUSH == 'true' }}
+      if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
@@ -213,6 +230,7 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run short-tests
+      if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
@@ -220,6 +238,7 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run mps tests
+      if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
@@ -299,7 +318,16 @@ jobs:
       with:
         path: _build/${{env.NSIS_NAME}}
 
-    - name: Archive upload
-      uses: actions/upload-artifact@v3
-      with:
-        path: _build/*.zip
+    # - name: Archive upload
+    #   uses: actions/upload-artifact@v3
+    #   with:
+    #     path: _build/*.zip
+      
+    - name: Publish assets
+      if: ${{ env.IS_RELEASE == 'true' }}
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+        tag: ${{ github.event.inputs.release_tag }}
+        title: ${{ github.event.inputs.release_name }}
+      run: |
+        gh release upload "$tag" _build/*.zip
