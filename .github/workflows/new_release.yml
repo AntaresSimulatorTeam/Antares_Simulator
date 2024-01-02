@@ -29,6 +29,12 @@ jobs:
             body: |
               Please complete description
 
+        - name: print output
+          id: print-output
+          run: "echo  ${{ steps.create_release.outputs.upload_url }}"
+          shell: bash
+
+
 
     ubuntu:
       name: Release - Ubuntu
