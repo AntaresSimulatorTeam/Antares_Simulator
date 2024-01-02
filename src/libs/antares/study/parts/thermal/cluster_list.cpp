@@ -81,7 +81,7 @@ void ThermalClusterList::giveIndicesToClusters()
         index++;
     }
     
-    enabledCount_ = ++index;
+    enabledCount_ = index;
 }
 
 unsigned int ThermalClusterList::enabledCount()
