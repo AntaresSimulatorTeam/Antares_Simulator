@@ -98,9 +98,12 @@ public:
     void addToCompleteList(std::shared_ptr<ThermalCluster> cluster);
     void sortCompleteList();
     void giveIndicesToClusters();
+    unsigned int enabledCount();
 
 private:
     bool alreadyInAllClusters(std::string clusterName);
+
+    unsigned int enabledCount_ = 0;
 }; // class ThermalClusterList
 } // namespace Data
 } // namespace Antares

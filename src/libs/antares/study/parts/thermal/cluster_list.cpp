@@ -80,7 +80,13 @@ void ThermalClusterList::giveIndicesToClusters()
         c->areaWideIndex = index;
         index++;
     }
+    
+    enabledCount_ = ++index;
+}
 
+unsigned int ThermalClusterList::enabledCount()
+{
+    return enabledCount_;
 }
 
 bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, Area* area)
