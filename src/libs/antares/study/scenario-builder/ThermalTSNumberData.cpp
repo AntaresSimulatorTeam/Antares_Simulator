@@ -79,22 +79,17 @@ bool thermalTSNumberData::apply(Study& study)
     assert(pArea != nullptr);
     assert(pArea->index < study.areas.size());
     Area& area = *(study.areas.byIndex[pArea->index]);
-    // The total number of clusters for the area
-    // WARNING: We may have some thermal clusters with the `mustrun` option
-    auto clusterCount = (uint)area.thermal.clusterCount();
 
     const uint tsGenCountThermal = get_tsGenCount(study);
 
-    for (uint clusterIndex = 0; clusterIndex != clusterCount; ++clusterIndex)
+    for (auto cluster : area.thermal.list.each_enabled())
     {
-        auto& cluster = *(area.thermal.clusters[clusterIndex]);
-        // alias to the current column
-        assert(clusterIndex < pTSNumberRules.width);
-        const auto& col = pTSNumberRules[clusterIndex];
+        assert(cluster->areaWideIndex < pTSNumberRules.width);
+        const auto& col = pTSNumberRules[cluster->areaWideIndex];
 
-        logprefix.clear() << "Thermal: area '" << area.name << "', cluster: '" << cluster.name()
+        logprefix.clear() << "Thermal: area '" << area.name << "', cluster: '" << cluster->name()
                           << "': ";
-        ret = ApplyToMatrix(errors, logprefix, cluster.series, col, tsGenCountThermal) && ret;
+        ret = ApplyToMatrix(errors, logprefix, cluster->series, col, tsGenCountThermal) && ret;
     }
     return ret;
 }

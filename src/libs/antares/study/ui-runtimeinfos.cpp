@@ -80,10 +80,9 @@ void UIRuntimeInfo::reload()
                     set.insert(i->second);
             }
 
-            for (uint j = 0; j < area->thermal.clusterCount(); ++j)
+            for (auto cluster : area->thermal.list.each_enabled())
             {
-                ThermalCluster* cluster = area->thermal.clusters[j];
-                pClusters.push_back(cluster);
+                pClusters.push_back(cluster.get());
             }
         }
     }
