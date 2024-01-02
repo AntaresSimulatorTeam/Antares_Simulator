@@ -26,6 +26,7 @@ env:
   IS_RELEASE: ${{ github.event_name == 'workflow_dispatch' }}
   RUN_SIMPLE_TESTS: ${{ github.event_name == 'push' || inputs.run-tests == 'true' }}
   RUN_EXTENDED_TESTS: ${{ github.event_name == 'schedule' || inputs.run-tests == 'true' }}
+  # TAG_NAME: $${{inputs.tag_name}}
 
 jobs:
 
@@ -293,7 +294,7 @@ jobs:
       if: ${{ env.IS_RELEASE == 'true' }}
       env:
         GITHUB_TOKEN: ${{ github.token }}
-        tag: ${{ github.event.inputs.tag_name }}
+        tag: ${{ github.event.inputs.release_tag }}
         title: ${{ github.event.inputs.release_name }}
       run: |
         gh release upload "$tag" _build/*.tar.gz _build/*.deb           
