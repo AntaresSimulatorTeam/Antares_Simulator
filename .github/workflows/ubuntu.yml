@@ -17,6 +17,9 @@ on:
       run-tests:
         required: true
         type: boolean
+      # tag_name:
+      #   required: true
+      #   type: string
 
 env:
   GITHUB_TOKEN: ${{ github.token }}
@@ -277,10 +280,20 @@ jobs:
       with:
         path: _build/*.deb
 
+    # - name: Publish assets
+    #   if: ${{ env.IS_RELEASE == 'true' }}
+    #   uses: alexellis/upload-assets@0.4.0
+    #   env:
+    #       GITHUB_TOKEN: ${{ github.token }}
+    #   with:
+    #       asset_paths: '["_build/*.tar.gz", "_build/*.deb"]'
+      
+    
     - name: Publish assets
       if: ${{ env.IS_RELEASE == 'true' }}
-      uses: alexellis/upload-assets@0.4.0
       env:
-          GITHUB_TOKEN: ${{ github.token }}
-      with:
-          asset_paths: '["_build/*.tar.gz", "_build/*.deb"]'
+        GITHUB_TOKEN: ${{ github.token }}
+        tag: ${{ github.event.inputs.tag_name }}
+        title: ${{ github.event.inputs.release_name }}
+      run: |
+        gh release upload "$tag" _build/*.tar.gz _build/*.deb           

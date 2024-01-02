@@ -50,9 +50,10 @@ jobs:
 
 
 
-    # ubuntu:
-    #   name: Release - Ubuntu
-    #   needs: release
-    #   uses: ./.github/workflows/ubuntu.yml
-    #   with:
-    #     run-tests: ${{ fromJSON(inputs.run-tests) }}
+      ubuntu:
+        name: Release - Ubuntu
+        needs: release
+        uses: ./.github/workflows/ubuntu.yml
+        with:
+          run-tests: ${{ fromJSON(inputs.run-tests) }}
+          # tag_name: ${{ github.event.inputs.release_tag }}
