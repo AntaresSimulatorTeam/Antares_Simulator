@@ -157,7 +157,7 @@ public:
         pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
 
         // Get the area
-        pNbClustersOfArea = area->thermal.clusterCount();
+        pNbClustersOfArea = area->thermal.list.enabledCount();
         if (pNbClustersOfArea)
         {
             AncestorType::pResults.resize(pNbClustersOfArea);
@@ -271,13 +271,11 @@ public:
         uint hourInTheWeek = state.hourInTheWeek;
         uint hourInTheYear = state.hourInTheYear;
 
-        for (uint clusterIndex = 0; clusterIndex != state.area->thermal.clusterCount();
-             ++clusterIndex)
+        for (auto cluster : area->thermal.list.each_enabled())
         {
-            auto* cluster = state.area->thermal.clusters[clusterIndex];
             double hourlyClusterProduction
-              = thermal[area->index].thermalClustersProductions[clusterIndex];
-            double pMin = thermal[area->index].PMinOfClusters[clusterIndex];
+              = thermal[area->index].thermalClustersProductions[cluster->areaWideIndex];
+            double pMin = thermal[area->index].PMinOfClusters[cluster->areaWideIndex];
             uint tsIndex = cluster->series.timeseriesNumbers[0][state.year];
 
             // Thermal cluster profit
@@ -312,12 +310,12 @@ public:
             const auto& thermal = results.data.area->thermal;
 
             // Write the data for the current year
-            for (uint i = 0; i < pNbClustersOfArea; ++i)
+            for (auto cluster : thermal.list.each_enabled())
             {
                 // Write the data for the current year
-                results.variableCaption = thermal.clusters[i]->name(); // VCardType::Caption();
+                results.variableCaption = cluster->name(); // VCardType::Caption();
                 results.variableUnit = VCardType::Unit();
-                pValuesForTheCurrentYear[numSpace][i].template buildAnnualSurveyReport<VCardType>(
+                pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex].template buildAnnualSurveyReport<VCardType>(
                   results, fileLevel, precision);
             }
         }

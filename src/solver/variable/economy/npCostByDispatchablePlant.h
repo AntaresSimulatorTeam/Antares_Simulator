@@ -311,12 +311,12 @@ public:
             const auto& thermal = results.data.area->thermal;
 
             // Write the data for the current year
-            for (uint i = 0; i < pSize; ++i)
+            for (auto cluster : thermal.list.each_enabled())
             {
                 // Write the data for the current year
-                results.variableCaption = thermal.clusters[i]->name(); // VCardType::Caption();
+                results.variableCaption = cluster->name(); // VCardType::Caption();
                 results.variableUnit = VCardType::Unit();
-                pValuesForTheCurrentYear[numSpace][i].template buildAnnualSurveyReport<VCardType>(
+                pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex].template buildAnnualSurveyReport<VCardType>(
                   results, fileLevel, precision);
             }
         }
