@@ -46,6 +46,11 @@ if(Python3_Interpreter_FOUND)
   find_python_module(numpy)
 
   if (PYTHON_MODULE_pytest_FOUND AND PYTHON_MODULE_numpy_FOUND)
+      set(benchmark_option "")
+      if(BENCHMARK)
+	      set(benchmark_option " --do-benchmark --benchmark-json ${CMAKE_BINARY_DIR}/output.json")
+      endif() 
+      
       # TODO : add more study batches
       add_test(
         NAME unfeasible
@@ -61,7 +66,7 @@ if(Python3_Interpreter_FOUND)
 
       add_test(
         NAME named-mps
-        COMMAND Python3::Interpreter -m pytest -m json --solver-path=$<TARGET_FILE:antares-solver> --named-mps-problems --benchmark-json ${CMAKE_BINARY_DIR}/output.json
+        COMMAND Python3::Interpreter -m pytest -m json --solver-path=$<TARGET_FILE:antares-solver> --named-mps-problems ${benchmark_option}
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/run-study-tests"
         )
 
