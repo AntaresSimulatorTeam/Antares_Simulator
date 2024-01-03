@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1704284644877,
+  "lastUpdate": 1704297997345,
   "repoUrl": "https://github.com/AntaresSimulatorTeam/Antares_Simulator",
   "entries": {
     "Python Benchmark with pytest-benchmark": [
@@ -202,6 +202,107 @@ window.BENCHMARK_DATA = {
             "unit": "iter/sec",
             "range": "stddev: 0.0049463902339453285",
             "extra": "mean: 2.547299970999984 sec\nrounds: 5"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "azakir@neverhack.com",
+            "name": "Abdoulbari ZAKIR",
+            "username": "a-zakir"
+          },
+          "committer": {
+            "email": "azakir@neverhack.com",
+            "name": "Abdoulbari ZAKIR",
+            "username": "a-zakir"
+          },
+          "distinct": true,
+          "id": "7a842c749e4fb2a697c34d36e95aadbcec17713b",
+          "message": "benchmark controller",
+          "timestamp": "2024-01-03T17:00:48+01:00",
+          "tree_id": "b60d4ef2eb7feb1c4f10b2e9720c9371ae8ba6df",
+          "url": "https://github.com/AntaresSimulatorTeam/Antares_Simulator/commit/7a842c749e4fb2a697c34d36e95aadbcec17713b"
+        },
+        "date": 1704297987086,
+        "tool": "pytest",
+        "benches": [
+          {
+            "name": "test_from_json.py::test[FinalStockEquivalent-cnt  (valid-named-mps / FinalStockEquivalent-cnt)]",
+            "value": 0.19972729115828897,
+            "unit": "iter/sec",
+            "range": "stddev: 0.3339870160836452",
+            "extra": "mean: 5.006827029999994 sec\nrounds: 5"
+          },
+          {
+            "name": "test_from_json.py::test[AreaHydroLevel  (valid-named-mps / AreaHydroLevel)]",
+            "value": 0.5886531408930458,
+            "unit": "iter/sec",
+            "range": "stddev: 0.00950596409645516",
+            "extra": "mean: 1.698793280000001 sec\nrounds: 5"
+          },
+          {
+            "name": "test_from_json.py::test[tests-ST-storage  (valid-named-mps / tests-ST-storage)]",
+            "value": 2.383217515714471,
+            "unit": "iter/sec",
+            "range": "stddev: 0.0011254204006595715",
+            "extra": "mean: 419.60081000000855 msec\nrounds: 5"
+          },
+          {
+            "name": "test_from_json.py::test[binding-constraints  (valid-named-mps / binding-constraints)]",
+            "value": 0.09586238881812591,
+            "unit": "iter/sec",
+            "range": "stddev: 0.01988078853761879",
+            "extra": "mean: 10.431619870199995 sec\nrounds: 5"
+          },
+          {
+            "name": "test_from_json.py::test[reservoir-MaxPumping  (valid-named-mps / reservoir-MaxPumping)]",
+            "value": 0.5434400422081359,
+            "unit": "iter/sec",
+            "range": "stddev: 0.009342674614040277",
+            "extra": "mean: 1.8401294022 sec\nrounds: 5"
+          },
+          {
+            "name": "test_from_json.py::test[test_025-mps-week  (valid-named-mps / 025_mps-week)]",
+            "value": 0.874280654510823,
+            "unit": "iter/sec",
+            "range": "stddev: 0.001202392530724033",
+            "extra": "mean: 1.1437974692000012 sec\nrounds: 5"
+          },
+          {
+            "name": "test_from_json.py::test[Power-fluctuations-minimize-ramping-HydroPowerSmoothingUsingVariationSum  (valid-named-mps / Power-fluctuations-minimize-ramping-HydroPowerSmoothingUsingVariationSum)]",
+            "value": 1.1451531694651786,
+            "unit": "iter/sec",
+            "range": "stddev: 0.004730904497632023",
+            "extra": "mean: 873.2456292000052 msec\nrounds: 5"
+          },
+          {
+            "name": "test_from_json.py::test[test_thermal_fleet_Accurate_unit_commitment  (valid-named-mps / thermal-fleet-Accurate-unit-commitment)]",
+            "value": 2.8556930805113927,
+            "unit": "iter/sec",
+            "range": "stddev: 0.001415056093724213",
+            "extra": "mean: 350.17768780002143 msec\nrounds: 5"
+          },
+          {
+            "name": "test_from_json.py::test[test_025-mps-day  (valid-named-mps / 025_mps-day)]",
+            "value": 0.8595398060941449,
+            "unit": "iter/sec",
+            "range": "stddev: 0.0024667733557562684",
+            "extra": "mean: 1.1634132508000108 sec\nrounds: 5"
+          },
+          {
+            "name": "test_from_json.py::test[Power-fluctuations-minimize-ramping-HydroPowerSmoothingUsingVariationMawDown  (valid-named-mps / Power-fluctuations-minimize-excursions-HydroPowerSmoothingUsingVariationMaxDown)]",
+            "value": 1.245440539019661,
+            "unit": "iter/sec",
+            "range": "stddev: 0.00467654955163969",
+            "extra": "mean: 802.9287377999935 msec\nrounds: 5"
+          },
+          {
+            "name": "test_from_json.py::test[reservoir-Min-MaxHydroPower  (valid-named-mps / reservoir-Min-MaxHydroPower)]",
+            "value": 0.387685879685785,
+            "unit": "iter/sec",
+            "range": "stddev: 0.014252529300046623",
+            "extra": "mean: 2.5794078463999996 sec\nrounds: 5"
           }
         ]
       }
