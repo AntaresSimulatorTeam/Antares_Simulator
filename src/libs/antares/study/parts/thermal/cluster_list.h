@@ -99,6 +99,7 @@ public:
     void sortCompleteList();
     void giveIndicesToClusters();
     unsigned int enabledCount();
+    std::shared_ptr<ThermalCluster> enabledClusterAt(unsigned int index) const;
 
 private:
     bool alreadyInAllClusters(std::string clusterName);

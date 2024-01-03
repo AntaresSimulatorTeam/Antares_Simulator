@@ -193,6 +193,18 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
     return ret;
 }
 
+std::shared_ptr<ThermalCluster> ThermalClusterList::enabledClusterAt(unsigned int index) const
+{
+    // No operator [] was found for std::view (returned by each_enabled()).
+    // The current function is there to replace it. 
+    auto it_enabled_cluster = each_enabled().begin();
+    for (unsigned int i = 0; i < index; i++)
+    {
+        it_enabled_cluster++;
+    }
+    return *it_enabled_cluster;
+}
+
 static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFile::Property* p)
 {
     if (p->key.empty())

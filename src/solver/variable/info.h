@@ -372,7 +372,7 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
             const Data::PartThermal& thermal = results.data.area->thermal;
             for (uint i = 0; i != container.size(); ++i)
             {
-                results.variableCaption = thermal.clusters[i]->name();
+                results.variableCaption = thermal.list.enabledClusterAt(i)->name();
 
                 container[i].template buildDigest<VCardT>(results, digestLevel, dataLevel);
             }
@@ -401,7 +401,7 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
         if (thermal_details)
         {
             auto& thermal = results.data.area->thermal;
-            results.variableCaption = thermal.clusters[idx]->name();
+            results.variableCaption = thermal.list.enabledClusterAt(idx)->name();
             return true;
         }
         if (renewable_details)
