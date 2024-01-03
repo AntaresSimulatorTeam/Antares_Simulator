@@ -50,7 +50,6 @@ void addClusterToAreaList(Area* area, std::shared_ptr<ClusterType> cluster);
 template<>
 void addClusterToAreaList(Area* area, std::shared_ptr<ThermalCluster> cluster)
 {
-	area->thermal.clusters.push_back(cluster.get());
 	area->thermal.list.add(cluster);
 	area->thermal.list.addToCompleteList(cluster);
 }

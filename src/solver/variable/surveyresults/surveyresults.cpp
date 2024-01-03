@@ -137,27 +137,24 @@ static void ExportGridInfosAreas(const Data::Study& study,
         }
 
         // Thermal clusters
-        for (uint i = 0; i != area.thermal.clusterCount(); ++i)
+        for (auto cluster : area.thermal.list.each_enabled())
         {
-            assert(NULL != area.thermal.clusters[i]);
-            auto& cluster = *(area.thermal.clusters[i]);
-
             outThermal << area.id << '\t';
-            outThermal << cluster.id() << '\t';
-            outThermal << cluster.name() << '\t';
-            outThermal << Data::ThermalCluster::GroupName(cluster.groupID) << '\t';
-            outThermal << cluster.unitCount << '\t';
-            outThermal << cluster.nominalCapacity << '\t';
-            outThermal << cluster.minStablePower << '\t';
-            outThermal << cluster.minUpTime << '\t';
-            outThermal << cluster.minDownTime << '\t';
-            outThermal << cluster.spinning << '\t';
-            outThermal << cluster.emissions.factors[Antares::Data::Pollutant::CO2] << '\t';
-            outThermal << cluster.marginalCost << '\t';
-            outThermal << cluster.fixedCost << '\t';
-            outThermal << cluster.startupCost << '\t';
-            outThermal << cluster.marketBidCost << '\t';
-            outThermal << cluster.spreadCost << '\n';
+            outThermal << cluster->id() << '\t';
+            outThermal << cluster->name() << '\t';
+            outThermal << Data::ThermalCluster::GroupName(cluster->groupID) << '\t';
+            outThermal << cluster->unitCount << '\t';
+            outThermal << cluster->nominalCapacity << '\t';
+            outThermal << cluster->minStablePower << '\t';
+            outThermal << cluster->minUpTime << '\t';
+            outThermal << cluster->minDownTime << '\t';
+            outThermal << cluster->spinning << '\t';
+            outThermal << cluster->emissions.factors[Antares::Data::Pollutant::CO2] << '\t';
+            outThermal << cluster->marginalCost << '\t';
+            outThermal << cluster->fixedCost << '\t';
+            outThermal << cluster->startupCost << '\t';
+            outThermal << cluster->marketBidCost << '\t';
+            outThermal << cluster->spreadCost << '\n';
 
         } // each thermal cluster
     });   // each area

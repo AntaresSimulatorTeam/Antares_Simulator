@@ -198,7 +198,7 @@ std::shared_ptr<ThermalCluster> ThermalClusterList::enabledClusterAt(unsigned in
     // No operator [] was found for std::view (returned by each_enabled()).
     // The current function is there to replace it. 
     auto it_enabled_cluster = each_enabled().begin();
-    for (unsigned int i = 0; i < index; i++)
+    for (unsigned int i = 0; i < index; i++) // Compiler won't accept : it_enabled_cluster + n
     {
         it_enabled_cluster++;
     }

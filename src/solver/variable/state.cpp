@@ -78,7 +78,7 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex)
     assert(clusterAreaWideIndex < area->thermal.clusterCount());
 
     // alias to the current thermal cluster
-    thermalCluster = area->thermal.clusters[clusterAreaWideIndex];
+    thermalCluster = area->thermal.list.enabledClusterAt(clusterAreaWideIndex).get();
     double thermalClusterAvailableProduction
      = thermalCluster->series.getCoefficient(this->year, hourInTheYear);
 
@@ -238,7 +238,7 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex)
 
 
     // Get cluster properties
-    Data::ThermalCluster* currentCluster = area->thermal.clusters[clusterAreaWideIndex];
+    Data::ThermalCluster* currentCluster = area->thermal.list.enabledClusterAt(clusterAreaWideIndex).get();
 
     assert(endHourForCurrentYear <= Variable::maxHoursInAYear);
     assert(endHourForCurrentYear <= currentCluster->series.timeSeries.height);
