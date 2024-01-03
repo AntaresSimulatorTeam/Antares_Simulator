@@ -1090,7 +1090,6 @@ bool Study::clusterRename(Cluster* cluster, ClusterName newName)
         break;
     case kThermal:
         ret = area.thermal.list.rename(cluster->id(), newName);
-        area.thermal.prepareAreaWideIndexes();
         break;
     case kUnknown:
         logs.error() << "Unknown cluster type";

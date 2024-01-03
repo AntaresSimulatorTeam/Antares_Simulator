@@ -1101,7 +1101,6 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
             Area& area = *(i->second);
             buffer.clear() << pStudy.folderInput << thermalPlant << area.id;
             ret = area.thermal.list.loadFromFolder(pStudy, buffer.c_str(), &area) && ret;
-            area.thermal.prepareAreaWideIndexes();
         }
     }
 

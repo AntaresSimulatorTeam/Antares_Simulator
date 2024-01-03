@@ -59,16 +59,6 @@ public:
     */
     void resizeAllTimeseriesNumbers(uint n);
 
-
-
-    /*!
-    ** \brief Create and initialize the list of all clusters (with the mustrun flag or not)
-    **
-    ** This method must be called before prepareClustersInMustRunMode()
-    ** to ensure the same order whatever the value of the 'mustrun' flag is.
-    */
-    void prepareAreaWideIndexes();
-
     /*!
     ** \brief Prepare all thermal clusters in the 'mustrun' mode
     **
@@ -119,16 +109,6 @@ public:
     //! \warning This list must only be used from the solver
     ThermalClusterList mustrunList;
 
-    /*!
-    ** \brief All clusters for the area
-    **
-    ** This variable is only available at runtime from the solver.
-    ** It is initialized in the same time that the runtime data.
-    **
-    ** This list is mainly used to ensure the same order of the
-    ** thermal clusters in the outputs.
-    */
-    std::vector<ThermalCluster*> clusters;
 }; // class PartThermal
 
 } // namespace Data

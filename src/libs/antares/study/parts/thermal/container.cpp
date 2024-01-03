@@ -63,26 +63,6 @@ PartThermal::~PartThermal()
 {
 }
 
-void PartThermal::prepareAreaWideIndexes()
-{
-    // Copy the list with all thermal clusters
-    // And init the areaWideIndex (unique index for a given area)
-    if (list.empty())
-    {
-        clusters.clear();
-        return;
-    }
-
-    clusters.assign(list.size(), nullptr);
-
-    uint idx = 0;
-    for (const auto& cluster : list)
-    {
-        clusters[idx] = cluster.get();
-        ++idx;
-    }
-}
-
 uint PartThermal::prepareClustersInMustRunMode()
 {
     // nothing to do if there is no cluster available
@@ -126,7 +106,6 @@ void PartThermal::reset()
 
     mustrunList.clear();
     list.clear();
-    clusters.clear();
 }
 
 bool PartThermal::hasForcedTimeseriesGeneration() const
@@ -147,8 +126,7 @@ bool PartThermal::hasForcedNoTimeseriesGeneration() const
 
 void PartThermal::checkAndCorrectAvailability()
 {
-    std::for_each(
-      clusters.begin(), clusters.end(), std::mem_fn(&ThermalCluster::checkAndCorrectAvailability));
+    std::ranges::for_each(list.each_enabled(), &ThermalCluster::checkAndCorrectAvailability);
 }
 
 } // namespace Data
