@@ -152,6 +152,7 @@ jobs:
         comment-on-alert: true
         fail-on-alert: true
         alert-comment-cc-users: '@a-zakir'
+        skip-fetch-gh-pages: true
 
 
     - name: Run unfeasibility-related tests
