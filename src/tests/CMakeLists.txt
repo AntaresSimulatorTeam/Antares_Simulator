@@ -61,7 +61,7 @@ if(Python3_Interpreter_FOUND)
 
       add_test(
         NAME named-mps
-        COMMAND Python3::Interpreter -m pytest -m json --solver-path=$<TARGET_FILE:antares-solver> --named-mps-problems
+        COMMAND Python3::Interpreter -m pytest -m json --solver-path=$<TARGET_FILE:antares-solver> --named-mps-problems --benchmark-json ${CMAKE_BINARY_DIR}/output.json
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/run-study-tests"
         )
 
