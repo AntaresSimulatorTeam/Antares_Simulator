@@ -50,7 +50,7 @@ ThermalState::StateForAnArea& ThermalState::operator[](size_t areaIndex)
 
 void ThermalState::StateForAnArea::initializeFromArea(const Data::Area& area)
 {
-    const auto count = area.thermal.clusterCount();
+    const auto count = area.thermal.list.enabledCount();
     thermalClustersProductions.resize(count);
     numberOfUnitsONbyCluster.resize(count);
     thermalClustersOperatingCost.resize(count);
@@ -75,7 +75,7 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex)
 {
     // asserts
     assert(area);
-    assert(clusterAreaWideIndex < area->thermal.clusterCount());
+    assert(clusterAreaWideIndex < area->thermal.list.enabledCount());
 
     // alias to the current thermal cluster
     thermalCluster = area->thermal.list.enabledClusterAt(clusterAreaWideIndex).get();

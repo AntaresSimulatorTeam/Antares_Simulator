@@ -15,7 +15,7 @@ bool thermalTSNumberData::reset(const Study& study)
     // If an area is available, it can only be an overlay for thermal timeseries
     // WARNING: The total number of clusters may vary if used from the
     //   solver or not.
-    // WARNING: At this point in time, the variable pArea->thermal.clusterCount()
+    // WARNING: At this point, the variable pArea->thermal.list.size()
     //   might not be valid (because not really initialized yet)
     uint clusterCount = (study.usedByTheSolver)
                         ? (pArea->thermal.list.size() + pArea->thermal.mustrunList.size())

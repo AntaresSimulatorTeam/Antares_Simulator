@@ -126,8 +126,6 @@ HydroManagement::HydroManagement(const Data::AreaList& areas,
     for (uint areaIndex = 0; areaIndex < areas_.size(); ++areaIndex)
     {
         auto& area = *areas_.byIndex[areaIndex];
-        size_t clusterCount = area.thermal.clusterCount();
-
         ventilationResults_[areaIndex].HydrauliqueModulableQuotidien.assign(nbDaysPerYear, 0);
 
         if (area.hydro.reservoirManagement)

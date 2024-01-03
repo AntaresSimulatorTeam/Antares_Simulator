@@ -98,7 +98,7 @@ public:
     void addToCompleteList(std::shared_ptr<ThermalCluster> cluster);
     void sortCompleteList();
     void giveIndicesToClusters();
-    unsigned int enabledCount();
+    unsigned int enabledCount() const;
     std::shared_ptr<ThermalCluster> enabledClusterAt(unsigned int index) const;
 
 private:

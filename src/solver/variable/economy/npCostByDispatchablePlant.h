@@ -164,7 +164,7 @@ public:
         pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
 
         // Get the area
-        pSize = area->thermal.clusterCount();
+        pSize = area->thermal.list.enabledCount();
         if (pSize)
         {
             AncestorType::pResults.resize(pSize);

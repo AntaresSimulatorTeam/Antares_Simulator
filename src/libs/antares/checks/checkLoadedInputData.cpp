@@ -169,16 +169,15 @@ static void checkThermalColumnNumber(const Antares::Data::AreaList& areas,
     for (uint areaIndex = 0; areaIndex < areas.size(); ++areaIndex)
     {
         const auto& area = *(areas.byIndex[areaIndex]);
-        for (uint clusterIndex = 0; clusterIndex != area.thermal.clusterCount(); ++clusterIndex)
+        for (auto cluster : area.thermal.list.each_enabled())
         {
-            const auto& cluster = *(area.thermal.clusters[clusterIndex]);
-            if (cluster.costgeneration == Antares::Data::setManually)
+            if (cluster->costgeneration == Antares::Data::setManually)
                 continue;
-            const uint otherMatrixWidth = (cluster.ecoInput.*matrix).width;
-            uint tsWidth = cluster.series.timeSeries.width;
+            const uint otherMatrixWidth = (cluster->ecoInput.*matrix).width;
+            uint tsWidth = cluster->series.timeSeries.width;
             if (otherMatrixWidth != 1 && otherMatrixWidth != tsWidth)
             {
-                logs.warning() << "Area: " << area.name << ". Cluster name: " << cluster.name()
+                logs.warning() << "Area: " << area.name << ". Cluster name: " << cluster->name()
                                << ". " << exception.what();
                 error = true;
             }

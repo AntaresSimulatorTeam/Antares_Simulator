@@ -264,10 +264,10 @@ public:
                     * state.hourlyResults->PompageHoraire[state.hourInTheWeek]);
 
         // Thermal costs
-        for (uint clusterIndex = 0; clusterIndex != area->thermal.clusterCount(); ++clusterIndex)
+        for (auto cluster : area->thermal.list.each_enabled())
         {
             pValuesForTheCurrentYear[numSpace][state.hourInTheYear]
-              += thermal[area->index].thermalClustersOperatingCost[clusterIndex];
+              += thermal[area->index].thermalClustersOperatingCost[cluster->areaWideIndex];
         }
 
         // Next variable
