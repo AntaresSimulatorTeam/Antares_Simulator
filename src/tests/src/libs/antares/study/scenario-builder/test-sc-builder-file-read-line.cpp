@@ -105,9 +105,6 @@ struct Fixture
 		thCluster_31->series.timeSeries.resize(14, 1);
 
 		// Thermal clusters : update areas local numbering for clusters
-		area_1->thermal.prepareAreaWideIndexes();
-		area_2->thermal.prepareAreaWideIndexes();
-		area_3->thermal.prepareAreaWideIndexes();
 		area_1->thermal.list.giveIndicesToClusters();
 		area_2->thermal.list.giveIndicesToClusters();
 		area_3->thermal.list.giveIndicesToClusters();
