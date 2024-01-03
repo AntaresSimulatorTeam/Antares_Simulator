@@ -23,6 +23,8 @@ def my_test(study_path, test_check_data, check_runner):
 
 @pytest.mark.json
 @pytest.mark.parametrize('study_path, test_check_data', json_collector.pairs(), ids=json_collector.testIds())
-def test(study_path, test_check_data, check_runner, benchmark):
-    benchmark(my_test, study_path, test_check_data, check_runner)
-
+def test(study_path, test_check_data, check_runner, benchmark, do_benchmark):
+    if do_benchmark:
+        benchmark(my_test, study_path, test_check_data, check_runner)
+    else:
+        my_test(study_path, test_check_data, check_runner)
