@@ -91,7 +91,7 @@ jobs:
     - name: Init submodule
       run: |
           git submodule update --init src/antares-deps
-          git submodule update --init --remote --recursive src/tests/resources/Antares_Simulator_Tests
+          # git submodule update --init --remote --recursive src/tests/resources/Antares_Simulator_Tests
 
     - name: Configure
       run: |
@@ -152,7 +152,7 @@ jobs:
         comment-on-alert: true
         fail-on-alert: true
         alert-comment-cc-users: '@a-zakir'
-        skip-fetch-gh-pages: true
+        # skip-fetch-gh-pages: true
 
 
     - name: Run unfeasibility-related tests
