@@ -287,9 +287,9 @@ Durations are expressed in days and rates belong to [0 , 1].
 ## Storages
 This window is used to create and edit short-term storage objects. An individual short-term storage component is defined as an object with the following characteristics:
 
-- Storage managed on cycles sub-multiples of the Antares optimization window (week or day) - by cycle we mean that at the end of the cycle the storage level must come back to its initial level at the beginning of the cycle;
+- Storage managed with a filling level which is identical at the start and end of each Antares optimization window;
 - Rule curves that frame permissible storage levels hour by hour - the admissible range is comprised between 0% and 100%;
-- Hourly series of max power for injection and withdrawal;
+- Time-series of hourly modulation of the maximum injection and withdrawal power;
 - Time-series of natural inflows (case of an open-cycle PSP).
 
 The user may pick any area appearing in the area list and is then given access to the list of short-term storages defined for the area. Once a given storage has been selected, the following characteristics can be set:
@@ -303,7 +303,7 @@ The user may pick any area appearing in the area list and is then given access t
 	- Efficiency (%): the energy efficiency of the storage, i.e. the ratio for a given volume between the energy taken from the system to be injected into the storage and the energy returned to the system during its withdrawal. This efficiency factor is applied when injecting energy into the storage.
 	- Initial level: the imposed initial filling rate of the storage at the beginning of each optimisation period. This  rate is a dimensionless decimal number, between 0 and 1.
 	- Initial level optimal: if the parameter is activated, the "Initial level" parameter is ignored and the initial storage level is optimized by Antares for each optimization period to minimize its objective function.  
-	_Note: setting this parameter to "True" implies that there is no guarantee that the initial storage level of week N is the same as the final storage level of week N-1._
+	_Note: setting this parameter to "True" implies that there is no guarantee that the initial storage level of week N is the same as the final storage level of week N-1. However, the final level of week N is always equal to the initial level of the same week N._
 	
 - "Injections/withdrawal capacities" tab: this tab allows to enter a hourly time-series of modulation factors of the injection and withdrawal capacity for each hour (between 0 and 1), reflecting a lower availability of the structures during certain periods. At a given hour, the overall injection/withdrawal capacities of the storage are the product of this modulation factor by the "Withdrawal" and "Injection" parameters in the General data.
 
