@@ -279,9 +279,37 @@ Durations are expressed in days and rates belong to [0 , 1].
     - _Note that:_
 
         - _If `Cost generation` is set to `Set manually` Marginal and Market bid costs (€/MWh) are specified directly in `Common` tab and have the same value for all time-series and hours._
-        - _If `Cost generation` is set to `Use cost timeseries` Marginal and Market bid costs (€/MWh) are calculated separately for all the time-series and hours using following equation:_\
-        _Marginal_Cost[€/MWh] = Market_Bid_Cost[€/MWh] = (Fuel_Cost[€/GJ] * 3.6 * 100 / Efficiency[%]) + CO2_emission_factor[tons/MWh] * C02_cost[€/tons] + Variable_O&M_cost[€/MWh]_\
-        _where Efficiency[%], CO2_emission_factor[tons/MWh] and Variable_O&M_cost[€/MWh] are specified in `Common` tab under operating costs and parameters, while Fuel_Cost[€/GJ] and C02_cost[€/tons] are provided as time-series in separate tabs._
+        - _If `Cost generation` is set to `Use cost timeseries` Marginal and Market bid costs (€/MWh) are calculated separately for all the time-series and hours using the following equation:_  
+        _Marginal_Cost[€/MWh] = Market_Bid_Cost[€/MWh] = (Fuel_Cost[€/GJ] * 3.6 * 100 / Efficiency[%]) + CO2_emission_factor[tons/MWh] * C02_cost[€/tons] + Variable_O&M_cost[€/MWh]_  
+        _where Efficiency[%], CO2_emission_factor[tons/MWh] and Variable_O&M_cost[€/MWh] are specified in the `Common` tab under operating costs and parameters, while Fuel_Cost[€/GJ] and C02_cost[€/tons] are provided as time-series in separate tabs._
+
+
+## Storages
+This window is used to create and edit short-term storage objects. An individual short-term storage component is defined as an object with the following characteristics:
+
+- Storage managed on cycles sub-multiples of the Antares optimization window (week or day) - by cycle we mean that at the end of the cycle the storage level must come back to its initial level at the beginning of the cycle;
+- Rule curves that frame permissible storage levels hour by hour - the admissible range is comprised between 0% and 100%;
+- Hourly series of max power for injection and withdrawal;
+- Time-series of natural inflows (case of an open-cycle PSP).
+
+The user may pick any area appearing in the area list and is then given access to the list of short-term storages defined for the area. Once a given storage has been selected, the following characteristics can be set:
+
+- General characteristics of the storage:
+	- Name
+	- Group: the type of storage, based on a predefined list of storages ("PSP_open", "PSP_closed", "Weight", "Battery", "Other")
+	- Withdrawal (MW): the maximum withrawal power for the storage - withdrawal refers to the flow from the storage to the power system
+	- Injection (MW): the maximum injection power for the storage - withdrawal refers to the flow from the power system to the storage
+	- Stock (MWh): the capacity of the storage in MWh
+	- Efficiency (%): the energy efficiency of the storage, i.e. the ratio for a given volume between the energy taken from the system to be injected into the storage and the energy returned to the system during its withdrawal. This efficiency factor is applied when injecting energy into the storage.
+	- Initial level: the imposed initial filling rate of the storage at the beginning of each optimisation period. This  rate is a dimensionless decimal number, between 0 and 1.
+	- Initial level optimal: if the parameter is activated, the "Initial level" parameter is ignored and the initial storage level is optimized by Antares for each optimization period to minimize its objective function.  
+	_Note: setting this parameter to "True" implies that there is no guarantee that the initial storage level of week N is the same as the final storage level of week N-1._
+	
+- "Injections/withdrawal capacities" tab: this tab allows to enter a hourly time-series of modulation factors of the injection and withdrawal capacity for each hour (between 0 and 1), reflecting a lower availability of the structures during certain periods. At a given hour, the overall injection/withdrawal capacities of the storage are the product of this modulation factor by the "Withdrawal" and "Injection" parameters in the General data.
+
+- "Rule curves" tab: this tab allows to enter a hourly time-series of rule curves (between 0 and 1), which are the lower and upper limits of the storage level imposed at each hour. 
+
+- "Inflows" tab: this tab allows to enter a hourly time-series of inflows filling the storage (in MWh). The values can be negative, corresponding to withdrawals imposed on the storage for other uses.
 
 ## Hydro
 

@@ -47,8 +47,8 @@ The files and their content are hereafter described.
 
 ## Economy and Adequacy, area results [^11]
 
-**15** files resulting from the combination of the following attributes:
-**[values | id | details] X [hourly | daily | weekly | monthly | annual]**
+**25** files resulting from the combination of the following attributes:
+**[values | id | details | details-res | details-STstorage] X [hourly | daily | weekly | monthly | annual]**
 
 - The second attribute defines the time span over which the results are assessed: hourly detail, daily bundle, weekly bundle, monthly bundle, annual bundle.
 
@@ -60,10 +60,16 @@ These results appear under the label "general values" in the output GUI.
 **details** Values regarding the different dispatchable thermal generating plants of each area (e.g. "older 300 MW coal from the south coast"). The sizes of these files differ from one area to another.
 These results appear under the label "thermal plants" in the output GUI.
 
+**details-res** Values regarding the different renewable clusters of each area. The sizes of these files differ from one area to another.
+These results appear under the label "Ren. clusters" in the output GUI.
+
+**details-STstorage** Values regarding the different short-term storages of each area. The sizes of these files differ from one area to another.
+These results appear under the label "ST storages" in the output GUI.
+
 **id** Identifier (number) of the Monte-Carlo years for which were observed the extreme values of the different variables presented in the « values » files
 These results appear under the label "record years" in the output GUI
 
-The area files that belong to the « values » class display **122** fields corresponding to the expectation, standard deviation, minimal and maximal values of the variables whose list is given hereafter.
+The area files that belong to the « values » class display fields corresponding to the expectation, standard deviation, minimal and maximal values of the variables whose list is given hereafter.
 
 | variables | description |
 |-----------|-------------|
@@ -116,11 +122,17 @@ The area files that belong to the « values » class display **122** fields corr
 | DENS | Domestic Energy Not Supplied: the difference between the local production capabilities of an area and its local load[^adqp] |
 | LMR. VIOL | Local Matching Rule Violation after the Antares Simulation as defined by the adequacy patch[^adqp] |
 | SPIL. ENRG. CSR | Spilled Energy after the Curtailment Sharing Rule step of the dequacy patch[^adqp] |
+| <Short-term storage group\>_injection |Injection of energy from the area into each short-term storage group|
+| <Short-term storage group\>_withdrawal |Withdrawal of energy from each short-term storage group into the area|
+| <Short-term storage group\>_level |Average level  of each short-term storage group|
 | NP COST | Non-proportional costs of the dispatchable plants (start-up and fixed costs) |
 | NODU | Number of Dispatched Units [^13] |
 | Profit | Net profit of the cluster in euros ((MRG. PRICE - marginal cost of the cluster) * (dispatchable production of the cluster)[^15]  |
+| <Short-term storage\>,P-injection |Injection of energy from the area into the short-term storage|
+| <Short-term storage\>,P-withdrawal |Withdrawal of energy the short-term storage into the area|
+| <Short-term storage\>,Levels |Level  of the short-term storage|
 
-Note: The net profit is computed on full precision values for MRG. PRICE. The user may obtain slightly different results applying the given formula because MRG. PRICE values are rounded to 10^-2.
+_Note: The net profit is computed on full precision values for MRG. PRICE. The user may obtain slightly different results applying the given formula because MRG. PRICE values are rounded to 10^-2._
 
 ## Economy and Adequacy, interconnection results [^14]
 **10** files resulting from the combination of the following attributes:
