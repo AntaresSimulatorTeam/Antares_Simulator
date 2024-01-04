@@ -8,6 +8,7 @@
 
 #include <antares/exception/LoadingError.hpp>
 #include <antares/checks/checkLoadedInputData.h>
+#include <antares/checks/checkHydroInput.h>
 #include <antares/version.h>
 #include <antares/writer/writer_factory.h>
 
@@ -158,6 +159,9 @@ void Application::prepare(int argc, char* argv[])
 
     checkFuelCostColumnNumber(pStudy->areas);
     checkCO2CostColumnNumber(pStudy->areas);
+
+    // Checks on hydro
+    checksOnHydroMinPower();
 
     // Start the progress meter
     pStudy->initializeProgressMeter(pSettings.tsGeneratorsOnly);

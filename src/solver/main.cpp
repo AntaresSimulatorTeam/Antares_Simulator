@@ -114,7 +114,6 @@ void logAbortion()
 int main(int argc, char** argv)
 {
     try {
-
         logs.info(ANTARES_LOGO);
         logs.info(GPL_ANNOUNCEMENT);
         // Name of the running application for the logger

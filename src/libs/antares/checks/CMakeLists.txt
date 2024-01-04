@@ -1,6 +1,8 @@
 set(SRC_CHECKS
         checkLoadedInputData.cpp
         antares/checks/checkLoadedInputData.h
+        checkHydroInput.cpp
+        antares/checks/checkHydroInput.h
 )
 source_group("checks" FILES ${SRC_CHECKS})
 
