@@ -106,6 +106,7 @@ void PartThermal::reset()
 
     mustrunList.clear();
     list.clear();
+    list.allClusters.clear(); // gp : allClusters should be private eventually
 }
 
 bool PartThermal::hasForcedTimeseriesGeneration() const
