@@ -288,7 +288,7 @@ Durations are expressed in days and rates belong to [0 , 1].
 This window is used to create and edit short-term storage objects. An individual short-term storage component is defined as an object with the following characteristics:
 
 - Storage managed with a filling level which is identical at the start and end of each Antares optimization window;
-- Rule curves that frame permissible storage levels hour by hour - the admissible range is comprised between 0% and 100%;
+- Rule curves that frame permissible storage levels hour by hour - the admissible range is a coefficient comprised between 0 and 1;
 - Time-series of hourly modulation of the maximum injection and withdrawal power;
 - Time-series of natural inflows (case of an open-cycle PSP).
 
@@ -296,11 +296,11 @@ The user may pick any area appearing in the area list and is then given access t
 
 - General characteristics of the storage:
 	- Name
-	- Group: the type of storage, based on a predefined list of storages ("PSP_open", "PSP_closed", "Weight", "Battery", "Other")
+	- Group: the type of storage, based on a predefined list of storages ("PSP_open", "PSP_closed", "Weight", "Battery", "Other1", "Other2", ..., "Other5")
 	- Withdrawal (MW): the maximum withrawal power for the storage - withdrawal refers to the flow from the storage to the power system
 	- Injection (MW): the maximum injection power for the storage - withdrawal refers to the flow from the power system to the storage
 	- Stock (MWh): the capacity of the storage in MWh
-	- Efficiency (%): the energy efficiency of the storage, i.e. the ratio for a given volume between the energy taken from the system to be injected into the storage and the energy returned to the system during its withdrawal. This efficiency factor is applied when injecting energy into the storage.
+	- Efficiency (p.u., coefficient between 0 and 1): the energy efficiency of the storage, i.e. the ratio for a given volume between the energy taken from the system to be injected into the storage and the energy returned to the system during its withdrawal. This efficiency factor is applied when injecting energy into the storage.
 	- Initial level: the imposed initial filling rate of the storage at the beginning of each optimisation period. This  rate is a dimensionless decimal number, between 0 and 1.
 	- Initial level optimal: if the parameter is activated, the "Initial level" parameter is ignored and the initial storage level is optimized by Antares for each optimization period to minimize its objective function.  
 	_Note: setting this parameter to "True" implies that there is no guarantee that the initial storage level of week N is the same as the final storage level of week N-1. However, the final level of week N is always equal to the initial level of the same week N._

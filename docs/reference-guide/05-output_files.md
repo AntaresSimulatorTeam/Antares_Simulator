@@ -69,7 +69,7 @@ These results appear under the label "ST storages" in the output GUI.
 **id** Identifier (number) of the Monte-Carlo years for which were observed the extreme values of the different variables presented in the « values » files
 These results appear under the label "record years" in the output GUI
 
-The area files that belong to the « values » class display fields corresponding to the expectation, standard deviation, minimal and maximal values of the variables whose list is given hereafter.
+The area files that belong to the "values" class display fields corresponding to the expectation, standard deviation, minimal and maximal values of the variables whose list is given hereafter.
 
 | variables | description |
 |-----------|-------------|
