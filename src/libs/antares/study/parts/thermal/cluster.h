@@ -242,6 +242,7 @@ public:
 
     //! Mustrun
     bool mustrun;
+    bool isMustRun() const { return mustrun; }
     bool isNotMustRun() const { return not mustrun; }
     bool isEnabled() const { return enabled; }
 

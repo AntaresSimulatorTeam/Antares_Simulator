@@ -58,8 +58,15 @@ public:
     */
     void enableMustrunForEveryone();
     //@}
+
     auto each_enabled() const { return allClusters | std::views::filter(&ThermalCluster::isEnabled); }
-    auto each_not_mustrun() const { return allClusters | std::views::filter(&ThermalCluster::isNotMustRun); }
+
+    auto each_mustrun_and_enabled() const 
+    { 
+        return allClusters | std::views::filter(&ThermalCluster::isMustRun)
+                           | std::views::filter(&ThermalCluster::isEnabled);
+    }
+
     auto each_enabled_and_not_mustrun() const 
     {   
         return allClusters | std::views::filter(&ThermalCluster::isEnabled)
