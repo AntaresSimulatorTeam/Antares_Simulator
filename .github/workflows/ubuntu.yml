@@ -10,7 +10,6 @@ on:
       - issue-*
       - release/*
       - doc/*
-  pull_request:  
   schedule:
     - cron: '21 2 * * *'
   workflow_call:
