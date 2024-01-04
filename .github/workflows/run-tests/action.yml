@@ -32,12 +32,15 @@ runs:
            cd _build
            ctest -C Release --output-on-failure -R ${{inputs.variant}}
            echo "RET_CODE=$?" >> $GITHUB_ENV
-
+  - name: run single study
+    shell: bash
+    run: _build/solver/antares-8.8-solver  src/tests/resources/batches/valid-named-mps/FinalStockEquivalent-cnt -s >> solver.log
+     
   - name: Upload tests logs 
     uses: actions/upload-artifact@v3
     with:
      name: test-log
-     path: ${{ github.workspace }}/src/tests/resources/batches/**/solver*.log         
+     path: ${{ github.workspace }}/solver.log         
 
   - name: Clean batches
     shell: bash
