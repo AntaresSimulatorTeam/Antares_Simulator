@@ -2,8 +2,6 @@ from fixtures import *
 from parse_studies.look_for_studies import look_for_studies
 from parse_studies.json_collector import jsonCollector
 from check_on_results.create_checks import create_checks
-# tmp import
-import time
 
 
 ROOT_FOLDER = Path('../resources/batches').resolve()
@@ -20,9 +18,7 @@ json_collector.collect()
 
 
 def my_test(study_path, test_check_data, check_runner):
-    time.sleep(60)
-    checks = create_checks(study_path, test_check_data,
-                           simulation=check_runner.get_simulation())
+    checks = create_checks(study_path, test_check_data, simulation=check_runner.get_simulation())
     check_runner.run(checks)
 
 @pytest.mark.json
