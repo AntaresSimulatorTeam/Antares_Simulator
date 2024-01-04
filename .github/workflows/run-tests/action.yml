@@ -37,7 +37,7 @@ runs:
     uses: actions/upload-artifact@v3
     with:
      name: test-log
-     path: ${{ github.workspace }}/src/tests/resources/batches/*simulation.log         
+     path: ${{ github.workspace }}/src/tests/resources/batches/**/simulation.log         
 
   - name: Clean batches
     shell: bash
