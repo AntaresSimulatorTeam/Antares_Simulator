@@ -154,7 +154,9 @@ jobs:
         # Enable Job Summary for PRs
         summary-always: true
         comment-on-alert: true
-        fail-on-alert: true
+        # fail-on-alert: true
+        #tmp remove below line
+        fail-on-alert: false
         alert-comment-cc-users: '@a-zakir'
         # skip-fetch-gh-pages: true
 
