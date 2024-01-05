@@ -500,9 +500,7 @@ bool ThermalClusterList::loadPreproFromFolder(Study& study,
 
     Clob buffer;
     auto hasPrepro = [&](auto c)
-    {   
-        ++options.progressTicks;
-        options.pushProgressLogs();
+    {
         return (bool) c->prepro;
     };
     

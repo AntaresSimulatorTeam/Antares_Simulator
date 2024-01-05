@@ -243,9 +243,6 @@ bool ClusterList<ClusterT>::loadDataSeriesFromFolder(Study& s,
 
     each([&](ClusterT& c) {
         ret = c.loadDataSeriesFromFolder(s, folder) and ret;
-
-        ++options.progressTicks;
-        options.pushProgressLogs();
     });
     return ret;
 }

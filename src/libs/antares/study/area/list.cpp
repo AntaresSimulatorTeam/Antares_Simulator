@@ -774,14 +774,6 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
                                              StringT& buffer,
                                              const StudyLoadOptions& options)
 {
-    // Progression
-    options.progressTicks = 0;
-    options.progressTickCount
-      = area.thermal.list.size() * (options.loadOnlyNeeded ? 1 : 2) // prepro+series
-        + 1                                                         // links
-        + 4                                                         // load,solar,wind,hydro
-        + 1;                                                        // DSM,misc...
-
     // Reset
     area.filterSynthesis = filterAll;
     area.filterYearByYear = filterAll;
@@ -820,15 +812,10 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         MatrixTestForPositiveValues_LimitWidth(buffer.c_str(), &area.miscGen, fhhPSP);
     }
 
-    ++options.progressTicks;
-    options.pushProgressLogs();
-
     // Links
     {
         buffer.clear() << study.folderInput << SEP << "links" << SEP << area.id;
         ret = AreaLinksLoadFromFolder(study, list, &area, buffer) && ret;
-        ++options.progressTicks;
-        options.pushProgressLogs();
     }
 
     // UI
@@ -858,9 +845,6 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             ret = area.load.series.loadFromFile(buffer.c_str(), averageTs)
                   && ret;
         }
-
-        ++options.progressTicks;
-        options.pushProgressLogs();
     }
 
     // Solar
@@ -880,9 +864,6 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
                   && ret;
 
         }
-
-        ++options.progressTicks;
-        options.pushProgressLogs();
     }
 
     // Hydro
@@ -903,9 +884,6 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "series";
             ret = area.hydro.series->loadFromFolder(study, area.id, buffer) && ret;
         }
-
-        ++options.progressTicks;
-        options.pushProgressLogs();
     }
 
     // Wind
@@ -924,9 +902,6 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             ret = area.wind.series.loadFromFile(buffer.c_str(), averageTs)
                   && ret;
         }
-
-        ++options.progressTicks;
-        options.pushProgressLogs();
     }
 
     // Thermal cluster list
