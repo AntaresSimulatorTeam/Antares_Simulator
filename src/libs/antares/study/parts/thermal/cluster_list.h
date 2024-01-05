@@ -114,9 +114,8 @@ private: // member functions
     bool alreadyInAllClusters(std::string clusterName);
 
 private: // member data
-    std::vector<std::shared_ptr<ThermalCluster>> allClusters;
-
     unsigned int enabledCount_ = 0;
+
 }; // class ThermalClusterList
 } // namespace Data
 } // namespace Antares

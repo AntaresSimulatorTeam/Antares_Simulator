@@ -170,8 +170,9 @@ public:
     uint removeDisabledClusters();
 
 protected:
-    /// The vector containing the clusters
+    // The vector containing the clusters
     Vect clusters;
+    std::vector<std::shared_ptr<ClusterT>> allClusters;
 
     /// thermal, renewable, etc.
     virtual std::string typeID() const = 0;
