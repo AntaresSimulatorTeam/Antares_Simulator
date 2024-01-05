@@ -131,7 +131,7 @@ void PrepareDataFromClustersInMustrunMode(Data::Study& study, uint numSpace, uin
         double* mrs = scratchpad.mustrunSum;
         double* adq = scratchpad.originalMustrunSum;
 
-        for (const auto& cluster : area.thermal.mustrunList)
+        for (const auto& cluster : area.thermal.list.each_mustrun_and_enabled())
         {
             const auto& availableProduction = cluster->series.getColumn(year);
             if (inAdequacy && cluster->mustrunOrigin)
@@ -151,7 +151,7 @@ void PrepareDataFromClustersInMustrunMode(Data::Study& study, uint numSpace, uin
 
         if (inAdequacy)
         {
-            for (const auto& cluster : area.thermal.mustrunList)
+            for (const auto& cluster : area.thermal.list.each_mustrun_and_enabled())
             {
                 if (!cluster->mustrunOrigin)
                     continue;
