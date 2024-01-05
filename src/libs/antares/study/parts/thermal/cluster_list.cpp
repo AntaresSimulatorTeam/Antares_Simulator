@@ -197,10 +197,14 @@ std::shared_ptr<ThermalCluster> ThermalClusterList::enabledClusterAt(unsigned in
 {
     // No operator [] was found for std::view (returned by each_enabled()).
     // The current function is there to replace it. 
-    auto it_enabled_cluster = each_enabled().begin();
-    for (unsigned int i = 0; i < index; i++) // Compiler won't accept : it_enabled_cluster + index
-        it_enabled_cluster++;
-    return *it_enabled_cluster;
+    // auto it_enabled_cluster = each_enabled().begin();
+    // for (unsigned int i = 0; i < index; i++) // Compiler won't accept : it_enabled_cluster + index
+    //     it_enabled_cluster++;
+    // return *it_enabled_cluster;
+    std::vector<std::shared_ptr<ThermalCluster>> v;
+    std::copy_if(allClusters.begin(), allClusters.end(), std::back_inserter(v), [](std::shared_ptr<ThermalCluster> e){ return e->isEnabled();});
+    
+    return v[index];
 }
 
 static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFile::Property* p)
