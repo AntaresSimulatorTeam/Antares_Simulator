@@ -142,9 +142,6 @@ bool Rules::readThermalCluster(const AreaName::Vector& splitKey, String value, b
         return false;
 
     const ThermalCluster* cluster = area->thermal.list.find(clustername);
-    if (!cluster)
-        cluster = area->thermal.mustrunList.find(clustername);
-
     if (cluster)
     {
         uint val = fromStringToTSnumber(value);

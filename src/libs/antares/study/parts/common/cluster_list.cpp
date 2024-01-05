@@ -60,9 +60,10 @@ typename ClusterList<ClusterT>::const_iterator ClusterList<ClusterT>::end() cons
 template<class ClusterT>
 ClusterT* ClusterList<ClusterT>::find(const Data::ClusterName& id) const
 {
-    const auto& it = std::ranges::find_if(clusters, [&id](auto& c) { return c->id() == id; });
-
-    return (it != clusters.end()) ? it->get() : nullptr;
+    for (auto cluster : each_enabled())
+        if (cluster->id() == id)
+            return cluster.get();
+    return nullptr;
 }
 
 template<class ClusterT>
@@ -92,13 +93,14 @@ void ClusterList<ClusterT>::storeTimeseriesNumbers(Solver::IResultWriter& writer
     Clob path;
     std::string ts_content;
 
-    each([&](const Cluster& cluster) {
-        path.clear() << "ts-numbers" << SEP << typeID() << SEP << cluster.parentArea->id << SEP
-                     << cluster.id() << ".txt";
+    for (auto cluster : each_enabled()) 
+    {
+        path.clear() << "ts-numbers" << SEP << typeID() << SEP << cluster->parentArea->id << SEP
+                     << cluster->id() << ".txt";
         ts_content.clear(); // We must clear ts_content here, since saveToBuffer does not do it.
-        cluster.series.timeseriesNumbers.saveToBuffer(ts_content, 0, true, predicate, true);
+        cluster->series.timeseriesNumbers.saveToBuffer(ts_content, 0, true, predicate, true);
         writer.addEntryFromBuffer(path.c_str(), ts_content);
-    });
+    }
 }
 
 template<class ClusterT>

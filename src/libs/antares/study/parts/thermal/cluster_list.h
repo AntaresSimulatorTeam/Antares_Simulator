@@ -104,6 +104,7 @@ public:
     void sortCompleteList();
     void giveIndicesToClusters();
     unsigned int enabledCount() const;
+    unsigned int mustRunAndEnabledCount() const;
     std::shared_ptr<ThermalCluster> enabledClusterAt(unsigned int index) const;
     void clearAll();
     unsigned int allClustersSize();

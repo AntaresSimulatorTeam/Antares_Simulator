@@ -89,6 +89,14 @@ unsigned int ThermalClusterList::enabledCount() const
     return enabledCount_;
 }
 
+unsigned int ThermalClusterList::mustRunAndEnabledCount() const
+{
+    unsigned int count = 0;
+    for (auto cluster : each_mustrun_and_enabled())
+        count++;
+    return count;
+}
+
 bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, Area* area)
 {
     assert(area and "A parent area is required");
