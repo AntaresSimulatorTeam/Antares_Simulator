@@ -244,7 +244,6 @@ public:
     bool mustrun;
     bool isMustRun() const { return mustrun; }
     bool isNotMustRun() const { return not mustrun; }
-    bool isEnabled() const { return enabled; }
 
     //! Mustrun (as it were at the loading of the data)
     //

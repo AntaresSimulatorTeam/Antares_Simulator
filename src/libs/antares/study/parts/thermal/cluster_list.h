@@ -1,6 +1,5 @@
 #pragma once
 
-#include <ranges>
 #include "../common/cluster_list.h"
 #include "cluster.h"
 

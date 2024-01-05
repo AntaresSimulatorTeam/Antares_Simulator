@@ -84,10 +84,9 @@ public:
     bool saveDataSeriesToFolder(const AnyString& folder) const;
     bool loadDataSeriesFromFolder(Study& s, const AnyString& folder);
 
-    //! Count of unit
     uint unitCount;
 
-    //! Enabled
+    bool isEnabled() const { return enabled; }
     bool enabled;
 
     //! The associate area (alias)

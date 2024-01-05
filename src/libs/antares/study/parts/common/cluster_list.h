@@ -9,8 +9,7 @@
 #include <algorithm>
 #include <vector>
 #include <memory>
-
-
+#include <ranges>
 
 
 namespace Antares
@@ -71,6 +70,8 @@ public:
     ** \return True if the cluster exists
     */
     bool exists(const Data::ClusterName& id) const;
+
+    auto each_enabled() const { return allClusters | std::views::filter(&ClusterT::isEnabled); }
 
     /*!
     ** \brief Rename a cluster
