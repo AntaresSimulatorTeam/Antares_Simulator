@@ -338,12 +338,14 @@ bool ThermalClusterLoadFromSection(const AnyString& filename,
 
 void ThermalClusterList::calculationOfSpinning()
 {
-    each([&](ThermalCluster& cluster) { cluster.calculationOfSpinning(); });
+    for (auto cluster : each_enabled())
+        cluster->calculationOfSpinning();
 }
 
 void ThermalClusterList::reverseCalculationOfSpinning()
 {
-    each([&](ThermalCluster& cluster) { cluster.reverseCalculationOfSpinning(); });
+    for (auto cluster : each_enabled())
+        cluster->reverseCalculationOfSpinning();
 }
 
 void ThermalClusterList::enableMustrunForEveryone()

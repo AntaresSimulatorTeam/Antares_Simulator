@@ -18,7 +18,7 @@ bool thermalTSNumberData::reset(const Study& study)
     // WARNING: At this point, the variable pArea->thermal.list.size()
     //   might not be valid (because not really initialized yet)
     uint clusterCount = (study.usedByTheSolver)
-                        ? (pArea->thermal.list.size() + pArea->thermal.mustrunList.size())
+                        ? (pArea->thermal.list.enabledCount())
                         : pArea->thermal.list.size();
 
     // Resize

@@ -84,10 +84,7 @@ static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos&
         // Spinning - Economic Only - If no prepro
         if (!(timeSeriesThermal & study.parameters.timeSeriesToRefresh))
         {
-            // Calculation of the spinning
             area.thermal.list.calculationOfSpinning();
-            // We should not forget the list of clusters in 'must-run' mode
-            area.thermal.mustrunList.calculationOfSpinning();
         }
 
         area.scratchpad.reserve(nbYearsInParallel);

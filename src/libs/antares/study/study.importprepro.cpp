@@ -112,7 +112,6 @@ bool Study::importTimeseriesIntoInput()
 
                 // Spinning
                 area.thermal.list.reverseCalculationOfSpinning();
-                area.thermal.mustrunList.reverseCalculationOfSpinning();
 
                 buffer.clear() << folderInput << SEP << "thermal" << SEP << "series";
                 ret = area.thermal.list.saveDataSeriesToFolder(buffer.c_str(), msg) && ret;
