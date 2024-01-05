@@ -73,7 +73,6 @@ public:
                            | std::views::filter(&ThermalCluster::isNotMustRun); 
     }
 
-    std::vector<std::shared_ptr<ThermalCluster>> allClusters;
 
     /*!
     ** \brief Ensure data for the prepro are initialized
@@ -107,9 +106,15 @@ public:
     void giveIndicesToClusters();
     unsigned int enabledCount() const;
     std::shared_ptr<ThermalCluster> enabledClusterAt(unsigned int index) const;
+    void clearAll();
+    unsigned int allClustersSize();
+    std::vector<std::shared_ptr<ThermalCluster>> all();
 
-private:
+private: // member functions
     bool alreadyInAllClusters(std::string clusterName);
+
+private: // member data
+    std::vector<std::shared_ptr<ThermalCluster>> allClusters;
 
     unsigned int enabledCount_ = 0;
 }; // class ThermalClusterList

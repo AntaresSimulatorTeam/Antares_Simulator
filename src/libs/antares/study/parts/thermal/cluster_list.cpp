@@ -203,6 +203,21 @@ std::shared_ptr<ThermalCluster> ThermalClusterList::enabledClusterAt(unsigned in
     return *it_enabled_cluster;
 }
 
+void ThermalClusterList::clearAll()
+{
+    allClusters.clear();
+}
+
+unsigned int ThermalClusterList::allClustersSize()
+{
+    return allClusters.size();
+}
+
+std::vector<std::shared_ptr<ThermalCluster>> ThermalClusterList::all()
+{
+    return allClusters;
+}
+
 static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFile::Property* p)
 {
     if (p->key.empty())

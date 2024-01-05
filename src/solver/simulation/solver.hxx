@@ -627,7 +627,7 @@ void ISimulation<Impl>::allocateMemoryForRandomNumbers(randomNumbers& randomForP
         {
             // logs.info() << "   area : " << a << " :";
             auto& area = *(study.areas.byIndex[a]);
-            size_t nbClusters = area.thermal.list.allClusters.size();
+            size_t nbClusters = area.thermal.list.allClustersSize();
             randomForParallelYears.pYears[y].pThermalNoisesByArea[a] = new double[nbClusters];
             randomForParallelYears.pYears[y].pNbClustersByArea[a] = nbClusters;
         }
@@ -691,7 +691,7 @@ void ISimulation<Impl>::computeRandomNumbers(randomNumbers& randomForYears,
             // logs.info() << "   area : " << a << " :";
             auto& area = *(study.areas.byIndex[a]);
 
-            for (auto cluster : area.thermal.list.allClusters)
+            for (auto cluster : area.thermal.list.all())
             {
                 uint clusterIndex = cluster->areaWideIndex;
                 double thermalNoise = runtime.random[Data::seedThermalCosts].next();

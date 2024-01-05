@@ -625,7 +625,7 @@ bool GenerateThermalTimeSeries(Data::Study& study,
     generator->currentYear = year;
 
     study.areas.each([&](Data::Area& area) {
-        for (auto cluster : area.thermal.list.allClusters)
+        for (auto cluster : area.thermal.list.all())
         {
             if (cluster->doWeGenerateTS(globalThermalTSgeneration) && refreshTSonCurrentYear)
             {

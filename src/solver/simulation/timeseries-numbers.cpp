@@ -634,7 +634,7 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
         // -------------
         indexTS = ts_to_tsIndex.at(timeSeriesThermal);
 
-        for (auto cluster : area.thermal.list.allClusters)
+        for (auto cluster : area.thermal.list.all())
         {
             if (not cluster->enabled)
                 study.runtime->random[seedTimeseriesNumbers].next();
