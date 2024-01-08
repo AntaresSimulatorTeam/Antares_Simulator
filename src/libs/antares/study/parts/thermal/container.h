@@ -93,9 +93,6 @@ public:
 
     //! List of all thermal clusters (enabled and disabled) except must-run clusters
     ThermalClusterList list;
-    //! List of all thermal clusters in 'must-run' mode
-    //! \warning This list must only be used from the solver
-    ThermalClusterList mustrunList;
 
 }; // class PartThermal
 

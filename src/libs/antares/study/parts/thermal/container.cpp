@@ -49,14 +49,12 @@ bool PartThermal::forceReload(bool reload) const
 {
     bool ret = true;
     ret = list.forceReload(reload) && ret;
-    ret = mustrunList.forceReload(reload) && ret;
     return ret;
 }
 
 void PartThermal::markAsModified() const
 {
     list.markAsModified();
-    mustrunList.markAsModified();
 }
 
 void PartThermal::reset()
@@ -64,7 +62,6 @@ void PartThermal::reset()
     unsuppliedEnergyCost = 0.;
     spilledEnergyCost = 0.;
 
-    mustrunList.clear();
     list.clear();
     list.clearAll();
 }
@@ -72,7 +69,6 @@ void PartThermal::reset()
 void PartThermal::resizeAllTimeseriesNumbers(uint n)
 {
     list.resizeAllTimeseriesNumbers(n);
-    mustrunList.resizeAllTimeseriesNumbers(n);
 }
 
 
