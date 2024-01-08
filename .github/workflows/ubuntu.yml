@@ -142,8 +142,8 @@ jobs:
     - name: Store benchmark result
       uses: benchmark-action/github-action-benchmark@v1
       with:
-        name: Python Benchmark with pytest-benchmark
-        tool: 'pytest'
+        name: Python Benchmark with customSmallerIsBetter-benchmark
+        tool: 'customSmallerIsBetter'
         output-file-path: _build/output.json
         # Use personal access token instead of GITHUB_TOKEN due to https://github.community/t/github-action-not-triggering-gh-pages-upon-push/16096
         github-token: ${{ secrets.GITHUB_TOKEN }}
