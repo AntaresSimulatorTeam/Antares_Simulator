@@ -35,7 +35,6 @@ jobs:
         # If you're changing the branch from main,
         # also change the `main` in `refs/heads/main`
         # below accordingly.
-        # /!\ tmp 
         if: github.ref == 'refs/heads/test/is_benchark_erased'
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
