@@ -48,7 +48,7 @@ if(Python3_Interpreter_FOUND)
   if (PYTHON_MODULE_pytest_FOUND AND PYTHON_MODULE_numpy_FOUND)
       set(benchmark_option "")
       if(BENCHMARK)
-	      set(benchmark_option --do-benchmark --benchmark-json ${CMAKE_BINARY_DIR}/output.json)
+	      set(benchmark_option --do-benchmark --custom-benchmark-json ${CMAKE_BINARY_DIR}/output.json)
       endif() 
       
       # TODO : add more study batches
