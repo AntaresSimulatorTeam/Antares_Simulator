@@ -71,10 +71,10 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
         {
             auto* link = study.runtime->areaLink[j];
             int ret = retrieveAverageNTC(
-              study, link->directCapacities, link->timeseriesNumbers, avgDirect);
+              study, link->directCapacities.timeSeries, link->timeseriesNumbers, avgDirect);
 
             ret = retrieveAverageNTC(
-                    study, link->indirectCapacities, link->timeseriesNumbers, avgIndirect)
+                    study, link->indirectCapacities.timeSeries, link->timeseriesNumbers, avgIndirect)
                   && ret;
             if (!ret)
             {
@@ -105,7 +105,6 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
     {
         const uint indx = i + PasDeTempsDebut;
         auto& ntcValues = problem.ValeursDeNTC[i];
-        assert(&ntcValues);
 
         for (uint j = 0; j < study.runtime->interconnectionsCount(); ++j)
         {
@@ -117,7 +116,7 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
 
 void PrepareDataFromClustersInMustrunMode(Data::Study& study, Data::Area::ScratchMap& scratchmap, uint year)
 {
-    bool inAdequacy = (study.parameters.mode == Data::stdmAdequacy);
+    bool inAdequacy = (study.parameters.mode == Data::SimulationMode::Adequacy);
 
     for (uint i = 0; i < study.areas.size(); ++i)
     {
@@ -131,40 +130,33 @@ void PrepareDataFromClustersInMustrunMode(Data::Study& study, Data::Area::Scratc
         double* mrs = scratchpad.mustrunSum;
         double* adq = scratchpad.originalMustrunSum;
 
-        if (!area.thermal.mustrunList.empty())
+        for (const auto& cluster : area.thermal.mustrunList)
         {
-            auto end = area.thermal.mustrunList.end();
-            for (auto i = area.thermal.mustrunList.begin(); i != end; ++i)
+            const auto& availableProduction = cluster->series.getColumn(year);
+            if (inAdequacy && cluster->mustrunOrigin)
             {
-                auto& cluster = *(i->second);
-                const auto& availableProduction = cluster.series.getColumn(year);
-                if (inAdequacy && cluster.mustrunOrigin)
+                for (uint h = 0; h != cluster->series.timeSeries.height; ++h)
                 {
-                    for (uint h = 0; h != cluster.series.timeSeries.height; ++h)
-                    {
-                        mrs[h] += availableProduction[h];
-                        adq[h] += availableProduction[h];
-                    }
+                    mrs[h] += availableProduction[h];
+                    adq[h] += availableProduction[h];
                 }
-                else
-                {
-                    for (uint h = 0; h != cluster.series.timeSeries.height; ++h)
-                        mrs[h] += availableProduction[h];
-                }
+            }
+            else
+            {
+                for (uint h = 0; h != cluster->series.timeSeries.height; ++h)
+                    mrs[h] += availableProduction[h];
             }
         }
 
         if (inAdequacy)
         {
-            auto end = area.thermal.list.end();
-            for (auto i = area.thermal.list.begin(); i != end; ++i)
+            for (const auto& cluster : area.thermal.mustrunList)
             {
-                auto& cluster = *(i->second);
-                if (!cluster.mustrunOrigin)
+                if (!cluster->mustrunOrigin)
                     continue;
 
-                const auto& availableProduction = cluster.series.getColumn(year);
-                for (uint h = 0; h != cluster.series.timeSeries.height; ++h)
+                const auto& availableProduction = cluster->series.getColumn(year);
+                for (uint h = 0; h != cluster->series.timeSeries.height; ++h)
                     adq[h] += availableProduction[h];
             }
         }
@@ -466,10 +458,14 @@ void finalizeOptimizationStatistics(PROBLEME_HEBDO& problem,
 {
     auto& firstOptStat = problem.optimizationStatistics[0];
     state.averageOptimizationTime1 = firstOptStat.getAverageSolveTime();
-    firstOptStat.reset();
 
     auto& secondOptStat = problem.optimizationStatistics[1];
     state.averageOptimizationTime2 = secondOptStat.getAverageSolveTime();
+
+    state.averageUpdateTime
+      = firstOptStat.getAverageUpdateTime() + secondOptStat.getAverageUpdateTime();
+
+    firstOptStat.reset();
     secondOptStat.reset();
 }
 

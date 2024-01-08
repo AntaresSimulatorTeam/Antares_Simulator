@@ -105,7 +105,6 @@ private:
     uint pNbWeeks;
     uint pStartTime;
     uint pNbMaxPerformedYearsInParallel;
-    bool pPreproOnly;
     std::vector<PROBLEME_HEBDO> pProblemesHebdo;
     Matrix<> pRES;
     IResultWriter& resultWriter;

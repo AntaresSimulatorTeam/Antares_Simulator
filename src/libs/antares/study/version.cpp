@@ -41,8 +41,7 @@ enum
     versionFromCMake = (ANTARES_VERSION_HI * 100 + ANTARES_VERSION_LO * 10),
 };
 
-YUNI_STATIC_ASSERT((uint)versionFromCMake == (uint)Antares::Data::versionLatest,
-                   DiscrepancyBetweenCMakeVersionAndAntaresVersion);
+static_assert((uint)versionFromCMake == (uint)Antares::Data::versionLatest);
 
 namespace Antares::Data
 {
@@ -73,7 +72,9 @@ const char* VersionToCStr(const Version v)
     switch (v)
     {
     case versionFutur:
-        return ">8.7";
+        return ">8.8";
+    case version880:
+        return "8.8";
     case version870:
         return "8.7";
     case version860:
@@ -111,7 +112,9 @@ const wchar_t* VersionToWStr(const Version v)
     switch (v)
     {
     case versionFutur:
-        return L">8.7";
+        return L">8.8";
+    case version880:
+        return L"8.8";
     case version870:
         return L"8.7";
     case version860:
@@ -147,6 +150,8 @@ Version VersionIntToVersion(uint version)
     // The list should remain ordered in the reverse order for performance reasons
     switch (version)
     {
+    case 880:
+        return version880;
     case 870:
         return version870;
     case 860:

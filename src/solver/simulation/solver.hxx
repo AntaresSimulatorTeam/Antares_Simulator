@@ -90,6 +90,10 @@ public:
             scratchmap.try_emplace(&a, a.scratchpad[numSpace]); });
     }
 
+    yearJob(const yearJob&) = delete;
+    yearJob& operator =(const yearJob&) = delete;
+    ~yearJob() = default;
+
 private:
     ISimulation<Impl>* simulation_;
     unsigned int y;
@@ -236,6 +240,7 @@ public:
 
     } // End of onExecute() method
 };
+
 
 template<class Impl>
 inline ISimulation<Impl>::ISimulation(Data::Study& study,
@@ -893,18 +898,18 @@ void ISimulation<Impl>::computeAnnualCostsStatistics(
         {
             // Get space number associated to the performed year
             uint numSpace = set_it->performedYearToSpace[y];
-            pAnnualCostsStatistics.systemCost.addCost(state[numSpace].annualSystemCost);
-            pAnnualCostsStatistics.criterionCost1.addCost(state[numSpace].optimalSolutionCost1);
-            pAnnualCostsStatistics.criterionCost2.addCost(state[numSpace].optimalSolutionCost2);
-            pAnnualCostsStatistics.optimizationTime1.addCost(
-              state[numSpace].averageOptimizationTime1);
-            pAnnualCostsStatistics.optimizationTime2.addCost(
-              state[numSpace].averageOptimizationTime2);
+            const Variable::State& s = state[numSpace];
+            pAnnualStatistics.systemCost.addCost(s.annualSystemCost);
+            pAnnualStatistics.criterionCost1.addCost(s.optimalSolutionCost1);
+            pAnnualStatistics.criterionCost2.addCost(s.optimalSolutionCost2);
+            pAnnualStatistics.optimizationTime1.addCost(s.averageOptimizationTime1);
+            pAnnualStatistics.optimizationTime2.addCost(s.averageOptimizationTime2);
+            pAnnualStatistics.updateTime.addCost(s.averageUpdateTime);
         }
     }
 }
 
-static void logPerformedYearsInAset(setOfParallelYears& set)
+static inline void logPerformedYearsInAset(setOfParallelYears& set)
 {
     logs.info() << "parallel batch size : " << set.nbYears << " (" << set.nbPerformedYears
                 << " perfomed)";
@@ -939,7 +944,7 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
     uint maxNbYearsPerformedInAset
       = buildSetsOfParallelYears(firstYear, endYear, setsOfParallelYears);
     // Related to annual costs statistics (printed in output into separate files)
-    pAnnualCostsStatistics.setNbPerformedYears(pNbYearsReallyPerformed);
+    pAnnualStatistics.setNbPerformedYears(pNbYearsReallyPerformed);
 
     // Container for random numbers of parallel years (to be executed or not)
     randomNumbers randomForParallelYears(maxNbYearsPerformedInAset,
@@ -987,7 +992,7 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
             // have to be rerun (meaning : they must be run once). if(!set_it->yearFailed[y])
             // continue;
 
-            Concurrency::Task task = yearJob<ImplementationType>(this,
+            auto task = std::make_shared<yearJob<ImplementationType>>(this,
                                                                  y,
                                                                  set_it->yearFailed,
                                                                  set_it->isFirstPerformedYearOfASet,
@@ -1046,8 +1051,8 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
     } // End loop over sets of parallel years
 
     // Writing annual costs statistics
-    pAnnualCostsStatistics.endStandardDeviations();
-    pAnnualCostsStatistics.writeToOutput(pResultWriter);
+    pAnnualStatistics.endStandardDeviations();
+    pAnnualStatistics.writeToOutput(pResultWriter);
 }
 
 } // namespace Antares::Solver::Simulation

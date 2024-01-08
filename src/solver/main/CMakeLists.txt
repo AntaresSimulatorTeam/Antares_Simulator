@@ -12,6 +12,7 @@ add_library(antares-solver-main-adequacy  ${SRC_SOLVER_MAIN_ADEQUACY})
 target_link_libraries(antares-solver-main-adequacy
         PRIVATE
         Antares::infoCollection
+        Antares::application
         antares-solver-simulation
 )
 
@@ -19,5 +20,6 @@ add_library(antares-solver-main-economy   ${SRC_SOLVER_MAIN_ECONOMY})
 target_link_libraries(antares-solver-main-economy
         PRIVATE
         Antares::infoCollection
+        Antares::application
         antares-solver-simulation
 )

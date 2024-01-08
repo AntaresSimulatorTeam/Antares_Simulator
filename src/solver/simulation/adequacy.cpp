@@ -346,9 +346,7 @@ bool Adequacy::year(Progression::Task& progression,
 
         currentProblem.firstWeekOfSimulation = false;
 
-        optWriter.addTime(w,
-                          currentProblem.tempsResolution1[0],
-                          currentProblem.tempsResolution2[0]);
+        optWriter.addTime(w, currentProblem.timeMeasure);
 
         ++progression;
     }

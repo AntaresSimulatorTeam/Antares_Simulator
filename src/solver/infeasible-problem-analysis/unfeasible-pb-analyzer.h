@@ -4,7 +4,7 @@
 #include <vector>
 #include <memory>
 
-#include "../utils/ortools_utils.h"
+#include "antares/solver/utils/ortools_utils.h"
 #include "unfeasibility-analysis.h"
 
 namespace Antares::Optimization

@@ -7,10 +7,12 @@ This is a list of all recent changes that came with new Antares Simulator featur
 
 ## v8.8.0
 ### Input
-### Short-term storage
+#### Short-term storage
 If no value is specified for `initiallevel`, then a default value of 50% is used. Note that this value is used only if `initialleveloptim=false`, and that `false` is the default value for `initialleveloptim`.
 
-### Experimental "MILP" mode
+Add property `enabled` (bool, default=`true`). If a ST storage object is not enabled, it is ignored by Antares Simulator.
+
+#### Experimental "MILP" mode
 New value `milp` for existing property `other preferences/unit-commitment-mode` in file **settings/generaldata.ini**.
 
 Using this property requires OR-Tools and a MILP solver (XPRESS, COIN)
@@ -18,6 +20,10 @@ Using this property requires OR-Tools and a MILP solver (XPRESS, COIN)
 ```
 antares-8.8-solver --use-ortools --ortools-solver coin|xpress ...
 ```
+
+### Output
+### Cashflow by short-term storage
+In existing file **details-STstorage-&lt;period&gt;.txt** (mc-all & mc-ind), add a new column for each ST storage object, named "STS Cashflow By Cluster", in EURO.
 
 ## v8.7.0
 ### Input

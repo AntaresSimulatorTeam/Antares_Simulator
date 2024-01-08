@@ -50,7 +50,7 @@ inline void IObject::enabled(bool state)
     pEnabled = state;
 }
 
-inline void IObject::onRelease()
+inline void IObject::onRelease() const
 {
     // do nothing
 }

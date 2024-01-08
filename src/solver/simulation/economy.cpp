@@ -193,9 +193,7 @@ bool Economy::year(Progression::Task& progression,
                 state.optimalSolutionCost1 += currentProblem.coutOptimalSolution1[opt];
                 state.optimalSolutionCost2 += currentProblem.coutOptimalSolution2[opt];
             }
-            optWriter.addTime(w,
-                              currentProblem.tempsResolution1[0],
-                              currentProblem.tempsResolution2[0]);
+            optWriter.addTime(w, currentProblem.timeMeasure);
         }
         catch (Data::AssertionError& ex)
         {

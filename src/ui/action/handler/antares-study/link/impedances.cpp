@@ -27,6 +27,7 @@
 
 #include "impedances.h"
 #include <antares/study/area/constants.h>
+#include "antares/utils/utils.h"
 
 namespace Antares
 {

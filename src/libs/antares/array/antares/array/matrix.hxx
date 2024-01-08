@@ -1136,7 +1136,7 @@ void Matrix<T, ReadWriteT>::saveToBuffer(std::string& data,
         // Does nothing if the matrix only contains zero
         return;
 
-    matrix_to_buffer_dumper_factory mtx_to_buffer_dumper_factory(isDecimal, precision);
+    matrix_to_buffer_dumper_factory mtx_to_buffer_dumper_factory;
 
     I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>* mtx_to_buffer_dpr
       = mtx_to_buffer_dumper_factory.get_dumper<T, ReadWriteT, PredicateT>(this, data, predicate);

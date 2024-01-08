@@ -142,8 +142,8 @@ public:
     //! Set of clusters
     using Set = std::set<Cluster*, CompareClusterName>;
 
-    int saveDataSeriesToFolder(const AnyString& folder) const;
-    int loadDataSeriesFromFolder(Study& s, const AnyString& folder);
+    bool saveDataSeriesToFolder(const AnyString& folder) const;
+    bool loadDataSeriesFromFolder(Study& s, const AnyString& folder);
 
 private:
     virtual unsigned int precision() const = 0;

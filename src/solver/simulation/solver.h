@@ -29,15 +29,14 @@
 
 #include <antares/study/study.h>
 #include <antares/logs/logs.h>
-#include <antares/study/fwd.h> // PowerFluctuations
 #include <antares/benchmarking/DurationCollector.h>
 
 #include <yuni/core/string.h>
 #include <yuni/job/queue/service.h>
 #include "../variable/state.h"
-#include "../misc/options.h"
+#include "antares/solver/misc/options.h"
 #include "solver.data.h"
-#include "solver.utils.h"
+#include "solver_utils.h"
 #include "../hydro/management/management.h"
 
 #include <antares/writer/writer_factory.h>
@@ -164,7 +163,7 @@ private:
     bool pFirstSetParallelWithAPerformedYearWasRun;
 
     //! Statistics about annual (system and solution) costs
-    annualCostsStatistics pAnnualCostsStatistics;
+    annualCostsStatistics pAnnualStatistics;
 
     // Collecting durations inside the simulation
     Benchmarking::IDurationCollector& pDurationCollector;

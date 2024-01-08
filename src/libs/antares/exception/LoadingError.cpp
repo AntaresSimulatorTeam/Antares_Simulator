@@ -1,4 +1,5 @@
 #include "antares/exception/LoadingError.hpp"
+#include <sstream>
 
 namespace Antares
 {
@@ -41,8 +42,18 @@ InvalidSimulationMode::InvalidSimulationMode() :
 {
 }
 
-InvalidSolver::InvalidSolver(const std::string& solver) :
- LoadingError("Can't use solver '" + solver + "' : it does not match any available OR-Tools solver")
+static std::string InvalidSolverHelper(const std::string& solver, const std::string& availableSolvers)
+{
+  std::ostringstream message;
+  message
+    << "Can't use solver '"
+    << solver
+    << "' : it does not match any available OR-Tools solver. Possible choices are "
+    << availableSolvers;
+  return message.str();
+}
+
+InvalidSolver::InvalidSolver(const std::string& solver, const std::string& availableSolvers) : LoadingError(InvalidSolverHelper(solver, availableSolvers))
 {
 }
 
@@ -99,11 +110,6 @@ IncompatibleDailyOptHeuristicForArea::IncompatibleDailyOptHeuristicForArea(
 {
 }
 
-WritingProgressFile::WritingProgressFile(const Yuni::String& file) :
- LoadingError(std::string("I/O error: impossible to write ") + file.c_str())
-{
-}
-
 std::string InvalidParametersForThermalClusters::buildMessage(
   const std::map<int, Yuni::String>& clusterNames) const
 {
@@ -132,7 +138,7 @@ CommandLineArguments::CommandLineArguments(uint errors) :
 {
 }
 
-IncompatibleStudyModeForAdqPatch::IncompatibleStudyModeForAdqPatch() :
+IncompatibleSimulationModeForAdqPatch::IncompatibleSimulationModeForAdqPatch() :
  LoadingError("Adequacy Patch can only be used with Economy Simulation Mode")
 {
 }

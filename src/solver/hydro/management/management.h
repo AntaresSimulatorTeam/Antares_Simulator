@@ -28,6 +28,7 @@
 #define __ANTARES_SOLVER_HYDRO_MANAGEMENT_MANAGEMENT_H__
 
 #include <yuni/yuni.h>
+#include <unordered_map>
 #include <antares/study/fwd.h>
 #include <antares/mersenne-twister/mersenne-twister.h>
 #include "../../simulation/sim_structure_donnees.h"
@@ -135,7 +136,7 @@ private:
     //! check minimum generation is lower than available inflows
     bool checkMinGeneration(uint year) const;
     //! Prepare the net demand for each area
-    void prepareNetDemand(uint year, Data::StudyMode mode,
+    void prepareNetDemand(uint year, Data::SimulationMode mode,
                           const Antares::Data::Area::ScratchMap& scratchmap);
     //! Prepare the effective demand for each area
     void prepareEffectiveDemand();
@@ -158,7 +159,7 @@ private:
 
 
 private:
-    std::vector<TmpDataByArea> tmpDataByArea_;
+    std::unordered_map<const Data::Area*, TmpDataByArea> tmpDataByArea_;
     const Data::AreaList& areas_;
     const Date::Calendar& calendar_;
     const Data::Parameters& parameters_;

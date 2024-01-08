@@ -324,17 +324,15 @@ private:
         if (VariablesStatsByDataLevel<NextT, Category::thermalAggregate>::count)
         {
             auto& area = *results.data.area;
-            auto end = area.thermal.list.end();
-            for (auto i = area.thermal.list.begin(); i != end; ++i)
+            for (const auto& cluster : area.thermal.list)
             {
-                auto& cluster = *(i->second);
-                results.data.thermalCluster = &cluster;
+                results.data.thermalCluster = cluster.get();
 
-                logs.info() << "Exporting results : " << area.name << " :: " << cluster.name();
+                logs.info() << "Exporting results : " << area.name << " :: " << cluster->name();
                 // The new output
                 results.data.output.clear();
                 results.data.output << results.data.originalOutput << SEP << "areas" << SEP
-                                    << area.id << SEP << "thermal" << SEP << cluster.id();
+                                    << area.id << SEP << "thermal" << SEP << cluster->id();
 
                 SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(list, results, numSpace);
             }
