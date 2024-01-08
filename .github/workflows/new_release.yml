@@ -43,3 +43,10 @@ jobs:
         uses: ./.github/workflows/windows-vcpkg.yml
         with:
           run-tests: ${{ fromJSON(inputs.run-tests) }}
+
+      centos7:
+        name: Release - centos7
+        needs: release
+        uses: ./.github/workflows/centos7.yml
+        with:
+          run-tests: ${{ fromJSON(inputs.run-tests) }}
