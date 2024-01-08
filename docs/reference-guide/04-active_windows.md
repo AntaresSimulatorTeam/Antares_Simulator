@@ -135,7 +135,7 @@ A built-in notepad for recording comments regarding the study. Such comments typ
 
 ## Load
 
-_[Documentation of the GUI] (https://antares-web.readthedocs.io/en/latest/user-guide/study/areas/02-load/)_
+_[Documentation of the GUI](https://antares-web.readthedocs.io/en/latest/user-guide/study/areas/02-load/)_
 
 This window is used to handle all input data regarding load. In Antares load should include transmission losses. It should preferably not include the power absorbed by pumped storage power plants. If it does, the user should neither use the "PSP" array (see window "Misc. Gen") nor the explicit modeling of PSP plants
 
@@ -185,7 +185,7 @@ The user may pick any area appearing in the list and is then given access to dif
 
 ## Thermal
 
-_[Documentation of the GUI] (https://antares-web.readthedocs.io/en/latest/user-guide/study/areas/03-thermals/)_
+_[Documentation of the GUI](https://antares-web.readthedocs.io/en/latest/user-guide/study/areas/03-thermals/)_
 
 This window is used to handle all input data regarding thermal dispatchable power.
 
@@ -290,7 +290,7 @@ Durations are expressed in days and rates belong to [0 , 1].
 
 ## Storages
 
-_[Documentation of the GUI] (https://antares-web.readthedocs.io/en/latest/user-guide/study/areas/08-st-storages/)_
+_[Documentation of the GUI](https://antares-web.readthedocs.io/en/latest/user-guide/study/areas/08-st-storages/)_
 
 This window is used to create and edit short-term storage objects. An individual short-term storage component is defined as an object with the following characteristics:
 
@@ -303,14 +303,14 @@ The user may pick any area appearing in the area list and is then given access t
 
 - General characteristics of the storage:
 	- Name
-	- Group: the type of storage, based on a predefined list of storages ("PSP_open", "PSP_closed", "Weight", "Battery", "Other1", "Other2", ..., "Other5")
+	- Group: the type of storage, based on a predefined list of storages ("PSP_open", "PSP_closed", "Pondage", "Battery", "Other1", "Other2", ..., "Other5")
 	- Withdrawal (MW): the maximum withdrawal power for the storage - withdrawal refers to the flow from the storage to the power system
 	- Injection (MW): the maximum injection power for the storage - withdrawal refers to the flow from the power system to the storage
 	- Stock (MWh): the capacity of the storage in MWh
-	- Efficiency (p.u., coefficient between 0 and 1): the energy efficiency of the storage, i.e. the ratio for a given volume between the energy taken from the system to be injected into the storage and the energy returned to the system during its withdrawal. This efficiency factor is applied when injecting energy into the storage.
-	- Initial level: the imposed initial filling rate of the storage at the beginning of each optimisation period. This  rate is a dimensionless decimal number, between 0 and 1.
+	- Efficiency (%): the energy efficiency of the storage, i.e. the ratio for a given volume between the energy taken from the system to be injected into the storage and the energy returned to the system during its withdrawal. This efficiency factor is applied when injecting energy into the storage.
+	- Initial level (%): the imposed initial filling rate of the storage at the beginning of each optimisation period.
 	- Initial level optimal: if the parameter is activated, the "Initial level" parameter is ignored and the initial storage level is optimized by Antares for each optimization period to minimize its objective function.  
-	_Note: setting this parameter to "True" implies that there is no guarantee that the initial storage level of week N is the same as the final storage level of week N-1. However, the final level of week N is always equal to the initial level of the same week N._
+	_Note: setting this parameter to "True" implies that there is no guarantee that the initial storage level of week N is the same as the final storage level of week N-1. However, the final level of week N is always equal to the initial level of the same week N plus/minus the injections/withdrawals occuring at the last hour of week N._
 	
 - "Injections/withdrawal capacities" tab: this tab allows to enter a hourly time-series of modulation factors of the injection and withdrawal capacity for each hour (between 0 and 1), reflecting a lower availability of the structures during certain periods. At a given hour, the overall injection/withdrawal capacities of the storage are the product of this modulation factor by the "Withdrawal" and "Injection" parameters in the General data.
 
@@ -320,7 +320,7 @@ The user may pick any area appearing in the area list and is then given access t
 
 ## Hydro
 
-_[Documentation of the GUI] (https://antares-web.readthedocs.io/en/latest/user-guide/study/areas/05-hydro/)_
+_[Documentation of the GUI](https://antares-web.readthedocs.io/en/latest/user-guide/study/areas/05-hydro/)_
 
 This section of the GUI is meant to handle all input data regarding hydro power,
 as well as any other kind of energy storage system of any size (from a small battery to a large
@@ -484,7 +484,7 @@ regardless of whether a pre-allocation heuristic is used or not.
 
 ## Wind
 
-_[Documentation of the GUI] (https://antares-web.readthedocs.io/en/latest/user-guide/study/areas/06-wind/)_
+_[Documentation of the GUI](https://antares-web.readthedocs.io/en/latest/user-guide/study/areas/06-wind/)_
 
 This window is used to handle all input data regarding Wind power.
 This window is only accessible when the advanced parameter Renewable Generation modeling is set to "Aggregated".
@@ -526,7 +526,7 @@ The user may pick any area appearing in the list and is then given access to dif
 
 ## Solar
 
-_[Documentation of the GUI] (https://antares-web.readthedocs.io/en/latest/user-guide/study/areas/07-solar/)_
+_[Documentation of the GUI](https://antares-web.readthedocs.io/en/latest/user-guide/study/areas/07-solar/)_
 
 This window is used to handle all input data regarding Solar power. Both thermal solar generation and PV solar generation are assumed to be bundled in this data section.
 _This window is only accessible when the advanced parameter Renewable Generation modeling is set to "aggregated”._
@@ -569,7 +569,7 @@ The user may pick any area appearing in the list and is then given access to dif
 
 ## Renewable
 
-_[Documentation of the GUI] (https://antares-web.readthedocs.io/en/latest/user-guide/study/areas/04-renewables/)_
+_[Documentation of the GUI](https://antares-web.readthedocs.io/en/latest/user-guide/study/areas/04-renewables/)_
 
 This window is used to handle all input data regarding renewable generation.
 _This window is only accessible when the advanced parameter Renewable Generation modeling is set to "cluster” (default value)._
@@ -618,7 +618,7 @@ The user may pick any area appearing in the area list and is then given access t
 
 ## Misc. Gen.
 
-_[Documentation of the GUI] (https://antares-web.readthedocs.io/en/latest/user-guide/study/areas/10-misc-gen/)_
+_[Documentation of the GUI](https://antares-web.readthedocs.io/en/latest/user-guide/study/areas/10-misc-gen/)_
 
 This window is used to handle all input data regarding miscellaneous non dispatchable generation.
 
@@ -653,7 +653,7 @@ On picking any area in the primary list, the user gets direct access to all data
 
 ## Reserves / DSM
 
-_[Documentation of the GUI] (https://antares-web.readthedocs.io/en/latest/user-guide/study/areas/09-reserves/)_
+_[Documentation of the GUI](https://antares-web.readthedocs.io/en/latest/user-guide/study/areas/09-reserves/)_
 
 This window is used to handle all input data regarding reserves and the potential of "smart" load management (when not modeled using "fake" thermal dispatchable plants). On picking any area in the primary list, the user gets direct access to all data regarding the area, which amount to **four** ready-made 8760-hour time-series (expressed in MW). Those reserves are available in either "adequacy" or "economy" simulations:
 

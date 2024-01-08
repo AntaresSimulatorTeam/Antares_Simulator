@@ -76,8 +76,7 @@ The area files that belong to the "values" class display fields corresponding to
 | OV.COST | Overall cost = operating cost + unsupplied cost+ spilled cost+ hydro cost |
 | OP.COST | Operating cost = Proportional costs + Non- proportional costs |
 | MRG. PRICE | LMP : overall economic effect of a local 1MW load increase |
-| CO2 EMIS. | Amount of CO2 emitted by all dispatchable thermal plants |
-| NH3, SO2,... EMIS. | Amount emitted by all dispatchable thermal plants for other pollutants than CO2: SO2, NH3, NOX, PM2\_5, PM5, PM10, NMVOC, OP1, OP2, OP3, OP4, OP5 EMIS. |
+| CO2, NH3, SO2, ... EMIS. | Amount emitted by all dispatchable thermal plants for the following types of pollutants: CO2, SO2, NH3, NOX, PM2\_5, PM5, PM10, NMVOC, OP1, OP2, OP3, OP4, OP5 EMIS. |
 | BALANCE | Overall Import/export balance of the area (positive value : export) |
 | ROW BAL | Import/export with areas outside the modeled system (positive value: import) [^12] |
 | PSP | User-defined settings for pumping and subsequent generating |
