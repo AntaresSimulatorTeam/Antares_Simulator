@@ -66,6 +66,6 @@ def test(study_path, test_check_data, check_runner, do_benchmark, custom_benchma
         # benchmark(my_test, study_path, test_check_data, check_runner)
         my_test(study_path, test_check_data, check_runner)
     
-        CustomBenchmark(custom_benchmark_json, CustomBenchmarkData(study_path, random.float(0, 100), random.randint(0,10))).dump_json()
+        CustomBenchmark(custom_benchmark_json, CustomBenchmarkData(study_path, random.uniform(0, 100), random.randint(0,10))).dump_json()
     else:
         my_test(study_path, test_check_data, check_runner)
