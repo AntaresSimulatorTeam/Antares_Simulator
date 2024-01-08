@@ -114,21 +114,11 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         path: _build/*.rpm
-
-  publish_assets:
-    name: Publish assets
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Download all artifacts
-      if: ${{ env.IS_RELEASE == 'true' }}
-      uses: actions/download-artifact@v3
-
+        
     - name: Publish assets
       if: ${{ env.IS_RELEASE == 'true' }}
       env:
         GITHUB_TOKEN: ${{ github.token }}
         tag: ${{ github.event.inputs.release_tag }}
       run: |
-        gh release upload "$tag" */*.tar.gz */*.rpm             
+        gh release upload "$tag" _build/*.tar.gz _build/*.rpm             

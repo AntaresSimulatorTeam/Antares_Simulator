@@ -318,11 +318,6 @@ jobs:
       with:
         path: _build/${{env.NSIS_NAME}}
 
-    # - name: Archive upload
-    #   uses: actions/upload-artifact@v3
-    #   with:
-    #     path: _build/*.zip
-      
     - name: Publish assets
       if: ${{ env.IS_RELEASE == 'true' }}
       env:
