@@ -77,7 +77,7 @@ static void importShortTermStorages(
 void SIM_InitialisationProblemeHebdo(Data::Study& study,
                                      PROBLEME_HEBDO& problem,
                                      int NombreDePasDeTemps,
-                                     const Antares::Data::Area::ScratchMap& scratchmap)
+                                     uint numspace)
 {
     int NombrePaliers;
 
@@ -146,6 +146,11 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         assert(false && "invalid power fluctuations");
         break;
     }
+
+    Antares::Data::Area::ScratchMap scratchmap;
+    study.areas.each([&scratchmap, &numspace](Antares::Data::Area& a) {
+            scratchmap.try_emplace(&a, a.scratchpad[numspace]); });
+
 
     for (uint i = 0; i != study.areas.size(); i++)
     {
