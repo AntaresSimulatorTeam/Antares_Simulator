@@ -36,7 +36,7 @@ class CustomBenchmark:
     
     def dump_json(self):
         lines = []
-        if (self.out_file.exists()):
+        if (Path(self.out_file).exists()):
             with open(self.out_file, 'r') as in_file:
                 lines = (line.rstrip() for line in in_file) # All lines including the blank ones
                 lines = (line for line in lines if line)
