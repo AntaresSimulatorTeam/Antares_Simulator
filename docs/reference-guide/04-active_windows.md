@@ -135,6 +135,8 @@ A built-in notepad for recording comments regarding the study. Such comments typ
 
 ## Load
 
+_[Documentation of the GUI] (https://antares-web.readthedocs.io/en/latest/user-guide/study/areas/02-load/)_
+
 This window is used to handle all input data regarding load. In Antares load should include transmission losses. It should preferably not include the power absorbed by pumped storage power plants. If it does, the user should neither use the "PSP" array (see window "Misc. Gen") nor the explicit modeling of PSP plants
 
 The user may pick any area appearing in the list and is then given access to different tabs:
@@ -182,6 +184,8 @@ The user may pick any area appearing in the list and is then given access to dif
     - The "digest" tab displays for all areas a short account of the local data
 
 ## Thermal
+
+_[Documentation of the GUI] (https://antares-web.readthedocs.io/en/latest/user-guide/study/areas/03-thermals/)_
 
 This window is used to handle all input data regarding thermal dispatchable power.
 
@@ -285,6 +289,9 @@ Durations are expressed in days and rates belong to [0 , 1].
 
 
 ## Storages
+
+_[Documentation of the GUI] (https://antares-web.readthedocs.io/en/latest/user-guide/study/areas/08-st-storages/)_
+
 This window is used to create and edit short-term storage objects. An individual short-term storage component is defined as an object with the following characteristics:
 
 - Storage managed with a filling level which is identical at the start and end of each Antares optimization window;
@@ -312,6 +319,8 @@ The user may pick any area appearing in the area list and is then given access t
 - "Inflows" tab: this tab allows to enter a hourly time-series of inflows filling the storage (in MWh). The values can be negative, corresponding to withdrawals imposed on the storage for other uses.
 
 ## Hydro
+
+_[Documentation of the GUI] (https://antares-web.readthedocs.io/en/latest/user-guide/study/areas/05-hydro/)_
 
 This section of the GUI is meant to handle all input data regarding hydro power,
 as well as any other kind of energy storage system of any size (from a small battery to a large
@@ -475,6 +484,8 @@ regardless of whether a pre-allocation heuristic is used or not.
 
 ## Wind
 
+_[Documentation of the GUI] (https://antares-web.readthedocs.io/en/latest/user-guide/study/areas/06-wind/)_
+
 This window is used to handle all input data regarding Wind power.
 This window is only accessible when the advanced parameter Renewable Generation modeling is set to "Aggregated".
 
@@ -514,6 +525,8 @@ The user may pick any area appearing in the list and is then given access to dif
 
 
 ## Solar
+
+_[Documentation of the GUI] (https://antares-web.readthedocs.io/en/latest/user-guide/study/areas/07-solar/)_
 
 This window is used to handle all input data regarding Solar power. Both thermal solar generation and PV solar generation are assumed to be bundled in this data section.
 _This window is only accessible when the advanced parameter Renewable Generation modeling is set to "aggregated”._
@@ -555,6 +568,8 @@ The user may pick any area appearing in the list and is then given access to dif
 
 
 ## Renewable
+
+_[Documentation of the GUI] (https://antares-web.readthedocs.io/en/latest/user-guide/study/areas/04-renewables/)_
 
 This window is used to handle all input data regarding renewable generation.
 _This window is only accessible when the advanced parameter Renewable Generation modeling is set to "cluster” (default value)._
@@ -603,6 +618,8 @@ The user may pick any area appearing in the area list and is then given access t
 
 ## Misc. Gen.
 
+_[Documentation of the GUI] (https://antares-web.readthedocs.io/en/latest/user-guide/study/areas/10-misc-gen/)_
+
 This window is used to handle all input data regarding miscellaneous non dispatchable generation.
 
 On picking any area in the primary list, the user gets direct access to all data regarding the area, which amount to **8** ready-made 8760-hour time-series (expressed in MW):
@@ -635,6 +652,8 @@ On picking any area in the primary list, the user gets direct access to all data
         - Adjust the values associated with the current first day of the year (function name: shift rows)
 
 ## Reserves / DSM
+
+_[Documentation of the GUI] (https://antares-web.readthedocs.io/en/latest/user-guide/study/areas/09-reserves/)_
 
 This window is used to handle all input data regarding reserves and the potential of "smart" load management (when not modeled using "fake" thermal dispatchable plants). On picking any area in the primary list, the user gets direct access to all data regarding the area, which amount to **four** ready-made 8760-hour time-series (expressed in MW). Those reserves are available in either "adequacy" or "economy" simulations:
 
