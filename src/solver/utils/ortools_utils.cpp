@@ -271,6 +271,17 @@ MPSolver* ORTOOLS_ConvertIfNeeded(const std::string& solverName,
     }
 }
 
+template<class SourceT>
+static void transferBasis(std::vector<operations_research::MPSolver::BasisStatus>& destination,
+                          const SourceT& source)
+{
+    destination.resize(source.size());
+    for (size_t idx = 0; idx < source.size(); idx++)
+    {
+        destination[idx] = source[idx]->basis_status();
+    }
+}
+
 MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
                            MPSolver* solver,
                            bool keepBasis)
@@ -281,7 +292,8 @@ MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probl
     // Provide an initial simplex basis, if any
     if (warmStart && Probleme->basisExists())
     {
-        solver->SetStartingLpBasisInt(Probleme->StatutDesVariables, Probleme->StatutDesContraintes);
+        solver->SetStartingLpBasis(Probleme->StatutDesVariables,
+                                   Probleme->StatutDesContraintes);
     }
 
     if (solveAndManageStatus(solver, Probleme->ExistenceDUneSolution, params))
@@ -290,8 +302,8 @@ MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probl
         // Save the final simplex basis for next resolutions
         if (warmStart && keepBasis)
         {
-            solver->GetFinalLpBasisInt(Probleme->StatutDesVariables,
-                                       Probleme->StatutDesContraintes);
+            transferBasis(Probleme->StatutDesVariables, solver->variables());
+            transferBasis(Probleme->StatutDesContraintes, solver->constraints());
         }
     }
 
@@ -356,7 +368,8 @@ const std::map<std::string, struct OrtoolsUtils::SolverNames> OrtoolsUtils::solv
   = {{"xpress", {"xpress_lp", "xpress"}},
      {"sirius", {"sirius_lp", "sirius"}},
      {"coin", {"clp", "cbc"}},
-     {"glpk", {"glpk_lp", "glpk"}}};
+     {"glpk", {"glpk_lp", "glpk"}},
+     {"scip", {"scip", "scip"}}};
 
 std::list<std::string> getAvailableOrtoolsSolverName()
 {
