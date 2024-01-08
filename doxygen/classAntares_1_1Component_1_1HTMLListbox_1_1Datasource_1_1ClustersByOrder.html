@@ -1,0 +1,326 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.5"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<!-- BEGIN opengraph metadata -->
+<meta property="og:title" content="Antares Simulator" />
+<meta property="og:image" content="https://github.com/AntaresSimulatorTeam/Antares_Simulator/blob/develop/docs/assets/antares.png" />
+<meta property="og:description" content="Power System Simulator." />
+<meta property="og:url" content="https://antares-simulator.org/" />
+<!-- END opengraph metadata -->
+<!-- BEGIN twitter metadata -->
+<meta name="twitter:image:src" content="https://github.com/AntaresSimulatorTeam/Antares_Simulator/blob/develop/docs/assets/logo.png" />
+<meta name="twitter:title" content="Antares Simulator" />
+<meta name="twitter:description" content="Power System Simulator." />
+<!-- END twitter metadata -->
+<title>Antares Simulator: Antares::Component::HTMLListbox::Datasource::ClustersByOrder Class Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="doxygen-awesome-darkmode-toggle.js"></script>
+<script type="text/javascript" src="doxygen-awesome-fragment-copy-button.js"></script>
+<script type="text/javascript" src="doxygen-awesome-paragraph-link.js"></script>
+<script type="text/javascript" src="doxygen-awesome-interactive-toc.js"></script>
+<script type="text/javascript" src="doxygen-awesome-tabs.js"></script>
+<script type="text/javascript" src="toggle-alternative-theme.js"></script>
+<script type="text/javascript">
+    DoxygenAwesomeFragmentCopyButton.init()
+    DoxygenAwesomeDarkModeToggle.init()
+    DoxygenAwesomeParagraphLink.init()
+    DoxygenAwesomeInteractiveToc.init()
+    DoxygenAwesomeTabs.init()
+</script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+<link href="custom.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only-darkmode-toggle.css" rel="stylesheet" type="text/css"/>
+<link href="custom-alternative.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- https://github.com/AntaresSimulatorTeam/Antares_Simulator/ -->
+<a href="https://github.com/AntaresSimulatorTeam/Antares_Simulator" class="github-corner" title="View source on GitHub" target="_blank">
+    <svg viewBox="0 0 250 250" width="40" height="40" style="position: absolute; top: 0; border: 0; right: 0; z-index: 99;" aria-hidden="true">
+    <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">Antares Simulator
+   </div>
+   <div id="projectbrief">Power System Simulator</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.5 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('classAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1ClustersByOrder.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="classAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1ClustersByOrder-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">Antares::Component::HTMLListbox::Datasource::ClustersByOrder Class Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div></div>
+</div><!--header-->
+<div class="contents">
+<div class="dynheader">
+Inheritance diagram for Antares::Component::HTMLListbox::Datasource::ClustersByOrder:</div>
+<div class="dyncontent">
+ <div class="center">
+  <img src="classAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1ClustersByOrder.png" usemap="#Antares::Component::HTMLListbox::Datasource::ClustersByOrder_map" alt=""/>
+  <map id="Antares::Component::HTMLListbox::Datasource::ClustersByOrder_map" name="Antares::Component::HTMLListbox::Datasource::ClustersByOrder_map">
+<area href="classAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1IDatasource.html" title="Datasource for HTMLListbox::Component." alt="Antares::Component::HTMLListbox::Datasource::IDatasource" shape="rect" coords="1056,0,1574,24"/>
+<area href="classAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1RenewableClustersByOrder.html" alt="Antares::Component::HTMLListbox::Datasource::RenewableClustersByOrder" shape="rect" coords="264,112,782,136"/>
+<area href="classAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1ThermalClustersByOrder.html" alt="Antares::Component::HTMLListbox::Datasource::ThermalClustersByOrder" shape="rect" coords="1320,112,1838,136"/>
+<area href="classAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1RenewableClustersByAlphaOrder.html" alt="Antares::Component::HTMLListbox::Datasource::RenewableClustersByAlphaOrder" shape="rect" coords="0,168,518,192"/>
+<area href="classAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1RenewableClustersByAlphaReverseOrder.html" alt="Antares::Component::HTMLListbox::Datasource::RenewableClustersByAlphaReverseOrder" shape="rect" coords="528,168,1046,192"/>
+<area href="classAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1ThermalClustersByAlphaOrder.html" alt="Antares::Component::HTMLListbox::Datasource::ThermalClustersByAlphaOrder" shape="rect" coords="1056,168,1574,192"/>
+<area href="classAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1ThermalClustersByAlphaReverseOrder.html" alt="Antares::Component::HTMLListbox::Datasource::ThermalClustersByAlphaReverseOrder" shape="rect" coords="1584,168,2102,192"/>
+  </map>
+</div></div>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader">Constructor &amp; Destructor</h2></td></tr>
+<tr class="memitem:aadf5024bf332de359cd031b23817113d"><td class="memItemLeft" align="right" valign="top"><a id="aadf5024bf332de359cd031b23817113d" name="aadf5024bf332de359cd031b23817113d"></a>
+<a class="el" href="classAntares_1_1Data_1_1Area.html">Data::Area</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>pArea</b></td></tr>
+<tr class="separator:aadf5024bf332de359cd031b23817113d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7aa055b7e2cc4f21da80a35859b2921f"><td class="memItemLeft" align="right" valign="top"><a id="a7aa055b7e2cc4f21da80a35859b2921f" name="a7aa055b7e2cc4f21da80a35859b2921f"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>hasGroupJustChanged_</b></td></tr>
+<tr class="separator:a7aa055b7e2cc4f21da80a35859b2921f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeffeaecc64865945eace5e34162573ac"><td class="memItemLeft" align="right" valign="top"><a id="aeffeaecc64865945eace5e34162573ac" name="aeffeaecc64865945eace5e34162573ac"></a>
+std::map&lt; wxString, <a class="el" href="classIItem.html#a8fc6067e92ad4fd6fea717be9076a5c6">IItem::Ptr</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>groups_to_items_</b></td></tr>
+<tr class="separator:aeffeaecc64865945eace5e34162573ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9057a163edaee42bbdee4574421c1363"><td class="memItemLeft" align="right" valign="top"><a id="a9057a163edaee42bbdee4574421c1363" name="a9057a163edaee42bbdee4574421c1363"></a>
+std::map&lt; <a class="el" href="classAntares_1_1Data_1_1Cluster.html">Data::Cluster</a> *, ClusterItem::Ptr &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>pClustersToItems</b></td></tr>
+<tr class="separator:a9057a163edaee42bbdee4574421c1363"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a94eba688fb6a96d42025e7d8e6c54fe1"><td class="memItemLeft" align="right" valign="top"><a id="a94eba688fb6a96d42025e7d8e6c54fe1" name="a94eba688fb6a96d42025e7d8e6c54fe1"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>ClustersByOrder</b> (<a class="el" href="classAntares_1_1Component_1_1HTMLListbox_1_1Component.html">HTMLListbox::Component</a> &amp;parent)</td></tr>
+<tr class="memdesc:a94eba688fb6a96d42025e7d8e6c54fe1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default Constructor. <br /></td></tr>
+<tr class="separator:a94eba688fb6a96d42025e7d8e6c54fe1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a55c27e7fe2858bb05d864e75858ddc04"><td class="memItemLeft" align="right" valign="top"><a id="a55c27e7fe2858bb05d864e75858ddc04" name="a55c27e7fe2858bb05d864e75858ddc04"></a>
+virtual&#160;</td><td class="memItemRight" valign="bottom"><b>~ClustersByOrder</b> ()</td></tr>
+<tr class="memdesc:a55c27e7fe2858bb05d864e75858ddc04"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor. <br /></td></tr>
+<tr class="separator:a55c27e7fe2858bb05d864e75858ddc04"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a37e0fbe4b1124f43ba474309fa131c29"><td class="memItemLeft" align="right" valign="top">virtual wxString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1ClustersByOrder.html#a37e0fbe4b1124f43ba474309fa131c29">name</a> () const =0</td></tr>
+<tr class="memdesc:a37e0fbe4b1124f43ba474309fa131c29"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the name of the datasource.  <a href="classAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1ClustersByOrder.html#a37e0fbe4b1124f43ba474309fa131c29">More...</a><br /></td></tr>
+<tr class="separator:a37e0fbe4b1124f43ba474309fa131c29"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7e13e983c13a082e81a071b092809f70"><td class="memItemLeft" align="right" valign="top">virtual const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1ClustersByOrder.html#a7e13e983c13a082e81a071b092809f70">icon</a> () const =0</td></tr>
+<tr class="memdesc:a7e13e983c13a082e81a071b092809f70"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the relative path to the icon file.  <a href="classAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1ClustersByOrder.html#a7e13e983c13a082e81a071b092809f70">More...</a><br /></td></tr>
+<tr class="separator:a7e13e983c13a082e81a071b092809f70"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8f0d361dfc9d556785f71f16e635a4ed"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1ClustersByOrder.html#a8f0d361dfc9d556785f71f16e635a4ed">refresh</a> (const wxString &amp;search=wxEmptyString)</td></tr>
+<tr class="memdesc:a8f0d361dfc9d556785f71f16e635a4ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Refresh the list.  <a href="classAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1ClustersByOrder.html#a8f0d361dfc9d556785f71f16e635a4ed">More...</a><br /></td></tr>
+<tr class="separator:a8f0d361dfc9d556785f71f16e635a4ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8235ed9d5ecd333b7c59631f103cd1b2"><td class="memItemLeft" align="right" valign="top"><a id="a8235ed9d5ecd333b7c59631f103cd1b2" name="a8235ed9d5ecd333b7c59631f103cd1b2"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>onAreaChanged</b> (<a class="el" href="classAntares_1_1Data_1_1Area.html">Data::Area</a> *area)</td></tr>
+<tr class="separator:a8235ed9d5ecd333b7c59631f103cd1b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a23c59155860ac1ea8bce74fae979642a"><td class="memItemLeft" align="right" valign="top"><a id="a23c59155860ac1ea8bce74fae979642a" name="a23c59155860ac1ea8bce74fae979642a"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>onInvalidateAllAreas</b> ()</td></tr>
+<tr class="separator:a23c59155860ac1ea8bce74fae979642a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b23b744776abd8cde72f88670e16a23"><td class="memItemLeft" align="right" valign="top"><a id="a2b23b744776abd8cde72f88670e16a23" name="a2b23b744776abd8cde72f88670e16a23"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>hasGroupChanged</b> (bool b)</td></tr>
+<tr class="separator:a2b23b744776abd8cde72f88670e16a23"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a91ae42904df8125cac11fa76b3eac11b"><td class="memItemLeft" align="right" valign="top"><a id="a91ae42904df8125cac11fa76b3eac11b" name="a91ae42904df8125cac11fa76b3eac11b"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>hasGroupChanged</b> () const</td></tr>
+<tr class="separator:a91ae42904df8125cac11fa76b3eac11b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
+Additional Inherited Members</h2></td></tr>
+<tr class="inherit_header pub_types_classAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1IDatasource"><td colspan="2" onclick="javascript:toggleInherit('pub_types_classAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1IDatasource')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="classAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1IDatasource.html">Antares::Component::HTMLListbox::Datasource::IDatasource</a></td></tr>
+<tr class="memitem:adb8cbad9e50b54515e2381c7dafc85ff inherit pub_types_classAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1IDatasource"><td class="memItemLeft" align="right" valign="top"><a id="adb8cbad9e50b54515e2381c7dafc85ff" name="adb8cbad9e50b54515e2381c7dafc85ff"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>Map</b> = std::map&lt; int, <a class="el" href="classAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1IDatasource.html">IDatasource</a> * &gt;</td></tr>
+<tr class="memdesc:adb8cbad9e50b54515e2381c7dafc85ff inherit pub_types_classAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1IDatasource"><td class="mdescLeft">&#160;</td><td class="mdescRight">List. <br /></td></tr>
+<tr class="separator:adb8cbad9e50b54515e2381c7dafc85ff inherit pub_types_classAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1IDatasource"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_classAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1IDatasource"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1IDatasource')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1IDatasource.html">Antares::Component::HTMLListbox::Datasource::IDatasource</a></td></tr>
+<tr class="memitem:a7193a955b6231e2dc36c7662b076694b inherit pub_methods_classAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1IDatasource"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1IDatasource.html#a7193a955b6231e2dc36c7662b076694b">IDatasource</a> (<a class="el" href="classAntares_1_1Component_1_1HTMLListbox_1_1Component.html">HTMLListbox::Component</a> &amp;parent)</td></tr>
+<tr class="memdesc:a7193a955b6231e2dc36c7662b076694b inherit pub_methods_classAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1IDatasource"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default Constructor.  <a href="classAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1IDatasource.html#a7193a955b6231e2dc36c7662b076694b">More...</a><br /></td></tr>
+<tr class="separator:a7193a955b6231e2dc36c7662b076694b inherit pub_methods_classAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1IDatasource"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a997bdb6801e068010b1e883341b061ae inherit pub_methods_classAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1IDatasource"><td class="memItemLeft" align="right" valign="top"><a id="a997bdb6801e068010b1e883341b061ae" name="a997bdb6801e068010b1e883341b061ae"></a>
+virtual&#160;</td><td class="memItemRight" valign="bottom"><b>~IDatasource</b> ()</td></tr>
+<tr class="memdesc:a997bdb6801e068010b1e883341b061ae inherit pub_methods_classAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1IDatasource"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor. <br /></td></tr>
+<tr class="separator:a997bdb6801e068010b1e883341b061ae inherit pub_methods_classAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1IDatasource"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_attribs_classAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1IDatasource"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1IDatasource')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1IDatasource.html">Antares::Component::HTMLListbox::Datasource::IDatasource</a></td></tr>
+<tr class="memitem:a7226ef0bcae0255aea8956dbd5a76a22 inherit pro_attribs_classAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1IDatasource"><td class="memItemLeft" align="right" valign="top"><a id="a7226ef0bcae0255aea8956dbd5a76a22" name="a7226ef0bcae0255aea8956dbd5a76a22"></a>
+<a class="el" href="classAntares_1_1Component_1_1HTMLListbox_1_1Component.html">HTMLListbox::Component</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>pParent</b></td></tr>
+<tr class="memdesc:a7226ef0bcae0255aea8956dbd5a76a22 inherit pro_attribs_classAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1IDatasource"><td class="mdescLeft">&#160;</td><td class="mdescRight">The parent component. <br /></td></tr>
+<tr class="separator:a7226ef0bcae0255aea8956dbd5a76a22 inherit pro_attribs_classAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1IDatasource"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a7e13e983c13a082e81a071b092809f70" name="a7e13e983c13a082e81a071b092809f70"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7e13e983c13a082e81a071b092809f70">&#9670;&#160;</a></span>icon()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual const char * Antares::Component::HTMLListbox::Datasource::ClustersByOrder::icon </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the relative path to the icon file. </p>
+
+<p>Implements <a class="el" href="classAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1IDatasource.html#ab31c6fc0d463656e401f40d45432a76e">Antares::Component::HTMLListbox::Datasource::IDatasource</a>.</p>
+
+<p>Implemented in <a class="el" href="classAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1RenewableClustersByAlphaReverseOrder.html#a88ac0cc41f427b8a51e4bc7d809cbeb4">Antares::Component::HTMLListbox::Datasource::RenewableClustersByAlphaReverseOrder</a>, <a class="el" href="classAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1ThermalClustersByAlphaReverseOrder.html#af8fe0c33ef30d5314ccfdeb417b2116c">Antares::Component::HTMLListbox::Datasource::ThermalClustersByAlphaReverseOrder</a>, <a class="el" href="classAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1RenewableClustersByAlphaOrder.html#abc1dc42e58e352e25538e4d755a1d26d">Antares::Component::HTMLListbox::Datasource::RenewableClustersByAlphaOrder</a>, and <a class="el" href="classAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1ThermalClustersByAlphaOrder.html#ac727699628bf0be7e1fa4945d30233e4">Antares::Component::HTMLListbox::Datasource::ThermalClustersByAlphaOrder</a>.</p>
+
+</div>
+</div>
+<a id="a37e0fbe4b1124f43ba474309fa131c29" name="a37e0fbe4b1124f43ba474309fa131c29"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a37e0fbe4b1124f43ba474309fa131c29">&#9670;&#160;</a></span>name()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual wxString Antares::Component::HTMLListbox::Datasource::ClustersByOrder::name </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the name of the datasource. </p>
+
+<p>Implements <a class="el" href="classAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1IDatasource.html#a6393181bd28c00b9e6abbb0653eb0576">Antares::Component::HTMLListbox::Datasource::IDatasource</a>.</p>
+
+<p>Implemented in <a class="el" href="classAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1RenewableClustersByAlphaReverseOrder.html#abab62c40a117dc9f76515b7373a9f175">Antares::Component::HTMLListbox::Datasource::RenewableClustersByAlphaReverseOrder</a>, <a class="el" href="classAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1ThermalClustersByAlphaReverseOrder.html#a00e0e8dab55e78b95c2d07d7742b4722">Antares::Component::HTMLListbox::Datasource::ThermalClustersByAlphaReverseOrder</a>, <a class="el" href="classAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1RenewableClustersByAlphaOrder.html#ad371f8395255b1b3ac648a397ab67800">Antares::Component::HTMLListbox::Datasource::RenewableClustersByAlphaOrder</a>, and <a class="el" href="classAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1ThermalClustersByAlphaOrder.html#ad9f3d52ea6394a7db19be295ee6a1936">Antares::Component::HTMLListbox::Datasource::ThermalClustersByAlphaOrder</a>.</p>
+
+</div>
+</div>
+<a id="a8f0d361dfc9d556785f71f16e635a4ed" name="a8f0d361dfc9d556785f71f16e635a4ed"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8f0d361dfc9d556785f71f16e635a4ed">&#9670;&#160;</a></span>refresh()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Antares::Component::HTMLListbox::Datasource::ClustersByOrder::refresh </td>
+          <td>(</td>
+          <td class="paramtype">const wxString &amp;&#160;</td>
+          <td class="paramname"><em>search</em> = <code>wxEmptyString</code></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Refresh the list. </p>
+
+<p>Implements <a class="el" href="classAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1IDatasource.html#ae85af4feeffc850b18ded8784418c884">Antares::Component::HTMLListbox::Datasource::IDatasource</a>.</p>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following files:<ul>
+<li>src/ui/simulator/toolbox/components/htmllistbox/datasource/<a class="el" href="cluster-order_8h_source.html">cluster-order.h</a></li>
+<li>src/ui/simulator/toolbox/components/htmllistbox/datasource/cluster-order.cpp</li>
+</ul>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><b>Antares</b></li><li class="navelem"><b>Component</b></li><li class="navelem"><b>HTMLListbox</b></li><li class="navelem"><b>Datasource</b></li><li class="navelem"><a class="el" href="classAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1ClustersByOrder.html">ClustersByOrder</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
+  </ul>
+</div>
+</body>
+</html>
