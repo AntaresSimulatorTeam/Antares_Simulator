@@ -23,7 +23,7 @@ json_collector.collect()
 
 @dataclass
 class CustomBenchmarkData:
-    name: str
+    name: Path
     duration: float 
     memory: int
 class BadBenchmarkFile(Exception):
@@ -32,7 +32,7 @@ class CustomBenchmark:
     def __init__(self, out_file: Path, data: CustomBenchmarkData) -> None:
         self.out_file = out_file
         self.data = data
-        self.name = self.data.name
+        self.name = Path(self.data.name).name
     
     def dump_json(self):
         lines = []
@@ -48,7 +48,6 @@ class CustomBenchmark:
         else:
             lines.append("[")
                  
-        to_file = []
     
         lines.append(self.duration())
         lines.append(self.memory())
@@ -59,7 +58,7 @@ class CustomBenchmark:
              
     def duration(self):
         return str({
-                "name" : self.name,
+                "name" : self.name+"_duration",
                 "value": self.data.duration,
                 "unit": "s"
             })
