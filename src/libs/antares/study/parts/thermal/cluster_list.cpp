@@ -1,6 +1,7 @@
 #include "cluster_list.h"
 #include "cluster.h"
 #include "../../study.h"
+#include <algorithm>
 
 namespace // anonymous
 {
@@ -206,6 +207,13 @@ std::shared_ptr<ThermalCluster> ThermalClusterList::enabledClusterAt(unsigned in
     // No operator [] was found for std::view (returned by each_enabled()).
     // The current function is there to replace it. 
     return *(std::views::drop(each_enabled(), index).begin());
+}
+
+void ThermalClusterList::removeMustRunClusters()
+{
+    std::erase_if(clusters, [](auto c) { return c->isMustRun(); });
+    forceReload();
+    rebuildIndex();
 }
 
 void ThermalClusterList::clearAll()

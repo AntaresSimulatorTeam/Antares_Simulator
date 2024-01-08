@@ -356,7 +356,8 @@ void StudyRuntimeInfos::initializeThermalClustersInMustRunMode(Study& study) con
     for (uint a = 0; a != study.areas.size(); ++a)
     {
         Area& area = *(study.areas.byIndex[a]);
-        count += area.thermal.prepareClustersInMustRunMode();
+        count += area.thermal.list.mustRunAndEnabledCount();
+        area.thermal.list.removeMustRunClusters();
     }
 
     switch (count)

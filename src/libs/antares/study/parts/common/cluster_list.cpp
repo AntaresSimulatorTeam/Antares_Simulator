@@ -81,7 +81,8 @@ void ClusterList<ClusterT>::clear()
 template<class ClusterT>
 void ClusterList<ClusterT>::resizeAllTimeseriesNumbers(uint n)
 {
-    each([&](Cluster& cluster) { cluster.series.timeseriesNumbers.resize(1, n); });
+    for (auto c : allClusters)
+        c->series.timeseriesNumbers.resize(1, n);
 }
 
 #define SEP IO::Separator
@@ -190,7 +191,6 @@ bool ClusterList<ClusterT>::forceReload(bool reload) const
     return std::ranges::all_of(clusters, [&reload](const auto& c){
         return c->forceReload(reload);
     });
-
 }
 
 template<class ClusterT>

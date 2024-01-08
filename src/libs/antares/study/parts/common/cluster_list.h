@@ -178,7 +178,6 @@ protected:
     /// thermal, renewable, etc.
     virtual std::string typeID() const = 0;
 
-private:
     /// Sort the vector, set index value for each cluster
     void rebuildIndex();
 

@@ -106,6 +106,7 @@ public:
     unsigned int enabledCount() const;
     unsigned int mustRunAndEnabledCount() const;
     std::shared_ptr<ThermalCluster> enabledClusterAt(unsigned int index) const;
+    void removeMustRunClusters();
     void clearAll();
     unsigned int allClustersSize();
     std::vector<std::shared_ptr<ThermalCluster>> all();
