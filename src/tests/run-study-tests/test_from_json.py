@@ -38,7 +38,7 @@ class CustomBenchmark:
         
          to_file.append(self.duration())
          to_file.append(self.memory())
-         with open(self.json_file) as output:
+         with open(self.json_file, "+a") as output:
             json.dump(to_file, output, indent=4)
              
     def duration(self):
@@ -66,6 +66,6 @@ def test(study_path, test_check_data, check_runner, do_benchmark, custom_benchma
         # benchmark(my_test, study_path, test_check_data, check_runner)
         my_test(study_path, test_check_data, check_runner)
     
-        CustomBenchmark(custom_benchmark_json, CustomBenchmarkData(study_path, random.float(0, 100), random.randint(0,10)))
+        CustomBenchmark(custom_benchmark_json, CustomBenchmarkData(study_path, random.float(0, 100), random.randint(0,10))).dump_json()
     else:
         my_test(study_path, test_check_data, check_runner)

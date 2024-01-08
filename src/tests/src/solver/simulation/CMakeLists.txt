@@ -1,5 +1,4 @@
 # Useful variables definitions
-find_package(benchmark REQUIRED)
 set(src_solver_simulation "${CMAKE_SOURCE_DIR}/solver/simulation")
 set(src_libs_antares_study "${CMAKE_SOURCE_DIR}/libs/antares/study")
 
@@ -89,24 +88,4 @@ add_test(NAME time_series COMMAND test-time_series)
 
 set_property(TEST time_series PROPERTY LABELS unit)
 
-# ===================================
-# Tests benchmark
-# ===================================
-set(SRC_BENCHMARK
-		test_benchmark.cpp
-		)
-add_executable(test_benchmark ${SRC_BENCHMARK})
-
-target_link_libraries(test_benchmark
-		PRIVATE
-		benchmark::benchmark
-		)
-
-
-
-set_target_properties(test_benchmark PROPERTIES FOLDER Unit-tests)
-
-add_test(NAME test_benchmark COMMAND test_benchmark)
-
-set_property(TEST test_benchmark PROPERTY LABELS unit)
 
