@@ -1,0 +1,419 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.5"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<!-- BEGIN opengraph metadata -->
+<meta property="og:title" content="Antares Simulator" />
+<meta property="og:image" content="https://github.com/AntaresSimulatorTeam/Antares_Simulator/blob/develop/docs/assets/antares.png" />
+<meta property="og:description" content="Power System Simulator." />
+<meta property="og:url" content="https://antares-simulator.org/" />
+<!-- END opengraph metadata -->
+<!-- BEGIN twitter metadata -->
+<meta name="twitter:image:src" content="https://github.com/AntaresSimulatorTeam/Antares_Simulator/blob/develop/docs/assets/logo.png" />
+<meta name="twitter:title" content="Antares Simulator" />
+<meta name="twitter:description" content="Power System Simulator." />
+<!-- END twitter metadata -->
+<title>Antares Simulator: ConstraintBuilder Class Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="doxygen-awesome-darkmode-toggle.js"></script>
+<script type="text/javascript" src="doxygen-awesome-fragment-copy-button.js"></script>
+<script type="text/javascript" src="doxygen-awesome-paragraph-link.js"></script>
+<script type="text/javascript" src="doxygen-awesome-interactive-toc.js"></script>
+<script type="text/javascript" src="doxygen-awesome-tabs.js"></script>
+<script type="text/javascript" src="toggle-alternative-theme.js"></script>
+<script type="text/javascript">
+    DoxygenAwesomeFragmentCopyButton.init()
+    DoxygenAwesomeDarkModeToggle.init()
+    DoxygenAwesomeParagraphLink.init()
+    DoxygenAwesomeInteractiveToc.init()
+    DoxygenAwesomeTabs.init()
+</script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+<link href="custom.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only-darkmode-toggle.css" rel="stylesheet" type="text/css"/>
+<link href="custom-alternative.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- https://github.com/AntaresSimulatorTeam/Antares_Simulator/ -->
+<a href="https://github.com/AntaresSimulatorTeam/Antares_Simulator" class="github-corner" title="View source on GitHub" target="_blank">
+    <svg viewBox="0 0 250 250" width="40" height="40" style="position: absolute; top: 0; border: 0; right: 0; z-index: 99;" aria-hidden="true">
+    <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">Antares Simulator
+   </div>
+   <div id="projectbrief">Power System Simulator</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.5 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('classConstraintBuilder.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="classConstraintBuilder-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">ConstraintBuilder Class Reference</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p><code>#include &lt;<a class="el" href="ConstraintBuilder_8h_source.html">ConstraintBuilder.h</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConstraintBuilder_1_1ConstraintBuilderInvalidOperator.html">ConstraintBuilderInvalidOperator</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:aefa90a408f1b50028a9a3162f5ab3929"><td class="memItemLeft" align="right" valign="top"><a id="aefa90a408f1b50028a9a3162f5ab3929" name="aefa90a408f1b50028a9a3162f5ab3929"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>ConstraintBuilder</b> (<a class="el" href="classConstraintBuilderData.html">ConstraintBuilderData</a> &amp;data)</td></tr>
+<tr class="separator:aefa90a408f1b50028a9a3162f5ab3929"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5a917e8779a11712bb3b536565a96b5e"><td class="memItemLeft" align="right" valign="top"><a id="a5a917e8779a11712bb3b536565a96b5e" name="a5a917e8779a11712bb3b536565a96b5e"></a>
+<a class="el" href="classConstraintBuilder.html">ConstraintBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>updateHourWithinWeek</b> (unsigned hour)</td></tr>
+<tr class="separator:a5a917e8779a11712bb3b536565a96b5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader">variables_method</h2></td></tr>
+<tr><td class="ititle" colspan="2"><p >Documentation for non obvious methods</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">index</td><td>local index of the variable </td></tr>
+    <tr><td class="paramname">offset</td><td>offset from the current time step </td></tr>
+    <tr><td class="paramname">delta</td><td>number of time steps for the variable </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>reference of *this </dd></dl>
+</td></tr>
+<tr class="memitem:a206bfb317c63a99e019b7cdd19d2350a"><td class="memItemLeft" align="right" valign="top"><a id="a206bfb317c63a99e019b7cdd19d2350a" name="a206bfb317c63a99e019b7cdd19d2350a"></a>
+<a class="el" href="classConstraintBuilderData.html">ConstraintBuilderData</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>data</b></td></tr>
+<tr class="separator:a206bfb317c63a99e019b7cdd19d2350a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a103ba21ae3fd03df815a55aea68ce111"><td class="memItemLeft" align="right" valign="top"><a id="a103ba21ae3fd03df815a55aea68ce111" name="a103ba21ae3fd03df815a55aea68ce111"></a>
+<a class="el" href="classConstraintBuilder.html">ConstraintBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>DispatchableProduction</b> (unsigned int index, double coeff, int offset=0, int delta=0)</td></tr>
+<tr class="separator:a103ba21ae3fd03df815a55aea68ce111"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb7263568de70d2ac32e5f0b6b55cb51"><td class="memItemLeft" align="right" valign="top"><a id="adb7263568de70d2ac32e5f0b6b55cb51" name="adb7263568de70d2ac32e5f0b6b55cb51"></a>
+<a class="el" href="classConstraintBuilder.html">ConstraintBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>NumberOfDispatchableUnits</b> (unsigned int index, double coeff)</td></tr>
+<tr class="separator:adb7263568de70d2ac32e5f0b6b55cb51"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a80fe9e8e8e5e83cf4c5f3ca4591f9775"><td class="memItemLeft" align="right" valign="top"><a id="a80fe9e8e8e5e83cf4c5f3ca4591f9775" name="a80fe9e8e8e5e83cf4c5f3ca4591f9775"></a>
+<a class="el" href="classConstraintBuilder.html">ConstraintBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>NumberStoppingDispatchableUnits</b> (unsigned int index, double coeff)</td></tr>
+<tr class="separator:a80fe9e8e8e5e83cf4c5f3ca4591f9775"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4608ddc31508c2f0222a5b3dcae9b7df"><td class="memItemLeft" align="right" valign="top"><a id="a4608ddc31508c2f0222a5b3dcae9b7df" name="a4608ddc31508c2f0222a5b3dcae9b7df"></a>
+<a class="el" href="classConstraintBuilder.html">ConstraintBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>NumberStartingDispatchableUnits</b> (unsigned int index, double coeff)</td></tr>
+<tr class="separator:a4608ddc31508c2f0222a5b3dcae9b7df"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a82c723b66cef17c9c4af3d88985120d7"><td class="memItemLeft" align="right" valign="top"><a id="a82c723b66cef17c9c4af3d88985120d7" name="a82c723b66cef17c9c4af3d88985120d7"></a>
+<a class="el" href="classConstraintBuilder.html">ConstraintBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>NumberBreakingDownDispatchableUnits</b> (unsigned int index, double coeff)</td></tr>
+<tr class="separator:a82c723b66cef17c9c4af3d88985120d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab6d4d759c7ad6bedf68d58612295fed6"><td class="memItemLeft" align="right" valign="top"><a id="ab6d4d759c7ad6bedf68d58612295fed6" name="ab6d4d759c7ad6bedf68d58612295fed6"></a>
+<a class="el" href="classConstraintBuilder.html">ConstraintBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>NTCDirect</b> (unsigned int index, double coeff, int offset=0, int delta=0)</td></tr>
+<tr class="separator:ab6d4d759c7ad6bedf68d58612295fed6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a94db412779a433de6e8a6ec2175bd04e"><td class="memItemLeft" align="right" valign="top"><a id="a94db412779a433de6e8a6ec2175bd04e" name="a94db412779a433de6e8a6ec2175bd04e"></a>
+<a class="el" href="classConstraintBuilder.html">ConstraintBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>IntercoDirectCost</b> (unsigned int index, double coeff)</td></tr>
+<tr class="separator:a94db412779a433de6e8a6ec2175bd04e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a252c8faae95d804bf53a834b2a827fbc"><td class="memItemLeft" align="right" valign="top"><a id="a252c8faae95d804bf53a834b2a827fbc" name="a252c8faae95d804bf53a834b2a827fbc"></a>
+<a class="el" href="classConstraintBuilder.html">ConstraintBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>IntercoIndirectCost</b> (unsigned int index, double coeff)</td></tr>
+<tr class="separator:a252c8faae95d804bf53a834b2a827fbc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adc42cba89cc3b95de562485ca20ae122"><td class="memItemLeft" align="right" valign="top"><a id="adc42cba89cc3b95de562485ca20ae122" name="adc42cba89cc3b95de562485ca20ae122"></a>
+<a class="el" href="classConstraintBuilder.html">ConstraintBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>ShortTermStorageInjection</b> (unsigned int index, double coeff)</td></tr>
+<tr class="separator:adc42cba89cc3b95de562485ca20ae122"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a522db1a90d01733dbbd275d7ebafbc16"><td class="memItemLeft" align="right" valign="top"><a id="a522db1a90d01733dbbd275d7ebafbc16" name="a522db1a90d01733dbbd275d7ebafbc16"></a>
+<a class="el" href="classConstraintBuilder.html">ConstraintBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>ShortTermStorageWithdrawal</b> (unsigned int index, double coeff)</td></tr>
+<tr class="separator:a522db1a90d01733dbbd275d7ebafbc16"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae9ed8f71f80cbde9243ef09f8e8c4cf7"><td class="memItemLeft" align="right" valign="top"><a id="ae9ed8f71f80cbde9243ef09f8e8c4cf7" name="ae9ed8f71f80cbde9243ef09f8e8c4cf7"></a>
+<a class="el" href="classConstraintBuilder.html">ConstraintBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>ShortTermStorageLevel</b> (unsigned int index, double coeff, int offset=0, int delta=0)</td></tr>
+<tr class="separator:ae9ed8f71f80cbde9243ef09f8e8c4cf7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5bffbc9ce27514061048dc12dee17eaa"><td class="memItemLeft" align="right" valign="top"><a id="a5bffbc9ce27514061048dc12dee17eaa" name="a5bffbc9ce27514061048dc12dee17eaa"></a>
+<a class="el" href="classConstraintBuilder.html">ConstraintBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>HydProd</b> (unsigned int index, double coeff)</td></tr>
+<tr class="separator:a5bffbc9ce27514061048dc12dee17eaa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abc70784333f832d5ced69bf3041e34b8"><td class="memItemLeft" align="right" valign="top"><a id="abc70784333f832d5ced69bf3041e34b8" name="abc70784333f832d5ced69bf3041e34b8"></a>
+<a class="el" href="classConstraintBuilder.html">ConstraintBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>HydProdDown</b> (unsigned int index, double coeff)</td></tr>
+<tr class="separator:abc70784333f832d5ced69bf3041e34b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae71f7c090b63b2e4206009309493967a"><td class="memItemLeft" align="right" valign="top"><a id="ae71f7c090b63b2e4206009309493967a" name="ae71f7c090b63b2e4206009309493967a"></a>
+<a class="el" href="classConstraintBuilder.html">ConstraintBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>HydProdUp</b> (unsigned int index, double coeff)</td></tr>
+<tr class="separator:ae71f7c090b63b2e4206009309493967a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3dc9eaf843b193b133e932b6cfff8799"><td class="memItemLeft" align="right" valign="top"><a id="a3dc9eaf843b193b133e932b6cfff8799" name="a3dc9eaf843b193b133e932b6cfff8799"></a>
+<a class="el" href="classConstraintBuilder.html">ConstraintBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>Pumping</b> (unsigned int index, double coeff)</td></tr>
+<tr class="separator:a3dc9eaf843b193b133e932b6cfff8799"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adbbaf151309ce34087d2028bce9849db"><td class="memItemLeft" align="right" valign="top"><a id="adbbaf151309ce34087d2028bce9849db" name="adbbaf151309ce34087d2028bce9849db"></a>
+<a class="el" href="classConstraintBuilder.html">ConstraintBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>HydroLevel</b> (unsigned int index, double coeff)</td></tr>
+<tr class="separator:adbbaf151309ce34087d2028bce9849db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a66ce76f0b22930bfc5160d430fc7f496"><td class="memItemLeft" align="right" valign="top"><a id="a66ce76f0b22930bfc5160d430fc7f496" name="a66ce76f0b22930bfc5160d430fc7f496"></a>
+<a class="el" href="classConstraintBuilder.html">ConstraintBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>Overflow</b> (unsigned int index, double coeff)</td></tr>
+<tr class="separator:a66ce76f0b22930bfc5160d430fc7f496"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9749f5bd7614c94789dd58709e7aee16"><td class="memItemLeft" align="right" valign="top"><a id="a9749f5bd7614c94789dd58709e7aee16" name="a9749f5bd7614c94789dd58709e7aee16"></a>
+<a class="el" href="classConstraintBuilder.html">ConstraintBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>FinalStorage</b> (unsigned int index, double coeff)</td></tr>
+<tr class="separator:a9749f5bd7614c94789dd58709e7aee16"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2465882f4d231b44d0525297c95f35ac"><td class="memItemLeft" align="right" valign="top"><a id="a2465882f4d231b44d0525297c95f35ac" name="a2465882f4d231b44d0525297c95f35ac"></a>
+<a class="el" href="classConstraintBuilder.html">ConstraintBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>PositiveUnsuppliedEnergy</b> (unsigned int index, double coeff)</td></tr>
+<tr class="separator:a2465882f4d231b44d0525297c95f35ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb62dcc1cc0816de056a7b0e5ef3a128"><td class="memItemLeft" align="right" valign="top"><a id="abb62dcc1cc0816de056a7b0e5ef3a128" name="abb62dcc1cc0816de056a7b0e5ef3a128"></a>
+<a class="el" href="classConstraintBuilder.html">ConstraintBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>NegativeUnsuppliedEnergy</b> (unsigned int index, double coeff)</td></tr>
+<tr class="separator:abb62dcc1cc0816de056a7b0e5ef3a128"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a369099ad93d164e56c68a8ae33fd1803"><td class="memItemLeft" align="right" valign="top"><a id="a369099ad93d164e56c68a8ae33fd1803" name="a369099ad93d164e56c68a8ae33fd1803"></a>
+<a class="el" href="classConstraintBuilder.html">ConstraintBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>LayerStorage</b> (unsigned area, unsigned layer, double coeff)</td></tr>
+<tr class="separator:a369099ad93d164e56c68a8ae33fd1803"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aef4e7d5c8b0116a17a96f5ccdab03f7e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classConstraintBuilder.html">ConstraintBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConstraintBuilder.html#aef4e7d5c8b0116a17a96f5ccdab03f7e">SetOperator</a> (char op)</td></tr>
+<tr class="memdesc:aef4e7d5c8b0116a17a96f5ccdab03f7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">set the operator of the constraint (sign)  <a href="classConstraintBuilder.html#aef4e7d5c8b0116a17a96f5ccdab03f7e">More...</a><br /></td></tr>
+<tr class="separator:aef4e7d5c8b0116a17a96f5ccdab03f7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a524b9a8c3936f2bc933d3fa657b2014c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classConstraintBuilder.html">ConstraintBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConstraintBuilder.html#a524b9a8c3936f2bc933d3fa657b2014c">equalTo</a> ()</td></tr>
+<tr class="memdesc:a524b9a8c3936f2bc933d3fa657b2014c"><td class="mdescLeft">&#160;</td><td class="mdescRight">set the sign of the constraint to '=', building a constraint equal to rhs  <a href="classConstraintBuilder.html#a524b9a8c3936f2bc933d3fa657b2014c">More...</a><br /></td></tr>
+<tr class="separator:a524b9a8c3936f2bc933d3fa657b2014c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d02a1b27aad2b5d46657e46e1e8de9e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classConstraintBuilder.html">ConstraintBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConstraintBuilder.html#a4d02a1b27aad2b5d46657e46e1e8de9e">lessThan</a> ()</td></tr>
+<tr class="memdesc:a4d02a1b27aad2b5d46657e46e1e8de9e"><td class="mdescLeft">&#160;</td><td class="mdescRight">set the sign of the constraint to '&lt;', building a constraint less than rhs  <a href="classConstraintBuilder.html#a4d02a1b27aad2b5d46657e46e1e8de9e">More...</a><br /></td></tr>
+<tr class="separator:a4d02a1b27aad2b5d46657e46e1e8de9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a58ae1ba54b01b148d836e4780361dfc4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classConstraintBuilder.html">ConstraintBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConstraintBuilder.html#a58ae1ba54b01b148d836e4780361dfc4">greaterThan</a> ()</td></tr>
+<tr class="memdesc:a58ae1ba54b01b148d836e4780361dfc4"><td class="mdescLeft">&#160;</td><td class="mdescRight">set the sign of the constraint to '&gt;', building a constraint greather than rhs  <a href="classConstraintBuilder.html#a58ae1ba54b01b148d836e4780361dfc4">More...</a><br /></td></tr>
+<tr class="separator:a58ae1ba54b01b148d836e4780361dfc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6154a8e04e39b9b4bcdf080cfa2c7acc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConstraintBuilder.html#a6154a8e04e39b9b4bcdf080cfa2c7acc">build</a> ()</td></tr>
+<tr class="memdesc:a6154a8e04e39b9b4bcdf080cfa2c7acc"><td class="mdescLeft">&#160;</td><td class="mdescRight">add the constraint in the matrix  <a href="classConstraintBuilder.html#a6154a8e04e39b9b4bcdf080cfa2c7acc">More...</a><br /></td></tr>
+<tr class="separator:a6154a8e04e39b9b4bcdf080cfa2c7acc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a09a6ee6a5acbeec1991ec3fe279a2181"><td class="memItemLeft" align="right" valign="top"><a id="a09a6ee6a5acbeec1991ec3fe279a2181" name="a09a6ee6a5acbeec1991ec3fe279a2181"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>NumberOfVariables</b> () const</td></tr>
+<tr class="separator:a09a6ee6a5acbeec1991ec3fe279a2181"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><pre class="fragment">this class build up the business object 'Constraint',
+Math:
+|coeff11 coeff12 .. coeff1n||var1| |sign_1|   |rhs1|       |constraint1||sign_1||rhs1|
+|..      ..             ...||....| |......|   |....| &lt;===&gt; |...........||......||....|
+|coeffn1 coeffn2 .. coeffnn||varn| |sign_n|   |rhsn|       |constraintn||sign_n||rhsn|
+
+it propose a set of methods  to attach 'Variables' to the Constraint
+ex: calling NTCDirect() implies adding Direct NTC Variable to the current Constraint
+finally the build() method gather all variables and put them into the matrix
+</pre> </div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="a6154a8e04e39b9b4bcdf080cfa2c7acc" name="a6154a8e04e39b9b4bcdf080cfa2c7acc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6154a8e04e39b9b4bcdf080cfa2c7acc">&#9670;&#160;</a></span>build()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ConstraintBuilder::build </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>add the constraint in the matrix </p>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+</div>
+</div>
+<a id="a524b9a8c3936f2bc933d3fa657b2014c" name="a524b9a8c3936f2bc933d3fa657b2014c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a524b9a8c3936f2bc933d3fa657b2014c">&#9670;&#160;</a></span>equalTo()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classConstraintBuilder.html">ConstraintBuilder</a> &amp; ConstraintBuilder::equalTo </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>set the sign of the constraint to '=', building a constraint equal to rhs </p>
+<dl class="section return"><dt>Returns</dt><dd>reference of *this </dd></dl>
+
+</div>
+</div>
+<a id="a58ae1ba54b01b148d836e4780361dfc4" name="a58ae1ba54b01b148d836e4780361dfc4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a58ae1ba54b01b148d836e4780361dfc4">&#9670;&#160;</a></span>greaterThan()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classConstraintBuilder.html">ConstraintBuilder</a> &amp; ConstraintBuilder::greaterThan </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>set the sign of the constraint to '&gt;', building a constraint greather than rhs </p>
+<dl class="section return"><dt>Returns</dt><dd>reference of *this </dd></dl>
+
+</div>
+</div>
+<a id="a4d02a1b27aad2b5d46657e46e1e8de9e" name="a4d02a1b27aad2b5d46657e46e1e8de9e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4d02a1b27aad2b5d46657e46e1e8de9e">&#9670;&#160;</a></span>lessThan()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classConstraintBuilder.html">ConstraintBuilder</a> &amp; ConstraintBuilder::lessThan </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>set the sign of the constraint to '&lt;', building a constraint less than rhs </p>
+<dl class="section return"><dt>Returns</dt><dd>reference of *this </dd></dl>
+
+</div>
+</div>
+<a id="aef4e7d5c8b0116a17a96f5ccdab03f7e" name="aef4e7d5c8b0116a17a96f5ccdab03f7e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aef4e7d5c8b0116a17a96f5ccdab03f7e">&#9670;&#160;</a></span>SetOperator()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classConstraintBuilder.html">ConstraintBuilder</a> &amp; ConstraintBuilder::SetOperator </td>
+          <td>(</td>
+          <td class="paramtype">char&#160;</td>
+          <td class="paramname"><em>op</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>set the operator of the constraint (sign) </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">op</td><td>the operator of the constraint </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>reference of *this </dd></dl>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following files:<ul>
+<li>src/solver/optimisation/constraints/<a class="el" href="ConstraintBuilder_8h_source.html">ConstraintBuilder.h</a></li>
+<li>src/solver/optimisation/constraints/ConstraintBuilder.cpp</li>
+</ul>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="classConstraintBuilder.html">ConstraintBuilder</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
+  </ul>
+</div>
+</body>
+</html>
