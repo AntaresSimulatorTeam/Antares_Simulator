@@ -29,9 +29,15 @@ jobs:
       VCPKG_ROOT: ${{ github.workspace }}/vcpkg
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
       ORTOOLS_URL: "https://github.com/rte-france/or-tools/releases/download/v9.5-rte2.0/ortools_cxx_windows-latest_static_sirius.zip"
+      RUN_EXTENDED_TESTS: ${{ github.event_name == 'schedule'}}
 
     steps:
     - uses: actions/checkout@v3
+
+    - name: Config OR-Tools URL
+      run: |
+          echo "ORTOOLS_URL=https://github.com/rte-france/or-tools/releases/download/$(cat ortools_tag)/ortools_cxx_windows-latest_static_sirius.zip" >> $GITHUB_ENV
+      shell: bash
 
     - name: Pre-requisites
       shell: cmd
