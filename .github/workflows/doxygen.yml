@@ -3,7 +3,7 @@ name: GitHub Pages
 on:
   push:
     branches:
-      - feature/move-doxygen-doc  # Set a branch name to trigger deployment
+      - develop  # Set a branch name to trigger deployment
 
 jobs:
   deploy:
@@ -35,7 +35,7 @@ jobs:
         # If you're changing the branch from main,
         # also change the `main` in `refs/heads/main`
         # below accordingly.
-        if: github.ref == 'refs/heads/feature/move-doxygen-doc'
+        if: github.ref == 'refs/heads/develop'
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./html
