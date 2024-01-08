@@ -44,7 +44,7 @@ public:
     */
     PartThermal();
     //! Destructor
-    ~PartThermal();
+    ~PartThermal() = default;
     //@}
 
     /*!
@@ -58,18 +58,6 @@ public:
     ** \param n A number of years
     */
     void resizeAllTimeseriesNumbers(uint n);
-
-    /*!
-    ** \brief Prepare all thermal clusters in the 'mustrun' mode
-    **
-    ** All clusters with the flag will be moved to the container 'mustrunList'.
-    ** As a consequence, they will no longer be seen as thermal clusters
-    ** from the solver's point of view.
-    ** \warning This method should only be used from the solver
-    **
-    ** \return The number of clusters found in 'must-run' mode
-    */
-    uint prepareClustersInMustRunMode();
 
     /*!
     ** \brief Invalidate all JIT data

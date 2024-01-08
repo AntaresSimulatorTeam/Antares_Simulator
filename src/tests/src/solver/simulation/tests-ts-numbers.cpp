@@ -58,6 +58,7 @@ template<>
 void addClusterToAreaList(Area* area, std::shared_ptr<RenewableCluster> cluster)
 {
 	area->renewable.list.add(cluster);
+	area->renewable.list.addToCompleteList(cluster);
 }
 
 template<class ClusterType>

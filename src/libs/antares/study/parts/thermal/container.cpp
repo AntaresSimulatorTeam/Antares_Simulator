@@ -59,46 +59,6 @@ void PartThermal::markAsModified() const
     mustrunList.markAsModified();
 }
 
-PartThermal::~PartThermal()
-{
-}
-
-uint PartThermal::prepareClustersInMustRunMode()
-{
-    // nothing to do if there is no cluster available
-    if (list.empty())
-        return 0;
-
-    // the number of clusters in 'must-run' mode
-    uint count = 0;
-    bool mustContinue;
-    do
-    {
-        mustContinue = false;
-        for (auto cluster : list)
-        {
-            if (!cluster->mustrun)
-                continue;
-
-            // Detaching the thermal cluster from the main list...
-            list.remove(cluster->id());
-            if (!cluster->enabled)
-                continue;
-            // ...and attaching it into the second list
-            mustrunList.add(cluster);
-            ++count;
-            logs.info() << "enabling 'must-run' mode for the cluster  "
-                        << cluster->parentArea->name << "::" << cluster->name();
-
-            // the iterator has been invalidated, loop again
-            mustContinue = true;
-            break;
-        }
-    } while (mustContinue);
-
-    return count;
-}
-
 void PartThermal::reset()
 {
     unsuppliedEnergyCost = 0.;
