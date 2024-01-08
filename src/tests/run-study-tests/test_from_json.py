@@ -36,15 +36,16 @@ class CustomBenchmark:
     
     def dump_json(self):
         lines = []
+        assert(False)
         if (Path(self.out_file).exists()):
             with open(self.out_file, 'r') as in_file:
-                lines = (line.rstrip() for line in in_file) # All lines including the blank ones
-                lines = (line for line in lines if line)
+                for line in in_file: 
+                    if not line.isspace(): 
+                        lines.append(line) 
             ## checks
-            lines = list(lines)
-            assert(lines[0][0]=='[')
-            assert(lines[-1][-1]==']')
-            lines[-1][-1]=""
+            # assert(lines[0][0]=='[')
+            # assert(lines[-1][-1]==']')
+            lines[-1]=lines[-1][:-1]
         else:
             lines.append("[")
                  
@@ -66,7 +67,7 @@ class CustomBenchmark:
              
     def memory(self):
         return str({
-                "name" : self.name,
+                "name" : self.name+"_memory",
                 "value": self.data.memory,
                 "unit": "mb"
                 })
