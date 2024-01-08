@@ -61,11 +61,11 @@ def my_test(study_path, test_check_data, check_runner):
 
 @pytest.mark.json
 @pytest.mark.parametrize('study_path, test_check_data', json_collector.pairs(), ids=json_collector.testIds())
-def test(study_path, test_check_data, check_runner, do_benchmark, benchmark_json):
+def test(study_path, test_check_data, check_runner, do_benchmark, custom_benchmark_json):
     if do_benchmark:
         # benchmark(my_test, study_path, test_check_data, check_runner)
         my_test(study_path, test_check_data, check_runner)
     
-        CustomBenchmark(benchmark_json, CustomBenchmarkData(study_path, random.float(0, 100), random.randint(0,10)))
+        CustomBenchmark(custom_benchmark_json, CustomBenchmarkData(study_path, random.float(0, 100), random.randint(0,10)))
     else:
         my_test(study_path, test_check_data, check_runner)

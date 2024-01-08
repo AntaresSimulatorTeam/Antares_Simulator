@@ -34,6 +34,6 @@ def do_benchmark(request):
     return request.config.getoption("--do-benchmark")
 
 @pytest.fixture()
-def benchmark_json(request):
+def custom_benchmark_json(request):
     return request.config.getoption("--custom-benchmark-json")
 
