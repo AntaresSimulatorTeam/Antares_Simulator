@@ -30,6 +30,7 @@
 #include <vector>
 #include <string>
 #include "opt_constants.h"
+#include "ortools/linear_solver/linear_solver.h"
 
 /*--------------------------------------------------------------------------------------*/
 
@@ -117,8 +118,11 @@ struct PROBLEME_ANTARES_A_RESOUDRE
 
     std::vector<bool> VariablesEntieres; // true = int, false = continuous
 
-    std::vector<int> StatutDesVariables;
-    std::vector<int> StatutDesContraintes;
+private:
+  using BasisStatus = operations_research::MPSolver::BasisStatus;
+public:
+    std::vector<BasisStatus> StatutDesVariables;
+    std::vector<BasisStatus> StatutDesContraintes;
 
 };
 
