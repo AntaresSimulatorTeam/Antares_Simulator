@@ -304,7 +304,7 @@ The user may pick any area appearing in the area list and is then given access t
 - General characteristics of the storage:
 	- Name
 	- Group: the type of storage, based on a predefined list of storages ("PSP_open", "PSP_closed", "Weight", "Battery", "Other1", "Other2", ..., "Other5")
-	- Withdrawal (MW): the maximum withrawal power for the storage - withdrawal refers to the flow from the storage to the power system
+	- Withdrawal (MW): the maximum withdrawal power for the storage - withdrawal refers to the flow from the storage to the power system
 	- Injection (MW): the maximum injection power for the storage - withdrawal refers to the flow from the power system to the storage
 	- Stock (MWh): the capacity of the storage in MWh
 	- Efficiency (p.u., coefficient between 0 and 1): the energy efficiency of the storage, i.e. the ratio for a given volume between the energy taken from the system to be injected into the storage and the energy returned to the system during its withdrawal. This efficiency factor is applied when injecting energy into the storage.
