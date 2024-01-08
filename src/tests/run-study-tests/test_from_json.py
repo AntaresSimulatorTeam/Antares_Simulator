@@ -26,34 +26,50 @@ class CustomBenchmarkData:
     name: str
     duration: float 
     memory: int
-
+class BadBenchmarkFile(Exception):
+    pass
 class CustomBenchmark:
-    def __init__(self, json_file: Path, data: CustomBenchmarkData) -> None:
-        self.json_file = json_file
+    def __init__(self, out_file: Path, data: CustomBenchmarkData) -> None:
+        self.out_file = out_file
         self.data = data
         self.name = self.data.name
-
+    
     def dump_json(self):
-         to_file = []
-        
-         to_file.append(self.duration())
-         to_file.append(self.memory())
-         with open(self.json_file, "+a") as output:
-            json.dump(to_file, output, indent=4)
+        lines = []
+        if (self.out_file.exists()):
+            with open(self.out_file, 'r') as in_file:
+                lines = (line.rstrip() for line in in_file) # All lines including the blank ones
+                lines = (line for line in lines if line)
+            ## checks
+            assert(lines[0][0]=='[')
+            assert(lines[-1][-1]==']')
+            lines[-1][-1]=""
+        else:
+            lines.append("[")
+                 
+        to_file = []
+    
+        lines.append(self.duration())
+        lines.append(self.memory())
+        lines.append("]")
+        with open(self.out_file, "w") as output:
+            output.writelines(lines)
+            
              
     def duration(self):
-        return {
+        return str({
                 "name" : self.name,
                 "value": self.data.duration,
                 "unit": "s"
-                }
+            })
+        
              
     def memory(self):
-        return {
+        return str({
                 "name" : self.name,
                 "value": self.data.memory,
                 "unit": "mb"
-                }
+                })
 
 def my_test(study_path, test_check_data, check_runner):
     checks = create_checks(study_path, test_check_data, simulation=check_runner.get_simulation())
