@@ -283,6 +283,5 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
         tag: ${{ github.event.inputs.release_tag }}
-        title: ${{ github.event.inputs.release_name }}
       run: |
         gh release upload "$tag" _build/*.tar.gz _build/*.deb           
