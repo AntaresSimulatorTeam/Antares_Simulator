@@ -137,7 +137,6 @@ jobs:
     #   with:
     #     path: ./cache
     #     key: ${{ runner.os }}-benchmark
-
     
     # Run `github-action-benchmark` action
     - name: Store benchmark result
