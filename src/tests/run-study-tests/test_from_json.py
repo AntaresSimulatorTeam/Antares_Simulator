@@ -50,7 +50,10 @@ class CustomBenchmark:
                  
     
         lines.append(self.duration())
+        lines.append(",\n")
         lines.append(self.memory())
+        lines.append(",\n")
+
         lines.append("]")
         with open(self.out_file, "w") as output:
             output.writelines(lines)
