@@ -36,15 +36,14 @@ class CustomBenchmark:
     
     def dump_json(self):
         lines = []
-        assert(False)
         if (Path(self.out_file).exists()):
             with open(self.out_file, 'r') as in_file:
                 for line in in_file: 
                     if not line.isspace(): 
                         lines.append(line) 
             ## checks
-            # assert(lines[0][0]=='[')
-            # assert(lines[-1][-1]==']')
+            assert(lines[0][0]=='[')
+            assert(lines[-1][-1]==']')
             lines[-1]=lines[-1][:-1]
         else:
             lines.append("[")
