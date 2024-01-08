@@ -114,6 +114,4 @@ public:
 } // namespace Data
 } // namespace Antares
 
-#include "container.hxx"
-
 #endif /* __ANTARES_LIBS_STUDY_PARTS_THERMAL_CONTAINER_H__ */

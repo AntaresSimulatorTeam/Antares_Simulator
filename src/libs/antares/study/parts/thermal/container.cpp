@@ -109,6 +109,13 @@ void PartThermal::reset()
     list.clearAll();
 }
 
+void PartThermal::resizeAllTimeseriesNumbers(uint n)
+{
+    list.resizeAllTimeseriesNumbers(n);
+    mustrunList.resizeAllTimeseriesNumbers(n);
+}
+
+
 bool PartThermal::hasForcedTimeseriesGeneration() const
 {
     using Behavior = LocalTSGenerationBehavior;

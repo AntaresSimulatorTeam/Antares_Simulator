@@ -67,7 +67,6 @@ source_group("study\\part\\common" FILES ${SRC_STUDY_PART_COMMON})
 
 set(SRC_STUDY_PART_THERMAL
         parts/thermal/container.h
-        parts/thermal/container.hxx
         parts/thermal/container.cpp
         parts/thermal/prepro.h
         parts/thermal/prepro.hxx
