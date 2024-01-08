@@ -41,6 +41,7 @@ class CustomBenchmark:
                 lines = (line.rstrip() for line in in_file) # All lines including the blank ones
                 lines = (line for line in lines if line)
             ## checks
+            lines = list(lines)
             assert(lines[0][0]=='[')
             assert(lines[-1][-1]==']')
             lines[-1][-1]=""
