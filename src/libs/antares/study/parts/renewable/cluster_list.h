@@ -19,6 +19,11 @@ public:
     std::string typeID() const override;
     bool loadFromFolder(const AnyString& folder, Area* area);
     bool saveToFolder(const AnyString& folder) const override;
+
+    void addToCompleteList(std::shared_ptr<RenewableCluster> cluster);
+
+private: // member functions
+    bool alreadyInAllClusters(std::string clusterName);
 }; // class RenewableClusterList
 } // namespace Data
 } // namespace Antares
