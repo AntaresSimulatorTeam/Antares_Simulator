@@ -147,10 +147,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         break;
     }
 
-    Antares::Data::Area::ScratchMap scratchmap;
-    study.areas.each([&scratchmap, &numspace](Antares::Data::Area& a) {
-            scratchmap.try_emplace(&a, a.scratchpad[numspace]); });
-
+    Antares::Data::Area::ScratchMap scratchmap = study.areas.buildScratchMap(numspace);
 
     for (uint i = 0; i != study.areas.size(); i++)
     {

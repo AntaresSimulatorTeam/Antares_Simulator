@@ -36,6 +36,7 @@
 #include "constants.h"
 #include "antares/study/parts/parts.h"
 #include "antares/study/parts/load/prepro.h"
+#include <antares/study/area/scratchpad.h>
 
 #define SEP IO::Separator
 
@@ -1577,6 +1578,14 @@ void AreaList::removeThermalTimeseries()
         area.thermal.list.each(
           [](Data::ThermalCluster& cluster) { cluster.series.reset(); });
     });
+}
+
+Area::ScratchMap AreaList::buildScratchMap(uint numspace)
+{
+    Area::ScratchMap scratchmap;
+    each([&scratchmap, &numspace](Area& a) {
+            scratchmap.try_emplace(&a, a.scratchpad[numspace]); });
+    return scratchmap;
 }
 
 } // namespace Antares::Data

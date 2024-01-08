@@ -653,6 +653,9 @@ public:
     void removeThermalTimeseries();
     //@}
 
+    /// create a map with the corresponding scratchpad for each area link to this numspace
+    Area::ScratchMap buildScratchMap(uint numspace);
+
     //! \name Memory management
     //@{
     /*!

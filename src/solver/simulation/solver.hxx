@@ -86,8 +86,7 @@ public:
                     resultWriter)
     {
         hydroHotStart = (study.parameters.initialReservoirLevels.iniLevels == Data::irlHotStart);
-        study.areas.each([this](Antares::Data::Area& a) {
-            scratchmap.try_emplace(&a, a.scratchpad[numSpace]); });
+        scratchmap = study.areas.buildScratchMap(numSpace);
     }
 
     yearJob(const yearJob&) = delete;
