@@ -169,6 +169,7 @@ public:
     ** \return The number of disabled clusters found
     */
     uint removeDisabledClusters();
+    void addToCompleteList(std::shared_ptr<ClusterT> cluster);
 
 protected:
     // The vector containing the clusters
@@ -180,6 +181,8 @@ protected:
 
     /// Sort the vector, set index value for each cluster
     void rebuildIndex();
+private:
+    bool alreadyInAllClusters(std::string clusterName);
 
 }; // class ClusterList
 } // namespace Data

@@ -58,8 +58,6 @@ public:
     void enableMustrunForEveryone();
     //@}
 
-    auto each_enabled() const { return allClusters | std::views::filter(&ThermalCluster::isEnabled); }
-
     auto each_mustrun_and_enabled() const 
     { 
         return allClusters | std::views::filter(&ThermalCluster::isMustRun)
@@ -100,7 +98,6 @@ public:
 
     bool saveToFolder(const AnyString& folder) const override;
 
-    void addToCompleteList(std::shared_ptr<ThermalCluster> cluster);
     void sortCompleteList();
     void giveIndicesToClusters();
     unsigned int enabledCount() const;
@@ -110,9 +107,6 @@ public:
     void clearAll();
     unsigned int allClustersSize();
     std::vector<std::shared_ptr<ThermalCluster>> all();
-
-private: // member functions
-    bool alreadyInAllClusters(std::string clusterName);
 
 private: // member data
     unsigned int enabledCount_ = 0;

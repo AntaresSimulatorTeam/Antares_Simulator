@@ -126,6 +126,20 @@ void ClusterList<ClusterT>::add(const SharedPtr newcluster)
 }
 
 template<class ClusterT>
+bool ClusterList<ClusterT>::alreadyInAllClusters(std::string clusterId)
+{
+    return std::ranges::any_of(allClusters, [&clusterId](const auto& c) { return c->id() == clusterId; });
+}
+
+template<class ClusterT>
+void ClusterList<ClusterT>::addToCompleteList(std::shared_ptr<ClusterT> cluster)
+{
+    if (alreadyInAllClusters(cluster->id()))
+        return;
+    allClusters.push_back(cluster);
+}
+
+template<class ClusterT>
 uint64_t ClusterList<ClusterT>::memoryUsage() const
 {
     uint64_t ret = sizeof(ClusterList) + (2 * sizeof(void*)) * this->size();

@@ -125,18 +125,6 @@ static bool ClusterLoadFromSection(const AnyString& filename,
     return true;
 }
 
-bool RenewableClusterList::alreadyInAllClusters(std::string clusterId)
-{
-    return std::ranges::any_of(allClusters, [&clusterId](const auto& c) { return c->id() == clusterId; });
-}
-
-void RenewableClusterList::addToCompleteList(std::shared_ptr<RenewableCluster> cluster)
-{
-    if (alreadyInAllClusters(cluster->id()))
-        return;
-    allClusters.push_back(cluster);
-}
-
 bool RenewableClusterList::loadFromFolder(const AnyString& folder, Area* area)
 {
     assert(area and "A parent area is required");
