@@ -8,10 +8,15 @@ on:
       - develop
   schedule:
     - cron: '21 2 * * *'
+  workflow_call:
+    inputs:
+      run-tests:
+        required: true
+        type: boolean
 
 env:
   GITHUB_TOKEN: ${{ github.token }}
-  IS_RELEASE: ${{ github.event_name == 'release' && github.event.action == 'created' }}
+  IS_RELEASE: ${{ github.event_name == 'workflow_dispatch' }}
   IS_PUSH: ${{ github.event_name == 'push' }}
 
 jobs:
@@ -108,12 +113,16 @@ jobs:
     - name: Download all artifacts
       if: ${{ env.IS_RELEASE == 'true' }}
       uses: actions/download-artifact@v3
-
+    
+    - name: install gh
+      run: |
+           sudo apt-get update  
+           sudo apt install gh  
 
     - name: Publish assets
       if: ${{ env.IS_RELEASE == 'true' }}
-      uses: alexellis/upload-assets@0.4.0
       env:
-          GITHUB_TOKEN: ${{ github.token }}
-      with:
-          asset_paths: '["*/*.tar.gz", "*/*.rpm"]'
+        GITHUB_TOKEN: ${{ github.token }}
+        tag: ${{ github.event.inputs.release_tag }}
+      run: |
+        gh release upload "$tag" */*.tar.gz */*.rpm             

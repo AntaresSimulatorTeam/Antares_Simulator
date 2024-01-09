@@ -50,3 +50,10 @@ jobs:
         uses: ./.github/workflows/centos7.yml
         with:
           run-tests: ${{ fromJSON(inputs.run-tests) }}
+
+      oracle8:
+        name: Release - oracle8
+        needs: release
+        uses: ./.github/workflows/oracle8.yml
+        with:
+          run-tests: ${{ fromJSON(inputs.run-tests) }}

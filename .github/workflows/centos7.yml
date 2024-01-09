@@ -124,6 +124,11 @@ jobs:
     - name: Download all artifacts
       if: ${{ env.IS_RELEASE == 'true' }}
       uses: actions/download-artifact@v3
+    
+    - name: install gh
+      run: |
+           sudo apt-get update  
+           sudo apt install gh  
 
     - name: Publish assets
       if: ${{ env.IS_RELEASE == 'true' }}
