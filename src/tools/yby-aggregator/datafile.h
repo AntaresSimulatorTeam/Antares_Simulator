@@ -22,7 +22,7 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 **
-** SPDX-License-Identifier: MPL 2.0
+** SPDX-License-Identifier: MPL-2.0
 */
 #ifndef __STUDY_DATA_FILE_AGGREGATOR_DATA_FILE_H__
 #define __STUDY_DATA_FILE_AGGREGATOR_DATA_FILE_H__

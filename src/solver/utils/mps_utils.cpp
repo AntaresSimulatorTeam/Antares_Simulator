@@ -41,7 +41,7 @@ constexpr size_t OPT_APPEL_SOLVEUR_BUFFER_SIZE = 256;
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 **
-** SPDX-License-Identifier: MPL 2.0
+** SPDX-License-Identifier: MPL-2.0
 */
 #include <antares/study/study.h>
 #include <string>
