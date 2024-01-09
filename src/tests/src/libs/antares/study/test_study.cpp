@@ -84,6 +84,7 @@ BOOST_FIXTURE_TEST_CASE(thermal_cluster_delete, OneAreaStudy)
     disabledCluster->enabled = false;
 
     areaA->thermal.list.add(disabledCluster);
+    areaA->thermal.list.addToCompleteList(disabledCluster);
     // Check that "Cluster1" is found
     BOOST_CHECK_EQUAL(areaA->thermal.list.find("cluster1"), disabledCluster.get());
 
@@ -99,6 +100,7 @@ BOOST_FIXTURE_TEST_CASE(renewable_cluster_delete, OneAreaStudy)
     disabledCluster->enabled = false;
 
     areaA->renewable.list.add(disabledCluster);
+    areaA->renewable.list.addToCompleteList(disabledCluster);
     // Check that "Cluster1" is found
     BOOST_CHECK_EQUAL(areaA->renewable.list.find("cluster1"), disabledCluster.get());
 
@@ -159,6 +161,7 @@ BOOST_FIXTURE_TEST_CASE(thermal_cluster_add, OneAreaStudy)
     BOOST_CHECK_EQUAL(newCluster->id(), "cluster");
 
     areaA->thermal.list.add(newCluster);
+    areaA->thermal.list.addToCompleteList(newCluster);
     BOOST_CHECK_EQUAL(areaA->thermal.list.find("cluster"), newCluster.get());
     BOOST_CHECK_EQUAL(areaA->thermal.list.find("Cluster"), nullptr);
 }
@@ -175,6 +178,7 @@ struct ThermalClusterStudy: public OneAreaStudy
         auto newCluster = std::make_shared<ThermalCluster>(areaA);
         newCluster->setName("Cluster");
         areaA->thermal.list.add(newCluster);
+        areaA->thermal.list.addToCompleteList(newCluster);
         cluster = newCluster.get();
     }
 
@@ -208,6 +212,7 @@ BOOST_FIXTURE_TEST_CASE(renewable_cluster_add, OneAreaStudy)
     BOOST_CHECK(newCluster->id() == "windcluster");
 
     areaA->renewable.list.add(newCluster);
+    areaA->renewable.list.addToCompleteList(newCluster);
     BOOST_CHECK(areaA->renewable.list.find("windcluster") == newCluster.get());
     BOOST_CHECK(areaA->renewable.list.find("WindCluster") == nullptr);
 }
@@ -226,6 +231,7 @@ struct RenewableClusterStudy : public OneAreaStudy
         auto newCluster = std::make_shared<RenewableCluster>(areaA);
         newCluster->setName("WindCluster");
         areaA->renewable.list.add(newCluster);
+        areaA->renewable.list.addToCompleteList(newCluster);
         cluster = newCluster.get();
     }
 

@@ -446,6 +446,7 @@ void ThermalCluster::internalAddPlant(void*)
         cluster->setName(sFl);
         cluster->reset();
         pArea->thermal.list.add(cluster);
+        pArea->thermal.list.addToCompleteList(cluster);
 
         // Update the list
         update();
@@ -523,6 +524,7 @@ void ThermalCluster::internalClonePlant(void*)
         cluster->copyFrom(selectedPlant);
 
         pArea->thermal.list.add(cluster);
+        pArea->thermal.list.addToCompleteList(cluster);
 
         // Update the list
         update();
