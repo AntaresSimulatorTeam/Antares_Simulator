@@ -46,7 +46,7 @@ class CustomBenchmark:
             assert(lines[-1][-1]==']')
             lines[-1]=lines[-1][:-1]
         else:
-            lines.append("[")
+            lines.append("[\n")
                  
     
         lines.append(self.duration())
