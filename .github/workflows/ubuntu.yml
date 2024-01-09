@@ -156,7 +156,7 @@ jobs:
         # fail-on-alert: true
         #tmp remove below line
         fail-on-alert: false
-        alert-comment-cc-users: '@flomnes,@payetvin,@a-zakir'
+        # alert-comment-cc-users: '@flomnes,@payetvin,@a-zakir'
         # skip-fetch-gh-pages: true
 
 
