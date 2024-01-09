@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1704797318491,
+  "lastUpdate": 1704797891349,
   "repoUrl": "https://github.com/AntaresSimulatorTeam/Antares_Simulator",
   "entries": {
     "Python Benchmark with customSmallerIsBetter-benchmark": [
@@ -1339,6 +1339,140 @@ window.BENCHMARK_DATA = {
           {
             "name": "reservoir-Min-MaxHydroPower_memory",
             "value": 8,
+            "unit": "mb"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "azakir@neverhack.com",
+            "name": "Abdoulbari ZAKIR",
+            "username": "a-zakir"
+          },
+          "committer": {
+            "email": "azakir@neverhack.com",
+            "name": "Abdoulbari ZAKIR",
+            "username": "a-zakir"
+          },
+          "distinct": true,
+          "id": "65e6defdbe7d459b438f36a986e0ddfb2b378991",
+          "message": "disable summary",
+          "timestamp": "2024-01-09T11:55:03+01:00",
+          "tree_id": "c6cd29e9fe80981c61548a23ec1d62159a0c3708",
+          "url": "https://github.com/AntaresSimulatorTeam/Antares_Simulator/commit/65e6defdbe7d459b438f36a986e0ddfb2b378991"
+        },
+        "date": 1704797879716,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "FinalStockEquivalent-cnt_duration",
+            "value": 37.72453622195653,
+            "unit": "s"
+          },
+          {
+            "name": "FinalStockEquivalent-cnt_memory",
+            "value": 10,
+            "unit": "mb"
+          },
+          {
+            "name": "AreaHydroLevel_duration",
+            "value": 17.247735517443886,
+            "unit": "s"
+          },
+          {
+            "name": "AreaHydroLevel_memory",
+            "value": 0,
+            "unit": "mb"
+          },
+          {
+            "name": "tests-ST-storage_duration",
+            "value": 73.38395155848015,
+            "unit": "s"
+          },
+          {
+            "name": "tests-ST-storage_memory",
+            "value": 3,
+            "unit": "mb"
+          },
+          {
+            "name": "binding-constraints_duration",
+            "value": 75.54263433502145,
+            "unit": "s"
+          },
+          {
+            "name": "binding-constraints_memory",
+            "value": 8,
+            "unit": "mb"
+          },
+          {
+            "name": "reservoir-MaxPumping_duration",
+            "value": 60.12494318449089,
+            "unit": "s"
+          },
+          {
+            "name": "reservoir-MaxPumping_memory",
+            "value": 8,
+            "unit": "mb"
+          },
+          {
+            "name": "025_mps-week_duration",
+            "value": 6.972355195881319,
+            "unit": "s"
+          },
+          {
+            "name": "025_mps-week_memory",
+            "value": 4,
+            "unit": "mb"
+          },
+          {
+            "name": "Power-fluctuations-minimize-ramping-HydroPowerSmoothingUsingVariationSum_duration",
+            "value": 20.23989231433456,
+            "unit": "s"
+          },
+          {
+            "name": "Power-fluctuations-minimize-ramping-HydroPowerSmoothingUsingVariationSum_memory",
+            "value": 2,
+            "unit": "mb"
+          },
+          {
+            "name": "thermal-fleet-Accurate-unit-commitment_duration",
+            "value": 30.964746195551474,
+            "unit": "s"
+          },
+          {
+            "name": "thermal-fleet-Accurate-unit-commitment_memory",
+            "value": 2,
+            "unit": "mb"
+          },
+          {
+            "name": "025_mps-day_duration",
+            "value": 62.05211848994783,
+            "unit": "s"
+          },
+          {
+            "name": "025_mps-day_memory",
+            "value": 6,
+            "unit": "mb"
+          },
+          {
+            "name": "Power-fluctuations-minimize-excursions-HydroPowerSmoothingUsingVariationMaxDown_duration",
+            "value": 26.75279163999629,
+            "unit": "s"
+          },
+          {
+            "name": "Power-fluctuations-minimize-excursions-HydroPowerSmoothingUsingVariationMaxDown_memory",
+            "value": 8,
+            "unit": "mb"
+          },
+          {
+            "name": "reservoir-Min-MaxHydroPower_duration",
+            "value": 64.73463537641362,
+            "unit": "s"
+          },
+          {
+            "name": "reservoir-Min-MaxHydroPower_memory",
+            "value": 3,
             "unit": "mb"
           }
         ]
