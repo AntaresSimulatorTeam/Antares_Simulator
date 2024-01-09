@@ -45,16 +45,15 @@ class CustomBenchmark:
             assert(lines[0][0]=='[')
             assert(lines[-1][-1]==']')
             lines[-1]=lines[-1][:-1]
+            lines.append(',\n')
         else:
             lines.append("[\n")
                  
-    
         lines.append(self.duration())
         lines.append(",\n")
         lines.append(self.memory())
-        lines.append(",\n")
 
-        lines.append("]")
+        lines.append("\n]")
         with open(self.out_file, "w") as output:
             output.writelines(lines)
             
