@@ -38,7 +38,7 @@ jobs:
 
     - name: Install libraries
       run: |
-           dnf install -y epel-release git cmake wget rpm-build redhat-lsb-core
+           dnf install -y epel-release git cmake wget rpm-build redhat-lsb-core gh
            dnf install -y unzip libuuid-devel boost-test boost-devel gcc-toolset-10-toolchain zlib-devel
 
     - name: Checkout
@@ -104,25 +104,11 @@ jobs:
       with:
         path: _build/*.rpm
 
-  publish_assets:
-    name: Publish assets
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Download all artifacts
-      if: ${{ env.IS_RELEASE == 'true' }}
-      uses: actions/download-artifact@v3
-    
-    - name: install gh
-      run: |
-           sudo apt-get update  
-           sudo apt install gh  
-
     - name: Publish assets
       if: ${{ env.IS_RELEASE == 'true' }}
       env:
         GITHUB_TOKEN: ${{ github.token }}
         tag: ${{ github.event.inputs.release_tag }}
       run: |
-        gh release upload "$tag" */*.tar.gz */*.rpm             
+        gh release upload "$tag" _build/*.tar.gz _build/*.rpm      
+
