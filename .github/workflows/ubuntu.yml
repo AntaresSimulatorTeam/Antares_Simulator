@@ -151,7 +151,7 @@ jobs:
         # Show alert with commit comment on detecting possible performance regression
         alert-threshold: '2%'
         # Enable Job Summary for PRs
-        summary-always: true
+        #summary-always: true
         comment-on-alert: true
         # fail-on-alert: true
         #tmp remove below line
