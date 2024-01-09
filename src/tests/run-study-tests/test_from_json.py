@@ -68,11 +68,11 @@ class CustomBenchmark:
         
              
     def memory(self):
-        return str({
+        return str(json.dumps({
                 "name" : self.name+"_memory",
                 "value": self.data.memory,
                 "unit": "mb"
-                })
+                }))
 
 def my_test(study_path, test_check_data, check_runner):
     checks = create_checks(study_path, test_check_data, simulation=check_runner.get_simulation())
