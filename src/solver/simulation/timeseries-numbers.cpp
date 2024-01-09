@@ -729,7 +729,7 @@ Matrix<uint32_t>* getFirstTSnumberInterModalMatrixFoundInArea(
         else if (isTSintermodal[ts_to_tsIndex.at(timeSeriesHydro)])
             tsNumbersMtx = &(area.hydro.series->timeseriesNumbers);
         else if (isTSintermodal[ts_to_tsIndex.at(timeSeriesThermal)] &&
-            not area.thermal.list.each_enabled().empty() > 0)
+            not area.thermal.list.each_enabled().empty())
         {
             std::shared_ptr<ThermalCluster> cluster = *(area.thermal.list.each_enabled().begin());
             tsNumbersMtx = &(cluster->series.timeseriesNumbers);
