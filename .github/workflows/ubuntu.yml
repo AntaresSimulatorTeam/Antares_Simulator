@@ -123,6 +123,9 @@ jobs:
         prop_path: 'version'
 
 
+    - name: delete benchmark file
+      run: rm -f _build/output.json 
+      
     - name: Run named mps tests
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
       uses: ./.github/workflows/run-tests
@@ -158,6 +161,9 @@ jobs:
         fail-on-alert: false
         # alert-comment-cc-users: '@flomnes,@payetvin,@a-zakir'
         # skip-fetch-gh-pages: true
+    
+    - name: delete benchmark file
+      run: rm -f _build/output.json 
 
 
     - name: Run unfeasibility-related tests
