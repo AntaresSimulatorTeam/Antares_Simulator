@@ -965,7 +965,7 @@ License, by the making, using, selling, offering for sale, having
 made, import, or transfer of either its Contributions or its
 Contributor Version.</p>
 <p>1.12. "Secondary License"
-means either the Mozilla Public Licence 2.0, Version 2.0, the GNU
+means either the GNU General Public License, Version 2.0, the GNU
 Lesser General Public License, Version 2.1, the GNU Affero General
 Public License, Version 3.0, or any later versions of those
 licenses.</p>
