@@ -1,7 +1,7 @@
 Valid-License-Identifier: MPL-2.0
 
 License-Text:
-Copyright (C) 2007-2018 RTE
+Copyright (C) 2007-2024 RTE
 Mozilla Public License
 Version 2.0
 1. Definitions
