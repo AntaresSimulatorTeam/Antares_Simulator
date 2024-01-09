@@ -60,11 +60,11 @@ class CustomBenchmark:
             
              
     def duration(self):
-        return str({
+        return str(json.dumps( {
                 "name" : self.name+"_duration",
                 "value": self.data.duration,
                 "unit": "s"
-            })
+            }))
         
              
     def memory(self):
