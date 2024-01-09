@@ -51,6 +51,8 @@ class CustomBenchmark:
                  
         lines.append(self.duration())
         lines.append(",\n")
+        lines.append(self.new_indicator())
+        lines.append(",\n")
         lines.append(self.memory())
 
         lines.append("\n]")
@@ -63,6 +65,15 @@ class CustomBenchmark:
                 "name" : self.name+"_duration",
                 "value": self.data.duration,
                 "unit": "s"
+            }))
+        
+            
+             
+    def new_indicator(self):
+        return str(json.dumps( {
+                "name" : self.name+"_indicator",
+                "value": self.data.duration,
+                "unit": "my_ind"
             }))
         
              
