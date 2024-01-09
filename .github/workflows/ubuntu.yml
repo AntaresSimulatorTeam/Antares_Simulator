@@ -123,9 +123,6 @@ jobs:
         prop_path: 'version'
 
 
-    - name: delete benchmark file
-      run: rm -f _build/output.json 
-      
     - name: Run named mps tests
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
       uses: ./.github/workflows/run-tests
