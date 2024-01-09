@@ -1,0 +1,225 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.5"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<!-- BEGIN opengraph metadata -->
+<meta property="og:title" content="Antares Simulator" />
+<meta property="og:image" content="https://github.com/AntaresSimulatorTeam/Antares_Simulator/blob/develop/docs/assets/antares.png" />
+<meta property="og:description" content="Power System Simulator." />
+<meta property="og:url" content="https://antares-simulator.org/" />
+<!-- END opengraph metadata -->
+<!-- BEGIN twitter metadata -->
+<meta name="twitter:image:src" content="https://github.com/AntaresSimulatorTeam/Antares_Simulator/blob/develop/docs/assets/logo.png" />
+<meta name="twitter:title" content="Antares Simulator" />
+<meta name="twitter:description" content="Power System Simulator." />
+<!-- END twitter metadata -->
+<title>Antares Simulator: Antares::Toolbox::Process::Execute Class Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="doxygen-awesome-darkmode-toggle.js"></script>
+<script type="text/javascript" src="doxygen-awesome-fragment-copy-button.js"></script>
+<script type="text/javascript" src="doxygen-awesome-paragraph-link.js"></script>
+<script type="text/javascript" src="doxygen-awesome-interactive-toc.js"></script>
+<script type="text/javascript" src="doxygen-awesome-tabs.js"></script>
+<script type="text/javascript" src="toggle-alternative-theme.js"></script>
+<script type="text/javascript">
+    DoxygenAwesomeFragmentCopyButton.init()
+    DoxygenAwesomeDarkModeToggle.init()
+    DoxygenAwesomeParagraphLink.init()
+    DoxygenAwesomeInteractiveToc.init()
+    DoxygenAwesomeTabs.init()
+</script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+<link href="custom.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only-darkmode-toggle.css" rel="stylesheet" type="text/css"/>
+<link href="custom-alternative.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- https://github.com/AntaresSimulatorTeam/Antares_Simulator/ -->
+<a href="https://github.com/AntaresSimulatorTeam/Antares_Simulator" class="github-corner" title="View source on GitHub" target="_blank">
+    <svg viewBox="0 0 250 250" width="40" height="40" style="position: absolute; top: 0; border: 0; right: 0; z-index: 99;" aria-hidden="true">
+    <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">Antares Simulator
+   </div>
+   <div id="projectbrief">Power System Simulator</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.5 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('classAntares_1_1Toolbox_1_1Process_1_1Execute.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="classAntares_1_1Toolbox_1_1Process_1_1Execute-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">Antares::Toolbox::Process::Execute Class Reference</div></div>
+</div><!--header-->
+<div class="contents">
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a77520bb65552ee14c13f3951b94ff637"><td class="memItemLeft" align="right" valign="top"><a id="a77520bb65552ee14c13f3951b94ff637" name="a77520bb65552ee14c13f3951b94ff637"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>Execute</b> ()</td></tr>
+<tr class="memdesc:a77520bb65552ee14c13f3951b94ff637"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor. <br /></td></tr>
+<tr class="separator:a77520bb65552ee14c13f3951b94ff637"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a676a053db5b93d28a8e2ea51e66c543b"><td class="memItemLeft" align="right" valign="top"><a id="a676a053db5b93d28a8e2ea51e66c543b" name="a676a053db5b93d28a8e2ea51e66c543b"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>~Execute</b> ()</td></tr>
+<tr class="memdesc:a676a053db5b93d28a8e2ea51e66c543b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor. <br /></td></tr>
+<tr class="separator:a676a053db5b93d28a8e2ea51e66c543b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Command to execute</div></td></tr>
+<tr class="memitem:aa437b342340209e808335c5aae64b7d8"><td class="memItemLeft" align="right" valign="top"><a id="aa437b342340209e808335c5aae64b7d8" name="aa437b342340209e808335c5aae64b7d8"></a>
+const wxString &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>command</b> () const</td></tr>
+<tr class="memdesc:aa437b342340209e808335c5aae64b7d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the command. <br /></td></tr>
+<tr class="separator:aa437b342340209e808335c5aae64b7d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7b1421920dd7786c2790882ac22acea0"><td class="memItemLeft" align="right" valign="top"><a id="a7b1421920dd7786c2790882ac22acea0" name="a7b1421920dd7786c2790882ac22acea0"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>command</b> (const wxString &amp;v)</td></tr>
+<tr class="memdesc:a7b1421920dd7786c2790882ac22acea0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the command to execute. <br /></td></tr>
+<tr class="separator:a7b1421920dd7786c2790882ac22acea0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Working directory</div></td></tr>
+<tr class="memitem:a15d940372a181292cc5f592ae61a060c"><td class="memItemLeft" align="right" valign="top"><a id="a15d940372a181292cc5f592ae61a060c" name="a15d940372a181292cc5f592ae61a060c"></a>
+const wxString &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>workingDirectory</b> () const</td></tr>
+<tr class="memdesc:a15d940372a181292cc5f592ae61a060c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the working directory to use before executing the command. <br /></td></tr>
+<tr class="separator:a15d940372a181292cc5f592ae61a060c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af8fc127000f67de42edfda62e59fdb8a"><td class="memItemLeft" align="right" valign="top"><a id="af8fc127000f67de42edfda62e59fdb8a" name="af8fc127000f67de42edfda62e59fdb8a"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>workingDirectory</b> (const wxString &amp;v)</td></tr>
+<tr class="memdesc:af8fc127000f67de42edfda62e59fdb8a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the working directory. <br /></td></tr>
+<tr class="separator:af8fc127000f67de42edfda62e59fdb8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Title</div></td></tr>
+<tr class="memitem:afa6f1bf674eec72f9d12cc50dca31cd9"><td class="memItemLeft" align="right" valign="top"><a id="afa6f1bf674eec72f9d12cc50dca31cd9" name="afa6f1bf674eec72f9d12cc50dca31cd9"></a>
+const wxString &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>title</b> () const</td></tr>
+<tr class="memdesc:afa6f1bf674eec72f9d12cc50dca31cd9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the sub-title value. <br /></td></tr>
+<tr class="separator:afa6f1bf674eec72f9d12cc50dca31cd9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a015cadb92df995702789f40759fce5c0"><td class="memItemLeft" align="right" valign="top"><a id="a015cadb92df995702789f40759fce5c0" name="a015cadb92df995702789f40759fce5c0"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>title</b> (const wxString &amp;v)</td></tr>
+<tr class="memdesc:a015cadb92df995702789f40759fce5c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the title. <br /></td></tr>
+<tr class="separator:a015cadb92df995702789f40759fce5c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a47bf70f3567b2e75596e2ba9cfb11faa"><td class="memItemLeft" align="right" valign="top"><a id="a47bf70f3567b2e75596e2ba9cfb11faa" name="a47bf70f3567b2e75596e2ba9cfb11faa"></a>
+const wxString &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>subTitle</b> () const</td></tr>
+<tr class="memdesc:a47bf70f3567b2e75596e2ba9cfb11faa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the sub-title value. <br /></td></tr>
+<tr class="separator:a47bf70f3567b2e75596e2ba9cfb11faa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a806c443a901b3de8cf07330cf37f9414"><td class="memItemLeft" align="right" valign="top"><a id="a806c443a901b3de8cf07330cf37f9414" name="a806c443a901b3de8cf07330cf37f9414"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>subTitle</b> (const wxString &amp;v)</td></tr>
+<tr class="memdesc:a806c443a901b3de8cf07330cf37f9414"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the sub-title. <br /></td></tr>
+<tr class="separator:a806c443a901b3de8cf07330cf37f9414"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader">The progress bar</div></td></tr>
+<tr class="memitem:aa06a957c7539656172a0c0d65a8a9f2e"><td class="memItemLeft" align="right" valign="top"><a id="aa06a957c7539656172a0c0d65a8a9f2e" name="aa06a957c7539656172a0c0d65a8a9f2e"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>displayProgressBar</b> () const</td></tr>
+<tr class="memdesc:aa06a957c7539656172a0c0d65a8a9f2e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get if the progress bar can be displayed. <br /></td></tr>
+<tr class="separator:aa06a957c7539656172a0c0d65a8a9f2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2023198ba64bce8f9d4b598bae1ee40b"><td class="memItemLeft" align="right" valign="top"><a id="a2023198ba64bce8f9d4b598bae1ee40b" name="a2023198ba64bce8f9d4b598bae1ee40b"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>displayProgressBar</b> (const bool v)</td></tr>
+<tr class="memdesc:a2023198ba64bce8f9d4b598bae1ee40b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set if the progress bar can be displayed. <br /></td></tr>
+<tr class="separator:a2023198ba64bce8f9d4b598bae1ee40b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Icon</div></td></tr>
+<tr class="memitem:ae10264acb4d54c64fae4c5acc35f6013"><td class="memItemLeft" align="right" valign="top"><a id="ae10264acb4d54c64fae4c5acc35f6013" name="ae10264acb4d54c64fae4c5acc35f6013"></a>
+const char *&#160;</td><td class="memItemRight" valign="bottom"><b>icon</b> () const</td></tr>
+<tr class="memdesc:ae10264acb4d54c64fae4c5acc35f6013"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the relative address to the icon in the resources folder. <br /></td></tr>
+<tr class="separator:ae10264acb4d54c64fae4c5acc35f6013"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a632038ab1b0e11c05aec9136165321d6"><td class="memItemLeft" align="right" valign="top"><a id="a632038ab1b0e11c05aec9136165321d6" name="a632038ab1b0e11c05aec9136165321d6"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>icon</b> (const char *v)</td></tr>
+<tr class="memdesc:a632038ab1b0e11c05aec9136165321d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the relative address to the icon in the resources folder. <br /></td></tr>
+<tr class="separator:a632038ab1b0e11c05aec9136165321d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader">Execution workflow</h2></td></tr>
+<tr class="memitem:a99da9605e521566c78a8fef34464c731"><td class="memItemLeft" align="right" valign="top"><a id="a99da9605e521566c78a8fef34464c731" name="a99da9605e521566c78a8fef34464c731"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>run</b> ()</td></tr>
+<tr class="memdesc:a99da9605e521566c78a8fef34464c731"><td class="mdescLeft">&#160;</td><td class="mdescRight">Run the command. <br /></td></tr>
+<tr class="separator:a99da9605e521566c78a8fef34464c731"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<hr/>The documentation for this class was generated from the following files:<ul>
+<li>src/ui/simulator/toolbox/execute/<a class="el" href="execute_2execute_8h_source.html">execute.h</a></li>
+<li>src/ui/simulator/toolbox/execute/execute.cpp</li>
+</ul>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><b>Antares</b></li><li class="navelem"><b>Toolbox</b></li><li class="navelem"><b>Process</b></li><li class="navelem"><a class="el" href="classAntares_1_1Toolbox_1_1Process_1_1Execute.html">Execute</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
+  </ul>
+</div>
+</body>
+</html>

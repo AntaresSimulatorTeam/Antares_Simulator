@@ -1,0 +1,242 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.5"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<!-- BEGIN opengraph metadata -->
+<meta property="og:title" content="Antares Simulator" />
+<meta property="og:image" content="https://github.com/AntaresSimulatorTeam/Antares_Simulator/blob/develop/docs/assets/antares.png" />
+<meta property="og:description" content="Power System Simulator." />
+<meta property="og:url" content="https://antares-simulator.org/" />
+<!-- END opengraph metadata -->
+<!-- BEGIN twitter metadata -->
+<meta name="twitter:image:src" content="https://github.com/AntaresSimulatorTeam/Antares_Simulator/blob/develop/docs/assets/logo.png" />
+<meta name="twitter:title" content="Antares Simulator" />
+<meta name="twitter:description" content="Power System Simulator." />
+<!-- END twitter metadata -->
+<title>Antares Simulator: Antares::Solver::Variable::Economy::VCardReservoirLevel Struct Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="doxygen-awesome-darkmode-toggle.js"></script>
+<script type="text/javascript" src="doxygen-awesome-fragment-copy-button.js"></script>
+<script type="text/javascript" src="doxygen-awesome-paragraph-link.js"></script>
+<script type="text/javascript" src="doxygen-awesome-interactive-toc.js"></script>
+<script type="text/javascript" src="doxygen-awesome-tabs.js"></script>
+<script type="text/javascript" src="toggle-alternative-theme.js"></script>
+<script type="text/javascript">
+    DoxygenAwesomeFragmentCopyButton.init()
+    DoxygenAwesomeDarkModeToggle.init()
+    DoxygenAwesomeParagraphLink.init()
+    DoxygenAwesomeInteractiveToc.init()
+    DoxygenAwesomeTabs.init()
+</script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+<link href="custom.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only-darkmode-toggle.css" rel="stylesheet" type="text/css"/>
+<link href="custom-alternative.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- https://github.com/AntaresSimulatorTeam/Antares_Simulator/ -->
+<a href="https://github.com/AntaresSimulatorTeam/Antares_Simulator" class="github-corner" title="View source on GitHub" target="_blank">
+    <svg viewBox="0 0 250 250" width="40" height="40" style="position: absolute; top: 0; border: 0; right: 0; z-index: 99;" aria-hidden="true">
+    <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">Antares Simulator
+   </div>
+   <div id="projectbrief">Power System Simulator</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.5 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardReservoirLevel.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardReservoirLevel-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">Antares::Solver::Variable::Economy::VCardReservoirLevel Struct Reference</div></div>
+</div><!--header-->
+<div class="contents">
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a4775e810cc42ea33ca6a4ff24cf108da"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom">{ <br />
+&#160;&#160;<a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardReservoirLevel.html#a4775e810cc42ea33ca6a4ff24cf108daa720df7aaa6b092a1f78e5d1d0e6bff24">categoryDataLevel</a> = Category::area
+, <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardReservoirLevel.html#a4775e810cc42ea33ca6a4ff24cf108daa19becaf6d9a1f37c69ff09a2a8c98d7e">categoryFileLevel</a> = ResultsType::categoryFile &amp; (Category::id | Category::va)
+, <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardReservoirLevel.html#a4775e810cc42ea33ca6a4ff24cf108daa2ebe3b9ce55dfeabb93edd2f3ed5c88d">precision</a> = Category::all
+, <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardReservoirLevel.html#a4775e810cc42ea33ca6a4ff24cf108daaa351cde44a2edafbdfe5d8b266e4f5b7">nodeDepthForGUI</a> = +0
+, <br />
+&#160;&#160;<a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardReservoirLevel.html#a4775e810cc42ea33ca6a4ff24cf108daad57083a39a9eed7c1f4f5d7997ae8410">decimal</a> = 2
+, <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardReservoirLevel.html#a4775e810cc42ea33ca6a4ff24cf108daafa5cb2290e69378b0465f30ddce19e98">columnCount</a> = 1
+, <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardReservoirLevel.html#a4775e810cc42ea33ca6a4ff24cf108daa9f0719ee92958c4cb60bd13c6706dff0">spatialAggregate</a> = Category::noSpatialAggregate
+, <b>spatialAggregateMode</b> = Category::spatialAggregateEachYear
+, <br />
+&#160;&#160;<b>spatialAggregatePostProcessing</b> = 0
+, <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardReservoirLevel.html#a4775e810cc42ea33ca6a4ff24cf108daacbeb0f68ace7932ec16e9ef546ee0c99">hasIntermediateValues</a> = 1
+, <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardReservoirLevel.html#a4775e810cc42ea33ca6a4ff24cf108daa63a6af2f8bd421f5e1847b48ae5f9ce1">isPossiblyNonApplicable</a> = 1
+<br />
+ }</td></tr>
+<tr class="separator:a4775e810cc42ea33ca6a4ff24cf108da"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a086bcaae893ca7d144da9feac4125a59"><td class="memItemLeft" align="right" valign="top"><a id="a086bcaae893ca7d144da9feac4125a59" name="a086bcaae893ca7d144da9feac4125a59"></a>
+typedef <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1Results.html">Results</a>&lt; <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average.html">R::AllYears::Average</a>&lt; <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html">R::AllYears::StdDeviation</a>&lt; <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Min.html">R::AllYears::Min</a>&lt; <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Max.html">R::AllYears::Max</a>&lt; &gt; &gt; &gt; &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>ResultsType</b></td></tr>
+<tr class="memdesc:a086bcaae893ca7d144da9feac4125a59"><td class="mdescLeft">&#160;</td><td class="mdescRight">The expecte results. <br /></td></tr>
+<tr class="separator:a086bcaae893ca7d144da9feac4125a59"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abaab8f85c1c1d704700538da35c39dd0"><td class="memItemLeft" align="right" valign="top"><a id="abaab8f85c1c1d704700538da35c39dd0" name="abaab8f85c1c1d704700538da35c39dd0"></a>
+typedef <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardReservoirLevel.html">VCardReservoirLevel</a>&#160;</td><td class="memItemRight" valign="bottom"><b>VCardForSpatialAggregate</b></td></tr>
+<tr class="memdesc:abaab8f85c1c1d704700538da35c39dd0"><td class="mdescLeft">&#160;</td><td class="mdescRight">The VCard to look for for calculating spatial aggregates. <br /></td></tr>
+<tr class="separator:abaab8f85c1c1d704700538da35c39dd0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afa929b139bcabb9a98ad8715fc874a62"><td class="memItemLeft" align="right" valign="top"><a id="afa929b139bcabb9a98ad8715fc874a62" name="afa929b139bcabb9a98ad8715fc874a62"></a>
+typedef <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html">IntermediateValues</a>&#160;</td><td class="memItemRight" valign="bottom"><b>IntermediateValuesBaseType</b></td></tr>
+<tr class="separator:afa929b139bcabb9a98ad8715fc874a62"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a081211b13d0d115a51f8f2f19f6eb8fc"><td class="memItemLeft" align="right" valign="top"><a id="a081211b13d0d115a51f8f2f19f6eb8fc" name="a081211b13d0d115a51f8f2f19f6eb8fc"></a>
+typedef <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html">IntermediateValues</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>IntermediateValuesType</b></td></tr>
+<tr class="separator:a081211b13d0d115a51f8f2f19f6eb8fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3c7ee4d4037bcc4811b04f70533e0a61"><td class="memItemLeft" align="right" valign="top"><a id="a3c7ee4d4037bcc4811b04f70533e0a61" name="a3c7ee4d4037bcc4811b04f70533e0a61"></a>
+typedef <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html">IntermediateValuesBaseType</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>IntermediateValuesTypeForSpatialAg</b></td></tr>
+<tr class="separator:a3c7ee4d4037bcc4811b04f70533e0a61"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:a9b9b656433a8ee85c1f5e107027bcb0f"><td class="memItemLeft" align="right" valign="top"><a id="a9b9b656433a8ee85c1f5e107027bcb0f" name="a9b9b656433a8ee85c1f5e107027bcb0f"></a>
+static std::string&#160;</td><td class="memItemRight" valign="bottom"><b>Caption</b> ()</td></tr>
+<tr class="memdesc:a9b9b656433a8ee85c1f5e107027bcb0f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Caption. <br /></td></tr>
+<tr class="separator:a9b9b656433a8ee85c1f5e107027bcb0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a22ea2a7d8e74cd842d237690bba6581a"><td class="memItemLeft" align="right" valign="top"><a id="a22ea2a7d8e74cd842d237690bba6581a" name="a22ea2a7d8e74cd842d237690bba6581a"></a>
+static std::string&#160;</td><td class="memItemRight" valign="bottom"><b>Unit</b> ()</td></tr>
+<tr class="memdesc:a22ea2a7d8e74cd842d237690bba6581a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unit. <br /></td></tr>
+<tr class="separator:a22ea2a7d8e74cd842d237690bba6581a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af614cbc35c0a6f33ce79d4d1eac440a1"><td class="memItemLeft" align="right" valign="top"><a id="af614cbc35c0a6f33ce79d4d1eac440a1" name="af614cbc35c0a6f33ce79d4d1eac440a1"></a>
+static std::string&#160;</td><td class="memItemRight" valign="bottom"><b>Description</b> ()</td></tr>
+<tr class="memdesc:af614cbc35c0a6f33ce79d4d1eac440a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">The short description of the variable. <br /></td></tr>
+<tr class="separator:af614cbc35c0a6f33ce79d4d1eac440a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<h2 class="groupheader">Member Enumeration Documentation</h2>
+<a id="a4775e810cc42ea33ca6a4ff24cf108da" name="a4775e810cc42ea33ca6a4ff24cf108da"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4775e810cc42ea33ca6a4ff24cf108da">&#9670;&#160;</a></span>anonymous enum</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">anonymous enum</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a4775e810cc42ea33ca6a4ff24cf108daa720df7aaa6b092a1f78e5d1d0e6bff24" name="a4775e810cc42ea33ca6a4ff24cf108daa720df7aaa6b092a1f78e5d1d0e6bff24"></a>categoryDataLevel&#160;</td><td class="fielddoc"><p >Data Level. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a4775e810cc42ea33ca6a4ff24cf108daa19becaf6d9a1f37c69ff09a2a8c98d7e" name="a4775e810cc42ea33ca6a4ff24cf108daa19becaf6d9a1f37c69ff09a2a8c98d7e"></a>categoryFileLevel&#160;</td><td class="fielddoc"><p >File level (provided by the type of the results) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a4775e810cc42ea33ca6a4ff24cf108daa2ebe3b9ce55dfeabb93edd2f3ed5c88d" name="a4775e810cc42ea33ca6a4ff24cf108daa2ebe3b9ce55dfeabb93edd2f3ed5c88d"></a>precision&#160;</td><td class="fielddoc"><p >Precision (views) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a4775e810cc42ea33ca6a4ff24cf108daaa351cde44a2edafbdfe5d8b266e4f5b7" name="a4775e810cc42ea33ca6a4ff24cf108daaa351cde44a2edafbdfe5d8b266e4f5b7"></a>nodeDepthForGUI&#160;</td><td class="fielddoc"><p >Indentation (GUI) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a4775e810cc42ea33ca6a4ff24cf108daad57083a39a9eed7c1f4f5d7997ae8410" name="a4775e810cc42ea33ca6a4ff24cf108daad57083a39a9eed7c1f4f5d7997ae8410"></a>decimal&#160;</td><td class="fielddoc"><p >Decimal precision. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a4775e810cc42ea33ca6a4ff24cf108daafa5cb2290e69378b0465f30ddce19e98" name="a4775e810cc42ea33ca6a4ff24cf108daafa5cb2290e69378b0465f30ddce19e98"></a>columnCount&#160;</td><td class="fielddoc"><p >Number of columns used by the variable (One ResultsType per column) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a4775e810cc42ea33ca6a4ff24cf108daa9f0719ee92958c4cb60bd13c6706dff0" name="a4775e810cc42ea33ca6a4ff24cf108daa9f0719ee92958c4cb60bd13c6706dff0"></a>spatialAggregate&#160;</td><td class="fielddoc"><p >The Spatial aggregation. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a4775e810cc42ea33ca6a4ff24cf108daacbeb0f68ace7932ec16e9ef546ee0c99" name="a4775e810cc42ea33ca6a4ff24cf108daacbeb0f68ace7932ec16e9ef546ee0c99"></a>hasIntermediateValues&#160;</td><td class="fielddoc"><p >Intermediate values. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a4775e810cc42ea33ca6a4ff24cf108daa63a6af2f8bd421f5e1847b48ae5f9ce1" name="a4775e810cc42ea33ca6a4ff24cf108daa63a6af2f8bd421f5e1847b48ae5f9ce1"></a>isPossiblyNonApplicable&#160;</td><td class="fielddoc"><p >Can this variable be non applicable. </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li>src/solver/variable/economy/<a class="el" href="reservoirlevel_8h_source.html">reservoirlevel.h</a></li>
+</ul>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><b>Antares</b></li><li class="navelem"><b>Solver</b></li><li class="navelem"><b>Variable</b></li><li class="navelem"><b>Economy</b></li><li class="navelem"><a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardReservoirLevel.html">VCardReservoirLevel</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
+  </ul>
+</div>
+</body>
+</html>
