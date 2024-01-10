@@ -55,6 +55,7 @@ src/script/v8/libs/*
 /src/antares.VC.db
 
 _build*
+tags
 buildDebian
 .vscode/
 *.dll
