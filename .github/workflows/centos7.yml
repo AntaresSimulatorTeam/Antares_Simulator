@@ -61,7 +61,7 @@ jobs:
 
     - name: Install gcc 10
       run: |
-        yum install -y centos-release-scl gh
+        yum install -y centos-release-scl
         yum install -y devtoolset-10-gcc*
 
     - name: Configure
@@ -115,6 +115,13 @@ jobs:
       with:
         path: _build/*.rpm
 
+    - name: Install gh
+      run: |
+           yum install dnf
+           dnf install 'dnf-command(config-manager)'
+           dnf config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
+           dnf install gh
+           
     - name: Publish assets
       if: ${{ env.IS_RELEASE == 'true' }}
       env:

@@ -38,7 +38,7 @@ jobs:
 
     - name: Install libraries
       run: |
-           dnf install -y epel-release git cmake wget rpm-build redhat-lsb-core gh
+           dnf install -y epel-release git cmake wget rpm-build redhat-lsb-core 
            dnf install -y unzip libuuid-devel boost-test boost-devel gcc-toolset-10-toolchain zlib-devel
 
     - name: Checkout
@@ -103,6 +103,12 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         path: _build/*.rpm
+
+    - name: Install gh
+      run: |
+           dnf install 'dnf-command(config-manager)'
+           dnf config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
+           dnf install gh
 
     - name: Publish assets
       if: ${{ env.IS_RELEASE == 'true' }}
