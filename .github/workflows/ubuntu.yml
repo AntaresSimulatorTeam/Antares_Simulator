@@ -23,7 +23,6 @@ env:
   IS_RELEASE: ${{ github.event_name == 'workflow_dispatch' }}
   RUN_SIMPLE_TESTS: ${{ github.event_name == 'push' || inputs.run-tests == 'true' }}
   RUN_EXTENDED_TESTS: ${{ github.event_name == 'schedule' || inputs.run-tests == 'true' }}
-  os: ubuntu-20.04
 
 jobs:
 
@@ -31,18 +30,22 @@ jobs:
     name: Build
     env:
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
+      OS: ubuntu-20.04
 
-    runs-on: $env.os
+    runs-on: ubuntu-20.04
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     
-
     steps:
-    - uses: actions/checkout@v3
+    
+    #tmp
+    - name: print runner
+      run: echo "${{runner.name}}"  
+    #end tmp- uses: actions/checkout@v3
 
     - name: ccache
       uses: hendrikmuhs/ccache-action@v1.2
       with:
-          key: ${{ env.os }}
+          key: ${{ runner.name }}
 
     - name: Install libraries
       run: |
