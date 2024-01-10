@@ -4,7 +4,7 @@
 
 **Copyright 2007-2024, RTE (https://www.rte-france.com) - Authors: The Antares\_Simulator Team**
 
-This file is part of Antares-Simulator, Adequacy and Performance assesment for interconnected energy networks.
+This file is part of Antares-Simulator, Adequacy and Performance assessment for interconnected energy networks.
 
 Antares\_Simulator is free software: you can redistribute it and/or modify it under the terms of the Mozilla Public Licence 2.0 as published by the Mozilla Foundation, either version 2 of the License, or (at your option) any later version.
 

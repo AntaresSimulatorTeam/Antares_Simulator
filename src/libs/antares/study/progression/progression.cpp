@@ -3,7 +3,7 @@
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
-** Adequacy and Performance assesment for interconnected energy networks.
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
 ** it under the terms of the Mozilla Public Licence 2.0 as published by
