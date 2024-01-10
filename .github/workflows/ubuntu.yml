@@ -36,6 +36,7 @@ jobs:
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     
     steps:
+    - uses: actions/checkout@v3
     
     - name: ccache
       uses: hendrikmuhs/ccache-action@v1.2
@@ -48,7 +49,7 @@ jobs:
            sudo apt-get install uuid-dev libwxgtk3.0-gtk3-dev
            sudo apt-get install libboost-test-dev
            sudo apt-get install g++-10 gcc-10
-           
+
     - name: Read antares-deps version
       id: antares-deps-version
       uses: notiz-dev/github-action-json-property@release
