@@ -37,7 +37,7 @@ jobs:
     
     steps:
     - uses: actions/checkout@v3
-    
+
     - name: ccache
       uses: hendrikmuhs/ccache-action@v1.2
       with:
@@ -66,7 +66,7 @@ jobs:
       uses: ./.github/workflows/download-extract-precompiled-libraries-tgz
       with:
         antares-deps-version: ${{steps.antares-deps-version.outputs.prop}}
-        os: ${{env.os}}
+        os: ${{env.OS}}
         ortools-url: ${{env.ORTOOLS_URL}}
         ortools-dir: ${{env.ORTOOLS_DIR}}
 
@@ -121,7 +121,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: valid-named-mps
-        os: ${{ env.os }}
+        os: ${{ env.OS }}
         variant: "named-mps"
 
     - name: Run unfeasibility-related tests
@@ -149,7 +149,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: valid-v830
-        os: ${{ env.os }}
+        os: ${{ env.OS }}
 
     - name: Run MILP with CBC
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
@@ -158,7 +158,7 @@ jobs:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: valid-milp
         variant: "milp-cbc"
-        os: ${{ env.os }}
+        os: ${{ env.OS }}
 
     - name: Run tests introduced in v860
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
@@ -166,7 +166,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: valid-v860
-        os: ${{ env.os }}
+        os: ${{ env.OS }}
 
     - name: Run tests introduced in v870
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
@@ -174,7 +174,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: valid-v870
-        os: ${{ env.os }}
+        os: ${{ env.OS }}
 
     - name: Run short-tests
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
@@ -182,7 +182,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: short-tests
-        os: ${{ env.os }}
+        os: ${{ env.OS }}
 
     - name: Run mps tests
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
@@ -190,7 +190,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: valid-mps
-        os: ${{ env.os }}
+        os: ${{ env.OS }}
 
     - name: Run tests for adequacy patch (CSR)
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
@@ -198,7 +198,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: adequacy-patch-CSR
-        os: ${{ env.os }}
+        os: ${{ env.OS }}
 
     - name: Run parallel tests
       if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
@@ -206,7 +206,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: valid-parallel
-        os: ${{ env.os }}
+        os: ${{ env.OS }}
         variant: "parallel"
 
     - name: Run medium-tests
@@ -215,7 +215,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: medium-tests
-        os: ${{ env.os }}
+        os: ${{ env.OS }}
 
     - name: Run long-tests-1
       if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
@@ -223,7 +223,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: long-tests-1
-        os: ${{ env.os }}
+        os: ${{ env.OS }}
 
     - name: Run long-tests-2
       if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
@@ -231,7 +231,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: long-tests-2
-        os: ${{ env.os }}
+        os: ${{ env.OS }}
 
     - name: Run long-tests-3
       if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
@@ -239,7 +239,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: long-tests-3
-        os: ${{ env.os }}
+        os: ${{ env.OS }}
 
     - name: Installer .deb creation
       run: |
