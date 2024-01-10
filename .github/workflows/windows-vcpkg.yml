@@ -34,6 +34,7 @@ jobs:
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
       RUN_EXTENDED_TESTS: ${{ github.event_name == 'schedule'}}
       OS: windows-latest
+      test-platform: windows-2022
       vcpkgPackages: wxwidgets boost-test
       triplet: x64-windows
 
