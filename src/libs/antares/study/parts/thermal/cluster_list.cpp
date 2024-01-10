@@ -354,8 +354,8 @@ void ThermalClusterList::reverseCalculationOfSpinning()
 
 void ThermalClusterList::enableMustrunForEveryone()
 {
-    // enabling the mustrun mode
-    each([&](ThermalCluster& cluster) { cluster.mustrun = true; });
+    for (auto c : allClusters)
+        c->mustrun = true;
 }
 
 void ThermalClusterList::ensureDataPrepro()
@@ -485,14 +485,15 @@ bool ThermalClusterList::savePreproToFolder(const AnyString& folder) const
     Clob buffer;
     bool ret = true;
 
-    each([&](const ThermalCluster& c) {
-        if (c.prepro)
+    for (auto c : allClusters) 
+    {
+        if (c->prepro)
         {
-            assert(c.parentArea and "cluster: invalid parent area");
-            buffer.clear() << folder << SEP << c.parentArea->id << SEP << c.id();
-            ret = c.prepro->saveToFolder(buffer) and ret;
+            assert(c->parentArea and "cluster: invalid parent area");
+            buffer.clear() << folder << SEP << c->parentArea->id << SEP << c->id();
+            ret = c->prepro->saveToFolder(buffer) and ret;
         }
-    });
+    }
     return ret;
 }
 
@@ -501,11 +502,12 @@ bool ThermalClusterList::saveEconomicCosts(const AnyString& folder) const
     Clob buffer;
     bool ret = true;
 
-    each([&](const ThermalCluster& c) {
-        assert(c.parentArea and "cluster: invalid parent area");
-        buffer.clear() << folder << SEP << c.parentArea->id << SEP << c.id();
-        ret = c.ecoInput.saveToFolder(buffer) && ret;
-    });
+    for (auto c : allClusters)
+    {
+        assert(c->parentArea and "cluster: invalid parent area");
+        buffer.clear() << folder << SEP << c->parentArea->id << SEP << c->id();
+        ret = c->ecoInput.saveToFolder(buffer) && ret;
+    }
     return ret;
 }
 
@@ -536,7 +538,7 @@ bool ThermalClusterList::loadPreproFromFolder(Study& study,
         return result;
     };
 
-    return std::ranges::all_of(clusters | std::views::filter(hasPrepro),
+    return std::ranges::all_of(allClusters | std::views::filter(hasPrepro),
                                loadAndCheckPrepro);
 }
 
