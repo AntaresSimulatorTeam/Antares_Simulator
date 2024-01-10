@@ -48,7 +48,7 @@ using namespace Antares;
 
 namespace Antares::Data {
 
-BindingConstraint::BindingConstraint() : enabledAtHour(Antares::Constants::nbHoursInAWeek, true)
+BindingConstraint::BindingConstraint()
 {
 }
 
@@ -655,9 +655,6 @@ void BindingConstraint::clearAndReset(const AnyString &name,
     pClusterWeights.clear();
     // Resetting the offsets
     pClusterOffsets.clear();
-
-    // Enabled at hour
-    enabledAtHour.assign(Antares::Constants::nbHoursInAWeek, true);
 
     switch (pType)
     {

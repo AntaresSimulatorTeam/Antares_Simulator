@@ -1,4 +1,5 @@
 #include "BindingConstraintHour.h"
+#include <cmath>
 
 void BindingConstraintHour::add(int pdt, int cntCouplante)
 {
@@ -9,7 +10,8 @@ void BindingConstraintHour::add(int pdt, int cntCouplante)
         return;
 
     // If so, is it enabled at this hour ?
-    if (!MatriceDesContraintesCouplantes.enabledAtHour[pdt])
+
+    if (std::isnan(MatriceDesContraintesCouplantes.SecondMembreDeLaContrainteCouplante[pdt]))
     {
         // By convention, any value that is < 0 represents a non-existing constraint
         data.CorrespondanceCntNativesCntOptim[pdt]

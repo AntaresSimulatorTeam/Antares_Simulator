@@ -375,9 +375,6 @@ public:
     template<class Env>
     std::string timeSeriesFileName(const Env &env) const;
 
-    //! Hourly binding constraints only
-    // TODO[FOM] Make private ?
-    std::vector<bool> enabledAtHour;
 private:
     //! Raw name
     ConstraintName pName;

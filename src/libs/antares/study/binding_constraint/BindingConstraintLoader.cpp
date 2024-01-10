@@ -11,31 +11,6 @@
 #include "antares/study/version.h"
 #include "antares/constants.h"
 
-bool hoursToVector(std::vector<bool>& output,
-                   const std::string& input)
-{
-    output.assign(Antares::Constants::nbHoursInAWeek, false);
-
-    std::istringstream ss(input);
-    while (ss) {
-        std::string token;
-        if (std::getline(ss, token, ',')) { // Split by comma
-            try {
-                unsigned int index = std::stoi(token) - 1;
-                if (index < Antares::Constants::nbHoursInAWeek && index >= 0)
-                    output[index] = true;
-                else
-                    return false;
-            } catch (const std::invalid_argument& e) {
-                return false;
-            } catch (const std::out_of_range& e) {
-                return false;
-            }
-        }
-    }
-    return true;
-}
-
 namespace Antares::Data
 {
 using namespace Yuni;
@@ -95,15 +70,6 @@ std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintLoader::load(En
         if (p->key == "group")
         {
             bc->group_ = p->value.c_str();
-            continue;
-        }
-
-        if (p->key == "enabled-at-hours")
-        {
-            if (!hoursToVector(bc->enabledAtHour, p->value))
-            {
-                logs.error() << "Error parsing binding constraint `enabled-at-hours` property " << p->value;
-            }
             continue;
         }
 

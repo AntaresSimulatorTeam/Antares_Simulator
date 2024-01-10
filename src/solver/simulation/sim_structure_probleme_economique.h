@@ -164,8 +164,6 @@ struct CONTRAINTES_COUPLANTES
     std::vector<int> OffsetTemporelSurLePalierDispatch;
 
     const char* NomDeLaContrainteCouplante;
-    // Only makes sense for hourly constraints
-    std::vector<bool> enabledAtHour;
 };
 
 namespace ShortTermStorage
