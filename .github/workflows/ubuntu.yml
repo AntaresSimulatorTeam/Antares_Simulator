@@ -39,7 +39,7 @@ jobs:
     
     #tmp
     - name: print runner
-      run: echo "${{runner.name}}"  
+      run: echo "${{runner.os}}"  
     #end tmp- uses: actions/checkout@v3
 
     - name: ccache
