@@ -118,10 +118,10 @@ jobs:
     - name: Install gh
       if: ${{ env.IS_RELEASE == 'true' }}
       run: |
-           yum install dnf
-           dnf install 'dnf-command(config-manager)'
-           dnf config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
-           dnf install gh
+           yum -y install dnf
+           dnf -y install 'dnf-command(config-manager)'
+           dnf -y config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
+           dnf -y install gh
 
     - name: Publish assets
       if: ${{ env.IS_RELEASE == 'true' }}
