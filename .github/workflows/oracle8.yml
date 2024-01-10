@@ -105,6 +105,7 @@ jobs:
         path: _build/*.rpm
 
     - name: Install gh
+      if: ${{ env.IS_RELEASE == 'true' }}
       run: |
            dnf install 'dnf-command(config-manager)'
            dnf config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
