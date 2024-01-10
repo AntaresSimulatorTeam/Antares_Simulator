@@ -1,6 +1,11 @@
 #include "BindingConstraintHour.h"
 #include <cmath>
 
+static bool shouldSkip(double x)
+{
+    return std::isnan(x) || std::isinf(x);
+}
+
 void BindingConstraintHour::add(int pdt, int cntCouplante)
 {
     const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
@@ -9,9 +14,8 @@ void BindingConstraintHour::add(int pdt, int cntCouplante)
     if (MatriceDesContraintesCouplantes.TypeDeContrainteCouplante != CONTRAINTE_HORAIRE)
         return;
 
-    // If so, is it enabled at this hour ?
-
-    if (std::isnan(MatriceDesContraintesCouplantes.SecondMembreDeLaContrainteCouplante[pdt]))
+    // If so, is it enabled at this hour ? Determined by the RHS being inf/nan or not
+    if (shouldSkip(MatriceDesContraintesCouplantes.SecondMembreDeLaContrainteCouplante[pdt]))
     {
         // By convention, any value that is < 0 represents a non-existing constraint
         data.CorrespondanceCntNativesCntOptim[pdt]
