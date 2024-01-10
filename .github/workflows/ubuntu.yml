@@ -23,6 +23,7 @@ env:
   IS_RELEASE: ${{ github.event_name == 'workflow_dispatch' }}
   RUN_SIMPLE_TESTS: ${{ github.event_name == 'push' || inputs.run-tests == 'true' }}
   RUN_EXTENDED_TESTS: ${{ github.event_name == 'schedule' || inputs.run-tests == 'true' }}
+  os: ubuntu-20.04
 
 jobs:
 
@@ -30,7 +31,6 @@ jobs:
     name: Build
     env:
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
-      os: ubuntu-20.04
 
     runs-on: ${{ env.os }}
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
