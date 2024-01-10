@@ -31,7 +31,6 @@
 #include <yuni/string.h>
 #include <yuni/core/smartptr/intrusive.h>
 #include "ref.h"
-#include "intrusive-reference.h"
 #include <atomic>
 
 namespace Antares
