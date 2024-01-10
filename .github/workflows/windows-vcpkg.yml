@@ -37,7 +37,7 @@ jobs:
       vcpkgPackages: wxwidgets boost-test
       triplet: x64-windows
 
-    runs-on: ${{ env.os }}
+    runs-on: windows-latest
 
     steps:
     - uses: actions/checkout@v3
