@@ -59,8 +59,7 @@ void StudyInfoCollector::enabledThermalClustersCountToFileContent(FileContent& f
     for (auto i = study_.areas.begin(); i != end; ++i)
     {
         Area& area = *(i->second);
-        nbEnabledThermalClusters +=
-            std::ranges::count_if(area.thermal.list, [](const auto& c) { return c->enabled; });
+        nbEnabledThermalClusters += area.thermal.list.mustRunAndEnabledCount();
     }
 
     // Adding an item related to number of enabled thermal clusters to the file content

@@ -317,6 +317,7 @@ void ThermalCluster::internalDeletePlant(void*)
             Refresh();
             MarkTheStudyAsModified();
             updateInnerValues();
+            pArea->thermal.list.giveIndicesToClusters();
             study->uiinfo->reload();
 
             // delete associated constraints
@@ -447,6 +448,7 @@ void ThermalCluster::internalAddPlant(void*)
         cluster->reset();
         pArea->thermal.list.add(cluster);
         pArea->thermal.list.addToCompleteList(cluster);
+        pArea->thermal.list.giveIndicesToClusters();
 
         // Update the list
         update();
@@ -525,6 +527,7 @@ void ThermalCluster::internalClonePlant(void*)
 
         pArea->thermal.list.add(cluster);
         pArea->thermal.list.addToCompleteList(cluster);
+        pArea->thermal.list.giveIndicesToClusters();
 
         // Update the list
         update();

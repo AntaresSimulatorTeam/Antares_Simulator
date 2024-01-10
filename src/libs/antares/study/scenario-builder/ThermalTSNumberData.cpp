@@ -36,13 +36,6 @@ void thermalTSNumberData::saveToINIFile(const Study& /* study */,
     if (!pArea)
         return;
 
-#ifndef NDEBUG
-    if (pTSNumberRules.width)
-    {
-        assert(pTSNumberRules.width == pArea->thermal.list.size());
-    }
-#endif
-
     // Foreach thermal cluster...
     for (uint index = 0; index != pTSNumberRules.width; ++index)
     {
