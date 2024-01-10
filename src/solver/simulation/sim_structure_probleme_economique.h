@@ -31,7 +31,6 @@
 #include "../optimisation/opt_structure_probleme_a_resoudre.h"
 #include <antares/study/fwd.h>
 #include <antares/study/study.h>
-#include <antares/constants.h>
 #include "antares/solver/utils/optimization_statistics.h"
 #include <vector>
 #include <optional>

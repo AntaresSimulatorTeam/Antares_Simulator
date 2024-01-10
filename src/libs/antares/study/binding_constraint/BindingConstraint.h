@@ -53,9 +53,6 @@ class BindingConstraint final : public Yuni::NonCopyable<BindingConstraint>
     friend class BindingConstraintLoader;
     friend class BindingConstraintSaver;
 public:
-    BindingConstraint();
-    ~BindingConstraint();
-
     enum Type
     {
         //! Unknown status

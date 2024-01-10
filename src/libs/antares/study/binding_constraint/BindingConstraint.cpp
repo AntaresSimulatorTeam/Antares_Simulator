@@ -30,7 +30,6 @@
 #include <vector>
 #include "BindingConstraint.h"
 #include "../study.h"
-#include <antares/constants.h>
 #include "BindingConstraintLoader.h"
 #include "BindingConstraintSaver.h"
 #include "antares/utils/utils.h"
@@ -47,10 +46,6 @@ using namespace Antares;
 #endif
 
 namespace Antares::Data {
-
-BindingConstraint::BindingConstraint()
-{
-}
 
 BindingConstraint::Operator BindingConstraint::StringToOperator(const AnyString& text)
 {
@@ -126,14 +121,6 @@ const char* BindingConstraint::MathOperatorToCString(BindingConstraint::Operator
     static const char *const names[opMax + 1] = {"", "=", "<", ">", "< and >", ""};
     assert((uint) o < (uint) (opMax + 1));
     return names[o];
-}
-
-BindingConstraint::~BindingConstraint()
-{
-#ifndef NDEBUG
-    pName = "<INVALID>";
-    pID = "<INVALID>";
-#endif
 }
 
 void BindingConstraint::name(const AnyString& newname)

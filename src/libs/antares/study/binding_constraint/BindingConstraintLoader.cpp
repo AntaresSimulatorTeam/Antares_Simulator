@@ -5,11 +5,9 @@
 #include "BindingConstraintLoader.h"
 #include <memory>
 #include <vector>
-#include <sstream>
 #include "BindingConstraint.h"
 #include "yuni/core/string/string.h"
 #include "antares/study/version.h"
-#include "antares/constants.h"
 
 namespace Antares::Data
 {
