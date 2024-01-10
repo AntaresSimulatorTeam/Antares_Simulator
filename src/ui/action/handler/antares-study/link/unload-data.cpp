@@ -25,6 +25,7 @@
 */
 
 #include "unload-data.h"
+#include "antares/utils/utils.h"
 
 namespace Antares
 {

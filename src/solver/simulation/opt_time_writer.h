@@ -24,21 +24,22 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
-#include <yuni/core/string.h>
+#include <sstream>
 #include <antares/writer/i_writer.h>
 
+#include "sim_structure_probleme_economique.h"
 #include "simulation.h"
 
 class OptimizationStatisticsWriter
 {
 public:
+    void addTime(uint week, const TIME_MEASURES& timeMeasure);
     OptimizationStatisticsWriter(Antares::Solver::IResultWriter& writer, uint year);
-    void addTime(uint week, double opt_1_ms, double opt_2_ms);
     void finalize();
 
 private:
     void printHeader();
-    Yuni::Clob pBuffer;
-    Yuni::String pFilename;
+    std::ostringstream pBuffer;
+    uint pYear;
     Antares::Solver::IResultWriter& pWriter;
 };

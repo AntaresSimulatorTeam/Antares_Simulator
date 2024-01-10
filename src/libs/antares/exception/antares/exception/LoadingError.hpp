@@ -28,6 +28,7 @@
 #pragma once
 
 #include <stdexcept>
+#include <list>
 #include <map>
 
 #include <yuni/yuni.h>
@@ -131,7 +132,7 @@ public:
 class InvalidSolver : public LoadingError
 {
 public:
-    explicit InvalidSolver(const std::string& solver);
+    explicit InvalidSolver(const std::string& solver, const std::string& availableSolverList);
 };
 
 class InvalidStudy : public LoadingError
@@ -158,12 +159,6 @@ public:
     explicit IncompatibleDailyOptHeuristicForArea(const Antares::Data::AreaName& name);
 };
 
-class WritingProgressFile : public LoadingError
-{
-public:
-    explicit WritingProgressFile(const Yuni::String& study);
-};
-
 class InvalidParametersForThermalClusters : public LoadingError
 {
 public:
@@ -179,10 +174,10 @@ public:
     explicit CommandLineArguments(uint errors);
 };
 
-class IncompatibleStudyModeForAdqPatch : public LoadingError
+class IncompatibleSimulationModeForAdqPatch : public LoadingError
 {
 public:
-    IncompatibleStudyModeForAdqPatch();
+    IncompatibleSimulationModeForAdqPatch();
 };
 
 class NoAreaInsideAdqPatchMode : public LoadingError

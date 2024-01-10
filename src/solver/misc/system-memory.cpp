@@ -24,7 +24,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "system-memory.h"
+#include "antares/solver/misc/system-memory.h"
 #include <antares/logs/logs.h>
 #include <yuni/core/system/memory.h>
 

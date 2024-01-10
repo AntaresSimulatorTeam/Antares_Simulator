@@ -73,7 +73,7 @@ BOOST_AUTO_TEST_CASE(test_throw)
 BOOST_AUTO_TEST_CASE(test_future_set)
 {
     auto threadPool = createThreadPool(4);
-    int counter = 0;
+    std::atomic<int> counter = 0;
     Task incrementCounter = [&counter]() {
         counter++;
     };

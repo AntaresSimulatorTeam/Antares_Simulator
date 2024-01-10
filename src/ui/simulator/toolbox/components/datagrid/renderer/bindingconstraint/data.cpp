@@ -116,7 +116,7 @@ Date::Precision Data::precision()
     }
 }
 
-double Data::cellNumericValue(int x, int y) const
+double Data::cellNumericValue(int x, [[maybe_unused]] int y) const
 {
     if (!(!study))
     {
@@ -184,7 +184,7 @@ IRenderer::CellStyle Data::cellStyle(int, int y) const
     return ((y % 2) ? IRenderer::cellStyleDefaultAlternate : IRenderer::cellStyleDefault);
 }
 
-bool Data::cellValue(int x, int y, const String& value)
+bool Data::cellValue(int x, [[maybe_unused]]int y, const String& value)
 {
     if (!study)
         return false;

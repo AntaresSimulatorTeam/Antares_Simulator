@@ -24,7 +24,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "../application.h"
+#include "antares/application/application.h"
 #include "../simulation/solver.h"
 #include "../simulation/adequacy.h"
 #include <antares/benchmarking/DurationCollector.h>

@@ -32,7 +32,7 @@
 
 #include "opt_fonctions.h"
 
-#include "../utils/ortools_utils.h"
+#include "antares/solver/utils/ortools_utils.h"
 
 extern "C"
 {

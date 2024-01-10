@@ -23,17 +23,19 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include "named_problem.h"
+#include "antares/solver/utils/named_problem.h"
 #include <algorithm>
 
 namespace Antares::Optimization
 {
 
+using BasisStatus = operations_research::MPSolver::BasisStatus;
+
 PROBLEME_SIMPLEXE_NOMME::PROBLEME_SIMPLEXE_NOMME(const std::vector<std::string>& NomDesVariables,
                                                  const std::vector<std::string>& NomDesContraintes,
                                                  const std::vector<bool>& VariablesEntieres,
-                                                 std::vector<int>& StatutDesVariables,
-                                                 std::vector<int>& StatutDesContraintes,
+                                                 std::vector<BasisStatus>& StatutDesVariables,
+                                                 std::vector<BasisStatus>& StatutDesContraintes,
                                                  bool UseNamedProblems,
                                                  bool SolverLogs) : PROBLEME_SIMPLEXE(),
 

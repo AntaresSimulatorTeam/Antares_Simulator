@@ -25,6 +25,7 @@
 */
 
 #include "create.h"
+#include "antares/utils/utils.h"
 
 using namespace Yuni;
 
@@ -180,7 +181,6 @@ bool Create::performWL(Context& ctx)
             ctx.cluster->setName(pFuturPlantName);
             ctx.cluster->reset();
             (ctx.area)->thermal.list.add(std::shared_ptr<Data::ThermalCluster>(ctx.cluster));
-            (ctx.area)->thermal.list.rebuildIndex();
             (ctx.area)->thermal.prepareAreaWideIndexes();
         }
         else

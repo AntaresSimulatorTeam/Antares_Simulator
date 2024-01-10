@@ -55,15 +55,11 @@
 #include <antares/config.h>
 #include <antares/Enum.hpp>
 
-#include <solver/utils/ortools_utils.h>
+#include <antares/solver/utils/ortools_utils.h>
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Window
-{
-namespace Simulation
+namespace Antares::Window::Simulation
 {
 enum
 {
@@ -216,7 +212,7 @@ Run::Run(wxWindow* parent, bool preproOnly) :
                    "images/32x32/run.png",
                    wxString(wxT("For the study `"))
                      << wxStringFromUTF8(study.header.caption) << wxT("`, ")
-                     << wxStringFromUTF8(Data::StudyModeToCString(study.parameters.mode))),
+                     << wxStringFromUTF8(Data::SimulationModeToCString(study.parameters.mode))),
                  0,
                  wxALL | wxEXPAND | wxFIXED_MINSIZE);
 
@@ -241,7 +237,7 @@ Run::Run(wxWindow* parent, bool preproOnly) :
     }
     {
         auto* lblMode = Antares::Component::CreateLabel(
-          pBigDaddy, wxStringFromUTF8(Data::StudyModeToCString(study.parameters.mode)));
+          pBigDaddy, wxStringFromUTF8(Data::SimulationModeToCString(study.parameters.mode)));
         wxFont f = lblMode->GetFont();
         f.SetWeight(wxFONTWEIGHT_BOLD);
         lblMode->SetFont(f);
@@ -833,6 +829,6 @@ void Run::onOrtoolsCheckboxChanged(wxCommandEvent& WXUNUSED(event))
         sizer->Fit(this);
 }
 
-} // namespace Simulation
-} // namespace Window
-} // namespace Antares
+} // namespace Antares::Window::Simulation
+
+

@@ -6,32 +6,13 @@ Antares Changelog
 ## New Features
 * Solver logs can be enabled either by the command-line option (--solver-logs) or in the generaldata.ini by setting solver-logs = true under the optimization section [(#1717)](https://github.com/AntaresSimulatorTeam/Antares_Simulator/pull/1717)
 
-
-8.8.0-rc3 (11/2023)
+8.8.0 (12/2023)
 --------------------
-## Bugfixes
-* Fix oracle-linux8 binaries missing compression feature (#1741)
 
-8.8.0-rc2 (10/2023)
---------------------
-## Build
-- Fix version numbers (8b9b2b389)
-
-8.8.0-rc1 (10/2023)
---------------------
 ## New features
 * New "cash-flow" variable for ST storage (#1633)
-* Experimental ptimization discrete variables (#670)
-
-## Bugfixes
-* Prevent segfault during simulation, check bounds of scenario builder (#1567)
-* Fix number of links in deprecated output file digest.txt (#1646)
-* Fix unfeasible problem analyzer (#1527)
-* [Windows only] Increase file size limit when reading file (#1674)
-* Fix segfault encountered when importing logs (#1702)
-* Fixes swallowed exceptions in computation thread (#1685)
-* Fix writer causing a segfault with OR-Tools (#1584)
-* Bug on renewable cluster (wrong group) (#1631)
+* Experimental optimization with discrete variables (MILP unit-commitment mode #670)
+* Add `enabled` property for ST storage objects, fix bug related to saving ST objects (#1807)
 
 ## Improvements
 * Add shortcut -s for names MPS problems in CLI options (#1613)
@@ -41,7 +22,25 @@ Antares Changelog
 * Fix wrong year number in logs upon failed year (#1672)
 * Always check mingen against maxPower, regardless of reservoirManagement (#1656)
 * New log msg when solver not found in or-tools (#1687)
+
+## For developers
 * Fix annoying error log about correlation matrices in tests (#1573)
+
+## Bugfixes (reported by users)
+* Fix output variable PROFIT for thermal clusters (#1767)
+* Bug on renewable cluster (wrong group) (#1631)
+
+## Bugfixes (reported internally)
+* Fix oracle-linux8 binaries missing compression feature (#1741)
+* Named MPS - fix duplicated "ranged" binding constraints (#1569)
+* Fix save for short term storage objects (#1807)
+* Prevent segfault during simulation, check bounds of scenario builder (#1567)
+* Fix number of links in deprecated output file digest.txt (#1646)
+* Fix unfeasible problem analyzer (#1527)
+* [Windows only] Increase file size limit when reading file (#1674)
+* Fix segfault encountered when importing logs (#1702)
+* Fixes swallowed exceptions in computation thread (#1685)
+* Fix writer causing a segfault with OR-Tools (#1584)
 
 ## Documentation
 * Create Doxygen documentation (#1650)

@@ -406,13 +406,13 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
         if (renewable_details)
         {
             auto& renewable = results.data.area->renewable;
-            results.variableCaption = renewable.clusters[idx]->name();
+            results.variableCaption = renewable.list[idx]->name();
             return true;
         }
         if (st_storage_details)
         {
             auto& st_storage_part = results.data.area->shortTermStorage;
-            results.variableCaption = st_storage_part.storagesByIndex[idx]->properties.name;
+            results.variableCaption = st_storage_part.storagesByIndex[idx].properties.name;
             return true;
         }
         return true;

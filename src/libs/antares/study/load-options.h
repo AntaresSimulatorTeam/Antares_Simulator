@@ -75,7 +75,7 @@ public:
     //! Ignore all constraints
     bool ignoreConstraints;
     //! Simulation mode
-    StudyMode forceMode;
+    SimulationMode forceMode;
 
     //! Enables the parallel computation of MC years
     bool enableParallel;

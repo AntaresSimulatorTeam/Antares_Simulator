@@ -316,7 +316,6 @@ void ThermalCluster::internalDeletePlant(void*)
             Refresh();
             MarkTheStudyAsModified();
             updateInnerValues();
-            pArea->thermal.list.rebuildIndex();
             pArea->thermal.prepareAreaWideIndexes();
             study->uiinfo->reload();
 
@@ -447,7 +446,6 @@ void ThermalCluster::internalAddPlant(void*)
         cluster->setName(sFl);
         cluster->reset();
         pArea->thermal.list.add(cluster);
-        pArea->thermal.list.rebuildIndex();
         pArea->thermal.prepareAreaWideIndexes();
 
         // Update the list
@@ -526,7 +524,6 @@ void ThermalCluster::internalClonePlant(void*)
         cluster->copyFrom(selectedPlant);
 
         pArea->thermal.list.add(cluster);
-        pArea->thermal.list.rebuildIndex();
         pArea->thermal.prepareAreaWideIndexes();
 
         // Update the list

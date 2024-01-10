@@ -664,11 +664,6 @@ public:
     //@}
 
     /*!
-    ** \brief
-    */
-    bool gotFatalError = false;
-
-    /*!
     ** \brief A non-zero value when the study will be used by the solver
     **
     ** If it is the case, some data may not be kept in memory, and some calculations
@@ -708,7 +703,7 @@ protected:
 */
 extern YString StudyIconFile;
 
-YString StudyCreateOutputPath(StudyMode mode,
+YString StudyCreateOutputPath(SimulationMode mode,
                               ResultFormat fmt,
                               const YString& folder,
                               const YString& label,

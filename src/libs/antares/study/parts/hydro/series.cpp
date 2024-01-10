@@ -30,6 +30,7 @@
 #include "series.h"
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
+#include <antares/exception/LoadingError.hpp>
 #include "../../study.h"
 
 using namespace Yuni;
@@ -133,7 +134,7 @@ bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const
                 logs.fatal() << "Hydro: `" << areaID
                              << "`: The matrices ROR (run-of-the-river) and hydro-storage must "
                                 "have the same number of time-series.";
-                study.gotFatalError = true;
+                throw Antares::Error::ReadingStudy();
             }
             else
             {
@@ -190,7 +191,7 @@ void DataSeriesHydro::checkMinGenTsNumber(Study& study, const AreaName& areaID)
             logs.fatal() << "Hydro: `" << areaID
                          << "`: The matrices Minimum Generation must "
                             "has the same number of time-series as ROR and hydro-storage.";
-            study.gotFatalError = true;
+            throw Antares::Error::ReadingStudy();
         }
         else
         {

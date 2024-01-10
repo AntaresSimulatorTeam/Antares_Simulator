@@ -31,6 +31,7 @@
 #include "../study.h"
 #include "BindingConstraintLoader.h"
 #include "BindingConstraintSaver.h"
+#include "antares/utils/utils.h"
 
 using namespace Yuni;
 using namespace Antares;

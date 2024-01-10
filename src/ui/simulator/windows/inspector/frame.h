@@ -99,7 +99,6 @@ public:
 
     void onSelectAllPlants(wxCommandEvent& evt);
     void onSelectPlant(wxCommandEvent& evt);
-    void onSelectAllPlantsFromArea(wxCommandEvent& evt);
 
     void clearAssociatinsBetweenIDAndPtr()
     {
@@ -148,7 +147,7 @@ private:
     wxPGProperty* pPGStudyGrpCalendar;
     wxPGProperty* pPGStudyMCScenarios;
     wxPGProperty* pPGStudyOutputProfile;
-    wxPGProperty* pPGStudyMode;
+    wxPGProperty* pPGSimulationMode;
     wxPGProperty* pPGStudyYears;
     wxPGProperty* pPGStudyCalendarBegin;
     wxPGProperty* pPGStudyCalendarEnd;

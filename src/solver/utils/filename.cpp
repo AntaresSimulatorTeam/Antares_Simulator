@@ -24,8 +24,9 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #include <sstream>
-#include "filename.h"
-#include "opt_period_string_generator.h"
+#include "antares/solver/utils/filename.h"
+#include "../optimisation/opt_period_string_generator_base.h"
+#include "include/antares/solver/utils/opt_period_string_generator.h"
 
 // ------------------------------------
 // Optimization period factory

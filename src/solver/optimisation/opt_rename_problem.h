@@ -129,6 +129,7 @@ public:
     void FlowDissociation(unsigned int constraint,
                           const std::string& origin,
                           const std::string& destination);
+
     void AreaBalance(unsigned int constraint);
     void FictiveLoads(unsigned int constraint);
     void HydroPower(unsigned int constraint);
@@ -151,6 +152,12 @@ public:
     void BindingConstraintHour(unsigned int constraint, const std::string& name);
     void BindingConstraintDay(unsigned int constraint, const std::string& name);
     void BindingConstraintWeek(unsigned int constraint, const std::string& name);
+    void CsrFlowDissociation(unsigned int constraint,
+                             const std::string& origin,
+                             const std::string& destination);
+
+    void CsrAreaBalance(unsigned int constraint);
+    void CsrBindingConstraintHour(unsigned int constraint, const std::string& name);
 
 private:
     void nameWithTimeGranularity(unsigned int constraint,

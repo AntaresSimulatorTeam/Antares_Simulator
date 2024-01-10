@@ -7,7 +7,7 @@ set(ANTARES_VERSION_REVISION  0)
 
 # Beta release
 set(ANTARES_BETA 0)
-set(ANTARES_RC 3)
+set(ANTARES_RC 0)
 
 set(ANTARES_VERSION_YEAR      2023)
 
@@ -35,7 +35,7 @@ include(CheckCXXCompilerFlag)
 include(CMakeDependentOption)
 include(FetchContent)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 
 if (DEFINED VCPKG_ROOT)
     include(${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake)
@@ -269,7 +269,8 @@ message(STATUS "OR-Tools tag ${ORTOOLS_TAG}")
   set(BUILD_SAMPLES "OFF" CACHE INTERNAL "")
   set(BUILD_FLATZINC "OFF" CACHE INTERNAL "")
   set(BUILD_EXAMPLES "OFF" CACHE INTERNAL "")
-  set(USE_SCIP "OFF" CACHE INTERNAL "")
+  set(USE_SCIP "ON" CACHE INTERNAL "")
+  set(USE_GLPK "ON" CACHE INTERNAL "")
   # We build OR-Tools as a static lib. Cyclic dependencies are detected
   # without this flag.
   set(BUILD_SHARED_LIBS "OFF" CACHE INTERNAL "")

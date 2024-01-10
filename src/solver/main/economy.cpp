@@ -24,15 +24,14 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "../application.h"
-#include "../simulation/solver.h"
-#include "../simulation/economy.h"
+
 #include <antares/benchmarking/DurationCollector.h>
 #include <antares/logs/logs.h>
+#include "antares/application/application.h"
+#include "solver.h"
+#include "economy.h"
 
-namespace Antares
-{
-namespace Solver
+namespace Antares::Solver
 {
 void Application::runSimulationInEconomicMode()
 {
@@ -52,5 +51,5 @@ void Application::runSimulationInEconomicMode()
         this->pOptimizationInfo = simulation.getOptimizationInfo();
     }
 }
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver
+

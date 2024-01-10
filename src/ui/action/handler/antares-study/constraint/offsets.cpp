@@ -25,6 +25,7 @@
 */
 
 #include "offsets.h"
+#include "antares/utils/utils.h"
 
 using namespace Yuni;
 

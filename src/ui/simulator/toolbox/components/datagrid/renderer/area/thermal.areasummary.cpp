@@ -50,7 +50,7 @@ ThermalClusterSummarySingleArea::~ThermalClusterSummarySingleArea()
 wxString ThermalClusterSummarySingleArea::rowCaption(int rowIndx) const
 {
     if (pArea)
-        return wxStringFromUTF8(pArea->thermal.list.byIndex[rowIndx]->name());
+        return wxStringFromUTF8(pArea->thermal.list[rowIndx]->name());
     return wxEmptyString;
 }
 
@@ -81,7 +81,7 @@ wxString ThermalClusterSummarySingleArea::columnCaption(int colIndx) const
 wxString ThermalClusterSummarySingleArea::cellValue(int x, int y) const
 {
     Data::ThermalCluster* cluster = (pArea and (uint) y < pArea->thermal.list.size())
-                                      ? pArea->thermal.list.byIndex[y]
+                                      ? pArea->thermal.list[y].get()
                                       : nullptr;
     if (!cluster->enabled)
         return wxEmptyString;
@@ -124,7 +124,7 @@ wxString ThermalClusterSummarySingleArea::cellValue(int x, int y) const
 double ThermalClusterSummarySingleArea::cellNumericValue(int x, int y) const
 {
     Data::ThermalCluster* cluster = (pArea and (uint) y < pArea->thermal.list.size())
-                                      ? pArea->thermal.list.byIndex[y]
+                                      ? pArea->thermal.list[y].get()
                                       : nullptr;
     if (!cluster->enabled)
         return 0.;
@@ -167,7 +167,7 @@ double ThermalClusterSummarySingleArea::cellNumericValue(int x, int y) const
 bool ThermalClusterSummarySingleArea::cellValue(int x, int y, const String& v)
 {
     auto* cluster = (pArea and (uint) y < pArea->thermal.list.size())
-                      ? pArea->thermal.list.byIndex[y]
+                      ? pArea->thermal.list[y].get()
                       : nullptr;
 
     if (cluster)

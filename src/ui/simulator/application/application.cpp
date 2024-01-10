@@ -70,7 +70,7 @@ static void detectStudyToLoadAtStartup()
     if (name == "study.antares")
     {
         String t;
-        IO::ExtractFilePath(t, Forms::StudyToLoadAtStartup);
+        IO::parentPath(t, Forms::StudyToLoadAtStartup);
         Forms::StudyToLoadAtStartup = t;
     }
     else
@@ -79,7 +79,7 @@ static void detectStudyToLoadAtStartup()
         if (name == "info.antares-output")
         {
             String t;
-            IO::ExtractFilePath(t, Forms::StudyToLoadAtStartup);
+            IO::parentPath(t, Forms::StudyToLoadAtStartup);
             if (System::windows)
                 Forms::StudyToLoadAtStartup.clear() << t << "\\..\\..";
             else
@@ -340,7 +340,7 @@ bool Application::OnInit()
         if (now - lasttime > 3600 * 24 * 20)
         {
             String path;
-            IO::ExtractFilePath(path, logs.logfile());
+            IO::parentPath(path, logs.logfile());
             logs.info() << "deleting old log files in " << path << "...";
             PurgeLogFiles(path);
         }

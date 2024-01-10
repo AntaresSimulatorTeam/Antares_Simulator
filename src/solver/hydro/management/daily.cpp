@@ -225,12 +225,9 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
                                                             uint y,
                                                             uint numSpace)
 {
-    uint z = area.index;
-    assert(z < areas_.size());
-
     auto const srcinflows = area.hydro.series->storage.getColumn(y);
 
-    auto& data = tmpDataByArea_[z];
+    auto& data = tmpDataByArea_[&area];
 
     auto& scratchpad = area.scratchpad[numSpace];
 
@@ -249,7 +246,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
     auto const& maxP = maxPower[Data::PartHydro::genMaxP];
     auto const& maxE = maxPower[Data::PartHydro::genMaxE];
 
-    auto& ventilationResults = ventilationResults_[z];
+    auto& ventilationResults = ventilationResults_[area.index];
 
     std::shared_ptr<DebugData> debugData(nullptr);
 
@@ -534,7 +531,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
         }
 
         uint firstDaySimu = parameters_.simulationDays.first;
-        state.problemeHebdo->previousSimulationFinalLevel[z]
+        state.problemeHebdo->previousSimulationFinalLevel[area.index]
           = ventilationResults.NiveauxReservoirsDebutJours[firstDaySimu] * reservoirCapacity;
 
         if (debugData)
