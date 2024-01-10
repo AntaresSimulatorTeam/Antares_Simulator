@@ -38,6 +38,13 @@ std::string ThermalClusterList::typeID() const
     return "thermal";
 }
 
+uint64_t ThermalClusterList::memoryUsage() const
+{
+    uint64_t ret = sizeof(ThermalClusterList) + (2 * sizeof(void*)) * mustRunAndEnabledCount();
+    each([&](const ThermalCluster& clusters) { ret += clusters.memoryUsage(); });
+    return ret;
+}
+
 static bool ThermalClusterLoadFromSection(const AnyString& filename,
                                           ThermalCluster& cluster,
                                           const IniFile::Section& section);
@@ -69,13 +76,6 @@ void ThermalClusterList::giveIndicesToClusters()
         c->areaWideIndex = index;
         index++;
     }
-    
-    enabledCount_ = index;
-}
-
-unsigned int ThermalClusterList::enabledCount() const
-{
-    return enabledCount_;
 }
 
 unsigned int ThermalClusterList::mustRunAndEnabledCount() const
@@ -360,7 +360,7 @@ void ThermalClusterList::enableMustrunForEveryone()
 
 void ThermalClusterList::ensureDataPrepro()
 {
-    for (const auto& c : clusters)
+    for (const auto& c : all())
         if (!c->prepro)
             c->prepro = new PreproThermal(c);
 }
@@ -376,96 +376,96 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
         // Allocate the inifile structure
         IniFile ini;
 
-        // Browse all clusters
-        each([&](const Data::ThermalCluster& c) {
+        for (auto c : allClusters) 
+        {
             // Adding a section to the inifile
-            IniFile::Section* s = ini.addSection(c.name());
+            IniFile::Section* s = ini.addSection(c->name());
 
             // The section must not be empty
             // This key will be silently ignored the next time
-            s->add("name", c.name());
+            s->add("name", c->name());
 
-            if (not c.group().empty())
-                s->add("group", c.group());
-            if (not c.enabled)
+            if (not c->group().empty())
+                s->add("group", c->group());
+            if (not c->enabled)
                 s->add("enabled", "false");
-            if (not Math::Zero(c.unitCount))
-                s->add("unitCount", c.unitCount);
-            if (not Math::Zero(c.nominalCapacity))
-                s->add("nominalCapacity", c.nominalCapacity);
+            if (not Math::Zero(c->unitCount))
+                s->add("unitCount", c->unitCount);
+            if (not Math::Zero(c->nominalCapacity))
+                s->add("nominalCapacity", c->nominalCapacity);
             // TS generation
-            if (c.tsGenBehavior != LocalTSGenerationBehavior::useGlobalParameter)
+            if (c->tsGenBehavior != LocalTSGenerationBehavior::useGlobalParameter)
             {
-                s->add("gen-ts", c.tsGenBehavior);
+                s->add("gen-ts", c->tsGenBehavior);
             }
             // Min. Stable Power
-            if (not Math::Zero(c.minStablePower))
-                s->add("min-stable-power", c.minStablePower);
+            if (not Math::Zero(c->minStablePower))
+                s->add("min-stable-power", c->minStablePower);
 
             // Min up and min down time
-            if (c.minUpTime != 1)
-                s->add("min-up-time", c.minUpTime);
-            if (c.minDownTime != 1)
-                s->add("min-down-time", c.minDownTime);
+            if (c->minUpTime != 1)
+                s->add("min-up-time", c->minUpTime);
+            if (c->minDownTime != 1)
+                s->add("min-down-time", c->minDownTime);
 
             // must-run
-            if (c.mustrun)
+            if (c->mustrun)
                 s->add("must-run", "true");
 
             // spinning
-            if (not Math::Zero(c.spinning))
-                s->add("spinning", c.spinning);
+            if (not Math::Zero(c->spinning))
+                s->add("spinning", c->spinning);
 
             // efficiency
-            if (c.fuelEfficiency != 100.0)
-                s->add("efficiency", c.fuelEfficiency);
+            if (c->fuelEfficiency != 100.0)
+                s->add("efficiency", c->fuelEfficiency);
 
             // volatility
-            if (not Math::Zero(c.forcedVolatility))
-                s->add("volatility.forced", Math::Round(c.forcedVolatility, 3));
-            if (not Math::Zero(c.plannedVolatility))
-                s->add("volatility.planned", Math::Round(c.plannedVolatility, 3));
+            if (not Math::Zero(c->forcedVolatility))
+                s->add("volatility.forced", Math::Round(c->forcedVolatility, 3));
+            if (not Math::Zero(c->plannedVolatility))
+                s->add("volatility.planned", Math::Round(c->plannedVolatility, 3));
 
             // laws
-            if (c.forcedLaw != thermalLawUniform)
-                s->add("law.forced", c.forcedLaw);
-            if (c.plannedLaw != thermalLawUniform)
-                s->add("law.planned", c.plannedLaw);
+            if (c->forcedLaw != thermalLawUniform)
+                s->add("law.forced", c->forcedLaw);
+            if (c->plannedLaw != thermalLawUniform)
+                s->add("law.planned", c->plannedLaw);
 
             // costs
-            if (c.costgeneration != setManually)
-                s->add("costgeneration", c.costgeneration);
-            if (not Math::Zero(c.marginalCost))
-                s->add("marginal-cost", Math::Round(c.marginalCost, 3));
-            if (not Math::Zero(c.spreadCost))
-                s->add("spread-cost", c.spreadCost);
-            if (not Math::Zero(c.fixedCost))
-                s->add("fixed-cost", Math::Round(c.fixedCost, 3));
-            if (not Math::Zero(c.startupCost))
-                s->add("startup-cost", Math::Round(c.startupCost, 3));
-            if (not Math::Zero(c.marketBidCost))
-                s->add("market-bid-cost", Math::Round(c.marketBidCost, 3));
-            if (!Math::Zero(c.variableomcost))
-                s->add("variableomcost", Math::Round(c.variableomcost,3));
+            if (c->costgeneration != setManually)
+                s->add("costgeneration", c->costgeneration);
+            if (not Math::Zero(c->marginalCost))
+                s->add("marginal-cost", Math::Round(c->marginalCost, 3));
+            if (not Math::Zero(c->spreadCost))
+                s->add("spread-cost", c->spreadCost);
+            if (not Math::Zero(c->fixedCost))
+                s->add("fixed-cost", Math::Round(c->fixedCost, 3));
+            if (not Math::Zero(c->startupCost))
+                s->add("startup-cost", Math::Round(c->startupCost, 3));
+            if (not Math::Zero(c->marketBidCost))
+                s->add("market-bid-cost", Math::Round(c->marketBidCost, 3));
+            if (!Math::Zero(c->variableomcost))
+                s->add("variableomcost", Math::Round(c->variableomcost,3));
 
 
             //pollutant factor
             for (auto const& [key, val] : Pollutant::namesToEnum)
-                s->add(key, c.emissions.factors[val]);
+                s->add(key, c->emissions.factors[val]);
 
 
             buffer.clear() << folder << SEP << ".." << SEP << ".." << SEP << "prepro" << SEP
-                           << c.parentArea->id << SEP << c.id();
+                           << c->parentArea->id << SEP << c->id();
             if (IO::Directory::Create(buffer))
             {
                 buffer.clear() << folder << SEP << ".." << SEP << ".." << SEP << "prepro" << SEP
-                               << c.parentArea->id << SEP << c.id() << SEP << "modulation.txt";
+                               << c->parentArea->id << SEP << c->id() << SEP << "modulation.txt";
 
-                ret = c.modulation.saveToCSVFile(buffer) and ret;
+                ret = c->modulation.saveToCSVFile(buffer) and ret;
             }
             else
                 ret = 0;
-        });
+        }
 
         // Write the ini file
         buffer.clear() << folder << SEP << "list.ini";

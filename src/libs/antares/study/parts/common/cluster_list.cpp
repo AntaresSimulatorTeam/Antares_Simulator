@@ -24,7 +24,7 @@ using namespace Antares;
 template<class ClusterT>
 inline uint ClusterList<ClusterT>::size() const
 {
-    return (uint)clusters.size();
+    return (uint)clusters.size(); // gp : function not removed because used in GUI where it contains all clusters
 }
 
 template<class ClusterT>
@@ -140,12 +140,12 @@ void ClusterList<ClusterT>::addToCompleteList(std::shared_ptr<ClusterT> cluster)
 }
 
 template<class ClusterT>
-uint64_t ClusterList<ClusterT>::memoryUsage() const
+unsigned int ClusterList<ClusterT>::enabledCount() const
 {
-    uint64_t ret = sizeof(ClusterList) + (2 * sizeof(void*)) * this->size();
-
-    each([&](const ClusterT& clusters) { ret += clusters.memoryUsage(); });
-    return ret;
+    unsigned int count = 0;
+    for (auto cluster : each_enabled())
+        count++;
+    return count;
 }
 
 template<class ClusterT>

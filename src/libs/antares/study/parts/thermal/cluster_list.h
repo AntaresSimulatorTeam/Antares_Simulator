@@ -15,6 +15,7 @@ class ThermalClusterList : public ClusterList<ThermalCluster>
 {
 public:
     std::string typeID() const override;
+    uint64_t memoryUsage() const override;
 
     /*!
     ** \brief Get the size (bytes) occupied in memory by a `ThermalClusterList` structure
@@ -100,16 +101,12 @@ public:
 
     void sortCompleteList();
     void giveIndicesToClusters();
-    unsigned int enabledCount() const;
     unsigned int mustRunAndEnabledCount() const;
     std::shared_ptr<ThermalCluster> enabledClusterAt(unsigned int index) const;
     void removeMustRunClusters();
     void clearAll();
     unsigned int allClustersSize();
     std::vector<std::shared_ptr<ThermalCluster>> all();
-
-private: // member data
-    unsigned int enabledCount_ = 0;
 
 }; // class ThermalClusterList
 } // namespace Data

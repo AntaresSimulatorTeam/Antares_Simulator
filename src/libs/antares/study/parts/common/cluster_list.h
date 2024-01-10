@@ -90,7 +90,7 @@ public:
     */
     virtual bool remove(const Data::ClusterName& id);
 
-    //! Get the number of items in the list
+    // gp : not removed because used in GUI where it contains all clusters
     uint size() const;
 
     //! Return true if the list is empty
@@ -131,7 +131,7 @@ public:
     ** \brief Get the size (bytes) occupied in memory by a `ClusterList` structure
     ** \return A size (in bytes)
     */
-    uint64_t memoryUsage() const;
+    virtual uint64_t memoryUsage() const = 0;
 
     /// \name IO functions
     /// @{
@@ -169,6 +169,7 @@ public:
     ** \return The number of disabled clusters found
     */
     uint removeDisabledClusters();
+    unsigned int enabledCount() const;
     void addToCompleteList(std::shared_ptr<ClusterT> cluster);
 
 protected:
