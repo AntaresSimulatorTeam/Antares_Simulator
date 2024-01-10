@@ -24,45 +24,25 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef ANTARES_STDCXX_DEMANGLE_HPP
-#define ANTARES_STDCXX_DEMANGLE_HPP
 
-#include <string>
-#include <typeinfo>
+#include <antares/stdcxx/class_name.h>
 
 namespace stdcxx
 {
-std::string demangle(const char* name);
 
-template<typename T>
-std::string demangle()
+std::string simpleClassName(const char* className)
 {
-    return demangle(typeid(T).name());
-}
+    const std::string& strClassName = className;
+    std::size_t index = strClassName.find_last_of("::");
 
-template<typename T>
-std::string demangle(const T& type)
-{
-    return demangle(typeid(type).name());
+    return (index == std::string::npos) ? strClassName
+                                        : strClassName.substr(index + 1, strClassName.size());
 }
 
 template<>
-std::string demangle(const std::type_info& type);
-
-std::string simpleClassName(const char* className);
-
-template<typename T>
-std::string simpleClassName()
+std::string simpleClassName(const std::type_info& type)
 {
-    return simpleClassName(typeid(T).name());
-}
-
-template<typename T>
-std::string simpleClassName(const T& type)
-{
-    return simpleClassName(typeid(type).name());
+    return simpleClassName(type.name());
 }
 
 } // namespace stdcxx
-
-#endif // ANTARES_STDCXX_DEMANGLE_HPP
