@@ -33,7 +33,7 @@ jobs:
       VCPKG_ROOT: ${{ github.workspace }}/vcpkg
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
       RUN_EXTENDED_TESTS: ${{ github.event_name == 'schedule'}}
-      OS: windows-2022
+      OS: windows-latest
       vcpkgPackages: wxwidgets boost-test
       triplet: x64-windows
 
@@ -165,7 +165,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: valid-named-mps
-        os: ${{ env.OS }}
+        os: ${{ env.test-platform }}
         variant: "named-mps"
 
     - name: Run unfeasibility-related tests
@@ -194,7 +194,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: adequacy-patch-CSR
-        os: ${{ env.OS }}
+        os: ${{ env.test-platform }}
 
     - name: Run tests about infinity on BCs RHS
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
@@ -202,7 +202,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: valid-v830
-        os: ${{ env.OS }}
+        os: ${{ env.test-platform }}
 
     - name: Run MILP with CBC
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
@@ -211,7 +211,7 @@ jobs:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: valid-milp
         variant: "milp-cbc"
-        os: ${{ env.OS }}
+        os: ${{ env.test-platform }}
 
     - name: Run tests introduced in v860
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
@@ -219,7 +219,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: valid-v860
-        os: ${{ env.OS }}
+        os: ${{ env.test-platform }}
 
     - name: Run tests introduced in v870
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
@@ -227,7 +227,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: valid-v870
-        os: ${{ env.OS }}
+        os: ${{ env.test-platform }}
 
     - name: Run short-tests
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
@@ -235,7 +235,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: short-tests
-        os: ${{ env.OS }}
+        os: ${{ env.test-platform }}
 
     - name: Run mps tests
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
@@ -243,7 +243,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: valid-mps
-        os: ${{ env.OS }}
+        os: ${{ env.test-platform }}
 
     - name: Run parallel tests
       if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
@@ -251,7 +251,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: valid-parallel
-        os: ${{ env.OS }}
+        os: ${{ env.test-platform }}
         variant: "parallel"
 
     - name: Run medium-tests
@@ -260,7 +260,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: medium-tests
-        os: ${{ env.OS }}
+        os: ${{ env.test-platform }}
 
     - name: Run long-tests-1
       if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
@@ -268,7 +268,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: long-tests-1
-        os: ${{ env.OS }}
+        os: ${{ env.test-platform }}
 
     - name: Run long-tests-2
       if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
@@ -276,7 +276,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: long-tests-2
-        os: ${{ env.OS }}
+        os: ${{ env.test-platform }}
 
     - name: Run long-tests-3
       if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
@@ -284,7 +284,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: long-tests-3
-        os: ${{ env.OS }}
+        os: ${{ env.test-platform }}
 
     - name: Solver archive creation
       shell: bash
