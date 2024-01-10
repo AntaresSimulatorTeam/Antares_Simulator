@@ -30,16 +30,11 @@ jobs:
     name: Build
     env:
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
+      os: ubuntu-20.04
 
-    outputs:
-        os: ${{ matrix.os }}
-
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ env.os }}
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
-    strategy:
-      matrix:
-        os: [ubuntu-20.04]
-        test-platform: [ubuntu-20.04]
+    
 
     steps:
     - uses: actions/checkout@v3
@@ -47,7 +42,7 @@ jobs:
     - name: ccache
       uses: hendrikmuhs/ccache-action@v1.2
       with:
-          key: ${{ matrix.os }}
+          key: ${{ env.os }}
 
     - name: Install libraries
       run: |
@@ -72,7 +67,7 @@ jobs:
       uses: ./.github/workflows/download-extract-precompiled-libraries-tgz
       with:
         antares-deps-version: ${{steps.antares-deps-version.outputs.prop}}
-        os: ${{matrix.os}}
+        os: ${{env.os}}
         ortools-url: ${{env.ORTOOLS_URL}}
         ortools-dir: ${{env.ORTOOLS_DIR}}
 
@@ -127,7 +122,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: valid-named-mps
-        os: ${{ matrix.test-platform }}
+        os: ${{ env.os }}
         variant: "named-mps"
 
     - name: Run unfeasibility-related tests
@@ -140,7 +135,7 @@ jobs:
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
       run: |
            cd _build
-           ctest -C ${{ matrix.buildtype }} --output-on-failure -L "unit|end-to-end"
+           ctest -C Release --output-on-failure -L "unit|end-to-end"
 
     - name: Upload logs for failed tests
       if: ${{ failure() }}
@@ -155,7 +150,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: valid-v830
-        os: ${{ matrix.test-platform }}
+        os: ${{ env.os }}
 
     - name: Run MILP with CBC
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
@@ -164,7 +159,7 @@ jobs:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: valid-milp
         variant: "milp-cbc"
-        os: ${{ matrix.test-platform }}
+        os: ${{ env.os }}
 
     - name: Run tests introduced in v860
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
@@ -172,7 +167,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: valid-v860
-        os: ${{ matrix.test-platform }}
+        os: ${{ env.os }}
 
     - name: Run tests introduced in v870
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
@@ -180,7 +175,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: valid-v870
-        os: ${{ matrix.test-platform }}
+        os: ${{ env.os }}
 
     - name: Run short-tests
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
@@ -188,7 +183,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: short-tests
-        os: ${{ matrix.test-platform }}
+        os: ${{ env.os }}
 
     - name: Run mps tests
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
@@ -196,7 +191,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: valid-mps
-        os: ${{ matrix.test-platform }}
+        os: ${{ env.os }}
 
     - name: Run tests for adequacy patch (CSR)
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
@@ -204,7 +199,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: adequacy-patch-CSR
-        os: ${{ matrix.test-platform }}
+        os: ${{ env.os }}
 
     - name: Run parallel tests
       if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
@@ -212,7 +207,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: valid-parallel
-        os: ${{ matrix.test-platform }}
+        os: ${{ env.os }}
         variant: "parallel"
 
     - name: Run medium-tests
@@ -221,7 +216,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: medium-tests
-        os: ${{ matrix.test-platform }}
+        os: ${{ env.os }}
 
     - name: Run long-tests-1
       if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
@@ -229,7 +224,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: long-tests-1
-        os: ${{ matrix.test-platform }}
+        os: ${{ env.os }}
 
     - name: Run long-tests-2
       if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
@@ -237,7 +232,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: long-tests-2
-        os: ${{ matrix.test-platform }}
+        os: ${{ env.os }}
 
     - name: Run long-tests-3
       if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
@@ -245,7 +240,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: long-tests-3
-        os: ${{ matrix.test-platform }}
+        os: ${{ env.os }}
 
     - name: Installer .deb creation
       run: |
