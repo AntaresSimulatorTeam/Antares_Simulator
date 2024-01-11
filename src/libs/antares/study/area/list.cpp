@@ -1270,7 +1270,6 @@ void AreaListEnsureDataHydroPrepro(AreaList* l)
 
 void AreaListEnsureDataThermalPrepro(AreaList* l)
 {
-    assert(l && "The area list must not be nullptr");
     l->each([&](Data::Area& area) { area.thermal.list.ensureDataPrepro(); });
 }
 
@@ -1509,7 +1508,6 @@ ThermalCluster* AreaList::findClusterFromINIKey(const AnyString& key)
     if (parentArea == nullptr)
         return nullptr;
     return parentArea->thermal.list.find(id);
-
 }
 
 void AreaList::updateNameIDSet() const
@@ -1548,8 +1546,8 @@ void AreaList::removeWindTimeseries()
 void AreaList::removeThermalTimeseries()
 {
     each([](Data::Area& area) {
-        area.thermal.list.each(
-          [](Data::ThermalCluster& cluster) { cluster.series.reset(); });
+        for (auto c : area.thermal.list.all())
+            c->series.reset();
     });
 }
 
