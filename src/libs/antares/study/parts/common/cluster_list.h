@@ -61,7 +61,7 @@ public:
     ** \param id ID of the cluster to find
     ** \return A pointer to a cluster. nullptr if not found
     */
-    ClusterT* find(const Data::ClusterName& id) const;
+    ClusterT* findInAll(const Data::ClusterName& id) const;
 
     /*!
     ** \brief Get if a cluster exists
@@ -72,6 +72,8 @@ public:
     bool exists(const Data::ClusterName& id) const;
 
     auto each_enabled() const { return allClusters | std::views::filter(&ClusterT::isEnabled); }
+
+    std::vector<std::shared_ptr<ClusterT>> all() const;
 
     /*!
     ** \brief Rename a cluster

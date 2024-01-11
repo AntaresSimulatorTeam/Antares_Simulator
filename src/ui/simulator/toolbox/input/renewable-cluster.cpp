@@ -373,7 +373,7 @@ void RenewableCluster::internalAddPlant(void*)
         // Trying to find an uniq name
         YString sFl;
         sFl.clear() << "new cluster";
-        while (pArea->renewable.list.find(sFl))
+        while (pArea->renewable.list.findInAll(sFl))
         {
             ++indx;
             sFl.clear() << "new cluster " << indx;
@@ -410,7 +410,7 @@ void RenewableCluster::internalClonePlant(void*)
     if (!pArea || !pLastSelectedRenewableCluster)
         return;
 
-    if (!pArea->renewable.list.find(pLastSelectedRenewableCluster->renewableAggregate()->id()))
+    if (!pArea->renewable.list.findInAll(pLastSelectedRenewableCluster->renewableAggregate()->id()))
     {
         // The selected has been obviously invalidated
         pLastSelectedRenewableCluster = nullptr;
@@ -449,7 +449,7 @@ void RenewableCluster::internalClonePlant(void*)
 
         YString sFl;
         sFl << copy << indx; // lowercase
-        while (pArea->renewable.list.find(sFl))
+        while (pArea->renewable.list.findInAll(sFl))
         {
             ++indx;
             sFl.clear() << copy << indx;

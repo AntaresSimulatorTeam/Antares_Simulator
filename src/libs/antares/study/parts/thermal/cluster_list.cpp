@@ -214,11 +214,6 @@ unsigned int ThermalClusterList::allClustersSize()
     return allClusters.size();
 }
 
-std::vector<std::shared_ptr<ThermalCluster>> ThermalClusterList::all() const
-{
-    return allClusters;
-}
-
 static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFile::Property* p)
 {
     if (p->key.empty())

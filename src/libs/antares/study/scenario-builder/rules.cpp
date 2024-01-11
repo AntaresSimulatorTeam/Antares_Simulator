@@ -141,7 +141,7 @@ bool Rules::readThermalCluster(const AreaName::Vector& splitKey, String value, b
     if (!area)
         return false;
 
-    const ThermalCluster* cluster = area->thermal.list.find(clustername);
+    const ThermalCluster* cluster = area->thermal.list.findInAll(clustername);
     if (cluster)
     {
         uint val = fromStringToTSnumber(value);
@@ -177,7 +177,7 @@ bool Rules::readRenewableCluster(const AreaName::Vector& splitKey, String value,
     if (!area)
         return false;
 
-    const RenewableCluster* cluster = area->renewable.list.find(clustername);
+    const RenewableCluster* cluster = area->renewable.list.findInAll(clustername);
 
     if (cluster)
     {

@@ -86,11 +86,11 @@ BOOST_FIXTURE_TEST_CASE(thermal_cluster_delete, OneAreaStudy)
     areaA->thermal.list.add(disabledCluster);
     areaA->thermal.list.addToCompleteList(disabledCluster);
     // Check that "Cluster1" is found
-    BOOST_CHECK_EQUAL(areaA->thermal.list.find("cluster1"), disabledCluster.get());
+    BOOST_CHECK_EQUAL(areaA->thermal.list.findInAll("cluster1"), disabledCluster.get());
 
     study.initializeRuntimeInfos(); // This should remove all disabled thermal clusters
     // Check that "Cluster1" isn't found
-    BOOST_CHECK_EQUAL(areaA->thermal.list.find("cluster1"), nullptr);
+    BOOST_CHECK_EQUAL(areaA->thermal.list.findInAll("cluster1"), nullptr);
 }
 
 BOOST_FIXTURE_TEST_CASE(renewable_cluster_delete, OneAreaStudy)
@@ -102,11 +102,11 @@ BOOST_FIXTURE_TEST_CASE(renewable_cluster_delete, OneAreaStudy)
     areaA->renewable.list.add(disabledCluster);
     areaA->renewable.list.addToCompleteList(disabledCluster);
     // Check that "Cluster1" is found
-    BOOST_CHECK_EQUAL(areaA->renewable.list.find("cluster1"), disabledCluster.get());
+    BOOST_CHECK_EQUAL(areaA->renewable.list.findInAll("cluster1"), disabledCluster.get());
 
     study.initializeRuntimeInfos(); // This should remove all disabled renewable clusters
     // Check that "Cluster1" isn't found
-    BOOST_CHECK_EQUAL(areaA->renewable.list.find("cluster1"), nullptr);
+    BOOST_CHECK_EQUAL(areaA->renewable.list.findInAll("cluster1"), nullptr);
 }
 
 BOOST_FIXTURE_TEST_CASE(short_term_storage_delete, OneAreaStudy)
@@ -162,8 +162,8 @@ BOOST_FIXTURE_TEST_CASE(thermal_cluster_add, OneAreaStudy)
 
     areaA->thermal.list.add(newCluster);
     areaA->thermal.list.addToCompleteList(newCluster);
-    BOOST_CHECK_EQUAL(areaA->thermal.list.find("cluster"), newCluster.get());
-    BOOST_CHECK_EQUAL(areaA->thermal.list.find("Cluster"), nullptr);
+    BOOST_CHECK_EQUAL(areaA->thermal.list.findInAll("cluster"), newCluster.get());
+    BOOST_CHECK_EQUAL(areaA->thermal.list.findInAll("Cluster"), nullptr);
 }
 
 /*!
@@ -194,9 +194,9 @@ BOOST_FIXTURE_TEST_CASE(thermal_cluster_rename, ThermalClusterStudy)
 
 BOOST_FIXTURE_TEST_CASE(thermal_cluster_delete, ThermalClusterStudy)
 {
-    BOOST_CHECK(areaA->thermal.list.find("cluster") == cluster);
+    BOOST_CHECK(areaA->thermal.list.findInAll("cluster") == cluster);
     areaA->thermal.list.remove("cluster");
-    BOOST_CHECK(areaA->thermal.list.find("cluster") == nullptr);
+    BOOST_CHECK(areaA->thermal.list.findInAll("cluster") == nullptr);
     BOOST_CHECK(areaA->thermal.list.empty());
 }
 
@@ -213,8 +213,8 @@ BOOST_FIXTURE_TEST_CASE(renewable_cluster_add, OneAreaStudy)
 
     areaA->renewable.list.add(newCluster);
     areaA->renewable.list.addToCompleteList(newCluster);
-    BOOST_CHECK(areaA->renewable.list.find("windcluster") == newCluster.get());
-    BOOST_CHECK(areaA->renewable.list.find("WindCluster") == nullptr);
+    BOOST_CHECK(areaA->renewable.list.findInAll("windcluster") == newCluster.get());
+    BOOST_CHECK(areaA->renewable.list.findInAll("WindCluster") == nullptr);
 }
 
 
@@ -247,9 +247,9 @@ BOOST_FIXTURE_TEST_CASE(renewable_cluster_rename, RenewableClusterStudy)
 
 BOOST_FIXTURE_TEST_CASE(renewable_cluster_delete, RenewableClusterStudy)
 {
-    BOOST_CHECK(areaA->renewable.list.find("windcluster") == cluster);
+    BOOST_CHECK(areaA->renewable.list.findInAll("windcluster") == cluster);
     BOOST_CHECK(areaA->renewable.list.remove("windcluster"));
-    BOOST_CHECK(areaA->renewable.list.find("windcluster") == nullptr);
+    BOOST_CHECK(areaA->renewable.list.findInAll("windcluster") == nullptr);
     BOOST_CHECK(areaA->renewable.list.empty());
 }
 

@@ -86,7 +86,7 @@ bool Create::prepareWL(Context& ctx)
         if (suffix == "<auto>" || pInfos.behavior == bhMerge)
         {
             TransformNameIntoID(pFuturPlantName, id);
-            clusterFound = area ? area->thermal.list.find(id) : nullptr;
+            clusterFound = area ? area->thermal.list.findInAll(id) : nullptr;
             if (clusterFound)
             {
                 Data::AreaName::Size sepPos = id.find_last_of('-');
@@ -107,7 +107,7 @@ bool Create::prepareWL(Context& ctx)
                     pFuturPlantName.clear() << pTargetPlantName << "-" << indx;
                     id.clear();
                     TransformNameIntoID(pFuturPlantName, id);
-                    clusterFound = area->thermal.list.find(id);
+                    clusterFound = area->thermal.list.findInAll(id);
                 } while (clusterFound);
             }
         }
@@ -115,13 +115,13 @@ bool Create::prepareWL(Context& ctx)
         {
             pFuturPlantName += suffix;
             TransformNameIntoID(pFuturPlantName, id);
-            clusterFound = area ? area->thermal.list.find(id) : nullptr;
+            clusterFound = area ? area->thermal.list.findInAll(id) : nullptr;
         }
     }
     else
     {
         TransformNameIntoID(pFuturPlantName, id);
-        clusterFound = area ? area->thermal.list.find(id) : nullptr;
+        clusterFound = area ? area->thermal.list.findInAll(id) : nullptr;
     }
 
     pInfos.caption.clear() << "Plant " << pFuturPlantName;
@@ -167,7 +167,7 @@ bool Create::performWL(Context& ctx)
         if (!source)
             return false;
         TransformNameIntoID(pOriginalPlantName, id);
-        ctx.originalPlant = source->thermal.list.find(id);
+        ctx.originalPlant = source->thermal.list.findInAll(id);
         if (!ctx.originalPlant)
             return false;
 
@@ -175,7 +175,7 @@ bool Create::performWL(Context& ctx)
         id.clear();
         TransformNameIntoID(pFuturPlantName, id);
 
-        ctx.cluster = ctx.area->thermal.list.find(id);
+        ctx.cluster = ctx.area->thermal.list.findInAll(id);
         if (!ctx.cluster)
         {
             ctx.cluster = new Data::ThermalCluster(ctx.area);

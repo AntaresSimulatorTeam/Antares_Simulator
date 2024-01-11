@@ -1048,12 +1048,12 @@ bool Study::clusterRename(Cluster* cluster, ClusterName newName)
 
     if (dynamic_cast<ThermalCluster*>(cluster))
     {
-        found = area.thermal.list.find(newID);
+        found = area.thermal.list.findInAll(newID);
         type = kThermal;
     }
     else if (dynamic_cast<RenewableCluster*>(cluster))
     {
-        found = area.renewable.list.find(newID);
+        found = area.renewable.list.findInAll(newID);
         type = kRenewable;
     }
 

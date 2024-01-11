@@ -58,12 +58,18 @@ typename ClusterList<ClusterT>::const_iterator ClusterList<ClusterT>::end() cons
 }
 
 template<class ClusterT>
-ClusterT* ClusterList<ClusterT>::find(const Data::ClusterName& id) const
+ClusterT* ClusterList<ClusterT>::findInAll(const Data::ClusterName& id) const
 {
-    for (auto cluster : each_enabled())
+    for (auto cluster : all())
         if (cluster->id() == id)
             return cluster.get();
     return nullptr;
+}
+
+template<class ClusterT>
+std::vector<std::shared_ptr<ClusterT>> ClusterList<ClusterT>::all() const
+{
+    return allClusters;
 }
 
 template<class ClusterT>
@@ -168,7 +174,7 @@ bool ClusterList<ClusterT>::rename(Data::ClusterName idToFind, Data::ClusterName
     Antares::TransformNameIntoID(newName, newID);
 
     // Looking for the renewable clusters in the list
-    auto* cluster_ptr = this->find(idToFind);
+    auto* cluster_ptr = this->findInAll(idToFind);
     if (!cluster_ptr)
         return true;
 

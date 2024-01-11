@@ -150,7 +150,7 @@ BOOST_AUTO_TEST_SUITE(s)
 BOOST_FIXTURE_TEST_CASE(ThermalClusterList_loadFromFolder_basic, FixtureFull)
 {
     clusterList.loadFromFolder(*study, folder, area);
-    auto cluster = clusterList.find("some cluster");
+    auto cluster = clusterList.findInAll("some cluster");
 
     BOOST_CHECK(cluster->startupCost == 70000.0);
     BOOST_CHECK(cluster->costgeneration == useCostTimeseries);
@@ -161,7 +161,7 @@ BOOST_FIXTURE_TEST_CASE(ThermalClusterList_loadFromFolder_basic, FixtureFull)
 BOOST_FIXTURE_TEST_CASE(checkCo2_checkCO2CostColumnNumber_OK, FixtureFull)
 {
     area->thermal.list.loadFromFolder(*study, folder, area);
-    auto cluster = area->thermal.list.find("some cluster");
+    auto cluster = area->thermal.list.findInAll("some cluster");
 
     cluster->series.timeSeries.reset(3, 8760);
     area->thermal.list.giveIndicesToClusters();
@@ -175,7 +175,7 @@ BOOST_FIXTURE_TEST_CASE(checkCo2_checkCO2CostColumnNumber_OK, FixtureFull)
 BOOST_FIXTURE_TEST_CASE(checkCo2_checkCO2CostColumnNumber_KO, FixtureFull)
 {
     area->thermal.list.loadFromFolder(*study, folder, area);
-    auto cluster = area->thermal.list.find("some cluster");
+    auto cluster = area->thermal.list.findInAll("some cluster");
 
     cluster->series.timeSeries.reset(3, 8760);
 
@@ -191,7 +191,7 @@ BOOST_FIXTURE_TEST_CASE(checkCo2_checkCO2CostColumnNumber_KO, FixtureFull)
 BOOST_FIXTURE_TEST_CASE(checkFuelAndCo2_checkColumnNumber_OK, FixtureFull)
 {
     area->thermal.list.loadFromFolder(*study, folder, area);
-    auto cluster = area->thermal.list.find("some cluster");
+    auto cluster = area->thermal.list.findInAll("some cluster");
 
     cluster->series.timeSeries.reset(3, 8760);
 
@@ -207,7 +207,7 @@ BOOST_FIXTURE_TEST_CASE(checkFuelAndCo2_checkColumnNumber_OK, FixtureFull)
 BOOST_FIXTURE_TEST_CASE(ThermalCluster_costGenManualCalculationOfMarketBidAndMarginalCostPerHour, FixtureFull)
 {
     clusterList.loadFromFolder(*study, folder, area);
-    auto cluster = clusterList.find("some cluster");
+    auto cluster = clusterList.findInAll("some cluster");
 
     cluster->costgeneration = Data::setManually;
     cluster->ComputeCostTimeSeries();
@@ -222,7 +222,7 @@ BOOST_FIXTURE_TEST_CASE(ThermalCluster_costGenTimeSeriesCalculationOfMarketBidAn
     TimeSeriesFile co2("CO2Cost.txt", 8760);
 
     clusterList.loadFromFolder(*study, folder, area);
-    auto cluster = clusterList.find("some cluster");
+    auto cluster = clusterList.findInAll("some cluster");
 
     cluster->modulation.reset(1, 8760);
     cluster->ecoInput.loadFromFolder(*study, folder);
@@ -237,7 +237,7 @@ BOOST_FIXTURE_TEST_CASE(ThermalCluster_costGenTimeSeriesCalculationOfMarketBidAn
 BOOST_FIXTURE_TEST_CASE(computeMarketBidCost, FixtureFull)
 {
     clusterList.loadFromFolder(*study, folder, area);
-    auto cluster = clusterList.find("some cluster");
+    auto cluster = clusterList.findInAll("some cluster");
 
     BOOST_CHECK_CLOSE(cluster->computeMarketBidCost(1, 2, 1), 24.12, 0.001);
 }
