@@ -27,8 +27,10 @@ jobs:
         include:
           - os: windows-latest
             triplet: x64-windows
+            test-platform: windows-2022
           - os: ubuntu-latest
             triplet: x64-linux
+            test-platform: ubuntu-20.04
 
     env:
       # Indicates the location of the vcpkg as a Git submodule of the project repository.
