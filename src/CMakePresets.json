@@ -41,6 +41,7 @@
         "BUILD_TESTING":"ON",
         "BUILD_TOOLS":"ON", 
         "BUILD_not_system":"OFF",
+        "BUILD_UI":"OFF",
         "VCPKG_INSTALLED_DIR": "${sourceDir}/../vcpkg_installed/",
         "Python3_EXECUTABLE": "$env{Python3_ROOT_DIR}"
       }
@@ -69,6 +70,7 @@
         "CMAKE_BUILD_TYPE":"Release",
         "BUILD_TESTING":"ON",
         "BUILD_TOOLS":"ON", 
+        "BUILD_UI":"OFF",
         "BUILD_not_system":"OFF",
         "VCPKG_INSTALLED_DIR": "${sourceDir}/../vcpkg_installed/",
         "Python3_EXECUTABLE": "$env{Python3_ROOT_DIR}"
