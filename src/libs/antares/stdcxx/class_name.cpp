@@ -24,43 +24,25 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __OPTIMATE_LIB_ASSEMBLY_OID_H__
-#define __OPTIMATE_LIB_ASSEMBLY_OID_H__
 
-#include "../antares.h"
-#include <yuni/uuid/uuid.h>
-#include <functional>
+#include <antares/stdcxx/class_name.h>
 
-namespace Yuni
+namespace stdcxx
 {
-class YUNI_DECL UUID;
+
+std::string simpleClassName(const char* className)
+{
+    const std::string& strClassName = className;
+    std::size_t index = strClassName.find_last_of("::");
+
+    return (index == std::string::npos) ? strClassName
+                                        : strClassName.substr(index + 1, strClassName.size());
 }
 
-namespace Antares
-{
-//! Object Unique Identifier
-using Ref = Yuni::UUID;
-
-} // namespace Antares
-
-namespace std
-{
-/*!
-** \brief Specialization fot std::hash<Antares::Ref>
-**
-** This specialization is requiered for std::unordered_map
-** (or any hash table from the previous tr1)
-*/
 template<>
-class hash<Yuni::UUID>
+std::string simpleClassName(const std::type_info& type)
 {
-public:
-    inline std::size_t operator()(const Yuni::UUID& value) const
-    {
-        return value.hash();
-    }
-}; // class hash<Yuni::UUID>
+    return simpleClassName(type.name());
+}
 
-} // namespace std
-
-#endif // __OPTIMATE_LIB_ASSEMBLY_OID_H__
+} // namespace stdcxx

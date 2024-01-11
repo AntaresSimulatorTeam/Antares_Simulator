@@ -1,10 +1,10 @@
 set(PROJ stdcxx)
 set(HEADERS
-        include/antares/${PROJ}/demangle.hpp
+        include/antares/${PROJ}/class_name.h
 )
 set(SRC_PROJ
         ${HEADERS}
-        demangle.cpp
+        class_name.cpp
 )
 source_group("stdcxx" FILES ${SRC_STDCXX})
 
