@@ -40,18 +40,12 @@ using namespace Yuni;
 
 #define EPSILON ((double)1.0e-9)
 
+using namespace Antares::Solver;
+
 namespace Antares
-{
-namespace Solver
 {
 namespace TSGenerator
 {
-static void PreproHydroInitMatrices(Data::Study& study, uint tsCount)
-{
-    study.areas.each([&](Data::Area& area) {
-        area.hydro.series->resizeRORandSTORAGE(tsCount);
-    });
-}
 
 static void PreproRoundAllEntriesPlusDerated(Data::Study& study)
 {
@@ -75,7 +69,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, IResultWriter
 {
     logs.info() << "Generating the hydro time-series";
 
-    Progression::Task progression(study, currentYear, Solver::Progression::sectTSGHydro);
+    Progression::Task progression(study, currentYear, Progression::sectTSGHydro);
 
     auto& studyRTI = *(study.runtime);
     auto& calendar = study.calendar;
@@ -154,8 +148,6 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, IResultWriter
         NORM[i] = 0.;
 
     uint nbTimeseries = study.parameters.nbTimeSeriesHydro;
-
-    PreproHydroInitMatrices(study, nbTimeseries);
 
     long cumul = 0;
 
@@ -317,5 +309,4 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, IResultWriter
 }
 
 } // namespace TSGenerator
-} // namespace Solver
 } // namespace Antares

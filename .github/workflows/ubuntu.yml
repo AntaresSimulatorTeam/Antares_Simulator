@@ -30,24 +30,18 @@ jobs:
     name: Build
     env:
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
+      OS: ubuntu-20.04
 
-    outputs:
-        os: ${{ matrix.os }}
-
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-20.04
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
-    strategy:
-      matrix:
-        os: [ubuntu-20.04]
-        test-platform: [ubuntu-20.04]
-
+    
     steps:
     - uses: actions/checkout@v3
 
     - name: ccache
       uses: hendrikmuhs/ccache-action@v1.2
       with:
-          key: ${{ matrix.os }}
+          key: ${{ runner.name }}
 
     - name: Install libraries
       run: |
@@ -67,13 +61,13 @@ jobs:
 
     - name: Config OR-Tools URL
       run: |
-          echo "ORTOOLS_URL=https://github.com/rte-france/or-tools/releases/download/v9.5-rte2.0/ortools_cxx_ubuntu-20.04_static_sirius.zip" >> $GITHUB_ENV
+          echo "ORTOOLS_URL=https://github.com/rte-france/or-tools/releases/download/$(cat ortools_tag)/ortools_cxx_ubuntu-20.04_static_sirius.zip" >> $GITHUB_ENV
 
     - name: Download pre-compiled librairies
       uses: ./.github/workflows/download-extract-precompiled-libraries-tgz
       with:
         antares-deps-version: ${{steps.antares-deps-version.outputs.prop}}
-        os: ${{matrix.os}}
+        os: ${{env.OS}}
         ortools-url: ${{env.ORTOOLS_URL}}
         ortools-dir: ${{env.ORTOOLS_DIR}}
 
@@ -129,7 +123,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: valid-named-mps
-        os: ${{ matrix.test-platform }}
+        os: ${{ env.OS }}
         variant: "named-mps"
       # Download previous benchmark result from cache (if exists)
     # - name: Download previous benchmark data
@@ -175,7 +169,7 @@ jobs:
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
       run: |
            cd _build
-           ctest -C ${{ matrix.buildtype }} --output-on-failure -L "unit|end-to-end"
+           ctest -C Release --output-on-failure -L "unit|end-to-end"
 
     - name: Upload logs for failed tests
       if: ${{ failure() }}
@@ -190,7 +184,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: valid-v830
-        os: ${{ matrix.test-platform }}
+        os: ${{ env.OS }}
 
     - name: Run MILP with CBC
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
@@ -199,7 +193,7 @@ jobs:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: valid-milp
         variant: "milp-cbc"
-        os: ${{ matrix.test-platform }}
+        os: ${{ env.OS }}
 
     - name: Run tests introduced in v860
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
@@ -207,7 +201,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: valid-v860
-        os: ${{ matrix.test-platform }}
+        os: ${{ env.OS }}
 
     - name: Run tests introduced in v870
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
@@ -215,7 +209,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: valid-v870
-        os: ${{ matrix.test-platform }}
+        os: ${{ env.OS }}
 
     - name: Run short-tests
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
@@ -223,7 +217,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: short-tests
-        os: ${{ matrix.test-platform }}
+        os: ${{ env.OS }}
 
     - name: Run mps tests
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
@@ -231,7 +225,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: valid-mps
-        os: ${{ matrix.test-platform }}
+        os: ${{ env.OS }}
 
     - name: Run tests for adequacy patch (CSR)
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
@@ -239,7 +233,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: adequacy-patch-CSR
-        os: ${{ matrix.test-platform }}
+        os: ${{ env.OS }}
 
     - name: Run parallel tests
       if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
@@ -247,7 +241,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: valid-parallel
-        os: ${{ matrix.test-platform }}
+        os: ${{ env.OS }}
         variant: "parallel"
 
     - name: Run medium-tests
@@ -256,7 +250,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: medium-tests
-        os: ${{ matrix.test-platform }}
+        os: ${{ env.OS }}
 
     - name: Run long-tests-1
       if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
@@ -264,7 +258,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: long-tests-1
-        os: ${{ matrix.test-platform }}
+        os: ${{ env.OS }}
 
     - name: Run long-tests-2
       if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
@@ -272,7 +266,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: long-tests-2
-        os: ${{ matrix.test-platform }}
+        os: ${{ env.OS }}
 
     - name: Run long-tests-3
       if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
@@ -280,7 +274,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: long-tests-3
-        os: ${{ matrix.test-platform }}
+        os: ${{ env.OS }}
 
     - name: Installer .deb creation
       run: |
@@ -311,11 +305,12 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         path: _build/*.deb
-
+      
+    
     - name: Publish assets
       if: ${{ env.IS_RELEASE == 'true' }}
-      uses: alexellis/upload-assets@0.4.0
       env:
-          GITHUB_TOKEN: ${{ github.token }}
-      with:
-          asset_paths: '["_build/*.tar.gz", "_build/*.deb"]'
+        GITHUB_TOKEN: ${{ github.token }}
+        tag: ${{ github.event.inputs.release_tag }}
+      run: |
+        gh release upload "$tag" _build/*.tar.gz _build/*.deb           

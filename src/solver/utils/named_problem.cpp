@@ -4,11 +4,13 @@
 namespace Antares::Optimization
 {
 
+using BasisStatus = operations_research::MPSolver::BasisStatus;
+
 PROBLEME_SIMPLEXE_NOMME::PROBLEME_SIMPLEXE_NOMME(const std::vector<std::string>& NomDesVariables,
                                                  const std::vector<std::string>& NomDesContraintes,
                                                  const std::vector<bool>& VariablesEntieres,
-                                                 std::vector<int>& StatutDesVariables,
-                                                 std::vector<int>& StatutDesContraintes,
+                                                 std::vector<BasisStatus>& StatutDesVariables,
+                                                 std::vector<BasisStatus>& StatutDesContraintes,
                                                  bool UseNamedProblems,
                                                  bool SolverLogs) : PROBLEME_SIMPLEXE(),
 

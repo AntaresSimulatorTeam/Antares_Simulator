@@ -257,39 +257,21 @@ void Area::resetToDefaultValues()
     invalidateJIT = true;
 }
 
-void Area::resizeAllTimeseriesNumbers(uint n)
+void Area::resizeAllTimeseriesNumbers(uint nbYears)
 {
-    assert(n < 200000); // arbitrary number
-
-    // asserts
     assert(hydro.series and "series must not be nullptr !");
 
-    if (!n)
+    load.series.timeseriesNumbers.reset(1, nbYears);
+    solar.series.timeseriesNumbers.reset(1, nbYears);
+    wind.series.timeseriesNumbers.reset(1, nbYears);
+    hydro.series->timeseriesNumbers.reset(1, nbYears);
+    for (auto& namedLink : links)
     {
-        load.series.timeseriesNumbers.clear();
-        solar.series.timeseriesNumbers.clear();
-        wind.series.timeseriesNumbers.clear();
-        hydro.series->timeseriesNumbers.clear();
-        for (auto& namedLink : links)
-        {
-            AreaLink* link = namedLink.second;
-            link->timeseriesNumbers.clear();
-        }
+        AreaLink* link = namedLink.second;
+        link->timeseriesNumbers.reset(1, nbYears);
     }
-    else
-    {
-        load.series.timeseriesNumbers.resize(1, n);
-        solar.series.timeseriesNumbers.resize(1, n);
-        wind.series.timeseriesNumbers.resize(1, n);
-        hydro.series->timeseriesNumbers.resize(1, n);
-        for (auto& namedLink : links)
-        {
-            AreaLink* link = namedLink.second;
-            link->timeseriesNumbers.resize(1, n);
-        }
-    }
-    thermal.resizeAllTimeseriesNumbers(n);
-    renewable.resizeAllTimeseriesNumbers(n);
+    thermal.resizeAllTimeseriesNumbers(nbYears);
+    renewable.resizeAllTimeseriesNumbers(nbYears);
 }
 
 bool Area::thermalClustersMinStablePowerValidity(std::vector<YString>& output) const

@@ -3,13 +3,13 @@ cmake_minimum_required(VERSION 3.14) # FetchContent_MakeAvailable
 # Version
 set(ANTARES_VERSION_HI	      8)
 set(ANTARES_VERSION_LO	      8)
-set(ANTARES_VERSION_REVISION  0)
+set(ANTARES_VERSION_REVISION  1)
 
 # Beta release
 set(ANTARES_BETA 0)
 set(ANTARES_RC 0)
 
-set(ANTARES_VERSION_YEAR      2023)
+set(ANTARES_VERSION_YEAR      2024)
 
 project(antares
         VERSION ${ANTARES_VERSION_HI}.${ANTARES_VERSION_LO}.${ANTARES_VERSION_REVISION})
@@ -269,7 +269,8 @@ message(STATUS "OR-Tools tag ${ORTOOLS_TAG}")
   set(BUILD_SAMPLES "OFF" CACHE INTERNAL "")
   set(BUILD_FLATZINC "OFF" CACHE INTERNAL "")
   set(BUILD_EXAMPLES "OFF" CACHE INTERNAL "")
-  set(USE_SCIP "OFF" CACHE INTERNAL "")
+  set(USE_SCIP "ON" CACHE INTERNAL "")
+  set(USE_GLPK "ON" CACHE INTERNAL "")
   # We build OR-Tools as a static lib. Cyclic dependencies are detected
   # without this flag.
   set(BUILD_SHARED_LIBS "OFF" CACHE INTERNAL "")
