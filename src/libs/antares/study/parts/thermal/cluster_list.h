@@ -106,7 +106,7 @@ public:
     void removeMustRunClusters();
     void clearAll();
     unsigned int allClustersSize();
-    std::vector<std::shared_ptr<ThermalCluster>> all();
+    std::vector<std::shared_ptr<ThermalCluster>> all() const;
 
 }; // class ThermalClusterList
 } // namespace Data

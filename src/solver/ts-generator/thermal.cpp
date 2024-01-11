@@ -631,7 +631,6 @@ bool GenerateThermalTimeSeries(Data::Study& study,
             {
                 (*generator)(area, *cluster);
             }
-
             ++progression;
         }
     });

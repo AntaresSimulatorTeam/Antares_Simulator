@@ -214,7 +214,7 @@ unsigned int ThermalClusterList::allClustersSize()
     return allClusters.size();
 }
 
-std::vector<std::shared_ptr<ThermalCluster>> ThermalClusterList::all()
+std::vector<std::shared_ptr<ThermalCluster>> ThermalClusterList::all() const
 {
     return allClusters;
 }
