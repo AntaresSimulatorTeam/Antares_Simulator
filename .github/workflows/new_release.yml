@@ -25,7 +25,7 @@ jobs:
             run: |
               gh release create "$tag" \
                   --repo="$GITHUB_REPOSITORY" \
-                  --title="$title" 
+                  --title="$title" \
                   --notes="Run tests: $tests"
 
 
