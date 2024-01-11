@@ -342,7 +342,6 @@ var hierarchy =
     [ "Antares::Graph::Grid< NodeT >", "classAntares_1_1Graph_1_1Grid.html", null ],
     [ "Antares::Graph::Grid< Antares::Data::Area >", "classAntares_1_1Graph_1_1Grid.html", null ],
     [ "Antares::GUILocker", "classAntares_1_1GUILocker.html", null ],
-    [ "std::hash< Yuni::UUID >", "classstd_1_1hash_3_01Yuni_1_1UUID_01_4.html", null ],
     [ "Antares::Date::HourInterval", "structAntares_1_1Date_1_1HourInterval.html", null ],
     [ "HourlyCSRProblem", "classHourlyCSRProblem.html", null ],
     [ "Hydro_problem_costs", "classHydro__problem__costs.html", null ],
@@ -576,14 +575,6 @@ var hierarchy =
         [ "Antares::Window::StudyLogs", "classAntares_1_1Window_1_1StudyLogs.html", null ]
       ] ]
     ] ],
-    [ "Yuni::IIntrusiveSmartPtr", null, [
-      [ "Antares::IObject", "classAntares_1_1IObject.html", [
-        [ "Antares::Data::Study", "classAntares_1_1Data_1_1Study.html", [
-          [ "PublicStudy", "classPublicStudy.html", null ],
-          [ "PublicStudy", "classPublicStudy.html", null ]
-        ] ]
-      ] ]
-    ] ],
     [ "Antares::Component::HTMLListbox::Item::IItem", "classAntares_1_1Component_1_1HTMLListbox_1_1Item_1_1IItem.html", [
       [ "Antares::Component::HTMLListbox::Item::Area", "classAntares_1_1Component_1_1HTMLListbox_1_1Item_1_1Area.html", null ],
       [ "Antares::Component::HTMLListbox::Item::ClusterItem", "classAntares_1_1Component_1_1HTMLListbox_1_1Item_1_1ClusterItem.html", [
@@ -682,7 +673,10 @@ var hierarchy =
     [ "JIT::just_in_time_manager", "classJIT_1_1just__in__time__manager.html", null ],
     [ "Antares::Window::OutputViewer::Layer", "classAntares_1_1Window_1_1OutputViewer_1_1Layer.html", null ],
     [ "Antares::Data::LayerData", "classAntares_1_1Data_1_1LayerData.html", [
-      [ "Antares::Data::Study", "classAntares_1_1Data_1_1Study.html", null ]
+      [ "Antares::Data::Study", "classAntares_1_1Data_1_1Study.html", [
+        [ "PublicStudy", "classPublicStudy.html", null ],
+        [ "PublicStudy", "classPublicStudy.html", null ]
+      ] ]
     ] ],
     [ "LeftT", null, [
       [ "Antares::Solver::Variable::Join< LeftT, RightT, BindConstT >", "classAntares_1_1Solver_1_1Variable_1_1Join.html", null ]
@@ -864,9 +858,6 @@ var hierarchy =
         [ "StudyFinderCleaner", "classStudyFinderCleaner.html", null ]
       ] ],
       [ "Antares::Memory", "classAntares_1_1Memory.html", null ]
-    ] ],
-    [ "Yuni::Policy::ObjectLevelLockable", null, [
-      [ "Antares::IIntrusiveReference< ChildT, TP >", "classAntares_1_1IIntrusiveReference.html", null ]
     ] ],
     [ "Yuni::Policy::ObjectLevelLockableNotRecursive", null, [
       [ "Antares::Toolbox::Jobs::PartList", "classAntares_1_1Toolbox_1_1Jobs_1_1PartList.html", null ]
@@ -1090,8 +1081,6 @@ var hierarchy =
     [ "SimulationHandler", "classSimulationHandler.html", null ],
     [ "Benchmarking::SimulationInfoCollector", "classBenchmarking_1_1SimulationInfoCollector.html", null ],
     [ "Antares::Private::OutputViewerData::Content::SimulationType", "classAntares_1_1Private_1_1OutputViewerData_1_1Content_1_1SimulationType.html", null ],
-    [ "Antares::IIntrusiveReference< ChildT, TP >::SmartPtr< T >", "classAntares_1_1IIntrusiveReference_1_1SmartPtr.html", null ],
-    [ "Antares::IObject::SmartPtr< U >", "classAntares_1_1IObject_1_1SmartPtr.html", null ],
     [ "Antares::TSGenerator::Predicate::Solar", "classAntares_1_1TSGenerator_1_1Predicate_1_1Solar.html", null ],
     [ "SOLDE_MOYEN_DES_ECHANGES", "structSOLDE__MOYEN__DES__ECHANGES.html", null ],
     [ "OrtoolsUtils::SolverNames", "structOrtoolsUtils_1_1SolverNames.html", null ],
