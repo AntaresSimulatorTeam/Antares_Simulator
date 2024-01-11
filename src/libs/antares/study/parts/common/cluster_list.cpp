@@ -22,12 +22,6 @@ namespace Antares::Data
 using namespace Antares;
 
 template<class ClusterT>
-inline uint ClusterList<ClusterT>::size() const
-{
-    return (uint)clusters.size(); // gp : function not removed because used in GUI where it contains all clusters
-}
-
-template<class ClusterT>
 inline bool ClusterList<ClusterT>::empty() const
 {
     return clusters.empty();
@@ -155,6 +149,12 @@ unsigned int ClusterList<ClusterT>::enabledCount() const
 }
 
 template<class ClusterT>
+unsigned int ClusterList<ClusterT>::allClustersCount() const
+{
+    return allClusters.size();
+}
+
+template<class ClusterT>
 bool ClusterList<ClusterT>::rename(Data::ClusterName idToFind, Data::ClusterName newName)
 {
     if (idToFind.empty() or newName.empty())
@@ -249,7 +249,7 @@ bool ClusterList<ClusterT>::saveDataSeriesToFolder(const AnyString& folder, cons
 
     return std::ranges::all_of(clusters, [&](const auto& c)
     {
-        logs.info() << msg << "  " << (ticks * 100 / (1 + this->clusters.size()))
+        logs.info() << msg << "  " << (ticks * 100 / (1 + this->allClustersCount()))
             << "% complete";
         ++ticks;
         return c->saveDataSeriesToFolder(folder);

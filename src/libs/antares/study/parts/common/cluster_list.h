@@ -92,9 +92,6 @@ public:
     */
     virtual bool remove(const Data::ClusterName& id);
 
-    // gp : not removed because used in GUI where it contains all clusters
-    uint size() const;
-
     //! Return true if the list is empty
     bool empty() const;
     //@}
@@ -172,6 +169,7 @@ public:
     */
     uint removeDisabledClusters();
     unsigned int enabledCount() const;
+    unsigned int allClustersCount() const;
     void addToCompleteList(std::shared_ptr<ClusterT> cluster);
 
 protected:

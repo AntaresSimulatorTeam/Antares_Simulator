@@ -735,8 +735,11 @@ Matrix<uint32_t>* getFirstTSnumberInterModalMatrixFoundInArea(
             tsNumbersMtx = &(cluster->series.timeseriesNumbers);
         }
         else if (isTSintermodal[ts_to_tsIndex.at(timeSeriesRenewable)]
-                 && area.renewable.list.size() > 0)
-            tsNumbersMtx = &(area.renewable.list[0]->series.timeseriesNumbers);
+            && area.renewable.list.enabledCount() > 0)
+        {
+            std::shared_ptr<RenewableCluster> cluster = *(area.renewable.list.each_enabled().begin());
+            tsNumbersMtx = &(cluster->series.timeseriesNumbers);
+        }
     }
     assert(tsNumbersMtx);
 

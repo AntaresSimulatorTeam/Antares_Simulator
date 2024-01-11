@@ -50,7 +50,7 @@ public:
     }
     virtual int height() const
     {
-        return (pArea) ? pArea->renewable.list.size() : 0;
+        return (pArea) ? pArea->renewable.list.allClustersCount() : 0;
     }
 
     virtual wxString columnCaption(int colIndx) const override;

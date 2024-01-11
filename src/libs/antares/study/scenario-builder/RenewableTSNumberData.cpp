@@ -66,14 +66,6 @@ void renewableTSNumberData::saveToINIFile(const Study& /* study */,
     if (!pArea)
         return;
 
-// Foreach year
-#ifndef NDEBUG
-    if (pTSNumberRules.width)
-    {
-        assert(pTSNumberRules.width == pArea->renewable.list.size());
-    }
-#endif
-
     for (uint index = 0; index != pTSNumberRules.width; ++index)
     {
         // Foreach renewable cluster...
@@ -99,7 +91,7 @@ bool renewableTSNumberData::reset(const Study& study)
     //   solver or not.
     // WARNING: At this point in time, the variable pArea->renewable.clusterCount()
     //   might not be valid (because not really initialized yet)
-    const uint clusterCount = pArea->renewable.list.size();
+    const uint clusterCount = pArea->renewable.list.allClustersCount();
     // Resize
     pTSNumberRules.reset(clusterCount, nbYears);
     return true;

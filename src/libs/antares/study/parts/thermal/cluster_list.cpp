@@ -78,6 +78,14 @@ void ThermalClusterList::giveIndicesToClusters()
     }
 }
 
+unsigned int ThermalClusterList::enabledAndNotMustRunCount() const
+{
+    unsigned int count = 0;
+    for (auto cluster : each_enabled_and_not_mustrun())
+        count++;
+    return count;
+}
+
 unsigned int ThermalClusterList::mustRunAndEnabledCount() const
 {
     unsigned int count = 0;
@@ -209,11 +217,6 @@ void ThermalClusterList::clearAll()
     allClusters.clear();
 }
 
-unsigned int ThermalClusterList::allClustersSize()
-{
-    return allClusters.size();
-}
-
 static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFile::Property* p)
 {
     if (p->key.empty())
@@ -337,7 +340,7 @@ bool ThermalClusterLoadFromSection(const AnyString& filename,
 
 void ThermalClusterList::calculationOfSpinning()
 {
-    for (auto cluster : each_enabled())
+    for (auto cluster : each_enabled_and_not_mustrun())
         cluster->calculationOfSpinning();
 }
 

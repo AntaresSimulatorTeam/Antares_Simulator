@@ -159,7 +159,7 @@ public:
         pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
 
         // Get the area
-        pSize = area->renewable.list.size();
+        pSize = area->renewable.list.enabledCount();
         if (pSize)
         {
             AncestorType::pResults.resize(pSize);

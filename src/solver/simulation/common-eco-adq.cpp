@@ -395,7 +395,7 @@ void BuildThermalPartOfWeeklyProblem(Data::Study& study,
     {
         auto& area = *study.areas.byIndex[k];
 
-        for (uint l = 0; l != area.thermal.list.size(); ++l)
+        for (uint l = 0; l != area.thermal.list.enabledAndNotMustRunCount(); ++l)
         {
             problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[l]
                    .PuissanceDisponibleDuPalierThermiqueRef

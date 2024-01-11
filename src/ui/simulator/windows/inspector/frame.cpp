@@ -783,7 +783,7 @@ void Frame::apply(const InspectorData::Ptr& data)
         {
             const Data::Area& area = *(*i);
             nbLinks += (uint)area.links.size();
-            nbThermalClusters += area.thermal.list.size();
+            nbThermalClusters += area.thermal.list.allClustersCount();
         }
         pPGAreaLinks->SetValueFromInt(nbLinks);
         pPGAreaPlants->SetValueFromInt(nbThermalClusters);

@@ -281,9 +281,10 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         auto& area = *(study.areas.byIndex[i]);
 
         auto& pbPalier = problem.PaliersThermiquesDuPays[i];
-        pbPalier.NombreDePaliersThermiques = area.thermal.list.size();
+        unsigned int clusterCount = area.thermal.list.enabledAndNotMustRunCount();
+        pbPalier.NombreDePaliersThermiques = clusterCount;
 
-        for (uint clusterIndex = 0; clusterIndex != area.thermal.list.size(); ++clusterIndex)
+        for (uint clusterIndex = 0; clusterIndex != clusterCount; ++clusterIndex)
         {
             auto& cluster = *(area.thermal.list[clusterIndex]);
             pbPalier.NumeroDuPalierDansLEnsembleDesPaliersThermiques[clusterIndex]
@@ -311,7 +312,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
             pbPalier.NomsDesPaliersThermiques[clusterIndex] = cluster.name().c_str();
         }
 
-        NombrePaliers += area.thermal.list.size();
+        NombrePaliers += clusterCount;
     }
 
     problem.NombreDePaliersThermiques = NombrePaliers;

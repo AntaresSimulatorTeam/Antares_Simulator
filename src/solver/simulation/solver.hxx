@@ -627,7 +627,7 @@ void ISimulation<Impl>::allocateMemoryForRandomNumbers(randomNumbers& randomForP
         {
             // logs.info() << "   area : " << a << " :";
             auto& area = *(study.areas.byIndex[a]);
-            size_t nbClusters = area.thermal.list.allClustersSize();
+            size_t nbClusters = area.thermal.list.allClustersCount();
             randomForParallelYears.pYears[y].pThermalNoisesByArea[a] = new double[nbClusters];
             randomForParallelYears.pYears[y].pNbClustersByArea[a] = nbClusters;
         }
