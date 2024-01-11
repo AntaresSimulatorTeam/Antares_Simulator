@@ -108,7 +108,7 @@ jobs:
         with:
           antares-deps-version: ${{steps.antares-deps-version.outputs.prop}}
           os: ${{matrix.os}}
-          ortools-url: ${{env.ORTOOLS_URL}}
+          ortools-url: "https://github.com/rte-france/or-tools/releases/download/v9.5-rte2.0/ortools_cxx_windows-latest_static_sirius.zip"
           ortools-dir: ${{env.ORTOOLS_DIR}}
           
       - name: Download pre-compiled librairies
@@ -118,7 +118,7 @@ jobs:
           antares-deps-version: ${{steps.antares-deps-version.outputs.prop}}
           #os: ${{matrix.os}}
           os: ubuntu-20.04
-          ortools-url: ${{env.ORTOOLS_URL}}
+          ortools-url: "https://github.com/rte-france/or-tools/releases/download/v9.5-rte2.0/ortools_cxx_ubuntu-20.04_static_sirius.zip"
           ortools-dir: ${{env.ORTOOLS_DIR}}
           
       - name: Setup Python 3.10.11
