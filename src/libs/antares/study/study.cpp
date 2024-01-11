@@ -1128,7 +1128,7 @@ void Study::destroyAllWindTSGeneratorData()
 void Study::destroyAllThermalTSGeneratorData()
 {
     areas.each([&](Data::Area& area) {
-        for (const auto& cluster : area.thermal.list)
+        for (const auto cluster : area.thermal.list.each_enabled_and_not_mustrun())
             FreeAndNil(cluster->prepro);
     });
 }
@@ -1414,10 +1414,9 @@ bool Study::checkForFilenameLimits(bool output, const String& chfolder) const
             auto& cname = clustername;
             cname.clear();
 
-            area.thermal.list.each([&](const Cluster& cluster) {
-                if (cluster.id().size() > cname.size())
-                    cname = cluster.id();
-            });
+            for (auto cluster : area.thermal.list.all())
+                if (cluster->id().size() > cname.size())
+                    cname = cluster->id();
         });
 
         String filename;

@@ -257,11 +257,10 @@ void StudyRuntimeInfos::checkThermalTSGeneration(Study& study)
     thermalTSRefresh = globalThermalTSgeneration;
 
     study.areas.each([this, globalThermalTSgeneration](Data::Area& area) {
-        area.thermal.list.each(
-          [this, globalThermalTSgeneration](const Data::ThermalCluster& cluster) {
-              thermalTSRefresh
-                = thermalTSRefresh || cluster.doWeGenerateTS(globalThermalTSgeneration);
-          });
+        for (auto c : area.thermal.list.each_enabled_and_not_mustrun())
+        {
+            thermalTSRefresh = thermalTSRefresh || c->doWeGenerateTS(globalThermalTSgeneration);
+        }
     });
 }
 

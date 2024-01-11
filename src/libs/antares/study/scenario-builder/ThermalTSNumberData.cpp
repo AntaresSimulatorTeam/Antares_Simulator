@@ -35,19 +35,17 @@ void thermalTSNumberData::saveToINIFile(const Study& /* study */,
 
     if (!pArea)
         return;
-
-    // Foreach thermal cluster...
-    for (uint index = 0; index != pTSNumberRules.width; ++index)
+    
+    for (auto cluster : pArea->thermal.list.all())
     {
-        // Foreach year ...
-        for (uint y = 0; y != pTSNumberRules.height; ++y)
+        for (uint year = 0; year != pTSNumberRules.height; ++year)
         {
-            const uint val = get(pArea->thermal.list[index].get(), y);
+            const uint val = get(cluster.get(), year);
             // Equals to zero means 'auto', which is the default mode
             if (!val)
                 continue;
-            file << prefix << pArea->id << "," << y << ','
-                 << pArea->thermal.list[index]->id() << " = " << val << '\n';
+            file << prefix << pArea->id << "," << year << ','
+                 << cluster->id() << " = " << val << '\n';
         }
     }
 }
