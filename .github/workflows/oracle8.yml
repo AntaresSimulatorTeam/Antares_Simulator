@@ -8,10 +8,15 @@ on:
       - develop
   schedule:
     - cron: '21 2 * * *'
+  workflow_call:
+    inputs:
+      run-tests:
+        required: true
+        type: boolean
 
 env:
   GITHUB_TOKEN: ${{ github.token }}
-  IS_RELEASE: ${{ github.event_name == 'release' && github.event.action == 'created' }}
+  IS_RELEASE: ${{ github.event_name == 'workflow_dispatch' }}
   IS_PUSH: ${{ github.event_name == 'push' }}
 
 jobs:
@@ -33,7 +38,7 @@ jobs:
 
     - name: Install libraries
       run: |
-           dnf install -y epel-release git cmake wget rpm-build redhat-lsb-core
+           dnf install -y epel-release git cmake wget rpm-build redhat-lsb-core 
            dnf install -y unzip libuuid-devel boost-test boost-devel gcc-toolset-10-toolchain zlib-devel
 
     - name: Checkout
@@ -99,21 +104,18 @@ jobs:
       with:
         path: _build/*.rpm
 
-  publish_assets:
-    name: Publish assets
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Download all artifacts
+    - name: Install gh
       if: ${{ env.IS_RELEASE == 'true' }}
-      uses: actions/download-artifact@v3
-
+      run: |
+           dnf -y install 'dnf-command(config-manager)'
+           dnf -y config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
+           dnf -y install gh
 
     - name: Publish assets
       if: ${{ env.IS_RELEASE == 'true' }}
-      uses: alexellis/upload-assets@0.4.0
       env:
-          GITHUB_TOKEN: ${{ github.token }}
-      with:
-          asset_paths: '["*/*.tar.gz", "*/*.rpm"]'
+        GITHUB_TOKEN: ${{ github.token }}
+        tag: ${{ github.event.inputs.release_tag }}
+      run: |
+        gh release upload "$tag" _build/*.tar.gz _build/*.rpm      
+

@@ -41,8 +41,7 @@ enum
     versionFromCMake = (ANTARES_VERSION_HI * 100 + ANTARES_VERSION_LO * 10),
 };
 
-YUNI_STATIC_ASSERT((uint)versionFromCMake == (uint)Antares::Data::versionLatest,
-                   DiscrepancyBetweenCMakeVersionAndAntaresVersion);
+static_assert((uint)versionFromCMake == (uint)Antares::Data::versionLatest);
 
 namespace Antares::Data
 {

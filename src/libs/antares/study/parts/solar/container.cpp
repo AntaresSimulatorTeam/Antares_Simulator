@@ -70,7 +70,7 @@ uint64_t Container::memoryUsage() const
 
 void Container::resetToDefault()
 {
-    series.timeSeries.reset();
+    series.reset();
     if (prepro)
         prepro->resetToDefault();
 }

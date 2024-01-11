@@ -154,7 +154,7 @@ public:
     **
     ** \param n A number of years
     */
-    void resizeAllTimeseriesNumbers(uint n);
+    void resizeAllTimeseriesNumbers(uint nbYears);
 
     /*!
     ** \brief Check if a link with another area is already established

@@ -29,12 +29,9 @@
 
 #include <antares/logs/logs.h>
 
-namespace Antares
+namespace Antares::TSGenerator
 {
-namespace Solver
-{
-namespace TSGenerator
-{
+
 // forward declaration
 // Hydro - see hydro.cpp
 bool GenerateHydroTimeSeries(Data::Study& study, uint year, IResultWriter& writer);
@@ -148,17 +145,6 @@ void Destroy(Data::Study& study, uint year)
     }
 }
 
-inline void DestroyAll(Data::Study& study)
-{
-    Solver::TSGenerator::Destroy<Data::timeSeriesLoad>(study, (uint)-1);
-    Solver::TSGenerator::Destroy<Data::timeSeriesSolar>(study, (uint)-1);
-    Solver::TSGenerator::Destroy<Data::timeSeriesWind>(study, (uint)-1);
-    Solver::TSGenerator::Destroy<Data::timeSeriesHydro>(study, (uint)-1);
-    Solver::TSGenerator::Destroy<Data::timeSeriesThermal>(study, (uint)-1);
-}
-
-} // namespace TSGenerator
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::TSGenerator
 
 #endif // __ANTARES_SOLVER_timeSeries_GENERATOR_HXX__

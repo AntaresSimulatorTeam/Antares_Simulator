@@ -5,7 +5,10 @@
 #include <map>
 
 #include "constraint.h"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
 #include "ortools/linear_solver/linear_solver.h"
+#pragma GCC diagnostic pop
 
 namespace Antares
 {

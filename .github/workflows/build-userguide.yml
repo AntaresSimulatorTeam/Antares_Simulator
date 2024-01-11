@@ -7,19 +7,21 @@ on:
     branches:
       - release/*
       - doc/*
+  workflow_call:
+    inputs:
+      run-tests:
+        required: true
+        type: boolean
 
 env:
-  IS_RELEASE: ${{ github.event_name == 'release' && github.event.action == 'created' }}
+  IS_RELEASE: ${{ github.event_name == 'workflow_dispatch' }}
 
 jobs:
 
   build:
 
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-20.04
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
-    strategy:
-      matrix:
-        os: [ubuntu-20.04]
 
     steps:
     - uses: actions/checkout@v3
@@ -27,7 +29,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: 3.8
+        python-version: 3.12
 
     - name: Install dependencies
       run: |
@@ -55,10 +57,12 @@ jobs:
         name: pdf-reference-guide
         path: ${{ env.PDF_PATH }}
 
-    - name: Upload user guide as release asset
+
+    - name: Publish assets
       if: ${{ env.IS_RELEASE == 'true' }}
-      uses: alexellis/upload-assets@0.4.0
       env:
-          GITHUB_TOKEN: ${{ github.token }}
-      with:
-          asset_paths: ${{ env.PDF_PATH_ASSET }}
+        GITHUB_TOKEN: ${{ github.token }}
+        tag: ${{ github.event.inputs.release_tag }}
+      run: |
+        gh release upload "$tag" ${{ env.PDF_PATH }}      
+
