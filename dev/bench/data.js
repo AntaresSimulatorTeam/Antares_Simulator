@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1704808425215,
+  "lastUpdate": 1704984365956,
   "repoUrl": "https://github.com/AntaresSimulatorTeam/Antares_Simulator",
   "entries": {
     "Python Benchmark with customSmallerIsBetter-benchmark": [
@@ -1662,6 +1662,195 @@ window.BENCHMARK_DATA = {
           {
             "name": "reservoir-Min-MaxHydroPower_memory",
             "value": 6,
+            "unit": "mb"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "vincent.payet@rte-france.com",
+            "name": "Vincent Payet",
+            "username": "payetvin"
+          },
+          "committer": {
+            "email": "vincent.payet@rte-france.com",
+            "name": "Vincent Payet",
+            "username": "payetvin"
+          },
+          "distinct": true,
+          "id": "52721e44d9b4e234c6217d5d1390264b55eef3a4",
+          "message": "Merge branch 'develop' into feature/custom-benchmark",
+          "timestamp": "2024-01-11T15:23:06+01:00",
+          "tree_id": "4c4f1408d392483cb10d60aad16e93acd9cf4cde",
+          "url": "https://github.com/AntaresSimulatorTeam/Antares_Simulator/commit/52721e44d9b4e234c6217d5d1390264b55eef3a4"
+        },
+        "date": 1704984354902,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "FinalStockEquivalent-cnt_duration",
+            "value": 75.41737776605092,
+            "unit": "s"
+          },
+          {
+            "name": "FinalStockEquivalent-cnt_indicator",
+            "value": 75.41737776605092,
+            "unit": "my_ind"
+          },
+          {
+            "name": "FinalStockEquivalent-cnt_memory",
+            "value": 9,
+            "unit": "mb"
+          },
+          {
+            "name": "AreaHydroLevel_duration",
+            "value": 19.478573472899463,
+            "unit": "s"
+          },
+          {
+            "name": "AreaHydroLevel_indicator",
+            "value": 19.478573472899463,
+            "unit": "my_ind"
+          },
+          {
+            "name": "AreaHydroLevel_memory",
+            "value": 2,
+            "unit": "mb"
+          },
+          {
+            "name": "tests-ST-storage_duration",
+            "value": 67.56754036970553,
+            "unit": "s"
+          },
+          {
+            "name": "tests-ST-storage_indicator",
+            "value": 67.56754036970553,
+            "unit": "my_ind"
+          },
+          {
+            "name": "tests-ST-storage_memory",
+            "value": 9,
+            "unit": "mb"
+          },
+          {
+            "name": "binding-constraints_duration",
+            "value": 69.81166872757242,
+            "unit": "s"
+          },
+          {
+            "name": "binding-constraints_indicator",
+            "value": 69.81166872757242,
+            "unit": "my_ind"
+          },
+          {
+            "name": "binding-constraints_memory",
+            "value": 4,
+            "unit": "mb"
+          },
+          {
+            "name": "reservoir-MaxPumping_duration",
+            "value": 86.61328966647059,
+            "unit": "s"
+          },
+          {
+            "name": "reservoir-MaxPumping_indicator",
+            "value": 86.61328966647059,
+            "unit": "my_ind"
+          },
+          {
+            "name": "reservoir-MaxPumping_memory",
+            "value": 10,
+            "unit": "mb"
+          },
+          {
+            "name": "025_mps-week_duration",
+            "value": 63.37633688304369,
+            "unit": "s"
+          },
+          {
+            "name": "025_mps-week_indicator",
+            "value": 63.37633688304369,
+            "unit": "my_ind"
+          },
+          {
+            "name": "025_mps-week_memory",
+            "value": 8,
+            "unit": "mb"
+          },
+          {
+            "name": "Power-fluctuations-minimize-ramping-HydroPowerSmoothingUsingVariationSum_duration",
+            "value": 21.45529668640096,
+            "unit": "s"
+          },
+          {
+            "name": "Power-fluctuations-minimize-ramping-HydroPowerSmoothingUsingVariationSum_indicator",
+            "value": 21.45529668640096,
+            "unit": "my_ind"
+          },
+          {
+            "name": "Power-fluctuations-minimize-ramping-HydroPowerSmoothingUsingVariationSum_memory",
+            "value": 1,
+            "unit": "mb"
+          },
+          {
+            "name": "thermal-fleet-Accurate-unit-commitment_duration",
+            "value": 94.12064478840013,
+            "unit": "s"
+          },
+          {
+            "name": "thermal-fleet-Accurate-unit-commitment_indicator",
+            "value": 94.12064478840013,
+            "unit": "my_ind"
+          },
+          {
+            "name": "thermal-fleet-Accurate-unit-commitment_memory",
+            "value": 4,
+            "unit": "mb"
+          },
+          {
+            "name": "025_mps-day_duration",
+            "value": 26.942045978587736,
+            "unit": "s"
+          },
+          {
+            "name": "025_mps-day_indicator",
+            "value": 26.942045978587736,
+            "unit": "my_ind"
+          },
+          {
+            "name": "025_mps-day_memory",
+            "value": 7,
+            "unit": "mb"
+          },
+          {
+            "name": "Power-fluctuations-minimize-excursions-HydroPowerSmoothingUsingVariationMaxDown_duration",
+            "value": 97.42619197453722,
+            "unit": "s"
+          },
+          {
+            "name": "Power-fluctuations-minimize-excursions-HydroPowerSmoothingUsingVariationMaxDown_indicator",
+            "value": 97.42619197453722,
+            "unit": "my_ind"
+          },
+          {
+            "name": "Power-fluctuations-minimize-excursions-HydroPowerSmoothingUsingVariationMaxDown_memory",
+            "value": 6,
+            "unit": "mb"
+          },
+          {
+            "name": "reservoir-Min-MaxHydroPower_duration",
+            "value": 53.69451626019705,
+            "unit": "s"
+          },
+          {
+            "name": "reservoir-Min-MaxHydroPower_indicator",
+            "value": 53.69451626019705,
+            "unit": "my_ind"
+          },
+          {
+            "name": "reservoir-Min-MaxHydroPower_memory",
+            "value": 10,
             "unit": "mb"
           }
         ]
