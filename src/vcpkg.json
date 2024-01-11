@@ -3,21 +3,11 @@
   "version-string": "8.5.0",
   "dependencies": [
     "boost-test",
-
-
-    {
-      "name": "boost-test",
-      "platform": "windows"
-    },
-
     {
       "name": "libuuid",
       "platform": "linux"
-    },
-
-    {
-      "name": "boost-test",
-      "platform": "linux"
     }
+
+
   ]
 }
