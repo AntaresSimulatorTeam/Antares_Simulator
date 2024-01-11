@@ -6,7 +6,7 @@ set(src_libs_antares "${CMAKE_SOURCE_DIR}/libs/antares")
 
 
 # Adding a library embedding all Antares sources useful to test class Matrix
-
+find_package(Boost COMPONENTS unit_test_framework REQUIRED)
 set(SRC_MATRIX_LIB
 	# For confort in IDE, but not necessary
 	${src_libs_antares}/array/antares/array/matrix.h
