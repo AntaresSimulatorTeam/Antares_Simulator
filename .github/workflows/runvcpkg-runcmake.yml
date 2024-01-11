@@ -29,7 +29,7 @@ jobs:
             triplet: x64-windows
             test-platform: windows-2022
           - os: ubuntu-latest
-            triplet: x64-linux
+            triplet: x64-linux-dynamic
             test-platform: ubuntu-20.04
 
     env:
