@@ -284,32 +284,31 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         unsigned int clusterCount = area.thermal.list.enabledAndNotMustRunCount();
         pbPalier.NombreDePaliersThermiques = clusterCount;
 
-        for (uint clusterIndex = 0; clusterIndex != clusterCount; ++clusterIndex)
+        for (auto cluster : area.thermal.list.each_enabled_and_not_mustrun())
         {
-            auto& cluster = *(area.thermal.list[clusterIndex]);
-            pbPalier.NumeroDuPalierDansLEnsembleDesPaliersThermiques[clusterIndex]
-              = NombrePaliers + clusterIndex;
-            pbPalier.TailleUnitaireDUnGroupeDuPalierThermique[clusterIndex]
-              = cluster.nominalCapacityWithSpinning;
-            pbPalier.PminDuPalierThermiquePendantUneHeure[clusterIndex] = cluster.minStablePower;
-            pbPalier.PminDuPalierThermiquePendantUnJour[clusterIndex] = 0;
-            pbPalier.minUpDownTime[clusterIndex] = cluster.minUpDownTime;
+            pbPalier.NumeroDuPalierDansLEnsembleDesPaliersThermiques[cluster->index]
+              = NombrePaliers + cluster->index;
+            pbPalier.TailleUnitaireDUnGroupeDuPalierThermique[cluster->index]
+              = cluster->nominalCapacityWithSpinning;
+            pbPalier.PminDuPalierThermiquePendantUneHeure[cluster->index] = cluster->minStablePower;
+            pbPalier.PminDuPalierThermiquePendantUnJour[cluster->index] = 0;
+            pbPalier.minUpDownTime[cluster->index] = cluster->minUpDownTime;
 
-            pbPalier.CoutDeDemarrageDUnGroupeDuPalierThermique[clusterIndex] = cluster.startupCost;
-            pbPalier.CoutDArretDUnGroupeDuPalierThermique[clusterIndex] = 0;
-            pbPalier.CoutFixeDeMarcheDUnGroupeDuPalierThermique[clusterIndex] = cluster.fixedCost;
-            pbPalier.DureeMinimaleDeMarcheDUnGroupeDuPalierThermique[clusterIndex]
-              = cluster.minUpTime;
-            pbPalier.DureeMinimaleDArretDUnGroupeDuPalierThermique[clusterIndex]
-              = cluster.minDownTime;
+            pbPalier.CoutDeDemarrageDUnGroupeDuPalierThermique[cluster->index] = cluster->startupCost;
+            pbPalier.CoutDArretDUnGroupeDuPalierThermique[cluster->index] = 0;
+            pbPalier.CoutFixeDeMarcheDUnGroupeDuPalierThermique[cluster->index] = cluster->fixedCost;
+            pbPalier.DureeMinimaleDeMarcheDUnGroupeDuPalierThermique[cluster->index]
+              = cluster->minUpTime;
+            pbPalier.DureeMinimaleDArretDUnGroupeDuPalierThermique[cluster->index]
+              = cluster->minDownTime;
 
-            pbPalier.PmaxDUnGroupeDuPalierThermique[clusterIndex]
-              = cluster.nominalCapacityWithSpinning;
-            pbPalier.pminDUnGroupeDuPalierThermique[clusterIndex]
-              = (pbPalier.PmaxDUnGroupeDuPalierThermique[clusterIndex] < cluster.minStablePower)
-                  ? pbPalier.PmaxDUnGroupeDuPalierThermique[clusterIndex]
-                  : cluster.minStablePower;
-            pbPalier.NomsDesPaliersThermiques[clusterIndex] = cluster.name().c_str();
+            pbPalier.PmaxDUnGroupeDuPalierThermique[cluster->index]
+              = cluster->nominalCapacityWithSpinning;
+            pbPalier.pminDUnGroupeDuPalierThermique[cluster->index]
+              = (pbPalier.PmaxDUnGroupeDuPalierThermique[cluster->index] < cluster->minStablePower)
+                  ? pbPalier.PmaxDUnGroupeDuPalierThermique[cluster->index]
+                  : cluster->minStablePower;
+            pbPalier.NomsDesPaliersThermiques[cluster->index] = cluster->name().c_str();
         }
 
         NombrePaliers += clusterCount;

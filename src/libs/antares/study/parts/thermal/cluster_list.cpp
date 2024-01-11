@@ -346,7 +346,7 @@ void ThermalClusterList::calculationOfSpinning()
 
 void ThermalClusterList::reverseCalculationOfSpinning()
 {
-    for (auto cluster : each_enabled())
+    for (auto cluster : each_enabled_and_not_mustrun())
         cluster->reverseCalculationOfSpinning();
 }
 
