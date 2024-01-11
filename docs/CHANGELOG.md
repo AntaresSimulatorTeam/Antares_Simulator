@@ -8,6 +8,10 @@ Antares Changelog
 
 8.8.1 (12/2023)
 --------------------
+
+## Bugfix
+* Simplify TS numbers drawings, fix bug related to refresh & local thermal generation (#1752)
+
 ## Improvements
 * Take into account breaking change in OR-Tools's API, enable SCIP & GLPK solvers, bump OR-Tools (#1825). This should improve performances with FICO XPRESS
 * Fail if OR-Tools solver is not found (#1851)
