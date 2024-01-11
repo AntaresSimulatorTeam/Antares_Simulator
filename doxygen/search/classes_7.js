@@ -11,7 +11,7 @@ var searchData=
   ['hydraulicsmoothinggroup_8',['HydraulicSmoothingGroup',['../classHydraulicSmoothingGroup.html',1,'']]],
   ['hydro_5fproblem_5fcosts_9',['Hydro_problem_costs',['../classHydro__problem__costs.html',1,'']]],
   ['hydroallocation_10',['HydroAllocation',['../classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1HydroAllocation.html',1,'Antares::Component::Datagrid::Renderer::HydroAllocation'],['../classAntares_1_1Data_1_1HydroAllocation.html',1,'Antares::Data::HydroAllocation']]],
-  ['hydroareanumberoftsretriever_11',['hydroAreaNumberOfTSretriever',['../classAntares_1_1Solver_1_1hydroAreaNumberOfTSretriever.html',1,'Antares::Solver']]],
+  ['hydroareanumberoftsretriever_11',['HydroAreaNumberOfTSretriever',['../classAntares_1_1Solver_1_1HydroAreaNumberOfTSretriever.html',1,'Antares::Solver']]],
   ['hydrocost_12',['HydroCost',['../classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroCost.html',1,'Antares::Solver::Variable::Economy']]],
   ['hydrocostnoise_13',['hydroCostNoise',['../classAntares_1_1Solver_1_1Simulation_1_1hydroCostNoise.html',1,'Antares::Solver::Simulation']]],
   ['hydrolevelsdata_14',['hydroLevelsData',['../classAntares_1_1Data_1_1ScenarioBuilder_1_1hydroLevelsData.html',1,'Antares::Data::ScenarioBuilder']]],

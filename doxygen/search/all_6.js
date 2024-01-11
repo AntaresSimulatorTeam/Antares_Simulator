@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['gammaeuler_0',['GammaEuler',['../classAntares_1_1Solver_1_1TSGenerator_1_1XCast_1_1XCast.html#a9924bae2f932178171abb73c5e830f58',1,'Antares::Solver::TSGenerator::XCast::XCast']]],
-  ['gammainc_1',['GammaInc',['../classAntares_1_1Solver_1_1TSGenerator_1_1XCast_1_1XCast.html#a9459a841e38bd389266e778c66a358c0',1,'Antares::Solver::TSGenerator::XCast::XCast']]],
+  ['gammaeuler_0',['GammaEuler',['../classAntares_1_1TSGenerator_1_1XCast_1_1XCast.html#aa90f195e299484fe2994b515923a4ea9',1,'Antares::TSGenerator::XCast::XCast']]],
+  ['gammainc_1',['GammaInc',['../classAntares_1_1TSGenerator_1_1XCast_1_1XCast.html#a1f24848a4361d9c2d68fdaedaf9ba244',1,'Antares::TSGenerator::XCast::XCast']]],
   ['gatherinfosaboutthermalclusters_2',['gatherInfosAboutThermalClusters',['../classAntares_1_1Private_1_1OutputViewerData_1_1Job.html#ae9fd690ae9e900afba39a2f04bea37cc',1,'Antares::Private::OutputViewerData::Job']]],
   ['gatherinfosaboutyearbyyeardata_3',['gatherInfosAboutYearByYearData',['../classAntares_1_1Private_1_1OutputViewerData_1_1Job.html#a921bafe4a016050fd6687f1782d5c2dc',1,'Antares::Private::OutputViewerData::Job']]],
   ['generatedtsstatus_4',['generatedTSstatus',['../classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1generatedTSstatus.html',1,'Antares::Component::Datagrid::Renderer']]],
@@ -42,8 +42,8 @@ var searchData=
   ['group_39',['Group',['../classAntares_1_1Component_1_1HTMLListbox_1_1Item_1_1Group.html',1,'Antares::Component::HTMLListbox::Item']]],
   ['group_40',['group',['../classIItem.html#a947daf7f8c09441db42226181eba1060',1,'IItem::group()'],['../classAntares_1_1Data_1_1BindingConstraint.html#a7a34d9a77804194550b53a75729fc1a5',1,'Antares::Data::BindingConstraint::group()'],['../classAntares_1_1Data_1_1Cluster.html#aa8b2a399286b9e5df51c9fb366377a48',1,'Antares::Data::Cluster::group()'],['../classAntares_1_1Data_1_1ShortTermStorage_1_1Properties.html#a3104c0e67bedcc3b60b8577924100282',1,'Antares::Data::ShortTermStorage::Properties::group()'],['../classIItem.html#ad392d236661618fd32bb871b5ad89532',1,'IItem::group()']]],
   ['group1_41',['Group1',['../classGroup1.html',1,'']]],
-  ['groupid_42',['groupId',['../classAntares_1_1Data_1_1RenewableCluster.html#a242c33df7d31195d2fcadd40c93cff62',1,'Antares::Data::RenewableCluster::groupId()'],['../classAntares_1_1Data_1_1ThermalCluster.html#a4a5dde22643ed69a9f489dfd34b9a93a',1,'Antares::Data::ThermalCluster::groupId()']]],
-  ['groupid_43',['groupID',['../classAntares_1_1Data_1_1RenewableCluster.html#a68675a5d06a20fc0d9a8eb6d677ca4bd',1,'Antares::Data::RenewableCluster::groupID()'],['../classAntares_1_1Data_1_1ThermalCluster.html#af6aa1f4f3377b7ca5d4d9298c5021c20',1,'Antares::Data::ThermalCluster::groupID()']]],
+  ['groupid_42',['groupID',['../classAntares_1_1Data_1_1RenewableCluster.html#a68675a5d06a20fc0d9a8eb6d677ca4bd',1,'Antares::Data::RenewableCluster::groupID()'],['../classAntares_1_1Data_1_1ThermalCluster.html#af6aa1f4f3377b7ca5d4d9298c5021c20',1,'Antares::Data::ThermalCluster::groupID()']]],
+  ['groupid_43',['groupId',['../classAntares_1_1Data_1_1RenewableCluster.html#a242c33df7d31195d2fcadd40c93cff62',1,'Antares::Data::RenewableCluster::groupId()'],['../classAntares_1_1Data_1_1ThermalCluster.html#a4a5dde22643ed69a9f489dfd34b9a93a',1,'Antares::Data::ThermalCluster::groupId()']]],
   ['groupmax_44',['groupMax',['../classAntares_1_1Data_1_1RenewableCluster.html#ade08abd90934ba01d21cb9e0cef5d23fa1bff636f25c9d0eeadc8e95fc7c399c0',1,'Antares::Data::RenewableCluster::groupMax()'],['../classAntares_1_1Data_1_1ThermalCluster.html#a1c269b0f39a7e8f25fef429d655f9a89a015265937af4c555d93be810aa22f792',1,'Antares::Data::ThermalCluster::groupMax()']]],
   ['groupname_45',['GroupName',['../classAntares_1_1Data_1_1ThermalCluster.html#a079ac9196051d5acd5995a790bcaa5d0',1,'Antares::Data::ThermalCluster']]],
   ['grouptype_46',['GroupType',['../classIItem.html#a71450156f36287a93369c759401d98b2',1,'IItem']]],

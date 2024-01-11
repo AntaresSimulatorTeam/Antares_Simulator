@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['gammaeuler_0',['GammaEuler',['../classAntares_1_1Solver_1_1TSGenerator_1_1XCast_1_1XCast.html#a9924bae2f932178171abb73c5e830f58',1,'Antares::Solver::TSGenerator::XCast::XCast']]],
-  ['gammainc_1',['GammaInc',['../classAntares_1_1Solver_1_1TSGenerator_1_1XCast_1_1XCast.html#a9459a841e38bd389266e778c66a358c0',1,'Antares::Solver::TSGenerator::XCast::XCast']]],
+  ['gammaeuler_0',['GammaEuler',['../classAntares_1_1TSGenerator_1_1XCast_1_1XCast.html#aa90f195e299484fe2994b515923a4ea9',1,'Antares::TSGenerator::XCast::XCast']]],
+  ['gammainc_1',['GammaInc',['../classAntares_1_1TSGenerator_1_1XCast_1_1XCast.html#a1f24848a4361d9c2d68fdaedaf9ba244',1,'Antares::TSGenerator::XCast::XCast']]],
   ['gatherinfosaboutthermalclusters_2',['gatherInfosAboutThermalClusters',['../classAntares_1_1Private_1_1OutputViewerData_1_1Job.html#ae9fd690ae9e900afba39a2f04bea37cc',1,'Antares::Private::OutputViewerData::Job']]],
   ['gatherinfosaboutyearbyyeardata_3',['gatherInfosAboutYearByYearData',['../classAntares_1_1Private_1_1OutputViewerData_1_1Job.html#a921bafe4a016050fd6687f1782d5c2dc',1,'Antares::Private::OutputViewerData::Job']]],
   ['getattr_4',['GetAttr',['../classAntares_1_1Component_1_1Datagrid_1_1GridCellAttrProvider.html#aeb016333685c8309445b6e4270563b8b',1,'Antares::Component::Datagrid::GridCellAttrProvider']]],

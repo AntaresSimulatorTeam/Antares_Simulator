@@ -28,7 +28,7 @@ var searchData=
   ['timeseriestoarchive_25',['timeSeriesToArchive',['../classAntares_1_1Data_1_1Parameters.html#a183ed870c4447452af99f780671a3cd1',1,'Antares::Data::Parameters']]],
   ['timeseriestogenerate_26',['timeSeriesToGenerate',['../classAntares_1_1Data_1_1Parameters.html#a7f9aa8bc81c74fed545ae3cbd657d7e5',1,'Antares::Data::Parameters']]],
   ['timeseriestorefresh_27',['timeSeriesToRefresh',['../classAntares_1_1Data_1_1Parameters.html#ac7200d752c0a628dd8bc79ce05c8ec6c',1,'Antares::Data::Parameters']]],
-  ['timeseriestype_28',['timeSeriesType',['../classAntares_1_1Solver_1_1TSGenerator_1_1XCast_1_1XCast.html#a63bc7d2abaa797e31b5d25c4c1936d08',1,'Antares::Solver::TSGenerator::XCast::XCast']]],
+  ['timeseriestype_28',['timeSeriesType',['../classAntares_1_1TSGenerator_1_1XCast_1_1XCast.html#aa70c818537beca4996e6b3f0596680da',1,'Antares::TSGenerator::XCast::XCast']]],
   ['timestamp_29',['timestamp',['../classAntares_1_1Data_1_1Output.html#a47d2b94d0e41f050757474e44c1a7181',1,'Antares::Data::Output']]],
   ['title_30',['title',['../classAntares_1_1Data_1_1Output.html#a1b0b78cffb6534e38602efedc15546c5',1,'Antares::Data::Output']]],
   ['total_31',['Total',['../classProgress.html#a7b0d1924b92c1557061ab78e49113bcd',1,'Progress']]],

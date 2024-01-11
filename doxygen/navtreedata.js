@@ -91,19 +91,19 @@ var NAVTREEINDEX =
 "classAntares_1_1Data_1_1ThermalCluster.html#a1c269b0f39a7e8f25fef429d655f9a89a89b1ebec59cf6dc646f79f800ea322a3",
 "classAntares_1_1Forms_1_1MainFormData.html#a7dd7e79930b59ec448b4a750c0f11061",
 "classAntares_1_1Map_1_1PanelInfos.html#a3066387ddb479bcf0d3cbaec4b789d34",
-"classAntares_1_1Solver_1_1Private_1_1Simulation_1_1CacheData.html#a7cc93bad6acbeade41e713818bd5f36f",
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCost.html",
-"classAntares_1_1Solver_1_1Variable_1_1State.html",
-"classAntares_1_1Toolbox_1_1Jobs_1_1MessageFlusherTimer.html",
-"classAntares_1_1Window_1_1OutputViewer_1_1Layer.html#aee184a3fb721f1d56202c73bcfc90d51",
-"classIItem.html#a595a5690a0fd82ec02053285fa493ea7",
-"classintegrity__compare_1_1integrity__compare.html",
-"dir_b2f0c8ed8a5758d1aac7fdf012e1db88.html",
-"group__logs.html#gaeeecaed35d419d20ac8985edff942068",
-"pages.html",
-"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1SpilledEnergy_1_1Statistics.html",
-"structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_013_01_4.html",
-"tests-matrix-save_8h_source.html"
+"classAntares_1_1Solver_1_1Private_1_1Simulation_1_1CacheData.html#a371e6bea44340e01ac59fa4e42c4b83b",
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OperatingCost.html#a51e0c70f5ba0c1bad380b2f2a94b8f39",
+"classAntares_1_1Solver_1_1Variable_1_1State.html#a59c1e34f17e362fc6e8793489d5a21fd",
+"classAntares_1_1Toolbox_1_1Jobs_1_1Part.html",
+"classAntares_1_1Window_1_1OutputViewer_1_1Provider_1_1Comparison.html",
+"classIItem.html#a5c2c2d7591c7ae44b7831c3c2aa5b2d2",
+"classjson__collector_1_1checksRetriever.html",
+"dir_b3a9990e8993590031442c20d62eeaca.html",
+"gui_8h_source.html",
+"panel_8hxx_source.html",
+"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardOverallCost.html",
+"structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_014_01_4.html",
+"tests_2end-to-end_2utils_2utils_8h_source.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

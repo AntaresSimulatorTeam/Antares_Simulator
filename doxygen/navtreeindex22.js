@@ -1,6 +1,5 @@
 var NAVTREEINDEX22 =
 {
-"pages.html":[],
 "panel_8hxx_source.html":[8,0,0,5,2,2,10,0,2],
 "parameter_8h_source.html":[8,0,0,5,2,1,1,1,0,2,0],
 "parameters_8h_source.html":[8,0,0,1,0,21,22],
@@ -234,20 +233,21 @@ var NAVTREEINDEX22 =
 "structAntares_1_1Date_1_1HourInterval.html":[7,0,0,4,2],
 "structAntares_1_1Date_1_1HourInterval.html#a53e86b3732adfe8635cab8d74fa5779d":[7,0,0,4,2,1],
 "structAntares_1_1Date_1_1HourInterval.html#a8e699af7f35137c818d5a00934f38a53":[7,0,0,4,2,0],
-"structAntares_1_1DebugData.html":[7,0,0,23],
+"structAntares_1_1DebugData.html":[7,0,0,24],
 "structAntares_1_1Forms_1_1CompareBySimulationMode.html":[7,0,0,7,1],
 "structAntares_1_1Forms_1_1CompareByTimestamp.html":[7,0,0,7,2],
 "structAntares_1_1Graph_1_1Edge_1_1addpWeight.html":[7,0,0,8,0,0],
 "structAntares_1_1Graph_1_1Edge_1_1compareWeight.html":[7,0,0,8,0,1],
 "structAntares_1_1Map_1_1Item_1_1SetCompare.html":[7,0,0,9,7,0],
 "structAntares_1_1Map_1_1MapRenderOptions.html":[7,0,0,9,9],
-"structAntares_1_1Matrix_1_1PredicateIdentity.html":[7,0,0,32,0],
-"structAntares_1_1Memory_1_1Stored.html":[7,0,0,38,1],
+"structAntares_1_1Matrix_1_1PredicateIdentity.html":[7,0,0,33,0],
+"structAntares_1_1Memory_1_1Stored.html":[7,0,0,39,1],
 "structAntares_1_1Optimization_1_1PROBLEME__SIMPLEXE__NOMME.html":[7,0,0,10,4],
 "structAntares_1_1Optimization_1_1VariableBounds.html":[7,0,0,10,9],
 "structAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html":[7,0,0,12,1,3],
 "structAntares_1_1Solver_1_1Simulation_1_1compareHydroCostsNoises.html":[7,0,0,12,3,5],
 "structAntares_1_1Solver_1_1Simulation_1_1optRuntimeData.html":[7,0,0,12,3,19],
 "structAntares_1_1Solver_1_1Simulation_1_1setOfParallelYears.html":[7,0,0,12,3,22],
-"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1OverallCost_1_1Statistics.html":[7,0,0,12,5,0,0,0]
+"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1OverallCost_1_1Statistics.html":[7,0,0,12,4,0,0,0],
+"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1SpilledEnergy_1_1Statistics.html":[7,0,0,12,4,0,1,0]
 };

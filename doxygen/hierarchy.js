@@ -42,14 +42,14 @@ var hierarchy =
     [ "AreaBalanceData", "structAreaBalanceData.html", null ],
     [ "AreaHydroLevelData", "structAreaHydroLevelData.html", null ],
     [ "Antares::areaInfo", "classAntares_1_1areaInfo.html", null ],
-    [ "Antares::Solver::areaNumberOfTSretriever", "classAntares_1_1Solver_1_1areaNumberOfTSretriever.html", [
-      [ "Antares::Solver::areaLinksTransCapaNumberOfTSretriever", "classAntares_1_1Solver_1_1areaLinksTransCapaNumberOfTSretriever.html", null ],
-      [ "Antares::Solver::hydroAreaNumberOfTSretriever", "classAntares_1_1Solver_1_1hydroAreaNumberOfTSretriever.html", null ],
-      [ "Antares::Solver::loadAreaNumberOfTSretriever", "classAntares_1_1Solver_1_1loadAreaNumberOfTSretriever.html", null ],
-      [ "Antares::Solver::renewClustersAreaNumberOfTSretriever", "classAntares_1_1Solver_1_1renewClustersAreaNumberOfTSretriever.html", null ],
-      [ "Antares::Solver::solarAreaNumberOfTSretriever", "classAntares_1_1Solver_1_1solarAreaNumberOfTSretriever.html", null ],
-      [ "Antares::Solver::thermalAreaNumberOfTSretriever", "classAntares_1_1Solver_1_1thermalAreaNumberOfTSretriever.html", null ],
-      [ "Antares::Solver::windAreaNumberOfTSretriever", "classAntares_1_1Solver_1_1windAreaNumberOfTSretriever.html", null ]
+    [ "Antares::Solver::AreaNumberOfTSretriever", "classAntares_1_1Solver_1_1AreaNumberOfTSretriever.html", [
+      [ "Antares::Solver::AreaLinksTransCapaNumberOfTSretriever", "classAntares_1_1Solver_1_1AreaLinksTransCapaNumberOfTSretriever.html", null ],
+      [ "Antares::Solver::HydroAreaNumberOfTSretriever", "classAntares_1_1Solver_1_1HydroAreaNumberOfTSretriever.html", null ],
+      [ "Antares::Solver::LoadAreaNumberOfTSretriever", "classAntares_1_1Solver_1_1LoadAreaNumberOfTSretriever.html", null ],
+      [ "Antares::Solver::RenewClustersAreaNumberOfTSretriever", "classAntares_1_1Solver_1_1RenewClustersAreaNumberOfTSretriever.html", null ],
+      [ "Antares::Solver::SolarAreaNumberOfTSretriever", "classAntares_1_1Solver_1_1SolarAreaNumberOfTSretriever.html", null ],
+      [ "Antares::Solver::ThermalAreaNumberOfTSretriever", "classAntares_1_1Solver_1_1ThermalAreaNumberOfTSretriever.html", null ],
+      [ "Antares::Solver::WindAreaNumberOfTSretriever", "classAntares_1_1Solver_1_1WindAreaNumberOfTSretriever.html", null ]
     ] ],
     [ "Antares::Solver::Variable::Areas< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Areas.html", null ],
     [ "Antares::Data::AreaScratchpad", "classAntares_1_1Data_1_1AreaScratchpad.html", null ],
@@ -697,7 +697,7 @@ var hierarchy =
     [ "Antares::Solver::Variable::LINK_NAMESPACE::Links", "classAntares_1_1Solver_1_1Variable_1_1LINK__NAMESPACE_1_1Links.html", null ],
     [ "HourlyCSRProblem::LinkVariable", "structHourlyCSRProblem_1_1LinkVariable.html", null ],
     [ "Antares::Toolbox::Filter::Operator::List", "classAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1List.html", null ],
-    [ "Antares::Solver::TSGenerator::Predicate::Load", "classAntares_1_1Solver_1_1TSGenerator_1_1Predicate_1_1Load.html", null ],
+    [ "Antares::TSGenerator::Predicate::Load", "classAntares_1_1TSGenerator_1_1Predicate_1_1Load.html", null ],
     [ "Antares::Data::AdequacyPatch::LocalMatching", "structAntares_1_1Data_1_1AdequacyPatch_1_1LocalMatching.html", null ],
     [ "Antares::WIP::Locker", "classAntares_1_1WIP_1_1Locker.html", null ],
     [ "Antares::Component::Datagrid::Renderer::LogEntry", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1LogEntry.html", null ],
@@ -846,7 +846,7 @@ var hierarchy =
       [ "Antares::Data::ScenarioBuilder::Sets", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Sets.html", null ],
       [ "Antares::Data::Study", "classAntares_1_1Data_1_1Study.html", null ],
       [ "Antares::Data::XCast", "classAntares_1_1Data_1_1XCast.html", null ],
-      [ "Antares::Solver::TSGenerator::XCast::XCast", "classAntares_1_1Solver_1_1TSGenerator_1_1XCast_1_1XCast.html", null ],
+      [ "Antares::TSGenerator::XCast::XCast", "classAntares_1_1TSGenerator_1_1XCast_1_1XCast.html", null ],
       [ "FSWalker::EventsRegistry", "classFSWalker_1_1EventsRegistry.html", null ],
       [ "FSWalker::Walker", "classFSWalker_1_1Walker.html", null ],
       [ "UserData", "classUserData.html", null ]
@@ -1092,7 +1092,7 @@ var hierarchy =
     [ "Antares::Private::OutputViewerData::Content::SimulationType", "classAntares_1_1Private_1_1OutputViewerData_1_1Content_1_1SimulationType.html", null ],
     [ "Antares::IIntrusiveReference< ChildT, TP >::SmartPtr< T >", "classAntares_1_1IIntrusiveReference_1_1SmartPtr.html", null ],
     [ "Antares::IObject::SmartPtr< U >", "classAntares_1_1IObject_1_1SmartPtr.html", null ],
-    [ "Antares::Solver::TSGenerator::Predicate::Solar", "classAntares_1_1Solver_1_1TSGenerator_1_1Predicate_1_1Solar.html", null ],
+    [ "Antares::TSGenerator::Predicate::Solar", "classAntares_1_1TSGenerator_1_1Predicate_1_1Solar.html", null ],
     [ "SOLDE_MOYEN_DES_ECHANGES", "structSOLDE__MOYEN__DES__ECHANGES.html", null ],
     [ "OrtoolsUtils::SolverNames", "structOrtoolsUtils_1_1SolverNames.html", null ],
     [ "Antares::Component::HTMLListbox::Datasource::SortAlphaOrder", "structAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1SortAlphaOrder.html", null ],
@@ -1253,7 +1253,7 @@ var hierarchy =
       ] ]
     ] ],
     [ "Antares::Data::StudyCleaningInfos", "classAntares_1_1Data_1_1StudyCleaningInfos.html", null ],
-    [ "Antares::Solver::TSGenerator::XCast::StudyData", "classAntares_1_1Solver_1_1TSGenerator_1_1XCast_1_1StudyData.html", null ],
+    [ "Antares::TSGenerator::XCast::StudyData", "classAntares_1_1TSGenerator_1_1XCast_1_1StudyData.html", null ],
     [ "StudyData", "classStudyData.html", null ],
     [ "Antares::Data::StudyHeader", "classAntares_1_1Data_1_1StudyHeader.html", null ],
     [ "Benchmarking::StudyInfoCollector", "classBenchmarking_1_1StudyInfoCollector.html", null ],
@@ -1450,7 +1450,7 @@ var hierarchy =
     ] ],
     [ "unfeasible_problem.weeks_in_year", "classunfeasible__problem_1_1weeks__in__year.html", null ],
     [ "Antares::Data::WhoseNameContains", "structAntares_1_1Data_1_1WhoseNameContains.html", null ],
-    [ "Antares::Solver::TSGenerator::Predicate::Wind", "classAntares_1_1Solver_1_1TSGenerator_1_1Predicate_1_1Wind.html", null ],
+    [ "Antares::TSGenerator::Predicate::Wind", "classAntares_1_1TSGenerator_1_1Predicate_1_1Wind.html", null ],
     [ "wxApp", null, [
       [ "Antares::Application", "classAntares_1_1Application.html", null ]
     ] ],

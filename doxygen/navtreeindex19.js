@@ -1,6 +1,5 @@
 var NAVTREEINDEX19 =
 {
-"classintegrity__compare_1_1integrity__compare.html":[7,0,13,0],
 "classjson__collector_1_1checksRetriever.html":[7,0,14,0],
 "classjson__collector_1_1error.html":[7,0,14,1],
 "classjson__collector_1_1jsonCollector.html":[7,0,14,2],
@@ -249,5 +248,6 @@ var NAVTREEINDEX19 =
 "dir_b09317864ff00fe4ec2e03bb740a6340.html":[8,0,0,5,0,1,0,0,0,0],
 "dir_b11ad5fb8f8daa2f254601715352a89c.html":[8,0,0,1,0,19,0,0,0],
 "dir_b245aa9f04213457d1e0cb57c55c3610.html":[8,0,0,5,2,2,16],
-"dir_b26ec8c49b27a9aaad3432be2fcf3afe.html":[8,0,0,2,9,0,0,0]
+"dir_b26ec8c49b27a9aaad3432be2fcf3afe.html":[8,0,0,2,9,0,0,0],
+"dir_b2f0c8ed8a5758d1aac7fdf012e1db88.html":[8,0,0,5,2]
 };

@@ -11,7 +11,7 @@ var searchData=
   ['text_8',['Text',['../classAntares_1_1Action_1_1Text.html',1,'Antares::Action::Text&lt; AutoExpandT &gt;'],['../classText.html',1,'Text']]],
   ['thermal_9',['Thermal',['../structAntares_1_1Data_1_1Parameters_1_1IncludeOptions_1_1Thermal.html',1,'Antares::Data::Parameters::IncludeOptions']]],
   ['thermalairpollutantemissions_10',['ThermalAirPollutantEmissions',['../classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ThermalAirPollutantEmissions.html',1,'Antares::Solver::Variable::Economy']]],
-  ['thermalareanumberoftsretriever_11',['thermalAreaNumberOfTSretriever',['../classAntares_1_1Solver_1_1thermalAreaNumberOfTSretriever.html',1,'Antares::Solver']]],
+  ['thermalareanumberoftsretriever_11',['ThermalAreaNumberOfTSretriever',['../classAntares_1_1Solver_1_1ThermalAreaNumberOfTSretriever.html',1,'Antares::Solver']]],
   ['thermalcluster_12',['ThermalCluster',['../classAntares_1_1Data_1_1ThermalCluster.html',1,'Antares::Data::ThermalCluster'],['../classAntares_1_1Toolbox_1_1InputSelector_1_1ThermalCluster.html',1,'Antares::Toolbox::InputSelector::ThermalCluster']]],
   ['thermalclustercommonmodulation_13',['ThermalClusterCommonModulation',['../classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ThermalClusterCommonModulation.html',1,'Antares::Component::Datagrid::Renderer']]],
   ['thermalclusterconfig_14',['ThermalClusterConfig',['../classThermalClusterConfig.html',1,'']]],

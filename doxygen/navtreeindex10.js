@@ -194,7 +194,7 @@ var NAVTREEINDEX10 =
 "classAntares_1_1ExtSource_1_1Handler_1_1BuildContext.html#ad595d5490507f25caf0ee32e2121c3ac":[7,0,0,6,0,0,1],
 "classAntares_1_1ExtSource_1_1Handler_1_1BuildContext.html#ae636626919c90c5139c28d0a34b913d1":[7,0,0,6,0,0,0],
 "classAntares_1_1ExtSource_1_1Handler_1_1BuildContext.html#aea8f8f1d39614cfaaa1339206bdafee9":[7,0,0,6,0,0,3],
-"classAntares_1_1FatalError.html":[7,0,0,24],
+"classAntares_1_1FatalError.html":[7,0,0,25],
 "classAntares_1_1Forms_1_1ApplWnd.html":[7,0,0,7,0],
 "classAntares_1_1Forms_1_1ApplWnd.html#a0302f49787d5b0f0c848598438024f3f":[7,0,0,7,0,27],
 "classAntares_1_1Forms_1_1ApplWnd.html#a04d6a7313bd189e19b40954a8030aa85":[7,0,0,7,0,36],

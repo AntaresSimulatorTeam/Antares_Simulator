@@ -32,7 +32,7 @@ var searchData=
   ['renewablegeneration_29',['RenewableGeneration',['../structAntares_1_1Data_1_1Parameters_1_1RenewableGeneration.html',1,'Antares::Data::Parameters::RenewableGeneration'],['../classAntares_1_1Solver_1_1Variable_1_1Economy_1_1RenewableGeneration.html',1,'Antares::Solver::Variable::Economy::RenewableGeneration&lt; NextT &gt;']]],
   ['renewablescbuilderrenderer_30',['renewableScBuilderRenderer',['../classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1renewableScBuilderRenderer.html',1,'Antares::Component::Datagrid::Renderer']]],
   ['renewabletsnumberdata_31',['renewableTSNumberData',['../classAntares_1_1Data_1_1ScenarioBuilder_1_1renewableTSNumberData.html',1,'Antares::Data::ScenarioBuilder']]],
-  ['renewclustersareanumberoftsretriever_32',['renewClustersAreaNumberOfTSretriever',['../classAntares_1_1Solver_1_1renewClustersAreaNumberOfTSretriever.html',1,'Antares::Solver']]],
+  ['renewclustersareanumberoftsretriever_32',['RenewClustersAreaNumberOfTSretriever',['../classAntares_1_1Solver_1_1RenewClustersAreaNumberOfTSretriever.html',1,'Antares::Solver']]],
   ['reserve_33',['Reserve',['../structAntares_1_1Data_1_1Parameters_1_1IncludeOptions_1_1Reserve.html',1,'Antares::Data::Parameters::IncludeOptions']]],
   ['reserve_5fjmoins1_34',['RESERVE_JMOINS1',['../structRESERVE__JMOINS1.html',1,'']]],
   ['reserves_35',['Reserves',['../classAntares_1_1Action_1_1AntaresStudy_1_1Area_1_1Reserves.html',1,'Antares::Action::AntaresStudy::Area']]],

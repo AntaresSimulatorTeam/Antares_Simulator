@@ -502,17 +502,6 @@ var annotated_dup =
           [ "yearJob", "classAntares_1_1Solver_1_1Simulation_1_1yearJob.html", null ],
           [ "yearRandomNumbers", "classAntares_1_1Solver_1_1Simulation_1_1yearRandomNumbers.html", null ]
         ] ],
-        [ "TSGenerator", null, [
-          [ "Predicate", null, [
-            [ "Load", "classAntares_1_1Solver_1_1TSGenerator_1_1Predicate_1_1Load.html", null ],
-            [ "Solar", "classAntares_1_1Solver_1_1TSGenerator_1_1Predicate_1_1Solar.html", null ],
-            [ "Wind", "classAntares_1_1Solver_1_1TSGenerator_1_1Predicate_1_1Wind.html", null ]
-          ] ],
-          [ "XCast", null, [
-            [ "StudyData", "classAntares_1_1Solver_1_1TSGenerator_1_1XCast_1_1StudyData.html", "classAntares_1_1Solver_1_1TSGenerator_1_1XCast_1_1StudyData" ],
-            [ "XCast", "classAntares_1_1Solver_1_1TSGenerator_1_1XCast_1_1XCast.html", "classAntares_1_1Solver_1_1TSGenerator_1_1XCast_1_1XCast" ]
-          ] ]
-        ] ],
         [ "Variable", null, [
           [ "Adequacy", null, [
             [ "OverallCost", "classAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1OverallCost.html", "classAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1OverallCost" ],
@@ -714,21 +703,21 @@ var annotated_dup =
           [ "VCardJoin", "structAntares_1_1Solver_1_1Variable_1_1VCardJoin.html", "structAntares_1_1Solver_1_1Variable_1_1VCardJoin" ]
         ] ],
         [ "Application", "classAntares_1_1Solver_1_1Application.html", "classAntares_1_1Solver_1_1Application" ],
-        [ "areaLinksTransCapaNumberOfTSretriever", "classAntares_1_1Solver_1_1areaLinksTransCapaNumberOfTSretriever.html", null ],
-        [ "areaNumberOfTSretriever", "classAntares_1_1Solver_1_1areaNumberOfTSretriever.html", null ],
+        [ "AreaLinksTransCapaNumberOfTSretriever", "classAntares_1_1Solver_1_1AreaLinksTransCapaNumberOfTSretriever.html", null ],
+        [ "AreaNumberOfTSretriever", "classAntares_1_1Solver_1_1AreaNumberOfTSretriever.html", null ],
         [ "EnsureQueueStartedIfNeeded", "classAntares_1_1Solver_1_1EnsureQueueStartedIfNeeded.html", null ],
-        [ "hydroAreaNumberOfTSretriever", "classAntares_1_1Solver_1_1hydroAreaNumberOfTSretriever.html", null ],
+        [ "HydroAreaNumberOfTSretriever", "classAntares_1_1Solver_1_1HydroAreaNumberOfTSretriever.html", null ],
         [ "ImmediateFileResultWriter", "classAntares_1_1Solver_1_1ImmediateFileResultWriter.html", "classAntares_1_1Solver_1_1ImmediateFileResultWriter" ],
         [ "IntraModalConsistencyChecker", "classAntares_1_1Solver_1_1IntraModalConsistencyChecker.html", null ],
         [ "IOError", "classAntares_1_1Solver_1_1IOError.html", null ],
         [ "IResultWriter", "classAntares_1_1Solver_1_1IResultWriter.html", "classAntares_1_1Solver_1_1IResultWriter" ],
-        [ "loadAreaNumberOfTSretriever", "classAntares_1_1Solver_1_1loadAreaNumberOfTSretriever.html", null ],
+        [ "LoadAreaNumberOfTSretriever", "classAntares_1_1Solver_1_1LoadAreaNumberOfTSretriever.html", null ],
         [ "NullResultWriter", "classAntares_1_1Solver_1_1NullResultWriter.html", null ],
         [ "Progression", "classAntares_1_1Solver_1_1Progression.html", "classAntares_1_1Solver_1_1Progression" ],
-        [ "renewClustersAreaNumberOfTSretriever", "classAntares_1_1Solver_1_1renewClustersAreaNumberOfTSretriever.html", null ],
-        [ "solarAreaNumberOfTSretriever", "classAntares_1_1Solver_1_1solarAreaNumberOfTSretriever.html", null ],
-        [ "thermalAreaNumberOfTSretriever", "classAntares_1_1Solver_1_1thermalAreaNumberOfTSretriever.html", null ],
-        [ "windAreaNumberOfTSretriever", "classAntares_1_1Solver_1_1windAreaNumberOfTSretriever.html", null ],
+        [ "RenewClustersAreaNumberOfTSretriever", "classAntares_1_1Solver_1_1RenewClustersAreaNumberOfTSretriever.html", null ],
+        [ "SolarAreaNumberOfTSretriever", "classAntares_1_1Solver_1_1SolarAreaNumberOfTSretriever.html", null ],
+        [ "ThermalAreaNumberOfTSretriever", "classAntares_1_1Solver_1_1ThermalAreaNumberOfTSretriever.html", null ],
+        [ "WindAreaNumberOfTSretriever", "classAntares_1_1Solver_1_1WindAreaNumberOfTSretriever.html", null ],
         [ "ZipWriteJob", "classAntares_1_1Solver_1_1ZipWriteJob.html", null ],
         [ "ZipWriter", "classAntares_1_1Solver_1_1ZipWriter.html", "classAntares_1_1Solver_1_1ZipWriter" ]
       ] ],
@@ -800,6 +789,17 @@ var annotated_dup =
           [ "ItemConstraint", "classAntares_1_1Toolbox_1_1Spotlight_1_1ItemConstraint.html", "classAntares_1_1Toolbox_1_1Spotlight_1_1ItemConstraint" ]
         ] ],
         [ "Clipboard", "classAntares_1_1Toolbox_1_1Clipboard.html", "classAntares_1_1Toolbox_1_1Clipboard" ]
+      ] ],
+      [ "TSGenerator", null, [
+        [ "Predicate", null, [
+          [ "Load", "classAntares_1_1TSGenerator_1_1Predicate_1_1Load.html", null ],
+          [ "Solar", "classAntares_1_1TSGenerator_1_1Predicate_1_1Solar.html", null ],
+          [ "Wind", "classAntares_1_1TSGenerator_1_1Predicate_1_1Wind.html", null ]
+        ] ],
+        [ "XCast", null, [
+          [ "StudyData", "classAntares_1_1TSGenerator_1_1XCast_1_1StudyData.html", "classAntares_1_1TSGenerator_1_1XCast_1_1StudyData" ],
+          [ "XCast", "classAntares_1_1TSGenerator_1_1XCast_1_1XCast.html", "classAntares_1_1TSGenerator_1_1XCast_1_1XCast" ]
+        ] ]
       ] ],
       [ "UnitTests", null, [
         [ "Buffer", "classAntares_1_1UnitTests_1_1Buffer.html", null ],

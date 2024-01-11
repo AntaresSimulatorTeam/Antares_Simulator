@@ -165,27 +165,24 @@ $(document).ready(function(){initNavTree('solver_2ts-generator_2xcast_2xcast_8hx
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="keyword">namespace </span>Antares</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>{</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="keyword">namespace </span>Solver</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="keyword">namespace </span>TSGenerator</div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>{</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="keyword">namespace </span>TSGenerator</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="keyword">namespace </span>XCast</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>{</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="keyword">namespace </span>XCast</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>{</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> PredicateT&gt;</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="classAntares_1_1Solver_1_1TSGenerator_1_1XCast_1_1XCast.html#a4d8366f0adc4f9e020ad42831c89d019">   39</a></span><span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classAntares_1_1Solver_1_1TSGenerator_1_1XCast_1_1XCast.html#a4d8366f0adc4f9e020ad42831c89d019">XCast::loadFromStudy</a>(<span class="keyword">const</span> <a class="code hl_class" href="classAntares_1_1Data_1_1Correlation.html">Data::Correlation</a>&amp; correlation, PredicateT&amp; predicate)</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>{</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    pData.template loadFromStudy&lt;PredicateT&gt;(<a class="code hl_variable" href="classAntares_1_1Solver_1_1TSGenerator_1_1XCast_1_1XCast.html#a3d6590fb5083030b1b56d16d11ead9f1">study</a>, correlation, predicate);</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>}</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>} <span class="comment">// namespace XCast</span></div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>} <span class="comment">// namespace TSGenerator</span></div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>} <span class="comment">// namespace Solver</span></div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>} <span class="comment">// namespace Antares</span></div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="preprocessor">#endif </span><span class="comment">// __ANTARES_SOLVER_TS_GENERATOR_XCAST_XCAST_HXX__</span></div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> PredicateT&gt;</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno"><a class="line" href="classAntares_1_1TSGenerator_1_1XCast_1_1XCast.html#a3d2e45c56bf5cd3f579b5281f44970ec">   37</a></span><span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classAntares_1_1TSGenerator_1_1XCast_1_1XCast.html#a3d2e45c56bf5cd3f579b5281f44970ec">XCast::loadFromStudy</a>(<span class="keyword">const</span> <a class="code hl_class" href="classAntares_1_1Data_1_1Correlation.html">Data::Correlation</a>&amp; correlation, PredicateT&amp; predicate)</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>{</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    pData.template loadFromStudy&lt;PredicateT&gt;(<a class="code hl_variable" href="classAntares_1_1TSGenerator_1_1XCast_1_1XCast.html#a0f540d96c37e1ea0ccc95b435b0c5f1e">study</a>, correlation, predicate);</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>}</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>} <span class="comment">// namespace XCast</span></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>} <span class="comment">// namespace TSGenerator</span></div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>} <span class="comment">// namespace Antares</span></div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="preprocessor">#endif </span><span class="comment">// __ANTARES_SOLVER_TS_GENERATOR_XCAST_XCAST_HXX__</span></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Correlation_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Correlation.html">Antares::Data::Correlation</a></div><div class="ttdef"><b>Definition:</b> correlation.h:42</div></div>
-<div class="ttc" id="aclassAntares_1_1Solver_1_1TSGenerator_1_1XCast_1_1XCast_html_a3d6590fb5083030b1b56d16d11ead9f1"><div class="ttname"><a href="classAntares_1_1Solver_1_1TSGenerator_1_1XCast_1_1XCast.html#a3d6590fb5083030b1b56d16d11ead9f1">Antares::Solver::TSGenerator::XCast::XCast::study</a></div><div class="ttdeci">Data::Study &amp; study</div><div class="ttdoc">The current study.</div><div class="ttdef"><b>Definition:</b> xcast.h:100</div></div>
-<div class="ttc" id="aclassAntares_1_1Solver_1_1TSGenerator_1_1XCast_1_1XCast_html_a4d8366f0adc4f9e020ad42831c89d019"><div class="ttname"><a href="classAntares_1_1Solver_1_1TSGenerator_1_1XCast_1_1XCast.html#a4d8366f0adc4f9e020ad42831c89d019">Antares::Solver::TSGenerator::XCast::XCast::loadFromStudy</a></div><div class="ttdeci">void loadFromStudy(const Data::Correlation &amp;correlation, PredicateT &amp;predicate)</div><div class="ttdoc">initialize all XCast indicators from the current simulation parameters</div><div class="ttdef"><b>Definition:</b> xcast.hxx:39</div></div>
+<div class="ttc" id="aclassAntares_1_1TSGenerator_1_1XCast_1_1XCast_html_a0f540d96c37e1ea0ccc95b435b0c5f1e"><div class="ttname"><a href="classAntares_1_1TSGenerator_1_1XCast_1_1XCast.html#a0f540d96c37e1ea0ccc95b435b0c5f1e">Antares::TSGenerator::XCast::XCast::study</a></div><div class="ttdeci">Data::Study &amp; study</div><div class="ttdoc">The current study.</div><div class="ttdef"><b>Definition:</b> xcast.h:101</div></div>
+<div class="ttc" id="aclassAntares_1_1TSGenerator_1_1XCast_1_1XCast_html_a3d2e45c56bf5cd3f579b5281f44970ec"><div class="ttname"><a href="classAntares_1_1TSGenerator_1_1XCast_1_1XCast.html#a3d2e45c56bf5cd3f579b5281f44970ec">Antares::TSGenerator::XCast::XCast::loadFromStudy</a></div><div class="ttdeci">void loadFromStudy(const Data::Correlation &amp;correlation, PredicateT &amp;predicate)</div><div class="ttdoc">initialize all XCast indicators from the current simulation parameters</div><div class="ttdef"><b>Definition:</b> xcast.hxx:37</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
