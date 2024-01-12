@@ -53,16 +53,13 @@ void GetRenewableClusterMap(Data::Area* area, RenewableClusterMap& l, const wxSt
 {
     wxString grp;
 
-    const Data::RenewableClusterList::iterator end = area->renewable.list.end();
-    for (Data::RenewableClusterList::iterator i = area->renewable.list.begin(); i != end; ++i)
+    for (auto cluster : area->renewable.list.all())
     {
-        Data::RenewableCluster* cluster = i->get();
-
         if (search.empty())
         {
             grp = wxStringFromUTF8(cluster->group());
             grp.MakeLower();
-            l[grp].push_back(cluster);
+            l[grp].push_back(cluster.get());
         }
     }
 }

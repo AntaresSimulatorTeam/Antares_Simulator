@@ -178,7 +178,7 @@ void Frame::onSelectAllPlants(wxCommandEvent&)
         for (auto i = data->areas.begin(); i != areaEnd; ++i)
         {
             Data::Area& area = *(*i);
-            for (auto& c : area.thermal.list)
+            for (auto c : area.thermal.list.all())
                 data->ThClusters.insert(c.get());
         }
         data->areas.clear();

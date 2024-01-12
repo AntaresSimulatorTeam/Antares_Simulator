@@ -164,7 +164,7 @@ static void listOfFilesAnDirectoriesToKeepForArea(PathList& e, PathList& p, cons
         buffer.clear() << "input/renewables/clusters/" << id << "/list.ini";
         e.add(buffer);
 
-        for (const auto& cluster : area->renewable.list)
+        for (const auto cluster : area->renewable.list.all())
         {
             buffer.clear() << "input/renewables/series/" << id << '/' << cluster->id();
             p.add(buffer);
