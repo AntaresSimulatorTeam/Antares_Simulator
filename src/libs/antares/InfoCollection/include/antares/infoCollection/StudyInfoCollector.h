@@ -53,4 +53,22 @@ public:
 private:
     const OptimizationInfo& opt_info_;
 };
+
+template<typename T>
+struct CustomBenchmarkData
+{
+    std::string name;
+    std::string unit;
+    T value;
+};
+template<typename T>
+std::string CustomBenchmarkDataToString(const CustomBenchmarkData<T>& data)
+{
+    std::ostringstream oss;
+    oss << "{\n"
+        << "\"name\": " << data.name << ",\n"
+        << "\"value\": " << data.value << ",\n"
+        << "\"unit\": " << data.unit << "\n"
+        << "}\n";
+}
 }
