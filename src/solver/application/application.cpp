@@ -451,10 +451,18 @@ void Application::writeExectutionInfo()
     study_info_collector.toFileContent(file_content);
     simulation_info_collector.toFileContent(file_content);
 
+    Benchmarking::CustomBenchmarkData<int64_t> time_data
+      = {"execution_time", "ms", pTotalTimer.get_duration()};
+
     // Flush previous info into a record file
     const std::string exec_info_path = "execution_info.ini";
+    const std::string custom_benchmark_file = "custom_benchmark.txt";
+
     std::string content = file_content.saveToBufferAsIni();
     resultWriter->addEntryFromBuffer(exec_info_path, content);
+
+    auto custom_str = Benchmarking::CustomBenchmarkDataToString(time_data);
+    resultWriter->addEntryFromBuffer(custom_benchmark_file, custom_str);
 }
 
 Application::~Application()
