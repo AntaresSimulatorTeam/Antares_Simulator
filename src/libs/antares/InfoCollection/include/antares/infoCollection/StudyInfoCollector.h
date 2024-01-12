@@ -5,6 +5,7 @@
 #pragma once
 
 #include "antares/study/study.h"
+#include <sstream>
 
 namespace Benchmarking {
 class FileContent;
@@ -70,5 +71,6 @@ std::string CustomBenchmarkDataToString(const CustomBenchmarkData<T>& data)
         << "\"value\": " << data.value << ",\n"
         << "\"unit\": " << data.unit << "\n"
         << "}\n";
+    return oss.str();
 }
 }
