@@ -32,17 +32,15 @@ bool renewableTSNumberData::apply(Study& study)
 
     const uint tsGenCountRenewable = get_tsGenCount(study);
 
-    uint clusterIndex = 0;
-    for (const auto& cluster : area.renewable.list)
+    for (const auto& cluster : area.renewable.list.each_enabled())
     {
         // alias to the current column
-        assert(clusterIndex < pTSNumberRules.width);
-        const auto& col = pTSNumberRules[clusterIndex];
+        assert(cluster->areaWideIndex < pTSNumberRules.width);
+        const auto& col = pTSNumberRules[cluster->areaWideIndex];
 
         logprefix.clear() << "Renewable: area '" << area.name << "', cluster: '" << cluster->name()
                           << "': ";
         ret = ApplyToMatrix(errors, logprefix, cluster->series, col, tsGenCountRenewable) && ret;
-        clusterIndex++;
     }
     return ret;
 }

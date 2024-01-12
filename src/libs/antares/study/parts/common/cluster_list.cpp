@@ -24,7 +24,7 @@ using namespace Antares;
 template<class ClusterT>
 inline bool ClusterList<ClusterT>::empty() const
 {
-    return clusters.empty();
+    return allClusters.empty();
 }
 
 template<class ClusterT>
@@ -284,7 +284,7 @@ void ClusterList<ClusterT>::retrieveTotalCapacityAndUnitCount(double& total, uin
     total = 0.;
     unitCount = 0;
 
-    for (const auto& c : clusters)
+    for (const auto& c : all())
     {
         unitCount += c->unitCount;
         total += c->unitCount * c->nominalCapacity;

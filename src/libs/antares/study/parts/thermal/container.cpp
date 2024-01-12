@@ -75,7 +75,7 @@ void PartThermal::resizeAllTimeseriesNumbers(uint n)
 bool PartThermal::hasForcedTimeseriesGeneration() const
 {
     using Behavior = LocalTSGenerationBehavior;
-    return std::any_of(list.begin(), list.end(), [](const ThermalClusterList::SharedPtr& cluster) {
+    return std::ranges::any_of(list.all(), [](const ThermalClusterList::SharedPtr& cluster) {
         return cluster->tsGenBehavior == Behavior::forceGen;
     });
 }
@@ -83,7 +83,7 @@ bool PartThermal::hasForcedTimeseriesGeneration() const
 bool PartThermal::hasForcedNoTimeseriesGeneration() const
 {
     using Behavior = LocalTSGenerationBehavior;
-    return std::any_of(list.begin(), list.end(), [](const ThermalClusterList::SharedPtr& cluster) {
+    return std::ranges::any_of(list.all(), [](const ThermalClusterList::SharedPtr& cluster) {
         return cluster->tsGenBehavior == Behavior::forceNoGen;
     });
 }

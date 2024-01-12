@@ -1526,7 +1526,7 @@ void Study::computePThetaInfForThermalClusters() const
         // Alias de la zone courant
         const auto& area = *(this->areas.byIndex[i]);
 
-        for (auto& cluster : area.thermal.list)
+        for (auto& cluster : area.thermal.list.each_enabled_and_not_mustrun())
         {
             for (uint k = 0; k < HOURS_PER_YEAR; k++)
                 cluster->PthetaInf[k] = cluster->modulation[Data::thermalMinGenModulation][k]
