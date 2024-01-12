@@ -102,8 +102,10 @@ public:
     iterator end();
     const_iterator end() const;
 
-    SharedPtr operator[](std::size_t idx) { return clusters[idx]; }
-    const SharedPtr operator[](std::size_t idx) const { return clusters[idx]; }
+    SharedPtr operator[](std::size_t idx) { return allClusters[idx]; }
+    const SharedPtr operator[](std::size_t idx) const { return allClusters[idx]; }
+
+    SharedPtr enabledClusterAt(unsigned int index) const;
     /*!
     ** \brief Resize all matrices dedicated to the sampled timeseries numbers
     **

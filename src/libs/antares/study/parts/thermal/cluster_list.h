@@ -103,7 +103,6 @@ public:
     void giveIndicesToClusters();
     unsigned int mustRunAndEnabledCount() const;
     unsigned int enabledAndNotMustRunCount() const;
-    std::shared_ptr<ThermalCluster> enabledClusterAt(unsigned int index) const;
     void removeMustRunClusters();
     void clearAll();
 

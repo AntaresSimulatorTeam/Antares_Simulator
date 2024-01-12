@@ -52,6 +52,14 @@ typename ClusterList<ClusterT>::const_iterator ClusterList<ClusterT>::end() cons
 }
 
 template<class ClusterT>
+std::shared_ptr<ClusterT> ClusterList<ClusterT>::enabledClusterAt(unsigned int index) const
+{
+    // No operator [] was found for std::view (returned by each_enabled()).
+    // The current function is there to replace it. 
+    return *(std::views::drop(each_enabled(), index).begin());
+}
+
+template<class ClusterT>
 ClusterT* ClusterList<ClusterT>::findInAll(const Data::ClusterName& id) const
 {
     for (auto cluster : all())
