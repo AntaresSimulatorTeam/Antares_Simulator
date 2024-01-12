@@ -57,23 +57,6 @@ PartRenewable::~PartRenewable()
 {
 }
 
-void PartRenewable::prepareAreaWideIndexes()
-{
-    unsigned int index = 0;
-    for (auto c : list.all())
-    {
-        c->areaWideIndex = index;
-        index++;
-    }
-
-    index = 0;
-    for (auto c : list.each_enabled())
-    {
-        c->areaWideIndex = index;
-        index++;
-    }
-}
-
 void PartRenewable::reset()
 {
     list.clear();

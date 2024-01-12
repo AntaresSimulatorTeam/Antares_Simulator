@@ -122,9 +122,9 @@ struct Fixture
 		rnCluster_32->series.timeSeries.resize(9, 1);
 
 		// Renewable clusters : update areas local numbering for clusters
-		area_1->renewable.prepareAreaWideIndexes();
-		area_2->renewable.prepareAreaWideIndexes();
-		area_3->renewable.prepareAreaWideIndexes();
+		area_1->renewable.list.giveIndicesToClusters();
+		area_2->renewable.list.giveIndicesToClusters();
+		area_3->renewable.list.giveIndicesToClusters();
 
 		// Resize all TS numbers storage (1 column x nbYears lines) 
 		area_1->resizeAllTimeseriesNumbers(study->parameters.nbYears);

@@ -1086,7 +1086,7 @@ bool Study::clusterRename(Cluster* cluster, ClusterName newName)
     {
     case kRenewable:
         ret = area.renewable.list.rename(cluster->id(), newName);
-        area.renewable.prepareAreaWideIndexes();
+        area.renewable.list.giveIndicesToClusters();
         break;
     case kThermal:
         ret = area.thermal.list.rename(cluster->id(), newName);

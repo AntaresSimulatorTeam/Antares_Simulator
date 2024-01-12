@@ -291,7 +291,7 @@ void RenewableCluster::internalDeletePlant(void*)
             Refresh();
             MarkTheStudyAsModified();
             updateInnerValues();
-            pArea->renewable.prepareAreaWideIndexes();
+            pArea->renewable.list.giveIndicesToClusters();
             study->uiinfo->reload();
         }
         else
@@ -389,7 +389,7 @@ void RenewableCluster::internalAddPlant(void*)
         cluster->reset();
         pArea->renewable.list.add(cluster);
         pArea->renewable.list.addToCompleteList(cluster);
-        pArea->renewable.prepareAreaWideIndexes();
+        pArea->renewable.list.giveIndicesToClusters();
 
         // Update the list
         update();
@@ -467,7 +467,7 @@ void RenewableCluster::internalClonePlant(void*)
 
         pArea->renewable.list.add(cluster);
         pArea->renewable.list.addToCompleteList(cluster);
-        pArea->renewable.prepareAreaWideIndexes();
+        pArea->renewable.list.giveIndicesToClusters();
 
         // Update the list
         update();

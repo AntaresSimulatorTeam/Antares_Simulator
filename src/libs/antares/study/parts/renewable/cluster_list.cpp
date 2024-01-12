@@ -174,6 +174,8 @@ bool RenewableClusterList::loadFromFolder(const AnyString& folder, Area* area)
             }
         }
 
+        giveIndicesToClusters();
+
         return ret;
     }
     return false;

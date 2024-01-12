@@ -166,6 +166,7 @@ public:
     uint removeDisabledClusters();
     unsigned int enabledCount() const;
     unsigned int allClustersCount() const;
+    void giveIndicesToClusters();
     void addToCompleteList(std::shared_ptr<ClusterT> cluster);
 
 protected:

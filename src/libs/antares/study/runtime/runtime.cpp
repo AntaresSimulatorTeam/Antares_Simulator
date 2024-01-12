@@ -417,7 +417,7 @@ void StudyRuntimeInfos::removeDisabledRenewableClustersFromSolverComputations(St
     removeClusters(study, "renewable", [](Area& area) {
         uint ret = area.renewable.list.removeDisabledClusters();
         if (ret > 0)
-            area.renewable.prepareAreaWideIndexes();
+            area.renewable.list.giveIndicesToClusters();
         return ret;
     });
 }

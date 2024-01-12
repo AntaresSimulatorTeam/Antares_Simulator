@@ -100,7 +100,6 @@ public:
     bool saveToFolder(const AnyString& folder) const override;
 
     void sortCompleteList();
-    void giveIndicesToClusters();
     unsigned int mustRunAndEnabledCount() const;
     unsigned int enabledAndNotMustRunCount() const;
     void removeMustRunClusters();

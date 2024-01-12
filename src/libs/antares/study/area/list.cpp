@@ -1115,7 +1115,6 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
             Area& area = *(i->second);
             buffer.clear() << pStudy.folderInput << renewablePlant << area.id;
             ret = area.renewable.list.loadFromFolder(buffer.c_str(), &area) && ret;
-            area.renewable.prepareAreaWideIndexes();
         }
     }
 

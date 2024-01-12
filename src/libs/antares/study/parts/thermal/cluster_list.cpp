@@ -56,28 +56,6 @@ void ThermalClusterList::sortCompleteList()
         });
 }
 
-void ThermalClusterList::giveIndicesToClusters()
-{
-    // First, we give an index to every cluster, enabled / must-run or not.
-    // We do that to :
-    //  - Stick to what was done before and not change the results
-    //  - Avoids seg faults, for instance when storing thermal noises (solver.hxx).
-    //    Indeed : otherwise disabled clusters have an infinite index
-    unsigned int index = 0;
-    for (auto c : allClusters)
-    {
-        c->areaWideIndex = index;
-        index++;
-    }
-    
-    index = 0;
-    for (auto c : each_enabled())
-    {
-        c->areaWideIndex = index;
-        index++;
-    }
-}
-
 unsigned int ThermalClusterList::enabledAndNotMustRunCount() const
 {
     unsigned int count = 0;
