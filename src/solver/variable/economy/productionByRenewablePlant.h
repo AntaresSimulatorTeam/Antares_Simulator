@@ -324,12 +324,12 @@ public:
             assert(NULL != results.data.area);
             const auto& renewable = results.data.area->renewable;
             // Write the data for the current year
-            for (uint i = 0; i < pSize; ++i)
+            for (auto cluster : renewable.list.each_enabled())
             {
                 // Write the data for the current year
-                results.variableCaption = renewable.list[i]->name();
+                results.variableCaption = cluster->name();
                 results.variableUnit = VCardType::Unit();
-                pValuesForTheCurrentYear[numSpace][i].template buildAnnualSurveyReport<VCardType>(
+                pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex].template buildAnnualSurveyReport<VCardType>(
                   results, fileLevel, precision);
             }
         }
