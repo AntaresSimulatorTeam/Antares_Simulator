@@ -59,11 +59,18 @@ PartRenewable::~PartRenewable()
 
 void PartRenewable::prepareAreaWideIndexes()
 {
-    uint idx = 0;
-    for (const auto& cluster : list)
+    unsigned int index = 0;
+    for (auto c : list.all())
     {
-        cluster->areaWideIndex = idx;
-        ++idx;
+        c->areaWideIndex = index;
+        index++;
+    }
+
+    index = 0;
+    for (auto c : list.each_enabled())
+    {
+        c->areaWideIndex = index;
+        index++;
     }
 }
 

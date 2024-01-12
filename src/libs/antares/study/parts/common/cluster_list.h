@@ -96,12 +96,6 @@ public:
     bool empty() const;
     //@}
 
-    iterator begin();
-    const_iterator begin() const;
-
-    iterator end();
-    const_iterator end() const;
-
     SharedPtr operator[](std::size_t idx) { return allClusters[idx]; }
     const SharedPtr operator[](std::size_t idx) const { return allClusters[idx]; }
 

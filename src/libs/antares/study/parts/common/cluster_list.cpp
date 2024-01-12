@@ -28,30 +28,6 @@ inline bool ClusterList<ClusterT>::empty() const
 }
 
 template<class ClusterT>
-typename ClusterList<ClusterT>::iterator ClusterList<ClusterT>::begin()
-{
-    return std::begin(clusters);
-}
-
-template<class ClusterT>
-typename ClusterList<ClusterT>::const_iterator ClusterList<ClusterT>::begin() const
-{
-    return std::begin(clusters);
-}
-
-template<class ClusterT>
-typename ClusterList<ClusterT>::iterator ClusterList<ClusterT>::end()
-{
-    return std::end(clusters);
-}
-
-template<class ClusterT>
-typename ClusterList<ClusterT>::const_iterator ClusterList<ClusterT>::end() const
-{
-    return std::end(clusters);
-}
-
-template<class ClusterT>
 std::shared_ptr<ClusterT> ClusterList<ClusterT>::enabledClusterAt(unsigned int index) const
 {
     // No operator [] was found for std::view (returned by each_enabled()).
