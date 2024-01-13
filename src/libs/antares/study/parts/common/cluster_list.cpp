@@ -126,10 +126,7 @@ void ClusterList<ClusterT>::addToCompleteList(std::shared_ptr<ClusterT> cluster)
 template<class ClusterT>
 unsigned int ClusterList<ClusterT>::enabledCount() const
 {
-    unsigned int count = 0;
-    for (auto cluster : each_enabled())
-        count++;
-    return count;
+    return std::ranges::count_if(allClusters, &ClusterT::isEnabled);
 }
 
 template<class ClusterT>
@@ -244,7 +241,7 @@ bool ClusterList<ClusterT>::remove(const Data::ClusterName& id)
 template<class ClusterT>
 bool ClusterList<ClusterT>::saveDataSeriesToFolder(const AnyString& folder) const
 {
-    return std::ranges::all_of(allClusters, [&folder](const auto& c){
+    return std::ranges::all_of(allClusters, [&folder](const auto c){
         return c->saveDataSeriesToFolder(folder);
     });
 }
@@ -252,13 +249,7 @@ bool ClusterList<ClusterT>::saveDataSeriesToFolder(const AnyString& folder) cons
 template<class ClusterT>
 bool ClusterList<ClusterT>::saveDataSeriesToFolder(const AnyString& folder, const String& msg) const
 {
-    uint ticks = 0;
-
-    return std::ranges::all_of(clusters, [&](const auto& c)
-    {
-        logs.info() << msg << "  " << (ticks * 100 / (1 + this->allClustersCount()))
-            << "% complete";
-        ++ticks;
+    return std::ranges::all_of(clusters, [&](const auto& c) {
         return c->saveDataSeriesToFolder(folder);
     });
 }

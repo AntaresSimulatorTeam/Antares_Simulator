@@ -58,18 +58,12 @@ void ThermalClusterList::sortCompleteList()
 
 unsigned int ThermalClusterList::enabledAndNotMustRunCount() const
 {
-    unsigned int count = 0;
-    for (auto cluster : each_enabled_and_not_mustrun())
-        count++;
-    return count;
+    return std::ranges::count_if(allClusters, [](auto c) { return c->isEnabled() && c->isNotMustRun(); });
 }
 
 unsigned int ThermalClusterList::mustRunAndEnabledCount() const
 {
-    unsigned int count = 0;
-    for (auto cluster : each_mustrun_and_enabled())
-        count++;
-    return count;
+    return std::ranges::count_if(allClusters, [](auto c) { return c->isEnabled() && c->isMustRun(); });
 }
 
 bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, Area* area)
