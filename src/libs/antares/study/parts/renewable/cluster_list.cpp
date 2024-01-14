@@ -20,9 +20,8 @@ std::string RenewableClusterList::typeID() const
 uint64_t RenewableClusterList::memoryUsage() const
 {
     uint64_t ret = sizeof(RenewableClusterList) + (2 * sizeof(void*)) * enabledCount();
-    each([&](const RenewableCluster& cluster) { ret += cluster.memoryUsage(); });
+    std::ranges::for_each(each_enabled(), [&ret](const auto c) { ret += c->memoryUsage(); });
     return ret;
-
 }
 
 
@@ -38,27 +37,28 @@ bool RenewableClusterList::saveToFolder(const AnyString& folder) const
         IniFile ini;
 
         // Browse all clusters
-        each([&](const Data::RenewableCluster& c) {
+        for (auto c : all())
+        {
             // Adding a section to the inifile
-            IniFile::Section* s = ini.addSection(c.name());
+            IniFile::Section* s = ini.addSection(c->name());
 
             // The section must not be empty
             // This key will be silently ignored the next time
-            s->add("name", c.name());
+            s->add("name", c->name());
 
-            if (not c.group().empty())
-                s->add("group", c.group());
-            if (not c.enabled)
+            if (not c->group().empty())
+                s->add("group", c->group());
+            if (not c->enabled)
                 s->add("enabled", "false");
 
-            if (not Math::Zero(c.nominalCapacity))
-                s->add("nominalCapacity", c.nominalCapacity);
+            if (not Math::Zero(c->nominalCapacity))
+                s->add("nominalCapacity", c->nominalCapacity);
 
-            if (not Math::Zero(c.unitCount))
-                s->add("unitCount", c.unitCount);
+            if (not Math::Zero(c->unitCount))
+                s->add("unitCount", c->unitCount);
 
-            s->add("ts-interpretation", c.getTimeSeriesModeAsString());
-        });
+            s->add("ts-interpretation", c->getTimeSeriesModeAsString());
+        }
 
         // Write the ini file
         buffer.clear() << folder << SEP << "list.ini";

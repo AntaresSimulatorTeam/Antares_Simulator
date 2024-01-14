@@ -31,15 +31,6 @@ public:
     using iterator = typename Vect::iterator;
     using const_iterator = typename Vect::const_iterator;
 
-    /*!
-    ** \brief Iterate through all clusters (const)
-    */
-    template<class PredicateT>
-    void each(const PredicateT& predicate) const
-    {
-        std::ranges::for_each(clusters_, [&predicate](const auto& c) { predicate(*c); });
-    }
-
     void clear();
 
     void add(const SharedPtr cluster);

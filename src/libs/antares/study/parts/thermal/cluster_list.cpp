@@ -41,7 +41,7 @@ std::string ThermalClusterList::typeID() const
 uint64_t ThermalClusterList::memoryUsage() const
 {
     uint64_t ret = sizeof(ThermalClusterList) + (2 * sizeof(void*)) * mustRunAndEnabledCount();
-    each([&](const ThermalCluster& cluster) { ret += cluster.memoryUsage(); });
+    std::ranges::for_each(each_enabled_and_not_mustrun(), [&ret](const auto c) { ret += c->memoryUsage(); });
     return ret;
 }
 
