@@ -37,26 +37,15 @@ public:
     template<class PredicateT>
     void each(const PredicateT& predicate) const
     {
-        std::ranges::for_each(clusters, [&predicate](const auto& c) { predicate(*c); });
+        std::ranges::for_each(clusters_, [&predicate](const auto& c) { predicate(*c); });
     }
 
-    //! \name clusters management
-    //@{
-    /*!
-    ** \brief Destroy all clusters
-    */
     void clear();
 
-    /*!
-    ** \brief Add a cluster in the list
-    **
-    ** \param t The cluster to add
-    ** \return True if the cluster has been added, false otherwise
-    */
-    void add(const SharedPtr clusters);
+    void add(const SharedPtr cluster);
 
     /*!
-    ** \brief Try to find a cluster from its id (const)
+    ** \brief Try to find a cluster from its id (const) in the complete cluster list
     **
     ** \param id ID of the cluster to find
     ** \return A pointer to a cluster. nullptr if not found
@@ -71,7 +60,7 @@ public:
     */
     bool exists(const Data::ClusterName& id) const;
 
-    auto each_enabled() const { return allClusters | std::views::filter(&ClusterT::isEnabled); }
+    auto each_enabled() const { return allClusters_ | std::views::filter(&ClusterT::isEnabled); }
 
     std::vector<std::shared_ptr<ClusterT>> all() const;
 
@@ -96,8 +85,8 @@ public:
     bool empty() const;
     //@}
 
-    SharedPtr operator[](std::size_t idx) { return allClusters[idx]; }
-    const SharedPtr operator[](std::size_t idx) const { return allClusters[idx]; }
+    SharedPtr operator[](std::size_t idx) { return allClusters_[idx]; }
+    const SharedPtr operator[](std::size_t idx) const { return allClusters_[idx]; }
 
     SharedPtr enabledClusterAt(unsigned int index) const;
     /*!
@@ -171,8 +160,8 @@ public:
 
 protected:
     // The vector containing the clusters
-    Vect clusters;
-    std::vector<std::shared_ptr<ClusterT>> allClusters;
+    Vect clusters_;
+    std::vector<std::shared_ptr<ClusterT>> allClusters_;
 
     /// thermal, renewable, etc.
     virtual std::string typeID() const = 0;

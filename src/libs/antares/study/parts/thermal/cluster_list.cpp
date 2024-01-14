@@ -41,7 +41,7 @@ std::string ThermalClusterList::typeID() const
 uint64_t ThermalClusterList::memoryUsage() const
 {
     uint64_t ret = sizeof(ThermalClusterList) + (2 * sizeof(void*)) * mustRunAndEnabledCount();
-    each([&](const ThermalCluster& clusters) { ret += clusters.memoryUsage(); });
+    each([&](const ThermalCluster& cluster) { ret += cluster.memoryUsage(); });
     return ret;
 }
 
@@ -51,19 +51,19 @@ static bool ThermalClusterLoadFromSection(const AnyString& filename,
 
 void ThermalClusterList::sortCompleteList()
 {
-    std::sort(allClusters.begin(), allClusters.end(), [](const auto& a, const auto& b) {
+    std::sort(allClusters_.begin(), allClusters_.end(), [](const auto& a, const auto& b) {
         return a->id() < b->id();
         });
 }
 
 unsigned int ThermalClusterList::enabledAndNotMustRunCount() const
 {
-    return std::ranges::count_if(allClusters, [](auto c) { return c->isEnabled() && c->isNotMustRun(); });
+    return std::ranges::count_if(allClusters_, [](auto c) { return c->isEnabled() && c->isNotMustRun(); });
 }
 
 unsigned int ThermalClusterList::mustRunAndEnabledCount() const
 {
-    return std::ranges::count_if(allClusters, [](auto c) { return c->isEnabled() && c->isMustRun(); });
+    return std::ranges::count_if(allClusters_, [](auto c) { return c->isEnabled() && c->isMustRun(); });
 }
 
 bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, Area* area)
@@ -172,14 +172,14 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
 
 void ThermalClusterList::removeMustRunClusters()
 {
-    std::erase_if(clusters, [](auto c) { return c->isMustRun(); });
+    std::erase_if(clusters_, [](auto c) { return c->isMustRun(); });
     forceReload();
     rebuildIndex();
 }
 
 void ThermalClusterList::clearAll()
 {
-    allClusters.clear();
+    allClusters_.clear();
 }
 
 static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFile::Property* p)
@@ -317,7 +317,7 @@ void ThermalClusterList::reverseCalculationOfSpinning()
 
 void ThermalClusterList::enableMustrunForEveryone()
 {
-    for (auto c : allClusters)
+    for (auto c : allClusters_)
         c->mustrun = true;
 }
 
@@ -339,7 +339,7 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
         // Allocate the inifile structure
         IniFile ini;
 
-        for (auto c : allClusters) 
+        for (auto c : allClusters_) 
         {
             // Adding a section to the inifile
             IniFile::Section* s = ini.addSection(c->name());
@@ -448,7 +448,7 @@ bool ThermalClusterList::savePreproToFolder(const AnyString& folder) const
     Clob buffer;
     bool ret = true;
 
-    for (auto c : allClusters) 
+    for (auto c : allClusters_) 
     {
         if (c->prepro)
         {
@@ -465,7 +465,7 @@ bool ThermalClusterList::saveEconomicCosts(const AnyString& folder) const
     Clob buffer;
     bool ret = true;
 
-    for (auto c : allClusters)
+    for (auto c : allClusters_)
     {
         assert(c->parentArea and "cluster: invalid parent area");
         buffer.clear() << folder << SEP << c->parentArea->id << SEP << c->id();
@@ -501,13 +501,13 @@ bool ThermalClusterList::loadPreproFromFolder(Study& study,
         return result;
     };
 
-    return std::ranges::all_of(allClusters | std::views::filter(hasPrepro),
+    return std::ranges::all_of(allClusters_ | std::views::filter(hasPrepro),
                                loadAndCheckPrepro);
 }
 
 bool ThermalClusterList::loadEconomicCosts(Study& study, const AnyString& folder)
 {
-    return std::ranges::all_of(clusters, [&study, folder](const auto& c)
+    return std::ranges::all_of(clusters_, [&study, folder](const auto& c)
     {
         assert(c->parentArea && "cluster: invalid parent area");
         Clob buffer;

@@ -20,7 +20,7 @@ std::string RenewableClusterList::typeID() const
 uint64_t RenewableClusterList::memoryUsage() const
 {
     uint64_t ret = sizeof(RenewableClusterList) + (2 * sizeof(void*)) * enabledCount();
-    each([&](const RenewableCluster& clusters) { ret += clusters.memoryUsage(); });
+    each([&](const RenewableCluster& cluster) { ret += cluster.memoryUsage(); });
     return ret;
 
 }
