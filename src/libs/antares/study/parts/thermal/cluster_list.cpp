@@ -49,11 +49,11 @@ static bool ThermalClusterLoadFromSection(const AnyString& filename,
                                           ThermalCluster& cluster,
                                           const IniFile::Section& section);
 
-void ThermalClusterList::sortCompleteList()
+void ThermalClusterList::rebuildIndex()
 {
-    std::sort(allClusters_.begin(), allClusters_.end(), [](const auto& a, const auto& b) {
-        return a->id() < b->id();
-        });
+    uint indx = 0;
+    for (auto& c : each_enabled_and_not_mustrun())
+        c->index = indx++;
 }
 
 unsigned int ThermalClusterList::enabledAndNotMustRunCount() const
@@ -164,8 +164,8 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
         addToCompleteList(cluster);
     }
 
-    sortCompleteList();
     giveIndicesToClusters();
+    rebuildIndex();
 
     return ret;
 }

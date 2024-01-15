@@ -53,7 +53,7 @@ std::vector<std::shared_ptr<ClusterT>> ClusterList<ClusterT>::all() const
 template<class ClusterT>
 bool ClusterList<ClusterT>::exists(const Data::ClusterName& id) const
 {
-    return std::ranges::any_of(clusters_, [&id](const auto& c){ return c->id() == id; });
+    return std::ranges::any_of(allClusters_, [&id](const auto& c){ return c->id() == id; });
 }
 
 template<class ClusterT>
@@ -89,24 +89,11 @@ void ClusterList<ClusterT>::storeTimeseriesNumbers(Solver::IResultWriter& writer
 }
 
 template<class ClusterT>
-void ClusterList<ClusterT>::rebuildIndex()
-{
-    std::sort(clusters_.begin(), clusters_.end(), [](const auto& a, const auto& b){
-        return a->id() < b->id();
-    });
-
-    uint indx = 0;
-    for (auto& c : clusters_)
-        c->index = indx++;
-}
-
-template<class ClusterT>
 void ClusterList<ClusterT>::add(const SharedPtr cluster)
 {
     if (exists(cluster->id()))
         return;
     clusters_.push_back(cluster);
-    rebuildIndex();
 }
 
 template<class ClusterT>
@@ -121,6 +108,13 @@ void ClusterList<ClusterT>::addToCompleteList(std::shared_ptr<ClusterT> cluster)
     if (alreadyInAllClusters(cluster->id()))
         return;
     allClusters_.push_back(cluster);
+    sortCompleteList();
+}
+
+template<class ClusterT>
+void ClusterList<ClusterT>::sortCompleteList()
+{
+    std::ranges::sort(allClusters_, [](const auto a, const auto b) { return a->id() < b->id(); });
 }
 
 template<class ClusterT>
@@ -204,15 +198,13 @@ bool ClusterList<ClusterT>::rename(Data::ClusterName idToFind, Data::ClusterName
     if (cluster_ptr->parentArea)
         (cluster_ptr->parentArea)->invalidateJIT = true;
 
-    // Rebuilding the index
-    rebuildIndex();
     return true;
 }
 
 template<class ClusterT>
 bool ClusterList<ClusterT>::forceReload(bool reload) const
 {
-    return std::ranges::all_of(clusters_, [&reload](const auto& c){
+    return std::ranges::all_of(allClusters_, [&reload](const auto& c){
         return c->forceReload(reload);
     });
 }
@@ -220,7 +212,7 @@ bool ClusterList<ClusterT>::forceReload(bool reload) const
 template<class ClusterT>
 void ClusterList<ClusterT>::markAsModified() const
 {
-    for (const auto& c : clusters_)
+    for (const auto& c : allClusters_)
         c->markAsModified();
 }
 
@@ -231,9 +223,6 @@ bool ClusterList<ClusterT>::remove(const Data::ClusterName& id)
 
     // Invalidating the parent area
     forceReload();
-
-    // Rebuilding the index
-    rebuildIndex();
 
     return nbDeletion > 0;
 }
@@ -284,14 +273,7 @@ void ClusterList<ClusterT>::retrieveTotalCapacityAndUnitCount(double& total, uin
 template<class ClusterT>
 uint ClusterList<ClusterT>::removeDisabledClusters()
 {
-    // nothing to do if there is no clusters available
-    if (empty())
-        return 0;
-
     auto count = std::erase_if(clusters_, [] (auto& c) { return !c->enabled; });
-
-    rebuildIndex();
-
     return count;
 }
 // Force template instantiation

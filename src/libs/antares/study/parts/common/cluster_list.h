@@ -32,7 +32,7 @@ public:
     using const_iterator = typename Vect::const_iterator;
 
     void clear();
-
+    bool empty() const;
     void add(const SharedPtr cluster);
 
     /*!
@@ -72,8 +72,6 @@ public:
     */
     virtual bool remove(const Data::ClusterName& id);
 
-    //! Return true if the list is empty
-    bool empty() const;
     //@}
 
     SharedPtr operator[](std::size_t idx) { return allClusters_[idx]; }
@@ -148,6 +146,7 @@ public:
     unsigned int allClustersCount() const;
     void giveIndicesToClusters();
     void addToCompleteList(std::shared_ptr<ClusterT> cluster);
+    void sortCompleteList();
 
 protected:
     // The vector containing the clusters
@@ -157,8 +156,6 @@ protected:
     /// thermal, renewable, etc.
     virtual std::string typeID() const = 0;
 
-    /// Sort the vector, set index value for each cluster
-    void rebuildIndex();
 private:
     bool alreadyInAllClusters(std::string clusterName);
 

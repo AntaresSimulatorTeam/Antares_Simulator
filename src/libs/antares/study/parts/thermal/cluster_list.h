@@ -99,7 +99,9 @@ public:
 
     bool saveToFolder(const AnyString& folder) const override;
 
-    void sortCompleteList();
+    /// Sort the vector, set index value for each cluster
+    void rebuildIndex();
+
     unsigned int mustRunAndEnabledCount() const;
     unsigned int enabledAndNotMustRunCount() const;
     void removeMustRunClusters();

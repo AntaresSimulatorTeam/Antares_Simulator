@@ -84,24 +84,21 @@ public:
     bool saveDataSeriesToFolder(const AnyString& folder) const;
     bool loadDataSeriesFromFolder(Study& s, const AnyString& folder);
 
-    uint unitCount;
+    uint unitCount = 0;
 
     bool isEnabled() const { return enabled; }
-    bool enabled;
+    bool enabled = true;
 
     //! The associate area (alias)
     Area* parentArea;
 
-    //! The index of the cluster (within a list)
-    uint index;
-
     //! Capacity of reference per unit (MW) (pMax)
-    double nominalCapacity;
+    double nominalCapacity = 0.;
 
     //! The index of the cluster from the area's point of view
     //! \warning this variable is only valid when used by the solver
     // (initialized in the same time that the runtime data)
-    uint areaWideIndex;
+    uint areaWideIndex = (uint)-1;
 
     //! Series
     TimeSeries series;

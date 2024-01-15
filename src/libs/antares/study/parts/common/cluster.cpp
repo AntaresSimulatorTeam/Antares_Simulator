@@ -9,13 +9,8 @@
 namespace Antares::Data
 {
 Cluster::Cluster(Area* parent) :
- unitCount(0),
- enabled(true),
- parentArea(parent),
- index(0),
- nominalCapacity(0.),
- areaWideIndex((uint)-1),
- series(tsNumbers)
+    parentArea(parent),
+    series(tsNumbers)
 {
 }
 

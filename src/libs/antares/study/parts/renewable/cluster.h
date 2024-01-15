@@ -38,15 +38,6 @@ namespace Antares
 {
 namespace Data
 {
-/* gp : useless in v8.1, could be useful in a further version
-enum RenewableModulation
-{
-    renewableModulationCost = 0,
-    renewableModulationCapacity,
-    renewableMinGenModulation,
-    renewableModulationMax
-};
-*/
 
 /*
 ** \brief A single renewable cluster
@@ -162,9 +153,9 @@ public:
     ** This value is computed from the field 'group' in 'group()
     ** \see group()
     */
-    enum RenewableGroup groupID;
+    enum RenewableGroup groupID = renewableOther1;
 
-    enum TimeSeriesMode tsMode;
+    enum TimeSeriesMode tsMode = powerGeneration;
 
     friend class RenewableClusterList;
 
