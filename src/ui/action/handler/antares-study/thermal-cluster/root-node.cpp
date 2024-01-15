@@ -86,7 +86,7 @@ bool RootNode::performWL(Context& ctx)
     {
         // bool forcePlantCreate = ctx.clusterForceCreate[pOriginalAreaName];
         if (pInfos.behavior == bhOverwrite)
-            ctx.area->thermal.list.clear();
+            ctx.area->thermal.list.clearAll();
         return true;
     }
     return false;

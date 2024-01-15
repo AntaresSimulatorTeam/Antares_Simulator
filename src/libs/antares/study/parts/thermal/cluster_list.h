@@ -105,7 +105,6 @@ public:
     unsigned int mustRunAndEnabledCount() const;
     unsigned int enabledAndNotMustRunCount() const;
     void removeMustRunClusters();
-    void clearAll();
 
 }; // class ThermalClusterList
 } // namespace Data

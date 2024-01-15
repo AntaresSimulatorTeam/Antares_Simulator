@@ -57,9 +57,9 @@ bool ClusterList<ClusterT>::exists(const Data::ClusterName& id) const
 }
 
 template<class ClusterT>
-void ClusterList<ClusterT>::clear()
+void ClusterList<ClusterT>::clearAll()
 {
-    clusters_.clear();
+    allClusters_.clear();
 }
 
 template<class ClusterT>
@@ -264,12 +264,6 @@ void ClusterList<ClusterT>::retrieveTotalCapacityAndUnitCount(double& total, uin
     }
 }
 
-template<class ClusterT>
-uint ClusterList<ClusterT>::removeDisabledClusters()
-{
-    auto count = std::erase_if(clusters_, [] (auto& c) { return !c->enabled; });
-    return count;
-}
 // Force template instantiation
 template class ClusterList<ThermalCluster>;
 template class ClusterList<RenewableCluster>;

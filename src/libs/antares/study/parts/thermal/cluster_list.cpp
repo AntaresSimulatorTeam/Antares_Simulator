@@ -27,8 +27,7 @@ ThermalClusterList::ThermalClusterList()
 
 ThermalClusterList::~ThermalClusterList()
 {
-    // deleting all thermal clusters
-    clear();
+    clearAll();
 }
 
 #define SEP IO::Separator
@@ -175,11 +174,6 @@ void ThermalClusterList::removeMustRunClusters()
     std::erase_if(clusters_, [](auto c) { return c->isMustRun(); });
     forceReload();
     rebuildIndex();
-}
-
-void ThermalClusterList::clearAll()
-{
-    allClusters_.clear();
 }
 
 static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFile::Property* p)

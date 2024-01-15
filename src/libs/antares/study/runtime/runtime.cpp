@@ -286,17 +286,12 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     study.calendarOutput.reset({gd.dayOfThe1stJanuary, gd.firstWeekday, gd.firstMonthInYear, gd.leapYear});
     initializeRangeLimits(study, rangeLimits);
 
-    // Removing disabled thermal clusters from solver computations
-    removeDisabledThermalClustersFromSolverComputations(study);
-
     // Removing disabled short-term storage objects from solver computations
     removeDisabledShortTermStorageClustersFromSolverComputations(study);
 
     switch (gd.renewableGeneration())
     {
     case rgClusters:
-        // Removing disabled renewable clusters from solver computations
-        removeDisabledRenewableClustersFromSolverComputations(study);
         break;
     case rgAggregated:
         // Removing all renewable clusters from solver computations
@@ -404,22 +399,6 @@ static void removeClusters(Study& study,
                         << " clusters and removed them before solver computations";
         }
     }
-}
-
-void StudyRuntimeInfos::removeDisabledThermalClustersFromSolverComputations(Study& study)
-{
-    removeClusters(
-      study, "thermal", [](Area& area) { return area.thermal.list.removeDisabledClusters(); });
-}
-
-void StudyRuntimeInfos::removeDisabledRenewableClustersFromSolverComputations(Study& study)
-{
-    removeClusters(study, "renewable", [](Area& area) {
-        uint ret = area.renewable.list.removeDisabledClusters();
-        if (ret > 0)
-            area.renewable.list.giveIndicesToClusters();
-        return ret;
-    });
 }
 
 void StudyRuntimeInfos::removeDisabledShortTermStorageClustersFromSolverComputations(Study& study)

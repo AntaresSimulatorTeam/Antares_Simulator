@@ -62,7 +62,6 @@ void PartThermal::reset()
     unsuppliedEnergyCost = 0.;
     spilledEnergyCost = 0.;
 
-    list.clear();
     list.clearAll();
 }
 

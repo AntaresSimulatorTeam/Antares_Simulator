@@ -353,7 +353,7 @@ bool listOfFilesAnDirectoriesToKeep(StudyCleaningInfos* infos)
             // Exclude
             listOfFilesAnDirectoriesToKeepForArea(e, p, area, buffer);
             // Clear the memory used by the thermal clusters of the area
-            area->thermal.list.clear();
+            area->thermal.list.clearAll();
 
             // Interconnections
             {

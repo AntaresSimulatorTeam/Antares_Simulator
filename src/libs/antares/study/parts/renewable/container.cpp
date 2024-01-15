@@ -59,7 +59,7 @@ PartRenewable::~PartRenewable()
 
 void PartRenewable::reset()
 {
-    list.clear();
+    list.clearAll();
 }
 
 } // namespace Data

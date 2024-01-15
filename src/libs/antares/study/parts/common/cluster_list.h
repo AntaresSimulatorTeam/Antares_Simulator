@@ -31,7 +31,7 @@ public:
     using iterator = typename Vect::iterator;
     using const_iterator = typename Vect::const_iterator;
 
-    void clear();
+    void clearAll();
     bool empty() const;
     void add(const SharedPtr cluster);
 
@@ -131,17 +131,6 @@ public:
     */
     void retrieveTotalCapacityAndUnitCount(double& total, uint& unitCount) const;
 
-    /*!
-    ** \brief Removes disabled clusters
-    **
-    ** All clusters with the flag 'enabled' turned to false will be removed from 'list'.
-    ** As a consequence, they will no longer be seen as thermal clusters
-    ** from the solver's point of view.
-    ** \warning This method should only be used from the solver
-    **
-    ** \return The number of disabled clusters found
-    */
-    uint removeDisabledClusters();
     unsigned int enabledCount() const;
     unsigned int allClustersCount() const;
     void giveIndicesToClusters();
