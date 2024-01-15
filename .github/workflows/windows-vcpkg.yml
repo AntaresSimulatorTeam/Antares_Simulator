@@ -33,7 +33,7 @@ jobs:
       VCPKG_ROOT: ${{ github.workspace }}/vcpkg
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
       RUN_EXTENDED_TESTS: ${{ github.event_name == 'schedule'}}
-      OS: windows-latest
+      os: windows-latest
       test-platform: windows-2022
       vcpkgPackages: wxwidgets boost-test
       triplet: x64-windows
@@ -111,7 +111,7 @@ jobs:
       uses: ./.github/workflows/download-extract-precompiled-libraries-zip
       with:
         antares-deps-version: ${{steps.antares-deps-version.outputs.prop}}
-        os: ${{env.OS}}
+        os: ${{env.os}}
         ortools-url: ${{env.ORTOOLS_URL}}
         ortools-dir: ${{env.ORTOOLS_DIR}}
 
