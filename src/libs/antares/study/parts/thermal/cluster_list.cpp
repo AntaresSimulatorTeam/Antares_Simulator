@@ -157,9 +157,6 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
 
         // Check the data integrity of the cluster
         cluster->integrityCheck();
-
-        // adding the thermal cluster
-        add(cluster);
         addToCompleteList(cluster);
     }
 

@@ -165,11 +165,7 @@ bool RenewableClusterList::loadFromFolder(const AnyString& folder, Area* area)
                     continue;
                 }
 
-                // Check the data integrity of the cluster
                 cluster->integrityCheck();
-
-                // adding the renewable cluster
-                add(cluster);
                 addToCompleteList(cluster);
             }
         }

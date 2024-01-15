@@ -89,14 +89,6 @@ void ClusterList<ClusterT>::storeTimeseriesNumbers(Solver::IResultWriter& writer
 }
 
 template<class ClusterT>
-void ClusterList<ClusterT>::add(const SharedPtr cluster)
-{
-    if (exists(cluster->id()))
-        return;
-    clusters_.push_back(cluster);
-}
-
-template<class ClusterT>
 bool ClusterList<ClusterT>::alreadyInAllClusters(std::string clusterId)
 {
     return std::ranges::any_of(allClusters_, [&clusterId](const auto& c) { return c->id() == clusterId; });

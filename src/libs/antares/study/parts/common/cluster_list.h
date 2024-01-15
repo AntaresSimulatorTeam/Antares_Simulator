@@ -27,13 +27,9 @@ class ClusterList
 {
 public:
     using SharedPtr = typename std::shared_ptr<ClusterT>;
-    using Vect = typename std::vector<SharedPtr>;
-    using iterator = typename Vect::iterator;
-    using const_iterator = typename Vect::const_iterator;
 
     void clearAll();
     bool empty() const;
-    void add(const SharedPtr cluster);
 
     /*!
     ** \brief Try to find a cluster from its id (const) in the complete cluster list
@@ -139,7 +135,6 @@ public:
 
 protected:
     // The vector containing the clusters
-    Vect clusters_;
     std::vector<std::shared_ptr<ClusterT>> allClusters_;
 
     /// thermal, renewable, etc.
