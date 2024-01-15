@@ -47,6 +47,9 @@ inline void State::startANewYear()
            0,
            sizeof(thermalClusterDispatchedUnitsCountForYear));
 
+    if (unitCommitmentMode == Antares::Data::UnitCommitmentMode::ucHeuristicAccurate)
+        memset(thermalClusterRampingCostForYear, 0, sizeof(thermalClusterNonProportionalCostForYear));
+
     // Re-initializing annual costs (to be printed in output into separate files)
     annualSystemCost = 0.;
     optimalSolutionCost1 = 0.;
