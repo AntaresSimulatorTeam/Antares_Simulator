@@ -446,7 +446,6 @@ void ThermalCluster::internalAddPlant(void*)
         logs.info() << "adding new thermal cluster " << pArea->id << '.' << sFl;
         cluster->setName(sFl);
         cluster->reset();
-        pArea->thermal.list.add(cluster);
         pArea->thermal.list.addToCompleteList(cluster);
         pArea->thermal.list.giveIndicesToClusters();
 
@@ -525,7 +524,6 @@ void ThermalCluster::internalClonePlant(void*)
         // Reset to default values
         cluster->copyFrom(selectedPlant);
 
-        pArea->thermal.list.add(cluster);
         pArea->thermal.list.addToCompleteList(cluster);
         pArea->thermal.list.giveIndicesToClusters();
 

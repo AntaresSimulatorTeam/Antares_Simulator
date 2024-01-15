@@ -18,13 +18,11 @@ using namespace Antares::Data;
 
 void addClusterToAreaList(Area* area, std::shared_ptr<ThermalCluster> cluster)
 {
-	area->thermal.list.add(cluster);
 	area->thermal.list.addToCompleteList(cluster);
 }
 
 void addClusterToAreaList(Area* area, std::shared_ptr<RenewableCluster> cluster)
 {
-	area->renewable.list.add(cluster);
 	area->renewable.list.addToCompleteList(cluster);
 }
 

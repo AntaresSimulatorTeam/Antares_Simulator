@@ -387,7 +387,6 @@ void RenewableCluster::internalAddPlant(void*)
         logs.info() << "adding new renewable cluster " << pArea->id << '.' << sFl;
         cluster->setName(sFl);
         cluster->reset();
-        pArea->renewable.list.add(cluster);
         pArea->renewable.list.addToCompleteList(cluster);
         pArea->renewable.list.giveIndicesToClusters();
 
@@ -465,7 +464,6 @@ void RenewableCluster::internalClonePlant(void*)
         // Reset to default values
         cluster->copyFrom(selectedPlant);
 
-        pArea->renewable.list.add(cluster);
         pArea->renewable.list.addToCompleteList(cluster);
         pArea->renewable.list.giveIndicesToClusters();
 

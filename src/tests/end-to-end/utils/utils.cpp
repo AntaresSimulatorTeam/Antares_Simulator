@@ -23,7 +23,6 @@ std::shared_ptr<ThermalCluster> addClusterToArea(Area* area, const std::string& 
     cluster->setName(clusterName);
     cluster->reset();
 
-    area->thermal.list.add(cluster);
     area->thermal.list.addToCompleteList(cluster);
     area->thermal.list.giveIndicesToClusters();
 
