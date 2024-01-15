@@ -30,7 +30,7 @@ jobs:
     name: Build
     env:
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
-      OS: ubuntu-20.04
+      os: ubuntu-20.04
 
     runs-on: ubuntu-20.04
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
@@ -41,7 +41,7 @@ jobs:
     - name: ccache
       uses: hendrikmuhs/ccache-action@v1.2
       with:
-          key: ${{ runner.name }}
+          key: ${{ env.os }}
 
     - name: Install libraries
       run: |
@@ -66,7 +66,7 @@ jobs:
       uses: ./.github/workflows/download-extract-precompiled-libraries-tgz
       with:
         antares-deps-version: ${{steps.antares-deps-version.outputs.prop}}
-        os: ${{env.OS}}
+        os: ${{env.os}}
         ortools-url: ${{env.ORTOOLS_URL}}
         ortools-dir: ${{env.ORTOOLS_DIR}}
 
@@ -121,7 +121,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: valid-named-mps
-        os: ${{ env.OS }}
+        os: ${{ env.os }}
         variant: "named-mps"
 
     - name: Run unfeasibility-related tests
@@ -149,7 +149,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: valid-v830
-        os: ${{ env.OS }}
+        os: ${{ env.os }}
 
     - name: Run MILP with CBC
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
@@ -158,7 +158,7 @@ jobs:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: valid-milp
         variant: "milp-cbc"
-        os: ${{ env.OS }}
+        os: ${{ env.os }}
 
     - name: Run tests introduced in v860
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
@@ -166,7 +166,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: valid-v860
-        os: ${{ env.OS }}
+        os: ${{ env.os }}
 
     - name: Run tests introduced in v870
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
@@ -174,7 +174,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: valid-v870
-        os: ${{ env.OS }}
+        os: ${{ env.os }}
 
     - name: Run short-tests
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
@@ -182,7 +182,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: short-tests
-        os: ${{ env.OS }}
+        os: ${{ env.os }}
 
     - name: Run mps tests
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
@@ -190,7 +190,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: valid-mps
-        os: ${{ env.OS }}
+        os: ${{ env.os }}
 
     - name: Run tests for adequacy patch (CSR)
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
@@ -198,7 +198,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: adequacy-patch-CSR
-        os: ${{ env.OS }}
+        os: ${{ env.os }}
 
     - name: Run parallel tests
       if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
@@ -206,7 +206,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: valid-parallel
-        os: ${{ env.OS }}
+        os: ${{ env.os }}
         variant: "parallel"
 
     - name: Run medium-tests
@@ -215,7 +215,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: medium-tests
-        os: ${{ env.OS }}
+        os: ${{ env.os }}
 
     - name: Run long-tests-1
       if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
@@ -223,7 +223,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: long-tests-1
-        os: ${{ env.OS }}
+        os: ${{ env.os }}
 
     - name: Run long-tests-2
       if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
@@ -231,7 +231,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: long-tests-2
-        os: ${{ env.OS }}
+        os: ${{ env.os }}
 
     - name: Run long-tests-3
       if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
@@ -239,7 +239,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: long-tests-3
-        os: ${{ env.OS }}
+        os: ${{ env.os }}
 
     - name: Installer .deb creation
       run: |
