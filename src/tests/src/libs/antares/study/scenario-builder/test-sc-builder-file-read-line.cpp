@@ -103,12 +103,6 @@ struct Fixture
 		thCluster_12->series.timeSeries.resize(14, 1);
 		thCluster_31->series.timeSeries.resize(14, 1);
 
-		// Thermal clusters : update areas local numbering for clusters
-		area_1->thermal.list.giveIndicesToClusters();
-		area_2->thermal.list.giveIndicesToClusters();
-		area_3->thermal.list.giveIndicesToClusters();
-
-
 		// Add renewable clusters
 		rnCluster_21 = addClusterToArea<RenewableCluster>(area_2, "rn-cluster-21");
 		rnCluster_31 = addClusterToArea<RenewableCluster>(area_3, "rn-cluster-31");
@@ -118,11 +112,6 @@ struct Fixture
 		rnCluster_21->series.timeSeries.resize(9, 1);
 		rnCluster_31->series.timeSeries.resize(9, 1);
 		rnCluster_32->series.timeSeries.resize(9, 1);
-
-		// Renewable clusters : update areas local numbering for clusters
-		area_1->renewable.list.giveIndicesToClusters();
-		area_2->renewable.list.giveIndicesToClusters();
-		area_3->renewable.list.giveIndicesToClusters();
 
 		// Resize all TS numbers storage (1 column x nbYears lines) 
 		area_1->resizeAllTimeseriesNumbers(study->parameters.nbYears);

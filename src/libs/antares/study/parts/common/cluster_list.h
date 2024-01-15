@@ -129,16 +129,16 @@ public:
 
     unsigned int enabledCount() const;
     unsigned int allClustersCount() const;
-    void giveIndicesToClusters();
     void addToCompleteList(std::shared_ptr<ClusterT> cluster);
     void sortCompleteList();
 
 protected:
-    // The vector containing the clusters
     std::vector<std::shared_ptr<ClusterT>> allClusters_;
 
-    /// thermal, renewable, etc.
     virtual std::string typeID() const = 0;
+
+    // Give a special index to enabled clusters (thermal / renewable)
+    void giveIndicesToClusters();
 
 private:
     bool alreadyInAllClusters(std::string clusterName);

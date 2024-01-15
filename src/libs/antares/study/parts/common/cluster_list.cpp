@@ -101,6 +101,7 @@ void ClusterList<ClusterT>::addToCompleteList(std::shared_ptr<ClusterT> cluster)
         return;
     allClusters_.push_back(cluster);
     sortCompleteList();
+    giveIndicesToClusters();
 }
 
 template<class ClusterT>

@@ -99,11 +99,12 @@ public:
 
     bool saveToFolder(const AnyString& folder) const override;
 
-    /// Sort the vector, set index value for each cluster
-    void rebuildIndex();
-
     unsigned int mustRunAndEnabledCount() const;
     unsigned int enabledAndNotMustRunCount() const;
+
+private:
+    // Give a special index to enbled and not must-run THERMAL clusters 
+    void rebuildIndex();
 
 }; // class ThermalClusterList
 } // namespace Data
