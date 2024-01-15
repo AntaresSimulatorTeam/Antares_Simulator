@@ -238,9 +238,8 @@ bool ClusterList<ClusterT>::saveDataSeriesToFolder(const AnyString& folder) cons
 template<class ClusterT>
 bool ClusterList<ClusterT>::saveDataSeriesToFolder(const AnyString& folder, const String& msg) const
 {
-    return std::ranges::all_of(allClusters_, [&](const auto& c) {
-        return c->saveDataSeriesToFolder(folder);
-    });
+    return std::ranges::all_of(allClusters_, 
+                               [&](const auto& c) { return c->saveDataSeriesToFolder(folder); });
 }
 
 template<class ClusterT>
@@ -248,13 +247,8 @@ bool ClusterList<ClusterT>::loadDataSeriesFromFolder(Study& s,
                                                     const StudyLoadOptions& options,
                                                     const AnyString& folder)
 {
-    bool ret = true;
-
-    for (auto c : allClusters_)
-    {
-        ret = c->loadDataSeriesFromFolder(s, folder) and ret;
-    }
-    return ret;
+    return std::ranges::all_of(allClusters_, 
+                               [&](auto c) { return c->loadDataSeriesFromFolder(s, folder); });
 }
 
 template<class ClusterT>

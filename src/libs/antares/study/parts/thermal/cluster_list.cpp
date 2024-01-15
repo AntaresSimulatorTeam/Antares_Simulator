@@ -507,7 +507,7 @@ bool ThermalClusterList::loadPreproFromFolder(Study& study,
 
 bool ThermalClusterList::loadEconomicCosts(Study& study, const AnyString& folder)
 {
-    return std::ranges::all_of(each_enabled_and_not_mustrun(), [&study, folder](const auto& c)
+    return std::ranges::all_of(allClusters_, [&study, folder](const auto& c)
     {
         assert(c->parentArea && "cluster: invalid parent area");
         Clob buffer;
