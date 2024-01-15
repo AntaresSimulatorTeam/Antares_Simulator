@@ -194,6 +194,7 @@ BOOST_FIXTURE_TEST_CASE(thermal_cluster_rename, ThermalClusterStudy)
 
 BOOST_FIXTURE_TEST_CASE(thermal_cluster_delete, ThermalClusterStudy)
 {
+    // gp : remove() only used in GUI (will go away when removing the GUI)
     BOOST_CHECK(areaA->thermal.list.findInAll("cluster") == cluster);
     areaA->thermal.list.remove("cluster");
     BOOST_CHECK(areaA->thermal.list.findInAll("cluster") == nullptr);
@@ -247,6 +248,7 @@ BOOST_FIXTURE_TEST_CASE(renewable_cluster_rename, RenewableClusterStudy)
 
 BOOST_FIXTURE_TEST_CASE(renewable_cluster_delete, RenewableClusterStudy)
 {
+    // gp : remove() only used in GUI (will go away when removing the GUI)
     BOOST_CHECK(areaA->renewable.list.findInAll("windcluster") == cluster);
     BOOST_CHECK(areaA->renewable.list.remove("windcluster"));
     BOOST_CHECK(areaA->renewable.list.findInAll("windcluster") == nullptr);

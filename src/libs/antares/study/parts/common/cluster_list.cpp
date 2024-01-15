@@ -219,7 +219,7 @@ void ClusterList<ClusterT>::markAsModified() const
 template<class ClusterT>
 bool ClusterList<ClusterT>::remove(const Data::ClusterName& id)
 {
-    auto nbDeletion = std::erase_if(clusters_, [&id](const SharedPtr& c) { return c->id() == id; });
+    auto nbDeletion = std::erase_if(allClusters_, [&id](const SharedPtr& c) { return c->id() == id; });
 
     // Invalidating the parent area
     forceReload();
@@ -238,7 +238,7 @@ bool ClusterList<ClusterT>::saveDataSeriesToFolder(const AnyString& folder) cons
 template<class ClusterT>
 bool ClusterList<ClusterT>::saveDataSeriesToFolder(const AnyString& folder, const String& msg) const
 {
-    return std::ranges::all_of(clusters_, [&](const auto& c) {
+    return std::ranges::all_of(allClusters_, [&](const auto& c) {
         return c->saveDataSeriesToFolder(folder);
     });
 }
