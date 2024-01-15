@@ -169,13 +169,6 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
     return ret;
 }
 
-void ThermalClusterList::removeMustRunClusters()
-{
-    std::erase_if(clusters_, [](auto c) { return c->isMustRun(); });
-    forceReload();
-    rebuildIndex();
-}
-
 static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFile::Property* p)
 {
     if (p->key.empty())

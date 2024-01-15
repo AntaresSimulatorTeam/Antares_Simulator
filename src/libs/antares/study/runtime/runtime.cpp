@@ -303,9 +303,6 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
         break;
     }
 
-    // Must-run mode
-    initializeThermalClustersInMustRunMode(study);
-
     // Areas
     StudyRuntimeInfosInitializeAllAreas(study, *this);
 
@@ -336,37 +333,6 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
 uint StudyRuntimeInfos::interconnectionsCount() const
 {
     return static_cast<uint>(areaLink.size());
-}
-
-void StudyRuntimeInfos::initializeThermalClustersInMustRunMode(Study& study) const
-{
-    logs.info();
-    logs.info() << "Optimizing the thermal clusters in 'must-run' mode...";
-
-    // The number of thermal clusters in 'must-run' mode
-    uint count = 0;
-
-    // each area...
-    for (uint a = 0; a != study.areas.size(); ++a)
-    {
-        Area& area = *(study.areas.byIndex[a]);
-        count += area.thermal.list.mustRunAndEnabledCount();
-        area.thermal.list.removeMustRunClusters();
-    }
-
-    switch (count)
-    {
-    case 0:
-        logs.info() << "No thermal cluster in 'must-run' mode";
-        break;
-    case 1:
-        logs.info() << "Found 1 thermal cluster in 'must-run' mode";
-        break;
-    default:
-        logs.info() << "Found " << count << " thermal clusters in 'must-run' mode";
-    }
-    // space
-    logs.info();
 }
 
 static void removeClusters(Study& study,
