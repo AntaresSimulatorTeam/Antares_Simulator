@@ -329,18 +329,16 @@ void BindingConstraintsRepository::markAsModified() const
         i->markAsModified();
 }
 
-std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintsRepository::activeContraints() const {
-    if (activeConstraints_) {
+std::unordered_map<std::string, std::shared_ptr<BindingConstraint>> BindingConstraintsRepository::activeContraints() const
+{
+    if (activeConstraints_)
         return activeConstraints_.value();
-    } else {
-        std::vector<std::shared_ptr<BindingConstraint>> out;
-        std::copy_if(constraints_.begin(), constraints_.end(), std::back_inserter(out),
-                     [](const auto &bc) {
-                         return bc->isActive();
-                     });
-        activeConstraints_ = std::move(out);
-        return activeConstraints_.value();
-    }
+
+    for (auto& bc : constraints_)
+        if(bc->isActive())
+            activeConstraints_.value().try_emplace(bc->name(), bc);
+
+    return activeConstraints_.value();
 }
 
 static bool isBindingConstraintTypeInequality(const Data::BindingConstraint& bc)
@@ -355,9 +353,9 @@ std::vector<uint> BindingConstraintsRepository::getIndicesForInequalityBindingCo
     const auto lastBC = activeConstraints.end();
 
     std::vector<uint> indices;
-    for (auto bc = firstBC; bc < lastBC; bc++)
+    for (auto bc = firstBC; bc != lastBC; bc++)
     {
-        if (isBindingConstraintTypeInequality(*(*bc)))
+        if (isBindingConstraintTypeInequality(*(*bc).second))
         {
             auto index = static_cast<uint>(std::distance(firstBC, bc));
             indices.push_back(index);

@@ -150,7 +150,7 @@ public:
 
     static std::vector<std::shared_ptr<BindingConstraint>> LoadBindingConstraint(EnvForLoading env);
 
-    [[nodiscard]] std::vector<std::shared_ptr<BindingConstraint>> activeContraints() const;
+    [[nodiscard]] std::unordered_map<std::string, std::shared_ptr<BindingConstraint>> activeContraints() const;
 
     [[nodiscard]] std::vector<uint> getIndicesForInequalityBindingConstraints() const;
 
@@ -161,7 +161,7 @@ private:
     //! All constraints
     Data::BindingConstraintsRepository::Vector constraints_;
 
-    mutable std::optional<std::vector<std::shared_ptr<BindingConstraint>>> activeConstraints_;
+    mutable std::optional<std::unordered_map<std::string, std::shared_ptr<BindingConstraint>>> activeConstraints_;
 };
 
 struct WhoseNameContains final
