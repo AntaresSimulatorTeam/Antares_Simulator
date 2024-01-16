@@ -85,11 +85,12 @@ jobs:
              -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
              -DDEPS_INSTALL_DIR=./rte-antares-deps-Debug \
              -DCODE_COVERAGE=ON \
-             -DCMAKE_BUILD_TYPE=debug \
+             -DCMAKE_BUILD_TYPE=Debug \
              -DCMAKE_PREFIX_PATH="../install;${{ env.ORTOOLS_DIR }}/install" \
              -DBUILD_TESTING=ON \
              -DMZ_CODE_COVERAGE=ON \
              -DBUILD_not_system=OFF
+
 
       - name: Build
         run: |
