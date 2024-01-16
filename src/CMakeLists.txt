@@ -139,7 +139,7 @@ OMESSAGE("")
 OMESSAGE("")
 
 #Display Build Configuration (debug or release)
-if("${CMAKE_BUILD_TYPE}" STREQUAL "release" OR "${CMAKE_BUILD_TYPE}" STREQUAL "tuning")
+if("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
 	OMESSAGE("{antares} Build Configuration: RELEASE")
 else()
 	OMESSAGE("{antares} Build Configuration: DEBUG")
@@ -148,7 +148,7 @@ endif()
 #
 # Yuni Framework
 #
-if("${CMAKE_BUILD_TYPE}" STREQUAL "release" OR "${CMAKE_BUILD_TYPE}" STREQUAL "tuning")
+if("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
 	set(YUNI_TARGET_MODE "release")
 	set(ANTARES_VERSION_TARGET  "release")
 else()
@@ -192,7 +192,7 @@ endif()
 
 
 # Add DEPS_INSTALL_DIR with antares-xpansion CMAKE_BUILD_TYPE
-if ("${CMAKE_BUILD_TYPE}" STREQUAL "release")
+if ("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
 
 	string(REPLACE ${CMAKE_BUILD_TYPE} Release
 			DEPS_INSTALL_DIR_XPANSION
@@ -344,11 +344,11 @@ OMESSAGE("")
 # Informations for NSIS
 if(WIN32 OR WIN64)
 	if(MSVC)
-		if("${CMAKE_BUILD_TYPE}" STREQUAL "release" OR "${CMAKE_BUILD_TYPE}" STREQUAL "tuning")
+		if("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
 			set(NSIS_TARGET "Release")
-		else("${CMAKE_BUILD_TYPE}" STREQUAL "release" OR "${CMAKE_BUILD_TYPE}" STREQUAL "tuning")
+		else()
 			set(NSIS_TARGET "Debug")
-		endif("${CMAKE_BUILD_TYPE}" STREQUAL "release" OR "${CMAKE_BUILD_TYPE}" STREQUAL "tuning")
+		endif()
 		set(COMPILER_MARK "v")
 		#set(COMPILER_INCLUDE "vs9")
 	else(MSVC)

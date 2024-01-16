@@ -90,14 +90,14 @@ jobs:
            -DCMAKE_C_COMPILER_LAUNCHER=ccache \
            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
            -DDEPS_INSTALL_DIR=${{github.workspace}}/rte-antares-deps-Release \
-           -DCMAKE_BUILD_TYPE=release \
+           -DCMAKE_BUILD_TYPE=Release \
            -DBUILD_TESTING=ON \
            -DBUILD_not_system=OFF \
            -DCMAKE_PREFIX_PATH=${{ env.ORTOOLS_DIR }}/install \
 
     - name: Build
       run: |
-             cmake --build _build --config release -j2
+             cmake --build _build -j$(nproc)
 
     - name: Run unfeasibility-related tests
       if: ${{ env.IS_PUSH == 'true' }}
