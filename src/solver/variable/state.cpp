@@ -441,11 +441,15 @@ void State::yearEndBuildCalculateRampingCosts(
             {
                 thermalClusterRampingCostForYear[h]
                   = rampingProduction * currentCluster->ramping->powerIncreaseCost;
+                logs.info() << " power increase cost = "
+                            << currentCluster->ramping->powerIncreaseCost;
             }
             else
             {
                 thermalClusterRampingCostForYear[h]
                   = -rampingProduction * currentCluster->ramping->powerDecreaseCost;
+                logs.info() << " power decrease cost = "
+                            << currentCluster->ramping->powerDecreaseCost;
             }
             thermalClusterOperatingCostForYear[h] += thermalClusterRampingCostForYear[h];
         }

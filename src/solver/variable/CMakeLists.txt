@@ -127,6 +127,8 @@ set(SRC_VARIABLE_ECONOMY
 		economy/lolp.h
 		economy/avail-dispatchable-generation.h
 		economy/dispatchable-generation-margin.h
+		economy/rampingCosts.h
+		economy/rampingCostByDispatchablePlant.h
 
 		# Links
 		economy/links/flowLinear.h
