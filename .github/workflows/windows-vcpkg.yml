@@ -151,7 +151,7 @@ jobs:
     - name: Build
       shell: bash
       run: |
-           cmake --build _build --config release -j2
+           cmake --build _build --config Release -j2
     # simtest
     - name: Read simtest version
       id: simtest-version
