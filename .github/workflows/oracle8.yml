@@ -58,7 +58,7 @@ jobs:
       run: |
            source /opt/rh/gcc-toolset-10/enable
            cmake -B _build -S src \
-             -DCMAKE_BUILD_TYPE=release \
+             -DCMAKE_BUILD_TYPE=Release \
              -DBUILD_TESTING=ON \
              -DBUILD_TOOLS=OFF \
              -DBUILD_UI=OFF \

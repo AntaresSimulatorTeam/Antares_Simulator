@@ -141,7 +141,7 @@ jobs:
            -DCMAKE_PREFIX_PATH="${{ env.ORTOOLS_DIR }}/install" \
            -DVCPKG_ROOT="${{env.VCPKG_ROOT}}" \
            -DVCPKG_TARGET_TRIPLET=${{ env.triplet }} \
-           -DCMAKE_BUILD_TYPE=release \
+           -DCMAKE_BUILD_TYPE=Release \
            -DBUILD_TESTING=ON  \
            -DBUILD_TOOLS=ON \
            -DBUILD_not_system=OFF \
@@ -151,7 +151,7 @@ jobs:
     - name: Build
       shell: bash
       run: |
-           cmake --build _build --config release -j2
+           cmake --build _build --config Release -j2
     # simtest
     - name: Read simtest version
       id: simtest-version
