@@ -102,7 +102,7 @@ bool AreaLink::linkLoadTimeSeries_for_version_below_810(const AnyString& folder)
     }
 
     // Store data into link's data container
-    for (int h = 0; h < HOURS_PER_YEAR; h++)
+    for (unsigned int h = 0; h < HOURS_PER_YEAR; h++)
     {
         directCapacities[0][h] = tmpMatrix[0][h];
         indirectCapacities[0][h] = tmpMatrix[1][h];
@@ -502,7 +502,7 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
                 const double* indirectCapacities = link.indirectCapacities[indexTS];
 
                 // Checks on direct capacities
-                for (int h = 0; h < HOURS_PER_YEAR; h++)
+                for (unsigned int h = 0; h < HOURS_PER_YEAR; h++)
                 {
                     if (directCapacities[h] < 0.)
                     {
@@ -517,7 +517,7 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
                 }
 
                 // Checks on indirect capacities
-                for (int h = 0; h < HOURS_PER_YEAR; h++)
+                for (unsigned int h = 0; h < HOURS_PER_YEAR; h++)
                 {
                     if (indirectCapacities[h] < 0.)
                     {
@@ -532,7 +532,7 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
                 }
             }
             // Checks on hurdle costs
-            for (int h = 0; h < HOURS_PER_YEAR; h++)
+            for (unsigned int h = 0; h < HOURS_PER_YEAR; h++)
             {
                 if (directHurdlesCost[h] + indirectHurdlesCost[h] < 0)
                 {
@@ -544,7 +544,7 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
             }
 
             // Checks on P. shift min and max
-            for (int h = 0; h < HOURS_PER_YEAR; h++)
+            for (unsigned int h = 0; h < HOURS_PER_YEAR; h++)
             {
                 if (PShiftPlus[h] < PShiftMinus[h])
                 {
