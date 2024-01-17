@@ -104,9 +104,11 @@ void BindingConstraints<NextT>::initializeFromStudy(Data::Study& study)
     const std::vector<uint> InequalityBCindices
       = study.bindingConstraints.getIndicesForInequalityBindingConstraints();
 
+    const std::vector<std::string> inequalityByNames
+        = study.bindingConstraints.getNamesForInequalityBindingConstraints();
     // The total number of inequality binding constraints count
     // (we don't count BCs with equality sign)
-    pBCcount = (uint)InequalityBCindices.size();
+    pBCcount = (uint)inequalityByNames.size();
 
     // Reserving the memory
     if (pBCcount > 0)
@@ -118,7 +120,7 @@ void BindingConstraints<NextT>::initializeFromStudy(Data::Study& study)
     {
         NextType& bc = pBindConstraints[i];
 
-        bc.setBindConstraintGlobalIndex(InequalityBCindices[i]);
+        bc.setBindConstraintGlobalIndex(InequalityBCindices[i], inequalityByNames[i]);
         bc.initializeFromStudy(study);
 
         // Does user want to print output results related to the current binding constraint ?

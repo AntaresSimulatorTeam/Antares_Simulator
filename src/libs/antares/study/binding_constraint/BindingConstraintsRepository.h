@@ -153,6 +153,7 @@ public:
     [[nodiscard]] std::unordered_map<std::string, std::shared_ptr<BindingConstraint>> activeContraints() const;
 
     [[nodiscard]] std::vector<uint> getIndicesForInequalityBindingConstraints() const;
+    [[nodiscard]] std::vector<std::string> getNamesForInequalityBindingConstraints() const;
 
 
 private:

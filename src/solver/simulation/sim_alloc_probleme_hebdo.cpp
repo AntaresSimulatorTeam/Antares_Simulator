@@ -291,35 +291,35 @@ void SIM_AllocationConstraints(PROBLEME_HEBDO& problem,
     const auto& bindingConstraintCount = activeConstraints.size();
     problem.ResultatsContraintesCouplantes.resize(bindingConstraintCount);
 
-    for (unsigned k = 0; k < bindingConstraintCount; k++)
+    unsigned constraintIndex = 0;
+    for (auto& [name, bc] : activeConstraints)
     {
-        assert(k < activeConstraints.size());
-        assert(activeConstraints[k]->linkCount() < 50000000);
-        assert(activeConstraints[k]->clusterCount() < 50000000);
+        assert(bc->linkCount() < 50000000);
+        assert(bc->clusterCount() < 50000000);
 
-        problem.MatriceDesContraintesCouplantes[k].SecondMembreDeLaContrainteCouplante
+        problem.MatriceDesContraintesCouplantes[constraintIndex].SecondMembreDeLaContrainteCouplante
           .assign(NombreDePasDeTemps, 0.);
 
-        problem.MatriceDesContraintesCouplantes[k].NumeroDeLInterconnexion
-          .assign(activeConstraints[k]->linkCount(), 0);
-        problem.MatriceDesContraintesCouplantes[k].PoidsDeLInterconnexion
-          .assign(activeConstraints[k]->linkCount(), 0.);
-        problem.MatriceDesContraintesCouplantes[k].OffsetTemporelSurLInterco
-          .assign(activeConstraints[k]->linkCount(), 0);
+        problem.MatriceDesContraintesCouplantes[constraintIndex].NumeroDeLInterconnexion
+          .assign(bc->linkCount(), 0);
+        problem.MatriceDesContraintesCouplantes[constraintIndex].PoidsDeLInterconnexion
+          .assign(bc->linkCount(), 0.);
+        problem.MatriceDesContraintesCouplantes[constraintIndex].OffsetTemporelSurLInterco
+          .assign(bc->linkCount(), 0);
 
-        problem.MatriceDesContraintesCouplantes[k].NumeroDuPalierDispatch
-          .assign(activeConstraints[k]->clusterCount(), 0);
-        problem.MatriceDesContraintesCouplantes[k].PoidsDuPalierDispatch
-          .assign(activeConstraints[k]->clusterCount(), 0.);
-        problem.MatriceDesContraintesCouplantes[k].OffsetTemporelSurLePalierDispatch
-          .assign(activeConstraints[k]->clusterCount(), 0);
-        problem.MatriceDesContraintesCouplantes[k].PaysDuPalierDispatch
-          .assign(activeConstraints[k]->clusterCount(), 0);
+        problem.MatriceDesContraintesCouplantes[constraintIndex].NumeroDuPalierDispatch
+          .assign(bc->clusterCount(), 0);
+        problem.MatriceDesContraintesCouplantes[constraintIndex].PoidsDuPalierDispatch
+          .assign(bc->clusterCount(), 0.);
+        problem.MatriceDesContraintesCouplantes[constraintIndex].OffsetTemporelSurLePalierDispatch
+          .assign(bc->clusterCount(), 0);
+        problem.MatriceDesContraintesCouplantes[constraintIndex].PaysDuPalierDispatch
+          .assign(bc->clusterCount(), 0);
 
 
         // TODO : create a numberOfTimeSteps method in class of runtime->bindingConstraint
         unsigned int nbTimeSteps;
-        switch (activeConstraints[k]->type())
+        switch (bc->type())
         {
             using namespace Antares::Data;
         case BindingConstraint::typeHourly:
@@ -336,7 +336,8 @@ void SIM_AllocationConstraints(PROBLEME_HEBDO& problem,
             break;
         }
         if (nbTimeSteps > 0)
-            problem.ResultatsContraintesCouplantes[k].variablesDuales.assign(nbTimeSteps, 0.);
+            problem.ResultatsContraintesCouplantes[constraintIndex].variablesDuales.assign(nbTimeSteps, 0.);
+        ++constraintIndex;
     }
 }
 

@@ -154,7 +154,7 @@ public:
             pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);
 
         // Set the associated binding constraint
-        associatedBC_ = study.bindingConstraints.activeContraints()[bindConstraintGlobalIndex_];
+        associatedBC_ = study.bindingConstraints.activeContraints().at(name);
 
         NextType::initializeFromStudy(study);
     }
@@ -165,9 +165,10 @@ public:
         VariableAccessorType::InitializeAndReset(results, study);
     }
 
-    void setBindConstraintGlobalIndex(uint bc_index)
+    void setBindConstraintGlobalIndex(uint bc_index, std::string bc_name)
     {
         bindConstraintGlobalIndex_ = bc_index;
+        name = bc_name;
     }
 
     void setBindConstraintsCount(uint bcCount)
@@ -395,6 +396,7 @@ private:
     unsigned int pNbYearsParallel = 0;
     std::shared_ptr<Data::BindingConstraint> associatedBC_ = nullptr;
     int bindConstraintGlobalIndex_ = -1;
+    std::string name;
     uint nbCount_ = 0; // Number of inequality BCs 
 
 }; // class BindingConstMarginCost

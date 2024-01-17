@@ -364,6 +364,18 @@ std::vector<uint> BindingConstraintsRepository::getIndicesForInequalityBindingCo
     return indices;
 }
 
+std::vector<std::string> BindingConstraintsRepository::getNamesForInequalityBindingConstraints() const
+{
+    auto activeConstraints = activeContraints();
+    std::vector<std::string> names;
+
+    for (auto& [name, bc] : activeConstraints)
+        if (isBindingConstraintTypeInequality(*bc))
+            names.push_back(name);
+
+    return names;
+}
+
 void BindingConstraintsRepository::forceReload(bool reload) const
 {
     if (!constraints_.empty())
