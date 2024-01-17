@@ -154,7 +154,7 @@ public:
             pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);
 
         // Set the associated binding constraint
-        associatedBC_ = study.bindingConstraints.activeContraints().at(name);
+        associatedBC_ = study.bindingConstraints.activeContraints().at(bindConstraintName);
 
         NextType::initializeFromStudy(study);
     }
@@ -168,7 +168,7 @@ public:
     void setBindConstraintGlobalIndex(uint bc_index, std::string bc_name)
     {
         bindConstraintGlobalIndex_ = bc_index;
-        name = bc_name;
+        bindConstraintName = bc_name;
     }
 
     void setBindConstraintsCount(uint bcCount)
@@ -254,7 +254,7 @@ public:
             {
                 pValuesForTheCurrentYear[numSpace].day[dayInTheYear]
                   -= state.problemeHebdo
-                       ->ResultatsContraintesCouplantes[bindConstraintGlobalIndex_]
+                       ->ResultatsContraintesCouplantes[bindConstraintName]
                        .variablesDuales[dayInTheWeek];
 
                 dayInTheYear++;
@@ -267,7 +267,7 @@ public:
         {
             uint weekInTheYear = state.weekInTheYear;
             double weeklyValue
-              = -state.problemeHebdo->ResultatsContraintesCouplantes[bindConstraintGlobalIndex_]
+              = -state.problemeHebdo->ResultatsContraintesCouplantes[bindConstraintName]
                    .variablesDuales[0];
 
             pValuesForTheCurrentYear[numSpace].week[weekInTheYear] = weeklyValue;
@@ -298,7 +298,7 @@ public:
         if (associatedBC_->type() == Data::BindingConstraint::typeHourly)
         {
             pValuesForTheCurrentYear[numSpace][hourInTheYear]
-              -= state.problemeHebdo->ResultatsContraintesCouplantes[bindConstraintGlobalIndex_]
+              -= state.problemeHebdo->ResultatsContraintesCouplantes[bindConstraintName]
                    .variablesDuales[state.hourInTheWeek];
         }
 
@@ -368,7 +368,7 @@ private:
 
     bool isInitialized()
     {
-        return (bindConstraintGlobalIndex_ >= 0) && associatedBC_;
+        return !bindConstraintName.empty() && associatedBC_;
     }
 
     bool isCurrentOutputNonApplicable(int precision) const
@@ -396,7 +396,7 @@ private:
     unsigned int pNbYearsParallel = 0;
     std::shared_ptr<Data::BindingConstraint> associatedBC_ = nullptr;
     int bindConstraintGlobalIndex_ = -1;
-    std::string name;
+    std::string bindConstraintName;
     uint nbCount_ = 0; // Number of inequality BCs 
 
 }; // class BindingConstMarginCost

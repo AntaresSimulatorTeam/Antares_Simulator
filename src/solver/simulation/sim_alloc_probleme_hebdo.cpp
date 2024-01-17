@@ -289,7 +289,6 @@ void SIM_AllocationConstraints(PROBLEME_HEBDO& problem,
         .assign(activeConstraints.size(), 0);
 
     const auto& bindingConstraintCount = activeConstraints.size();
-    problem.ResultatsContraintesCouplantes.resize(bindingConstraintCount);
 
     unsigned constraintIndex = 0;
     for (auto& [name, bc] : activeConstraints)
@@ -335,8 +334,10 @@ void SIM_AllocationConstraints(PROBLEME_HEBDO& problem,
             nbTimeSteps = 0;
             break;
         }
+        RESULTATS_CONTRAINTES_COUPLANTES res;
+        res.variablesDuales.assign(nbTimeSteps, 0.);
         if (nbTimeSteps > 0)
-            problem.ResultatsContraintesCouplantes[constraintIndex].variablesDuales.assign(nbTimeSteps, 0.);
+            problem.ResultatsContraintesCouplantes.emplace(name, res);
         ++constraintIndex;
     }
 }
