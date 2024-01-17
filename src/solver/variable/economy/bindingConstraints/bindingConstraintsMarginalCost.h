@@ -165,9 +165,8 @@ public:
         VariableAccessorType::InitializeAndReset(results, study);
     }
 
-    void setBindConstraintGlobalIndex(uint bc_index, std::string bc_name)
+    void setBindConstraintName(std::string bc_name)
     {
-        bindConstraintGlobalIndex_ = bc_index;
         bindConstraintName = bc_name;
     }
 
