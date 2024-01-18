@@ -175,13 +175,6 @@ void DataSeriesHydro::reset()
     maxPowerTScount_ = 1;
 }
 
-void DataSeriesHydro::resizeRORandSTORAGE(uint width)
-{
-    ror.resize(width, HOURS_PER_YEAR);
-    storage.resize(width, DAYS_PER_YEAR);
-    generationTScount_ = width;
-}
-
 void DataSeriesHydro::resizeGenerationTS(uint w, uint h)
 {
     ror.resize(w, h);
