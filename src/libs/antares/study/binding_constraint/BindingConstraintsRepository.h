@@ -150,7 +150,7 @@ public:
 
     static std::vector<std::shared_ptr<BindingConstraint>> LoadBindingConstraint(EnvForLoading env);
 
-    [[nodiscard]] std::vector<std::shared_ptr<BindingConstraint>> activeContraints() const;
+    [[nodiscard]] std::vector<std::shared_ptr<BindingConstraint>> activeConstraints() const;
 
     [[nodiscard]] std::vector<std::string> getNamesForInequalityBindingConstraints() const;
 

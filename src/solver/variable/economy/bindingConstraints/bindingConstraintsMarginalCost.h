@@ -154,7 +154,7 @@ public:
             pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);
 
         // Set the associated binding constraint
-        auto activeConstraints = study.bindingConstraints.activeContraints();
+        auto activeConstraints = study.bindingConstraints.activeConstraints();
         auto tmpBc = std::ranges::find_if(activeConstraints, [&](const auto& bc)
             { return bc->name() == bindConstraintName; });
 

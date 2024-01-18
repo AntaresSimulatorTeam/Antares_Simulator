@@ -329,7 +329,7 @@ void BindingConstraintsRepository::markAsModified() const
         i->markAsModified();
 }
 
-std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintsRepository::activeContraints() const
+std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintsRepository::activeConstraints() const
 {
     if (!activeConstraints_.empty())
         return activeConstraints_;
@@ -348,10 +348,10 @@ static bool isBindingConstraintTypeInequality(const Data::BindingConstraint& bc)
 
 std::vector<std::string> BindingConstraintsRepository::getNamesForInequalityBindingConstraints() const
 {
-    auto activeConstraints = activeContraints();
+    auto activeBC = activeConstraints();
     std::vector<std::string> names;
 
-    for (auto& bc : activeConstraints)
+    for (auto& bc : activeBC)
         if (isBindingConstraintTypeInequality(*bc))
             names.push_back(bc->name());
 

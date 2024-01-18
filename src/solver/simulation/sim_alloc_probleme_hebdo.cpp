@@ -116,7 +116,7 @@ void SIM_AllocationProblemeDonneesGenerales(PROBLEME_HEBDO& problem,
     problem.CorrespondanceCntNativesCntOptim.resize(NombreDePasDeTemps);
     problem.VariablesDualesDesContraintesDeNTC.resize(NombreDePasDeTemps);
 
-    auto activeConstraints = study.bindingConstraints.activeContraints();
+    auto activeConstraints = study.bindingConstraints.activeConstraints();
     problem.NombreDeContraintesCouplantes = activeConstraints.size();
     problem.MatriceDesContraintesCouplantes.resize(activeConstraints.size());
     problem.PaliersThermiquesDuPays.resize(nbPays);
@@ -155,7 +155,7 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
     const uint linkCount = study.runtime->interconnectionsCount();
     const uint shortTermStorageCount = study.runtime->shortTermStorageCount;
 
-    auto activeConstraints = study.bindingConstraints.activeContraints();
+    auto activeConstraints = study.bindingConstraints.activeConstraints();
 
     for (uint k = 0; k < NombreDePasDeTemps; k++)
     {
@@ -274,7 +274,7 @@ void SIM_AllocationConstraints(PROBLEME_HEBDO& problem,
                                const Antares::Data::Study& study,
                                unsigned NombreDePasDeTemps)
 {
-    auto activeConstraints = study.bindingConstraints.activeContraints();
+    auto activeConstraints = study.bindingConstraints.activeConstraints();
 
     problem.CorrespondanceCntNativesCntOptimJournalieres.resize(7);
     for (uint k = 0; k < 7; k++)
