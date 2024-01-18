@@ -33,7 +33,7 @@ jobs:
       VCPKG_ROOT: ${{ github.workspace }}/vcpkg
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
       RUN_EXTENDED_TESTS: ${{ github.event_name == 'schedule'}}
-      OS: windows-latest
+      os: windows-latest
       test-platform: windows-2022
       vcpkgPackages: wxwidgets boost-test
       triplet: x64-windows
@@ -111,7 +111,7 @@ jobs:
       uses: ./.github/workflows/download-extract-precompiled-libraries-zip
       with:
         antares-deps-version: ${{steps.antares-deps-version.outputs.prop}}
-        os: ${{env.OS}}
+        os: ${{env.os}}
         ortools-url: ${{env.ORTOOLS_URL}}
         ortools-dir: ${{env.ORTOOLS_DIR}}
 
@@ -141,7 +141,7 @@ jobs:
            -DCMAKE_PREFIX_PATH="${{ env.ORTOOLS_DIR }}/install" \
            -DVCPKG_ROOT="${{env.VCPKG_ROOT}}" \
            -DVCPKG_TARGET_TRIPLET=${{ env.triplet }} \
-           -DCMAKE_BUILD_TYPE=release \
+           -DCMAKE_BUILD_TYPE=Release \
            -DBUILD_TESTING=ON  \
            -DBUILD_TOOLS=ON \
            -DBUILD_not_system=OFF \
@@ -151,7 +151,7 @@ jobs:
     - name: Build
       shell: bash
       run: |
-           cmake --build _build --config release -j2
+           cmake --build _build --config Release -j2
     # simtest
     - name: Read simtest version
       id: simtest-version
