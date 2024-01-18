@@ -28,6 +28,7 @@
 #define __LIBS_STUDY_SCENARIO_BUILDER_DATA_HYDRO_LEVELS_H__
 
 #include "scBuilderDataInterface.h"
+#include <functional>
 
 namespace Antares
 {
@@ -45,7 +46,10 @@ public:
     using MatrixType = Matrix<double>;
 
 public:
-    // We use default constructor and destructor
+    // Constructor
+
+    hydroLevelsData(std::string& iniFilePrefix,
+                    std::function<void(Study&, MatrixType&)> applyToTarget);
 
     //! \name Data manupulation
     //@{
@@ -57,7 +61,7 @@ public:
     /*!
     ** \brief Export the data into a mere INI file
     */
-    void saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const;
+    void saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const override;
 
     /*!
     ** \brief Assign a single value
@@ -77,11 +81,15 @@ public:
 
     void set_value(uint x, uint y, double value);
 
-    bool apply(Study& study);
+    bool apply(Study& study) override;
 
 private:
     //! Hydro levels overlay (0 if auto)
     MatrixType pHydroLevelsRules;
+    // prefix to be added when calling saveToINIFileHydroLevel
+    std::string& addToPrefix;
+
+    std::function<void(Study&, MatrixType&)> applyToTarget_;
 
 }; // class hydroLevelsData
 
@@ -107,6 +115,16 @@ inline uint hydroLevelsData::height() const
 inline double hydroLevelsData::get_value(uint x, uint y) const
 {
     return pHydroLevelsRules.entry[y][x];
+}
+
+inline void initLevelApply(Study& study, Matrix<double>& matrix)
+{
+    study.scenarioInitialHydroLevels.copyFrom(matrix);
+}
+
+inline void finalLevelApply(Study& study, Matrix<double>& matrix)
+{
+    study.scenarioFinalHydroLevels.copyFrom(matrix);
 }
 
 } // namespace ScenarioBuilder

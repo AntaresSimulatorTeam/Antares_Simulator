@@ -5,6 +5,7 @@ set(ANTARES_VERSION_HI	      8)
 set(ANTARES_VERSION_LO	      8)
 set(ANTARES_VERSION_REVISION  2)
 
+
 # Beta release
 set(ANTARES_BETA 0)
 set(ANTARES_RC 0)

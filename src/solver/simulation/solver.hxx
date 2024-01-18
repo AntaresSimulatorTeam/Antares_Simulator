@@ -43,6 +43,7 @@
 
 #include <yuni/core/system/suspend.h>
 #include <yuni/job/job.h>
+#include "hydro-final-reservoir-level-functions.h"
 
 #include "antares/concurrency/concurrency.h"
 
@@ -349,7 +350,10 @@ void ISimulation<Impl>::run()
         }
 
         if (study.parameters.useCustomScenario)
+        {
             ApplyCustomScenario(study);
+            CheckFinalReservoirLevelsConfiguration(study);
+        }
 
         // Launching the simulation for all years
         logs.info() << "MC-Years : [" << (study.runtime->rangeLimits.year[Data::rangeBegin] + 1)
@@ -730,7 +734,7 @@ void ISimulation<Impl>::computeRandomNumbers(randomNumbers& randomForYears,
             // Possibly update the intial level from scenario builder
             if (study.parameters.useCustomScenario)
             {
-                double levelFromScenarioBuilder = study.scenarioHydroLevels[areaIndex][y];
+                double levelFromScenarioBuilder = study.scenarioInitialHydroLevels[areaIndex][y];
                 if (levelFromScenarioBuilder >= 0.)
                     randomLevel = levelFromScenarioBuilder;
             }

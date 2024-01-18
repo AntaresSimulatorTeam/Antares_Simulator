@@ -31,6 +31,7 @@
 #include "series.h"
 #include "../../fwd.h"
 #include "allocation.h"
+#include "finallevelinflowsmodifyer.h"
 
 namespace Antares::Data
 {
@@ -93,7 +94,7 @@ public:
     /*!
     ** \brief Default Constructor
     */
-    PartHydro();
+    PartHydro(const Data::Area& area);
     //! Destructor
     ~PartHydro();
 
@@ -172,8 +173,9 @@ public:
     //! Data for time-series
     DataSeriesHydro* series;
 
+    //! Data for final reservoir level
+    FinalLevelInflowsModifier finalLevelInflowsModifier;
 }; // class PartHydro
-
 
 // Interpolates a water value from a table according to a level and a day.
 // As this function can be called a lot of times, we pass working variables and returned variables
