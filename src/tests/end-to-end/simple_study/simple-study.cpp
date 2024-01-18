@@ -34,12 +34,12 @@ StudyFixture::StudyFixture()
 	cluster = addClusterToArea(area, "some cluster");
 
 	loadInArea = 7.0;
-	loadTSconfig = std::move(TimeSeriesConfigurer(area->load.series.timeSeries));
+	loadTSconfig = TimeSeriesConfigurer(area->load.series.timeSeries);
 	loadTSconfig.setColumnCount(1)
 				.fillColumnWith(0, loadInArea);
 
 	clusterCost = 2.;
-	clusterConfig = std::move(ThermalClusterConfig(cluster.get()));
+	clusterConfig = ThermalClusterConfig(cluster.get());
 	clusterConfig.setNominalCapacity(100.)
 				 .setAvailablePower(0, 50.)
 				 .setCosts(clusterCost)
@@ -192,6 +192,41 @@ BOOST_AUTO_TEST_CASE(milp_two_mc_two_unit_single_scenario)
                tt::tolerance(0.001));
     BOOST_TEST(output.thermalNbUnitsON(cluster.get()).hour(10) == 2, tt::tolerance(0.001));
 }
+
+BOOST_AUTO_TEST_CASE(parallel)
+{
+	setNumberMCyears(10);
+    study->maxNbYearsInParallel = 2;
+
+	simulation->create();
+	simulation->run();
+
+	OutputRetriever output(simulation->rawSimu());
+	BOOST_TEST(output.overallCost(area).hour(0) == loadInArea * clusterCost, tt::tolerance(0.001));
+	BOOST_TEST(output.load(area).hour(0) == loadInArea, tt::tolerance(0.001));
+}
+
+BOOST_AUTO_TEST_CASE(parallel2)
+{
+	setNumberMCyears(2);
+    study->maxNbYearsInParallel = 2;
+
+	loadTSconfig.setColumnCount(2)
+				.fillColumnWith(0, 7.0)
+				.fillColumnWith(1, 7.0);
+
+	clusterConfig.setAvailablePowerNumberOfTS(2)
+				 .setAvailablePower(0, 50.)
+				 .setAvailablePower(1, 50.);
+
+	simulation->create();
+	simulation->run();
+
+	OutputRetriever output(simulation->rawSimu());
+	BOOST_TEST(output.overallCost(area).hour(0) == loadInArea * clusterCost, tt::tolerance(0.001));
+	BOOST_TEST(output.load(area).hour(0) == loadInArea, tt::tolerance(0.001));
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 

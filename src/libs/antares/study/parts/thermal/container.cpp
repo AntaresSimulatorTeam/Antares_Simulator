@@ -40,7 +40,6 @@ namespace Antares
 {
 namespace Data
 {
-using NamedCluster = std::pair<ClusterName, ThermalClusterList::SharedPtr>;
 
 PartThermal::PartThermal() : unsuppliedEnergyCost(0.), spilledEnergyCost(0.)
 {
@@ -76,13 +75,11 @@ void PartThermal::prepareAreaWideIndexes()
 
     clusters.assign(list.size(), nullptr);
 
-    auto end = list.end();
     uint idx = 0;
-    for (auto i = list.begin(); i != end; ++i)
+    for (const auto& cluster : list)
     {
-        ThermalCluster* t = i->second.get();
-        t->areaWideIndex = idx;
-        clusters[idx] = t;
+        cluster->areaWideIndex = idx;
+        clusters[idx] = cluster.get();
         ++idx;
     }
 }
@@ -99,65 +96,33 @@ uint PartThermal::prepareClustersInMustRunMode()
     do
     {
         mustContinue = false;
-        auto end = list.end();
-        for (auto i = list.begin(); i != end; ++i)
+        for (auto cluster : list)
         {
-            if ((i->second)->mustrun)
-            {
-                // Detaching the thermal cluster from the main list...
-                std::shared_ptr<ThermalCluster> cluster = list.detach(i);
-                if (!cluster->enabled)
-                    continue;
-                // ...and attaching it into the second list
-                if (!mustrunList.add(cluster))
-                {
-                    logs.error() << "Impossible to prepare the thermal cluster in 'must-run' mode: "
-                                 << cluster->parentArea->name << "::" << cluster->name();
-                }
-                else
-                {
-                    ++count;
-                    logs.info() << "enabling 'must-run' mode for the cluster  "
-                                << cluster->parentArea->name << "::" << cluster->name();
-                }
+            if (!cluster->mustrun)
+                continue;
 
-                // the iterator has been invalidated, loop again
-                mustContinue = true;
-                break;
+            // Detaching the thermal cluster from the main list...
+            list.remove(cluster->id());
+            if (!cluster->enabled)
+                continue;
+            // ...and attaching it into the second list
+            if (!mustrunList.add(cluster))
+            {
+                logs.error() << "Impossible to prepare the thermal cluster in 'must-run' mode: "
+                    << cluster->parentArea->name << "::" << cluster->name();
             }
+            else
+            {
+                ++count;
+                logs.info() << "enabling 'must-run' mode for the cluster  "
+                    << cluster->parentArea->name << "::" << cluster->name();
+            }
+
+            // the iterator has been invalidated, loop again
+            mustContinue = true;
+            break;
         }
     } while (mustContinue);
-
-    // if some thermal cluster has been moved, we must rebuild all the indexes
-    if (count)
-    {
-        list.rebuildIndex();
-        mustrunList.rebuildIndex();
-    }
-
-    return count;
-}
-
-uint PartThermal::removeDisabledClusters()
-{
-    // nothing to do if there is no cluster available
-    if (list.empty())
-        return 0;
-
-    std::vector<ClusterName> disabledClusters;
-
-    for (auto& it : list)
-    {
-        if (!it.second->enabled)
-            disabledClusters.push_back(it.first);
-    }
-
-    for (const auto& cluster : disabledClusters)
-        list.remove(cluster);
-
-    const auto count = disabledClusters.size();
-    if (count)
-        list.rebuildIndex();
 
     return count;
 }
@@ -175,16 +140,16 @@ void PartThermal::reset()
 bool PartThermal::hasForcedTimeseriesGeneration() const
 {
     using Behavior = LocalTSGenerationBehavior;
-    return std::any_of(list.begin(), list.end(), [](const NamedCluster& namedCluster) {
-        return namedCluster.second->tsGenBehavior == Behavior::forceGen;
+    return std::any_of(list.begin(), list.end(), [](const ThermalClusterList::SharedPtr& cluster) {
+        return cluster->tsGenBehavior == Behavior::forceGen;
     });
 }
 
 bool PartThermal::hasForcedNoTimeseriesGeneration() const
 {
     using Behavior = LocalTSGenerationBehavior;
-    return std::any_of(list.begin(), list.end(), [](const NamedCluster& namedCluster) {
-        return namedCluster.second->tsGenBehavior == Behavior::forceNoGen;
+    return std::any_of(list.begin(), list.end(), [](const ThermalClusterList::SharedPtr& cluster) {
+        return cluster->tsGenBehavior == Behavior::forceNoGen;
     });
 }
 

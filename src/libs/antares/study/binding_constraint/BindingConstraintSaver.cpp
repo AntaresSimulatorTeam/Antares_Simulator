@@ -20,9 +20,7 @@ bool BindingConstraintSaver::saveToEnv(EnvForSaving& env, const BindingConstrain
     env.section->add("operator", BindingConstraint::OperatorToCString(bindingConstraint->pOperator));
     env.section->add("filter-year-by-year", datePrecisionIntoString(bindingConstraint->pFilterYearByYear));
     env.section->add("filter-synthesis", datePrecisionIntoString(bindingConstraint->pFilterSynthesis));
-
-    if (!bindingConstraint->group().empty())
-        env.section->add("group", bindingConstraint->group());
+    env.section->add("group", bindingConstraint->group());
 
     if (!bindingConstraint->pComments.empty())
         env.section->add("comments", bindingConstraint->pComments);

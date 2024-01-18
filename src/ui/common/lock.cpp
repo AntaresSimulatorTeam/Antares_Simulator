@@ -26,14 +26,14 @@
 */
 
 #include "lock.h"
-#include <yuni/core/atomic/int.h>
 #include <cassert>
+#include <atomic>
 
 namespace Antares
 {
-static Yuni::Atomic::Int<32> gGUIFlushRefCount = 0;
+static std::atomic<int> gGUIFlushRefCount = 0;
 
-static Yuni::Atomic::Int<32> GUIIsAboutToQuitFlag = false;
+static std::atomic<int> GUIIsAboutToQuitFlag = false;
 
 bool IsGUIAboutToQuit()
 {

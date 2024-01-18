@@ -1,4 +1,4 @@
-#include "opt_period_string_generator.h"
+#include "antares/solver/utils/opt_period_string_generator.h"
 
 // ------------------------------------
 // Daily optimization

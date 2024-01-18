@@ -35,8 +35,6 @@
 
 namespace Antares
 {
-namespace Solver
-{
 namespace TSGenerator
 {
 namespace Predicate
@@ -169,7 +167,6 @@ public:
 
 } // namespace Predicate
 } // namespace TSGenerator
-} // namespace Solver
 } // namespace Antares
 
 #endif // __SOLVER_TS_GENERATOR_XCAST_PREDICATE_HXX__

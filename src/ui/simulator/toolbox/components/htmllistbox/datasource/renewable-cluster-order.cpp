@@ -56,7 +56,7 @@ void GetRenewableClusterMap(Data::Area* area, RenewableClusterMap& l, const wxSt
     const Data::RenewableClusterList::iterator end = area->renewable.list.end();
     for (Data::RenewableClusterList::iterator i = area->renewable.list.begin(); i != end; ++i)
     {
-        Data::RenewableCluster* cluster = i->second.get();
+        Data::RenewableCluster* cluster = i->get();
 
         if (search.empty())
         {

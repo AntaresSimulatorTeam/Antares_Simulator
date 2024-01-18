@@ -29,9 +29,9 @@
 #define __SOLVER_SIMULATION_ECO_STRUCTS_H__
 
 #include "../optimisation/opt_structure_probleme_a_resoudre.h"
-#include "../utils/optimization_statistics.h"
 #include "../../libs/antares/study/fwd.h"
 #include "../../libs/antares/study/study.h"
+#include "antares/solver/utils/optimization_statistics.h"
 #include <vector>
 #include <optional>
 #include <memory>
@@ -276,7 +276,7 @@ struct PALIERS_THERMIQUES
     std::vector<double> PminDuPalierThermiquePendantUneHeure;
     std::vector<double> PminDuPalierThermiquePendantUnJour;
     std::vector<int> NumeroDuPalierDansLEnsembleDesPaliersThermiques;
-    mutable std::vector<PDISP_ET_COUTS_HORAIRES_PAR_PALIER> PuissanceDisponibleEtCout;
+    std::vector<PDISP_ET_COUTS_HORAIRES_PAR_PALIER> PuissanceDisponibleEtCout;
 
     std::vector<double> CoutDeDemarrageDUnGroupeDuPalierThermique;
     std::vector<double> CoutDArretDUnGroupeDuPalierThermique;
@@ -424,14 +424,13 @@ struct PRODUCTION_THERMIQUE_OPTIMALE
     std::vector<double> NombreDeGroupesQuiSArretentDuPalier;
 
     std::vector<double> NombreDeGroupesQuiTombentEnPanneDuPalier;
-
 };
 
 struct RESULTATS_HORAIRES
 {
     std::vector<double> ValeursHorairesDeDefaillancePositive;
     std::vector<double> ValeursHorairesDENS;                  // adq patch domestic unsupplied energy
-    mutable std::vector<int> ValeursHorairesLmrViolations;    // adq patch lmr violations
+    std::vector<int> ValeursHorairesLmrViolations;    // adq patch lmr violations
     std::vector<double> ValeursHorairesSpilledEnergyAfterCSR; // adq patch spillage after CSR
     std::vector<double> ValeursHorairesDtgMrgCsr;             // adq patch DTG MRG after CSR
     std::vector<double> ValeursHorairesDeDefaillancePositiveUp;
@@ -469,8 +468,15 @@ struct COUTS_DE_TRANSPORT
 
     std::vector<double> CoutDeTransportOrigineVersExtremiteRef;
     std::vector<double> CoutDeTransportExtremiteVersOrigineRef;
-
 };
+
+struct TIME_MEASURE
+{
+    long solveTime = 0;
+    long updateTime = 0;
+};
+
+using TIME_MEASURES = std::array<TIME_MEASURE, 2>;
 
 struct VARIABLES_DUALES_INTERCONNEXIONS
 {
@@ -495,9 +501,9 @@ struct PROBLEME_HEBDO
     uint32_t NombreDInterconnexions = 0;
     std::vector<int> PaysOrigineDeLInterconnexion;
     std::vector<int> PaysExtremiteDeLInterconnexion;
-    mutable std::vector<COUTS_DE_TRANSPORT> CoutDeTransport;
+    std::vector<COUTS_DE_TRANSPORT> CoutDeTransport;
 
-    mutable std::vector<VALEURS_DE_NTC_ET_RESISTANCES> ValeursDeNTC;
+    std::vector<VALEURS_DE_NTC_ET_RESISTANCES> ValeursDeNTC;
 
     uint32_t NombreDePasDeTemps = 0;
     std::vector<int32_t> NumeroDeJourDuPasDeTemps;
@@ -510,14 +516,14 @@ struct PROBLEME_HEBDO
     //TODO same as NombreDePasDeTemps
     int32_t NombreDePasDeTempsDUneJournee = 0;
 
-    mutable std::vector<CONSOMMATIONS_ABATTUES> ConsommationsAbattues;
+    std::vector<CONSOMMATIONS_ABATTUES> ConsommationsAbattues;
 
     std::vector<double> CoutDeDefaillancePositive;
     std::vector<double> CoutDeDefaillanceNegative;
     std::vector<double> CoutDeDefaillanceEnReserve;
 
     std::vector<PALIERS_THERMIQUES> PaliersThermiquesDuPays;
-    mutable std::vector<ENERGIES_ET_PUISSANCES_HYDRAULIQUES> CaracteristiquesHydrauliques;
+    std::vector<ENERGIES_ET_PUISSANCES_HYDRAULIQUES> CaracteristiquesHydrauliques;
 
     uint32_t NumberOfShortTermStorages = 0;
     // problemeHebdo->ShortTermStorage[areaIndex][clusterIndex].capacity;
@@ -533,7 +539,7 @@ struct PROBLEME_HEBDO
     std::vector<std::vector<double>> BruitSurCoutHydraulique;
 
     uint32_t NombreDeContraintesCouplantes = 0;
-    mutable std::vector<CONTRAINTES_COUPLANTES> MatriceDesContraintesCouplantes;
+    std::vector<CONTRAINTES_COUPLANTES> MatriceDesContraintesCouplantes;
     std::vector<RESULTATS_CONTRAINTES_COUPLANTES> ResultatsContraintesCouplantes;
 
     std::vector<SOLDE_MOYEN_DES_ECHANGES> SoldeMoyenHoraire; // Used for quadratic opt
@@ -555,7 +561,7 @@ struct PROBLEME_HEBDO
     std::vector<CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES> CorrespondanceCntNativesCntOptimJournalieres;
     CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES CorrespondanceCntNativesCntOptimHebdomadaires;
 
-    mutable std::vector<RESERVE_JMOINS1> ReserveJMoins1;
+    std::vector<RESERVE_JMOINS1> ReserveJMoins1;
 
     std::vector<int> IndexDebutIntercoOrigine;
     std::vector<int> IndexSuivantIntercoOrigine;
@@ -598,8 +604,7 @@ struct PROBLEME_HEBDO
     std::vector<double> coutOptimalSolution1;
     std::vector<double> coutOptimalSolution2;
 
-    std::vector<double> tempsResolution1;
-    std::vector<double> tempsResolution2;
+    TIME_MEASURES timeMeasure;
 
     /* Unused for now, will be used in future revisions */
 #if 0

@@ -2,34 +2,26 @@
 
 void MaxHydroPower::add(int pays)
 {
-    bool presenceHydro
-      = problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable;
-    bool TurbEntreBornes = problemeHebdo->CaracteristiquesHydrauliques[pays].TurbinageEntreBornes;
-    if (presenceHydro
-        && (TurbEntreBornes
-            || problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable))
+    if (data.CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable
+        && (data.CaracteristiquesHydrauliques[pays].TurbinageEntreBornes
+            || data.CaracteristiquesHydrauliques[pays].PresenceDePompageModulable))
     {
-        problemeHebdo->NumeroDeContrainteMaxEnergieHydraulique[pays]
-          = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
+        data.NumeroDeContrainteMaxEnergieHydraulique[pays] = builder.data.nombreDeContraintes;
 
-        const int NombreDePasDeTempsPourUneOptimisation
-          = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
-
-        for (int pdt = 0; pdt < NombreDePasDeTempsPourUneOptimisation; pdt++)
+        for (int pdt = 0; pdt < builder.data.NombreDePasDeTempsPourUneOptimisation; pdt++)
         {
             builder.updateHourWithinWeek(pdt);
             builder.HydProd(pays, 1.0);
         }
-        problemeHebdo->NumeroDeContrainteMaxEnergieHydraulique[pays]
-          = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
+        data.NumeroDeContrainteMaxEnergieHydraulique[pays] = builder.data.nombreDeContraintes;
 
-        ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes);
-        namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-        namer.UpdateTimeStep(problemeHebdo->weekInTheYear);
-        namer.MaxHydroPower(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
+        ConstraintNamer namer(builder.data.NomDesContraintes);
+        namer.UpdateArea(builder.data.NomsDesPays[pays]);
+        namer.UpdateTimeStep(builder.data.weekInTheYear);
+        namer.MaxHydroPower(builder.data.nombreDeContraintes);
 
         builder.lessThan().build();
     }
     else
-        problemeHebdo->NumeroDeContrainteMaxEnergieHydraulique[pays] = -1;
+        data.NumeroDeContrainteMaxEnergieHydraulique[pays] = -1;
 }

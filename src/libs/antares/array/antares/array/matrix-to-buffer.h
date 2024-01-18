@@ -46,8 +46,7 @@ class I_mtx_to_buffer_dumper;
 class matrix_to_buffer_dumper_factory
 {
 public:
-    matrix_to_buffer_dumper_factory(bool isDecimal, uint precision) :
-     any_decimal_(isDecimal and precision)
+    matrix_to_buffer_dumper_factory()
     {
     }
 
@@ -59,9 +58,6 @@ public:
     I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>* get_dumper(const Matrix<T, ReadWriteT>* mtx,
                                                                   std::string& data,
                                                                   PredicateT& predicate);
-
-private:
-    bool any_decimal_;
 };
 
 template<class T, class ReadWriteT, class PredicateT>

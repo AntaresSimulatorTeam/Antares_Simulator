@@ -31,6 +31,7 @@
 #include "series.h"
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
+#include <antares/exception/LoadingError.hpp>
 #include "../../study.h"
 
 using namespace Yuni;
@@ -134,7 +135,7 @@ bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const
                 logs.fatal() << "Hydro: `" << areaID
                              << "`: The matrices ROR (run-of-the-river) and hydro-storage must "
                                 "have the same number of time-series.";
-                study.gotFatalError = true;
+                throw Antares::Error::ReadingStudy();
             }
             else
             {
@@ -191,7 +192,7 @@ void DataSeriesHydro::checkMinGenTsNumber(Study& study, const AreaName& areaID)
             logs.fatal() << "Hydro: `" << areaID
                          << "`: The matrices Minimum Generation must "
                             "has the same number of time-series as ROR and hydro-storage.";
-            study.gotFatalError = true;
+            throw Antares::Error::ReadingStudy();
         }
         else
         {
@@ -236,11 +237,30 @@ void DataSeriesHydro::reset()
     count = 1;
 }
 
-void DataSeriesHydro::resizeRORandSTORAGE(unsigned int width)
+void DataSeriesHydro::resize_ROR_STORAGE_MINGEN_whenGeneratedTS(unsigned int newWidth)
 {
-    ror.resize(width, HOURS_PER_YEAR);
-    storage.resize(width, DAYS_PER_YEAR);
-    count = width;
+    // This function is called in case hydro TS are generated.
+    // ROR ans STORAGE are resized here, and will be overriden at some point.
+    // MINGEN TS are different : when generating hydro TS, mingen TS are not generated, 
+    // but only resized, so that their size is the same as ROR and STORAGE TS.
+    // When resizing MINGEN :
+    //  - If we extend mingen TS, we keep already existing TS and fill the extra ones 
+    //    with a copy of the first TS
+    //  - if we reduce mingen TS, we remove some existing TS, but we must keep intact
+    //    the remaining ones.
+    ror.resize(newWidth, HOURS_PER_YEAR);
+    storage.resize(newWidth, DAYS_PER_YEAR);
+
+    // Resizing mingen (mingen has necessarily at least one column, by construction)
+    uint mingenOriginalSize = mingen.timeSeries.width;
+    mingen.timeSeries.resizeWithoutDataLost(newWidth, mingen.timeSeries.height);
+    if (mingenOriginalSize < newWidth)
+    {
+        for (uint col = mingenOriginalSize; col < newWidth; ++col)
+            mingen.timeSeries.pasteToColumn(col, mingen[0]);
+    }
+
+    count = newWidth;
 }
 
 void DataSeriesHydro::resizeGenerationTS(unsigned int w, unsigned int h)

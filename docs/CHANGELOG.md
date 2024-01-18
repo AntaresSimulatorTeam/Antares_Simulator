@@ -6,6 +6,150 @@ Antares Changelog
 ## New Features
 * Solver logs can be enabled either by the command-line option (--solver-logs) or in the generaldata.ini by setting solver-logs = true under the optimization section [(#1717)](https://github.com/AntaresSimulatorTeam/Antares_Simulator/pull/1717)
 
+8.8.2
+--------------------
+
+## Bugfix
+* Fix segfault caused by uninitialized `cluster.series.timeseriesNumbers` (#1876). This bug was introduced in v8.8.1 by #1752
+* Bump OR-Tools from 9.5 to 9.8 (fix crash with XPRESS) (#1873)
+
+8.8.1 (01/2024)
+--------------------
+/!\ This version has known bugs, please use 8.8.2 instead.
+
+## Bugfix
+* Simplify TS numbers drawings, fix bug related to refresh & local thermal generation (#1752)
+
+## Improvements
+* Take into account breaking change in OR-Tools's API, enable SCIP & GLPK solvers, bump OR-Tools (#1825). This should improve performances with FICO XPRESS
+* Fail if OR-Tools solver is not found (#1851)
+* Normalize simulation mode Expansion, fix logs (#1771)
+* Add possibility to release without running any tests (#1852)
+
+## Code quality
+* Use `std::unordered_map` for tmpDataByArea_ (hydro ventilation) (#1855)
+* Remove `mutable` keyword from `PROBLEME_HEBDO` (#1846)
+* Remove `Study::gotFatalError`, throw exceptions instead (#1806)
+* Renewable containers (#1809)
+* Use modern style `for` loops, avoid int cast (#1847)
+* Remove `YUNI_STATIC_ASSERT` (#1863)
+
+## Testing
+* Add tests on short-term storage/thermal cluster/renewable cluster removal (#1841)
+
+## Doc
+* Add precision about `enabled` field in ST storage (#1850)
+* Use dedicated URL path for Doxygen, instead of root (#1865)
+* Fix HTML generation for readthedocs (#1867)
+* Add dark mode switch for Doxygen online documentation (#1792)
+
+8.8.0 (12/2023)
+--------------------
+
+## New features
+* New "cash-flow" variable for ST storage (#1633)
+* Experimental optimization with discrete variables (MILP unit-commitment mode #670)
+* Add `enabled` property for ST storage objects, fix bug related to saving ST objects (#1807)
+
+## Improvements
+* Add shortcut -s for names MPS problems in CLI options (#1613)
+* Use 50% as a default value for ST-storage property initiallevel (#1632)
+* Add warning logs for non-existent output variable (#1638)
+* Add area name in error message for rare error (#1695)
+* Fix wrong year number in logs upon failed year (#1672)
+* Always check mingen against maxPower, regardless of reservoirManagement (#1656)
+* New log msg when solver not found in or-tools (#1687)
+
+## For developers
+* Fix annoying error log about correlation matrices in tests (#1573)
+
+## Bugfixes (reported by users)
+* Fix output variable PROFIT for thermal clusters (#1767)
+* Bug on renewable cluster (wrong group) (#1631)
+
+## Bugfixes (reported internally)
+* Fix oracle-linux8 binaries missing compression feature (#1741)
+* Named MPS - fix duplicated "ranged" binding constraints (#1569)
+* Fix save for short term storage objects (#1807)
+* Prevent segfault during simulation, check bounds of scenario builder (#1567)
+* Fix number of links in deprecated output file digest.txt (#1646)
+* Fix unfeasible problem analyzer (#1527)
+* [Windows only] Increase file size limit when reading file (#1674)
+* Fix segfault encountered when importing logs (#1702)
+* Fixes swallowed exceptions in computation thread (#1685)
+* Fix writer causing a segfault with OR-Tools (#1584)
+
+## Documentation
+* Create Doxygen documentation (#1650)
+* Update README.md (#1654)
+* Add advice for developers (#1639)
+* Document the usage of XPRESS (#1596)
+
+## GUI
+* Fix regression on cluster renaming, add unit tests (#1699)
+
+## Dependencies
+* Use minizip-ng 4.0.1 (from 3.0.7) (#1696)
+* Bump vcpkg to latest tag (2023.07.21) (#1532)
+* Remove dead code yuni-docmake (#1544)
+* Remove fixed-size ints from Yuni (#1622, #1629)
+
+## Code cleaning / quality
+* Architecture Decision Record for Study breakdown (#1600)
+* Remove dependency to UI, use RAII to handle resources (#1678)
+* De-templatize `HydroManagement::prepareNetDemand` (#1679)
+* Use `std::unique_ptr::operator->` rather than `std::unique_ptr::get` (#1676)
+* Renamed `timeSeries` into `timeSeriesEnum` (#1675)
+* Remove RenouvelableParPalier from global variable (#1659)
+* Remove code duplication in src/libs/antares/study/parameters.cpp (#1667)
+* Remove manual alloc and update code standards in hydro/daily2 (#1651)
+* Remove `StudyRuntimeInfos::parameters` (#1665)
+* Introduce & use DataSeriesCommon::getAvailablePowerYearly (#1660)
+* Add getValue for thermal clusters, remove `State::timeSeriesIndex` (#1644)
+* Move `resultWriter` out of class `Study` (#1649)
+* Remove malloc in src/solver/hydro/ (#1626)
+* Refactor constraint building (#1607)
+* Remove most uses of `IResultWriter::Ptr`, use ref instead (#1642)
+* Refactor hydro pmin checks (#1381)
+* Clean up parameters.cpp (#1623)
+* Remove unused `BindingConstraintsRepository::eachActive` (#1625)
+* Provide reference to `Benchmarking::IDurationCollector`, not raw pointer (#1621)
+* Use `int32_t` and `uint32_t` in `PROBLEME_HEBDO` (#1577, #1543)
+* Reduce use of study in helper functions (#1610)
+* Move thermal noises to class Simulation (#1594)
+* Upgrade src/solver/hydro to C++ (#1581)
+* Remove duplicate header (#1595)
+* Remove unused variable (#1585)
+* Remove dynamic alloc of PROBLEME_HEBDO (#1554)
+* Remove memory usage (#1578)
+* Use reference instead of raw pointers (#1579)
+* Re-order initialization to avoid compilation warnings (#1599)
+* Remove some global variables (#1545)
+* Remove `goto` in `OPT_AppelDuSimplexe` (#1533)
+* Remove useless Area's data member : `enabled` (#1556)
+* Clarify string -> enum conversion for thermal cluster groups (#1553)
+* Remove unmanaged dynamic allocation for `ProblemeAResoudre` (#1549)
+* Remove `shared_ptr` for `OptPeriodStringGenerator` (#1528)
+* Final removal of study singleton from the solver (#1536)
+* Remove use of current study singleton in emergency exit (#1519)
+* Remove unused function `getFilenameWithExtension` (#1537)
+* Remove tmpnam from tests (#1506)
+
+## Build
+* ACR CMake (#1551)
+* Add "Antares::action" CMake library, build only if BUILD_UI=ON (#1637)
+* Fix conflicting library name (#1590)
+* Cleanup date dependency (#1565)
+* CMake Memory and Sys (#1558)
+* Split benchmarking (#1582)
+* Remove liblib* CMake targets (#1609)
+* Split study in CMakefile (#1583)
+* CMake usage improvements (#1548)
+* Fix build for Oracle Linux 8 (#1542)
+
+## Misc
+* Schedule deps compile instead of develop merge (#1530)
+
 8.7.0 (08/2023)
 --------------------
 ## New Features
@@ -44,7 +188,7 @@ Antares Changelog
 * Remove one `goto` instruction in OPT (#1522)
 * Remove study singleton in application signal handlers (#1513)
 * Remove barely-used `ThermalCluster::productionCost` temporary (#1517)
-* Bindings constraints scenario :  handling last remarks (#1466)
+* Bindings constraints scenario : handling last remarks (#1466)
 * Replace remaining vector of pointers by plain vector (#1505)
 * Split ts numbers data classes in different files (#1398)
 * Remove more usage of study singleton (#1509)

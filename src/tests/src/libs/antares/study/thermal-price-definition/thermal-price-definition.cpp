@@ -14,7 +14,6 @@
 #include <antares/checks/checkLoadedInputData.h>
 #include "cluster_list.h"
 
-const auto SEP = Yuni::IO::Separator;
 using namespace Antares::Data;
 using std::filesystem::temp_directory_path;
 

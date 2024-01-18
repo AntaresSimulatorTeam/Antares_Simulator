@@ -36,7 +36,6 @@
 #include <antares/writer/i_writer.h>
 
 #include "../antares.h"
-#include "../object/object.h"
 #include "fwd.h"
 
 #include "simulation.h"
@@ -63,7 +62,7 @@ namespace Antares::Data
 */
 
 class UIRuntimeInfo;
-class Study: public Yuni::NonCopyable<Study>, public IObject, public LayerData
+class Study: public Yuni::NonCopyable<Study>, public LayerData
 {
 public:
     using Ptr = std::shared_ptr<Study>;
@@ -666,11 +665,6 @@ public:
     //@}
 
     /*!
-    ** \brief
-    */
-    bool gotFatalError = false;
-
-    /*!
     ** \brief A non-zero value when the study will be used by the solver
     **
     ** If it is the case, some data may not be kept in memory, and some calculations
@@ -710,7 +704,7 @@ protected:
 */
 extern YString StudyIconFile;
 
-YString StudyCreateOutputPath(StudyMode mode,
+YString StudyCreateOutputPath(SimulationMode mode,
                               ResultFormat fmt,
                               const YString& folder,
                               const YString& label,

@@ -6,6 +6,7 @@ project(ts-generator)
 set(SRC_GENERATORS
 	generator.h
 	generator.hxx
+	generator.cpp
 	thermal.cpp
 	hydro.cpp
 )
@@ -47,4 +48,5 @@ target_link_libraries(antares-solver-ts-generator
 		array
 		benchmarking
 		Antares::study
+		Antares::misc
 )

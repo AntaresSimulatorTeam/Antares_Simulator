@@ -52,7 +52,7 @@ public:
 
     virtual ~WxLocalFrame();
 
-    virtual bool Destroy();
+    virtual bool Destroy() override;
 
     virtual bool excludeFromMenu() override;
     virtual void updateOpenWindowsMenu() override;

@@ -143,7 +143,7 @@ void StudyRuntimeInfos::initializeRangeLimits(const Study& study, StudyRangeLimi
             // We have here too much hours, the interval will be reduced
             // Log Entry
             logs.info() << "    Partial week detected. Not allowed in "
-                        << StudyModeToCString(study.parameters.mode);
+                        << SimulationModeToCString(study.parameters.mode);
             logs.info() << "    Time interval that has been requested: " << (1 + a) << ".."
                         << (1 + b);
             // Reducing
@@ -293,6 +293,9 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     // Removing disabled thermal clusters from solver computations
     removeDisabledThermalClustersFromSolverComputations(study);
 
+    // Removing disabled short-term storage objects from solver computations
+    removeDisabledShortTermStorageClustersFromSolverComputations(study);
+
     switch (gd.renewableGeneration())
     {
     case rgClusters:
@@ -410,17 +413,24 @@ static void removeClusters(Study& study,
 void StudyRuntimeInfos::removeDisabledThermalClustersFromSolverComputations(Study& study)
 {
     removeClusters(
-      study, "thermal", [](Area& area) { return area.thermal.removeDisabledClusters(); });
+      study, "thermal", [](Area& area) { return area.thermal.list.removeDisabledClusters(); });
 }
 
 void StudyRuntimeInfos::removeDisabledRenewableClustersFromSolverComputations(Study& study)
 {
     removeClusters(study, "renewable", [](Area& area) {
-        uint ret = area.renewable.removeDisabledClusters();
+        uint ret = area.renewable.list.removeDisabledClusters();
         if (ret > 0)
             area.renewable.prepareAreaWideIndexes();
         return ret;
     });
+}
+
+void StudyRuntimeInfos::removeDisabledShortTermStorageClustersFromSolverComputations(Study& study)
+{
+    removeClusters(
+      study, "short term storage", [](Area& area)
+      { return area.shortTermStorage.removeDisabledClusters(); });
 }
 
 void StudyRuntimeInfos::removeAllRenewableClustersFromSolverComputations(Study& study)
@@ -443,7 +453,6 @@ StudyRuntimeInfos::~StudyRuntimeInfos()
 #ifndef NDEBUG
 void StudyRangeLimits::checkIntegrity() const
 {
-    assert(this != nullptr);
     assert(hour[rangeBegin] <= hour[rangeEnd]);
     assert(day[rangeBegin] <= day[rangeEnd]);
     assert(hour[rangeBegin] < 9000); // arbitrary value

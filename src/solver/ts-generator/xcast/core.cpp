@@ -30,15 +30,13 @@
 #include <antares/logs/logs.h>
 #include "xcast.h"
 #include "constants.h"
-#include "../../misc/cholesky.h"
-#include "../../misc/matrix-dp-make.h"
+#include "antares/solver/misc/cholesky.h"
+#include "antares/solver/misc/matrix-dp-make.h"
 #include "math.hxx"
 
 using namespace Yuni;
 
 namespace Antares
-{
-namespace Solver
 {
 namespace TSGenerator
 {
@@ -556,5 +554,4 @@ bool XCast::generateValuesForTheCurrentDay()
 
 } // namespace XCast
 } // namespace TSGenerator
-} // namespace Solver
 } // namespace Antares

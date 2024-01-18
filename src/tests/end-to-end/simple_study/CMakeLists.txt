@@ -33,9 +33,6 @@ add_test(NAME end-to-end-simple-study COMMAND tests-simple-study)
 set_property(TEST end-to-end-simple-study PROPERTY LABELS end-to-end)
 set_target_properties(tests-simple-study PROPERTIES FOLDER Unit-tests/end_to_end)
 
-
-copy_dependency(sirius_solver tests-simple-study)
-
 # Storing tests-simple-study under the folder Unit-tests in the IDE
 
 #----------------------------------------------------------

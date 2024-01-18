@@ -297,11 +297,11 @@ target_link_libraries(study
         Antares::inifile #parameters
         Antares::stdcxx #enum.hxx
         Antares::utils #area.hxx
+        Antares::solverUtils #sim_structure_probleme_economique.h -> optimization_statistics.h
         Antares::correlation
         Antares::path
         Antares::mersenne
         Antares::result_writer #study.h
-        Antares::object
         Antares::series
     PRIVATE
         Antares::exception

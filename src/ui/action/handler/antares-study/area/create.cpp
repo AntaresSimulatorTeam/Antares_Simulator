@@ -293,11 +293,9 @@ void Create::createActionsForAStandardAreaCopy(Context& ctx, bool copyPosition)
         auto* root = new RootNodePlant(pOriginalAreaName);
 
         // browsing each thermal cluster
-        auto end = area->thermal.list.end();
-        for (auto i = area->thermal.list.begin(); i != end; ++i)
-        {
-            *root += StandardActionsToCopyThermalCluster(pOriginalAreaName, i->second->name());
-        }
+        for (auto& c : area->thermal.list)
+            *root += StandardActionsToCopyThermalCluster(pOriginalAreaName, c->name());
+
         *this += root;
     }
 }

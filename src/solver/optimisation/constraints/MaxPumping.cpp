@@ -2,27 +2,22 @@
 
 void MaxPumping::add(int pays)
 {
-    if (problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable)
+    if (data.CaracteristiquesHydrauliques[pays].PresenceDePompageModulable)
     {
-        problemeHebdo->NumeroDeContrainteMaxPompage[pays]
-          = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
+        data.NumeroDeContrainteMaxPompage[pays] = builder.data.nombreDeContraintes;
 
-        const int NombreDePasDeTempsPourUneOptimisation
-          = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
-
-        for (int pdt = 0; pdt < NombreDePasDeTempsPourUneOptimisation; pdt++)
+        for (int pdt = 0; pdt < builder.data.NombreDePasDeTempsPourUneOptimisation; pdt++)
         {
             builder.updateHourWithinWeek(pdt);
             builder.Pumping(pays, 1.0);
         }
-        problemeHebdo->NumeroDeContrainteMaxPompage[pays]
-          = problemeHebdo->ProblemeAResoudre->NombreDeContraintes;
-        ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes);
-        namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-        namer.UpdateTimeStep(problemeHebdo->weekInTheYear);
-        namer.MaxPumping(problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
+        data.NumeroDeContrainteMaxPompage[pays] = builder.data.nombreDeContraintes;
+        ConstraintNamer namer(builder.data.NomDesContraintes);
+        namer.UpdateArea(builder.data.NomsDesPays[pays]);
+        namer.UpdateTimeStep(builder.data.weekInTheYear);
+        namer.MaxPumping(builder.data.nombreDeContraintes);
         builder.lessThan().build();
     }
     else
-        problemeHebdo->NumeroDeContrainteMaxPompage[pays] = -1;
+        data.NumeroDeContrainteMaxPompage[pays] = -1;
 }
