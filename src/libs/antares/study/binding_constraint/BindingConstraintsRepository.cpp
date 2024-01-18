@@ -329,14 +329,14 @@ void BindingConstraintsRepository::markAsModified() const
         i->markAsModified();
 }
 
-std::unordered_map<std::string, std::shared_ptr<BindingConstraint>> BindingConstraintsRepository::activeContraints() const
+std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintsRepository::activeContraints() const
 {
     if (!activeConstraints_.empty())
         return activeConstraints_;
 
     for (auto& bc : constraints_)
         if(bc->isActive())
-            activeConstraints_.try_emplace(bc->name(), bc);
+            activeConstraints_.push_back(bc);
 
     return activeConstraints_;
 }
@@ -355,7 +355,7 @@ std::vector<uint> BindingConstraintsRepository::getIndicesForInequalityBindingCo
     std::vector<uint> indices;
     for (auto bc = firstBC; bc != lastBC; bc++)
     {
-        if (isBindingConstraintTypeInequality(*(*bc).second))
+        if (isBindingConstraintTypeInequality(*(*bc)))
         {
             auto index = static_cast<uint>(std::distance(firstBC, bc));
             indices.push_back(index);
@@ -369,9 +369,9 @@ std::vector<std::string> BindingConstraintsRepository::getNamesForInequalityBind
     auto activeConstraints = activeContraints();
     std::vector<std::string> names;
 
-    for (auto& [name, bc] : activeConstraints)
+    for (auto& bc : activeConstraints)
         if (isBindingConstraintTypeInequality(*bc))
-            names.push_back(name);
+            names.push_back(bc->name());
 
     return names;
 }

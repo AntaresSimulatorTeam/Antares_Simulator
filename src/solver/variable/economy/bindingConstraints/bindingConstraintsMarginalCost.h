@@ -154,7 +154,15 @@ public:
             pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);
 
         // Set the associated binding constraint
-        associatedBC_ = study.bindingConstraints.activeContraints().at(bindConstraintName);
+        auto activeConstraints = study.bindingConstraints.activeContraints();
+        auto tmpBc = std::ranges::find_if(activeConstraints, [&](const auto& bc)
+            { return bc->name() == bindConstraintName; });
+
+        if (tmpBc != activeConstraints.end())
+            associatedBC_ = *tmpBc;
+        else
+            logs.error() << "Binding constraint: \"" << bindConstraintName << "\" not found";
+
 
         NextType::initializeFromStudy(study);
     }

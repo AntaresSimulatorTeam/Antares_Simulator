@@ -290,9 +290,11 @@ void SIM_AllocationConstraints(PROBLEME_HEBDO& problem,
 
     const auto& bindingConstraintCount = activeConstraints.size();
 
-    unsigned constraintIndex = 0;
-    for (auto& [name, bc] : activeConstraints)
+    for (unsigned constraintIndex = 0; constraintIndex != bindingConstraintCount; ++constraintIndex)
     {
+        assert(constraintIndex < bindingConstraintCount);
+
+        auto bc = activeConstraints[constraintIndex];
         assert(bc->linkCount() < 50000000);
         assert(bc->clusterCount() < 50000000);
 
@@ -337,8 +339,7 @@ void SIM_AllocationConstraints(PROBLEME_HEBDO& problem,
         RESULTATS_CONTRAINTES_COUPLANTES res;
         res.variablesDuales.assign(nbTimeSteps, 0.);
         if (nbTimeSteps > 0)
-            problem.ResultatsContraintesCouplantes.emplace(name, res);
-        ++constraintIndex;
+            problem.ResultatsContraintesCouplantes.emplace(bc->name(), res);
     }
 }
 

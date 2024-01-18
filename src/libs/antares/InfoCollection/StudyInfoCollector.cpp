@@ -75,7 +75,7 @@ void StudyInfoCollector::enabledBindingConstraintsCountToFileContent(FileContent
     unsigned nbEnabledDailyBC(0);
     unsigned nbEnabledWeeklyBC(0);
 
-    for (auto& [name, bc] : activeConstraints)
+    for (const auto& bc : activeConstraints)
     {
         switch (bc->type())
         {

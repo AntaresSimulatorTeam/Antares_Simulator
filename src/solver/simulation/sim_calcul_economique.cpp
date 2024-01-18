@@ -230,9 +230,9 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         problem.PaysExtremiteDeLInterconnexion[i] = link.with->index;
     }
 
-    auto constraintIndex = 0;
-    for (auto& [name, bc] : activeContraints)
+    for (unsigned constraintIndex = 0; constraintIndex < activeContraints.size(); constraintIndex++)
     {
+        auto bc = activeContraints[constraintIndex];
         CONTRAINTES_COUPLANTES& PtMat = problem.MatriceDesContraintesCouplantes[constraintIndex];
         PtMat.NombreDInterconnexionsDansLaContrainteCouplante = bc->linkCount();
         PtMat.NombreDePaliersDispatchDansLaContrainteCouplante = bc->clusterCount();
@@ -273,7 +273,6 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
 
             PtMat.OffsetTemporelSurLePalierDispatch[j] = bindingConstraintStructures.clusterOffset[j];
         }
-        ++constraintIndex;
     }
 
     NombrePaliers = 0;
@@ -330,9 +329,9 @@ static void prepareBindingConstraint(PROBLEME_HEBDO &problem,
     auto activeContraints = bindingConstraints.activeContraints();
     const auto constraintCount = activeContraints.size();
 
-    unsigned constraintIndex = 0;
-    for (auto& [name, bc] : activeContraints)
+    for (unsigned constraintIndex = 0; constraintIndex != constraintCount; ++constraintIndex)
     {
+        auto bc = activeContraints[constraintIndex];
         assert(bc->RHSTimeSeries().width && "Invalid constraint data width");
 
         uint tsIndexForBc = 0;
@@ -391,7 +390,6 @@ static void prepareBindingConstraint(PROBLEME_HEBDO &problem,
                 break;
             }
         }
-        ++constraintIndex;
     }
 }
 
