@@ -346,18 +346,6 @@ static bool isBindingConstraintTypeInequality(const Data::BindingConstraint& bc)
     return bc.operatorType() == BindingConstraint::opLess || bc.operatorType() == BindingConstraint::opGreater;
 }
 
-std::vector<std::string> BindingConstraintsRepository::getNamesForInequalityBindingConstraints() const
-{
-    auto activeBC = activeConstraints();
-    std::vector<std::string> names;
-
-    for (auto& bc : activeBC)
-        if (isBindingConstraintTypeInequality(*bc))
-            names.push_back(bc->name());
-
-    return names;
-}
-
 BindingConstraintsRepository::Vector
 BindingConstraintsRepository::getPtrForInequalityBindingConstraints() const
 {
