@@ -6,9 +6,7 @@
 #include <string>
 #include <stdexcept>
 
-namespace Antares
-{
-namespace Solver
+namespace Antares::Solver
 {
 
 /*!
@@ -46,5 +44,4 @@ class NullResultWriter: public Solver::IResultWriter {
     void finalize(bool ) override;
 };
 
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver

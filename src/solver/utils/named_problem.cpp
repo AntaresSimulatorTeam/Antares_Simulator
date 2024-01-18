@@ -1,26 +1,26 @@
-#include "named_problem.h"
+#include "antares/solver/utils/named_problem.h"
 #include <algorithm>
 
-namespace Antares
+namespace Antares::Optimization
 {
-namespace Optimization
-{
+
+using BasisStatus = operations_research::MPSolver::BasisStatus;
 
 PROBLEME_SIMPLEXE_NOMME::PROBLEME_SIMPLEXE_NOMME(const std::vector<std::string>& NomDesVariables,
                                                  const std::vector<std::string>& NomDesContraintes,
                                                  const std::vector<bool>& VariablesEntieres,
-                                                 std::vector<int>& StatutDesVariables,
-                                                 std::vector<int>& StatutDesContraintes,
+                                                 std::vector<BasisStatus>& StatutDesVariables,
+                                                 std::vector<BasisStatus>& StatutDesContraintes,
                                                  bool UseNamedProblems,
-                                                 bool SolverLogs) :
+                                                 bool SolverLogs) : PROBLEME_SIMPLEXE(),
 
  NomDesVariables(NomDesVariables),
  NomDesContraintes(NomDesContraintes),
- VariablesEntieres(VariablesEntieres),
+ useNamedProblems_(UseNamedProblems),
+ solverLogs_(SolverLogs),
  StatutDesVariables(StatutDesVariables),
  StatutDesContraintes(StatutDesContraintes),
- useNamedProblems_(UseNamedProblems),
- solverLogs_(SolverLogs)
+ VariablesEntieres(VariablesEntieres)
 {
     AffichageDesTraces = SolverLogs ? OUI_SPX : NON_SPX;
 }
@@ -36,5 +36,4 @@ bool PROBLEME_SIMPLEXE_NOMME::basisExists() const
     return !StatutDesVariables.empty() && !StatutDesContraintes.empty();
 }
 
-} // namespace Optimization
-} // namespace Antares
+} // namespace Antares::Optimization

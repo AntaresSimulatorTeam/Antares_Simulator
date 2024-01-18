@@ -97,21 +97,19 @@ enum StudyError
 };
 
 /*!
-** \brief Types of Study
+** \brief Types of Simulation
 */
-enum StudyMode
+enum class SimulationMode
 {
-    stdmUnknown = -1,
     //! Economic
-    stdmEconomy,
+    Economy,
     //! Adequacy (subset of the economy mode)
-    stdmAdequacy,
+    Adequacy,
     //! Expansion
-    stdmExpansion,
-    //! Max
-    stdmMax
-
-}; // enum StudyMode
+    Expansion,
+    //! Unknown simulation mode
+    Unknown
+};
 
 /*
 ** \brief Simplex optimizations

@@ -5,8 +5,6 @@ add_subdirectory(args)
 add_subdirectory(writer)
 add_subdirectory(memory)
 
-add_subdirectory(object)
-
 add_subdirectory(array)
 add_subdirectory(correlation)
 add_subdirectory(concurrency)
@@ -26,7 +24,6 @@ set(SRC
     config.h
     constants.h
 	constants.cpp
-    xpansion.h
 	# Misc
 
 	locale.h

@@ -31,6 +31,7 @@
 #include <yuni/job/job.h>
 
 #include <memory>
+#include <atomic>
 
 namespace FSWalker
 {
@@ -39,7 +40,7 @@ class Walker;
 class WalkerThread;
 
 //! Internal job counter
-using InternalJobCounter = std::shared_ptr<Yuni::Atomic::Int<32>>;
+using InternalJobCounter = std::shared_ptr<std::atomic<int>>;
 
 class IJob : public Yuni::Job::IJob
 {

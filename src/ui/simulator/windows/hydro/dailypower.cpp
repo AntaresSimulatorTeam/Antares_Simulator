@@ -26,15 +26,12 @@
 */
 
 #include "dailypower.h"
-#include <wx/stattext.h>
 #include "../../toolbox/components/datagrid/renderer/area/hydroprepro.h"
 #include "../../toolbox/components/datagrid/renderer/area/inflowpattern.h"
 #include "../../toolbox/components/datagrid/renderer/area/hydromonthlypower.h"
 #include "../../toolbox/components/datagrid/renderer/area/creditmodulations.h"
-#include "../../toolbox/components/button.h"
 #include "../../toolbox/validator.h"
 #include "../../toolbox/create.h"
-#include "../../application/menus.h"
 #include <wx/statline.h>
 
 using namespace Yuni;
@@ -72,14 +69,6 @@ void Dailypower::createComponents()
 
     wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
     pSupport->SetSizer(sizer);
-
-    const wxSize ourDefaultSize(55, wxDefaultSize.GetHeight());
-
-    enum
-    {
-        right = wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL,
-        left = wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL,
-    };
 
     wxBoxSizer* sizerHigh = new wxBoxSizer(wxHORIZONTAL);
 

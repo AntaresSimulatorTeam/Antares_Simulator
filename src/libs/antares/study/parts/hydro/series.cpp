@@ -31,6 +31,7 @@
 #include "series.h"
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
+#include <antares/exception/LoadingError.hpp>
 #include "../../study.h"
 #include <algorithm>
 

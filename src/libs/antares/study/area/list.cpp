@@ -29,6 +29,7 @@
 #include <yuni/io/file.h>
 #include "../study.h"
 #include <cassert>
+#include "antares/utils/utils.h"
 #include "area.h"
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
@@ -854,7 +855,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         {
             buffer.clear() << study.folderInput << SEP << "load" << SEP << "series" << SEP
                            << "load_" << area.id << ".txt";
-            ret = area.load.series.loadFromFile(buffer.c_str(), study.dataBuffer, averageTs)
+            ret = area.load.series.loadFromFile(buffer.c_str(), averageTs)
                   && ret;
         }
 
@@ -875,7 +876,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         {
             buffer.clear() << study.folderInput << SEP << "solar" << SEP << "series" << SEP
                            << "solar_" << area.id << ".txt";
-            ret = area.solar.series.loadFromFile(buffer.c_str(), study.dataBuffer, averageTs)
+            ret = area.solar.series.loadFromFile(buffer.c_str(), averageTs)
                   && ret;
 
         }
@@ -948,7 +949,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         {
             buffer.clear() << study.folderInput << SEP << "wind" << SEP << "series" << SEP
                            << "wind_" << area.id << ".txt";
-            ret = area.wind.series.loadFromFile(buffer.c_str(), study.dataBuffer, averageTs)
+            ret = area.wind.series.loadFromFile(buffer.c_str(), averageTs)
                   && ret;
         }
 
@@ -965,7 +966,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         ret = area.thermal.list.loadEconomicCosts(study, buffer) && ret;
 
         // In adequacy mode, all thermal clusters must be in 'mustrun' mode
-        if (study.usedByTheSolver && study.parameters.mode == stdmAdequacy)
+        if (study.usedByTheSolver && study.parameters.mode == SimulationMode::Adequacy)
             area.thermal.list.enableMustrunForEveryone();
     }
 
@@ -1490,7 +1491,6 @@ void AreaList::fixOrientationForAllInterconnections(BindingConstraintsRepository
                 // Reference to the link
                 auto& link = *(i->second);
                 // Asserts
-                assert(&link);
                 assert(link.from);
                 assert(link.with);
 
@@ -1562,8 +1562,8 @@ ThermalCluster* AreaList::findClusterFromINIKey(const AnyString& key)
     Area* parentArea = findFromName(parentName);
     if (parentArea == nullptr)
         return nullptr;
-    ThermalCluster* i = parentArea->thermal.list.find(id);
-    return (i != nullptr) ? i : nullptr;
+    return parentArea->thermal.list.find(id);
+
 }
 
 void AreaList::updateNameIDSet() const

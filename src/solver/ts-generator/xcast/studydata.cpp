@@ -33,8 +33,6 @@ using namespace Yuni;
 
 namespace Antares
 {
-namespace Solver
-{
 namespace TSGenerator
 {
 namespace XCast
@@ -127,5 +125,4 @@ void StudyData::reloadDataFromAreaList(const Data::Correlation& originalCorrelat
 
 } // namespace XCast
 } // namespace TSGenerator
-} // namespace Solver
 } // namespace Antares

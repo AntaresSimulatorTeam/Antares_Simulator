@@ -36,6 +36,7 @@
 #include <ui/common/lock.h>
 #include <memory>
 #include <limits>
+#include <atomic>
 
 using namespace Yuni;
 
@@ -105,7 +106,7 @@ public:
     //! Loading options
     uint options;
     //!
-    Atomic::Int<> shouldAbort;
+    std::atomic<int> shouldAbort;
 
 protected:
     virtual void onExecute()
@@ -212,7 +213,7 @@ public:
     //! Filename to load
     String::Vector filenames;
     //!
-    Atomic::Int<> shouldAbort;
+    std::atomic<int> shouldAbort;
 
 protected:
     enum
@@ -668,15 +669,16 @@ void Panel::loadDataFromFile()
     // Economy
     switch (output.mode)
     {
-    case Data::stdmEconomy:
+    case Data::SimulationMode::Economy:
         filename << output.path << SEP << "economy" << SEP;
         break;
-    case Data::stdmAdequacy:
+    case Data::SimulationMode::Adequacy:
         filename << output.path << SEP << "adequacy" << SEP;
         break;
-    case Data::stdmExpansion:
-    case Data::stdmUnknown:
-    case Data::stdmMax:
+    case Data::SimulationMode::Expansion:
+        filename << output.path << SEP << "expansion" << SEP;
+        break;
+    case Data::SimulationMode::Unknown:
         filename << output.path << SEP << "unknown" << SEP;
         break;
     }

@@ -38,16 +38,14 @@ using namespace Yuni;
 namespace Antares::Data
 {
 
-const double TimeSeries::emptyColumn[] = {0};
-
 TimeSeries::TimeSeries(numbers& tsNumbers) : timeseriesNumbers(tsNumbers)
 {}
 
 bool TimeSeries::loadFromFile(const std::string& path,
-                              Matrix<>::BufferType dataBuffer,
                               const bool average)
 {
     bool ret = true;
+    Matrix<>::BufferType dataBuffer;
     ret = timeSeries.loadFromCSVFile(path, 1, HOURS_PER_YEAR, &dataBuffer) && ret;
 
     if (average)
@@ -67,27 +65,24 @@ int TimeSeries::saveToFolder(const AreaName& areaID,
     return timeSeries.saveToCSVFile(buffer, 0);
 }
 
+int TimeSeries::saveToFile(const std::string& filename, bool saveEvenIfAllZero) const
+{
+    return timeSeries.saveToCSVFile(filename, 6, false, saveEvenIfAllZero);
+}
 
 double TimeSeries::getCoefficient(uint32_t year, uint32_t timestep) const
 {
-    if (timeSeries.width == 0)
-        return 0;
     return timeSeries[getSeriesIndex(year)][timestep];
 }
 
 const double* TimeSeries::getColumn(uint32_t year) const
 {
-    if (timeSeries.width == 0)
-        return emptyColumn;
     return timeSeries[getSeriesIndex(year)];
 }
 
 uint32_t TimeSeries::getSeriesIndex(uint32_t year) const
 {
-    if (timeSeries.width == 1)
-        return 0;
-    else
-        return timeseriesNumbers[0][year];
+    return timeseriesNumbers[0][year];
 }
 
 double* TimeSeries::operator[](uint32_t index)
@@ -110,6 +105,11 @@ void TimeSeries::reset(uint32_t width, uint32_t height)
 void TimeSeries::resize(uint32_t timeSeriesCount, uint32_t timestepCount)
 {
     timeSeries.resize(timeSeriesCount, timestepCount);
+}
+
+void TimeSeries::fill(double value)
+{
+    timeSeries.fill(value);
 }
 
 void TimeSeries::roundAllEntries()

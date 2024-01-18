@@ -206,8 +206,8 @@ public:
     //! Probleme Hebdo
     PROBLEME_HEBDO* problemeHebdo;
 
-    //! Study mode: economy / adequacy
-    Data::StudyMode studyMode;
+    //! Simulation mode: economy / adequacy / expansion
+    Data::SimulationMode simulationMode;
     //! Study unit commitment mode: fast(ucHeuristic) / accurate(ucMILP)
     Data::UnitCommitmentMode unitCommitmentMode;
     //! Reference to the original study
@@ -228,15 +228,17 @@ public:
     // - sum over all links of variable "hurdle cost".
     // That is : Somme(h in Y)[ Somme(a in areas)(OV. COST[h,a])  +  Somme(l in links)(HURDLE
     // COST[h,l]) ]
-    double annualSystemCost;
-    // Sum of the weekly optimal costs over the year (first optimisation step)
-    double optimalSolutionCost1;
-    // Sum of the weekly optimal costs over the year (second optimisation step)
-    double optimalSolutionCost2;
-    // Average time spent in first optimization over the year (ms)
-    double averageOptimizationTime1;
-    // Average time spent in second optimization over the year (ms)
-    double averageOptimizationTime2;
+    double annualSystemCost = 0.;
+    /// Sum of the weekly optimal costs over the year (first optimisation step)
+    double optimalSolutionCost1 = 0.;
+    /// Sum of the weekly optimal costs over the year (second optimisation step)
+    double optimalSolutionCost2 = 0.;
+    /// Average time spent in first optimization over the year (ms)
+    double averageOptimizationTime1 = 0.;
+    /// Average time spent in second optimization over the year (ms)
+    double averageOptimizationTime2 = 0.;
+    /// Average time spent updating the problem over the year (ms)
+    double averageUpdateTime = 0.;
     // -----------------------------------------------------------------
 }; // class State
 

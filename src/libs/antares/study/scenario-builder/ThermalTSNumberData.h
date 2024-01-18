@@ -11,6 +11,7 @@ class thermalTSNumberData : public TSNumberData
 {
 public:
     thermalTSNumberData() = default;
+    virtual ~thermalTSNumberData() = default;
 
     bool reset(const Study& study) override;
     void saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const override;

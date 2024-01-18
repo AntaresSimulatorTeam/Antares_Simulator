@@ -32,6 +32,7 @@
 #include "../study.h"
 #include "BindingConstraintLoader.h"
 #include "BindingConstraintSaver.h"
+#include "antares/utils/utils.h"
 
 using namespace Yuni;
 using namespace Antares;
@@ -133,8 +134,12 @@ BindingConstraint::~BindingConstraint()
 void BindingConstraint::name(const AnyString& newname)
 {
     pName = newname;
+}
+
+void BindingConstraint::pId(const AnyString& name)
+{
     pID.clear();
-    Antares::TransformNameIntoID(pName, pID);
+    Antares::TransformNameIntoID(name, pID);
 }
 
 void BindingConstraint::weight(const AreaLink* lnk, double w)

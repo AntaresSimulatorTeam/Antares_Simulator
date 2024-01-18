@@ -1,10 +1,10 @@
 
 #pragma once
 #include "ConstraintBuilder.h"
-
 /*!
  * represent 'Hydraulic Power Smoothing Using Variation Sum' constraint type
  */
+
 class HydroPowerSmoothingUsingVariationSum : private ConstraintFactory
 {
 public:
@@ -13,5 +13,5 @@ public:
      * @brief Add variables to the constraint and update constraints Matrix
      * @param pays : area
      */
-    void add(int pays);
+    void add(int pays, const int nombreDePasDeTempsPourUneOptimisation);
 };

@@ -14,7 +14,7 @@ class BindingConstraintsTimeSeriesNumbersWriter: public ITimeSeriesNumbersWriter
 
 public:
     explicit BindingConstraintsTimeSeriesNumbersWriter(IResultWriter& resultWriter);
-    BindingConstraintsTimeSeriesNumbersWriter() = default;
+    BindingConstraintsTimeSeriesNumbersWriter() = delete;
     void write(const Data::BindingConstraintGroupRepository &bindingConstraintGroupRepository) override;
 
 private:

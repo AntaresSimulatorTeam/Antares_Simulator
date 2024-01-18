@@ -22,14 +22,6 @@ namespace Antares::Data {
         return constraints_;
     }
 
-    void BindingConstraintGroup::fixTSNumbersWhenWidthIsOne() {
-        if (std::all_of(constraints_.begin(), constraints_.end(), [](auto constraint){
-            return constraint->RHSTimeSeries().width == 1;
-        })) {
-            timeseriesNumbers.fillColumn(0, 0);
-        }
-    }
-
     unsigned BindingConstraintGroup::numberOfTimeseries() const {
         //Assume all BC in a group have the same width
         if (constraints_.empty()) return 0;

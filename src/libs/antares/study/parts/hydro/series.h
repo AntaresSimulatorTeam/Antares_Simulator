@@ -62,7 +62,7 @@ public:
     */
     void reset();
 
-    void resizeRORandSTORAGE(unsigned int width);
+    void resize_ROR_STORAGE_MINGEN_whenGeneratedTS(unsigned int width);
     void resizeGenerationTS(unsigned int w, unsigned int h);
     void resizeMaxPowerTS(unsigned int w, unsigned int h);
 
