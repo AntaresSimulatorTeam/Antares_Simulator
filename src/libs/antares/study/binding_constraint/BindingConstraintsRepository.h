@@ -152,7 +152,6 @@ public:
 
     [[nodiscard]] std::vector<std::shared_ptr<BindingConstraint>> activeContraints() const;
 
-    [[nodiscard]] std::vector<uint> getIndicesForInequalityBindingConstraints() const;
     [[nodiscard]] std::vector<std::string> getNamesForInequalityBindingConstraints() const;
 
 

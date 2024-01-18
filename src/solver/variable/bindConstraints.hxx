@@ -101,11 +101,9 @@ inline void BindingConstraints<NextT>::provideInformations(I& infos)
 template<class NextT>
 void BindingConstraints<NextT>::initializeFromStudy(Data::Study& study)
 {
-    const std::vector<uint> InequalityBCindices
-      = study.bindingConstraints.getIndicesForInequalityBindingConstraints();
-
     const std::vector<std::string> inequalityByNames
         = study.bindingConstraints.getNamesForInequalityBindingConstraints();
+
     // The total number of inequality binding constraints count
     // (we don't count BCs with equality sign)
     pBCcount = (uint)inequalityByNames.size();
