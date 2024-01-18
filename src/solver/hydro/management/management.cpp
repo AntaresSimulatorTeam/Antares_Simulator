@@ -376,7 +376,7 @@ void HydroManagement::changeInflowsToAccommodateFinalLevels(uint year)
 {
     areas_.each([this, &year](Data::Area& area) 
     {
-        auto& data = tmpDataByArea_[area.index];
+        auto& data = tmpDataByArea_[&area];
 
         if (!area.hydro.finalLevelInflowsModifier.isApplicable(year))
             return;
