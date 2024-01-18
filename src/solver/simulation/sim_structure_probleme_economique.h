@@ -163,6 +163,8 @@ struct CONTRAINTES_COUPLANTES
     std::vector<int> OffsetTemporelSurLePalierDispatch;
 
     const char* NomDeLaContrainteCouplante;
+
+    std::shared_ptr<Data::BindingConstraint> addressOfTheBindingConstraint;
 };
 
 namespace ShortTermStorage
@@ -540,7 +542,8 @@ struct PROBLEME_HEBDO
 
     uint32_t NombreDeContraintesCouplantes = 0;
     std::vector<CONTRAINTES_COUPLANTES> MatriceDesContraintesCouplantes;
-    std::unordered_map<std::string, RESULTATS_CONTRAINTES_COUPLANTES> ResultatsContraintesCouplantes;
+    std::unordered_map<std::shared_ptr<Data::BindingConstraint>, RESULTATS_CONTRAINTES_COUPLANTES>
+            ResultatsContraintesCouplantes;
 
     std::vector<SOLDE_MOYEN_DES_ECHANGES> SoldeMoyenHoraire; // Used for quadratic opt
     /* Implementation details : I/O, error management, etc. */

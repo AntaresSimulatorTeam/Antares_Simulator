@@ -339,7 +339,7 @@ void SIM_AllocationConstraints(PROBLEME_HEBDO& problem,
         RESULTATS_CONTRAINTES_COUPLANTES res;
         res.variablesDuales.assign(nbTimeSteps, 0.);
         if (nbTimeSteps > 0)
-            problem.ResultatsContraintesCouplantes.emplace(bc->name(), res);
+            problem.ResultatsContraintesCouplantes.emplace(bc, res);
     }
 }
 

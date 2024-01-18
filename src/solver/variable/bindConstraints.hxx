@@ -121,7 +121,7 @@ void BindingConstraints<NextT>::initializeFromStudy(Data::Study& study)
     {
         NextType& bc = pBindConstraints[i];
 
-        bc.setBindConstraintName(inequalityByNames[i]);
+        bc.setAssociatedBindConstraint(inequalityByPtr[i]);
         bc.initializeFromStudy(study);
 
         // Does user want to print output results related to the current binding constraint ?
