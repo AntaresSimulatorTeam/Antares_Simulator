@@ -358,6 +358,19 @@ std::vector<std::string> BindingConstraintsRepository::getNamesForInequalityBind
     return names;
 }
 
+BindingConstraintsRepository::Vector
+BindingConstraintsRepository::getPtrForInequalityBindingConstraints() const
+{
+    auto activeBC = activeConstraints();
+    Vector ptr;
+
+    for (auto& bc : activeBC)
+        if (isBindingConstraintTypeInequality(*bc))
+            ptr.push_back(bc);
+
+    return ptr;
+}
+
 void BindingConstraintsRepository::forceReload(bool reload) const
 {
     if (!constraints_.empty())

@@ -104,6 +104,9 @@ void BindingConstraints<NextT>::initializeFromStudy(Data::Study& study)
     const std::vector<std::string> inequalityByNames
         = study.bindingConstraints.getNamesForInequalityBindingConstraints();
 
+    const std::vector<std::shared_ptr<Data::BindingConstraint>> inequalityByPtr
+        = study.bindingConstraints.getPtrForInequalityBindingConstraints();
+
     // The total number of inequality binding constraints count
     // (we don't count BCs with equality sign)
     pBCcount = (uint)inequalityByNames.size();
@@ -125,7 +128,7 @@ void BindingConstraints<NextT>::initializeFromStudy(Data::Study& study)
         bc.getPrintStatusFromStudy(study);
     }
 
-    // Here we supply the max number of columns to the variable print info collector 
+    // Here we supply the max number of columns to the variable print info collector
     // This is a ugly hack (it's a work around).
     // We should have a simple call to :
     //      NextType::supplyMaxNumberOfColumns(study);

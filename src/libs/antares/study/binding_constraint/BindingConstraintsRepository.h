@@ -153,6 +153,7 @@ public:
     [[nodiscard]] std::vector<std::shared_ptr<BindingConstraint>> activeConstraints() const;
 
     [[nodiscard]] std::vector<std::string> getNamesForInequalityBindingConstraints() const;
+    [[nodiscard]] Vector getPtrForInequalityBindingConstraints() const;
 
 
 private:
