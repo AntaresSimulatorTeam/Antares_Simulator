@@ -16,7 +16,7 @@
 void Data::BindingConstraintsRepository::clear()
 {
     constraints_.clear();
-    activeConstraints_.reset();
+    activeConstraints_.clear();
 }
 
 namespace Antares::Data {
@@ -283,7 +283,7 @@ void BindingConstraintsRepository::remove(const Area* area)
     RemovePredicate<Area> predicate(area);
     auto e = std::remove_if(constraints_.begin(), constraints_.end(), predicate);
     constraints_.erase(e, constraints_.end());
-    activeConstraints_.reset();
+    activeConstraints_.clear();
 }
 
 void BindingConstraintsRepository::remove(const AreaLink* lnk)
@@ -291,7 +291,7 @@ void BindingConstraintsRepository::remove(const AreaLink* lnk)
     RemovePredicate<AreaLink> predicate(lnk);
     auto e = std::remove_if(constraints_.begin(), constraints_.end(), predicate);
     constraints_.erase(e, constraints_.end());
-    activeConstraints_.reset();
+    activeConstraints_.clear();
 }
 
 void BindingConstraintsRepository::remove(const BindingConstraint* bc)
@@ -299,7 +299,7 @@ void BindingConstraintsRepository::remove(const BindingConstraint* bc)
     RemovePredicate<BindingConstraint> predicate(bc);
     auto e = std::remove_if(constraints_.begin(), constraints_.end(), predicate);
     constraints_.erase(e, constraints_.end());
-    activeConstraints_.reset();
+    activeConstraints_.clear();
 }
 
 
@@ -331,14 +331,14 @@ void BindingConstraintsRepository::markAsModified() const
 
 std::unordered_map<std::string, std::shared_ptr<BindingConstraint>> BindingConstraintsRepository::activeContraints() const
 {
-    if (activeConstraints_)
-        return activeConstraints_.value();
+    if (!activeConstraints_.empty())
+        return activeConstraints_;
 
     for (auto& bc : constraints_)
         if(bc->isActive())
-            activeConstraints_.value().try_emplace(bc->name(), bc);
+            activeConstraints_.try_emplace(bc->name(), bc);
 
-    return activeConstraints_.value();
+    return activeConstraints_;
 }
 
 static bool isBindingConstraintTypeInequality(const Data::BindingConstraint& bc)

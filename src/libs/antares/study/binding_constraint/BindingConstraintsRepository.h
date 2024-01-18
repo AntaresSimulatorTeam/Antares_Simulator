@@ -162,7 +162,7 @@ private:
     //! All constraints
     Data::BindingConstraintsRepository::Vector constraints_;
 
-    mutable std::optional<std::unordered_map<std::string, std::shared_ptr<BindingConstraint>>> activeConstraints_;
+    mutable std::unordered_map<std::string, std::shared_ptr<BindingConstraint>> activeConstraints_;
 };
 
 struct WhoseNameContains final

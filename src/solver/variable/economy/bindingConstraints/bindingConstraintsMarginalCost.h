@@ -394,9 +394,8 @@ private:
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear = nullptr;
     unsigned int pNbYearsParallel = 0;
     std::shared_ptr<Data::BindingConstraint> associatedBC_ = nullptr;
-    int bindConstraintGlobalIndex_ = -1;
     std::string bindConstraintName;
-    uint nbCount_ = 0; // Number of inequality BCs 
+    uint nbCount_ = 0; // Number of inequality BCs
 
 }; // class BindingConstMarginCost
 
