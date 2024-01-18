@@ -295,8 +295,6 @@ void SIM_AllocationConstraints(PROBLEME_HEBDO& problem,
         assert(constraintIndex < bindingConstraintCount);
 
         auto bc = activeConstraints[constraintIndex];
-        assert(bc->linkCount() < 50000000);
-        assert(bc->clusterCount() < 50000000);
 
         problem.MatriceDesContraintesCouplantes[constraintIndex].SecondMembreDeLaContrainteCouplante
           .assign(NombreDePasDeTemps, 0.);
