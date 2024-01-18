@@ -28,7 +28,9 @@ void ResizeGeneratedTimeSeries(Data::AreaList& areas, Data::Parameters& params)
         // Hydro
         if (params.timeSeriesToGenerate & Data::timeSeriesHydro)
         {
-            area.hydro.series.timeSeries.reset(params.nbTimeSeriesHydro, HOURS_PER_YEAR);
+            // TODO[FOM] check
+            area.hydro.series->storage.reset(params.nbTimeSeriesHydro, HOURS_PER_YEAR);
+            area.hydro.series->ror.reset(params.nbTimeSeriesHydro, HOURS_PER_YEAR);
         }
 
         // Thermal
