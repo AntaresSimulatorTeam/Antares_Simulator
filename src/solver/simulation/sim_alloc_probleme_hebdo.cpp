@@ -335,7 +335,7 @@ void SIM_AllocationConstraints(PROBLEME_HEBDO& problem,
             break;
         }
         if (nbTimeSteps > 0)
-            problem.ResultatsContraintesCouplantes.emplace(bc, std::vector<double>(nbTimeSteps));
+            problem.ResultatsContraintesCouplantes.emplace(bc, nbTimeSteps, 0));
     }
 }
 
