@@ -325,6 +325,5 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
         tag: ${{ github.event.inputs.release_tag }}
       run: |
-        gh release upload "$tag" _build/*.zip
-        gh release upload "$tag" _build/*.exe
+        gh release upload "$tag" _build/*.zip _build/*.exe
       shell: bash
