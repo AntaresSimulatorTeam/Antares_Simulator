@@ -164,7 +164,7 @@ struct CONTRAINTES_COUPLANTES
 
     const char* NomDeLaContrainteCouplante;
 
-    std::shared_ptr<Data::BindingConstraint> addressOfTheBindingConstraint;
+    std::shared_ptr<Data::BindingConstraint> bindingConstraint;
 };
 
 namespace ShortTermStorage
@@ -194,11 +194,6 @@ struct RESULTS
     std::vector<double> withdrawal; // MWh
 };
 } // namespace ShortTermStorage
-
-struct RESULTATS_CONTRAINTES_COUPLANTES
-{
-    std::vector<double> variablesDuales;
-};
 
 struct DEMAND_MARKET_POOL
 {
@@ -542,8 +537,8 @@ struct PROBLEME_HEBDO
 
     uint32_t NombreDeContraintesCouplantes = 0;
     std::vector<CONTRAINTES_COUPLANTES> MatriceDesContraintesCouplantes;
-    std::unordered_map<std::shared_ptr<Data::BindingConstraint>, RESULTATS_CONTRAINTES_COUPLANTES>
-            ResultatsContraintesCouplantes;
+    std::unordered_map<std::shared_ptr<Data::BindingConstraint>, std::vector<double>>
+        ResultatsContraintesCouplantes;
 
     std::vector<SOLDE_MOYEN_DES_ECHANGES> SoldeMoyenHoraire; // Used for quadratic opt
     /* Implementation details : I/O, error management, etc. */

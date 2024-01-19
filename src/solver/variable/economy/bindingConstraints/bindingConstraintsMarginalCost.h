@@ -251,8 +251,7 @@ public:
             {
                 pValuesForTheCurrentYear[numSpace].day[dayInTheYear]
                   -= state.problemeHebdo
-                       ->ResultatsContraintesCouplantes[associatedBC_]
-                       .variablesDuales[dayInTheWeek];
+                       ->ResultatsContraintesCouplantes[associatedBC_][dayInTheWeek];
 
                 dayInTheYear++;
             }
@@ -264,8 +263,7 @@ public:
         {
             uint weekInTheYear = state.weekInTheYear;
             double weeklyValue
-              = -state.problemeHebdo->ResultatsContraintesCouplantes[associatedBC_]
-                   .variablesDuales[0];
+              = -state.problemeHebdo->ResultatsContraintesCouplantes[associatedBC_][0];
 
             pValuesForTheCurrentYear[numSpace].week[weekInTheYear] = weeklyValue;
 
@@ -295,8 +293,8 @@ public:
         if (associatedBC_->type() == Data::BindingConstraint::typeHourly)
         {
             pValuesForTheCurrentYear[numSpace][hourInTheYear]
-              -= state.problemeHebdo->ResultatsContraintesCouplantes[associatedBC_]
-                   .variablesDuales[state.hourInTheWeek];
+              -= state.problemeHebdo->
+              ResultatsContraintesCouplantes[associatedBC_][state.hourInTheWeek];
         }
 
         NextType::hourEnd(state, hourInTheYear);

@@ -188,8 +188,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
                   = MatriceDesContraintesCouplantes.SecondMembreDeLaContrainteCouplante[pdtHebdo];
                 AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt]
                   = problemeHebdo->ResultatsContraintesCouplantes
-                    [MatriceDesContraintesCouplantes.addressOfTheBindingConstraint]
-                    .variablesDuales.data()
+                    [MatriceDesContraintesCouplantes.bindingConstraint].data()
                     + pdtHebdo;
             }
         }
@@ -219,8 +218,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
                       = MatriceDesContraintesCouplantes.SecondMembreDeLaContrainteCouplante[jour];
                     AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt]
                       = problemeHebdo->ResultatsContraintesCouplantes
-                        [MatriceDesContraintesCouplantes.addressOfTheBindingConstraint]
-                        .variablesDuales.data()
+                        [MatriceDesContraintesCouplantes.bindingConstraint].data()
                         + jour;
                 }
             }
@@ -253,8 +251,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
                   = MatriceDesContraintesCouplantes.SecondMembreDeLaContrainteCouplante[0];
                 AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt]
                   = problemeHebdo->ResultatsContraintesCouplantes
-                    [MatriceDesContraintesCouplantes.addressOfTheBindingConstraint]
-                    .variablesDuales.data();
+                    [MatriceDesContraintesCouplantes.bindingConstraint].data();
             }
         }
     }

@@ -234,7 +234,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     {
         auto bc = activeConstraints[constraintIndex];
         CONTRAINTES_COUPLANTES& PtMat = problem.MatriceDesContraintesCouplantes[constraintIndex];
-        PtMat.addressOfTheBindingConstraint = bc;
+        PtMat.bindingConstraint = bc;
         PtMat.NombreDInterconnexionsDansLaContrainteCouplante = bc->linkCount();
         PtMat.NombreDePaliersDispatchDansLaContrainteCouplante = bc->clusterCount();
         PtMat.NombreDElementsDansLaContrainteCouplante = bc->linkCount() + bc->clusterCount();
