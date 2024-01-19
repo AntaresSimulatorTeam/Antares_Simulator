@@ -326,4 +326,5 @@ jobs:
         tag: ${{ github.event.inputs.release_tag }}
       run: |
         gh release upload "$tag" _build/*.zip
+        gh release upload "$tag" _build/*.exe
       shell: bash
