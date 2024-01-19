@@ -69,15 +69,15 @@ void StudyInfoCollector::enabledThermalClustersCountToFileContent(FileContent& f
 
 void StudyInfoCollector::enabledBindingConstraintsCountToFileContent(FileContent& file_content)
 {
-    auto activeContraints = study_.bindingConstraints.activeContraints();
-    auto nbEnabledBC = activeContraints.size();
+    auto activeConstraints = study_.bindingConstraints.activeConstraints();
+    auto nbEnabledBC = activeConstraints.size();
     unsigned nbEnabledHourlyBC(0);
     unsigned nbEnabledDailyBC(0);
     unsigned nbEnabledWeeklyBC(0);
 
-    for (uint i = 0; i < nbEnabledBC; i++)
+    for (const auto& bc : activeConstraints)
     {
-        switch (activeContraints[i]->type())
+        switch (bc->type())
         {
             case BindingConstraint::Type::typeHourly:
                 nbEnabledHourlyBC++;

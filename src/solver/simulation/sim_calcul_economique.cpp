@@ -111,8 +111,8 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
 
     problem.NumberOfShortTermStorages = study.runtime->shortTermStorageCount;
 
-    auto activeContraints = study.bindingConstraints.activeContraints();
-    problem.NombreDeContraintesCouplantes = activeContraints.size();
+    auto activeConstraints = study.bindingConstraints.activeConstraints();
+    problem.NombreDeContraintesCouplantes = activeConstraints.size();
 
     problem.ExportMPS = study.parameters.include.exportMPS;
     problem.ExportStructure = study.parameters.include.exportStructure;
@@ -230,10 +230,11 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         problem.PaysExtremiteDeLInterconnexion[i] = link.with->index;
     }
 
-    for (uint i = 0; i < activeContraints.size(); ++i)
+    for (unsigned constraintIndex = 0; constraintIndex < activeConstraints.size(); constraintIndex++)
     {
-        auto bc = activeContraints[i];
-        CONTRAINTES_COUPLANTES& PtMat = problem.MatriceDesContraintesCouplantes[i];
+        auto bc = activeConstraints[constraintIndex];
+        CONTRAINTES_COUPLANTES& PtMat = problem.MatriceDesContraintesCouplantes[constraintIndex];
+        PtMat.bindingConstraint = bc;
         PtMat.NombreDInterconnexionsDansLaContrainteCouplante = bc->linkCount();
         PtMat.NombreDePaliersDispatchDansLaContrainteCouplante = bc->clusterCount();
         PtMat.NombreDElementsDansLaContrainteCouplante = bc->linkCount() + bc->clusterCount();
@@ -326,11 +327,12 @@ static void prepareBindingConstraint(PROBLEME_HEBDO &problem,
                                      const uint weekFirstDay,
                                      int pasDeTemps)
 {
-    auto activeContraints = bindingConstraints.activeContraints();
-    const auto constraintCount = activeContraints.size();
+    auto activeConstraints = bindingConstraints.activeConstraints();
+    const auto constraintCount = activeConstraints.size();
+
     for (unsigned constraintIndex = 0; constraintIndex != constraintCount; ++constraintIndex)
     {
-        auto bc = activeContraints[constraintIndex];
+        auto bc = activeConstraints[constraintIndex];
         assert(bc->RHSTimeSeries().width && "Invalid constraint data width");
 
         uint tsIndexForBc = 0;
