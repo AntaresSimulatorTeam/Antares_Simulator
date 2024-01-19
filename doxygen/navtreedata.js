@@ -103,7 +103,7 @@ var NAVTREEINDEX =
 "renewable_2cluster_8hxx_source.html",
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoopFlow_1_1Statistics.html",
 "structAntares_1_1TmpDataByArea.html#a432c65a9449d8cedfb4d18329da0416d",
-"ui_2simulator_2application_2application_8h_source.html"
+"ui_2simulator_2application_2main_2fwd_8h_source.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

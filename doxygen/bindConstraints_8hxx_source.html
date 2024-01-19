@@ -237,12 +237,12 @@ $(document).ready(function(){initNavTree('bindConstraints_8hxx_source.html','');
 <div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> NextT&gt;</div>
 <div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span><span class="keywordtype">void</span> BindingConstraints&lt;NextT&gt;::initializeFromStudy(Data::Study&amp; study)</div>
 <div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>{</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    <span class="keyword">const</span> std::vector&lt;uint&gt; InequalityBCindices</div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>      = study.bindingConstraints.getIndicesForInequalityBindingConstraints();</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    <span class="keyword">const</span> std::vector&lt;std::shared_ptr&lt;Data::BindingConstraint&gt;&gt; inequalityByPtr</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>        = study.bindingConstraints.getPtrForInequalityBindingConstraints();</div>
 <div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span> </div>
 <div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    <span class="comment">// The total number of inequality binding constraints count</span></div>
 <div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>    <span class="comment">// (we don&#39;t count BCs with equality sign)</span></div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    pBCcount = (uint)InequalityBCindices.size();</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    pBCcount = (uint)inequalityByPtr.size();</div>
 <div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span> </div>
 <div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    <span class="comment">// Reserving the memory</span></div>
 <div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    <span class="keywordflow">if</span> (pBCcount &gt; 0)</div>
@@ -254,14 +254,14 @@ $(document).ready(function(){initNavTree('bindConstraints_8hxx_source.html','');
 <div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>    {</div>
 <div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>        NextType&amp; bc = pBindConstraints[i];</div>
 <div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span> </div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>        bc.setBindConstraintGlobalIndex(InequalityBCindices[i]);</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>        bc.setAssociatedBindConstraint(inequalityByPtr[i]);</div>
 <div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>        bc.initializeFromStudy(study);</div>
 <div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span> </div>
 <div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>        <span class="comment">// Does user want to print output results related to the current binding constraint ?</span></div>
 <div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>        bc.getPrintStatusFromStudy(study);</div>
 <div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>    }</div>
 <div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span> </div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>    <span class="comment">// Here we supply the max number of columns to the variable print info collector </span></div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>    <span class="comment">// Here we supply the max number of columns to the variable print info collector</span></div>
 <div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>    <span class="comment">// This is a ugly hack (it&#39;s a work around).</span></div>
 <div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>    <span class="comment">// We should have a simple call to :</span></div>
 <div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>    <span class="comment">//      NextType::supplyMaxNumberOfColumns(study);</span></div>

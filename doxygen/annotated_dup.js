@@ -1295,7 +1295,6 @@ var annotated_dup =
     [ "referenceScBuilderFile", "classreferenceScBuilderFile.html", null ],
     [ "RenewableClusterStudy", "structRenewableClusterStudy.html", null ],
     [ "RESERVE_JMOINS1", "structRESERVE__JMOINS1.html", null ],
-    [ "RESULTATS_CONTRAINTES_COUPLANTES", "structRESULTATS__CONTRAINTES__COUPLANTES.html", null ],
     [ "RESULTATS_HORAIRES", "structRESULTATS__HORAIRES.html", null ],
     [ "ResultMatrix", "classResultMatrix.html", "classResultMatrix" ],
     [ "saveFixture", "structsaveFixture.html", null ],

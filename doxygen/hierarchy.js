@@ -1011,7 +1011,6 @@ var hierarchy =
     [ "Antares::Data::Parameters::RenewableGeneration", "structAntares_1_1Data_1_1Parameters_1_1RenewableGeneration.html", null ],
     [ "Antares::Data::Parameters::IncludeOptions::Reserve", "structAntares_1_1Data_1_1Parameters_1_1IncludeOptions_1_1Reserve.html", null ],
     [ "RESERVE_JMOINS1", "structRESERVE__JMOINS1.html", null ],
-    [ "RESULTATS_CONTRAINTES_COUPLANTES", "structRESULTATS__CONTRAINTES__COUPLANTES.html", null ],
     [ "RESULTATS_HORAIRES", "structRESULTATS__HORAIRES.html", null ],
     [ "Antares::Toolbox::Filter::ResultCaption< T >", "structAntares_1_1Toolbox_1_1Filter_1_1ResultCaption.html", null ],
     [ "ResultMatrix", "classResultMatrix.html", null ],
