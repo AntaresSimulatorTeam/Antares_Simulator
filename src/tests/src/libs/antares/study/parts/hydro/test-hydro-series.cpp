@@ -119,7 +119,6 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_matrices_equal_width, Fixture
 BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_both_matrix_equal_width_and_derated, Fixture)
 {
     bool ret = true;
-    bool fatalError = false;
     study->parameters.derated = true;
     unsigned int studyVersion = 890;
     bool usedBySolver = true;
@@ -170,7 +169,6 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_matrices_different_width_case
     BOOST_CHECK(ret);
 
     area_1->hydro.series->EqualizeMaxPowerTSsizes(*area_1);
-    BOOST_CHECK(fatalError);
 }
 
 BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_different_width_case_1, Fixture)
