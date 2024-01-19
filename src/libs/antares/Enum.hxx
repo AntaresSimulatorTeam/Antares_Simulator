@@ -31,7 +31,7 @@
 #include <list>
 
 #include <antares/exception/AssertionError.hpp>
-#include <antares/stdcxx/demangle.hpp>
+#include <antares/stdcxx/class_name.h>
 
 #include <antares/Enum.hpp>
 

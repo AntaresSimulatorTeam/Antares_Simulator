@@ -35,7 +35,7 @@ namespace Antares::Solver::Optimization
 class CsrQuadraticProblem
 {
 public:
-    CsrQuadraticProblem(const PROBLEME_HEBDO* p, PROBLEME_ANTARES_A_RESOUDRE& pa, HourlyCSRProblem& hourly) :
+    CsrQuadraticProblem(PROBLEME_HEBDO* p, PROBLEME_ANTARES_A_RESOUDRE& pa, HourlyCSRProblem& hourly) :
       problemeHebdo_(p), problemeAResoudre_(pa), hourlyCsrProblem_(hourly)
     {
     }
@@ -43,7 +43,7 @@ public:
     void buildConstraintMatrix();
 
 private:
-    const PROBLEME_HEBDO* problemeHebdo_;
+    PROBLEME_HEBDO* problemeHebdo_;
     PROBLEME_ANTARES_A_RESOUDRE& problemeAResoudre_;
     HourlyCSRProblem& hourlyCsrProblem_;
 

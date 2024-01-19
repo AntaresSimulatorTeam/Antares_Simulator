@@ -105,7 +105,7 @@ void ClusterList<ClusterT>::clear()
 template<class ClusterT>
 void ClusterList<ClusterT>::resizeAllTimeseriesNumbers(uint n)
 {
-    each([&](Cluster& cluster) { cluster.series.timeseriesNumbers.resize(1, n); });
+    each([&](Cluster& cluster) { cluster.series.timeseriesNumbers.reset(1, n); });
 }
 
 #define SEP IO::Separator

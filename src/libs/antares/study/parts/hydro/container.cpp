@@ -190,7 +190,7 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
         {
             auto& col = area.hydro.inflowPattern[0];
             bool errorInflow = false;
-            for (int day = 0; day < DAYS_PER_YEAR; day++)
+            for (unsigned int day = 0; day < DAYS_PER_YEAR; day++)
             {
                 if (col[day] < 0 && !errorInflow)
                 {
@@ -203,7 +203,7 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
             auto& colMin = area.hydro.reservoirLevel[minimum];
             auto& colAvg = area.hydro.reservoirLevel[average];
             auto& colMax = area.hydro.reservoirLevel[maximum];
-            for (int day = 0; day < DAYS_PER_YEAR; day++)
+            for (unsigned int day = 0; day < DAYS_PER_YEAR; day++)
             {
                 if (!errorLevels
                     && (colMin[day] < 0 || colAvg[day] < 0 || colMin[day] > colMax[day]
@@ -218,7 +218,7 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
             for (int i = 0; i < 4; i++)
             {
                 auto& col = area.hydro.maxPower[i];
-                for (int day = 0; day < DAYS_PER_YEAR; day++)
+                for (unsigned int day = 0; day < DAYS_PER_YEAR; day++)
                 {
                     if (!errorPowers && (col[day] < 0 || (i % 2 /*column hours*/ && col[day] > 24)))
                     {

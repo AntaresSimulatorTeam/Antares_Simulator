@@ -68,7 +68,7 @@ void MinDownTime::add(int pays, int index, int pdt)
     }
     else
     {
-        *builder.data.NbTermesContraintesPourLesCoutsDeDemarrage
+        builder.data.NbTermesContraintesPourLesCoutsDeDemarrage
           += 1 + DureeMinimaleDArretDUnGroupeDuPalierThermique;
         builder.data.nombreDeContraintes++;
     }

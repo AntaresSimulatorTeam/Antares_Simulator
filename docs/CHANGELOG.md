@@ -6,6 +6,43 @@ Antares Changelog
 ## New Features
 * Solver logs can be enabled either by the command-line option (--solver-logs) or in the generaldata.ini by setting solver-logs = true under the optimization section [(#1717)](https://github.com/AntaresSimulatorTeam/Antares_Simulator/pull/1717)
 
+8.8.2
+--------------------
+
+## Bugfix
+* Fix segfault caused by uninitialized `cluster.series.timeseriesNumbers` (#1876). This bug was introduced in v8.8.1 by #1752
+* Bump OR-Tools from 9.5 to 9.8 (fix crash with XPRESS) (#1873)
+
+8.8.1 (01/2024)
+--------------------
+/!\ This version has known bugs, please use 8.8.2 instead.
+
+## Bugfix
+* Simplify TS numbers drawings, fix bug related to refresh & local thermal generation (#1752)
+
+## Improvements
+* Take into account breaking change in OR-Tools's API, enable SCIP & GLPK solvers, bump OR-Tools (#1825). This should improve performances with FICO XPRESS
+* Fail if OR-Tools solver is not found (#1851)
+* Normalize simulation mode Expansion, fix logs (#1771)
+* Add possibility to release without running any tests (#1852)
+
+## Code quality
+* Use `std::unordered_map` for tmpDataByArea_ (hydro ventilation) (#1855)
+* Remove `mutable` keyword from `PROBLEME_HEBDO` (#1846)
+* Remove `Study::gotFatalError`, throw exceptions instead (#1806)
+* Renewable containers (#1809)
+* Use modern style `for` loops, avoid int cast (#1847)
+* Remove `YUNI_STATIC_ASSERT` (#1863)
+
+## Testing
+* Add tests on short-term storage/thermal cluster/renewable cluster removal (#1841)
+
+## Doc
+* Add precision about `enabled` field in ST storage (#1850)
+* Use dedicated URL path for Doxygen, instead of root (#1865)
+* Fix HTML generation for readthedocs (#1867)
+* Add dark mode switch for Doxygen online documentation (#1792)
+
 8.8.0 (12/2023)
 --------------------
 

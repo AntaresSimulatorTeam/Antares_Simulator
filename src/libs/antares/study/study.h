@@ -35,7 +35,6 @@
 #include <antares/writer/i_writer.h>
 
 #include "../antares.h"
-#include "../object/object.h"
 #include "fwd.h"
 
 #include "simulation.h"
@@ -62,7 +61,7 @@ namespace Antares::Data
 */
 
 class UIRuntimeInfo;
-class Study: public Yuni::NonCopyable<Study>, public IObject, public LayerData
+class Study: public Yuni::NonCopyable<Study>, public LayerData
 {
 public:
     using Ptr = std::shared_ptr<Study>;

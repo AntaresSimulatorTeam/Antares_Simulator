@@ -23,37 +23,25 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#ifndef __ANTARES_LIB_OBJECT_HXX__
-#define __ANTARES_LIB_OBJECT_HXX__
 
-namespace Antares
+#include <antares/stdcxx/class_name.h>
+
+namespace stdcxx
 {
-inline const Ref& IObject::oid() const
+
+std::string simpleClassName(const char* className)
 {
-    return pOID;
+    const std::string& strClassName = className;
+    std::size_t index = strClassName.find_last_of("::");
+
+    return (index == std::string::npos) ? strClassName
+                                        : strClassName.substr(index + 1, strClassName.size());
 }
 
-inline YString IObject::caption() const
+template<>
+std::string simpleClassName(const std::type_info& type)
 {
-    ThreadingPolicy::MutexLocker locker(*this);
-    return pCaption;
+    return simpleClassName(type.name());
 }
 
-inline bool IObject::enabled() const
-{
-    return (pEnabled != 0);
-}
-
-inline void IObject::enabled(bool state)
-{
-    pEnabled = state;
-}
-
-inline void IObject::onRelease() const
-{
-    // do nothing
-}
-
-} // namespace Antares
-
-#endif // __ANTARES_LIB_OBJECT_HXX__
+} // namespace stdcxx

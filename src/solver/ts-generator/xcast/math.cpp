@@ -29,8 +29,6 @@
 
 namespace Antares
 {
-namespace Solver
-{
 namespace TSGenerator
 {
 namespace XCast
@@ -58,5 +56,4 @@ void XCast::normal(float& x, float& y)
 
 } // namespace XCast
 } // namespace TSGenerator
-} // namespace Solver
 } // namespace Antares

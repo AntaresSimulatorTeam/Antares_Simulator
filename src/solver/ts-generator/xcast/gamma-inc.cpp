@@ -34,8 +34,6 @@ using namespace Yuni;
 
 namespace Antares
 {
-namespace Solver
-{
 namespace TSGenerator
 {
 namespace XCast
@@ -62,5 +60,4 @@ double XCast::GammaInc(double s, double z)
 
 } // namespace XCast
 } // namespace TSGenerator
-} // namespace Solver
 } // namespace Antares

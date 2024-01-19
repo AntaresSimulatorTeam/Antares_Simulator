@@ -62,7 +62,7 @@ void ConsistenceNumberOfDispatchableUnits::add(int pays, int index, int pdt)
     }
     else
     {
-        *builder.data.NbTermesContraintesPourLesCoutsDeDemarrage += 4;
+        builder.data.NbTermesContraintesPourLesCoutsDeDemarrage += 4;
         builder.data.nombreDeContraintes++;
     }
 }

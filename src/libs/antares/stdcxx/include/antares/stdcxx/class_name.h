@@ -1,9 +1,8 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
+** Copyright 2007-2023 RTE
+** Authors: Antares_Simulator Team
+**
+** This file is part of Antares_Simulator.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
 ** it under the terms of the Mozilla Public Licence 2.0 as published by
@@ -22,10 +21,29 @@
 **
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+**
+** SPDX-License-Identifier: MPL-2.0
 */
-#ifndef __ANTARES_LIBS_NET_NET_H__
-#define __ANTARES_LIBS_NET_NET_H__
+#pragma once
 
-#include <yuni/yuni.h>
+#include <string>
+#include <typeinfo>
 
-#endif // __ANTARES_LIBS_NET_NET_H__
+namespace stdcxx
+{
+
+std::string simpleClassName(const char* className);
+
+template<typename T>
+std::string simpleClassName()
+{
+    return simpleClassName(typeid(T).name());
+}
+
+template<typename T>
+std::string simpleClassName(const T& type)
+{
+    return simpleClassName(typeid(type).name());
+}
+
+} // namespace stdcxx

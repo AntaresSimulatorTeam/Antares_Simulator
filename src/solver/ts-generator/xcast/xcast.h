@@ -29,13 +29,14 @@
 #include <yuni/yuni.h>
 #include <antares/study/fwd.h>
 #include <antares/mersenne-twister/mersenne-twister.h>
+#include <antares/study/progression/progression.h>
 #include <antares/writer/i_writer.h>
 #include "studydata.h"
 #include <yuni/core/noncopyable.h>
 
+using namespace Antares::Solver;
+
 namespace Antares
-{
-namespace Solver
 {
 namespace TSGenerator
 {
@@ -98,8 +99,6 @@ public:
     //! The current study
     Data::Study& study;
 
-    //! The number of time-series
-    uint nbTimeseries;
     //! The current year
     uint year;
     //! The time-series type
@@ -176,6 +175,9 @@ private:
     void normal(float& x, float& y);
 
 private:
+    //! The number of time-series
+    uint nbTimeseries_;
+
     //! Some data after transformation
     StudyData pData;
 
@@ -254,7 +256,6 @@ private:
 
 } // namespace XCast
 } // namespace TSGenerator
-} // namespace Solver
 } // namespace Antares
 
 #include "xcast.hxx"

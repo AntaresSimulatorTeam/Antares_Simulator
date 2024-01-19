@@ -47,8 +47,6 @@ using namespace Yuni;
 
 namespace Antares
 {
-namespace Solver
-{
 namespace TSGenerator
 {
 namespace
@@ -58,7 +56,7 @@ class GeneratorTempData final
 public:
     GeneratorTempData(Data::Study& study,
                       Solver::Progression::Task& progr,
-                      IResultWriter& writer);
+                      Solver::IResultWriter& writer);
 
     void prepareOutputFoldersForAllAreas(uint year);
 
@@ -70,8 +68,6 @@ public:
     bool archive;
 
     uint currentYear;
-
-    uint nbThermalTimeseries;
 
     bool derated;
 
@@ -88,6 +84,7 @@ private:
                                const T& duration);
 
 private:
+    uint nbThermalTimeseries_;
     const uint nbHoursPerYear = HOURS_PER_YEAR;
     const uint daysPerYear = DAYS_PER_YEAR;
 
@@ -114,12 +111,12 @@ private:
 
     String pTempFilename;
     Solver::Progression::Task& pProgression;
-    IResultWriter& pWriter;
+    Solver::IResultWriter& pWriter;
 };
 
 GeneratorTempData::GeneratorTempData(Data::Study& study,
                                      Solver::Progression::Task& progr,
-                                     IResultWriter& writer) :
+                                     Solver::IResultWriter& writer) :
     study(study),
     rndgenerator(study.runtime->random[Data::seedTsGenThermal]),
     pProgression(progr),
@@ -129,7 +126,7 @@ GeneratorTempData::GeneratorTempData(Data::Study& study,
 
     archive = (0 != (parameters.timeSeriesToArchive & Data::timeSeriesThermal));
 
-    nbThermalTimeseries = parameters.nbTimeSeriesThermal;
+    nbThermalTimeseries_ = parameters.nbTimeSeriesThermal;
 
     derated = parameters.derated;
 }
@@ -250,14 +247,10 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
 
     if (0 == cluster.unitCount or 0 == cluster.nominalCapacity)
     {
-        cluster.series.timeSeries.reset(1, nbHoursPerYear);
-
         if (archive)
             writeResultsToDisk(area, cluster);
         return;
     }
-
-    cluster.series.timeSeries.resize(nbThermalTimeseries, nbHoursPerYear);
 
     const auto& preproData = *(cluster.prepro);
 
@@ -354,7 +347,7 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
 
     double* dstSeries = nullptr;
 
-    const uint tsCount = nbThermalTimeseries + 2;
+    const uint tsCount = nbThermalTimeseries_ + 2;
     for (uint tsIndex = 0; tsIndex != tsCount; ++tsIndex)
     {
         uint hour = 0;
@@ -644,5 +637,4 @@ bool GenerateThermalTimeSeries(Data::Study& study,
 }
 
 } // namespace TSGenerator
-} // namespace Solver
 } // namespace Antares
