@@ -5,6 +5,10 @@
 #include <iomanip>
 #include <algorithm>
 
+namespace {
+    const std::string kUnknown;
+}
+
 namespace Antares
 {
 namespace Optimization
@@ -104,6 +108,8 @@ std::string Constraint::getTimeStepInYear() const
     case ConstraintType::fictitious_load:
     case ConstraintType::hydro_reservoir_level:
         return StringBetweenAngleBrackets (mItems.at(mItems.size()-2));
+    case ConstraintType::short_term_storage_level:
+        return StringBetweenAngleBrackets (mItems.at(mItems.size()-2));
     default:
         return "-1";
     }
@@ -132,6 +138,10 @@ ConstraintType Constraint::getType() const
     {
         return ConstraintType::hydro_reservoir_level;
     }
+    if (mItems.at(0) == "Level")
+    {
+        return ConstraintType::short_term_storage_level;
+    }
     return ConstraintType::none;
 }
 
@@ -144,8 +154,16 @@ std::string Constraint::getBindingConstraintName() const
     case ConstraintType::binding_constraint_weekly:
         return mItems.at(0);
     default:
-        return "<unknown>";
+        return kUnknown;
     }
+}
+
+std::string Constraint::getSTSName() const
+{
+  if (getType() == ConstraintType::short_term_storage_level)
+      return StringBetweenAngleBrackets(mItems.at(2));
+  else
+      return kUnknown;
 }
 
 std::string Constraint::prettyPrint() const
@@ -167,8 +185,11 @@ std::string Constraint::prettyPrint() const
     case ConstraintType::hydro_reservoir_level:
         return "Hydro reservoir constraint at area '" + getAreaName() + "' at hour "
                + getTimeStepInYear();
+    case ConstraintType::short_term_storage_level:
+        return "Short-term-storage reservoir constraint at area '" + getAreaName() + "' in STS '" + getSTSName() + "' at hour " + getTimeStepInYear();
+
     default:
-        return "<unknown>";
+        return kUnknown;
     }
 }
 } // namespace Optimization

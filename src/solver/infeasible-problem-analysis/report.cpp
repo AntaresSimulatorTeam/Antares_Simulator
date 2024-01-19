@@ -70,6 +70,11 @@ void InfeasibleProblemReport::logSuspiciousConstraints()
     {
         Antares::logs.error() << "* Last resort shedding status,";
     }
+    if (mTypes[ConstraintType::short_term_storage_level] > 0)
+    {
+        Antares::logs.error() << "* Short-term storage reservoir level impossible to manage. Please check inflows, lower & upper curves and initial level (if prescribed),";
+    }
+
     const unsigned int bcCount = mTypes[ConstraintType::binding_constraint_hourly]
                                  + mTypes[ConstraintType::binding_constraint_daily]
                                  + mTypes[ConstraintType::binding_constraint_weekly];
