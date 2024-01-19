@@ -54,6 +54,13 @@ jobs:
       run: |
           pip3 install -r src/tests/examples/requirements.txt
 
+    - name: Install gh if needed
+      if: ${{ env.IS_RELEASE == 'true' }}
+      run: |
+           dnf -y install 'dnf-command(config-manager)'
+           dnf -y config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
+           dnf -y install gh
+
     - name: Configure
       run: |
            source /opt/rh/gcc-toolset-10/enable
@@ -103,13 +110,6 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         path: _build/*.rpm
-
-    - name: Install gh
-      if: ${{ env.IS_RELEASE == 'true' }}
-      run: |
-           dnf -y install 'dnf-command(config-manager)'
-           dnf -y config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
-           dnf -y install gh
 
     - name: Publish assets
       if: ${{ env.IS_RELEASE == 'true' }}
