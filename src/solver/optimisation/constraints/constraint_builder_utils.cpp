@@ -1,8 +1,7 @@
 #include "constraint_builder_utils.h"
 
-ConstraintBuilderData NewGetConstraintBuilderFromProblemHebdoAndProblemAResoudre(
-  const PROBLEME_HEBDO* problemeHebdo,
-  PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre)
+ConstraintBuilderData NewGetConstraintBuilderFromProblemHebdoAndProblemAResoudre(PROBLEME_HEBDO* problemeHebdo,
+                                                                                 PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre)
 {
     return {ProblemeAResoudre.Pi,
             ProblemeAResoudre.Colonne,
@@ -24,5 +23,5 @@ ConstraintBuilderData NewGetConstraintBuilderFromProblemHebdoAndProblemAResoudre
             problemeHebdo->NomsDesPays,
             problemeHebdo->weekInTheYear,
             problemeHebdo->NombreDePasDeTemps,
-            nullptr};
+            problemeHebdo->NbTermesContraintesPourLesCoutsDeDemarrage};
 }
