@@ -153,8 +153,6 @@ public:
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
             pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);
 
-        // Set the associated binding constraint
-        associatedBC_ = study.bindingConstraints.activeContraints()[bindConstraintGlobalIndex_];
 
         NextType::initializeFromStudy(study);
     }
@@ -165,9 +163,9 @@ public:
         VariableAccessorType::InitializeAndReset(results, study);
     }
 
-    void setBindConstraintGlobalIndex(uint bc_index)
+    void setAssociatedBindConstraint(std::shared_ptr<Data::BindingConstraint> bc_ptr)
     {
-        bindConstraintGlobalIndex_ = bc_index;
+        associatedBC_ = bc_ptr;
     }
 
     void setBindConstraintsCount(uint bcCount)
@@ -253,8 +251,7 @@ public:
             {
                 pValuesForTheCurrentYear[numSpace].day[dayInTheYear]
                   -= state.problemeHebdo
-                       ->ResultatsContraintesCouplantes[bindConstraintGlobalIndex_]
-                       .variablesDuales[dayInTheWeek];
+                       ->ResultatsContraintesCouplantes[associatedBC_][dayInTheWeek];
 
                 dayInTheYear++;
             }
@@ -266,8 +263,7 @@ public:
         {
             uint weekInTheYear = state.weekInTheYear;
             double weeklyValue
-              = -state.problemeHebdo->ResultatsContraintesCouplantes[bindConstraintGlobalIndex_]
-                   .variablesDuales[0];
+              = -state.problemeHebdo->ResultatsContraintesCouplantes[associatedBC_][0];
 
             pValuesForTheCurrentYear[numSpace].week[weekInTheYear] = weeklyValue;
 
@@ -297,8 +293,8 @@ public:
         if (associatedBC_->type() == Data::BindingConstraint::typeHourly)
         {
             pValuesForTheCurrentYear[numSpace][hourInTheYear]
-              -= state.problemeHebdo->ResultatsContraintesCouplantes[bindConstraintGlobalIndex_]
-                   .variablesDuales[state.hourInTheWeek];
+              -= state.problemeHebdo->
+              ResultatsContraintesCouplantes[associatedBC_][state.hourInTheWeek];
         }
 
         NextType::hourEnd(state, hourInTheYear);
@@ -367,7 +363,7 @@ private:
 
     bool isInitialized()
     {
-        return (bindConstraintGlobalIndex_ >= 0) && associatedBC_;
+        return associatedBC_ != nullptr;
     }
 
     bool isCurrentOutputNonApplicable(int precision) const
@@ -394,8 +390,7 @@ private:
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear = nullptr;
     unsigned int pNbYearsParallel = 0;
     std::shared_ptr<Data::BindingConstraint> associatedBC_ = nullptr;
-    int bindConstraintGlobalIndex_ = -1;
-    uint nbCount_ = 0; // Number of inequality BCs 
+    uint nbCount_ = 0; // Number of inequality BCs
 
 }; // class BindingConstMarginCost
 

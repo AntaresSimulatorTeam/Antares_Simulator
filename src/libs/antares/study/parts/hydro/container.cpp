@@ -208,7 +208,7 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
               auto& colMin = area.hydro.reservoirLevel[minimum];
               auto& colAvg = area.hydro.reservoirLevel[average];
               auto& colMax = area.hydro.reservoirLevel[maximum];
-              for (int day = 0; day < DAYS_PER_YEAR; day++)
+              for (unsigned int day = 0; day < DAYS_PER_YEAR; day++)
               {
                   if (!errorLevels
                       && (colMin[day] < 0 || colAvg[day] < 0 || colMin[day] > colMax[day]

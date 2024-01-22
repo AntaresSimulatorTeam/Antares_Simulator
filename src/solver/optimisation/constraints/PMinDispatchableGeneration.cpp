@@ -28,7 +28,7 @@ void PMinDispatchableGeneration::add(int pays, int index, int pdt)
     }
     else
     {
-        *builder.data.NbTermesContraintesPourLesCoutsDeDemarrage += 2;
+        builder.data.NbTermesContraintesPourLesCoutsDeDemarrage += 2;
         builder.data.nombreDeContraintes++;
     }
 }
