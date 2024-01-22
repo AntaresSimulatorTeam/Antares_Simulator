@@ -128,6 +128,8 @@ public:
             SecondMembre;  // Vecteur des second membre des contraintes, taille =
     // NombreDeContraintes
 
+    std::vector<std::string> variables;
+
     friend class boost::serialization::access;
     template <class Archive>
     void serialize(Archive& ar, [[maybe_unused]] const unsigned int version) {
@@ -136,6 +138,7 @@ public:
         ar& Xmin;
         ar& CoutLineaire;
         ar& SecondMembre;
+        ar& variables;
     }
 };
 
