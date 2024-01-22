@@ -3,7 +3,7 @@
 
 #define WIN32_LEAN_AND_MEAN
 
-#include <boost/test/included/unit_test.hpp>
+#include <boost/test/unit_test.hpp>
 #include <antares/study/study.h>
 #include <antares/array/matrix.h>
 #include <files-system.h>
