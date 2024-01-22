@@ -91,7 +91,6 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
     for (int i = 0; i < ProblemeAResoudre->NombreDeContraintes; i++)
     {
         AdresseOuPlacerLaValeurDesCoutsMarginaux[i] = nullptr;
-
         SecondMembre[i] = 0.0;
     }
 

@@ -122,15 +122,15 @@ struct commonFixture
 
         // Hydro : set the nb of ready made TS
         nbReadyMadeTS = 12;
-        area_1->hydro.series->resizeGenerationTS(nbReadyMadeTS, 1);
-        area_2->hydro.series->resizeGenerationTS(nbReadyMadeTS, 1);
-        area_3->hydro.series->resizeGenerationTS(nbReadyMadeTS, 1);
+        area_1->hydro.series->resizeGenerationTS(nbReadyMadeTS);
+        area_2->hydro.series->resizeGenerationTS(nbReadyMadeTS);
+        area_3->hydro.series->resizeGenerationTS(nbReadyMadeTS);
 
         // Hydro Max Power : set the nb of ready made TS
         nbReadyMadeTS = 15;
-        area_1->hydro.series->resizeMaxPowerTS(nbReadyMadeTS, 1);
-        area_2->hydro.series->resizeMaxPowerTS(nbReadyMadeTS, 1);
-        area_3->hydro.series->resizeMaxPowerTS(nbReadyMadeTS, 1);
+        area_1->hydro.series->resizeMaxPowerTS(nbReadyMadeTS);
+        area_2->hydro.series->resizeMaxPowerTS(nbReadyMadeTS);
+        area_3->hydro.series->resizeMaxPowerTS(nbReadyMadeTS);
 
         // Links
         link_12 = AreaAddLinkBetweenAreas(area_1, area_2, false);

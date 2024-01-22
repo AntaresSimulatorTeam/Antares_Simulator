@@ -647,11 +647,9 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
         {
             if (problem.CaracteristiquesHydrauliques[k].PresenceDHydrauliqueModulable > 0)
             {
-                auto& area = *study.areas.byIndex[k];       
+                auto& area = *study.areas.byIndex[k];
                 auto& scratchpad = area.scratchpad[numSpace];
                 auto& hydroSeries = area.hydro.series;
-
-                assert(&scratchpad);
 
                 auto const& dailyMeanMaxGenPower = scratchpad.meanMaxDailyGenPower.getColumn(year);
                 auto const& dailyMeanMaxPumpPower = scratchpad.meanMaxDailyPumpPower.getColumn(year);

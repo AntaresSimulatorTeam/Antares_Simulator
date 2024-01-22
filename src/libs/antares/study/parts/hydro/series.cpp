@@ -163,29 +163,25 @@ void DataSeriesHydro::copyMaxPowerTS(const DataSeriesHydro& source)
 
 void DataSeriesHydro::reset()
 {
-    ror.reset(1, HOURS_PER_YEAR);
-    storage.reset(1, DAYS_PER_YEAR);
-    mingen.reset(1, HOURS_PER_YEAR);
-    generationTScount_ = 1;
-
-    maxHourlyGenPower.reset(1, HOURS_PER_YEAR);
-    maxHourlyPumpPower.reset(1, HOURS_PER_YEAR);
-    maxPowerTScount_ = 1;
+    resizeGenerationTS(1);
+    resizeMaxPowerTS(1);
 }
 
-void DataSeriesHydro::resizeGenerationTS(uint w, uint h)
+void DataSeriesHydro::resizeGenerationTS(uint nbSeries)
 {
-    ror.resize(w, h);
-    storage.resize(w, std::min((uint)DAYS_PER_YEAR, h));
-    mingen.resize(w, h);
-    generationTScount_ = w;
+    storage.reset(nbSeries, DAYS_PER_YEAR);
+    ror.reset(nbSeries, HOURS_PER_YEAR);
+    mingen.reset(nbSeries, HOURS_PER_YEAR);
+
+    generationTScount_ = nbSeries;
 }
 
-void DataSeriesHydro::resizeMaxPowerTS(uint w, uint h)
+void DataSeriesHydro::resizeMaxPowerTS(uint nbSeries)
 {
-    maxHourlyGenPower.reset(w, h);
-    maxHourlyPumpPower.reset(w, h);
-    maxPowerTScount_ = w;
+    maxHourlyGenPower.reset(nbSeries, HOURS_PER_YEAR);
+    maxHourlyPumpPower.reset(nbSeries, HOURS_PER_YEAR);
+
+    maxPowerTScount_ = nbSeries;
 }
 
 bool DataSeriesHydro::forceReload(bool reload) const
