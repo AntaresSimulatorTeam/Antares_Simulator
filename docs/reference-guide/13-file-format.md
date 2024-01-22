@@ -12,6 +12,9 @@ If no value is specified for `initiallevel`, then a default value of 50% is used
 
 Add property `enabled` (bool, default=`true`). If a ST storage object is not enabled, it is ignored by Antares Simulator.
 
+#### Solver logs (expert option)
+Save solver logs by setting `solver-logs = true` (default : `false`) under the `optimization` section.
+
 #### Experimental "MILP" mode
 New value `milp` for existing property `other preferences/unit-commitment-mode` in file **settings/generaldata.ini**.
 

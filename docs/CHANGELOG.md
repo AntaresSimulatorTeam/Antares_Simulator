@@ -3,8 +3,7 @@ Antares Changelog
 
 8.9.0 (Unreleased yet)
 --------------------
-## New Features
-* Solver logs can be enabled either by the command-line option (--solver-logs) or in the generaldata.ini by setting solver-logs = true under the optimization section [(#1717)](https://github.com/AntaresSimulatorTeam/Antares_Simulator/pull/1717)
+
 
 8.8.2
 --------------------
@@ -50,6 +49,7 @@ Antares Changelog
 * New "cash-flow" variable for ST storage (#1633)
 * Experimental optimization with discrete variables (MILP unit-commitment mode #670)
 * Add `enabled` property for ST storage objects, fix bug related to saving ST objects (#1807)
+* Solver logs can be enabled either by the command-line option (--solver-logs) or in the generaldata.ini
 
 ## Improvements
 * Add shortcut -s for names MPS problems in CLI options (#1613)
