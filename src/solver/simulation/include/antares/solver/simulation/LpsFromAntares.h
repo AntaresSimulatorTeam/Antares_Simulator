@@ -97,6 +97,8 @@ public:
     // fera le nommage des contraintes
     // dans Antarès ?
 
+    std::vector<std::string> variables;
+
     friend class boost::serialization::access;
     template <class Archive>
     void serialize(Archive& ar, [[maybe_unused]] const unsigned int version) {
@@ -110,6 +112,7 @@ public:
         ar& CoefficientsDeLaMatriceDesContraintes;
         ar& SignificationMetierDesVariables;
         ar& SignificationMetierDesContraintes;
+        ar& variables;
     }
 };
 
@@ -128,8 +131,6 @@ public:
             SecondMembre;  // Vecteur des second membre des contraintes, taille =
     // NombreDeContraintes
 
-    std::vector<std::string> variables;
-
     friend class boost::serialization::access;
     template <class Archive>
     void serialize(Archive& ar, [[maybe_unused]] const unsigned int version) {
@@ -138,7 +139,6 @@ public:
         ar& Xmin;
         ar& CoutLineaire;
         ar& SecondMembre;
-        ar& variables;
     }
 };
 

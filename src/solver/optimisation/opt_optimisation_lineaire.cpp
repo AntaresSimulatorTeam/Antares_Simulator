@@ -135,6 +135,8 @@ bool runWeeklyOptimization(const OptimizationOptions& options,
             copy(problemeHebdo->ProblemeAResoudre->IndicesColonnes, year_ptr->IndicesColonnes);
 
             copy(problemeHebdo->ProblemeAResoudre->IndicesDebutDeLigne, year_ptr->Mdeb);
+            copy(problemeHebdo->ProblemeAResoudre->NomDesVariables, year_ptr->variables);
+
             lps->_constant = year_ptr;
         }
         {
@@ -146,9 +148,6 @@ bool runWeeklyOptimization(const OptimizationOptions& options,
 
             copy(problemeHebdo->ProblemeAResoudre->SecondMembre, week_ptr->SecondMembre);
             copy(problemeHebdo->ProblemeAResoudre->Sens, week_ptr->Sens);
-
-            //Liste des variables
-            copy(problemeHebdo->ProblemeAResoudre->NomDesVariables, week_ptr->variables);
 
             lps->_hebdo[{static_cast<unsigned int>(year), static_cast<unsigned int>(week)}] = week_ptr;
         }
