@@ -268,6 +268,22 @@ BOOST_AUTO_TEST_CASE(sts_initial_level)
 
     storages.push_back(sts);
 
+    {
+      auto& windTS = area->wind.series.timeSeries;
+      TimeSeriesConfigurer(windTS)
+        .setColumnCount(1)
+        .fillColumnWith(0, 0.);
+      windTS[0][1] = 100;
+    }
+
+    {
+      auto& loadTS = area->load.series.timeSeries;
+      TimeSeriesConfigurer(loadTS)
+        .setColumnCount(1)
+        .fillColumnWith(0, 0.);
+      loadTS[0][2] = 100;
+    }
+
 	simulation->create();
 	simulation->run();
 

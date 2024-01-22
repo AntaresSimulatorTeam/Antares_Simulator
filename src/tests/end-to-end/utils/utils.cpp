@@ -96,7 +96,7 @@ averageResults OutputRetriever::overallCost(Area* area)
     return averageResults(result->avgdata);
 }
 
-averageResults STSLevel_PSP_Open(Area* area);
+averageResults OutputRetriever::STSLevel_PSP_Open(Area* area)
 {
     auto result = retrieveAreaResults<Variable::Economy::VCardShortTermStorage>(area);
     // PSP_open / Level, see STStorageOutputCaptions.cpp
