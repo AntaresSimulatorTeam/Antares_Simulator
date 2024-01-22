@@ -6,6 +6,7 @@ on:
   push:
     branches:
       - develop
+      #delete this
       - feature/ol8-ortools
 
   schedule:
@@ -52,6 +53,12 @@ jobs:
       run: |
           echo "ORTOOLS_URL=https://github.com/rte-france/or-tools/releases/download/$(cat ortools_tag)/ortools_cxx_oraclelinux-8_static_sirius.zip" >> $GITHUB_ENV
 
+    - name: Read antares-deps version
+      id: antares-deps-version
+      uses: notiz-dev/github-action-json-property@release
+      with:
+        path: 'antares-deps-version.json'
+        prop_path: 'antares_deps_version'
 
     - name: Download pre-compiled librairies
       uses: ./.github/workflows/download-extract-precompiled-libraries-tgz
