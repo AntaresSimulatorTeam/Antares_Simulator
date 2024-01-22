@@ -24,7 +24,7 @@ jobs:
   build:
     name: Build
     env:
-      ORTOOLSDIR: ${{ github.workspace }}/or-tools
+      ORTOOLS_DIR: ${{ github.workspace }}/or-tools
 
     runs-on: ubuntu-latest
     container: 'oraclelinux:8'
@@ -38,8 +38,21 @@ jobs:
 
     - name: Install libraries
       run: |
-           dnf install -y epel-release git cmake wget rpm-build redhat-lsb-core 
+           dnf install -y epel-release git cmake wget rpm-build redhat-lsb-core
            dnf install -y unzip libuuid-devel boost-test boost-devel gcc-toolset-10-toolchain zlib-devel
+
+    - name: Config OR-Tools URL
+      run: |
+          echo "ORTOOLS_URL=https://github.com/rte-france/or-tools/releases/download/$(cat ortools_tag)/ortools_cxx_oraclelinux-8_static_sirius.zip" >> $GITHUB_ENV
+
+
+    - name: Download pre-compiled librairies
+      uses: ./.github/workflows/download-extract-precompiled-libraries-tgz
+      with:
+        antares-deps-version: ${{steps.antares-deps-version.outputs.prop}}
+        os: ${{env.os}}
+        ortools-url: ${{env.ORTOOLS_URL}}
+        ortools-dir: ${{env.ORTOOLS_DIR}}
 
     - name: Checkout
       run: |
@@ -69,6 +82,7 @@ jobs:
              -DBUILD_TESTING=ON \
              -DBUILD_TOOLS=OFF \
              -DBUILD_UI=OFF \
+             -DCMAKE_PREFIX_PATH=${{ env.ORTOOLS_DIR }}/install
 
     - name: Build
       run: |
@@ -117,5 +131,4 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
         tag: ${{ github.event.inputs.release_tag }}
       run: |
-        gh release upload "$tag" _build/*.tar.gz _build/*.rpm      
-
+        gh release upload "$tag" _build/*.tar.gz _build/*.rpm
