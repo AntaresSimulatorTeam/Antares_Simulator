@@ -130,6 +130,7 @@ public:
     std::vector<double>
             SecondMembre;  // Vecteur des second membre des contraintes, taille =
     // NombreDeContraintes
+    std::string name;
 
     friend class boost::serialization::access;
     template <class Archive>
@@ -139,6 +140,7 @@ public:
         ar& Xmin;
         ar& CoutLineaire;
         ar& SecondMembre;
+        ar& name;
     }
 };
 

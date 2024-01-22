@@ -148,6 +148,8 @@ bool runWeeklyOptimization(const OptimizationOptions& options,
 
             copy(problemeHebdo->ProblemeAResoudre->SecondMembre, week_ptr->SecondMembre);
             copy(problemeHebdo->ProblemeAResoudre->Sens, week_ptr->Sens);
+            std::string plop;
+            copy(createMPSfilename(*optPeriodStringGenerator, optimizationNumber), week_ptr->name);
 
             lps->_hebdo[{static_cast<unsigned int>(year), static_cast<unsigned int>(week)}] = week_ptr;
         }
