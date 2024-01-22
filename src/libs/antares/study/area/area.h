@@ -60,6 +60,7 @@ public:
     using Vector = std::vector<Area*>;
     using VectorConst = std::vector<const Area*>;
     using List = std::list<Area*>;
+    using ScratchMap = std::map<const Area*, AreaScratchpad&>;
     //! Name mapping -> must be replaced by AreaNameMapping
     using NameMapping = std::map<AreaName, AreaName>;
 
@@ -651,6 +652,9 @@ public:
     //! Remove all thermal timeseries
     void removeThermalTimeseries();
     //@}
+
+    /// create a map with the corresponding scratchpad for each area link to this numspace
+    Area::ScratchMap buildScratchMap(uint numspace);
 
     //! \name Memory management
     //@{
