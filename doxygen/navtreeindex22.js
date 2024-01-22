@@ -1,5 +1,6 @@
 var NAVTREEINDEX22 =
 {
+"renewableGeneration_8h_source.html":[8,0,0,2,10,2,29],
 "renewable_2cluster_8hxx_source.html":[8,0,0,1,0,19,5,3,1],
 "renewable_2cluster__list_8h_source.html":[8,0,0,1,0,19,5,3,2],
 "renewable_2defines_8h_source.html":[8,0,0,1,0,19,5,3,5],
@@ -248,6 +249,5 @@ var NAVTREEINDEX22 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroStorage_1_1Statistics.html":[7,0,0,12,4,4,15,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Inflows_1_1Statistics.html":[7,0,0,12,4,4,16,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LMRViolations_1_1Statistics.html":[7,0,0,12,4,4,17,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD_1_1Statistics.html":[7,0,0,12,4,4,18,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLP_1_1Statistics.html":[7,0,0,12,4,4,19,0]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLD_1_1Statistics.html":[7,0,0,12,4,4,18,0]
 };

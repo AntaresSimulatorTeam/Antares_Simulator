@@ -1,5 +1,6 @@
 var NAVTREEINDEX11 =
 {
+"classAntares_1_1Forms_1_1MainFormData.html#a42bdadcd35ac8d77f29ce82de1b45db6":[7,0,0,7,7,1],
 "classAntares_1_1Forms_1_1MainFormData.html#a7dd7e79930b59ec448b4a750c0f11061":[7,0,0,7,7,4],
 "classAntares_1_1Forms_1_1MainFormData.html#a93fe7c5412df39a300788e4e8780a506":[7,0,0,7,7,2],
 "classAntares_1_1Forms_1_1MainFormData.html#abafd330c148b1a8d3a0c9ff4efb0cc4f":[7,0,0,7,7,5],
@@ -25,7 +26,7 @@ var NAVTREEINDEX11 =
 "classAntares_1_1Graph_1_1Grid.html#af0bcd0a47cf60f481817641a786ca19f":[7,0,0,8,1,4],
 "classAntares_1_1Graph_1_1Node.html":[7,0,0,8,2],
 "classAntares_1_1HydroManagement.html":[7,0,0,27],
-"classAntares_1_1HydroManagement.html#a362609c8c4b2e35f76c4ac563b6dce07":[7,0,0,27,0],
+"classAntares_1_1HydroManagement.html#a8666c9d444f246d138280363cb06617a":[7,0,0,27,0],
 "classAntares_1_1I__mtx__to__buffer__dumper.html":[7,0,0,28],
 "classAntares_1_1IniFile.html":[7,0,0,29],
 "classAntares_1_1IniFile.html#a00a4ab7ba3da35393f7d334396177126":[7,0,0,29,18],
@@ -248,6 +249,5 @@ var NAVTREEINDEX11 =
 "classAntares_1_1Map_1_1Tool_1_1Tool.html#a69a758841ee47cbd63d182d395f798b3":[7,0,0,9,1,2,1],
 "classAntares_1_1Map_1_1Tool_1_1Tool.html#a777a88e9e5d510368b9b2e6098e52086":[7,0,0,9,1,2,9],
 "classAntares_1_1Map_1_1Tool_1_1Tool.html#a829f0727f3a69b9e3e25739a4476762b":[7,0,0,9,1,2,20],
-"classAntares_1_1Map_1_1Tool_1_1Tool.html#ab7c181225bba7c1c14aca3669a7b07bd":[7,0,0,9,1,2,4],
-"classAntares_1_1Map_1_1Tool_1_1Tool.html#ab7e16528efd01bfaa8d8c35d56626ec9":[7,0,0,9,1,2,13]
+"classAntares_1_1Map_1_1Tool_1_1Tool.html#ab7c181225bba7c1c14aca3669a7b07bd":[7,0,0,9,1,2,4]
 };

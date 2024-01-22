@@ -9,6 +9,7 @@ var classAntares_1_1Data_1_1AreaList =
     [ "~AreaList", "classAntares_1_1Data_1_1AreaList.html#ad1c4a464812ae2f175409270f5b12ccd", null ],
     [ "add", "classAntares_1_1Data_1_1AreaList.html#af5eca7e4e62a281705747d882e6f4834", null ],
     [ "areaLinkCount", "classAntares_1_1Data_1_1AreaList.html#a9bf75cb25f5addebf28679b96fc0e20a", null ],
+    [ "buildScratchMap", "classAntares_1_1Data_1_1AreaList.html#a4f2076d1a54724f1682f85943ca253fb", null ],
     [ "clear", "classAntares_1_1Data_1_1AreaList.html#a3c21f8ea7355df393adb6ccae5333f22", null ],
     [ "each", "classAntares_1_1Data_1_1AreaList.html#af6603405158b284ccb8849ffa1aeb0ba", null ],
     [ "each", "classAntares_1_1Data_1_1AreaList.html#a5a7cd3333567343603c242b6c2ac3760", null ],

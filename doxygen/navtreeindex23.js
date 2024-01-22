@@ -1,5 +1,6 @@
 var NAVTREEINDEX23 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLP_1_1Statistics.html":[7,0,0,12,4,4,19,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoopFlow_1_1Statistics.html":[7,0,0,12,4,4,20,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Marge_1_1Statistics.html":[7,0,0,12,4,4,21,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MarginalCost_1_1Statistics.html":[7,0,0,12,4,4,22,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX23 =
 "structAntares_1_1Solver_1_1Variable_1_1VariableAccessor_3_01ResultsT_00_01Category_1_1singleColumn_01_4.html":[7,0,0,12,4,42],
 "structAntares_1_1TmpDataByArea.html":[7,0,0,45],
 "structAntares_1_1TmpDataByArea.html#a1ada46b994a596098d72bbc3fbdceec1":[7,0,0,45,5],
-"structAntares_1_1TmpDataByArea.html#a1c1b6559b1615beb4803088b24626dc1":[7,0,0,45,7],
-"structAntares_1_1TmpDataByArea.html#a3d3b2308682f7d68d709c23a29fc6a1e":[7,0,0,45,6]
+"structAntares_1_1TmpDataByArea.html#a1c1b6559b1615beb4803088b24626dc1":[7,0,0,45,7]
 };

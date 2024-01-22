@@ -1,5 +1,6 @@
 var NAVTREEINDEX13 =
 {
+"classAntares_1_1Solver_1_1Simulation_1_1Economy.html#ac6ba9f85ff17ff64d8564dc49040b80c":[7,0,0,12,3,10,1],
 "classAntares_1_1Solver_1_1Simulation_1_1Economy.html#ae8579c3987404bac0d3dc19669bd03a0":[7,0,0,12,3,10,5],
 "classAntares_1_1Solver_1_1Simulation_1_1HydroLevelsFinalUpdatePostProcessCmd.html":[7,0,0,12,3,12],
 "classAntares_1_1Solver_1_1Simulation_1_1HydroLevelsUpdatePostProcessCmd.html":[7,0,0,12,3,13],
@@ -248,6 +249,5 @@ var NAVTREEINDEX13 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByRenewablePlant.html#a417e78791cc72664a2750487cf556b9a":[7,0,0,12,4,4,33,3],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByRenewablePlant.html#a9869b6961e7376f6670802fed92104be":[7,0,0,12,4,4,33,4],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByRenewablePlant.html#acaf0eaa27316c104536da2a069879d2d":[7,0,0,12,4,4,33,2],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByRenewablePlant.html#ad76f96fb8e186b8990c2642d99580d2e":[7,0,0,12,4,4,33,1],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProfitByPlant.html":[7,0,0,12,4,4,34]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByRenewablePlant.html#ad76f96fb8e186b8990c2642d99580d2e":[7,0,0,12,4,4,33,1]
 };
