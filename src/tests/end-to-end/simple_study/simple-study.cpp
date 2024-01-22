@@ -247,3 +247,34 @@ BOOST_AUTO_TEST_CASE(error_on_wrong_hydro_data)
     BOOST_CHECK_THROW(simulation->run(), Antares::FatalError);
 }
 BOOST_AUTO_TEST_SUITE_END()
+
+BOOST_FIXTURE_TEST_SUITE(ONE_AREA__ONE_STS_THERMAL_CLUSTER, StudyFixture)
+BOOST_AUTO_TEST_CASE(sts_initial_level)
+{
+    using namespace Antares::Data::ShortTermStorage;
+	setNumberMCyears(1);
+    auto& storages = area->shortTermStorage.storagesByIndex;
+    STStorageCluster sts;
+    auto& props = sts.properties;
+    props.name = "my-sts";
+    props.injectionNominalCapacity = 10;
+    props.withdrawalNominalCapacity = 10;
+    props.reservoirCapacity = 100;
+    props.efficiencyFactor = .9;
+    props.initialLevel = .443;
+    props.group = Group::PSP_open;
+    // Default values for series
+    sts.series->fillDefaultSeriesIfEmpty();
+
+    storages.push_back(sts);
+
+	simulation->create();
+	simulation->run();
+
+	OutputRetriever output(simulation->rawSimu());
+	BOOST_TEST(output.STSLevel_PSP_Open(area).hour(0) == props.initialLevel * props.reservoirCapacity.value(), tt::tolerance(0.001));
+}
+BOOST_AUTO_TEST_SUITE_END()
+
+
+
