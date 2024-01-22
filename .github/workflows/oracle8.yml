@@ -43,6 +43,10 @@ jobs:
            dnf install -y epel-release git cmake wget rpm-build redhat-lsb-core
            dnf install -y unzip libuuid-devel boost-test boost-devel gcc-toolset-10-toolchain zlib-devel
 
+    - name: Checkout
+      run: |
+           git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git -b $GITHUB_REF_NAME .
+
     - name: Config OR-Tools URL
       run: |
           echo "ORTOOLS_URL=https://github.com/rte-france/or-tools/releases/download/$(cat ortools_tag)/ortools_cxx_oraclelinux-8_static_sirius.zip" >> $GITHUB_ENV
@@ -55,10 +59,6 @@ jobs:
         os: ${{env.os}}
         ortools-url: ${{env.ORTOOLS_URL}}
         ortools-dir: ${{env.ORTOOLS_DIR}}
-
-    - name: Checkout
-      run: |
-           git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git -b $GITHUB_REF_NAME .
 
     - name: Init submodule
       run: |
