@@ -27,6 +27,7 @@ jobs:
     name: Build
     env:
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
+      os: oracle8
 
     runs-on: ubuntu-latest
     container: 'oraclelinux:8'
