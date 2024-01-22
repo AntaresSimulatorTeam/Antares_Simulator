@@ -247,3 +247,39 @@ BOOST_AUTO_TEST_CASE(error_on_wrong_hydro_data)
     BOOST_CHECK_THROW(simulation->run(), Antares::FatalError);
 }
 BOOST_AUTO_TEST_SUITE_END()
+
+
+BOOST_AUTO_TEST_SUITE(hydro_hourly_max_power)
+BOOST_AUTO_TEST_CASE(basic)
+{
+    StudyBuilder builder;
+    builder.simulationBetweenDays(0, 7);
+    builder.setNumberMCyears(1);
+    Area& area = *builder.addAreaToStudy("A");
+
+    area.thermal.unsuppliedEnergyCost = 1;
+
+    PartHydro& hydro = area.hydro;
+    TimeSeriesConfigurer genP(hydro.series->maxHourlyGenPower.timeSeries);
+    genP.setColumnCount(1)
+      .fillColumnWith(0, 12);
+
+    // 10000MW hourly load
+    loadInArea = 24000.0;
+	TimeSeriesConfigurer loadTSconfig(area.load.series.timeSeries);
+	loadTSconfig.setColumnCount(1)
+				.fillColumnWith(0, loadInArea);
+
+
+    hydro.reservoirCapacity = 1e6;
+    hydro.reservoirManagement = true; // TODO check
+
+    TimeSeriesConfigurer inflowsTS(hydro.series->storage.timeSeries);
+    inflowsTS.setColumnCount(1)
+      .fillColumnWith(0, 1000);
+
+    auto simulation = builder.simulation;
+    simulation->create();
+    simulation->run();
+}
+BOOST_AUTO_TEST_SUITE_END()
