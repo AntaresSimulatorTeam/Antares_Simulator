@@ -139,6 +139,8 @@ bool runWeeklyOptimization(const OptimizationOptions& options,
 
             lps->_constant = year_ptr;
         }
+
+        if (n == 1) //Export only the first optimisation
         {
             HebdoDataFromAntaresPtr week_ptr(new HebdoDataFromAntares);
 
@@ -148,8 +150,8 @@ bool runWeeklyOptimization(const OptimizationOptions& options,
 
             copy(problemeHebdo->ProblemeAResoudre->SecondMembre, week_ptr->SecondMembre);
             copy(problemeHebdo->ProblemeAResoudre->Sens, week_ptr->Sens);
-            std::string plop;
-            copy(createMPSfilename(*optPeriodStringGenerator, optimizationNumber), week_ptr->name);
+            std::string problemName = createMPSfilename(*optPeriodStringGenerator, optimizationNumber);
+            copy(problemName, week_ptr->name);
 
             lps->_hebdo[{static_cast<unsigned int>(year), static_cast<unsigned int>(week)}] = week_ptr;
         }
