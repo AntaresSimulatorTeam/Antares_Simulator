@@ -105,9 +105,9 @@ public:
         {
             std::ostringstream oss;
             oss << "{\n"
-                << "\"name\": " << data->Name() << ",\n"
+                << "\"name\": \"" << data->Name() << "\",\n"
                 << "\"value\": " << data->Value() << ",\n"
-                << "\"unit\": " << data->Unit() << "\n"
+                << "\"unit\": \"" << data->Unit() << "\"\n"
                 << "}\n";
 
             if (!result.empty())
