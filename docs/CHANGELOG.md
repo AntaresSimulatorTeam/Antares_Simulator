@@ -1,6 +1,19 @@
 Antares Changelog
 =================
 
+8.8.3
+--------------------
+
+## Bugfix
+* For ST storage, set initial level at t=0 instead of t=167 (#1889)
+
+## Improvements
+* Add STS level constraint to suspect list for infeasible problem analysis (#1891)
+* Upload Windows .exe installer in release (#1888)
+
+## Code quality
+* Use `std::shared_ptr` instead of indices for active binding constraints in results (#1887)
+* Remove some uses of numSpace (scratchpad) (#1749)
 
 
 8.8.2
