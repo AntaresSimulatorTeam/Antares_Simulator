@@ -148,18 +148,18 @@ void annualCostsStatistics::writeOptimizationTimeToOutput(
     buffer << "MIN (ms) : " << optimizationTime1.costMin << "\n";
     buffer << "MAX (ms) : " << optimizationTime1.costMax << "\n";
 
-    Benchmarking::CustomBenchmarkData<double> exp_data(
+    Benchmarking::CustomBenchmarkData<double> exp_data2(
       "Second optimization EXP", "ms", optimizationTime2.costAverage);
-    benchs.AddBenchmark(&exp_data);
-    Benchmarking::CustomBenchmarkData<double> std_data(
+    benchs.AddBenchmark(&exp_data2);
+    Benchmarking::CustomBenchmarkData<double> std_data2(
       "Second optimization STD", "ms", optimizationTime2.costStdDeviation);
-    benchs.AddBenchmark(&std_data);
-    Benchmarking::CustomBenchmarkData<double> min_data(
+    benchs.AddBenchmark(&std_data2);
+    Benchmarking::CustomBenchmarkData<double> min_data2(
       "Second optimization MIN", "ms", optimizationTime2.costMin);
-    benchs.AddBenchmark(&min_data);
-    Benchmarking::CustomBenchmarkData<double> max_data(
+    benchs.AddBenchmark(&min_data2);
+    Benchmarking::CustomBenchmarkData<double> max_data2(
       "Second optimization MAX", "ms", optimizationTime2.costMax);
-    benchs.AddBenchmark(&max_data);
+    benchs.AddBenchmark(&max_data2);
     buffer << "Second optimization :\n";
     buffer << "EXP (ms) : " << optimizationTime2.costAverage << "\n";
     buffer << "STD (ms) : " << optimizationTime2.costStdDeviation << "\n";
