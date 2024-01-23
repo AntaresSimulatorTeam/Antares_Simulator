@@ -6,6 +6,8 @@ def pytest_addoption(parser):
     parser.addoption("--solver-path", action="store")
     parser.addoption("--named-mps-problems", action="store_true", default=False)
     parser.addoption("--force-parallel", action="store_true", default=False)
+    parser.addoption("--do-benchmark", action="store_true", default=False)
+    parser.addoption("--custom-benchmark-json", action="store")
 
 @pytest.fixture()
 def ortools_solver(request):
@@ -26,3 +28,11 @@ def named_mps_problems(request):
 @pytest.fixture()
 def parallel(request):
     return request.config.getoption("--force-parallel")
+
+@pytest.fixture()
+def do_benchmark(request):
+    return request.config.getoption("--do-benchmark")
+
+@pytest.fixture()
+def custom_benchmark_json(request):
+    return request.config.getoption("--custom-benchmark-json")
