@@ -49,6 +49,7 @@ jobs:
            sudo apt-get install uuid-dev libwxgtk3.0-gtk3-dev
            sudo apt-get install libboost-test-dev
            sudo apt-get install g++-10 gcc-10
+           sudo apt-get install libbenchmark-dev
 
     - name: Read antares-deps version
       id: antares-deps-version
@@ -84,7 +85,7 @@ jobs:
     - name: Init submodule
       run: |
           git submodule update --init src/antares-deps
-          git submodule update --init --remote --recursive src/tests/resources/Antares_Simulator_Tests
+          # git submodule update --init --remote --recursive src/tests/resources/Antares_Simulator_Tests
 
     - name: Configure
       run: |
@@ -99,7 +100,8 @@ jobs:
            -DBUILD_not_system=OFF \
            -DBUILD_TOOLS=ON \
            -DCMAKE_PREFIX_PATH=${{ env.ORTOOLS_DIR }}/install \
-           -DPython3_EXECUTABLE="${{ env.Python3_ROOT_DIR }}/bin/python"
+           -DPython3_EXECUTABLE="${{ env.Python3_ROOT_DIR }}/bin/python" \
+           -DBENCHMARK=ON
 
     - name: Build
       run: |
@@ -123,6 +125,39 @@ jobs:
         batch-name: valid-named-mps
         os: ${{ env.OS }}
         variant: "named-mps"
+      # Download previous benchmark result from cache (if exists)
+    # - name: Download previous benchmark data
+    #   uses: actions/cache@v1
+    #   with:
+    #     path: ./cache
+    #     key: ${{ runner.os }}-benchmark
+    
+    # Run `github-action-benchmark` action
+    - name: Store benchmark result
+      uses: benchmark-action/github-action-benchmark@v1
+      with:
+        name: Python Benchmark with customSmallerIsBetter-benchmark
+        tool: 'customSmallerIsBetter'
+        output-file-path: _build/output.json
+        # Use personal access token instead of GITHUB_TOKEN due to https://github.community/t/github-action-not-triggering-gh-pages-upon-push/16096
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        auto-push: true
+        # Show alert with commit comment on detecting possible performance regression
+        alert-threshold: '2%'
+        # Enable Job Summary for PRs
+        #summary-always: true
+        comment-on-alert: true
+        # fail-on-alert: true
+        #tmp remove below line
+        fail-on-alert: false
+        # alert-comment-cc-users: '@flomnes,@payetvin,@a-zakir'
+        # skip-fetch-gh-pages: true
+    
+    - name: cat output.json
+      run: cat _build/output.json 
+    - name: delete benchmark file
+      run: rm -f _build/output.json 
+
 
     - name: Run unfeasibility-related tests
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
