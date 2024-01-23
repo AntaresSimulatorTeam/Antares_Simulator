@@ -138,7 +138,11 @@ public:
     {}
     ~SimulationHandler() = default;
     void create();
-    void run() { simulation_->run(); }
+    void run()
+    {
+        Benchmarking::CustomBenchmarkAgregator benchs;
+        simulation_->run(benchs);
+    }
     ISimulation<Economy>& rawSimu() { return *simulation_; }
 
 private:

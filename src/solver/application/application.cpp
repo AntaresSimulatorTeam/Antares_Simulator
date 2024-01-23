@@ -39,7 +39,7 @@ void printSolvers()
 
 namespace Antares::Solver
 {
-Application::Application()
+Application::Application(Benchmarking::CustomBenchmarkAgregator& benchs) : benchs(benchs)
 {
     resetProcessPriority();
 }
@@ -460,7 +460,6 @@ void Application::writeExectutionInfo()
 
     std::string content = file_content.saveToBufferAsIni();
     resultWriter->addEntryFromBuffer(exec_info_path, content);
-    Benchmarking::CustomBenchmarkAgregator benchs;
     benchs.AddBenchmark(&time_data);
     auto custom_str = benchs.Result();
     resultWriter->addEntryFromBuffer(custom_benchmark_file, custom_str);

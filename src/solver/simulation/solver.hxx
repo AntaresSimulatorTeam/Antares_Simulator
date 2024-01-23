@@ -284,7 +284,8 @@ inline ISimulation<Impl>::~ISimulation()
 }
 
 template<class Impl>
-void ISimulation<Impl>::run()
+
+void ISimulation<Impl>::run(Benchmarking::CustomBenchmarkAgregator& benchs)
 {
     pNbMaxPerformedYearsInParallel = study.maxNbYearsInParallel;
 
@@ -366,7 +367,7 @@ void ISimulation<Impl>::run()
         uint finalYear = 1 + study.runtime->rangeLimits.year[Data::rangeEnd];
         {
             Benchmarking::Timer timer;
-            loopThroughYears(0, finalYear, state);
+            loopThroughYears(0, finalYear, state, benchs);
             timer.stop();
             pDurationCollector.addDuration("mc_years", timer.get_duration());
         }
@@ -924,7 +925,8 @@ static inline void logPerformedYearsInAset(setOfParallelYears& set)
 template<class Impl>
 void ISimulation<Impl>::loopThroughYears(uint firstYear,
                                          uint endYear,
-                                         std::vector<Variable::State>& state)
+                                         std::vector<Variable::State>& state,
+                                         Benchmarking::CustomBenchmarkAgregator& benchs)
 {
     assert(endYear <= study.parameters.nbYears);
 
@@ -1050,7 +1052,7 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
 
     // Writing annual costs statistics
     pAnnualStatistics.endStandardDeviations();
-    pAnnualStatistics.writeToOutput(pResultWriter);
+    pAnnualStatistics.writeToOutput(pResultWriter, benchs);
 }
 
 } // namespace Antares::Solver::Simulation

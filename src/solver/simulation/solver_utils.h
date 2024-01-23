@@ -35,7 +35,7 @@
 #include <sstream>  // For ostringstream
 #include <iomanip>  // For setprecision
 #include <yuni/yuni.h>
-
+#include <antares/InfoCollection/StudyInfoCollector.h>
 
 namespace Antares::Solver::Simulation
 {
@@ -109,13 +109,14 @@ public:
     annualCostsStatistics();
     void setNbPerformedYears(uint n);
     void endStandardDeviations();
-    void writeToOutput(IResultWriter& writer);
+    void writeToOutput(IResultWriter& writer, Benchmarking::CustomBenchmarkAgregator& benchs);
 
 private:
     void writeSystemCostToOutput(IResultWriter& writer);
     void writeCriterionCostsToOutput(IResultWriter& writer) const;
     void writeUpdateTimes(IResultWriter& writer) const;
-    void writeOptimizationTimeToOutput(IResultWriter& writer) const;
+    void writeOptimizationTimeToOutput(IResultWriter& writer,
+                                       Benchmarking::CustomBenchmarkAgregator& benchs) const;
 };
 
 class yearRandomNumbers

@@ -73,11 +73,12 @@ void annualCostsStatistics::endStandardDeviations()
     updateTime.endStandardDeviation();
 };
 
-void annualCostsStatistics::writeToOutput(IResultWriter& writer)
+void annualCostsStatistics::writeToOutput(IResultWriter& writer,
+                                          Benchmarking::CustomBenchmarkAgregator& benchs)
 {
     writeSystemCostToOutput(writer);
     writeCriterionCostsToOutput(writer);
-    writeOptimizationTimeToOutput(writer);
+    writeOptimizationTimeToOutput(writer, benchs);
     writeUpdateTimes(writer);
 }
 
@@ -123,9 +124,15 @@ void annualCostsStatistics::writeUpdateTimes(IResultWriter& writer) const
     writer.addEntryFromBuffer(updateTimeFilename, s);
 }
 
-void annualCostsStatistics::writeOptimizationTimeToOutput(IResultWriter& writer) const
+void annualCostsStatistics::writeOptimizationTimeToOutput(
+  IResultWriter& writer,
+  Benchmarking::CustomBenchmarkAgregator& benchs) const
 {
     std::ostringstream buffer;
+    Benchmarking::CustomBenchmarkData<double> exp_data(
+      "First optimization EXP", "ms", optimizationTime1.costAverage);
+    benchs.AddBenchmark(&exp_data);
+
     buffer << "First optimization :\n";
     buffer << "EXP (ms) : " << optimizationTime1.costAverage << "\n";
     buffer << "STD (ms) : " << optimizationTime1.costStdDeviation << "\n";

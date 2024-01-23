@@ -40,6 +40,7 @@
 #include "../hydro/management/management.h"
 
 #include <antares/writer/writer_factory.h>
+#include <antares/infoCollection/StudyInfoCollector.h>
 
 namespace Antares::Solver::Simulation
 {
@@ -76,7 +77,7 @@ public:
     /*!
     ** \brief Run the simulation
     */
-    void run();
+    void run(Benchmarking::CustomBenchmarkAgregator& benchs);
 
     /*!
     ** \brief Export the results to disk
@@ -145,8 +146,10 @@ private:
     ** \param firstYear The first real MC year
     ** \param endYear   The last MC year
     */
-    void loopThroughYears(uint firstYear, uint endYear, std::vector<Variable::State>& state);
-
+    void loopThroughYears(uint firstYear,
+                          uint endYear,
+                          std::vector<Variable::State>& state,
+                          Benchmarking::CustomBenchmarkAgregator& benchs);
 
 private:
     //! Some temporary to avoid performing useless complex checks

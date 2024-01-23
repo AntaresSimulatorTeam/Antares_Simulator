@@ -33,6 +33,7 @@
 #include <antares/fatal-error.h>
 #include <antares/memory/memory.h>
 #include <antares/locale.h>
+#include <antares/infoCollection/StudyInfoCollector.h>
 
 using namespace Antares;
 using namespace Yuni;
@@ -129,7 +130,8 @@ int main(int argc, char** argv)
         // Getting real UTF8 arguments
         IntoUTF8ArgsTranslator toUTF8ArgsTranslator(argc, argv);
         std::tie(argc, argv) = toUTF8ArgsTranslator.convert();
-        Antares::Solver::Application application;
+        Benchmarking::CustomBenchmarkAgregator benchs;
+        Antares::Solver::Application application(benchs);
         application.prepare(argc, argv);
         application.execute();
         application.writeExectutionInfo();
