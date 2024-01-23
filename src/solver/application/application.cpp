@@ -453,6 +453,9 @@ void Application::writeExectutionInfo()
 
     Benchmarking::CustomBenchmarkData<int64_t> time_data(
       "execution_time", "ms", pTotalTimer.get_duration());
+    benchs.AddBenchmark(&time_data);
+    Benchmarking::CustomBenchmarkData<int64_t> memory_data("Memory", "b", pStudy->memoryUsage());
+    benchs.AddBenchmark(&memory_data);
 
     // Flush previous info into a record file
     const std::string exec_info_path = "execution_info.ini";
@@ -460,7 +463,6 @@ void Application::writeExectutionInfo()
 
     std::string content = file_content.saveToBufferAsIni();
     resultWriter->addEntryFromBuffer(exec_info_path, content);
-    benchs.AddBenchmark(&time_data);
     auto custom_str = benchs.Result();
     resultWriter->addEntryFromBuffer(custom_benchmark_file, custom_str);
 }
