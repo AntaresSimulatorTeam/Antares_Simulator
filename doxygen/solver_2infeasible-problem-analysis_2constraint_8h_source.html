@@ -150,37 +150,39 @@ $(document).ready(function(){initNavTree('solver_2infeasible-problem-analysis_2c
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>    binding_constraint_weekly,</div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>    fictitious_load,</div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>    hydro_reservoir_level,</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>    none</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>};</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="classAntares_1_1Optimization_1_1Constraint.html">   20</a></span><span class="keyword">class </span><a class="code hl_class" href="classAntares_1_1Optimization_1_1Constraint.html">Constraint</a></div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>{</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    <span class="comment">// Construct object</span></div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    <a class="code hl_class" href="classAntares_1_1Optimization_1_1Constraint.html">Constraint</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    <a class="code hl_class" href="classAntares_1_1Optimization_1_1Constraint.html">Constraint</a>(<span class="keyword">const</span> std::string&amp; input, <span class="keyword">const</span> <span class="keywordtype">double</span> slackValue);</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    <span class="comment">// Raw members</span></div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    <span class="keywordtype">double</span> getSlackValue() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    <span class="comment">// Extract items, check consistency</span></div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    std::size_t extractItems();</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    std::string prettyPrint() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    ConstraintType getType() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    std::string mInput;</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    std::vector&lt;std::string&gt; mItems;</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    <span class="keywordtype">double</span> mSlackValue;</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="comment">// Get specific items</span></div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    std::string getAreaName() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    std::string getTimeStepInYear() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    std::string getBindingConstraintName() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>};</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>} <span class="comment">// namespace Optimization</span></div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>} <span class="comment">// namespace Antares</span></div>
-<div class="ttc" id="aclassAntares_1_1Optimization_1_1Constraint_html"><div class="ttname"><a href="classAntares_1_1Optimization_1_1Constraint.html">Antares::Optimization::Constraint</a></div><div class="ttdef"><b>Definition:</b> constraint.h:21</div></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>    short_term_storage_level,</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>    none</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>};</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="classAntares_1_1Optimization_1_1Constraint.html">   21</a></span><span class="keyword">class </span><a class="code hl_class" href="classAntares_1_1Optimization_1_1Constraint.html">Constraint</a></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>{</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    <span class="comment">// Construct object</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    <a class="code hl_class" href="classAntares_1_1Optimization_1_1Constraint.html">Constraint</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    <a class="code hl_class" href="classAntares_1_1Optimization_1_1Constraint.html">Constraint</a>(<span class="keyword">const</span> std::string&amp; input, <span class="keyword">const</span> <span class="keywordtype">double</span> slackValue);</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    <span class="comment">// Raw members</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    <span class="keywordtype">double</span> getSlackValue() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    <span class="comment">// Extract items, check consistency</span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    std::size_t extractItems();</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    std::string prettyPrint() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    ConstraintType getType() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    std::string mInput;</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    std::vector&lt;std::string&gt; mItems;</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    <span class="keywordtype">double</span> mSlackValue;</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="comment">// Get specific items</span></div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    std::string getAreaName() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    std::string getSTSName() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    std::string getTimeStepInYear() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    std::string getBindingConstraintName() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>};</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>} <span class="comment">// namespace Optimization</span></div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>} <span class="comment">// namespace Antares</span></div>
+<div class="ttc" id="aclassAntares_1_1Optimization_1_1Constraint_html"><div class="ttname"><a href="classAntares_1_1Optimization_1_1Constraint.html">Antares::Optimization::Constraint</a></div><div class="ttdef"><b>Definition:</b> constraint.h:22</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
