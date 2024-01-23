@@ -6,12 +6,10 @@
 #include <algorithm>
 
 namespace {
-    const std::string kUnknown;
+const std::string kUnknown = "<unknown>";
 }
 
-namespace Antares
-{
-namespace Optimization
+namespace Antares::Optimization
 {
 Constraint::Constraint(const std::string& input, const double slackValue) :
  mInput(input), mSlackValue(slackValue)
@@ -107,11 +105,10 @@ std::string Constraint::getTimeStepInYear() const
     case ConstraintType::binding_constraint_daily:
     case ConstraintType::fictitious_load:
     case ConstraintType::hydro_reservoir_level:
-        return StringBetweenAngleBrackets (mItems.at(mItems.size()-2));
     case ConstraintType::short_term_storage_level:
         return StringBetweenAngleBrackets (mItems.at(mItems.size()-2));
     default:
-        return "-1";
+        return kUnknown;
     }
 }
 
@@ -192,5 +189,4 @@ std::string Constraint::prettyPrint() const
         return kUnknown;
     }
 }
-} // namespace Optimization
-} // namespace Antares
+} // namespace Antares::Optimization
