@@ -1,8 +1,6 @@
 Antares Changelog
 =================
 
-8.9.0 (Unreleased yet)
---------------------
 
 
 8.8.2
