@@ -35,7 +35,7 @@
 #include <sstream>  // For ostringstream
 #include <iomanip>  // For setprecision
 #include <yuni/yuni.h>
-#include <antares/InfoCollection/StudyInfoCollector.h>
+#include <antares/infoCollection/StudyInfoCollector.h>
 
 namespace Antares::Solver::Simulation
 {
