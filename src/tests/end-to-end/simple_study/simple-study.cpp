@@ -268,6 +268,7 @@ BOOST_AUTO_TEST_CASE(sts_initial_level)
 
     storages.push_back(sts);
 
+    // Fatal gen at h=1
     {
       auto& windTS = area->wind.series.timeSeries;
       TimeSeriesConfigurer(windTS)
@@ -276,6 +277,7 @@ BOOST_AUTO_TEST_CASE(sts_initial_level)
       windTS[0][1] = 100;
     }
 
+    // Fatal load at h=2
     {
       auto& loadTS = area->load.series.timeSeries;
       TimeSeriesConfigurer(loadTS)
@@ -283,6 +285,10 @@ BOOST_AUTO_TEST_CASE(sts_initial_level)
         .fillColumnWith(0, 0.);
       loadTS[0][2] = 100;
     }
+
+    // Usual values, avoid spillage & unsupplied energy
+    area->thermal.unsuppliedEnergyCost = 1.e3;
+    area->thermal.spilledEnergyCost = 1.;
 
 	simulation->create();
 	simulation->run();
