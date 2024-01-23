@@ -49,10 +49,6 @@ jobs:
       run: |
            git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git -b $GITHUB_REF_NAME .
 
-    - name: Config OR-Tools URL
-      run: |
-          echo "ORTOOLS_URL=https://github.com/rte-france/or-tools/releases/download/$(cat ortools_tag)/ortools_cxx_oraclelinux-8_static_sirius.zip" >> $GITHUB_ENV
-
     - name: Read antares-deps version
       id: antares-deps-version
       uses: notiz-dev/github-action-json-property@release
@@ -60,13 +56,18 @@ jobs:
         path: 'antares-deps-version.json'
         prop_path: 'antares_deps_version'
 
-    - name: Download pre-compiled librairies
-      uses: ./.github/workflows/download-extract-precompiled-libraries-tgz
-      with:
-        antares-deps-version: ${{steps.antares-deps-version.outputs.prop}}
-        os: ${{env.os}}
-        ortools-url: ${{env.ORTOOLS_URL}}
-        ortools-dir: ${{env.ORTOOLS_DIR}}
+    - name: Config OR-Tools URL
+      run: |
+          echo "ORTOOLS_URL=https://github.com/rte-france/or-tools/releases/download/$(cat ortools_tag)/ortools_cxx_oraclelinux-8_static_sirius.zip" >> $GITHUB_ENV
+
+    - name: Download & extract OR-Tools
+        shell: bash
+        run: |
+           mkdir -p  ${{env.ORTOOLS_DIR}}
+           cd ${{env.ORTOOLS_DIR}}
+           wget ${{env.ORTOOLS_URL}} -O ortools.zip
+           unzip ortools.zip
+           rm ortools.zip
 
     - name: Init submodule
       run: |
