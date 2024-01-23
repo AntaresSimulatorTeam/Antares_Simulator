@@ -7,6 +7,8 @@ on:
     branches:
       - develop
       - feature/ol8-ortools
+      - feature/*
+      - fix/*
 
   schedule:
     - cron: '21 2 * * *'
