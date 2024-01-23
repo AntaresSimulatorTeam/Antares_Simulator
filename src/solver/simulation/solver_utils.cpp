@@ -132,6 +132,15 @@ void annualCostsStatistics::writeOptimizationTimeToOutput(
     Benchmarking::CustomBenchmarkData<double> exp_data(
       "First optimization EXP", "ms", optimizationTime1.costAverage);
     benchs.AddBenchmark(&exp_data);
+    Benchmarking::CustomBenchmarkData<double> std_data(
+      "First optimization STD", "ms", optimizationTime1.costStdDeviation);
+    benchs.AddBenchmark(&std_data);
+    Benchmarking::CustomBenchmarkData<double> min_data(
+      "First optimization MIN", "ms", optimizationTime1.costMin);
+    benchs.AddBenchmark(&min_data);
+    Benchmarking::CustomBenchmarkData<double> max_data(
+      "First optimization MAX", "ms", optimizationTime1.costMax);
+    benchs.AddBenchmark(&max_data);
 
     buffer << "First optimization :\n";
     buffer << "EXP (ms) : " << optimizationTime1.costAverage << "\n";
@@ -139,6 +148,18 @@ void annualCostsStatistics::writeOptimizationTimeToOutput(
     buffer << "MIN (ms) : " << optimizationTime1.costMin << "\n";
     buffer << "MAX (ms) : " << optimizationTime1.costMax << "\n";
 
+    Benchmarking::CustomBenchmarkData<double> exp_data(
+      "Second optimization EXP", "ms", optimizationTime2.costAverage);
+    benchs.AddBenchmark(&exp_data);
+    Benchmarking::CustomBenchmarkData<double> std_data(
+      "Second optimization STD", "ms", optimizationTime2.costStdDeviation);
+    benchs.AddBenchmark(&std_data);
+    Benchmarking::CustomBenchmarkData<double> min_data(
+      "Second optimization MIN", "ms", optimizationTime2.costMin);
+    benchs.AddBenchmark(&min_data);
+    Benchmarking::CustomBenchmarkData<double> max_data(
+      "Second optimization MAX", "ms", optimizationTime2.costMax);
+    benchs.AddBenchmark(&max_data);
     buffer << "Second optimization :\n";
     buffer << "EXP (ms) : " << optimizationTime2.costAverage << "\n";
     buffer << "STD (ms) : " << optimizationTime2.costStdDeviation << "\n";
