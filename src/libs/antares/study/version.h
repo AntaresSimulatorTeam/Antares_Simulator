@@ -31,6 +31,16 @@
 
 namespace Antares::Data
 {
+
+struct VersionClass
+{
+public:
+    unsigned major = 0;
+    unsigned minor = 0;
+
+    auto operator<=>(const VersionClass&) const = default;
+};
+
 /*!
 ** \brief Version of a study
 **
