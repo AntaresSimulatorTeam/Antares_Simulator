@@ -60,8 +60,7 @@ jobs:
           echo "ORTOOLS_URL=https://github.com/rte-france/or-tools/releases/download/$(cat ortools_tag)/ortools_cxx_oraclelinux-8_static_sirius.zip" >> $GITHUB_ENV
 
     - name: Download & extract OR-Tools
-        shell: bash
-        run: |
+      run: |
            mkdir -p  ${{env.ORTOOLS_DIR}}
            cd ${{env.ORTOOLS_DIR}}
            wget ${{env.ORTOOLS_URL}} -O ortools.zip
