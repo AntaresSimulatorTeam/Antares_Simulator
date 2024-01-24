@@ -55,7 +55,6 @@ struct HydroMaxPowerStudy : public StudyBuilder
 	Area* area = nullptr;
 	PartHydro* hydro = nullptr;
 	double loadInArea = 24000.;
-	TimeSeriesConfigurer loadTSconfig;
 };
 
 HydroMaxPowerStudy::HydroMaxPowerStudy()
