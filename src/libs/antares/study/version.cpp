@@ -27,6 +27,7 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
+#include <string>
 #include "study.h"
 #include "version.h"
 #include "../../../config.h"
@@ -65,6 +66,32 @@ static inline Version StudyFormatCheck(const String& headerFile)
         return venum;
     }
 }
+
+std::string VersionStruct::toString() const
+{
+    return major + "." + minor;
+}
+
+VersionStruct::VersionStruct(std::string s)
+{
+    int separator = s.find('.');
+    if (separator == std::string::npos)
+        logs.error() << "Invalid version format, exiting";
+
+    try
+    {
+        major = std::stoul(s.substr(0, separator));
+        minor = std::stoul(s.substr(separator));
+    }
+    catch (std::invalid_argument)
+    {
+        logs.error() << "Invalid version format, exiting";
+    }
+}
+
+VersionStruct::VersionStruct(unsigned major_, unsigned minor_) : major(major_), minor(minor_)
+{}
+
 
 const char* VersionToCStr(const Version v)
 {

@@ -32,13 +32,19 @@
 namespace Antares::Data
 {
 
-struct VersionClass
+class VersionStruct
 {
 public:
     unsigned major = 0;
     unsigned minor = 0;
 
-    auto operator<=>(const VersionClass&) const = default;
+    auto operator<=>(const VersionStruct&) const = default;
+
+    VersionStruct(std::string);
+    VersionStruct(unsigned, unsigned);
+    ~VersionStruct() = default;
+
+    std::string toString() const;
 };
 
 /*!
