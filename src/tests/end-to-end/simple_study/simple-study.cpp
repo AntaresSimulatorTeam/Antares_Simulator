@@ -46,6 +46,43 @@ StudyFixture::StudyFixture()
 				 .setUnitCount(1);
 };
 
+struct HydroMaxPowerStudy : public StudyBuilder
+{
+	using StudyBuilder::StudyBuilder;
+	HydroMaxPowerStudy();
+
+	// Data members
+	Area* area = nullptr;
+	PartHydro* hydro = nullptr;
+	double loadInArea = 24000.;
+	TimeSeriesConfigurer loadTSconfig;
+};
+
+HydroMaxPowerStudy::HydroMaxPowerStudy()
+{
+    simulationBetweenDays(0, 14);
+    setNumberMCyears(1);
+
+    area = addAreaToStudy("Area");
+    area->thermal.unsuppliedEnergyCost = 1;
+
+    TimeSeriesConfigurer loadTSconfig(area->load.series.timeSeries);
+    loadTSconfig.setColumnCount(1).fillColumnWith(0, loadInArea);
+
+    hydro = &area->hydro;
+
+    TimeSeriesConfigurer genP(hydro->series->maxHourlyGenPower.timeSeries);
+    genP.setColumnCount(1).fillColumnWith(0, 100.);
+
+    TimeSeriesConfigurer hydroStorage(hydro->series->storage.timeSeries);
+    hydroStorage.setColumnCount(1, DAYS_PER_YEAR).fillColumnWith(0, 2400.);
+
+    TimeSeriesConfigurer genE(hydro->dailyNbHoursAtGenPmax);
+    genE.setColumnCount(1, DAYS_PER_YEAR).fillColumnWith(0, 24);
+
+    hydro->reservoirCapacity = 1e6;
+    hydro->reservoirManagement = true;
+};
 
 BOOST_FIXTURE_TEST_SUITE(ONE_AREA__ONE_THERMAL_CLUSTER, StudyFixture)
 
@@ -248,38 +285,17 @@ BOOST_AUTO_TEST_CASE(error_on_wrong_hydro_data)
 }
 BOOST_AUTO_TEST_SUITE_END()
 
+BOOST_FIXTURE_TEST_SUITE(HYDRO_MAX_POWER, HydroMaxPowerStudy)
 
-BOOST_AUTO_TEST_SUITE(hydro_hourly_max_power)
 BOOST_AUTO_TEST_CASE(basic)
 {
-    StudyBuilder builder;
-    builder.simulationBetweenDays(0, 7);
-    builder.setNumberMCyears(1);
-    Area& area = *builder.addAreaToStudy("A");
-
-    area.thermal.unsuppliedEnergyCost = 1;
-
-    PartHydro& hydro = area.hydro;
-    TimeSeriesConfigurer genP(hydro.series->maxHourlyGenPower.timeSeries);
-    genP.setColumnCount(1)
-      .fillColumnWith(0, 12);
-
-    // 10000MW hourly load
-    loadInArea = 24000.0;
-	TimeSeriesConfigurer loadTSconfig(area.load.series.timeSeries);
-	loadTSconfig.setColumnCount(1)
-				.fillColumnWith(0, loadInArea);
-
-
-    hydro.reservoirCapacity = 1e6;
-    hydro.reservoirManagement = true; // TODO check
-
-    TimeSeriesConfigurer inflowsTS(hydro.series->storage.timeSeries);
-    inflowsTS.setColumnCount(1)
-      .fillColumnWith(0, 1000);
-
-    auto simulation = builder.simulation;
     simulation->create();
     simulation->run();
+
+	OutputRetriever output(simulation->rawSimu());
+
+	BOOST_TEST(output.hydroStorage(area).hour(0) == hydro->series->maxHourlyGenPower.timeSeries[0][0], tt::tolerance(0.001));
+	BOOST_TEST(output.overallCost(area).hour(0) == (loadInArea - output.hydroStorage(area).hour(0)) * area->thermal.unsuppliedEnergyCost, tt::tolerance(0.001));
 }
+
 BOOST_AUTO_TEST_SUITE_END()

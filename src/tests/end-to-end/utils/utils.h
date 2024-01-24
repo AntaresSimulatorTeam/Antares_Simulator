@@ -20,7 +20,7 @@ class TimeSeriesConfigurer
 public:
     TimeSeriesConfigurer() = default;
     TimeSeriesConfigurer(Matrix<>& matrix) : ts_(&matrix) {}
-    TimeSeriesConfigurer& setColumnCount(unsigned int columnCount);
+    TimeSeriesConfigurer& setColumnCount(unsigned int columnCount, unsigned rowCount = HOURS_PER_YEAR);
     TimeSeriesConfigurer& fillColumnWith(unsigned int column, double value);
 private:
     Matrix<>* ts_ = nullptr;
@@ -70,6 +70,7 @@ public:
     OutputRetriever(ISimulation<Economy>& simulation) : simulation_(simulation) {}
     averageResults overallCost(Area* area);
     averageResults load(Area* area);
+    averageResults hydroStorage(Area* area);
     averageResults flow(AreaLink* link);
     averageResults thermalGeneration(ThermalCluster* cluster);
     averageResults thermalNbUnitsON(ThermalCluster* cluster);
