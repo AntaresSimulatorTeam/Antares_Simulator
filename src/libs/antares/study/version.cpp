@@ -1,5 +1,4 @@
-/*
-** Copyright 2007-2023 RTE
+/*** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -46,6 +45,22 @@ static_assert((uint)versionFromCMake == (uint)Antares::Data::versionLatest);
 
 namespace Antares::Data
 {
+const std::map<enum Version, const std::string> VersionStruct::mapEnum =
+{
+    {versionUnknown, "0.0"},
+    {version700, "7.0"},
+    {version710, "7.1"},
+    {version720, "7.2"},
+    {version800, "8.0"},
+    {version810, "8.1"},
+    {version820, "8.2"},
+    {version830, "8.3"},
+    {version840, "8.4"},
+    {version850, "8.5"},
+    {version860, "8.6"},
+    {version870, "8.7"},
+    {version880, "8.8"}
+};
 
 static inline Version StudyFormatCheck(const String& headerFile)
 {

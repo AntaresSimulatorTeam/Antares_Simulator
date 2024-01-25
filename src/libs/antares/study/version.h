@@ -28,24 +28,10 @@
 #define __ANTARES_LIBS_STUDY_VERSION_H__
 
 #include <yuni/yuni.h>
+#include <map>
 
 namespace Antares::Data
 {
-
-class VersionStruct
-{
-public:
-    unsigned major = 0;
-    unsigned minor = 0;
-
-    auto operator<=>(const VersionStruct&) const = default;
-
-    VersionStruct(std::string);
-    VersionStruct(unsigned, unsigned);
-    ~VersionStruct() = default;
-
-    std::string toString() const;
-};
 
 /*!
 ** \brief Version of a study
@@ -87,6 +73,23 @@ enum Version
     versionFutur = 99999,
 
 };
+
+class VersionStruct
+{
+public:
+    unsigned major = 0;
+    unsigned minor = 0;
+
+    auto operator<=>(const VersionStruct&) const = default;
+
+    VersionStruct(std::string);
+    VersionStruct(unsigned, unsigned);
+    ~VersionStruct() = default;
+
+    std::string toString() const;
+    static const std::map<enum Version, const std::string> mapEnum;
+};
+
 
 constexpr Version versionLatest = version880;
 
