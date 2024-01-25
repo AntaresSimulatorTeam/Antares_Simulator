@@ -121,6 +121,7 @@ class ScenarioBuilderRule
 public:
     ScenarioBuilderRule(Study& study);
     loadTSNumberData& load() { return rules_->load; }
+    hydroMaxPowerTSNumberData& hydroMaxPower() { return rules_->hydroMaxPower; }
     BindingConstraintsTSNumberData& bcGroup() { return rules_->binding_constraints; }
 
 private:

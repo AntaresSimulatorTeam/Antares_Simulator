@@ -347,6 +347,38 @@ BOOST_AUTO_TEST_CASE(basic)
 	BOOST_TEST(output.overallCost(area).hour(0) == (loadInArea - output.hydroStorage(area).hour(0)) * area->thermal.unsuppliedEnergyCost, tt::tolerance(0.001));
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+BOOST_AUTO_TEST_CASE(scenario_builder)
+{
+    hydro->series->setMaxPowerTScount(3U);
+    setNumberMCyears(3);
 
+	giveWeightToYear(4.f, 0);
+	giveWeightToYear(3.f, 1);
+	giveWeightToYear(2.f, 2);
+	float weightSum = study->parameters.getYearsWeightSum();
+
+    TimeSeriesConfigurer genP(hydro->series->maxHourlyGenPower.timeSeries);
+    TimeSeriesConfigurer genE(hydro->series->maxHourlyPumpPower.timeSeries);
+    genP.setColumnCount(3).fillColumnWith(0, 100.).fillColumnWith(1, 200.).fillColumnWith(2, 300.);
+    genE.setColumnCount(3).fillColumnWith(0, 0.).fillColumnWith(1, 0.).fillColumnWith(2, 0.);
+
+    ScenarioBuilderRule scenarioBuilderRule(*study);
+    scenarioBuilderRule.hydroMaxPower().setTSnumber(area->index, 0, 3);
+    scenarioBuilderRule.hydroMaxPower().setTSnumber(area->index, 1, 2);
+    scenarioBuilderRule.hydroMaxPower().setTSnumber(area->index, 2, 1);
+
+    simulation->create();
+    simulation->run();
+
+	OutputRetriever output(simulation->rawSimu());
+
+	double averageLoad = (4 * 300. + 3. * 200. + 2. * 100.) / weightSum;
+
+    BOOST_TEST(hydro->series->maxHourlyGenPower.timeseriesNumbers[0][0] == 2U);
+    BOOST_TEST(hydro->series->maxHourlyGenPower.timeseriesNumbers[0][1] == 1U);
+    BOOST_TEST(hydro->series->maxHourlyGenPower.timeseriesNumbers[0][2] == 0);
+	BOOST_TEST(output.overallCost(area).hour(0) == loadInArea - averageLoad * area->thermal.unsuppliedEnergyCost, tt::tolerance(0.1));
+}
+
+BOOST_AUTO_TEST_SUITE_END()
 

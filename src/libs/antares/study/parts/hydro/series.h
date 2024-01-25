@@ -163,6 +163,7 @@ public:
     // max power (generation and pumping) number of TS
     uint TScount() const;
     uint maxPowerTScount() const;
+    void setMaxPowerTScount(uint count) { maxPowerTScount_ = count;}
 
     // Setting TS's when derated mode is on
     void resizeTSinDeratedMode(bool derated, unsigned int studyVersion, bool useBySolver);
