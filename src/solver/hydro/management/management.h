@@ -116,7 +116,7 @@ public:
     void makeVentilation(double* randomReservoirLevel,
                          Solver::Variable::State& state,
                          uint y,
-                         uint numSpace);
+                         Antares::Data::Area::ScratchMap& scratchmap);
 
     const HYDRO_VENTILATION_RESULTS& ventilationResults() { return ventilationResults_; }
 
@@ -138,7 +138,8 @@ private:
     //! check minimum generation is lower than available inflows
     bool checkMinGeneration(uint year) const;
     //! Prepare the net demand for each area
-    void prepareNetDemand(uint numSpace, uint year, Data::SimulationMode mode);
+    void prepareNetDemand(uint year, Data::SimulationMode mode,
+                          const Antares::Data::Area::ScratchMap& scratchmap);
     //! Prepare the effective demand for each area
     void prepareEffectiveDemand();
     //! Monthly Optimal generations
@@ -151,12 +152,12 @@ private:
 
     void prepareDailyOptimalGenerations(Solver::Variable::State& state,
                                         uint y,
-                                        uint numSpace);
+                                        Antares::Data::Area::ScratchMap& scratchmap);
 
     void prepareDailyOptimalGenerations(Solver::Variable::State& state,
                                         Data::Area& area,
                                         uint y,
-                                        uint numSpace);
+                                        Antares::Data::Area::ScratchMap& scratchmap);
 
 
 private:

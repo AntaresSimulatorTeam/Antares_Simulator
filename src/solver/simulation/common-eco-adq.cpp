@@ -28,7 +28,6 @@
 #include <yuni/yuni.h>
 #include <yuni/core/math.h>
 #include <antares/study/study.h>
-#include <antares/study/area/scratchpad.h>
 #include <antares/exception/UnfeasibleProblemError.hpp>
 
 #include "common-eco-adq.h"
@@ -115,14 +114,14 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
     }
 }
 
-void PrepareDataFromClustersInMustrunMode(Data::Study& study, uint numSpace, uint year)
+void PrepareDataFromClustersInMustrunMode(Data::Study& study, Data::Area::ScratchMap& scratchmap, uint year)
 {
     bool inAdequacy = (study.parameters.mode == Data::SimulationMode::Adequacy);
 
     for (uint i = 0; i < study.areas.size(); ++i)
     {
         auto& area = *study.areas[i];
-        auto& scratchpad = area.scratchpad[numSpace];
+        auto& scratchpad = scratchmap.at(&area);
 
         memset(scratchpad.mustrunSum, 0, sizeof(double) * HOURS_PER_YEAR);
         if (inAdequacy)

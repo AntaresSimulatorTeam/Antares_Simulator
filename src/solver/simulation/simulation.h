@@ -49,16 +49,16 @@ void SIM_AllocationProblemeHebdo(const Antares::Data::Study& study,
 void SIM_InitialisationProblemeHebdo(Antares::Data::Study& study,
                                      PROBLEME_HEBDO& problem,
                                      int NombreDePasDeTemps,
-                                     uint numSpace);
+                                     uint numspace);
 
 void SIM_PreallocationTableaux(void);
 
 void SIM_RenseignementProblemeHebdo(const Antares::Data::Study& study,
                                     PROBLEME_HEBDO& problem,
                                     uint weekInTheYear,
-                                    uint numSpace,
                                     const int,
-                                    const HYDRO_VENTILATION_RESULTS&);
+                                    const HYDRO_VENTILATION_RESULTS&,
+                                    const Antares::Data::Area::ScratchMap&);
 
 void SIM_RenseignementProblemeHoraireAdequation(uint);
 

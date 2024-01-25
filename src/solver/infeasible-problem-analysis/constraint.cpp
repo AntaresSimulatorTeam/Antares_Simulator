@@ -5,9 +5,11 @@
 #include <iomanip>
 #include <algorithm>
 
-namespace Antares
-{
-namespace Optimization
+namespace {
+const std::string kUnknown = "<unknown>";
+}
+
+namespace Antares::Optimization
 {
 Constraint::Constraint(const std::string& input, const double slackValue) :
  mInput(input), mSlackValue(slackValue)
@@ -103,9 +105,10 @@ std::string Constraint::getTimeStepInYear() const
     case ConstraintType::binding_constraint_daily:
     case ConstraintType::fictitious_load:
     case ConstraintType::hydro_reservoir_level:
+    case ConstraintType::short_term_storage_level:
         return StringBetweenAngleBrackets (mItems.at(mItems.size()-2));
     default:
-        return "-1";
+        return kUnknown;
     }
 }
 
@@ -132,6 +135,10 @@ ConstraintType Constraint::getType() const
     {
         return ConstraintType::hydro_reservoir_level;
     }
+    if (mItems.at(0) == "Level")
+    {
+        return ConstraintType::short_term_storage_level;
+    }
     return ConstraintType::none;
 }
 
@@ -144,8 +151,16 @@ std::string Constraint::getBindingConstraintName() const
     case ConstraintType::binding_constraint_weekly:
         return mItems.at(0);
     default:
-        return "<unknown>";
+        return kUnknown;
     }
+}
+
+std::string Constraint::getSTSName() const
+{
+  if (getType() == ConstraintType::short_term_storage_level)
+      return StringBetweenAngleBrackets(mItems.at(2));
+  else
+      return kUnknown;
 }
 
 std::string Constraint::prettyPrint() const
@@ -167,9 +182,11 @@ std::string Constraint::prettyPrint() const
     case ConstraintType::hydro_reservoir_level:
         return "Hydro reservoir constraint at area '" + getAreaName() + "' at hour "
                + getTimeStepInYear();
+    case ConstraintType::short_term_storage_level:
+        return "Short-term-storage reservoir constraint at area '" + getAreaName() + "' in STS '" + getSTSName() + "' at hour " + getTimeStepInYear();
+
     default:
-        return "<unknown>";
+        return kUnknown;
     }
 }
-} // namespace Optimization
-} // namespace Antares
+} // namespace Antares::Optimization

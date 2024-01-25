@@ -77,7 +77,7 @@ static void importShortTermStorages(
 void SIM_InitialisationProblemeHebdo(Data::Study& study,
                                      PROBLEME_HEBDO& problem,
                                      int NombreDePasDeTemps,
-                                     uint numSpace)
+                                     uint numspace)
 {
     int NombrePaliers;
 
@@ -147,9 +147,12 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         break;
     }
 
+    Antares::Data::Area::ScratchMap scratchmap = study.areas.buildScratchMap(numspace);
+
     for (uint i = 0; i != study.areas.size(); i++)
     {
-        auto& area = *(study.areas[i]);
+        const auto& area = *(study.areas[i]);
+        const auto& scratchpad = scratchmap.at(&area);
 
         problem.NomsDesPays[i] = area.id.c_str();
 
@@ -167,10 +170,10 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
           = (anoNonDispatchPower & area.nodalOptimization) != 0;
 
         problem.CaracteristiquesHydrauliques[i].PresenceDHydrauliqueModulable
-          = area.scratchpad[numSpace].hydroHasMod;
+          = scratchpad.hydroHasMod;
 
         problem.CaracteristiquesHydrauliques[i].PresenceDePompageModulable
-          = area.hydro.reservoirManagement && area.scratchpad[numSpace].pumpHasMod
+          = area.hydro.reservoirManagement && scratchpad.pumpHasMod
               && area.hydro.pumpingEfficiency > 0.
               && problem.CaracteristiquesHydrauliques[i].PresenceDHydrauliqueModulable;
 
@@ -397,9 +400,10 @@ static void prepareBindingConstraint(PROBLEME_HEBDO &problem,
 void SIM_RenseignementProblemeHebdo(const Study& study,
                                     PROBLEME_HEBDO& problem,
                                     uint weekInTheYear,
-                                    uint numSpace,
                                     const int PasDeTempsDebut,
-                                    const HYDRO_VENTILATION_RESULTS& hydroVentilationResults)
+                                    const HYDRO_VENTILATION_RESULTS& hydroVentilationResults,
+                                    const Antares::Data::Area::ScratchMap& scratchmap)
+
 {
     const auto& parameters = study.parameters;
     auto& studyruntime = *study.runtime;
@@ -586,6 +590,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
 
             auto& area = *(study.areas.byIndex[k]);
             auto& scratchpad = area.scratchpad[numSpace];
+            const auto& scratchpad = scratchmap.at(&area);
             const double hourlyLoad = area.load.series.getCoefficient(year, hourInYear);
             const double hourlyWind = area.wind.series.getCoefficient(year, hourInYear);
             const double hourlySolar = area.solar.series.getCoefficient(year, hourInYear);
