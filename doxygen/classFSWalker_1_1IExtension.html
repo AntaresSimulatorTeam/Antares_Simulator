@@ -1,0 +1,382 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.5"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<!-- BEGIN opengraph metadata -->
+<meta property="og:title" content="Antares Simulator" />
+<meta property="og:image" content="https://github.com/AntaresSimulatorTeam/Antares_Simulator/blob/develop/docs/assets/antares.png" />
+<meta property="og:description" content="Power System Simulator." />
+<meta property="og:url" content="https://antares-simulator.org/" />
+<!-- END opengraph metadata -->
+<!-- BEGIN twitter metadata -->
+<meta name="twitter:image:src" content="https://github.com/AntaresSimulatorTeam/Antares_Simulator/blob/develop/docs/assets/logo.png" />
+<meta name="twitter:title" content="Antares Simulator" />
+<meta name="twitter:description" content="Power System Simulator." />
+<!-- END twitter metadata -->
+<title>Antares Simulator: FSWalker::IExtension Class Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="doxygen-awesome-darkmode-toggle.js"></script>
+<script type="text/javascript" src="doxygen-awesome-fragment-copy-button.js"></script>
+<script type="text/javascript" src="doxygen-awesome-paragraph-link.js"></script>
+<script type="text/javascript" src="doxygen-awesome-interactive-toc.js"></script>
+<script type="text/javascript" src="doxygen-awesome-tabs.js"></script>
+<script type="text/javascript" src="toggle-alternative-theme.js"></script>
+<script type="text/javascript">
+    DoxygenAwesomeFragmentCopyButton.init()
+    DoxygenAwesomeDarkModeToggle.init()
+    DoxygenAwesomeParagraphLink.init()
+    DoxygenAwesomeInteractiveToc.init()
+    DoxygenAwesomeTabs.init()
+</script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+<link href="custom.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only-darkmode-toggle.css" rel="stylesheet" type="text/css"/>
+<link href="custom-alternative.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- https://github.com/AntaresSimulatorTeam/Antares_Simulator/ -->
+<a href="https://github.com/AntaresSimulatorTeam/Antares_Simulator" class="github-corner" title="View source on GitHub" target="_blank">
+    <svg viewBox="0 0 250 250" width="40" height="40" style="position: absolute; top: 0; border: 0; right: 0; z-index: 99;" aria-hidden="true">
+    <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">Antares Simulator
+   </div>
+   <div id="projectbrief">Power System Simulator</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.5 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('classFSWalker_1_1IExtension.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="classFSWalker_1_1IExtension-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">FSWalker::IExtension Class Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div></div>
+</div><!--header-->
+<div class="contents">
+<div class="dynheader">
+Inheritance diagram for FSWalker::IExtension:</div>
+<div class="dyncontent">
+ <div class="center">
+  <img src="classFSWalker_1_1IExtension.png" usemap="#FSWalker::IExtension_map" alt=""/>
+  <map id="FSWalker::IExtension_map" name="FSWalker::IExtension_map">
+<area href="classAntaresStudy.html" alt="AntaresStudy" shape="rect" coords="0,56,130,80"/>
+<area href="classModifiedINode.html" alt="ModifiedINode" shape="rect" coords="140,56,270,80"/>
+  </map>
+</div></div>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:ae25fbf49dbf109e1bb90e7f22e01ebef"><td class="memItemLeft" align="right" valign="top"><a id="ae25fbf49dbf109e1bb90e7f22e01ebef" name="ae25fbf49dbf109e1bb90e7f22e01ebef"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>Ptr</b> = std::shared_ptr&lt; <a class="el" href="classFSWalker_1_1IExtension.html">IExtension</a> &gt;</td></tr>
+<tr class="memdesc:ae25fbf49dbf109e1bb90e7f22e01ebef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Most suitable smart pointer. <br /></td></tr>
+<tr class="separator:ae25fbf49dbf109e1bb90e7f22e01ebef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad181f97ac9893dcf6da71cad79867f80"><td class="memItemLeft" align="right" valign="top"><a id="ad181f97ac9893dcf6da71cad79867f80" name="ad181f97ac9893dcf6da71cad79867f80"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>Vector</b> = std::vector&lt; <a class="el" href="classFSWalker_1_1IExtension.html#ae25fbf49dbf109e1bb90e7f22e01ebef">Ptr</a> &gt;</td></tr>
+<tr class="memdesc:ad181f97ac9893dcf6da71cad79867f80"><td class="mdescLeft">&#160;</td><td class="mdescRight">List. <br /></td></tr>
+<tr class="separator:ad181f97ac9893dcf6da71cad79867f80"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a3fa5eca39dd3338139d98cd2a99f03fd"><td class="memItemLeft" align="right" valign="top"><a id="a3fa5eca39dd3338139d98cd2a99f03fd" name="a3fa5eca39dd3338139d98cd2a99f03fd"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>IExtension</b> ()</td></tr>
+<tr class="memdesc:a3fa5eca39dd3338139d98cd2a99f03fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor. <br /></td></tr>
+<tr class="separator:a3fa5eca39dd3338139d98cd2a99f03fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa7815da69afe3e34cf338adf3dff2710"><td class="memItemLeft" align="right" valign="top"><a id="aa7815da69afe3e34cf338adf3dff2710" name="aa7815da69afe3e34cf338adf3dff2710"></a>
+virtual&#160;</td><td class="memItemRight" valign="bottom"><b>~IExtension</b> ()</td></tr>
+<tr class="memdesc:aa7815da69afe3e34cf338adf3dff2710"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor. <br /></td></tr>
+<tr class="separator:aa7815da69afe3e34cf338adf3dff2710"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a437a1a3b0a5e0ef217d4f528d67ba31c"><td class="memItemLeft" align="right" valign="top">virtual const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFSWalker_1_1IExtension.html#a437a1a3b0a5e0ef217d4f528d67ba31c">caption</a> () const =0</td></tr>
+<tr class="memdesc:a437a1a3b0a5e0ef217d4f528d67ba31c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Human readable caption of the extension.  <a href="classFSWalker_1_1IExtension.html#a437a1a3b0a5e0ef217d4f528d67ba31c">More...</a><br /></td></tr>
+<tr class="separator:a437a1a3b0a5e0ef217d4f528d67ba31c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aff4d22d9b2bf72716818832da5c8b5bf"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFSWalker_1_1IExtension.html#aff4d22d9b2bf72716818832da5c8b5bf">priority</a> () const</td></tr>
+<tr class="memdesc:aff4d22d9b2bf72716818832da5c8b5bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Recommended priority for the extension.  <a href="classFSWalker_1_1IExtension.html#aff4d22d9b2bf72716818832da5c8b5bf">More...</a><br /></td></tr>
+<tr class="separator:aff4d22d9b2bf72716818832da5c8b5bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7312c2228a67ab3d42391bd946f3a8a8"><td class="memItemLeft" align="right" valign="top">virtual OnDirectoryEvent&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFSWalker_1_1IExtension.html#a7312c2228a67ab3d42391bd946f3a8a8">directoryEvent</a> ()</td></tr>
+<tr class="memdesc:a7312c2228a67ab3d42391bd946f3a8a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provide a reentrant event for handling directories.  <a href="classFSWalker_1_1IExtension.html#a7312c2228a67ab3d42391bd946f3a8a8">More...</a><br /></td></tr>
+<tr class="separator:a7312c2228a67ab3d42391bd946f3a8a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a811a80e715cbfda233d84e474c8e6fe3"><td class="memItemLeft" align="right" valign="top">virtual OnFileEvent&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFSWalker_1_1IExtension.html#a811a80e715cbfda233d84e474c8e6fe3">fileEvent</a> ()</td></tr>
+<tr class="memdesc:a811a80e715cbfda233d84e474c8e6fe3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provide a reentrant event for handling files.  <a href="classFSWalker_1_1IExtension.html#a811a80e715cbfda233d84e474c8e6fe3">More...</a><br /></td></tr>
+<tr class="separator:a811a80e715cbfda233d84e474c8e6fe3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa7998574f6ff371ec68a826dcb633e3f"><td class="memItemLeft" align="right" valign="top">virtual void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFSWalker_1_1IExtension.html#aa7998574f6ff371ec68a826dcb633e3f">userdataCreate</a> (DispatchJobEvent &amp;)</td></tr>
+<tr class="memdesc:aa7998574f6ff371ec68a826dcb633e3f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the user data.  <a href="classFSWalker_1_1IExtension.html#aa7998574f6ff371ec68a826dcb633e3f">More...</a><br /></td></tr>
+<tr class="separator:aa7998574f6ff371ec68a826dcb633e3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae1ae34a55f0abefba7b00586199717cc"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFSWalker_1_1IExtension.html#ae1ae34a55f0abefba7b00586199717cc">userdataDestroy</a> (void *)</td></tr>
+<tr class="memdesc:ae1ae34a55f0abefba7b00586199717cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroy user data.  <a href="classFSWalker_1_1IExtension.html#ae1ae34a55f0abefba7b00586199717cc">More...</a><br /></td></tr>
+<tr class="separator:ae1ae34a55f0abefba7b00586199717cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a437a1a3b0a5e0ef217d4f528d67ba31c" name="a437a1a3b0a5e0ef217d4f528d67ba31c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a437a1a3b0a5e0ef217d4f528d67ba31c">&#9670;&#160;</a></span>caption()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual const char * FSWalker::IExtension::caption </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Human readable caption of the extension. </p>
+
+<p>Implemented in <a class="el" href="classAntaresStudy.html#ab6f4f792b5935789742af31eb967e28f">AntaresStudy</a>, and <a class="el" href="classModifiedINode.html#a4c02b074f9470a703af595fc2f08b4f8">ModifiedINode</a>.</p>
+
+</div>
+</div>
+<a id="a7312c2228a67ab3d42391bd946f3a8a8" name="a7312c2228a67ab3d42391bd946f3a8a8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7312c2228a67ab3d42391bd946f3a8a8">&#9670;&#160;</a></span>directoryEvent()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual OnDirectoryEvent FSWalker::IExtension::directoryEvent </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Provide a reentrant event for handling directories. </p>
+
+<p>Reimplemented in <a class="el" href="classAntaresStudy.html#a6caee79a802e8be7616bc9cc8a0f19d9">AntaresStudy</a>, and <a class="el" href="classModifiedINode.html#ad0840cb4d096056fba4fe5bac78ce0d8">ModifiedINode</a>.</p>
+
+</div>
+</div>
+<a id="a811a80e715cbfda233d84e474c8e6fe3" name="a811a80e715cbfda233d84e474c8e6fe3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a811a80e715cbfda233d84e474c8e6fe3">&#9670;&#160;</a></span>fileEvent()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual OnFileEvent FSWalker::IExtension::fileEvent </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Provide a reentrant event for handling files. </p>
+
+<p>Reimplemented in <a class="el" href="classModifiedINode.html#a5f595069b77eb71490477a12952ffc1e">ModifiedINode</a>.</p>
+
+</div>
+</div>
+<a id="aff4d22d9b2bf72716818832da5c8b5bf" name="aff4d22d9b2bf72716818832da5c8b5bf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aff4d22d9b2bf72716818832da5c8b5bf">&#9670;&#160;</a></span>priority()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual int FSWalker::IExtension::priority </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Recommended priority for the extension. </p>
+
+<p>Reimplemented in <a class="el" href="classAntaresStudy.html#a62a11749df671c0175448e76bf52d3e5">AntaresStudy</a>.</p>
+
+</div>
+</div>
+<a id="aa7998574f6ff371ec68a826dcb633e3f" name="aa7998574f6ff371ec68a826dcb633e3f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa7998574f6ff371ec68a826dcb633e3f">&#9670;&#160;</a></span>userdataCreate()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void * FSWalker::IExtension::userdataCreate </td>
+          <td>(</td>
+          <td class="paramtype">DispatchJobEvent &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the user data. </p>
+
+<p>Reimplemented in <a class="el" href="classAntaresStudy.html#a2378f70a009b5deeb0b2eec25ecfba2b">AntaresStudy</a>, and <a class="el" href="classModifiedINode.html#a32e5cffa56a52c2d00558645b6816fd4">ModifiedINode</a>.</p>
+
+</div>
+</div>
+<a id="ae1ae34a55f0abefba7b00586199717cc" name="ae1ae34a55f0abefba7b00586199717cc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae1ae34a55f0abefba7b00586199717cc">&#9670;&#160;</a></span>userdataDestroy()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void FSWalker::IExtension::userdataDestroy </td>
+          <td>(</td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Destroy user data. </p>
+
+<p>Reimplemented in <a class="el" href="classAntaresStudy.html#abcc86fd1a57c449e3beb2c103ecca756">AntaresStudy</a>, and <a class="el" href="classModifiedINode.html#aef5298e99ca8bc33a33c40e05a3cd6d2">ModifiedINode</a>.</p>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
+<li>src/libs/fswalker/<a class="el" href="fswalker_8h_source.html">fswalker.h</a></li>
+</ul>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><b>FSWalker</b></li><li class="navelem"><a class="el" href="classFSWalker_1_1IExtension.html">IExtension</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
+  </ul>
+</div>
+</body>
+</html>
