@@ -209,7 +209,6 @@ set(SRC_STUDY
 
         # Study
         header.h
-        header.hxx
         header.cpp
         load-options.h
         load-options.cpp

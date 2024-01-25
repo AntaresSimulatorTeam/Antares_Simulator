@@ -128,6 +128,4 @@ private:
 } // namespace Data
 } // namespace Antares
 
-#include "header.hxx"
-
 #endif /* __ANTARES_LIBS_STUDY_HEADER_H__ */
