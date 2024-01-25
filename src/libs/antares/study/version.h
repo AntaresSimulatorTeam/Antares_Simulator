@@ -111,8 +111,8 @@ public:
 };
 
 
-VersionStruct versionLatest = VersionStruct(supportedVersions.back());
-VersionStruct versionUnknown = VersionStruct(0, 0);
+static VersionStruct versionLatest = VersionStruct(supportedVersions.back());
+static VersionStruct versionUnknown = VersionStruct(0, 0);
 
 /*!
 ** \brief Try to determine the version of a study

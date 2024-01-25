@@ -150,7 +150,7 @@ public:
 class InvalidVersion : public LoadingError
 {
 public:
-    InvalidVersion(const char* version, const char* latest);
+    InvalidVersion(const std::string& version, const std::string& latest);
 };
 
 class IncompatibleDailyOptHeuristicForArea : public LoadingError

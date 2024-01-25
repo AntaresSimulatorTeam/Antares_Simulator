@@ -168,8 +168,9 @@ bool StudyHeader::internalLoadFromINIFile(const IniFile& ini, bool warnings)
         {
             if (warnings)
             {
-                logs.error() << "Header: This version is not supported (version found:" << version
-                             << ", expected: <=" << Data::versionLatest.toString() << ')';
+                logs.error() << "Header: This version is not supported (version found:"
+                             << version.toString() << ", expected: <="
+                             << Data::versionLatest.toString() << ')';
             }
             return false;
         }

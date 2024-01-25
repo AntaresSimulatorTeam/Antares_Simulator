@@ -62,7 +62,7 @@ InvalidStudy::InvalidStudy(const Yuni::String& study) :
 {
 }
 
-InvalidVersion::InvalidVersion(const char* version, const char* latest) :
+InvalidVersion::InvalidVersion(const std::string& version, const std::string& latest) :
  LoadingError(std::string("Invalid version for the study : found `") + version + "`, expected <=`"
               + latest + '`')
 {

@@ -50,7 +50,7 @@ bool Study::resetFolderIcon() const
         buffer.clear() << "[.shellclassinfo]\r\n"
                        << "iconfile = settings/resources/study.ico\r\n"
                        << "iconindex = 0\r\n"
-                       << "infotip = Antares Study" << header.version.toString())
+                       << "infotip = Antares Study" << header.version.toString()
                        << ": " << header.caption << "\r\n";
         file << buffer;
     }
