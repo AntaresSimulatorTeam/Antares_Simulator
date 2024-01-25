@@ -5,6 +5,7 @@
 #pragma once
 
 #include "antares/study/study.h"
+#include <sstream>
 
 namespace Benchmarking {
 class FileContent;
@@ -52,5 +53,81 @@ public:
 
 private:
     const OptimizationInfo& opt_info_;
+};
+
+class ICustomBenchmarkData
+{
+public:
+    ICustomBenchmarkData(const std::string& name, const std::string& unit) : name(name), unit(unit)
+    {
+    }
+    std::string Name() const
+    {
+        return name;
+    }
+    std::string Unit() const
+    {
+        return unit;
+    }
+    virtual std::string Value() const = 0;
+
+private:
+    std::string name;
+    std::string unit;
+};
+
+template<typename T>
+class CustomBenchmarkData : public ICustomBenchmarkData
+{
+public:
+    CustomBenchmarkData(const std::string& name, const std::string& unit, const T& value) :
+     ICustomBenchmarkData(name, unit), value(value)
+    {
+    }
+
+    std::string Value() const override
+    {
+        std::ostringstream oss;
+        oss << value;
+        return oss.str();
+    }
+
+private:
+    T value;
+};
+class CustomBenchmarkAgregator
+{
+public:
+    CustomBenchmarkAgregator() = default;
+    void AddBenchmark(ICustomBenchmarkData* data)
+    {
+        if (data)
+        {
+            std::ostringstream oss;
+            oss << "{\n"
+                << "\"name\": \"" << prefix_ << " " << data->Name() << "\",\n"
+                << "\"value\": " << data->Value() << ",\n"
+                << "\"unit\": \"" << data->Unit() << "\"\n"
+                << "}\n";
+
+            if (!result_.empty())
+            {
+                result_ += ",\n";
+            }
+            result_ += oss.str();
+        }
+    }
+    std::string Result() const
+    {
+        return result_;
+    }
+    void SetPrefix(const std::string& prefix)
+    {
+        prefix_ = prefix;
+    }
+
+private:
+    std::string result_;
+    std::string prefix_ = "";
 };
 }

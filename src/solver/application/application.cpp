@@ -20,6 +20,7 @@
 #include "../../config.h"
 
 #include <antares/infoCollection/StudyInfoCollector.h>
+#include <filesystem>
 
 #include <yuni/datetime/timestamp.h>
 #include <yuni/core/process/rename.h>
@@ -100,6 +101,9 @@ void Application::prepare(int argc, char* argv[])
     checkAndCorrectSettingsAndOptions(pSettings, options);
 
     pSettings.checkAndSetStudyFolder(options.studyFolder);
+    std::filesystem::path study_folder = pSettings.studyFolder.c_str();
+    std::string study_folder_name = study_folder.filename().string();
+    benchs.SetPrefix(study_folder_name);
 
     checkStudyVersion(pSettings.studyFolder);
 
@@ -451,10 +455,20 @@ void Application::writeExectutionInfo()
     study_info_collector.toFileContent(file_content);
     simulation_info_collector.toFileContent(file_content);
 
+    Benchmarking::CustomBenchmarkData<int64_t> time_data(
+      "execution_time", "ms", pTotalTimer.get_duration());
+    benchs.AddBenchmark(&time_data);
+    Benchmarking::CustomBenchmarkData<int64_t> memory_data("Memory", "b", pStudy->memoryUsage());
+    benchs.AddBenchmark(&memory_data);
+
     // Flush previous info into a record file
     const std::string exec_info_path = "execution_info.ini";
+    const std::string custom_benchmark_file = "custom_benchmark.txt";
+
     std::string content = file_content.saveToBufferAsIni();
     resultWriter->addEntryFromBuffer(exec_info_path, content);
+    auto custom_str = benchs.Result();
+    resultWriter->addEntryFromBuffer(custom_benchmark_file, custom_str);
 }
 
 Application::~Application()

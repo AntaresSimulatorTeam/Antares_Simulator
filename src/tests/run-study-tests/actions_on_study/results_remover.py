@@ -2,13 +2,17 @@ import shutil
 
 from os import remove
 from os.path import isdir, isfile, basename
-
+from utils.benchmark_utils import CustomBenchmark
 
 class results_remover:
-    def __init__(self, study_path):
+    def __init__(self, study_path,do_benchmark, custom_benchmark_json):
         self.study_path = study_path
+        self.do_benchmark = do_benchmark
+        self.custom_benchmark_json = custom_benchmark_json
 
     def run(self):
+        if(self.do_benchmark):
+            self.copy_benchmarks()
         self.remove_logs()
         self.clean_results()
 
@@ -24,4 +28,7 @@ class results_remover:
                 shutil.rmtree(element)
             if isfile(element):
                 remove(element)
+
+    def copy_benchmarks(self):
+        CustomBenchmark(self.study_path, self.custom_benchmark_json).copy()
 

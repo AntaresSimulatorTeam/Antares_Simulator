@@ -20,6 +20,7 @@ public:
     /*!
     ** \brief Default Constructor
     */
+
     Application();
     /*!
     ** \brief Destructor
@@ -89,6 +90,7 @@ private:
     Benchmarking::Timer pTotalTimer;
     Benchmarking::DurationCollector pDurationCollector;
     Benchmarking::OptimizationInfo pOptimizationInfo;
+    Benchmarking::CustomBenchmarkAgregator benchs;
 
     std::shared_ptr<Yuni::Job::QueueService> ioQueueService;
     IResultWriter::Ptr resultWriter = nullptr;

@@ -41,7 +41,7 @@ void Application::runSimulationInAdequacyMode()
     typedef Solver::Simulation::ISimulation<Solver::Simulation::Adequacy> SimulationType;
     SimulationType simulation(*pStudy, pSettings, pDurationCollector, *resultWriter);
     simulation.checkWriter();
-    simulation.run();
+    simulation.run(benchs);
 
     if (!(pSettings.noOutput || pSettings.tsGeneratorsOnly))
     {

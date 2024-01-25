@@ -33,6 +33,7 @@
 #include <antares/fatal-error.h>
 #include <antares/memory/memory.h>
 #include <antares/locale.h>
+#include <antares/infoCollection/StudyInfoCollector.h>
 
 using namespace Antares;
 using namespace Yuni;

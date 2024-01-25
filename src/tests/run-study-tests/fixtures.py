@@ -36,8 +36,8 @@ def study_path(request):
     return request.param
 
 @pytest.fixture
-def resultsRemover(study_path):
-    return results_remover(study_path)
+def resultsRemover(study_path, do_benchmark, custom_benchmark_json):
+    return results_remover(study_path, do_benchmark, custom_benchmark_json)
 
 @pytest.fixture
 def simulation(study_path, solver_path, use_ortools, ortools_solver, named_mps_problems, parallel):
