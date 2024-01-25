@@ -97,7 +97,7 @@ Output::Output(const AnyString& folder) :
 bool Output::valid() const
 {
     // The outputs as we know them was first introduced in Antares 3.0
-    return version <= Data::versionLatest;
+    return version <= Data::VersionStruct::versionLatest();
 }
 
 bool Output::loadFromFolder(const AnyString& folder)
@@ -137,7 +137,7 @@ bool Output::loadFromFolder(const AnyString& folder)
             version = VersionStruct::buildVersionLegacyOrCurrent(p->value);
 
             // Early checks about the version
-            if (version > Data::versionLatest)
+            if (version > Data::VersionStruct::versionLatest())
             {
                 logs.warning() << "Study Version greater then supported";
                 return false;

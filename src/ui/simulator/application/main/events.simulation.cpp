@@ -129,10 +129,10 @@ void ApplWnd::evtOnRunTSAnalyzerDelayed()
             logs.error() << "The study must be saved before launching the analyzer";
             return;
         }
-        if (study.header.version != Data::versionLatest)
+        if (study.header.version != Data::VersionStruct::versionLatest())
         {
             logs.error() << "The study must be upgraded to the v"
-                         << Data::versionLatest.toString()
+                         << Data::VersionStruct::versionLatest().toString()
                          << " format before launching the analyzer";
             return;
         }
@@ -169,10 +169,10 @@ void ApplWnd::evtOnRunConstraintsBuilderDelayed()
             logs.error() << "The study must be saved before launching the constraints builder";
             return;
         }
-        if (study.header.version != Data::versionLatest)
+        if (study.header.version != Data::VersionStruct::versionLatest())
         {
             logs.error() << "The study must be upgraded to the v"
-                         << Data::versionLatest.toString()
+                         << Data::VersionStruct::versionLatest().toString()
                          << " format before launching the constraints builder";
             return;
         }

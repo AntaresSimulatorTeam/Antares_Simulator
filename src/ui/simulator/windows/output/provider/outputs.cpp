@@ -160,7 +160,7 @@ void Outputs::search(Spotlight::IItem::Vector& out,
             }
 
             auto item = std::make_shared<OutputSpotlightItem>();
-            if (output->version != Data::versionLatest)
+            if (output->version != Data::VersionStruct::versionLatest())
             {
                 CString<16, false> text;
                 text << 'v' << output->version.toString();

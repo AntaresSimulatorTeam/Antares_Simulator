@@ -59,11 +59,11 @@ void checkStudyVersion(const AnyString& optStudyFolder)
     using namespace Antares::Data;
     auto version = StudyTryToFindTheVersion(optStudyFolder);
 
-    if (version == versionUnknown)
+    if (version == VersionStruct::versionUnknown())
         throw Error::InvalidStudy(optStudyFolder);
 
-    if (version > versionLatest)
-        throw Error::InvalidVersion(version.toString(),versionLatest.toString());
+    if (version > VersionStruct::versionLatest())
+        throw Error::InvalidVersion(version.toString(),VersionStruct::versionLatest().toString());
 }
 // CHECK incompatible de choix simultané des options « simplex range= daily » et « hydro-pricing
 // = MILP ».

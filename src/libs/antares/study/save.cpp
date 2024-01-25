@@ -134,7 +134,7 @@ bool Study::saveToFolder(const AnyString& newfolder)
     // In this case, we have to invalidate all matrices to make sure that all
     // data will be rewritten to avoid data loss
     // (if filenames have changed for examples)
-    if (header.version != versionLatest)
+    if (header.version != VersionStruct::versionLatest())
     {
         logs.info() << "  performing a format upgrade";
         // Invalidate all matrices

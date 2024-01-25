@@ -729,7 +729,7 @@ void Study::saveAboutTheStudy(Solver::IResultWriter& resultWriter)
     String startTimeStr;
     DateTime::TimestampToString(startTimeStr, "%Y.%m.%d - %H:%M", pStartTime);
     f << "[general]";
-    f << "\nversion = " << versionLatest.toString();
+    f << "\nversion = " << VersionStruct::versionLatest().toString();
     f << "\nname = " << simulationComments.name;
     f << "\nmode = " << SimulationModeToCString(parameters.mode);
     f << "\ndate = " << startTimeStr;

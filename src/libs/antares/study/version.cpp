@@ -109,6 +109,15 @@ VersionStruct::VersionStruct(const std::string& s)
 VersionStruct::VersionStruct(unsigned major_, unsigned minor_) : major(major_), minor(minor_)
 {}
 
+VersionStruct VersionStruct::versionLatest()
+{
+    return VersionStruct(supportedVersions.back());
+}
+
+VersionStruct VersionStruct::versionUnknown()
+{
+    return VersionStruct(0, 0);
+}
 
 const char* VersionToCStr(const Version v)
 {
@@ -236,7 +245,7 @@ Version VersionIntToVersion(uint version)
 VersionStruct StudyTryToFindTheVersion(const AnyString& folder)
 {
     if (folder.empty()) // trivial check
-        return versionUnknown;
+        return VersionStruct::versionUnknown();
 
     // foldernormalization
     String abspath, directory;
@@ -250,11 +259,11 @@ VersionStruct StudyTryToFindTheVersion(const AnyString& folder)
         if (IO::File::Exists(abspath))
             return VersionStruct::studyFormatCheck(abspath);
     }
-    return versionUnknown;
+    return VersionStruct::versionUnknown();
 }
 
 bool StudyVersion::isStudyLatestVersion(std::string studyFolder) const {
-    return StudyTryToFindTheVersion(studyFolder) == versionLatest;
+    return StudyTryToFindTheVersion(studyFolder) == VersionStruct::versionLatest();
 }
 } // namespace Antares::Data
 

@@ -109,11 +109,12 @@ public:
     static VersionStruct buildVersionLegacyOrCurrent(const std::string& versionStr);
 
     static const std::map<enum Version, const std::string> mapEnum;
+
+    static VersionStruct versionLatest();
+    static VersionStruct versionUnknown();
 };
 
 
-static VersionStruct versionLatest = VersionStruct(supportedVersions.back());
-static VersionStruct versionUnknown = VersionStruct(0, 0);
 
 /*!
 ** \brief Try to determine the version of a study
