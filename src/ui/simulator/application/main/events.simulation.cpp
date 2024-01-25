@@ -132,7 +132,7 @@ void ApplWnd::evtOnRunTSAnalyzerDelayed()
         if (study.header.version != Data::versionLatest)
         {
             logs.error() << "The study must be upgraded to the v"
-                         << Data::VersionToCStr((Data::Version)Data::versionLatest)
+                         << Data::versionLatest.toString()
                          << " format before launching the analyzer";
             return;
         }
@@ -172,7 +172,7 @@ void ApplWnd::evtOnRunConstraintsBuilderDelayed()
         if (study.header.version != Data::versionLatest)
         {
             logs.error() << "The study must be upgraded to the v"
-                         << Data::VersionToCStr((Data::Version)Data::versionLatest)
+                         << Data::versionLatest.toString()
                          << " format before launching the constraints builder";
             return;
         }

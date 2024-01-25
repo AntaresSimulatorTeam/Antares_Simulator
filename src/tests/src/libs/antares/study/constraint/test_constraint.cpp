@@ -44,7 +44,7 @@ BOOST_AUTO_TEST_CASE( load_basic_attributes ) {
     std::ofstream rhs(working_tmp_dir / "dummy_id_eq.txt");
     rhs.close();
 
-    study->header.version = version870;
+    study->header.version = VersionStruct(8, 7);
     const bool loading_ok = bindingConstraints.loadFromFolder(*study, options, working_tmp_dir.string());
 
     BOOST_CHECK_EQUAL(loading_ok, true);
@@ -94,7 +94,7 @@ BOOST_AUTO_TEST_CASE(BC_load_RHS) {
         rhs << "0.2\t0.4\t0.6\n";
     }
     rhs.close();
-    study->header.version = version870;
+    study->header.version = VersionStruct(8, 7);
     const bool loading_ok = bindingConstraints.loadFromFolder(*study, options, working_tmp_dir.string());
 
     BOOST_CHECK_EQUAL(loading_ok, true);
@@ -143,7 +143,7 @@ BOOST_AUTO_TEST_CASE(BC_load_range_type) {
         gt << "0.4\t0.6\t0.8\n";
     }
     gt.close();
-    study->header.version = version870;
+    study->header.version = VersionStruct(8, 7);
     const bool loading_ok = bindingConstraints.loadFromFolder(*study, options, working_tmp_dir.string());
 
     BOOST_CHECK_EQUAL(loading_ok, true);
@@ -200,7 +200,7 @@ BOOST_AUTO_TEST_CASE(BC_load_legacy) {
     }
     lt.close();
 
-    study->header.version = version860;
+    study->header.version = VersionStruct(8, 6);
     const bool loading_ok = bindingConstraints.loadFromFolder(*study, options, working_tmp_dir.string());
 
     BOOST_CHECK_EQUAL(loading_ok, true);
@@ -244,7 +244,7 @@ BOOST_AUTO_TEST_CASE(BC_load_legacy_range) {
     }
     lt.close();
 
-    study->header.version = version860;
+    study->header.version = VersionStruct(8, 6);
     const bool loading_ok = bindingConstraints.loadFromFolder(*study, options, working_tmp_dir.string());
 
     BOOST_CHECK_EQUAL(loading_ok, true);

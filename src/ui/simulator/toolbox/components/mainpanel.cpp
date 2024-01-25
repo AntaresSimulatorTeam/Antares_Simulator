@@ -151,13 +151,13 @@ void MainPanel::onDraw(wxPaintEvent&)
             f.SetWeight(wxFONTWEIGHT_BOLD);
             dc.SetFont(f);
 
-            if (study->header.version != (uint)Data::versionLatest)
+            if (study->header.version != Data::versionLatest)
             {
                 wxString s;
                 if (StudyHasBeenModified())
                     s << wxT("(*) ");
                 s << pStudyCaption << wxT(" (v")
-                  << Data::VersionToWStr((Data::Version(study->header.version))) << wxT(")");
+                  << study->header.version.toString() << wxT(")");
                 addProperty(dc, name, s, size, posY);
             }
             else

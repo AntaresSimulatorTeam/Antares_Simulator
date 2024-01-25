@@ -160,10 +160,10 @@ void Outputs::search(Spotlight::IItem::Vector& out,
             }
 
             auto item = std::make_shared<OutputSpotlightItem>();
-            if (output->version != (uint)Data::versionLatest)
+            if (output->version != Data::versionLatest)
             {
                 CString<16, false> text;
-                text << 'v' << Data::VersionToCStr((Data::Version)output->version);
+                text << 'v' << output->version.toString();
                 item->addRightTag(text, 220, 220, 240);
             }
             item->caption(title);

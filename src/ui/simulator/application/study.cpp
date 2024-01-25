@@ -791,9 +791,9 @@ SaveResult SaveStudy()
           wxT("The study was saved with a previous version of Antares"),
           wxString() << wxT("You can choose either to upgrade the study folder or to save it\n")
                      << wxT("into a new folder.\n\nCurrent version of Antares : ")
-                     << wxStringFromUTF8(Data::VersionToCStr((Data::Version)Data::versionLatest))
+                     << Data::versionLatest.toString()
                      << wxT("\nFormat version of the study : ")
-                     << wxStringFromUTF8(Data::VersionToCStr((Data::Version)study.header.version)),
+                     << study.header.version.toString(),
           "images/misc/save.png");
         message.add(Window::Message::btnUpgrade);
         message.add(Window::Message::btnSaveAs, false, 15);
@@ -1015,7 +1015,7 @@ void OpenStudyFromFolder(wxString folder)
     if (version > Data::versionLatest)
     {
         logs.error() << "A more recent version of Antares is required to open `" << studyfolder
-            << "`  (" << Data::VersionToCStr(version) << ')';
+            << "`  (" << version.toString() << ')';
         return;
     }
 
