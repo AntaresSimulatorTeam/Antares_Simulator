@@ -68,7 +68,7 @@ bool StudyCleaningInfos::analyze()
     if (version == versionUnknown)
     {
         logs.error() << "Unknown study version: " << folder;
-        return false
+        return false;
     }
 
     if (not listOfFilesAnDirectoriesToKeep(this))

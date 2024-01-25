@@ -106,7 +106,7 @@ bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const
     if (ror.timeSeries.width > count)
         count = ror.timeSeries.width;
 
-    if (study.header.version >= 860)
+    if (study.header.version >= VersionStruct(8, 6))
     {
         buffer.clear() << folder << SEP << areaID << SEP << "mingen." << study.inputExtension;
         ret = mingen.timeSeries.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &study.dataBuffer) && ret;

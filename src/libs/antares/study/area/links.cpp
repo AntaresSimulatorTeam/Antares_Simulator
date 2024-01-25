@@ -178,7 +178,7 @@ void AreaLink::overrideTransmissionCapacityAccordingToGlobalParameter(
 
 bool AreaLink::loadTimeSeries(const Study& study, const AnyString& folder)
 {
-    if (study.header.version < 820)
+    if (study.header.version < VersionStruct(8, 2))
         return linkLoadTimeSeries_for_version_below_810(folder);
     else
         return linkLoadTimeSeries_for_version_820_and_later(folder);
