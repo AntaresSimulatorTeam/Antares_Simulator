@@ -82,7 +82,7 @@ public:
 
     auto operator<=>(const VersionStruct&) const = default;
 
-    VersionStruct(std::string);
+    VersionStruct(const std::string&);
     VersionStruct(unsigned, unsigned);
     ~VersionStruct() = default;
 

@@ -62,24 +62,29 @@ const std::map<enum Version, const std::string> VersionStruct::mapEnum =
     {version880, "8.8"}
 };
 
-static inline Version StudyFormatCheck(const String& headerFile)
+static inline VersionStruct LegacyStudyFormatCheck(std::string& versionStr)
+{
+    unsigned versionNumber = std::stoul(versionStr);
+
+    // Its equivalent
+    Version venum = VersionIntToVersion(versionNumber);
+
+    if (venum == versionUnknown || venum == versionFutur)
+        venum = (versionNumber and (uint) versionNumber > (uint)versionLatest) ? versionFutur : versionUnknown;
+
+    const std::string& version = VersionStruct::mapEnum.at(venum);
+    return VersionStruct(version);
+}
+
+static inline VersionStruct StudyFormatCheck(const String& headerFile)
 {
     // The raw version number
-    uint version = std::stoul(StudyHeader::ReadVersionFromFile(headerFile));
-    // Its equivalent
-    Version venum = VersionIntToVersion(version);
+    std::string versionStr = StudyHeader::ReadVersionFromFile(headerFile);
 
-    switch (venum)
-    {
-    // Dealing with special values
-    case versionUnknown:
-    case versionFutur:
-    {
-        return (version and (uint) version > (uint)versionLatest) ? versionFutur : versionUnknown;
-    }
-    default:
-        return venum;
-    }
+    if (versionStr.find(".") == std::string::npos)
+        return LegacyStudyFormatCheck(versionStr);
+
+    return VersionStruct(versionStr);
 }
 
 std::string VersionStruct::toString() const
@@ -87,7 +92,7 @@ std::string VersionStruct::toString() const
     return major + "." + minor;
 }
 
-VersionStruct::VersionStruct(std::string s)
+VersionStruct::VersionStruct(const std::string& s)
 {
     unsigned separator = s.find('.');
     if (separator == std::string::npos)
@@ -231,7 +236,7 @@ Version VersionIntToVersion(uint version)
     }
 }
 
-Version StudyTryToFindTheVersion(const AnyString& folder)
+VersionStruct StudyTryToFindTheVersion(const AnyString& folder)
 {
     if (folder.empty()) // trivial check
         return versionUnknown;
