@@ -71,7 +71,7 @@ void StudyHeader::CopySettingsToIni(IniFile& ini, bool upgradeVersion)
     // StudyHeader::ReadVersionFromFile().
     if (upgradeVersion)
         version = Data::versionLatest;
-    sect->add("version", (uint)Data::versionLatest);
+    sect->add("version", Data::versionLatest.toString());
 
     // Caption
     sect->add("caption", caption);
@@ -108,7 +108,7 @@ std::string StudyHeader::internalFindVersionFromFile(const IniFile& ini)
 
 bool StudyHeader::internalLoadFromINIFile(const IniFile& ini, bool warnings)
 {
-    version = 0;
+    version = versionUnknown;
     const IniFile::Section* sect = ini.find("antares");
     if (sect)
     {
@@ -129,7 +129,7 @@ bool StudyHeader::internalLoadFromINIFile(const IniFile& ini, bool warnings)
             // Version
             if (p->key == "version")
             {
-                version = p->value.to<uint>();
+                version = VersionStruct::StudyFormatCheck(p->value);
                 continue;
             }
 
@@ -162,14 +162,14 @@ bool StudyHeader::internalLoadFromINIFile(const IniFile& ini, bool warnings)
             logs.error() << "The main section has not been found. The study seems invalid.";
     }
 
-    if (version >= 700)
+    if (version >= VersionStruct(7, 0))
     {
-        if (version > static_cast<uint>(Data::versionLatest))
+        if (version > Data::versionLatest)
         {
             if (warnings)
             {
                 logs.error() << "Header: This version is not supported (version found:" << version
-                             << ", expected: <=" << static_cast<uint>(Data::versionLatest) << ')';
+                             << ", expected: <=" << Data::versionLatest.toString() << ')';
             }
             return false;
         }

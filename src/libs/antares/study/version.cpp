@@ -47,7 +47,7 @@ namespace Antares::Data
 {
 const std::map<enum Version, const std::string> VersionStruct::mapEnum =
 {
-    {versionUnknown, "0.0"},
+    {versionUnknownEnum, "0.0"},
     {version700, "7.0"},
     {version710, "7.1"},
     {version720, "7.2"},
@@ -69,14 +69,11 @@ static inline VersionStruct LegacyStudyFormatCheck(std::string& versionStr)
     // Its equivalent
     Version venum = VersionIntToVersion(versionNumber);
 
-    if (venum == versionUnknown || venum == versionFutur)
-        venum = (versionNumber and (uint) versionNumber > (uint)versionLatest) ? versionFutur : versionUnknown;
-
     const std::string& version = VersionStruct::mapEnum.at(venum);
     return VersionStruct(version);
 }
 
-static inline VersionStruct StudyFormatCheck(const String& headerFile)
+VersionStruct VersionStruct::StudyFormatCheck(const std::string headerFile)
 {
     // The raw version number
     std::string versionStr = StudyHeader::ReadVersionFromFile(headerFile);
@@ -147,7 +144,7 @@ const char* VersionToCStr(const Version v)
     case version700:
         return "7.0";
 
-    case versionUnknown:
+    case versionUnknownEnum:
         return "0";
     }
     return "0.0";
@@ -186,7 +183,7 @@ const wchar_t* VersionToWStr(const Version v)
         return L"7.1";
     case version700:
         return L"7.0";
-    case versionUnknown:
+    case versionUnknownEnum:
         return L"0";
     }
     return L"0.0";
@@ -224,15 +221,15 @@ Version VersionIntToVersion(uint version)
     case 700:
         return version700;
     case versionFutur:
-    case versionUnknown:
-        return versionUnknown;
+    case versionUnknownEnum:
+        return versionUnknownEnum;
     default:
         logs.error() << "Study version " << version << " is not supported by this version of "
             "antares-solver";
 
         logs.error() << "Studies in version <7.0 are no longer supported. Please upgrade it first"
             << " if it's the case";
-    return versionUnknown;
+    return versionUnknownEnum;
     }
 }
 

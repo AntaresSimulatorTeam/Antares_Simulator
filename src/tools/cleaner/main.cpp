@@ -52,9 +52,9 @@ public:
     {
     }
 
-    void onStudyFound(const String& folder, Data::Version version) override
+    void onStudyFound(const String& folder, Data::VersionStruct version) override
     {
-        if ((int)version != (int)Data::versionLatest)
+        if (version != Data::versionLatest)
         {
             logs.warning() << "requires format upgrade, ignoring " << folder;
             return;

@@ -63,20 +63,14 @@ protected:
 
     virtual Flow onBeginFolder(const String& filename, const String&, const String&)
     {
-        const Version versionFound = StudyTryToFindTheVersion(filename);
-        switch (versionFound)
-        {
-        case versionFutur:
+        const VersionStruct versionFound = StudyTryToFindTheVersion(filename);
+        if (versionFound > versionLatest)
             return IO::flowSkip;
-        case versionUnknown:
+        if (versionFound == versionUnknown)
             return IO::flowContinue;
-        default:
-        {
-            // We have found a study !
-            pFinder.onStudyFound(filename, versionFound);
-            return IO::flowSkip;
-        }
-        }
+
+        // We have found a study !
+        pFinder.onStudyFound(filename, versionFound);
         return IO::flowSkip;
     }
 

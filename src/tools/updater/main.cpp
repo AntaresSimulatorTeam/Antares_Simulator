@@ -47,9 +47,9 @@ static bool onProgress(uint)
 class MyStudyFinder final : public Data::StudyFinder
 {
 public:
-    void onStudyFound(const String& folder, Data::Version version) override
+    void onStudyFound(const String& folder, Data::VersionStruct version) override
     {
-        if (version == Data::versionUnknown || version == Data::versionFutur)
+        if (version == Data::versionUnknown || version > versionLatest)
         {
             logs.info() << folder << " : version of study is too old, too new or unknown";
             return;
@@ -61,14 +61,14 @@ public:
             return;
         }
 
-        if ((int)Data::versionLatest == (int)version && (!removeUselessTimeseries))
+        if (Data::versionLatest == version && (!removeUselessTimeseries))
         {
             logs.info() << folder << " : is up-to-date";
         }
         else
         {
-            logs.notice() << "Upgrading " << folder << "  (v" << Data::VersionToCStr(version)
-                          << " to " << Data::VersionToCStr((Data::Version)Data::versionLatest)
+            logs.notice() << "Upgrading " << folder << "  (v" << version.toString()
+                          << " to " << Data::versionLatest.toString()
                           << ")";
 
             auto study = std::make_unique<Data::Study>();

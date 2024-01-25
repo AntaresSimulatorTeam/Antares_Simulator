@@ -79,7 +79,8 @@ public:
     Yuni::String folder;
 
     /*! Version of the study */
-    Version version;
+    VersionStruct version;
+    std::string versionString;
     /*! List of all intruders */
     ::PathList intruders;
     /*! List of all files/folders to prevent from the destruction */

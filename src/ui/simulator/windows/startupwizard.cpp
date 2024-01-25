@@ -73,7 +73,7 @@ public:
             pOutputList.push_back(PairStringString(it.first, it.second));
     }
 
-    virtual void onStudyFound(const String& folder, Data::Version) override
+    virtual void onStudyFound(const String& folder, Data::VersionStruct) override
     {
         if (Data::Study::TitleFromStudyFolder(folder, pTitle, false))
         {

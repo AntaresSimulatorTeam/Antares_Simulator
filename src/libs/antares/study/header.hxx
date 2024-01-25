@@ -31,14 +31,14 @@ namespace Antares
 {
 namespace Data
 {
-inline StudyHeader::StudyHeader()
-{
-    reset();
-}
+/* inline StudyHeader::StudyHeader() */
+/* { */
+/*     reset(); */
+/* } */
 
-inline StudyHeader::~StudyHeader()
-{
-}
+/* inline StudyHeader::~StudyHeader() */
+/* { */
+/* } */
 
 } // namespace Data
 } // namespace Antares

@@ -42,7 +42,7 @@ namespace Antares::Data
 enum Version
 {
     //! Unknown version of a study
-    versionUnknown = 0,
+    versionUnknownEnum = 0,
     //! Study version 7.0
     version700 = 700,
     //! Study version 7.1
@@ -74,6 +74,22 @@ enum Version
 
 };
 
+static std::vector<std::string> supportedVersions =
+{
+    "7.0",
+    "7.1",
+    "7.2",
+    "8.0",
+    "8.1",
+    "8.2",
+    "8.3",
+    "8.4",
+    "8.5",
+    "8.6",
+    "8.7",
+    "8.8"
+};
+
 class VersionStruct
 {
 public:
@@ -82,16 +98,21 @@ public:
 
     auto operator<=>(const VersionStruct&) const = default;
 
+    VersionStruct() = default;
     VersionStruct(const std::string&);
     VersionStruct(unsigned, unsigned);
     ~VersionStruct() = default;
 
     std::string toString() const;
+
+    static VersionStruct StudyFormatCheck(const std::string&);
+
     static const std::map<enum Version, const std::string> mapEnum;
 };
 
 
-constexpr Version versionLatest = version880;
+VersionStruct versionLatest = VersionStruct(supportedVersions.back());
+VersionStruct versionUnknown = VersionStruct(0, 0);
 
 /*!
 ** \brief Try to determine the version of a study
@@ -101,7 +122,7 @@ constexpr Version versionLatest = version880;
 ** \param checkFor1x True to check for an old 1.x study
 ** \return The version of the study. `VersionUnknown` of not found
 */
-Version StudyTryToFindTheVersion(const AnyString& folder);
+VersionStruct StudyTryToFindTheVersion(const AnyString& folder);
 
 /*!
 ** \brief Get the human readable version of the version of a study

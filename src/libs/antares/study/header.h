@@ -31,6 +31,7 @@
 #include <yuni/core/string.h>
 #include <ctime>
 #include <antares/inifile/inifile.h>
+#include "version.h"
 
 //! Default author
 #define STUDYHEADER_DEFAULT_AUTHOR "Unknown"
@@ -62,11 +63,14 @@ public:
     /*!
     ** \brief Default constructor
     */
-    StudyHeader();
+    StudyHeader()
+    {
+        reset();
+    }
     /*!
     ** \brief Destructor
     */
-    ~StudyHeader();
+    ~StudyHeader() = default;
     //@}
 
     /*!
@@ -102,7 +106,7 @@ public:
     Yuni::String caption;
 
     //! Format version
-    uint version;
+    VersionStruct version;
 
     //! Date: Creation (timestamp)
     time_t dateCreated;

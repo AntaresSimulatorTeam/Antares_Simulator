@@ -60,32 +60,21 @@ bool StudyCleaningInfos::analyze()
     // Getting the version
     version = StudyTryToFindTheVersion(folder);
 
-    switch (version)
-    {
-    case versionFutur:
+    if (version > versionLatest)
     {
         logs.error() << "A more recent version of Antares is required for " << folder;
-        break;
+        return false;
     }
-    case versionUnknown:
+    if (version == versionUnknown)
     {
         logs.error() << "Unknown study version: " << folder;
-        break;
+        return false
     }
-    default:
+
+    if (not listOfFilesAnDirectoriesToKeep(this))
     {
-        if ((int)version <= (int)versionLatest)
-        {
-            if (not listOfFilesAnDirectoriesToKeep(this))
-            {
-                logs.error() << "Aborting: an error has been encountered: " << folder;
-                return false;
-            }
-        }
-        else
-            logs.error() << "Invalid study version: " << folder;
-        break;
-    }
+        logs.error() << "Aborting: an error has been encountered: " << folder;
+        return false;
     }
 
     // Grab all intruders at once
