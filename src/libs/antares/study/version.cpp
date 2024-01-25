@@ -86,7 +86,7 @@ VersionStruct VersionStruct::studyFormatCheck(const std::string& headerFilePath)
 
 std::string VersionStruct::toString() const
 {
-    return major + "." + minor;
+    return std::to_string(major) + "." + std::to_string(minor);
 }
 
 VersionStruct::VersionStruct(const std::string& s)
