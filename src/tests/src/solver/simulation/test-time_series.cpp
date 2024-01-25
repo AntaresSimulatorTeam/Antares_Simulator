@@ -50,7 +50,7 @@ void CheckEqual(const Matrix<Ta>& a, const Matrix<Tb>& b) {
 
 struct Fixture {
     Fixture() {
-        study->header.version = version870;
+        study->header.version = VersionStruct(8, 7);
         working_tmp_dir = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
 
         study->folderInput = working_tmp_dir.string();
