@@ -131,6 +131,10 @@ jobs:
     #   with:
     #     path: ./cache
     #     key: ${{ runner.os }}-benchmark
+
+    - name: Collect benchmarks
+      shell: bash  
+      run: echo "[ " >> _build/output.json && cat _build/benchs/*.json >> _build/output.json && echo "] " >> _build/output.json && cat _build/output.json 
     
     # Run `github-action-benchmark` action
     - name: Store benchmark result
@@ -153,10 +157,6 @@ jobs:
         # alert-comment-cc-users: '@flomnes,@payetvin,@a-zakir'
         # skip-fetch-gh-pages: true
     
-    - name: cat output.json
-      run: cat _build/output.json 
-    - name: delete benchmark file
-      run: rm -f _build/output.json 
 
 
     - name: Run unfeasibility-related tests

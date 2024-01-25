@@ -20,6 +20,7 @@
 #include "../../config.h"
 
 #include <antares/infoCollection/StudyInfoCollector.h>
+#include <filesystem>
 
 #include <yuni/datetime/timestamp.h>
 #include <yuni/core/process/rename.h>
@@ -39,7 +40,7 @@ void printSolvers()
 
 namespace Antares::Solver
 {
-Application::Application(Benchmarking::CustomBenchmarkAgregator& benchs) : benchs(benchs)
+Application::Application()
 {
     resetProcessPriority();
 }
@@ -100,6 +101,9 @@ void Application::prepare(int argc, char* argv[])
     checkAndCorrectSettingsAndOptions(pSettings, options);
 
     pSettings.checkAndSetStudyFolder(options.studyFolder);
+    std::filesystem::path study_folder = pSettings.studyFolder.c_str();
+    std::string study_folder_name = study_folder.filename().string();
+    benchs.SetPrefix(study_folder_name);
 
     checkStudyVersion(pSettings.studyFolder);
 

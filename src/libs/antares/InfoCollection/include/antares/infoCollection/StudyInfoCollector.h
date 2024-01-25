@@ -105,24 +105,29 @@ public:
         {
             std::ostringstream oss;
             oss << "{\n"
-                << "\"name\": \"" << data->Name() << "\",\n"
+                << "\"name\": \"" << prefix_ << " " << data->Name() << "\",\n"
                 << "\"value\": " << data->Value() << ",\n"
                 << "\"unit\": \"" << data->Unit() << "\"\n"
                 << "}\n";
 
-            if (!result.empty())
+            if (!result_.empty())
             {
-                result += ",\n";
+                result_ += ",\n";
             }
-            result += oss.str();
+            result_ += oss.str();
         }
     }
     std::string Result() const
     {
-        return result;
+        return result_;
+    }
+    void SetPrefix(const std::string& prefix)
+    {
+        prefix_ = prefix;
     }
 
 private:
-    std::string result;
+    std::string result_;
+    std::string prefix_ = "";
 };
 }

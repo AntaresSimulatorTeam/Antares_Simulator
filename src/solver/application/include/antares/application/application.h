@@ -21,7 +21,7 @@ public:
     ** \brief Default Constructor
     */
 
-    Application(Benchmarking::CustomBenchmarkAgregator& benchs);
+    Application();
     /*!
     ** \brief Destructor
     */
