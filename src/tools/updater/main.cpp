@@ -49,7 +49,7 @@ class MyStudyFinder final : public Data::StudyFinder
 public:
     void onStudyFound(const String& folder, Data::VersionStruct version) override
     {
-        if (version == Data::versionUnknown || version > versionLatest)
+        if (version == Data::versionUnknown || version > Data::versionLatest)
         {
             logs.info() << folder << " : version of study is too old, too new or unknown";
             return;
