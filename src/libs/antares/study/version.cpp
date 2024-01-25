@@ -98,7 +98,7 @@ VersionStruct::VersionStruct(const std::string& s)
     try
     {
         major = std::stoul(s.substr(0, separator));
-        minor = std::stoul(s.substr(separator));
+        minor = std::stoul(s.substr(separator + 1));
     }
     catch (std::invalid_argument&)
     {
