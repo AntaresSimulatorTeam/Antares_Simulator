@@ -96,14 +96,6 @@ averageResults OutputRetriever::overallCost(Area* area)
     return averageResults(result->avgdata);
 }
 
-averageResults OutputRetriever::STSLevel_PSP_Open(Area* area)
-{
-    auto result = retrieveAreaResults<Variable::Economy::VCardShortTermStorage>(area);
-    // PSP_open / Level, see STStorageOutputCaptions.cpp
-    const unsigned int PSP_Open_Level = 2;
-    return result[area->index][PSP_Open_Level].avgdata;
-}
-
 averageResults OutputRetriever::load(Area* area)
 {
     auto result = retrieveAreaResults<Variable::Economy::VCardTimeSeriesValuesLoad>(area);
@@ -148,7 +140,7 @@ ScenarioBuilderRule::ScenarioBuilderRule(Study& study)
         study.parameters.useCustomScenario = true;
         study.parameters.activeRulesScenario = "Custom";
     }
-}
+ }
 
 
 // =====================

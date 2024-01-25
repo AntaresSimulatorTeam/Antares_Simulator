@@ -203,7 +203,7 @@ bool Series::validateRuleCurves() const
     if (!validateUpperRuleCurve() || !validateLowerRuleCurve())
         return false;
 
-    for (unsigned int i = 0; i < HOURS_PER_YEAR; i++)
+    for (int i = 0; i < HOURS_PER_YEAR; i++)
     {
         if (lowerRuleCurve[i] > upperRuleCurve[i])
         {
