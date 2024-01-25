@@ -54,7 +54,7 @@ public:
     ** \param filename The filename to read
     ** \return The version of the study, or 0 if unknown (invalid header)
     */
-    static uint ReadVersionFromFile(const AnyString& filename);
+    static std::string ReadVersionFromFile(const AnyString& filename);
 
 public:
     //! \name Constructor & Destructor
@@ -117,7 +117,7 @@ private:
     bool internalLoadFromINIFile(const IniFile& ini, bool warnings);
 
     //! Get the version written in an header file
-    static uint internalFindVersionFromFile(const IniFile& ini);
+    static std::string internalFindVersionFromFile(const IniFile& ini);
 
 }; // class StudyHeader;
 

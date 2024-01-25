@@ -50,7 +50,7 @@ namespace Antares::Data
 static inline Version StudyFormatCheck(const String& headerFile)
 {
     // The raw version number
-    uint version = StudyHeader::ReadVersionFromFile(headerFile);
+    uint version = std::stoul(StudyHeader::ReadVersionFromFile(headerFile));
     // Its equivalent
     Version venum = VersionIntToVersion(version);
 
@@ -74,7 +74,7 @@ std::string VersionStruct::toString() const
 
 VersionStruct::VersionStruct(std::string s)
 {
-    int separator = s.find('.');
+    unsigned separator = s.find('.');
     if (separator == std::string::npos)
         logs.error() << "Invalid version format, exiting";
 
@@ -83,7 +83,7 @@ VersionStruct::VersionStruct(std::string s)
         major = std::stoul(s.substr(0, separator));
         minor = std::stoul(s.substr(separator));
     }
-    catch (std::invalid_argument)
+    catch (std::invalid_argument&)
     {
         logs.error() << "Invalid version format, exiting";
     }
