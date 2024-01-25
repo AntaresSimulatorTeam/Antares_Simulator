@@ -2,6 +2,7 @@
 import os
 from utils.find_output import  find_dated_output_folder
 from pathlib import Path
+
 class CustomBenchmark:
     def __init__(self, study_path: Path, dest: Path) -> None:
         self.study_path = study_path
