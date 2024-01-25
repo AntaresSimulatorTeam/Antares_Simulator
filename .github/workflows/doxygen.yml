@@ -3,7 +3,7 @@ name: GitHub Pages
 on:
   push:
     branches:
-      - develop  # Set a branch name to trigger deployment
+      - clean-gh-pages  # Set a branch name to trigger deployment
 
 jobs:
   deploy:
@@ -17,7 +17,20 @@ jobs:
         with:
           submodules: true  # Fetch Hugo themes (true OR recursive)
           fetch-depth: 0    # Fetch all history for .GitInfo and .Lastmod
+      
+      - name: clean
+        run: mkdir tmp
 
+      - name: Deploy empty
+        uses: peaceiris/actions-gh-pages@v3
+        # If you're changing the branch from main,
+        # also change the `main` in `refs/heads/main`
+        # below accordingly.
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./tmp
+          # destination_dir: ./doxygen
+            
       - name: theme
         run: |
              git clone https://github.com/jothepro/doxygen-awesome-css.git
