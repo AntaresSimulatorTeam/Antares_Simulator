@@ -21,25 +21,11 @@ json_collector.collect()
     
 class TestFromJson:
     
-    @pytest.fixture(autouse=True)    
-    def setup_method_fixture(self, do_benchmark, custom_benchmark_json):
-        self.do_benchmark = False
-        self.list_of_benchmark = []
-        self.custom_benchmark_json = custom_benchmark_json
-        self.do_benchmark = do_benchmark
-        if (self.do_benchmark):
-            with open(self.custom_benchmark_json, "w") as out:
-                    out.write("[\n")
-
-    def teardown_method(self):
-        if self.do_benchmark:
-            with open(self.custom_benchmark_json, "+a") as out:
-                out.write("\n]")
-
     @pytest.mark.json
     @pytest.mark.parametrize('study_path, test_check_data', json_collector.pairs(), ids=json_collector.testIds())
     def test(self, study_path, test_check_data, check_runner):
         checks = create_checks(study_path, test_check_data, simulation=check_runner.get_simulation())
         check_runner.run(checks)
+        
 
 
