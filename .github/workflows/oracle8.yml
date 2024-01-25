@@ -85,7 +85,7 @@ jobs:
 
     - name: Configure
       run: |
-           source /opt/rh/gcc-toolset-10/enable
+           source /opt/rh/gcc-toolset-11/enable
            cmake -B _build -S src \
              -DCMAKE_BUILD_TYPE=Release \
              -DBUILD_TESTING=ON \
@@ -95,7 +95,7 @@ jobs:
 
     - name: Build
       run: |
-           source /opt/rh/gcc-toolset-10/enable
+           source /opt/rh/gcc-toolset-11/enable
            cmake --build _build --config Release -j$(nproc)
 
     - name: Run unit and end-to-end tests
