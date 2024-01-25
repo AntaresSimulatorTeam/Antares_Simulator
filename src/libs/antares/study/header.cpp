@@ -129,7 +129,7 @@ bool StudyHeader::internalLoadFromINIFile(const IniFile& ini, bool warnings)
             // Version
             if (p->key == "version")
             {
-                version = VersionStruct::StudyFormatCheck(p->value);
+                version = VersionStruct::buildVersionLegacyOrCurrent(p->value);
                 continue;
             }
 

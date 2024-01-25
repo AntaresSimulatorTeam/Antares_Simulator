@@ -105,7 +105,8 @@ public:
 
     std::string toString() const;
 
-    static VersionStruct StudyFormatCheck(const std::string&);
+    static VersionStruct studyFormatCheck(const std::string& headerFilePath);
+    static VersionStruct buildVersionLegacyOrCurrent(const std::string& versionStr);
 
     static const std::map<enum Version, const std::string> mapEnum;
 };

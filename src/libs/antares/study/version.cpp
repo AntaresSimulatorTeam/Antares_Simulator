@@ -59,26 +59,29 @@ const std::map<enum Version, const std::string> VersionStruct::mapEnum =
     {version880, "8.8"}
 };
 
-static inline VersionStruct LegacyStudyFormatCheck(std::string& versionStr)
+static inline VersionStruct legacyStudyFormatCheck(const std::string& versionStr)
 {
     unsigned versionNumber = std::stoul(versionStr);
 
-    // Its equivalent
     Version venum = VersionIntToVersion(versionNumber);
 
     const std::string& version = VersionStruct::mapEnum.at(venum);
     return VersionStruct(version);
 }
 
-VersionStruct VersionStruct::StudyFormatCheck(const std::string& headerFile)
+VersionStruct VersionStruct::buildVersionLegacyOrCurrent(const std::string& versionStr)
+{
+    // if the string doesn't contains a dot it's legacy format
+    if (versionStr.find(".") == std::string::npos)
+        return legacyStudyFormatCheck(versionStr);
+    return VersionStruct(versionStr);
+}
+
+VersionStruct VersionStruct::studyFormatCheck(const std::string& headerFilePath)
 {
     // The raw version number
-    std::string versionStr = StudyHeader::ReadVersionFromFile(headerFile);
-
-    if (versionStr.find(".") == std::string::npos)
-        return LegacyStudyFormatCheck(versionStr);
-
-    return VersionStruct(versionStr);
+    const std::string& versionStr = StudyHeader::ReadVersionFromFile(headerFilePath);
+    return buildVersionLegacyOrCurrent(versionStr);
 }
 
 std::string VersionStruct::toString() const
@@ -245,7 +248,7 @@ VersionStruct StudyTryToFindTheVersion(const AnyString& folder)
         abspath.reserve(directory.size() + 20);
         abspath.clear() << directory << SEP << "study.antares";
         if (IO::File::Exists(abspath))
-            return VersionStruct::StudyFormatCheck(abspath);
+            return VersionStruct::studyFormatCheck(abspath);
     }
     return versionUnknown;
 }

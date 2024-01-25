@@ -140,7 +140,7 @@ bool initResources(int argc, char* argv[])
 bool initComponents(std::shared_ptr<Data::Study> study, const std::string& studyPath)
 {
     study->header.version =
-        Data::VersionStruct::StudyFormatCheck(studyPath + Yuni::IO::Separator + "study.antares");
+        Data::VersionStruct::studyFormatCheck(studyPath + Yuni::IO::Separator + "study.antares");
     study->folder = studyPath;
     study->folderInput = studyPath + Yuni::IO::Separator + "input";
 
