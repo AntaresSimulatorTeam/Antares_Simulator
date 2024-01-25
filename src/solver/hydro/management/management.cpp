@@ -368,10 +368,11 @@ bool HydroManagement::checkMinGeneration(uint year) const
     return ret;
 }
 
-void HydroManagement::prepareNetDemand(uint numSpace, uint year, Data::SimulationMode mode)
+void HydroManagement::prepareNetDemand(uint year, Data::SimulationMode mode,
+                                       const Antares::Data::Area::ScratchMap& scratchmap)
 {
-    areas_.each([this, &year, &numSpace, &mode](const Data::Area& area) {
-        auto& scratchpad = area.scratchpad[numSpace];
+    areas_.each([this, &year, &scratchmap, &mode](const Data::Area& area) {
+        const auto& scratchpad = scratchmap.at(&area);
 
         const auto& rormatrix = area.hydro.series->ror;
         const auto* ror = rormatrix.getColumn(year);
@@ -488,7 +489,7 @@ bool HydroManagement::checksOnGenerationPowerBounds(uint year) const
 void HydroManagement::makeVentilation(double* randomReservoirLevel,
                                       Solver::Variable::State& state,
                                       uint y,
-                                      uint numSpace)
+                                      Antares::Data::Area::ScratchMap& scratchmap)
 {
     prepareInflowsScaling(y);
     minGenerationScaling(y);
@@ -497,11 +498,11 @@ void HydroManagement::makeVentilation(double* randomReservoirLevel,
         throw FatalError("hydro management: invalid minimum generation");
     }
 
-    prepareNetDemand(numSpace, y, parameters_.mode);
+    prepareNetDemand(y, parameters_.mode, scratchmap);
     prepareEffectiveDemand();
 
     prepareMonthlyOptimalGenerations(randomReservoirLevel, y);
-    prepareDailyOptimalGenerations(state, y, numSpace);
+    prepareDailyOptimalGenerations(state, y, scratchmap);
 }
 
 } // namespace Antares

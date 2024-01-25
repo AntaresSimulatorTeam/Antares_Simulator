@@ -225,13 +225,13 @@ struct DebugData
 inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::State& state,
                                                             Data::Area& area,
                                                             uint y,
-                                                            uint numSpace)
+                                                            Antares::Data::Area::ScratchMap& scratchmap)
 {
     auto const srcinflows = area.hydro.series->storage.getColumn(y);
 
     auto& data = tmpDataByArea_[&area];
 
-    auto& scratchpad = area.scratchpad[numSpace];
+    auto& scratchpad = scratchmap.at(&area);
 
     auto& meanMaxDailyGenPower = scratchpad.meanMaxDailyGenPower;
 
@@ -549,11 +549,11 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
 
 void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::State& state,
                                                      uint y,
-                                                     uint numSpace)
+                                                     Antares::Data::Area::ScratchMap& scratchmap)
 {
     areas_.each(
       [&](Data::Area& area) {
-          prepareDailyOptimalGenerations(state, area, y, numSpace);
+          prepareDailyOptimalGenerations(state, area, y, scratchmap);
           });
 }
 } // namespace Antares

@@ -86,6 +86,7 @@ public:
                     resultWriter)
     {
         hydroHotStart = (study.parameters.initialReservoirLevels.iniLevels == Data::irlHotStart);
+        scratchmap = study.areas.buildScratchMap(numSpace);
     }
 
     yearJob(const yearJob&) = delete;
@@ -108,6 +109,7 @@ private:
     Benchmarking::IDurationCollector& pDurationCollector;
     IResultWriter& pResultWriter;
     HydroManagement hydroManagement;
+    Antares::Data::Area::ScratchMap scratchmap;
 private:
     /*
     ** \brief Log failed week
@@ -168,11 +170,11 @@ public:
             // removed
 
             // 3 - Preparing data related to Clusters in 'must-run' mode
-            simulation_->prepareClustersInMustRunMode(numSpace, y);
+            simulation_->prepareClustersInMustRunMode(scratchmap, y);
 
             // 4 - Hydraulic ventilation
             Benchmarking::Timer timer;
-            hydroManagement.makeVentilation(randomReservoirLevel, state[numSpace], y, numSpace);
+            hydroManagement.makeVentilation(randomReservoirLevel, state[numSpace], y, scratchmap);
             timer.stop();
             pDurationCollector.addDuration("hydro_ventilation", timer.get_duration());
 
@@ -195,7 +197,8 @@ public:
                                                failedWeekList,
                                                isFirstPerformedYearOfSimulation,
                                                hydroManagement.ventilationResults(),
-                                               optWriter);
+                                               optWriter,
+                                               scratchmap);
 
             // Log failing weeks
             logFailedWeek(y, study, failedWeekList);

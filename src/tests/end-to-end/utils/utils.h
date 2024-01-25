@@ -69,6 +69,7 @@ class OutputRetriever
 public:
     OutputRetriever(ISimulation<Economy>& simulation) : simulation_(simulation) {}
     averageResults overallCost(Area* area);
+    averageResults STSLevel_PSP_Open(Area* area);
     averageResults load(Area* area);
     averageResults hydroStorage(Area* area);
     averageResults flow(AreaLink* link);
