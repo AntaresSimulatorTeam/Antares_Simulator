@@ -136,6 +136,7 @@ bool runWeeklyOptimization(const OptimizationOptions& options,
 
             copy(problemeHebdo->ProblemeAResoudre->IndicesDebutDeLigne, year_ptr->Mdeb);
             copy(problemeHebdo->ProblemeAResoudre->NomDesVariables, year_ptr->variables);
+            copy(problemeHebdo->ProblemeAResoudre->NomDesContraintes, year_ptr->constraints);
 
             lps->_constant = year_ptr;
         }

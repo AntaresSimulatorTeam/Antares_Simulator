@@ -98,6 +98,7 @@ public:
     // dans Antarès ?
 
     std::vector<std::string> variables;
+    std::vector<std::string> constraints;
 
     friend class boost::serialization::access;
     template <class Archive>
@@ -113,6 +114,7 @@ public:
         ar& SignificationMetierDesVariables;
         ar& SignificationMetierDesContraintes;
         ar& variables;
+        ar& constraints;
     }
 };
 
