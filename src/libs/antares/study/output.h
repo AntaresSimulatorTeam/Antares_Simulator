@@ -87,7 +87,7 @@ public:
 
 public:
     //! Version of the solver used for the simulation
-    uint version;
+    VersionStruct version;
     //! Date/time when the simulation has been launched
     int64_t timestamp;
     //! Mode (economy/adequacy/other)

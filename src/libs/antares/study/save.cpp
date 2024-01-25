@@ -50,7 +50,7 @@ bool Study::resetFolderIcon() const
         buffer.clear() << "[.shellclassinfo]\r\n"
                        << "iconfile = settings/resources/study.ico\r\n"
                        << "iconindex = 0\r\n"
-                       << "infotip = Antares Study" << VersionToCStr((Version)header.version)
+                       << "infotip = Antares Study" << header.version.toString())
                        << ": " << header.caption << "\r\n";
         file << buffer;
     }
@@ -134,8 +134,7 @@ bool Study::saveToFolder(const AnyString& newfolder)
     // In this case, we have to invalidate all matrices to make sure that all
     // data will be rewritten to avoid data loss
     // (if filenames have changed for examples)
-    bool versionUpgrade = ((uint)header.version != (uint)versionLatest);
-    if (versionUpgrade)
+    if (header.version != versionLatest)
     {
         logs.info() << "  performing a format upgrade";
         // Invalidate all matrices

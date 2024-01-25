@@ -53,7 +53,7 @@ bool Study::internalLoadHeader(const String& path)
     // Informations about the study
     logs.info();
     logs.notice() << "Preparing " << header.caption << "...";
-    logs.info() << "  detected version: " << header.version;
+    logs.info() << "  detected version: " << header.version.toString();
     logs.info() << "  from `" << path << '`';
     logs.info();
     return true;

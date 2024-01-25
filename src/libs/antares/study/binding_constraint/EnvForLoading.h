@@ -7,6 +7,7 @@
 #include "yuni/core/fwd.h"
 #include <antares/inifile/inifile.h>
 #include <antares/array/matrix.h>
+#include <antares/study/version.h>
 
 namespace Antares::Data {
 
@@ -14,7 +15,7 @@ class AreaList;
 class EnvForLoading final
 {
 public:
-    explicit EnvForLoading(AreaList& l, unsigned v) : areaList(l), version(v)
+    explicit EnvForLoading(AreaList& l, VersionStruct& v) : areaList(l), version(v)
     {
     }
     //! INI file
@@ -29,7 +30,7 @@ public:
     //! List of areas
     AreaList& areaList;
 
-    unsigned version;
+    VersionStruct version;
 };
 
 } // Data

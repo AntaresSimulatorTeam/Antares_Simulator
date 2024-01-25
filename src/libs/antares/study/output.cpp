@@ -89,7 +89,7 @@ private:
 } // anonymous namespace
 
 Output::Output(const AnyString& folder) :
- version(0), timestamp(0), mode(Data::SimulationMode::Economy), menuID(-1), viewMenuID(-1), outputViewerID(-1)
+ timestamp(0), mode(Data::SimulationMode::Economy), menuID(-1), viewMenuID(-1), outputViewerID(-1)
 {
     loadFromFolder(folder);
 }
@@ -97,7 +97,7 @@ Output::Output(const AnyString& folder) :
 bool Output::valid() const
 {
     // The outputs as we know them was first introduced in Antares 3.0
-    return (uint)version <= (uint)Data::versionLatest;
+    return version <= Data::versionLatest;
 }
 
 bool Output::loadFromFolder(const AnyString& folder)
@@ -109,7 +109,6 @@ bool Output::loadFromFolder(const AnyString& folder)
     title.clear();
     name.clear();
     path.clear();
-    version = 0;
     mode = Data::SimulationMode::Unknown;
 
     // Load the INI file in memory
@@ -135,12 +134,12 @@ bool Output::loadFromFolder(const AnyString& folder)
     {
         if (p->key == "version")
         {
-            version = p->value.to<uint>();
+            version = VersionStruct::StudyFormatCheck(p->value);
 
             // Early checks about the version
-            if (version > (uint)Data::versionLatest)
+            if (version > Data::versionLatest)
             {
-                version = 0;
+                logs.warning() << "Study Version greater then supported";
                 return false;
             }
         }

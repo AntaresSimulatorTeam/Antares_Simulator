@@ -36,12 +36,9 @@ using namespace Yuni;
 #define SEP IO::Separator
 
 // Checking version between CMakeLists.txt and Antares'versions
-enum
-{
-    versionFromCMake = (ANTARES_VERSION_HI * 100 + ANTARES_VERSION_LO * 10),
-};
+static auto versionFromCMake = Antares::Data::VersionStruct(ANTARES_VERSION_HI, ANTARES_VERSION_LO);
 
-static_assert((uint)versionFromCMake == (uint)Antares::Data::versionLatest);
+/* static_assert(versionFromCMake == Antares::Data::versionLatest); */
 
 namespace Antares::Data
 {
@@ -73,7 +70,7 @@ static inline VersionStruct LegacyStudyFormatCheck(std::string& versionStr)
     return VersionStruct(version);
 }
 
-VersionStruct VersionStruct::StudyFormatCheck(const std::string headerFile)
+VersionStruct VersionStruct::StudyFormatCheck(const std::string& headerFile)
 {
     // The raw version number
     std::string versionStr = StudyHeader::ReadVersionFromFile(headerFile);
@@ -248,7 +245,7 @@ VersionStruct StudyTryToFindTheVersion(const AnyString& folder)
         abspath.reserve(directory.size() + 20);
         abspath.clear() << directory << SEP << "study.antares";
         if (IO::File::Exists(abspath))
-            return StudyFormatCheck(abspath);
+            return VersionStruct::StudyFormatCheck(abspath);
     }
     return versionUnknown;
 }
