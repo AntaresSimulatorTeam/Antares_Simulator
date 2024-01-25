@@ -42,7 +42,7 @@ jobs:
     - name: Install libraries
       run: |
            dnf install -y epel-release git cmake wget rpm-build redhat-lsb-core
-           dnf install -y unzip libuuid-devel boost-test boost-devel gcc-toolset-10-toolchain zlib-devel
+           dnf install -y unzip libuuid-devel boost-test boost-devel gcc-toolset-11 zlib-devel
 
     - name: Checkout
       run: |
