@@ -37,6 +37,7 @@
 
 #include "spx_constantes_externes.h"
 #include "variables/VariableManagement.h"
+#include "variables/VariableManagerUtils.h"
 
 using namespace Antares;
 using namespace Antares::Data;
@@ -96,18 +97,13 @@ void setBoundsForUnsuppliedEnergy(PROBLEME_HEBDO* problemeHebdo,
 
     const bool reserveJm1 = (problemeHebdo->YaDeLaReserveJmoins1);
     const bool opt1 = (optimizationNumber == PREMIERE_OPTIMISATION);
+    auto variableManagerFactory = VariableManagerFactoryFromProblemHebdo(problemeHebdo);
 
     for (int pdtHebdo = PremierPdtDeLIntervalle, pdtJour = 0; pdtHebdo < DernierPdtDeLIntervalle;
          pdtHebdo++, pdtJour++)
     {
-        VariableManagement::VariableManagerFactory variableManagerFactory(
-          problemeHebdo->CorrespondanceVarNativesVarOptim,
-          problemeHebdo->NumeroDeVariableStockFinal,
-          problemeHebdo->NumeroDeVariableDeTrancheDeStock,
-          problemeHebdo->NombreDePasDeTempsPourUneOptimisation);
-
-        const CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
-          = problemeHebdo->CorrespondanceVarNativesVarOptim[pdtJour];
+        // const CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
+        //   = problemeHebdo->CorrespondanceVarNativesVarOptim[pdtJour];
         const ALL_MUST_RUN_GENERATION& AllMustRunGeneration
           = problemeHebdo->AllMustRunGeneration[pdtHebdo];
         const CONSOMMATIONS_ABATTUES& ConsommationsAbattues
@@ -166,6 +162,9 @@ static void setBoundsForShortTermStorage(PROBLEME_HEBDO* problemeHebdo,
     std::vector<double*>& AddressForVars
       = problemeHebdo->ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees;
     int weekFirstHour = problemeHebdo->weekInTheYear * 168;
+
+    auto variableManagerFactory = VariableManagerFactoryFromProblemHebdo(problemeHebdo);
+
     for (int pdtHebdo = PremierPdtDeLIntervalle, pdtJour = 0; pdtHebdo < DernierPdtDeLIntervalle;
          pdtHebdo++, pdtJour++)
     {
@@ -181,8 +180,9 @@ static void setBoundsForShortTermStorage(PROBLEME_HEBDO* problemeHebdo,
                 auto& STSResult
                   = problemeHebdo->ResultatsHoraires[areaIndex].ShortTermStorage[pdtHebdo];
                 // 1. Injection
-                int varInjection = CorrespondanceVarNativesVarOptim.SIM_ShortTermStorage
-                                     .InjectionVariable[clusterGlobalIndex];
+                int varInjection
+                  = variableManagerFactory.GetVariableManager(pdtJour).ShortTermStorageInjection(
+                    clusterGlobalIndex);
                 Xmin[varInjection] = 0.;
                 Xmax[varInjection] = storage.injectionNominalCapacity
                                      * storage.series->maxInjectionModulation[hourInTheYear];
