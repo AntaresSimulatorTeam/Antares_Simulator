@@ -36,6 +36,7 @@
 #include <yuni/core/math.h>
 
 #include "spx_constantes_externes.h"
+#include "constraints/VariableManagement.h"
 
 using namespace Antares;
 using namespace Antares::Data;
@@ -99,6 +100,12 @@ void setBoundsForUnsuppliedEnergy(PROBLEME_HEBDO* problemeHebdo,
     for (int pdtHebdo = PremierPdtDeLIntervalle, pdtJour = 0; pdtHebdo < DernierPdtDeLIntervalle;
          pdtHebdo++, pdtJour++)
     {
+        VariableManagement::VariableManagerFactory variableManagerFactory(
+          problemeHebdo->CorrespondanceVarNativesVarOptim,
+          problemeHebdo->NumeroDeVariableStockFinal,
+          problemeHebdo->NumeroDeVariableDeTrancheDeStock,
+          problemeHebdo->NombreDePasDeTempsPourUneOptimisation);
+
         const CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
           = problemeHebdo->CorrespondanceVarNativesVarOptim[pdtJour];
         const ALL_MUST_RUN_GENERATION& AllMustRunGeneration
@@ -116,7 +123,9 @@ void setBoundsForUnsuppliedEnergy(PROBLEME_HEBDO* problemeHebdo,
                   += problemeHebdo->ReserveJMoins1[pays].ReserveHoraireJMoins1[pdtHebdo];
             }
 
-            int var = CorrespondanceVarNativesVarOptim.NumeroDeVariableDefaillancePositive[pays];
+            int var
+              = variableManagerFactory.GetVariableManager(pdtJour).PositiveUnsuppliedEnergy(pays);
+            // int var = CorrespondanceVarNativesVarOptim.NumeroDeVariableDefaillancePositive[pays];
             Xmin[var] = 0.0;
 
             double MaxAllMustRunGenerationOfArea = 0.;

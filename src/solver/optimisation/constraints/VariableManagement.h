@@ -144,8 +144,6 @@ public:
       const std::vector<std::vector<int>>& NumeroDeVariableDeTrancheDeStock,
       const int32_t& NombreDePasDeTempsPourUneOptimisation);
 
-    int GetShiftedTimeStep(int offset, int delta) const;
-
     /*!
      * @brief
      * @param offset: offset from the current time step
@@ -153,6 +151,14 @@ public:
      * @return VariableManager object
      */
     VariableManager GetVariableManager(unsigned int hourInWeek, int offset, int delta);
+    /*!
+     * @brief
+     * @return VariableManager object
+     */
+    VariableManager GetVariableManager(unsigned int hourInWeek)
+    {
+        return GetVariableManager(hourInWeek, 0, 0);
+    }
 
 private:
     const std::vector<CORRESPONDANCES_DES_VARIABLES>& CorrespondanceVarNativesVarOptim_;
@@ -160,5 +166,6 @@ private:
     const std::vector<std::vector<int>>& NumeroDeVariableDeTrancheDeStock_;
     const int32_t& NombreDePasDeTempsPourUneOptimisation_;
     unsigned int hourInWeek_ = 0;
+    int GetShiftedTimeStep(int offset, int delta) const;
 };
 } // namespace VariableManagement
