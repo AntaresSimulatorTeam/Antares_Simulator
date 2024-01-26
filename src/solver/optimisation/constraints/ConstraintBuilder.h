@@ -207,7 +207,7 @@ private:
      * @param delta: number of time steps for the variable
      * @return VariableManager object
      */
-    NewVariable::VariableManager GetVariableManager(int offset = 0, int delta = 0) const;
+    VariableManagement::VariableManager GetVariableManager(int offset = 0, int delta = 0) const;
 };
 
 /*! factory class to build a Constraint */

@@ -3,7 +3,7 @@
 #include "../opt_structure_probleme_a_resoudre.h"
 #include "../../simulation/sim_structure_probleme_economique.h"
 
-namespace NewVariable
+namespace VariableManagement
 {
 
 /*!
@@ -134,4 +134,4 @@ private:
     const std::vector<int>& NumeroDeVariableStockFinal;
     const std::vector<std::vector<int>>& NumeroDeVariableDeTrancheDeStock;
 };
-} // namespace NewVariable
+} // namespace VariableManagement
