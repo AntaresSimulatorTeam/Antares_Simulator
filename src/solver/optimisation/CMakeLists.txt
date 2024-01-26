@@ -169,7 +169,8 @@ set(RTESOLVER_OPT
 		constraints/ExchangeBalance.cpp
 		constraints/ExchangeBalanceGroup.h
 		constraints/ExchangeBalanceGroup.cpp
-		constraints/VariableManager.h
+		constraints/VariableManagement.h
+		constraints/VariableManagement.cpp
 
 	)
 

@@ -134,4 +134,25 @@ private:
     const std::vector<int>& NumeroDeVariableStockFinal;
     const std::vector<std::vector<int>>& NumeroDeVariableDeTrancheDeStock;
 };
+
+class VariableManagerFactory
+{
+public:
+    VariableManagerFactory(
+      const std::vector<CORRESPONDANCES_DES_VARIABLES>& CorrespondanceVarNativesVarOptim,
+      const std::vector<int>& NumeroDeVariableStockFinal,
+      std::vector<std::vector<int>>& NumeroDeVariableDeTrancheDeStock,
+      const int32_t& NombreDePasDeTempsPourUneOptimisation);
+
+    int GetShiftedTimeStep(int offset, int delta) const;
+
+    VariableManager GetVariableManager(unsigned int hourInWeek, int offset, int delta);
+
+private:
+    const std::vector<CORRESPONDANCES_DES_VARIABLES>& CorrespondanceVarNativesVarOptim_;
+    const std::vector<int>& NumeroDeVariableStockFinal_;
+    const std::vector<std::vector<int>>& NumeroDeVariableDeTrancheDeStock_;
+    const int32_t& NombreDePasDeTempsPourUneOptimisation_;
+    unsigned int hourInWeek_ = 0;
+};
 } // namespace VariableManagement

@@ -5,7 +5,7 @@
 #include "../opt_rename_problem.h"
 #include "../opt_fonctions.h"
 #include "../../simulation/sim_structure_probleme_economique.h"
-#include "VariableManager.h"
+#include "VariableManagement.h"
 
 #include <utility>
 
