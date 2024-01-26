@@ -62,7 +62,11 @@ VersionStruct VersionStruct::buildVersionLegacyOrCurrent(const std::string& vers
     // if the string doesn't contains a dot it's legacy format
     if (versionStr.find(".") == std::string::npos)
         return legacyStudyFormatCheck(versionStr);
-    return VersionStruct(versionStr);
+
+    if (VersionStruct::isVersionSupported(versionStr)
+            return VersionStruct(versionStr);
+
+    return VersionStruct(0, 0);
 }
 
 VersionStruct VersionStruct::studyFormatCheck(const std::string& headerFilePath)
@@ -129,6 +133,16 @@ VersionStruct StudyTryToFindTheVersion(const AnyString& folder)
 
 bool StudyVersion::isStudyLatestVersion(std::string studyFolder) const {
     return StudyTryToFindTheVersion(studyFolder) == VersionStruct::versionLatest();
+}
+
+bool VersionStruct::isVersionSupported(const std::string& version)
+{
+    auto found = std::find(supportedVersions.begin(), supportedVersions.end(), version);
+    if (found != supportedVersions.end())
+        return true;
+
+    logs.error() << "Version: " << version << " not supported, please upgrade your study";
+    return false;
 }
 
 VersionStruct legacyVersionIntToVersion(uint version)

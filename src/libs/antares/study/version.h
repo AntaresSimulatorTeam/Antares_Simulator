@@ -71,6 +71,8 @@ public:
 
     std::string toString() const;
 
+    static bool isVersionSupported(const std::string& version);
+
     static VersionStruct studyFormatCheck(const std::string& headerFilePath);
     static VersionStruct buildVersionLegacyOrCurrent(const std::string& versionStr);
 
