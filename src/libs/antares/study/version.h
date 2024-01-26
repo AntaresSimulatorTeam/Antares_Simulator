@@ -51,7 +51,15 @@ public:
 
     std::string toString() const;
 
-    static StudyVersion studyFormatCheck(const std::string& headerFilePath);
+    /*!
+     ** \brief Try to determine the version of a study
+     ** \ingroup study
+     **
+     ** \param folder The folder where data are located
+     ** \return The version of the study. `VersionUnknown` of not found
+     */
+    static StudyVersion tryToFindTheVersion(const AnyString& folder);
+
     static StudyVersion buildVersionLegacyOrCurrent(const std::string& versionStr);
 
     static StudyVersion versionLatest();
@@ -65,15 +73,6 @@ private:
     static const std::vector<std::string> supportedVersions;
 };
 
-/*!
-** \brief Try to determine the version of a study
-** \ingroup study
-**
-** \param folder The folder where data are located
-** \param checkFor1x True to check for an old 1.x study
-** \return The version of the study. `VersionUnknown` of not found
-*/
-StudyVersion StudyTryToFindTheVersion(const AnyString& folder);
 
 /*!
 ** \brief Convert a mere integer into an enum `Version`

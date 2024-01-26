@@ -1004,7 +1004,7 @@ void OpenStudyFromFolder(wxString folder)
     // Getting the version of the study
     String studyfolder;
     wxStringToString(folder, studyfolder);
-    auto version = Data::StudyTryToFindTheVersion(studyfolder);
+    auto version = Data::StudyVersion::tryToFindTheVersion(studyfolder);
 
     if (version == Data::StudyVersion::versionUnknown())
     {

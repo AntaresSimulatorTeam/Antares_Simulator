@@ -57,7 +57,7 @@ void checkOrtoolsUsage(Antares::Data::UnitCommitmentMode ucMode,
 void checkStudyVersion(const AnyString& optStudyFolder)
 {
     using namespace Antares::Data;
-    auto version = StudyTryToFindTheVersion(optStudyFolder);
+    auto version = StudyVersion::tryToFindTheVersion(optStudyFolder);
 
     if (version == StudyVersion::versionUnknown())
         throw Error::InvalidStudy(optStudyFolder);

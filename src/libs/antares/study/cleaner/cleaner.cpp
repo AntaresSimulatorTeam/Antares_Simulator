@@ -58,7 +58,7 @@ bool StudyCleaningInfos::analyze()
     intruders.clear();
     postExclude.clear();
     // Getting the version
-    version = StudyTryToFindTheVersion(folder);
+    version = StudyVersion::tryToFindTheVersion(folder);
 
     if (version > StudyVersion::versionLatest())
     {

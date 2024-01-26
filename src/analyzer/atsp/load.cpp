@@ -297,7 +297,7 @@ bool ATSP::loadFromINIFile(const String& filename)
 
 bool ATSP::checkStudyVersion() const
 {
-    auto v = Data::StudyTryToFindTheVersion(pStudyFolder);
+    auto v = Data::StudyVersion::tryToFindTheVersion(pStudyFolder);
     if (v == Data::StudyVersion::versionUnknown())
     {
         logs.error() << "The folder is not a study";

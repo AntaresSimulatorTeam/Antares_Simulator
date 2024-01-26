@@ -82,13 +82,6 @@ StudyVersion StudyVersion::buildVersionLegacyOrCurrent(const std::string& versio
     return StudyVersion(0, 0);
 }
 
-StudyVersion StudyVersion::studyFormatCheck(const std::string& headerFilePath)
-{
-    // The raw version number
-    const std::string& versionStr = StudyHeader::ReadVersionFromFile(headerFilePath);
-    return buildVersionLegacyOrCurrent(versionStr);
-}
-
 std::string StudyVersion::toString() const
 {
     return std::to_string(major) + "." + std::to_string(minor);
@@ -124,7 +117,7 @@ StudyVersion StudyVersion::versionUnknown()
     return StudyVersion(0, 0);
 }
 
-StudyVersion StudyTryToFindTheVersion(const AnyString& folder)
+StudyVersion StudyVersion::tryToFindTheVersion(const AnyString& folder)
 {
     if (folder.empty()) // trivial check
         return StudyVersion::versionUnknown();
@@ -139,7 +132,11 @@ StudyVersion StudyTryToFindTheVersion(const AnyString& folder)
         abspath.reserve(directory.size() + 20);
         abspath.clear() << directory << SEP << "study.antares";
         if (IO::File::Exists(abspath))
-            return StudyVersion::studyFormatCheck(abspath);
+        {
+            // The raw version number
+            const std::string& versionStr = StudyHeader::ReadVersionFromFile(abspath);
+            return buildVersionLegacyOrCurrent(versionStr);
+        }
     }
     return StudyVersion::versionUnknown();
 }
