@@ -42,31 +42,19 @@ static auto versionFromCMake = Antares::Data::VersionStruct(ANTARES_VERSION_HI, 
 
 namespace Antares::Data
 {
-const std::map<enum Version, const std::string> VersionStruct::mapEnum =
-{
-    {versionUnknownEnum, "0.0"},
-    {version700, "7.0"},
-    {version710, "7.1"},
-    {version720, "7.2"},
-    {version800, "8.0"},
-    {version810, "8.1"},
-    {version820, "8.2"},
-    {version830, "8.3"},
-    {version840, "8.4"},
-    {version850, "8.5"},
-    {version860, "8.6"},
-    {version870, "8.7"},
-    {version880, "8.8"}
-};
 
 static inline VersionStruct legacyStudyFormatCheck(const std::string& versionStr)
 {
-    unsigned versionNumber = std::stoul(versionStr);
-
-    Version venum = VersionIntToVersion(versionNumber);
-
-    const std::string& version = VersionStruct::mapEnum.at(venum);
-    return VersionStruct(version);
+    unsigned versionNumber = 0;
+    try
+    {
+        versionNumber = std::stoul(versionStr);
+    }
+    catch (std::invalid_argument&)
+    {
+        logs.error() << "Invalid version number: " << versionStr;
+    }
+    return legacyVersionIntToVersion(versionNumber);
 }
 
 VersionStruct VersionStruct::buildVersionLegacyOrCurrent(const std::string& versionStr)
@@ -119,129 +107,6 @@ VersionStruct VersionStruct::versionUnknown()
     return VersionStruct(0, 0);
 }
 
-const char* VersionToCStr(const Version v)
-{
-    // The list should remain ordered in the reverse order for performance reasons
-    switch (v)
-    {
-    case versionFutur:
-        return ">8.8";
-    case version880:
-        return "8.8";
-    case version870:
-        return "8.7";
-    case version860:
-        return "8.6";
-    case version850:
-        return "8.5";
-    case version840:
-        return "8.4";
-    case version830:
-        return "8.3";
-    case version820:
-        return "8.2";
-    case version810:
-        return "8.1";
-    case version800:
-        return "8.0";
-
-    // older versions
-    case version720:
-        return "7.2";
-    case version710:
-        return "7.1";
-    case version700:
-        return "7.0";
-
-    case versionUnknownEnum:
-        return "0";
-    }
-    return "0.0";
-}
-
-const wchar_t* VersionToWStr(const Version v)
-{
-    // The list should remain ordered in the reverse order for performance reasons
-    switch (v)
-    {
-    case versionFutur:
-        return L">8.8";
-    case version880:
-        return L"8.8";
-    case version870:
-        return L"8.7";
-    case version860:
-        return L"8.6";
-    case version850:
-        return L"8.5";
-    case version840:
-        return L"8.4";
-    case version830:
-        return L"8.3";
-    case version820:
-        return L"8.2";
-    case version810:
-        return L"8.1";
-    case version800:
-        return L"8.0";
-
-    // older versions
-    case version720:
-        return L"7.2";
-    case version710:
-        return L"7.1";
-    case version700:
-        return L"7.0";
-    case versionUnknownEnum:
-        return L"0";
-    }
-    return L"0.0";
-}
-
-Version VersionIntToVersion(uint version)
-{
-    // The list should remain ordered in the reverse order for performance reasons
-    switch (version)
-    {
-    case 880:
-        return version880;
-    case 870:
-        return version870;
-    case 860:
-        return version860;
-    case 850:
-        return version850;
-    case 840:
-        return version840;
-    case 830:
-        return version830;
-    case 820:
-        return version820;
-    case 810:
-        return version810;
-    case 800:
-        return version800;
-
-    // older versions
-    case 720:
-        return version720;
-    case 710:
-        return version710;
-    case 700:
-        return version700;
-    case versionFutur:
-    case versionUnknownEnum:
-        return versionUnknownEnum;
-    default:
-        logs.error() << "Study version " << version << " is not supported by this version of "
-            "antares-solver";
-
-        logs.error() << "Studies in version <7.0 are no longer supported. Please upgrade it first"
-            << " if it's the case";
-    return versionUnknownEnum;
-    }
-}
-
 VersionStruct StudyTryToFindTheVersion(const AnyString& folder)
 {
     if (folder.empty()) // trivial check
@@ -264,6 +129,47 @@ VersionStruct StudyTryToFindTheVersion(const AnyString& folder)
 
 bool StudyVersion::isStudyLatestVersion(std::string studyFolder) const {
     return StudyTryToFindTheVersion(studyFolder) == VersionStruct::versionLatest();
+}
+
+VersionStruct legacyVersionIntToVersion(uint version)
+{
+    // The list should remain ordered in the reverse order for performance reasons
+    switch (version)
+    {
+    case 880:
+        return VersionStruct(8, 8);
+    case 870:
+        return VersionStruct(8, 7);
+    case 860:
+        return VersionStruct(8, 6);
+    case 850:
+        return VersionStruct(8, 5);
+    case 840:
+        return VersionStruct(8, 4);
+    case 830:
+        return VersionStruct(8, 3);
+    case 820:
+        return VersionStruct(8, 2);
+    case 810:
+        return VersionStruct(8, 1);
+    case 800:
+        return VersionStruct(8, 0);
+
+    // older versions
+    case 720:
+        return VersionStruct(7, 2);
+    case 710:
+        return VersionStruct(7, 1);
+    case 700:
+        return VersionStruct(7, 0);
+    default:
+        logs.error() << "Study version " << version << " is not supported by this version of "
+            "antares-solver";
+
+        logs.error() << "Studies in version <7.0 are no longer supported. Please upgrade it first"
+            << " if it's the case";
+    return VersionStruct(0, 0);
+    }
 }
 } // namespace Antares::Data
 

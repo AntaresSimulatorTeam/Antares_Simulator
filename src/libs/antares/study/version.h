@@ -39,40 +39,6 @@ namespace Antares::Data
 ** \ingroup study
 ** \see CHANGELOG.txt
 */
-enum Version
-{
-    //! Unknown version of a study
-    versionUnknownEnum = 0,
-    //! Study version 7.0
-    version700 = 700,
-    //! Study version 7.1
-    version710 = 710,
-    //! Study version 7.2
-    version720 = 720,
-    //! Study version 8.0
-    version800 = 800,
-    //! Study version 8.1
-    version810 = 810,
-    //! Study version 8.2
-    version820 = 820,
-    //! Study version 8.3
-    version830 = 830,
-    //! Study version 8.4
-    version840 = 840,
-    //! Study version 8.5
-    version850 = 850,
-    //! Study version 8.6
-    version860 = 860,
-    //! Study version 8.7
-    version870 = 870,
-    //! Study version 8.8
-    version880 = 880,
-
-    // Constants
-    //! A more recent version that we can't handle
-    versionFutur = 99999,
-
-};
 
 static std::vector<std::string> supportedVersions =
 {
@@ -108,8 +74,6 @@ public:
     static VersionStruct studyFormatCheck(const std::string& headerFilePath);
     static VersionStruct buildVersionLegacyOrCurrent(const std::string& versionStr);
 
-    static const std::map<enum Version, const std::string> mapEnum;
-
     static VersionStruct versionLatest();
     static VersionStruct versionUnknown();
 };
@@ -127,7 +91,7 @@ VersionStruct StudyTryToFindTheVersion(const AnyString& folder);
 /*!
 ** \brief Convert a mere integer into an enum `Version`
 */
-Version VersionIntToVersion(uint version);
+VersionStruct legacyVersionIntToVersion(uint version);
 
 class StudyVersion {
 public:
