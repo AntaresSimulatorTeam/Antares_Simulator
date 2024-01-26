@@ -29,6 +29,7 @@
 
 #include "../simulation/simulation.h"
 #include "../simulation/sim_extern_variables_globales.h"
+#include "variables/VariableManagerUtils.h"
 
 #include "opt_fonctions.h"
 
@@ -37,15 +38,18 @@ void OPT_InitialiserLesCoutsQuadratiques(PROBLEME_HEBDO* problemeHebdo, int PdtH
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
     ProblemeAResoudre->CoutLineaire.assign(ProblemeAResoudre->NombreDeVariables, 0.);
+    auto variableManagerFactory = VariableManagerFactoryFromProblemHebdo(problemeHebdo);
 
     const VALEURS_DE_NTC_ET_RESISTANCES& ValeursDeResistances
       = problemeHebdo->ValeursDeNTC[PdtHebdo];
-    const CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
-      = problemeHebdo->CorrespondanceVarNativesVarOptim[0];
+    // const CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
+    //   = problemeHebdo->CorrespondanceVarNativesVarOptim[0];
+    auto variable_manager = variableManagerFactory.GetVariableManager(0);
 
     for (uint32_t interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
     {
-        int var = CorrespondanceVarNativesVarOptim.NumeroDeVariableDeLInterconnexion[interco];
+        // int var = CorrespondanceVarNativesVarOptim.NumeroDeVariableDeLInterconnexion[interco];
+        int var = variable_manager.NTCDirect(interco);
         if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
             ProblemeAResoudre->CoutQuadratique[var]
               = ValeursDeResistances.ResistanceApparente[interco];
