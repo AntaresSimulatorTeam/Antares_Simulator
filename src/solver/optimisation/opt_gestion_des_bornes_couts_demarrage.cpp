@@ -54,9 +54,6 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(
     for (int pdtHebdo = PremierPdtDeLIntervalle, pdtJour = 0; pdtHebdo < DernierPdtDeLIntervalle;
          pdtHebdo++, pdtJour++)
     {
-        const CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
-          =  problemeHebdo->CorrespondanceVarNativesVarOptim[pdtJour];
-
         auto variable_manager = variableManagerFactory.GetVariableManager(pdtJour);
 
         for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
