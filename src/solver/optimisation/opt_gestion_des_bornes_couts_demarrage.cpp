@@ -31,6 +31,8 @@
 #include "../simulation/sim_structure_donnees.h"
 #include "../simulation/sim_structure_probleme_economique.h"
 #include "opt_fonctions.h"
+#include "variables/VariableManagement.h"
+#include "variables/VariableManagerUtils.h"
 
 using namespace Yuni;
 
@@ -47,12 +49,15 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(
       = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees;
     std::vector<double>& Xmin = ProblemeAResoudre->Xmin;
     std::vector<double>& Xmax = ProblemeAResoudre->Xmax;
+    auto variableManagerFactory = VariableManagerFactoryFromProblemHebdo(problemeHebdo);
 
     for (int pdtHebdo = PremierPdtDeLIntervalle, pdtJour = 0; pdtHebdo < DernierPdtDeLIntervalle;
          pdtHebdo++, pdtJour++)
     {
         const CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
           =  problemeHebdo->CorrespondanceVarNativesVarOptim[pdtJour];
+
+        auto variable_manager = variableManagerFactory.GetVariableManager(pdtJour);
 
         for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
@@ -70,8 +75,11 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(
                 const std::vector<int>& NombreMinDeGroupesEnMarcheDuPalierThermique
                   = PuissanceDisponibleEtCout.NombreMinDeGroupesEnMarcheDuPalierThermique;
 
-                int var = CorrespondanceVarNativesVarOptim
-                            .NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[palier];
+                // int var = CorrespondanceVarNativesVarOptim
+                //             .NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[palier];
+
+                int var = variable_manager.NumberOfDispatchableUnits(palier);
+
                 Xmax[var] = NombreMaxDeGroupesEnMarcheDuPalierThermique[pdtHebdo];
                 Xmin[var] = NombreMinDeGroupesEnMarcheDuPalierThermique[pdtHebdo];
 
@@ -80,8 +88,9 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(
                                                 .NombreDeGroupesEnMarcheDuPalier[index]);
                 AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat;
 
-                var = CorrespondanceVarNativesVarOptim
-                        .NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique[palier];
+                // var = CorrespondanceVarNativesVarOptim
+                //         .NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique[palier];
+                var = variable_manager.NumberStartingDispatchableUnits(palier);
                 Xmax[var] = LINFINI_ANTARES;
                 Xmin[var] = 0;
                 adresseDuResultat = &(problemeHebdo->ResultatsHoraires[pays]
@@ -89,8 +98,9 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(
                                         .NombreDeGroupesQuiDemarrentDuPalier[index]);
                 AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat;
 
-                var = CorrespondanceVarNativesVarOptim
-                        .NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique[palier];
+                // var = CorrespondanceVarNativesVarOptim
+                //         .NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique[palier];
+                var = variable_manager.NumberStoppingDispatchableUnits(palier);
                 Xmax[var] = LINFINI_ANTARES;
                 Xmin[var] = 0;
                 adresseDuResultat = &(problemeHebdo->ResultatsHoraires[pays]
@@ -98,9 +108,10 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(
                                         .NombreDeGroupesQuiSArretentDuPalier[index]);
                 AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat;
 
-                var
-                  = CorrespondanceVarNativesVarOptim
-                      .NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique[palier];
+                // var
+                //   = CorrespondanceVarNativesVarOptim
+                //       .NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique[palier];
+                var = variable_manager.NumberBreakingDownDispatchableUnits(palier);
                 Xmin[var] = 0;
                 int t1 = pdtHebdo;
                 int t1moins1 = t1 - 1;
