@@ -179,26 +179,27 @@ static void setBoundsForShortTermStorage(PROBLEME_HEBDO* problemeHebdo,
                 const int clusterGlobalIndex = storage.clusterGlobalIndex;
                 auto& STSResult
                   = problemeHebdo->ResultatsHoraires[areaIndex].ShortTermStorage[pdtHebdo];
+                auto variable_manager = variableManagerFactory.GetVariableManager(pdtJour);
                 // 1. Injection
-                int varInjection
-                  = variableManagerFactory.GetVariableManager(pdtJour).ShortTermStorageInjection(
-                    clusterGlobalIndex);
+                int varInjection = variable_manager.ShortTermStorageInjection(clusterGlobalIndex);
                 Xmin[varInjection] = 0.;
                 Xmax[varInjection] = storage.injectionNominalCapacity
                                      * storage.series->maxInjectionModulation[hourInTheYear];
                 AddressForVars[varInjection] = &STSResult.injection[storageIndex];
 
                 // 2. Withdrwal
-                int varWithdrawal = CorrespondanceVarNativesVarOptim.SIM_ShortTermStorage
-                                      .WithdrawalVariable[clusterGlobalIndex];
+                // int varWithdrawal = CorrespondanceVarNativesVarOptim.SIM_ShortTermStorage
+                //                       .WithdrawalVariable[clusterGlobalIndex];
+                int varWithdrawal = variable_manager.ShortTermStorageWithdrawal(clusterGlobalIndex);
                 Xmin[varWithdrawal] = 0.;
                 Xmax[varWithdrawal] = storage.withdrawalNominalCapacity
                                       * storage.series->maxWithdrawalModulation[hourInTheYear];
                 AddressForVars[varWithdrawal] = &STSResult.withdrawal[storageIndex];
 
                 // 3. Levels
-                int varLevel = CorrespondanceVarNativesVarOptim.SIM_ShortTermStorage
-                                 .LevelVariable[clusterGlobalIndex];
+                // int varLevel = CorrespondanceVarNativesVarOptim.SIM_ShortTermStorage
+                //                  .LevelVariable[clusterGlobalIndex];
+                int varLevel = variable_manager.ShortTermStorageLevel(clusterGlobalIndex);
                 if (pdtHebdo == DernierPdtDeLIntervalle - 1 && !storage.initialLevelOptim)
                 {
                     Xmin[varLevel] = Xmax[varLevel]
