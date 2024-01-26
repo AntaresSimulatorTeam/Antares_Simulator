@@ -63,10 +63,10 @@ protected:
 
     virtual Flow onBeginFolder(const String& filename, const String&, const String&)
     {
-        const VersionStruct versionFound = StudyTryToFindTheVersion(filename);
-        if (versionFound > VersionStruct::versionLatest())
+        const StudyVersion versionFound = StudyTryToFindTheVersion(filename);
+        if (versionFound > StudyVersion::versionLatest())
             return IO::flowSkip;
-        if (versionFound == VersionStruct::versionUnknown())
+        if (versionFound == StudyVersion::versionUnknown())
             return IO::flowContinue;
 
         // We have found a study !

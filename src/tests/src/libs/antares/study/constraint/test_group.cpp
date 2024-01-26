@@ -24,7 +24,7 @@ public:
 struct Fixture {
     Fixture() {
         fs::create_directories(working_tmp_dir / "bindingconstraints");
-        study->header.version = VersionStruct(8, 7);
+        study->header.version = StudyVersion(8, 7);
         study->folderInput = working_tmp_dir.string();
     }
 
@@ -80,7 +80,7 @@ BOOST_AUTO_TEST_CASE(WhenLoadingsConstraints_AllGroupExists) {
     addConstraint("dummy_name_2", "dummy_group_uno");
     addConstraint("dummy_name_3", "dummy_group_other");
 
-    study->header.version = VersionStruct(8, 7);
+    study->header.version = StudyVersion(8, 7);
 
     study->folderInput = working_tmp_dir.string();
     const bool loading_ok = study->internalLoadBindingConstraints(options);
@@ -95,7 +95,7 @@ BOOST_AUTO_TEST_CASE(WhenLoadingsConstraints_AllGroupsNonEmpty) {
     addConstraint("dummy_name_2", "dummy_group_uno");
     addConstraint("dummy_name_3", "dummy_group_other");
 
-    study->header.version = VersionStruct(8, 7);
+    study->header.version = StudyVersion(8, 7);
 
     study->folderInput = working_tmp_dir.string();
     const bool loading_ok = study->internalLoadBindingConstraints(options);

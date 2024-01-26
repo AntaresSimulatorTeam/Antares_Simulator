@@ -79,7 +79,7 @@ public:
     Yuni::String folder;
 
     /*! Version of the study */
-    VersionStruct version;
+    StudyVersion version;
     std::string versionString;
     /*! List of all intruders */
     ::PathList intruders;

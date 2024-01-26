@@ -15,7 +15,7 @@ class AreaList;
 class EnvForLoading final
 {
 public:
-    explicit EnvForLoading(AreaList& l, VersionStruct& v) : areaList(l), version(v)
+    explicit EnvForLoading(AreaList& l, StudyVersion& v) : areaList(l), version(v)
     {
     }
     //! INI file
@@ -30,7 +30,7 @@ public:
     //! List of areas
     AreaList& areaList;
 
-    VersionStruct version;
+    StudyVersion version;
 };
 
 } // Data

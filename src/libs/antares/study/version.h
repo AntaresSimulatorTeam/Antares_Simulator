@@ -56,28 +56,28 @@ static std::vector<std::string> supportedVersions =
     "8.8"
 };
 
-class VersionStruct
+class StudyVersion
 {
 public:
     unsigned major = 0;
     unsigned minor = 0;
 
-    auto operator<=>(const VersionStruct&) const = default;
+    auto operator<=>(const StudyVersion&) const = default;
 
-    VersionStruct() = default;
-    VersionStruct(const std::string&);
-    VersionStruct(unsigned, unsigned);
-    ~VersionStruct() = default;
+    StudyVersion() = default;
+    StudyVersion(const std::string&);
+    StudyVersion(unsigned, unsigned);
+    ~StudyVersion() = default;
 
     std::string toString() const;
 
     static bool isVersionSupported(const std::string& version);
 
-    static VersionStruct studyFormatCheck(const std::string& headerFilePath);
-    static VersionStruct buildVersionLegacyOrCurrent(const std::string& versionStr);
+    static StudyVersion studyFormatCheck(const std::string& headerFilePath);
+    static StudyVersion buildVersionLegacyOrCurrent(const std::string& versionStr);
 
-    static VersionStruct versionLatest();
-    static VersionStruct versionUnknown();
+    static StudyVersion versionLatest();
+    static StudyVersion versionUnknown();
 };
 
 /*!
@@ -88,17 +88,13 @@ public:
 ** \param checkFor1x True to check for an old 1.x study
 ** \return The version of the study. `VersionUnknown` of not found
 */
-VersionStruct StudyTryToFindTheVersion(const AnyString& folder);
+StudyVersion StudyTryToFindTheVersion(const AnyString& folder);
 
 /*!
 ** \brief Convert a mere integer into an enum `Version`
 */
-VersionStruct legacyVersionIntToVersion(uint version);
+StudyVersion legacyVersionIntToVersion(uint version);
 
-class StudyVersion {
-public:
-    [[nodiscard]] bool isStudyLatestVersion(std::string studyFolder) const;
-};
 } // namespace Antares::Data
 
 

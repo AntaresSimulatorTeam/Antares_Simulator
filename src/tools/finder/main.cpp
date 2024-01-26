@@ -47,7 +47,7 @@ public:
     {
     }
 
-    void onStudyFound(const String& folder, Data::VersionStruct version)
+    void onStudyFound(const String& folder, Data::StudyVersion version)
     {
         std::cout << folder;
         if (extra)

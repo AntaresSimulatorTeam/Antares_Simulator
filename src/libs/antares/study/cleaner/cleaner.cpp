@@ -39,12 +39,12 @@ namespace Antares::Data
 {
 StudyCleaningInfos::StudyCleaningInfos()
 {
-    version = VersionStruct::versionUnknown();
+    version = StudyVersion::versionUnknown();
 }
 
 StudyCleaningInfos::StudyCleaningInfos(const AnyString& path) : folder(path)
 {
-    version = VersionStruct::versionUnknown();
+    version = StudyVersion::versionUnknown();
 }
 
 StudyCleaningInfos::~StudyCleaningInfos() = default;
@@ -60,12 +60,12 @@ bool StudyCleaningInfos::analyze()
     // Getting the version
     version = StudyTryToFindTheVersion(folder);
 
-    if (version > VersionStruct::versionLatest())
+    if (version > StudyVersion::versionLatest())
     {
         logs.error() << "A more recent version of Antares is required for " << folder;
         return false;
     }
-    if (version == VersionStruct::versionUnknown())
+    if (version == StudyVersion::versionUnknown())
     {
         logs.error() << "Unknown study version: " << folder;
         return false;
@@ -102,7 +102,7 @@ bool StudyCleaningInfos::analyze()
 
 void StudyCleaningInfos::performCleanup()
 {
-    if (version != VersionStruct::versionUnknown() && not intruders.empty())
+    if (version != StudyVersion::versionUnknown() && not intruders.empty())
     {
         // Remove all files first
         intruders.deleteAllFiles(folder);

@@ -910,7 +910,7 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
                                     const String& key,
                                     const String& value,
                                     const String&,
-                                    VersionStruct& version)
+                                    StudyVersion& version)
 {
     // Comparisons kept for compatibility reasons
 
@@ -921,7 +921,7 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
     if (key == "custom-ts-numbers")
         return value.to<bool>(d.useCustomScenario);
 
-    if (key == "filtering" && version < VersionStruct(7, 1))
+    if (key == "filtering" && version < StudyVersion(7, 1))
         return value.to<bool>(d.geographicTrimming);
 
     // Custom set
@@ -953,7 +953,7 @@ bool firstKeyLetterIsValid(const String& name)
     return (firstLetter >= 'a' && firstLetter <= 'z');
 }
 
-bool Parameters::loadFromINI(const IniFile& ini, VersionStruct& version, const StudyLoadOptions& options)
+bool Parameters::loadFromINI(const IniFile& ini, StudyVersion& version, const StudyLoadOptions& options)
 {
     // Reset inner data
     reset();
@@ -1692,7 +1692,7 @@ void Parameters::saveToINI(IniFile& ini) const
 }
 
 bool Parameters::loadFromFile(const AnyString& filename,
-                              VersionStruct& version,
+                              StudyVersion& version,
                               const StudyLoadOptions& options)
 {
     // Loading the INI file

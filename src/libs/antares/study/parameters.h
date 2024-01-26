@@ -93,7 +93,7 @@ public:
     ** \param filename The file to load
     ** \return True if the settings have been loaded, false if at least one error has occured
     */
-    bool loadFromFile(const AnyString& filename, VersionStruct& version, const StudyLoadOptions& options);
+    bool loadFromFile(const AnyString& filename, StudyVersion& version, const StudyLoadOptions& options);
 
     /*!
     ** \brief Prepare all settings for a simulation
@@ -528,7 +528,7 @@ public:
 
 private:
     //! Load data from an INI file
-    bool loadFromINI(const IniFile& ini, VersionStruct& version, const StudyLoadOptions& options);
+    bool loadFromINI(const IniFile& ini, StudyVersion& version, const StudyLoadOptions& options);
 
     void resetPlayedYears(uint nbOfYears);
 

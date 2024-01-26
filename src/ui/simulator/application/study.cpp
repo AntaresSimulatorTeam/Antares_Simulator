@@ -783,7 +783,7 @@ SaveResult SaveStudy()
     bool shouldInvalidateStudy = false;
 
     // Detection for old format
-    if (study.header.version != Data::VersionStruct::versionLatest())
+    if (study.header.version != Data::StudyVersion::versionLatest())
     {
         Window::Message message(
           &mainFrm,
@@ -791,7 +791,7 @@ SaveResult SaveStudy()
           wxT("The study was saved with a previous version of Antares"),
           wxString() << wxT("You can choose either to upgrade the study folder or to save it\n")
                      << wxT("into a new folder.\n\nCurrent version of Antares : ")
-                     << Data::VersionStruct::versionLatest().toString()
+                     << Data::StudyVersion::versionLatest().toString()
                      << wxT("\nFormat version of the study : ")
                      << study.header.version.toString(),
           "images/misc/save.png");
@@ -1006,13 +1006,13 @@ void OpenStudyFromFolder(wxString folder)
     wxStringToString(folder, studyfolder);
     auto version = Data::StudyTryToFindTheVersion(studyfolder);
 
-    if (version == Data::VersionStruct::versionUnknown())
+    if (version == Data::StudyVersion::versionUnknown())
     {
         logs.error() << studyfolder << ": it does not seem a valid study";
         return;
     }
 
-    if (version > Data::VersionStruct::versionLatest())
+    if (version > Data::StudyVersion::versionLatest())
     {
         logs.error() << "A more recent version of Antares is required to open `" << studyfolder
             << "`  (" << version.toString() << ')';

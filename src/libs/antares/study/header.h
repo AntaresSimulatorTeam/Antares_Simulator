@@ -106,7 +106,7 @@ public:
     Yuni::String caption;
 
     //! Format version
-    VersionStruct version;
+    StudyVersion version;
 
     //! Date: Creation (timestamp)
     time_t dateCreated;

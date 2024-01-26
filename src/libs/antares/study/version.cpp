@@ -36,14 +36,14 @@ using namespace Yuni;
 #define SEP IO::Separator
 
 // Checking version between CMakeLists.txt and Antares'versions
-static auto versionFromCMake = Antares::Data::VersionStruct(ANTARES_VERSION_HI, ANTARES_VERSION_LO);
+static auto versionFromCMake = Antares::Data::StudyVersion(ANTARES_VERSION_HI, ANTARES_VERSION_LO);
 
 /* static_assert(versionFromCMake == Antares::Data::versionLatest); */
 
 namespace Antares::Data
 {
 
-static inline VersionStruct legacyStudyFormatCheck(const std::string& versionStr)
+static inline StudyVersion legacyStudyFormatCheck(const std::string& versionStr)
 {
     unsigned versionNumber = 0;
     try
@@ -57,31 +57,31 @@ static inline VersionStruct legacyStudyFormatCheck(const std::string& versionStr
     return legacyVersionIntToVersion(versionNumber);
 }
 
-VersionStruct VersionStruct::buildVersionLegacyOrCurrent(const std::string& versionStr)
+StudyVersion StudyVersion::buildVersionLegacyOrCurrent(const std::string& versionStr)
 {
     // if the string doesn't contains a dot it's legacy format
     if (versionStr.find(".") == std::string::npos)
         return legacyStudyFormatCheck(versionStr);
 
-    if (VersionStruct::isVersionSupported(versionStr))
-        return VersionStruct(versionStr);
+    if (StudyVersion::isVersionSupported(versionStr))
+        return StudyVersion(versionStr);
 
-    return VersionStruct(0, 0);
+    return StudyVersion(0, 0);
 }
 
-VersionStruct VersionStruct::studyFormatCheck(const std::string& headerFilePath)
+StudyVersion StudyVersion::studyFormatCheck(const std::string& headerFilePath)
 {
     // The raw version number
     const std::string& versionStr = StudyHeader::ReadVersionFromFile(headerFilePath);
     return buildVersionLegacyOrCurrent(versionStr);
 }
 
-std::string VersionStruct::toString() const
+std::string StudyVersion::toString() const
 {
     return std::to_string(major) + "." + std::to_string(minor);
 }
 
-VersionStruct::VersionStruct(const std::string& s)
+StudyVersion::StudyVersion(const std::string& s)
 {
     unsigned separator = s.find('.');
     if (separator == std::string::npos)
@@ -98,23 +98,23 @@ VersionStruct::VersionStruct(const std::string& s)
     }
 }
 
-VersionStruct::VersionStruct(unsigned major_, unsigned minor_) : major(major_), minor(minor_)
+StudyVersion::StudyVersion(unsigned major_, unsigned minor_) : major(major_), minor(minor_)
 {}
 
-VersionStruct VersionStruct::versionLatest()
+StudyVersion StudyVersion::versionLatest()
 {
-    return VersionStruct(supportedVersions.back());
+    return StudyVersion(supportedVersions.back());
 }
 
-VersionStruct VersionStruct::versionUnknown()
+StudyVersion StudyVersion::versionUnknown()
 {
-    return VersionStruct(0, 0);
+    return StudyVersion(0, 0);
 }
 
-VersionStruct StudyTryToFindTheVersion(const AnyString& folder)
+StudyVersion StudyTryToFindTheVersion(const AnyString& folder)
 {
     if (folder.empty()) // trivial check
-        return VersionStruct::versionUnknown();
+        return StudyVersion::versionUnknown();
 
     // foldernormalization
     String abspath, directory;
@@ -126,16 +126,12 @@ VersionStruct StudyTryToFindTheVersion(const AnyString& folder)
         abspath.reserve(directory.size() + 20);
         abspath.clear() << directory << SEP << "study.antares";
         if (IO::File::Exists(abspath))
-            return VersionStruct::studyFormatCheck(abspath);
+            return StudyVersion::studyFormatCheck(abspath);
     }
-    return VersionStruct::versionUnknown();
+    return StudyVersion::versionUnknown();
 }
 
-bool StudyVersion::isStudyLatestVersion(std::string studyFolder) const {
-    return StudyTryToFindTheVersion(studyFolder) == VersionStruct::versionLatest();
-}
-
-bool VersionStruct::isVersionSupported(const std::string& version)
+bool StudyVersion::isVersionSupported(const std::string& version)
 {
     auto found = std::find(supportedVersions.begin(), supportedVersions.end(), version);
     if (found != supportedVersions.end())
@@ -143,7 +139,7 @@ bool VersionStruct::isVersionSupported(const std::string& version)
 
     logs.error() << "Version: " << version << " not supported";
 
-    if (VersionStruct(version) > versionLatest())
+    if (StudyVersion(version) > versionLatest())
     {
         logs.error() << "Maximum study version supported: " << supportedVersions.back();
         logs.error() << "Please upgrade the solver to the latest version";
@@ -152,44 +148,44 @@ bool VersionStruct::isVersionSupported(const std::string& version)
     return false;
 }
 
-VersionStruct legacyVersionIntToVersion(uint version)
+StudyVersion legacyVersionIntToVersion(uint version)
 {
     // The list should remain ordered in the reverse order for performance reasons
     switch (version)
     {
     case 880:
-        return VersionStruct(8, 8);
+        return StudyVersion(8, 8);
     case 870:
-        return VersionStruct(8, 7);
+        return StudyVersion(8, 7);
     case 860:
-        return VersionStruct(8, 6);
+        return StudyVersion(8, 6);
     case 850:
-        return VersionStruct(8, 5);
+        return StudyVersion(8, 5);
     case 840:
-        return VersionStruct(8, 4);
+        return StudyVersion(8, 4);
     case 830:
-        return VersionStruct(8, 3);
+        return StudyVersion(8, 3);
     case 820:
-        return VersionStruct(8, 2);
+        return StudyVersion(8, 2);
     case 810:
-        return VersionStruct(8, 1);
+        return StudyVersion(8, 1);
     case 800:
-        return VersionStruct(8, 0);
+        return StudyVersion(8, 0);
 
     // older versions
     case 720:
-        return VersionStruct(7, 2);
+        return StudyVersion(7, 2);
     case 710:
-        return VersionStruct(7, 1);
+        return StudyVersion(7, 1);
     case 700:
-        return VersionStruct(7, 0);
+        return StudyVersion(7, 0);
     default:
         logs.error() << "Study version " << version << " is not supported by this version of "
             "antares-solver";
 
         logs.error() << "Studies in version <7.0 are no longer supported. Please upgrade it first"
             << " if it's the case";
-    return VersionStruct(0, 0);
+    return StudyVersion(0, 0);
     }
 }
 } // namespace Antares::Data

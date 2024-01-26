@@ -52,7 +52,7 @@ void StudyHeader::reset()
     // Caption
     caption = STUDYHEADER_DEFAULT_CAPTION;
     // Version
-    version = Data::VersionStruct::versionLatest();
+    version = Data::StudyVersion::versionLatest();
     // Date
     dateCreated = ::time(nullptr);
     dateLastSave = dateCreated;
@@ -70,8 +70,8 @@ void StudyHeader::CopySettingsToIni(IniFile& ini, bool upgradeVersion)
     // be able to quickly check the version of the study when calling
     // StudyHeader::ReadVersionFromFile().
     if (upgradeVersion)
-        version = Data::VersionStruct::versionLatest();
-    sect->add("version", Data::VersionStruct::versionLatest().toString());
+        version = Data::StudyVersion::versionLatest();
+    sect->add("version", Data::StudyVersion::versionLatest().toString());
 
     // Caption
     sect->add("caption", caption);
@@ -108,7 +108,7 @@ std::string StudyHeader::internalFindVersionFromFile(const IniFile& ini)
 
 bool StudyHeader::internalLoadFromINIFile(const IniFile& ini, bool warnings)
 {
-    version = VersionStruct::versionUnknown();
+    version = StudyVersion::versionUnknown();
     const IniFile::Section* sect = ini.find("antares");
     if (sect)
     {
@@ -129,7 +129,7 @@ bool StudyHeader::internalLoadFromINIFile(const IniFile& ini, bool warnings)
             // Version
             if (p->key == "version")
             {
-                version = VersionStruct::buildVersionLegacyOrCurrent(p->value);
+                version = StudyVersion::buildVersionLegacyOrCurrent(p->value);
                 continue;
             }
 
@@ -162,15 +162,15 @@ bool StudyHeader::internalLoadFromINIFile(const IniFile& ini, bool warnings)
             logs.error() << "The main section has not been found. The study seems invalid.";
     }
 
-    if (version >= VersionStruct(7, 0))
+    if (version >= StudyVersion(7, 0))
     {
-        if (version > Data::VersionStruct::versionLatest())
+        if (version > Data::StudyVersion::versionLatest())
         {
             if (warnings)
             {
                 logs.error() << "Header: This version is not supported (version found:"
                              << version.toString() << ", expected: <="
-                             << Data::VersionStruct::versionLatest().toString() << ')';
+                             << Data::StudyVersion::versionLatest().toString() << ')';
             }
             return false;
         }

@@ -43,7 +43,7 @@ void ApplWnd::evtOnCleanCurrentStudyFolder(wxCommandEvent&)
             logs.error() << "Impossible to perform a cleanup. The study is readonly.";
             return;
         }
-        if (study->header.version != Data::VersionStruct::versionLatest())
+        if (study->header.version != Data::StudyVersion::versionLatest())
         {
             // Logs
             logs.error() << "Impossible to perform a cleanup. You must save (as) the study before, "

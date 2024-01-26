@@ -68,7 +68,7 @@ bool EconomicInputData::loadFromFolder(Study& study, const AnyString& folder)
 {
     bool ret = true;
 
-    if (study.header.version >= VersionStruct(8, 7))
+    if (study.header.version >= StudyVersion(8, 7))
     {
         YString filename;
         Yuni::Clob dataBuffer;
