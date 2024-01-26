@@ -63,8 +63,8 @@ VersionStruct VersionStruct::buildVersionLegacyOrCurrent(const std::string& vers
     if (versionStr.find(".") == std::string::npos)
         return legacyStudyFormatCheck(versionStr);
 
-    if (VersionStruct::isVersionSupported(versionStr)
-            return VersionStruct(versionStr);
+    if (VersionStruct::isVersionSupported(versionStr))
+        return VersionStruct(versionStr);
 
     return VersionStruct(0, 0);
 }
@@ -141,7 +141,14 @@ bool VersionStruct::isVersionSupported(const std::string& version)
     if (found != supportedVersions.end())
         return true;
 
-    logs.error() << "Version: " << version << " not supported, please upgrade your study";
+    logs.error() << "Version: " << version << " not supported";
+
+    if (VersionStruct(version) > versionLatest())
+    {
+        logs.error() << "Maximum study version supported: " << supportedVersions.back();
+        logs.error() << "Please upgrade the solver to the latest version";
+    }
+
     return false;
 }
 
