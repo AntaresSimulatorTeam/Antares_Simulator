@@ -141,11 +141,17 @@ public:
     VariableManagerFactory(
       const std::vector<CORRESPONDANCES_DES_VARIABLES>& CorrespondanceVarNativesVarOptim,
       const std::vector<int>& NumeroDeVariableStockFinal,
-      std::vector<std::vector<int>>& NumeroDeVariableDeTrancheDeStock,
+      const std::vector<std::vector<int>>& NumeroDeVariableDeTrancheDeStock,
       const int32_t& NombreDePasDeTempsPourUneOptimisation);
 
     int GetShiftedTimeStep(int offset, int delta) const;
 
+    /*!
+     * @brief
+     * @param offset: offset from the current time step
+     * @param delta: number of time steps for the variable
+     * @return VariableManager object
+     */
     VariableManager GetVariableManager(unsigned int hourInWeek, int offset, int delta);
 
 private:

@@ -5,7 +5,7 @@ using namespace VariableManagement;
 VariableManagerFactory::VariableManagerFactory(
   const std::vector<CORRESPONDANCES_DES_VARIABLES>& CorrespondanceVarNativesVarOptim,
   const std::vector<int>& NumeroDeVariableStockFinal,
-  std::vector<std::vector<int>>& NumeroDeVariableDeTrancheDeStock,
+  const std::vector<std::vector<int>>& NumeroDeVariableDeTrancheDeStock,
   const int32_t& NombreDePasDeTempsPourUneOptimisation) :
  CorrespondanceVarNativesVarOptim_(CorrespondanceVarNativesVarOptim),
  NumeroDeVariableStockFinal_(NumeroDeVariableStockFinal),
@@ -13,6 +13,7 @@ VariableManagerFactory::VariableManagerFactory(
  NombreDePasDeTempsPourUneOptimisation_(NombreDePasDeTempsPourUneOptimisation)
 {
 }
+
 int VariableManagerFactory::GetShiftedTimeStep(int offset, int delta) const
 {
     int pdt = hourInWeek_ + offset;

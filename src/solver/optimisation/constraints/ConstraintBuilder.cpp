@@ -9,25 +9,6 @@ void ConstraintBuilder::build()
     nombreDeTermes_ = 0;
 }
 
-int ConstraintBuilder::GetShiftedTimeStep(int offset, int delta) const
-{
-    int pdt = hourInWeek_ + offset;
-    const int nbTimeSteps = data.NombreDePasDeTempsPourUneOptimisation;
-
-    if (const bool shifted_timestep = offset != 0; shifted_timestep)
-    {
-        if (offset >= 0)
-        {
-            pdt = pdt % nbTimeSteps;
-        }
-        else
-        {
-            pdt = (pdt + delta) % nbTimeSteps;
-        }
-    }
-    return pdt;
-}
-
 void ConstraintBuilder::AddVariable(int varIndex, double coeff)
 {
     if (varIndex >= 0)
@@ -37,47 +18,50 @@ void ConstraintBuilder::AddVariable(int varIndex, double coeff)
         nombreDeTermes_++;
     }
 }
-VariableManagement::VariableManager ConstraintBuilder::GetVariableManager(int offset,
-                                                                          int delta) const
-{
-    auto pdt = GetShiftedTimeStep(offset, delta);
-    return VariableManagement::VariableManager(data.CorrespondanceVarNativesVarOptim[pdt],
-                                               data.NumeroDeVariableStockFinal,
-                                               data.NumeroDeVariableDeTrancheDeStock);
-}
+
 ConstraintBuilder& ConstraintBuilder::DispatchableProduction(unsigned int index,
                                                                    double coeff,
                                                                    int offset,
                                                                    int delta)
 {
-    AddVariable(GetVariableManager(offset, delta).DispatchableProduction(index), coeff);
+    AddVariable(variableManagerFactory_.GetVariableManager(hourInWeek_, offset, delta)
+                  .DispatchableProduction(index),
+                coeff);
     return *this;
 }
 
 ConstraintBuilder& ConstraintBuilder::NumberOfDispatchableUnits(unsigned int index, double coeff)
 {
-    AddVariable(GetVariableManager(0, 0).NumberOfDispatchableUnits(index), coeff);
+    AddVariable(variableManagerFactory_.GetVariableManager(hourInWeek_, 0, 0)
+                  .NumberOfDispatchableUnits(index),
+                coeff);
     return *this;
 }
 
 ConstraintBuilder& ConstraintBuilder::NumberStoppingDispatchableUnits(unsigned int index,
                                                                       double coeff)
 {
-    AddVariable(GetVariableManager(0, 0).NumberStoppingDispatchableUnits(index), coeff);
+    AddVariable(variableManagerFactory_.GetVariableManager(hourInWeek_, 0, 0)
+                  .NumberStoppingDispatchableUnits(index),
+                coeff);
     return *this;
 }
 
 ConstraintBuilder& ConstraintBuilder::NumberStartingDispatchableUnits(unsigned int index,
                                                                       double coeff)
 {
-    AddVariable(GetVariableManager(0, 0).NumberStartingDispatchableUnits(index), coeff);
+    AddVariable(variableManagerFactory_.GetVariableManager(hourInWeek_, 0, 0)
+                  .NumberStartingDispatchableUnits(index),
+                coeff);
     return *this;
 }
 
 ConstraintBuilder& ConstraintBuilder::NumberBreakingDownDispatchableUnits(unsigned int index,
                                                                           double coeff)
 {
-    AddVariable(GetVariableManager(0, 0).NumberBreakingDownDispatchableUnits(index), coeff);
+    AddVariable(variableManagerFactory_.GetVariableManager(hourInWeek_, 0, 0)
+                  .NumberBreakingDownDispatchableUnits(index),
+                coeff);
     return *this;
 }
 
@@ -86,31 +70,41 @@ ConstraintBuilder& ConstraintBuilder::NTCDirect(unsigned int index,
                                                 int offset,
                                                 int delta)
 {
-    AddVariable(GetVariableManager(offset, delta).NTCDirect(index), coeff);
+    AddVariable(
+      variableManagerFactory_.GetVariableManager(hourInWeek_, offset, delta).NTCDirect(index),
+      coeff);
     return *this;
 }
 
 ConstraintBuilder& ConstraintBuilder::IntercoDirectCost(unsigned int index, double coeff)
 {
-    AddVariable(GetVariableManager(0, 0).IntercoDirectCost(index), coeff);
+    AddVariable(
+      variableManagerFactory_.GetVariableManager(hourInWeek_, 0, 0).IntercoDirectCost(index),
+      coeff);
     return *this;
 }
 
 ConstraintBuilder& ConstraintBuilder::IntercoIndirectCost(unsigned int index, double coeff)
 {
-    AddVariable(GetVariableManager(0, 0).IntercoIndirectCost(index), coeff);
+    AddVariable(
+      variableManagerFactory_.GetVariableManager(hourInWeek_, 0, 0).IntercoIndirectCost(index),
+      coeff);
     return *this;
 }
 
 ConstraintBuilder& ConstraintBuilder::ShortTermStorageInjection(unsigned int index, double coeff)
 {
-    AddVariable(GetVariableManager(0, 0).ShortTermStorageInjection(index), coeff);
+    AddVariable(variableManagerFactory_.GetVariableManager(hourInWeek_, 0, 0)
+                  .ShortTermStorageInjection(index),
+                coeff);
     return *this;
 }
 
 ConstraintBuilder& ConstraintBuilder::ShortTermStorageWithdrawal(unsigned int index, double coeff)
 {
-    AddVariable(GetVariableManager(0, 0).ShortTermStorageWithdrawal(index), coeff);
+    AddVariable(variableManagerFactory_.GetVariableManager(hourInWeek_, 0, 0)
+                  .ShortTermStorageWithdrawal(index),
+                coeff);
     return *this;
 }
 
@@ -119,67 +113,82 @@ ConstraintBuilder& ConstraintBuilder::ShortTermStorageLevel(unsigned int index,
                                                             int offset,
                                                             int delta)
 {
-    AddVariable(GetVariableManager(offset, delta).ShortTermStorageLevel(index), coeff);
+    AddVariable(variableManagerFactory_.GetVariableManager(hourInWeek_, offset, delta)
+                  .ShortTermStorageLevel(index),
+                coeff);
     return *this;
 }
 
 ConstraintBuilder& ConstraintBuilder::HydProd(unsigned int index, double coeff)
 {
-    AddVariable(GetVariableManager(0, 0).HydProd(index), coeff);
+    AddVariable(variableManagerFactory_.GetVariableManager(hourInWeek_, 0, 0).HydProd(index),
+                coeff);
     return *this;
 }
 
 ConstraintBuilder& ConstraintBuilder::HydProdDown(unsigned int index, double coeff)
 {
-    AddVariable(GetVariableManager(0, 0).HydProdDown(index), coeff);
+    AddVariable(variableManagerFactory_.GetVariableManager(hourInWeek_, 0, 0).HydProdDown(index),
+                coeff);
     return *this;
 }
 
 ConstraintBuilder& ConstraintBuilder::HydProdUp(unsigned int index, double coeff)
 {
-    AddVariable(GetVariableManager(0, 0).HydProdUp(index), coeff);
+    AddVariable(variableManagerFactory_.GetVariableManager(hourInWeek_, 0, 0).HydProdUp(index),
+                coeff);
     return *this;
 }
 
 ConstraintBuilder& ConstraintBuilder::Pumping(unsigned int index, double coeff)
 {
-    AddVariable(GetVariableManager(0, 0).Pumping(index), coeff);
+    AddVariable(variableManagerFactory_.GetVariableManager(hourInWeek_, 0, 0).Pumping(index),
+                coeff);
     return *this;
 }
 
 ConstraintBuilder& ConstraintBuilder::HydroLevel(unsigned int index, double coeff)
 {
-    AddVariable(GetVariableManager(0, 0).HydroLevel(index), coeff);
+    AddVariable(variableManagerFactory_.GetVariableManager(hourInWeek_, 0, 0).HydroLevel(index),
+                coeff);
     return *this;
 }
 
 ConstraintBuilder& ConstraintBuilder::Overflow(unsigned int index, double coeff)
 {
-    AddVariable(GetVariableManager(0, 0).Overflow(index), coeff);
+    AddVariable(variableManagerFactory_.GetVariableManager(hourInWeek_, 0, 0).Overflow(index),
+                coeff);
     return *this;
 }
 
 ConstraintBuilder& ConstraintBuilder::FinalStorage(unsigned int index, double coeff)
 {
-    AddVariable(GetVariableManager(0, 0).FinalStorage(index), coeff);
+    AddVariable(variableManagerFactory_.GetVariableManager(hourInWeek_, 0, 0).FinalStorage(index),
+                coeff);
     return *this;
 }
 
 ConstraintBuilder& ConstraintBuilder::PositiveUnsuppliedEnergy(unsigned int index, double coeff)
 {
-    AddVariable(GetVariableManager(0, 0).PositiveUnsuppliedEnergy(index), coeff);
+    AddVariable(
+      variableManagerFactory_.GetVariableManager(hourInWeek_, 0, 0).PositiveUnsuppliedEnergy(index),
+      coeff);
     return *this;
 }
 
 ConstraintBuilder& ConstraintBuilder::NegativeUnsuppliedEnergy(unsigned int index, double coeff)
 {
-    AddVariable(GetVariableManager(0, 0).NegativeUnsuppliedEnergy(index), coeff);
+    AddVariable(
+      variableManagerFactory_.GetVariableManager(hourInWeek_, 0, 0).NegativeUnsuppliedEnergy(index),
+      coeff);
     return *this;
 }
 
 ConstraintBuilder& ConstraintBuilder::LayerStorage(unsigned area, unsigned layer, double coeff)
 {
-    AddVariable(GetVariableManager(0, 0).LayerStorage(area, layer), coeff);
+    AddVariable(
+      variableManagerFactory_.GetVariableManager(hourInWeek_, 0, 0).LayerStorage(area, layer),
+      coeff);
     return *this;
 }
 

@@ -52,7 +52,12 @@ class ConstraintBuilder
 {
 public:
     ConstraintBuilder() = delete;
-    explicit ConstraintBuilder(ConstraintBuilderData& data) : data(data)
+    explicit ConstraintBuilder(ConstraintBuilderData& data) :
+     data(data),
+     variableManagerFactory_(data.CorrespondanceVarNativesVarOptim,
+                             data.NumeroDeVariableStockFinal,
+                             data.NumeroDeVariableDeTrancheDeStock,
+                             data.NombreDePasDeTempsPourUneOptimisation)
     {
     }
 
@@ -198,7 +203,6 @@ private:
     char operator_ = '=';
     int nombreDeTermes_ = 0;
 
-    int GetShiftedTimeStep(int offset, int delta) const;
     void AddVariable(int index, double coeff);
 
     /*!
@@ -207,7 +211,7 @@ private:
      * @param delta: number of time steps for the variable
      * @return VariableManager object
      */
-    VariableManagement::VariableManager GetVariableManager(int offset = 0, int delta = 0) const;
+    VariableManagement::VariableManagerFactory variableManagerFactory_;
 };
 
 /*! factory class to build a Constraint */
