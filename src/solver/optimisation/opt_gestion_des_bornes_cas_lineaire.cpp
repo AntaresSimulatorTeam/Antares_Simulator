@@ -36,7 +36,7 @@
 #include <yuni/core/math.h>
 
 #include "spx_constantes_externes.h"
-#include "constraints/VariableManagement.h"
+#include "variables/VariableManagement.h"
 
 using namespace Antares;
 using namespace Antares::Data;
