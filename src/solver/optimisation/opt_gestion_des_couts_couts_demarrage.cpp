@@ -30,6 +30,7 @@
 #include "../simulation/simulation.h"
 #include "../simulation/sim_structure_donnees.h"
 #include "../simulation/sim_extern_variables_globales.h"
+#include "variables/VariableManagerUtils.h"
 
 #include "opt_fonctions.h"
 
@@ -39,12 +40,14 @@ void OPT_InitialiserLesCoutsLineaireCoutsDeDemarrage(PROBLEME_HEBDO* problemeHeb
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
     std::vector<double>& CoutLineaire = ProblemeAResoudre->CoutLineaire;
+    auto variableManagerFactory = VariableManagerFactoryFromProblemHebdo(problemeHebdo);
 
     for (int pdtHebdo = PremierPdtDeLIntervalle, pdtJour = 0; pdtHebdo < DernierPdtDeLIntervalle;
          pdtHebdo++, pdtJour++)
     {
-        const CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
-          =  problemeHebdo->CorrespondanceVarNativesVarOptim[pdtJour];
+        // const CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
+        //   =  problemeHebdo->CorrespondanceVarNativesVarOptim[pdtJour];
+        auto variable_manager = variableManagerFactory.GetVariableManager(pdtJour);
 
         for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
@@ -56,30 +59,34 @@ void OPT_InitialiserLesCoutsLineaireCoutsDeDemarrage(PROBLEME_HEBDO* problemeHeb
                 const int palier
                   = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
 
-                int var = CorrespondanceVarNativesVarOptim
-                            .NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[palier];
+                // int var = CorrespondanceVarNativesVarOptim
+                //             .NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[palier];
+                int var = variable_manager.NumberOfDispatchableUnits(palier);
                 if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                 {
                     CoutLineaire[var]
                       = PaliersThermiquesDuPays.CoutFixeDeMarcheDUnGroupeDuPalierThermique[index];
                 }
 
-                var = CorrespondanceVarNativesVarOptim
-                        .NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique[palier];
+                // var = CorrespondanceVarNativesVarOptim
+                //         .NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique[palier];
+                var = variable_manager.NumberStoppingDispatchableUnits(palier);
                 if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                 {
                     CoutLineaire[var]
                       = PaliersThermiquesDuPays.CoutDArretDUnGroupeDuPalierThermique[index];
                 }
 
-                var
-                  = CorrespondanceVarNativesVarOptim
-                      .NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique[palier];
+                // var
+                //   = CorrespondanceVarNativesVarOptim
+                //       .NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique[palier];
+                var = variable_manager.NumberBreakingDownDispatchableUnits(palier);
                 if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                     CoutLineaire[var] = 0;
 
-                var = CorrespondanceVarNativesVarOptim
-                        .NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique[palier];
+                // var = CorrespondanceVarNativesVarOptim
+                //         .NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique[palier];
+                var = variable_manager.NumberStartingDispatchableUnits(palier);
                 if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                 {
                     CoutLineaire[var]
