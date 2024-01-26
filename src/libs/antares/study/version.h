@@ -114,8 +114,6 @@ public:
     static VersionStruct versionUnknown();
 };
 
-
-
 /*!
 ** \brief Try to determine the version of a study
 ** \ingroup study
@@ -125,24 +123,6 @@ public:
 ** \return The version of the study. `VersionUnknown` of not found
 */
 VersionStruct StudyTryToFindTheVersion(const AnyString& folder);
-
-/*!
-** \brief Get the human readable version of the version of a study
-**
-** \ingroup study
-** \param v The study version to convert
-** \return A CString
-*/
-const char* VersionToCStr(const Version v);
-
-/*!
-** \brief Get the human readable version of the version of a study (wide char)
-**
-** \ingroup study
-** \param v The study version to convert
-** \return A wide string
-*/
-const wchar_t* VersionToWStr(const Version v);
 
 /*!
 ** \brief Convert a mere integer into an enum `Version`
