@@ -148,7 +148,7 @@ ScenarioBuilderRule::ScenarioBuilderRule(Study& study)
         study.parameters.useCustomScenario = true;
         study.parameters.activeRulesScenario = "Custom";
     }
-}
+ }
 
 
 // =====================

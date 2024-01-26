@@ -294,7 +294,7 @@ BOOST_AUTO_TEST_CASE(sts_initial_level)
 	simulation->run();
 
 	OutputRetriever output(simulation->rawSimu());
-	BOOST_TEST(output.STSLevel_PSP_Open(area).hour(0) == props.initialLevel * props.reservoirCapacity.value(), tt::tolerance(0.001));
+	BOOST_TEST(output.STSLevel_PSP_Open(area).hour(167) == props.initialLevel * props.reservoirCapacity.value(), tt::tolerance(0.001));
 }
 BOOST_AUTO_TEST_SUITE_END()
 
