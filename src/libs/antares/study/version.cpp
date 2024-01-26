@@ -23,13 +23,10 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-
-#include <yuni/yuni.h>
 #include <yuni/core/string.h>
-#include <string>
 #include "study.h"
 #include "version.h"
-#include "../../../config.h"
+#include "../../../config.h" //used to get versionFromCMake
 
 using namespace Yuni;
 
@@ -42,6 +39,22 @@ static auto versionFromCMake = Antares::Data::StudyVersion(ANTARES_VERSION_HI, A
 
 namespace Antares::Data
 {
+
+const std::vector<std::string> StudyVersion::supportedVersions =
+{
+    "7.0",
+    "7.1",
+    "7.2",
+    "8.0",
+    "8.1",
+    "8.2",
+    "8.3",
+    "8.4",
+    "8.5",
+    "8.6",
+    "8.7",
+    "8.8"
+};
 
 static inline StudyVersion legacyStudyFormatCheck(const std::string& versionStr)
 {
@@ -189,4 +202,3 @@ StudyVersion legacyVersionIntToVersion(uint version)
     }
 }
 } // namespace Antares::Data
-

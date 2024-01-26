@@ -24,10 +24,9 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_LIBS_STUDY_VERSION_H__
-#define __ANTARES_LIBS_STUDY_VERSION_H__
+#pragma once
 
-#include <yuni/yuni.h>
+#include <string>
 #include <map>
 
 namespace Antares::Data
@@ -40,28 +39,9 @@ namespace Antares::Data
 ** \see CHANGELOG.txt
 */
 
-static std::vector<std::string> supportedVersions =
-{
-    "7.0",
-    "7.1",
-    "7.2",
-    "8.0",
-    "8.1",
-    "8.2",
-    "8.3",
-    "8.4",
-    "8.5",
-    "8.6",
-    "8.7",
-    "8.8"
-};
-
 class StudyVersion
 {
 public:
-    unsigned major = 0;
-    unsigned minor = 0;
-
     auto operator<=>(const StudyVersion&) const = default;
 
     StudyVersion() = default;
@@ -71,13 +51,18 @@ public:
 
     std::string toString() const;
 
-    static bool isVersionSupported(const std::string& version);
-
     static StudyVersion studyFormatCheck(const std::string& headerFilePath);
     static StudyVersion buildVersionLegacyOrCurrent(const std::string& versionStr);
 
     static StudyVersion versionLatest();
     static StudyVersion versionUnknown();
+
+private:
+    unsigned major = 0;
+    unsigned minor = 0;
+
+    static bool isVersionSupported(const std::string& version);
+    static const std::vector<std::string> supportedVersions;
 };
 
 /*!
@@ -96,6 +81,3 @@ StudyVersion StudyTryToFindTheVersion(const AnyString& folder);
 StudyVersion legacyVersionIntToVersion(uint version);
 
 } // namespace Antares::Data
-
-
-#endif // __ANTARES_LIBS_STUDY_VERSION_H__
