@@ -27,6 +27,7 @@
 #include "opt_structure_probleme_a_resoudre.h"
 #include "../simulation/sim_extern_variables_globales.h"
 #include "opt_fonctions.h"
+#include "variables/VariableManagerUtils.h"
 #include "opt_rename_problem.h"
 
 #include "spx_constantes_externes.h"
@@ -39,12 +40,14 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
       = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
     int NombreDeVariables = 0;
     VariableNamer variableNamer(ProblemeAResoudre->NomDesVariables);
+    auto variableManagerFactory = VariableManagerFactoryFromProblemHebdo(problemeHebdo);
 
     for (int pdt = 0; pdt < NombreDePasDeTempsPourUneOptimisation; pdt++)
     {
         variableNamer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
         auto& CorrespondanceVarNativesVarOptim
           = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
+        auto variable_manager = variableManagerFactory.GetVariableManager(pdt);
 
         for (uint32_t interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
         {

@@ -24,10 +24,10 @@ public:
     std::vector<int>& NombreDeTermesDesLignes;
     std::string& Sens;
     int& IncrementDAllocationMatriceDesContraintes;
-    const std::vector<CORRESPONDANCES_DES_VARIABLES>& CorrespondanceVarNativesVarOptim;
+    std::vector<CORRESPONDANCES_DES_VARIABLES>& CorrespondanceVarNativesVarOptim;
     const int32_t& NombreDePasDeTempsPourUneOptimisation;
-    const std::vector<int>& NumeroDeVariableStockFinal;
-    const std::vector<std::vector<int>>& NumeroDeVariableDeTrancheDeStock;
+    std::vector<int>& NumeroDeVariableStockFinal;
+    std::vector<std::vector<int>>& NumeroDeVariableDeTrancheDeStock;
     std::vector<std::string>& NomDesContraintes;
     const bool& NamedProblems;
     const std::vector<const char*>& NomsDesPays;

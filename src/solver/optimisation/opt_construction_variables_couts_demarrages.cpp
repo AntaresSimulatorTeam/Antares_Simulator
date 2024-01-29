@@ -33,6 +33,7 @@
 #include "opt_rename_problem.h"
 
 #include "spx_constantes_externes.h"
+#include "variables/VariableManagerUtils.h"
 
 void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarrage(
   PROBLEME_HEBDO* problemeHebdo,
@@ -55,6 +56,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
             const int palier
               = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
             const auto& clusterName = PaliersThermiquesDuPays.NomsDesPaliersThermiques[index];
+            // auto variableManagerFactory = VariableManagerFactoryFromProblemHebdo(problemeHebdo);
 
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
@@ -66,10 +68,10 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
                 }
                 CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
                   =  problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
+                // auto variable_manager = variableManagerFactory.GetVariableManager(pdt);
 
-                CorrespondanceVarNativesVarOptim
-                  .NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[palier]
-                  = nombreDeVariables;
+                // CorrespondanceVarNativesVarOptim.NumberOfDispatchableUnits[palier]
+                // = nombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[nombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
 
