@@ -79,7 +79,7 @@ StudyVersion StudyVersion::buildVersionLegacyOrCurrent(const std::string& versio
     if (StudyVersion::isVersionSupported(versionStr))
         return StudyVersion(versionStr);
 
-    return StudyVersion(0, 0);
+    return versionUnknown();
 }
 
 std::string StudyVersion::toString() const
@@ -138,7 +138,7 @@ StudyVersion StudyVersion::tryToFindTheVersion(const AnyString& folder)
             return buildVersionLegacyOrCurrent(versionStr);
         }
     }
-    return StudyVersion::versionUnknown();
+    return versionUnknown();
 }
 
 bool StudyVersion::isVersionSupported(const std::string& version)
@@ -195,7 +195,7 @@ StudyVersion legacyVersionIntToVersion(uint version)
 
         logs.error() << "Studies in version <7.0 are no longer supported. Please upgrade it first"
             << " if it's the case";
-    return StudyVersion(0, 0);
+    return StudyVersion::versionUnknown();
     }
 }
 } // namespace Antares::Data
