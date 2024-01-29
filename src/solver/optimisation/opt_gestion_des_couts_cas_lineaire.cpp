@@ -335,15 +335,16 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
 
     for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; ++pays)
     {
+        auto variable_manager = variableManagerFactory.GetVariableManager(
+          problemeHebdo->NombreDePasDeTempsPourUneOptimisation - 1);
         if (problemeHebdo->CaracteristiquesHydrauliques[pays].AccurateWaterValue)
         {
-            int var = problemeHebdo->NumeroDeVariableStockFinal[pays];
+            // int var = problemeHebdo->NumeroDeVariableStockFinal[pays];
+            int var = variable_manager.FinalStorage(pays);
             if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
             {
                 ProblemeAResoudre->CoutLineaire[var] = 0;
             }
-            auto variable_manager = variableManagerFactory.GetVariableManager(
-              problemeHebdo->NombreDePasDeTempsPourUneOptimisation - 1);
 
             for (int layerindex = 0; layerindex < 100; layerindex++)
             {

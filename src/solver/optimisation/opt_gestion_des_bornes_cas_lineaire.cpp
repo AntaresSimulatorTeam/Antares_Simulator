@@ -499,7 +499,8 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
         {
             auto variable_manager = variableManagerFactory.GetVariableManager(
               problemeHebdo->NombreDePasDeTempsPourUneOptimisation - 1);
-            int var = problemeHebdo->NumeroDeVariableStockFinal[pays];
+            // int var = problemeHebdo->NumeroDeVariableStockFinal[pays];
+            int var = variable_manager.FinalStorage(pays);
             if (var >= 0)
             {
                 Xmin[var] = -(LINFINI_ANTARES);
