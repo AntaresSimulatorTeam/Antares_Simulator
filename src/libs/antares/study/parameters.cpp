@@ -910,7 +910,7 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
                                     const String& key,
                                     const String& value,
                                     const String&,
-                                    StudyVersion& version)
+                                    const StudyVersion& version)
 {
     // Comparisons kept for compatibility reasons
 

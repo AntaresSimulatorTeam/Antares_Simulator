@@ -15,7 +15,7 @@ class AreaList;
 class EnvForLoading final
 {
 public:
-    explicit EnvForLoading(AreaList& l, StudyVersion& v) : areaList(l), version(v)
+    explicit EnvForLoading(AreaList& l, const StudyVersion& v) : areaList(l), version(v)
     {
     }
     //! INI file

@@ -46,7 +46,7 @@ public:
     auto operator<=>(const StudyVersion&) const = default;
 
     StudyVersion() = default;
-    StudyVersion(const std::string&);
+    explicit StudyVersion(const std::string&);
     StudyVersion(unsigned, unsigned);
     ~StudyVersion() = default;
 

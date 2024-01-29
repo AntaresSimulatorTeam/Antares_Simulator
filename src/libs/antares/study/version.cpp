@@ -90,7 +90,7 @@ std::string StudyVersion::toString() const
 
 StudyVersion::StudyVersion(const std::string& s)
 {
-    unsigned separator = s.find('.');
+    size_t separator = s.find('.');
     if (separator == std::string::npos)
         logs.error() << "Invalid version format, exiting";
 
@@ -147,8 +147,7 @@ StudyVersion StudyVersion::tryToFindTheVersion(const AnyString& folder)
 
 bool StudyVersion::isVersionSupported(const std::string& version)
 {
-    auto found = std::find(supportedVersions.begin(), supportedVersions.end(), version);
-    if (found != supportedVersions.end())
+    if (std::ranges::find(supportedVersions, version) != supportedVersions.end())
         return true;
 
     logs.error() << "Version: " << version << " not supported";
