@@ -136,8 +136,8 @@ BOOST_FIXTURE_TEST_CASE(short_term_storage_delete, OneAreaStudy)
     };
 
     // Check that "Cluster1" and "Cluster2" are found
-    BOOST_CHECK(findDisabledCluster("Cluster1") != sts.end()); 
-    BOOST_CHECK(findDisabledCluster("Cluster2") != sts.end()); 
+    BOOST_CHECK(findDisabledCluster("Cluster1") != sts.end());
+    BOOST_CHECK(findDisabledCluster("Cluster2") != sts.end());
 
     study.initializeRuntimeInfos(); // This should remove all disabled short-term storages
 
@@ -250,3 +250,29 @@ BOOST_FIXTURE_TEST_CASE(renewable_cluster_delete, RenewableClusterStudy)
 }
 
 BOOST_AUTO_TEST_SUITE_END() //renewable clusters
+
+BOOST_AUTO_TEST_SUITE(studyVersion_class)
+
+BOOST_AUTO_TEST_CASE(version_comparison)
+{
+    StudyVersion v1(7, 2), v2(8, 0), v3("8.0");
+    BOOST_CHECK(v1 < v2);
+    BOOST_CHECK(!(v1 > v2));
+    BOOST_CHECK(v1 != v2);
+    BOOST_CHECK(v2 == v3);
+}
+
+BOOST_AUTO_TEST_CASE(version_parsing)
+{
+    BOOST_CHECK(StudyVersion(7,2) == StudyVersion("7.2"));
+    BOOST_CHECK(StudyVersion("abc") == StudyVersion::unknown());
+
+    BOOST_CHECK(StudyVersion::buildVersionLegacyOrCurrent("860") == StudyVersion(8, 6));
+    BOOST_CHECK(StudyVersion::buildVersionLegacyOrCurrent("8.6") == StudyVersion(8, 6));
+    BOOST_CHECK(StudyVersion::buildVersionLegacyOrCurrent("8..6") == StudyVersion::unknown());
+
+    // 4.5 is not in the list of supported versions, thus failing
+    BOOST_CHECK(StudyVersion(4, 5) == StudyVersion::unknown())
+}
+
+BOOST_AUTO_TEST_SUITE_END() //version
