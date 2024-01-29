@@ -342,10 +342,13 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
             {
                 ProblemeAResoudre->CoutLineaire[var] = 0;
             }
+            auto variable_manager = variableManagerFactory.GetVariableManager(
+              problemeHebdo->NombreDePasDeTempsPourUneOptimisation - 1);
 
             for (int layerindex = 0; layerindex < 100; layerindex++)
             {
-                var = problemeHebdo->NumeroDeVariableDeTrancheDeStock[pays][layerindex];
+                // var = problemeHebdo->NumeroDeVariableDeTrancheDeStock[pays][layerindex];
+                var = variable_manager.LayerStorage(pays, layerindex);
                 if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                 {
                     ProblemeAResoudre->CoutLineaire[var]

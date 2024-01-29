@@ -254,6 +254,8 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
 
     for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
+        auto variable_manager = variableManagerFactory.GetVariableManager(
+          problemeHebdo->NombreDePasDeTempsPourUneOptimisation - 1);
         variableNamer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168
                                       + NombreDePasDeTempsPourUneOptimisation - 1);
         variableNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
@@ -266,7 +268,9 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
 
             for (uint nblayer = 0; nblayer < 100; nblayer++)
             {
-                problemeHebdo->NumeroDeVariableDeTrancheDeStock[pays][nblayer] = NombreDeVariables;
+                // problemeHebdo->NumeroDeVariableDeTrancheDeStock[pays][nblayer] =
+                // NombreDeVariables;
+                variable_manager.LayerStorage(pays, nblayer) = NombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
                 variableNamer.LayerStorage(NombreDeVariables, nblayer);
@@ -278,7 +282,8 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
             problemeHebdo->NumeroDeVariableStockFinal[pays] = -1;
             for (uint nblayer = 0; nblayer < 100; nblayer++)
             {
-                problemeHebdo->NumeroDeVariableDeTrancheDeStock[pays][nblayer] = -1;
+                // problemeHebdo->NumeroDeVariableDeTrancheDeStock[pays][nblayer] = -1;
+                variable_manager.LayerStorage(pays, nblayer) = -1;
             }
         }
     }
