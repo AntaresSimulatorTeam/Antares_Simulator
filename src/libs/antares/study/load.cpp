@@ -115,7 +115,7 @@ void Study::parameterFiller(const StudyLoadOptions& options)
     if (usedByTheSolver)
     {
         // We have time-series to import
-        if (parameters.exportTimeSeriesInInput && header.version == StudyVersion::versionLatest())
+        if (parameters.exportTimeSeriesInInput && header.version == StudyVersion::latest())
         {
             logs.info() << "Stochastic TS stored in input parametrized."
                            " Disabling Store in input because study is not at latest version"

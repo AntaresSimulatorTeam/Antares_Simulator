@@ -42,6 +42,7 @@ namespace Antares::Data
 class StudyVersion
 {
 public:
+    /// allows automatic members comparison
     auto operator<=>(const StudyVersion&) const = default;
 
     StudyVersion() = default;
@@ -49,6 +50,7 @@ public:
     StudyVersion(unsigned, unsigned);
     ~StudyVersion() = default;
 
+    /// Return the version in "major.minor" format
     std::string toString() const;
 
     /*!
@@ -56,14 +58,15 @@ public:
      ** \ingroup study
      **
      ** \param folder The folder where data are located
-     ** \return The version of the study. `VersionUnknown` of not found
+     ** \return The version of the study. `unknown` if not found
      */
     static StudyVersion tryToFindTheVersion(const AnyString& folder);
 
+    /// Determine if version string is legacy or current, calls the correct constructor
     static StudyVersion buildVersionLegacyOrCurrent(const std::string& versionStr);
 
-    static StudyVersion versionLatest();
-    static StudyVersion versionUnknown();
+    static StudyVersion latest();
+    static StudyVersion unknown();
 
 private:
     unsigned major = 0;
@@ -73,10 +76,7 @@ private:
     static const std::vector<std::string> supportedVersions;
 };
 
-
-/*!
-** \brief Convert a mere integer into an enum `Version`
-*/
+/// Convert a unsigned into a StudyVersion, used for legacy version format (ex: 720)
 StudyVersion legacyVersionIntToVersion(uint version);
 
 } // namespace Antares::Data

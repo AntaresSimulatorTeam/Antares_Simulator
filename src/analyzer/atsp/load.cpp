@@ -298,20 +298,20 @@ bool ATSP::loadFromINIFile(const String& filename)
 bool ATSP::checkStudyVersion() const
 {
     auto v = Data::StudyVersion::tryToFindTheVersion(pStudyFolder);
-    if (v == Data::StudyVersion::versionUnknown())
+    if (v == Data::StudyVersion::unknown())
     {
         logs.error() << "The folder is not a study";
         return false;
     }
-    if (v > Data::StudyVersion::versionLatest())
+    if (v > Data::StudyVersion::latest())
     {
         logs.error() << "The format of the study folder requires a more recent version of Antares";
         return false;
     }
-    if (v < Data::StudyVersion::versionLatest())
+    if (v < Data::StudyVersion::latest())
     {
         logs.error() << "The study folder must be upgraded from v" << v.toString()
-                     << " to v"<< Data::StudyVersion::versionLatest().toString();
+                     << " to v"<< Data::StudyVersion::latest().toString();
         return false;
     }
     return true;

@@ -151,7 +151,7 @@ void MainPanel::onDraw(wxPaintEvent&)
             f.SetWeight(wxFONTWEIGHT_BOLD);
             dc.SetFont(f);
 
-            if (study->header.version != Data::StudyVersion::versionLatest())
+            if (study->header.version != Data::StudyVersion::latest())
             {
                 wxString s;
                 if (StudyHasBeenModified())

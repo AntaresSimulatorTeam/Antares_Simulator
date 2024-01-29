@@ -52,7 +52,7 @@ void StudyHeader::reset()
     // Caption
     caption = STUDYHEADER_DEFAULT_CAPTION;
     // Version
-    version = Data::StudyVersion::versionLatest();
+    version = Data::StudyVersion::latest();
     // Date
     dateCreated = ::time(nullptr);
     dateLastSave = dateCreated;
@@ -70,8 +70,8 @@ void StudyHeader::CopySettingsToIni(IniFile& ini, bool upgradeVersion)
     // be able to quickly check the version of the study when calling
     // StudyHeader::ReadVersionFromFile().
     if (upgradeVersion)
-        version = Data::StudyVersion::versionLatest();
-    sect->add("version", Data::StudyVersion::versionLatest().toString());
+        version = Data::StudyVersion::latest();
+    sect->add("version", Data::StudyVersion::latest().toString());
 
     // Caption
     sect->add("caption", caption);
@@ -108,7 +108,7 @@ std::string StudyHeader::internalFindVersionFromFile(const IniFile& ini)
 
 bool StudyHeader::internalLoadFromINIFile(const IniFile& ini, bool warnings)
 {
-    version = StudyVersion::versionUnknown();
+    version = StudyVersion::unknown();
     const IniFile::Section* sect = ini.find("antares");
     if (sect)
     {
@@ -164,13 +164,13 @@ bool StudyHeader::internalLoadFromINIFile(const IniFile& ini, bool warnings)
 
     if (version >= StudyVersion(7, 0))
     {
-        if (version > Data::StudyVersion::versionLatest())
+        if (version > Data::StudyVersion::latest())
         {
             if (warnings)
             {
                 logs.error() << "Header: This version is not supported (version found:"
                              << version.toString() << ", expected: <="
-                             << Data::StudyVersion::versionLatest().toString() << ')';
+                             << Data::StudyVersion::latest().toString() << ')';
             }
             return false;
         }

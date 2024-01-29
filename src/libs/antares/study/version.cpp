@@ -77,10 +77,10 @@ StudyVersion StudyVersion::buildVersionLegacyOrCurrent(const std::string& versio
     if (versionStr.find(".") == std::string::npos)
         return legacyStudyFormatCheck(versionStr);
 
-    if (StudyVersion::isVersionSupported(versionStr))
+    if (isVersionSupported(versionStr))
         return StudyVersion(versionStr);
 
-    return versionUnknown();
+    return unknown();
 }
 
 std::string StudyVersion::toString() const
@@ -108,12 +108,12 @@ StudyVersion::StudyVersion(const std::string& s)
 StudyVersion::StudyVersion(unsigned major_, unsigned minor_) : major(major_), minor(minor_)
 {}
 
-StudyVersion StudyVersion::versionLatest()
+StudyVersion StudyVersion::latest()
 {
     return StudyVersion(supportedVersions.back());
 }
 
-StudyVersion StudyVersion::versionUnknown()
+StudyVersion StudyVersion::unknown()
 {
     return StudyVersion(0, 0);
 }
@@ -121,7 +121,7 @@ StudyVersion StudyVersion::versionUnknown()
 StudyVersion StudyVersion::tryToFindTheVersion(const AnyString& folder)
 {
     if (folder.empty()) // trivial check
-        return StudyVersion::versionUnknown();
+        return StudyVersion::unknown();
 
     // foldernormalization
     String abspath, directory;
@@ -139,7 +139,7 @@ StudyVersion StudyVersion::tryToFindTheVersion(const AnyString& folder)
             return buildVersionLegacyOrCurrent(versionStr);
         }
     }
-    return versionUnknown();
+    return unknown();
 }
 
 bool StudyVersion::isVersionSupported(const std::string& version)
@@ -150,7 +150,7 @@ bool StudyVersion::isVersionSupported(const std::string& version)
 
     logs.error() << "Version: " << version << " not supported";
 
-    if (StudyVersion(version) > versionLatest())
+    if (StudyVersion(version) > latest())
     {
         logs.error() << "Maximum study version supported: " << supportedVersions.back();
         logs.error() << "Please upgrade the solver to the latest version";
@@ -196,7 +196,7 @@ StudyVersion legacyVersionIntToVersion(uint version)
 
         logs.error() << "Studies in version <7.0 are no longer supported. Please upgrade it first"
             << " if it's the case";
-    return StudyVersion::versionUnknown();
+    return StudyVersion::unknown();
     }
 }
 } // namespace Antares::Data

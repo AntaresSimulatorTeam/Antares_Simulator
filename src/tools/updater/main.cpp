@@ -49,7 +49,7 @@ class MyStudyFinder final : public Data::StudyFinder
 public:
     void onStudyFound(const String& folder, Data::StudyVersion version) override
     {
-        if (version == Data::StudyVersion::versionUnknown() || version > Data::StudyVersion::versionLatest())
+        if (version == Data::StudyVersion::unknown() || version > Data::StudyVersion::latest())
         {
             logs.info() << folder << " : version of study is too old, too new or unknown";
             return;
@@ -61,14 +61,14 @@ public:
             return;
         }
 
-        if (Data::StudyVersion::versionLatest() == version && (!removeUselessTimeseries))
+        if (Data::StudyVersion::latest() == version && (!removeUselessTimeseries))
         {
             logs.info() << folder << " : is up-to-date";
         }
         else
         {
             logs.notice() << "Upgrading " << folder << "  (v" << version.toString()
-                          << " to " << Data::StudyVersion::versionLatest().toString()
+                          << " to " << Data::StudyVersion::latest().toString()
                           << ")";
 
             auto study = std::make_unique<Data::Study>();
