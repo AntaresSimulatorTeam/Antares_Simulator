@@ -4,6 +4,7 @@
 #
 
 include(GNUInstallDirs)
+
 # generate and install export file
 set(TARGET_LIBS #No alias
         solver-lib
@@ -52,8 +53,12 @@ set(TARGET_LIBS #No alias
         #
         signal-handling
         antares-solver-variable-info
-        minizip
 )
+
+# Workaround for minizip
+if(NOT minizip_FOUND OR BUILD_MINIZIP)
+	set(TARGET_LIBS "${TARGET_LIBS} minizip")
+endif()
 
 install(TARGETS ${TARGET_LIBS}
         EXPORT AntaresTargets

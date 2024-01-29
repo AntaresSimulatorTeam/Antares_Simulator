@@ -307,6 +307,8 @@ if(NOT minizip_FOUND OR BUILD_MINIZIP)
 	)
 
     FetchContent_MakeAvailable(minizip)
+else()
+	message("minizip was found and we do not build it")
 endif()
 find_package(minizip REQUIRED)
 
