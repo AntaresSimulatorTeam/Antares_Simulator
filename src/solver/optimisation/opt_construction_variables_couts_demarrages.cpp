@@ -56,7 +56,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
             const int palier
               = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
             const auto& clusterName = PaliersThermiquesDuPays.NomsDesPaliersThermiques[index];
-            // auto variableManagerFactory = VariableManagerFactoryFromProblemHebdo(problemeHebdo);
+            auto variableManagerFactory = VariableManagerFactoryFromProblemHebdo(problemeHebdo);
 
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
@@ -68,10 +68,11 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
                 }
                 CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
                   =  problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
-                // auto variable_manager = variableManagerFactory.GetVariableManager(pdt);
+                auto variable_manager = variableManagerFactory.GetVariableManager(pdt);
 
                 // CorrespondanceVarNativesVarOptim.NumberOfDispatchableUnits[palier]
                 // = nombreDeVariables;
+                variable_manager.NumberOfDispatchableUnits(palier) = nombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[nombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
 
