@@ -33,6 +33,7 @@
 #include <antares/logs/logs.h>
 #include <antares/study/parameters/adq-patch-params.h>
 #include "../opt_structure_probleme_a_resoudre.h"
+#include "../variables/VariableManagerUtils.h"
 
 struct PROBLEME_HEBDO;
 class HourlyCSRProblem
@@ -70,6 +71,7 @@ private:
 private:
     using AdqPatchParams = Antares::Data::AdequacyPatch::AdqPatchParams;
     const AdqPatchParams& adqPatchParams_;
+    VariableManagement::VariableManagerFactory variableManagerFactory_;
 
 public:
     void run(uint week, uint year);
@@ -80,9 +82,13 @@ public:
     PROBLEME_HEBDO* problemeHebdo_;
     PROBLEME_ANTARES_A_RESOUDRE problemeAResoudre_;
 
-    explicit HourlyCSRProblem(const AdqPatchParams& adqPatchParams,PROBLEME_HEBDO* p) :
-        adqPatchParams_(adqPatchParams),
-        problemeHebdo_(p)
+    explicit HourlyCSRProblem(const AdqPatchParams& adqPatchParams, PROBLEME_HEBDO* p) :
+     adqPatchParams_(adqPatchParams),
+     problemeHebdo_(p),
+     variableManagerFactory_(problemeHebdo_->CorrespondanceVarNativesVarOptim,
+                             problemeHebdo_->NumeroDeVariableStockFinal,
+                             problemeHebdo_->NumeroDeVariableDeTrancheDeStock,
+                             problemeHebdo_->NombreDePasDeTempsPourUneOptimisation)
     {
         double temp = pow(10, -adqPatchParams.curtailmentSharing.thresholdVarBoundsRelaxation);
         belowThisThresholdSetToZero = std::min(temp, 0.1);

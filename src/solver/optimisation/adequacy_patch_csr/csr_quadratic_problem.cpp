@@ -63,8 +63,6 @@ void CsrQuadraticProblem::setConstraintsOnFlows(ConstraintBuilder& builder)
 void CsrQuadraticProblem::setNodeBalanceConstraints(ConstraintBuilder& builder)
 {
     int hour = hourlyCsrProblem_.triggeredHour;
-    const CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
-      = problemeHebdo_->CorrespondanceVarNativesVarOptim[hour];
 
     // constraint:
     // ENS(node A) +
