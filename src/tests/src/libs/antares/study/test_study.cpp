@@ -42,6 +42,8 @@ struct OneAreaStudy
     OneAreaStudy()
     {
         areaA = study.areaAdd("A");
+        study.parameters.simulationDays.first = 0;
+        study.parameters.simulationDays.end = 7;
     }
 
     Study study;
