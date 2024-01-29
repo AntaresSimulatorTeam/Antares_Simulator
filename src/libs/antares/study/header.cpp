@@ -86,7 +86,7 @@ void StudyHeader::CopySettingsToIni(IniFile& ini, bool upgradeVersion)
     sect->add("author", author);
 }
 
-std::string StudyHeader::internalFindVersionFromFile(const IniFile& ini)
+bool StudyHeader::internalFindVersionFromFile(const IniFile& ini, std::string& version)
 {
     const IniFile::Section* sect = ini.find("antares");
     if (sect)
@@ -96,14 +96,14 @@ std::string StudyHeader::internalFindVersionFromFile(const IniFile& ini)
             // Version
             if (p->key == "version")
             {
-                std::string ret;
-                if (p->value.to(ret))
-                    return ret;
-                break;
+                version = p->value;
+                return true;
             }
         }
     }
-    return "0.0";
+
+    logs.error() << "Couldn't find a version number in study.antares";
+    return false;
 }
 
 bool StudyHeader::internalLoadFromINIFile(const IniFile& ini, bool warnings)
@@ -199,12 +199,14 @@ bool StudyHeader::saveToFile(const AnyString& filename, bool upgradeVersion)
     return ini.save(filename);
 }
 
-std::string StudyHeader::ReadVersionFromFile(const AnyString& filename)
+bool StudyHeader::ReadVersionFromFile(const AnyString& filename, std::string& version)
 {
     IniFile ini;
     if (ini.open(filename))
-        return internalFindVersionFromFile(ini);
-    return "0.0";
+        return internalFindVersionFromFile(ini, version);
+
+    logs.error() << "Couldn't open study.antares to find the version number";
+    return false;
 }
 
 } // namespace Antares::Data

@@ -135,7 +135,10 @@ StudyVersion StudyVersion::tryToFindTheVersion(const AnyString& folder)
         if (IO::File::Exists(abspath))
         {
             // The raw version number
-            const std::string& versionStr = StudyHeader::ReadVersionFromFile(abspath);
+            std::string versionStr;
+            if (!StudyHeader::ReadVersionFromFile(abspath, versionStr))
+                return unknown();
+
             return buildVersionLegacyOrCurrent(versionStr);
         }
     }
