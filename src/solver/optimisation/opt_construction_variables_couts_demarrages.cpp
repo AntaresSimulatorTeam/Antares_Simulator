@@ -80,9 +80,10 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
                 variableNamer.NODU(nombreDeVariables, clusterName);
                 nombreDeVariables++;
 
-                CorrespondanceVarNativesVarOptim
-                  .NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique[palier]
-                  = nombreDeVariables;
+                // CorrespondanceVarNativesVarOptim
+                //   .NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique[palier]
+                //   = nombreDeVariables;
+                variable_manager.NumberStartingDispatchableUnits(palier) = nombreDeVariables;
 
                 ProblemeAResoudre->TypeDeVariable[nombreDeVariables]
                   = VARIABLE_BORNEE_INFERIEUREMENT;
@@ -90,18 +91,20 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
                 variableNamer.NumberStartingDispatchableUnits(nombreDeVariables, clusterName);
                 nombreDeVariables++;
 
-                CorrespondanceVarNativesVarOptim
-                  .NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique[palier]
-                  = nombreDeVariables;
+                // CorrespondanceVarNativesVarOptim
+                //   .NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique[palier]
+                //   = nombreDeVariables;
+                variable_manager.NumberStoppingDispatchableUnits(palier) = nombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[nombreDeVariables]
                   = VARIABLE_BORNEE_INFERIEUREMENT;
                 ProblemeAResoudre->VariablesEntieres[nombreDeVariables] = intVariables;
                 variableNamer.NumberStoppingDispatchableUnits(nombreDeVariables, clusterName);
                 nombreDeVariables++;
 
-                CorrespondanceVarNativesVarOptim
-                  .NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique[palier]
-                  = nombreDeVariables;
+                // CorrespondanceVarNativesVarOptim
+                //   .NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique[palier]
+                //   = nombreDeVariables;
+                variable_manager.NumberBreakingDownDispatchableUnits(palier) = nombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[nombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
 
