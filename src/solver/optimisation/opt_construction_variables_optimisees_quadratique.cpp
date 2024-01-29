@@ -30,6 +30,7 @@
 #include "../simulation/simulation.h"
 #include "../simulation/sim_structure_donnees.h"
 #include "../simulation/sim_extern_variables_globales.h"
+#include "variables/VariableManagerUtils.h"
 
 #include "opt_fonctions.h"
 
@@ -41,14 +42,12 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique(PROBLEME_H
     assert(ProblemeAResoudre != NULL);
 
     int nombreDeVariables = 0;
-
-    CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
-      = problemeHebdo->CorrespondanceVarNativesVarOptim[0];
+    auto variableManagerFactory = VariableManagerFactoryFromProblemHebdo(problemeHebdo);
+    auto variable_manager = variableManagerFactory.GetVariableManager(0);
 
     for (uint32_t interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
     {
-        CorrespondanceVarNativesVarOptim.NumeroDeVariableDeLInterconnexion[interco]
-          = nombreDeVariables;
+        variable_manager.NTCDirect(interco) = nombreDeVariables;
         ProblemeAResoudre->TypeDeVariable[nombreDeVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
         nombreDeVariables++;
     }

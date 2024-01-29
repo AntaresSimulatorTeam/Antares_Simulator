@@ -51,13 +51,10 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique(PROBLEME_HEBDO* p
         ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[i] = nullptr;
 
     VALEURS_DE_NTC_ET_RESISTANCES& ValeursDeNTC = problemeHebdo->ValeursDeNTC[PdtHebdo];
-    // const CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
-    //   = problemeHebdo->CorrespondanceVarNativesVarOptim[0];
     auto variable_manager = variableManagerFactory.GetVariableManager(0);
 
     for (uint32_t interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
     {
-        // int var = CorrespondanceVarNativesVarOptim.NumeroDeVariableDeLInterconnexion[interco];
         int var = variable_manager.NTCDirect(interco);
         ProblemeAResoudre->Xmax[var] = ValeursDeNTC.ValeurDeNTCOrigineVersExtremite[interco];
         ProblemeAResoudre->Xmin[var] = -(ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine[interco]);

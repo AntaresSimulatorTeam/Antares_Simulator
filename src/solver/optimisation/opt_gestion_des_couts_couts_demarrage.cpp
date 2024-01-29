@@ -45,8 +45,6 @@ void OPT_InitialiserLesCoutsLineaireCoutsDeDemarrage(PROBLEME_HEBDO* problemeHeb
     for (int pdtHebdo = PremierPdtDeLIntervalle, pdtJour = 0; pdtHebdo < DernierPdtDeLIntervalle;
          pdtHebdo++, pdtJour++)
     {
-        // const CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
-        //   =  problemeHebdo->CorrespondanceVarNativesVarOptim[pdtJour];
         auto variable_manager = variableManagerFactory.GetVariableManager(pdtJour);
 
         for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
@@ -59,8 +57,6 @@ void OPT_InitialiserLesCoutsLineaireCoutsDeDemarrage(PROBLEME_HEBDO* problemeHeb
                 const int palier
                   = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
 
-                // int var = CorrespondanceVarNativesVarOptim
-                //             .NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[palier];
                 int var = variable_manager.NumberOfDispatchableUnits(palier);
                 if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                 {
@@ -68,8 +64,6 @@ void OPT_InitialiserLesCoutsLineaireCoutsDeDemarrage(PROBLEME_HEBDO* problemeHeb
                       = PaliersThermiquesDuPays.CoutFixeDeMarcheDUnGroupeDuPalierThermique[index];
                 }
 
-                // var = CorrespondanceVarNativesVarOptim
-                //         .NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique[palier];
                 var = variable_manager.NumberStoppingDispatchableUnits(palier);
                 if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                 {
@@ -77,15 +71,10 @@ void OPT_InitialiserLesCoutsLineaireCoutsDeDemarrage(PROBLEME_HEBDO* problemeHeb
                       = PaliersThermiquesDuPays.CoutDArretDUnGroupeDuPalierThermique[index];
                 }
 
-                // var
-                //   = CorrespondanceVarNativesVarOptim
-                //       .NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique[palier];
                 var = variable_manager.NumberBreakingDownDispatchableUnits(palier);
                 if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                     CoutLineaire[var] = 0;
 
-                // var = CorrespondanceVarNativesVarOptim
-                //         .NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique[palier];
                 var = variable_manager.NumberStartingDispatchableUnits(palier);
                 if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                 {

@@ -66,8 +66,6 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
                     nombreDeVariables += 4;
                     continue;
                 }
-                CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
-                  =  problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
                 auto variable_manager = variableManagerFactory.GetVariableManager(pdt);
 
                 // CorrespondanceVarNativesVarOptim.NumberOfDispatchableUnits[palier]
