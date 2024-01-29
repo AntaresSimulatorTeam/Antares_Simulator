@@ -33,9 +33,10 @@ using namespace Yuni;
 #define SEP IO::Separator
 
 // Checking version between CMakeLists.txt and Antares'versions
-static auto versionFromCMake = Antares::Data::StudyVersion(ANTARES_VERSION_HI, ANTARES_VERSION_LO);
+static constexpr unsigned lastMinorCMake = ANTARES_VERSION_LO;
+static constexpr unsigned lastVersionMinor = 8;
 
-/* static_assert(versionFromCMake == Antares::Data::versionLatest); */
+static_assert(lastMinorCMake == lastVersionMinor);
 
 namespace Antares::Data
 {
