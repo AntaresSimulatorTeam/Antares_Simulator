@@ -101,6 +101,15 @@ public:
     //! Copy the internal settings into an INI structure
     void CopySettingsToIni(IniFile& ini, bool upgradeVersion);
 
+    /*!
+     ** \brief Try to determine the version of a study
+     ** \ingroup study
+     **
+     ** \param folder The folder where data are located
+     ** \return The version of the study. `unknown` if not found
+     */
+     static StudyVersion tryToFindTheVersion(const AnyString& folder);
+
 public:
     //! Caption of the study
     Yuni::String caption;

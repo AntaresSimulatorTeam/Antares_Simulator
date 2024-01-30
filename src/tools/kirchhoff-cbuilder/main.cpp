@@ -139,7 +139,7 @@ bool initResources(int argc, char* argv[])
 
 bool initComponents(std::shared_ptr<Data::Study> study, const std::string& studyPath)
 {
-    study->header.version = Data::StudyVersion::tryToFindTheVersion(studyPath);
+    study->header.version = Data::StudyHeader::tryToFindTheVersion(studyPath);
     if (study->header.version == Data::StudyVersion::unknown())
         return false;
     study->folder = studyPath;

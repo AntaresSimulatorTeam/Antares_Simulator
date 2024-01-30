@@ -28,6 +28,7 @@
 #include <yuni/yuni.h>
 #include <yuni/string.h>
 #include "../cleaner.h"
+#include <antares/study/header.h>
 #include "versions.h"
 #include <antares/logs/logs.h>
 
@@ -58,7 +59,7 @@ bool StudyCleaningInfos::analyze()
     intruders.clear();
     postExclude.clear();
     // Getting the version
-    version = StudyVersion::tryToFindTheVersion(folder);
+    version = StudyHeader::tryToFindTheVersion(folder);
 
     if (version > StudyVersion::latest())
     {

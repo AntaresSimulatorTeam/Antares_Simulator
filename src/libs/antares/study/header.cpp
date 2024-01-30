@@ -34,6 +34,7 @@
 
 using namespace Yuni;
 
+#define SEP IO::Separator
 
 namespace Antares::Data
 {
@@ -197,6 +198,33 @@ bool StudyHeader::saveToFile(const AnyString& filename, bool upgradeVersion)
     IniFile ini;
     CopySettingsToIni(ini, upgradeVersion);
     return ini.save(filename);
+}
+
+StudyVersion StudyHeader::tryToFindTheVersion(const AnyString& folder)
+{
+    if (folder.empty()) // trivial check
+        return StudyVersion::unknown();
+
+    // foldernormalization
+    String abspath, directory;
+    IO::MakeAbsolute(abspath, folder);
+    IO::Normalize(directory, abspath);
+
+    if (not directory.empty() and IO::Directory::Exists(directory))
+    {
+        abspath.reserve(directory.size() + 20);
+        abspath.clear() << directory << SEP << "study.antares";
+        if (IO::File::Exists(abspath))
+        {
+            // The raw version number
+            std::string versionStr;
+            if (!ReadVersionFromFile(abspath, versionStr))
+                return StudyVersion::unknown();
+
+            return StudyVersion::buildVersionLegacyOrCurrent(versionStr);
+        }
+    }
+    return StudyVersion::unknown();
 }
 
 bool StudyHeader::ReadVersionFromFile(const AnyString& filename, std::string& version)

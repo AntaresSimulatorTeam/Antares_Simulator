@@ -28,6 +28,7 @@
 #include <antares/exception/InitializationError.hpp>
 #include <antares/exception/LoadingError.hpp>
 #include <antares/study/version.h>
+#include <antares/study/header.h>
 
 #include <antares/series/series.h>
 #include <antares/checks/checkLoadedInputData.h>
@@ -57,7 +58,7 @@ void checkOrtoolsUsage(Antares::Data::UnitCommitmentMode ucMode,
 void checkStudyVersion(const AnyString& optStudyFolder)
 {
     using namespace Antares::Data;
-    auto version = StudyVersion::tryToFindTheVersion(optStudyFolder);
+    auto version = StudyHeader::tryToFindTheVersion(optStudyFolder);
 
     if (version == StudyVersion::unknown())
         throw Error::InvalidStudy(optStudyFolder);

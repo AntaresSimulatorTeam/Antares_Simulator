@@ -26,8 +26,8 @@
 */
 #pragma once
 
+#include <vector>
 #include <string>
-#include <map>
 
 namespace Antares::Data
 {
@@ -52,15 +52,6 @@ public:
 
     /// Return the version in "major.minor" format
     std::string toString() const;
-
-    /*!
-     ** \brief Try to determine the version of a study
-     ** \ingroup study
-     **
-     ** \param folder The folder where data are located
-     ** \return The version of the study. `unknown` if not found
-     */
-    static StudyVersion tryToFindTheVersion(const AnyString& folder);
 
     /// Determine if version string is legacy or current, calls the correct constructor
     static StudyVersion buildVersionLegacyOrCurrent(const std::string& versionStr);
