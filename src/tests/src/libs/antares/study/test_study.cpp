@@ -272,7 +272,7 @@ BOOST_AUTO_TEST_CASE(version_parsing)
     BOOST_CHECK(StudyVersion::buildVersionLegacyOrCurrent("8..6") == StudyVersion::unknown());
 
     // 4.5 is not in the list of supported versions, thus failing
-    BOOST_CHECK(StudyVersion(4, 5) == StudyVersion::unknown())
+    BOOST_CHECK(StudyVersion(4, 5) == StudyVersion::unknown());
 }
 
 BOOST_AUTO_TEST_SUITE_END() //version
