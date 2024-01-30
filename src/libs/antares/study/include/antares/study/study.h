@@ -36,7 +36,6 @@
 #include <antares/writer/i_writer.h>
 
 #include "antares/antares/antares.h"
-#include "antares/object/object.h"
 #include "fwd.h"
 
 #include "simulation.h"

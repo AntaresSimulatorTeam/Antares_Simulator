@@ -1,4 +1,4 @@
-#include "generator.h"
+#include "antares/solver/ts-generator/generator.h"
 
 namespace Antares::TSGenerator
 {
