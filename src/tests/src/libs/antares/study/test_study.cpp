@@ -46,7 +46,7 @@ struct OneAreaStudy
         study.parameters.simulationDays.end = 7;
     }
 
-    Study study;
+    auto study = std::make_unique<Study>();
     Area* areaA;
 };
 
