@@ -275,6 +275,7 @@ BOOST_AUTO_TEST_CASE(version_parsing)
 
     // legacy format
     BOOST_CHECK(StudyVersion::buildVersionLegacyOrCurrent("8a60") == StudyVersion::unknown());
+    BOOST_CHECK(StudyVersion::buildVersionLegacyOrCurrent("a860") == StudyVersion::unknown());
     BOOST_CHECK(StudyVersion::buildVersionLegacyOrCurrent("860") == StudyVersion(8, 6));
 
     BOOST_CHECK(StudyVersion::buildVersionLegacyOrCurrent("8.6") == StudyVersion(8, 6));
