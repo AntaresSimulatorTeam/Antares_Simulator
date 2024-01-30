@@ -134,7 +134,7 @@ bool StudyVersion::isVersionSupported(const std::string& version)
     return false;
 }
 
-StudyVersion legacyVersionIntToVersion(uint version)
+StudyVersion legacyVersionIntToVersion(unsigned version)
 {
     // The list should remain ordered in the reverse order for performance reasons
     switch (version)

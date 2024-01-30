@@ -68,6 +68,6 @@ private:
 };
 
 /// Convert a unsigned into a StudyVersion, used for legacy version format (ex: 720)
-StudyVersion legacyVersionIntToVersion(uint version);
+StudyVersion legacyVersionIntToVersion(unsigned version);
 
 } // namespace Antares::Data
