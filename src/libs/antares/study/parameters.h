@@ -91,6 +91,7 @@ public:
     ** be opened, the routine will return 0.
     **
     ** \param filename The file to load
+    ** \param version Current study version
     ** \return True if the settings have been loaded, false if at least one error has occured
     */
     bool loadFromFile(const AnyString& filename, StudyVersion& version, const StudyLoadOptions& options);

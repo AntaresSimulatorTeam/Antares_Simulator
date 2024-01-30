@@ -52,7 +52,7 @@ public:
     {
     }
 
-    void onStudyFound(const String& folder, Data::StudyVersion version) override
+    void onStudyFound(const String& folder, const Data::StudyVersion& version) override
     {
         if (version != Data::StudyVersion::latest())
         {

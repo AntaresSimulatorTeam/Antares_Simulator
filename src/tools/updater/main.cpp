@@ -47,11 +47,11 @@ static bool onProgress(uint)
 class MyStudyFinder final : public Data::StudyFinder
 {
 public:
-    void onStudyFound(const String& folder, Data::StudyVersion version) override
+    void onStudyFound(const String& folder, const Data::StudyVersion& version) override
     {
         if (version == Data::StudyVersion::unknown() || version > Data::StudyVersion::latest())
         {
-            logs.info() << folder << " : version of study is too old, too new or unknown";
+            logs.info() << folder << " : version of study is too new or unknown";
             return;
         }
 

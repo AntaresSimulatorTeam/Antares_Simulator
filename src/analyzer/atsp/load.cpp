@@ -300,7 +300,7 @@ bool ATSP::checkStudyVersion() const
     auto v = Data::StudyVersion::tryToFindTheVersion(pStudyFolder);
     if (v == Data::StudyVersion::unknown())
     {
-        logs.error() << "The folder is not a study";
+        logs.error() << "Couldn't indentify the study version, is the folder a correct study ?";
         return false;
     }
     if (v > Data::StudyVersion::latest())

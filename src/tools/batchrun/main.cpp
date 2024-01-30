@@ -50,7 +50,7 @@ namespace // anonymous
 class MyStudyFinder final : public Data::StudyFinder
 {
 public:
-    void onStudyFound(const String& folder, Data::StudyVersion) override
+    void onStudyFound(const String& folder, const Data::StudyVersion&) override
     {
         logs.info() << "Found: " << folder;
         list.push_back(folder);

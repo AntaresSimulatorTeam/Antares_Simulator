@@ -260,6 +260,7 @@ BOOST_AUTO_TEST_CASE(version_comparison)
     BOOST_CHECK(!(v1 > v2));
     BOOST_CHECK(v1 != v2);
     BOOST_CHECK(v2 == v3);
+    BOOST_CHECK(StudyVersion(12, 3) > StudyVersion(1, 23));
 }
 
 BOOST_AUTO_TEST_CASE(version_parsing)
