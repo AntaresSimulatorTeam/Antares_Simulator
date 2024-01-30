@@ -101,6 +101,8 @@ StudyVersion::StudyVersion(const std::string& s)
     }
     catch (std::invalid_argument&)
     {
+        major = 0;
+        minor = 0;
         logs.error() << "Invalid version format, exiting";
     }
 }

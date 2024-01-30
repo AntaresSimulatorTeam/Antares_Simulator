@@ -262,12 +262,16 @@ BOOST_AUTO_TEST_CASE(version_comparison)
     BOOST_CHECK(v1 != v2);
     BOOST_CHECK(v2 == v3);
     BOOST_CHECK(StudyVersion(12, 3) > StudyVersion(1, 23));
+
+    BOOST_CHECK_EQUAL(StudyVersion(7, 5).toString(), "7.5");
 }
 
 BOOST_AUTO_TEST_CASE(version_parsing)
 {
     BOOST_CHECK(StudyVersion(7,2) == StudyVersion("7.2"));
     BOOST_CHECK(StudyVersion("abc") == StudyVersion::unknown());
+    BOOST_CHECK(StudyVersion("a8.7") == StudyVersion::unknown());
+    BOOST_CHECK(StudyVersion("8.b7") == StudyVersion::unknown());
 
     BOOST_CHECK(StudyVersion::buildVersionLegacyOrCurrent("860") == StudyVersion(8, 6));
     BOOST_CHECK(StudyVersion::buildVersionLegacyOrCurrent("8.6") == StudyVersion(8, 6));
@@ -275,6 +279,7 @@ BOOST_AUTO_TEST_CASE(version_parsing)
 
     // 4.5 is not in the list of supported versions, thus failing
     BOOST_CHECK(StudyVersion::buildVersionLegacyOrCurrent("4.5") == StudyVersion::unknown());
+
 }
 
 BOOST_AUTO_TEST_SUITE_END() //version
