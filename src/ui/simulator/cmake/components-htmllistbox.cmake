@@ -27,19 +27,19 @@ add_library(antares-ui-component-htmllistbox
 		toolbox/components/htmllistbox/datasource/datasource.h
 		toolbox/components/htmllistbox/datasource/datasource.hxx
 
-        toolbox/components/htmllistbox/datasource/cluster-order.h
-        toolbox/components/htmllistbox/datasource/cluster-order.cpp
+    toolbox/components/htmllistbox/datasource/cluster-order.h
+    toolbox/components/htmllistbox/datasource/cluster-order.cpp
 		toolbox/components/htmllistbox/datasource/thermal-cluster-order.h
 		toolbox/components/htmllistbox/datasource/thermal-cluster-order.cpp
 		toolbox/components/htmllistbox/datasource/renewable-cluster-order.h
 		toolbox/components/htmllistbox/datasource/renewable-cluster-order.cpp
 
-        toolbox/components/htmllistbox/item/cluster-item.h
-        toolbox/components/htmllistbox/item/cluster-item.cpp        
-        toolbox/components/htmllistbox/item/renewable-cluster-item.h
-        toolbox/components/htmllistbox/item/renewable-cluster-item.cpp
-        toolbox/components/htmllistbox/item/thermal-cluster-item.h
-        toolbox/components/htmllistbox/item/thermal-cluster-item.cpp
+    toolbox/components/htmllistbox/item/cluster-item.h
+    toolbox/components/htmllistbox/item/cluster-item.cpp        
+    toolbox/components/htmllistbox/item/renewable-cluster-item.h
+    toolbox/components/htmllistbox/item/renewable-cluster-item.cpp
+    toolbox/components/htmllistbox/item/thermal-cluster-item.h
+    toolbox/components/htmllistbox/item/thermal-cluster-item.cpp
 	)
 
 
