@@ -150,7 +150,6 @@ source_group("study\\general data" FILES ${SRC_STUDY_PARAMETERS})
 
 
 set(SRC_STUDY_FINDER
-        include/antares/study/finder.h
         finder/finder.cpp
         include/antares/study/finder/finder.h
 )
