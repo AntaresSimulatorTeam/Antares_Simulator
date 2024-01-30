@@ -53,7 +53,6 @@ static void shortTermStorageCost(
                  pdtHebdo < DernierPdtDeLIntervalle;
                  pdtHebdo++, pdtJour++)
             {
-                // const auto& VarCurrent = CorrespondanceVarNativesVarOptim[pdtJour];
                 auto variable_manager = variableManagerFactory.GetVariableManager(pdtJour);
 
                 const int clusterGlobalIndex = storage.clusterGlobalIndex;

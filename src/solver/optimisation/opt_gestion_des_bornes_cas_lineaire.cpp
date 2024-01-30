@@ -119,7 +119,6 @@ void setBoundsForUnsuppliedEnergy(PROBLEME_HEBDO* problemeHebdo,
 
             int var
               = variableManagerFactory.GetVariableManager(pdtJour).PositiveUnsuppliedEnergy(pays);
-            // int var = CorrespondanceVarNativesVarOptim.NumeroDeVariableDefaillancePositive[pays];
             Xmin[var] = 0.0;
 
             double MaxAllMustRunGenerationOfArea = 0.;
@@ -184,8 +183,6 @@ static void setBoundsForShortTermStorage(PROBLEME_HEBDO* problemeHebdo,
                 AddressForVars[varInjection] = &STSResult.injection[storageIndex];
 
                 // 2. Withdrwal
-                // int varWithdrawal = CorrespondanceVarNativesVarOptim.SIM_ShortTermStorage
-                //                       .WithdrawalVariable[clusterGlobalIndex];
                 int varWithdrawal = variable_manager.ShortTermStorageWithdrawal(clusterGlobalIndex);
                 Xmin[varWithdrawal] = 0.;
                 Xmax[varWithdrawal] = storage.withdrawalNominalCapacity
@@ -193,8 +190,6 @@ static void setBoundsForShortTermStorage(PROBLEME_HEBDO* problemeHebdo,
                 AddressForVars[varWithdrawal] = &STSResult.withdrawal[storageIndex];
 
                 // 3. Levels
-                // int varLevel = CorrespondanceVarNativesVarOptim.SIM_ShortTermStorage
-                //                  .LevelVariable[clusterGlobalIndex];
                 int varLevel = variable_manager.ShortTermStorageLevel(clusterGlobalIndex);
                 if (pdtHebdo == DernierPdtDeLIntervalle - 1 && !storage.initialLevelOptim)
                 {

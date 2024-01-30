@@ -72,9 +72,6 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(
                 const std::vector<int>& NombreMinDeGroupesEnMarcheDuPalierThermique
                   = PuissanceDisponibleEtCout.NombreMinDeGroupesEnMarcheDuPalierThermique;
 
-                // int var = CorrespondanceVarNativesVarOptim
-                //             .NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[palier];
-
                 int var = variable_manager.NumberOfDispatchableUnits(palier);
 
                 Xmax[var] = NombreMaxDeGroupesEnMarcheDuPalierThermique[pdtHebdo];
@@ -85,8 +82,6 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(
                                                 .NombreDeGroupesEnMarcheDuPalier[index]);
                 AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat;
 
-                // var = CorrespondanceVarNativesVarOptim
-                //         .NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique[palier];
                 var = variable_manager.NumberStartingDispatchableUnits(palier);
                 Xmax[var] = LINFINI_ANTARES;
                 Xmin[var] = 0;
@@ -95,8 +90,6 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(
                                         .NombreDeGroupesQuiDemarrentDuPalier[index]);
                 AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat;
 
-                // var = CorrespondanceVarNativesVarOptim
-                //         .NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique[palier];
                 var = variable_manager.NumberStoppingDispatchableUnits(palier);
                 Xmax[var] = LINFINI_ANTARES;
                 Xmin[var] = 0;
@@ -106,8 +99,6 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(
                 AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat;
 
                 // var
-                //   = CorrespondanceVarNativesVarOptim
-                //       .NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique[palier];
                 var = variable_manager.NumberBreakingDownDispatchableUnits(palier);
                 Xmin[var] = 0;
                 int t1 = pdtHebdo;
