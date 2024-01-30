@@ -54,11 +54,11 @@ static void PreproRoundAllEntriesPlusDerated(Data::Study& study)
     });
 }
 
-bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, IResultWriter& writer)
+bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, Solver::IResultWriter& writer)
 {
     logs.info() << "Generating the hydro time-series";
 
-    Progression::Task progression(study, currentYear, Progression::sectTSGHydro);
+    Solver::Progression::Task progression(study, currentYear, Solver::Progression::sectTSGHydro);
 
     auto& studyRTI = *(study.runtime);
     auto& calendar = study.calendar;
@@ -76,7 +76,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, IResultWriter
     double x, y, z, u;
     double** nullmatrx = nullptr;
 
-    if (1. > MatrixDPMake<double>(CHSKY.entry,
+    if (1. > Solver::MatrixDPMake<double>(CHSKY.entry,
                                   study.preproHydroCorrelation.annual->entry,
                                   B.entry,
                                   nullmatrx,
@@ -114,7 +114,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, IResultWriter
     }
 
     {
-        double r = MatrixDPMake<double>(
+        double r = Solver::MatrixDPMake<double>(
           CHSKY.entry, CORRE.entry, B.entry, nullmatrx, DIM, QCHOLTemp, true);
         if (r < 1.)
         {
@@ -124,7 +124,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, IResultWriter
         }
     }
 
-    Cholesky<double>(CHSKY.entry, B.entry, DIM, QCHOLTemp);
+    Solver::Cholesky<double>(CHSKY.entry, B.entry, DIM, QCHOLTemp);
 
     B.clear();
     CORRE.clear();
