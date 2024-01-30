@@ -6,7 +6,6 @@ add_library(antares-ui-component-htmllistbox
 		toolbox/components/htmllistbox/item/item.h
 		toolbox/components/htmllistbox/item/item.hxx
 		toolbox/components/htmllistbox/item/item.cpp
-		toolbox/components/htmllistbox/sort.h
 		toolbox/components/htmllistbox/item/info.h toolbox/components/htmllistbox/item/info.cpp
 		toolbox/components/htmllistbox/item/group.h toolbox/components/htmllistbox/item/group.cpp
 		toolbox/components/htmllistbox/item/area.h

@@ -29,7 +29,6 @@
 
 #include <wx/htmllbox.h>
 #include "item/item.h"
-#include "sort.h"
 #include <wx/srchctrl.h>
 #include "datasource/datasource.h"
 #include <ui/common/component/panel.h>
