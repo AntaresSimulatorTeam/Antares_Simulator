@@ -54,7 +54,8 @@ BOOST_AUTO_TEST_SUITE(areas_operations)
 
 BOOST_AUTO_TEST_CASE(area_add)
 {
-    const auto areaA = study.areaAdd("A");
+    auto study = std::make_unique<Study>() ;
+    const auto areaA = study->areaAdd("A");
     BOOST_CHECK(areaA != nullptr);
     BOOST_CHECK_EQUAL(areaA->name, "A");
     BOOST_CHECK_EQUAL(areaA->id, "a");
