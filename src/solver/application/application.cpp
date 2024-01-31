@@ -428,6 +428,20 @@ void Application::writeComment(Data::Study& study)
     }
 }
 
+static void logTotalTime(unsigned duration)
+{
+    duration /= 1000; // duration in seconds instead of ms
+    unsigned hours = duration / 3600;
+    unsigned minutes = duration / 60 % 60;
+    unsigned seconds = duration % 60;
+
+    char timeDisplay[32];
+    sprintf(timeDisplay, "%02uh%02um%02us", hours, minutes, seconds);
+
+    std::string timeToPrint = timeDisplay;
+    logs.notice() << "Total simulation time: " << timeToPrint;
+}
+
 void Application::writeExectutionInfo()
 {
     if (!pStudy)
@@ -436,6 +450,8 @@ void Application::writeExectutionInfo()
     // Last missing duration to get : measure of total simulation duration
     pTotalTimer.stop();
     pDurationCollector.addDuration("total", pTotalTimer.get_duration());
+
+    logTotalTime(pTotalTimer.get_duration());
 
     // If no writer is available, we can't write
     if (!resultWriter)
