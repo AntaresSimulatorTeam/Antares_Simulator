@@ -57,6 +57,9 @@ public:
         if (version != Data::StudyVersion::latest())
         {
             logs.warning() << "requires format upgrade, ignoring " << folder;
+            logs.warning() << "current study version: " << version.toString();
+            logs.warning() << "latest version supported by this solver: "
+                           << Data::StudyVersion::latest().toString();
             return;
         }
 
