@@ -283,10 +283,11 @@ find_package(minizip QUIET)
 
 if(NOT minizip_FOUND OR BUILD_MINIZIP)
 	if (NOT minizip_FOUND)
-		message("minizip not found, downloading")
+		message("*** minizip not found, set BUILD_MINIZIP to ON")
+		set(BUILD_MINIZIP ON)
 	endif ()
 	if (BUILD_MINIZIP)
-		message("BUILD_MINIZIP set, downloading")
+		message("*** BUILD_MINIZIP set, downloading")
 	endif ()
     # Repository + tag
     set(MZ_REPOSITORY "https://github.com/zlib-ng/minizip-ng.git")
@@ -303,12 +304,12 @@ if(NOT minizip_FOUND OR BUILD_MINIZIP)
     FetchContent_Declare(minizip
     GIT_REPOSITORY ${MZ_REPOSITORY}
     GIT_TAG ${MZ_TAG}
-	OVERRIDE_FIND_PACKAGE
+	OVERRIDE_FIND_PACKAGE # CAUTION : minizip_FOUND is overridden with ON here
 	)
 
     FetchContent_MakeAvailable(minizip)
 else()
-	message("minizip was found and we do not build it")
+	message("*** minizip was found, no need to build it")
 endif()
 find_package(minizip REQUIRED)
 

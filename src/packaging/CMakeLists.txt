@@ -56,8 +56,11 @@ set(TARGET_LIBS #No alias
 )
 
 # Workaround for minizip
-if(NOT minizip_FOUND OR BUILD_MINIZIP)
-	set(TARGET_LIBS "${TARGET_LIBS} minizip")
+if(BUILD_MINIZIP)
+	message("*** We add minizip into TARGET_LIBS")
+	list(APPEND TARGET_LIBS minizip)
+else()
+	message("*** We don't add minizip into TARGET_LIBS")
 endif()
 
 install(TARGETS ${TARGET_LIBS}
