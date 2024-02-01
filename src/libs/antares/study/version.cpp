@@ -99,6 +99,7 @@ bool StudyVersion::fromString(const std::string& versionStr)
     if (isSupported())
         return true;
 
+    *this = unknown();
     return false;
 }
 

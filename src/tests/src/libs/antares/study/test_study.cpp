@@ -272,23 +272,23 @@ BOOST_AUTO_TEST_CASE(version_parsing)
     StudyVersion v;
     v.fromString("7.2");
     BOOST_CHECK(v == StudyVersion(7,2));
-    BOOST_FAIL(v.fromString("abc"));
+    BOOST_CHECK(!v.fromString("abc"));
     BOOST_CHECK(v == StudyVersion::unknown());
-    BOOST_FAIL(v.fromString("a8.7"));
-    BOOST_FAIL(v.fromString("8.b7"));
+    BOOST_CHECK(!v.fromString("a8.7"));
+    BOOST_CHECK(!v.fromString("8.b7"));
 
     // legacy format
-    BOOST_FAIL(v.fromString("8a60"));
-    BOOST_FAIL(v.fromString("a860"));
+    BOOST_CHECK(!v.fromString("8a60"));
+    BOOST_CHECK(!v.fromString("a860"));
     v.fromString("860");
     BOOST_CHECK(v == StudyVersion(8, 6));
 
     v.fromString("8.8");
     BOOST_CHECK(v == StudyVersion(8, 8));
-    BOOST_FAIL(v.fromString("8..6"));
+    BOOST_CHECK(!v.fromString("8..6"));
 
     // 4.5 is not in the list of supported versions, thus failing
-    BOOST_FAIL(v.fromString("4.5"));
+    BOOST_CHECK(!v.fromString("4.5"));
     BOOST_CHECK(v == StudyVersion::unknown());
 
 }
