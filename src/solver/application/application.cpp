@@ -428,6 +428,18 @@ void Application::writeComment(Data::Study& study)
     }
 }
 
+static void logTotalTime(unsigned duration)
+{
+    std::chrono::milliseconds d(duration);
+    auto hours = std::chrono::duration_cast<std::chrono::hours>(d);
+    d -= hours;
+    auto minutes = std::chrono::duration_cast<std::chrono::minutes>(d);
+    d -= minutes;
+    auto seconds = std::chrono::duration_cast<std::chrono::seconds>(d);
+
+    logs.info().appendFormat("Total simulation time: %02luh%02lum%02lus", hours.count(), minutes.count(), seconds.count());
+}
+
 void Application::writeExectutionInfo()
 {
     if (!pStudy)
@@ -436,6 +448,8 @@ void Application::writeExectutionInfo()
     // Last missing duration to get : measure of total simulation duration
     pTotalTimer.stop();
     pDurationCollector.addDuration("total", pTotalTimer.get_duration());
+
+    logTotalTime(pTotalTimer.get_duration());
 
     // If no writer is available, we can't write
     if (!resultWriter)
