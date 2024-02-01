@@ -45,16 +45,11 @@ public:
     /// allows automatic members comparison
     auto operator<=>(const StudyVersion&) const = default;
 
-    StudyVersion() = default;
-    explicit StudyVersion(const std::string&);
-    StudyVersion(unsigned, unsigned);
+    constexpr StudyVersion() = default;
+    constexpr StudyVersion(unsigned, unsigned);
     ~StudyVersion() = default;
 
-    /// Return the version in "major.minor" format
-    std::string toString() const;
-
-    /// Determine if version string is legacy or current, calls the correct constructor
-    static StudyVersion buildVersionLegacyOrCurrent(const std::string& versionStr);
+    bool isSupported() const;
 
     static StudyVersion latest();
     static StudyVersion unknown();
@@ -63,8 +58,7 @@ private:
     unsigned major = 0;
     unsigned minor = 0;
 
-    static bool isVersionSupported(const std::string& version);
-    static const std::vector<std::string> supportedVersions;
+    static const std::vector<StudyVersion> supportedVersions;
 };
 
 /// Convert a unsigned into a StudyVersion, used for legacy version format (ex: 720)

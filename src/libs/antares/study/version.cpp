@@ -29,31 +29,28 @@
 
 using namespace Yuni;
 
-
-// Checking version between CMakeLists.txt and Antares'versions
-static constexpr unsigned lastMinorCMake = ANTARES_VERSION_LO;
-static constexpr unsigned lastVersionMinor = 8;
-
-static_assert(lastMinorCMake == lastVersionMinor);
-
 namespace Antares::Data
 {
-
-const std::vector<std::string> StudyVersion::supportedVersions =
+const std::vector<StudyVersion> StudyVersion::supportedVersions =
 {
-    "7.0",
-    "7.1",
-    "7.2",
-    "8.0",
-    "8.1",
-    "8.2",
-    "8.3",
-    "8.4",
-    "8.5",
-    "8.6",
-    "8.7",
-    "8.8"
+  StudyVersion(7,0),
+  StudyVersion(7,1),
+  StudyVersion(7,2),
+  StudyVersion(8,0),
+  StudyVersion(8,1),
+  StudyVersion(8,2),
+  StudyVersion(8,3),
+  StudyVersion(8,4),
+  StudyVersion(8,5),
+  StudyVersion(8,6),
+  StudyVersion(8,7),
+  StudyVersion(8,8)
 };
+
+// Checking version between CMakeLists.txt and Antares'versions
+static constexpr StudyVersion lastMinorCMake(ANTARES_VERSION_HI, ANTARES_VERSION_HI);
+
+static_assert(lastMinorCMake == StudyVersion::supportedVersions.back());
 
 static inline StudyVersion legacyStudyFormatCheck(const std::string& versionStr)
 {
@@ -69,14 +66,13 @@ static inline StudyVersion legacyStudyFormatCheck(const std::string& versionStr)
     return legacyVersionIntToVersion(versionNumber);
 }
 
-StudyVersion StudyVersion::buildVersionLegacyOrCurrent(const std::string& versionStr)
+StudyVersion fromString(const std::string& versionStr)
 {
     // if the string doesn't contains a dot it's legacy format
     if (versionStr.find(".") == std::string::npos)
-        return legacyStudyFormatCheck(versionStr);
+        return fromLegacy(versionStr);
 
-    if (isVersionSupported(versionStr))
-        return StudyVersion(versionStr);
+    return StudyVersion(versionStr);
 
     return unknown();
 }
@@ -110,22 +106,22 @@ StudyVersion::StudyVersion(unsigned major_, unsigned minor_) : major(major_), mi
 
 StudyVersion StudyVersion::latest()
 {
-    return StudyVersion(supportedVersions.back());
+    return supportedVersions.back();
 }
 
 StudyVersion StudyVersion::unknown()
 {
-    return StudyVersion(0, 0);
+    return StudyVersion();
 }
 
-bool StudyVersion::isVersionSupported(const std::string& version)
+bool StudyVersion::isSupported() const
 {
-    if (std::ranges::find(supportedVersions, version) != supportedVersions.end())
+    if (std::ranges::find(supportedVersions, *this) != supportedVersions.end())
         return true;
 
     logs.error() << "Version: " << version << " not supported";
 
-    if (StudyVersion(version) > latest())
+    if (*this > latest())
     {
         logs.error() << "Maximum study version supported: " << supportedVersions.back();
         logs.error() << "Please upgrade the solver to the latest version";
