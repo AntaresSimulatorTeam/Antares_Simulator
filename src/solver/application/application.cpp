@@ -430,13 +430,15 @@ void Application::writeComment(Data::Study& study)
 
 static void logTotalTime(unsigned duration)
 {
-    duration /= 1000; // duration in seconds instead of ms
-    unsigned hours = duration / 3600;
-    unsigned minutes = duration / 60 % 60;
-    unsigned seconds = duration % 60;
+    std::chrono::milliseconds d(duration);
+    auto hours = std::chrono::duration_cast<std::chrono::hours>(d);
+    d -= hours;
+    auto minutes = std::chrono::duration_cast<std::chrono::minutes>(d);
+    d -= minutes;
+    auto seconds = std::chrono::duration_cast<std::chrono::seconds>(d);
 
     char timeDisplay[32];
-    snprintf(timeDisplay, 10, "%02uh%02um%02us", hours, minutes, seconds);
+    snprintf(timeDisplay, 10, "%02luh%02lum%02lus", hours.count(), minutes.count(), seconds.count());
 
     std::string timeToPrint = timeDisplay;
     logs.notice() << "Total simulation time: " << timeToPrint;
