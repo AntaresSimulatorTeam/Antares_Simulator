@@ -437,11 +437,7 @@ static void logTotalTime(unsigned duration)
     d -= minutes;
     auto seconds = std::chrono::duration_cast<std::chrono::seconds>(d);
 
-    char timeDisplay[32];
-    snprintf(timeDisplay, 10, "%02luh%02lum%02lus", hours.count(), minutes.count(), seconds.count());
-
-    std::string timeToPrint = timeDisplay;
-    logs.notice() << "Total simulation time: " << timeToPrint;
+    logs.info().appendFormat("Total simulation time: %02luh%02lum%02lus", hours.count(), minutes.count(), seconds.count());
 }
 
 void Application::writeExectutionInfo()
