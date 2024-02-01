@@ -436,7 +436,7 @@ static void logTotalTime(unsigned duration)
     unsigned seconds = duration % 60;
 
     char timeDisplay[32];
-    sprintf(timeDisplay, "%02uh%02um%02us", hours, minutes, seconds);
+    snprintf(timeDisplay, 10, "%02uh%02um%02us", hours, minutes, seconds);
 
     std::string timeToPrint = timeDisplay;
     logs.notice() << "Total simulation time: " << timeToPrint;
