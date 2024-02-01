@@ -66,10 +66,9 @@ static inline StudyVersion parseLegacyVersion(const std::string& versionStr)
     return legacyVersionIntToVersion(versionNumber);
 }
 
-static inline StudyVersion parseCurrentVersion(const std::string& s)
+static inline StudyVersion parseCurrentVersion(const std::string& s, size_t separator)
 {
     unsigned major, minor;
-    size_t separator = s.find('.');
 
     if (separator == std::string::npos)
         logs.error() << "Invalid version format, exiting";
@@ -91,12 +90,12 @@ static inline StudyVersion parseCurrentVersion(const std::string& s)
 bool StudyVersion::fromString(const std::string& versionStr)
 {
     // if the string doesn't contains a dot it's legacy format
-    if (versionStr.find(".") == std::string::npos)
+    if (size_t separator = versionStr.find("."); separator == std::string::npos)
         *this = parseLegacyVersion(versionStr);
     else
-        *this = parseCurrentVersion(versionStr);
+        *this = parseCurrentVersion(versionStr, separator);
 
-    if (isSupported())
+    if (isSupported(true))
         return true;
 
     *this = unknown();
@@ -121,14 +120,14 @@ StudyVersion StudyVersion::unknown()
     return StudyVersion();
 }
 
-bool StudyVersion::isSupported() const
+bool StudyVersion::isSupported(bool verbose) const
 {
     if (std::ranges::find(supportedVersions, *this) != supportedVersions.end())
         return true;
 
     logs.error() << "Version: " << toString() << " not supported";
 
-    if (*this > latest())
+    if (*this > latest() && verbose)
     {
         logs.error() << "Maximum study version supported: " << supportedVersions.back().toString();
         logs.error() << "Please upgrade the solver to the latest version";

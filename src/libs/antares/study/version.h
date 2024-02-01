@@ -49,7 +49,7 @@ public:
     StudyVersion(unsigned, unsigned);
     ~StudyVersion() = default;
 
-    bool isSupported() const;
+    bool isSupported(bool verbose) const;
 
     bool fromString(const std::string& versionStr);
 
