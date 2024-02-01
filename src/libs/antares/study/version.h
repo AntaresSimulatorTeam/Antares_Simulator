@@ -45,11 +45,15 @@ public:
     /// allows automatic members comparison
     auto operator<=>(const StudyVersion&) const = default;
 
-    constexpr StudyVersion() = default;
-    constexpr StudyVersion(unsigned, unsigned);
+    StudyVersion() = default;
+    StudyVersion(unsigned, unsigned);
     ~StudyVersion() = default;
 
     bool isSupported() const;
+
+    bool fromString(const std::string& versionStr);
+
+    std::string toString() const;
 
     static StudyVersion latest();
     static StudyVersion unknown();

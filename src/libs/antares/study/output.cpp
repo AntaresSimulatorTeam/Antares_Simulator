@@ -134,7 +134,7 @@ bool Output::loadFromFolder(const AnyString& folder)
     {
         if (p->key == "version")
         {
-            version = StudyVersion::buildVersionLegacyOrCurrent(p->value);
+            version.fromString(p->value);
 
             // Early checks about the version
             if (version > Data::StudyVersion::latest())

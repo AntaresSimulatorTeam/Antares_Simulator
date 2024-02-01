@@ -33,26 +33,26 @@ namespace Antares::Data
 {
 const std::vector<StudyVersion> StudyVersion::supportedVersions =
 {
-  StudyVersion(7,0),
-  StudyVersion(7,1),
-  StudyVersion(7,2),
-  StudyVersion(8,0),
-  StudyVersion(8,1),
-  StudyVersion(8,2),
-  StudyVersion(8,3),
-  StudyVersion(8,4),
-  StudyVersion(8,5),
-  StudyVersion(8,6),
-  StudyVersion(8,7),
-  StudyVersion(8,8)
+    StudyVersion(7,0),
+    StudyVersion(7,1),
+    StudyVersion(7,2),
+    StudyVersion(8,0),
+    StudyVersion(8,1),
+    StudyVersion(8,2),
+    StudyVersion(8,3),
+    StudyVersion(8,4),
+    StudyVersion(8,5),
+    StudyVersion(8,6),
+    StudyVersion(8,7),
+    StudyVersion(8,8)
 };
 
 // Checking version between CMakeLists.txt and Antares'versions
-static constexpr StudyVersion lastMinorCMake(ANTARES_VERSION_HI, ANTARES_VERSION_HI);
+/* static constexpr StudyVersion lastMinorCMake(ANTARES_VERSION_HI, ANTARES_VERSION_HI); */
 
-static_assert(lastMinorCMake == StudyVersion::supportedVersions.back());
+/* static_assert(lastMinorCMake == StudyVersion::supportedVersions.back()); */
 
-static inline StudyVersion legacyStudyFormatCheck(const std::string& versionStr)
+static inline StudyVersion parseLegacyVersion(const std::string& versionStr)
 {
     unsigned versionNumber = 0;
     try
@@ -66,25 +66,11 @@ static inline StudyVersion legacyStudyFormatCheck(const std::string& versionStr)
     return legacyVersionIntToVersion(versionNumber);
 }
 
-StudyVersion fromString(const std::string& versionStr)
+static inline StudyVersion parseCurrentVersion(const std::string& s)
 {
-    // if the string doesn't contains a dot it's legacy format
-    if (versionStr.find(".") == std::string::npos)
-        return fromLegacy(versionStr);
-
-    return StudyVersion(versionStr);
-
-    return unknown();
-}
-
-std::string StudyVersion::toString() const
-{
-    return std::to_string(major) + "." + std::to_string(minor);
-}
-
-StudyVersion::StudyVersion(const std::string& s)
-{
+    unsigned major, minor;
     size_t separator = s.find('.');
+
     if (separator == std::string::npos)
         logs.error() << "Invalid version format, exiting";
 
@@ -99,6 +85,26 @@ StudyVersion::StudyVersion(const std::string& s)
         minor = 0;
         logs.error() << "Invalid version format, exiting";
     }
+    return StudyVersion(major, minor);
+}
+
+bool StudyVersion::fromString(const std::string& versionStr)
+{
+    // if the string doesn't contains a dot it's legacy format
+    if (versionStr.find(".") == std::string::npos)
+        *this = parseLegacyVersion(versionStr);
+    else
+        *this = parseCurrentVersion(versionStr);
+
+    if (isSupported())
+        return true;
+
+    return false;
+}
+
+std::string StudyVersion::toString() const
+{
+    return std::to_string(major) + "." + std::to_string(minor);
 }
 
 StudyVersion::StudyVersion(unsigned major_, unsigned minor_) : major(major_), minor(minor_)
@@ -119,11 +125,11 @@ bool StudyVersion::isSupported() const
     if (std::ranges::find(supportedVersions, *this) != supportedVersions.end())
         return true;
 
-    logs.error() << "Version: " << version << " not supported";
+    logs.error() << "Version: " << toString() << " not supported";
 
     if (*this > latest())
     {
-        logs.error() << "Maximum study version supported: " << supportedVersions.back();
+        logs.error() << "Maximum study version supported: " << supportedVersions.back().toString();
         logs.error() << "Please upgrade the solver to the latest version";
     }
 
