@@ -1,0 +1,15 @@
+name: "Download extract .tgz precompiled libraries"
+description: "Download and extract .tgz precompiled libraries from antares-deps and antares-simulator repository"
+
+runs:
+  using: "composite"
+  steps:
+    run: |
+      source /opt/rh/devtoolset-10/enable
+      yum -y install openssl-devel
+      wget https://github.com/Kitware/CMake/releases/download/v3.28.2/cmake-3.28.2.tar.gz
+      tar -xvf cmake-3.28.2.tar.gz
+      cd cmake-3.28.2
+      ./bootstrap
+      make -j$(nproc)
+      make install
