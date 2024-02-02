@@ -46,6 +46,7 @@ constexpr auto supportedVersions = std::to_array(
     StudyVersion(8, 6),
     StudyVersion(8, 7),
     StudyVersion(8, 8)
+    // Add new versions here
 });
 
 /// Convert a unsigned into a StudyVersion, used for legacy version format (ex: 720)
@@ -91,14 +92,8 @@ StudyVersion legacyVersionIntToVersion(unsigned version)
     return StudyVersion::unknown();
     }
 }
-}
 
-// Checking version between CMakeLists.txt and Antares'versions
-static_assert(StudyVersion(ANTARES_VERSION_HI, ANTARES_VERSION_LO) == ::supportedVersions.back(), "Please check that CMake's version and version.cpp's version match");
-
-namespace Antares::Data
-{
-static inline StudyVersion parseLegacyVersion(const std::string& versionStr)
+StudyVersion parseLegacyVersion(const std::string& versionStr)
 {
     unsigned versionNumber = 0;
     try
@@ -113,7 +108,7 @@ static inline StudyVersion parseLegacyVersion(const std::string& versionStr)
     return ::legacyVersionIntToVersion(versionNumber);
 }
 
-static inline StudyVersion parseCurrentVersion(const std::string& s, size_t separator)
+StudyVersion parseCurrentVersion(const std::string& s, size_t separator)
 {
     unsigned major, minor;
 
@@ -133,6 +128,13 @@ static inline StudyVersion parseCurrentVersion(const std::string& s, size_t sepa
     return StudyVersion(major, minor);
 }
 
+}
+
+// Checking version between CMakeLists.txt and Antares'versions
+static_assert(StudyVersion(ANTARES_VERSION_HI, ANTARES_VERSION_LO) == ::supportedVersions.back(), "Please check that CMake's version and version.cpp's version match");
+
+namespace Antares::Data
+{
 bool StudyVersion::fromString(const std::string& versionStr)
 {
     // if the string doesn't contains a dot it's legacy format
