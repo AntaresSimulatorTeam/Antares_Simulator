@@ -44,25 +44,25 @@ jobs:
         needs: release
         uses: ./.github/workflows/windows-vcpkg.yml
         with:
-          run-tests: ${{ fromJSON(inputs.run-tests) }}
+          run-tests: ${{ inputs.run-tests }}
 
       centos7:
         name: Release - centos7
         needs: release
         uses: ./.github/workflows/centos7.yml
         with:
-          run-tests: ${{ fromJSON(inputs.run-tests) }}
+          run-tests: ${{ inputs.run-tests }}
 
       oracle8:
         name: Release - oracle8
         needs: release
         uses: ./.github/workflows/oracle8.yml
         with:
-          run-tests: ${{ fromJSON(inputs.run-tests) }}
+          run-tests: ${{ inputs.run-tests }}
 
       user_guide:
         name: User Guide
         needs: release
         uses: ./.github/workflows/build-userguide.yml
         with:
-          run-tests: ${{ fromJSON(inputs.run-tests) }}
+          run-tests: ${{ inputs.run-tests }}
