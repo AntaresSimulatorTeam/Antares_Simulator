@@ -167,7 +167,7 @@ $(document).ready(function(){initNavTree('libs_2antares_2study_2version_8h_sourc
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1StudyVersion.html#a188ee2697e85307e84228ab806b817ee">   39</a></span>    <span class="keyword">auto</span> <a class="code hl_function" href="classAntares_1_1Data_1_1StudyVersion.html#a188ee2697e85307e84228ab806b817ee">operator&lt;=&gt;</a>(<span class="keyword">const</span> <a class="code hl_class" href="classAntares_1_1Data_1_1StudyVersion.html">StudyVersion</a>&amp;) <span class="keyword">const</span> = <span class="keywordflow">default</span>;</div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="keyword">constexpr</span> <a class="code hl_class" href="classAntares_1_1Data_1_1StudyVersion.html">StudyVersion</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="keyword">constexpr</span> <a class="code hl_class" href="classAntares_1_1Data_1_1StudyVersion.html">StudyVersion</a>(<span class="keywordtype">unsigned</span> major_, <span class="keywordtype">unsigned</span> minor_) : major(major_), minor(minor_) {}</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="keyword">constexpr</span> <a class="code hl_class" href="classAntares_1_1Data_1_1StudyVersion.html">StudyVersion</a>(<span class="keywordtype">unsigned</span> major, <span class="keywordtype">unsigned</span> minor) : major_(major), minor_(minor) {}</div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <a class="code hl_class" href="classAntares_1_1Data_1_1StudyVersion.html">~StudyVersion</a>() = <span class="keywordflow">default</span>;</div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <span class="keywordtype">bool</span> isSupported(<span class="keywordtype">bool</span> verbose) <span class="keyword">const</span>;</div>
@@ -180,8 +180,8 @@ $(document).ready(function(){initNavTree('libs_2antares_2study_2version_8h_sourc
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="keyword">static</span> <a class="code hl_class" href="classAntares_1_1Data_1_1StudyVersion.html">StudyVersion</a> unknown();</div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="keywordtype">unsigned</span> major = 0;</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="keywordtype">unsigned</span> minor = 0;</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="keywordtype">unsigned</span> major_ = 0;</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="keywordtype">unsigned</span> minor_ = 0;</div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>};</div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>} <span class="comment">// namespace Antares::Data</span></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1StudyVersion_html"><div class="ttname"><a href="classAntares_1_1Data_1_1StudyVersion.html">Antares::Data::StudyVersion</a></div><div class="ttdoc">Version of a study.</div><div class="ttdef"><b>Definition:</b> version.h:36</div></div>
