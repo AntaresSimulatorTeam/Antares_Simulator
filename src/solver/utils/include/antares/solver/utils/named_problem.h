@@ -18,57 +18,20 @@ struct PROBLEME_SIMPLEXE_NOMME : public PROBLEME_SIMPLEXE
 private:
     using BasisStatus = operations_research::MPSolver::BasisStatus;
 public:
-    PROBLEME_SIMPLEXE_NOMME(const std::vector<std::string>& NomDesVariables,
-                            const std::vector<std::string>& NomDesContraintes,
-                            const std::vector<bool>& VariablesEntieres,
+    PROBLEME_SIMPLEXE_NOMME(std::vector<std::string>& NomDesVariables,
+                            std::vector<std::string>& NomDesContraintes,
                             std::vector<BasisStatus>& StatutDesVariables,
-                            std::vector<BasisStatus>& StatutDesContraintes,
-                            bool UseNamedProblems,
-                            bool SolverLogs);
+                            std::vector<BasisStatus>& StatutDesContraintes);
 
-private:
-    const std::vector<std::string>& NomDesVariables;
-    const std::vector<std::string>& NomDesContraintes;
-    bool useNamedProblems_;
-    bool solverLogs_;
+    std::vector<std::string>& NomDesVariables;
+    std::vector<std::string>& NomDesContraintes;
 
-public:
     std::vector<BasisStatus>& StatutDesVariables;
     std::vector<BasisStatus>& StatutDesContraintes;
-    const std::vector<bool>& VariablesEntieres;
 
     bool isMIP() const;
     bool basisExists() const;
 
-    bool UseNamedProblems() const
-    {
-        return useNamedProblems_;
-    }
-
-    void SetUseNamedProblems(bool useNamedProblems)
-    {
-        useNamedProblems_ = useNamedProblems;
-    }
-
-    const std::vector<std::string>& VariableNames() const
-    {
-        return NomDesVariables;
-    }
-
-    const std::vector<std::string>& ConstraintNames() const
-    {
-        return NomDesContraintes;
-    }
-
-    bool IntegerVariable(size_t idx) const
-    {
-        return VariablesEntieres[idx];
-    }
-
-    bool SolverLogs() const
-    {
-        return solverLogs_;
-    }
 };
 } // namespace Optimization
 } // namespace Antares

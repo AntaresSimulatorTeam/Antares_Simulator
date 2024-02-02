@@ -172,5 +172,10 @@ add_library(libantares-solver-variable-info
 		surveyresults/data.h
 		surveyresults/surveyresults.cpp
 )
-target_link_libraries(libantares-solver-variable-info PRIVATE libantares-core result_writer)
+target_link_libraries(libantares-solver-variable-info PRIVATE libantares-core result_writer
+        ortools::ortools
+        sirius_solver
+        utils
+
+)
 

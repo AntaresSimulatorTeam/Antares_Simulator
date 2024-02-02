@@ -1,4 +1,4 @@
-#include "named_problem.h"
+#include "antares/solver/utils/named_problem.h"
 #include <algorithm>
 #include <iterator>
 
@@ -9,8 +9,8 @@ namespace Optimization
 
 using BasisStatus = operations_research::MPSolver::BasisStatus;
 
-PROBLEME_SIMPLEXE_NOMME::PROBLEME_SIMPLEXE_NOMME(const std::vector<std::string>& NomDesVariables,
-                                                 const std::vector<std::string>& NomDesContraintes,
+PROBLEME_SIMPLEXE_NOMME::PROBLEME_SIMPLEXE_NOMME(std::vector<std::string>& NomDesVariables,
+                                                 std::vector<std::string>& NomDesContraintes,
                                                  std::vector<BasisStatus>& StatutDesVariables,
                                                  std::vector<BasisStatus>& StatutDesContraintes):
  NomDesVariables(NomDesVariables),

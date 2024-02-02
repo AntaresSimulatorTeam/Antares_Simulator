@@ -2,7 +2,8 @@
 #define __ORTOOLS_WRAPPER__
 
 #include <string>
-#include "named_problem.h"
+#include "antares/solver/utils/named_problem.h"
+
 
 using namespace operations_research;
 
