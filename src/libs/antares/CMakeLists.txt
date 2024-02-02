@@ -607,6 +607,8 @@ target_link_libraries(libantares-core
 		array
 		correlation
 		object
+    PRIVATE
+        ortools::ortools
 	)
 
 import_std_libs(libantares-core)
