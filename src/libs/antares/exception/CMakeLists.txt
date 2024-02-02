@@ -4,7 +4,7 @@ set(SRC_PROJ
         LoadingError.cpp
         UnfeasibleProblemError.cpp
 
-        include/antares/exception/AssertionError.hpp
+        include/antares/exception/InitializationError.hpp
         include/antares/exception/UnfeasibleProblemError.hpp
         include/antares/exception/LoadingError.hpp
 )
