@@ -256,7 +256,8 @@ BOOST_AUTO_TEST_SUITE(studyVersion_class)
 
 BOOST_AUTO_TEST_CASE(version_comparison)
 {
-    StudyVersion v1(7, 2), v2(8, 0), v3("8.0");
+    StudyVersion v1(7, 2), v2(8, 0), v3;
+    v3.fromString("8.0");
     BOOST_CHECK(v1 < v2);
     BOOST_CHECK(!(v1 > v2));
     BOOST_CHECK(v1 != v2);
@@ -268,21 +269,27 @@ BOOST_AUTO_TEST_CASE(version_comparison)
 
 BOOST_AUTO_TEST_CASE(version_parsing)
 {
-    BOOST_CHECK(StudyVersion(7,2) == StudyVersion("7.2"));
-    BOOST_CHECK(StudyVersion("abc") == StudyVersion::unknown());
-    BOOST_CHECK(StudyVersion("a8.7") == StudyVersion::unknown());
-    BOOST_CHECK(StudyVersion("8.b7") == StudyVersion::unknown());
+    StudyVersion v;
+    v.fromString("7.2");
+    BOOST_CHECK(v == StudyVersion(7,2));
+    BOOST_CHECK(!v.fromString("abc"));
+    BOOST_CHECK(v == StudyVersion::unknown());
+    BOOST_CHECK(!v.fromString("a8.7"));
+    BOOST_CHECK(!v.fromString("8.b7"));
 
     // legacy format
-    BOOST_CHECK(StudyVersion::buildVersionLegacyOrCurrent("8a60") == StudyVersion::unknown());
-    BOOST_CHECK(StudyVersion::buildVersionLegacyOrCurrent("a860") == StudyVersion::unknown());
-    BOOST_CHECK(StudyVersion::buildVersionLegacyOrCurrent("860") == StudyVersion(8, 6));
+    BOOST_CHECK(!v.fromString("8a60"));
+    BOOST_CHECK(!v.fromString("a860"));
+    v.fromString("860");
+    BOOST_CHECK(v == StudyVersion(8, 6));
 
-    BOOST_CHECK(StudyVersion::buildVersionLegacyOrCurrent("8.6") == StudyVersion(8, 6));
-    BOOST_CHECK(StudyVersion::buildVersionLegacyOrCurrent("8..6") == StudyVersion::unknown());
+    v.fromString("8.8");
+    BOOST_CHECK(v == StudyVersion(8, 8));
+    BOOST_CHECK(!v.fromString("8..6"));
 
     // 4.5 is not in the list of supported versions, thus failing
-    BOOST_CHECK(StudyVersion::buildVersionLegacyOrCurrent("4.5") == StudyVersion::unknown());
+    BOOST_CHECK(!v.fromString("4.5"));
+    BOOST_CHECK(v == StudyVersion::unknown());
 
 }
 

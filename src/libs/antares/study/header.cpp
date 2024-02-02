@@ -109,7 +109,6 @@ bool StudyHeader::internalFindVersionFromFile(const IniFile& ini, std::string& v
 
 bool StudyHeader::internalLoadFromINIFile(const IniFile& ini, bool warnings)
 {
-    version = StudyVersion::unknown();
     const IniFile::Section* sect = ini.find("antares");
     if (sect)
     {
@@ -130,7 +129,7 @@ bool StudyHeader::internalLoadFromINIFile(const IniFile& ini, bool warnings)
             // Version
             if (p->key == "version")
             {
-                version = StudyVersion::buildVersionLegacyOrCurrent(p->value);
+                version.fromString(p->value);
                 continue;
             }
 
@@ -221,7 +220,9 @@ StudyVersion StudyHeader::tryToFindTheVersion(const AnyString& folder)
             if (!ReadVersionFromFile(abspath, versionStr))
                 return StudyVersion::unknown();
 
-            return StudyVersion::buildVersionLegacyOrCurrent(versionStr);
+            StudyVersion v;
+            v.fromString(versionStr);
+            return v;
         }
     }
     return StudyVersion::unknown();
