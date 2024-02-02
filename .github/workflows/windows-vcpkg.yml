@@ -17,8 +17,9 @@ on:
       run-tests:
         required: true
         type: string
-      with:
-        ref: ${{ inputs.ref }}
+      ref:
+        required: true
+        type: string
 
 env:
   GITHUB_TOKEN: ${{ github.token }}
