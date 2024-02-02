@@ -300,13 +300,13 @@ if(NOT minizip_FOUND OR BUILD_MINIZIP)
     set(MZ_OPENSSL "OFF" CACHE INTERNAL "")
     set(MZ_ICONV "OFF" CACHE INTERNAL "")
 
-    FetchContent_Declare(minizip
-    GIT_REPOSITORY ${MZ_REPOSITORY}
-    GIT_TAG ${MZ_TAG}
-	OVERRIDE_FIND_PACKAGE
+	FetchContent_Declare(minizip
+		GIT_REPOSITORY ${MZ_REPOSITORY}
+		GIT_TAG ${MZ_TAG}
+		OVERRIDE_FIND_PACKAGE
 	)
 
-    FetchContent_MakeAvailable(minizip)
+	FetchContent_MakeAvailable(minizip)
 endif()
 find_package(minizip REQUIRED)
 
