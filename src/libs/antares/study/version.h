@@ -39,7 +39,7 @@ public:
     auto operator<=>(const StudyVersion&) const = default;
 
     constexpr StudyVersion() = default;
-    constexpr StudyVersion(unsigned major_, unsigned minor_) : major(major_), minor(minor_) {}
+    constexpr StudyVersion(unsigned major, unsigned minor) : major_(major), minor_(minor) {}
     ~StudyVersion() = default;
 
     bool isSupported(bool verbose) const;
@@ -52,7 +52,7 @@ public:
     static StudyVersion unknown();
 
 private:
-    unsigned major = 0;
-    unsigned minor = 0;
+    unsigned major_ = 0;
+    unsigned minor_ = 0;
 };
 } // namespace Antares::Data
