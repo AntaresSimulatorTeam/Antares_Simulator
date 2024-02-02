@@ -145,19 +145,19 @@ $(document).ready(function(){initNavTree('classAntares_1_1Data_1_1StudyHeader.ht
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a4bb492ae844e4ce7269c988565404e08"><td class="memItemLeft" align="right" valign="top">static uint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1StudyHeader.html#a4bb492ae844e4ce7269c988565404e08">ReadVersionFromFile</a> (const AnyString &amp;filename)</td></tr>
-<tr class="memdesc:a4bb492ae844e4ce7269c988565404e08"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the version of a header.  <a href="classAntares_1_1Data_1_1StudyHeader.html#a4bb492ae844e4ce7269c988565404e08">More...</a><br /></td></tr>
-<tr class="separator:a4bb492ae844e4ce7269c988565404e08"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac234ecac4e391781d7d7a5372f2830d4"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1StudyHeader.html#ac234ecac4e391781d7d7a5372f2830d4">ReadVersionFromFile</a> (const AnyString &amp;filename, std::string &amp;<a class="el" href="classAntares_1_1Data_1_1StudyHeader.html#ab5ace17c779306b4e256beb53281c88f">version</a>)</td></tr>
+<tr class="memdesc:ac234ecac4e391781d7d7a5372f2830d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the version of a header.  <a href="classAntares_1_1Data_1_1StudyHeader.html#ac234ecac4e391781d7d7a5372f2830d4">More...</a><br /></td></tr>
+<tr class="separator:ac234ecac4e391781d7d7a5372f2830d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Constructor &amp; Destructor</h2></td></tr>
 <tr class="memitem:a3d4729a38cdfe5de876e24895a9a6dc5"><td class="memItemLeft" align="right" valign="top"><a id="a3d4729a38cdfe5de876e24895a9a6dc5" name="a3d4729a38cdfe5de876e24895a9a6dc5"></a>
 Yuni::String&#160;</td><td class="memItemRight" valign="bottom"><b>caption</b></td></tr>
 <tr class="memdesc:a3d4729a38cdfe5de876e24895a9a6dc5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Caption of the study. <br /></td></tr>
 <tr class="separator:a3d4729a38cdfe5de876e24895a9a6dc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aecdc147f7f8d4bca09c0a24feed1a96f"><td class="memItemLeft" align="right" valign="top"><a id="aecdc147f7f8d4bca09c0a24feed1a96f" name="aecdc147f7f8d4bca09c0a24feed1a96f"></a>
-uint&#160;</td><td class="memItemRight" valign="bottom"><b>version</b></td></tr>
-<tr class="memdesc:aecdc147f7f8d4bca09c0a24feed1a96f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Format version. <br /></td></tr>
-<tr class="separator:aecdc147f7f8d4bca09c0a24feed1a96f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab5ace17c779306b4e256beb53281c88f"><td class="memItemLeft" align="right" valign="top"><a id="ab5ace17c779306b4e256beb53281c88f" name="ab5ace17c779306b4e256beb53281c88f"></a>
+<a class="el" href="classAntares_1_1Data_1_1StudyVersion.html">StudyVersion</a>&#160;</td><td class="memItemRight" valign="bottom"><b>version</b></td></tr>
+<tr class="memdesc:ab5ace17c779306b4e256beb53281c88f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Format version. <br /></td></tr>
+<tr class="separator:ab5ace17c779306b4e256beb53281c88f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6f1c434bd68f75553be139879e83aefd"><td class="memItemLeft" align="right" valign="top"><a id="a6f1c434bd68f75553be139879e83aefd" name="a6f1c434bd68f75553be139879e83aefd"></a>
 time_t&#160;</td><td class="memItemRight" valign="bottom"><b>dateCreated</b></td></tr>
 <tr class="memdesc:a6f1c434bd68f75553be139879e83aefd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Date: Creation (timestamp) <br /></td></tr>
@@ -170,14 +170,17 @@ time_t&#160;</td><td class="memItemRight" valign="bottom"><b>dateLastSave</b></t
 Yuni::String&#160;</td><td class="memItemRight" valign="bottom"><b>author</b></td></tr>
 <tr class="memdesc:a1dde88024c6dc9b87cbe87dc806b428a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Author. <br /></td></tr>
 <tr class="separator:a1dde88024c6dc9b87cbe87dc806b428a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a399a9626b30d2fd481f6cb70b38f05ad"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classAntares_1_1Data_1_1StudyVersion.html">StudyVersion</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1StudyHeader.html#a399a9626b30d2fd481f6cb70b38f05ad">tryToFindTheVersion</a> (const AnyString &amp;folder)</td></tr>
+<tr class="memdesc:a399a9626b30d2fd481f6cb70b38f05ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Try to determine the version of a study.  <a href="classAntares_1_1Data_1_1StudyHeader.html#a399a9626b30d2fd481f6cb70b38f05ad">More...</a><br /></td></tr>
+<tr class="separator:a399a9626b30d2fd481f6cb70b38f05ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a147bd67a2671e4d250141c33bc5e97d4"><td class="memItemLeft" align="right" valign="top"><a id="a147bd67a2671e4d250141c33bc5e97d4" name="a147bd67a2671e4d250141c33bc5e97d4"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>StudyHeader</b> ()</td></tr>
 <tr class="memdesc:a147bd67a2671e4d250141c33bc5e97d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor. <br /></td></tr>
 <tr class="separator:a147bd67a2671e4d250141c33bc5e97d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af648ffbc4cc1477071c6591c6054b35b"><td class="memItemLeft" align="right" valign="top"><a id="af648ffbc4cc1477071c6591c6054b35b" name="af648ffbc4cc1477071c6591c6054b35b"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>~StudyHeader</b> ()</td></tr>
-<tr class="memdesc:af648ffbc4cc1477071c6591c6054b35b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor. <br /></td></tr>
-<tr class="separator:af648ffbc4cc1477071c6591c6054b35b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a71396b36c71b801cd1fb6c915ef1f20c"><td class="memItemLeft" align="right" valign="top"><a id="a71396b36c71b801cd1fb6c915ef1f20c" name="a71396b36c71b801cd1fb6c915ef1f20c"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>~StudyHeader</b> ()=default</td></tr>
+<tr class="memdesc:a71396b36c71b801cd1fb6c915ef1f20c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor. <br /></td></tr>
+<tr class="separator:a71396b36c71b801cd1fb6c915ef1f20c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a99e8bcfe7c0dbd33b2e9cbd897f81d87"><td class="memItemLeft" align="right" valign="top"><a id="a99e8bcfe7c0dbd33b2e9cbd897f81d87" name="a99e8bcfe7c0dbd33b2e9cbd897f81d87"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>reset</b> ()</td></tr>
 <tr class="memdesc:a99e8bcfe7c0dbd33b2e9cbd897f81d87"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reset the values. <br /></td></tr>
@@ -234,8 +237,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>CopySettingsToIni</b>
 
 </div>
 </div>
-<a id="a4bb492ae844e4ce7269c988565404e08" name="a4bb492ae844e4ce7269c988565404e08"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4bb492ae844e4ce7269c988565404e08">&#9670;&#160;</a></span>ReadVersionFromFile()</h2>
+<a id="ac234ecac4e391781d7d7a5372f2830d4" name="ac234ecac4e391781d7d7a5372f2830d4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac234ecac4e391781d7d7a5372f2830d4">&#9670;&#160;</a></span>ReadVersionFromFile()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -244,11 +247,21 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>CopySettingsToIni</b>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">uint Antares::Data::StudyHeader::ReadVersionFromFile </td>
+          <td class="memname">bool Antares::Data::StudyHeader::ReadVersionFromFile </td>
           <td>(</td>
           <td class="paramtype">const AnyString &amp;&#160;</td>
-          <td class="paramname"><em>filename</em></td><td>)</td>
+          <td class="paramname"><em>filename</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">std::string &amp;&#160;</td>
+          <td class="paramname"><em>version</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -307,10 +320,44 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>CopySettingsToIni</b>
 
 </div>
 </div>
+<a id="a399a9626b30d2fd481f6cb70b38f05ad" name="a399a9626b30d2fd481f6cb70b38f05ad"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a399a9626b30d2fd481f6cb70b38f05ad">&#9670;&#160;</a></span>tryToFindTheVersion()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classAntares_1_1Data_1_1StudyVersion.html">StudyVersion</a> Antares::Data::StudyHeader::tryToFindTheVersion </td>
+          <td>(</td>
+          <td class="paramtype">const AnyString &amp;&#160;</td>
+          <td class="paramname"><em>folder</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Try to determine the version of a study. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">folder</td><td>The folder where data are located </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The version of the study. <code>unknown</code> if not found </dd></dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>src/libs/antares/study/<a class="el" href="header_8h_source.html">header.h</a></li>
 <li>src/libs/antares/study/header.cpp</li>
-<li>src/libs/antares/study/<a class="el" href="header_8hxx_source.html">header.hxx</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

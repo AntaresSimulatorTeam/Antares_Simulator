@@ -175,7 +175,7 @@ var searchData=
   ['_7estudycleaninginfos_172',['~StudyCleaningInfos',['../classAntares_1_1Data_1_1StudyCleaningInfos.html#aae461fd3271c36dd82d53da7a094bb6a',1,'Antares::Data::StudyCleaningInfos']]],
   ['_7estudydata_173',['~StudyData',['../classAntares_1_1TSGenerator_1_1XCast_1_1StudyData.html#ab241a0761b8fa8a152d5a076e2e6e29b',1,'Antares::TSGenerator::XCast::StudyData']]],
   ['_7estudyfinder_174',['~StudyFinder',['../classAntares_1_1Data_1_1StudyFinder.html#aa56016a0ab776dda5e630ff358aabc31',1,'Antares::Data::StudyFinder']]],
-  ['_7estudyheader_175',['~StudyHeader',['../classAntares_1_1Data_1_1StudyHeader.html#af648ffbc4cc1477071c6591c6054b35b',1,'Antares::Data::StudyHeader']]],
+  ['_7estudyheader_175',['~StudyHeader',['../classAntares_1_1Data_1_1StudyHeader.html#a71396b36c71b801cd1fb6c915ef1f20c',1,'Antares::Data::StudyHeader']]],
   ['_7estudylogs_176',['~StudyLogs',['../classAntares_1_1Window_1_1StudyLogs.html#af15b31d897bb0ef292f484f057f64eb9',1,'Antares::Window::StudyLogs']]],
   ['_7estudyruntimeinfos_177',['~StudyRuntimeInfos',['../classAntares_1_1Data_1_1StudyRuntimeInfos.html#ac0abd4cba8aa233c5057aea91d5aec24',1,'Antares::Data::StudyRuntimeInfos']]],
   ['_7esuffixareaname_178',['~SuffixAreaName',['../classAntares_1_1Action_1_1Settings_1_1SuffixAreaName.html#adb729eab576f9161c8806021ce03d305',1,'Antares::Action::Settings::SuffixAreaName']]],

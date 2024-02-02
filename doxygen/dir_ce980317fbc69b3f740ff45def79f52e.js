@@ -17,7 +17,6 @@ var dir_ce980317fbc69b3f740ff45def79f52e =
     [ "finder.h", "finder_8h_source.html", null ],
     [ "fwd.h", "libs_2antares_2study_2fwd_8h_source.html", null ],
     [ "header.h", "header_8h_source.html", null ],
-    [ "header.hxx", "header_8hxx_source.html", null ],
     [ "layerdata.h", "layerdata_8h_source.html", null ],
     [ "load-options.h", "load-options_8h_source.html", null ],
     [ "output.h", "libs_2antares_2study_2output_8h_source.html", null ],

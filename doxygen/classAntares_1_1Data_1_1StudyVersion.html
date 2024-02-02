@@ -133,18 +133,49 @@ $(document).ready(function(){initNavTree('classAntares_1_1Data_1_1StudyVersion.h
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="classAntares_1_1Data_1_1StudyVersion-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">Antares::Data::StudyVersion Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Version of a study.  
+ <a href="classAntares_1_1Data_1_1StudyVersion.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="libs_2antares_2study_2version_8h_source.html">version.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a15ad25a2cac0f84e2639281ad61115ac"><td class="memItemLeft" align="right" valign="top"><a id="a15ad25a2cac0f84e2639281ad61115ac" name="a15ad25a2cac0f84e2639281ad61115ac"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>isStudyLatestVersion</b> (std::string studyFolder) const</td></tr>
-<tr class="separator:a15ad25a2cac0f84e2639281ad61115ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a188ee2697e85307e84228ab806b817ee"><td class="memItemLeft" align="right" valign="top"><a id="a188ee2697e85307e84228ab806b817ee" name="a188ee2697e85307e84228ab806b817ee"></a>
+auto&#160;</td><td class="memItemRight" valign="bottom"><b>operator&lt;=&gt;</b> (const <a class="el" href="classAntares_1_1Data_1_1StudyVersion.html">StudyVersion</a> &amp;) const =default</td></tr>
+<tr class="memdesc:a188ee2697e85307e84228ab806b817ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">allows automatic members comparison <br /></td></tr>
+<tr class="separator:a188ee2697e85307e84228ab806b817ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca9359e24b2ee2189f8067bcbe649ac3"><td class="memItemLeft" align="right" valign="top"><a id="aca9359e24b2ee2189f8067bcbe649ac3" name="aca9359e24b2ee2189f8067bcbe649ac3"></a>
+constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>StudyVersion</b> (unsigned major_, unsigned minor_)</td></tr>
+<tr class="separator:aca9359e24b2ee2189f8067bcbe649ac3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a26d794df23c8604eadce35cab13ec13e"><td class="memItemLeft" align="right" valign="top"><a id="a26d794df23c8604eadce35cab13ec13e" name="a26d794df23c8604eadce35cab13ec13e"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isSupported</b> (bool verbose) const</td></tr>
+<tr class="separator:a26d794df23c8604eadce35cab13ec13e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a46b2cc68552920eb44d42d9c49c0f9ec"><td class="memItemLeft" align="right" valign="top"><a id="a46b2cc68552920eb44d42d9c49c0f9ec" name="a46b2cc68552920eb44d42d9c49c0f9ec"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>fromString</b> (const std::string &amp;versionStr)</td></tr>
+<tr class="separator:a46b2cc68552920eb44d42d9c49c0f9ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae2d9289f3fc577683d9f8b65ee6106cc"><td class="memItemLeft" align="right" valign="top"><a id="ae2d9289f3fc577683d9f8b65ee6106cc" name="ae2d9289f3fc577683d9f8b65ee6106cc"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>toString</b> () const</td></tr>
+<tr class="separator:ae2d9289f3fc577683d9f8b65ee6106cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:a8bb902b338e3b291aac2c9ea7d012791"><td class="memItemLeft" align="right" valign="top"><a id="a8bb902b338e3b291aac2c9ea7d012791" name="a8bb902b338e3b291aac2c9ea7d012791"></a>
+static <a class="el" href="classAntares_1_1Data_1_1StudyVersion.html">StudyVersion</a>&#160;</td><td class="memItemRight" valign="bottom"><b>latest</b> ()</td></tr>
+<tr class="separator:a8bb902b338e3b291aac2c9ea7d012791"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab6b0a9aaccf0a7f1e3f374f74ac9f5cd"><td class="memItemLeft" align="right" valign="top"><a id="ab6b0a9aaccf0a7f1e3f374f74ac9f5cd" name="ab6b0a9aaccf0a7f1e3f374f74ac9f5cd"></a>
+static <a class="el" href="classAntares_1_1Data_1_1StudyVersion.html">StudyVersion</a>&#160;</td><td class="memItemRight" valign="bottom"><b>unknown</b> ()</td></tr>
+<tr class="separator:ab6b0a9aaccf0a7f1e3f374f74ac9f5cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<hr/>The documentation for this class was generated from the following files:<ul>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p >Version of a study. </p>
+<dl class="section see"><dt>See also</dt><dd>CHANGELOG.txt </dd></dl>
+</div><hr/>The documentation for this class was generated from the following files:<ul>
 <li>src/libs/antares/study/<a class="el" href="libs_2antares_2study_2version_8h_source.html">version.h</a></li>
 <li>src/libs/antares/study/version.cpp</li>
 </ul>

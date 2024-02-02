@@ -80,7 +80,7 @@ var NAVTREEINDEX0 =
 "StudyInfoCollector_8h_source.html":[8,0,0,1,0,8,0,0,0,0],
 "TSnumberData_8h_source.html":[8,0,0,1,0,19,8,15],
 "ThermalTSNumberData_8h_source.html":[8,0,0,1,0,19,8,14],
-"UnfeasibleProblemBehavior_8hpp_source.html":[8,0,0,1,0,19,30],
+"UnfeasibleProblemBehavior_8hpp_source.html":[8,0,0,1,0,19,29],
 "UnfeasibleProblemError_8hpp_source.html":[8,0,0,1,0,7,0,0,3],
 "WindTSNumberData_8h_source.html":[8,0,0,1,0,19,8,17],
 "about_2aboutbox_8h_source.html":[8,0,0,5,2,2,0,0],

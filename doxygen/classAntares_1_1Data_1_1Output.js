@@ -17,6 +17,6 @@ var classAntares_1_1Data_1_1Output =
     [ "path", "classAntares_1_1Data_1_1Output.html#ae8c652bf83c5e1a48f870bb8224e99fe", null ],
     [ "timestamp", "classAntares_1_1Data_1_1Output.html#a47d2b94d0e41f050757474e44c1a7181", null ],
     [ "title", "classAntares_1_1Data_1_1Output.html#a1b0b78cffb6534e38602efedc15546c5", null ],
-    [ "version", "classAntares_1_1Data_1_1Output.html#a86aab958ade31444577197cf83a489ee", null ],
+    [ "version", "classAntares_1_1Data_1_1Output.html#a6e2cab8e1b0815b06d4a4ef7b19df688", null ],
     [ "viewMenuID", "classAntares_1_1Data_1_1Output.html#a0610c0093f9168ba4ad912de7cad5c30", null ]
 ];

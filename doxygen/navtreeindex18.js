@@ -1,5 +1,6 @@
 var NAVTREEINDEX18 =
 {
+"classIItem_1_1Tag.html#a03ecb8f2e70751863597edf59000f695":[7,0,116,1,1],
 "classIItem_1_1Tag.html#a744db431dc93c4ec31f8d0ec4de42352":[7,0,116,1,0],
 "classIItem_1_1Tag.html#ac96f2e7cdb26c00e59e50692fe0f131e":[7,0,116,1,3],
 "classIItem_1_1Tag.html#af1cce5df78504a1ddce9a4c3215798d7":[7,0,116,1,2],
@@ -127,8 +128,8 @@ var NAVTREEINDEX18 =
 "classProgress.html#ac4b5ef750872e2013c6925c203a35d4cadfe3149fcd3440053bcdf797ab68efc8":[7,0,183,1,0],
 "classProgress.html#ac871f3914f9fb67fa2da2783d5be9a0f":[7,0,183,4],
 "classPublicStudy.html":[7,0,184],
-"classPublicStudy.html#a7bd1904c52c42533e39390182c2d1726":[7,0,184,1],
 "classPublicStudy.html#a7bd1904c52c42533e39390182c2d1726":[7,0,184,0],
+"classPublicStudy.html#a7bd1904c52c42533e39390182c2d1726":[7,0,184,1],
 "classQuadraticProblemMatrix.html":[7,0,185],
 "classRealName.html":[7,0,186],
 "classResultMatrix.html":[7,0,192],
@@ -248,6 +249,5 @@ var NAVTREEINDEX18 =
 "common_2cluster__list_8h_source.html":[8,0,0,1,0,19,5,0,1],
 "common_2component_2frame_2frame_8h_source.html":[8,0,0,5,1,0,0,0],
 "common_2component_2panel_2group_8h_source.html":[8,0,0,5,1,0,1,0],
-"common_2component_2panel_2panel_8h_source.html":[8,0,0,5,1,0,1,1],
-"common_2component_2panel_8h_source.html":[8,0,0,5,1,0,4]
+"common_2component_2panel_2panel_8h_source.html":[8,0,0,5,1,0,1,1]
 };

@@ -154,53 +154,38 @@ $(document).ready(function(){initNavTree('libs_2antares_2study_2version_8h_sourc
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="comment">** You should have received a copy of the Mozilla Public Licence 2.0</span></div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="comment">** along with Antares_Simulator. If not, see &lt;https://opensource.org/license/mpl-2-0/&gt;.</span></div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="comment">*/</span></div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#ifndef __ANTARES_LIBS_STUDY_VERSION_H__</span></div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#define __ANTARES_LIBS_STUDY_VERSION_H__</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;yuni/yuni.h&gt;</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#pragma once</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &lt;array&gt;</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="keyword">namespace </span>Antares::Data</div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>{</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="keyword">enum</span> Version</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>{</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    versionUnknown = 0,</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    version700 = 700,</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    version710 = 710,</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    version720 = 720,</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    version800 = 800,</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    version810 = 810,</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    version820 = 820,</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    version830 = 830,</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    version840 = 840,</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    version850 = 850,</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    version860 = 860,</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    version870 = 870,</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    version880 = 880,</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <span class="comment">// Constants</span></div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span><span class="comment"></span>    versionFutur = 99999,</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>};</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span> </div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span><span class="keyword">constexpr</span> Version versionLatest = version880;</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>Version StudyTryToFindTheVersion(<span class="keyword">const</span> AnyString&amp; folder);</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span> </div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span><span class="keyword">const</span> <span class="keywordtype">char</span>* VersionToCStr(<span class="keyword">const</span> Version v);</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span> </div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span><span class="keyword">const</span> <span class="keywordtype">wchar_t</span>* VersionToWStr(<span class="keyword">const</span> Version v);</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span> </div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>Version VersionIntToVersion(uint version);</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span> </div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1StudyVersion.html">  104</a></span><span class="keyword">class </span><a class="code hl_class" href="classAntares_1_1Data_1_1StudyVersion.html">StudyVersion</a> {</div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    [[nodiscard]] <span class="keywordtype">bool</span> isStudyLatestVersion(std::string studyFolder) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>};</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>} <span class="comment">// namespace Antares::Data</span></div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span> </div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span> </div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span><span class="preprocessor">#endif </span><span class="comment">// __ANTARES_LIBS_STUDY_VERSION_H__</span></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1StudyVersion_html"><div class="ttname"><a href="classAntares_1_1Data_1_1StudyVersion.html">Antares::Data::StudyVersion</a></div><div class="ttdef"><b>Definition:</b> version.h:104</div></div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1StudyVersion.html">   35</a></span><span class="keyword">class </span><a class="code hl_class" href="classAntares_1_1Data_1_1StudyVersion.html">StudyVersion</a></div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>{</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1StudyVersion.html#a188ee2697e85307e84228ab806b817ee">   39</a></span>    <span class="keyword">auto</span> <a class="code hl_function" href="classAntares_1_1Data_1_1StudyVersion.html#a188ee2697e85307e84228ab806b817ee">operator&lt;=&gt;</a>(<span class="keyword">const</span> <a class="code hl_class" href="classAntares_1_1Data_1_1StudyVersion.html">StudyVersion</a>&amp;) <span class="keyword">const</span> = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="keyword">constexpr</span> <a class="code hl_class" href="classAntares_1_1Data_1_1StudyVersion.html">StudyVersion</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="keyword">constexpr</span> <a class="code hl_class" href="classAntares_1_1Data_1_1StudyVersion.html">StudyVersion</a>(<span class="keywordtype">unsigned</span> major_, <span class="keywordtype">unsigned</span> minor_) : major(major_), minor(minor_) {}</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <a class="code hl_class" href="classAntares_1_1Data_1_1StudyVersion.html">~StudyVersion</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <span class="keywordtype">bool</span> isSupported(<span class="keywordtype">bool</span> verbose) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="keywordtype">bool</span> fromString(<span class="keyword">const</span> std::string&amp; versionStr);</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    std::string toString() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="keyword">static</span> <a class="code hl_class" href="classAntares_1_1Data_1_1StudyVersion.html">StudyVersion</a> latest();</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="keyword">static</span> <a class="code hl_class" href="classAntares_1_1Data_1_1StudyVersion.html">StudyVersion</a> unknown();</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="keywordtype">unsigned</span> major = 0;</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="keywordtype">unsigned</span> minor = 0;</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>};</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>} <span class="comment">// namespace Antares::Data</span></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1StudyVersion_html"><div class="ttname"><a href="classAntares_1_1Data_1_1StudyVersion.html">Antares::Data::StudyVersion</a></div><div class="ttdoc">Version of a study.</div><div class="ttdef"><b>Definition:</b> version.h:36</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1StudyVersion_html_a188ee2697e85307e84228ab806b817ee"><div class="ttname"><a href="classAntares_1_1Data_1_1StudyVersion.html#a188ee2697e85307e84228ab806b817ee">Antares::Data::StudyVersion::operator&lt;=&gt;</a></div><div class="ttdeci">auto operator&lt;=&gt;(const StudyVersion &amp;) const =default</div><div class="ttdoc">allows automatic members comparison</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

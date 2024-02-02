@@ -313,7 +313,7 @@ var annotated_dup =
         [ "StudyLoadOptions", "classAntares_1_1Data_1_1StudyLoadOptions.html", "classAntares_1_1Data_1_1StudyLoadOptions" ],
         [ "StudyRangeLimits", "structAntares_1_1Data_1_1StudyRangeLimits.html", "structAntares_1_1Data_1_1StudyRangeLimits" ],
         [ "StudyRuntimeInfos", "classAntares_1_1Data_1_1StudyRuntimeInfos.html", "classAntares_1_1Data_1_1StudyRuntimeInfos" ],
-        [ "StudyVersion", "classAntares_1_1Data_1_1StudyVersion.html", null ],
+        [ "StudyVersion", "classAntares_1_1Data_1_1StudyVersion.html", "classAntares_1_1Data_1_1StudyVersion" ],
         [ "ThermalCluster", "classAntares_1_1Data_1_1ThermalCluster.html", "classAntares_1_1Data_1_1ThermalCluster" ],
         [ "ThermalClusterList", "classAntares_1_1Data_1_1ThermalClusterList.html", "classAntares_1_1Data_1_1ThermalClusterList" ],
         [ "TimeSeries", "classAntares_1_1Data_1_1TimeSeries.html", "classAntares_1_1Data_1_1TimeSeries" ],
