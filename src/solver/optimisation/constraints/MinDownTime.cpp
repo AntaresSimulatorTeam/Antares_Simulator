@@ -10,11 +10,6 @@
 ** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
 **
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
-**
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
