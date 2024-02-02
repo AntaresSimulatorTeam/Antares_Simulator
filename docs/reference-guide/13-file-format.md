@@ -11,7 +11,7 @@ becomes
 ```
 version = 9.0
 ```
-Compatibility is kept as long as version numbers only have one digit (9.0.0 can still be written as 900, while 9.10.0 can't be written 910 because it might be confused with 9.1.0 or 91.0.0).
+Compatibility is kept with versions up to 8.8.0. Starting from version 9.0.0, the new format must be used.
 
 ## v8.8.0
 ### Input
