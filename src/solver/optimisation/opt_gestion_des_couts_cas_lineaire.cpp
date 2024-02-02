@@ -20,7 +20,6 @@
 */
 
 #include <yuni/yuni.h>
-#include <antares/study/area/scratchpad.h>
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 
 #include "antares/solver/simulation/sim_spread_generator.h"

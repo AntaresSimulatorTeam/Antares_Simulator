@@ -19,7 +19,6 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <antares/study/area/scratchpad.h>
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 
 #include "antares/solver/simulation/simulation.h"
