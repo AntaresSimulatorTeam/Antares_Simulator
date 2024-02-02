@@ -18,16 +18,25 @@
 // ** You should have received a copy of the Mozilla Public Licence 2.0
 // ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 // *
-
-#pragma once
+#ifndef ANTARES_DATA_ASSERTIONERROR_HPP
+#define ANTARES_DATA_ASSERTIONERROR_HPP
 
 #include <stdexcept>
 
-namespace Antares::Solver::Initialization::Error
+namespace Antares
 {
-class NoQueueService : public std::runtime_error
+namespace Data
+{
+class AssertionError : public std::runtime_error
 {
 public:
-    NoQueueService(): std::runtime_error("No queue service") {}
+    explicit AssertionError(const std::string& message);
+
+    ~AssertionError() noexcept override = default;
 };
-} // namespace Antares::Solver::Initialization::Error
+
+} // namespace Data
+
+} // namespace Antares
+
+#endif // ANTARES_DATA_ASSERTIONERROR_HPP
