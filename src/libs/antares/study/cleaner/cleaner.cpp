@@ -39,14 +39,10 @@ using namespace Yuni;
 namespace Antares::Data
 {
 StudyCleaningInfos::StudyCleaningInfos()
-{
-    version = StudyVersion::unknown();
-}
+{}
 
 StudyCleaningInfos::StudyCleaningInfos(const AnyString& path) : folder(path)
-{
-    version = StudyVersion::unknown();
-}
+{}
 
 StudyCleaningInfos::~StudyCleaningInfos() = default;
 

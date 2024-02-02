@@ -80,7 +80,6 @@ public:
 
     /*! Version of the study */
     StudyVersion version;
-    std::string versionString;
     /*! List of all intruders */
     ::PathList intruders;
     /*! List of all files/folders to prevent from the destruction */
