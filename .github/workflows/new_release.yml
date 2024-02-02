@@ -12,6 +12,7 @@ on:
       run-tests:
         description: "Run all tests (true/false)"
         required: true
+        type: string
 jobs:
       release:
         name: Release pushed tag
