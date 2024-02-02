@@ -1,9 +1,17 @@
 # Study format changes
 This is a list of all recent changes that came with new Antares Simulator features. The main goal of this document is to lower the costs of changing existing interfaces, both GUI and scripts.
-## v8.9.0
+## v9.0.0
 ### Input
-### Solver logs
-* Solver logs can be enabled either by the command-line option (--solver-logs) or in the generaldata.ini file by setting solver-logs = true under the optimization section.
+### Study version
+Breaking change in the study format, file **study.antares**
+```
+version = 900
+```
+becomes
+```
+version = 9.0
+```
+Compatibility is kept as long as version numbers only have one digit (9.0.0 can still be written as 900, while 9.10.0 can't be written 910 because it might be confused with 9.1.0 or 91.0.0).
 
 ## v8.8.0
 ### Input
