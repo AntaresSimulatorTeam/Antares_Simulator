@@ -147,7 +147,7 @@ bool StudyVersion::fromString(const std::string& versionStr)
 
 std::string StudyVersion::toString() const
 {
-    return std::to_string(major) + "." + std::to_string(minor);
+    return std::to_string(major_) + "." + std::to_string(minor_);
 }
 
 StudyVersion StudyVersion::latest()
@@ -164,9 +164,6 @@ bool StudyVersion::isSupported(bool verbose) const
 {
     if (std::ranges::find(::supportedVersions, *this) != ::supportedVersions.end())
         return true;
-
-    if (verbose)
-        logs.error() << "Version: " << toString() << " not supported";
 
     if (*this > latest() && verbose)
     {
