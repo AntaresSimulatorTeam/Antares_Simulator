@@ -28,114 +28,32 @@
 #include "../../../config.h" //used to get versionFromCMake
 
 using namespace Yuni;
+using namespace Antares::Data;
 
-
-// Checking version between CMakeLists.txt and Antares'versions
-static constexpr unsigned lastMinorCMake = ANTARES_VERSION_LO;
-static constexpr unsigned lastVersionMinor = 8;
-
-static_assert(lastMinorCMake == lastVersionMinor);
-
-namespace Antares::Data
+namespace
 {
-
-const std::vector<std::string> StudyVersion::supportedVersions =
+constexpr auto supportedVersions = std::to_array(
 {
-    "7.0",
-    "7.1",
-    "7.2",
-    "8.0",
-    "8.1",
-    "8.2",
-    "8.3",
-    "8.4",
-    "8.5",
-    "8.6",
-    "8.7",
-    "8.8"
-};
+    StudyVersion(7, 0),
+    StudyVersion(7, 1),
+    StudyVersion(7, 2),
+    StudyVersion(8, 0),
+    StudyVersion(8, 1),
+    StudyVersion(8, 2),
+    StudyVersion(8, 3),
+    StudyVersion(8, 4),
+    StudyVersion(8, 5),
+    StudyVersion(8, 6),
+    StudyVersion(8, 7),
+    StudyVersion(8, 8)
+    // Add new versions here
+});
 
-static inline StudyVersion legacyStudyFormatCheck(const std::string& versionStr)
-{
-    unsigned versionNumber = 0;
-    try
-    {
-        versionNumber = std::stoul(versionStr);
-    }
-    catch (std::invalid_argument&)
-    {
-        logs.error() << "Invalid version number: " << versionStr;
-    }
-    return legacyVersionIntToVersion(versionNumber);
-}
-
-StudyVersion StudyVersion::buildVersionLegacyOrCurrent(const std::string& versionStr)
-{
-    // if the string doesn't contains a dot it's legacy format
-    if (versionStr.find(".") == std::string::npos)
-        return legacyStudyFormatCheck(versionStr);
-
-    if (isVersionSupported(versionStr))
-        return StudyVersion(versionStr);
-
-    return unknown();
-}
-
-std::string StudyVersion::toString() const
-{
-    return std::to_string(major) + "." + std::to_string(minor);
-}
-
-StudyVersion::StudyVersion(const std::string& s)
-{
-    size_t separator = s.find('.');
-    if (separator == std::string::npos)
-        logs.error() << "Invalid version format, exiting";
-
-    try
-    {
-        major = std::stoul(s.substr(0, separator));
-        minor = std::stoul(s.substr(separator + 1));
-    }
-    catch (std::invalid_argument&)
-    {
-        major = 0;
-        minor = 0;
-        logs.error() << "Invalid version format, exiting";
-    }
-}
-
-StudyVersion::StudyVersion(unsigned major_, unsigned minor_) : major(major_), minor(minor_)
-{}
-
-StudyVersion StudyVersion::latest()
-{
-    return StudyVersion(supportedVersions.back());
-}
-
-StudyVersion StudyVersion::unknown()
-{
-    return StudyVersion(0, 0);
-}
-
-bool StudyVersion::isVersionSupported(const std::string& version)
-{
-    if (std::ranges::find(supportedVersions, version) != supportedVersions.end())
-        return true;
-
-    logs.error() << "Version: " << version << " not supported";
-
-    if (StudyVersion(version) > latest())
-    {
-        logs.error() << "Maximum study version supported: " << supportedVersions.back();
-        logs.error() << "Please upgrade the solver to the latest version";
-    }
-
-    return false;
-}
-
+/// Convert a unsigned into a StudyVersion, used for legacy version format (ex: 720)
 StudyVersion legacyVersionIntToVersion(unsigned version)
 {
+    // It's not necessary to add anything here, since legacy versions should not be created
+
     // The list should remain ordered in the reverse order for performance reasons
     switch (version)
     {
@@ -173,5 +91,94 @@ StudyVersion legacyVersionIntToVersion(unsigned version)
             << " if it's the case";
     return StudyVersion::unknown();
     }
+}
+
+StudyVersion parseLegacyVersion(const std::string& versionStr)
+{
+    unsigned versionNumber = 0;
+    try
+    {
+        versionNumber = std::stoul(versionStr);
+    }
+    catch (std::invalid_argument&)
+    {
+        logs.error() << "Invalid version number: " << versionStr;
+        return StudyVersion::unknown();
+    }
+    return ::legacyVersionIntToVersion(versionNumber);
+}
+
+StudyVersion parseCurrentVersion(const std::string& s, size_t separator)
+{
+    unsigned major, minor;
+
+    if (separator == std::string::npos)
+        logs.error() << "Invalid version format, exiting";
+
+    try
+    {
+        major = std::stoul(s.substr(0, separator));
+        minor = std::stoul(s.substr(separator + 1));
+    }
+    catch (std::invalid_argument&)
+    {
+        logs.error() << "Invalid version format, exiting";
+        return StudyVersion::unknown();
+    }
+    return StudyVersion(major, minor);
+}
+
+}
+
+// Checking version between CMakeLists.txt and Antares'versions
+static_assert(StudyVersion(ANTARES_VERSION_HI, ANTARES_VERSION_LO) == ::supportedVersions.back(), "Please check that CMake's version and version.cpp's version match");
+
+namespace Antares::Data
+{
+bool StudyVersion::fromString(const std::string& versionStr)
+{
+    // if the string doesn't contains a dot it's legacy format
+    if (size_t separator = versionStr.find("."); separator == std::string::npos)
+        *this = parseLegacyVersion(versionStr);
+    else
+        *this = parseCurrentVersion(versionStr, separator);
+
+    if (isSupported(true))
+        return true;
+
+    *this = unknown();
+    return false;
+}
+
+std::string StudyVersion::toString() const
+{
+    return std::to_string(major) + "." + std::to_string(minor);
+}
+
+StudyVersion StudyVersion::latest()
+{
+    return ::supportedVersions.back();
+}
+
+StudyVersion StudyVersion::unknown()
+{
+    return StudyVersion();
+}
+
+bool StudyVersion::isSupported(bool verbose) const
+{
+    if (std::ranges::find(::supportedVersions, *this) != ::supportedVersions.end())
+        return true;
+
+    if (verbose)
+        logs.error() << "Version: " << toString() << " not supported";
+
+    if (*this > latest() && verbose)
+    {
+        logs.error() << "Maximum study version supported: " << ::supportedVersions.back().toString();
+        logs.error() << "Please upgrade the solver to the latest version";
+    }
+
+    return false;
 }
 } // namespace Antares::Data

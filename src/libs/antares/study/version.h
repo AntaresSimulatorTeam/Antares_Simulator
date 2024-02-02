@@ -26,12 +26,11 @@
 */
 #pragma once
 
-#include <vector>
+#include <array>
 #include <string>
 
 namespace Antares::Data
 {
-
 /*!
 ** \brief Version of a study
 **
@@ -45,16 +44,15 @@ public:
     /// allows automatic members comparison
     auto operator<=>(const StudyVersion&) const = default;
 
-    StudyVersion() = default;
-    explicit StudyVersion(const std::string&);
-    StudyVersion(unsigned, unsigned);
+    constexpr StudyVersion() = default;
+    constexpr StudyVersion(unsigned major_, unsigned minor_) : major(major_), minor(minor_) {}
     ~StudyVersion() = default;
 
-    /// Return the version in "major.minor" format
-    std::string toString() const;
+    bool isSupported(bool verbose) const;
 
-    /// Determine if version string is legacy or current, calls the correct constructor
-    static StudyVersion buildVersionLegacyOrCurrent(const std::string& versionStr);
+    bool fromString(const std::string& versionStr);
+
+    std::string toString() const;
 
     static StudyVersion latest();
     static StudyVersion unknown();
@@ -62,12 +60,5 @@ public:
 private:
     unsigned major = 0;
     unsigned minor = 0;
-
-    static bool isVersionSupported(const std::string& version);
-    static const std::vector<std::string> supportedVersions;
 };
-
-/// Convert a unsigned into a StudyVersion, used for legacy version format (ex: 720)
-StudyVersion legacyVersionIntToVersion(unsigned version);
-
 } // namespace Antares::Data
