@@ -594,6 +594,7 @@ target_include_directories(libantares-core
 
 target_link_libraries(libantares-core
 	PUBLIC
+        ortools::ortools
 		yuni-static-core
 		yuni-static-uuid
 		libantares-core-calendar

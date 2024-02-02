@@ -27,6 +27,6 @@ target_link_libraries(utils
         libantares-core
         )
 target_include_directories(utils
-    PUBLIC
+        PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
