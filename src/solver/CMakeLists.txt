@@ -18,6 +18,7 @@ add_subdirectory(main)
 add_subdirectory(constraints-builder)
 add_subdirectory(application)
 add_subdirectory(misc)
+add_subdirectory(optim)
 
 #
 # Resource file for Windows

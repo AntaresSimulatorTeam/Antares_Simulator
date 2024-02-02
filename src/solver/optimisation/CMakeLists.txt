@@ -176,6 +176,10 @@ set(RTESOLVER_OPT
 
 set(SRC_MODEL
 	${RTESOLVER_OPT}
+		LegacyLinearProblemImpl.cpp
+		LegacyLinearProblemImpl.h
+        LegacyLinearProblemFillerImpl.cpp
+        LegacyLinearProblemFillerImpl.h
 )
 
 add_library(model_antares ${SRC_MODEL})

@@ -48,6 +48,13 @@ MPSolver* ProblemSimplexeNommeConverter::Convert()
     MPSolver* solver = MPSolverFactory(problemeSimplexe_, solverName_);
     TuneSolverSpecificOptions(solver);
 
+    Fill(solver);
+
+    return solver;
+}
+
+void ProblemSimplexeNommeConverter::Fill(MPSolver* solver)
+{
     // Create the variables and set objective cost.
     CopyVariables(solver);
 
@@ -55,12 +62,6 @@ MPSolver* ProblemSimplexeNommeConverter::Convert()
     CopyRows(solver);
 
     CopyMatrix(solver);
-    if (problemeSimplexe_->SolverLogs())
-    {
-        solver->EnableOutput();
-    }
-
-    return solver;
 }
 
 void ProblemSimplexeNommeConverter::TuneSolverSpecificOptions(MPSolver* solver) const
@@ -77,6 +78,10 @@ void ProblemSimplexeNommeConverter::TuneSolverSpecificOptions(MPSolver* solver) 
     // Add solver-specific options here
     default:
         break;
+    }
+    if (problemeSimplexe_->SolverLogs())
+    {
+        solver->EnableOutput();
     }
 }
 

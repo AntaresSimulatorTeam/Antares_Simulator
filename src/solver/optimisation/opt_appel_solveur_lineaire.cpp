@@ -50,6 +50,10 @@ extern "C"
 #include "../infeasible-problem-analysis/variables-bounds-consistency.h"
 #include "../infeasible-problem-analysis/constraint-slack-analysis.h"
 
+#include "../optim/api/LinearProblemBuilder.h"
+#include "LegacyLinearProblemImpl.h"
+#include "LegacyLinearProblemFillerImpl.h"
+
 #include <chrono>
 
 using namespace operations_research;
@@ -109,7 +113,7 @@ static SimplexResult OPT_TryToCallSimplex(
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
     auto ProbSpx
-      = (PROBLEME_SPX*)(ProblemeAResoudre->ProblemesSpx[(int)NumIntervalle]);
+            = (PROBLEME_SPX*)(ProblemeAResoudre->ProblemesSpx[(int)NumIntervalle]);
     auto solver = (MPSolver*)(ProblemeAResoudre->ProblemesSpx[(int)NumIntervalle]);
 
     const int opt = optimizationNumber - 1;
@@ -154,8 +158,9 @@ static SimplexResult OPT_TryToCallSimplex(
             TimeMeasurement updateMeasure;
             if (options.useOrtools)
             {
+                // TODO comment gérer le update ??? => ajouter une méthode update à LinearProblem ?
                 ORTOOLS_ModifierLeVecteurCouts(
-                  solver, ProblemeAResoudre->CoutLineaire.data(), ProblemeAResoudre->NombreDeVariables);
+                        solver, ProblemeAResoudre->CoutLineaire.data(), ProblemeAResoudre->NombreDeVariables);
                 ORTOOLS_ModifierLeVecteurSecondMembre(solver,
                                                       ProblemeAResoudre->SecondMembre.data(),
                                                       ProblemeAResoudre->Sens.data(),
@@ -169,7 +174,7 @@ static SimplexResult OPT_TryToCallSimplex(
             else
             {
                 SPX_ModifierLeVecteurCouts(
-                  ProbSpx, ProblemeAResoudre->CoutLineaire.data(), ProblemeAResoudre->NombreDeVariables);
+                        ProbSpx, ProblemeAResoudre->CoutLineaire.data(), ProblemeAResoudre->NombreDeVariables);
                 SPX_ModifierLeVecteurSecondMembre(ProbSpx,
                                                   ProblemeAResoudre->SecondMembre.data(),
                                                   ProblemeAResoudre->Sens.data(),
@@ -196,7 +201,7 @@ static SimplexResult OPT_TryToCallSimplex(
     Probleme.NombreDeTermesDesLignes = ProblemeAResoudre->NombreDeTermesDesLignes.data();
     Probleme.IndicesColonnes = ProblemeAResoudre->IndicesColonnes.data();
     Probleme.CoefficientsDeLaMatriceDesContraintes
-      = ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes.data();
+            = ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes.data();
     Probleme.Sens = ProblemeAResoudre->Sens.data();
     Probleme.SecondMembre = ProblemeAResoudre->SecondMembre.data();
 
@@ -224,7 +229,14 @@ static SimplexResult OPT_TryToCallSimplex(
 
     if (options.useOrtools)
     {
-        solver = ORTOOLS_ConvertIfNeeded(options.solverName, &Probleme, solver);
+        LegacyLinearProblemImpl legacyLinearProblem(&Probleme, options.solverName);
+        LinearProblemBuilder linearProblemBuilder(&legacyLinearProblem);
+        LegacyLinearProblemFillerImpl filler(&Probleme); // TODO : fusionner avec LegacyLinearProblemImpl ?
+        linearProblemBuilder.addFiller(&filler);
+        // TODO : on peut ajouter ici des fillers supplémentaires, par exemple passés en argument de la fonction
+        // sinon renvoyer le builder ou le problem à une autre classe
+        linearProblemBuilder.build();
+        solver = legacyLinearProblem.getMpSolver();
     }
     const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
 
@@ -318,6 +330,7 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
 
     if (!simplexResult.success)
     {
+        // TODO : why ??
         PremierPassage = false;
         simplexResult = OPT_TryToCallSimplex(options, problemeHebdo, Probleme,  NumIntervalle, optimizationNumber,
                 optPeriodStringGenerator, PremierPassage, writer);
@@ -378,6 +391,7 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
 
         Probleme.SetUseNamedProblems(true);
 
+        // Analyse d'infaisa en clonant le MPSolver existant => on peut ignorer ça pour l'instant
         auto MPproblem = std::shared_ptr<MPSolver>(ProblemSimplexeNommeConverter(options.solverName, &Probleme).Convert());
 
         auto analyzer = makeUnfeasiblePbAnalyzer();
