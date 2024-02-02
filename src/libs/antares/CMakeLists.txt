@@ -48,18 +48,18 @@ add_library(antares-core
 
 target_include_directories(antares-core
         PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         PRIVATE
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/libs>
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/libs>
 )
 
 target_link_libraries(antares-core
         PUBLIC
-        yuni-static-core
-        Antares::logs
-        Antares::exception
-        Antares::study
-        Antares::config
+            yuni-static-core
+            Antares::logs
+            Antares::exception
+            Antares::study
+            Antares::config
 )
 
 import_std_libs(antares-core)
