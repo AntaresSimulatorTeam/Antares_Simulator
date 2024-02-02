@@ -13,6 +13,9 @@ on:
       run-tests:
         required: true
         type: string
+      ref:
+        required: true
+        type: string
 
 env:
   GITHUB_TOKEN: ${{ github.token }}
@@ -33,7 +36,7 @@ jobs:
 
     - name: Checkout
       run: |
-          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git -b $GITHUB_REF_NAME .
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git -b ${{ inputs.ref }} .
 
     - name: Init submodule
       run: |

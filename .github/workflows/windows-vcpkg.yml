@@ -17,6 +17,8 @@ on:
       run-tests:
         required: true
         type: string
+      with:
+        ref: ${{ inputs.ref }}
 
 env:
   GITHUB_TOKEN: ${{ github.token }}
@@ -42,6 +44,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+      with:
+        ref: ${{ inputs.ref }}
 
     - name: Config OR-Tools URL
       run: |
