@@ -165,9 +165,6 @@ bool StudyVersion::isSupported(bool verbose) const
     if (std::ranges::find(::supportedVersions, *this) != ::supportedVersions.end())
         return true;
 
-    if (verbose)
-        logs.error() << "Version: " << toString() << " not supported";
-
     if (*this > latest() && verbose)
     {
         logs.error() << "Maximum study version supported: " << ::supportedVersions.back().toString();
