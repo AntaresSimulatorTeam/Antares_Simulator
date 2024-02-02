@@ -1,15 +1,17 @@
-name: "Download extract .tgz precompiled libraries"
-description: "Download and extract .tgz precompiled libraries from antares-deps and antares-simulator repository"
+name: "Install cmake 3.28 using devtoolset 10"
+description: "Download and install system wide cmake 3.28"
+inputs:
 
 runs:
   using: "composite"
   steps:
-    run: |
-      source /opt/rh/devtoolset-10/enable
-      yum -y install openssl-devel
-      wget https://github.com/Kitware/CMake/releases/download/v3.28.2/cmake-3.28.2.tar.gz
-      tar -xvf cmake-3.28.2.tar.gz
-      cd cmake-3.28.2
-      ./bootstrap
-      make -j$(nproc)
-      make install
+    - name: Build cmake
+      run: |
+        source /opt/rh/devtoolset-10/enable
+        yum -y install openssl-devel
+        wget https://github.com/Kitware/CMake/releases/download/v3.28.2/cmake-3.28.2.tar.gz
+        tar -xvf cmake-3.28.2.tar.gz
+        cd cmake-3.28.2
+        ./bootstrap
+        make -j$(nproc)
+        make install

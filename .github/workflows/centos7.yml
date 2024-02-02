@@ -35,6 +35,13 @@ jobs:
       run: |
           git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git -b $GITHUB_REF_NAME .
 
+    - name: Install gcc 10
+      run: |
+        yum install -y centos-release-scl
+        yum install -y devtoolset-10-gcc*
+
+    - uses: ./.github/workflows/install-cmake-328
+
     - name: Init submodule
       run: |
           git submodule update --init --remote src/antares-deps src/tests/resources/Antares_Simulator_Tests
@@ -59,11 +66,6 @@ jobs:
             unzip -q ortools.zip
             rm ortools.zip
 
-    - name: Install gcc 10
-      run: |
-        yum install -y centos-release-scl
-        yum install -y devtoolset-10-gcc*
-
     - name: Install gh if needed
       if: ${{ env.IS_RELEASE == 'true' }}
       run: |
@@ -72,7 +74,6 @@ jobs:
            dnf -y config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
            dnf -y install gh
 
-    - uses: ./.github/workflows/install-cmake-328
 
     - name: Configure
       run: |
