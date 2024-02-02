@@ -37,7 +37,7 @@ jobs:
         needs: release
         uses: ./.github/workflows/ubuntu.yml
         with:
-          run-tests: ${{ fromJSON(inputs.run-tests) }}
+          run-tests: ${{ inputs.run-tests }}
 
       windows:
         name: Release - Windows
