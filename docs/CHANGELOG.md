@@ -13,6 +13,7 @@ Antares Changelog
 
 ## For developers
 * Use precompiled OR-Tools for Oracle Linux 8 CI (#1893)
+* Change version behavior to allow more flexibility (#1898)
 
 ## Code quality
 * Use std::shared_ptr instead of indices for active binding constraints in results (#1887)
