@@ -24,7 +24,8 @@ Until 2018 it was distributed under the terms of a proprietary license.
 
 In May 2018 RTE decided to release the project under the GPLv3 license.
 
-In January 2024, RTE, as the exclusive Copyright owner decided, to switch from GPL V3 to MPL V2 License since the 9.0 major version of Antares-Simulator
+In January 2024, RTE, as the exclusive Copyright owner decided, to switch from GPL V3 to MPL V2 License since the 9.0 major version of Antares-Simulator.
+
 # Links:
 
 - Antares web site :  https://antares-simulator.org
