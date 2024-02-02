@@ -18,10 +18,10 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#ifndef __ANTARES_LIBS_STUDY_VERSION_H__
-#define __ANTARES_LIBS_STUDY_VERSION_H__
+#pragma once
 
-#include <yuni/yuni.h>
+#include <array>
+#include <string>
 
 namespace Antares::Data
 {
@@ -31,81 +31,28 @@ namespace Antares::Data
 ** \ingroup study
 ** \see CHANGELOG.txt
 */
-enum Version
+
+class StudyVersion
 {
-    //! Unknown version of a study
-    versionUnknown = 0,
-    //! Study version 7.0
-    version700 = 700,
-    //! Study version 7.1
-    version710 = 710,
-    //! Study version 7.2
-    version720 = 720,
-    //! Study version 8.0
-    version800 = 800,
-    //! Study version 8.1
-    version810 = 810,
-    //! Study version 8.2
-    version820 = 820,
-    //! Study version 8.3
-    version830 = 830,
-    //! Study version 8.4
-    version840 = 840,
-    //! Study version 8.5
-    version850 = 850,
-    //! Study version 8.6
-    version860 = 860,
-    //! Study version 8.7
-    version870 = 870,
-    //! Study version 8.8
-    version880 = 880,
-
-    // Constants
-    //! A more recent version that we can't handle
-    versionFutur = 99999,
-
-};
-
-constexpr Version versionLatest = version880;
-
-/*!
-** \brief Try to determine the version of a study
-** \ingroup study
-**
-** \param folder The folder where data are located
-** \param checkFor1x True to check for an old 1.x study
-** \return The version of the study. `VersionUnknown` of not found
-*/
-Version StudyTryToFindTheVersion(const AnyString& folder);
-
-/*!
-** \brief Get the human readable version of the version of a study
-**
-** \ingroup study
-** \param v The study version to convert
-** \return A CString
-*/
-const char* VersionToCStr(const Version v);
-
-/*!
-** \brief Get the human readable version of the version of a study (wide char)
-**
-** \ingroup study
-** \param v The study version to convert
-** \return A wide string
-*/
-const wchar_t* VersionToWStr(const Version v);
-
-/*!
-** \brief Convert a mere integer into an enum `Version`
-*/
-Version VersionIntToVersion(uint version);
-
-class StudyVersion {
 public:
-    [[nodiscard]] bool isStudyLatestVersion(std::string studyFolder) const;
+    /// allows automatic members comparison
+    auto operator<=>(const StudyVersion&) const = default;
+
+    constexpr StudyVersion() = default;
+    constexpr StudyVersion(unsigned major_, unsigned minor_) : major(major_), minor(minor_) {}
+    ~StudyVersion() = default;
+
+    bool isSupported(bool verbose) const;
+
+    bool fromString(const std::string& versionStr);
+
+    std::string toString() const;
+
+    static StudyVersion latest();
+    static StudyVersion unknown();
+
+private:
+    unsigned major = 0;
+    unsigned minor = 0;
 };
 } // namespace Antares::Data
-
-
-#endif // __ANTARES_LIBS_STUDY_VERSION_H__

@@ -46,11 +46,14 @@ public:
     {
     }
 
-    void onStudyFound(const String& folder, Data::Version version) override
+    void onStudyFound(const String& folder, const Data::StudyVersion& version) override
     {
-        if ((int)version != (int)Data::versionLatest)
+        if (version != Data::StudyVersion::latest())
         {
             logs.warning() << "requires format upgrade, ignoring " << folder;
+            logs.warning() << "current study version: " << version.toString();
+            logs.warning() << "latest version supported by this solver: "
+                           << Data::StudyVersion::latest().toString();
             return;
         }
 

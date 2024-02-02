@@ -28,6 +28,7 @@
 
 using namespace Yuni;
 
+#define SEP IO::Separator
 
 namespace Antares::Data
 {
@@ -46,7 +47,7 @@ void StudyHeader::reset()
     // Caption
     caption = STUDYHEADER_DEFAULT_CAPTION;
     // Version
-    version = Data::versionLatest;
+    version = Data::StudyVersion::latest();
     // Date
     dateCreated = ::time(nullptr);
     dateLastSave = dateCreated;
@@ -64,8 +65,8 @@ void StudyHeader::CopySettingsToIni(IniFile& ini, bool upgradeVersion)
     // be able to quickly check the version of the study when calling
     // StudyHeader::ReadVersionFromFile().
     if (upgradeVersion)
-        version = Data::versionLatest;
-    sect->add("version", (uint)Data::versionLatest);
+        version = Data::StudyVersion::latest();
+    sect->add("version", Data::StudyVersion::latest().toString());
 
     // Caption
     sect->add("caption", caption);
@@ -80,7 +81,7 @@ void StudyHeader::CopySettingsToIni(IniFile& ini, bool upgradeVersion)
     sect->add("author", author);
 }
 
-uint StudyHeader::internalFindVersionFromFile(const IniFile& ini)
+bool StudyHeader::internalFindVersionFromFile(const IniFile& ini, std::string& version)
 {
     const IniFile::Section* sect = ini.find("antares");
     if (sect)
@@ -90,19 +91,18 @@ uint StudyHeader::internalFindVersionFromFile(const IniFile& ini)
             // Version
             if (p->key == "version")
             {
-                uint ret;
-                if (p->value.to(ret))
-                    return ret;
-                break;
+                version = p->value;
+                return true;
             }
         }
     }
-    return (uint)versionUnknown;
+
+    logs.error() << "Couldn't find a version number in study.antares";
+    return false;
 }
 
 bool StudyHeader::internalLoadFromINIFile(const IniFile& ini, bool warnings)
 {
-    version = 0;
     const IniFile::Section* sect = ini.find("antares");
     if (sect)
     {
@@ -123,7 +123,7 @@ bool StudyHeader::internalLoadFromINIFile(const IniFile& ini, bool warnings)
             // Version
             if (p->key == "version")
             {
-                version = p->value.to<uint>();
+                version.fromString(p->value);
                 continue;
             }
 
@@ -156,14 +156,15 @@ bool StudyHeader::internalLoadFromINIFile(const IniFile& ini, bool warnings)
             logs.error() << "The main section has not been found. The study seems invalid.";
     }
 
-    if (version >= 700)
+    if (version >= StudyVersion(7, 0))
     {
-        if (version > static_cast<uint>(Data::versionLatest))
+        if (version > Data::StudyVersion::latest())
         {
             if (warnings)
             {
-                logs.error() << "Header: This version is not supported (version found:" << version
-                             << ", expected: <=" << static_cast<uint>(Data::versionLatest) << ')';
+                logs.error() << "Header: This version is not supported (version found:"
+                             << version.toString() << ", expected: <="
+                             << Data::StudyVersion::latest().toString() << ')';
             }
             return false;
         }
@@ -192,12 +193,43 @@ bool StudyHeader::saveToFile(const AnyString& filename, bool upgradeVersion)
     return ini.save(filename);
 }
 
-uint StudyHeader::ReadVersionFromFile(const AnyString& filename)
+StudyVersion StudyHeader::tryToFindTheVersion(const AnyString& folder)
+{
+    if (folder.empty()) // trivial check
+        return StudyVersion::unknown();
+
+    // foldernormalization
+    String abspath, directory;
+    IO::MakeAbsolute(abspath, folder);
+    IO::Normalize(directory, abspath);
+
+    if (not directory.empty() and IO::Directory::Exists(directory))
+    {
+        abspath.reserve(directory.size() + 20);
+        abspath.clear() << directory << SEP << "study.antares";
+        if (IO::File::Exists(abspath))
+        {
+            // The raw version number
+            std::string versionStr;
+            if (!ReadVersionFromFile(abspath, versionStr))
+                return StudyVersion::unknown();
+
+            StudyVersion v;
+            v.fromString(versionStr);
+            return v;
+        }
+    }
+    return StudyVersion::unknown();
+}
+
+bool StudyHeader::ReadVersionFromFile(const AnyString& filename, std::string& version)
 {
     IniFile ini;
     if (ini.open(filename))
-        return internalFindVersionFromFile(ini);
-    return (uint)versionUnknown;
+        return internalFindVersionFromFile(ini, version);
+
+    logs.error() << "Couldn't open study.antares to find the version number";
+    return false;
 }
 
 } // namespace Antares::Data

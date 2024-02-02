@@ -104,7 +104,7 @@ public: // Events
     /*!
     ** \brief Event triggered when a lookup has been found
     */
-    virtual void onStudyFound(const Yuni::String& folder, Version version) = 0;
+    virtual void onStudyFound(const Yuni::String& folder, const StudyVersion& version) = 0;
 
     /*!
     ** \brief Event triggered when a lookup has finished gracefully

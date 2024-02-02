@@ -25,6 +25,7 @@
 #include <yuni/core/string.h>
 #include <ctime>
 #include <antares/inifile/inifile.h>
+#include "version.h"
 
 //! Default author
 #define STUDYHEADER_DEFAULT_AUTHOR "Unknown"
@@ -48,7 +49,7 @@ public:
     ** \param filename The filename to read
     ** \return The version of the study, or 0 if unknown (invalid header)
     */
-    static uint ReadVersionFromFile(const AnyString& filename);
+    static bool ReadVersionFromFile(const AnyString& filename, std::string& version);
 
 public:
     //! \name Constructor & Destructor
@@ -56,11 +57,14 @@ public:
     /*!
     ** \brief Default constructor
     */
-    StudyHeader();
+    StudyHeader()
+    {
+        reset();
+    }
     /*!
     ** \brief Destructor
     */
-    ~StudyHeader();
+    ~StudyHeader() = default;
     //@}
 
     /*!
@@ -91,12 +95,21 @@ public:
     //! Copy the internal settings into an INI structure
     void CopySettingsToIni(IniFile& ini, bool upgradeVersion);
 
+    /*!
+     ** \brief Try to determine the version of a study
+     ** \ingroup study
+     **
+     ** \param folder The folder where data are located
+     ** \return The version of the study. `unknown` if not found
+     */
+     static StudyVersion tryToFindTheVersion(const AnyString& folder);
+
 public:
     //! Caption of the study
     Yuni::String caption;
 
     //! Format version
-    uint version;
+    StudyVersion version;
 
     //! Date: Creation (timestamp)
     time_t dateCreated;
@@ -111,13 +124,11 @@ private:
     bool internalLoadFromINIFile(const IniFile& ini, bool warnings);
 
     //! Get the version written in an header file
-    static uint internalFindVersionFromFile(const IniFile& ini);
+    static bool internalFindVersionFromFile(const IniFile& ini, std::string& version);
 
 }; // class StudyHeader;
 
 } // namespace Data
 } // namespace Antares
-
-#include "header.hxx"
 
 #endif /* __ANTARES_LIBS_STUDY_HEADER_H__ */

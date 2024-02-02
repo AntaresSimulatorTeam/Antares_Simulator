@@ -47,7 +47,7 @@ bool Study::internalLoadHeader(const String& path)
     // Informations about the study
     logs.info();
     logs.notice() << "Preparing " << header.caption << "...";
-    logs.info() << "  detected version: " << header.version;
+    logs.info() << "  detected study version: " << header.version.toString();
     logs.info() << "  from `" << path << '`';
     logs.info();
     return true;
@@ -109,8 +109,7 @@ void Study::parameterFiller(const StudyLoadOptions& options)
     if (usedByTheSolver)
     {
         // We have time-series to import
-        StudyVersion studyVersion;
-        if (parameters.exportTimeSeriesInInput && studyVersion.isStudyLatestVersion(folder.c_str()))
+        if (parameters.exportTimeSeriesInInput && header.version == StudyVersion::latest())
         {
             logs.info() << "Stochastic TS stored in input parametrized."
                            " Disabling Store in input because study is not at latest version"

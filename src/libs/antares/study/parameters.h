@@ -34,6 +34,7 @@
 #include "fwd.h"
 #include "variable-print-info.h"
 #include "parameters/adq-patch-params.h"
+#include "version.h"
 
 #include <antares/study/UnfeasibleProblemBehavior.hpp>
 
@@ -84,9 +85,10 @@ public:
     ** be opened, the routine will return 0.
     **
     ** \param filename The file to load
+    ** \param version Current study version
     ** \return True if the settings have been loaded, false if at least one error has occured
     */
-    bool loadFromFile(const AnyString& filename, uint version, const StudyLoadOptions& options);
+    bool loadFromFile(const AnyString& filename, StudyVersion& version, const StudyLoadOptions& options);
 
     /*!
     ** \brief Prepare all settings for a simulation
@@ -521,7 +523,7 @@ public:
 
 private:
     //! Load data from an INI file
-    bool loadFromINI(const IniFile& ini, uint version, const StudyLoadOptions& options);
+    bool loadFromINI(const IniFile& ini, StudyVersion& version, const StudyLoadOptions& options);
 
     void resetPlayedYears(uint nbOfYears);
 

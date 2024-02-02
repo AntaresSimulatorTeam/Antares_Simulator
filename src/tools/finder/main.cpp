@@ -41,15 +41,15 @@ public:
     {
     }
 
-    void onStudyFound(const String& folder, Data::Version version)
+    void onStudyFound(const String& folder, const Data::StudyVersion& version)
     {
         std::cout << folder;
         if (extra)
         {
             if (csv)
-                std::cout << ";" << Data::VersionToCStr(version);
+                std::cout << ";" << version.toString();
             else
-                std::cout << " (" << Data::VersionToCStr(version) << ')';
+                std::cout << " (" << version.toString() << ')';
         }
         std::cout << '\n';
     }

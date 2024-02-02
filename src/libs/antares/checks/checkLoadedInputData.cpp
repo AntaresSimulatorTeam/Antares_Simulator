@@ -22,6 +22,7 @@
 #include <antares/exception/InitializationError.hpp>
 #include <antares/exception/LoadingError.hpp>
 #include <antares/study/version.h>
+#include <antares/study/header.h>
 
 #include <antares/series/series.h>
 #include <antares/checks/checkLoadedInputData.h>
@@ -51,19 +52,13 @@ void checkOrtoolsUsage(Antares::Data::UnitCommitmentMode ucMode,
 void checkStudyVersion(const AnyString& optStudyFolder)
 {
     using namespace Antares::Data;
-    auto version = StudyTryToFindTheVersion(optStudyFolder);
-    if (version == versionUnknown)
-    {
+    auto version = StudyHeader::tryToFindTheVersion(optStudyFolder);
+
+    if (version == StudyVersion::unknown())
         throw Error::InvalidStudy(optStudyFolder);
-    }
-    else
-    {
-        if ((uint)version > (uint)versionLatest)
-        {
-            throw Error::InvalidVersion(VersionToCStr(version),
-                                        VersionToCStr(versionLatest));
-        }
-    }
+
+    if (version > StudyVersion::latest())
+        throw Error::InvalidVersion(version.toString(),StudyVersion::latest().toString());
 }
 // CHECK incompatible de choix simultané des options « simplex range= daily » et « hydro-pricing
 // = MILP ».

@@ -260,7 +260,7 @@ bool BindingConstraintLoader::SeparateValue(const EnvForLoading& env,
 bool BindingConstraintLoader::loadTimeSeries(EnvForLoading& env,
                                              BindingConstraint* bindingConstraint)
 {
-    if (env.version >= version870)
+    if (env.version >= StudyVersion(8, 7))
         return loadTimeSeries(env, bindingConstraint->operatorType(), bindingConstraint);
 
     return loadTimeSeriesLegacyStudies(env, bindingConstraint);

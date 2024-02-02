@@ -734,7 +734,7 @@ bool AreaList::saveToFolder(const AnyString& folder) const
 template<class StringT>
 static void readAdqPatchMode(Study& study, Area& area, StringT& buffer)
 {
-    if (study.header.version >= 830)
+    if (study.header.version >= StudyVersion(8, 3))
     {
         buffer.clear() << study.folderInput << SEP << "areas" << SEP << area.id << SEP
                        << "adequacy_patch.ini";
@@ -938,7 +938,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     }
 
     // Short term storage
-    if (study.header.version >= 860)
+    if (study.header.version >= StudyVersion(8, 6))
     {
         buffer.clear() << study.folderInput << SEP << "st-storage" << SEP << "series"
             << SEP << area.id;
@@ -948,7 +948,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     }
 
     // Renewable cluster list
-    if (study.header.version >= 810)
+    if (study.header.version >= StudyVersion(8, 1))
     {
         buffer.clear() << study.folderInput << SEP << "renewables" << SEP << "series";
         ret = area.renewable.list.loadDataSeriesFromFolder(study, options, buffer) && ret;
@@ -1101,7 +1101,7 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
     }
 
     // Short term storage data, specific to areas
-    if (pStudy.header.version >= 860)
+    if (pStudy.header.version >= StudyVersion(8, 6))
     {
         logs.info() << "Loading short term storage clusters...";
         buffer.clear() << pStudy.folderInput << SEP << "st-storage";
@@ -1122,7 +1122,7 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
     }
 
     // Renewable data, specific to areas
-    if (pStudy.header.version >= 810)
+    if (pStudy.header.version >= StudyVersion(8, 1))
     {
         // The cluster list must be loaded before the method
         // ensureDataIsInitialized is called

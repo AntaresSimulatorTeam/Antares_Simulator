@@ -22,6 +22,7 @@
 #include <yuni/yuni.h>
 #include <yuni/string.h>
 #include "../cleaner.h"
+#include <antares/study/header.h>
 #include "versions.h"
 #include <antares/logs/logs.h>
 
@@ -32,14 +33,10 @@ using namespace Yuni;
 namespace Antares::Data
 {
 StudyCleaningInfos::StudyCleaningInfos()
-{
-    version = versionUnknown;
-}
+{}
 
 StudyCleaningInfos::StudyCleaningInfos(const AnyString& path) : folder(path)
-{
-    version = versionUnknown;
-}
+{}
 
 StudyCleaningInfos::~StudyCleaningInfos() = default;
 
@@ -52,34 +49,23 @@ bool StudyCleaningInfos::analyze()
     intruders.clear();
     postExclude.clear();
     // Getting the version
-    version = StudyTryToFindTheVersion(folder);
+    version = StudyHeader::tryToFindTheVersion(folder);
 
-    switch (version)
-    {
-    case versionFutur:
+    if (version > StudyVersion::latest())
     {
         logs.error() << "A more recent version of Antares is required for " << folder;
-        break;
+        return false;
     }
-    case versionUnknown:
+    if (version == StudyVersion::unknown())
     {
         logs.error() << "Unknown study version: " << folder;
-        break;
+        return false;
     }
-    default:
+
+    if (not listOfFilesAnDirectoriesToKeep(this))
     {
-        if ((int)version <= (int)versionLatest)
-        {
-            if (not listOfFilesAnDirectoriesToKeep(this))
-            {
-                logs.error() << "Aborting: an error has been encountered: " << folder;
-                return false;
-            }
-        }
-        else
-            logs.error() << "Invalid study version: " << folder;
-        break;
-    }
+        logs.error() << "Aborting: an error has been encountered: " << folder;
+        return false;
     }
 
     // Grab all intruders at once
@@ -107,7 +93,7 @@ bool StudyCleaningInfos::analyze()
 
 void StudyCleaningInfos::performCleanup()
 {
-    if (version != versionUnknown && not intruders.empty())
+    if (version != StudyVersion::unknown() && not intruders.empty())
     {
         // Remove all files first
         intruders.deleteAllFiles(folder);

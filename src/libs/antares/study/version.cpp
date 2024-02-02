@@ -18,193 +18,162 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-
-#include <yuni/yuni.h>
-#include <yuni/core/string.h>
-#include "study.h"
 #include "version.h"
-#include "../../../config.h"
+#include "study.h"
+#include "../../../config.h" //used to get versionFromCMake
 
 using namespace Yuni;
+using namespace Antares::Data;
 
-#define SEP IO::Separator
-
-// Checking version between CMakeLists.txt and Antares'versions
-enum
+namespace
 {
-    versionFromCMake = (ANTARES_VERSION_HI * 100 + ANTARES_VERSION_LO * 10),
-};
-
-static_assert((uint)versionFromCMake == (uint)Antares::Data::versionLatest);
-
-namespace Antares::Data
+constexpr auto supportedVersions = std::to_array(
 {
+    StudyVersion(7, 0),
+    StudyVersion(7, 1),
+    StudyVersion(7, 2),
+    StudyVersion(8, 0),
+    StudyVersion(8, 1),
+    StudyVersion(8, 2),
+    StudyVersion(8, 3),
+    StudyVersion(8, 4),
+    StudyVersion(8, 5),
+    StudyVersion(8, 6),
+    StudyVersion(8, 7),
+    StudyVersion(8, 8)
+    // Add new versions here
+});
 
-static inline Version StudyFormatCheck(const String& headerFile)
+/// Convert a unsigned into a StudyVersion, used for legacy version format (ex: 720)
+StudyVersion legacyVersionIntToVersion(unsigned version)
 {
-    // The raw version number
-    uint version = StudyHeader::ReadVersionFromFile(headerFile);
-    // Its equivalent
-    Version venum = VersionIntToVersion(version);
+    // It's not necessary to add anything here, since legacy versions should not be created
 
-    switch (venum)
-    {
-    // Dealing with special values
-    case versionUnknown:
-    case versionFutur:
-    {
-        return (version and (uint) version > (uint)versionLatest) ? versionFutur : versionUnknown;
-    }
-    default:
-        return venum;
-    }
-}
-
-const char* VersionToCStr(const Version v)
-{
-    // The list should remain ordered in the reverse order for performance reasons
-    switch (v)
-    {
-    case versionFutur:
-        return ">8.8";
-    case version880:
-        return "8.8";
-    case version870:
-        return "8.7";
-    case version860:
-        return "8.6";
-    case version850:
-        return "8.5";
-    case version840:
-        return "8.4";
-    case version830:
-        return "8.3";
-    case version820:
-        return "8.2";
-    case version810:
-        return "8.1";
-    case version800:
-        return "8.0";
-
-    // older versions
-    case version720:
-        return "7.2";
-    case version710:
-        return "7.1";
-    case version700:
-        return "7.0";
-
-    case versionUnknown:
-        return "0";
-    }
-    return "0.0";
-}
-
-const wchar_t* VersionToWStr(const Version v)
-{
-    // The list should remain ordered in the reverse order for performance reasons
-    switch (v)
-    {
-    case versionFutur:
-        return L">8.8";
-    case version880:
-        return L"8.8";
-    case version870:
-        return L"8.7";
-    case version860:
-        return L"8.6";
-    case version850:
-        return L"8.5";
-    case version840:
-        return L"8.4";
-    case version830:
-        return L"8.3";
-    case version820:
-        return L"8.2";
-    case version810:
-        return L"8.1";
-    case version800:
-        return L"8.0";
-
-    // older versions
-    case version720:
-        return L"7.2";
-    case version710:
-        return L"7.1";
-    case version700:
-        return L"7.0";
-    case versionUnknown:
-        return L"0";
-    }
-    return L"0.0";
-}
-
-Version VersionIntToVersion(uint version)
-{
     // The list should remain ordered in the reverse order for performance reasons
     switch (version)
     {
     case 880:
-        return version880;
+        return StudyVersion(8, 8);
     case 870:
-        return version870;
+        return StudyVersion(8, 7);
     case 860:
-        return version860;
+        return StudyVersion(8, 6);
     case 850:
-        return version850;
+        return StudyVersion(8, 5);
     case 840:
-        return version840;
+        return StudyVersion(8, 4);
     case 830:
-        return version830;
+        return StudyVersion(8, 3);
     case 820:
-        return version820;
+        return StudyVersion(8, 2);
     case 810:
-        return version810;
+        return StudyVersion(8, 1);
     case 800:
-        return version800;
+        return StudyVersion(8, 0);
 
     // older versions
     case 720:
-        return version720;
+        return StudyVersion(7, 2);
     case 710:
-        return version710;
+        return StudyVersion(7, 1);
     case 700:
-        return version700;
-    case versionFutur:
-    case versionUnknown:
-        return versionUnknown;
+        return StudyVersion(7, 0);
     default:
         logs.error() << "Study version " << version << " is not supported by this version of "
             "antares-solver";
 
         logs.error() << "Studies in version <7.0 are no longer supported. Please upgrade it first"
             << " if it's the case";
-    return versionUnknown;
+    return StudyVersion::unknown();
     }
 }
 
-Version StudyTryToFindTheVersion(const AnyString& folder)
+StudyVersion parseLegacyVersion(const std::string& versionStr)
 {
-    if (folder.empty()) // trivial check
-        return versionUnknown;
-
-    // foldernormalization
-    String abspath, directory;
-    IO::MakeAbsolute(abspath, folder);
-    IO::Normalize(directory, abspath);
-
-    if (not directory.empty() and IO::Directory::Exists(directory))
+    unsigned versionNumber = 0;
+    try
     {
-        abspath.reserve(directory.size() + 20);
-        abspath.clear() << directory << SEP << "study.antares";
-        if (IO::File::Exists(abspath))
-            return StudyFormatCheck(abspath);
+        versionNumber = std::stoul(versionStr);
     }
-    return versionUnknown;
+    catch (std::invalid_argument&)
+    {
+        logs.error() << "Invalid version number: " << versionStr;
+        return StudyVersion::unknown();
+    }
+    return ::legacyVersionIntToVersion(versionNumber);
 }
 
-bool StudyVersion::isStudyLatestVersion(std::string studyFolder) const {
-    return StudyTryToFindTheVersion(studyFolder) == versionLatest;
+StudyVersion parseCurrentVersion(const std::string& s, size_t separator)
+{
+    unsigned major, minor;
+
+    if (separator == std::string::npos)
+        logs.error() << "Invalid version format, exiting";
+
+    try
+    {
+        major = std::stoul(s.substr(0, separator));
+        minor = std::stoul(s.substr(separator + 1));
+    }
+    catch (std::invalid_argument&)
+    {
+        logs.error() << "Invalid version format, exiting";
+        return StudyVersion::unknown();
+    }
+    return StudyVersion(major, minor);
+}
+
+}
+
+// Checking version between CMakeLists.txt and Antares'versions
+static_assert(StudyVersion(ANTARES_VERSION_HI, ANTARES_VERSION_LO) == ::supportedVersions.back(), "Please check that CMake's version and version.cpp's version match");
+
+namespace Antares::Data
+{
+bool StudyVersion::fromString(const std::string& versionStr)
+{
+    // if the string doesn't contains a dot it's legacy format
+    if (size_t separator = versionStr.find("."); separator == std::string::npos)
+        *this = parseLegacyVersion(versionStr);
+    else
+        *this = parseCurrentVersion(versionStr, separator);
+
+    if (isSupported(true))
+        return true;
+
+    *this = unknown();
+    return false;
+}
+
+std::string StudyVersion::toString() const
+{
+    return std::to_string(major) + "." + std::to_string(minor);
+}
+
+StudyVersion StudyVersion::latest()
+{
+    return ::supportedVersions.back();
+}
+
+StudyVersion StudyVersion::unknown()
+{
+    return StudyVersion();
+}
+
+bool StudyVersion::isSupported(bool verbose) const
+{
+    if (std::ranges::find(::supportedVersions, *this) != ::supportedVersions.end())
+        return true;
+
+    if (verbose)
+        logs.error() << "Version: " << toString() << " not supported";
+
+    if (*this > latest() && verbose)
+    {
+        logs.error() << "Maximum study version supported: " << ::supportedVersions.back().toString();
+        logs.error() << "Please upgrade the solver to the latest version";
+    }
+
+    return false;
 }
 } // namespace Antares::Data
-
