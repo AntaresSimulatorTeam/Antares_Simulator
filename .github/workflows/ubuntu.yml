@@ -257,7 +257,7 @@ jobs:
            cmake --install . --prefix install
            pushd .
            cd install/bin
-           tar czf ../../antares-solver_ubuntu20.04.tar.gz antares-*-solver libsirius_solver.so
+           tar czf ../../antares-solver_ubuntu20.04.tar.gz antares-solver libsirius_solver.so
            popd
            rm -rf install
 
