@@ -25,7 +25,7 @@ endif(WIN32)
 
 
 
-set(execname "antares-${ANTARES_PRG_VERSION}-batchrun")
+set(execname "antares-batchrun")
 add_executable(${execname} ${SRCS})
 
 install(TARGETS ${execname} EXPORT antares-batchrun DESTINATION bin)

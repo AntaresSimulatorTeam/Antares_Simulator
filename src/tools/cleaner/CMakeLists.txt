@@ -15,7 +15,7 @@ if(WIN32 OR WIN64)
 endif()
 
 
-set(execname "antares-${ANTARES_PRG_VERSION}-study-cleaner")
+set(execname "antares-study-cleaner")
 add_executable(${execname}  ${SRCS})
 install(TARGETS ${execname} EXPORT antares-study-cleaner DESTINATION bin)
 

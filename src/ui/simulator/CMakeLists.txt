@@ -1,6 +1,6 @@
 
 #Define executable name
-set(execname "antares-${ANTARES_PRG_VERSION}-ui-simulator")
+set(execname "antares-ui-simulator")
 
 # WxCore
 include("cmake/wxcore.cmake")

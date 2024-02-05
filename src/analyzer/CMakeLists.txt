@@ -39,16 +39,16 @@ if(WIN32)
 	endif(MINGW)
 endif(WIN32)
 
-add_executable(antares-${ANTARES_PRG_VERSION}-analyzer  ${SRCS})
+add_executable(antares-analyzer  ${SRCS})
 
-install(TARGETS antares-${ANTARES_PRG_VERSION}-analyzer EXPORT antares-analyzer DESTINATION bin)
+install(TARGETS antares-analyzer EXPORT antares-analyzer DESTINATION bin)
 
 INSTALL(EXPORT antares-analyzer
 	FILE antares-analyzerConfig.cmake
 	DESTINATION cmake
 )
 
-target_link_libraries(antares-${ANTARES_PRG_VERSION}-analyzer
+target_link_libraries(antares-analyzer
 		PRIVATE
 			yuni-static-core
 			Antares::args_helper
@@ -60,6 +60,6 @@ target_link_libraries(antares-${ANTARES_PRG_VERSION}-analyzer
 			Antares::sys
 		)
 
-import_std_libs(antares-${ANTARES_PRG_VERSION}-analyzer)
-executable_strip(antares-${ANTARES_PRG_VERSION}-analyzer)
+import_std_libs(antares-analyzer)
+executable_strip(antares-analyzer)
 

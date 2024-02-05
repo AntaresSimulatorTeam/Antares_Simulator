@@ -37,7 +37,7 @@ if(WIN32 OR WIN64)
 endif()
 
 
-set(execname "antares-${ANTARES_PRG_VERSION}-ybyaggregator")
+set(execname "antares-ybyaggregator")
 add_executable(${execname}  ${SRCS})
 install(TARGETS ${execname} EXPORT antares-ybyaggregator DESTINATION bin)
 

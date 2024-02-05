@@ -23,7 +23,7 @@ if(WIN32)
 endif(WIN32)
 
 
-set(execname "antares-${ANTARES_PRG_VERSION}-vacuum")
+set(execname "antares-vacuum")
 add_executable(${execname}  ${SRCS})
 install(TARGETS ${execname} EXPORT antares-vacuum DESTINATION bin)
 
