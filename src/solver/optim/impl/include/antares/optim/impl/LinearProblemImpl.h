@@ -26,7 +26,7 @@
 */
 #pragma once
 
-#include "../api/LinearProblem.h"
+#include "../../../../../api/include/antares/optim/api/LinearProblem.h"
 #include "ortools/linear_solver/linear_solver.h"
 
 using namespace std;
@@ -36,7 +36,7 @@ class LinearProblemImpl : public LinearProblem
 protected:
     MPSolver* mpSolver{};
     // This shall be removed when legacy support is abandoned
-    explicit LinearProblemImpl() {};
+    LinearProblemImpl();
 public :
     LinearProblemImpl(bool isMip, const std::string& solverName);
     MPVariable* addNumVariable(string name, double lb, double ub) override;

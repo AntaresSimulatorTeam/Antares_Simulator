@@ -2,7 +2,7 @@
 // Created by mitripet on 29/01/24.
 //
 
-#include "LinearProblemBuilder.h"
+#include "include/antares/optim/api/LinearProblemBuilder.h"
 
 using namespace Antares::optim::api;
 

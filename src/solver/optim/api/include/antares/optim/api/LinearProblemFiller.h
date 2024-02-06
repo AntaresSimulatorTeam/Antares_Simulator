@@ -35,6 +35,7 @@ namespace Antares::optim::api
     class LinearProblemFiller
     {
     public:
+        // TODO : remplacer pointeurs par références
         virtual void addVariables(LinearProblem* problem, LinearProblemData* data) = 0;
         virtual void addConstraints(LinearProblem* problem, LinearProblemData* data) = 0;
         virtual void addObjective(LinearProblem* problem, LinearProblemData* data) = 0;

@@ -1,7 +1,7 @@
 
 
 #include "vector"
-#include "optim/api/LinearProblemFiller.h"
+#include "antares/optim/api/LinearProblemFiller.h"
 
 using namespace Antares::optim::api;
 using namespace std;
@@ -21,8 +21,9 @@ public:
     void addConstraints(LinearProblem* problem, LinearProblemData* data) override;
     void addObjective(LinearProblem* problem, LinearProblemData* data) override;
     void update(LinearProblem* problem, LinearProblemData* data) override;
-    string getPVarName(int ts);
-    double getPCost(int ts);
+
+    string getPVarName(int ts); // équivalent de getPort
+    double getPCost(int ts); // équivalent de getPort
 };
 
 void Thermal::addVariables(LinearProblem *problem, LinearProblemData *data)

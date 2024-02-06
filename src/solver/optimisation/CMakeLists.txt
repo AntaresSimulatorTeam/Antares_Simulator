@@ -198,4 +198,6 @@ target_link_libraries(model_antares
 		infeasible_problem_analysis
 		antares-solver-simulation
 		Antares::benchmarking
+		Antares::optim_api
+		Antares::optim_impl
 )

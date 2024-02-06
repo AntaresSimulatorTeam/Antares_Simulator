@@ -26,7 +26,7 @@
 */
 #pragma once
 
-#include "optim/api/LinearProblemFiller.h"
+#include "optim/api/include/antares/optim/api/LinearProblemFiller.h"
 #include "utils/include/antares/solver/utils/named_problem.h"
 #include "LegacyLinearProblemImpl.h"
 using namespace Antares::optim::api;

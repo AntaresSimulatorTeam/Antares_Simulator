@@ -2,11 +2,14 @@
 // Created by mitripet on 26/01/24.
 //
 
-#include "LinearProblemImpl.h"
-#include "ortools_utils.h"
+#include "include/antares/optim/impl/LinearProblemImpl.h"
 #include "ortools/linear_solver/linear_solver.h"
+#include "antares/solver/utils/ortools_utils.h"
+
 using namespace Antares::optim::api;
 using namespace std;
+
+LinearProblemImpl::LinearProblemImpl() = default;
 
 LinearProblemImpl::LinearProblemImpl(bool isMip, const std::string& solverName)
 {

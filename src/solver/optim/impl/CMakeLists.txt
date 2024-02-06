@@ -1,12 +1,10 @@
 set(PROJ optim_impl)
 set(HEADERS
-        LinearProblemImpl.h
-        ortools_utils.h
+        include/antares/optim/impl/LinearProblemImpl.h
 )
 set(SRC_OPTIM
         ${HEADERS}
         LinearProblemImpl.cpp
-        ortools_utils.cpp
 )
 source_group("solver\\optim\\impl" FILES ${SRC_OPTIM})
 
@@ -16,9 +14,10 @@ add_library(Antares::${PROJ} ALIAS ${PROJ})
 target_link_libraries(${PROJ}
         PUBLIC
         ortools::ortools
+        Antares::solverUtils
 )
 
 target_include_directories(${PROJ}
         PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
 )

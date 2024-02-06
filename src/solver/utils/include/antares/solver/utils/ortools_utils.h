@@ -39,6 +39,7 @@ std::string availableOrToolsSolversString();
  */
 MPSolver* MPSolverFactory(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* probleme,
                           const std::string& solverName);
+MPSolver* MPSolverFactory(bool isMip, const std::string& solverName);
 
 std::string generateTempPath(const std::string& filename);
 void removeTemporaryFile(const std::string& tmpPath);

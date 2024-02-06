@@ -50,7 +50,7 @@ extern "C"
 #include "../infeasible-problem-analysis/variables-bounds-consistency.h"
 #include "../infeasible-problem-analysis/constraint-slack-analysis.h"
 
-#include "../optim/api/LinearProblemBuilder.h"
+#include "optim/api/include/antares/optim/api/LinearProblemBuilder.h"
 #include "LegacyLinearProblemImpl.h"
 #include "LegacyLinearProblemFillerImpl.h"
 

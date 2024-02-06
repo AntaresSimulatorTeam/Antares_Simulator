@@ -424,10 +424,15 @@ std::string availableOrToolsSolversString()
 MPSolver* MPSolverFactory(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* probleme,
                           const std::string& solverName)
 {
+    return MPSolverFactory(probleme->isMIP(), solverName);
+}
+
+MPSolver *MPSolverFactory(bool isMip, const std::string &solverName)
+{
     MPSolver* solver;
     try
     {
-        if (probleme->isMIP())
+        if (isMip)
             solver = MPSolver::CreateSolver((OrtoolsUtils::solverMap.at(solverName)).MIPSolverName);
         else
             solver = MPSolver::CreateSolver((OrtoolsUtils::solverMap.at(solverName)).LPSolverName);

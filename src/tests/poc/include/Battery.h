@@ -1,6 +1,6 @@
 
 #include "vector"
-#include "optim/api/LinearProblemFiller.h"
+#include "antares/optim/api/LinearProblemFiller.h"
 
 using namespace Antares::optim::api;
 using namespace std;
@@ -30,6 +30,8 @@ void Battery::addVariables(LinearProblem *problem, LinearProblemData *data)
     for (auto ts : timeSteps_) {
         string pVarName = "P_batt_" + to_string(ts);
         problem->addNumVariable(pVarName, -maxP_, maxP_);
+        // - charge
+        // + décharge
         pVarNames.push_back(pVarName);
 
         string eVarName = "E_batt_" + to_string(ts);

@@ -10,7 +10,7 @@ using namespace Antares::optim::api;
 using namespace std;
 
 LegacyLinearProblemImpl::LegacyLinearProblemImpl(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME *legacyProblem,
-                                                 const std::string &solverName)
+                                                 const std::string &solverName) : LinearProblemImpl()
 {
     this->mpSolver = MPSolverFactory(legacyProblem, solverName);
     Antares::Optimization::ProblemSimplexeNommeConverter converter(solverName, legacyProblem);
