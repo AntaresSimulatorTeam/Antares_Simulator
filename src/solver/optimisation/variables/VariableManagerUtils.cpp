@@ -1,9 +1,8 @@
 #include "VariableManagerUtils.h"
 
-VariableManagement::VariableManagerFactory VariableManagerFactoryFromProblemHebdo(
-  PROBLEME_HEBDO* problemeHebdo)
+VariableManagement::VariableManager VariableManagerFromProblemHebdo(PROBLEME_HEBDO* problemeHebdo)
 {
-    return VariableManagement::VariableManagerFactory(
+    return VariableManagement::VariableManagement(
       problemeHebdo->CorrespondanceVarNativesVarOptim,
       problemeHebdo->NumeroDeVariableStockFinal,
       problemeHebdo->NumeroDeVariableDeTrancheDeStock,

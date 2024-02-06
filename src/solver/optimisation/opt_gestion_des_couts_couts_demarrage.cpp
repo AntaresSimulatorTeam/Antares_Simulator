@@ -40,13 +40,11 @@ void OPT_InitialiserLesCoutsLineaireCoutsDeDemarrage(PROBLEME_HEBDO* problemeHeb
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
     std::vector<double>& CoutLineaire = ProblemeAResoudre->CoutLineaire;
-    auto variableManagerFactory = VariableManagerFactoryFromProblemHebdo(problemeHebdo);
+    auto variable_manager = VariableManagerFromProblemHebdo(problemeHebdo);
 
     for (int pdtHebdo = PremierPdtDeLIntervalle, pdtJour = 0; pdtHebdo < DernierPdtDeLIntervalle;
          pdtHebdo++, pdtJour++)
     {
-        auto variable_manager = variableManagerFactory.GetVariableManager(pdtJour);
-
         for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
             const PALIERS_THERMIQUES& PaliersThermiquesDuPays
@@ -57,25 +55,25 @@ void OPT_InitialiserLesCoutsLineaireCoutsDeDemarrage(PROBLEME_HEBDO* problemeHeb
                 const int palier
                   = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
 
-                int var = variable_manager.NumberOfDispatchableUnits(palier);
+                int var = variable_manager.NumberOfDispatchableUnits(palier, pdtJour);
                 if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                 {
                     CoutLineaire[var]
                       = PaliersThermiquesDuPays.CoutFixeDeMarcheDUnGroupeDuPalierThermique[index];
                 }
 
-                var = variable_manager.NumberStoppingDispatchableUnits(palier);
+                var = variable_manager.NumberStoppingDispatchableUnits(palier, pdtJour);
                 if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                 {
                     CoutLineaire[var]
                       = PaliersThermiquesDuPays.CoutDArretDUnGroupeDuPalierThermique[index];
                 }
 
-                var = variable_manager.NumberBreakingDownDispatchableUnits(palier);
+                var = variable_manager.NumberBreakingDownDispatchableUnits(palier, pdtJour);
                 if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                     CoutLineaire[var] = 0;
 
-                var = variable_manager.NumberStartingDispatchableUnits(palier);
+                var = variable_manager.NumberStartingDispatchableUnits(palier, pdtJour);
                 if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                 {
                     CoutLineaire[var]

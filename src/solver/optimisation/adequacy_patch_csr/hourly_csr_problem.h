@@ -71,7 +71,7 @@ private:
 private:
     using AdqPatchParams = Antares::Data::AdequacyPatch::AdqPatchParams;
     const AdqPatchParams& adqPatchParams_;
-    VariableManagement::VariableManagerFactory variableManagerFactory_;
+    VariableManagement::VariableManager variableManager_;
 
 public:
     void run(uint week, uint year);
@@ -85,10 +85,10 @@ public:
     explicit HourlyCSRProblem(const AdqPatchParams& adqPatchParams, PROBLEME_HEBDO* p) :
      adqPatchParams_(adqPatchParams),
      problemeHebdo_(p),
-     variableManagerFactory_(p->CorrespondanceVarNativesVarOptim,
-                             p->NumeroDeVariableStockFinal,
-                             p->NumeroDeVariableDeTrancheDeStock,
-                             p->NombreDePasDeTempsPourUneOptimisation)
+     variableManager_(p->CorrespondanceVarNativesVarOptim,
+                      p->NumeroDeVariableStockFinal,
+                      p->NumeroDeVariableDeTrancheDeStock,
+                      p->NombreDePasDeTempsPourUneOptimisation)
     {
         double temp = pow(10, -adqPatchParams.curtailmentSharing.thresholdVarBoundsRelaxation);
         belowThisThresholdSetToZero = std::min(temp, 0.1);

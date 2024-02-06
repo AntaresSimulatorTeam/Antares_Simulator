@@ -60,8 +60,6 @@ double calculateQuadraticCost(const PROBLEME_HEBDO* problemeHebdo, const AdqPatc
 
 void HourlyCSRProblem::setQuadraticCost()
 {
-    auto variable_manager = variableManagerFactory_.GetVariableManager(triggeredHour);
-
     // variables: ENS for each area inside adq patch
     // obj function term is: 1 / (PTO) * ENS * ENS
     //  => quadratic cost: 1 / (PTO)
@@ -74,7 +72,7 @@ void HourlyCSRProblem::setQuadraticCost()
         if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[area]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
-            int var = variable_manager.PositiveUnsuppliedEnergy(area);
+            int var = variableManager_.PositiveUnsuppliedEnergy(area, triggeredHour);
             if (var >= 0 && var < problemeAResoudre_.NombreDeVariables)
             {
                 problemeAResoudre_.CoutQuadratique[var] = calculateQuadraticCost(problemeHebdo_, 
@@ -90,7 +88,6 @@ void HourlyCSRProblem::setQuadraticCost()
 void HourlyCSRProblem::setLinearCost()
 {
     int var;
-    auto variable_manager = variableManagerFactory_.GetVariableManager(triggeredHour);
 
     // variables: transmission cost for links between nodes of type 2 (area inside adequacy patch)
     // obj function term is: Sum ( hurdle_cost_direct x flow_direct )+ Sum ( hurdle_cost_indirect x
@@ -114,14 +111,14 @@ void HourlyCSRProblem::setLinearCost()
 
         const COUTS_DE_TRANSPORT& TransportCost = problemeHebdo_->CoutDeTransport[Interco];
         // flow
-        var = variable_manager.NTCDirect(Interco);
+        var = variableManager_.NTCDirect(Interco, triggeredHour);
         if (var >= 0 && var < problemeAResoudre_.NombreDeVariables)
         {
             problemeAResoudre_.CoutLineaire[var] = 0.0;
             logs.debug() << var << ". Linear C = " << problemeAResoudre_.CoutLineaire[var];
         }
         // direct / indirect flow
-        var = variable_manager.IntercoDirectCost(Interco);
+        var = variableManager_.IntercoDirectCost(Interco, triggeredHour);
         if (var >= 0 && var < problemeAResoudre_.NombreDeVariables)
         {
             if (!TransportCost.IntercoGereeAvecDesCouts)
@@ -132,7 +129,7 @@ void HourlyCSRProblem::setLinearCost()
             logs.debug() << var << ". Linear C = " << problemeAResoudre_.CoutLineaire[var];
         }
 
-        var = variable_manager.IntercoIndirectCost(Interco);
+        var = variableManager_.IntercoIndirectCost(Interco, triggeredHour);
         if (var >= 0 && var < problemeAResoudre_.NombreDeVariables)
         {
             if (!TransportCost.IntercoGereeAvecDesCouts)

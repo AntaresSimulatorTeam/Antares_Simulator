@@ -38,15 +38,14 @@ void OPT_InitialiserLesCoutsQuadratiques(PROBLEME_HEBDO* problemeHebdo, int PdtH
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
     ProblemeAResoudre->CoutLineaire.assign(ProblemeAResoudre->NombreDeVariables, 0.);
-    auto variableManagerFactory = VariableManagerFactoryFromProblemHebdo(problemeHebdo);
+    auto variable_manager = VariableManagerFromProblemHebdo(problemeHebdo);
 
     const VALEURS_DE_NTC_ET_RESISTANCES& ValeursDeResistances
       = problemeHebdo->ValeursDeNTC[PdtHebdo];
-    auto variable_manager = variableManagerFactory.GetVariableManager(0);
 
     for (uint32_t interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
     {
-        int var = variable_manager.NTCDirect(interco);
+        int var = variable_manager.NTCDirect(interco, 0);
         if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
             ProblemeAResoudre->CoutQuadratique[var]
               = ValeursDeResistances.ResistanceApparente[interco];

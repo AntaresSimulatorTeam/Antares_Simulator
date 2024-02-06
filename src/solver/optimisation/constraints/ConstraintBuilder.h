@@ -54,10 +54,10 @@ public:
     ConstraintBuilder() = delete;
     explicit ConstraintBuilder(ConstraintBuilderData& data) :
      data(data),
-     variableManagerFactory_(data.CorrespondanceVarNativesVarOptim,
-                             data.NumeroDeVariableStockFinal,
-                             data.NumeroDeVariableDeTrancheDeStock,
-                             data.NombreDePasDeTempsPourUneOptimisation)
+     variableManager_(data.CorrespondanceVarNativesVarOptim,
+                      data.NumeroDeVariableStockFinal,
+                      data.NumeroDeVariableDeTrancheDeStock,
+                      data.NombreDePasDeTempsPourUneOptimisation)
     {
     }
 
@@ -211,7 +211,7 @@ private:
      * @param delta: number of time steps for the variable
      * @return VariableManager object
      */
-    VariableManagement::VariableManagerFactory variableManagerFactory_;
+    VariableManagement::VariableManager variableManager_;
 };
 
 /*! factory class to build a Constraint */

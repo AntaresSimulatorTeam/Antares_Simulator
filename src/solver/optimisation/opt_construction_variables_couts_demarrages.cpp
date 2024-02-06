@@ -56,7 +56,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
             const int palier
               = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
             const auto& clusterName = PaliersThermiquesDuPays.NomsDesPaliersThermiques[index];
-            auto variableManagerFactory = VariableManagerFactoryFromProblemHebdo(problemeHebdo);
+            auto variable_manager = VariableManagerFromProblemHebdo(problemeHebdo);
 
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
@@ -66,9 +66,8 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
                     nombreDeVariables += 4;
                     continue;
                 }
-                auto variable_manager = variableManagerFactory.GetVariableManager(pdt);
 
-                variable_manager.NumberOfDispatchableUnits(palier) = nombreDeVariables;
+                variable_manager.NumberOfDispatchableUnits(palier, pdt) = nombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[nombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
 
@@ -76,7 +75,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
                 variableNamer.NODU(nombreDeVariables, clusterName);
                 nombreDeVariables++;
 
-                variable_manager.NumberStartingDispatchableUnits(palier) = nombreDeVariables;
+                variable_manager.NumberStartingDispatchableUnits(palier, pdt) = nombreDeVariables;
 
                 ProblemeAResoudre->TypeDeVariable[nombreDeVariables]
                   = VARIABLE_BORNEE_INFERIEUREMENT;
@@ -84,14 +83,15 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
                 variableNamer.NumberStartingDispatchableUnits(nombreDeVariables, clusterName);
                 nombreDeVariables++;
 
-                variable_manager.NumberStoppingDispatchableUnits(palier) = nombreDeVariables;
+                variable_manager.NumberStoppingDispatchableUnits(palier, pdt) = nombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[nombreDeVariables]
                   = VARIABLE_BORNEE_INFERIEUREMENT;
                 ProblemeAResoudre->VariablesEntieres[nombreDeVariables] = intVariables;
                 variableNamer.NumberStoppingDispatchableUnits(nombreDeVariables, clusterName);
                 nombreDeVariables++;
 
-                variable_manager.NumberBreakingDownDispatchableUnits(palier) = nombreDeVariables;
+                variable_manager.NumberBreakingDownDispatchableUnits(palier, pdt)
+                  = nombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[nombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
 
