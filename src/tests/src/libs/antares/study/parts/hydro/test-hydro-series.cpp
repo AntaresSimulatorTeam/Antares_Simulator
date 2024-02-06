@@ -37,7 +37,7 @@ struct Fixture
         createFoldersAndFiles();
 
         // Instantiating neccessary studies parameters
-        study->header.version = 890;
+        study->header.version = Antares::Data::StudyVersion(9, 1);
         study->parameters.derated = false;
 
         //  Setting necessary paths
@@ -120,7 +120,7 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_both_matrix_equal_width_and_d
 {
     bool ret = true;
     study->parameters.derated = true;
-    unsigned int studyVersion = 890;
+    StudyVersion studyVersion(9, 1);
     bool usedBySolver = true;
 
     auto& maxHourlyGenPower = area_1->hydro.series->maxHourlyGenPower.timeSeries;

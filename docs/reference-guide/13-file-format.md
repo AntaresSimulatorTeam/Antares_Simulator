@@ -1,14 +1,25 @@
 # Study format changes
 This is a list of all recent changes that came with new Antares Simulator features. The main goal of this document is to lower the costs of changing existing interfaces, both GUI and scripts.
-## v8.9.0
-### Input
-### Solver logs
-* Solver logs can be enabled either by the command-line option (--solver-logs) or in the generaldata.ini file by setting solver-logs = true under the optimization section.
-### Hydro Maximum Generation/Pumping Power
+## v9.1.0
+### (Input) Hydro Maximum Generation/Pumping Power
 * For each area, new files are added **input/hydro/series/&lt;area&gt;/maxHourlyGenPower.txt** and **input/hydro/series/&lt;area&gt;/maxHourlyPumpPower.txt**. These files have one or more columns, and 8760 rows. The number of columns in these two files must be the same if there is more than one column in each file, but if there is just one column for example in maxHourlyGenPower.txt file, maxHourlyPumpPower.txt file can have more than one column and vice versa. For old studies, file **input/hydro/common/capacity/maxpower_&lt;area&gt;** will be deleted after cleaning a study.
 * Also for each area, new files are added **input/hydro/common/capacity/maxDailyGenEnergy_&lt;area&gt;** and **input/hydro/common/capacity/maxDailyPumpEnergy_&lt;area&gt;**. These files have just one column and 365 rows. For old studies, file **input/hydro/common/capacity/maxpower_&lt;area&gt;** will be deleted after cleaning a study.
 * Under `Configure/MC Scenario Builder` new section is added `Hydro Max Power`
 * In the existing file **settings/scenariobuilder.dat**, under **&lt;ruleset&gt;** section following properties added: **hgp,&lt;area&gt;,&lt;year&gt; = &lt;hgp-value&gt;**
+
+## v9.0.0
+### Input
+### Study version
+Breaking change in the study format, file **study.antares**
+```
+version = 900
+```
+becomes
+```
+version = 9.0
+```
+Compatibility is kept with versions up to 8.8.0. Starting from version 9.0.0, the new format must be used.
+
 
 ## v8.8.0
 ### Input

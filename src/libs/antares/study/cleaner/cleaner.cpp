@@ -1,33 +1,28 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
 #include <yuni/yuni.h>
 #include <yuni/string.h>
 #include "../cleaner.h"
+#include <antares/study/header.h>
 #include "versions.h"
 #include <antares/logs/logs.h>
 
@@ -38,14 +33,10 @@ using namespace Yuni;
 namespace Antares::Data
 {
 StudyCleaningInfos::StudyCleaningInfos()
-{
-    version = versionUnknown;
-}
+{}
 
 StudyCleaningInfos::StudyCleaningInfos(const AnyString& path) : folder(path)
-{
-    version = versionUnknown;
-}
+{}
 
 StudyCleaningInfos::~StudyCleaningInfos() = default;
 
@@ -58,34 +49,23 @@ bool StudyCleaningInfos::analyze()
     intruders.clear();
     postExclude.clear();
     // Getting the version
-    version = StudyTryToFindTheVersion(folder);
+    version = StudyHeader::tryToFindTheVersion(folder);
 
-    switch (version)
-    {
-    case versionFutur:
+    if (version > StudyVersion::latest())
     {
         logs.error() << "A more recent version of Antares is required for " << folder;
-        break;
+        return false;
     }
-    case versionUnknown:
+    if (version == StudyVersion::unknown())
     {
         logs.error() << "Unknown study version: " << folder;
-        break;
+        return false;
     }
-    default:
+
+    if (not listOfFilesAnDirectoriesToKeep(this))
     {
-        if ((int)version <= (int)versionLatest)
-        {
-            if (not listOfFilesAnDirectoriesToKeep(this))
-            {
-                logs.error() << "Aborting: an error has been encountered: " << folder;
-                return false;
-            }
-        }
-        else
-            logs.error() << "Invalid study version: " << folder;
-        break;
-    }
+        logs.error() << "Aborting: an error has been encountered: " << folder;
+        return false;
     }
 
     // Grab all intruders at once
@@ -113,7 +93,7 @@ bool StudyCleaningInfos::analyze()
 
 void StudyCleaningInfos::performCleanup()
 {
-    if (version != versionUnknown && not intruders.empty())
+    if (version != StudyVersion::unknown() && not intruders.empty())
     {
         // Remove all files first
         intruders.deleteAllFiles(folder);

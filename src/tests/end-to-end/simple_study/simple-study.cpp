@@ -1,3 +1,23 @@
+/*
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
+**
+** Antares_Simulator is free software: you can redistribute it and/or modify
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
+** (at your option) any later version.
+**
+** Antares_Simulator is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+** Mozilla Public Licence 2.0 for more details.
+**
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+*/
 #define BOOST_TEST_MODULE test-end-to-end tests
 #define BOOST_TEST_DYN_LINK
 #include <boost/test/unit_test.hpp>
@@ -46,6 +66,42 @@ StudyFixture::StudyFixture()
 				 .setUnitCount(1);
 };
 
+struct HydroMaxPowerStudy : public StudyBuilder
+{
+	using StudyBuilder::StudyBuilder;
+	HydroMaxPowerStudy();
+
+	// Data members
+	Area* area = nullptr;
+	PartHydro* hydro = nullptr;
+	double loadInArea = 24000.;
+};
+
+HydroMaxPowerStudy::HydroMaxPowerStudy()
+{
+    simulationBetweenDays(0, 14);
+    setNumberMCyears(1);
+
+    area = addAreaToStudy("Area");
+    area->thermal.unsuppliedEnergyCost = 1;
+
+    TimeSeriesConfigurer loadTSconfig(area->load.series.timeSeries);
+    loadTSconfig.setColumnCount(1).fillColumnWith(0, loadInArea);
+
+    hydro = &area->hydro;
+
+    TimeSeriesConfigurer genP(hydro->series->maxHourlyGenPower.timeSeries);
+    genP.setColumnCount(1).fillColumnWith(0, 100.);
+
+    TimeSeriesConfigurer hydroStorage(hydro->series->storage.timeSeries);
+    hydroStorage.setColumnCount(1, DAYS_PER_YEAR).fillColumnWith(0, 2400.);
+
+    TimeSeriesConfigurer genE(hydro->dailyNbHoursAtGenPmax);
+    genE.setColumnCount(1, DAYS_PER_YEAR).fillColumnWith(0, 24);
+
+    hydro->reservoirCapacity = 1e6;
+    hydro->reservoirManagement = true;
+};
 
 BOOST_FIXTURE_TEST_SUITE(ONE_AREA__ONE_THERMAL_CLUSTER, StudyFixture)
 
@@ -294,9 +350,55 @@ BOOST_AUTO_TEST_CASE(sts_initial_level)
 	simulation->run();
 
 	OutputRetriever output(simulation->rawSimu());
-	BOOST_TEST(output.STSLevel_PSP_Open(area).hour(0) == props.initialLevel * props.reservoirCapacity.value(), tt::tolerance(0.001));
+	BOOST_TEST(output.STSLevel_PSP_Open(area).hour(167) == props.initialLevel * props.reservoirCapacity.value(), tt::tolerance(0.001));
 }
 BOOST_AUTO_TEST_SUITE_END()
 
+BOOST_FIXTURE_TEST_SUITE(HYDRO_MAX_POWER, HydroMaxPowerStudy)
 
+BOOST_AUTO_TEST_CASE(basic)
+{
+    simulation->create();
+    simulation->run();
+
+	OutputRetriever output(simulation->rawSimu());
+
+	BOOST_TEST(output.hydroStorage(area).hour(0) == hydro->series->maxHourlyGenPower.timeSeries[0][0], tt::tolerance(0.001));
+	BOOST_TEST(output.overallCost(area).hour(0) == (loadInArea - output.hydroStorage(area).hour(0)) * area->thermal.unsuppliedEnergyCost, tt::tolerance(0.001));
+}
+
+BOOST_AUTO_TEST_CASE(scenario_builder)
+{
+    hydro->series->setMaxPowerTScount(3U);
+    setNumberMCyears(3);
+
+	giveWeightToYear(4.f, 0);
+	giveWeightToYear(3.f, 1);
+	giveWeightToYear(2.f, 2);
+	float weightSum = study->parameters.getYearsWeightSum();
+
+    TimeSeriesConfigurer genP(hydro->series->maxHourlyGenPower.timeSeries);
+    TimeSeriesConfigurer genE(hydro->series->maxHourlyPumpPower.timeSeries);
+    genP.setColumnCount(3).fillColumnWith(0, 100.).fillColumnWith(1, 200.).fillColumnWith(2, 300.);
+    genE.setColumnCount(3).fillColumnWith(0, 0.).fillColumnWith(1, 0.).fillColumnWith(2, 0.);
+
+    ScenarioBuilderRule scenarioBuilderRule(*study);
+    scenarioBuilderRule.hydroMaxPower().setTSnumber(area->index, 0, 3);
+    scenarioBuilderRule.hydroMaxPower().setTSnumber(area->index, 1, 2);
+    scenarioBuilderRule.hydroMaxPower().setTSnumber(area->index, 2, 1);
+
+    simulation->create();
+    simulation->run();
+
+	OutputRetriever output(simulation->rawSimu());
+
+	double averageLoad = (4 * 300. + 3. * 200. + 2. * 100.) / weightSum;
+
+    BOOST_TEST(hydro->series->maxHourlyGenPower.timeseriesNumbers[0][0] == 2U);
+    BOOST_TEST(hydro->series->maxHourlyGenPower.timeseriesNumbers[0][1] == 1U);
+    BOOST_TEST(hydro->series->maxHourlyGenPower.timeseriesNumbers[0][2] == 0);
+	BOOST_TEST(output.overallCost(area).hour(0) == loadInArea - averageLoad * area->thermal.unsuppliedEnergyCost, tt::tolerance(0.1));
+}
+
+BOOST_AUTO_TEST_SUITE_END()
 
