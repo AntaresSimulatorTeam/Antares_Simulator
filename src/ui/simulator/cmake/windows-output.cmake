@@ -43,6 +43,6 @@ add_Library(libantares-ui-windows-output
 		${SRC_UI_OUTPUT_PROVIDERS})
 
 target_link_libraries(libantares-ui-windows-output  PRIVATE ${wxWidgets_LIBRARIES})
-target_link_libraries(libantares-ui-windows-output  PRIVATE libantares-ui-common)
+target_link_libraries(libantares-ui-windows-output  PRIVATE libantares-ui-common ortools::ortools)
 
  
