@@ -19,18 +19,33 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #include "BindingConstraintHour.h"
+#include <cmath>
+
+static bool shouldSkip(double x)
+{
+    return std::isnan(x) || std::isinf(x);
+}
 
 void BindingConstraintHour::add(int pdt, int cntCouplante)
 {
+    const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
+      = data.MatriceDesContraintesCouplantes[cntCouplante];
+    // Are we dealing with an hourly binding constraint ?
+    if (MatriceDesContraintesCouplantes.TypeDeContrainteCouplante != CONTRAINTE_HORAIRE)
+        return;
+
+    // If so, is it enabled at this hour ? Determined by the RHS being inf/nan or not
+    if (shouldSkip(MatriceDesContraintesCouplantes.SecondMembreDeLaContrainteCouplante[pdt]))
+    {
+        // By convention, any value that is < 0 represents a non-existing constraint
+        data.CorrespondanceCntNativesCntOptim[pdt]
+          .NumeroDeContrainteDesContraintesCouplantes[cntCouplante] = -1;
+        return;
+    }
+
     data.CorrespondanceCntNativesCntOptim[pdt]
       .NumeroDeContrainteDesContraintesCouplantes[cntCouplante]
       = builder.data.nombreDeContraintes;
-
-    const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
-      = data.MatriceDesContraintesCouplantes[cntCouplante];
-
-    if (MatriceDesContraintesCouplantes.TypeDeContrainteCouplante != CONTRAINTE_HORAIRE)
-        return;
 
     builder.updateHourWithinWeek(pdt);
     // Links

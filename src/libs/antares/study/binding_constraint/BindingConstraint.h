@@ -123,14 +123,6 @@ public:
     */
     static Operator StringToOperator(const AnyString& text);
 
-    //! \name Constructor & Destructor
-    //@{
-    /*!
-    ** \brief Destructor
-    */
-    ~BindingConstraint();
-    //@}
-
     //! \name / ID
     //@{
     /*!
