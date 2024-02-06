@@ -1,4 +1,4 @@
-
+#pragma once
 
 #include "vector"
 #include "antares/optim/api/LinearProblemFiller.h"
@@ -9,13 +9,16 @@ using namespace std;
 class Thermal : public LinearProblemFiller
 {
 private:
-    std::vector<int> timeSteps_;
+    std::vector<int>& timeSteps_;
     double maxP_;
-    vector<double> pCost_; // TODO : put in LinearProblemData ?
+    vector<double>& pCost_; // TODO : put in LinearProblemData ?
     vector<string> pVarNames;
 public:
-    Thermal(std::vector<int> timeSteps,         double maxP,   vector<double> pCost) :
-            timeSteps_(timeSteps), maxP_(maxP), pCost_(pCost) {};
+    Thermal(std::vector<int>& timeSteps, double maxP, vector<double>& pCost) :
+            timeSteps_(timeSteps), maxP_(maxP), pCost_(pCost)
+    {
+        pVarNames.reserve(timeSteps.size());
+    };
 
     void addVariables(LinearProblem* problem, LinearProblemData* data) override;
     void addConstraints(LinearProblem* problem, LinearProblemData* data) override;

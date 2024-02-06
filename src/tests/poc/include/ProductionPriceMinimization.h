@@ -1,0 +1,47 @@
+#pragma once
+
+#include "antares/optim/api/LinearProblemFiller.h"
+#include "Thermal.h"
+
+using namespace Antares::optim::api;
+using namespace std;
+
+class ProductionPriceMinimization : public LinearProblemFiller
+{
+private:
+    vector<int>& timeSteps_;
+    vector<Thermal*> &thermals_;
+public:
+    ProductionPriceMinimization(vector<int>& timeSteps, vector<Thermal*>& thermals) :
+            timeSteps_(timeSteps), thermals_(thermals) {};
+    void addVariables(LinearProblem* problem, LinearProblemData* data) override;
+    void addConstraints(LinearProblem* problem, LinearProblemData* data) override;
+    void addObjective(LinearProblem* problem, LinearProblemData* data) override;
+    void update(LinearProblem* problem, LinearProblemData* data) override;
+};
+
+void ProductionPriceMinimization::addVariables(LinearProblem *problem, LinearProblemData *data)
+{
+    // nothing to do
+}
+
+void ProductionPriceMinimization::addConstraints(LinearProblem *problem, LinearProblemData *data)
+{
+    // nothing to do
+}
+
+void ProductionPriceMinimization::addObjective(Antares::optim::api::LinearProblem *problem, Antares::optim::api::LinearProblemData *data)
+{
+    problem->setMinimization(true);
+    for (auto ts : timeSteps_) {
+        for (auto* thermal : thermals_) {
+            auto p = problem->getVariable(thermal->getPVarName(ts));
+            problem->setObjectiveCoefficient(p, thermal->getPCost(ts));
+        }
+    }
+}
+
+void ProductionPriceMinimization::update(Antares::optim::api::LinearProblem *problem, Antares::optim::api::LinearProblemData *data)
+{
+    // nothing to do
+}

@@ -19,6 +19,8 @@ LinearProblemImpl::LinearProblemImpl(bool isMip, const std::string& solverName)
 
 MPVariable* LinearProblemImpl::addNumVariable(string name, double lb, double ub)
 {
+
+    // TODO attention ortools ne fail pas si on ajoute une même variable plusieurs fois => à faire en dehors ?
     return mpSolver->MakeNumVar(lb, ub, name);
 }
 

@@ -1,3 +1,4 @@
+#pragma once
 
 #include "vector"
 #include "antares/optim/api/LinearProblemFiller.h"
@@ -8,7 +9,7 @@ using namespace std;
 class Battery : public LinearProblemFiller
 {
 private:
-    std::vector<int> timeSteps_;
+    std::vector<int>& timeSteps_;
     int timeStepInMinutes_;
     double maxP_;
     double maxE_;
@@ -16,8 +17,12 @@ private:
     vector<string> pVarNames;
     vector<string> eVarNames;
 public:
-    Battery(std::vector<int> timeSteps, int timeStepInMinutes, double maxP, double maxE, double initialE) :
-            timeSteps_(timeSteps), timeStepInMinutes_(timeStepInMinutes), maxP_(maxP), maxE_(maxE), initialE_(initialE) {};
+    Battery(std::vector<int> &timeSteps, int timeStepInMinutes, double maxP, double maxE, double initialE) :
+            timeSteps_(timeSteps), timeStepInMinutes_(timeStepInMinutes), maxP_(maxP), maxE_(maxE), initialE_(initialE)
+    {
+        pVarNames.reserve(timeSteps.size());
+        eVarNames.reserve(timeSteps.size());
+    };
     void addVariables(LinearProblem* problem, LinearProblemData* data) override;
     void addConstraints(LinearProblem* problem, LinearProblemData* data) override;
     void addObjective(LinearProblem* problem, LinearProblemData* data) override;
@@ -35,7 +40,7 @@ void Battery::addVariables(LinearProblem *problem, LinearProblemData *data)
         pVarNames.push_back(pVarName);
 
         string eVarName = "E_batt_" + to_string(ts);
-        problem->addNumVariable(pVarName, 0, maxE_);
+        problem->addNumVariable(eVarName, 0, maxE_);
         eVarNames.push_back(eVarName);
     }
 }
@@ -50,7 +55,7 @@ void Battery::addConstraints(LinearProblem *problem, LinearProblemData *data)
         auto stockConstraint = problem->addConstraint("E_constr_" + to_string(ts), 0, 0);
         stockConstraint->SetCoefficient(e, 1);
         stockConstraint->SetCoefficient(p, timeStepInMinutes_ * 1.0 / 60.0);
-        if (ts > 1)
+        if (ts > 0)
         {
             auto previousE = problem->getVariable(eVarNames[ts - 1]);
             stockConstraint->SetCoefficient(previousE, -1);
