@@ -32,7 +32,7 @@
 
 using namespace Antares::optim::api;
 
-void LegacyLinearProblemFillerImpl::addVariables(LinearProblem *problem)
+void LegacyLinearProblemFillerImpl::addVariables(LinearProblem *problem, const AntaresData& data)
 {
     // For now, only one "fill" method is developed in order for the legacy problem to fill the ORTools matrix
     // It is called here since addVariables is called first in problem builder
@@ -48,14 +48,19 @@ void LegacyLinearProblemFillerImpl::addVariables(LinearProblem *problem)
     }
 };
 
-void LegacyLinearProblemFillerImpl::addConstraints(LinearProblem *problem)
+void LegacyLinearProblemFillerImpl::addConstraints(LinearProblem *problem, const AntaresData& data)
 {
 // nothing to do: everything has been done in addVariables
 };
 
-void LegacyLinearProblemFillerImpl::addObjective(LinearProblem *problem)
+void LegacyLinearProblemFillerImpl::addObjective(LinearProblem *problem, const AntaresData& data)
 {
 // nothing to do: everything has been done in addVariables
+}
+
+void LegacyLinearProblemFillerImpl::update(LinearProblem *problem, const AntaresData& data)
+{
+// TODO ?
 }
 
 void LegacyLinearProblemFillerImpl::declareBalanceConstraints(LegacyLinearProblemImpl *legacyLinearProblem)
@@ -66,5 +71,7 @@ void LegacyLinearProblemFillerImpl::declareBalanceConstraints(LegacyLinearProble
 // renvoie le numéro de contrainte qui devrait marcher avec MPSolver
 // MPSolver.constraint(int) renvoie une MPConstraint
 }
+
+
 
 

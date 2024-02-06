@@ -38,9 +38,11 @@ private:
 public:
     explicit LegacyLinearProblemFillerImpl(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* legacyProblem) : legacyProblem_(legacyProblem) {};
 
-    void addVariables(LinearProblem* problem) override;
+    void addVariables(LinearProblem* problem, const AntaresData& data) override;
 
-    void addConstraints(LinearProblem* problem) override;
+    void addConstraints(LinearProblem* problem, const AntaresData& data) override;
 
-    void addObjective(LinearProblem* problem) override;
+    void addObjective(LinearProblem* problem, const AntaresData& data) override;
+
+    void update(LinearProblem* problem, const AntaresData& data) override; // TODO : comment autoriser de màj seulement les coefs et lb/ub ? ne pas ajouter de contrainte, variable ...
 };

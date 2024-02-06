@@ -31,7 +31,7 @@ using namespace operations_research;
 
 namespace Antares::optim::api
 {
-    class AntaresData;
+    class AntaresData {};
     class LinearProblemFiller
     {
     public:
