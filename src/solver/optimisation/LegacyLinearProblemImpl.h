@@ -26,12 +26,12 @@
 */
 #pragma once
 
-#include "optim/api/LinearProblem.h"
+#include "optim/impl/LinearProblemImpl.h"
 #include "utils/include/antares/solver/utils/named_problem.h"
 
 using namespace Antares::optim::api;
 using namespace std;
-class LegacyLinearProblemImpl : public LinearProblem
+class LegacyLinearProblemImpl : public LinearProblemImpl
 {
 private:
     MPSolver* mpSolver{};
@@ -42,12 +42,6 @@ public :
                                      const std::string& solverName);
     MPSolver* getMpSolver() { return mpSolver; } // only used in legacy filler
     void declareBalanceConstraint(const string& nodeName, MPConstraint* constraint); // only used in legacy filler
-    MPVariable* addNumVariable(string name, double lb, double ub) override;
-    MPVariable* addIntVariable(string name, double lb, double ub) override;
-    MPVariable* getVariable(string name) override;
-    MPConstraint* addConstraint(string name, double lb, double ub, string legacyBalanceConstraintNodeName) override;
-    MPConstraint* getConstraint(string name) override;
-    void setObjectiveCoefficient(MPVariable* variable, double coefficient) override;
+    MPConstraint* addBalanceConstraint(string name, double lb, double ub, string nodeName, int timestep) override;
     void setMinimization(bool isMinim) override;
-    MipSolution solve() override;
 };

@@ -26,26 +26,13 @@
 */
 #pragma once
 
-#include "../api/LinearProblem.h"
-#include "ortools/linear_solver/linear_solver.h"
+using namespace operations_research;
 
-using namespace std;
-using namespace Antares::optim::api;
-class LinearProblemImpl : public LinearProblem
+namespace Antares::optim::api
 {
-protected:
-    MPSolver* mpSolver{};
-    // This shall be removed when legacy support is abandoned
-    explicit LinearProblemImpl() {};
-public :
-    LinearProblemImpl(bool isMip, const std::string& solverName);
-    MPVariable* addNumVariable(string name, double lb, double ub) override;
-    MPVariable* addIntVariable(string name, double lb, double ub) override;
-    MPVariable* getVariable(string name) override;
-    MPConstraint* addConstraint(string name, double lb, double ub) override;
-    MPConstraint* addBalanceConstraint(string name, double lb, double ub, string nodeName, int timestep) override;
-    MPConstraint* getConstraint(string name) override;
-    void setObjectiveCoefficient(MPVariable* variable, double coefficient) override;
-    void setMinimization(bool isMinim) override;
-    MipSolution solve() override;
-};
+    class LinearProblemData
+    {
+    public:
+        LinearProblemData() {};
+    };
+}

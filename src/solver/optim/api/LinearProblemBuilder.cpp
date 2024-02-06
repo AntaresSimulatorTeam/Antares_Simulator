@@ -3,3 +3,51 @@
 //
 
 #include "LinearProblemBuilder.h"
+
+using namespace Antares::optim::api;
+
+void LinearProblemBuilder::addFiller(LinearProblemFiller* filler)
+{
+    fillers_.push_back(filler);
+}
+
+void LinearProblemBuilder::build(LinearProblemData* data) {
+    if (built) {
+        // TODO
+        throw;
+    }
+    for (auto filler : fillers_)
+    {
+        filler->addVariables(linearProblem_, data);
+    }
+    for (auto filler : fillers_)
+    {
+        filler->addConstraints(linearProblem_, data);
+    }
+    for (auto filler : fillers_)
+    {
+        filler->addObjective(linearProblem_, data);
+    }
+    built = true;
+}
+
+void LinearProblemBuilder::update(LinearProblemData* data) const {
+    if (!built) {
+        // TODO
+        throw;
+    }
+    for (auto filler : fillers_)
+    {
+        filler->update(linearProblem_, data);
+    }
+}
+
+MipSolution LinearProblemBuilder::solve()
+{
+    // TODO : move to new interface LinearProblemSolver ??
+    if (!built) {
+        // TODO
+        throw;
+    }
+    return linearProblem_->solve();
+}

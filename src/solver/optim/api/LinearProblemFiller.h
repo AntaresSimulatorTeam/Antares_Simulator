@@ -27,6 +27,7 @@
 #pragma once
 
 #include "LinearProblem.h"
+#include "LinearProblemData.h"
 using namespace operations_research;
 
 namespace Antares::optim::api
@@ -34,15 +35,14 @@ namespace Antares::optim::api
     class LinearProblemFiller
     {
     public:
-        virtual void addVariables(LinearProblem* problem, AntaresData data) = 0;
-        virtual void addConstraints(LinearProblem* problem, AntaresData data) = 0;
-        virtual void addObjective(LinearProblem* problem, AntaresData data) = 0;
-        virtual void update(LinearProblem* problem, AntaresData data) = 0; // TODO : comment autoriser de màj seulement les coefs et lb/ub ? ne pas ajouter de contrainte, variable ...
+        virtual void addVariables(LinearProblem* problem, LinearProblemData* data) = 0;
+        virtual void addConstraints(LinearProblem* problem, LinearProblemData* data) = 0;
+        virtual void addObjective(LinearProblem* problem, LinearProblemData* data) = 0;
+        virtual void update(LinearProblem* problem, LinearProblemData* data) = 0; // TODO : comment autoriser de màj seulement les coefs et lb/ub ? ne pas ajouter de contrainte, variable ...
         // update nécessaire pour mettre à jour les données de semaine en semaine
         // la structure de données hebdo s'appelle SIM, c'est elle qui est utilisée pour mettre à jour le problème hebdo
         // sim_structure_contrainte_economique.h
         // ApportNaturelHoraire
         // la structure de données devra devenir générique, au moins au niveau API standard (dictionnaire)
-        // => interface Data dont l'implém est adhérente à l'implém des fillers ? 
     };
 }

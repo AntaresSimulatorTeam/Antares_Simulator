@@ -235,7 +235,9 @@ static SimplexResult OPT_TryToCallSimplex(
         linearProblemBuilder.addFiller(&filler);
         // TODO : on peut ajouter ici des fillers supplémentaires, par exemple passés en argument de la fonction
         // sinon renvoyer le builder ou le problem à une autre classe
-        linearProblemBuilder.build();
+        auto linearProblemData = new LinearProblemData();
+        // TODO : ajouter les données ici
+        linearProblemBuilder.build(linearProblemData);
         solver = legacyLinearProblem.getMpSolver();
     }
     const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);

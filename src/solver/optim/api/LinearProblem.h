@@ -36,11 +36,17 @@ namespace Antares::optim::api
 	class LinearProblem
 	{
 	public :
+        // TODO : where to tune params ?
+        // TODO : ajouter une gestion des pdt & scenarios ?
+        // pex addNumVariableForAllTimesteps(string name, vector<double> lb, vector<double> ub) = 0;
+        // pex addNumVariableForAllScenarios(string name, vector<double> lb, vector<double> ub) = 0;
+        // pex addNumVariableForAllTimestepsAndAllScenarios(string name, vector<vector<double>> lb, vector<vector<double>> ub) = 0;
 		virtual MPVariable* addNumVariable(string name, double lb, double ub) = 0;
 		virtual MPVariable* addIntVariable(string name, double lb, double ub) = 0;
 		virtual MPVariable* getVariable(string name) = 0;
-		virtual MPConstraint* addConstraint(string name, double lb, double ub, string legacyBalanceConstraintNodeName) = 0;
-        // TODO ajouter une fonction qui prend le legacy node & pas de temps (pdt)
+		virtual MPConstraint* addConstraint(string name, double lb, double ub) = 0;
+        // Next method is to ensure transition with existing models. In the target solution it will disappear and we should use the previous one
+		virtual MPConstraint* addBalanceConstraint(string name, double lb, double ub, string nodeName, int timestep) = 0;
 		virtual MPConstraint* getConstraint(string name) = 0;
 		virtual void setObjectiveCoefficient(MPVariable* variable, double coefficient) = 0;
 		virtual void setMinimization(bool isMinim) = 0; // TODO : supprimer ? non supporté par l'existant

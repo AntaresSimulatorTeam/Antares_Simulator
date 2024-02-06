@@ -27,6 +27,7 @@
 #pragma once
 
 #include "LinearProblemFiller.h"
+#include "vector"
 using namespace std;
 
 namespace Antares::optim::api
@@ -35,41 +36,13 @@ namespace Antares::optim::api
     {
     private:
         LinearProblem* linearProblem_;
-        vector<LinearProblemFiller*> fillers_;
+        vector<LinearProblemFiller*> fillers_{};
         bool built = false;
     public:
         explicit LinearProblemBuilder(LinearProblem* linearProblem) : linearProblem_(linearProblem) {};
-
-        void addFiller(LinearProblemFiller* filler)
-        {
-            fillers_.push_back(filler);
-        }
-
-        void build() {
-            if (built) {
-                // TODO : throw
-            }
-            for (auto filler : fillers_)
-            {
-                filler->addVariables(linearProblem_);
-            }
-            for (auto filler : fillers_)
-            {
-                filler->addConstraints(linearProblem_);
-            }
-            for (auto filler : fillers_)
-            {
-                filler->addObjective(linearProblem_);
-            }
-        }
-
-        MipSolution solve()
-        {
-            // TODO : move to new interface LinearProblemSolver ??
-            if (!built) {
-                build();
-            }
-            return linearProblem_->solve();
-        }
+        void addFiller(LinearProblemFiller* filler);
+        void build(LinearProblemData* data);
+        void update(LinearProblemData* data) const;
+        MipSolution solve();
     };
 }

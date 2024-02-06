@@ -5,6 +5,7 @@ set(HEADERS
         MipSolution.h
         LinearProblemFiller.h
         LinearProblemBuilder.h
+        LinearProblemData.h
 )
 set(SRC_OPTIM
         ${HEADERS}

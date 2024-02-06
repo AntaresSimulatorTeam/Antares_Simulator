@@ -1,24 +1,23 @@
-set(PROJ optim_impl)
+set(PROJ optim_standard
+)
 set(HEADERS
-        LinearProblemImpl.h
-        ortools_utils.h
 )
 set(SRC_OPTIM
         ${HEADERS}
-        LinearProblemImpl.cpp
-        ortools_utils.cpp
 )
-source_group("solver\\optim\\impl" FILES ${SRC_OPTIM})
+source_group("solver\\optim\\standard" FILES ${SRC_OPTIM})
 
 add_library(${PROJ} ${SRC_OPTIM})
 add_library(Antares::${PROJ} ALIAS ${PROJ})
 
 target_link_libraries(${PROJ}
-        PUBLIC
-        ortools::ortools
+
 )
 
 target_include_directories(${PROJ}
         PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}
 )
+
+set_target_properties(${PROJ} PROPERTIES LINKER_LANGUAGE CXX)
+
