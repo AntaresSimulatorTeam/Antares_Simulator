@@ -42,11 +42,11 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique(PROBLEME_H
     assert(ProblemeAResoudre != NULL);
 
     int nombreDeVariables = 0;
-    auto variable_manager = VariableManagerFromProblemHebdo(problemeHebdo);
+    auto variableManager = VariableManagerFromProblemHebdo(problemeHebdo);
 
     for (uint32_t interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
     {
-        variable_manager.NTCDirect(interco, 0) = nombreDeVariables;
+        variableManager.NTCDirect(interco, 0) = nombreDeVariables;
         ProblemeAResoudre->TypeDeVariable[nombreDeVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
         nombreDeVariables++;
     }
