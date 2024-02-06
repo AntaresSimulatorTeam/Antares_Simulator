@@ -157,7 +157,7 @@ add_library(libantares-solver-variable
 		${SRC_VARIABLE_ECONOMY}  )
 
 target_include_directories(libantares-solver-variable PUBLIC .)
-target_link_libraries(libantares-solver-variable PRIVATE libantares-core)
+target_link_libraries(libantares-solver-variable PRIVATE libantares-core ortools::ortools)
 
 
 add_library(libantares-solver-variable-info
