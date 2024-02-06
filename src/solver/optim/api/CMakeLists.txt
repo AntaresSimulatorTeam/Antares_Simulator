@@ -16,7 +16,8 @@ add_library(${PROJ} ${SRC_OPTIM})
 add_library(Antares::${PROJ} ALIAS ${PROJ})
 
 target_link_libraries(${PROJ}
-
+  PRIVATE
+  ortools::ortools
 )
 
 target_include_directories(${PROJ}
@@ -24,5 +25,5 @@ target_include_directories(${PROJ}
         ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-set_target_properties(${PROJ} PROPERTIES LINKER_LANGUAGE CXX)
+# set_target_properties(${PROJ} PROPERTIES LINKER_LANGUAGE CXX)
 

@@ -45,29 +45,29 @@ namespace Antares::optim::api
             fillers_.push_back(filler);
         }
 
-        void build() {
+        void build(const AntaresData& data) {
             if (built) {
                 // TODO : throw
             }
-            for (auto filler : fillers_)
+            for (auto& filler : fillers_)
             {
-                filler->addVariables(linearProblem_);
+                filler->addVariables(linearProblem_, data);
             }
-            for (auto filler : fillers_)
+            for (auto& filler : fillers_)
             {
-                filler->addConstraints(linearProblem_);
+                filler->addConstraints(linearProblem_, data);
             }
-            for (auto filler : fillers_)
+            for (auto& filler : fillers_)
             {
-                filler->addObjective(linearProblem_);
+                filler->addObjective(linearProblem_, data);
             }
         }
 
-        MipSolution solve()
+        MipSolution solve(const AntaresData& data)
         {
             // TODO : move to new interface LinearProblemSolver ??
             if (!built) {
-                build();
+                build(data);
             }
             return linearProblem_->solve();
         }
