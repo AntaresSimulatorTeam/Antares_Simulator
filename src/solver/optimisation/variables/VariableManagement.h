@@ -80,13 +80,9 @@ public:
 
     int& Overflow(unsigned int index, unsigned int hourInWeek, int offset = 0, int delta = 0);
 
-    int& FinalStorage(unsigned int index, unsigned int hourInWeek, int offset = 0, int delta = 0);
+    int& FinalStorage(unsigned int index);
 
-    int& LayerStorage(unsigned area,
-                      unsigned layer,
-                      unsigned int hourInWeek,
-                      int offset = 0,
-                      int delta = 0);
+    int& LayerStorage(unsigned area, unsigned layer);
 
     int& PositiveUnsuppliedEnergy(unsigned int index,
                                   unsigned int hourInWeek,
@@ -99,9 +95,9 @@ public:
                                   int delta = 0);
 
 private:
-    CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim_;
-    std::vector<int>& NumeroDeVariableStockFinal;
-    std::vector<std::vector<int>>& NumeroDeVariableDeTrancheDeStock;
+    std::vector<CORRESPONDANCES_DES_VARIABLES>& CorrespondanceVarNativesVarOptim_;
+    std::vector<int>& NumeroDeVariableStockFinal_;
+    std::vector<std::vector<int>>& NumeroDeVariableDeTrancheDeStock_;
     const int32_t& NombreDePasDeTempsPourUneOptimisation_;
     unsigned int hourInWeek_ = 0;
     int GetShiftedTimeStep(int offset, int delta) const;

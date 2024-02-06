@@ -135,7 +135,7 @@ ConstraintBuilder& ConstraintBuilder::Overflow(unsigned int index, double coeff)
 
 ConstraintBuilder& ConstraintBuilder::FinalStorage(unsigned int index, double coeff)
 {
-    AddVariable(variableManager_.FinalStorage(index, hourInWeek_), coeff);
+    AddVariable(variableManager_.FinalStorage(index), coeff);
     return *this;
 }
 
@@ -153,7 +153,7 @@ ConstraintBuilder& ConstraintBuilder::NegativeUnsuppliedEnergy(unsigned int inde
 
 ConstraintBuilder& ConstraintBuilder::LayerStorage(unsigned area, unsigned layer, double coeff)
 {
-    AddVariable(variableManager_.LayerStorage(area, layer, hourInWeek_), coeff);
+    AddVariable(variableManager_.LayerStorage(area, layer), coeff);
     return *this;
 }
 

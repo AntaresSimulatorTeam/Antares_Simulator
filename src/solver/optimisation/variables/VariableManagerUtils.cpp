@@ -2,7 +2,7 @@
 
 VariableManagement::VariableManager VariableManagerFromProblemHebdo(PROBLEME_HEBDO* problemeHebdo)
 {
-    return VariableManagement::VariableManagement(
+    return VariableManagement::VariableManager(
       problemeHebdo->CorrespondanceVarNativesVarOptim,
       problemeHebdo->NumeroDeVariableStockFinal,
       problemeHebdo->NumeroDeVariableDeTrancheDeStock,

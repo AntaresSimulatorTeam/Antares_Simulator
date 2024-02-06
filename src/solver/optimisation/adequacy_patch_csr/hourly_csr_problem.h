@@ -84,11 +84,11 @@ public:
 
     explicit HourlyCSRProblem(const AdqPatchParams& adqPatchParams, PROBLEME_HEBDO* p) :
      adqPatchParams_(adqPatchParams),
-     problemeHebdo_(p),
      variableManager_(p->CorrespondanceVarNativesVarOptim,
                       p->NumeroDeVariableStockFinal,
                       p->NumeroDeVariableDeTrancheDeStock,
-                      p->NombreDePasDeTempsPourUneOptimisation)
+                      p->NombreDePasDeTempsPourUneOptimisation),
+     problemeHebdo_(p)
     {
         double temp = pow(10, -adqPatchParams.curtailmentSharing.thresholdVarBoundsRelaxation);
         belowThisThresholdSetToZero = std::min(temp, 0.1);

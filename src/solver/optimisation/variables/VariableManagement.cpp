@@ -192,25 +192,14 @@ int& VariableManager::Overflow(unsigned int index, unsigned int hourInWeek, int 
     return CorrespondanceVarNativesVarOptim_[pdt].NumeroDeVariablesDeDebordement[index];
 }
 
-int& VariableManager::FinalStorage(unsigned int index,
-                                   unsigned int hourInWeek,
-                                   int offset,
-                                   int delta)
+int& VariableManager::FinalStorage(unsigned int index)
 {
-    hourInWeek_ = hourInWeek;
-    auto pdt = GetShiftedTimeStep(offset, delta);
-    return NumeroDeVariableStockFinal[index];
+    return NumeroDeVariableStockFinal_[index];
 }
 
-int& VariableManager::LayerStorage(unsigned area,
-                                   unsigned layer,
-                                   unsigned int hourInWeek,
-                                   int offset,
-                                   int delta)
+int& VariableManager::LayerStorage(unsigned area, unsigned layer)
 {
-    hourInWeek_ = hourInWeek;
-    auto pdt = GetShiftedTimeStep(offset, delta);
-    return NumeroDeVariableDeTrancheDeStock[area][layer];
+    return NumeroDeVariableDeTrancheDeStock_[area][layer];
 }
 
 int& VariableManager::PositiveUnsuppliedEnergy(unsigned int index,

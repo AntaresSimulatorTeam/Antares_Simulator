@@ -310,8 +310,7 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
     {
         if (problemeHebdo->CaracteristiquesHydrauliques[pays].AccurateWaterValue)
         {
-            int var = variable_manager.FinalStorage(
-              pays, problemeHebdo->NombreDePasDeTempsPourUneOptimisation - 1);
+            int var = variable_manager.FinalStorage(pays);
             if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
             {
                 ProblemeAResoudre->CoutLineaire[var] = 0;
@@ -319,8 +318,7 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
 
             for (int layerindex = 0; layerindex < 100; layerindex++)
             {
-                var = variable_manager.LayerStorage(
-                  pays, layerindex, problemeHebdo->NombreDePasDeTempsPourUneOptimisation - 1);
+                var = variable_manager.LayerStorage(pays, layerindex);
                 if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                 {
                     ProblemeAResoudre->CoutLineaire[var]

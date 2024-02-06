@@ -464,8 +464,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
     {
         if (problemeHebdo->CaracteristiquesHydrauliques[pays].AccurateWaterValue)
         {
-            int var = variable_manager.FinalStorage(
-              pays, problemeHebdo->NombreDePasDeTempsPourUneOptimisation - 1);
+            int var = variable_manager.FinalStorage(pays);
             if (var >= 0)
             {
                 Xmin[var] = -(LINFINI_ANTARES);
@@ -482,8 +481,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
             }
             for (uint nblayer = 0; nblayer < 100; nblayer++)
             {
-                var = variable_manager.LayerStorage(
-                  pays, nblayer, problemeHebdo->NombreDePasDeTempsPourUneOptimisation - 1);
+                var = variable_manager.LayerStorage(pays, nblayer);
                 if (var >= 0)
                 {
                     Xmin[var] = 0;
