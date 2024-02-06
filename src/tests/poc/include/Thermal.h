@@ -25,8 +25,8 @@ public:
     void addObjective(LinearProblem* problem, LinearProblemData* data) override;
     void update(LinearProblem* problem, LinearProblemData* data) override;
 
-    string getPVarName(int ts); // équivalent de getPort
-    double getPCost(int ts); // équivalent de getPort
+    string getPVarName(int ts); // sera remplacé par la notion de ports
+    double getPCost(int ts); // sera remplacé par la notion de ports
 };
 
 void Thermal::addVariables(LinearProblem *problem, LinearProblemData *data)

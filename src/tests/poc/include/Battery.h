@@ -27,7 +27,7 @@ public:
     void addConstraints(LinearProblem* problem, LinearProblemData* data) override;
     void addObjective(LinearProblem* problem, LinearProblemData* data) override;
     void update(LinearProblem* problem, LinearProblemData* data) override;
-    string getPVarName(int ts);
+    string getPVarName(int ts); // sera remplacé par la notion de ports
 };
 
 void Battery::addVariables(LinearProblem *problem, LinearProblemData *data)

@@ -11,9 +11,9 @@ class Balance : public LinearProblemFiller
 {
 private:
     vector<int>& timeSteps_;
-    vector<Battery*> &batteries_;
-    vector<Thermal*> &thermals_;
-    vector<double>& consumption_; // TODO : put this in data object
+    vector<Battery*> &batteries_; // sera remplacé par la notion de ports
+    vector<Thermal*> &thermals_; // sera remplacé par la notion de ports
+    vector<double>& consumption_; // TODO : à mettre dans la structure de données LinearProblemData
 public:
     Balance(vector<int>& timeSteps, vector<Battery*>& batteries, vector<Thermal*>& thermals, vector<double>& consumption) :
             timeSteps_(timeSteps), batteries_(batteries), thermals_(thermals), consumption_(consumption) {};

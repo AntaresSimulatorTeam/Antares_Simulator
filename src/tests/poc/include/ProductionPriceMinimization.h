@@ -10,7 +10,7 @@ class ProductionPriceMinimization : public LinearProblemFiller
 {
 private:
     vector<int>& timeSteps_;
-    vector<Thermal*> &thermals_;
+    vector<Thermal*> &thermals_; // sera remplacé par la notion de ports
 public:
     ProductionPriceMinimization(vector<int>& timeSteps, vector<Thermal*>& thermals) :
             timeSteps_(timeSteps), thermals_(thermals) {};
