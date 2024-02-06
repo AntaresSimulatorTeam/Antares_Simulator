@@ -1129,13 +1129,13 @@ void Parameters::fixGenRefreshForHydroMaxPower()
     if ((timeSeriesHydroMaxPower & timeSeriesToGenerate) != 0)
     {
         timeSeriesToGenerate &= ~timeSeriesHydroMaxPower;
-        logs.error() << "Time-series generation is not available for hydro max power. It "
+        logs.warning() << "Time-series generation is not available for hydro max power. It "
                         "will be automatically disabled.";
     }
     if ((timeSeriesHydroMaxPower & timeSeriesToRefresh) != 0)
     {
         timeSeriesToRefresh &= ~timeSeriesHydroMaxPower;
-        logs.error() << "Time-series refresh is not available for hydro max power. It will "
+        logs.warning() << "Time-series refresh is not available for hydro max power. It will "
                         "be automatically disabled.";
     }
 }
