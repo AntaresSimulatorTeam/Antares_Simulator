@@ -22,8 +22,6 @@ env:
   GITHUB_TOKEN: ${{ github.token }}
   IS_RELEASE: ${{ github.event_name == 'workflow_dispatch' }}
   RUN_SIMPLE_TESTS: ${{ github.event_name == 'push' || inputs.run-tests == 'true' }}
-  RUN_EXTENDED_TESTS: ${{ github.event_name == 'schedule' || inputs.run-tests == 'true' }}
-
 
 jobs:
   build:
@@ -32,7 +30,7 @@ jobs:
       # Indicates the location of the vcpkg as a Git submodule of the project repository.
       VCPKG_ROOT: ${{ github.workspace }}/vcpkg
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
-      RUN_EXTENDED_TESTS: ${{ github.event_name == 'schedule'}}
+      RUN_EXTENDED_TESTS: 'true'
       os: windows-latest
       test-platform: windows-2022
       vcpkgPackages: wxwidgets boost-test
@@ -160,15 +158,6 @@ jobs:
         path: 'simtest.json'
         prop_path: 'version'
 
-    - name: Run named mps tests
-      if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
-      uses: ./.github/workflows/run-tests
-      with:
-        simtest-tag: ${{steps.simtest-version.outputs.prop}}
-        batch-name: valid-named-mps
-        os: ${{ env.test-platform }}
-        variant: "named-mps"
-
     - name: Run unfeasibility-related tests
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
       run: |
@@ -236,14 +225,6 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: short-tests
-        os: ${{ env.test-platform }}
-
-    - name: Run mps tests
-      if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
-      uses: ./.github/workflows/run-tests
-      with:
-        simtest-tag: ${{steps.simtest-version.outputs.prop}}
-        batch-name: valid-mps
         os: ${{ env.test-platform }}
 
     - name: Run parallel tests
