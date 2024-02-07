@@ -6,16 +6,6 @@
 using namespace Antares::optim::api;
 using namespace std;
 
-
-class PortConnexion
-{
-    string componentAndPortId1;
-    string componentAndPortId2;
-};
-class PortConnexionsManager
-{
-    vector<PortConnexion> connexions;
-};
 class Model
 {
     vector<string> parameters;
@@ -26,6 +16,15 @@ class Component
 {
     Model model;
     map<string, double> parameterValues;
+};
+class PortConnexion
+{
+    string componentAndPortId1;
+    string componentAndPortId2;
+};
+class PortConnexionsManager
+{
+    vector<PortConnexion> connexions;
 };
 
 class ComponentFiller : public LinearProblemFiller
