@@ -34,7 +34,7 @@ BOOST_AUTO_TEST_CASE(test_productionMaxP_notEnough)
     thermals.push_back(&thermal);
 
     vector<double> consumption{50, 50, 150, 120};
-    Balance balance(timesteps, batteries, thermals, consumption);
+    Balance balance(timesteps, "nodeA", batteries, thermals, consumption);
 
     ProductionPriceMinimization objective(timesteps, thermals);
 

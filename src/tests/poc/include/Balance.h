@@ -11,12 +11,13 @@ class Balance : public LinearProblemFiller
 {
 private:
     vector<int>& timeSteps_;
+    string nodeName_;
     vector<Battery*> &batteries_; // sera remplacé par la notion de ports
     vector<Thermal*> &thermals_; // sera remplacé par la notion de ports
     vector<double>& consumption_; // TODO : à mettre dans la structure de données LinearProblemData
 public:
-    Balance(vector<int>& timeSteps, vector<Battery*>& batteries, vector<Thermal*>& thermals, vector<double>& consumption) :
-            timeSteps_(timeSteps), batteries_(batteries), thermals_(thermals), consumption_(consumption) {};
+    Balance(vector<int>& timeSteps, string nodeName, vector<Battery*>& batteries, vector<Thermal*>& thermals, vector<double>& consumption) :
+            timeSteps_(timeSteps), nodeName_(nodeName), batteries_(batteries), thermals_(thermals), consumption_(consumption) {};
     void addVariables(LinearProblem* problem, LinearProblemData* data) override;
     void addConstraints(LinearProblem* problem, LinearProblemData* data) override;
     void addObjective(LinearProblem* problem, LinearProblemData* data) override;
@@ -31,7 +32,8 @@ void Balance::addVariables(LinearProblem *problem, LinearProblemData *data)
 void Balance::addConstraints(LinearProblem *problem, LinearProblemData *data)
 {
     for (auto ts : timeSteps_) {
-        auto balanceConstraint = problem->addConstraint("Balance_" + to_string(ts), consumption_[ts], consumption_[ts]);
+        auto balanceConstraint =
+                problem->addBalanceConstraint("Balance_" + nodeName_ + "_" + to_string(ts), consumption_[ts], consumption_[ts], nodeName_, ts);
 
         for (auto* battery : batteries_) {
             auto p = problem->getVariable(battery->getPVarName(ts));
