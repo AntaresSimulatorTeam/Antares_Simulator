@@ -19,6 +19,12 @@ add_library(result_writer
         # Add entry to zip, using a job queue (private)
         zip_writer.cpp
         private/zip_writer.h
+
+        # In-memory writer
+        in_memory_writer.cpp
+        private/in_memory_writer.h
+
+        # Enums, etc
         antares/writer/result_format.h
 )
 
