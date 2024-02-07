@@ -157,7 +157,7 @@ add_library(libantares-solver-variable
 		${SRC_VARIABLE_ECONOMY}  )
 
 target_include_directories(libantares-solver-variable PUBLIC .)
-target_link_libraries(libantares-solver-variable PRIVATE libantares-core)
+target_link_libraries(libantares-solver-variable PRIVATE libantares-core ortools::ortools)
 
 
 add_library(libantares-solver-variable-info
@@ -172,5 +172,10 @@ add_library(libantares-solver-variable-info
 		surveyresults/data.h
 		surveyresults/surveyresults.cpp
 )
-target_link_libraries(libantares-solver-variable-info PRIVATE libantares-core result_writer)
+target_link_libraries(libantares-solver-variable-info PRIVATE libantares-core result_writer
+        ortools::ortools
+        sirius_solver
+        utils
+
+)
 

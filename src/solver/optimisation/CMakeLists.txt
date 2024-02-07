@@ -89,6 +89,7 @@ else()
 endif()
 target_link_libraries(libmodel_antares
 		PUBLIC
+        ortools::ortools
 		libantares-core
 		utils
 		sirius_solver

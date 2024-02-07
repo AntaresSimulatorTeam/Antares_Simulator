@@ -8,7 +8,7 @@ extern "C"
 #include "srs_api.h"
 }
 
-#include "named_problem.h"
+#include "antares/solver/utils/named_problem.h"
 #include "ortools_utils.h"
 
 using namespace Antares;

@@ -44,7 +44,7 @@ jobs:
 
     - name: Config OR-Tools URL
       run: |
-           echo "URL_ORTOOLS=https://github.com/rte-france/or-tools/releases/download/v9.5-rte2.0/ortools_cxx_centos7_static_sirius.zip" >> $GITHUB_ENV
+           echo "URL_ORTOOLS=https://github.com/rte-france/or-tools/releases/download/$(cat ortools_tag)/ortools_cxx_centos7_static_sirius.zip" >> $GITHUB_ENV
 
     - name: Download OR-Tools
       id: ortools
@@ -61,7 +61,7 @@ jobs:
            -DCMAKE_C_COMPILER_LAUNCHER=ccache \
            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
            -DDEPS_INSTALL_DIR=/rte-antares-deps-Release \
-           -DCMAKE_BUILD_TYPE=release \
+           -DCMAKE_BUILD_TYPE=Release \
            -DBUILD_TESTING=ON \
            -DBUILD_not_system=OFF \
            -DBUILD_TOOLS=OFF \

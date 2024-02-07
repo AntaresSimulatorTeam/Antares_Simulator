@@ -6,4 +6,4 @@ source_group("aleatoire" FILES ${SRC_ALEATOIRE})
 
 
 add_library(libantares-solver-aleatoire ${SRC_ALEATOIRE})
-target_link_libraries(libantares-solver-aleatoire PRIVATE libantares-core)
+target_link_libraries(libantares-solver-aleatoire PRIVATE libantares-core ortools::ortools)
