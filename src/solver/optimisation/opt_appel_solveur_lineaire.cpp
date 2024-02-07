@@ -238,7 +238,7 @@ static SimplexResult OPT_TryToCallSimplex(
         LinearProblemData linearProblemData;
         // TODO : ajouter les données ici
         linearProblemBuilder.build(linearProblemData);
-        solver = &legacyLinearProblem.getMpSolver();
+        solver = &legacyLinearProblem.getMpSolver(); // TODO attention quand on sort de ce scope mpSolver est détruit
     }
     const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
 

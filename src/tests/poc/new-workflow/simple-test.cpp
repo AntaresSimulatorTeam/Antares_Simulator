@@ -24,8 +24,9 @@ BOOST_AUTO_TEST_CASE(test_productionMaxP_notEnough)
     vector<Battery*> batteries;
     vector<Thermal*> thermals;
 
-    LinearProblemImpl linearProblem(true, "xpress");
+    LinearProblemImpl linearProblem(false, "xpress");
     LinearProblemBuilder linearProblemBuilder(linearProblem);
+
     Battery battery(timesteps, timestep, 100, 1000, 0);
     batteries.push_back(&battery);
 
@@ -46,6 +47,8 @@ BOOST_AUTO_TEST_CASE(test_productionMaxP_notEnough)
     LinearProblemData linearProblemData;
     linearProblemBuilder.build(linearProblemData);
     auto solution = linearProblemBuilder.solve();
+
+    // TODO : utiliser LinearProblemData et utiliser update
 
     // la conso est supérieure à la Pmax du thermique sur les pas de temps 2 & 3
     // Donc la batterie doit se charger pendant les TS 0 & 1

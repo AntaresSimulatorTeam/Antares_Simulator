@@ -25,6 +25,7 @@ MPConstraint& LegacyLinearProblemImpl::addBalanceConstraint(string name, double 
         // add new name declared by filler to list of aliases of the existing constraint
         balanceConstraintPerNodeName.at(nodeWithTs).second.push_back(name);
         // return the existing constraint
+        // TODO : vérifier aussi que LB/UB sont les mêmes ? ou forcer lb=ub ? comment gérer la conso ?
         return *balanceConstraintPerNodeName.at(nodeWithTs).first;
     }
     MPConstraint *constraint = mpSolver->MakeRowConstraint(lb, ub, name);

@@ -55,7 +55,7 @@ void ComponentFiller::addVariables(LinearProblem& problem, const LinearProblemDa
 
 void ComponentFiller::addConstraints(LinearProblem& problem, const LinearProblemData& data)
 {
-    // parse constraint definition using component_->model and component_->parameterValues
+    // parse constraint definition using component_->model and component_->parameterValues and port connexions (in manager)
     // call problem.addConstraint(...) or problem.addBalanceConstraint(...)
 }
 
