@@ -28,15 +28,10 @@
 
 using namespace Antares;
 
-static void AllocateResultsForEconomicMode(const Data::Study& study)
+void SIM_AllocationTableaux(const Data::Study& study)
 {
     transitMoyenInterconnexionsRecalculQuadratique.resize(study.runtime->interconnectionsCount());
 
     for (uint i = 0; i != study.runtime->interconnectionsCount(); i++)
         transitMoyenInterconnexionsRecalculQuadratique[i].assign(HOURS_PER_YEAR, 0.);
-}
-
-void SIM_AllocationTableaux(const Data::Study& study)
-{
-    AllocateResultsForEconomicMode(study);
 }
