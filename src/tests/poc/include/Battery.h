@@ -23,41 +23,41 @@ public:
         pVarNames.reserve(timeSteps.size());
         eVarNames.reserve(timeSteps.size());
     };
-    void addVariables(LinearProblem* problem, LinearProblemData* data) override;
-    void addConstraints(LinearProblem* problem, LinearProblemData* data) override;
-    void addObjective(LinearProblem* problem, LinearProblemData* data) override;
-    void update(LinearProblem* problem, LinearProblemData* data) override;
+    void addVariables(LinearProblem& problem, const LinearProblemData& data) override;
+    void addConstraints(LinearProblem& problem, const LinearProblemData& data) override;
+    void addObjective(LinearProblem& problem, const LinearProblemData& data) override;
+    void update(LinearProblem& problem, const LinearProblemData& data) override;
     string getPVarName(int ts); // sera remplacé par la notion de ports
 };
 
-void Battery::addVariables(LinearProblem *problem, LinearProblemData *data)
+void Battery::addVariables(LinearProblem& problem, const LinearProblemData& data)
 {
     for (auto ts : timeSteps_) {
         string pVarName = "P_batt_" + to_string(ts);
-        problem->addNumVariable(pVarName, -maxP_, maxP_);
+        problem.addNumVariable(pVarName, -maxP_, maxP_);
         // - charge
         // + décharge
         pVarNames.push_back(pVarName);
 
         string eVarName = "E_batt_" + to_string(ts);
-        problem->addNumVariable(eVarName, 0, maxE_);
+        problem.addNumVariable(eVarName, 0, maxE_);
         eVarNames.push_back(eVarName);
     }
 }
 
-void Battery::addConstraints(LinearProblem *problem, LinearProblemData *data)
+void Battery::addConstraints(LinearProblem& problem, const LinearProblemData& data)
 {
     for (auto ts : timeSteps_) {
-        auto p = problem->getVariable(pVarNames[ts]);
-        auto e = problem->getVariable(eVarNames[ts]);
+        auto p = &problem.getVariable(pVarNames[ts]);
+        auto e = &problem.getVariable(eVarNames[ts]);
 
         // E(t) = E(t-T) - T/60 * P(t)
-        auto stockConstraint = problem->addConstraint("E_constr_" + to_string(ts), 0, 0);
+        auto stockConstraint = &problem.addConstraint("E_constr_" + to_string(ts), 0, 0);
         stockConstraint->SetCoefficient(e, 1);
         stockConstraint->SetCoefficient(p, timeStepInMinutes_ * 1.0 / 60.0);
         if (ts > 0)
         {
-            auto previousE = problem->getVariable(eVarNames[ts - 1]);
+            auto previousE = &problem.getVariable(eVarNames[ts - 1]);
             stockConstraint->SetCoefficient(previousE, -1);
         }
         else
@@ -68,12 +68,12 @@ void Battery::addConstraints(LinearProblem *problem, LinearProblemData *data)
     }
 }
 
-void Battery::addObjective(Antares::optim::api::LinearProblem *problem, Antares::optim::api::LinearProblemData *data)
+void Battery::addObjective(Antares::optim::api::LinearProblem& problem, const LinearProblemData& data)
 {
     // nothing to do
 }
 
-void Battery::update(Antares::optim::api::LinearProblem *problem, Antares::optim::api::LinearProblemData *data)
+void Battery::update(Antares::optim::api::LinearProblem& problem, const LinearProblemData& data)
 {
     // nothing to do
 }

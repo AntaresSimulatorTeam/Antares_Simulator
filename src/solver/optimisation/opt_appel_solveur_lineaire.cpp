@@ -230,15 +230,15 @@ static SimplexResult OPT_TryToCallSimplex(
     if (options.useOrtools)
     {
         LegacyLinearProblemImpl legacyLinearProblem(&Probleme, options.solverName);
-        LinearProblemBuilder linearProblemBuilder(&legacyLinearProblem);
+        LinearProblemBuilder linearProblemBuilder(legacyLinearProblem);
         LegacyLinearProblemFillerImpl filler(&Probleme); // TODO : fusionner avec LegacyLinearProblemImpl ?
-        linearProblemBuilder.addFiller(&filler);
+        linearProblemBuilder.addFiller(filler);
         // TODO : on peut ajouter ici des fillers supplémentaires, par exemple passés en argument de la fonction
         // sinon renvoyer le builder ou le problem à une autre classe
-        auto linearProblemData = new LinearProblemData();
+        LinearProblemData linearProblemData;
         // TODO : ajouter les données ici
         linearProblemBuilder.build(linearProblemData);
-        solver = legacyLinearProblem.getMpSolver();
+        solver = &legacyLinearProblem.getMpSolver();
     }
     const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
 

@@ -32,7 +32,7 @@
 
 using namespace Antares::optim::api;
 
-void LegacyLinearProblemFillerImpl::addVariables(LinearProblem *problem, LinearProblemData* data)
+void LegacyLinearProblemFillerImpl::addVariables(LinearProblem& problem, const LinearProblemData& data)
 {
     // For now, only one "fill" method is developed in order for the legacy problem to fill the ORTools matrix
     // It is called here since addVariables is called first in problem builder
@@ -40,25 +40,25 @@ void LegacyLinearProblemFillerImpl::addVariables(LinearProblem *problem, LinearP
     // Also, no "fill(linearProblem)" has been developed yet, so we are casting the linearProblem and fetching its
     // underlying MPSolver object in order to fill it. If needed, we should change this in the future.
     Antares::Optimization::ProblemSimplexeNommeConverter converter("mock", legacyProblem_);
-    if (auto *legacyLinearProblem = dynamic_cast<LegacyLinearProblemImpl *>(problem)) {
-        converter.Fill(legacyLinearProblem->getMpSolver());
+    if (auto *legacyLinearProblem = dynamic_cast<LegacyLinearProblemImpl *>(&problem)) {
+        converter.Fill(&legacyLinearProblem->getMpSolver());
         declareBalanceConstraints(legacyLinearProblem);
     } else {
         // throw
     }
 };
 
-void LegacyLinearProblemFillerImpl::addConstraints(LinearProblem *problem, LinearProblemData* data)
+void LegacyLinearProblemFillerImpl::addConstraints(LinearProblem& problem, const LinearProblemData& data)
 {
 // nothing to do: everything has been done in addVariables
 };
 
-void LegacyLinearProblemFillerImpl::addObjective(LinearProblem *problem, LinearProblemData* data)
+void LegacyLinearProblemFillerImpl::addObjective(LinearProblem& problem, const LinearProblemData& data)
 {
 // nothing to do: everything has been done in addVariables
 }
 
-void LegacyLinearProblemFillerImpl::update(LinearProblem *problem, LinearProblemData* data)
+void LegacyLinearProblemFillerImpl::update(LinearProblem& problem, const LinearProblemData& data)
 {
 // TODO
 }

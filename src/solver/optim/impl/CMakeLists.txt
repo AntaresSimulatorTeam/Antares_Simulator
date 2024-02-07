@@ -12,7 +12,7 @@ add_library(${PROJ} ${SRC_OPTIM})
 add_library(Antares::${PROJ} ALIAS ${PROJ})
 
 target_link_libraries(${PROJ}
-        PUBLIC
+        PRIVATE
         ortools::ortools
         Antares::solverUtils
 )

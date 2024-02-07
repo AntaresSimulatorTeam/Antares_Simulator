@@ -25,7 +25,7 @@ BOOST_AUTO_TEST_CASE(test_productionMaxP_notEnough)
     vector<Thermal*> thermals;
 
     LinearProblemImpl linearProblem(true, "xpress");
-    LinearProblemBuilder linearProblemBuilder(&linearProblem);
+    LinearProblemBuilder linearProblemBuilder(linearProblem);
     Battery battery(timesteps, timestep, 100, 1000, 0);
     batteries.push_back(&battery);
 
@@ -38,12 +38,13 @@ BOOST_AUTO_TEST_CASE(test_productionMaxP_notEnough)
 
     ProductionPriceMinimization objective(timesteps, thermals);
 
-    linearProblemBuilder.addFiller(&battery);
-    linearProblemBuilder.addFiller(&thermal);
-    linearProblemBuilder.addFiller(&balance);
-    linearProblemBuilder.addFiller(&objective);
+    linearProblemBuilder.addFiller(battery);
+    linearProblemBuilder.addFiller(thermal);
+    linearProblemBuilder.addFiller(balance);
+    linearProblemBuilder.addFiller(objective);
 
-    linearProblemBuilder.build(nullptr);
+    LinearProblemData linearProblemData;
+    linearProblemBuilder.build(linearProblemData);
     auto solution = linearProblemBuilder.solve();
 
     // la conso est supérieure à la Pmax du thermique sur les pas de temps 2 & 3

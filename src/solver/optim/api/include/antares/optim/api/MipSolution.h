@@ -26,6 +26,8 @@
 */
 #pragma once
 
+#include <utility>
+
 #include "ortools/linear_solver/linear_solver.h"
 using namespace operations_research;
 using namespace std;
@@ -38,8 +40,8 @@ namespace Antares::optim::api
         operations_research::MPSolver::ResultStatus responseStatus_;
         map<MPVariable*, double> solution_;
     public:
-        MipSolution(operations_research::MPSolver::ResultStatus responseStatus, map<MPVariable*, double> solution) : responseStatus_(responseStatus), solution_(solution) {};
+        MipSolution(operations_research::MPSolver::ResultStatus responseStatus, map<MPVariable*, double> solution) : responseStatus_(responseStatus), solution_(std::move(solution)) {};
         operations_research::MPSolver::ResultStatus getStatus() { return responseStatus_; }
-        double getOptimalValue(MPVariable* variable) { return solution_.at(variable); }
+        double getOptimalValue(MPVariable& variable) { return solution_.at(&variable); }
     };
 }

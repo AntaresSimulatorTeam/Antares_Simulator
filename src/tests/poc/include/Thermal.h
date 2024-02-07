@@ -20,35 +20,35 @@ public:
         pVarNames.reserve(timeSteps.size());
     };
 
-    void addVariables(LinearProblem* problem, LinearProblemData* data) override;
-    void addConstraints(LinearProblem* problem, LinearProblemData* data) override;
-    void addObjective(LinearProblem* problem, LinearProblemData* data) override;
-    void update(LinearProblem* problem, LinearProblemData* data) override;
+    void addVariables(LinearProblem& problem, const LinearProblemData& data) override;
+    void addConstraints(LinearProblem& problem, const LinearProblemData& data) override;
+    void addObjective(LinearProblem& problem, const LinearProblemData& data) override;
+    void update(LinearProblem& problem, const LinearProblemData& data) override;
 
     string getPVarName(int ts); // sera remplacé par la notion de ports
     double getPCost(int ts); // sera remplacé par la notion de ports
 };
 
-void Thermal::addVariables(LinearProblem *problem, LinearProblemData *data)
+void Thermal::addVariables(LinearProblem& problem, const LinearProblemData& data)
 {
     for (auto ts : timeSteps_) {
         string pVarName = "P_thermal_" + to_string(ts);
-        problem->addNumVariable(pVarName, 0, maxP_);
+        problem.addNumVariable(pVarName, 0, maxP_);
         pVarNames.push_back(pVarName);
     }
 }
 
-void Thermal::addConstraints(LinearProblem *problem, LinearProblemData *data)
+void Thermal::addConstraints(LinearProblem& problem, const LinearProblemData& data)
 {
     // nothing to do
 }
 
-void Thermal::addObjective(Antares::optim::api::LinearProblem *problem, Antares::optim::api::LinearProblemData *data)
+void Thermal::addObjective(Antares::optim::api::LinearProblem& problem, const LinearProblemData& data)
 {
     // nothing to do
 }
 
-void Thermal::update(Antares::optim::api::LinearProblem *problem, Antares::optim::api::LinearProblemData *data)
+void Thermal::update(Antares::optim::api::LinearProblem& problem, const LinearProblemData& data)
 {
     // nothing to do
 }

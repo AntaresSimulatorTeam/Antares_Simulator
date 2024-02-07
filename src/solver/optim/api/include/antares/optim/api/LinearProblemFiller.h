@@ -36,10 +36,10 @@ namespace Antares::optim::api
     {
     public:
         // TODO : remplacer pointeurs par références
-        virtual void addVariables(LinearProblem* problem, LinearProblemData* data) = 0;
-        virtual void addConstraints(LinearProblem* problem, LinearProblemData* data) = 0;
-        virtual void addObjective(LinearProblem* problem, LinearProblemData* data) = 0;
-        virtual void update(LinearProblem* problem, LinearProblemData* data) = 0; // TODO : comment autoriser de màj seulement les coefs et lb/ub ? ne pas ajouter de contrainte, variable ...
+        virtual void addVariables(LinearProblem& problem, const LinearProblemData& data) = 0;
+        virtual void addConstraints(LinearProblem& problem, const LinearProblemData& data) = 0;
+        virtual void addObjective(LinearProblem& problem, const LinearProblemData& data) = 0;
+        virtual void update(LinearProblem& problem, const LinearProblemData& data) = 0; // TODO : comment autoriser de màj seulement les coefs et lb/ub ? ne pas ajouter de contrainte, variable ...
         // update nécessaire pour mettre à jour les données de semaine en semaine
         // la structure de données hebdo s'appelle SIM, c'est elle qui est utilisée pour mettre à jour le problème hebdo
         // sim_structure_contrainte_economique.h

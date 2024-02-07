@@ -6,39 +6,39 @@
 
 using namespace Antares::optim::api;
 
-void LinearProblemBuilder::addFiller(LinearProblemFiller* filler)
+void LinearProblemBuilder::addFiller(LinearProblemFiller& filler)
 {
-    fillers_.push_back(filler);
+    fillers_.push_back(&filler);
 }
 
-void LinearProblemBuilder::build(LinearProblemData* data) {
+void LinearProblemBuilder::build(const LinearProblemData& data) {
     if (built) {
         // TODO
         throw;
     }
     for (auto filler : fillers_)
     {
-        filler->addVariables(linearProblem_, data);
+        filler->addVariables(*linearProblem_, data);
     }
     for (auto filler : fillers_)
     {
-        filler->addConstraints(linearProblem_, data);
+        filler->addConstraints(*linearProblem_, data);
     }
     for (auto filler : fillers_)
     {
-        filler->addObjective(linearProblem_, data);
+        filler->addObjective(*linearProblem_, data);
     }
     built = true;
 }
 
-void LinearProblemBuilder::update(LinearProblemData* data) const {
+void LinearProblemBuilder::update(const LinearProblemData& data) const {
     if (!built) {
         // TODO
         throw;
     }
     for (auto filler : fillers_)
     {
-        filler->update(linearProblem_, data);
+        filler->update(*linearProblem_, data);
     }
 }
 

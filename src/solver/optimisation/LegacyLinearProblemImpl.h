@@ -34,14 +34,13 @@ using namespace std;
 class LegacyLinearProblemImpl : public LinearProblemImpl
 {
 private:
-    MPSolver* mpSolver{};
     // For each node name, contains the balance constraint declared by the legacy filler, as well as its names & aliases declared by new fillers
     map<string, pair<MPConstraint*, vector<string>>> balanceConstraintPerNodeName;
 public :
     LegacyLinearProblemImpl(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* legacyProblem,
                                      const std::string& solverName);
-    MPSolver* getMpSolver() { return mpSolver; } // only used in legacy filler
+    MPSolver& getMpSolver() { return *mpSolver; } // only used in legacy filler
     void declareBalanceConstraint(const string& nodeName, MPConstraint* constraint); // only used in legacy filler
-    MPConstraint* addBalanceConstraint(string name, double lb, double ub, string nodeName, int timestep) override;
+    MPConstraint& addBalanceConstraint(string name, double lb, double ub, string nodeName, int timestep) override;
     void setMinimization(bool isMinim) override;
 };

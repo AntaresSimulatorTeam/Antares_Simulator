@@ -37,8 +37,8 @@ private:
     void declareBalanceConstraints(LegacyLinearProblemImpl* legacyLinearProblem);
 public:
     explicit LegacyLinearProblemFillerImpl(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* legacyProblem) : legacyProblem_(legacyProblem) {};
-    void addVariables(LinearProblem* problem, LinearProblemData* data) override;
-    void addConstraints(LinearProblem* problem, LinearProblemData* data) override;
-    void addObjective(LinearProblem* problem, LinearProblemData* data) override;
-    void update(LinearProblem* problem, LinearProblemData* data) override;
+    void addVariables(LinearProblem& problem, const LinearProblemData& data) override;
+    void addConstraints(LinearProblem& problem, const LinearProblemData& data) override;
+    void addObjective(LinearProblem& problem, const LinearProblemData& data) override;
+    void update(LinearProblem& problem, const LinearProblemData& data) override;
 };

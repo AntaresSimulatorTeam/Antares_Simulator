@@ -24,6 +24,3 @@ target_include_directories(${PROJ}
         PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
-
-set_target_properties(${PROJ} PROPERTIES LINKER_LANGUAGE CXX)
-

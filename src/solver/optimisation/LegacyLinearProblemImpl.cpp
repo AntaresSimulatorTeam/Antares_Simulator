@@ -18,18 +18,18 @@ LegacyLinearProblemImpl::LegacyLinearProblemImpl(const Antares::Optimization::PR
     mpSolver->MutableObjective()->SetMinimization();
 }
 
-MPConstraint* LegacyLinearProblemImpl::addBalanceConstraint(string name, double lb, double ub, string nodeName, int timestep)
+MPConstraint& LegacyLinearProblemImpl::addBalanceConstraint(string name, double lb, double ub, string nodeName, int timestep)
 {
     string nodeWithTs = nodeName + "_" + to_string(timestep);
     if (balanceConstraintPerNodeName.contains(nodeWithTs)) {
         // add new name declared by filler to list of aliases of the existing constraint
         balanceConstraintPerNodeName.at(nodeWithTs).second.push_back(name);
         // return the existing constraint
-        return balanceConstraintPerNodeName.at(nodeWithTs).first;
+        return *balanceConstraintPerNodeName.at(nodeWithTs).first;
     }
     MPConstraint *constraint = mpSolver->MakeRowConstraint(lb, ub, name);
     balanceConstraintPerNodeName.insert({nodeWithTs, {constraint, {name}}});
-    return constraint;
+    return *constraint;
 }
 
 void LegacyLinearProblemImpl::setMinimization(bool isMinim)
