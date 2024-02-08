@@ -61,10 +61,10 @@ MipSolution LinearProblemImpl::solve()
     string lp;
     mpSolver->ExportModelAsLpFormat(false, &lp);
     auto status = mpSolver->Solve();
-    map<MPVariable*, double> solution;
+    map<string, double> solution;
     for (auto var : mpSolver->variables())
     {
-        solution.insert({var, var->solution_value()});
+        solution.insert({var->name(), var->solution_value()});
     }
     return {status, solution};
 }

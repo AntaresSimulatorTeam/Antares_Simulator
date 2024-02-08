@@ -38,10 +38,19 @@ namespace Antares::optim::api
         // TODO : improve this
     private:
         operations_research::MPSolver::ResultStatus responseStatus_;
-        map<MPVariable*, double> solution_;
+        map<string, double> solution_;
     public:
-        MipSolution(operations_research::MPSolver::ResultStatus responseStatus, map<MPVariable*, double> solution) : responseStatus_(responseStatus), solution_(std::move(solution)) {};
+        MipSolution(operations_research::MPSolver::ResultStatus responseStatus, map<string , double> solution) : responseStatus_(responseStatus), solution_(std::move(solution)) {};
         operations_research::MPSolver::ResultStatus getStatus() { return responseStatus_; }
-        double getOptimalValue(MPVariable& variable) { return solution_.at(&variable); }
+        double getOptimalValue(const string& variableName) { return solution_.at(variableName); }
+        vector<double> getOptimalValues(const vector<string>& variableNames)
+        {
+            vector<double> solution;
+            solution.reserve(variableNames.size());
+            for (const auto& varName : variableNames) {
+                solution.push_back(getOptimalValue(varName));
+            }
+            return solution;
+        }
     };
 }

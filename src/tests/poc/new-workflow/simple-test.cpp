@@ -66,13 +66,11 @@ BOOST_AUTO_TEST_CASE(test_oneBattery_with_oneThermal)
     // thermique : 100, 100, 70, 100
     // batterie : -50, -50, 80, 20
 
-    BOOST_TEST(solution.getOptimalValue(linearProblem.getVariable(thermal.getPVarName(0))) == 100, tt::tolerance(0.001));
-    BOOST_TEST(solution.getOptimalValue(linearProblem.getVariable(thermal.getPVarName(1))) == 100, tt::tolerance(0.001));
-    BOOST_TEST(solution.getOptimalValue(linearProblem.getVariable(thermal.getPVarName(2))) == 70, tt::tolerance(0.001));
-    BOOST_TEST(solution.getOptimalValue(linearProblem.getVariable(thermal.getPVarName(3))) == 100, tt::tolerance(0.001));
+    vector<double> actualThermalP = solution.getOptimalValues({"P_thermal1_0", "P_thermal1_1", "P_thermal1_2", "P_thermal1_3"});
+    vector<double> expectedThermalP({100., 100., 70., 100.});
+    BOOST_TEST(actualThermalP == expectedThermalP, tt::per_element()); // TODO add tolerance?
 
-    BOOST_TEST(solution.getOptimalValue(linearProblem.getVariable(battery.getPVarName(0))) == -50, tt::tolerance(0.001));
-    BOOST_TEST(solution.getOptimalValue(linearProblem.getVariable(battery.getPVarName(1))) == -50, tt::tolerance(0.001));
-    BOOST_TEST(solution.getOptimalValue(linearProblem.getVariable(battery.getPVarName(2))) == 80, tt::tolerance(0.001));
-    BOOST_TEST(solution.getOptimalValue(linearProblem.getVariable(battery.getPVarName(3))) == 20, tt::tolerance(0.001));
+    vector<double> actualBatteryP = solution.getOptimalValues({"P_battery1_0", "P_battery1_1", "P_battery1_2", "P_battery1_3"});
+    vector<double> expectedBatteryP({-50, -50, 80, 320});
+    BOOST_TEST(actualBatteryP == expectedBatteryP, tt::per_element()); // TODO add tolerance?
 }
