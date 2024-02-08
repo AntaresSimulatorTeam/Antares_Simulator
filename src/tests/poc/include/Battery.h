@@ -1,5 +1,7 @@
 #pragma once
 
+#include <utility>
+
 #include "vector"
 #include "antares/optim/api/LinearProblemFiller.h"
 
@@ -9,19 +11,15 @@ using namespace std;
 class Battery : public LinearProblemFiller
 {
 private:
-    std::vector<int>& timeSteps_;
-    int timeStepInMinutes_;
+    string id_;
     double maxP_;
-    double maxE_;
-    double initialE_;
+    double maxStock_;
     vector<string> pVarNames;
-    vector<string> eVarNames;
+    vector<string> stockVarNames;
 public:
-    Battery(std::vector<int> &timeSteps, int timeStepInMinutes, double maxP, double maxE, double initialE) :
-            timeSteps_(timeSteps), timeStepInMinutes_(timeStepInMinutes), maxP_(maxP), maxE_(maxE), initialE_(initialE)
+    Battery(string id, double maxP, double maxStock) : id_(std::move(id)), maxP_(maxP), maxStock_(maxStock)
     {
-        pVarNames.reserve(timeSteps.size());
-        eVarNames.reserve(timeSteps.size());
+
     };
     void addVariables(LinearProblem& problem, const LinearProblemData& data) override;
     void addConstraints(LinearProblem& problem, const LinearProblemData& data) override;
@@ -32,38 +30,45 @@ public:
 
 void Battery::addVariables(LinearProblem& problem, const LinearProblemData& data)
 {
-    for (auto ts : timeSteps_) {
-        string pVarName = "P_batt_" + to_string(ts);
+    auto timestamps = data.getTimeStamps();
+    pVarNames.reserve(timestamps.size());
+    stockVarNames.reserve(timestamps.size());
+    for (auto ts : timestamps) {
+        string pVarName = "P_" + id_ + "_" + to_string(ts);
         problem.addNumVariable(pVarName, -maxP_, maxP_);
         // - charge
         // + décharge
         pVarNames.push_back(pVarName);
 
-        string eVarName = "E_batt_" + to_string(ts);
-        problem.addNumVariable(eVarName, 0, maxE_);
-        eVarNames.push_back(eVarName);
+        string stockVarName = "Stock_" + id_ + "_" + to_string(ts);
+        problem.addNumVariable(stockVarName, 0, maxStock_);
+        stockVarNames.push_back(stockVarName);
     }
 }
 
 void Battery::addConstraints(LinearProblem& problem, const LinearProblemData& data)
 {
-    for (auto ts : timeSteps_) {
+    if (!data.hasScalarData("initialStock_" + id_)) {
+        throw;
+    }
+    double initialStock = data.getScalarData("initialStock_" + id_);
+    for (auto ts : data.getTimeStamps()) {
         auto p = &problem.getVariable(pVarNames[ts]);
-        auto e = &problem.getVariable(eVarNames[ts]);
+        auto e = &problem.getVariable(stockVarNames[ts]);
 
-        // E(t) = E(t-T) - T/60 * P(t)
-        auto stockConstraint = &problem.addConstraint("E_constr_" + to_string(ts), 0, 0);
+        // Stock(t) = Stock(t-T) - T/60 * P(t)
+        auto stockConstraint = &problem.addConstraint("Stock_constr_" + to_string(ts), 0, 0);
         stockConstraint->SetCoefficient(e, 1);
-        stockConstraint->SetCoefficient(p, timeStepInMinutes_ * 1.0 / 60.0);
+        stockConstraint->SetCoefficient(p, data.getTimeResolutionInMinutes() * 1.0 / 60.0);
         if (ts > 0)
         {
-            auto previousE = &problem.getVariable(eVarNames[ts - 1]);
+            auto previousE = &problem.getVariable(stockVarNames[ts - 1]);
             stockConstraint->SetCoefficient(previousE, -1);
         }
         else
         {
-            stockConstraint->SetLB(initialE_);
-            stockConstraint->SetUB(initialE_);
+            stockConstraint->SetLB(initialStock);
+            stockConstraint->SetUB(initialStock);
         }
     }
 }

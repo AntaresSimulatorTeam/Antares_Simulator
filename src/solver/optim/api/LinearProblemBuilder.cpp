@@ -32,6 +32,7 @@ void LinearProblemBuilder::build(const LinearProblemData& data) {
 }
 
 void LinearProblemBuilder::update(const LinearProblemData& data) const {
+    // TODO : throw if timestamps have changed ?
     if (!built) {
         // TODO
         throw;

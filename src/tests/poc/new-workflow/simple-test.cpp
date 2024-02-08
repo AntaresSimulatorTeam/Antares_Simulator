@@ -16,10 +16,10 @@ namespace tt = boost::test_tools;
 
 using namespace Antares::optim::api;
 
-BOOST_AUTO_TEST_CASE(test_productionMaxP_notEnough)
+BOOST_AUTO_TEST_CASE(test_oneBattery_with_oneThermal)
 {
-    vector<int> timesteps{0, 1, 2, 3}; // toujours commencer à 0 sinon ça plante actuellement
-    int timestep = 60;
+    vector<int> timeStamps{0, 1, 2, 3}; // toujours commencer à 0 sinon ça plante actuellement
+    int timeResolution = 60;
 
     vector<Battery*> batteries;
     vector<Thermal*> thermals;
@@ -27,24 +27,29 @@ BOOST_AUTO_TEST_CASE(test_productionMaxP_notEnough)
     LinearProblemImpl linearProblem(false, "xpress");
     LinearProblemBuilder linearProblemBuilder(linearProblem);
 
-    Battery battery(timesteps, timestep, 100, 1000, 0);
+    Battery battery("battery1", 100, 1000);
     batteries.push_back(&battery);
 
-    vector<double> pCost{1, 3, 10, 8};
-    Thermal thermal(timesteps, 100, pCost);
+    Thermal thermal("thermal1", 100);
     thermals.push_back(&thermal);
 
-    vector<double> consumption{50, 50, 150, 120};
-    Balance balance(timesteps, "nodeA", batteries, thermals, consumption);
+    Balance balance("nodeA", batteries, thermals);
 
-    ProductionPriceMinimization objective(timesteps, thermals);
+    ProductionPriceMinimization objective(thermals);
 
     linearProblemBuilder.addFiller(battery);
     linearProblemBuilder.addFiller(thermal);
     linearProblemBuilder.addFiller(balance);
     linearProblemBuilder.addFiller(objective);
 
-    LinearProblemData linearProblemData;
+    map<string, double> scalarData = {
+            {"initialStock_battery1", 0}
+    };
+    map<string, vector<double>> timedData = {
+            {"consumption_nodeA", {50, 50, 150, 120}},
+            {"cost_thermal1", {1, 3, 10, 8}}
+    };
+    LinearProblemData linearProblemData(timeStamps, timeResolution, scalarData, timedData);
     linearProblemBuilder.build(linearProblemData);
     auto solution = linearProblemBuilder.solve();
 

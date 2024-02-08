@@ -9,11 +9,9 @@ using namespace std;
 class ProductionPriceMinimization : public LinearProblemFiller
 {
 private:
-    vector<int>& timeSteps_;
     vector<Thermal*> &thermals_; // sera remplacé par la notion de ports
 public:
-    ProductionPriceMinimization(vector<int>& timeSteps, vector<Thermal*>& thermals) :
-            timeSteps_(timeSteps), thermals_(thermals) {};
+    explicit ProductionPriceMinimization(vector<Thermal*>& thermals) : thermals_(thermals) {};
     void addVariables(LinearProblem& problem, const LinearProblemData& data) override;
     void addConstraints(LinearProblem& problem, const LinearProblemData& data) override;
     void addObjective(LinearProblem& problem, const LinearProblemData& data) override;
@@ -33,7 +31,7 @@ void ProductionPriceMinimization::addConstraints(LinearProblem& problem, const L
 void ProductionPriceMinimization::addObjective(Antares::optim::api::LinearProblem& problem, const LinearProblemData& data)
 {
     problem.setMinimization(true);
-    for (auto ts : timeSteps_) {
+    for (auto ts : data.getTimeStamps()) {
         for (auto* thermal : thermals_) {
             auto* p = &problem.getVariable(thermal->getPVarName(ts));
             problem.setObjectiveCoefficient(*p, thermal->getPCost(ts));

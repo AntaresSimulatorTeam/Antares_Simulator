@@ -235,7 +235,7 @@ static SimplexResult OPT_TryToCallSimplex(
         linearProblemBuilder.addFiller(filler);
         // TODO : on peut ajouter ici des fillers supplémentaires, par exemple passés en argument de la fonction
         // sinon renvoyer le builder ou le problem à une autre classe
-        LinearProblemData linearProblemData;
+        LinearProblemData linearProblemData({}, 0, {}, {});
         // TODO : ajouter les données ici
         linearProblemBuilder.build(linearProblemData);
         solver = &legacyLinearProblem.getMpSolver(); // TODO attention quand on sort de ce scope mpSolver est détruit

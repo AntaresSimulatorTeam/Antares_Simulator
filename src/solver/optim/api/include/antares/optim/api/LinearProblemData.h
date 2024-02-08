@@ -26,13 +26,33 @@
 */
 #pragma once
 
+#include <utility>
+
+#include "vector"
+
 using namespace operations_research;
+using namespace std;
 
 namespace Antares::optim::api
 {
     class LinearProblemData
     {
+    private:
+        vector<int> timeStamps_;
+        int timeResolutionInMinutes_;
+        map<string, double> scalarData_;
+        map<string, vector<double>> timedData_;
     public:
-        LinearProblemData() {};
+        explicit LinearProblemData(vector<int> timeStamps, int timeResolutionInMinutes, map<string, double> scalarData,
+                                   map <string, vector<double>> timedData) :
+                timeStamps_(std::move(timeStamps)), timeResolutionInMinutes_(timeResolutionInMinutes),
+                scalarData_(std::move(scalarData)), timedData_(std::move(timedData))
+        {};
+        vector<int> getTimeStamps() const { return timeStamps_; }
+        int getTimeResolutionInMinutes() const { return timeResolutionInMinutes_; }
+        bool hasScalarData(const string& key) const { return scalarData_.contains(key); }
+        double getScalarData(const string& key) const { return scalarData_.at(key); }
+        bool hasTimedData(const string& key) const { return timedData_.contains(key); }
+        vector<double> getTimedData(const string& key) const { return timedData_.at(key); }
     };
 }

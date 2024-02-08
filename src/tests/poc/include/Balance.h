@@ -12,14 +12,12 @@ using namespace std;
 class Balance : public LinearProblemFiller
 {
 private:
-    vector<int>& timeSteps_;
     string nodeName_;
     vector<Battery*> &batteries_; // sera remplacé par la notion de ports
     vector<Thermal*> &thermals_; // sera remplacé par la notion de ports
-    vector<double>& consumption_; // TODO : à mettre dans la structure de données LinearProblemData
 public:
-    Balance(vector<int>& timeSteps, string nodeName, vector<Battery*>& batteries, vector<Thermal*>& thermals, vector<double>& consumption) :
-            timeSteps_(timeSteps), nodeName_(std::move(nodeName)), batteries_(batteries), thermals_(thermals), consumption_(consumption) {};
+    Balance(string nodeName, vector<Battery*>& batteries, vector<Thermal*>& thermals) :
+            nodeName_(std::move(nodeName)), batteries_(batteries), thermals_(thermals) {};
     void addVariables(LinearProblem& problem, const LinearProblemData& data) override;
     void addConstraints(LinearProblem& problem, const LinearProblemData& data) override;
     void addObjective(LinearProblem& problem, const LinearProblemData& data) override;
@@ -33,9 +31,13 @@ void Balance::addVariables(LinearProblem& problem, const LinearProblemData& data
 
 void Balance::addConstraints(LinearProblem& problem, const LinearProblemData& data)
 {
-    for (auto ts : timeSteps_) {
+    if (!data.hasTimedData("consumption_" + nodeName_)) {
+        throw;
+    }
+    auto consumption = data.getTimedData("consumption_" + nodeName_);
+    for (auto ts : data.getTimeStamps()) {
         auto balanceConstraint =
-                &problem.addBalanceConstraint("Balance_" + nodeName_ + "_" + to_string(ts), consumption_[ts], consumption_[ts], nodeName_, ts);
+                &problem.addBalanceConstraint("Balance_" + nodeName_ + "_" + to_string(ts), consumption[ts], consumption[ts], nodeName_, ts);
 
         for (auto* battery : batteries_) {
             auto p = &problem.getVariable(battery->getPVarName(ts));
@@ -55,5 +57,13 @@ void Balance::addObjective(Antares::optim::api::LinearProblem& problem, const Li
 
 void Balance::update(Antares::optim::api::LinearProblem& problem, const LinearProblemData& data)
 {
-    // nothing to do
+    if (!data.hasTimedData("consumption_" + nodeName_)) {
+        throw;
+    }
+    auto consumption = data.getTimedData("consumption_" + nodeName_);
+    for (auto ts : data.getTimeStamps()) {
+        auto balanceConstraint = &problem.getConstraint("Balance_" + nodeName_ + "_" + to_string(ts));
+        balanceConstraint->SetLB(consumption[ts]);
+        balanceConstraint->SetUB(consumption[ts]);
+    }
 }

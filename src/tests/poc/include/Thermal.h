@@ -1,5 +1,7 @@
 #pragma once
 
+#include <utility>
+
 #include "vector"
 #include "antares/optim/api/LinearProblemFiller.h"
 
@@ -9,17 +11,13 @@ using namespace std;
 class Thermal : public LinearProblemFiller
 {
 private:
-    std::vector<int>& timeSteps_;
+    string id_;
     double maxP_;
-    vector<double>& pCost_; // TODO : put in LinearProblemData ?
+    vector<double> pCost_; // TODO : put in LinearProblemData ?
     vector<string> pVarNames;
 public:
-    Thermal(std::vector<int>& timeSteps, double maxP, vector<double>& pCost) :
-            timeSteps_(timeSteps), maxP_(maxP), pCost_(pCost)
-    {
-        pVarNames.reserve(timeSteps.size());
-    };
-
+    Thermal(string id, double maxP) : id_(std::move(id)), maxP_(maxP)
+    {}
     void addVariables(LinearProblem& problem, const LinearProblemData& data) override;
     void addConstraints(LinearProblem& problem, const LinearProblemData& data) override;
     void addObjective(LinearProblem& problem, const LinearProblemData& data) override;
@@ -31,11 +29,17 @@ public:
 
 void Thermal::addVariables(LinearProblem& problem, const LinearProblemData& data)
 {
-    for (auto ts : timeSteps_) {
-        string pVarName = "P_thermal_" + to_string(ts);
+    pVarNames.reserve(data.getTimeStamps().size());
+    for (auto ts : data.getTimeStamps()) {
+        string pVarName = "P_" + id_ + "_" + to_string(ts);
         problem.addNumVariable(pVarName, 0, maxP_);
         pVarNames.push_back(pVarName);
     }
+    // keep cost data for later (will be replaced with ports)
+    if (!data.hasTimedData("cost_" + id_)) {
+        throw;
+    }
+    pCost_ = data.getTimedData("cost_" + id_);
 }
 
 void Thermal::addConstraints(LinearProblem& problem, const LinearProblemData& data)
