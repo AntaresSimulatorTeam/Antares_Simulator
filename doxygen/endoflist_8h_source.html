@@ -16,7 +16,7 @@
 <meta name="twitter:title" content="Antares Simulator" />
 <meta name="twitter:description" content="Power System Simulator." />
 <!-- END twitter metadata -->
-<title>Antares Simulator: src/solver/variable/endoflist.h Source File</title>
+<title>Antares Simulator: src/solver/variable/include/antares/solver/variable/endoflist.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -215,10 +215,10 @@ $(document).ready(function(){initNavTree('endoflist_8h_source.html',''); initRes
 <div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> initializeFromArea(<a class="code hl_class" href="classAntares_1_1Data_1_1Study.html">Data::Study</a>*, <a class="code hl_class" href="classAntares_1_1Data_1_1Area.html">Data::Area</a>*)</div>
 <div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    {</div>
 <div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    }</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> initializeFromThermalCluster(Data::Study*, Data::Area*, Data::ThermalCluster*)</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> initializeFromThermalCluster(<a class="code hl_class" href="classAntares_1_1Data_1_1Study.html">Data::Study</a>*, <a class="code hl_class" href="classAntares_1_1Data_1_1Area.html">Data::Area</a>*, <a class="code hl_class" href="classAntares_1_1Data_1_1ThermalCluster.html">Data::ThermalCluster</a>*)</div>
 <div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    {</div>
 <div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    }</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> initializeFromAreaLink(Data::Study*, Data::AreaLink*)</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> initializeFromAreaLink(<a class="code hl_class" href="classAntares_1_1Data_1_1Study.html">Data::Study</a>*, <a class="code hl_class" href="classAntares_1_1Data_1_1AreaLink.html">Data::AreaLink</a>*)</div>
 <div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    {</div>
 <div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    }</div>
 <div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span> </div>
@@ -226,11 +226,11 @@ $(document).ready(function(){initNavTree('endoflist_8h_source.html',''); initRes
 <div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    {</div>
 <div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    }</div>
 <div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span> </div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>    <span class="keywordtype">void</span> getPrintStatusFromStudy([[maybe_unused]] Data::Study&amp; study)</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>    <span class="keywordtype">void</span> getPrintStatusFromStudy([[maybe_unused]] <a class="code hl_class" href="classAntares_1_1Data_1_1Study.html">Data::Study</a>&amp; study)</div>
 <div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    {</div>
 <div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    }</div>
 <div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span> </div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    <span class="keywordtype">void</span> supplyMaxNumberOfColumns([[maybe_unused]] Data::Study&amp; study)</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    <span class="keywordtype">void</span> supplyMaxNumberOfColumns([[maybe_unused]] <a class="code hl_class" href="classAntares_1_1Data_1_1Study.html">Data::Study</a>&amp; study)</div>
 <div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    {</div>
 <div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>    }</div>
 <div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span> </div>
@@ -246,21 +246,21 @@ $(document).ready(function(){initNavTree('endoflist_8h_source.html',''); initRes
 <div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>    {</div>
 <div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    }</div>
 <div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span> </div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> yearEndBuildPrepareDataForEachThermalCluster(State&amp; state, uint year, uint numSpace)</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> yearEndBuildPrepareDataForEachThermalCluster(<a class="code hl_class" href="classAntares_1_1State.html">State</a>&amp; state, uint year, uint numSpace)</div>
 <div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    {</div>
 <div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>        UNUSED_VARIABLE(state);</div>
 <div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>        UNUSED_VARIABLE(year);</div>
 <div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>        UNUSED_VARIABLE(numSpace);</div>
 <div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>    }</div>
 <div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span> </div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> yearEndBuildForEachThermalCluster(State&amp; state, uint year, uint numSpace)</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> yearEndBuildForEachThermalCluster(<a class="code hl_class" href="classAntares_1_1State.html">State</a>&amp; state, uint year, uint numSpace)</div>
 <div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>    {</div>
 <div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>        UNUSED_VARIABLE(state);</div>
 <div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>        UNUSED_VARIABLE(year);</div>
 <div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>        UNUSED_VARIABLE(numSpace);</div>
 <div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>    }</div>
 <div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span> </div>
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> yearEndBuild(State&amp;, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span>)</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> yearEndBuild(<a class="code hl_class" href="classAntares_1_1State.html">State</a>&amp;, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span>)</div>
 <div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>    {</div>
 <div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>    }</div>
 <div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> yearEnd(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span>, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span>)</div>
@@ -299,16 +299,16 @@ $(document).ready(function(){initNavTree('endoflist_8h_source.html',''); initRes
 <div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>    {</div>
 <div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>    }</div>
 <div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span> </div>
-<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> weekBegin(State&amp;)</div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> weekBegin(<a class="code hl_class" href="classAntares_1_1State.html">State</a>&amp;)</div>
 <div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>    {</div>
 <div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>    }</div>
 <div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span> </div>
-<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> weekForEachArea(State&amp;, uint numSpace)</div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> weekForEachArea(<a class="code hl_class" href="classAntares_1_1State.html">State</a>&amp;, uint numSpace)</div>
 <div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>    {</div>
 <div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>        UNUSED_VARIABLE(numSpace);</div>
 <div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>    }</div>
 <div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span> </div>
-<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> weekEnd(State&amp;)</div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> weekEnd(<a class="code hl_class" href="classAntares_1_1State.html">State</a>&amp;)</div>
 <div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>    {</div>
 <div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>    }</div>
 <div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span> </div>
@@ -316,17 +316,17 @@ $(document).ready(function(){initNavTree('endoflist_8h_source.html',''); initRes
 <div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>    {</div>
 <div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>    }</div>
 <div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span> </div>
-<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> hourForEachArea(State&amp;, uint numSpace)</div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> hourForEachArea(<a class="code hl_class" href="classAntares_1_1State.html">State</a>&amp;, uint numSpace)</div>
 <div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>    {</div>
 <div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>        UNUSED_VARIABLE(numSpace);</div>
 <div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>    }</div>
 <div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span> </div>
-<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> hourForEachLink(State&amp;, uint numSpace)</div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> hourForEachLink(<a class="code hl_class" href="classAntares_1_1State.html">State</a>&amp;, uint numSpace)</div>
 <div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>    {</div>
 <div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>        UNUSED_VARIABLE(numSpace);</div>
 <div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>    }</div>
 <div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span> </div>
-<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> hourEnd(State&amp;, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span>)</div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> hourEnd(<a class="code hl_class" href="classAntares_1_1State.html">State</a>&amp;, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span>)</div>
 <div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>    {</div>
 <div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>    }</div>
 <div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span> </div>
@@ -362,7 +362,7 @@ $(document).ready(function(){initNavTree('endoflist_8h_source.html',''); initRes
 <div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>        assert(<span class="keyword">false</span>);</div>
 <div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>    }</div>
 <div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> SearchVCardT, <span class="keyword">class</span> O&gt;</div>
-<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> computeSpatialAggregateWith(O&amp;, <span class="keyword">const</span> Data::Area*)</div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> computeSpatialAggregateWith(O&amp;, <span class="keyword">const</span> <a class="code hl_class" href="classAntares_1_1Data_1_1Area.html">Data::Area</a>*)</div>
 <div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>    {</div>
 <div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>        assert(<span class="keyword">false</span>);</div>
 <div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>    }</div>
@@ -374,7 +374,7 @@ $(document).ready(function(){initNavTree('endoflist_8h_source.html',''); initRes
 <div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>    }</div>
 <div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span> </div>
 <div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> VCardToFindT, <span class="keyword">class</span> O&gt;</div>
-<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> retrieveResultsForArea(O** <span class="comment">/*result*/</span>, <span class="keyword">const</span> Data::Area*)</div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> retrieveResultsForArea(O** <span class="comment">/*result*/</span>, <span class="keyword">const</span> <a class="code hl_class" href="classAntares_1_1Data_1_1Area.html">Data::Area</a>*)</div>
 <div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>    {</div>
 <div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>        <span class="comment">// Does nothing - this method may be called from a leaf</span></div>
 <div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>        <span class="comment">// Consequently we can not throw an error from here if the variable `result`</span></div>
@@ -382,7 +382,7 @@ $(document).ready(function(){initNavTree('endoflist_8h_source.html',''); initRes
 <div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>    }</div>
 <div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span> </div>
 <div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> VCardToFindT, <span class="keyword">class</span> O&gt;</div>
-<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> retrieveResultsForThermalCluster(O** <span class="comment">/*result*/</span>, <span class="keyword">const</span> Data::ThermalCluster*)</div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> retrieveResultsForThermalCluster(O** <span class="comment">/*result*/</span>, <span class="keyword">const</span> <a class="code hl_class" href="classAntares_1_1Data_1_1ThermalCluster.html">Data::ThermalCluster</a>*)</div>
 <div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>    {</div>
 <div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>        <span class="comment">// Does nothing - this method may be called from a leaf</span></div>
 <div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>        <span class="comment">// Consequently we can not throw an error from here if the variable `result`</span></div>
@@ -390,7 +390,7 @@ $(document).ready(function(){initNavTree('endoflist_8h_source.html',''); initRes
 <div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>    }</div>
 <div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span> </div>
 <div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> VCardToFindT, <span class="keyword">class</span> O&gt;</div>
-<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> retrieveResultsForLink(O** <span class="comment">/*result*/</span>, <span class="keyword">const</span> Data::AreaLink*)</div>
+<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> retrieveResultsForLink(O** <span class="comment">/*result*/</span>, <span class="keyword">const</span> <a class="code hl_class" href="classAntares_1_1Data_1_1AreaLink.html">Data::AreaLink</a>*)</div>
 <div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>    {</div>
 <div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>        <span class="comment">// Does nothing - this method may be called from a leaf</span></div>
 <div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>        <span class="comment">// Consequently we can not throw an error from here if the variable `result`</span></div>
@@ -410,12 +410,15 @@ $(document).ready(function(){initNavTree('endoflist_8h_source.html',''); initRes
 <div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>} <span class="comment">// namespace Antares</span></div>
 <div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span> </div>
 <div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span><span class="preprocessor">#endif </span><span class="comment">// __SOLVER_END_OF_LIST_END_OF_LIST_H__</span></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1AreaLink_html"><div class="ttname"><a href="classAntares_1_1Data_1_1AreaLink.html">Antares::Data::AreaLink</a></div><div class="ttdoc">Definition of a link between two areas (Interconnection)</div><div class="ttdef"><b>Definition:</b> links.h:48</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Area_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Area.html">Antares::Data::Area</a></div><div class="ttdoc">Definition for a single area.</div><div class="ttdef"><b>Definition:</b> area.h:48</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Study_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a></div><div class="ttdef"><b>Definition:</b> study.h:60</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1ThermalCluster_html"><div class="ttname"><a href="classAntares_1_1Data_1_1ThermalCluster.html">Antares::Data::ThermalCluster</a></div><div class="ttdoc">A single thermal cluster.</div><div class="ttdef"><b>Definition:</b> cluster.h:74</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Container_1_1EndOfList_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Container_1_1EndOfList.html">Antares::Solver::Variable::Container::EndOfList</a></div><div class="ttdef"><b>Definition:</b> endoflist.h:41</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Container_1_1EndOfList_html_a1c12a0a9fd2d541e5f88f5dbd6de42f8"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Container_1_1EndOfList.html#a1c12a0a9fd2d541e5f88f5dbd6de42f8">Antares::Solver::Variable::Container::EndOfList::NextType</a></div><div class="ttdeci">void NextType</div><div class="ttdoc">Type of the next static variable.</div><div class="ttdef"><b>Definition:</b> endoflist.h:44</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Container_1_1EndOfList_html_a742e17a7fcbe14f9aade5ad648d5aa04"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Container_1_1EndOfList.html#a742e17a7fcbe14f9aade5ad648d5aa04">Antares::Solver::Variable::Container::EndOfList::RetrieveVariableList</a></div><div class="ttdeci">static void RetrieveVariableList(PredicateT &amp;)</div><div class="ttdoc">Retrieve the list of all individual variables.</div><div class="ttdef"><b>Definition:</b> endoflist.h:69</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Container_1_1EndOfList_html_a8c73d560516460063a081124a873d712a02c9b73b88bdc94a9f862b504f0d0ec0"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Container_1_1EndOfList.html#a8c73d560516460063a081124a873d712a02c9b73b88bdc94a9f862b504f0d0ec0">Antares::Solver::Variable::Container::EndOfList::count</a></div><div class="ttdeci">@ count</div><div class="ttdoc">How many items have we got.</div><div class="ttdef"><b>Definition:</b> endoflist.h:49</div></div>
+<div class="ttc" id="aclassAntares_1_1State_html"><div class="ttname"><a href="classAntares_1_1State.html">Antares::State</a></div><div class="ttdef"><b>Definition:</b> cbuilder.h:114</div></div>
 <div class="ttc" id="aclassVariable_html"><div class="ttname"><a href="classVariable.html">Variable</a></div><div class="ttdef"><b>Definition:</b> variable.h:25</div></div>
 <div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1Container_1_1EndOfList_1_1Statistics_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1Container_1_1EndOfList_1_1Statistics.html">Antares::Solver::Variable::Container::EndOfList::Statistics</a></div><div class="ttdef"><b>Definition:</b> endoflist.h:54</div></div>
 </div><!-- fragment --></div><!-- contents -->
@@ -423,7 +426,7 @@ $(document).ready(function(){initNavTree('endoflist_8h_source.html',''); initRes
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_041db6ad6a3d44280e40e5af409429cb.html">solver</a></li><li class="navelem"><a class="el" href="dir_3e822a6ee4d724687cb7bda3e29a5b91.html">variable</a></li><li class="navelem"><b>endoflist.h</b></li>
+    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_041db6ad6a3d44280e40e5af409429cb.html">solver</a></li><li class="navelem"><a class="el" href="dir_3e822a6ee4d724687cb7bda3e29a5b91.html">variable</a></li><li class="navelem"><a class="el" href="dir_20840d7036cd3874771cb5f002fb682a.html">include</a></li><li class="navelem"><a class="el" href="dir_788e7f05e8620bbe44f03aee5eae2ddd.html">antares</a></li><li class="navelem"><a class="el" href="dir_8f58b5f8d3a1b7f0f618eab98f86bc8f.html">solver</a></li><li class="navelem"><a class="el" href="dir_6eccbe1c151b0c708db2d7dc07169755.html">variable</a></li><li class="navelem"><b>endoflist.h</b></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
   </ul>
 </div>

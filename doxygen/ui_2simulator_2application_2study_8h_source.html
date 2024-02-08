@@ -163,7 +163,7 @@ $(document).ready(function(){initNavTree('ui_2simulator_2application_2study_8h_s
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &lt;antares/study/output.h&gt;</span></div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#include &lt;yuni/core/event.h&gt;</span></div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#include &lt;list&gt;</span></div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#include &lt;antares/solver.h&gt;</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#include &lt;antares/locator/locator.h&gt;</span></div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="preprocessor">#include &quot;ui/simulator/toolbox/components/map/settings.h&quot;</span></div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
@@ -216,7 +216,7 @@ $(document).ready(function(){initNavTree('ui_2simulator_2application_2study_8h_s
 <div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span> </div>
 <div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span><span class="keywordtype">void</span> UpdateGUIFromStudyState();</div>
 <div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span> </div>
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span><span class="keywordtype">bool</span> StudyRenameArea(Data::Area* area, <span class="keyword">const</span> AnyString&amp; newname, Data::Study* study = <span class="keyword">nullptr</span>);</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span><span class="keywordtype">bool</span> StudyRenameArea(<a class="code hl_class" href="classAntares_1_1Data_1_1Area.html">Data::Area</a>* area, <span class="keyword">const</span> AnyString&amp; newname, <a class="code hl_class" href="classAntares_1_1Data_1_1Study.html">Data::Study</a>* study = <span class="keyword">nullptr</span>);</div>
 <div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span> </div>
 <div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span><span class="keywordtype">void</span> MarkTheStudyAsModified();</div>
 <div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span> </div>
@@ -242,7 +242,7 @@ $(document).ready(function(){initNavTree('ui_2simulator_2application_2study_8h_s
 <div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span> </div>
 <div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span><span class="keyword">extern</span> Yuni::Event&lt;void()&gt; OnStudySavedAs;</div>
 <div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span> </div>
-<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span><span class="keyword">extern</span> Yuni::Event&lt;void(Data::Study&amp;)&gt; OnStudyChanged;</div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span><span class="keyword">extern</span> Yuni::Event&lt;void(<a class="code hl_class" href="classAntares_1_1Data_1_1Study.html">Data::Study</a>&amp;)&gt; OnStudyChanged;</div>
 <div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span> </div>
 <div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span><span class="keyword">extern</span> Yuni::Event&lt;void()&gt; OnStudyAreasChanged;</div>
 <div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span> </div>
@@ -251,25 +251,25 @@ $(document).ready(function(){initNavTree('ui_2simulator_2application_2study_8h_s
 <div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span><span class="keyword">extern</span> Yuni::Event&lt;void(<span class="keyword">const</span> <a class="code hl_typedef" href="classAntares_1_1Data_1_1Output.html#a34c79a6070e8b14d52a95847b4caef50">Data::Output::List</a>&amp;, <span class="keyword">const</span> <a class="code hl_typedef" href="classAntares_1_1Data_1_1Output.html#ab42e1015a606b7ddc2276d2db4a170e2">Data::Output::Ptr</a>)&gt;</div>
 <div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>  OnStudyUpdateOutputInfo;</div>
 <div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span> </div>
-<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span><span class="keyword">extern</span> Yuni::Event&lt;void(Data::Area*)&gt; OnStudyAreaRename;</div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span><span class="keyword">extern</span> Yuni::Event&lt;void(<a class="code hl_class" href="classAntares_1_1Data_1_1Area.html">Data::Area</a>*)&gt; OnStudyAreaRename;</div>
 <div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span> </div>
-<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span><span class="keyword">extern</span> Yuni::Event&lt;void(Data::Area*)&gt; OnStudyAreaAdded;</div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span><span class="keyword">extern</span> Yuni::Event&lt;void(<a class="code hl_class" href="classAntares_1_1Data_1_1Area.html">Data::Area</a>*)&gt; OnStudyAreaAdded;</div>
 <div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span> </div>
-<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span><span class="keyword">extern</span> Yuni::Event&lt;void(Data::Area*)&gt; OnStudyAreaDelete;</div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span><span class="keyword">extern</span> Yuni::Event&lt;void(<a class="code hl_class" href="classAntares_1_1Data_1_1Area.html">Data::Area</a>*)&gt; OnStudyAreaDelete;</div>
 <div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span> </div>
-<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span><span class="keyword">extern</span> Yuni::Event&lt;void(Data::Area*)&gt; OnStudyAreaColorChanged;</div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span><span class="keyword">extern</span> Yuni::Event&lt;void(<a class="code hl_class" href="classAntares_1_1Data_1_1Area.html">Data::Area</a>*)&gt; OnStudyAreaColorChanged;</div>
 <div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span> </div>
-<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span><span class="keyword">extern</span> Yuni::Event&lt;void(Data::AreaLink*)&gt; OnStudyLinkAdded;</div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span><span class="keyword">extern</span> Yuni::Event&lt;void(<a class="code hl_class" href="classAntares_1_1Data_1_1AreaLink.html">Data::AreaLink</a>*)&gt; OnStudyLinkAdded;</div>
 <div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span> </div>
-<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span><span class="keyword">extern</span> Yuni::Event&lt;void(Data::AreaLink*)&gt; OnStudyLinkDelete;</div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span><span class="keyword">extern</span> Yuni::Event&lt;void(<a class="code hl_class" href="classAntares_1_1Data_1_1AreaLink.html">Data::AreaLink</a>*)&gt; OnStudyLinkDelete;</div>
 <div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span> </div>
-<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span><span class="keyword">extern</span> Yuni::Event&lt;void(Data::AreaLink*)&gt; OnStudyLinkChanged;</div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span><span class="keyword">extern</span> Yuni::Event&lt;void(<a class="code hl_class" href="classAntares_1_1Data_1_1AreaLink.html">Data::AreaLink</a>*)&gt; OnStudyLinkChanged;</div>
 <div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span> </div>
-<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span><span class="keyword">extern</span> Yuni::Event&lt;void(Data::BindingConstraint*)&gt; OnStudyConstraintAdded;</div>
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span><span class="keyword">extern</span> Yuni::Event&lt;void(<a class="code hl_class" href="classAntares_1_1Data_1_1BindingConstraint.html">Data::BindingConstraint</a>*)&gt; OnStudyConstraintAdded;</div>
 <div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span> </div>
-<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span><span class="keyword">extern</span> Yuni::Event&lt;void(Data::BindingConstraint*)&gt; OnStudyConstraintDelete;</div>
+<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span><span class="keyword">extern</span> Yuni::Event&lt;void(<a class="code hl_class" href="classAntares_1_1Data_1_1BindingConstraint.html">Data::BindingConstraint</a>*)&gt; OnStudyConstraintDelete;</div>
 <div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span> </div>
-<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span><span class="keyword">extern</span> Yuni::Event&lt;void(Data::BindingConstraint*)&gt; OnStudyConstraintModified;</div>
+<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span><span class="keyword">extern</span> Yuni::Event&lt;void(<a class="code hl_class" href="classAntares_1_1Data_1_1BindingConstraint.html">Data::BindingConstraint</a>*)&gt; OnStudyConstraintModified;</div>
 <div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span> </div>
 <div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span><span class="keyword">extern</span> Yuni::Event&lt;void()&gt; OnStudyNodalOptimizationChanged;</div>
 <div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span> </div>
@@ -281,13 +281,13 @@ $(document).ready(function(){initNavTree('ui_2simulator_2application_2study_8h_s
 <div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span> </div>
 <div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span><span class="keyword">extern</span> Yuni::Event&lt;void()&gt; OnStudyThermalClusterCommonSettingsChanged;</div>
 <div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span> </div>
-<div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span><span class="keyword">extern</span> Yuni::Event&lt;void(Data::ThermalCluster*)&gt; OnStudyThermalClusterRenamed;</div>
-<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span><span class="keyword">extern</span> Yuni::Event&lt;void(Data::Area*)&gt; OnStudyThermalClusterGroupChanged;</div>
+<div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span><span class="keyword">extern</span> Yuni::Event&lt;void(<a class="code hl_class" href="classAntares_1_1Data_1_1ThermalCluster.html">Data::ThermalCluster</a>*)&gt; OnStudyThermalClusterRenamed;</div>
+<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span><span class="keyword">extern</span> Yuni::Event&lt;void(<a class="code hl_class" href="classAntares_1_1Data_1_1Area.html">Data::Area</a>*)&gt; OnStudyThermalClusterGroupChanged;</div>
 <div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span> </div>
 <div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span><span class="keyword">extern</span> Yuni::Event&lt;void()&gt; OnStudyRenewableClusterCommonSettingsChanged;</div>
 <div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span> </div>
-<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span><span class="keyword">extern</span> Yuni::Event&lt;void(Data::RenewableCluster*)&gt; OnStudyRenewableClusterRenamed;</div>
-<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span><span class="keyword">extern</span> Yuni::Event&lt;void(Data::Area*)&gt; OnStudyRenewableClusterGroupChanged;</div>
+<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span><span class="keyword">extern</span> Yuni::Event&lt;void(<a class="code hl_class" href="classAntares_1_1Data_1_1RenewableCluster.html">Data::RenewableCluster</a>*)&gt; OnStudyRenewableClusterRenamed;</div>
+<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span><span class="keyword">extern</span> Yuni::Event&lt;void(<a class="code hl_class" href="classAntares_1_1Data_1_1Area.html">Data::Area</a>*)&gt; OnStudyRenewableClusterGroupChanged;</div>
 <div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span> </div>
 <div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span><span class="keyword">extern</span> Yuni::Event&lt;void()&gt; OnStudyScenarioBuilderDataAreLoaded;</div>
 <div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span> </div>
@@ -350,8 +350,14 @@ $(document).ready(function(){initNavTree('ui_2simulator_2application_2study_8h_s
 <div class="line"><a id="l00415" name="l00415"></a><span class="lineno">  415</span>} <span class="comment">// namespace Antares</span></div>
 <div class="line"><a id="l00416" name="l00416"></a><span class="lineno">  416</span> </div>
 <div class="line"><a id="l00417" name="l00417"></a><span class="lineno">  417</span><span class="preprocessor">#endif </span><span class="comment">// __ANTARES_APPLICATION_STUDY_H__</span></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1AreaLink_html"><div class="ttname"><a href="classAntares_1_1Data_1_1AreaLink.html">Antares::Data::AreaLink</a></div><div class="ttdoc">Definition of a link between two areas (Interconnection)</div><div class="ttdef"><b>Definition:</b> links.h:48</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1Area_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Area.html">Antares::Data::Area</a></div><div class="ttdoc">Definition for a single area.</div><div class="ttdef"><b>Definition:</b> area.h:48</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1BindingConstraint_html"><div class="ttname"><a href="classAntares_1_1Data_1_1BindingConstraint.html">Antares::Data::BindingConstraint</a></div><div class="ttdef"><b>Definition:</b> BindingConstraint.h:46</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Output_html_a34c79a6070e8b14d52a95847b4caef50"><div class="ttname"><a href="classAntares_1_1Data_1_1Output.html#a34c79a6070e8b14d52a95847b4caef50">Antares::Data::Output::List</a></div><div class="ttdeci">std::list&lt; Ptr &gt; List</div><div class="ttdoc">List.</div><div class="ttdef"><b>Definition:</b> output.h:41</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Output_html_ab42e1015a606b7ddc2276d2db4a170e2"><div class="ttname"><a href="classAntares_1_1Data_1_1Output.html#ab42e1015a606b7ddc2276d2db4a170e2">Antares::Data::Output::Ptr</a></div><div class="ttdeci">std::shared_ptr&lt; Output &gt; Ptr</div><div class="ttdoc">Smartptr.</div><div class="ttdef"><b>Definition:</b> output.h:39</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1RenewableCluster_html"><div class="ttname"><a href="classAntares_1_1Data_1_1RenewableCluster.html">Antares::Data::RenewableCluster</a></div><div class="ttdef"><b>Definition:</b> cluster.h:49</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1Study_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a></div><div class="ttdef"><b>Definition:</b> study.h:60</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1ThermalCluster_html"><div class="ttname"><a href="classAntares_1_1Data_1_1ThermalCluster.html">Antares::Data::ThermalCluster</a></div><div class="ttdoc">A single thermal cluster.</div><div class="ttdef"><b>Definition:</b> cluster.h:74</div></div>
 <div class="ttc" id="aclassAntares_1_1MemoryFlushLocker_html"><div class="ttname"><a href="classAntares_1_1MemoryFlushLocker.html">Antares::MemoryFlushLocker</a></div><div class="ttdoc">Avoid the execution of a memory flush.</div><div class="ttdef"><b>Definition:</b> study.h:403</div></div>
 <div class="ttc" id="aclassAntares_1_1StudyUpdateLocker_html"><div class="ttname"><a href="classAntares_1_1StudyUpdateLocker.html">Antares::StudyUpdateLocker</a></div><div class="ttdoc">Avoid the use of the data related to a study for the lifetime of the object (RAII)</div><div class="ttdef"><b>Definition:</b> study.h:387</div></div>
 </div><!-- fragment --></div><!-- contents -->

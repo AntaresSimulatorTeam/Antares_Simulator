@@ -16,7 +16,7 @@
 <meta name="twitter:title" content="Antares Simulator" />
 <meta name="twitter:description" content="Power System Simulator." />
 <!-- END twitter metadata -->
-<title>Antares Simulator: src/libs/antares/correlation/antares/correlation/correlation.hxx Source File</title>
+<title>Antares Simulator: src/libs/antares/correlation/include/antares/correlation/correlation.hxx Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -162,12 +162,12 @@ $(document).ready(function(){initNavTree('correlation_8hxx_source.html',''); ini
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>{</div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="keyword">namespace </span>Data</div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>{</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="keyword">inline</span> <span class="keywordtype">void</span> InterAreaCorrelationResetMatrix(Matrix&lt;&gt;* m, AreaList* l)</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="keyword">inline</span> <span class="keywordtype">void</span> InterAreaCorrelationResetMatrix(<a class="code hl_class" href="classAntares_1_1Matrix.html">Matrix&lt;&gt;</a>* m, AreaList* l)</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>{</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    assert(NULL != m);</div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    assert(NULL != l);</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    m-&gt;resize(l-&gt;size(), l-&gt;size());</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    m-&gt;fillUnit();</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    m-&gt;<a class="code hl_function" href="classAntares_1_1Matrix.html#a97823ff73bcf91cc895d4062694b9274">resize</a>(l-&gt;size(), l-&gt;size());</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    m-&gt;<a class="code hl_function" href="classAntares_1_1Matrix.html#af1d70e01bafdf778ca902a1b44a2cea1">fillUnit</a>();</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>}</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1Correlation.html#a0f8f7010c990e6d275eb91ebe2647df6">   37</a></span><span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classAntares_1_1Data_1_1Correlation.html#ad24b833b9dd6761ddbce73d18e4edc37">Correlation::mode</a>(Correlation::Mode mode)</div>
@@ -200,15 +200,17 @@ $(document).ready(function(){initNavTree('correlation_8hxx_source.html',''); ini
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="preprocessor">#endif </span><span class="comment">// __ANTARES_LIBS_ARRAY_CORRELATION_HXX__</span></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Area_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Area.html">Antares::Data::Area</a></div><div class="ttdoc">Definition for a single area.</div><div class="ttdef"><b>Definition:</b> area.h:48</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Area_html_a6f0836ad1bea1b15b6479567ba18054a"><div class="ttname"><a href="classAntares_1_1Data_1_1Area.html#a6f0836ad1bea1b15b6479567ba18054a">Antares::Data::Area::name</a></div><div class="ttdeci">AreaName name</div><div class="ttdoc">Name of the area.</div><div class="ttdef"><b>Definition:</b> area.h:216</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1Correlation_html_a8101296f7fc0b4db5722e0f6e0cb05e1"><div class="ttname"><a href="classAntares_1_1Data_1_1Correlation.html#a8101296f7fc0b4db5722e0f6e0cb05e1">Antares::Data::Correlation::correlationName</a></div><div class="ttdeci">Yuni::CString&lt; 30, false &gt; correlationName</div><div class="ttdoc">The name to displays in logs.</div><div class="ttdef"><b>Definition:</b> correlation.h:156</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1Correlation_html_a8101296f7fc0b4db5722e0f6e0cb05e1"><div class="ttname"><a href="classAntares_1_1Data_1_1Correlation.html#a8101296f7fc0b4db5722e0f6e0cb05e1">Antares::Data::Correlation::correlationName</a></div><div class="ttdeci">Yuni::CString&lt; 30, false &gt; correlationName</div><div class="ttdoc">The name to displays in logs.</div><div class="ttdef"><b>Definition:</b> correlation.h:154</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Correlation_html_ad24b833b9dd6761ddbce73d18e4edc37"><div class="ttname"><a href="classAntares_1_1Data_1_1Correlation.html#ad24b833b9dd6761ddbce73d18e4edc37">Antares::Data::Correlation::mode</a></div><div class="ttdeci">Mode mode() const</div><div class="ttdoc">Get the current mode.</div><div class="ttdef"><b>Definition:</b> correlation.hxx:42</div></div>
 <div class="ttc" id="aclassAntares_1_1Matrix_html"><div class="ttname"><a href="classAntares_1_1Matrix.html">Antares::Matrix</a></div><div class="ttdoc">A n-by-n matrix.</div><div class="ttdef"><b>Definition:</b> matrix.h:44</div></div>
+<div class="ttc" id="aclassAntares_1_1Matrix_html_a97823ff73bcf91cc895d4062694b9274"><div class="ttname"><a href="classAntares_1_1Matrix.html#a97823ff73bcf91cc895d4062694b9274">Antares::Matrix::resize</a></div><div class="ttdeci">void resize(uint w, uint h, bool fixedSize=false)</div><div class="ttdoc">Resize the matrix.</div><div class="ttdef"><b>Definition:</b> matrix.hxx:539</div></div>
+<div class="ttc" id="aclassAntares_1_1Matrix_html_af1d70e01bafdf778ca902a1b44a2cea1"><div class="ttname"><a href="classAntares_1_1Matrix.html#af1d70e01bafdf778ca902a1b44a2cea1">Antares::Matrix::fillUnit</a></div><div class="ttdeci">void fillUnit()</div><div class="ttdoc">Make the matrix an unit matrix (identity matrix)</div><div class="ttdef"><b>Definition:</b> matrix.hxx:320</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_87a455bccb09a92130c26a11a880c98a.html">libs</a></li><li class="navelem"><a class="el" href="dir_f35d736e29d8243b24d0b8688c8560d6.html">antares</a></li><li class="navelem"><a class="el" href="dir_aef4ffec0fc7155945a4149bf41af958.html">correlation</a></li><li class="navelem"><a class="el" href="dir_817762309f325164157efca8aad2274a.html">antares</a></li><li class="navelem"><a class="el" href="dir_167851e2c0cdbda924a43187c5fd1717.html">correlation</a></li><li class="navelem"><b>correlation.hxx</b></li>
+    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_87a455bccb09a92130c26a11a880c98a.html">libs</a></li><li class="navelem"><a class="el" href="dir_f35d736e29d8243b24d0b8688c8560d6.html">antares</a></li><li class="navelem"><a class="el" href="dir_aef4ffec0fc7155945a4149bf41af958.html">correlation</a></li><li class="navelem"><a class="el" href="dir_fde180139199bec15b9fd75fbc6f35e7.html">include</a></li><li class="navelem"><a class="el" href="dir_b2c00eafa331cd58f63e515aea3b86b6.html">antares</a></li><li class="navelem"><a class="el" href="dir_3427371fd7d6dc8a679c3fe5e7764794.html">correlation</a></li><li class="navelem"><b>correlation.hxx</b></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
   </ul>
 </div>

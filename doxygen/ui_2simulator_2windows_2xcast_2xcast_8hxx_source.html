@@ -356,11 +356,11 @@ $(document).ready(function(){initNavTree('ui_2simulator_2windows_2xcast_2xcast_8
 <div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>    <span class="keywordflow">if</span> (!pArea)</div>
 <div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>        <span class="keywordflow">return</span>;</div>
 <div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span> </div>
-<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>    Data::XCast* xcast = pArea-&gt;xcastData&lt;T&gt;();</div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>    <a class="code hl_class" href="classAntares_1_1Data_1_1XCast.html">Data::XCast</a>* xcast = pArea-&gt;xcastData&lt;T&gt;();</div>
 <div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>    <span class="keywordflow">if</span> (!xcast)</div>
 <div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>        <span class="keywordflow">return</span>;</div>
 <div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span> </div>
-<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>    <span class="keywordflow">if</span> (xcast-&gt;useConversion != evt.IsChecked())</div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>    <span class="keywordflow">if</span> (xcast-&gt;<a class="code hl_variable" href="classAntares_1_1Data_1_1XCast.html#a558d6d6a8892a31904dde504f02c6703">useConversion</a> != evt.IsChecked())</div>
 <div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>    {</div>
 <div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>        xcast-&gt;<a class="code hl_variable" href="classAntares_1_1Data_1_1XCast.html#a558d6d6a8892a31904dde504f02c6703">useConversion</a> = evt.IsChecked();</div>
 <div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>        MarkTheStudyAsModified();</div>
@@ -374,16 +374,16 @@ $(document).ready(function(){initNavTree('ui_2simulator_2windows_2xcast_2xcast_8
 <div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>    wxChoice* obj = (wxChoice*)evt.GetEventObject();</div>
 <div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>    <span class="keywordflow">if</span> (obj and pArea)</div>
 <div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>    {</div>
-<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>        Data::XCast* xcast = pArea-&gt;xcastData&lt;T&gt;();</div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>        <a class="code hl_class" href="classAntares_1_1Data_1_1XCast.html">Data::XCast</a>* xcast = pArea-&gt;xcastData&lt;T&gt;();</div>
 <div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>        <span class="keywordflow">if</span> (!xcast)</div>
 <div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>            <span class="keywordflow">return</span>;</div>
 <div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span> </div>
 <div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>        YString s;</div>
 <div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>        wxStringToString(obj-&gt;GetStringSelection(), s);</div>
 <div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>        <a class="code hl_enumeration" href="classAntares_1_1Data_1_1XCast.html#a9d63568c3e292b02528b7dd1c99c2abc">Data::XCast::TSTranslationUse</a> d = Data::XCast::CStringToTSTranslationUse(s);</div>
-<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>        <span class="keywordflow">if</span> (d != xcast-&gt;useTranslation)</div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>        <span class="keywordflow">if</span> (d != xcast-&gt;<a class="code hl_variable" href="classAntares_1_1Data_1_1XCast.html#a5405b02aedc965a25a743b9aeb24b9c9">useTranslation</a>)</div>
 <div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>        {</div>
-<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>            xcast-&gt;useTranslation = d;</div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>            xcast-&gt;<a class="code hl_variable" href="classAntares_1_1Data_1_1XCast.html#a5405b02aedc965a25a743b9aeb24b9c9">useTranslation</a> = d;</div>
 <div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>            MarkTheStudyAsModified();</div>
 <div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>            Window::Inspector::Refresh();</div>
 <div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>        }</div>
@@ -405,7 +405,7 @@ $(document).ready(function(){initNavTree('ui_2simulator_2windows_2xcast_2xcast_8
 <div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>}</div>
 <div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span> </div>
 <div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span><span class="keyword">template</span>&lt;enum Data::TimeSeriesType T&gt;</div>
-<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span><span class="keywordtype">void</span> XCast&lt;T&gt;::onAreaChanged(Data::Area* area)</div>
+<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span><span class="keywordtype">void</span> XCast&lt;T&gt;::onAreaChanged(<a class="code hl_class" href="classAntares_1_1Data_1_1Area.html">Data::Area</a>* area)</div>
 <div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>{</div>
 <div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>    <span class="keyword">using namespace </span>Yuni;</div>
 <div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>    <span class="comment">// Keeping a pointer to the current area</span></div>
@@ -414,21 +414,21 @@ $(document).ready(function(){initNavTree('ui_2simulator_2windows_2xcast_2xcast_8
 <div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>    <span class="comment">// Updating the installed capacity of the current area</span></div>
 <div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>    <span class="keywordflow">if</span> (pArea)</div>
 <div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>    {</div>
-<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>        Data::XCast* xcast = pArea-&gt;xcastData&lt;T&gt;();</div>
+<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>        <a class="code hl_class" href="classAntares_1_1Data_1_1XCast.html">Data::XCast</a>* xcast = pArea-&gt;xcastData&lt;T&gt;();</div>
 <div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>        <span class="keywordflow">if</span> (xcast)</div>
 <div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>        {</div>
 <div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>            <span class="comment">// Capacity</span></div>
-<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>            pInstalledCapacity-&gt;ChangeValue(DoubleToWxString(xcast-&gt;capacity));</div>
+<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>            pInstalledCapacity-&gt;ChangeValue(DoubleToWxString(xcast-&gt;<a class="code hl_variable" href="classAntares_1_1Data_1_1XCast.html#a45cf83d40b900b21cdc7184a8c503e69">capacity</a>));</div>
 <div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span> </div>
 <div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>            <span class="comment">// Distribution</span></div>
-<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>            <span class="keywordtype">int</span> indx = (int)xcast-&gt;distribution - 1;</div>
+<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>            <span class="keywordtype">int</span> indx = (int)xcast-&gt;<a class="code hl_variable" href="classAntares_1_1Data_1_1XCast.html#a240744a269ed67cb44095210d09bfdd4">distribution</a> - 1;</div>
 <div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>            if (indx &lt; 0 or indx &gt; 5)</div>
 <div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span>                indx = 1;</div>
 <div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span>            pDistribution-&gt;SetSelection(indx);</div>
 <div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span> </div>
 <div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span>            <span class="comment">// Transfert</span></div>
-<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span>            useConversion-&gt;SetValue(xcast-&gt;useConversion);</div>
-<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span>            useTranslation-&gt;SetSelection((<span class="keywordtype">int</span>)xcast-&gt;useTranslation);</div>
+<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span>            useConversion-&gt;SetValue(xcast-&gt;<a class="code hl_variable" href="classAntares_1_1Data_1_1XCast.html#a558d6d6a8892a31904dde504f02c6703">useConversion</a>);</div>
+<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span>            useTranslation-&gt;SetSelection((<span class="keywordtype">int</span>)xcast-&gt;<a class="code hl_variable" href="classAntares_1_1Data_1_1XCast.html#a5405b02aedc965a25a743b9aeb24b9c9">useTranslation</a>);</div>
 <div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span>            <span class="keywordflow">return</span>;</div>
 <div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span>        }</div>
 <div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span>    }</div>
@@ -448,10 +448,10 @@ $(document).ready(function(){initNavTree('ui_2simulator_2windows_2xcast_2xcast_8
 <div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span>    <span class="keywordflow">if</span> (d &lt; 0.)</div>
 <div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span>        d = 0.;</div>
 <div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span> </div>
-<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>    Data::XCast* xcastData = pArea-&gt;xcastData&lt;T&gt;();</div>
-<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>    <span class="keywordflow">if</span> (xcastData and not Yuni::Math::Equals(d, xcastData-&gt;capacity))</div>
+<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>    <a class="code hl_class" href="classAntares_1_1Data_1_1XCast.html">Data::XCast</a>* xcastData = pArea-&gt;xcastData&lt;T&gt;();</div>
+<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>    <span class="keywordflow">if</span> (xcastData and not Yuni::Math::Equals(d, xcastData-&gt;<a class="code hl_variable" href="classAntares_1_1Data_1_1XCast.html#a45cf83d40b900b21cdc7184a8c503e69">capacity</a>))</div>
 <div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span>    {</div>
-<div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span>        xcastData-&gt;capacity = d;</div>
+<div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span>        xcastData-&gt;<a class="code hl_variable" href="classAntares_1_1Data_1_1XCast.html#a45cf83d40b900b21cdc7184a8c503e69">capacity</a> = d;</div>
 <div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span>        MarkTheStudyAsModified();</div>
 <div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span>    }</div>
 <div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span>}</div>
@@ -469,15 +469,18 @@ $(document).ready(function(){initNavTree('ui_2simulator_2windows_2xcast_2xcast_8
 <div class="ttc" id="aclassAntares_1_1Component_1_1Notebook_html"><div class="ttname"><a href="classAntares_1_1Component_1_1Notebook.html">Antares::Component::Notebook</a></div><div class="ttdoc">Notebook.</div><div class="ttdef"><b>Definition:</b> notebook.h:38</div></div>
 <div class="ttc" id="aclassAntares_1_1Component_1_1Notebook_html_aa87e3b1c4d185ad341573c0f3f723e6e"><div class="ttname"><a href="classAntares_1_1Component_1_1Notebook.html#aa87e3b1c4d185ad341573c0f3f723e6e">Antares::Component::Notebook::theme</a></div><div class="ttdeci">void theme(Theme t)</div><div class="ttdoc">Set the current theme.</div><div class="ttdef"><b>Definition:</b> notebook.h:281</div></div>
 <div class="ttc" id="aclassAntares_1_1Component_1_1Panel_html"><div class="ttname"><a href="classAntares_1_1Component_1_1Panel.html">Antares::Component::Panel</a></div><div class="ttdoc">Panel implementation.</div><div class="ttdef"><b>Definition:</b> panel.h:36</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1Area_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Area.html">Antares::Data::Area</a></div><div class="ttdoc">Definition for a single area.</div><div class="ttdef"><b>Definition:</b> area.h:48</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1XCast_html"><div class="ttname"><a href="classAntares_1_1Data_1_1XCast.html">Antares::Data::XCast</a></div><div class="ttdef"><b>Definition:</b> xcast.h:32</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1XCast_html_a240744a269ed67cb44095210d09bfdd4"><div class="ttname"><a href="classAntares_1_1Data_1_1XCast.html#a240744a269ed67cb44095210d09bfdd4">Antares::Data::XCast::distribution</a></div><div class="ttdeci">Distribution distribution</div><div class="ttdoc">The probability distribution to use.</div><div class="ttdef"><b>Definition:</b> xcast.h:190</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1XCast_html_a45cf83d40b900b21cdc7184a8c503e69"><div class="ttname"><a href="classAntares_1_1Data_1_1XCast.html#a45cf83d40b900b21cdc7184a8c503e69">Antares::Data::XCast::capacity</a></div><div class="ttdeci">double capacity</div><div class="ttdoc">The installed capacity.</div><div class="ttdef"><b>Definition:</b> xcast.h:193</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1XCast_html_a5405b02aedc965a25a743b9aeb24b9c9"><div class="ttname"><a href="classAntares_1_1Data_1_1XCast.html#a5405b02aedc965a25a743b9aeb24b9c9">Antares::Data::XCast::useTranslation</a></div><div class="ttdeci">TSTranslationUse useTranslation</div><div class="ttdoc">How to use the timeseries average.</div><div class="ttdef"><b>Definition:</b> xcast.h:187</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1XCast_html_a558d6d6a8892a31904dde504f02c6703"><div class="ttname"><a href="classAntares_1_1Data_1_1XCast.html#a558d6d6a8892a31904dde504f02c6703">Antares::Data::XCast::useConversion</a></div><div class="ttdeci">bool useConversion</div><div class="ttdoc">True to use the transfer function after the generation of the time-series.</div><div class="ttdef"><b>Definition:</b> xcast.h:196</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1XCast_html_a6d97c533d309ba1bde2763d7117ba613"><div class="ttname"><a href="classAntares_1_1Data_1_1XCast.html#a6d97c533d309ba1bde2763d7117ba613">Antares::Data::XCast::Distribution</a></div><div class="ttdeci">Distribution</div><div class="ttdoc">All available probability distribution.</div><div class="ttdef"><b>Definition:</b> xcast.h:58</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1XCast_html_a6d97c533d309ba1bde2763d7117ba613a94fbaa68c5866eed711bfdb8b09fbbcc"><div class="ttname"><a href="classAntares_1_1Data_1_1XCast.html#a6d97c533d309ba1bde2763d7117ba613a94fbaa68c5866eed711bfdb8b09fbbcc">Antares::Data::XCast::dtMax</a></div><div class="ttdeci">@ dtMax</div><div class="ttdoc">The maximum number of distributions.</div><div class="ttdef"><b>Definition:</b> xcast.h:72</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1XCast_html_a6d97c533d309ba1bde2763d7117ba613aa79006cba5f7d4a21e8181fd3e25ccb3"><div class="ttname"><a href="classAntares_1_1Data_1_1XCast.html#a6d97c533d309ba1bde2763d7117ba613aa79006cba5f7d4a21e8181fd3e25ccb3">Antares::Data::XCast::dtNone</a></div><div class="ttdeci">@ dtNone</div><div class="ttdoc">None.</div><div class="ttdef"><b>Definition:</b> xcast.h:60</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1XCast_html_a74426a4225835b1989b98ab5ef6227a0"><div class="ttname"><a href="classAntares_1_1Data_1_1XCast.html#a74426a4225835b1989b98ab5ef6227a0">Antares::Data::XCast::DistributionToCString</a></div><div class="ttdeci">static const char * DistributionToCString(Distribution d)</div><div class="ttdoc">Convert a distribution into its human readable representation.</div><div class="ttdef"><b>Definition:</b> xcast.cpp:62</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1XCast_html_a74426a4225835b1989b98ab5ef6227a0"><div class="ttname"><a href="classAntares_1_1Data_1_1XCast.html#a74426a4225835b1989b98ab5ef6227a0">Antares::Data::XCast::DistributionToCString</a></div><div class="ttdeci">static const char * DistributionToCString(Distribution d)</div><div class="ttdoc">Convert a distribution into its human readable representation.</div><div class="ttdef"><b>Definition:</b> xcast.cpp:60</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1XCast_html_a9d63568c3e292b02528b7dd1c99c2abc"><div class="ttname"><a href="classAntares_1_1Data_1_1XCast.html#a9d63568c3e292b02528b7dd1c99c2abc">Antares::Data::XCast::TSTranslationUse</a></div><div class="ttdeci">TSTranslationUse</div><div class="ttdef"><b>Definition:</b> xcast.h:82</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1XCast_html_ac3e8c8aa9663b8436a098461320d7f1b"><div class="ttname"><a href="classAntares_1_1Data_1_1XCast.html#ac3e8c8aa9663b8436a098461320d7f1b">Antares::Data::XCast::StringToDistribution</a></div><div class="ttdeci">static Distribution StringToDistribution(AnyString str)</div><div class="ttdoc">Convert a CString into a probability distribution.</div><div class="ttdef"><b>Definition:</b> xcast.cpp:83</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1XCast_html_ac3e8c8aa9663b8436a098461320d7f1b"><div class="ttname"><a href="classAntares_1_1Data_1_1XCast.html#ac3e8c8aa9663b8436a098461320d7f1b">Antares::Data::XCast::StringToDistribution</a></div><div class="ttdeci">static Distribution StringToDistribution(AnyString str)</div><div class="ttdoc">Convert a CString into a probability distribution.</div><div class="ttdef"><b>Definition:</b> xcast.cpp:81</div></div>
 <div class="ttc" id="aclassAntares_1_1Toolbox_1_1InputSelector_1_1Area_html"><div class="ttname"><a href="classAntares_1_1Toolbox_1_1InputSelector_1_1Area.html">Antares::Toolbox::InputSelector::Area</a></div><div class="ttdoc">Visual Component for displaying all available areas (and groups)</div><div class="ttdef"><b>Definition:</b> area.h:41</div></div>
 <div class="ttc" id="aclassAntares_1_1Toolbox_1_1InputSelector_1_1Area_html_a6512ade5fdbd0a2b7897a048fa0943fd"><div class="ttname"><a href="classAntares_1_1Toolbox_1_1InputSelector_1_1Area.html#a6512ade5fdbd0a2b7897a048fa0943fd">Antares::Toolbox::InputSelector::Area::onAreaChanged</a></div><div class="ttdeci">static Yuni::Event&lt; void(Data::Area *)&gt; onAreaChanged</div><div class="ttdoc">Public event, triggered when the selected area has changed.</div><div class="ttdef"><b>Definition:</b> area.h:72</div></div>
 <div class="ttc" id="aclassAntares_1_1Window_1_1XCast_html"><div class="ttname"><a href="classAntares_1_1Window_1_1XCast.html">Antares::Window::XCast</a></div><div class="ttdef"><b>Definition:</b> xcast.h:40</div></div>

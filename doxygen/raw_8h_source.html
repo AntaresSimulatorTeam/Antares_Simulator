@@ -16,7 +16,7 @@
 <meta name="twitter:title" content="Antares Simulator" />
 <meta name="twitter:description" content="Power System Simulator." />
 <!-- END twitter metadata -->
-<title>Antares Simulator: src/solver/variable/storage/raw.h Source File</title>
+<title>Antares Simulator: src/solver/variable/include/antares/solver/variable/storage/raw.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -316,7 +316,7 @@ $(document).ready(function(){initNavTree('raw_8h_source.html',''); initResizable
 <div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>        report.captions[2][report.data.columnIndex] = <span class="stringliteral">&quot;values&quot;</span>;</div>
 <div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>        <span class="comment">// Precision</span></div>
 <div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>        report.precision[report.data.columnIndex]</div>
-<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>          = Solver::Variable::PrecisionToPrintfFormat&lt;VCardT::decimal&gt;::Value();</div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>          = <a class="code hl_struct" href="structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat.html">Solver::Variable::PrecisionToPrintfFormat&lt;VCardT::decimal&gt;::Value</a>();</div>
 <div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>        <span class="comment">// Non applicability</span></div>
 <div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>        report.nonApplicableStatus[report.data.columnIndex] = *report.isCurrentVarNA;</div>
 <div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span> </div>
@@ -348,7 +348,7 @@ $(document).ready(function(){initNavTree('raw_8h_source.html',''); initResizable
 <div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>        report.captions[2][report.data.columnIndex] = <span class="stringliteral">&quot;values&quot;</span>;</div>
 <div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>        <span class="comment">// Precision</span></div>
 <div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>        report.precision[report.data.columnIndex]</div>
-<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>          = Solver::Variable::PrecisionToPrintfFormat&lt;VCardT::decimal&gt;::Value();</div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>          = <a class="code hl_struct" href="structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat.html">Solver::Variable::PrecisionToPrintfFormat&lt;VCardT::decimal&gt;::Value</a>();</div>
 <div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>        <span class="comment">// Non applicability</span></div>
 <div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>        report.nonApplicableStatus[report.data.columnIndex] = *report.isCurrentVarNA;</div>
 <div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span> </div>
@@ -372,6 +372,7 @@ $(document).ready(function(){initNavTree('raw_8h_source.html',''); initResizable
 <div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span><span class="preprocessor">#endif </span><span class="comment">// __SOLVER_VARIABLE_STORAGE_RAW_H__</span></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Study_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a></div><div class="ttdef"><b>Definition:</b> study.h:60</div></div>
 <div class="ttc" id="aclassVariable_html"><div class="ttname"><a href="classVariable.html">Variable</a></div><div class="ttdef"><b>Definition:</b> variable.h:25</div></div>
+<div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat.html">Antares::Solver::Variable::PrecisionToPrintfFormat</a></div><div class="ttdef"><b>Definition:</b> constants.h:43</div></div>
 <div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw_1_1Data_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw_1_1Data.html">Antares::Solver::Variable::R::AllYears::Raw::Data</a></div><div class="ttdef"><b>Definition:</b> raw.h:55</div></div>
 <div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw.html">Antares::Solver::Variable::R::AllYears::Raw</a></div><div class="ttdef"><b>Definition:</b> raw.h:41</div></div>
 <div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw_html_a61704d08fa83555cead000d519fdf01aa187a27aba53df78c5fe51fcbaa12b0a2"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw.html#a61704d08fa83555cead000d519fdf01aa187a27aba53df78c5fe51fcbaa12b0a2">Antares::Solver::Variable::R::AllYears::Raw::count</a></div><div class="ttdeci">@ count</div><div class="ttdoc">The count if item in the list.</div><div class="ttdef"><b>Definition:</b> raw.h:49</div></div>
@@ -382,7 +383,7 @@ $(document).ready(function(){initNavTree('raw_8h_source.html',''); initResizable
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_041db6ad6a3d44280e40e5af409429cb.html">solver</a></li><li class="navelem"><a class="el" href="dir_3e822a6ee4d724687cb7bda3e29a5b91.html">variable</a></li><li class="navelem"><a class="el" href="dir_4623542ab793d0a1f59aac97b42c5ceb.html">storage</a></li><li class="navelem"><b>raw.h</b></li>
+    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_041db6ad6a3d44280e40e5af409429cb.html">solver</a></li><li class="navelem"><a class="el" href="dir_3e822a6ee4d724687cb7bda3e29a5b91.html">variable</a></li><li class="navelem"><a class="el" href="dir_20840d7036cd3874771cb5f002fb682a.html">include</a></li><li class="navelem"><a class="el" href="dir_788e7f05e8620bbe44f03aee5eae2ddd.html">antares</a></li><li class="navelem"><a class="el" href="dir_8f58b5f8d3a1b7f0f618eab98f86bc8f.html">solver</a></li><li class="navelem"><a class="el" href="dir_6eccbe1c151b0c708db2d7dc07169755.html">variable</a></li><li class="navelem"><a class="el" href="dir_578523f16a34cb320c312a1ca44976fb.html">storage</a></li><li class="navelem"><b>raw.h</b></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
   </ul>
 </div>

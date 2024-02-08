@@ -16,7 +16,7 @@
 <meta name="twitter:title" content="Antares Simulator" />
 <meta name="twitter:description" content="Power System Simulator." />
 <!-- END twitter metadata -->
-<title>Antares Simulator: src/solver/variable/economy/operatingCost.h Source File</title>
+<title>Antares Simulator: src/solver/variable/include/antares/solver/variable/economy/operatingCost.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -304,7 +304,7 @@ $(document).ready(function(){initNavTree('operatingCost_8h_source.html',''); ini
 <div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>        NextType::yearBegin(year, numSpace);</div>
 <div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>    }</div>
 <div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span> </div>
-<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>    <span class="keywordtype">void</span> yearEndBuildForEachThermalCluster(State&amp; state, uint year, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace)</div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>    <span class="keywordtype">void</span> yearEndBuildForEachThermalCluster(<a class="code hl_class" href="classAntares_1_1State.html">State</a>&amp; state, uint year, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace)</div>
 <div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>    {</div>
 <div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>        <span class="comment">// Get end year calculations</span></div>
 <div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>        <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i = state.study.runtime-&gt;rangeLimits.hour[Data::rangeBegin];</div>
@@ -318,7 +318,7 @@ $(document).ready(function(){initNavTree('operatingCost_8h_source.html',''); ini
 <div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>        NextType::yearEndBuildForEachThermalCluster(state, year, numSpace);</div>
 <div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>    }</div>
 <div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span> </div>
-<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>    <span class="keywordtype">void</span> yearEndBuild(State&amp; state, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> year)</div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>    <span class="keywordtype">void</span> yearEndBuild(<a class="code hl_class" href="classAntares_1_1State.html">State</a>&amp; state, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> year)</div>
 <div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>    {</div>
 <div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>        <span class="comment">// Next variable</span></div>
 <div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>        NextType::yearEndBuild(state, year);</div>
@@ -353,7 +353,7 @@ $(document).ready(function(){initNavTree('operatingCost_8h_source.html',''); ini
 <div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>        NextType::hourBegin(hourInTheYear);</div>
 <div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>    }</div>
 <div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span> </div>
-<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>    <span class="keywordtype">void</span> hourForEachArea(State&amp; state, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace)</div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>    <span class="keywordtype">void</span> hourForEachArea(<a class="code hl_class" href="classAntares_1_1State.html">State</a>&amp; state, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace)</div>
 <div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>    {</div>
 <div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>        <span class="comment">// Next variable</span></div>
 <div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>        NextType::hourForEachArea(state, numSpace);</div>
@@ -411,11 +411,12 @@ $(document).ready(function(){initNavTree('operatingCost_8h_source.html',''); ini
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1IntermediateValues_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html">Antares::Solver::Variable::IntermediateValues</a></div><div class="ttdoc">Temporary buffer for allocating results for a single year.</div><div class="ttdef"><b>Definition:</b> intermediate.h:44</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1IntermediateValues_html_a39289dffd321f9fbb103e29953200dec"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html#a39289dffd321f9fbb103e29953200dec">Antares::Solver::Variable::IntermediateValues::reset</a></div><div class="ttdeci">void reset()</div><div class="ttdoc">Reset all values.</div><div class="ttdef"><b>Definition:</b> intermediate.hxx:35</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1IntermediateValues_html_a49bfe1df7fe7547926b82e052f2e77be"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html#a49bfe1df7fe7547926b82e052f2e77be">Antares::Solver::Variable::IntermediateValues::hour</a></div><div class="ttdeci">Antares::Memory::Stored&lt; Type &gt;::Type hour</div><div class="ttdoc">Values for each hour in the year.</div><div class="ttdef"><b>Definition:</b> intermediate.h:140</div></div>
-<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1IntermediateValues_html_ade98373f7d78dd65f18947cc28edb746"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html#ade98373f7d78dd65f18947cc28edb746">Antares::Solver::Variable::IntermediateValues::computeStatisticsForTheCurrentYear</a></div><div class="ttdeci">void computeStatisticsForTheCurrentYear()</div><div class="ttdoc">Compute statistics for the current year.</div><div class="ttdef"><b>Definition:</b> intermediate.cpp:67</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1IntermediateValues_html_ade98373f7d78dd65f18947cc28edb746"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html#ade98373f7d78dd65f18947cc28edb746">Antares::Solver::Variable::IntermediateValues::computeStatisticsForTheCurrentYear</a></div><div class="ttdeci">void computeStatisticsForTheCurrentYear()</div><div class="ttdoc">Compute statistics for the current year.</div><div class="ttdef"><b>Definition:</b> intermediate.cpp:63</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Max_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Max.html">Antares::Solver::Variable::R::AllYears::Max</a></div><div class="ttdef"><b>Definition:</b> minmax.h:183</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Min_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Min.html">Antares::Solver::Variable::R::AllYears::Min</a></div><div class="ttdef"><b>Definition:</b> minmax.h:161</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Results_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Results.html">Antares::Solver::Variable::Results</a></div><div class="ttdef"><b>Definition:</b> results.h:47</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Results_html_abd6cff7bd81802a783556b0f22d48deba55b6b058d10bee9d3e07fb750b82287d"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Results.html#abd6cff7bd81802a783556b0f22d48deba55b6b058d10bee9d3e07fb750b82287d">Antares::Solver::Variable::Results::count</a></div><div class="ttdeci">@ count</div><div class="ttdoc">The count if item in the list.</div><div class="ttdef"><b>Definition:</b> results.h:54</div></div>
+<div class="ttc" id="aclassAntares_1_1State_html"><div class="ttname"><a href="classAntares_1_1State.html">Antares::State</a></div><div class="ttdef"><b>Definition:</b> cbuilder.h:114</div></div>
 <div class="ttc" id="aclassVariable_html"><div class="ttname"><a href="classVariable.html">Variable</a></div><div class="ttdef"><b>Definition:</b> variable.h:25</div></div>
 <div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1Economy_1_1OperatingCost_1_1Statistics_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OperatingCost_1_1Statistics.html">Antares::Solver::Variable::Economy::OperatingCost::Statistics</a></div><div class="ttdef"><b>Definition:</b> operatingCost.h:126</div></div>
 <div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardOperatingCost_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardOperatingCost.html">Antares::Solver::Variable::Economy::VCardOperatingCost</a></div><div class="ttdef"><b>Definition:</b> operatingCost.h:35</div></div>
@@ -441,7 +442,7 @@ $(document).ready(function(){initNavTree('operatingCost_8h_source.html',''); ini
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_041db6ad6a3d44280e40e5af409429cb.html">solver</a></li><li class="navelem"><a class="el" href="dir_3e822a6ee4d724687cb7bda3e29a5b91.html">variable</a></li><li class="navelem"><a class="el" href="dir_40e77f85c46d9044194ce13b476b8162.html">economy</a></li><li class="navelem"><b>operatingCost.h</b></li>
+    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_041db6ad6a3d44280e40e5af409429cb.html">solver</a></li><li class="navelem"><a class="el" href="dir_3e822a6ee4d724687cb7bda3e29a5b91.html">variable</a></li><li class="navelem"><a class="el" href="dir_20840d7036cd3874771cb5f002fb682a.html">include</a></li><li class="navelem"><a class="el" href="dir_788e7f05e8620bbe44f03aee5eae2ddd.html">antares</a></li><li class="navelem"><a class="el" href="dir_8f58b5f8d3a1b7f0f618eab98f86bc8f.html">solver</a></li><li class="navelem"><a class="el" href="dir_6eccbe1c151b0c708db2d7dc07169755.html">variable</a></li><li class="navelem"><a class="el" href="dir_11a0355828d5552f473d70dc684a09d4.html">economy</a></li><li class="navelem"><b>operatingCost.h</b></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
   </ul>
 </div>

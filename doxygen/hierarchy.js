@@ -654,7 +654,6 @@ var hierarchy =
       [ "Antares::Solver::NullResultWriter", "classAntares_1_1Solver_1_1NullResultWriter.html", null ],
       [ "Antares::Solver::ZipWriter", "classAntares_1_1Solver_1_1ZipWriter.html", null ]
     ] ],
-    [ "Antares::Component::HTMLListbox::ISortPredicate", "structAntares_1_1Component_1_1HTMLListbox_1_1ISortPredicate.html", null ],
     [ "Antares::Map::Item", "classAntares_1_1Map_1_1Item.html", [
       [ "Antares::Map::BindingConstraint", "classAntares_1_1Map_1_1BindingConstraint.html", null ],
       [ "Antares::Map::Connection", "classAntares_1_1Map_1_1Connection.html", null ],

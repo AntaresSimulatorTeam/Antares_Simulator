@@ -16,7 +16,7 @@
 <meta name="twitter:title" content="Antares Simulator" />
 <meta name="twitter:description" content="Power System Simulator." />
 <!-- END twitter metadata -->
-<title>Antares Simulator: src/solver/variable/commons/spatial-aggregate.h Source File</title>
+<title>Antares Simulator: src/solver/variable/include/antares/solver/variable/commons/spatial-aggregate.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -335,7 +335,7 @@ $(document).ready(function(){initNavTree('spatial-aggregate_8h_source.html','');
 <div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>        <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace = 0; numSpace &lt; pNbYearsParallel; numSpace++)</div>
 <div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>            VariableAccessorType::InitializeAndReset(pValuesForTheCurrentYear[numSpace], study);</div>
 <div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span> </div>
-<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>        <span class="keyword">auto</span>&amp; limits = study.runtime-&gt;rangeLimits;</div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>        <span class="keyword">auto</span>&amp; limits = study.<a class="code hl_variable" href="classAntares_1_1Data_1_1Study.html#a43bc5dc3c2ea7f2ede9ba2db82c32a56">runtime</a>-&gt;<a class="code hl_variable" href="classAntares_1_1Data_1_1StudyRuntimeInfos.html#a36b313472b05b5476d364fe767a9f6eb">rangeLimits</a>;</div>
 <div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span> </div>
 <div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>        pRatioYear = 100. / (double)limits.year[Data::rangeCount];</div>
 <div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>        pRatioDay = 100. / (<span class="keywordtype">double</span>)limits.day[Data::rangeCount];</div>
@@ -375,19 +375,19 @@ $(document).ready(function(){initNavTree('spatial-aggregate_8h_source.html','');
 <div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>        NextType::yearBegin(year);</div>
 <div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>    }</div>
 <div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span> </div>
-<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>    <span class="keywordtype">void</span> yearEndBuildPrepareDataForEachThermalCluster(State&amp; state, uint year)</div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>    <span class="keywordtype">void</span> yearEndBuildPrepareDataForEachThermalCluster(<a class="code hl_class" href="classAntares_1_1State.html">State</a>&amp; state, uint year)</div>
 <div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>    {</div>
 <div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>        <span class="comment">// Next variable</span></div>
 <div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>        NextType::yearEndBuildPrepareDataForEachThermalCluster(state, year);</div>
 <div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>    }</div>
 <div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span> </div>
-<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>    <span class="keywordtype">void</span> yearEndBuildForEachThermalCluster(State&amp; state, uint year)</div>
+<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>    <span class="keywordtype">void</span> yearEndBuildForEachThermalCluster(<a class="code hl_class" href="classAntares_1_1State.html">State</a>&amp; state, uint year)</div>
 <div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>    {</div>
 <div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>        <span class="comment">// Next variable</span></div>
 <div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>        NextType::yearEndBuildForEachThermalCluster(state, year);</div>
 <div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>    }</div>
 <div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span> </div>
-<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>    <span class="keywordtype">void</span> yearEndBuild(State&amp; state, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> year)</div>
+<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>    <span class="keywordtype">void</span> yearEndBuild(<a class="code hl_class" href="classAntares_1_1State.html">State</a>&amp; state, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> year)</div>
 <div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>    {</div>
 <div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>        <span class="comment">// Next variable</span></div>
 <div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>        NextType::yearEndBuild(state, year);</div>
@@ -399,13 +399,13 @@ $(document).ready(function(){initNavTree('spatial-aggregate_8h_source.html','');
 <div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>        NextType::yearEnd(year);</div>
 <div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>    }</div>
 <div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span> </div>
-<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>    <span class="keywordtype">void</span> weekBegin(State&amp; state)</div>
+<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>    <span class="keywordtype">void</span> weekBegin(<a class="code hl_class" href="classAntares_1_1State.html">State</a>&amp; state)</div>
 <div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>    {</div>
 <div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>        <span class="comment">// Next variable</span></div>
 <div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>        NextType::weekBegin(state);</div>
 <div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span>    }</div>
 <div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span> </div>
-<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span>    <span class="keywordtype">void</span> weekEnd(State&amp; state)</div>
+<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span>    <span class="keywordtype">void</span> weekEnd(<a class="code hl_class" href="classAntares_1_1State.html">State</a>&amp; state)</div>
 <div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span>    {</div>
 <div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span>        <span class="comment">// Next variable</span></div>
 <div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span>        NextType::weekEnd(state);</div>
@@ -417,7 +417,7 @@ $(document).ready(function(){initNavTree('spatial-aggregate_8h_source.html','');
 <div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span>        NextType::hourBegin(hourInTheYear);</div>
 <div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span>    }</div>
 <div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span> </div>
-<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span>    <span class="keywordtype">void</span> hourForEachArea(State&amp; state)</div>
+<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span>    <span class="keywordtype">void</span> hourForEachArea(<a class="code hl_class" href="classAntares_1_1State.html">State</a>&amp; state)</div>
 <div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>    {</div>
 <div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span>        <span class="comment">// Next variable</span></div>
 <div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span>        NextType::hourForEachArea(state);</div>
@@ -598,7 +598,9 @@ $(document).ready(function(){initNavTree('spatial-aggregate_8h_source.html','');
 <div class="line"><a id="l00483" name="l00483"></a><span class="lineno">  483</span><span class="preprocessor">#endif </span><span class="comment">// __SOLVER_VARIABLE_ECONOMY_SPATIAL_AGGREGATE_H__</span></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1AreaLink_html"><div class="ttname"><a href="classAntares_1_1Data_1_1AreaLink.html">Antares::Data::AreaLink</a></div><div class="ttdoc">Definition of a link between two areas (Interconnection)</div><div class="ttdef"><b>Definition:</b> links.h:48</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Area_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Area.html">Antares::Data::Area</a></div><div class="ttdoc">Definition for a single area.</div><div class="ttdef"><b>Definition:</b> area.h:48</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1StudyRuntimeInfos_html_a36b313472b05b5476d364fe767a9f6eb"><div class="ttname"><a href="classAntares_1_1Data_1_1StudyRuntimeInfos.html#a36b313472b05b5476d364fe767a9f6eb">Antares::Data::StudyRuntimeInfos::rangeLimits</a></div><div class="ttdeci">StudyRangeLimits rangeLimits</div><div class="ttdoc">Range limits.</div><div class="ttdef"><b>Definition:</b> runtime.h:90</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Study_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a></div><div class="ttdef"><b>Definition:</b> study.h:60</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1Study_html_a43bc5dc3c2ea7f2ede9ba2db82c32a56"><div class="ttname"><a href="classAntares_1_1Data_1_1Study.html#a43bc5dc3c2ea7f2ede9ba2db82c32a56">Antares::Data::Study::runtime</a></div><div class="ttdeci">StudyRuntimeInfos * runtime</div><div class="ttdoc">Runtime informations.</div><div class="ttdef"><b>Definition:</b> study.h:613</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate.html">Antares::Solver::Variable::Common::SpatialAggregate</a></div><div class="ttdef"><b>Definition:</b> spatial-aggregate.h:166</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate_html_a08d4a1fb6a3c03612311113c28e45902"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate.html#a08d4a1fb6a3c03612311113c28e45902">Antares::Solver::Variable::Common::SpatialAggregate::ResultsType</a></div><div class="ttdeci">VCardType::ResultsType ResultsType</div><div class="ttdoc">List of expected results.</div><div class="ttdef"><b>Definition:</b> spatial-aggregate.h:177</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate_html_a29e52771ee481ad5447ad7b7f0afc81a"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate.html#a29e52771ee481ad5447ad7b7f0afc81a">Antares::Solver::Variable::Common::SpatialAggregate::AncestorType</a></div><div class="ttdeci">Variable::IVariable&lt; SpatialAggregate&lt; VarT, NextT &gt;, NextT, VCardType &gt; AncestorType</div><div class="ttdoc">Ancestor.</div><div class="ttdef"><b>Definition:</b> spatial-aggregate.h:174</div></div>
@@ -610,6 +612,7 @@ $(document).ready(function(){initNavTree('spatial-aggregate_8h_source.html','');
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1IVariable_html_a297b1cefb9b8726c6beef8937aa8787c"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">Antares::Solver::Variable::IVariable::results</a></div><div class="ttdeci">const StoredResultType &amp; results() const</div><div class="ttdoc">The results.</div><div class="ttdef"><b>Definition:</b> variable.hxx:538</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1IVariable_html_a5c927574a94a005bd28a3522d2176334"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a5c927574a94a005bd28a3522d2176334">Antares::Solver::Variable::IVariable::pResults</a></div><div class="ttdeci">StoredResultType pResults</div><div class="ttdoc">All the results about this variable.</div><div class="ttdef"><b>Definition:</b> variable.h:339</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1IVariable_html_aed9a5fdd43ad5b62a92dab7d5ae280d9"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#aed9a5fdd43ad5b62a92dab7d5ae280d9">Antares::Solver::Variable::IVariable::computeSpatialAggregateWith</a></div><div class="ttdeci">void computeSpatialAggregateWith(O &amp;out, uint numSpace)</div><div class="ttdoc">Compute the spatial cluster with the results of a single variable.</div><div class="ttdef"><b>Definition:</b> variable.hxx:385</div></div>
+<div class="ttc" id="aclassAntares_1_1State_html"><div class="ttname"><a href="classAntares_1_1State.html">Antares::State</a></div><div class="ttdef"><b>Definition:</b> cbuilder.h:114</div></div>
 <div class="ttc" id="aclassVariable_html"><div class="ttname"><a href="classVariable.html">Variable</a></div><div class="ttdef"><b>Definition:</b> variable.h:25</div></div>
 <div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1Common_1_1MultipleCaptionProxy_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1Common_1_1MultipleCaptionProxy.html">Antares::Solver::Variable::Common::MultipleCaptionProxy</a></div><div class="ttdef"><b>Definition:</b> spatial-aggregate.h:37</div></div>
 <div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate_1_1Statistics_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate_1_1Statistics.html">Antares::Solver::Variable::Common::SpatialAggregate::Statistics</a></div><div class="ttdef"><b>Definition:</b> spatial-aggregate.h:189</div></div>
@@ -636,7 +639,7 @@ $(document).ready(function(){initNavTree('spatial-aggregate_8h_source.html','');
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_041db6ad6a3d44280e40e5af409429cb.html">solver</a></li><li class="navelem"><a class="el" href="dir_3e822a6ee4d724687cb7bda3e29a5b91.html">variable</a></li><li class="navelem"><a class="el" href="dir_a30b07b848327eba5175bb49e81b2310.html">commons</a></li><li class="navelem"><b>spatial-aggregate.h</b></li>
+    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_041db6ad6a3d44280e40e5af409429cb.html">solver</a></li><li class="navelem"><a class="el" href="dir_3e822a6ee4d724687cb7bda3e29a5b91.html">variable</a></li><li class="navelem"><a class="el" href="dir_20840d7036cd3874771cb5f002fb682a.html">include</a></li><li class="navelem"><a class="el" href="dir_788e7f05e8620bbe44f03aee5eae2ddd.html">antares</a></li><li class="navelem"><a class="el" href="dir_8f58b5f8d3a1b7f0f618eab98f86bc8f.html">solver</a></li><li class="navelem"><a class="el" href="dir_6eccbe1c151b0c708db2d7dc07169755.html">variable</a></li><li class="navelem"><a class="el" href="dir_975cde24ce853807f10143515c4f97c7.html">commons</a></li><li class="navelem"><b>spatial-aggregate.h</b></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5 </li>
   </ul>
 </div>

@@ -205,8 +205,7 @@ var annotated_dup =
             [ "ThermalClusterItem", "classAntares_1_1Component_1_1HTMLListbox_1_1Item_1_1ThermalClusterItem.html", "classAntares_1_1Component_1_1HTMLListbox_1_1Item_1_1ThermalClusterItem" ]
           ] ],
           [ "Component", "classAntares_1_1Component_1_1HTMLListbox_1_1Component.html", "classAntares_1_1Component_1_1HTMLListbox_1_1Component" ],
-          [ "CustomClientData", "classAntares_1_1Component_1_1HTMLListbox_1_1CustomClientData.html", "classAntares_1_1Component_1_1HTMLListbox_1_1CustomClientData" ],
-          [ "ISortPredicate", "structAntares_1_1Component_1_1HTMLListbox_1_1ISortPredicate.html", null ]
+          [ "CustomClientData", "classAntares_1_1Component_1_1HTMLListbox_1_1CustomClientData.html", "classAntares_1_1Component_1_1HTMLListbox_1_1CustomClientData" ]
         ] ],
         [ "Button", "classAntares_1_1Component_1_1Button.html", "classAntares_1_1Component_1_1Button" ],
         [ "CaptionPanel", "classAntares_1_1Component_1_1CaptionPanel.html", "classAntares_1_1Component_1_1CaptionPanel" ],
