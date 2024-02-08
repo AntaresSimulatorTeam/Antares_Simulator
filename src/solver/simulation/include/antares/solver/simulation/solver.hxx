@@ -235,8 +235,8 @@ public:
 };
 
 
-template<class Impl>
-inline ISimulation<Impl>::ISimulation(Data::Study& study,
+template<class ImplementationType>
+inline ISimulation<ImplementationType>::ISimulation(Data::Study& study,
     const ::Settings& settings,
     Benchmarking::IDurationCollector& duration_collector,
     IResultWriter& resultWriter) :
@@ -265,8 +265,8 @@ inline ISimulation<Impl>::ISimulation(Data::Study& study,
     pHydroHotStart = (study.parameters.initialReservoirLevels.iniLevels == Data::irlHotStart);
 }
 
-template<class Impl>
-inline void ISimulation<Impl>::checkWriter() const
+template<class ImplementationType>
+inline void ISimulation<ImplementationType>::checkWriter() const
 {
     // The zip writer needs a queue service (async mutexed write)
     if (!pQueueService && pResultWriter.needsTheJobQueue())
@@ -275,13 +275,13 @@ inline void ISimulation<Impl>::checkWriter() const
     }
 }
 
-template<class Impl>
-inline ISimulation<Impl>::~ISimulation()
+template<class ImplementationType>
+inline ISimulation<ImplementationType>::~ISimulation()
 {
 }
 
-template<class Impl>
-void ISimulation<Impl>::run()
+template<class ImplementationType>
+void ISimulation<ImplementationType>::run()
 {
     pNbMaxPerformedYearsInParallel = study.maxNbYearsInParallel;
 
@@ -392,8 +392,8 @@ void ISimulation<Impl>::run()
     }
 }
 
-template<class Impl>
-void ISimulation<Impl>::writeResults(bool synthesis, uint year, uint numSpace)
+template<class ImplementationType>
+void ISimulation<ImplementationType>::writeResults(bool synthesis, uint year, uint numSpace)
 {
     using namespace Yuni;
 
@@ -441,8 +441,8 @@ void ISimulation<Impl>::writeResults(bool synthesis, uint year, uint numSpace)
     }
 }
 
-template<class Impl>
-void ISimulation<Impl>::regenerateTimeSeries(uint year)
+template<class ImplementationType>
+void ISimulation<ImplementationType>::regenerateTimeSeries(uint year)
 {
     // A preprocessor can be launched for several reasons:
     // * The option "Preprocessor" is checked in the interface _and_ year == 0
@@ -492,8 +492,8 @@ void ISimulation<Impl>::regenerateTimeSeries(uint year)
     }
 }
 
-template<class Impl>
-uint ISimulation<Impl>::buildSetsOfParallelYears(
+template<class ImplementationType>
+uint ISimulation<ImplementationType>::buildSetsOfParallelYears(
   uint firstYear,
   uint endYear,
   std::vector<setOfParallelYears>& setsOfParallelYears)
@@ -607,8 +607,8 @@ uint ISimulation<Impl>::buildSetsOfParallelYears(
     return maxNbYearsPerformed;
 }
 
-template<class Impl>
-void ISimulation<Impl>::allocateMemoryForRandomNumbers(randomNumbers& randomForParallelYears)
+template<class ImplementationType>
+void ISimulation<ImplementationType>::allocateMemoryForRandomNumbers(randomNumbers& randomForParallelYears)
 {
     uint maxNbPerformedYears = randomForParallelYears.pMaxNbPerformedYears;
     uint nbAreas = study.areas.size();
@@ -663,8 +663,8 @@ void ISimulation<Impl>::allocateMemoryForRandomNumbers(randomNumbers& randomForP
     } // End loop over years
 }
 
-template<class Impl>
-void ISimulation<Impl>::computeRandomNumbers(randomNumbers& randomForYears,
+template<class ImplementationType>
+void ISimulation<ImplementationType>::computeRandomNumbers(randomNumbers& randomForYears,
                                              std::vector<uint>& years,
                                              std::map<unsigned int, bool>& isYearPerformed,
                                              MersenneTwister& randomHydroGenerator)
@@ -878,8 +878,8 @@ void ISimulation<Impl>::computeRandomNumbers(randomNumbers& randomForYears,
     } // End loop over years
 } // End function
 
-template<class Impl>
-void ISimulation<Impl>::computeAnnualCostsStatistics(
+template<class ImplementationType>
+void ISimulation<ImplementationType>::computeAnnualCostsStatistics(
   std::vector<Variable::State>& state,
   std::vector<setOfParallelYears>::iterator& set_it)
 {
@@ -918,8 +918,8 @@ static inline void logPerformedYearsInAset(setOfParallelYears& set)
     logs.info() << "Year(s) " << performedYearsToLog;
 }
 
-template<class Impl>
-void ISimulation<Impl>::loopThroughYears(uint firstYear,
+template<class ImplementationType>
+void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
                                          uint endYear,
                                          std::vector<Variable::State>& state)
 {

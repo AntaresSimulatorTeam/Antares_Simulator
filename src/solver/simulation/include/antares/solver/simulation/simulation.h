@@ -28,6 +28,7 @@
 
 struct PROBLEME_HEBDO;
 
+// TODO remove when global variables have been removed (looking at you, transitMoyenInterconnexionsRecalculQuadratique)
 void SIM_AllocationTableaux(const Antares::Data::Study& study);
 
 /*!
@@ -45,25 +46,11 @@ void SIM_InitialisationProblemeHebdo(Antares::Data::Study& study,
                                      int NombreDePasDeTemps,
                                      uint numspace);
 
-void SIM_PreallocationTableaux(void);
-
 void SIM_RenseignementProblemeHebdo(const Antares::Data::Study& study,
                                     PROBLEME_HEBDO& problem,
                                     uint weekInTheYear,
                                     const int,
                                     const HYDRO_VENTILATION_RESULTS&,
                                     const Antares::Data::Area::ScratchMap&);
-
-void SIM_RenseignementProblemeHoraireAdequation(uint);
-
-void SIM_CalculFlotHoraireAdequation(void);
-
-void SIM_InitialisationProblemeHoraireAdequation(void);
-
-void SIM_AllocationProblemeHoraireAdequation(void);
-
-void SIM_InitialisationChainagePourAdequation(void);
-
-void SIM_DesallocationProblemeHoraireAdequation(void);
 
 #endif /* __SOLVER_SIMULATION_H__ */

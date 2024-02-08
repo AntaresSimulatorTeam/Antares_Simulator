@@ -47,10 +47,6 @@ class ISimulation : public Impl
     friend class yearJob<Impl>;
 
 public:
-    //! The real implementation for the simulation
-    typedef Impl ImplementationType;
-
-public:
     //! \name Constructor & Destructor
     //@{
     /*!
