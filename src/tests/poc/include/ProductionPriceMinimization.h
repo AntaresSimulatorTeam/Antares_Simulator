@@ -1,5 +1,7 @@
 #pragma once
 
+#include <utility>
+
 #include "antares/optim/api/LinearProblemFiller.h"
 #include "Thermal.h"
 
@@ -9,9 +11,9 @@ using namespace std;
 class ProductionPriceMinimization : public LinearProblemFiller
 {
 private:
-    vector<Thermal*> &thermals_; // sera remplacé par la notion de ports
+    vector<Thermal*> thermals_; // sera remplacé par la notion de ports
 public:
-    explicit ProductionPriceMinimization(vector<Thermal*>& thermals) : thermals_(thermals) {};
+    explicit ProductionPriceMinimization(vector<Thermal*> thermals) : thermals_(std::move(thermals)) {};
     void addVariables(LinearProblem& problem, const LinearProblemData& data) override;
     void addConstraints(LinearProblem& problem, const LinearProblemData& data) override;
     void addObjective(LinearProblem& problem, const LinearProblemData& data) override;

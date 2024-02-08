@@ -1,10 +1,9 @@
-#define BOOST_TEST_MODULE test-end-to-end tests
+#define BOOST_TEST_MODULE poc tests
 #define BOOST_TEST_DYN_LINK
 
 #include <boost/test/unit_test.hpp>
 #include <boost/test/data/test_case.hpp>
 
-namespace utf = boost::unit_test;
 namespace tt = boost::test_tools;
 
 #include "antares/optim/api/LinearProblemBuilder.h"
@@ -21,39 +20,31 @@ BOOST_AUTO_TEST_CASE(test_oneBattery_with_oneThermal)
     vector<int> timeStamps{0, 1, 2, 3}; // toujours commencer à 0 sinon ça plante actuellement
     int timeResolution = 60;
 
-    vector<Battery*> batteries;
-    vector<Thermal*> thermals;
-
     LinearProblemImpl linearProblem(false, "xpress");
     LinearProblemBuilder linearProblemBuilder(linearProblem);
 
     Battery battery("battery1", 100, 1000);
-    batteries.push_back(&battery);
-
     Thermal thermal("thermal1", 100);
-    thermals.push_back(&thermal);
-
-    Balance balance("nodeA", batteries, thermals);
-
-    ProductionPriceMinimization objective(thermals);
+    Balance balance("nodeA", {&battery}, {&thermal});
+    ProductionPriceMinimization objective({&thermal});
 
     linearProblemBuilder.addFiller(battery);
     linearProblemBuilder.addFiller(thermal);
     linearProblemBuilder.addFiller(balance);
     linearProblemBuilder.addFiller(objective);
 
-    map<string, double> scalarData = {
-            {"initialStock_battery1", 0}
-    };
-    map<string, vector<double>> timedData = {
-            {"consumption_nodeA", {50, 50, 150, 120}},
-            {"cost_thermal1", {1, 3, 10, 8}}
-    };
-    LinearProblemData linearProblemData(timeStamps, timeResolution, scalarData, timedData);
+    LinearProblemData linearProblemData(
+            timeStamps,
+            timeResolution,
+            {
+                {"initialStock_battery1", 0}
+            },
+            {
+                {"consumption_nodeA", {50, 50, 150, 120}},
+                {"cost_thermal1",     {1,  3,  10,  8}}
+            });
     linearProblemBuilder.build(linearProblemData);
     auto solution = linearProblemBuilder.solve();
-
-    // TODO : utiliser LinearProblemData et utiliser update
 
     // la conso est supérieure à la Pmax du thermique sur les pas de temps 2 & 3
     // Donc la batterie doit se charger pendant les TS 0 & 1
@@ -71,6 +62,6 @@ BOOST_AUTO_TEST_CASE(test_oneBattery_with_oneThermal)
     BOOST_TEST(actualThermalP == expectedThermalP, tt::per_element()); // TODO add tolerance?
 
     vector<double> actualBatteryP = solution.getOptimalValues({"P_battery1_0", "P_battery1_1", "P_battery1_2", "P_battery1_3"});
-    vector<double> expectedBatteryP({-50, -50, 80, 320});
+    vector<double> expectedBatteryP({-50, -50, 80, 20});
     BOOST_TEST(actualBatteryP == expectedBatteryP, tt::per_element()); // TODO add tolerance?
 }

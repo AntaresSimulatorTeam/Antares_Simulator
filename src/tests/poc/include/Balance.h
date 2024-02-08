@@ -13,11 +13,11 @@ class Balance : public LinearProblemFiller
 {
 private:
     string nodeName_;
-    vector<Battery*> &batteries_; // sera remplacé par la notion de ports
-    vector<Thermal*> &thermals_; // sera remplacé par la notion de ports
+    vector<Battery*> batteries_; // sera remplacé par la notion de ports
+    vector<Thermal*> thermals_; // sera remplacé par la notion de ports
 public:
-    Balance(string nodeName, vector<Battery*>& batteries, vector<Thermal*>& thermals) :
-            nodeName_(std::move(nodeName)), batteries_(batteries), thermals_(thermals) {};
+    Balance(string nodeName, vector<Battery*> batteries, vector<Thermal*> thermals) :
+            nodeName_(std::move(nodeName)), batteries_(std::move(batteries)), thermals_(std::move(thermals)) {};
     void addVariables(LinearProblem& problem, const LinearProblemData& data) override;
     void addConstraints(LinearProblem& problem, const LinearProblemData& data) override;
     void addObjective(LinearProblem& problem, const LinearProblemData& data) override;
