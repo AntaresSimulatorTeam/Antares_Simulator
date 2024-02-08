@@ -24,9 +24,9 @@
 #include "antares/application/application.h"
 #include <antares/args/args_to_utf8.h>
 
-#include <antares/fatal-error.h>
+#include <antares/antares/fatal-error.h>
 #include <antares/memory/memory.h>
-#include <antares/locale.h>
+#include <antares/locale/locale.h>
 
 using namespace Antares;
 using namespace Yuni;

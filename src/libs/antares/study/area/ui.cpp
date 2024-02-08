@@ -19,7 +19,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "ui.h"
+#include "antares/study/area/ui.h"
 #include <antares/logs/logs.h>
 #include <yuni/core/math.h>
 #include <antares/inifile/inifile.h>

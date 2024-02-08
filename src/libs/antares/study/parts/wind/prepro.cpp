@@ -20,9 +20,9 @@
 */
 
 #include <yuni/yuni.h>
-#include "prepro.h"
+#include "antares/study/parts/wind/prepro.h"
 #include <yuni/io/directory.h>
-#include "../../study.h"
+#include "antares/study/study.h"
 #include <antares/logs/logs.h>
 
 using namespace Yuni;
@@ -30,11 +30,9 @@ using namespace Antares;
 
 #define SEP IO::Separator
 
-namespace Antares
-{
-namespace Data
-{
-namespace Wind
+
+
+namespace Antares::Data::Wind
 {
 Prepro::Prepro() : xcast(timeSeriesWind)
 {
@@ -54,6 +52,6 @@ bool Prepro::saveToFolder(const AnyString& folder) const
     return xcast.saveToFolder(folder);
 }
 
-} // namespace Wind
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data::Wind
+
+

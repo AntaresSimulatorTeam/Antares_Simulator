@@ -21,18 +21,12 @@
 
 #include <yuni/yuni.h>
 #include <antares/study/study.h>
-#include "max-mrg.h"
+#include "antares/solver/variable/economy/max-mrg.h"
 #include <antares/study/area/scratchpad.h>
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Variable
-{
-namespace Economy
+namespace Antares::Solver::Variable::Economy
 {
 template<bool WithSimplexT>
 struct SpillageSelector
@@ -175,7 +169,4 @@ void PrepareMaxMRG(const State& state, double* opmrg, uint numSpace)
         PrepareMaxMRGFor<false>(state, opmrg, numSpace);
 }
 
-} // namespace Economy
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Variable::Economy

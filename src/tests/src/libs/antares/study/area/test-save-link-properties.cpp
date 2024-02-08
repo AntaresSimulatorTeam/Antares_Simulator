@@ -30,8 +30,8 @@
 #include <filesystem>
 #include <fstream>
 
-#include <study.h>
-#include <filter.h>
+#include <antares/study/study.h>
+#include <antares/study/filter.h>
 
 #include "files-helper.h"
 

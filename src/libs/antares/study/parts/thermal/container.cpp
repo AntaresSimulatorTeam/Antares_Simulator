@@ -20,8 +20,8 @@
 */
 
 #include <yuni/yuni.h>
-#include "../../study.h"
-#include "container.h"
+#include "antares/study/study.h"
+#include "antares/study/parts/thermal/container.h"
 #include <antares/logs/logs.h>
 
 #include <algorithm>

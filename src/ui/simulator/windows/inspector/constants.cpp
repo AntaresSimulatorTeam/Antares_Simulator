@@ -288,7 +288,9 @@ const wxChar* const calendarWeeks[] = {wxT("MON  -  SUN"),
 
 const wxChar* const simulationMode[] = {wxT("Economy"),
                                    wxT("Adequacy"),
+#if STUDY_MODE_EXPANSION
                                    wxT("Expansion"),
+#endif
                                    nullptr};
 
 const wxChar* const adequacyPatchMode[] = {wxT("virtual area"),

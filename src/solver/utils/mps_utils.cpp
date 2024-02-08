@@ -20,7 +20,7 @@
 */
 #include <antares/study/study.h>
 
-#include "../simulation/simulation.h"
+#include "antares/solver/simulation/simulation.h"
 
 #include "antares/solver/utils/ortools_utils.h"
 #include "antares/solver/utils/mps_utils.h"
@@ -68,7 +68,7 @@ constexpr size_t OPT_APPEL_SOLVEUR_BUFFER_SIZE = 256;
 #include <vector>
 #include <algorithm>
 #include "antares/solver/utils/filename.h"
-#include "../optimisation/opt_constants.h"
+#include "antares/solver/optimisation/opt_constants.h"
 #include "antares/solver/utils/name_translator.h"
 
 using namespace Yuni;

@@ -35,7 +35,7 @@
 #include "../application/menus.h"
 #include "../application/wait.h"
 #include "version.h"
-#include "../../../config.h"
+#include <antares/config/config.h>
 #include <ui/common/component/panel.h>
 #include <ui/common/component/spotlight.h>
 #include "../toolbox/dispatcher/study.h"

@@ -136,8 +136,8 @@ target_link_libraries(antares-action
 )
 
 target_include_directories(antares-action
-        PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/include
+                PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 
 add_library(Antares::action ALIAS antares-action)

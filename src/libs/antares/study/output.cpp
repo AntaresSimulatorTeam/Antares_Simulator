@@ -19,16 +19,14 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "output.h"
+#include "antares/study/output.h"
 #include <yuni/io/directory/iterator.h>
 
 using namespace Yuni;
 
 #define SEP IO::Separator
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 namespace // anonymous
 {
@@ -199,5 +197,5 @@ void Output::RetrieveListFromStudy(List& out, const Study& study)
     }
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+

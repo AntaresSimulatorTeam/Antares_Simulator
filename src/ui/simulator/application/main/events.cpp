@@ -30,7 +30,7 @@
 #include "../../toolbox/dispatcher/study.h"
 
 #include "../menus.h"
-#include "../study.h"
+#include "antares/study/study.h"
 
 // Windows
 #include <ui/common/component/spotlight/spotlight.h>

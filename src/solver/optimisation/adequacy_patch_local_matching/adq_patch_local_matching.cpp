@@ -19,8 +19,8 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "adq_patch_local_matching.h"
-#include "../simulation/adequacy_patch_runtime_data.h"
+#include "antares/solver/optimisation/adequacy_patch_local_matching/adq_patch_local_matching.h"
+#include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 
 namespace Antares::Data::AdequacyPatch
 {

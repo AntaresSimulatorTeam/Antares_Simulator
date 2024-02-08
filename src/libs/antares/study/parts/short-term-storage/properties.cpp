@@ -22,7 +22,7 @@
 #include <antares/logs/logs.h>
 #include <stdexcept>
 
-#include "properties.h"
+#include "antares/study/parts/short-term-storage/properties.h"
 
 #define SEP Yuni::IO::Separator
 

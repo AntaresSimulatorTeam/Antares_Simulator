@@ -20,16 +20,17 @@
 */
 
 #include "main.h"
-#include "../study.h"
+#include "antares/study/study.h"
 #include "../../toolbox/execute/execute.h"
 #include "../../windows/message.h"
 #include "../../toolbox/jobs.h"
 #include <wx/wupdlock.h>
 #include "internal-ids.h"
-#include "../../../../solver/constraints-builder/cbuilder.h"
+#include "antares/solver/constraints-builder/cbuilder.h"
 #include <ui/common/lock.h>
 #include "../wait.h"
 #include "antares/study/ui-runtimeinfos.h"
+#include "application/study.h"
 
 #define SEP IO::Separator
 

@@ -20,7 +20,7 @@
 */
 
 #include "main.h"
-#include "../study.h"
+#include "antares/study/study.h"
 #include "../menus.h"
 #include <antares/date/date.h>
 #include <wx/menuitem.h>
@@ -28,6 +28,7 @@
 #include "../../../common/lock.h"
 #include <yuni/datetime/timestamp.h>
 #include "internal-ids.h"
+#include "application/study.h"
 
 using namespace Yuni;
 

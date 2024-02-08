@@ -21,8 +21,8 @@
 #ifndef YUNI_OS_WINDOWS
 #include <csignal>
 
-#include "common.h"
-#include "public.h"
+#include "antares/signal-handling/common.h"
+#include "antares/signal-handling/public.h"
 
 namespace Antares::Solver
 {

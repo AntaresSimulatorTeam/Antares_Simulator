@@ -19,7 +19,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <antares/antares.h>
+#include "antares/antares/antares.h"
 #include "notebook.h"
 #include <wx/dcbuffer.h>
 #include <wx/sizer.h>

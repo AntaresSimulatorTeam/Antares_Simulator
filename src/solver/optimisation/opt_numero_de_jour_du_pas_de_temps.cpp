@@ -21,10 +21,10 @@
 
 #include <math.h>
 
-#include "../simulation/simulation.h"
-#include "../simulation/sim_extern_variables_globales.h"
+#include "antares/solver/simulation/simulation.h"
+#include "antares/solver/simulation/sim_extern_variables_globales.h"
 
-#include "opt_fonctions.h"
+#include "antares/solver/optimisation/opt_fonctions.h"
 
 void OPT_NumeroDeJourDuPasDeTemps(PROBLEME_HEBDO* problemeHebdo)
 {

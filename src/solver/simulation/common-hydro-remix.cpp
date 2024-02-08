@@ -23,10 +23,10 @@
 #include <yuni/core/math.h>
 #include <antares/study/study.h>
 #include <antares/exception/AssertionError.hpp>
-#include "common-eco-adq.h"
+#include "antares/solver/simulation/common-eco-adq.h"
 #include <antares/logs/logs.h>
 #include <cassert>
-#include "simulation.h"
+#include "antares/study/simulation.h"
 #include <antares/study/area/scratchpad.h>
 
 using namespace Yuni;

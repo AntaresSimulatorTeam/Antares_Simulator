@@ -20,7 +20,7 @@
 */
 
 #include <action/action.h>
-#include <antares/antares.h>
+#include "antares/antares/antares.h"
 
 using namespace Yuni;
 
