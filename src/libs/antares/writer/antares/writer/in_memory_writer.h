@@ -34,8 +34,8 @@ namespace Antares::Solver
 class InMemoryWriter : public IResultWriter
 {
 public:
-    using MapType = std::map<std::string, std::string>;
-    InMemoryWriter(Benchmarking::IDurationCollector& duration_collector);
+    using MapType = std::map<std::string, std::string, std::less<>>;
+    explicit InMemoryWriter(Benchmarking::IDurationCollector& duration_collector);
     void addEntryFromBuffer(const std::string& entryPath, Yuni::Clob& entryContent) override;
     void addEntryFromBuffer(const std::string& entryPath, std::string& entryContent) override;
     void addEntryFromFile(const std::string& entryPath, const std::string& filePath) override;
