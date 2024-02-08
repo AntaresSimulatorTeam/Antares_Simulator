@@ -92,18 +92,18 @@ var NAVTREEINDEX =
 "classAntares_1_1Forms_1_1MainFormData.html#a37123ca5b75f18ae9f2904e3d6b0ab2b",
 "classAntares_1_1Map_1_1Tool_1_1Tool.html#ab7c181225bba7c1c14aca3669a7b07bd",
 "classAntares_1_1Solver_1_1Simulation_1_1Economy.html#a891d0f5ad4d8749ca14d79933f523715",
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByRenewablePlant.html#ad76f96fb8e186b8990c2642d99580d2e",
-"classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html#aad35ad10748abd21ed376fb046353610",
-"classAntares_1_1Toolbox_1_1Spotlight_1_1ItemConstraint.html",
-"classAntares_1_1Window_1_1OutputViewer_1_1SpotlightProviderMCAll.html",
-"classIItem_1_1Tag.html#a03ecb8f2e70751863597edf59000f695",
-"common_2component_2panel_8h_source.html",
-"dir_d040d26dea9cc6c197fd1ea2521075ae.html",
-"index.html#autotoc_md1",
-"renewableGeneration_8h_source.html",
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLP_1_1Statistics.html",
-"structAntares_1_1TmpDataByArea.html#a3d3b2308682f7d68d709c23a29fc6a1e",
-"ui_2simulator_2application_2application_8h_source.html"
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProfitByPlant.html",
+"classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html#ab2b82bea22aadb135da7facc9f484e12",
+"classAntares_1_1Toolbox_1_1Spotlight_1_1ItemConstraint.html#a020f7921656d6476aeae7b6929fa304f",
+"classAntares_1_1Window_1_1OutputViewer_1_1SpotlightProviderMCAll.html#a041756acdf162ce47c9794a1a9e75e10",
+"classIItem_1_1Tag.html#a744db431dc93c4ec31f8d0ec4de42352",
+"common_2component_2spotlight_2mini-frame_8h_source.html",
+"dir_d070168646c1b05fc83060058a76ff79.html",
+"index.html#autotoc_md2",
+"renewable_2cluster_8hxx_source.html",
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoopFlow_1_1Statistics.html",
+"structAntares_1_1TmpDataByArea.html#a432c65a9449d8cedfb4d18329da0416d",
+"ui_2simulator_2application_2main_2fwd_8h_source.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

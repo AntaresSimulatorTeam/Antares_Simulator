@@ -1,6 +1,5 @@
 var NAVTREEINDEX19 =
 {
-"common_2component_2panel_8h_source.html":[8,0,0,5,1,0,4],
 "common_2component_2spotlight_2mini-frame_8h_source.html":[8,0,0,5,1,0,3,3],
 "common_2component_2spotlight_2text_8h_source.html":[8,0,0,5,1,0,3,11],
 "common_2dispatcher_2action_8h_source.html":[8,0,0,5,1,1,0],
@@ -249,5 +248,6 @@ var NAVTREEINDEX19 =
 "dir_cc6fedb281d78f8fe70ec0908da22553.html":[8,0,0,2,5,1],
 "dir_cc916e2f44333e82b34e0f3894ee9ade.html":[8,0,0,5,2,2,12],
 "dir_ccb0271c3f5d8205cf5104e2cff46f15.html":[8,0,0,2,3],
-"dir_ce980317fbc69b3f740ff45def79f52e.html":[8,0,0,1,0,19]
+"dir_ce980317fbc69b3f740ff45def79f52e.html":[8,0,0,1,0,19],
+"dir_d040d26dea9cc6c197fd1ea2521075ae.html":[8,0,0,5,2,1,1,4]
 };
