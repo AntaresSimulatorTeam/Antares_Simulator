@@ -1,5 +1,5 @@
-#include "private/in_memory_writer.h"
-#include "antares/logs/logs.h"
+#include <antares/writer/in_memory_writer.h>
+#include <antares/logs/logs.h>
 
 #include <antares/benchmarking/timer.h>
 #include <antares/benchmarking/DurationCollector.h>
@@ -10,7 +10,7 @@ namespace Antares::Solver {
 
 namespace
 {
-void logErrorAndThrow(const std::string& errorMessage)
+void logErrorAndThrow [[noreturn]] (const std::string& errorMessage)
 {
     Antares::logs.error() << errorMessage;
     throw IOError(errorMessage);
@@ -24,7 +24,7 @@ void logErrorAndThrow(const std::string& errorMessage)
                 Benchmarking::IDurationCollector& duration_collector)
   {
     Benchmarking::Timer timer_wait;
-    std::lock_guard<std::mutex> lock(mutex);
+    std::lock_guard lock(mutex);
     timer_wait.stop();
     duration_collector.addDuration("in_memory_wait", timer_wait.get_duration());
 
@@ -38,16 +38,6 @@ void logErrorAndThrow(const std::string& errorMessage)
 
 
 InMemoryWriter::InMemoryWriter(Benchmarking::IDurationCollector& duration_collector) : pDurationCollector(duration_collector) {}
-
-InMemoryWriter::~InMemoryWriter()
-{
-    // TODO remove
-    for (const auto& [path, content] : pEntries)
-      {
-        Antares::logs.info() << path;
-        Antares::logs.info() << content;
-      }
-}
 
 void InMemoryWriter::addEntryFromBuffer(const std::string& entryPath, Yuni::Clob& entryContent)
 {
@@ -108,4 +98,10 @@ bool InMemoryWriter::needsTheJobQueue() const
 void InMemoryWriter::finalize(bool /* verbose */)
 {
 }
+
+const InMemoryWriter::MapType& InMemoryWriter::getMap() const
+{
+    return pEntries;
+}
+
 }

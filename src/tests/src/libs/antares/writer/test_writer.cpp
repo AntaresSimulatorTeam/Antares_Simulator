@@ -25,6 +25,7 @@
 
 #include "yuni/job/queue/service.h"
 #include "antares/writer/i_writer.h"
+#include "antares/writer/in_memory_writer.h"
 #include "antares/writer/writer_factory.h"
 #include "antares/benchmarking/DurationCollector.h"
 #include "utils.h"
@@ -68,13 +69,13 @@ std::string removeExtension(const std::string& name, const std::string& ext)
 }
 
 
-TestContext createContext(const std::filesystem::path zipPath, int threadCount)
+TestContext createContext(const std::filesystem::path zipPath, int threadCount, Antares::Data::ResultFormat fmt)
 {
     auto threadPool = createThreadPool(threadCount);
     std::unique_ptr<IDurationCollector> durationCollector = std::make_unique<Benchmarking::NullDurationCollector>();
     std::string archiveName = zipPath.string();
     auto writer = Antares::Solver::resultWriterFactory(
-            Antares::Data::zipArchive,
+            fmt,
             removeExtension(zipPath.string(), ".zip"),
             threadPool,
             *durationCollector
@@ -104,7 +105,7 @@ BOOST_AUTO_TEST_CASE(test_zip)
     // Writer some content to test.zip, possibly from 2 threads
     auto working_tmp_dir = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     auto zipPath = working_tmp_dir / "test.zip";
-    auto context = createContext(zipPath, 2);
+    auto context = createContext(zipPath, 2, Antares::Data::zipArchive);
     std::string content1 = "test-content1";
     std::string content2 = "test-content2";
     context.writer->addEntryFromBuffer("test-path", content1);
@@ -119,4 +120,48 @@ BOOST_AUTO_TEST_CASE(test_zip)
     checkZipContent(readerHandle, "test-path", "test-content1");
     checkZipContent(readerHandle, "test-second-path", "test-content2");
     mz_zip_reader_close(readerHandle);
+}
+
+
+BOOST_AUTO_TEST_CASE(test_in_memory_concrete)
+{
+    // Writer some content to test.zip, possibly from 2 threads
+    std::string content1 = "test-content1";
+    std::string content2 = "test-content2";
+
+    Benchmarking::NullDurationCollector durationCollector;
+    Antares::Solver::InMemoryWriter writer(durationCollector);
+
+    writer.addEntryFromBuffer("folder/test", content1);
+    writer.addEntryFromBuffer("test-second-path", content2);
+    writer.flush();
+    writer.finalize(true);
+
+    const auto& map = writer.getMap();
+    BOOST_CHECK(map.at("folder/test") == content1);
+    BOOST_CHECK(map.at("test-second-path") == content2);
+}
+
+
+BOOST_AUTO_TEST_CASE(test_in_memory_dyncast)
+{
+    // Writer some content to test.zip, possibly from 2 threads
+
+    auto working_tmp_dir = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
+    auto zipPath = working_tmp_dir / "test.zip";
+    auto context = createContext(zipPath /* unused */, 1 /* unused */, Antares::Data::inMemory);
+
+    std::string content1 = "test-content1";
+    std::string content2 = "test-content2";
+    context.writer->addEntryFromBuffer("folder/test", content1);
+    context.writer->addEntryFromBuffer("test-second-path", content2);
+    context.writer->flush();
+    context.writer->finalize(true);
+
+    auto writer = std::dynamic_pointer_cast<Antares::Solver::InMemoryWriter>(context.writer);
+    BOOST_CHECK(writer != nullptr);
+
+    const auto& map = writer->getMap();
+    BOOST_CHECK(map.at("folder/test") == content1);
+    BOOST_CHECK(map.at("test-second-path") == content2);
 }
