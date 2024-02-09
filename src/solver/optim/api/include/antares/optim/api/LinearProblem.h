@@ -46,7 +46,7 @@ namespace Antares::optim::api
 		virtual MPVariable& getVariable(string name) = 0;
 		virtual MPConstraint& addConstraint(string name, double lb, double ub) = 0;
         // Next method is to ensure transition with existing models. In the target solution it will disappear and we should use the previous one
-		virtual MPConstraint& addBalanceConstraint(string name, double lb, double ub, string nodeName, int timestep) = 0;
+		virtual MPConstraint& addBalanceConstraint(string name, double bound, string nodeName, int timestep) = 0;
 		virtual MPConstraint& getConstraint(string name) = 0;
 		virtual void setObjectiveCoefficient(const MPVariable& variable, double coefficient) = 0;
 		virtual void setMinimization(bool isMinim) = 0; // TODO : supprimer ? non supporté par l'existant

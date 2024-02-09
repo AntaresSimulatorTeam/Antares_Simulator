@@ -37,7 +37,7 @@ void Balance::addConstraints(LinearProblem& problem, const LinearProblemData& da
     auto consumption = data.getTimedData("consumption_" + nodeName_);
     for (auto ts : data.getTimeStamps()) {
         auto balanceConstraint =
-                &problem.addBalanceConstraint("Balance_" + nodeName_ + "_" + to_string(ts), consumption[ts], consumption[ts], nodeName_, ts);
+                &problem.addBalanceConstraint("Balance_" + nodeName_ + "_" + to_string(ts), consumption[ts], nodeName_, ts);
 
         for (auto* battery : batteries_) {
             auto p = &problem.getVariable(battery->getPVarName(ts));
