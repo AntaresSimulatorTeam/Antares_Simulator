@@ -40,7 +40,7 @@ void LegacyLinearProblemFillerImpl::addVariables(LinearProblem& problem, const L
     Antares::Optimization::ProblemSimplexeNommeConverter converter("mock", legacyProblem_);
     if (auto *legacyLinearProblem = dynamic_cast<LegacyLinearProblemImpl *>(&problem)) {
         converter.Fill(&legacyLinearProblem->getMpSolver());
-        declareBalanceConstraints(legacyLinearProblem, data);
+        declareBalanceConstraints(legacyLinearProblem, data.legacy);
     } else {
         // throw
     }
@@ -69,18 +69,18 @@ void LegacyLinearProblemFillerImpl::update(LinearProblem& problem, const LinearP
 // renvoie le numéro de contrainte qui devrait marcher avec MPSolver
 // MPSolver.constraint(int) renvoie une MPConstraint
 void LegacyLinearProblemFillerImpl::declareBalanceConstraints(LegacyLinearProblemImpl *legacyLinearProblem,
-                                                              const LinearProblemData& data)
+                                                              const LinearProblemData::Legacy& legacy)
 {
    auto& balanceConstraintPerNodeName = legacyLinearProblem->balanceConstraintPerNodeName;
    const auto& solver = legacyLinearProblem->getMpSolver();
-   auto* legacyCntMapping = data.legacy.CntMapping;
+   auto* legacyCntMapping = legacy.CntMapping;
 
    for (unsigned int timestep = 0; timestep < legacyCntMapping->size(); timestep++)
    {
        const auto& BalanceAtT = legacyCntMapping->at(timestep).NumeroDeContrainteDesBilansPays;
        for (unsigned areaIndex = 0; areaIndex < BalanceAtT.size(); areaIndex++)
        {
-           std::string nodeWithTs = std::string(data.legacy.areaNames->at(areaIndex)) + "_" + to_string(timestep);
+           std::string nodeWithTs = std::string(legacy.areaNames->at(areaIndex)) + "_" + to_string(timestep);
            std::string name = "AreaBalance";
            int cnt = BalanceAtT[areaIndex];
            // add new name declared by filler to list of aliases of the existing constraint

@@ -34,7 +34,7 @@ class LegacyLinearProblemFillerImpl : public LinearProblemFiller
 {
 private:
     const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* legacyProblem_;
-    void declareBalanceConstraints(LegacyLinearProblemImpl* legacyLinearProblem, const LinearProblemData& data);
+    void declareBalanceConstraints(LegacyLinearProblemImpl* legacyLinearProblem, const LinearProblemData::Legacy& legacy);
 public:
     explicit LegacyLinearProblemFillerImpl(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* legacyProblem) : legacyProblem_(legacyProblem) {};
     void addVariables(LinearProblem& problem, const LinearProblemData& data) override;
