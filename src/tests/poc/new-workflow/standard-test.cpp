@@ -102,7 +102,7 @@ BOOST_AUTO_TEST_CASE(test_std_oneWeek_oneNode_oneBattery_twoThermals)
 
     Component priceMinim("priceMinim", PRICE_MINIM, {}, {});
     ComponentFiller priceMinimFiller(priceMinim, portConnexionsManager);
-    portConnexionsManager.addConnexion({&priceMinimFiller, "cost"}, {&thermal1Filler, "cost"});
+    portConnexionsManager.addConnection({&priceMinimFiller, "cost"}, {&thermal1Filler, "cost"});
     portConnexionsManager.addConnexion({&priceMinimFiller, "cost"}, {&thermal2Filler, "cost"});
     portConnexionsManager.addConnexion({&priceMinimFiller, "cost"}, {&battery1Filler, "cost"});
 
