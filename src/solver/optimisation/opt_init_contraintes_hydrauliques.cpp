@@ -25,8 +25,7 @@
 
 #include "opt_fonctions.h"
 
-void OPT_InitialiserLesContrainteDEnergieHydrauliqueParIntervalleOptimise(
-  PROBLEME_HEBDO* problemeHebdo)
+void OPT_InitialiserLesContrainteDEnergieHydrauliqueParIntervalleOptimise(PROBLEME_HEBDO* problemeHebdo, DebugHydroEnergy* debug)
 {
     int NombreDePasDeTempsPourUneOptimisation
       = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
@@ -58,6 +57,10 @@ void OPT_InitialiserLesContrainteDEnergieHydrauliqueParIntervalleOptimise(
             }
 
             CntEnergieH2OParIntervalleOptimise[intervalle] = CntTurbParIntervalle;
+            if (debug)
+            {
+                debug->write(pays, intervalle, CntEnergieH2OParIntervalleOptimise);
+            }
         }
     }
 

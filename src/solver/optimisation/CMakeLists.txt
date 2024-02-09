@@ -23,6 +23,7 @@ set(RTESOLVER_OPT
 		opt_gestion_des_bornes_cas_lineaire.cpp
 		opt_verification_presence_reserve_jmoins1.cpp
 		opt_init_contraintes_hydrauliques.cpp
+		opt_debug_hydro_energy.cpp
 		opt_appel_solveur_lineaire.cpp
 		opt_liberation_problemes_simplexe.cpp
 		opt_restaurer_les_donnees.cpp
@@ -36,6 +37,7 @@ set(RTESOLVER_OPT
 		opt_init_minmax_groupes_couts_demarrage.cpp
 		opt_nombre_min_groupes_demarres_couts_demarrage.cpp
 		opt_export_structure.h
+		opt_debug_hydro_energy.h
 		opt_export_structure.cpp
 		base_weekly_optimization.h
 		base_weekly_optimization.cpp

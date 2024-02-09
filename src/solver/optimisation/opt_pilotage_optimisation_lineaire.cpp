@@ -68,7 +68,8 @@ bool OPT_PilotageOptimisationLineaire(const OptimizationOptions& options,
 
     OPT_InitialiserLesPminHebdo(problemeHebdo);
 
-    OPT_InitialiserLesContrainteDEnergieHydrauliqueParIntervalleOptimise(problemeHebdo);
+    DebugHydroEnergy debug(writer, problemeHebdo);
+    OPT_InitialiserLesContrainteDEnergieHydrauliqueParIntervalleOptimise(problemeHebdo, &debug);
 
     OPT_MaxDesPmaxHydrauliques(problemeHebdo);
 

@@ -27,6 +27,7 @@
 #include "opt_period_string_generator_base.h"
 #include "antares/study/parameters/adq-patch-params.h"
 #include "opt_structure_probleme_a_resoudre.h"
+#include "opt_debug_hydro_energy.h"
 #include <antares/writer/i_writer.h>
 
 using AdqPatchParams = Antares::Data::AdequacyPatch::AdqPatchParams;
@@ -41,7 +42,7 @@ void OPT_NumeroDIntervalleOptimiseDuPasDeTemps(PROBLEME_HEBDO*);
 void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBDO*);
 void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique(PROBLEME_HEBDO*);
 void OPT_InitialiserLesPminHebdo(PROBLEME_HEBDO*);
-void OPT_InitialiserLesContrainteDEnergieHydrauliqueParIntervalleOptimise(PROBLEME_HEBDO*);
+void OPT_InitialiserLesContrainteDEnergieHydrauliqueParIntervalleOptimise(PROBLEME_HEBDO*, DebugHydroEnergy* debug);
 void OPT_MaxDesPmaxHydrauliques(PROBLEME_HEBDO*);
 void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO*,
                                                             const AdqPatchParams&,

@@ -21,6 +21,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include "utils.h"
 
+Antares::Solver::NullResultWriter gNullResultWriter;
 
 void initializeStudy(Study::Ptr study)
 {
@@ -60,9 +61,9 @@ void addScratchpadToEachArea(Study& study)
     }
 }
 
-TimeSeriesConfigurer& TimeSeriesConfigurer::setColumnCount(unsigned int columnCount)
+TimeSeriesConfigurer& TimeSeriesConfigurer::setColumnCount(unsigned int columnCount, unsigned int height)
 {
-    ts_->resize(columnCount, HOURS_PER_YEAR);
+    ts_->resize(columnCount, height);
     return *this;
 }
 
@@ -130,6 +131,12 @@ averageResults OutputRetriever::load(Area* area)
     return averageResults(result->avgdata);
 }
 
+averageResults OutputRetriever::hydroLevel(Area* area)
+{
+    auto result = retrieveAreaResults<Variable::Economy::VCardReservoirLevel>(area);
+    return averageResults(result->avgdata);
+}
+
 averageResults OutputRetriever::flow(AreaLink* link)
 {
     // There is a problem here : 
@@ -175,7 +182,7 @@ ScenarioBuilderRule::ScenarioBuilderRule(Study& study)
 // Simulation handler
 // =====================
 
-void SimulationHandler::create()
+void SimulationHandler::create(IResultWriter& writer)
 {
     study_.initializeRuntimeInfos();
     addScratchpadToEachArea(study_);
@@ -183,7 +190,7 @@ void SimulationHandler::create()
     simulation_ = std::make_shared<ISimulation<Economy>>(study_,
                                                          settings_,
                                                          nullDurationCollector_,
-                                                         resultWriter_);
+                                                         writer);
     SIM_AllocationTableaux(study_);
 }
 
