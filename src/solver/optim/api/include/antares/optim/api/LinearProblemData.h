@@ -38,6 +38,7 @@ namespace Antares::optim::api
     class LinearProblemData
     {
     private:
+        // TODO : ajouter scénarios, permettre de coupler même TS de scénarios différents ou même scénario de TS différents
         vector<int> timeStamps_;
         int timeResolutionInMinutes_;
         map<string, double> scalarData_;

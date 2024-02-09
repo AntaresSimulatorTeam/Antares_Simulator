@@ -26,6 +26,7 @@ public:
 
 void ComponentFiller::addVariables(LinearProblem& problem, const LinearProblemData& data)
 {
+    // TODO : remplacer par des AST
     if (component_.getModel() == THERMAL)
     {
         for (auto ts : data.getTimeStamps()) {
@@ -53,6 +54,7 @@ void ComponentFiller::addVariables(LinearProblem& problem, const LinearProblemDa
 
 void ComponentFiller::addConstraints(LinearProblem& problem, const LinearProblemData& data)
 {
+    // TODO : remplacer par des AST
     if (component_.getModel() == BATTERY) {
         if (!data.hasScalarData("initialStock_" + component_.getId())) {
             throw;
@@ -103,6 +105,7 @@ void ComponentFiller::addConstraints(LinearProblem& problem, const LinearProblem
 
 void ComponentFiller::addObjective(Antares::optim::api::LinearProblem& problem, const LinearProblemData& data)
 {
+    // TODO : remplacer par des AST
     if (component_.getModel() == PRICE_MINIM) {
         problem.setMinimization(true);
         for (auto ts : data.getTimeStamps()) {
@@ -124,6 +127,7 @@ void ComponentFiller::update(Antares::optim::api::LinearProblem& problem, const 
 
 map<string, double> ComponentFiller::getPortPin(string name, int timestamp, const LinearProblemData& data) const
 {
+    // TODO : remplacer par des AST
     if (component_.getModel() == THERMAL) {
         string pVarName = "P_" + component_.getId() + "_" + to_string(timestamp);
         if (name == "P") {
