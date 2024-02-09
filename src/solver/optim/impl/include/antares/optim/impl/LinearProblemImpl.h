@@ -43,7 +43,7 @@ public :
     MPVariable& addIntVariable(string name, double lb, double ub) override;
     MPVariable& getVariable(string name) override;
     MPConstraint& addConstraint(string name, double lb, double ub) override;
-    MPConstraint& addBalanceConstraint(string name, double lb, double ub, string nodeName, int timestep) override;
+    MPConstraint& addBalanceConstraint(string name, double lb, string nodeName, int timestep) override;
     MPConstraint& getConstraint(string name) override;
     void setObjectiveCoefficient(const MPVariable& variable, double coefficient) override;
     void setMinimization(bool isMinim) override;

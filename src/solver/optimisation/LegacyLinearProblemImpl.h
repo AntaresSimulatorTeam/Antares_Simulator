@@ -26,6 +26,8 @@
 */
 #pragma once
 
+#include <vector>
+
 #include "optim/impl/include/antares/optim/impl/LinearProblemImpl.h"
 #include "utils/include/antares/solver/utils/named_problem.h"
 
@@ -41,6 +43,6 @@ public :
                                      const std::string& solverName);
     MPSolver& getMpSolver() { return *mpSolver; } // only used in legacy filler
     void declareBalanceConstraint(const string& nodeName, MPConstraint* constraint); // only used in legacy filler
-    MPConstraint& addBalanceConstraint(string name, double lb, double ub, string nodeName, int timestep) override;
+    MPConstraint& addBalanceConstraint(string name, double lb, string nodeName, int timestep) override;
     void setMinimization(bool isMinim) override;
 };

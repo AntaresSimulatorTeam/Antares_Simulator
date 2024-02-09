@@ -24,8 +24,6 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#pragma once
-
 #include "LegacyLinearProblemFillerImpl.h"
 #include "LegacyLinearProblemImpl.h"
 #include "utils/include/antares/solver/utils/ortools_utils.h"
