@@ -77,10 +77,10 @@ void LegacyLinearProblemFillerImpl::declareBalanceConstraints(LegacyLinearProble
 
    for (unsigned int timestep = 0; timestep < legacyCntMapping->size(); timestep++)
    {
-       const auto& BalanceAtT = legacyCntMapping->operator[](timestep).NumeroDeContrainteDesBilansPays;
+       const auto& BalanceAtT = legacyCntMapping->at(timestep).NumeroDeContrainteDesBilansPays;
        for (unsigned areaIndex = 0; areaIndex < BalanceAtT.size(); areaIndex++)
        {
-           std::string nodeWithTs = std::string(data.legacy.areaNames->operator[](areaIndex)) + "_" + to_string(timestep);
+           std::string nodeWithTs = std::string(data.legacy.areaNames->at(areaIndex)) + "_" + to_string(timestep);
            std::string name = "AreaBalance";
            int cnt = BalanceAtT[areaIndex];
            // add new name declared by filler to list of aliases of the existing constraint
