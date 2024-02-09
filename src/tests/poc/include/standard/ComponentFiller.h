@@ -3,7 +3,7 @@
 #include "vector"
 #include "antares/optim/api/LinearProblemFiller.h"
 #include "Component.h"
-#include "PortConnexion.h"
+#include "PortConnection.h"
 
 using namespace Antares::optim::api;
 using namespace std;
@@ -11,12 +11,12 @@ using namespace std;
 class ComponentFiller : public LinearProblemFiller
 {
 private:
-    PortConnexionsManager* portConnexionsManager_;
+    PortConnectionsManager* portConnectionsManager_;
     Component component_;
     [[nodiscard]] map<string, double> getPortPin(string name, int timestamp, const LinearProblemData& linearProblemData) const;
 public:
-    ComponentFiller(Component component, PortConnexionsManager &portConnexionsManager) :
-            portConnexionsManager_(&portConnexionsManager), component_(std::move(component))
+    ComponentFiller(Component component, PortConnectionsManager &portConnectionsManager) :
+            portConnectionsManager_(&portConnectionsManager), component_(std::move(component))
     {}
     void addVariables(LinearProblem &problem, const LinearProblemData &data) override;
     void addConstraints(LinearProblem &problem, const LinearProblemData &data) override;
@@ -92,8 +92,8 @@ void ComponentFiller::addConstraints(LinearProblem& problem, const LinearProblem
         for (auto ts : data.getTimeStamps()) {
             auto balanceConstraint =
                     &problem.addBalanceConstraint("Balance_" + nodeName + "_" + to_string(ts), consumption[ts], consumption[ts], nodeName, ts);
-            for (const auto& connexion : portConnexionsManager_->getConexionsTo(this, "P")) {
-                for (const auto& varAndCoeff : connexion.first->getPortPin(connexion.second, ts, data))
+            for (const auto& connection : portConnectionsManager_->getConectionsTo(this, "P")) {
+                for (const auto& varAndCoeff : connection.first->getPortPin(connection.second, ts, data))
                 {
                     auto p = &problem.getVariable(varAndCoeff.first);
                     balanceConstraint->SetCoefficient(p, varAndCoeff.second * 1.0);
@@ -109,8 +109,8 @@ void ComponentFiller::addObjective(Antares::optim::api::LinearProblem& problem, 
     if (component_.getModel() == PRICE_MINIM) {
         problem.setMinimization(true);
         for (auto ts : data.getTimeStamps()) {
-            for (const auto& connexion : portConnexionsManager_->getConexionsTo(this, "cost")) {
-                for (const auto& varAndCoeff : connexion.first->getPortPin(connexion.second, ts, data))
+            for (const auto& connection : portConnectionsManager_->getConectionsTo(this, "cost")) {
+                for (const auto& varAndCoeff : connection.first->getPortPin(connection.second, ts, data))
                 {
                     auto variable = &problem.getVariable(varAndCoeff.first);
                     problem.setObjectiveCoefficient(*variable, varAndCoeff.second);

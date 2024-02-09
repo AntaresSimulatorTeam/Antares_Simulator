@@ -20,23 +20,23 @@ BOOST_AUTO_TEST_CASE(test_std_oneWeek_oneNode_oneBattery_oneThermal)
 
     LinearProblemImpl linearProblem(false, "xpress");
     LinearProblemBuilder linearProblemBuilder(linearProblem);
-    PortConnexionsManager portConnexionsManager;
+    PortConnectionsManager portConnectionsManager;
 
     Component thermal("thermal1", THERMAL, {{"maxP", 100}}, {});
-    ComponentFiller thermal1Filler(thermal, portConnexionsManager);
+    ComponentFiller thermal1Filler(thermal, portConnectionsManager);
 
     Component battery("battery1", BATTERY, {{"maxP", 100}, {"maxStock", 1000}}, {});
-    ComponentFiller battery1Filler(battery, portConnexionsManager);
+    ComponentFiller battery1Filler(battery, portConnectionsManager);
 
     Component balance("balanceA", BALANCE, {}, {{"nodeName", "nodeA"}});
-    ComponentFiller balanceAFiller(balance, portConnexionsManager);
-    portConnexionsManager.addConnexion({&balanceAFiller, "P"}, {&thermal1Filler, "P"});
-    portConnexionsManager.addConnexion({&balanceAFiller, "P"}, {&battery1Filler, "P"});
+    ComponentFiller balanceAFiller(balance, portConnectionsManager);
+    portConnectionsManager.addConnection({&balanceAFiller, "P"}, {&thermal1Filler, "P"});
+    portConnectionsManager.addConnection({&balanceAFiller, "P"}, {&battery1Filler, "P"});
 
     Component priceMinim("priceMinim", PRICE_MINIM, {}, {});
-    ComponentFiller priceMinimFiller(priceMinim, portConnexionsManager);
-    portConnexionsManager.addConnexion({&priceMinimFiller, "cost"}, {&thermal1Filler, "cost"});
-    portConnexionsManager.addConnexion({&priceMinimFiller, "cost"}, {&battery1Filler, "cost"});
+    ComponentFiller priceMinimFiller(priceMinim, portConnectionsManager);
+    portConnectionsManager.addConnection({&priceMinimFiller, "cost"}, {&thermal1Filler, "cost"});
+    portConnectionsManager.addConnection({&priceMinimFiller, "cost"}, {&battery1Filler, "cost"});
 
     linearProblemBuilder.addFiller(thermal1Filler);
     linearProblemBuilder.addFiller(battery1Filler);
@@ -83,28 +83,28 @@ BOOST_AUTO_TEST_CASE(test_std_oneWeek_oneNode_oneBattery_twoThermals)
 
     LinearProblemImpl linearProblem(false, "xpress");
     LinearProblemBuilder linearProblemBuilder(linearProblem);
-    PortConnexionsManager portConnexionsManager;
+    PortConnectionsManager portConnectionsManager;
 
     Component thermal1("thermal1", THERMAL, {{"maxP", 100}}, {});
-    ComponentFiller thermal1Filler(thermal1, portConnexionsManager);
+    ComponentFiller thermal1Filler(thermal1, portConnectionsManager);
 
     Component thermal2("thermal2", THERMAL, {{"maxP", 100}}, {});
-    ComponentFiller thermal2Filler(thermal2, portConnexionsManager);
+    ComponentFiller thermal2Filler(thermal2, portConnectionsManager);
 
     Component battery("battery1", BATTERY, {{"maxP", 180}, {"maxStock", 200}}, {});
-    ComponentFiller battery1Filler(battery, portConnexionsManager);
+    ComponentFiller battery1Filler(battery, portConnectionsManager);
 
     Component balance("balanceA", BALANCE, {}, {{"nodeName", "nodeA"}});
-    ComponentFiller balanceAFiller(balance, portConnexionsManager);
-    portConnexionsManager.addConnexion({&balanceAFiller, "P"}, {&thermal1Filler, "P"});
-    portConnexionsManager.addConnexion({&balanceAFiller, "P"}, {&thermal2Filler, "P"});
-    portConnexionsManager.addConnexion({&balanceAFiller, "P"}, {&battery1Filler, "P"});
+    ComponentFiller balanceAFiller(balance, portConnectionsManager);
+    portConnectionsManager.addConnection({&balanceAFiller, "P"}, {&thermal1Filler, "P"});
+    portConnectionsManager.addConnection({&balanceAFiller, "P"}, {&thermal2Filler, "P"});
+    portConnectionsManager.addConnection({&balanceAFiller, "P"}, {&battery1Filler, "P"});
 
     Component priceMinim("priceMinim", PRICE_MINIM, {}, {});
-    ComponentFiller priceMinimFiller(priceMinim, portConnexionsManager);
-    portConnexionsManager.addConnection({&priceMinimFiller, "cost"}, {&thermal1Filler, "cost"});
-    portConnexionsManager.addConnexion({&priceMinimFiller, "cost"}, {&thermal2Filler, "cost"});
-    portConnexionsManager.addConnexion({&priceMinimFiller, "cost"}, {&battery1Filler, "cost"});
+    ComponentFiller priceMinimFiller(priceMinim, portConnectionsManager);
+    portConnectionsManager.addConnection({&priceMinimFiller, "cost"}, {&thermal1Filler, "cost"});
+    portConnectionsManager.addConnection({&priceMinimFiller, "cost"}, {&thermal2Filler, "cost"});
+    portConnectionsManager.addConnection({&priceMinimFiller, "cost"}, {&battery1Filler, "cost"});
 
     linearProblemBuilder.addFiller(thermal1Filler);
     linearProblemBuilder.addFiller(thermal2Filler);
