@@ -43,6 +43,6 @@ public :
                                      const std::string& solverName);
     MPSolver& getMpSolver() { return *mpSolver; } // only used in legacy filler
     void declareBalanceConstraint(const string& nodeName, MPConstraint* constraint); // only used in legacy filler
-    MPConstraint& addBalanceConstraint(string name, double lb, string nodeName, int timestep) override;
+    MPConstraint& addBalanceConstraint(string name, double bound, string nodeName, int timestep) override;
     void setMinimization(bool isMinim) override;
 };
