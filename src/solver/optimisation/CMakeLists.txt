@@ -5,6 +5,8 @@ set(RTESOLVER_OPT
 		opt_optimisation_lineaire.cpp
 		opt_chainage_intercos.cpp
 		opt_fonctions.h
+		opt_global.h
+		opt_global.cpp
 		opt_pilotage_optimisation_lineaire.cpp
 		opt_pilotage_optimisation_quadratique.cpp
 		opt_structure_probleme_a_resoudre.h

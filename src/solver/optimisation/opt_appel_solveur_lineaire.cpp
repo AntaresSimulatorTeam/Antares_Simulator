@@ -31,6 +31,7 @@
 #include "../simulation/simulation.h"
 #include "../simulation/sim_structure_probleme_economique.h"
 #include "opt_fonctions.h"
+#include "opt_global.h"
 
 extern "C"
 {
@@ -233,14 +234,16 @@ static SimplexResult OPT_TryToCallSimplex(
         LinearProblemBuilder linearProblemBuilder(legacyLinearProblem);
         LegacyLinearProblemFillerImpl filler(&Probleme); // TODO : fusionner avec LegacyLinearProblemImpl ?
         linearProblemBuilder.addFiller(filler);
+        for (auto* filler : gAdditionalFillers)
+            linearProblemBuilder.addFiller(*filler);
+
         // TODO : on peut ajouter ici des fillers supplémentaires, par exemple passés en argument de la fonction
         // sinon renvoyer le builder ou le problem à une autre classe
-        LinearProblemData linearProblemData({}, 0, {}, {});
         // Required for the balance constraint indices
-        linearProblemData.legacy.CntMapping = &problemeHebdo->CorrespondanceCntNativesCntOptim;
-        linearProblemData.legacy.areaNames = &problemeHebdo->NomsDesPays;
+        gLinearProblemData.legacy.constraintMapping = &problemeHebdo->CorrespondanceCntNativesCntOptim;
+        gLinearProblemData.legacy.areaNames = &problemeHebdo->NomsDesPays;
         // TODO : ajouter les données ici
-        linearProblemBuilder.build(linearProblemData);
+        linearProblemBuilder.build(gLinearProblemData);
         solver = &legacyLinearProblem.getMpSolver(); // TODO attention quand on sort de ce scope mpSolver est détruit
     }
     const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);

@@ -73,11 +73,11 @@ void LegacyLinearProblemFillerImpl::declareBalanceConstraints(LegacyLinearProble
 {
    auto& balanceConstraintPerNodeName = legacyLinearProblem->balanceConstraintPerNodeName;
    const auto& solver = legacyLinearProblem->getMpSolver();
-   auto* legacyCntMapping = legacy.CntMapping;
+   auto* constraintMapping = legacy.constraintMapping;
 
-   for (unsigned int timestep = 0; timestep < legacyCntMapping->size(); timestep++)
+   for (unsigned int timestep = 0; timestep < constraintMapping->size(); timestep++)
    {
-       const auto& BalanceAtT = legacyCntMapping->at(timestep).NumeroDeContrainteDesBilansPays;
+       const auto& BalanceAtT = constraintMapping->at(timestep).NumeroDeContrainteDesBilansPays;
        for (unsigned areaIndex = 0; areaIndex < BalanceAtT.size(); areaIndex++)
        {
            std::string nodeWithTs = std::string(legacy.areaNames->at(areaIndex)) + "_" + to_string(timestep);

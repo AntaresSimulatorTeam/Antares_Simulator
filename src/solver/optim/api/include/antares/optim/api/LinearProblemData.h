@@ -59,7 +59,7 @@ namespace Antares::optim::api
 
         // TODO remove
         struct Legacy {
-            const std::vector<CORRESPONDANCES_DES_CONTRAINTES>* CntMapping;
+            const std::vector<CORRESPONDANCES_DES_CONTRAINTES>* constraintMapping;
             const std::vector<const char*>* areaNames;
         };
         Legacy legacy;
