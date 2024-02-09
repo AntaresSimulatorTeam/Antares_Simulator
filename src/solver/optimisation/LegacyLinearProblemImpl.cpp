@@ -18,17 +18,16 @@ LegacyLinearProblemImpl::LegacyLinearProblemImpl(const Antares::Optimization::PR
     mpSolver->MutableObjective()->SetMinimization();
 }
 
-MPConstraint& LegacyLinearProblemImpl::addBalanceConstraint(string name, double lb, double ub, string nodeName, int timestep)
+MPConstraint& LegacyLinearProblemImpl::addBalanceConstraint(string name, double bound, string nodeName, int timestep)
 {
     string nodeWithTs = nodeName + "_" + to_string(timestep);
     if (balanceConstraintPerNodeName.contains(nodeWithTs)) {
         // add new name declared by filler to list of aliases of the existing constraint
         balanceConstraintPerNodeName.at(nodeWithTs).second.push_back(name);
         // return the existing constraint
-        // TODO : vérifier aussi que LB/UB sont les mêmes ? ou forcer lb=ub ? comment gérer la conso ?
         return *balanceConstraintPerNodeName.at(nodeWithTs).first;
     }
-    MPConstraint *constraint = mpSolver->MakeRowConstraint(lb, ub, name);
+    MPConstraint *constraint = mpSolver->MakeRowConstraint(bound, bound, name);
     balanceConstraintPerNodeName.insert({nodeWithTs, {constraint, {name}}});
     return *constraint;
 }

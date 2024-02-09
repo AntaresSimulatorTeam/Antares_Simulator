@@ -26,6 +26,8 @@
 */
 #pragma once
 
+#include <vector>
+
 #include "optim/impl/include/antares/optim/impl/LinearProblemImpl.h"
 #include "utils/include/antares/solver/utils/named_problem.h"
 
@@ -33,6 +35,7 @@ using namespace Antares::optim::api;
 using namespace std;
 class LegacyLinearProblemImpl : public LinearProblemImpl
 {
+    friend class LegacyLinearProblemFillerImpl;
 private:
     // For each node name, contains the balance constraint declared by the legacy filler, as well as its names & aliases declared by new fillers
     map<string, pair<MPConstraint*, vector<string>>> balanceConstraintPerNodeName;
@@ -41,6 +44,6 @@ public :
                                      const std::string& solverName);
     MPSolver& getMpSolver() { return *mpSolver; } // only used in legacy filler
     void declareBalanceConstraint(const string& nodeName, MPConstraint* constraint); // only used in legacy filler
-    MPConstraint& addBalanceConstraint(string name, double lb, double ub, string nodeName, int timestep) override;
+    MPConstraint& addBalanceConstraint(string name, double bound, string nodeName, int timestep) override;
     void setMinimization(bool isMinim) override;
 };

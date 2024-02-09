@@ -35,10 +35,10 @@ MPConstraint& LinearProblemImpl::addConstraint(string name, double lb, double ub
     return *mpSolver->MakeRowConstraint(lb, ub, name);
 }
 
-MPConstraint& LinearProblemImpl::addBalanceConstraint(string name, double lb, double ub, string nodeName, int timestep)
+MPConstraint& LinearProblemImpl::addBalanceConstraint(string name, double bound, string nodeName, int timestep)
 {
     // TODO : log ignored arguments ?
-    return this->addConstraint(name, lb, ub);
+    return this->addConstraint(name, bound, bound);
 }
 
 MPConstraint& LinearProblemImpl::getConstraint(string name)

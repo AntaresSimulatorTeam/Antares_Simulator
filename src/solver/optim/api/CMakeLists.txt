@@ -18,6 +18,12 @@ add_library(Antares::${PROJ} ALIAS ${PROJ})
 
 target_link_libraries(${PROJ}
     ortools::ortools
+    # TODO remove these "almost useless" dependencies
+    yuni-static-core
+    Antares::result_writer
+    Antares::date
+    Antares::inifile
+    Antares::study
 )
 
 target_include_directories(${PROJ}

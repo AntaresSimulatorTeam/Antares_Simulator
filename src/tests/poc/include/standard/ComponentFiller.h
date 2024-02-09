@@ -91,7 +91,7 @@ void ComponentFiller::addConstraints(LinearProblem& problem, const LinearProblem
         auto consumption = data.getTimedData("consumption_" + nodeName);
         for (auto ts : data.getTimeStamps()) {
             auto balanceConstraint =
-                    &problem.addBalanceConstraint("Balance_" + nodeName + "_" + to_string(ts), consumption[ts], consumption[ts], nodeName, ts);
+                    &problem.addBalanceConstraint("Balance_" + nodeName + "_" + to_string(ts), consumption[ts], nodeName, ts);
             for (const auto& connection : portConnectionsManager_->getConectionsTo(this, "P")) {
                 for (const auto& varAndCoeff : connection.first->getPortPin(connection.second, ts, data))
                 {
