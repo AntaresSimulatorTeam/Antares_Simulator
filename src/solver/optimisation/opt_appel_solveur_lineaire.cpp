@@ -236,6 +236,9 @@ static SimplexResult OPT_TryToCallSimplex(
         // TODO : on peut ajouter ici des fillers supplémentaires, par exemple passés en argument de la fonction
         // sinon renvoyer le builder ou le problem à une autre classe
         LinearProblemData linearProblemData({}, 0, {}, {});
+        // Required for the balance constraint indices
+        linearProblemData.legacy.CntMapping = &problemeHebdo->CorrespondanceCntNativesCntOptim;
+        linearProblemData.legacy.areaNames = &problemeHebdo->NomsDesPays;
         // TODO : ajouter les données ici
         linearProblemBuilder.build(linearProblemData);
         solver = &legacyLinearProblem.getMpSolver(); // TODO attention quand on sort de ce scope mpSolver est détruit

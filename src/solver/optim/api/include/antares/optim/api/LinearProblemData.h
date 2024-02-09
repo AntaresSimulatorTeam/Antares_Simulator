@@ -27,6 +27,8 @@
 #pragma once
 
 #include <utility>
+// TODO fix headers
+#include "../../../../../../simulation/sim_structure_probleme_economique.h" // CORRESPONDANCES_DES_CONTRAINTES
 
 #include "vector"
 
@@ -54,5 +56,12 @@ namespace Antares::optim::api
         double getScalarData(const string& key) const { return scalarData_.at(key); }
         bool hasTimedData(const string& key) const { return timedData_.contains(key); }
         vector<double> getTimedData(const string& key) const { return timedData_.at(key); }
+
+        // TODO remove
+        struct {
+            const std::vector<CORRESPONDANCES_DES_CONTRAINTES>* CntMapping;
+            const std::vector<const char*>* areaNames;
+        } legacy;
     };
+
 }

@@ -40,7 +40,7 @@ void LegacyLinearProblemFillerImpl::addVariables(LinearProblem& problem, const L
     Antares::Optimization::ProblemSimplexeNommeConverter converter("mock", legacyProblem_);
     if (auto *legacyLinearProblem = dynamic_cast<LegacyLinearProblemImpl *>(&problem)) {
         converter.Fill(&legacyLinearProblem->getMpSolver());
-        declareBalanceConstraints(legacyLinearProblem);
+        declareBalanceConstraints(legacyLinearProblem, data);
     } else {
         // throw
     }
@@ -61,13 +61,34 @@ void LegacyLinearProblemFillerImpl::update(LinearProblem& problem, const LinearP
 // TODO
 }
 
-void LegacyLinearProblemFillerImpl::declareBalanceConstraints(LegacyLinearProblemImpl *legacyLinearProblem)
-{
+// TODO move to class LegacyLinearProblem ?
+
 // Tell the LegacyLinearProblem what the balance constraints are, in order to be able to add new models to existing nodes
 // TODO : ask for help for this
 // utiliser data.CorrespondanceCntNativesCntOptim[pdt].NumeroDeContrainteDesBilansPays[pays]
 // renvoie le numéro de contrainte qui devrait marcher avec MPSolver
 // MPSolver.constraint(int) renvoie une MPConstraint
+void LegacyLinearProblemFillerImpl::declareBalanceConstraints(LegacyLinearProblemImpl *legacyLinearProblem,
+                                                              const LinearProblemData& data)
+{
+   auto& balanceConstraintPerNodeName = legacyLinearProblem->balanceConstraintPerNodeName;
+   const auto& solver = legacyLinearProblem->getMpSolver();
+   auto* legacyCntMapping = data.legacy.CntMapping;
+
+   for (unsigned int timestep = 0; timestep < legacyCntMapping->size(); timestep++)
+   {
+       const auto& BalanceAtT = legacyCntMapping->operator[](timestep).NumeroDeContrainteDesBilansPays;
+       for (unsigned areaIndex = 0; areaIndex < BalanceAtT.size(); areaIndex++)
+       {
+           std::string nodeWithTs = std::string(data.legacy.areaNames->operator[](areaIndex)) + "_" + to_string(timestep);
+           std::string name = "AreaBalance";
+           int cnt = BalanceAtT[areaIndex];
+           // add new name declared by filler to list of aliases of the existing constraint
+           operations_research::MPConstraint* constraint = solver.constraint(cnt);
+           balanceConstraintPerNodeName.insert({nodeWithTs, {constraint, {name}}});
+       }
+   }
 }
+
 
 

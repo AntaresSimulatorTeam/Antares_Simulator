@@ -35,6 +35,7 @@ using namespace Antares::optim::api;
 using namespace std;
 class LegacyLinearProblemImpl : public LinearProblemImpl
 {
+    friend class LegacyLinearProblemFillerImpl;
 private:
     // For each node name, contains the balance constraint declared by the legacy filler, as well as its names & aliases declared by new fillers
     map<string, pair<MPConstraint*, vector<string>>> balanceConstraintPerNodeName;
