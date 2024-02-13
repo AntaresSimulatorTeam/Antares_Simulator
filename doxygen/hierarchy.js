@@ -1361,7 +1361,7 @@ var hierarchy =
     [ "Antares::Solver::Variable::VariableAccessor< ResultsT, Category::singleColumn >", "structAntares_1_1Solver_1_1Variable_1_1VariableAccessor_3_01ResultsT_00_01Category_1_1singleColumn_01_4.html", null ],
     [ "Antares::Optimization::VariableBounds", "structAntares_1_1Optimization_1_1VariableBounds.html", null ],
     [ "Antares::Window::OutputViewer::Provider::VariableCollector", "classAntares_1_1Window_1_1OutputViewer_1_1Provider_1_1VariableCollector.html", null ],
-    [ "NewVariable::VariableManager", "classNewVariable_1_1VariableManager.html", null ],
+    [ "VariableManagement::VariableManager", "classVariableManagement_1_1VariableManager.html", null ],
     [ "Antares::Data::VariablePrintInfo", "classAntares_1_1Data_1_1VariablePrintInfo.html", null ],
     [ "Antares::Data::variablePrintInfoCollector", "classAntares_1_1Data_1_1variablePrintInfoCollector.html", null ],
     [ "VARIABLES_DUALES_INTERCONNEXIONS", "structVARIABLES__DUALES__INTERCONNEXIONS.html", null ],

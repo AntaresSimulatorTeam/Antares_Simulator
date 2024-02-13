@@ -1081,9 +1081,6 @@ var annotated_dup =
     [ "kirchhoff_pytest", null, [
       [ "StudyReference", "classkirchhoff__pytest_1_1StudyReference.html", null ]
     ] ],
-    [ "NewVariable", null, [
-      [ "VariableManager", "classNewVariable_1_1VariableManager.html", null ]
-    ] ],
     [ "output_compare", null, [
       [ "output_compare", "classoutput__compare_1_1output__compare.html", null ]
     ] ],
@@ -1118,6 +1115,9 @@ var annotated_dup =
       [ "behavior_flag", "classunfeasible__problem_1_1behavior__flag.html", null ],
       [ "unfeasible_problem", "classunfeasible__problem_1_1unfeasible__problem.html", null ],
       [ "weeks_in_year", "classunfeasible__problem_1_1weeks__in__year.html", null ]
+    ] ],
+    [ "VariableManagement", null, [
+      [ "VariableManager", "classVariableManagement_1_1VariableManager.html", null ]
     ] ],
     [ "Yuni", null, [
       [ "Extension", null, [

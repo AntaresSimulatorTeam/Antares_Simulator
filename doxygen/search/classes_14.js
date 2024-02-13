@@ -9,7 +9,7 @@ var searchData=
   ['variableaccessor_3c_20resultst_2c_20category_3a_3asinglecolumn_20_3e_6',['VariableAccessor&lt; ResultsT, Category::singleColumn &gt;',['../structAntares_1_1Solver_1_1Variable_1_1VariableAccessor_3_01ResultsT_00_01Category_1_1singleColumn_01_4.html',1,'Antares::Solver::Variable']]],
   ['variablebounds_7',['VariableBounds',['../structAntares_1_1Optimization_1_1VariableBounds.html',1,'Antares::Optimization']]],
   ['variablecollector_8',['VariableCollector',['../classAntares_1_1Window_1_1OutputViewer_1_1Provider_1_1VariableCollector.html',1,'Antares::Window::OutputViewer::Provider']]],
-  ['variablemanager_9',['VariableManager',['../classNewVariable_1_1VariableManager.html',1,'NewVariable']]],
+  ['variablemanager_9',['VariableManager',['../classVariableManagement_1_1VariableManager.html',1,'VariableManagement']]],
   ['variablenamer_10',['VariableNamer',['../classVariableNamer.html',1,'']]],
   ['variableprintinfo_11',['VariablePrintInfo',['../classAntares_1_1Data_1_1VariablePrintInfo.html',1,'Antares::Data']]],
   ['variableprintinfocollector_12',['variablePrintInfoCollector',['../classAntares_1_1Data_1_1variablePrintInfoCollector.html',1,'Antares::Data']]],

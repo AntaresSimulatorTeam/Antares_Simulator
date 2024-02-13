@@ -82,6 +82,8 @@ var NAVTREEINDEX0 =
 "ThermalTSNumberData_8h_source.html":[8,0,0,1,0,22,0,0,0,8,14],
 "UnfeasibleProblemBehavior_8hpp_source.html":[8,0,0,1,0,22,0,0,0,29],
 "UnfeasibleProblemError_8hpp_source.html":[8,0,0,1,0,7,0,0,0,3],
+"VariableManagement_8h_source.html":[8,0,0,2,5,2,0],
+"VariableManagerUtils_8h_source.html":[8,0,0,2,5,2,1],
 "WindTSNumberData_8h_source.html":[8,0,0,1,0,22,0,0,0,8,17],
 "about_2aboutbox_8h_source.html":[8,0,0,5,2,2,0,0],
 "aboutbox_8h_source.html":[8,0,0,5,2,2,17],
@@ -247,7 +249,5 @@ var NAVTREEINDEX0 =
 "classAntares_1_1Action_1_1AntaresStudy_1_1Area_1_1DataTimeseries.html#a3b6184f4b780c0baa344a5d87ec82c80":[7,0,0,0,0,0,6,2],
 "classAntares_1_1Action_1_1AntaresStudy_1_1Area_1_1DataTimeseries.html#a6003dac69cfa5a798c87fd15ee0d100b":[7,0,0,0,0,0,6,7],
 "classAntares_1_1Action_1_1AntaresStudy_1_1Area_1_1DataTimeseries.html#a939b3b832436dc47ded18baf96121135":[7,0,0,0,0,0,6,6],
-"classAntares_1_1Action_1_1AntaresStudy_1_1Area_1_1DataTimeseries.html#aa8de887188d2b54d2981ece8cffcb407":[7,0,0,0,0,0,6,4],
-"classAntares_1_1Action_1_1AntaresStudy_1_1Area_1_1DataTimeseries.html#aad8fbc6bf8604681bb091ff56826d1a8":[7,0,0,0,0,0,6,5],
-"classAntares_1_1Action_1_1AntaresStudy_1_1Area_1_1DataTimeseries.html#ac9815eee4a63547480d17da322984be1":[7,0,0,0,0,0,6,3]
+"classAntares_1_1Action_1_1AntaresStudy_1_1Area_1_1DataTimeseries.html#aa8de887188d2b54d2981ece8cffcb407":[7,0,0,0,0,0,6,4]
 };

@@ -1,5 +1,8 @@
 var NAVTREEINDEX24 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1LINK__NAMESPACE_1_1VCardAllLinks.html":[7,0,0,12,4,5,1],
+"structAntares_1_1Solver_1_1Variable_1_1LINK__NAMESPACE_1_1VCardAllLinks.html#a5e6d6d82ddf949aa8a2dafd3cba028a2":[7,0,0,12,4,5,1,0],
+"structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat.html":[7,0,0,12,4,14],
 "structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_010_01_4.html":[7,0,0,12,4,15],
 "structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_011_01_4.html":[7,0,0,12,4,16],
 "structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_012_01_4.html":[7,0,0,12,4,17],
@@ -215,8 +218,8 @@ var NAVTREEINDEX24 =
 "structRenewableClusterStudy.html":[7,0,189],
 "structSOLDE__MOYEN__DES__ECHANGES.html":[7,0,202],
 "structShortTermStorageLevelData.html":[7,0,199],
-"structShortTermStorage_1_1PROPERTIES.html":[7,0,19,0],
-"structShortTermStorage_1_1RESULTS.html":[7,0,19,1],
+"structShortTermStorage_1_1PROPERTIES.html":[7,0,18,0],
+"structShortTermStorage_1_1RESULTS.html":[7,0,18,1],
 "structSimplexResult.html":[7,0,200],
 "structStartUpCostsData.html":[7,0,203],
 "structStudyBuilder.html":[7,0,204],
@@ -246,8 +249,5 @@ var NAVTREEINDEX24 =
 "suffix-for-cluster-names_8hxx_source.html":[8,0,0,5,0,1,0,1,5],
 "suffix-for-constraint-names_8h_source.html":[8,0,0,5,0,1,0,1,6],
 "suffix-for-constraint-names_8hxx_source.html":[8,0,0,5,0,1,0,1,7],
-"summary_8h_source.html":[8,0,0,5,2,1,1,1,1,4,0],
-"surveyresults_2surveyresults_8h_source.html":[8,0,0,2,10,0,0,0,0,4,2],
-"surveyresults_8h_source.html":[8,0,0,2,10,0,0,0,0,23],
-"system-memory_8h_source.html":[8,0,0,2,4,0,0,0,0,5]
+"summary_8h_source.html":[8,0,0,5,2,1,1,1,1,4,0]
 };
