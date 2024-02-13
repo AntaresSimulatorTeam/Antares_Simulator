@@ -30,6 +30,7 @@ set(UPDATER_LIBS
 		Antares::study
 		Antares::sys
 		antares-core #version.h
+		Antares::locale
 		${CMAKE_THREADS_LIBS_INIT}
 		)
 

@@ -4,11 +4,11 @@ set(RTESOLVER_OPT
 		opt_gestion_second_membre_cas_lineaire.cpp
 		opt_optimisation_lineaire.cpp
 		opt_chainage_intercos.cpp
-		opt_fonctions.h
+		include/antares/solver/optimisation/opt_fonctions.h
 		opt_pilotage_optimisation_lineaire.cpp
 		opt_pilotage_optimisation_quadratique.cpp
-		opt_structure_probleme_a_resoudre.h
-		opt_constants.h
+		include/antares/solver/optimisation/opt_structure_probleme_a_resoudre.h
+		include/antares/solver/optimisation/opt_constants.h
 		opt_alloc_probleme_a_optimiser.cpp
 		opt_gestion_des_bornes_cas_quadratique.cpp
 		opt_construction_variables_optimisees_lineaire.cpp
@@ -35,33 +35,33 @@ set(RTESOLVER_OPT
 		opt_decompte_variables_et_contraintes_couts_demarrage.cpp
 		opt_init_minmax_groupes_couts_demarrage.cpp
 		opt_nombre_min_groupes_demarres_couts_demarrage.cpp
-		opt_export_structure.h
+		include/antares/solver/optimisation/opt_export_structure.h
 		opt_export_structure.cpp
-		base_weekly_optimization.h
+		include/antares/solver/optimisation/base_weekly_optimization.h
 		base_weekly_optimization.cpp
-		adequacy_patch_local_matching/adequacy_patch_weekly_optimization.h
+		include/antares/solver/optimisation/adequacy_patch_local_matching/adequacy_patch_weekly_optimization.h
 		adequacy_patch_local_matching/adequacy_patch_weekly_optimization.cpp
-		weekly_optimization.h
+		include/antares/solver/optimisation/weekly_optimization.h
 		weekly_optimization.cpp
-		optim_post_process_list.h
+		include/antares/solver/optimisation/optim_post_process_list.h
 		optim_post_process_list.cpp
-		post_process_commands.h
+		include/antares/solver/optimisation/post_process_commands.h
 		post_process_commands.cpp
-		adequacy_patch_csr/hourly_csr_problem.h
-		adequacy_patch_csr/adq_patch_post_process_list.h
+		include/antares/solver/optimisation/adequacy_patch_csr/hourly_csr_problem.h
+		include/antares/solver/optimisation/adequacy_patch_csr/adq_patch_post_process_list.h
 		adequacy_patch_csr/adq_patch_post_process_list.cpp
-		adequacy_patch_local_matching/adq_patch_local_matching.h
+		include/antares/solver/optimisation/adequacy_patch_local_matching/adq_patch_local_matching.h
 		adequacy_patch_local_matching/adq_patch_local_matching.cpp
-		adequacy_patch_csr/adq_patch_curtailment_sharing.h
+		include/antares/solver/optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h
 		adequacy_patch_csr/adq_patch_curtailment_sharing.cpp
 		adequacy_patch_csr/solve_problem.cpp
 		adequacy_patch_csr/set_variable_boundaries.cpp
 		adequacy_patch_csr/set_problem_cost_function.cpp
 		adequacy_patch_csr/construct_problem_variables.cpp
 		adequacy_patch_csr/construct_problem_constraints_RHS.cpp
-		adequacy_patch_csr/csr_quadratic_problem.h
+		include/antares/solver/optimisation/adequacy_patch_csr/csr_quadratic_problem.h
 		adequacy_patch_csr/csr_quadratic_problem.cpp
-		adequacy_patch_csr/count_constraints_variables.h
+		include/antares/solver/optimisation/adequacy_patch_csr/count_constraints_variables.h
 		adequacy_patch_csr/count_constraints_variables.cpp
 		adequacy_patch_csr/constraints/CsrFlowDissociation.h
 		adequacy_patch_csr/constraints/CsrFlowDissociation.cpp
@@ -70,104 +70,104 @@ set(RTESOLVER_OPT
 		adequacy_patch_csr/constraints/CsrBindingConstraintHour.h
 		adequacy_patch_csr/constraints/CsrBindingConstraintHour.cpp
 
-		opt_period_string_generator_base.h
-		opt_rename_problem.h
+		include/antares/solver/optimisation/opt_period_string_generator_base.h
+		include/antares/solver/optimisation/opt_rename_problem.h
 		opt_rename_problem.cpp
 
 
 		constraints/ConstraintBuilder.cpp
-		constraints/ConstraintBuilder.h
-		constraints/constraint_builder_utils.cpp
-		constraints/constraint_builder_utils.h
-		constraints/AreaBalance.h
+		include/antares/solver/optimisation/constraints/ConstraintBuilder.h
+        constraints/constraint_builder_utils.cpp
+        include/antares/solver/optimisation/constraints/constraint_builder_utils.h
+        include/antares/solver/optimisation/constraints/AreaBalance.h
 		constraints/AreaBalance.cpp
-		constraints/FictitiousLoad.h
+		include/antares/solver/optimisation/constraints/FictitiousLoad.h
 		constraints/FictitiousLoad.cpp
-		constraints/ShortTermStorageLevel.h
+		include/antares/solver/optimisation/constraints/ShortTermStorageLevel.h
 		constraints/ShortTermStorageLevel.cpp
-		constraints/FlowDissociation.h
+		include/antares/solver/optimisation/constraints/FlowDissociation.h
 		constraints/FlowDissociation.cpp
-		constraints/BindingConstraintHour.h
+		include/antares/solver/optimisation/constraints/BindingConstraintHour.h
 		constraints/BindingConstraintHour.cpp
-		constraints/BindingConstraintDay.h
+		include/antares/solver/optimisation/constraints/BindingConstraintDay.h
 		constraints/BindingConstraintDay.cpp
-		constraints/BindingConstraintWeek.h
+		include/antares/solver/optimisation/constraints/BindingConstraintWeek.h
 		constraints/BindingConstraintWeek.cpp
-		constraints/HydroPower.h
+		include/antares/solver/optimisation/constraints/HydroPower.h
 		constraints/HydroPower.cpp
-		constraints/HydroPowerSmoothingUsingVariationSum.h
+		include/antares/solver/optimisation/constraints/HydroPowerSmoothingUsingVariationSum.h
 		constraints/HydroPowerSmoothingUsingVariationSum.cpp
-		constraints/HydroPowerSmoothingUsingVariationMaxDown.h
+		include/antares/solver/optimisation/constraints/HydroPowerSmoothingUsingVariationMaxDown.h
 		constraints/HydroPowerSmoothingUsingVariationMaxDown.cpp
-		constraints/HydroPowerSmoothingUsingVariationMaxUp.h
+		include/antares/solver/optimisation/constraints/HydroPowerSmoothingUsingVariationMaxUp.h
 		constraints/HydroPowerSmoothingUsingVariationMaxUp.cpp
-		constraints/MinHydroPower.h
+		include/antares/solver/optimisation/constraints/MinHydroPower.h
 		constraints/MinHydroPower.cpp
-		constraints/MaxHydroPower.h
+		include/antares/solver/optimisation/constraints/MaxHydroPower.h
 		constraints/MaxHydroPower.cpp
-		constraints/MaxPumping.h
+		include/antares/solver/optimisation/constraints/MaxPumping.h
 		constraints/MaxPumping.cpp
-		constraints/AreaHydroLevel.h
+		include/antares/solver/optimisation/constraints/AreaHydroLevel.h
 		constraints/AreaHydroLevel.cpp
-		constraints/FinalStockEquivalent.h
+		include/antares/solver/optimisation/constraints/FinalStockEquivalent.h
 		constraints/FinalStockEquivalent.cpp
-		constraints/FinalStockExpression.h
+		include/antares/solver/optimisation/constraints/FinalStockExpression.h
 		constraints/FinalStockExpression.cpp
-		constraints/PMaxDispatchableGeneration.h
+		include/antares/solver/optimisation/constraints/PMaxDispatchableGeneration.h
 		constraints/PMaxDispatchableGeneration.cpp
-		constraints/PMinDispatchableGeneration.h
+		include/antares/solver/optimisation/constraints/PMinDispatchableGeneration.h
 		constraints/PMinDispatchableGeneration.cpp
-		constraints/ConsistenceNumberOfDispatchableUnits.h
+		include/antares/solver/optimisation/constraints/ConsistenceNumberOfDispatchableUnits.h
 		constraints/ConsistenceNumberOfDispatchableUnits.cpp
-		constraints/NbUnitsOutageLessThanNbUnitsStop.h
+		include/antares/solver/optimisation/constraints/NbUnitsOutageLessThanNbUnitsStop.h
 		constraints/NbUnitsOutageLessThanNbUnitsStop.cpp
-		constraints/NbDispUnitsMinBoundSinceMinUpTime.h
+		include/antares/solver/optimisation/constraints/NbDispUnitsMinBoundSinceMinUpTime.h
 		constraints/NbDispUnitsMinBoundSinceMinUpTime.cpp
-		constraints/MinDownTime.h
+		include/antares/solver/optimisation/constraints/MinDownTime.h
 		constraints/MinDownTime.cpp
 
-		ProblemMatrixEssential.h
+		include/antares/solver/optimisation/ProblemMatrixEssential.h
 		ProblemMatrixEssential.cpp
-		LinearProblemMatrixStartUpCosts.h
+		include/antares/solver/optimisation/LinearProblemMatrixStartUpCosts.h
 		LinearProblemMatrixStartUpCosts.cpp
-		LinearProblemMatrix.h
+		include/antares/solver/optimisation/LinearProblemMatrix.h
 		LinearProblemMatrix.cpp
-		QuadraticProblemMatrix.h
+		include/antares/solver/optimisation/QuadraticProblemMatrix.h
 		QuadraticProblemMatrix.cpp
-		constraints/ConstraintGroup.h
-		constraints/Group1.h
+		include/antares/solver/optimisation/constraints/ConstraintGroup.h
+		include/antares/solver/optimisation/constraints/Group1.h
 		constraints/Group1.cpp
-		constraints/BindingConstraintDayGroup.h
+		include/antares/solver/optimisation/constraints/BindingConstraintDayGroup.h
 		constraints/BindingConstraintDayGroup.cpp
-		constraints/BindingConstraintWeekGroup.h
+		include/antares/solver/optimisation/constraints/BindingConstraintWeekGroup.h
 		constraints/BindingConstraintWeekGroup.cpp
-		constraints/HydroPowerGroup.h
+		include/antares/solver/optimisation/constraints/HydroPowerGroup.h
 		constraints/HydroPowerGroup.cpp
-		constraints/HydraulicSmoothingGroup.h
+		include/antares/solver/optimisation/constraints/HydraulicSmoothingGroup.h
 		constraints/HydraulicSmoothingGroup.cpp
-		constraints/MinMaxHydroPowerGroup.h
+		include/antares/solver/optimisation/constraints/MinMaxHydroPowerGroup.h
 		constraints/MinMaxHydroPowerGroup.cpp
-		constraints/MaxPumpingGroup.h
+		include/antares/solver/optimisation/constraints/MaxPumpingGroup.h
 		constraints/MaxPumpingGroup.cpp
-		constraints/AreaHydroLevelGroup.h
+		include/antares/solver/optimisation/constraints/AreaHydroLevelGroup.h
 		constraints/AreaHydroLevelGroup.cpp
-		constraints/FinalStockGroup.h
+		include/antares/solver/optimisation/constraints/FinalStockGroup.h
 		constraints/FinalStockGroup.cpp
-		constraints/AbstractStartUpCostsGroup.h
+		include/antares/solver/optimisation/constraints/AbstractStartUpCostsGroup.h
 		constraints/AbstractStartUpCostsGroup.cpp
-		constraints/PMinMaxDispatchableGenerationGroup.h
+		include/antares/solver/optimisation/constraints/PMinMaxDispatchableGenerationGroup.h
 		constraints/PMinMaxDispatchableGenerationGroup.cpp
-		constraints/ConsistenceNumberOfDispatchableUnitsGroup.h
+		include/antares/solver/optimisation/constraints/ConsistenceNumberOfDispatchableUnitsGroup.h
 		constraints/ConsistenceNumberOfDispatchableUnitsGroup.cpp
-		constraints/NbUnitsOutageLessThanNbUnitsStopGroup.h
+		include/antares/solver/optimisation/constraints/NbUnitsOutageLessThanNbUnitsStopGroup.h
 		constraints/NbUnitsOutageLessThanNbUnitsStopGroup.cpp
-		constraints/NbDispUnitsMinBoundSinceMinUpTimeGroup.h
+		include/antares/solver/optimisation/constraints/NbDispUnitsMinBoundSinceMinUpTimeGroup.h
 		constraints/NbDispUnitsMinBoundSinceMinUpTimeGroup.cpp
-		constraints/MinDownTimeGroup.h
+		include/antares/solver/optimisation/constraints/MinDownTimeGroup.h
 		constraints/MinDownTimeGroup.cpp
-		constraints/ExchangeBalance.h
+		include/antares/solver/optimisation/constraints/ExchangeBalance.h
 		constraints/ExchangeBalance.cpp
-		constraints/ExchangeBalanceGroup.h
+		include/antares/solver/optimisation/constraints/ExchangeBalanceGroup.h
 		constraints/ExchangeBalanceGroup.cpp
 		variables/VariableManagement.h
 		variables/VariableManagement.cpp
@@ -198,4 +198,9 @@ target_link_libraries(model_antares
 		infeasible_problem_analysis
 		antares-solver-simulation
 		Antares::benchmarking
+)
+
+target_include_directories(model_antares
+	PUBLIC
+		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )

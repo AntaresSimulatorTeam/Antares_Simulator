@@ -16,6 +16,6 @@ add_library(Antares::${PROJ} ALIAS ${PROJ})
 #)
 
 target_include_directories(${PROJ}
-        PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/include
+                PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )

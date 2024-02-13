@@ -12,7 +12,7 @@ on:
     inputs:
       run-tests:
         required: true
-        type: boolean
+        type: string
 
 env:
   GITHUB_TOKEN: ${{ github.token }}
@@ -34,6 +34,13 @@ jobs:
     - name: Checkout
       run: |
           git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git -b $GITHUB_REF_NAME .
+
+    - name: Install gcc 10
+      run: |
+        yum install -y centos-release-scl
+        yum install -y devtoolset-10-gcc*
+
+    - uses: ./.github/workflows/install-cmake-328
 
     - name: Init submodule
       run: |
@@ -59,11 +66,6 @@ jobs:
             unzip -q ortools.zip
             rm ortools.zip
 
-    - name: Install gcc 10
-      run: |
-        yum install -y centos-release-scl
-        yum install -y devtoolset-10-gcc*
-
     - name: Install gh if needed
       if: ${{ env.IS_RELEASE == 'true' }}
       run: |
@@ -72,10 +74,11 @@ jobs:
            dnf -y config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
            dnf -y install gh
 
+
     - name: Configure
       run: |
            source /opt/rh/devtoolset-10/enable
-           cmake3 -B _build -S src \
+           cmake -B _build -S src \
            -DCMAKE_C_COMPILER_LAUNCHER=ccache \
            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
            -DDEPS_INSTALL_DIR=/rte-antares-deps-Release \
@@ -90,18 +93,18 @@ jobs:
       run: |
            source /opt/rh/devtoolset-10/enable
            source /opt/rh/rh-git227/enable
-           cmake3 --build _build --config Release -j$(nproc)
+           cmake --build _build --config Release -j$(nproc)
            ccache -s
 
     - name: Installer .rpm creation
       run: |
            cd _build
-           cpack3 -G RPM
+           cpack -G RPM
 
     - name: Solver archive creation
       run: |
            cd _build
-           cmake3 --install . --prefix install
+           cmake --install . --prefix install
            pushd .
            cd install/bin
            tar czf ../../antares-solver_centos7.tar.gz antares-*-solver libsirius_solver.so
@@ -111,7 +114,7 @@ jobs:
     - name: .tar.gz creation
       run: |
            cd _build
-           cpack3 -G TGZ
+           cpack -G TGZ
 
     - name: Installer TGZ push
       uses: actions/upload-artifact@v3

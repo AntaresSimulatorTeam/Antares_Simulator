@@ -1,6 +1,6 @@
 set(HEADERS
-        antares/io/statistics.h
-        antares/io/file.h
+        include/antares/io/statistics.h
+        include/antares/io/file.h
 )
 set(SRC_IO
         ${HEADERS}
@@ -20,6 +20,6 @@ target_link_libraries(io
         )
 
 target_include_directories(io
-        PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}
+                PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         )

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../opt_structure_probleme_a_resoudre.h"
-#include "../../simulation/sim_structure_probleme_economique.h"
+#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 namespace VariableManagement
 {

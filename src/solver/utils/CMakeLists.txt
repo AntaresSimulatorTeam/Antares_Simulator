@@ -30,9 +30,10 @@ target_link_libraries(utils
         Antares::study
         Antares::result_writer #ortools_utils.h
         antares-core #enum.h
+        model_antares #opt_period_string_generator.h -> antares/solver/optimisation/opt_period_string_generator_base.h
         )
 
 target_include_directories(utils
-    PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/include
+            PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
