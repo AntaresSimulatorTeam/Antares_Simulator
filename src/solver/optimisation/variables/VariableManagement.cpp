@@ -19,7 +19,7 @@ int VariableManager::GetShiftedTimeStep(int offset, int delta, unsigned int hour
     int pdt = hourInWeek + offset;
     const int nbTimeSteps = NombreDePasDeTempsPourUneOptimisation_;
 
-    if (const bool shifted_timestep = offset != 0; shifted_timestep)
+    if (offset != 0)
     {
         if (offset >= 0)
         {
