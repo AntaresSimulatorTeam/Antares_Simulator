@@ -99,8 +99,7 @@ private:
     std::vector<int>& NumeroDeVariableStockFinal_;
     std::vector<std::vector<int>>& NumeroDeVariableDeTrancheDeStock_;
     const int32_t& NombreDePasDeTempsPourUneOptimisation_;
-    unsigned int hourInWeek_ = 0;
-    int GetShiftedTimeStep(int offset, int delta) const;
+    int GetShiftedTimeStep(int offset, int delta, unsigned int hourInWeek) const;
 };
 
 } // namespace VariableManagement
