@@ -32,18 +32,18 @@
 #include "utils/include/antares/solver/utils/named_problem.h"
 
 using namespace Antares::optim::api;
-using namespace std;
-class LegacyLinearProblemImpl : public LinearProblemImpl
+class LegacyLinearProblemImpl final : public LinearProblemImpl
 {
     friend class LegacyLinearProblemFillerImpl;
 private:
     // For each node name, contains the balance constraint declared by the legacy filler, as well as its names & aliases declared by new fillers
-    map<string, pair<MPConstraint*, vector<string>>> balanceConstraintPerNodeName;
+    std::map<std::string, std::pair<operations_research::MPConstraint*, std::vector<std::string>>> balanceConstraintPerNodeName;
+    static std::string getBalanceConstraintKey(const std::string& nodeName, int timestamp);
+    void declareBalanceConstraint(const std::string& nodeName, int timestamp, operations_research::MPConstraint* constraint); // only used in legacy filler
 public :
     LegacyLinearProblemImpl(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* legacyProblem,
                                      const std::string& solverName);
-    MPSolver& getMpSolver() { return *mpSolver; } // only used in legacy filler
-    void declareBalanceConstraint(const string& nodeName, MPConstraint* constraint); // only used in legacy filler
-    MPConstraint& addBalanceConstraint(string name, double bound, string nodeName, int timestep) override;
+    operations_research::MPSolver& getMpSolver() { return *mpSolver; } // only used in legacy filler
+    operations_research::MPConstraint& addBalanceConstraint(std::string name, double bound, std::string nodeName, int timestamp) override;
     void setMinimization(bool isMinim) override;
 };

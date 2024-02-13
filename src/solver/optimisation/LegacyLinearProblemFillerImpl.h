@@ -29,16 +29,16 @@
 #include "optim/api/include/antares/optim/api/LinearProblemFiller.h"
 #include "utils/include/antares/solver/utils/named_problem.h"
 #include "LegacyLinearProblemImpl.h"
-using namespace Antares::optim::api;
-class LegacyLinearProblemFillerImpl : public LinearProblemFiller
+
+class LegacyLinearProblemFillerImpl final : public Antares::optim::api::LinearProblemFiller
 {
 private:
     const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* legacyProblem_;
-    void declareBalanceConstraints(LegacyLinearProblemImpl* legacyLinearProblem, const LinearProblemData::Legacy& legacy);
+    static void declareBalanceConstraints(LegacyLinearProblemImpl* legacyLinearProblem, const LinearProblemData::Legacy& legacy);
 public:
     explicit LegacyLinearProblemFillerImpl(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* legacyProblem) : legacyProblem_(legacyProblem) {};
-    void addVariables(LinearProblem& problem, const LinearProblemData& data) override;
-    void addConstraints(LinearProblem& problem, const LinearProblemData& data) override;
-    void addObjective(LinearProblem& problem, const LinearProblemData& data) override;
-    void update(LinearProblem& problem, const LinearProblemData& data) override;
+    void addVariables(Antares::optim::api::LinearProblem& problem, const Antares::optim::api::LinearProblemData& data) override;
+    void addConstraints(Antares::optim::api::LinearProblem& problem, const Antares::optim::api::LinearProblemData& data) override;
+    void addObjective(Antares::optim::api::LinearProblem& problem, const Antares::optim::api::LinearProblemData& data) override;
+    void update(Antares::optim::api::LinearProblem& problem, const Antares::optim::api::LinearProblemData& data) override;
 };

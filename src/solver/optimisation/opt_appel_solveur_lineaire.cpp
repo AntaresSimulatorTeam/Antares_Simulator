@@ -231,17 +231,19 @@ static SimplexResult OPT_TryToCallSimplex(
     {
         LegacyLinearProblemImpl legacyLinearProblem(&Probleme, options.solverName);
         LinearProblemBuilder linearProblemBuilder(legacyLinearProblem);
-        LegacyLinearProblemFillerImpl filler(&Probleme); // TODO : fusionner avec LegacyLinearProblemImpl ?
+        LegacyLinearProblemFillerImpl filler(&Probleme); // TODO: merge this with LegacyLinearProblemImpl ?
         linearProblemBuilder.addFiller(filler);
-        // TODO : on peut ajouter ici des fillers supplémentaires, par exemple passés en argument de la fonction
+        // TODO: we can add extra fillers here
         // sinon renvoyer le builder ou le problem à une autre classe
         LinearProblemData linearProblemData({}, 0, {}, {});
         // Required for the balance constraint indices
         linearProblemData.legacy.CntMapping = &problemeHebdo->CorrespondanceCntNativesCntOptim;
         linearProblemData.legacy.areaNames = &problemeHebdo->NomsDesPays;
-        // TODO : ajouter les données ici
+        // TODO : add data here
         linearProblemBuilder.build(linearProblemData);
-        solver = &legacyLinearProblem.getMpSolver(); // TODO attention quand on sort de ce scope mpSolver est détruit
+        solver = &legacyLinearProblem.getMpSolver();
+        // TODO: because of LinearProblemImpl's destructor, when we exit this scope, the MPSolver instance is destroyed
+        // We have to work around this in order for the current "update" methods to work
     }
     const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
 

@@ -15,13 +15,15 @@ LinearProblemImpl::LinearProblemImpl(bool isMip, const std::string& solverName)
 
 MPVariable& LinearProblemImpl::addNumVariable(string name, double lb, double ub)
 {
-
-    // TODO attention ortools ne fail pas si on ajoute une même variable plusieurs fois => à faire en dehors ?
+    // TODO: OR-Tools does not seem to care if you try to add two different variables / constraints with the same name
+    // This is pretty dangerous, so we have to forbid it ourselves
     return *mpSolver->MakeNumVar(lb, ub, name);
 }
 
 MPVariable& LinearProblemImpl::addIntVariable(string name, double lb, double ub)
 {
+    // TODO: OR-Tools does not seem to care if you try to add two different variables / constraints with the same name
+    // This is pretty dangerous, so we have to forbid it ourselves
     return *mpSolver->MakeIntVar(lb, ub, name);
 }
 
@@ -32,12 +34,16 @@ MPVariable& LinearProblemImpl::getVariable(string name)
 
 MPConstraint& LinearProblemImpl::addConstraint(string name, double lb, double ub)
 {
+    // TODO: OR-Tools does not seem to care if you try to add two different variables / constraints with the same name
+    // This is pretty dangerous, so we have to forbid it ourselves
     return *mpSolver->MakeRowConstraint(lb, ub, name);
 }
 
 MPConstraint& LinearProblemImpl::addBalanceConstraint(string name, double bound, string nodeName, int timestep)
 {
-    // TODO : log ignored arguments ?
+    // TODO: OR-Tools does not seem to care if you try to add two different variables / constraints with the same name
+    // This is pretty dangerous, so we have to forbid it ourselves
+    // TODO: log ignored arguments
     return this->addConstraint(name, bound, bound);
 }
 
@@ -58,8 +64,6 @@ void LinearProblemImpl::setMinimization(bool isMinim)
 
 MipSolution LinearProblemImpl::solve()
 {
-    string lp;
-    mpSolver->ExportModelAsLpFormat(false, &lp);
     auto status = mpSolver->Solve();
     map<string, double> solution;
     for (auto var : mpSolver->variables())
@@ -67,4 +71,9 @@ MipSolution LinearProblemImpl::solve()
         solution.insert({var->name(), var->solution_value()});
     }
     return {status, solution};
+}
+
+LinearProblemImpl::~LinearProblemImpl()
+{
+    delete mpSolver;
 }

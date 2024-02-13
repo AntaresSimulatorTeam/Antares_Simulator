@@ -32,33 +32,32 @@
 
 #include "vector"
 
-using namespace operations_research;
-using namespace std;
-
 namespace Antares::optim::api
 {
-    class LinearProblemData
+    class LinearProblemData final
     {
     private:
-        // TODO : ajouter scénarios, permettre de coupler même TS de scénarios différents ou même scénario de TS différents
-        vector<int> timeStamps_;
+        // TODO : timestamps or timesteps?
+        std::vector<int> timeStamps_;
         int timeResolutionInMinutes_;
-        map<string, double> scalarData_;
-        map<string, vector<double>> timedData_;
+        std::map<std::string, double> scalarData_;
+        std::map<std::string, std::vector<double>> timedData_;
+        // TODO : handle scenarios, and data vectorized on scenarios, on time, or on both
     public:
-        explicit LinearProblemData(vector<int> timeStamps, int timeResolutionInMinutes, map<string, double> scalarData,
-                                   map <string, vector<double>> timedData) :
-                timeStamps_(std::move(timeStamps)), timeResolutionInMinutes_(timeResolutionInMinutes),
-                scalarData_(std::move(scalarData)), timedData_(std::move(timedData))
-        {};
-        vector<int> getTimeStamps() const { return timeStamps_; }
-        int getTimeResolutionInMinutes() const { return timeResolutionInMinutes_; }
-        bool hasScalarData(const string& key) const { return scalarData_.contains(key); }
-        double getScalarData(const string& key) const { return scalarData_.at(key); }
-        bool hasTimedData(const string& key) const { return timedData_.contains(key); }
-        vector<double> getTimedData(const string& key) const { return timedData_.at(key); }
+        explicit LinearProblemData(const std::vector<int> &timeStamps, int timeResolutionInMinutes,
+                                   const std::map<std::string, double> &scalarData,
+                                   const std::map<std::string, std::vector<double>> &timedData) :
+                timeStamps_(timeStamps), timeResolutionInMinutes_(timeResolutionInMinutes),
+                scalarData_(scalarData), timedData_(timedData) {};
+        [[nodiscard]] std::vector<int> getTimeStamps() const { return timeStamps_; }
+        [[nodiscard]] int getTimeResolutionInMinutes() const { return timeResolutionInMinutes_; }
+        [[nodiscard]] bool hasScalarData(const std::string& key) const { return scalarData_.contains(key); }
+        [[nodiscard]] double getScalarData(const std::string& key) const { return scalarData_.at(key); }
+        [[nodiscard]] bool hasTimedData(const std::string& key) const { return timedData_.contains(key); }
+        [[nodiscard]] std::vector<double> getTimedData(const std::string& key) const { return timedData_.at(key); }
 
-        // TODO remove
+        // TODO: remove this when legacy support is dropped
+        // TODO: meanwhile, instead of having a nested struct, create a daughter class?
         struct Legacy {
             const std::vector<CORRESPONDANCES_DES_CONTRAINTES>* CntMapping;
             const std::vector<const char*>* areaNames;

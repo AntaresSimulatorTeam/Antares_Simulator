@@ -29,23 +29,38 @@
 #include <utility>
 
 #include "ortools/linear_solver/linear_solver.h"
-using namespace operations_research;
-using namespace std;
+
 namespace Antares::optim::api
 {
-    class MipSolution
+    class MipSolution final
     {
-        // TODO : improve this
+        // TODO: improve this by removing dependency to OR-Tools
     private:
         operations_research::MPSolver::ResultStatus responseStatus_;
-        map<string, double> solution_;
+        std::map<std::string, double> solution_;
     public:
-        MipSolution(operations_research::MPSolver::ResultStatus responseStatus, map<string , double> solution) : responseStatus_(responseStatus), solution_(std::move(solution)) {};
-        operations_research::MPSolver::ResultStatus getStatus() { return responseStatus_; }
-        double getOptimalValue(const string& variableName) { return solution_.at(variableName); }
-        vector<double> getOptimalValues(const vector<string>& variableNames)
+        MipSolution(operations_research::MPSolver::ResultStatus responseStatus, const std::map<std::string, double>& solution) : responseStatus_(responseStatus)
         {
-            vector<double> solution;
+            // Only store non-zero values
+            for (const auto& varAndValue : solution)
+            {
+                if (abs(varAndValue.second) > 1e-6) // TODO: is this tolerance OK?
+                {
+                    solution_.insert(varAndValue);
+                }
+            }
+        }
+
+        operations_research::MPSolver::ResultStatus getStatus() { return responseStatus_; }
+
+        double getOptimalValue(const std::string& variableName)
+        {
+            return solution_.contains(variableName) ? solution_.at(variableName) : 0;
+        }
+
+        std::vector<double> getOptimalValues(const std::vector<std::string>& variableNames)
+        {
+            std::vector<double> solution;
             solution.reserve(variableNames.size());
             for (const auto& varName : variableNames) {
                 solution.push_back(getOptimalValue(varName));

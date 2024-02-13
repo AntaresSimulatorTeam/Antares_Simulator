@@ -28,29 +28,25 @@
 
 #include "ortools/linear_solver/linear_solver.h"
 #include "MipSolution.h"
-using namespace operations_research;
-using namespace std;
 
 namespace Antares::optim::api
 {
 	class LinearProblem
 	{
 	public :
-        // TODO : where to tune params ?
-        // TODO : ajouter une gestion des pdt & scenarios ?
-        // pex addNumVariableForAllTimesteps(string name, vector<double> lb, vector<double> ub) = 0;
-        // pex addNumVariableForAllScenarios(string name, vector<double> lb, vector<double> ub) = 0;
-        // pex addNumVariableForAllTimestepsAndAllScenarios(string name, vector<vector<double>> lb, vector<vector<double>> ub) = 0;
-		virtual MPVariable& addNumVariable(string name, double lb, double ub) = 0;
-		virtual MPVariable& addIntVariable(string name, double lb, double ub) = 0;
-		virtual MPVariable& getVariable(string name) = 0;
-		virtual MPConstraint& addConstraint(string name, double lb, double ub) = 0;
-        // Next method is to ensure transition with existing models. In the target solution it will disappear and we should use the previous one
-		virtual MPConstraint& addBalanceConstraint(string name, double bound, string nodeName, int timestep) = 0;
-		virtual MPConstraint& getConstraint(string name) = 0;
-		virtual void setObjectiveCoefficient(const MPVariable& variable, double coefficient) = 0;
-		virtual void setMinimization(bool isMinim) = 0; // TODO : supprimer ? non supporté par l'existant
+        // TODO : where to tune solver parameters?
+        // TODO : should this class have native support for timestamps and scenarios?
+		virtual operations_research::MPVariable& addNumVariable(std::string name, double lb, double ub) = 0;
+		virtual operations_research::MPVariable& addIntVariable(std::string name, double lb, double ub) = 0;
+		virtual operations_research::MPVariable& getVariable(std::string name) = 0;
+		virtual operations_research::MPConstraint& addConstraint(std::string name, double lb, double ub) = 0;
+        // Next method is to ensure transition with existing models. In the target solution it will be dropped and replaced by the previous one
+		virtual operations_research::MPConstraint& addBalanceConstraint(std::string name, double bound, std::string nodeName, int timestep) = 0;
+		virtual operations_research::MPConstraint& getConstraint(std::string name) = 0;
+		virtual void setObjectiveCoefficient(const operations_research::MPVariable& variable, double coefficient) = 0;
+		virtual void setMinimization(bool isMinim) = 0;
 		virtual MipSolution solve() = 0;
+		virtual ~LinearProblem() = default;
 	};
 }
 

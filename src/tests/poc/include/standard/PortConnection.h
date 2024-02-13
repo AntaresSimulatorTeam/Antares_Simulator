@@ -29,6 +29,7 @@ public:
     }
     vector<pair<ComponentFiller*, string>> getConectionsTo(ComponentFiller* componentFiller, const string& portId)
     {
+        // TODO: implement a better search algorithm
         vector<pair<ComponentFiller*, string>> connectedComponents;
         for (const auto& c: connections) {
             if (c.getComponentAndPort1().first == componentFiller
