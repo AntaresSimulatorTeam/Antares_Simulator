@@ -6,7 +6,6 @@ on:
       - main
       - develop
       - release/*
-  pull_request:
 
 jobs:
   sonarcloud:
