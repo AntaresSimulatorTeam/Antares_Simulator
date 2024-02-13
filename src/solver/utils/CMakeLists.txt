@@ -3,7 +3,7 @@ set(SRC
         ortools_utils.cpp
         filename.h
         filename.cpp
-        named_problem.h
+        include/antares/solver/utils/named_problem.h
         named_problem.cpp
         mps_utils.h
         mps_utils.cpp
@@ -26,3 +26,8 @@ target_link_libraries(utils
         sirius_solver
         libantares-core
         )
+
+target_include_directories(utils
+    PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
