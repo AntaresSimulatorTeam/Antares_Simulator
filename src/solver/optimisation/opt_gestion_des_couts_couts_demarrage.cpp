@@ -21,6 +21,7 @@
 
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 
+#include "variables/VariableManagerUtils.h"
 #include "antares/solver/simulation/simulation.h"
 #include "antares/solver/simulation/sim_structure_donnees.h"
 #include "antares/solver/simulation/sim_extern_variables_globales.h"
@@ -33,13 +34,11 @@ void OPT_InitialiserLesCoutsLineaireCoutsDeDemarrage(PROBLEME_HEBDO* problemeHeb
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
     std::vector<double>& CoutLineaire = ProblemeAResoudre->CoutLineaire;
+    auto variableManager = VariableManagerFromProblemHebdo(problemeHebdo);
 
     for (int pdtHebdo = PremierPdtDeLIntervalle, pdtJour = 0; pdtHebdo < DernierPdtDeLIntervalle;
          pdtHebdo++, pdtJour++)
     {
-        const CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
-          =  problemeHebdo->CorrespondanceVarNativesVarOptim[pdtJour];
-
         for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
             const PALIERS_THERMIQUES& PaliersThermiquesDuPays
@@ -50,30 +49,25 @@ void OPT_InitialiserLesCoutsLineaireCoutsDeDemarrage(PROBLEME_HEBDO* problemeHeb
                 const int palier
                   = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
 
-                int var = CorrespondanceVarNativesVarOptim
-                            .NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[palier];
+                int var = variableManager.NumberOfDispatchableUnits(palier, pdtJour);
                 if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                 {
                     CoutLineaire[var]
                       = PaliersThermiquesDuPays.CoutFixeDeMarcheDUnGroupeDuPalierThermique[index];
                 }
 
-                var = CorrespondanceVarNativesVarOptim
-                        .NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique[palier];
+                var = variableManager.NumberStoppingDispatchableUnits(palier, pdtJour);
                 if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                 {
                     CoutLineaire[var]
                       = PaliersThermiquesDuPays.CoutDArretDUnGroupeDuPalierThermique[index];
                 }
 
-                var
-                  = CorrespondanceVarNativesVarOptim
-                      .NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique[palier];
+                var = variableManager.NumberBreakingDownDispatchableUnits(palier, pdtJour);
                 if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                     CoutLineaire[var] = 0;
 
-                var = CorrespondanceVarNativesVarOptim
-                        .NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique[palier];
+                var = variableManager.NumberStartingDispatchableUnits(palier, pdtJour);
                 if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                 {
                     CoutLineaire[var]

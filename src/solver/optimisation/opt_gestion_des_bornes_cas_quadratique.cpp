@@ -21,6 +21,7 @@
 
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 
+#include "variables/VariableManagerUtils.h"
 #include "antares/solver/simulation/simulation.h"
 #include "antares/solver/simulation/sim_extern_variables_globales.h"
 
@@ -38,17 +39,16 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique(PROBLEME_HEBDO* p
                                                                int PdtHebdo)
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
+    auto variableManager = VariableManagerFromProblemHebdo(problemeHebdo);
 
     for (int i = 0; i < ProblemeAResoudre->NombreDeVariables; i++)
         ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[i] = nullptr;
 
     VALEURS_DE_NTC_ET_RESISTANCES& ValeursDeNTC = problemeHebdo->ValeursDeNTC[PdtHebdo];
-    const CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
-      = problemeHebdo->CorrespondanceVarNativesVarOptim[0];
 
     for (uint32_t interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
     {
-        int var = CorrespondanceVarNativesVarOptim.NumeroDeVariableDeLInterconnexion[interco];
+        int var = variableManager.NTCDirect(interco, 0);
         ProblemeAResoudre->Xmax[var] = ValeursDeNTC.ValeurDeNTCOrigineVersExtremite[interco];
         ProblemeAResoudre->Xmin[var] = -(ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine[interco]);
 

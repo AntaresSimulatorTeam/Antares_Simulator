@@ -21,6 +21,7 @@
 
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 
+#include "variables/VariableManagerUtils.h"
 #include "antares/solver/simulation/simulation.h"
 #include "antares/solver/simulation/sim_extern_variables_globales.h"
 
@@ -31,15 +32,14 @@ void OPT_InitialiserLesCoutsQuadratiques(PROBLEME_HEBDO* problemeHebdo, int PdtH
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
     ProblemeAResoudre->CoutLineaire.assign(ProblemeAResoudre->NombreDeVariables, 0.);
+    auto variableManager = VariableManagerFromProblemHebdo(problemeHebdo);
 
     const VALEURS_DE_NTC_ET_RESISTANCES& ValeursDeResistances
       = problemeHebdo->ValeursDeNTC[PdtHebdo];
-    const CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
-      = problemeHebdo->CorrespondanceVarNativesVarOptim[0];
 
     for (uint32_t interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
     {
-        int var = CorrespondanceVarNativesVarOptim.NumeroDeVariableDeLInterconnexion[interco];
+        int var = variableManager.NTCDirect(interco, 0);
         if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
             ProblemeAResoudre->CoutQuadratique[var]
               = ValeursDeResistances.ResistanceApparente[interco];

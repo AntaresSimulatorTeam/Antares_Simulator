@@ -29,8 +29,6 @@ void HourlyCSRProblem::constructVariableENS()
 {
     int& NumberOfVariables = problemeAResoudre_.NombreDeVariables;
     NumberOfVariables = 0;
-    auto& CorrespondanceVarNativesVarOptim
-      = problemeHebdo_->CorrespondanceVarNativesVarOptim[triggeredHour];
 
     // variables: ENS of each area inside adq patch
     logs.debug() << " ENS of each area inside adq patch: ";
@@ -40,8 +38,7 @@ void HourlyCSRProblem::constructVariableENS()
         if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[area]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
-            CorrespondanceVarNativesVarOptim.NumeroDeVariableDefaillancePositive[area]
-              = NumberOfVariables;
+            variableManager_.PositiveUnsuppliedEnergy(area, triggeredHour) = NumberOfVariables;
             problemeAResoudre_.TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
             varToBeSetToZeroIfBelowThreshold.insert(NumberOfVariables);
             ensVariablesInsideAdqPatch.insert(NumberOfVariables);
@@ -55,8 +52,6 @@ void HourlyCSRProblem::constructVariableENS()
 
 void HourlyCSRProblem::constructVariableSpilledEnergy()
 {
-    auto& CorrespondanceVarNativesVarOptim
-      = problemeHebdo_->CorrespondanceVarNativesVarOptim[triggeredHour];
     int& NumberOfVariables = problemeAResoudre_.NombreDeVariables;
 
     // variables: Spilled Energy  of each area inside adq patch
@@ -67,8 +62,7 @@ void HourlyCSRProblem::constructVariableSpilledEnergy()
         if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[area]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
-            CorrespondanceVarNativesVarOptim.NumeroDeVariableDefaillanceNegative[area]
-              = NumberOfVariables;
+            variableManager_.NegativeUnsuppliedEnergy(area, triggeredHour) = NumberOfVariables;
             problemeAResoudre_.TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_INFERIEUREMENT;
             varToBeSetToZeroIfBelowThreshold.insert(NumberOfVariables);
             logs.debug() << NumberOfVariables << " Spilled Energy[" << area << "].-["
@@ -81,8 +75,6 @@ void HourlyCSRProblem::constructVariableSpilledEnergy()
 
 void HourlyCSRProblem::constructVariableFlows()
 {
-    auto& CorrespondanceVarNativesVarOptim
-      = problemeHebdo_->CorrespondanceVarNativesVarOptim[triggeredHour];
     int& NumberOfVariables = problemeAResoudre_.NombreDeVariables;
 
     // variables: transmissin flows (flow, direct_direct and flow_indirect). For links between 2
@@ -100,8 +92,7 @@ void HourlyCSRProblem::constructVariableFlows()
             int algebraicFluxVar;
             int directVar;
             int indirectVar;
-            algebraicFluxVar
-              = CorrespondanceVarNativesVarOptim.NumeroDeVariableDeLInterconnexion[Interco]
+            algebraicFluxVar = variableManager_.NTCDirect(Interco, triggeredHour)
               = NumberOfVariables;
             problemeAResoudre_.TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
             logs.debug()
@@ -113,15 +104,13 @@ void HourlyCSRProblem::constructVariableFlows()
               << "].";
             NumberOfVariables++;
 
-            directVar = CorrespondanceVarNativesVarOptim
-                          .NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco]
+            directVar = variableManager_.IntercoDirectCost(Interco, triggeredHour)
               = NumberOfVariables;
             problemeAResoudre_.TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
             logs.debug() << NumberOfVariables << " direct flow[" << Interco << "]. ";
             NumberOfVariables++;
 
-            indirectVar = CorrespondanceVarNativesVarOptim
-                            .NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco]
+            indirectVar = variableManager_.IntercoIndirectCost(Interco, triggeredHour)
               = NumberOfVariables;
             problemeAResoudre_.TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
             logs.debug() << NumberOfVariables << " indirect flow[" << Interco << "]. ";
