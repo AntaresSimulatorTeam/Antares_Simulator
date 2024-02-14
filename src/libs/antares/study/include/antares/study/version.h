@@ -19,6 +19,19 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
+#pragma once
+
+#include <array>
+#include <string>
+
+namespace Antares::Data
+{
+/*!
+** \brief Version of a study
+**
+** \ingroup study
+** \see CHANGELOG.txt
+*/
 class StudyVersion
 {
 public:
