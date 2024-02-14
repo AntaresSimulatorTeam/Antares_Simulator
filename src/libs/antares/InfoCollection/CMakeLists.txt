@@ -21,16 +21,16 @@ target_link_libraries(${PROJ}
 
 target_include_directories(${PROJ}
         PUBLIC
-        ${CMAKE_SOURCE_DIR}/libs #study
-        ${CMAKE_SOURCE_DIR}/libs/antares/date #parameters -> date
-        ${CMAKE_SOURCE_DIR}/libs/antares/array #links
-        ${CMAKE_SOURCE_DIR}/libs/antares/logs #study -> binding constraint -> matrix -> jit
-        ${CMAKE_SOURCE_DIR}/libs/antares/io #study -> binding constraint -> matrix
-        ${CMAKE_SOURCE_DIR}/libs/antares/writer #study
-        ${CMAKE_SOURCE_DIR}/libs/antares/exception #enum -> exception
-        ${CMAKE_SOURCE_DIR}/libs/antares/jit # something,something -> jit
-        ${CMAKE_SOURCE_DIR}/libs/antares/memory/include #study -> BC -> link -> memory
-        ${CMAKE_SOURCE_DIR}/libs/antares/inifile #study -> inifile
+        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/libs> #study
+        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/libs/antares/date> #parameters -> date
+        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/libs/antares/array> #links
+        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/libs/antares/logs> #study -> binding constraint -> matrix -> jit
+        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/libs/antares/io> #study -> binding constraint -> matrix
+        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/libs/antares/writer> #study
+        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/libs/antares/exception> #enum -> exception
+        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/libs/antares/jit> # something,something -> jit
+        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/libs/antares/memory/include> #study -> BC -> link -> memory
+        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/libs/antares/inifile> #study -> inifile
         PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/include
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )

@@ -1,10 +1,64 @@
 Antares Changelog
 =================
 
-8.9.0 (Unreleased yet)
+9.0.0
 --------------------
-## New Features
-* Solver logs can be enabled either by the command-line option (--solver-logs) or in the generaldata.ini by setting solver-logs = true under the optimization section [(#1717)](https://github.com/AntaresSimulatorTeam/Antares_Simulator/pull/1717)
+## License
+* Use licence MPL 2.0 instead of GPL3_WITH_RTE-Exceptions (#1812)
+
+## Improvements
+* Include overflow variable in HydroPower constraint (#1903)
+* Add total time logging at the end of the simulation (#1908)
+* Add STS level constraint to suspect list for infeasible problem analysis (#1891)
+
+## For developers
+* Use precompiled OR-Tools for Oracle Linux 8 CI (#1893)
+* Change version behavior to allow more flexibility (#1898)
+
+## Code quality
+* Use std::shared_ptr instead of indices for active binding constraints in results (#1887)
+* Fix a few compilation warnings (#1880)
+* Scratchpad numspace (#1749)
+
+## Tests
+* Fix invalid index causing segfault in `test-study` test (#1902)
+
+8.8.2
+--------------------
+
+## Bugfix
+* Fix segfault caused by uninitialized `cluster.series.timeseriesNumbers` (#1876). This bug was introduced in v8.8.1 by #1752
+* Bump OR-Tools from 9.5 to 9.8 (fix crash with XPRESS) (#1873)
+
+8.8.1 (01/2024)
+--------------------
+/!\ This version has known bugs, please use 8.8.2 instead.
+
+## Bugfix
+* Simplify TS numbers drawings, fix bug related to refresh & local thermal generation (#1752)
+
+## Improvements
+* Take into account breaking change in OR-Tools's API, enable SCIP & GLPK solvers, bump OR-Tools (#1825). This should improve performances with FICO XPRESS
+* Fail if OR-Tools solver is not found (#1851)
+* Normalize simulation mode Expansion, fix logs (#1771)
+* Add possibility to release without running any tests (#1852)
+
+## Code quality
+* Use `std::unordered_map` for tmpDataByArea_ (hydro ventilation) (#1855)
+* Remove `mutable` keyword from `PROBLEME_HEBDO` (#1846)
+* Remove `Study::gotFatalError`, throw exceptions instead (#1806)
+* Renewable containers (#1809)
+* Use modern style `for` loops, avoid int cast (#1847)
+* Remove `YUNI_STATIC_ASSERT` (#1863)
+
+## Testing
+* Add tests on short-term storage/thermal cluster/renewable cluster removal (#1841)
+
+## Doc
+* Add precision about `enabled` field in ST storage (#1850)
+* Use dedicated URL path for Doxygen, instead of root (#1865)
+* Fix HTML generation for readthedocs (#1867)
+* Add dark mode switch for Doxygen online documentation (#1792)
 
 8.8.0 (12/2023)
 --------------------
@@ -13,6 +67,7 @@ Antares Changelog
 * New "cash-flow" variable for ST storage (#1633)
 * Experimental optimization with discrete variables (MILP unit-commitment mode #670)
 * Add `enabled` property for ST storage objects, fix bug related to saving ST objects (#1807)
+* Solver logs can be enabled either by the command-line option (--solver-logs) or in the generaldata.ini
 
 ## Improvements
 * Add shortcut -s for names MPS problems in CLI options (#1613)

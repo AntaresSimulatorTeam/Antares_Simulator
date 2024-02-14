@@ -4,11 +4,10 @@ add_library(test_utils
         )
 
 target_link_libraries(test_utils
-        PRIVATE
-        antares-solver-simulation
         PUBLIC
         ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}
         Antares::infoCollection
+        antares-solver-simulation
         )
 
 target_include_directories(test_utils

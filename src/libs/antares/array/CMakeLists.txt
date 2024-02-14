@@ -1,6 +1,6 @@
 set(SRC_MATRIX
-        antares/array/matrix.h
-        antares/array/matrix.hxx
+        include/antares/array/matrix.h
+        include/antares/array/matrix.hxx
         matrix.cpp
         )
 source_group("array" FILES ${SRC_MATRIX})
@@ -15,9 +15,10 @@ target_link_libraries(array
         io #matrix.hxx
         jit #jit.hxx require logs
         Antares::memory
+        Antares::study
         )
 
 target_include_directories(array
-        PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}
+                PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         )

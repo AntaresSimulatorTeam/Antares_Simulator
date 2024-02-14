@@ -1,10 +1,10 @@
 set(PROJ stdcxx)
 set(HEADERS
-        include/antares/${PROJ}/demangle.hpp
+        include/antares/${PROJ}/class_name.h
 )
 set(SRC_PROJ
         ${HEADERS}
-        demangle.cpp
+        class_name.cpp
 )
 source_group("stdcxx" FILES ${SRC_STDCXX})
 
@@ -16,6 +16,6 @@ add_library(Antares::${PROJ} ALIAS ${PROJ})
 #)
 
 target_include_directories(${PROJ}
-        PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/include
+                PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
