@@ -27,7 +27,7 @@ add_library(result_writer
 add_library(Antares::result_writer ALIAS result_writer)
 
 target_include_directories(result_writer
-        PUBLIC
+    PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 

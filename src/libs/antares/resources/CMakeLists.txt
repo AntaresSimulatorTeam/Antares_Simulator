@@ -1,6 +1,6 @@
 set(PROJ resources)
 set(HEADERS
-        include/antares/resources/resources.h
+    include/antares/resources/resources.h
 )
 set(SRC_RESOURCES
         ${HEADERS}

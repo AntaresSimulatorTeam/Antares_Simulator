@@ -1,25 +1,31 @@
 
 OMESSAGE("Antares Core library")
 
+add_subdirectory(InfoCollection)
 add_subdirectory(args)
-add_subdirectory(writer)
-add_subdirectory(memory)
+add_subdirectory(array)
+add_subdirectory(benchmarking)
+add_subdirectory(checks)
+add_subdirectory(concurrency)
+add_subdirectory(correlation)
+add_subdirectory(date)
+add_subdirectory(exception)
+add_subdirectory(inifile)
+add_subdirectory(io)
+add_subdirectory(jit)
 add_subdirectory(locale)
 add_subdirectory(locator)
-add_subdirectory(array)
-add_subdirectory(correlation)
-add_subdirectory(concurrency)
-
 add_subdirectory(logs)
-add_subdirectory(jit)
-add_subdirectory(inifile)
-
-add_subdirectory(benchmarking)
-add_subdirectory(InfoCollection)
-add_subdirectory(io)
-add_subdirectory(exception)
+add_subdirectory(memory)
+add_subdirectory(mersenne-twister)
+add_subdirectory(paths)
 add_subdirectory(resources)
+add_subdirectory(series)
+add_subdirectory(stdcxx)
+add_subdirectory(study)
 add_subdirectory(sys)
+add_subdirectory(utils)
+add_subdirectory(writer)
 
 set(HEADERS
         include/antares/antares/antares.h
@@ -34,16 +40,7 @@ set(SRC
         constants.cpp
         version.cpp
 )
-add_subdirectory(date)
 
-add_subdirectory(checks)
-
-add_subdirectory(study)
-add_subdirectory(stdcxx)
-add_subdirectory(utils)
-add_subdirectory(paths)
-add_subdirectory(mersenne-twister)
-add_subdirectory(series)
 
 add_library(antares-core
         ${SRC}
@@ -51,18 +48,18 @@ add_library(antares-core
 
 target_include_directories(antares-core
         PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         PRIVATE
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/libs>
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/libs>
 )
 
 target_link_libraries(antares-core
         PUBLIC
-        yuni-static-core
-        Antares::logs
-        Antares::exception
-        Antares::study
-        Antares::config
+            yuni-static-core
+            Antares::logs
+            Antares::exception
+            Antares::study
+            Antares::config
 )
 
 import_std_libs(antares-core)

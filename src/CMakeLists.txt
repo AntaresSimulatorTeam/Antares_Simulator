@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.14) # FetchContent_MakeAvailable
 
 # Version
-set(ANTARES_VERSION_HI	      8)
-set(ANTARES_VERSION_LO	      8)
-set(ANTARES_VERSION_REVISION  3)
+set(ANTARES_VERSION_HI	      9)
+set(ANTARES_VERSION_LO	      0)
+set(ANTARES_VERSION_REVISION  0)
 
 # Beta release
 set(ANTARES_BETA 0)
@@ -300,13 +300,13 @@ if(NOT minizip_FOUND OR BUILD_MINIZIP)
     set(MZ_OPENSSL "OFF" CACHE INTERNAL "")
     set(MZ_ICONV "OFF" CACHE INTERNAL "")
 
-    FetchContent_Declare(minizip
-    GIT_REPOSITORY ${MZ_REPOSITORY}
-    GIT_TAG ${MZ_TAG}
-	OVERRIDE_FIND_PACKAGE
+	FetchContent_Declare(minizip
+		GIT_REPOSITORY ${MZ_REPOSITORY}
+		GIT_TAG ${MZ_TAG}
+		OVERRIDE_FIND_PACKAGE
 	)
 
-    FetchContent_MakeAvailable(minizip)
+	FetchContent_MakeAvailable(minizip)
 endif()
 find_package(minizip REQUIRED)
 

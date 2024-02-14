@@ -208,7 +208,6 @@ set(SRC_STUDY
 
         # Study
         include/antares/study/header.h
-        include/antares/study/header.hxx
         header.cpp
         include/antares/study/load-options.h
         load-options.cpp
@@ -311,12 +310,12 @@ target_link_libraries(study
 )
 
 target_include_directories(study
-        PUBLIC
+             PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 
         # Make more than just study visible but it's the lesser evil for now
 )
 
-install(DIRECTORY include/antares
+install(DIRECTORY   include/antares
         DESTINATION "include"
 )
