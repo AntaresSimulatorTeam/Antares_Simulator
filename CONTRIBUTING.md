@@ -33,3 +33,14 @@ git config core.hooksPath .githooks
 
 ### Code formatting
 We're using [clang-format](https://clang.llvm.org/docs/ClangFormat.html) to format code. Rules are defined in [.clang-format](src/.clang-format) file.
+
+### Pull Requests
+
+A pull request name must be self-explanatory this will be the default commit title when merging.
+
+Please provide a description in the head comment of the PR. This description will be the details of the merge commit.
+The description should be short but proportionnal to the length or complexity of the PR. Try to explain the motivation of the PR (why) and
+the method employed (how).
+
+When a pull request is opened please set it to draft if it is still being worked on or not ready for review
+

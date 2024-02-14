@@ -60,7 +60,7 @@ For installation instructions, please visit [INSTALL.md](INSTALL.md)
 
 * [AUTHORS](AUTHORS.txt)           -    Antares Simulator authors
 * [CERTIFICATE](CERTIFICATE.txt)	 - A standard DCO that has to be signed by every contributor 
-* [CONTRIBUTING](CONTRIBUTING.txt)	     - How to submit patches and discuss about code evolutions
+* [CONTRIBUTING](CONTRIBUTING.md)	     - How to submit patches and discuss about code evolutions
 * [COPYING](COPYING.txt)            - The GPL v3 license.
 * [INSTALL](INSTALL.md)           - Installation and building instructions.
 * [NEWS](NEWS.md)                 - Important modifications between the releases.
