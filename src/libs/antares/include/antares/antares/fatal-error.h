@@ -18,6 +18,12 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
+
+#pragma once
+#include <stdexcept>
+
+namespace Antares {
+
 class FatalError : public std::runtime_error
 {
 public:
@@ -25,5 +31,3 @@ public:
 };
 
 }
-
-#endif // __ANTARES_LIB_FATAL_ERROR_H__
