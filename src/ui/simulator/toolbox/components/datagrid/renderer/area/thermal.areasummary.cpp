@@ -177,7 +177,7 @@ bool ThermalClusterSummarySingleArea::cellValue(int x, int y, const String& v)
         {
         case 0:
         {
-            if (cluster->group() != v)
+            if (cluster->group() != Yuni::CString(v))
             {
                 cluster->setGroup(v);
                 return true;
