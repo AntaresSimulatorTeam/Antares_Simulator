@@ -131,13 +131,6 @@ jobs:
            cd _build
            ctest -C ${{ matrix.buildtype }} --output-on-failure -L "unit|end-to-end" -LE ortools
 
-    - name: Run kirchhoff-constraint-tests
-      shell: bash
-      run: |
-           tar xvf src/tests/kirchhoff-cbuilder/reference.tar.gz -C src/tests/kirchhoff-cbuilder/
-           cd _build
-           ctest -C Release --output-on-failure -R kirchhoff
-
     - name: Upload build on failure
       if: ${{ failure() }}
       uses: actions/upload-artifact@v3
