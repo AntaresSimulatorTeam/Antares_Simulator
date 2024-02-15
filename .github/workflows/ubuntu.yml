@@ -155,24 +155,6 @@ jobs:
       with:
         path: _build/*.deb
 
-  publish_assets:
-    name: Publish assets
-    needs: build
-    runs-on: ${{needs.build.outputs.os}}
-    steps:
-    - name: Download all artifacts
-      if: ${{ env.IS_RELEASE == 'true' }}
-      uses: actions/download-artifact@v3
-
-
-    - name: Publish assets
-      if: ${{ env.IS_RELEASE == 'true' }}
-      uses: alexellis/upload-assets@0.4.0
-      env:
-          GITHUB_TOKEN: ${{ github.token }}
-      with:
-          asset_paths: '["*/*.tar.gz", "*/*.deb"]'
-
     # simtest
     - name: Read simtest version
       id: simtest-version
@@ -245,3 +227,20 @@ jobs:
         batch-name: long-tests-3
         os: ${{ matrix.test-platform }}
 
+  publish_assets:
+    name: Publish assets
+    needs: build
+    runs-on: ${{needs.build.outputs.os}}
+    steps:
+    - name: Download all artifacts
+      if: ${{ env.IS_RELEASE == 'true' }}
+      uses: actions/download-artifact@v3
+
+
+    - name: Publish assets
+      if: ${{ env.IS_RELEASE == 'true' }}
+      uses: alexellis/upload-assets@0.4.0
+      env:
+          GITHUB_TOKEN: ${{ github.token }}
+      with:
+          asset_paths: '["*/*.tar.gz", "*/*.deb"]'
