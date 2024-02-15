@@ -101,7 +101,7 @@ void ClusterList<ClusterT>::addToCompleteList(std::shared_ptr<ClusterT> cluster)
         return;
     allClusters_.push_back(cluster);
     sortCompleteList();
-    giveIndicesToClusters();
+    rebuildIndexes();
 }
 
 template<class ClusterT>
@@ -123,7 +123,7 @@ unsigned int ClusterList<ClusterT>::allClustersCount() const
 }
 
 template<class ClusterT>
-void ClusterList<ClusterT>::giveIndicesToClusters()
+void ClusterList<ClusterT>::rebuildIndexes()
 {
     // First, we give an index to every cluster, enabled / must-run or not.
     // We do that to :

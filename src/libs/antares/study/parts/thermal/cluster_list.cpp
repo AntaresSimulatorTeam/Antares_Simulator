@@ -160,7 +160,7 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
         addToCompleteList(cluster);
     }
 
-    giveIndicesToClusters();
+    rebuildIndexes();
     rebuildIndex();
 
     return ret;

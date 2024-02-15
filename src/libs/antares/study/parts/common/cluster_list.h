@@ -138,7 +138,7 @@ protected:
     virtual std::string typeID() const = 0;
 
     // Give a special index to enabled clusters (thermal / renewable)
-    void giveIndicesToClusters();
+    void rebuildIndexes();
 
 private:
     bool alreadyInAllClusters(std::string clusterName);

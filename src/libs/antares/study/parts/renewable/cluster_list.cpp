@@ -46,15 +46,15 @@ bool RenewableClusterList::saveToFolder(const AnyString& folder) const
             // This key will be silently ignored the next time
             s->add("name", c->name());
 
-            if (not c->group().empty())
+            if (!c->group().empty())
                 s->add("group", c->group());
-            if (not c->enabled)
+            if (!c->enabled)
                 s->add("enabled", "false");
 
-            if (not Math::Zero(c->nominalCapacity))
+            if (!Math::Zero(c->nominalCapacity))
                 s->add("nominalCapacity", c->nominalCapacity);
 
-            if (not Math::Zero(c->unitCount))
+            if (!Math::Zero(c->unitCount))
                 s->add("unitCount", c->unitCount);
 
             s->add("ts-interpretation", c->getTimeSeriesModeAsString());
@@ -123,7 +123,7 @@ static bool ClusterLoadFromSection(const AnyString& filename,
                                << "`: Invalid key/value";
                 continue;
             }
-            if (not ClusterLoadFromProperty(cluster, property))
+            if (!ClusterLoadFromProperty(cluster, property))
             {
                 logs.warning() << '`' << filename << "`: `" << section.name << "`/`"
                                << property->key << "`: The property is unknown and ignored";
@@ -160,7 +160,7 @@ bool RenewableClusterList::loadFromFolder(const AnyString& folder, Area* area)
                 auto cluster = std::make_shared<RenewableCluster>(area);
 
                 // Load data of a renewable cluster from a ini file section
-                if (not ClusterLoadFromSection(buffer, *cluster, *section))
+                if (!ClusterLoadFromSection(buffer, *cluster, *section))
                 {
                     continue;
                 }
@@ -170,7 +170,7 @@ bool RenewableClusterList::loadFromFolder(const AnyString& folder, Area* area)
             }
         }
 
-        giveIndicesToClusters();
+        rebuildIndexes();
 
         return ret;
     }
