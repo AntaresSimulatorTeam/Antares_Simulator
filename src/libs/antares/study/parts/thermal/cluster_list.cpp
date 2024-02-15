@@ -57,7 +57,7 @@ void ThermalClusterList::rebuildIndex()
 
 unsigned int ThermalClusterList::enabledAndNotMustRunCount() const
 {
-    return std::ranges::count_if(allClusters_, [](auto c) { return c->isEnabled() && c->isNotMustRun(); });
+    return std::ranges::count_if(allClusters_, [](auto c) { return c->isEnabled() && !c->isMustRun(); });
 }
 
 unsigned int ThermalClusterList::mustRunAndEnabledCount() const
@@ -459,7 +459,6 @@ bool ThermalClusterList::saveEconomicCosts(const AnyString& folder) const
 }
 
 bool ThermalClusterList::loadPreproFromFolder(Study& study,
-                                              const StudyLoadOptions& options,
                                               const AnyString& folder)
 {
     const bool globalThermalTSgeneration

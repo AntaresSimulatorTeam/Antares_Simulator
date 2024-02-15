@@ -606,10 +606,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                              + scratchpad.mustrunSum[hourInYear];
 
                 for (auto c : area.renewable.list.each_enabled())
-                {
-                    assert(cluster.series.timeSeries.jit == nullptr && "No JIT data from the solver");
                     mustRunGen += c->valueAtTimeStep(year, hourInYear);
-                }
             }
 
             assert(

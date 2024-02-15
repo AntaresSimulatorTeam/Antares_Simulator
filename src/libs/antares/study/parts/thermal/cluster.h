@@ -246,7 +246,6 @@ public:
     //! Mustrun
     bool mustrun = false;
     bool isMustRun() const { return mustrun; }
-    bool isNotMustRun() const { return not mustrun; }
 
     //! Mustrun (as it were at the loading of the data)
     //

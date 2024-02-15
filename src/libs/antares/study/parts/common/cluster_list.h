@@ -105,12 +105,9 @@ public:
     /// \name IO functions
     /// @{
     bool loadDataSeriesFromFolder(Study& study,
-                                 const StudyLoadOptions& options,
                                  const AnyString& folder);
 
     bool saveDataSeriesToFolder(const AnyString& folder) const;
-
-    bool saveDataSeriesToFolder(const AnyString& folder, const YString& msg) const;
 
     virtual bool saveToFolder(const AnyString& folder) const = 0;
     ///@}

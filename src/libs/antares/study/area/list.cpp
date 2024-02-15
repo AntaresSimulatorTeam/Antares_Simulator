@@ -907,9 +907,9 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     // Thermal cluster list
     {
         buffer.clear() << study.folderInput << SEP << "thermal" << SEP << "prepro";
-        ret = area.thermal.list.loadPreproFromFolder(study, options, buffer) && ret;
+        ret = area.thermal.list.loadPreproFromFolder(study, buffer) && ret;
         buffer.clear() << study.folderInput << SEP << "thermal" << SEP << "series";
-        ret = area.thermal.list.loadDataSeriesFromFolder(study, options, buffer) && ret;
+        ret = area.thermal.list.loadDataSeriesFromFolder(study, buffer) && ret;
         ret = area.thermal.list.loadEconomicCosts(study, buffer) && ret;
 
         // In adequacy mode, all thermal clusters must be in 'mustrun' mode
@@ -931,7 +931,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     if (study.header.version >= 810)
     {
         buffer.clear() << study.folderInput << SEP << "renewables" << SEP << "series";
-        ret = area.renewable.list.loadDataSeriesFromFolder(study, options, buffer) && ret;
+        ret = area.renewable.list.loadDataSeriesFromFolder(study, buffer) && ret;
     }
 
     // Adequacy patch

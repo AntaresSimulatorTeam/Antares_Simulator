@@ -1,5 +1,6 @@
 #pragma once
 
+#include <functional>
 #include "../common/cluster_list.h"
 #include "cluster.h"
 
@@ -59,16 +60,16 @@ public:
     void enableMustrunForEveryone();
     //@}
 
-    auto each_mustrun_and_enabled() const 
-    { 
+    auto each_mustrun_and_enabled() const
+    {
         return allClusters_ | std::views::filter(&ThermalCluster::isMustRun)
                             | std::views::filter(&ThermalCluster::isEnabled);
     }
 
-    auto each_enabled_and_not_mustrun() const 
-    {   
+    auto each_enabled_and_not_mustrun() const
+    {
         return allClusters_ | std::views::filter(&ThermalCluster::isEnabled)
-                            | std::views::filter(&ThermalCluster::isNotMustRun); 
+                            | std::views::filter(std::not_fn(&ThermalCluster::isMustRun));
     }
 
 
@@ -90,7 +91,7 @@ public:
      ** \param folder The target folder
      ** \return A non-zero value if the operation succeeded, 0 otherwise
      */
-    bool loadPreproFromFolder(Study& s, const StudyLoadOptions& options, const AnyString& folder);
+    bool loadPreproFromFolder(Study& s, const AnyString& folder);
 
     bool loadEconomicCosts(Study& s, const AnyString& folder);
 
@@ -103,7 +104,7 @@ public:
     unsigned int enabledAndNotMustRunCount() const;
 
 private:
-    // Give a special index to enbled and not must-run THERMAL clusters 
+    // Give a special index to enbled and not must-run THERMAL clusters
     void rebuildIndex();
 
 }; // class ThermalClusterList

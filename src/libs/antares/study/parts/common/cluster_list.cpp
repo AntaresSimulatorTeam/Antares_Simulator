@@ -31,7 +31,7 @@ template<class ClusterT>
 std::shared_ptr<ClusterT> ClusterList<ClusterT>::enabledClusterAt(unsigned int index) const
 {
     // No operator [] was found for std::view (returned by each_enabled()).
-    // The current function is there to replace it. 
+    // The current function is there to replace it.
     return *(std::views::drop(each_enabled(), index).begin());
 }
 
@@ -78,7 +78,7 @@ void ClusterList<ClusterT>::storeTimeseriesNumbers(Solver::IResultWriter& writer
     Clob path;
     std::string ts_content;
 
-    for (auto cluster : each_enabled()) 
+    for (auto cluster : each_enabled())
     {
         path.clear() << "ts-numbers" << SEP << typeID() << SEP << cluster->parentArea->id << SEP
                      << cluster->id() << ".txt";
@@ -229,18 +229,10 @@ bool ClusterList<ClusterT>::saveDataSeriesToFolder(const AnyString& folder) cons
 }
 
 template<class ClusterT>
-bool ClusterList<ClusterT>::saveDataSeriesToFolder(const AnyString& folder, const String& msg) const
-{
-    return std::ranges::all_of(allClusters_, 
-                               [&](const auto& c) { return c->saveDataSeriesToFolder(folder); });
-}
-
-template<class ClusterT>
 bool ClusterList<ClusterT>::loadDataSeriesFromFolder(Study& s,
-                                                    const StudyLoadOptions& options,
                                                     const AnyString& folder)
 {
-    return std::ranges::all_of(allClusters_, 
+    return std::ranges::all_of(allClusters_,
                                [&](auto c) { return c->loadDataSeriesFromFolder(s, folder); });
 }
 
