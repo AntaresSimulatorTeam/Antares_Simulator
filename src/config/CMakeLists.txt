@@ -1,4 +1,4 @@
-set(PROJ antares-config)
+set(PROJ antares-config-lib)
 set(HEADERS
         include/antares/config/config.h
 )
