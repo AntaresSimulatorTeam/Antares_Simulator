@@ -20,19 +20,15 @@
 */
 
 #include <algorithm>
-#include "rules.h"
-#include "../study.h"
+#include "antares/study/scenario-builder/rules.h"
+#include "antares/study/study.h"
 #include <antares/logs/logs.h>
-#include "scBuilderUtils.h"
-#include "TSnumberData.h"
+#include "antares/study/scenario-builder/scBuilderUtils.h"
+#include "antares/study/scenario-builder/TSnumberData.h"
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Data
-{
-namespace ScenarioBuilder
+namespace Antares::Data::ScenarioBuilder
 {
 Rules::Rules(Study& study) : study_(study), pAreaCount(0)
 {
@@ -408,6 +404,6 @@ void Rules::sendWarningsForDisabledClusters()
     }
 }
 
-} // namespace ScenarioBuilder
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data::ScenarioBuilder
+
+

@@ -20,7 +20,7 @@
 */
 
 #include "main.h"
-#include "../study.h"
+#include "antares/study/study.h"
 #include "../recentfiles.h"
 #include "../menus.h"
 #include "../../windows/saveas.h"

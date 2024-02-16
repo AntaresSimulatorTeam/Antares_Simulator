@@ -21,14 +21,10 @@
 
 #include <sstream>
 #include <iomanip>
-#include "hydroLevelsData.h"
-#include "scBuilderUtils.h"
+#include "antares/study/scenario-builder/hydroLevelsData.h"
+#include "antares/study/scenario-builder/scBuilderUtils.h"
 
-namespace Antares
-{
-namespace Data
-{
-namespace ScenarioBuilder
+namespace Antares::Data::ScenarioBuilder
 {
 bool hydroLevelsData::reset(const Study& study)
 {
@@ -83,6 +79,6 @@ bool hydroLevelsData::apply(Study& study)
     return true;
 }
 
-} // namespace ScenarioBuilder
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data::ScenarioBuilder
+
+

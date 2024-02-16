@@ -33,12 +33,12 @@
 
 #include "antares/solver/misc/options.h"
 
-#include "../../config.h"
+#include "antares/config/config.h"
 
 #include <antares/exception/AssertionError.hpp>
 #include <antares/exception/LoadingError.hpp>
-#include <antares/Enum.hpp>
-#include <antares/constants.h>
+#include "antares/antares/Enum.hpp"
+#include <antares/antares/constants.h>
 
 #include "antares/solver/utils/ortools_utils.h"
 

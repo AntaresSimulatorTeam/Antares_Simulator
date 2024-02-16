@@ -29,6 +29,7 @@
 #include "../../resources.h"
 #include "settings.h"
 #include "nodes/bindingconstraint.h"
+#include <antares/utils/utils.h>
 
 #include "controls/addtools.h"
 #include "component.h"

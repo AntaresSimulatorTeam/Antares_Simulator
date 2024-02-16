@@ -31,8 +31,8 @@ extern "C"
 }
 #endif
 
-#include "h2o_m_donnees_annuelles.h"
-#include "h2o_m_fonctions.h"
+#include "antares/solver/hydro/monthly/h2o_m_donnees_annuelles.h"
+#include "antares/solver/hydro/monthly/h2o_m_fonctions.h"
 
 void H2O_M_Free(DONNEES_ANNUELLES& DonneesAnnuelles)
 {

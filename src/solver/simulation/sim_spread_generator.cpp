@@ -20,7 +20,7 @@
 */
 
 
-#include "sim_spread_generator.h"
+#include "antares/solver/simulation/sim_spread_generator.h"
 
 namespace SIM
 {

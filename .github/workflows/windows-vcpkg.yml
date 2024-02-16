@@ -32,7 +32,6 @@ jobs:
       # Indicates the location of the vcpkg as a Git submodule of the project repository.
       VCPKG_ROOT: ${{ github.workspace }}/vcpkg
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
-      RUN_EXTENDED_TESTS: ${{ github.event_name == 'schedule'}}
       os: windows-latest
       test-platform: windows-2022
       vcpkgPackages: wxwidgets boost-test

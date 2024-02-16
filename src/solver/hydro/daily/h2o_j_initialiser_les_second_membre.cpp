@@ -19,8 +19,8 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "h2o_j_donnees_mensuelles.h"
-#include "h2o_j_fonctions.h"
+#include "antares/solver/hydro/daily/h2o_j_donnees_mensuelles.h"
+#include "antares/solver/hydro/daily/h2o_j_fonctions.h"
 
 void H2O_J_InitialiserLeSecondMembre(DONNEES_MENSUELLES* DonneesMensuelles, int NumeroDeProbleme)
 {

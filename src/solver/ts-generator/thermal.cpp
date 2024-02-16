@@ -29,10 +29,7 @@
 #include <antares/logs/logs.h>
 #include <antares/writer/i_writer.h>
 
-#include "../simulation/simulation.h"
-#include "../simulation/sim_structure_donnees.h"
-#include "../simulation/sim_structure_probleme_economique.h"
-#include "../simulation/sim_extern_variables_globales.h"
+#include "antares/study/simulation.h"
 
 using namespace Yuni;
 
@@ -40,9 +37,7 @@ using namespace Yuni;
 
 #define FAILURE_RATE_EQ_1 0.999
 
-namespace Antares
-{
-namespace TSGenerator
+namespace Antares::TSGenerator
 {
 namespace
 {
@@ -631,5 +626,6 @@ bool GenerateThermalTimeSeries(Data::Study& study,
     return true;
 }
 
-} // namespace TSGenerator
-} // namespace Antares
+} // namespace Antares::TSGenerator
+
+

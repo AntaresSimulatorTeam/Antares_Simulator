@@ -19,5 +19,5 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "links.h"
-#include "../commons/links/links.cpp.inc.hxx"
+#include "antares/solver/variable/economy/links.h"
+#include "antares/solver/variable/commons/links/links.cpp.inc.hxx"

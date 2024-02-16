@@ -19,7 +19,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "solver.data.h"
+#include "antares/solver/simulation/solver.data.h"
 #include <antares/study/parameters.h>
 
 namespace Antares::Solver::Private::Simulation

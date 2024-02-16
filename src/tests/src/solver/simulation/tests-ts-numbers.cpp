@@ -25,8 +25,8 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include <timeseries-numbers.h>
-#include "ts-generator/generator.h"
+#include <antares/solver/simulation/timeseries-numbers.h>
+#include "antares/solver/ts-generator/generator.h"
 
 #include <algorithm> // std::adjacent_find
 

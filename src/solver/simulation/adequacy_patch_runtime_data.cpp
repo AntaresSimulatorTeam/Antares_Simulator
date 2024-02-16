@@ -18,7 +18,8 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include "adequacy_patch_runtime_data.h"
+
+#include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 
 namespace
 {
