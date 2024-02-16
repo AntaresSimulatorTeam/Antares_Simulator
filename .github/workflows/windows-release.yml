@@ -30,6 +30,10 @@ jobs:
       run: |
           choco install wget unzip zip --no-progress
 
+    - name : Init VCPKG submodule
+      run: |
+          git submodule update --init vcpkg
+
     # Restore both vcpkg and its artifacts from the GitHub cache service.
     - name: Restore vcpkg and its artifacts.
       uses: actions/cache@v3
@@ -55,7 +59,6 @@ jobs:
 
     - name : Install deps with VCPKG
       run: |
-          git submodule update --init vcpkg
           cd vcpkg
           ./bootstrap-vcpkg.sh
           vcpkg install ${{matrix.vcpkgPackages}} --triplet ${{matrix.triplet}}
