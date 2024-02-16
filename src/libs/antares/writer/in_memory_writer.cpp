@@ -23,14 +23,19 @@ void logErrorAndThrow [[noreturn]] (const std::string& errorMessage)
                 std::mutex& mutex,
                 Benchmarking::IDurationCollector& duration_collector)
   {
+    std::string entryPathSanitized = entryPath;
+    std::replace(entryPathSanitized.begin(),
+                 entryPathSanitized.end(),
+                 '\\',
+                 '/');
+
     Benchmarking::Timer timer_wait;
     std::lock_guard lock(mutex);
     timer_wait.stop();
     duration_collector.addDuration("in_memory_wait", timer_wait.get_duration());
 
-
     Benchmarking::Timer timer_insert;
-    entries.insert({entryPath, content});
+    entries.insert({entryPathSanitized, content});
     timer_insert.stop();
     duration_collector.addDuration("in_memory_insert", timer_insert.get_duration());
   }
@@ -38,6 +43,8 @@ void logErrorAndThrow [[noreturn]] (const std::string& errorMessage)
 
 
 InMemoryWriter::InMemoryWriter(Benchmarking::IDurationCollector& duration_collector) : pDurationCollector(duration_collector) {}
+
+InMemoryWriter::~InMemoryWriter() = default;
 
 void InMemoryWriter::addEntryFromBuffer(const std::string& entryPath, Yuni::Clob& entryContent)
 {
@@ -71,22 +78,16 @@ void InMemoryWriter::addEntryFromFile(const std::string& entryPath, const std::s
                   pMapMutex,
                   pDurationCollector);
         break;
-    case errNotFound:
-        logErrorAndThrow(filePath + ": file does not exist");
-        break;
-   case errReadFailed:
-        logErrorAndThrow("Read failed '" + filePath + "'");
-        break;
-    case errMemoryLimit:
-        logErrorAndThrow("Size limit hit for file '" + filePath + "'");
-        break;
-    default:
-        logErrorAndThrow("Unhandled error");
-        break;
+    // Since logErrorAndThrow does not return, we don't need 'break's here
+    case errNotFound: logErrorAndThrow(filePath + ": file does not exist");
+    case errReadFailed: logErrorAndThrow("Read failed '" + filePath + "'");
+    case errMemoryLimit: logErrorAndThrow("Size limit hit for file '" + filePath + "'");
+    default: logErrorAndThrow("Unhandled error");
     }
 }
 void InMemoryWriter::flush()
 {
+    // Nothing to do here
 }
 
 bool InMemoryWriter::needsTheJobQueue() const
@@ -97,6 +98,7 @@ bool InMemoryWriter::needsTheJobQueue() const
 
 void InMemoryWriter::finalize(bool /* verbose */)
 {
+    // Nothing to do here
 }
 
 const InMemoryWriter::MapType& InMemoryWriter::getMap() const

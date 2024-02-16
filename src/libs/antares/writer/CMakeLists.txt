@@ -2,10 +2,6 @@ project(result-writer)
 find_package(minizip)
 
 add_library(result_writer
-        # Interface class (public API)
-        include/antares/writer/i_writer.h
-        include/antares/writer/result_format.h
-
         # Helper class
         private/ensure_queue_started.h
         ensure_queue_started.cpp
@@ -21,6 +17,8 @@ add_library(result_writer
         # Add entry to zip, using a job queue (private)
         zip_writer.cpp
         private/zip_writer.h
+
+        in_memory_writer.cpp
         include/antares/writer/in_memory_writer.h # Public (for tests)
         include/antares/writer/result_format.h
 )
