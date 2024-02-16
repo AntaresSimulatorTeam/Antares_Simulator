@@ -1,5 +1,6 @@
 var NAVTREEINDEX23 =
 {
+"structAntares_1_1Optimization_1_1PROBLEME__SIMPLEXE__NOMME.html":[7,0,0,10,4],
 "structAntares_1_1Optimization_1_1VariableBounds.html":[7,0,0,10,9],
 "structAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html":[7,0,0,12,1,3],
 "structAntares_1_1Solver_1_1Simulation_1_1compareHydroCostsNoises.html":[7,0,0,12,3,5],
@@ -248,6 +249,5 @@ var NAVTREEINDEX23 =
 "structAntares_1_1Solver_1_1Variable_1_1Empty.html":[7,0,0,12,4,10],
 "structAntares_1_1Solver_1_1Variable_1_1Empty.html#aeb65c5b0db0e215d8c875a5fffadc475":[7,0,0,12,4,10,0],
 "structAntares_1_1Solver_1_1Variable_1_1IVariable_1_1Statistics.html":[7,0,0,12,4,12,0],
-"structAntares_1_1Solver_1_1Variable_1_1Join_1_1Statistics.html":[7,0,0,12,4,13,0],
-"structAntares_1_1Solver_1_1Variable_1_1LINK__NAMESPACE_1_1Links_1_1Statistics.html":[7,0,0,12,4,5,0,0]
+"structAntares_1_1Solver_1_1Variable_1_1Join_1_1Statistics.html":[7,0,0,12,4,13,0]
 };

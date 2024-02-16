@@ -1,5 +1,6 @@
 var NAVTREEINDEX25 =
 {
+"summary_8h_source.html":[8,0,0,5,2,1,1,1,1,4,0],
 "surveyresults_2surveyresults_8h_source.html":[8,0,0,2,10,0,0,0,0,4,2],
 "surveyresults_8h_source.html":[8,0,0,2,10,0,0,0,0,23],
 "system-memory_8h_source.html":[8,0,0,2,4,0,0,0,0,5],
@@ -111,7 +112,7 @@ var NAVTREEINDEX25 =
 "watervalues_8h_source.html":[8,0,0,5,2,1,1,1,1,1,15],
 "week_8h_source.html":[8,0,0,5,2,1,1,1,0,0,7],
 "weekday_8h_source.html":[8,0,0,5,2,1,1,1,0,0,8],
-"weekly__optimization_8h_source.html":[8,0,0,2,5,1,0,0,0,16],
+"weekly__optimization_8h_source.html":[8,0,0,2,5,0,0,0,0,16],
 "wind_2prepro_8hxx_source.html":[8,0,0,1,0,22,0,0,0,5,7,2],
 "wind_8h_source.html":[8,0,0,2,10,0,0,0,0,1,9],
 "windows_2bindingconstraint_2bindingconstraint_8h_source.html":[8,0,0,5,2,2,2,0],

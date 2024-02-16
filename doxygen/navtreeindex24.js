@@ -1,5 +1,6 @@
 var NAVTREEINDEX24 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1LINK__NAMESPACE_1_1Links_1_1Statistics.html":[7,0,0,12,4,5,0,0],
 "structAntares_1_1Solver_1_1Variable_1_1LINK__NAMESPACE_1_1VCardAllLinks.html":[7,0,0,12,4,5,1],
 "structAntares_1_1Solver_1_1Variable_1_1LINK__NAMESPACE_1_1VCardAllLinks.html#a5e6d6d82ddf949aa8a2dafd3cba028a2":[7,0,0,12,4,5,1,0],
 "structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat.html":[7,0,0,12,4,14],
@@ -248,6 +249,5 @@ var NAVTREEINDEX24 =
 "suffix-for-cluster-names_8h_source.html":[8,0,0,5,0,1,0,1,4],
 "suffix-for-cluster-names_8hxx_source.html":[8,0,0,5,0,1,0,1,5],
 "suffix-for-constraint-names_8h_source.html":[8,0,0,5,0,1,0,1,6],
-"suffix-for-constraint-names_8hxx_source.html":[8,0,0,5,0,1,0,1,7],
-"summary_8h_source.html":[8,0,0,5,2,1,1,1,1,4,0]
+"suffix-for-constraint-names_8hxx_source.html":[8,0,0,5,0,1,0,1,7]
 };

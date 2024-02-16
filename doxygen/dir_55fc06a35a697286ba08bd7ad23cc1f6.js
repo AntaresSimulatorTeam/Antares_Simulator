@@ -5,6 +5,5 @@ var dir_55fc06a35a697286ba08bd7ad23cc1f6 =
     [ "Enum.hpp", "Enum_8hpp_source.html", null ],
     [ "Enum.hxx", "Enum_8hxx_source.html", null ],
     [ "fatal-error.h", "fatal-error_8h_source.html", null ],
-    [ "jit.h", "include_2antares_2antares_2jit_8h_source.html", null ],
     [ "version.h", "libs_2antares_2include_2antares_2antares_2version_8h_source.html", null ]
 ];
