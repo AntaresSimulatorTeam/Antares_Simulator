@@ -300,7 +300,7 @@ bool checkInterModalConsistencyForArea(Area& area,
     if (isTSintermodal[indexTS])
     {
         for (auto cluster : area.thermal.list.each_enabled())
-            listNumberTsOverArea.push_back(cluster.series.timeSeries.width);
+            listNumberTsOverArea.push_back(cluster->series.timeSeries.width);
     }
 
     // Renewable clusters : Add renewable's number of TS of each cluster in area ...
