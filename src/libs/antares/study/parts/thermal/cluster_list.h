@@ -100,7 +100,7 @@ public:
 
     bool saveToFolder(const AnyString& folder) const override;
 
-    unsigned int mustRunAndEnabledCount() const;
+    unsigned int enabledAndMustRunCount() const;
     unsigned int enabledAndNotMustRunCount() const;
 
 private:

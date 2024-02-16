@@ -39,7 +39,7 @@ std::string ThermalClusterList::typeID() const
 
 uint64_t ThermalClusterList::memoryUsage() const
 {
-    uint64_t ret = sizeof(ThermalClusterList) + (2 * sizeof(void*)) * mustRunAndEnabledCount();
+    uint64_t ret = sizeof(ThermalClusterList) + (2 * sizeof(void*)) * enabledAndMustRunCount();
     std::ranges::for_each(each_enabled_and_not_mustrun(), [&ret](const auto c) { ret += c->memoryUsage(); });
     return ret;
 }
@@ -60,7 +60,7 @@ unsigned int ThermalClusterList::enabledAndNotMustRunCount() const
     return std::ranges::count_if(allClusters_, [](auto c) { return c->isEnabled() && !c->isMustRun(); });
 }
 
-unsigned int ThermalClusterList::mustRunAndEnabledCount() const
+unsigned int ThermalClusterList::enabledAndMustRunCount() const
 {
     return std::ranges::count_if(allClusters_, [](auto c) { return c->isEnabled() && c->isMustRun(); });
 }
