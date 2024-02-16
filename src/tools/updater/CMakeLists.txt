@@ -29,7 +29,9 @@ set(UPDATER_LIBS
 		Antares::args_helper
 		Antares::study
 		Antares::sys
+		Antares::locale
 		antares-core #version.h
+		Antares::locale
 		${CMAKE_THREADS_LIBS_INIT}
 		)
 

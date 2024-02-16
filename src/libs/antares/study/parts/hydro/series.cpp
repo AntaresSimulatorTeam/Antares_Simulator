@@ -1,46 +1,38 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
 #include <yuni/yuni.h>
 #include <yuni/io/file.h>
-#include <stdio.h>
-#include "series.h"
+#include <cstdio>
+#include "antares/study/parts/hydro/series.h"
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
 #include <antares/exception/LoadingError.hpp>
-#include "../../study.h"
+#include "antares/study/study.h"
 
 using namespace Yuni;
 
 #define SEP IO::Separator
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 DataSeriesHydro::DataSeriesHydro() :
     ror(timeseriesNumbers),
@@ -106,7 +98,7 @@ bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const
     if (ror.timeSeries.width > count)
         count = ror.timeSeries.width;
 
-    if (study.header.version >= 860)
+    if (study.header.version >= StudyVersion(8, 6))
     {
         buffer.clear() << folder << SEP << areaID << SEP << "mingen." << study.inputExtension;
         ret = mingen.timeSeries.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &study.dataBuffer) && ret;
@@ -237,11 +229,30 @@ void DataSeriesHydro::reset()
     count = 1;
 }
 
-void DataSeriesHydro::resizeRORandSTORAGE(unsigned int width)
+void DataSeriesHydro::resize_ROR_STORAGE_MINGEN_whenGeneratedTS(unsigned int newWidth)
 {
-    ror.resize(width, HOURS_PER_YEAR);
-    storage.resize(width, DAYS_PER_YEAR);
-    count = width;
+    // This function is called in case hydro TS are generated.
+    // ROR ans STORAGE are resized here, and will be overriden at some point.
+    // MINGEN TS are different : when generating hydro TS, mingen TS are not generated,
+    // but only resized, so that their size is the same as ROR and STORAGE TS.
+    // When resizing MINGEN :
+    //  - If we extend mingen TS, we keep already existing TS and fill the extra ones
+    //    with a copy of the first TS
+    //  - if we reduce mingen TS, we remove some existing TS, but we must keep intact
+    //    the remaining ones.
+    ror.resize(newWidth, HOURS_PER_YEAR);
+    storage.resize(newWidth, DAYS_PER_YEAR);
+
+    // Resizing mingen (mingen has necessarily at least one column, by construction)
+    uint mingenOriginalSize = mingen.timeSeries.width;
+    mingen.timeSeries.resizeWithoutDataLost(newWidth, mingen.timeSeries.height);
+    if (mingenOriginalSize < newWidth)
+    {
+        for (uint col = mingenOriginalSize; col < newWidth; ++col)
+            mingen.timeSeries.pasteToColumn(col, mingen[0]);
+    }
+
+    count = newWidth;
 }
 
 void DataSeriesHydro::resizeGenerationTS(unsigned int w, unsigned int h)
@@ -257,5 +268,5 @@ uint64_t DataSeriesHydro::memoryUsage() const
     return sizeof(double) + ror.memoryUsage() + storage.memoryUsage() + mingen.memoryUsage();
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+

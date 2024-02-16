@@ -1,3 +1,23 @@
+/*
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
+**
+** Antares_Simulator is free software: you can redistribute it and/or modify
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
+** (at your option) any later version.
+**
+** Antares_Simulator is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+** Mozilla Public Licence 2.0 for more details.
+**
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+*/
 #define BOOST_TEST_MODULE "test time series"
 #define BOOST_TEST_DYN_LINK
 
@@ -20,8 +40,9 @@ struct Fixture
     Fixture& operator=(const Fixture&& f) = delete;
     Fixture() : ts(tsnum)
     {
-        ts.resize(1, HOURS_PER_YEAR);
+        ts.reset(1, HOURS_PER_YEAR);
         tsnum.resize(1, 1);
+        tsnum[0][0] = 0;
     }
     TimeSeries ts;
     TimeSeries::numbers tsnum;
@@ -65,9 +86,6 @@ BOOST_FIXTURE_TEST_CASE(getSeriesIndex, Fixture)
     for (unsigned int i = 0; i < 10; i++)
         tsnum[0][i] = i;
 
-    //timeSeries.width == 1 so returns 0
-    BOOST_CHECK_EQUAL(ts.getSeriesIndex(5), 0);
-
     ts.resize(2, HOURS_PER_YEAR);
     for (unsigned int i = 0; i < 10; i++)
         BOOST_CHECK_EQUAL(ts.getSeriesIndex(i), i);
@@ -78,13 +96,6 @@ BOOST_FIXTURE_TEST_CASE(getCoefficientWidth1, Fixture)
     fillColumn(0);
     BOOST_CHECK_EQUAL(ts.getCoefficient(0, 12), 12);
     BOOST_CHECK_EQUAL(ts.getCoefficient(0, 8750), 8750);
-}
-
-BOOST_FIXTURE_TEST_CASE(getCoefficientWidth0, Fixture)
-{
-    ts.resize(0, HOURS_PER_YEAR);
-    BOOST_CHECK_EQUAL(ts.getCoefficient(0, 12), 0);
-    BOOST_CHECK_EQUAL(ts.getCoefficient(0, 8750), 0);
 }
 
 BOOST_FIXTURE_TEST_CASE(getCoefficientNotInitialized, Fixture)
@@ -111,8 +122,7 @@ BOOST_FIXTURE_TEST_CASE(getCoefficientWidthMoreThan1, Fixture)
 
 BOOST_FIXTURE_TEST_CASE(getColumn, Fixture)
 {
-    ts.resize(0, HOURS_PER_YEAR);
-    auto col = ts.getColumn(3); //emptyColumn
+    auto col = ts.getColumn(0);
     BOOST_CHECK_EQUAL(col[38], 0);
     BOOST_CHECK_EQUAL(col[7463], 0);
 

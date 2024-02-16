@@ -19,11 +19,16 @@ target_link_libraries(${PROJ}
         PRIVATE
         Antares::logs
         Antares::inifile
+        Antares::config
 )
 
 target_include_directories(${PROJ}
         PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/include
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         PRIVATE
-        ${CMAKE_SOURCE_DIR}/libs
+        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/libs>
+)
+
+install(DIRECTORY include/antares
+        DESTINATION "include"
 )
