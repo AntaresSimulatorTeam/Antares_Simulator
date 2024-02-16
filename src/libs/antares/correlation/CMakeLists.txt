@@ -1,8 +1,8 @@
 set(SRC_CORRELATION
         correlation.cpp
-        antares/correlation/correlation.h
-        antares/correlation/correlation.hxx
-        )
+        include/antares/correlation/correlation.h
+        include/antares/correlation/correlation.hxx
+)
 source_group("correlation" FILES ${SRC_CORRELATION})
 
 add_library(correlation
@@ -16,13 +16,14 @@ target_link_libraries(correlation
         Antares::inifile
         Antares::array
         Antares::study #correlation.h -> area.h
-        )
+        Antares::locator
+)
 
 target_include_directories(correlation
-        PRIVATE
-        ${CMAKE_SOURCE_DIR}/libs/ #area -> antares/study/parameters/adq-patch-params.h
-        ${CMAKE_SOURCE_DIR}/libs/antares/date #area -> antares/study/parameters/adq-patch-params.h -> date
-        ${CMAKE_SOURCE_DIR}/libs/antares/writer #area -> antares/parts/thermal/cluster -> writer
         PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}
-        )
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+)
+
+install(DIRECTORY include/antares
+        DESTINATION "include"
+)

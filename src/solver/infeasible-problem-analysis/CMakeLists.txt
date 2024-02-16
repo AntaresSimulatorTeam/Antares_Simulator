@@ -20,6 +20,6 @@ target_link_libraries(infeasible_problem_analysis
         utils #ortools-utils, not Antares::utils
   )
 target_include_directories(infeasible_problem_analysis
-  PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/..
+          PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..>
 )

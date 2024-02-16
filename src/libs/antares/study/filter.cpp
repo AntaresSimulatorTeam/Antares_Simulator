@@ -19,13 +19,11 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "filter.h"
+#include "antares/study/filter.h"
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 std::string datePrecisionIntoString(uint datePrecisionFilter)
 {
@@ -126,5 +124,5 @@ uint addTimeIntervallToDatePrecisionFilter(const uint index)
     return flag;
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+

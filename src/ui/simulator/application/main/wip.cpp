@@ -21,10 +21,11 @@
 
 #include "main.h"
 #include <wx/statusbr.h>
-#include "../study.h"
+#include "antares/study/study.h"
 #include <ui/common/lock.h>
 #include <ui/common/dispatcher.h>
 #include "internal-data.h"
+#include "application/study.h"
 
 using namespace Yuni;
 

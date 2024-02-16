@@ -20,9 +20,9 @@
 */
 
 #include <yuni/yuni.h>
-#include "../../study.h"
-#include "container.h"
-#include "prepro.h"
+#include "antares/study/study.h"
+#include "antares/study/parts/load/container.h"
+#include "antares/study/parts/load/prepro.h"
 
 using namespace Yuni;
 

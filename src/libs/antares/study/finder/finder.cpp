@@ -22,14 +22,12 @@
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
 #include <yuni/io/directory/iterator.h>
-#include "../study.h"
-#include "finder.h"
+#include "antares/study/study.h"
+#include "antares/study/finder/finder.h"
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 namespace // anonymous namespace
 {
@@ -166,5 +164,5 @@ void StudyFinder::lookup(const String& folder)
     pLycos->start();
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+

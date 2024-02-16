@@ -21,11 +21,11 @@
 
 #include <yuni/yuni.h>
 #include <yuni/io/file.h>
-#include "study.h"
-#include "../constants.h"
+#include "antares/study/study.h"
+#include "antares/antares/constants.h"
 #include <stdio.h>
 #include <string.h>
-#include "simulation.h"
+#include "antares/study/simulation.h"
 #include <antares/logs/logs.h>
 
 using namespace Yuni;

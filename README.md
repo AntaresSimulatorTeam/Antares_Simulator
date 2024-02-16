@@ -60,8 +60,8 @@ For installation instructions, please visit [INSTALL.md](INSTALL.md)
 # Source Code Content
 
 * [AUTHORS](AUTHORS.txt)           -    Antares Simulator authors
-* [CERTIFICATE](CERTIFICATE.txt)	 - A standard DCO that has to be signed by every contributor
-* [CONTRIBUTING](CONTRIBUTING.txt)	     - How to submit patches and discuss about code evolutions
+* [CERTIFICATE](CERTIFICATE.txt)	 - A standard DCO that has to be signed by every contributor 
+* [CONTRIBUTING](CONTRIBUTING.md)	     - How to submit patches and discuss about code evolutions
 * [COPYING](COPYING.txt)            - The MPL v2 license.
 * [INSTALL](INSTALL.md)           - Installation and building instructions.
 * [NEWS](NEWS.md)                 - Important modifications between the releases.

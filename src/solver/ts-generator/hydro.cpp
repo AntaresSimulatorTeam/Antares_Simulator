@@ -20,9 +20,8 @@
 */
 
 #include <yuni/yuni.h>
-#include "../simulation/sim_extern_variables_globales.h"
-#include <antares/benchmarking/DurationCollector.h>
-#include <antares/fatal-error.h>
+#include "antares/solver/simulation/sim_extern_variables_globales.h"
+#include <antares/antares/fatal-error.h>
 #include <antares/writer/i_writer.h>
 #include "antares/solver/misc/cholesky.h"
 #include "antares/solver/misc/matrix-dp-make.h"
@@ -34,11 +33,7 @@ using namespace Yuni;
 
 #define EPSILON ((double)1.0e-9)
 
-using namespace Antares::Solver;
-
-namespace Antares
-{
-namespace TSGenerator
+namespace Antares::TSGenerator
 {
 
 static void PreproRoundAllEntriesPlusDerated(Data::Study& study)
@@ -59,11 +54,11 @@ static void PreproRoundAllEntriesPlusDerated(Data::Study& study)
     });
 }
 
-bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, IResultWriter& writer)
+bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, Solver::IResultWriter& writer)
 {
     logs.info() << "Generating the hydro time-series";
 
-    Progression::Task progression(study, currentYear, Progression::sectTSGHydro);
+    Solver::Progression::Task progression(study, currentYear, Solver::Progression::sectTSGHydro);
 
     auto& studyRTI = *(study.runtime);
     auto& calendar = study.calendar;
@@ -81,7 +76,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, IResultWriter
     double x, y, z, u;
     double** nullmatrx = nullptr;
 
-    if (1. > MatrixDPMake<double>(CHSKY.entry,
+    if (1. > Solver::MatrixDPMake<double>(CHSKY.entry,
                                   study.preproHydroCorrelation.annual->entry,
                                   B.entry,
                                   nullmatrx,
@@ -119,7 +114,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, IResultWriter
     }
 
     {
-        double r = MatrixDPMake<double>(
+        double r = Solver::MatrixDPMake<double>(
           CHSKY.entry, CORRE.entry, B.entry, nullmatrx, DIM, QCHOLTemp, true);
         if (r < 1.)
         {
@@ -129,7 +124,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, IResultWriter
         }
     }
 
-    Cholesky<double>(CHSKY.entry, B.entry, DIM, QCHOLTemp);
+    Solver::Cholesky<double>(CHSKY.entry, B.entry, DIM, QCHOLTemp);
 
     B.clear();
     CORRE.clear();
@@ -302,5 +297,6 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, IResultWriter
     return true;
 }
 
-} // namespace TSGenerator
-} // namespace Antares
+} // namespace Antares::TSGenerator
+
+

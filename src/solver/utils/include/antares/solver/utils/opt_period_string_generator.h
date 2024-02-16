@@ -35,7 +35,7 @@
    called.
 */
 
-#include "../../../../../optimisation/opt_period_string_generator_base.h"
+#include "antares/solver/optimisation/opt_period_string_generator_base.h"
 // ------------------------------------
 // Daily optimization
 // ------------------------------------

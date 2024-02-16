@@ -20,9 +20,9 @@
 */
 
 #include <sstream>
-#include "../simulation/sim_structure_probleme_economique.h"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
-#include "opt_export_structure.h"
+#include "antares/solver/optimisation/opt_export_structure.h"
 
 ////////////////////////////////////////////////////////////////////
 // Export de la structure des LPs

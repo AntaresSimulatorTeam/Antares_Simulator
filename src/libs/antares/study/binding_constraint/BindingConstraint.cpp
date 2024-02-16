@@ -22,10 +22,10 @@
 #include <yuni/core/math.h>
 #include <algorithm>
 #include <vector>
-#include "BindingConstraint.h"
-#include "../study.h"
-#include "BindingConstraintLoader.h"
-#include "BindingConstraintSaver.h"
+#include "antares/study/binding_constraint/BindingConstraint.h"
+#include "antares/study/study.h"
+#include "antares/study/binding_constraint/BindingConstraintLoader.h"
+#include "antares/study/binding_constraint/BindingConstraintSaver.h"
 #include "antares/utils/utils.h"
 
 using namespace Yuni;

@@ -20,20 +20,16 @@
 */
 
 #include "frame.h"
+#include "constants.h"
 #include "../../application/main.h"
 #include <wx/wupdlock.h>
-#include <wx/fontdlg.h>
-#include <wx/propgrid/editors.h>
 
+#include <wx/propgrid/editors.h>
 #include <antares/study/study.h>
-#include <antares/study/area/constants.h>
 #include "../../application/study.h"
 #include "editor-calendar.h"
-#include "../../toolbox/resources.h"
 #include "../../toolbox/components/map/component.h"
 #include "../../toolbox/components/mainpanel.h"
-#include "../../toolbox/components/button.h"
-#include <ui/common/lock.h>
 #include "grid.h"
 
 using namespace Yuni;

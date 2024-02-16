@@ -22,8 +22,8 @@
 #include <yuni/io/file.h>
 #include <yuni/io/directory.h>
 
-#include "cluster.h"
-#include "../../study.h"
+#include "antares/study/parts/common/cluster.h"
+#include "antares/study/study.h"
 #include <antares/utils/utils.h>
 
 namespace Antares::Data

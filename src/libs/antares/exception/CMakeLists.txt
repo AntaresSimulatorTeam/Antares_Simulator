@@ -4,9 +4,10 @@ set(SRC_PROJ
         LoadingError.cpp
         UnfeasibleProblemError.cpp
 
-        antares/exception/AssertionError.hpp
-        antares/exception/UnfeasibleProblemError.hpp
-        antares/exception/LoadingError.hpp
+        include/antares/exception/AssertionError.hpp
+        include/antares/exception/InitializationError.hpp
+        include/antares/exception/LoadingError.hpp
+        include/antares/exception/UnfeasibleProblemError.hpp
 )
 source_group("exception" FILES ${SRC_PROJ})
 
@@ -14,12 +15,17 @@ add_library(${PROJ} ${SRC_PROJ})
 add_library(Antares::${PROJ} ALIAS ${PROJ})
 
 target_link_libraries(${PROJ}
+        PUBLIC
+        Antares::study
         PRIVATE
         yuni-static-core
 )
 
 target_include_directories(${PROJ}
-        PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}
-        ${CMAKE_SOURCE_DIR}/libs #fwd
+                PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+)
+
+install(DIRECTORY include/antares
+        DESTINATION "include"
 )

@@ -27,7 +27,7 @@
 #include <antares/resources/resources.h>
 #include <antares/sys/policy.h>
 #include <antares/logs/logs.h>
-#include <antares/locale.h>
+#include <antares/locale/locale.h>
 
 #ifdef YUNI_OS_MSVC
 // WxWidgets Stuff

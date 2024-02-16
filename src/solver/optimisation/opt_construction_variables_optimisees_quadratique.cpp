@@ -19,13 +19,14 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "opt_structure_probleme_a_resoudre.h"
+#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 
-#include "../simulation/simulation.h"
-#include "../simulation/sim_structure_donnees.h"
-#include "../simulation/sim_extern_variables_globales.h"
+#include "variables/VariableManagerUtils.h"
+#include "antares/solver/simulation/simulation.h"
+#include "antares/solver/simulation/sim_structure_donnees.h"
+#include "antares/solver/simulation/sim_extern_variables_globales.h"
 
-#include "opt_fonctions.h"
+#include "antares/solver/optimisation/opt_fonctions.h"
 
 #include "pi_constantes_externes.h"
 
@@ -35,14 +36,11 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique(PROBLEME_H
     assert(ProblemeAResoudre != NULL);
 
     int nombreDeVariables = 0;
-
-    CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
-      = problemeHebdo->CorrespondanceVarNativesVarOptim[0];
+    auto variableManager = VariableManagerFromProblemHebdo(problemeHebdo);
 
     for (uint32_t interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
     {
-        CorrespondanceVarNativesVarOptim.NumeroDeVariableDeLInterconnexion[interco]
-          = nombreDeVariables;
+        variableManager.NTCDirect(interco, 0) = nombreDeVariables;
         ProblemeAResoudre->TypeDeVariable[nombreDeVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
         nombreDeVariables++;
     }

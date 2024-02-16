@@ -19,11 +19,11 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "LinearProblemMatrix.h"
-#include "opt_export_structure.h"
+#include "antares/solver/optimisation/LinearProblemMatrix.h"
+#include "antares/solver/optimisation/opt_export_structure.h"
 #include "antares/solver/utils/filename.h"
-#include "opt_fonctions.h"
-#include "LinearProblemMatrixStartUpCosts.h"
+#include "antares/solver/optimisation/opt_fonctions.h"
+#include "antares/solver/optimisation/LinearProblemMatrixStartUpCosts.h"
 
 using namespace Antares::Data;
 

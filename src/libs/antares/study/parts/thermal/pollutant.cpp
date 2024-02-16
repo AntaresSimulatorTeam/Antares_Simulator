@@ -19,7 +19,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "pollutant.h"
+#include "antares/study/parts/thermal/pollutant.h"
 
 namespace Antares::Data
 {

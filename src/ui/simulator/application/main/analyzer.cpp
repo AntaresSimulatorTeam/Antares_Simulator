@@ -28,6 +28,7 @@
 #include <wx/wupdlock.h>
 #include "internal-ids.h"
 #include "antares/study/ui-runtimeinfos.h"
+#include "application/study.h"
 
 using namespace Yuni;
 

@@ -24,7 +24,7 @@
 #include <wx/sizer.h>
 #include "yuni/core/event/interfaces.h"
 #include "../toolbox/components/button.h"
-#include "libs/antares/study/area/links.h"
+#include "antares/study/area/links.h"
 
 namespace Antares
 {

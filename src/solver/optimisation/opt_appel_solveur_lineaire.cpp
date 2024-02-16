@@ -20,11 +20,11 @@
 */
 
 #include <yuni/yuni.h>
-#include "opt_structure_probleme_a_resoudre.h"
+#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 
-#include "../simulation/simulation.h"
-#include "../simulation/sim_structure_probleme_economique.h"
-#include "opt_fonctions.h"
+#include "antares/solver/simulation/simulation.h"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
+#include "antares/solver/optimisation/opt_fonctions.h"
 
 extern "C"
 {
@@ -35,7 +35,7 @@ extern "C"
 }
 
 #include <antares/logs/logs.h>
-#include <antares/fatal-error.h>
+#include <antares/antares/fatal-error.h>
 
 #include "antares/solver/utils/mps_utils.h"
 #include "antares/solver/utils/filename.h"
