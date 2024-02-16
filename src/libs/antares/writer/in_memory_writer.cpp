@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include <antares/writer/in_memory_writer.h>
 #include <antares/logs/logs.h>
 

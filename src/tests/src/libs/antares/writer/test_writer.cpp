@@ -165,3 +165,23 @@ BOOST_AUTO_TEST_CASE(test_in_memory_dyncast)
     BOOST_CHECK(map.at("folder/test") == content1);
     BOOST_CHECK(map.at("test-second-path") == content2);
 }
+
+BOOST_AUTO_TEST_CASE(test_in_memory_sanitize_antislash)
+{
+    // Writer some content to test.zip, possibly from 2 threads
+
+    auto working_tmp_dir = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
+    auto zipPath = working_tmp_dir / "test.zip";
+    auto context = createContext(zipPath /* unused */, 1 /* unused */, Antares::Data::inMemory);
+
+    std::string content1 = "test-content1";
+    context.writer->addEntryFromBuffer("folder\\test", content1);
+    context.writer->flush();
+    context.writer->finalize(true);
+
+    auto writer = std::dynamic_pointer_cast<Antares::Solver::InMemoryWriter>(context.writer);
+    BOOST_CHECK(writer != nullptr);
+
+    const auto& map = writer->getMap();
+    BOOST_CHECK(map.at("folder/test") == content1);
+}
