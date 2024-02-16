@@ -48,7 +48,7 @@ INSTALL(EXPORT antares-analyzer
         DESTINATION cmake
 )
 
-target_link_libraries(antares-${ANTARES_PRG_VERSION}-analyzer
+target_link_libraries(antares-analyzer
         PRIVATE
         yuni-static-core
         Antares::args_helper
