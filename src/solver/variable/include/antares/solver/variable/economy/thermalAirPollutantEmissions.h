@@ -22,7 +22,7 @@
 #define __SOLVER_VARIABLE_ECONOMY_thermalAirPollutantEmissions_H__
 
 #include <antares/study/study.h>
-#include "../variable.h"
+#include "antares/solver/variable/variable.h"
 
 namespace Antares::Solver::Variable::Economy
 {

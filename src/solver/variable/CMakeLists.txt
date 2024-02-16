@@ -195,3 +195,6 @@ target_link_libraries(antares-solver-variable-info
         antares-solver-simulation
 )
 
+install(DIRECTORY include/antares
+        DESTINATION "include"
+)

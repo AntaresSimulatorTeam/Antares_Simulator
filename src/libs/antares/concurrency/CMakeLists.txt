@@ -9,3 +9,7 @@ target_include_directories(concurrency PUBLIC
 )
 
 target_link_libraries(concurrency yuni-static-core)
+
+install(DIRECTORY include/antares
+        DESTINATION "include"
+)

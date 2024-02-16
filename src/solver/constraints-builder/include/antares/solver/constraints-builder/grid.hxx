@@ -18,8 +18,8 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include "grid.h"
-#include "cbuilder.h"
+#include "antares/solver/constraints-builder/grid.h"
+#include "antares/solver/constraints-builder/cbuilder.h"
 #include <algorithm>
 #include <utility>
 #include <algorithm>

@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include "../variable.h"
+#include "antares/solver/variable/variable.h"
 
 namespace Antares
 {

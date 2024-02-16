@@ -74,3 +74,7 @@ target_link_libraries(antares-solver-simulation
 		antares-solver-variable
 		antares-solver-ts-generator
 )
+
+install(DIRECTORY include/antares
+        DESTINATION "include"
+)

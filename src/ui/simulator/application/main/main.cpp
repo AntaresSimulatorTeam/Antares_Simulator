@@ -60,6 +60,7 @@
 #include "../wait.h"
 
 #include "../../windows/options/advanced/advanced.h"
+#include "application/study.h"
 
 using namespace Yuni;
 

@@ -150,7 +150,6 @@ source_group("study\\general data" FILES ${SRC_STUDY_PARAMETERS})
 
 
 set(SRC_STUDY_FINDER
-        include/antares/study/finder.h
         finder/finder.cpp
         include/antares/study/finder/finder.h
 )
@@ -287,7 +286,7 @@ add_library(study ${SRC_ALL})
 add_library(Antares::study ALIAS study)
 
 target_link_libraries(study
-    PUBLIC
+        PUBLIC
         Boost::boost
         yuni-static-core
         Antares::array #xcast
@@ -302,7 +301,9 @@ target_link_libraries(study
         Antares::result_writer #study.h
         Antares::series
         antares-core
-    PRIVATE
+        antares-solver-simulation
+        Antares::hydro
+        PRIVATE
         Antares::exception
         Antares::benchmarking
         antares-solver-variable

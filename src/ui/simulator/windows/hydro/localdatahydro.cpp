@@ -24,18 +24,12 @@
 #include "dailypower.h"
 #include "levelsandvalues.h"
 #include "management.h"
-#include "../../toolbox/components/notebook/notebook.h"
-#include "../../toolbox/components/datagrid/component.h"
 #include "../../toolbox/components/datagrid/renderer/area/timeseries.h"
 #include "../../toolbox/components/datagrid/renderer/area/hydromonthlypower.h"
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Window
-{
-namespace Hydro
+namespace Antares::Window::Hydro
 {
 Localdatahydro::Localdatahydro(wxWindow* parent, Toolbox::InputSelector::Area* notifier) :
  Component::Panel(parent), pNotifier(notifier), pLastArea(nullptr)
@@ -91,6 +85,6 @@ void Localdatahydro::onStudyLoaded()
         pPageFatal->select();
 }
 
-} // namespace Hydro
-} // namespace Window
-} // namespace Antares
+} // namespace Antares::Window::Hydro
+
+

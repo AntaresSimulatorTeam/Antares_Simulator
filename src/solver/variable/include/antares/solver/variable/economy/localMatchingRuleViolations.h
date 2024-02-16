@@ -21,7 +21,7 @@
 #ifndef __SOLVER_VARIABLE_ECONOMY_LMR_VIOLATIONS_H__
 #define __SOLVER_VARIABLE_ECONOMY_LMR_VIOLATIONS_H__
 
-#include "../variable.h"
+#include "antares/solver/variable/variable.h"
 
 namespace Antares::Solver::Variable::Economy
 {
