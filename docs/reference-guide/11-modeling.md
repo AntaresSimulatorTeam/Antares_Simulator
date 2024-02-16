@@ -66,9 +66,9 @@ Quite different is the situation that prevails in expansion studies, in which we
 
 The next sections of this document develop the following subjects:
 
-- Notations used for \\(\mathcal{P}^k\\)
+- Notations used for $\mathcal{P}^k$
 
-- Formulation of \\(\mathcal{P}^k\\)
+- Formulation of $\mathcal{P}^k$
 
 - Complements to the standard problems (how to make **Antares\_Simulator** work as a SCOPF )
 
@@ -81,20 +81,20 @@ The next sections of this document develop the following subjects:
 
 | Notation             | Explanation                                                                                                        |
 | ------------         | -------------                                                                                                      |
-| \\( k \in  K \\)     | optimization periods (weeks) over which \\(P\\) and \\(P^k\\) are defined (omitted for simplicity)                 |
-| \\(t \in T\\)        | individual time steps of any optimization period \\( k\in K\\) (hours of the week)                                 |
-| \\(G(N,L)\\)         | undirected graph of the power system (connected)                                                                   |
-| \\(n \in N\\)        | vertices of \\(G\\), \\(N\\) is an ordered set                                                                     |
-| \\(l \in L\\)        | edges of \\(G\\)                                                                                                   |
-| \\(A\\)              | incidence matrix of \\(G\\), dimension \\(N\times L\\)                                                             |
-| \\(g\\)              | spanning tree of \\(G\\)                                                                                           |
-| \\(C_g\\)            | cycle basis associated with \\(g\\), dimension \\(L\times (L+1-N)\\)                                               |
-| \\(L_n^+\subset L\\) | set of edges for which \\(n\\) is the upstream vertex                                                              |
-| \\(L_n^-\subset L\\) | set of edges for which \\(n\\) is the downstream vertex                                                            |
-| \\(u_l \in N\\)      | vertex upstream from \\(l\\)                                                                                       |
-| \\(d_l \in N\\)      | vertex downstream from \\(l\\)                                                                                     |
-| \\(u \cdot v\\)      | inner product of vectors \\(u\\) and \\(v\\)                                                                       |
-| \\(u_\uparrow^p\\)   | vector resulting from the permutation on \\(u \in \mathbb{R}^s\\) : \\( u\_\uparrow^p(i)=u(i+p\, \mathrm{mod}\,s)\\) |
+| $ k \in  K $     | optimization periods (weeks) over which $P$ and $P^k$ are defined (omitted for simplicity)                 |
+| $t \in T$        | individual time steps of any optimization period $ k\in K$ (hours of the week)                                 |
+| $G(N,L)$         | undirected graph of the power system (connected)                                                                   |
+| $n \in N$        | vertices of $G$, $N$ is an ordered set                                                                     |
+| $l \in L$        | edges of $G$                                                                                                   |
+| $A$              | incidence matrix of $G$, dimension $N\times L$                                                             |
+| $g$              | spanning tree of $G$                                                                                           |
+| $C_g$            | cycle basis associated with $g$, dimension $L\times (L+1-N)$                                               |
+| $L_n^+\subset L$ | set of edges for which $n$ is the upstream vertex                                                              |
+| $L_n^-\subset L$ | set of edges for which $n$ is the downstream vertex                                                            |
+| $u_l \in N$      | vertex upstream from $l$                                                                                       |
+| $d_l \in N$      | vertex downstream from $l$                                                                                     |
+| $u \cdot v$      | inner product of vectors $u$ and $v$                                                                       |
+| $u_\uparrow^p$   | vector resulting from the permutation on $u \in \mathbb{R}^s$ : $ u\_\uparrow^p(i)=u(i+p\, \mathrm{mod}\,s)$ |
 
 
 ### Grid
@@ -102,110 +102,110 @@ The next sections of this document develop the following subjects:
 
 | Notation                                      | Explanation                                                                                            |
 | ------------                                  | -------------                                                                                          |
-| \\(C_l^+ \in \mathbb{R}^T_+\\)                | initial transmission capacity from \\(u_l\\) to \\(d_l\\) (variable of \\(P\\) and \\(P^k\\))          |
-| \\( \overline{C}\_l^+ \in \mathbb{R}^T\_+ \\) | maximum transmission capacity from \\(u_l\\) to \\(d_l\\) (variable of \\(P\\), not used in \\(P^k\\)) |
-| \\(C_l^- \in \mathbb{R}^T_+\\)                | initial transmission capacity from \\(d_l\\) to \\(u_l\\) (variable of \\(P\\) and \\(P^k\\))          |
-| \\( \overline{C}^{-}\_l\in \mathbb{R}^T\_{+} \\)   | maximum transmission capacity from \\(d_l\\) to \\(u_l\\) (variable of \\(P\\), not used in \\(P^k\\)) |
-| \\(\Psi_l \in \mathbb{R}_+\\)                 | weekly cost of a maximum capacity investment                                                           |
-| \\(x_l \in [0,1]\\)                           | transmission capacity investment level                                                                 |
-| \\(F_l^+ \in \mathbb{R}^T_+\\)                | power flow through \\(l\\), from \\(u_l\\) to \\(d_l\\)                                                |
-| \\(F_l^- \in \mathbb{R}^T_+\\)                | power flow through \\(l\\), from \\(d_l\\) to \\(u_l\\)                                                |
-| \\(F_l\in \mathbb{R}^T\\)                     | total power flow through \\(l\\), \\(F_l=F_l^+-F_l^-\\)                                                |
-| \\(\tilde{F}_t \in \mathbb{R}^T\\)            | system flow snapshot at time \\(t\\)                                                                   |
-| \\(\gamma_l^+\in \mathbb{R}^T\\)              | transmission cost through \\(l\\), from \\(u_l\\) to \\(d_l\\). Proportional to the power flow         |
-| \\(\gamma_l^-\in \mathbb{R}^T\\)              | transmission cost through \\(l\\), from \\(d_l\\) to \\(u_l\\). Proportional to the power flow         |
-| \\(Z_l \in \mathbb{R}\_+\\)                   | overall impedance of \\(l\\)                                                                           |
+| $C_l^+ \in \mathbb{R}^T_+$                | initial transmission capacity from $u_l$ to $d_l$ (variable of $P$ and $P^k$)          |
+| $ \overline{C}\_l^+ \in \mathbb{R}^T\_+ $ | maximum transmission capacity from $u_l$ to $d_l$ (variable of $P$, not used in $P^k$) |
+| $C_l^- \in \mathbb{R}^T_+$                | initial transmission capacity from $d_l$ to $u_l$ (variable of $P$ and $P^k$)          |
+| $ \overline{C}^{-}\_l\in \mathbb{R}^T\_{+} $   | maximum transmission capacity from $d_l$ to $u_l$ (variable of $P$, not used in $P^k$) |
+| $\Psi_l \in \mathbb{R}_+$                 | weekly cost of a maximum capacity investment                                                           |
+| $x_l \in [0,1]$                           | transmission capacity investment level                                                                 |
+| $F_l^+ \in \mathbb{R}^T_+$                | power flow through $l$, from $u_l$ to $d_l$                                                |
+| $F_l^- \in \mathbb{R}^T_+$                | power flow through $l$, from $d_l$ to $u_l$                                                |
+| $F_l\in \mathbb{R}^T$                     | total power flow through $l$, $F_l=F_l^+-F_l^-$                                                |
+| $\tilde{F}_t \in \mathbb{R}^T$            | system flow snapshot at time $t$                                                                   |
+| $\gamma_l^+\in \mathbb{R}^T$              | transmission cost through $l$, from $u_l$ to $d_l$. Proportional to the power flow         |
+| $\gamma_l^-\in \mathbb{R}^T$              | transmission cost through $l$, from $d_l$ to $u_l$. Proportional to the power flow         |
+| $Z_l \in \mathbb{R}\_+$                   | overall impedance of $l$                                                                           |
 
 ### Thermal units
 **TODO : add units**
 
 | Notation                                                      | Explanation                                                                            |
 | ------------                                                  | -------------                                                                          |
-| \\(\theta \in \Theta_n\\)                                     | thermal clusters (sets of identical units) installed in node \\(n\\)                   |
-| \\(\Theta\\)                                                  | set of all thermal clusters of the power system \\(\Theta = \cup_{n\in N} \Theta_n\\)  |
-| \\(\overline{P}\_\theta \in \mathbb{R}^T_+\\)                 | maximum power output from cluster \\(\theta\\), depends on units availability          |
-| \\(\underline{P}\_\theta \in \mathbb{R}^T_+\\)                | mimimum power output from cluster \\(\theta\\), units availability allowing            |
-| \\(P_\theta \in \mathbb{R}^T_+\\)                             | power output from cluster \\(\theta\\)                                                 |
-| \\(\chi_\theta \in \mathbb{R}^T\\)                            | power output from cluster \\(\theta\\)                                                 |
-| \\(\sigma_\theta^+ \in \mathbb{R}^T\\)                        | startup cost of a single unit in cluster \\(\theta\\)                                  |
-| \\(\tau_\theta \in \mathbb{R}^T\\)                            | running unit in \\(\theta\\) : cost independent from output level (aka NoLoadHeatCost) |
-| \\(l_\theta \in \mathbb{R}_+\\)                               | unit in \\(\theta\\) : minimum stable power output when running                        |
-| \\(u_\theta \in \mathbb{R}_+\\)                               | unit in \\(\theta\\) : maximum net power output when running                           |
-| \\(\Delta_\theta^+ \in \lbrace 1,\dots, \|T\|\rbrace\\)       | unit in \\(\theta\\) : minumum on time when running                                    |
-| \\(\Delta_\theta^- \in \lbrace 1,\dots, \|T\|\rbrace\\)        | unit in \\(\theta\\) : minumum off time when not running                               |
-| \\(\Delta_\theta = \max(\Delta_\theta^-, \Delta_\theta^+) \\) | duration above which both state changes are allowed                                    |
-| \\(M_\theta \in \mathbb{N}^T\\)                               | number of running units in cluster \\(\theta\\)                                        |
-| \\(\overline{M}_\theta \in \mathbb{N}^T\\)                    | maximum number of running units in cluster \\(\theta\\)                                |
-| \\(\underline{M}_\theta \in \mathbb{N}^T\\)                   | minimum number of running units in cluster \\(\theta\\)                                |
-| \\(M_\theta^+ \in \mathbb{N}^T\\)                             | number of units in cluster changing from state off to state on in cluster \\(\theta\\) |
-| \\(M_\theta^- \in \mathbb{N}^T\\)                             | number of units in cluster changing from state on to state off in cluster \\(\theta\\) |
-| \\(M_\theta^{--} \in \mathbb{N}^T\\)                                   | number of units in cluster changing from state on to state outage cluster \\(\theta\\) |
+| $\theta \in \Theta_n$                                     | thermal clusters (sets of identical units) installed in node $n$                   |
+| $\Theta$                                                  | set of all thermal clusters of the power system $\Theta = \cup_{n\in N} \Theta_n$  |
+| $\overline{P}\_\theta \in \mathbb{R}^T_+$                 | maximum power output from cluster $\theta$, depends on units availability          |
+| $\underline{P}\_\theta \in \mathbb{R}^T_+$                | mimimum power output from cluster $\theta$, units availability allowing            |
+| $P_\theta \in \mathbb{R}^T_+$                             | power output from cluster $\theta$                                                 |
+| $\chi_\theta \in \mathbb{R}^T$                            | power output from cluster $\theta$                                                 |
+| $\sigma_\theta^+ \in \mathbb{R}^T$                        | startup cost of a single unit in cluster $\theta$                                  |
+| $\tau_\theta \in \mathbb{R}^T$                            | running unit in $\theta$ : cost independent from output level (aka NoLoadHeatCost) |
+| $l_\theta \in \mathbb{R}_+$                               | unit in $\theta$ : minimum stable power output when running                        |
+| $u_\theta \in \mathbb{R}_+$                               | unit in $\theta$ : maximum net power output when running                           |
+| $\Delta_\theta^+ \in \lbrace 1,\dots, \|T\|\rbrace$       | unit in $\theta$ : minumum on time when running                                    |
+| $\Delta_\theta^- \in \lbrace 1,\dots, \|T\|\rbrace$        | unit in $\theta$ : minumum off time when not running                               |
+| $\Delta_\theta = \max(\Delta_\theta^-, \Delta_\theta^+) $ | duration above which both state changes are allowed                                    |
+| $M_\theta \in \mathbb{N}^T$                               | number of running units in cluster $\theta$                                        |
+| $\overline{M}_\theta \in \mathbb{N}^T$                    | maximum number of running units in cluster $\theta$                                |
+| $\underline{M}_\theta \in \mathbb{N}^T$                   | minimum number of running units in cluster $\theta$                                |
+| $M_\theta^+ \in \mathbb{N}^T$                             | number of units in cluster changing from state off to state on in cluster $\theta$ |
+| $M_\theta^- \in \mathbb{N}^T$                             | number of units in cluster changing from state on to state off in cluster $\theta$ |
+| $M_\theta^{--} \in \mathbb{N}^T$                                   | number of units in cluster changing from state on to state outage cluster $\theta$ |
 
 ### Reservoir-type hydropower units (or other power storage facilities)
 **TODO : add units**
 
 | Notation                                         | Explanation                                                                                                                          |
 | ------------                                     | -------------                
-| \\(\lambda \in \Lambda_n\\)                      | reservoirs connected to node \\(n\\)                                                                                                 |
-| \\(\Sigma_\lambda \in \mathbb{R}_+\\)            | size of reservoir \\(\lambda\\) : amount of energy that can be stored in \\(\lambda\\)                                               |
-| \\(Q\in \mathbb{N}\\)                                     | number of discrete levels defined in reservoir                                                                                       |
-| \\(\overline{W}\_\lambda \in \mathbb{R}_+\\)     | maximum energy output from \\(\lambda\\) throughout the optimization period                                                          |
-| \\(\underline{W}\_\lambda \in \mathbb{R}_+\\)    | minimum energy output from \\(\lambda\\) throughout the optimization period                                                          |
-| \\(\overline{H}\_\lambda \in \mathbb{R}_+^T\\)   | maximum power output from reservoir \\(\lambda\\). Note : \\(\sum_{t\in T} \overline{H}\_{\lambda\_t} \geq \underline{W}\_\lambda\\) |
-| \\(\underline{H}\_\lambda \in \mathbb{R}_+^T\\)  | minimum power output from reservoir \\(\lambda\\). Note : \\(\sum_{t\in T} \underline{H}\_{\lambda\_t} \leq \overline{W}\_\lambda\\) |
-| \\(H\_\lambda \in \mathbb{R}_+^T\\)              | power output from reservoir \\(\lambda\\)                                                                                            |
-| \\(r\_\lambda \in \mathbb{R}_+\\)                | maximum ratio between output power daily peak and daily average (\\(1 \leq r\_\lambda \leq 24\\))                                    |
-| \\(\varepsilon\_\lambda \in \mathbb{R}\\)                 | reference water value associated with the reservoir's initial state (date, level)                                                    |
-| \\(\varepsilon^*\_\lambda \in \mathbb{R}\\)               | random component added to the water value (dispatch smoothing effect)                                                                |
-| \\(\eta\_\lambda \in \mathbb{R}^Q\\)             | reference water value associated with the reservoir's final state (date)                                                             |
-| \\(\rho\_\lambda \in \mathbb{R}_+\\)             | efficiency ratio of pumping units (or equivalent devices) available in reservoir \\(\lambda\\)                                       |
-| \\(\overline{\Pi}\_\lambda \in \mathbb{R}_+^T\\) | maximum power absorbed by pumps of reservoir \\(\lambda\\)                                                                           |
-| \\(\Pi\_\lambda \in \mathbb{R}_+^T\\)            | power absorbed by pumps of reservoir \\(\lambda\\)                                                                                   |
-| \\(I\_\lambda \in \mathbb{R}^T_+\\)              | natural power inflow to reservoir \\(\lambda\\)                                                                                      |
-| \\(O\_\lambda \in \mathbb{R}_+^T\\)              | power overflowing from reservoir \\(\lambda\\) : part of inflow that cannot be stored                                                |
-| \\(\overline{R}\_\lambda \in \mathbb{R}_+^T\\)   | upper bound of the admissible level in reservoir \\(\lambda\\)                                                                       |
-| \\(\underline{R}\_\lambda \in \mathbb{R}_+^T\\)  | lower bound of the admissible level in reservoir \\(\lambda\\)                                                                       |
-| \\(R\_\lambda \in \mathbb{R}^T_+\\)              | stored energy level in reservoir \\(\lambda\\)                                                                                       |
-| \\(\mathfrak{R}\_{\lambda_q} \in \mathbb{R}_+\\) | filling level of reservoir layer \\(q\\) at time \\(T\\) (end of the week)                                                           |
+| $\lambda \in \Lambda_n$                      | reservoirs connected to node $n$                                                                                                 |
+| $\Sigma_\lambda \in \mathbb{R}_+$            | size of reservoir $\lambda$ : amount of energy that can be stored in $\lambda$                                               |
+| $Q\in \mathbb{N}$                                     | number of discrete levels defined in reservoir                                                                                       |
+| $\overline{W}\_\lambda \in \mathbb{R}_+$     | maximum energy output from $\lambda$ throughout the optimization period                                                          |
+| $\underline{W}\_\lambda \in \mathbb{R}_+$    | minimum energy output from $\lambda$ throughout the optimization period                                                          |
+| $\overline{H}\_\lambda \in \mathbb{R}_+^T$   | maximum power output from reservoir $\lambda$. Note : $\sum_{t\in T} \overline{H}\_{\lambda\_t} \geq \underline{W}\_\lambda$ |
+| $\underline{H}\_\lambda \in \mathbb{R}_+^T$  | minimum power output from reservoir $\lambda$. Note : $\sum_{t\in T} \underline{H}\_{\lambda\_t} \leq \overline{W}\_\lambda$ |
+| $H\_\lambda \in \mathbb{R}_+^T$              | power output from reservoir $\lambda$                                                                                            |
+| $r\_\lambda \in \mathbb{R}_+$                | maximum ratio between output power daily peak and daily average ($1 \leq r\_\lambda \leq 24$)                                    |
+| $\varepsilon\_\lambda \in \mathbb{R}$                 | reference water value associated with the reservoir's initial state (date, level)                                                    |
+| $\varepsilon^*\_\lambda \in \mathbb{R}$               | random component added to the water value (dispatch smoothing effect)                                                                |
+| $\eta\_\lambda \in \mathbb{R}^Q$             | reference water value associated with the reservoir's final state (date)                                                             |
+| $\rho\_\lambda \in \mathbb{R}_+$             | efficiency ratio of pumping units (or equivalent devices) available in reservoir $\lambda$                                       |
+| $\overline{\Pi}\_\lambda \in \mathbb{R}_+^T$ | maximum power absorbed by pumps of reservoir $\lambda$                                                                           |
+| $\Pi\_\lambda \in \mathbb{R}_+^T$            | power absorbed by pumps of reservoir $\lambda$                                                                                   |
+| $I\_\lambda \in \mathbb{R}^T_+$              | natural power inflow to reservoir $\lambda$                                                                                      |
+| $O\_\lambda \in \mathbb{R}_+^T$              | power overflowing from reservoir $\lambda$ : part of inflow that cannot be stored                                                |
+| $\overline{R}\_\lambda \in \mathbb{R}_+^T$   | upper bound of the admissible level in reservoir $\lambda$                                                                       |
+| $\underline{R}\_\lambda \in \mathbb{R}_+^T$  | lower bound of the admissible level in reservoir $\lambda$                                                                       |
+| $R\_\lambda \in \mathbb{R}^T_+$              | stored energy level in reservoir $\lambda$                                                                                       |
+| $\mathfrak{R}\_{\lambda_q} \in \mathbb{R}_+$ | filling level of reservoir layer $q$ at time $T$ (end of the week)                                                           |
 
 ### Binding constraints
 
-In problems \\(\mathcal{P}^k\\), the need for a versatile modelling of the power system calls for the introduction of an arbitrary number of linear binding constraints between system's variables throughout the grid, expressed either in terms of hourly power, daily energies or weekly energies.
+In problems $\mathcal{P}^k$, the need for a versatile modelling of the power system calls for the introduction of an arbitrary number of linear binding constraints between system's variables throughout the grid, expressed either in terms of hourly power, daily energies or weekly energies.
 These constraints may bind together synchronous flows as well as thermal units power outputs. They may be related to synchronous values or bear on different times.
 Herebelow, the generic notation size is used for the relevant dimension of the set to which parameters belong.
 
 These dimensions stand as follow
 
-\\(\mathrm{size}=T=168\\) : applicable to lower and upper bounds of constraints between hourly powers
-\\(\mathrm{size}=\frac{T}{7}=24\\) : applicable to lower and upper bounds of constraints between daily energies
-\\(\mathrm{size}=\frac{T}{168}=1\\) : applicable to lower and upper bounds of constraints between weekly energies
+$\mathrm{size}=T=168$ : applicable to lower and upper bounds of constraints between hourly powers
+$\mathrm{size}=\frac{T}{7}=24$ : applicable to lower and upper bounds of constraints between daily energies
+$\mathrm{size}=\frac{T}{168}=1$ : applicable to lower and upper bounds of constraints between weekly energies
 
 Generic notations for binding constraints :
 
 | Notation                                 | Explanation                                                                                                 |
 | ------------                             | -------------                                                                                               |
-| \\(e \in E\\)                            | set of all grid interconnections and thermal clusters. \\(E = L \cup \Theta\\)                              |
-| \\(b \in B\\)                            | binding constraints                                                                                         |
-| \\(B_h \subset B\\)                      | subset of \\(B\\) containing the binding constraints between hourly powers                                  |
-| \\(B_d \subset B\\)                      | subset of \\(B\\) containing the binding constraints between daily energies                                 |
-| \\(B_w \subset B\\)                      | subset of \\(B\\) containing the binding constraints between weekly energies                                |
-| \\(\alpha_e^b \in \mathbb{R}\\)          | weight of \\(e\\) (flow within \\(e\\) or output from \\(e\\)) in the expression of constraint \\(b\\)      |
-| \\(o_e^b \in \mathbb{N}\\)               | time offset of \\(e\\) (flow within \\(e\\) or output from \\(e\\)) in the expression of constraint \\(b\\) |
-| \\(u^b \in \mathbb{R}^{\mathrm{size}}\\) | upper bound of binding constraint \\(b\\)                                                                   |
-| \\(l^b \in \mathbb{R}^{\mathrm{size}}\\) | lower bound of binding constraint \\(b\\)                                                                   |
+| $e \in E$                            | set of all grid interconnections and thermal clusters. $E = L \cup \Theta$                              |
+| $b \in B$                            | binding constraints                                                                                         |
+| $B_h \subset B$                      | subset of $B$ containing the binding constraints between hourly powers                                  |
+| $B_d \subset B$                      | subset of $B$ containing the binding constraints between daily energies                                 |
+| $B_w \subset B$                      | subset of $B$ containing the binding constraints between weekly energies                                |
+| $\alpha_e^b \in \mathbb{R}$          | weight of $e$ (flow within $e$ or output from $e$) in the expression of constraint $b$      |
+| $o_e^b \in \mathbb{N}$               | time offset of $e$ (flow within $e$ or output from $e$) in the expression of constraint $b$ |
+| $u^b \in \mathbb{R}^{\mathrm{size}}$ | upper bound of binding constraint $b$                                                                   |
+| $l^b \in \mathbb{R}^{\mathrm{size}}$ | lower bound of binding constraint $b$                                                                   |
 
 ### Demand, security uplift, unsupplied and spilled energies
 | Notation                          | Explanation                                                                            |
 | ------------                      | -------------                                                                          |
-| \\(D_n \in \mathbb{R}^T\\)        | net power demand expressed in node \\(n\\), including must-run generation              |
-| \\(S_n \in \mathbb{R}^T_+\\)      | demand security uplift to be faced in node \\(n\\), by activation of security reserves |
-| \\(\delta_n^+ \in \mathbb{R}^T\\) | normative unsupplied energy value in node \\(n\\). Value of lost load - VOLL           |
-| \\(G_n^+ \in \mathbb{R}^T_+\\)    | unsupplied power in the nominal state                                                  |
-| \\(\delta_n^- \in \mathbb{R}^T\\) | normative spilled energy value in node \\(n\\) (value of wasted energy)                |
-| \\(G_n^- \in \mathbb{R}^T_+\\)    | spilled power in the nominal state                                                     |
+| $D_n \in \mathbb{R}^T$        | net power demand expressed in node $n$, including must-run generation              |
+| $S_n \in \mathbb{R}^T_+$      | demand security uplift to be faced in node $n$, by activation of security reserves |
+| $\delta_n^+ \in \mathbb{R}^T$ | normative unsupplied energy value in node $n$. Value of lost load - VOLL           |
+| $G_n^+ \in \mathbb{R}^T_+$    | unsupplied power in the nominal state                                                  |
+| $\delta_n^- \in \mathbb{R}^T$ | normative spilled energy value in node $n$ (value of wasted energy)                |
+| $G_n^- \in \mathbb{R}^T_+$    | spilled power in the nominal state                                                     |
 
 
-## Formulation of problem \\(\mathcal{P}^k\\)
+## Formulation of problem $\mathcal{P}^k$
 
 Superscript k is implicit in all subsequent notations of this section (omitted for simplicity's sake)
 
@@ -218,36 +218,36 @@ $$
 with
 
 
-\\(
+$
 \displaystyle \Omega\_{\mathrm{dispatch}} = \Omega\_{\mathrm{transmission}}+\Omega\_{\mathrm{hydro}}+\Omega\_{\mathrm{thermal}}+\Omega\_{\mathrm{unsupplied}}+\Omega\_{\mathrm{spillage}}
-\\)
+$
 
 
-\\(
+$
 \displaystyle \Omega\_{\mathrm{transmission}}=\sum_{l \in L} \gamma_l^+ \cdot F_l^+ + \gamma_l^- \cdot F_l^-
-\\)
+$
 
 
-\\(
+$
 \displaystyle \Omega\_{\mathrm{hydro}} = \sum\_{n \in N} \sum\_{\lambda in \Lambda\_n} (\varepsilon\_\lambda + \varepsilon^*\_\lambda)\cdot(H\_\lambda - \rho\_\lambda \Pi\_\lambda + O\_\lambda) - \sum\_{n \in N} \sum\_{\lambda \in \Lambda\_n}\sum\_{q=1}^Q \eta\_{\lambda\_q} \mathfrak{R}\_{\lambda_q}
-\\)
+$
 
 
-\\(
+$
 \displaystyle \Omega\_{\mathrm{thermal}}=\sum\_{n \in N} \sum\_{\theta \in \Theta\_n} \chi\_\theta \cdot P\_\theta + \sigma\_\theta^+ \cdot M\_\theta^+ + \tau\_\theta \cdot M\_\theta
-\\)
+$
 
 
-\\(
+$
 \displaystyle \Omega\_{\mathrm{unsupplied}}=\sum\_{n \in N} \delta_n^+ \cdot G_n^+
-\\)
+$
 
 
-\\(
+$
 \displaystyle \Omega\_{\mathrm{spillage}}=\sum\_{n \in N} \delta_n^- \cdot G_n^-
-\\)
+$
 
-\\(\Omega\_{\mathrm{unit com}}\\) is the expression derived from \\(\Omega\_{\mathrm{dispatch}}\\) by replacing all variables that depend on the system's state by their equivalent in the uplifted state.
+$\Omega\_{\mathrm{unit com}}$ is the expression derived from $\Omega\_{\mathrm{dispatch}}$ by replacing all variables that depend on the system's state by their equivalent in the uplifted state.
 
 ## Constraints related to the nominal system state
 
@@ -255,83 +255,83 @@ Balance between load and generation:
 
 First Kirchhoff's law:
 
-\\(
+$
 \displaystyle  \forall n \in N, \sum\_{l \in L\_n^+} F_l - \sum\_{l \in L\_n^-} F_l = \left( G\_n^+ + \sum\_{\lambda \in \Lambda\_n}(H\_\lambda - \Pi\_\lambda) + \sum\_{\theta \ \in \Theta\_n} P\_\theta\right)-(G\_n^-+D\_n)
-\\)
+$
 
 
 On each node, the unsupplied power is bounded by the net positive demand:
 
-\\(
+$
 \displaystyle \forall n \in N, 0 \leq G\_n^+ \leq \max(0, D_n)
-\\)
+$
 
 On each node, the spilled power is bounded by the overall generation of the node (must-run + dispatchable power):
 
-\\(
+$
 \displaystyle \forall n \in N, 0 \leq G_n^- \leq -\min(0, D_n) + \sum\_{\lambda \in \Lambda\_n}H\_\lambda + \sum\_{\theta \ \in \Theta\_n} P\_\theta
-\\)
+$
 
 Flows on the grid:
 
-\\(
+$
 \displaystyle \forall l \in L, 0 \leq F\_l^+ \leq C\_l^+ +(\overline{C}^{+}\_l - C\_l^+)x\_l
-\\)
+$
 
-\\(
+$
 \displaystyle \forall l \in L, 0 \leq F\_l^- \leq C\_l^- +(\overline{C}^{-}\_l - C\_l^-)x\_l
-\\)
+$
 
-\\(
+$
 \displaystyle \forall l \in L, F\_l = F\_l^+ - F\_l^-
-\\)
+$
 
 Flows are bounded by the sum of an initial capacity and of a complement brought by investment
 
 Binding constraints :
 
-\\(
+$
 \displaystyle \forall b \in B\_h, l^b \leq \sum\_{e \in E} \alpha\_e^b (F\_e)\_{\uparrow}^{o\_e^b} \leq u^b
-\\)
+$
 
-\\(
+$
 \displaystyle \forall b \in B\_d, \forall k \in \lbrace 0,\dots,6\rbrace, l^b \leq \sum\_{e \in E} \alpha\_e^b \sum\_{t \in \lbrace 1,\dots,24\rbrace} (F\_e)\_{\uparrow {24k+t}}^{o\_e^b} \leq u^b
-\\)
+$
 
-\\(
+$
 \displaystyle \forall b \in B\_w, l^b \leq \sum\_{e \in E} \alpha\_e^b \sum\_{t \in T} F\_{e\_t} \leq u^b
-\\)
+$
 
 Reservoir-type Hydro power:
 
 The energy generated throughout the optimization period is bounded
 
-\\(
+$
 \displaystyle \forall n \in N, \forall \lambda \in \Lambda\_n, \underline{W}\_{\lambda} \ leq \sum\_{t\in T} H\_{\lambda\_t} \leq \overline{W}\_{\lambda}
-\\)
+$
 
 FIXME : RHS
-\\(
+$
 \displaystyle \forall n \in N, \forall \lambda \in \Lambda\_n, \sum\_{t\in T} H\_{\lambda\_t} - \sum\_{t\in T} \rho\_t \Pi\_{\lambda\_t} = \overline{W}\_{\lambda}
-\\)
+$
 
 Instantaneous generating power is bounded
 
-\\(
+$
 \displaystyle \forall n \in N, \forall \lambda \in \Lambda\_n, \underline{H}\_{\lambda} \leq H\_{\lambda} \leq \overline{H}\_{\lambda}
-\\)
+$
 
 Intra-daily power modulations are bounded
 
-\\(
+$
 \displaystyle \forall n \in N, \forall \lambda \in \Lambda\_n, \forall k \in \lbrace 1, \ldots, 6 \rbrace, \frac{\max\_{t \in \lbrace 24k+1,\ldots, 24k+24 \rbrace} H\_{\lambda\_t}}{\sum\_{t \in \lbrace 24k+1,\ldots, 24k+24 \rbrace} H\_{\lambda\_t}} \leq r\_{\lambda}
-\\)
+$
 
 Instantaneous pumping power is bounded
 
-\\(
+$
 \displaystyle \forall n \in N, \forall \lambda \in \Lambda\_n, 0 \leq \Pi\_{\lambda} \leq \overline{\Pi}\_{\lambda}
-\\)
+$
 
 Reservoir level evolution depends on generating power, pumping power, pumping efficiency, natural inflows and overflows
 
@@ -351,11 +351,11 @@ Minimum running and not-running durations contribute to the unit-commitment plan
 
 All constraints to previously defined for regular operation conditions are repeated with replacement of all variables by their twins when they exist.
 
-Besides, in the expression of constraints , all occurrences of are replaced by \\(D_n + S_n\\)
+Besides, in the expression of constraints , all occurrences of are replaced by $D_n + S_n$
 
 ## Antares as a SCOPF ("flow-based model")
 
-When problems \\(\mathcal{P}^k\\) do not include any instance of so-called ";binding constraints"; and if no market pools are defined, the flows within the grid are only committed to meet the bounds set on the initial transmission capacities, potentially reinforced by investments (problem ).In other words, there are no electrical laws enforcing any particular pattern on the flows, even though hurdles costs and may influence flow directions through an economic signal.
+When problems $\mathcal{P}^k$ do not include any instance of so-called ";binding constraints"; and if no market pools are defined, the flows within the grid are only committed to meet the bounds set on the initial transmission capacities, potentially reinforced by investments (problem ).In other words, there are no electrical laws enforcing any particular pattern on the flows, even though hurdles costs and may influence flow directions through an economic signal.
 
 In the general case, such a raw backbone model is a very simplified representation of a real power system whose topology and consistency are much more complex. While the full detailed modeling of the system within Antares is most often out of the question, it may happen that additional data and/or observations can be incorporated in the problems solved by the software.
 
@@ -369,19 +369,19 @@ When a full flow-based model cannot be set up (lack of robust data for the relev
 
 ### Implementation of Kirchhoff's second law
 
-The implementation ofKirchhoff's second law for the reference state calls for the following additional hourly binding \\(L+1-N\\) constraints:
+The implementation ofKirchhoff's second law for the reference state calls for the following additional hourly binding $L+1-N$ constraints:
 
-\\(
+$
 \forall t \in T, C\_{g}^t Diag(Z\_{l}) \tilde{F}\_{t} = 0
-\\)
+$
 
 ### Implementation of a passive loop flow
 
 In cases where a residual passive loop flow should be incorporated in the model to complete the enforcement of regular Kirchhoff's rules, the binding constraints mentioned in 7.1 should be replaced by:
 
-\\(
+$
 \forall t \in T, C\_{g}^t Diag(Z\_{l}) \tilde{F}\_{t} = C\_{g}^t Diag(Z\_{l}) \tilde{\phi}\_{t}
-\\)
+$
 
 ### Modelling of phase-shifting transformers
 
@@ -389,16 +389,16 @@ In cases where the power system is equipped with phase-shifting transformers who
 
 | Notation             | Explanation                                                                                                        |
 | ------------         | -------------                                                                                                      |
-| \\(\Pi\_{l}^{+shift} \in \mathbb{R}\_{+}\\)  | Maximum positive shifting ability of a device equipping link \\(l\\)|
-| \\(\Pi^{+shift} \in \mathbb{R}^{L}\\) | Snapshots formed by all positive synchronous deviations \\(\Pi\_{l}^{+shift} \in \mathbb{R}\_{+}\\) |
-| \\(\Pi\_{l}^{+shift} \in \mathbb{R}\_{-}\\)  | Maximum negative shifting ability of a device equipping link \\(l\\)|
-| \\(\Pi^{-shift} \in \mathbb{R}^{L}\\) | Snapshots formed by all negative synchronous deviations \\(\Pi\_{l}^{-shift} \in \mathbb{R}\_{-}\\) |
+| $\Pi\_{l}^{+shift} \in \mathbb{R}\_{+}$  | Maximum positive shifting ability of a device equipping link $l$|
+| $\Pi^{+shift} \in \mathbb{R}^{L}$ | Snapshots formed by all positive synchronous deviations $\Pi\_{l}^{+shift} \in \mathbb{R}\_{+}$ |
+| $\Pi\_{l}^{+shift} \in \mathbb{R}\_{-}$  | Maximum negative shifting ability of a device equipping link $l$|
+| $\Pi^{-shift} \in \mathbb{R}^{L}$ | Snapshots formed by all negative synchronous deviations $\Pi\_{l}^{-shift} \in \mathbb{R}\_{-}$ |
 
 The enhancement of the model with a representation of the phase-shifting components of the real system then requires to re-formulate as follows the binding constraints defined in 7.2:
 
-\\(
+$
 \forall t \in T, C\_{g}^t Diag(Z\_{l}) \tilde{\phi}\_{t} - \Pi^{-shift} \leq C\_{g}^t Diag(Z\_{l}) \tilde{F}\_{t} \leq C\_{g}^t Diag(Z\_{l}) \tilde{\phi}\_{t} + \Pi^{+shift}
-\\)
+$
 
 ### Modelling of DC components
 
