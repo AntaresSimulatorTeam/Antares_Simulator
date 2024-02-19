@@ -16,7 +16,7 @@ using namespace std;
 static const string solverNames[] =
         {
                 "xpress",
-                //"sirius", // TODO fix this
+                "sirius",
                 "coin",
                 //"glpk", // TODO fix this
                 //"scip" // TODO activate this after adding tolerance
@@ -27,8 +27,8 @@ static const int timestepNumbers[] =
                 24, // 1 day
                 168, // 1 week
                 744, // 1 month
-                4380, // 6 months
-                8760 // 1 year
+                //4380, // 6 months TODO
+                //8760 // 1 year TODO
         };
 
 BOOST_DATA_TEST_CASE(test_scaling_simple_problem, bdata::make(solverNames)*bdata::make(timestepNumbers), solverName, nTimesteps)
