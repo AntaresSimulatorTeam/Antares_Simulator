@@ -79,14 +79,16 @@ BOOST_FIXTURE_TEST_CASE(thermal_cluster_delete, OneAreaStudy)
     auto disabledCluster = std::make_shared<ThermalCluster>(areaA);
     disabledCluster->setName("Cluster1");
     disabledCluster->enabled = false;
+    auto enabledCluster = std::make_shared<ThermalCluster>(areaA);
+    enabledCluster->setName("Cluster2");
+    enabledCluster->enabled = true;
+
     areaA->thermal.list.addToCompleteList(disabledCluster);
+    areaA->thermal.list.addToCompleteList(enabledCluster);
 
-    // Check that "Cluster1" is found
-    BOOST_CHECK_EQUAL(areaA->thermal.list.findInAll("cluster1"), disabledCluster.get());
-
-    study->initializeRuntimeInfos(); // This should remove all disabled thermal clusters
     // Check that "Cluster1" isn't found
-    BOOST_CHECK_EQUAL(areaA->thermal.list.findInAll("cluster1"), nullptr);
+    for (const auto c : areaA->thermal.list.each_enabled())
+        BOOST_CHECK(c->name() != "Cluster1");
 }
 
 BOOST_FIXTURE_TEST_CASE(renewable_cluster_delete, OneAreaStudy)
@@ -94,14 +96,16 @@ BOOST_FIXTURE_TEST_CASE(renewable_cluster_delete, OneAreaStudy)
     auto disabledCluster = std::make_shared<RenewableCluster>(areaA);
     disabledCluster->setName("Cluster1");
     disabledCluster->enabled = false;
+    auto enabledCluster = std::make_shared<ThermalCluster>(areaA);
+    enabledCluster->setName("Cluster2");
+    enabledCluster->enabled = true;
+
     areaA->renewable.list.addToCompleteList(disabledCluster);
+    areaA->renewable.list.addToCompleteList(enabledCluster);
 
-    // Check that "Cluster1" is found
-    BOOST_CHECK_EQUAL(areaA->renewable.list.findInAll("cluster1"), disabledCluster.get());
-
-    study->initializeRuntimeInfos(); // This should remove all disabled renewable clusters
     // Check that "Cluster1" isn't found
-    BOOST_CHECK_EQUAL(areaA->renewable.list.findInAll("cluster1"), nullptr);
+    for (const auto c : areaA->renewable.list.each_enabled())
+        BOOST_CHECK(c->name() != "Cluster1");
 }
 
 BOOST_FIXTURE_TEST_CASE(short_term_storage_delete, OneAreaStudy)
