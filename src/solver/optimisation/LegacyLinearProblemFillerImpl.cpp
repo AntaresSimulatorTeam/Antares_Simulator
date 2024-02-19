@@ -39,7 +39,7 @@ void LegacyLinearProblemFillerImpl::addVariables(LinearProblem& problem, const L
     // underlying MPSolver object in order to fill it. If needed, we should change this in the future.
     Antares::Optimization::ProblemSimplexeNommeConverter converter("mock", legacyProblem_);
     if (auto *legacyLinearProblem = dynamic_cast<LegacyLinearProblemImpl *>(&problem)) {
-        converter.Fill(&legacyLinearProblem->getMpSolver());
+        converter.Fill(legacyLinearProblem->getMpSolver());
         declareBalanceConstraints(legacyLinearProblem, data.legacy);
     } else {
         // throw
@@ -67,7 +67,7 @@ void LegacyLinearProblemFillerImpl::update(LinearProblem& problem, const LinearP
 void LegacyLinearProblemFillerImpl::declareBalanceConstraints(LegacyLinearProblemImpl *legacyLinearProblem,
                                                               const LinearProblemData::Legacy& legacy)
 {
-   const auto& solver = legacyLinearProblem->getMpSolver();
+   const auto* solver = legacyLinearProblem->getMpSolver();
    auto* constraintMapping = legacy.constraintMapping;
 
    for (unsigned int timestamp = 0; timestamp < constraintMapping->size(); timestamp++)
@@ -76,7 +76,7 @@ void LegacyLinearProblemFillerImpl::declareBalanceConstraints(LegacyLinearProble
        for (unsigned areaIndex = 0; areaIndex < BalanceAtT.size(); areaIndex++)
        {
            int cnt = BalanceAtT[areaIndex];
-           operations_research::MPConstraint* constraint = solver.constraint(cnt);
+           operations_research::MPConstraint* constraint = solver->constraint(cnt);
            legacyLinearProblem->declareBalanceConstraint(std::string(legacy.areaNames->at(areaIndex)), timestamp, constraint);
        }
    }
