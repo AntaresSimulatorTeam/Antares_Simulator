@@ -257,7 +257,7 @@ bool checkIntraModalConsistency(array<uint, timeSeriesCount>& nbTimeseriesByMode
     return true;
 }
 
-bool checkInterModalConsistencyForArea(Area& area,
+bool checkInterModalConsistencyForArea(const Area& area,
                                        const array<bool, timeSeriesCount>& isTSintermodal)
 {
     // 1. Making a list of TS numbers :
