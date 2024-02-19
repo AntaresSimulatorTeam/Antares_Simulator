@@ -31,6 +31,7 @@
 #include "../simulation/simulation.h"
 #include "../simulation/sim_structure_probleme_economique.h"
 #include "opt_fonctions.h"
+#include "opt_global.h"
 
 extern "C"
 {
@@ -234,13 +235,15 @@ static SimplexResult OPT_TryToCallSimplex(
         LegacyLinearProblemFillerImpl filler(&Probleme); // TODO: merge this with LegacyLinearProblemImpl ?
         linearProblemBuilder.addFiller(filler);
         // TODO: we can add extra fillers here
+        for (auto* filler : gAdditionalFillers)
+            linearProblemBuilder.addFiller(*filler);
+
         // sinon renvoyer le builder ou le problem à une autre classe
-        LinearProblemData linearProblemData({}, 0, {}, {});
         // Required for the balance constraint indices
-        linearProblemData.legacy.CntMapping = &problemeHebdo->CorrespondanceCntNativesCntOptim;
-        linearProblemData.legacy.areaNames = &problemeHebdo->NomsDesPays;
+        gLinearProblemData.legacy.constraintMapping = &problemeHebdo->CorrespondanceCntNativesCntOptim;
+        gLinearProblemData.legacy.areaNames = &problemeHebdo->NomsDesPays;
         // TODO : add data here
-        linearProblemBuilder.build(linearProblemData);
+        linearProblemBuilder.build(gLinearProblemData);
         solver = &legacyLinearProblem.getMpSolver();
         // TODO: because of LinearProblemImpl's destructor, when we exit this scope, the MPSolver instance is destroyed
         // We have to work around this in order for the current "update" methods to work

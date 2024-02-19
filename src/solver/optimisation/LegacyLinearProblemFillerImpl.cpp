@@ -68,11 +68,11 @@ void LegacyLinearProblemFillerImpl::declareBalanceConstraints(LegacyLinearProble
                                                               const LinearProblemData::Legacy& legacy)
 {
    const auto& solver = legacyLinearProblem->getMpSolver();
-   auto* legacyCntMapping = legacy.CntMapping;
+   auto* constraintMapping = legacy.constraintMapping;
 
-   for (unsigned int timestamp = 0; timestamp < legacyCntMapping->size(); timestamp++)
+   for (unsigned int timestamp = 0; timestamp < constraintMapping->size(); timestamp++)
    {
-       const auto& BalanceAtT = legacyCntMapping->at(timestamp).NumeroDeContrainteDesBilansPays;
+       const auto& BalanceAtT = constraintMapping->at(timestamp).NumeroDeContrainteDesBilansPays;
        for (unsigned areaIndex = 0; areaIndex < BalanceAtT.size(); areaIndex++)
        {
            int cnt = BalanceAtT[areaIndex];

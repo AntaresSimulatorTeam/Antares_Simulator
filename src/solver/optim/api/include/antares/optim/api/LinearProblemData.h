@@ -59,7 +59,7 @@ namespace Antares::optim::api
         // TODO: remove this when legacy support is dropped
         // TODO: meanwhile, instead of having a nested struct, create a daughter class?
         struct Legacy {
-            const std::vector<CORRESPONDANCES_DES_CONTRAINTES>* CntMapping;
+            const std::vector<CORRESPONDANCES_DES_CONTRAINTES>* constraintMapping;
             const std::vector<const char*>* areaNames;
         };
         Legacy legacy;
