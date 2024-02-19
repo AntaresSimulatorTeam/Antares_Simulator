@@ -43,7 +43,7 @@ private:
 public :
     LegacyLinearProblemImpl(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* legacyProblem,
                                      const std::string& solverName);
-    operations_research::MPSolver& getMpSolver() { return *mpSolver; } // only used in legacy filler
+    operations_research::MPSolver* getMpSolver() { return mpSolver; } // only used in legacy filler
     operations_research::MPConstraint& addBalanceConstraint(std::string name, double bound, std::string nodeName, int timestamp) override;
     void setMinimization(bool isMinim) override;
 };
