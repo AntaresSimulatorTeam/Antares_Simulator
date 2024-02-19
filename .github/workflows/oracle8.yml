@@ -44,7 +44,7 @@ jobs:
 
     - name: Checkout
       run: |
-           git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git -b $${{ github.event.inputs.target_branch }} .
+           git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git -b ${{ github.event.inputs.target_branch }} .
 
     - name: Config OR-Tools URL
       run: |
