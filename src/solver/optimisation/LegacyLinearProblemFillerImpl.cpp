@@ -70,14 +70,14 @@ void LegacyLinearProblemFillerImpl::declareBalanceConstraints(LegacyLinearProble
    const auto& solver = legacyLinearProblem->getMpSolver();
    auto* constraintMapping = legacy.constraintMapping;
 
-   for (unsigned int timestep = 0; timestep < constraintMapping->size(); timestep++)
+   for (unsigned int timestamp = 0; timestamp < constraintMapping->size(); timestamp++)
    {
-       const auto& BalanceAtT = constraintMapping->at(timestep).NumeroDeContrainteDesBilansPays;
+       const auto& BalanceAtT = constraintMapping->at(timestamp).NumeroDeContrainteDesBilansPays;
        for (unsigned areaIndex = 0; areaIndex < BalanceAtT.size(); areaIndex++)
        {
            int cnt = BalanceAtT[areaIndex];
            operations_research::MPConstraint* constraint = solver.constraint(cnt);
-           legacyLinearProblem->declareBalanceConstraint(std::string(legacy.areaNames->at(areaIndex)), timestep, constraint);
+           legacyLinearProblem->declareBalanceConstraint(std::string(legacy.areaNames->at(areaIndex)), timestamp, constraint);
        }
    }
 }
