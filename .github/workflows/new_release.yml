@@ -51,6 +51,7 @@ jobs:
         uses: ./.github/workflows/windows-vcpkg.yml
         with:
           run-tests: ${{ inputs.run-tests }}
+          target_branch: ${{ inputs.target_branch }}
 
       centos7:
         name: Release - centos7
