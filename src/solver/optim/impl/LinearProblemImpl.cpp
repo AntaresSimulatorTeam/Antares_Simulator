@@ -68,6 +68,7 @@ void LinearProblemImpl::setMinimization(bool isMinim)
 
 MipSolution LinearProblemImpl::solve(const operations_research::MPSolverParameters& param)
 {
+    mpSolver->EnableOutput();
     auto status = mpSolver->Solve(param);
     // TODO remove this
     // std::string str;

@@ -6,9 +6,9 @@
 
 using namespace Antares::optim::api;
 
-void LinearProblemBuilder::addFiller(LinearProblemFiller& filler)
+void LinearProblemBuilder::addFiller(std::shared_ptr<LinearProblemFiller> filler)
 {
-    fillers_.push_back(&filler);
+    fillers_.push_back(filler);
 }
 
 void LinearProblemBuilder::build(const LinearProblemData& data) {
