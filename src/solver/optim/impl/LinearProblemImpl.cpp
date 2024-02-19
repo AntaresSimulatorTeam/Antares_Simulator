@@ -73,7 +73,4 @@ MipSolution LinearProblemImpl::solve()
     return {status, solution};
 }
 
-LinearProblemImpl::~LinearProblemImpl()
-{
-    delete mpSolver;
-}
+LinearProblemImpl::~LinearProblemImpl() = default;
