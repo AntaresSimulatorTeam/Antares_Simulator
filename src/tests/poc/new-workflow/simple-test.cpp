@@ -10,6 +10,7 @@
 #include "../include/simple/Thermal.h"
 #include "../include/simple/Balance.h"
 #include "../include/simple/ProductionPriceMinimization.h"
+#include "../include/standard/PortConnection.h"
 
 namespace tt = boost::test_tools;
 namespace bdata = boost::unit_test::data;
@@ -18,7 +19,7 @@ using namespace Antares::optim::api;
 static const std::string solverNames[] =
         {
                 "xpress",
-                //"sirius", // TODO fix this
+                "sirius",
                 "coin",
                 //"glpk", // TODO fix this
                 //"scip" // TODO activate this after adding tolerance
@@ -33,10 +34,12 @@ BOOST_DATA_TEST_CASE(test_oneWeek_oneNode_oneBattery_oneThermal,
     LinearProblemImpl linearProblem(false, solverName);
     LinearProblemBuilder linearProblemBuilder(linearProblem);
 
-    Battery battery("battery1", 100, 1000);
-    Thermal thermal("thermal1", 100);
-    Balance balance("nodeA", {&battery}, {&thermal});
-    ProductionPriceMinimization objective({&thermal});
+    auto battery = make_shared<Battery>("battery1", 100, 1000);
+    auto thermal = make_shared<Thermal>("thermal1", 100);
+    vector<shared_ptr<Battery>> batteries{battery};
+    vector<shared_ptr<Thermal>> thermals{thermal};
+    auto balance = make_shared<Balance>("nodeA", batteries, thermals);
+    auto objective = make_shared<ProductionPriceMinimization>(thermals);
 
     linearProblemBuilder.addFiller(battery);
     linearProblemBuilder.addFiller(thermal);
@@ -84,11 +87,13 @@ BOOST_DATA_TEST_CASE(test_oneWeek_oneNode_oneBattery_twoThermals,
     LinearProblemImpl linearProblem(false, solverName);
     LinearProblemBuilder linearProblemBuilder(linearProblem);
 
-    Battery battery1("battery1", 180, 200);
-    Thermal thermal1("thermal1", 100);
-    Thermal thermal2("thermal2", 100);
-    Balance balance("nodeA", {&battery1}, {&thermal1, &thermal2});
-    ProductionPriceMinimization objective({&thermal1, &thermal2});
+    auto battery1 = make_shared<Battery>("battery1", 180, 200);
+    auto thermal1 = make_shared<Thermal>("thermal1", 100);
+    auto thermal2 = make_shared<Thermal>("thermal2", 100);
+    vector<shared_ptr<Battery>> batteries{battery1};
+    vector<shared_ptr<Thermal>> thermals{thermal1, thermal2};
+    auto balance = make_shared<Balance>("nodeA", batteries, thermals);
+    auto objective = make_shared<ProductionPriceMinimization>(thermals);
 
     linearProblemBuilder.addFiller(battery1);
     linearProblemBuilder.addFiller(thermal1);

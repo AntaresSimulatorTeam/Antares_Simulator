@@ -15,12 +15,12 @@ using namespace Antares::optim::api;
 static const std::string solverNames[] =
         {
                 "xpress",
-                //"sirius", // TODO fix this
+                "sirius",
                 "coin",
                 //"glpk", // TODO fix this
                 //"scip" // TODO activate this after adding tolerance
         };
-/*
+
 BOOST_DATA_TEST_CASE(test_std_oneWeek_oneNode_oneBattery_oneThermal,
                      bdata::make(solverNames), solverName)
 {
@@ -32,26 +32,24 @@ BOOST_DATA_TEST_CASE(test_std_oneWeek_oneNode_oneBattery_oneThermal,
     LinearProblemBuilder linearProblemBuilder(linearProblem);
     PortConnectionsManager portConnectionsManager;
 
-    Component thermal("thermal1", THERMAL, {{"maxP", 100}}, {});
-    ComponentFiller thermal1Filler(thermal, portConnectionsManager);
-
-    Component battery("battery1", BATTERY, {{"maxP", 100}, {"maxStock", 1000}}, {});
-    ComponentFiller battery1Filler(battery, portConnectionsManager);
-
     Component balance("balanceA", BALANCE, {}, {{"nodeName", "nodeA"}});
-    ComponentFiller balanceAFiller(balance, portConnectionsManager);
-    portConnectionsManager.addConnection({&balanceAFiller, "P"}, {&thermal1Filler, "P"});
-    portConnectionsManager.addConnection({&balanceAFiller, "P"}, {&battery1Filler, "P"});
-
+    auto balanceAFiller = make_shared<ComponentFiller>(balance, portConnectionsManager);
     Component priceMinim("priceMinim", PRICE_MINIM, {}, {});
-    ComponentFiller priceMinimFiller(priceMinim, portConnectionsManager);
-    portConnectionsManager.addConnection({&priceMinimFiller, "cost"}, {&thermal1Filler, "cost"});
-    portConnectionsManager.addConnection({&priceMinimFiller, "cost"}, {&battery1Filler, "cost"});
+    auto priceMinimFiller = make_shared<ComponentFiller>(priceMinim, portConnectionsManager);
+    Component thermal("thermal1", THERMAL, {{"maxP", 100}}, {});
+    auto thermalFiller = make_shared<ComponentFiller>(thermal, portConnectionsManager);
+    Component battery("battery1", BATTERY, {{"maxP", 100}, {"maxStock", 1000}}, {});
+    auto batteryFiller = make_shared<ComponentFiller>(battery, portConnectionsManager);
 
-    linearProblemBuilder.addFiller(thermal1Filler);
-    linearProblemBuilder.addFiller(battery1Filler);
     linearProblemBuilder.addFiller(balanceAFiller);
+    linearProblemBuilder.addFiller(batteryFiller);
+    linearProblemBuilder.addFiller(thermalFiller);
     linearProblemBuilder.addFiller(priceMinimFiller);
+
+    portConnectionsManager.addConnection({balanceAFiller, "P"}, {thermalFiller, "P"});
+    portConnectionsManager.addConnection({balanceAFiller, "P"}, {batteryFiller, "P"});
+    portConnectionsManager.addConnection({priceMinimFiller, "cost"}, {thermalFiller, "cost"});
+    portConnectionsManager.addConnection({priceMinimFiller, "cost"}, {batteryFiller, "cost"});
 
     LinearProblemData linearProblemData(
             timeStamps, // TODO : move to LinearProblem ?
@@ -95,32 +93,29 @@ BOOST_DATA_TEST_CASE(test_std_oneWeek_oneNode_oneBattery_twoThermals,
     LinearProblemBuilder linearProblemBuilder(linearProblem);
     PortConnectionsManager portConnectionsManager;
 
-    Component thermal1("thermal1", THERMAL, {{"maxP", 100}}, {});
-    ComponentFiller thermal1Filler(thermal1, portConnectionsManager);
-
-    Component thermal2("thermal2", THERMAL, {{"maxP", 100}}, {});
-    ComponentFiller thermal2Filler(thermal2, portConnectionsManager);
-
-    Component battery("battery1", BATTERY, {{"maxP", 180}, {"maxStock", 200}}, {});
-    ComponentFiller battery1Filler(battery, portConnectionsManager);
-
     Component balance("balanceA", BALANCE, {}, {{"nodeName", "nodeA"}});
-    ComponentFiller balanceAFiller(balance, portConnectionsManager);
-    portConnectionsManager.addConnection({&balanceAFiller, "P"}, {&thermal1Filler, "P"});
-    portConnectionsManager.addConnection({&balanceAFiller, "P"}, {&thermal2Filler, "P"});
-    portConnectionsManager.addConnection({&balanceAFiller, "P"}, {&battery1Filler, "P"});
-
+    auto balanceAFiller = make_shared<ComponentFiller>(balance, portConnectionsManager);
     Component priceMinim("priceMinim", PRICE_MINIM, {}, {});
-    ComponentFiller priceMinimFiller(priceMinim, portConnectionsManager);
-    portConnectionsManager.addConnection({&priceMinimFiller, "cost"}, {&thermal1Filler, "cost"});
-    portConnectionsManager.addConnection({&priceMinimFiller, "cost"}, {&thermal2Filler, "cost"});
-    portConnectionsManager.addConnection({&priceMinimFiller, "cost"}, {&battery1Filler, "cost"});
+    auto priceMinimFiller = make_shared<ComponentFiller>(priceMinim, portConnectionsManager);
+    Component thermal1("thermal1", THERMAL, {{"maxP", 100}}, {});
+    auto thermal1Filler = make_shared<ComponentFiller>(thermal1, portConnectionsManager);
+    Component thermal2("thermal2", THERMAL, {{"maxP", 100}}, {});
+    auto thermal2Filler = make_shared<ComponentFiller>(thermal2, portConnectionsManager);
+    Component battery("battery1", BATTERY, {{"maxP", 180}, {"maxStock", 200}}, {});
+    auto batteryFiller = make_shared<ComponentFiller>(battery, portConnectionsManager);
 
     linearProblemBuilder.addFiller(thermal1Filler);
     linearProblemBuilder.addFiller(thermal2Filler);
-    linearProblemBuilder.addFiller(battery1Filler);
+    linearProblemBuilder.addFiller(batteryFiller);
     linearProblemBuilder.addFiller(balanceAFiller);
     linearProblemBuilder.addFiller(priceMinimFiller);
+
+    portConnectionsManager.addConnection({balanceAFiller, "P"}, {thermal1Filler, "P"});
+    portConnectionsManager.addConnection({balanceAFiller, "P"}, {thermal2Filler, "P"});
+    portConnectionsManager.addConnection({balanceAFiller, "P"}, {batteryFiller, "P"});
+    portConnectionsManager.addConnection({priceMinimFiller, "cost"}, {thermal1Filler, "cost"});
+    portConnectionsManager.addConnection({priceMinimFiller, "cost"}, {thermal2Filler, "cost"});
+    portConnectionsManager.addConnection({priceMinimFiller, "cost"}, {batteryFiller, "cost"});
 
     LinearProblemData linearProblemData(
             timeStamps, // TODO : move to LinearProblem ?
@@ -159,4 +154,3 @@ BOOST_DATA_TEST_CASE(test_std_oneWeek_oneNode_oneBattery_twoThermals,
     vector<double> expectedThermal2P({80, 100, 0, 0});
     BOOST_TEST(actualThermal2P == expectedThermal2P, tt::per_element()); // TODO add tolerance
 }
- */
