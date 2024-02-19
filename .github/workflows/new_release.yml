@@ -43,6 +43,7 @@ jobs:
         uses: ./.github/workflows/ubuntu.yml
         with:
           run-tests: ${{ inputs.run-tests }}
+          target_branch: ${{ inputs.target_branch }}
 
       windows:
         name: Release - Windows
@@ -50,6 +51,7 @@ jobs:
         uses: ./.github/workflows/windows-vcpkg.yml
         with:
           run-tests: ${{ inputs.run-tests }}
+          target_branch: ${{ inputs.target_branch }}
 
       centos7:
         name: Release - centos7
@@ -57,6 +59,7 @@ jobs:
         uses: ./.github/workflows/centos7.yml
         with:
           run-tests: ${{ inputs.run-tests }}
+          target_branch: ${{ inputs.target_branch }}
 
       oracle8:
         name: Release - oracle8
@@ -64,6 +67,7 @@ jobs:
         uses: ./.github/workflows/oracle8.yml
         with:
           run-tests: ${{ inputs.run-tests }}
+          target_branch: ${{ inputs.target_branch }}
 
       user_guide:
         name: User Guide
@@ -71,3 +75,4 @@ jobs:
         uses: ./.github/workflows/build-userguide.yml
         with:
           run-tests: ${{ inputs.run-tests }}
+          target_branch: ${{ inputs.target_branch }}
