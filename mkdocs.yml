@@ -66,6 +66,7 @@ extra_css:
 extra_javascript:
   - https://code.jquery.com/jquery-3.6.0.min.js
   - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - javascript/mathjax.js
   - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML
 
 markdown_extensions:
