@@ -56,7 +56,7 @@ std::shared_ptr<ClusterT> ClusterList<ClusterT>::enabledClusterAt(unsigned int i
 }
 
 template<class ClusterT>
-ClusterT* ClusterList<ClusterT>::findInAll(const Data::ClusterName& id) const
+ClusterT* ClusterList<ClusterT>::findInAll(std::string_view id) const
 {
     for (auto cluster : all())
         if (cluster->id() == id)

@@ -425,7 +425,7 @@ void ThermalCluster::internalAddPlant(void*)
         // Trying to find an uniq name
         YString sFl;
         sFl.clear() << "new cluster";
-        while (pArea->thermal.list.findInAll(sFl))
+        while (pArea->thermal.list.findInAll(sFl.c_str()))
         {
             ++indx;
             sFl.clear() << "new cluster " << indx;
@@ -500,7 +500,7 @@ void ThermalCluster::internalClonePlant(void*)
 
         YString sFl;
         sFl << copy << indx; // lowercase
-        while (pArea->thermal.list.findInAll(sFl))
+        while (pArea->thermal.list.findInAll(sFl.c_str()))
         {
             ++indx;
             sFl.clear() << copy << indx;

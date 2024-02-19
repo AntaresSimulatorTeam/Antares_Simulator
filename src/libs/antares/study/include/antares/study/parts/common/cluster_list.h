@@ -57,7 +57,7 @@ public:
     ** \param id ID of the cluster to find
     ** \return A pointer to a cluster. nullptr if not found
     */
-    ClusterT* findInAll(const Data::ClusterName& id) const;
+    ClusterT* findInAll(std::string_view id) const;
 
     /*!
     ** \brief Get if a cluster exists

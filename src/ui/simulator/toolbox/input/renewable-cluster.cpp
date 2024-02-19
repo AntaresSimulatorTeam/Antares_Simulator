@@ -366,7 +366,7 @@ void RenewableCluster::internalAddPlant(void*)
         // Trying to find an uniq name
         YString sFl;
         sFl.clear() << "new cluster";
-        while (pArea->renewable.list.findInAll(sFl))
+        while (pArea->renewable.list.findInAll(sFl.c_str()))
         {
             ++indx;
             sFl.clear() << "new cluster " << indx;
@@ -440,7 +440,7 @@ void RenewableCluster::internalClonePlant(void*)
 
         YString sFl;
         sFl << copy << indx; // lowercase
-        while (pArea->renewable.list.findInAll(sFl))
+        while (pArea->renewable.list.findInAll(sFl.c_str()))
         {
             ++indx;
             sFl.clear() << copy << indx;

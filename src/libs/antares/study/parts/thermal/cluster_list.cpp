@@ -484,9 +484,9 @@ bool ThermalClusterList::loadPreproFromFolder(Study& study,
         = study.parameters.timeSeriesToGenerate & timeSeriesThermal;
 
     Clob buffer;
-    auto hasPrepro = [&](auto c) { return (bool) c->prepro; };
+    auto hasPrepro = [](auto c) { return (bool) c->prepro; };
 
-    auto loadAndCheckPrepro = [&](auto c)
+    auto loadAndCheckPrepro = [&buffer, &folder, &study, &globalThermalTSgeneration](auto c)
     {
         assert(c->parentArea && "cluster: invalid parent area");
         buffer.clear() << folder << SEP << c->parentArea->id << SEP << c->id();
