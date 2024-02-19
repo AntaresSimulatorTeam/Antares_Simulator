@@ -185,8 +185,8 @@ message(STATUS "Build OR-Tools: ${BUILD_ORTOOLS}")
 option(BUILD_MINIZIP "Build minizip" OFF)
 message(STATUS "Build minizip: ${BUILD_MINIZIP}")
 
-option(BUILD_MT_PYBIND11 "Build pybind11 bindings for Mersenne-Twister" OFF)
-if (${BUILD_MT_PYBIND11})
+option(BUILD_MERSENNE_TWISTER_PYBIND11 "Build pybind11 bindings for Mersenne-Twister" OFF)
+if (${BUILD_MERSENNE_TWISTER_PYBIND11})
     find_package(pybind11 REQUIRED)
 endif()
 
