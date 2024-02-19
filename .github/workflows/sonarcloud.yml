@@ -9,8 +9,6 @@ on:
       - fix/*
       - feature/*
 
-  pull_request:
-
 jobs:
   sonarcloud:
     name: SonarCloud
