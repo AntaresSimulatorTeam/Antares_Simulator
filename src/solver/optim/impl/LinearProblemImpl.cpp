@@ -64,6 +64,7 @@ void LinearProblemImpl::setMinimization(bool isMinim)
 
 MipSolution LinearProblemImpl::solve()
 {
+    mpSolver->EnableOutput();
     auto status = mpSolver->Solve();
     map<string, double> solution;
     for (auto var : mpSolver->variables())

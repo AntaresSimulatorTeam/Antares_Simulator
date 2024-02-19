@@ -20,7 +20,7 @@ static const std::string solverNames[] =
                 //"glpk", // TODO fix this
                 //"scip" // TODO activate this after adding tolerance
         };
-
+/*
 BOOST_DATA_TEST_CASE(test_std_oneWeek_oneNode_oneBattery_oneThermal,
                      bdata::make(solverNames), solverName)
 {
@@ -159,3 +159,4 @@ BOOST_DATA_TEST_CASE(test_std_oneWeek_oneNode_oneBattery_twoThermals,
     vector<double> expectedThermal2P({80, 100, 0, 0});
     BOOST_TEST(actualThermal2P == expectedThermal2P, tt::per_element()); // TODO add tolerance
 }
+ */

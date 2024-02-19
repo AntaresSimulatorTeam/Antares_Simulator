@@ -35,11 +35,11 @@ namespace Antares::optim::api
     {
     private:
         LinearProblem* linearProblem_;
-        std::vector<LinearProblemFiller*> fillers_{};
+        std::vector<std::shared_ptr<LinearProblemFiller>> fillers_{};
         bool built = false;
     public:
         explicit LinearProblemBuilder(LinearProblem& linearProblem) : linearProblem_(&linearProblem) {};
-        void addFiller(LinearProblemFiller& filler);
+        void addFiller(std::shared_ptr<LinearProblemFiller> filler);
         void build(const LinearProblemData& data);
         void update(const LinearProblemData& data) const;
         MipSolution solve();
