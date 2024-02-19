@@ -22,3 +22,11 @@ target_include_directories(${PROJ}
 install(DIRECTORY include/antares
         DESTINATION "include"
 )
+
+if (${BUILD_MT_PYBIND11})
+    pybind11_add_module(mersenne_twister_pybind11 mersenne_twister_pybind11.cpp)
+    target_link_libraries(mersenne_twister_pybind11
+        PRIVATE
+        ${PROJ}
+        yuni-static-core)
+endif()

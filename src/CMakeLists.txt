@@ -185,6 +185,11 @@ message(STATUS "Build OR-Tools: ${BUILD_ORTOOLS}")
 option(BUILD_MINIZIP "Build minizip" OFF)
 message(STATUS "Build minizip: ${BUILD_MINIZIP}")
 
+option(BUILD_MT_PYBIND11 "Build pybind11 bindings for Mersenne-Twister" OFF)
+if (${BUILD_MT_PYBIND11})
+    find_package(pybind11 REQUIRED)
+endif()
+
 #Define install directory
 if (NOT DEPS_INSTALL_DIR)
     SET(DEPS_INSTALL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../rte-antares-deps-${CMAKE_BUILD_TYPE})
