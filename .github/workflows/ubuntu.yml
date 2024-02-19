@@ -18,7 +18,7 @@ on:
         required: true
         type: string
       target_branch:
-        default: $GITHUB_REF_NAME
+        required: true
         type: string
 
 env:
@@ -39,14 +39,10 @@ jobs:
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     
     steps:
-    - name: print vars
-      shell: bash
-      run: |
-          echo ${{ inputs.target_branch}} 
     - uses: actions/checkout@v3
       with:
         ref: ${{ inputs.target_branch}}
-
+        
     - name: ccache
       uses: hendrikmuhs/ccache-action@v1.2
       with:
