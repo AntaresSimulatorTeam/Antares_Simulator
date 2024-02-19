@@ -488,7 +488,7 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
 
         for (auto cluster : area.thermal.list.all())
         {
-            if (not cluster->enabled)
+            if (!cluster->enabled)
                 study.runtime->random[seedTimeseriesNumbers].next();
             else
             {
@@ -563,7 +563,7 @@ Matrix<uint32_t>* getFirstTSnumberInterModalMatrixFoundInArea(
         else if (isTSintermodal[ts_to_tsIndex.at(timeSeriesHydro)])
             tsNumbersMtx = &(area.hydro.series->timeseriesNumbers);
         else if (isTSintermodal[ts_to_tsIndex.at(timeSeriesThermal)] &&
-            not area.thermal.list.each_enabled().empty())
+            !area.thermal.list.each_enabled().empty())
         {
             std::shared_ptr<ThermalCluster> cluster = *(area.thermal.list.each_enabled().begin());
             tsNumbersMtx = &(cluster->series.timeseriesNumbers);
@@ -659,7 +659,7 @@ bool TimeSeriesNumbers::Generate(Study& study)
     array<uint32_t, timeSeriesCount> intramodal_draws;
     std::fill(intramodal_draws.begin(), intramodal_draws.end(), 0);
 
-    if (not checkIntraModalConsistency(nbTimeseriesByMode, isTSintramodal, study))
+    if (!checkIntraModalConsistency(nbTimeseriesByMode, isTSintramodal, study))
         return false;
 
     for (uint year = 0; year < years; ++year)

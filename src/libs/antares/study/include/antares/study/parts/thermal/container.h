@@ -51,7 +51,7 @@ public:
     **
     ** \param n A number of years
     */
-    void resizeAllTimeseriesNumbers(uint n);
+    void resizeAllTimeseriesNumbers(uint n) const;
 
     /*!
     ** \brief Invalidate all JIT data

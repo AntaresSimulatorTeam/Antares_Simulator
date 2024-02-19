@@ -59,7 +59,7 @@ void PartThermal::reset()
     list.clearAll();
 }
 
-void PartThermal::resizeAllTimeseriesNumbers(uint n)
+void PartThermal::resizeAllTimeseriesNumbers(uint n) const
 {
     list.resizeAllTimeseriesNumbers(n);
 }

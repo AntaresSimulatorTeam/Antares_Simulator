@@ -143,7 +143,7 @@ void checkMinStablePower(bool tsGenThermal, const Antares::Data::AreaList& areas
     }
     else
     {
-        areas.each([](Antares::Data::Area& area) { area.thermal.checkAndCorrectAvailability(); });
+        areas.each([](const auto& area) { area.thermal.checkAndCorrectAvailability(); });
     }
 }
 
