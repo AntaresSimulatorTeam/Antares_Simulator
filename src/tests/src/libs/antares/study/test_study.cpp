@@ -96,7 +96,7 @@ BOOST_FIXTURE_TEST_CASE(renewable_cluster_delete, OneAreaStudy)
     auto disabledCluster = std::make_shared<RenewableCluster>(areaA);
     disabledCluster->setName("Cluster1");
     disabledCluster->enabled = false;
-    auto enabledCluster = std::make_shared<ThermalCluster>(areaA);
+    auto enabledCluster = std::make_shared<RenewableCluster>(areaA);
     enabledCluster->setName("Cluster2");
     enabledCluster->enabled = true;
 
