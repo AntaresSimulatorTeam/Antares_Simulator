@@ -211,7 +211,7 @@ public:
     /*!
     ** \brief Check the validity of Min Stable Power with a new modulation value
     */
-    bool checkMinStablePowerWithNewModulation(uint index, double value);
+    bool checkMinStablePowerWithNewModulation(uint idx, double value);
     //@}
 
     bool doWeGenerateTS(bool globalTSgeneration) const;

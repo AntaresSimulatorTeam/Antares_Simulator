@@ -81,7 +81,7 @@ bool PartThermal::hasForcedNoTimeseriesGeneration() const
     });
 }
 
-void PartThermal::checkAndCorrectAvailability()
+void PartThermal::checkAndCorrectAvailability() const
 {
     std::ranges::for_each(list.each_enabled(), &ThermalCluster::checkAndCorrectAvailability);
 }

@@ -222,7 +222,7 @@ void PrepareRandomNumbers(Data::Study& study,
                           yearRandomNumbers& randomForYear)
 {
     uint indexArea = 0;
-    study.areas.each([&](Data::Area& area) {
+    study.areas.each([&](const Data::Area& area) {
         double rnd = 0.;
 
         rnd = randomForYear.pUnsuppliedEnergy[indexArea];

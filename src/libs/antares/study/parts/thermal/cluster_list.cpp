@@ -69,7 +69,7 @@ static bool ThermalClusterLoadFromSection(const AnyString& filename,
                                           ThermalCluster& cluster,
                                           const IniFile::Section& section);
 
-void ThermalClusterList::rebuildIndex()
+void ThermalClusterList::rebuildIndex() const
 {
     uint indx = 0;
     for (auto& c : each_enabled_and_not_mustrun())
@@ -88,7 +88,7 @@ unsigned int ThermalClusterList::enabledAndMustRunCount() const
 
 bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, Area* area)
 {
-    assert(area and "A parent area is required");
+    assert(area && "A parent area is required");
 
     // logs
     logs.info() << "Loading thermal configuration for the area " << area->name;
@@ -114,7 +114,7 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
         auto cluster = std::make_shared<ThermalCluster>(area);
 
         // Load data of a thermal cluster from a ini file section
-        if (not ThermalClusterLoadFromSection(study.buffer, *cluster, *section))
+        if (!ThermalClusterLoadFromSection(study.buffer, *cluster, *section))
         {
             continue;
         }
@@ -147,20 +147,20 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
         };
         bool r = cluster->modulation.loadFromCSVFile(
                 modulationFile, thermalModulationMax, HOURS_PER_YEAR, options);
-        if (not r and study.usedByTheSolver)
+        if (!r && study.usedByTheSolver)
         {
             cluster->modulation.reset(thermalModulationMax, HOURS_PER_YEAR);
             cluster->modulation.fill(1.);
             cluster->modulation.fillColumn(thermalMinGenModulation, 0.);
         }
-        ret = ret and r;
+        ret = ret && r;
 
         // Special operations when not ran from the interface (aka solver)
         if (study.usedByTheSolver)
         {
-            if (not study.parameters.include.thermal.minStablePower)
+            if (!study.parameters.include.thermal.minStablePower)
                 cluster->minStablePower = 0.;
-            if (not study.parameters.include.thermal.minUPTime)
+            if (!study.parameters.include.thermal.minUPTime)
             {
                 cluster->minUpDownTime = 1;
                 cluster->minUpTime = 1;
@@ -170,7 +170,7 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
                 cluster->minUpDownTime
                   = Math::Max(cluster->minUpTime, cluster->minDownTime);
 
-            if (not study.parameters.include.reserve.spinning)
+            if (!study.parameters.include.reserve.spinning)
                 cluster->spinning = 0;
 
             cluster->nominalCapacityWithSpinning = cluster->nominalCapacity;
@@ -336,116 +336,114 @@ void ThermalClusterList::ensureDataPrepro()
 bool ThermalClusterList::saveToFolder(const AnyString& folder) const
 {
     // Make sure the folder is created
-    if (IO::Directory::Create(folder))
-    {
-        Clob buffer;
-        bool ret = true;
-
-        // Allocate the inifile structure
-        IniFile ini;
-
-        for (auto c : allClusters_) 
-        {
-            // Adding a section to the inifile
-            IniFile::Section* s = ini.addSection(c->name());
-
-            // The section must not be empty
-            // This key will be silently ignored the next time
-            s->add("name", c->name());
-
-            if (not c->group().empty())
-                s->add("group", c->group());
-            if (not c->enabled)
-                s->add("enabled", "false");
-            if (not Math::Zero(c->unitCount))
-                s->add("unitCount", c->unitCount);
-            if (not Math::Zero(c->nominalCapacity))
-                s->add("nominalCapacity", c->nominalCapacity);
-            // TS generation
-            if (c->tsGenBehavior != LocalTSGenerationBehavior::useGlobalParameter)
-            {
-                s->add("gen-ts", c->tsGenBehavior);
-            }
-            // Min. Stable Power
-            if (not Math::Zero(c->minStablePower))
-                s->add("min-stable-power", c->minStablePower);
-
-            // Min up and min down time
-            if (c->minUpTime != 1)
-                s->add("min-up-time", c->minUpTime);
-            if (c->minDownTime != 1)
-                s->add("min-down-time", c->minDownTime);
-
-            // must-run
-            if (c->mustrun)
-                s->add("must-run", "true");
-
-            // spinning
-            if (not Math::Zero(c->spinning))
-                s->add("spinning", c->spinning);
-
-            // efficiency
-            if (c->fuelEfficiency != 100.0)
-                s->add("efficiency", c->fuelEfficiency);
-
-            // volatility
-            if (not Math::Zero(c->forcedVolatility))
-                s->add("volatility.forced", Math::Round(c->forcedVolatility, 3));
-            if (not Math::Zero(c->plannedVolatility))
-                s->add("volatility.planned", Math::Round(c->plannedVolatility, 3));
-
-            // laws
-            if (c->forcedLaw != thermalLawUniform)
-                s->add("law.forced", c->forcedLaw);
-            if (c->plannedLaw != thermalLawUniform)
-                s->add("law.planned", c->plannedLaw);
-
-            // costs
-            if (c->costgeneration != setManually)
-                s->add("costgeneration", c->costgeneration);
-            if (not Math::Zero(c->marginalCost))
-                s->add("marginal-cost", Math::Round(c->marginalCost, 3));
-            if (not Math::Zero(c->spreadCost))
-                s->add("spread-cost", c->spreadCost);
-            if (not Math::Zero(c->fixedCost))
-                s->add("fixed-cost", Math::Round(c->fixedCost, 3));
-            if (not Math::Zero(c->startupCost))
-                s->add("startup-cost", Math::Round(c->startupCost, 3));
-            if (not Math::Zero(c->marketBidCost))
-                s->add("market-bid-cost", Math::Round(c->marketBidCost, 3));
-            if (!Math::Zero(c->variableomcost))
-                s->add("variableomcost", Math::Round(c->variableomcost,3));
-
-
-            //pollutant factor
-            for (auto const& [key, val] : Pollutant::namesToEnum)
-                s->add(key, c->emissions.factors[val]);
-
-
-            buffer.clear() << folder << SEP << ".." << SEP << ".." << SEP << "prepro" << SEP
-                           << c->parentArea->id << SEP << c->id();
-            if (IO::Directory::Create(buffer))
-            {
-                buffer.clear() << folder << SEP << ".." << SEP << ".." << SEP << "prepro" << SEP
-                               << c->parentArea->id << SEP << c->id() << SEP << "modulation.txt";
-
-                ret = c->modulation.saveToCSVFile(buffer) and ret;
-            }
-            else
-                ret = 0;
-        }
-
-        // Write the ini file
-        buffer.clear() << folder << SEP << "list.ini";
-        ret = ini.save(buffer) and ret;
-    }
-    else
+    if (!IO::Directory::Create(folder))
     {
         logs.error() << "I/O Error: impossible to create '" << folder << "'";
         return false;
     }
 
-    return true;
+    bool ret = true;
+    Clob buffer;
+    // Allocate the inifile structure
+    IniFile ini;
+
+    for (auto c : allClusters_)
+    {
+        // Adding a section to the inifile
+        IniFile::Section* s = ini.addSection(c->name());
+
+        // The section must not be empty
+        // This key will be silently ignored the next time
+        s->add("name", c->name());
+
+        if (!c->group().empty())
+            s->add("group", c->group());
+        if (!c->enabled)
+            s->add("enabled", "false");
+        if (!Math::Zero(c->unitCount))
+            s->add("unitCount", c->unitCount);
+        if (!Math::Zero(c->nominalCapacity))
+            s->add("nominalCapacity", c->nominalCapacity);
+        // TS generation
+        if (c->tsGenBehavior != LocalTSGenerationBehavior::useGlobalParameter)
+        {
+            s->add("gen-ts", c->tsGenBehavior);
+        }
+        // Min. Stable Power
+        if (!Math::Zero(c->minStablePower))
+            s->add("min-stable-power", c->minStablePower);
+
+        // Min up and min down time
+        if (c->minUpTime != 1)
+            s->add("min-up-time", c->minUpTime);
+        if (c->minDownTime != 1)
+            s->add("min-down-time", c->minDownTime);
+
+        // must-run
+        if (c->mustrun)
+            s->add("must-run", "true");
+
+        // spinning
+        if (!Math::Zero(c->spinning))
+            s->add("spinning", c->spinning);
+
+        // efficiency
+        if (c->fuelEfficiency != 100.0)
+            s->add("efficiency", c->fuelEfficiency);
+
+        // volatility
+        if (!Math::Zero(c->forcedVolatility))
+            s->add("volatility.forced", Math::Round(c->forcedVolatility, 3));
+        if (!Math::Zero(c->plannedVolatility))
+            s->add("volatility.planned", Math::Round(c->plannedVolatility, 3));
+
+        // laws
+        if (c->forcedLaw != thermalLawUniform)
+            s->add("law.forced", c->forcedLaw);
+        if (c->plannedLaw != thermalLawUniform)
+            s->add("law.planned", c->plannedLaw);
+
+        // costs
+        if (c->costgeneration != setManually)
+            s->add("costgeneration", c->costgeneration);
+        if (!Math::Zero(c->marginalCost))
+            s->add("marginal-cost", Math::Round(c->marginalCost, 3));
+        if (!Math::Zero(c->spreadCost))
+            s->add("spread-cost", c->spreadCost);
+        if (!Math::Zero(c->fixedCost))
+            s->add("fixed-cost", Math::Round(c->fixedCost, 3));
+        if (!Math::Zero(c->startupCost))
+            s->add("startup-cost", Math::Round(c->startupCost, 3));
+        if (!Math::Zero(c->marketBidCost))
+            s->add("market-bid-cost", Math::Round(c->marketBidCost, 3));
+        if (!Math::Zero(c->variableomcost))
+            s->add("variableomcost", Math::Round(c->variableomcost,3));
+
+
+        //pollutant factor
+        for (auto const& [key, val] : Pollutant::namesToEnum)
+            s->add(key, c->emissions.factors[val]);
+
+
+        buffer.clear() << folder << SEP << ".." << SEP << ".." << SEP << "prepro" << SEP
+            << c->parentArea->id << SEP << c->id();
+        if (IO::Directory::Create(buffer))
+        {
+            buffer.clear() << folder << SEP << ".." << SEP << ".." << SEP << "prepro" << SEP
+                << c->parentArea->id << SEP << c->id() << SEP << "modulation.txt";
+
+            ret = c->modulation.saveToCSVFile(buffer) && ret;
+        }
+        else
+            ret = false;
+
+
+        // Write the ini file
+        buffer.clear() << folder << SEP << "list.ini";
+        ret = ini.save(buffer) && ret;
+    }
+
+    return ret;
 }
 
 bool ThermalClusterList::savePreproToFolder(const AnyString& folder) const
@@ -453,13 +451,13 @@ bool ThermalClusterList::savePreproToFolder(const AnyString& folder) const
     Clob buffer;
     bool ret = true;
 
-    for (auto c : allClusters_) 
+    for (auto c : allClusters_)
     {
         if (c->prepro)
         {
-            assert(c->parentArea and "cluster: invalid parent area");
+            assert(c->parentArea && "cluster: invalid parent area");
             buffer.clear() << folder << SEP << c->parentArea->id << SEP << c->id();
-            ret = c->prepro->saveToFolder(buffer) and ret;
+            ret = c->prepro->saveToFolder(buffer) && ret;
         }
     }
     return ret;
@@ -472,7 +470,7 @@ bool ThermalClusterList::saveEconomicCosts(const AnyString& folder) const
 
     for (auto c : allClusters_)
     {
-        assert(c->parentArea and "cluster: invalid parent area");
+        assert(c->parentArea && "cluster: invalid parent area");
         buffer.clear() << folder << SEP << c->parentArea->id << SEP << c->id();
         ret = c->ecoInput.saveToFolder(buffer) && ret;
     }

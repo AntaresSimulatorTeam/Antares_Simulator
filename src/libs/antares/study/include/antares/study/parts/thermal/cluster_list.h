@@ -125,7 +125,7 @@ public:
 
 private:
     // Give a special index to enbled and not must-run THERMAL clusters
-    void rebuildIndex();
+    void rebuildIndex() const;
 
 }; // class ThermalClusterList
 } // namespace Data

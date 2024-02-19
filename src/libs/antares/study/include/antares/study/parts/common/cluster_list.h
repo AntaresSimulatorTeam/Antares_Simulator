@@ -91,7 +91,7 @@ public:
     //@}
 
     SharedPtr operator[](std::size_t idx) { return allClusters_[idx]; }
-    const SharedPtr operator[](std::size_t idx) const { return allClusters_[idx]; }
+    SharedPtr operator[](std::size_t idx) const { return allClusters_[idx]; }
 
     SharedPtr enabledClusterAt(unsigned int index) const;
     /*!
@@ -99,7 +99,7 @@ public:
     **
     ** \param n A number of years
     */
-    void resizeAllTimeseriesNumbers(uint n);
+    void resizeAllTimeseriesNumbers(uint n) const;
 
     void storeTimeseriesNumbers(Solver::IResultWriter& writer) const;
 

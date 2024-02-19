@@ -688,7 +688,7 @@ void ISimulation<ImplementationType>::computeRandomNumbers(randomNumbers& random
         for (unsigned int a = 0; a != nbAreas; ++a)
         {
             // logs.info() << "   area : " << a << " :";
-            auto& area = *(study.areas.byIndex[a]);
+            const auto& area = *(study.areas.byIndex[a]);
 
             for (auto cluster : area.thermal.list.all())
             {

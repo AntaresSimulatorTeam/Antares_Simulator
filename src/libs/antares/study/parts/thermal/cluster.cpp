@@ -671,9 +671,9 @@ bool ThermalCluster::checkMinStablePower()
     return true;
 }
 
-bool ThermalCluster::checkMinStablePowerWithNewModulation(uint index, double value)
+bool ThermalCluster::checkMinStablePowerWithNewModulation(uint idx, double value)
 {
-    if (not minDivModulation.isCalculated || index == minDivModulation.index)
+    if (not minDivModulation.isCalculated || idx == minDivModulation.index)
         calculatMinDivModulation();
     else
     {
@@ -681,7 +681,7 @@ bool ThermalCluster::checkMinStablePowerWithNewModulation(uint index, double val
         if (div < minDivModulation.value)
         {
             minDivModulation.value = div;
-            minDivModulation.index = index;
+            minDivModulation.index = idx;
         }
     }
 

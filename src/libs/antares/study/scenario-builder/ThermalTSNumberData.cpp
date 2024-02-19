@@ -55,7 +55,7 @@ void thermalTSNumberData::saveToINIFile(const Study& /* study */,
 
     if (!pArea)
         return;
-    
+
     for (auto cluster : pArea->thermal.list.all())
     {
         for (uint year = 0; year != pTSNumberRules.height; ++year)
@@ -89,7 +89,7 @@ bool thermalTSNumberData::apply(Study& study)
     // Alias to the current area
     assert(pArea != nullptr);
     assert(pArea->index < study.areas.size());
-    Area& area = *(study.areas.byIndex[pArea->index]);
+    const Area& area = *(study.areas.byIndex[pArea->index]);
 
     const uint tsGenCountThermal = get_tsGenCount(study);
 

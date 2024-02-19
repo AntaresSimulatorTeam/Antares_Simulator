@@ -77,7 +77,7 @@ public:
 
     // Check & correct availability timeseries for thermal availability
     // Only applies if time-series are ready-made
-    void checkAndCorrectAvailability();
+    void checkAndCorrectAvailability() const;
 
 public:
     //! The unsupplied energy cost (Euros/MWh)

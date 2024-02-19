@@ -78,7 +78,7 @@ void StudyInfoCollector::enabledThermalClustersCountToFileContent(FileContent& f
     auto end = study_.areas.end();
     for (auto i = study_.areas.begin(); i != end; ++i)
     {
-        Area& area = *(i->second);
+        const Area& area = *(i->second);
         nbEnabledThermalClusters += area.thermal.list.enabledAndNotMustRunCount();
     }
 
