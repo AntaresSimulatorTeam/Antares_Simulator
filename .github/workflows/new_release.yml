@@ -32,7 +32,7 @@ jobs:
               gh release create "$tag" \
                   --repo="$GITHUB_REPOSITORY" \
                   --title="$title" \
-                  --notes="Run tests: $tests"
+                  --notes="Run tests: $tests"\
                   --target="$target_branch" 
 
 
