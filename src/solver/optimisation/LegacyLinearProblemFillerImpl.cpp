@@ -61,17 +61,12 @@ void LegacyLinearProblemFillerImpl::update(LinearProblem& problem, const LinearP
 // TODO
 }
 
-// TODO move to class LegacyLinearProblem ?
+// TODO move to class LegacyLinearProblem? Maybe simpler if we don't need the "update" method after all
 
 // Tell the LegacyLinearProblem what the balance constraints are, in order to be able to add new models to existing nodes
-// TODO : ask for help for this
-// utiliser data.CorrespondanceCntNativesCntOptim[pdt].NumeroDeContrainteDesBilansPays[pays]
-// renvoie le numéro de contrainte qui devrait marcher avec MPSolver
-// MPSolver.constraint(int) renvoie une MPConstraint
 void LegacyLinearProblemFillerImpl::declareBalanceConstraints(LegacyLinearProblemImpl *legacyLinearProblem,
                                                               const LinearProblemData::Legacy& legacy)
 {
-   auto& balanceConstraintPerNodeName = legacyLinearProblem->balanceConstraintPerNodeName;
    const auto& solver = legacyLinearProblem->getMpSolver();
    auto* constraintMapping = legacy.constraintMapping;
 
@@ -80,12 +75,9 @@ void LegacyLinearProblemFillerImpl::declareBalanceConstraints(LegacyLinearProble
        const auto& BalanceAtT = constraintMapping->at(timestep).NumeroDeContrainteDesBilansPays;
        for (unsigned areaIndex = 0; areaIndex < BalanceAtT.size(); areaIndex++)
        {
-           std::string nodeWithTs = std::string(legacy.areaNames->at(areaIndex)) + "_" + to_string(timestep);
-           std::string name = "AreaBalance";
            int cnt = BalanceAtT[areaIndex];
-           // add new name declared by filler to list of aliases of the existing constraint
            operations_research::MPConstraint* constraint = solver.constraint(cnt);
-           balanceConstraintPerNodeName.insert({nodeWithTs, {constraint, {name}}});
+           legacyLinearProblem->declareBalanceConstraint(std::string(legacy.areaNames->at(areaIndex)), timestep, constraint);
        }
    }
 }

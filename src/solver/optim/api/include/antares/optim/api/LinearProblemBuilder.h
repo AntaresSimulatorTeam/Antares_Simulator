@@ -28,15 +28,14 @@
 
 #include "LinearProblemFiller.h"
 #include "vector"
-using namespace std;
 
 namespace Antares::optim::api
 {
-    class LinearProblemBuilder
+    class LinearProblemBuilder final
     {
     private:
         LinearProblem* linearProblem_;
-        vector<LinearProblemFiller*> fillers_{};
+        std::vector<LinearProblemFiller*> fillers_{};
         bool built = false;
     public:
         explicit LinearProblemBuilder(LinearProblem& linearProblem) : linearProblem_(&linearProblem) {};

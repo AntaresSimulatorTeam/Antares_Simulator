@@ -15,6 +15,7 @@ target_link_libraries(${PROJ}
         PRIVATE
         ortools::ortools
         Antares::solverUtils
+        Antares::optim_api
         yuni-static-core
 )
 

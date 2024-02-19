@@ -28,22 +28,23 @@
 
 #include "LinearProblem.h"
 #include "LinearProblemData.h"
-using namespace operations_research;
 
 namespace Antares::optim::api
 {
     class LinearProblemFiller
     {
     public:
-        // TODO : remplacer pointeurs par références
         virtual void addVariables(LinearProblem& problem, const LinearProblemData& data) = 0;
         virtual void addConstraints(LinearProblem& problem, const LinearProblemData& data) = 0;
         virtual void addObjective(LinearProblem& problem, const LinearProblemData& data) = 0;
-        virtual void update(LinearProblem& problem, const LinearProblemData& data) = 0; // TODO : comment autoriser de màj seulement les coefs et lb/ub ? ne pas ajouter de contrainte, variable ...
-        // update nécessaire pour mettre à jour les données de semaine en semaine
-        // la structure de données hebdo s'appelle SIM, c'est elle qui est utilisée pour mettre à jour le problème hebdo
-        // sim_structure_contrainte_economique.h
-        // ApportNaturelHoraire
-        // la structure de données devra devenir générique, au moins au niveau API standard (dictionnaire)
+        virtual void update(LinearProblem& problem, const LinearProblemData& data) = 0;
+        // TODO : see if update is really needed in target solution
+        // Currently used to update the MIP from week to week by only changing LB/UB & coefs
+        // (see sim_structure_contrainte_economique.h & ApportNaturelHoraire)
+        // This may be dropped in the target solution (thus we'll have to re-create the MIP) for 2 reasons:
+        // - we may have to add/remove variables & constraints
+        // - OR-Tools does not allow changing the names of variables & constraints, which is necessary if we want the
+        //   variables & constraints to be indexed by the number of the week in the year
+        virtual ~LinearProblemFiller() = default;
     };
 }

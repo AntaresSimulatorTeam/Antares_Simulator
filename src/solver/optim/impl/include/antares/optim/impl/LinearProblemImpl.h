@@ -26,26 +26,26 @@
 */
 #pragma once
 
-#include "../../../../../api/include/antares/optim/api/LinearProblem.h"
+#include "antares/optim/api/LinearProblem.h"
 #include "ortools/linear_solver/linear_solver.h"
 
-using namespace std;
-using namespace Antares::optim::api;
-class LinearProblemImpl : public LinearProblem
+// TODO: rename this class to include "ORTOOLS" in its name
+class LinearProblemImpl : public Antares::optim::api::LinearProblem
 {
 protected:
-    MPSolver* mpSolver{};
-    // This shall be removed when legacy support is abandoned
+    operations_research::MPSolver* mpSolver{};
+    // TODO: remove this constructor when legacy support is dropped
     LinearProblemImpl();
 public :
     LinearProblemImpl(bool isMip, const std::string& solverName);
-    MPVariable& addNumVariable(string name, double lb, double ub) override;
-    MPVariable& addIntVariable(string name, double lb, double ub) override;
-    MPVariable& getVariable(string name) override;
-    MPConstraint& addConstraint(string name, double lb, double ub) override;
-    MPConstraint& addBalanceConstraint(string name, double bound, string nodeName, int timestep) override;
-    MPConstraint& getConstraint(string name) override;
-    void setObjectiveCoefficient(const MPVariable& variable, double coefficient) override;
+    operations_research::MPVariable& addNumVariable(std::string name, double lb, double ub) override;
+    operations_research::MPVariable& addIntVariable(std::string name, double lb, double ub) override;
+    operations_research::MPVariable& getVariable(std::string name) override;
+    operations_research::MPConstraint& addConstraint(std::string name, double lb, double ub) override;
+    operations_research::MPConstraint& addBalanceConstraint(std::string name, double bound, std::string nodeName, int timestep) override;
+    operations_research::MPConstraint& getConstraint(std::string name) override;
+    void setObjectiveCoefficient(const operations_research::MPVariable& variable, double coefficient) override;
     void setMinimization(bool isMinim) override;
-    MipSolution solve() override;
+    Antares::optim::api::MipSolution solve() override;
+    virtual ~LinearProblemImpl() override;
 };
