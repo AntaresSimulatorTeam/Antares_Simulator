@@ -46,6 +46,12 @@ bool GenerateThermalTimeSeries(Data::Study& study,
                                bool refresh,
                                IResultWriter& writer);
 
+bool generateSpecificThermalTimeSeries(Data::Study& study,
+                               std::vector<std::pair<std::string, std::string>> names,
+                               uint year,
+                               bool globalThermalTSgeneration,
+                               bool refresh,
+                               IResultWriter& writer);
 /*!
 ** \brief Destroy all TS Generators
 */

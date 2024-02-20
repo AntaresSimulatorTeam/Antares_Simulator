@@ -441,6 +441,27 @@ void ISimulation<ImplementationType>::writeResults(bool synthesis, uint year, ui
     }
 }
 
+static std::vector<std::pair<std::string, std::string>>
+    splitStringIntoPairs(const std::string& s, char delimiter1, char delimiter2)
+{
+    std::vector<std::pair<std::string, std::string>> pairs;
+    std::stringstream ss(s);
+    std::string token;
+
+    while (std::getline(ss, token, delimiter1))
+    {
+        size_t pos = token.find(delimiter2);
+        if (pos != std::string::npos)
+        {
+            std::string first = token.substr(0, pos);
+            std::string second = token.substr(pos + 1);
+            pairs.push_back(std::make_pair(first, second));
+        }
+    }
+
+    return pairs;
+}
+
 template<class ImplementationType>
 void ISimulation<ImplementationType>::regenerateTimeSeries(uint year)
 {
@@ -481,15 +502,24 @@ void ISimulation<ImplementationType>::regenerateTimeSeries(uint year)
         timer.stop();
         pDurationCollector.addDuration("tsgen_hydro", timer.get_duration());
     }
+
     // Thermal
     const bool refreshTSonCurrentYear = (year % pData.refreshIntervalThermal == 0);
+    Benchmarking::Timer timer;
+
+    if (!settings.clustersToGen.empty())
     {
-        Benchmarking::Timer timer;
-        GenerateThermalTimeSeries(
-          study, year, pData.haveToRefreshTSThermal, refreshTSonCurrentYear, pResultWriter);
-        timer.stop();
-        pDurationCollector.addDuration("tsgen_thermal", timer.get_duration());
+        auto names = splitStringIntoPairs(settings.clustersToGen, ';', '.');
+        generateSpecificThermalTimeSeries(study, names, year,
+                pData.haveToRefreshTSThermal, refreshTSonCurrentYear, pResultWriter);
     }
+    else
+    {
+        GenerateThermalTimeSeries(
+                study, year, pData.haveToRefreshTSThermal, refreshTSonCurrentYear, pResultWriter);
+    }
+    timer.stop();
+    pDurationCollector.addDuration("tsgen_thermal", timer.get_duration());
 }
 
 template<class ImplementationType>

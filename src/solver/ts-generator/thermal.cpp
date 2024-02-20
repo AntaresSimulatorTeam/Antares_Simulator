@@ -622,6 +622,37 @@ bool GenerateThermalTimeSeries(Data::Study& study,
     return true;
 }
 
+bool generateSpecificThermalTimeSeries(Data::Study& study,
+                                       std::vector<std::pair<std::string, std::string>> names,
+                                       uint year,
+                                       bool globalThermalTSgeneration,
+                                       bool refreshTSonCurrentYear,
+                                       Antares::Solver::IResultWriter& writer)
+{
+    logs.info();
+    logs.info() << "Generating the thermal time-series";
+    Solver::Progression::Task progression(study, year, Solver::Progression::sectTSGThermal);
+
+    auto* generator = new GeneratorTempData(study, progression, writer);
+
+    generator->currentYear = year;
+
+    for (const auto& [areaName, clusterName] : names)
+        logs.notice() << areaName << clusterName;
+    /* study.areas.each([&](Data::Area& area) { */
+    /*     for (auto cluster : area.thermal.list.all()) */
+    /*     { */
+    /*         if (cluster->doWeGenerateTS(globalThermalTSgeneration) && refreshTSonCurrentYear) */
+    /*         { */
+    /*             (*generator)(area, *cluster); */
+    /*         } */
+    /*         ++progression; */
+    /*     } */
+    /* }); */
+
+    delete generator;
+
+    return true;
+}
+
 } // namespace Antares::TSGenerator
-
-
