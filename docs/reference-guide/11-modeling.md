@@ -82,7 +82,7 @@ The next sections of this document develop the following subjects:
 
 | Notation             | Explanation                                                                                                        |
 | ------------         | -------------                                                                                                      |
-| $ k \in  K $     | optimization periods (weeks) over which $P$ and $P^k$ are defined (omitted for simplicity)                 |
+| $k \in  K$     | optimization periods (weeks) over which $P$ and $P^k$ are defined (omitted for simplicity)                 |
 | $t \in T$        | individual time steps of any optimization period $ k\in K$ (hours of the week)                                 |
 | $G(N,L)$         | undirected graph of the power system (connected)                                                                   |
 | $n \in N$        | vertices of $G$, $N$ is an ordered set                                                                     |
@@ -342,11 +342,11 @@ $$
 \forall n \in N, \forall \lambda \in \Lambda\_n, 0 \leq \Pi\_{\lambda} \leq \overline{\Pi}\_{\lambda}
 $$
 
-Reservoir level evolution depends on generating power, pumping power, pumping efficiency, natural inflows and overflows[^14]
+Reservoir level evolution depends on generating power, pumping power, pumping efficiency, natural inflows and overflows
 
 $$
  (14)(a) \forall n \in N, \forall \lambda \in \Lambda\_n, \forall t \in T, R_{\lambda_t} - R_{\lambda_{t-1}} = \rho_\lambda \Pi_{\lambda_t} - H_{\lambda_t} + I_{\lambda_t} - O_{\lambda_t}
-$$[^14a]
+$$
 
 $$
 (14)(b) \forall n \in N, \forall \lambda \in \Lambda\_n, R_{\lambda T} = \sum_{q=1,Q} \mathfrak{R}_{\lambda_q}
@@ -454,9 +454,9 @@ In cases where the power system is equipped with phase-shifting transformers who
 
 The enhancement of the model with a representation of the phase-shifting components of the real system then requires to re-formulate as follows the binding constraints defined in 7.2:
 
-$
+$$
 \forall t \in T, C\_{g}^t Diag(Z\_{l}) \tilde{\phi}\_{t} - \Pi^{-shift} \leq C\_{g}^t Diag(Z\_{l}) \tilde{F}\_{t} \leq C\_{g}^t Diag(Z\_{l}) \tilde{\phi}\_{t} + \Pi^{+shift}
-$
+$$
 
 ### Modelling of DC components
 
