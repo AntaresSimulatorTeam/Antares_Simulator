@@ -638,17 +638,26 @@ bool generateSpecificThermalTimeSeries(Data::Study& study,
     generator->currentYear = year;
 
     for (const auto& [areaName, clusterName] : names)
-        logs.notice() << areaName << clusterName;
-    /* study.areas.each([&](Data::Area& area) { */
-    /*     for (auto cluster : area.thermal.list.all()) */
-    /*     { */
-    /*         if (cluster->doWeGenerateTS(globalThermalTSgeneration) && refreshTSonCurrentYear) */
-    /*         { */
-    /*             (*generator)(area, *cluster); */
-    /*         } */
-    /*         ++progression; */
-    /*     } */
-    /* }); */
+    {
+        logs.notice() << "Generating ts for area: " << areaName << " and cluster: " << clusterName;
+        auto area = study.areas.find(areaName);
+        if (!area)
+        {
+            logs.warning() << "Area not found: " << areaName;
+            continue;
+        }
+        auto cluster = area->thermal.list.findInAll(clusterName);
+        if (!cluster)
+        {
+            logs.warning() << "Cluster not found: " << clusterName;
+            continue;
+        }
+
+        if (cluster->doWeGenerateTS(globalThermalTSgeneration) && refreshTSonCurrentYear)
+            (*generator)(*area, *cluster);
+
+    }
+
 
     delete generator;
 
