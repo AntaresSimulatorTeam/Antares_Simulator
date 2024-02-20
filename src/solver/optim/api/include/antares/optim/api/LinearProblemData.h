@@ -58,7 +58,7 @@ namespace Antares::optim::api
         [[nodiscard]] bool hasScalarData(const std::string& key) const { return scalarData_.contains(key); }
         [[nodiscard]] double getScalarData(const std::string& key) const { return scalarData_.at(key); }
         [[nodiscard]] bool hasTimedData(const std::string& key) const { return timedData_.contains(key); }
-        [[nodiscard]] std::vector<double> getTimedData(const std::string& key) const { return timedData_.at(key); }
+        [[nodiscard]] const std::vector<double>& getTimedData(const std::string& key) const { return timedData_.at(key); }
 
         // TODO: remove this when legacy support is dropped
         // TODO: meanwhile, instead of having a nested struct, create a daughter class?
