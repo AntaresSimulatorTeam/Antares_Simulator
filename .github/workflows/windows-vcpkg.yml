@@ -44,9 +44,6 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - name: print var
-      shell: bash
-      run: "echo $${{env.REF}}"
 
     - uses: actions/checkout@v3
       with:
