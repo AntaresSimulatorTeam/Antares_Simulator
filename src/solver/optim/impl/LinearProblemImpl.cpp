@@ -72,7 +72,6 @@ MipSolution LinearProblemImpl::solve()
     {
         solution.insert({var->name(), var->solution_value()});
     }
-    str.pop();
     return {status, solution};
 }
 
