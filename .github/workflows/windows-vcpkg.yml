@@ -46,7 +46,7 @@ jobs:
     steps:
     - name: print var
       shell: bash
-      run: "echo ${env.REF}"
+      run: "echo $${{env.REF}}"
 
     - uses: actions/checkout@v3
       with:
