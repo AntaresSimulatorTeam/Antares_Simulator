@@ -72,6 +72,7 @@ BOOST_AUTO_TEST_CASE(thermal_cluster_fullfills_area_demand)
         auto& parameters = study->parameters;
         study->folderOutput = "/tmp";
         parameters.include.exportMPS = mpsExportStatus::EXPORT_BOTH_OPTIMS;
+        parameters.namedProblems = true;
         parameters.ortoolsUsed = true;
     }
 

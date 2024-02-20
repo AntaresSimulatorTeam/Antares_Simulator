@@ -65,8 +65,8 @@ void LinearProblemImpl::setMinimization(bool isMinim)
 MipSolution LinearProblemImpl::solve()
 {
     auto status = mpSolver->Solve();
-    std::string str;
-    mpSolver->ExportModelAsLpFormat(false, &str);
+    // std::string str;
+    // mpSolver->ExportModelAsLpFormat(false, &str);
     map<string, double> solution;
     for (auto var : mpSolver->variables())
     {
