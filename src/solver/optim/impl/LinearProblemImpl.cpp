@@ -49,7 +49,10 @@ MPConstraint& LinearProblemImpl::addBalanceConstraint(string name, double bound,
 
 MPConstraint& LinearProblemImpl::getConstraint(string name)
 {
-    return *mpSolver->LookupConstraintOrNull(name);
+    MPConstraint* cnt = mpSolver->LookupConstraintOrNull(name);
+    if (!cnt)
+        throw;
+    return *cnt;
 }
 
 void LinearProblemImpl::setObjectiveCoefficient(const MPVariable& variable, double coefficient)
