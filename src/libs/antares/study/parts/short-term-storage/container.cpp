@@ -1,28 +1,22 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
 #include <antares/logs/logs.h>
@@ -31,7 +25,7 @@
 #include <algorithm>
 #include <string>
 
-#include "container.h"
+#include "antares/study/parts/short-term-storage/container.h"
 
 #define SEP Yuni::IO::Separator
 
@@ -92,12 +86,15 @@ bool STStorageInput::saveToFolder(const std::string& folder) const
 {
     // create empty list.ini if there's no sts in this area
     Yuni::IO::Directory::Create(folder);
-    Yuni::IO::File::CreateEmptyFile(folder + SEP + "list.ini");
-    logs.notice() << "created empty ini: " << folder + SEP + "list.ini";
+    const std::string pathIni(folder + SEP + "list.ini");
+    IniFile ini;
 
-    return std::all_of(storagesByIndex.cbegin(), storagesByIndex.cend(), [&folder](auto& storage) {
-        return storage.saveProperties(folder);
+    logs.debug() << "saving file " << pathIni;
+    std::for_each(storagesByIndex.cbegin(), storagesByIndex.cend(), [&ini](auto& storage) {
+        return storage.saveProperties(ini);
     });
+
+    return ini.save(pathIni);
 }
 
 bool STStorageInput::saveDataSeriesToFolder(const std::string& folder) const
@@ -110,6 +107,22 @@ bool STStorageInput::saveDataSeriesToFolder(const std::string& folder) const
 
 std::size_t STStorageInput::count() const
 {
-    return storagesByIndex.size();
+  return std::count_if(storagesByIndex.begin(),
+                       storagesByIndex.end(),
+                       [](const STStorageCluster& st) {
+                           return st.properties.enabled;
+                       });
 }
+
+uint STStorageInput::removeDisabledClusters()
+{
+    const auto& it = std::remove_if(storagesByIndex.begin(), storagesByIndex.end(),
+        [](const auto& c) { return !c.enabled(); });
+
+    uint disabledCount = std::distance(it, storagesByIndex.end());
+    storagesByIndex.erase(it, storagesByIndex.end());
+
+    return disabledCount;
+}
+
 } // namespace Antares::Data::ShortTermStorage

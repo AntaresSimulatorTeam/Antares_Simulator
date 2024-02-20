@@ -1,9 +1,29 @@
+/*
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
+**
+** Antares_Simulator is free software: you can redistribute it and/or modify
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
+** (at your option) any later version.
+**
+** Antares_Simulator is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+** Mozilla Public Licence 2.0 for more details.
+**
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+*/
 //
 // Created by marechaljas on 03/07/23.
 //
 
-#include "RenewableTSNumberData.h"
-#include "applyToMatrix.hxx"
+#include "antares/study/scenario-builder/RenewableTSNumberData.h"
+#include "antares/study/scenario-builder/applyToMatrix.hxx"
 
 namespace Antares::Data::ScenarioBuilder
 {
@@ -29,20 +49,20 @@ bool renewableTSNumberData::apply(Study& study)
     Area& area = *(study.areas.byIndex[pArea->index]);
     // The total number of clusters for the area
     // WARNING: We may have some renewable clusters with the `mustrun` option
-    auto clusterCount = (uint)area.renewable.clusterCount();
 
     const uint tsGenCountRenewable = get_tsGenCount(study);
 
-    for (uint clusterIndex = 0; clusterIndex != clusterCount; ++clusterIndex)
+    uint clusterIndex = 0;
+    for (const auto& cluster : area.renewable.list)
     {
-        auto& cluster = *(area.renewable.clusters[clusterIndex]);
         // alias to the current column
         assert(clusterIndex < pTSNumberRules.width);
         const auto& col = pTSNumberRules[clusterIndex];
 
-        logprefix.clear() << "Renewable: area '" << area.name << "', cluster: '" << cluster.name()
+        logprefix.clear() << "Renewable: area '" << area.name << "', cluster: '" << cluster->name()
                           << "': ";
-        ret = ApplyToMatrix(errors, logprefix, cluster.series, col, tsGenCountRenewable) && ret;
+        ret = ApplyToMatrix(errors, logprefix, cluster->series, col, tsGenCountRenewable) && ret;
+        clusterIndex++;
     }
     return ret;
 }
@@ -79,12 +99,12 @@ void renewableTSNumberData::saveToINIFile(const Study& /* study */,
         // Foreach renewable cluster...
         for (uint y = 0; y != pTSNumberRules.height; ++y)
         {
-            const uint val = get(pArea->renewable.list.byIndex[index], y);
+            const uint val = get(pArea->renewable.list[index].get(), y);
             // Equals to zero means 'auto', which is the default mode
             if (!val)
                 continue;
             file << prefix << pArea->id << "," << y << ','
-                 << pArea->renewable.list.byIndex[index]->id() << " = " << val << '\n';
+                 << pArea->renewable.list[index]->id() << " = " << val << '\n';
         }
     }
 }

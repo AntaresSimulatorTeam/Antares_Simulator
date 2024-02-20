@@ -90,13 +90,13 @@ inline Int<Size, TP>::operator ScalarType() const
 template<int Size, template<class> class TP>
 inline typename Int<Size, TP>::ScalarType Int<Size, TP>::operator++()
 {
-    return (threadSafe) ? Private::AtomicImpl::Operator<size, TP>::Increment(*this) : (++pValue);
+    return Private::AtomicImpl::Operator<size, TP>::Increment(*this);
 }
 
 template<int Size, template<class> class TP>
 inline typename Int<Size, TP>::ScalarType Int<Size, TP>::operator--()
 {
-    return (threadSafe) ? Private::AtomicImpl::Operator<size, TP>::Decrement(*this) : (--pValue);
+    return Private::AtomicImpl::Operator<size, TP>::Decrement(*this);
 }
 
 template<int Size, template<class> class TP>

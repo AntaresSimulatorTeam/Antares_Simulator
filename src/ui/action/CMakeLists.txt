@@ -132,13 +132,12 @@ target_link_libraries(antares-action
         Antares::result_writer #study.h
         Antares::date #parameters
         Antares::inifile #parameters
-        Antares::object
         Antares::study
 )
 
 target_include_directories(antares-action
-        PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/include
+                PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 
 add_library(Antares::action ALIAS antares-action)

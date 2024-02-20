@@ -1,31 +1,25 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "../antares.h"
+#include "antares/antares/antares.h"
 #include <yuni/yuni.h>
 #include <yuni/core/system/windows.hdr.h>
 #include <yuni/core/string.h>
@@ -38,17 +32,17 @@
 #include <optional>
 
 #include "antares/utils/utils.h"
-#include "study.h"
-#include "runtime.h"
-#include "scenario-builder/sets.h"
-#include "correlation-updater.hxx"
-#include "scenario-builder/updater.hxx"
-#include "area/constants.h"
+#include "antares/study/study.h"
+#include "antares/study/runtime.h"
+#include "antares/study/scenario-builder/sets.h"
+#include "antares/study/correlation-updater.hxx"
+#include "antares/study/scenario-builder/updater.hxx"
+#include "antares/study/area/constants.h"
 
 #include <yuni/core/system/cpu.h> // For use of Yuni::System::CPU::Count()
 #include <cmath>                 // For use of floor(...) and ceil(...)
 #include <antares/writer/writer_factory.h>
-#include "ui-runtimeinfos.h"
+#include "antares/study/ui-runtimeinfos.h"
 
 using namespace Yuni;
 
@@ -133,8 +127,6 @@ void Study::clear()
     ClearAndShrink(folderOutput);
     ClearAndShrink(folderSettings);
     inputExtension.clear();
-
-    gotFatalError = false;
 }
 
 void Study::createAsNew()
@@ -731,7 +723,7 @@ void Study::saveAboutTheStudy(Solver::IResultWriter& resultWriter)
     String startTimeStr;
     DateTime::TimestampToString(startTimeStr, "%Y.%m.%d - %H:%M", pStartTime);
     f << "[general]";
-    f << "\nversion = " << (uint)Data::versionLatest;
+    f << "\nversion = " << StudyVersion::latest().toString();
     f << "\nname = " << simulationComments.name;
     f << "\nmode = " << SimulationModeToCString(parameters.mode);
     f << "\ndate = " << startTimeStr;
@@ -1130,12 +1122,8 @@ void Study::destroyAllWindTSGeneratorData()
 void Study::destroyAllThermalTSGeneratorData()
 {
     areas.each([&](Data::Area& area) {
-        auto pend = area.thermal.list.end();
-        for (auto j = area.thermal.list.begin(); j != pend; ++j)
-        {
-            ThermalCluster& cluster = *(j->second);
-            FreeAndNil(cluster.prepro);
-        }
+        for (const auto& cluster : area.thermal.list)
+            FreeAndNil(cluster->prepro);
     });
 }
 
@@ -1533,10 +1521,8 @@ void Study::computePThetaInfForThermalClusters() const
         // Alias de la zone courant
         const auto& area = *(this->areas.byIndex[i]);
 
-        for (uint j = 0; j < area.thermal.list.size(); j++)
+        for (auto& cluster : area.thermal.list)
         {
-            // Alias du cluster courant
-            auto& cluster = area.thermal.list.byIndex[j];
             for (uint k = 0; k < HOURS_PER_YEAR; k++)
                 cluster->PthetaInf[k] = cluster->modulation[Data::thermalMinGenModulation][k]
                                         * cluster->unitCount * cluster->nominalCapacity;

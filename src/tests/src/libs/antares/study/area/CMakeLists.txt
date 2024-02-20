@@ -13,7 +13,7 @@ add_executable(test-save-link-properties ${SRC_LINK_PROPERTIES})
 
 target_include_directories(test-save-link-properties
 								PRIVATE
-									"${src_libs_antares_study}"
+									"${src_libs_antares_study}/include"
 )
 target_link_libraries(test-save-link-properties
 						PRIVATE
@@ -45,7 +45,7 @@ add_executable(test-save-area-optimization-ini ${SRC_AREA_OPTIMIZATION})
 
 target_include_directories(test-save-area-optimization-ini
 								PRIVATE
-									"${src_libs_antares_study}"
+									"${src_libs_antares_study}/include"
 )
 target_link_libraries(test-save-area-optimization-ini
 						PRIVATE

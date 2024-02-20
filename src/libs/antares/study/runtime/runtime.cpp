@@ -1,34 +1,28 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "runtime.h"
-#include "antares/fatal-error.h"
+#include "antares/study/runtime/runtime.h"
+#include "antares/antares/fatal-error.h"
 
-#include "../area/scratchpad.h"
+#include "antares/study/area/scratchpad.h"
 
 using namespace Yuni;
 
@@ -293,6 +287,9 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     // Removing disabled thermal clusters from solver computations
     removeDisabledThermalClustersFromSolverComputations(study);
 
+    // Removing disabled short-term storage objects from solver computations
+    removeDisabledShortTermStorageClustersFromSolverComputations(study);
+
     switch (gd.renewableGeneration())
     {
     case rgClusters:
@@ -331,7 +328,7 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     logs.info() << "     thermal clusters: " << thermalPlantTotalCount;
     logs.info() << "     thermal clusters (must-run): " << thermalPlantTotalCountMustRun;
     logs.info() << "     short-term storages: " << shortTermStorageCount;
-    logs.info() << "     binding constraints: " << study.bindingConstraints.activeContraints().size();
+    logs.info() << "     binding constraints: " << study.bindingConstraints.activeConstraints().size();
     logs.info() << "     geographic trimming:" << (gd.geographicTrimming ? "true" : "false");
     logs.info() << "     memory : " << ((study.memoryUsage()) / 1024 / 1024) << "Mo";
     logs.info();
@@ -410,17 +407,24 @@ static void removeClusters(Study& study,
 void StudyRuntimeInfos::removeDisabledThermalClustersFromSolverComputations(Study& study)
 {
     removeClusters(
-      study, "thermal", [](Area& area) { return area.thermal.removeDisabledClusters(); });
+      study, "thermal", [](Area& area) { return area.thermal.list.removeDisabledClusters(); });
 }
 
 void StudyRuntimeInfos::removeDisabledRenewableClustersFromSolverComputations(Study& study)
 {
     removeClusters(study, "renewable", [](Area& area) {
-        uint ret = area.renewable.removeDisabledClusters();
+        uint ret = area.renewable.list.removeDisabledClusters();
         if (ret > 0)
             area.renewable.prepareAreaWideIndexes();
         return ret;
     });
+}
+
+void StudyRuntimeInfos::removeDisabledShortTermStorageClustersFromSolverComputations(Study& study)
+{
+    removeClusters(
+      study, "short term storage", [](Area& area)
+      { return area.shortTermStorage.removeDisabledClusters(); });
 }
 
 void StudyRuntimeInfos::removeAllRenewableClustersFromSolverComputations(Study& study)

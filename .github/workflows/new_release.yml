@@ -1,0 +1,68 @@
+name: Create new release
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: "Release tag"
+        required: true
+      release_name:
+        description: "Release name"
+        required: true
+      run-tests:
+        description: "Run all tests (true/false)"
+        required: true
+        type: string
+jobs:
+      release:
+        name: Release pushed tag
+        runs-on: ubuntu-20.04
+        steps:
+          - name: Create release
+            env:
+              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              tag: ${{ github.event.inputs.release_tag }}
+              title: ${{ github.event.inputs.release_name }}
+              tests: ${{ github.event.inputs.run-tests }}
+            run: |
+              gh release create "$tag" \
+                  --repo="$GITHUB_REPOSITORY" \
+                  --title="$title" \
+                  --notes="Run tests: $tests"
+
+
+
+      ubuntu:
+        name: Release - Ubuntu
+        needs: release
+        uses: ./.github/workflows/ubuntu.yml
+        with:
+          run-tests: ${{ inputs.run-tests }}
+
+      windows:
+        name: Release - Windows
+        needs: release
+        uses: ./.github/workflows/windows-vcpkg.yml
+        with:
+          run-tests: ${{ inputs.run-tests }}
+
+      centos7:
+        name: Release - centos7
+        needs: release
+        uses: ./.github/workflows/centos7.yml
+        with:
+          run-tests: ${{ inputs.run-tests }}
+
+      oracle8:
+        name: Release - oracle8
+        needs: release
+        uses: ./.github/workflows/oracle8.yml
+        with:
+          run-tests: ${{ inputs.run-tests }}
+
+      user_guide:
+        name: User Guide
+        needs: release
+        uses: ./.github/workflows/build-userguide.yml
+        with:
+          run-tests: ${{ inputs.run-tests }}

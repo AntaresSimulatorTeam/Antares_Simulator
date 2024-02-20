@@ -1,8 +1,28 @@
+/*
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
+**
+** Antares_Simulator is free software: you can redistribute it and/or modify
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
+** (at your option) any later version.
+**
+** Antares_Simulator is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+** Mozilla Public Licence 2.0 for more details.
+**
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+*/
 #include "antares/solver/utils/ortools_utils.h"
 
 #include <antares/logs/logs.h>
 #include <antares/exception/AssertionError.hpp>
-#include <antares/Enum.hpp>
+#include "antares/antares/Enum.hpp"
 #include <filesystem>
 
 using namespace operations_research;
@@ -156,7 +176,7 @@ static void extractSolutionValues(const std::vector<MPVariable*>& variables,
     int nbVar = problemeSimplexe->NombreDeVariables;
     for (int idxVar = 0; idxVar < nbVar; ++idxVar)
     {
-        auto& var = variables[idxVar];
+        const MPVariable* var = variables[idxVar];
         problemeSimplexe->X[idxVar] = var->solution_value();
     }
 }
@@ -167,7 +187,7 @@ static void extractReducedCosts(const std::vector<MPVariable*>& variables,
     int nbVar = problemeSimplexe->NombreDeVariables;
     for (int idxVar = 0; idxVar < nbVar; ++idxVar)
     {
-        auto& var = variables[idxVar];
+        const MPVariable* var = variables[idxVar];
         problemeSimplexe->CoutsReduits[idxVar] = var->reduced_cost();
     }
 }
@@ -178,12 +198,12 @@ static void extractDualValues(const std::vector<MPConstraint*>& constraints,
   int nbRows = problemeSimplexe->NombreDeContraintes;
   for (int idxRow = 0; idxRow < nbRows; ++idxRow)
   {
-      auto& row = constraints[idxRow];
+      const MPConstraint* row = constraints[idxRow];
       problemeSimplexe->CoutsMarginauxDesContraintes[idxRow] = row->dual_value();
   }
 }
 
-static void extract_from_MPSolver(MPSolver* solver,
+static void extract_from_MPSolver(const MPSolver* solver,
                                   Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe)
 {
     assert(solver);
@@ -196,9 +216,9 @@ static void extract_from_MPSolver(MPSolver* solver,
 
     if (isMIP)
     {
+        // TODO extract dual values & marginal costs from LP with fixed integer variables
         const int nbVar = problemeSimplexe->NombreDeVariables;
         std::fill(problemeSimplexe->CoutsReduits, problemeSimplexe->CoutsReduits + nbVar, 0.);
-
         const int nbRows = problemeSimplexe->NombreDeContraintes;
         std::fill(problemeSimplexe->CoutsMarginauxDesContraintes,
                   problemeSimplexe->CoutsMarginauxDesContraintes + nbRows,
@@ -207,7 +227,6 @@ static void extract_from_MPSolver(MPSolver* solver,
     else
     {
         extractReducedCosts(solver->variables(), problemeSimplexe);
-
         extractDualValues(solver->constraints(), problemeSimplexe);
     }
 }
@@ -289,6 +308,17 @@ MPSolver* ORTOOLS_ConvertIfNeeded(const std::string& solverName,
     }
 }
 
+template<class SourceT>
+static void transferBasis(std::vector<operations_research::MPSolver::BasisStatus>& destination,
+                          const SourceT& source)
+{
+    destination.resize(source.size());
+    for (size_t idx = 0; idx < source.size(); idx++)
+    {
+        destination[idx] = source[idx]->basis_status();
+    }
+}
+
 MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
                            MPSolver* solver,
                            bool keepBasis)
@@ -299,7 +329,8 @@ MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probl
     // Provide an initial simplex basis, if any
     if (warmStart && Probleme->basisExists())
     {
-        solver->SetStartingLpBasisInt(Probleme->StatutDesVariables, Probleme->StatutDesContraintes);
+        solver->SetStartingLpBasis(Probleme->StatutDesVariables,
+                                   Probleme->StatutDesContraintes);
     }
 
     if (solveAndManageStatus(solver, Probleme->ExistenceDUneSolution, params))
@@ -308,8 +339,8 @@ MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probl
         // Save the final simplex basis for next resolutions
         if (warmStart && keepBasis)
         {
-            solver->GetFinalLpBasisInt(Probleme->StatutDesVariables,
-                                       Probleme->StatutDesContraintes);
+            transferBasis(Probleme->StatutDesVariables, solver->variables());
+            transferBasis(Probleme->StatutDesContraintes, solver->constraints());
         }
     }
 
@@ -374,7 +405,8 @@ const std::map<std::string, struct OrtoolsUtils::SolverNames> OrtoolsUtils::solv
   = {{"xpress", {"xpress_lp", "xpress"}},
      {"sirius", {"sirius_lp", "sirius"}},
      {"coin", {"clp", "cbc"}},
-     {"glpk", {"glpk_lp", "glpk"}}};
+     {"glpk", {"glpk_lp", "glpk"}},
+     {"scip", {"scip", "scip"}}};
 
 std::list<std::string> getAvailableOrtoolsSolverName()
 {
@@ -388,8 +420,20 @@ std::list<std::string> getAvailableOrtoolsSolverName()
         if (MPSolver::SupportsProblemType(solverType))
             result.push_back(solverName.first);
     }
-
     return result;
+}
+
+std::string availableOrToolsSolversString()
+{
+  const std::list<std::string> availableSolverList = getAvailableOrtoolsSolverName();
+  std::ostringstream solvers;
+  for (const std::string& avail : availableSolverList)
+  {
+    bool last = &avail == &availableSolverList.back();
+    std::string sep = last ? "." : ", ";
+    solvers << avail << sep;
+  }
+  return solvers.str();
 }
 
 MPSolver* MPSolverFactory(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* probleme,

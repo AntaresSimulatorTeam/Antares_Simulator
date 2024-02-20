@@ -1,28 +1,22 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
 #include "antares/sys/policy.h"
@@ -32,8 +26,8 @@
 #include <antares/logs/logs.h>
 #include <antares/inifile/inifile.h>
 #include <antares/logs/hostname.hxx>
-#include "../config.h"
-#include <antares/fatal-error.h>
+#include "antares/config/config.h"
+#include <antares/antares/fatal-error.h>
 #include <yuni/core/system/environment.h>
 #include <yuni/core/system/process.h>
 #include <yuni/core/system/username.h>
@@ -75,7 +69,7 @@ static void OpenFromINIFileWL(const String& filename, const StringT& hostname)
     ini.each([&](const IniFile::Section& section) {
         // This section is dedicated to another host
         if (section.name == "*:*" or section.name == "*:" ANTARES_VERSION
-            or section.name == hostnameAll or section.name == hostnameVersion)
+            or section.name.equals(hostnameAll) or section.name.equals(hostnameVersion))
         {
             section.each([&](const IniFile::Property& property) {
                 key = property.key;
@@ -252,14 +246,6 @@ void Close()
     }
 }
 
-bool HasKey(const PolicyKey& key)
-{
-    // avoid concurrent changes
-    MutexLocker locker(gsMutex);
-
-    return (not key.empty() and entries and entries->find(key) != entries->end());
-}
-
 bool Read(String& out, const PolicyKey& key)
 {
     // avoid concurrent changes
@@ -330,39 +316,6 @@ void DumpToString(Clob& out)
     }
 }
 
-void DumpToStdOut()
-{
-    // avoid concurrent changes
-    MutexLocker locker(gsMutex);
-
-    if (!entries or entries->empty())
-        return;
-
-    // The end of the container
-    const PolicyMap::const_iterator end = entries->end();
-
-    // Find the longest key length
-    uint maxlen = 0;
-    {
-        for (PolicyMap::const_iterator i = entries->begin(); i != end; ++i)
-        {
-            uint len = i->first.size();
-            if (len > maxlen)
-                maxlen = len;
-        }
-    }
-
-    maxlen += 3; // spaces after the key
-    PolicyKey row;
-
-    for (PolicyMap::const_iterator i = entries->begin(); i != end; ++i)
-    {
-        row = i->first;
-        row.resize(maxlen, " ");
-        std::cout << "  " << row << ": " << i->second << '\n';
-    }
-}
-
 void DumpToLogs()
 {
     // avoid concurrent changes
@@ -388,10 +341,9 @@ void CheckRootPrefix(const char* argv0)
     // avoid concurrent changes
     MutexLocker locker(gsMutex);
 
-    if (!entries)
+    if (entries == nullptr)
         return;
-    auto i = entries->find("force_root_prefix");
-    if (i != entries->end() and not i->second.empty())
+    if (auto i = entries->find("force_root_prefix"); i != entries->end() and not i->second.empty())
     {
         AnyString adapter = argv0;
         if (IO::IsAbsolute(adapter))
