@@ -20,8 +20,8 @@
 */
 
 #include <yuni/yuni.h>
-#include "../study.h"
-#include "../cleaner.h"
+#include "antares/study/study.h"
+#include "antares/study/cleaner.h"
 #include <antares/inifile/inifile.h>
 
 using namespace Yuni;
@@ -29,9 +29,7 @@ using namespace Antares;
 
 #define SEP IO::Separator
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 namespace // anonymous
 {
@@ -418,5 +416,5 @@ bool listOfFilesAnDirectoriesToKeep(StudyCleaningInfos* infos)
     return true;
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+

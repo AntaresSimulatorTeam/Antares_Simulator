@@ -20,14 +20,12 @@
 */
 
 #include <yuni/yuni.h>
-#include "study.h"
-#include "ui-runtimeinfos.h"
+#include "antares/study/study.h"
+#include "antares/study/ui-runtimeinfos.h"
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 UIRuntimeInfo::UIRuntimeInfo(Study& study) : pStudy(study)
 {
@@ -181,5 +179,5 @@ uint UIRuntimeInfo::visibleLinksCount(uint layerID)
     return count;
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+

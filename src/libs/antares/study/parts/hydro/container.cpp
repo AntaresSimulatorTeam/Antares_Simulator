@@ -19,8 +19,8 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "../../study.h"
-#include "container.h"
+#include "antares/study/study.h"
+#include "antares/study/parts/hydro/container.h"
 #include <antares/inifile/inifile.h>
 #include "hydromaxtimeseriesreader.h"
 
@@ -29,9 +29,7 @@ using namespace Yuni;
 
 #define SEP IO::Separator
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 PartHydro::PartHydro() :
  interDailyBreakdown(0.),
@@ -867,5 +865,5 @@ double getWeeklyModulation(const double& level /* format : in % of reservoir cap
     return valueToReturn;
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+

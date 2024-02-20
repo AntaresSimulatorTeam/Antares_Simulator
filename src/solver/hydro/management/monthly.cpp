@@ -27,8 +27,8 @@
 #include <yuni/io/directory.h>
 #include <yuni/io/file.h>
 #include "management.h"
-#include <antares/fatal-error.h>
-#include "../../simulation/sim_extern_variables_globales.h"
+#include <antares/antares/fatal-error.h>
+#include "antares/solver/simulation/sim_extern_variables_globales.h"
 #include "../monthly/h2o_m_donnees_annuelles.h"
 #include "../monthly/h2o_m_fonctions.h"
 

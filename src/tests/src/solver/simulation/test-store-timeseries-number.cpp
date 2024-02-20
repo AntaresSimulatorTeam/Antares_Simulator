@@ -29,8 +29,8 @@
 #include <boost/test/unit_test.hpp>
 #include <filesystem>
 #include <fstream>
-#include "timeseries-numbers.h"
-#include "BindingConstraintsTimeSeriesNumbersWriter.h"
+#include "antares/solver/simulation/timeseries-numbers.h"
+#include "antares/solver/simulation/BindingConstraintsTimeSeriesNumbersWriter.h"
 #include <files-system.h>
 #include <antares/writer/writer_factory.h>
 #include <antares/writer/result_format.h>

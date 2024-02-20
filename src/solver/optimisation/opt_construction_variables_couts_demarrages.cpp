@@ -19,14 +19,15 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "opt_structure_probleme_a_resoudre.h"
+#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 
-#include "../simulation/sim_extern_variables_globales.h"
+#include "antares/solver/simulation/sim_extern_variables_globales.h"
 
-#include "opt_fonctions.h"
-#include "opt_rename_problem.h"
+#include "antares/solver/optimisation/opt_fonctions.h"
+#include "antares/solver/optimisation/opt_rename_problem.h"
 
 #include "spx_constantes_externes.h"
+#include "variables/VariableManagerUtils.h"
 
 void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarrage(
   PROBLEME_HEBDO* problemeHebdo,
@@ -49,6 +50,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
             const int palier
               = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
             const auto& clusterName = PaliersThermiquesDuPays.NomsDesPaliersThermiques[index];
+            auto variableManager = VariableManagerFromProblemHebdo(problemeHebdo);
 
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
@@ -58,12 +60,8 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
                     nombreDeVariables += 4;
                     continue;
                 }
-                CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
-                  =  problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
 
-                CorrespondanceVarNativesVarOptim
-                  .NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[palier]
-                  = nombreDeVariables;
+                variableManager.NumberOfDispatchableUnits(palier, pdt) = nombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[nombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
 
@@ -71,9 +69,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
                 variableNamer.NODU(nombreDeVariables, clusterName);
                 nombreDeVariables++;
 
-                CorrespondanceVarNativesVarOptim
-                  .NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique[palier]
-                  = nombreDeVariables;
+                variableManager.NumberStartingDispatchableUnits(palier, pdt) = nombreDeVariables;
 
                 ProblemeAResoudre->TypeDeVariable[nombreDeVariables]
                   = VARIABLE_BORNEE_INFERIEUREMENT;
@@ -81,17 +77,14 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
                 variableNamer.NumberStartingDispatchableUnits(nombreDeVariables, clusterName);
                 nombreDeVariables++;
 
-                CorrespondanceVarNativesVarOptim
-                  .NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique[palier]
-                  = nombreDeVariables;
+                variableManager.NumberStoppingDispatchableUnits(palier, pdt) = nombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[nombreDeVariables]
                   = VARIABLE_BORNEE_INFERIEUREMENT;
                 ProblemeAResoudre->VariablesEntieres[nombreDeVariables] = intVariables;
                 variableNamer.NumberStoppingDispatchableUnits(nombreDeVariables, clusterName);
                 nombreDeVariables++;
 
-                CorrespondanceVarNativesVarOptim
-                  .NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique[palier]
+                variableManager.NumberBreakingDownDispatchableUnits(palier, pdt)
                   = nombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[nombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;

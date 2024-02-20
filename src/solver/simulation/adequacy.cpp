@@ -19,7 +19,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "adequacy.h"
+#include "antares/solver/simulation/adequacy.h"
 #include <antares/exception/UnfeasibleProblemError.hpp>
 #include <antares/exception/AssertionError.hpp>
 

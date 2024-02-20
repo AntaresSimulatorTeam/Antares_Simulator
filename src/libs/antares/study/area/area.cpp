@@ -21,11 +21,11 @@
 
 #include <yuni/yuni.h>
 #include <cassert>
-#include "../study.h"
+#include "antares/study//study.h"
 #include "antares/utils/utils.h"
-#include "area.h"
-#include "ui.h"
-#include "scratchpad.h"
+#include "antares/study/area/area.h"
+#include "antares/study/area/ui.h"
+#include "antares/study/area/scratchpad.h"
 #include "antares/study/parts/load/prepro.h"
 
 using namespace Yuni;

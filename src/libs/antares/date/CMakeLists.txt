@@ -1,6 +1,6 @@
 set(PROJ date)
 set(HEADERS
-        antares/${PROJ}/date.h
+        include/antares/${PROJ}/date.h
 )
 set(SRC_DATE
         ${HEADERS}
@@ -12,6 +12,8 @@ add_library(${PROJ} ${SRC_DATE})
 add_library(Antares::${PROJ} ALIAS ${PROJ})
 
 target_link_libraries(${PROJ}
+        PUBLIC
+        study
         PRIVATE
         yuni-static-core
         logs
@@ -19,5 +21,5 @@ target_link_libraries(${PROJ}
 
 target_include_directories(${PROJ}
         PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )

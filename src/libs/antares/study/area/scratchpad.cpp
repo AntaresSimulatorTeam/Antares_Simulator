@@ -19,9 +19,9 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "scratchpad.h"
-#include "constants.h"
-#include "../study.h"
+#include "antares/study/area/scratchpad.h"
+#include "antares/antares/antares.h"
+#include "antares/study/study.h"
 #include <limits>
 
 using namespace Yuni;
@@ -193,5 +193,5 @@ void AreaScratchpad::CalculateMeanDailyMaxPowerMatrices(const Matrix<double>& ho
         CalculateDailyMeanPower(hourlyMaxPumpColumn, MeanMaxDailyPumpPowerColumn);
     }
 }
-
 } // namespace Antares::Data
+

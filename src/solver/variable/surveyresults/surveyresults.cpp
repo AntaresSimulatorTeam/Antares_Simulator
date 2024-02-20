@@ -22,23 +22,15 @@
 #include <algorithm>
 #include <yuni/yuni.h>
 #include <antares/study/study.h>
-#include "surveyresults.h"
+#include "antares/solver/variable/surveyresults/surveyresults.h"
 #include <antares/logs/logs.h>
-#include <yuni/io/file.h>
-#include <antares/io/file.h>
 
 using namespace Yuni;
 using namespace Antares;
 
 #define SEP IO::Separator
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Variable
-{
-namespace Private
+namespace Antares::Solver::Variable::Private
 {
 void InternalExportDigestLinksMatrix(const Data::Study& study,
                                      const char* title,
@@ -211,10 +203,10 @@ void SurveyResultsData::exportGridInfos(IResultWriter& writer)
     output.clear();
     Solver::Variable::Private::ExportGridInfosAreas(study, originalOutput, writer);
 }
-} // namespace Private
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Variable::Private
+
+
+
 
 namespace Antares
 {

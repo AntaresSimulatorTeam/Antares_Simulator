@@ -20,17 +20,17 @@
 */
 
 #include <vector>
-#include "../solver/optimisation/opt_structure_probleme_a_resoudre.h"
+#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 
-#include "../simulation/adequacy_patch_runtime_data.h"
-#include "../solver/optimisation/opt_fonctions.h"
-#include "csr_quadratic_problem.h"
-#include "hourly_csr_problem.h"
-#include "sim_structure_probleme_economique.h"
+#include "antares/solver/simulation/adequacy_patch_runtime_data.h"
+#include "antares/solver/optimisation/opt_fonctions.h"
+#include "antares/solver/optimisation/adequacy_patch_csr/csr_quadratic_problem.h"
+#include "antares/solver/optimisation/adequacy_patch_csr/hourly_csr_problem.h"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "constraints/CsrFlowDissociation.h"
 #include "constraints/CsrAreaBalance.h"
 #include "constraints/CsrBindingConstraintHour.h"
-#include "../constraints/constraint_builder_utils.h"
+#include "antares/solver/optimisation/constraints/constraint_builder_utils.h"
 
 using namespace Antares::Data;
 
@@ -57,8 +57,6 @@ void CsrQuadraticProblem::setConstraintsOnFlows(ConstraintBuilder& builder)
 void CsrQuadraticProblem::setNodeBalanceConstraints(ConstraintBuilder& builder)
 {
     int hour = hourlyCsrProblem_.triggeredHour;
-    const CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim
-      = problemeHebdo_->CorrespondanceVarNativesVarOptim[hour];
 
     // constraint:
     // ENS(node A) +

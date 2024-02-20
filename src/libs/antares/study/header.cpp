@@ -19,12 +19,12 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "header.h"
+#include "antares/study/header.h"
 #include <cstdlib>
 #include <ctime>
 #include <cassert>
 #include <antares/logs/logs.h>
-#include "version.h"
+#include "antares/study/version.h"
 
 using namespace Yuni;
 

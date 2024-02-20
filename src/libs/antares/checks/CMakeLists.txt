@@ -1,6 +1,6 @@
 set(SRC_CHECKS
         checkLoadedInputData.cpp
-        antares/checks/checkLoadedInputData.h
+        include/antares/checks/checkLoadedInputData.h
 )
 source_group("checks" FILES ${SRC_CHECKS})
 
@@ -11,7 +11,7 @@ add_library(Antares::checks ALIAS checks)
 
 target_include_directories(checks
         PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 
 target_link_libraries(checks

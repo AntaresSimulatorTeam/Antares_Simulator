@@ -22,10 +22,10 @@
 // Created by marechaljas on 11/05/23.
 //
 
-#include "BindingConstraintLoader.h"
+#include "antares/study/binding_constraint/BindingConstraintLoader.h"
 #include <memory>
 #include <vector>
-#include "BindingConstraint.h"
+#include "antares/study/binding_constraint/BindingConstraint.h"
 #include "yuni/core/string/string.h"
 #include "antares/study/version.h"
 

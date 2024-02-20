@@ -25,7 +25,7 @@
 #include <unordered_map>
 #include <antares/study/fwd.h>
 #include <antares/mersenne-twister/mersenne-twister.h>
-#include "../../simulation/sim_structure_donnees.h"
+#include "antares/solver/simulation/sim_structure_donnees.h"
 
 namespace Antares
 {

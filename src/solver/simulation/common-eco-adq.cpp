@@ -24,11 +24,11 @@
 #include <antares/study/study.h>
 #include <antares/exception/UnfeasibleProblemError.hpp>
 
-#include "common-eco-adq.h"
+#include "antares/solver/simulation/common-eco-adq.h"
 #include <antares/logs/logs.h>
 #include <cassert>
 #include <map>
-#include "simulation.h"
+#include "antares/study/simulation.h"
 
 using namespace Yuni;
 

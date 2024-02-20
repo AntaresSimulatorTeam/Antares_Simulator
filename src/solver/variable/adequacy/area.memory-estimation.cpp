@@ -19,7 +19,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "all.h"
+#include "antares/solver/variable/adequacy/all.h"
 
 using NEXTTYPE = Solver::Variable::Adequacy::VariablesPerArea;
-#include "../area.memory-estimation.inc.hxx"
+#include "antares/solver/variable/area.memory-estimation.inc.hxx"

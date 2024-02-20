@@ -29,7 +29,7 @@
 #include "../../toolbox/components/map/settings.h"
 #include <list>
 #include "fwd.h"
-#include "config.h"
+#include "antares/config/config.h"
 #include <ui/common/component/frame/local-frame.h>
 #include <antares/study/study.h>
 #include <antares/study/output.h>

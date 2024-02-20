@@ -22,8 +22,8 @@
 // Created by marechaljas on 03/07/23.
 //
 
-#include "RenewableTSNumberData.h"
-#include "applyToMatrix.hxx"
+#include "antares/study/scenario-builder/RenewableTSNumberData.h"
+#include "antares/study/scenario-builder/applyToMatrix.hxx"
 
 namespace Antares::Data::ScenarioBuilder
 {

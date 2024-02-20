@@ -24,7 +24,7 @@
 #include <wx/sizer.h>
 #include "../../application/study.h"
 #include "../../application/main/main.h"
-#include "../../config.h"
+#include "antares/config/config.h"
 #include "../../toolbox/resources.h"
 #include "../../../common/lock.h"
 

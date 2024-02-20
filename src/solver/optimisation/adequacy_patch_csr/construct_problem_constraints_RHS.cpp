@@ -19,10 +19,10 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "hourly_csr_problem.h"
+#include "antares/solver/optimisation/adequacy_patch_csr/hourly_csr_problem.h"
 #include <antares/logs/logs.h>
-#include <sim_structure_probleme_economique.h>
-#include "adequacy_patch_runtime_data.h"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
+#include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 
 void HourlyCSRProblem::setRHSvalueOnFlows()
 {

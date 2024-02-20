@@ -26,7 +26,7 @@
 #include <antares/study/version.h>
 #include "../../toolbox/resources.h"
 #include "../../toolbox/create.h"
-#include "../../../config.h"
+#include <antares/config/config.h>
 #include <ui/common/component/panel.h>
 
 #include <wx/sizer.h>
@@ -58,7 +58,7 @@ Li		Wu		V5\n\
 Artwork\n\
 == == == =\n\
 \n\
-Damien		Gérard";
+Damien		Gï¿½rard";
 
 static std::string Thanks = "ATTRIBUTION NOTICES\n\
 ===================\n\

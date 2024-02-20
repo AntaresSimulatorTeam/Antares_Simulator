@@ -23,7 +23,7 @@
 
 #include "../../renderer.h"
 #include <antares/study/study.h>
-#include "../solver/constraints-builder/cbuilder.h"
+#include "antares/solver/constraints-builder/cbuilder.h"
 #include <map>
 #include <yuni/core/bind.h>
 #include <yuni/core/event.h>

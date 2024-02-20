@@ -19,14 +19,14 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "sim_structure_probleme_economique.h"
-#include "opt_fonctions.h"
-#include "opt_export_structure.h"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
+#include "antares/solver/optimisation/opt_fonctions.h"
+#include "antares/solver/optimisation/opt_export_structure.h"
 
 #include <antares/logs/logs.h>
 #include "antares/solver/utils/filename.h"
-#include "LinearProblemMatrix.h"
-#include "constraints/constraint_builder_utils.h"
+#include "antares/solver/optimisation/LinearProblemMatrix.h"
+#include "antares/solver/optimisation/constraints/constraint_builder_utils.h"
 using namespace Antares;
 using namespace Yuni;
 using Antares::Solver::Optimization::OptimizationOptions;

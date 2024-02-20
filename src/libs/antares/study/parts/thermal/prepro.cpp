@@ -23,8 +23,8 @@
 #include <yuni/io/file.h>
 #include <yuni/io/directory.h>
 #include <yuni/core/math.h>
-#include "../../study.h"
-#include "prepro.h"
+#include "antares/study/study.h"
+#include "antares/study/parts/thermal/prepro.h"
 #include <antares/logs/logs.h>
 
 using namespace Yuni;

@@ -21,21 +21,18 @@
 
 #include <yuni/yuni.h>
 #include <yuni/io/file.h>
-//#include <stdio.h>
-#include "series.h"
+#include "antares/study/parts/hydro/series.h"
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
 #include <antares/exception/LoadingError.hpp>
-#include "../../study.h"
+#include "antares/study/study.h"
 #include <algorithm>
 
 using namespace Yuni;
 
 #define SEP IO::Separator
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 
 static void resizeTSNoDataLoss(TimeSeries& TSToResize, uint width)
@@ -348,5 +345,5 @@ void DataSeriesHydro::resizeTSinDeratedMode(bool derated,
     }
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+

@@ -21,13 +21,13 @@
 #include <yuni/yuni.h>
 #include <antares/study/study.h>
 
-#include "../optimisation/opt_structure_probleme_a_resoudre.h"
+#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 
-#include "simulation.h"
-#include "sim_structure_donnees.h"
-#include "sim_structure_probleme_economique.h"
-#include "sim_alloc_probleme_hebdo.h"
-#include "sim_extern_variables_globales.h"
+#include "antares/study/simulation.h"
+#include "antares/solver/simulation/sim_structure_donnees.h"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
+#include "antares/solver/simulation/sim_alloc_probleme_hebdo.h"
+#include "antares/solver/simulation/sim_extern_variables_globales.h"
 
 using namespace Antares;
 

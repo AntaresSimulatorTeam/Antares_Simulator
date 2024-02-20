@@ -26,7 +26,7 @@
 #include <antares/study/version.h>
 #include "../../toolbox/resources.h"
 #include "../../toolbox/create.h"
-#include "../../../config.h"
+#include <antares/config/config.h>
 #include "../../application/menus.h"
 #include <ui/common/component/panel.h>
 

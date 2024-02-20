@@ -21,12 +21,12 @@
 
 #include <antares/resources/resources.h>
 #include <antares/sys/policy.h>
-#include <antares/locale.h>
+#include <antares/locale/locale.h>
 #include <antares/study/study.h>
 #include <antares/logs/logs.h>
 #include <string>
 
-#include "../../solver/constraints-builder/cbuilder.h"
+#include "antares/solver/constraints-builder/cbuilder.h"
 
 #include "kirchhoff-cbuilder.h"
 
