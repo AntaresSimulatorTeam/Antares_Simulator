@@ -57,14 +57,14 @@ The common rationale of the modeling used in all of these studies is, whenever i
 
 In **Antares\_Simulator**, the "elementary" optimization problem resulting from this approach is that of the minimization of the overall system operation cost over a week, taking into account all proportional and non-proportional generation costs, as well as transmission charges and "external" costs such as that of the unsupplied energy (generation shortage) or, conversely, that of the spilled energy (generation excess).
 
-In this light, carrying out generation adequacy studies or transmission projects studies means formulating and solving a series of a great many week-long operation problems (one for each week of each Monte-Carlo year ), assumed to be independent. This generic optimization problem will be further denoted \\(\mathcal{P}^k\\), where \\(k\\) is an index encompassing all weeks of all Monte-Carlo years.
+In this light, carrying out generation adequacy studies or transmission projects studies means formulating and solving a series of a great many week-long operation problems (one for each week of each Monte-Carlo year ), assumed to be independent. This generic optimization problem will be further denoted $\mathcal{P}^k$, where $k$ is an index encompassing all weeks of all Monte-Carlo years.
 
 Note that this independency assumption may sometimes be too lax, because in many contexts weekly problems are actually coupled to some degree, as a result of energy constraints (management of reservoir-type hydro resources, refueling of nuclear power plants, etc.). When appropriate, these effects are therefore dealt with before the actual decomposition in weekly problems takes place, this being done[^3] either of the following way (depending on simulation options):
 
 1. Use of an economic signal (typically, a shadow "water value") yielded by an external preliminary stochastic dynamic programming optimization of the use of energy-constrained resources.
 2. Use of heuristics that provide an assessment of the relevant energy credits that should be used for each period, fitted so as to accommodate with sufficient versatility different operational rules.
 
-Quite different is the situation that prevails in expansion studies, in which weekly problems cannot at all be separated from a formal standpoint, because new assets should be paid for all year-long, regardless of the fact that they are used or not during such or such week : the generic expansion problem encompasses therefore all the weeks of all the Monte-Carlo years at the same time. It will be further denoted \\(\mathcal{P}\\).
+Quite different is the situation that prevails in expansion studies, in which weekly problems cannot at all be separated from a formal standpoint, because new assets should be paid for all year-long, regardless of the fact that they are used or not during such or such week : the generic expansion problem encompasses therefore all the weeks of all the Monte-Carlo years at the same time. It will be further denoted $\mathcal{P}$.
 
 The next sections of this document develop the following subjects:
 
@@ -97,15 +97,15 @@ The next sections of this document develop the following subjects:
 | $u \cdot v$      | inner product of vectors $u$ and $v$                                                                       |
 | $u_\uparrow^p$   | vector resulting from the permutation on $u \in \mathbb{R}^s$ : $ u\_\uparrow^p(i)=u(i+p\, \mathrm{mod}\,s)$ |
 
-Problems \\(P^k\\) and \\(P\\) call for the definition of many parameters and variables further described.
+Problems $P^k$ and $P$ call for the definition of many parameters and variables further described.
 
 The power system is supposed to be operated so as to be able to face some amount of unexpected demand increase with redispatching actions only (no change in the unit commitment). Two operating states are therefore modelled:
 
 - **nominal**: Actual conditions match exactly all standard forecast. Demand is supplied by optimal generation dispatch (variable notation: _Var_).
 
-- **uplifted**: Additional demand increases are applied to the nominal state and call for redispatch (activation of security reserves; variable notation: _\\(Var^s\\)_).
+- **uplifted**: Additional demand increases are applied to the nominal state and call for redispatch (activation of security reserves; variable notation: _$Var^s$_).
 
-Note: Almost all variables of the system are defined twice (one value per state). For clarity's sake, only the definition of the nominal variables (_Var_) are given hereafter, the definition of variables _\\(Var^s\\)_ are implicit.
+Note: Almost all variables of the system are defined twice (one value per state). For clarity's sake, only the definition of the nominal variables (_Var_) are given hereafter, the definition of variables _$Var^s$_ are implicit.
 
 ### Grid
 
@@ -344,70 +344,70 @@ $
 
 Reservoir level evolution depends on generating power, pumping power, pumping efficiency, natural inflows and overflows[^14]
 
-\\(
+$
 \displaystyle (14)(a) \forall n \in N, \forall \lambda \in \Lambda\_n, \forall t \in T, R_{\lambda_t} - R_{\lambda_{t-1}} = \rho_\lambda \Pi_{\lambda_t} - H_{\lambda_t} + I_{\lambda_t} - O_{\lambda_t}
-\\)[^14a]
+$[^14a]
 
-\\(
+$
 \displaystyle (14)(b) \forall n \in N, \forall \lambda \in \Lambda\_n, R_{\lambda T} = \sum_{q=1,Q} \mathfrak{R}_{\lambda_q}
-\\)
+$
 
-\\(
+$
 \displaystyle (14)(c) \forall n \in N, \forall \lambda \in \Lambda\_n, q=1,Q, \mathfrak{R}\_{\lambda_q} \leq \sum\_{\lambda} \frac{1}{Q}
-\\)
+$
 
 Reservoir level is bounded by admissible lower and upper bounds (rule curves)
 
-\\(
+$
 \displaystyle (15) \forall n \in N, \forall \lambda \in \Lambda\_n, \underline{R}\_\lambda \leq R_\lambda \leq \overline{R}_\lambda
-\\)
+$
 
 ### Thermal units : [^8]
 
 Power output is bounded by must-run commitments and power availability
 
-\\(
+$
 \displaystyle (16) \forall n \in N, \forall \theta \in \Theta\_n, \underline{P_\theta} \leq P_\theta \leq \overline{P_\theta}
-\\)
+$
 
 The number of running units is bounded
 
-\\(
+$
 \displaystyle (17) \forall n \in N, \forall \theta \in \Theta\_n, \underline{M_\theta} \leq M_\theta \leq \overline{M_\theta}
-\\)
+$
 
 Power output remains within limits set by minimum stable power and maximum capacity thresholds
 
-\\(
+$
 \displaystyle (18) \forall n \in N, \forall \theta \in \Theta\_n, l_\theta M_\theta \leq M_\theta \leq u_\theta M_\theta
-\\)
+$
 
 
-Minimum running and not-running durations contribute to the unit-commitment plan. Note that this modeling requires[^9] that one at least of the following conditions is met: \\(\Delta_\theta^- \leq \Delta_\theta^+\\) or \\(\overline{M}_\theta \leq 1_T\\)
+Minimum running and not-running durations contribute to the unit-commitment plan. Note that this modeling requires[^9] that one at least of the following conditions is met: $\Delta_\theta^- \leq \Delta_\theta^+$ or $\overline{M}_\theta \leq 1_T$
 
-\\(
+$
 \displaystyle (19) \forall n \in N, \forall \theta \in \Theta\_n, \forall t \in T, M_{\theta_t} = M_{\theta_{t-1}} + M_{\theta_t}^+ - M_{\theta_t}^-
-\\)
+$
 
-\\(
+$
 \displaystyle (20) \forall n \in N, \forall \theta \in \Theta\_n, \forall t \in T, {M_\theta^{- -}}_t \leq {M _ \theta^{-}}_t
-\\)
+$
 
-\\(
+$
 \displaystyle (21) \forall n \in N, \forall \theta \in \Theta\_n, \forall t \in T, {M_\theta^{- -}}\_t \leq \max(0, \overline{M}\_{\theta_{t-1}} - \overline{M}\_{\theta_t})
-\\)
+$
 
-\\(
+$
 \displaystyle (22) \forall n \in N, \forall \theta \in \Theta\_n, \forall t \in T, M_{\theta_ t} \geq \sum_{k=t+1-\Delta_\theta^+}^{k=t}(M_{\theta_k}^+ - {M_\theta^{- -}}_k) 
-\\)
+$
 
-\\(
+$
 \displaystyle (23) \forall n \in N, \forall \theta \in \Theta\_n, \forall t \in T, M_{\theta_t} \leq \overline{M}\_{\theta_{t - \Delta_\theta^-}} + \sum_{k=t+1-\Delta_\theta^+}^{k=t} \max(0, \overline{M}\_{\theta_k} - \overline{M}\_{\theta_{k-1}}) - \sum_{k=t+1-\Delta_\theta^+}^{k=t}(M_{\theta_k}^-)
-\\)
+$
 
 ### Constraints related to the uplifted system state (activation of security reserves)
 
-All constraints (1) to (23) previously defined for regular operation conditions are repeated with replacement of all variables _Var_ by their twins _\\(Var^s\\)_ when they exist.
+All constraints (1) to (23) previously defined for regular operation conditions are repeated with replacement of all variables _Var_ by their twins _$Var^s$_ when they exist.
 
 Besides, in the expression of constraints , all occurrences of are replaced by $D_n + S_n$
 
@@ -417,13 +417,13 @@ When problems $\mathcal{P}^k$ do not include any instance of so-called ";binding
 
 In the general case, such a raw backbone model is a very simplified representation of a real power system whose topology and consistency are much more complex. While the full detailed modeling of the system within Antares is most often out of the question, it may happen that additional data and/or observations can be incorporated in the problems solved by the software.
 
-In a particularly favorable case, various upstream studies, taking account the detailed system characteristics in different operation conditions (generating units outages and/or grid components outages N, N-1 , N-k,…) may prove able to provide a translation of all relevant system limits as a set of additional linear constraints on the power flowing on the graph \\(G(N,L)\\) handled by Antares.
+In a particularly favorable case, various upstream studies, taking account the detailed system characteristics in different operation conditions (generating units outages and/or grid components outages N, N-1 , N-k,…) may prove able to provide a translation of all relevant system limits as a set of additional linear constraints on the power flowing on the graph $G(N,L)$ handled by Antares.
 
 These can therefore be readily translated as "hourly binding constraints", without any loss of information. This kind of model will be further referred to as a "flow-based model"[^FB]. Its potential downside is the fact that data may prove to be volatile in short-term studies and difficult to assess in long-term studies.
 
 ## Antares as a SCOPF ("KL model")
 
-When a full flow-based model cannot be set up (lack of robust data for the relevant horizon), it remains possible that classical power system studies carried on the detailed system yield sufficient information to enrich the raw backbone model. An occurrence of particular interest is when these studies show that the physics of the active power flow within the real system can be valuably approached by considering that the edges \\(l\\) of \\(G(N,L)\\) behave as simple impedances \\(Z_l\\).This model can be further improved if a residual (passive) loop flow is to be expected on the real system when all nodes have a zero net import and export balance (situation typically encountered when individual nodes actually represent large regions of the real system). This passive loop flow should therefore be added to the classical flow dictated by Kirchhoff's rules on the basis of impedances \\(Z_l\\). This model will be further referred to as a "KL model"[^KL]. Different categories of binding constraints, presented hereafter, make it possible to implement this feature in \\(\mathcal{P}^k\\) and \\(\mathcal{P}\\).
+When a full flow-based model cannot be set up (lack of robust data for the relevant horizon), it remains possible that classical power system studies carried on the detailed system yield sufficient information to enrich the raw backbone model. An occurrence of particular interest is when these studies show that the physics of the active power flow within the real system can be valuably approached by considering that the edges $l$ of $G(N,L)$ behave as simple impedances $Z_l$.This model can be further improved if a residual (passive) loop flow is to be expected on the real system when all nodes have a zero net import and export balance (situation typically encountered when individual nodes actually represent large regions of the real system). This passive loop flow should therefore be added to the classical flow dictated by Kirchhoff's rules on the basis of impedances $Z_l$. This model will be further referred to as a "KL model"[^KL]. Different categories of binding constraints, presented hereafter, make it possible to implement this feature in $\mathcal{P}^k$ and $\mathcal{P}$.
 
 ### Implementation of Kirchhoff's second law
 
@@ -435,7 +435,7 @@ $
 
 ### Implementation of a passive loop flow
 
-In cases where a residual passive loop flow \\(\tilde{\phi}\_{t}\\) should be incorporated in the model to complete the enforcement of regular Kirchhoff's rules, the binding constraints mentioned in 7.1 should be replaced by:
+In cases where a residual passive loop flow $\tilde{\phi}\_{t}$ should be incorporated in the model to complete the enforcement of regular Kirchhoff's rules, the binding constraints mentioned in 7.1 should be replaced by:
 
 $
 \forall t \in T, C\_{g}^t Diag(Z\_{l}) \tilde{F}\_{t} = C\_{g}^t Diag(Z\_{l}) \tilde{\phi}\_{t}
@@ -464,12 +464,12 @@ When the power system graph contains edges that represent DC components, additio
 
 | Notation             | Explanation                                                                                                        |
 | ------------         | -------------                                                                                                      |
-|\\(L^* \subset L\\) | subset of edges representing AC components|
-|\\(G^\*(N,L^*)\\) | subgraph of \\(G(N,L)\\) |
-|\\(g^*\\) | spanning tree of \\(G^\*(N,L^*)\\) |
-|\\(C^\*_{g^*}\\) | cycle matric of \\(G^\*(N,L^\*)\\) associated with \\(g^*\\) |
+|$L^* \subset L$ | subset of edges representing AC components|
+|$G^\*(N,L^*)$ | subgraph of $G(N,L)$ |
+|$g^*$ | spanning tree of $G^\*(N,L^*)$ |
+|$C^\*_{g^*}$ | cycle matric of $G^\*(N,L^\*)$ associated with $g^*$ |
 
-The proper modeling of the system then requires that all "load flow" constraints defined previously be formulated using notations \\((L^\*, G^\*(N,L^\*), C^\*\_{g^*})\\) instead of \\((L, G(N,L), C_{g})\\).
+The proper modeling of the system then requires that all "load flow" constraints defined previously be formulated using notations $(L^\*, G^\*(N,L^\*), C^\*\_{g^*})$ instead of $(L, G(N,L), C_{g})$.
 
 ### Implementation of security rules N-1,..., N-k
 
@@ -477,17 +477,17 @@ It is assumed here that upstream power system classical calculations on the deta
 
 | Notation             | Explanation                                                                                                        |
 | ------------         | -------------                                                                                                      |
-|\\(O \subset P(L\\) | set of situations (single or multiple outages) considered in the contingency analysis|
-|\\(Q \in O\\) | situation (incident) considered in the contingency analysis|
-|\\({}^Qp_l^m \in [-1,1]\\) | LODFs from component \\(m\\) (involved in \\(Q\\)) on component \\(l\\) if \\(Q\\) occurs |
-| \\(\underline{F}_l^Q \in \mathbb{R}^T\\) | lower bound of the power flow through \\(l\\) if \\(Q\\) occurs |
-| \\(\overline{F}_l^Q \in \mathbb{R}^T\\) | upper bound of the power flow through \\(l\\) if \\(Q\\) occurs |
+|$O \subset P(L$ | set of situations (single or multiple outages) considered in the contingency analysis|
+|$Q \in O$ | situation (incident) considered in the contingency analysis|
+|${}^Qp_l^m \in [-1,1]$ | LODFs from component $m$ (involved in $Q$) on component $l$ if $Q$ occurs |
+| $\underline{F}_l^Q \in \mathbb{R}^T$ | lower bound of the power flow through $l$ if $Q$ occurs |
+| $\overline{F}_l^Q \in \mathbb{R}^T$ | upper bound of the power flow through $l$ if $Q$ occurs |
 
-The implementation of security rules for the chosen situations requires the following \\(|L||O|\\) additional binding constraints:
+The implementation of security rules for the chosen situations requires the following $|L||O|$ additional binding constraints:
 
-\\(
+$
 \displaystyle \forall Q \in O, \forall l \in L, \underline{F}\_l^Q \leq F_l + \sum_{m \in Q} {}^Qp_l^m F_m \leq \overline{F}_l^Q
-\\)
+$
 
 ## Random and Epsilon parameters in Antares
 
@@ -507,7 +507,7 @@ These numbers take the form of numeric noises on thermal generation costs, hydro
 
 Aside from these random epsilons, there is in Antares a need for a large set of other random numbers that are required to define in detail the consistency of each Monte-Carlo scenarios. This includes the setting up of the initial (hydro) reservoir levels, the automatic generation of several kinds of time-series (if the built-in timeseries generators are activated), the draws of time-series (either ready-made or generated on the spot) and, possibly, random deviations from the standard costs prescribed by the user (spreads). All of these numbers are, again, generated by dedicated instances of MT19937.
 
-For the sake of exhaustiveness, it has to be noted that there is, aside from random epsilons, a handful of deterministic epsilons that help define the way hydro or other storable resources should be managed. In the course of the simulation, these auxiliary parameters take the form of penalties that may be put or not on hydro hourly power fluctuations (two types of penalties may be used for that purpose, they appear explicitly in the problem formulation with notations \\(\epsilon_\lambda^1\\) and \\(\epsilon_\lambda^2\\)).
+For the sake of exhaustiveness, it has to be noted that there is, aside from random epsilons, a handful of deterministic epsilons that help define the way hydro or other storable resources should be managed. In the course of the simulation, these auxiliary parameters take the form of penalties that may be put or not on hydro hourly power fluctuations (two types of penalties may be used for that purpose, they appear explicitly in the problem formulation with notations $\epsilon_\lambda^1$ and $\epsilon_\lambda^2$).
 
 Finally, upstream of the proper optimization, there is a last set of hydro-related parameters that help drive the hydro heuristic engine (this code is deemed to provide a way for Antares to use storable resources when no actual stock value is available). Note that, since the heuristic stage is completely independent from the actual optimization, the absolute magnitude of the hydro-drivers has absolutely no influence on the output of the weekly problem (large numbers could be used instead of epsilons, provided their relative scale is preserved).
 
@@ -517,12 +517,12 @@ The following diagram summarizes the situation regarding both random and epsilon
 
 | Random Epsilons | Minimum absolute value | Maximum absolute value |
 | ------------| ------------| ------------|
-|N_THERMAL|\\(5 \cdot 10^{-4} €/MWh\\)|\\(6 \cdot 10^{-4} €/MWh\\)|
-|N_UNSUPPLIED|\\(5 \cdot 10^{-4} €/MWh\\)|\\(6 \cdot 10^{-4} €/MWh\\)|
-|N_SPILLAGE|\\(5 \cdot 10^{-4} €/MWh\\)|\\(6 \cdot 10^{-4} €/MWh\\)|
-|N_HYDRO|\\(5 \cdot 10^{-4} €/MWh\\)|\\(10 \cdot 10^{-4} €/MWh\\)|
+|N_THERMAL|$5 \cdot 10^{-4} €/MWh$|$6 \cdot 10^{-4} €/MWh$|
+|N_UNSUPPLIED|$5 \cdot 10^{-4} €/MWh$|$6 \cdot 10^{-4} €/MWh$|
+|N_SPILLAGE|$5 \cdot 10^{-4} €/MWh$|$6 \cdot 10^{-4} €/MWh$|
+|N_HYDRO|$5 \cdot 10^{-4} €/MWh$|$10 \cdot 10^{-4} €/MWh$|
 
-It can be noted that, in absolute value, all random epsilons are smaller than the lower bound of the (non-zero) actual costs that can be defined through the user interface (CLB – cost lower bound : \\(5 \cdot 10^{-3} €/𝑀𝑊ℎ\\))
+It can be noted that, in absolute value, all random epsilons are smaller than the lower bound of the (non-zero) actual costs that can be defined through the user interface (CLB – cost lower bound : $5 \cdot 10^{-3} €/𝑀𝑊ℎ$)
 
 [^1]: Reference guide , section « optimization preferences : "export mps problems"
 
@@ -540,7 +540,7 @@ Last Rev : M. Doquet - 25 JAN 2023
 
 [^14]: Constraints 14(a) are not implemented if the "heuristic" mode is used without any leeway and if there are no pumping capacities. <br> Constraints 14(b) and 14(c) are implemented only if the option "hydro pricing mode" is set to "accurate".
 
-[^14a]: In the equation attached to the first time slot t, \\(R_{\lambda_{t-1}}\\) is not a variable but a parameter (reservoir initial level)
+[^14a]: In the equation attached to the first time slot t, $R_{\lambda_{t-1}}$ is not a variable but a parameter (reservoir initial level)
 
 [^8]: The constraints implemented depend on the option selected for unit commitment. In "fast" mode, implementation is restricted to (16), whereas "accurate" mode involved modelling of constraints (16) to (23). Note that in both cases, a heuristic stage takes place between the "uplifted" and "nominal" optimization runs to deal with integrity issues.
 
@@ -556,4 +556,4 @@ Last Rev : M. Doquet - 25 JAN 2023
 
 [^alike]: Consider for instance a case where a fleet of ten exactly identical plants, in a highly symmetric system, is expected to generate an overall amount of power roughly equivalent to the nominal capacity of two of them. Simulations results indicating that this power should exclusively be provided by a specific pair of units (the other eight remaining always idle, throughout all Monte Carlo scenarios), would appear heavily biased, though not mathematically wrong.
 
-[^costs]: These random noises affect only cost-related parameters and not RHS parameters (such perturbations, which have not been implemented so far, might bring some benefits as regards degeneracy). It can also be noted that, in the special case of hydro, the random noise is present in the problem formulation given in this document, with notation \\(\epsilon_\lambda^0\\).
+[^costs]: These random noises affect only cost-related parameters and not RHS parameters (such perturbations, which have not been implemented so far, might bring some benefits as regards degeneracy). It can also be noted that, in the special case of hydro, the random noise is present in the problem formulation given in this document, with notation $\epsilon_\lambda^0$.
