@@ -610,9 +610,8 @@ bool GenerateThermalTimeSeries(Data::Study& study,
         for (auto cluster : area.thermal.list.all())
         {
             if (cluster->doWeGenerateTS(globalThermalTSgeneration) && refreshTSonCurrentYear)
-            {
                 (*generator)(area, *cluster);
-            }
+
             ++progression;
         }
     });
@@ -640,12 +639,15 @@ bool generateSpecificThermalTimeSeries(Data::Study& study,
     for (const auto& [areaName, clusterName] : names)
     {
         logs.notice() << "Generating ts for area: " << areaName << " and cluster: " << clusterName;
+        ++progression;
+
         auto area = study.areas.find(areaName);
         if (!area)
         {
             logs.warning() << "Area not found: " << areaName;
             continue;
         }
+
         auto cluster = area->thermal.list.findInAll(clusterName);
         if (!cluster)
         {
