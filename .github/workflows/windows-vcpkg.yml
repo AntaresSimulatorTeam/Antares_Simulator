@@ -26,7 +26,7 @@ env:
   IS_RELEASE: ${{ github.event_name == 'workflow_dispatch' }}
   RUN_SIMPLE_TESTS: ${{ github.event_name == 'push' || inputs.run-tests == 'true' }}
   RUN_EXTENDED_TESTS: ${{ github.event_name == 'schedule' || inputs.run-tests == 'true' }}
-  REF: ${{ inputs.target_branch =='' && $GITHUB_REF_NAME || inputs.target_branch}}
+  REF: ${{ inputs.target_branch =='' && $github.ref || inputs.target_branch}}
 
 
 jobs:
@@ -47,7 +47,7 @@ jobs:
     - name: print var
       shell: bash
       run: "echo ${env.REF}"
-      
+
     - uses: actions/checkout@v3
       with:
         ref: ${{ env.REF }}
