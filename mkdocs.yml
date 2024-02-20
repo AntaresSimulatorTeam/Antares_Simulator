@@ -66,8 +66,10 @@ extra_css:
 extra_javascript:
   - https://code.jquery.com/jquery-3.6.0.min.js
   - https://polyfill.io/v3/polyfill.min.js?features=es6
-  - javascripts/mathjax.js
-  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js
+  - path: javascripts/mathjax.js
+    defer: true
+  - path: https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js
+    defer: true
 
 markdown_extensions:
   - footnotes
@@ -76,11 +78,11 @@ markdown_extensions:
       permalink: true
       toc_depth: 3
   - pymdownx.emoji:
-      emoji_index: !!python/name:materialx.emoji.twemoji
-      emoji_generator: !!python/name:materialx.emoji.to_svg
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
   - admonition
   - pymdownx.details
   - pymdownx.superfences
   - pymdownx.tabbed
 
-copyright: Copyright &copy; 2007 - 2021 RTE
+copyright: Copyright &copy; 2007 - 2024 RTE
