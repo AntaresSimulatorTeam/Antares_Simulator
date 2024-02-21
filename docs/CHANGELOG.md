@@ -1,10 +1,10 @@
 Antares Changelog
 =================
 
-8.9.0 (Unreleased yet)
+8.8.3
 --------------------
-## New Features
-* Solver logs can be enabled either by the command-line option (--solver-logs) or in the generaldata.ini by setting solver-logs = true under the optimization section [(#1717)](https://github.com/AntaresSimulatorTeam/Antares_Simulator/pull/1717)
+## Bugfix
+* Fix an issue where depending on the platform the output archive could contain several entries of the same area and inrco files
 
 8.8.2
 --------------------
