@@ -25,7 +25,6 @@
 #include <antares/array/matrix.h>
 #include <antares/study/version.h>
 #include "../../fwd.h"
-// #include <antares/exception/antares/exception/LoadingError.hpp>
 
 
 namespace Antares

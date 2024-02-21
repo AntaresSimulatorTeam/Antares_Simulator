@@ -28,8 +28,6 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_HYDRO_MAX_TIME_SERIES_READER_H__
 #define __ANTARES_LIBS_STUDY_PARTS_HYDRO_MAX_TIME_SERIES_READER_H__
 
-#include "../../../array/antares//array/matrix.h"
-
 namespace Antares::Data
 {
 /*!
