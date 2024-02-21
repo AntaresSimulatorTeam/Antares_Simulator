@@ -29,7 +29,7 @@
 #include <iostream>
 #include <yuni/core/string.h>
 #include <yuni/core/getopt.h>
-#include <antares/study/finder.h>
+#include <antares/study/finder/finder.h>
 #include <antares/args/args_to_utf8.h>
 #include <antares/antares/version.h>
 #include <antares/locale/locale.h>

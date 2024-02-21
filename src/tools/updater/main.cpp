@@ -21,7 +21,7 @@
 
 #include <yuni/yuni.h>
 #include <antares/logs/logs.h>
-#include <antares/study/finder.h>
+#include <antares/study/finder/finder.h>
 #include <yuni/core/getopt.h>
 #include <antares/args/args_to_utf8.h>
 #include <antares/utils/utils.h>

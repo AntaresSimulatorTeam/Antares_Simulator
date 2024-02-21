@@ -31,11 +31,7 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Window
-{
-namespace Hydro
+namespace Antares::Window::Hydro
 {
 Management::Management(wxWindow* parent, Toolbox::InputSelector::Area* notifier) :
  wxScrolledWindow(parent), pInputAreaSelector(notifier)
@@ -1151,6 +1147,6 @@ void Management::onChangingInitializeReservoirLevelDate(wxCommandEvent& evt)
     }
 }
 
-} // namespace Hydro
-} // namespace Window
-} // namespace Antares
+} // namespace Antares::Window::Hydro
+
+

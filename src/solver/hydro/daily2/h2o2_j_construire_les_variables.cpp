@@ -30,7 +30,7 @@ extern "C"
 }
 #endif
 
-#include "h2o2_j_donnees_mensuelles.h"
+#include "antares/solver/hydro/daily2/h2o2_j_donnees_mensuelles.h"
 
 void H2O2_j_ConstruireLesVariables(
   int NbPdt,

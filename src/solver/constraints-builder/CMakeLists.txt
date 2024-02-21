@@ -27,6 +27,10 @@ target_link_libraries(antares-solver-constraints-builder PRIVATE antares-core
 )
 
 target_include_directories(antares-solver-constraints-builder
-	PUBLIC
-		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+)
+
+install(DIRECTORY include/antares
+        DESTINATION "include"
 )

@@ -26,11 +26,11 @@
 #include <antares/study/study.h>
 #include <yuni/io/directory.h>
 #include <yuni/io/file.h>
-#include "management.h"
+#include "antares/solver/hydro/management/management.h"
 #include <antares/antares/fatal-error.h>
 #include "antares/solver/simulation/sim_extern_variables_globales.h"
-#include "../monthly/h2o_m_donnees_annuelles.h"
-#include "../monthly/h2o_m_fonctions.h"
+#include "antares/solver/hydro/monthly/h2o_m_donnees_annuelles.h"
+#include "antares/solver/hydro/monthly/h2o_m_fonctions.h"
 
 using namespace Yuni;
 

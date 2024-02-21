@@ -41,7 +41,8 @@ target_link_libraries(result_writer
         inifile
         io
         Antares::concurrency
-    )
+)
 
-
-
+install(DIRECTORY include/antares
+        DESTINATION "include"
+)

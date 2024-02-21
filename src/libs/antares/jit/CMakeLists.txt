@@ -3,12 +3,12 @@ set(SRC_JIT
         include/antares/jit/jit.h
         include/antares/jit/jit.hxx
         jit.cpp
-        )
+)
 source_group("misc\\jit" FILES ${SRC_JIT})
 
 add_library(jit
         ${SRC_JIT}
-        )
+)
 
 target_include_directories(jit
                 PUBLIC
@@ -20,4 +20,8 @@ target_link_libraries(jit
         yuni-static-core
         PUBLIC
         logs #templated function use logs
-        )
+)
+
+install(DIRECTORY include/antares
+        DESTINATION "include"
+)

@@ -26,7 +26,7 @@
 #define NON 0
 #define EMERGENCY_SHUT_DOWN 2
 
-#include "h2o2_j_donnees_optimisation.h"
+#include "antares/solver/hydro/daily2/h2o2_j_donnees_optimisation.h"
 
 /*************************************************************************************************/
 /*                    Structure contenant les champs a renseigner par l'appelant */
