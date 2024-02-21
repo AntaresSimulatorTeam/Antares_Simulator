@@ -457,6 +457,11 @@ static std::vector<std::pair<std::string, std::string>>
             std::string second = token.substr(pos + 1);
             pairs.push_back(std::make_pair(first, second));
         }
+        else
+        {
+            logs.warning() << "Error with area and cluster: " << token;
+            logs.warning() << "Correct format: \"area1.cluster1;area2.cluster2\"";
+        }
     }
 
     return pairs;
