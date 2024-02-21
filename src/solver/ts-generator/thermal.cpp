@@ -19,6 +19,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
+#include <sstream>
 #include <string>
 
 #include <yuni/yuni.h>
@@ -592,7 +593,35 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
 }
 } // namespace
 
+
+static std::vector<std::pair<std::string, std::string>>
+    splitStringIntoPairs(const std::string& s, char delimiter1, char delimiter2)
+{
+    std::vector<std::pair<std::string, std::string>> pairs;
+    std::stringstream ss(s);
+    std::string token;
+
+    while (std::getline(ss, token, delimiter1))
+    {
+        size_t pos = token.find(delimiter2);
+        if (pos != std::string::npos)
+        {
+            std::string first = token.substr(0, pos);
+            std::string second = token.substr(pos + 1);
+            pairs.push_back(std::make_pair(first, second));
+        }
+        else
+        {
+            logs.warning() << "Error with area and cluster: " << token;
+            logs.warning() << "Correct format: \"area1.cluster1;area2.cluster2\"";
+        }
+    }
+
+    return pairs;
+}
+
 bool GenerateThermalTimeSeries(Data::Study& study,
+                               const std::string& clustersToGen,
                                uint year,
                                bool globalThermalTSgeneration,
                                bool refreshTSonCurrentYear,
@@ -606,58 +635,44 @@ bool GenerateThermalTimeSeries(Data::Study& study,
 
     generator->currentYear = year;
 
-    study.areas.each([&](Data::Area& area) {
-        for (auto cluster : area.thermal.list.all())
-        {
-            if (cluster->doWeGenerateTS(globalThermalTSgeneration) && refreshTSonCurrentYear)
-                (*generator)(area, *cluster);
-
-            ++progression;
-        }
-    });
-
-    delete generator;
-
-    return true;
-}
-
-bool generateSpecificThermalTimeSeries(Data::Study& study,
-                                       std::vector<std::pair<std::string, std::string>> names,
-                                       uint year,
-                                       bool globalThermalTSgeneration,
-                                       bool refreshTSonCurrentYear,
-                                       Antares::Solver::IResultWriter& writer)
-{
-    logs.info();
-    logs.info() << "Generating the thermal time-series";
-    Solver::Progression::Task progression(study, year, Solver::Progression::sectTSGThermal);
-
-    auto* generator = new GeneratorTempData(study, progression, writer);
-
-    generator->currentYear = year;
-
-    for (const auto& [areaName, clusterName] : names)
+    if (clustersToGen.empty()) // generate TS for all clusters
     {
-        logs.notice() << "Generating ts for area: " << areaName << " and cluster: " << clusterName;
-        ++progression;
+        study.areas.each([&](Data::Area& area) {
+            for (auto cluster : area.thermal.list.all())
+            {
+                if (cluster->doWeGenerateTS(globalThermalTSgeneration) && refreshTSonCurrentYear)
+                    (*generator)(area, *cluster);
 
-        auto area = study.areas.find(areaName);
-        if (!area)
+                ++progression;
+            }
+        });
+    }
+    else
+    {
+        auto names = splitStringIntoPairs(clustersToGen, ';', '.');
+
+        for (const auto& [areaName, clusterName] : names)
         {
-            logs.warning() << "Area not found: " << areaName;
-            continue;
-        }
+            logs.notice() << "Generating ts for area: " << areaName << " and cluster: " << clusterName;
+            ++progression;
 
-        auto cluster = area->thermal.list.findInAll(clusterName);
-        if (!cluster)
-        {
-            logs.warning() << "Cluster not found: " << clusterName;
-            continue;
-        }
+            auto area = study.areas.find(areaName);
+            if (!area)
+            {
+                logs.warning() << "Area not found: " << areaName;
+                continue;
+            }
 
-        if (cluster->doWeGenerateTS(globalThermalTSgeneration) && refreshTSonCurrentYear)
+            auto cluster = area->thermal.list.findInAll(clusterName);
+            if (!cluster)
+            {
+                logs.warning() << "Cluster not found: " << clusterName;
+                continue;
+            }
+
             (*generator)(*area, *cluster);
 
+        }
     }
 
 
