@@ -634,6 +634,35 @@ void generateAllClusters(Data::AreaList& areas,
     });
 }
 
+void generateSpecificClusters(Data::AreaList& areas,
+                         const std::string& clustersToGen,
+                         GeneratorTempData* generator,
+                         bool globalThermalTSgeneration,
+                         bool refreshTSonCurrentYear)
+{
+    auto names = splitStringIntoPairs(clustersToGen, ';', '.');
+
+    for (const auto& [areaName, clusterName] : names)
+    {
+        logs.info() << "Generating ts for area: " << areaName << " and cluster: " << clusterName;
+
+        auto* area = areas.find(areaName);
+        if (!area)
+        {
+            logs.warning() << "Area not found: " << areaName;
+            continue;
+        }
+
+        auto* cluster = area->thermal.list.findInAll(clusterName);
+        if (!cluster)
+        {
+            logs.warning() << "Cluster not found: " << clusterName;
+            continue;
+        }
+
+        (*generator)(*area, *cluster);
+    }
+}
 
 bool GenerateThermalTimeSeries(Data::Study& study,
                                const std::string& clustersToGen,
@@ -653,32 +682,8 @@ bool GenerateThermalTimeSeries(Data::Study& study,
     if (clustersToGen.empty()) // generate TS for all clusters
         generateAllClusters(study.areas, generator, globalThermalTSgeneration, refreshTSonCurrentYear);
     else
-    {
-        auto names = splitStringIntoPairs(clustersToGen, ';', '.');
-
-        for (const auto& [areaName, clusterName] : names)
-        {
-            logs.notice() << "Generating ts for area: " << areaName << " and cluster: " << clusterName;
-
-            auto area = study.areas.find(areaName);
-            if (!area)
-            {
-                logs.warning() << "Area not found: " << areaName;
-                continue;
-            }
-
-            auto cluster = area->thermal.list.findInAll(clusterName);
-            if (!cluster)
-            {
-                logs.warning() << "Cluster not found: " << clusterName;
-                continue;
-            }
-
-            (*generator)(*area, *cluster);
-
-        }
-    }
-
+        generateSpecificClusters(study.areas, clustersToGen, generator,
+                globalThermalTSgeneration, refreshTSonCurrentYear);
 
     delete generator;
 
