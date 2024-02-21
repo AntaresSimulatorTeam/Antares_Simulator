@@ -38,7 +38,7 @@
 /* #undef ANTARES_RC */
 
 //! git revision (SHA-1)
-#define GIT_SHA1_SHORT_STRING "0a2b300-dirty"
+#define GIT_SHA1_SHORT_STRING "2bcf620-dirty"
 
 #endif // __ANTARES_CONFIG_H__
 

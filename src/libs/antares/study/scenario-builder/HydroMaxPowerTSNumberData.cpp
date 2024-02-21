@@ -1,7 +1,7 @@
 
 
-#include "HydroMaxPowerTSNumberData.h"
-#include "applyToMatrix.hxx"
+#include "antares/study/scenario-builder/HydroMaxPowerTSNumberData.h"
+#include "antares/study/scenario-builder/applyToMatrix.hxx"
 
 // ================================
 // Hydro Max Power...
