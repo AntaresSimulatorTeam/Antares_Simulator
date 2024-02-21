@@ -620,6 +620,21 @@ static std::vector<std::pair<std::string, std::string>>
     return pairs;
 }
 
+void generateAllClusters(Data::AreaList& areas,
+                         GeneratorTempData* generator,
+                         bool globalThermalTSgeneration,
+                         bool refreshTSonCurrentYear)
+{
+    areas.each([&](Data::Area& area) {
+        for (auto cluster : area.thermal.list.all())
+        {
+            if (cluster->doWeGenerateTS(globalThermalTSgeneration) && refreshTSonCurrentYear)
+                (*generator)(area, *cluster);
+        }
+    });
+}
+
+
 bool GenerateThermalTimeSeries(Data::Study& study,
                                const std::string& clustersToGen,
                                uint year,
@@ -636,17 +651,7 @@ bool GenerateThermalTimeSeries(Data::Study& study,
     generator->currentYear = year;
 
     if (clustersToGen.empty()) // generate TS for all clusters
-    {
-        study.areas.each([&](Data::Area& area) {
-            for (auto cluster : area.thermal.list.all())
-            {
-                if (cluster->doWeGenerateTS(globalThermalTSgeneration) && refreshTSonCurrentYear)
-                    (*generator)(area, *cluster);
-
-                ++progression;
-            }
-        });
-    }
+        generateAllClusters(study.areas, generator, globalThermalTSgeneration, refreshTSonCurrentYear);
     else
     {
         auto names = splitStringIntoPairs(clustersToGen, ';', '.');
@@ -654,7 +659,6 @@ bool GenerateThermalTimeSeries(Data::Study& study,
         for (const auto& [areaName, clusterName] : names)
         {
             logs.notice() << "Generating ts for area: " << areaName << " and cluster: " << clusterName;
-            ++progression;
 
             auto area = study.areas.find(areaName);
             if (!area)
