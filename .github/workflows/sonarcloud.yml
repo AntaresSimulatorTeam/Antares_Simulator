@@ -6,9 +6,9 @@ on:
       - main
       - develop
       - release/*
+      - dependabot/*
       - fix/*
       - feature/*
-
 jobs:
   sonarcloud:
     name: SonarCloud

@@ -7,6 +7,7 @@ on:
     branches:
       - release/*
       - doc/*
+      - dependabot/*
   workflow_call:
     inputs:
       run-tests:

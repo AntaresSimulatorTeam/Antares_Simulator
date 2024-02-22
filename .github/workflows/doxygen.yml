@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - develop  # Set a branch name to trigger deployment
+      - dependabot/*
 
 jobs:
   deploy:
