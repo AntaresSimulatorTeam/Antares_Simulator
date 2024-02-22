@@ -6,6 +6,7 @@ on:
   push:
     branches:
       - develop
+      - dependabot/*
 
   schedule:
     - cron: '21 2 * * *'

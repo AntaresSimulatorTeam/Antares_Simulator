@@ -6,6 +6,7 @@ on:
       - main
       - develop
       - release/*
+      - dependabot/*
   pull_request:
 
 jobs:

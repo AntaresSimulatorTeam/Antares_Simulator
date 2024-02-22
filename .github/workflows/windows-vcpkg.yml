@@ -10,6 +10,7 @@ on:
       - issue-*
       - release/*
       - doc/*
+      - dependabot/*
   schedule:
     - cron: '21 2 * * *'
   workflow_call:
