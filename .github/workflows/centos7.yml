@@ -6,6 +6,7 @@ on:
   push:
     branches:
       - develop
+
   schedule:
     - cron: '21 2 * * *'
   workflow_call:
@@ -13,11 +14,15 @@ on:
       run-tests:
         required: true
         type: string
+      ref:
+        required: true
+        type: string
 
 env:
   GITHUB_TOKEN: ${{ github.token }}
   IS_RELEASE: ${{ github.event_name == 'workflow_dispatch' }}
   IS_PUSH: ${{ github.event_name == 'push' }}
+  REF: ${{ inputs.ref == '' && $GITHUB_REF_NAME || inputs.ref }}
 
 jobs:
 
@@ -33,7 +38,7 @@ jobs:
 
     - name: Checkout
       run: |
-          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git -b $GITHUB_REF_NAME .
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git -b ${{ env.REF }} .
 
     - name: Install gcc 10
       run: |

@@ -17,6 +17,9 @@ on:
       run-tests:
         required: true
         type: string
+      ref:
+        required: true
+        type: string
 
 env:
   GITHUB_TOKEN: ${{ github.token }}
@@ -37,6 +40,8 @@ jobs:
     
     steps:
     - uses: actions/checkout@v3
+      with:
+          ref: ${{ inputs.ref }}
 
     - name: ccache
       uses: hendrikmuhs/ccache-action@v1.2
