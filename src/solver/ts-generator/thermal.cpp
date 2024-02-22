@@ -46,7 +46,6 @@ class GeneratorTempData final
 {
 public:
     GeneratorTempData(Data::Study& study,
-                      Solver::Progression::Task& progr,
                       Solver::IResultWriter& writer);
 
     void prepareOutputFoldersForAllAreas(uint year);
@@ -101,16 +100,13 @@ private:
     double PPOW[366][102];
 
     String pTempFilename;
-    Solver::Progression::Task& pProgression;
     Solver::IResultWriter& pWriter;
 };
 
 GeneratorTempData::GeneratorTempData(Data::Study& study,
-                                     Solver::Progression::Task& progr,
                                      Solver::IResultWriter& writer) :
     study(study),
     rndgenerator(study.runtime->random[Data::seedTsGenThermal]),
-    pProgression(progr),
     pWriter(writer)
 {
     auto& parameters = study.parameters;
@@ -142,8 +138,6 @@ void GeneratorTempData::writeResultsToDisk(const Data::Area& area,
 
         pWriter.addEntryFromBuffer(pTempFilename.c_str(), buffer);
     }
-
-    ++pProgression;
 }
 
 template<class T>
@@ -673,9 +667,8 @@ bool GenerateThermalTimeSeries(Data::Study& study,
 {
     logs.info();
     logs.info() << "Generating the thermal time-series";
-    Solver::Progression::Task progression(study, year, Solver::Progression::sectTSGThermal);
 
-    auto* generator = new GeneratorTempData(study, progression, writer);
+    auto* generator = new GeneratorTempData(study, writer);
 
     generator->currentYear = year;
 
