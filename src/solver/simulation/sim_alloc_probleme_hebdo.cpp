@@ -344,7 +344,7 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
 
     for (unsigned k = 0; k < nbPays; k++)
     {
-        const uint nbPaliers = study.areas.byIndex[k]->thermal.list.size();
+        const uint nbPaliers = study.areas.byIndex[k]->thermal.list.enabledAndNotMustRunCount();
 
         problem.PaliersThermiquesDuPays[k].minUpDownTime.assign(nbPaliers, 0);
         problem.PaliersThermiquesDuPays[k].PminDuPalierThermiquePendantUneHeure

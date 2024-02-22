@@ -240,16 +240,14 @@ public:
     {
         auto area = state.area;
         auto& thermal = state.thermal;
-        for (uint clusterIndex = 0; clusterIndex != area->thermal.clusterCount(); ++clusterIndex)
+        for (auto cluster : area->thermal.list.each_enabled())
         {
-            auto* thermalCluster = area->thermal.clusters[clusterIndex];
-
             // Multiply every pollutant factor with production
-            for (int i = 0; i < Antares::Data::Pollutant::POLLUTANT_MAX; i++)
+            for (int pollutant = 0; pollutant < Antares::Data::Pollutant::POLLUTANT_MAX; pollutant++)
             {
-                pValuesForTheCurrentYear[numSpace][i][state.hourInTheYear]
-                  += thermalCluster->emissions.factors[i]
-                     * thermal[state.area->index].thermalClustersProductions[clusterIndex];
+                pValuesForTheCurrentYear[numSpace][pollutant][state.hourInTheYear]
+                  += cluster->emissions.factors[pollutant]
+                     * thermal[state.area->index].thermalClustersProductions[cluster->areaWideIndex];
             }
         }
 

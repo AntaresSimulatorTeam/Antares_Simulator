@@ -758,11 +758,8 @@ void Manager::selectFromBoundingBox(const wxPoint& a, const wxPoint& b, const si
                             j->first->selected(true);
                         if (mouseSelectionPlants)
                         {
-                            Data::ThermalClusterList::iterator tend = area->thermal.list.end();
-                            for (Data::ThermalClusterList::iterator t = area->thermal.list.begin();
-                                 t != tend;
-                                 ++t)
-                                clusterlist.push_back((*t).get());
+                            for(auto cluster : area->thermal.list.all())
+                                clusterlist.push_back(cluster.get());
                         }
                         continue;
                     }

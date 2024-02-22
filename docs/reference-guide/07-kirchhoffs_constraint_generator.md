@@ -15,7 +15,7 @@ To achieve that, the KCG implements an efficient algorithm yielding a minimal cy
 
 $$c= 1, ..., C : \sum_{l \in C}{sign(l,c)F_lZ_l} = 0$$
 
-Where \\(Z_l\\) are the impedances (parameters) and \\(F_l\\) are the flows (variables).
+Where $Z_l$ are the impedances (parameters) and $F_l$ are the flows (variables).
 
 Beyond this basic purpose, the KCG is meant to provide additional modeling capacities, so as to allow the representation of two important phenomena:
 
@@ -23,7 +23,7 @@ Beyond this basic purpose, the KCG is meant to provide additional modeling capac
 
 $$c= 1, ..., C : \sum_{l \in C}{sign(l,c)F_lZ_l} = \sum_{l \in C}{sign(l,c)\varphi_lZ_l}$$
 
-- To mitigate the effects of actual loop flows, or more generally to allow the transmission assets to give the maximum of their potential, the power system may include components such as phase-shifting transformers, whose function can be modeled by changing the formulation of the binding constraints. Provided that estimates of the shifting capacities (\\(Y_l^-\\), \\(Y_l^+\\)) of the installed PST are known and filled out in the link data section, the KCG will (on user's request) automatically reformulate the binding constraints as:
+- To mitigate the effects of actual loop flows, or more generally to allow the transmission assets to give the maximum of their potential, the power system may include components such as phase-shifting transformers, whose function can be modeled by changing the formulation of the binding constraints. Provided that estimates of the shifting capacities ($Y_l^-$, $Y_l^+$) of the installed PST are known and filled out in the link data section, the KCG will (on user's request) automatically reformulate the binding constraints as:
 
 $$c= 1, ..., C : Y_c^- + \sum_{l \in C}{sign(l,c)\varphi_lZ_l} \leq \sum_{l \in C}{sign(l,c)F_lZ_l} \leq Y_c^+ + \sum_{l \in C}{sign(l,c)\varphi_lZ_l}$$
 
@@ -35,7 +35,7 @@ $$Y_c^+ = \sum_{l \in C}{Max(sign(l,c)Y_l^-, sign(l,c)Y_l^+)}$$
 
 Besides, the KCG takes into account the fact that the "best estimates" of all critical data (loop flows, phase-shifting ratings, or even impedances) may vary in time: In such cases, the KCG formulates as many different binding constraints as necessary to model this operating context diversity, and relax them when appropriate (by setting the right hand sides of the equation to +/- infinite)
 
-From a practical standpoint, assessments of \\(Y^-, Y^+\\) should be derived from knowledge about the actual components installed on the grid, while \\(Z_l\\) and \\( \varphi_l \\) can be estimated by various methods.
+From a practical standpoint, assessments of $Y^-, Y^+$ should be derived from knowledge about the actual components installed on the grid, while $Z_l$ and $ \varphi_l $ can be estimated by various methods.
 
 In addition to the previous functionalities, the KCG's GUI also includes the following options:
 
