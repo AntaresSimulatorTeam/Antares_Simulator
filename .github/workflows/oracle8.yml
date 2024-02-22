@@ -20,6 +20,8 @@ env:
   GITHUB_TOKEN: ${{ github.token }}
   IS_RELEASE: ${{ github.event_name == 'workflow_dispatch' }}
   IS_PUSH: ${{ github.event_name == 'push' }}
+  REF: ${{ inputs.target_branch =='' && github.ref_name || inputs.target_branch}}
+
 
 jobs:
 
@@ -45,7 +47,7 @@ jobs:
 
     - name: Checkout
       run: |
-           git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git -b ${{ github.event.inputs.target_branch }} .
+           git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git -b ${{ env.REF }} .
 
     - name: Config OR-Tools URL
       run: |
