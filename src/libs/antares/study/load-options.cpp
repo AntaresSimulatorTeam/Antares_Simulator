@@ -45,16 +45,6 @@ StudyLoadOptions::StudyLoadOptions() :
 {
 }
 
-void StudyLoadOptions::pushProgressLogs() const
-{
-    if (loadOnlyNeeded && progressTicks)
-    {
-        uint percent = progressTicks * 100 / progressTickCount;
-        if (percent < 100)
-            logs.info() << logMessage << "  " << percent << '%';
-    }
-}
-
 void StudyLoadOptions::checkForceSimulationMode()
 {
     const uint number_of_enabled_force_options

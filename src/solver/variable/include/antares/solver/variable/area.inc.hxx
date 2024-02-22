@@ -127,11 +127,10 @@ void Areas<NEXTTYPE>::hourForEachArea(State& state, uint numSpace)
         // Initializing the state for the current area
         state.initFromAreaIndex(area.index, numSpace);
 
-        // For each thermal cluster
-        for (uint j = 0; j != area.thermal.clusterCount(); ++j)
+        for (auto cluster : area.thermal.list.each_enabled())
         {
             // Intiializing the state for the current thermal cluster
-            state.initFromThermalClusterIndex(j);
+            state.initFromThermalClusterIndex(cluster->areaWideIndex);
         }
 
         // Variables
@@ -194,17 +193,16 @@ void Areas<NEXTTYPE>::yearEndBuild(State& state, uint year, uint numSpace)
         // Variables
         auto& variablesForArea = pAreas[area.index];
 
-        // For each thermal cluster
-        for (uint j = 0; j != area.thermal.clusterCount(); ++j)
+        for(auto cluster : area.thermal.list.each_enabled())
         {
-            state.thermalCluster = area.thermal.clusters[j];
+            state.thermalCluster = cluster.get();
             state.yearEndResetThermal();
 
             // Variables
             variablesForArea.yearEndBuildPrepareDataForEachThermalCluster(state, year, numSpace);
 
             // Building the end of year
-            state.yearEndBuildFromThermalClusterIndex(j);
+            state.yearEndBuildFromThermalClusterIndex(cluster->areaWideIndex);
 
             // Variables
             variablesForArea.yearEndBuildForEachThermalCluster(state, year, numSpace);

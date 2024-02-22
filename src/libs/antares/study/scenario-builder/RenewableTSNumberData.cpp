@@ -52,17 +52,15 @@ bool renewableTSNumberData::apply(Study& study)
 
     const uint tsGenCountRenewable = get_tsGenCount(study);
 
-    uint clusterIndex = 0;
-    for (const auto& cluster : area.renewable.list)
+    for (const auto& cluster : area.renewable.list.each_enabled())
     {
         // alias to the current column
-        assert(clusterIndex < pTSNumberRules.width);
-        const auto& col = pTSNumberRules[clusterIndex];
+        assert(cluster->areaWideIndex < pTSNumberRules.width);
+        const auto& col = pTSNumberRules[cluster->areaWideIndex];
 
         logprefix.clear() << "Renewable: area '" << area.name << "', cluster: '" << cluster->name()
                           << "': ";
         ret = ApplyToMatrix(errors, logprefix, cluster->series, col, tsGenCountRenewable) && ret;
-        clusterIndex++;
     }
     return ret;
 }
@@ -86,25 +84,16 @@ void renewableTSNumberData::saveToINIFile(const Study& /* study */,
     if (!pArea)
         return;
 
-// Foreach year
-#ifndef NDEBUG
-    if (pTSNumberRules.width)
+    for (auto cluster : pArea->renewable.list.all())
     {
-        assert(pTSNumberRules.width == pArea->renewable.list.size());
-    }
-#endif
-
-    for (uint index = 0; index != pTSNumberRules.width; ++index)
-    {
-        // Foreach renewable cluster...
-        for (uint y = 0; y != pTSNumberRules.height; ++y)
+        for (uint year = 0; year != pTSNumberRules.height; ++year)
         {
-            const uint val = get(pArea->renewable.list[index].get(), y);
+            const uint val = get(cluster.get(), year);
             // Equals to zero means 'auto', which is the default mode
             if (!val)
                 continue;
-            file << prefix << pArea->id << "," << y << ','
-                 << pArea->renewable.list[index]->id() << " = " << val << '\n';
+            file << prefix << pArea->id << "," << year << ','
+                 << cluster->id() << " = " << val << '\n';
         }
     }
 }
@@ -119,7 +108,7 @@ bool renewableTSNumberData::reset(const Study& study)
     //   solver or not.
     // WARNING: At this point in time, the variable pArea->renewable.clusterCount()
     //   might not be valid (because not really initialized yet)
-    const uint clusterCount = pArea->renewable.list.size();
+    const uint clusterCount = pArea->renewable.list.allClustersCount();
     // Resize
     pTSNumberRules.reset(clusterCount, nbYears);
     return true;

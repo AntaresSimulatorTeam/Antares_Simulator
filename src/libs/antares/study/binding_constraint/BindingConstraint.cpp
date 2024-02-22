@@ -268,7 +268,7 @@ void BindingConstraint::copyWeights(const Study &study,
             if (localParent)
             {
                 const ThermalCluster *localTC
-                        = localParent->thermal.list.find(thermalCluster->id());
+                        = localParent->thermal.list.findInAll(thermalCluster->id());
                 if (localTC)
                     pClusterWeights[localTC] = weight;
             }
@@ -329,7 +329,7 @@ void BindingConstraint::copyOffsets(const Study &study,
             if (localParent)
             {
                 const ThermalCluster *localTC
-                        = localParent->thermal.list.find(thermalCluster->id());
+                        = localParent->thermal.list.findInAll(thermalCluster->id());
                 if (localTC)
                     pClusterOffsets[localTC] = offset;
             }
