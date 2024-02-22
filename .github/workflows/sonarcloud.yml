@@ -6,7 +6,8 @@ on:
       - main
       - develop
       - release/*
-  pull_request:
+      - fix/*
+      - feature/*
 
 jobs:
   sonarcloud:

@@ -1,28 +1,22 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
 #include <numeric>
@@ -33,8 +27,8 @@
 #include <yuni/core/math.h>
 #include <cassert>
 #include <boost/algorithm/string/case_conv.hpp>
-#include "../../study.h"
-#include "cluster.h"
+#include "antares/study/study.h"
+#include "antares/study/parts/thermal/cluster.h"
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
 #include <antares/utils/utils.h>
@@ -46,11 +40,7 @@ using namespace Antares;
 
 #define SEP IO::Separator
 
-namespace Yuni
-{
-namespace Extension
-{
-namespace CString
+namespace Yuni::Extension::CString
 {
 bool Into<Antares::Data::ThermalLaw>::Perform(AnyString string, TargetType& out)
 {
@@ -114,9 +104,9 @@ bool Into<Antares::Data::LocalTSGenerationBehavior>::Perform(AnyString string, T
     return false;
 }
 
-} // namespace CString
-} // namespace Extension
-} // namespace Yuni
+} // namespace Yuni::Extension::CString
+
+
 
 namespace Antares
 {
@@ -124,18 +114,6 @@ namespace Data
 {
 Data::ThermalCluster::ThermalCluster(Area* parent) :
     Cluster(parent),
-    groupID(thermalDispatchGrpOther1),
-    mustrun(false),
-    mustrunOrigin(false),
-    nominalCapacityWithSpinning(0.),
-    minStablePower(0.),
-    minUpTime(1),
-    minDownTime(1),
-    spinning(0.),
-    forcedVolatility(0.),
-    plannedVolatility(0.),
-    forcedLaw(thermalLawUniform),
-    plannedLaw(thermalLawUniform),
     PthetaInf(HOURS_PER_YEAR, 0),
     costsTimeSeries(1, CostsTimeSeries())
 {
@@ -214,7 +192,7 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
 
     // Making sure that the data related to the prepro and timeseries are present
     // prepro
-    if (not prepro)
+    if (!prepro)
         prepro = new PreproThermal(this->weak_from_this());
 
     prepro->copyFrom(*cluster.prepro);
@@ -295,7 +273,7 @@ void Data::ThermalCluster::calculationOfSpinning()
 
     // Nothing to do if the spinning is equal to zero
     // because it will the same multiply all entries of the matrix by 1.
-    if (not Math::Zero(spinning))
+    if (!Math::Zero(spinning))
     {
         logs.debug() << "  Calculation of spinning... " << parentArea->name << "::" << pName;
 
@@ -415,7 +393,7 @@ void Data::ThermalCluster::reverseCalculationOfSpinning()
 {
     // Nothing to do if the spinning is equal to zero
     // because it will the same multiply all entries of the matrix by 1.
-    if (not Math::Zero(spinning))
+    if (!Math::Zero(spinning))
     {
         logs.debug() << "  Calculation of spinning (reverse)... " << parentArea->name
                      << "::" << pName;
@@ -480,7 +458,7 @@ void Data::ThermalCluster::reset()
     // warning: the variables `prepro` and `series` __must__ not be destroyed
     //   since the interface may still have a pointer to them.
     //   we must simply reset their content.
-    if (not prepro)
+    if (!prepro)
         prepro = new PreproThermal(this->weak_from_this());
     prepro->reset();
     ecoInput.reset();
@@ -488,7 +466,7 @@ void Data::ThermalCluster::reset()
 
 bool Data::ThermalCluster::integrityCheck()
 {
-    if (not parentArea)
+    if (!parentArea)
     {
         logs.error() << "Thermal cluster " << pName << ": The parent area is missing";
         return false;
@@ -665,7 +643,7 @@ void ThermalCluster::calculatMinDivModulation()
 
 bool ThermalCluster::checkMinStablePower()
 {
-    if (not minDivModulation.isCalculated) // not has been initialized
+    if (!minDivModulation.isCalculated) // not has been initialized
         calculatMinDivModulation();
 
     if (minDivModulation.value < 0)
@@ -693,9 +671,9 @@ bool ThermalCluster::checkMinStablePower()
     return true;
 }
 
-bool ThermalCluster::checkMinStablePowerWithNewModulation(uint index, double value)
+bool ThermalCluster::checkMinStablePowerWithNewModulation(uint idx, double value)
 {
-    if (not minDivModulation.isCalculated || index == minDivModulation.index)
+    if (!minDivModulation.isCalculated || idx == minDivModulation.index)
         calculatMinDivModulation();
     else
     {
@@ -703,7 +681,7 @@ bool ThermalCluster::checkMinStablePowerWithNewModulation(uint index, double val
         if (div < minDivModulation.value)
         {
             minDivModulation.value = div;
-            minDivModulation.index = index;
+            minDivModulation.index = idx;
         }
     }
 

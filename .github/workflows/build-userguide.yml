@@ -11,7 +11,7 @@ on:
     inputs:
       run-tests:
         required: true
-        type: boolean
+        type: string
 
 env:
   IS_RELEASE: ${{ github.event_name == 'workflow_dispatch' }}

@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.14) # FetchContent_MakeAvailable
 
 # Version
-set(ANTARES_VERSION_HI	      8)
-set(ANTARES_VERSION_LO	      8)
-set(ANTARES_VERSION_REVISION  3)
+set(ANTARES_VERSION_HI	      9)
+set(ANTARES_VERSION_LO	      0)
+set(ANTARES_VERSION_REVISION  0)
 
 # Beta release
 set(ANTARES_BETA 0)
@@ -279,9 +279,15 @@ message(STATUS "OR-Tools tag ${ORTOOLS_TAG}")
   FetchContent_MakeAvailable(ortools)
 endif()
 
-find_package(minizip)
+find_package(minizip QUIET)
 
 if(NOT minizip_FOUND OR BUILD_MINIZIP)
+	if (NOT minizip_FOUND)
+		message("minizip not found, downloading")
+	endif ()
+	if (BUILD_MINIZIP)
+		message("BUILD_MINIZIP set, downloading")
+	endif ()
     # Repository + tag
     set(MZ_REPOSITORY "https://github.com/zlib-ng/minizip-ng.git")
     set(MZ_TAG "4.0.1")
@@ -294,12 +300,15 @@ if(NOT minizip_FOUND OR BUILD_MINIZIP)
     set(MZ_OPENSSL "OFF" CACHE INTERNAL "")
     set(MZ_ICONV "OFF" CACHE INTERNAL "")
 
-    FetchContent_Declare(minizip
-    GIT_REPOSITORY ${MZ_REPOSITORY}
-    GIT_TAG ${MZ_TAG})
+	FetchContent_Declare(minizip
+		GIT_REPOSITORY ${MZ_REPOSITORY}
+		GIT_TAG ${MZ_TAG}
+		OVERRIDE_FIND_PACKAGE
+	)
 
-    FetchContent_MakeAvailable(minizip)
+	FetchContent_MakeAvailable(minizip)
 endif()
+find_package(minizip REQUIRED)
 
 #wxWidget not needed for all library find is done in ui CMakeLists.txt
 if (VCPKG_TOOLCHAIN AND NOT BUILD_wxWidgets) 
@@ -310,9 +319,11 @@ endif()
 # TODO : review Standard Settings
 include(cmake/common-settings.cmake)
 
+add_subdirectory(config)
+
 # Configure config.h with current ANTARES version
-configure_file("config.h.cmake" "${CMAKE_CURRENT_BINARY_DIR}/config.h")
-configure_file("config.h.cmake" "${CMAKE_CURRENT_SOURCE_DIR}/config.h")
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/config/config.h.in"
+		"${CMAKE_CURRENT_SOURCE_DIR}/config/include/antares/config/config.h")
 
 # Yuni Framework
 configure_file("cmake/ProfileBuild.template.cmake" "ext/yuni/src/ProfileBuild.cmake")
@@ -447,3 +458,5 @@ endif()
 # Load packaging facilities.
 include(CPack)
 
+#Last. We need all target defined
+add_subdirectory(packaging)
