@@ -186,23 +186,18 @@ public:
         NextType::simulationEnd();
     }
 
-    void addThermalClusterList(Data::ThermalClusterList& list, unsigned int year, unsigned int numSpace)
-    {
-        for (const auto& cluster : list)
-        {
-            const auto& availableProduction = cluster->series.getColumn(year);
-            for (unsigned int hour = 0; hour != cluster->series.timeSeries.height; ++hour)
-                pValuesForTheCurrentYear[numSpace].hour[hour] += availableProduction[hour];
-        }
-    }
-
     void yearBegin(unsigned int year, unsigned int numSpace)
     {
         // Somme de toutes les productions disponibles pour l'ensemble des
         // paliers thermiques (+must-run)
         pValuesForTheCurrentYear[numSpace].reset();
-        addThermalClusterList(pArea->thermal.list, year, numSpace);
-        addThermalClusterList(pArea->thermal.mustrunList, year, numSpace);
+        for (const auto cluster : pArea->thermal.list.each_enabled())
+        {
+            const auto& availableProduction = cluster->series.getColumn(year);
+            for (unsigned int hour = 0; hour != cluster->series.timeSeries.height; ++hour)
+                pValuesForTheCurrentYear[numSpace].hour[hour] += availableProduction[hour];
+        }
+
 
         // Next variable
         NextType::yearBegin(year, numSpace);

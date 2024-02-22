@@ -155,7 +155,7 @@ public:
         pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
 
         // Get the area
-        pSize = area->thermal.clusterCount();
+        pSize = area->thermal.list.enabledCount();
         if (pSize)
         {
             AncestorType::pResults.resize(pSize);
@@ -293,13 +293,10 @@ public:
     {
         auto area = state.area;
         auto& thermal = state.thermal;
-        for (uint clusterIndex = 0; clusterIndex != state.area->thermal.clusterCount();
-             ++clusterIndex)
+        for (auto cluster : area->thermal.list.each_enabled())
         {
-            const auto* thermalCluster = area->thermal.clusters[clusterIndex];
-            pValuesForTheCurrentYear[numSpace][thermalCluster->areaWideIndex]
-              .hour[state.hourInTheYear]
-              = thermal[area->index].numberOfUnitsONbyCluster[clusterIndex];
+            pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex].hour[state.hourInTheYear]
+              = thermal[area->index].numberOfUnitsONbyCluster[cluster->areaWideIndex];
         }
 
         // Next variable
@@ -327,12 +324,12 @@ public:
             const auto& thermal = results.data.area->thermal;
 
             // Write the data for the current year
-            for (uint i = 0; i < pSize; ++i)
+            for (auto cluster : thermal.list.each_enabled())
             {
                 // Write the data for the current year
-                results.variableCaption = thermal.clusters[i]->name(); // VCardType::Caption();
+                results.variableCaption = cluster->name(); // VCardType::Caption();
                 results.variableUnit = VCardType::Unit();
-                pValuesForTheCurrentYear[numSpace][i].template buildAnnualSurveyReport<VCardType>(
+                pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex].template buildAnnualSurveyReport<VCardType>(
                   results, fileLevel, precision);
             }
         }

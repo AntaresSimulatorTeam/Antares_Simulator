@@ -38,7 +38,7 @@ public:
     */
     PartThermal();
     //! Destructor
-    ~PartThermal();
+    ~PartThermal() = default;
     //@}
 
     /*!
@@ -51,29 +51,7 @@ public:
     **
     ** \param n A number of years
     */
-    void resizeAllTimeseriesNumbers(uint n);
-
-
-
-    /*!
-    ** \brief Create and initialize the list of all clusters (with the mustrun flag or not)
-    **
-    ** This method must be called before prepareClustersInMustRunMode()
-    ** to ensure the same order whatever the value of the 'mustrun' flag is.
-    */
-    void prepareAreaWideIndexes();
-
-    /*!
-    ** \brief Prepare all thermal clusters in the 'mustrun' mode
-    **
-    ** All clusters with the flag will be moved to the container 'mustrunList'.
-    ** As a consequence, they will no longer be seen as thermal clusters
-    ** from the solver's point of view.
-    ** \warning This method should only be used from the solver
-    **
-    ** \return The number of clusters found in 'must-run' mode
-    */
-    uint prepareClustersInMustRunMode();
+    void resizeAllTimeseriesNumbers(uint n) const;
 
     /*!
     ** \brief Invalidate all JIT data
@@ -99,7 +77,7 @@ public:
 
     // Check & correct availability timeseries for thermal availability
     // Only applies if time-series are ready-made
-    void checkAndCorrectAvailability();
+    void checkAndCorrectAvailability() const;
 
 public:
     //! The unsupplied energy cost (Euros/MWh)
@@ -109,31 +87,10 @@ public:
 
     //! List of all thermal clusters (enabled and disabled) except must-run clusters
     ThermalClusterList list;
-    //! List of all thermal clusters in 'must-run' mode
-    //! \warning This list must only be used from the solver
-    ThermalClusterList mustrunList;
 
-    /*!
-    ** \brief All clusters for the area
-    **
-    ** This variable is only available at runtime from the solver.
-    ** It is initialized in the same time that the runtime data.
-    **
-    ** This list is mainly used to ensure the same order of the
-    ** thermal clusters in the outputs.
-    */
-    std::vector<ThermalCluster*> clusters;
-
-    // Return unit count
-    inline size_t clusterCount() const
-    {
-        return clusters.size();
-    }
 }; // class PartThermal
 
 } // namespace Data
 } // namespace Antares
-
-#include "container.hxx"
 
 #endif /* __ANTARES_LIBS_STUDY_PARTS_THERMAL_CONTAINER_H__ */

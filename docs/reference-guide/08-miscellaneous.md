@@ -24,7 +24,7 @@ This section gives a summary of the whole simulation process followed by Antares
 
 ## Operating reserves modeling
 
-Many definitions may be encountered regarding the different operating reserves (spinning / non spinning, fast / delayed, primary-secondary-tertiary, frequency containment reserve – frequency restoration reserve – replacement reserve, etc.).
+Many definitions may be encountered regarding the different operating reserves (spinning / non-spinning, fast / delayed, primary-secondary-tertiary, frequency containment reserve – frequency restoration reserve – replacement reserve, etc.).
 
 Besides, all of them need not be modeled with the same level of accuracy in a simulator such as Antares. Furthermore, the best way to use the concept is not always quite the same in pure Adequacy studies and in Economy studies.
 
@@ -49,10 +49,10 @@ Note that this "standard" feature of Antares makes it possible to assess the pot
 
 The table below gives an overview of the different reserves available in Antares
 
-| | _Economy_ | _Adequacy_ |
-|:---:|:---:|:---:|:---:|
-| _R0_ | _Yes_ | _Yes_ |
-| _R3_ | _Yes_ | _Yes_ |
+|      | _Economy_ | _Adequacy_ |
+|------|-----------|------------|
+| _R0_ | _Yes_     | _Yes_      |
+| _R3_ | _Yes_     | _Yes_      |
 
 
 ## The heuristic for seasonal hydro pre-allocation
@@ -322,7 +322,7 @@ output = true
 b) File defining a district gathering all areas but five:
 
 ```ini
-[most of the system
+[most of the system]
 apply-filter = add-al
 - = country 
 - = neighbour 
@@ -381,7 +381,7 @@ The second file ("criterion" file) contains the value of the optimal (minimum) v
 
 All commercial as well as Open Source linear solvers are able to process mps files. As a consequence, tests aiming at comparing Antares' solver with other commercial solutions can be easily carried out: all that has to be done is to submit the mps problem to the solver at hand and measure its performances (calculation time, criterion value) with those of Antares.
 
-Note that this kind of comparisons brings no information regarding the quality of the physical modelling on which the simulation is based. It is useful, however, to gather evidence on mathematical grounds.
+Note that this kind of comparison brings no information regarding the quality of the physical modelling on which the simulation is based. It is useful, however, to gather evidence on mathematical grounds.
 
 File names are structured as follows:
 
@@ -431,7 +431,7 @@ Areas that have some hydro-storage capability installed and for which explicit r
 
 **Cold Start:**
 
-On starting the simulation of a new Monte-Carlo year, the reservoir level to consider in each Area on the first day of the initialization month (see [Active windows](#active-windows)) is randomly drawn between the extreme levels defined for the Area on that day.
+On starting the simulation of a new Monte-Carlo year, the reservoir level to consider in each Area on the first day of the initialization month (see [Active Windows](04-active_windows)) is randomly drawn between the extreme levels defined for the Area on that day.
 
 More precisely:
 
@@ -454,7 +454,7 @@ On starting the simulation of a new Monte-Carlo year, the reservoir level to con
 - The Monte-Carlo year considered is not the first to simulate, or does not belong to the first batch of years to be simulated in parallel. In sequential runtime mode, that means that year #N may start with the level reached at the end of year #(N-1). In parallel runtime mode, if the simulation is carried out with batches of B years over as many CPU cores, years of the k-th batch
   [^19] may start with the ending levels of the years processed in the (k-1)-th batch.
 
-- The parallelization context (see [System requirements](#9-system-requirements)) must be set so as to ensure that the M Monte-Carlo years to simulate will be processed in a round number of K consecutive batches of B years in parallel (i.e. M = K\*B and all time-series refresh intervals are exact multiple of B).
+- The parallelization context (see [System requirements](09-system_requirements)) must be set so as to ensure that the M Monte-Carlo years to simulate will be processed in a round number of K consecutive batches of B years in parallel (i.e. M = K\*B and all time-series refresh intervals are exact multiple of B).
 
 The first year of the simulation, and more generally years belonging to the first simulation batch in parallel mode, are initialized as they would be in the cold start option.
 
@@ -542,7 +542,7 @@ In the second optimization stage, the unit commitment set by the intermediate IP
 
 This parameter can take the two values “aggregated” or “cluster”. For a new study, it will default to cluster. For a legacy (Antares version <8.1.0) study it will default to aggregated.
 
-If the parameter is set to "aggregated”, the user will have access to the Wind & Solar windows, but not the Renewable window. When the parameter is set to “cluster", the Renewable window will be available, but not the Wind nor the Solar windows. The data stored in the windows that are not available will always be conserved. However, only Renewable data (and not the wind and solar data) will be considered for the calculations when the parameter is set to “cluster”. And only the wind and solar data (and not the renewable data) will be considered for the calculations when the parameter is set to “aggregated”.
+If the parameter is set to “aggregated”, the user will have access to the Wind & Solar windows, but not the Renewable window. When the parameter is set to “cluster”, the Renewable window will be available, but not the Wind nor the Solar windows. The data stored in the windows that are not available will always be conserved. However, only Renewable data (and not the wind and solar data) will be considered for the calculations when the parameter is set to “cluster”. And only the wind and solar data (and not the renewable data) will be considered for the calculations when the parameter is set to “aggregated”.
 
 The Renewable window can be filled out with the different renewable clusters inside each node. Each renewable cluster needs to have a group specified or will default to the «Other RES 1» group. Production Timeseries can be filled out much like the Thermal production ones. Note that unlike thermal clusters, negative production values are allowed. The Renewable window is described in more details in the “4. Active Windows” section. In the Simulation window, only “Ready-made” timeseries can be selected for renewables for now. This should be modified in a future release. The MC scenario builder for Renewables works the same way as for Thermal Clusters.
 
