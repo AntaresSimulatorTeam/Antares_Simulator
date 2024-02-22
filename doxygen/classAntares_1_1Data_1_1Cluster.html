@@ -134,6 +134,8 @@ $(document).ready(function(){initNavTree('classAntares_1_1Data_1_1Cluster.html',
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classAntares_1_1Data_1_1Cluster-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">Antares::Data::Cluster Class Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div></div>
 </div><!--header-->
@@ -151,10 +153,9 @@ Inheritance diagram for Antares::Data::Cluster:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:abeb9225836957284e2125f767a9d7ca4"><td class="memItemLeft" align="right" valign="top"><a id="abeb9225836957284e2125f767a9d7ca4" name="abeb9225836957284e2125f767a9d7ca4"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>Map</b> = std::map&lt; ClusterName, <a class="el" href="classAntares_1_1Data_1_1Cluster.html">Cluster</a> * &gt;</td></tr>
-<tr class="memdesc:abeb9225836957284e2125f767a9d7ca4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Map of renewable clusters. <br /></td></tr>
-<tr class="separator:abeb9225836957284e2125f767a9d7ca4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac628c51bf1d31a38f417a1b11df94af6"><td class="memItemLeft" align="right" valign="top"><a id="ac628c51bf1d31a38f417a1b11df94af6" name="ac628c51bf1d31a38f417a1b11df94af6"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>Set</b> = std::set&lt; <a class="el" href="classAntares_1_1Data_1_1Cluster.html">Cluster</a> *, <a class="el" href="structAntares_1_1Data_1_1CompareClusterName.html">CompareClusterName</a> &gt;</td></tr>
+<tr class="separator:ac628c51bf1d31a38f417a1b11df94af6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -163,94 +164,38 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a705f8abd19dd13377d25fe20d2e1ee7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad3a115866c2f2be73fd64c7e8df2805b"><td class="memItemLeft" align="right" valign="top"><a id="ad3a115866c2f2be73fd64c7e8df2805b" name="ad3a115866c2f2be73fd64c7e8df2805b"></a>
 const ClusterName &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>id</b> () const</td></tr>
-<tr class="memdesc:ad3a115866c2f2be73fd64c7e8df2805b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the cluster ID. <br /></td></tr>
 <tr class="separator:ad3a115866c2f2be73fd64c7e8df2805b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader">Group</h2></td></tr>
-<tr class="memitem:ac628c51bf1d31a38f417a1b11df94af6"><td class="memItemLeft" align="right" valign="top"><a id="ac628c51bf1d31a38f417a1b11df94af6" name="ac628c51bf1d31a38f417a1b11df94af6"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>Set</b> = std::set&lt; <a class="el" href="classAntares_1_1Data_1_1Cluster.html">Cluster</a> *, <a class="el" href="structAntares_1_1Data_1_1CompareClusterName.html">CompareClusterName</a> &gt;</td></tr>
-<tr class="memdesc:ac628c51bf1d31a38f417a1b11df94af6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set of clusters. <br /></td></tr>
-<tr class="separator:ac628c51bf1d31a38f417a1b11df94af6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acfb0e684f9e67dc0836a4056eda7bfda"><td class="memItemLeft" align="right" valign="top"><a id="acfb0e684f9e67dc0836a4056eda7bfda" name="acfb0e684f9e67dc0836a4056eda7bfda"></a>
-uint&#160;</td><td class="memItemRight" valign="bottom"><b>unitCount</b></td></tr>
-<tr class="memdesc:acfb0e684f9e67dc0836a4056eda7bfda"><td class="mdescLeft">&#160;</td><td class="mdescRight">Count of unit. <br /></td></tr>
-<tr class="separator:acfb0e684f9e67dc0836a4056eda7bfda"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0fb2326d8658ae067843c1169f225c00"><td class="memItemLeft" align="right" valign="top"><a id="a0fb2326d8658ae067843c1169f225c00" name="a0fb2326d8658ae067843c1169f225c00"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>enabled</b></td></tr>
-<tr class="memdesc:a0fb2326d8658ae067843c1169f225c00"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enabled. <br /></td></tr>
-<tr class="separator:a0fb2326d8658ae067843c1169f225c00"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab593cef54f0e36411998fe057e82ce34"><td class="memItemLeft" align="right" valign="top"><a id="ab593cef54f0e36411998fe057e82ce34" name="ab593cef54f0e36411998fe057e82ce34"></a>
-<a class="el" href="classAntares_1_1Data_1_1Area.html">Area</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>parentArea</b></td></tr>
-<tr class="memdesc:ab593cef54f0e36411998fe057e82ce34"><td class="mdescLeft">&#160;</td><td class="mdescRight">The associate area (alias) <br /></td></tr>
-<tr class="separator:ab593cef54f0e36411998fe057e82ce34"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af5b507f3f22f485b5dcd88d1b78b2c51"><td class="memItemLeft" align="right" valign="top"><a id="af5b507f3f22f485b5dcd88d1b78b2c51" name="af5b507f3f22f485b5dcd88d1b78b2c51"></a>
-uint&#160;</td><td class="memItemRight" valign="bottom"><b>index</b></td></tr>
-<tr class="memdesc:af5b507f3f22f485b5dcd88d1b78b2c51"><td class="mdescLeft">&#160;</td><td class="mdescRight">The index of the cluster (within a list) <br /></td></tr>
-<tr class="separator:af5b507f3f22f485b5dcd88d1b78b2c51"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1d7e1d8ddf0071df24ba61919ec60582"><td class="memItemLeft" align="right" valign="top"><a id="a1d7e1d8ddf0071df24ba61919ec60582" name="a1d7e1d8ddf0071df24ba61919ec60582"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>nominalCapacity</b></td></tr>
-<tr class="memdesc:a1d7e1d8ddf0071df24ba61919ec60582"><td class="mdescLeft">&#160;</td><td class="mdescRight">Capacity of reference per unit (MW) (pMax) <br /></td></tr>
-<tr class="separator:a1d7e1d8ddf0071df24ba61919ec60582"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a564f137d2d6985addb1e8dcd4b0ecdfc"><td class="memItemLeft" align="right" valign="top">uint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1Cluster.html#a564f137d2d6985addb1e8dcd4b0ecdfc">areaWideIndex</a></td></tr>
-<tr class="separator:a564f137d2d6985addb1e8dcd4b0ecdfc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad00ce25790a04c8ee7c473fd6d1b1a8b"><td class="memItemLeft" align="right" valign="top"><a id="ad00ce25790a04c8ee7c473fd6d1b1a8b" name="ad00ce25790a04c8ee7c473fd6d1b1a8b"></a>
-<a class="el" href="classAntares_1_1Data_1_1TimeSeries.html">TimeSeries</a>&#160;</td><td class="memItemRight" valign="bottom"><b>series</b></td></tr>
-<tr class="memdesc:ad00ce25790a04c8ee7c473fd6d1b1a8b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Series. <br /></td></tr>
-<tr class="separator:ad00ce25790a04c8ee7c473fd6d1b1a8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a541774ebb10556ba6c21d4ddf77c4156"><td class="memItemLeft" align="right" valign="top"><a id="a541774ebb10556ba6c21d4ddf77c4156" name="a541774ebb10556ba6c21d4ddf77c4156"></a>
-<a class="el" href="classAntares_1_1Matrix.html">TimeSeries::numbers</a>&#160;</td><td class="memItemRight" valign="bottom"><b>tsNumbers</b></td></tr>
-<tr class="separator:a541774ebb10556ba6c21d4ddf77c4156"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0b959414068e894b6fcddeee6bac0c36"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAntares_1_1Matrix.html">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1Cluster.html#a0b959414068e894b6fcddeee6bac0c36">modulation</a></td></tr>
-<tr class="memdesc:a0b959414068e894b6fcddeee6bac0c36"><td class="mdescLeft">&#160;</td><td class="mdescRight">Modulation matrix.  <a href="classAntares_1_1Data_1_1Cluster.html#a0b959414068e894b6fcddeee6bac0c36">More...</a><br /></td></tr>
-<tr class="separator:a0b959414068e894b6fcddeee6bac0c36"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a40dfbccdb4a6499f9a506bbe96dd0ef9"><td class="memItemLeft" align="right" valign="top"><a id="a40dfbccdb4a6499f9a506bbe96dd0ef9" name="a40dfbccdb4a6499f9a506bbe96dd0ef9"></a>
-Data::ClusterName&#160;</td><td class="memItemRight" valign="bottom"><b>pName</b></td></tr>
-<tr class="memdesc:a40dfbccdb4a6499f9a506bbe96dd0ef9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Name. <br /></td></tr>
-<tr class="separator:a40dfbccdb4a6499f9a506bbe96dd0ef9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3168f470e9fb86767133129ed26e195c"><td class="memItemLeft" align="right" valign="top"><a id="a3168f470e9fb86767133129ed26e195c" name="a3168f470e9fb86767133129ed26e195c"></a>
-Data::ClusterName&#160;</td><td class="memItemRight" valign="bottom"><b>pID</b></td></tr>
-<tr class="memdesc:a3168f470e9fb86767133129ed26e195c"><td class="mdescLeft">&#160;</td><td class="mdescRight">ID. <br /></td></tr>
-<tr class="separator:a3168f470e9fb86767133129ed26e195c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a57cf2b366a110f4593ff3f209bddc363"><td class="memItemLeft" align="right" valign="top"><a id="a57cf2b366a110f4593ff3f209bddc363" name="a57cf2b366a110f4593ff3f209bddc363"></a>
-Data::ClusterName&#160;</td><td class="memItemRight" valign="bottom"><b>pGroup</b></td></tr>
-<tr class="memdesc:a57cf2b366a110f4593ff3f209bddc363"><td class="mdescLeft">&#160;</td><td class="mdescRight">Group. <br /></td></tr>
-<tr class="separator:a57cf2b366a110f4593ff3f209bddc363"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa8b2a399286b9e5df51c9fb366377a48"><td class="memItemLeft" align="right" valign="top"><a id="aa8b2a399286b9e5df51c9fb366377a48" name="aa8b2a399286b9e5df51c9fb366377a48"></a>
 const ClusterName &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>group</b> () const</td></tr>
-<tr class="memdesc:aa8b2a399286b9e5df51c9fb366377a48"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the group of the cluster. <br /></td></tr>
 <tr class="separator:aa8b2a399286b9e5df51c9fb366377a48"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abf7a1f92ec1d3d2074c4edab63404330"><td class="memItemLeft" align="right" valign="top"><a id="abf7a1f92ec1d3d2074c4edab63404330" name="abf7a1f92ec1d3d2074c4edab63404330"></a>
 const ClusterName &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>name</b> () const</td></tr>
-<tr class="memdesc:abf7a1f92ec1d3d2074c4edab63404330"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the renewable cluster name. <br /></td></tr>
 <tr class="separator:abf7a1f92ec1d3d2074c4edab63404330"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3a67a5f3829e861c899ab4ce1a2f4989"><td class="memItemLeft" align="right" valign="top"><a id="a3a67a5f3829e861c899ab4ce1a2f4989" name="a3a67a5f3829e861c899ab4ce1a2f4989"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setName</b> (const AnyString &amp;newname)</td></tr>
-<tr class="memdesc:a3a67a5f3829e861c899ab4ce1a2f4989"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the name/ID. <br /></td></tr>
 <tr class="separator:a3a67a5f3829e861c899ab4ce1a2f4989"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a183bbf7ff5ecbc2bd4e2a76d4c1f9245"><td class="memItemLeft" align="right" valign="top"><a id="a183bbf7ff5ecbc2bd4e2a76d4c1f9245" name="a183bbf7ff5ecbc2bd4e2a76d4c1f9245"></a>
 Yuni::String&#160;</td><td class="memItemRight" valign="bottom"><b>getFullName</b> () const</td></tr>
-<tr class="memdesc:a183bbf7ff5ecbc2bd4e2a76d4c1f9245"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the full cluster name. <br /></td></tr>
 <tr class="separator:a183bbf7ff5ecbc2bd4e2a76d4c1f9245"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaf99216c03fd30691b8577647dad63f0"><td class="memItemLeft" align="right" valign="top">virtual uint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1Cluster.html#aaf99216c03fd30691b8577647dad63f0">groupId</a> () const =0</td></tr>
 <tr class="separator:aaf99216c03fd30691b8577647dad63f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a536567d0afec1d53e7147919b9c0990b"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1Cluster.html#a536567d0afec1d53e7147919b9c0990b">setGroup</a> (Data::ClusterName newgrp)=0</td></tr>
-<tr class="memdesc:a536567d0afec1d53e7147919b9c0990b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the group.  <a href="classAntares_1_1Data_1_1Cluster.html#a536567d0afec1d53e7147919b9c0990b">More...</a><br /></td></tr>
 <tr class="separator:a536567d0afec1d53e7147919b9c0990b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acd914aeeada706fa6c666551c39930a0"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1Cluster.html#acd914aeeada706fa6c666551c39930a0">integrityCheck</a> ()=0</td></tr>
 <tr class="memdesc:acd914aeeada706fa6c666551c39930a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check and fix all values of a renewable cluster.  <a href="classAntares_1_1Data_1_1Cluster.html#acd914aeeada706fa6c666551c39930a0">More...</a><br /></td></tr>
 <tr class="separator:acd914aeeada706fa6c666551c39930a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acede3aae7e4fc1a1876f141d5fbc60b2"><td class="memItemLeft" align="right" valign="top">virtual uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1Cluster.html#acede3aae7e4fc1a1876f141d5fbc60b2">memoryUsage</a> () const =0</td></tr>
-<tr class="memdesc:acede3aae7e4fc1a1876f141d5fbc60b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the memory consummed by the renewable cluster (in bytes)  <a href="classAntares_1_1Data_1_1Cluster.html#acede3aae7e4fc1a1876f141d5fbc60b2">More...</a><br /></td></tr>
+<tr class="memdesc:acede3aae7e4fc1a1876f141d5fbc60b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the memory consummed by the cluster (in bytes)  <a href="classAntares_1_1Data_1_1Cluster.html#acede3aae7e4fc1a1876f141d5fbc60b2">More...</a><br /></td></tr>
 <tr class="separator:acede3aae7e4fc1a1876f141d5fbc60b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af5345aba70ba0ff196efa86a865879c8"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1Cluster.html#af5345aba70ba0ff196efa86a865879c8">forceReload</a> (bool reload) const =0</td></tr>
-<tr class="memdesc:af5345aba70ba0ff196efa86a865879c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invalidate all data associated to the renewable cluster.  <a href="classAntares_1_1Data_1_1Cluster.html#af5345aba70ba0ff196efa86a865879c8">More...</a><br /></td></tr>
+<tr class="memdesc:af5345aba70ba0ff196efa86a865879c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invalidate all data associated to the cluster.  <a href="classAntares_1_1Data_1_1Cluster.html#af5345aba70ba0ff196efa86a865879c8">More...</a><br /></td></tr>
 <tr class="separator:af5345aba70ba0ff196efa86a865879c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad13dd96e336ec0cca19b78d5e3f6e047"><td class="memItemLeft" align="right" valign="top"><a id="ad13dd96e336ec0cca19b78d5e3f6e047" name="ad13dd96e336ec0cca19b78d5e3f6e047"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>invalidateArea</b> ()</td></tr>
 <tr class="memdesc:ad13dd96e336ec0cca19b78d5e3f6e047"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invalidate the whole attached area. <br /></td></tr>
 <tr class="separator:ad13dd96e336ec0cca19b78d5e3f6e047"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad4140c4202f83318258856e71db9b868"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1Cluster.html#ad4140c4202f83318258856e71db9b868">markAsModified</a> () const =0</td></tr>
-<tr class="memdesc:ad4140c4202f83318258856e71db9b868"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mark the renewable cluster as modified.  <a href="classAntares_1_1Data_1_1Cluster.html#ad4140c4202f83318258856e71db9b868">More...</a><br /></td></tr>
+<tr class="memdesc:ad4140c4202f83318258856e71db9b868"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mark the cluster as modified.  <a href="classAntares_1_1Data_1_1Cluster.html#ad4140c4202f83318258856e71db9b868">More...</a><br /></td></tr>
 <tr class="separator:ad4140c4202f83318258856e71db9b868"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac6b2ed92f9e40778fd2e5640713872e1"><td class="memItemLeft" align="right" valign="top"><a id="ac6b2ed92f9e40778fd2e5640713872e1" name="ac6b2ed92f9e40778fd2e5640713872e1"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>isVisibleOnLayer</b> (const size_t &amp;layerID) const</td></tr>
@@ -265,6 +210,50 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>saveDataSeriesToFolde
 <tr class="memitem:af86fa671f2f28a7fe4d3292de7399350"><td class="memItemLeft" align="right" valign="top"><a id="af86fa671f2f28a7fe4d3292de7399350" name="af86fa671f2f28a7fe4d3292de7399350"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>loadDataSeriesFromFolder</b> (<a class="el" href="classAntares_1_1Data_1_1Study.html">Study</a> &amp;s, const AnyString &amp;folder)</td></tr>
 <tr class="separator:af86fa671f2f28a7fe4d3292de7399350"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab99c2591da5313c6096ce8d8731f9f38"><td class="memItemLeft" align="right" valign="top"><a id="ab99c2591da5313c6096ce8d8731f9f38" name="ab99c2591da5313c6096ce8d8731f9f38"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isEnabled</b> () const</td></tr>
+<tr class="separator:ab99c2591da5313c6096ce8d8731f9f38"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:acfb0e684f9e67dc0836a4056eda7bfda"><td class="memItemLeft" align="right" valign="top"><a id="acfb0e684f9e67dc0836a4056eda7bfda" name="acfb0e684f9e67dc0836a4056eda7bfda"></a>
+uint&#160;</td><td class="memItemRight" valign="bottom"><b>unitCount</b> = 0</td></tr>
+<tr class="separator:acfb0e684f9e67dc0836a4056eda7bfda"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0fb2326d8658ae067843c1169f225c00"><td class="memItemLeft" align="right" valign="top"><a id="a0fb2326d8658ae067843c1169f225c00" name="a0fb2326d8658ae067843c1169f225c00"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>enabled</b> = true</td></tr>
+<tr class="separator:a0fb2326d8658ae067843c1169f225c00"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab593cef54f0e36411998fe057e82ce34"><td class="memItemLeft" align="right" valign="top"><a id="ab593cef54f0e36411998fe057e82ce34" name="ab593cef54f0e36411998fe057e82ce34"></a>
+<a class="el" href="classAntares_1_1Data_1_1Area.html">Area</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>parentArea</b></td></tr>
+<tr class="memdesc:ab593cef54f0e36411998fe057e82ce34"><td class="mdescLeft">&#160;</td><td class="mdescRight">The associate area (alias) <br /></td></tr>
+<tr class="separator:ab593cef54f0e36411998fe057e82ce34"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1d7e1d8ddf0071df24ba61919ec60582"><td class="memItemLeft" align="right" valign="top"><a id="a1d7e1d8ddf0071df24ba61919ec60582" name="a1d7e1d8ddf0071df24ba61919ec60582"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>nominalCapacity</b> = 0.</td></tr>
+<tr class="memdesc:a1d7e1d8ddf0071df24ba61919ec60582"><td class="mdescLeft">&#160;</td><td class="mdescRight">Capacity of reference per unit (MW) (pMax) <br /></td></tr>
+<tr class="separator:a1d7e1d8ddf0071df24ba61919ec60582"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a564f137d2d6985addb1e8dcd4b0ecdfc"><td class="memItemLeft" align="right" valign="top">uint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1Cluster.html#a564f137d2d6985addb1e8dcd4b0ecdfc">areaWideIndex</a> = (uint)-1</td></tr>
+<tr class="separator:a564f137d2d6985addb1e8dcd4b0ecdfc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad00ce25790a04c8ee7c473fd6d1b1a8b"><td class="memItemLeft" align="right" valign="top"><a id="ad00ce25790a04c8ee7c473fd6d1b1a8b" name="ad00ce25790a04c8ee7c473fd6d1b1a8b"></a>
+<a class="el" href="classAntares_1_1Data_1_1TimeSeries.html">TimeSeries</a>&#160;</td><td class="memItemRight" valign="bottom"><b>series</b></td></tr>
+<tr class="memdesc:ad00ce25790a04c8ee7c473fd6d1b1a8b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Series. <br /></td></tr>
+<tr class="separator:ad00ce25790a04c8ee7c473fd6d1b1a8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a541774ebb10556ba6c21d4ddf77c4156"><td class="memItemLeft" align="right" valign="top"><a id="a541774ebb10556ba6c21d4ddf77c4156" name="a541774ebb10556ba6c21d4ddf77c4156"></a>
+<a class="el" href="classAntares_1_1Matrix.html">TimeSeries::numbers</a>&#160;</td><td class="memItemRight" valign="bottom"><b>tsNumbers</b></td></tr>
+<tr class="separator:a541774ebb10556ba6c21d4ddf77c4156"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b959414068e894b6fcddeee6bac0c36"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAntares_1_1Matrix.html">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1Cluster.html#a0b959414068e894b6fcddeee6bac0c36">modulation</a></td></tr>
+<tr class="memdesc:a0b959414068e894b6fcddeee6bac0c36"><td class="mdescLeft">&#160;</td><td class="mdescRight">Modulation matrix.  <a href="classAntares_1_1Data_1_1Cluster.html#a0b959414068e894b6fcddeee6bac0c36">More...</a><br /></td></tr>
+<tr class="separator:a0b959414068e894b6fcddeee6bac0c36"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
+Protected Attributes</h2></td></tr>
+<tr class="memitem:a40dfbccdb4a6499f9a506bbe96dd0ef9"><td class="memItemLeft" align="right" valign="top"><a id="a40dfbccdb4a6499f9a506bbe96dd0ef9" name="a40dfbccdb4a6499f9a506bbe96dd0ef9"></a>
+Data::ClusterName&#160;</td><td class="memItemRight" valign="bottom"><b>pName</b></td></tr>
+<tr class="separator:a40dfbccdb4a6499f9a506bbe96dd0ef9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3168f470e9fb86767133129ed26e195c"><td class="memItemLeft" align="right" valign="top"><a id="a3168f470e9fb86767133129ed26e195c" name="a3168f470e9fb86767133129ed26e195c"></a>
+Data::ClusterName&#160;</td><td class="memItemRight" valign="bottom"><b>pID</b></td></tr>
+<tr class="separator:a3168f470e9fb86767133129ed26e195c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a57cf2b366a110f4593ff3f209bddc363"><td class="memItemLeft" align="right" valign="top"><a id="a57cf2b366a110f4593ff3f209bddc363" name="a57cf2b366a110f4593ff3f209bddc363"></a>
+Data::ClusterName&#160;</td><td class="memItemRight" valign="bottom"><b>pGroup</b></td></tr>
+<tr class="separator:a57cf2b366a110f4593ff3f209bddc363"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
 <a id="af5345aba70ba0ff196efa86a865879c8" name="af5345aba70ba0ff196efa86a865879c8"></a>
@@ -291,7 +280,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>loadDataSeriesFromFol
 </table>
 </div><div class="memdoc">
 
-<p>Invalidate all data associated to the renewable cluster. </p>
+<p>Invalidate all data associated to the cluster. </p>
 
 <p>Implemented in <a class="el" href="classAntares_1_1Data_1_1RenewableCluster.html#ac2aa017881ae145e2c422298f272311c">Antares::Data::RenewableCluster</a>, and <a class="el" href="classAntares_1_1Data_1_1ThermalCluster.html#a8af7d95b5e9805d840d4c9b091073910">Antares::Data::ThermalCluster</a>.</p>
 
@@ -377,7 +366,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>loadDataSeriesFromFol
 </table>
 </div><div class="memdoc">
 
-<p>Mark the renewable cluster as modified. </p>
+<p>Mark the cluster as modified. </p>
 
 <p>Implemented in <a class="el" href="classAntares_1_1Data_1_1RenewableCluster.html#ae8ec6b0966a8bec49347a806054cd484">Antares::Data::RenewableCluster</a>, and <a class="el" href="classAntares_1_1Data_1_1ThermalCluster.html#aee1ba740e0ec981839a06f0b5617ed45">Antares::Data::ThermalCluster</a>.</p>
 
@@ -406,7 +395,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>loadDataSeriesFromFol
 </table>
 </div><div class="memdoc">
 
-<p>Get the memory consummed by the renewable cluster (in bytes) </p>
+<p>Get the memory consummed by the cluster (in bytes) </p>
 
 <p>Implemented in <a class="el" href="classAntares_1_1Data_1_1RenewableCluster.html#af1e7130b288acd19f71b07e6d5652882">Antares::Data::RenewableCluster</a>, and <a class="el" href="classAntares_1_1Data_1_1ThermalCluster.html#afe909ae1171f72d1ad8c2896f81f2089">Antares::Data::ThermalCluster</a>.</p>
 
@@ -466,8 +455,6 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>loadDataSeriesFromFol
 </table>
 </div><div class="memdoc">
 
-<p>Set the group. </p>
-
 <p>Implemented in <a class="el" href="classAntares_1_1Data_1_1RenewableCluster.html#a021725327dab871273ea8d04da9f0a19">Antares::Data::RenewableCluster</a>, and <a class="el" href="classAntares_1_1Data_1_1ThermalCluster.html#a073742dd9e1502e7976e5e9b295347a5">Antares::Data::ThermalCluster</a>.</p>
 
 </div>
@@ -480,7 +467,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>loadDataSeriesFromFol
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">uint Antares::Data::Cluster::areaWideIndex</td>
+          <td class="memname">uint Antares::Data::Cluster::areaWideIndex = (uint)-1</td>
         </tr>
       </table>
 </div><div class="memdoc">
