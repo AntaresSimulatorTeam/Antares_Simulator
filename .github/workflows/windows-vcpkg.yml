@@ -18,12 +18,16 @@ on:
       run-tests:
         required: true
         type: string
+      target_branch:
+        required: true
+        type: string
 
 env:
   GITHUB_TOKEN: ${{ github.token }}
   IS_RELEASE: ${{ github.event_name == 'workflow_dispatch' }}
   RUN_SIMPLE_TESTS: ${{ github.event_name == 'push' || inputs.run-tests == 'true' }}
   RUN_EXTENDED_TESTS: ${{ github.event_name == 'schedule' || inputs.run-tests == 'true' }}
+  REF: ${{ inputs.target_branch =='' && github.ref || inputs.target_branch}}
 
 
 jobs:
@@ -41,7 +45,10 @@ jobs:
     runs-on: windows-latest
 
     steps:
+
     - uses: actions/checkout@v3
+      with:
+        ref: ${{ env.REF }}
 
     - name: Config OR-Tools URL
       run: |
@@ -291,7 +298,7 @@ jobs:
       shell: bash
       run: |
            cd _build
-           zip -r antares-solver_windows.zip solver/Release/antares-*-solver.exe solver/Release/*.dll
+           zip -r antares-solver_windows.zip solver/Release/antares-solver.exe solver/Release/*.dll
 
     - name: NSIS Installer creation
       shell: bash

@@ -45,7 +45,7 @@ jobs:
 
     - name: Checkout
       run: |
-           git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git -b $GITHUB_REF_NAME .
+           git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git -b ${{ github.event.inputs.target_branch }} .
 
     - name: Config OR-Tools URL
       run: |
@@ -107,7 +107,7 @@ jobs:
            cmake --install . --prefix install
            pushd .
            cd install/bin
-           tar czf ../../antares-solver_oracle8.tar.gz antares-*-solver libsirius_solver.so
+           tar czf ../../antares-solver_oracle8.tar.gz antares-solver libsirius_solver.so
            popd
            rm -rf install
 

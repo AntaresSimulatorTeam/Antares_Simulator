@@ -13,6 +13,9 @@ on:
       run-tests:
         required: true
         type: string
+      target_branch:
+        required: true
+        type: string
 
 env:
   IS_RELEASE: ${{ github.event_name == 'workflow_dispatch' }}
@@ -26,6 +29,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+      with:
+        ref: ${{ inputs.target_branch}}
 
     - name: Set up Python
       uses: actions/setup-python@v4
