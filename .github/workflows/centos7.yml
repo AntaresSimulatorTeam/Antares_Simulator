@@ -33,7 +33,7 @@ jobs:
 
     - name: Checkout
       run: |
-          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git -b $GITHUB_REF_NAME .
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git -b ${{ github.event.inputs.target_branch }} .
 
     - name: Install gcc 10
       run: |
