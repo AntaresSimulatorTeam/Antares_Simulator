@@ -7,7 +7,6 @@ on:
     branches:
       - develop
       - dependabot/*
-      - fix/centos-ol8-ci
 
   schedule:
     - cron: '21 2 * * *'
