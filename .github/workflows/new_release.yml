@@ -3,20 +3,12 @@ name: Create new release
 on:
   workflow_dispatch:
     inputs:
-      ref:
-        description: "Reference to checkout (SHA1, branch, tag)"
-        required: true
-        type: string
-        default: "develop"
-
       release_tag:
         description: "Release tag"
         required: true
-
       release_name:
         description: "Release name"
         required: true
-
       run-tests:
         description: "Run all tests (true/false)"
         required: true
