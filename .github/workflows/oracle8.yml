@@ -6,6 +6,7 @@ on:
   push:
     branches:
       - develop
+      - dependabot/*
 
   schedule:
     - cron: '21 2 * * *'
@@ -19,6 +20,8 @@ env:
   GITHUB_TOKEN: ${{ github.token }}
   IS_RELEASE: ${{ github.event_name == 'workflow_dispatch' }}
   IS_PUSH: ${{ github.event_name == 'push' }}
+  REF: ${{ inputs.target_branch =='' && github.ref_name || inputs.target_branch}}
+
 
 jobs:
 
@@ -44,7 +47,7 @@ jobs:
 
     - name: Checkout
       run: |
-           git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git -b $GITHUB_REF_NAME .
+           git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git -b ${{ env.REF }} .
 
     - name: Config OR-Tools URL
       run: |
@@ -106,7 +109,7 @@ jobs:
            cmake --install . --prefix install
            pushd .
            cd install/bin
-           tar czf ../../antares-solver_oracle8.tar.gz antares-*-solver libsirius_solver.so
+           tar czf ../../antares-solver_oracle8.tar.gz antares-solver libsirius_solver.so
            popd
            rm -rf install
 

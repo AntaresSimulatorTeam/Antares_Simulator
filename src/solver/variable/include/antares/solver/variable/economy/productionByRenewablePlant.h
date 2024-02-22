@@ -153,7 +153,7 @@ public:
         pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
 
         // Get the area
-        pSize = area->renewable.list.size();
+        pSize = area->renewable.list.enabledCount();
         if (pSize)
         {
             AncestorType::pResults.resize(pSize);
@@ -271,7 +271,7 @@ public:
 
     void hourForEachArea(State& state, unsigned int numSpace)
     {
-        for (const auto& renewableCluster : state.area->renewable.list)
+        for (const auto renewableCluster : state.area->renewable.list.each_enabled())
         {
             double renewableClusterProduction = renewableCluster->valueAtTimeStep(state.year, state.hourInTheYear);
 
@@ -318,12 +318,12 @@ public:
             assert(NULL != results.data.area);
             const auto& renewable = results.data.area->renewable;
             // Write the data for the current year
-            for (uint i = 0; i < pSize; ++i)
+            for (auto cluster : renewable.list.each_enabled())
             {
                 // Write the data for the current year
-                results.variableCaption = renewable.list[i]->name();
+                results.variableCaption = cluster->name();
                 results.variableUnit = VCardType::Unit();
-                pValuesForTheCurrentYear[numSpace][i].template buildAnnualSurveyReport<VCardType>(
+                pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex].template buildAnnualSurveyReport<VCardType>(
                   results, fileLevel, precision);
             }
         }

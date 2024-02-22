@@ -285,7 +285,6 @@ void RenewableCluster::internalDeletePlant(void*)
             Refresh();
             MarkTheStudyAsModified();
             updateInnerValues();
-            pArea->renewable.prepareAreaWideIndexes();
             study->uiinfo->reload();
         }
         else
@@ -367,7 +366,7 @@ void RenewableCluster::internalAddPlant(void*)
         // Trying to find an uniq name
         YString sFl;
         sFl.clear() << "new cluster";
-        while (pArea->renewable.list.find(sFl))
+        while (pArea->renewable.list.findInAll(sFl.c_str()))
         {
             ++indx;
             sFl.clear() << "new cluster " << indx;
@@ -381,8 +380,7 @@ void RenewableCluster::internalAddPlant(void*)
         logs.info() << "adding new renewable cluster " << pArea->id << '.' << sFl;
         cluster->setName(sFl);
         cluster->reset();
-        pArea->renewable.list.add(cluster);
-        pArea->renewable.prepareAreaWideIndexes();
+        pArea->renewable.list.addToCompleteList(cluster);
 
         // Update the list
         update();
@@ -403,7 +401,7 @@ void RenewableCluster::internalClonePlant(void*)
     if (!pArea || !pLastSelectedRenewableCluster)
         return;
 
-    if (!pArea->renewable.list.find(pLastSelectedRenewableCluster->renewableAggregate()->id()))
+    if (!pArea->renewable.list.findInAll(pLastSelectedRenewableCluster->renewableAggregate()->id()))
     {
         // The selected has been obviously invalidated
         pLastSelectedRenewableCluster = nullptr;
@@ -442,7 +440,7 @@ void RenewableCluster::internalClonePlant(void*)
 
         YString sFl;
         sFl << copy << indx; // lowercase
-        while (pArea->renewable.list.find(sFl))
+        while (pArea->renewable.list.findInAll(sFl.c_str()))
         {
             ++indx;
             sFl.clear() << copy << indx;
@@ -458,8 +456,7 @@ void RenewableCluster::internalClonePlant(void*)
         // Reset to default values
         cluster->copyFrom(selectedPlant);
 
-        pArea->renewable.list.add(cluster);
-        pArea->renewable.prepareAreaWideIndexes();
+        pArea->renewable.list.addToCompleteList(cluster);
 
         // Update the list
         update();

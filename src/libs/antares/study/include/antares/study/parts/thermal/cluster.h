@@ -211,7 +211,7 @@ public:
     /*!
     ** \brief Check the validity of Min Stable Power with a new modulation value
     */
-    bool checkMinStablePowerWithNewModulation(uint index, double value);
+    bool checkMinStablePowerWithNewModulation(uint idx, double value);
     //@}
 
     bool doWeGenerateTS(bool globalTSgeneration) const;
@@ -226,30 +226,35 @@ public:
 
     bool isActive() const;
 
+    //! The index of the cluster (within a list)
+    uint index = 0;
+
     /*!
     ** \brief The group ID
     **
     ** This value is computed from the field 'group' in 'group()
     ** \see group()
     */
-    ThermalDispatchableGroup groupID;
+    ThermalDispatchableGroup groupID = thermalDispatchGrpOther1;
 
     //! Mustrun
-    bool mustrun;
+    bool mustrun = false;
+    bool isMustRun() const { return mustrun; }
+
     //! Mustrun (as it were at the loading of the data)
     //
     // This value might differ from mustrun, because `mustrun` might be
     // modified for different reasons.
     // Only used by the solver in adequacy mode
-    bool mustrunOrigin;
+    bool mustrunOrigin = false;
 
     //! Nominal capacity - spinning (solver only)
-    double nominalCapacityWithSpinning;
+    double nominalCapacityWithSpinning = 0.;
 
     //! \name PMin
     //@{
     //! Min. Stable Power (MW)
-    double minStablePower;
+    double minStablePower = 0.;
 
     struct DivModulation
     {
@@ -265,28 +270,28 @@ public:
     } minDivModulation;
 
     //! Min. Up time (1..168)
-    uint minUpTime;
+    uint minUpTime = 1;
     //! Min. Down time (1..168)
-    uint minDownTime;
+    uint minDownTime = 1;
     //! Max entre . minUp/minDown time (1..168)
     uint minUpDownTime;
     //@}
 
     //! Spinning (%)
-    double spinning;
+    double spinning = 0.;
 
     //! Efficiency (%)
     double fuelEfficiency = 100;
 
     //! Forced Volatility
-    double forcedVolatility;
+    double forcedVolatility = 0.;
     //! Planned volatility
-    double plannedVolatility;
+    double plannedVolatility = 0.;
 
     //! Law (ts-generator)
-    ThermalLaw forcedLaw;
+    ThermalLaw forcedLaw = thermalLawUniform;
     //! Law (ts-generator)
-    ThermalLaw plannedLaw;
+    ThermalLaw plannedLaw = thermalLawUniform;
 
     //! \name Costs
     //  Marginal (€/MWh)     MA

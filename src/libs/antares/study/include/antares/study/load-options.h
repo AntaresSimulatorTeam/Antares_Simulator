@@ -38,9 +38,6 @@ public:
     StudyLoadOptions();
     //@}
 
-    //! Push a new log entry according to the local progress data
-    void pushProgressLogs() const;
-
     void checkForceSimulationMode();
 
 public:
@@ -89,10 +86,6 @@ public:
 
     //! Temporary string for passing log message
     mutable Yuni::String logMessage;
-    //! Porgression, tick count
-    mutable uint progressTickCount;
-    //! The current number of ticks
-    mutable uint progressTicks;
 
     //! Display version number and exit
     bool displayVersion = false;
