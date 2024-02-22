@@ -274,7 +274,7 @@ $(document).ready(function(){initNavTree('productionByDispatchablePlant_8h_sourc
 <div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>        pminOfTheClusterForYear = <span class="keyword">new</span> <span class="keywordtype">double</span>*[pNbYearsParallel];</div>
 <div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span> </div>
 <div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>        <span class="comment">// Get the area</span></div>
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>        pSize = area-&gt;thermal.clusterCount();</div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>        pSize = area-&gt;thermal.list.enabledCount();</div>
 <div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>        <span class="keywordflow">if</span> (pSize)</div>
 <div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>        {</div>
 <div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>            <a class="code hl_variable" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a5c927574a94a005bd28a3522d2176334">AncestorType::pResults</a>.resize(pSize);</div>
@@ -417,85 +417,83 @@ $(document).ready(function(){initNavTree('productionByDispatchablePlant_8h_sourc
 <div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span>    {</div>
 <div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span>        <span class="keyword">auto</span>&amp; area = state.area;</div>
 <div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>        <span class="keyword">auto</span>&amp; thermal = state.thermal;</div>
-<div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span>        <span class="keywordflow">for</span> (uint clusterIndex = 0; clusterIndex != state.area-&gt;thermal.clusterCount();</div>
-<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span>             ++clusterIndex)</div>
-<div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>        {</div>
-<div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span>            <span class="keyword">const</span> <span class="keyword">auto</span>* thermalCluster = area-&gt;thermal.clusters[clusterIndex];</div>
-<div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span>            <span class="comment">// Production for this hour</span></div>
-<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>            pValuesForTheCurrentYear[numSpace][thermalCluster-&gt;areaWideIndex]</div>
-<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span>              .<a class="code hl_variable" href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html#a49bfe1df7fe7547926b82e052f2e77be">hour</a>[state.hourInTheYear]</div>
-<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span>              += thermal[area-&gt;index].thermalClustersProductions[clusterIndex];</div>
-<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span> </div>
-<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>            pminOfTheClusterForYear[numSpace][(thermalCluster-&gt;areaWideIndex * maxHoursInAYear)</div>
-<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>                                              + state.hourInTheYear]</div>
-<div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span>              = thermal[area-&gt;index].PMinOfClusters[clusterIndex];</div>
-<div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span>        }</div>
-<div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span> </div>
-<div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span>        <span class="comment">// Next variable</span></div>
-<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span>        NextType::hourForEachArea(state, numSpace);</div>
-<div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span>    }</div>
-<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span> </div>
-<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>    <span class="keyword">inline</span> <span class="keywordtype">void</span> buildDigest(SurveyResults&amp; results, <span class="keywordtype">int</span> digestLevel, <span class="keywordtype">int</span> dataLevel)<span class="keyword"> const</span></div>
-<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span><span class="keyword">    </span>{</div>
-<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>        <span class="comment">// Ask to build the digest to the next variable</span></div>
-<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>        NextType::buildDigest(results, digestLevel, dataLevel);</div>
-<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>    }</div>
-<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span> </div>
-<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>    Antares::Memory::Stored&lt;double&gt;::ConstReturnType retrieveRawHourlyValuesForCurrentYear(</div>
-<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>      <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> column,</div>
-<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>      <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace)<span class="keyword"> const</span></div>
-<div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span><span class="keyword">    </span>{</div>
-<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>        <span class="keywordflow">return</span> pValuesForTheCurrentYear[numSpace][column].<a class="code hl_variable" href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html#a49bfe1df7fe7547926b82e052f2e77be">hour</a>;</div>
-<div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>    }</div>
-<div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span> </div>
-<div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>    <span class="keyword">inline</span> uint64_t memoryUsage()<span class="keyword"> const</span></div>
-<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span><span class="keyword">    </span>{</div>
-<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>        uint64_t r = (<span class="keyword">sizeof</span>(IntermediateValues) * pSize + <a class="code hl_function" href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html#a34568dbe5deda19094a78424e715fcbe">IntermediateValues::MemoryUsage</a>())</div>
-<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>                         * pNbYearsParallel;</div>
-<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>        r += <span class="keyword">sizeof</span>(double) * pSize * maxHoursInAYear * pNbYearsParallel;</div>
-<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>        r += <a class="code hl_function" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a720b93f85e90b9d7e9f79a469bba95f0">AncestorType::memoryUsage</a>();</div>
-<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span>        <span class="keywordflow">return</span> r;</div>
-<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>    }</div>
-<div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span> </div>
-<div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span>    <span class="keywordtype">void</span> localBuildAnnualSurveyReport(SurveyResults&amp; results,</div>
-<div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span>                                      <span class="keywordtype">int</span> fileLevel,</div>
-<div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span>                                      <span class="keywordtype">int</span> precision,</div>
-<div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span>                                      <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace)<span class="keyword"> const</span></div>
-<div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span><span class="keyword">    </span>{</div>
-<div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span>        <span class="comment">// Initializing external pointer on current variable non applicable status</span></div>
-<div class="line"><a id="l00352" name="l00352"></a><span class="lineno">  352</span>        results.isCurrentVarNA = AncestorType::isNonApplicable;</div>
-<div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span> </div>
-<div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span>        <span class="keywordflow">if</span> (AncestorType::isPrinted[0])</div>
-<div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span>        {</div>
-<div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span>            assert(NULL != results.data.area);</div>
-<div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span>            <span class="keyword">const</span> <span class="keyword">auto</span>&amp; thermal = results.data.area-&gt;thermal;</div>
-<div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span> </div>
-<div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span>            <span class="comment">// Write the data for the current year</span></div>
-<div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span>            <span class="keywordflow">for</span> (uint i = 0; i &lt; pSize; ++i)</div>
-<div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span>            {</div>
-<div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span>                <span class="comment">// Write the data for the current year</span></div>
-<div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span>                results.variableCaption = thermal.clusters[i]-&gt;name(); <span class="comment">// VCardType::Caption();</span></div>
-<div class="line"><a id="l00364" name="l00364"></a><span class="lineno">  364</span>                results.variableUnit = <a class="code hl_function" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardProductionByDispatchablePlant.html#ac79fb7643d872cf5112bb8bfa22180d0">VCardType::Unit</a>();</div>
-<div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span>                pValuesForTheCurrentYear[numSpace][i].template buildAnnualSurveyReport&lt;VCardType&gt;(</div>
-<div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span>                  results, fileLevel, precision);</div>
-<div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span>            }</div>
-<div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span>        }</div>
-<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span>    }</div>
-<div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span> </div>
-<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span>    <span class="keyword">typename</span> VCardType::IntermediateValuesType pValuesForTheCurrentYear;</div>
-<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span>    <span class="keywordtype">double</span>** pminOfTheClusterForYear;</div>
-<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span>    <span class="keywordtype">size_t</span> pSize;</div>
-<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> pNbYearsParallel;</div>
+<div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> cluster : area-&gt;thermal.list.each_enabled())</div>
+<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span>        {</div>
+<div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>            <span class="comment">// Production for this hour</span></div>
+<div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span>            pValuesForTheCurrentYear[numSpace][cluster-&gt;areaWideIndex]</div>
+<div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span>              .<a class="code hl_variable" href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html#a49bfe1df7fe7547926b82e052f2e77be">hour</a>[state.hourInTheYear]</div>
+<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>              += thermal[area-&gt;index].thermalClustersProductions[cluster-&gt;areaWideIndex];</div>
+<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span> </div>
+<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span>            pminOfTheClusterForYear[numSpace][(cluster-&gt;areaWideIndex * maxHoursInAYear)</div>
+<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>                                              + state.hourInTheYear]</div>
+<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>              = thermal[area-&gt;index].PMinOfClusters[cluster-&gt;areaWideIndex];</div>
+<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>        }</div>
+<div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span> </div>
+<div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span>        <span class="comment">// Next variable</span></div>
+<div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span>        NextType::hourForEachArea(state, numSpace);</div>
+<div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span>    }</div>
+<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span> </div>
+<div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span>    <span class="keyword">inline</span> <span class="keywordtype">void</span> buildDigest(SurveyResults&amp; results, <span class="keywordtype">int</span> digestLevel, <span class="keywordtype">int</span> dataLevel)<span class="keyword"> const</span></div>
+<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span><span class="keyword">    </span>{</div>
+<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>        <span class="comment">// Ask to build the digest to the next variable</span></div>
+<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>        NextType::buildDigest(results, digestLevel, dataLevel);</div>
+<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>    }</div>
+<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span> </div>
+<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>    Antares::Memory::Stored&lt;double&gt;::ConstReturnType retrieveRawHourlyValuesForCurrentYear(</div>
+<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>      <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> column,</div>
+<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>      <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace)<span class="keyword"> const</span></div>
+<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span><span class="keyword">    </span>{</div>
+<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>        <span class="keywordflow">return</span> pValuesForTheCurrentYear[numSpace][column].<a class="code hl_variable" href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html#a49bfe1df7fe7547926b82e052f2e77be">hour</a>;</div>
+<div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span>    }</div>
+<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span> </div>
+<div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>    <span class="keyword">inline</span> uint64_t memoryUsage()<span class="keyword"> const</span></div>
+<div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span><span class="keyword">    </span>{</div>
+<div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>        uint64_t r = (<span class="keyword">sizeof</span>(IntermediateValues) * pSize + <a class="code hl_function" href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html#a34568dbe5deda19094a78424e715fcbe">IntermediateValues::MemoryUsage</a>())</div>
+<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>                         * pNbYearsParallel;</div>
+<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>        r += <span class="keyword">sizeof</span>(double) * pSize * maxHoursInAYear * pNbYearsParallel;</div>
+<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>        r += <a class="code hl_function" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a720b93f85e90b9d7e9f79a469bba95f0">AncestorType::memoryUsage</a>();</div>
+<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>        <span class="keywordflow">return</span> r;</div>
+<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>    }</div>
+<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span> </div>
+<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>    <span class="keywordtype">void</span> localBuildAnnualSurveyReport(SurveyResults&amp; results,</div>
+<div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span>                                      <span class="keywordtype">int</span> fileLevel,</div>
+<div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span>                                      <span class="keywordtype">int</span> precision,</div>
+<div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span>                                      <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace)<span class="keyword"> const</span></div>
+<div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span><span class="keyword">    </span>{</div>
+<div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span>        <span class="comment">// Initializing external pointer on current variable non applicable status</span></div>
+<div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span>        results.isCurrentVarNA = AncestorType::isNonApplicable;</div>
+<div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span> </div>
+<div class="line"><a id="l00352" name="l00352"></a><span class="lineno">  352</span>        <span class="keywordflow">if</span> (AncestorType::isPrinted[0])</div>
+<div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span>        {</div>
+<div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span>            assert(NULL != results.data.area);</div>
+<div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span>            <span class="keyword">const</span> <span class="keyword">auto</span>&amp; thermal = results.data.area-&gt;thermal;</div>
+<div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span> </div>
+<div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span>            <span class="comment">// Write the data for the current year</span></div>
+<div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span>            <span class="keywordflow">for</span> (<span class="keyword">auto</span> cluster : thermal.list.each_enabled())</div>
+<div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span>            {</div>
+<div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span>                <span class="comment">// Write the data for the current year</span></div>
+<div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span>                results.variableCaption = cluster-&gt;name(); <span class="comment">// VCardType::Caption();</span></div>
+<div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span>                results.variableUnit = <a class="code hl_function" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardProductionByDispatchablePlant.html#ac79fb7643d872cf5112bb8bfa22180d0">VCardType::Unit</a>();</div>
+<div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span>                pValuesForTheCurrentYear[numSpace][cluster-&gt;areaWideIndex].template buildAnnualSurveyReport&lt;VCardType&gt;(</div>
+<div class="line"><a id="l00364" name="l00364"></a><span class="lineno">  364</span>                  results, fileLevel, precision);</div>
+<div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span>            }</div>
+<div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span>        }</div>
+<div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span>    }</div>
+<div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span> </div>
+<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span>    <span class="keyword">typename</span> VCardType::IntermediateValuesType pValuesForTheCurrentYear;</div>
+<div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span>    <span class="keywordtype">double</span>** pminOfTheClusterForYear;</div>
+<div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span>    <span class="keywordtype">size_t</span> pSize;</div>
+<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> pNbYearsParallel;</div>
+<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span> </div>
+<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span>}; <span class="comment">// class ProductionByDispatchablePlant</span></div>
 <div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span> </div>
-<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span>}; <span class="comment">// class ProductionByDispatchablePlant</span></div>
-<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span> </div>
-<div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>} <span class="comment">// namespace Economy</span></div>
-<div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>} <span class="comment">// namespace Variable</span></div>
-<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span>} <span class="comment">// namespace Solver</span></div>
-<div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span>} <span class="comment">// namespace Antares</span></div>
-<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span> </div>
-<div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span><span class="preprocessor">#endif </span><span class="comment">// __SOLVER_VARIABLE_ECONOMY_ProductionByDispatchablePlant_H__</span></div>
+<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span>} <span class="comment">// namespace Economy</span></div>
+<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span>} <span class="comment">// namespace Variable</span></div>
+<div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>} <span class="comment">// namespace Solver</span></div>
+<div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>} <span class="comment">// namespace Antares</span></div>
+<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span> </div>
+<div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span><span class="preprocessor">#endif </span><span class="comment">// __SOLVER_VARIABLE_ECONOMY_ProductionByDispatchablePlant_H__</span></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1AreaLink_html"><div class="ttname"><a href="classAntares_1_1Data_1_1AreaLink.html">Antares::Data::AreaLink</a></div><div class="ttdoc">Definition of a link between two areas (Interconnection)</div><div class="ttdef"><b>Definition:</b> links.h:48</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Area_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Area.html">Antares::Data::Area</a></div><div class="ttdoc">Definition for a single area.</div><div class="ttdef"><b>Definition:</b> area.h:48</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Study_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a></div><div class="ttdef"><b>Definition:</b> study.h:60</div></div>
