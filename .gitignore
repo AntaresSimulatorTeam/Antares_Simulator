@@ -21,8 +21,7 @@ Makefile
 *.layout
 src/.vs
 
-src/config.h
-src/config/include
+src/config/include/antares/config/config.h
 
 # Yuni
 src/ext/yuni/src/ProfileBuild.cmake
