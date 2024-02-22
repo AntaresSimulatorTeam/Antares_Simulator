@@ -6,7 +6,6 @@ on:
   push:
     branches:
       - develop
-      - fix/allow-release-anywhere
 
   schedule:
     - cron: '21 2 * * *'
