@@ -168,7 +168,7 @@ void Frame::onSelectAllPlants(wxCommandEvent&)
         for (auto i = data->areas.begin(); i != areaEnd; ++i)
         {
             Data::Area& area = *(*i);
-            for (auto& c : area.thermal.list)
+            for (auto c : area.thermal.list.all())
                 data->ThClusters.insert(c.get());
         }
         data->areas.clear();
@@ -773,7 +773,7 @@ void Frame::apply(const InspectorData::Ptr& data)
         {
             const Data::Area& area = *(*i);
             nbLinks += (uint)area.links.size();
-            nbThermalClusters += area.thermal.list.size();
+            nbThermalClusters += area.thermal.list.allClustersCount();
         }
         pPGAreaLinks->SetValueFromInt(nbLinks);
         pPGAreaPlants->SetValueFromInt(nbThermalClusters);

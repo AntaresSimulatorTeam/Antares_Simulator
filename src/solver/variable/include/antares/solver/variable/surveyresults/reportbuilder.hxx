@@ -318,7 +318,7 @@ private:
         if (VariablesStatsByDataLevel<NextT, Category::thermalAggregate>::count)
         {
             auto& area = *results.data.area;
-            for (const auto& cluster : area.thermal.list)
+            for (auto cluster : area.thermal.list.each_enabled_and_not_mustrun())
             {
                 results.data.thermalCluster = cluster.get();
 

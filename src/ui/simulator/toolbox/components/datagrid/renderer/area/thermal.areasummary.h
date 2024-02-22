@@ -44,7 +44,7 @@ public:
     }
     virtual int height() const override
     {
-        return (pArea) ? pArea->thermal.list.size() : 0;
+        return (pArea) ? pArea->thermal.list.allClustersCount() : 0;
     }
 
     virtual wxString columnCaption(int colIndx) const override;

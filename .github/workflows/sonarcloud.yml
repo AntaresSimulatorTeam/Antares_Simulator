@@ -7,8 +7,8 @@ on:
       - develop
       - release/*
       - dependabot/*
-  pull_request:
-
+      - fix/*
+      - feature/*
 jobs:
   sonarcloud:
     name: SonarCloud
