@@ -114,18 +114,6 @@ namespace Data
 {
 Data::ThermalCluster::ThermalCluster(Area* parent) :
     Cluster(parent),
-    groupID(thermalDispatchGrpOther1),
-    mustrun(false),
-    mustrunOrigin(false),
-    nominalCapacityWithSpinning(0.),
-    minStablePower(0.),
-    minUpTime(1),
-    minDownTime(1),
-    spinning(0.),
-    forcedVolatility(0.),
-    plannedVolatility(0.),
-    forcedLaw(thermalLawUniform),
-    plannedLaw(thermalLawUniform),
     PthetaInf(HOURS_PER_YEAR, 0),
     costsTimeSeries(1, CostsTimeSeries())
 {
@@ -204,7 +192,7 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
 
     // Making sure that the data related to the prepro and timeseries are present
     // prepro
-    if (not prepro)
+    if (!prepro)
         prepro = new PreproThermal(this->weak_from_this());
 
     prepro->copyFrom(*cluster.prepro);
@@ -285,7 +273,7 @@ void Data::ThermalCluster::calculationOfSpinning()
 
     // Nothing to do if the spinning is equal to zero
     // because it will the same multiply all entries of the matrix by 1.
-    if (not Math::Zero(spinning))
+    if (!Math::Zero(spinning))
     {
         logs.debug() << "  Calculation of spinning... " << parentArea->name << "::" << pName;
 
@@ -405,7 +393,7 @@ void Data::ThermalCluster::reverseCalculationOfSpinning()
 {
     // Nothing to do if the spinning is equal to zero
     // because it will the same multiply all entries of the matrix by 1.
-    if (not Math::Zero(spinning))
+    if (!Math::Zero(spinning))
     {
         logs.debug() << "  Calculation of spinning (reverse)... " << parentArea->name
                      << "::" << pName;
@@ -470,7 +458,7 @@ void Data::ThermalCluster::reset()
     // warning: the variables `prepro` and `series` __must__ not be destroyed
     //   since the interface may still have a pointer to them.
     //   we must simply reset their content.
-    if (not prepro)
+    if (!prepro)
         prepro = new PreproThermal(this->weak_from_this());
     prepro->reset();
     ecoInput.reset();
@@ -478,7 +466,7 @@ void Data::ThermalCluster::reset()
 
 bool Data::ThermalCluster::integrityCheck()
 {
-    if (not parentArea)
+    if (!parentArea)
     {
         logs.error() << "Thermal cluster " << pName << ": The parent area is missing";
         return false;
@@ -655,7 +643,7 @@ void ThermalCluster::calculatMinDivModulation()
 
 bool ThermalCluster::checkMinStablePower()
 {
-    if (not minDivModulation.isCalculated) // not has been initialized
+    if (!minDivModulation.isCalculated) // not has been initialized
         calculatMinDivModulation();
 
     if (minDivModulation.value < 0)
@@ -683,9 +671,9 @@ bool ThermalCluster::checkMinStablePower()
     return true;
 }
 
-bool ThermalCluster::checkMinStablePowerWithNewModulation(uint index, double value)
+bool ThermalCluster::checkMinStablePowerWithNewModulation(uint idx, double value)
 {
-    if (not minDivModulation.isCalculated || index == minDivModulation.index)
+    if (!minDivModulation.isCalculated || idx == minDivModulation.index)
         calculatMinDivModulation();
     else
     {
@@ -693,7 +681,7 @@ bool ThermalCluster::checkMinStablePowerWithNewModulation(uint index, double val
         if (div < minDivModulation.value)
         {
             minDivModulation.value = div;
-            minDivModulation.index = index;
+            minDivModulation.index = idx;
         }
     }
 

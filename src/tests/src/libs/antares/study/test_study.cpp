@@ -79,14 +79,16 @@ BOOST_FIXTURE_TEST_CASE(thermal_cluster_delete, OneAreaStudy)
     auto disabledCluster = std::make_shared<ThermalCluster>(areaA);
     disabledCluster->setName("Cluster1");
     disabledCluster->enabled = false;
+    auto enabledCluster = std::make_shared<ThermalCluster>(areaA);
+    enabledCluster->setName("Cluster2");
+    enabledCluster->enabled = true;
 
-    areaA->thermal.list.add(disabledCluster);
-    // Check that "Cluster1" is found
-    BOOST_CHECK_EQUAL(areaA->thermal.list.find("cluster1"), disabledCluster.get());
+    areaA->thermal.list.addToCompleteList(disabledCluster);
+    areaA->thermal.list.addToCompleteList(enabledCluster);
 
-    study->initializeRuntimeInfos(); // This should remove all disabled thermal clusters
     // Check that "Cluster1" isn't found
-    BOOST_CHECK_EQUAL(areaA->thermal.list.find("cluster1"), nullptr);
+    for (const auto c : areaA->thermal.list.each_enabled())
+        BOOST_CHECK(c->name() != "Cluster1");
 }
 
 BOOST_FIXTURE_TEST_CASE(renewable_cluster_delete, OneAreaStudy)
@@ -94,14 +96,16 @@ BOOST_FIXTURE_TEST_CASE(renewable_cluster_delete, OneAreaStudy)
     auto disabledCluster = std::make_shared<RenewableCluster>(areaA);
     disabledCluster->setName("Cluster1");
     disabledCluster->enabled = false;
+    auto enabledCluster = std::make_shared<RenewableCluster>(areaA);
+    enabledCluster->setName("Cluster2");
+    enabledCluster->enabled = true;
 
-    areaA->renewable.list.add(disabledCluster);
-    // Check that "Cluster1" is found
-    BOOST_CHECK_EQUAL(areaA->renewable.list.find("cluster1"), disabledCluster.get());
+    areaA->renewable.list.addToCompleteList(disabledCluster);
+    areaA->renewable.list.addToCompleteList(enabledCluster);
 
-    study->initializeRuntimeInfos(); // This should remove all disabled renewable clusters
     // Check that "Cluster1" isn't found
-    BOOST_CHECK_EQUAL(areaA->renewable.list.find("cluster1"), nullptr);
+    for (const auto c : areaA->renewable.list.each_enabled())
+        BOOST_CHECK(c->name() != "Cluster1");
 }
 
 BOOST_FIXTURE_TEST_CASE(short_term_storage_delete, OneAreaStudy)
@@ -155,9 +159,9 @@ BOOST_FIXTURE_TEST_CASE(thermal_cluster_add, OneAreaStudy)
     BOOST_CHECK_EQUAL(newCluster->name(), "Cluster");
     BOOST_CHECK_EQUAL(newCluster->id(), "cluster");
 
-    areaA->thermal.list.add(newCluster);
-    BOOST_CHECK_EQUAL(areaA->thermal.list.find("cluster"), newCluster.get());
-    BOOST_CHECK_EQUAL(areaA->thermal.list.find("Cluster"), nullptr);
+    areaA->thermal.list.addToCompleteList(newCluster);
+    BOOST_CHECK_EQUAL(areaA->thermal.list.findInAll("cluster"), newCluster.get());
+    BOOST_CHECK_EQUAL(areaA->thermal.list.findInAll("Cluster"), nullptr);
 }
 
 /*!
@@ -171,7 +175,7 @@ struct ThermalClusterStudy: public OneAreaStudy
     {
         auto newCluster = std::make_shared<ThermalCluster>(areaA);
         newCluster->setName("Cluster");
-        areaA->thermal.list.add(newCluster);
+        areaA->thermal.list.addToCompleteList(newCluster);
         cluster = newCluster.get();
     }
 
@@ -187,9 +191,10 @@ BOOST_FIXTURE_TEST_CASE(thermal_cluster_rename, ThermalClusterStudy)
 
 BOOST_FIXTURE_TEST_CASE(thermal_cluster_delete, ThermalClusterStudy)
 {
-    BOOST_CHECK(areaA->thermal.list.find("cluster") == cluster);
+    // gp : remove() only used in GUI (will go away when removing the GUI)
+    BOOST_CHECK(areaA->thermal.list.findInAll("cluster") == cluster);
     areaA->thermal.list.remove("cluster");
-    BOOST_CHECK(areaA->thermal.list.find("cluster") == nullptr);
+    BOOST_CHECK(areaA->thermal.list.findInAll("cluster") == nullptr);
     BOOST_CHECK(areaA->thermal.list.empty());
 }
 
@@ -204,9 +209,9 @@ BOOST_FIXTURE_TEST_CASE(renewable_cluster_add, OneAreaStudy)
     BOOST_CHECK(newCluster->name() == "WindCluster");
     BOOST_CHECK(newCluster->id() == "windcluster");
 
-    areaA->renewable.list.add(newCluster);
-    BOOST_CHECK(areaA->renewable.list.find("windcluster") == newCluster.get());
-    BOOST_CHECK(areaA->renewable.list.find("WindCluster") == nullptr);
+    areaA->renewable.list.addToCompleteList(newCluster);
+    BOOST_CHECK(areaA->renewable.list.findInAll("windcluster") == newCluster.get());
+    BOOST_CHECK(areaA->renewable.list.findInAll("WindCluster") == nullptr);
 }
 
 
@@ -222,7 +227,7 @@ struct RenewableClusterStudy : public OneAreaStudy
         areaA = study->areaAdd("A");
         auto newCluster = std::make_shared<RenewableCluster>(areaA);
         newCluster->setName("WindCluster");
-        areaA->renewable.list.add(newCluster);
+        areaA->renewable.list.addToCompleteList(newCluster);
         cluster = newCluster.get();
     }
 
@@ -238,9 +243,10 @@ BOOST_FIXTURE_TEST_CASE(renewable_cluster_rename, RenewableClusterStudy)
 
 BOOST_FIXTURE_TEST_CASE(renewable_cluster_delete, RenewableClusterStudy)
 {
-    BOOST_CHECK(areaA->renewable.list.find("windcluster") == cluster);
+    // gp : remove() only used in GUI (will go away when removing the GUI)
+    BOOST_CHECK(areaA->renewable.list.findInAll("windcluster") == cluster);
     BOOST_CHECK(areaA->renewable.list.remove("windcluster"));
-    BOOST_CHECK(areaA->renewable.list.find("windcluster") == nullptr);
+    BOOST_CHECK(areaA->renewable.list.findInAll("windcluster") == nullptr);
     BOOST_CHECK(areaA->renewable.list.empty());
 }
 

@@ -277,40 +277,40 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     NombrePaliers = 0;
     for (uint i = 0; i < study.areas.size(); ++i)
     {
-        auto& area = *(study.areas.byIndex[i]);
+        const auto& area = *(study.areas.byIndex[i]);
 
         auto& pbPalier = problem.PaliersThermiquesDuPays[i];
-        pbPalier.NombreDePaliersThermiques = area.thermal.list.size();
+        unsigned int clusterCount = area.thermal.list.enabledAndNotMustRunCount();
+        pbPalier.NombreDePaliersThermiques = clusterCount;
 
-        for (uint clusterIndex = 0; clusterIndex != area.thermal.list.size(); ++clusterIndex)
+        for (auto cluster : area.thermal.list.each_enabled_and_not_mustrun())
         {
-            auto& cluster = *(area.thermal.list[clusterIndex]);
-            pbPalier.NumeroDuPalierDansLEnsembleDesPaliersThermiques[clusterIndex]
-              = NombrePaliers + clusterIndex;
-            pbPalier.TailleUnitaireDUnGroupeDuPalierThermique[clusterIndex]
-              = cluster.nominalCapacityWithSpinning;
-            pbPalier.PminDuPalierThermiquePendantUneHeure[clusterIndex] = cluster.minStablePower;
-            pbPalier.PminDuPalierThermiquePendantUnJour[clusterIndex] = 0;
-            pbPalier.minUpDownTime[clusterIndex] = cluster.minUpDownTime;
+            pbPalier.NumeroDuPalierDansLEnsembleDesPaliersThermiques[cluster->index]
+              = NombrePaliers + cluster->index;
+            pbPalier.TailleUnitaireDUnGroupeDuPalierThermique[cluster->index]
+              = cluster->nominalCapacityWithSpinning;
+            pbPalier.PminDuPalierThermiquePendantUneHeure[cluster->index] = cluster->minStablePower;
+            pbPalier.PminDuPalierThermiquePendantUnJour[cluster->index] = 0;
+            pbPalier.minUpDownTime[cluster->index] = cluster->minUpDownTime;
 
-            pbPalier.CoutDeDemarrageDUnGroupeDuPalierThermique[clusterIndex] = cluster.startupCost;
-            pbPalier.CoutDArretDUnGroupeDuPalierThermique[clusterIndex] = 0;
-            pbPalier.CoutFixeDeMarcheDUnGroupeDuPalierThermique[clusterIndex] = cluster.fixedCost;
-            pbPalier.DureeMinimaleDeMarcheDUnGroupeDuPalierThermique[clusterIndex]
-              = cluster.minUpTime;
-            pbPalier.DureeMinimaleDArretDUnGroupeDuPalierThermique[clusterIndex]
-              = cluster.minDownTime;
+            pbPalier.CoutDeDemarrageDUnGroupeDuPalierThermique[cluster->index] = cluster->startupCost;
+            pbPalier.CoutDArretDUnGroupeDuPalierThermique[cluster->index] = 0;
+            pbPalier.CoutFixeDeMarcheDUnGroupeDuPalierThermique[cluster->index] = cluster->fixedCost;
+            pbPalier.DureeMinimaleDeMarcheDUnGroupeDuPalierThermique[cluster->index]
+              = cluster->minUpTime;
+            pbPalier.DureeMinimaleDArretDUnGroupeDuPalierThermique[cluster->index]
+              = cluster->minDownTime;
 
-            pbPalier.PmaxDUnGroupeDuPalierThermique[clusterIndex]
-              = cluster.nominalCapacityWithSpinning;
-            pbPalier.pminDUnGroupeDuPalierThermique[clusterIndex]
-              = (pbPalier.PmaxDUnGroupeDuPalierThermique[clusterIndex] < cluster.minStablePower)
-                  ? pbPalier.PmaxDUnGroupeDuPalierThermique[clusterIndex]
-                  : cluster.minStablePower;
-            pbPalier.NomsDesPaliersThermiques[clusterIndex] = cluster.name().c_str();
+            pbPalier.PmaxDUnGroupeDuPalierThermique[cluster->index]
+              = cluster->nominalCapacityWithSpinning;
+            pbPalier.pminDUnGroupeDuPalierThermique[cluster->index]
+              = (pbPalier.PmaxDUnGroupeDuPalierThermique[cluster->index] < cluster->minStablePower)
+                  ? pbPalier.PmaxDUnGroupeDuPalierThermique[cluster->index]
+                  : cluster->minStablePower;
+            pbPalier.NomsDesPaliersThermiques[cluster->index] = cluster->name().c_str();
         }
 
-        NombrePaliers += area.thermal.list.size();
+        NombrePaliers += clusterCount;
     }
 
     problem.NombreDePaliersThermiques = NombrePaliers;
@@ -606,10 +606,8 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                 mustRunGen = scratchpad.miscGenSum[hourInYear] + rorSeries
                              + scratchpad.mustrunSum[hourInYear];
 
-                area.renewable.list.each([&](const RenewableCluster& cluster) {
-                    assert(cluster.series.timeSeries.jit == nullptr && "No JIT data from the solver");
-                    mustRunGen += cluster.valueAtTimeStep(year, hourInYear);
-                });
+                for (auto c : area.renewable.list.each_enabled())
+                    mustRunGen += c->valueAtTimeStep(year, hourInYear);
             }
 
             assert(

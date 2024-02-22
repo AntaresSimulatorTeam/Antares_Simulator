@@ -38,8 +38,8 @@ using namespace Antares;
 
 namespace Antares::Data
 {
-Data::RenewableCluster::RenewableCluster(Area* parent) :
- Cluster(parent), groupID(renewableOther1), tsMode(powerGeneration)
+Data::RenewableCluster::RenewableCluster(Area* parent) :    
+    Cluster(parent)
 {
     // assert
     assert(parent and "A parent for a renewable dispatchable cluster can not be null");

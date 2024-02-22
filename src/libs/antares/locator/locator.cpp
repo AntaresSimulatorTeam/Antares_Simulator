@@ -47,7 +47,7 @@ bool FindLocation(String& location)
     s.reserve(root.size() + 30 /*arbitrary*/);
 
     IO::SearchPath searchpaths;
-    searchpaths.prefixes.push_back((s = "antares-" ANTARES_VERSION "-"));
+    searchpaths.prefixes.push_back((s = "antares-"));
 
     if (System::windows)
     {
@@ -95,7 +95,7 @@ bool FindAnalyzerLocation(String& location)
     s.reserve(root.size() + 30 /*arbitrary*/);
 
     IO::SearchPath searchpaths;
-    searchpaths.prefixes.push_back((s = "antares-" ANTARES_VERSION "-"));
+    searchpaths.prefixes.push_back((s = "antares-"));
 
     if (System::windows)
     {
@@ -132,7 +132,7 @@ bool FindConstraintsBuilderLocation(String& location)
     s.reserve(root.size() + 30 /*arbitrary*/);
 
     IO::SearchPath searchpaths;
-    searchpaths.prefixes.push_back((s = "antares-" ANTARES_VERSION "-"));
+    searchpaths.prefixes.push_back((s = "antares-"));
 
     if (System::windows)
     {
@@ -171,7 +171,7 @@ bool FindYearByYearAggregator(Yuni::String& location)
     s.reserve(root.size() + 30 /*arbitrary*/);
 
     IO::SearchPath searchpaths;
-    searchpaths.prefixes.push_back((s = "antares-" ANTARES_VERSION "-"));
+    searchpaths.prefixes.push_back((s = "antares-"));
 
     if (System::windows)
     {
