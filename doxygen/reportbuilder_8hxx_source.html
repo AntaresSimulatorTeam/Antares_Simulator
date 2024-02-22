@@ -450,7 +450,7 @@ $(document).ready(function(){initNavTree('reportbuilder_8hxx_source.html',''); i
 <div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span>        <span class="keywordflow">if</span> (VariablesStatsByDataLevel&lt;NextT, Category::thermalAggregate&gt;::count)</div>
 <div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span>        {</div>
 <div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span>            <span class="keyword">auto</span>&amp; area = *results.data.area;</div>
-<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span>            <span class="keywordflow">for</span> (<span class="keyword">auto</span> cluster : area.thermal.list.each_enabled_and_not_mustrun())</div>
+<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span>            <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; cluster : area.thermal.list)</div>
 <div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span>            {</div>
 <div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>                results.data.thermalCluster = cluster.get();</div>
 <div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span> </div>

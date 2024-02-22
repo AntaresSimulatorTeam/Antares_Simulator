@@ -1,6 +1,7 @@
 var classAntares_1_1Data_1_1StudyLoadOptions =
 [
     [ "StudyLoadOptions", "classAntares_1_1Data_1_1StudyLoadOptions.html#a8e2eb6c518fae3e063b01e4447aaf493", null ],
+    [ "pushProgressLogs", "classAntares_1_1Data_1_1StudyLoadOptions.html#adee40bd2786d7156ff1d6ea5fc3e03c0", null ],
     [ "displayVersion", "classAntares_1_1Data_1_1StudyLoadOptions.html#ac6a4b3ef6417c0c875fedb892e8d89fe", null ],
     [ "enableParallel", "classAntares_1_1Data_1_1StudyLoadOptions.html#a834a970868e5de806c652fe44e12d772", null ],
     [ "forceDerated", "classAntares_1_1Data_1_1StudyLoadOptions.html#a997e3591f935d1e56d3a375045f292bb", null ],
@@ -19,6 +20,8 @@ var classAntares_1_1Data_1_1StudyLoadOptions =
     [ "ortoolsSolver", "classAntares_1_1Data_1_1StudyLoadOptions.html#a2ea074504f09a865f976383e17b536c8", null ],
     [ "ortoolsUsed", "classAntares_1_1Data_1_1StudyLoadOptions.html#a05295e6e14025681487d0be75bc8f41f", null ],
     [ "prepareOutput", "classAntares_1_1Data_1_1StudyLoadOptions.html#a9751b6e06083f06e331a2731170c3a6e", null ],
+    [ "progressTickCount", "classAntares_1_1Data_1_1StudyLoadOptions.html#a4366f7e045b651fb8c8b8c2373997155", null ],
+    [ "progressTicks", "classAntares_1_1Data_1_1StudyLoadOptions.html#a53350cc42c20ea7feeaa34db4784e1c7", null ],
     [ "simplexOptimizationRange", "classAntares_1_1Data_1_1StudyLoadOptions.html#a2ef386b36efcd3f12fd76d8756207510", null ],
     [ "solverLogs", "classAntares_1_1Data_1_1StudyLoadOptions.html#a0013ff5cc0adf4f805b828e053a30710", null ],
     [ "usedByTheSolver", "classAntares_1_1Data_1_1StudyLoadOptions.html#ab44e57f6b6a32ece0b7c96f16f36f3e8", null ]
