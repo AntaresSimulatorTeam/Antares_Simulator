@@ -588,8 +588,9 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
 } // namespace
 
 
-static std::vector<std::pair<std::string, std::string>>
-    splitStringIntoPairs(const std::string& s, char delimiter1, char delimiter2)
+std::vector<std::pair<std::string, std::string>> splitStringIntoPairs (const std::string& s,
+                                                                       char delimiter1,
+                                                                       char delimiter2)
 {
     std::vector<std::pair<std::string, std::string>> pairs;
     std::stringstream ss(s);
@@ -614,10 +615,10 @@ static std::vector<std::pair<std::string, std::string>>
     return pairs;
 }
 
-void generateAllClusters(Data::AreaList& areas,
-                         GeneratorTempData* generator,
-                         bool globalThermalTSgeneration,
-                         bool refreshTSonCurrentYear)
+static void generateAllClusters(Data::AreaList& areas,
+                                GeneratorTempData* generator,
+                                bool globalThermalTSgeneration,
+                                bool refreshTSonCurrentYear)
 {
     areas.each([&](Data::Area& area) {
         for (auto cluster : area.thermal.list.all())
@@ -628,13 +629,11 @@ void generateAllClusters(Data::AreaList& areas,
     });
 }
 
-void generateSpecificClusters(Data::AreaList& areas,
-                         const std::string& clustersToGen,
-                         GeneratorTempData* generator,
-                         bool globalThermalTSgeneration,
-                         bool refreshTSonCurrentYear)
+static void generateSpecificClusters(Data::AreaList& areas,
+                                     const std::string& clustersToGen,
+                                     GeneratorTempData* generator)
 {
-    auto names = splitStringIntoPairs(clustersToGen, ';', '.');
+    const auto names = splitStringIntoPairs(clustersToGen, ';', '.');
 
     for (const auto& [areaName, clusterName] : names)
     {
@@ -675,8 +674,7 @@ bool GenerateThermalTimeSeries(Data::Study& study,
     if (clustersToGen.empty()) // generate TS for all clusters
         generateAllClusters(study.areas, generator, globalThermalTSgeneration, refreshTSonCurrentYear);
     else
-        generateSpecificClusters(study.areas, clustersToGen, generator,
-                globalThermalTSgeneration, refreshTSonCurrentYear);
+        generateSpecificClusters(study.areas, clustersToGen, generator);
 
     delete generator;
 

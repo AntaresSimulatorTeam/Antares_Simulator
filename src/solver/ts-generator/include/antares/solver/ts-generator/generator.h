@@ -47,6 +47,10 @@ bool GenerateThermalTimeSeries(Data::Study& study,
                                bool refresh,
                                IResultWriter& writer);
 
+std::vector<std::pair<std::string, std::string>> splitStringIntoPairs (const std::string& s,
+                                                                       char delimiter1,
+                                                                       char delimiter2);
+
 /*!
 ** \brief Destroy all TS Generators
 */
