@@ -265,12 +265,10 @@ public:
     {
         auto area = state.area;
         auto& thermal = state.thermal;
-        for (uint clusterIndex = 0; clusterIndex != state.area->thermal.clusterCount();
-             ++clusterIndex)
+        for (auto cluster : area->thermal.list.each_enabled())
         {
-            const auto* thermalCluster = area->thermal.clusters[clusterIndex];
-            pValuesForTheCurrentYear[numSpace][thermalCluster->groupID][state.hourInTheYear]
-              += thermal[area->index].thermalClustersProductions[clusterIndex];
+            pValuesForTheCurrentYear[numSpace][cluster->groupID][state.hourInTheYear]
+              += thermal[area->index].thermalClustersProductions[cluster->areaWideIndex];
         }
 
         // Next variable
