@@ -278,8 +278,8 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
 
     for (uint d = 0; d < daysPerYear; ++d)
     {
-        FPOW[d].resize(AUN);
-        PPOW[d].resize(AUN);
+        FPOW[d].resize(cluster.unitCount);
+        PPOW[d].resize(cluster.unitCount);
 
         PODOfTheDay = (int)POD[d];
         FODOfTheDay = (int)FOD[d];
