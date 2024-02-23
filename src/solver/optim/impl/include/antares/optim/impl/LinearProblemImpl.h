@@ -46,6 +46,6 @@ public :
     operations_research::MPConstraint& getConstraint(std::string name) override;
     void setObjectiveCoefficient(const operations_research::MPVariable& variable, double coefficient) override;
     void setMinimization(bool isMinim) override;
-    Antares::optim::api::MipSolution solve() override;
+    Antares::optim::api::MipSolution solve(const operations_research::MPSolverParameters& param) override;
     virtual ~LinearProblemImpl() override;
 };

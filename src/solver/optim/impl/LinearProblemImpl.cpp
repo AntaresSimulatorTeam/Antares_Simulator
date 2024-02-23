@@ -66,9 +66,9 @@ void LinearProblemImpl::setMinimization(bool isMinim)
     isMinim ? mpSolver->MutableObjective()->SetMinimization() : mpSolver->MutableObjective()->SetMaximization();
 }
 
-MipSolution LinearProblemImpl::solve()
+MipSolution LinearProblemImpl::solve(const operations_research::MPSolverParameters& param)
 {
-    auto status = mpSolver->Solve();
+    auto status = mpSolver->Solve(param);
     // TODO remove this
     // std::string str;
     // mpSolver->ExportModelAsLpFormat(false, &str);

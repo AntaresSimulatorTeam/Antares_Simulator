@@ -265,7 +265,7 @@ void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver,
 
 bool solveAndManageStatus(Antares::optim::api::LinearProblemBuilder& builder, int& resultStatus, const MPSolverParameters& params)
 {
-    gMipSolution = builder.solve(); // TODO[FOM] provide params
+    gMipSolution = builder.solve(params);
     if (auto status = gMipSolution.getStatus(); status == MPSolver::OPTIMAL || status == MPSolver::FEASIBLE)
     {
         resultStatus = OUI_SPX;

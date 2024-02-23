@@ -43,12 +43,12 @@ void LinearProblemBuilder::update(const LinearProblemData& data) const {
     }
 }
 
-MipSolution LinearProblemBuilder::solve()
+MipSolution LinearProblemBuilder::solve(const operations_research::MPSolverParameters& param)
 {
     // TODO : move to new interface LinearProblemSolver ??
     if (!built) {
         // TODO
         throw;
     }
-    return linearProblem_->solve();
+    return linearProblem_->solve(param);
 }
