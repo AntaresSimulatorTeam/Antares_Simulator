@@ -54,7 +54,7 @@ BOOST_DATA_TEST_CASE(test_oneWeek_oneNode_oneBattery_oneThermal,
                     {"cost_thermal1",     {1,  3,  10,  8}}
             });
     linearProblemBuilder.build(linearProblemData);
-    auto solution = linearProblemBuilder.solve();
+    auto solution = linearProblemBuilder.solve({});
 
     // Consumption is greater than thermal maximum production in TS 2 & 3
     // So, the battery has to charge during tS 0 & 1
@@ -108,7 +108,7 @@ BOOST_DATA_TEST_CASE(test_oneWeek_oneNode_oneBattery_twoThermals,
                     {"cost_thermal2",     {2,  3,  10,  9}}
             });
     linearProblemBuilder.build(linearProblemData);
-    auto solution = linearProblemBuilder.solve();
+    auto solution = linearProblemBuilder.solve({});
 
     // Thermal production is cheap in TS 0, then very expensive.
     // Battery must charge up to its max during TS 0, then discharge mostly when thermal production is most
