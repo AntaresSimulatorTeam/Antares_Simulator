@@ -45,7 +45,7 @@ namespace Antares::optim::api
 		virtual operations_research::MPConstraint& getConstraint(std::string name) = 0;
 		virtual void setObjectiveCoefficient(const operations_research::MPVariable& variable, double coefficient) = 0;
 		virtual void setMinimization(bool isMinim) = 0;
-		virtual MipSolution solve() = 0;
+		virtual MipSolution solve(const operations_research::MPSolverParameters& param) = 0;
 		virtual ~LinearProblem() = default;
 	};
 }

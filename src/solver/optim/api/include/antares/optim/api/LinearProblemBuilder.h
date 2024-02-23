@@ -42,6 +42,6 @@ namespace Antares::optim::api
         void addFiller(LinearProblemFiller& filler);
         void build(const LinearProblemData& data);
         void update(const LinearProblemData& data) const;
-        MipSolution solve();
+        MipSolution solve(const operations_research::MPSolverParameters& param);
     };
 }
