@@ -1,6 +1,5 @@
 var NAVTREEINDEX14 =
 {
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageCashFlowByCluster.html#a4c852440ec158621a43d4563602bfcc5":[7,0,0,12,4,4,45,4],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageCashFlowByCluster.html#aafa676c309b984544273ab00245b8df9":[7,0,0,12,4,4,45,2],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageCashFlowByCluster.html#afc973cbdc707b8c830b9d0e83f9ea156":[7,0,0,12,4,4,45,1],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageInjectionByCluster.html":[7,0,0,12,4,4,46],
@@ -249,5 +248,6 @@ var NAVTREEINDEX14 =
 "classAntares_1_1TSGenerator_1_1Predicate_1_1Solar.html":[7,0,0,15,0,1],
 "classAntares_1_1TSGenerator_1_1Predicate_1_1Wind.html":[7,0,0,15,0,2],
 "classAntares_1_1TSGenerator_1_1XCast_1_1StudyData.html":[7,0,0,15,1,0],
-"classAntares_1_1TSGenerator_1_1XCast_1_1StudyData.html#a1b0a640c98e59ef30a2aee7edc8460c1":[7,0,0,15,1,0,3]
+"classAntares_1_1TSGenerator_1_1XCast_1_1StudyData.html#a1b0a640c98e59ef30a2aee7edc8460c1":[7,0,0,15,1,0,3],
+"classAntares_1_1TSGenerator_1_1XCast_1_1StudyData.html#a5047c1f65d3065ea6fa3f9588fcc1715":[7,0,0,15,1,0,2]
 };

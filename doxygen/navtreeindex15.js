@@ -1,6 +1,5 @@
 var NAVTREEINDEX15 =
 {
-"classAntares_1_1TSGenerator_1_1XCast_1_1StudyData.html#a5047c1f65d3065ea6fa3f9588fcc1715":[7,0,0,15,1,0,2],
 "classAntares_1_1TSGenerator_1_1XCast_1_1StudyData.html#a66ac4000752e9381de114874941beddf":[7,0,0,15,1,0,4],
 "classAntares_1_1TSGenerator_1_1XCast_1_1StudyData.html#ab241a0761b8fa8a152d5a076e2e6e29b":[7,0,0,15,1,0,0],
 "classAntares_1_1TSGenerator_1_1XCast_1_1StudyData.html#afe2b7a60615da5d8f9a67b6e23b60ba2":[7,0,0,15,1,0,1],
@@ -249,5 +248,6 @@ var NAVTREEINDEX15 =
 "classAntares_1_1Window_1_1BindingConstraintInfoEditor.html":[7,0,0,17,13],
 "classAntares_1_1Window_1_1BindingConstraintInfoEditor.html#a337be31697f7bf9c810de3c84a25930d":[7,0,0,17,13,1],
 "classAntares_1_1Window_1_1BindingConstraintInfoEditor.html#a9fed3d3dee3af09435a632355d2a544d":[7,0,0,17,13,0],
-"classAntares_1_1Window_1_1BindingConstraintOffsetsPanel.html":[7,0,0,17,14]
+"classAntares_1_1Window_1_1BindingConstraintOffsetsPanel.html":[7,0,0,17,14],
+"classAntares_1_1Window_1_1BindingConstraintWeightsPanel.html":[7,0,0,17,15]
 };

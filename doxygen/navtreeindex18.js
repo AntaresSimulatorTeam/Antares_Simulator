@@ -1,6 +1,5 @@
 var NAVTREEINDEX18 =
 {
-"classJIT_1_1Informations.html#addae1b1dd67aea33b1b5f4cb1239f753":[7,0,119,0,9],
 "classJIT_1_1Informations.html#adf1b5eca4b7f69f15f4b2096118d3441":[7,0,119,0,1],
 "classJIT_1_1Informations.html#aefca06ed3eb0d0b449fc328e286122b5":[7,0,119,0,13],
 "classJIT_1_1Informations.html#af62b4f794931d1cb5b9d4a0273ea9326":[7,0,119,0,3],
@@ -99,8 +98,8 @@ var NAVTREEINDEX18 =
 "classProgress.html#ac4b5ef750872e2013c6925c203a35d4cadfe3149fcd3440053bcdf797ab68efc8":[7,0,183,1,0],
 "classProgress.html#ac871f3914f9fb67fa2da2783d5be9a0f":[7,0,183,4],
 "classPublicStudy.html":[7,0,184],
-"classPublicStudy.html#a7bd1904c52c42533e39390182c2d1726":[7,0,184,0],
 "classPublicStudy.html#a7bd1904c52c42533e39390182c2d1726":[7,0,184,1],
+"classPublicStudy.html#a7bd1904c52c42533e39390182c2d1726":[7,0,184,0],
 "classQuadraticProblemMatrix.html":[7,0,185],
 "classRealName.html":[7,0,186],
 "classResultMatrix.html":[7,0,192],
@@ -249,5 +248,6 @@ var NAVTREEINDEX18 =
 "control_8h_source.html":[8,0,0,5,2,1,1,3,4],
 "copper-plate_8h_source.html":[8,0,0,5,0,0,0,2,2],
 "correlation-post_8h_source.html":[8,0,0,5,0,0,0,0,4],
-"correlation-post_8hxx_source.html":[8,0,0,5,0,0,0,0,5]
+"correlation-post_8hxx_source.html":[8,0,0,5,0,0,0,0,5],
+"correlation-updater_8hxx_source.html":[8,0,0,1,0,22,0,0,0,12]
 };

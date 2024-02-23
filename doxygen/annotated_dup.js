@@ -222,9 +222,6 @@ var annotated_dup =
         [ "WIPPanel", "classAntares_1_1Component_1_1WIPPanel.html", "classAntares_1_1Component_1_1WIPPanel" ]
       ] ],
       [ "Concurrency", null, [
-        [ "Detail", null, [
-          [ "CopyableCallable", "classAntares_1_1Concurrency_1_1Detail_1_1CopyableCallable.html", null ]
-        ] ],
         [ "FutureSet", "classAntares_1_1Concurrency_1_1FutureSet.html", "classAntares_1_1Concurrency_1_1FutureSet" ]
       ] ],
       [ "Data", null, [

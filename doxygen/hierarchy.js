@@ -193,7 +193,6 @@ var hierarchy =
     [ "Antares::Private::OutputViewerData::Content", "classAntares_1_1Private_1_1OutputViewerData_1_1Content.html", null ],
     [ "Antares::Action::Context", "classAntares_1_1Action_1_1Context.html", null ],
     [ "CONTRAINTES_COUPLANTES", "structCONTRAINTES__COUPLANTES.html", null ],
-    [ "Antares::Concurrency::Detail::CopyableCallable< T >", "classAntares_1_1Concurrency_1_1Detail_1_1CopyableCallable.html", null ],
     [ "Antares::Data::Correlation", "classAntares_1_1Data_1_1Correlation.html", null ],
     [ "Antares::Window::CorrelationPanelData", "classAntares_1_1Window_1_1CorrelationPanelData.html", null ],
     [ "CORRESPONDANCE_DES_CONTRAINTES", "structCORRESPONDANCE__DES__CONTRAINTES.html", null ],
@@ -251,7 +250,7 @@ var hierarchy =
     [ "Antares::Map::DrawingContext", "classAntares_1_1Map_1_1DrawingContext.html", null ],
     [ "Antares::Data::EconomicInputData", "classAntares_1_1Data_1_1EconomicInputData.html", null ],
     [ "Antares::Solver::Simulation::Economy", "classAntares_1_1Solver_1_1Simulation_1_1Economy.html", [
-      [ "Antares::Solver::Simulation::ISimulation< Economy >", "classAntares_1_1Solver_1_1Simulation_1_1ISimulation.html", null ]
+      [ "Antares::Solver::Simulation::ISimulation< Antares::Solver::Simulation::Economy >", "classAntares_1_1Solver_1_1Simulation_1_1ISimulation.html", null ]
     ] ],
     [ "Antares::Graph::Edge< NodeT >", "classAntares_1_1Graph_1_1Edge.html", null ],
     [ "Antares::Solver::Variable::Empty", "structAntares_1_1Solver_1_1Variable_1_1Empty.html", [
@@ -702,13 +701,11 @@ var hierarchy =
     [ "Antares::Map::Manager", "classAntares_1_1Map_1_1Manager.html", null ],
     [ "Antares::Map::MapRenderOptions", "structAntares_1_1Map_1_1MapRenderOptions.html", null ],
     [ "Antares::Matrix< T, ReadWriteT >", "classAntares_1_1Matrix.html", [
+      [ "Matrix_easy_to_fill< double, double >", "classMatrix__easy__to__fill.html", null ],
       [ "Matrix_easy_to_fill< T, ReadWriteT >", "classMatrix__easy__to__fill.html", [
         [ "Matrix_load_bypass< T, ReadWriteT >", "classMatrix__load__bypass.html", null ]
       ] ],
       [ "Matrix_mock_load_to_buffer< T, ReadWriteT >", "classMatrix__mock__load__to__buffer.html", null ]
-    ] ],
-    [ "Matrix", null, [
-      [ "Matrix_easy_to_fill< double, double >", "classMatrix__easy__to__fill.html", null ]
     ] ],
     [ "Antares::Matrix< double, double >", "classAntares_1_1Matrix.html", null ],
     [ "Antares::Matrix< float, float >", "classAntares_1_1Matrix.html", null ],

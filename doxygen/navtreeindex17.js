@@ -1,6 +1,5 @@
 var NAVTREEINDEX17 =
 {
-"classAntares_1_1Window_1_1SaveAs.html#a93c6cb0fd81a7def4a08bd52a3bc8000":[7,0,0,17,50,2],
 "classAntares_1_1Window_1_1ScenarioBuilder_1_1Panel.html":[7,0,0,17,5,0],
 "classAntares_1_1Window_1_1ScenarioBuilder_1_1Panel.html#a24eef2ce721c011b844ff1ae3e5ba04b":[7,0,0,17,5,0,2],
 "classAntares_1_1Window_1_1ScenarioBuilder_1_1Panel.html#a3186b64edd5ea7c9a61b24e510c20b00":[7,0,0,17,5,0,1],
@@ -249,5 +248,6 @@ var NAVTREEINDEX17 =
 "classJIT_1_1Informations.html#a8e73ad3bba1b513201e2e1880f8a2b54":[7,0,119,0,4],
 "classJIT_1_1Informations.html#a93e678b555bd5a4a7c4133be44e383c4":[7,0,119,0,2],
 "classJIT_1_1Informations.html#aa5d6792c070b958e4bf49436ea0fec90":[7,0,119,0,5],
-"classJIT_1_1Informations.html#ab64260c0bdcded0fb93c17e5b81b9dc7":[7,0,119,0,10]
+"classJIT_1_1Informations.html#ab64260c0bdcded0fb93c17e5b81b9dc7":[7,0,119,0,10],
+"classJIT_1_1Informations.html#addae1b1dd67aea33b1b5f4cb1239f753":[7,0,119,0,9]
 };

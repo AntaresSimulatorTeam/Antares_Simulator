@@ -1,7 +1,5 @@
 var NAVTREEINDEX23 =
 {
-"structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardProxy.html#ad8bcde81cd7a9576a40fcfbdec0ef641":[7,0,0,12,4,2,5,1],
-"structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardProxy_1_1Multiple.html":[7,0,0,12,4,2,5,0],
 "structAntares_1_1Solver_1_1Variable_1_1Container_1_1EndOfList_1_1Statistics.html":[7,0,0,12,4,3,0,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1AvailableDispatchGen_1_1Statistics.html":[7,0,0,12,4,4,0,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Balance_1_1Statistics.html":[7,0,0,12,4,4,1,0],
@@ -249,5 +247,7 @@ var NAVTREEINDEX23 =
 "structAntares_1_1Solver_1_1Variable_1_1SpatialAggregateOperation_3_01true_00_01Category_1_1spatialAggregateMax_00_01VCardT_01_4.html":[7,0,0,12,4,26],
 "structAntares_1_1Solver_1_1Variable_1_1SpatialAggregateOperation_3_01true_00_01Category_1_1spatialAggregateOr_00_01VCardT_01_4.html":[7,0,0,12,4,27],
 "structAntares_1_1Solver_1_1Variable_1_1SpatialAggregateOperation_3_01true_00_01Category_1_1spatialAggregateSum_00_01VCardT_01_4.html":[7,0,0,12,4,28],
-"structAntares_1_1Solver_1_1Variable_1_1SpatialAggregateOperation_3_01true_00_01Category_1_1spatib45dc589c9aad1010829c4d00b555bd9.html":[7,0,0,12,4,25]
+"structAntares_1_1Solver_1_1Variable_1_1SpatialAggregateOperation_3_01true_00_01Category_1_1spatib45dc589c9aad1010829c4d00b555bd9.html":[7,0,0,12,4,25],
+"structAntares_1_1Solver_1_1Variable_1_1SpecifierRemover.html":[7,0,0,12,4,30],
+"structAntares_1_1Solver_1_1Variable_1_1SpecifierRemover_3_01T_01_5_01_4.html":[7,0,0,12,4,33]
 };

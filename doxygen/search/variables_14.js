@@ -12,7 +12,7 @@ var searchData=
   ['updaterules_9',['updateRules',['../classAntares_1_1Window_1_1ScenarioBuilder_1_1Panel.html#a24eef2ce721c011b844ff1ae3e5ba04b',1,'Antares::Window::ScenarioBuilder::Panel']]],
   ['useconversion_10',['useConversion',['../classAntares_1_1Data_1_1XCast.html#a558d6d6a8892a31904dde504f02c6703',1,'Antares::Data::XCast']]],
   ['usecustomscenario_11',['useCustomScenario',['../classAntares_1_1Data_1_1Parameters.html#ac1601b399055210ec40c34f52579482e',1,'Antares::Data::Parameters']]],
-  ['usedbythesolver_12',['usedByTheSolver',['../classAntares_1_1Data_1_1StudyLoadOptions.html#ab44e57f6b6a32ece0b7c96f16f36f3e8',1,'Antares::Data::StudyLoadOptions::usedByTheSolver()'],['../classAntares_1_1Data_1_1Study.html#af416e6cf886489dce4c7c1f8d6129a55',1,'Antares::Data::Study::usedByTheSolver()']]],
+  ['usedbythesolver_12',['usedbythesolver',['../classAntares_1_1Data_1_1StudyLoadOptions.html#ab44e57f6b6a32ece0b7c96f16f36f3e8',1,'Antares::Data::StudyLoadOptions::usedByTheSolver'],['../classAntares_1_1Data_1_1Study.html#af416e6cf886489dce4c7c1f8d6129a55',1,'Antares::Data::Study::usedByTheSolver']]],
   ['usedfromgui_13',['usedFromGUI',['../classJIT.html#adbcf9f1ee33a155502afe63805d27484',1,'JIT']]],
   ['useheuristictarget_14',['useHeuristicTarget',['../classAntares_1_1Data_1_1PartHydro.html#a70bf5d6cc1a7ff0ce37d558fc4bca632',1,'Antares::Data::PartHydro']]],
   ['usehurdlescost_15',['useHurdlesCost',['../classAntares_1_1Data_1_1AreaLink.html#a040783ca80bcf4f9966e4cdeb478da51',1,'Antares::Data::AreaLink']]],

@@ -1,6 +1,5 @@
 var NAVTREEINDEX13 =
 {
-"classAntares_1_1Solver_1_1ThermalAreaNumberOfTSretriever.html":[7,0,0,12,19],
 "classAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1OverallCost.html":[7,0,0,12,4,0,0],
 "classAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1OverallCost.html#a69253ca6687ddb497e19441f46c3376c":[7,0,0,12,4,0,0,1],
 "classAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1OverallCost.html#a8f404b70ff65e628ab0b85bd5f834abe":[7,0,0,12,4,0,0,4],
@@ -249,5 +248,6 @@ var NAVTREEINDEX13 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1RowBalance.html#ab3fa5e5b340c6f320c715443c2df7eee":[7,0,0,12,4,4,39,4],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1RowBalance.html#afa456559147418143b69ee09458417a6":[7,0,0,12,4,4,39,1],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageCashFlowByCluster.html":[7,0,0,12,4,4,45],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageCashFlowByCluster.html#a3ea318a992a29f43ae15c3a6d16bc311":[7,0,0,12,4,4,45,3]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageCashFlowByCluster.html#a3ea318a992a29f43ae15c3a6d16bc311":[7,0,0,12,4,4,45,3],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageCashFlowByCluster.html#a4c852440ec158621a43d4563602bfcc5":[7,0,0,12,4,4,45,4]
 };

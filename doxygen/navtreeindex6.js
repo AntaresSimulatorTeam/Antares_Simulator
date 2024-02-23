@@ -101,10 +101,9 @@ var NAVTREEINDEX6 =
 "classAntares_1_1Component_1_1WIPPanel.html#a31eba8cbb5dfcf7b209b83183251067b":[7,0,0,1,15,3],
 "classAntares_1_1Component_1_1WIPPanel.html#ab3159cd96d2344c4aad011f5408c2db4":[7,0,0,1,15,1],
 "classAntares_1_1Component_1_1WIPPanel.html#ab981bf1e9e37ea03e71561fb7fc45b47":[7,0,0,1,15,0],
-"classAntares_1_1Concurrency_1_1Detail_1_1CopyableCallable.html":[7,0,0,2,0,0],
-"classAntares_1_1Concurrency_1_1FutureSet.html":[7,0,0,2,1],
-"classAntares_1_1Concurrency_1_1FutureSet.html#a1911ee50a617f632e1cdaccb6181083e":[7,0,0,2,1,0],
-"classAntares_1_1Concurrency_1_1FutureSet.html#a8cf68f6c1a66e76acaec9ce67cb20e5f":[7,0,0,2,1,1],
+"classAntares_1_1Concurrency_1_1FutureSet.html":[7,0,0,2,0],
+"classAntares_1_1Concurrency_1_1FutureSet.html#a1911ee50a617f632e1cdaccb6181083e":[7,0,0,2,0,0],
+"classAntares_1_1Concurrency_1_1FutureSet.html#a8cf68f6c1a66e76acaec9ce67cb20e5f":[7,0,0,2,0,1],
 "classAntares_1_1Cycle.html":[7,0,0,23],
 "classAntares_1_1Data_1_1AdequacyPatch_1_1CurtailmentSharing.html":[7,0,0,3,0,1],
 "classAntares_1_1Data_1_1AdequacyPatch_1_1CurtailmentSharing.html#a22af9ddf555d64580b310e8879fe30d7":[7,0,0,3,0,1,2],
@@ -249,5 +248,6 @@ var NAVTREEINDEX6 =
 "classAntares_1_1Data_1_1AreaUI.html#a3a74c64682ddd04a20d5159a8b1468ae":[7,0,0,3,11,6],
 "classAntares_1_1Data_1_1AreaUI.html#a458393c01a9dc075688ebc9a1b354452":[7,0,0,3,11,10],
 "classAntares_1_1Data_1_1AreaUI.html#a82b9e2f5bc9c9cd90e9c684fa5a98dd6":[7,0,0,3,11,5],
-"classAntares_1_1Data_1_1AreaUI.html#a95e8d3a05c705d91d73df95eed8f73dc":[7,0,0,3,11,9]
+"classAntares_1_1Data_1_1AreaUI.html#a95e8d3a05c705d91d73df95eed8f73dc":[7,0,0,3,11,9],
+"classAntares_1_1Data_1_1AreaUI.html#ab14c6c2638102613c256603227bf10a0":[7,0,0,3,11,3]
 };

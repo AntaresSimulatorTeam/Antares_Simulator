@@ -28,27 +28,27 @@ var NAVTREE =
     [ "Links:", "index.html#autotoc_md1", null ],
     [ "Installation", "index.html#autotoc_md2", null ],
     [ "Source Code Content", "index.html#autotoc_md3", null ],
-    [ "How does the automatic testing script system work ?", "md_src_tests_run_study_tests_readme.html", [
-      [ "Introduction", "md_src_tests_run_study_tests_readme.html#autotoc_md5", null ],
-      [ "Entry points to the automatic testing script system", "md_src_tests_run_study_tests_readme.html#autotoc_md6", null ],
-      [ "File test_from_json.py", "md_src_tests_run_study_tests_readme.html#autotoc_md7", null ],
-      [ "Fixtures", "md_src_tests_run_study_tests_readme.html#autotoc_md8", null ],
-      [ "Tests parametrization", "md_src_tests_run_study_tests_readme.html#autotoc_md9", null ],
-      [ "The test's body", "md_src_tests_run_study_tests_readme.html#autotoc_md10", [
-        [ "<ins>Run fixtures</ins>", "md_src_tests_run_study_tests_readme.html#autotoc_md11", null ],
-        [ "<ins>Checks creation factory</ins>", "md_src_tests_run_study_tests_readme.html#autotoc_md12", null ],
-        [ "<ins>Running the checks</ins>", "md_src_tests_run_study_tests_readme.html#autotoc_md13", null ],
-        [ "<ins>End of tests</ins>", "md_src_tests_run_study_tests_readme.html#autotoc_md14", null ]
+    [ "How does the automatic testing script system work ?", "md_src_2tests_2run-study-tests_2readme.html", [
+      [ "Introduction", "md_src_2tests_2run-study-tests_2readme.html#autotoc_md5", null ],
+      [ "Entry points to the automatic testing script system", "md_src_2tests_2run-study-tests_2readme.html#autotoc_md6", null ],
+      [ "File test_from_json.py", "md_src_2tests_2run-study-tests_2readme.html#autotoc_md7", null ],
+      [ "Fixtures", "md_src_2tests_2run-study-tests_2readme.html#autotoc_md8", null ],
+      [ "Tests parametrization", "md_src_2tests_2run-study-tests_2readme.html#autotoc_md9", null ],
+      [ "The test's body", "md_src_2tests_2run-study-tests_2readme.html#autotoc_md10", [
+        [ "<ins>Run fixtures</ins>", "md_src_2tests_2run-study-tests_2readme.html#autotoc_md11", null ],
+        [ "<ins>Checks creation factory</ins>", "md_src_2tests_2run-study-tests_2readme.html#autotoc_md12", null ],
+        [ "<ins>Running the checks</ins>", "md_src_2tests_2run-study-tests_2readme.html#autotoc_md13", null ],
+        [ "<ins>End of tests</ins>", "md_src_2tests_2run-study-tests_2readme.html#autotoc_md14", null ]
       ] ],
-      [ "How to add a check on a test ?", "md_src_tests_run_study_tests_readme.html#autotoc_md15", [
-        [ "What to do ?", "md_src_tests_run_study_tests_readme.html#autotoc_md16", null ],
-        [ "What NOT to do ?", "md_src_tests_run_study_tests_readme.html#autotoc_md17", null ]
+      [ "How to add a check on a test ?", "md_src_2tests_2run-study-tests_2readme.html#autotoc_md15", [
+        [ "What to do ?", "md_src_2tests_2run-study-tests_2readme.html#autotoc_md16", null ],
+        [ "What NOT to do ?", "md_src_2tests_2run-study-tests_2readme.html#autotoc_md17", null ]
       ] ],
-      [ "Running the script", "md_src_tests_run_study_tests_readme.html#autotoc_md18", null ],
-      [ "TO DO", "md_src_tests_run_study_tests_readme.html#autotoc_md19", null ]
+      [ "Running the script", "md_src_2tests_2run-study-tests_2readme.html#autotoc_md18", null ],
+      [ "TO DO", "md_src_2tests_2run-study-tests_2readme.html#autotoc_md19", null ]
     ] ],
     [ "Todo List", "todo.html", null ],
-    [ "Modules", "modules.html", "modules" ],
+    [ "Topics", "topics.html", "topics" ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
       [ "Namespace Members", "namespacemembers.html", [
@@ -82,28 +82,28 @@ var NAVTREEINDEX =
 "classAntares_1_1Action_1_1AntaresStudy_1_1Area_1_1DataTimeseries.html#aad8fbc6bf8604681bb091ff56826d1a8",
 "classAntares_1_1Action_1_1Settings_1_1SuffixPlantName.html#a6624c501301c5679b6faecd2ae99a228",
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1CommonClusterSummarySingleArea.html#aff2996a1426ea0a14f4d55957f87b635",
-"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1Matrix.html#a211bac56ebe07a80a362dbc1992b1cad",
+"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1Matrix.html#a137bb354a7812aef05615af42ec4f3ee",
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1XCastK.html#a9fbb054c9d57732c11d7445a355b0104",
 "classAntares_1_1Component_1_1Notebook.html#a27de5d6c95263037681acaeb92cd381b",
-"classAntares_1_1Data_1_1AreaUI.html#ab14c6c2638102613c256603227bf10a0",
-"classAntares_1_1Data_1_1Parameters.html#a7899cb781bb7a4d36c3dc654e2105e6e",
-"classAntares_1_1Data_1_1ShortTermStorage_1_1Properties.html#aaf3cc774eab37cb5db7ab8d618ee9c57",
-"classAntares_1_1Data_1_1ThermalCluster.html#aa0fb5f7cdfe334fba4cd15cb14a05c81",
-"classAntares_1_1HydroManagement.html#a8666c9d444f246d138280363cb06617a",
-"classAntares_1_1Matrix.html#a28415f128221d2768bd635181f361bd6",
-"classAntares_1_1Solver_1_1ThermalAreaNumberOfTSretriever.html",
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageCashFlowByCluster.html#a4c852440ec158621a43d4563602bfcc5",
-"classAntares_1_1TSGenerator_1_1XCast_1_1StudyData.html#a5047c1f65d3065ea6fa3f9588fcc1715",
-"classAntares_1_1Window_1_1BindingConstraintWeightsPanel.html",
-"classAntares_1_1Window_1_1SaveAs.html#a93c6cb0fd81a7def4a08bd52a3bc8000",
-"classJIT_1_1Informations.html#addae1b1dd67aea33b1b5f4cb1239f753",
-"correlation-updater_8hxx_source.html",
-"dir_c112b081dc311dabb915b35e7b9a5811.html",
-"h2o__m__donnees__annuelles_8h_source.html",
-"profitByPlant_8h_source.html",
-"structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardProxy.html#ad8bcde81cd7a9576a40fcfbdec0ef641",
-"structAntares_1_1Solver_1_1Variable_1_1SpecifierRemover.html",
-"toolbox_2ext-source_2window_8h_source.html"
+"classAntares_1_1Data_1_1AreaUI.html#ab9dc91a8ccd522e21d8478ab295d9e8d",
+"classAntares_1_1Data_1_1Parameters.html#a78e0f056264051b537ad5f76e207c98e",
+"classAntares_1_1Data_1_1ShortTermStorage_1_1Properties.html#ab09f8557720004f577be7993dd9fadcb",
+"classAntares_1_1Data_1_1ThermalCluster.html#aa46961895e2290b63ee4ef0b3c40c6b3",
+"classAntares_1_1I__mtx__to__buffer__dumper.html",
+"classAntares_1_1Matrix.html#a445a7818d4a99a9435189b353cab5365",
+"classAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1OverallCost.html",
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageCashFlowByCluster.html#aafa676c309b984544273ab00245b8df9",
+"classAntares_1_1TSGenerator_1_1XCast_1_1StudyData.html#a66ac4000752e9381de114874941beddf",
+"classAntares_1_1Window_1_1CalendarSelect.html",
+"classAntares_1_1Window_1_1ScenarioBuilder_1_1Panel.html",
+"classJIT_1_1Informations.html#adf1b5eca4b7f69f15f4b2096118d3441",
+"correlation_8hxx_source.html",
+"dir_c1b97a77b0778a14760957f38f2f3ae1.html",
+"h2o__m__donnees__optimisation_8h_source.html",
+"progress_8hxx_source.html",
+"structAntares_1_1Solver_1_1Variable_1_1Container_1_1EndOfList_1_1Statistics.html",
+"structAntares_1_1Solver_1_1Variable_1_1SpecifierRemover_3_01T_0fN_0e_4.html",
+"toolbox_2input_2bindingconstraint_8h_source.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
