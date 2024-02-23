@@ -228,10 +228,10 @@ static SimplexResult OPT_TryToCallSimplex(
 
     Probleme.NombreDeContraintesCoupes = 0;
 
+    LegacyLinearProblemImpl legacyLinearProblem(&Probleme, options.solverName);
+    LinearProblemBuilder linearProblemBuilder(legacyLinearProblem);
     if (options.useOrtools)
     {
-        LegacyLinearProblemImpl legacyLinearProblem(&Probleme, options.solverName);
-        LinearProblemBuilder linearProblemBuilder(legacyLinearProblem);
         LegacyLinearProblemFillerImpl filler(&Probleme); // TODO: merge this with LegacyLinearProblemImpl ?
         linearProblemBuilder.addFiller(filler);
         // TODO: we can add extra fillers here
@@ -264,7 +264,10 @@ static SimplexResult OPT_TryToCallSimplex(
     if (options.useOrtools)
     {
         const bool keepBasis = (optimizationNumber == PREMIERE_OPTIMISATION);
-        solver = ORTOOLS_Simplexe(&Probleme, solver, keepBasis);
+        solver = ORTOOLS_Simplexe(&Probleme,
+                                  solver,
+                                  linearProblemBuilder,
+                                  keepBasis);
         if (solver != nullptr)
         {
             ProblemeAResoudre->ProblemesSpx[NumIntervalle] = (void*)solver;

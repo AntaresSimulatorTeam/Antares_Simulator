@@ -30,6 +30,9 @@ target_link_libraries(utils
         Antares::study
         Antares::result_writer #ortools_utils.h
         antares-core #enum.h
+        Antares::optim_api
+        PRIVATE
+        model_antares
         )
 
 target_include_directories(utils

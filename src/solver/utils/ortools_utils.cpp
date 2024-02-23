@@ -4,6 +4,7 @@
 #include <antares/exception/AssertionError.hpp>
 #include <antares/Enum.hpp>
 #include <filesystem>
+#include "../optimisation/opt_global.h"
 
 using namespace operations_research;
 
@@ -262,11 +263,10 @@ void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver,
     removeTemporaryFile(tmpPath);
 }
 
-bool solveAndManageStatus(MPSolver* solver, int& resultStatus, const MPSolverParameters& params)
+bool solveAndManageStatus(Antares::optim::api::LinearProblemBuilder& builder, int& resultStatus, const MPSolverParameters& params)
 {
-    auto status = solver->Solve(params);
-
-    if (status == MPSolver::OPTIMAL || status == MPSolver::FEASIBLE)
+    gMipSolution = builder.solve(); // TODO[FOM] provide params
+    if (auto status = gMipSolution.getStatus(); status == MPSolver::OPTIMAL || status == MPSolver::FEASIBLE)
     {
         resultStatus = OUI_SPX;
     }
@@ -305,7 +305,8 @@ static void transferBasis(std::vector<operations_research::MPSolver::BasisStatus
 }
 
 MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
-                           MPSolver* solver,
+                           operations_research::MPSolver* solver,
+                           Antares::optim::api::LinearProblemBuilder& builder,
                            bool keepBasis)
 {
     MPSolverParameters params;
@@ -318,7 +319,7 @@ MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probl
                                    Probleme->StatutDesContraintes);
     }
 
-    if (solveAndManageStatus(solver, Probleme->ExistenceDUneSolution, params))
+    if (solveAndManageStatus(builder, Probleme->ExistenceDUneSolution, params))
     {
         extract_from_MPSolver(solver, Probleme);
         // Save the final simplex basis for next resolutions
@@ -328,7 +329,6 @@ MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probl
             transferBasis(Probleme->StatutDesContraintes, solver->constraints());
         }
     }
-
     return solver;
 }
 
