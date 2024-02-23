@@ -66,20 +66,15 @@ BOOST_AUTO_TEST_CASE(thermal_cluster_fullfills_area_demand)
     }
 
     area->thermal.unsuppliedEnergyCost = 1.e3;
-    area->thermal.spilledEnergyCost = 1.3;
+    area->thermal.spilledEnergyCost = 1.;
 
-    {
-        auto& parameters = study->parameters;
-        study->folderOutput = "/tmp";
-        parameters.include.exportMPS = mpsExportStatus::EXPORT_BOTH_OPTIMS;
-        parameters.namedProblems = true;
-        parameters.ortoolsUsed = true;
-    }
+    // VERY IMPORTANT
+    study->parameters.ortoolsUsed = true;
 
-	simulation->create();
-	simulation->run();
+    simulation->create();
+    simulation->run();
 
-	OutputRetriever output(simulation->rawSimu());
+    OutputRetriever output(simulation->rawSimu());
     //BOOST_TEST(output.overallCost(area).hour(0) == loadInArea * clusterCost, tt::tolerance(0.001));
     std::vector<double> expectedThermalP(168, loadInArea);
 
