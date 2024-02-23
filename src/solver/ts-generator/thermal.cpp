@@ -96,8 +96,9 @@ private:
     double ap[366];
     double bf[366];
     double bp[366];
-    double FPOW[366][102];
-    double PPOW[366][102];
+
+    std::vector<std::vector<double>> FPOW;
+    std::vector<std::vector<double>> PPOW;
 
     String pTempFilename;
     Solver::Progression::Task& pProgression;
@@ -119,6 +120,9 @@ GeneratorTempData::GeneratorTempData(Data::Study& study,
     nbThermalTimeseries_ = parameters.nbTimeSeriesThermal;
 
     derated = parameters.derated;
+
+    FPOW.resize(366);
+    PPOW.resize(366);
 }
 
 void GeneratorTempData::writeResultsToDisk(const Data::Area& area,
@@ -274,6 +278,9 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
 
     for (uint d = 0; d < daysPerYear; ++d)
     {
+        FPOW[d].resize(AUN);
+        PPOW[d].resize(AUN);
+
         PODOfTheDay = (int)POD[d];
         FODOfTheDay = (int)FOD[d];
 
@@ -347,7 +354,6 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
 
         for (uint dayInTheYear = 0; dayInTheYear < daysPerYear; ++dayInTheYear)
         {
-            assert(AUN <= 100 and "Thermal Prepro: AUN is out of bounds (>=100)");
             assert(dayInTheYear < 366);
             assert(not(lf[dayInTheYear] < 0.));
             assert(not(lp[dayInTheYear] < 0.));
