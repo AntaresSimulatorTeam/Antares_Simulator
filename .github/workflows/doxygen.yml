@@ -27,7 +27,7 @@ jobs:
              git apply ../docs/antares-simulator-doxygen.patch
              
       - name: Doxygen
-        uses: mattnotmitt/doxygen-action@1.9.5
+        uses: mattnotmitt/doxygen-action@v1.9.8
         with:
           doxyfile-path:  docs/Doxyfile
 
