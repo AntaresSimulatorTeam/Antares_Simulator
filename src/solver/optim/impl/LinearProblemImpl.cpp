@@ -50,6 +50,7 @@ MPConstraint& LinearProblemImpl::addBalanceConstraint(string name, double bound,
 MPConstraint& LinearProblemImpl::getConstraint(string name)
 {
     MPConstraint* cnt = mpSolver->LookupConstraintOrNull(name);
+    // TODO Better error handling (logs, etc.)
     if (!cnt)
         throw;
     return *cnt;
@@ -68,6 +69,7 @@ void LinearProblemImpl::setMinimization(bool isMinim)
 MipSolution LinearProblemImpl::solve(const operations_research::MPSolverParameters& param)
 {
     auto status = mpSolver->Solve(param);
+    // TODO remove this
     // std::string str;
     // mpSolver->ExportModelAsLpFormat(false, &str);
     map<string, double> solution;
