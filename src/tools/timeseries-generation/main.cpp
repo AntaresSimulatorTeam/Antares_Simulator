@@ -5,9 +5,7 @@
 #include <antares/study/study.h>
 #include <antares/logs/logs.h>
 
-
-namespace Antares::TimeSeriesGeneration
-{
+using namespace Antares;
 
 int main(int argc, char *argv[])
 {
@@ -22,9 +20,8 @@ int main(int argc, char *argv[])
 
     for (auto& [name, area] : study->areas)
         for (auto& c : area->thermal.list.all())
-            std::cout << c->name();
+            logs.notice() << c->name();
 
     return 0;
 }
 
-} // namespace Antares::TimeSeriesGeneration
