@@ -667,6 +667,51 @@ static void generateSpecificClusters(Data::AreaList& areas,
     }
 }
 
+static std::vector<Data::ThermalCluster*> getClustersToGen(Data::AreaList& areas,
+                                                           const std::string& clustersToGen,
+                                                           bool globalThermalTSgeneration,
+                                                           bool refreshTSonCurrentYear)
+{
+
+    std::vector<Data::ThermalCluster*> clusters;
+
+    if (clustersToGen.empty()) // generate TS for all clusters
+    {
+        areas.each([&clusters, &globalThermalTSgeneration, &refreshTSonCurrentYear](Data::Area& area) {
+            for (auto cluster : area.thermal.list.all())
+                if (cluster->doWeGenerateTS(globalThermalTSgeneration) && refreshTSonCurrentYear)
+                    clusters.push_back(cluster.get());
+        });
+    }
+    else
+    {
+        const auto names = splitStringIntoPairs(clustersToGen, ';', '.');
+
+        for (const auto& [areaName, clusterName] : names)
+        {
+            logs.info() << "Generating ts for area: " << areaName << " and cluster: " << clusterName;
+
+            auto* area = areas.find(areaName);
+            if (!area)
+            {
+                logs.warning() << "Area not found: " << areaName;
+                continue;
+            }
+
+            auto* cluster = area->thermal.list.findInAll(clusterName);
+            if (!cluster)
+            {
+                logs.warning() << "Cluster not found: " << clusterName;
+                continue;
+            }
+
+            clusters.push_back(cluster);
+        }
+    }
+
+    return clusters;
+}
+
 bool GenerateThermalTimeSeries(Data::Study& study,
                                const std::string& clustersToGen,
                                uint year,
