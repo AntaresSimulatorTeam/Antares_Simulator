@@ -15,5 +15,9 @@ target_link_libraries(${execname}
                       antares-solver-ts-generator
                       Antares::study)
 
+target_include_directories(${execname}
+        PRIVATE
+        "${CMAKE_CURRENT_SOURCE_DIR}/include"
+)
 import_std_libs(${execname})
 executable_strip(${execname})
