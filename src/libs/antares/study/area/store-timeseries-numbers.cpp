@@ -79,7 +79,7 @@ void storeTimeseriesNumbersForHydro(Solver::IResultWriter& writer, const Area& a
 
 void storeTimeseriesNumbersForHydroMaxPower(Solver::IResultWriter& writer, const Area& area)
 {
-    storeTSnumbers(writer, area.hydro.series->timeseriesNumbersHydroMaxPower, area.id, "max-power");
+    storeTSnumbers(writer, area.hydro.series->timeseriesNumbersHydroMaxPower, area.id, "hgp");
 }
 
 void storeTimeseriesNumbersForWind(Solver::IResultWriter& writer, const Area& area)
