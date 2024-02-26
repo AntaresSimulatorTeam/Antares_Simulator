@@ -625,48 +625,6 @@ std::vector<std::pair<std::string, std::string>> splitStringIntoPairs (const std
     return pairs;
 }
 
-static void generateAllClusters(Data::AreaList& areas,
-                                GeneratorTempData* generator,
-                                bool globalThermalTSgeneration,
-                                bool refreshTSonCurrentYear)
-{
-    areas.each([&](Data::Area& area) {
-        for (auto cluster : area.thermal.list.all())
-        {
-            if (cluster->doWeGenerateTS(globalThermalTSgeneration) && refreshTSonCurrentYear)
-                (*generator)(area, *cluster);
-        }
-    });
-}
-
-static void generateSpecificClusters(Data::AreaList& areas,
-                                     const std::string& clustersToGen,
-                                     GeneratorTempData* generator)
-{
-    const auto names = splitStringIntoPairs(clustersToGen, ';', '.');
-
-    for (const auto& [areaName, clusterName] : names)
-    {
-        logs.info() << "Generating ts for area: " << areaName << " and cluster: " << clusterName;
-
-        auto* area = areas.find(areaName);
-        if (!area)
-        {
-            logs.warning() << "Area not found: " << areaName;
-            continue;
-        }
-
-        auto* cluster = area->thermal.list.findInAll(clusterName);
-        if (!cluster)
-        {
-            logs.warning() << "Cluster not found: " << clusterName;
-            continue;
-        }
-
-        (*generator)(*area, *cluster);
-    }
-}
-
 static std::vector<Data::ThermalCluster*> getClustersToGen(Data::AreaList& areas,
                                                            const std::string& clustersToGen,
                                                            bool globalThermalTSgeneration,
@@ -727,10 +685,11 @@ bool GenerateThermalTimeSeries(Data::Study& study,
 
     generator->currentYear = year;
 
-    if (clustersToGen.empty()) // generate TS for all clusters
-        generateAllClusters(study.areas, generator, globalThermalTSgeneration, refreshTSonCurrentYear);
-    else
-        generateSpecificClusters(study.areas, clustersToGen, generator);
+    const auto clusters = getClustersToGen(study.areas, clustersToGen, globalThermalTSgeneration,
+                                            refreshTSonCurrentYear);
+
+    for (auto* cluster : clusters)
+        (*generator)(*cluster->parentArea, *cluster);
 
     delete generator;
 
