@@ -55,7 +55,7 @@ public:
     {
         // Removing references to this instance
         {
-            Yuni::MutexLocker locker(pParent->pMutex);
+            std::lock_guard locker(pParent->pMutex);
             if (pParent->pInfos)
                 pParent->pInfos->onProgress.unbind();
         }
@@ -66,7 +66,7 @@ protected:
     virtual bool onStarting() override
     {
         // Cleaning
-        Yuni::MutexLocker locker(pParent->pMutex);
+        std::lock_guard locker(pParent->pMutex);
         if (pParent->pInfos)
         {
             pParent->pInfos->onProgress.bind(this, &CleaningThread::onProgress);
@@ -241,7 +241,7 @@ void StudyCleaner::studyFolder(const wxString& folder)
 
     // Reset internal variables
     {
-        Yuni::MutexLocker locker(pMutex);
+        std::lock_guard locker(pMutex);
         if (&pFolder != &folder) // avoid possible undefined behavior
             pFolder = folder;
         pProgressionCount = 0;
@@ -397,7 +397,7 @@ void StudyCleaner::updateGUI(bool hasItems)
 
 void StudyCleaner::progress(uint count)
 {
-    Yuni::MutexLocker locker(pMutex);
+    std::lock_guard locker(pMutex);
     pProgressionCount = count;
 }
 

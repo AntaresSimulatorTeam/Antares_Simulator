@@ -23,6 +23,7 @@
 
 #include <yuni/core/singleton.h>
 #include <yuni/thread/timer.h>
+#include <mutex>
 #include <map>
 #include <list>
 #include <vector>
@@ -183,7 +184,7 @@ private:
         //
         Progression::Part::Map parts;
         Part::ListRef inUse;
-        Yuni::Mutex mutex;
+        std::mutex mutex;
         uint nbParallelYears;
 
         // Because writing something to the logs might be expensive, we have to
