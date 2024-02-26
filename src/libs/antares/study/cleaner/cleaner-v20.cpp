@@ -133,7 +133,7 @@ static void listOfFilesAnDirectoriesToKeepForArea(PathList& e, PathList& p, cons
         buffer.clear() << "input/thermal/clusters/" << id << "/list.ini";
         e.add(buffer);
 
-        for (const auto& cluster : area->thermal.list)
+        for (auto cluster : area->thermal.list.all())
         {
             buffer.clear() << "input/thermal/prepro/" << id << '/' << cluster->id();
             p.add(buffer);
@@ -162,7 +162,7 @@ static void listOfFilesAnDirectoriesToKeepForArea(PathList& e, PathList& p, cons
         buffer.clear() << "input/renewables/clusters/" << id << "/list.ini";
         e.add(buffer);
 
-        for (const auto& cluster : area->renewable.list)
+        for (const auto cluster : area->renewable.list.all())
         {
             buffer.clear() << "input/renewables/series/" << id << '/' << cluster->id();
             p.add(buffer);
@@ -351,7 +351,7 @@ bool listOfFilesAnDirectoriesToKeep(StudyCleaningInfos* infos)
             // Exclude
             listOfFilesAnDirectoriesToKeepForArea(e, p, area, buffer);
             // Clear the memory used by the thermal clusters of the area
-            area->thermal.list.clear();
+            area->thermal.list.clearAll();
 
             // Interconnections
             {

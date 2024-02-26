@@ -6,8 +6,9 @@ on:
       - main
       - develop
       - release/*
-  pull_request:
-
+      - dependabot/*
+      - fix/*
+      - feature/*
 jobs:
   sonarcloud:
     name: SonarCloud
@@ -22,7 +23,7 @@ jobs:
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
 
@@ -62,7 +63,7 @@ jobs:
           ortools-dir: ${{env.ORTOOLS_DIR}}
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: 3.12
 

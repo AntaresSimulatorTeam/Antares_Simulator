@@ -35,11 +35,11 @@ bool thermalTSNumberData::reset(const Study& study)
     // If an area is available, it can only be an overlay for thermal timeseries
     // WARNING: The total number of clusters may vary if used from the
     //   solver or not.
-    // WARNING: At this point in time, the variable pArea->thermal.clusterCount()
+    // WARNING: At this point, the variable pArea->thermal.list.size()
     //   might not be valid (because not really initialized yet)
     uint clusterCount = (study.usedByTheSolver)
-                        ? (pArea->thermal.list.size() + pArea->thermal.mustrunList.size())
-                        : pArea->thermal.list.size();
+                        ? (pArea->thermal.list.enabledCount())
+                        : pArea->thermal.list.allClustersCount();
 
     // Resize
     pTSNumberRules.reset(clusterCount, nbYears);
@@ -56,25 +56,16 @@ void thermalTSNumberData::saveToINIFile(const Study& /* study */,
     if (!pArea)
         return;
 
-#ifndef NDEBUG
-    if (pTSNumberRules.width)
+    for (auto cluster : pArea->thermal.list.all())
     {
-        assert(pTSNumberRules.width == pArea->thermal.list.size());
-    }
-#endif
-
-    // Foreach thermal cluster...
-    for (uint index = 0; index != pTSNumberRules.width; ++index)
-    {
-        // Foreach year ...
-        for (uint y = 0; y != pTSNumberRules.height; ++y)
+        for (uint year = 0; year != pTSNumberRules.height; ++year)
         {
-            const uint val = get(pArea->thermal.list[index].get(), y);
+            const uint val = get(cluster.get(), year);
             // Equals to zero means 'auto', which is the default mode
             if (!val)
                 continue;
-            file << prefix << pArea->id << "," << y << ','
-                 << pArea->thermal.list[index]->id() << " = " << val << '\n';
+            file << prefix << pArea->id << "," << year << ','
+                 << cluster->id() << " = " << val << '\n';
         }
     }
 }
@@ -98,23 +89,18 @@ bool thermalTSNumberData::apply(Study& study)
     // Alias to the current area
     assert(pArea != nullptr);
     assert(pArea->index < study.areas.size());
-    Area& area = *(study.areas.byIndex[pArea->index]);
-    // The total number of clusters for the area
-    // WARNING: We may have some thermal clusters with the `mustrun` option
-    auto clusterCount = (uint)area.thermal.clusterCount();
+    const Area& area = *(study.areas.byIndex[pArea->index]);
 
     const uint tsGenCountThermal = get_tsGenCount(study);
 
-    for (uint clusterIndex = 0; clusterIndex != clusterCount; ++clusterIndex)
+    for (auto cluster : area.thermal.list.each_enabled())
     {
-        auto& cluster = *(area.thermal.clusters[clusterIndex]);
-        // alias to the current column
-        assert(clusterIndex < pTSNumberRules.width);
-        const auto& col = pTSNumberRules[clusterIndex];
+        assert(cluster->areaWideIndex < pTSNumberRules.width);
+        const auto& col = pTSNumberRules[cluster->areaWideIndex];
 
-        logprefix.clear() << "Thermal: area '" << area.name << "', cluster: '" << cluster.name()
+        logprefix.clear() << "Thermal: area '" << area.name << "', cluster: '" << cluster->name()
                           << "': ";
-        ret = ApplyToMatrix(errors, logprefix, cluster.series, col, tsGenCountThermal) && ret;
+        ret = ApplyToMatrix(errors, logprefix, cluster->series, col, tsGenCountThermal) && ret;
     }
     return ret;
 }

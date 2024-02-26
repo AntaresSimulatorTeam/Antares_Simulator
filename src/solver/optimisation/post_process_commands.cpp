@@ -47,19 +47,16 @@ void DispatchableMarginPostProcessCmd::execute(const optRuntimeData& opt_runtime
         for (uint h = 0; h != nbHoursInWeek; ++h)
             dtgmrg[h] = 0.;
 
-        if (not area.thermal.list.empty())
-        {
-            auto& hourlyResults = problemeHebdo_->ResultatsHoraires[area.index];
+        auto& hourlyResults = problemeHebdo_->ResultatsHoraires[area.index];
 
-            for (const auto& cluster : area.thermal.list)
+        for (const auto& cluster : area.thermal.list.each_enabled_and_not_mustrun())
+        {
+            const auto& availableProduction = cluster->series.getColumn(year);
+            for (uint h = 0; h != nbHoursInWeek; ++h)
             {
-                const auto& availableProduction = cluster->series.getColumn(year);
-                for (uint h = 0; h != nbHoursInWeek; ++h)
-                {
-                    double production = hourlyResults.ProductionThermique[h]
-                                          .ProductionThermiqueDuPalier[cluster->index];
-                    dtgmrg[h] += availableProduction[h + hourInYear] - production;
-                }
+                double production = hourlyResults.ProductionThermique[h]
+                                        .ProductionThermiqueDuPalier[cluster->index];
+                dtgmrg[h] += availableProduction[h + hourInYear] - production;
             }
         }
     });

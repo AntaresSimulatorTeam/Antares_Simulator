@@ -90,7 +90,6 @@ void storeTimeseriesNumbersForWind(Solver::IResultWriter& writer, const Area& ar
 void storeTimeseriesNumbersForThermal(Solver::IResultWriter& writer, const Area& area)
 {
     area.thermal.list.storeTimeseriesNumbers(writer);
-    area.thermal.mustrunList.storeTimeseriesNumbers(writer);
 }
 
 void storeTimeseriesNumbersForRenewable(Solver::IResultWriter& writer, const Area& area)

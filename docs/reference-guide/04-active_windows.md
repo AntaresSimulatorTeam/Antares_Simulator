@@ -4,6 +4,8 @@
 Data can be reviewed, updated, deleted by selecting different possible active windows whose list and content
 are described hereafter. On launching Antares, the default active window is "System Maps".
 
+__DISCLAIMER: this section sometimes refers to the original interfaces of Antares-Simulator, which are deprecated. Please refer to the [AntaresWeb online documentation](https://antares-web.readthedocs.io/en/latest/) for the description of the current interface.__
+
 ## System Maps
 
 This window is used to define the general structure of the system, i.e. the list of areas and that of the interconnections. Only the area's names, location and the topology of the grid are defined at this stage. Different colors may be assigned to different areas. These colors may later be used as sorting options in most windows. They are useful to edit data in a fashion that has a geographic meaning (which the lexicographic order may not have). This window displays copy/paste/select all icons equivalent to the relevant EDIT menu commands.
@@ -135,6 +137,8 @@ A built-in notepad for recording comments regarding the study. Such comments typ
 
 ## Load
 
+_[Documentation of the AntaresWeb interface for this section](https://antares-web.readthedocs.io/en/latest/user-guide/study/areas/02-load/)_
+
 This window is used to handle all input data regarding load. In Antares load should include transmission losses. It should preferably not include the power absorbed by pumped storage power plants. If it does, the user should neither use the "PSP" array (see window "Misc. Gen") nor the explicit modeling of PSP plants
 
 The user may pick any area appearing in the list and is then given access to different tabs:
@@ -182,6 +186,8 @@ The user may pick any area appearing in the list and is then given access to dif
     - The "digest" tab displays for all areas a short account of the local data
 
 ## Thermal
+
+_[Documentation of the AntaresWeb interface for this section](https://antares-web.readthedocs.io/en/latest/user-guide/study/areas/03-thermals/)_
 
 This window is used to handle all input data regarding thermal dispatchable power.
 
@@ -247,7 +253,7 @@ Durations are expressed in days and rates belong to [0 , 1].
     - Minimum Up time (hours)
     - Minimum Down time (hours)
     - Default contribution to the spinning reserve (% of nominal capacity)
-    - CO2 tons emitted per electric MWh
+    - tons of different pollutant types (CO2, SO2, etc.) emitted per electric MWh
     - Fuel efficiency (%)
     - Cost generation [Set manually / Use cost timeseries]
     - Marginal operating cost (€/MWh)
@@ -279,13 +285,46 @@ Durations are expressed in days and rates belong to [0 , 1].
     - _Note that:_
 
         - _If `Cost generation` is set to `Set manually` Marginal and Market bid costs (€/MWh) are specified directly in `Common` tab and have the same value for all time-series and hours._
-        - _If `Cost generation` is set to `Use cost timeseries` Marginal and Market bid costs (€/MWh) are calculated separately for all the time-series and hours using following equation:_\
-        _Marginal_Cost[€/MWh] = Market_Bid_Cost[€/MWh] = (Fuel_Cost[€/GJ] * 3.6 * 100 / Efficiency[%]) + CO2_emission_factor[tons/MWh] * C02_cost[€/tons] + Variable_O&M_cost[€/MWh]_\
-        _where Efficiency[%], CO2_emission_factor[tons/MWh] and Variable_O&M_cost[€/MWh] are specified in `Common` tab under operating costs and parameters, while Fuel_Cost[€/GJ] and C02_cost[€/tons] are provided as time-series in separate tabs._
+        - _If `Cost generation` is set to `Use cost timeseries` Marginal and Market bid costs (€/MWh) are calculated separately for all the time-series and hours using the following equation:_  
+        _Marginal_Cost[€/MWh] = Market_Bid_Cost[€/MWh] = (Fuel_Cost[€/GJ] * 3.6 * 100 / Efficiency[%]) + CO2_emission_factor[tons/MWh] * C02_cost[€/tons] + Variable_O&M_cost[€/MWh]_  
+        _where Efficiency[%], CO2_emission_factor[tons/MWh] and Variable_O&M_cost[€/MWh] are specified in the `Common` tab under operating costs and parameters, while Fuel_Cost[€/GJ] and C02_cost[€/tons] are provided as time-series in separate tabs._
+
+
+## Storages
+
+_[Documentation of the AntaresWeb interface for this section](https://antares-web.readthedocs.io/en/latest/user-guide/study/areas/08-st-storages/)_
+
+This window is used to create and edit short-term storage objects. An individual short-term storage component is defined as an object with the following characteristics:
+
+- Storage managed with a filling level which is identical at the start and end of each Antares optimization window;
+- Rule curves that frame permissible storage levels hour by hour - the admissible range is a coefficient comprised between 0 and 1;
+- Time-series of hourly modulation of the maximum injection and withdrawal power;
+- Time-series of natural inflows (case of an open-cycle PSP).
+
+The user may pick any area appearing in the area list and is then given access to the list of short-term storages defined for the area. Once a given storage has been selected, the following characteristics can be set:
+
+- General characteristics of the storage:
+	- Name
+	- Group: the type of storage, based on a predefined list of storages ("PSP_open", "PSP_closed", "Pondage", "Battery", "Other1", "Other2", ..., "Other5")
+	- Withdrawal (MW): the maximum withdrawal power for the storage - withdrawal refers to the flow from the storage to the power system
+	- Injection (MW): the maximum injection power for the storage - withdrawal refers to the flow from the power system to the storage
+	- Stock (MWh): the capacity of the storage in MWh
+	- Efficiency (%): the energy efficiency of the storage, i.e. the ratio for a given volume between the energy taken from the system to be injected into the storage and the energy returned to the system during its withdrawal. This efficiency factor is applied when injecting energy into the storage.
+	- Initial level (%): the imposed initial filling rate of the storage at the beginning of each optimisation period.
+	- Initial level optimal: if the parameter is activated, the "Initial level" parameter is ignored and the initial storage level is optimized by Antares for each optimization period to minimize its objective function.  
+	_Note: setting this parameter to "True" implies that there is no guarantee that the initial storage level of week N is the same as the final storage level of week N-1. However, the final level of week N is always equal to the initial level of the same week N plus/minus the injections/withdrawals occuring at the last hour of week N._
+	
+- "Injections/withdrawal capacities": a hourly time-series of modulation factors of the injection and withdrawal capacity for each hour (between 0 and 1), reflecting a lower availability of the structures during certain periods. At a given hour, the overall injection/withdrawal capacities of the storage are the product of this modulation factor by the "Withdrawal" and "Injection" parameters in the General data.
+
+- "Rule curves": a hourly time-series of rule curves (between 0 and 1), which are the lower and upper limits of the storage level imposed at each hour. 
+
+- "Inflows": a hourly time-series of inflows filling the storage (in MWh). The values can be negative, corresponding to withdrawals imposed on the storage for other uses.
 
 ## Hydro
 
-This section of the GUI is meant to handle all input data regarding hydro power,
+_[Documentation of the AntaresWeb interface for this section](https://antares-web.readthedocs.io/en/latest/user-guide/study/areas/05-hydro/)_
+
+This section of the AntaresWeb interface for this section is meant to handle all input data regarding hydro power,
 as well as any other kind of energy storage system of any size (from a small battery to a large
 conventional hydro-storage reservoir with or without pumping facilities, etc.): Hydro power being
 historically the first and largest form of power storage, it stood to reason that it should play in
@@ -448,6 +487,8 @@ regardless of whether a pre-allocation heuristic is used or not.
 
 ## Wind
 
+_[Documentation of the AntaresWeb interface for this section](https://antares-web.readthedocs.io/en/latest/user-guide/study/areas/06-wind/)_
+
 This window is used to handle all input data regarding Wind power.
 This window is only accessible when the advanced parameter Renewable Generation modeling is set to "Aggregated".
 
@@ -487,6 +528,8 @@ The user may pick any area appearing in the list and is then given access to dif
 
 
 ## Solar
+
+_[Documentation of the AntaresWeb interface for this section](https://antares-web.readthedocs.io/en/latest/user-guide/study/areas/07-solar/)_
 
 This window is used to handle all input data regarding Solar power. Both thermal solar generation and PV solar generation are assumed to be bundled in this data section.
 _This window is only accessible when the advanced parameter Renewable Generation modeling is set to "aggregated”._
@@ -528,6 +571,8 @@ The user may pick any area appearing in the list and is then given access to dif
 
 
 ## Renewable
+
+_[Documentation of the AntaresWeb interface for this section](https://antares-web.readthedocs.io/en/latest/user-guide/study/areas/04-renewables/)_
 
 This window is used to handle all input data regarding renewable generation.
 _This window is only accessible when the advanced parameter Renewable Generation modeling is set to "cluster” (default value)._
@@ -576,6 +621,8 @@ The user may pick any area appearing in the area list and is then given access t
 
 ## Misc. Gen.
 
+_[Documentation of the AntaresWeb interface for this section](https://antares-web.readthedocs.io/en/latest/user-guide/study/areas/10-misc-gen/)_
+
 This window is used to handle all input data regarding miscellaneous non dispatchable generation.
 
 On picking any area in the primary list, the user gets direct access to all data regarding the area, which amount to **8** ready-made 8760-hour time-series (expressed in MW):
@@ -608,6 +655,8 @@ On picking any area in the primary list, the user gets direct access to all data
         - Adjust the values associated with the current first day of the year (function name: shift rows)
 
 ## Reserves / DSM
+
+_[Documentation of the AntaresWeb interface for this section](https://antares-web.readthedocs.io/en/latest/user-guide/study/areas/09-reserves/)_
 
 This window is used to handle all input data regarding reserves and the potential of "smart" load management (when not modeled using "fake" thermal dispatchable plants). On picking any area in the primary list, the user gets direct access to all data regarding the area, which amount to **four** ready-made 8760-hour time-series (expressed in MW). Those reserves are available in either "adequacy" or "economy" simulations:
 
@@ -669,7 +718,7 @@ In this tab, the table "Direct" describes the upstream-to-downstream capacity, i
 
 ## Binding constraints
 
-This section of the GUI is used to handle all data regarding special constraints that one may wish to include in the formulation of the optimization problems to solve.
+This section of the AntaresWeb interface for this section is used to handle all data regarding special constraints that one may wish to include in the formulation of the optimization problems to solve.
 
 The set of tabs described hereafter provides for that purpose all the means required to define arbitrary linear constraints on any subset of continuous variables involved in the modeling of the power system.
 
@@ -698,7 +747,7 @@ More generally, Antares allows to define three categories of binding constraints
 
 - "weekly" binding constraints, that are applied to weekly energies. Like the previous ones, these constraints may be used to model commercial contracts or various phenomena, such as the operation of a pumped storage power plant operated on a weekly cycle.
 
-The Binding Constraints section of the GUI involves six main tabs described hereafter:
+The Binding Constraints section of the AntaresWeb interface for this section involves six main tabs described hereafter:
 
 - **TAB "summary"**
 Creation, edition or removal of a binding constraint. A binding constraint is here defined by four macroscopic attributes that can be set by the edit command:

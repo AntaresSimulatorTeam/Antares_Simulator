@@ -10,11 +10,15 @@ on:
       - issue-*
       - release/*
       - doc/*
+      - dependabot/*
   schedule:
     - cron: '21 2 * * *'
   workflow_call:
     inputs:
       run-tests:
+        required: true
+        type: string
+      target_branch:
         required: true
         type: string
 
@@ -23,6 +27,7 @@ env:
   IS_RELEASE: ${{ github.event_name == 'workflow_dispatch' }}
   RUN_SIMPLE_TESTS: ${{ github.event_name == 'push' || inputs.run-tests == 'true' }}
   RUN_EXTENDED_TESTS: ${{ github.event_name == 'schedule' || inputs.run-tests == 'true' }}
+  REF: ${{ inputs.target_branch =='' && github.ref || inputs.target_branch}}
 
 
 jobs:
@@ -40,7 +45,10 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v3
+
+    - uses: actions/checkout@v4
+      with:
+        ref: ${{ env.REF }}
 
     - name: Config OR-Tools URL
       run: |
@@ -76,7 +84,7 @@ jobs:
 
     # Restore both vcpkg and its artifacts from the GitHub cache service.
     - name: Restore vcpkg and its artifacts.
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         # The first path is the location of vcpkg (it contains the vcpkg executable and data files).
         # The other paths starting with '!' are exclusions: they contain termporary files generated during the build of the installed packages.
@@ -115,7 +123,7 @@ jobs:
         ortools-dir: ${{env.ORTOOLS_DIR}}
 
     - name: Setup Python 3.12
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       id: setup-python
       with:
         architecture: 'x64'
@@ -290,7 +298,7 @@ jobs:
       shell: bash
       run: |
            cd _build
-           zip -r antares-solver_windows.zip solver/Release/antares-*-solver.exe solver/Release/*.dll
+           zip -r antares-solver_windows.zip solver/Release/antares-solver.exe solver/Release/*.dll
 
     - name: NSIS Installer creation
       shell: bash

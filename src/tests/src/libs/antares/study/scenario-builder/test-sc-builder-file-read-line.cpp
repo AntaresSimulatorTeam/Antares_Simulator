@@ -38,14 +38,12 @@ using namespace Antares::Data;
 
 void addClusterToAreaList(Area* area, std::shared_ptr<ThermalCluster> cluster)
 {
-	area->thermal.clusters.push_back(cluster.get());
-	area->thermal.list.add(cluster);
-	area->thermal.list.mapping[cluster->id()] = cluster;
+	area->thermal.list.addToCompleteList(cluster);
 }
 
 void addClusterToAreaList(Area* area, std::shared_ptr<RenewableCluster> cluster)
 {
-	area->renewable.list.add(cluster);
+	area->renewable.list.addToCompleteList(cluster);
 }
 
 template<class ClusterType>
@@ -131,11 +129,6 @@ struct Fixture
 		thCluster_12->series.timeSeries.resize(14, 1);
 		thCluster_31->series.timeSeries.resize(14, 1);
 
-		// Thermal clusters : update areas local numbering for clusters
-		area_1->thermal.prepareAreaWideIndexes();
-		area_2->thermal.prepareAreaWideIndexes();
-		area_3->thermal.prepareAreaWideIndexes();
-
 		// Add renewable clusters
 		rnCluster_21 = addClusterToArea<RenewableCluster>(area_2, "rn-cluster-21");
 		rnCluster_31 = addClusterToArea<RenewableCluster>(area_3, "rn-cluster-31");
@@ -145,11 +138,6 @@ struct Fixture
 		rnCluster_21->series.timeSeries.resize(9, 1);
 		rnCluster_31->series.timeSeries.resize(9, 1);
 		rnCluster_32->series.timeSeries.resize(9, 1);
-
-		// Renewable clusters : update areas local numbering for clusters
-		area_1->renewable.prepareAreaWideIndexes();
-		area_2->renewable.prepareAreaWideIndexes();
-		area_3->renewable.prepareAreaWideIndexes();
 
 		// Resize all TS numbers storage (1 column x nbYears lines) 
 		area_1->resizeAllTimeseriesNumbers(study->parameters.nbYears);

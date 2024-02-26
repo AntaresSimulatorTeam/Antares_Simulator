@@ -10,11 +10,15 @@ on:
       - issue-*
       - release/*
       - doc/*
+      - dependabot/*
   schedule:
     - cron: '21 2 * * *'
   workflow_call:
     inputs:
       run-tests:
+        required: true
+        type: string
+      target_branch:
         required: true
         type: string
 
@@ -23,6 +27,7 @@ env:
   IS_RELEASE: ${{ github.event_name == 'workflow_dispatch' }}
   RUN_SIMPLE_TESTS: ${{ github.event_name == 'push' || inputs.run-tests == 'true' }}
   RUN_EXTENDED_TESTS: ${{ github.event_name == 'schedule' || inputs.run-tests == 'true' }}
+  REF: ${{ inputs.target_branch =='' && github.ref || inputs.target_branch}}
 
 jobs:
 
@@ -36,8 +41,10 @@ jobs:
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     
     steps:
-    - uses: actions/checkout@v3
-
+    - uses: actions/checkout@v4
+      with:
+        ref: ${{ env.REF }}
+        
     - name: ccache
       uses: hendrikmuhs/ccache-action@v1.2
       with:
@@ -72,7 +79,7 @@ jobs:
 
     - name: Set up Python
       id: setup-python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: '3.12'
 
@@ -257,7 +264,7 @@ jobs:
            cmake --install . --prefix install
            pushd .
            cd install/bin
-           tar czf ../../antares-solver_ubuntu20.04.tar.gz antares-*-solver libsirius_solver.so
+           tar czf ../../antares-solver_ubuntu20.04.tar.gz antares-solver libsirius_solver.so
            popd
            rm -rf install
 
