@@ -847,12 +847,6 @@ var hierarchy =
       [ "kirchhoff_pytest.StudyReference", "classkirchhoff__pytest_1_1StudyReference.html", null ]
     ] ],
     [ "Yuni::Policy::ObjectLevelLockable", null, [
-      [ "Antares::Data::StudyFinder", "classAntares_1_1Data_1_1StudyFinder.html", [
-        [ "MyStudyFinder", "classMyStudyFinder.html", null ],
-        [ "MyStudyFinder", "classMyStudyFinder.html", null ],
-        [ "MyStudyFinder", "classMyStudyFinder.html", null ],
-        [ "StudyFinderCleaner", "classStudyFinderCleaner.html", null ]
-      ] ],
       [ "Antares::Memory", "classAntares_1_1Memory.html", null ]
     ] ],
     [ "Yuni::Policy::ObjectLevelLockableNotRecursive", null, [
@@ -1239,6 +1233,12 @@ var hierarchy =
     [ "Antares::Data::StudyCleaningInfos", "classAntares_1_1Data_1_1StudyCleaningInfos.html", null ],
     [ "Antares::TSGenerator::XCast::StudyData", "classAntares_1_1TSGenerator_1_1XCast_1_1StudyData.html", null ],
     [ "StudyData", "classStudyData.html", null ],
+    [ "Antares::Data::StudyFinder", "classAntares_1_1Data_1_1StudyFinder.html", [
+      [ "MyStudyFinder", "classMyStudyFinder.html", null ],
+      [ "MyStudyFinder", "classMyStudyFinder.html", null ],
+      [ "MyStudyFinder", "classMyStudyFinder.html", null ],
+      [ "StudyFinderCleaner", "classStudyFinderCleaner.html", null ]
+    ] ],
     [ "Antares::Data::StudyHeader", "classAntares_1_1Data_1_1StudyHeader.html", null ],
     [ "Benchmarking::StudyInfoCollector", "classBenchmarking_1_1StudyInfoCollector.html", null ],
     [ "Antares::Data::StudyLoadOptions", "classAntares_1_1Data_1_1StudyLoadOptions.html", null ],

@@ -1,6 +1,5 @@
 var NAVTREEINDEX11 =
 {
-"classAntares_1_1I__mtx__to__buffer__dumper.html":[7,0,0,28],
 "classAntares_1_1IniFile.html":[7,0,0,29],
 "classAntares_1_1IniFile.html#a00a4ab7ba3da35393f7d334396177126":[7,0,0,29,18],
 "classAntares_1_1IniFile.html#a072c2782308977e7a081f799b159ee05":[7,0,0,29,10],
@@ -249,5 +248,6 @@ var NAVTREEINDEX11 =
 "classAntares_1_1Matrix.html#a391c07855c0ed159d5b99ae9f448c5b2":[7,0,0,31,15],
 "classAntares_1_1Matrix.html#a39223f70956d91bd1619b365590eb222":[7,0,0,31,14],
 "classAntares_1_1Matrix.html#a39ef7ff62df2ea41ac18ec775ef8023a":[7,0,0,31,46],
-"classAntares_1_1Matrix.html#a3fbf0ab3853312d666c482c70c4428c0":[7,0,0,31,42]
+"classAntares_1_1Matrix.html#a3fbf0ab3853312d666c482c70c4428c0":[7,0,0,31,42],
+"classAntares_1_1Matrix.html#a445a7818d4a99a9435189b353cab5365":[7,0,0,31,6]
 };

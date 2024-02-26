@@ -1,7 +1,6 @@
 var classAntares_1_1Data_1_1StudyFinder =
 [
     [ "FolderVector", "classAntares_1_1Data_1_1StudyFinder.html#aae3a75750620371536bf6666ceb15be0", null ],
-    [ "ThreadingPolicy", "classAntares_1_1Data_1_1StudyFinder.html#a30e1013e437cdfeae7451d2d25b52806", null ],
     [ "StudyFinder", "classAntares_1_1Data_1_1StudyFinder.html#a54ac66bd04d56d4bb7e668c3b8a1a300", null ],
     [ "StudyFinder", "classAntares_1_1Data_1_1StudyFinder.html#a89ce5c6739373666b0000b0307297441", null ],
     [ "~StudyFinder", "classAntares_1_1Data_1_1StudyFinder.html#aa56016a0ab776dda5e630ff358aabc31", null ],

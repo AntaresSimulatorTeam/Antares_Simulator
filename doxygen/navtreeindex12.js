@@ -1,6 +1,5 @@
 var NAVTREEINDEX12 =
 {
-"classAntares_1_1Matrix.html#a445a7818d4a99a9435189b353cab5365":[7,0,0,31,6],
 "classAntares_1_1Matrix.html#a49b9aaaf2f7fcd652198cfc4c6d2bfd0":[7,0,0,31,54],
 "classAntares_1_1Matrix.html#a4fe99caa3f6123bffc44a077296ce11f":[7,0,0,31,27],
 "classAntares_1_1Matrix.html#a53c8917d6aa96867db4dc17131d62311":[7,0,0,31,40],
@@ -249,5 +248,6 @@ var NAVTREEINDEX12 =
 "classAntares_1_1Solver_1_1Simulation_1_1yearJob.html":[7,0,0,12,3,23],
 "classAntares_1_1Solver_1_1Simulation_1_1yearRandomNumbers.html":[7,0,0,12,3,24],
 "classAntares_1_1Solver_1_1SolarAreaNumberOfTSretriever.html":[7,0,0,12,18],
-"classAntares_1_1Solver_1_1ThermalAreaNumberOfTSretriever.html":[7,0,0,12,19]
+"classAntares_1_1Solver_1_1ThermalAreaNumberOfTSretriever.html":[7,0,0,12,19],
+"classAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1OverallCost.html":[7,0,0,12,4,0,0]
 };

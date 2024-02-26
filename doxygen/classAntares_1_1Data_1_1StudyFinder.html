@@ -148,10 +148,10 @@ Inheritance diagram for Antares::Data::StudyFinder:</div>
  <div class="center">
   <img src="classAntares_1_1Data_1_1StudyFinder.png" usemap="#Antares::Data::StudyFinder_map" alt=""/>
   <map id="Antares::Data::StudyFinder_map" name="Antares::Data::StudyFinder_map">
-<area href="classMyStudyFinder.html" alt="MyStudyFinder" shape="rect" coords="0,112,297,136"/>
-<area href="classMyStudyFinder.html" alt="MyStudyFinder" shape="rect" coords="307,112,604,136"/>
-<area href="classMyStudyFinder.html" alt="MyStudyFinder" shape="rect" coords="614,112,911,136"/>
-<area href="classStudyFinderCleaner.html" alt="StudyFinderCleaner" shape="rect" coords="921,112,1218,136"/>
+<area href="classMyStudyFinder.html" alt="MyStudyFinder" shape="rect" coords="0,56,163,80"/>
+<area href="classMyStudyFinder.html" alt="MyStudyFinder" shape="rect" coords="173,56,336,80"/>
+<area href="classMyStudyFinder.html" alt="MyStudyFinder" shape="rect" coords="346,56,509,80"/>
+<area href="classStudyFinderCleaner.html" alt="StudyFinderCleaner" shape="rect" coords="519,56,682,80"/>
   </map>
 </div></div>
 <table class="memberdecls">
@@ -160,16 +160,15 @@ Public Types</h2></td></tr>
 <tr class="memitem:a80ebeac6eebfb4a8ba3f06c4dc2cfdbb" id="r_a80ebeac6eebfb4a8ba3f06c4dc2cfdbb"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom">{ <a class="el" href="classAntares_1_1Data_1_1StudyFinder.html#a80ebeac6eebfb4a8ba3f06c4dc2cfdbba5ecddd3432b0078388422eae6c84640a">defaultTimeout</a> = 10000
  }</td></tr>
 <tr class="separator:a80ebeac6eebfb4a8ba3f06c4dc2cfdbb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a30e1013e437cdfeae7451d2d25b52806" id="r_a30e1013e437cdfeae7451d2d25b52806"><td class="memItemLeft" align="right" valign="top"><a id="a30e1013e437cdfeae7451d2d25b52806" name="a30e1013e437cdfeae7451d2d25b52806"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>ThreadingPolicy</b> = Yuni::Policy::ObjectLevelLockable&lt; <a class="el" href="classAntares_1_1Data_1_1StudyFinder.html">StudyFinder</a> &gt;</td></tr>
-<tr class="memdesc:a30e1013e437cdfeae7451d2d25b52806"><td class="mdescLeft">&#160;</td><td class="mdescRight">The threading policy. <br /></td></tr>
-<tr class="separator:a30e1013e437cdfeae7451d2d25b52806"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aae3a75750620371536bf6666ceb15be0" id="r_aae3a75750620371536bf6666ceb15be0"><td class="memItemLeft" align="right" valign="top"><a id="aae3a75750620371536bf6666ceb15be0" name="aae3a75750620371536bf6666ceb15be0"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>FolderVector</b> = std::vector&lt; Yuni::String::Ptr &gt;</td></tr>
 <tr class="memdesc:aae3a75750620371536bf6666ceb15be0"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of folders. <br /></td></tr>
 <tr class="separator:aae3a75750620371536bf6666ceb15be0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Constructor</h2></td></tr>
+<tr class="memitem:a6fbc7a5439d9078545978eab44961a48" id="r_a6fbc7a5439d9078545978eab44961a48"><td class="memItemLeft" align="right" valign="top"><a id="a6fbc7a5439d9078545978eab44961a48" name="a6fbc7a5439d9078545978eab44961a48"></a>
+std::mutex&#160;</td><td class="memItemRight" valign="bottom"><b>mutex</b></td></tr>
+<tr class="separator:a6fbc7a5439d9078545978eab44961a48"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a54ac66bd04d56d4bb7e668c3b8a1a300" id="r_a54ac66bd04d56d4bb7e668c3b8a1a300"><td class="memItemLeft" align="right" valign="top"><a id="a54ac66bd04d56d4bb7e668c3b8a1a300" name="a54ac66bd04d56d4bb7e668c3b8a1a300"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>StudyFinder</b> ()</td></tr>
 <tr class="memdesc:a54ac66bd04d56d4bb7e668c3b8a1a300"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default Constructor. <br /></td></tr>
