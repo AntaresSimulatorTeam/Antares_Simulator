@@ -20,15 +20,14 @@ std::unique_ptr<Yuni::GetOpt::Parser> createTsGeneratorParser(TsGeneratorSetting
 
     parser->addFlag(settings.allThermal, 't', "thermal", "Generate TS for a list of thermal clusters");
 
+    parser->remainingArguments(settings.studyFolder);
+
 
     return parser;
 }
 
 int main(int argc, char *argv[])
 {
-    if (argc < 2)
-        return 1;
-
     TsGeneratorSettings settings;
 
     auto parser = createTsGeneratorParser(settings);
@@ -47,9 +46,10 @@ int main(int argc, char *argv[])
     auto study = std::make_shared<Data::Study>(true);
     Data::StudyLoadOptions studyOptions;
 
-    if (!study->loadFromFolder(argv[1], studyOptions))
+    if (!study->loadFromFolder(settings.studyFolder, studyOptions))
     {
-        logs.error() << "couldn't load study";
+        if (settings.studyFolder.empty())
+            logs.error() << "No study given to the generator";
         return 1;
     }
 
