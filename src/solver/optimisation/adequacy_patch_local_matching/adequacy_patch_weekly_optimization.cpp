@@ -30,6 +30,7 @@
 #include "../simulation/simulation.h"
 #include "../simulation/adequacy_patch_runtime_data.h"
 #include "antares/study/fwd.h"
+#include "../simulation/common-eco-adq.h"
 
 using namespace Antares::Data::AdequacyPatch;
 using Antares::Constants::nbHoursInAWeek;
@@ -46,7 +47,10 @@ AdequacyPatchOptimization::AdequacyPatchOptimization(const Antares::Data::Study&
 {
 }
 
-void AdequacyPatchOptimization::solve(uint weekInTheYear, int hourInTheYear)
+void AdequacyPatchOptimization::solve(uint weekInTheYear, 
+                                      int hourInTheYear,
+                                      const ALL_HYDRO_VENTILATION_RESULTS& hydroVentilationResults,
+                                      double** thermalNoises)
 {
     problemeHebdo_->adequacyPatchRuntimeData->AdequacyFirstStep = true;
     OPT_OptimisationHebdomadaire(options_, problemeHebdo_, adqPatchParams_, writer_);
@@ -63,6 +67,12 @@ void AdequacyPatchOptimization::solve(uint weekInTheYear, int hourInTheYear)
                     problemeHebdo_->ResultatsHoraires[pays].ValeursHorairesDENS.end(), 0);
     }
     
+    ::SIM_RenseignementProblemeHebdo(study_, *problemeHebdo_, weekInTheYear,
+        thread_number_, hourInTheYear, hydroVentilationResults);
+
+    Simulation::BuildThermalPartOfWeeklyProblem(study_, *problemeHebdo_,
+        thread_number_, hourInTheYear, thermalNoises);
+
     OPT_OptimisationHebdomadaire(options_, problemeHebdo_, adqPatchParams_, writer_);
 }
 

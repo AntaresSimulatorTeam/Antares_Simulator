@@ -31,13 +31,18 @@
 #include "../simulation/sim_structure_donnees.h"
 #include "../simulation/sim_structure_probleme_economique.h"
 #include <antares/study/parameters/adq-patch-params.h>
+#include "../hydro/management.h"
 
 namespace Antares::Solver::Optimization
 {
 class WeeklyOptimization
 {
 public:
-    virtual void solve(uint weekInTheYear, int hourInTheYear) = 0;
+    virtual void solve(uint weekInTheYear,
+                       int hourInTheYear,
+                       const ALL_HYDRO_VENTILATION_RESULTS& hydroVentilationResults,
+                       double** thermalNoises) = 0;
+
     virtual ~WeeklyOptimization() = default;
     static std::unique_ptr<WeeklyOptimization> create(const Antares::Data::Study& study,
                                                       const OptimizationOptions& options,
@@ -52,8 +57,9 @@ protected:
                                 Antares::Data::AdequacyPatch::AdqPatchParams&, 
                                 uint numSpace,
                                 IResultWriter& writer);
+
     Antares::Solver::Optimization::OptimizationOptions options_;
-    PROBLEME_HEBDO* const problemeHebdo_ = nullptr;
+    PROBLEME_HEBDO* problemeHebdo_ = nullptr;
     Antares::Data::AdequacyPatch::AdqPatchParams& adqPatchParams_;
     const uint thread_number_ = 0;
     IResultWriter& writer_;

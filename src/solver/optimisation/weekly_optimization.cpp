@@ -39,7 +39,7 @@ DefaultWeeklyOptimization::DefaultWeeklyOptimization(const OptimizationOptions& 
 {
 }
 
-void DefaultWeeklyOptimization::solve(uint, int)
+void DefaultWeeklyOptimization::solve(uint, int, const ALL_HYDRO_VENTILATION_RESULTS&, double**)
 {
     OPT_OptimisationHebdomadaire(options_, problemeHebdo_, adqPatchParams_, writer_);
 }

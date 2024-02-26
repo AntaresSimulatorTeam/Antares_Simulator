@@ -47,7 +47,10 @@ public:
                                        IResultWriter& writer);
 
     ~AdequacyPatchOptimization() override = default;
-    void solve(uint weekInTheYear, int hourInTheYear) override;
+    void solve(uint weekInTheYear,
+               int hourInTheYear,
+               const ALL_HYDRO_VENTILATION_RESULTS& hydroVentilationResults,
+               double** thermalNoises) override;
 private:
     const Antares::Data::Study& study_;
 };

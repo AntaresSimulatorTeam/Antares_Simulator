@@ -154,7 +154,10 @@ bool Economy::year(Progression::Task& progression,
 
         try
         {
-            weeklyOptProblems_[numSpace]->solve(w, hourInTheYear);
+            weeklyOptProblems_[numSpace]->solve(w, 
+                                                hourInTheYear,
+                                                hydroVentilationResults,
+                                                randomForYear.pThermalNoisesByArea);
 
             // Runs all the post processes in the list of post-process commands
             optRuntimeData opt_runtime_data(state.year, w, hourInTheYear);

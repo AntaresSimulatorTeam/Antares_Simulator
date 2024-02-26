@@ -41,6 +41,6 @@ public:
                                      uint numSpace,
                                      IResultWriter& writer);
     ~DefaultWeeklyOptimization() override = default;
-    void solve(uint, int) override;
+    void solve(uint, int, const ALL_HYDRO_VENTILATION_RESULTS&, double**) override;
 };
 } // namespace Antares::Solver::Optimization
