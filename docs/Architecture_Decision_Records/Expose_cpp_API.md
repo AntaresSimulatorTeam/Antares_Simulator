@@ -19,4 +19,4 @@ Expose C++ public API.
 * This allow clients to bind to library directly and not use CLI client
 * Allow data transmission between client and library without resorting to files
 * Allow describing a pure C API in the future if the need comes
-* Need to maintain API/ABI versioning
+* Need to maintain API/ABI versioning and communicate changes/breaking changes
