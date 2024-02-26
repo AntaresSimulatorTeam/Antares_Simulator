@@ -139,7 +139,7 @@ void SpotlightProvider::search(Spotlight::IItem::Vector& out,
         return;
 
     // Looking for the list of areas and links
-    Yuni::MutexLocker locker(pComponent->pMutex);
+    std::lock_guard locker(pComponent->pMutex);
 
     auto it = pComponent->pAlreadyPreparedContents.find(outputPath);
     if (it == pComponent->pAlreadyPreparedContents.end())

@@ -19,6 +19,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
+#include <mutex>
 #include <yuni/yuni.h>
 #include <yuni/job/job.h>
 #include <yuni/job/queue/service.h>
@@ -44,7 +45,7 @@ using DispatcherServiceType = Yuni::Job::QueueService;
 static DispatcherServiceType gDispatcher;
 
 static LinkedList<Yuni::Job::IJob::Ptr> gGUIDispatcherList;
-static Yuni::Mutex gGUIMutex;
+static std::mutex gGUIMutex;
 
 class JobDelay final : public Yuni::Job::IJob
 {
@@ -138,7 +139,7 @@ void Wait()
 
 bool Empty()
 {
-    Yuni::MutexLocker locker(Antares::Dispatcher::gGUIMutex);
+    std::lock_guard locker(Antares::Dispatcher::gGUIMutex);
     return Antares::Dispatcher::gGUIDispatcherList.empty();
 }
 

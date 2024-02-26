@@ -19,6 +19,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
+#include <mutex>
 #include <yuni/io/directory.h>
 #include <yuni/core/system/windows.hdr.h>
 #include <yuni/core/system/environment.h>
@@ -53,12 +54,12 @@ Memory memory;
 namespace // anonymous
 {
 // Global mutex for memory handler
-static Yuni::Mutex gMutex;
+static std::mutex gMutex;
 } // anonymous namespace
 
 bool Memory::initializeTemporaryFolder()
 {
-    Yuni::MutexLocker locker(gMutex);
+    std::lock_guard locker(gMutex);
     if (pAlreadyInitialized)
         return true;
 
@@ -122,19 +123,19 @@ void Memory::displayInfo() const
     logs.info() << "  memory pool: system info: page size: " << sysconf(_SC_PAGESIZE);
 #endif
 
-    Yuni::MutexLocker locker(gMutex);
+    std::lock_guard locker(gMutex);
     logs.info() << "  memory pool: cache folder: " << pCacheFolder;
 }
 
 const String& Memory::cacheFolder() const
 {
-    MutexLocker locker(gMutex);
+    std::lock_guard locker(gMutex);
     return pCacheFolder;
 }
 
 void Memory::cacheFolder(const AnyString& folder)
 {
-    MutexLocker locker(gMutex);
+    std::lock_guard locker(gMutex);
     if (pAllowedToChangeCacheFolder)
         pCacheFolder = folder;
 }

@@ -24,6 +24,7 @@
 #include "../../renderer.h"
 #include <antares/study/study.h>
 #include "antares/solver/constraints-builder/cbuilder.h"
+#include <mutex>
 #include <map>
 #include <yuni/core/bind.h>
 #include <yuni/core/event.h>
@@ -70,7 +71,7 @@ public:
             }
 
         public:
-            mutable Yuni::Mutex mutex;
+            mutable std::mutex mutex;
             std::vector<Record> array;
             bool canRunAnalyzer;
         };

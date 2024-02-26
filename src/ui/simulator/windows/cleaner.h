@@ -21,6 +21,7 @@
 #ifndef __ANTARES_APPLICATION_WINDOW_CLEANER_H__
 #define __ANTARES_APPLICATION_WINDOW_CLEANER_H__
 
+#include <mutex>
 #include <yuni/thread/thread.h>
 #include <yuni/thread/mutex.h>
 #include <wx/panel.h>
@@ -90,7 +91,7 @@ private:
 
     wxTimer* pRefreshTimer;
     Yuni::Thread::IThread* pThread;
-    Yuni::Mutex pMutex;
+    std::mutex pMutex;
     uint pProgressionCount;
 
     friend class CleaningThread;
