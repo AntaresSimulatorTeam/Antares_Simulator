@@ -76,8 +76,6 @@ private:
 
 private:
     uint nbThermalTimeseries_;
-    const uint nbHoursPerYear = HOURS_PER_YEAR;
-    const uint daysPerYear = DAYS_PER_YEAR;
 
     MersenneTwister& rndgenerator;
 
@@ -97,8 +95,9 @@ private:
     double ap[366];
     double bf[366];
     double bp[366];
-    double FPOW[366][102];
-    double PPOW[366][102];
+
+    std::vector<std::vector<double>> FPOW;
+    std::vector<std::vector<double>> PPOW;
 
     String pTempFilename;
     Solver::Progression::Task& pProgression;
@@ -120,6 +119,9 @@ GeneratorTempData::GeneratorTempData(Data::Study& study,
     nbThermalTimeseries_ = parameters.nbTimeSeriesThermal;
 
     derated = parameters.derated;
+
+    FPOW.resize(DAYS_PER_YEAR);
+    PPOW.resize(DAYS_PER_YEAR);
 }
 
 void GeneratorTempData::writeResultsToDisk(const Data::Area& area,
@@ -157,7 +159,7 @@ void GeneratorTempData::prepareIndispoFromLaw(Data::ThermalLaw law,
     {
     case Data::thermalLawUniform:
     {
-        for (uint d = 0; d < daysPerYear; ++d)
+        for (uint d = 0; d < DAYS_PER_YEAR; ++d)
         {
             double D = (double)duration[d];
             double xtemp = volatility * (D - 1.);
@@ -168,7 +170,7 @@ void GeneratorTempData::prepareIndispoFromLaw(Data::ThermalLaw law,
     }
     case Data::thermalLawGeometric:
     {
-        for (uint d = 0; d < daysPerYear; ++d)
+        for (uint d = 0; d < DAYS_PER_YEAR; ++d)
         {
             double D = (double)duration[d];
             double xtemp = volatility * volatility * D * (D - 1.);
@@ -273,8 +275,11 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
     int FOD_reel = 0;
     int POD_reel = 0;
 
-    for (uint d = 0; d < daysPerYear; ++d)
+    for (uint d = 0; d < DAYS_PER_YEAR; ++d)
     {
+        FPOW[d].resize(cluster.unitCount + 1);
+        PPOW[d].resize(cluster.unitCount + 1);
+
         PODOfTheDay = (int)POD[d];
         FODOfTheDay = (int)FOD[d];
 
@@ -346,9 +351,8 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
         if (tsIndex > 1)
             dstSeries = cluster.series.timeSeries[tsIndex - 2];
 
-        for (uint dayInTheYear = 0; dayInTheYear < daysPerYear; ++dayInTheYear)
+        for (uint dayInTheYear = 0; dayInTheYear < DAYS_PER_YEAR; ++dayInTheYear)
         {
-            assert(AUN <= 100 and "Thermal Prepro: AUN is out of bounds (>=100)");
             assert(dayInTheYear < 366);
             assert(not(lf[dayInTheYear] < 0.));
             assert(not(lp[dayInTheYear] < 0.));

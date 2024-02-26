@@ -15,7 +15,7 @@ if(WIN32)
 endif(WIN32)
 
 
-set(execname "antares-${ANTARES_PRG_VERSION}-study-updater")
+set(execname "antares-study-updater")
 add_executable(${execname}  ${SRCS})
 install(TARGETS ${execname} EXPORT antares-study-updater DESTINATION bin)
 
