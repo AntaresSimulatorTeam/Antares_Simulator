@@ -625,10 +625,10 @@ std::vector<std::pair<std::string, std::string>> splitStringIntoPairs (const std
     return pairs;
 }
 
-static std::vector<Data::ThermalCluster*> getClustersToGen(Data::AreaList& areas,
-                                                           const std::string& clustersToGen,
-                                                           bool globalThermalTSgeneration,
-                                                           bool refreshTSonCurrentYear)
+std::vector<Data::ThermalCluster*> getClustersToGen(Data::AreaList& areas,
+                                                    const std::string& clustersToGen,
+                                                    bool globalThermalTSgeneration,
+                                                    bool refreshTSonCurrentYear)
 {
 
     std::vector<Data::ThermalCluster*> clusters;
@@ -671,11 +671,9 @@ static std::vector<Data::ThermalCluster*> getClustersToGen(Data::AreaList& areas
 }
 
 bool GenerateThermalTimeSeries(Data::Study& study,
-                               const std::string& clustersToGen,
+                               std::vector<Data::ThermalCluster*> clusters,
                                uint year,
-                               bool globalThermalTSgeneration,
-                               bool refreshTSonCurrentYear,
-                               Antares::Solver::IResultWriter& writer)
+                               Solver::IResultWriter& writer)
 {
     logs.info();
     logs.info() << "Generating the thermal time-series";
@@ -684,9 +682,6 @@ bool GenerateThermalTimeSeries(Data::Study& study,
     auto* generator = new GeneratorTempData(study, progression, writer);
 
     generator->currentYear = year;
-
-    const auto clusters = getClustersToGen(study.areas, clustersToGen, globalThermalTSgeneration,
-                                            refreshTSonCurrentYear);
 
     for (auto* cluster : clusters)
         (*generator)(*cluster->parentArea, *cluster);
