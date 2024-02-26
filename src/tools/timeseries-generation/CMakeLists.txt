@@ -1,18 +1,19 @@
-project(timeseries-gen-tool)
+# set(SRCS main.cpp)
 
-add_library(timeseries-gen-tool)
+set(execname "antares-timeseries-generator")
+add_executable(${execname}  main.cpp)
+install(TARGETS ${execname} EXPORT antares-timeseries-generator DESTINATION bin)
 
-target_sources(timeseries-gen-tool PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/main.cpp>
+INSTALL(EXPORT antares-timeseries-generator
+        FILE antares-timeseries-generatorConfig.cmake
+        DESTINATION cmake
 )
 
-target_link_libraries(series PUBLIC antares-solver-ts-generator)
 
-target_include_directories(series
-        PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-)
+target_link_libraries(${execname}
+                      PRIVATE
+                      antares-solver-ts-generator
+                      Antares::study)
 
-install(DIRECTORY include/antares
-        DESTINATION "include"
-)
+import_std_libs(${execname})
+executable_strip(${execname})
