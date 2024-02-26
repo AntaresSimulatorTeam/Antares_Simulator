@@ -1,37 +1,73 @@
 Antares Changelog
 =================
 
-8.9.0 (Unreleased yet)
+9.0.0
 --------------------
-## New Features
-* Solver logs can be enabled either by the command-line option (--solver-logs) or in the generaldata.ini by setting solver-logs = true under the optimization section [(#1717)](https://github.com/AntaresSimulatorTeam/Antares_Simulator/pull/1717)
+## License
+* Use licence MPL 2.0 instead of GPL3_WITH_RTE-Exceptions (#1812)
 
+## Improvements
+* Include overflow variable in HydroPower constraint (#1903)
+* Add total time logging at the end of the simulation (#1908)
+* Add STS level constraint to suspect list for infeasible problem analysis (#1891)
 
-8.8.0-rc3 (11/2023)
+## For developers
+* Use precompiled OR-Tools for Oracle Linux 8 CI (#1893)
+* Change version behavior to allow more flexibility (#1898)
+
+## Code quality
+* Use std::shared_ptr instead of indices for active binding constraints in results (#1887)
+* Fix a few compilation warnings (#1880)
+* Scratchpad numspace (#1749)
+
+## Tests
+* Fix invalid index causing segfault in `test-study` test (#1902)
+
+8.8.2
 --------------------
-## Bugfixes
-* Fix oracle-linux8 binaries missing compression feature (#1741)
 
-8.8.0-rc2 (10/2023)
---------------------
-## Build
-- Fix version numbers (8b9b2b389)
+## Bugfix
+* Fix segfault caused by uninitialized `cluster.series.timeseriesNumbers` (#1876). This bug was introduced in v8.8.1 by #1752
+* Bump OR-Tools from 9.5 to 9.8 (fix crash with XPRESS) (#1873)
 
-8.8.0-rc1 (10/2023)
+8.8.1 (01/2024)
 --------------------
+/!\ This version has known bugs, please use 8.8.2 instead.
+
+## Bugfix
+* Simplify TS numbers drawings, fix bug related to refresh & local thermal generation (#1752)
+
+## Improvements
+* Take into account breaking change in OR-Tools's API, enable SCIP & GLPK solvers, bump OR-Tools (#1825). This should improve performances with FICO XPRESS
+* Fail if OR-Tools solver is not found (#1851)
+* Normalize simulation mode Expansion, fix logs (#1771)
+* Add possibility to release without running any tests (#1852)
+
+## Code quality
+* Use `std::unordered_map` for tmpDataByArea_ (hydro ventilation) (#1855)
+* Remove `mutable` keyword from `PROBLEME_HEBDO` (#1846)
+* Remove `Study::gotFatalError`, throw exceptions instead (#1806)
+* Renewable containers (#1809)
+* Use modern style `for` loops, avoid int cast (#1847)
+* Remove `YUNI_STATIC_ASSERT` (#1863)
+
+## Testing
+* Add tests on short-term storage/thermal cluster/renewable cluster removal (#1841)
+
+## Doc
+* Add precision about `enabled` field in ST storage (#1850)
+* Use dedicated URL path for Doxygen, instead of root (#1865)
+* Fix HTML generation for readthedocs (#1867)
+* Add dark mode switch for Doxygen online documentation (#1792)
+
+8.8.0 (12/2023)
+--------------------
+
 ## New features
 * New "cash-flow" variable for ST storage (#1633)
-* Experimental ptimization discrete variables (#670)
-
-## Bugfixes
-* Prevent segfault during simulation, check bounds of scenario builder (#1567)
-* Fix number of links in deprecated output file digest.txt (#1646)
-* Fix unfeasible problem analyzer (#1527)
-* [Windows only] Increase file size limit when reading file (#1674)
-* Fix segfault encountered when importing logs (#1702)
-* Fixes swallowed exceptions in computation thread (#1685)
-* Fix writer causing a segfault with OR-Tools (#1584)
-* Bug on renewable cluster (wrong group) (#1631)
+* Experimental optimization with discrete variables (MILP unit-commitment mode #670)
+* Add `enabled` property for ST storage objects, fix bug related to saving ST objects (#1807)
+* Solver logs can be enabled either by the command-line option (--solver-logs) or in the generaldata.ini
 
 ## Improvements
 * Add shortcut -s for names MPS problems in CLI options (#1613)
@@ -41,7 +77,25 @@ Antares Changelog
 * Fix wrong year number in logs upon failed year (#1672)
 * Always check mingen against maxPower, regardless of reservoirManagement (#1656)
 * New log msg when solver not found in or-tools (#1687)
+
+## For developers
 * Fix annoying error log about correlation matrices in tests (#1573)
+
+## Bugfixes (reported by users)
+* Fix output variable PROFIT for thermal clusters (#1767)
+* Bug on renewable cluster (wrong group) (#1631)
+
+## Bugfixes (reported internally)
+* Fix oracle-linux8 binaries missing compression feature (#1741)
+* Named MPS - fix duplicated "ranged" binding constraints (#1569)
+* Fix save for short term storage objects (#1807)
+* Prevent segfault during simulation, check bounds of scenario builder (#1567)
+* Fix number of links in deprecated output file digest.txt (#1646)
+* Fix unfeasible problem analyzer (#1527)
+* [Windows only] Increase file size limit when reading file (#1674)
+* Fix segfault encountered when importing logs (#1702)
+* Fixes swallowed exceptions in computation thread (#1685)
+* Fix writer causing a segfault with OR-Tools (#1584)
 
 ## Documentation
 * Create Doxygen documentation (#1650)

@@ -1,34 +1,53 @@
+/*
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
+**
+** Antares_Simulator is free software: you can redistribute it and/or modify
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
+** (at your option) any later version.
+**
+** Antares_Simulator is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+** Mozilla Public Licence 2.0 for more details.
+**
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+*/
 #include "antares/application/application.h"
 
 #include <antares/sys/policy.h>
 #include <antares/resources/resources.h>
 #include <antares/logs/hostinfo.h>
-#include <antares/fatal-error.h>
+#include <antares/antares/fatal-error.h>
 #include <antares/benchmarking/timer.h>
 
-#include <antares/exception/InitializationError.hpp>
 #include <antares/exception/LoadingError.hpp>
 #include <antares/checks/checkLoadedInputData.h>
-#include <antares/version.h>
+#include <antares/study/version.h>
 #include <antares/writer/writer_factory.h>
 
-#include "signal-handling/public.h"
+#include "antares/signal-handling/public.h"
 
 #include "antares/solver/misc/system-memory.h"
 #include "antares/solver/misc/write-command-line.h"
 
 #include "antares/solver/utils/ortools_utils.h"
-#include "../../config.h"
+#include "antares/config/config.h"
 
 #include <antares/infoCollection/StudyInfoCollector.h>
 
-#include <yuni/io/io.h>
 #include <yuni/datetime/timestamp.h>
 #include <yuni/core/process/rename.h>
 
-#include <algorithm>
 
-#include "../simulation/simulation.h"
+#include "antares/study/simulation.h"
+#include "antares/antares/version.h"
+#include "antares/solver/simulation/simulation.h"
 
 using namespace Antares::Check;
 
@@ -36,11 +55,7 @@ namespace
 {
 void printSolvers()
 {
-    std::cout << "Available solvers :" << std::endl;
-    for (const auto& solver : getAvailableOrtoolsSolverName())
-    {
-        std::cout << solver << std::endl;
-    }
+    std::cout << "Available solvers: " << availableOrToolsSolversString() << std::endl;
 }
 } // namespace
 
@@ -81,7 +96,6 @@ void Application::prepare(int argc, char* argv[])
         using namespace Yuni::GetOpt;
     case ReturnCode::error:
         throw Error::CommandLineArguments(parser->errors());
-        break;
     case ReturnCode::help:
         // End the program
         pStudy = nullptr;
@@ -183,7 +197,7 @@ void Application::prepare(int argc, char* argv[])
         logs.info() << "  The progression is disabled";
 }
 
-void Application::initializeRandomNumberGenerators()
+void Application::initializeRandomNumberGenerators() const
 {
     logs.info() << "Initializing random number generators...";
     const auto& parameters = pStudy->parameters;
@@ -207,8 +221,6 @@ void Application::onLogMessage(int level, const Yuni::String& /*message*/)
         ++pWarningCount;
         break;
     case Yuni::Logs::Verbosity::Error::level:
-        ++pErrorCount;
-        break;
     case Yuni::Logs::Verbosity::Fatal::level:
         ++pErrorCount;
         break;
@@ -285,7 +297,7 @@ void Application::processCaption(const Yuni::String& caption)
     pArgv = Yuni::Process::Rename(pArgc, pArgv, caption);
 }
 
-void Application::prepareWriter(Antares::Data::Study& study,
+void Application::prepareWriter(const Antares::Data::Study& study,
                                 Benchmarking::IDurationCollector& duration_collector)
 {
     ioQueueService = std::make_shared<Yuni::Job::QueueService>();
@@ -315,7 +327,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     std::exception_ptr loadingException;
     try
     {
-        if (study.loadFromFolder(pSettings.studyFolder, options) && !study.gotFatalError)
+        if (study.loadFromFolder(pSettings.studyFolder, options))
         {
             logs.info() << "The study is loaded.";
             logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
@@ -323,9 +335,6 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
 
         timer.stop();
         pDurationCollector.addDuration("study_loading", timer.get_duration());
-
-        if (study.gotFatalError)
-            throw Error::ReadingStudy();
 
         if (study.areas.empty())
         {
@@ -379,7 +388,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     }
 
     // Errors
-    if (pErrorCount || pWarningCount || study.gotFatalError)
+    if (pErrorCount || pWarningCount)
     {
         if (pErrorCount || !pSettings.ignoreWarningsErrors)
         {
@@ -411,18 +420,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
         if (!study.checkForFilenameLimits(true))
             throw Error::InvalidFileName();
 
-        // comments
-        {
-            study.buffer.clear() << "simulation-comments.txt";
-
-            if (!pSettings.commentFile.empty())
-            {
-                resultWriter->addEntryFromFile(study.buffer.c_str(), pSettings.commentFile.c_str());
-
-                pSettings.commentFile.clear();
-                pSettings.commentFile.shrink();
-            }
-        }
+        writeComment(study);
     }
 
     // Runtime data dedicated for the solver
@@ -438,6 +436,31 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     // Random-numbers generators
     initializeRandomNumberGenerators();
 }
+void Application::writeComment(Data::Study& study)
+{
+    study.buffer.clear() << "simulation-comments.txt";
+
+    if (!this->pSettings.commentFile.empty())
+    {
+        this->resultWriter->addEntryFromFile(study.buffer.c_str(),
+                                             this->pSettings.commentFile.c_str());
+
+        this->pSettings.commentFile.clear();
+        this->pSettings.commentFile.shrink();
+    }
+}
+
+static void logTotalTime(unsigned duration)
+{
+    std::chrono::milliseconds d(duration);
+    auto hours = std::chrono::duration_cast<std::chrono::hours>(d);
+    d -= hours;
+    auto minutes = std::chrono::duration_cast<std::chrono::minutes>(d);
+    d -= minutes;
+    auto seconds = std::chrono::duration_cast<std::chrono::seconds>(d);
+
+    logs.info().appendFormat("Total simulation time: %02luh%02lum%02lus", hours.count(), minutes.count(), seconds.count());
+}
 
 void Application::writeExectutionInfo()
 {
@@ -447,6 +470,8 @@ void Application::writeExectutionInfo()
     // Last missing duration to get : measure of total simulation duration
     pTotalTimer.stop();
     pDurationCollector.addDuration("total", pTotalTimer.get_duration());
+
+    logTotalTime(pTotalTimer.get_duration());
 
     // If no writer is available, we can't write
     if (!resultWriter)

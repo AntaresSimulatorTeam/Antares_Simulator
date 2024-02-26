@@ -1,28 +1,22 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
 #include "create.h"
@@ -86,7 +80,7 @@ bool Create::prepareWL(Context& ctx)
         if (suffix == "<auto>" || pInfos.behavior == bhMerge)
         {
             TransformNameIntoID(pFuturPlantName, id);
-            clusterFound = area ? area->thermal.list.find(id) : nullptr;
+            clusterFound = area ? area->thermal.list.findInAll(id) : nullptr;
             if (clusterFound)
             {
                 Data::AreaName::Size sepPos = id.find_last_of('-');
@@ -107,7 +101,7 @@ bool Create::prepareWL(Context& ctx)
                     pFuturPlantName.clear() << pTargetPlantName << "-" << indx;
                     id.clear();
                     TransformNameIntoID(pFuturPlantName, id);
-                    clusterFound = area->thermal.list.find(id);
+                    clusterFound = area->thermal.list.findInAll(id);
                 } while (clusterFound);
             }
         }
@@ -115,13 +109,13 @@ bool Create::prepareWL(Context& ctx)
         {
             pFuturPlantName += suffix;
             TransformNameIntoID(pFuturPlantName, id);
-            clusterFound = area ? area->thermal.list.find(id) : nullptr;
+            clusterFound = area ? area->thermal.list.findInAll(id) : nullptr;
         }
     }
     else
     {
         TransformNameIntoID(pFuturPlantName, id);
-        clusterFound = area ? area->thermal.list.find(id) : nullptr;
+        clusterFound = area ? area->thermal.list.findInAll(id) : nullptr;
     }
 
     pInfos.caption.clear() << "Plant " << pFuturPlantName;
@@ -167,7 +161,7 @@ bool Create::performWL(Context& ctx)
         if (!source)
             return false;
         TransformNameIntoID(pOriginalPlantName, id);
-        ctx.originalPlant = source->thermal.list.find(id);
+        ctx.originalPlant = source->thermal.list.findInAll(id);
         if (!ctx.originalPlant)
             return false;
 
@@ -175,15 +169,13 @@ bool Create::performWL(Context& ctx)
         id.clear();
         TransformNameIntoID(pFuturPlantName, id);
 
-        ctx.cluster = ctx.area->thermal.list.find(id);
+        ctx.cluster = ctx.area->thermal.list.findInAll(id);
         if (!ctx.cluster)
         {
             ctx.cluster = new Data::ThermalCluster(ctx.area);
             ctx.cluster->setName(pFuturPlantName);
             ctx.cluster->reset();
-            (ctx.area)->thermal.list.add(std::shared_ptr<Data::ThermalCluster>(ctx.cluster));
-            (ctx.area)->thermal.list.rebuildIndex();
-            (ctx.area)->thermal.prepareAreaWideIndexes();
+            (ctx.area)->thermal.list.addToCompleteList(std::shared_ptr<Data::ThermalCluster>(ctx.cluster));
         }
         else
         {

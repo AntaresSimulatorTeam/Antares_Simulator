@@ -1,57 +1,57 @@
 set(SRC_STUDY_SCENARIO_BUILDER
-        scenario-builder/scBuilderDataInterface.h
-        scenario-builder/TSnumberData.h
+        include/antares/study/scenario-builder/scBuilderDataInterface.h
+        include/antares/study/scenario-builder/TSnumberData.h
         scenario-builder/TSnumberData.cpp
-        scenario-builder/hydroLevelsData.h
+        include/antares/study/scenario-builder/hydroLevelsData.h
         scenario-builder/hydroLevelsData.cpp
-        scenario-builder/rules.h
-        scenario-builder/rules.hxx
+        include/antares/study/scenario-builder/rules.h
+        include/antares/study/scenario-builder/rules.hxx
         scenario-builder/rules.cpp
-        scenario-builder/sets.h
-        scenario-builder/sets.hxx
+        include/antares/study/scenario-builder/sets.h
+        include/antares/study/scenario-builder/sets.hxx
         scenario-builder/sets.cpp
-        scenario-builder/updater.hxx
-        scenario-builder/scBuilderUtils.h
+        include/antares/study/scenario-builder/updater.hxx
+        include/antares/study/scenario-builder/scBuilderUtils.h
         scenario-builder/scBuilderUtils.cpp
         scenario-builder/BindingConstraintsTSNumbersData.cpp
         scenario-builder/NTCTSNumberData.cpp
-        scenario-builder/NTCTSNumberData.h
-        scenario-builder/BindingConstraintsTSNumbersData.h
-        scenario-builder/RenewableTSNumberData.h
+        include/antares/study/scenario-builder/NTCTSNumberData.h
+        include/antares/study/scenario-builder/BindingConstraintsTSNumbersData.h
+        include/antares/study/scenario-builder/RenewableTSNumberData.h
         scenario-builder/RenewableTSNumberData.cpp
         scenario-builder/ThermalTSNumberData.cpp
-        scenario-builder/ThermalTSNumberData.h
-        scenario-builder/HydroTSNumberData.h
+        include/antares/study/scenario-builder/ThermalTSNumberData.h
+        include/antares/study/scenario-builder/HydroTSNumberData.h
         scenario-builder/HydroTSNumberData.cpp
         scenario-builder/SolarTSNumberData.cpp
-        scenario-builder/solarTSNumberData.h
-        scenario-builder/WindTSNumberData.h
+        include/antares/study/scenario-builder/solarTSNumberData.h
+        include/antares/study/scenario-builder/WindTSNumberData.h
         scenario-builder/WindTSNumberData.cpp
-        scenario-builder/LoadTSNumberData.h
+        include/antares/study/scenario-builder/LoadTSNumberData.h
         scenario-builder/LoadTSNumberData.cpp
-        scenario-builder/applyToMatrix.hxx
+        include/antares/study/scenario-builder/applyToMatrix.hxx
 )
 source_group("study\\scenario builder" FILES ${SRC_MATRIX})
 
 set(SRC_AREAS
-        area/constants.h
-        area/area.h
-        area/area.hxx
-        area/scratchpad.h
+        include/antares/study/area/constants.h
+        include/antares/study/area/area.h
+        include/antares/study/area/area.hxx
+        include/antares/study/area/scratchpad.h
         area/scratchpad.cpp
         area/area.cpp
         area/links.cpp
-        area/links.h
+        include/antares/study/area/links.h
         area/store-timeseries-numbers.cpp
-        area/store-timeseries-numbers.h
-        area/store-timeseries-numbers.hxx
+        include/antares/study/area/store-timeseries-numbers.h
+        include/antares/study/area/store-timeseries-numbers.hxx
         area/list.cpp
 )
 source_group("study\\area" FILES ${SRC_AREAS})
 
 
 set(SRC_STUDY_AREA_UI
-        area/ui.h
+        include/antares/study/area/ui.h
         area/ui.cpp
 )
 source_group("study\\area\\ui" FILES ${SRC_STUDY_AREA_UI})
@@ -59,206 +59,204 @@ source_group("study\\area\\ui" FILES ${SRC_STUDY_AREA_UI})
 
 set(SRC_STUDY_PART_COMMON
         parts/common/cluster.cpp
-        parts/common/cluster.h
-        parts/common/cluster_list.h
+        include/antares/study/parts/common/cluster.h
+        include/antares/study/parts/common/cluster_list.h
         parts/common/cluster_list.cpp
 )
 source_group("study\\part\\common" FILES ${SRC_STUDY_PART_COMMON})
 
 set(SRC_STUDY_PART_THERMAL
-        parts/thermal/container.h
-        parts/thermal/container.hxx
+        include/antares/study/parts/thermal/container.h
         parts/thermal/container.cpp
-        parts/thermal/prepro.h
-        parts/thermal/prepro.hxx
+        include/antares/study/parts/thermal/prepro.h
+        include/antares/study/parts/thermal/prepro.hxx
         parts/thermal/prepro.cpp
-        parts/thermal/ecoInput.h
+        include/antares/study/parts/thermal/ecoInput.h
         parts/thermal/ecoInput.cpp
-        parts/thermal/cluster.h
-        parts/thermal/cluster.hxx
+        include/antares/study/parts/thermal/cluster.h
+        include/antares/study/parts/thermal/cluster.hxx
         parts/thermal/cluster.cpp
-        parts/thermal/cluster_list.h
+        include/antares/study/parts/thermal/cluster_list.h
         parts/thermal/cluster_list.cpp
-        parts/thermal/pollutant.h
+        include/antares/study/parts/thermal/pollutant.h
         parts/thermal/pollutant.cpp
 )
 source_group("study\\part\\thermal" FILES ${SRC_STUDY_PART_THERMAL})
 
 set(SRC_STUDY_PART_RENEWABLE
-        parts/renewable/container.h
-        parts/renewable/container.hxx
+        include/antares/study/parts/renewable/container.h
+        include/antares/study/parts/renewable/container.hxx
         parts/renewable/container.cpp
-        parts/renewable/cluster.h
+        include/antares/study/parts/renewable/cluster.h
         parts/renewable/cluster.cpp
-        parts/renewable/cluster_list.h
+        include/antares/study/parts/renewable/cluster_list.h
         parts/renewable/cluster_list.cpp
 )
 source_group("study\\part\\renewable" FILES ${SRC_STUDY_PART_RENEWABLE})
 
 set(SRC_STUDY_PART_SHORT_TERM_STORAGE
-        parts/short-term-storage/container.h
+        include/antares/study/parts/short-term-storage/container.h
         parts/short-term-storage/container.cpp
-        parts/short-term-storage/properties.h
+        include/antares/study/parts/short-term-storage/properties.h
         parts/short-term-storage/properties.cpp
         parts/short-term-storage/series.cpp
-        parts/short-term-storage/series.h
-        parts/short-term-storage/cluster.h
+        include/antares/study/parts/short-term-storage/series.h
+        include/antares/study/parts/short-term-storage/cluster.h
         parts/short-term-storage/cluster.cpp
-        parts/short-term-storage/STStorageOutputCaptions.h
+        include/antares/study/parts/short-term-storage/STStorageOutputCaptions.h
         parts/short-term-storage/STStorageOutputCaptions.cpp
 )
 source_group("study\\part\\short-term-storage" FILES ${SRC_STUDY_PART_SHORT_TERM_SOTRAGE})
 
 set(SRC_STUDY_PART_WIND
-        parts/wind/container.h
+        include/antares/study/parts/wind/container.h
         parts/wind/container.cpp
-        parts/wind/prepro.h
-        parts/wind/prepro.hxx
+        include/antares/study/parts/wind/prepro.h
+        include/antares/study/parts/wind/prepro.hxx
         parts/wind/prepro.cpp
 )
 source_group("study\\part\\wind" FILES ${SRC_STUDY_PART_WIND})
 
 set(SRC_STUDY_PART_HYDRO
-        parts/hydro/container.h
+        include/antares/study/parts/hydro/container.h
         parts/hydro/container.cpp
-        parts/hydro/series.h
+        include/antares/study/parts/hydro/series.h
         parts/hydro/series.cpp
-        parts/hydro/prepro.h
+        include/antares/study/parts/hydro/prepro.h
         parts/hydro/prepro.cpp
-        parts/hydro/allocation.h
-        parts/hydro/allocation.hxx
+        include/antares/study/parts/hydro/allocation.h
+        include/antares/study/parts/hydro/allocation.hxx
         parts/hydro/allocation.cpp
 )
 source_group("study\\part\\hydro" FILES ${SRC_STUDY_PART_HYDRO})
 
 set(SRC_STUDY_UI
-        ui-runtimeinfos.h
+        include/antares/study/ui-runtimeinfos.h
         ui-runtimeinfos.cpp
 )
 source_group(study\\UI FILES ${SRC_STUDY_UI})
 
 set(SRC_STUDY_PARAMETERS
-        parameters.h
+        include/antares/study/parameters.h
         parameters.cpp
-        parameters/adq-patch-params.h
+        include/antares/study/parameters/adq-patch-params.h
         parameters/adq-patch-params.cpp
         UnfeasibleProblemBehavior.cpp
         # TODO JMK : should be in a target_include_directories : but need to remove all .h from all SRC
-        UnfeasibleProblemBehavior.hpp
+        include/antares/study/UnfeasibleProblemBehavior.hpp
 )
 source_group("study\\general data" FILES ${SRC_STUDY_PARAMETERS})
 
 
 set(SRC_STUDY_FINDER
-        finder.h
         finder/finder.cpp
-        finder/finder.h
+        include/antares/study/finder/finder.h
 )
 source_group("study\\finder" FILES ${SRC_STUDY_FINDER})
 
 
 set(SRC_STUDY_BINDING_CONSTRAINT
-        constraint.h
-        binding_constraint/BindingConstraint.h
-        binding_constraint/BindingConstraint.hxx
+        include/antares/study/constraint.h
+        include/antares/study/binding_constraint/BindingConstraint.h
+        include/antares/study/binding_constraint/BindingConstraint.hxx
         binding_constraint/BindingConstraint.cpp
-        binding_constraint/BindingConstraintsRepository.h
-        binding_constraint/BindingConstraintsRepository.h
-        binding_constraint/BindingConstraintsRepository.hxx
+        include/antares/study/binding_constraint/BindingConstraintsRepository.h
+        include/antares/study/binding_constraint/BindingConstraintsRepository.h
+        include/antares/study/binding_constraint/BindingConstraintsRepository.hxx
         binding_constraint/BindingConstraintsRepository.cpp
         binding_constraint/BindingConstraintLoader.cpp
-        binding_constraint/BindingConstraintLoader.h
+        include/antares/study/binding_constraint/BindingConstraintLoader.h
         binding_constraint/BindingConstraintSaver.cpp
-        binding_constraint/BindingConstraintSaver.h
-        binding_constraint/EnvForLoading.h
-        binding_constraint/BindingConstraintStructures.h
+        include/antares/study/binding_constraint/BindingConstraintSaver.h
+        include/antares/study/binding_constraint/EnvForLoading.h
+        include/antares/study/binding_constraint/BindingConstraintStructures.h
         binding_constraint/BindingConstraintGroup.cpp
-        binding_constraint/BindingConstraintGroup.h
+        include/antares/study/binding_constraint/BindingConstraintGroup.h
         binding_constraint/BindingConstraintGroupRepository.cpp
-        binding_constraint/BindingConstraintGroupRepository.h
+        include/antares/study/binding_constraint/BindingConstraintGroupRepository.h
 )
 
 source_group("study\\constraint" FILES ${SRC_STUDY_BINDING_CONSTRAINT})
 
 
 set(SRC_XCAST
-        xcast.h
-        xcast/xcast.h
-        xcast/xcast.hxx
+        include/antares/study/xcast.h
+        include/antares/study/xcast/xcast.h
+        include/antares/study/xcast/xcast.hxx
         xcast/xcast.cpp
 )
 source_group("study\\xcast" FILES ${SRC_XCAST})
 
 set(SRC_STUDY
         # all
-        parts/parts.h
+        include/antares/study/parts/parts.h
 
         # Load
-        parts/load/container.h
+        include/antares/study/parts/load/container.h
         parts/load/container.cpp
         parts/load/prepro.cpp
-        parts/load/prepro.h
-        parts/load/prepro.hxx
+        include/antares/study/parts/load/prepro.h
+        include/antares/study/parts/load/prepro.hxx
 
         # Solar
-        parts/solar/container.h
+        include/antares/study/parts/solar/container.h
         parts/solar/container.cpp
         parts/solar/prepro.cpp
-        parts/solar/prepro.h
-        parts/solar/prepro.hxx
+        include/antares/study/parts/solar/prepro.h
+        include/antares/study/parts/solar/prepro.hxx
 
         # Study
-        header.h
-        header.hxx
+        include/antares/study/header.h
         header.cpp
-        load-options.h
+        include/antares/study/load-options.h
         load-options.cpp
-        runtime/runtime.h
-        runtime/runtime.hxx
+        include/antares/study/runtime/runtime.h
+        include/antares/study/runtime/runtime.hxx
         runtime/runtime.cpp
-        runtime.h
-        study.h
-        study.hxx
-        fwd.h
+        include/antares/study/runtime.h
+        include/antares/study/study.h
+        include/antares/study/study.hxx
+        include/antares/study/fwd.h
         fwd.cpp
-        study.h
+        include/antares/study/study.h
         study.cpp
-        correlation-updater.hxx
+        include/antares/study/correlation-updater.hxx
         study.importprepro.cpp
         importlogs.cpp
         load.cpp
         save.cpp
         study.extra.cpp
-        version.h
+        include/antares/study/version.h
         version.cpp
-        cleaner.h
-        cleaner/cleaner.cpp cleaner/versions.h
+        include/antares/study/cleaner.h
+        cleaner/cleaner.cpp
+        include/antares/study/cleaner/versions.h
         cleaner/cleaner-v20.cpp
         output.cpp
-        output.h
-        output.hxx
+        include/antares/study/output.h
+        include/antares/study/output.hxx
         layerdata.cpp
-        layerdata.h
+        include/antares/study/layerdata.h
 
         # progression
-        progression/progression.h
-        progression/progression.hxx
+        include/antares/study/progression/progression.h
+        include/antares/study/progression/progression.hxx
         progression/progression.cpp
 
         # Simulation
-        simulation.h
+        include/antares/study/simulation.h
         simulation.cpp
 
         # Filter
-        filter.h
+        include/antares/study/filter.h
         filter.cpp
 
         # Sets
-        sets.h
-        sets.hxx
+        include/antares/study/sets.h
+        include/antares/study/sets.hxx
 
         # variable selection
-        variable-print-info.h
+        include/antares/study/variable-print-info.h
         variable-print-info.cpp
 )
 
@@ -287,7 +285,7 @@ add_library(study ${SRC_ALL})
 add_library(Antares::study ALIAS study)
 
 target_link_libraries(study
-    PUBLIC
+        PUBLIC
         Boost::boost
         yuni-static-core
         Antares::array #xcast
@@ -300,15 +298,23 @@ target_link_libraries(study
         Antares::path
         Antares::mersenne
         Antares::result_writer #study.h
-        Antares::object
         Antares::series
-    PRIVATE
+        antares-core
+        antares-solver-simulation
+        Antares::hydro
+        PRIVATE
         Antares::exception
         Antares::benchmarking
+        antares-solver-variable
 )
 
 target_include_directories(study
-     PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/../.. #Dirty trick to allow inclusion via <antares/study/X>
+             PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+
         # Make more than just study visible but it's the lesser evil for now
+)
+
+install(DIRECTORY   include/antares
+        DESTINATION "include"
 )

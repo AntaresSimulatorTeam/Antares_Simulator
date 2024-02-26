@@ -1,36 +1,30 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
 #include <yuni/yuni.h>
 #include <antares/study/study.h>
 #include <antares/study/area/scratchpad.h>
-#include <antares/fatal-error.h>
-#include "management.h"
-#include "../../simulation/sim_extern_variables_globales.h"
+#include <antares/antares/fatal-error.h>
+#include "antares/solver/hydro/management/management.h"
+#include "antares/solver/simulation/sim_extern_variables_globales.h"
 #include <yuni/core/math.h>
 #include <limits>
 #include <antares/study/parts/hydro/container.h>
@@ -125,15 +119,14 @@ HydroManagement::HydroManagement(const Data::AreaList& areas,
     ventilationResults_.resize(areas_.size());
     for (uint areaIndex = 0; areaIndex < areas_.size(); ++areaIndex)
     {
-        auto& area = *areas_.byIndex[areaIndex];
-        size_t clusterCount = area.thermal.clusterCount();
+        auto* area = areas_.byIndex[areaIndex];
+        auto& ventilationResults = ventilationResults_[areaIndex];
 
-        ventilationResults_[areaIndex].HydrauliqueModulableQuotidien.assign(nbDaysPerYear, 0);
-
-        if (area.hydro.reservoirManagement)
+        ventilationResults.HydrauliqueModulableQuotidien.assign(nbDaysPerYear, 0);
+        if (area->hydro.reservoirManagement)
         {
-            ventilationResults_[areaIndex].NiveauxReservoirsDebutJours.assign(nbDaysPerYear, 0.);
-            ventilationResults_[areaIndex].NiveauxReservoirsFinJours.assign(nbDaysPerYear, 0.);
+            ventilationResults.NiveauxReservoirsDebutJours.assign(nbDaysPerYear, 0.);
+            ventilationResults.NiveauxReservoirsFinJours.assign(nbDaysPerYear, 0.);
         }
     }
 }
@@ -142,11 +135,9 @@ void HydroManagement::prepareInflowsScaling(uint year)
 {
     areas_.each([&](const Data::Area& area)
       {
-          uint z = area.index;
-
           auto const& srcinflows = area.hydro.series->storage.getColumn(year);
 
-          auto& data = tmpDataByArea_[z];
+          auto& data = tmpDataByArea_[&area];
           double totalYearInflows = 0.0;
 
           for (uint month = 0; month != 12; ++month)
@@ -192,8 +183,7 @@ void HydroManagement::minGenerationScaling(uint year)
       {
           auto const& srcmingen =  area.hydro.series->mingen.getColumn(year);
 
-          uint z = area.index;
-          auto& data = tmpDataByArea_[z];
+          auto& data = tmpDataByArea_[&area];
           double totalYearMingen = 0.0;
 
           for (uint month = 0; month != 12; ++month)
@@ -244,7 +234,7 @@ void HydroManagement::minGenerationScaling(uint year)
 
 bool HydroManagement::checkMonthlyMinGeneration(uint year, const Data::Area& area) const
 {
-    const auto& data = tmpDataByArea_[area.index];
+    const auto& data = tmpDataByArea_.at(&area);
     for (uint month = 0; month != 12; ++month)
     {
         uint realmonth = calendar_.months[month].realmonth;
@@ -264,7 +254,7 @@ bool HydroManagement::checkMonthlyMinGeneration(uint year, const Data::Area& are
 
 bool HydroManagement::checkYearlyMinGeneration(uint year, const Data::Area& area) const
 {
-    const auto& data = tmpDataByArea_[area.index];
+    const auto& data = tmpDataByArea_.at(&area);
     if (data.totalYearMingen > data.totalYearInflows)
     {
         // Yearly minimum generation <= Yearly inflows
@@ -376,17 +366,16 @@ bool HydroManagement::checkMinGeneration(uint year) const
     return ret;
 }
 
-void HydroManagement::prepareNetDemand(uint numSpace, uint year, Data::SimulationMode mode)
+void HydroManagement::prepareNetDemand(uint year, Data::SimulationMode mode,
+                                       const Antares::Data::Area::ScratchMap& scratchmap)
 {
-    areas_.each([this, &year, &numSpace, &mode](const Data::Area& area) {
-        uint z = area.index;
-
-        auto& scratchpad = area.scratchpad[numSpace];
+    areas_.each([this, &year, &scratchmap, &mode](const Data::Area& area) {
+        const auto& scratchpad = scratchmap.at(&area);
 
         const auto& rormatrix = area.hydro.series->ror;
         const auto* ror = rormatrix.getColumn(year);
 
-        auto& data = tmpDataByArea_[z];
+        auto& data = tmpDataByArea_[&area];
         const double* loadSeries = area.load.series.getColumn(year);
         const double* windSeries = area.wind.series.getColumn(year);
         const double* solarSeries = area.solar.series.getColumn(year);
@@ -415,10 +404,8 @@ void HydroManagement::prepareNetDemand(uint numSpace, uint year, Data::Simulatio
                             - ((mode != Data::SimulationMode::Adequacy) ? scratchpad.mustrunSum[hour]
                                                              : scratchpad.originalMustrunSum[hour]);
 
-                area.renewable.list.each([&](const Antares::Data::RenewableCluster& cluster) {
-                    assert(cluster.series.timeSeries.jit == nullptr && "No JIT data from the solver");
-                    netdemand -= cluster.valueAtTimeStep(year, hour);
-                });
+                for (auto c : area.renewable.list.each_enabled())
+                    netdemand -= c->valueAtTimeStep(year, hour);
             }
 
             assert(!Math::NaN(netdemand)
@@ -431,9 +418,7 @@ void HydroManagement::prepareNetDemand(uint numSpace, uint year, Data::Simulatio
 void HydroManagement::prepareEffectiveDemand()
 {
     areas_.each([&](Data::Area& area) {
-        auto z = area.index;
-
-        auto& data = tmpDataByArea_[z];
+        auto& data = tmpDataByArea_[&area];
 
         for (uint day = 0; day != 365; ++day)
         {
@@ -442,8 +427,10 @@ void HydroManagement::prepareEffectiveDemand()
             auto realmonth = calendar_.months[month].realmonth;
 
             double effectiveDemand = 0;
-            area.hydro.allocation.eachNonNull([&](unsigned areaindex, double value) {
-                effectiveDemand += (tmpDataByArea_[areaindex]).DLN[day] * value;
+            // area.hydro.allocation is indexed by area index
+            area.hydro.allocation.eachNonNull([&](unsigned areaIndex, double value) {
+                const auto* area = areas_.byIndex[areaIndex];
+                effectiveDemand += tmpDataByArea_[area].DLN[day] * value;
             });
 
             assert(!Math::NaN(effectiveDemand) && "nan value detected for effectiveDemand");
@@ -493,11 +480,8 @@ void HydroManagement::prepareEffectiveDemand()
 void HydroManagement::makeVentilation(double* randomReservoirLevel,
                                       Solver::Variable::State& state,
                                       uint y,
-                                      uint numSpace)
+                                      Antares::Data::Area::ScratchMap& scratchmap)
 {
-    tmpDataByArea_.resize(areas_.size());
-    memset(tmpDataByArea_.data(), 0, sizeof(TmpDataByArea) * areas_.size());
-
     prepareInflowsScaling(y);
     minGenerationScaling(y);
     if (!checkMinGeneration(y))
@@ -505,11 +489,11 @@ void HydroManagement::makeVentilation(double* randomReservoirLevel,
         throw FatalError("hydro management: invalid minimum generation");
     }
 
-    prepareNetDemand(numSpace, y, parameters_.mode);
+    prepareNetDemand(y, parameters_.mode, scratchmap);
     prepareEffectiveDemand();
 
     prepareMonthlyOptimalGenerations(randomReservoirLevel, y);
-    prepareDailyOptimalGenerations(state, y, numSpace);
+    prepareDailyOptimalGenerations(state, y, scratchmap);
 }
 
 } // namespace Antares

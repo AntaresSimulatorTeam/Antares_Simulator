@@ -1,44 +1,34 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
 #include <algorithm>
-#include "rules.h"
-#include "../study.h"
+#include "antares/study/scenario-builder/rules.h"
+#include "antares/study/study.h"
 #include <antares/logs/logs.h>
-#include "scBuilderUtils.h"
-#include "TSnumberData.h"
+#include "antares/study/scenario-builder/scBuilderUtils.h"
+#include "antares/study/scenario-builder/TSnumberData.h"
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Data
-{
-namespace ScenarioBuilder
+namespace Antares::Data::ScenarioBuilder
 {
 Rules::Rules(Study& study) : study_(study), pAreaCount(0)
 {
@@ -141,11 +131,7 @@ bool Rules::readThermalCluster(const AreaName::Vector& splitKey, String value, b
     if (!area)
         return false;
 
-    const ThermalCluster* cluster = area->thermal.list.find(clustername);
-    if (!cluster)
-        cluster = area->thermal.mustrunList.find(clustername);
-
-    if (cluster)
+    if (const ThermalCluster* cluster = area->thermal.list.findInAll(clustername); cluster)
     {
         uint val = fromStringToTSnumber(value);
         thermal[area->index].setTSnumber(cluster, year, val);
@@ -180,7 +166,7 @@ bool Rules::readRenewableCluster(const AreaName::Vector& splitKey, String value,
     if (!area)
         return false;
 
-    const RenewableCluster* cluster = area->renewable.list.find(clustername);
+    const RenewableCluster* cluster = area->renewable.list.findInAll(clustername);
 
     if (cluster)
     {
@@ -414,6 +400,6 @@ void Rules::sendWarningsForDisabledClusters()
     }
 }
 
-} // namespace ScenarioBuilder
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data::ScenarioBuilder
+
+
