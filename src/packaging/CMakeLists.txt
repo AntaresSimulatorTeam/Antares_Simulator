@@ -48,7 +48,7 @@ set(TARGET_LIBS #No alias
         StudyUtils
         stdcxx
         inifile
-        antares-config
+        antares-config-lib
         #
         signal-handling
         antares-solver-variable-info

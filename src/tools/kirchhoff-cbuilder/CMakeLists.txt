@@ -12,8 +12,8 @@ set(SRCS main.cpp)
 # endif(WIN32)
 
 
-set(execname "antares-${ANTARES_PRG_VERSION}-kirchhoff-constraints-builder")
-add_executable(${execname} ${SRCS})
+set(execname "antares-kirchhoff-constraints-builder")
+add_executable(${execname}  ${SRCS})
 install(TARGETS ${execname} EXPORT antares-kirchhoff-constraints-builder DESTINATION bin)
 
 INSTALL(EXPORT antares-kirchhoff-constraints-builder

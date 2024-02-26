@@ -43,7 +43,7 @@ endif ()
 
 OMESSAGE("  :: application solver")
 
-set(exec_name "antares-${ANTARES_PRG_VERSION}-solver")
+set(exec_name "antares-solver")
 
 add_library(solver-lib
         ${SRCS}
