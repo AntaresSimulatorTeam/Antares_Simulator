@@ -1,7 +1,10 @@
-# set(SRCS main.cpp)
+set(SRCS
+        main.cpp
+        include/antares/timeseries-generation/timeseries-generation.h
+)
 
 set(execname "antares-timeseries-generator")
-add_executable(${execname}  main.cpp)
+add_executable(${execname} ${SRCS})
 install(TARGETS ${execname} EXPORT antares-timeseries-generator DESTINATION bin)
 
 INSTALL(EXPORT antares-timeseries-generator
@@ -9,11 +12,11 @@ INSTALL(EXPORT antares-timeseries-generator
         DESTINATION cmake
 )
 
-
 target_link_libraries(${execname}
                       PRIVATE
                       antares-solver-ts-generator
-                      Antares::study)
+                      Antares::study
+)
 
 target_include_directories(${execname}
         PRIVATE
