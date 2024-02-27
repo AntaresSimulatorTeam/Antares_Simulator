@@ -611,15 +611,12 @@ std::vector<std::pair<std::string, std::string>> splitStringIntoPairs (const std
         size_t pos = token.find(delimiter2);
         if (pos != std::string::npos)
         {
-            std::string first = token.substr(0, pos);
-            std::string second = token.substr(pos + 1);
-            pairs.push_back(std::make_pair(first, second));
+            std::string begin = token.substr(0, pos);
+            std::string end = token.substr(pos + 1);
+            pairs.push_back({begin, end});
         }
         else
-        {
-            logs.warning() << "Error with area and cluster: " << token;
-            logs.warning() << "Correct format: \"area1.cluster1;area2.cluster2\"";
-        }
+            logs.warning() << "Error while parsing: " << token;
     }
 
     return pairs;
@@ -643,23 +640,23 @@ std::vector<Data::ThermalCluster*> getClustersToGen(Data::AreaList& areas,
     }
     else
     {
-        const auto names = splitStringIntoPairs(clustersToGen, ';', '.');
+        const auto ids = splitStringIntoPairs(clustersToGen, ';', '.');
 
-        for (const auto& [areaName, clusterName] : names)
+        for (const auto& [areaID, clusterID] : ids)
         {
-            logs.info() << "Generating ts for area: " << areaName << " and cluster: " << clusterName;
+            logs.info() << "Generating ts for area: " << areaID << " and cluster: " << clusterID;
 
-            auto* area = areas.find(areaName);
+            auto* area = areas.find(areaID);
             if (!area)
             {
-                logs.warning() << "Area not found: " << areaName;
+                logs.warning() << "Area not found: " << areaID;
                 continue;
             }
 
-            auto* cluster = area->thermal.list.findInAll(clusterName);
+            auto* cluster = area->thermal.list.findInAll(clusterID);
             if (!cluster)
             {
-                logs.warning() << "Cluster not found: " << clusterName;
+                logs.warning() << "Cluster not found: " << clusterID;
                 continue;
             }
 
