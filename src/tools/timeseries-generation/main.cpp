@@ -33,12 +33,12 @@ using namespace Antares;
 
 std::unique_ptr<Yuni::GetOpt::Parser> createTsGeneratorParser(TsGeneratorSettings& settings)
 {
-    auto parser = std::unique_ptr<Yuni::GetOpt::Parser>(new Yuni::GetOpt::Parser());
+    auto parser = std::make_unique<Yuni::GetOpt::Parser>();
     parser->addParagraph("Antares Time Series generator\n");
 
     parser->addFlag(settings.allThermal, ' ', "all-thermal", "Generate TS for all thermal clusters");
 
-    parser->addFlag(settings.allThermal, 't', "thermal", "Generate TS for a list of thermal clusters");
+    parser->addFlag(settings.thermalListToGen, 't', "thermal", "Generate TS for a list of thermal clusters");
 
     parser->remainingArguments(settings.studyFolder);
 
