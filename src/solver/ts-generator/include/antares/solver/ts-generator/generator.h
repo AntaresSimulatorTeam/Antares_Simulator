@@ -41,11 +41,18 @@ template<enum Data::TimeSeriesType T>
 bool GenerateTimeSeries(Data::Study& study, uint year, IResultWriter& writer);
 
 bool GenerateThermalTimeSeries(Data::Study& study,
+                               std::vector<Data::ThermalCluster*> clusters,
                                uint year,
-                               bool globalThermalTSgeneration,
-                               bool refresh,
-                               IResultWriter& writer);
+                               Solver::IResultWriter& writer);
 
+std::vector<std::pair<std::string, std::string>> splitStringIntoPairs (const std::string& s,
+                                                                       char delimiter1,
+                                                                       char delimiter2);
+
+std::vector<Data::ThermalCluster*> getClustersToGen(Data::AreaList& areas,
+                                                    const std::string& clustersToGen,
+                                                    bool globalThermalTSgeneration,
+                                                    bool refreshTSonCurrentYear);
 /*!
 ** \brief Destroy all TS Generators
 */

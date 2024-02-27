@@ -751,3 +751,39 @@ BOOST_AUTO_TEST_CASE(check_all_drawn_ts_numbers_are_bounded_between_0_and_nb_of_
 	BOOST_CHECK(thermalTsNumber < thermalNumberOfTs);
     BOOST_CHECK_LT(binding_constraints_TS_number, binding_constraints_number_of_TS);
 }
+
+BOOST_AUTO_TEST_CASE(split_string_ts_cluster_gen)
+{
+    char delimiter1 = ';';
+    char delimiter2 = '.';
+
+    using stringPair = std::pair<std::string, std::string>;
+    std::vector<stringPair> v;
+
+    // only one pair of area cluster
+    v = TSGenerator::splitStringIntoPairs("abc.def", delimiter1, delimiter2);
+    BOOST_CHECK(v[0] == stringPair("abc", "def"));
+
+    // two pairs
+    v = TSGenerator::splitStringIntoPairs("abc.def;ghi.jkl", delimiter1, delimiter2);
+    BOOST_CHECK(v[0] == stringPair("abc", "def"));
+    BOOST_CHECK(v[1] == stringPair("ghi", "jkl"));
+
+    // first pair isn't valid
+    v = TSGenerator::splitStringIntoPairs("abcdef;ghi.jkl", delimiter1, delimiter2);
+    BOOST_CHECK(v[0] == stringPair("ghi", "jkl"));
+
+    // second pair isn't valid
+    v = TSGenerator::splitStringIntoPairs("abc.def;ghijkl", delimiter1, delimiter2);
+    BOOST_CHECK(v[0] == stringPair("abc", "def"));
+
+    // no semi colon
+    v = TSGenerator::splitStringIntoPairs("abc.def.ghi.jkl", delimiter1, delimiter2);
+    BOOST_CHECK(v[0] == stringPair("abc", "def.ghi.jkl"));
+
+    // no separator
+    v.clear();
+    v = TSGenerator::splitStringIntoPairs("abcdef", delimiter1, delimiter2);
+    BOOST_CHECK(v.empty());
+}
+
