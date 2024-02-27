@@ -21,11 +21,15 @@
 #include <memory>
 #include <string>
 
+#include <antares/solver/ts-generator/generator.h>
 #include <antares/exception/LoadingError.hpp>
 #include <antares/study/header.h>
 #include <antares/study/study.h>
 #include <antares/logs/logs.h>
 #include <yuni/core/getopt.h>
+
+#include "antares/benchmarking/DurationCollector.h"
+#include "antares/writer/writer_factory.h"
 
 #include <antares/timeseries-generation/timeseries-generation.h>
 
@@ -73,10 +77,16 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    for (auto& [name, area] : study->areas)
-        for (auto& c : area->thermal.list.all())
-            logs.notice() << c->name();
+    auto durationCollector = std::make_unique<Benchmarking::DurationCollector>();
+    auto ioQueueService = std::make_shared<Yuni::Job::QueueService>();
+    ioQueueService->maximumThreadCount(1);
+    ioQueueService->start();
 
-    return 0;
+    auto resultWriter = Solver::resultWriterFactory(
+            study->parameters.resultFormat, study->folderOutput, ioQueueService, *durationCollector);
+
+    auto clusters = TSGenerator::getClustersToGen(study->areas, settings.thermalListToGen, true, true);
+
+    return TSGenerator::GenerateThermalTimeSeries(*study, clusters, 0, *resultWriter);
 }
 
