@@ -28,8 +28,9 @@
 #include <antares/logs/logs.h>
 #include <yuni/core/getopt.h>
 
-#include "antares/benchmarking/DurationCollector.h"
-#include "antares/writer/writer_factory.h"
+#include <antares/benchmarking/DurationCollector.h>
+#include <antares/writer/writer_factory.h>
+#include <antares/writer/result_format.h>
 
 #include <antares/timeseries-generation/timeseries-generation.h>
 
@@ -77,15 +78,16 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    auto durationCollector = std::make_unique<Benchmarking::DurationCollector>();
-    auto ioQueueService = std::make_shared<Yuni::Job::QueueService>();
-    ioQueueService->maximumThreadCount(1);
-    ioQueueService->start();
+    Benchmarking::NullDurationCollector nullDurationCollector;
 
+    study->parameters.noOutput = false;
     auto resultWriter = Solver::resultWriterFactory(
-            study->parameters.resultFormat, study->folderOutput, ioQueueService, *durationCollector);
+            Data::ResultFormat::legacyFilesDirectories, study->folderOutput, nullptr, nullDurationCollector);
 
     auto clusters = TSGenerator::getClustersToGen(study->areas, settings.thermalListToGen, true, true);
+
+    for (auto& c : clusters)
+        logs.notice() << c->id();
 
     return TSGenerator::GenerateThermalTimeSeries(*study, clusters, 0, *resultWriter);
 }
