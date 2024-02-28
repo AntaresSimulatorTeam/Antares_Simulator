@@ -69,6 +69,12 @@ int main(int argc, char *argv[])
         break;
     }
 
+    if (settings.allThermal && !settings.thermalListToGen.empty())
+    {
+        logs.error() << "Conflicting options, either choose all thermal clusters or a list";
+        return 1;
+    }
+
     auto study = std::make_shared<Data::Study>(true);
     Data::StudyLoadOptions studyOptions;
     studyOptions.prepareOutput = true;
