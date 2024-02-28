@@ -70,6 +70,7 @@ int main(int argc, char *argv[])
 
     auto study = std::make_shared<Data::Study>(true);
     Data::StudyLoadOptions studyOptions;
+    studyOptions.prepareOutput = true;
 
     if (!study->loadFromFolder(settings.studyFolder, studyOptions))
     {
@@ -80,7 +81,6 @@ int main(int argc, char *argv[])
 
     Benchmarking::NullDurationCollector nullDurationCollector;
 
-    study->parameters.noOutput = false;
     auto resultWriter = Solver::resultWriterFactory(
             Data::ResultFormat::legacyFilesDirectories, study->folderOutput, nullptr, nullDurationCollector);
 
