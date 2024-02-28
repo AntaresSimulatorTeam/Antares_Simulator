@@ -16,12 +16,11 @@ namespace tt = boost::test_tools;
 namespace bdata = boost::unit_test::data;
 using namespace Antares::optim::api;
 
-static const std::string solverNames[] =
+static constexpr array<const char*, 3> solverNames =
         {
                 "xpress",
                 "sirius",
                 "coin",
-                //"glpk", // TODO fix this
                 //"scip" // TODO activate this after adding tolerance
         };
 

@@ -13,29 +13,24 @@ namespace bdata = boost::unit_test::data;
 using namespace Antares::optim::api;
 using namespace std;
 
-static const string solverNames[] =
+static constexpr array<const char*, 3> solverNames =
         {
                 "xpress",
                 "sirius",
                 "coin",
-                //"glpk", // TODO fix this
                 //"scip" // TODO activate this after adding tolerance
         };
 
-static const int timestepNumbers[] =
+static constexpr array<int, 4> timestepNumbers =
         {
                 24, // 1 day
                 168, // 1 week
                 744, // 1 month
-                //4380, // 6 months TODO
-                //8760 // 1 year TODO
+                4380 // 6 months
         };
 
 BOOST_DATA_TEST_CASE(test_scaling_simple_problem, bdata::make(solverNames)*bdata::make(timestepNumbers), solverName, nTimesteps)
 {
-    cout << "solver = " << solverName << endl;
-    cout << "nTimesteps = " << nTimesteps << endl;
-
     int timeResolution = 60;
 
     // Build timesteps vector beginning at 0
@@ -78,7 +73,7 @@ BOOST_DATA_TEST_CASE(test_scaling_simple_problem, bdata::make(solverNames)*bdata
 
     LinearProblemData linearProblemData(timeStamps, timeResolution, {}, timedData);
     linearProblemBuilder.build(linearProblemData);
-    auto solution = linearProblemBuilder.solve();
+    auto solution = linearProblemBuilder.solve({});
 
     for (int i = 1; i <= nUnits; ++i) {
         string pVarNamePrefix  = "P_thermal" + to_string(i) + "_";
