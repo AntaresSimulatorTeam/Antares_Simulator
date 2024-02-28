@@ -43,7 +43,7 @@ std::unique_ptr<Yuni::GetOpt::Parser> createTsGeneratorParser(TsGeneratorSetting
 
     parser->addFlag(settings.allThermal, ' ', "all-thermal", "Generate TS for all thermal clusters");
 
-    parser->addFlag(settings.thermalListToGen, 't', "thermal", "Generate TS for a list of thermal clusters");
+    parser->addFlag(settings.thermalListToGen, ' ', "thermal", "Generate TS for a list of thermal clusters");
 
     parser->remainingArguments(settings.studyFolder);
 
@@ -60,7 +60,8 @@ int main(int argc, char *argv[])
     {
         using namespace Yuni::GetOpt;
     case ReturnCode::error:
-        throw Error::CommandLineArguments(parser->errors());
+        logs.error() << "Unknown arguments, aborting";
+        return parser->errors();
     case ReturnCode::help:
         // End the program
         return 0;
