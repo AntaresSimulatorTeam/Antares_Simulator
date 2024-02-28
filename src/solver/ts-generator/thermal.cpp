@@ -77,7 +77,8 @@ private:
 private:
     uint nbThermalTimeseries_;
 
-    MersenneTwister& rndgenerator;
+    uint seedThermalGlobal;
+    MersenneTwister rndgenerator;
 
     double AVP[366];
     enum
@@ -108,7 +109,7 @@ GeneratorTempData::GeneratorTempData(Data::Study& study,
                                      Solver::Progression::Task& progr,
                                      Solver::IResultWriter& writer) :
     study(study),
-    rndgenerator(study.runtime->random[Data::seedTsGenThermal]),
+    seedThermalGlobal(study.parameters.seed[Data::seedTsGenThermal]),
     pProgression(progr),
     pWriter(writer)
 {
@@ -244,6 +245,11 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
             writeResultsToDisk(area, cluster);
         return;
     }
+
+    // we use global seed + areaID + clusterID to reproduce same rnd for each cluster
+    std::string seedstr = std::to_string(seedThermalGlobal) + cluster.id() + cluster.parentArea->id;
+    unsigned seed = std::hash<std::string>{}(seedstr);
+    rndgenerator.reset(seed);
 
     const auto& preproData = *(cluster.prepro);
 

@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
     auto clusters = TSGenerator::getClustersToGen(study->areas, settings.thermalListToGen, true, true);
 
     for (auto& c : clusters)
-        logs.notice() << c->id();
+        logs.debug() << c->id();
 
     return TSGenerator::GenerateThermalTimeSeries(*study, clusters, 0, *resultWriter);
 }
