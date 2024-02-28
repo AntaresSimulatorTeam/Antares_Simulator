@@ -8,7 +8,7 @@ Boundary SimulatorAPI
 
 Client -> SimulatorAPI: PerformSimulation(/path/to/study, 4 /*Force parallelization*/ )
 activate SimulatorAPI
-rnote over SimulatorAPI: Simulator perfor the simulation on the designated study
+rnote over SimulatorAPI: Antares-Simulator performs the simulation on the designated study
 SimulatorAPI --> Client: SimulationResult
 deactivate SimulatorAPI
 Client -> SimulationResult: GetHebdoProblems()
