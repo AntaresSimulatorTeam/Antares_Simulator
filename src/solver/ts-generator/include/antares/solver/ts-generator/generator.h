@@ -49,10 +49,9 @@ std::vector<std::pair<std::string, std::string>> splitStringIntoPairs (const std
                                                                        char delimiter1,
                                                                        char delimiter2);
 
-std::vector<Data::ThermalCluster*> getClustersToGen(Data::AreaList& areas,
-                                                    const std::string& clustersToGen,
-                                                    bool globalThermalTSgeneration,
-                                                    bool refreshTSonCurrentYear);
+std::vector<Data::ThermalCluster*> getAllClustersToGen(Data::AreaList& areas,
+                                                       bool globalThermalTSgeneration,
+                                                       bool refreshTSonCurrentYear);
 /*!
 ** \brief Destroy all TS Generators
 */

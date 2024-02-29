@@ -51,6 +51,36 @@ std::unique_ptr<Yuni::GetOpt::Parser> createTsGeneratorParser(TsGeneratorSetting
     return parser;
 }
 
+std::vector<Data::ThermalCluster*> getClustersToGen(Data::AreaList& areas,
+                                                    const std::string& clustersToGen)
+{
+    std::vector<Data::ThermalCluster*> clusters;
+    const auto ids = TSGenerator::splitStringIntoPairs(clustersToGen, ';', '.');
+
+    for (const auto& [areaID, clusterID] : ids)
+    {
+        logs.info() << "Generating ts for area: " << areaID << " and cluster: " << clusterID;
+
+        auto* area = areas.find(areaID);
+        if (!area)
+        {
+            logs.warning() << "Area not found: " << areaID;
+            continue;
+        }
+
+        auto* cluster = area->thermal.list.findInAll(clusterID);
+        if (!cluster)
+        {
+            logs.warning() << "Cluster not found: " << clusterID;
+            continue;
+        }
+
+        clusters.push_back(cluster);
+    }
+
+    return clusters;
+}
+
 int main(int argc, char *argv[])
 {
     TsGeneratorSettings settings;
@@ -81,8 +111,7 @@ int main(int argc, char *argv[])
 
     if (!study->loadFromFolder(settings.studyFolder, studyOptions))
     {
-        if (settings.studyFolder.empty())
-            logs.error() << "No study given to the generator";
+        logs.error() << "Invalid study given to the generator";
         return 1;
     }
 
@@ -91,7 +120,12 @@ int main(int argc, char *argv[])
     auto resultWriter = Solver::resultWriterFactory(
             Data::ResultFormat::legacyFilesDirectories, study->folderOutput, nullptr, nullDurationCollector);
 
-    auto clusters = TSGenerator::getClustersToGen(study->areas, settings.thermalListToGen, true, true);
+    std::vector<Data::ThermalCluster*> clusters;
+
+    if (settings.thermalListToGen.empty())
+        clusters = TSGenerator::getAllClustersToGen(study->areas, true, true);
+    else
+        clusters = getClustersToGen(study->areas, settings.thermalListToGen);
 
     for (auto& c : clusters)
         logs.debug() << c->id();

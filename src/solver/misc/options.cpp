@@ -96,10 +96,6 @@ std::unique_ptr<GetOpt::Parser> CreateParser(Settings& settings,
     // --generators-only
     parser->addFlag(
             settings.tsGeneratorsOnly, 'g', "generators-only", "Run the time-series generators only");
-    // --clusters-to-gen
-    parser->addFlag(
-            settings.clustersToGen, ' ', "clusters-to-gen", "List of areas and clusters selected to generate TS");
-
 
     // --comment-file
     parser->add(settings.commentFile,

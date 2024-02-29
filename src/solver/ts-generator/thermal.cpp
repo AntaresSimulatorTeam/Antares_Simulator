@@ -628,47 +628,17 @@ std::vector<std::pair<std::string, std::string>> splitStringIntoPairs (const std
     return pairs;
 }
 
-std::vector<Data::ThermalCluster*> getClustersToGen(Data::AreaList& areas,
-                                                    const std::string& clustersToGen,
-                                                    bool globalThermalTSgeneration,
-                                                    bool refreshTSonCurrentYear)
+std::vector<Data::ThermalCluster*> getAllClustersToGen(Data::AreaList& areas,
+                                                       bool globalThermalTSgeneration,
+                                                       bool refreshTSonCurrentYear)
 {
-
     std::vector<Data::ThermalCluster*> clusters;
 
-    if (clustersToGen.empty()) // generate TS for all clusters
-    {
-        areas.each([&clusters, &globalThermalTSgeneration, &refreshTSonCurrentYear](Data::Area& area) {
-            for (auto cluster : area.thermal.list.all())
-                if (cluster->doWeGenerateTS(globalThermalTSgeneration) && refreshTSonCurrentYear)
-                    clusters.push_back(cluster.get());
-        });
-    }
-    else
-    {
-        const auto ids = splitStringIntoPairs(clustersToGen, ';', '.');
-
-        for (const auto& [areaID, clusterID] : ids)
-        {
-            logs.info() << "Generating ts for area: " << areaID << " and cluster: " << clusterID;
-
-            auto* area = areas.find(areaID);
-            if (!area)
-            {
-                logs.warning() << "Area not found: " << areaID;
-                continue;
-            }
-
-            auto* cluster = area->thermal.list.findInAll(clusterID);
-            if (!cluster)
-            {
-                logs.warning() << "Cluster not found: " << clusterID;
-                continue;
-            }
-
-            clusters.push_back(cluster);
-        }
-    }
+    areas.each([&clusters, &globalThermalTSgeneration, &refreshTSonCurrentYear](Data::Area& area) {
+        for (auto cluster : area.thermal.list.all())
+            if (cluster->doWeGenerateTS(globalThermalTSgeneration) && refreshTSonCurrentYear)
+                clusters.push_back(cluster.get());
+    });
 
     return clusters;
 }

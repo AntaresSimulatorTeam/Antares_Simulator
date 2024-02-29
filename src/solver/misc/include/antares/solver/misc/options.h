@@ -51,7 +51,6 @@ public:
 
     //! Run the TS generator only
     bool tsGeneratorsOnly = false;
-    std::string clustersToGen = "";
 
     //! True to disable the writing in the output folder
     bool noOutput = false;
