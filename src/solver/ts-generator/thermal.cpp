@@ -598,14 +598,13 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
 } // namespace
 
 std::vector<Data::ThermalCluster*> getAllClustersToGen(Data::AreaList& areas,
-                                                       bool globalThermalTSgeneration,
-                                                       bool refreshTSonCurrentYear)
+                                                       bool globalThermalTSgeneration)
 {
     std::vector<Data::ThermalCluster*> clusters;
 
-    areas.each([&clusters, &globalThermalTSgeneration, &refreshTSonCurrentYear](Data::Area& area) {
+    areas.each([&clusters, &globalThermalTSgeneration](Data::Area& area) {
         for (auto cluster : area.thermal.list.all())
-            if (cluster->doWeGenerateTS(globalThermalTSgeneration) && refreshTSonCurrentYear)
+            if (cluster->doWeGenerateTS(globalThermalTSgeneration))
                 clusters.push_back(cluster.get());
     });
 

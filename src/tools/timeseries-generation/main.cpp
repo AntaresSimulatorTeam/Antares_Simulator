@@ -124,7 +124,7 @@ int main(int argc, char *argv[])
     std::vector<Data::ThermalCluster*> clusters;
 
     if (settings.thermalListToGen.empty())
-        clusters = TSGenerator::getAllClustersToGen(study->areas, true, true);
+        clusters = TSGenerator::getAllClustersToGen(study->areas, true);
     else
         clusters = getClustersToGen(study->areas, settings.thermalListToGen);
 
