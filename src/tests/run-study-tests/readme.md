@@ -5,8 +5,11 @@ Here is an automatic testing python script system.
 This program performs the following : 
 1. Searches for all studies in a given directory
 2. From each study, retrieves the specifications to make checks on the simulation results of that study (see items below)
-3. Runs a simlulation on each study
-4. Given the results of the simulation on a study, makes the checks retrieved at step 2 on these results (for instance : make sure current results and reference resuts are identical, check for existence or content of output files,...)
+3. Runs a simulation on each study
+4. Given the results of the simulation on a study, makes the checks retrieved at step 2 on these results.
+   Examples :
+    - make sure current results and reference resuts are identical
+    - check for existence or even content of output files
 
 Note that each study found is supposed to contain the definition of checks performed by scripts after the simulation on the study is completed.
 So, each study is supposed to contain a file **check-config.json** for that purpose. This file is build manually for each study.
@@ -42,7 +45,7 @@ In the following, we comment the content of this script. Lines of this scripts a
 
 ## Fixtures
 **pytest** comes with the notion of **fixture**. Fixtures allow executing a piece of code just before a test runs.
-To take bebefit of a fixture, a test needs to be given this fixture as argument. 
+To take benefit of a fixture, a test needs to be given this fixture as argument. 
 Fixture themselves can also be given arguments, we'll see how we do it (in the context of the current testing system) when we talk about **parametrization**.
 Fixtures return a result to be used in the test.
 Let's look at a simple test :
