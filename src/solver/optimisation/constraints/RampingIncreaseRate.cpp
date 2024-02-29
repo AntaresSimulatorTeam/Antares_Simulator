@@ -9,16 +9,16 @@ void RampingIncreaseRate::add(int pays, int cluster, int clusterIndex, int pdt, 
           = PaliersThermiquesDuPays.clusterRampingVariablesIndex[clusterIndex];
         double maxUpwardPowerRampingRate
           = PaliersThermiquesDuPays.maxUpwardPowerRampingRate[rampingClusterIndex];
-        double pminDUnGroupeDuPalierThermique
-          = PaliersThermiquesDuPays.pminDUnGroupeDuPalierThermique[clusterIndex];
-        // constraint : P(t) - P(t-1) - R^+ * M(t) - l * M^+(t) < 0
+        double pmaxDUnGroupeDuPalierThermique
+          = PaliersThermiquesDuPays.PmaxDUnGroupeDuPalierThermique[clusterIndex];
+        // constraint : P(t) - P(t-1) - R^+ * M(t) - u * M^+(t) < 0
 
         builder.updateHourWithinWeek(pdt)
             .DispatchableProduction(cluster, 1.0)
             .DispatchableProduction(
             cluster, -1.0, -1, problemeHebdo->NombreDePasDeTempsPourUneOptimisation)
             .NumberOfDispatchableUnits(cluster, -maxUpwardPowerRampingRate)
-            .NumberStartingDispatchableUnits(cluster, -pminDUnGroupeDuPalierThermique)
+          .NumberStartingDispatchableUnits(cluster, -pmaxDUnGroupeDuPalierThermique)
             .lessThan();
         
         if (builder.NumberOfVariables() > 0)

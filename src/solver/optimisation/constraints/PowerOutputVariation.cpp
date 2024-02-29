@@ -9,14 +9,15 @@ void PowerOutputVariation::add(int pays, int cluster, int clusterIndex, int pdt,
           = PaliersThermiquesDuPays.clusterRampingVariablesIndex[clusterIndex];
         double maxUpwardPowerRampingRate
           = PaliersThermiquesDuPays.maxUpwardPowerRampingRate[rampingClusterIndex];
-        double pminDUnGroupeDuPalierThermique = PaliersThermiquesDuPays.pminDUnGroupeDuPalierThermique[clusterIndex];
-        // constraint : P(t) - P(t-1) - l * M^+(t) - P^+ + P^- = 0
+        double pmaxDUnGroupeDuPalierThermique = PaliersThermiquesDuPays.PmaxDUnGroupeDuPalierThermique[clusterIndex];
+        // constraint : P(t) - P(t-1) - u * M^+(t) - P^+ + P^- + u * M^-(t) = 0
         builder.updateHourWithinWeek(pdt)
             .DispatchableProduction(cluster, 1.0)
             .DispatchableProduction(cluster, -1.0, -1, problemeHebdo->NombreDePasDeTempsPourUneOptimisation)
-            .NumberStartingDispatchableUnits(cluster, -pminDUnGroupeDuPalierThermique)
+          .NumberStartingDispatchableUnits(cluster, -pmaxDUnGroupeDuPalierThermique)
             .ProductionIncreaseAboveMin(cluster, -1.0)
-            .ProductionDecreaseAboveMin(cluster, 1.0)
+          .ProductionDecreaseAboveMin(cluster, 1.0)
+          .NumberStoppingDispatchableUnits(cluster, pmaxDUnGroupeDuPalierThermique)
             .equalTo();
    
         if (builder.NumberOfVariables() > 0)

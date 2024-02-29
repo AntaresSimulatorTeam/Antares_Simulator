@@ -61,15 +61,9 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireRampesThermiques(PROB
 
                     int var = CorrespondanceVarNativesVarOptim.powerRampingDecreaseIndex[palier];
                     Xmin[var] = 0;
-                    Xmax[var]
-                      = PaliersThermiquesDuPays.maxDownwardPowerRampingRate[rampingClusterIndex]
-                                * PaliersThermiquesDuPays.NombreDePaliersThermiques;
 
                     var = CorrespondanceVarNativesVarOptim.powerRampingIncreaseIndex[palier];
                     Xmin[var] = 0;
-                    Xmax[var]
-                      = PaliersThermiquesDuPays.maxUpwardPowerRampingRate[rampingClusterIndex]
-                                * PaliersThermiquesDuPays.NombreDePaliersThermiques;
                 }
             }
         }
