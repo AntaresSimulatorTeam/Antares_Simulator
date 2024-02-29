@@ -79,10 +79,8 @@ public:
     //! A non-zero value if the data will be used for a simulation
     bool usedByTheSolver;
 
-    //! Force ortools use
-    bool ortoolsUsed;
     //! THe solver name, sirius is the default
-    std::string ortoolsSolver = "sirius";
+    std::string solverName = "sirius";
 
     //! Temporary string for passing log message
     mutable Yuni::String logMessage;

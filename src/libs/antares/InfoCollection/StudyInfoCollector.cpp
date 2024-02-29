@@ -141,19 +141,13 @@ void StudyInfoCollector::solverVersionToFileContent(FileContent& file_content)
 
 void StudyInfoCollector::ORToolsUsed(FileContent& file_content)
 {
-    const bool& ortoolsUsed = study_.parameters.ortoolsUsed;
-    file_content.addItemToSection("study", "ortools used", ortoolsUsed ? "true" : "false");
+    file_content.addItemToSection("study", "ortools used", "true");
 }
 
 void StudyInfoCollector::ORToolsSolver(FileContent& file_content)
 {
-    const bool& ortoolsUsed = study_.parameters.ortoolsUsed;
-    std::string ortoolsSolver = "none";
-    if (ortoolsUsed)
-    {
-        ortoolsSolver = study_.parameters.ortoolsSolver;
-    }
-    file_content.addItemToSection("study", "ortools solver", ortoolsSolver);
+    std::string solverName = study_.parameters.solverName;
+    file_content.addItemToSection("study", "ortools solver", solverName);
 }
 
 // Collecting data optimization problem

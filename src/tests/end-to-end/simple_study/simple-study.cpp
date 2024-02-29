@@ -171,8 +171,7 @@ BOOST_AUTO_TEST_CASE(milp_two_mc_single_unit_single_scenario)
     // Use OR-Tools / COIN for MILP
     auto& p = study->parameters;
     p.unitCommitment.ucMode = ucMILP;
-    p.ortoolsUsed = true;
-    p.ortoolsSolver = "coin";
+    p.solverName = "coin";
 
     simulation->create();
     simulation->run();
@@ -200,8 +199,7 @@ BOOST_AUTO_TEST_CASE(milp_two_mc_two_unit_single_scenario)
     // Use OR-Tools / COIN for MILP
     auto& p = study->parameters;
     p.unitCommitment.ucMode = ucMILP;
-    p.ortoolsUsed = true;
-    p.ortoolsSolver = "coin";
+    p.solverName = "coin";
 
     simulation->create();
     simulation->run();

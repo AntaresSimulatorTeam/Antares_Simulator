@@ -95,7 +95,6 @@ public:
                      bool exportMPSOnError,
                      const int current_optim_number,
                      PROBLEME_SIMPLEXE_NOMME* named_splx_problem,
-                     bool ortoolsUsed,
                      MPSolver* solver);
 
     std::unique_ptr<I_MPS_writer> create();

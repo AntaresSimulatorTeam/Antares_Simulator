@@ -461,10 +461,7 @@ void finalizeOptimizationStatistics(PROBLEME_HEBDO& problem,
 
 OptimizationOptions createOptimizationOptions(const Data::Study& study)
 {
-    return {
-        study.parameters.ortoolsUsed,
-        study.parameters.ortoolsSolver
-    };
+    return { study.parameters.solverName };
 }
 
 

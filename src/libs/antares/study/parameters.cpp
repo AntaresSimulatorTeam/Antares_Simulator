@@ -325,8 +325,7 @@ void Parameters::reset()
 
     hydroDebug = false;
 
-    ortoolsUsed = false;
-    ortoolsSolver = "sirius";
+    solverName = "sirius";
 
     resultFormat = legacyFilesDirectories;
 
@@ -1042,9 +1041,7 @@ bool Parameters::loadFromINI(const IniFile& ini, StudyVersion& version, const St
     if (options.forceDerated)
         derated = true;
 
-    // Define ortools parameters from options
-    ortoolsUsed = options.ortoolsUsed;
-    ortoolsSolver = options.ortoolsSolver;
+    solverName = options.solverName;
 
     namedProblems = options.namedProblems;
     solverLogs = options.solverLogs || solverLogs;
@@ -1450,11 +1447,7 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
     if (!include.hurdleCosts)
         logs.info() << "  :: ignoring hurdle costs";
 
-    // Indicate ortools solver used
-    if (ortoolsUsed)
-    {
-        logs.info() << "  :: ortools solver " << ortoolsSolver << " used for problem resolution";
-    }
+    logs.info() << "  :: solver " << solverName << " is used for problem resolution";
 
     // indicated that Problems will be named
     if (namedProblems)

@@ -507,10 +507,8 @@ public:
 
     //! \name Ortools configuration
     //@{
-    //! Define if ortools is used
-    bool ortoolsUsed;
-    //! Ortool solver used for simulation
-    std::string ortoolsSolver;
+    //! Solver used for simulation
+    std::string solverName;
     //@}
     // Format of results. Currently, only single files or zip archive are supported
     ResultFormat resultFormat = legacyFilesDirectories;

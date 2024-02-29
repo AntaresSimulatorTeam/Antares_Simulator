@@ -32,7 +32,6 @@ namespace Antares::Solver::Optimization {
 
 struct OptimizationOptions
 {
-    bool useOrtools;
     std::string solverName;
 };
 
