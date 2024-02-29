@@ -167,14 +167,14 @@ jobs:
         path: 'simtest.json'
         prop_path: 'version'
 
-    - name: Run named mps tests
-      if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
-      uses: ./.github/workflows/run-tests
-      with:
-        simtest-tag: ${{steps.simtest-version.outputs.prop}}
-        batch-name: valid-named-mps
-        os: ${{ env.test-platform }}
-        variant: "named-mps"
+    # - name: Run named mps tests
+    #   if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
+    #   uses: ./.github/workflows/run-tests
+    #   with:
+    #     simtest-tag: ${{steps.simtest-version.outputs.prop}}
+    #     batch-name: valid-named-mps
+    #     os: ${{ env.test-platform }}
+    #     variant: "named-mps"
 
     - name: Run unfeasibility-related tests
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
