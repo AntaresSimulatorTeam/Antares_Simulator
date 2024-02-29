@@ -91,12 +91,15 @@ bool thermalTSNumberData::apply(Study& study)
     assert(pArea->index < study.areas.size());
     const Area& area = *(study.areas.byIndex[pArea->index]);
 
-    const uint tsGenCountThermal = get_tsGenCount(study);
+    uint tsGenCountThermal = get_tsGenCount(study);
 
     for (auto cluster : area.thermal.list.each_enabled())
     {
         assert(cluster->areaWideIndex < pTSNumberRules.width);
         const auto& col = pTSNumberRules[cluster->areaWideIndex];
+
+        if (cluster->tsGenBehavior == LocalTSGenerationBehavior::forceNoGen)
+            tsGenCountThermal = cluster->series.timeSeries.width;
 
         logprefix.clear() << "Thermal: area '" << area.name << "', cluster: '" << cluster->name()
                           << "': ";
