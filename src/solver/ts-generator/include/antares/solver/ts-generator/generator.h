@@ -45,10 +45,6 @@ bool GenerateThermalTimeSeries(Data::Study& study,
                                uint year,
                                Solver::IResultWriter& writer);
 
-std::vector<std::pair<std::string, std::string>> splitStringIntoPairs (const std::string& s,
-                                                                       char delimiter1,
-                                                                       char delimiter2);
-
 std::vector<Data::ThermalCluster*> getAllClustersToGen(Data::AreaList& areas,
                                                        bool globalThermalTSgeneration,
                                                        bool refreshTSonCurrentYear);

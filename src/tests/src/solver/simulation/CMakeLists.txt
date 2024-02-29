@@ -19,6 +19,7 @@ target_include_directories(tests-ts-numbers
 )
 target_link_libraries(tests-ts-numbers
 						PRIVATE
+                            Antares::utils
 							Boost::unit_test_framework
 							model_antares
 							antares-solver-simulation

@@ -597,31 +597,6 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
 }
 } // namespace
 
-
-std::vector<std::pair<std::string, std::string>> splitStringIntoPairs (const std::string& s,
-                                                                       char delimiter1,
-                                                                       char delimiter2)
-{
-    std::vector<std::pair<std::string, std::string>> pairs;
-    std::stringstream ss(s);
-    std::string token;
-
-    while (std::getline(ss, token, delimiter1))
-    {
-        size_t pos = token.find(delimiter2);
-        if (pos != std::string::npos)
-        {
-            std::string begin = token.substr(0, pos);
-            std::string end = token.substr(pos + 1);
-            pairs.push_back({begin, end});
-        }
-        else
-            logs.warning() << "Error while parsing: " << token;
-    }
-
-    return pairs;
-}
-
 std::vector<Data::ThermalCluster*> getAllClustersToGen(Data::AreaList& areas,
                                                        bool globalThermalTSgeneration,
                                                        bool refreshTSonCurrentYear)

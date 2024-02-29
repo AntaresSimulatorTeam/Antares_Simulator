@@ -26,6 +26,7 @@
 #include <antares/study/header.h>
 #include <antares/study/study.h>
 #include <antares/logs/logs.h>
+#include <antares/utils/utils.h>
 #include <yuni/core/getopt.h>
 
 #include <antares/benchmarking/DurationCollector.h>
@@ -55,7 +56,7 @@ std::vector<Data::ThermalCluster*> getClustersToGen(Data::AreaList& areas,
                                                     const std::string& clustersToGen)
 {
     std::vector<Data::ThermalCluster*> clusters;
-    const auto ids = TSGenerator::splitStringIntoPairs(clustersToGen, ';', '.');
+    const auto ids = splitStringIntoPairs(clustersToGen, ';', '.');
 
     for (const auto& [areaID, clusterID] : ids)
     {
