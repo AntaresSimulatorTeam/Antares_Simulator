@@ -25,7 +25,7 @@ endif(WIN32)
 
 
 
-set(execname "antares-${ANTARES_PRG_VERSION}-batchrun")
+set(execname "antares-batchrun")
 add_executable(${execname} ${SRCS})
 
 install(TARGETS ${execname} EXPORT antares-batchrun DESTINATION bin)
@@ -36,11 +36,14 @@ INSTALL(EXPORT antares-batchrun
 )
 
 set(BATCHRUN_LIBS
-		antares-core #local.h
+		antares-core
 		yuni-static-core
 		${CMAKE_THREADS_LIBS_INIT}
 		Antares::args_helper
 		Antares::study
+		Antares::resources
+		Antares::locale
+		Antares::locator
 )
 
 target_link_libraries(${execname}

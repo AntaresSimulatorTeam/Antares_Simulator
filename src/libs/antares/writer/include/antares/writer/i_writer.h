@@ -1,0 +1,67 @@
+/*
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
+**
+** Antares_Simulator is free software: you can redistribute it and/or modify
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
+** (at your option) any later version.
+**
+** Antares_Simulator is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+** Mozilla Public Licence 2.0 for more details.
+**
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+*/
+#pragma once
+
+#include <yuni/core/string.h>
+
+#include <memory>
+#include <string>
+#include <stdexcept>
+
+namespace Antares::Solver
+{
+
+/*!
+ * A generic I/O exception that may be thrown by writer operations.
+ */
+class IOError : public std::runtime_error
+{
+public:
+    using std::runtime_error::runtime_error;
+};
+
+class IResultWriter
+{
+public:
+    using Ptr = std::shared_ptr<IResultWriter>;
+    virtual void addEntryFromBuffer(const std::string& entryPath, Yuni::Clob& entryContent) = 0;
+    virtual void addEntryFromBuffer(const std::string& entryPath, std::string& entryContent) = 0;
+    virtual void addEntryFromFile(const std::string& entryPath, const std::string& filePath) = 0;
+
+    /*!
+     * Waits for completion of every write operation previously appended.
+     * An IOError may be raised if any of those fails.
+     */
+    virtual void flush() = 0;
+    virtual bool needsTheJobQueue() const = 0;
+    virtual void finalize(bool verbose) = 0;
+};
+
+class NullResultWriter: public Solver::IResultWriter {
+    void addEntryFromBuffer(const std::string &, Yuni::Clob &) override;
+    void addEntryFromBuffer(const std::string &, std::string &) override;
+    void addEntryFromFile(const std::string &, const std::string &) override;
+    void flush() override;
+    bool needsTheJobQueue() const override;
+    void finalize(bool ) override;
+};
+
+} // namespace Antares::Solver

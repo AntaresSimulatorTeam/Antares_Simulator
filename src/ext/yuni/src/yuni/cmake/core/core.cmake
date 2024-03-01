@@ -508,6 +508,7 @@ install(FILES
 	doxygen.h
 	platform.h
 	yuni.h
+	string.h
 	COMPONENT ${YUNICOMPONENT_CORE}
 	DESTINATION include/yuni
 )

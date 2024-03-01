@@ -11,8 +11,7 @@ add_executable(test-sc-builder-file-read-line ${SRC_SC_BUILDER_READ})
 
 target_include_directories(test-sc-builder-file-read-line
 								PRIVATE
-									"${src_libs_antares_study}"
-									"${src_libs_antares_study}/scenario-builder"
+									"${src_libs_antares_study}/include"
 )
 
 target_link_libraries(test-sc-builder-file-read-line

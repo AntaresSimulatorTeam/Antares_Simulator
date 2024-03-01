@@ -1,44 +1,39 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
 #include <antares/writer/writer_factory.h>
 #include <antares/benchmarking/DurationCollector.h>
 
 #include <cassert>
+#include "study.h"
 #include "application.h"
 #include "main.h"
-#include "../config.h"
+#include "antares/config/config.h"
 #include <wx/font.h>
 #include <wx/image.h>
 #include <wx/app.h>
 #include "../toolbox/resources.h"
 #include <antares/logs/hostinfo.h>
 #include <yuni/io/file.h>
-#include <antares/jit.h>
+#include <antares/jit/jit.h>
 #include <antares/logs/logs.h>
 #include <antares/memory/memory.h>
 #include <wx/config.h>
@@ -48,7 +43,7 @@
 #include "study.h"
 #include <yuni/datetime/timestamp.h>
 #include <antares/logs/cleaner.h>
-#include <antares/locale.h>
+#include <antares/locale/locale.h>
 #ifndef YUNI_OS_WINDOWS
 #include <signal.h>
 #endif

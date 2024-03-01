@@ -19,4 +19,4 @@ add_Library(antares-ui-inputs  ${SRC_UI_INPUTS})
 
 
 target_link_libraries(antares-ui-inputs PUBLIC ${wxWidgets_LIBRARIES})
-target_link_libraries(antares-ui-inputs PRIVATE antares-core antares-ui-common)
+target_link_libraries(antares-ui-inputs PRIVATE antares-core antares-ui-common Antares::resources Antares::locator)

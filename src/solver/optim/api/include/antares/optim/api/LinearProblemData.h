@@ -27,8 +27,7 @@
 #pragma once
 
 #include <utility>
-// TODO fix headers
-#include "../../../../../../simulation/sim_structure_probleme_economique.h" // CORRESPONDANCES_DES_CONTRAINTES
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 #include "vector"
 
