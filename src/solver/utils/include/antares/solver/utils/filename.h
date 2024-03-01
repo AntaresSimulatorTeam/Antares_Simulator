@@ -33,3 +33,8 @@ std::string createCriterionFilename(const OptPeriodStringGenerator& optPeriodStr
                                     const unsigned int optNumber);
 std::string createMPSfilename(const OptPeriodStringGenerator& optPeriodStringGenerator,
                               const unsigned int optNumber);
+
+std::string createOptimizationFilename(const std::string& title,
+				       const OptPeriodStringGenerator& optPeriodStringGenerator,
+				       unsigned int optNumber,
+				       const std::string& extension);
