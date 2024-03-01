@@ -126,6 +126,8 @@ int main(int argc, char *argv[])
     }
 
     study->initializeRuntimeInfos();
+    // Force the writing of generated TS into output/YYYYMMDD-HHSSeco/ts-generator/thermal/mc-0
+    study->parameters.timeSeriesToArchive |= Antares::Data::timeSeriesThermal;
 
     Benchmarking::NullDurationCollector nullDurationCollector;
 
