@@ -73,9 +73,10 @@ var searchData=
   ['transfer_5fbound_5fand_5flevel_5fflex_5fup_5fedge_70',['TRANSFER_BOUND_AND_LEVEL_FLEX_UP_EDGE',['../structTRANSFER__BOUND__AND__LEVEL__FLEX__UP__EDGE.html',1,'']]],
   ['transfer_5fbound_5fand_5flevel_5fmarket_5fedge_71',['TRANSFER_BOUND_AND_LEVEL_MARKET_EDGE',['../structTRANSFER__BOUND__AND__LEVEL__MARKET__EDGE.html',1,'']]],
   ['treeleaf_72',['TreeLeaf',['../classAntares_1_1Toolbox_1_1InputSelector_1_1TreeLeaf.html',1,'Antares::Toolbox::InputSelector']]],
-  ['tsmanagement_73',['TSmanagement',['../classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TSmanagement.html',1,'Antares::Component::Datagrid::Renderer']]],
-  ['tsmanagementaggregatedasrenewable_74',['TSmanagementAggregatedAsRenewable',['../classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TSmanagementAggregatedAsRenewable.html',1,'Antares::Component::Datagrid::Renderer']]],
-  ['tsmanagementrenewablecluster_75',['TSmanagementRenewableCluster',['../classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TSmanagementRenewableCluster.html',1,'Antares::Component::Datagrid::Renderer']]],
-  ['tsnumberdata_76',['TSNumberData',['../classAntares_1_1Data_1_1ScenarioBuilder_1_1TSNumberData.html',1,'Antares::Data::ScenarioBuilder']]],
-  ['tsnumberspredicate_77',['TSNumbersPredicate',['../structTSNumbersPredicate.html',1,'']]]
+  ['tsgeneratorsettings_73',['TsGeneratorSettings',['../structTsGeneratorSettings.html',1,'']]],
+  ['tsmanagement_74',['TSmanagement',['../classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TSmanagement.html',1,'Antares::Component::Datagrid::Renderer']]],
+  ['tsmanagementaggregatedasrenewable_75',['TSmanagementAggregatedAsRenewable',['../classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TSmanagementAggregatedAsRenewable.html',1,'Antares::Component::Datagrid::Renderer']]],
+  ['tsmanagementrenewablecluster_76',['TSmanagementRenewableCluster',['../classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TSmanagementRenewableCluster.html',1,'Antares::Component::Datagrid::Renderer']]],
+  ['tsnumberdata_77',['TSNumberData',['../classAntares_1_1Data_1_1ScenarioBuilder_1_1TSNumberData.html',1,'Antares::Data::ScenarioBuilder']]],
+  ['tsnumberspredicate_78',['TSNumbersPredicate',['../structTSNumbersPredicate.html',1,'']]]
 ];

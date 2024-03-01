@@ -1327,6 +1327,7 @@ var annotated_dup =
     [ "TRANSFER_BOUND_AND_LEVEL_FLEX_DOWN_EDGE", "structTRANSFER__BOUND__AND__LEVEL__FLEX__DOWN__EDGE.html", null ],
     [ "TRANSFER_BOUND_AND_LEVEL_FLEX_UP_EDGE", "structTRANSFER__BOUND__AND__LEVEL__FLEX__UP__EDGE.html", null ],
     [ "TRANSFER_BOUND_AND_LEVEL_MARKET_EDGE", "structTRANSFER__BOUND__AND__LEVEL__MARKET__EDGE.html", null ],
+    [ "TsGeneratorSettings", "structTsGeneratorSettings.html", "structTsGeneratorSettings" ],
     [ "TSNumbersPredicate", "structTSNumbersPredicate.html", null ],
     [ "UserData", "classUserData.html", null ],
     [ "VALEURS_DE_NTC_ET_RESISTANCES", "structVALEURS__DE__NTC__ET__RESISTANCES.html", null ],

@@ -1,5 +1,6 @@
 var NAVTREEINDEX24 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1SpecifierRemover_3_01T_0fN_0e_4.html":[7,0,0,12,4,34],
 "structAntares_1_1Solver_1_1Variable_1_1SpecifierRemover_3_01const_01T_01_5_01_4.html":[7,0,0,12,4,31],
 "structAntares_1_1Solver_1_1Variable_1_1SpecifierRemover_3_01const_01T_0fN_0e_4.html":[7,0,0,12,4,32],
 "structAntares_1_1Solver_1_1Variable_1_1Storage.html":[7,0,0,12,4,36],
@@ -199,13 +200,16 @@ var NAVTREEINDEX24 =
 "structTRANSFER__BOUND__AND__LEVEL__FLEX__DOWN__EDGE.html":[7,0,224],
 "structTRANSFER__BOUND__AND__LEVEL__FLEX__UP__EDGE.html":[7,0,225],
 "structTRANSFER__BOUND__AND__LEVEL__MARKET__EDGE.html":[7,0,226],
-"structTSNumbersPredicate.html":[7,0,227],
+"structTSNumbersPredicate.html":[7,0,228],
 "structTestContext.html":[7,0,213],
 "structThermalClusterStudy.html":[7,0,218],
 "structThermalIniFile.html":[7,0,219],
 "structTimeSeriesFile.html":[7,0,223],
-"structVALEURS__DE__NTC__ET__RESISTANCES.html":[7,0,229],
-"structVARIABLES__DUALES__INTERCONNEXIONS.html":[7,0,232],
+"structTsGeneratorSettings.html":[7,0,227],
+"structTsGeneratorSettings.html#a1ceeb4b01cdff76701bf73cbfc150cef":[7,0,227,1],
+"structTsGeneratorSettings.html#a44bda1a5bbdcfe6a1ec55864f01f5fca":[7,0,227,0],
+"structVALEURS__DE__NTC__ET__RESISTANCES.html":[7,0,230],
+"structVARIABLES__DUALES__INTERCONNEXIONS.html":[7,0,233],
 "structcommonFixture.html":[7,0,52],
 "structsaveFixture.html":[7,0,193],
 "study_8hxx_source.html":[8,0,0,1,0,22,0,0,0,27],
@@ -245,9 +249,5 @@ var NAVTREEINDEX24 =
 "tool_8h_source.html":[8,0,0,5,2,1,1,3,2,2],
 "toolbox_2components_2datagrid_2filter_2input_8h_source.html":[8,0,0,5,2,1,1,1,0,5],
 "toolbox_2components_2datagrid_2renderer_2connection_8h_source.html":[8,0,0,5,2,1,1,1,1,9],
-"toolbox_2components_2map_2nodes_2bindingconstraint_8h_source.html":[8,0,0,5,2,1,1,3,1,0],
-"toolbox_2components_2map_2nodes_2connection_8h_source.html":[8,0,0,5,2,1,1,3,1,1],
-"toolbox_2ext-source_2window_8h_source.html":[8,0,0,5,2,1,4,5],
-"toolbox_2input_2bindingconstraint_2bindingconstraint_8h_source.html":[8,0,0,5,2,1,5,0,0],
-"toolbox_2input_2bindingconstraint_8h_source.html":[8,0,0,5,2,1,5,2]
+"toolbox_2components_2map_2nodes_2bindingconstraint_8h_source.html":[8,0,0,5,2,1,1,3,1,0]
 };

@@ -7,5 +7,6 @@ var classSettings =
     [ "noOutput", "classSettings.html#a7cf7176a50ff929e8954f32c4767e470", null ],
     [ "simplexOptimRange", "classSettings.html#a533bd3e503ce147fdf74467a7251c511", null ],
     [ "simulationName", "classSettings.html#a2f6a7ad328def111ce976e4102f7cc85", null ],
-    [ "studyFolder", "classSettings.html#ad694d40285aff937bce75b365084e9ea", null ]
+    [ "studyFolder", "classSettings.html#ad694d40285aff937bce75b365084e9ea", null ],
+    [ "tsGeneratorsOnly", "classSettings.html#a7a85732f59739f454763d67bf3b89789", null ]
 ];

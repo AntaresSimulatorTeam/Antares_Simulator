@@ -1,5 +1,6 @@
 var NAVTREEINDEX19 =
 {
+"correlation_8hxx_source.html":[8,0,0,1,0,5,0,0,0,1],
 "count__constraints__variables_8h_source.html":[8,0,0,2,5,0,0,0,0,0,3],
 "creditmodulations_8h_source.html":[8,0,0,5,2,1,1,1,1,1,2],
 "csr__quadratic__problem_8h_source.html":[8,0,0,2,5,0,0,0,0,0,4],
@@ -248,6 +249,5 @@ var NAVTREEINDEX19 =
 "dir_bf91ce0d7d9ebce247f17207861aa803.html":[8,0,0,1,0,25,0,0,0],
 "dir_c02d8ab3ac466a46bd676ad3bd535a9a.html":[8,0,0,1,0,18,0,0,0],
 "dir_c0704015f574cad5df63ff00012b2c72.html":[8,0,0,5,2,2,5],
-"dir_c112b081dc311dabb915b35e7b9a5811.html":[8,0,0,5,2,1,1,3],
-"dir_c1b97a77b0778a14760957f38f2f3ae1.html":[8,0,0,1,0,8]
+"dir_c112b081dc311dabb915b35e7b9a5811.html":[8,0,0,5,2,1,1,3]
 };
