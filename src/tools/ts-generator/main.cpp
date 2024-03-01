@@ -132,7 +132,7 @@ int main(int argc, char *argv[])
     study->parameters.timeSeriesToArchive |= Antares::Data::timeSeriesThermal;
 
     try {
-        Antares::Check::checkMinStablePower(true, study.areas);
+        Antares::Check::checkMinStablePower(true, study->areas);
     } catch(Error::InvalidParametersForThermalClusters& ex) {
         Antares::logs.error() << ex.what();
     }
