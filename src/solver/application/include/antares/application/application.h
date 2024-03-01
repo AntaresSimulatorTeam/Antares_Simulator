@@ -85,8 +85,6 @@ private:
     void runSimulationInAdequacyMode();
     void runSimulationInEconomicMode();
 
-    void initializeRandomNumberGenerators() const;
-
     void onLogMessage(int level, const YString& message);
 
     void processCaption(const Yuni::String& caption);

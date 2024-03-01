@@ -197,22 +197,6 @@ void Application::prepare(int argc, char* argv[])
         logs.info() << "  The progression is disabled";
 }
 
-void Application::initializeRandomNumberGenerators() const
-{
-    logs.info() << "Initializing random number generators...";
-    const auto& parameters = pStudy->parameters;
-    auto& runtime = *pStudy->runtime;
-
-    for (uint i = 0; i != Data::seedMax; ++i)
-    {
-#ifndef NDEBUG
-        logs.debug() << "  random number generator: " << Data::SeedToCString((Data::SeedIndex)i)
-                     << ", seed: " << parameters.seed[i];
-#endif
-        runtime.random[i].reset(parameters.seed[i]);
-    }
-}
-
 void Application::onLogMessage(int level, const Yuni::String& /*message*/)
 {
     switch (level)
@@ -432,9 +416,6 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
 
     // alloc global vectors
     SIM_AllocationTableaux(study);
-
-    // Random-numbers generators
-    initializeRandomNumberGenerators();
 }
 void Application::writeComment(Data::Study& study)
 {

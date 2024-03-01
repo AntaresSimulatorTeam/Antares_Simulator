@@ -82,6 +82,8 @@ public:
     */
     bool loadFromStudy(Study& study);
 
+    void initializeRandomNumberGenerators(const Parameters& parameters);
+
 public:
     //! The number of years to process
     uint nbYears;

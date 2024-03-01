@@ -258,6 +258,19 @@ void StudyRuntimeInfos::checkThermalTSGeneration(Study& study)
     });
 }
 
+void StudyRuntimeInfos::initializeRandomNumberGenerators(const Parameters& parameters)
+{
+    logs.info() << "Initializing random number generators...";
+    for (uint i = 0; i != Data::seedMax; ++i)
+    {
+#ifndef NDEBUG
+        logs.debug() << "  random number generator: " << Data::SeedToCString((Data::SeedIndex)i)
+                     << ", seed: " << parameters.seed[i];
+#endif
+        random[i].reset(parameters.seed[i]);
+    }
+}
+
 bool StudyRuntimeInfos::loadFromStudy(Study& study)
 {
     auto& gd = study.parameters;
@@ -308,6 +321,8 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
 
     if (not gd.geographicTrimming)
         disableAllFilters(study);
+
+    initializeRandomNumberGenerators(study.parameters);
 
     logs.info();
     logs.info() << "Summary";
