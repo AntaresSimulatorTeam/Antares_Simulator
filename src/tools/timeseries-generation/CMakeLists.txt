@@ -1,6 +1,5 @@
 set(SRCS
         main.cpp
-        include/antares/timeseries-generation/timeseries-generation.h
 )
 
 set(execname "antares-timeseries-generator")

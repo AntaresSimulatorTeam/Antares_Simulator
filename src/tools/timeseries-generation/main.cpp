@@ -33,9 +33,17 @@
 #include <antares/writer/writer_factory.h>
 #include <antares/writer/result_format.h>
 
-#include <antares/timeseries-generation/timeseries-generation.h>
-
 using namespace Antares;
+
+struct TsGeneratorSettings
+{
+    std::string studyFolder;
+
+    /// generate TS for all clusters if activated
+    bool allThermal = false;
+    /// generate TS for a list "area.cluster;area2.cluster2;"
+    std::string thermalListToGen = "";
+};
 
 std::unique_ptr<Yuni::GetOpt::Parser> createTsGeneratorParser(TsGeneratorSettings& settings)
 {
