@@ -16,6 +16,7 @@ target_link_libraries(${execname}
                       Antares::utils
                       antares-solver-ts-generator
                       Antares::study
+		      Antares::checks
 )
 
 target_include_directories(${execname}

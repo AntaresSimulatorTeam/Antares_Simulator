@@ -32,6 +32,8 @@
 #include <antares/benchmarking/DurationCollector.h>
 #include <antares/writer/writer_factory.h>
 #include <antares/writer/result_format.h>
+#include <antares/checks/checkLoadedInputData.h>
+
 
 using namespace Antares;
 
@@ -128,6 +130,12 @@ int main(int argc, char *argv[])
     study->initializeRuntimeInfos();
     // Force the writing of generated TS into output/YYYYMMDD-HHSSeco/ts-generator/thermal/mc-0
     study->parameters.timeSeriesToArchive |= Antares::Data::timeSeriesThermal;
+
+    try {
+        Antares::Check::checkMinStablePower(true, study.areas);
+    } catch(Error::InvalidParametersForThermalClusters& ex) {
+        Antares::logs.error() << ex.what();
+    }
 
     Benchmarking::NullDurationCollector nullDurationCollector;
 
