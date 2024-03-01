@@ -624,6 +624,7 @@ bool GenerateThermalTimeSeries(Data::Study& study,
 
     generator->currentYear = year;
 
+    // TODO VP: parallel
     for (auto* cluster : clusters)
         (*generator)(*cluster->parentArea, *cluster);
 

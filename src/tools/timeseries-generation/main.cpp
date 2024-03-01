@@ -52,7 +52,8 @@ std::unique_ptr<Yuni::GetOpt::Parser> createTsGeneratorParser(TsGeneratorSetting
 
     parser->addFlag(settings.allThermal, ' ', "all-thermal", "Generate TS for all thermal clusters");
 
-    parser->addFlag(settings.thermalListToGen, ' ', "thermal", "Generate TS for a list of thermal clusters");
+    parser->addFlag(settings.thermalListToGen, ' ', "thermal", "Generate TS for a list of\
+                                    thermal clusters, format: (area.cluster;area2.cluster)");
 
     parser->remainingArguments(settings.studyFolder);
 
@@ -124,6 +125,8 @@ int main(int argc, char *argv[])
         return 1;
     }
 
+    study->initializeRuntimeInfos();
+
     Benchmarking::NullDurationCollector nullDurationCollector;
 
     auto resultWriter = Solver::resultWriterFactory(
@@ -137,7 +140,7 @@ int main(int argc, char *argv[])
         clusters = getClustersToGen(study->areas, settings.thermalListToGen);
 
     for (auto& c : clusters)
-        logs.notice() << c->id();
+        logs.debug() << c->id();
 
     return TSGenerator::GenerateThermalTimeSeries(*study, clusters, 0, *resultWriter);
 }
