@@ -52,8 +52,8 @@ std::unique_ptr<Yuni::GetOpt::Parser> createTsGeneratorParser(TsGeneratorSetting
 
     parser->addFlag(settings.allThermal, ' ', "all-thermal", "Generate TS for all thermal clusters");
 
-    parser->addFlag(settings.thermalListToGen, ' ', "thermal", "Generate TS for a list of\
-                                    thermal clusters, format: (area.cluster;area2.cluster)");
+    parser->addFlag(settings.thermalListToGen, ' ', "thermal", "Generate TS for a list of area\
+            IDs and thermal clusters IDs, usage: --thermal=\"areaID.clusterID;area2ID.clusterID\"");
 
     parser->remainingArguments(settings.studyFolder);
 
