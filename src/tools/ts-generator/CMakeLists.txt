@@ -2,12 +2,12 @@ set(SRCS
         main.cpp
 )
 
-set(execname "antares-timeseries-generator")
+set(execname "antares-ts-generator")
 add_executable(${execname} ${SRCS})
-install(TARGETS ${execname} EXPORT antares-timeseries-generator DESTINATION bin)
+install(TARGETS ${execname} EXPORT antares-ts-generator DESTINATION bin)
 
 INSTALL(EXPORT ${execname}
-        FILE antares-timeseries-generatorConfig.cmake
+        FILE antares-ts-generatorConfig.cmake
         DESTINATION cmake
 )
 
