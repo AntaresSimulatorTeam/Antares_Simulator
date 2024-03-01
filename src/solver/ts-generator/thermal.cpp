@@ -19,6 +19,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
+#include <sstream>
 #include <string>
 
 #include <yuni/yuni.h>
@@ -596,11 +597,24 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
 }
 } // namespace
 
+std::vector<Data::ThermalCluster*> getAllClustersToGen(Data::AreaList& areas,
+                                                       bool globalThermalTSgeneration)
+{
+    std::vector<Data::ThermalCluster*> clusters;
+
+    areas.each([&clusters, &globalThermalTSgeneration](Data::Area& area) {
+        for (auto cluster : area.thermal.list.all())
+            if (cluster->doWeGenerateTS(globalThermalTSgeneration))
+                clusters.push_back(cluster.get());
+    });
+
+    return clusters;
+}
+
 bool GenerateThermalTimeSeries(Data::Study& study,
+                               std::vector<Data::ThermalCluster*> clusters,
                                uint year,
-                               bool globalThermalTSgeneration,
-                               bool refreshTSonCurrentYear,
-                               Antares::Solver::IResultWriter& writer)
+                               Solver::IResultWriter& writer)
 {
     logs.info();
     logs.info() << "Generating the thermal time-series";
@@ -610,16 +624,9 @@ bool GenerateThermalTimeSeries(Data::Study& study,
 
     generator->currentYear = year;
 
-    study.areas.each([&](Data::Area& area) {
-        for (auto cluster : area.thermal.list.all())
-        {
-            if (cluster->doWeGenerateTS(globalThermalTSgeneration) && refreshTSonCurrentYear)
-            {
-                (*generator)(area, *cluster);
-            }
-            ++progression;
-        }
-    });
+    // TODO VP: parallel
+    for (auto* cluster : clusters)
+        (*generator)(*cluster->parentArea, *cluster);
 
     delete generator;
 
@@ -627,5 +634,3 @@ bool GenerateThermalTimeSeries(Data::Study& study,
 }
 
 } // namespace Antares::TSGenerator
-
-
