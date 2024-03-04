@@ -1,6 +1,8 @@
+#pragma once
+
 #include <antares/writer/i_writer.h>
+#include <antares/solver/simulation/sim_structure_probleme_economique.h>
 #include <vector>
-#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 
 class DebugHydroEnergy
 {

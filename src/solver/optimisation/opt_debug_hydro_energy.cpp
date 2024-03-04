@@ -1,4 +1,4 @@
-#include "opt_debug_hydro_energy.h"
+#include "antares/solver/optimisation/opt_debug_hydro_energy.h"
 #include <yuni/io/file.h>
 
 DebugHydroEnergy::DebugHydroEnergy(Antares::Solver::IResultWriter& writer,

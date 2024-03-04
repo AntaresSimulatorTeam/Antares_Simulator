@@ -19,16 +19,17 @@ set(RTESOLVER_OPT
         opt_numero_de_jour_du_pas_de_temps.cpp
         opt_construction_variables_optimisees_quadratique.cpp
         opt_decompte_variables_et_contraintes.cpp
-		opt_decompte_variables_et_contraintes.cpp
+	opt_decompte_variables_et_contraintes.cpp
         opt_construction_matrice_des_contraintes_outils.cpp
         opt_gestion_des_bornes_cas_lineaire.cpp
         opt_verification_presence_reserve_jmoins1.cpp
         opt_init_contraintes_hydrauliques.cpp
+	opt_debug_hydro_energy.cpp
         opt_appel_solveur_lineaire.cpp
         opt_liberation_problemes_simplexe.cpp
         opt_restaurer_les_donnees.cpp
         opt_gestion_des_couts_cas_quadratique.cpp
-		opt_gestion_des_couts_cas_quadratique.cpp
+	opt_gestion_des_couts_cas_quadratique.cpp
         opt_construction_variables_couts_demarrages.cpp
         opt_gestion_des_bornes_couts_demarrage.cpp
         opt_gestion_des_couts_couts_demarrage.cpp
@@ -37,44 +38,44 @@ set(RTESOLVER_OPT
         opt_decompte_variables_et_contraintes_couts_demarrage.cpp
         opt_init_minmax_groupes_couts_demarrage.cpp
         opt_nombre_min_groupes_demarres_couts_demarrage.cpp
-	opt_debug_hydro_energy.h
-		include/antares/solver/optimisation/opt_export_structure.h
+	include/antares/solver/optimisation/opt_debug_hydro_energy.h
+	include/antares/solver/optimisation/opt_export_structure.h
         opt_export_structure.cpp
-		include/antares/solver/optimisation/base_weekly_optimization.h
+	include/antares/solver/optimisation/base_weekly_optimization.h
         base_weekly_optimization.cpp
-		include/antares/solver/optimisation/adequacy_patch_local_matching/adequacy_patch_weekly_optimization.h
+	include/antares/solver/optimisation/adequacy_patch_local_matching/adequacy_patch_weekly_optimization.h
         adequacy_patch_local_matching/adequacy_patch_weekly_optimization.cpp
-		include/antares/solver/optimisation/weekly_optimization.h
+	include/antares/solver/optimisation/weekly_optimization.h
         weekly_optimization.cpp
-		include/antares/solver/optimisation/optim_post_process_list.h
+	include/antares/solver/optimisation/optim_post_process_list.h
         optim_post_process_list.cpp
-		include/antares/solver/optimisation/post_process_commands.h
+	include/antares/solver/optimisation/post_process_commands.h
         post_process_commands.cpp
-		include/antares/solver/optimisation/adequacy_patch_csr/hourly_csr_problem.h
-		include/antares/solver/optimisation/adequacy_patch_csr/adq_patch_post_process_list.h
+	include/antares/solver/optimisation/adequacy_patch_csr/hourly_csr_problem.h
+	include/antares/solver/optimisation/adequacy_patch_csr/adq_patch_post_process_list.h
         adequacy_patch_csr/adq_patch_post_process_list.cpp
-		include/antares/solver/optimisation/adequacy_patch_local_matching/adq_patch_local_matching.h
+	include/antares/solver/optimisation/adequacy_patch_local_matching/adq_patch_local_matching.h
         adequacy_patch_local_matching/adq_patch_local_matching.cpp
-		include/antares/solver/optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h
+	include/antares/solver/optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h
         adequacy_patch_csr/adq_patch_curtailment_sharing.cpp
         adequacy_patch_csr/solve_problem.cpp
         adequacy_patch_csr/set_variable_boundaries.cpp
         adequacy_patch_csr/set_problem_cost_function.cpp
         adequacy_patch_csr/construct_problem_variables.cpp
         adequacy_patch_csr/construct_problem_constraints_RHS.cpp
-		include/antares/solver/optimisation/adequacy_patch_csr/csr_quadratic_problem.h
+	include/antares/solver/optimisation/adequacy_patch_csr/csr_quadratic_problem.h
         adequacy_patch_csr/csr_quadratic_problem.cpp
-		include/antares/solver/optimisation/adequacy_patch_csr/count_constraints_variables.h
+	include/antares/solver/optimisation/adequacy_patch_csr/count_constraints_variables.h
         adequacy_patch_csr/count_constraints_variables.cpp
         include/antares/solver/optimisation/adequacy_patch_csr/constraints/CsrFlowDissociation.h
-		adequacy_patch_csr/constraints/CsrFlowDissociation.cpp
+	adequacy_patch_csr/constraints/CsrFlowDissociation.cpp
         include/antares/solver/optimisation/adequacy_patch_csr/constraints/CsrAreaBalance.h
-		adequacy_patch_csr/constraints/CsrAreaBalance.cpp
+	adequacy_patch_csr/constraints/CsrAreaBalance.cpp
         include/antares/solver/optimisation/adequacy_patch_csr/constraints/CsrBindingConstraintHour.h
-		adequacy_patch_csr/constraints/CsrBindingConstraintHour.cpp
+	adequacy_patch_csr/constraints/CsrBindingConstraintHour.cpp
 
-		include/antares/solver/optimisation/opt_period_string_generator_base.h
-		include/antares/solver/optimisation/opt_rename_problem.h
+	include/antares/solver/optimisation/opt_period_string_generator_base.h
+	include/antares/solver/optimisation/opt_rename_problem.h
         opt_rename_problem.cpp
 
         constraints/ConstraintBuilder.cpp

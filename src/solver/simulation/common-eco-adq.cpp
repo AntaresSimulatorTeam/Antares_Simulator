@@ -463,7 +463,8 @@ OptimizationOptions createOptimizationOptions(const Data::Study& study)
 {
     return {
         study.parameters.ortoolsUsed,
-        study.parameters.ortoolsSolver
+        study.parameters.ortoolsSolver,
+	study.parameters.hydroDebug
     };
 }
 

@@ -34,6 +34,7 @@ struct OptimizationOptions
 {
     bool useOrtools;
     std::string solverName;
+    bool hydroDebug;
 };
 
 }

@@ -32,6 +32,8 @@ bool OPT_PilotageOptimisationLineaire(const OptimizationOptions& options,
                                       const AdqPatchParams& adqPatchParams,
                                       Solver::IResultWriter& writer)
 {
+    std::unique_ptr<DebugHydroEnergy> hydroDebug = options.hydroDebug ? std::make_unique<DebugHydroEnergy>(writer, problemeHebdo) : nullptr;
+
     if (!problemeHebdo->LeProblemeADejaEteInstancie)
     {
         if (problemeHebdo->TypeDOptimisation == OPTIMISATION_LINEAIRE)
@@ -67,8 +69,7 @@ bool OPT_PilotageOptimisationLineaire(const OptimizationOptions& options,
 
     OPT_InitialiserLesPminHebdo(problemeHebdo);
 
-    DebugHydroEnergy debug(writer, problemeHebdo);
-    OPT_InitialiserLesContrainteDEnergieHydrauliqueParIntervalleOptimise(problemeHebdo, &debug);
+    OPT_InitialiserLesContrainteDEnergieHydrauliqueParIntervalleOptimise(problemeHebdo, hydroDebug.get());
 
     OPT_MaxDesPmaxHydrauliques(problemeHebdo);
 
