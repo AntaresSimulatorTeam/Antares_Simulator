@@ -434,8 +434,8 @@ BOOST_FIXTURE_TEST_CASE(thermalTSNumberData, Fixture)
 
     tsdata.apply(*study);
 
-    BOOST_CHECK(thCluster_12->series.timeseriesNumbers[0][2] == 21);
-    BOOST_CHECK(thCluster_12->series.timeseriesNumbers[0][5] == 0);
+    BOOST_CHECK_EQUAL(thCluster_12->series.timeseriesNumbers[0][2], 21);
+    BOOST_CHECK_EQUAL(thCluster_12->series.timeseriesNumbers[0][5], 0);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
