@@ -1,14 +1,8 @@
 name: SonarCloud
 
 on:
-  push:
-    branches:
-      - main
-      - develop
-      - release/*
-      - dependabot/*
-      - fix/*
-      - feature/*
+    pull_request:
+
 jobs:
   sonarcloud:
     name: SonarCloud
@@ -98,7 +92,7 @@ jobs:
 
       - name: Build
         run: |
-          build-wrapper-linux-x86-64 --out-dir $GITHUB_WORKSPACE/_build/output cmake --build _build --config release -j2
+          build-wrapper-linux-x86-64 --out-dir $GITHUB_WORKSPACE/_build/output cmake --build _build --config release -j$(nproc)
 
       - name: Test and generate coverage
         continue-on-error: true
