@@ -8,6 +8,7 @@ var classAntares_1_1Data_1_1Parameters =
     [ "adequacy", "classAntares_1_1Data_1_1Parameters.html#aefe09481bdf826b2829344d0289efd0f", null ],
     [ "economy", "classAntares_1_1Data_1_1Parameters.html#ad00f3d68e3fecc1d6ff24e9dc73d2d9e", null ],
     [ "fixBadValues", "classAntares_1_1Data_1_1Parameters.html#a2ddb22d0ed8e33e0e4a60f335669c30a", null ],
+    [ "fixGenRefreshForHydroMaxPower", "classAntares_1_1Data_1_1Parameters.html#a08a0413af02c23099650e57b1aefa70d", null ],
     [ "fixGenRefreshForNTC", "classAntares_1_1Data_1_1Parameters.html#a8de0a85ffc9b17f484579b0d0435c4b3", null ],
     [ "fixRefreshIntervals", "classAntares_1_1Data_1_1Parameters.html#afeefe1610f75f63c01180b8a2d215eed", null ],
     [ "getYearsWeight", "classAntares_1_1Data_1_1Parameters.html#a137e194dc21bcd3bd6ffc6ca92bbe4c6", null ],

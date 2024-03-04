@@ -49,7 +49,8 @@ var hierarchy =
       [ "Antares::Solver::RenewClustersAreaNumberOfTSretriever", "classAntares_1_1Solver_1_1RenewClustersAreaNumberOfTSretriever.html", null ],
       [ "Antares::Solver::SolarAreaNumberOfTSretriever", "classAntares_1_1Solver_1_1SolarAreaNumberOfTSretriever.html", null ],
       [ "Antares::Solver::ThermalAreaNumberOfTSretriever", "classAntares_1_1Solver_1_1ThermalAreaNumberOfTSretriever.html", null ],
-      [ "Antares::Solver::WindAreaNumberOfTSretriever", "classAntares_1_1Solver_1_1WindAreaNumberOfTSretriever.html", null ]
+      [ "Antares::Solver::WindAreaNumberOfTSretriever", "classAntares_1_1Solver_1_1WindAreaNumberOfTSretriever.html", null ],
+      [ "Antares::Solver::hydroMaxPowerAreaNumberOfTSretriever", "classAntares_1_1Solver_1_1hydroMaxPowerAreaNumberOfTSretriever.html", null ]
     ] ],
     [ "Antares::Solver::Variable::Areas< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Areas.html", null ],
     [ "Antares::Data::AreaScratchpad", "classAntares_1_1Data_1_1AreaScratchpad.html", null ],
@@ -113,6 +114,7 @@ var hierarchy =
     [ "Antares::Window::Inspector::PAreaColor::Color", "structAntares_1_1Window_1_1Inspector_1_1PAreaColor_1_1Color.html", null ],
     [ "Antares::Window::Inspector::PLinkColor::Color", "structAntares_1_1Window_1_1Inspector_1_1PLinkColor_1_1Color.html", null ],
     [ "Antares::Component::Datagrid::Renderer::Column", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1Column.html", [
+      [ "Antares::Component::Datagrid::Renderer::ColumnHydroMaxPower", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ColumnHydroMaxPower.html", null ],
       [ "Antares::Component::Datagrid::Renderer::ColumnNTC", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ColumnNTC.html", null ],
       [ "Antares::Component::Datagrid::Renderer::ColumnRenewableClusters", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ColumnRenewableClusters.html", null ],
       [ "Antares::Component::Datagrid::Renderer::classicColumn", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1classicColumn.html", null ],
@@ -219,6 +221,7 @@ var hierarchy =
     [ "Antares::Data::ScenarioBuilder::dataInterface", "classAntares_1_1Data_1_1ScenarioBuilder_1_1dataInterface.html", [
       [ "Antares::Data::ScenarioBuilder::TSNumberData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1TSNumberData.html", [
         [ "Antares::Data::ScenarioBuilder::BindingConstraintsTSNumberData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1BindingConstraintsTSNumberData.html", null ],
+        [ "Antares::Data::ScenarioBuilder::hydroMaxPowerTSNumberData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1hydroMaxPowerTSNumberData.html", null ],
         [ "Antares::Data::ScenarioBuilder::hydroTSNumberData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1hydroTSNumberData.html", null ],
         [ "Antares::Data::ScenarioBuilder::loadTSNumberData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1loadTSNumberData.html", null ],
         [ "Antares::Data::ScenarioBuilder::ntcTSNumberData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1ntcTSNumberData.html", null ],
@@ -347,6 +350,7 @@ var hierarchy =
     [ "Antares::Data::HydroAllocation", "classAntares_1_1Data_1_1HydroAllocation.html", null ],
     [ "Antares::Solver::Simulation::hydroCostNoise", "classAntares_1_1Solver_1_1Simulation_1_1hydroCostNoise.html", null ],
     [ "Antares::HydroManagement", "classAntares_1_1HydroManagement.html", null ],
+    [ "Antares::Data::HydroMaxTimeSeriesReader", "classAntares_1_1Data_1_1HydroMaxTimeSeriesReader.html", null ],
     [ "HydroPowerData", "structHydroPowerData.html", null ],
     [ "I_MPS_writer", "classI__MPS__writer.html", [
       [ "fullMPSwriter", "classfullMPSwriter.html", null ],
@@ -408,6 +412,8 @@ var hierarchy =
         [ "Antares::Component::Datagrid::Renderer::Matrix< double >", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1Matrix.html", [
           [ "Antares::Component::Datagrid::Renderer::ATimeSeries", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ATimeSeries.html", [
             [ "Antares::Component::Datagrid::Renderer::TimeSeriesHydroFatal", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TimeSeriesHydroFatal.html", null ],
+            [ "Antares::Component::Datagrid::Renderer::TimeSeriesHydroMaxHourlyGenPower", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TimeSeriesHydroMaxHourlyGenPower.html", null ],
+            [ "Antares::Component::Datagrid::Renderer::TimeSeriesHydroMaxHourlyPumpPower", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TimeSeriesHydroMaxHourlyPumpPower.html", null ],
             [ "Antares::Component::Datagrid::Renderer::TimeSeriesHydroMinGen", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TimeSeriesHydroMinGen.html", null ],
             [ "Antares::Component::Datagrid::Renderer::TimeSeriesHydroMod", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TimeSeriesHydroMod.html", null ],
             [ "Antares::Component::Datagrid::Renderer::TimeSeriesLoad", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1TimeSeriesLoad.html", null ],
@@ -423,7 +429,7 @@ var hierarchy =
         ] ],
         [ "Antares::Component::Datagrid::Renderer::Matrix< double, double, 2 >", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1Matrix.html", [
           [ "Antares::Component::Datagrid::Renderer::CreditModulations", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1CreditModulations.html", null ],
-          [ "Antares::Component::Datagrid::Renderer::HydroMonthlyPower", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1HydroMonthlyPower.html", null ],
+          [ "Antares::Component::Datagrid::Renderer::HydroMonthlyHours", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1HydroMonthlyHours.html", null ],
           [ "Antares::Component::Datagrid::Renderer::ReservoirLevels", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ReservoirLevels.html", null ],
           [ "Antares::Component::Datagrid::Renderer::WaterValues", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1WaterValues.html", null ]
         ] ],
@@ -443,7 +449,7 @@ var hierarchy =
           [ "Antares::Component::Datagrid::Renderer::ATimeSeries", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ATimeSeries.html", null ],
           [ "Antares::Component::Datagrid::Renderer::CreditModulations", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1CreditModulations.html", null ],
           [ "Antares::Component::Datagrid::Renderer::DSM", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1DSM.html", null ],
-          [ "Antares::Component::Datagrid::Renderer::HydroMonthlyPower", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1HydroMonthlyPower.html", null ],
+          [ "Antares::Component::Datagrid::Renderer::HydroMonthlyHours", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1HydroMonthlyHours.html", null ],
           [ "Antares::Component::Datagrid::Renderer::HydroPrepro", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1HydroPrepro.html", null ],
           [ "Antares::Component::Datagrid::Renderer::InflowPattern", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1InflowPattern.html", null ],
           [ "Antares::Component::Datagrid::Renderer::Misc", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1Misc.html", null ],
@@ -490,6 +496,7 @@ var hierarchy =
         [ "Antares::Component::Datagrid::Renderer::ScBuilderRendererBase", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererBase.html", [
           [ "Antares::Component::Datagrid::Renderer::ScBuilderRendererAreasAsRows", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ScBuilderRendererAreasAsRows.html", [
             [ "Antares::Component::Datagrid::Renderer::hydroLevelsScBuilderRenderer", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1hydroLevelsScBuilderRenderer.html", null ],
+            [ "Antares::Component::Datagrid::Renderer::hydroMaxPowerScBuilderRenderer", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1hydroMaxPowerScBuilderRenderer.html", null ],
             [ "Antares::Component::Datagrid::Renderer::hydroScBuilderRenderer", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1hydroScBuilderRenderer.html", null ],
             [ "Antares::Component::Datagrid::Renderer::loadScBuilderRenderer", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1loadScBuilderRenderer.html", null ],
             [ "Antares::Component::Datagrid::Renderer::solarScBuilderRenderer", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1solarScBuilderRenderer.html", null ],
@@ -1224,6 +1231,7 @@ var hierarchy =
     [ "study_modifier.study_modifier", "classstudy__modifier_1_1study__modifier.html", null ],
     [ "study_run.study_run", "classstudy__run_1_1study__run.html", null ],
     [ "StudyBuilder", "structStudyBuilder.html", [
+      [ "HydroMaxPowerStudy", "structHydroMaxPowerStudy.html", null ],
       [ "StudyFixture", "structStudyFixture.html", null ],
       [ "StudyForBCTest", "structStudyForBCTest.html", [
         [ "StudyWithBConCluster", "structStudyWithBConCluster.html", null ],

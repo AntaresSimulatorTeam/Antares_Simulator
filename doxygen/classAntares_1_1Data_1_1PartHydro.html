@@ -153,12 +153,6 @@ Public Types</h2></td></tr>
 , <a class="el" href="classAntares_1_1Data_1_1PartHydro.html#ab061cf3011b3de9287147d66432c661ea2891a6065599b69fbbf774a502ff32ae">maximum</a>
  }</td></tr>
 <tr class="separator:ab061cf3011b3de9287147d66432c661e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a68099428367d9c782a90b74beabd56c7" id="r_a68099428367d9c782a90b74beabd56c7"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1PartHydro.html#a68099428367d9c782a90b74beabd56c7">powerDailyE</a> { <a class="el" href="classAntares_1_1Data_1_1PartHydro.html#a68099428367d9c782a90b74beabd56c7a1b92d2bcf2f8a5453b67493bd2c53f10">genMaxP</a> = 0
-, <a class="el" href="classAntares_1_1Data_1_1PartHydro.html#a68099428367d9c782a90b74beabd56c7a57170de57c6e72a464f4176eefcba8d8">genMaxE</a>
-, <a class="el" href="classAntares_1_1Data_1_1PartHydro.html#a68099428367d9c782a90b74beabd56c7aa5b074d37933d1baa8a27222cc4ea019">pumpMaxP</a>
-, <b>pumpMaxE</b>
- }</td></tr>
-<tr class="separator:a68099428367d9c782a90b74beabd56c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a79728c73ad10d6c7b7a93880bee019e1" id="r_a79728c73ad10d6c7b7a93880bee019e1"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1PartHydro.html#a79728c73ad10d6c7b7a93880bee019e1">weeklyHydroMod</a> { <a class="el" href="classAntares_1_1Data_1_1PartHydro.html#a79728c73ad10d6c7b7a93880bee019e1a144240360470d881195163d3ffb16507">genMod</a> = 0
 , <a class="el" href="classAntares_1_1Data_1_1PartHydro.html#a79728c73ad10d6c7b7a93880bee019e1a46e953e6bdbeffa9e047d86c905a9d2e">pumpMod</a>
  }</td></tr>
@@ -188,6 +182,13 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>forceReload</b> (bool
 void&#160;</td><td class="memItemRight" valign="bottom"><b>markAsModified</b> () const</td></tr>
 <tr class="memdesc:a076984e01722b7147ab993e224cbe4db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mark all data as modified. <br /></td></tr>
 <tr class="separator:a076984e01722b7147ab993e224cbe4db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acad6e4644d4c78c6f7621e19bb22baf0" id="r_acad6e4644d4c78c6f7621e19bb22baf0"><td class="memItemLeft" align="right" valign="top"><a id="acad6e4644d4c78c6f7621e19bb22baf0" name="acad6e4644d4c78c6f7621e19bb22baf0"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>LoadDailyMaxEnergy</b> (const AnyString &amp;folder, const AnyString &amp;areaid)</td></tr>
+<tr class="memdesc:acad6e4644d4c78c6f7621e19bb22baf0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load daily max energy. <br /></td></tr>
+<tr class="separator:acad6e4644d4c78c6f7621e19bb22baf0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a750b7bb11e93e55240989f71f87e1a51" id="r_a750b7bb11e93e55240989f71f87e1a51"><td class="memItemLeft" align="right" valign="top"><a id="a750b7bb11e93e55240989f71f87e1a51" name="a750b7bb11e93e55240989f71f87e1a51"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>CheckDailyMaxEnergy</b> (const AnyString &amp;areaName)</td></tr>
+<tr class="separator:a750b7bb11e93e55240989f71f87e1a51"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -260,8 +261,6 @@ double&#160;</td><td class="memItemRight" valign="bottom"><b>leewayUpperBound</b
 double&#160;</td><td class="memItemRight" valign="bottom"><b>pumpingEfficiency</b></td></tr>
 <tr class="memdesc:af823acf557789b06efc959a3e3679458"><td class="mdescLeft">&#160;</td><td class="mdescRight">Puming efficiency. <br /></td></tr>
 <tr class="separator:af823acf557789b06efc959a3e3679458"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a35cf8fb88b4393516ef0ed8f85c3be08" id="r_a35cf8fb88b4393516ef0ed8f85c3be08"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAntares_1_1Matrix.html">Matrix</a>&lt; double, double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1PartHydro.html#a35cf8fb88b4393516ef0ed8f85c3be08">maxPower</a></td></tr>
-<tr class="separator:a35cf8fb88b4393516ef0ed8f85c3be08"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a60e0880e27ad840a15123f0b07a7cd40" id="r_a60e0880e27ad840a15123f0b07a7cd40"><td class="memItemLeft" align="right" valign="top"><a id="a60e0880e27ad840a15123f0b07a7cd40" name="a60e0880e27ad840a15123f0b07a7cd40"></a>
 <a class="el" href="classAntares_1_1Matrix.html">Matrix</a>&lt; double, double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>creditModulation</b></td></tr>
 <tr class="memdesc:a60e0880e27ad840a15123f0b07a7cd40"><td class="mdescLeft">&#160;</td><td class="mdescRight">Credit Modulation (default 0, 101 * 2) <br /></td></tr>
@@ -293,6 +292,12 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>hydroModulable</b></t
 <a class="el" href="classAntares_1_1Data_1_1DataSeriesHydro.html">DataSeriesHydro</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>series</b></td></tr>
 <tr class="memdesc:a5972fe9423729bba01bed1afde7b40fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Data for time-series. <br /></td></tr>
 <tr class="separator:a5972fe9423729bba01bed1afde7b40fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3d6664efceacd53ea83ed726e528c049" id="r_a3d6664efceacd53ea83ed726e528c049"><td class="memItemLeft" align="right" valign="top"><a id="a3d6664efceacd53ea83ed726e528c049" name="a3d6664efceacd53ea83ed726e528c049"></a>
+<a class="el" href="classAntares_1_1Matrix.html">Matrix</a>&lt; double, double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>dailyNbHoursAtGenPmax</b></td></tr>
+<tr class="separator:a3d6664efceacd53ea83ed726e528c049"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d96e101233797cfb12db1db9dcfd796" id="r_a0d96e101233797cfb12db1db9dcfd796"><td class="memItemLeft" align="right" valign="top"><a id="a0d96e101233797cfb12db1db9dcfd796" name="a0d96e101233797cfb12db1db9dcfd796"></a>
+<a class="el" href="classAntares_1_1Matrix.html">Matrix</a>&lt; double, double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>dailyNbHoursAtPumpPmax</b></td></tr>
+<tr class="separator:a0d96e101233797cfb12db1db9dcfd796"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Hydro for a single area. </p>
@@ -314,28 +319,6 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>hydroModulable</b></t
 <tr><td class="fieldname"><a id="ab061cf3011b3de9287147d66432c661ea59f74790bdeafe2587bcef043d1c3e8a" name="ab061cf3011b3de9287147d66432c661ea59f74790bdeafe2587bcef043d1c3e8a"></a>average&#160;</td><td class="fielddoc"><p>The average value. </p>
 </td></tr>
 <tr><td class="fieldname"><a id="ab061cf3011b3de9287147d66432c661ea2891a6065599b69fbbf774a502ff32ae" name="ab061cf3011b3de9287147d66432c661ea2891a6065599b69fbbf774a502ff32ae"></a>maximum&#160;</td><td class="fielddoc"><p>The maximum value. </p>
-</td></tr>
-</table>
-
-</div>
-</div>
-<a id="a68099428367d9c782a90b74beabd56c7" name="a68099428367d9c782a90b74beabd56c7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a68099428367d9c782a90b74beabd56c7">&#9670;&#160;</a></span>powerDailyE</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="classAntares_1_1Data_1_1PartHydro.html#a68099428367d9c782a90b74beabd56c7">Antares::Data::PartHydro::powerDailyE</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a68099428367d9c782a90b74beabd56c7a1b92d2bcf2f8a5453b67493bd2c53f10" name="a68099428367d9c782a90b74beabd56c7a1b92d2bcf2f8a5453b67493bd2c53f10"></a>genMaxP&#160;</td><td class="fielddoc"><p>Generated max power. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a68099428367d9c782a90b74beabd56c7a57170de57c6e72a464f4176eefcba8d8" name="a68099428367d9c782a90b74beabd56c7a57170de57c6e72a464f4176eefcba8d8"></a>genMaxE&#160;</td><td class="fielddoc"><p>Generated max energy. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a68099428367d9c782a90b74beabd56c7aa5b074d37933d1baa8a27222cc4ea019" name="a68099428367d9c782a90b74beabd56c7aa5b074d37933d1baa8a27222cc4ea019"></a>pumpMaxP&#160;</td><td class="fielddoc"><p>Pumping max Power. </p>
 </td></tr>
 </table>
 
@@ -450,22 +433,6 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>hydroModulable</b></t
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A non-zero value if the operation succeeded, 0 otherwise </dd></dl>
-
-</div>
-</div>
-<h2 class="groupheader">Member Data Documentation</h2>
-<a id="a35cf8fb88b4393516ef0ed8f85c3be08" name="a35cf8fb88b4393516ef0ed8f85c3be08"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a35cf8fb88b4393516ef0ed8f85c3be08">&#9670;&#160;</a></span>maxPower</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classAntares_1_1Matrix.html">Matrix</a>&lt;double, double&gt; Antares::Data::PartHydro::maxPower</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Daily max power ({generating max Power, generating max energy, pumping max power, pumping max energy}x365) </p>
 
 </div>
 </div>

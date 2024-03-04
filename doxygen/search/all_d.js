@@ -45,7 +45,7 @@ var searchData=
   ['normalizeandchecknpo_42',['normalizeAndCheckNPO',['../classAntares_1_1Data_1_1PreproThermal.html#a6e23561c82abbad94b9a3e6960a7fdd0',1,'Antares::Data::PreproThermal']]],
   ['nostudyprovided_43',['NoStudyProvided',['../classAntares_1_1Error_1_1NoStudyProvided.html',1,'Antares::Error']]],
   ['not_20to_20do_44',['What NOT to do ?',['../md_src_2tests_2run-study-tests_2readme.html#autotoc_md17',1,'']]],
-  ['notebook_45',['notebook',['../classAntares_1_1Component_1_1Notebook_1_1Page.html#a080c4915912192b14c4ab77b94cd3a7b',1,'Antares::Component::Notebook::Page::notebook()'],['../classAntares_1_1Component_1_1Notebook.html',1,'Antares::Component::Notebook'],['../classAntares_1_1Component_1_1Notebook.html#ae31eb98bf22d192fc62cbd3e4250545b',1,'Antares::Component::Notebook::Notebook()']]],
+  ['notebook_45',['notebook',['../classAntares_1_1Component_1_1Notebook.html#ae31eb98bf22d192fc62cbd3e4250545b',1,'Antares::Component::Notebook::Notebook()'],['../classAntares_1_1Component_1_1Notebook.html',1,'Antares::Component::Notebook'],['../classAntares_1_1Component_1_1Notebook_1_1Page.html#a080c4915912192b14c4ab77b94cd3a7b',1,'Antares::Component::Notebook::Page::notebook()']]],
   ['notebooktype_46',['NotebookType',['../classAntares_1_1Window_1_1XCast.html#a26a52a0b0d850dce8880b956e0343a56',1,'Antares::Window::XCast']]],
   ['notequalsto_47',['NotEqualsTo',['../classAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1NotEqualsTo.html',1,'Antares::Toolbox::Filter::Operator']]],
   ['notes_48',['notes',['../classAntares_1_1Window_1_1Notes.html#a572a1a534399c9a464481f863fa809b3',1,'Antares::Window::Notes::Notes()'],['../classAntares_1_1Window_1_1Notes.html',1,'Antares::Window::Notes']]],

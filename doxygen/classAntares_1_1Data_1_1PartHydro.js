@@ -1,17 +1,12 @@
 var classAntares_1_1Data_1_1PartHydro =
 [
-    [ "powerDailyE", "classAntares_1_1Data_1_1PartHydro.html#a68099428367d9c782a90b74beabd56c7", [
-      [ "genMaxP", "classAntares_1_1Data_1_1PartHydro.html#a68099428367d9c782a90b74beabd56c7a1b92d2bcf2f8a5453b67493bd2c53f10", null ],
-      [ "genMaxE", "classAntares_1_1Data_1_1PartHydro.html#a68099428367d9c782a90b74beabd56c7a57170de57c6e72a464f4176eefcba8d8", null ],
-      [ "pumpMaxP", "classAntares_1_1Data_1_1PartHydro.html#a68099428367d9c782a90b74beabd56c7aa5b074d37933d1baa8a27222cc4ea019", null ],
-      [ "pumpMaxE", "classAntares_1_1Data_1_1PartHydro.html#a68099428367d9c782a90b74beabd56c7a58fdbab172e605a850c70b4d03005e03", null ]
-    ] ],
     [ "weeklyHydroMod", "classAntares_1_1Data_1_1PartHydro.html#a79728c73ad10d6c7b7a93880bee019e1", [
       [ "genMod", "classAntares_1_1Data_1_1PartHydro.html#a79728c73ad10d6c7b7a93880bee019e1a144240360470d881195163d3ffb16507", null ],
       [ "pumpMod", "classAntares_1_1Data_1_1PartHydro.html#a79728c73ad10d6c7b7a93880bee019e1a46e953e6bdbeffa9e047d86c905a9d2e", null ]
     ] ],
     [ "PartHydro", "classAntares_1_1Data_1_1PartHydro.html#a04d548a70f2829cc320ea34d473f3f02", null ],
     [ "~PartHydro", "classAntares_1_1Data_1_1PartHydro.html#a129570fc5addc93e3ec1cf1f0264fa3e", null ],
+    [ "LoadDailyMaxEnergy", "classAntares_1_1Data_1_1PartHydro.html#acad6e4644d4c78c6f7621e19bb22baf0", null ],
     [ "markAsModified", "classAntares_1_1Data_1_1PartHydro.html#a076984e01722b7147ab993e224cbe4db", null ],
     [ "reset", "classAntares_1_1Data_1_1PartHydro.html#a62e9b91214feb6cded4b8340a77ec4de", null ],
     [ "allocation", "classAntares_1_1Data_1_1PartHydro.html#abef4d91c29b2032f5a1a00e8a05265c3", null ],
@@ -25,7 +20,6 @@ var classAntares_1_1Data_1_1PartHydro =
     [ "intraDailyModulation", "classAntares_1_1Data_1_1PartHydro.html#aaaa1a7fb19c92c573e1fc7c4417ed309", null ],
     [ "leewayLowerBound", "classAntares_1_1Data_1_1PartHydro.html#a77de4f19d3828f4b5d8e90b56ee3eccd", null ],
     [ "leewayUpperBound", "classAntares_1_1Data_1_1PartHydro.html#a9d2425626e4b6eb115fcd58e82b7f010", null ],
-    [ "maxPower", "classAntares_1_1Data_1_1PartHydro.html#a35cf8fb88b4393516ef0ed8f85c3be08", null ],
     [ "powerToLevel", "classAntares_1_1Data_1_1PartHydro.html#a7e223043e3ce64cd2ec889f97a78c447", null ],
     [ "prepro", "classAntares_1_1Data_1_1PartHydro.html#ac16a6b168ec920876dccb77bf7326c35", null ],
     [ "pumpingEfficiency", "classAntares_1_1Data_1_1PartHydro.html#af823acf557789b06efc959a3e3679458", null ],

@@ -180,6 +180,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>addConstraint</b> (co
 <tr class="memitem:ae896767380854fc7e77e73642161ea07" id="r_ae896767380854fc7e77e73642161ea07"><td class="memItemLeft" align="right" valign="top"><a id="ae896767380854fc7e77e73642161ea07" name="ae896767380854fc7e77e73642161ea07"></a>
 <a class="el" href="structFixture.html">Fixture</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="structFixture.html">Fixture</a> &amp;&amp;f)=delete</td></tr>
 <tr class="separator:ae896767380854fc7e77e73642161ea07"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a497dbd4f759200e5dd5b78de338f62ee" id="r_a497dbd4f759200e5dd5b78de338f62ee"><td class="memItemLeft" align="right" valign="top"><a id="a497dbd4f759200e5dd5b78de338f62ee" name="a497dbd4f759200e5dd5b78de338f62ee"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>createFoldersAndFiles</b> ()</td></tr>
+<tr class="separator:a497dbd4f759200e5dd5b78de338f62ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a497dbd4f759200e5dd5b78de338f62ee" id="r_a497dbd4f759200e5dd5b78de338f62ee"><td class="memItemLeft" align="right" valign="top"><a id="a497dbd4f759200e5dd5b78de338f62ee" name="a497dbd4f759200e5dd5b78de338f62ee"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>createFoldersAndFiles</b> ()</td></tr>
+<tr class="separator:a497dbd4f759200e5dd5b78de338f62ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2beeb8a23be27b6189dff78184322045" id="r_a2beeb8a23be27b6189dff78184322045"><td class="memItemLeft" align="right" valign="top"><a id="a2beeb8a23be27b6189dff78184322045" name="a2beeb8a23be27b6189dff78184322045"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>Fixture</b> (const <a class="el" href="structFixture.html">Fixture</a> &amp;f)=delete</td></tr>
 <tr class="separator:a2beeb8a23be27b6189dff78184322045"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -258,6 +264,60 @@ std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><b>work
 <tr class="memitem:a5f3827acbe58c005a7a65c8cf4ba7574" id="r_a5f3827acbe58c005a7a65c8cf4ba7574"><td class="memItemLeft" align="right" valign="top"><a id="a5f3827acbe58c005a7a65c8cf4ba7574" name="a5f3827acbe58c005a7a65c8cf4ba7574"></a>
 fs::path&#160;</td><td class="memItemRight" valign="bottom"><b>outputRoot</b></td></tr>
 <tr class="separator:a5f3827acbe58c005a7a65c8cf4ba7574"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8d324c405f8e8d8797fb0af4a1892230" id="r_a8d324c405f8e8d8797fb0af4a1892230"><td class="memItemLeft" align="right" valign="top"><a id="a8d324c405f8e8d8797fb0af4a1892230" name="a8d324c405f8e8d8797fb0af4a1892230"></a>
+std::shared_ptr&lt; <a class="el" href="classAntares_1_1Data_1_1Study.html">Study</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>study</b></td></tr>
+<tr class="separator:a8d324c405f8e8d8797fb0af4a1892230"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abe9c56fd030fc724ac647abe9ec5fefe" id="r_abe9c56fd030fc724ac647abe9ec5fefe"><td class="memItemLeft" align="right" valign="top"><a id="abe9c56fd030fc724ac647abe9ec5fefe" name="abe9c56fd030fc724ac647abe9ec5fefe"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>base_folder</b> = fs::temp_directory_path().string()</td></tr>
+<tr class="separator:abe9c56fd030fc724ac647abe9ec5fefe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a87dbdae913c906c0d4a63885528a724a" id="r_a87dbdae913c906c0d4a63885528a724a"><td class="memItemLeft" align="right" valign="top"><a id="a87dbdae913c906c0d4a63885528a724a" name="a87dbdae913c906c0d4a63885528a724a"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>series_folder</b> = &quot;series&quot;</td></tr>
+<tr class="separator:a87dbdae913c906c0d4a63885528a724a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7765a6e6203ac031b2b8cbc43a83b158" id="r_a7765a6e6203ac031b2b8cbc43a83b158"><td class="memItemLeft" align="right" valign="top"><a id="a7765a6e6203ac031b2b8cbc43a83b158" name="a7765a6e6203ac031b2b8cbc43a83b158"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>maxHourlyGenPower_file</b> = &quot;maxHourlyGenPower.txt&quot;</td></tr>
+<tr class="separator:a7765a6e6203ac031b2b8cbc43a83b158"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeae6ea6d32f35ea33f94b99a13a1520b" id="r_aeae6ea6d32f35ea33f94b99a13a1520b"><td class="memItemLeft" align="right" valign="top"><a id="aeae6ea6d32f35ea33f94b99a13a1520b" name="aeae6ea6d32f35ea33f94b99a13a1520b"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>maxHourlyPumpPower_file</b> = &quot;maxHourlyPumpPower.txt&quot;</td></tr>
+<tr class="separator:aeae6ea6d32f35ea33f94b99a13a1520b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3c23ab4f5279b6c412011cd6294e58c9" id="r_a3c23ab4f5279b6c412011cd6294e58c9"><td class="memItemLeft" align="right" valign="top"><a id="a3c23ab4f5279b6c412011cd6294e58c9" name="a3c23ab4f5279b6c412011cd6294e58c9"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>pathToMaxHourlyGenPower_file</b></td></tr>
+<tr class="separator:a3c23ab4f5279b6c412011cd6294e58c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5c9e4d4068c8144457ce98828e195c76" id="r_a5c9e4d4068c8144457ce98828e195c76"><td class="memItemLeft" align="right" valign="top"><a id="a5c9e4d4068c8144457ce98828e195c76" name="a5c9e4d4068c8144457ce98828e195c76"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>pathToMaxHourlyPumpPower_file</b></td></tr>
+<tr class="separator:a5c9e4d4068c8144457ce98828e195c76"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ada5cacd951aca03fd5a27bd91ec50a80" id="r_ada5cacd951aca03fd5a27bd91ec50a80"><td class="memItemLeft" align="right" valign="top"><a id="ada5cacd951aca03fd5a27bd91ec50a80" name="ada5cacd951aca03fd5a27bd91ec50a80"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>pathToSeriesFolder</b></td></tr>
+<tr class="separator:ada5cacd951aca03fd5a27bd91ec50a80"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a28266005cdb587026201afe3865fdb4d" id="r_a28266005cdb587026201afe3865fdb4d"><td class="memItemLeft" align="right" valign="top"><a id="a28266005cdb587026201afe3865fdb4d" name="a28266005cdb587026201afe3865fdb4d"></a>
+std::shared_ptr&lt; <a class="el" href="classAntares_1_1Data_1_1HydroMaxTimeSeriesReader.html">HydroMaxTimeSeriesReader</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>reader</b></td></tr>
+<tr class="separator:a28266005cdb587026201afe3865fdb4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a349f288eedfee6d64706151142c1bf6c" id="r_a349f288eedfee6d64706151142c1bf6c"><td class="memItemLeft" align="right" valign="top"><a id="a349f288eedfee6d64706151142c1bf6c" name="a349f288eedfee6d64706151142c1bf6c"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>hydro_folder</b> = &quot;hydro&quot;</td></tr>
+<tr class="separator:a349f288eedfee6d64706151142c1bf6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ae26f008314d0e5026d0ba139c582c7" id="r_a1ae26f008314d0e5026d0ba139c582c7"><td class="memItemLeft" align="right" valign="top"><a id="a1ae26f008314d0e5026d0ba139c582c7" name="a1ae26f008314d0e5026d0ba139c582c7"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>common_folder</b> = &quot;common&quot;</td></tr>
+<tr class="separator:a1ae26f008314d0e5026d0ba139c582c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6964df9eb6df4268e50972300a687249" id="r_a6964df9eb6df4268e50972300a687249"><td class="memItemLeft" align="right" valign="top"><a id="a6964df9eb6df4268e50972300a687249" name="a6964df9eb6df4268e50972300a687249"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>capacity_folder</b> = &quot;capacity&quot;</td></tr>
+<tr class="separator:a6964df9eb6df4268e50972300a687249"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0f24add6687851bab815ce2636fe45d5" id="r_a0f24add6687851bab815ce2636fe45d5"><td class="memItemLeft" align="right" valign="top"><a id="a0f24add6687851bab815ce2636fe45d5" name="a0f24add6687851bab815ce2636fe45d5"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>maxDailyGenEnergy_</b> = &quot;maxDailyGenEnergy_&quot;</td></tr>
+<tr class="separator:a0f24add6687851bab815ce2636fe45d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0a6eb41a2a7c31d0a26ce1bca4ffdb94" id="r_a0a6eb41a2a7c31d0a26ce1bca4ffdb94"><td class="memItemLeft" align="right" valign="top"><a id="a0a6eb41a2a7c31d0a26ce1bca4ffdb94" name="a0a6eb41a2a7c31d0a26ce1bca4ffdb94"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>maxDailyPumpEnergy_</b> = &quot;maxDailyPumpEnergy_&quot;</td></tr>
+<tr class="separator:a0a6eb41a2a7c31d0a26ce1bca4ffdb94"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1bc0d0389bf91425df6cbe018c7afee4" id="r_a1bc0d0389bf91425df6cbe018c7afee4"><td class="memItemLeft" align="right" valign="top"><a id="a1bc0d0389bf91425df6cbe018c7afee4" name="a1bc0d0389bf91425df6cbe018c7afee4"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>maxpower</b> = &quot;maxpower_&quot;</td></tr>
+<tr class="separator:a1bc0d0389bf91425df6cbe018c7afee4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a46fbcdcf8e7c610f44166c60703f116b" id="r_a46fbcdcf8e7c610f44166c60703f116b"><td class="memItemLeft" align="right" valign="top"><a id="a46fbcdcf8e7c610f44166c60703f116b" name="a46fbcdcf8e7c610f44166c60703f116b"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>maxHourlyGenPower</b> = &quot;maxHourlyGenPower.txt&quot;</td></tr>
+<tr class="separator:a46fbcdcf8e7c610f44166c60703f116b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a250e07ffd7758e177d5acd10d3c0547c" id="r_a250e07ffd7758e177d5acd10d3c0547c"><td class="memItemLeft" align="right" valign="top"><a id="a250e07ffd7758e177d5acd10d3c0547c" name="a250e07ffd7758e177d5acd10d3c0547c"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>maxHourlyPumpPower</b> = &quot;maxHourlyPumpPower.txt&quot;</td></tr>
+<tr class="separator:a250e07ffd7758e177d5acd10d3c0547c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab4a167f3ea16f005538211fe78e93441" id="r_ab4a167f3ea16f005538211fe78e93441"><td class="memItemLeft" align="right" valign="top"><a id="ab4a167f3ea16f005538211fe78e93441" name="ab4a167f3ea16f005538211fe78e93441"></a>
+<a class="el" href="classAntares_1_1Matrix.html">Matrix</a>&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>dailyMaxPumpAndGen</b></td></tr>
+<tr class="separator:ab4a167f3ea16f005538211fe78e93441"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae887c4fe4bd36ba1da18ce545124d402" id="r_ae887c4fe4bd36ba1da18ce545124d402"><td class="memItemLeft" align="right" valign="top"><a id="ae887c4fe4bd36ba1da18ce545124d402" name="ae887c4fe4bd36ba1da18ce545124d402"></a>
 <a class="el" href="classAntares_1_1Data_1_1Area.html">Area</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>area_3</b></td></tr>
 <tr class="separator:ae887c4fe4bd36ba1da18ce545124d402"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -327,6 +387,8 @@ ShortTermStorage::STStorageInput&#160;</td><td class="memItemRight" valign="bott
 <li>src/tests/src/libs/antares/study/area/<b>test-save-link-properties.cpp</b></li>
 <li>src/tests/src/libs/antares/study/constraint/<b>test_group.cpp</b></li>
 <li>src/tests/src/libs/antares/study/output-folder/<b>study.cpp</b></li>
+<li>src/tests/src/libs/antares/study/parts/hydro/<b>test-hydro-series.cpp</b></li>
+<li>src/tests/src/libs/antares/study/parts/hydro/<b>test-hydroreader-class.cpp</b></li>
 <li>src/tests/src/libs/antares/study/scenario-builder/<b>test-sc-builder-file-read-line.cpp</b></li>
 <li>src/tests/src/libs/antares/study/series/<b>timeseries-tests.cpp</b></li>
 <li>src/tests/src/libs/antares/study/short-term-storage-input/<b>short-term-storage-input-output.cpp</b></li>
