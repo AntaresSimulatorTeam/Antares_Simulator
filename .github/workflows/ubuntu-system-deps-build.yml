@@ -47,7 +47,7 @@ jobs:
 
     - name: Build
       run: |
-           cmake --build _build --config release -j($nproc)
+           cmake --build _build --config release -j$(nproc)
 
     - name: Installer .deb creation
       run: |
