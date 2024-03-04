@@ -259,6 +259,7 @@ void Area::resizeAllTimeseriesNumbers(uint nbYears)
     solar.series.timeseriesNumbers.reset(1, nbYears);
     wind.series.timeseriesNumbers.reset(1, nbYears);
     hydro.series->timeseriesNumbers.reset(1, nbYears);
+    hydro.series->timeseriesNumbersHydroMaxPower.reset(1, nbYears);
     for (auto& namedLink : links)
     {
         AreaLink* link = namedLink.second;

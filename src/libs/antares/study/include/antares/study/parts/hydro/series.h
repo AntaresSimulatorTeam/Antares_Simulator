@@ -23,12 +23,15 @@
 
 #include <antares/series/series.h>
 #include <antares/array/matrix.h>
+#include <antares/study/version.h>
 #include "../../fwd.h"
+
 
 namespace Antares
 {
 namespace Data
 {
+
 /*!
 ** \brief Data series (Hydro)
 */
@@ -44,6 +47,7 @@ public:
     //@}
 
     void copyGenerationTS(const DataSeriesHydro& source);
+    void copyMaxPowerTS(const DataSeriesHydro& source);
 
     //! \name Data
     //@{
@@ -52,8 +56,9 @@ public:
     */
     void reset();
 
-    void resize_ROR_STORAGE_MINGEN_whenGeneratedTS(unsigned int width);
-    void resizeGenerationTS(unsigned int w, unsigned int h);
+    void resizeGenerationTS(uint nbSeries);
+    void resizeMaxPowerTS(uint nbSeries);
+
 
     /*!
     ** \brief Load all data not already loaded
@@ -65,16 +70,17 @@ public:
     void markAsModified() const;
     //@}
 
-    //! \name Save / Load
-    //@{
-    /*!
-    ** \brief Load data series for hydro from a folder
-    **
-    ** \param d The data series for hydro
-    ** \param folder The source folder
-    ** \return A non-zero value if the operation succeeded, 0 otherwise
-    */
-    bool loadFromFolder(Study& s, const AreaName& areaID, const AnyString& folder);
+    void EqualizeGenerationTSsizes(Area& area, bool usedByTheSolver);
+
+    // Loading hydro time series collection
+    // Returned boolean : reading from file failed
+    bool loadGenerationTS(const AreaName& areaID, const AnyString& folder, StudyVersion version);
+
+    // Loading hydro max generation and mqx pumping TS's
+    bool LoadMaxPower(const AreaName& areaID, const AnyString& folder);
+
+    void buildHourlyMaxPowerFromDailyTS(const Matrix<double>::ColumnType& DailyMaxGenPower,
+                                  const Matrix<double>::ColumnType& DailyMaxPumpPower);
 
     /*!
     ** \brief Save data series for hydro into a folder (`input/hydro/series`)
@@ -101,12 +107,6 @@ public:
     //@}
 
     /*!
-    ** \brief Check TS number for Minimum Generation and logs error if necessary
-    */
-    void checkMinGenTsNumber(Study& s, const AreaName& areaID);
-
-public:
-    /*!
     ** \brief Run-of-the-river - ROR (MW)
     **
 
@@ -129,26 +129,53 @@ public:
     */
     TimeSeries mingen;
 
-    unsigned int TScount() const { return count; };
-
     /*!
-    ** \brief Monte-Carlo
-    */
-    Matrix<uint32_t> timeseriesNumbers;
-
-    /*!
-    ** \brief The number of time-series
+    ** \brief Maximum Generation (MW)
     **
-    ** This value must be the same as the width of the matrices `mod` and `fatal`.
-    ** It is only provided for convenience to avoid same strange and ambiguous code
-    ** (for example using `fatal.width` and `mod.width` in the same routine, it might
-    ** indicate that the two values are not strictly equal)
+    ** Merely a matrix of TimeSeriesCount * HOURS_PER_YEAR values
     */
+
+    TimeSeries maxHourlyGenPower;
+
+    /*!
+    ** \brief Maximum Pumping (MW)
+    **
+    ** Merely a matrix of TimeSeriesCount * HOURS_PER_YEAR values
+    */
+    TimeSeries maxHourlyPumpPower;
+
+    // TS's number matrices for Generation and Maximum Power
+    Matrix<uint32_t> timeseriesNumbers;
+    Matrix<uint32_t> timeseriesNumbersHydroMaxPower;
+
+    // Equalizing max generation and max pumping numbers of TS's    
+    void EqualizeMaxPowerTSsizes(Area& area);
+
+    void setHydroModulability(Area& area) const;
+
+    // Getters for generation (ror, storage and mingen) and 
+    // max power (generation and pumping) number of TS
+    uint TScount() const;
+    uint maxPowerTScount() const;
+    void setMaxPowerTScount(uint count) { maxPowerTScount_ = count;}
+
+    // Setting TS's when derated mode is on
+    void resizeTSinDeratedMode(bool derated, StudyVersion version, bool useBySolver);
+
 private:
-    uint count = 0;
+    
+    // The number of time-series about generation (ror, inflows (=storage), mingen)
+    // They all should have the same number of columns (width), as they each year receives a common
+    // TS number for all three.
+    uint generationTScount_ = 0;
+
+    // The number of time-series about max power (maxHourlyGenPower and maxHourlyPumpPower)
+    // They both should have the same number of columns (width), as they each year receives a common
+    // TS number for all three.
+    uint maxPowerTScount_ = 0;
+
 
 }; // class DataSeriesHydro
-
 } // namespace Data
 } // namespace Antares
 

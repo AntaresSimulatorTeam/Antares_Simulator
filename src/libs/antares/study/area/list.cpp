@@ -874,11 +874,38 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "prepro";
             ret = area.hydro.prepro->loadFromFolder(study, area.id, buffer.c_str()) && ret;
         }
-        if (area.hydro.series && (!options.loadOnlyNeeded || !area.hydro.prepro)) // Series
+
+        auto* hydroSeries = area.hydro.series;
+        if (!options.loadOnlyNeeded || !area.hydro.prepro) // Series
         {
             buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "series";
-            ret = area.hydro.series->loadFromFolder(study, area.id, buffer) && ret;
+            ret = hydroSeries->loadGenerationTS(area.id, buffer, study.header.version) && ret;
+
+            hydroSeries->EqualizeGenerationTSsizes(area, study.usedByTheSolver);
         }
+
+        if (study.header.version < StudyVersion(9,1))
+        {
+            buffer.clear() << study.folderInput << SEP << "hydro";
+
+            HydroMaxTimeSeriesReader reader(area.hydro, area.id.to<std::string>(), area.name.to<std::string>());
+            ret = reader.read(buffer, study.usedByTheSolver) && ret;
+        }
+        else
+        {
+            buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "series";
+            ret = hydroSeries->LoadMaxPower(area.id, buffer) && ret;
+
+            if (study.usedByTheSolver)
+            {
+                hydroSeries->EqualizeMaxPowerTSsizes(area);
+            }
+            else
+                hydroSeries->setHydroModulability(area);
+        }
+
+        hydroSeries->resizeTSinDeratedMode(
+            study.parameters.derated, study.header.version, study.usedByTheSolver);
     }
 
     // Wind
@@ -1522,9 +1549,7 @@ void AreaList::removeLoadTimeseries()
 
 void AreaList::removeHydroTimeseries()
 {
-    each([](Data::Area& area) {
-        area.hydro.series->reset();
-    });
+    each([](Data::Area& area) { area.hydro.series->reset(); });
 }
 
 void AreaList::removeSolarTimeseries()

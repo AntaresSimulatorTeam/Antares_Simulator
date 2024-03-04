@@ -44,18 +44,6 @@ public:
         maximum,
     };
 
-    enum powerDailyE
-    {
-        //! Generated max power
-        genMaxP = 0,
-        //! Generated max energy
-        genMaxE,
-        //! Pumping max Power
-        pumpMaxP,
-        // Pumping max Energy
-        pumpMaxE,
-    };
-
     enum weeklyHydroMod
     {
         //! Weekly generating modulation
@@ -105,6 +93,13 @@ public:
     */
     void markAsModified() const;
 
+    /*!
+    ** \brief Load daily max energy
+    */
+    bool LoadDailyMaxEnergy(const AnyString& folder, const AnyString& areaid);
+
+    bool CheckDailyMaxEnergy(const AnyString& areaName);
+
 public:
     //! Inter-daily breakdown (previously called Smoothing Factor or alpha)
     double interDailyBreakdown;
@@ -140,9 +135,6 @@ public:
     double leewayUpperBound;
     //! Puming efficiency
     double pumpingEfficiency;
-    //! Daily max power ({generating max Power, generating max energy, pumping max power, pumping
-    //! max energy}x365)
-    Matrix<double, double> maxPower;
     //! Credit Modulation (default 0, 101 * 2)
     Matrix<double, double> creditModulation;
 
@@ -163,11 +155,15 @@ public:
 
     //! Data for the pre-processor
     PreproHydro* prepro;
+
     //! Data for time-series
     DataSeriesHydro* series;
+    // TODO : following time series could be hosted by the series data member above (of type DataSeriesHydro),
+    //        which contains other time.
+    Matrix<double, double> dailyNbHoursAtGenPmax;
+    Matrix<double, double> dailyNbHoursAtPumpPmax;
 
 }; // class PartHydro
-
 
 // Interpolates a water value from a table according to a level and a day.
 // As this function can be called a lot of times, we pass working variables and returned variables

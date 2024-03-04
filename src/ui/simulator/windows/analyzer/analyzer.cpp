@@ -553,7 +553,7 @@ AnalyzerWizard::AnalyzerWizard(wxFrame* parent) :
  pAnalyzeSource(nullptr),
  pCheckRelationship(nullptr),
  pFileSearch(nullptr),
- pTSSelected(Data::timeSeriesCount), // invalid in our case
+ pTSSelected(Data::timeSeriesLoad), // invalid in our case
  pUpdating(false)
 {
     pRefreshTimer = new AnalyzeTimer(*this);

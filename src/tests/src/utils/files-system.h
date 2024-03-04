@@ -18,14 +18,18 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include "utils.h"
+#pragma once
 
-namespace fs = std::filesystem;
+#include <filesystem>
+#include <string>
+#include <iostream>
+#include <fstream>
 
-fs::path generateAndCreateDirName(const std::string& dirName)
-{
-    fs::path working_dir = fs::temp_directory_path() / dirName;
-    fs::remove_all(working_dir);
-    fs::create_directories(working_dir);
-    return working_dir;
-}
+// The following macro is used due to linking issues with <boost/test/unit_test.hpp>
+#define CREATE_TMP_DIR_BASED_ON_TEST_NAME() generateAndCreateDirName(boost::unit_test::framework::current_test_case().p_name);
+
+std::filesystem::path generateAndCreateDirName(const std::string&);
+
+void createFolder(const std::string& path, const std::string& folder_name);
+void createFile(const std::string& folder_path, const std::string& file_name);
+void removeFolder(std::string& path, std::string& folder_name);

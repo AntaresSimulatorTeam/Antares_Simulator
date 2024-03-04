@@ -92,6 +92,16 @@ public:
     ~ColumnNTC() override = default;
 };
 
+// -------------------------------
+// Column for Hydro Max Power
+// -------------------------------
+class ColumnHydroMaxPower final : public Column
+{
+public:
+    ColumnHydroMaxPower();
+    ~ColumnHydroMaxPower() override = default;
+};
+
 } // namespace Renderer
 } // namespace Datagrid
 } // namespace Component
