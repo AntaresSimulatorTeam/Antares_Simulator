@@ -42,7 +42,7 @@ void OPT_NumeroDIntervalleOptimiseDuPasDeTemps(PROBLEME_HEBDO*);
 void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBDO*);
 void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique(PROBLEME_HEBDO*);
 void OPT_InitialiserLesPminHebdo(PROBLEME_HEBDO*);
-void OPT_InitialiserLesContrainteDEnergieHydrauliqueParIntervalleOptimise(PROBLEME_HEBDO*, DebugHydroEnergy* debug);
+void OPT_InitialiserLesContrainteDEnergieHydrauliqueParIntervalleOptimise(PROBLEME_HEBDO*, const DebugHydroEnergy& debug);
 void OPT_MaxDesPmaxHydrauliques(PROBLEME_HEBDO*);
 void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO*,
                                                             const AdqPatchParams&,

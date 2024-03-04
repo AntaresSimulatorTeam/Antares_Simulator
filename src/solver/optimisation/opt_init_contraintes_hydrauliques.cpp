@@ -25,7 +25,7 @@
 
 #include "antares/solver/optimisation/opt_fonctions.h"
 
-void OPT_InitialiserLesContrainteDEnergieHydrauliqueParIntervalleOptimise(PROBLEME_HEBDO* problemeHebdo, DebugHydroEnergy* debug)
+void OPT_InitialiserLesContrainteDEnergieHydrauliqueParIntervalleOptimise(PROBLEME_HEBDO* problemeHebdo, const DebugHydroEnergy& debug)
 {
     int NombreDePasDeTempsPourUneOptimisation
       = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
@@ -57,10 +57,7 @@ void OPT_InitialiserLesContrainteDEnergieHydrauliqueParIntervalleOptimise(PROBLE
             }
 
             CntEnergieH2OParIntervalleOptimise[intervalle] = CntTurbParIntervalle;
-            if (debug)
-            {
-                debug->write(pays, intervalle, CntEnergieH2OParIntervalleOptimise);
-            }
+	    debug.write(pays, intervalle, CntEnergieH2OParIntervalleOptimise);
         }
     }
 

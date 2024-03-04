@@ -1,11 +1,15 @@
 #include "antares/solver/optimisation/opt_debug_hydro_energy.h"
 #include <yuni/io/file.h>
 
-DebugHydroEnergy::DebugHydroEnergy(Antares::Solver::IResultWriter& writer,
-                                   PROBLEME_HEBDO* problemeHebdo) : writer(writer), problemeHebdo(problemeHebdo) {}
+DebugHydroEnergy::DebugHydroEnergy(bool doWrite,
+				   Antares::Solver::IResultWriter& writer,
+                                   const PROBLEME_HEBDO* problemeHebdo) : doWrite(doWrite), writer(writer), problemeHebdo(problemeHebdo) {}
 
-void DebugHydroEnergy::write(int areaIndex, unsigned interval, const std::vector<double>& CntEnergieH2OParIntervalleOptimise)
+void DebugHydroEnergy::write(int areaIndex, unsigned interval, const std::vector<double>& CntEnergieH2OParIntervalleOptimise) const
 {
+  if (!doWrite)
+      return;
+
   std::ostringstream buffer, path;
   const unsigned y = problemeHebdo->year;
 #define SEP Yuni::IO::Separator

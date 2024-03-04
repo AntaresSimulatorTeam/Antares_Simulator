@@ -7,10 +7,12 @@
 class DebugHydroEnergy
 {
 public:
-    DebugHydroEnergy(Antares::Solver::IResultWriter& writer,
-                     PROBLEME_HEBDO* problemeHebdo);
-    void write(int areaIndex, unsigned interval, const std::vector<double>& CntEnergieH2OParIntervalleOptimise);
+    DebugHydroEnergy(bool doWrite,
+		     Antares::Solver::IResultWriter& writer,
+                     const PROBLEME_HEBDO* problemeHebdo);
+    void write(int areaIndex, unsigned interval, const std::vector<double>& CntEnergieH2OParIntervalleOptimise) const;
 private:
+    const bool doWrite;
     Antares::Solver::IResultWriter& writer;
-    PROBLEME_HEBDO* problemeHebdo;
+    const PROBLEME_HEBDO* problemeHebdo;
 };
