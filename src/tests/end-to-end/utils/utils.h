@@ -39,7 +39,7 @@ class TimeSeriesConfigurer
 public:
     TimeSeriesConfigurer() = default;
     TimeSeriesConfigurer(Matrix<>& matrix) : ts_(&matrix) {}
-    TimeSeriesConfigurer& setColumnCount(unsigned int columnCount, unsigned int height = HOURS_PER_YEAR);
+    TimeSeriesConfigurer& setColumnCount(unsigned int columnCount);
     TimeSeriesConfigurer& fillColumnWith(unsigned int column, double value);
 private:
     Matrix<>* ts_ = nullptr;
@@ -90,7 +90,6 @@ public:
     averageResults overallCost(Area* area);
     averageResults STSLevel_PSP_Open(Area* area);
     averageResults load(Area* area);
-    averageResults hydroLevel(Area* area);
     averageResults flow(AreaLink* link);
     averageResults thermalGeneration(ThermalCluster* cluster);
     averageResults thermalNbUnitsON(ThermalCluster* cluster);
@@ -151,8 +150,6 @@ private:
 // =====================
 using namespace Benchmarking;
 
-extern Antares::Solver::NullResultWriter gNullResultWriter;
-
 class SimulationHandler
 {
 public:
@@ -160,7 +157,7 @@ public:
         : study_(study)
     {}
     ~SimulationHandler() = default;
-    void create(IResultWriter& writer = gNullResultWriter);
+    void create();
     void run() { simulation_->run(); }
     ISimulation<Economy>& rawSimu() { return *simulation_; }
 
@@ -169,6 +166,7 @@ private:
     NullDurationCollector nullDurationCollector_;
     Settings settings_;
     Study& study_;
+    NullResultWriter resultWriter_;
 };
 
 

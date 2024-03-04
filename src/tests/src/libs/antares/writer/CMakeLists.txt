@@ -1,7 +1,6 @@
-# Zip writer
 add_executable(test-writer)
 
-target_sources(test-writer PRIVATE test_writer.cpp)
+target_sources(test-writer PRIVATE test_zip_writer.cpp)
 
 target_link_libraries(test-writer
 	PRIVATE
@@ -12,4 +11,5 @@ target_link_libraries(test-writer
 )
 
 add_test(NAME writer COMMAND test-writer)
+
 set_tests_properties(writer PROPERTIES LABELS unit)

@@ -22,10 +22,8 @@
 #define BOOST_TEST_DYN_LINK
 #include <boost/test/unit_test.hpp>
 #include <boost/test/data/test_case.hpp>
-#include <antares/writer/in_memory_writer.h>
 
 #include "utils.h"
-//#include <fstream>
 
 namespace utf = boost::unit_test;
 namespace tt = boost::test_tools;
@@ -289,13 +287,6 @@ BOOST_AUTO_TEST_CASE(sts_initial_level)
     sts.series->fillDefaultSeriesIfEmpty();
 
     storages.push_back(sts);
-    auto& hydro = area->hydro;
-    hydro.reservoirCapacity = 1.e6;
-    hydro.reservoirManagement = true;
-    hydro.useHeuristicTarget = true;
-    hydro.useLeeway = false;
-    hydro.useWaterValue = false;
-    hydro.pumpingEfficiency = .9;
 
     // Fatal gen at h=1
     {
@@ -315,65 +306,17 @@ BOOST_AUTO_TEST_CASE(sts_initial_level)
       loadTS[0][2] = 100;
     }
 
-    const double dailyInflow_MWh = 0.;
-    // Inflow = 100MW for every day
-    {
-      auto& inflowTS = hydro.series->storage.timeSeries;
-      TimeSeriesConfigurer(inflowTS)
-        .setColumnCount(1, DAYS_PER_YEAR)
-        .fillColumnWith(0, dailyInflow_MWh);
-    }
-
-    {
-      auto& maxPower = hydro.maxPower;
-      TimeSeriesConfigurer(maxPower)
-        .setColumnCount(4, DAYS_PER_YEAR)
-        .fillColumnWith(hydro.genMaxE, 24.)
-        .fillColumnWith(hydro.genMaxP, 100.)
-        .fillColumnWith(hydro.pumpMaxE, 24.)
-        .fillColumnWith(hydro.pumpMaxP, 50.);
-    }
-
     // Usual values, avoid spillage & unsupplied energy
     area->thermal.unsuppliedEnergyCost = 1.e3;
     area->thermal.spilledEnergyCost = 1.;
 
-    study->parameters.noOutput = true;
-    study->parameters.namedProblems = true;
-    study->parameters.include.exportMPS = Data::mpsExportStatus::EXPORT_BOTH_OPTIMS;
-
-
-
-    NullDurationCollector nullDurationCollector;
-    Antares::Solver::InMemoryWriter writer(nullDurationCollector);
-	simulation->create(writer);
+	simulation->create();
 	simulation->run();
 
-    const auto& inMemoryResult = writer.getMap();
-
-    // {
-    //     const std::string m2 = "problem-1-1--optim-nb-1.mps";
-    //     auto& mps = inMemoryResult.at(m2);
-    //     std::ofstream os("/tmp/a.mps");
-    //     os << mps;
-    // }
-
-    std::string str;
-    std::vector<double> turbCreditWeek;
-    const std::string magic = "debug/solver/1/week-0interval-0_some area.txt";
-    std::istringstream is(inMemoryResult.at(magic));
-    while(getline(is, str))
-    {
-        turbCreditWeek.push_back(std::stod(str));
-    }
-    OutputRetriever output(simulation->rawSimu());
-
-    double deltaLevel_MWh = hydro.reservoirCapacity * (output.hydroLevel(area).hour(167) - output.hydroLevel(area).hour(0)) / 100; // This is not the real level difference, since we'd need hour -1 that doesn't exist, but it's pretty close
-    double turbCreditReal_MWh = turbCreditWeek[0]; // In 'weekly' simulations, only the 1st element (out of 7) is actually used
-
-    double sumInflows_MWh = 7 * dailyInflow_MWh;
-    // TODO Why does this fail ?
-    BOOST_TEST(deltaLevel_MWh + turbCreditReal_MWh == sumInflows_MWh, tt::tolerance(.01));
+	OutputRetriever output(simulation->rawSimu());
+	BOOST_TEST(output.STSLevel_PSP_Open(area).hour(167) == props.initialLevel * props.reservoirCapacity.value(), tt::tolerance(0.001));
 }
-
 BOOST_AUTO_TEST_SUITE_END()
+
+
+
