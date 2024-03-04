@@ -1,14 +1,8 @@
 name: SonarCloud
 
 on:
-  push:
-    branches:
-      - main
-      - develop
-      - release/*
-      - dependabot/*
-      - fix/*
-      - feature/*
+    pull_request:
+
 jobs:
   sonarcloud:
     name: SonarCloud
