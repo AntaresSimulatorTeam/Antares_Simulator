@@ -20,7 +20,7 @@
 */
 
 #include "version.h"
-#include "../../../config.h"
+#include <antares/config/config.h>
 
 namespace Antares
 {

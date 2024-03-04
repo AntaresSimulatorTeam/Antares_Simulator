@@ -20,20 +20,12 @@
 */
 
 #include <yuni/yuni.h>
-#include "intermediate.h"
-#include "averagedata.h"
+#include "antares/solver/variable/storage/intermediate.h"
+#include "antares/solver/variable/storage/averagedata.h"
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Variable
-{
-namespace R
-{
-namespace AllYears
+namespace Antares::Solver::Variable::R::AllYears
 {
 AverageData::AverageData() : hourly(nullptr), year(nullptr), nbYearsCapacity(0), allYears(0.)
 {
@@ -87,8 +79,8 @@ void AverageData::merge(unsigned int y, const IntermediateValues& rhs)
     year[y] += rhs.year * ratio;
 }
 
-} // namespace AllYears
-} // namespace R
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Variable::R::AllYears
+
+
+
+

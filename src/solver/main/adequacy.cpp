@@ -20,8 +20,8 @@
 */
 
 #include "antares/application/application.h"
-#include "../simulation/solver.h"
-#include "../simulation/adequacy.h"
+#include "antares/solver/simulation/solver.h"
+#include "antares/solver/simulation/adequacy.h"
 #include <antares/benchmarking/DurationCollector.h>
 #include <antares/logs/logs.h>
 

@@ -19,15 +19,13 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "progression.h"
-#include "../study.h"
+#include "antares/study/progression/progression.h"
+#include "antares/study/study.h"
 #include <antares/logs/logs.h>
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Solver
+namespace Antares::Solver
 {
 Progression::Task::Task(const Antares::Data::Study& study, Section section) :
  pProgression(study.progression), pPart(study.progression.begin((uint)-1, section))
@@ -150,7 +148,7 @@ Progression::~Progression()
 bool Progression::saveToFile(const Yuni::String& filename, IResultWriter& writer)
 {
     Yuni::Clob buffer;
-    MutexLocker locker(pProgressMeter.mutex);
+    std::lock_guard locker(pProgressMeter.mutex);
     {
         uint year;
         const Part::Map::const_iterator end = pProgressMeter.parts.end();
@@ -186,5 +184,5 @@ void Progression::stop()
     pStarted = false;
 }
 
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver
+

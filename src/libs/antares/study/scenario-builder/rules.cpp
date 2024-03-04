@@ -20,19 +20,15 @@
 */
 
 #include <algorithm>
-#include "rules.h"
-#include "../study.h"
+#include "antares/study/scenario-builder/rules.h"
+#include "antares/study/study.h"
 #include <antares/logs/logs.h>
-#include "scBuilderUtils.h"
-#include "TSnumberData.h"
+#include "antares/study/scenario-builder/scBuilderUtils.h"
+#include "antares/study/scenario-builder/TSnumberData.h"
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Data
-{
-namespace ScenarioBuilder
+namespace Antares::Data::ScenarioBuilder
 {
 Rules::Rules(Study& study) : study_(study), pAreaCount(0)
 {
@@ -135,11 +131,7 @@ bool Rules::readThermalCluster(const AreaName::Vector& splitKey, String value, b
     if (!area)
         return false;
 
-    const ThermalCluster* cluster = area->thermal.list.find(clustername);
-    if (!cluster)
-        cluster = area->thermal.mustrunList.find(clustername);
-
-    if (cluster)
+    if (const ThermalCluster* cluster = area->thermal.list.findInAll(clustername); cluster)
     {
         uint val = fromStringToTSnumber(value);
         thermal[area->index].setTSnumber(cluster, year, val);
@@ -174,7 +166,7 @@ bool Rules::readRenewableCluster(const AreaName::Vector& splitKey, String value,
     if (!area)
         return false;
 
-    const RenewableCluster* cluster = area->renewable.list.find(clustername);
+    const RenewableCluster* cluster = area->renewable.list.findInAll(clustername);
 
     if (cluster)
     {
@@ -408,6 +400,6 @@ void Rules::sendWarningsForDisabledClusters()
     }
 }
 
-} // namespace ScenarioBuilder
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data::ScenarioBuilder
+
+

@@ -18,7 +18,7 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include "study.h"
+#include "antares/study/study.h"
 #include <yuni/core/system/environment.h>
 #include <antares/study/area/area.h>
 #include <antares/inifile/inifile.h>
@@ -29,7 +29,7 @@
 #include "../toolbox/components/map/component.h"
 #include "../toolbox/components/mainpanel.h"
 #include "../toolbox/jobs.h"
-#include <antares/solver.h>
+
 #include "../toolbox/execute/execute.h"
 #include "../windows/message.h"
 #include <antares/date/date.h>

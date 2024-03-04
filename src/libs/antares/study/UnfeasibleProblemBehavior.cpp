@@ -25,7 +25,7 @@
 #include <antares/exception/AssertionError.hpp>
 #include <antares/study/UnfeasibleProblemBehavior.hpp>
 
-#include <antares/Enum.hpp>
+#include "antares/antares/Enum.hpp"
 
 namespace Antares::Data
 {

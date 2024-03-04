@@ -23,21 +23,21 @@
 #include <antares/sys/policy.h>
 #include <antares/resources/resources.h>
 #include <antares/logs/hostinfo.h>
-#include <antares/fatal-error.h>
+#include <antares/antares/fatal-error.h>
 #include <antares/benchmarking/timer.h>
 
 #include <antares/exception/LoadingError.hpp>
 #include <antares/checks/checkLoadedInputData.h>
-#include <antares/version.h>
+#include <antares/study/version.h>
 #include <antares/writer/writer_factory.h>
 
-#include "signal-handling/public.h"
+#include "antares/signal-handling/public.h"
 
 #include "antares/solver/misc/system-memory.h"
 #include "antares/solver/misc/write-command-line.h"
 
 #include "antares/solver/utils/ortools_utils.h"
-#include "../../config.h"
+#include "antares/config/config.h"
 
 #include <antares/infoCollection/StudyInfoCollector.h>
 
@@ -45,7 +45,9 @@
 #include <yuni/core/process/rename.h>
 
 
-#include "../simulation/simulation.h"
+#include "antares/study/simulation.h"
+#include "antares/antares/version.h"
+#include "antares/solver/simulation/simulation.h"
 
 using namespace Antares::Check;
 
@@ -193,22 +195,6 @@ void Application::prepare(int argc, char* argv[])
     }
     else
         logs.info() << "  The progression is disabled";
-}
-
-void Application::initializeRandomNumberGenerators() const
-{
-    logs.info() << "Initializing random number generators...";
-    const auto& parameters = pStudy->parameters;
-    auto& runtime = *pStudy->runtime;
-
-    for (uint i = 0; i != Data::seedMax; ++i)
-    {
-#ifndef NDEBUG
-        logs.debug() << "  random number generator: " << Data::SeedToCString((Data::SeedIndex)i)
-                     << ", seed: " << parameters.seed[i];
-#endif
-        runtime.random[i].reset(parameters.seed[i]);
-    }
 }
 
 void Application::onLogMessage(int level, const Yuni::String& /*message*/)
@@ -430,9 +416,6 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
 
     // alloc global vectors
     SIM_AllocationTableaux(study);
-
-    // Random-numbers generators
-    initializeRandomNumberGenerators();
 }
 void Application::writeComment(Data::Study& study)
 {

@@ -19,8 +19,8 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "weekly_optimization.h"
-#include "opt_fonctions.h"
+#include "antares/solver/optimisation/weekly_optimization.h"
+#include "antares/solver/optimisation/opt_fonctions.h"
 
 namespace Antares::Solver::Optimization
 {

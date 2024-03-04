@@ -22,9 +22,9 @@
 #include <yuni/yuni.h>
 #include <antares/study/study.h>
 #include <antares/study/area/scratchpad.h>
-#include <antares/fatal-error.h>
-#include "management.h"
-#include "../../simulation/sim_extern_variables_globales.h"
+#include <antares/antares/fatal-error.h>
+#include "antares/solver/hydro/management/management.h"
+#include "antares/solver/simulation/sim_extern_variables_globales.h"
 #include <yuni/core/math.h>
 #include <limits>
 #include <antares/study/parts/hydro/container.h>
@@ -404,10 +404,8 @@ void HydroManagement::prepareNetDemand(uint year, Data::SimulationMode mode,
                             - ((mode != Data::SimulationMode::Adequacy) ? scratchpad.mustrunSum[hour]
                                                              : scratchpad.originalMustrunSum[hour]);
 
-                area.renewable.list.each([&](const Antares::Data::RenewableCluster& cluster) {
-                    assert(cluster.series.timeSeries.jit == nullptr && "No JIT data from the solver");
-                    netdemand -= cluster.valueAtTimeStep(year, hour);
-                });
+                for (auto c : area.renewable.list.each_enabled())
+                    netdemand -= c->valueAtTimeStep(year, hour);
             }
 
             assert(!Math::NaN(netdemand)

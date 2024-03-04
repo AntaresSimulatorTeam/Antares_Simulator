@@ -22,20 +22,15 @@
 #include <yuni/io/file.h>
 #include <yuni/io/directory.h>
 
-#include "cluster.h"
-#include "../../study.h"
+#include "antares/study/parts/common/cluster.h"
+#include "antares/study/study.h"
 #include <antares/utils/utils.h>
 
 namespace Antares::Data
 {
 Cluster::Cluster(Area* parent) :
- unitCount(0),
- enabled(true),
- parentArea(parent),
- index(0),
- nominalCapacity(0.),
- areaWideIndex((uint)-1),
- series(tsNumbers)
+    parentArea(parent),
+    series(tsNumbers)
 {
 }
 

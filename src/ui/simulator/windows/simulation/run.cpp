@@ -41,14 +41,14 @@
 
 #include "../../toolbox/validator.h"
 #include "../../toolbox/create.h"
-#include <antares/solver.h>
 #include "../../application/study.h"
 #include "../../application/main/main.h"
 #include "../../application/menus.h"
 #include "../../windows/message.h"
 #include "../../toolbox/system/diskfreespace.hxx"
-#include <antares/config.h>
-#include <antares/Enum.hpp>
+#include <antares/config/config.h>
+#include "antares/antares/Enum.hpp"
+#include "antares/solver/utils/ortools_utils.h"
 
 #include <antares/solver/utils/ortools_utils.h>
 

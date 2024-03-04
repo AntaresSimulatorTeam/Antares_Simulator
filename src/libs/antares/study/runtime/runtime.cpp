@@ -19,10 +19,10 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "runtime.h"
-#include "antares/fatal-error.h"
+#include "antares/study/runtime/runtime.h"
+#include "antares/antares/fatal-error.h"
 
-#include "../area/scratchpad.h"
+#include "antares/study/area/scratchpad.h"
 
 using namespace Yuni;
 
@@ -78,10 +78,7 @@ static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos&
         // Spinning - Economic Only - If no prepro
         if (!(timeSeriesThermal & study.parameters.timeSeriesToRefresh))
         {
-            // Calculation of the spinning
             area.thermal.list.calculationOfSpinning();
-            // We should not forget the list of clusters in 'must-run' mode
-            area.thermal.mustrunList.calculationOfSpinning();
         }
 
         area.scratchpad.reserve(nbYearsInParallel);
@@ -89,8 +86,8 @@ static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos&
             area.scratchpad.emplace_back(r, area);
 
         // statistics
-        r.thermalPlantTotalCount += area.thermal.list.size();
-        r.thermalPlantTotalCountMustRun += area.thermal.mustrunList.size();
+        r.thermalPlantTotalCount += area.thermal.list.enabledAndNotMustRunCount();
+        r.thermalPlantTotalCountMustRun += area.thermal.list.enabledAndMustRunCount();
 
         r.shortTermStorageCount += area.shortTermStorage.count();
     }
@@ -254,12 +251,24 @@ void StudyRuntimeInfos::checkThermalTSGeneration(Study& study)
     thermalTSRefresh = globalThermalTSgeneration;
 
     study.areas.each([this, globalThermalTSgeneration](Data::Area& area) {
-        area.thermal.list.each(
-          [this, globalThermalTSgeneration](const Data::ThermalCluster& cluster) {
-              thermalTSRefresh
-                = thermalTSRefresh || cluster.doWeGenerateTS(globalThermalTSgeneration);
-          });
+        for (auto c : area.thermal.list.each_enabled_and_not_mustrun())
+        {
+            thermalTSRefresh = thermalTSRefresh || c->doWeGenerateTS(globalThermalTSgeneration);
+        }
     });
+}
+
+void StudyRuntimeInfos::initializeRandomNumberGenerators(const Parameters& parameters)
+{
+    logs.info() << "Initializing random number generators...";
+    for (uint i = 0; i != Data::seedMax; ++i)
+    {
+#ifndef NDEBUG
+        logs.debug() << "  random number generator: " << Data::SeedToCString((Data::SeedIndex)i)
+                     << ", seed: " << parameters.seed[i];
+#endif
+        random[i].reset(parameters.seed[i]);
+    }
 }
 
 bool StudyRuntimeInfos::loadFromStudy(Study& study)
@@ -284,17 +293,12 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     study.calendarOutput.reset({gd.dayOfThe1stJanuary, gd.firstWeekday, gd.firstMonthInYear, gd.leapYear});
     initializeRangeLimits(study, rangeLimits);
 
-    // Removing disabled thermal clusters from solver computations
-    removeDisabledThermalClustersFromSolverComputations(study);
-
     // Removing disabled short-term storage objects from solver computations
     removeDisabledShortTermStorageClustersFromSolverComputations(study);
 
     switch (gd.renewableGeneration())
     {
     case rgClusters:
-        // Removing disabled renewable clusters from solver computations
-        removeDisabledRenewableClustersFromSolverComputations(study);
         break;
     case rgAggregated:
         // Removing all renewable clusters from solver computations
@@ -305,9 +309,6 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
         logs.warning() << "Invalid value for renewable generation";
         break;
     }
-
-    // Must-run mode
-    initializeThermalClustersInMustRunMode(study);
 
     // Areas
     StudyRuntimeInfosInitializeAllAreas(study, *this);
@@ -320,6 +321,8 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
 
     if (not gd.geographicTrimming)
         disableAllFilters(study);
+
+    initializeRandomNumberGenerators(study.parameters);
 
     logs.info();
     logs.info() << "Summary";
@@ -339,37 +342,6 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
 uint StudyRuntimeInfos::interconnectionsCount() const
 {
     return static_cast<uint>(areaLink.size());
-}
-
-void StudyRuntimeInfos::initializeThermalClustersInMustRunMode(Study& study) const
-{
-    logs.info();
-    logs.info() << "Optimizing the thermal clusters in 'must-run' mode...";
-
-    // The number of thermal clusters in 'must-run' mode
-    uint count = 0;
-
-    // each area...
-    for (uint a = 0; a != study.areas.size(); ++a)
-    {
-        Area& area = *(study.areas.byIndex[a]);
-        area.thermal.prepareAreaWideIndexes();
-        count += area.thermal.prepareClustersInMustRunMode();
-    }
-
-    switch (count)
-    {
-    case 0:
-        logs.info() << "No thermal cluster in 'must-run' mode";
-        break;
-    case 1:
-        logs.info() << "Found 1 thermal cluster in 'must-run' mode";
-        break;
-    default:
-        logs.info() << "Found " << count << " thermal clusters in 'must-run' mode";
-    }
-    // space
-    logs.info();
 }
 
 static void removeClusters(Study& study,
@@ -402,22 +374,6 @@ static void removeClusters(Study& study,
                         << " clusters and removed them before solver computations";
         }
     }
-}
-
-void StudyRuntimeInfos::removeDisabledThermalClustersFromSolverComputations(Study& study)
-{
-    removeClusters(
-      study, "thermal", [](Area& area) { return area.thermal.list.removeDisabledClusters(); });
-}
-
-void StudyRuntimeInfos::removeDisabledRenewableClustersFromSolverComputations(Study& study)
-{
-    removeClusters(study, "renewable", [](Area& area) {
-        uint ret = area.renewable.list.removeDisabledClusters();
-        if (ret > 0)
-            area.renewable.prepareAreaWideIndexes();
-        return ret;
-    });
 }
 
 void StudyRuntimeInfos::removeDisabledShortTermStorageClustersFromSolverComputations(Study& study)

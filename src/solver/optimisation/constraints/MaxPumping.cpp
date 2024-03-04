@@ -18,7 +18,8 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include "MaxPumping.h"
+
+#include "antares/solver/optimisation/constraints/MaxPumping.h"
 
 void MaxPumping::add(int pays)
 {

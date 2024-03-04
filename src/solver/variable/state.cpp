@@ -21,7 +21,7 @@
 
 #include <yuni/yuni.h>
 #include <antares/study/study.h>
-#include "state.h"
+#include "antares/solver/variable/state.h"
 
 using namespace Yuni;
 
@@ -44,7 +44,7 @@ ThermalState::StateForAnArea& ThermalState::operator[](size_t areaIndex)
 
 void ThermalState::StateForAnArea::initializeFromArea(const Data::Area& area)
 {
-    const auto count = area.thermal.clusterCount();
+    const auto count = area.thermal.list.enabledCount();
     thermalClustersProductions.resize(count);
     numberOfUnitsONbyCluster.resize(count);
     thermalClustersOperatingCost.resize(count);
@@ -69,10 +69,10 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex)
 {
     // asserts
     assert(area);
-    assert(clusterAreaWideIndex < area->thermal.clusterCount());
+    assert(clusterAreaWideIndex < area->thermal.list.enabledCount());
 
     // alias to the current thermal cluster
-    thermalCluster = area->thermal.clusters[clusterAreaWideIndex];
+    thermalCluster = area->thermal.list.enabledClusterAt(clusterAreaWideIndex).get();
     double thermalClusterAvailableProduction
      = thermalCluster->series.getCoefficient(this->year, hourInTheYear);
 
@@ -232,7 +232,7 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex)
 
 
     // Get cluster properties
-    Data::ThermalCluster* currentCluster = area->thermal.clusters[clusterAreaWideIndex];
+    Data::ThermalCluster* currentCluster = area->thermal.list.enabledClusterAt(clusterAreaWideIndex).get();
 
     assert(endHourForCurrentYear <= Variable::maxHoursInAYear);
     assert(endHourForCurrentYear <= currentCluster->series.timeSeries.height);

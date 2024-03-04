@@ -20,20 +20,16 @@
 */
 
 #include "frame.h"
+#include "constants.h"
 #include "../../application/main.h"
 #include <wx/wupdlock.h>
-#include <wx/fontdlg.h>
-#include <wx/propgrid/editors.h>
 
+#include <wx/propgrid/editors.h>
 #include <antares/study/study.h>
-#include <antares/study/area/constants.h>
 #include "../../application/study.h"
 #include "editor-calendar.h"
-#include "../../toolbox/resources.h"
 #include "../../toolbox/components/map/component.h"
 #include "../../toolbox/components/mainpanel.h"
-#include "../../toolbox/components/button.h"
-#include <ui/common/lock.h>
 #include "grid.h"
 
 using namespace Yuni;
@@ -172,7 +168,7 @@ void Frame::onSelectAllPlants(wxCommandEvent&)
         for (auto i = data->areas.begin(); i != areaEnd; ++i)
         {
             Data::Area& area = *(*i);
-            for (auto& c : area.thermal.list)
+            for (auto c : area.thermal.list.all())
                 data->ThClusters.insert(c.get());
         }
         data->areas.clear();
@@ -777,7 +773,7 @@ void Frame::apply(const InspectorData::Ptr& data)
         {
             const Data::Area& area = *(*i);
             nbLinks += (uint)area.links.size();
-            nbThermalClusters += area.thermal.list.size();
+            nbThermalClusters += area.thermal.list.allClustersCount();
         }
         pPGAreaLinks->SetValueFromInt(nbLinks);
         pPGAreaPlants->SetValueFromInt(nbThermalClusters);

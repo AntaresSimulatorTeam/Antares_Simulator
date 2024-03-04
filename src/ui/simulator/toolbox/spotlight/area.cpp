@@ -21,7 +21,7 @@
 
 #include "area.h"
 #include <cassert>
-#include "../resources.h"
+#include "antares/resources/resources.h"
 
 using namespace Yuni;
 

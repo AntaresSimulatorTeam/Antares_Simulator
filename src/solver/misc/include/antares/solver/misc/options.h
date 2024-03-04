@@ -48,8 +48,10 @@ public:
     int ignoreWarningsErrors = 0;
     //! Ignore constraints
     bool ignoreConstraints = false;
-    //!
+
+    //! Run the TS generator only
     bool tsGeneratorsOnly = false;
+
     //! True to disable the writing in the output folder
     bool noOutput = false;
     //! Progression

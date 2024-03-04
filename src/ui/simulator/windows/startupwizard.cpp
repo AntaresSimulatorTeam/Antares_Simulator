@@ -25,7 +25,7 @@
 #include <wx/settings.h>
 #include <wx/statline.h>
 
-#include <antares/study/finder.h>
+#include <antares/study/finder/finder.h>
 #include "../toolbox/resources.h"
 #include "../toolbox/components/button.h"
 #include "../application/study.h"
@@ -35,7 +35,7 @@
 #include "../application/menus.h"
 #include "../application/wait.h"
 #include "version.h"
-#include "../../../config.h"
+#include <antares/config/config.h>
 #include <ui/common/component/panel.h>
 #include <ui/common/component/spotlight.h>
 #include "../toolbox/dispatcher/study.h"

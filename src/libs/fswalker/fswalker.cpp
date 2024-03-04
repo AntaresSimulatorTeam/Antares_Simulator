@@ -20,7 +20,8 @@
 */
 
 #include "fswalker.h"
-#include <antares/antares.h>
+#include <antares/antares/antares.h>
+#include <mutex>
 #include <stack>
 #include <list>
 #include <yuni/io/directory/info.h>
@@ -39,8 +40,8 @@ using namespace Antares;
 
 namespace FSWalker
 {
-//! Mutex for the global queueservice
-static Yuni::Mutex gsMutex;
+
+static std::mutex gsMutex;//!< Mutex for the global queueservice
 static bool queueserviceInitialized = false;
 //! Global Queue service
 static Job::QueueService queueservice;
@@ -132,7 +133,7 @@ WalkerThread::WalkerThread(Statistics& stats) : pFileJob(nullptr), pOriginalStat
     pJobCounter = std::make_shared<std::atomic<int>>();
     pShouldStop = false;
 
-    MutexLocker locker(gsMutex);
+    std::lock_guard locker(gsMutex);
     if (not queueserviceInitialized)
     {
         queueserviceInitialized = true;

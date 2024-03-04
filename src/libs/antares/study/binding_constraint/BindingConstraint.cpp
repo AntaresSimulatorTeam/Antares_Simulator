@@ -22,10 +22,10 @@
 #include <yuni/core/math.h>
 #include <algorithm>
 #include <vector>
-#include "BindingConstraint.h"
-#include "../study.h"
-#include "BindingConstraintLoader.h"
-#include "BindingConstraintSaver.h"
+#include "antares/study/binding_constraint/BindingConstraint.h"
+#include "antares/study/study.h"
+#include "antares/study/binding_constraint/BindingConstraintLoader.h"
+#include "antares/study/binding_constraint/BindingConstraintSaver.h"
 #include "antares/utils/utils.h"
 
 using namespace Yuni;
@@ -268,7 +268,7 @@ void BindingConstraint::copyWeights(const Study &study,
             if (localParent)
             {
                 const ThermalCluster *localTC
-                        = localParent->thermal.list.find(thermalCluster->id());
+                        = localParent->thermal.list.findInAll(thermalCluster->id());
                 if (localTC)
                     pClusterWeights[localTC] = weight;
             }
@@ -329,7 +329,7 @@ void BindingConstraint::copyOffsets(const Study &study,
             if (localParent)
             {
                 const ThermalCluster *localTC
-                        = localParent->thermal.list.find(thermalCluster->id());
+                        = localParent->thermal.list.findInAll(thermalCluster->id());
                 if (localTC)
                     pClusterOffsets[localTC] = offset;
             }

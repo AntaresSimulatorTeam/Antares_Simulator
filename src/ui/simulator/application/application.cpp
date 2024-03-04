@@ -23,16 +23,17 @@
 #include <antares/benchmarking/DurationCollector.h>
 
 #include <cassert>
+#include "study.h"
 #include "application.h"
 #include "main.h"
-#include "../config.h"
+#include "antares/config/config.h"
 #include <wx/font.h>
 #include <wx/image.h>
 #include <wx/app.h>
 #include "../toolbox/resources.h"
 #include <antares/logs/hostinfo.h>
 #include <yuni/io/file.h>
-#include <antares/jit.h>
+#include <antares/jit/jit.h>
 #include <antares/logs/logs.h>
 #include <antares/memory/memory.h>
 #include <wx/config.h>
@@ -42,7 +43,7 @@
 #include "study.h"
 #include <yuni/datetime/timestamp.h>
 #include <antares/logs/cleaner.h>
-#include <antares/locale.h>
+#include <antares/locale/locale.h>
 #ifndef YUNI_OS_WINDOWS
 #include <signal.h>
 #endif

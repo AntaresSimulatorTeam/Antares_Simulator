@@ -19,9 +19,9 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "TSnumberData.h"
-#include "scBuilderUtils.h"
-#include "applyToMatrix.hxx"
+#include "antares/study/scenario-builder/TSnumberData.h"
+#include "antares/study/scenario-builder/scBuilderUtils.h"
+#include "antares/study/scenario-builder/applyToMatrix.hxx"
 
 namespace Antares::Data::ScenarioBuilder
 {

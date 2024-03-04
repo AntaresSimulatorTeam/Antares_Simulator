@@ -19,7 +19,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "../antares.h"
+#include "antares/antares/antares.h"
 #include <yuni/yuni.h>
 #include <yuni/core/system/windows.hdr.h>
 #include <yuni/core/string.h>
@@ -32,17 +32,17 @@
 #include <optional>
 
 #include "antares/utils/utils.h"
-#include "study.h"
-#include "runtime.h"
-#include "scenario-builder/sets.h"
-#include "correlation-updater.hxx"
-#include "scenario-builder/updater.hxx"
-#include "area/constants.h"
+#include "antares/study/study.h"
+#include "antares/study/runtime.h"
+#include "antares/study/scenario-builder/sets.h"
+#include "antares/study/correlation-updater.hxx"
+#include "antares/study/scenario-builder/updater.hxx"
+#include "antares/study/area/constants.h"
 
 #include <yuni/core/system/cpu.h> // For use of Yuni::System::CPU::Count()
 #include <cmath>                 // For use of floor(...) and ceil(...)
 #include <antares/writer/writer_factory.h>
-#include "ui-runtimeinfos.h"
+#include "antares/study/ui-runtimeinfos.h"
 
 using namespace Yuni;
 
@@ -1042,12 +1042,12 @@ bool Study::clusterRename(Cluster* cluster, ClusterName newName)
 
     if (dynamic_cast<ThermalCluster*>(cluster))
     {
-        found = area.thermal.list.find(newID);
+        found = area.thermal.list.findInAll(newID);
         type = kThermal;
     }
     else if (dynamic_cast<RenewableCluster*>(cluster))
     {
-        found = area.renewable.list.find(newID);
+        found = area.renewable.list.findInAll(newID);
         type = kRenewable;
     }
 
@@ -1080,11 +1080,9 @@ bool Study::clusterRename(Cluster* cluster, ClusterName newName)
     {
     case kRenewable:
         ret = area.renewable.list.rename(cluster->id(), newName);
-        area.renewable.prepareAreaWideIndexes();
         break;
     case kThermal:
         ret = area.thermal.list.rename(cluster->id(), newName);
-        area.thermal.prepareAreaWideIndexes();
         break;
     case kUnknown:
         logs.error() << "Unknown cluster type";
@@ -1122,7 +1120,7 @@ void Study::destroyAllWindTSGeneratorData()
 void Study::destroyAllThermalTSGeneratorData()
 {
     areas.each([&](Data::Area& area) {
-        for (const auto& cluster : area.thermal.list)
+        for (const auto cluster : area.thermal.list.each_enabled_and_not_mustrun())
             FreeAndNil(cluster->prepro);
     });
 }
@@ -1408,10 +1406,9 @@ bool Study::checkForFilenameLimits(bool output, const String& chfolder) const
             auto& cname = clustername;
             cname.clear();
 
-            area.thermal.list.each([&](const Cluster& cluster) {
-                if (cluster.id().size() > cname.size())
-                    cname = cluster.id();
-            });
+            for (auto cluster : area.thermal.list.all())
+                if (cluster->id().size() > cname.size())
+                    cname = cluster->id();
         });
 
         String filename;
@@ -1521,7 +1518,7 @@ void Study::computePThetaInfForThermalClusters() const
         // Alias de la zone courant
         const auto& area = *(this->areas.byIndex[i]);
 
-        for (auto& cluster : area.thermal.list)
+        for (auto& cluster : area.thermal.list.each_enabled_and_not_mustrun())
         {
             for (uint k = 0; k < HOURS_PER_YEAR; k++)
                 cluster->PthetaInf[k] = cluster->modulation[Data::thermalMinGenModulation][k]

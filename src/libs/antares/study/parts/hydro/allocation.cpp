@@ -19,8 +19,8 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "allocation.h"
-#include "../../study.h"
+#include "antares/study/parts/hydro/allocation.h"
+#include "antares/study/study.h"
 #include <yuni/core/math.h>
 #include <yuni/io/file.h>
 

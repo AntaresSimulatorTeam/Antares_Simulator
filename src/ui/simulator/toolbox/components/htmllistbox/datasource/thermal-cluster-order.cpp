@@ -47,16 +47,13 @@ void GetThermalClusterMap(Data::Area* area, ThermalClusterMap& l, const wxString
 {
     wxString grp;
 
-    const Data::ThermalClusterList::iterator end = area->thermal.list.end();
-    for (Data::ThermalClusterList::iterator i = area->thermal.list.begin(); i != end; ++i)
+    for (auto cluster : area->thermal.list.all())
     {
-        Data::ThermalCluster* cluster = i->get();
-
         if (search.empty())
         {
             grp = wxStringFromUTF8(cluster->group());
             grp.MakeLower();
-            l[grp].push_back(cluster);
+            l[grp].push_back(cluster.get());
         }
     }
 }

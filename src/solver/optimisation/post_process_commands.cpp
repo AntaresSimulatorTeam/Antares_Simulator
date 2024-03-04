@@ -19,11 +19,11 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "post_process_commands.h"
-#include "../simulation/common-eco-adq.h"
-#include "../simulation/adequacy_patch_runtime_data.h"
-#include "adequacy_patch_local_matching/adequacy_patch_weekly_optimization.h"
-#include "adequacy_patch_csr/adq_patch_curtailment_sharing.h"
+#include "antares/solver/optimisation/post_process_commands.h"
+#include "antares/solver/simulation/common-eco-adq.h"
+#include "antares/solver/simulation/adequacy_patch_runtime_data.h"
+#include "antares/solver/optimisation/adequacy_patch_local_matching/adequacy_patch_weekly_optimization.h"
+#include "antares/solver/optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h"
 
 namespace Antares::Solver::Simulation
 {
@@ -47,19 +47,16 @@ void DispatchableMarginPostProcessCmd::execute(const optRuntimeData& opt_runtime
         for (uint h = 0; h != nbHoursInWeek; ++h)
             dtgmrg[h] = 0.;
 
-        if (not area.thermal.list.empty())
-        {
-            auto& hourlyResults = problemeHebdo_->ResultatsHoraires[area.index];
+        auto& hourlyResults = problemeHebdo_->ResultatsHoraires[area.index];
 
-            for (const auto& cluster : area.thermal.list)
+        for (const auto& cluster : area.thermal.list.each_enabled_and_not_mustrun())
+        {
+            const auto& availableProduction = cluster->series.getColumn(year);
+            for (uint h = 0; h != nbHoursInWeek; ++h)
             {
-                const auto& availableProduction = cluster->series.getColumn(year);
-                for (uint h = 0; h != nbHoursInWeek; ++h)
-                {
-                    double production = hourlyResults.ProductionThermique[h]
-                                          .ProductionThermiqueDuPalier[cluster->index];
-                    dtgmrg[h] += availableProduction[h + hourInYear] - production;
-                }
+                double production = hourlyResults.ProductionThermique[h]
+                                        .ProductionThermiqueDuPalier[cluster->index];
+                dtgmrg[h] += availableProduction[h + hourInYear] - production;
             }
         }
     });

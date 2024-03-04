@@ -19,7 +19,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "h2o2_j_donnees_optimisation.h"
+#include "antares/solver/hydro/daily2/h2o2_j_donnees_optimisation.h"
 #include "antares/study/fwd.h"
 
 Hydro_problem_costs::Hydro_problem_costs(const Data::Parameters& parameters)

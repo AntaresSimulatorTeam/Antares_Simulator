@@ -21,16 +21,15 @@
 
 #include "main.h"
 #include "../../windows/cleaner.h"
-#include "../study.h"
+#include "antares/study/study.h"
+#include "application/study.h"
 
-namespace Antares
-{
-namespace Forms
+namespace Antares::Forms
 {
 void ApplWnd::evtOnCleanCurrentStudyFolder(wxCommandEvent&)
 {
     auto study = GetCurrentStudy();
-    if (!(!study))
+    if (study)
     {
         if (study->parameters.readonly)
         {
@@ -67,5 +66,5 @@ void ApplWnd::evtOnCleanStudyFolder(wxCommandEvent&)
     dialog->Destroy();
 }
 
-} // namespace Forms
-} // namespace Antares
+} // namespace Antares::Forms
+

@@ -20,16 +20,15 @@
 */
 
 #include <yuni/yuni.h>
-#include "../../study.h"
-#include "container.h"
+#include "antares/study/study.h"
+#include "antares/study/parts/renewable/container.h"
 #include <antares/logs/logs.h>
 
 using namespace Yuni;
 using namespace Antares;
 
-namespace Antares
-{
-namespace Data
+
+namespace Antares::Data
 {
 PartRenewable::PartRenewable()
 {
@@ -51,27 +50,10 @@ PartRenewable::~PartRenewable()
 {
 }
 
-void PartRenewable::prepareAreaWideIndexes()
-{
-    // Copy the list with all renewable clusters
-    // And init the areaWideIndex (unique index for a given area)
-    if (list.empty())
-    {
-        return;
-    }
-
-    uint idx = 0;
-    for (const auto& cluster : list)
-    {
-        cluster->areaWideIndex = idx;
-        ++idx;
-    }
-}
-
 void PartRenewable::reset()
 {
-    list.clear();
+    list.clearAll();
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+

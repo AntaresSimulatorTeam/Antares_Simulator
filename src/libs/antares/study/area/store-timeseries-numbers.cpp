@@ -23,7 +23,7 @@
 #include <antares/study/study.h>
 #include <antares/logs/logs.h>
 
-#include "store-timeseries-numbers.h"
+#include "antares/study/area/store-timeseries-numbers.h"
 
 using namespace Yuni;
 
@@ -84,7 +84,6 @@ void storeTimeseriesNumbersForWind(Solver::IResultWriter& writer, const Area& ar
 void storeTimeseriesNumbersForThermal(Solver::IResultWriter& writer, const Area& area)
 {
     area.thermal.list.storeTimeseriesNumbers(writer);
-    area.thermal.mustrunList.storeTimeseriesNumbers(writer);
 }
 
 void storeTimeseriesNumbersForRenewable(Solver::IResultWriter& writer, const Area& area)

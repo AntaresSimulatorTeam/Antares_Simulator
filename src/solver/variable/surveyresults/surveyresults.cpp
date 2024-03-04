@@ -22,23 +22,15 @@
 #include <algorithm>
 #include <yuni/yuni.h>
 #include <antares/study/study.h>
-#include "surveyresults.h"
+#include "antares/solver/variable/surveyresults/surveyresults.h"
 #include <antares/logs/logs.h>
-#include <yuni/io/file.h>
-#include <antares/io/file.h>
 
 using namespace Yuni;
 using namespace Antares;
 
 #define SEP IO::Separator
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Variable
-{
-namespace Private
+namespace Antares::Solver::Variable::Private
 {
 void InternalExportDigestLinksMatrix(const Data::Study& study,
                                      const char* title,
@@ -131,27 +123,24 @@ static void ExportGridInfosAreas(const Data::Study& study,
         }
 
         // Thermal clusters
-        for (uint i = 0; i != area.thermal.clusterCount(); ++i)
+        for (auto cluster : area.thermal.list.each_enabled())
         {
-            assert(NULL != area.thermal.clusters[i]);
-            auto& cluster = *(area.thermal.clusters[i]);
-
             outThermal << area.id << '\t';
-            outThermal << cluster.id() << '\t';
-            outThermal << cluster.name() << '\t';
-            outThermal << Data::ThermalCluster::GroupName(cluster.groupID) << '\t';
-            outThermal << cluster.unitCount << '\t';
-            outThermal << cluster.nominalCapacity << '\t';
-            outThermal << cluster.minStablePower << '\t';
-            outThermal << cluster.minUpTime << '\t';
-            outThermal << cluster.minDownTime << '\t';
-            outThermal << cluster.spinning << '\t';
-            outThermal << cluster.emissions.factors[Antares::Data::Pollutant::CO2] << '\t';
-            outThermal << cluster.marginalCost << '\t';
-            outThermal << cluster.fixedCost << '\t';
-            outThermal << cluster.startupCost << '\t';
-            outThermal << cluster.marketBidCost << '\t';
-            outThermal << cluster.spreadCost << '\n';
+            outThermal << cluster->id() << '\t';
+            outThermal << cluster->name() << '\t';
+            outThermal << Data::ThermalCluster::GroupName(cluster->groupID) << '\t';
+            outThermal << cluster->unitCount << '\t';
+            outThermal << cluster->nominalCapacity << '\t';
+            outThermal << cluster->minStablePower << '\t';
+            outThermal << cluster->minUpTime << '\t';
+            outThermal << cluster->minDownTime << '\t';
+            outThermal << cluster->spinning << '\t';
+            outThermal << cluster->emissions.factors[Antares::Data::Pollutant::CO2] << '\t';
+            outThermal << cluster->marginalCost << '\t';
+            outThermal << cluster->fixedCost << '\t';
+            outThermal << cluster->startupCost << '\t';
+            outThermal << cluster->marketBidCost << '\t';
+            outThermal << cluster->spreadCost << '\n';
 
         } // each thermal cluster
     });   // each area
@@ -211,10 +200,10 @@ void SurveyResultsData::exportGridInfos(IResultWriter& writer)
     output.clear();
     Solver::Variable::Private::ExportGridInfosAreas(study, originalOutput, writer);
 }
-} // namespace Private
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Variable::Private
+
+
+
 
 namespace Antares
 {

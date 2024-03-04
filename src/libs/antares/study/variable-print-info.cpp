@@ -19,17 +19,15 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "variable-print-info.h"
+#include "antares/study/variable-print-info.h"
 #include <algorithm>
-#include <assert.h>
+#include <cassert>
 #include <antares/study/study.h>
-#include "../solver/variable/categories.h"
+#include "antares/solver/variable/categories.h"
 
 using namespace Antares::Solver::Variable;
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 // ============================================================
 // One variable print information
@@ -270,5 +268,5 @@ void AllVariablesPrintInfo::countSelectedLinkVars()
 }
 
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+

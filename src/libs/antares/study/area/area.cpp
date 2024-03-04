@@ -21,11 +21,11 @@
 
 #include <yuni/yuni.h>
 #include <cassert>
-#include "../study.h"
+#include "antares/study//study.h"
 #include "antares/utils/utils.h"
-#include "area.h"
-#include "ui.h"
-#include "scratchpad.h"
+#include "antares/study/area/area.h"
+#include "antares/study/area/ui.h"
+#include "antares/study/area/scratchpad.h"
 #include "antares/study/parts/load/prepro.h"
 
 using namespace Yuni;
@@ -271,9 +271,8 @@ void Area::resizeAllTimeseriesNumbers(uint nbYears)
 bool Area::thermalClustersMinStablePowerValidity(std::vector<YString>& output) const
 {
     bool noErrorMinStabPow = true;
-    for (uint l = 0; l != thermal.clusterCount(); ++l)
+    for (auto cluster : thermal.list.each_enabled())
     {
-        auto& cluster = thermal.clusters[l];
         logs.debug() << "cluster : " << cluster->name();
         if ((not cluster->checkMinStablePower())
             || (cluster->minStablePower
