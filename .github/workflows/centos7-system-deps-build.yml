@@ -56,7 +56,7 @@ jobs:
       run: |
            source /opt/rh/devtoolset-9/enable
            source /opt/rh/rh-git227/enable
-           cmake --build _build --config release -j2
+           cmake --build _build --config release -j$(nproc)
 
     - name: Installer .rpm creation
       run: |
