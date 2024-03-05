@@ -357,10 +357,11 @@ void* AntaresStudy::userdataCreate(FSWalker::DispatchJobEvent& queue)
 
 void AntaresStudy::userdataDestroy(void* userdata)
 {
-    pMutex.lock();
-    bytesDeleted += ((UserData*)userdata)->bytesDeleted;
-    filesDeleted += ((UserData*)userdata)->filesDeleted;
-    foldersDeleted += ((UserData*)userdata)->foldersDeleted;
-    pMutex.unlock();
+    {
+        std::lock_guard lock(pMutex);
+        bytesDeleted += ((UserData*)userdata)->bytesDeleted;
+        filesDeleted += ((UserData*)userdata)->filesDeleted;
+        foldersDeleted += ((UserData*)userdata)->foldersDeleted;
+    }
     delete (UserData*)userdata;
 }

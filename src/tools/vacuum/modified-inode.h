@@ -21,7 +21,7 @@
 #ifndef __MODIFIED_INODE_H__
 #define __MODIFIED_INODE_H__
 
-#include <yuni/yuni.h>
+#include <mutex>
 #include <fswalker/fswalker.h>
 
 class ModifiedINode : public FSWalker::IExtension
@@ -46,7 +46,7 @@ public:
     uint64_t foldersDeleted;
 
 private:
-    Yuni::Mutex pMutex;
+    std::mutex pMutex;
     int64_t pDateLimit;
     FSWalker::DispatchJobEvent pQueue;
 
