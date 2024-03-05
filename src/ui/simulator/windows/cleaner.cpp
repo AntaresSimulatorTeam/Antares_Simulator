@@ -57,9 +57,8 @@ public:
         {
             std::lock_guard locker(pParent->pMutex);
             if (pParent->pInfos)
-                pParent->pInfos->onProgress = []([[maybe_unused]] unsigned int) -> bool {
-                    return false;
-                };
+                pParent->pInfos->onProgress
+                  = []([[maybe_unused]] unsigned int) { return false; };
         }
         stop();
     }
