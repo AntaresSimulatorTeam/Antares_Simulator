@@ -162,7 +162,7 @@ $(document).ready(function(){initNavTree('modified-inode_8h_source.html',''); in
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#ifndef __MODIFIED_INODE_H__</span></div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#define __MODIFIED_INODE_H__</span></div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;yuni/yuni.h&gt;</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;mutex&gt;</span></div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &lt;fswalker/fswalker.h&gt;</span></div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
 <div class="foldopen" id="foldopen00027" data-start="{" data-end="};">
@@ -188,7 +188,7 @@ $(document).ready(function(){initNavTree('modified-inode_8h_source.html',''); in
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    uint64_t foldersDeleted;</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    Yuni::Mutex pMutex;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    std::mutex pMutex;</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    int64_t pDateLimit;</div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    FSWalker::DispatchJobEvent pQueue;</div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>

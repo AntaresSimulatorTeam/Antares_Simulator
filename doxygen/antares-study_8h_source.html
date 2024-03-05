@@ -162,7 +162,7 @@ $(document).ready(function(){initNavTree('antares-study_8h_source.html',''); ini
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#ifndef __ANTARES_STUDY_H__</span></div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#define __ANTARES_STUDY_H__</span></div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;yuni/yuni.h&gt;</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;mutex&gt;</span></div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &lt;fswalker/fswalker.h&gt;</span></div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
 <div class="foldopen" id="foldopen00027" data-start="{" data-end="};">
@@ -195,7 +195,7 @@ $(document).ready(function(){initNavTree('antares-study_8h_source.html',''); ini
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    uint64_t foldersDeleted;</div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    Yuni::Mutex pMutex;</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    std::mutex pMutex;</div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    int64_t pDateLimit;</div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>}; <span class="comment">// class AntaresStudy</span></div>
