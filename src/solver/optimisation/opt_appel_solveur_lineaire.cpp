@@ -97,40 +97,40 @@ void dumpSPXData(const PROBLEME_SIMPLEXE& Probleme,
 		 unsigned int optNumber,
 		 std::size_t nbTerms)
 {
-  auto dump = [&optNumber, &optPeriodStringGenerator, &writer](std::string name, auto* tab, std::size_t sz)
-  {
-    const auto filename = createOptimizationFilename(name,
-						     optPeriodStringGenerator,
-						     optNumber,
-						     "txt");
-    std::ostringstream os;
-    for (size_t ii = 0; ii < sz; ii++)
+    auto dump = [&optNumber, &optPeriodStringGenerator, &writer](std::string name, auto* tab, std::size_t sz)
     {
-	os << tab[ii] << "\n";
-    }
-    auto buffer = os.str();
-    writer.addEntryFromBuffer(filename, buffer);
-  };
+        const auto filename = createOptimizationFilename(name,
+						                                 optPeriodStringGenerator,
+						                                 optNumber,
+						                                 "txt");
+        std::ostringstream os;
+        for (size_t ii = 0; ii < sz; ii++)
+        {
+            os << tab[ii] << "\n";
+        }
+        auto buffer = os.str();
+        writer.addEntryFromBuffer(filename, buffer);
+    };
 
     {
-      const auto nbVar = Probleme.NombreDeVariables;
-      dump("CoutLineaire", Probleme.CoutLineaire, nbVar);
-      dump("Xmin", Probleme.Xmin, nbVar);
-      dump("Xmax", Probleme.Xmax, nbVar);
-      dump("TypeDeVariable", Probleme.TypeDeVariable, nbVar);
-    }
-
-    {
-      const auto nbConstraints = Probleme.NombreDeContraintes;
-      dump("IndicesDebutDeLigne", Probleme.IndicesDebutDeLigne, nbConstraints);
-      dump("NombreDeTermesDesLignes", Probleme.NombreDeTermesDesLignes, nbConstraints);
-      dump("Sens", Probleme.Sens, nbConstraints);
-      dump("SecondMembre", Probleme.SecondMembre, nbConstraints);
+        const auto nbVar = Probleme.NombreDeVariables;
+        dump("CoutLineaire", Probleme.CoutLineaire, nbVar);
+        dump("Xmin", Probleme.Xmin, nbVar);
+        dump("Xmax", Probleme.Xmax, nbVar);
+        dump("TypeDeVariable", Probleme.TypeDeVariable, nbVar);
     }
 
     {
-      dump("IndicesColonnes", Probleme.IndicesColonnes, nbTerms);
-      dump("CoefficientsDeLaMatriceDesContraintes", Probleme.CoefficientsDeLaMatriceDesContraintes, nbTerms);
+        const auto nbConstraints = Probleme.NombreDeContraintes;
+        dump("IndicesDebutDeLigne", Probleme.IndicesDebutDeLigne, nbConstraints);
+        dump("NombreDeTermesDesLignes", Probleme.NombreDeTermesDesLignes, nbConstraints);
+        dump("Sens", Probleme.Sens, nbConstraints);
+        dump("SecondMembre", Probleme.SecondMembre, nbConstraints);
+    }
+
+    {
+        dump("IndicesColonnes", Probleme.IndicesColonnes, nbTerms);
+        dump("CoefficientsDeLaMatriceDesContraintes", Probleme.CoefficientsDeLaMatriceDesContraintes, nbTerms);
     }
 }
 
@@ -280,15 +280,14 @@ static SimplexResult OPT_TryToCallSimplex(
     if (options.useOrtools)
     {
         const bool keepBasis = (optimizationNumber == PREMIERE_OPTIMISATION);
-	{
-	  auto* srs = static_cast<SRS_PROBLEM*>(solver->underlying_solver());
-	  PROBLEME_SIMPLEXE* spx = srs->problem_simplexe;
-	  dumpSPXData(*spx,
-		      optPeriodStringGenerator,
-		      writer,
-		      optimizationNumber,
-		      nbTerms);
-	}
+
+	    auto* srs = static_cast<SRS_PROBLEM*>(solver->underlying_solver());
+	    PROBLEME_SIMPLEXE* spx = srs->problem_simplexe;
+	    dumpSPXData(*spx,
+		            optPeriodStringGenerator,
+		            writer,
+		            optimizationNumber,
+		            nbTerms);
 
         solver = ORTOOLS_Simplexe(&Probleme, solver, keepBasis);
         if (solver != nullptr)
@@ -299,10 +298,10 @@ static SimplexResult OPT_TryToCallSimplex(
     else
     {
         dumpSPXData(Probleme,
-		    optPeriodStringGenerator,
-		    writer,
-		    optimizationNumber,
-		    nbTerms);
+		            optPeriodStringGenerator,
+		            writer,
+		            optimizationNumber,
+		            nbTerms);
         ProbSpx = SPX_Simplexe(&Probleme, ProbSpx);
         if (ProbSpx != nullptr)
         {
