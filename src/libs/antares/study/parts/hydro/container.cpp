@@ -187,7 +187,7 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
           {
               auto& col = area.hydro.inflowPattern[0];
               bool errorInflow = false;
-              for (int day = 0; day < DAYS_PER_YEAR; day++)
+              for (unsigned int day = 0; day < DAYS_PER_YEAR; day++)
               {
                   if (col[day] < 0 && !errorInflow)
                   {
@@ -811,7 +811,7 @@ bool PartHydro::CheckDailyMaxEnergy(const AnyString& areaName)
     auto& colGen = dailyNbHoursAtGenPmax[0];
     auto& colPump = dailyNbHoursAtPumpPmax[0];
 
-    for (int day = 0; day < DAYS_PER_YEAR; day++)
+    for (unsigned int day = 0; day < DAYS_PER_YEAR; day++)
     {
         if (!errorEnergy && (colGen[day] < 0 || (colGen[day] > 24)))
         {

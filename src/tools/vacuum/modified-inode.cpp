@@ -224,11 +224,12 @@ void ModifiedINode::userdataDestroy(void* userdata)
 
     if (userdata)
     {
-        pMutex.lock();
-        bytesDeleted += ((UserData*)userdata)->bytesDeleted;
-        filesDeleted += ((UserData*)userdata)->filesDeleted;
-        foldersDeleted += ((UserData*)userdata)->foldersDeleted;
-        pMutex.unlock();
+        {
+            std::lock_guard lock(pMutex);
+            bytesDeleted += ((UserData*)userdata)->bytesDeleted;
+            filesDeleted += ((UserData*)userdata)->filesDeleted;
+            foldersDeleted += ((UserData*)userdata)->foldersDeleted;
+        }
 
         // destroying the user data
         ((UserData*)userdata)->syncBeforeRelease();
