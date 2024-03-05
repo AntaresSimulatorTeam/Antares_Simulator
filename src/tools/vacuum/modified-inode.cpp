@@ -220,15 +220,16 @@ void* ModifiedINode::userdataCreate(FSWalker::DispatchJobEvent&)
 
 void ModifiedINode::userdataDestroy(void* userdata)
 {
-    pQueue.unbind();
+    pQueue = []([[maybe_unused]] FSWalker::IJob::Ptr job){};
 
     if (userdata)
     {
-        pMutex.lock();
-        bytesDeleted += ((UserData*)userdata)->bytesDeleted;
-        filesDeleted += ((UserData*)userdata)->filesDeleted;
-        foldersDeleted += ((UserData*)userdata)->foldersDeleted;
-        pMutex.unlock();
+        {
+            std::lock_guard lock(pMutex);
+            bytesDeleted += ((UserData*)userdata)->bytesDeleted;
+            filesDeleted += ((UserData*)userdata)->filesDeleted;
+            foldersDeleted += ((UserData*)userdata)->foldersDeleted;
+        }
 
         // destroying the user data
         ((UserData*)userdata)->syncBeforeRelease();

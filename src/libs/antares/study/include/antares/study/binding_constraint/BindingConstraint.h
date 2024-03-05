@@ -237,7 +237,7 @@ public:
     void copyWeights(const Study& study,
                      const BindingConstraint& rhs,
                      bool emptyBefore,
-                     Yuni::Bind<void(AreaName&, const AreaName&)>& translate);
+                     const std::function<void(AreaName&, const AreaName&)>& translate);
 
     /*!
     ** \brief Get the offset of a given interconnection
@@ -269,7 +269,7 @@ public:
     void copyOffsets(const Study& study,
                      const BindingConstraint& rhs,
                      bool emptyBefore,
-                     Yuni::Bind<void(AreaName&, const AreaName&)>& translate);
+                     const std::function<void(AreaName&, const AreaName&)>& translate);
 
     /*!
     ** \brief Get how many links the binding constraint contains

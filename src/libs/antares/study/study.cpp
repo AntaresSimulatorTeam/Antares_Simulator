@@ -1120,7 +1120,7 @@ void Study::destroyAllWindTSGeneratorData()
 void Study::destroyAllThermalTSGeneratorData()
 {
     areas.each([&](Data::Area& area) {
-        for (const auto cluster : area.thermal.list.each_enabled_and_not_mustrun())
+        for (const auto& cluster : area.thermal.list.each_enabled_and_not_mustrun())
             FreeAndNil(cluster->prepro);
     });
 }
