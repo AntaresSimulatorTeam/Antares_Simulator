@@ -13,7 +13,7 @@ namespace bdata = boost::unit_test::data;
 using namespace Antares::optim::api;
 using namespace std;
 
-static constexpr array<const char*, 3> solverNames =
+static constexpr std::array solverNames =
         {
                 "xpress",
                 "sirius",
@@ -21,7 +21,7 @@ static constexpr array<const char*, 3> solverNames =
                 //"scip" // TODO activate this after adding tolerance
         };
 
-static constexpr array<int, 4> timestepNumbers =
+static constexpr std::array timestepNumbers =
         {
                 24, // 1 day
                 168, // 1 week

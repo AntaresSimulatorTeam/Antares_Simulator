@@ -16,7 +16,7 @@ namespace tt = boost::test_tools;
 namespace bdata = boost::unit_test::data;
 using namespace Antares::optim::api;
 
-static constexpr array<const char*, 3> solverNames =
+static constexpr std::array solverNames =
         {
                 "xpress",
                 "sirius",
