@@ -49,7 +49,7 @@ using OnFileEvent = void (*)(const YString& filename,
                              uint64_t size,
                              void* user);
 //! Event for dispatching a new job
-using DispatchJobEvent = Yuni::Bind<void(IJob::Ptr job)>;
+using DispatchJobEvent = std::function<void(IJob::Ptr job)>;
 
 class IExtension
 {

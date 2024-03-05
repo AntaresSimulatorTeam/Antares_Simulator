@@ -102,7 +102,7 @@ public:
         if (cleanup)
         {
             auto* cleaner = new Data::StudyCleaningInfos(folder.c_str());
-            cleaner->onProgress.bind(&onProgress);
+            cleaner->onProgress = &onProgress;
             if (cleaner->analyze())
                 cleaner->performCleanup();
             delete cleaner;

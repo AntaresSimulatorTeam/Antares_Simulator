@@ -57,7 +57,7 @@ public:
         {
             std::lock_guard locker(pParent->pMutex);
             if (pParent->pInfos)
-                pParent->pInfos->onProgress.unbind();
+                pParent->pInfos->onProgress = nullptr;
         }
         stop();
     }
@@ -69,7 +69,8 @@ protected:
         std::lock_guard locker(pParent->pMutex);
         if (pParent->pInfos)
         {
-            pParent->pInfos->onProgress.bind(this, &CleaningThread::onProgress);
+            pParent->pInfos->onProgress
+              = std::bind(&CleaningThread::onProgress, this, std::placeholders::_1);
             delete pParent->pInfos;
             pParent->pInfos = nullptr;
         }
@@ -87,7 +88,9 @@ protected:
         {
             logs.callback.clear();
             pParent->pInfos = new Data::StudyCleaningInfos(stdFolder.c_str());
-            pParent->pInfos->onProgress.bind(this, &CleaningThread::onProgress);
+            pParent->pInfos->onProgress
+              = std::bind(&CleaningThread::onProgress, this, std::placeholders::_1);
+
             pParent->pMutex.unlock();
 
             pParent->pInfos->analyze();
