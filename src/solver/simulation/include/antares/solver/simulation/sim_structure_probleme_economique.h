@@ -308,6 +308,7 @@ struct ENERGIES_ET_PUISSANCES_HYDRAULIQUES
     bool TurbinageEntreBornes;
     bool SansHeuristique;
     bool SuiviNiveauHoraire;
+    bool MaxPowerConstraint;
 
     std::vector<double> NiveauHoraireSup;
     std::vector<double> NiveauHoraireInf;
@@ -526,13 +527,14 @@ struct PROBLEME_HEBDO
     std::vector<bool> DefaillanceNegativeUtiliserHydro;
     std::vector<bool> DefaillanceNegativeUtiliserConsoAbattue;
 
-    char TypeDOptimisation = OPTIMISATION_LINEAIRE; // OPTIMISATION_LINEAIRE or OPTIMISATION_QUADRATIQUE
+    char TypeDOptimisation
+      = OPTIMISATION_LINEAIRE; // OPTIMISATION_LINEAIRE or OPTIMISATION_QUADRATIQUE
     std::vector<std::vector<double>> BruitSurCoutHydraulique;
 
     uint32_t NombreDeContraintesCouplantes = 0;
     std::vector<CONTRAINTES_COUPLANTES> MatriceDesContraintesCouplantes;
     std::unordered_map<std::shared_ptr<Data::BindingConstraint>, std::vector<double>>
-        ResultatsContraintesCouplantes;
+      ResultatsContraintesCouplantes;
 
     std::vector<SOLDE_MOYEN_DES_ECHANGES> SoldeMoyenHoraire; // Used for quadratic opt
     /* Implementation details : I/O, error management, etc. */

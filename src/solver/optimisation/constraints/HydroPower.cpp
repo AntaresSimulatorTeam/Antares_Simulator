@@ -26,8 +26,7 @@ void HydroPower::add(int pays)
     const int NombreDePasDeTempsPourUneOptimisation
       = builder.data.NombreDePasDeTempsPourUneOptimisation;
     const auto& caracteristiquesHydrauliques = data.CaracteristiquesHydrauliques[pays];
-    if (caracteristiquesHydrauliques.PresenceDHydrauliqueModulable
-        && !caracteristiquesHydrauliques.TurbinageEntreBornes)
+    if (caracteristiquesHydrauliques.MaxPowerConstraint)
     {
         if (caracteristiquesHydrauliques.PresenceDePompageModulable)
         {

@@ -69,6 +69,45 @@ static void importShortTermStorages(
     }
 }
 
+static void logIndependentWeeks(
+  const std::vector<ENERGIES_ET_PUISSANCES_HYDRAULIQUES>& hydroCharacteristics,
+  const std::vector<const char*>& areaNames)
+{
+    assert(hydroCharacteristics.size() == areaNames.size());
+    auto checkCriterion
+      = [&hydroCharacteristics, &areaNames](bool ENERGIES_ET_PUISSANCES_HYDRAULIQUES::*criterion,
+                                            const std::string& msg)
+    {
+        const std::size_t nbAreas = hydroCharacteristics.size();
+        std::vector<const char*> out;
+        for (std::size_t areaIndex = 0; areaIndex < nbAreas; areaIndex++)
+        {
+            if (!(hydroCharacteristics[areaIndex].*criterion))
+            {
+                out.push_back(areaNames[areaIndex]);
+            }
+        }
+        if (out.empty())
+            return true;
+        else
+        {
+            logs.info() << msg << out;
+            return false;
+        }
+    };
+    bool ret = false;
+    ret
+      = checkCriterion(
+          &ENERGIES_ET_PUISSANCES_HYDRAULIQUES::MaxPowerConstraint,
+          "Dependent weeks because the MaxPower constraint is not enabled in the following areas ")
+        && ret;
+    ret = checkCriterion(&ENERGIES_ET_PUISSANCES_HYDRAULIQUES::SuiviNiveauHoraire,
+                         "Dependent weeks because level is not tracked in the following areas ")
+          && ret;
+    if (ret)
+        logs.notice() << "All simulation weeks are independent.";
+}
+
 void SIM_InitialisationProblemeHebdo(Data::Study& study,
                                      PROBLEME_HEBDO& problem,
                                      int NombreDePasDeTemps,
@@ -122,8 +161,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     problem.OptimisationAvecVariablesEntieres
       = (study.parameters.unitCommitment.ucMode == Antares::Data::UnitCommitmentMode::ucMILP);
 
-    problem.OptimisationAuPasHebdomadaire
-      = (parameters.simplexOptimizationRange == Data::sorWeek);
+    problem.OptimisationAuPasHebdomadaire = (parameters.simplexOptimizationRange == Data::sorWeek);
 
     switch (parameters.power.fluctuations)
     {
@@ -148,7 +186,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     {
         const auto& area = *(study.areas[i]);
         const auto& scratchpad = scratchmap.at(&area);
-
+        auto& hydro = problem.CaracteristiquesHydrauliques[i];
         problem.NomsDesPays[i] = area.id.c_str();
 
         problem.CoutDeDefaillancePositive[i] = area.thermal.unsuppliedEnergyCost;
@@ -164,45 +202,38 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         problem.DefaillanceNegativeUtiliserConsoAbattue[i]
           = (anoNonDispatchPower & area.nodalOptimization) != 0;
 
-        problem.CaracteristiquesHydrauliques[i].PresenceDHydrauliqueModulable
-          = scratchpad.hydroHasMod;
+        hydro.PresenceDHydrauliqueModulable = scratchpad.hydroHasMod;
 
-        problem.CaracteristiquesHydrauliques[i].PresenceDePompageModulable
-          = area.hydro.reservoirManagement && scratchpad.pumpHasMod
-              && area.hydro.pumpingEfficiency > 0.
-              && problem.CaracteristiquesHydrauliques[i].PresenceDHydrauliqueModulable;
+        hydro.PresenceDePompageModulable = area.hydro.reservoirManagement && scratchpad.pumpHasMod
+                                           && area.hydro.pumpingEfficiency > 0.
+                                           && hydro.PresenceDHydrauliqueModulable;
 
-        problem.CaracteristiquesHydrauliques[i].PumpingRatio = area.hydro.pumpingEfficiency;
+        hydro.PumpingRatio = area.hydro.pumpingEfficiency;
 
-        problem.CaracteristiquesHydrauliques[i].SansHeuristique
-          = area.hydro.reservoirManagement && !area.hydro.useHeuristicTarget;
+        hydro.SansHeuristique = area.hydro.reservoirManagement && !area.hydro.useHeuristicTarget;
 
-        problem.CaracteristiquesHydrauliques[i].TurbinageEntreBornes
-          = area.hydro.reservoirManagement
-            && (!area.hydro.useHeuristicTarget || area.hydro.useLeeway);
+        hydro.TurbinageEntreBornes = area.hydro.reservoirManagement
+                                     && (!area.hydro.useHeuristicTarget || area.hydro.useLeeway);
 
-
-        problem.CaracteristiquesHydrauliques[i].SuiviNiveauHoraire
+        hydro.SuiviNiveauHoraire
           = area.hydro.reservoirManagement && (problem.OptimisationAuPasHebdomadaire)
-            && (!area.hydro.useHeuristicTarget
-                || problem.CaracteristiquesHydrauliques[i].PresenceDePompageModulable);
+            && (!area.hydro.useHeuristicTarget || hydro.PresenceDePompageModulable);
 
-        problem.CaracteristiquesHydrauliques[i].DirectLevelAccess = false;
-        problem.CaracteristiquesHydrauliques[i].AccurateWaterValue = false;
+        hydro.DirectLevelAccess = false;
+        hydro.AccurateWaterValue = false;
         if (problem.WaterValueAccurate && area.hydro.useWaterValue)
         {
-            problem.CaracteristiquesHydrauliques[i].AccurateWaterValue = true;
-            problem.CaracteristiquesHydrauliques[i].SuiviNiveauHoraire = true;
-            problem.CaracteristiquesHydrauliques[i].DirectLevelAccess = true;
+            hydro.AccurateWaterValue = true;
+            hydro.SuiviNiveauHoraire = true;
+            hydro.DirectLevelAccess = true;
         }
 
-        problem.CaracteristiquesHydrauliques[i].TailleReservoir = area.hydro.reservoirCapacity;
+        hydro.TailleReservoir = area.hydro.reservoirCapacity;
 
         for (int pdt = 0; pdt < NombreDePasDeTemps; pdt++)
         {
-            problem.CaracteristiquesHydrauliques[i].NiveauHoraireInf[pdt] = 0;
-            problem.CaracteristiquesHydrauliques[i].NiveauHoraireSup[pdt]
-              = problem.CaracteristiquesHydrauliques[i].TailleReservoir;
+            hydro.NiveauHoraireInf[pdt] = 0;
+            hydro.NiveauHoraireSup[pdt] = hydro.TailleReservoir;
         }
 
         problem.previousSimulationFinalLevel[i] = -1.;
@@ -210,14 +241,19 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         if (!problem.previousYearFinalLevels.empty())
             problem.previousYearFinalLevels[i] = -1.;
 
-        problem.CaracteristiquesHydrauliques[i].WeeklyWaterValueStateRegular = 0.;
+        hydro.WeeklyWaterValueStateRegular = 0.;
 
-        problem.CaracteristiquesHydrauliques[i].WeeklyGeneratingModulation = 1.;
-        problem.CaracteristiquesHydrauliques[i].WeeklyPumpingModulation = 1.;
+        hydro.WeeklyGeneratingModulation = 1.;
+        hydro.WeeklyPumpingModulation = 1.;
 
         assert(area.hydro.intraDailyModulation >= 1. && "Intra-daily modulation must be >= 1.0");
         problem.CoefficientEcretementPMaxHydraulique[i] = area.hydro.intraDailyModulation;
+
+        hydro.MaxPowerConstraint
+          = hydro.PresenceDHydrauliqueModulable && !hydro.TurbinageEntreBornes;
     }
+
+    logIndependentWeeks(problem.CaracteristiquesHydrauliques, problem.NomsDesPays);
 
     importShortTermStorages(study.areas, problem.ShortTermStorage);
 
