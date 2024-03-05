@@ -98,8 +98,6 @@ bool Weights::performWL(Context& ctx)
         if (source && source != ctx.constraint)
         {
             pCurrentContext = &ctx;
-            // const tr
-            //   = std::bind(this, targetName.empty() ? &Weights::translate : &Weights::toLower);
             const std::function<void(Data::AreaName&, const Data::AreaName&)> tr
               = std::bind(targetName.empty() ? &Weights::translate : &Weights::toLower,
                           this,
