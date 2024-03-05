@@ -1,6 +1,5 @@
 from re import match
-from os.path import isdir, basename
-from os import walk
+import pathlib, os
 from pathlib import Path
 
 from utils.assertions import check
@@ -11,11 +10,14 @@ class output_folder_finder:
         self.found_dir_path = None
 
     def find(self):
-        for element in self.output_folder.iterdir():
-            if isdir(element) and match('[0-9]{8}-[0-9]{4}', basename(element)):
-                self.found_dir_path = element
-                return True
-        return False
+        dirs = pathlib.Path(self.output_folder).glob('*/')
+        try:
+            next(dirs)
+        except StopIteration:
+            return False
+
+        self.found_dir_path = max(dirs, key=os.path.getmtime)
+        return True
 
     def get(self):
         return self.found_dir_path

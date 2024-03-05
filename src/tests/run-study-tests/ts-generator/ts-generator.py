@@ -23,7 +23,12 @@ class StudyReference(object):
 
 study_list = []
 study_list.append(StudyReference("../resources/batches/valid-tsgenerator/007 Thermal fleet - Fast unit commitment", "area.base;area.peak"))
+study_list.append(StudyReference("../resources/batches/valid-tsgenerator/079 Zero  Power Balance - Type 1", "6.p;g.sb;b.b;z11.p;&vir-west.dummy;z11.sb"))
 
 @pytest.mark.tsgenerator
 def test1(exe_tsgenerator_path):
     study_list[0].run_and_compare(exe_tsgenerator_path)
+
+@pytest.mark.tsgenerator
+def test2(exe_tsgenerator_path):
+    study_list[1].run_and_compare(exe_tsgenerator_path)
