@@ -281,15 +281,17 @@ static SimplexResult OPT_TryToCallSimplex(
     {
         const bool keepBasis = (optimizationNumber == PREMIERE_OPTIMISATION);
 
-	    auto* srs = static_cast<SRS_PROBLEM*>(solver->underlying_solver());
-	    PROBLEME_SIMPLEXE* spx = srs->problem_simplexe;
-	    dumpSPXData(*spx,
-		            optPeriodStringGenerator,
-		            writer,
-		            optimizationNumber,
-		            nbTerms);
-
         solver = ORTOOLS_Simplexe(&Probleme, solver, keepBasis);
+
+        {
+          auto* srs = static_cast<SRS_PROBLEM*>(solver->underlying_solver());
+          PROBLEME_SIMPLEXE* spx = srs->problem_simplexe;
+          dumpSPXData(*spx,
+                      optPeriodStringGenerator,
+                      writer,
+                      optimizationNumber,
+                      nbTerms);
+        }
         if (solver != nullptr)
         {
             ProblemeAResoudre->ProblemesSpx[NumIntervalle] = (void*)solver;
