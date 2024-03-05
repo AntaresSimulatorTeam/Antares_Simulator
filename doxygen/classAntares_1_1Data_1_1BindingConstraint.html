@@ -295,10 +295,10 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>weight</b> (const <a 
 void&#160;</td><td class="memItemRight" valign="bottom"><b>removeAllWeights</b> ()</td></tr>
 <tr class="memdesc:a9320c2e7e9ff05c37b224bd2026f5407"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove all weights. <br /></td></tr>
 <tr class="separator:a9320c2e7e9ff05c37b224bd2026f5407"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a96b5a4e37d2647f7b2ddaa9700a6ad46" id="r_a96b5a4e37d2647f7b2ddaa9700a6ad46"><td class="memItemLeft" align="right" valign="top"><a id="a96b5a4e37d2647f7b2ddaa9700a6ad46" name="a96b5a4e37d2647f7b2ddaa9700a6ad46"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>copyWeights</b> (const <a class="el" href="classAntares_1_1Data_1_1Study.html">Study</a> &amp;study, const <a class="el" href="classAntares_1_1Data_1_1BindingConstraint.html">BindingConstraint</a> &amp;rhs, bool emptyBefore, Yuni::Bind&lt; void(AreaName &amp;, const AreaName &amp;)&gt; &amp;translate)</td></tr>
-<tr class="memdesc:a96b5a4e37d2647f7b2ddaa9700a6ad46"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy all weights from another constraint. <br /></td></tr>
-<tr class="separator:a96b5a4e37d2647f7b2ddaa9700a6ad46"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d231b4ca845723e0ff3ae214e8359e0" id="r_a7d231b4ca845723e0ff3ae214e8359e0"><td class="memItemLeft" align="right" valign="top"><a id="a7d231b4ca845723e0ff3ae214e8359e0" name="a7d231b4ca845723e0ff3ae214e8359e0"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>copyWeights</b> (const <a class="el" href="classAntares_1_1Data_1_1Study.html">Study</a> &amp;study, const <a class="el" href="classAntares_1_1Data_1_1BindingConstraint.html">BindingConstraint</a> &amp;rhs, bool emptyBefore, const std::function&lt; void(AreaName &amp;, const AreaName &amp;)&gt; &amp;translate)</td></tr>
+<tr class="memdesc:a7d231b4ca845723e0ff3ae214e8359e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy all weights from another constraint. <br /></td></tr>
+<tr class="separator:a7d231b4ca845723e0ff3ae214e8359e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a579d9f52e9d02eae275e6368035d586b" id="r_a579d9f52e9d02eae275e6368035d586b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1BindingConstraint.html#a579d9f52e9d02eae275e6368035d586b">offset</a> (const <a class="el" href="classAntares_1_1Data_1_1AreaLink.html">AreaLink</a> *lnk) const</td></tr>
 <tr class="memdesc:a579d9f52e9d02eae275e6368035d586b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the offset of a given interconnection.  <br /></td></tr>
 <tr class="separator:a579d9f52e9d02eae275e6368035d586b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -313,10 +313,10 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>offset</b> (const <a 
 void&#160;</td><td class="memItemRight" valign="bottom"><b>offset</b> (const <a class="el" href="classAntares_1_1Data_1_1ThermalCluster.html">ThermalCluster</a> *clstr, int o)</td></tr>
 <tr class="memdesc:a8a266f863b6263ef372955710ec358a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the weight of a thermal cluster. <br /></td></tr>
 <tr class="separator:a8a266f863b6263ef372955710ec358a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a064cdd426a762c362e6472476ff582db" id="r_a064cdd426a762c362e6472476ff582db"><td class="memItemLeft" align="right" valign="top"><a id="a064cdd426a762c362e6472476ff582db" name="a064cdd426a762c362e6472476ff582db"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>copyOffsets</b> (const <a class="el" href="classAntares_1_1Data_1_1Study.html">Study</a> &amp;study, const <a class="el" href="classAntares_1_1Data_1_1BindingConstraint.html">BindingConstraint</a> &amp;rhs, bool emptyBefore, Yuni::Bind&lt; void(AreaName &amp;, const AreaName &amp;)&gt; &amp;translate)</td></tr>
-<tr class="memdesc:a064cdd426a762c362e6472476ff582db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy all offsets from another constraint. <br /></td></tr>
-<tr class="separator:a064cdd426a762c362e6472476ff582db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a146b50b6c3a81af65435b51e59ce4e26" id="r_a146b50b6c3a81af65435b51e59ce4e26"><td class="memItemLeft" align="right" valign="top"><a id="a146b50b6c3a81af65435b51e59ce4e26" name="a146b50b6c3a81af65435b51e59ce4e26"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>copyOffsets</b> (const <a class="el" href="classAntares_1_1Data_1_1Study.html">Study</a> &amp;study, const <a class="el" href="classAntares_1_1Data_1_1BindingConstraint.html">BindingConstraint</a> &amp;rhs, bool emptyBefore, const std::function&lt; void(AreaName &amp;, const AreaName &amp;)&gt; &amp;translate)</td></tr>
+<tr class="memdesc:a146b50b6c3a81af65435b51e59ce4e26"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy all offsets from another constraint. <br /></td></tr>
+<tr class="separator:a146b50b6c3a81af65435b51e59ce4e26"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ace22f4f0b3637e32409ea3baa40cc37e" id="r_ace22f4f0b3637e32409ea3baa40cc37e"><td class="memItemLeft" align="right" valign="top"><a id="ace22f4f0b3637e32409ea3baa40cc37e" name="ace22f4f0b3637e32409ea3baa40cc37e"></a>
 uint&#160;</td><td class="memItemRight" valign="bottom"><b>linkCount</b> () const</td></tr>
 <tr class="memdesc:ace22f4f0b3637e32409ea3baa40cc37e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get how many links the binding constraint contains. <br /></td></tr>
