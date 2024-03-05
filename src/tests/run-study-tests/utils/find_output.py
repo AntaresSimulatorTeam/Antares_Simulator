@@ -26,6 +26,6 @@ def find_dated_output_folder(study_path):
 def find_simulation_folder(output_dir):
     # Return full path of the ouptut simulation path (can be "adequacy", "economy")
     for root, dirs, files in os.walk(output_dir):
-        if basename(root) in ["adequacy", "economy"]:
-            return Path(root)
+        if os.path.basename(root) in ["adequacy", "economy"]:
+            return pathlib.Path(root)
 
