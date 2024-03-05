@@ -26,9 +26,6 @@ study_list.append(StudyReference("../resources/batches/valid-tsgenerator/007 The
 study_list.append(StudyReference("../resources/batches/valid-tsgenerator/079 Zero  Power Balance - Type 1", "6.p;g.sb;b.b;z11.p;&vir-west.dummy;z11.sb"))
 
 @pytest.mark.tsgenerator
-def test1(exe_tsgenerator_path):
-    study_list[0].run_and_compare(exe_tsgenerator_path)
-
-@pytest.mark.tsgenerator
-def test2(exe_tsgenerator_path):
-    study_list[1].run_and_compare(exe_tsgenerator_path)
+def test_ts_generator(exe_tsgenerator_path):
+    for study in study_list:
+        study .run_and_compare(exe_tsgenerator_path)
