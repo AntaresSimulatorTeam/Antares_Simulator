@@ -11,11 +11,6 @@ class output_folder_finder:
 
     def find(self):
         dirs = pathlib.Path(self.output_folder).glob('*/')
-        try:
-            next(dirs)
-        except StopIteration:
-            return False
-
         self.found_dir_path = max(dirs, key=os.path.getmtime)
         return True
 
