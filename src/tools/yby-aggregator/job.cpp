@@ -21,6 +21,7 @@
 
 #include "job.h"
 #include <antares/logs/logs.h>
+#include <mutex>
 #include "progress.h"
 
 using namespace Yuni;
@@ -31,7 +32,7 @@ static std::atomic<int> gNbJobs = 0;
 
 #define SEP IO::Separator
 
-Yuni::Mutex gResultsMutex;
+std::mutex gResultsMutex;
 
 bool JobFileReader::RemainJobsToExecute()
 {
@@ -278,7 +279,7 @@ bool JobFileReader::storeResults()
     if (!pLineCount)
         return false;
 
-    Yuni::MutexLocker locker(gResultsMutex);
+    std::lock_guard locker(gResultsMutex);
 
     // The total number of variables
     const uint nbVars = (uint)output->columns.size();

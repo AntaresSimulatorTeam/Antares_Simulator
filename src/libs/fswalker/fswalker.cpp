@@ -491,7 +491,7 @@ void Walker::run()
     thread->logPrefix = pLogPrefix;
     // Extensions
     DispatchJobEvent callback;
-    callback.bind(thread, &WalkerThread::dispatchJob);
+    callback = std::bind(&WalkerThread::dispatchJob, thread, std::placeholders::_1);
     thread->events.initialize(pExtensions, callback);
 
     // Starting the thread !

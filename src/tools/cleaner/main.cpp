@@ -65,7 +65,7 @@ public:
 
         auto* cleaner = new Data::StudyCleaningInfos(folder);
         cleaner->setCustomExcludeList(exclude);
-        cleaner->onProgress.bind(&onProgress);
+        cleaner->onProgress = &onProgress;
         if (cleaner->analyze())
             cleaner->performCleanup();
         delete cleaner;
