@@ -220,7 +220,7 @@ void* ModifiedINode::userdataCreate(FSWalker::DispatchJobEvent&)
 
 void ModifiedINode::userdataDestroy(void* userdata)
 {
-    pQueue.unbind();
+    pQueue = []([[maybe_unused]] FSWalker::IJob::Ptr job){};
 
     if (userdata)
     {

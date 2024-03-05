@@ -90,11 +90,10 @@ public:
     **
     ** Return false to stop the process
     */
-    Yuni::Bind<bool(uint)> onProgress;
+    std::function<bool(uint)> onProgress;
 
 }; // class StudyCleaningInfos
 
 } // namespace Antares::Data
-
 
 #endif /* __ANTARES_LIBS_STUDY_CLEANER_H__ */

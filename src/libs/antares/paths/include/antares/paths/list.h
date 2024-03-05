@@ -199,7 +199,7 @@ public:
     /*!
     ** \brief Event triggered from time to time
     */
-    Yuni::Bind<bool(uint)> onProgress;
+    std::function<bool(uint)> onProgress;
 
 private:
     template<class StringT>
