@@ -61,9 +61,13 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireRampesThermiques(PROB
 
                     int var = CorrespondanceVarNativesVarOptim.powerRampingDecreaseIndex[palier];
                     Xmin[var] = 0;
+                    Xmax[var] = LINFINI_ANTARES;
+
 
                     var = CorrespondanceVarNativesVarOptim.powerRampingIncreaseIndex[palier];
                     Xmin[var] = 0;
+                    Xmax[var] = LINFINI_ANTARES;
+
                 }
             }
         }
