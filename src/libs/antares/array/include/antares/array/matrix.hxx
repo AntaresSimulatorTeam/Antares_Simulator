@@ -23,10 +23,11 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
-#include <yuni/core/math.h>
 #include <antares/logs/logs.h>
 #include <utility>
 #include <cstdlib>
+#include <cmath>
+
 #include <antares/io/statistics.h>
 #include "matrix-to-buffer.h"
 
@@ -1084,7 +1085,7 @@ bool Matrix<T, ReadWriteT>::containsOnlyZero() const
             auto& column = entry[x];
             for (uint y = 0; y != height; ++y)
             {
-                if (not Yuni::Math::Zero((T)column[y]))
+                if ((T)column[y] != 0)
                     return false;
             }
         }
@@ -1103,7 +1104,7 @@ bool Matrix<T, ReadWriteT>::containsOnlyZero(PredicateT& predicate) const
             auto& column = entry[x];
             for (uint y = 0; y != height; ++y)
             {
-                if (not Yuni::Math::Zero((T)predicate(column[y])))
+                if ((T)predicate(column[y]) != 0)
                     return false;
             }
         }
