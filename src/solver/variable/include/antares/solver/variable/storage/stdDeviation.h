@@ -23,7 +23,7 @@
 
 #include <float.h>
 #include <limits>
-#include <yuni/core/math.h>
+#include <cmath>
 
 namespace Antares
 {
@@ -207,35 +207,35 @@ private:
         case Category::hourly:
         {
             for (unsigned int i = 0; i != Size; ++i)
-                target[i] = Yuni::Math::SquareRoot(
+                target[i] = std::sqrt(
                   array[i] - results.avgdata.hourly[i] * results.avgdata.hourly[i]);
         }
         break;
         case Category::daily:
         {
             for (unsigned int i = 0; i != Size; ++i)
-                target[i] = Yuni::Math::SquareRoot(
+                target[i] = std::sqrt(
                   array[i] - results.avgdata.daily[i] * results.avgdata.daily[i]);
         }
         break;
         case Category::weekly:
         {
             for (unsigned int i = 0; i != Size; ++i)
-                target[i] = Yuni::Math::SquareRoot(
+                target[i] = std::sqrt(
                   array[i] - results.avgdata.weekly[i] * results.avgdata.weekly[i]);
         }
         break;
         case Category::monthly:
         {
             for (unsigned int i = 0; i != Size; ++i)
-                target[i] = Yuni::Math::SquareRoot(
+                target[i] = std::sqrt(
                   array[i] - results.avgdata.monthly[i] * results.avgdata.monthly[i]);
         }
         break;
         case Category::annual:
         {
             const double d = *array - results.avgdata.allYears * results.avgdata.allYears;
-            *target = Yuni::Math::SquareRoot(d);
+            *target = std::sqrt(d);
         }
         break;
         }

@@ -21,6 +21,8 @@
 #ifndef __SOLVER_VARIABLE_ECONOMY_CongestionFeeAbs_H__
 #define __SOLVER_VARIABLE_ECONOMY_CongestionFeeAbs_H__
 
+#include <cmath>
+
 #include "../../variable.h"
 
 namespace Antares
@@ -231,7 +233,7 @@ public:
       .CoutsMarginauxHoraires[state.hourInTheWeek]
 
         // Congestion Fee
-        pValuesForTheCurrentYear[numSpace].hour[state.hourInTheYear] = Yuni::Math::Abs(
+        pValuesForTheCurrentYear[numSpace].hour[state.hourInTheYear] = std::abs(
           state.ntc.ValeurDuFlux[state.link->index] * (UPSTREAM_PRICE - DOWNSTREAM_PRICE));
         // Next item in the list
         NextType::hourForEachLink(state, numSpace);
