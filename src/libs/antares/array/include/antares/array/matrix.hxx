@@ -1302,7 +1302,7 @@ void Matrix<T, ReadWriteT>::multiplyAllEntriesBy(const U& c)
 {
     if (entry)
     {
-        if (!Yuni::Math::Zero(c))
+        if (c != 0)
         {
             for (uint x = 0; x != width; ++x)
             {
@@ -1356,7 +1356,7 @@ void Matrix<T, ReadWriteT>::makeAllEntriesAbsolute()
     {
         ColumnType& col = entry[x];
         for (uint y = 0; y != height; ++y)
-            col[y] = Yuni::Math::Abs<T>(col[y]);
+            col[y] = std::abs(col[y]);
     }
 }
 
