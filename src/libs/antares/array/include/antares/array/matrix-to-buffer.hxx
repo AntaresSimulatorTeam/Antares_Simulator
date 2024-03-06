@@ -37,7 +37,7 @@ struct MatrixScalar
 {
     static inline void Append(std::string& file, T v, const char* const)
     {
-        if (Yuni::Math::Zero(v))
+        if (v == 0)
             file.append(std::to_string(0));
         else
             file.append(std::to_string(v));
@@ -49,7 +49,7 @@ struct MatrixScalar<double>
 {
     static void Append(std::string& file, double v, const char* const format)
     {
-        if (Yuni::Math::Zero(v))
+        if (v == 0)
         {
             file += '0';
         }
@@ -57,7 +57,7 @@ struct MatrixScalar<double>
         {
             char ConversionBuffer[128];
             const int sizePrintf
-              = (Yuni::Math::Zero(v - floor(v)))
+              = (v - floor(v)) == 0
                   ? ANTARES_MATRIX_SNPRINTF(ConversionBuffer, sizeof(ConversionBuffer), "%.0f", v)
                   : ANTARES_MATRIX_SNPRINTF(ConversionBuffer, sizeof(ConversionBuffer), format, v);
 
@@ -74,7 +74,7 @@ struct MatrixScalar<float>
 {
     static void Append(std::string& file, float v, const char* const format)
     {
-        if (Yuni::Math::Zero(v))
+        if (v == 0)
         {
             file += '0';
         }
@@ -82,7 +82,7 @@ struct MatrixScalar<float>
         {
             char ConversionBuffer[128];
             const int sizePrintf
-              = (Yuni::Math::Zero(v - floor(v)))
+              = (v - floor(v)) == 0
                   ? ANTARES_MATRIX_SNPRINTF(
                     ConversionBuffer, sizeof(ConversionBuffer), "%.0f", (double)v)
                   : ANTARES_MATRIX_SNPRINTF(
