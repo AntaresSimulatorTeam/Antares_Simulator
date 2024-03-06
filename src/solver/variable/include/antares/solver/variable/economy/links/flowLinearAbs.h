@@ -22,7 +22,7 @@
 #define __SOLVER_VARIABLE_ECONOMY_FlowLinearAbs_H__
 
 #include "../../variable.h"
-#include <cmath>
+#include <yuni/core/math.h>
 
 namespace Antares
 {
@@ -227,7 +227,7 @@ public:
     {
         // Flow assessed over all MC years (linear)
         pValuesForTheCurrentYear[numSpace].hour[state.hourInTheYear]
-          += std::abs(state.ntc.ValeurDuFlux[state.link->index]);
+          += Yuni::Math::Abs(state.ntc.ValeurDuFlux[state.link->index]);
         // Next item in the list
         NextType::hourForEachLink(state, numSpace);
     }

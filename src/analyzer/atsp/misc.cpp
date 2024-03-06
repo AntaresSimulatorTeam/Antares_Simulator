@@ -21,7 +21,7 @@
 
 #include "atsp.h"
 #include <assert.h>
-#include <cmath>
+#include <yuni/core/math.h>
 
 using namespace Yuni;
 
@@ -263,9 +263,9 @@ double ATSP::Correlation(double* A,
         return 999.; // should never happen
     }
 
-    if (std::abs(sigma_A) < 1e-4 && std::abs(sigma_B) < 1e-4)
+    if (Math::Abs(sigma_A) < 1e-4 && Math::Abs(sigma_B) < 1e-4)
         return 1.;
-    if (std::abs(sigma_A) < 1e-4 || std::abs(sigma_B) < 1e-4)
+    if (Math::Abs(sigma_A) < 1e-4 || Math::Abs(sigma_B) < 1e-4)
         return 0.;
 
     double rho = 0.;
@@ -594,9 +594,9 @@ bool ATSP::Probab_density_funct(double L,
     C = 0.;
     D = 1.;
 
-    if (std::abs(S) < 1e-40)
+    if (Math::Abs(S) < 1e-40)
     {
-        //	double fe = std::abs(E);
+        //	double fe = Math::Abs(E);
         //	S = (fe < 1e-40) ? (1e-4) : (1e-4 / fe);
         S = 0;
     }
