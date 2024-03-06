@@ -68,7 +68,7 @@ struct VariableAccessor
     template<class U>
     static void MultiplyHourlyResultsBy(U& intermediateValues, const double v)
     {
-        assert(!std::isnan(v));
+        assert(!Yuni::Math::NaN(v));
         for (uint i = 0; i != ColumnCountT; ++i)
         {
             Antares::Memory::Stored<double>::ReturnType array = intermediateValues[i].hour;
@@ -260,7 +260,7 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
     template<class U>
     static void MultiplyHourlyResultsBy(U& intermediateValues, const double v)
     {
-        assert(!std::isnan(v));
+        assert(!Yuni::Math::NaN(v));
         double* array;
         const typename Type::const_iterator end = intermediateValues.end();
         for (typename Type::const_iterator i = intermediateValues.begin(); i != end; ++i)
@@ -499,7 +499,7 @@ struct VariableAccessor<ResultsT, Category::singleColumn /* The default */>
     template<class U>
     static void MultiplyHourlyResultsBy(U& intermediateValues, const double v)
     {
-        assert(!std::isnan(v));
+        assert(!Yuni::Math::NaN(v));
         for (uint y = 0; y != maxHoursInAYear; ++y)
             intermediateValues.hour[y] *= v;
     }
