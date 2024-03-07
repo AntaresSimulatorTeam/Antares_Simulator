@@ -116,16 +116,16 @@ void HourlyCSRProblem::setBoundsOnFlows()
         Xmin[var] = -(ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine[Interco]) - belowThisThresholdSetToZero;
         problemeAResoudre_.X[var] = ValeursDeNTC.ValeurDuFlux[Interco];
 
-        if (Math::Infinite(Xmax[var]) == 1)
+        if (std::isinf(Xmax[var]))
         {
-            if (Math::Infinite(Xmin[var]) == -1)
+            if (std::isinf(Xmin[var]))
                 problemeAResoudre_.TypeDeVariable[var] = VARIABLE_NON_BORNEE;
             else
                 problemeAResoudre_.TypeDeVariable[var] = VARIABLE_BORNEE_INFERIEUREMENT;
         }
         else
         {
-            if (Math::Infinite(Xmin[var]) == -1)
+            if (std::isinf(Xmin[var]))
                 problemeAResoudre_.TypeDeVariable[var] = VARIABLE_BORNEE_SUPERIEUREMENT;
             else
                 problemeAResoudre_.TypeDeVariable[var] = VARIABLE_BORNEE_DES_DEUX_COTES;
@@ -143,7 +143,7 @@ void HourlyCSRProblem::setBoundsOnFlows()
         Xmin[var] = -belowThisThresholdSetToZero;
         Xmax[var] = ValeursDeNTC.ValeurDeNTCOrigineVersExtremite[Interco] + belowThisThresholdSetToZero;
         problemeAResoudre_.TypeDeVariable[var] = VARIABLE_BORNEE_DES_DEUX_COTES;
-        if (Math::Infinite(Xmax[var]) == 1)
+        if (std::isinf(Xmax[var]))
         {
             problemeAResoudre_.TypeDeVariable[var] = VARIABLE_BORNEE_INFERIEUREMENT;
         }
@@ -156,7 +156,7 @@ void HourlyCSRProblem::setBoundsOnFlows()
         Xmin[var] = -belowThisThresholdSetToZero;
         Xmax[var] = ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine[Interco] + belowThisThresholdSetToZero;
         problemeAResoudre_.TypeDeVariable[var] = VARIABLE_BORNEE_DES_DEUX_COTES;
-        if (Math::Infinite(Xmax[var]) == 1)
+        if (std::isinf(Xmax[var]))
         {
             problemeAResoudre_.TypeDeVariable[var] = VARIABLE_BORNEE_INFERIEUREMENT;
         }
