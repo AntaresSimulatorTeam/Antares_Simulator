@@ -38,6 +38,10 @@ inline void MersenneTwister::reset()
     reset(defaultSeed);
 }
 
+inline typename MersenneTwister::Value MersenneTwister::operator()()
+{
+    return (this)->next();
+}
 } // namespace Antares
 
 #endif // __LIB_ANTARES_RANDOM_MERSENNE_H__
