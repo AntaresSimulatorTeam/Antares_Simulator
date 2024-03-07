@@ -549,7 +549,7 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
 
                     assert(hourInTheYear + HOURS_PER_DAY <= series.height && "Bound checking");
                     for (uint h = 0; h != HOURS_PER_DAY; ++h)
-                        column[hourInTheYear + h] = std::round(dailyResults[h]);
+                        column[hourInTheYear + h] = Math::Round(dailyResults[h]);
 
                     ++progression;
                 }
