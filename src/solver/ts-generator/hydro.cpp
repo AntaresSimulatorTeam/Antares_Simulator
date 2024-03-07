@@ -19,17 +19,18 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <yuni/yuni.h>
+#include <cmath>
+
 #include "antares/solver/simulation/sim_extern_variables_globales.h"
 #include <antares/antares/fatal-error.h>
 #include <antares/writer/i_writer.h>
+#include <antares/utils/utils.h>
 #include "antares/solver/misc/cholesky.h"
 #include "antares/solver/misc/matrix-dp-make.h"
 
 using namespace Antares;
-using namespace Yuni;
 
-#define SEP IO::Separator
+#define SEP Yuni::IO::Separator
 
 #define EPSILON ((double)1.0e-9)
 
@@ -104,7 +105,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, Solver::IResu
             uint areaIndexJ = j / 12;
             auto* preproJ = study.areas.byIndex[areaIndexJ]->hydro.prepro;
 
-            x = Math::Abs(((int)(i % 12) - (int)(j % 12)) / 2.);
+            x = std::abs(((int)(i % 12) - (int)(j % 12)) / 2.);
 
             corre[j] = annualCorrAreaI[areaIndexJ]
                        * pow(prepro->intermonthlyCorrelation * preproJ->intermonthlyCorrelation, x);
@@ -180,7 +181,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, Solver::IResu
 
             double EnergieHydrauliqueTotaleMensuelle = 0;
 
-            if (not Math::Zero(colExpectation[realmonth]))
+            if (!isZero(colExpectation[realmonth]))
             {
                 for (uint j = 0; j < i + 1; ++j)
                     EnergieHydrauliqueTotaleMensuelle += CHSKY[i][j] * NORM[j];
@@ -206,7 +207,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, Solver::IResu
             for (uint i = d; i < dend; i++)
                 SIP += area.hydro.inflowPattern[0][i];
 
-            if (Math::Zero(SIP))
+            if (isZero(SIP))
             {
                 logs.fatal() << "Sum of monthly inflow patterns equals zero.";
                 return false;
@@ -269,7 +270,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, Solver::IResu
         {
             logs.info() << "Archiving the hydro time-series";
             const int precision = 0;
-            String output;
+            Yuni::String output;
             study.areas.each([&](const Data::Area& area) {
                 study.buffer.clear() << "ts-generator" << SEP << "hydro" << SEP << "mc-"
                                      << currentYear << SEP << area.id;
