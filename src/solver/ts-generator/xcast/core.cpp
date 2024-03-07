@@ -509,7 +509,7 @@ bool XCast::generateValuesForTheCurrentDay()
                 }
             }
 
-            assert(0 == Math::Infinite(data_si) && "Infinite value");
+            assert(!std::isinf(data_si) && "Infinite value");
             DATA[s][i] = data_si;
         }
     }
