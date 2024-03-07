@@ -107,4 +107,9 @@ std::vector<std::pair<std::string, std::string>> splitStringIntoPairs(const std:
     return pairs;
 }
 
+bool isZero(double d)
+{
+    return (std::abs(d) < 1.e-6) ? true : false;
+}
+
 } // namespace Antares
