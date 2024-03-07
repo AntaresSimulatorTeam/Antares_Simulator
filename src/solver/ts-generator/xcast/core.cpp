@@ -465,7 +465,7 @@ bool XCast::generateValuesForTheCurrentDay()
                 if (data_si > MA[s])
                 {
                     data_si = MA[s];
-                    if (std::fabs(FO[s][i]) > 0.f)
+                    if (std::abs(FO[s][i]) > 0.f)
                     {
                         POSI[s] = MA[s] / FO[s][i];
                         POSI[s] -= G[s];
@@ -478,7 +478,7 @@ bool XCast::generateValuesForTheCurrentDay()
                 if (data_si < MI[s])
                 {
                     data_si = MI[s];
-                    if (std::fabs(FO[s][i]) > 0.f)
+                    if (std::abs(FO[s][i]) > 0.f)
                     {
                         POSI[s] = MI[s] / FO[s][i];
                         POSI[s] -= G[s];
