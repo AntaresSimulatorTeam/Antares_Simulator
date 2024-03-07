@@ -20,6 +20,7 @@
 */
 
 #include <algorithm>
+#include <cmath>
 #include <yuni/yuni.h>
 #include <antares/study/study.h>
 #include "antares/solver/variable/surveyresults/surveyresults.h"
@@ -66,11 +67,11 @@ void InternalExportDigestLinksMatrix(const Data::Study& study,
             else
             {
                 v = matrix[x][y];
-                if (Math::NaN(v))
+                if (std::isnan(v))
                     buffer.append("\t--");
                 else
                 {
-                    if (Math::Zero(v))
+                    if (v == 0)
                     {
                         buffer.append("\t0");
                     }
@@ -316,9 +317,9 @@ inline void SurveyResults::AppendDoubleValue(uint& error,
         return;
     }
 
-    if (not Math::Zero(v))
+    if (v != 0)
     {
-        if (Math::NaN(v))
+        if (std::isnan(v))
         {
             buffer.append("\tNaN", 4);
             if (++error == 1)
@@ -330,7 +331,7 @@ inline void SurveyResults::AppendDoubleValue(uint& error,
         }
         else
         {
-            if (Math::Infinite(v))
+            if (std::isinf(v))
             {
                 buffer.append((v > 0) ? "\t+inf" : "\t-inf", 5);
                 if (++error == 1)
@@ -591,7 +592,7 @@ void SurveyResults::exportDigestAllYears(std::string& buffer)
                 continue;
             }
 
-            if (Math::Zero(values[i][y]))
+            if (values[i][y] == 0)
             {
                 buffer.append("\t0");
             }

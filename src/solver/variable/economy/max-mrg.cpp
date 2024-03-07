@@ -92,7 +92,7 @@ inline void PrepareMaxMRGFor(const State& state, double* opmrg, uint numSpace)
                 WH += H[i];
         }
 
-        if (Math::Zero(WH)) // no hydro
+        if (WH == 0) // no hydro
         {
             for (uint i = offset; i != endHour; ++i)
                 opmrg[i] = +S[i] + M[i] - D[i];
@@ -134,12 +134,12 @@ inline void PrepareMaxMRGFor(const State& state, double* opmrg, uint numSpace)
             assert(i < HOURS_PER_YEAR && "calendar overflow");
             if (niveau > OI[i])
             {
-                opmrg[i] = Math::Min(niveau, OI[i] + P.getCoefficient(y, i + state.hourInTheYear) - H[i]);
+                opmrg[i] = std::min(niveau, OI[i] + P.getCoefficient(y, i + state.hourInTheYear) - H[i]);
                 SM += opmrg[i] - OI[i];
             }
             else
             {
-                opmrg[i] = Math::Max(niveau, OI[i] - H[i]);
+                opmrg[i] = std::max(niveau, OI[i] - H[i]);
                 SP += OI[i] - opmrg[i];
             }
         }
