@@ -19,7 +19,6 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <cmath>
 #include <string>
 #include <sstream>
 #include <yuni/yuni.h>
@@ -151,7 +150,7 @@ void XCast::applyTransferFunction(PredicateT& predicate)
 
                     if (dailyResults[h] >= pj[x] && dailyResults[h] <= pk[x])
                     {
-                        assert(!std::isinf(b[j]) && "Infinite value");
+                        assert(0 == Math::Infinite(b[j]) && "Infinite value");
                         dailyResults[h] = (a[j] * dailyResults[h]) + b[j];
                         last_i = i;
                         break;
@@ -479,7 +478,7 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
 
                     for (uint h = 0; h != HOURS_PER_DAY; ++h)
                     {
-                        assert(!std::isinf(dailyResults[h]) && "Infinite value");
+                        assert(0 == Math::Infinite(dailyResults[h]) && "Infinite value");
                     }
                 }
 #endif
@@ -500,7 +499,7 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
 
                     for (uint h = 0; h != HOURS_PER_DAY; ++h)
                     {
-                        assert(!std::isinf(dailyResults[h]) && "Infinite value");
+                        assert(0 == Math::Infinite(dailyResults[h]) && "Infinite value");
                         dailyResults[h] += (float)column[hourInTheYear + h];
                     }
                 }
@@ -515,7 +514,7 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
 
                     for (uint h = 0; h != HOURS_PER_DAY; ++h)
                     {
-                        assert(!std::isinf(dailyResults[h]) && "Infinite value");
+                        assert(0 == Math::Infinite(dailyResults[h]) && "Infinite value");
                     }
                 }
 #endif
@@ -534,7 +533,7 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
 
                     for (uint h = 0; h != HOURS_PER_DAY; ++h)
                     {
-                        assert(!std::isinf(dailyResults[h]) && "Infinite value");
+                        assert(0 == Math::Infinite(dailyResults[h]) && "Infinite value");
                         dailyResults[h] *= (float)srcData.capacity;
                     }
 
