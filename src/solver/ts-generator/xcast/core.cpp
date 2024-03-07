@@ -18,6 +18,8 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
+#include <cmath>
+
 #include <yuni/yuni.h>
 #include <yuni/core/math.h>
 #include <antares/study/study.h>
@@ -463,7 +465,7 @@ bool XCast::generateValuesForTheCurrentDay()
                 if (data_si > MA[s])
                 {
                     data_si = MA[s];
-                    if (Math::Abs(FO[s][i]) > 0.f)
+                    if (std::fabs(FO[s][i]) > 0.f)
                     {
                         POSI[s] = MA[s] / FO[s][i];
                         POSI[s] -= G[s];
@@ -476,7 +478,7 @@ bool XCast::generateValuesForTheCurrentDay()
                 if (data_si < MI[s])
                 {
                     data_si = MI[s];
-                    if (Math::Abs(FO[s][i]) > 0.f)
+                    if (std::fabs(FO[s][i]) > 0.f)
                     {
                         POSI[s] = MI[s] / FO[s][i];
                         POSI[s] -= G[s];
