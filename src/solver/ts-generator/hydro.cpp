@@ -19,8 +19,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <cmath>
-
+#include <yuni/yuni.h>
 #include "antares/solver/simulation/sim_extern_variables_globales.h"
 #include <antares/antares/fatal-error.h>
 #include <antares/writer/i_writer.h>
@@ -105,7 +104,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, Solver::IResu
             uint areaIndexJ = j / 12;
             auto* preproJ = study.areas.byIndex[areaIndexJ]->hydro.prepro;
 
-            x = std::abs(((int)(i % 12) - (int)(j % 12)) / 2.);
+            x = Math::Abs(((int)(i % 12) - (int)(j % 12)) / 2.);
 
             corre[j] = annualCorrAreaI[areaIndexJ]
                        * pow(prepro->intermonthlyCorrelation * preproJ->intermonthlyCorrelation, x);
@@ -181,7 +180,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, Solver::IResu
 
             double EnergieHydrauliqueTotaleMensuelle = 0;
 
-            if (colExpectation[realmonth] != 0)
+            if (not Math::Zero(colExpectation[realmonth]))
             {
                 for (uint j = 0; j < i + 1; ++j)
                     EnergieHydrauliqueTotaleMensuelle += CHSKY[i][j] * NORM[j];
@@ -207,7 +206,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, Solver::IResu
             for (uint i = d; i < dend; i++)
                 SIP += area.hydro.inflowPattern[0][i];
 
-            if (SIP != 0)
+            if (Math::Zero(SIP))
             {
                 logs.fatal() << "Sum of monthly inflow patterns equals zero.";
                 return false;

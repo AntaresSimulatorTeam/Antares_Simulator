@@ -21,9 +21,9 @@
 
 #include <sstream>
 #include <string>
-#include <cmath>
 
 #include <yuni/yuni.h>
+#include <yuni/core/math.h>
 #include <yuni/core/string.h>
 
 #include <antares/study/study.h>

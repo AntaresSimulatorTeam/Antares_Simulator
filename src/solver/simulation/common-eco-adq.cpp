@@ -20,13 +20,13 @@
 */
 
 #include <yuni/yuni.h>
+#include <yuni/core/math.h>
 #include <antares/study/study.h>
 #include <antares/exception/UnfeasibleProblemError.hpp>
 
 #include "antares/solver/simulation/common-eco-adq.h"
 #include <antares/logs/logs.h>
 #include <cassert>
-#include <cmath>
 #include <map>
 #include "antares/study/simulation.h"
 
@@ -170,7 +170,7 @@ bool ShouldUseQuadraticOptimisation(const Data::Study& study)
 
         for (uint hour = 0; hour < HOURS_PER_YEAR; ++hour)
         {
-            if (std::fabs(impedances[hour]) >= 1e-100)
+            if (Math::Abs(impedances[hour]) >= 1e-100)
             {
                 return true;
             }
@@ -240,7 +240,7 @@ void PrepareRandomNumbers(Data::Study& study,
         {
             alea = (rnd - 0.5) * (area.spreadUnsuppliedEnergyCost);
 
-            if (std::fabs(alea) < 5.e-4)
+            if (Math::Abs(alea) < 5.e-4)
             {
                 if (alea >= 0)
                     alea += 5.e-4;
@@ -263,7 +263,7 @@ void PrepareRandomNumbers(Data::Study& study,
         {
             alea = (rnd - 0.5) * (area.spreadSpilledEnergyCost);
 
-            if (std::fabs(alea) < 5.e-4)
+            if (Math::Abs(alea) < 5.e-4)
             {
                 if (alea >= 0)
                     alea += 5.e-4;
@@ -293,9 +293,9 @@ void PrepareRandomNumbers(Data::Study& study,
             {
                 randomClusterProdCost = (rnd - 0.5) * (cluster->spreadCost);
 
-                if (std::fabs(randomClusterProdCost) < 5.e-4)
+                if (Math::Abs(randomClusterProdCost) < 5.e-4)
                 {
-                    if (std::fabs(randomClusterProdCost) >= 0)
+                    if (Math::Abs(randomClusterProdCost) >= 0)
                         randomClusterProdCost += 5.e-4;
                     else
                         randomClusterProdCost -= 5.e-4;
