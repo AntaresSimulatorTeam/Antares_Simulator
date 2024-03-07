@@ -6,7 +6,7 @@ void PowerOutputVariation::add(int pays, int cluster, int clusterIndex, int pdt,
     {
         const PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
         double maxUpwardPowerRampingRate
-          = PaliersThermiquesDuPays.maxUpwardPowerRampingRate[rampingClusterIndex];
+          = PaliersThermiquesDuPays.maxUpwardPowerRampingRate[clusterIndex];
         double pmaxDUnGroupeDuPalierThermique = PaliersThermiquesDuPays.PmaxDUnGroupeDuPalierThermique[clusterIndex];
         // constraint : P(t) - P(t-1) - u * M^+(t) - P^+ + P^- + u * M^-(t) = 0
         builder.updateHourWithinWeek(pdt)

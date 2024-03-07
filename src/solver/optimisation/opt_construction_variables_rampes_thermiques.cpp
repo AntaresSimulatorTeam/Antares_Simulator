@@ -26,7 +26,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireRampesThermiqu
             variableNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
             for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
             {
-                if (PaliersThermiquesDuPays.maxUpwardPowerRampingRate[index] != -1)
+                if (PaliersThermiquesDuPays.maxUpwardPowerRampingRate[index] >= 0 )
                 {
                     const int palier = PaliersThermiquesDuPays
                                          .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];

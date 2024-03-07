@@ -6,7 +6,7 @@ void RampingIncreaseRate::add(int pays, int cluster, int clusterIndex, int pdt, 
     {
         const PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
         double maxUpwardPowerRampingRate
-          = PaliersThermiquesDuPays.maxUpwardPowerRampingRate[rampingClusterIndex];
+          = PaliersThermiquesDuPays.maxUpwardPowerRampingRate[clusterIndex];
         double pmaxDUnGroupeDuPalierThermique
           = PaliersThermiquesDuPays.PmaxDUnGroupeDuPalierThermique[clusterIndex];
         // constraint : P(t) - P(t-1) - R^+ * M(t) - u * M^+(t) < 0
