@@ -472,18 +472,18 @@ bool Data::ThermalCluster::integrityCheck()
         return false;
     }
 
-    if (Math::NaN(marketBidCost))
+    if (std::isnan(marketBidCost))
     {
         logs.error() << "Thermal cluster " << pName << ": NaN detected for market bid cost";
         return false;
     }
-    if (Math::NaN(marginalCost))
+    if (std::isnan(marginalCost))
     {
         logs.error() << "Thermal cluster " << parentArea->name << '/' << pName
                      << ": NaN detected for marginal cost";
         return false;
     }
-    if (Math::NaN(spreadCost))
+    if (std::isnan(spreadCost))
     {
         logs.error() << "Thermal cluster " << parentArea->name << '/' << pName
                      << ": NaN detected for marginal cost";

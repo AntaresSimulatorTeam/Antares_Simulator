@@ -612,7 +612,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
             }
 
             assert(
-              !Math::NaN(problem.AllMustRunGeneration[hourInWeek].AllMustRunGenerationOfArea[k])
+              !std::isnan(problem.AllMustRunGeneration[hourInWeek].AllMustRunGenerationOfArea[k])
               && "NaN detected for 'AllMustRunGeneration', probably from miscGenSum/mustrunSum");
 
             problem.ConsommationsAbattues[hourInWeek].ConsommationAbattueDuPays[k]

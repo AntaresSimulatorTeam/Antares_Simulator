@@ -231,8 +231,8 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
 #ifndef NDEBUG
         for (uint realmonth = 0; realmonth != 12; ++realmonth)
         {
-            assert(!Math::NaN(data.MOG[realmonth]) && "nan value detected for MOG");
-            assert(!Math::NaN(data.MOL[realmonth]) && "nan value detected for MOL");
+            assert(!std::isnan(data.MOG[realmonth]) && "nan value detected for MOG");
+            assert(!std::isnan(data.MOL[realmonth]) && "nan value detected for MOL");
             assert(!Math::Infinite(data.MOG[realmonth]) && "infinite value detected for MOG");
             assert(!Math::Infinite(data.MOL[realmonth]) && "infinite value detected for MOL");
         }

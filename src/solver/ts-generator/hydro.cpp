@@ -109,7 +109,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, Solver::IResu
             corre[j] = annualCorrAreaI[areaIndexJ]
                        * pow(prepro->intermonthlyCorrelation * preproJ->intermonthlyCorrelation, x);
 
-            assert(not Math::NaN(corre[j]) and "TS generator Hydro: NaN value detected");
+            assert(not std::isnan(corre[j]) and "TS generator Hydro: NaN value detected");
         }
     }
 
@@ -173,7 +173,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, Solver::IResu
             uint daysPerMonth = calendar.months[month].days;
 
             assert(l < series.ror.timeSeries.width);
-            assert(not Math::NaN(colPOW[realmonth]));
+            assert(not std::isnan(colPOW[realmonth]));
 
             if (month == 0)
                 cumul = 0;
@@ -189,7 +189,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, Solver::IResu
                 EnergieHydrauliqueTotaleMensuelle += colExpectation[realmonth];
 
                 EnergieHydrauliqueTotaleMensuelle = exp(EnergieHydrauliqueTotaleMensuelle);
-                assert(not Math::NaN(EnergieHydrauliqueTotaleMensuelle));
+                assert(not std::isnan(EnergieHydrauliqueTotaleMensuelle));
 
                 if (EnergieHydrauliqueTotaleMensuelle < colMinEnergy[realmonth])
                     EnergieHydrauliqueTotaleMensuelle = colMinEnergy[realmonth];
@@ -247,7 +247,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, Solver::IResu
                 sumInflowPatterns -= dailyInflowPattern;
             }
 
-            assert(not Math::NaN(monthlyStorage)
+            assert(not std::isnan(monthlyStorage)
                    && "TS generator Hydro: NaN value detected in timeseries");
 
             cumul += daysPerMonth;

@@ -417,7 +417,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
 #ifndef NDEBUG
             for (uint day = firstDay; day != endDay; ++day)
             {
-                assert(!Math::NaN(ventilationResults.HydrauliqueModulableQuotidien[day]));
+                assert(!std::isnan(ventilationResults.HydrauliqueModulableQuotidien[day]));
                 assert(!Math::Infinite(ventilationResults.HydrauliqueModulableQuotidien[day]));
             }
 #endif

@@ -59,9 +59,9 @@ static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos&
                     nS = sqrt(log(1. + (s[i] * s[i]) / (e[i] * e[i])));
 
                     // asserts
-                    assert(!Math::NaN(nE)
+                    assert(!std::isnan(nE)
                            && "Hydro: NaN value detected for hydro prepro expectation");
-                    assert(!Math::NaN(nS)
+                    assert(!std::isnan(nS)
                            && "Hydro: NaN value detected for hydro prepro expectation");
 
                     e[i] = nE;

@@ -596,7 +596,7 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
                 for (uint h = 0; h < matrix.height; ++h)
                 {
                     perHour[h] += dsmvalues[h];
-                    assert(!Math::NaN(perHour[h]));
+                    assert(!std::isnan(perHour[h]));
                 }
             }
         }

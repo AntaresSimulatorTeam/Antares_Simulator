@@ -183,12 +183,12 @@ static bool Remix(const Data::AreaList& areas, PROBLEME_HEBDO& problem, uint num
             for (uint i = offset; i != endHour; ++i)
             {
                 H[i] = HE[i];
-                assert(not Math::NaN(HE[i]) && "hydro remix: nan detected");
+                assert(not std::isnan(HE[i]) && "hydro remix: nan detected");
             }
             for (uint i = offset; i != endHour; ++i)
             {
                 D[i] = DE[i];
-                assert(not Math::NaN(DE[i]) && "hydro remix: nan detected");
+                assert(not std::isnan(DE[i]) && "hydro remix: nan detected");
             }
         }
     });

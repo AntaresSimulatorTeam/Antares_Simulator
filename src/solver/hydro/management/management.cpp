@@ -161,7 +161,7 @@ void HydroManagement::prepareInflowsScaling(uint year)
                   if (area.hydro.reservoirManagement)
                   {
                       data.inflows[realmonth] = totalMonthInflows / (area.hydro.reservoirCapacity);
-                      assert(!Math::NaN(data.inflows[month]) && "nan value detect in inflows");
+                      assert(!std::isnan(data.inflows[month]) && "nan value detect in inflows");
                   }
                   else
                   {
@@ -204,7 +204,7 @@ void HydroManagement::minGenerationScaling(uint year)
                   {
                       // Set monthly mingen, used later for h2o_m
                       data.mingens[realmonth] = totalMonthMingen / (area.hydro.reservoirCapacity);
-                      assert(!Math::NaN(data.mingens[month]) && "nan value detect in mingen");
+                      assert(!std::isnan(data.mingens[month]) && "nan value detect in mingen");
                   }
                   else
                   {
@@ -404,7 +404,7 @@ void HydroManagement::prepareNetDemand(uint year, Data::SimulationMode mode,
                     netdemand -= c->valueAtTimeStep(year, hour);
             }
 
-            assert(!Math::NaN(netdemand)
+            assert(!std::isnan(netdemand)
                    && "hydro management: NaN detected when calculating the net demande");
             data.DLN[dayYear] += netdemand;
         }
@@ -429,12 +429,12 @@ void HydroManagement::prepareEffectiveDemand()
                 effectiveDemand += tmpDataByArea_[area].DLN[day] * value;
             });
 
-            assert(!Math::NaN(effectiveDemand) && "nan value detected for effectiveDemand");
+            assert(!std::isnan(effectiveDemand) && "nan value detected for effectiveDemand");
             data.DLE[day] += effectiveDemand;
             data.MLE[realmonth] += effectiveDemand;
 
-            assert(not Math::NaN(data.DLE[day]) && "nan value detected for DLE");
-            assert(not Math::NaN(data.MLE[realmonth]) && "nan value detected for DLE");
+            assert(not std::isnan(data.DLE[day]) && "nan value detected for DLE");
+            assert(not std::isnan(data.MLE[realmonth]) && "nan value detected for DLE");
         }
 
         auto minimumYear = std::numeric_limits<double>::infinity();
