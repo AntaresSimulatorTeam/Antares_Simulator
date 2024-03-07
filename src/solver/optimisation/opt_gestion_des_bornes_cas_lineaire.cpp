@@ -19,6 +19,8 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
+#include <cmath>
+
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
@@ -239,16 +241,16 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
             AdequacyPatch::setNTCbounds(
               Xmax[var], Xmin[var], ValeursDeNTC, interco, problemeHebdo, adqPatchParams);
 
-            if (Math::Infinite(Xmax[var]) == 1)
+            if (std::isinf(Xmax[var]))
             {
-                if (Math::Infinite(Xmin[var]) == -1)
+                if (std::isinf(Xmin[var]))
                     TypeDeVariable[var] = VARIABLE_NON_BORNEE;
                 else
                     TypeDeVariable[var] = VARIABLE_BORNEE_INFERIEUREMENT;
             }
             else
             {
-                if (Math::Infinite(Xmin[var]) == -1)
+                if (std::isinf(Xmin[var]))
                     TypeDeVariable[var] = VARIABLE_BORNEE_SUPERIEUREMENT;
                 else
                     TypeDeVariable[var] = VARIABLE_BORNEE_DES_DEUX_COTES;
@@ -274,7 +276,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
 
                 Xmax[var] += 0.01;
                 TypeDeVariable[var] = VARIABLE_BORNEE_DES_DEUX_COTES;
-                if (Math::Infinite(Xmax[var]) == 1)
+                if (std::isinf(Xmax[var]))
                 {
                     TypeDeVariable[var] = VARIABLE_BORNEE_INFERIEUREMENT;
                 }
@@ -291,7 +293,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
 
                 Xmax[var] += 0.01;
                 TypeDeVariable[var] = VARIABLE_BORNEE_DES_DEUX_COTES;
-                if (Math::Infinite(Xmax[var]) == 1)
+                if (std::isinf(Xmax[var]))
                 {
                     TypeDeVariable[var] = VARIABLE_BORNEE_INFERIEUREMENT;
                 }
