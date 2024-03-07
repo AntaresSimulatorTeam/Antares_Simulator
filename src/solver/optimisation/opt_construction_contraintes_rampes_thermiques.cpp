@@ -25,7 +25,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireRampesThermiques(PRO
         constraintNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
         for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
         {
-            if (PaliersThermiquesDuPays.clusterRampingVariablesIndex[index] >= 0)
+            if (PaliersThermiquesDuPays.maxUpwardPowerRampingRate[index] != -1)
             {
                 RampingIncreaseRate rampingIncreaseRate(problemeHebdo);
                 RampingDecreaseRate rampingDecreaseRate(problemeHebdo);

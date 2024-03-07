@@ -393,11 +393,10 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
          .assign(nbPaliers, 0);
         problem.PaliersThermiquesDuPays[k].NomsDesPaliersThermiques.resize(nbPaliers);
 
-        problem.PaliersThermiquesDuPays[k].downwardRampingCost.assign(nRampingClusters, 0);
-        problem.PaliersThermiquesDuPays[k].upwardRampingCost.assign(nRampingClusters, 0);
-        problem.PaliersThermiquesDuPays[k].maxUpwardPowerRampingRate.assign(nRampingClusters, 0);
-        problem.PaliersThermiquesDuPays[k].maxDownwardPowerRampingRate.assign(nRampingClusters, 0);
-        problem.PaliersThermiquesDuPays[k].clusterRampingVariablesIndex.assign(nbPaliers, -1);
+        problem.PaliersThermiquesDuPays[k].downwardRampingCost.assign(nbPaliers, -1);
+        problem.PaliersThermiquesDuPays[k].upwardRampingCost.assign(nbPaliers, -1);
+        problem.PaliersThermiquesDuPays[k].maxUpwardPowerRampingRate.assign(nbPaliers, -1);
+        problem.PaliersThermiquesDuPays[k].maxDownwardPowerRampingRate.assign(nbPaliers, -1);
 
         problem.CaracteristiquesHydrauliques[k].CntEnergieH2OParIntervalleOptimise
           .assign(7, 0.);

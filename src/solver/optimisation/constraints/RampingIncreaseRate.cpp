@@ -5,8 +5,6 @@ void RampingIncreaseRate::add(int pays, int cluster, int clusterIndex, int pdt, 
     if (!Simulation)
     {
         const PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
-        int rampingClusterIndex
-          = PaliersThermiquesDuPays.clusterRampingVariablesIndex[clusterIndex];
         double maxUpwardPowerRampingRate
           = PaliersThermiquesDuPays.maxUpwardPowerRampingRate[rampingClusterIndex];
         double pmaxDUnGroupeDuPalierThermique

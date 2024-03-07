@@ -51,13 +51,10 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireRampesThermiques(PROB
 
             for (int index = 0; index < maxThermalPlant; index++)
             {
-                if (PaliersThermiquesDuPays.clusterRampingVariablesIndex[index] >= 0)
+                if (PaliersThermiquesDuPays.maxUpwardPowerRampingRate[index] != -1)
                 {
                     const int palier = PaliersThermiquesDuPays
                                          .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
-
-                    int rampingClusterIndex
-                      = PaliersThermiquesDuPays.clusterRampingVariablesIndex[index];
 
                     int var = CorrespondanceVarNativesVarOptim.powerRampingDecreaseIndex[palier];
                     Xmin[var] = 0;

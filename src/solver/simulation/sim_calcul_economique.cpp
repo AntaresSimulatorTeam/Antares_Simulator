@@ -282,7 +282,6 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         auto& pbPalier = problem.PaliersThermiquesDuPays[i];
         pbPalier.NombreDePaliersThermiques = area.thermal.list.size();
 
-        uint nRampingCluster = 0;
 
         for (uint clusterIndex = 0; clusterIndex != area.thermal.list.size(); ++clusterIndex)
         {
@@ -306,16 +305,14 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
             // ramping (if enabled)
             if (cluster.ramping)
             {
-                pbPalier.upwardRampingCost[nRampingCluster]
+                pbPalier.upwardRampingCost[clusterIndex]
                   = cluster.ramping.value().powerIncreaseCost;
-                pbPalier.downwardRampingCost[nRampingCluster]
+                pbPalier.downwardRampingCost[clusterIndex]
                   = cluster.ramping.value().powerDecreaseCost;
-                pbPalier.maxDownwardPowerRampingRate[nRampingCluster]
+                pbPalier.maxDownwardPowerRampingRate[clusterIndex]
                   = cluster.ramping.value().maxDownwardPowerRampingRate;
-                pbPalier.maxUpwardPowerRampingRate[nRampingCluster]
+                pbPalier.maxUpwardPowerRampingRate[clusterIndex]
                   = cluster.ramping.value().maxUpwardPowerRampingRate;
-                pbPalier.clusterRampingVariablesIndex[clusterIndex] = nRampingCluster;
-                nRampingCluster++;
             }
             
             pbPalier.PmaxDUnGroupeDuPalierThermique[clusterIndex]
@@ -326,7 +323,6 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
                   : cluster.minStablePower;
             pbPalier.NomsDesPaliersThermiques[clusterIndex] = cluster.name().c_str();
         }
-        pbPalier.numberOfRampingCluster = nRampingCluster;
 
         NombrePaliers += area.thermal.list.size();
     }
