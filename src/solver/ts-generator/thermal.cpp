@@ -580,7 +580,7 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
                 double AVPDayInTheYear = AVP[dayInTheYear];
                 for (uint h = 0; h != 24; ++h)
                 {
-                    dstSeries[hour] = std::round(AVPDayInTheYear * modulation[hour]);
+                    dstSeries[hour] = Math::Round(AVPDayInTheYear * modulation[hour]);
                     ++hour;
                 }
             }
