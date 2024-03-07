@@ -1,5 +1,4 @@
-/*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+/*** Copyright 2007-2024, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -19,17 +18,15 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <yuni/yuni.h>
-#include <yuni/core/math.h>
+#include <cassert>
+#include <cmath>
+
 #include <antares/study/study.h>
 #include <antares/exception/AssertionError.hpp>
 #include "antares/solver/simulation/common-eco-adq.h"
 #include <antares/logs/logs.h>
-#include <cassert>
 #include "antares/study/simulation.h"
 #include <antares/study/area/scratchpad.h>
-
-using namespace Yuni;
 
 #define EPSILON 1e-6
 
@@ -97,7 +94,7 @@ static bool Remix(const Data::AreaList& areas, PROBLEME_HEBDO& problem, uint num
             for (uint i = offset; i < endHour; ++i)
             {
                 double h_d = H[i] + D[i];
-                if (h_d > 0. && Math::Zero(S[i] + M[i]))
+                if (h_d > 0. && (S[i] + M[i]) != 0)
                 {
                     double Li = L[i + hourInYear];
 
@@ -178,7 +175,7 @@ static bool Remix(const Data::AreaList& areas, PROBLEME_HEBDO& problem, uint num
                                  << ": infinite loop detected. please check input data";
                     break;
                 }
-            } while (Math::Abs(ecart) > 0.01);
+            } while (std::fabs(ecart) > 0.01);
 
             for (uint i = offset; i != endHour; ++i)
             {

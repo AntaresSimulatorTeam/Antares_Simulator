@@ -21,9 +21,9 @@
 
 #include <sstream>
 #include <string>
+#include <cmath>
 
 #include <yuni/yuni.h>
-#include <yuni/core/math.h>
 #include <yuni/core/string.h>
 
 #include <antares/study/study.h>
@@ -580,7 +580,7 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
                 double AVPDayInTheYear = AVP[dayInTheYear];
                 for (uint h = 0; h != 24; ++h)
                 {
-                    dstSeries[hour] = Math::Round(AVPDayInTheYear * modulation[hour]);
+                    dstSeries[hour] = std::round(AVPDayInTheYear * modulation[hour]);
                     ++hour;
                 }
             }
