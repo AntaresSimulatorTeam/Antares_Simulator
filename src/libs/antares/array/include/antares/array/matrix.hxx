@@ -288,7 +288,7 @@ void Matrix<T, ReadWriteT>::averageTimeseries(bool roundValues)
             for (uint j = 0; j != height; ++j)
             {
                 const double d = first[j] * coeff;
-                first[j] = Yuni::Math::Round(d);
+                first[j] = std::round(d);
             }
         }
         else
@@ -1345,7 +1345,7 @@ void Matrix<T, ReadWriteT>::roundAllEntries()
     {
         ColumnType& col = entry[x];
         for (uint y = 0; y != height; ++y)
-            col[y] = (T)Yuni::Math::Round(col[y]);
+            col[y] = (T)std::round(col[y]);
     }
 }
 
