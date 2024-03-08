@@ -60,9 +60,13 @@ BOOST_AUTO_TEST_CASE(thermal_cluster_fullfills_area_demand)
                                                                     {{"cost_thermal1", std::move(costThermal1)},
                                                                      {"consumption_some_area", consumption1}});
 
-        auto thermal = new Thermal("thermal1", 100);
+        auto thermal = std::make_shared<Thermal>("thermal1", 100);
         gAdditionalFillers.push_back(thermal);
-        gAdditionalFillers.push_back(new Balance("some_area", {}, {thermal}));
+        // For some reason, this doesn't compile with g++-10
+        // gAdditionalFillers.push_back(std::make_shared<Balance>("some_area", {}, {thermal}));
+        // brace-init seems to be the issue, so we need to be more explicit with types
+        auto balance = std::make_shared<Balance>("some_area", std::vector<std::shared_ptr<Battery>>{}, std::vector<std::shared_ptr<Thermal>>({thermal}));
+        gAdditionalFillers.push_back(balance);
     }
 
     area->thermal.unsuppliedEnergyCost = 1.e3;
