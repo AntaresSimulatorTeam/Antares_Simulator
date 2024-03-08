@@ -392,11 +392,12 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
         if (c->fuelEfficiency != 100.0)
             s->add("efficiency", c->fuelEfficiency);
 
+        auto roundToThreeDecimal = [](double d) { return std::round(d * 1000.0) / 1000.0; };
         // volatility
         if (!isZero(c->forcedVolatility))
-            s->add("volatility.forced", std::round(c->forcedVolatility, 3));
+            s->add("volatility.forced", roundToThreeDecimal(c->forcedVolatility));
         if (!isZero(c->plannedVolatility))
-            s->add("volatility.planned", std::round(c->plannedVolatility, 3));
+            s->add("volatility.planned", roundToThreeDecimal(c->plannedVolatility));
 
         // laws
         if (c->forcedLaw != thermalLawUniform)
@@ -408,17 +409,17 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
         if (c->costgeneration != setManually)
             s->add("costgeneration", c->costgeneration);
         if (!isZero(c->marginalCost))
-            s->add("marginal-cost", std::round(c->marginalCost, 3));
+            s->add("marginal-cost", roundToThreeDecimal(c->marginalCost));
         if (!isZero(c->spreadCost))
             s->add("spread-cost", c->spreadCost);
         if (!isZero(c->fixedCost))
-            s->add("fixed-cost", std::round(c->fixedCost, 3));
+            s->add("fixed-cost", roundToThreeDecimal(c->fixedCost));
         if (!isZero(c->startupCost))
-            s->add("startup-cost", std::round(c->startupCost, 3));
+            s->add("startup-cost", roundToThreeDecimal(c->startupCost));
         if (!isZero(c->marketBidCost))
-            s->add("market-bid-cost", std::round(c->marketBidCost, 3));
+            s->add("market-bid-cost", roundToThreeDecimal(c->marketBidCost));
         if (!isZero(c->variableomcost))
-            s->add("variableomcost", std::round(c->variableomcost,3));
+            s->add("variableomcost", roundToThreeDecimal(c->variableomcost));
 
 
         //pollutant factor

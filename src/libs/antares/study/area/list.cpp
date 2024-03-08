@@ -75,7 +75,7 @@ static bool AreaListLoadThermalDataFromFile(AreaList& list, const Clob& filename
 
                 // New scheme
                 // MBO 30/10/2014 - Allow negative values
-                if (Math::Abs(area->thermal.unsuppliedEnergyCost) < 5.e-3)
+                if (std::abs(area->thermal.unsuppliedEnergyCost) < 5.e-3)
                     area->thermal.unsuppliedEnergyCost = 0.;
                 else
                 {
@@ -114,7 +114,7 @@ static bool AreaListLoadThermalDataFromFile(AreaList& list, const Clob& filename
                 // positive";
 
                 // MBO 30/10/2014 - allow negative values
-                if (Math::Abs(area->thermal.spilledEnergyCost) < 5.e-3)
+                if (std::abs(area->thermal.spilledEnergyCost) < 5.e-3)
                     area->thermal.spilledEnergyCost = 0.;
                 else
                 {
@@ -146,14 +146,14 @@ static bool AreaListSaveThermalDataToFile(const AreaList& list, const AnyString&
     IniFile::Section* s = ini.addSection("unserverdenergycost");
     list.each([&](const Data::Area& area) {
         // 0 values are skipped
-        if (!Math::Zero(area.thermal.unsuppliedEnergyCost))
+        if (!isZero(area.thermal.unsuppliedEnergyCost))
             s->add(area.id, area.thermal.unsuppliedEnergyCost);
     });
 
     s = ini.addSection("spilledenergycost");
     list.each([&](const Data::Area& area) {
         // 0 values are skipped
-        if (!Math::Zero(area.thermal.spilledEnergyCost))
+        if (!isZero(area.thermal.spilledEnergyCost))
             s->add(area.id, area.thermal.spilledEnergyCost);
     });
 
@@ -1191,8 +1191,8 @@ Area* AreaList::findFromPosition(const int x, const int y) const
         {
             auto lastArea = i->second;
             if (lastArea->ui)
-                if (Math::Abs(lastArea->ui->x - x) < nearestDistance
-                    && Math::Abs(lastArea->ui->y - y) < nearestDistance)
+                if (std::abs(lastArea->ui->x - x) < nearestDistance
+                    && std::abs(lastArea->ui->y - y) < nearestDistance)
                 {
                     nearestItem = lastArea;
                 }
