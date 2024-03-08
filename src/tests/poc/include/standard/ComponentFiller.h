@@ -95,7 +95,7 @@ void ComponentFiller::addConstraints(LinearProblem& problem, const LinearProblem
             auto balanceConstraint =
                     &problem.addBalanceConstraint("Balance_" + nodeName + "_" + to_string(ts), -consumption[ts], nodeName, ts);
             for (const auto& connection : portConnectionsManager_->getConectionsTo(this, "P")) {
-                for (const auto& varAndCoeff : connection.first->getPortPin(connection.second, ts, data))
+                for (const auto& varAndCoeff : connection.componentFiller->getPortPin(connection.portName, ts, data))
                 {
                     auto p = &problem.getVariable(varAndCoeff.first);
                     balanceConstraint->SetCoefficient(p, varAndCoeff.second * -1.0);
@@ -112,7 +112,7 @@ void ComponentFiller::addObjective(Antares::optim::api::LinearProblem& problem, 
         problem.setMinimization(true);
         for (auto ts : data.getTimeStamps()) {
             for (const auto& connection : portConnectionsManager_->getConectionsTo(this, "cost")) {
-                for (const auto& varAndCoeff : connection.first->getPortPin(connection.second, ts, data))
+                for (const auto& varAndCoeff : connection.componentFiller->getPortPin(connection.portName, ts, data))
                 {
                     auto variable = &problem.getVariable(varAndCoeff.first);
                     problem.setObjectiveCoefficient(*variable, varAndCoeff.second);

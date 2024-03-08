@@ -226,11 +226,11 @@ static SimplexResult OPT_TryToCallSimplex(
     LinearProblemBuilder linearProblemBuilder(legacyLinearProblem);
     if (options.useOrtools)
     {
-        LegacyLinearProblemFillerImpl filler(&Probleme); // TODO: merge this with LegacyLinearProblemImpl ?
+        auto filler = std::make_shared<LegacyLinearProblemFillerImpl>(&Probleme); // TODO: merge this with LegacyLinearProblemImpl ?
         linearProblemBuilder.addFiller(filler);
         // TODO: we can add extra fillers here
-        for (auto* filler : gAdditionalFillers)
-            linearProblemBuilder.addFiller(*filler);
+        for (const auto& additionalFiller : gAdditionalFillers)
+            linearProblemBuilder.addFiller(additionalFiller);
 
         // sinon renvoyer le builder ou le problem à une autre classe
         // Required for the balance constraint indices
