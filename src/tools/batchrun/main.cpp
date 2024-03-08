@@ -27,6 +27,7 @@
 #include <yuni/core/nullable.h>
 #include <map>
 #include <iostream>
+#include <string>
 #include <yuni/core/string.h>
 #include <yuni/core/getopt.h>
 #include <antares/study/finder/finder.h>
@@ -81,8 +82,8 @@ int main(int argc, char* argv[])
     Antares::Resources::Initialize(argc, argv, true);
 
     // options
-    String optInput;
-    String ortoolsSolver;
+    std::string optInput;
+    std::string ortoolsSolver;
     bool optNoTSImport = false;
     bool optIgnoreAllConstraints = false;
     bool optForceExpansion = false;
