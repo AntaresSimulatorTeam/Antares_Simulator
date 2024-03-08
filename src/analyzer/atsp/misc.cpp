@@ -124,7 +124,7 @@ void ATSP::Mtrx_abs(Matrix<>& out, const Matrix<>& MTRX, uint nblig, uint nbcol)
     for (uint j = 0; j < nbcol; ++j)
     {
         for (uint i = 0; i < nblig; ++i)
-            out[j][i] = Math::Abs(MTRX[j][i]);
+            out[j][i] = std::abs(MTRX[j][i]);
     }
 }
 

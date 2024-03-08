@@ -20,6 +20,7 @@
 */
 
 #include "atsp.h"
+#include <antares/utils/utils.h>
 #include <antares/date/date.h>
 #include "antares/solver/misc/matrix-dp-make.h"
 
@@ -257,7 +258,7 @@ bool ATSP::computeMonthlyCorrelations()
             auto& column = CORR_MNP[i];
             for (uint j = 0; j < i; ++j)
             {
-                if (Math::Abs(column[j]) < RTZ)
+                if (std::abs(column[j]) < RTZ)
                 {
                     column[j] = 0.;
                     CORR_MNP[j][i] = 0.;
@@ -280,7 +281,7 @@ bool ATSP::computeMonthlyCorrelations()
             auto& column = CORR_MNPZ[i];
             for (uint j = 0; j < i; ++j)
             {
-                if (Math::Abs(column[j]) < RTZ)
+                if (std::abs(column[j]) < RTZ)
                 {
                     column[j] = 0.;
                     CORR_MNPZ[j][i] = 0.;
@@ -414,7 +415,7 @@ bool ATSP::computeMonthlyCorrelations()
         auto& column = CORR_YNP[i];
         for (uint j = 0; j < i; ++j)
         {
-            if (Math::Abs(column[j]) < RTZ)
+            if (std::abs(column[j]) < RTZ)
             {
                 column[j] = 0.;
                 CORR_YNP[j][i] = 0.;
@@ -437,7 +438,7 @@ bool ATSP::computeMonthlyCorrelations()
         auto& column = CORR_YNPZ[i];
         for (uint j = 0; j < i; ++j)
         {
-            if (Math::Abs(column[j]) < RTZ)
+            if (std::abs(column[j]) < RTZ)
             {
                 column[j] = 0.;
                 CORR_YNPZ[j][i] = 0.;
@@ -559,7 +560,7 @@ bool ATSP::computeMonthlyCorrelations()
                 const auto& col = resultNDP[iZ];
                 for (uint jZ = iZ + 1; jZ < realAreaCount; ++jZ)
                 {
-                    if (not Math::Zero(col[jZ]))
+                    if (!isZero(col[jZ]))
                     {
                         const uint j = mapping[jZ];
                         f << pArea[i]->name << '%' << pArea[j]->name << " = " << col[jZ] << '\n';
@@ -593,7 +594,7 @@ bool ATSP::computeMonthlyCorrelations()
                     const auto& col = CORR_MNP.entry[iZ];
                     for (uint jZ = iZ + 1; jZ < realAreaCount; ++jZ)
                     {
-                        if (not Math::Zero(col[jZ]))
+                        if (!isZero(col[jZ]))
                         {
                             const uint j = mapping[jZ];
                             f << pArea[i]->name << '%' << pArea[j]->name << " = " << col[jZ]
