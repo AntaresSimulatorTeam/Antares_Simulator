@@ -22,12 +22,14 @@
 #define __ORTOOLS_WRAPPER__
 
 #include <string>
+#include <antares/optim/api/LinearProblemBuilder.h>
 #include "named_problem.h"
 
 using namespace operations_research;
 
 MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
-                           MPSolver* ProbSpx,
+                           MPSolver* solver,
+                           Antares::optim::api::LinearProblemBuilder& builder,
                            bool keepBasis);
 
 MPSolver* ORTOOLS_ConvertIfNeeded(const std::string& solverName,

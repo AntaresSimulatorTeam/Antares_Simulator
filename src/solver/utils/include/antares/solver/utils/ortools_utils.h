@@ -59,6 +59,7 @@ std::string availableOrToolsSolversString();
  */
 MPSolver* MPSolverFactory(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* probleme,
                           const std::string& solverName);
+MPSolver* MPSolverFactory(bool isMip, const std::string& solverName);
 
 std::string generateTempPath(const std::string& filename);
 void removeTemporaryFile(const std::string& tmpPath);
@@ -114,6 +115,9 @@ public:
       const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe);
 
     MPSolver* Convert();
+    void Fill(MPSolver* mpSolver);
+    // TODO : we can declare void Fill(optim::api::LinearProblem* linearProblem); and clone what is done Fill(MPSolver)
+    void TuneSolverSpecificOptions(MPSolver* solver) const;
 
 private:
     const std::string& solverName_;
@@ -125,7 +129,6 @@ private:
     void CopyVariables(MPSolver* solver);
     void UpdateContraints(unsigned idxRow, MPSolver* solver);
     void CopyRows(MPSolver* solver);
-    void TuneSolverSpecificOptions(MPSolver* solver) const;
     void CopyMatrix(const MPSolver* solver);
 };
 } // namespace Optimization

@@ -1,4 +1,7 @@
 set(RTESOLVER_OPT
+	opt_global.h # TODO REMOVE
+	opt_global.cpp # TODO REMOVE
+
         opt_optimisation_hebdo.cpp
         opt_appel_solveur_quadratique.cpp
         opt_gestion_second_membre_cas_lineaire.cpp
@@ -179,7 +182,11 @@ set(RTESOLVER_OPT
 
 
 set(SRC_MODEL
-        ${RTESOLVER_OPT}
+	${RTESOLVER_OPT}
+		LegacyLinearProblemImpl.cpp
+		LegacyLinearProblemImpl.h
+        LegacyLinearProblemFillerImpl.cpp
+        LegacyLinearProblemFillerImpl.h
 )
 
 add_library(model_antares ${SRC_MODEL})
@@ -192,12 +199,14 @@ else ()
     #set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS} /wd 4101") # unused local variable
 endif ()
 target_link_libraries(model_antares
-        PUBLIC
-        utils
-        sirius_solver
-        infeasible_problem_analysis
-        antares-solver-simulation
-        Antares::benchmarking
+		PUBLIC
+		utils
+		sirius_solver
+		infeasible_problem_analysis
+		antares-solver-simulation
+		Antares::benchmarking
+		Antares::optim_api
+		Antares::optim_impl
 )
 
 target_include_directories(model_antares

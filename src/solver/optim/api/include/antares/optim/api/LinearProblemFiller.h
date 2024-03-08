@@ -1,0 +1,50 @@
+/*
+** Copyright 2007-2024 RTE
+** Authors: Antares_Simulator Team
+**
+** This file is part of Antares_Simulator.
+**
+** Antares_Simulator is free software: you can redistribute it and/or modify
+** it under the terms of the GNU General Public License as published by
+** the Free Software Foundation, either version 3 of the License, or
+** (at your option) any later version.
+**
+** There are special exceptions to the terms and conditions of the
+** license as they are applied to this software. View the full text of
+** the exceptions in file COPYING.txt in the directory of this software
+** distribution
+**
+** Antares_Simulator is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+** GNU General Public License for more details.
+**
+** You should have received a copy of the GNU General Public License
+** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
+**
+** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+*/
+#pragma once
+
+#include "LinearProblem.h"
+#include "LinearProblemData.h"
+
+namespace Antares::optim::api
+{
+    class LinearProblemFiller
+    {
+    public:
+        virtual void addVariables(LinearProblem& problem, const LinearProblemData& data) = 0;
+        virtual void addConstraints(LinearProblem& problem, const LinearProblemData& data) = 0;
+        virtual void addObjective(LinearProblem& problem, const LinearProblemData& data) = 0;
+        virtual void update(LinearProblem& problem, const LinearProblemData& data) = 0;
+        // TODO : see if update is really needed in target solution
+        // Currently used to update the MIP from week to week by only changing LB/UB & coefs
+        // (see sim_structure_contrainte_economique.h & ApportNaturelHoraire)
+        // This may be dropped in the target solution (thus we'll have to re-create the MIP) for 2 reasons:
+        // - we may have to add/remove variables & constraints
+        // - OR-Tools does not allow changing the names of variables & constraints, which is necessary if we want the
+        //   variables & constraints to be indexed by the number of the week in the year
+        virtual ~LinearProblemFiller() = default;
+    };
+}

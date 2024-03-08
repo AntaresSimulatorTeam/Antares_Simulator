@@ -113,6 +113,13 @@ averageResults OutputRetriever::overallCost(Area* area)
     return averageResults(result->avgdata);
 }
 
+averageResults OutputRetriever::unsupliedEnergy(Area* area)
+{
+    auto result = retrieveAreaResults<Variable::Economy::VCardUnsupliedEnergy>(area);
+    return averageResults(result->avgdata);
+}
+
+
 averageResults OutputRetriever::STSLevel_PSP_Open(Area* area)
 {
     auto result = retrieveAreaResults<Variable::Economy::VCardShortTermStorage>(area);

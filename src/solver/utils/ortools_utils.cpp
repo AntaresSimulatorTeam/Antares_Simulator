@@ -24,6 +24,7 @@
 #include <antares/exception/AssertionError.hpp>
 #include "antares/antares/Enum.hpp"
 #include <filesystem>
+#include "../optimisation/opt_global.h"
 
 using namespace operations_research;
 
@@ -68,6 +69,13 @@ MPSolver* ProblemSimplexeNommeConverter::Convert()
     MPSolver* solver = MPSolverFactory(problemeSimplexe_, solverName_);
     TuneSolverSpecificOptions(solver);
 
+    Fill(solver);
+
+    return solver;
+}
+
+void ProblemSimplexeNommeConverter::Fill(MPSolver* solver)
+{
     // Create the variables and set objective cost.
     CopyVariables(solver);
 
@@ -75,12 +83,6 @@ MPSolver* ProblemSimplexeNommeConverter::Convert()
     CopyRows(solver);
 
     CopyMatrix(solver);
-    if (problemeSimplexe_->SolverLogs())
-    {
-        solver->EnableOutput();
-    }
-
-    return solver;
 }
 
 void ProblemSimplexeNommeConverter::TuneSolverSpecificOptions(MPSolver* solver) const
@@ -97,6 +99,10 @@ void ProblemSimplexeNommeConverter::TuneSolverSpecificOptions(MPSolver* solver) 
     // Add solver-specific options here
     default:
         break;
+    }
+    if (problemeSimplexe_->SolverLogs())
+    {
+        solver->EnableOutput();
     }
 }
 
@@ -277,11 +283,10 @@ void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver,
     removeTemporaryFile(tmpPath);
 }
 
-bool solveAndManageStatus(MPSolver* solver, int& resultStatus, const MPSolverParameters& params)
+bool solveAndManageStatus(Antares::optim::api::LinearProblemBuilder& builder, int& resultStatus, const MPSolverParameters& params)
 {
-    auto status = solver->Solve(params);
-
-    if (status == MPSolver::OPTIMAL || status == MPSolver::FEASIBLE)
+    gMipSolution = builder.solve(params);
+    if (auto status = gMipSolution.getStatus(); status == MPSolver::OPTIMAL || status == MPSolver::FEASIBLE)
     {
         resultStatus = OUI_SPX;
     }
@@ -320,7 +325,8 @@ static void transferBasis(std::vector<operations_research::MPSolver::BasisStatus
 }
 
 MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
-                           MPSolver* solver,
+                           operations_research::MPSolver* solver,
+                           Antares::optim::api::LinearProblemBuilder& builder,
                            bool keepBasis)
 {
     MPSolverParameters params;
@@ -333,7 +339,7 @@ MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probl
                                    Probleme->StatutDesContraintes);
     }
 
-    if (solveAndManageStatus(solver, Probleme->ExistenceDUneSolution, params))
+    if (solveAndManageStatus(builder, Probleme->ExistenceDUneSolution, params))
     {
         extract_from_MPSolver(solver, Probleme);
         // Save the final simplex basis for next resolutions
@@ -343,7 +349,6 @@ MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probl
             transferBasis(Probleme->StatutDesContraintes, solver->constraints());
         }
     }
-
     return solver;
 }
 
@@ -439,10 +444,15 @@ std::string availableOrToolsSolversString()
 MPSolver* MPSolverFactory(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* probleme,
                           const std::string& solverName)
 {
+    return MPSolverFactory(probleme->isMIP(), solverName);
+}
+
+MPSolver *MPSolverFactory(bool isMip, const std::string &solverName)
+{
     MPSolver* solver;
     try
     {
-        if (probleme->isMIP())
+        if (isMip)
             solver = MPSolver::CreateSolver((OrtoolsUtils::solverMap.at(solverName)).MIPSolverName);
         else
             solver = MPSolver::CreateSolver((OrtoolsUtils::solverMap.at(solverName)).LPSolverName);
