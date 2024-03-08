@@ -37,7 +37,7 @@ static constexpr std::array nbThermalUnits =
                 500
        };
 
-BOOST_DATA_TEST_CASE(test_scaling_simple_problem, bdata::make(solverNames)*bdata::make(timestepNumbers)*bdata::make(nbThermalUnits), solverName, nTimesteps)
+BOOST_DATA_TEST_CASE(test_scaling_simple_problem, bdata::make(solverNames)*bdata::make(timestepNumbers)*bdata::make(nbThermalUnits), solverName, nTimesteps, nbUnits)
 {
     int timeResolution = 60;
 
@@ -67,8 +67,7 @@ BOOST_DATA_TEST_CASE(test_scaling_simple_problem, bdata::make(solverNames)*bdata
     // Create thermal production units
     // Every unit can produce up to 10 MW
     // Price is stable in time but increase for every unit
-    int nUnits = ceil(1.0 * (nTimesteps - 1) / 10.0);
-    for (int i = 1; i <= nUnits; ++i) {
+    for (int i = 1; i <= nbUnits; ++i) {
         string id = "thermal" + to_string(i);
         Component thermal(id, THERMAL, {{"maxP", 10}}, {});
         shared_ptr<ComponentFiller> thermalFiller = make_shared<ComponentFiller>(thermal, portConnectionsManager);
@@ -83,7 +82,7 @@ BOOST_DATA_TEST_CASE(test_scaling_simple_problem, bdata::make(solverNames)*bdata
     linearProblemBuilder.build(linearProblemData);
     auto solution = linearProblemBuilder.solve({});
 
-    for (int i = 1; i <= nUnits; ++i) {
+    for (int i = 1; i <= nbUnits; ++i) {
         string pVarNamePrefix  = "P_thermal" + to_string(i) + "_";
         vector<string> pVarNames;
         pVarNames.reserve(nTimesteps);
