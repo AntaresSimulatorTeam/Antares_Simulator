@@ -29,7 +29,15 @@ static constexpr std::array timestepNumbers =
                 4380 // 6 months
         };
 
-BOOST_DATA_TEST_CASE(test_scaling_simple_problem, bdata::make(solverNames)*bdata::make(timestepNumbers), solverName, nTimesteps)
+static constexpr std::array nbThermalUnits =
+       {
+                1,
+                10,
+                100,
+                500
+       };
+
+BOOST_DATA_TEST_CASE(test_scaling_simple_problem, bdata::make(solverNames)*bdata::make(timestepNumbers)*bdata::make(nbThermalUnits), solverName, nTimesteps)
 {
     int timeResolution = 60;
 
