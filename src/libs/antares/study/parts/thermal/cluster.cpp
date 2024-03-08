@@ -24,7 +24,6 @@
 
 #include <yuni/yuni.h>
 #include <yuni/io/file.h>
-#include <yuni/core/math.h>
 #include <cassert>
 #include <boost/algorithm/string/case_conv.hpp>
 #include "antares/study/study.h"
@@ -273,7 +272,7 @@ void Data::ThermalCluster::calculationOfSpinning()
 
     // Nothing to do if the spinning is equal to zero
     // because it will the same multiply all entries of the matrix by 1.
-    if (!Math::Zero(spinning))
+    if (!isZero(spinning))
     {
         logs.debug() << "  Calculation of spinning... " << parentArea->name << "::" << pName;
 
@@ -393,7 +392,7 @@ void Data::ThermalCluster::reverseCalculationOfSpinning()
 {
     // Nothing to do if the spinning is equal to zero
     // because it will the same multiply all entries of the matrix by 1.
-    if (!Math::Zero(spinning))
+    if (!isZero(spinning))
     {
         logs.debug() << "  Calculation of spinning (reverse)... " << parentArea->name
                      << "::" << pName;
@@ -624,7 +623,7 @@ uint64_t ThermalCluster::memoryUsage() const
 void ThermalCluster::calculatMinDivModulation()
 {
     minDivModulation.value = (modulation[thermalModulationCapacity][0]
-                              / Math::Ceil(modulation[thermalModulationCapacity][0]));
+                              / std::ceil(modulation[thermalModulationCapacity][0]));
     minDivModulation.index = 0;
 
     for (uint t = 1; t < modulation.height; t++)
@@ -655,11 +654,11 @@ bool ThermalCluster::checkMinStablePower()
     // calculate nominalCapacityWithSpinning
     double nomCapacityWithSpinning = nominalCapacity * (1 - spinning / 101);
 
-    if (Math::Zero(1 - spinning / 101))
+    if (isZero(1 - spinning / 101))
         minDivModulation.border = .0;
     else
         minDivModulation.border
-          = Math::Min(nomCapacityWithSpinning, minStablePower) / nomCapacityWithSpinning;
+          = std::min(nomCapacityWithSpinning, minStablePower) / nomCapacityWithSpinning;
 
     if (minDivModulation.value < minDivModulation.border)
     {
@@ -715,7 +714,7 @@ double ThermalCluster::getOperatingCost(uint serieIndex, uint hourInTheYear) con
     }
     else
     {
-        const uint tsIndex = Math::Min(serieIndex, costsTimeSeries.size() - 1);
+        const uint tsIndex = std::min(serieIndex, (uint)costsTimeSeries.size() - 1);
         return costsTimeSeries[tsIndex].productionCostTs[hourInTheYear];
     }
 }
@@ -730,10 +729,10 @@ double ThermalCluster::getMarginalCost(uint serieIndex, uint hourInTheYear) cons
     }
     else
     {
-        const uint tsIndex = Math::Min(serieIndex, costsTimeSeries.size() - 1);
+        const uint tsIndex = std::min(serieIndex, (uint)costsTimeSeries.size() - 1);
         return costsTimeSeries[tsIndex].marginalCostTS[hourInTheYear] * mod;
     }
-    /* Math::Min is necessary in case Availability has e.g 10 TS and both FuelCost & Co2Cost have
+    /* std::min is necessary in case Availability has e.g 10 TS and both FuelCost & Co2Cost have
      only 1TS. Then - > In order to save memory marginalCostTS vector has only one array
      inside -> that is used for all (e.g.10) TS*/
 }
@@ -750,7 +749,7 @@ double ThermalCluster::getMarketBidCost(uint hourInTheYear, uint year) const
     }
     else
     {
-        const uint tsIndex = Math::Min(serieIndex, costsTimeSeries.size() - 1);
+        const uint tsIndex = std::min(serieIndex, (uint)costsTimeSeries.size() - 1);
         return costsTimeSeries[tsIndex].marketBidCostTS[hourInTheYear] * mod;
     }
 }

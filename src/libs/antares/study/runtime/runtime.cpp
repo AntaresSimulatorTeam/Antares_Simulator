@@ -23,6 +23,7 @@
 #include "antares/antares/fatal-error.h"
 
 #include "antares/study/area/scratchpad.h"
+#include <antares/utils/utils.h>
 
 using namespace Yuni;
 
@@ -51,7 +52,7 @@ static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos&
             double nE, nS;
             for (uint i = 0; i != 12; ++i)
             {
-                if (!Math::Zero(e[i]))
+                if (!isZero(e[i]))
                 {
                     // E' = ln(e) - 0.5 * ln(1 + (s*s) / (e*e))
                     // S' = sqrt(ln(1 + (s*s) / (e*e)))
