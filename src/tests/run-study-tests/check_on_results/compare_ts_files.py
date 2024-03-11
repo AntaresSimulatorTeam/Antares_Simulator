@@ -34,7 +34,7 @@ class compare_ts_files(check_interface):
         ts_files = list(self.dated_output_folder.glob('**/*.txt'))
         assert ts_files
 
-        list_of_pairs = [(ts_ref, ts) for ts_ref in ref_ts_files for ts in ts_files if ts_ref.name == ts.name]
+        list_of_pairs = [(ts_ref, ts) for ts_ref in ref_ts_files for ts in ts_files if ts_ref.name == ts.name and ts_ref.parent == ts.parent]
         for pair in list_of_pairs:
             print(pair[0], file=sys.stderr)
             print(pair[1], file=sys.stderr)
