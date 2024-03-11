@@ -28,6 +28,8 @@
 #define ANTARES_MATRIX_SNPRINTF snprintf
 #endif
 
+#include <antares/utils/utils.h>
+
 namespace Antares
 {
 namespace // anonymous
@@ -37,7 +39,7 @@ struct MatrixScalar
 {
     static inline void Append(std::string& file, T v, const char* const)
     {
-        if (v == 0)
+        if (Utils::isZero(v))
             file.append(std::to_string(0));
         else
             file.append(std::to_string(v));
@@ -49,7 +51,7 @@ struct MatrixScalar<double>
 {
     static void Append(std::string& file, double v, const char* const format)
     {
-        if (v == 0)
+        if (Utils::isZero(v))
         {
             file += '0';
         }
@@ -74,7 +76,7 @@ struct MatrixScalar<float>
 {
     static void Append(std::string& file, float v, const char* const format)
     {
-        if (v == 0)
+        if (Utils::isZero(v))
         {
             file += '0';
         }
