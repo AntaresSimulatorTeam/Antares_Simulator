@@ -76,7 +76,7 @@ def create_mps_compare(study_path):
     return compare_mps_files(study_path)
 
 # --------------------------------------
-# ts_generation object creation
+# ts_compare object creation
 # --------------------------------------
 def create_ts_compare(study_path):
     return compare_ts_files(study_path)

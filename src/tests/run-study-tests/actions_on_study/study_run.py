@@ -3,8 +3,10 @@ import os
 from pathlib import Path
 from utils.assertions import check
 
+import sys
+
 class study_run:
-    def __init__(self, study_path, solver_path, use_ortools, ortools_solver, named_mps_problems, parallel):
+    def __init__(self, study_path, solver_path, use_ortools, ortools_solver, named_mps_problems, parallel, ts_generator):
         self.study_path = study_path
         self.solver_path = solver_path
         self.use_ortools = use_ortools
@@ -36,7 +38,7 @@ class study_run:
             clusterToGenFile = open(self.study_path / "clustersToGen.txt", 'r')
             line = clusterToGenFile.readline().rstrip() # remove new line char
             clusterToGenFile.close()
-            command.append('--thermal=' + line)
+            command = [solver_full_path, str(self.study_path), '--thermal=' + line]
 
         process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
         process.communicate()
