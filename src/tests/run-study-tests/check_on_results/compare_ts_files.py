@@ -25,8 +25,6 @@ class compare_ts_files(check_interface):
 
     def run(self):
         self.find_folders_to_compare()
-        print(self.ref_folder, file=sys.stderr)
-        print(self.dated_output_folder, file=sys.stderr)
 
         ref_ts_files = list(self.ref_folder.glob('**/*.txt'))
         assert ref_ts_files
@@ -36,8 +34,6 @@ class compare_ts_files(check_interface):
 
         list_of_pairs = [(ts_ref, ts) for ts_ref in ref_ts_files for ts in ts_files if ts_ref.name == ts.name and ts_ref.parent == ts.parent]
         for pair in list_of_pairs:
-            print(pair[0], file=sys.stderr)
-            print(pair[1], file=sys.stderr)
             ref_content = open(pair[0]).read()
             output_content = open(pair[1]).read()
             check(ref_content == output_content, f"Difference between files {pair[0]} and {pair[1]}")
