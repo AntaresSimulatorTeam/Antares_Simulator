@@ -150,7 +150,7 @@ public:
 };
 
 
-template<unsigned A = 0, bool B = false>
+template<unsigned A, bool B>
 Yuni::CString<A, B> trunc(Yuni::CString<A, B>& str)
 {
     return str;

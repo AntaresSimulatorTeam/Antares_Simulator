@@ -40,7 +40,7 @@ inline void MersenneTwister::reset()
 
 inline typename MersenneTwister::Value MersenneTwister::operator()()
 {
-    return (this)->next();
+    return this->next();
 }
 } // namespace Antares
 
