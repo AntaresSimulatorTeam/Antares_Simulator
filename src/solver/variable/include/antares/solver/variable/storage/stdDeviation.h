@@ -202,42 +202,42 @@ private:
         double* target = report.values[report.data.columnIndex];
         // A mere copy
 
-        auto square = [](double d) { return d >= 0 ? std::sqrt(d) : 0.; };
+        auto squareRootChecked = [](double d) { return d >= 0 ? std::sqrt(d) : 0.; };
 
         switch (PrecisionT)
         {
         case Category::hourly:
         {
             for (unsigned int i = 0; i != Size; ++i)
-                target[i] = square(
+                target[i] = squareRootChecked(
                   array[i] - results.avgdata.hourly[i] * results.avgdata.hourly[i]);
         }
         break;
         case Category::daily:
         {
             for (unsigned int i = 0; i != Size; ++i)
-                target[i] = square(
+                target[i] = squareRootChecked(
                   array[i] - results.avgdata.daily[i] * results.avgdata.daily[i]);
         }
         break;
         case Category::weekly:
         {
             for (unsigned int i = 0; i != Size; ++i)
-                target[i] = square(
+                target[i] = squareRootChecked(
                   array[i] - results.avgdata.weekly[i] * results.avgdata.weekly[i]);
         }
         break;
         case Category::monthly:
         {
             for (unsigned int i = 0; i != Size; ++i)
-                target[i] = square(
+                target[i] = squareRootChecked(
                   array[i] - results.avgdata.monthly[i] * results.avgdata.monthly[i]);
         }
         break;
         case Category::annual:
         {
             const double d = *array - results.avgdata.allYears * results.avgdata.allYears;
-            *target = square(d);
+            *target = squareRootChecked(d);
         }
         break;
         }
