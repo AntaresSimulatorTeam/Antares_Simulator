@@ -109,10 +109,10 @@ std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintLoader::load(En
                              << "`: link not found";
                 continue;
             }
-            if (!isZero(w))
+            if (!Utils::isZero(w))
                 bc->weight(lnk, w);
 
-            if (!isZero(o))
+            if (!Utils::isZero(o))
                 bc->offset(lnk, o);
 
             continue;
@@ -138,10 +138,10 @@ std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintLoader::load(En
                              << "`: cluster not found";
                 continue;
             }
-            if (!isZero(w))
+            if (!Utils::isZero(w))
                 bc->weight(clstr, w);
 
-            if (!isZero(o))
+            if (!Utils::isZero(o))
                 bc->offset(clstr, o);
 
             continue;

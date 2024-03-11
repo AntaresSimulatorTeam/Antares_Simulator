@@ -560,7 +560,7 @@ bool ATSP::computeMonthlyCorrelations()
                 const auto& col = resultNDP[iZ];
                 for (uint jZ = iZ + 1; jZ < realAreaCount; ++jZ)
                 {
-                    if (!isZero(col[jZ]))
+                    if (!Utils::isZero(col[jZ]))
                     {
                         const uint j = mapping[jZ];
                         f << pArea[i]->name << '%' << pArea[j]->name << " = " << col[jZ] << '\n';
@@ -594,7 +594,7 @@ bool ATSP::computeMonthlyCorrelations()
                     const auto& col = CORR_MNP.entry[iZ];
                     for (uint jZ = iZ + 1; jZ < realAreaCount; ++jZ)
                     {
-                        if (!isZero(col[jZ]))
+                        if (!Utils::isZero(col[jZ]))
                         {
                             const uint j = mapping[jZ];
                             f << pArea[i]->name << '%' << pArea[j]->name << " = " << col[jZ]

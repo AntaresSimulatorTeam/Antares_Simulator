@@ -178,7 +178,7 @@ static inline void ExportCorrelationCoefficients(Study& study,
         auto& col = m.entry[x];
         for (uint y = 0; y < x; ++y)
         {
-            if (!isZero(col[y]))
+            if (!Utils::isZero(col[y]))
             {
                 file << from << '%' << study.areas.byIndex[y]->id << " = " << col[y] << '\n';
             }

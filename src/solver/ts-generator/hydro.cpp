@@ -181,7 +181,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, Solver::IResu
 
             double EnergieHydrauliqueTotaleMensuelle = 0;
 
-            if (!isZero(colExpectation[realmonth]))
+            if (!Utils::isZero(colExpectation[realmonth]))
             {
                 for (uint j = 0; j < i + 1; ++j)
                     EnergieHydrauliqueTotaleMensuelle += CHSKY[i][j] * NORM[j];
@@ -207,7 +207,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, Solver::IResu
             for (uint i = d; i < dend; i++)
                 SIP += area.hydro.inflowPattern[0][i];
 
-            if (isZero(SIP))
+            if (Utils::isZero(SIP))
             {
                 logs.fatal() << "Sum of monthly inflow patterns equals zero.";
                 return false;

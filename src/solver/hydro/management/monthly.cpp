@@ -48,7 +48,7 @@ static void CheckHydroAllocationProblem(Data::Area& area,
     bool error = false;
 
     double X = problem.Volume[11] - problem.Turbine[11] + problem.Apport[11];
-    if (!isZero(X - lvi))
+    if (!Utils::isZero(X - lvi))
     {
         logs.fatal() << area.id << ": hydro management: monthly: reservoir error";
         error = true;
@@ -105,7 +105,7 @@ double HydroManagement::prepareMonthlyTargetGenerations(Data::Area& area, TmpDat
             monthlyMaxDemand = data.MLE[realmonth];
     }
 
-    if (!isZero(monthlyMaxDemand))
+    if (!Utils::isZero(monthlyMaxDemand))
     {
         double coeff = 0.;
         for (uint realmonth = 0; realmonth != 12; ++realmonth)
@@ -115,7 +115,7 @@ double HydroManagement::prepareMonthlyTargetGenerations(Data::Area& area, TmpDat
                                  area.hydro.intermonthlyBreakdown);
         }
 
-        if (!isZero(coeff))
+        if (!Utils::isZero(coeff))
             coeff = total / coeff;
 
         for (uint realmonth = 0; realmonth != 12; ++realmonth)

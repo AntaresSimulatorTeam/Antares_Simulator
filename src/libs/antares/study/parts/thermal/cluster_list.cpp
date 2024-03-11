@@ -361,9 +361,9 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
             s->add("group", c->group());
         if (!c->enabled)
             s->add("enabled", "false");
-        if (!isZero(c->unitCount))
+        if (!Utils::isZero(c->unitCount))
             s->add("unitCount", c->unitCount);
-        if (!isZero(c->nominalCapacity))
+        if (!Utils::isZero(c->nominalCapacity))
             s->add("nominalCapacity", c->nominalCapacity);
         // TS generation
         if (c->tsGenBehavior != LocalTSGenerationBehavior::useGlobalParameter)
@@ -371,7 +371,7 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
             s->add("gen-ts", c->tsGenBehavior);
         }
         // Min. Stable Power
-        if (!isZero(c->minStablePower))
+        if (!Utils::isZero(c->minStablePower))
             s->add("min-stable-power", c->minStablePower);
 
         // Min up and min down time
@@ -385,7 +385,7 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
             s->add("must-run", "true");
 
         // spinning
-        if (!isZero(c->spinning))
+        if (!Utils::isZero(c->spinning))
             s->add("spinning", c->spinning);
 
         // efficiency
@@ -394,9 +394,9 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
 
         auto roundToThreeDecimal = [](double d) { return std::round(d * 1000.0) / 1000.0; };
         // volatility
-        if (!isZero(c->forcedVolatility))
+        if (!Utils::isZero(c->forcedVolatility))
             s->add("volatility.forced", roundToThreeDecimal(c->forcedVolatility));
-        if (!isZero(c->plannedVolatility))
+        if (!Utils::isZero(c->plannedVolatility))
             s->add("volatility.planned", roundToThreeDecimal(c->plannedVolatility));
 
         // laws
@@ -408,17 +408,17 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
         // costs
         if (c->costgeneration != setManually)
             s->add("costgeneration", c->costgeneration);
-        if (!isZero(c->marginalCost))
+        if (!Utils::isZero(c->marginalCost))
             s->add("marginal-cost", roundToThreeDecimal(c->marginalCost));
-        if (!isZero(c->spreadCost))
+        if (!Utils::isZero(c->spreadCost))
             s->add("spread-cost", c->spreadCost);
-        if (!isZero(c->fixedCost))
+        if (!Utils::isZero(c->fixedCost))
             s->add("fixed-cost", roundToThreeDecimal(c->fixedCost));
-        if (!isZero(c->startupCost))
+        if (!Utils::isZero(c->startupCost))
             s->add("startup-cost", roundToThreeDecimal(c->startupCost));
-        if (!isZero(c->marketBidCost))
+        if (!Utils::isZero(c->marketBidCost))
             s->add("market-bid-cost", roundToThreeDecimal(c->marketBidCost));
-        if (!isZero(c->variableomcost))
+        if (!Utils::isZero(c->variableomcost))
             s->add("variableomcost", roundToThreeDecimal(c->variableomcost));
 
 

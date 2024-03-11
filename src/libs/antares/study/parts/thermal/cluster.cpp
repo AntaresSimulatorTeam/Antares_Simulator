@@ -272,7 +272,7 @@ void Data::ThermalCluster::calculationOfSpinning()
 
     // Nothing to do if the spinning is equal to zero
     // because it will the same multiply all entries of the matrix by 1.
-    if (!isZero(spinning))
+    if (!Utils::isZero(spinning))
     {
         logs.debug() << "  Calculation of spinning... " << parentArea->name << "::" << pName;
 
@@ -392,7 +392,7 @@ void Data::ThermalCluster::reverseCalculationOfSpinning()
 {
     // Nothing to do if the spinning is equal to zero
     // because it will the same multiply all entries of the matrix by 1.
-    if (!isZero(spinning))
+    if (!Utils::isZero(spinning))
     {
         logs.debug() << "  Calculation of spinning (reverse)... " << parentArea->name
                      << "::" << pName;
@@ -654,7 +654,7 @@ bool ThermalCluster::checkMinStablePower()
     // calculate nominalCapacityWithSpinning
     double nomCapacityWithSpinning = nominalCapacity * (1 - spinning / 101);
 
-    if (isZero(1 - spinning / 101))
+    if (Utils::isZero(1 - spinning / 101))
         minDivModulation.border = .0;
     else
         minDivModulation.border

@@ -117,7 +117,7 @@ double HydroAllocation::fromArea(const AreaName& areaid) const
 void HydroAllocation::fromArea(const AreaName& areaid, double value)
 {
     assert(!pMustUseValuesFromAreaID);
-    if (isZero(value))
+    if (Utils::isZero(value))
     {
         auto i = pValues.find(areaid);
         if (i != pValues.end())
@@ -167,7 +167,7 @@ bool HydroAllocation::loadFromFile(const AreaName& referencearea, const AnyStrin
                 for (auto* p = section.firstProperty; p; p = p->next)
                 {
                     double coeff = p->value.to<double>();
-                    if (!isZero(coeff))
+                    if (!Utils::isZero(coeff))
                     {
                         areaname = p->key;
                         areaname.toLower();
@@ -200,7 +200,7 @@ bool HydroAllocation::saveToFile(const AnyString& filename) const
         for (auto i = pValues.begin(); i != end; ++i)
         {
             double v = i->second;
-            if (!isZero(v))
+            if (!Utils::isZero(v))
             {
                 str = v;
                 if (str.contains('.'))

@@ -319,7 +319,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
                         demandMax = data.DLE[dYear];
                 }
 
-                if (!isZero(demandMax))
+                if (!Utils::isZero(demandMax))
                 {
                     assert(std::abs(demandMax) > 1e-12);
                     double coeff = 0.;

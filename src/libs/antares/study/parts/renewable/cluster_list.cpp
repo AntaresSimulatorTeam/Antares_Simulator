@@ -73,10 +73,10 @@ bool RenewableClusterList::saveToFolder(const AnyString& folder) const
             if (!c->enabled)
                 s->add("enabled", "false");
 
-            if (!isZero(c->nominalCapacity))
+            if (!Utils::isZero(c->nominalCapacity))
                 s->add("nominalCapacity", c->nominalCapacity);
 
-            if (!isZero(c->unitCount))
+            if (!Utils::isZero(c->unitCount))
                 s->add("unitCount", c->unitCount);
 
             s->add("ts-interpretation", c->getTimeSeriesModeAsString());

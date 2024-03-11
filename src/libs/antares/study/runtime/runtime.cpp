@@ -52,7 +52,7 @@ static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos&
             double nE, nS;
             for (uint i = 0; i != 12; ++i)
             {
-                if (!isZero(e[i]))
+                if (!Utils::isZero(e[i]))
                 {
                     // E' = ln(e) - 0.5 * ln(1 + (s*s) / (e*e))
                     // S' = sqrt(ln(1 + (s*s) / (e*e)))

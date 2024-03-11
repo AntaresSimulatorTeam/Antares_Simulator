@@ -146,14 +146,14 @@ static bool AreaListSaveThermalDataToFile(const AreaList& list, const AnyString&
     IniFile::Section* s = ini.addSection("unserverdenergycost");
     list.each([&](const Data::Area& area) {
         // 0 values are skipped
-        if (!isZero(area.thermal.unsuppliedEnergyCost))
+        if (!Utils::isZero(area.thermal.unsuppliedEnergyCost))
             s->add(area.id, area.thermal.unsuppliedEnergyCost);
     });
 
     s = ini.addSection("spilledenergycost");
     list.each([&](const Data::Area& area) {
         // 0 values are skipped
-        if (!isZero(area.thermal.spilledEnergyCost))
+        if (!Utils::isZero(area.thermal.spilledEnergyCost))
             s->add(area.id, area.thermal.spilledEnergyCost);
     });
 

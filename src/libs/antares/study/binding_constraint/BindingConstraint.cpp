@@ -143,7 +143,7 @@ void BindingConstraint::weight(const AreaLink* lnk, double w)
 {
     if (lnk)
     {
-        if (isZero(w))
+        if (Utils::isZero(w))
         {
             auto i = pLinkWeights.find(lnk);
             if (i != pLinkWeights.end())
@@ -159,7 +159,7 @@ void BindingConstraint::weight(const ThermalCluster* cluster, double w)
 {
     if (cluster && cluster->isActive())
     {
-        if (isZero(w))
+        if (Utils::isZero(w))
         {
             auto i = pClusterWeights.find(cluster);
             if (i != pClusterWeights.end())
@@ -180,7 +180,7 @@ void BindingConstraint::offset(const AreaLink* lnk, int o)
 {
     if (lnk)
     {
-        if (isZero(o))
+        if (Utils::isZero(o))
         {
             auto i = pLinkOffsets.find(lnk);
             if (i != pLinkOffsets.end())
@@ -195,7 +195,7 @@ void BindingConstraint::offset(const ThermalCluster* cluster, int o)
 {
     if (cluster && cluster->isActive())
     {
-        if (isZero(o))
+        if (Utils::isZero(o))
         {
             auto i = pClusterOffsets.find(cluster);
             if (i != pClusterOffsets.end())

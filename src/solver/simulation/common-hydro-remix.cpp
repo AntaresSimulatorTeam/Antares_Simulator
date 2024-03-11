@@ -95,7 +95,7 @@ static bool Remix(const Data::AreaList& areas, PROBLEME_HEBDO& problem, uint num
             for (uint i = offset; i < endHour; ++i)
             {
                 double h_d = H[i] + D[i];
-                if (h_d > 0. && isZero(S[i] + M[i]))
+                if (h_d > 0. && Utils::isZero(S[i] + M[i]))
                 {
                     double Li = L[i + hourInYear];
 

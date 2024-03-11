@@ -145,7 +145,7 @@ bool XCast::generateValuesForTheCurrentDay()
                 for (uint t = 0; t < s; ++t)
                 {
                     x = T[s] * T[t] * STDE[s] * STDE[t];
-                    if (isZero(x))
+                    if (Utils::isZero(x))
                         CORR[s][t] = 0.f;
                     else
                     {
@@ -183,7 +183,7 @@ bool XCast::generateValuesForTheCurrentDay()
                 {
                     x = T[s] * T[t] * STDE[s] * STDE[t];
                     float z = D_COPIE[t] * STDE[s];
-                    if (isZero(x))
+                    if (Utils::isZero(x))
                         CORR[s][t] = 0.f;
                     else
                     {
@@ -371,7 +371,7 @@ bool XCast::generateValuesForTheCurrentDay()
                         auto& userMonthlyCorr = pCorrMonth->column(s);
                         for (uint t = 0; t < s; ++t)
                         {
-                            if (isZero(DIFF[s]) || isZero(DIFF[t]))
+                            if (Utils::isZero(DIFF[s]) || Utils::isZero(DIFF[t]))
                                 corr_s[t] = 0;
                             else
                             {

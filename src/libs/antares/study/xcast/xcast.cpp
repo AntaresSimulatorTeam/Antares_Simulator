@@ -358,7 +358,7 @@ bool XCast::saveToFolder(const AnyString& folder) const
     IniFile::Section* s = ini.addSection("general");
     if (distribution != dtBeta)
         s->add("distribution", DistributionToNameID(distribution));
-    if (!isZero(capacity))
+    if (!Utils::isZero(capacity))
         s->add("capacity", capacity);
     if (useConversion)
         s->add("conversion", useConversion);

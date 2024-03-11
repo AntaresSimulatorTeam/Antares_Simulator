@@ -748,7 +748,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                         {
                             if (not area.hydro.hardBoundsOnRuleCurves)
                             {
-                                if (isZero(WGU))
+                                if (Utils::isZero(WGU))
                                     DGU[j] = 0.;
                                 else
                                     DGU[j] = DGU_tmp[j] * std::min(WGU, WSL + WNI) / WGU;
@@ -761,7 +761,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                                 auto& minLvl = area.hydro.reservoirLevel[Data::PartHydro::minimum];
                                 double V = std::max(0., WSL - minLvl[nextWeekFirstDay] * rc + WNI);
 
-                                if (isZero(WGU))
+                                if (Utils::isZero(WGU))
                                     DGU[j] = 0.;
                                 else
                                     DGU[j] = DGU_tmp[j] * std::min(WGU, V) / WGU;
@@ -887,7 +887,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                                 {
                                     double V = std::max(0., rc - (WNI + WSL));
 
-                                    if (isZero(U))
+                                    if (Utils::isZero(U))
                                         DPU[j] = 0.;
                                     else
                                         DPU[j] = DPC * DPM * std::min(U, V) / U;
@@ -903,7 +903,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                                     double V
                                       = std::max(0., maxLvl[nextWeekFirstDay] * rc - (WNI + WSL));
 
-                                    if (isZero(U))
+                                    if (Utils::isZero(U))
                                         DPU[j] = 0.;
                                     else
                                         DPU[j] = DPC * DPM * std::min(U, V) / U;
