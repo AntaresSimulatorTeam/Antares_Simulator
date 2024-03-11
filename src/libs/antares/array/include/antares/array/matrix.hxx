@@ -149,13 +149,26 @@ public:
     }
 };
 
+
+template<unsigned A = 0, bool B = false>
+Yuni::CString<A, B> trunc(Yuni::CString<A, B>& str)
+{
+    return str;
+}
+
+template<class T>
+static T trunc(T& in)
+{
+    return static_cast<T>(std::trunc(in));
+}
+
 template<class T, class P>
 class MatrixRound final
 {
 public:
     static T Value(P value)
     {
-        return static_cast<T>(Yuni::Math::Trunc(value));
+        return static_cast<T>(trunc(value));
     }
 };
 

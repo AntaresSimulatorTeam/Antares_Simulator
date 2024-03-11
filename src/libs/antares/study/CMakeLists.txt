@@ -292,7 +292,6 @@ target_link_libraries(study
         PUBLIC
         Boost::boost
         yuni-static-core
-        Antares::array #xcast
         Antares::date #parameters
         Antares::inifile #parameters
         Antares::stdcxx #enum.hxx
