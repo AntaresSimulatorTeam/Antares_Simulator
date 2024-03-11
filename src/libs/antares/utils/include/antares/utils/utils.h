@@ -52,6 +52,8 @@ namespace Utils
 
 bool isZero(double d);
 
+double round(double d, unsigned precision);
+
 } // namespace Utils
 } // namespace Antares
 
