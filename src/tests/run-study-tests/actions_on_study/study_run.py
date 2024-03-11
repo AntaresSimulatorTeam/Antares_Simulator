@@ -11,6 +11,7 @@ class study_run:
         self.ortools_solver = ortools_solver
         self.named_mps_problems = named_mps_problems
         self.parallel = parallel
+        self.ts_generator = ts_generator
         self.raise_exception_on_failure = True
         self.return_code = 0
 
@@ -30,6 +31,13 @@ class study_run:
             command.append('--named-mps-problems')
         if self.parallel:
             command.append('--force-parallel=4')
+
+        if self.ts_generator:
+            clusterToGenFile = open(self.study_path / "clustersToGen.txt", 'r')
+            line = clusterToGenFile.readline().rstrip() # remove new line char
+            clusterToGenFile.close()
+            command.append('--thermal=' + line)
+
         process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
         process.communicate()
 

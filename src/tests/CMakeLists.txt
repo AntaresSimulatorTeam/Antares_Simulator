@@ -77,18 +77,18 @@ if(Python3_Interpreter_FOUND)
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/run-study-tests"
         )
 
+      add_test(
+        NAME ts-generator
+        COMMAND Python3::Interpreter -m pytest -m ts-generator --solver-path=$<TARGET_FILE:antares-ts-generator> --ts-generator
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/run-study-tests"
+        )
+
 # The Kirchhoff constraint builder is built only if BUILD_TOOLS=ON
 if (BUILD_TOOLS)
       add_test(
         NAME kirchhoff
         COMMAND Python3::Interpreter -m pytest -m kirchhoff --exe_kirchhoff_path=$<TARGET_FILE:antares-kirchhoff-constraints-builder> kirchhoff_pytest.py
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/kirchhoff-cbuilder"
-        )
-
-      add_test(
-        NAME tsgenerator
-        COMMAND Python3::Interpreter -m pytest -m tsgenerator --exe_tsgenerator_path=$<TARGET_FILE:antares-ts-generator> ts-generator/ts-generator.py
-        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/run-study-tests"
         )
 
 endif()

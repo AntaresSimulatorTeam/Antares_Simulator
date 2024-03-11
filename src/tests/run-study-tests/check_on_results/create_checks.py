@@ -4,6 +4,7 @@ from check_on_results.integrity_compare import integrity_compare
 from check_on_results.check_hydro_level import check_hydro_level
 from check_on_results.unfeasible_problem import unfeasible_problem, weeks_in_year
 from check_on_results.compare_mps_files import compare_mps_files
+from check_on_results.compare_ts_files import compare_ts_files
 from check_on_results.tolerances import get_tolerances
 
 
@@ -19,6 +20,8 @@ def create_checks(study_path, checks_data = {}, simulation = None):
         checks.add(create_unfeasible_problem(study_path, checks_data["unfeasible_problem"], simulation))
     if "mps_compare" in checks_data:
         checks.add(create_mps_compare(study_path))
+    if "ts_compare" in checks_data:
+        checks.add(create_ts_compare(study_path))
 
     return checks
 
@@ -72,3 +75,8 @@ def make_list_of_weeks(weeks_in_year_data):
 def create_mps_compare(study_path):
     return compare_mps_files(study_path)
 
+# --------------------------------------
+# ts_generation object creation
+# --------------------------------------
+def create_ts_compare(study_path):
+    return compare_ts_files(study_path)
