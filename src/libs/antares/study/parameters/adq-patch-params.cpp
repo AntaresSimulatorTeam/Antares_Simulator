@@ -115,7 +115,7 @@ bool CurtailmentSharing::updateFromKeyValue(const Yuni::String& key, const Yuni:
     if (key == "threshold-csr-variable-bounds-relaxation")
         return value.to<int>(thresholdVarBoundsRelaxation);
     if (key == "recompute-dtg-mrg")
-        return value.to<int>(recomputeDTGMRG);
+        return value.to<bool>(recomputeDTGMRG);
     return false;
 }
 
