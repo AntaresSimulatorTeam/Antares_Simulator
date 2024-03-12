@@ -55,7 +55,7 @@ void DispatchableMarginPostProcessCmd::execute(const optRuntimeData& opt_runtime
             for (uint h = 0; h != nbHoursInWeek; ++h)
             {
                 double production = hourlyResults.ProductionThermique[h]
-                                        .ProductionThermiqueDuPalier[cluster->index];
+                                      .ProductionThermiqueDuPalier[cluster->index];
                 dtgmrg[h] += availableProduction[h + hourInYear] - production;
             }
         }
@@ -114,10 +114,14 @@ void RemixHydroPostProcessCmd::execute(const optRuntimeData& opt_runtime_data)
 using namespace Antares::Data::AdequacyPatch;
 
 DTGmarginForAdqPatchPostProcessCmd::DTGmarginForAdqPatchPostProcessCmd(
+  const AdqPatchParams& adqPatchParams,
   PROBLEME_HEBDO* problemeHebdo,
   AreaList& areas,
   unsigned int thread_number) :
- basePostProcessCommand(problemeHebdo), area_list_(areas), thread_number_(thread_number)
+ basePostProcessCommand(problemeHebdo),
+ adqPatchParams_(adqPatchParams),
+ area_list_(areas),
+ thread_number_(thread_number)
 {
 }
 
@@ -145,6 +149,11 @@ void DTGmarginForAdqPatchPostProcessCmd::execute(const optRuntimeData&)
             // calculate DTG MRG CSR and adjust ENS if neccessary
             if (problemeHebdo_->adequacyPatchRuntimeData->wasCSRTriggeredAtAreaHour(Area, hour))
             {
+                if (adqPatchParams_.curtailmentSharing.recomputeDTGMRG)
+                {
+                    dtgMrgCsr = std::max(0.0, dtgMrg - ens);
+                    ens = std::max(0.0, ens - dtgMrg);
+                }
                 // set MRG PRICE to value of unsupplied energy cost, if LOLD=1.0 (ENS>0.5)
                 if (ens > 0.5)
                     mrgCost = -area_list_[Area]->thermal.unsuppliedEnergyCost;
@@ -192,14 +201,15 @@ void HydroLevelsFinalUpdatePostProcessCmd::execute(const optRuntimeData&)
 // --------------------------------------
 //  Curtailment sharing for adq patch
 // --------------------------------------
-CurtailmentSharingPostProcessCmd::CurtailmentSharingPostProcessCmd(const AdqPatchParams& adqPatchParams,
-                                                                   PROBLEME_HEBDO* problemeHebdo,
-                                                                   AreaList& areas,
-                                                                   unsigned int thread_number) :
-    basePostProcessCommand(problemeHebdo),
-    area_list_(areas), 
-    adqPatchParams_(adqPatchParams),
-    thread_number_(thread_number)
+CurtailmentSharingPostProcessCmd::CurtailmentSharingPostProcessCmd(
+  const AdqPatchParams& adqPatchParams,
+  PROBLEME_HEBDO* problemeHebdo,
+  AreaList& areas,
+  unsigned int thread_number) :
+ basePostProcessCommand(problemeHebdo),
+ area_list_(areas),
+ adqPatchParams_(adqPatchParams),
+ thread_number_(thread_number)
 {
 }
 
@@ -232,11 +242,11 @@ double CurtailmentSharingPostProcessCmd::calculateDensNewAndTotalLmrViolation()
         {
             for (uint hour = 0; hour < nbHoursInWeek; hour++)
             {
-                const auto [netPositionInit, densNew, totalNodeBalance]
-                    = calculateAreaFlowBalance(problemeHebdo_, 
-                                               adqPatchParams_.localMatching.setToZeroOutsideInsideLinks, 
-                                               Area,
-                                               hour);
+                const auto [netPositionInit, densNew, totalNodeBalance] = calculateAreaFlowBalance(
+                  problemeHebdo_,
+                  adqPatchParams_.localMatching.setToZeroOutsideInsideLinks,
+                  Area,
+                  hour);
                 // adjust densNew according to the new specification/request by ELIA
                 /* DENS_new (node A) = max [ 0; ENS_init (node A) + net_position_init (node A)
                                         + ? flows (node 1 -> node A) - DTG.MRG(node A)] */
@@ -252,10 +262,11 @@ double CurtailmentSharingPostProcessCmd::calculateDensNewAndTotalLmrViolation()
                       .ValeursHorairesDeDefaillanceNegative[hour];
                 // check LMR violations
                 totalLmrViolation += LmrViolationAreaHour(
-                            problemeHebdo_,
-                            totalNodeBalance, 
-                            adqPatchParams_.curtailmentSharing.thresholdDisplayViolations,
-                            Area, hour);
+                  problemeHebdo_,
+                  totalNodeBalance,
+                  adqPatchParams_.curtailmentSharing.thresholdDisplayViolations,
+                  Area,
+                  hour);
             }
         }
     }
