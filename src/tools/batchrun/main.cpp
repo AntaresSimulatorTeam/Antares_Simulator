@@ -293,7 +293,7 @@ int main(int argc, char* argv[])
             if (optForceParallel)
                 cmd << " --force-parallel=" << *optForceParallel;
 	    if (ortoolsUsed)
- 	        cmd << " --ortools-solver=" << ortoolsSolver;
+ 	        cmd << "--use-ortools --ortools-solver=" << ortoolsSolver;
 
             cmd << " \"" << studypath << "\"";
             if (!optVerbose)
