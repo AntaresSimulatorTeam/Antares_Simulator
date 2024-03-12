@@ -1,5 +1,5 @@
 
-
+find_package(yaml-cpp CONFIG REQUIRED)
 Set(SRCS main.cpp
 )
 
@@ -10,4 +10,4 @@ add_executable(${execname}  ${SRCS})
 #         DESTINATION cmake
 # )
 
-target_link_libraries(${execname} PUBLIC yaml-cpp::yaml-cpp) # The library or executable that require yaml-cpp library
+target_link_libraries(${execname} PUBLIC yaml-cpp) # The library or executable that require yaml-cpp library
