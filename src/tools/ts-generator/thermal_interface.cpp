@@ -18,46 +18,20 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-# pragma once
 
-#include <array>
-
-#include <antares/study/parts/thermal/cluster.h>
+#include <antares/ts-generator/thermal_interface.h>
 
 namespace Antares::TsGenerator
 {
 
-class preproVector
-{
-public:
-    preproVector() : mVec(8760) {}
-    double& operator[](std::size_t idx) { return mVec[idx];}
-
-private:
-    std::vector<double> mVec;
-};
-
-struct thermalInterface
-{
-    preproVector foDuration;
-    preproVector poDuration;
-    preproVector foRate;
-    preproVector poRate;
-    preproVector npoMin;
-    preproVector npoMax;
-
-    unsigned unitCount;
-    float nominalCapacity;
-
-    double forcedVolatility;
-    double plannedVolatility;
-
-    Data::ThermalLaw forcedLaw = Data::thermalLawUniform;
-    Data::ThermalLaw plannedLaw = Data::thermalLawUniform;
-
-};
-
 template<class T>
-std::vector<thermalInterface> convertToInterface(T list);
+std::vector<thermalInterface> convertToInterface(T list)
+{
+    std::vector<thermalInterface> clusters;
+    clusters.resize(list.size());
+
+    return clusters;
+}
+
 
 } // namespace Antares::TsGenerator
