@@ -10,7 +10,6 @@
 #include "../include/simple/Thermal.h"
 #include "../include/simple/Balance.h"
 #include "../include/simple/ProductionPriceMinimization.h"
-#include "../include/standard/PortConnection.h"
 
 namespace tt = boost::test_tools;
 namespace bdata = boost::unit_test::data;

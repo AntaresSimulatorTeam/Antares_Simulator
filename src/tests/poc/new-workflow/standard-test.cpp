@@ -6,11 +6,13 @@
 #include <boost/test/data/dataset.hpp>
 #include "antares/optim/api/LinearProblemBuilder.h"
 #include "antares/optim/impl/LinearProblemImpl.h"
-#include "../include/standard/ComponentFiller.h"
+#include "antares/optim/standard_api/ComponentFiller.h"
 
 namespace tt = boost::test_tools;
 namespace bdata = boost::unit_test::data;
 using namespace Antares::optim::api;
+using namespace Antares::optim::standard_api;
+using namespace std;
 
 static constexpr std::array solverNames =
         {
