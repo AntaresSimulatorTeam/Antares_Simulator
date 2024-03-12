@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2007-2024, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
@@ -19,18 +20,9 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#define BOOST_TEST_MODULE test api
-#define BOOST_TEST_DYN_LINK
+#pragma once
+#include "SimulationResults.h"
 
-#define WIN32_LEAN_AND_MEAN
-
-#include <boost/test/unit_test.hpp>
-#include "antares/api/solver.h"
-#include "antares/api/SimulationResults.h"
-
-BOOST_AUTO_TEST_CASE(simulation_path_points_to_results)
-{
-    const Antares::API::SimulationResults results{Antares::API::PerformSimulation()};
-
-    BOOST_CHECK(!results.simulationPath.empty());
+namespace Antares::API {
+    SimulationResults PerformSimulation();
 }
