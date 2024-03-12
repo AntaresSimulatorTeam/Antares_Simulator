@@ -34,6 +34,8 @@
 #include <antares/writer/result_format.h>
 #include <antares/checks/checkLoadedInputData.h>
 
+#include <antares/ts-generator/thermal_interface.h>
+
 
 using namespace Antares;
 
