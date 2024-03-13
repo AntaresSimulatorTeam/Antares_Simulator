@@ -101,7 +101,6 @@ void Application::handleOptions(const Data::StudyLoadOptions& options)
 
 void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
 {
-    processCaption(Yuni::String() << "antares: loading \"" << pSettings.studyFolder << "\"");
     auto& study = *pStudy;
 
     // Name of the simulation
@@ -267,9 +266,6 @@ void Application::startSimulation(Data::StudyLoadOptions& options)
 
 void Application::prepare(int argc, char* argv[])
 {
-    pArgc = argc;
-    pArgv = argv;
-
     // Load the local policy settings
     LocalPolicy::Open();
     LocalPolicy::CheckRootPrefix(argv[0]);
