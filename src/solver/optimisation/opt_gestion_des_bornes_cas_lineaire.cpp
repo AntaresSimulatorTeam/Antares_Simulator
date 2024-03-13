@@ -241,16 +241,16 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
             AdequacyPatch::setNTCbounds(
               Xmax[var], Xmin[var], ValeursDeNTC, interco, problemeHebdo, adqPatchParams);
 
-            if (std::isinf(Xmax[var]))
+            if (std::isinf(Xmax[var]) && Xmax[var] > 0)
             {
-                if (std::isinf(Xmin[var]))
+                if (std::isinf(Xmin[var]) && Xmin[var] > 0)
                     TypeDeVariable[var] = VARIABLE_NON_BORNEE;
                 else
                     TypeDeVariable[var] = VARIABLE_BORNEE_INFERIEUREMENT;
             }
             else
             {
-                if (std::isinf(Xmin[var]))
+                if (std::isinf(Xmin[var]) && Xmin[var] < 0)
                     TypeDeVariable[var] = VARIABLE_BORNEE_SUPERIEUREMENT;
                 else
                     TypeDeVariable[var] = VARIABLE_BORNEE_DES_DEUX_COTES;
@@ -276,7 +276,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
 
                 Xmax[var] += 0.01;
                 TypeDeVariable[var] = VARIABLE_BORNEE_DES_DEUX_COTES;
-                if (std::isinf(Xmax[var]))
+                if (std::isinf(Xmax[var]) && Xmax[var] > 0)
                 {
                     TypeDeVariable[var] = VARIABLE_BORNEE_INFERIEUREMENT;
                 }
@@ -293,7 +293,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
 
                 Xmax[var] += 0.01;
                 TypeDeVariable[var] = VARIABLE_BORNEE_DES_DEUX_COTES;
-                if (std::isinf(Xmax[var]))
+                if (std::isinf(Xmax[var]) && Xmax[var] > 0)
                 {
                     TypeDeVariable[var] = VARIABLE_BORNEE_INFERIEUREMENT;
                 }
