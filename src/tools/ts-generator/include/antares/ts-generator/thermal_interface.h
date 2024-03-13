@@ -27,29 +27,12 @@
 namespace Antares::TsGenerator
 {
 
-class preproVector
-{
-public:
-    preproVector() : mVec(8760) {}
-    double& operator[](std::size_t idx) { return mVec[idx];}
-
-private:
-    std::vector<double> mVec;
-};
-
 class ThermalInterface
 {
 public:
 
     template<class T>
     ThermalInterface(T& source);
-
-    preproVector foDuration;
-    preproVector poDuration;
-    preproVector foRate;
-    preproVector poRate;
-    preproVector npoMin;
-    preproVector npoMax;
 
     const unsigned &unitCount;
     const double &nominalCapacity;
@@ -59,6 +42,8 @@ public:
 
     Data::ThermalLaw& forcedLaw;
     Data::ThermalLaw& plannedLaw;
+
+    Data::PreproThermal* prepro;
 };
 
 template<class T>
@@ -68,7 +53,8 @@ ThermalInterface::ThermalInterface(T& source) :
     forcedVolatility(source->forcedVolatility),
     plannedVolatility(source->plannedVolatility),
     forcedLaw(source->forcedLaw),
-    plannedLaw(source->plannedLaw)
+    plannedLaw(source->plannedLaw),
+    prepro(source->prepro)
 {}
 
 } // namespace Antares::TsGenerator
