@@ -1011,7 +1011,7 @@ void Component::onLoadMatrix(void*)
         // Force a refresh
         forceRefresh();
         // Last opened file
-        IO::parentPath(LastPathForOpeningAFile, stdFilename);
+        IO::parent_path(LastPathForOpeningAFile, stdFilename);
 
         if (pInternal->shouldMarkStudyModifiedWhenModifyingCell)
             MarkTheStudyAsModified();
@@ -1067,7 +1067,7 @@ void Component::onSaveMatrix(void*)
         // Exporting the matrix
         m.saveToCSVFile(stdFilename);
         // Last opened file
-        IO::parentPath(LastPathForOpeningAFile, stdFilename);
+        IO::parent_path(LastPathForOpeningAFile, stdFilename);
     }
     else
         dialog->Destroy();

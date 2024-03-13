@@ -60,7 +60,7 @@ int main(int argc, char* argv[])
     }
 
     String targetFolder;
-    IO::parentPath(targetFolder, targetfile);
+    IO::parent_path(targetFolder, targetfile);
 
     String tmplcontent;
 

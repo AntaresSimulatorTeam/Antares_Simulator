@@ -42,7 +42,6 @@
 #include <antares/infoCollection/StudyInfoCollector.h>
 
 #include <yuni/datetime/timestamp.h>
-#include <yuni/core/process/rename.h>
 
 
 #include "antares/study/simulation.h"
@@ -102,7 +101,6 @@ void Application::handleOptions(const Data::StudyLoadOptions& options)
 
 void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
 {
-    processCaption(Yuni::String() << "antares: loading \"" << pSettings.studyFolder << "\"");
     auto& study = *pStudy;
 
     // Name of the simulation
@@ -268,9 +266,6 @@ void Application::startSimulation(Data::StudyLoadOptions& options)
 
 void Application::prepare(int argc, char* argv[])
 {
-    pArgc = argc;
-    pArgv = argv;
-
     // Load the local policy settings
     LocalPolicy::Open();
     LocalPolicy::CheckRootPrefix(argv[0]);
@@ -328,8 +323,6 @@ void Application::execute()
     if (!pStudy)
         return;
 
-    processCaption(Yuni::String() << "antares: running \"" << pStudy->header.caption << "\"");
-
     SystemMemoryLogger memoryReport;
     memoryReport.interval(1000 * 60 * 5); // 5 minutes
     memoryReport.start();
@@ -383,11 +376,6 @@ void Application::resetLogFilename() const
     {
         throw FatalError(std::string("Impossible to create the log file at ") + logfile.c_str());
     }
-}
-
-void Application::processCaption(const Yuni::String& caption)
-{
-    pArgv = Yuni::Process::Rename(pArgc, pArgv, caption);
 }
 
 void Application::prepareWriter(const Antares::Data::Study& study,
