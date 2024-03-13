@@ -125,7 +125,12 @@ jobs:
       run: |
           git submodule update --init src/antares-deps
           git submodule update --init --remote --recursive src/tests/resources/Antares_Simulator_Tests
-
+    
+    - name: export wxWidgets script
+      shell: bash
+      run: |
+           export WX_CONFIG=/usr/bin/wx-config
+    
     - name: Configure
       run: |
            cmake -B _build -S src \
