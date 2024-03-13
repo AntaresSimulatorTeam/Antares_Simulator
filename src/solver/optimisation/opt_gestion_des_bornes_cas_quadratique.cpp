@@ -61,16 +61,18 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique(PROBLEME_HEBDO* p
         }
         else
         {
-            if (double xmax = ProblemeAResoudre->Xmax[var]; std::isinf(xmax) && xmax > 0)
+            const double Xmin = ProblemeAResoudre->Xmin[var];
+            const double Xmax =  ProblemeAResoudre->Xmax[var];
+            if (std::isinf(Xmax) && Xmax > 0)
             {
-                if (std::isinf(ProblemeAResoudre->Xmin[var]) && ProblemeAResoudre->Xmin[var] < 0)
+                if (std::isinf(Xmin) && Xmin < 0)
                     ProblemeAResoudre->TypeDeVariable[var] = VARIABLE_NON_BORNEE;
                 else
                     ProblemeAResoudre->TypeDeVariable[var] = VARIABLE_BORNEE_INFERIEUREMENT;
             }
             else
             {
-                if (std::isinf(ProblemeAResoudre->Xmin[var]) && ProblemeAResoudre->Xmin[var] < 0)
+                if (std::isinf(Xmin) && Xmin < 0)
                     ProblemeAResoudre->TypeDeVariable[var] = VARIABLE_BORNEE_SUPERIEUREMENT;
                 else
                     ProblemeAResoudre->TypeDeVariable[var] = VARIABLE_BORNEE_DES_DEUX_COTES;

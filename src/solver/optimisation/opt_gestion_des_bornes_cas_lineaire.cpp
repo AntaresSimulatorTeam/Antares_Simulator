@@ -243,7 +243,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
 
             if (std::isinf(Xmax[var]) && Xmax[var] > 0)
             {
-                if (std::isinf(Xmin[var]) && Xmin[var] > 0)
+                if (std::isinf(Xmin[var]) && Xmin[var] < 0)
                     TypeDeVariable[var] = VARIABLE_NON_BORNEE;
                 else
                     TypeDeVariable[var] = VARIABLE_BORNEE_INFERIEUREMENT;
