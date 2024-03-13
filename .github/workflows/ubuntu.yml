@@ -29,8 +29,8 @@ env:
   RUN_EXTENDED_TESTS: ${{ github.event_name == 'schedule' || inputs.run-tests == 'true' }}
   REF: ${{ inputs.target_branch =='' && github.ref || inputs.target_branch}}
   VCPKG_ROOT: ${{ github.workspace }}/vcpkg
-  vcpkgPackages: yaml-cpp antlr4
-  triplet: x64-linux
+  vcpkgPackages: yaml-cpp antlr4 boost-test
+  triplet: x64-linux-dynamic
   WX_CONFIG: /usr/bin/wx-config
 
 jobs:
@@ -96,7 +96,6 @@ jobs:
           cd vcpkg
           ./bootstrap-vcpkg.sh
           vcpkg install ${{env.vcpkgPackages}} --triplet ${{env.triplet}}
-          vcpkg install boost-test --triplet x64-linux-dynamic
           rm -rf buildtrees packages downloads
       shell: bash
 
