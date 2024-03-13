@@ -1,6 +1,13 @@
 Antares Changelog
 =================
 
+9.1.0-rc1
+--------------------
+## New features
+* Scenarized & hourly values for hydro pumping and hydro generation. Previously this data was not scenarized and daily.
+
+## TODO
+
 9.0.0
 --------------------
 ## License
