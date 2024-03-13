@@ -11,6 +11,9 @@ Source file = maxpower_&lt;area&gt;, destination files are maxHourlyGenPower.txt
 * Under `Configure/MC Scenario Builder` new section is added `Hydro Max Power`
 * In the existing file **settings/scenariobuilder.dat**, under **&lt;ruleset&gt;** section following properties added: **hgp,&lt;area&gt;,&lt;year&gt; = &lt;hgp-value&gt;**
 
+### Adequacy patch - CSR
+In section `adequacy patch` from file `generaldata.ini`, add property `recompute-dtg-mrg` ([bool], default value = `false`)
+
 ## v9.0.0
 ### Input
 ### Study version
