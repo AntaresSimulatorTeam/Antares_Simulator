@@ -13,15 +13,15 @@ def get_ts_files(path):
     return ts_files
 
 def get_clusters_to_gen(path):
-    clusterToGenFile = open(path / "clustersToGen.txt", 'r')
-    line = clusterToGenFile.readline().rstrip() # remove new line char
-    clusterToGenFile.close()
+    cluster_to_gen_file = open(path / "clustersToGen.txt", 'r')
+    line = cluster_to_gen_file.readline().rstrip() # remove new line char
+    cluster_to_gen_file.close()
     return line
 
 def run_and_compare(exe, path):
-    clusters_to_gen = get_clusters_to_gen(path)
+    clusters_to_gen_arg = get_clusters_to_gen(path)
 
-    res = subprocess.run([exe, "--thermal=" + clusters_to_gen, path])
+    res = subprocess.run([exe, clusters_to_gen_arg, path])
     assert (res.returncode == 0), "The exec failed for study: " + str(path)
 
     ref_path = Path(find_reference_folder(path)) / "ts-generator"
