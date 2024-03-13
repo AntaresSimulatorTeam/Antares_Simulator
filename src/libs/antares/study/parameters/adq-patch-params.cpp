@@ -1,4 +1,24 @@
-#include "adq-patch-params.h"
+/*
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
+**
+** Antares_Simulator is free software: you can redistribute it and/or modify
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
+** (at your option) any later version.
+**
+** Antares_Simulator is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+** Mozilla Public Licence 2.0 for more details.
+**
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+*/
+#include "antares/study/parameters/adq-patch-params.h"
 #include <antares/logs/logs.h>
 
 #include <antares/study/study.h>
@@ -169,11 +189,11 @@ void AdqPatchParams::saveToINI(IniFile& ini) const
     curtailmentSharing.addProperties(section);
 }
 
-bool AdqPatchParams::checkAdqPatchParams(const StudyMode studyMode,
+bool AdqPatchParams::checkAdqPatchParams(const SimulationMode simulationMode,
                                          const AreaList& areas,
                                          const bool includeHurdleCostParameters) const
 {
-    checkAdqPatchStudyModeEconomyOnly(studyMode);
+    checkAdqPatchSimulationModeEconomyOnly(simulationMode);
     checkAdqPatchContainsAdqPatchArea(areas);
     checkAdqPatchIncludeHurdleCost(includeHurdleCostParameters);
     checkAdqPatchDisabledLocalMatching();
@@ -182,10 +202,10 @@ bool AdqPatchParams::checkAdqPatchParams(const StudyMode studyMode,
 }
 
 // Adequacy Patch can only be used with Economy Study/Simulation Mode.
-void AdqPatchParams::checkAdqPatchStudyModeEconomyOnly(const StudyMode studyMode) const
+void AdqPatchParams::checkAdqPatchSimulationModeEconomyOnly(const SimulationMode simulationMode) const
 {
-    if (studyMode != StudyMode::stdmEconomy)
-        throw Error::IncompatibleStudyModeForAdqPatch();
+    if (simulationMode != SimulationMode::Economy)
+        throw Error::IncompatibleSimulationModeForAdqPatch();
 }
 
 // When Adequacy Patch is on at least one area must be inside Adequacy patch mode.

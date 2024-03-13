@@ -1,16 +1,41 @@
 # Study format changes
 This is a list of all recent changes that came with new Antares Simulator features. The main goal of this document is to lower the costs of changing existing interfaces, both GUI and scripts.
-## v8.9.0
+## v9.1.0
+### (Input) Hydro Maximum Generation/Pumping Power
+* For each area, new files are added **input/hydro/series/&lt;area&gt;/maxHourlyGenPower.txt** and **input/hydro/series/&lt;area&gt;/maxHourlyPumpPower.txt**. These files have one or more columns, and 8760 rows. The number of columns in these two files must be the same if there is more than one column in each file, but if there is just one column for example in maxHourlyGenPower.txt file, maxHourlyPumpPower.txt file can have more than one column and vice versa. Starting from v9.0, file **input/hydro/common/capacity/maxpower_&lt;area&gt;** is no longer used.
+### How to upgrade capacity time-series ?
+Source file = maxpower_&lt;area&gt;, destination files are maxHourlyGenPower.txt and maxHourlyPumpPower.txt. To upgrade time-series, you need to 
+1. For generation, multiply 1st and 2nd rows. For pumping, multiply 3rd and 4rd rows.
+2. Duplicate values 24 times : source has 365 rows, destination has 365 * 24 = 8760 rows
+* Also for each area, new files are added **input/hydro/common/capacity/maxDailyGenEnergy_&lt;area&gt;** and **input/hydro/common/capacity/maxDailyPumpEnergy_&lt;area&gt;**. These files have just one column and 365 rows. For old studies, file **input/hydro/common/capacity/maxpower_&lt;area&gt;** will be deleted after cleaning a study.
+* Under `Configure/MC Scenario Builder` new section is added `Hydro Max Power`
+* In the existing file **settings/scenariobuilder.dat**, under **&lt;ruleset&gt;** section following properties added: **hgp,&lt;area&gt;,&lt;year&gt; = &lt;hgp-value&gt;**
+
+## v9.0.0
 ### Input
-### Solver logs
-* Solver logs can be enabled either by the command-line option (--solver-logs) or in the generaldata.ini file by setting solver-logs = true under the optimization section.
+### Study version
+Breaking change in the study format, file **study.antares**
+```
+version = 900
+```
+becomes
+```
+version = 9.0
+```
+Compatibility is kept with versions up to 8.8.0. Starting from version 9.0.0, the new format must be used.
+
 
 ## v8.8.0
 ### Input
-### Short-term storage
+#### Short-term storage
 If no value is specified for `initiallevel`, then a default value of 50% is used. Note that this value is used only if `initialleveloptim=false`, and that `false` is the default value for `initialleveloptim`.
 
-### Experimental "MILP" mode
+Add property `enabled` (bool, default=`true`). If a ST storage object is not enabled, it is ignored by Antares Simulator.
+
+#### Solver logs (expert option)
+Save solver logs by setting `solver-logs = true` (default : `false`) under the `optimization` section.
+
+#### Experimental "MILP" mode
 New value `milp` for existing property `other preferences/unit-commitment-mode` in file **settings/generaldata.ini**.
 
 Using this property requires OR-Tools and a MILP solver (XPRESS, COIN)
@@ -25,6 +50,10 @@ Also for each area, new files are added **input/hydro/common/capacity/maxDailyGe
 Under `Configure/MC Scenario Builder` new section added `Hydro Max Power`
 In the existing file **settings/scenariobuilder.dat**, under **&lt;ruleset&gt;** section following properties added:
 * **hgp,&lt;area&gt;,&lt;year&gt; = &lt;hgp-value&gt;**
+
+### Output
+### Cashflow by short-term storage
+In existing file **details-STstorage-&lt;period&gt;.txt** (mc-all & mc-ind), add a new column for each ST storage object, named "STS Cashflow By Cluster", in EURO.
 
 ## v8.7.0
 ### Input

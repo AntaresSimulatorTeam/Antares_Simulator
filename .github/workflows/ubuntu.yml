@@ -1,8 +1,6 @@
 name: Ubuntu CI (push and/or release)
 
 on:
-  release:
-    types: [created]
   push:
     branches:
       - develop
@@ -12,14 +10,24 @@ on:
       - issue-*
       - release/*
       - doc/*
+      - dependabot/*
   schedule:
     - cron: '21 2 * * *'
+  workflow_call:
+    inputs:
+      run-tests:
+        required: true
+        type: string
+      target_branch:
+        required: true
+        type: string
 
 env:
   GITHUB_TOKEN: ${{ github.token }}
-  IS_RELEASE: ${{ github.event_name == 'release' && github.event.action == 'created' }}
-  IS_PUSH: ${{ github.event_name == 'push' }}
-  RUN_EXTENDED_TESTS: ${{ github.event_name == 'schedule' || github.event_name == 'release' }}
+  IS_RELEASE: ${{ github.event_name == 'workflow_dispatch' }}
+  RUN_SIMPLE_TESTS: ${{ github.event_name == 'push' || inputs.run-tests == 'true' }}
+  RUN_EXTENDED_TESTS: ${{ github.event_name == 'schedule' || inputs.run-tests == 'true' }}
+  REF: ${{ inputs.target_branch =='' && github.ref || inputs.target_branch}}
 
 jobs:
 
@@ -27,30 +35,27 @@ jobs:
     name: Build
     env:
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
+      os: ubuntu-20.04
 
-    outputs:
-        os: ${{ matrix.os }}
-
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-20.04
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
-    strategy:
-      matrix:
-        os: [ubuntu-20.04]
-        test-platform: [ubuntu-20.04]
-
+    
     steps:
-    - uses: actions/checkout@v3
-
+    - uses: actions/checkout@v4
+      with:
+        ref: ${{ env.REF }}
+        
     - name: ccache
       uses: hendrikmuhs/ccache-action@v1.2
       with:
-          key: ${{ matrix.os }}
+          key: ${{ env.os }}
 
     - name: Install libraries
       run: |
            sudo apt-get update
            sudo apt-get install uuid-dev libwxgtk3.0-gtk3-dev
            sudo apt-get install libboost-test-dev
+           sudo apt-get install g++-10 gcc-10
 
     - name: Read antares-deps version
       id: antares-deps-version
@@ -62,19 +67,19 @@ jobs:
 
     - name: Config OR-Tools URL
       run: |
-          echo "ORTOOLS_URL=https://github.com/rte-france/or-tools/releases/download/v9.5-rte2.0/ortools_cxx_ubuntu-20.04_static_sirius.zip" >> $GITHUB_ENV
+          echo "ORTOOLS_URL=https://github.com/rte-france/or-tools/releases/download/$(cat ortools_tag)/ortools_cxx_ubuntu-20.04_static_sirius.zip" >> $GITHUB_ENV
 
     - name: Download pre-compiled librairies
       uses: ./.github/workflows/download-extract-precompiled-libraries-tgz
       with:
         antares-deps-version: ${{steps.antares-deps-version.outputs.prop}}
-        os: ${{matrix.os}}
+        os: ${{env.os}}
         ortools-url: ${{env.ORTOOLS_URL}}
         ortools-dir: ${{env.ORTOOLS_DIR}}
 
     - name: Set up Python
       id: setup-python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: '3.12'
 
@@ -92,18 +97,20 @@ jobs:
       run: |
            cmake -B _build -S src \
            -DCMAKE_C_COMPILER_LAUNCHER=ccache \
+           -DCMAKE_C_COMPILER=/usr/bin/gcc-10 \
            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
+           -DCMAKE_CXX_COMPILER=/usr/bin/g++-10 \
            -DDEPS_INSTALL_DIR=${{github.workspace}}/rte-antares-deps-Release \
-           -DCMAKE_BUILD_TYPE=release \
+           -DCMAKE_BUILD_TYPE=Release \
            -DBUILD_TESTING=ON \
            -DBUILD_not_system=OFF \
            -DBUILD_TOOLS=ON \
            -DCMAKE_PREFIX_PATH=${{ env.ORTOOLS_DIR }}/install \
-           -DPython3_EXECUTABLE='${{ steps.setup-python.outputs.python-path }}'
+           -DPython3_EXECUTABLE="${{ env.Python3_ROOT_DIR }}/bin/python"
 
     - name: Build
       run: |
-             cmake --build _build --config release -j2
+             cmake --build _build -j$(nproc)
 
 
     # simtest
@@ -114,34 +121,27 @@ jobs:
         path: 'simtest.json'
         prop_path: 'version'
 
+
     - name: Run named mps tests
-      if: ${{ env.IS_PUSH == 'true' }}
+      if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: valid-named-mps
-        os: ${{ matrix.test-platform }}
+        os: ${{ env.os }}
         variant: "named-mps"
 
     - name: Run unfeasibility-related tests
-      if: ${{ env.IS_PUSH == 'true' }}
+      if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
       run: |
            cd _build
            ctest -C Release --output-on-failure -R "^unfeasible$"
 
     - name: Run unit and end-to-end tests
-      if: ${{ env.IS_PUSH == 'true' }}
+      if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
       run: |
            cd _build
-           ctest -C ${{ matrix.buildtype }} --output-on-failure -L "unit|end-to-end"
-
-    - name: Run kirchhoff constraints tests
-      if: ${{ false }}
-      shell: bash
-      run: |
-           tar xvf src/tests/kirchhoff-cbuilder/reference.tar.gz -C src/tests/kirchhoff-cbuilder/
-           cd _build
-           ctest -C Release --output-on-failure -R kirchhoff
+           ctest -C Release --output-on-failure -L "unit|end-to-end"
 
     - name: Upload logs for failed tests
       if: ${{ failure() }}
@@ -151,44 +151,70 @@ jobs:
         path: ${{ github.workspace }}/_build/Testing/Temporary/LastTest.log
 
     - name: Run tests about infinity on BCs RHS
-      if: ${{ env.IS_PUSH == 'true' }}
+      if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: valid-v830
-        os: ${{ matrix.test-platform }}
+        os: ${{ env.os }}
+
+    - name: Run MILP with CBC
+      if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: valid-milp
+        variant: "milp-cbc"
+        os: ${{ env.os }}
 
     - name: Run tests introduced in v860
-      if: ${{ env.IS_PUSH == 'true' }}
+      if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: valid-v860
-        os: ${{ matrix.test-platform }}
+        os: ${{ env.os }}
+
+    - name: Run tests introduced in v870
+      if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: valid-v870
+        os: ${{ env.os }}
 
     - name: Run short-tests
-      if: ${{ env.IS_PUSH == 'true' }}
+      if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: short-tests
-        os: ${{ matrix.test-platform }}
+        os: ${{ env.os }}
 
     - name: Run mps tests
-      if: ${{ env.IS_PUSH == 'true' }}
+      if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: valid-mps
-        os: ${{ matrix.test-platform }}
+        os: ${{ env.os }}
 
     - name: Run tests for adequacy patch (CSR)
-      if: ${{ env.IS_PUSH == 'true' }}
+      if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: adequacy-patch-CSR
-        os: ${{ matrix.test-platform }}
+        os: ${{ env.os }}
+
+    - name: Run parallel tests
+      if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: valid-parallel
+        os: ${{ env.os }}
+        variant: "parallel"
 
     - name: Run medium-tests
       if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
@@ -196,7 +222,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: medium-tests
-        os: ${{ matrix.test-platform }}
+        os: ${{ env.os }}
 
     - name: Run long-tests-1
       if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
@@ -204,7 +230,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: long-tests-1
-        os: ${{ matrix.test-platform }}
+        os: ${{ env.os }}
 
     - name: Run long-tests-2
       if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
@@ -212,7 +238,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: long-tests-2
-        os: ${{ matrix.test-platform }}
+        os: ${{ env.os }}
 
     - name: Run long-tests-3
       if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
@@ -220,7 +246,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: long-tests-3
-        os: ${{ matrix.test-platform }}
+        os: ${{ env.os }}
 
     - name: Installer .deb creation
       run: |
@@ -238,7 +264,7 @@ jobs:
            cmake --install . --prefix install
            pushd .
            cd install/bin
-           tar czf ../../antares-solver_ubuntu20.04.tar.gz antares-*-solver libsirius_solver.so
+           tar czf ../../antares-solver_ubuntu20.04.tar.gz antares-solver libsirius_solver.so
            popd
            rm -rf install
 
@@ -251,21 +277,12 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         path: _build/*.deb
-
-  publish_assets:
-    name: Publish assets
-    needs: build
-    runs-on: ${{needs.build.outputs.os}}
-    steps:
-    - name: Download all artifacts
-      if: ${{ env.IS_RELEASE == 'true' }}
-      uses: actions/download-artifact@v3
-
-
+      
+    
     - name: Publish assets
       if: ${{ env.IS_RELEASE == 'true' }}
-      uses: alexellis/upload-assets@0.4.0
       env:
-          GITHUB_TOKEN: ${{ github.token }}
-      with:
-          asset_paths: '["*/*.tar.gz", "*/*.deb"]'
+        GITHUB_TOKEN: ${{ github.token }}
+        tag: ${{ github.event.inputs.release_tag }}
+      run: |
+        gh release upload "$tag" _build/*.tar.gz _build/*.deb           

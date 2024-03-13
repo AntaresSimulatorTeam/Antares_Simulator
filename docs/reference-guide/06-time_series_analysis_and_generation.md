@@ -30,33 +30,33 @@ The stationary processes are defined at a monthly scale. For each month, there a
 
 - Four parameters for the definition of the marginal law
 
-TS Gen. Parameters : \\(\alpha\\), \\(\beta\\), \\(\gamma\\) and \\(\delta\\)
+TS Gen. Parameters : $\alpha$, $\beta$, $\gamma$ and $\delta$
 
-| **Law** | \\(\alpha\\) | \\(\beta\\) | \\(\gamma\\) | \\(\delta\\) | **Expectation** | **Variance** |
+| **Law** | $\alpha$ | $\beta$ | $\gamma$ | $\delta$ | **Expectation** | **Variance** |
 |---------|:----------:|:---------:|:----------:|:----------:|:---------------:|:------------:|
-| Uniform | N/A | N/A | \\(< \delta\\) | \\(> \gamma\\) | \\({(\delta - \gamma)\over 2}\\) | \\({(\delta - \gamma)^2\over 12}\\) |
-| Beta | &gt;0 | &gt;0 | \\(< \delta\\) | \\(> \gamma\\) | \\(\gamma + {\alpha(\delta - \gamma)\over (\alpha + \beta)}\\) | \\(\alpha\beta(\delta - \gamma)^2\over (\alpha + \beta + 1)(\alpha + \beta)^2\\) |
-| Normal | Any | &gt;0 | N/A | N/A | \\(\alpha\\) | \\(\beta^2\\) |
-| Weibull | &gt;=1 <br/> &lt;50 | &gt;0 | N/A | N/A | \\(\beta \Gamma (1 + {1\over\alpha})\\) | \\(\beta^2[\Gamma(1+{2\over \alpha}) - \Gamma (1 + {1\over \alpha})^2]\\) |
-| Gamma | &gt;=1 <br/> &lt;50 | &gt;0 | N/A | N/A | \\(\alpha * \beta\\) | \\(\alpha * \beta^2\\) |
+| Uniform | N/A | N/A | $< \delta$ | $> \gamma$ | ${(\delta - \gamma)\over 2}$ | ${(\delta - \gamma)^2\over 12}$ |
+| Beta | &gt;0 | &gt;0 | $< \delta$ | $> \gamma$ | $\gamma + {\alpha(\delta - \gamma)\over (\alpha + \beta)}$ | $\alpha\beta(\delta - \gamma)^2\over (\alpha + \beta + 1)(\alpha + \beta)^2$ |
+| Normal | Any | &gt;0 | N/A | N/A | $\alpha$ | $\beta^2$ |
+| Weibull | &gt;=1 <br/> &lt;50 | &gt;0 | N/A | N/A | $\beta \Gamma (1 + {1\over\alpha})$ | $\beta^2[\Gamma(1+{2\over \alpha}) - \Gamma (1 + {1\over \alpha})^2]$ |
+| Gamma | &gt;=1 <br/> &lt;50 | &gt;0 | N/A | N/A | $\alpha * \beta$ | $\alpha * \beta^2$ |
 
-_Uniform: uniform defined on (\\(\gamma\\), \\(\delta\\))._  
-_Beta: Beta (\\(\alpha\\), \\(\beta\\)) defined on (\\(\gamma\\), \\(\delta\\))._  
-_Normal: expectation \\(\alpha\\), standard deviation \\(\beta\\)._  
-_Weibull: shape \\(\alpha\\), scale \\(\beta\\), defined on (0,+\\(\infty\\))._  
-_Gamma: shape \\(\alpha\\), scale \\(\beta\\), defined on (0, +\\(\infty\\))._
+_Uniform: uniform defined on ($\gamma$, $\delta$)._  
+_Beta: Beta ($\alpha$, $\beta$) defined on ($\gamma$, $\delta$)._  
+_Normal: expectation $\alpha$, standard deviation $\beta$._  
+_Weibull: shape $\alpha$, scale $\beta$, defined on (0,+$\infty$)._  
+_Gamma: shape $\alpha$, scale $\beta$, defined on (0, +$\infty$)._
 
-In the expressions of expectation and variance, \\(\Gamma(x)\\) is the standard Euler Function.
+In the expressions of expectation and variance, $\Gamma(x)$ is the standard Euler Function.
 
 
 - Two parameters for the definition of the autocorrelation function
 
-**TS Gen. Parameters : \\(\theta\\) and \\(\mu\\)**
+**TS Gen. Parameters : $\theta$ and $\mu$**
 
-| **Law** | \\(\theta\\) | \\(\mu\\) | **Corr(Xt, Xt+h)** |
+| **Law** | $\theta$ | $\mu$ | **Corr(Xt, Xt+h)** |
 |-----|----|-----|--------|
-| Pure exponential decay | \\(\theta > 0\\) | \\(\mu = 1\\) | \\(e^{-\theta h}\\) |
-| Smoothed exponential decay [^decay] | \\(\theta > 0\\) | \\( 1 < \mu < 24\\) | \\(\Phi(\theta, \mu, h)\\) |
+| Pure exponential decay | $\theta > 0$ | $\mu = 1$ | $e^{-\theta h}$ |
+| Smoothed exponential decay [^decay] | $\theta > 0$ | $ 1 < \mu < 24$ | $\Phi(\theta, \mu, h)$ |
 
 $$\Phi(\theta, \mu, h)\ =\ {1\over A}\ *\ \sum_{i=0, \mu}{\ \sum_{j=h, h+\mu}{e^{-\theta|j-i|}}}$$
 
@@ -71,7 +71,7 @@ The section of the GUI specific to the generation of wind, solar and load time-s
 
 1. **Spatial correlation matrices that are located within the "spatial correlation" tab of each path "Wind|Solar|Load / &lt;area\_name&gt;"**
 
-	This tab contains a workspace for the description of 12 monthly spatial correlation matrices \\(\Xi\\) and one annual correlation matrix. For the stochastic generators to work properly, these matrices must meet the usual requirements (matrices must be p.s.d, symmetric, with all terms between -100 and +100, and a main diagonal made of 100s). If this is not the case, generators will emit an infeasibility diagnosis. Matrices can be either set up manually OR automatically filled out by the time-series analyzer (see next paragraph).
+	This tab contains a workspace for the description of 12 monthly spatial correlation matrices $\Xi$ and one annual correlation matrix. For the stochastic generators to work properly, these matrices must meet the usual requirements (matrices must be p.s.d, symmetric, with all terms between -100 and +100, and a main diagonal made of 100s). If this is not the case, generators will emit an infeasibility diagnosis. Matrices can be either set up manually OR automatically filled out by the time-series analyzer (see next paragraph).
 	
 	Depending on the choices made in the main "simulation" window, the matrices used will be either the 12 monthly matrices or the annual matrix. Whether to use the first or the second option depends on the quality of the statistical data at hand: with high quality data (for instance, that derived from the analysis of a very large pool of historical data), use of monthly correlations is recommended because monthly differences between matrices have a physical meaning ; with less robust data (derived from a handful of historical data,…), use of the single annual correlation matrix should be preferred because it smooths out the numeric noise which impairs the monthly matrices.
 
@@ -79,7 +79,7 @@ The section of the GUI specific to the generation of wind, solar and load time-s
 
 **FOUR PARAMETERS**
 
-- Capacity: This first parameter is used to scale up time-series generated on the basis of the (\\(\alpha\\), \\(\beta\\), \\(\gamma\\), \\(\delta\\), \\(\theta\\), \\(\mu\\)) parameters described previously in the "principles" paragraph, together with coefficients characterizing the diurnal pattern (see below)
+- Capacity: This first parameter is used to scale up time-series generated on the basis of the ($\alpha$, $\beta$, $\gamma$, $\delta$, $\theta$, $\mu$) parameters described previously in the "principles" paragraph, together with coefficients characterizing the diurnal pattern (see below)
 
 - Distribution: This second parameter gives the type of marginal distribution of the stationary stochastic processes to generate (Beta, Weibull, Normal, Gamma, Uniform)
 
@@ -98,7 +98,7 @@ The section of the GUI specific to the generation of wind, solar and load time-s
 **FOUR SUBTABS**
 
 - Subtab "Coefficients"
-	A twelve-month table of values for the primary parameters \\(\alpha\\), \\(\beta\\), \\(\gamma\\), \\(\delta\\), \\(\theta\\), \\(\mu\\) <br/>
+	A twelve-month table of values for the primary parameters $\alpha$, $\beta$, $\gamma$, $\delta$, $\theta$, $\mu$ <br/>
 	This table may be either filled out manually or automatically (use of the time-series analyzer)
 
 - Subtab "Translation"
@@ -148,7 +148,7 @@ The primary TS analyzer window shows two tabs:
 - Keep the same:
 
     - Type of distribution
-    - Values for \\(\alpha\\), \\(\beta\\), \\(\gamma\\), \\(\delta\\) and for the diurnal–seasonal pattern (table of 12 X 24 values)
+    - Values for $\alpha$, $\beta$, $\gamma$, $\delta$ and for the diurnal–seasonal pattern (table of 12 X 24 values)
     - Value for the "capacity" parameter (the analyzer automatically sets it to 1)
 
 - Besides:
@@ -163,7 +163,7 @@ The primary TS analyzer window shows two tabs:
 
     - Short-term autocorrelation adjustment (%)
     - Long-term autocorrelation adjustment (%) <br/>
-      These two parameters are used by Antares as targets for the fitting of \\(\theta\\) and \\(\mu\\) parameters. For instance, if the historical time-series autocorrelation function is such that Corr(T,T+ 18 hours)=90 % and Corr(T,T+60 hours)= 50%, and if the parameters in the analyzer are (ST = 90%,LT = 50%) , then it will search values of \\(\theta\\) and \\(\mu\\) matching the historical autocorr.function in two points(18 hours, 60 hours).
+      These two parameters are used by Antares as targets for the fitting of $\theta$ and $\mu$ parameters. For instance, if the historical time-series autocorrelation function is such that Corr(T,T+ 18 hours)=90 % and Corr(T,T+60 hours)= 50%, and if the parameters in the analyzer are (ST = 90%,LT = 50%) , then it will search values of $\theta$ and $\mu$ matching the historical autocorr.function in two points(18 hours, 60 hours).
 
     - Trimming threshold (%) <br/>
       In the spatial correlation matrices, terms lower than the threshold will be replaced by zeroes
@@ -240,14 +240,14 @@ In complement to the average value of the duration D of outages beginning on a p
         - If choice = "geometric": **F = 0 and G = D** <br/>
           (which in turn implies 1 &lt;= actual duration &lt;= #4D)
 
-    - 0&lt;V&lt;1: The variability of the actual outage duration is such that the ratio \\(\sigma / D\\) of its standard deviation to its expectation has a value that depends on **V** , on **D** and on the chosen distribution law. More precisely:
+    - 0&lt;V&lt;1: The variability of the actual outage duration is such that the ratio $\sigma / D$ of its standard deviation to its expectation has a value that depends on **V** , on **D** and on the chosen distribution law. More precisely:
 
-        - If choice = "uniform": \\(\sigma / D = [{1/3}^{0.5}] \* V \* (D-1) / D \\) <br/>
+        - If choice = "uniform": $\sigma / D = [{1/3}^{0.5}] \* V \* (D-1) / D $ <br/>
           and <br/>
           **Duration min = D (1-V) + V** <br/>
           **Duration max = D (1+V) - V**
 
-        - If choice = "geometric": \\(\sigma / D = V \* [(D-1) / D]^{0.5}\\) <br/>
+        - If choice = "geometric": $\sigma / D = V \* [(D-1) / D]^{0.5}$ <br/>
           and <br/>
           **Duration min = F** <br/>
           **Duration max # 4D-3F** <br/>
@@ -424,4 +424,4 @@ In both cases, assuming that a large number of historical time-series of energie
 
 	Assess the expectations of the 12 random variables **R1(n)/M1(n),…., R12(n)/M12(n)** . These values should be used to fill out the fields "ROR share" of the "local data" tab in the "hydro" active window.
 
-[^decay]: Obtained by the generation of purely exponentially autocorrelated values (parameter \\(\theta\\) ) followed by a moving average transformation (parameter \\(\mu\\) ). \\(\theta\\) and \\(\mu\\) should be carefully chosen so as to accommodate at best the experimental data at hand. If meaningful historical data are available, this identification may be directly made using the Antares time-series analyzer.
+[^decay]: Obtained by the generation of purely exponentially autocorrelated values (parameter $\theta$ ) followed by a moving average transformation (parameter $\mu$ ). $\theta$ and $\mu$ should be carefully chosen so as to accommodate at best the experimental data at hand. If meaningful historical data are available, this identification may be directly made using the Antares time-series analyzer.

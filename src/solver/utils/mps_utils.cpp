@@ -1,9 +1,29 @@
+/*
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
+**
+** Antares_Simulator is free software: you can redistribute it and/or modify
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
+** (at your option) any later version.
+**
+** Antares_Simulator is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+** Mozilla Public Licence 2.0 for more details.
+**
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+*/
 #include <antares/study/study.h>
 
-#include "../simulation/simulation.h"
+#include "antares/solver/simulation/simulation.h"
 
-#include "ortools_utils.h"
-#include "mps_utils.h"
+#include "antares/solver/utils/ortools_utils.h"
+#include "antares/solver/utils/mps_utils.h"
 
 using namespace Antares;
 using namespace Antares::Data;
@@ -24,8 +44,8 @@ constexpr size_t OPT_APPEL_SOLVEUR_BUFFER_SIZE = 256;
 ** This file is part of Antares_Simulator.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
 **
 ** There are special exceptions to the terms and conditions of the
@@ -36,20 +56,20 @@ constexpr size_t OPT_APPEL_SOLVEUR_BUFFER_SIZE = 256;
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 **
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** SPDX-License-Identifier: MPL-2.0
 */
 #include <antares/study/study.h>
 #include <string>
 #include <vector>
 #include <algorithm>
-#include "filename.h"
-#include "../optimisation/opt_constants.h"
-#include "name_translator.h"
+#include "antares/solver/utils/filename.h"
+#include "antares/solver/optimisation/opt_constants.h"
+#include "antares/solver/utils/name_translator.h"
 
 using namespace Yuni;
 

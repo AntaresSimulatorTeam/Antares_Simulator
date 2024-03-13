@@ -1,36 +1,30 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
 #include <yuni/yuni.h>
-#include "opt_structure_probleme_a_resoudre.h"
+#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 
-#include "../simulation/simulation.h"
-#include "../simulation/sim_structure_probleme_economique.h"
-#include "opt_fonctions.h"
+#include "antares/solver/simulation/simulation.h"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
+#include "antares/solver/optimisation/opt_fonctions.h"
 
 extern "C"
 {
@@ -41,10 +35,10 @@ extern "C"
 }
 
 #include <antares/logs/logs.h>
-#include <antares/fatal-error.h>
+#include <antares/antares/fatal-error.h>
 
-#include "../utils/mps_utils.h"
-#include "../utils/filename.h"
+#include "antares/solver/utils/mps_utils.h"
+#include "antares/solver/utils/filename.h"
 
 #include "../infeasible-problem-analysis/unfeasible-pb-analyzer.h"
 #include "../infeasible-problem-analysis/variables-bounds-consistency.h"
@@ -75,7 +69,7 @@ public:
         end_ = clock::now();
     }
 
-    long long duration_ms() const
+    long duration_ms() const
     {
         return std::chrono::duration_cast<std::chrono::milliseconds>(end_ - start_).count();
     }
@@ -93,7 +87,7 @@ private:
 struct SimplexResult
 {
     bool success = false;
-    long long solveTime = 0;
+    TIME_MEASURE timeMeasure;
     mpsWriterFactory mps_writer_factory;
 };
 
@@ -115,7 +109,7 @@ static SimplexResult OPT_TryToCallSimplex(
     const int opt = optimizationNumber - 1;
     assert(opt >= 0 && opt < 2);
     OptimizationStatistics& optimizationStatistics = problemeHebdo->optimizationStatistics[opt];
-
+    TIME_MEASURE timeMeasure;
     if (!PremierPassage)
     {
         ProbSpx = nullptr;
@@ -151,7 +145,7 @@ static SimplexResult OPT_TryToCallSimplex(
             Probleme.Contexte = BRANCH_AND_BOUND_OU_CUT_NOEUD;
             Probleme.BaseDeDepartFournie = UTILISER_LA_BASE_DU_PROBLEME_SPX;
 
-            TimeMeasurement measure;
+            TimeMeasurement updateMeasure;
             if (options.useOrtools)
             {
                 ORTOOLS_ModifierLeVecteurCouts(
@@ -175,8 +169,9 @@ static SimplexResult OPT_TryToCallSimplex(
                                                   ProblemeAResoudre->Sens.data(),
                                                   ProblemeAResoudre->NombreDeContraintes);
             }
-            measure.tick();
-            optimizationStatistics.addUpdateTime(measure.duration_ms());
+            updateMeasure.tick();
+            timeMeasure.updateTime = updateMeasure.duration_ms();
+            optimizationStatistics.addUpdateTime(timeMeasure.updateTime);
         }
     }
 
@@ -256,8 +251,8 @@ static SimplexResult OPT_TryToCallSimplex(
         }
     }
     measure.tick();
-    long long solveTime = measure.duration_ms();
-    optimizationStatistics.addSolveTime(solveTime);
+    timeMeasure.solveTime = measure.duration_ms();
+    optimizationStatistics.addSolveTime(timeMeasure.solveTime);
 
     ProblemeAResoudre->ExistenceDUneSolution = Probleme.ExistenceDUneSolution;
     if (ProblemeAResoudre->ExistenceDUneSolution != OUI_SPX && PremierPassage)
@@ -280,7 +275,8 @@ static SimplexResult OPT_TryToCallSimplex(
             {
                 logs.info() << " solver: resetting";
             }
-            return {.success=false, .solveTime=solveTime, .mps_writer_factory=mps_writer_factory};
+            return {.success=false, .timeMeasure=timeMeasure,
+                    .mps_writer_factory=mps_writer_factory};
         }
 
         else
@@ -288,7 +284,8 @@ static SimplexResult OPT_TryToCallSimplex(
             throw FatalError("Internal error: insufficient memory");
         }
     }
-    return {.success=true, .solveTime=solveTime, .mps_writer_factory=mps_writer_factory};
+    return {.success=true, .timeMeasure=timeMeasure,
+            .mps_writer_factory=mps_writer_factory};
 }
 
 bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
@@ -309,7 +306,7 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
 
     bool PremierPassage = true;
 
-    struct SimplexResult simplexResult =
+    SimplexResult simplexResult =
         OPT_TryToCallSimplex(options, problemeHebdo, Probleme, NumIntervalle, optimizationNumber,
                 optPeriodStringGenerator, PremierPassage, writer);
 
@@ -319,8 +316,6 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
         simplexResult = OPT_TryToCallSimplex(options, problemeHebdo, Probleme,  NumIntervalle, optimizationNumber,
                 optPeriodStringGenerator, PremierPassage, writer);
     }
-
-    long long solveTime = simplexResult.solveTime;
 
     if (ProblemeAResoudre->ExistenceDUneSolution == OUI_SPX)
     {
@@ -345,15 +340,20 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
                 *pt = ProblemeAResoudre->CoutsReduits[i];
         }
 
+        {
+            const int opt = optimizationNumber - 1;
+            assert(opt >= 0 && opt < 2);
+            problemeHebdo->timeMeasure[opt] = simplexResult.timeMeasure;
+        }
+
+        // TODO remove this if..else
         if (optimizationNumber == PREMIERE_OPTIMISATION)
         {
             problemeHebdo->coutOptimalSolution1[NumIntervalle] = CoutOpt;
-            problemeHebdo->tempsResolution1[NumIntervalle] = solveTime;
         }
         else
         {
             problemeHebdo->coutOptimalSolution2[NumIntervalle] = CoutOpt;
-            problemeHebdo->tempsResolution2[NumIntervalle] = solveTime;
         }
         for (int Cnt = 0; Cnt < ProblemeAResoudre->NombreDeContraintes; Cnt++)
         {

@@ -1,3 +1,23 @@
+/*
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
+**
+** Antares_Simulator is free software: you can redistribute it and/or modify
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
+** (at your option) any later version.
+**
+** Antares_Simulator is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+** Mozilla Public Licence 2.0 for more details.
+**
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+*/
 #define BOOST_TEST_MODULE test solver simulation things
 #define BOOST_TEST_DYN_LINK
 
@@ -5,7 +25,9 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include <timeseries-numbers.h>
+#include <antares/solver/simulation/timeseries-numbers.h>
+#include "antares/solver/ts-generator/generator.h"
+#include <antares/utils/utils.h>
 
 #include <algorithm> // std::adjacent_find
 
@@ -47,15 +69,12 @@ Area* addAreaToStudy(Study::Ptr study, const std::string& areaName)
 
 void addClusterToAreaList(Area* area, std::shared_ptr<ThermalCluster> cluster)
 {
-	area->thermal.clusters.push_back(cluster.get());
-	area->thermal.list.add(cluster);
-	area->thermal.list.mapping[cluster->id()] = cluster;
+	area->thermal.list.addToCompleteList(cluster);
 }
 
 void addClusterToAreaList(Area* area, std::shared_ptr<RenewableCluster> cluster)
 {
-	area->renewable.clusters.push_back(cluster.get());
-	area->renewable.list.add(cluster);
+	area->renewable.list.addToCompleteList(cluster);
 }
 
 template<class ClusterType>
@@ -122,6 +141,7 @@ BOOST_AUTO_TEST_CASE(two_areas_with_5_ready_made_ts_on_load___check_intra_modal_
 	area_2->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 	area_2->load.series.timeSeries.resize(5, 1);
 
+	TSGenerator::ResizeGeneratedTimeSeries(study->areas, study->parameters);
 	BOOST_CHECK(Generate(*study));
 
 	// intra-modal for load : drawn TS numbers in all areas must be equal
@@ -151,6 +171,7 @@ static bool intramodal_load_two_areas(unsigned width_area_1, unsigned width_area
 	area_2->load.series.timeSeries.resize(width_area_2, 1);
 	area_2->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
+	TSGenerator::ResizeGeneratedTimeSeries(study->areas, study->parameters);
 	return Generate(*study);
 }
 
@@ -197,6 +218,7 @@ BOOST_AUTO_TEST_CASE(two_areas_3_thermal_clusters_with_same_number_of_ready_made
 
 	area_2->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
+	TSGenerator::ResizeGeneratedTimeSeries(study->areas, study->parameters);
 	BOOST_CHECK(Generate(*study));
 
 	// TS number checks
@@ -235,6 +257,7 @@ BOOST_AUTO_TEST_CASE(two_areas_2_thermal_clusters_with_respectively_4_4_ready_ma
 
 	area_2->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
+	TSGenerator::ResizeGeneratedTimeSeries(study->areas, study->parameters);
 	BOOST_CHECK(Generate(*study));
 
 	// TS number checks
@@ -275,7 +298,7 @@ BOOST_AUTO_TEST_CASE(two_areas_3_thermal_clusters_with_different_number_of_ready
 
 	area_2->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
-
+	TSGenerator::ResizeGeneratedTimeSeries(study->areas, study->parameters);
 	BOOST_CHECK(not Generate(*study));
 }
 
@@ -312,6 +335,7 @@ BOOST_AUTO_TEST_CASE(two_areas_3_renew_clusters_with_same_number_of_ready_made_t
 
 	area_2->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
+	TSGenerator::ResizeGeneratedTimeSeries(study->areas, study->parameters);
 	BOOST_CHECK(Generate(*study));
 
 	// TS number checks
@@ -351,6 +375,7 @@ BOOST_AUTO_TEST_CASE(two_areas_2_renew_clusters_with_respectively_4_4_ready_made
 
 	area_2->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
+	TSGenerator::ResizeGeneratedTimeSeries(study->areas, study->parameters);
 	BOOST_CHECK(Generate(*study));
 
 	// TS number checks
@@ -392,6 +417,7 @@ BOOST_AUTO_TEST_CASE(two_areas_3_renew_clusters_with_different_number_of_ready_m
 
 	area_2->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
+	TSGenerator::ResizeGeneratedTimeSeries(study->areas, study->parameters);
 	BOOST_CHECK(not Generate(*study));
 }
 
@@ -457,7 +483,9 @@ BOOST_AUTO_TEST_CASE(one_area__load_wind_thermal_are_turned_to_inter_modal__same
 	area->wind.series.timeSeries.resize(5, 1);	// Ready made TS for wind
 
 	// ... Thermal
+	study->parameters.timeSeriesToGenerate |= timeSeriesThermal; // Generated TS for thermal
 	study->parameters.timeSeriesToRefresh |= timeSeriesThermal; // Generated TS for thermal
+
 	study->parameters.nbTimeSeriesThermal = 5;
 	// ... ... clusters
 	auto thCluster_1 = addClusterToArea<ThermalCluster>(area, "th-cluster-1");
@@ -465,6 +493,7 @@ BOOST_AUTO_TEST_CASE(one_area__load_wind_thermal_are_turned_to_inter_modal__same
 
 	area->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
+	TSGenerator::ResizeGeneratedTimeSeries(study->areas, study->parameters);
 	BOOST_CHECK(Generate(*study));
 
 	// TS number checks
@@ -495,6 +524,7 @@ BOOST_AUTO_TEST_CASE(one_area__load_wind_thermal_are_turned_to_inter_modal__same
 	area->wind.series.timeSeries.resize(5, 1);	// Ready made TS for wind
 
 	// ... Thermal
+	study->parameters.timeSeriesToGenerate |= timeSeriesThermal; // Generated TS for thermal
 	study->parameters.timeSeriesToRefresh |= timeSeriesThermal; // Generated TS for thermal
 	study->parameters.nbTimeSeriesThermal = 5;
 	// ... ... clusters
@@ -503,6 +533,7 @@ BOOST_AUTO_TEST_CASE(one_area__load_wind_thermal_are_turned_to_inter_modal__same
 
 	area->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
+	TSGenerator::ResizeGeneratedTimeSeries(study->areas, study->parameters);
 	BOOST_CHECK(Generate(*study));
 
 	// TS number checks
@@ -533,6 +564,7 @@ BOOST_AUTO_TEST_CASE(one_area__load_wind_thermal_are_turned_to_inter_modal__diff
 	area->wind.series.timeSeries.resize(5, 1);	// Ready made TS for wind
 
 	// ... Thermal
+	study->parameters.timeSeriesToGenerate |= timeSeriesThermal; // Generated TS for thermal
 	study->parameters.timeSeriesToRefresh |= timeSeriesThermal; // Generated TS for thermal
 	study->parameters.nbTimeSeriesThermal = 4;
 	// ... ... clusters
@@ -541,6 +573,7 @@ BOOST_AUTO_TEST_CASE(one_area__load_wind_thermal_are_turned_to_inter_modal__diff
 
 	area->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
+	TSGenerator::ResizeGeneratedTimeSeries(study->areas, study->parameters);
 	BOOST_CHECK(not Generate(*study));
 }
 
@@ -569,6 +602,7 @@ BOOST_AUTO_TEST_CASE(one_area__load_renewable_are_turned_to_inter_modal__same_nb
 
 	area->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
+	TSGenerator::ResizeGeneratedTimeSeries(study->areas, study->parameters);
 	BOOST_CHECK(Generate(*study));
 
 	// TS number checks
@@ -600,6 +634,7 @@ BOOST_AUTO_TEST_CASE(one_area__load_renewable_are_turned_to_inter_modal__differe
 
 	area->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
+	TSGenerator::ResizeGeneratedTimeSeries(study->areas, study->parameters);
 	BOOST_CHECK(not Generate(*study));
 }
 
@@ -627,6 +662,7 @@ BOOST_AUTO_TEST_CASE(one_area__load_renewable_are_turned_to_inter_modal_with_res
 
 	area->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
+	TSGenerator::ResizeGeneratedTimeSeries(study->areas, study->parameters);
 	BOOST_CHECK(Generate(*study));
 }
 
@@ -651,6 +687,7 @@ BOOST_AUTO_TEST_CASE(load_wind_thermal_in_intra_and_inter_modal____check_all_ts_
 	study->parameters.interModal |= timeSeriesThermal;
 
 	// Generated TS for thermal
+	study->parameters.timeSeriesToGenerate |= timeSeriesThermal; // Generated TS for thermal
 	study->parameters.timeSeriesToRefresh |= timeSeriesThermal;
 	study->parameters.nbTimeSeriesThermal = 5;
 
@@ -680,6 +717,7 @@ BOOST_AUTO_TEST_CASE(load_wind_thermal_in_intra_and_inter_modal____check_all_ts_
 
 	area_2->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
+	TSGenerator::ResizeGeneratedTimeSeries(study->areas, study->parameters);
 	BOOST_CHECK(Generate(*study));
 
 	// TS number checks : all intra-modal & inter-modal modes have get the same ts number :
@@ -733,6 +771,7 @@ BOOST_AUTO_TEST_CASE(check_all_drawn_ts_numbers_are_bounded_between_0_and_nb_of_
     bc->RHSTimeSeries().resize(42, 1);
     study->bindingConstraintsGroups.resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
+	TSGenerator::ResizeGeneratedTimeSeries(study->areas, study->parameters);
 	BOOST_CHECK(Generate(*study));
 
 	// TS number checks : each energy drawn ts numbers are up-bounded with the number of TS of the related energy
@@ -751,3 +790,39 @@ BOOST_AUTO_TEST_CASE(check_all_drawn_ts_numbers_are_bounded_between_0_and_nb_of_
 	BOOST_CHECK(thermalTsNumber < thermalNumberOfTs);
     BOOST_CHECK_LT(binding_constraints_TS_number, binding_constraints_number_of_TS);
 }
+
+BOOST_AUTO_TEST_CASE(split_string_ts_cluster_gen)
+{
+    char delimiter1 = ';';
+    char delimiter2 = '.';
+
+    using stringPair = std::pair<std::string, std::string>;
+    std::vector<stringPair> v;
+
+    // only one pair of area cluster
+    v = splitStringIntoPairs("abc.def", delimiter1, delimiter2);
+    BOOST_CHECK(v[0] == stringPair("abc", "def"));
+
+    // two pairs
+    v = splitStringIntoPairs("abc.def;ghi.jkl", delimiter1, delimiter2);
+    BOOST_CHECK(v[0] == stringPair("abc", "def"));
+    BOOST_CHECK(v[1] == stringPair("ghi", "jkl"));
+
+    // first pair isn't valid
+    v = splitStringIntoPairs("abcdef;ghi.jkl", delimiter1, delimiter2);
+    BOOST_CHECK(v[0] == stringPair("ghi", "jkl"));
+
+    // second pair isn't valid
+    v = splitStringIntoPairs("abc.def;ghijkl", delimiter1, delimiter2);
+    BOOST_CHECK(v[0] == stringPair("abc", "def"));
+
+    // no semi colon
+    v = splitStringIntoPairs("abc.def.ghi.jkl", delimiter1, delimiter2);
+    BOOST_CHECK(v[0] == stringPair("abc", "def.ghi.jkl"));
+
+    // no separator
+    v.clear();
+    v = splitStringIntoPairs("abcdef", delimiter1, delimiter2);
+    BOOST_CHECK(v.empty());
+}
+

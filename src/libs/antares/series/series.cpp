@@ -1,28 +1,22 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
 #include <yuni/yuni.h>
@@ -38,16 +32,14 @@ using namespace Yuni;
 namespace Antares::Data
 {
 
-const double TimeSeries::emptyColumn[] = {0};
-
 TimeSeries::TimeSeries(numbers& tsNumbers) : timeseriesNumbers(tsNumbers)
 {}
 
 bool TimeSeries::loadFromFile(const std::string& path,
-                              Matrix<>::BufferType dataBuffer,
                               const bool average)
 {
     bool ret = true;
+    Matrix<>::BufferType dataBuffer;
     ret = timeSeries.loadFromCSVFile(path, 1, HOURS_PER_YEAR, &dataBuffer) && ret;
 
     if (average)
@@ -67,27 +59,24 @@ int TimeSeries::saveToFolder(const AreaName& areaID,
     return timeSeries.saveToCSVFile(buffer, 0);
 }
 
+int TimeSeries::saveToFile(const std::string& filename, bool saveEvenIfAllZero) const
+{
+    return timeSeries.saveToCSVFile(filename, 6, false, saveEvenIfAllZero);
+}
 
 double TimeSeries::getCoefficient(uint32_t year, uint32_t timestep) const
 {
-    if (timeSeries.width == 0)
-        return 0;
     return timeSeries[getSeriesIndex(year)][timestep];
 }
 
 const double* TimeSeries::getColumn(uint32_t year) const
 {
-    if (timeSeries.width == 0)
-        return emptyColumn;
     return timeSeries[getSeriesIndex(year)];
 }
 
 uint32_t TimeSeries::getSeriesIndex(uint32_t year) const
 {
-    if (timeSeries.width == 1)
-        return 0;
-    else
-        return timeseriesNumbers[0][year];
+    return timeseriesNumbers[0][year];
 }
 
 double* TimeSeries::operator[](uint32_t index)
@@ -110,6 +99,11 @@ void TimeSeries::reset(uint32_t width, uint32_t height)
 void TimeSeries::resize(uint32_t timeSeriesCount, uint32_t timestepCount)
 {
     timeSeries.resize(timeSeriesCount, timestepCount);
+}
+
+void TimeSeries::fill(double value)
+{
+    timeSeries.fill(value);
 }
 
 void TimeSeries::roundAllEntries()

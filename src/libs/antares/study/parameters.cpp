@@ -1,48 +1,42 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #include <algorithm>
 
 #include <yuni/yuni.h>
-#include <stdio.h>
-#include <ctype.h>
+#include <cstdio>
+#include <cctype>
 #include <tuple>   // std::tuple
 #include <list>    // std::list
 #include <sstream> // std::stringstream
 
-#include "parameters.h"
-#include <antares/constants.h>
+#include "antares/study/parameters.h"
+#include "antares/antares/constants.h"
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
-#include "load-options.h"
+#include "antares/study/load-options.h"
 #include <climits>
-#include "../solver/variable/economy/all.h"
+#include "antares/solver/variable/economy/all.h"
 
 #include <antares/exception/AssertionError.hpp>
-#include <antares/Enum.hxx>
+#include "antares/antares/Enum.hpp"
 
 using namespace Yuni;
 
@@ -139,7 +133,7 @@ static void ParametersSaveResultFormat(IniFile::Section* section, ResultFormat f
     }
 }
 
-bool StringToStudyMode(StudyMode& mode, CString<20, false> text)
+bool StringToSimulationMode(SimulationMode& mode, CString<20, false> text)
 {
     if (!text)
         return false;
@@ -153,38 +147,37 @@ bool StringToStudyMode(StudyMode& mode, CString<20, false> text)
     if (text == "economy" || text == "economic")
     {
         // The term `economic` was mis-used in previous versions of antares (<3.4)
-        mode = stdmEconomy;
+        mode = SimulationMode::Economy;
         return true;
     }
     // Adequacy
     if (text == "adequacy")
     {
-        mode = stdmAdequacy;
+        mode = SimulationMode::Adequacy;
         return true;
     }
     // Expansion
     if (text == "expansion")
     {
-        mode = stdmExpansion;
+        mode = SimulationMode::Expansion;
         return true;
     }
     return false;
 }
 
-const char* StudyModeToCString(StudyMode mode)
+const char* SimulationModeToCString(SimulationMode mode)
 {
     switch (mode)
     {
-    case stdmEconomy:
+    case SimulationMode::Economy:
         return "Economy";
-    case stdmAdequacy:
+    case SimulationMode::Adequacy:
         return "Adequacy";
-    case stdmMax:
-    case stdmExpansion:
-    case stdmUnknown:
+    case SimulationMode::Expansion:
+        return "Expansion";
+    default:
         return "Unknown";
     }
-    return "Unknown";
 }
 
 Parameters::Parameters() : noOutput(false)
@@ -195,12 +188,12 @@ Parameters::~Parameters() = default;
 
 bool Parameters::economy() const
 {
-    return mode == stdmEconomy;
+    return mode == SimulationMode::Economy;
 }
 
 bool Parameters::adequacy() const
 {
-    return mode == stdmAdequacy;
+    return mode == SimulationMode::Adequacy;
 }
 
 void Parameters::resetSeeds()
@@ -232,9 +225,7 @@ void Parameters::resetPlayedYears(uint nbOfYears)
 void Parameters::reset()
 {
     // Mode
-    mode = stdmEconomy;
-    // Expansion
-    expansion = false;
+    mode = SimulationMode::Economy;
     // Calendar
     horizon.clear();
 
@@ -455,7 +446,7 @@ static bool SGDIntLoadFamily_General(Parameters& d,
         return value.to(d.leapYear);
 
     if (key == "mode")
-        return StringToStudyMode(d.mode, value);
+        return StringToSimulationMode(d.mode, value);
 
     if (key == "nbyears")
     {
@@ -921,7 +912,7 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
                                     const String& key,
                                     const String& value,
                                     const String&,
-                                    uint version)
+                                    const StudyVersion& version)
 {
     // Comparisons kept for compatibility reasons
 
@@ -932,7 +923,7 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
     if (key == "custom-ts-numbers")
         return value.to<bool>(d.useCustomScenario);
 
-    if (key == "filtering" && version < 710)
+    if (key == "filtering" && version < StudyVersion(7, 1))
         return value.to<bool>(d.geographicTrimming);
 
     // Custom set
@@ -964,7 +955,7 @@ bool firstKeyLetterIsValid(const String& name)
     return (firstLetter >= 'a' && firstLetter <= 'z');
 }
 
-bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOptions& options)
+bool Parameters::loadFromINI(const IniFile& ini, StudyVersion& version, const StudyLoadOptions& options)
 {
     // Reset inner data
     reset();
@@ -1047,29 +1038,14 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
     }
 
     // Simulation mode
-    // ... Expansion
-    if (mode == stdmExpansion)
-    {
-        mode = stdmEconomy;
-        expansion = true;
-    }
-
     // ... Enforcing simulation mode
-    if (options.forceMode != stdmUnknown)
+    if (options.forceMode != SimulationMode::Unknown)
     {
-        if (options.forceMode == stdmExpansion)
-        {
-            mode = stdmEconomy;
-            expansion = true;
-        }
-        else
-            mode = options.forceMode;
-
-        logs.info() << "  forcing the simulation mode " << StudyModeToCString(mode);
-        assert(mode != stdmMax && "Invalid simulation mode");
+        mode = options.forceMode;
+        logs.info() << "  forcing the simulation mode " << SimulationModeToCString(mode);
     }
     else
-        logs.info() << "  simulation mode: " << StudyModeToCString(mode);
+        logs.info() << "  simulation mode: " << SimulationModeToCString(mode);
 
     if (options.forceDerated)
         derated = true;
@@ -1153,13 +1129,13 @@ void Parameters::fixGenRefreshForHydroMaxPower()
     if ((timeSeriesHydroMaxPower & timeSeriesToGenerate) != 0)
     {
         timeSeriesToGenerate &= ~timeSeriesHydroMaxPower;
-        logs.error() << "Time-series generation is not available for hydro max power. It "
+        logs.warning() << "Time-series generation is not available for hydro max power. It "
                         "will be automatically disabled.";
     }
     if ((timeSeriesHydroMaxPower & timeSeriesToRefresh) != 0)
     {
         timeSeriesToRefresh &= ~timeSeriesHydroMaxPower;
-        logs.error() << "Time-series refresh is not available for hydro max power. It will "
+        logs.warning() << "Time-series refresh is not available for hydro max power. It will "
                         "be automatically disabled.";
     }
 }
@@ -1383,17 +1359,16 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
 
     switch (mode)
     {
-    case stdmEconomy:
-    case stdmAdequacy:
+    case SimulationMode::Economy:
+    case SimulationMode::Adequacy:
+    case SimulationMode::Expansion:
     {
         // The year-by-year mode might have been requested from the command line
         if (options.forceYearByYear)
             yearByYear = true;
         break;
     }
-    case stdmUnknown:
-    case stdmExpansion:
-    case stdmMax:
+    case SimulationMode::Unknown:
     {
         // The mode year-by-year can not be enabled in adequacy
         yearByYear = false;
@@ -1463,7 +1438,7 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
         exportTimeSeriesInInput = 0;
     }
 
-    if (expansion)
+    if (mode == SimulationMode::Expansion)
         logs.info() << "  :: enabling expansion";
     if (yearByYear)
         logs.info() << "  :: enabling the 'year-by-year' mode";
@@ -1530,13 +1505,7 @@ void Parameters::saveToINI(IniFile& ini) const
         auto* section = ini.addSection("general");
 
         // Mode
-        if (expansion && mode == stdmEconomy)
-            section->add("mode", "Expansion");
-        else
-        {
-            section->add("mode", StudyModeToCString(mode));
-            expansion = false;
-        }
+        section->add("mode", SimulationModeToCString(mode));
 
         // Calendar
         section->add("horizon", horizon);
@@ -1743,7 +1712,7 @@ void Parameters::saveToINI(IniFile& ini) const
 }
 
 bool Parameters::loadFromFile(const AnyString& filename,
-                              uint version,
+                              StudyVersion& version,
                               const StudyLoadOptions& options)
 {
     // Loading the INI file

@@ -1,46 +1,39 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
 #include <yuni/yuni.h>
 #include <yuni/io/file.h>
-#include <stdio.h>
-#include "series.h"
+#include "antares/study/parts/hydro/series.h"
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
-#include "../../study.h"
+#include <antares/exception/LoadingError.hpp>
+#include "antares/study/study.h"
+#include <algorithm>
 #include <algorithm>
 
 using namespace Yuni;
 
 #define SEP IO::Separator
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 
 static void resizeTSNoDataLoss(TimeSeries& TSToResize, uint width)
@@ -53,7 +46,6 @@ static void resizeTSNoDataLoss(TimeSeries& TSToResize, uint width)
 
 static uint EqualizeTSsize(TimeSeries& TScollection1,
                            TimeSeries& TScollection2,
-                           bool& fatalError,
                            const std::string& fatalErrorMsg,
                            Area& area,
                            unsigned int height1 = HOURS_PER_YEAR,
@@ -76,7 +68,6 @@ static uint EqualizeTSsize(TimeSeries& TScollection1,
     if (ts1Width > 1 && ts2Width > 1)
     {
         logs.fatal() << fatalErrorMsg;
-        fatalError = true;
         return 0;
     }
 
@@ -164,36 +155,25 @@ void DataSeriesHydro::copyMaxPowerTS(const DataSeriesHydro& source)
 
 void DataSeriesHydro::reset()
 {
-    ror.reset(1, HOURS_PER_YEAR);
-    storage.reset(1, DAYS_PER_YEAR);
-    mingen.reset(1, HOURS_PER_YEAR);
-    generationTScount_ = 1;
-
-    maxHourlyGenPower.reset(1, HOURS_PER_YEAR);
-    maxHourlyPumpPower.reset(1, HOURS_PER_YEAR);
-    maxPowerTScount_ = 1;
+    resizeGenerationTS(1);
+    resizeMaxPowerTS(1);
 }
 
-void DataSeriesHydro::resizeRORandSTORAGE(uint width)
+void DataSeriesHydro::resizeGenerationTS(uint nbSeries)
 {
-    ror.resize(width, HOURS_PER_YEAR);
-    storage.resize(width, DAYS_PER_YEAR);
-    generationTScount_ = width;
+    storage.reset(nbSeries, DAYS_PER_YEAR);
+    ror.reset(nbSeries, HOURS_PER_YEAR);
+    mingen.reset(nbSeries, HOURS_PER_YEAR);
+
+    generationTScount_ = nbSeries;
 }
 
-void DataSeriesHydro::resizeGenerationTS(uint w, uint h)
+void DataSeriesHydro::resizeMaxPowerTS(uint nbSeries)
 {
-    ror.resize(w, h);
-    storage.resize(w, std::min((uint)DAYS_PER_YEAR, h));
-    mingen.resize(w, h);
-    generationTScount_ = w;
-}
+    maxHourlyGenPower.reset(nbSeries, HOURS_PER_YEAR);
+    maxHourlyPumpPower.reset(nbSeries, HOURS_PER_YEAR);
 
-void DataSeriesHydro::resizeMaxPowerTS(uint w, uint h)
-{
-    maxHourlyGenPower.reset(w, h);
-    maxHourlyPumpPower.reset(w, h);
-    maxPowerTScount_ = w;
+    maxPowerTScount_ = nbSeries;
 }
 
 bool DataSeriesHydro::forceReload(bool reload) const
@@ -216,7 +196,7 @@ void DataSeriesHydro::markAsModified() const
     maxHourlyPumpPower.markAsModified();
 }
 
-void DataSeriesHydro::EqualizeGenerationTSsizes(Area& area, bool usedByTheSolver, bool& fatalError)
+void DataSeriesHydro::EqualizeGenerationTSsizes(Area& area, bool usedByTheSolver)
 {
     if (!usedByTheSolver) // From GUI, no need to equalize TS collections sizes
         return;
@@ -226,7 +206,7 @@ void DataSeriesHydro::EqualizeGenerationTSsizes(Area& area, bool usedByTheSolver
     std::string fatalErrorMsg = "Hydro : area `" + area.id.to<std::string>() + "` : ";
     fatalErrorMsg += "ROR and INFLOWS must have the same number of time series.";
 
-    generationTScount_ = EqualizeTSsize(ror, storage, fatalError, fatalErrorMsg, area, HOURS_PER_YEAR, DAYS_PER_YEAR);
+    generationTScount_ = EqualizeTSsize(ror, storage, fatalErrorMsg, area, HOURS_PER_YEAR, DAYS_PER_YEAR);
 
     logs.info() << "  '" << area.id << "': ROR and INFLOWS time series were both set to : " << generationTScount_;
 
@@ -235,19 +215,22 @@ void DataSeriesHydro::EqualizeGenerationTSsizes(Area& area, bool usedByTheSolver
     fatalErrorMsg = "Hydro : area `" + area.id.to<std::string>() + "` : ";
     fatalErrorMsg += "ROR and MINGEN must have the same number of time series.";
 
-    generationTScount_ = EqualizeTSsize(ror, mingen, fatalError, fatalErrorMsg, area);
+    generationTScount_ = EqualizeTSsize(ror, mingen, fatalErrorMsg, area);
 
     logs.info() << "  '" << area.id << "': ROR and MINGEN time series were both set to : " << generationTScount_;
 }
 
-bool DataSeriesHydro::loadGenerationTS(const AreaName& areaID, const AnyString& folder, unsigned int studyVersion)
+bool DataSeriesHydro::loadGenerationTS(const AreaName& areaID,
+                                       const AnyString& folder,
+                                       StudyVersion studyVersion)
 {
     timeseriesNumbers.clear();
 
     bool ret = loadTSfromFile(ror.timeSeries, areaID, folder, "ror.txt", HOURS_PER_YEAR);
     ret = loadTSfromFile(storage.timeSeries, areaID, folder, "mod.txt", DAYS_PER_YEAR) && ret;
-    if (studyVersion >= 860)
+    if (studyVersion >= StudyVersion(8, 6))
         ret = loadTSfromFile(mingen.timeSeries, areaID, folder, "mingen.txt", HOURS_PER_YEAR) && ret;
+
     return ret;
 }
 
@@ -312,13 +295,13 @@ uint64_t DataSeriesHydro::memoryUsage() const
            + maxHourlyGenPower.memoryUsage() + maxHourlyPumpPower.memoryUsage();
 }
 
-void DataSeriesHydro::EqualizeMaxPowerTSsizes(Area& area, bool& fatalError)
+void DataSeriesHydro::EqualizeMaxPowerTSsizes(Area& area)
 {
     std::string fatalErrorMsg = "Hydro Max Power: " + area.id.to<std::string>() + " : ";
     fatalErrorMsg += "generation and pumping must have the same number of TS.";
 
     maxPowerTScount_
-      = EqualizeTSsize(maxHourlyGenPower, maxHourlyPumpPower, fatalError, fatalErrorMsg, area);
+      = EqualizeTSsize(maxHourlyGenPower, maxHourlyPumpPower, fatalErrorMsg, area);
 
     logs.info() << "  '" << area.id << "': The number of hydro max power (generation and pumping) "
                 << "TS were both set to : " << maxPowerTScount_;
@@ -343,7 +326,7 @@ uint DataSeriesHydro::maxPowerTScount() const
 }
 
 void DataSeriesHydro::resizeTSinDeratedMode(bool derated,
-                                            unsigned int studyVersion,
+                                            StudyVersion studyVersion,
                                             bool usedBySolver)
 {
     if (!(derated && usedBySolver))
@@ -351,11 +334,11 @@ void DataSeriesHydro::resizeTSinDeratedMode(bool derated,
 
     ror.averageTimeseries();
     storage.averageTimeseries();
-    if (studyVersion >= 860)
+    if (studyVersion >= StudyVersion(8,6))
         mingen.averageTimeseries();
     generationTScount_ = 1;
 
-    if (studyVersion >= 870)
+    if (studyVersion >= StudyVersion(9,1))
     {
         maxHourlyGenPower.averageTimeseries();
         maxHourlyPumpPower.averageTimeseries();
@@ -363,5 +346,5 @@ void DataSeriesHydro::resizeTSinDeratedMode(bool derated,
     }
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+

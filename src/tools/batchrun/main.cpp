@@ -1,43 +1,41 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <antares/antares.h>
+#include "antares/antares/antares.h"
+#include "antares/locator/locator.h"
 #include <antares/logs/logs.h>
-#include <antares/solver.h>
+#include <antares/solver/simulation/solver.h>
 #include <antares/resources/resources.h>
 #include <yuni/core/nullable.h>
 #include <map>
 #include <iostream>
+#include <string>
 #include <yuni/core/string.h>
 #include <yuni/core/getopt.h>
-#include <antares/study/finder.h>
+#include <antares/study/finder/finder.h>
 #include <antares/args/args_to_utf8.h>
-#include <antares/version.h>
-#include <antares/locale.h>
+#include <antares/antares/version.h>
+#include <antares/locale/locale.h>
+#include <antares/solver/utils/ortools_utils.h>
+
 #ifdef YUNI_OS_WINDOWS
 #include <process.h>
 #endif
@@ -50,7 +48,7 @@ namespace // anonymous
 class MyStudyFinder final : public Data::StudyFinder
 {
 public:
-    void onStudyFound(const String& folder, Data::Version) override
+    void onStudyFound(const String& folder, const Data::StudyVersion&) override
     {
         logs.info() << "Found: " << folder;
         list.push_back(folder);
@@ -84,7 +82,8 @@ int main(int argc, char* argv[])
     Antares::Resources::Initialize(argc, argv, true);
 
     // options
-    String optInput;
+    std::string optInput;
+    std::string ortoolsSolver;
     bool optNoTSImport = false;
     bool optIgnoreAllConstraints = false;
     bool optForceExpansion = false;
@@ -95,6 +94,7 @@ int main(int argc, char* argv[])
     bool optNoOutput = false;
     bool optParallel = false;
     bool optVerbose = false;
+    bool ortoolsUsed = false;
     Nullable<uint> optYears;
     Nullable<String> optSolver;
     Nullable<String> optName;
@@ -143,6 +143,20 @@ int main(int argc, char* argv[])
                     ' ',
                     "force-parallel",
                     "Override the max number of years computed simultaneously");
+
+	// add option for ortools use
+	// --use-ortools
+	options.addFlag(ortoolsUsed, ' ', "use-ortools", "Use ortools library to launch solver");
+
+	//--ortools-solver
+	options.add(ortoolsSolver,
+		    ' ',
+		    "ortools-solver",
+		    "Ortools solver used for simulation (only available with use-ortools "
+		    "option)\nAvailable solver list : "
+		    + availableOrToolsSolversString());
+
+
         options.remainingArguments(optInput);
         // Version
         options.addParagraph("\nMisc.");
@@ -230,7 +244,7 @@ int main(int argc, char* argv[])
 
         // The folder that contains the solver
         String dirname;
-        IO::ExtractFilePath(dirname, solver);
+        IO::parentPath(dirname, solver);
 
         String cmd;
 
@@ -276,8 +290,11 @@ int main(int argc, char* argv[])
                 cmd << " --no-constraints";
             if (optParallel)
                 cmd << " --parallel";
-            if (!(!optForceParallel))
+            if (optForceParallel)
                 cmd << " --force-parallel=" << *optForceParallel;
+	    if (ortoolsUsed)
+ 	        cmd << " --ortools-solver=" << ortoolsSolver;
+
             cmd << " \"" << studypath << "\"";
             if (!optVerbose)
                 cmd << sendToNull();

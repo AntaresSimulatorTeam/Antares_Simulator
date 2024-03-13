@@ -1,54 +1,41 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
 #include <string>
 #include <sstream>
 #include <yuni/yuni.h>
 #include <antares/study/study.h>
-#include "xcast.h"
-#include "predicate.hxx"
+#include "antares/solver/ts-generator/xcast/xcast.h"
+#include "antares/solver/ts-generator/xcast/predicate.hxx"
 #include <antares/logs/logs.h>
-#include <antares/fatal-error.h>
+#include <antares/antares/fatal-error.h>
 #include <limits>
-#include <yuni/io/directory.h>
-#include <antares/study/area/constants.h>
 
 using namespace Yuni;
 
 #define SEP (IO::Separator)
 
-namespace Antares
+namespace Antares::TSGenerator::XCast
 {
-namespace Solver
-{
-namespace TSGenerator
-{
-namespace XCast
-{
+
 enum
 {
     alpha = Data::XCast::dataCoeffAlpha,
@@ -110,13 +97,8 @@ void XCast::applyTransferFunction(PredicateT& predicate)
 {
     enum
     {
-
-        nbHoursADay = 24,
-
         x = 0,
-
         y = 1,
-
         maxPoints = Data::XCast::conversionMaxPoints,
     };
 
@@ -157,7 +139,7 @@ void XCast::applyTransferFunction(PredicateT& predicate)
             }
 
             dailyResults = DATA[s];
-            for (h = 0; h != nbHoursADay; ++h)
+            for (h = 0; h != HOURS_PER_DAY; ++h)
             {
                 for (i = 0; i != tf.width; ++i)
                 {
@@ -370,12 +352,6 @@ void XCast::destroyTemporaryData()
 template<class PredicateT>
 bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progression)
 {
-    enum
-    {
-
-        nbHoursADay = 24,
-    };
-
     pTSName = predicate.timeSeriesName();
 
     {
@@ -395,8 +371,6 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
 
     if (pNeverInitialized)
     {
-        const uint nbHours = 8760;
-
         loadFromStudy(predicate.correlation(study), predicate);
 
         allocateTemporaryData();
@@ -405,7 +379,6 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
         {
             auto& area = *(pData.localareas[s]);
 
-            predicate.matrix(area).resize(nbTimeseries, nbHours);
             auto& xcast = predicate.xcastData(area);
 
             pUseConversion[s] = (xcast.useConversion && xcast.conversion.width >= 3);
@@ -419,7 +392,7 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
 
     if (study.areas.size() > pData.localareas.size())
         progression
-          += (nbTimeseries * 365) * ((uint)study.areas.size() - (uint)pData.localareas.size());
+          += (nbTimeseries_ * DAYS_PER_YEAR) * ((uint)study.areas.size() - (uint)pData.localareas.size());
 
     if (processCount == 0)
     {
@@ -434,7 +407,7 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
     pNDPMatrixCount = 0;
     pLevellingCount = 0;
 
-    for (uint tsIndex = 0; tsIndex != nbTimeseries; ++tsIndex)
+    for (uint tsIndex = 0; tsIndex != nbTimeseries_; ++tsIndex)
     {
         uint hourInTheYear = 0;
 
@@ -488,7 +461,7 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
                     MA[s] = +std::numeric_limits<float>::max();
                 }
                 }
-                memcpy(FO[s], xcastdata.K[realmonth], sizeof(float) * nbHoursADay);
+                memcpy(FO[s], xcastdata.K[realmonth], sizeof(float) * HOURS_PER_DAY);
             }
 
             uint nbDaysPerMonth = study.calendar.months[month].days;
@@ -503,7 +476,7 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
                 {
                     float* dailyResults = DATA[s];
 
-                    for (uint h = 0; h != nbHoursADay; ++h)
+                    for (uint h = 0; h != HOURS_PER_DAY; ++h)
                     {
                         assert(0 == Math::Infinite(dailyResults[h]) && "Infinite value");
                     }
@@ -521,10 +494,10 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
 
                     auto& column = srcData.translation[0];
                     float* dailyResults = DATA[s];
-                    assert(hourInTheYear + nbHoursADay <= srcData.translation.height
+                    assert(hourInTheYear + HOURS_PER_DAY <= srcData.translation.height
                            && "Bound checking");
 
-                    for (uint h = 0; h != nbHoursADay; ++h)
+                    for (uint h = 0; h != HOURS_PER_DAY; ++h)
                     {
                         assert(0 == Math::Infinite(dailyResults[h]) && "Infinite value");
                         dailyResults[h] += (float)column[hourInTheYear + h];
@@ -539,7 +512,7 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
                 {
                     float* dailyResults = DATA[s];
 
-                    for (uint h = 0; h != nbHoursADay; ++h)
+                    for (uint h = 0; h != HOURS_PER_DAY; ++h)
                     {
                         assert(0 == Math::Infinite(dailyResults[h]) && "Infinite value");
                     }
@@ -558,7 +531,7 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
                     auto& column = series.column(tsIndex);
                     float* dailyResults = DATA[s];
 
-                    for (uint h = 0; h != nbHoursADay; ++h)
+                    for (uint h = 0; h != HOURS_PER_DAY; ++h)
                     {
                         assert(0 == Math::Infinite(dailyResults[h]) && "Infinite value");
                         dailyResults[h] *= (float)srcData.capacity;
@@ -566,21 +539,21 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
 
                     if (srcData.useTranslation == Data::XCast::tsTranslationAfterConversion)
                     {
-                        assert(hourInTheYear + nbHoursADay <= srcData.translation.height
+                        assert(hourInTheYear + HOURS_PER_DAY <= srcData.translation.height
                                && "Bound checking");
                         auto& tsavg = srcData.translation[0];
-                        for (uint h = 0; h != nbHoursADay; ++h)
+                        for (uint h = 0; h != HOURS_PER_DAY; ++h)
                             dailyResults[h] += (float)tsavg[hourInTheYear + h];
                     }
 
-                    assert(hourInTheYear + nbHoursADay <= series.height && "Bound checking");
-                    for (uint h = 0; h != nbHoursADay; ++h)
+                    assert(hourInTheYear + HOURS_PER_DAY <= series.height && "Bound checking");
+                    for (uint h = 0; h != HOURS_PER_DAY; ++h)
                         column[hourInTheYear + h] = Math::Round(dailyResults[h]);
 
                     ++progression;
                 }
 
-                hourInTheYear += nbHoursADay;
+                hourInTheYear += HOURS_PER_DAY;
 
                 pNewMonth = false;
             }
@@ -588,7 +561,7 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
     }
 
     {
-        uint y = ((pAccuracyOnCorrelation) ? pComputedPointCount : (nbTimeseries * 365));
+        uint y = ((pAccuracyOnCorrelation) ? pComputedPointCount : (nbTimeseries_ * 365));
         uint z = pNDPMatrixCount;
 
         logs.info() << "  " << pComputedPointCount << " points calculated, using " << y
@@ -640,7 +613,7 @@ bool XCast::run()
     {
         Solver::Progression::Task p(study, year, Progression::sectTSGLoad);
 
-        nbTimeseries = study.parameters.nbTimeSeriesLoad;
+        nbTimeseries_ = study.parameters.nbTimeSeriesLoad;
 
         Predicate::Load predicate;
         return runWithPredicate(predicate, p);
@@ -649,7 +622,7 @@ bool XCast::run()
     {
         Solver::Progression::Task p(study, year, Progression::sectTSGSolar);
 
-        nbTimeseries = study.parameters.nbTimeSeriesSolar;
+        nbTimeseries_ = study.parameters.nbTimeSeriesSolar;
 
         Predicate::Solar predicate;
         return runWithPredicate(predicate, p);
@@ -658,7 +631,7 @@ bool XCast::run()
     {
         Solver::Progression::Task p(study, year, Progression::sectTSGWind);
 
-        nbTimeseries = study.parameters.nbTimeSeriesWind;
+        nbTimeseries_ = study.parameters.nbTimeSeriesWind;
 
         Predicate::Wind predicate;
         return runWithPredicate(predicate, p);
@@ -672,7 +645,7 @@ bool XCast::run()
     return false;
 }
 
-} // namespace XCast
-} // namespace TSGenerator
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::TSGenerator::XCast
+
+
+

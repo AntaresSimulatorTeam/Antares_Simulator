@@ -1,15 +1,34 @@
+/*
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
+**
+** Antares_Simulator is free software: you can redistribute it and/or modify
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
+** (at your option) any later version.
+**
+** Antares_Simulator is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+** Mozilla Public Licence 2.0 for more details.
+**
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+*/
 #pragma once
 #define WIN32_LEAN_AND_MEAN
 #include "antares/study/study.h"
-#include "simulation/economy.h"
+#include "antares/solver/simulation/economy.h"
 #include "antares/study/scenario-builder/rules.h"
 #include "antares/study/scenario-builder/sets.h"
-#include "simulation.h"
+#include "antares/solver/simulation/simulation.h"
 
 using namespace Antares::Solver;
 using namespace Antares::Solver::Simulation;
 using namespace Antares::Data::ScenarioBuilder;
-
 
 void initializeStudy(Study::Ptr study);
 void configureLinkCapacities(AreaLink* link);
@@ -20,7 +39,7 @@ class TimeSeriesConfigurer
 public:
     TimeSeriesConfigurer() = default;
     TimeSeriesConfigurer(Matrix<>& matrix) : ts_(&matrix) {}
-    TimeSeriesConfigurer& setColumnCount(unsigned int columnCount);
+    TimeSeriesConfigurer& setColumnCount(unsigned int columnCount, unsigned rowCount = HOURS_PER_YEAR);
     TimeSeriesConfigurer& fillColumnWith(unsigned int column, double value);
 private:
     Matrix<>* ts_ = nullptr;
@@ -69,7 +88,9 @@ class OutputRetriever
 public:
     OutputRetriever(ISimulation<Economy>& simulation) : simulation_(simulation) {}
     averageResults overallCost(Area* area);
+    averageResults STSLevel_PSP_Open(Area* area);
     averageResults load(Area* area);
+    averageResults hydroStorage(Area* area);
     averageResults flow(AreaLink* link);
     averageResults thermalGeneration(ThermalCluster* cluster);
     averageResults thermalNbUnitsON(ThermalCluster* cluster);
@@ -119,6 +140,7 @@ class ScenarioBuilderRule
 public:
     ScenarioBuilderRule(Study& study);
     loadTSNumberData& load() { return rules_->load; }
+    hydroMaxPowerTSNumberData& hydroMaxPower() { return rules_->hydroMaxPower; }
     BindingConstraintsTSNumberData& bcGroup() { return rules_->binding_constraints; }
 
 private:

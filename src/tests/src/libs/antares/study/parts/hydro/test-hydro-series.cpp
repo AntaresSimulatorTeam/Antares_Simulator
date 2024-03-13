@@ -3,7 +3,7 @@
 
 #define WIN32_LEAN_AND_MEAN
 
-#include <boost/test/included/unit_test.hpp>
+#include <boost/test/unit_test.hpp>
 #include <antares/study/study.h>
 #include <antares/array/matrix.h>
 #include <files-system.h>
@@ -37,7 +37,7 @@ struct Fixture
         createFoldersAndFiles();
 
         // Instantiating neccessary studies parameters
-        study->header.version = 870;
+        study->header.version = Antares::Data::StudyVersion(9, 1);
         study->parameters.derated = false;
 
         //  Setting necessary paths
@@ -93,7 +93,6 @@ BOOST_AUTO_TEST_SUITE(s)
 BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_matrices_equal_width, Fixture)
 {
     bool ret = true;
-    bool fatalError = false;
 
     auto& maxHourlyGenPower = area_1->hydro.series->maxHourlyGenPower.timeSeries;
     auto& maxHourlyPumpPower = area_1->hydro.series->maxHourlyPumpPower.timeSeries;
@@ -112,18 +111,16 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_matrices_equal_width, Fixture
     ret = area_1->hydro.series->LoadMaxPower(area_1->id, pathToSeriesFolder) && ret;
     BOOST_CHECK(ret);
 
-    area_1->hydro.series->EqualizeMaxPowerTSsizes(*area_1, fatalError);
+    area_1->hydro.series->EqualizeMaxPowerTSsizes(*area_1);
 
-    BOOST_CHECK(!fatalError);
     BOOST_CHECK_EQUAL(maxHourlyGenPower.width, 3);
 }
 
 BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_both_matrix_equal_width_and_derated, Fixture)
 {
     bool ret = true;
-    bool fatalError = false;
     study->parameters.derated = true;
-    unsigned int studyVersion = 870;
+    StudyVersion studyVersion(9, 1);
     bool usedBySolver = true;
 
     auto& maxHourlyGenPower = area_1->hydro.series->maxHourlyGenPower.timeSeries;
@@ -143,18 +140,16 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_both_matrix_equal_width_and_d
     ret = area_1->hydro.series->LoadMaxPower(area_1->id, pathToSeriesFolder) && ret;
     BOOST_CHECK(ret);
 
-    area_1->hydro.series->EqualizeMaxPowerTSsizes(*area_1, fatalError);
+    area_1->hydro.series->EqualizeMaxPowerTSsizes(*area_1);
     area_1->hydro.series->resizeTSinDeratedMode(study->parameters.derated, studyVersion, usedBySolver);
 
     BOOST_CHECK_EQUAL(maxHourlyGenPower.width, 1);
     BOOST_CHECK_EQUAL(maxHourlyPumpPower.width, 1);
-    BOOST_CHECK(!fatalError);
 }
 
 BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_matrices_different_width_case_2, Fixture)
 {
     bool ret = true;
-    bool fatalError = false;
 
     auto& maxHourlyGenPower = area_1->hydro.series->maxHourlyGenPower.timeSeries;
     auto& maxHourlyPumpPower = area_1->hydro.series->maxHourlyPumpPower.timeSeries;
@@ -173,14 +168,12 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_matrices_different_width_case
     ret = area_1->hydro.series->LoadMaxPower(area_1->id, pathToSeriesFolder) && ret;
     BOOST_CHECK(ret);
 
-    area_1->hydro.series->EqualizeMaxPowerTSsizes(*area_1, fatalError);
-    BOOST_CHECK(fatalError);
+    area_1->hydro.series->EqualizeMaxPowerTSsizes(*area_1);
 }
 
 BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_different_width_case_1, Fixture)
 {
     bool ret = true;
-    bool fatalError = false;
 
     auto& maxHourlyGenPower = area_1->hydro.series->maxHourlyGenPower.timeSeries;
     auto& maxHourlyPumpPower = area_1->hydro.series->maxHourlyPumpPower.timeSeries;
@@ -199,16 +192,14 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_different_width_case_1, Fixtu
     ret = area_1->hydro.series->LoadMaxPower(area_1->id, pathToSeriesFolder) && ret;
     BOOST_CHECK(ret);
 
-    area_1->hydro.series->EqualizeMaxPowerTSsizes(*area_1, fatalError);
+    area_1->hydro.series->EqualizeMaxPowerTSsizes(*area_1);
 
-    BOOST_CHECK(!fatalError);
     BOOST_CHECK_EQUAL(maxHourlyGenPower.width, maxHourlyPumpPower.width);
 }
 
 BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_different_width_case_2, Fixture)
 {
     bool ret = true;
-    bool fatalError = false;
 
     auto& maxHourlyGenPower = area_1->hydro.series->maxHourlyGenPower.timeSeries;
     auto& maxHourlyPumpPower = area_1->hydro.series->maxHourlyPumpPower.timeSeries;
@@ -227,16 +218,14 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_different_width_case_2, Fixtu
     ret = area_1->hydro.series->LoadMaxPower(area_1->id, pathToSeriesFolder) && ret;
     BOOST_CHECK(ret);
 
-    area_1->hydro.series->EqualizeMaxPowerTSsizes(*area_1, fatalError);
+    area_1->hydro.series->EqualizeMaxPowerTSsizes(*area_1);
 
-    BOOST_CHECK(!fatalError);
     BOOST_CHECK_EQUAL(maxHourlyGenPower.width, maxHourlyPumpPower.width);
 }
 
 BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_both_zeros, Fixture)
 {
     bool ret = true;
-    bool fatalError = false;
 
     auto& maxHourlyGenPower = area_1->hydro.series->maxHourlyGenPower.timeSeries;
     auto& maxHourlyPumpPower = area_1->hydro.series->maxHourlyPumpPower.timeSeries;
@@ -257,9 +246,8 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_both_zeros, Fixture)
 
     maxHourlyGenPower.width = 0;
     maxHourlyPumpPower.width = 0;
-    area_1->hydro.series->EqualizeMaxPowerTSsizes(*area_1, fatalError);
+    area_1->hydro.series->EqualizeMaxPowerTSsizes(*area_1);
 
-    BOOST_CHECK(!fatalError);
     BOOST_CHECK_EQUAL(maxHourlyGenPower.width, maxHourlyPumpPower.width);
 }
 

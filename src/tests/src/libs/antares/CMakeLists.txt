@@ -4,13 +4,12 @@ add_subdirectory(study)
 
 set(src_libs_antares "${CMAKE_SOURCE_DIR}/libs/antares")
 
-
 # Adding a library embedding all Antares sources useful to test class Matrix
 
 set(SRC_MATRIX_LIB
 	# For confort in IDE, but not necessary
-	${src_libs_antares}/array/antares/array/matrix.h
-	${src_libs_antares}/array/antares/array/matrix.hxx
+	${src_libs_antares}/array/include/antares/array/matrix.h
+	${src_libs_antares}/array/include/antares/array/matrix.hxx
 	
 	# Necessary cpp files
 	${src_libs_antares}/jit/jit.cpp
@@ -27,6 +26,7 @@ target_link_libraries(matrix
 target_include_directories(matrix
 								PRIVATE
 									"${CMAKE_CURRENT_SOURCE_DIR}/logs"
+									"${src_libs_antares}/jit/include"
 		)
 
 # Storing lib-matrix under the folder Unit-tests in the IDE
@@ -45,9 +45,9 @@ add_executable(tests-matrix-save ${SRC_TEST_MATRIX_SAVE})
 
 target_include_directories(tests-matrix-save
 								PRIVATE
-									"${src_libs_antares}/array"
-									"${src_libs_antares}/io"
-									"${src_libs_antares}/jit"
+									"${src_libs_antares}/array/include"
+									"${src_libs_antares}/io/include"
+									"${src_libs_antares}/jit/include"
 									"${src_libs_antares}/memory/include"
 									"${CMAKE_CURRENT_SOURCE_DIR}/logs"
 									"${CMAKE_CURRENT_SOURCE_DIR}/jit"
@@ -60,6 +60,7 @@ target_link_libraries(tests-matrix-save
 							matrix
 							yuni-static-core
 							Boost::unit_test_framework
+							antares-core
 )
 
 # Storing tests-matrix-save under the folder Unit-tests in the IDE
@@ -80,9 +81,9 @@ set(SRC_TEST_MATRIX_LOAD
 add_executable(tests-matrix-load ${SRC_TEST_MATRIX_LOAD})
 target_include_directories(tests-matrix-load
 								PRIVATE
-									"${src_libs_antares}/array"
-									"${src_libs_antares}/io"
-									"${src_libs_antares}/jit"
+									"${src_libs_antares}/array/include"
+									"${src_libs_antares}/io/include"
+									"${src_libs_antares}/jit/include"
 									"${src_libs_antares}/memory/include"
 									"${CMAKE_CURRENT_SOURCE_DIR}/logs"
 									"${CMAKE_CURRENT_SOURCE_DIR}/jit"
@@ -95,6 +96,7 @@ target_link_libraries(tests-matrix-load
 							matrix
 							yuni-static-core
 							Boost::unit_test_framework
+							antares-core
 )
 
 # Storing tests-matrix-load under the folder Unit-tests in the IDE
@@ -113,4 +115,4 @@ target_link_libraries(test-utils
 		yuni-static-core
 )
 add_test(NAME test-utils COMMAND test-utils)
-
+set_property(TEST test-utils PROPERTY LABELS unit)

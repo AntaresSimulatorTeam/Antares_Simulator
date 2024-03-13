@@ -1,11 +1,31 @@
+/*
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
+**
+** Antares_Simulator is free software: you can redistribute it and/or modify
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
+** (at your option) any later version.
+**
+** Antares_Simulator is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+** Mozilla Public Licence 2.0 for more details.
+**
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+*/
 //
 // Created by marechaljas on 11/05/23.
 //
 
-#include "BindingConstraintLoader.h"
+#include "antares/study/binding_constraint/BindingConstraintLoader.h"
 #include <memory>
 #include <vector>
-#include "BindingConstraint.h"
+#include "antares/study/binding_constraint/BindingConstraint.h"
 #include "yuni/core/string/string.h"
 #include "antares/study/version.h"
 
@@ -152,19 +172,6 @@ std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintLoader::load(En
                      << "]: Invalid operator [less,greater,equal,both]";
         return {};
     }
-    if (bc->group_.empty())
-    {
-        if (env.version >= version870)
-        {
-            logs.error() << env.iniFilename << ": in [" << env.section->name
-                         << "]: Missing mandatory binding constraint group";
-            return {};
-        }
-        else // In studies versions < 870, binding constraints have no group. From version 870, antares requires constraints to have a group.
-        {
-            bc->group_ = "default";
-        }
-    }
 
     // The binding constraint can not be enabled if there is no weight in the table
     if (bc->pLinkWeights.empty() && bc->pClusterWeights.empty())
@@ -184,10 +191,10 @@ std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintLoader::load(En
     {
         auto greater_bc = std::make_shared<BindingConstraint>();
         greater_bc->copyFrom(bc.get());
-        greater_bc->name(bc->name());
+        greater_bc->name(bc->name() + "_sup");
         greater_bc->pID = bc->pID;
         greater_bc->operatorType(BindingConstraint::opGreater);
-
+        bc->name(bc->name() + "_inf");
         bc->operatorType(BindingConstraint::opLess);
 
         if (loadTimeSeries(env, bc.get()) && loadTimeSeries(env, greater_bc.get()))
@@ -253,7 +260,7 @@ bool BindingConstraintLoader::SeparateValue(const EnvForLoading& env,
 bool BindingConstraintLoader::loadTimeSeries(EnvForLoading& env,
                                              BindingConstraint* bindingConstraint)
 {
-    if (env.version >= version870)
+    if (env.version >= StudyVersion(8, 7))
         return loadTimeSeries(env, bindingConstraint->operatorType(), bindingConstraint);
 
     return loadTimeSeriesLegacyStudies(env, bindingConstraint);
@@ -319,7 +326,10 @@ bool BindingConstraintLoader::loadTimeSeriesLegacyStudies(
         else if (bindingConstraint->operatorType() == BindingConstraint::opEquality)
             columnNumber = BindingConstraint::Column::columnEquality;
         else
+        {
             logs.error("Cannot load time series of type other that eq/gt/lt");
+            return false;
+        }
 
         bindingConstraint->RHSTimeSeries_.resize(1, height);
         bindingConstraint->RHSTimeSeries_.pasteToColumn(0, intermediate[columnNumber]);

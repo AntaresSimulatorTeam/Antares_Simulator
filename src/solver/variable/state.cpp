@@ -1,33 +1,27 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
 #include <yuni/yuni.h>
 #include <antares/study/study.h>
-#include "state.h"
+#include "antares/solver/variable/state.h"
 
 using namespace Yuni;
 
@@ -50,7 +44,7 @@ ThermalState::StateForAnArea& ThermalState::operator[](size_t areaIndex)
 
 void ThermalState::StateForAnArea::initializeFromArea(const Data::Area& area)
 {
-    const auto count = area.thermal.clusterCount();
+    const auto count = area.thermal.list.enabledCount();
     thermalClustersProductions.resize(count);
     numberOfUnitsONbyCluster.resize(count);
     thermalClustersOperatingCost.resize(count);
@@ -63,16 +57,11 @@ void ThermalState::StateForAnArea::initializeFromArea(const Data::Area& area)
 State::State(Data::Study& s) :
  hourInTheSimulation(0u),
  dispatchableMargin(nullptr),
- studyMode(s.parameters.mode),
+ simulationMode(s.parameters.mode),
  unitCommitmentMode(s.parameters.unitCommitment.ucMode),
  study(s),
  thermal(s.areas),
- simplexRunNeeded(true),
- annualSystemCost(0.),
- optimalSolutionCost1(0.),
- optimalSolutionCost2(0.),
- averageOptimizationTime1(0.),
- averageOptimizationTime2(0.)
+ simplexRunNeeded(true)
 {
 }
 
@@ -80,10 +69,10 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex)
 {
     // asserts
     assert(area);
-    assert(clusterAreaWideIndex < area->thermal.clusterCount());
+    assert(clusterAreaWideIndex < area->thermal.list.enabledCount());
 
     // alias to the current thermal cluster
-    thermalCluster = area->thermal.clusters[clusterAreaWideIndex];
+    thermalCluster = area->thermal.list.enabledClusterAt(clusterAreaWideIndex).get();
     double thermalClusterAvailableProduction
      = thermalCluster->series.getCoefficient(this->year, hourInTheYear);
 
@@ -108,7 +97,7 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex)
     {
         // otherwise from the solver (most of the time)
 
-        if (studyMode != Data::stdmAdequacy) // Economy
+        if (simulationMode != Data::SimulationMode::Adequacy) // Economy
         {
             thermalClusterPMinOfAGroup
               = problemeHebdo->PaliersThermiquesDuPays[area->index]
@@ -145,7 +134,7 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex)
     }
     initFromThermalClusterIndexProduction(clusterAreaWideIndex);
 
-    if (studyMode != Data::stdmAdequacy)
+    if (simulationMode != Data::SimulationMode::Adequacy)
     {
         // Minimum power of a group of the cluster, one per year for each cluster - from the
         // solver
@@ -243,7 +232,7 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex)
 
 
     // Get cluster properties
-    Data::ThermalCluster* currentCluster = area->thermal.clusters[clusterAreaWideIndex];
+    Data::ThermalCluster* currentCluster = area->thermal.list.enabledClusterAt(clusterAreaWideIndex).get();
 
     assert(endHourForCurrentYear <= Variable::maxHoursInAYear);
     assert(endHourForCurrentYear <= currentCluster->series.timeSeries.height);

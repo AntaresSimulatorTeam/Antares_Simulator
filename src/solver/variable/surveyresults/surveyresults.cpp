@@ -1,50 +1,36 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
 #include <algorithm>
 #include <yuni/yuni.h>
 #include <antares/study/study.h>
-#include "surveyresults.h"
+#include "antares/solver/variable/surveyresults/surveyresults.h"
 #include <antares/logs/logs.h>
-#include <yuni/io/file.h>
-#include <antares/io/file.h>
 
 using namespace Yuni;
 using namespace Antares;
 
 #define SEP IO::Separator
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Variable
-{
-namespace Private
+namespace Antares::Solver::Variable::Private
 {
 void InternalExportDigestLinksMatrix(const Data::Study& study,
                                      const char* title,
@@ -137,27 +123,24 @@ static void ExportGridInfosAreas(const Data::Study& study,
         }
 
         // Thermal clusters
-        for (uint i = 0; i != area.thermal.clusterCount(); ++i)
+        for (auto cluster : area.thermal.list.each_enabled())
         {
-            assert(NULL != area.thermal.clusters[i]);
-            auto& cluster = *(area.thermal.clusters[i]);
-
             outThermal << area.id << '\t';
-            outThermal << cluster.id() << '\t';
-            outThermal << cluster.name() << '\t';
-            outThermal << Data::ThermalCluster::GroupName(cluster.groupID) << '\t';
-            outThermal << cluster.unitCount << '\t';
-            outThermal << cluster.nominalCapacity << '\t';
-            outThermal << cluster.minStablePower << '\t';
-            outThermal << cluster.minUpTime << '\t';
-            outThermal << cluster.minDownTime << '\t';
-            outThermal << cluster.spinning << '\t';
-            outThermal << cluster.emissions.factors[Antares::Data::Pollutant::CO2] << '\t';
-            outThermal << cluster.marginalCost << '\t';
-            outThermal << cluster.fixedCost << '\t';
-            outThermal << cluster.startupCost << '\t';
-            outThermal << cluster.marketBidCost << '\t';
-            outThermal << cluster.spreadCost << '\n';
+            outThermal << cluster->id() << '\t';
+            outThermal << cluster->name() << '\t';
+            outThermal << Data::ThermalCluster::GroupName(cluster->groupID) << '\t';
+            outThermal << cluster->unitCount << '\t';
+            outThermal << cluster->nominalCapacity << '\t';
+            outThermal << cluster->minStablePower << '\t';
+            outThermal << cluster->minUpTime << '\t';
+            outThermal << cluster->minDownTime << '\t';
+            outThermal << cluster->spinning << '\t';
+            outThermal << cluster->emissions.factors[Antares::Data::Pollutant::CO2] << '\t';
+            outThermal << cluster->marginalCost << '\t';
+            outThermal << cluster->fixedCost << '\t';
+            outThermal << cluster->startupCost << '\t';
+            outThermal << cluster->marketBidCost << '\t';
+            outThermal << cluster->spreadCost << '\n';
 
         } // each thermal cluster
     });   // each area
@@ -197,23 +180,17 @@ void SurveyResultsData::initialize(uint maxVariables)
 
     switch (study.parameters.mode)
     {
-    case Data::stdmEconomy:
+    case Data::SimulationMode::Adequacy:
+    case Data::SimulationMode::Economy:
+    case Data::SimulationMode::Expansion:
     {
         matrix.resize(study.areas.size(), study.areas.size());
         // The initialization will be done later
         //::MatrixFill(&matrix, std::numeric_limits<double>::quiet_NaN());
         break;
     }
-    case Data::stdmAdequacy:
-    {
-        matrix.resize(study.areas.size(), study.areas.size());
-        // The initialization will be done later
-        //::MatrixFill(&matrix, std::numeric_limits<double>::quiet_NaN());
-        break;
-    }
-    case Data::stdmUnknown:
-    case Data::stdmExpansion:
-    case Data::stdmMax:
+
+    case Data::SimulationMode::Unknown:
         break;
     }
 }
@@ -223,10 +200,10 @@ void SurveyResultsData::exportGridInfos(IResultWriter& writer)
     output.clear();
     Solver::Variable::Private::ExportGridInfosAreas(study, originalOutput, writer);
 }
-} // namespace Private
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Variable::Private
+
+
+
 
 namespace Antares
 {
