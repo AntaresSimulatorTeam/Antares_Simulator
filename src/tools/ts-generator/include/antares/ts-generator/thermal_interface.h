@@ -37,8 +37,13 @@ private:
     std::vector<double> mVec;
 };
 
-struct thermalInterface
+class ThermalInterface
 {
+public:
+
+    template<class T>
+    ThermalInterface(T source);
+
     preproVector foDuration;
     preproVector poDuration;
     preproVector foRate;
@@ -54,16 +59,10 @@ struct thermalInterface
 
     Data::ThermalLaw forcedLaw = Data::thermalLawUniform;
     Data::ThermalLaw plannedLaw = Data::thermalLawUniform;
-
 };
 
 template<class T>
-std::vector<thermalInterface> convertToInterface(T list)
-{
-    std::vector<thermalInterface> clusters;
-    clusters.resize(list.size());
-
-    return clusters;
-}
+ThermalInterface::ThermalInterface(T source)
+{}
 
 } // namespace Antares::TsGenerator
