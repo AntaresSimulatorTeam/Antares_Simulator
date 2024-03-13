@@ -28,23 +28,23 @@ using namespace Antares::Data;
 
 namespace
 {
-constexpr auto supportedVersions = std::to_array(
-{
-    StudyVersion(7, 0),
-    StudyVersion(7, 1),
-    StudyVersion(7, 2),
-    StudyVersion(8, 0),
-    StudyVersion(8, 1),
-    StudyVersion(8, 2),
-    StudyVersion(8, 3),
-    StudyVersion(8, 4),
-    StudyVersion(8, 5),
-    StudyVersion(8, 6),
-    StudyVersion(8, 7),
-    StudyVersion(8, 8),
-    StudyVersion(9, 0)
-    // Add new versions here
-});
+constexpr std::array supportedVersions{
+  StudyVersion(7, 0),
+  StudyVersion(7, 1),
+  StudyVersion(7, 2),
+  StudyVersion(8, 0),
+  StudyVersion(8, 1),
+  StudyVersion(8, 2),
+  StudyVersion(8, 3),
+  StudyVersion(8, 4),
+  StudyVersion(8, 5),
+  StudyVersion(8, 6),
+  StudyVersion(8, 7),
+  StudyVersion(8, 8),
+  StudyVersion(9, 0),
+  StudyVersion(9, 1)
+  // Add new versions here
+};
 
 /// Convert a unsigned into a StudyVersion, used for legacy version format (ex: 720)
 StudyVersion legacyVersionIntToVersion(unsigned version)
