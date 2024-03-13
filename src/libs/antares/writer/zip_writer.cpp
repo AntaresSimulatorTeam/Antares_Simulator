@@ -43,13 +43,11 @@ namespace Antares::Solver
 
 namespace
 {
-
 void logErrorAndThrow(const std::string& errorMessage)
 {
     logs.error() << errorMessage;
     throw IOError(errorMessage);
 }
-
 }
 
 // Class ZipWriteJob
