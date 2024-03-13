@@ -92,7 +92,7 @@ inline void PrepareMaxMRGFor(const State& state, double* opmrg, uint numSpace)
                 WH += H[i];
         }
 
-        if (WH == 0) // no hydro
+        if (Utils::isZero(WH)) // no hydro
         {
             for (uint i = offset; i != endHour; ++i)
                 opmrg[i] = +S[i] + M[i] - D[i];

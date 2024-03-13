@@ -59,7 +59,7 @@ struct MatrixScalar<double>
         {
             char ConversionBuffer[128];
             const int sizePrintf
-              = (v - floor(v)) == 0
+              = Utils::isZero(v - floor(v))
                   ? ANTARES_MATRIX_SNPRINTF(ConversionBuffer, sizeof(ConversionBuffer), "%.0f", v)
                   : ANTARES_MATRIX_SNPRINTF(ConversionBuffer, sizeof(ConversionBuffer), format, v);
 
@@ -84,7 +84,7 @@ struct MatrixScalar<float>
         {
             char ConversionBuffer[128];
             const int sizePrintf
-              = (v - floor(v)) == 0
+              = Utils::isZero(v - floor(v))
                   ? ANTARES_MATRIX_SNPRINTF(
                     ConversionBuffer, sizeof(ConversionBuffer), "%.0f", (double)v)
                   : ANTARES_MATRIX_SNPRINTF(

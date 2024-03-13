@@ -1098,7 +1098,7 @@ bool Matrix<T, ReadWriteT>::containsOnlyZero() const
             auto& column = entry[x];
             for (uint y = 0; y != height; ++y)
             {
-                if ((T)column[y] != 0)
+                if (!Utils::isZero((T)column[y]))
                     return false;
             }
         }
@@ -1117,7 +1117,7 @@ bool Matrix<T, ReadWriteT>::containsOnlyZero(PredicateT& predicate) const
             auto& column = entry[x];
             for (uint y = 0; y != height; ++y)
             {
-                if ((T)predicate(column[y]) != 0)
+                if (Utils::isZero((T)predicate(column[y])))
                     return false;
             }
         }
@@ -1313,21 +1313,21 @@ template<class T, class ReadWriteT>
 template<class U>
 void Matrix<T, ReadWriteT>::multiplyAllEntriesBy(const U& c)
 {
-    if (entry)
-    {
-        if (c != 0)
-        {
-            for (uint x = 0; x != width; ++x)
-            {
-                ColumnType& column = entry[x];
+    if (!entry)
+        return;
 
-                for (uint y = 0; y != height; ++y)
-                    column[y] *= (T)c;
-            }
+    if (!Utils::isZero(c))
+    {
+        for (uint x = 0; x != width; ++x)
+        {
+            ColumnType& column = entry[x];
+
+            for (uint y = 0; y != height; ++y)
+                column[y] *= (T)c;
         }
-        else
-            zero();
     }
+    else
+        zero();
 }
 
 template<class T, class ReadWriteT>

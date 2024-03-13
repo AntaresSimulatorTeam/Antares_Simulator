@@ -50,7 +50,7 @@ public:
     bool accept(const Data::Area& area) const
     {
         assert(area.wind.prepro != NULL);
-        return area.wind.prepro->xcast.capacity != 0;
+        return !Utils::isZero(area.wind.prepro->xcast.capacity);
     }
 
     Data::TimeSeries::TS& matrix(Data::Area& area) const
@@ -92,7 +92,7 @@ public:
     bool accept(const Data::Area& area) const
     {
         assert(area.load.prepro != NULL);
-        return area.load.prepro->xcast.capacity != 0;
+        return !Utils::isZero(area.load.prepro->xcast.capacity);
     }
 
     Data::TimeSeries::TS& matrix(Data::Area& area) const
@@ -134,7 +134,7 @@ public:
     bool accept(const Data::Area& area) const
     {
         assert(area.solar.prepro != NULL);
-        return area.solar.prepro->xcast.capacity != 0;
+        return !Utils::isZero(area.solar.prepro->xcast.capacity);
     }
 
     Data::TimeSeries::TS& matrix(Data::Area& area) const
