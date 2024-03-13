@@ -20,7 +20,7 @@
 */
 # pragma once
 
-#include <array>
+#include <vector>
 
 #include <antares/study/parts/thermal/cluster.h>
 
@@ -58,6 +58,12 @@ struct thermalInterface
 };
 
 template<class T>
-std::vector<thermalInterface> convertToInterface(T list);
+std::vector<thermalInterface> convertToInterface(T list)
+{
+    std::vector<thermalInterface> clusters;
+    clusters.resize(list.size());
+
+    return clusters;
+}
 
 } // namespace Antares::TsGenerator
