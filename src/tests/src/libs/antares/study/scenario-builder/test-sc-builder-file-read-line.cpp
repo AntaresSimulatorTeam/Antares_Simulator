@@ -38,14 +38,12 @@ using namespace Antares::Data;
 
 void addClusterToAreaList(Area* area, std::shared_ptr<ThermalCluster> cluster)
 {
-	area->thermal.clusters.push_back(cluster.get());
-	area->thermal.list.add(cluster);
-	area->thermal.list.mapping[cluster->id()] = cluster;
+	area->thermal.list.addToCompleteList(cluster);
 }
 
 void addClusterToAreaList(Area* area, std::shared_ptr<RenewableCluster> cluster)
 {
-	area->renewable.list.add(cluster);
+	area->renewable.list.addToCompleteList(cluster);
 }
 
 template<class ClusterType>
@@ -101,9 +99,15 @@ struct Fixture
 
 		// Hydro : set the nb of ready made TS
 		nbReadyMadeTS = 12;
-		area_1->hydro.series->resizeGenerationTS(nbReadyMadeTS, 1);
-		area_2->hydro.series->resizeGenerationTS(nbReadyMadeTS, 1);
-		area_3->hydro.series->resizeGenerationTS(nbReadyMadeTS, 1);
+		area_1->hydro.series->resizeGenerationTS(nbReadyMadeTS);
+		area_2->hydro.series->resizeGenerationTS(nbReadyMadeTS);
+		area_3->hydro.series->resizeGenerationTS(nbReadyMadeTS);
+		
+		// Hydro Max Power: set the nb of ready made TS
+		nbReadyMadeTS = 15;
+		area_1->hydro.series->resizeMaxPowerTS(nbReadyMadeTS);
+		area_2->hydro.series->resizeMaxPowerTS(nbReadyMadeTS);
+		area_3->hydro.series->resizeMaxPowerTS(nbReadyMadeTS);
 
 		// Links
 		link_12 = AreaAddLinkBetweenAreas(area_1, area_2, false);
@@ -125,11 +129,6 @@ struct Fixture
 		thCluster_12->series.timeSeries.resize(14, 1);
 		thCluster_31->series.timeSeries.resize(14, 1);
 
-		// Thermal clusters : update areas local numbering for clusters
-		area_1->thermal.prepareAreaWideIndexes();
-		area_2->thermal.prepareAreaWideIndexes();
-		area_3->thermal.prepareAreaWideIndexes();
-
 		// Add renewable clusters
 		rnCluster_21 = addClusterToArea<RenewableCluster>(area_2, "rn-cluster-21");
 		rnCluster_31 = addClusterToArea<RenewableCluster>(area_3, "rn-cluster-31");
@@ -139,11 +138,6 @@ struct Fixture
 		rnCluster_21->series.timeSeries.resize(9, 1);
 		rnCluster_31->series.timeSeries.resize(9, 1);
 		rnCluster_32->series.timeSeries.resize(9, 1);
-
-		// Renewable clusters : update areas local numbering for clusters
-		area_1->renewable.prepareAreaWideIndexes();
-		area_2->renewable.prepareAreaWideIndexes();
-		area_3->renewable.prepareAreaWideIndexes();
 
 		// Resize all TS numbers storage (1 column x nbYears lines) 
 		area_1->resizeAllTimeseriesNumbers(study->parameters.nbYears);
@@ -248,6 +242,22 @@ BOOST_FIXTURE_TEST_CASE(on_area2_and_on_year_15__solar_TS_number_3_is_chosen__re
 
 	BOOST_CHECK(my_rule.apply());
 	BOOST_CHECK_EQUAL(area_2->hydro.series->timeseriesNumbers[0][yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
+}
+
+// =================
+// Tests on Hydro Max Power
+// =================
+BOOST_FIXTURE_TEST_CASE(on_area3_and_on_year_10__hydro_power_credits_TS_number_6_is_chosen__reading_OK, Fixture)
+{
+	AreaName yearNumber = "7";
+	String tsNumber = "6";
+	AreaName::Vector splitKey = { "hgp", "area 3", yearNumber };
+	BOOST_CHECK(my_rule.readLine(splitKey, tsNumber, false));
+
+	BOOST_CHECK_EQUAL(my_rule.hydroMaxPower.get_value(yearNumber.to<uint>(), area_3->index), tsNumber.to<uint>());
+
+	BOOST_CHECK(my_rule.apply());
+	BOOST_CHECK_EQUAL(area_3->hydro.series->timeseriesNumbersHydroMaxPower[0][yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
 }
 
 
@@ -427,6 +437,27 @@ BOOST_FIXTURE_TEST_CASE(binding_constraints_group_groupTest__Load_TS_4_for_year_
     BOOST_CHECK(my_rule.apply());
     auto actual = study->bindingConstraintsGroups["groupTest"]->timeseriesNumbers[0][yearNumber];
     BOOST_CHECK_EQUAL(actual, tsNumber-1);
+}
+
+// ========================
+// Tests on TSNumberData
+// ========================
+BOOST_FIXTURE_TEST_CASE(thermalTSNumberData, Fixture)
+{
+    ScenarioBuilder::thermalTSNumberData tsdata;
+    tsdata.attachArea(area_1);
+    tsdata.reset(*study);
+    tsdata.setTSnumber(thCluster_12.get(), 2, 22);
+    tsdata.setTSnumber(thCluster_12.get(), 5, 32); //out of bounds
+
+    study->parameters.nbTimeSeriesThermal = 1;
+    thCluster_12->tsGenBehavior = LocalTSGenerationBehavior::forceNoGen;
+    thCluster_12->series.timeSeries.resize(30, 8760);
+
+    tsdata.apply(*study);
+
+    BOOST_CHECK_EQUAL(thCluster_12->series.timeseriesNumbers[0][2], 21);
+    BOOST_CHECK_EQUAL(thCluster_12->series.timeseriesNumbers[0][5], 0);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

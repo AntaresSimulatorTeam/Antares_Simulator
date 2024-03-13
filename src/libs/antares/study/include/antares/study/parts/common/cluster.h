@@ -44,37 +44,21 @@ struct CompareClusterName final
 class Cluster
 {
 public:
-    //! Map of renewable clusters
-    using Map = std::map<ClusterName, Cluster*>;
+    using Set = std::set<Cluster*, CompareClusterName>;
 
 public:
     Cluster(Area* parent);
 
     virtual ~Cluster() = default;
 
-    //! Get the cluster ID
     const ClusterName& id() const;
-
-    //! \name Group
-    //@{
-    //! Get the group of the cluster
     const ClusterName& group() const;
-
-    //! Get the renewable cluster name
     const ClusterName& name() const;
-
-    //! Set the name/ID
     void setName(const AnyString& newname);
-    //@}
-
-    //! Get the full cluster name
     Yuni::String getFullName() const;
 
     virtual uint groupId() const = 0;
-
-    //! Set the group
     virtual void setGroup(Data::ClusterName newgrp) = 0;
-    //@}
 
     /*!
     ** \brief Check and fix all values of a renewable cluster
@@ -84,13 +68,13 @@ public:
     virtual bool integrityCheck() = 0;
 
     /*!
-    ** \brief Get the memory consummed by the renewable cluster (in bytes)
+    ** \brief Get the memory consummed by the cluster (in bytes)
     */
     virtual uint64_t memoryUsage() const = 0;
     //@}
 
     /*!
-    ** \brief Invalidate all data associated to the renewable cluster
+    ** \brief Invalidate all data associated to the cluster
     */
     virtual bool forceReload(bool reload) const = 0;
 
@@ -100,7 +84,7 @@ public:
     void invalidateArea();
 
     /*!
-    ** \brief Mark the renewable cluster as modified
+    ** \brief Mark the cluster as modified
     */
     virtual void markAsModified() const = 0;
 
@@ -117,25 +101,24 @@ public:
     */
     virtual void reset();
 
-    //! Count of unit
-    uint unitCount;
+    bool saveDataSeriesToFolder(const AnyString& folder) const;
+    bool loadDataSeriesFromFolder(Study& s, const AnyString& folder);
 
-    //! Enabled
-    bool enabled;
+    uint unitCount = 0;
+
+    bool isEnabled() const { return enabled; }
+    bool enabled = true;
 
     //! The associate area (alias)
     Area* parentArea;
 
-    //! The index of the cluster (within a list)
-    uint index;
-
     //! Capacity of reference per unit (MW) (pMax)
-    double nominalCapacity;
+    double nominalCapacity = 0.;
 
     //! The index of the cluster from the area's point of view
     //! \warning this variable is only valid when used by the solver
     // (initialized in the same time that the runtime data)
-    uint areaWideIndex;
+    uint areaWideIndex = (uint)-1;
 
     //! Series
     TimeSeries series;
@@ -151,19 +134,9 @@ public:
     Matrix<> modulation;
 
 protected:
-    //! Name
     Data::ClusterName pName;
-    //! ID
     Data::ClusterName pID;
-    //! Group
     Data::ClusterName pGroup;
-
-public:
-    //! Set of clusters
-    using Set = std::set<Cluster*, CompareClusterName>;
-
-    bool saveDataSeriesToFolder(const AnyString& folder) const;
-    bool loadDataSeriesFromFolder(Study& s, const AnyString& folder);
 
 private:
     virtual unsigned int precision() const = 0;

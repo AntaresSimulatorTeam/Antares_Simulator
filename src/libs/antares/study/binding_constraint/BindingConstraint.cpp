@@ -22,6 +22,8 @@
 #include <yuni/core/math.h>
 #include <algorithm>
 #include <vector>
+#include <functional>
+
 #include "antares/study/binding_constraint/BindingConstraint.h"
 #include "antares/study/study.h"
 #include "antares/study/binding_constraint/BindingConstraintLoader.h"
@@ -39,7 +41,8 @@ using namespace Antares;
 #define SNPRINTF snprintf
 #endif
 
-namespace Antares::Data {
+namespace Antares::Data
+{
 
 BindingConstraint::Operator BindingConstraint::StringToOperator(const AnyString& text)
 {
@@ -211,10 +214,11 @@ void BindingConstraint::resetToDefaultValues()
     markAsModified();
 }
 
-void BindingConstraint::copyWeights(const Study &study,
-                                    const BindingConstraint &rhs,
-                                    bool emptyBefore,
-                                    Yuni::Bind<void(AreaName&, const AreaName&)>& translate)
+void BindingConstraint::copyWeights(
+  const Study& study,
+  const BindingConstraint& rhs,
+  bool emptyBefore,
+  const std::function<void(AreaName&, const AreaName&)>& translate)
 {
     if (emptyBefore)
     {
@@ -268,7 +272,7 @@ void BindingConstraint::copyWeights(const Study &study,
             if (localParent)
             {
                 const ThermalCluster *localTC
-                        = localParent->thermal.list.find(thermalCluster->id());
+                        = localParent->thermal.list.findInAll(thermalCluster->id());
                 if (localTC)
                     pClusterWeights[localTC] = weight;
             }
@@ -276,10 +280,11 @@ void BindingConstraint::copyWeights(const Study &study,
     }
 }
 
-void BindingConstraint::copyOffsets(const Study &study,
-                                    const BindingConstraint &rhs,
-                                    bool emptyBefore,
-                                    Yuni::Bind<void(AreaName&, const AreaName&)>& translate)
+void BindingConstraint::copyOffsets(
+  const Study& study,
+  const BindingConstraint& rhs,
+  bool emptyBefore,
+  const std::function<void(AreaName&, const AreaName&)>& translate)
 {
     if (emptyBefore)
         pLinkOffsets.clear();
@@ -329,7 +334,7 @@ void BindingConstraint::copyOffsets(const Study &study,
             if (localParent)
             {
                 const ThermalCluster *localTC
-                        = localParent->thermal.list.find(thermalCluster->id());
+                        = localParent->thermal.list.findInAll(thermalCluster->id());
                 if (localTC)
                     pClusterOffsets[localTC] = offset;
             }

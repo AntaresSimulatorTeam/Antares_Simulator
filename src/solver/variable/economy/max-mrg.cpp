@@ -119,10 +119,9 @@ inline void PrepareMaxMRGFor(const State& state, double* opmrg, uint numSpace)
     double ecart = 1.;
     uint loop = 100; // arbitrary - maximum number of iterations
 
-    // ref to the study calendar
-    auto& calendar = state.study.calendar;
     // Pmax
-    const auto& P = area.hydro.maxPower[Data::PartHydro::genMaxP];
+    const uint y = problem.year;
+    const auto& P = area.hydro.series->maxHourlyGenPower;
 
     do
     {
@@ -135,8 +134,7 @@ inline void PrepareMaxMRGFor(const State& state, double* opmrg, uint numSpace)
             assert(i < HOURS_PER_YEAR && "calendar overflow");
             if (niveau > OI[i])
             {
-                uint dayYear = calendar.hours[i + state.hourInTheYear].dayYear;
-                opmrg[i] = Math::Min(niveau, OI[i] + P[dayYear] - H[i]);
+                opmrg[i] = Math::Min(niveau, OI[i] + P.getCoefficient(y, i + state.hourInTheYear) - H[i]);
                 SM += opmrg[i] - OI[i];
             }
             else

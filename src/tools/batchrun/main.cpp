@@ -27,12 +27,15 @@
 #include <yuni/core/nullable.h>
 #include <map>
 #include <iostream>
+#include <string>
 #include <yuni/core/string.h>
 #include <yuni/core/getopt.h>
 #include <antares/study/finder/finder.h>
 #include <antares/args/args_to_utf8.h>
 #include <antares/antares/version.h>
 #include <antares/locale/locale.h>
+#include <antares/solver/utils/ortools_utils.h>
+
 #ifdef YUNI_OS_WINDOWS
 #include <process.h>
 #endif
@@ -79,7 +82,8 @@ int main(int argc, char* argv[])
     Antares::Resources::Initialize(argc, argv, true);
 
     // options
-    String optInput;
+    std::string optInput;
+    std::string ortoolsSolver;
     bool optNoTSImport = false;
     bool optIgnoreAllConstraints = false;
     bool optForceExpansion = false;
@@ -90,6 +94,7 @@ int main(int argc, char* argv[])
     bool optNoOutput = false;
     bool optParallel = false;
     bool optVerbose = false;
+    bool ortoolsUsed = false;
     Nullable<uint> optYears;
     Nullable<String> optSolver;
     Nullable<String> optName;
@@ -138,6 +143,20 @@ int main(int argc, char* argv[])
                     ' ',
                     "force-parallel",
                     "Override the max number of years computed simultaneously");
+
+	// add option for ortools use
+	// --use-ortools
+	options.addFlag(ortoolsUsed, ' ', "use-ortools", "Use ortools library to launch solver");
+
+	//--ortools-solver
+	options.add(ortoolsSolver,
+		    ' ',
+		    "ortools-solver",
+		    "Ortools solver used for simulation (only available with use-ortools "
+		    "option)\nAvailable solver list : "
+		    + availableOrToolsSolversString());
+
+
         options.remainingArguments(optInput);
         // Version
         options.addParagraph("\nMisc.");
@@ -225,7 +244,7 @@ int main(int argc, char* argv[])
 
         // The folder that contains the solver
         String dirname;
-        IO::parentPath(dirname, solver);
+        IO::parent_path(dirname, solver);
 
         String cmd;
 
@@ -271,8 +290,11 @@ int main(int argc, char* argv[])
                 cmd << " --no-constraints";
             if (optParallel)
                 cmd << " --parallel";
-            if (!(!optForceParallel))
+            if (optForceParallel)
                 cmd << " --force-parallel=" << *optForceParallel;
+	    if (ortoolsUsed)
+ 	        cmd << " --ortools-solver=" << ortoolsSolver;
+
             cmd << " \"" << studypath << "\"";
             if (!optVerbose)
                 cmd << sendToNull();

@@ -55,16 +55,6 @@ public:
     */
     void resizeAllTimeseriesNumbers(uint n);
 
-
-
-    /*!
-    ** \brief Create and initialize the list of all clusters (with the mustrun flag or not)
-    **
-    ** This method must be called before prepareClustersInMustRunMode()
-    ** to ensure the same order whatever the value of the 'mustrun' flag is.
-    */
-    void prepareAreaWideIndexes();
-
     /*!
     ** \brief Invalidate all JIT data
     */

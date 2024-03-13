@@ -21,7 +21,7 @@
 #ifndef __ANTARES_STUDY_H__
 #define __ANTARES_STUDY_H__
 
-#include <yuni/yuni.h>
+#include <mutex>
 #include <fswalker/fswalker.h>
 
 class AntaresStudy : public FSWalker::IExtension
@@ -51,7 +51,7 @@ public:
     uint64_t foldersDeleted;
 
 private:
-    Yuni::Mutex pMutex;
+    std::mutex pMutex;
     int64_t pDateLimit;
 
 }; // class AntaresStudy

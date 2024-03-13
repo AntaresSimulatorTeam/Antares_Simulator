@@ -122,7 +122,7 @@ public:
     using Flow = IO::Flow;
 
 public:
-    PathListIterator(PathList& l, const PathList& e, Yuni::Bind<bool(uint)>& progress) :
+    PathListIterator(PathList& l, const PathList& e, std::function<bool(uint)>& progress) :
      list(l), exclude(e), onProgress(progress)
     {
     }
@@ -160,7 +160,7 @@ private:
     PathList& list;
     const PathList& exclude;
     uint offset;
-    Yuni::Bind<bool(uint)>& onProgress;
+    std::function<bool(uint)>& onProgress;
 };
 
 void PathList::internalAddFromFolder(const Clob& folder, const PathList& exclude)

@@ -6,6 +6,7 @@ if (MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj")
 endif (MSVC)
 
+
 add_subdirectory(infeasible-problem-analysis)
 add_subdirectory(variable)
 add_subdirectory(hydro)
@@ -43,7 +44,7 @@ endif ()
 
 OMESSAGE("  :: application solver")
 
-set(exec_name "antares-${ANTARES_PRG_VERSION}-solver")
+set(exec_name "antares-solver")
 
 add_library(solver-lib
         ${SRCS}

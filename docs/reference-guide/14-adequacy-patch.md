@@ -17,7 +17,7 @@ It should be noted that, in the current implementation of the patch within Antar
 
 The rule implemented is called the « Local Matching » rule:
 
-- This rule consists in satisfying **ENS \\(\leq\\) DENS** (Domestic Energy not Served) for all physical areas inside the adequacy patch.
+- This rule consists in satisfying **ENS $\leq$ DENS** (Domestic Energy not Served) for all physical areas inside the adequacy patch.
 - It specifies that an area cannot export more than its local margin.
 
 This means that an area which can serve local demand with local generation, should never have ENS.

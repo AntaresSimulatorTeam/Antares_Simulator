@@ -29,8 +29,7 @@
 #include <algorithm>
 #include <vector>
 #include <memory>
-
-
+#include <ranges>
 
 
 namespace Antares
@@ -48,41 +47,17 @@ class ClusterList
 {
 public:
     using SharedPtr = typename std::shared_ptr<ClusterT>;
-    using Vect = typename std::vector<SharedPtr>;
-    using iterator = typename Vect::iterator;
-    using const_iterator = typename Vect::const_iterator;
+
+    void clearAll();
+    bool empty() const;
 
     /*!
-    ** \brief Iterate through all clusters (const)
-    */
-    template<class PredicateT>
-    void each(const PredicateT& predicate) const
-    {
-        std::ranges::for_each(clusters, [&predicate](SharedPtr c) { predicate(*c); });
-    }
-
-    //! \name clusters management
-    //@{
-    /*!
-    ** \brief Destroy all clusters
-    */
-    void clear();
-
-    /*!
-    ** \brief Add a cluster in the list
-    **
-    ** \param t The cluster to add
-    ** \return True if the cluster has been added, false otherwise
-    */
-    SharedPtr add(const SharedPtr clusters);
-
-    /*!
-    ** \brief Try to find a cluster from its id (const)
+    ** \brief Try to find a cluster from its id (const) in the complete cluster list
     **
     ** \param id ID of the cluster to find
     ** \return A pointer to a cluster. nullptr if not found
     */
-    ClusterT* find(const Data::ClusterName& id) const;
+    ClusterT* findInAll(std::string_view id) const;
 
     /*!
     ** \brief Get if a cluster exists
@@ -91,6 +66,10 @@ public:
     ** \return True if the cluster exists
     */
     bool exists(const Data::ClusterName& id) const;
+
+    auto each_enabled() const { return allClusters_ | std::views::filter(&ClusterT::isEnabled); }
+
+    std::vector<std::shared_ptr<ClusterT>> all() const;
 
     /*!
     ** \brief Rename a cluster
@@ -109,27 +88,18 @@ public:
     */
     virtual bool remove(const Data::ClusterName& id);
 
-    //! Get the number of items in the list
-    uint size() const;
-
-    //! Return true if the list is empty
-    bool empty() const;
     //@}
 
-    iterator begin();
-    const_iterator begin() const;
+    SharedPtr operator[](std::size_t idx) { return allClusters_[idx]; }
+    SharedPtr operator[](std::size_t idx) const { return allClusters_[idx]; }
 
-    iterator end();
-    const_iterator end() const;
-
-    SharedPtr operator[](std::size_t idx) { return clusters[idx]; }
-    const SharedPtr operator[](std::size_t idx) const { return clusters[idx]; }
+    SharedPtr enabledClusterAt(unsigned int index) const;
     /*!
     ** \brief Resize all matrices dedicated to the sampled timeseries numbers
     **
     ** \param n A number of years
     */
-    void resizeAllTimeseriesNumbers(uint n);
+    void resizeAllTimeseriesNumbers(uint n) const;
 
     void storeTimeseriesNumbers(Solver::IResultWriter& writer) const;
 
@@ -150,17 +120,14 @@ public:
     ** \brief Get the size (bytes) occupied in memory by a `ClusterList` structure
     ** \return A size (in bytes)
     */
-    uint64_t memoryUsage() const;
+    virtual uint64_t memoryUsage() const = 0;
 
     /// \name IO functions
     /// @{
     bool loadDataSeriesFromFolder(Study& study,
-                                 const StudyLoadOptions& options,
                                  const AnyString& folder);
 
     bool saveDataSeriesToFolder(const AnyString& folder) const;
-
-    bool saveDataSeriesToFolder(const AnyString& folder, const YString& msg) const;
 
     virtual bool saveToFolder(const AnyString& folder) const = 0;
     ///@}
@@ -177,28 +144,21 @@ public:
     */
     void retrieveTotalCapacityAndUnitCount(double& total, uint& unitCount) const;
 
-    /*!
-    ** \brief Removes disabled clusters
-    **
-    ** All clusters with the flag 'enabled' turned to false will be removed from 'list'.
-    ** As a consequence, they will no longer be seen as thermal clusters
-    ** from the solver's point of view.
-    ** \warning This method should only be used from the solver
-    **
-    ** \return The number of disabled clusters found
-    */
-    uint removeDisabledClusters();
+    unsigned int enabledCount() const;
+    unsigned int allClustersCount() const;
+    void addToCompleteList(std::shared_ptr<ClusterT> cluster);
+    void sortCompleteList();
 
 protected:
-    /// The vector containing the clusters
-    Vect clusters;
+    std::vector<std::shared_ptr<ClusterT>> allClusters_;
 
-    /// thermal, renewable, etc.
     virtual std::string typeID() const = 0;
 
+    // Give a special index to enabled clusters (thermal / renewable)
+    void rebuildIndexes();
+
 private:
-    /// Sort the vector, set index value for each cluster
-    void rebuildIndex();
+    bool alreadyInAllClusters(std::string clusterName);
 
 }; // class ClusterList
 } // namespace Data

@@ -326,6 +326,70 @@ private:
     }
 };
 
+class TimeSeriesHydroMaxHourlyGenPower final : public ATimeSeries
+{
+public:
+    using AncestorType = Renderer::Matrix<double, int32_t>;
+
+    TimeSeriesHydroMaxHourlyGenPower(wxWindow* control, Toolbox::InputSelector::Area* notifier) :
+     ATimeSeries(control, notifier)
+    {
+    }
+    ~TimeSeriesHydroMaxHourlyGenPower() override
+    {
+        destroyBoundEvents();
+    }
+
+    Date::Precision precision() override
+    {
+        return Date::hourly;
+    }
+
+    uint maxHeightResize() const override
+    {
+        return HOURS_PER_YEAR;
+    }
+
+private:
+    void internalAreaChanged(Antares::Data::Area* area) override
+    {
+        matrix((area && CurrentStudyIsValid()) ? &(area->hydro.series->maxHourlyGenPower.timeSeries) : NULL);
+        Renderer::ARendererArea::internalAreaChanged(area);
+    }
+};
+
+class TimeSeriesHydroMaxHourlyPumpPower final : public ATimeSeries
+{
+public:
+    using AncestorType = Renderer::Matrix<double, int32_t>;
+
+    TimeSeriesHydroMaxHourlyPumpPower(wxWindow* control, Toolbox::InputSelector::Area* notifier) :
+     ATimeSeries(control, notifier)
+    {
+    }
+    ~TimeSeriesHydroMaxHourlyPumpPower() override
+    {
+        destroyBoundEvents();
+    }
+
+    Date::Precision precision() override
+    {
+        return Date::hourly;
+    }
+
+    uint maxHeightResize() const override
+    {
+        return HOURS_PER_YEAR;
+    }
+
+private:
+    void internalAreaChanged(Antares::Data::Area* area) override
+    {
+        matrix((area && CurrentStudyIsValid()) ? &(area->hydro.series->maxHourlyPumpPower.timeSeries) : NULL);
+        Renderer::ARendererArea::internalAreaChanged(area);
+    }
+};
+
 // =========================
 // Clusters ...
 // =========================

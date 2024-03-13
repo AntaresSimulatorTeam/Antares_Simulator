@@ -40,6 +40,7 @@ namespace Antares::Data
     void storeTimeseriesNumbersForThermal(Solver::IResultWriter& writer, const Area& area);
     void storeTimeseriesNumbersForRenewable(Solver::IResultWriter& writer, const Area& area);
     void storeTimeseriesNumbersForTransmissionCapacities(Solver::IResultWriter& writer, const Area& area);
+    void storeTimeseriesNumbersForHydroMaxPower(Solver::IResultWriter& writer, const Area& area);
 
 } //Antares::Data
 

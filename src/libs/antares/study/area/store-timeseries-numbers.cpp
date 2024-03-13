@@ -42,10 +42,10 @@ struct TSNumbersPredicate
 };
 } // anonymous namespace
 
-static void genericStoreTimeseriesNumbers(Solver::IResultWriter& writer,
-                                          const Matrix<uint32_t>& timeseriesNumbers,
-                                          const String& id,
-                                          const String& directory)
+static void storeTSnumbers(Solver::IResultWriter& writer,
+                           const Matrix<uint32_t>& timeseriesNumbers,
+                           const String& id,
+                           const String& directory)
 {
     TSNumbersPredicate predicate;
     Clob path;
@@ -63,28 +63,33 @@ static void genericStoreTimeseriesNumbers(Solver::IResultWriter& writer,
 
 void storeTimeseriesNumbersForLoad(Solver::IResultWriter& writer, const Area& area)
 {
-    genericStoreTimeseriesNumbers(writer, area.load.series.timeseriesNumbers, area.id, "load");
+    storeTSnumbers(writer, area.load.series.timeseriesNumbers, area.id, "load");
 }
 
 void storeTimeseriesNumbersForSolar(Solver::IResultWriter& writer, const Area& area)
 {
-    genericStoreTimeseriesNumbers(writer, area.solar.series.timeseriesNumbers, area.id, "solar");
+    storeTSnumbers(writer, area.solar.series.timeseriesNumbers, area.id, "solar");
 }
 
 void storeTimeseriesNumbersForHydro(Solver::IResultWriter& writer, const Area& area)
 {
-    genericStoreTimeseriesNumbers(writer, area.hydro.series->timeseriesNumbers, area.id, "hydro");
+    storeTSnumbers(writer, area.hydro.series->timeseriesNumbers, area.id, "hydro");
+}
+
+
+void storeTimeseriesNumbersForHydroMaxPower(Solver::IResultWriter& writer, const Area& area)
+{
+    storeTSnumbers(writer, area.hydro.series->timeseriesNumbersHydroMaxPower, area.id, "hgp");
 }
 
 void storeTimeseriesNumbersForWind(Solver::IResultWriter& writer, const Area& area)
 {
-    genericStoreTimeseriesNumbers(writer, area.wind.series.timeseriesNumbers, area.id, "wind");
+    storeTSnumbers(writer, area.wind.series.timeseriesNumbers, area.id, "wind");
 }
 
 void storeTimeseriesNumbersForThermal(Solver::IResultWriter& writer, const Area& area)
 {
     area.thermal.list.storeTimeseriesNumbers(writer);
-    area.thermal.mustrunList.storeTimeseriesNumbers(writer);
 }
 
 void storeTimeseriesNumbersForRenewable(Solver::IResultWriter& writer, const Area& area)

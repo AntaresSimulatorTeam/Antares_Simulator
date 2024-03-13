@@ -7,9 +7,13 @@ on:
     branches:
       - release/*
       - doc/*
+      - dependabot/*
   workflow_call:
     inputs:
       run-tests:
+        required: true
+        type: string
+      target_branch:
         required: true
         type: string
 
@@ -24,10 +28,12 @@ jobs:
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
+      with:
+        ref: ${{ inputs.target_branch}}
 
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: 3.12
 

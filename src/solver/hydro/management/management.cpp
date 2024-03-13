@@ -302,40 +302,38 @@ bool HydroManagement::checkWeeklyMinGeneration(uint year, const Data::Area& area
     return true;
 }
 
-bool HydroManagement::checkHourlyMinGeneration(uint year, const Data::Area& area) const
+bool HydroManagement::checkGenerationPowerConsistency(uint year) const
 {
-    // Hourly minimum generation <= hourly max generation for each hour
+    bool ret = true;
 
-    auto const& srcmingen = area.hydro.series->mingen.getColumn(year);
-    auto const& maxPower = area.hydro.maxPower;
-    auto const& maxP = maxPower[Data::PartHydro::genMaxP];
+    areas_.each(
+      [&ret, &year](const Data::Area& area)
+      {
+        
+          auto const& srcmingen = area.hydro.series->mingen.getColumn(year);
+          auto const& srcmaxgen = area.hydro.series->maxHourlyGenPower.getColumn(year);
 
-    for (uint month = 0; month != 12; ++month)
-    {
-        uint realmonth = calendar_.months[month].realmonth;
-        uint simulationMonth = calendar_.mapping.months[realmonth];
-        auto daysPerMonth = calendar_.months[simulationMonth].days;
-        uint firstDay = calendar_.months[simulationMonth].daysYear.first;
-        uint endDay = firstDay + daysPerMonth;
+          uint const tsIndexMin = area.hydro.series->mingen.getSeriesIndex(year);
+          uint const tsIndexMax = area.hydro.series->maxHourlyGenPower.getSeriesIndex(year);
 
-        for (uint day = firstDay; day != endDay; ++day)
-        {
-            for (uint h = 0; h < 24; ++h)
-            {
-                if (srcmingen[day * 24 + h] > maxP[day])
-                {
-                    logs.error()
-                        << "In area: " << area.name << " [hourly] minimum generation of "
-                        << srcmingen[day * 24 + h] << " MW in timestep " << day * 24 + h + 1
-                        << " of TS-" << area.hydro.series->mingen.getSeriesIndex(year) + 1
-                        << " is incompatible with the maximum generation of " << maxP[day]
-                        << " MW.";
-                    return false;
-                }
-            }
-        }
-    }
-    return true;
+          for (uint h = 0; h < HOURS_PER_YEAR; ++h)
+          {
+              const auto& min = srcmingen[h];
+              const auto& max = srcmaxgen[h];
+
+              if (max < min)
+              {
+                  logs.error() << "In area: " << area.name << " [hourly] minimum generation of "
+                               << min << " MW in timestep " << h + 1 << " of TS-" << tsIndexMin + 1
+                               << " is incompatible with the maximum generation of " << max
+                               << " MW in timestep " << h + 1 << " of TS-" << tsIndexMax + 1 << " MW.";
+                  ret = false;
+                  return;
+              }
+          }
+      });
+
+    return ret;
 }
 
 bool HydroManagement::checkMinGeneration(uint year) const
@@ -346,8 +344,6 @@ bool HydroManagement::checkMinGeneration(uint year) const
         bool useHeuristicTarget = area.hydro.useHeuristicTarget;
         bool followLoadModulations = area.hydro.followLoadModulations;
         bool reservoirManagement = area.hydro.reservoirManagement;
-
-        ret = checkHourlyMinGeneration(year, area) && ret;
 
         if (!useHeuristicTarget)
             return;
@@ -404,10 +400,8 @@ void HydroManagement::prepareNetDemand(uint year, Data::SimulationMode mode,
                             - ((mode != Data::SimulationMode::Adequacy) ? scratchpad.mustrunSum[hour]
                                                              : scratchpad.originalMustrunSum[hour]);
 
-                area.renewable.list.each([&](const Antares::Data::RenewableCluster& cluster) {
-                    assert(cluster.series.timeSeries.jit == nullptr && "No JIT data from the solver");
-                    netdemand -= cluster.valueAtTimeStep(year, hour);
-                });
+                for (auto c : area.renewable.list.each_enabled())
+                    netdemand -= c->valueAtTimeStep(year, hour);
             }
 
             assert(!Math::NaN(netdemand)
@@ -479,6 +473,11 @@ void HydroManagement::prepareEffectiveDemand()
     });
 }
 
+bool HydroManagement::checksOnGenerationPowerBounds(uint year) const
+{
+    return (checkMinGeneration(year) && checkGenerationPowerConsistency(year)) ? true : false;
+}
+
 void HydroManagement::makeVentilation(double* randomReservoirLevel,
                                       Solver::Variable::State& state,
                                       uint y,
@@ -486,7 +485,7 @@ void HydroManagement::makeVentilation(double* randomReservoirLevel,
 {
     prepareInflowsScaling(y);
     minGenerationScaling(y);
-    if (!checkMinGeneration(y))
+    if (!checksOnGenerationPowerBounds(y))
     {
         throw FatalError("hydro management: invalid minimum generation");
     }

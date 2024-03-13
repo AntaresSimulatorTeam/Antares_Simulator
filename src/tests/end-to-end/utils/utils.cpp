@@ -43,10 +43,7 @@ std::shared_ptr<ThermalCluster> addClusterToArea(Area* area, const std::string& 
     cluster->setName(clusterName);
     cluster->reset();
 
-    auto added = area->thermal.list.add(cluster);
-
-    area->thermal.list.mapping[cluster->id()] = added;
-    area->thermal.prepareAreaWideIndexes();
+    area->thermal.list.addToCompleteList(cluster);
 
     return cluster;
 }
@@ -59,10 +56,10 @@ void addScratchpadToEachArea(Study& study)
         }
     }
 }
-
-TimeSeriesConfigurer& TimeSeriesConfigurer::setColumnCount(unsigned int columnCount)
+// Name should be changed to setTSSize
+TimeSeriesConfigurer& TimeSeriesConfigurer::setColumnCount(unsigned int columnCount, unsigned rowCount)
 {
-    ts_->resize(columnCount, HOURS_PER_YEAR);
+    ts_->resize(columnCount, rowCount);
     return *this;
 }
 
@@ -127,6 +124,12 @@ averageResults OutputRetriever::STSLevel_PSP_Open(Area* area)
 averageResults OutputRetriever::load(Area* area)
 {
     auto result = retrieveAreaResults<Variable::Economy::VCardTimeSeriesValuesLoad>(area);
+    return averageResults(result->avgdata);
+}
+
+averageResults OutputRetriever::hydroStorage(Area* area)
+{
+    auto result = retrieveAreaResults<Variable::Economy::VCardHydroStorage>(area);
     return averageResults(result->avgdata);
 }
 

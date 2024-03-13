@@ -21,10 +21,14 @@
 #ifndef __ANTARES_LIB_FINDER_FINDER_H__
 #define __ANTARES_LIB_FINDER_FINDER_H__
 
+#include <mutex>
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
 #include "antares/study/study.h"
 #include <yuni/io/directory/iterator.h>
+
+#include "../version.h"
+
 
 namespace Antares
 {
@@ -33,13 +37,10 @@ namespace Data
 /*!
 ** \brief Look for study folders asynchronously
 */
-class StudyFinder : public Yuni::Policy::ObjectLevelLockable<StudyFinder>
+class StudyFinder
 {
 public:
-    //! The threading policy
-    using ThreadingPolicy = Yuni::Policy::ObjectLevelLockable<StudyFinder>;
-    enum
-    {
+    enum {
         //! The default value for the timeout
         defaultTimeout = 10000, // 10s
     };
@@ -123,7 +124,8 @@ public: // Events
     virtual void onLookupAborted()
     {
     }
-
+protected:
+    std::mutex mutex;
 private:
     Yuni::IO::Directory::IIterator<true>* pLycos;
 

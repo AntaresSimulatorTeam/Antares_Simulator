@@ -23,6 +23,8 @@ set(SRC_STUDY_SCENARIO_BUILDER
         include/antares/study/scenario-builder/ThermalTSNumberData.h
         include/antares/study/scenario-builder/HydroTSNumberData.h
         scenario-builder/HydroTSNumberData.cpp
+        include/antares/study/scenario-builder/HydroMaxPowerTSNumberData.h
+        scenario-builder/HydroMaxPowerTSNumberData.cpp
         scenario-builder/SolarTSNumberData.cpp
         include/antares/study/scenario-builder/solarTSNumberData.h
         include/antares/study/scenario-builder/WindTSNumberData.h
@@ -67,7 +69,6 @@ source_group("study\\part\\common" FILES ${SRC_STUDY_PART_COMMON})
 
 set(SRC_STUDY_PART_THERMAL
         include/antares/study/parts/thermal/container.h
-        include/antares/study/parts/thermal/container.hxx
         parts/thermal/container.cpp
         include/antares/study/parts/thermal/prepro.h
         include/antares/study/parts/thermal/prepro.hxx
@@ -128,6 +129,8 @@ set(SRC_STUDY_PART_HYDRO
         include/antares/study/parts/hydro/allocation.h
         include/antares/study/parts/hydro/allocation.hxx
         parts/hydro/allocation.cpp
+        include/antares/study/parts/hydro/hydromaxtimeseriesreader.h
+        parts/hydro/hydromaxtimeseriesreader.cpp
 )
 source_group("study\\part\\hydro" FILES ${SRC_STUDY_PART_HYDRO})
 

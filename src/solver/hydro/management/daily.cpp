@@ -37,6 +37,7 @@
 #include <limits>
 #include "antares/solver/variable/state.h"
 #include <array>
+#include <numeric>
 
 using namespace Yuni;
 
@@ -226,6 +227,10 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
 
     auto& scratchpad = scratchmap.at(&area);
 
+    auto& meanMaxDailyGenPower = scratchpad.meanMaxDailyGenPower;
+
+    const uint tsIndex =  meanMaxDailyGenPower.getSeriesIndex(y);
+
     int initReservoirLvlMonth = area.hydro.initializeReservoirLevelDate;
 
     double reservoirCapacity = area.hydro.reservoirCapacity;
@@ -236,10 +241,11 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
 
     uint dayYear = 0;
 
-    auto const& maxPower = area.hydro.maxPower;
+    auto const& dailyNbHoursAtGenPmax = area.hydro.dailyNbHoursAtGenPmax;
 
-    auto const& maxP = maxPower[Data::PartHydro::genMaxP];
-    auto const& maxE = maxPower[Data::PartHydro::genMaxE];
+    
+    auto const& maxP = meanMaxDailyGenPower[tsIndex];
+    auto const& maxE = dailyNbHoursAtGenPmax[0];
 
     auto& ventilationResults = ventilationResults_[area.index];
 
@@ -263,14 +269,13 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
         auto daysPerMonth = calendar_.months[month].days;
         assert(daysPerMonth <= maxOPP);
         assert(daysPerMonth <= maxDailyTargetGen);
-        assert(daysPerMonth + dayYear - 1 < maxPower.height);
+        assert(daysPerMonth + dayYear - 1 < meanMaxDailyGenPower.timeSeries.height);
 
         for (uint day = 0; day != daysPerMonth; ++day)
         {
             auto dYear = day + dayYear;
             assert(day < 32);
             assert(dYear < 366);
-            scratchpad.optimalMaxPower[dYear] = maxP[dYear];
 
             if (debugData)
                 debugData->OPP[dYear] = maxP[dYear] * maxE[dYear];
@@ -545,5 +550,4 @@ void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::State& st
           prepareDailyOptimalGenerations(state, area, y, scratchmap);
           });
 }
-
 } // namespace Antares

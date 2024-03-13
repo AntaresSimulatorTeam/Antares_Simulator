@@ -198,6 +198,8 @@ std::string styleToString(const StyleType& style);
 **
 ** These values are mainly used for mask bits
 */
+static const unsigned int timeSeriesCount = 8;
+
 enum TimeSeriesType : unsigned int
 {
     //! TimeSeries : Load
@@ -214,11 +216,14 @@ enum TimeSeriesType : unsigned int
     timeSeriesRenewable = 32,
     //! TimeSeries : Renewable
     timeSeriesTransmissionCapacities = 64,
-
-    //! The maximum number of time-series that we can encounter
-    timeSeriesCount = 7,
-
+    //! TimeSeries : Hydro Max Power
+    timeSeriesHydroMaxPower = 128,
+    // ***********************************************************************
+    // Please update the constant timeSeriesCount if you add / remove an item
+    // ***********************************************************************
 }; // enum TimeSeries
+
+
 
 template<int T>
 struct TimeSeriesBitPatternIntoIndex;

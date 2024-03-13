@@ -71,4 +71,5 @@ void TSNumberData::set_value(uint x, uint y, uint value)
 {
     pTSNumberRules.entry[y][x] = value;
 }
+
 } // namespace Antares

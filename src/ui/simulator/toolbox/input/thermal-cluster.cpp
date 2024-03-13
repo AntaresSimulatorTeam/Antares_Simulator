@@ -311,7 +311,6 @@ void ThermalCluster::internalDeletePlant(void*)
             Refresh();
             MarkTheStudyAsModified();
             updateInnerValues();
-            pArea->thermal.prepareAreaWideIndexes();
             study->uiinfo->reload();
 
             // delete associated constraints
@@ -426,7 +425,7 @@ void ThermalCluster::internalAddPlant(void*)
         // Trying to find an uniq name
         YString sFl;
         sFl.clear() << "new cluster";
-        while (pArea->thermal.list.find(sFl))
+        while (pArea->thermal.list.findInAll(sFl.c_str()))
         {
             ++indx;
             sFl.clear() << "new cluster " << indx;
@@ -440,8 +439,7 @@ void ThermalCluster::internalAddPlant(void*)
         logs.info() << "adding new thermal cluster " << pArea->id << '.' << sFl;
         cluster->setName(sFl);
         cluster->reset();
-        pArea->thermal.list.add(cluster);
-        pArea->thermal.prepareAreaWideIndexes();
+        pArea->thermal.list.addToCompleteList(cluster);
 
         // Update the list
         update();
@@ -463,7 +461,7 @@ void ThermalCluster::internalClonePlant(void*)
     if (!pArea || !pLastSelectedThermalCluster)
         return;
 
-    if (!pArea->thermal.list.find(pLastSelectedThermalCluster->thermalAggregate()->id()))
+    if (!pArea->thermal.list.findInAll(pLastSelectedThermalCluster->thermalAggregate()->id()))
     {
         // The selected has been obviously invalidated
         pLastSelectedThermalCluster = nullptr;
@@ -502,7 +500,7 @@ void ThermalCluster::internalClonePlant(void*)
 
         YString sFl;
         sFl << copy << indx; // lowercase
-        while (pArea->thermal.list.find(sFl))
+        while (pArea->thermal.list.findInAll(sFl.c_str()))
         {
             ++indx;
             sFl.clear() << copy << indx;
@@ -518,8 +516,7 @@ void ThermalCluster::internalClonePlant(void*)
         // Reset to default values
         cluster->copyFrom(selectedPlant);
 
-        pArea->thermal.list.add(cluster);
-        pArea->thermal.prepareAreaWideIndexes();
+        pArea->thermal.list.addToCompleteList(cluster);
 
         // Update the list
         update();

@@ -31,7 +31,7 @@
 #include <fstream>
 #include "antares/solver/simulation/timeseries-numbers.h"
 #include "antares/solver/simulation/BindingConstraintsTimeSeriesNumbersWriter.h"
-#include "utils.h"
+#include <files-system.h>
 #include <antares/writer/writer_factory.h>
 #include <antares/writer/result_format.h>
 #include <antares/benchmarking/DurationCollector.h>

@@ -20,7 +20,9 @@
 */
 #pragma once
 
+#include <functional>
 #include "../common/cluster_list.h"
+#include "cluster.h"
 
 namespace Antares
 {
@@ -34,8 +36,7 @@ class ThermalClusterList : public ClusterList<ThermalCluster>
 {
 public:
     std::string typeID() const override;
-    // Map container
-    using Map = typename std::map<ClusterName, std::shared_ptr<ThermalCluster>>;
+    uint64_t memoryUsage() const override;
 
     /*!
     ** \brief Get the size (bytes) occupied in memory by a `ThermalClusterList` structure
@@ -79,7 +80,18 @@ public:
     void enableMustrunForEveryone();
     //@}
 
-    Map mapping;
+    auto each_mustrun_and_enabled() const
+    {
+        return allClusters_ | std::views::filter(&ThermalCluster::isMustRun)
+                            | std::views::filter(&ThermalCluster::isEnabled);
+    }
+
+    auto each_enabled_and_not_mustrun() const
+    {
+        return allClusters_ | std::views::filter(&ThermalCluster::isEnabled)
+                            | std::views::filter(std::not_fn(&ThermalCluster::isMustRun));
+    }
+
 
     /*!
     ** \brief Ensure data for the prepro are initialized
@@ -99,7 +111,7 @@ public:
      ** \param folder The target folder
      ** \return A non-zero value if the operation succeeded, 0 otherwise
      */
-    bool loadPreproFromFolder(Study& s, const StudyLoadOptions& options, const AnyString& folder);
+    bool loadPreproFromFolder(Study& s, const AnyString& folder);
 
     bool loadEconomicCosts(Study& s, const AnyString& folder);
 
@@ -107,6 +119,14 @@ public:
     bool saveEconomicCosts(const AnyString& folder) const;
 
     bool saveToFolder(const AnyString& folder) const override;
+
+    unsigned int enabledAndMustRunCount() const;
+    unsigned int enabledAndNotMustRunCount() const;
+
+private:
+    // Give a special index to enbled and not must-run THERMAL clusters
+    void rebuildIndex() const;
+
 }; // class ThermalClusterList
 } // namespace Data
 } // namespace Antares

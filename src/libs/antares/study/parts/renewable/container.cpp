@@ -50,26 +50,9 @@ PartRenewable::~PartRenewable()
 {
 }
 
-void PartRenewable::prepareAreaWideIndexes()
-{
-    // Copy the list with all renewable clusters
-    // And init the areaWideIndex (unique index for a given area)
-    if (list.empty())
-    {
-        return;
-    }
-
-    uint idx = 0;
-    for (const auto& cluster : list)
-    {
-        cluster->areaWideIndex = idx;
-        ++idx;
-    }
-}
-
 void PartRenewable::reset()
 {
-    list.clear();
+    list.clearAll();
 }
 
 } // namespace Antares::Data

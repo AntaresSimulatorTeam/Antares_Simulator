@@ -82,6 +82,8 @@ public:
     */
     bool loadFromStudy(Study& study);
 
+    void initializeRandomNumberGenerators(const Parameters& parameters);
+
 public:
     //! The number of years to process
     uint nbYears;
@@ -130,8 +132,6 @@ private:
     void initializeRangeLimits(const Study& study, StudyRangeLimits& limits);
     //! Prepare all thermal clusters in 'must-run' mode
     void initializeThermalClustersInMustRunMode(Study& study) const;
-    void removeDisabledThermalClustersFromSolverComputations(Study& study);
-    void removeDisabledRenewableClustersFromSolverComputations(Study& study);
     void removeDisabledShortTermStorageClustersFromSolverComputations(Study& study);
     void removeAllRenewableClustersFromSolverComputations(Study& study);
     void disableAllFilters(Study& study);

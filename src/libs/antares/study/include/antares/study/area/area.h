@@ -331,7 +331,6 @@ private:
     void createMissingTimeSeries();
     void createMissingPrepros();
 
-
 }; // class Area
 
 bool saveAreaOptimisationIniFile(const Area& area, const Yuni::Clob& buffer);

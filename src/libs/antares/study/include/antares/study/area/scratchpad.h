@@ -28,10 +28,10 @@
 #include <antares/array/matrix.h>
 #include <vector>
 #include <set>
+#include <numeric>
+#include <antares/series/series.h>
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 /*!
 ** \brief Scratchpad for temporary data performed by the solver
@@ -49,7 +49,7 @@ public:
     */
     AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area);
     //! Destructor
-    ~AreaScratchpad();
+    ~AreaScratchpad() = default;
     //@}
 
     //! Sum of all fatal hors hydro
@@ -69,22 +69,36 @@ public:
     // This variable is initialized every MC-year
     double originalMustrunSum[HOURS_PER_YEAR];
 
-    //! Optimal max power (OPP) - Hydro management
-    double optimalMaxPower[DAYS_PER_YEAR];
-
-    //!
-    double pumpingMaxPower[DAYS_PER_YEAR];
-
-    /*!
+       /*!
     ** \brief Dispatchable Generation Margin
     **
     ** Those values, written by the output, must be calculated before
     ** running the hydro remix.
     */
     double dispatchableGenerationMargin[168];
+
+    /*!
+    ** \brief Daily mean maximum power matrices
+    **
+    ** These matrices will be calculated based on maximum
+    ** hourly generation/pumping matrices
+    */
+    TimeSeries meanMaxDailyGenPower;
+    TimeSeries meanMaxDailyPumpPower;
+
+private:
+    /*!
+    ** \brief Caluclation of daily mean maximum power matrices
+    **
+    ** Calculates daily mean maximum generation/pumping power
+    ** power matrices meanMaxDailyGenPower/meanMaxDailyPumpPower
+    */
+    void CalculateMeanDailyMaxPowerMatrices(const Matrix<double>& hourlyMaxGenMatrix,
+                                            const Matrix<double>& hourlyMaxPumpMatrix,
+                                            uint nbOfMaxPowerTimeSeries);
+
 }; // class AreaScratchpad
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
 
 #endif // __ANTARES_LIBS_STUDY_AREA_SCRATCHPAD_H__

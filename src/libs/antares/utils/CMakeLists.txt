@@ -12,6 +12,7 @@ add_library(Antares::utils ALIAS ${PROJ})
 target_link_libraries(${PROJ}
         PRIVATE
         yuni-static-core
+        Antares::logs
 )
 
 target_include_directories(${PROJ}

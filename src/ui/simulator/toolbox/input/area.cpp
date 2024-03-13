@@ -219,10 +219,10 @@ protected:
 
         if (0 != (equipment & Data::timeSeriesThermal))
         {
-            if (area->thermal.list.size() > 0)
+            if (area->thermal.list.allClustersCount() > 0)
             {
                 CString<32, false> text;
-                text << area->thermal.list.size();
+                text << area->thermal.list.allClustersCount();
                 const uint8_t R_COLOR = 210;
                 const uint8_t G_COLOR = 217;
                 const uint8_t B_COLOR = 216;
@@ -235,10 +235,10 @@ protected:
         }
         if (0 != (equipment & Data::timeSeriesRenewable))
         {
-            if (area->renewable.list.size() > 0)
+            if (area->renewable.list.allClustersCount() > 0)
             {
                 CString<32, false> text;
-                text << area->renewable.list.size();
+                text << area->renewable.list.allClustersCount();
                 item->addRightTag(text, 210, 217, 216);
             }
         }
