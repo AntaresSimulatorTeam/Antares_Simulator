@@ -24,6 +24,9 @@
 #include <antares/exception/AssertionError.hpp>
 #include "antares/antares/Enum.hpp"
 #include <filesystem>
+#ifdef _WIN32
+#include <io.h>
+#endif
 
 using namespace operations_research;
 
@@ -231,14 +234,35 @@ static void extract_from_MPSolver(const MPSolver* solver,
     }
 }
 
+std::filesystem::path CreateRandomSubDir(const std::filesystem::path& parentDir)
+{
+    char template_array[] = "XXXXXX";
+#ifdef __linux__
+    auto template_dir = parentDir / template_array;
+    char* template_dir_array = template_dir.string().data();
+    if (auto ret = mkdtemp(template_dir_array); ret != nullptr)
+    {
+        return ret;
+    }
+#elif _WIN32
+    if (auto ret = _mktemp_s(template_array); ret == 0)
+    {
+        auto created_dir = parentDir / template_array;
+        std::filesystem::create_directory(created_dir);
+        return created_dir;
+    }
+#endif
+    else
+    {
+        Antares::logs.warning() << "Could not create random subdirectory in " << parentDir.string()
+                                << "\n";
+        return parentDir;
+    }
+}
 std::string generateTempPath(const std::string& filename)
 {
-    namespace fs = std::filesystem;
-    std::ostringstream tmpPath;
-    tmpPath << fs::temp_directory_path().string() << Yuni::IO::SeparatorAsString << filename;
-    return tmpPath.str();
+    return (CreateRandomSubDir(std::filesystem::temp_directory_path()) / filename).string().c_str();
 }
-
 void removeTemporaryFile(const std::string& tmpPath)
 {
     namespace fs = std::filesystem;
