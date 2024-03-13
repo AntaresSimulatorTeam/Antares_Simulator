@@ -81,7 +81,7 @@ jobs:
           vcpkg install ${{env.vcpkgPackages}} --triplet ${{env.triplet}}
           rm -rf buildtrees packages downloads
       shell: bash
-
+      
     - name: Install libraries
       run: |
            sudo apt-get update
