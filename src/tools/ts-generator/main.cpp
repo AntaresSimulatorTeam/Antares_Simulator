@@ -150,10 +150,16 @@ int main(int argc, char *argv[])
     else
         clusters = getClustersToGen(study->areas, settings.thermalListToGen);
 
+    std::vector<TsGenerator::ThermalInterface> interface;
     for (auto& c : clusters)
+    {
         logs.debug() << c->id();
+        interface.push_back(c);
+        logs.notice() << interface.back().unitCount;
+        logs.notice() << interface.back().nominalCapacity;
+        logs.notice() << interface.back().forcedVolatility;
+    }
 
-    /* auto clustersInterface = TsGenerator::convertToInterface(clusters); */
     return TSGenerator::GenerateThermalTimeSeries(*study, clusters, 0, *resultWriter);
 }
 

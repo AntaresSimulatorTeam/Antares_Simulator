@@ -42,7 +42,7 @@ class ThermalInterface
 public:
 
     template<class T>
-    ThermalInterface(T source);
+    ThermalInterface(T& source);
 
     preproVector foDuration;
     preproVector poDuration;
@@ -51,18 +51,24 @@ public:
     preproVector npoMin;
     preproVector npoMax;
 
-    unsigned unitCount;
-    float nominalCapacity;
+    const unsigned &unitCount;
+    const double &nominalCapacity;
 
-    double forcedVolatility;
-    double plannedVolatility;
+    const double& forcedVolatility;
+    const double& plannedVolatility;
 
-    Data::ThermalLaw forcedLaw = Data::thermalLawUniform;
-    Data::ThermalLaw plannedLaw = Data::thermalLawUniform;
+    Data::ThermalLaw& forcedLaw;
+    Data::ThermalLaw& plannedLaw;
 };
 
 template<class T>
-ThermalInterface::ThermalInterface(T source)
+ThermalInterface::ThermalInterface(T& source) :
+    unitCount(source->unitCount),
+    nominalCapacity(source->nominalCapacity),
+    forcedVolatility(source->forcedVolatility),
+    plannedVolatility(source->plannedVolatility),
+    forcedLaw(source->forcedLaw),
+    plannedLaw(source->plannedLaw)
 {}
 
 } // namespace Antares::TsGenerator
