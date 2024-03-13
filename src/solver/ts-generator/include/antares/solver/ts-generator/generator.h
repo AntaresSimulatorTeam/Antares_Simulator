@@ -53,7 +53,7 @@ public:
 
     Data::TimeSeries& series;
 
-    Matrix<>& modulation;
+    Matrix<>::ColumnType& modulationCapacity;
 
     const std::string& name;
     const std::string& id;
@@ -69,7 +69,7 @@ ThermalInterface::ThermalInterface(T& source) :
     plannedLaw(source->plannedLaw),
     prepro(source->prepro),
     series(source->series),
-    modulation(source->modulation),
+    modulationCapacity(source->modulation[Data::thermalModulationCapacity]),
     name(source->name()),
     id(source->id())
 {}

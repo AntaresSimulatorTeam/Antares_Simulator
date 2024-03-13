@@ -341,8 +341,6 @@ void GeneratorTempData::operator()(Data::Area& area, ThermalInterface& cluster)
     double cumul = 0;
     double last = 0;
 
-    auto& modulation = cluster.modulation[Data::thermalModulationCapacity];
-
     double* dstSeries = nullptr;
 
     const uint tsCount = nbThermalTimeseries_ + 2;
@@ -582,7 +580,7 @@ void GeneratorTempData::operator()(Data::Area& area, ThermalInterface& cluster)
                 double AVPDayInTheYear = AVP[dayInTheYear];
                 for (uint h = 0; h != 24; ++h)
                 {
-                    dstSeries[hour] = Math::Round(AVPDayInTheYear * modulation[hour]);
+                    dstSeries[hour] = Math::Round(AVPDayInTheYear * cluster.modulationCapacity[hour]);
                     ++hour;
                 }
             }
