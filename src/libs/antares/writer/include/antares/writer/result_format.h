@@ -33,6 +33,8 @@ namespace Antares::Data
         // Store outputs as files inside directories
         legacyFilesDirectories = 0,
         // Store outputs inside a single zip archive
-        zipArchive
+        zipArchive,
+        // Store outputs in-memory
+        inMemory
     };
 }

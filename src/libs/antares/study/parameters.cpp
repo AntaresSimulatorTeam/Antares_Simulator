@@ -108,9 +108,14 @@ static bool ConvertCStrToResultFormat(const AnyString& text, ResultFormat& out)
         out = legacyFilesDirectories;
         return true;
     }
-    if (s == "zip") // Using renewable clusters
+    if (s == "zip")
     {
         out = zipArchive;
+        return true;
+    }
+    if (s == "in-memory")
+    {
+        out = inMemory;
         return true;
     }
 
@@ -127,6 +132,9 @@ static void ParametersSaveResultFormat(IniFile::Section* section, ResultFormat f
     {
     case zipArchive:
         section->add(name, "zip");
+        break;
+    case inMemory:
+        section->add(name, "in-memory");
         break;
     default:
         section->add(name, "txt-files");
