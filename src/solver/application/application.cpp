@@ -308,6 +308,9 @@ void Application::postParametersChecks() const
 
 void Application::prepare(int argc, char* argv[])
 {
+    pArgc = argc;
+    pArgv = argv;
+
     // Load the local policy settings
     LocalPolicy::Open();
     LocalPolicy::CheckRootPrefix(argv[0]);
