@@ -1,7 +1,6 @@
 name: Branch name validation
 
-on:
-  push:
+
 
 jobs:
   valid-branch-name:

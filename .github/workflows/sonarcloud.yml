@@ -1,8 +1,5 @@
 name: SonarCloud
 
-on:
-    pull_request:
-
 jobs:
   sonarcloud:
     name: SonarCloud

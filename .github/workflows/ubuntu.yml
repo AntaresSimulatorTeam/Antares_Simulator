@@ -95,7 +95,7 @@ jobs:
            mkdir -p ${{github.workspace}}/overlays/wxWidgets
            echo "set(VCPKG_POLICY_EMPTY_PACKAGE enabled)" >> ${{github.workspace}}/overlays/wxWidgets/portfile.cmake
            cat  ${{github.workspace}}/overlays/wxWidgets/portfile.cmake
-           
+
     - name: Read antares-deps version
       id: antares-deps-version
       uses: notiz-dev/github-action-json-property@release
@@ -136,6 +136,7 @@ jobs:
       run: |
            cmake -B _build -S src \
            -DCMAKE_C_COMPILER_LAUNCHER=ccache \
+           -DVCPKG_OVERLAY_PORTS=${{github.workspace}}/overlays/ \
            -DVCPKG_ROOT="${{env.VCPKG_ROOT}}" \
            -DVCPKG_TARGET_TRIPLET=${{ env.triplet }} \
            -DCMAKE_C_COMPILER=/usr/bin/gcc-10 \
