@@ -87,7 +87,7 @@ if (BUILD_TOOLS)
 
       add_test(
         NAME ts-generator
-        COMMAND Python3::Interpreter -m pytest -m json --solver-path=$<TARGET_FILE:antares-ts-generator> --ts-generator
+        COMMAND Python3::Interpreter -m pytest -m ts-generator --tsgenerator_path=$<TARGET_FILE:antares-ts-generator> antares_tools/ts-generator/ts-generator.py
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/run-study-tests"
         )
 
