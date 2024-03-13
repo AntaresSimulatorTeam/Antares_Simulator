@@ -27,7 +27,3 @@ def named_mps_problems(request):
 @pytest.fixture()
 def parallel(request):
     return request.config.getoption("--force-parallel")
-
-@pytest.fixture()
-def ts_generator(request):
-    return request.config.getoption("--ts-generator")
