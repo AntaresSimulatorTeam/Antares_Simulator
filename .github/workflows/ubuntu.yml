@@ -29,7 +29,7 @@ env:
   RUN_EXTENDED_TESTS: ${{ github.event_name == 'schedule' || inputs.run-tests == 'true' }}
   REF: ${{ inputs.target_branch =='' && github.ref || inputs.target_branch}}
   VCPKG_ROOT: ${{ github.workspace }}/vcpkg
-  vcpkgPackages: yaml-cpp antlr4
+  vcpkgPackages: yaml-cpp antlr4 boost-test
   triplet: x64-linux
 
 jobs:
@@ -86,7 +86,7 @@ jobs:
       run: |
            sudo apt-get update
            sudo apt-get install uuid-dev libwxgtk3.0-gtk3-dev
-           sudo apt-get install libboost-test-dev
+          #  sudo apt-get install libboost-test-dev
            sudo apt-get install g++-10 gcc-10
           #  sudo apt-get install libyaml-cpp-dev libantlr4-runtime-dev 
 
