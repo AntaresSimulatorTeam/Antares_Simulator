@@ -91,19 +91,19 @@ var NAVTREEINDEX =
 "classAntares_1_1Data_1_1ThermalCluster.html#a67ac1264f98779e79e5f4c3be02a1fe5",
 "classAntares_1_1Graph_1_1Grid.html#a0f396c947841654d8ce748aa73e478f0",
 "classAntares_1_1Matrix.html#a1e00393f6359fa63e2bb0b5c35d279d2a1d85b0d52cc96d30d04776011c3819e3",
-"classAntares_1_1Solver_1_1Simulation_1_1ITimeSeriesNumbersWriter.html",
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1RenewableGeneration.html#a8f02b29457ffc8b4c7164ec7c8c65ed0",
-"classAntares_1_1Solver_1_1WindAreaNumberOfTSretriever.html",
-"classAntares_1_1Window_1_1AnalyzerWizard.html#a5e3aac41ae207666672da448ea98d873",
-"classAntares_1_1Window_1_1RaiseWindowBox.html",
-"classIProvider.html#afe23d5d59fdc13c722ec9e2db9854f01",
-"congestionProbability_8h_source.html",
-"dir_b9bf6eda63046244e43e0b7d97d54c27.html",
-"global__JIT__manager_8h_source.html",
-"parameter_8h_source.html",
-"structAntares_1_1Solver_1_1Variable_1_1Areas_1_1Statistics.html",
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxBase.html#a22867a4b6e6809f5c815050b22a524ca",
-"thermal-cluster-item_8h_source.html"
+"classAntares_1_1Solver_1_1Simulation_1_1ISimulation.html#a7ba42a043ab3c43a4aa8f6054521423d",
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1RenewableGeneration.html#a486ce0693a89676ba30a49bce3649b2a",
+"classAntares_1_1Solver_1_1Variable_1_1ThermalState_1_1StateForAnArea.html#a69e64f3ddf551f791ca1cc8e5fe850a1",
+"classAntares_1_1Window_1_1AnalyzerWizard.html#a3e69ad1fae7c2d9f3aef23446886c419",
+"classAntares_1_1Window_1_1PerformerDialog.html#a8f8a36650514d1ad39ff5a8734acdc92",
+"classIProvider.html#ad85e769598271622ea04cf18eded8a58",
+"congestionFeeAbs_8h_source.html",
+"dir_b89309f7b0994e54c2ca58e16db6405e.html",
+"geographic-trimming-grid_8h_source.html",
+"overflow_8h_source.html",
+"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html",
+"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average.html#a78db0f8bffc05da1df4366d1b2f25054",
+"tests_2end-to-end_2utils_2utils_8h_source.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

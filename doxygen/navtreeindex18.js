@@ -1,5 +1,7 @@
 var NAVTREEINDEX18 =
 {
+"classIProvider.html#ad85e769598271622ea04cf18eded8a58":[7,0,119,7],
+"classIProvider.html#ae183c87e26c164fa217db87fa1ea1d77":[7,0,119,9],
 "classIProvider.html#afe23d5d59fdc13c722ec9e2db9854f01":[7,0,119,2],
 "classI__MPS__writer.html":[7,0,116],
 "classIntoUTF8ArgsTranslator.html":[7,0,118],
@@ -113,8 +115,8 @@ var NAVTREEINDEX18 =
 "classProgress.html#ac4b5ef750872e2013c6925c203a35d4cadfe3149fcd3440053bcdf797ab68efc8":[7,0,184,1,0],
 "classProgress.html#ac871f3914f9fb67fa2da2783d5be9a0f":[7,0,184,4],
 "classPublicStudy.html":[7,0,185],
-"classPublicStudy.html#a7bd1904c52c42533e39390182c2d1726":[7,0,185,0],
 "classPublicStudy.html#a7bd1904c52c42533e39390182c2d1726":[7,0,185,1],
+"classPublicStudy.html#a7bd1904c52c42533e39390182c2d1726":[7,0,185,0],
 "classQuadraticProblemMatrix.html":[7,0,186],
 "classRealName.html":[7,0,187],
 "classResultMatrix.html":[7,0,193],
@@ -247,7 +249,5 @@ var NAVTREEINDEX18 =
 "common_8areasummary_8h_source.html":[8,0,0,5,2,1,1,1,1,1,1],
 "component_8hxx_source.html":[8,0,0,5,2,1,1,2,3],
 "concurrency_8h_source.html":[8,0,0,1,0,4,0,0,0,0],
-"config_8h_source.html":[8,0,0,5,2,3],
-"congestionFeeAbs_8h_source.html":[8,0,0,2,10,0,0,0,0,2,1,1],
-"congestionFee_8h_source.html":[8,0,0,2,10,0,0,0,0,2,1,0]
+"config_8h_source.html":[8,0,0,5,2,3]
 };

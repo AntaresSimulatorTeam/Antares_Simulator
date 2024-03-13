@@ -16,7 +16,7 @@
 <meta name="twitter:title" content="Antares Simulator" />
 <meta name="twitter:description" content="Power System Simulator." />
 <!-- END twitter metadata -->
-<title>Antares Simulator: src/libs/antares/writer/include/antares/writer/result_format.h Source File</title>
+<title>Antares Simulator: Member List</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -92,11 +92,6 @@ $(function() {
 /* @license-end */
 </script>
 <div id="main-nav"></div>
-<script type="text/javascript">
-/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function() { init_codefold(0); });
-/* @license-end */
-</script>
 </div><!-- top -->
 <div id="side-nav" class="ui-resizable side-nav-resizable">
   <div id="nav-tree">
@@ -110,7 +105,7 @@ $(document).ready(function() { init_codefold(0); });
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('result__format_8h_source.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('classAntares_1_1Solver_1_1InMemoryWriter.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -136,55 +131,28 @@ $(document).ready(function(){initNavTree('result__format_8h_source.html',''); in
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">result_format.h</div></div>
+  <div class="headertitle"><div class="title">Antares::Solver::InMemoryWriter Member List</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/*</span></div>
-<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment"> * Copyright 2007-2024, RTE (https://www.rte-france.com)</span></div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> * See AUTHORS.txt</span></div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> * SPDX-License-Identifier: MPL-2.0</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment"> * This file is part of Antares-Simulator,</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment"> * Adequacy and Performance assessment for interconnected energy networks.</span></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment"> *</span></div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="comment"> * Antares_Simulator is free software: you can redistribute it and/or modify</span></div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="comment"> * it under the terms of the Mozilla Public Licence 2.0 as published by</span></div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="comment"> * the Mozilla Foundation, either version 2 of the License, or</span></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="comment"> * (at your option) any later version.</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="comment"> *</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="comment"> * Antares_Simulator is distributed in the hope that it will be useful,</span></div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="comment"> * but WITHOUT ANY WARRANTY; without even the implied warranty of</span></div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="comment"> * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the</span></div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="comment"> * Mozilla Public Licence 2.0 for more details.</span></div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="comment"> *</span></div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="comment"> * You should have received a copy of the Mozilla Public Licence 2.0</span></div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="comment"> * along with Antares_Simulator. If not, see &lt;https://opensource.org/license/mpl-2-0/&gt;.</span></div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="comment">//</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="comment">// Created by marechaljas on 10/08/23.</span></div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="comment">//</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#pragma once</span></div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keyword">namespace </span>Antares::Data</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>{</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    <span class="comment">// Format of results</span></div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    <span class="keyword">enum</span> ResultFormat</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    {</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        <span class="comment">// Store outputs as files inside directories</span></div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>        legacyFilesDirectories = 0,</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>        <span class="comment">// Store outputs inside a single zip archive</span></div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        zipArchive,</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        <span class="comment">// Store outputs in-memory</span></div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        inMemory</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    };</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>}</div>
-</div><!-- fragment --></div><!-- contents -->
+
+<p>This is the complete list of members for <a class="el" href="classAntares_1_1Solver_1_1InMemoryWriter.html">Antares::Solver::InMemoryWriter</a>, including all inherited members.</p>
+<table class="directory">
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>addEntryFromBuffer</b>(const std::string &amp;entryPath, Yuni::Clob &amp;entryContent) override (defined in <a class="el" href="classAntares_1_1Solver_1_1InMemoryWriter.html">Antares::Solver::InMemoryWriter</a>)</td><td class="entry"><a class="el" href="classAntares_1_1Solver_1_1InMemoryWriter.html">Antares::Solver::InMemoryWriter</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>addEntryFromBuffer</b>(const std::string &amp;entryPath, std::string &amp;entryContent) override (defined in <a class="el" href="classAntares_1_1Solver_1_1InMemoryWriter.html">Antares::Solver::InMemoryWriter</a>)</td><td class="entry"><a class="el" href="classAntares_1_1Solver_1_1InMemoryWriter.html">Antares::Solver::InMemoryWriter</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>addEntryFromFile</b>(const std::string &amp;entryPath, const std::string &amp;filePath) override (defined in <a class="el" href="classAntares_1_1Solver_1_1InMemoryWriter.html">Antares::Solver::InMemoryWriter</a>)</td><td class="entry"><a class="el" href="classAntares_1_1Solver_1_1InMemoryWriter.html">Antares::Solver::InMemoryWriter</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>finalize</b>(bool verbose) override (defined in <a class="el" href="classAntares_1_1Solver_1_1InMemoryWriter.html">Antares::Solver::InMemoryWriter</a>)</td><td class="entry"><a class="el" href="classAntares_1_1Solver_1_1InMemoryWriter.html">Antares::Solver::InMemoryWriter</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classAntares_1_1Solver_1_1InMemoryWriter.html#ae79bc278d4eff373baf313ebb426361b">flush</a>() override</td><td class="entry"><a class="el" href="classAntares_1_1Solver_1_1InMemoryWriter.html">Antares::Solver::InMemoryWriter</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>getMap</b>() const (defined in <a class="el" href="classAntares_1_1Solver_1_1InMemoryWriter.html">Antares::Solver::InMemoryWriter</a>)</td><td class="entry"><a class="el" href="classAntares_1_1Solver_1_1InMemoryWriter.html">Antares::Solver::InMemoryWriter</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>InMemoryWriter</b>(Benchmarking::IDurationCollector &amp;duration_collector) (defined in <a class="el" href="classAntares_1_1Solver_1_1InMemoryWriter.html">Antares::Solver::InMemoryWriter</a>)</td><td class="entry"><a class="el" href="classAntares_1_1Solver_1_1InMemoryWriter.html">Antares::Solver::InMemoryWriter</a></td><td class="entry"><span class="mlabel">explicit</span></td></tr>
+  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>MapType</b> typedef (defined in <a class="el" href="classAntares_1_1Solver_1_1InMemoryWriter.html">Antares::Solver::InMemoryWriter</a>)</td><td class="entry"><a class="el" href="classAntares_1_1Solver_1_1InMemoryWriter.html">Antares::Solver::InMemoryWriter</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>needsTheJobQueue</b>() const override (defined in <a class="el" href="classAntares_1_1Solver_1_1InMemoryWriter.html">Antares::Solver::InMemoryWriter</a>)</td><td class="entry"><a class="el" href="classAntares_1_1Solver_1_1InMemoryWriter.html">Antares::Solver::InMemoryWriter</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>Ptr</b> typedef (defined in <a class="el" href="classAntares_1_1Solver_1_1IResultWriter.html">Antares::Solver::IResultWriter</a>)</td><td class="entry"><a class="el" href="classAntares_1_1Solver_1_1IResultWriter.html">Antares::Solver::IResultWriter</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>~InMemoryWriter</b>() (defined in <a class="el" href="classAntares_1_1Solver_1_1InMemoryWriter.html">Antares::Solver::InMemoryWriter</a>)</td><td class="entry"><a class="el" href="classAntares_1_1Solver_1_1InMemoryWriter.html">Antares::Solver::InMemoryWriter</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+</table></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_87a455bccb09a92130c26a11a880c98a.html">libs</a></li><li class="navelem"><a class="el" href="dir_f35d736e29d8243b24d0b8688c8560d6.html">antares</a></li><li class="navelem"><a class="el" href="dir_fbf1ff225a84ae76ebe1da6e7150b0cc.html">writer</a></li><li class="navelem"><a class="el" href="dir_ae73bb7e32b3d1051c8a9b9ee6c4dc40.html">include</a></li><li class="navelem"><a class="el" href="dir_beff7427979cae89e6df9e0b39a4fa89.html">antares</a></li><li class="navelem"><a class="el" href="dir_bf91ce0d7d9ebce247f17207861aa803.html">writer</a></li><li class="navelem"><b>result_format.h</b></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>

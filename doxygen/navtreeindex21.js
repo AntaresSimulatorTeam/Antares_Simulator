@@ -1,5 +1,7 @@
 var NAVTREEINDEX21 =
 {
+"geographic-trimming-grid_8h_source.html":[8,0,0,5,2,1,1,1,1,11],
+"geographic-trimming_8h_source.html":[8,0,0,5,2,2,9,2,0],
 "global__JIT__manager_8h_source.html":[8,0,0,3,1,0,0,1,0],
 "greaterthan_8h_source.html":[8,0,0,5,2,1,1,1,0,1,2],
 "greaterthanorequalsto_8h_source.html":[8,0,0,5,2,1,1,1,0,1,3],
@@ -44,6 +46,7 @@ var NAVTREEINDEX21 =
 "iitem_8hxx_source.html":[8,0,0,5,1,0,3,1],
 "immediate__file__writer_8h_source.html":[8,0,0,1,0,25,1,1],
 "impedances_8h_source.html":[8,0,0,5,0,0,0,2,5],
+"in__memory__writer_8h_source.html":[8,0,0,1,0,25,0,0,0,1],
 "index.html":[],
 "index.html#autotoc_md1":[0],
 "index.html#autotoc_md2":[1],
@@ -246,8 +249,5 @@ var NAVTREEINDEX21 =
 "ortools__wrapper_8h_source.html":[8,0,0,2,9,0,0,0,0,7],
 "output-comparison_8h_source.html":[8,0,0,5,2,2,10,1,0],
 "output_8hxx_source.html":[8,0,0,1,0,22,0,0,0,20],
-"outputs_8h_source.html":[8,0,0,5,2,2,10,1,1],
-"overflow_8h_source.html":[8,0,0,2,10,0,0,0,0,2,23],
-"pages.html":[],
-"panel_8hxx_source.html":[8,0,0,5,2,2,10,0,2]
+"outputs_8h_source.html":[8,0,0,5,2,2,10,1,1]
 };
