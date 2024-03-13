@@ -54,13 +54,6 @@ jobs:
       with:
           key: ${{ env.os }}
 
-    - name: export wxWidgets script
-      shell: bash
-      run: |
-           echo ${{ env.WX_CONFIG}}
-           cat ${{ env.WX_CONFIG}}
-           export WX_CONFIG=/usr/bin/wx-config
-           cat $WX_CONFIG
 
     - name : Init VCPKG submodule
       run: |
@@ -83,6 +76,21 @@ jobs:
         key: |
           ${{ hashFiles( 'vcpkg_manifest/vcpkg.json' ) }}-${{ hashFiles( '.git/modules/vcpkg/HEAD' )}}-${{ env.triplet }}
 
+    - name: Install libraries
+      run: |
+           sudo apt-get update
+           sudo apt-get install uuid-dev libwxgtk3.0-gtk3-dev
+           sudo apt-get install g++-10 gcc-10
+          #  sudo apt-get install libyaml-cpp-dev libantlr4-runtime-dev 
+    
+    - name: export wxWidgets script
+      shell: bash
+      run: |
+           echo ${{ env.WX_CONFIG}}
+           cat ${{ env.WX_CONFIG}}
+           export WX_CONFIG=/usr/bin/wx-config
+           cat $WX_CONFIG
+
     - name : Install deps with VCPKG
       run: |
           cd vcpkg
@@ -90,13 +98,6 @@ jobs:
           vcpkg install ${{env.vcpkgPackages}} --triplet ${{env.triplet}}
           rm -rf buildtrees packages downloads
       shell: bash
-
-    - name: Install libraries
-      run: |
-           sudo apt-get update
-           sudo apt-get install uuid-dev libwxgtk3.0-gtk3-dev
-           sudo apt-get install g++-10 gcc-10
-          #  sudo apt-get install libyaml-cpp-dev libantlr4-runtime-dev 
 
     - name: Read antares-deps version
       id: antares-deps-version
