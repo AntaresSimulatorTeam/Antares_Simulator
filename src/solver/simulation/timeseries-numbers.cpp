@@ -250,8 +250,6 @@ bool checkIntraModalConsistency(array<uint, timeSeriesCount>& nbTimeseriesByMode
       = make_shared<AreaLinksTransCapaNumberOfTSretriever>();
     ts_to_numberOfTSretrievers[timeSeriesHydroMaxPower]
       = make_shared<hydroMaxPowerAreaNumberOfTSretriever>();
-    ts_to_numberOfTSretrievers[timeSeriesHydroMaxPower]
-      = make_shared<hydroMaxPowerAreaNumberOfTSretriever>(study);
 
     // Loop over TS kind and check intra-modal consistency
     mapTStoRetriever::iterator it = ts_to_numberOfTSretrievers.begin();

@@ -231,10 +231,6 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
 
     const uint tsIndex =  meanMaxDailyGenPower.getSeriesIndex(y);
 
-    auto& meanMaxDailyGenPower = scratchpad.meanMaxDailyGenPower;
-
-    const uint tsIndex =  meanMaxDailyGenPower.getSeriesIndex(y);
-
     int initReservoirLvlMonth = area.hydro.initializeReservoirLevelDate;
 
     double reservoirCapacity = area.hydro.reservoirCapacity;

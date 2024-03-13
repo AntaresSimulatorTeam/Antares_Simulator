@@ -433,17 +433,17 @@ BOOST_AUTO_TEST_CASE(check_intra_modal_on_hydro_max_power_time_series)
 
 	// Area 1
 	Area* area_1 = addAreaToStudy(study, "Area 1");
-	area_1->hydro.series->resizeMaxPowerTS(hydroMaxPowerTSsize, 1);
+	area_1->hydro.series->resizeMaxPowerTS(hydroMaxPowerTSsize);
 	area_1->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
 	// Area 2
 	Area* area_2 = addAreaToStudy(study, "Area 2");
-	area_2->hydro.series->resizeMaxPowerTS(hydroMaxPowerTSsize, 1);
+	area_2->hydro.series->resizeMaxPowerTS(hydroMaxPowerTSsize);
 	area_2->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
 	// Area 3
 	Area* area_3 = addAreaToStudy(study, "Area 3");
-	area_3->hydro.series->resizeMaxPowerTS(hydroMaxPowerTSsize, 1);
+	area_3->hydro.series->resizeMaxPowerTS(hydroMaxPowerTSsize);
 	area_3->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
 	BOOST_CHECK(Generate(*study));
