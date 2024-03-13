@@ -26,6 +26,7 @@
 #include <antares/study/parameters.h>
 #include <antares/study/study.h>
 #include <antares/study/parts/thermal/cluster.h>
+#include <antares/series/series.h>
 #include <antares/writer/i_writer.h>
 #include "xcast/xcast.h"
 
@@ -49,6 +50,13 @@ public:
     Data::ThermalLaw& plannedLaw;
 
     Data::PreproThermal* prepro;
+
+    Data::TimeSeries& series;
+
+    Matrix<>& modulation;
+
+    const std::string& name;
+    const std::string& id;
 };
 
 template<class T>
@@ -59,7 +67,11 @@ ThermalInterface::ThermalInterface(T& source) :
     plannedVolatility(source->plannedVolatility),
     forcedLaw(source->forcedLaw),
     plannedLaw(source->plannedLaw),
-    prepro(source->prepro)
+    prepro(source->prepro),
+    series(source->series),
+    modulation(source->modulation),
+    name(source->name()),
+    id(source->id())
 {}
 
 void ResizeGeneratedTimeSeries(Data::AreaList& areas, Data::Parameters& params);

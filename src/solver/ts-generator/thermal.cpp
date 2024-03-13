@@ -53,7 +53,7 @@ public:
 
     void prepareOutputFoldersForAllAreas(uint year);
 
-    void operator()(Data::Area& area, Data::ThermalCluster& cluster);
+    void operator()(Data::Area& area, ThermalInterface& cluster);
 
 public:
     Data::Study& study;
@@ -65,7 +65,7 @@ public:
     bool derated;
 
 private:
-    void writeResultsToDisk(const Data::Area& area, const Data::ThermalCluster& cluster);
+    void writeResultsToDisk(const Data::Area& area, const ThermalInterface& cluster);
 
     int durationGenerator(Data::ThermalLaw law, int expec, double volat, double a, double b);
 
@@ -127,14 +127,14 @@ GeneratorTempData::GeneratorTempData(Data::Study& study,
 }
 
 void GeneratorTempData::writeResultsToDisk(const Data::Area& area,
-                                           const Data::ThermalCluster& cluster)
+                                           const ThermalInterface& cluster)
 {
     if (not study.parameters.noOutput)
     {
         pTempFilename.reserve(study.folderOutput.size() + 256);
 
         pTempFilename.clear() << "ts-generator" << SEP << "thermal" << SEP << "mc-" << currentYear
-                              << SEP << area.id << SEP << cluster.id() << ".txt";
+                              << SEP << area.id << SEP << cluster.id << ".txt";
 
         enum
         {
@@ -227,12 +227,12 @@ int GeneratorTempData::durationGenerator(Data::ThermalLaw law,
     return 0;
 }
 
-void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& cluster)
+void GeneratorTempData::operator()(Data::Area& area, ThermalInterface& cluster)
 {
     if (not cluster.prepro)
     {
         logs.error()
-          << "Cluster: " << area.name << '/' << cluster.name()
+          << "Cluster: " << area.name << '/' << cluster.name
           << ": The timeseries will not be regenerated. All data related to the ts-generator for "
           << "'thermal' have been released.";
         return;
@@ -595,7 +595,6 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
     if (archive)
         writeResultsToDisk(area, cluster);
 
-    cluster.calculationOfSpinning();
 }
 } // namespace
 
@@ -629,8 +628,9 @@ bool GenerateThermalTimeSeries(Data::Study& study,
     // TODO VP: parallel
     for (auto* cluster : clusters)
     {
-        /* ThermalInterface clusterInterface(cluster); */
-        (*generator)(*cluster->parentArea, *cluster);
+        ThermalInterface clusterInterface(cluster);
+        (*generator)(*cluster->parentArea, clusterInterface);
+        cluster->calculationOfSpinning();
     }
 
     delete generator;
