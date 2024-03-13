@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2024-03-13T12:57:22.263Z" agent="Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:107.0) Gecko/20100101 Firefox/107.0" etag="Yd08GPFLw8OI0QEOzv3M" version="24.0.4" type="device">
+<mxfile host="app.diagrams.net" modified="2024-03-13T13:15:01.675Z" agent="Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:107.0) Gecko/20100101 Firefox/107.0" etag="koawN99b-TlucHJj6lrC" version="24.0.4" type="device">
   <diagram name="Page-1" id="Kyvzz6OrJYYe4iwYSb0X">
     <mxGraphModel dx="1194" dy="792" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -19,63 +19,45 @@
         <mxCell id="lWOmYwpAASeuPBXCEZz9-3" value="&lt;div&gt;input/hydro/common/capacity/maxpower_&amp;lt;area&amp;gt;.txt&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;4 columns&lt;br&gt;&lt;/div&gt;&lt;div&gt;365 rows&lt;br&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="lWOmYwpAASeuPBXCEZz9-2">
           <mxGeometry y="26" width="270" height="94" as="geometry" />
         </mxCell>
-        <mxCell id="lWOmYwpAASeuPBXCEZz9-9" value="PUMP ENERGY" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="lWOmYwpAASeuPBXCEZz9-2">
+        <mxCell id="lWOmYwpAASeuPBXCEZz9-9" value="GEN POWER" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="lWOmYwpAASeuPBXCEZz9-2">
           <mxGeometry y="120" width="270" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="lWOmYwpAASeuPBXCEZz9-23" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="lWOmYwpAASeuPBXCEZz9-2" source="lWOmYwpAASeuPBXCEZz9-8">
+        <mxCell id="lWOmYwpAASeuPBXCEZz9-23" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;dashed=1;" edge="1" parent="lWOmYwpAASeuPBXCEZz9-2" source="lWOmYwpAASeuPBXCEZz9-8">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="590" y="330" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="lWOmYwpAASeuPBXCEZz9-8" value="PUMP POWER" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="lWOmYwpAASeuPBXCEZz9-2">
+        <mxCell id="lWOmYwpAASeuPBXCEZz9-8" value="GEN ENERGY" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="lWOmYwpAASeuPBXCEZz9-2">
           <mxGeometry y="140" width="270" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="lWOmYwpAASeuPBXCEZz9-7" value="GEN ENERGY" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="lWOmYwpAASeuPBXCEZz9-2">
+        <mxCell id="lWOmYwpAASeuPBXCEZz9-7" value="PUMP POWER" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="lWOmYwpAASeuPBXCEZz9-2">
           <mxGeometry y="160" width="270" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="lWOmYwpAASeuPBXCEZz9-6" value="GEN POWER" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="lWOmYwpAASeuPBXCEZz9-2">
+        <mxCell id="lWOmYwpAASeuPBXCEZz9-6" value="PUMP ENERGY" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="lWOmYwpAASeuPBXCEZz9-2">
           <mxGeometry y="180" width="270" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="lWOmYwpAASeuPBXCEZz9-13" value="maxDailyGenEnergy" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="440" y="560" width="200" height="90" as="geometry" />
-        </mxCell>
-        <mxCell id="lWOmYwpAASeuPBXCEZz9-14" value="&lt;div&gt;input/hydro/common/capacity/maxDailyGenEnergy_&amp;lt;area&amp;gt;.txt&lt;/div&gt;&lt;div&gt;1 column&lt;/div&gt;&lt;div&gt;365 rows&lt;br&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="lWOmYwpAASeuPBXCEZz9-13">
-          <mxGeometry y="26" width="200" height="64" as="geometry" />
-        </mxCell>
-        <mxCell id="lWOmYwpAASeuPBXCEZz9-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;dashed=1;" edge="1" parent="1" source="lWOmYwpAASeuPBXCEZz9-7" target="lWOmYwpAASeuPBXCEZz9-13">
+        <mxCell id="lWOmYwpAASeuPBXCEZz9-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="lWOmYwpAASeuPBXCEZz9-7" target="lWOmYwpAASeuPBXCEZz9-21">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="420" y="540" as="targetPoint" />
+            <mxPoint x="540" y="560" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="lWOmYwpAASeuPBXCEZz9-17" value="maxDailyPumpEnergy" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="680" y="560" width="200" height="90" as="geometry" />
-        </mxCell>
-        <mxCell id="lWOmYwpAASeuPBXCEZz9-18" value="&lt;div&gt;input/hydro/common/capacity/maxDailyPumpEnergy_&amp;lt;area&amp;gt;.txt&lt;/div&gt;&lt;div&gt;1 column&lt;/div&gt;&lt;div&gt;365 rows&lt;br&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="lWOmYwpAASeuPBXCEZz9-17">
-          <mxGeometry y="26" width="200" height="64" as="geometry" />
-        </mxCell>
-        <mxCell id="lWOmYwpAASeuPBXCEZz9-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;dashed=1;" edge="1" parent="1" source="lWOmYwpAASeuPBXCEZz9-9" target="lWOmYwpAASeuPBXCEZz9-17">
+        <mxCell id="lWOmYwpAASeuPBXCEZz9-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="lWOmYwpAASeuPBXCEZz9-9">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="420" y="500" as="targetPoint" />
+            <mxPoint x="780" y="570" as="targetPoint" />
             <Array as="points">
               <mxPoint x="780" y="500" />
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="lWOmYwpAASeuPBXCEZz9-19" value="maxHourlyGenPower" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="810" y="700" width="200" height="90" as="geometry" />
-        </mxCell>
-        <mxCell id="lWOmYwpAASeuPBXCEZz9-20" value="&lt;div&gt;input/hydro/series/&amp;lt;area&amp;gt;/maxHourlyGenPower.txt&lt;br&gt;&lt;/div&gt;&lt;div&gt;N columns&lt;/div&gt;&lt;div&gt;8760 rows&lt;br&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="lWOmYwpAASeuPBXCEZz9-19">
-          <mxGeometry y="26" width="200" height="64" as="geometry" />
-        </mxCell>
         <mxCell id="lWOmYwpAASeuPBXCEZz9-21" value="maxHourlyPumpPower" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="570" y="700" width="200" height="90" as="geometry" />
+          <mxGeometry x="440" y="570" width="200" height="90" as="geometry" />
         </mxCell>
         <mxCell id="lWOmYwpAASeuPBXCEZz9-22" value="&lt;div&gt;input/hydro/series/&amp;lt;area&amp;gt;/maxHourlyPumpPower.txt&lt;br&gt;&lt;/div&gt;&lt;div&gt;N columns&lt;/div&gt;&lt;div&gt;8760 rows&lt;br&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="lWOmYwpAASeuPBXCEZz9-21">
           <mxGeometry y="26" width="200" height="64" as="geometry" />
         </mxCell>
-        <mxCell id="lWOmYwpAASeuPBXCEZz9-24" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="lWOmYwpAASeuPBXCEZz9-6" target="lWOmYwpAASeuPBXCEZz9-19">
+        <mxCell id="lWOmYwpAASeuPBXCEZz9-24" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;dashed=1;" edge="1" parent="1" source="lWOmYwpAASeuPBXCEZz9-6">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="380" y="680" as="targetPoint" />
+            <mxPoint x="910" y="700" as="targetPoint" />
             <Array as="points">
               <mxPoint x="390" y="560" />
               <mxPoint x="390" y="670" />
@@ -109,6 +91,24 @@
         </mxCell>
         <mxCell id="lWOmYwpAASeuPBXCEZz9-43" value="9.1 and after" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
           <mxGeometry x="930" y="540" width="90" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="lWOmYwpAASeuPBXCEZz9-44" value="maxDailyGenEnergy" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="560" y="700" width="200" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="lWOmYwpAASeuPBXCEZz9-45" value="&lt;div&gt;input/hydro/common/capacity/maxDailyGenEnergy_&amp;lt;area&amp;gt;.txt&lt;/div&gt;&lt;div&gt;1 column&lt;/div&gt;&lt;div&gt;365 rows&lt;br&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="lWOmYwpAASeuPBXCEZz9-44">
+          <mxGeometry y="26" width="200" height="64" as="geometry" />
+        </mxCell>
+        <mxCell id="lWOmYwpAASeuPBXCEZz9-46" value="maxDailyPumpEnergy" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="810" y="700" width="200" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="lWOmYwpAASeuPBXCEZz9-47" value="&lt;div&gt;input/hydro/common/capacity/maxDailyPumpEnergy_&amp;lt;area&amp;gt;.txt&lt;/div&gt;&lt;div&gt;1 column&lt;/div&gt;&lt;div&gt;365 rows&lt;br&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="lWOmYwpAASeuPBXCEZz9-46">
+          <mxGeometry y="26" width="200" height="64" as="geometry" />
+        </mxCell>
+        <mxCell id="lWOmYwpAASeuPBXCEZz9-48" value="maxHourlyGenPower" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="690" y="570" width="200" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="lWOmYwpAASeuPBXCEZz9-49" value="&lt;div&gt;input/hydro/series/&amp;lt;area&amp;gt;/maxHourlyGenPower.txt&lt;br&gt;&lt;/div&gt;&lt;div&gt;N columns&lt;/div&gt;&lt;div&gt;8760 rows&lt;br&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="lWOmYwpAASeuPBXCEZz9-48">
+          <mxGeometry y="26" width="200" height="64" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
