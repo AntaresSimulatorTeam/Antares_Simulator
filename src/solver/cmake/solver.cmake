@@ -81,17 +81,6 @@ set(RTESOLVER_OPT
 		optimisation/adequacy_patch_csr/count_constraints_variables.cpp
 
 		optimisation/opt_period_string_generator_base.h
-
-		utils/ortools_utils.h
-		utils/ortools_utils.cpp
-		utils/filename.h
-		utils/filename.cpp
-		utils/named_problem.h
-		utils/named_problem.cpp
-		utils/mps_utils.h
-		utils/mps_utils.cpp
-		utils/opt_period_string_generator.h
-		utils/opt_period_string_generator.cpp
 	)
 
 
@@ -108,4 +97,5 @@ target_link_libraries(libmodel_antares
 		sirius_solver
 		infeasible_problem_analysis
 		libantares-solver-simulation
+		antares-utils
 		)

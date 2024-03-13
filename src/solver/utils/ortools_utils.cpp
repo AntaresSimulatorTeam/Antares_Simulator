@@ -11,6 +11,20 @@ using namespace operations_research;
 
 const char* const XPRESS_PARAMS = "THREADS 1 SCALING 0";
 
+std::string availableOrToolsSolversString()
+{
+    const std::list<std::string> availableSolverList = getAvailableOrtoolsSolverName();
+    std::string availableSolverListStr;
+    for (auto it = availableSolverList.begin(); it != availableSolverList.end(); it++)
+    {
+        availableSolverListStr += *it + ";";
+    }
+    // Remove last semicolumn
+    if (!availableSolverListStr.empty())
+        availableSolverListStr.pop_back();
+    return availableSolverListStr;
+}
+
 static void transferVariables(MPSolver* solver,
                               const double* bMin,
                               const double* bMax,
@@ -315,8 +329,7 @@ MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probl
     // Provide an initial simplex basis, if any
     if (warmStart && Probleme->basisExists() && !Probleme->isMIP())
     {
-        solver->SetStartingLpBasis(Probleme->StatutDesVariables,
-                                   Probleme->StatutDesContraintes);
+        solver->SetStartingLpBasis(Probleme->StatutDesVariables, Probleme->StatutDesContraintes);
     }
 
     if (solveAndManageStatus(solver, Probleme->ExistenceDUneSolution, params))

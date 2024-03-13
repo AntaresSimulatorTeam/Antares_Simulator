@@ -29,5 +29,7 @@ target_link_libraries(utils
 
 target_include_directories(utils
     PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/include
+        ${CMAKE_SOURCE_DIR}/solver/utils
 )
+
+ add_library(antares-utils ALIAS utils)

@@ -21,6 +21,8 @@ void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver,
  */
 std::list<std::string> getAvailableOrtoolsSolverName();
 
+std::string availableOrToolsSolversString();
+
 /*!
  *  \brief Create a MPSolver with correct linear or mixed variant
  *
