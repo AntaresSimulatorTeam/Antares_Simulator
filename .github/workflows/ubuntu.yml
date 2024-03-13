@@ -31,6 +31,7 @@ env:
   VCPKG_ROOT: ${{ github.workspace }}/vcpkg
   vcpkgPackages: yaml-cpp antlr4 boost-test
   triplet: x64-linux
+  WX_CONFIG: /usr/bin/wx-config
 
 jobs:
 
@@ -52,6 +53,14 @@ jobs:
       uses: hendrikmuhs/ccache-action@v1.2
       with:
           key: ${{ env.os }}
+
+    - name: export wxWidgets script
+      shell: bash
+      run: |
+           echo ${{ env.WX_CONFIG}}
+           cat ${{ env.WX_CONFIG}}
+           export WX_CONFIG=/usr/bin/wx-config
+           cat $WX_CONFIG
 
     - name : Init VCPKG submodule
       run: |
@@ -125,10 +134,7 @@ jobs:
           git submodule update --init src/antares-deps
           git submodule update --init --remote --recursive src/tests/resources/Antares_Simulator_Tests
     
-    - name: export wxWidgets script
-      shell: bash
-      run: |
-           export WX_CONFIG=/usr/bin/wx-config
+
     
     - name: Configure
       run: |
