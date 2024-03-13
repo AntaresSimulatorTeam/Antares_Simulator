@@ -1098,7 +1098,7 @@ bool Matrix<T, ReadWriteT>::containsOnlyZero() const
             auto& column = entry[x];
             for (uint y = 0; y != height; ++y)
             {
-                if (!Utils::isZero((T)column[y]))
+                if ((T)column[y] != 0)
                     return false;
             }
         }
@@ -1117,7 +1117,7 @@ bool Matrix<T, ReadWriteT>::containsOnlyZero(PredicateT& predicate) const
             auto& column = entry[x];
             for (uint y = 0; y != height; ++y)
             {
-                if (Utils::isZero((T)predicate(column[y])))
+                if ((T)predicate(column[y]) != 0)
                     return false;
             }
         }
