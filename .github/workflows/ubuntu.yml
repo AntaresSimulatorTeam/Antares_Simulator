@@ -89,7 +89,13 @@ jobs:
            sudo apt-get install libboost-test-dev
            sudo apt-get install g++-10 gcc-10
           #  sudo apt-get install libyaml-cpp-dev libantlr4-runtime-dev 
-
+    
+    - name: use wxWidget from system manager
+      run: |
+           mkdir -p ${{github.workspace}}/overlays/wxWidgets
+           echo "set(VCPKG_POLICY_EMPTY_PACKAGE enabled)" >> ${{github.workspace}}/overlays/wxWidgets/portfile.cmake
+           cat  ${{github.workspace}}/overlays/wxWidgets/portfile.cmake
+           
     - name: Read antares-deps version
       id: antares-deps-version
       uses: notiz-dev/github-action-json-property@release
