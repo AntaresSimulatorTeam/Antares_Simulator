@@ -19,11 +19,9 @@ def get_clusters_to_gen(path):
     return line
 
 def run_and_compare(exe, path):
-    clusterToGenFile = open(path / "clustersToGen.txt", 'r')
-    line = clusterToGenFile.readline().rstrip() # remove new line char
-    clusterToGenFile.close()
+    clusters_to_gen = get_clusters_to_gen(path)
 
-    res = subprocess.run([exe, "--thermal=" + line, path])
+    res = subprocess.run([exe, "--thermal=" + clusters_to_gen, path])
     assert (res.returncode == 0), "The exec failed for study: " + str(path)
 
     ref_path = Path(find_reference_folder(path)) / "ts-generator"
@@ -34,13 +32,13 @@ def run_and_compare(exe, path):
 
     # get pairs of same file to compare
     # we need to have the correct cluster and area pair, that's why we check ts.parent
-    list_of_pairs = [(ts_ref, ts) for ts_ref in ref_ts_files for ts in ts_files if ts_ref.name == ts.name and ts_ref.parent == ts.parent]
+    list_of_pairs = [(ts_ref, ts) for ts_ref in ref_ts_files for ts in ts_files if ts_ref.name == ts.name and ts_ref.parent.name == ts.parent.name]
+    assert list_of_pairs
+
     for pair in list_of_pairs:
-        print(pair[0], file=sys.stderr)
-        print(pair[1], file=sys.stderr)
         ref_content = open(pair[0]).read()
         output_content = open(pair[1]).read()
-        check(ref_content == output_content, f"Difference between files {pair[0]} and {pair[1]}")
+        assert ref_content == output_content, "Difference between files {pair[0]} and {pair[1]}"
 
 
 
