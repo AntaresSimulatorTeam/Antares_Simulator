@@ -6,6 +6,7 @@ if (MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj")
 endif (MSVC)
 
+
 add_subdirectory(infeasible-problem-analysis)
 add_subdirectory(variable)
 add_subdirectory(hydro)

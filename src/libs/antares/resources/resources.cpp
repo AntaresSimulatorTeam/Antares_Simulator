@@ -131,7 +131,7 @@ void Initialize(int argc, char** argv, bool initializeSearchPath)
     String p;
     IO::MakeAbsolute(p, argv[0]);
     String tt;
-    IO::parentPath(tt, p);
+    IO::parent_path(tt, p);
 
     IO::Normalize(RootFolder, tt);
 
