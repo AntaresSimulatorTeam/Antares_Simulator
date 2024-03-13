@@ -4,5 +4,5 @@ def pytest_addoption(parser):
     parser.addoption("--tsgenerator_path", action="store", default="")
 
 @pytest.fixture
-def exe_tsgenerator_path(request):
+def tsgenerator_path(request):
     return request.config.getoption("--tsgenerator_path")

@@ -3,8 +3,6 @@ import os
 from pathlib import Path
 from utils.assertions import check
 
-import sys
-
 class study_run:
     def __init__(self, study_path, solver_path, use_ortools, ortools_solver, named_mps_problems, parallel):
         self.study_path = study_path
