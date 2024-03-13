@@ -4,15 +4,15 @@
 #include <string>
 #include <vector>
 
-#include "antlr4-runtime.h"
+// #include "antlr4-runtime.h"
 // #include "TLexer.h"
 // #include "TParser.h"
 
 // #include <Windows.h>
 
-#pragma execution_character_set("utf-8")
+// #pragma execution_character_set("utf-8")
 
-using namespace antlr4;
+// using namespace antlr4;
 
 // our data types
 struct Vec3
@@ -172,7 +172,7 @@ int main()
         }
     }
     // YAML::Node doc_to_write = ;
-    ANTLRInputStream input("a = b + \"c\";(((x * d))) * e + f; a + (x * (y ? 0 : 1) + z);");
+    // ANTLRInputStream input("a = b + \"c\";(((x * d))) * e + f; a + (x * (y ? 0 : 1) + z);");
     // TLexer lexer(&input);
     // CommonTokenStream tokens(&lexer);
 
