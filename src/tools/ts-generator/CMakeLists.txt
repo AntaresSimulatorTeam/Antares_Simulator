@@ -1,6 +1,5 @@
 set(SRCS
         main.cpp
-        include/antares/ts-generator/thermal_interface.h
 )
 
 set(execname "antares-ts-generator")

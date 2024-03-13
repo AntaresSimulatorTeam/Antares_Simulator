@@ -1,5 +1,4 @@
-/*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
+/*** Copyright 2007-2024, RTE (https://www.rte-france.com)
 ** See AUTHORS.txt
 ** SPDX-License-Identifier: MPL-2.0
 ** This file is part of Antares-Simulator,
@@ -33,9 +32,6 @@
 #include <antares/writer/writer_factory.h>
 #include <antares/writer/result_format.h>
 #include <antares/checks/checkLoadedInputData.h>
-
-#include <antares/ts-generator/thermal_interface.h>
-
 
 using namespace Antares;
 
@@ -150,16 +146,8 @@ int main(int argc, char *argv[])
     else
         clusters = getClustersToGen(study->areas, settings.thermalListToGen);
 
-    std::vector<TsGenerator::ThermalInterface> interface;
     for (auto& c : clusters)
-    {
         logs.debug() << c->id();
-        interface.push_back(c);
-        logs.notice() << interface.back().unitCount;
-        logs.notice() << interface.back().nominalCapacity;
-        logs.notice() << interface.back().forcedVolatility;
-    }
 
     return TSGenerator::GenerateThermalTimeSeries(*study, clusters, 0, *resultWriter);
 }
-

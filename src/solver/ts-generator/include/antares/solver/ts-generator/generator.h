@@ -32,6 +32,36 @@
 namespace Antares::TSGenerator
 {
 
+class ThermalInterface
+{
+public:
+
+    template<class T>
+    ThermalInterface(T& source);
+
+    const unsigned &unitCount;
+    const double &nominalCapacity;
+
+    const double& forcedVolatility;
+    const double& plannedVolatility;
+
+    Data::ThermalLaw& forcedLaw;
+    Data::ThermalLaw& plannedLaw;
+
+    Data::PreproThermal* prepro;
+};
+
+template<class T>
+ThermalInterface::ThermalInterface(T& source) :
+    unitCount(source->unitCount),
+    nominalCapacity(source->nominalCapacity),
+    forcedVolatility(source->forcedVolatility),
+    plannedVolatility(source->plannedVolatility),
+    forcedLaw(source->forcedLaw),
+    plannedLaw(source->plannedLaw),
+    prepro(source->prepro)
+{}
+
 void ResizeGeneratedTimeSeries(Data::AreaList& areas, Data::Parameters& params);
 
 /*!

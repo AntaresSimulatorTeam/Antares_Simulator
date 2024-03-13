@@ -24,7 +24,7 @@
 
 #include <antares/study/parts/thermal/cluster.h>
 
-namespace Antares::TsGenerator
+namespace Antares::TSGenerator
 {
 
 class ThermalInterface
@@ -57,4 +57,4 @@ ThermalInterface::ThermalInterface(T& source) :
     prepro(source->prepro)
 {}
 
-} // namespace Antares::TsGenerator
+} // namespace Antares::TSGenerator

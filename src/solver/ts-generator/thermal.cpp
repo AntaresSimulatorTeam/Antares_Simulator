@@ -30,6 +30,8 @@
 #include <antares/logs/logs.h>
 #include <antares/writer/i_writer.h>
 
+#include <antares/solver/ts-generator/generator.h>
+
 #include "antares/study/simulation.h"
 
 using namespace Yuni;
@@ -626,7 +628,10 @@ bool GenerateThermalTimeSeries(Data::Study& study,
 
     // TODO VP: parallel
     for (auto* cluster : clusters)
+    {
+        /* ThermalInterface clusterInterface(cluster); */
         (*generator)(*cluster->parentArea, *cluster);
+    }
 
     delete generator;
 
