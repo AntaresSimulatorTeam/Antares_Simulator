@@ -4,6 +4,16 @@
 #include <string>
 #include <vector>
 
+#include "antlr4-runtime.h"
+// #include "TLexer.h"
+// #include "TParser.h"
+
+// #include <Windows.h>
+
+#pragma execution_character_set("utf-8")
+
+using namespace antlr4;
+
 // our data types
 struct Vec3
 {
@@ -147,12 +157,29 @@ int main()
     - name: Staff
       damage: 3)";
     YAML::Node doc = YAML::Load(my_yaml);
+    std::vector<Monster> monsters;
     for (unsigned i = 0; i < doc.size(); i++)
     {
-        Monster monster;
-        monster = doc[i].as<Monster>();
+        monsters.push_back(doc[i].as<Monster>());
+        const Monster& monster = monsters.back();
         std::cout << monster.name << "\n";
+        std::cout << "Position: " << monster.position.x << ", " << monster.position.y << ", "
+                  << monster.position.z << "\n";
+        std::cout << "Powers: \n";
+        for (const auto power : monster.powers)
+        {
+            std::cout << power.name << " " << power.damage << "\n";
+        }
     }
+    // YAML::Node doc_to_write = ;
+    ANTLRInputStream input("a = b + \"c\";(((x * d))) * e + f; a + (x * (y ? 0 : 1) + z);");
+    // TLexer lexer(&input);
+    // CommonTokenStream tokens(&lexer);
 
+    // TParser parser(&tokens);
+    // tree::ParseTree* tree = parser.main();
+
+    // auto s = tree->toStringTree(&parser);
+    // std::cout << "Parse Tree: " << s << std::endl;
     return 0;
 }
