@@ -48,8 +48,7 @@ class GeneratorTempData final
 {
 public:
     GeneratorTempData(Data::Study& study,
-                      Solver::Progression::Task& progr,
-                      Solver::IResultWriter& writer);
+                      Solver::Progression::Task& progr);
 
     void prepareOutputFoldersForAllAreas(uint year);
 
@@ -58,15 +57,9 @@ public:
 public:
     Data::Study& study;
 
-    bool archive;
-
-    uint currentYear;
-
     bool derated;
 
 private:
-    void writeResultsToDisk(const Data::Area& area, const ThermalInterface& cluster);
-
     int durationGenerator(Data::ThermalLaw law, int expec, double volat, double a, double b);
 
     template<class T>
@@ -103,20 +96,15 @@ private:
 
     String pTempFilename;
     Solver::Progression::Task& pProgression;
-    Solver::IResultWriter& pWriter;
 };
 
 GeneratorTempData::GeneratorTempData(Data::Study& study,
-                                     Solver::Progression::Task& progr,
-                                     Solver::IResultWriter& writer) :
+                                     Solver::Progression::Task& progr):
     study(study),
     rndgenerator(study.runtime->random[Data::seedTsGenThermal]),
-    pProgression(progr),
-    pWriter(writer)
+    pProgression(progr)
 {
     auto& parameters = study.parameters;
-
-    archive = (0 != (parameters.timeSeriesToArchive & Data::timeSeriesThermal));
 
     nbThermalTimeseries_ = parameters.nbTimeSeriesThermal;
 
@@ -124,30 +112,6 @@ GeneratorTempData::GeneratorTempData(Data::Study& study,
 
     FPOW.resize(DAYS_PER_YEAR);
     PPOW.resize(DAYS_PER_YEAR);
-}
-
-void GeneratorTempData::writeResultsToDisk(const Data::Area& area,
-                                           const ThermalInterface& cluster)
-{
-    if (not study.parameters.noOutput)
-    {
-        pTempFilename.reserve(study.folderOutput.size() + 256);
-
-        pTempFilename.clear() << "ts-generator" << SEP << "thermal" << SEP << "mc-" << currentYear
-                              << SEP << area.id << SEP << cluster.id << ".txt";
-
-        enum
-        {
-            precision = 0
-        };
-
-        std::string buffer;
-        cluster.series.timeSeries.saveToBuffer(buffer, precision);
-
-        pWriter.addEntryFromBuffer(pTempFilename.c_str(), buffer);
-    }
-
-    ++pProgression;
 }
 
 template<class T>
@@ -242,8 +206,8 @@ void GeneratorTempData::operator()(const Data::Area& area, ThermalInterface& clu
 
     if (0 == cluster.unitCount or 0 == cluster.nominalCapacity)
     {
-        if (archive)
-            writeResultsToDisk(area, cluster);
+        if ((0 != (study.parameters.timeSeriesToArchive & Data::timeSeriesThermal)))
+            /* writeResultsToDisk(area, cluster); */
         return;
     }
 
@@ -590,11 +554,35 @@ void GeneratorTempData::operator()(const Data::Area& area, ThermalInterface& clu
     if (derated)
         cluster.series.timeSeries.averageTimeseries();
 
-    if (archive)
-        writeResultsToDisk(area, cluster);
 
 }
 } // namespace
+
+void writeResultsToDisk(const Data::Study& study,
+                        Solver::IResultWriter& writer,
+                        const Data::Area& area,
+                        const Data::ThermalCluster& cluster)
+{
+    if (study.parameters.noOutput)
+        return;
+
+    String pTempFilename;
+
+    pTempFilename.reserve(study.folderOutput.size() + 256);
+
+    pTempFilename.clear() << "ts-generator" << SEP << "thermal" << SEP << "mc-0"
+        << SEP << area.id << SEP << cluster.id() << ".txt";
+
+    enum
+    {
+        precision = 0
+    };
+
+    std::string buffer;
+    cluster.series.timeSeries.saveToBuffer(buffer, precision);
+
+    writer.addEntryFromBuffer(pTempFilename.c_str(), buffer);
+}
 
 std::vector<Data::ThermalCluster*> getAllClustersToGen(Data::AreaList& areas,
                                                        bool globalThermalTSgeneration)
@@ -619,9 +607,9 @@ bool GenerateThermalTimeSeries(Data::Study& study,
     logs.info() << "Generating the thermal time-series";
     Solver::Progression::Task progression(study, year, Solver::Progression::sectTSGThermal);
 
-    auto* generator = new GeneratorTempData(study, progression, writer);
+    bool archive = (0 != (study.parameters.timeSeriesToArchive & Data::timeSeriesThermal));
 
-    generator->currentYear = year;
+    auto* generator = new GeneratorTempData(study, progression);
 
     // TODO VP: parallel
     for (auto* cluster : clusters)
@@ -629,6 +617,9 @@ bool GenerateThermalTimeSeries(Data::Study& study,
         ThermalInterface clusterInterface(cluster);
         (*generator)(*cluster->parentArea, clusterInterface);
         cluster->calculationOfSpinning();
+
+        if (archive)
+            writeResultsToDisk(study, writer, *cluster->parentArea, *cluster);
     }
 
     delete generator;
