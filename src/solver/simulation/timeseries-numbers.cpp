@@ -316,14 +316,6 @@ bool checkInterModalConsistencyForArea(const Area& area,
         listNumberTsOverArea.push_back(nbTimeSeries);
     }
 
-    // Hydro Max Power : Add hydro's max power number of TS in area ...
-    indexTS = ts_to_tsIndex.at(timeSeriesHydroMaxPower);
-    if (isTSintermodal[indexTS])
-    {
-        uint nbTimeSeries = area.hydro.series->maxPowerTScount();
-        listNumberTsOverArea.push_back(nbTimeSeries);
-    }
-
     // Thermal : Add thermal's number of TS of each cluster in area ...
     indexTS = ts_to_tsIndex.at(timeSeriesThermal);
     if (isTSintermodal[indexTS])
