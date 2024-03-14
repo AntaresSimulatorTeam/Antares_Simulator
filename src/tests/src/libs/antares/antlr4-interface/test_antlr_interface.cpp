@@ -18,7 +18,7 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#define BOOST_TEST_MODULE test - writer tests
+#define BOOST_TEST_MODULE antlr_interface tests
 #define BOOST_TEST_DYN_LINK
 #include <boost/test/unit_test.hpp>
 #include <boost/test/data/test_case.hpp>
@@ -27,7 +27,7 @@
 
 #include "ExprLexer.h"
 #include "ExprParser.h"
-// #pragma execution_character_set("utf-8")
+
 using namespace antlr4;
 BOOST_AUTO_TEST_CASE(test_antlr_interface)
 {
