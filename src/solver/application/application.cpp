@@ -66,8 +66,9 @@ Application::Application()
     resetProcessPriority();
 }
 
-void Application::handleParserReturn(Yuni::GetOpt::Parser* parser)
+void Application::parseCommandLine(Data::StudyLoadOptions& options)
 {
+    auto parser = CreateParser(pSettings, options);
     auto ret = parser->operator()(pArgc, pArgv);
     switch (ret)
     {
@@ -98,7 +99,7 @@ void Application::handleOptions(const Data::StudyLoadOptions& options)
     }
 }
 
-void Application::startSimulation(Data::StudyLoadOptions options)
+void Application::startSimulation(Data::StudyLoadOptions& options)
 {
     // Starting !
     #ifdef GIT_SHA1_SHORT_STRING
@@ -158,10 +159,8 @@ void Application::prepare(int argc, char* argv[])
     // CAUTION
     // The parser contains references to members of pSettings and options,
     // don't de-allocate these.
-    auto parser = CreateParser(pSettings, options);
-    // Parse the command line arguments
 
-    handleParserReturn(parser.get());
+    parseCommandLine(options);
 
     handleOptions(options);
 
