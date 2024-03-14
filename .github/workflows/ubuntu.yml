@@ -39,12 +39,12 @@ jobs:
 
     runs-on: ubuntu-20.04
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
-    
+
     steps:
     - uses: actions/checkout@v4
       with:
         ref: ${{ env.REF }}
-        
+
     - name: ccache
       uses: hendrikmuhs/ccache-action@v1.2
       with:
@@ -268,6 +268,16 @@ jobs:
            popd
            rm -rf install
 
+    - name: Ts Generator tool archive creation
+      run: |
+           cd _build
+           cmake --install . --prefix install
+           pushd .
+           cd install/bin
+           tar czf ../../antares-ts-generator20.04.tar.gz antares-ts-generator
+           popd
+           rm -rf install
+
     - name: Installer archive upload push
       uses: actions/upload-artifact@v3
       with:
@@ -277,12 +287,12 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         path: _build/*.deb
-      
-    
+
+
     - name: Publish assets
       if: ${{ env.IS_RELEASE == 'true' }}
       env:
         GITHUB_TOKEN: ${{ github.token }}
         tag: ${{ github.event.inputs.release_tag }}
       run: |
-        gh release upload "$tag" _build/*.tar.gz _build/*.deb           
+        gh release upload "$tag" _build/*.tar.gz _build/*.deb
