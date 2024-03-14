@@ -110,9 +110,9 @@ private:
                        Benchmarking::IDurationCollector& duration_collector);
 
     void writeComment(Data::Study& study);
-    void startSimulation(Data::StudyLoadOptions options);
+    void startSimulation(Data::StudyLoadOptions& options);
     void handleOptions(const Data::StudyLoadOptions& options);
-    void handleParserReturn(Yuni::GetOpt::Parser* parser);
+    void parseCommandLine(Data::StudyLoadOptions& options);
 }; // class Application
 } // namespace Antares::Solver
 
