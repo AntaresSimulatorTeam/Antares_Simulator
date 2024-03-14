@@ -25,12 +25,21 @@
 #define WIN32_LEAN_AND_MEAN
 
 #include <boost/test/unit_test.hpp>
+#include <filesystem>
 #include "antares/api/solver.h"
 #include "antares/api/SimulationResults.h"
 
 BOOST_AUTO_TEST_CASE(simulation_path_points_to_results)
 {
-    const Antares::API::SimulationResults results{Antares::API::PerformSimulation()};
-
+    const Antares::API::SimulationResults results{
+      Antares::API::PerformSimulation(std::filesystem::path())};
     BOOST_CHECK(!results.simulationPath.empty());
+}
+
+BOOST_AUTO_TEST_CASE(simulation_path_points_to_valid_output)
+{
+    using namespace std::string_literals;
+    const Antares::API::SimulationResults results{
+      Antares::API::PerformSimulation(std::filesystem::path())};
+    BOOST_CHECK_EQUAL(results.simulationPath, std::filesystem::path{"output_path"s});
 }

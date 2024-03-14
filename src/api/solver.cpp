@@ -20,11 +20,14 @@
  */
 
 #include <antares/api/solver.h>
+#include "private/API.h"
 
 namespace Antares::API {
 
-SimulationResults PerformSimulation() {
-    return {.simulationPath{"plop"}};
+SimulationResults PerformSimulation(std::filesystem::path study_path)
+{
+    APIInternal api;
+    return api.run(study_path);
 }
 
 }
