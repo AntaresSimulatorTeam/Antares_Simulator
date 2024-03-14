@@ -644,7 +644,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
         {
             if (problem.CaracteristiquesHydrauliques[k].PresenceDHydrauliqueModulable > 0)
             {
-                auto& area = *study.areas.byIndex[k];       
+                auto& area = *study.areas.byIndex[k];
                 const auto& scratchpad = scratchmap.at(&area);
                 auto& hydroSeries = area.hydro.series;
 
