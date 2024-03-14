@@ -616,10 +616,11 @@ bool GenerateThermalTimeSeries(Data::Study& study,
     {
         ThermalInterface clusterInterface(cluster);
         (*generator)(*cluster->parentArea, clusterInterface);
-        cluster->calculationOfSpinning();
 
         if (archive)
             writeResultsToDisk(study, writer, *cluster->parentArea, *cluster);
+
+        cluster->calculationOfSpinning();
     }
 
     delete generator;
