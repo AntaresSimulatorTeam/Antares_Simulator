@@ -2,7 +2,7 @@
 This is a list of all recent changes that came with new Antares Simulator features. The main goal of this document is to lower the costs of changing existing interfaces, both GUI and scripts.
 ## v9.1.0
 ### (Input) Hydro Maximum Generation/Pumping Power
-* For time series ![Migration diagram](migration.svg "Migration diagram")
+* For time series ![Migration diagram](migration.png "Migration diagram")
 * In the existing file **settings/scenariobuilder.dat**, under **&lt;ruleset&gt;** section following properties added: **hgp,&lt;area&gt;,&lt;year&gt; = &lt;hgp-value&gt;**
 
 
