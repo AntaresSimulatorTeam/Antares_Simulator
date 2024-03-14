@@ -465,11 +465,11 @@ When the power system graph contains edges that represent DC components, additio
 | Notation             | Explanation                                                                                                        |
 | ------------         | -------------                                                                                                      |
 |$L^* \subset L$ | subset of edges representing AC components|
-|$G^\*(N,L^*)$ | subgraph of $G(N,L)$ |
-|$g^*$ | spanning tree of $G^\*(N,L^*)$ |
-|$C^\*_{g^*}$ | cycle matric of $G^\*(N,L^\*)$ associated with $g^*$ |
+|$G^*(N,L^*)$ | subgraph of $G(N,L)$ |
+|$g^*$ | spanning tree of $G^*(N,L^*)$ |
+|$C^*_{g^*}$ | cycle matric of $G^*(N,L^*)$ associated with $g^*$ |
 
-The proper modeling of the system then requires that all "load flow" constraints defined previously be formulated using notations $(L^\*, G^\*(N,L^\*), C^\*\_{g^*})$ instead of $(L, G(N,L), C_{g})$.
+The proper modeling of the system then requires that all "load flow" constraints defined previously be formulated using notations $(L^*, G^*(N,L^*), C^*\_{g^*})$ instead of $(L, G(N,L), C_{g})$.
 
 ### Implementation of security rules N-1,..., N-k
 
@@ -477,7 +477,7 @@ It is assumed here that upstream power system classical calculations on the deta
 
 | Notation             | Explanation                                                                                                        |
 | ------------         | -------------                                                                                                      |
-|$O \subset P(L$ | set of situations (single or multiple outages) considered in the contingency analysis|
+|$O \subset PL$ | set of situations (single or multiple outages) considered in the contingency analysis|
 |$Q \in O$ | situation (incident) considered in the contingency analysis|
 |${}^Qp_l^m \in [-1,1]$ | LODFs from component $m$ (involved in $Q$) on component $l$ if $Q$ occurs |
 | $\underline{F}_l^Q \in \mathbb{R}^T$ | lower bound of the power flow through $l$ if $Q$ occurs |
