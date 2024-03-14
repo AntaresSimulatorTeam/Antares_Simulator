@@ -27,7 +27,6 @@
 #include <antares/exception/LoadingError.hpp>
 #include "antares/study/study.h"
 #include <algorithm>
-#include <algorithm>
 
 using namespace Yuni;
 
