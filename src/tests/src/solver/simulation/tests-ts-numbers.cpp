@@ -333,12 +333,10 @@ BOOST_AUTO_TEST_CASE(two_areas_3_renew_clusters_with_different_number_of_ready_m
 
 	Area* area_1 = addAreaToStudy(study, "Area 1");
 	Area* area_2 = addAreaToStudy(study, "Area 2");
-	study->areas.resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
-	// Add clusters to area 1
+	// Add 2 clusters to area 1
 	auto rnCluster_11 = addClusterToArea<RenewableCluster>(area_1, "rn-cluster-11");
 	rnCluster_11->series.timeSeries.resize(4, 1);
-	// ... Area 1 : renewable cluster 2
 	auto rnCluster_12 = addClusterToArea<RenewableCluster>(area_1, "rn-cluster-12");
 	rnCluster_12->series.timeSeries.resize(3, 1); // Caution : number of TS different from previous cluster
 
@@ -346,7 +344,7 @@ BOOST_AUTO_TEST_CASE(two_areas_3_renew_clusters_with_different_number_of_ready_m
 	auto rnCluster_21 = addClusterToArea<RenewableCluster>(area_2, "rn-cluster-21");
 	rnCluster_21->series.timeSeries.resize(4, 1);
 
-	TSGenerator::ResizeGeneratedTimeSeries(study->areas, study->parameters);
+	study->areas.resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
 	BOOST_CHECK(not Generate(*study));
 }
@@ -361,20 +359,15 @@ BOOST_AUTO_TEST_CASE(check_intra_modal_on_hydro_max_power_time_series)
 
 	unsigned int hydroMaxPowerTSsize = 3;
 
-	// Area 1
 	Area* area_1 = addAreaToStudy(study, "Area 1");
-	area_1->hydro.series->resizeMaxPowerTS(hydroMaxPowerTSsize);
-	area_1->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
-
-	// Area 2
 	Area* area_2 = addAreaToStudy(study, "Area 2");
-	area_2->hydro.series->resizeMaxPowerTS(hydroMaxPowerTSsize);
-	area_2->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
-
-	// Area 3
 	Area* area_3 = addAreaToStudy(study, "Area 3");
+
+	area_1->hydro.series->resizeMaxPowerTS(hydroMaxPowerTSsize);
+	area_2->hydro.series->resizeMaxPowerTS(hydroMaxPowerTSsize);
 	area_3->hydro.series->resizeMaxPowerTS(hydroMaxPowerTSsize);
-	area_3->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
+
+	study->areas.resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
 	BOOST_CHECK(TimeSeriesNumbers::Generate(*study));
 
@@ -403,21 +396,15 @@ BOOST_AUTO_TEST_CASE(one_area__load_wind_thermal_are_turned_to_inter_modal__same
 	study->parameters.interModal |= timeSeriesWind;
 	study->parameters.interModal |= timeSeriesThermal;
 
-	// Area
 	Area* area = addAreaToStudy(study, "Area");
 	
-	// ... Load
 	area->load.series.timeSeries.resize(5, 1); // Ready made TS for load
-
-	// ... Wind
 	area->wind.series.timeSeries.resize(5, 1);	// Ready made TS for wind
 
-	// ... Thermal
+	// Thermal
 	study->parameters.timeSeriesToGenerate |= timeSeriesThermal; // Generated TS for thermal
-	study->parameters.timeSeriesToRefresh |= timeSeriesThermal; // Generated TS for thermal
 
 	study->parameters.nbTimeSeriesThermal = 5;
-	// ... ... clusters
 	auto thCluster_1 = addClusterToArea<ThermalCluster>(area, "th-cluster-1");
 	auto thCluster_2 = addClusterToArea<ThermalCluster>(area, "th-cluster-2");
 
@@ -444,18 +431,13 @@ BOOST_AUTO_TEST_CASE(one_area__load_wind_thermal_are_turned_to_inter_modal__same
 	study->parameters.interModal |= timeSeriesWind;
 	study->parameters.interModal |= timeSeriesThermal;
 
-	// Area
 	Area* area = addAreaToStudy(study, "Area");
 
-	// ... Load
 	area->load.series.timeSeries.resize(1, 1); // Ready made TS for load
-
-	// ... Wind
 	area->wind.series.timeSeries.resize(5, 1);	// Ready made TS for wind
 
 	// ... Thermal
 	study->parameters.timeSeriesToGenerate |= timeSeriesThermal; // Generated TS for thermal
-	study->parameters.timeSeriesToRefresh |= timeSeriesThermal; // Generated TS for thermal
 	study->parameters.nbTimeSeriesThermal = 5;
 	// ... ... clusters
 	auto thCluster_1 = addClusterToArea<ThermalCluster>(area, "th-cluster-1");
@@ -484,20 +466,15 @@ BOOST_AUTO_TEST_CASE(one_area__load_wind_thermal_are_turned_to_inter_modal__diff
 	study->parameters.interModal |= timeSeriesWind;
 	study->parameters.interModal |= timeSeriesThermal;
 
-	// Area
 	Area* area = addAreaToStudy(study, "Area");
 
-	// ... Load
 	area->load.series.timeSeries.resize(5, 1); // Ready made TS for load
+	area->wind.series.timeSeries.resize(5, 1); // Ready made TS for wind
 
-	// ... Wind
-	area->wind.series.timeSeries.resize(5, 1);	// Ready made TS for wind
-
-	// ... Thermal
+	// Thermal
 	study->parameters.timeSeriesToGenerate |= timeSeriesThermal; // Generated TS for thermal
-	study->parameters.timeSeriesToRefresh |= timeSeriesThermal; // Generated TS for thermal
 	study->parameters.nbTimeSeriesThermal = 4;
-	// ... ... clusters
+	// Add 2 clusters to area
 	auto thCluster_1 = addClusterToArea<ThermalCluster>(area, "th-cluster-1");
 	auto thCluster_2 = addClusterToArea<ThermalCluster>(area, "th-cluster-2");
 
@@ -519,20 +496,15 @@ BOOST_AUTO_TEST_CASE(one_area__load_renewable_are_turned_to_inter_modal__same_nb
 	study->parameters.interModal |= timeSeriesLoad;
 	study->parameters.interModal |= timeSeriesRenewable;
 
-	// Area
 	Area* area = addAreaToStudy(study, "Area");
 
-	// ... Load
 	area->load.series.timeSeries.resize(5, 1); // Ready made TS for load
 
-	// ... Renewable
-	// ... ... clusters
 	auto rnCluster_1 = addClusterToArea<RenewableCluster>(area, "rn-cluster-1");
 	rnCluster_1->series.timeSeries.resize(5, 1);
 
 	area->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
-	TSGenerator::ResizeGeneratedTimeSeries(study->areas, study->parameters);
 	BOOST_CHECK(Generate(*study));
 
 	// TS number checks
@@ -551,20 +523,15 @@ BOOST_AUTO_TEST_CASE(one_area__load_renewable_are_turned_to_inter_modal__differe
 	study->parameters.interModal |= timeSeriesLoad;
 	study->parameters.interModal |= timeSeriesRenewable;
 
-	// Area
 	Area* area = addAreaToStudy(study, "Area");
 
-	// ... Load
 	area->load.series.timeSeries.resize(5, 1); // Ready made TS for load
 
-	// ... Renewable
-	// ... ... clusters
 	auto rnCluster_1 = addClusterToArea<RenewableCluster>(area, "rn-cluster-1");
 	rnCluster_1->series.timeSeries.resize(4, 1);
 
 	area->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
-	TSGenerator::ResizeGeneratedTimeSeries(study->areas, study->parameters);
 	BOOST_CHECK(not Generate(*study));
 }
 
@@ -579,20 +546,15 @@ BOOST_AUTO_TEST_CASE(one_area__load_renewable_are_turned_to_inter_modal_with_res
 	study->parameters.interModal |= timeSeriesLoad;
 	study->parameters.interModal |= timeSeriesRenewable;
 
-	// Area
 	Area* area = addAreaToStudy(study, "Area");
 
-	// ... Load
 	area->load.series.timeSeries.resize(5, 1); // Ready made TS for load
 
-	// ... Renewable
-	// ... ... clusters
 	auto rnCluster_1 = addClusterToArea<RenewableCluster>(area, "rn-cluster-1");
 	rnCluster_1->series.timeSeries.resize(1, 1);
 
 	area->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
-	TSGenerator::ResizeGeneratedTimeSeries(study->areas, study->parameters);
 	BOOST_CHECK(Generate(*study));
 }
 
@@ -618,34 +580,22 @@ BOOST_AUTO_TEST_CASE(load_wind_thermal_in_intra_and_inter_modal____check_all_ts_
 
 	// Generated TS for thermal
 	study->parameters.timeSeriesToGenerate |= timeSeriesThermal; // Generated TS for thermal
-	study->parameters.timeSeriesToRefresh |= timeSeriesThermal;
 	study->parameters.nbTimeSeriesThermal = 5;
 
-	// ===============
-	// Area 1
-	// ===============
 	Area* area_1 = addAreaToStudy(study, "Area 1");
-	// ... Load
+	Area* area_2 = addAreaToStudy(study, "Area 2");
+
+	// Acions on area 1
 	area_1->load.series.timeSeries.resize(5, 1); // Ready made TS for load
-	// ... Wind
-	area_1->wind.series.timeSeries.resize(5, 1);	// Ready made TS for wind
-	// ... Thermal
+	area_1->wind.series.timeSeries.resize(5, 1); // Ready made TS for wind
 	auto thCluster_area_1 = addClusterToArea<ThermalCluster>(area_1, "th-cluster-area-1");
 
-	area_1->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
-
-	// ===============
-	// Area 2
-	// ===============
-	Area* area_2 = addAreaToStudy(study, "Area 2");
-	// ... Load
+	// Acions on area 2
 	area_2->load.series.timeSeries.resize(5, 1); // Ready made TS for load
-	// ... Wind
 	area_2->wind.series.timeSeries.resize(5, 1);	// Ready made TS for wind
-	// ... Thermal
 	auto thCluster_area_2 = addClusterToArea<ThermalCluster>(area_2, "th-cluster-area-2");
 
-	area_2->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
+	study->areas.resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
 	TSGenerator::ResizeGeneratedTimeSeries(study->areas, study->parameters);
 	BOOST_CHECK(Generate(*study));
@@ -669,11 +619,11 @@ BOOST_AUTO_TEST_CASE(check_all_drawn_ts_numbers_are_bounded_between_0_and_nb_of_
 	initializeStudy(study);
 
 	// Generated TS for everyone
-	study->parameters.timeSeriesToRefresh |= timeSeriesLoad;
-	study->parameters.timeSeriesToRefresh |= timeSeriesWind;
-	study->parameters.timeSeriesToRefresh |= timeSeriesSolar;
-	study->parameters.timeSeriesToRefresh |= timeSeriesHydro;
-	study->parameters.timeSeriesToRefresh |= timeSeriesThermal;
+	study->parameters.timeSeriesToGenerate |= timeSeriesLoad;
+	study->parameters.timeSeriesToGenerate |= timeSeriesWind;
+	study->parameters.timeSeriesToGenerate |= timeSeriesSolar;
+	study->parameters.timeSeriesToGenerate |= timeSeriesHydro;
+	study->parameters.timeSeriesToGenerate |= timeSeriesThermal;
 
 	// Number of TS for each energy
 	uint loadNumberOfTs = 10;
@@ -691,10 +641,10 @@ BOOST_AUTO_TEST_CASE(check_all_drawn_ts_numbers_are_bounded_between_0_and_nb_of_
 
 	Area* area = addAreaToStudy(study, "Area");
 
-	// ... Thermal
 	auto thCluster = addClusterToArea<ThermalCluster>(area, "th-cluster");
 
 	area->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
+
     auto bc = study->bindingConstraints.add("dummy");
     bc->group("dummy");
     study->bindingConstraintsGroups.add(bc->group());
