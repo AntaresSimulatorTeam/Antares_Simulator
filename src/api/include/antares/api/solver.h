@@ -24,5 +24,5 @@
 #include "SimulationResults.h"
 
 namespace Antares::API {
-    SimulationResults PerformSimulation();
+SimulationResults PerformSimulation(std::filesystem::path study_path);
 }
