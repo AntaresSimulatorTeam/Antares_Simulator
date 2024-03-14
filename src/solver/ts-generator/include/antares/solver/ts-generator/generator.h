@@ -38,7 +38,7 @@ class ThermalInterface
 public:
 
     template<class T>
-    ThermalInterface(T& source);
+    explicit ThermalInterface(T& source);
 
     const unsigned &unitCount;
     const double &nominalCapacity;

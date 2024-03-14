@@ -53,7 +53,7 @@ public:
 
     void prepareOutputFoldersForAllAreas(uint year);
 
-    void operator()(Data::Area& area, ThermalInterface& cluster);
+    void operator()(const Data::Area& area, ThermalInterface& cluster);
 
 public:
     Data::Study& study;
@@ -227,7 +227,7 @@ int GeneratorTempData::durationGenerator(Data::ThermalLaw law,
     return 0;
 }
 
-void GeneratorTempData::operator()(Data::Area& area, ThermalInterface& cluster)
+void GeneratorTempData::operator()(const Data::Area& area, ThermalInterface& cluster)
 {
     if (not cluster.prepro)
     {
