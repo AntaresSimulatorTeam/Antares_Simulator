@@ -522,7 +522,7 @@ The following diagram summarizes the situation regarding both random and epsilon
 |N_SPILLAGE|$5 \cdot 10^{-4} €/MWh$|$6 \cdot 10^{-4} €/MWh$|
 |N_HYDRO|$5 \cdot 10^{-4} €/MWh$|$10 \cdot 10^{-4} €/MWh$|
 
-It can be noted that, in absolute value, all random epsilons are smaller than the lower bound of the (non-zero) actual costs that can be defined through the user interface (CLB – cost lower bound : $5 \cdot 10^{-3} €/𝑀𝑊ℎ$)
+It can be noted that, in absolute value, all random epsilons are smaller than the lower bound of the (non-zero) actual costs that can be defined through the user interface (CLB – cost lower bound : $5 \cdot 10^{-3} €/MWh$)
 
 [^1]: Reference guide , section « optimization preferences : "export mps problems"
 
