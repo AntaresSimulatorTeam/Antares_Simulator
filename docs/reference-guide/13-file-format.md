@@ -2,14 +2,17 @@
 This is a list of all recent changes that came with new Antares Simulator features. The main goal of this document is to lower the costs of changing existing interfaces, both GUI and scripts.
 ## v9.1.0
 ### (Input) Hydro Maximum Generation/Pumping Power
-* For each area, new files are added **input/hydro/series/&lt;area&gt;/maxHourlyGenPower.txt** and **input/hydro/series/&lt;area&gt;/maxHourlyPumpPower.txt**. These files have one or more columns, and 8760 rows. The number of columns in these two files must be the same if there is more than one column in each file, but if there is just one column for example in maxHourlyGenPower.txt file, maxHourlyPumpPower.txt file can have more than one column and vice versa. Starting from v9.0, file **input/hydro/common/capacity/maxpower_&lt;area&gt;** is no longer used.
-### How to upgrade capacity time-series ?
-Source file = maxpower_&lt;area&gt;, destination files are maxHourlyGenPower.txt and maxHourlyPumpPower.txt. To upgrade time-series, you need to 
-1. For generation, multiply 1st and 2nd rows. For pumping, multiply 3rd and 4rd rows.
-2. Duplicate values 24 times : source has 365 rows, destination has 365 * 24 = 8760 rows
-* Also for each area, new files are added **input/hydro/common/capacity/maxDailyGenEnergy_&lt;area&gt;** and **input/hydro/common/capacity/maxDailyPumpEnergy_&lt;area&gt;**. These files have just one column and 365 rows. For old studies, file **input/hydro/common/capacity/maxpower_&lt;area&gt;** will be deleted after cleaning a study.
-* Under `Configure/MC Scenario Builder` new section is added `Hydro Max Power`
+* For time series ![Migration diagram](migration.svg "Migration diagram")
 * In the existing file **settings/scenariobuilder.dat**, under **&lt;ruleset&gt;** section following properties added: **hgp,&lt;area&gt;,&lt;year&gt; = &lt;hgp-value&gt;**
+
+
+Regarding Hydro time-series, the scenario builder allows the user to choose, for a given year and area, a different time series whether we consider :
+- inflows, ROR and minimum generation
+- initial level
+- max power for generation and pumping
+This implies that, inside one of the previous categories, the number of available time series is the same
+
+* [Logic changes](17-v91.md)
 
 ## v9.0.0
 ### Input
