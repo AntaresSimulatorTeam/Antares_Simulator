@@ -19,32 +19,17 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#define BOOST_TEST_MODULE test api
+#define BOOST_TEST_MODULE test file-study-loader
 #define BOOST_TEST_DYN_LINK
 
 #define WIN32_LEAN_AND_MEAN
 
 #include <boost/test/unit_test.hpp>
-#include <filesystem>
-#include "antares/api/solver.h"
-#include "antares/api/SimulationResults.h"
+#include <antares/study-loader/IStudyLoader.h>
+#include <antares/file-tree-study-loader/FileTreeStudyLoader.h>
 
-BOOST_AUTO_TEST_CASE(dumlmmy_test)
+BOOST_AUTO_TEST_CASE(load_ok)
 {
-    BOOST_CHECK(true);
+    auto study_loader = std::make_unique<Antares::FileTreeStudyLoader>();
+    BOOST_CHECK(study_loader->load());
 }
-
-//BOOST_AUTO_TEST_CASE(simulation_path_points_to_results)
-//{
-//    const Antares::API::SimulationResults results{
-//      Antares::API::PerformSimulation(std::filesystem::path())};
-//    //BOOST_CHECK(!results.simulationPath.empty());
-//}
-//
-//BOOST_AUTO_TEST_CASE(simulation_path_points_to_valid_output)
-//{
-//    using namespace std::string_literals;
-//    const Antares::API::SimulationResults results{
-//      Antares::API::PerformSimulation(std::filesystem::path())};
-//    //BOOST_CHECK_EQUAL(results.simulationPath, std::filesystem::path{"output_path"s});
-//}

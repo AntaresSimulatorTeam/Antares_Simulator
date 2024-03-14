@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2007-2024, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
@@ -19,32 +20,14 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#define BOOST_TEST_MODULE test api
-#define BOOST_TEST_DYN_LINK
+#include "antares/file-tree-study-loader/FileTreeStudyLoader.h"
 
-#define WIN32_LEAN_AND_MEAN
-
-#include <boost/test/unit_test.hpp>
-#include <filesystem>
-#include "antares/api/solver.h"
-#include "antares/api/SimulationResults.h"
-
-BOOST_AUTO_TEST_CASE(dumlmmy_test)
+namespace Antares
 {
-    BOOST_CHECK(true);
-}
+FileTreeStudyLoader::FileTreeStudyLoader() {
 
-//BOOST_AUTO_TEST_CASE(simulation_path_points_to_results)
-//{
-//    const Antares::API::SimulationResults results{
-//      Antares::API::PerformSimulation(std::filesystem::path())};
-//    //BOOST_CHECK(!results.simulationPath.empty());
-//}
-//
-//BOOST_AUTO_TEST_CASE(simulation_path_points_to_valid_output)
-//{
-//    using namespace std::string_literals;
-//    const Antares::API::SimulationResults results{
-//      Antares::API::PerformSimulation(std::filesystem::path())};
-//    //BOOST_CHECK_EQUAL(results.simulationPath, std::filesystem::path{"output_path"s});
-//}
+}
+bool FileTreeStudyLoader::load() {
+    return true;
+}
+} // namespace Antares
