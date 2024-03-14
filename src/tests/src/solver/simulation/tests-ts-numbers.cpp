@@ -43,7 +43,6 @@ void initializeStudy(Study::Ptr study, unsigned int nbYears = 1)
 	study->runtime = new StudyRuntimeInfos();
 	study->runtime->rangeLimits.year[rangeBegin] = 0;
 	study->runtime->rangeLimits.year[rangeEnd] = nbYears - 1;
-	study->runtime->rangeLimits.year[rangeCount] = nbYears - 1;
 
 	study->parameters.renewableGeneration.toAggregated(); // Default
 
