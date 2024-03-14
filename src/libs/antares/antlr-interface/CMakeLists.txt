@@ -20,7 +20,6 @@ add_library(Antares::${PROJ} ALIAS ${PROJ})
 
 target_link_libraries(${PROJ} PUBLIC antlr4_shared) # The library or executable that require yaml-cpp library
 
-message ("************* ${ANTLR4_INCLUDE_DIR} ********++++++********* ")
 
 target_include_directories(${PROJ} 
         PUBLIC
