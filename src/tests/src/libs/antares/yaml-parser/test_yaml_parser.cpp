@@ -1,3 +1,27 @@
+/*
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
+**
+** Antares_Simulator is free software: you can redistribute it and/or modify
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
+** (at your option) any later version.
+**
+** Antares_Simulator is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+** Mozilla Public Licence 2.0 for more details.
+**
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+*/
+#define BOOST_TEST_MODULE test - writer tests
+#define BOOST_TEST_DYN_LINK
+#include <boost/test/unit_test.hpp>
+#include <boost/test/data/test_case.hpp>
 #include "yaml-cpp/yaml.h"
 #include <iostream>
 #include <fstream>
@@ -104,37 +128,8 @@ struct convert<Monster>
 };
 } // namespace YAML
 
-// // now the extraction operators for these types
-// void operator>>(const YAML::Node& node, Vec3& v)
-// {
-//     node[0] >> v.x;
-//     node[1] >> v.y;
-//     node[2] >> v.z;
-// }
-
-// void operator>>(const YAML::Node& node, Power& power)
-// {
-//     node["name"] >> power.name;
-//     node["damage"] >> power.damage;
-// }
-
-// void operator>>(const YAML::Node& node, Monster& monster)
-// {
-//     node["name"] >> monster.name;
-//     node["position"] >> monster.position;
-//     const YAML::Node& powers = node["powers"];
-//     for (unsigned i = 0; i < powers.size(); i++)
-//     {
-//         Power power;
-//         powers[i] >> power;
-//         monster.powers.push_back(power);
-//     }
-// }
-
-// int main(int argc, char** argv)
-int main()
+BOOST_AUTO_TEST_CASE(test_yaml_parser)
 {
-    // YAML::Node doc = YAML::LoadFile(argv[1]);
     std::string my_yaml = R"(- name: Ogre
   position: [0, 5, 0]
   powers:
@@ -162,7 +157,6 @@ int main()
     {
         monsters.push_back(doc[i].as<Monster>());
         const Monster& monster = monsters.back();
-        std::cout << monster.name << "\n";
         std::cout << "Position: " << monster.position.x << ", " << monster.position.y << ", "
                   << monster.position.z << "\n";
         std::cout << "Powers: \n";
@@ -171,15 +165,15 @@ int main()
             std::cout << power.name << " " << power.damage << "\n";
         }
     }
-    // YAML::Node doc_to_write = ;
-    // ANTLRInputStream input("a = b + \"c\";(((x * d))) * e + f; a + (x * (y ? 0 : 1) + z);");
-    // TLexer lexer(&input);
-    // CommonTokenStream tokens(&lexer);
-
-    // TParser parser(&tokens);
-    // tree::ParseTree* tree = parser.main();
-
-    // auto s = tree->toStringTree(&parser);
-    // std::cout << "Parse Tree: " << s << std::endl;
-    return 0;
+    BOOST_CHECK(monsters.size() == 3);
+    auto ogre = monsters[0];
+    BOOST_CHECK(ogre.name == "Ogre");
+    BOOST_CHECK(ogre.position.x == 0);
+    BOOST_CHECK(ogre.position.y == 5);
+    BOOST_CHECK(ogre.position.z == 0);
+    auto ogre_powers = ogre.powers;
+    BOOST_CHECK(ogre_powers.size() == 2);
+    auto ogre_power_Club = ogre_powers[0];
+    BOOST_CHECK(ogre_power_Club.name == "Club");
+    BOOST_CHECK(ogre_power_Club.damage == 10);
 }

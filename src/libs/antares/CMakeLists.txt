@@ -26,7 +26,6 @@ add_subdirectory(study)
 add_subdirectory(sys)
 add_subdirectory(utils)
 add_subdirectory(writer)
-add_subdirectory(yaml-parser)
 add_subdirectory(antlr-interface)
 
 set(HEADERS
