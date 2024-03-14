@@ -1,21 +1,33 @@
 
-find_package(antlr4-runtime CONFIG REQUIRED)
-Set(SRCS 
-ExprBaseVisitor.h
-ExprBaseVisitor.cpp
-ExprLexer.h
-ExprLexer.cpp
-ExprParser.h
-ExprParser.cpp
-ExprVisitor.h
-ExprVisitor.cpp
+set(PROJ antlr-interface)
+set(HEADERS
+        ExprBaseVisitor.h
+        ExprLexer.h
+        ExprParser.h
+        ExprVisitor.h
 )
 
-set(lib_name "antlr-interface")
-add_library(${lib_name}  ${SRCS})
+Set(SRCS 
+ExprBaseVisitor.cpp
+ExprLexer.cpp
+ExprParser.cpp
+ExprVisitor.cpp
+)
+find_package(antlr4-runtime CONFIG REQUIRED)
 
-target_link_libraries(${lib_name} PUBLIC antlr4_shared) # The library or executable that require yaml-cpp library
+add_library(${PROJ}  ${SRCS})
+add_library(Antares::${PROJ} ALIAS ${PROJ})
+
+target_link_libraries(${PROJ} PUBLIC antlr4_shared) # The library or executable that require yaml-cpp library
 
 message ("************* ${ANTLR4_INCLUDE_DIR} ********++++++********* ")
 
-target_include_directories(${lib_name} PUBLIC ${ANTLR4_INCLUDE_DIR})
+target_include_directories(${PROJ} 
+        PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}
+        PRIVATE
+         ${ANTLR4_INCLUDE_DIR})
+
+install(FILES ${HEADERS}
+        DESTINATION "include"
+)
