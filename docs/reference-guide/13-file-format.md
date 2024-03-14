@@ -4,6 +4,14 @@ This is a list of all recent changes that came with new Antares Simulator featur
 ### (Input) Hydro Maximum Generation/Pumping Power
 * For time series ![Migration diagram](migration.svg "Migration diagram")
 * In the existing file **settings/scenariobuilder.dat**, under **&lt;ruleset&gt;** section following properties added: **hgp,&lt;area&gt;,&lt;year&gt; = &lt;hgp-value&gt;**
+
+
+Regarding Hydro time-series, the scenario builder allows the user to choose, for a given year and area, a different time series whether we consider :
+- inflows, ROR and minimum generation
+- initial level
+- max power for generation and pumping
+This implies that, inside one of the previous categories, the number of available time series is the same
+
 * [Logic changes](17-v91.md)
 
 ## v9.0.0
