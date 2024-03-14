@@ -8,7 +8,6 @@ on:
       - release/*
       - doc/*
       - dependabot/*
-      - fix/pdf-docs
   workflow_call:
     inputs:
       run-tests:
