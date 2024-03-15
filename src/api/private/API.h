@@ -22,39 +22,19 @@
 
 #pragma once
 #include <filesystem>
-#include "antares/study/load-options.h"
-#include "antares/solver/misc/options.h"
 #include "antares/api/SimulationResults.h"
-#include "antares/benchmarking/DurationCollector.h"
-#include <antares/writer/i_writer.h>
+#include "antares/study-loader/IStudyLoader.h"
+#include "antares/study/study.h"
 
 namespace Antares::API
 {
 
 class APIInternal
 {
-    void prepare(std::filesystem::path study_path);
-    Data::StudyLoadOptions options_;
-    Settings settings_;
-    std::shared_ptr<Data::Study> study_;
-    void readDataForTheStudy(Data::StudyLoadOptions& options);
-
-    Benchmarking::DurationCollector durationCollector_;
-    uint errorCount_ = 0;
-    //! The total muber of warnings which have been generated
-    uint warningCount_ = 0;
-
-    Antares::Data::Parameters* parameters_ = nullptr;
-    std::shared_ptr<Yuni::Job::QueueService> ioQueueService;
-    Solver::IResultWriter::Ptr resultWriter = nullptr;
-
 
 public:
-    SimulationResults run(std::filesystem::path study_path);
-    void prepareWriter(const Data::Study& study,
-                       Benchmarking::IDurationCollector& duration_collector);
-    void writeComment(Data::Study& study);
-    void startSimulation();
+    SimulationResults run(IStudyLoader* study_loader);
+    std::shared_ptr<Antares::Data::Study> study_;
 };
 
 } // namespace API

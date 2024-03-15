@@ -21,13 +21,16 @@
 
 #include <antares/api/solver.h>
 #include "private/API.h"
+#include "antares/study-loader/IStudyLoader.h"
+#include "antares/file-tree-study-loader/FileTreeStudyLoader.h"
 
 namespace Antares::API {
 
 SimulationResults PerformSimulation(std::filesystem::path study_path)
 {
     APIInternal api;
-    return api.run(study_path);
+    auto study_loader = std::make_unique<FileTreeStudyLoader>(study_path);
+    return api.run(study_loader.get());
 }
 
 }

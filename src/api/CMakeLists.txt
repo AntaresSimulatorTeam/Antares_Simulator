@@ -17,8 +17,6 @@ target_include_directories(solver_api
 target_link_libraries(solver_api
         PRIVATE
         Antares::study
-        Antares::checks
-        Antares::benchmarking
-        Antares::result_writer
-        Antares::signal-handling
+        Antares::study-loader
+        Antares::file-tree-study-loader
 )
