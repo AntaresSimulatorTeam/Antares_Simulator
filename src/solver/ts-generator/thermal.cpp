@@ -50,8 +50,6 @@ public:
     GeneratorTempData(Data::Study& study,
                       Solver::Progression::Task& progr);
 
-    void prepareOutputFoldersForAllAreas(uint year);
-
     void operator()(const Data::Area& area, ThermalInterface& cluster);
 
 public:
@@ -205,11 +203,7 @@ void GeneratorTempData::operator()(const Data::Area& area, ThermalInterface& clu
     assert(cluster.prepro);
 
     if (0 == cluster.unitCount or 0 == cluster.nominalCapacity)
-    {
-        if ((0 != (study.parameters.timeSeriesToArchive & Data::timeSeriesThermal)))
-            /* writeResultsToDisk(area, cluster); */
         return;
-    }
 
     const auto& preproData = *(cluster.prepro);
 
@@ -609,7 +603,7 @@ bool GenerateThermalTimeSeries(Data::Study& study,
 
     bool archive = (0 != (study.parameters.timeSeriesToArchive & Data::timeSeriesThermal));
 
-    auto* generator = new GeneratorTempData(study, progression);
+    auto generator = std::make_unique<GeneratorTempData>(study, progression);
 
     // TODO VP: parallel
     for (auto* cluster : clusters)
@@ -622,8 +616,6 @@ bool GenerateThermalTimeSeries(Data::Study& study,
 
         cluster->calculationOfSpinning();
     }
-
-    delete generator;
 
     return true;
 }
