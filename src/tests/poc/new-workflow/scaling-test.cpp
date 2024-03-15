@@ -37,7 +37,7 @@ BOOST_DATA_TEST_CASE(test_scaling_simple_problem, bdata::make(solverNames)*bdata
     std::vector<int> timeStamps(nTimesteps);
     std::iota(timeStamps.begin(), timeStamps.end(), 0);
 
-    std::map<std::string, std::vector<double>> timedData;
+    LinearProblemData::TimedDataDict timedData;
 
     // Build increasing consumption vector beginning at 0 MW, and increasing by 1 MW at every timestep
     std::vector<double> consumption(nTimesteps);

@@ -49,11 +49,11 @@ BOOST_DATA_TEST_CASE(test_oneWeek_oneNode_oneBattery_oneThermal,
             timeStamps, // TODO : move to LinearProblem ?
             timeResolution, // TODO : move to LinearProblem ?
             {
-                    {"initialStock_battery1", 0}
+                    {"initialStock_battery1", 0.}
             },
             {
-                    {"consumption_nodeA", {50, 50, 150, 120}},
-                    {"cost_thermal1",     {1,  3,  10,  8}}
+                    {"consumption_nodeA", {50., 50., 150., 120.}},
+                    {"cost_thermal1",     {1.,  3.,  10.,  8.}}
             });
     linearProblemBuilder.build(linearProblemData);
     auto solution = linearProblemBuilder.solve({});
@@ -104,12 +104,12 @@ BOOST_DATA_TEST_CASE(test_oneWeek_oneNode_oneBattery_twoThermals,
             timeStamps, // TODO : move to LinearProblem ?
             timeResolution, // TODO : move to LinearProblem ?
             {
-                    {"initialStock_battery1", 0}
+                    {"initialStock_battery1", 0.}
             },
             {
-                    {"consumption_nodeA", {0, 150, 150, 150}},
-                    {"cost_thermal1",     {1,  4,  8,  11}},
-                    {"cost_thermal2",     {2,  3,  10,  9}}
+                    {"consumption_nodeA", {0., 150., 150., 150.}},
+                    {"cost_thermal1",     {1.,  4.,  8.,  11.}},
+                    {"cost_thermal2",     {2.,  3.,  10.,  9.}}
             });
     linearProblemBuilder.build(linearProblemData);
     auto solution = linearProblemBuilder.solve({});

@@ -32,9 +32,5 @@ target_include_directories(${EXECUTABLE_NAME}
 							)
 
 add_test(NAME poc-legacy-study COMMAND ${EXECUTABLE_NAME})
-set_property(TEST poc-legacy-study PROPERTY LABELS end-to-end)
+set_property(TEST poc-legacy-study PROPERTY LABELS poc)
 set_target_properties(${EXECUTABLE_NAME} PROPERTIES FOLDER Unit-tests/poc-legacy-study)
-
-# Storing tests-simple-study under the folder Unit-tests in the IDE
-
-#----------------------------------------------------------

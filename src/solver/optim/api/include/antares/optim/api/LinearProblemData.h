@@ -36,25 +36,48 @@ namespace Antares::optim::api
     class LinearProblemData final
     {
     public:
-        using ScalarDataDict = std::map<std::string, double>;
+        template<class V>
+        class GroupedData
+        {
+        public:
+            GroupedData() = default;
+            template<class T>
+            GroupedData(const T& v) : values({v}) {}
+            template<class T>
+            GroupedData(T&& v) : values({v}) {}
+            template<class T>
+            GroupedData(std::initializer_list<T> v) : values({v}) {}
 
-        using TimedData = std::vector<double>;
+            inline V operator[](std::size_t idx) const { return values[idx];}
+            inline V& operator[](std::size_t idx) { return values[idx];}
+
+            std::string group;
+            std::vector<V> values; // index = tsIndex
+        };
+
+        using ScalarData = GroupedData<double>;
+        using ScalarDataDict = std::map<std::string, ScalarData>;
+
+        using TimedData = GroupedData<std::vector<double>>;
         using TimedDataDict = std::map<std::string, TimedData>;
 
-    private:
-        // TODO : timestamps or timesteps?
-        std::vector<int> timeStamps_;
-        int timeResolutionInMinutes_;
+        using GroupYearToIndex = std::map<std::string /*group*/,
+                                          std::map<unsigned int /*year*/, unsigned int /*tsIndex*/>>;
 
-        ScalarDataDict scalarData_;
-        TimedDataDict timedData_;
-        // TODO : handle scenarios, and data vectorized on scenarios, on time, or on both
+      // TODO : timestamps or timesteps?
+      std::vector<int> timeStamps_;
+      int timeResolutionInMinutes_;
+
+      ScalarDataDict scalarData_;
+      TimedDataDict timedData_;
+      // TODO : handle scenarios, and data vectorized on scenarios, on time, or on both
+      GroupYearToIndex groupYearToIndex_;
     public:
         explicit LinearProblemData(const std::vector<int> &timeStamps, int timeResolutionInMinutes,
                                    const ScalarDataDict& scalarData,
                                    const TimedDataDict& timedData) :
                 timeStamps_(timeStamps), timeResolutionInMinutes_(timeResolutionInMinutes),
-                scalarData_(scalarData), timedData_(timedData)
+                scalarData_(scalarData), timedData_(timedData), groupYearToIndex_({{"", {{0, 0}}}})
         {
             // TODO: some coherence check on data
             // for example, check that timed data are all of same size = size of timeStamps_
@@ -62,9 +85,22 @@ namespace Antares::optim::api
         [[nodiscard]] std::vector<int> getTimeStamps() const { return timeStamps_; }
         [[nodiscard]] int getTimeResolutionInMinutes() const { return timeResolutionInMinutes_; }
         [[nodiscard]] bool hasScalarData(const std::string& key) const { return scalarData_.contains(key); }
-        [[nodiscard]] double getScalarData(const std::string& key) const { return scalarData_.at(key); }
+        [[nodiscard]] double getScalarData(const std::string& key) const {
+            auto& data = scalarData_.at(key);
+
+            const std::string& group = data.group;
+            unsigned tsIndex = groupYearToIndex_.at(group).at(year_);
+            return data.values[tsIndex];
+        }
         [[nodiscard]] bool hasTimedData(const std::string& key) const { return timedData_.contains(key); }
-        [[nodiscard]] const TimedData& getTimedData(const std::string& key) const { return timedData_.at(key); }
+        [[nodiscard]] const std::vector<double>& getTimedData(const std::string& key) const
+        {
+            auto& data = timedData_.at(key);
+
+            const std::string& group = data.group;
+            unsigned tsIndex = groupYearToIndex_.at(group).at(year_);
+            return data.values[tsIndex];
+        }
 
         // TODO: remove this when legacy support is dropped
         // TODO: meanwhile, instead of having a nested struct, create a daughter class?
@@ -73,6 +109,8 @@ namespace Antares::optim::api
             const std::vector<const char*>* areaNames;
         };
         Legacy legacy;
+        // TODO[FOM] Move as argument ?
+        // TODO[FOM] No default value ?
+        unsigned int year_ = 0;
     };
-
 }
