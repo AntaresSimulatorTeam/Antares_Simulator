@@ -1,5 +1,4 @@
 #define BOOST_TEST_MODULE test hydro series
-#define BOOST_TEST_DYN_LINK
 
 #define WIN32_LEAN_AND_MEAN
 

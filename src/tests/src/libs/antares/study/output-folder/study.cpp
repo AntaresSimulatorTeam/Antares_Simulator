@@ -19,7 +19,6 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #define BOOST_TEST_MODULE output folder
-#define BOOST_TEST_DYN_LINK
 
 #define WIN32_LEAN_AND_MEAN
 
