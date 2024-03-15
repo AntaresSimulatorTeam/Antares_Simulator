@@ -47,6 +47,7 @@
 #include "antares/study/simulation.h"
 #include "antares/antares/version.h"
 #include "antares/solver/simulation/simulation.h"
+#include "antares/file-tree-study-loader/FileTreeStudyLoader.h"
 #include "antares/solver/simulation/economy_mode.h"
 #include "antares/solver/simulation/adequacy_mode.h"
 
@@ -117,7 +118,9 @@ void Application::startSimulation(Data::StudyLoadOptions& options)
 
     logs.callback.connect(this, &Application::onLogMessage);
 
-    pStudy = std::make_shared<Antares::Data::Study>(true /* for the solver */);
+    FileTreeStudyLoader fileTreeStudyLoader(options, pSettings, resultWriter);
+    processCaption(Yuni::String() << "antares: loading \"" << pSettings.studyFolder << "\"");
+    pStudy = fileTreeStudyLoader.load();
 
     pParameters = &(pStudy->parameters);
 
