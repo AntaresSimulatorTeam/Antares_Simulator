@@ -30,7 +30,7 @@ env:
   REF: ${{ inputs.target_branch =='' && github.ref || inputs.target_branch}}
   VCPKG_ROOT: ${{ github.workspace }}/vcpkg
   vcpkgPackages: yaml-cpp antlr4 boost-test
-  triplet: x64-linux-dynamic
+  triplet: x64-linux
   WX_CONFIG: /usr/bin/wx-config
 
 jobs:
