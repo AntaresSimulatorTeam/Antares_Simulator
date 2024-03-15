@@ -268,16 +268,6 @@ jobs:
            popd
            rm -rf install
 
-    - name: Ts Generator tool archive creation
-      run: |
-           cd _build
-           cmake --install . --prefix install
-           pushd .
-           cd install/bin
-           tar czf ../../antares-ts-generator20.04.tar.gz antares-ts-generator
-           popd
-           rm -rf install
-
     - name: Installer archive upload push
       uses: actions/upload-artifact@v3
       with:
