@@ -18,8 +18,11 @@ find_package(antlr4-runtime CONFIG REQUIRED)
 add_library(${PROJ}  ${SRCS})
 add_library(Antares::${PROJ} ALIAS ${PROJ})
 
-target_link_libraries(${PROJ} PUBLIC antlr4_static) # The library or executable that require yaml-cpp library
-
+if(MSVC)
+    target_link_libraries(${PROJ} PUBLIC antlr4_shared) # vcpkg triplet x64-windows provides shared lib
+else()
+    target_link_libraries(${PROJ} PUBLIC antlr4_static) # vcpkg triplet x64-linux provides static lib
+endif()
 
 target_include_directories(${PROJ} 
         PUBLIC
