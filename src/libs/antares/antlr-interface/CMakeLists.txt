@@ -24,8 +24,7 @@ target_link_libraries(${PROJ} PUBLIC antlr4_static) # The library or executable 
 target_include_directories(${PROJ} 
         PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}
-        PRIVATE
-         ${ANTLR4_INCLUDE_DIR})
+        ${ANTLR4_INCLUDE_DIR})
 
 install(FILES ${HEADERS}
         DESTINATION "include"
