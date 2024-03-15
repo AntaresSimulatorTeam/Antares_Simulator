@@ -4,12 +4,22 @@ add_executable(${EXECUTABLE_NAME})
 target_sources(${EXECUTABLE_NAME}
     PRIVATE
     test_api.cpp
+        ${CMAKE_SOURCE_DIR}/api/API.cpp
 )
 
 target_link_libraries(${EXECUTABLE_NAME}
         PRIVATE
         Boost::unit_test_framework
-        Antares::solver_api
+        Antares::study
+        Antares::study-loader
+        Antares::tests::in-memory-study
+)
+
+target_include_directories(${EXECUTABLE_NAME}
+        PRIVATE
+        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/api/private>
+        PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/api/include>
 )
 
 # Storing tests-ts-numbers under the folder Unit-tests in the IDE

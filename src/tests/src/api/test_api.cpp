@@ -26,25 +26,33 @@
 
 #include <boost/test/unit_test.hpp>
 #include <filesystem>
-#include "antares/api/solver.h"
-#include "antares/api/SimulationResults.h"
+#include "API.h"
+#include "in-memory-study.h"
 
-BOOST_AUTO_TEST_CASE(dumlmmy_test)
+class InMemoryStudyLoader : public Antares::IStudyLoader
 {
-    BOOST_CHECK(true);
+public:
+    std::shared_ptr<Antares::Data::Study> load() override {
+      StudyBuilder builder;
+      builder.addAreaToStudy("area1");
+      builder.addAreaToStudy("area2");
+      return builder.study;
+    };
+};
+
+
+BOOST_AUTO_TEST_CASE(simulation_path_points_to_results)
+{
+    Antares::API::APIInternal api;
+    auto study_loader = std::make_unique<InMemoryStudyLoader>();
+    auto results = api.run(study_loader.get());
+    BOOST_CHECK_EQUAL(results.simulationPath, std::filesystem::path{"results"});
 }
 
-//BOOST_AUTO_TEST_CASE(simulation_path_points_to_results)
-//{
-//    const Antares::API::SimulationResults results{
-//      Antares::API::PerformSimulation(std::filesystem::path())};
-//    //BOOST_CHECK(!results.simulationPath.empty());
-//}
-//
-//BOOST_AUTO_TEST_CASE(simulation_path_points_to_valid_output)
-//{
+BOOST_AUTO_TEST_CASE(simulation_path_points_to_valid_output)
+{
 //    using namespace std::string_literals;
 //    const Antares::API::SimulationResults results{
 //      Antares::API::PerformSimulation(std::filesystem::path())};
-//    //BOOST_CHECK_EQUAL(results.simulationPath, std::filesystem::path{"output_path"s});
-//}
+//    BOOST_CHECK_EQUAL(results.simulationPath, std::filesystem::path{"output_path"s});
+}
