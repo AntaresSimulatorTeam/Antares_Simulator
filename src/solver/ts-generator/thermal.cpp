@@ -564,8 +564,8 @@ void writeResultsToDisk(const Data::Study& study,
 
     pTempFilename.reserve(study.folderOutput.size() + 256);
 
-    pTempFilename.clear() << "ts-generator" << SEP << "thermal" << SEP << "mc-0"
-        << SEP << area.id << SEP << cluster.id() << ".txt";
+    pTempFilename.clear() << "ts-generator" << SEP << "thermal" << SEP << area.id
+        << SEP << cluster.id() << ".txt";
 
     enum
     {
