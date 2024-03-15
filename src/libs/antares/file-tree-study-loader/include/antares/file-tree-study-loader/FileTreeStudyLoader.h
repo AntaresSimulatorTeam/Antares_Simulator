@@ -25,6 +25,8 @@
 #include "antares/study/load-options.h"
 #include "antares/solver/misc/options.h"
 #include <antares/writer/i_writer.h>
+#include <filesystem>
+
 
 namespace Antares
 {
@@ -32,16 +34,9 @@ namespace Antares
 class FileTreeStudyLoader: public IStudyLoader
 {
 public:
-    FileTreeStudyLoader(const Data::StudyLoadOptions& options,
-                        const Settings& settings,
-                        Solver::IResultWriter::Ptr writer);
+    explicit FileTreeStudyLoader(std::filesystem::path study_path);
     ~FileTreeStudyLoader() override = default;
-    std::unique_ptr<Antares::Data::Study> load() override;
-    const Data::StudyLoadOptions& options_;
-    const Settings& settings_;
-    Solver::IResultWriter::Ptr writer_;
-    void readDataForTheStudy();
-    std::unique_ptr<Data::Study> study_;
-    void writeComment(Data::Study& study);
+    std::shared_ptr<Antares::Data::Study> load() override;
+    std::filesystem::path study_path_;
 };
 } // namespace Antares
