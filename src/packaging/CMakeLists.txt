@@ -49,6 +49,8 @@ set(TARGET_LIBS #No alias
         stdcxx
         inifile
         antares-config-lib
+        file-tree-study-loader
+        study-loader
         #
         signal-handling
         antares-solver-variable-info
