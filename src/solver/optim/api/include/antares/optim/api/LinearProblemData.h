@@ -27,25 +27,32 @@
 #pragma once
 
 #include <utility>
-#include "antares/solver/simulation/sim_structure_probleme_economique.h"
+#include <vector>
 
-#include "vector"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 namespace Antares::optim::api
 {
     class LinearProblemData final
     {
+    public:
+        using ScalarDataDict = std::map<std::string, double>;
+
+        using TimedData = std::vector<double>;
+        using TimedDataDict = std::map<std::string, TimedData>;
+
     private:
         // TODO : timestamps or timesteps?
         std::vector<int> timeStamps_;
         int timeResolutionInMinutes_;
-        std::map<std::string, double> scalarData_;
-        std::map<std::string, std::vector<double>> timedData_;
+
+        ScalarDataDict scalarData_;
+        TimedDataDict timedData_;
         // TODO : handle scenarios, and data vectorized on scenarios, on time, or on both
     public:
         explicit LinearProblemData(const std::vector<int> &timeStamps, int timeResolutionInMinutes,
-                                   const std::map<std::string, double> &scalarData,
-                                   const std::map<std::string, std::vector<double>> &timedData) :
+                                   const ScalarDataDict& scalarData,
+                                   const TimedDataDict& timedData) :
                 timeStamps_(timeStamps), timeResolutionInMinutes_(timeResolutionInMinutes),
                 scalarData_(scalarData), timedData_(timedData)
         {
@@ -57,7 +64,7 @@ namespace Antares::optim::api
         [[nodiscard]] bool hasScalarData(const std::string& key) const { return scalarData_.contains(key); }
         [[nodiscard]] double getScalarData(const std::string& key) const { return scalarData_.at(key); }
         [[nodiscard]] bool hasTimedData(const std::string& key) const { return timedData_.contains(key); }
-        [[nodiscard]] const std::vector<double>& getTimedData(const std::string& key) const { return timedData_.at(key); }
+        [[nodiscard]] const TimedData& getTimedData(const std::string& key) const { return timedData_.at(key); }
 
         // TODO: remove this when legacy support is dropped
         // TODO: meanwhile, instead of having a nested struct, create a daughter class?
