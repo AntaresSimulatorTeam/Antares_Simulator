@@ -116,7 +116,7 @@ void Application::startSimulation(Data::StudyLoadOptions& options)
 
     logs.callback.connect(this, &Application::onLogMessage);
 
-    FileTreeStudyLoader fileTreeStudyLoader(options, pSettings, resultWriter);
+    FileTreeStudyLoader fileTreeStudyLoader(nullptr);
     processCaption(Yuni::String() << "antares: loading \"" << pSettings.studyFolder << "\"");
     pStudy = fileTreeStudyLoader.load();
 
