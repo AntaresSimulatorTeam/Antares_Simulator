@@ -71,6 +71,7 @@ public:
     void resetProcessPriority() const;
 
     void writeExectutionInfo();
+    std::shared_ptr<Data::Study> study() const { return pStudy; }
 private:
     /*!
     ** \brief Reset the log filename and open it

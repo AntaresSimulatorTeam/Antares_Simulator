@@ -17,6 +17,7 @@ target_link_libraries(${PROJ}
         Antares::study-loader
         Antares::result_writer
         Antares::study
+        Antares::application
 )
 
 target_include_directories(${PROJ}
