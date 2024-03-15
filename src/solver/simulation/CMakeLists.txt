@@ -60,9 +60,8 @@ target_include_directories(antares-solver-simulation
 )
 
 target_link_libraries(antares-solver-simulation
-		PRIVATE
-		Antares::infoCollection
 		PUBLIC
+		Antares::infoCollection
 		yuni-static-core
 		Antares::study
 		Antares::result_writer
