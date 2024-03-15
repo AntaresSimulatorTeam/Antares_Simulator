@@ -22,6 +22,9 @@
 
 #pragma once
 #include "antares/study-loader/IStudyLoader.h"
+#include "antares/study/load-options.h"
+#include "antares/solver/misc/options.h"
+#include <antares/writer/i_writer.h>
 
 namespace Antares
 {
@@ -29,8 +32,16 @@ namespace Antares
 class FileTreeStudyLoader: public IStudyLoader
 {
 public:
-    FileTreeStudyLoader();
-    ~FileTreeStudyLoader() = default;
-    bool load() override;
+    FileTreeStudyLoader(const Data::StudyLoadOptions& options,
+                        const Settings& settings,
+                        Solver::IResultWriter::Ptr writer);
+    ~FileTreeStudyLoader() override = default;
+    std::unique_ptr<Antares::Data::Study> load() override;
+    const Data::StudyLoadOptions& options_;
+    const Settings& settings_;
+    Solver::IResultWriter::Ptr writer_;
+    void readDataForTheStudy();
+    std::unique_ptr<Data::Study> study_;
+    void writeComment(Data::Study& study);
 };
 } // namespace Antares

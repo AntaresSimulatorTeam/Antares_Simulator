@@ -21,11 +21,12 @@
  */
 
 #pragma once
+#include <antares/study/study.h>
 
 namespace Antares {
 class IStudyLoader {
 public:
     virtual ~IStudyLoader() = default;
-    virtual bool load() = 0;
+    virtual std::unique_ptr<Antares::Data::Study> load() = 0;
 };
 }
