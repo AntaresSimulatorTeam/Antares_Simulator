@@ -18,7 +18,7 @@ find_package(antlr4-runtime CONFIG REQUIRED)
 add_library(${PROJ}  ${SRCS})
 add_library(Antares::${PROJ} ALIAS ${PROJ})
 
-target_link_libraries(${PROJ} PUBLIC antlr4_shared) # The library or executable that require yaml-cpp library
+target_link_libraries(${PROJ} PUBLIC antlr4_static) # The library or executable that require yaml-cpp library
 
 
 target_include_directories(${PROJ} 
