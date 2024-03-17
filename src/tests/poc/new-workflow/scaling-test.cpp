@@ -15,7 +15,7 @@ using namespace std;
 
 static constexpr std::array solverNames =
         {
-          //                "xpress",
+                "xpress",
                 "sirius",
                 "coin",
                 //"scip" // TODO activate this after adding tolerance
