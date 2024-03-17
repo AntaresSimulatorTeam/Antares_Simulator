@@ -14,7 +14,7 @@ using namespace Antares::optim::api;
 
 static constexpr std::array solverNames =
         {
-                "xpress",
+          //                "xpress",
                 "sirius",
                 "coin",
                 //"scip" // TODO activate this after adding tolerance

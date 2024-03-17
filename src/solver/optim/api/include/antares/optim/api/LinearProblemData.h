@@ -84,22 +84,47 @@ namespace Antares::optim::api
         };
         [[nodiscard]] std::vector<int> getTimeStamps() const { return timeStamps_; }
         [[nodiscard]] int getTimeResolutionInMinutes() const { return timeResolutionInMinutes_; }
-        [[nodiscard]] bool hasScalarData(const std::string& key) const { return scalarData_.contains(key); }
-        [[nodiscard]] double getScalarData(const std::string& key) const {
-            auto& data = scalarData_.at(key);
 
-            const std::string& group = data.group;
-            unsigned tsIndex = groupYearToIndex_.at(group).at(year_);
-            return data.values[tsIndex];
-        }
-        [[nodiscard]] bool hasTimedData(const std::string& key) const { return timedData_.contains(key); }
-        [[nodiscard]] const std::vector<double>& getTimedData(const std::string& key) const
+        inline std::set<std::string> groups() const
         {
-            auto& data = timedData_.at(key);
+            return {""}; // TODO iterate over scalarData and TimedData
+        }
 
-            const std::string& group = data.group;
-            unsigned tsIndex = groupYearToIndex_.at(group).at(year_);
-            return data.values[tsIndex];
+        class YearView
+        {
+        public:
+          YearView(const LinearProblemData& data, unsigned year)
+          {
+            for (const auto& group : data.groups())
+            {
+              unsigned tsIndex = data.groupYearToIndex_.at(group).at(year);
+              for (auto& [key, scalarData] : data.scalarData_)
+                {
+                  scalarData_.insert({key, scalarData[tsIndex]}); // TODO avoid copies
+                }
+
+              for (auto& [key, timedData] : data.timedData_)
+                {
+                  timedData_.insert({key, timedData[tsIndex]}); // TODO avoid copies
+                }
+            }
+          }
+          [[nodiscard]] bool hasScalarData(const std::string& key) const { return scalarData_.contains(key); }
+          [[nodiscard]] double getScalarData(const std::string& key) const {
+            return scalarData_.at(key);
+          }
+          [[nodiscard]] bool hasTimedData(const std::string& key) const { return timedData_.contains(key); }
+          [[nodiscard]] const std::vector<double>& getTimedData(const std::string& key) const
+          {
+              return timedData_.at(key);
+          }
+        private:
+          std::map<std::string, double> scalarData_;
+          std::map<std::string, std::vector<double>> timedData_;
+        };
+
+        YearView operator[](std::size_t year) const {
+           return YearView(*this, year);
         }
 
         // TODO: remove this when legacy support is dropped
