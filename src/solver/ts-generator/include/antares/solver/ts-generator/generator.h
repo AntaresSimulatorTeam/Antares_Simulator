@@ -36,7 +36,7 @@ class ThermalInterface
 {
 public:
     ThermalInterface(Data::ThermalCluster*);
-    ThermalInterface(Data::AreaLink*, Data::TimeSeries&);
+    ThermalInterface(Data::AreaLink::TsGeneration&, Data::TimeSeries&, const std::string& name);
 
     const unsigned &unitCount;
     const double &nominalCapacity;

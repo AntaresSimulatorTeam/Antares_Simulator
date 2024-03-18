@@ -56,17 +56,19 @@ ThermalInterface::ThermalInterface(Data::ThermalCluster *source) :
     name(source->name())
 {}
 
-ThermalInterface::ThermalInterface(Data::AreaLink *source, Data::TimeSeries& capacity) :
-    unitCount(source->unitCount),
-    nominalCapacity(source->nominalCapacity),
-    forcedVolatility(source->forcedVolatility),
-    plannedVolatility(source->plannedVolatility),
-    forcedLaw(source->forcedLaw),
-    plannedLaw(source->plannedLaw),
-    prepro(source->prepro),
+ThermalInterface::ThermalInterface(Data::AreaLink::TsGeneration& source,
+                                   Data::TimeSeries& capacity,
+                                   const std::string& linkName) :
+    unitCount(source.unitCount),
+    nominalCapacity(source.nominalCapacity),
+    forcedVolatility(source.forcedVolatility),
+    plannedVolatility(source.plannedVolatility),
+    forcedLaw(source.forcedLaw),
+    plannedLaw(source.plannedLaw),
+    prepro(source.prepro),
     series(capacity),
-    modulationCapacity(source->modulationCapacity[0]),
-    name(source->getName())
+    modulationCapacity(source.modulationCapacity[0]),
+    name(linkName)
 {}
 
 namespace

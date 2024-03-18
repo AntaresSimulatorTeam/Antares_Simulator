@@ -206,18 +206,21 @@ public:
 
     friend struct CompareLinkName;
 
-    unsigned unitCount;
-    double nominalCapacity;
+    struct TsGeneration
+    {
+        unsigned unitCount;
+        double nominalCapacity;
 
-    double forcedVolatility;
-    double plannedVolatility;
+        double forcedVolatility;
+        double plannedVolatility;
 
-    Data::ThermalLaw forcedLaw;
-    Data::ThermalLaw plannedLaw;
+        Data::ThermalLaw forcedLaw;
+        Data::ThermalLaw plannedLaw;
 
-    Data::PreproThermal* prepro;
+        Data::PreproThermal* prepro;
 
-    Matrix<> modulationCapacity;
+        Matrix<> modulationCapacity;
+    };
 
 
 }; // class AreaLink
