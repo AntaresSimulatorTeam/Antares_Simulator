@@ -84,6 +84,13 @@ if (BUILD_TOOLS)
         COMMAND Python3::Interpreter -m pytest -m kirchhoff --exe_kirchhoff_path=$<TARGET_FILE:antares-kirchhoff-constraints-builder> kirchhoff_pytest.py
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/kirchhoff-cbuilder"
         )
+
+      add_test(
+        NAME tsgenerator
+        COMMAND Python3::Interpreter -m pytest -m tsgenerator --tsgenerator_path=$<TARGET_FILE:antares-ts-generator> antares_tools/ts-generator/ts-generator.py
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/run-study-tests"
+        )
+
 endif()
 
       set_property(TEST unfeasible PROPERTY LABELS study sirius)
