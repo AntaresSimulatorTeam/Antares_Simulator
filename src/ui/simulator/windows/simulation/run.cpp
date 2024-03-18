@@ -91,7 +91,11 @@ static wxString TimeSeriesToWxString(uint m)
         r << (r.empty() ? wxEmptyString : wxT(", ")) << wxT("wind");
     if (m & Data::timeSeriesThermal)
         r << (r.empty() ? wxEmptyString : wxT(", ")) << wxT("thermal");
-    return r.empty() ? wxT("none") : r;
+
+    if (r.empty())
+        return wxT("none");
+    else
+        return r;
 }
 
 static inline void UpdateLabel(bool& guiUpdated, wxStaticText* label, const wxString& text)
