@@ -109,6 +109,4 @@ private:
 
 } // namespace Antares
 
-#include "mersenne-twister.hxx"
-
 #endif // __LIB_ANTARES_RANDOM_MERSENNE_H__

@@ -112,7 +112,8 @@ namespace Utils
 
 bool isZero(double d)
 {
-    return (std::abs(d) < 1.e-6) ? true : false;
+    constexpr double threshold = 1.e-6;
+    return (std::abs(d) < threshold) ? true : false;
 }
 
 double round(double d, unsigned precision)

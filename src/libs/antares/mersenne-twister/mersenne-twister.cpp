@@ -112,4 +112,24 @@ MersenneTwister::Value MersenneTwister::next() const
     return y * (1.0 / 4294967295.0);
 }
 
+MersenneTwister::Value MersenneTwister::min()
+{
+    return 0.;
+}
+
+MersenneTwister::Value MersenneTwister::max()
+{
+    return 1.;
+}
+
+void MersenneTwister::reset()
+{
+    reset(defaultSeed);
+}
+
+MersenneTwister::Value MersenneTwister::operator()()
+{
+    return this->next();
+}
+
 } // namespace Antares
