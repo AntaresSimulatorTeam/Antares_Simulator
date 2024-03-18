@@ -1,6 +1,5 @@
 var NAVTREEINDEX22 =
 {
-"overflow_8h_source.html":[8,0,0,2,10,0,0,0,0,2,23],
 "pages.html":[],
 "panel_8hxx_source.html":[8,0,0,5,2,2,10,0,2],
 "parameter_8h_source.html":[8,0,0,5,2,1,1,1,0,2,0],
@@ -249,5 +248,6 @@ var NAVTREEINDEX22 =
 "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1SpilledEnergy_1_1Statistics.html":[7,0,0,12,4,0,1,0],
 "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardOverallCost.html":[7,0,0,12,4,0,2],
 "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardOverallCost.html#a854c5d2699f58392bf9403bf3446e5a6":[7,0,0,12,4,0,2,0],
-"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardOverallCost.html#a9e39464214dd3554a1719085d8918e54":[7,0,0,12,4,0,2,1]
+"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardOverallCost.html#a9e39464214dd3554a1719085d8918e54":[7,0,0,12,4,0,2,1],
+"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html":[7,0,0,12,4,0,3]
 };

@@ -163,7 +163,7 @@ $(document).ready(function(){initNavTree('flowLinearAbs_8h_source.html',''); ini
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#define __SOLVER_VARIABLE_ECONOMY_FlowLinearAbs_H__</span></div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &quot;../../variable.h&quot;</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &lt;yuni/core/math.h&gt;</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &lt;cmath&gt;</span></div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="keyword">namespace </span>Antares</div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>{</div>
@@ -358,7 +358,7 @@ $(document).ready(function(){initNavTree('flowLinearAbs_8h_source.html',''); ini
 <div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>    {</div>
 <div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>        <span class="comment">// Flow assessed over all MC years (linear)</span></div>
 <div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>        pValuesForTheCurrentYear[numSpace].<a class="code hl_variable" href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html#a49bfe1df7fe7547926b82e052f2e77be">hour</a>[state.hourInTheYear]</div>
-<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>          += Yuni::Math::Abs(state.ntc.ValeurDuFlux[state.link-&gt;index]);</div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>          += std::abs(state.ntc.ValeurDuFlux[state.link-&gt;index]);</div>
 <div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>        <span class="comment">// Next item in the list</span></div>
 <div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>        NextType::hourForEachLink(state, numSpace);</div>
 <div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>    }</div>
@@ -446,7 +446,7 @@ $(document).ready(function(){initNavTree('flowLinearAbs_8h_source.html',''); ini
 <div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardFlowLinearAbs_html_a9c47a3dfe79fca941ecc39d4a12a609fac14d3ccc89972b6cfd03ec13bc1d978f"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardFlowLinearAbs.html#a9c47a3dfe79fca941ecc39d4a12a609fac14d3ccc89972b6cfd03ec13bc1d978f">Antares::Solver::Variable::Economy::VCardFlowLinearAbs::decimal</a></div><div class="ttdeci">@ decimal</div><div class="ttdoc">Decimal precision.</div><div class="ttdef"><b>Definition</b> flowLinearAbs.h:73</div></div>
 <div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average.html">Antares::Solver::Variable::R::AllYears::Average</a></div><div class="ttdef"><b>Definition</b> average.h:38</div></div>
 <div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html">Antares::Solver::Variable::R::AllYears::StdDeviation</a></div><div class="ttdef"><b>Definition</b> stdDeviation.h:40</div></div>
-<div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1VariableAccessor_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1VariableAccessor.html">Antares::Solver::Variable::VariableAccessor</a></div><div class="ttdef"><b>Definition</b> info.h:62</div></div>
+<div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1VariableAccessor_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1VariableAccessor.html">Antares::Solver::Variable::VariableAccessor</a></div><div class="ttdef"><b>Definition</b> info.h:64</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

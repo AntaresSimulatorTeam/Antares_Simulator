@@ -160,8 +160,8 @@ $(document).ready(function(){initNavTree('math_8hxx_source.html',''); initResiza
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="comment">** along with Antares_Simulator. If not, see &lt;https://opensource.org/license/mpl-2-0/&gt;.</span></div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="comment">*/</span></div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &lt;yuni/yuni.h&gt;</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &lt;yuni/core/math.h&gt;</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &lt;cmath&gt;</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &lt;yuni/yuni.h&gt;</span></div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;antares/study/study.h&gt;</span></div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &lt;antares/logs/logs.h&gt;</span></div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &quot;antares/solver/ts-generator/xcast/xcast.h&quot;</span></div>
@@ -319,7 +319,7 @@ $(document).ready(function(){initNavTree('math_8hxx_source.html',''); initResiza
 <div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>        <span class="comment">// Warning:</span></div>
 <div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>        <span class="comment">// On suppose ici que d a ete correctement initialise avec d=gamma_euler(1+1/a)</span></div>
 <div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>        <span class="comment">//</span></div>
-<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>        assert(!Math::Zero(b) &amp;&amp; <span class="stringliteral">&quot;division by zero&quot;</span>);</div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>        assert(b != 0 &amp;&amp; <span class="stringliteral">&quot;division by zero&quot;</span>);</div>
 <div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>        <span class="keyword">const</span> <span class="keywordtype">double</span> v = pow(x / b, a);</div>
 <div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>        <span class="keyword">const</span> <span class="keywordtype">double</span> w = exp(v);</div>
 <div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span> </div>
@@ -372,7 +372,7 @@ $(document).ready(function(){initNavTree('math_8hxx_source.html',''); initResiza
 <div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span><span class="comment">                        for (k = 0; k &lt; N; ++k)</span></div>
 <div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span><span class="comment">                                estim_aij += L[i][k] * L[j][k];</span></div>
 <div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span><span class="comment"></span> </div>
-<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span><span class="comment">                        if (Math::Abs(estim_aij - A[i][j]) &gt; EPSIMAX)</span></div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span><span class="comment">                        if (std::abs(estim_aij - A[i][j]) &gt; EPSIMAX)</span></div>
 <div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span><span class="comment">                                return false;</span></div>
 <div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span><span class="comment">                }</span></div>
 <div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span><span class="comment">        }</span></div>
