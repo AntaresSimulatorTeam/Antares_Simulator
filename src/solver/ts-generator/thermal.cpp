@@ -47,8 +47,7 @@ namespace
 class GeneratorTempData final
 {
 public:
-    GeneratorTempData(Data::Study& study,
-                      Solver::Progression::Task& progr);
+    GeneratorTempData(Data::Study& study);
 
     void operator()(const Data::Area& area, ThermalInterface& cluster);
 
@@ -93,14 +92,11 @@ private:
     std::vector<std::vector<double>> PPOW;
 
     String pTempFilename;
-    Solver::Progression::Task& pProgression;
 };
 
-GeneratorTempData::GeneratorTempData(Data::Study& study,
-                                     Solver::Progression::Task& progr):
+GeneratorTempData::GeneratorTempData(Data::Study& study) :
     study(study),
-    rndgenerator(study.runtime->random[Data::seedTsGenThermal]),
-    pProgression(progr)
+    rndgenerator(study.runtime->random[Data::seedTsGenThermal])
 {
     auto& parameters = study.parameters;
 
@@ -599,11 +595,10 @@ bool GenerateThermalTimeSeries(Data::Study& study,
 {
     logs.info();
     logs.info() << "Generating the thermal time-series";
-    Solver::Progression::Task progression(study, year, Solver::Progression::sectTSGThermal);
 
     bool archive = (0 != (study.parameters.timeSeriesToArchive & Data::timeSeriesThermal));
 
-    auto generator = std::make_unique<GeneratorTempData>(study, progression);
+    auto generator = std::make_unique<GeneratorTempData>(study);
 
     // TODO VP: parallel
     for (auto* cluster : clusters)
