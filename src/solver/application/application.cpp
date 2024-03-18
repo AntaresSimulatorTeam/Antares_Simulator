@@ -183,9 +183,7 @@ void Application::startSimulation(Data::StudyLoadOptions options)
 
     logs.callback.connect(this, &Application::onLogMessage);
 
-    FileTreeStudyLoader fileTreeStudyLoader(options, pSettings, resultWriter);
-    processCaption(Yuni::String() << "antares: loading \"" << pSettings.studyFolder << "\"");
-    pStudy = fileTreeStudyLoader.load();
+    pStudy = std::make_shared<Antares::Data::Study>(true /* for the solver */);
 
     pParameters = &(pStudy->parameters);
 
