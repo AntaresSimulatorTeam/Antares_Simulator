@@ -45,7 +45,11 @@ void APIInternal::execute()
 
     study_->computePThetaInfForThermalClusters();
 
+    //Only those two fields are used un simulation
     Settings settings;
+    settings.tsGeneratorsOnly = false;
+    settings.noOutput = false;
+
     Benchmarking::DurationCollector durationCollector;
     Benchmarking::OptimizationInfo optimizationInfo;
     auto ioQueueService = std::make_shared<Yuni::Job::QueueService>();

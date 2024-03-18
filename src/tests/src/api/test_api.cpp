@@ -36,6 +36,7 @@ public:
       StudyBuilder builder;
       builder.addAreaToStudy("area1");
       builder.addAreaToStudy("area2");
+      builder.study->initializeRuntimeInfos();
       return builder.study;
     };
 };
