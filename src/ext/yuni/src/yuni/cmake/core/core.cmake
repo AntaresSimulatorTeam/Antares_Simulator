@@ -233,8 +233,6 @@ add_library(yuni-static-core STATIC
 		core/process/program/process-info.hxx
 		core/process/program/windows.inc.hpp
 		core/process/program/unix.inc.hpp
-		core/process/rename.cpp
-		core/process/rename.h
 		core/process.h
 		core/quaternion.h
 		core/rect2D.h
