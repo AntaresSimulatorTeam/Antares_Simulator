@@ -37,6 +37,8 @@ public:
       builder.addAreaToStudy("area1");
       builder.addAreaToStudy("area2");
       builder.study->initializeRuntimeInfos();
+      builder.study->parameters.resultFormat = ResultFormat::inMemory;
+      builder.study->prepareOutput();
       return builder.study;
     };
 };
@@ -47,7 +49,8 @@ BOOST_AUTO_TEST_CASE(simulation_path_points_to_results)
     Antares::API::APIInternal api;
     auto study_loader = std::make_unique<InMemoryStudyLoader>();
     auto results = api.run(study_loader.get());
-    BOOST_CHECK_EQUAL(results.simulationPath, std::filesystem::path{"results"});
+    BOOST_CHECK_EQUAL(results.simulationPath, std::filesystem::path{"no_output"});
+    //Testing for "no_output" is a bit weird, but it's the only way to test this without actually running the simulation
 }
 
 BOOST_AUTO_TEST_CASE(simulation_path_points_to_valid_output)
