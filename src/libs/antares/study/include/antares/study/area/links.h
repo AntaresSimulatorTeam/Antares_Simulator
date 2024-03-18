@@ -21,6 +21,7 @@
 #ifndef __ANTARES_LIBS_STUDY_LINKS_H__
 #define __ANTARES_LIBS_STUDY_LINKS_H__
 
+#include <antares/study/parts/thermal/cluster.h>
 #include <yuni/yuni.h>
 #include <yuni/core/noncopyable.h>
 #include <yuni/core/string.h>
@@ -204,6 +205,21 @@ public:
     int linkWidth;
 
     friend struct CompareLinkName;
+
+    unsigned unitCount;
+    double nominalCapacity;
+
+    double forcedVolatility;
+    double plannedVolatility;
+
+    Data::ThermalLaw forcedLaw;
+    Data::ThermalLaw plannedLaw;
+
+    Data::PreproThermal* prepro;
+
+    Matrix<> modulationCapacity;
+
+
 }; // class AreaLink
 
 struct CompareLinkName final

@@ -36,9 +36,7 @@ namespace Antares::TSGenerator
 class ThermalInterface
 {
 public:
-
-    template<class T>
-    explicit ThermalInterface(T& source);
+    explicit ThermalInterface(Data::ThermalCluster*);
 
     const unsigned &unitCount;
     const double &nominalCapacity;
@@ -58,8 +56,7 @@ public:
     const std::string& name;
 };
 
-template<class T>
-ThermalInterface::ThermalInterface(T& source) :
+ThermalInterface::ThermalInterface(Data::ThermalCluster *source) :
     unitCount(source->unitCount),
     nominalCapacity(source->nominalCapacity),
     forcedVolatility(source->forcedVolatility),
