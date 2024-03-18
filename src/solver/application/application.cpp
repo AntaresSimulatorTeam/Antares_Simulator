@@ -48,6 +48,8 @@
 #include "antares/antares/version.h"
 #include "antares/solver/simulation/simulation.h"
 #include "antares/file-tree-study-loader/FileTreeStudyLoader.h"
+#include "antares/solver/run_mode/economy.h"
+#include "antares/solver/run_mode/adequacy.h"
 
 using namespace Antares::Check;
 
@@ -293,6 +295,15 @@ void Application::execute()
 
     // Stop the display of the progression
     pStudy->progression.stop();
+}
+
+void Application::runSimulationInEconomicMode()
+{
+    Solver::runSimulationInEconomicMode(*pStudy, pSettings, pDurationCollector, *resultWriter, pOptimizationInfo);
+}
+void Application::runSimulationInAdequacyMode()
+{
+    Solver::runSimulationInAdequacyMode(*pStudy, pSettings, pDurationCollector, *resultWriter, pOptimizationInfo);
 }
 
 void Application::resetLogFilename() const
