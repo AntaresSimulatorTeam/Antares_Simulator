@@ -21,21 +21,16 @@
  */
 
 #pragma once
-#include <filesystem>
-#include "antares/api/SimulationResults.h"
-#include "antares/study-loader/IStudyLoader.h"
-#include "antares/study/study.h"
 
-namespace Antares::API
+#include "antares/infoCollection/StudyInfoCollector.h"
+#include "antares/solver/misc/options.h"
+#include "antares/writer/i_writer.h"
+
+namespace Antares::Solver
 {
-
-class APIInternal
-{
-
-public:
-    SimulationResults run(IStudyLoader* study_loader);
-    std::shared_ptr<Antares::Data::Study> study_;
-    void execute();
-};
-
-} // namespace API
+void runSimulationInEconomicMode(Antares::Data::Study& study,
+                                 const Settings& settings,
+                                 Benchmarking::IDurationCollector& durationCollector,
+                                 IResultWriter& resultWriter,
+                                 Benchmarking::OptimizationInfo& info);
+}

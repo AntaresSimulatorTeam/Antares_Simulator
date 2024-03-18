@@ -21,12 +21,56 @@
  */
 
 #include "API.h"
+#include "antares/solver/run_mode/economy.h"
+#include "antares/solver/run_mode/adequacy.h"
+#include "antares/solver/misc/options.h"
+#include "antares/infoCollection/StudyInfoCollector.h"
+#include "antares/benchmarking/DurationCollector.h"
+#include <antares/writer/writer_factory.h>
 
 namespace Antares::API
 {
 SimulationResults APIInternal::run(IStudyLoader* study_loader) {
     study_ = study_loader->load();
+    execute();
+    
     return {.simulationPath{study_->folderOutput.c_str()}};
 }
 
+void APIInternal::execute()
+{
+    // study_ == nullptr e.g when the -h flag is given
+    if (!study_)
+        return;
+
+    study_->computePThetaInfForThermalClusters();
+
+    Settings settings;
+    Benchmarking::DurationCollector durationCollector;
+    Benchmarking::OptimizationInfo optimizationInfo;
+    auto ioQueueService = std::make_shared<Yuni::Job::QueueService>();
+    ioQueueService->maximumThreadCount(1);
+    ioQueueService->start();
+    auto resultWriter = Solver::resultWriterFactory(
+      study_->parameters.resultFormat, study_->folderOutput, ioQueueService, durationCollector);
+    // Run the simulation
+    switch (study_->runtime->mode)
+    {
+    case Data::SimulationMode::Economy:
+    case Data::SimulationMode::Expansion:
+        Solver::runSimulationInEconomicMode(*study_, settings, durationCollector, *resultWriter, optimizationInfo);
+        break;
+    case Data::SimulationMode::Adequacy:
+        Solver::runSimulationInAdequacyMode(*study_, settings, durationCollector, *resultWriter, optimizationInfo);
+        break;
+    default:
+        break;
+    }
+
+    // Importing Time-Series if asked
+    study_->importTimeseriesIntoInput();
+
+    // Stop the display of the progression
+    study_->progression.stop();
+}
 } // namespace API

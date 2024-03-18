@@ -13,6 +13,7 @@ target_link_libraries(${EXECUTABLE_NAME}
         Antares::study
         Antares::study-loader
         Antares::tests::in-memory-study
+        Antares::run-mode
 )
 
 target_include_directories(${EXECUTABLE_NAME}
