@@ -114,8 +114,7 @@ bool CurtailmentSharing::updateFromKeyValue(const Yuni::String& key, const Yuni:
         return value.to<double>(thresholdDisplayViolations);
     if (key == "threshold-csr-variable-bounds-relaxation")
         return value.to<int>(thresholdVarBoundsRelaxation);
-    if (key == "recompute-dtg-mrg")
-        return value.to<bool>(recomputeDTGMRG);
+
     return false;
 }
 
@@ -137,7 +136,7 @@ void CurtailmentSharing::addProperties(IniFile::Section* section) const
     section->add("price-taking-order", PriceTakingOrderToString(priceTakingOrder));
     section->add("include-hurdle-cost-csr", includeHurdleCost);
     section->add("check-csr-cost-function", checkCsrCostFunction);
-    section->add("recompute-dtg-mrg", recomputeDTGMRG);
+
     // Thresholds
     section->add("threshold-initiate-curtailment-sharing-rule", thresholdRun);
     section->add("threshold-display-local-matching-rule-violations", thresholdDisplayViolations);
