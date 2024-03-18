@@ -237,6 +237,14 @@ jobs:
         batch-name: valid-v870
         os: ${{ env.test-platform }}
 
+    - name: Run tests introduced in v910
+      if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: valid-v910
+        os: ${{ env.os }}
+
     - name: Run short-tests
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
       uses: ./.github/workflows/run-tests
