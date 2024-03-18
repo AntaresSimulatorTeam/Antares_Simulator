@@ -34,10 +34,14 @@ jobs:
       # Indicates the location of the vcpkg as a Git submodule of the project repository.
       VCPKG_ROOT: ${{ github.workspace }}/vcpkg
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
-      ORTOOLS_URL: "https://github.com/rte-france/or-tools/releases/download/v9.2-rte2.1/ortools_cxx_windows-latest_static_sirius.zip"
 
     steps:
     - uses: actions/checkout@v3
+
+    - name: Config OR-Tools URL
+      run: |
+          echo "ORTOOLS_URL=https://github.com/rte-france/or-tools/releases/download/$(cat ortools_tag)/ortools_cxx_windows-latest_static_sirius.zip" >> $GITHUB_ENV
+      shell: bash
 
     - name: Pre-requisites
       shell: cmd
@@ -94,11 +98,11 @@ jobs:
         ortools-url: ${{env.ORTOOLS_URL}}
         ortools-dir: ${{env.ORTOOLS_DIR}}
 
-    - name: Setup Python 3.11
+    - name: Setup Python 3.12
       uses: actions/setup-python@v4
       with:
         architecture: 'x64'
-        python-version: '3.11'
+        python-version: '3.12'
 
     - name: Install pip dependencies if necessary
       run: pip install -r src/tests/examples/requirements.txt
@@ -118,14 +122,14 @@ jobs:
            -DCMAKE_PREFIX_PATH="${{ env.ORTOOLS_DIR }}/install" \
            -DVCPKG_ROOT="${{env.VCPKG_ROOT}}" \
            -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }} \
-           -DCMAKE_BUILD_TYPE=release \
+           -DCMAKE_BUILD_TYPE=Release \
            -DBUILD_TESTING=ON  \
            -DBUILD_not_system=OFF
 
     - name: Build
       shell: bash
       run: |
-           cmake --build _build --config release -j2
+           cmake --build _build --config Release -j2
 
     - name: Run unfeasibility-related tests
       run: |
@@ -136,13 +140,6 @@ jobs:
       run: |
            cd _build
            ctest -C ${{ matrix.buildtype }} --output-on-failure -L "unit|end-to-end" -LE ortools
-
-    - name: Run kirchhoff-constraint-tests
-      shell: bash
-      run: |
-           tar xvf src/tests/kirchhoff-cbuilder/reference.tar.gz -C src/tests/kirchhoff-cbuilder/
-           cd _build
-           ctest -C Release --output-on-failure -R kirchhoff
 
     - name: Upload build on failure
       if: ${{ failure() }}

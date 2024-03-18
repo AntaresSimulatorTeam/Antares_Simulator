@@ -2,7 +2,6 @@
 #define __ORTOOLS_WRAPPER__
 
 #include "named_problem.h"
-
 using namespace operations_research;
 
 MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,

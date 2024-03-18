@@ -177,7 +177,9 @@ bool ThermalClusterSummarySingleArea::cellValue(int x, int y, const String& v)
         {
         case 0:
         {
-            if (cluster->group() != v)
+            std::string group = cluster->group().c_str();
+            std::string v_string;
+            if (group != v_string)
             {
                 cluster->setGroup(v);
                 return true;

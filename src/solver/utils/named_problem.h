@@ -5,6 +5,9 @@
 
 #include <vector>
 #include <string>
+#include <algorithm>
+#include <iterator>
+#include "ortools/linear_solver/linear_solver.h"
 
 namespace Antares
 {
@@ -13,19 +16,22 @@ namespace Optimization
 struct PROBLEME_SIMPLEXE_NOMME : public PROBLEME_SIMPLEXE
 {
 private:
+    using BasisStatus = operations_research::MPSolver::BasisStatus;
 public:
-    PROBLEME_SIMPLEXE_NOMME(const std::vector<std::string>& NomDesVariables,
-                            const std::vector<std::string>& NomDesContraintes,
-                            std::vector<int>& StatutDesVariables,
-                            std::vector<int>& StatutDesContraintes);
+    PROBLEME_SIMPLEXE_NOMME(std::vector<std::string>& NomDesVariables,
+                            std::vector<std::string>& NomDesContraintes,
+                            std::vector<BasisStatus>& StatutDesVariables,
+                            std::vector<BasisStatus>& StatutDesContraintes);
 
-    const std::vector<std::string>& NomDesVariables;
-    const std::vector<std::string>& NomDesContraintes;
-    std::vector<int>& StatutDesVariables;
-    std::vector<int>& StatutDesContraintes;
+    std::vector<std::string>& NomDesVariables;
+    std::vector<std::string>& NomDesContraintes;
+
+    std::vector<BasisStatus>& StatutDesVariables;
+    std::vector<BasisStatus>& StatutDesContraintes;
 
     bool isMIP() const;
     bool basisExists() const;
+
 };
 } // namespace Optimization
 } // namespace Antares

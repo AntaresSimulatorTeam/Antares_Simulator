@@ -14,7 +14,7 @@ set(ANTARES_WEBSITE "https://antares-simulator.org/")
 set(ANTARES_ONLINE_DOC "https://antares-simulator.readthedocs.io/")
 
 # Beta release
-set(ANTARES_BETA 12) # adq-patch-beta-12 for Elia
+set(ANTARES_BETA 13) # adq-patch-beta-12 for Elia
 set(ANTARES_RC 0)
 
 # OR-Tools tag
@@ -63,8 +63,6 @@ execute_process(COMMAND
   WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
   OUTPUT_VARIABLE GIT_SHA1_SHORT
   ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE)
-
-string(TOLOWER ${CMAKE_BUILD_TYPE} CMAKE_BUILD_TYPE)
 
 # Build Configuration
 set(ANTARES_TARGET "${CMAKE_BUILD_TYPE}")
@@ -141,7 +139,7 @@ OMESSAGE("")
 OMESSAGE("")
 
 #Display Build Configuration (debug or release)
-if("${CMAKE_BUILD_TYPE}" STREQUAL "release" OR "${CMAKE_BUILD_TYPE}" STREQUAL "tuning")
+if("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
 	OMESSAGE("{antares} Build Configuration: RELEASE")
 else()
 	OMESSAGE("{antares} Build Configuration: DEBUG")
@@ -150,7 +148,7 @@ endif()
 #
 # Yuni Framework
 #
-if("${CMAKE_BUILD_TYPE}" STREQUAL "release" OR "${CMAKE_BUILD_TYPE}" STREQUAL "tuning")
+if("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
 	set(YUNI_TARGET_MODE "release")
 	set(ANTARES_VERSION_TARGET  "release")
 else()
@@ -194,7 +192,7 @@ endif()
 
 
 # Add DEPS_INSTALL_DIR with antares-xpansion CMAKE_BUILD_TYPE
-if ("${CMAKE_BUILD_TYPE}" STREQUAL "release")
+if ("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
 
 	string(REPLACE ${CMAKE_BUILD_TYPE} Release
 			DEPS_INSTALL_DIR_XPANSION
@@ -261,7 +259,8 @@ message(STATUS "OR-Tools tag ${ORTOOLS_TAG}")
   set(BUILD_SAMPLES "OFF" CACHE INTERNAL "")
   set(BUILD_FLATZINC "OFF" CACHE INTERNAL "")
   set(BUILD_EXAMPLES "OFF" CACHE INTERNAL "")
-  set(USE_SCIP "OFF" CACHE INTERNAL "")
+  set(USE_SCIP "ON" CACHE INTERNAL "")
+  set(USE_GLPK "ON" CACHE INTERNAL "")
   # We build OR-Tools as a static lib. Cyclic dependencies are detected
   # without this flag.
   set(BUILD_SHARED_LIBS "OFF" CACHE INTERNAL "")
@@ -345,11 +344,11 @@ OMESSAGE("")
 # Informations for NSIS
 if(WIN32 OR WIN64)
 	if(MSVC)
-		if("${CMAKE_BUILD_TYPE}" STREQUAL "release" OR "${CMAKE_BUILD_TYPE}" STREQUAL "tuning")
+		if("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
 			set(NSIS_TARGET "Release")
-		else("${CMAKE_BUILD_TYPE}" STREQUAL "release" OR "${CMAKE_BUILD_TYPE}" STREQUAL "tuning")
+		else()
 			set(NSIS_TARGET "Debug")
-		endif("${CMAKE_BUILD_TYPE}" STREQUAL "release" OR "${CMAKE_BUILD_TYPE}" STREQUAL "tuning")
+		endif()
 		set(COMPILER_MARK "v")
 		#set(COMPILER_INCLUDE "vs9")
 	else(MSVC)

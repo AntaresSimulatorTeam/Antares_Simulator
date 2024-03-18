@@ -65,7 +65,7 @@ jobs:
 
     - name: Config OR-Tools URL
       run: |
-          echo "ORTOOLS_URL=https://github.com/rte-france/or-tools/releases/download/v9.2-rte2.1/ortools_cxx_ubuntu-20.04_static_sirius.zip" >> $GITHUB_ENV
+          echo "ORTOOLS_URL=https://github.com/rte-france/or-tools/releases/download/$(cat ortools_tag)/ortools_cxx_ubuntu-20.04_static_sirius.zip" >> $GITHUB_ENV
 
     - name: Download pre-compiled librairies
       uses: ./.github/workflows/download-extract-precompiled-libraries-tgz
@@ -78,7 +78,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: 3.x
+        python-version: 3.12
 
     - name: Install dependencies
       run: |
@@ -96,14 +96,14 @@ jobs:
            -DCMAKE_C_COMPILER_LAUNCHER=ccache \
            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
            -DDEPS_INSTALL_DIR=${{github.workspace}}/rte-antares-deps-Release \
-           -DCMAKE_BUILD_TYPE=release \
+           -DCMAKE_BUILD_TYPE=Release \
            -DBUILD_TESTING=ON \
            -DBUILD_not_system=OFF \
            -DCMAKE_PREFIX_PATH=${{ env.ORTOOLS_DIR }}/install \
 
     - name: Build
       run: |
-             cmake --build _build --config release -j2
+             cmake --build _build -j$(nproc)
 
     - name: Run unfeasibility-related tests
       if: ${{ env.IS_PUSH == 'true' }}
@@ -123,13 +123,6 @@ jobs:
            tar xvf src/tests/kirchhoff-cbuilder/reference.tar.gz -C src/tests/kirchhoff-cbuilder/
            cd _build
            ctest -C Release --output-on-failure -R kirchhoff
-
-    - name: Upload logs for failed tests
-      if: ${{ failure() }}
-      uses: actions/upload-artifact@v3
-      with:
-        name: test-log
-        path: ${{ github.workspace }}/_build/Testing/Temporary/LastTest.log
 
     # simtest
     - name: Read simtest version
@@ -202,6 +195,13 @@ jobs:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: long-tests-3
         os: ${{ matrix.test-platform }}
+
+    - name: Upload logs for failed tests
+      if: ${{ failure() }}
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-log
+        path: ${{ github.workspace }}/_build/Testing/Temporary/LastTest.log
 
     - name: Installer .deb creation
       run: |

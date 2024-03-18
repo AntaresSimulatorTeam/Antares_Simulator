@@ -182,7 +182,7 @@ public:
             {
                 int lastLevel = 0;
                 int j = 0;
-                Yuni::CString<15, false> old;
+                Yuni::CString<12, false> old;
                 wxColour color;
                 wxColour colorIdentity;
                 const Data::Area::Vector::const_iterator end = pArray.end();

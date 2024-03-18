@@ -34,7 +34,7 @@ Here is a list of available CMake configure option :
 
 |Option | Description |
 |:-------|-------|
-|`CMAKE_BUILD_TYPE` | Define build type. Available values are `release` and `debug` (case insensitive) |
+|`CMAKE_BUILD_TYPE` | Define build type. Available values are `Release` and `Debug` |
 |`BUILD_UI`|Enable or disable Antares Simulator UI compilation (default `ON`)|
 |`BUILD_ALL`|Enable build of ALL external libraries (default `OFF`)|
 |`DEPS_INSTALL_DIR`|Define dependencies libraries install directory|

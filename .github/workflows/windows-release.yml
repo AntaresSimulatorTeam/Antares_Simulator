@@ -29,15 +29,14 @@ jobs:
       # Indicates the location of the vcpkg as a Git submodule of the project repository.
       VCPKG_ROOT: ${{ github.workspace }}/vcpkg
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
-      ORTOOLS_URL: "https://github.com/rte-france/or-tools/releases/download/v9.2-rte2.1/ortools_cxx_windows-latest_static_sirius.zip"
 
     steps:
     - uses: actions/checkout@v3
 
-    - name: Get release
-      id: get_release
-      uses: bruceadams/get-release@v1.3.2
-
+    - name: Config OR-Tools URL
+      run: |
+          echo "ORTOOLS_URL=https://github.com/rte-france/or-tools/releases/download/$(cat ortools_tag)/ortools_cxx_windows-latest_static_sirius.zip" >> $GITHUB_ENV    
+      shell: bash
 
     - name: Pre-requisites
       shell: cmd
@@ -116,7 +115,7 @@ jobs:
            -DCMAKE_PREFIX_PATH="${{env.ORTOOLS_DIR}}/install" \
            -DVCPKG_ROOT="${{env.VCPKG_ROOT}}" \
            -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }} \
-           -DCMAKE_BUILD_TYPE=release \
+           -DCMAKE_BUILD_TYPE=Release \
            -DBUILD_TESTING=ON  \
            -DBUILD_not_system=OFF
 
