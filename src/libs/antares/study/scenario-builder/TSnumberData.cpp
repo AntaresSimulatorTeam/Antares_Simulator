@@ -403,7 +403,7 @@ bool thermalTSNumberData::apply(Study& study)
         const auto& col = pTSNumberRules[clusterIndex];
 
         uint tsGenCount = cluster.tsGenBehavior == LocalTSGenerationBehavior::forceNoGen ?
-            cluster.series.timeSeries.width : get_tsGenCount(study);
+            cluster.series->timeSeries.width : get_tsGenCount(study);
 
         logprefix.clear() << "Thermal: area '" << area.name << "', cluster: '" << cluster.name()
                           << "': ";
