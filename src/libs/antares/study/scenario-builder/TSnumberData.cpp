@@ -407,7 +407,7 @@ bool thermalTSNumberData::apply(Study& study)
 
         logprefix.clear() << "Thermal: area '" << area.name << "', cluster: '" << cluster.name()
                           << "': ";
-        ret = ApplyToMatrix(errors, logprefix, cluster.series, col, tsGenCount) && ret;
+        ret = ApplyToMatrix(errors, logprefix, *cluster.series, col, tsGenCount) && ret;
 
     }
     return ret;
