@@ -129,7 +129,7 @@ void MersenneTwister::reset()
 
 MersenneTwister::Value MersenneTwister::operator()()
 {
-    return this->next();
+    return next();
 }
 
 } // namespace Antares
