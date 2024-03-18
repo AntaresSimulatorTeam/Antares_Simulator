@@ -490,7 +490,7 @@ void ISimulation<ImplementationType>::regenerateTimeSeries(uint year)
     {
         auto clusters = getAllClustersToGen(study.areas, pData.haveToRefreshTSThermal);
 
-        GenerateThermalTimeSeries(study, clusters, year, pResultWriter);
+        GenerateThermalTimeSeries(study, clusters, pResultWriter);
     }
 
     timer.stop();

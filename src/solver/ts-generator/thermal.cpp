@@ -590,7 +590,6 @@ std::vector<Data::ThermalCluster*> getAllClustersToGen(Data::AreaList& areas,
 
 bool GenerateThermalTimeSeries(Data::Study& study,
                                std::vector<Data::ThermalCluster*> clusters,
-                               uint year,
                                Solver::IResultWriter& writer)
 {
     logs.info();

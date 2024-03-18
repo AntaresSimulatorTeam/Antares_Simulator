@@ -150,5 +150,5 @@ int main(int argc, char *argv[])
     for (auto& c : clusters)
         logs.debug() << c->id();
 
-    return TSGenerator::GenerateThermalTimeSeries(*study, clusters, 0, *resultWriter);
+    return TSGenerator::GenerateThermalTimeSeries(*study, clusters, *resultWriter);
 }
