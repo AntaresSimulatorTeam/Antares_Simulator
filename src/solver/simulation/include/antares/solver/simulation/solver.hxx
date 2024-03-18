@@ -303,9 +303,6 @@ void ISimulation<ImplementationType>::run()
     // Determine if we have to use the preprocessors at least one time.
     pData.initialize(study.parameters);
 
-    // Prepro only ?
-    ImplementationType::preproOnly = settings.tsGeneratorsOnly;
-
     ImplementationType::setNbPerformedYearsInParallel(pNbMaxPerformedYearsInParallel);
 
     TSGenerator::ResizeGeneratedTimeSeries(study.areas, study.parameters);
