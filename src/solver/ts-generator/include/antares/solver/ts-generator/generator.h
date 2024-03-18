@@ -56,7 +56,6 @@ public:
     Matrix<>::ColumnType& modulationCapacity;
 
     const std::string& name;
-    const std::string& id;
 };
 
 template<class T>
@@ -70,8 +69,7 @@ ThermalInterface::ThermalInterface(T& source) :
     prepro(source->prepro),
     series(source->series),
     modulationCapacity(source->modulation[Data::thermalModulationCapacity]),
-    name(source->name()),
-    id(source->id())
+    name(source->name())
 {}
 
 void ResizeGeneratedTimeSeries(Data::AreaList& areas, Data::Parameters& params);
