@@ -99,6 +99,9 @@ private:
     //! The total muber of warnings which have been generated
     uint pWarningCount = 0;
 
+    int pArgc = 0;
+    char** pArgv = nullptr;
+
     // Benchmarking
     Benchmarking::Timer pTotalTimer;
     Benchmarking::DurationCollector pDurationCollector;
