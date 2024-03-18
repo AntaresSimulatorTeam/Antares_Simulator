@@ -56,19 +56,6 @@ public:
     const std::string& name;
 };
 
-inline ThermalInterface::ThermalInterface(Data::ThermalCluster *source) :
-    unitCount(source->unitCount),
-    nominalCapacity(source->nominalCapacity),
-    forcedVolatility(source->forcedVolatility),
-    plannedVolatility(source->plannedVolatility),
-    forcedLaw(source->forcedLaw),
-    plannedLaw(source->plannedLaw),
-    prepro(source->prepro),
-    series(source->series),
-    modulationCapacity(source->modulation[Data::thermalModulationCapacity]),
-    name(source->name())
-{}
-
 void ResizeGeneratedTimeSeries(Data::AreaList& areas, Data::Parameters& params);
 
 /*!
