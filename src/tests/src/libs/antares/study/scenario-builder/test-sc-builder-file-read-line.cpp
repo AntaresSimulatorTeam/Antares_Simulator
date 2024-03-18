@@ -108,7 +108,7 @@ struct Fixture
 		area_1->hydro.series->resizeMaxPowerTS(nbReadyMadeTS);
 		area_2->hydro.series->resizeMaxPowerTS(nbReadyMadeTS);
 		area_3->hydro.series->resizeMaxPowerTS(nbReadyMadeTS);
-
+		
 		// Links
 		link_12 = AreaAddLinkBetweenAreas(area_1, area_2, false);
 		link_12->directCapacities.resize(15, 1);
