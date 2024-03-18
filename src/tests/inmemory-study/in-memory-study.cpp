@@ -198,7 +198,7 @@ StudyBuilder::StudyBuilder()
     // Make logs shrink to errors (and higher) only
     logs.verbosityLevel = Logs::Verbosity::Error::level;
 
-    study = std::make_shared<Study>();
+    study = std::make_shared<Study>(true);
     simulation = std::make_shared<SimulationHandler>(*study);
 
     initializeStudy(study);
