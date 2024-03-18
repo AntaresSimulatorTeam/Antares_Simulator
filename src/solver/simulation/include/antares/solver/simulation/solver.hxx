@@ -114,11 +114,10 @@ private:
     */
     void logFailedWeek(int y, const Data::Study& study, const std::list<uint>& failedWeekList)
     {
-        if (failedWeekList.size() != 0)
+        if (!failedWeekList.empty())
         {
             std::stringstream failedWeekStr;
-            std::copy(failedWeekList.begin(),
-                      failedWeekList.end(),
+            std::ranges::copy(failedWeekList,
                       std::ostream_iterator<int>(failedWeekStr, " "));
 
             std::string s = failedWeekStr.str();
