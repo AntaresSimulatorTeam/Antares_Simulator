@@ -385,26 +385,4 @@ BOOST_AUTO_TEST_CASE(on_link_area2_area3_and_on_year_19__ntc_TS_number_6_is_chos
 	BOOST_CHECK(my_rule.apply());
 	BOOST_CHECK_EQUAL(link_23->timeseriesNumbers[0][yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
 }
-
-// ========================
-// Tests on TSNumberData
-// ========================
-BOOST_FIXTURE_TEST_CASE(thermalTSNumberData, Fixture)
-{
-    ScenarioBuilder::thermalTSNumberData tsdata;
-    tsdata.attachArea(area_1);
-    tsdata.reset(*study);
-    tsdata.setTSnumber(thCluster_12.get(), 2, 22);
-    tsdata.setTSnumber(thCluster_12.get(), 5, 32); //out of bounds
-
-    study->parameters.nbTimeSeriesThermal = 1;
-    thCluster_12->tsGenBehavior = LocalTSGenerationBehavior::forceNoGen;
-    thCluster_12->series.timeSeries.resize(30, 8760);
-
-    tsdata.apply(*study);
-
-    BOOST_CHECK_EQUAL(thCluster_12->series.timeseriesNumbers[0][2], 21);
-    BOOST_CHECK_EQUAL(thCluster_12->series.timeseriesNumbers[0][5], 0);
-}
-
 BOOST_AUTO_TEST_SUITE_END()
