@@ -42,7 +42,7 @@ using namespace Antares;
 static inline double Round2ndPlace(double v)
 {
     v *= 100.;
-    v = Math::Trunc(v);
+    v = std::trunc(v);
     return v / 100.;
 }
 

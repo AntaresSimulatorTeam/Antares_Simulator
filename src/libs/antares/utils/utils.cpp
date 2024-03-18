@@ -107,4 +107,20 @@ std::vector<std::pair<std::string, std::string>> splitStringIntoPairs(const std:
     return pairs;
 }
 
+namespace Utils
+{
+
+bool isZero(double d)
+{
+    constexpr double threshold = 1.e-6;
+    return std::abs(d) < threshold;
+}
+
+double round(double d, unsigned precision)
+{
+    unsigned factor = std::pow(10, precision);
+    return std::round(d * factor) / factor;
+}
+
+} // namespace Utils
 } // namespace Antares

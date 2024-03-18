@@ -485,7 +485,7 @@ bool ATSP::preflight(const uint areaIndex)
 
         // si mu>1 il faut majorer l'ecart-type observe  sur les valeurs lissees
         // pour remonter a l'ecart-type des valeurs des series non-lissees
-        double standard_majore = (Math::Abs(stocha[5] - 1.) < 1e-6)
+        double standard_majore = (std::abs(stocha[5] - 1.) < 1e-6)
                                    ? standard
                                    : standard / Standard_shrinkage((int)stocha[5], exp(-stocha[4]));
 
