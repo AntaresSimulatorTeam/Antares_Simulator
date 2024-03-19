@@ -580,7 +580,7 @@ void writeResultsToDisk(const Data::Study& study,
     if (study.parameters.noOutput)
         return;
 
-    String pTempFilename;
+    Yuni::String pTempFilename;
 
     pTempFilename.reserve(study.folderOutput.size() + 256);
 
