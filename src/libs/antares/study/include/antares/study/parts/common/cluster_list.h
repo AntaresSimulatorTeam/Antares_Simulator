@@ -25,6 +25,7 @@
 #include "../../fwd.h"
 
 #include <antares/writer/i_writer.h>
+#include <antares/study/area/newReserves.h>
 
 #include <algorithm>
 #include <vector>
@@ -127,6 +128,14 @@ public:
     bool loadDataSeriesFromFolder(Study& study,
                                  const AnyString& folder);
 
+    /// @brief Load the reserve participation. For each entry, it checks if the reserve has been
+    /// added to area.newReserves, if not then log the name of the reserve that has not been found.
+    /// @tparam ClusterT Type of the Cluster list
+    /// @param area Reference to area
+    /// @param file File to read the reserve participations entries
+    /// @return false if the file opening failed, true otherwise
+    bool loadReserveParticipations(Area& area, const AnyString& folder);
+
     bool saveDataSeriesToFolder(const AnyString& folder) const;
 
     virtual bool saveToFolder(const AnyString& folder) const = 0;
@@ -149,6 +158,12 @@ public:
     void addToCompleteList(std::shared_ptr<ClusterT> cluster);
     void sortCompleteList();
 
+    /// @brief Add the reserve participation to the current clusterReservesParticipations map
+    /// @param name the name of the reserve to add
+    /// @param reserveParticipation the reserve participation to add
+    void addReserveParticipation(std::string name,
+                                 ClusterReserveParticipation reserveParticipation);
+
 protected:
     std::vector<std::shared_ptr<ClusterT>> allClusters_;
 
@@ -159,6 +174,9 @@ protected:
 
 private:
     bool alreadyInAllClusters(std::string clusterName);
+    /// @brief Stores the reserves Participations for each reserve, the key is the name of the
+    /// reserve
+    std::map<std::string, ClusterReserveParticipation> clusterReservesParticipations;
 
 }; // class ClusterList
 } // namespace Data
