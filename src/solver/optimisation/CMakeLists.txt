@@ -174,7 +174,8 @@ set(RTESOLVER_OPT
 		variables/VariableManagement.cpp
 		variables/VariableManagerUtils.h
 		variables/VariableManagerUtils.cpp
-
+		include/antares/solver/optimisation/HebdoProblemToLpsTranslator.h
+		HebdoProblemToLpsTranslator.cpp
 )
 
 
@@ -197,6 +198,7 @@ target_link_libraries(model_antares
         sirius_solver
         antares-solver-simulation
         Antares::benchmarking
+		Antares::lps
 		PRIVATE
 		infeasible_problem_analysis
 )

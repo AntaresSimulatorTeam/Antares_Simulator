@@ -20,4 +20,5 @@ target_link_libraries(solver_api
         Antares::study-loader
         Antares::file-tree-study-loader
         Antares::run-mode
+        Antares::lps
 )
