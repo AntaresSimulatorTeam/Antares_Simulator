@@ -72,6 +72,7 @@ HebdoDataFromAntaresPtr HebdoProblemToLpsTranslator::translate(
         copy(problem->NomDesVariables, ret->variables);
         copy(problem->NomDesContraintes, ret->constraints);
         copy(problem->SecondMembre, ret->SecondMembre);
+        copy(problem->Sens, ret->Sens);
 //        copy(hebdoProblem->ProblemeAResoudre->Sens, week_ptr->Sens);
 //        //std::string problemName = createMPSfilename(*optPeriodStringGenerator, optimizationNumber);
 //        //copy(problemName, week_ptr->name);

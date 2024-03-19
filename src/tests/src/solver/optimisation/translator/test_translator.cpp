@@ -62,4 +62,11 @@ BOOST_AUTO_TEST_CASE(Data_properly_copied) {
     BOOST_CHECK(ret->constraints == problemHebdo.NomDesContraintes);
 }
 
-//TODO sens
+BOOST_AUTO_TEST_CASE(translate_sens) {
+    HebdoProblemToLpsTranslator translator;
+    PROBLEME_ANTARES_A_RESOUDRE problemHebdo;
+    problemHebdo.Sens = "<=>";
+
+    auto ret = translator.translate(&problemHebdo);
+    BOOST_CHECK(ret->Sens == std::vector({'<','=','>'}));
+}
