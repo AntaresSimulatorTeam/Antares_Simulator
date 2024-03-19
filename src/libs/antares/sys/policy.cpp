@@ -219,7 +219,7 @@ bool Open(bool expandEntries)
     (*entries)[(key = "sys.cpu")] = System::CPU::Count();
     // how much memory ?
     (*entries)[(key = "sys.memory")].clear()
-      << (uint)Math::Round(((double)(System::Memory::Total() + 1) / 1024 / 1024 / 1024)) << " Go";
+      << (uint)std::round(((double)(System::Memory::Total() + 1) / 1024 / 1024 / 1024)) << " Go";
 
     // paths
     (*entries)[(key = "localpolicy.user.path")] = pathLocalPolicy;

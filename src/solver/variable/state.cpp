@@ -19,11 +19,10 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <yuni/yuni.h>
+#include <cmath>
+
 #include <antares/study/study.h>
 #include "antares/solver/variable/state.h"
-
-using namespace Yuni;
 
 namespace Antares::Solver::Variable
 {
@@ -163,7 +162,7 @@ void State::initFromThermalClusterIndexProduction(const uint clusterAreaWideInde
         if (p > thermal[area->index].productionLastHour[clusterAreaWideIndex])
         {
             newUnitCount
-              = static_cast<uint>(Math::Ceil(p / thermalCluster->nominalCapacityWithSpinning));
+              = static_cast<uint>(std::ceil(p / thermalCluster->nominalCapacityWithSpinning));
             if (newUnitCount > thermalCluster->unitCount)
                 newUnitCount = thermalCluster->unitCount;
             if (newUnitCount < previousUnitCount)
@@ -174,7 +173,7 @@ void State::initFromThermalClusterIndexProduction(const uint clusterAreaWideInde
             if (thermalCluster->minStablePower > 0.)
             {
                 newUnitCount
-                  = static_cast<uint>(Math::Ceil(p / thermalCluster->nominalCapacityWithSpinning));
+                  = static_cast<uint>(std::ceil(p / thermalCluster->nominalCapacityWithSpinning));
                 if (newUnitCount > thermalCluster->unitCount)
                     newUnitCount = thermalCluster->unitCount;
             }
@@ -241,7 +240,7 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex)
     if (currentCluster->fixedCost > 0.)
     {
         maxDurationON = static_cast<uint>(
-                Math::Floor(currentCluster->startupCost / currentCluster->fixedCost));
+                std::floor(currentCluster->startupCost / currentCluster->fixedCost));
         if (maxDurationON > endHourForCurrentYear)
             maxDurationON = endHourForCurrentYear;
     }
@@ -284,31 +283,31 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex)
         {
             case Antares::Data::UnitCommitmentMode::ucHeuristicFast:
                 {
-                    //	ON_min[h] = static_cast<uint>(Math::Ceil(thermalClusterProduction /
+                    //	ON_min[h] = static_cast<uint>(std::ceil(thermalClusterProduction /
                     // currentCluster->nominalCapacityWithSpinning)); // code 5.0.3b<7
                     // 5.0.3b7
                     if (thermal[area->index].pminOfAGroup[clusterAreaWideIndex] > 0.)
                     {
-                        ON_min[h] = Math::Max(
-                                Math::Min(static_cast<uint>(
-                                        Math::Floor(thermalClusterPMinOfTheClusterForYear[h]
+                        ON_min[h] = std::max(
+                                std::min(static_cast<uint>(
+                                        std::floor(thermalClusterPMinOfTheClusterForYear[h]
                                             / thermal[area->index].pminOfAGroup[clusterAreaWideIndex])),
                                     static_cast<uint>(
-                                        Math::Ceil(thermalClusterAvailableProduction
+                                        std::ceil(thermalClusterAvailableProduction
                                             / currentCluster->nominalCapacityWithSpinning))),
                                 static_cast<uint>(
-                                    Math::Ceil(thermalClusterProduction / currentCluster->nominalCapacityWithSpinning)));
+                                    std::ceil(thermalClusterProduction / currentCluster->nominalCapacityWithSpinning)));
                     }
                     else
-                        ON_min[h] = static_cast<uint>(Math::Ceil(
+                        ON_min[h] = static_cast<uint>(std::ceil(
                                     thermalClusterProduction / currentCluster->nominalCapacityWithSpinning));
                     break;
                 }
             case Antares::Data::UnitCommitmentMode::ucMILP:
             case Antares::Data::UnitCommitmentMode::ucHeuristicAccurate:
                 {
-                    ON_min[h] = Math::Max(
-                            static_cast<uint>(Math::Ceil(thermalClusterProduction / currentCluster->nominalCapacityWithSpinning)),
+                    ON_min[h] = std::max(
+                            static_cast<uint>(std::ceil(thermalClusterProduction / currentCluster->nominalCapacityWithSpinning)),
                             thermalClusterDispatchedUnitsCountForYear[h]); // eq. to thermalClusterON for
                     // that hour
 
@@ -321,13 +320,13 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex)
                 }
         }
 
-        ON_max[h] = static_cast<uint>(Math::Ceil(
+        ON_max[h] = static_cast<uint>(std::ceil(
                     thermalClusterAvailableProduction / currentCluster->nominalCapacityWithSpinning));
 
         if (currentCluster->minStablePower > 0.)
         {
             maxUnitNeeded = static_cast<uint>(
-                    Math::Floor(thermalClusterProduction / currentCluster->minStablePower));
+                    std::floor(thermalClusterProduction / currentCluster->minStablePower));
             if (ON_max[h] > maxUnitNeeded)
                 ON_max[h] = maxUnitNeeded;
         }

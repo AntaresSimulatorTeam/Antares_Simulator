@@ -21,6 +21,7 @@
 
 #include "antares/correlation/correlation.h"
 #include "antares/study/study.h"
+#include <antares/utils/utils.h>
 #include "antares/study/area/area.h"
 #include <antares/array/matrix.h>
 
@@ -177,7 +178,7 @@ static inline void ExportCorrelationCoefficients(Study& study,
         auto& col = m.entry[x];
         for (uint y = 0; y < x; ++y)
         {
-            if (!Math::Zero(col[y]))
+            if (!Utils::isZero(col[y]))
             {
                 file << from << '%' << study.areas.byIndex[y]->id << " = " << col[y] << '\n';
             }

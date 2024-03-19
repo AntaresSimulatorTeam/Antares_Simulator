@@ -30,6 +30,7 @@ class study_run:
             command.append('--named-mps-problems')
         if self.parallel:
             command.append('--force-parallel=4')
+
         process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
         process.communicate()
 

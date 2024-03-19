@@ -21,7 +21,6 @@
 
 #include "antares/study/area/ui.h"
 #include <antares/logs/logs.h>
-#include <yuni/core/math.h>
 #include <antares/inifile/inifile.h>
 #include <sstream>
 
@@ -217,7 +216,7 @@ bool AreaUI::loadFromFile(const AnyString& filename)
 
             // Bound checking - limits 0..255
             for (uint i = 0; i < 3; ++i)
-                color[i] = Math::MinMax<int>(color[i], 0, 255);
+                color[i] = std::clamp(color[i], 0, 255);
 
             pModified = false;
         }
