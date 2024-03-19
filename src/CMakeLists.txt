@@ -14,7 +14,7 @@ set(ANTARES_WEBSITE "https://antares-simulator.org/")
 set(ANTARES_ONLINE_DOC "https://antares-simulator.readthedocs.io/")
 
 # Beta release
-set(ANTARES_BETA 13) # adq-patch-beta-12 for Elia
+set(ANTARES_BETA 14)
 set(ANTARES_RC 0)
 
 # OR-Tools tag
