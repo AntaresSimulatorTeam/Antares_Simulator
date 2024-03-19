@@ -35,8 +35,8 @@ namespace Antares::TSGenerator
 class ThermalInterface
 {
 public:
-    ThermalInterface(Data::ThermalCluster*);
-    ThermalInterface(Data::AreaLink::TsGeneration&, Data::TimeSeries&, const std::string& name);
+    explicit ThermalInterface(Data::ThermalCluster*);
+    ThermalInterface(Data::AreaLink::LinkTsGeneration&, Data::TimeSeries&, const std::string& name);
 
     const unsigned &unitCount;
     const double &nominalCapacity;

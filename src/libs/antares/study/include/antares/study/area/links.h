@@ -206,7 +206,7 @@ public:
 
     friend struct CompareLinkName;
 
-    struct TsGeneration
+    struct LinkTsGeneration
     {
         unsigned unitCount;
         double nominalCapacity;
@@ -222,6 +222,7 @@ public:
         Matrix<> modulationCapacity;
     };
 
+    LinkTsGeneration tsGeneration;
 
 }; // class AreaLink
 

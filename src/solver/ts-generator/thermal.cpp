@@ -51,7 +51,7 @@ ThermalInterface::ThermalInterface(Data::ThermalCluster *source) :
     name(source->name())
 {}
 
-ThermalInterface::ThermalInterface(Data::AreaLink::TsGeneration& source,
+ThermalInterface::ThermalInterface(Data::AreaLink::LinkTsGeneration& source,
                                    Data::TimeSeries& capacity,
                                    const std::string& linkName) :
     unitCount(source.unitCount),
@@ -72,7 +72,7 @@ namespace
 class GeneratorTempData final
 {
 public:
-    GeneratorTempData(Data::Study& study);
+    explicit GeneratorTempData(Data::Study& study);
 
     void operator()(const Data::Area& area, ThermalInterface& cluster);
 
@@ -634,6 +634,9 @@ bool GenerateThermalTimeSeries(Data::Study& study,
 
         cluster->calculationOfSpinning();
     }
+
+    for (auto& [name, link] : study.areas.byIndex[0]->links)
+        ThermalInterface lnk(link->tsGeneration, link->directCapacities, link->getName());
 
     return true;
 }
