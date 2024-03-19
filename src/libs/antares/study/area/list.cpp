@@ -778,6 +778,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     area.spreadSpilledEnergyCost = 0.;
 
     bool ret = true;
+    auto studyVersion = study.header.version;
 
     // DSM, Reserves, D-1
     buffer.clear() << study.folderInput << SEP << "reserves" << SEP << area.id << ".txt";
@@ -879,12 +880,12 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         if (!options.loadOnlyNeeded || !area.hydro.prepro) // Series
         {
             buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "series";
-            ret = hydroSeries->loadGenerationTS(area.id, buffer, study.header.version) && ret;
+            ret = hydroSeries->loadGenerationTS(area.id, buffer, studyVersion) && ret;
 
             hydroSeries->EqualizeGenerationTSsizes(area, study.usedByTheSolver);
         }
 
-        if (study.header.version < StudyVersion(9,1))
+        if (studyVersion < StudyVersion(9,1))
         {
             buffer.clear() << study.folderInput << SEP << "hydro";
 
@@ -905,7 +906,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         }
 
         hydroSeries->resizeTSinDeratedMode(
-            study.parameters.derated, study.header.version, study.usedByTheSolver);
+            study.parameters.derated, studyVersion, study.usedByTheSolver);
     }
 
     // Wind
@@ -940,7 +941,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     }
 
     // Short term storage
-    if (study.header.version >= StudyVersion(8, 6))
+    if (studyVersion >= StudyVersion(8, 6))
     {
         buffer.clear() << study.folderInput << SEP << "st-storage" << SEP << "series"
             << SEP << area.id;
@@ -950,7 +951,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     }
 
     // Renewable cluster list
-    if (study.header.version >= StudyVersion(8, 1))
+    if (studyVersion >= StudyVersion(8, 1))
     {
         buffer.clear() << study.folderInput << SEP << "renewables" << SEP << "series";
         ret = area.renewable.list.loadDataSeriesFromFolder(study, buffer) && ret;
@@ -1064,6 +1065,7 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
 {
     bool ret = true;
     Clob buffer;
+    auto studyVersion = pStudy.header.version;
 
     // Load the list of all available areas
     {
@@ -1102,7 +1104,7 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
     }
 
     // Short term storage data, specific to areas
-    if (pStudy.header.version >= StudyVersion(8, 6))
+    if (studyVersion >= StudyVersion(8, 6))
     {
         logs.info() << "Loading short term storage clusters...";
         buffer.clear() << pStudy.folderInput << SEP << "st-storage";
@@ -1123,7 +1125,7 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
     }
 
     // Renewable data, specific to areas
-    if (pStudy.header.version >= StudyVersion(8, 1))
+    if (studyVersion >= StudyVersion(8, 1))
     {
         // The cluster list must be loaded before the method
         // ensureDataIsInitialized is called

@@ -70,8 +70,8 @@ public:
     /// Enabled ?
     bool enabled = true;
 
-    static const std::map<std::string, enum Group> ST_STORAGE_PROPERTY_GROUP_ENUM;
 private:
+    static const std::map<std::string, enum Group> GROUP_TO_ENUM;
     static constexpr double initiallevelDefault = .5;
 };
 } // namespace Antares::Data::ShortTermStorage
