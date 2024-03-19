@@ -114,7 +114,8 @@ bool runWeeklyOptimization(const OptimizationOptions& options,
           problemeHebdo->year);
 
         truc = new Antares::Solver::ITruc();
-        Solver::HebdoProblemToLpsTranslator translator;
+        Solver::HebdoProblemToLpsTranslator translator(optPeriodStringGenerator,
+                                                       optimizationNumber);
         //truc->lps = translator.translate(problemeHebdo);
 
         if (!OPT_AppelDuSimplexe(options,
