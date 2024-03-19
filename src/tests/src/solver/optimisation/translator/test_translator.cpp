@@ -41,3 +41,25 @@ BOOST_AUTO_TEST_CASE(non_null_hebdo_returns_non_empty_lps) {
     auto ret = translator.translate(&problemHebdo);
     BOOST_CHECK(ret != nullptr);
 }
+
+BOOST_AUTO_TEST_CASE(Data_properly_copied) {
+    HebdoProblemToLpsTranslator translator;
+    PROBLEME_ANTARES_A_RESOUDRE problemHebdo;
+    problemHebdo.CoutLineaire = {0, 1, 2};
+    problemHebdo.Xmax = {10, 11, 12};
+    problemHebdo.Xmin = {20, 21, 22};
+    problemHebdo.NomDesVariables = {"a", "b", "c"};
+    problemHebdo.NomDesContraintes = {"d", "e", "f"};
+    problemHebdo.SecondMembre = {30, 31, 32};
+
+    auto ret = translator.translate(&problemHebdo);
+    BOOST_CHECK(ret->CoutLineaire == problemHebdo.CoutLineaire);
+    BOOST_CHECK(ret->Xmax == problemHebdo.Xmax);
+    BOOST_CHECK(ret->Xmin == problemHebdo.Xmin);
+    BOOST_CHECK(ret->SecondMembre == problemHebdo.SecondMembre);
+
+    BOOST_CHECK(ret->variables == problemHebdo.NomDesVariables);
+    BOOST_CHECK(ret->constraints == problemHebdo.NomDesContraintes);
+}
+
+//TODO sens

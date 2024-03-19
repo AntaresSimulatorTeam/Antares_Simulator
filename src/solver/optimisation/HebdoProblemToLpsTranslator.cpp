@@ -36,7 +36,7 @@ HebdoDataFromAntaresPtr HebdoProblemToLpsTranslator::translate(
 {
     if (problem == nullptr)
         return {};
-    return std::make_unique<HebdoDataFromAntares>();
+    auto ret = std::make_unique<HebdoDataFromAntares>();
 //    LpsFromAntares lps;
 //    int const year = hebdoProblem->year + 1;
 //    int const week = hebdoProblem->weekInTheYear + 1;
@@ -66,17 +66,18 @@ HebdoDataFromAntaresPtr HebdoProblemToLpsTranslator::translate(
 //    {
 //        Solver::HebdoDataFromAntaresPtr week_ptr(new Solver::HebdoDataFromAntares);
 //
-//        copy(hebdoProblem->ProblemeAResoudre->CoutLineaire, week_ptr->CoutLineaire);
-//        copy(hebdoProblem->ProblemeAResoudre->Xmax, week_ptr->Xmax);
-//        copy(hebdoProblem->ProblemeAResoudre->Xmin, week_ptr->Xmin);
-//        copy(hebdoProblem->ProblemeAResoudre->NomDesVariables, week_ptr->variables);
-//        copy(hebdoProblem->ProblemeAResoudre->NomDesContraintes, week_ptr->constraints);
-//        copy(hebdoProblem->ProblemeAResoudre->SecondMembre, week_ptr->SecondMembre);
+        copy(problem->CoutLineaire, ret->CoutLineaire);
+        copy(problem->Xmax, ret->Xmax);
+        copy(problem->Xmin, ret->Xmin);
+        copy(problem->NomDesVariables, ret->variables);
+        copy(problem->NomDesContraintes, ret->constraints);
+        copy(problem->SecondMembre, ret->SecondMembre);
 //        copy(hebdoProblem->ProblemeAResoudre->Sens, week_ptr->Sens);
 //        //std::string problemName = createMPSfilename(*optPeriodStringGenerator, optimizationNumber);
 //        //copy(problemName, week_ptr->name);
 //
 //        lps._hebdo[{static_cast<unsigned int>(year), static_cast<unsigned int>(week)}] = week_ptr;
 //    }
+        return ret;
 }
 } // namespace Solver
