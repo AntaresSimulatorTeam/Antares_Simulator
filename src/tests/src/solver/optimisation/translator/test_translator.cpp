@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2007-2024, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
@@ -20,16 +19,25 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#pragma once
-#include <filesystem>
-#include "antares/solver/lps/LpsFromAntares.h"
+#define BOOST_TEST_MODULE test translator
+#define BOOST_TEST_DYN_LINK
 
-namespace Antares::API
-{
-struct SimulationResults
-{
-    std::filesystem::path simulationPath;
-    Antares::Solver::LpsFromAntares antares_problems;
-};
+#define WIN32_LEAN_AND_MEAN
 
+#include <boost/test/unit_test.hpp>
+#include <antares/solver/optimisation/HebdoProblemToLpsTranslator.h>
+
+using namespace Antares::Solver;
+BOOST_AUTO_TEST_CASE(null_hebdo_is_empty_lps) {
+    HebdoProblemToLpsTranslator translator;
+    auto ret = translator.translate(nullptr);
+    BOOST_CHECK(ret == nullptr);
+}
+
+BOOST_AUTO_TEST_CASE(non_null_hebdo_returns_non_empty_lps) {
+    HebdoProblemToLpsTranslator translator;
+    PROBLEME_ANTARES_A_RESOUDRE problemHebdo;
+
+    auto ret = translator.translate(&problemHebdo);
+    BOOST_CHECK(ret != nullptr);
 }

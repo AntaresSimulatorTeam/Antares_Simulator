@@ -50,6 +50,7 @@ set(TARGET_LIBS #No alias
         antares-config-lib
         file-tree-study-loader
         study-loader
+        lps
         #
         signal-handling
         antares-solver-variable-info

@@ -174,7 +174,8 @@ set(RTESOLVER_OPT
 		variables/VariableManagement.cpp
 		variables/VariableManagerUtils.h
 		variables/VariableManagerUtils.cpp
-
+		include/antares/solver/optimisation/HebdoProblemToLpsTranslator.h
+		HebdoProblemToLpsTranslator.cpp
 )
 
 
@@ -198,6 +199,7 @@ target_link_libraries(model_antares
         infeasible_problem_analysis
         antares-solver-simulation
         Antares::benchmarking
+		Antares::lps
 )
 
 target_include_directories(model_antares
