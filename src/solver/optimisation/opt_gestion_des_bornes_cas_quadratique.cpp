@@ -29,7 +29,7 @@
 
 #include "pi_constantes_externes.h"
 
-#include <yuni/core/math.h>
+#include <cmath>
 
 #define ZERO_POUR_LES_VARIABLES_FIXES 1.e-6
 
@@ -61,16 +61,18 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique(PROBLEME_HEBDO* p
         }
         else
         {
-            if (Math::Infinite(ProblemeAResoudre->Xmax[var]) == 1)
+            const double Xmin = ProblemeAResoudre->Xmin[var];
+            const double Xmax =  ProblemeAResoudre->Xmax[var];
+            if (std::isinf(Xmax) && Xmax > 0)
             {
-                if (Math::Infinite(ProblemeAResoudre->Xmin[var]) == -1)
+                if (std::isinf(Xmin) && Xmin < 0)
                     ProblemeAResoudre->TypeDeVariable[var] = VARIABLE_NON_BORNEE;
                 else
                     ProblemeAResoudre->TypeDeVariable[var] = VARIABLE_BORNEE_INFERIEUREMENT;
             }
             else
             {
-                if (Math::Infinite(ProblemeAResoudre->Xmin[var]) == -1)
+                if (std::isinf(Xmin) && Xmin < 0)
                     ProblemeAResoudre->TypeDeVariable[var] = VARIABLE_BORNEE_SUPERIEUREMENT;
                 else
                     ProblemeAResoudre->TypeDeVariable[var] = VARIABLE_BORNEE_DES_DEUX_COTES;

@@ -28,6 +28,7 @@
 #include "antares/study/binding_constraint/BindingConstraint.h"
 #include "yuni/core/string/string.h"
 #include "antares/study/version.h"
+#include <antares/utils/utils.h>
 
 namespace Antares::Data
 {
@@ -108,10 +109,10 @@ std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintLoader::load(En
                              << "`: link not found";
                 continue;
             }
-            if (!Math::Zero(w))
+            if (!Utils::isZero(w))
                 bc->weight(lnk, w);
 
-            if (!Math::Zero(o))
+            if (!Utils::isZero(o))
                 bc->offset(lnk, o);
 
             continue;
@@ -137,10 +138,10 @@ std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintLoader::load(En
                              << "`: cluster not found";
                 continue;
             }
-            if (!Math::Zero(w))
+            if (!Utils::isZero(w))
                 bc->weight(clstr, w);
 
-            if (!Math::Zero(o))
+            if (!Utils::isZero(o))
                 bc->offset(clstr, o);
 
             continue;

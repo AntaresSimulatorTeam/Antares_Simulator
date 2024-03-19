@@ -619,6 +619,8 @@ Matrix<uint32_t>* getFirstTSnumberInterModalMatrixFoundInArea(
             std::shared_ptr<RenewableCluster> cluster = *(area.renewable.list.each_enabled().begin());
             tsNumbersMtx = &(cluster->series.timeseriesNumbers);
         }
+        else if (isTSintermodal[ts_to_tsIndex.at(timeSeriesHydroMaxPower)])
+            tsNumbersMtx = &(area.hydro.series->timeseriesNumbersHydroMaxPower);
     }
     assert(tsNumbersMtx);
 

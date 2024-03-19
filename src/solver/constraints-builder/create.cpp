@@ -202,12 +202,12 @@ std::shared_ptr<Antares::Data::BindingConstraint> CBuilder::addConstraint(const 
     // weights
     for (auto j = weights.begin(); j != weights.end(); j++)
     {
-        if (!Math::Zero(j->second))
+        if (!Utils::isZero(j->second))
             constraint->weight(j->first->ptr, j->second);
     }
 
     // second members
-    if (!Math::Zero(secondMember))
+    if (!Utils::isZero(secondMember))
     {
         constraint->RHSTimeSeries().fill(secondMember);
         constraint->RHSTimeSeries().markAsModified();

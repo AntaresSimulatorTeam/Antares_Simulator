@@ -130,7 +130,7 @@ of area $u$ in the definition of the monthly and daily primary hydro generation 
 
 Following variables and parameters are local to linear optimization problems $M$ &amp; $D(m)$
 solved within the heuristic. For the sake of clarity, the same generic index is used for all time steps,
-knowing that in $M$ there are 12 monthly time-steps, while in \\D(m)t$ there are from 28 to 31 daily
+knowing that in $M$ there are 12 monthly time-steps, while in $D(m)t$ there are from 28 to 31 daily
 time-steps. Costs $\gamma_{Var}$ given to these variables are chosen to enforce a logical hierarchy
 of penalties (letting the reservoir overflow is worse than violating rule curves, which is worse than deviating
 from the generation objective assessed in stage 1, etc.)

@@ -23,6 +23,7 @@
 #include <antares/logs/logs.h>
 #include <antares/inifile/inifile.h>
 #include "antares/study//study.h"
+#include <antares/utils/utils.h>
 #include <limits>
 
 using namespace Yuni;
@@ -357,7 +358,7 @@ bool XCast::saveToFolder(const AnyString& folder) const
     IniFile::Section* s = ini.addSection("general");
     if (distribution != dtBeta)
         s->add("distribution", DistributionToNameID(distribution));
-    if (!Math::Zero(capacity))
+    if (!Utils::isZero(capacity))
         s->add("capacity", capacity);
     if (useConversion)
         s->add("conversion", useConversion);
