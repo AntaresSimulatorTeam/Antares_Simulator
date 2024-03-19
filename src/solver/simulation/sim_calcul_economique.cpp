@@ -20,10 +20,12 @@
 */
 
 #include <sstream>
+#include <cmath>
 
 #include <antares/study/study.h>
 #include <antares/study/area/constants.h>
 #include <antares/study/area/scratchpad.h>
+#include <antares/utils/utils.h>
 
 #include "antares/study/fwd.h"
 #include "antares/study/simulation.h"
@@ -35,7 +37,6 @@
 
 using namespace Antares;
 using namespace Antares::Data;
-using namespace Yuni;
 
 static void importShortTermStorages(
   const AreaList& areas,
@@ -612,7 +613,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
             }
 
             assert(
-              !Math::NaN(problem.AllMustRunGeneration[hourInWeek].AllMustRunGenerationOfArea[k])
+              !std::isnan(problem.AllMustRunGeneration[hourInWeek].AllMustRunGenerationOfArea[k])
               && "NaN detected for 'AllMustRunGeneration', probably from miscGenSum/mustrunSum");
 
             problem.ConsommationsAbattues[hourInWeek].ConsommationAbattueDuPays[k]
@@ -747,10 +748,10 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                         {
                             if (not area.hydro.hardBoundsOnRuleCurves)
                             {
-                                if (Math::Zero(WGU))
+                                if (Utils::isZero(WGU))
                                     DGU[j] = 0.;
                                 else
-                                    DGU[j] = DGU_tmp[j] * Math::Min(WGU, WSL + WNI) / WGU;
+                                    DGU[j] = DGU_tmp[j] * std::min(WGU, WSL + WNI) / WGU;
                             }
 
                             else
@@ -758,15 +759,15 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                                 const uint nextWeekFirstDay
                                   = study.calendar.hours[PasDeTempsDebut + 7 * 24].dayYear;
                                 auto& minLvl = area.hydro.reservoirLevel[Data::PartHydro::minimum];
-                                double V = Math::Max(0., WSL - minLvl[nextWeekFirstDay] * rc + WNI);
+                                double V = std::max(0., WSL - minLvl[nextWeekFirstDay] * rc + WNI);
 
-                                if (Math::Zero(WGU))
+                                if (Utils::isZero(WGU))
                                     DGU[j] = 0.;
                                 else
-                                    DGU[j] = DGU_tmp[j] * Math::Min(WGU, V) / WGU;
+                                    DGU[j] = DGU_tmp[j] * std::min(WGU, V) / WGU;
                             }
 
-                            DGL[j] = Math::Min(DGU[j], DGL_tmp[j]);
+                            DGL[j] = std::min(DGU[j], DGL_tmp[j]);
                         }
                     }
                 }
@@ -884,12 +885,12 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
 
                                 if (not area.hydro.hardBoundsOnRuleCurves)
                                 {
-                                    double V = Math::Max(0., rc - (WNI + WSL));
+                                    double V = std::max(0., rc - (WNI + WSL));
 
-                                    if (Math::Zero(U))
+                                    if (Utils::isZero(U))
                                         DPU[j] = 0.;
                                     else
-                                        DPU[j] = DPC * DPM * Math::Min(U, V) / U;
+                                        DPU[j] = DPC * DPM * std::min(U, V) / U;
                                 }
 
                                 else
@@ -900,12 +901,12 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                                       = area.hydro.reservoirLevel[Data::PartHydro::maximum];
 
                                     double V
-                                      = Math::Max(0., maxLvl[nextWeekFirstDay] * rc - (WNI + WSL));
+                                      = std::max(0., maxLvl[nextWeekFirstDay] * rc - (WNI + WSL));
 
-                                    if (Math::Zero(U))
+                                    if (Utils::isZero(U))
                                         DPU[j] = 0.;
                                     else
-                                        DPU[j] = DPC * DPM * Math::Min(U, V) / U;
+                                        DPU[j] = DPC * DPM * std::min(U, V) / U;
                                 }
                             }
                         }

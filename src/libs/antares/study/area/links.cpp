@@ -351,24 +351,25 @@ bool AreaLinksInternalLoadFromProperty(AreaLink& link, const String& key, const 
         }
         return true;
     }
+
     if (key == "link-width")
     {
-        link.linkWidth = Math::MinMax<int>(value.to<int>(), 1, 6);
+        link.linkWidth = std::clamp(value.to<int>(), 1, 6);
         return true;
     }
     if (key == "colorr")
     {
-        link.color[0] = Math::MinMax<int>(value.to<int>(), 0, 255);
+        link.color[0] = std::clamp(value.to<int>(), 0, 255);
         return true;
     }
     if (key == "colorg")
     {
-        link.color[1] = Math::MinMax<int>(value.to<int>(), 0, 255);
+        link.color[1] = std::clamp(value.to<int>(), 0, 255);
         return true;
     }
     if (key == "colorb")
     {
-        link.color[2] = Math::MinMax<int>(value.to<int>(), 0, 255);
+        link.color[2] = std::clamp(value.to<int>(), 0, 255);
         return true;
     }
     if (key == "transmission-capacities")

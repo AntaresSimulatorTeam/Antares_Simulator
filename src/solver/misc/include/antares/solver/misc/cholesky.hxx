@@ -22,6 +22,8 @@
 //! Precision sur la factorisation des matrices
 #define ANTARES_CHOLESKY_EPSIMIN ((T)1.0e-9)
 
+#include <cmath>
+
 namespace Antares
 {
 namespace Solver
@@ -47,7 +49,7 @@ bool Cholesky(U1& L, U2& A, uint size, T* temp)
 
         if (som > ANTARES_CHOLESKY_EPSIMIN)
         {
-            Li[i] = Math::SquareRootNoCheck(som);
+            Li[i] = std::sqrt(som);
 
             // maintenant on cherche L[k][i], k > i.
             for (uint k = i + 1; k < size; ++k)

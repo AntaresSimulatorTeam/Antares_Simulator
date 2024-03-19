@@ -21,6 +21,8 @@
 #ifndef __SOLVER_VARIABLE_ECONOMY_MarginalCost_H__
 #define __SOLVER_VARIABLE_ECONOMY_MarginalCost_H__
 
+#include <cmath>
+
 #include "../../variable.h"
 
 namespace Antares
@@ -222,7 +224,7 @@ public:
 
     void hourForEachLink(State& state, unsigned int numSpace)
     {
-        pValuesForTheCurrentYear[numSpace][state.hourInTheYear] = Yuni::Math::Abs(
+        pValuesForTheCurrentYear[numSpace][state.hourInTheYear] = std::abs(
           state.problemeHebdo->VariablesDualesDesContraintesDeNTC[state.hourInTheWeek]
             .VariableDualeParInterconnexion[state.link->index]);
 

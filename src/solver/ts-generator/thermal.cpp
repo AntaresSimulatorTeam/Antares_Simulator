@@ -21,10 +21,7 @@
 
 #include <sstream>
 #include <string>
-
-#include <yuni/yuni.h>
-#include <yuni/core/math.h>
-#include <yuni/core/string.h>
+#include <cmath>
 
 #include <antares/study/study.h>
 #include <antares/logs/logs.h>
@@ -34,9 +31,7 @@
 
 #include "antares/study/simulation.h"
 
-using namespace Yuni;
-
-#define SEP IO::Separator
+#define SEP Yuni::IO::Separator
 
 #define FAILURE_RATE_EQ_1 0.999
 
@@ -121,7 +116,7 @@ private:
     std::vector<std::vector<double>> FPOW;
     std::vector<std::vector<double>> PPOW;
 
-    String pTempFilename;
+    Yuni::String pTempFilename;
 };
 
 GeneratorTempData::GeneratorTempData(Data::Study& study) :
@@ -564,7 +559,7 @@ void GeneratorTempData::operator()(const Data::Area& area, ThermalInterface& clu
                 double AVPDayInTheYear = AVP[dayInTheYear];
                 for (uint h = 0; h != 24; ++h)
                 {
-                    dstSeries[hour] = Math::Round(AVPDayInTheYear * cluster.modulationCapacity[hour]);
+                    dstSeries[hour] = std::round(AVPDayInTheYear * cluster.modulationCapacity[hour]);
                     ++hour;
                 }
             }
@@ -573,7 +568,6 @@ void GeneratorTempData::operator()(const Data::Area& area, ThermalInterface& clu
 
     if (derated)
         cluster.series.timeSeries.averageTimeseries();
-
 
 }
 } // namespace

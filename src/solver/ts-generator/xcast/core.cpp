@@ -18,10 +18,12 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
+#include <cmath>
+
 #include <yuni/yuni.h>
-#include <yuni/core/math.h>
 #include <antares/study/study.h>
 #include <antares/logs/logs.h>
+#include <antares/utils/utils.h>
 #include "antares/solver/ts-generator/xcast/xcast.h"
 #include "antares/antares/constants.h"
 #include "antares/solver/misc/cholesky.h"
@@ -143,7 +145,7 @@ bool XCast::generateValuesForTheCurrentDay()
                 for (uint t = 0; t < s; ++t)
                 {
                     x = T[s] * T[t] * STDE[s] * STDE[t];
-                    if (Math::Zero(x))
+                    if (Utils::isZero(x))
                         CORR[s][t] = 0.f;
                     else
                     {
@@ -181,7 +183,7 @@ bool XCast::generateValuesForTheCurrentDay()
                 {
                     x = T[s] * T[t] * STDE[s] * STDE[t];
                     float z = D_COPIE[t] * STDE[s];
-                    if (Math::Zero(x))
+                    if (Utils::isZero(x))
                         CORR[s][t] = 0.f;
                     else
                     {
@@ -369,7 +371,7 @@ bool XCast::generateValuesForTheCurrentDay()
                         auto& userMonthlyCorr = pCorrMonth->column(s);
                         for (uint t = 0; t < s; ++t)
                         {
-                            if (Math::Zero(DIFF[s]) || Math::Zero(DIFF[t]))
+                            if (Utils::isZero(DIFF[s]) || Utils::isZero(DIFF[t]))
                                 corr_s[t] = 0;
                             else
                             {
@@ -463,7 +465,7 @@ bool XCast::generateValuesForTheCurrentDay()
                 if (data_si > MA[s])
                 {
                     data_si = MA[s];
-                    if (Math::Abs(FO[s][i]) > 0.f)
+                    if (std::abs(FO[s][i]) > 0.f)
                     {
                         POSI[s] = MA[s] / FO[s][i];
                         POSI[s] -= G[s];
@@ -476,7 +478,7 @@ bool XCast::generateValuesForTheCurrentDay()
                 if (data_si < MI[s])
                 {
                     data_si = MI[s];
-                    if (Math::Abs(FO[s][i]) > 0.f)
+                    if (std::abs(FO[s][i]) > 0.f)
                     {
                         POSI[s] = MI[s] / FO[s][i];
                         POSI[s] -= G[s];
@@ -507,7 +509,7 @@ bool XCast::generateValuesForTheCurrentDay()
                 }
             }
 
-            assert(0 == Math::Infinite(data_si) && "Infinite value");
+            assert(!std::isinf(data_si) && "Infinite value");
             DATA[s][i] = data_si;
         }
     }
