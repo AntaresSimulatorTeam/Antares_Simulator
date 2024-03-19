@@ -24,13 +24,23 @@
 
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/solver/lps/LpsFromAntares.h"
+#include "opt_period_string_generator_base.h"
+
 namespace Antares::Solver
 {
 
 class HebdoProblemToLpsTranslator
 {
 public:
-    HebdoDataFromAntaresPtr translate(const PROBLEME_ANTARES_A_RESOUDRE* problem) const;
+    explicit HebdoProblemToLpsTranslator(
+      std::shared_ptr<OptPeriodStringGenerator> periodStringGenerator,
+      unsigned int optimizationNumber = 1) noexcept;
+    [[nodiscard]] HebdoDataFromAntaresPtr translate(const PROBLEME_ANTARES_A_RESOUDRE* problem) const;
+    [[nodiscard]] ConstantDataFromAntaresPtr commonProblemData(const PROBLEME_ANTARES_A_RESOUDRE* problem) const;
+
+private:
+    std::shared_ptr<OptPeriodStringGenerator> periodStringGenerator_;
+    unsigned int optimizationNumber_ = 1;
 };
 
-} // namespace Solver
+} // namespace Antares::Solver
