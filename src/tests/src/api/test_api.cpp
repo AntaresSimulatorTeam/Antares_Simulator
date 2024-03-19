@@ -53,10 +53,11 @@ BOOST_AUTO_TEST_CASE(simulation_path_points_to_results)
     //Testing for "no_output" is a bit weird, but it's the only way to test this without actually running the simulation
 }
 
-BOOST_AUTO_TEST_CASE(simulation_path_points_to_valid_output)
+BOOST_AUTO_TEST_CASE(api_run_contains_antares_problem)
 {
-//    using namespace std::string_literals;
-//    const Antares::API::SimulationResults results{
-//      Antares::API::PerformSimulation(std::filesystem::path())};
-//    BOOST_CHECK_EQUAL(results.simulationPath, std::filesystem::path{"output_path"s});
+    Antares::API::APIInternal api;
+    auto study_loader = std::make_unique<InMemoryStudyLoader>();
+    auto results = api.run(study_loader.get());
+
+    BOOST_CHECK(!results.antares_problems.empty());
 }
