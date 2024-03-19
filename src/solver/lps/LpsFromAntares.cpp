@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2007-2024, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
@@ -20,16 +19,15 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#pragma once
-#include <filesystem>
 #include "antares/solver/lps/LpsFromAntares.h"
 
-namespace Antares::API
+namespace Antares::Solver
 {
-struct SimulationResults
-{
-    std::filesystem::path simulationPath;
-    Antares::Solver::LpsFromAntares antares_problems;
-};
-
+    bool LpsFromAntares::empty() const
+    {
+        return _constant == nullptr || _hebdo.empty();
+    }
 }
+
+
+

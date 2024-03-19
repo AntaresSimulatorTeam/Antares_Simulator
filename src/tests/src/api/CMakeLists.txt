@@ -4,7 +4,7 @@ add_executable(${EXECUTABLE_NAME})
 target_sources(${EXECUTABLE_NAME}
     PRIVATE
     test_api.cpp
-        ${CMAKE_SOURCE_DIR}/api/API.cpp
+    ${CMAKE_SOURCE_DIR}/api/API.cpp
 )
 
 target_link_libraries(${EXECUTABLE_NAME}
@@ -14,6 +14,7 @@ target_link_libraries(${EXECUTABLE_NAME}
         Antares::study-loader
         Antares::tests::in-memory-study
         Antares::run-mode
+        Antares::lps
 )
 
 target_include_directories(${EXECUTABLE_NAME}

@@ -21,15 +21,16 @@
  */
 
 #pragma once
-#include <filesystem>
-#include "antares/solver/lps/LpsFromAntares.h"
 
-namespace Antares::API
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
+#include "antares/solver/lps/LpsFromAntares.h"
+namespace Antares::Solver
 {
-struct SimulationResults
+
+class HebdoProblemToLpsTranslator
 {
-    std::filesystem::path simulationPath;
-    Antares::Solver::LpsFromAntares antares_problems;
+public:
+    HebdoDataFromAntaresPtr translate(const PROBLEME_ANTARES_A_RESOUDRE* problem) const;
 };
 
-}
+} // namespace Solver
