@@ -55,6 +55,12 @@ public:
         {
         }
 
+        template<class T>
+        GroupedData(std::string group, std::initializer_list<T> values) :
+         group(group), values(values)
+        {
+        }
+
         inline V& operator[](std::size_t idx)
         {
             return values[idx];
@@ -91,12 +97,13 @@ public:
     explicit LinearProblemData(const std::vector<int>& timeStamps,
                                int timeResolutionInMinutes,
                                const ScalarDataDict& scalarData,
-                               const TimedDataDict& timedData) :
+                               const TimedDataDict& timedData,
+                               const GroupYearToIndex& groupToYear = {{"", {{0, 0}}}}) :
      timeStamps_(timeStamps),
      timeResolutionInMinutes_(timeResolutionInMinutes),
      scalarData_(scalarData),
      timedData_(timedData),
-     groupYearToIndex_({{"", {{0, 0}}}}){
+     groupYearToIndex_(groupToYear){
        // TODO: some coherence check on data
        // for example, check that timed data are all of same size = size of timeStamps_
      };
@@ -141,12 +148,18 @@ public:
                 unsigned tsIndex = data.groupYearToIndex_.at(group).at(year);
                 for (auto& [key, scalarData] : data.scalarData_)
                 {
-                    scalarData_.insert({key, scalarData[tsIndex]});
+                    if (scalarData.group == group)
+                    {
+                        scalarData_.insert({key, scalarData[tsIndex]});
+                    }
                 }
 
                 for (auto& [key, timedData] : data.timedData_)
                 {
-                    timedData_.insert({key, std::cref(timedData[tsIndex])});
+                    if (timedData.group == group)
+                    {
+                        timedData_.insert({key, std::cref(timedData[tsIndex])});
+                    }
                 }
             }
         }
