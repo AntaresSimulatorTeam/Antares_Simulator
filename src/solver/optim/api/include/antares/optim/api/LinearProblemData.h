@@ -208,8 +208,5 @@ public:
     // TODO: remove this when legacy support is dropped
     // TODO: meanwhile, instead of having a nested struct, create a daughter class?
     Legacy legacy;
-    // TODO[FOM] Move as argument ?
-    // TODO[FOM] No default value ?
-    unsigned int year_ = 0;
 };
 } // namespace Antares::optim::api
