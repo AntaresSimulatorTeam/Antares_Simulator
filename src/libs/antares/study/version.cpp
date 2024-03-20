@@ -26,6 +26,8 @@
 using namespace Yuni;
 using namespace Antares::Data;
 
+static_assert(ANTARES_VERSION_LO == 1);
+
 namespace
 {
 constexpr auto supportedVersions = std::to_array(
@@ -42,7 +44,8 @@ constexpr auto supportedVersions = std::to_array(
     StudyVersion(8, 6),
     StudyVersion(8, 7),
     StudyVersion(8, 8),
-    StudyVersion(9, 0)
+    StudyVersion(9, 0),
+    StudyVersion(9, 1)
     // Add new versions here
 });
 
