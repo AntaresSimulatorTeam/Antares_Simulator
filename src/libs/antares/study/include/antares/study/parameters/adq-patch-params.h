@@ -140,7 +140,6 @@ struct AdqPatchParams
     void checkAdqPatchSimulationModeEconomyOnly(const SimulationMode simulationMode) const;
     void checkAdqPatchContainsAdqPatchArea(const Antares::Data::AreaList& areas) const;
     void checkAdqPatchIncludeHurdleCost(const bool includeHurdleCost) const;
-    void checkAdqPatchDisabledLocalMatching() const;
 };
 
 } // namespace Antares::Data::AdequacyPatch
