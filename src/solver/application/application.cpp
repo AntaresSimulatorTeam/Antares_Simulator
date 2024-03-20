@@ -165,8 +165,9 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
 
     // Save about-the-study files (comments, notes, etc.)
     study.saveAboutTheStudy(*resultWriter);
+}
 
-void Application::startSimulation(Data::StudyLoadOptions options)
+void Application::startSimulation(Data::StudyLoadOptions& options)
 {
     // Starting !
     #ifdef GIT_SHA1_SHORT_STRING
