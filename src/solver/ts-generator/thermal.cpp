@@ -635,9 +635,6 @@ bool GenerateThermalTimeSeries(Data::Study& study,
         cluster->calculationOfSpinning();
     }
 
-    for (auto& [name, link] : study.areas.byIndex[0]->links)
-        ThermalInterface lnk(link->tsGeneration, link->directCapacities, link->getName());
-
     return true;
 }
 
