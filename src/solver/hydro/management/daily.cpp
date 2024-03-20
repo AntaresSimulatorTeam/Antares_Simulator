@@ -22,6 +22,7 @@
 #include <yuni/yuni.h>
 #include <antares/study/study.h>
 #include <antares/study/area/scratchpad.h>
+#include <antares/utils/utils.h>
 #include <yuni/io/file.h>
 #include <yuni/io/directory.h>
 #include "antares/solver/hydro/management/management.h"
@@ -318,16 +319,16 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
                         demandMax = data.DLE[dYear];
                 }
 
-                if (not Math::Zero(demandMax))
+                if (!Utils::isZero(demandMax))
                 {
-                    assert(Math::Abs(demandMax) > 1e-12);
+                    assert(std::abs(demandMax) > 1e-12);
                     double coeff = 0.;
 
                     for (uint day = 0; day != daysPerMonth; ++day)
                     {
                         auto dYear = day + dayYear;
-                        coeff += Math::Power(data.DLE[dYear] / demandMax,
-                                             area.hydro.interDailyBreakdown);
+                        coeff += std::pow(data.DLE[dYear] / demandMax,
+                                area.hydro.interDailyBreakdown);
                     }
                     coeff = data.MOG[realmonth] / coeff;
 
@@ -335,7 +336,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
                     {
                         auto dYear = day + dayYear;
                         dailyTargetGen[dYear] = coeff
-                                                * Math::Power(data.DLE[dYear] / demandMax,
+                                                * std::pow(data.DLE[dYear] / demandMax,
                                                               area.hydro.interDailyBreakdown);
                     }
                 }
@@ -417,8 +418,8 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
 #ifndef NDEBUG
             for (uint day = firstDay; day != endDay; ++day)
             {
-                assert(!Math::NaN(ventilationResults.HydrauliqueModulableQuotidien[day]));
-                assert(!Math::Infinite(ventilationResults.HydrauliqueModulableQuotidien[day]));
+                assert(!std::isnan(ventilationResults.HydrauliqueModulableQuotidien[day]));
+                assert(!std::isinf(ventilationResults.HydrauliqueModulableQuotidien[day]));
             }
 #endif
         }

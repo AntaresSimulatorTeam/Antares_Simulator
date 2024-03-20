@@ -21,6 +21,8 @@
 #ifndef __SOLVER_VARIABLE_INFO_H__
 #define __SOLVER_VARIABLE_INFO_H__
 
+#include <cmath>
+
 namespace Antares
 {
 namespace Solver
@@ -66,7 +68,7 @@ struct VariableAccessor
     template<class U>
     static void MultiplyHourlyResultsBy(U& intermediateValues, const double v)
     {
-        assert(!Yuni::Math::NaN(v));
+        assert(!std::isnan(v));
         for (uint i = 0; i != ColumnCountT; ++i)
         {
             Antares::Memory::Stored<double>::ReturnType array = intermediateValues[i].hour;
@@ -83,7 +85,7 @@ struct VariableAccessor
             Antares::Memory::Stored<double>::ReturnType array = intermediateValues[i].hour;
             for (uint y = 0; y != maxHoursInAYear; ++y)
             {
-                array[y] = Yuni::Math::Abs(array[y]) > 0. ? 1. : 0.;
+                array[y] = std::abs(array[y]) > 0. ? 1. : 0.;
             }
         }
     }
@@ -95,7 +97,7 @@ struct VariableAccessor
         {
             Antares::Memory::Stored<double>::ReturnType array = intermediateValues[i].hour;
             for (uint y = 0; y != maxHoursInAYear; ++y)
-                array[y] = Yuni::Math::Abs(array[y]) > 0. ? 100. : 0.;
+                array[y] = std::abs(array[y]) > 0. ? 100. : 0.;
         }
     }
 
@@ -258,7 +260,7 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
     template<class U>
     static void MultiplyHourlyResultsBy(U& intermediateValues, const double v)
     {
-        assert(!Yuni::Math::NaN(v));
+        assert(!std::isnan(v));
         double* array;
         const typename Type::const_iterator end = intermediateValues.end();
         for (typename Type::const_iterator i = intermediateValues.begin(); i != end; ++i)
@@ -278,7 +280,7 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
         {
             array = (*i).hour;
             for (uint y = 0; y != maxHoursInAYear; ++y)
-                array[y] = Yuni::Math::Abs(array[y]) > 0. ? 1. : 0.;
+                array[y] = std::abs(array[y]) > 0. ? 1. : 0.;
         }
     }
 
@@ -291,7 +293,7 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
         {
             array = (*i).hour;
             for (uint y = 0; y != maxHoursInAYear; ++y)
-                array[y] = Yuni::Math::Abs(array[y]) > 0. ? 100. : 0.;
+                array[y] = std::abs(array[y]) > 0. ? 100. : 0.;
         }
     }
 
@@ -497,7 +499,7 @@ struct VariableAccessor<ResultsT, Category::singleColumn /* The default */>
     template<class U>
     static void MultiplyHourlyResultsBy(U& intermediateValues, const double v)
     {
-        assert(!Yuni::Math::NaN(v));
+        assert(!std::isnan(v));
         for (uint y = 0; y != maxHoursInAYear; ++y)
             intermediateValues.hour[y] *= v;
     }
@@ -506,7 +508,7 @@ struct VariableAccessor<ResultsT, Category::singleColumn /* The default */>
     static void SetTo1IfPositive(U& intermediateValues)
     {
         for (uint y = 0; y != maxHoursInAYear; ++y)
-            intermediateValues.hour[y] = Yuni::Math::Abs(intermediateValues.hour[y]) > 0. ? 1. : 0.;
+            intermediateValues.hour[y] = std::abs(intermediateValues.hour[y]) > 0. ? 1. : 0.;
     }
 
     template<class U>
@@ -514,7 +516,7 @@ struct VariableAccessor<ResultsT, Category::singleColumn /* The default */>
     {
         for (uint y = 0; y != maxHoursInAYear; ++y)
             intermediateValues.hour[y]
-              = Yuni::Math::Abs(intermediateValues.hour[y]) > 0. ? 100. : 0.;
+              = std::abs(intermediateValues.hour[y]) > 0. ? 100. : 0.;
     }
 
     template<class U>
