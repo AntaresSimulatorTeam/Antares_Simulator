@@ -122,7 +122,60 @@ BOOST_AUTO_TEST_CASE(common_data_properly_copied) {
     BOOST_CHECK(ret->CoefficientsDeLaMatriceDesContraintes == problemHebdo.CoefficientsDeLaMatriceDesContraintes);
     BOOST_CHECK(ret->IndicesColonnes == problemHebdo.IndicesColonnes);
     BOOST_CHECK(ret->Mdeb == problemHebdo.IndicesDebutDeLigne);
-    BOOST_CHECK_EQUAL(ret->NombreDeCoefficients, 6);
 }
 
-//Test NombreDeCoefficients
+//throw exception if NombreDeVariables is 0
+BOOST_AUTO_TEST_CASE(throw_exception_if_NombreDeVariables_is_0)
+{
+    HebdoProblemToLpsTranslator translator(std::make_shared<StubOptPeriodStringGenerator>());
+    PROBLEME_ANTARES_A_RESOUDRE problemHebdo;
+    problemHebdo.NombreDeVariables = 0;
+    BOOST_CHECK_THROW(translator.commonProblemData(&problemHebdo), std::runtime_error);
+}
+
+BOOST_AUTO_TEST_CASE(throw_exception_if_NombreDeContraintes_is_0)
+{
+    HebdoProblemToLpsTranslator translator(std::make_shared<StubOptPeriodStringGenerator>());
+    PROBLEME_ANTARES_A_RESOUDRE problemHebdo;
+    problemHebdo.NombreDeContraintes = 0;
+    BOOST_CHECK_THROW(translator.commonProblemData(&problemHebdo), std::runtime_error);
+}
+
+BOOST_AUTO_TEST_CASE(throw_exception_if_IndicesDebutDeLigne_out_of_bound)
+{
+    HebdoProblemToLpsTranslator translator(std::make_shared<StubOptPeriodStringGenerator>());
+    PROBLEME_ANTARES_A_RESOUDRE problemHebdo;
+    problemHebdo.NombreDeVariables = 1;
+    problemHebdo.NombreDeContraintes = 3;
+    problemHebdo.IndicesDebutDeLigne = {0, 3};
+    problemHebdo.NombreDeTermesDesLignes = {0, 3, 6, 7, 8};
+    BOOST_CHECK_THROW(translator.commonProblemData(&problemHebdo), std::runtime_error);
+}
+
+BOOST_AUTO_TEST_CASE(throw_exception_if_NombreDeTermesDesLignes_out_of_bound)
+{
+    HebdoProblemToLpsTranslator translator(std::make_shared<StubOptPeriodStringGenerator>());
+    PROBLEME_ANTARES_A_RESOUDRE problemHebdo;
+    problemHebdo.NombreDeVariables = 1;
+    problemHebdo.NombreDeContraintes = 3;
+    problemHebdo.NombreDeTermesDesLignes = {0, 3};
+    problemHebdo.IndicesDebutDeLigne = {0, 3, 6, 7, 8};
+    BOOST_CHECK_THROW(translator.commonProblemData(&problemHebdo), std::runtime_error);
+}
+
+//NombreDeCoefficients
+BOOST_AUTO_TEST_CASE(NombreDeCoefficients_is_properly_computed)
+{
+    HebdoProblemToLpsTranslator translator(std::make_shared<StubOptPeriodStringGenerator>());
+    PROBLEME_ANTARES_A_RESOUDRE problemHebdo;
+    problemHebdo.NombreDeVariables = 1;
+    problemHebdo.NombreDeContraintes = 3;
+    problemHebdo.IndicesDebutDeLigne = {0, 3, 6};
+    problemHebdo.NombreDeTermesDesLignes = {3, 3, 3};
+    problemHebdo.CoefficientsDeLaMatriceDesContraintes = {0, 1, 2, 3, 4, 5, 6, 7, 8};
+    problemHebdo.IndicesColonnes = {0, 1, 2, 3, 4, 5, 6, 7, 8};
+
+    auto ret = translator.commonProblemData(&problemHebdo);
+    BOOST_CHECK_EQUAL(ret->NombreDeCoefficients, 9);
+}
+
