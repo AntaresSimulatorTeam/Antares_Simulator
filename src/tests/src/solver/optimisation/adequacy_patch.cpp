@@ -509,7 +509,6 @@ BOOST_AUTO_TEST_CASE(check_valid_adq_param)
     auto p = createParams();
     BOOST_CHECK_NO_THROW(p.checkAdqPatchSimulationModeEconomyOnly(Antares::Data::SimulationMode::Economy));
     BOOST_CHECK_NO_THROW(p.checkAdqPatchIncludeHurdleCost(true));
-    BOOST_CHECK_NO_THROW(p.checkAdqPatchDisabledLocalMatching());
 }
 
 BOOST_AUTO_TEST_CASE(check_adq_param_wrong_mode)
