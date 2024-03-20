@@ -109,9 +109,17 @@ public:
         return timeResolutionInMinutes_;
     }
 
+    // TODO use cache ?
     inline std::set<std::string> groups() const
     {
-        return {""}; // TODO iterate over scalarData and TimedData
+        std::set<std::string> groups;
+        for (const auto& [_, scalar] : scalarData_)
+            groups.insert(scalar.group);
+
+        for (const auto& [_, timed] : timedData_)
+            groups.insert(timed.group);
+
+        return groups;
     }
 
     struct Legacy
