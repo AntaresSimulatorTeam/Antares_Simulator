@@ -42,14 +42,20 @@ public:
     {
     public:
         GroupedData() = default;
+
+        // One single scenario. Remove ?
         template<class T>
         GroupedData(const T& v) : values({v})
         {
         }
+
+        // One single scenario. Remove ?
         template<class T>
         GroupedData(T&& v) : values({v})
         {
         }
+
+        // Kept for compat. Remove ?
         template<class T>
         GroupedData(std::initializer_list<T> v) : values({v})
         {
@@ -98,7 +104,9 @@ public:
                                int timeResolutionInMinutes,
                                const ScalarDataDict& scalarData,
                                const TimedDataDict& timedData,
+                               // Default value = one single scenario, no groups
                                const GroupYearToIndex& groupToYear = {{"", {{0, 0}}}}) :
+
      timeStamps_(timeStamps),
      timeResolutionInMinutes_(timeResolutionInMinutes),
      scalarData_(scalarData),
@@ -107,7 +115,7 @@ public:
        // TODO: some coherence check on data
        // for example, check that timed data are all of same size = size of timeStamps_
      };
-    [[nodiscard]] std::vector<int> getTimeStamps() const
+    [[nodiscard]] const std::vector<int>& getTimeStamps() const
     {
         return timeStamps_;
     }
@@ -200,6 +208,7 @@ public:
         std::map<std::string, std::reference_wrapper<const std::vector<double>>> timedData_;
     };
 
+    // TODO cache for this ?
     YearView operator[](std::size_t year) const
     {
         return YearView(*this, year);
