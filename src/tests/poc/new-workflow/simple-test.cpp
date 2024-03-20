@@ -79,11 +79,20 @@ BOOST_DATA_TEST_CASE(test_oneWeek_oneNode_oneBattery_twoThermals,
                      bdata::make(solverNames),
                      solverName)
 {
+    constexpr unsigned int nbMonteCarloYears = 2;
+
     vector<int> timeStamps{0, 1, 2, 3};
     int timeResolution = 60;
-
-    LinearProblemImpl linearProblem(false, solverName);
-    LinearProblemBuilder linearProblemBuilder(linearProblem);
+    // TODO having to store multiple LinearProblemBuilder kinda sucks
+    std::vector<LinearProblemImpl> linearProblem;
+    linearProblem.reserve(nbMonteCarloYears); // Prevent copies, invalidating references
+    std::vector<LinearProblemBuilder> linearProblemBuilder;
+    linearProblemBuilder.reserve(nbMonteCarloYears); // Prevent copies, invalidating references
+    for (unsigned int year = 0; year < nbMonteCarloYears; year++)
+    {
+        linearProblem.emplace_back(false, solverName);
+        linearProblemBuilder.emplace_back(linearProblem.back());
+    }
 
     auto battery1 = make_shared<Battery>("battery1", 180, 200);
     auto thermal1 = make_shared<Thermal>("thermal1", 100);
@@ -93,42 +102,105 @@ BOOST_DATA_TEST_CASE(test_oneWeek_oneNode_oneBattery_twoThermals,
     auto balance = make_shared<Balance>("nodeA", batteries, thermals);
     auto objective = make_shared<ProductionPriceMinimization>(thermals);
 
-    linearProblemBuilder.addFiller(battery1);
-    linearProblemBuilder.addFiller(thermal1);
-    linearProblemBuilder.addFiller(thermal2);
-    linearProblemBuilder.addFiller(balance);
-    linearProblemBuilder.addFiller(objective);
+    // Two groups "" (default) and "group1"
+    // For group "", take scenario 0 for all MC years
+    // For group "group1", take scenario k for MC year k, k=0,1
+    const LinearProblemData::GroupYearToIndex groupToIndex{{"", {{0, 0}, {1, 0}}},
+                                                           {"group1", {{0, 0}, {1, 1}}}};
 
-    LinearProblemData linearProblemData(timeStamps,     // TODO : move to LinearProblem ?
-                                        timeResolution, // TODO : move to LinearProblem ?
-                                        {{"initialStock_battery1", 0.}},
-                                        {{"consumption_nodeA", {0., 150., 150., 150.}},
-                                         {"cost_thermal1", {1., 4., 8., 11.}},
-                                         {"cost_thermal2", {2., 3., 10., 9.}}});
-    unsigned int year = 0;
-    linearProblemBuilder.build(linearProblemData[0]);
-    auto solution = linearProblemBuilder.solve({});
+    for (const auto& [_, groupScenarios] : groupToIndex)
+    {
+        BOOST_TEST(groupScenarios.size() == nbMonteCarloYears);
+    }
 
-    // Thermal production is cheap in TS 0, then very expensive.
-    // Battery must charge up to its max during TS 0, then discharge mostly when thermal production
-    // is most expensive (mostly in TS 3, then in TS 2). It is limited in power and stock, it can
-    // charge 180 MW in TS 0 and 20 MW in TS 2. Thermal production will complete the rest, following
-    // merit order imposed by their respective costs. Expected power plans are:
-    // - Battery: -180, -20, 50, 150
-    // - Thermal1: 100, 70, 100, 0
-    // - Thermal2: 80, 100, 0, 0
+    LinearProblemData linearProblemData(
+      timeStamps,     // TODO : move to LinearProblem ?
+      timeResolution, // TODO : move to LinearProblem ?
+      {{"initialStock_battery1",
+        {"group1", {0., 200.}}}}, // Two scenarios : 0 (empty), and 200 (full)
+      {{"consumption_nodeA", {0., 150., 150., 150.}},
+       {"cost_thermal1", {1., 4., 8., 11.}},
+       {"cost_thermal2", {2., 3., 10., 9.}}},
+      groupToIndex);
 
-    vector<double> actualBatteryP
-      = solution.getOptimalValues({"P_battery1_0", "P_battery1_1", "P_battery1_2", "P_battery1_3"});
-    vector<double> expectedBatteryP({-180, -20, 50, 150});
-    BOOST_TEST(actualBatteryP == expectedBatteryP, tt::per_element()); // TODO add tolerance
+    std::array<MipSolution, nbMonteCarloYears> solutions;
 
-    vector<double> actualThermal1P
-      = solution.getOptimalValues({"P_thermal1_0", "P_thermal1_1", "P_thermal1_2", "P_thermal1_3"});
-    vector<double> expectedThermal1P({100, 70, 100, 0});
-    BOOST_TEST(actualThermal1P == expectedThermal1P, tt::per_element()); // TODO add tolerance
-    vector<double> actualThermal2P
-      = solution.getOptimalValues({"P_thermal2_0", "P_thermal2_1", "P_thermal2_2", "P_thermal2_3"});
-    vector<double> expectedThermal2P({80, 100, 0, 0});
-    BOOST_TEST(actualThermal2P == expectedThermal2P, tt::per_element()); // TODO add tolerance
+    for (unsigned int year = 0; year < nbMonteCarloYears; year++)
+    {
+        linearProblemBuilder[year].addFiller(battery1);
+        linearProblemBuilder[year].addFiller(thermal1);
+        linearProblemBuilder[year].addFiller(thermal2);
+        linearProblemBuilder[year].addFiller(balance);
+        linearProblemBuilder[year].addFiller(objective);
+    }
+    for (unsigned int year = 0; year < nbMonteCarloYears; year++)
+    {
+        linearProblemBuilder[year].build(linearProblemData[year]);
+    }
+
+    for (unsigned int year = 0; year < nbMonteCarloYears; year++)
+    {
+        solutions[year] = linearProblemBuilder[year].solve({});
+    }
+
+    {
+        // MCY = 0
+        // Thermal production is cheap in TS 0, then very
+        // expensive. Battery must charge up to its max during TS
+        // 0, then discharge mostly when thermal production is
+        // most expensive (mostly in TS 3, then in TS 2). It is
+        // limited in power and stock, it can charge 180 MW in TS
+        // 0 and 20 MW in TS 2. Thermal production will complete
+        // the rest, following merit order imposed by their
+        // respective costs. Expected power plans are:
+
+        // - Battery: -180 -20 50  150
+        // - Thermal1: 100 70  100 0
+        // - Thermal2: 80  100 0   0
+
+        const auto& solution = solutions[0];
+        vector<double> actualBatteryP = solution.getOptimalValues(
+          {"P_battery1_0", "P_battery1_1", "P_battery1_2", "P_battery1_3"});
+        vector<double> expectedBatteryP({-180, -20, 50, 150});
+        BOOST_TEST(actualBatteryP == expectedBatteryP,
+                   tt::per_element()); // TODO add tolerance
+
+        vector<double> actualThermal1P = solution.getOptimalValues(
+          {"P_thermal1_0", "P_thermal1_1", "P_thermal1_2", "P_thermal1_3"});
+        vector<double> expectedThermal1P({100, 70, 100, 0});
+        BOOST_TEST(actualThermal1P == expectedThermal1P,
+                   tt::per_element()); // TODO add tolerance
+        vector<double> actualThermal2P = solution.getOptimalValues(
+          {"P_thermal2_0", "P_thermal2_1", "P_thermal2_2", "P_thermal2_3"});
+        vector<double> expectedThermal2P({80, 100, 0, 0});
+        BOOST_TEST(actualThermal2P == expectedThermal2P,
+                   tt::per_element()); // TODO add tolerance
+    }
+
+    {
+        // MCY = 1
+        // Same as MCY = 0, except the battery is fully charged at TS 1, so there is no need / it is
+        // not possible to charge it.
+        // - Battery:  0 0   50  150
+        // - Thermal1: 0 50  100 0
+        // - Thermal2: 0 100 0   0
+
+        const auto& solution = solutions[1];
+        vector<double> actualBatteryP = solution.getOptimalValues(
+          {"P_battery1_0", "P_battery1_1", "P_battery1_2", "P_battery1_3"});
+        vector<double> expectedBatteryP({0, 0, 50, 150});
+        BOOST_TEST(actualBatteryP == expectedBatteryP,
+                   tt::per_element()); // TODO add tolerance
+
+        vector<double> actualThermal1P = solution.getOptimalValues(
+          {"P_thermal1_0", "P_thermal1_1", "P_thermal1_2", "P_thermal1_3"});
+        vector<double> expectedThermal1P({0, 50, 100, 0});
+        BOOST_TEST(actualThermal1P == expectedThermal1P,
+                   tt::per_element()); // TODO add tolerance
+        vector<double> actualThermal2P = solution.getOptimalValues(
+          {"P_thermal2_0", "P_thermal2_1", "P_thermal2_2", "P_thermal2_3"});
+        vector<double> expectedThermal2P({0, 100, 0, 0});
+        BOOST_TEST(actualThermal2P == expectedThermal2P,
+                   tt::per_element()); // TODO add tolerance
+    }
 }
