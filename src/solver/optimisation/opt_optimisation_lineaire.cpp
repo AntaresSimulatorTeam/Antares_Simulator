@@ -112,12 +112,13 @@ bool runWeeklyOptimization(const OptimizationOptions& options,
         truc = new Antares::Solver::ITruc();
         Solver::HebdoProblemToLpsTranslator translator(optPeriodStringGenerator,
                                                        optimizationNumber);
-        int const year = problemeHebdo->year + 1;
-        int const week = problemeHebdo->weekInTheYear + 1;
+        unsigned int const year = problemeHebdo->year + 1;
+        unsigned int const week = problemeHebdo->weekInTheYear + 1;
         if (year == 1 && week == 1) {
             truc->lps.replaceConstantData(translator.commonProblemData(problemeHebdo->ProblemeAResoudre.get()));
         }
-        //truc->lps = translator.translate(problemeHebdo);
+        truc->lps.addHebdoData({year, week},
+                               translator.translate(problemeHebdo->ProblemeAResoudre.get()));
 
         if (!OPT_AppelDuSimplexe(options,
                                  problemeHebdo,
