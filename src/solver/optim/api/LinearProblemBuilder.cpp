@@ -11,8 +11,10 @@ void LinearProblemBuilder::addFiller(std::shared_ptr<LinearProblemFiller> filler
     fillers_.push_back(filler);
 }
 
-void LinearProblemBuilder::build(const LinearProblemData& data) {
-    if (built) {
+void LinearProblemBuilder::build(const LinearProblemData::YearView& data)
+{
+    if (built)
+    {
         // TODO
         throw;
     }
@@ -31,9 +33,11 @@ void LinearProblemBuilder::build(const LinearProblemData& data) {
     built = true;
 }
 
-void LinearProblemBuilder::update(const LinearProblemData& data) const {
+void LinearProblemBuilder::update(const LinearProblemData::YearView& data) const
+{
     // TODO : throw if timestamps have changed ?
-    if (!built) {
+    if (!built)
+    {
         // TODO
         throw;
     }
@@ -46,7 +50,8 @@ void LinearProblemBuilder::update(const LinearProblemData& data) const {
 MipSolution LinearProblemBuilder::solve(const operations_research::MPSolverParameters& param)
 {
     // TODO : move to new interface LinearProblemSolver ??
-    if (!built) {
+    if (!built)
+    {
         // TODO
         throw;
     }

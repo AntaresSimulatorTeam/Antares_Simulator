@@ -16,24 +16,28 @@ private:
     double maxStock_;
     vector<string> pVarNames;
     vector<string> stockVarNames;
-public:
-    Battery(string id, double maxP, double maxStock) : id_(std::move(id)), maxP_(maxP), maxStock_(maxStock)
-    {
 
-    };
-    void addVariables(LinearProblem& problem, const LinearProblemData& data) override;
-    void addConstraints(LinearProblem& problem, const LinearProblemData& data) override;
-    void addObjective(LinearProblem& problem, const LinearProblemData& data) override;
-    void update(LinearProblem& problem, const LinearProblemData& data) override;
+public:
+    Battery(string id, double maxP, double maxStock) :
+     id_(std::move(id)),
+     maxP_(maxP),
+     maxStock_(maxStock){
+
+     };
+    void addVariables(LinearProblem& problem, const LinearProblemData::YearView& data) override;
+    void addConstraints(LinearProblem& problem, const LinearProblemData::YearView& data) override;
+    void addObjective(LinearProblem& problem, const LinearProblemData::YearView& data) override;
+    void update(LinearProblem& problem, const LinearProblemData::YearView& data) override;
     string getPVarName(int ts); // sera remplacé par la notion de ports
 };
 
-void Battery::addVariables(LinearProblem& problem, const LinearProblemData& data)
+void Battery::addVariables(LinearProblem& problem, const LinearProblemData::YearView& data)
 {
     auto timestamps = data.getTimeStamps();
     pVarNames.reserve(timestamps.size());
     stockVarNames.reserve(timestamps.size());
-    for (auto ts : timestamps) {
+    for (auto ts : timestamps)
+    {
         string pVarName = "P_" + id_ + "_" + to_string(ts);
         problem.addNumVariable(pVarName, -maxP_, maxP_);
         // - charge
@@ -46,13 +50,15 @@ void Battery::addVariables(LinearProblem& problem, const LinearProblemData& data
     }
 }
 
-void Battery::addConstraints(LinearProblem& problem, const LinearProblemData& data)
+void Battery::addConstraints(LinearProblem& problem, const LinearProblemData::YearView& data)
 {
-    if (!data.hasScalarData("initialStock_" + id_)) {
+    if (!data.hasScalarData("initialStock_" + id_))
+    {
         throw;
     }
     double initialStock = data.getScalarData("initialStock_" + id_);
-    for (auto ts : data.getTimeStamps()) {
+    for (auto ts : data.getTimeStamps())
+    {
         auto p = &problem.getVariable(pVarNames[ts]);
         auto e = &problem.getVariable(stockVarNames[ts]);
 
@@ -73,12 +79,14 @@ void Battery::addConstraints(LinearProblem& problem, const LinearProblemData& da
     }
 }
 
-void Battery::addObjective(Antares::optim::api::LinearProblem& problem, const LinearProblemData& data)
+void Battery::addObjective(Antares::optim::api::LinearProblem& problem,
+                           const LinearProblemData::YearView& data)
 {
     // nothing to do
 }
 
-void Battery::update(Antares::optim::api::LinearProblem& problem, const LinearProblemData& data)
+void Battery::update(Antares::optim::api::LinearProblem& problem,
+                     const LinearProblemData::YearView& data)
 {
     // nothing to do
 }

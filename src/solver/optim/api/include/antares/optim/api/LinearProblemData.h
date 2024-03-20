@@ -33,109 +33,160 @@
 
 namespace Antares::optim::api
 {
-    class LinearProblemData final
+class LinearProblemData final
+{
+public:
+    template<class V>
+    class GroupedData
     {
     public:
-        template<class V>
-        class GroupedData
+        GroupedData() = default;
+        template<class T>
+        GroupedData(const T& v) : values({v})
         {
-        public:
-            GroupedData() = default;
-            template<class T>
-            GroupedData(const T& v) : values({v}) {}
-            template<class T>
-            GroupedData(T&& v) : values({v}) {}
-            template<class T>
-            GroupedData(std::initializer_list<T> v) : values({v}) {}
-
-            inline V operator[](std::size_t idx) const { return values[idx];}
-            inline V& operator[](std::size_t idx) { return values[idx];}
-
-            std::string group;
-            std::vector<V> values; // index = tsIndex
-        };
-
-        using ScalarData = GroupedData<double>;
-        using ScalarDataDict = std::map<std::string, ScalarData>;
-
-        using TimedData = GroupedData<std::vector<double>>;
-        using TimedDataDict = std::map<std::string, TimedData>;
-
-        using GroupYearToIndex = std::map<std::string /*group*/,
-                                          std::map<unsigned int /*year*/, unsigned int /*tsIndex*/>>;
-
-      // TODO : timestamps or timesteps?
-      std::vector<int> timeStamps_;
-      int timeResolutionInMinutes_;
-
-      ScalarDataDict scalarData_;
-      TimedDataDict timedData_;
-      // TODO : handle scenarios, and data vectorized on scenarios, on time, or on both
-      GroupYearToIndex groupYearToIndex_;
-    public:
-        explicit LinearProblemData(const std::vector<int> &timeStamps, int timeResolutionInMinutes,
-                                   const ScalarDataDict& scalarData,
-                                   const TimedDataDict& timedData) :
-                timeStamps_(timeStamps), timeResolutionInMinutes_(timeResolutionInMinutes),
-                scalarData_(scalarData), timedData_(timedData), groupYearToIndex_({{"", {{0, 0}}}})
+        }
+        template<class T>
+        GroupedData(T&& v) : values({v})
         {
-            // TODO: some coherence check on data
-            // for example, check that timed data are all of same size = size of timeStamps_
-        };
-        [[nodiscard]] std::vector<int> getTimeStamps() const { return timeStamps_; }
-        [[nodiscard]] int getTimeResolutionInMinutes() const { return timeResolutionInMinutes_; }
-
-        inline std::set<std::string> groups() const
+        }
+        template<class T>
+        GroupedData(std::initializer_list<T> v) : values({v})
         {
-            return {""}; // TODO iterate over scalarData and TimedData
         }
 
-        class YearView
+        inline V operator[](std::size_t idx) const
         {
-        public:
-          YearView(const LinearProblemData& data, unsigned year)
-          {
+            return values[idx];
+        }
+        inline V& operator[](std::size_t idx)
+        {
+            return values[idx];
+        }
+
+        std::string group;
+        std::vector<V> values; // index = tsIndex
+    };
+
+    using ScalarData = GroupedData<double>;
+    using ScalarDataDict = std::map<std::string, ScalarData>;
+
+    using TimedData = GroupedData<std::vector<double>>;
+    using TimedDataDict = std::map<std::string, TimedData>;
+
+    using GroupYearToIndex
+      = std::map<std::string /*group*/, std::map<unsigned int /*year*/, unsigned int /*tsIndex*/>>;
+
+    // TODO : timestamps or timesteps?
+    std::vector<int> timeStamps_;
+    int timeResolutionInMinutes_;
+
+    ScalarDataDict scalarData_;
+    TimedDataDict timedData_;
+    // TODO : handle scenarios, and data vectorized on scenarios, on time, or on both
+    GroupYearToIndex groupYearToIndex_;
+
+public:
+    explicit LinearProblemData(const std::vector<int>& timeStamps,
+                               int timeResolutionInMinutes,
+                               const ScalarDataDict& scalarData,
+                               const TimedDataDict& timedData) :
+     timeStamps_(timeStamps),
+     timeResolutionInMinutes_(timeResolutionInMinutes),
+     scalarData_(scalarData),
+     timedData_(timedData),
+     groupYearToIndex_({{"", {{0, 0}}}}){
+       // TODO: some coherence check on data
+       // for example, check that timed data are all of same size = size of timeStamps_
+     };
+    [[nodiscard]] std::vector<int> getTimeStamps() const
+    {
+        return timeStamps_;
+    }
+    [[nodiscard]] int getTimeResolutionInMinutes() const
+    {
+        return timeResolutionInMinutes_;
+    }
+
+    inline std::set<std::string> groups() const
+    {
+        return {""}; // TODO iterate over scalarData and TimedData
+    }
+
+    struct Legacy
+    {
+        const std::vector<CORRESPONDANCES_DES_CONTRAINTES>* constraintMapping;
+        const std::vector<const char*>* areaNames;
+    };
+
+    class YearView
+    {
+    public:
+        YearView(const LinearProblemData& data, unsigned year) :
+         legacy(data.legacy),
+         timeStamps_(data.timeStamps_),
+         timeResolutionInMinutes_(data.timeResolutionInMinutes_)
+        {
             for (const auto& group : data.groups())
             {
-              unsigned tsIndex = data.groupYearToIndex_.at(group).at(year);
-              for (auto& [key, scalarData] : data.scalarData_)
+                unsigned tsIndex = data.groupYearToIndex_.at(group).at(year);
+                for (auto& [key, scalarData] : data.scalarData_)
                 {
-                  scalarData_.insert({key, scalarData[tsIndex]}); // TODO avoid copies
+                    scalarData_.insert({key, scalarData[tsIndex]}); // TODO avoid copies
                 }
 
-              for (auto& [key, timedData] : data.timedData_)
+                for (auto& [key, timedData] : data.timedData_)
                 {
-                  timedData_.insert({key, timedData[tsIndex]}); // TODO avoid copies
+                    timedData_.insert({key, timedData[tsIndex]}); // TODO avoid copies
                 }
             }
-          }
-          [[nodiscard]] bool hasScalarData(const std::string& key) const { return scalarData_.contains(key); }
-          [[nodiscard]] double getScalarData(const std::string& key) const {
+        }
+        [[nodiscard]] bool hasScalarData(const std::string& key) const
+        {
+            return scalarData_.contains(key);
+        }
+        [[nodiscard]] double getScalarData(const std::string& key) const
+        {
             return scalarData_.at(key);
-          }
-          [[nodiscard]] bool hasTimedData(const std::string& key) const { return timedData_.contains(key); }
-          [[nodiscard]] const std::vector<double>& getTimedData(const std::string& key) const
-          {
-              return timedData_.at(key);
-          }
-        private:
-          std::map<std::string, double> scalarData_;
-          std::map<std::string, std::vector<double>> timedData_;
-        };
-
-        YearView operator[](std::size_t year) const {
-           return YearView(*this, year);
+        }
+        [[nodiscard]] bool hasTimedData(const std::string& key) const
+        {
+            return timedData_.contains(key);
+        }
+        [[nodiscard]] const std::vector<double>& getTimedData(const std::string& key) const
+        {
+            return timedData_.at(key);
         }
 
-        // TODO: remove this when legacy support is dropped
-        // TODO: meanwhile, instead of having a nested struct, create a daughter class?
-        struct Legacy {
-            const std::vector<CORRESPONDANCES_DES_CONTRAINTES>* constraintMapping;
-            const std::vector<const char*>* areaNames;
-        };
-        Legacy legacy;
-        // TODO[FOM] Move as argument ?
-        // TODO[FOM] No default value ?
-        unsigned int year_ = 0;
+        [[nodiscard]] const std::vector<int>& getTimeStamps() const
+        {
+            return timeStamps_;
+        }
+
+        [[nodiscard]] int getTimeResolutionInMinutes() const
+        {
+            return timeResolutionInMinutes_;
+        }
+
+    public:
+        const Legacy& legacy;
+        const std::vector<int>& timeStamps_;
+        const double timeResolutionInMinutes_;
+
+    private:
+        std::map<std::string, double> scalarData_;
+        std::map<std::string, std::vector<double>> timedData_;
     };
-}
+
+    YearView operator[](std::size_t year) const
+    {
+        return YearView(*this, year);
+    }
+
+    // TODO: remove this when legacy support is dropped
+    // TODO: meanwhile, instead of having a nested struct, create a daughter class?
+    Legacy legacy;
+    // TODO[FOM] Move as argument ?
+    // TODO[FOM] No default value ?
+    unsigned int year_ = 0;
+};
+} // namespace Antares::optim::api

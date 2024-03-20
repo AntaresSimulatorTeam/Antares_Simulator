@@ -13,23 +13,29 @@ class ComponentFiller : public LinearProblemFiller
 private:
     PortConnectionsManager* portConnectionsManager_;
     Component component_;
-    [[nodiscard]] map<string, double> getPortPin(string name, int timestamp, const LinearProblemData& linearProblemData) const;
+    [[nodiscard]] map<string, double> getPortPin(
+      string name,
+      int timestamp,
+      const LinearProblemData::YearView& linearProblemData) const;
+
 public:
-    ComponentFiller(Component component, PortConnectionsManager &portConnectionsManager) :
-            portConnectionsManager_(&portConnectionsManager), component_(std::move(component))
-    {}
-    void addVariables(LinearProblem &problem, const LinearProblemData &data) override;
-    void addConstraints(LinearProblem &problem, const LinearProblemData &data) override;
-    void addObjective(LinearProblem &problem, const LinearProblemData &data) override;
-    void update(LinearProblem &problem, const LinearProblemData &data) override;
+    ComponentFiller(Component component, PortConnectionsManager& portConnectionsManager) :
+     portConnectionsManager_(&portConnectionsManager), component_(std::move(component))
+    {
+    }
+    void addVariables(LinearProblem& problem, const LinearProblemData::YearView& data) override;
+    void addConstraints(LinearProblem& problem, const LinearProblemData::YearView& data) override;
+    void addObjective(LinearProblem& problem, const LinearProblemData::YearView& data) override;
+    void update(LinearProblem& problem, const LinearProblemData::YearView& data) override;
 };
 
-void ComponentFiller::addVariables(LinearProblem& problem, const LinearProblemData& data)
+void ComponentFiller::addVariables(LinearProblem& problem, const LinearProblemData::YearView& data)
 {
     // TODO : remplacer par des AST
     if (component_.getModel() == THERMAL)
     {
-        for (auto ts : data.getTimeStamps()) {
+        for (auto ts : data.getTimeStamps())
+        {
             string pVarName = "P_" + component_.getId() + "_" + to_string(ts);
             double maxP = component_.getDoubleParameterValue("maxP");
             problem.addNumVariable(pVarName, 0, maxP);
@@ -38,7 +44,8 @@ void ComponentFiller::addVariables(LinearProblem& problem, const LinearProblemDa
     else if (component_.getModel() == BATTERY)
     {
         auto timestamps = data.getTimeStamps();
-        for (auto ts : timestamps) {
+        for (auto ts : timestamps)
+        {
             // P < 0 : charge
             // P > 0 : décharge
             string pVarName = "P_" + component_.getId() + "_" + to_string(ts);
@@ -52,15 +59,19 @@ void ComponentFiller::addVariables(LinearProblem& problem, const LinearProblemDa
     }
 }
 
-void ComponentFiller::addConstraints(LinearProblem& problem, const LinearProblemData& data)
+void ComponentFiller::addConstraints(LinearProblem& problem,
+                                     const LinearProblemData::YearView& data)
 {
     // TODO : remplacer par des AST
-    if (component_.getModel() == BATTERY) {
-        if (!data.hasScalarData("initialStock_" + component_.getId())) {
+    if (component_.getModel() == BATTERY)
+    {
+        if (!data.hasScalarData("initialStock_" + component_.getId()))
+        {
             throw;
         }
         double initialStock = data.getScalarData("initialStock_" + component_.getId());
-        for (auto ts : data.getTimeStamps()) {
+        for (auto ts : data.getTimeStamps())
+        {
             string pVarName = "P_" + component_.getId() + "_" + to_string(ts);
             auto p = &problem.getVariable(pVarName);
             string stockVarName = "Stock_" + component_.getId() + "_" + to_string(ts);
@@ -83,19 +94,24 @@ void ComponentFiller::addConstraints(LinearProblem& problem, const LinearProblem
             }
         }
     }
-    else if (component_.getModel() == BALANCE) {
+    else if (component_.getModel() == BALANCE)
+    {
         string nodeName = component_.getStringParameterValue("nodeName");
-        if (!data.hasTimedData("consumption_" + nodeName)) {
+        if (!data.hasTimedData("consumption_" + nodeName))
+        {
             throw;
         }
         auto consumption = data.getTimedData("consumption_" + nodeName);
-        for (auto ts : data.getTimeStamps()) {
-            // <!> IMPORTANT : we have to use the convention -production = -consumption, in order to be compatible
-            // with the legacy code's balance constraint
-            auto balanceConstraint =
-                    &problem.addBalanceConstraint("Balance_" + nodeName + "_" + to_string(ts), -consumption[ts], nodeName, ts);
-            for (const auto& connection : portConnectionsManager_->getConectionsTo(this, "P")) {
-                for (const auto& varAndCoeff : connection.componentFiller->getPortPin(connection.portName, ts, data))
+        for (auto ts : data.getTimeStamps())
+        {
+            // <!> IMPORTANT : we have to use the convention -production = -consumption, in order to
+            // be compatible with the legacy code's balance constraint
+            auto balanceConstraint = &problem.addBalanceConstraint(
+              "Balance_" + nodeName + "_" + to_string(ts), -consumption[ts], nodeName, ts);
+            for (const auto& connection : portConnectionsManager_->getConectionsTo(this, "P"))
+            {
+                for (const auto& varAndCoeff :
+                     connection.componentFiller->getPortPin(connection.portName, ts, data))
                 {
                     auto p = &problem.getVariable(varAndCoeff.first);
                     balanceConstraint->SetCoefficient(p, varAndCoeff.second * -1.0);
@@ -105,14 +121,19 @@ void ComponentFiller::addConstraints(LinearProblem& problem, const LinearProblem
     }
 }
 
-void ComponentFiller::addObjective(Antares::optim::api::LinearProblem& problem, const LinearProblemData& data)
+void ComponentFiller::addObjective(Antares::optim::api::LinearProblem& problem,
+                                   const LinearProblemData::YearView& data)
 {
     // TODO : remplacer par des AST
-    if (component_.getModel() == PRICE_MINIM) {
+    if (component_.getModel() == PRICE_MINIM)
+    {
         problem.setMinimization(true);
-        for (auto ts : data.getTimeStamps()) {
-            for (const auto& connection : portConnectionsManager_->getConectionsTo(this, "cost")) {
-                for (const auto& varAndCoeff : connection.componentFiller->getPortPin(connection.portName, ts, data))
+        for (auto ts : data.getTimeStamps())
+        {
+            for (const auto& connection : portConnectionsManager_->getConectionsTo(this, "cost"))
+            {
+                for (const auto& varAndCoeff :
+                     connection.componentFiller->getPortPin(connection.portName, ts, data))
                 {
                     auto variable = &problem.getVariable(varAndCoeff.first);
                     problem.setObjectiveCoefficient(*variable, varAndCoeff.second);
@@ -122,27 +143,38 @@ void ComponentFiller::addObjective(Antares::optim::api::LinearProblem& problem, 
     }
 }
 
-void ComponentFiller::update(Antares::optim::api::LinearProblem& problem, const LinearProblemData& data)
+void ComponentFiller::update(Antares::optim::api::LinearProblem& problem,
+                             const LinearProblemData::YearView& data)
 {
     // ?
 }
 
-map<string, double> ComponentFiller::getPortPin(string name, int timestamp, const LinearProblemData& data) const
+map<string, double> ComponentFiller::getPortPin(string name,
+                                                int timestamp,
+                                                const LinearProblemData::YearView& data) const
 {
     // TODO : remplacer par des AST
-    if (component_.getModel() == THERMAL) {
+    if (component_.getModel() == THERMAL)
+    {
         string pVarName = "P_" + component_.getId() + "_" + to_string(timestamp);
-        if (name == "P") {
+        if (name == "P")
+        {
             return {{pVarName, 1.0}};
-        } else if (name == "cost") {
-            if (!data.hasTimedData("cost_" + component_.getId())) {
+        }
+        else if (name == "cost")
+        {
+            if (!data.hasTimedData("cost_" + component_.getId()))
+            {
                 throw;
             }
             double cost = data.getTimedData("cost_" + component_.getId()).at(timestamp);
             return {{pVarName, cost}};
         }
-    } else if (component_.getModel() == BATTERY) {
-        if (name == "P") {
+    }
+    else if (component_.getModel() == BATTERY)
+    {
+        if (name == "P")
+        {
             string pVarName = "P_" + component_.getId() + "_" + to_string(timestamp);
             return {{pVarName, 1.0}};
         }
