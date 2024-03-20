@@ -69,8 +69,23 @@ struct ITruc
 {
     ::Antares::Solver::LpsFromAntares lps;
 };
-}
+} // namespace Antares::Solver
 
+void notifyProblemHebdo(const PROBLEME_HEBDO* problemeHebdo,
+                        int optimizationNumber,
+                        Antares::Solver::ITruc* truc,
+                        const std::shared_ptr<OptPeriodStringGenerator>& optPeriodStringGenerator)
+{
+    Solver::HebdoProblemToLpsTranslator translator(optPeriodStringGenerator,
+                                                   optimizationNumber);
+    unsigned int const year = problemeHebdo->year + 1;
+    unsigned int const week = problemeHebdo->weekInTheYear + 1;
+    if (year == 1 && week == 1) {
+        truc->lps.replaceConstantData(translator.commonProblemData(problemeHebdo->ProblemeAResoudre.get()));
+    }
+    truc->lps.addHebdoData({year, week},
+                           translator.translate(problemeHebdo->ProblemeAResoudre.get()));
+}
 bool runWeeklyOptimization(const OptimizationOptions& options,
                            PROBLEME_HEBDO* problemeHebdo,
                            const AdqPatchParams& adqPatchParams,
@@ -114,15 +129,7 @@ bool runWeeklyOptimization(const OptimizationOptions& options,
           problemeHebdo->year);
 
         truc = new Antares::Solver::ITruc();
-        Solver::HebdoProblemToLpsTranslator translator(optPeriodStringGenerator,
-                                                       optimizationNumber);
-        unsigned int const year = problemeHebdo->year + 1;
-        unsigned int const week = problemeHebdo->weekInTheYear + 1;
-        if (year == 1 && week == 1) {
-            truc->lps.replaceConstantData(translator.commonProblemData(problemeHebdo->ProblemeAResoudre.get()));
-        }
-        truc->lps.addHebdoData({year, week},
-                               translator.translate(problemeHebdo->ProblemeAResoudre.get()));
+        notifyProblemHebdo(problemeHebdo, optimizationNumber, truc, optPeriodStringGenerator);
 
         if (!OPT_AppelDuSimplexe(options,
                                  problemeHebdo,
