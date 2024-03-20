@@ -111,6 +111,9 @@ public:
     ConstantDataFromAntaresPtr _constant;
     YearWeekHebdoDataFromAntares _hebdo;
     bool empty() const;
+    void replaceConstantData(ConstantDataFromAntaresPtr uniquePtr);
+    void addHebdoData(ProblemHebdoId id, HebdoDataFromAntaresPtr uniquePtr);
+    const HebdoDataFromAntares* hebdoData(ProblemHebdoId id) const;
 };
 
 }
