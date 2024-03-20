@@ -28,6 +28,7 @@
 
 #include <utility>
 #include <vector>
+#include <functional>
 
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
@@ -54,11 +55,12 @@ public:
         {
         }
 
-        inline V operator[](std::size_t idx) const
+        inline V& operator[](std::size_t idx)
         {
             return values[idx];
         }
-        inline V& operator[](std::size_t idx)
+
+        inline const V& operator[](std::size_t idx) const
         {
             return values[idx];
         }
@@ -131,12 +133,12 @@ public:
                 unsigned tsIndex = data.groupYearToIndex_.at(group).at(year);
                 for (auto& [key, scalarData] : data.scalarData_)
                 {
-                    scalarData_.insert({key, scalarData[tsIndex]}); // TODO avoid copies
+                    scalarData_.insert({key, scalarData[tsIndex]});
                 }
 
                 for (auto& [key, timedData] : data.timedData_)
                 {
-                    timedData_.insert({key, timedData[tsIndex]}); // TODO avoid copies
+                    timedData_.insert({key, std::cref(timedData[tsIndex])});
                 }
             }
         }
@@ -174,7 +176,7 @@ public:
 
     private:
         std::map<std::string, double> scalarData_;
-        std::map<std::string, std::vector<double>> timedData_;
+        std::map<std::string, std::reference_wrapper<const std::vector<double>>> timedData_;
     };
 
     YearView operator[](std::size_t year) const
