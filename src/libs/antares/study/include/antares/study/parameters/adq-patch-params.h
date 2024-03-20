@@ -29,7 +29,6 @@
 
 namespace Antares::Data::AdequacyPatch
 {
-
 //! A default threshold value for initiate curtailment sharing rule
 const double defaultThresholdToRunCurtailmentSharing = 0.0;
 //! A default threshold value for display local matching rule violations
@@ -78,7 +77,6 @@ enum class AdqPatchPTO
 
 }; // enum AdqPatchPTO
 
-
 struct LocalMatching
 {
     bool enabled = true;
@@ -91,12 +89,11 @@ struct LocalMatching
     //! rule.
     bool setToZeroOutsideOutsideLinks = true;
     /*!
-        ** \brief Reset to default values related to local matching
-        */
+     ** \brief Reset to default values related to local matching
+     */
     void reset();
     bool updateFromKeyValue(const Yuni::String& key, const Yuni::String& value);
     void addProperties(IniFile::Section* section) const;
-
 };
 
 class CurtailmentSharing
@@ -115,6 +112,8 @@ public:
     //! Check CSR cost function prior & after CSR optimization
     bool checkCsrCostFunction;
 
+    bool recomputeDTGMRG = false;
+
     bool updateFromKeyValue(const Yuni::String& key, const Yuni::String& value);
     void addProperties(IniFile::Section* section) const;
 
@@ -124,10 +123,8 @@ private:
     void resetThresholds();
 };
 
-
 struct AdqPatchParams
 {
-
     bool enabled;
     LocalMatching localMatching;
     CurtailmentSharing curtailmentSharing;
@@ -140,11 +137,9 @@ struct AdqPatchParams
                              const AreaList& areas,
                              const bool includeHurdleCostParameters) const;
 
-
     void checkAdqPatchSimulationModeEconomyOnly(const SimulationMode simulationMode) const;
     void checkAdqPatchContainsAdqPatchArea(const Antares::Data::AreaList& areas) const;
     void checkAdqPatchIncludeHurdleCost(const bool includeHurdleCost) const;
-    void checkAdqPatchDisabledLocalMatching() const;
 };
 
 } // namespace Antares::Data::AdequacyPatch
