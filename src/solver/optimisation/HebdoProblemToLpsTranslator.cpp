@@ -65,16 +65,28 @@ ConstantDataFromAntaresPtr HebdoProblemToLpsTranslator::commonProblemData(const 
     if (problem == nullptr)
         return nullptr;
 
+    if (problem->NombreDeVariables <= 0) {
+        throw std::runtime_error("NombreDeVariables must be strictly positive");
+    }
+    if (problem->NombreDeContraintes <= 0) {
+        throw std::runtime_error("NombreDeContraintes must be strictly positive");
+    }
+
+    if (problem->NombreDeContraintes > problem->IndicesDebutDeLigne.size()) {
+        throw std::runtime_error("NombreDeContraintes exceed IndicesDebutDeLigne size");
+    }
+
+    if (problem->NombreDeContraintes > problem->NombreDeTermesDesLignes.size()) {
+        throw std::runtime_error("NombreDeContraintes exceed NombreDeTermesDesLignes size");
+    }
+
     auto ret = std::make_unique<ConstantDataFromAntares>();
 
-    int nvars = problem->NombreDeVariables;
-    int ncons = problem->NombreDeContraintes;
-    int neles = problem->IndicesDebutDeLigne[ncons - 1] +
-    problem->NombreDeTermesDesLignes[ncons - 1];
+    ret->NombreDeVariables = problem->NombreDeVariables;
+    ret->NombreDeContraintes = problem->NombreDeContraintes;
 
-    ret->NombreDeVariables = nvars;
-    ret->NombreDeCoefficients = neles;
-    ret->NombreDeContraintes = ncons;
+    ret->NombreDeCoefficients = problem->IndicesDebutDeLigne[problem->NombreDeContraintes - 1] +
+                                problem->NombreDeTermesDesLignes[problem->NombreDeContraintes - 1];
 
     copy(problem->TypeDeVariable, ret->TypeDeVariable);
 
