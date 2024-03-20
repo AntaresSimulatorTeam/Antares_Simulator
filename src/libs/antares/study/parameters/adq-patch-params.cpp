@@ -181,7 +181,7 @@ bool AdqPatchParams::checkAdqPatchParams(const StudyMode studyMode,
 }
 
 // Adequacy Patch can only be used with Economy Study/Simulation Mode.
-void AdqPatchParams::checkAdqPatchSimulationModeEconomyOnly(const StudyMode studyMode) const
+void AdqPatchParams::checkAdqPatchStudyModeEconomyOnly(const StudyMode studyMode) const
 {
     if (studyMode != StudyMode::stdmEconomy)
         throw Error::IncompatibleStudyModeForAdqPatch();
