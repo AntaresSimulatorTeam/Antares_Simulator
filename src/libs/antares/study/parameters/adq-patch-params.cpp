@@ -176,13 +176,13 @@ bool AdqPatchParams::checkAdqPatchParams(const SimulationMode simulationMode,
     checkAdqPatchSimulationModeEconomyOnly(simulationMode);
     checkAdqPatchContainsAdqPatchArea(areas);
     checkAdqPatchIncludeHurdleCost(includeHurdleCostParameters);
-    checkAdqPatchDisabledLocalMatching();
 
     return true;
 }
 
 // Adequacy Patch can only be used with Economy Study/Simulation Mode.
-void AdqPatchParams::checkAdqPatchSimulationModeEconomyOnly(const SimulationMode simulationMode) const
+void AdqPatchParams::checkAdqPatchSimulationModeEconomyOnly(
+  const SimulationMode simulationMode) const
 {
     if (simulationMode != SimulationMode::Economy)
         throw Error::IncompatibleSimulationModeForAdqPatch();
