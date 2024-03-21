@@ -34,14 +34,12 @@ jobs:
               target_branch: ${{ github.event.inputs.target_branch }}
               latest: ${{ github.event.inputs.target_branch }}
             run: |
-              [[ $latest = true ]] && latest_arg="--latest"
-
               gh release create "$tag" \
                   --repo="$GITHUB_REPOSITORY" \
                   --title="$title" \
                   --notes="Run tests: $tests"\
                   --target="$target_branch" \
-                  latest_arg
+                  --latest=$latest
 
 
       ubuntu:
