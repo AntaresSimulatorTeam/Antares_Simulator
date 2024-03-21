@@ -16,7 +16,8 @@ on:
         description: "Run all tests (true/false)"
         required: true
         type: string
-      set_latest: "Set the release as latest"
+      set_latest:
+        description: "Set the release as latest"
         required: true
         type: boolean
 jobs:
