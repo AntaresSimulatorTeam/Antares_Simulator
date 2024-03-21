@@ -29,11 +29,13 @@ void runSimulationInEconomicMode(Antares::Data::Study& study,
                                  const Settings& settings,
                                  Benchmarking::IDurationCollector& durationCollector,
                                  IResultWriter& resultWriter,
-                                 Benchmarking::OptimizationInfo& info)
+                                 Benchmarking::OptimizationInfo& info,
+                                 std::shared_ptr<Simulation::ISimulationObserver> simulationObserver
+                                 )
 {
     // Type of the simulation
     typedef Solver::Simulation::ISimulation<Solver::Simulation::Economy> SimulationType;
-    SimulationType simulation(study, settings, durationCollector, resultWriter);
+    SimulationType simulation(study, settings, durationCollector, resultWriter, simulationObserver);
     simulation.checkWriter();
     simulation.run();
 

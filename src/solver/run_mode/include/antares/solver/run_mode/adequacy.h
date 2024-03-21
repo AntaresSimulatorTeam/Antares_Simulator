@@ -24,6 +24,7 @@
 
 #include "antares/infoCollection/StudyInfoCollector.h"
 #include "antares/solver/misc/options.h"
+#include "antares/solver/simulation/ISimulationObserver.h"
 #include "antares/writer/i_writer.h"
 
 namespace Antares::Solver
@@ -32,5 +33,6 @@ void runSimulationInAdequacyMode(Antares::Data::Study& study,
                                  const Settings& settings,
                                  Benchmarking::IDurationCollector& durationCollector,
                                  IResultWriter& resultWriter,
-                                 Benchmarking::OptimizationInfo& info);
+                                 Benchmarking::OptimizationInfo& info,
+                                 std::shared_ptr<Simulation::ISimulationObserver> simulationObserver);
 }

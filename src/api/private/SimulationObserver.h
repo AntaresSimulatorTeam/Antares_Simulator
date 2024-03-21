@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2007-2024, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
@@ -20,25 +21,13 @@
  */
 
 #pragma once
+#include <antares/solver/simulation/ISimulationObserver.h>
 
-#include "base_weekly_optimization.h"
-#include "antares/solver/simulation/sim_structure_probleme_economique.h"
-#include "antares/solver/simulation/ISimulationObserver.h"
-
-
-namespace Antares::Solver::Optimization
+namespace Antares::API
 {
-class DefaultWeeklyOptimization : public WeeklyOptimization
+
+class SimulationObserver: public Solver::Simulation::ISimulationObserver
 {
-public:
-  explicit DefaultWeeklyOptimization(const OptimizationOptions& options,
-                                     PROBLEME_HEBDO* problemeHebdo,
-                                     Antares::Data::AdequacyPatch::AdqPatchParams&,
-                                     uint numSpace,
-                                     IResultWriter& writer,
-                                       std::shared_ptr<Simulation::ISimulationObserver> simulationObserver
-                                       );
-    ~DefaultWeeklyOptimization() override = default;
-    void solve() override;
 };
-} // namespace Antares::Solver::Optimization
+
+} // namespace Api

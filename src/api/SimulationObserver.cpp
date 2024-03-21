@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2007-2024, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
@@ -19,27 +20,8 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#include "antares/solver/optimisation/weekly_optimization.h"
-#include "antares/solver/optimisation/opt_fonctions.h"
-#include "antares/solver/simulation/ISimulationObserver.h"
+#include "SimulationObserver.h"
 
-namespace Antares::Solver::Optimization
+namespace Antares::API
 {
-DefaultWeeklyOptimization::DefaultWeeklyOptimization(
-  const OptimizationOptions& options,
-  PROBLEME_HEBDO* problemeHebdo,
-  AdqPatchParams& adqPatchParams,
-  uint thread_number,
-  IResultWriter& writer,
-  std::shared_ptr<Simulation::ISimulationObserver> simulationObserver
-  ) :
- WeeklyOptimization(options, problemeHebdo, adqPatchParams, thread_number, writer, simulationObserver)
-{
-}
-
-void DefaultWeeklyOptimization::solve()
-{
-    OPT_OptimisationHebdomadaire(options_, problemeHebdo_, adqPatchParams_, writer_, simulationObserver_.get());
-}
-
-} // namespace Antares::Solver::Optimization
+} // namespace Api
