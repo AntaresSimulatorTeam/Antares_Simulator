@@ -27,6 +27,7 @@
 #include "antares/infoCollection/StudyInfoCollector.h"
 #include "antares/benchmarking/DurationCollector.h"
 #include <antares/writer/writer_factory.h>
+#include <SimulationObserver.h>
 
 namespace Antares::API
 {
@@ -57,15 +58,17 @@ void APIInternal::execute()
     ioQueueService->start();
     auto resultWriter = Solver::resultWriterFactory(
       study_->parameters.resultFormat, study_->folderOutput, ioQueueService, durationCollector);
+    auto simulationObserver = std::make_shared<SimulationObserver>();
     // Run the simulation
     switch (study_->runtime->mode)
     {
     case Data::SimulationMode::Economy:
     case Data::SimulationMode::Expansion:
-        Solver::runSimulationInEconomicMode(*study_, settings, durationCollector, *resultWriter, optimizationInfo);
+        Solver::runSimulationInEconomicMode(
+          *study_, settings, durationCollector, *resultWriter, optimizationInfo, simulationObserver);
         break;
     case Data::SimulationMode::Adequacy:
-        Solver::runSimulationInAdequacyMode(*study_, settings, durationCollector, *resultWriter, optimizationInfo);
+        Solver::runSimulationInAdequacyMode(*study_, settings, durationCollector, *resultWriter, optimizationInfo, simulationObserver);
         break;
     default:
         break;
