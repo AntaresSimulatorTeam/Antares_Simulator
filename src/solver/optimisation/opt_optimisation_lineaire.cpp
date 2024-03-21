@@ -64,18 +64,11 @@ void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(
 void notifyProblemHebdo(const PROBLEME_HEBDO* problemeHebdo,
                         int optimizationNumber,
                         Solver::Simulation::ISimulationObserver* simulationObserver,
-                        const std::shared_ptr<OptPeriodStringGenerator>& optPeriodStringGenerator)
+                        const OptPeriodStringGenerator* optPeriodStringGenerator)
 {
-    Solver::HebdoProblemToLpsTranslator translator(optPeriodStringGenerator,
-                                                   optimizationNumber);
-    unsigned int const year = problemeHebdo->year + 1;
-    unsigned int const week = problemeHebdo->weekInTheYear + 1;
-//    if (year == 1 && week == 1) {
-//        truc->lps.replaceConstantData(translator.commonProblemData(problemeHebdo->ProblemeAResoudre.get()));
-//    }
-//    truc->lps.addHebdoData({year, week},
-//                           translator.translate(problemeHebdo->ProblemeAResoudre.get()));
+    simulationObserver->notifyHebdoProblem(problemeHebdo, optimizationNumber, createMPSfilename(*optPeriodStringGenerator, optimizationNumber));
 }
+
 bool runWeeklyOptimization(const OptimizationOptions& options,
                            PROBLEME_HEBDO* problemeHebdo,
                            const AdqPatchParams& adqPatchParams,
@@ -118,7 +111,7 @@ bool runWeeklyOptimization(const OptimizationOptions& options,
                                     problemeHebdo->weekInTheYear,
                                     problemeHebdo->year);
 
-        notifyProblemHebdo(problemeHebdo, optimizationNumber, simulationObserver, optPeriodStringGenerator);
+        notifyProblemHebdo(problemeHebdo, optimizationNumber, simulationObserver, optPeriodStringGenerator.get());
 
         if (!OPT_AppelDuSimplexe(options,
                                  problemeHebdo,

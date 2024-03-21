@@ -28,6 +28,10 @@ namespace Antares::API
 
 class SimulationObserver: public Solver::Simulation::ISimulationObserver
 {
+public:
+    void notifyHebdoProblem(const PROBLEME_HEBDO* problemeHebdo,
+                            int optimizationNumber,
+                            std::string name) override;
 };
 
 } // namespace Api
