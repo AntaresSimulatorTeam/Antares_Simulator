@@ -34,8 +34,6 @@
 #include <antares/writer/result_format.h>
 #include <antares/checks/checkLoadedInputData.h>
 
-#define SEP Yuni::IO::Separator
-
 using namespace Antares;
 
 struct TsGeneratorSettings
@@ -142,7 +140,9 @@ int main(int argc, char *argv[])
     auto resultWriter = Solver::resultWriterFactory(
             Data::ResultFormat::legacyFilesDirectories, study->folderOutput, nullptr, nullDurationCollector);
 
+#define SEP Yuni::IO::Separator
     const std::string savePath = std::string("ts-generator") + SEP + "thermal";
+#undef SEP
 
     std::vector<Data::ThermalCluster*> clusters;
 

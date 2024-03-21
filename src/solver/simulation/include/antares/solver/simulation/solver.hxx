@@ -39,7 +39,6 @@
 #include <yuni/job/job.h>
 
 #include "antares/concurrency/concurrency.h"
-#define SEP Yuni::IO::Separator
 
 namespace Antares::Solver::Simulation
 {
@@ -490,8 +489,9 @@ void ISimulation<ImplementationType>::regenerateTimeSeries(uint year)
     if (refreshTSonCurrentYear)
     {
         auto clusters = getAllClustersToGen(study.areas, pData.haveToRefreshTSThermal);
-
+#define SEP Yuni::IO::Separator
         const std::string savePath = std::string("ts-generator") + SEP + "thermal" + SEP + "mc-0";
+#undef SEP
         GenerateThermalTimeSeries(study, clusters, pResultWriter, savePath);
     }
 
