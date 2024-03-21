@@ -1,6 +1,13 @@
 Antares Changelog
 =================
 
+8.8.4 (03/2024)
+--------------------
+## Bugfix
+* Adequacy patch CSR - fix DTG MRG (#1982)
+* Fix ts numbers for no gen clusters (#1969)
+* Remove unitcount limit for time series generation (#1960)
+
 8.8.3
 --------------------
 ## Bugfix
