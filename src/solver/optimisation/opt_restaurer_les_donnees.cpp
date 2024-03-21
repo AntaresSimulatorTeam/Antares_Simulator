@@ -57,7 +57,8 @@ void OPT_RestaurerLesDonnees(PROBLEME_HEBDO* problemeHebdo)
             if (!CaracteristiquesHydrauliques.PresenceDHydrauliqueModulable)
                 continue;
 
-            CaracteristiquesHydrauliques.ContrainteDePmaxHydrauliqueHoraire[pdt]
+            double& hourlyPmax = CaracteristiquesHydrauliques.ContrainteDePmaxHydrauliqueHoraire[pdt];
+            hourlyPmax
               = CaracteristiquesHydrauliques.ContrainteDePmaxHydrauliqueHoraireRef[pdt];
             if (CaracteristiquesHydrauliques.SansHeuristique)
                 continue;
@@ -73,18 +74,11 @@ void OPT_RestaurerLesDonnees(PROBLEME_HEBDO* problemeHebdo)
                 double PmaxHydUplift
                   = CaracteristiquesHydrauliques.ContrainteDePmaxPompageHoraire[pdt];
                 PmaxHydUplift *= problemeHebdo->CoefficientEcretementPMaxHydraulique[pays];
-
-                if (PmaxHydEcretee < PmaxHydUplift)
-                    PmaxHydEcretee = PmaxHydUplift;
+                PmaxHydEcretee = std::min(PmaxHydUplift, PmaxHydEcretee);
             }
 
             // The generating power allowance cannot exceed the maximum available generating power
-            if (PmaxHydEcretee
-                < CaracteristiquesHydrauliques.ContrainteDePmaxHydrauliqueHoraire[pdt])
-            {
-                CaracteristiquesHydrauliques.ContrainteDePmaxHydrauliqueHoraire[pdt]
-                  = PmaxHydEcretee;
-            }
+            hourlyPmax = std::min(PmaxHydEcretee, hourlyPmax);
         }
     }
 
