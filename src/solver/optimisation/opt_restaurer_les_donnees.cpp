@@ -74,11 +74,11 @@ void OPT_RestaurerLesDonnees(PROBLEME_HEBDO* problemeHebdo)
                 double PmaxHydUplift
                   = CaracteristiquesHydrauliques.ContrainteDePmaxPompageHoraire[pdt];
                 PmaxHydUplift *= problemeHebdo->CoefficientEcretementPMaxHydraulique[pays];
-                PmaxHydEcretee = std::min(PmaxHydUplift, PmaxHydEcretee);
+                PmaxHydEcretee = std::max(PmaxHydUplift, PmaxHydEcretee);
             }
 
             // The generating power allowance cannot exceed the maximum available generating power
-            hourlyPmax = std::min(PmaxHydEcretee, hourlyPmax);
+            hourlyPmax = std::max(PmaxHydEcretee, hourlyPmax);
         }
     }
 
