@@ -10,6 +10,7 @@ target_link_libraries(${EXECUTABLE_NAME}
         PRIVATE
         Boost::unit_test_framework
         Antares::lps
+        antares-solver-simulation
 )
 
 # Storing tests-ts-numbers under the folder Unit-tests in the IDE

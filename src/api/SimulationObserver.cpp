@@ -21,7 +21,21 @@
  */
 
 #include "SimulationObserver.h"
+#include "antares/solver/optimisation/HebdoProblemToLpsTranslator.h"
 
 namespace Antares::API
 {
+void SimulationObserver::notifyHebdoProblem(const PROBLEME_HEBDO* problemeHebdo,
+                                            int optimizationNumber,
+                                            std::string name)
+{
+    Solver::LpsFromAntares lps;
+    Solver::HebdoProblemToLpsTranslator translator;
+    unsigned int const year = problemeHebdo->year + 1;
+    unsigned int const week = problemeHebdo->weekInTheYear + 1;
+    if (year == 1 && week == 1) {
+        lps.replaceConstantData(translator.commonProblemData(problemeHebdo->ProblemeAResoudre.get()));
+    }
+    lps.addHebdoData({year, week}, translator.translate(problemeHebdo->ProblemeAResoudre.get(), name));
+}
 } // namespace Api

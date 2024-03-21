@@ -26,14 +26,6 @@
 namespace Antares::Solver
 {
 
-HebdoProblemToLpsTranslator::HebdoProblemToLpsTranslator(
-  std::shared_ptr<OptPeriodStringGenerator> periodStringGenerator,
-  unsigned int optimizationNumber) noexcept :
- periodStringGenerator_(periodStringGenerator)
-, optimizationNumber_(optimizationNumber)
-{
-}
-
 template<class T, class U>
 void copy(const T& in, U& out)
 {
@@ -41,7 +33,8 @@ void copy(const T& in, U& out)
 }
 
 HebdoDataFromAntaresPtr HebdoProblemToLpsTranslator::translate(
-  const PROBLEME_ANTARES_A_RESOUDRE* problem) const
+  const PROBLEME_ANTARES_A_RESOUDRE* problem,
+  std::string name) const
 {
     if (problem == nullptr)
         return {};
@@ -55,8 +48,7 @@ HebdoDataFromAntaresPtr HebdoProblemToLpsTranslator::translate(
     copy(problem->SecondMembre, ret->SecondMembre);
     copy(problem->Sens, ret->Sens);
 
-    std::string problemName = createMPSfilename(*periodStringGenerator_, optimizationNumber_);
-    copy(problemName, ret->name);
+    copy(name, ret->name);
 
     return ret;
 }

@@ -32,15 +32,9 @@ namespace Antares::Solver
 class HebdoProblemToLpsTranslator
 {
 public:
-    explicit HebdoProblemToLpsTranslator(
-      std::shared_ptr<OptPeriodStringGenerator> periodStringGenerator,
-      unsigned int optimizationNumber = 1) noexcept;
-    [[nodiscard]] HebdoDataFromAntaresPtr translate(const PROBLEME_ANTARES_A_RESOUDRE* problem) const;
+    [[nodiscard]] HebdoDataFromAntaresPtr translate(const PROBLEME_ANTARES_A_RESOUDRE* problem,
+                                                    std::string name) const;
     [[nodiscard]] ConstantDataFromAntaresPtr commonProblemData(const PROBLEME_ANTARES_A_RESOUDRE* problem) const;
-
-private:
-    std::shared_ptr<OptPeriodStringGenerator> periodStringGenerator_;
-    unsigned int optimizationNumber_ = 1;
 };
 
 } // namespace Antares::Solver
