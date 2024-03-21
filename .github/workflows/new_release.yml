@@ -32,7 +32,7 @@ jobs:
               title: ${{ github.event.inputs.release_name }}
               tests: ${{ github.event.inputs.run-tests }}
               target_branch: ${{ github.event.inputs.target_branch }}
-              latest: ${{ github.event.inputs.target_branch }}
+              latest: ${{ github.event.inputs.set_latest }}
             run: |
               gh release create "$tag" \
                   --repo="$GITHUB_REPOSITORY" \
