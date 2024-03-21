@@ -5,6 +5,7 @@ target_sources(${EXECUTABLE_NAME}
     PRIVATE
     test_api.cpp
     ${CMAKE_SOURCE_DIR}/api/API.cpp
+    ${CMAKE_SOURCE_DIR}/api/SimulationObserver.cpp
 )
 
 target_link_libraries(${EXECUTABLE_NAME}

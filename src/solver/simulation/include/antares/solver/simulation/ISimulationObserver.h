@@ -22,17 +22,26 @@
 
 #pragma once
 
+#include "sim_structure_probleme_economique.h"
+
 namespace Antares::Solver::Simulation
 {
 class ISimulationObserver
 {
 public:
     virtual ~ISimulationObserver() = default;
+    virtual void notifyHebdoProblem(const PROBLEME_HEBDO* problemeHebdo,
+                                    int optimizationNumber,
+                                    std::string name)
+      = 0;
 };
 
 class NullSimulationObserver : public ISimulationObserver
 {
 public:
-    virtual ~NullSimulationObserver() = default;
+    ~NullSimulationObserver() override = default;
+    void notifyHebdoProblem(const PROBLEME_HEBDO*, int, std::string name) override
+    {
+    }
 };
 } // namespace Antares::Solver::Simulation
