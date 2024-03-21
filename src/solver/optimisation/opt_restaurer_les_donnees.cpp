@@ -78,7 +78,7 @@ void OPT_RestaurerLesDonnees(PROBLEME_HEBDO* problemeHebdo)
             }
 
             // The generating power allowance cannot exceed the maximum available generating power
-            hourlyPmax = std::max(PmaxHydEcretee, hourlyPmax);
+            hourlyPmax = std::min(PmaxHydEcretee, hourlyPmax);
         }
     }
 
