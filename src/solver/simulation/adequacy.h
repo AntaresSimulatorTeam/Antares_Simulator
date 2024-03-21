@@ -83,7 +83,8 @@ protected:
               std::list<uint>& failedWeekList,
               bool isFirstPerformedYearOfSimulation,
               const HYDRO_VENTILATION_RESULTS&,
-              OptimizationStatisticsWriter& optWriter);
+              OptimizationStatisticsWriter& optWriter,
+              const Antares::Data::Area::ScratchMap& scratchmap);
 
     void incrementProgression(Progression::Task& progression);
 
@@ -92,7 +93,7 @@ protected:
     /*!
     ** \brief Prepare clusters in 'must-run' mode
     */
-    void prepareClustersInMustRunMode(uint numSpace, uint year);
+    void prepareClustersInMustRunMode(Data::Area::ScratchMap& scratchmap, uint year);
 
     void initializeState(Variable::State& state, uint numSpace);
 

@@ -101,12 +101,12 @@ inline void BindingConstraints<NextT>::provideInformations(I& infos)
 template<class NextT>
 void BindingConstraints<NextT>::initializeFromStudy(Data::Study& study)
 {
-    const std::vector<uint> InequalityBCindices
-      = study.bindingConstraints.getIndicesForInequalityBindingConstraints();
+    const std::vector<std::shared_ptr<Data::BindingConstraint>> inequalityByPtr
+        = study.bindingConstraints.getPtrForInequalityBindingConstraints();
 
     // The total number of inequality binding constraints count
     // (we don't count BCs with equality sign)
-    pBCcount = (uint)InequalityBCindices.size();
+    pBCcount = (uint)inequalityByPtr.size();
 
     // Reserving the memory
     if (pBCcount > 0)
@@ -118,14 +118,14 @@ void BindingConstraints<NextT>::initializeFromStudy(Data::Study& study)
     {
         NextType& bc = pBindConstraints[i];
 
-        bc.setBindConstraintGlobalIndex(InequalityBCindices[i]);
+        bc.setAssociatedBindConstraint(inequalityByPtr[i]);
         bc.initializeFromStudy(study);
 
         // Does user want to print output results related to the current binding constraint ?
         bc.getPrintStatusFromStudy(study);
     }
 
-    // Here we supply the max number of columns to the variable print info collector 
+    // Here we supply the max number of columns to the variable print info collector
     // This is a ugly hack (it's a work around).
     // We should have a simple call to :
     //      NextType::supplyMaxNumberOfColumns(study);

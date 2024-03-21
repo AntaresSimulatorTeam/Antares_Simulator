@@ -150,9 +150,9 @@ public:
 
     static std::vector<std::shared_ptr<BindingConstraint>> LoadBindingConstraint(EnvForLoading env);
 
-    [[nodiscard]] std::vector<std::shared_ptr<BindingConstraint>> activeContraints() const;
+    [[nodiscard]] std::vector<std::shared_ptr<BindingConstraint>> activeConstraints() const;
 
-    [[nodiscard]] std::vector<uint> getIndicesForInequalityBindingConstraints() const;
+    [[nodiscard]] Vector getPtrForInequalityBindingConstraints() const;
 
 
 private:
@@ -161,7 +161,7 @@ private:
     //! All constraints
     Data::BindingConstraintsRepository::Vector constraints_;
 
-    mutable std::optional<std::vector<std::shared_ptr<BindingConstraint>>> activeConstraints_;
+    mutable std::vector<std::shared_ptr<BindingConstraint>> activeConstraints_;
 };
 
 struct WhoseNameContains final

@@ -24,40 +24,26 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
+#pragma once
 
-#include "object.h"
+#include <string>
+#include <typeinfo>
 
-using namespace Yuni;
-
-namespace Antares
+namespace stdcxx
 {
-IObject::IObject() : pOID(Ref::fGenerate) // will generate a new uuid
+
+std::string simpleClassName(const char* className);
+
+template<typename T>
+std::string simpleClassName()
 {
-    assert(!pOID.null()
-           and "An object ID must not be NULL ({000000000-0000-0000-0000-0000000000000})");
+    return simpleClassName(typeid(T).name());
 }
 
-IObject::IObject(const Ref& uid) : pOID(uid)
+template<typename T>
+std::string simpleClassName(const T& type)
 {
-    assert(!pOID.null()
-           and "An object ID must not be NULL ({000000000-0000-0000-0000-0000000000000})");
+    return simpleClassName(typeid(type).name());
 }
 
-IObject::~IObject()
-{
-    // It would be safer to lock/unlock the inner mutex to prevent
-    // some rare (and nearly impossible) case where the object is destroyed
-    // whereas another thread is calling one of our methods.
-    // The smart pointer should get rid of this issue.
-    // And anyway, it is pointless here the vtable has been already wiped out
-    //
-    // ThreadingPolicy::MutexLocker locker(*this);
-}
-
-void IObject::caption(const AnyString& text)
-{
-    ThreadingPolicy::MutexLocker locker(*this);
-    pCaption = text;
-}
-
-} // namespace Antares
+} // namespace stdcxx

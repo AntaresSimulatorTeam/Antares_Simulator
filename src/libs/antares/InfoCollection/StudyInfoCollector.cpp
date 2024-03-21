@@ -59,13 +59,8 @@ void StudyInfoCollector::enabledThermalClustersCountToFileContent(FileContent& f
     for (auto i = study_.areas.begin(); i != end; ++i)
     {
         Area& area = *(i->second);
-        auto end = area.thermal.list.end();
-        for (auto i = area.thermal.list.begin(); i != end; ++i)
-        {
-            auto& cluster = i->second;
-            if (cluster->enabled)
-                nbEnabledThermalClusters++;
-        }
+        nbEnabledThermalClusters +=
+            std::ranges::count_if(area.thermal.list, [](const auto& c) { return c->enabled; });
     }
 
     // Adding an item related to number of enabled thermal clusters to the file content
@@ -74,15 +69,15 @@ void StudyInfoCollector::enabledThermalClustersCountToFileContent(FileContent& f
 
 void StudyInfoCollector::enabledBindingConstraintsCountToFileContent(FileContent& file_content)
 {
-    auto activeContraints = study_.bindingConstraints.activeContraints();
-    auto nbEnabledBC = activeContraints.size();
+    auto activeConstraints = study_.bindingConstraints.activeConstraints();
+    auto nbEnabledBC = activeConstraints.size();
     unsigned nbEnabledHourlyBC(0);
     unsigned nbEnabledDailyBC(0);
     unsigned nbEnabledWeeklyBC(0);
 
-    for (uint i = 0; i < nbEnabledBC; i++)
+    for (const auto& bc : activeConstraints)
     {
-        switch (activeContraints[i]->type())
+        switch (bc->type())
         {
             case BindingConstraint::Type::typeHourly:
                 nbEnabledHourlyBC++;

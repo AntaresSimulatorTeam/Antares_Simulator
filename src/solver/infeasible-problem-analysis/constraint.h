@@ -14,6 +14,7 @@ enum class ConstraintType
     binding_constraint_weekly,
     fictitious_load,
     hydro_reservoir_level,
+    short_term_storage_level,
     none
 };
 
@@ -39,6 +40,7 @@ private:
 
     // Get specific items
     std::string getAreaName() const;
+    std::string getSTSName() const;
     std::string getTimeStepInYear() const;
     std::string getBindingConstraintName() const;
 };

@@ -224,16 +224,13 @@ struct DebugData
 inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::State& state,
                                                             Data::Area& area,
                                                             uint y,
-                                                            uint numSpace)
+                                                            Antares::Data::Area::ScratchMap& scratchmap)
 {
-    uint z = area.index;
-    assert(z < areas_.size());
-
     auto const srcinflows = area.hydro.series->storage.getColumn(y);
 
-    auto& data = tmpDataByArea_[z];
+    auto& data = tmpDataByArea_[&area];
 
-    auto& scratchpad = area.scratchpad[numSpace];
+    auto& scratchpad = scratchmap.at(&area);
 
     int initReservoirLvlMonth = area.hydro.initializeReservoirLevelDate;
 
@@ -250,7 +247,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
     auto const& maxP = maxPower[Data::PartHydro::genMaxP];
     auto const& maxE = maxPower[Data::PartHydro::genMaxE];
 
-    auto& ventilationResults = ventilationResults_[z];
+    auto& ventilationResults = ventilationResults_[area.index];
 
     std::shared_ptr<DebugData> debugData(nullptr);
 
@@ -535,7 +532,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
         }
 
         uint firstDaySimu = parameters_.simulationDays.first;
-        state.problemeHebdo->previousSimulationFinalLevel[z]
+        state.problemeHebdo->previousSimulationFinalLevel[area.index]
           = ventilationResults.NiveauxReservoirsDebutJours[firstDaySimu] * reservoirCapacity;
 
         if (debugData)
@@ -547,11 +544,11 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
 
 void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::State& state,
                                                      uint y,
-                                                     uint numSpace)
+                                                     Antares::Data::Area::ScratchMap& scratchmap)
 {
     areas_.each(
       [&](Data::Area& area) {
-          prepareDailyOptimalGenerations(state, area, y, numSpace);
+          prepareDailyOptimalGenerations(state, area, y, scratchmap);
           });
 }
 

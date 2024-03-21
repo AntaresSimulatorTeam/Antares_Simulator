@@ -36,6 +36,7 @@
 #include "constants.h"
 #include "antares/study/parts/parts.h"
 #include "antares/study/parts/load/prepro.h"
+#include <antares/study/area/scratchpad.h>
 
 #define SEP IO::Separator
 
@@ -1463,7 +1464,6 @@ void AreaList::fixOrientationForAllInterconnections(BindingConstraintsRepository
                 // Reference to the link
                 auto& link = *(i->second);
                 // Asserts
-                assert(&link);
                 assert(link.from);
                 assert(link.with);
 
@@ -1535,8 +1535,8 @@ ThermalCluster* AreaList::findClusterFromINIKey(const AnyString& key)
     Area* parentArea = findFromName(parentName);
     if (parentArea == nullptr)
         return nullptr;
-    ThermalCluster* i = parentArea->thermal.list.find(id);
-    return (i != nullptr) ? i : nullptr;
+    return parentArea->thermal.list.find(id);
+
 }
 
 void AreaList::updateNameIDSet() const
@@ -1578,6 +1578,14 @@ void AreaList::removeThermalTimeseries()
         area.thermal.list.each(
           [](Data::ThermalCluster& cluster) { cluster.series.reset(); });
     });
+}
+
+Area::ScratchMap AreaList::buildScratchMap(uint numspace)
+{
+    Area::ScratchMap scratchmap;
+    each([&scratchmap, &numspace](Area& a) {
+            scratchmap.try_emplace(&a, a.scratchpad[numspace]); });
+    return scratchmap;
 }
 
 } // namespace Antares::Data

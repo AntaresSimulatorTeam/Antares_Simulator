@@ -38,8 +38,6 @@ using namespace Yuni;
 
 namespace Antares
 {
-namespace Solver
-{
 namespace TSGenerator
 {
 namespace XCast
@@ -556,5 +554,4 @@ bool XCast::generateValuesForTheCurrentDay()
 
 } // namespace XCast
 } // namespace TSGenerator
-} // namespace Solver
 } // namespace Antares

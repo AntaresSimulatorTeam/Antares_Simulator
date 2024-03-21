@@ -573,13 +573,17 @@ void MarkTheStudyAsModified(const Data::Study::Ptr& study)
     if (!(!study) and study == GetCurrentStudy())
         MarkTheStudyAsModified();
 }
-
 void MarkTheStudyAsModified()
 {
     auto study = GetCurrentStudy();
     if (!(!study))
     {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpragmas"
+#pragma GCC diagnostic ignored "-Wvolatile"
         ++gInMemoryRevisionIncrement;
+#pragma GCC diagnostic pop
+#pragma GCC diagnostic pop
         if (!gStudyHasBeenModified)
         {
             gStudyHasBeenModified = true;

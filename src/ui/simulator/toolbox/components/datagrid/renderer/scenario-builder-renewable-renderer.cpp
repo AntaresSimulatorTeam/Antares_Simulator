@@ -54,7 +54,7 @@ wxString renewableScBuilderRenderer::rowCaption(int rowIndx) const
         && (uint)rowIndx < selectedArea()->renewable.list.size())
     {
         return wxString() << wxT(
-                 " ") << wxStringFromUTF8(selectedArea()->renewable.list.byIndex[rowIndx]->name())
+                 " ") << wxStringFromUTF8(selectedArea()->renewable.list[rowIndx]->name())
                           << wxT("  ");
     }
     return wxEmptyString;
@@ -70,7 +70,7 @@ bool renewableScBuilderRenderer::cellValue(int x, int y, const String& value)
         assert((uint)x < pRules->renewable[selectedArea()->index].height());
         uint val = fromStringToTSnumber(value);
         pRules->renewable[selectedArea()->index].setTSnumber(
-          selectedArea()->renewable.list.byIndex[y], x, val);
+          selectedArea()->renewable.list[y].get(), x, val);
         return true;
     }
     return false;

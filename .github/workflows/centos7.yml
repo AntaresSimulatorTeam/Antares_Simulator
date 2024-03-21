@@ -9,10 +9,15 @@ on:
       - develop
   schedule:
     - cron: '21 2 * * *'
+  workflow_call:
+    inputs:
+      run-tests:
+        required: true
+        type: boolean
 
 env:
   GITHUB_TOKEN: ${{ github.token }}
-  IS_RELEASE: ${{ github.event_name == 'release' && github.event.action == 'created' }}
+  IS_RELEASE: ${{ github.event_name == 'workflow_dispatch' }}
   IS_PUSH: ${{ github.event_name == 'push' }}
 
 jobs:
@@ -45,7 +50,7 @@ jobs:
 
     - name: Config OR-Tools URL
       run: |
-           echo "URL_ORTOOLS=https://github.com/rte-france/or-tools/releases/download/xprschobj-oneshot/ortools_cxx_centos7_static_sirius.zip" >> $GITHUB_ENV
+           echo "URL_ORTOOLS=https://github.com/rte-france/or-tools/releases/download/$(cat ortools_tag)/ortools_cxx_centos7_static_sirius.zip" >> $GITHUB_ENV
 
     - name: Download OR-Tools
       id: ortools
@@ -60,6 +65,14 @@ jobs:
         yum install -y centos-release-scl
         yum install -y devtoolset-10-gcc*
 
+    - name: Install gh if needed
+      if: ${{ env.IS_RELEASE == 'true' }}
+      run: |
+           yum -y install dnf
+           dnf -y install 'dnf-command(config-manager)'
+           dnf -y config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
+           dnf -y install gh
+
     - name: Configure
       run: |
            source /opt/rh/devtoolset-10/enable
@@ -67,7 +80,7 @@ jobs:
            -DCMAKE_C_COMPILER_LAUNCHER=ccache \
            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
            -DDEPS_INSTALL_DIR=/rte-antares-deps-Release \
-           -DCMAKE_BUILD_TYPE=release \
+           -DCMAKE_BUILD_TYPE=Release \
            -DBUILD_TESTING=ON \
            -DBUILD_not_system=OFF \
            -DBUILD_TOOLS=OFF \
@@ -111,21 +124,12 @@ jobs:
       with:
         path: _build/*.rpm
 
-  publish_assets:
-    name: Publish assets
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Download all artifacts
-      if: ${{ env.IS_RELEASE == 'true' }}
-      uses: actions/download-artifact@v3
-
-
     - name: Publish assets
       if: ${{ env.IS_RELEASE == 'true' }}
-      uses: alexellis/upload-assets@0.4.0
       env:
-          GITHUB_TOKEN: ${{ github.token }}
-      with:
-          asset_paths: '["*/*.tar.gz", "*/*.rpm"]'
+        GITHUB_TOKEN: ${{ github.token }}
+        tag: ${{ github.event.inputs.release_tag }}
+      run: |
+        gh release upload "$tag" _build/*.tar.gz _build/*.rpm
+
+  

@@ -31,7 +31,7 @@
 #include <antares/study/xcast/xcast.h>
 #include <antares/correlation/antares/correlation/correlation.h> //TODO collision
 
-namespace Antares::Solver::TSGenerator::XCast
+namespace Antares::TSGenerator::XCast
 {
 class StudyData final
 {
@@ -100,7 +100,7 @@ private:
 
 }; // class StudyData
 
-} // namespace Antares::Solver::TSGenerator::XCast
+} // namespace Antares::TSGenerator::XCast
 
 
 

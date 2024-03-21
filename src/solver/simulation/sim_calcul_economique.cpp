@@ -77,7 +77,7 @@ static void importShortTermStorages(
 void SIM_InitialisationProblemeHebdo(Data::Study& study,
                                      PROBLEME_HEBDO& problem,
                                      int NombreDePasDeTemps,
-                                     uint numSpace)
+                                     uint numspace)
 {
     int NombrePaliers;
 
@@ -111,8 +111,8 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
 
     problem.NumberOfShortTermStorages = study.runtime->shortTermStorageCount;
 
-    auto activeContraints = study.bindingConstraints.activeContraints();
-    problem.NombreDeContraintesCouplantes = activeContraints.size();
+    auto activeConstraints = study.bindingConstraints.activeConstraints();
+    problem.NombreDeContraintesCouplantes = activeConstraints.size();
 
     problem.ExportMPS = study.parameters.include.exportMPS;
     problem.ExportStructure = study.parameters.include.exportStructure;
@@ -147,9 +147,12 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         break;
     }
 
+    Antares::Data::Area::ScratchMap scratchmap = study.areas.buildScratchMap(numspace);
+
     for (uint i = 0; i != study.areas.size(); i++)
     {
-        auto& area = *(study.areas[i]);
+        const auto& area = *(study.areas[i]);
+        const auto& scratchpad = scratchmap.at(&area);
 
         problem.NomsDesPays[i] = area.id.c_str();
 
@@ -167,10 +170,10 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
           = (anoNonDispatchPower & area.nodalOptimization) != 0;
 
         problem.CaracteristiquesHydrauliques[i].PresenceDHydrauliqueModulable
-          = area.scratchpad[numSpace].hydroHasMod;
+          = scratchpad.hydroHasMod;
 
         problem.CaracteristiquesHydrauliques[i].PresenceDePompageModulable
-          = area.hydro.reservoirManagement && area.scratchpad[numSpace].pumpHasMod
+          = area.hydro.reservoirManagement && scratchpad.pumpHasMod
               && area.hydro.pumpingEfficiency > 0.
               && problem.CaracteristiquesHydrauliques[i].PresenceDHydrauliqueModulable;
 
@@ -230,10 +233,11 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         problem.PaysExtremiteDeLInterconnexion[i] = link.with->index;
     }
 
-    for (uint i = 0; i < activeContraints.size(); ++i)
+    for (unsigned constraintIndex = 0; constraintIndex < activeConstraints.size(); constraintIndex++)
     {
-        auto bc = activeContraints[i];
-        CONTRAINTES_COUPLANTES& PtMat = problem.MatriceDesContraintesCouplantes[i];
+        auto bc = activeConstraints[constraintIndex];
+        CONTRAINTES_COUPLANTES& PtMat = problem.MatriceDesContraintesCouplantes[constraintIndex];
+        PtMat.bindingConstraint = bc;
         PtMat.NombreDInterconnexionsDansLaContrainteCouplante = bc->linkCount();
         PtMat.NombreDePaliersDispatchDansLaContrainteCouplante = bc->clusterCount();
         PtMat.NombreDElementsDansLaContrainteCouplante = bc->linkCount() + bc->clusterCount();
@@ -285,7 +289,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
 
         for (uint clusterIndex = 0; clusterIndex != area.thermal.list.size(); ++clusterIndex)
         {
-            auto& cluster = *(area.thermal.list.byIndex[clusterIndex]);
+            auto& cluster = *(area.thermal.list[clusterIndex]);
             pbPalier.NumeroDuPalierDansLEnsembleDesPaliersThermiques[clusterIndex]
               = NombrePaliers + clusterIndex;
             pbPalier.TailleUnitaireDUnGroupeDuPalierThermique[clusterIndex]
@@ -319,16 +323,19 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     problem.LeProblemeADejaEteInstancie = false;
 }
 
-void preparerBindingConstraint(const PROBLEME_HEBDO &problem, int PasDeTempsDebut,
-                               const BindingConstraintsRepository &bindingConstraints,
-                               const BindingConstraintGroupRepository &bcgroups,
-                               const uint weekFirstDay, int pasDeTemps)
+static void prepareBindingConstraint(PROBLEME_HEBDO &problem,
+                                     int PasDeTempsDebut,
+                                     const BindingConstraintsRepository &bindingConstraints,
+                                     const BindingConstraintGroupRepository &bcgroups,
+                                     const uint weekFirstDay,
+                                     int pasDeTemps)
 {
-    auto activeContraints = bindingConstraints.activeContraints();
-    const auto constraintCount = activeContraints.size();
+    auto activeConstraints = bindingConstraints.activeConstraints();
+    const auto constraintCount = activeConstraints.size();
+
     for (unsigned constraintIndex = 0; constraintIndex != constraintCount; ++constraintIndex)
     {
-        auto bc = activeContraints[constraintIndex];
+        auto bc = activeConstraints[constraintIndex];
         assert(bc->RHSTimeSeries().width && "Invalid constraint data width");
 
         uint tsIndexForBc = 0;
@@ -393,9 +400,10 @@ void preparerBindingConstraint(const PROBLEME_HEBDO &problem, int PasDeTempsDebu
 void SIM_RenseignementProblemeHebdo(const Study& study,
                                     PROBLEME_HEBDO& problem,
                                     uint weekInTheYear,
-                                    uint numSpace,
                                     const int PasDeTempsDebut,
-                                    const HYDRO_VENTILATION_RESULTS& hydroVentilationResults)
+                                    const HYDRO_VENTILATION_RESULTS& hydroVentilationResults,
+                                    const Antares::Data::Area::ScratchMap& scratchmap)
+
 {
     const auto& parameters = study.parameters;
     auto& studyruntime = *study.runtime;
@@ -573,7 +581,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
     for (unsigned hourInWeek = 0; hourInWeek < problem.NombreDePasDeTemps; ++hourInWeek, ++hourInYear)
     {
 
-        preparerBindingConstraint(problem, PasDeTempsDebut,
+        prepareBindingConstraint(problem, PasDeTempsDebut,
                 study.bindingConstraints, study.bindingConstraintsGroups,
                 weekFirstDay, hourInWeek);
 
@@ -581,14 +589,12 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
 
         for (uint k = 0; k < nbPays; ++k)
         {
-            auto& area = *(study.areas.byIndex[k]);
-            auto& scratchpad = area.scratchpad[numSpace];
+            const auto& area = *(study.areas.byIndex[k]);
+            const auto& scratchpad = scratchmap.at(&area);
             double loadSeries = area.load.series.getCoefficient(year, hourInYear);
             double windSeries = area.wind.series.getCoefficient(year, hourInYear);
             double solarSeries = area.solar.series.getCoefficient(year, hourInYear);
             double rorSeries = area.hydro.series->ror.getCoefficient(year, hourInYear);
-
-            assert(&scratchpad);
 
             double& mustRunGen = problem.AllMustRunGeneration[hourInWeek].AllMustRunGenerationOfArea[k];
             if (parameters.renewableGeneration.isAggregated())

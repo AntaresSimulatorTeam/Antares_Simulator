@@ -24,7 +24,7 @@ public:
     /*!
     ** \brief Destructor
     */
-    ~Application() final;
+    ~Application() override;
     //@}
 
     Application(const Application&) = delete;
@@ -51,9 +51,6 @@ public:
     void resetProcessPriority() const;
 
     void writeExectutionInfo();
-
-    void installSignalHandlers() const;
-
 private:
     /*!
     ** \brief Reset the log filename and open it
@@ -68,7 +65,7 @@ private:
     void runSimulationInAdequacyMode();
     void runSimulationInEconomicMode();
 
-    void initializeRandomNumberGenerators();
+    void initializeRandomNumberGenerators() const;
 
     void onLogMessage(int level, const YString& message);
 
@@ -85,8 +82,8 @@ private:
     //! The total muber of warnings which have been generated
     uint pWarningCount = 0;
 
-    int pArgc;
-    char** pArgv;
+    int pArgc = 0;
+    char** pArgv = nullptr;
 
     // Benchmarking
     Benchmarking::Timer pTotalTimer;
@@ -96,9 +93,10 @@ private:
     std::shared_ptr<Yuni::Job::QueueService> ioQueueService;
     IResultWriter::Ptr resultWriter = nullptr;
 
-    void prepareWriter(Antares::Data::Study& study,
+    void prepareWriter(const Antares::Data::Study& study,
                        Benchmarking::IDurationCollector& duration_collector);
 
+    void writeComment(Data::Study& study);
 }; // class Application
 } // namespace Antares::Solver
 

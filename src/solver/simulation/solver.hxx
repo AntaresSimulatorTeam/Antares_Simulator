@@ -86,6 +86,7 @@ public:
                     resultWriter)
     {
         hydroHotStart = (study.parameters.initialReservoirLevels.iniLevels == Data::irlHotStart);
+        scratchmap = study.areas.buildScratchMap(numSpace);
     }
 
     yearJob(const yearJob&) = delete;
@@ -108,6 +109,7 @@ private:
     Benchmarking::IDurationCollector& pDurationCollector;
     IResultWriter& pResultWriter;
     HydroManagement hydroManagement;
+    Antares::Data::Area::ScratchMap scratchmap;
 private:
     /*
     ** \brief Log failed week
@@ -168,11 +170,11 @@ public:
             // removed
 
             // 3 - Preparing data related to Clusters in 'must-run' mode
-            simulation_->prepareClustersInMustRunMode(numSpace, y);
+            simulation_->prepareClustersInMustRunMode(scratchmap, y);
 
             // 4 - Hydraulic ventilation
             Benchmarking::Timer timer;
-            hydroManagement.makeVentilation(randomReservoirLevel, state[numSpace], y, numSpace);
+            hydroManagement.makeVentilation(randomReservoirLevel, state[numSpace], y, scratchmap);
             timer.stop();
             pDurationCollector.addDuration("hydro_ventilation", timer.get_duration());
 
@@ -195,7 +197,8 @@ public:
                                                failedWeekList,
                                                isFirstPerformedYearOfSimulation,
                                                hydroManagement.ventilationResults(),
-                                               optWriter);
+                                               optWriter,
+                                               scratchmap);
 
             // Log failing weeks
             logFailedWeek(y, study, failedWeekList);
@@ -312,6 +315,8 @@ void ISimulation<Impl>::run()
 
     ImplementationType::setNbPerformedYearsInParallel(pNbMaxPerformedYearsInParallel);
 
+    TSGenerator::ResizeGeneratedTimeSeries(study.areas, study.parameters);
+
     if (settings.tsGeneratorsOnly)
     {
         // Only the preprocessors can be used
@@ -323,7 +328,7 @@ void ISimulation<Impl>::run()
 
         // Destroy the TS Generators if any
         // It will export the time-series into the output in the same time
-        Solver::TSGenerator::DestroyAll(study);
+        TSGenerator::DestroyAll(study);
     }
     else
     {
@@ -370,7 +375,7 @@ void ISimulation<Impl>::run()
         }
         // Destroy the TS Generators if any
         // It will export the time-series into the output in the same time
-        Solver::TSGenerator::DestroyAll(study);
+        TSGenerator::DestroyAll(study);
 
         // Post operations
         {
@@ -449,7 +454,7 @@ void ISimulation<Impl>::regenerateTimeSeries(uint year)
     // * The option "Preprocessor" is checked in the interface _and_ year == 0
     // * Both options "Preprocessor" and "Refresh" are checked in the interface
     //   _and_ the refresh must be done for the given year (always done for the first year).
-    using namespace Solver::TSGenerator;
+    using namespace TSGenerator;
     // Load
     if (pData.haveToRefreshTSLoad && (year % pData.refreshIntervalLoad == 0))
     {

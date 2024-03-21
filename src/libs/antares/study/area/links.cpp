@@ -32,6 +32,7 @@
 #include "links.h"
 #include "area.h"
 #include <antares/logs/logs.h>
+#include <antares/exception/LoadingError.hpp>
 
 using namespace Yuni;
 using namespace Antares;
@@ -101,7 +102,7 @@ bool AreaLink::linkLoadTimeSeries_for_version_below_810(const AnyString& folder)
     }
 
     // Store data into link's data container
-    for (int h = 0; h < HOURS_PER_YEAR; h++)
+    for (unsigned int h = 0; h < HOURS_PER_YEAR; h++)
     {
         directCapacities[0][h] = tmpMatrix[0][h];
         indirectCapacities[0][h] = tmpMatrix[1][h];
@@ -414,22 +415,21 @@ bool AreaLinksInternalLoadFromProperty(AreaLink& link, const String& key, const 
     return false;
 }
 
-void logLinkDataCheckError(bool& gotFatalError, const AreaLink& link, const String& msg, int hour)
+void logLinkDataCheckError(const AreaLink& link, const String& msg, int hour)
 {
     logs.error() << "Link (" << link.from->name << "/" << link.with->name << "): Invalid values ("
                  << msg << ") for hour " << hour;
-    gotFatalError = true;
+    throw Antares::Error::ReadingStudy();
 }
 
-void logLinkDataCheckErrorDirectIndirect(bool& gotFatalError,
-                                         const AreaLink& link,
+void logLinkDataCheckErrorDirectIndirect(const AreaLink& link,
                                          uint direct,
                                          uint indirect)
 {
     logs.error() << "Link (" << link.from->name << "/" << link.with->name << "): Found " << direct
                  << " direct TS "
                  << " and " << indirect << " indirect TS, expected the same number";
-    gotFatalError = true;
+    throw Antares::Error::ReadingStudy();
 }
 } // anonymous namespace
 
@@ -486,8 +486,7 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
             const uint nbIndirectTS = link.indirectCapacities.timeSeries.width;
             if (nbDirectTS != nbIndirectTS)
             {
-                logLinkDataCheckErrorDirectIndirect(
-                  study.gotFatalError, link, nbDirectTS, nbIndirectTS);
+                logLinkDataCheckErrorDirectIndirect(link, nbDirectTS, nbIndirectTS);
                 return false;
             }
 
@@ -503,45 +502,41 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
                 const double* indirectCapacities = link.indirectCapacities[indexTS];
 
                 // Checks on direct capacities
-                for (int h = 0; h < HOURS_PER_YEAR; h++)
+                for (unsigned int h = 0; h < HOURS_PER_YEAR; h++)
                 {
                     if (directCapacities[h] < 0.)
                     {
-                        logLinkDataCheckError(study.gotFatalError, link, "direct capacity < 0", h);
+                        logLinkDataCheckError(link, "direct capacity < 0", h);
                         return false;
                     }
                     if (directCapacities[h] < loopFlow[h])
                     {
-                        logLinkDataCheckError(
-                          study.gotFatalError, link, "direct capacity < loop flow", h);
+                        logLinkDataCheckError(link, "direct capacity < loop flow", h);
                         return false;
                     }
                 }
 
                 // Checks on indirect capacities
-                for (int h = 0; h < HOURS_PER_YEAR; h++)
+                for (unsigned int h = 0; h < HOURS_PER_YEAR; h++)
                 {
                     if (indirectCapacities[h] < 0.)
                     {
-                        logLinkDataCheckError(
-                          study.gotFatalError, link, "indirect capacitity < 0", h);
+                        logLinkDataCheckError(link, "indirect capacitity < 0", h);
                         return false;
                     }
                     if (indirectCapacities[h] + loopFlow[h] < 0)
                     {
-                        logLinkDataCheckError(
-                          study.gotFatalError, link, "indirect capacity + loop flow < 0", h);
+                        logLinkDataCheckError(link, "indirect capacity + loop flow < 0", h);
                         return false;
                     }
                 }
             }
             // Checks on hurdle costs
-            for (int h = 0; h < HOURS_PER_YEAR; h++)
+            for (unsigned int h = 0; h < HOURS_PER_YEAR; h++)
             {
                 if (directHurdlesCost[h] + indirectHurdlesCost[h] < 0)
                 {
-                    logLinkDataCheckError(study.gotFatalError,
-                                          link,
+                    logLinkDataCheckError(link,
                                           "hurdle costs direct + hurdle cost indirect < 0",
                                           h);
                     return false;
@@ -549,12 +544,11 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
             }
 
             // Checks on P. shift min and max
-            for (int h = 0; h < HOURS_PER_YEAR; h++)
+            for (unsigned int h = 0; h < HOURS_PER_YEAR; h++)
             {
                 if (PShiftPlus[h] < PShiftMinus[h])
                 {
-                    logLinkDataCheckError(
-                      study.gotFatalError, link, "phase shift plus < phase shift minus", h);
+                    logLinkDataCheckError(link, "phase shift plus < phase shift minus", h);
                     return false;
                 }
             }

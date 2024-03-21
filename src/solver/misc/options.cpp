@@ -38,7 +38,6 @@
 #include <algorithm>
 
 #include "antares/solver/misc/options.h"
-#include "../config.h"
 
 #include "../../config.h"
 
@@ -53,22 +52,8 @@ using namespace Yuni;
 using namespace Antares;
 using namespace Antares::Data;
 
-static std::string availableOrToolsSolversString()
-{
-    const std::list<std::string> availableSolverList = getAvailableOrtoolsSolverName();
-    std::string availableSolverListStr;
-    for (auto it = availableSolverList.begin(); it != availableSolverList.end(); it++)
-    {
-        availableSolverListStr += *it + ";";
-    }
-    // Remove last semicolumn
-    if (!availableSolverListStr.empty())
-        availableSolverListStr.pop_back();
-    return availableSolverListStr;
-}
-
 std::unique_ptr<GetOpt::Parser> CreateParser(Settings& settings,
-                                             Antares::Data::StudyLoadOptions& options)
+                                             StudyLoadOptions& options)
 {
     settings.reset();
 
@@ -284,27 +269,19 @@ void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOption
 
 void checkOrtoolsSolver(Data::StudyLoadOptions& options)
 {
-    std::string baseSolver = "sirius";
-    if (options.optOptions.useOrtools)
+    if (options.ortoolsUsed)
     {
         std::string& solverName = options.optOptions.solverName;
         const std::list<std::string> availableSolverList = getAvailableOrtoolsSolverName();
-        if (availableSolverList.empty())
-        {
-            throw Error::InvalidSolver(solverName);
-        }
 
         // Check if solver is available
         bool found
           = (std::find(
                availableSolverList.begin(), availableSolverList.end(), solverName)
              != availableSolverList.end());
-
         if (!found)
         {
-            logs.warning() << "Invalid ortools-solver option. Got '" << solverName
-                           << "'. reset to " << baseSolver;
-            solverName = baseSolver;
+            throw Error::InvalidSolver(options.ortoolsSolver, availableOrToolsSolversString());
         }
     }
 }
