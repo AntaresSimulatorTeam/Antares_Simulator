@@ -1,42 +1,34 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
 #include <yuni/yuni.h>
 #include <antares/study/study.h>
 #include <antares/study/area/scratchpad.h>
-#include <antares/fatal-error.h>
-#include "management.h"
-#include "../../simulation/sim_extern_variables_globales.h"
-#include <yuni/core/math.h>
+#include <antares/antares/fatal-error.h>
+#include "antares/solver/hydro/management/management.h"
+#include "antares/solver/simulation/sim_extern_variables_globales.h"
 #include <limits>
 #include <antares/study/parts/hydro/container.h>
 #include <numeric>
-
-using namespace Yuni;
+#include <cmath>
 
 namespace Antares
 {
@@ -45,22 +37,24 @@ namespace Solver
 
 double randomReservoirLevel(double min, double avg, double max, MersenneTwister& random)
 {
-    if (Math::Equals(min, max))
+    auto equals = [] (double a, double b) { return std::abs(a - b) < 1.e-6; };
+
+    if (equals(min, max))
         return avg;
-    if (Math::Equals(avg, min) || Math::Equals(avg, max))
+    if (equals(avg, min) || equals(avg, max))
         return avg;
 
     double e = (avg - min) / (max - min);
     double re = 1. - e;
 
-    assert(Math::Abs(1. + e) > 1e-12);
-    assert(Math::Abs(2. - e) > 1e-12);
+    assert(std::abs(1. + e) > 1e-12);
+    assert(std::abs(2. - e) > 1e-12);
 
     double v1 = (e * e) * re / (1. + e);
     double v2 = e * re * re / (2. - e);
-    double v = Math::Min(v1, v2) * .5;
+    double v = std::min(v1, v2) * .5;
 
-    assert(Math::Abs(v) > 1e-12);
+    assert(std::abs(v) > 1e-12);
 
     double a = e * (e * re / v - 1.);
     double b = re * (e * re / v - 1.);
@@ -78,9 +72,9 @@ double GammaVariable(double r, MersenneTwister &random)
         double u = random();
         double v = random();
         double w = u * (1. - u);
-        assert(Math::Abs(w) > 1e-12);
+        assert(std::abs(w) > 1e-12);
         assert(3. * (r - 0.25) / w > 0.);
-        double y = Math::SquareRootNoCheck(3. * (r - 0.25) / w) * (u - 0.5);
+        double y = std::sqrt(3. * (r - 0.25) / w) * (u - 0.5);
 
         x = y + s;
         if (v < 1e-12)
@@ -90,7 +84,7 @@ double GammaVariable(double r, MersenneTwister &random)
         v *= w;
         double z = w * v * v;
 
-        assert(Math::Abs(s) > 1e-12);
+        assert(std::abs(s) > 1e-12);
         assert(z > 0.);
         assert(z / s > 0.);
         if (log(z) <= 2. * (s * log(x / s) - y))
@@ -103,7 +97,7 @@ double BetaVariable(double a, double b, MersenneTwister &random)
 {
     double y = GammaVariable(a, random);
     double z = GammaVariable(b, random);
-    assert(Math::Abs(y + z) > 1e-12);
+    assert(std::abs(y + z) > 1e-12);
     return y / (y + z);
 }
 
@@ -167,7 +161,7 @@ void HydroManagement::prepareInflowsScaling(uint year)
                   if (area.hydro.reservoirManagement)
                   {
                       data.inflows[realmonth] = totalMonthInflows / (area.hydro.reservoirCapacity);
-                      assert(!Math::NaN(data.inflows[month]) && "nan value detect in inflows");
+                      assert(!std::isnan(data.inflows[month]) && "nan value detect in inflows");
                   }
                   else
                   {
@@ -210,7 +204,7 @@ void HydroManagement::minGenerationScaling(uint year)
                   {
                       // Set monthly mingen, used later for h2o_m
                       data.mingens[realmonth] = totalMonthMingen / (area.hydro.reservoirCapacity);
-                      assert(!Math::NaN(data.mingens[month]) && "nan value detect in mingen");
+                      assert(!std::isnan(data.mingens[month]) && "nan value detect in mingen");
                   }
                   else
                   {
@@ -308,40 +302,38 @@ bool HydroManagement::checkWeeklyMinGeneration(uint year, const Data::Area& area
     return true;
 }
 
-bool HydroManagement::checkHourlyMinGeneration(uint year, const Data::Area& area) const
+bool HydroManagement::checkGenerationPowerConsistency(uint year) const
 {
-    // Hourly minimum generation <= hourly max generation for each hour
+    bool ret = true;
 
-    auto const& srcmingen = area.hydro.series->mingen.getColumn(year);
-    auto const& maxPower = area.hydro.maxPower;
-    auto const& maxP = maxPower[Data::PartHydro::genMaxP];
+    areas_.each(
+      [&ret, &year](const Data::Area& area)
+      {
 
-    for (uint month = 0; month != 12; ++month)
-    {
-        uint realmonth = calendar_.months[month].realmonth;
-        uint simulationMonth = calendar_.mapping.months[realmonth];
-        auto daysPerMonth = calendar_.months[simulationMonth].days;
-        uint firstDay = calendar_.months[simulationMonth].daysYear.first;
-        uint endDay = firstDay + daysPerMonth;
+          auto const& srcmingen = area.hydro.series->mingen.getColumn(year);
+          auto const& srcmaxgen = area.hydro.series->maxHourlyGenPower.getColumn(year);
 
-        for (uint day = firstDay; day != endDay; ++day)
-        {
-            for (uint h = 0; h < 24; ++h)
-            {
-                if (srcmingen[day * 24 + h] > maxP[day])
-                {
-                    logs.error()
-                        << "In area: " << area.name << " [hourly] minimum generation of "
-                        << srcmingen[day * 24 + h] << " MW in timestep " << day * 24 + h + 1
-                        << " of TS-" << area.hydro.series->mingen.getSeriesIndex(year) + 1
-                        << " is incompatible with the maximum generation of " << maxP[day]
-                        << " MW.";
-                    return false;
-                }
-            }
-        }
-    }
-    return true;
+          uint const tsIndexMin = area.hydro.series->mingen.getSeriesIndex(year);
+          uint const tsIndexMax = area.hydro.series->maxHourlyGenPower.getSeriesIndex(year);
+
+          for (uint h = 0; h < HOURS_PER_YEAR; ++h)
+          {
+              const auto& min = srcmingen[h];
+              const auto& max = srcmaxgen[h];
+
+              if (max < min)
+              {
+                  logs.error() << "In area: " << area.name << " [hourly] minimum generation of "
+                               << min << " MW in timestep " << h + 1 << " of TS-" << tsIndexMin + 1
+                               << " is incompatible with the maximum generation of " << max
+                               << " MW in timestep " << h + 1 << " of TS-" << tsIndexMax + 1 << " MW.";
+                  ret = false;
+                  return;
+              }
+          }
+      });
+
+    return ret;
 }
 
 bool HydroManagement::checkMinGeneration(uint year) const
@@ -352,8 +344,6 @@ bool HydroManagement::checkMinGeneration(uint year) const
         bool useHeuristicTarget = area.hydro.useHeuristicTarget;
         bool followLoadModulations = area.hydro.followLoadModulations;
         bool reservoirManagement = area.hydro.reservoirManagement;
-
-        ret = checkHourlyMinGeneration(year, area) && ret;
 
         if (!useHeuristicTarget)
             return;
@@ -410,13 +400,11 @@ void HydroManagement::prepareNetDemand(uint year, Data::SimulationMode mode,
                             - ((mode != Data::SimulationMode::Adequacy) ? scratchpad.mustrunSum[hour]
                                                              : scratchpad.originalMustrunSum[hour]);
 
-                area.renewable.list.each([&](const Antares::Data::RenewableCluster& cluster) {
-                    assert(cluster.series.timeSeries.jit == nullptr && "No JIT data from the solver");
-                    netdemand -= cluster.valueAtTimeStep(year, hour);
-                });
+                for (auto c : area.renewable.list.each_enabled())
+                    netdemand -= c->valueAtTimeStep(year, hour);
             }
 
-            assert(!Math::NaN(netdemand)
+            assert(!std::isnan(netdemand)
                    && "hydro management: NaN detected when calculating the net demande");
             data.DLN[dayYear] += netdemand;
         }
@@ -441,12 +429,12 @@ void HydroManagement::prepareEffectiveDemand()
                 effectiveDemand += tmpDataByArea_[area].DLN[day] * value;
             });
 
-            assert(!Math::NaN(effectiveDemand) && "nan value detected for effectiveDemand");
+            assert(!std::isnan(effectiveDemand) && "nan value detected for effectiveDemand");
             data.DLE[day] += effectiveDemand;
             data.MLE[realmonth] += effectiveDemand;
 
-            assert(not Math::NaN(data.DLE[day]) && "nan value detected for DLE");
-            assert(not Math::NaN(data.MLE[realmonth]) && "nan value detected for DLE");
+            assert(not std::isnan(data.DLE[day]) && "nan value detected for DLE");
+            assert(not std::isnan(data.MLE[realmonth]) && "nan value detected for DLE");
         }
 
         auto minimumYear = std::numeric_limits<double>::infinity();
@@ -485,6 +473,11 @@ void HydroManagement::prepareEffectiveDemand()
     });
 }
 
+bool HydroManagement::checksOnGenerationPowerBounds(uint year) const
+{
+    return (checkMinGeneration(year) && checkGenerationPowerConsistency(year)) ? true : false;
+}
+
 void HydroManagement::makeVentilation(double* randomReservoirLevel,
                                       Solver::Variable::State& state,
                                       uint y,
@@ -492,7 +485,7 @@ void HydroManagement::makeVentilation(double* randomReservoirLevel,
 {
     prepareInflowsScaling(y);
     minGenerationScaling(y);
-    if (!checkMinGeneration(y))
+    if (!checksOnGenerationPowerBounds(y))
     {
         throw FatalError("hydro management: invalid minimum generation");
     }

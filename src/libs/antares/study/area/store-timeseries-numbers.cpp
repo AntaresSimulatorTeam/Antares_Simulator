@@ -1,35 +1,29 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
 #include <antares/writer/i_writer.h>
 #include <antares/study/study.h>
 #include <antares/logs/logs.h>
 
-#include "store-timeseries-numbers.h"
+#include "antares/study/area/store-timeseries-numbers.h"
 
 using namespace Yuni;
 
@@ -48,10 +42,10 @@ struct TSNumbersPredicate
 };
 } // anonymous namespace
 
-static void genericStoreTimeseriesNumbers(Solver::IResultWriter& writer,
-                                          const Matrix<uint32_t>& timeseriesNumbers,
-                                          const String& id,
-                                          const String& directory)
+static void storeTSnumbers(Solver::IResultWriter& writer,
+                           const Matrix<uint32_t>& timeseriesNumbers,
+                           const String& id,
+                           const String& directory)
 {
     TSNumbersPredicate predicate;
     Clob path;
@@ -69,28 +63,33 @@ static void genericStoreTimeseriesNumbers(Solver::IResultWriter& writer,
 
 void storeTimeseriesNumbersForLoad(Solver::IResultWriter& writer, const Area& area)
 {
-    genericStoreTimeseriesNumbers(writer, area.load.series.timeseriesNumbers, area.id, "load");
+    storeTSnumbers(writer, area.load.series.timeseriesNumbers, area.id, "load");
 }
 
 void storeTimeseriesNumbersForSolar(Solver::IResultWriter& writer, const Area& area)
 {
-    genericStoreTimeseriesNumbers(writer, area.solar.series.timeseriesNumbers, area.id, "solar");
+    storeTSnumbers(writer, area.solar.series.timeseriesNumbers, area.id, "solar");
 }
 
 void storeTimeseriesNumbersForHydro(Solver::IResultWriter& writer, const Area& area)
 {
-    genericStoreTimeseriesNumbers(writer, area.hydro.series->timeseriesNumbers, area.id, "hydro");
+    storeTSnumbers(writer, area.hydro.series->timeseriesNumbers, area.id, "hydro");
+}
+
+
+void storeTimeseriesNumbersForHydroMaxPower(Solver::IResultWriter& writer, const Area& area)
+{
+    storeTSnumbers(writer, area.hydro.series->timeseriesNumbersHydroMaxPower, area.id, "hgp");
 }
 
 void storeTimeseriesNumbersForWind(Solver::IResultWriter& writer, const Area& area)
 {
-    genericStoreTimeseriesNumbers(writer, area.wind.series.timeseriesNumbers, area.id, "wind");
+    storeTSnumbers(writer, area.wind.series.timeseriesNumbers, area.id, "wind");
 }
 
 void storeTimeseriesNumbersForThermal(Solver::IResultWriter& writer, const Area& area)
 {
     area.thermal.list.storeTimeseriesNumbers(writer);
-    area.thermal.mustrunList.storeTimeseriesNumbers(writer);
 }
 
 void storeTimeseriesNumbersForRenewable(Solver::IResultWriter& writer, const Area& area)

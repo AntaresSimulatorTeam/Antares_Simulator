@@ -1,9 +1,32 @@
 # Study format changes
 This is a list of all recent changes that came with new Antares Simulator features. The main goal of this document is to lower the costs of changing existing interfaces, both GUI and scripts.
-## v8.9.0
+## v9.1.0
+### (Input) Hydro Maximum Generation/Pumping Power
+* For time series ![Migration diagram](migration.png "Migration diagram"), for more details, see [this Python script](migration.py)
+* In the existing file **settings/scenariobuilder.dat**, under **&lt;ruleset&gt;** section following properties added: **hgp,&lt;area&gt;,&lt;year&gt; = &lt;hgp-value&gt;**
+
+
+Regarding Hydro time-series, the scenario builder allows the user to choose, for a given year and area, a different time series whether we consider :
+- inflows, ROR and minimum generation
+- initial level
+- max power for generation and pumping
+This implies that, inside one of the previous categories, the number of available time series is the same
+
+* [Logic changes](17-v91.md)
+
+## v9.0.0
 ### Input
-### Solver logs
-* Solver logs can be enabled either by the command-line option (--solver-logs) or in the generaldata.ini file by setting solver-logs = true under the optimization section.
+### Study version
+Breaking change in the study format, file **study.antares**
+```
+version = 900
+```
+becomes
+```
+version = 9.0
+```
+Compatibility is kept with versions up to 8.8.0. Starting from version 9.0.0, the new format must be used.
+
 
 ## v8.8.0
 ### Input

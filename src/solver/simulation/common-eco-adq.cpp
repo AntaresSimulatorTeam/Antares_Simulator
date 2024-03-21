@@ -1,42 +1,33 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <yuni/yuni.h>
-#include <yuni/core/math.h>
 #include <antares/study/study.h>
 #include <antares/exception/UnfeasibleProblemError.hpp>
 
-#include "common-eco-adq.h"
+#include "antares/solver/simulation/common-eco-adq.h"
 #include <antares/logs/logs.h>
 #include <cassert>
+#include <cmath>
 #include <map>
-#include "simulation.h"
-
-using namespace Yuni;
+#include "antares/study/simulation.h"
 
 namespace Antares::Solver::Simulation
 {
@@ -133,7 +124,7 @@ void PrepareDataFromClustersInMustrunMode(Data::Study& study, Data::Area::Scratc
         double* mrs = scratchpad.mustrunSum;
         double* adq = scratchpad.originalMustrunSum;
 
-        for (const auto& cluster : area.thermal.mustrunList)
+        for (const auto& cluster : area.thermal.list.each_mustrun_and_enabled())
         {
             const auto& availableProduction = cluster->series.getColumn(year);
             if (inAdequacy && cluster->mustrunOrigin)
@@ -153,7 +144,7 @@ void PrepareDataFromClustersInMustrunMode(Data::Study& study, Data::Area::Scratc
 
         if (inAdequacy)
         {
-            for (const auto& cluster : area.thermal.mustrunList)
+            for (const auto& cluster : area.thermal.list.each_mustrun_and_enabled())
             {
                 if (!cluster->mustrunOrigin)
                     continue;
@@ -179,7 +170,7 @@ bool ShouldUseQuadraticOptimisation(const Data::Study& study)
 
         for (uint hour = 0; hour < HOURS_PER_YEAR; ++hour)
         {
-            if (Math::Abs(impedances[hour]) >= 1e-100)
+            if (std::abs(impedances[hour]) >= 1e-100)
             {
                 return true;
             }
@@ -231,10 +222,8 @@ void PrepareRandomNumbers(Data::Study& study,
                           yearRandomNumbers& randomForYear)
 {
     uint indexArea = 0;
-    study.areas.each(
-      [&](Data::Area& area)
-      {
-          double rnd = 0.;
+    study.areas.each([&](const Data::Area& area) {
+        double rnd = 0.;
 
           rnd = randomForYear.pUnsuppliedEnergy[indexArea];
 
@@ -251,15 +240,15 @@ void PrepareRandomNumbers(Data::Study& study,
           {
               alea = (rnd - 0.5) * (area.spreadUnsuppliedEnergyCost);
 
-              if (Math::Abs(alea) < 5.e-4)
-              {
-                  if (alea >= 0)
-                      alea += 5.e-4;
-                  else
-                      alea -= 5.e-4;
-              }
-          }
-          problem.CoutDeDefaillancePositive[area.index] = area.thermal.unsuppliedEnergyCost + alea;
+            if (std::abs(alea) < 5.e-4)
+            {
+                if (alea >= 0)
+                    alea += 5.e-4;
+                else
+                    alea -= 5.e-4;
+            }
+        }
+        problem.CoutDeDefaillancePositive[area.index] = area.thermal.unsuppliedEnergyCost + alea;
 
           rnd = randomForYear.pSpilledEnergy[indexArea];
 
@@ -274,49 +263,46 @@ void PrepareRandomNumbers(Data::Study& study,
           {
               alea = (rnd - 0.5) * (area.spreadSpilledEnergyCost);
 
-              if (Math::Abs(alea) < 5.e-4)
-              {
-                  if (alea >= 0)
-                      alea += 5.e-4;
-                  else
-                      alea -= 5.e-4;
-              }
-          }
-          problem.CoutDeDefaillanceNegative[area.index] = area.thermal.spilledEnergyCost + alea;
+            if (std::abs(alea) < 5.e-4)
+            {
+                if (alea >= 0)
+                    alea += 5.e-4;
+                else
+                    alea -= 5.e-4;
+            }
+        }
+        problem.CoutDeDefaillanceNegative[area.index] = area.thermal.spilledEnergyCost + alea;
 
-          //-----------------------------
-          // Thermal noises
-          //-----------------------------
-          auto end = area.thermal.list.mapping.end();
-          for (auto it = area.thermal.list.mapping.begin(); it != end; ++it)
-          {
-              auto cluster = it->second;
-              if (!cluster->enabled)
-                  continue;
-              uint clusterIndex = cluster->areaWideIndex;
-              double& rnd = randomForYear.pThermalNoisesByArea[indexArea][clusterIndex];
-              double randomClusterProdCost(0.);
-              if (cluster->spreadCost == 0) // 5e-4 < |randomClusterProdCost| < 6e-4
-              {
-                  if (rnd < 0.5)
-                      randomClusterProdCost = 1e-4 * (5 + 2 * rnd);
-                  else
-                      randomClusterProdCost = -1e-4 * (5 + 2 * (rnd - 0.5));
-              }
-              else
-              {
-                  randomClusterProdCost = (rnd - 0.5) * (cluster->spreadCost);
 
-                  if (Math::Abs(randomClusterProdCost) < 5.e-4)
-                  {
-                      if (Math::Abs(randomClusterProdCost) >= 0)
-                          randomClusterProdCost += 5.e-4;
-                      else
-                          randomClusterProdCost -= 5.e-4;
-                  }
-              }
-              rnd = randomClusterProdCost;
-          }
+        //-----------------------------
+        // Thermal noises
+        //-----------------------------
+        for (auto cluster : area.thermal.list.each_enabled())
+        {
+            uint clusterIndex = cluster->areaWideIndex;
+            double& rnd = randomForYear.pThermalNoisesByArea[indexArea][clusterIndex];
+            double randomClusterProdCost(0.);
+            if (cluster->spreadCost == 0) // 5e-4 < |randomClusterProdCost| < 6e-4
+            {
+                if (rnd < 0.5)
+                    randomClusterProdCost = 1e-4 * (5 + 2 * rnd);
+                else
+                    randomClusterProdCost = -1e-4 * (5 + 2 * (rnd - 0.5));
+            }
+            else
+            {
+                randomClusterProdCost = (rnd - 0.5) * (cluster->spreadCost);
+
+                if (std::abs(randomClusterProdCost) < 5.e-4)
+                {
+                    if (std::abs(randomClusterProdCost) >= 0)
+                        randomClusterProdCost += 5.e-4;
+                    else
+                        randomClusterProdCost -= 5.e-4;
+                }
+            }
+            rnd = randomClusterProdCost;
+        }
 
           //-----------------------------
           // Hydro noises
@@ -378,23 +364,23 @@ void BuildThermalPartOfWeeklyProblem(Data::Study& study,
         for (uint areaIdx = 0; areaIdx < nbPays; ++areaIdx)
         {
             auto& area = *study.areas.byIndex[areaIdx];
-            area.thermal.list.each([&](const Data::ThermalCluster& cluster)
+            for (auto cluster : area.thermal.list.each_enabled_and_not_mustrun())
             {
                     auto& Pt = problem.PaliersThermiquesDuPays[areaIdx]
-                               .PuissanceDisponibleEtCout[cluster.index];
+                               .PuissanceDisponibleEtCout[cluster->index];
 
                     Pt.CoutHoraireDeProductionDuPalierThermique[hourInWeek] =
-                        cluster.getMarketBidCost(hourInYear, year)
-                        + thermalNoises[areaIdx][cluster.areaWideIndex];
+                        cluster->getMarketBidCost(hourInYear, year)
+                        + thermalNoises[areaIdx][cluster->areaWideIndex];
 
                     Pt.PuissanceDisponibleDuPalierThermique[hourInWeek]
-                        = cluster.series.getCoefficient(year, hourInYear);
+                        = cluster->series.getCoefficient(year, hourInYear);
 
                     Pt.PuissanceMinDuPalierThermique[hourInWeek]
-                        = (Pt.PuissanceDisponibleDuPalierThermique[hourInWeek] < cluster.PthetaInf[hourInYear])
+                        = (Pt.PuissanceDisponibleDuPalierThermique[hourInWeek] < cluster->PthetaInf[hourInYear])
                         ? Pt.PuissanceDisponibleDuPalierThermique[hourInWeek]
-                        : cluster.PthetaInf[hourInYear];
-            });
+                        : cluster->PthetaInf[hourInYear];
+            }
         }
     }
 
@@ -402,7 +388,7 @@ void BuildThermalPartOfWeeklyProblem(Data::Study& study,
     {
         auto& area = *study.areas.byIndex[k];
 
-        for (uint l = 0; l != area.thermal.list.size(); ++l)
+        for (uint l = 0; l != area.thermal.list.enabledAndNotMustRunCount(); ++l)
         {
             problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout[l]
                    .PuissanceDisponibleDuPalierThermiqueRef
