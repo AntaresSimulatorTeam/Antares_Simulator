@@ -20,19 +20,8 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#pragma once
+#include "SimulationObserver.h"
 
-#include "antares/infoCollection/StudyInfoCollector.h"
-#include "antares/solver/misc/options.h"
-#include "antares/solver/simulation/ISimulationObserver.h"
-#include "antares/writer/i_writer.h"
-
-namespace Antares::Solver
+namespace Antares::API
 {
-void runSimulationInAdequacyMode(Antares::Data::Study& study,
-                                 const Settings& settings,
-                                 Benchmarking::IDurationCollector& durationCollector,
-                                 IResultWriter& resultWriter,
-                                 Benchmarking::OptimizationInfo& info,
-                                 std::shared_ptr<Simulation::ISimulationObserver> simulationObserver);
-}
+} // namespace Api

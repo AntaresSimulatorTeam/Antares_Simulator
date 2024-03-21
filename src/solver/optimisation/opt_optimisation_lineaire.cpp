@@ -26,6 +26,7 @@
 #include "antares/solver/optimisation/constraints/constraint_builder_utils.h"
 #include "antares/solver/optimisation/opt_export_structure.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
+#include "antares/solver/simulation/ISimulationObserver.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/solver/utils/filename.h"
 using namespace Antares;
@@ -63,35 +64,28 @@ void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(
     writer.addEntryFromBuffer(filename, buffer);
 }
 
-namespace Antares::Solver
-{
-struct ITruc
-{
-    ::Antares::Solver::LpsFromAntares lps;
-};
-} // namespace Antares::Solver
-
 void notifyProblemHebdo(const PROBLEME_HEBDO* problemeHebdo,
                         int optimizationNumber,
-                        Antares::Solver::ITruc* truc,
+                        Solver::Simulation::ISimulationObserver* simulationObserver,
                         const std::shared_ptr<OptPeriodStringGenerator>& optPeriodStringGenerator)
 {
     Solver::HebdoProblemToLpsTranslator translator(optPeriodStringGenerator,
                                                    optimizationNumber);
     unsigned int const year = problemeHebdo->year + 1;
     unsigned int const week = problemeHebdo->weekInTheYear + 1;
-    if (year == 1 && week == 1) {
-        truc->lps.replaceConstantData(translator.commonProblemData(problemeHebdo->ProblemeAResoudre.get()));
-    }
-    truc->lps.addHebdoData({year, week},
-                           translator.translate(problemeHebdo->ProblemeAResoudre.get()));
+//    if (year == 1 && week == 1) {
+//        truc->lps.replaceConstantData(translator.commonProblemData(problemeHebdo->ProblemeAResoudre.get()));
+//    }
+//    truc->lps.addHebdoData({year, week},
+//                           translator.translate(problemeHebdo->ProblemeAResoudre.get()));
 }
 bool runWeeklyOptimization(const OptimizationOptions& options,
                            PROBLEME_HEBDO* problemeHebdo,
                            const AdqPatchParams& adqPatchParams,
                            Solver::IResultWriter& writer,
                            int optimizationNumber,
-                           Antares::Solver::ITruc* truc = nullptr)
+                           Solver::Simulation::ISimulationObserver* simulationObserver
+                           )
 {
     const int NombreDePasDeTempsPourUneOptimisation = problemeHebdo
                                                         ->NombreDePasDeTempsPourUneOptimisation;
@@ -128,8 +122,7 @@ bool runWeeklyOptimization(const OptimizationOptions& options,
           problemeHebdo->weekInTheYear,
           problemeHebdo->year);
 
-        truc = new Antares::Solver::ITruc();
-        notifyProblemHebdo(problemeHebdo, optimizationNumber, truc, optPeriodStringGenerator);
+        notifyProblemHebdo(problemeHebdo, optimizationNumber, simulationObserver, optPeriodStringGenerator);
 
         if (!OPT_AppelDuSimplexe(options,
                                  problemeHebdo,
@@ -171,7 +164,9 @@ void runThermalHeuristic(PROBLEME_HEBDO* problemeHebdo)
 bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                               PROBLEME_HEBDO* problemeHebdo,
                               const AdqPatchParams& adqPatchParams,
-                              Solver::IResultWriter& writer)
+                              Solver::IResultWriter& writer,
+                              Solver::Simulation::ISimulationObserver* simulationObserver
+                              )
 {
     if (!problemeHebdo->OptimisationAuPasHebdomadaire)
     {
@@ -204,7 +199,8 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                                      problemeHebdo,
                                      adqPatchParams,
                                      writer,
-                                     PREMIERE_OPTIMISATION);
+                                     PREMIERE_OPTIMISATION,
+                                     simulationObserver);
 
     // We only need the 2nd optimization when NOT solving with integer variables
     // We also skip the 2nd optimization in the hidden 'Expansion' mode
@@ -217,7 +213,8 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                                      problemeHebdo,
                                      adqPatchParams,
                                      writer,
-                                     DEUXIEME_OPTIMISATION);
+                                     DEUXIEME_OPTIMISATION,
+                                     simulationObserver);
     }
     return ret;
 }

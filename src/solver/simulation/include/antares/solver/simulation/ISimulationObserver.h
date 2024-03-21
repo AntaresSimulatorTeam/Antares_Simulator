@@ -22,17 +22,17 @@
 
 #pragma once
 
-#include "antares/infoCollection/StudyInfoCollector.h"
-#include "antares/solver/misc/options.h"
-#include "antares/solver/simulation/ISimulationObserver.h"
-#include "antares/writer/i_writer.h"
-
-namespace Antares::Solver
+namespace Antares::Solver::Simulation
 {
-void runSimulationInAdequacyMode(Antares::Data::Study& study,
-                                 const Settings& settings,
-                                 Benchmarking::IDurationCollector& durationCollector,
-                                 IResultWriter& resultWriter,
-                                 Benchmarking::OptimizationInfo& info,
-                                 std::shared_ptr<Simulation::ISimulationObserver> simulationObserver);
-}
+class ISimulationObserver
+{
+public:
+    virtual ~ISimulationObserver() = default;
+};
+
+class NullSimulationObserver : public ISimulationObserver
+{
+public:
+    virtual ~NullSimulationObserver() = default;
+};
+} // namespace Antares::Solver::Simulation

@@ -58,7 +58,8 @@ public:
             std::vector<Variable::State>& pState,
             bool pYearByYear,
             Benchmarking::DurationCollector& durationCollector,
-            IResultWriter& resultWriter):
+            IResultWriter& resultWriter,
+            std::shared_ptr<ISimulationObserver> simulationObserver):
         simulation_(simulation),
         y(pY),
         yearFailed(pYearFailed),
@@ -72,6 +73,7 @@ public:
         yearByYear(pYearByYear),
         pDurationCollector(durationCollector),
         pResultWriter(resultWriter),
+        simulationObserver_(simulationObserver),
         hydroManagement(study.areas,
                         study.parameters,
                         study.calendar,
@@ -101,6 +103,7 @@ private:
     bool hydroHotStart;
     Benchmarking::DurationCollector& pDurationCollector;
     IResultWriter& pResultWriter;
+    std::shared_ptr<ISimulationObserver> simulationObserver_;
     HydroManagement hydroManagement;
     Antares::Data::Area::ScratchMap scratchmap;
 
@@ -197,7 +200,8 @@ public:
                                                isFirstPerformedYearOfSimulation,
                                                hydroManagement.ventilationResults(),
                                                optWriter,
-                                               scratchmap);
+                                               scratchmap,
+                                               simulationObserver_.get());
 
             // Log failing weeks
             logFailedWeek(y, study, failedWeekList);
@@ -244,8 +248,9 @@ inline ISimulation<ImplementationType>::ISimulation(
   Data::Study& study,
   const ::Settings& settings,
   Benchmarking::DurationCollector& duration_collector,
-  IResultWriter& resultWriter):
-    ImplementationType(study, resultWriter),
+  IResultWriter& resultWriter,
+  std::shared_ptr<Simulation::ISimulationObserver> simulationObserver):
+    ImplementationType(study, resultWriter, simulationObserver),
     study(study),
     settings(settings),
     pNbYearsReallyPerformed(0),
@@ -254,7 +259,8 @@ inline ISimulation<ImplementationType>::ISimulation(
     pFirstSetParallelWithAPerformedYearWasRun(false),
     pDurationCollector(duration_collector),
     pQueueService(study.pQueueService),
-    pResultWriter(resultWriter)
+    pResultWriter(resultWriter),
+    simulationObserver_(simulationObserver)
 {
     // Ask to the interface to show the messages
     logs.info();
@@ -1054,7 +1060,8 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
               state,
               pYearByYear,
               pDurationCollector,
-              pResultWriter);
+              pResultWriter,
+              simulationObserver_);
             results.add(Concurrency::AddTask(*pQueueService, task));
         } // End loop over years of the current set of parallel years
 

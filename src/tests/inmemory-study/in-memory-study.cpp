@@ -183,6 +183,11 @@ ScenarioBuilderRule::ScenarioBuilderRule(Study& study)
 // Simulation handler
 // =====================
 
+ class NullObserver: public Simulation::ISimulationObserver {
+
+ };
+
+
 void SimulationHandler::create()
 {
     study_.initializeRuntimeInfos();
@@ -191,7 +196,8 @@ void SimulationHandler::create()
     simulation_ = std::make_shared<ISimulation<Economy>>(study_,
                                                          settings_,
                                                          durationCollector_,
-                                                         resultWriter_);
+                                                         resultWriter_,
+                                                         std::make_shared<NullObserver>());
     SIM_AllocationTableaux(study_);
 }
 

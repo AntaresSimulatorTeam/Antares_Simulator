@@ -399,13 +399,18 @@ void Application::execute()
     pStudy->progression.stop();
 }
 
+class NullObserver: public Simulation::ISimulationObserver {
+
+};
+
 void Application::runSimulationInEconomicMode()
 {
     Solver::runSimulationInEconomicMode(*pStudy,
                                         pSettings,
                                         pDurationCollector,
                                         *resultWriter,
-                                        pOptimizationInfo);
+                                        pOptimizationInfo,
+                                        std::make_shared<NullObserver>());
 }
 
 void Application::runSimulationInAdequacyMode()
@@ -414,7 +419,8 @@ void Application::runSimulationInAdequacyMode()
                                         pSettings,
                                         pDurationCollector,
                                         *resultWriter,
-                                        pOptimizationInfo);
+                                        pOptimizationInfo,
+                                        std::make_shared<NullObserver>());
 }
 
 void Application::resetLogFilename() const
