@@ -575,17 +575,16 @@ void GeneratorTempData::operator()(const Data::Area& area, ThermalInterface& clu
 void writeResultsToDisk(const Data::Study& study,
                         Solver::IResultWriter& writer,
                         const Data::Area& area,
-                        const Data::ThermalCluster& cluster)
+                        const Data::ThermalCluster& cluster,
+                        const std::string& savePath)
 {
     if (study.parameters.noOutput)
         return;
 
     Yuni::String pTempFilename;
-
     pTempFilename.reserve(study.folderOutput.size() + 256);
 
-    pTempFilename.clear() << "ts-generator" << SEP << "thermal" << SEP << area.id
-        << SEP << cluster.id() << ".txt";
+    pTempFilename.clear() << savePath << SEP << area.id << SEP << cluster.id() << ".txt";
 
     enum
     {
@@ -614,7 +613,8 @@ std::vector<Data::ThermalCluster*> getAllClustersToGen(Data::AreaList& areas,
 
 bool GenerateThermalTimeSeries(Data::Study& study,
                                std::vector<Data::ThermalCluster*> clusters,
-                               Solver::IResultWriter& writer)
+                               Solver::IResultWriter& writer,
+                               const std::string& savePath)
 {
     logs.info();
     logs.info() << "Generating the thermal time-series";
@@ -630,7 +630,7 @@ bool GenerateThermalTimeSeries(Data::Study& study,
         (*generator)(*cluster->parentArea, clusterInterface);
 
         if (archive)
-            writeResultsToDisk(study, writer, *cluster->parentArea, *cluster);
+            writeResultsToDisk(study, writer, *cluster->parentArea, *cluster, savePath);
 
         cluster->calculationOfSpinning();
     }
