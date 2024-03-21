@@ -1,10 +1,23 @@
 add_library(solver_api)
 add_library(Antares::solver_api ALIAS solver_api)
 
+set(PUBLIC_HEADERS
+        include/antares/api/SimulationResults.h
+        include/antares/api/solver.h
+)
+
+set(PRIVATE_HEADERS
+        private/API.h
+        private/SimulationObserver.h
+)
+
 target_sources(solver_api
         PRIVATE
         solver.cpp
         API.cpp
+        SimulationObserver.cpp
+        ${PUBLIC_HEADERS}
+        ${PRIVATE_HEADERS}
 )
 
 target_include_directories(solver_api
@@ -21,4 +34,5 @@ target_link_libraries(solver_api
         Antares::file-tree-study-loader
         Antares::run-mode
         Antares::lps
+        antares-solver-simulation
 )
