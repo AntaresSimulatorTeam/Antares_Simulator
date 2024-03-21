@@ -16,6 +16,9 @@ on:
         description: "Run all tests (true/false)"
         required: true
         type: string
+      set_latest: "Set the release as latest"
+        required: true
+        type: boolean
 jobs:
       release:
         name: Release pushed tag
@@ -28,13 +31,16 @@ jobs:
               title: ${{ github.event.inputs.release_name }}
               tests: ${{ github.event.inputs.run-tests }}
               target_branch: ${{ github.event.inputs.target_branch }}
+              latest: ${{ github.event.inputs.target_branch }}
             run: |
+              [[ $latest = true ]] && latest_arg="--latest"
+
               gh release create "$tag" \
                   --repo="$GITHUB_REPOSITORY" \
                   --title="$title" \
                   --notes="Run tests: $tests"\
-                  --target="$target_branch" 
-
+                  --target="$target_branch" \
+                  latest_arg
 
 
       ubuntu:
@@ -66,7 +72,6 @@ jobs:
         uses: ./.github/workflows/oracle8.yml
         with:
           run-tests: ${{ inputs.run-tests }}
-          
 
       user_guide:
         name: User Guide
