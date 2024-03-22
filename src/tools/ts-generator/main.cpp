@@ -55,6 +55,10 @@ std::unique_ptr<Yuni::GetOpt::Parser> createTsGeneratorParser(TsGeneratorSetting
 
     parser->addFlag(settings.thermalListToGen, ' ', "thermal", "Generate TS for a list of area IDs and thermal clusters IDs, usage:\n\t--thermal=\"areaID.clusterID;area2ID.clusterID\"");
 
+    parser->addFlag(settings.allThermal, ' ', "all-links", "Generate TS capacities for all links");
+
+    parser->addFlag(settings.thermalListToGen, ' ', "links", "Generate TS capacities for a list of area IDs and links name, usage:\n\t--links=\"areaID.linkName;area2ID.linkName\"");
+
     parser->remainingArguments(settings.studyFolder);
 
 
@@ -89,6 +93,35 @@ std::vector<Data::ThermalCluster*> getClustersToGen(Data::AreaList& areas,
     }
 
     return clusters;
+}
+
+std::vector<Data::AreaLink*> getLinkssToGen(Data::AreaList& areas,
+                                           const std::string& clustersToGen)
+{
+    std::vector<Data::AreaLink*> links;
+    const auto ids = splitStringIntoPairs(clustersToGen, ';', '.');
+
+    for (const auto& [areaID, linkID] : ids)
+    {
+        logs.info() << "Generating ts for area: " << areaID << " and cluster: " << linkID;
+
+        auto* area = areas.find(areaID);
+        if (!area)
+        {
+            logs.warning() << "Area not found: " << areaID;
+            continue;
+        }
+
+        auto it = std::ranges::find_if(area->links, [&linkID](auto& l)
+                { return l.second->getName() == linkID;});
+
+        if (it != area->links.end())
+            links.push_back(it->second);
+        else
+            logs.warning() << "Link not found: " << linkID;
+    }
+
+    return links;
 }
 
 int main(int argc, char *argv[])
