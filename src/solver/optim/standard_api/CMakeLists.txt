@@ -3,7 +3,7 @@ set(PROJ optim_standard_api
 set(HEADERS
         include/antares/optim/standard_api/Component.h
         include/antares/optim/standard_api/ComponentFiller.h
-        include/antares/optim/standard_api/ConnectableLinearProblemFiller.h
+        include/antares/optim/standard_api/PortHolder.h
         include/antares/optim/standard_api/PortConnection.h
 )
 set(SRC_OPTIM

@@ -1,11 +1,12 @@
 #pragma once
 
+#include "antares/optim/api/LinearProblemFiller.h"
 #include "Component.h"
 #include "PortConnection.h"
 
 namespace Antares::optim::standard_api
 {
-    class ComponentFiller : public ConnectableLinearProblemFiller
+class ComponentFiller : public Antares::optim::api::LinearProblemFiller, public PortHolder
     {
     private:
         PortConnectionsManager *portConnectionsManager_;
@@ -24,6 +25,6 @@ namespace Antares::optim::standard_api
         void update(Antares::optim::api::LinearProblem &problem, const Antares::optim::api::LinearProblemData &data) override;
 
         [[nodiscard]] std::map<std::string, double>
-        getPortPin(std::string name, int timestamp, const Antares::optim::api::LinearProblemData &linearProblemData) const;
+        getPortPin(std::string name, int timestamp, const Antares::optim::api::LinearProblemData &linearProblemData) const override;
     };
 }

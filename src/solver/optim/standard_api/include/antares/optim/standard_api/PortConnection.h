@@ -2,14 +2,14 @@
 
 #include "vector"
 #include "string"
-#include "ConnectableLinearProblemFiller.h"
+#include "PortHolder.h"
 
 // TODO: move this to optim::api?
 namespace Antares::optim::standard_api
 {
     struct FillerAndPort
     {
-        std::shared_ptr<ConnectableLinearProblemFiller> connectableFiller;
+        std::shared_ptr<PortHolder> connectableFiller;
         std::string portName;
     };
 
@@ -41,7 +41,7 @@ namespace Antares::optim::standard_api
         }
 
         std::vector<FillerAndPort>
-        getConnectionsTo(ConnectableLinearProblemFiller *connectableFiller, const std::string &portId)
+        getConnectionsTo(PortHolder *connectableFiller, const std::string &portId)
         {
             // TODO: implement a better search algorithm
             std::vector<FillerAndPort> connectedComponents;
