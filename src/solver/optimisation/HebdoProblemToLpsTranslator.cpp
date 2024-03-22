@@ -34,7 +34,7 @@ void copy(const T& in, U& out)
 
 HebdoDataFromAntaresPtr HebdoProblemToLpsTranslator::translate(
   const PROBLEME_ANTARES_A_RESOUDRE* problem,
-  std::string name) const
+  std::string_view name) const
 {
     if (problem == nullptr)
         return {};

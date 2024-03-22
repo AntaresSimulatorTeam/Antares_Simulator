@@ -40,7 +40,7 @@ class NullSimulationObserver : public ISimulationObserver
 {
 public:
     ~NullSimulationObserver() override = default;
-    void notifyHebdoProblem(const PROBLEME_HEBDO*, int, std::string name) override
+    void notifyHebdoProblem(const PROBLEME_HEBDO*, int, std::string) override
     {
     }
 };

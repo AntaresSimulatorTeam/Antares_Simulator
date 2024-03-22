@@ -31,22 +31,25 @@
 
 namespace Antares::API
 {
-SimulationResults APIInternal::run(IStudyLoader* study_loader) {
+SimulationResults APIInternal::run(IStudyLoader* study_loader)
+{
     study_ = study_loader->load();
-    execute();
-    
-    return {.simulationPath{study_->folderOutput.c_str()}};
+    return execute();
 }
 
-void APIInternal::execute()
+SimulationResults APIInternal::execute() const
 {
     // study_ == nullptr e.g when the -h flag is given
     if (!study_)
-        return;
+        return {
+          .simulationPath = "",
+          .antares_problems = {},
+          .resultStatus = SimulationResults::ResultStatus::FAIL
+        };
 
     study_->computePThetaInfForThermalClusters();
 
-    //Only those two fields are used un simulation
+    // Only those two fields are used un simulation
     Settings settings;
     settings.tsGeneratorsOnly = false;
     settings.noOutput = false;
@@ -64,11 +67,20 @@ void APIInternal::execute()
     {
     case Data::SimulationMode::Economy:
     case Data::SimulationMode::Expansion:
-        Solver::runSimulationInEconomicMode(
-          *study_, settings, durationCollector, *resultWriter, optimizationInfo, simulationObserver);
+        Solver::runSimulationInEconomicMode(*study_,
+                                            settings,
+                                            durationCollector,
+                                            *resultWriter,
+                                            optimizationInfo,
+                                            simulationObserver);
         break;
     case Data::SimulationMode::Adequacy:
-        Solver::runSimulationInAdequacyMode(*study_, settings, durationCollector, *resultWriter, optimizationInfo, simulationObserver);
+        Solver::runSimulationInAdequacyMode(*study_,
+                                            settings,
+                                            durationCollector,
+                                            *resultWriter,
+                                            optimizationInfo,
+                                            simulationObserver);
         break;
     default:
         break;
@@ -79,5 +91,11 @@ void APIInternal::execute()
 
     // Stop the display of the progression
     study_->progression.stop();
+    return
+    {
+        .simulationPath = study_->folderOutput.c_str(),
+        .antares_problems = simulationObserver->acquireLps(),
+        .resultStatus = SimulationResults::ResultStatus::OK
+    };
 }
-} // namespace API
+} // namespace Antares::API

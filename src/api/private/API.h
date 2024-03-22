@@ -34,8 +34,9 @@ class APIInternal
 
 public:
     SimulationResults run(IStudyLoader* study_loader);
+private:
     std::shared_ptr<Antares::Data::Study> study_;
-    void execute();
+    SimulationResults execute() const;
 };
 
 } // namespace API
