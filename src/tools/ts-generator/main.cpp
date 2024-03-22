@@ -44,6 +44,11 @@ struct TsGeneratorSettings
     bool allThermal = false;
     /// generate TS for a list "area.cluster;area2.cluster2;"
     std::string thermalListToGen = "";
+
+    /// generate TS for all links if activated
+    bool allLinks = false;
+    /// generate TS for a list "area.link;area2.link2;"
+    std::string linksListToGen = "";
 };
 
 std::unique_ptr<Yuni::GetOpt::Parser> createTsGeneratorParser(TsGeneratorSettings& settings)
@@ -55,9 +60,9 @@ std::unique_ptr<Yuni::GetOpt::Parser> createTsGeneratorParser(TsGeneratorSetting
 
     parser->addFlag(settings.thermalListToGen, ' ', "thermal", "Generate TS for a list of area IDs and thermal clusters IDs, usage:\n\t--thermal=\"areaID.clusterID;area2ID.clusterID\"");
 
-    parser->addFlag(settings.allThermal, ' ', "all-links", "Generate TS capacities for all links");
+    parser->addFlag(settings.allLinks, ' ', "all-links", "Generate TS capacities for all links");
 
-    parser->addFlag(settings.thermalListToGen, ' ', "links", "Generate TS capacities for a list of area IDs and links name, usage:\n\t--links=\"areaID.linkName;area2ID.linkName\"");
+    parser->addFlag(settings.linksListToGen, ' ', "links", "Generate TS capacities for a list of area IDs and links name, usage:\n\t--links=\"areaID.linkName;area2ID.linkName\"");
 
     parser->remainingArguments(settings.studyFolder);
 
@@ -95,7 +100,7 @@ std::vector<Data::ThermalCluster*> getClustersToGen(Data::AreaList& areas,
     return clusters;
 }
 
-std::vector<Data::AreaLink*> getLinkssToGen(Data::AreaList& areas,
+std::vector<Data::AreaLink*> getLinksToGen(Data::AreaList& areas,
                                            const std::string& clustersToGen)
 {
     std::vector<Data::AreaLink*> links;
@@ -183,6 +188,11 @@ int main(int argc, char *argv[])
         clusters = TSGenerator::getAllClustersToGen(study->areas, true);
     else if (!settings.thermalListToGen.empty())
         clusters = getClustersToGen(study->areas, settings.thermalListToGen);
+
+    std::vector<Data::AreaLink*> links;
+
+    if (!settings.linksListToGen.empty())
+        links = getLinksToGen(study->areas, settings.linksListToGen);
 
     for (auto& c : clusters)
         logs.debug() << c->id();
