@@ -32,7 +32,11 @@
 class InMemoryStudyLoader : public Antares::IStudyLoader
 {
 public:
+    explicit InMemoryStudyLoader(bool success = true) : success_(success) {};
     std::shared_ptr<Antares::Data::Study> load() override {
+        if (!success_) {
+        return nullptr;
+      }
       StudyBuilder builder;
       builder.addAreaToStudy("area1");
       builder.addAreaToStudy("area2");
@@ -41,6 +45,7 @@ public:
       builder.study->prepareOutput();
       return builder.study;
     };
+    bool success_ = true;
 };
 
 
@@ -60,4 +65,14 @@ BOOST_AUTO_TEST_CASE(api_run_contains_antares_problem)
     auto results = api.run(study_loader.get());
 
     BOOST_CHECK(!results.antares_problems.empty());
+    BOOST_CHECK(results.resultStatus == Antares::API::SimulationResults::ResultStatus::OK);
+}
+
+BOOST_AUTO_TEST_CASE(result_failure_when_study_is_null)
+{
+    Antares::API::APIInternal api;
+    auto study_loader = std::make_unique<InMemoryStudyLoader>(false);
+    auto results = api.run(study_loader.get());
+
+    BOOST_CHECK(results.resultStatus == Antares::API::SimulationResults::ResultStatus::FAIL);
 }
