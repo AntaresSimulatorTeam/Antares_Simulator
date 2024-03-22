@@ -26,6 +26,7 @@
 
 #include <antares/writer/i_writer.h>
 #include <antares/study/area/newReserves.h>
+#include <antares/study/parts/common/cluster.h>
 
 #include <algorithm>
 #include <vector>
@@ -157,12 +158,10 @@ public:
     unsigned int allClustersCount() const;
     void addToCompleteList(std::shared_ptr<ClusterT> cluster);
     void sortCompleteList();
-
-    /// @brief Add the reserve participation to the current clusterReservesParticipations map
-    /// @param name the name of the reserve to add
-    /// @param reserveParticipation the reserve participation to add
-    void addReserveParticipation(std::string name,
-                                 ClusterReserveParticipation reserveParticipation);
+    /// @brief Get the cluster from the vector allClusters_ using it's name
+    /// @param clusterName
+    /// @return nullopt if no clusters found else a pointer to the cluster
+    std::optional<std::shared_ptr<Cluster>> getClusterByName(std::string clusterName);
 
 protected:
     std::vector<std::shared_ptr<ClusterT>> allClusters_;
@@ -174,9 +173,6 @@ protected:
 
 private:
     bool alreadyInAllClusters(std::string clusterName);
-    /// @brief Stores the reserves Participations for each reserve, the key is the name of the
-    /// reserve
-    std::map<std::string, ClusterReserveParticipation> clusterReservesParticipations;
 
 }; // class ClusterList
 } // namespace Data

@@ -99,6 +99,14 @@ bool Cluster::loadDataSeriesFromFolder(Study& s, const AnyString& folder)
 }
 #undef SEP
 
+
+void Cluster::addReserveParticipation(
+  std::string name,
+  ClusterReserveParticipation reserveParticipation)
+{
+    clusterReservesParticipations.emplace(name, reserveParticipation);
+}
+
 void Cluster::invalidateArea()
 {
     if (parentArea)

@@ -30,7 +30,6 @@
 /// @brief Represents an area reserve using it's name, it's failure cost and it's spillage cost
 struct AreaReserve
 {
-    std::string name;
     float failureCost = 0;
     float spillageCost = 0;
 };
@@ -53,7 +52,7 @@ struct NewReserves
     /// @param name
     /// @return an optional of the reserve reference if the reserve was found, and a nullopt
     /// otherwise
-    std::optional<std::reference_wrapper<AreaReserve>> getReserveFromName(std::string name)
+    std::optional<std::reference_wrapper<AreaReserve>> getReserveByName(Yuni::ShortString256 name)
     {
         if (areaReservesUp.contains(name))
         {
