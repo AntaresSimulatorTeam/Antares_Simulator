@@ -36,3 +36,6 @@ target_link_libraries(solver_api
         Antares::lps
         antares-solver-simulation
 )
+install(DIRECTORY include/antares
+        DESTINATION "include"
+)
