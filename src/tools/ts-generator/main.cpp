@@ -179,9 +179,9 @@ int main(int argc, char *argv[])
 
     std::vector<Data::ThermalCluster*> clusters;
 
-    if (settings.thermalListToGen.empty())
+    if (settings.allThermal)
         clusters = TSGenerator::getAllClustersToGen(study->areas, true);
-    else
+    else if (!settings.thermalListToGen.empty())
         clusters = getClustersToGen(study->areas, settings.thermalListToGen);
 
     for (auto& c : clusters)
