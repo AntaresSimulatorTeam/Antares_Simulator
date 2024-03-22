@@ -96,6 +96,7 @@
 
 // Output variables associated to binding constraints
 #include "bindingConstraints/bindingConstraintsMarginalCost.h"
+#include "varDynamic.h"
 
 namespace Antares::Solver::Variable::Economy
 {
@@ -123,6 +124,7 @@ typedef                           // Prices
   OverallCost                     // Overall Cost (Op. Cost + Unsupplied Eng.)
   <OperatingCost                  // Operating Cost
    <Price                         // Marginal price
+   <VarDynamic
                                   // Thermal pollutants
     <ThermalAirPollutantEmissions // Overall pollutant emissions(from all thermal dispatchable
                                   // clusters) Production by thermal cluster
@@ -170,7 +172,7 @@ typedef                           // Prices
                                         <ProfitByPlant
                                          // Links
                                          <Variable::Economy::Links // All links
-                                          >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                          >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerArea;
 
 /*!

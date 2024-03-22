@@ -379,8 +379,9 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
         const bool thermal_details = fileLevel & Category::de;
         const bool renewable_details = fileLevel & Category::de_res;
         const bool st_storage_details = fileLevel & Category::de_sts;
+        const bool st_storage_values_id = fileLevel & (Category::id | Category::va);
 
-        std::array<bool, 3> kind_of_details = { thermal_details, renewable_details , st_storage_details };
+        std::array<bool, 4> kind_of_details = { thermal_details, renewable_details , st_storage_details, st_storage_values_id };
 
         // The current result file must be a detail file and of one kind only.
         // So the vector above must contain one true. No less, no more.
@@ -408,6 +409,16 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
         {
             auto& st_storage_part = results.data.area->shortTermStorage;
             results.variableCaption = st_storage_part.storagesByIndex[idx].properties.name;
+            return true;
+        }
+        if (st_storage_values_id)
+        {
+            // Recall that, in the current function, we handle dynamic variables in the function 
+            // (defined and called in the context of Category::dynamicColumns only)
+            // Furthermore, the current function is called (apparently) when building reports for :
+            // - synthesis
+            // - districts
+            // We do nothing
             return true;
         }
         return true;
