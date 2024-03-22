@@ -33,7 +33,7 @@ class HebdoProblemToLpsTranslator
 {
 public:
     [[nodiscard]] HebdoDataFromAntaresPtr translate(const PROBLEME_ANTARES_A_RESOUDRE* problem,
-                                                    std::string name) const;
+                                                    std::string_view name) const;
     [[nodiscard]] ConstantDataFromAntaresPtr commonProblemData(const PROBLEME_ANTARES_A_RESOUDRE* problem) const;
 };
 
