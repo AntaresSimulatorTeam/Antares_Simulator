@@ -29,13 +29,17 @@ void SimulationObserver::notifyHebdoProblem(const PROBLEME_HEBDO* problemeHebdo,
                                             int optimizationNumber,
                                             std::string name)
 {
-    Solver::LpsFromAntares lps;
+    if (optimizationNumber != 1) return; //We only care about first optimization
     Solver::HebdoProblemToLpsTranslator translator;
     unsigned int const year = problemeHebdo->year + 1;
     unsigned int const week = problemeHebdo->weekInTheYear + 1;
     if (year == 1 && week == 1) {
-        lps.replaceConstantData(translator.commonProblemData(problemeHebdo->ProblemeAResoudre.get()));
+        lps_.replaceConstantData(translator.commonProblemData(problemeHebdo->ProblemeAResoudre.get()));
     }
-    lps.addHebdoData({year, week}, translator.translate(problemeHebdo->ProblemeAResoudre.get(), name));
+    lps_.addHebdoData({year, week}, translator.translate(problemeHebdo->ProblemeAResoudre.get(), std::move(name)));
+}
+Solver::LpsFromAntares&& SimulationObserver::acquireLps() noexcept
+{
+    return std::move(lps_);
 }
 } // namespace Api
