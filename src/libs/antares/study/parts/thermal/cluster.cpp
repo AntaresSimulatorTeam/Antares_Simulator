@@ -28,6 +28,7 @@
 #include <boost/algorithm/string/case_conv.hpp>
 #include "antares/study/study.h"
 #include "antares/study/parts/thermal/cluster.h"
+#include <antares/solver/ts-generator/law.h>
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
 #include <antares/utils/utils.h>
@@ -105,16 +106,12 @@ bool Into<Antares::Data::LocalTSGenerationBehavior>::Perform(AnyString string, T
 
 } // namespace Yuni::Extension::CString
 
-
-
 namespace Antares
 {
 namespace Data
 {
 Data::ThermalCluster::ThermalCluster(Area* parent) :
-    Cluster(parent),
-    PthetaInf(HOURS_PER_YEAR, 0),
-    costsTimeSeries(1, CostsTimeSeries())
+ Cluster(parent), PthetaInf(HOURS_PER_YEAR, 0), costsTimeSeries(1, CostsTimeSeries())
 {
     // assert
     assert(parent && "A parent for a thermal dispatchable cluster can not be null");
@@ -225,7 +222,7 @@ static Data::ThermalCluster::ThermalDispatchableGroup stringToGroup(Data::Cluste
          {"other 4", ThermalCluster::thermalDispatchGrpOther4}};
 
     boost::to_lower(newgrp);
-    if (auto res = mapping.find(newgrp);res != mapping.end())
+    if (auto res = mapping.find(newgrp); res != mapping.end())
     {
         return res->second;
     }
@@ -380,10 +377,9 @@ void ThermalCluster::ComputeProductionCostTS()
     }
 }
 
-
 double Data::ThermalCluster::computeMarketBidCost(double fuelCost,
-                                                         double co2EmissionFactor,
-                                                         double co2cost)
+                                                  double co2EmissionFactor,
+                                                  double co2cost)
 {
     return fuelCost * 360.0 / fuelEfficiency + co2EmissionFactor * co2cost + variableomcost;
 }
@@ -768,9 +764,8 @@ void ThermalCluster::checkAndCorrectAvailability()
     {
         for (uint x = 0; x != series.timeSeries.width; ++x)
         {
-            auto rightpart
-              = PminDUnGroupeDuPalierThermique
-                * ceil(series.timeSeries.entry[x][y] / PmaxDUnGroupeDuPalierThermique);
+            auto rightpart = PminDUnGroupeDuPalierThermique
+                             * ceil(series.timeSeries.entry[x][y] / PmaxDUnGroupeDuPalierThermique);
             condition = rightpart > series.timeSeries.entry[x][y];
             if (condition)
             {
@@ -785,7 +780,8 @@ void ThermalCluster::checkAndCorrectAvailability()
                        << " available power lifted to match Pmin and Pnom requirements";
 }
 
-bool ThermalCluster::isActive() const {
+bool ThermalCluster::isActive() const
+{
     return enabled && !mustrun;
 }
 

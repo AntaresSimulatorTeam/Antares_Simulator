@@ -223,8 +223,6 @@ enum TimeSeriesType : unsigned int
     // ***********************************************************************
 }; // enum TimeSeries
 
-
-
 template<int T>
 struct TimeSeriesBitPatternIntoIndex;
 
@@ -550,8 +548,6 @@ class TSNumberRules;
 class Sets;
 
 } // namespace Antares::Data::ScenarioBuilder
-
-
 
 namespace Benchmarking
 {

@@ -28,7 +28,7 @@
 #include <antares/writer/i_writer.h>
 
 #include <antares/solver/ts-generator/generator.h>
-
+#include <antares/solver/ts-generator/law.h>
 #include "antares/study/simulation.h"
 
 #define SEP Yuni::IO::Separator
@@ -37,38 +37,38 @@
 
 namespace Antares::TSGenerator
 {
-
-ThermalInterface::ThermalInterface(Data::ThermalCluster *source) :
-    unitCount(source->unitCount),
-    nominalCapacity(source->nominalCapacity),
-    forcedVolatility(source->forcedVolatility),
-    plannedVolatility(source->plannedVolatility),
-    forcedLaw(source->forcedLaw),
-    plannedLaw(source->plannedLaw),
-    prepro(source->prepro),
-    series(source->series),
-    modulationCapacity(source->modulation[Data::thermalModulationCapacity]),
-    name(source->name())
-{}
+ThermalInterface::ThermalInterface(Data::ThermalCluster* source) :
+ unitCount(source->unitCount),
+ nominalCapacity(source->nominalCapacity),
+ forcedVolatility(source->forcedVolatility),
+ plannedVolatility(source->plannedVolatility),
+ forcedLaw(source->forcedLaw),
+ plannedLaw(source->plannedLaw),
+ prepro(source->prepro),
+ series(source->series),
+ modulationCapacity(source->modulation[Data::thermalModulationCapacity]),
+ name(source->name())
+{
+}
 
 ThermalInterface::ThermalInterface(Data::AreaLink::LinkTsGeneration& source,
                                    Data::TimeSeries& capacity,
                                    const std::string& areaDestName) :
-    unitCount(source.unitCount),
-    nominalCapacity(source.nominalCapacity),
-    forcedVolatility(source.forcedVolatility),
-    plannedVolatility(source.plannedVolatility),
-    forcedLaw(source.forcedLaw),
-    plannedLaw(source.plannedLaw),
-    prepro(source.prepro),
-    series(capacity),
-    modulationCapacity(source.modulationCapacity[0]),
-    name(areaDestName)
-{}
+ unitCount(source.unitCount),
+ nominalCapacity(source.nominalCapacity),
+ forcedVolatility(source.forcedVolatility),
+ plannedVolatility(source.plannedVolatility),
+ forcedLaw(source.forcedLaw),
+ plannedLaw(source.plannedLaw),
+ prepro(source.prepro),
+ series(capacity),
+ modulationCapacity(source.modulationCapacity[0]),
+ name(areaDestName)
+{
+}
 
 namespace
 {
-
 class GeneratorTempData final
 {
 public:
@@ -120,8 +120,7 @@ private:
 };
 
 GeneratorTempData::GeneratorTempData(Data::Study& study) :
-    study(study),
-    rndgenerator(study.runtime->random[Data::seedTsGenThermal])
+ study(study), rndgenerator(study.runtime->random[Data::seedTsGenThermal])
 {
     auto& parameters = study.parameters;
 
@@ -569,7 +568,6 @@ void GeneratorTempData::operator()(const Data::Area& area, ThermalInterface& clu
 
     if (derated)
         cluster.series.timeSeries.averageTimeseries();
-
 }
 } // namespace
 
@@ -649,9 +647,10 @@ bool generateLinkTimeSeries(Data::Study& study,
 
     auto generator = std::make_unique<GeneratorTempData>(study);
 
-    for (auto* link: links)
+    for (auto* link : links)
     {
-        ThermalInterface clusterInterface(link->tsGeneration, link->directCapacities, link->with->name);
+        ThermalInterface clusterInterface(
+          link->tsGeneration, link->directCapacities, link->with->name);
         (*generator)(*link->from, clusterInterface);
     }
 

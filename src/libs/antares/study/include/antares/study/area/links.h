@@ -21,7 +21,9 @@
 #ifndef __ANTARES_LIBS_STUDY_LINKS_H__
 #define __ANTARES_LIBS_STUDY_LINKS_H__
 
-#include <antares/study/parts/thermal/cluster.h>
+//#include <antares/study/parts/thermal/cluster.h>
+#include <antares/solver/ts-generator/prepro.h>
+#include <antares/solver/ts-generator/law.h>
 #include <yuni/yuni.h>
 #include <yuni/core/noncopyable.h>
 #include <yuni/core/string.h>
