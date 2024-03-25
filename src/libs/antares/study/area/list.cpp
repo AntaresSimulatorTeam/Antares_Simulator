@@ -861,6 +861,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
               else
               {
                   AreaReserve tmpReserve;
+                  std::string file_name = NewReserves::toFilename(section.name);
                   int type = -1;
                   for (auto* p = section.firstProperty; p; p = p->next)
                   {
@@ -895,12 +896,21 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
                                 << area.name << ": invalid type for reserve " << section.name;
                       }
                   }
+                  buffer.clear() << study.folderInput << SEP << "reserves" << SEP << area.id << SEP
+                                 << file_name << ".txt";
+                  TimeSeries::numbers tsnum;
+                  Antares::Data::TimeSeries* tmp_need = new TimeSeries(tsnum);
+                  ret = (*tmp_need).loadFromFile(buffer, false) && ret;
+                  tmpReserve.need = tmp_need;
                   if (type == 0)
-                      area.newReserves.areaReservesUp.emplace(section.name, tmpReserve);
+                      area.newReserves.areaReservesUp[section.name] = tmpReserve;
                   else if (type == 1)
-                      area.newReserves.areaReservesDown.emplace(section.name, tmpReserve);
+                      area.newReserves.areaReservesDown[section.name] = tmpReserve;
                   else
+                  {
                       logs.warning() << area.name << ": invalid type for reserve " << section.name;
+                      delete tmp_need;
+                  }
               }
           });
     }

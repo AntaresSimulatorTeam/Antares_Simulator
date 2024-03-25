@@ -26,12 +26,14 @@
 #include <yuni/core/string.h>
 #include <vector>
 #include <optional>
+#include <antares/series/series.h>
 
 /// @brief Represents an area reserve using it's name, it's failure cost and it's spillage cost
 struct AreaReserve
 {
     float failureCost = 0;
     float spillageCost = 0;
+    Data::TimeSeries* need;
 };
 
 /// @brief Stores all the Reserves in two vectors for the up and down reserves
@@ -63,6 +65,17 @@ struct NewReserves
             return areaReservesDown.at(name);
         }
         return std::nullopt;
+    }
+
+    /// @brief Returns lower case, no space string
+    /// @param name
+    /// @return A string usable for file naming
+    static std::string toFilename(std::string name)
+    {
+        std::string file_name = name;
+        std::replace(file_name.begin(), file_name.end(), ' ', '_');
+        std::transform(file_name.begin(), file_name.end(), file_name.begin(), ::tolower);
+        return file_name;
     }
 };
 
