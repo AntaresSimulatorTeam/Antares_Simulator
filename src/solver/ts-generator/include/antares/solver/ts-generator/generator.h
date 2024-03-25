@@ -26,21 +26,21 @@
 #include <antares/study/parameters.h>
 #include <antares/study/study.h>
 #include <antares/study/parts/thermal/cluster.h>
+#include <antares/solver/ts-generator/law.h>
 #include <antares/series/series.h>
 #include <antares/writer/i_writer.h>
 #include "xcast/xcast.h"
 
 namespace Antares::TSGenerator
 {
-
 class ThermalInterface
 {
 public:
     explicit ThermalInterface(Data::ThermalCluster*);
     ThermalInterface(Data::AreaLink::LinkTsGeneration&, Data::TimeSeries&, const std::string& name);
 
-    const unsigned &unitCount;
-    const double &nominalCapacity;
+    const unsigned& unitCount;
+    const double& nominalCapacity;
 
     const double& forcedVolatility;
     const double& plannedVolatility;

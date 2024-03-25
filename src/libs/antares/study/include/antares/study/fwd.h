@@ -153,12 +153,6 @@ enum class LocalTransmissionCapacities
     infinite
 };
 
-enum ThermalLaw
-{
-    thermalLawUniform,
-    thermalLawGeometric
-};
-
 std::string transmissionCapacitiesToString(const LocalTransmissionCapacities& tc);
 
 /*!
