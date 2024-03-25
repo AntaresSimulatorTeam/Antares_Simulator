@@ -76,17 +76,11 @@ std::unique_ptr<GetOpt::Parser> CreateParser(Settings& settings,
                 "force-parallel",
                 "Override the max number of years computed simultaneously");
 
-    // add option for ortools use
-    // --use-ortools
-    parser->addFlag(
-      options.ortoolsUsed, ' ', "use-ortools", "Use ortools library to launch solver");
-
-    //--ortools-solver
-    parser->add(options.ortoolsSolver,
+    //--solver
+    parser->add(options.solverName,
                 ' ',
-                "ortools-solver",
-                "Ortools solver used for simulation (only available with use-ortools "
-                "option)\nAvailable solver list : "
+                "solver",
+                "Solver used for simulation\nAvailable solver list : "
                   + availableOrToolsSolversString());
 
     parser->addParagraph("\nParameters");
@@ -247,19 +241,15 @@ void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOption
 
 void checkOrtoolsSolver(Data::StudyLoadOptions& options)
 {
-    if (options.ortoolsUsed)
-    {
-        const std::list<std::string> availableSolverList = getAvailableOrtoolsSolverName();
+    const std::list<std::string> availableSolverList = getAvailableOrtoolsSolverName();
 
-        // Check if solver is available
-        bool found
-          = (std::find(
-               availableSolverList.begin(), availableSolverList.end(), options.ortoolsSolver)
-             != availableSolverList.end());
-        if (!found)
-        {
-            throw Error::InvalidSolver(options.ortoolsSolver, availableOrToolsSolversString());
-        }
+    // Check if solver is available
+    bool found = std::find(availableSolverList.begin(), 
+                           availableSolverList.end(), 
+                           options.solverName) != availableSolverList.end();
+    if (!found)
+    {
+        throw Error::InvalidSolver(options.solverName, availableOrToolsSolversString());
     }
 }
 

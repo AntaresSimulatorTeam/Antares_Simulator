@@ -1091,7 +1091,7 @@ void RunSimulationOnTheStudy(Data::Study::Ptr study,
                              Solver::Feature features,
                              bool preproOnly,
                              bool useOrtools,
-                             const std::string& ortoolsSolver)
+                             const std::string& solverName)
 {
     if (!study) // A valid study would be better
     {
@@ -1212,7 +1212,7 @@ void RunSimulationOnTheStudy(Data::Study::Ptr study,
                 cmd << " --use-ortools";
 
                 // add solver name for ortools
-                cmd << " --ortools-solver=" << ortoolsSolver;
+                cmd << " --ortools-solver=" << solverName;
             }
 
             // Go go go !

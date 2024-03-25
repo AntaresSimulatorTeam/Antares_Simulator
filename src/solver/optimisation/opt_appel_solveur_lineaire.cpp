@@ -102,9 +102,8 @@ static SimplexResult OPT_TryToCallSimplex(
         IResultWriter& writer)
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
-    auto ProbSpx
-      = (PROBLEME_SPX*)(ProblemeAResoudre->ProblemesSpx[(int)NumIntervalle]);
-    auto solver = (MPSolver*)(ProblemeAResoudre->ProblemesSpx[(int)NumIntervalle]);
+    auto ProbSpx = (PROBLEME_SPX*)(ProblemeAResoudre->ProblemesSpx[NumIntervalle]);
+    auto solver = (MPSolver*)(ProblemeAResoudre->ProblemesSpx[NumIntervalle]);
 
     const int opt = optimizationNumber - 1;
     assert(opt >= 0 && opt < 2);
@@ -125,7 +124,7 @@ static SimplexResult OPT_TryToCallSimplex(
     {
         if (problemeHebdo->ReinitOptimisation)
         {
-            if (options.useOrtools && solver != nullptr)
+            if (solver != nullptr)
             {
                 ORTOOLS_LibererProbleme(solver);
             }
@@ -146,29 +145,19 @@ static SimplexResult OPT_TryToCallSimplex(
             Probleme.BaseDeDepartFournie = UTILISER_LA_BASE_DU_PROBLEME_SPX;
 
             TimeMeasurement updateMeasure;
-            if (options.useOrtools)
-            {
-                ORTOOLS_ModifierLeVecteurCouts(
-                  solver, ProblemeAResoudre->CoutLineaire.data(), ProblemeAResoudre->NombreDeVariables);
-                ORTOOLS_ModifierLeVecteurSecondMembre(solver,
-                                                      ProblemeAResoudre->SecondMembre.data(),
-                                                      ProblemeAResoudre->Sens.data(),
-                                                      ProblemeAResoudre->NombreDeContraintes);
-                ORTOOLS_CorrigerLesBornes(solver,
-                                          ProblemeAResoudre->Xmin.data(),
-                                          ProblemeAResoudre->Xmax.data(),
-                                          ProblemeAResoudre->TypeDeVariable.data(),
-                                          ProblemeAResoudre->NombreDeVariables);
-            }
-            else
-            {
-                SPX_ModifierLeVecteurCouts(
-                  ProbSpx, ProblemeAResoudre->CoutLineaire.data(), ProblemeAResoudre->NombreDeVariables);
-                SPX_ModifierLeVecteurSecondMembre(ProbSpx,
-                                                  ProblemeAResoudre->SecondMembre.data(),
-                                                  ProblemeAResoudre->Sens.data(),
-                                                  ProblemeAResoudre->NombreDeContraintes);
-            }
+
+            ORTOOLS_ModifierLeVecteurCouts(
+                solver, ProblemeAResoudre->CoutLineaire.data(), ProblemeAResoudre->NombreDeVariables);
+            ORTOOLS_ModifierLeVecteurSecondMembre(solver,
+                                                    ProblemeAResoudre->SecondMembre.data(),
+                                                    ProblemeAResoudre->Sens.data(),
+                                                    ProblemeAResoudre->NombreDeContraintes);
+            ORTOOLS_CorrigerLesBornes(solver,
+                                        ProblemeAResoudre->Xmin.data(),
+                                        ProblemeAResoudre->Xmax.data(),
+                                        ProblemeAResoudre->TypeDeVariable.data(),
+                                        ProblemeAResoudre->NombreDeVariables);
+
             updateMeasure.tick();
             timeMeasure.updateTime = updateMeasure.duration_ms();
             optimizationStatistics.addUpdateTime(timeMeasure.updateTime);
@@ -216,40 +205,27 @@ static SimplexResult OPT_TryToCallSimplex(
 
     Probleme.NombreDeContraintesCoupes = 0;
 
-    if (options.useOrtools)
-    {
-        solver = ORTOOLS_ConvertIfNeeded(options.solverName, &Probleme, solver);
-    }
+    solver = ORTOOLS_ConvertIfNeeded(options.solverName, &Probleme, solver);
     const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
 
     mpsWriterFactory mps_writer_factory(problemeHebdo->ExportMPS,
                                         problemeHebdo->exportMPSOnError,
                                         optimizationNumber,
                                         &Probleme,
-                                        options.useOrtools,
                                         solver);
 
     auto mps_writer = mps_writer_factory.create();
     mps_writer->runIfNeeded(writer, filename);
 
     TimeMeasurement measure;
-    if (options.useOrtools)
+
+    const bool keepBasis = (optimizationNumber == PREMIERE_OPTIMISATION);
+    solver = ORTOOLS_Simplexe(&Probleme, solver, keepBasis);
+    if (solver != nullptr)
     {
-        const bool keepBasis = (optimizationNumber == PREMIERE_OPTIMISATION);
-        solver = ORTOOLS_Simplexe(&Probleme, solver, keepBasis);
-        if (solver != nullptr)
-        {
-            ProblemeAResoudre->ProblemesSpx[NumIntervalle] = (void*)solver;
-        }
+        ProblemeAResoudre->ProblemesSpx[NumIntervalle] = (void*)solver;
     }
-    else
-    {
-        ProbSpx = SPX_Simplexe(&Probleme, ProbSpx);
-        if (ProbSpx != nullptr)
-        {
-            ProblemeAResoudre->ProblemesSpx[NumIntervalle] = (void*)ProbSpx;
-        }
-    }
+
     measure.tick();
     timeMeasure.solveTime = measure.duration_ms();
     optimizationStatistics.addSolveTime(timeMeasure.solveTime);
@@ -259,7 +235,7 @@ static SimplexResult OPT_TryToCallSimplex(
     {
         if (ProblemeAResoudre->ExistenceDUneSolution != SPX_ERREUR_INTERNE)
         {
-            if (options.useOrtools && solver != nullptr)
+            if (solver != nullptr)
             {
                 ORTOOLS_LibererProbleme(solver);
             }
