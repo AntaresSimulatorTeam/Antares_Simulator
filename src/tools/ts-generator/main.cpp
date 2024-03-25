@@ -57,15 +57,12 @@ std::unique_ptr<Yuni::GetOpt::Parser> createTsGeneratorParser(TsGeneratorSetting
     parser->addParagraph("Antares Time Series generator\n");
 
     parser->addFlag(settings.allThermal, ' ', "all-thermal", "Generate TS for all thermal clusters");
-
     parser->addFlag(settings.thermalListToGen, ' ', "thermal", "Generate TS for a list of area IDs and thermal clusters IDs, usage:\n\t--thermal=\"areaID.clusterID;area2ID.clusterID\"");
 
     parser->addFlag(settings.allLinks, ' ', "all-links", "Generate TS capacities for all links");
-
-    parser->addFlag(settings.linksListToGen, ' ', "links", "Generate TS capacities for a list of area IDs and links name, usage:\n\t--links=\"areaID.linkName;area2ID.linkName\"");
+    parser->addFlag(settings.linksListToGen, ' ', "links", "Generate TS capacities for a list of area IDs and links name, usage:\n\t--links=\"areaID.area2ID;area3ID.area1ID\"");
 
     parser->remainingArguments(settings.studyFolder);
-
 
     return parser;
 }
