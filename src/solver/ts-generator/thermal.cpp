@@ -681,6 +681,8 @@ bool generateLinkTimeSeries(Data::Study& study,
 
         (*generator)(*link->from, clusterInterfaceDirect);
         (*generator)(*link->from, clusterInterfaceIndirect);
+
+        writeLinksResultsToDisk(study, writer, *link, savePath);
     }
 
     return true;
