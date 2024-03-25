@@ -153,6 +153,12 @@ enum class LocalTransmissionCapacities
     infinite
 };
 
+enum ThermalLaw
+{
+    thermalLawUniform,
+    thermalLawGeometric
+};
+
 std::string transmissionCapacitiesToString(const LocalTransmissionCapacities& tc);
 
 /*!
@@ -222,8 +228,6 @@ enum TimeSeriesType : unsigned int
     // Please update the constant timeSeriesCount if you add / remove an item
     // ***********************************************************************
 }; // enum TimeSeries
-
-
 
 template<int T>
 struct TimeSeriesBitPatternIntoIndex;
@@ -550,8 +554,6 @@ class TSNumberRules;
 class Sets;
 
 } // namespace Antares::Data::ScenarioBuilder
-
-
 
 namespace Benchmarking
 {

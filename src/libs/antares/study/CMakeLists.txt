@@ -70,9 +70,6 @@ source_group("study\\part\\common" FILES ${SRC_STUDY_PART_COMMON})
 set(SRC_STUDY_PART_THERMAL
         include/antares/study/parts/thermal/container.h
         parts/thermal/container.cpp
-        include/antares/study/parts/thermal/prepro.h
-        include/antares/study/parts/thermal/prepro.hxx
-        parts/thermal/prepro.cpp
         include/antares/study/parts/thermal/ecoInput.h
         parts/thermal/ecoInput.cpp
         include/antares/study/parts/thermal/cluster.h
