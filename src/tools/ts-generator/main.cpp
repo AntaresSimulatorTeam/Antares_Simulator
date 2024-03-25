@@ -179,26 +179,28 @@ int main(int argc, char *argv[])
             Data::ResultFormat::legacyFilesDirectories, study->folderOutput, nullptr, nullDurationCollector);
 
 #define SEP Yuni::IO::Separator
-    const std::string savePath = std::string("ts-generator") + SEP + "thermal";
+    const std::string thermalSavePath = std::string("ts-generator") + SEP + "thermal";
+    const std::string linksSavePath = std::string("ts-generator") + SEP + "links";
 #undef SEP
 
+    // THERMAL
     std::vector<Data::ThermalCluster*> clusters;
-
     if (settings.allThermal)
         clusters = TSGenerator::getAllClustersToGen(study->areas, true);
     else if (!settings.thermalListToGen.empty())
         clusters = getClustersToGen(study->areas, settings.thermalListToGen);
 
-    std::vector<Data::AreaLink*> links;
-
-    if (!settings.linksListToGen.empty())
-        links = getLinksToGen(study->areas, settings.linksListToGen);
-
     for (auto& c : clusters)
         logs.debug() << c->id();
+
+    // LINKS
+    std::vector<Data::AreaLink*> links;
+    if (!settings.linksListToGen.empty())
+        links = getLinksToGen(study->areas, settings.linksListToGen);
 
     for (auto& l : links)
         logs.debug() << l->getName();
 
-    return !TSGenerator::GenerateThermalTimeSeries(*study, clusters, *resultWriter, savePath);
+    return !TSGenerator::GenerateThermalTimeSeries(*study, clusters, *resultWriter, thermalSavePath)
+        && !TSGenerator::generateLinkTimeSeries(*study, links, *resultWriter, linksSavePath);
 }

@@ -70,6 +70,11 @@ bool GenerateThermalTimeSeries(Data::Study& study,
                                Solver::IResultWriter& writer,
                                const std::string& savePath);
 
+bool generateLinkTimeSeries(Data::Study& study,
+                            std::vector<Data::AreaLink*> links,
+                            Solver::IResultWriter& writer,
+                            const std::string& savePath);
+
 std::vector<Data::ThermalCluster*> getAllClustersToGen(Data::AreaList& areas,
                                                        bool globalThermalTSgeneration);
 /*!
