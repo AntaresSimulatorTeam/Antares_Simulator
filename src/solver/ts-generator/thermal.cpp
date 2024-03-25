@@ -53,7 +53,7 @@ ThermalInterface::ThermalInterface(Data::ThermalCluster* source) :
 
 ThermalInterface::ThermalInterface(Data::AreaLink::LinkTsGeneration& source,
                                    Data::TimeSeries& capacity,
-                                   const std::string& linkName) :
+                                   const std::string& areaDestName) :
  unitCount(source.unitCount),
  nominalCapacity(source.nominalCapacity),
  forcedVolatility(source.forcedVolatility),
@@ -63,7 +63,7 @@ ThermalInterface::ThermalInterface(Data::AreaLink::LinkTsGeneration& source,
  prepro(source.prepro),
  series(capacity),
  modulationCapacity(source.modulationCapacity[0]),
- name(linkName)
+ name(areaDestName)
 {
 }
 
@@ -637,4 +637,23 @@ bool GenerateThermalTimeSeries(Data::Study& study,
     return true;
 }
 
+bool generateLinkTimeSeries(Data::Study& study,
+                            std::vector<Data::AreaLink*> links,
+                            Solver::IResultWriter& writer,
+                            const std::string& savePath)
+{
+    logs.info();
+    logs.info() << "Generating the links time-series";
+
+    auto generator = std::make_unique<GeneratorTempData>(study);
+
+    for (auto* link : links)
+    {
+        ThermalInterface clusterInterface(
+          link->tsGeneration, link->directCapacities, link->with->name);
+        (*generator)(*link->from, clusterInterface);
+    }
+
+    return true;
+}
 } // namespace Antares::TSGenerator
