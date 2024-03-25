@@ -15,7 +15,7 @@ on:
       run-tests:
         description: "Run all tests"
         required: true
-        type: boolean
+        type: string
       set_latest:
         description: "Set the release as latest"
         required: true
