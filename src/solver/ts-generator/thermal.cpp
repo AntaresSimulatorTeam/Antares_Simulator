@@ -596,28 +596,28 @@ void writeResultsToDisk(const Data::Study& study,
 void writeLinksResultsToDisk(const Data::Study& study,
                              Solver::IResultWriter& writer,
                              const Data::AreaLink& link,
-                             const std::string& savePath,
-                             bool directCapacity)
+                             const std::string& savePath)
 {
     if (study.parameters.noOutput)
         return;
 
-    std::string direction = directCapacity ? "direct" : "indirect";
+    enum { precision = 0 };
+    std::string buffer;
 
     Yuni::String pTempFilename;
     pTempFilename.reserve(study.folderOutput.size() + 256);
 
     pTempFilename.clear() << savePath << SEP << link.from->id << SEP <<
-        link.with->id << "_" << direction << ".txt";
+        link.with->id << "_direct.txt";
 
-    enum { precision = 0 };
+    link.directCapacities.timeSeries.saveToBuffer(buffer, precision);
+    writer.addEntryFromBuffer(pTempFilename.c_str(), buffer);
 
-    std::string buffer;
-    if (directCapacity)
-        link.directCapacities.timeSeries.saveToBuffer(buffer, precision);
-    else
-        link.indirectCapacities.timeSeries.saveToBuffer(buffer, precision);
 
+    pTempFilename.clear() << savePath << SEP << link.from->id << SEP <<
+        link.with->id << "_indirect.txt";
+
+    link.indirectCapacities.timeSeries.saveToBuffer(buffer, precision);
     writer.addEntryFromBuffer(pTempFilename.c_str(), buffer);
 }
 
