@@ -585,13 +585,38 @@ void writeResultsToDisk(const Data::Study& study,
 
     pTempFilename.clear() << savePath << SEP << area.id << SEP << cluster.id() << ".txt";
 
-    enum
-    {
-        precision = 0
-    };
+    enum { precision = 0 };
 
     std::string buffer;
     cluster.series.timeSeries.saveToBuffer(buffer, precision);
+
+    writer.addEntryFromBuffer(pTempFilename.c_str(), buffer);
+}
+
+void writeLinksResultsToDisk(const Data::Study& study,
+                             Solver::IResultWriter& writer,
+                             const Data::AreaLink& link,
+                             const std::string& savePath,
+                             bool directCapacity)
+{
+    if (study.parameters.noOutput)
+        return;
+
+    std::string direction = directCapacity ? "direct" : "indirect";
+
+    Yuni::String pTempFilename;
+    pTempFilename.reserve(study.folderOutput.size() + 256);
+
+    pTempFilename.clear() << savePath << SEP << link.from->id << SEP <<
+        link.with->id << "_" << direction << ".txt";
+
+    enum { precision = 0 };
+
+    std::string buffer;
+    if (directCapacity)
+        link.directCapacities.timeSeries.saveToBuffer(buffer, precision);
+    else
+        link.indirectCapacities.timeSeries.saveToBuffer(buffer, precision);
 
     writer.addEntryFromBuffer(pTempFilename.c_str(), buffer);
 }
@@ -649,9 +674,13 @@ bool generateLinkTimeSeries(Data::Study& study,
 
     for (auto* link : links)
     {
-        ThermalInterface clusterInterface(
-          link->tsGeneration, link->directCapacities, link->with->name);
-        (*generator)(*link->from, clusterInterface);
+        ThermalInterface clusterInterfaceDirect(
+                link->tsGeneration, link->directCapacities, link->with->name);
+        ThermalInterface clusterInterfaceIndirect(
+                link->tsGeneration, link->indirectCapacities, link->with->name);
+
+        (*generator)(*link->from, clusterInterfaceDirect);
+        (*generator)(*link->from, clusterInterfaceIndirect);
     }
 
     return true;
