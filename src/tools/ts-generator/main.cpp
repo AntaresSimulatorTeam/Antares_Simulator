@@ -118,7 +118,7 @@ std::vector<Data::AreaLink*> getLinksToGen(Data::AreaList& areas,
         }
 
         auto it = std::ranges::find_if(area->links, [&linkID](auto& l)
-                { return l.second->getName() == linkID;});
+                { return l.second->with->id == linkID;});
 
         if (it != area->links.end())
             links.push_back(it->second);
@@ -196,6 +196,9 @@ int main(int argc, char *argv[])
 
     for (auto& c : clusters)
         logs.debug() << c->id();
+
+    for (auto& l : links)
+        logs.debug() << l->getName();
 
     return !TSGenerator::GenerateThermalTimeSeries(*study, clusters, *resultWriter, savePath);
 }
