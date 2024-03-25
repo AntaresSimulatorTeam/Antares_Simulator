@@ -160,8 +160,6 @@ void DTGmarginForAdqPatchPostProcessCmd::execute(const optRuntimeData&)
             // calculate DTG MRG CSR and adjust ENS if neccessary
             if (problemeHebdo_->adequacyPatchRuntimeData->wasCSRTriggeredAtAreaHour(Area, hour))
             {
-                dtgMrgCsr = std::max(0.0, dtgMrg - ens);
-                ens = std::max(0.0, ens - dtgMrg);
                 if (adqPatchParams_.curtailmentSharing.recomputeDTGMRG)
                 {
                     dtgMrgCsr = std::max(0.0, dtgMrg - ens);
