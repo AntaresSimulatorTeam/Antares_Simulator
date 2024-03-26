@@ -145,14 +145,6 @@ BOOST_AUTO_TEST_CASE(test_yaml_parser)
     for (unsigned i = 0; i < doc.size(); i++)
     {
         monsters.push_back(doc[i].as<Monster>());
-        const Monster& monster = monsters.back();
-        std::cout << "Position: " << monster.position.x << ", " << monster.position.y << ", "
-                  << monster.position.z << "\n";
-        std::cout << "Powers: \n";
-        for (const auto power : monster.powers)
-        {
-            std::cout << power.name << " " << power.damage << "\n";
-        }
     }
     BOOST_CHECK(monsters.size() == 3);
     auto ogre = monsters[0];

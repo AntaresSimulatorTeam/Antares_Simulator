@@ -30,20 +30,10 @@
 using namespace antlr4;
 BOOST_AUTO_TEST_CASE(test_antlr_interface)
 {
-    const std::string my_input = "y = b + ax";
+    const std::string my_input = "y = b + a*x";
     ANTLRInputStream input(my_input);
     ExprLexer lexer(&input);
     CommonTokenStream tokens(&lexer);
     tokens.fill();
-    for (auto token : tokens.getTokens())
-    {
-        std::cout << token->toString() << std::endl;
-    }
-    BOOST_CHECK(tokens.getTokens().size() == 6);
-    // ExprParser parser(&tokens);
-    // tree::ParseTree* tree = parser.main();
-
-    // auto s = tree->toStringTree(&parser);
-    // auto input_stream = parser.getInputStream();
-    // BOOST_CHECK(input_stream->size() == my_input.size());
+    BOOST_CHECK(tokens.getTokens().size() == 8);
 }
