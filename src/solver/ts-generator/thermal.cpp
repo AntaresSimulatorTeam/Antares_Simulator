@@ -72,7 +72,7 @@ namespace
 class GeneratorTempData final
 {
 public:
-    explicit GeneratorTempData(Data::Study& study);
+    explicit GeneratorTempData(Data::Study&, unsigned);
 
     void operator()(const Data::Area& area, ThermalInterface& cluster);
 
@@ -119,12 +119,12 @@ private:
     Yuni::String pTempFilename;
 };
 
-GeneratorTempData::GeneratorTempData(Data::Study& study) :
+GeneratorTempData::GeneratorTempData(Data::Study& study, unsigned nbOfSeriesToGen) :
  study(study), rndgenerator(study.runtime->random[Data::seedTsGenThermal])
 {
     auto& parameters = study.parameters;
 
-    nbThermalTimeseries_ = parameters.nbTimeSeriesThermal;
+    nbThermalTimeseries_ = nbOfSeriesToGen;
 
     derated = parameters.derated;
 
@@ -645,7 +645,7 @@ bool GenerateThermalTimeSeries(Data::Study& study,
 
     bool archive = (0 != (study.parameters.timeSeriesToArchive & Data::timeSeriesThermal));
 
-    auto generator = std::make_unique<GeneratorTempData>(study);
+    auto generator = std::make_unique<GeneratorTempData>(study, study.parameters.nbTimeSeriesThermal);
 
     // TODO VP: parallel
     for (auto* cluster : clusters)
@@ -670,7 +670,7 @@ bool generateLinkTimeSeries(Data::Study& study,
     logs.info();
     logs.info() << "Generating the links time-series";
 
-    auto generator = std::make_unique<GeneratorTempData>(study);
+    auto generator = std::make_unique<GeneratorTempData>(study, study.parameters.nbTimeSeriesLinks);
 
     for (auto* link : links)
     {
