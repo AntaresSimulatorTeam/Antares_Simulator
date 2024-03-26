@@ -28,6 +28,7 @@
 
 namespace Antares::Data::ShortTermStorage
 {
+// gp : we'll be able to remove the map and the function below
 const std::map<std::string, enum Group> Properties::GROUP_TO_ENUM = 
     {{"PSP_open", Group::PSP_open},
      {"PSP_closed", Group::PSP_closed},
@@ -100,6 +101,8 @@ bool Properties::loadKey(const IniFile::Property* p)
 
     if (p->key == "group")
     {
+        this->groupName = p->value.c_str();
+
         if (auto it = Properties::GROUP_TO_ENUM.find(p->value.c_str());
             it != Properties::GROUP_TO_ENUM.end())
         {
@@ -120,6 +123,9 @@ void Properties::save(IniFile& ini) const
     IniFile::Section* s = ini.addSection(this->name);
 
     s->add("name", this->name);
+
+    // gp : we'll have to print simply (instead of subsequent already existing lines) :
+    // s->add("group", this->groupName);
 
     for (const auto& [key, value] : GROUP_TO_ENUM)
         if (value == this->group)

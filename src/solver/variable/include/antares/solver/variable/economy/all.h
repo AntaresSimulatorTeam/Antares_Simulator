@@ -97,6 +97,7 @@
 // Output variables associated to binding constraints
 #include "bindingConstraints/bindingConstraintsMarginalCost.h"
 #include "varDynamic.h"
+#include "STSbyGroup.h"
 
 namespace Antares::Solver::Variable::Economy
 {
@@ -124,7 +125,7 @@ typedef                           // Prices
   OverallCost                     // Overall Cost (Op. Cost + Unsupplied Eng.)
   <OperatingCost                  // Operating Cost
    <Price                         // Marginal price
-   <VarDynamic
+   // <VarDynamic
                                   // Thermal pollutants
     <ThermalAirPollutantEmissions // Overall pollutant emissions(from all thermal dispatchable
                                   // clusters) Production by thermal cluster
@@ -150,10 +151,13 @@ typedef                           // Prices
                      <Overflows        // Hydraulic overflows
                       <WaterValue      // Water values
                        <HydroCost      // Hydro costs
-                        <ShortTermStorageByGroup<STstorageInjectionByCluster<
-                          STstorageWithdrawalByCluster<STstorageLevelsByCluster<
-                          STstorageCashFlowByCluster<
-                            UnsupliedEnergy           // Unsuplied Energy
+                        // <ShortTermStorageByGroup
+                        <STSbyGroup
+                        <STstorageInjectionByCluster
+                        <STstorageWithdrawalByCluster
+                        <STstorageLevelsByCluster
+                          <STstorageCashFlowByCluster
+                            <UnsupliedEnergy           // Unsuplied Energy
                             <DomesticUnsuppliedEnergy // Domestic Unsupplied Energy
                              <LMRViolations           // LMR Violations
                               <SpilledEnergy          // Spilled Energy
@@ -172,7 +176,7 @@ typedef                           // Prices
                                         <ProfitByPlant
                                          // Links
                                          <Variable::Economy::Links // All links
-                                          >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                          >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>//>>
     VariablesPerArea;
 
 /*!

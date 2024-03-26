@@ -64,6 +64,8 @@ public:
     double efficiencyFactor = 1;
     /// Used to sort outputs
     Group group = Group::Other1;
+    // Used to sort outputs
+    std::string groupName;
     /// cluster name
     std::string name;
 
