@@ -395,8 +395,6 @@ bool thermalTSNumberData::apply(Study& study)
     // WARNING: We may have some thermal clusters with the `mustrun` option
     auto clusterCount = (uint)area.thermal.clusterCount();
 
-    const uint tsGenCountThermal = get_tsGenCount(study);
-
     for (uint clusterIndex = 0; clusterIndex != clusterCount; ++clusterIndex)
     {
         auto& cluster = *(area.thermal.clusters[clusterIndex]);
@@ -404,9 +402,13 @@ bool thermalTSNumberData::apply(Study& study)
         assert(clusterIndex < pTSNumberRules.width);
         const auto& col = pTSNumberRules[clusterIndex];
 
-        logprefix.clear() << "Thermal: Area '" << area.name << "', cluster: '" << cluster.name()
+        uint tsGenCount = cluster.tsGenBehavior == LocalTSGenerationBehavior::forceNoGen ?
+            cluster.series->timeSeries.width : get_tsGenCount(study);
+
+        logprefix.clear() << "Thermal: area '" << area.name << "', cluster: '" << cluster.name()
                           << "': ";
-        ret = ApplyToMatrix(errors, logprefix, *cluster.series, col, tsGenCountThermal) && ret;
+        ret = ApplyToMatrix(errors, logprefix, *cluster.series, col, tsGenCount) && ret;
+
     }
     return ret;
 }

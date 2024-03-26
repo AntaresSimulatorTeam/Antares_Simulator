@@ -1,6 +1,12 @@
 Antares Changelog
 =================
 
+# v8.6.6 (03/2024)
+## Bugfixes
+Adequacy patch CSR - fix DTG MRG (#1982)
+Fix ts numbers for no gen clusters (#1969)
+Remove unitcount limit for time series generation (#1960)
+
 # v8.6.4 (11/2023)
 ## Bugfixes
 * Fix Oracle Linux minizip build + actually run zip unit tests (#1744)

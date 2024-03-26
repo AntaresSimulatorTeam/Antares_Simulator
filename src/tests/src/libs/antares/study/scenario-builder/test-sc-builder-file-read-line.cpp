@@ -385,5 +385,4 @@ BOOST_AUTO_TEST_CASE(on_link_area2_area3_and_on_year_19__ntc_TS_number_6_is_chos
 	BOOST_CHECK(my_rule.apply());
 	BOOST_CHECK_EQUAL(link_23->timeseriesNumbers[0][yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
 }
-
 BOOST_AUTO_TEST_SUITE_END()

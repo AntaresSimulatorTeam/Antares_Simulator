@@ -176,7 +176,6 @@ bool AdqPatchParams::checkAdqPatchParams(const StudyMode studyMode,
     checkAdqPatchStudyModeEconomyOnly(studyMode);
     checkAdqPatchContainsAdqPatchArea(areas);
     checkAdqPatchIncludeHurdleCost(includeHurdleCostParameters);
-    checkAdqPatchDisabledLocalMatching();
 
     return true;
 }
@@ -205,11 +204,4 @@ void AdqPatchParams::checkAdqPatchIncludeHurdleCost(const bool includeHurdleCost
     if (curtailmentSharing.includeHurdleCost && !includeHurdleCostParameters)
         throw Error::IncompatibleHurdleCostCSR();
 }
-
-void AdqPatchParams::checkAdqPatchDisabledLocalMatching() const
-{
-    if (!localMatching.enabled && curtailmentSharing.priceTakingOrder == AdqPatchPTO::isDens)
-        throw Error::AdqPatchDisabledLMR();
-}
-
-} // Antares::Data::AdequacyPatch
+} // namespace Antares::Data::AdequacyPatch
