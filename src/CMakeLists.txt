@@ -315,6 +315,7 @@ if(NOT minizip_FOUND OR BUILD_MINIZIP)
 endif()
 find_package(minizip REQUIRED)
 
+
 #wxWidget not needed for all library find is done in ui CMakeLists.txt
 if (VCPKG_TOOLCHAIN AND NOT BUILD_wxWidgets) 
     #Add cmake directory to CMAKE_MODULE_PATH to use specific FindwxWidgets package needed for vcpkg
