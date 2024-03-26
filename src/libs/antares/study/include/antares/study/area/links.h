@@ -224,7 +224,8 @@ public:
         Matrix<> modulationCapacity;
     };
 
-    LinkTsGeneration tsGeneration;
+    LinkTsGeneration tsGenerationDirect;
+    LinkTsGeneration tsGenerationIndirect;
 
 }; // class AreaLink
 

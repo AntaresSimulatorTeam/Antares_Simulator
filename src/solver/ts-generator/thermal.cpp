@@ -676,12 +676,13 @@ bool generateLinkTimeSeries(Data::Study& study,
         ts.resize(study.parameters.nbTimeSeriesLinks, HOURS_PER_YEAR);
 
         // direct capacity
-        ThermalInterface clusterInterface(link->tsGeneration, ts, link->with->name);
-        (*generator)(*link->from, clusterInterface);
+        ThermalInterface clusterInterfaceDirect(link->tsGenerationDirect, ts, link->with->name);
+        (*generator)(*link->from, clusterInterfaceDirect);
         writeLinksResultsToDisk(study, writer, *link, ts.timeSeries, savePath, true);
 
         // indirect capacity
-        (*generator)(*link->from, clusterInterface);
+        ThermalInterface clusterInterfaceIndirect(link->tsGenerationIndirect, ts, link->with->name);
+        (*generator)(*link->from, clusterInterfaceIndirect);
         writeLinksResultsToDisk(study, writer, *link, ts.timeSeries, savePath, false);
     }
 
