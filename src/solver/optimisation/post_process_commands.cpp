@@ -122,12 +122,14 @@ void RemixHydroPostProcessCmd::execute(const optRuntimeData& opt_runtime_data)
 using namespace Antares::Data::AdequacyPatch;
 
 DTGmarginForAdqPatchPostProcessCmd::DTGmarginForAdqPatchPostProcessCmd(
+  const AdqPatchParams& adqPatchParams,
   PROBLEME_HEBDO* problemeHebdo,
   AreaList& areas,
-  unsigned int thread_number):
-    basePostProcessCommand(problemeHebdo),
-    area_list_(areas),
-    thread_number_(thread_number)
+  unsigned int thread_number) :
+ basePostProcessCommand(problemeHebdo),
+ adqPatchParams_(adqPatchParams),
+ area_list_(areas),
+ thread_number_(thread_number)
 {
 }
 
@@ -147,22 +149,23 @@ void DTGmarginForAdqPatchPostProcessCmd::execute(const optRuntimeData&)
         for (uint hour = 0; hour < nbHoursInWeek; hour++)
         {
             auto& hourlyResults = problemeHebdo_->ResultatsHoraires[Area];
-            const auto& scratchpad = area_list_[Area]->scratchpad[thread_number_];
-            const double dtgMrg = scratchpad.dispatchableGenerationMargin[hour];
-            const double ens = hourlyResults.ValeursHorairesDeDefaillancePositive[hour];
-            const bool triggered = problemeHebdo_->adequacyPatchRuntimeData
-                                     ->wasCSRTriggeredAtAreaHour(Area, hour);
-            hourlyResults.ValeursHorairesDtgMrgCsr[hour] = recomputeDTG_MRG(triggered, dtgMrg, ens);
-            hourlyResults.ValeursHorairesDeDefaillancePositiveCSR[hour] = recomputeENS_MRG(
-              triggered,
-              dtgMrg,
-              ens);
-
-            const double unsuppliedEnergyCost = area_list_[Area]->thermal.unsuppliedEnergyCost;
-            hourlyResults.CoutsMarginauxHoraires[hour] = recomputeMRGPrice(
-              hourlyResults.ValeursHorairesDtgMrgCsr[hour],
-              hourlyResults.CoutsMarginauxHoraires[hour],
-              unsuppliedEnergyCost);
+            double& dtgMrgCsr = hourlyResults.ValeursHorairesDtgMrgCsr[hour];
+            double& ens = hourlyResults.ValeursHorairesDeDefaillancePositive[hour];
+            double& mrgCost = hourlyResults.CoutsMarginauxHoraires[hour];
+            // calculate DTG MRG CSR and adjust ENS if neccessary
+            if (problemeHebdo_->adequacyPatchRuntimeData->wasCSRTriggeredAtAreaHour(Area, hour))
+            {
+                if (adqPatchParams_.curtailmentSharing.recomputeDTGMRG)
+                {
+                    dtgMrgCsr = std::max(0.0, dtgMrg - ens);
+                    ens = std::max(0.0, ens - dtgMrg);
+                }
+                // set MRG PRICE to value of unsupplied energy cost, if LOLD=1.0 (ENS>0.5)
+                if (ens > 0.5)
+                    mrgCost = -area_list_[Area]->thermal.unsuppliedEnergyCost;
+            }
+            else
+                dtgMrgCsr = dtgMrg;
         }
     }
 }
@@ -211,11 +214,11 @@ CurtailmentSharingPostProcessCmd::CurtailmentSharingPostProcessCmd(
   const AdqPatchParams& adqPatchParams,
   PROBLEME_HEBDO* problemeHebdo,
   AreaList& areas,
-  unsigned int thread_number):
-    basePostProcessCommand(problemeHebdo),
-    area_list_(areas),
-    adqPatchParams_(adqPatchParams),
-    thread_number_(thread_number)
+  unsigned int thread_number) :
+ basePostProcessCommand(problemeHebdo),
+ area_list_(areas),
+ adqPatchParams_(adqPatchParams),
+ thread_number_(thread_number)
 {
 }
 
