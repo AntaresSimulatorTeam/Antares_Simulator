@@ -86,10 +86,7 @@ jobs:
     - name: export wxWidgets script
       shell: bash
       run: |
-           echo ${{ env.WX_CONFIG}}
-           cat ${{ env.WX_CONFIG}}
-           export WX_CONFIG=/usr/bin/wx-config
-           cat $WX_CONFIG
+           export WX_CONFIG=${{env.WX_CONFIG}}
 
     - name : Install deps with VCPKG
       run: |
@@ -139,7 +136,6 @@ jobs:
     
     - name: Configure
       run: |
-           export WX_CONFIG=${{env.WX_CONFIG}}
            cmake -B _build -S src \
            -DCMAKE_C_COMPILER_LAUNCHER=ccache \
            -DVCPKG_ROOT="${{env.VCPKG_ROOT}}" \
