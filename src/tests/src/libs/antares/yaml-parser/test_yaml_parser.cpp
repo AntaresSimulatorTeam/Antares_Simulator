@@ -140,6 +140,7 @@ BOOST_AUTO_TEST_CASE(test_yaml_parser)
       damage: 50
     - name: Staff
       damage: 3)";
+
     YAML::Node doc = YAML::Load(my_yaml);
     std::vector<Monster> monsters;
     for (unsigned i = 0; i < doc.size(); i++)
