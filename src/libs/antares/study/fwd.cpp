@@ -40,8 +40,6 @@ const char* SeedToCString(SeedIndex seed)
         return "Thermal time-series generation";
     case seedTsGenSolar:
         return "Solar time-series generation";
-    case seedTsGenLinks:
-        return "Links time-series generation";
     case seedTimeseriesNumbers:
         return "Time-series draws (MC scenario builder)";
     case seedUnsuppliedEnergyCosts:
@@ -54,6 +52,8 @@ const char* SeedToCString(SeedIndex seed)
         return "Noise on virtual Hydro costs";
     case seedHydroManagement:
         return "Initial reservoir levels";
+    case seedTsGenLinks:
+        return "Links time-series generation";
     case seedMax:
         return "";
     }
@@ -74,8 +74,6 @@ const char* SeedToID(SeedIndex seed)
         return "seed-tsgen-thermal";
     case seedTsGenSolar:
         return "seed-tsgen-solar";
-    case seedTsGenLinks:
-        return "seed-tsgen-links";
     case seedTimeseriesNumbers:
         return "seed-tsnumbers";
     case seedUnsuppliedEnergyCosts:
@@ -88,6 +86,8 @@ const char* SeedToID(SeedIndex seed)
         return "seed-hydro-costs";
     case seedHydroManagement:
         return "seed-initial-reservoir-levels";
+    case seedTsGenLinks:
+        return "seed-tsgen-links";
     case seedMax:
         return "";
     }
