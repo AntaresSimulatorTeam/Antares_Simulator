@@ -596,7 +596,9 @@ void writeResultsToDisk(const Data::Study& study,
 void writeLinksResultsToDisk(const Data::Study& study,
                              Solver::IResultWriter& writer,
                              const Data::AreaLink& link,
-                             const std::string& savePath)
+                             Matrix<>& series,
+                             const std::string& savePath,
+                             bool direct)
 {
     if (study.parameters.noOutput)
         return;
@@ -604,20 +606,16 @@ void writeLinksResultsToDisk(const Data::Study& study,
     enum { precision = 0 };
     std::string buffer;
 
+    std::string capacityType = direct ? "_direct" : "_indirect";
+
     Yuni::String pTempFilename;
     pTempFilename.reserve(study.folderOutput.size() + 256);
 
     pTempFilename.clear() << savePath << SEP << link.from->id << SEP <<
-        link.with->id << "_direct.txt";
+        link.with->id << capacityType << ".txt";
 
-    link.directCapacities.timeSeries.saveToBuffer(buffer, precision);
-    writer.addEntryFromBuffer(pTempFilename.c_str(), buffer);
+    series.saveToBuffer(buffer, precision);
 
-
-    pTempFilename.clear() << savePath << SEP << link.from->id << SEP <<
-        link.with->id << "_indirect.txt";
-
-    link.indirectCapacities.timeSeries.saveToBuffer(buffer, precision);
     writer.addEntryFromBuffer(pTempFilename.c_str(), buffer);
 }
 
@@ -674,15 +672,17 @@ bool generateLinkTimeSeries(Data::Study& study,
 
     for (auto* link : links)
     {
-        ThermalInterface clusterInterfaceDirect(
-                link->tsGeneration, link->directCapacities, link->with->name);
-        ThermalInterface clusterInterfaceIndirect(
-                link->tsGeneration, link->indirectCapacities, link->with->name);
+        Data::TimeSeries ts(link->timeseriesNumbers);
+        ts.resize(study.parameters.nbTimeSeriesLinks, HOURS_PER_YEAR);
 
-        (*generator)(*link->from, clusterInterfaceDirect);
-        (*generator)(*link->from, clusterInterfaceIndirect);
+        // direct capacity
+        ThermalInterface clusterInterface(link->tsGeneration, ts, link->with->name);
+        (*generator)(*link->from, clusterInterface);
+        writeLinksResultsToDisk(study, writer, *link, ts.timeSeries, savePath, true);
 
-        writeLinksResultsToDisk(study, writer, *link, savePath);
+        // indirect capacity
+        (*generator)(*link->from, clusterInterface);
+        writeLinksResultsToDisk(study, writer, *link, ts.timeSeries, savePath, false);
     }
 
     return true;
