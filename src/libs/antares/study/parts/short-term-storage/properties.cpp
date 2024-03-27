@@ -28,44 +28,6 @@
 
 namespace Antares::Data::ShortTermStorage
 {
-// gp : we'll be able to remove the map and the function below
-const std::map<std::string, enum Group> Properties::GROUP_TO_ENUM = 
-    {{"PSP_open", Group::PSP_open},
-     {"PSP_closed", Group::PSP_closed},
-     {"Pondage", Group::Pondage},
-     {"Battery", Group::Battery},
-     {"Other1", Group::Other1},
-     {"Other2", Group::Other2},
-     {"Other3", Group::Other3},
-     {"Other4", Group::Other4},
-     {"Other5", Group::Other5}};
-
-unsigned int groupIndex(Group group)
-{
-    switch (group)
-    {
-    case Group::PSP_open:
-        return 0;
-    case Group::PSP_closed:
-        return 1;
-    case Group::Pondage:
-        return 2;
-    case Group::Battery:
-        return 3;
-    case Group::Other1:
-        return 4;
-    case Group::Other2:
-        return 5;
-    case Group::Other3:
-        return 6;
-    case Group::Other4:
-        return 7;
-    case Group::Other5:
-        return 8;
-    default:
-        throw std::invalid_argument("Group not recognized");
-    }
-}
 
 bool Properties::loadKey(const IniFile::Property* p)
 {
@@ -102,14 +64,7 @@ bool Properties::loadKey(const IniFile::Property* p)
     if (p->key == "group")
     {
         this->groupName = p->value.c_str();
-
-        if (auto it = Properties::GROUP_TO_ENUM.find(p->value.c_str());
-            it != Properties::GROUP_TO_ENUM.end())
-        {
-            this->group = it->second;
-            return true;
-        }
-        return false;
+        return true;
     }
 
     if (p->key == "enabled")
@@ -123,14 +78,7 @@ void Properties::save(IniFile& ini) const
     IniFile::Section* s = ini.addSection(this->name);
 
     s->add("name", this->name);
-
-    // gp : we'll have to print simply (instead of subsequent already existing lines) :
-    // s->add("group", this->groupName);
-
-    for (const auto& [key, value] : GROUP_TO_ENUM)
-        if (value == this->group)
-            s->add("group", key);
-
+    s->add("group", this->groupName);
     s->add("reservoircapacity", this->reservoirCapacity);
     s->add("initiallevel", this->initialLevel);
     s->add("injectionnominalcapacity", this->injectionNominalCapacity);

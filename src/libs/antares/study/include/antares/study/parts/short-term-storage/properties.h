@@ -62,8 +62,6 @@ public:
     bool initialLevelOptim = false;
     /// Efficiency factor between 0 and 1
     double efficiencyFactor = 1;
-    /// Used to sort outputs
-    Group group = Group::Other1;
     // Used to sort outputs
     std::string groupName;
     /// cluster name
@@ -73,7 +71,6 @@ public:
     bool enabled = true;
 
 private:
-    static const std::map<std::string, enum Group> GROUP_TO_ENUM;
     static constexpr double initiallevelDefault = .5;
 };
 } // namespace Antares::Data::ShortTermStorage
