@@ -133,7 +133,7 @@ public:
         }
         std::sort(groupNames_.begin(), groupNames_.end());
 
-        // 
+        // Giving a number to each group
         unsigned int groupNumber{0};
         for (auto name : groupNames_)
         {
@@ -298,6 +298,18 @@ public:
         return r;
     }
 
+    std::string caption(unsigned int column) const
+    {
+        std::string groupName = groupNames_[column / 3];
+        std::string variableKind = VAR_POSSIBLE_KINDS[column % 3];
+        return groupName + "_" + variableKind;
+    }
+
+    std::string unit(unsigned int column) const
+    {
+        return (column % 3 == 2) ? "MWh" : "MW"; // Level in MWh, others in "MW"
+    }
+
     void localBuildAnnualSurveyReport(SurveyResults& results,
                                       int fileLevel,
                                       int precision,
@@ -311,15 +323,8 @@ public:
 
         for (unsigned int column = 0; column < nbColumns_; column++)
         {
-            std::string groupName = groupNames_[column / 3];
-            std::string variableKind = VAR_POSSIBLE_KINDS[column % 3];
-            results.variableCaption = groupName + "_" + variableKind;
-
-            std::string unit{"MW"};
-            if (column % 3 == 2) // Level
-                unit = "MWh";
-            results.variableUnit = unit;
-
+            results.variableCaption = caption(column);
+            results.variableUnit = unit(column);
             pValuesForTheCurrentYear[numSpace][column]
                 .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
         }
@@ -343,15 +348,8 @@ public:
 
             for (unsigned int column = 0; column < nbColumns_; column++)
             {   
-                std::string groupName = groupNames_[column / 3];
-                std::string variableKind = VAR_POSSIBLE_KINDS[column % 3];
-                results.variableCaption = groupName + "_" + variableKind;
-
-                std::string unit{ "MW" };
-                if (column % 3 == 2) // Level
-                    unit = "MWh";
-                results.variableUnit = unit;
-
+                results.variableCaption = caption(column);
+                results.variableUnit = unit(column);
                 AncestorType::pResults[column].template
                     buildSurveyReport<ResultsType, VCardType>(results,
                                                               AncestorType:: pResults[column],
