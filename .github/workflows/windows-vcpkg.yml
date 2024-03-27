@@ -267,7 +267,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: ts-generator
-        os: ${{ env.os }}
+        os: ${{ env.test-platform }}
         variant: "tsgenerator"
 
     - name: Run parallel tests
