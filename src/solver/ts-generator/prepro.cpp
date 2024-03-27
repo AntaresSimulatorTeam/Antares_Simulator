@@ -24,7 +24,7 @@
 #include <yuni/io/directory.h>
 #include <yuni/core/math.h>
 #include "antares/study/study.h"
-#include "antares/study/parts/thermal/prepro.h"
+#include <antares/solver/ts-generator/prepro.h>
 #include <antares/logs/logs.h>
 
 using namespace Yuni;
@@ -157,7 +157,7 @@ bool PreproThermal::loadFromFolder(Study& study, const AnyString& folder)
 
 bool PreproThermal::forceReload(bool reload) const
 {
-    return data.forceReload(reload); 
+    return data.forceReload(reload);
 }
 
 void PreproThermal::markAsModified() const

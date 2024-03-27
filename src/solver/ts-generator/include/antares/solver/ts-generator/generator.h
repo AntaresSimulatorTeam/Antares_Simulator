@@ -26,11 +26,36 @@
 #include <antares/study/parameters.h>
 #include <antares/study/study.h>
 #include <antares/study/parts/thermal/cluster.h>
+#include <antares/solver/ts-generator/law.h>
+#include <antares/series/series.h>
 #include <antares/writer/i_writer.h>
 #include "xcast/xcast.h"
 
 namespace Antares::TSGenerator
 {
+class ThermalInterface
+{
+public:
+    explicit ThermalInterface(Data::ThermalCluster*);
+    ThermalInterface(Data::AreaLink::LinkTsGeneration&, Data::TimeSeries&, const std::string& name);
+
+    const unsigned& unitCount;
+    const double& nominalCapacity;
+
+    const double& forcedVolatility;
+    const double& plannedVolatility;
+
+    Data::ThermalLaw& forcedLaw;
+    Data::ThermalLaw& plannedLaw;
+
+    Data::PreproThermal* prepro;
+
+    Data::TimeSeries& series;
+
+    Matrix<>::ColumnType& modulationCapacity;
+
+    const std::string& name;
+};
 
 void ResizeGeneratedTimeSeries(Data::AreaList& areas, Data::Parameters& params);
 
@@ -40,13 +65,21 @@ void ResizeGeneratedTimeSeries(Data::AreaList& areas, Data::Parameters& params);
 template<enum Data::TimeSeriesType T>
 bool GenerateTimeSeries(Data::Study& study, uint year, IResultWriter& writer);
 
-bool GenerateThermalTimeSeries(Data::Study& study,
+bool generateThermalTimeSeries(Data::Study& study,
                                std::vector<Data::ThermalCluster*> clusters,
-                               uint year,
-                               Solver::IResultWriter& writer);
+                               Solver::IResultWriter& writer,
+                               const std::string& savePath);
+
+bool generateLinkTimeSeries(Data::Study& study,
+                            std::vector<Data::AreaLink*> links,
+                            Solver::IResultWriter& writer,
+                            const std::string& savePath);
 
 std::vector<Data::ThermalCluster*> getAllClustersToGen(Data::AreaList& areas,
                                                        bool globalThermalTSgeneration);
+
+std::vector<Data::AreaLink*> getAllLinksToGen(Data::AreaList& areas);
+
 /*!
 ** \brief Destroy all TS Generators
 */

@@ -20,6 +20,12 @@ set(SRC_XCAST
 	include/antares/solver/ts-generator/xcast/constants.h
 	include/antares/solver/ts-generator/xcast/studydata.h
 	include/antares/solver/ts-generator/xcast/studydata.hxx
+	include/antares/solver/ts-generator/law.h
+
+	prepro.cpp
+
+	include/antares/solver/ts-generator/prepro.h
+	include/antares/solver/ts-generator/prepro.hxx
 	xcast/studydata.cpp
 	xcast/gamma-euler.cpp
 	xcast/gamma-inc.cpp

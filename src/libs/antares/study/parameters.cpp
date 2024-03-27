@@ -900,6 +900,8 @@ static bool SGDIntLoadFamily_SeedsMersenneTwister(Parameters& d,
                 return value.to<uint>(d.seed[seedTsGenThermal]);
             if (key == "seed_solar")
                 return value.to<uint>(d.seed[seedTsGenSolar]);
+            if (key == "seed_links")
+                return value.to<uint>(d.seed[seedTsGenLinks]);
             if (key == "seed_timeseriesnumbers")
                 return value.to<uint>(d.seed[seedTimeseriesNumbers]);
         }

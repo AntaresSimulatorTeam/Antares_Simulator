@@ -23,7 +23,7 @@
 
 #include "../../../../input/thermal-cluster.h"
 #include "../matrix.h"
-#include <antares/study/parts/thermal/prepro.h>
+#include <antares/solver/ts-generator/prepro.h>
 
 namespace Antares
 {

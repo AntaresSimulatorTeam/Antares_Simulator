@@ -489,8 +489,11 @@ void ISimulation<ImplementationType>::regenerateTimeSeries(uint year)
     if (refreshTSonCurrentYear)
     {
         auto clusters = getAllClustersToGen(study.areas, pData.haveToRefreshTSThermal);
-
-        GenerateThermalTimeSeries(study, clusters, year, pResultWriter);
+#define SEP Yuni::IO::Separator
+        const std::string savePath = std::string("ts-generator") + SEP + "thermal" + SEP +
+            "mc-" + std::to_string(year);
+#undef SEP
+        generateThermalTimeSeries(study, clusters, pResultWriter, savePath);
     }
 
     timer.stop();

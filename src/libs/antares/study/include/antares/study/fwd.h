@@ -223,8 +223,6 @@ enum TimeSeriesType : unsigned int
     // ***********************************************************************
 }; // enum TimeSeries
 
-
-
 template<int T>
 struct TimeSeriesBitPatternIntoIndex;
 
@@ -352,6 +350,8 @@ enum SeedIndex
     seedHydroCosts,
     //! Seed - Hydro management
     seedHydroManagement,
+    //! The seed for links
+    seedTsGenLinks,
     //! The number of seeds
     seedMax,
 };
@@ -550,8 +550,6 @@ class TSNumberRules;
 class Sets;
 
 } // namespace Antares::Data::ScenarioBuilder
-
-
 
 namespace Benchmarking
 {

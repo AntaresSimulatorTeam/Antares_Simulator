@@ -52,6 +52,8 @@ const char* SeedToCString(SeedIndex seed)
         return "Noise on virtual Hydro costs";
     case seedHydroManagement:
         return "Initial reservoir levels";
+    case seedTsGenLinks:
+        return "Links time-series generation";
     case seedMax:
         return "";
     }
@@ -84,6 +86,8 @@ const char* SeedToID(SeedIndex seed)
         return "seed-hydro-costs";
     case seedHydroManagement:
         return "seed-initial-reservoir-levels";
+    case seedTsGenLinks:
+        return "seed-tsgen-links";
     case seedMax:
         return "";
     }

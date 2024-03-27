@@ -36,6 +36,7 @@
 #include <antares/study/filter.h>
 #include <antares/study/scenario-builder/updater.hxx>
 #include <antares/study/area/constants.h>
+#include <antares/solver/ts-generator/law.h>
 #include "../message.h"
 #include "../../application/main/internal-ids.h"
 #include "property.cluster.update.h"
@@ -797,7 +798,7 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
             (*i)->marginalCost = d;
             (*i)->ComputeCostTimeSeries(); // update
         }
-        
+
         pFrame.delayApply();
         // Notify
         OnStudyThermalClusterCommonSettingsChanged();
