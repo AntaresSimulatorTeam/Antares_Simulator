@@ -198,6 +198,6 @@ int main(int argc, char *argv[])
     for (auto& l : links)
         logs.debug() << l->getName();
 
-    return !TSGenerator::GenerateThermalTimeSeries(*study, clusters, *resultWriter, thermalSavePath)
+    return !TSGenerator::generateThermalTimeSeries(*study, clusters, *resultWriter, thermalSavePath)
         && !TSGenerator::generateLinkTimeSeries(*study, links, *resultWriter, linksSavePath);
 }

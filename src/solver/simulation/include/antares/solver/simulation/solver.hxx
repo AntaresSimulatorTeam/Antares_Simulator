@@ -493,7 +493,7 @@ void ISimulation<ImplementationType>::regenerateTimeSeries(uint year)
         const std::string savePath = std::string("ts-generator") + SEP + "thermal" + SEP +
             "mc-" + std::to_string(year);
 #undef SEP
-        GenerateThermalTimeSeries(study, clusters, pResultWriter, savePath);
+        generateThermalTimeSeries(study, clusters, pResultWriter, savePath);
     }
 
     timer.stop();

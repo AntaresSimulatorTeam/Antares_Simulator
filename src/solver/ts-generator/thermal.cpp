@@ -571,7 +571,21 @@ void GeneratorTempData::operator()(const Data::Area& area, ThermalInterface& clu
 }
 } // namespace
 
-void writeResultsToDisk(const Data::Study& study,
+std::vector<Data::ThermalCluster*> getAllClustersToGen(Data::AreaList& areas,
+                                                       bool globalThermalTSgeneration)
+{
+    std::vector<Data::ThermalCluster*> clusters;
+
+    areas.each([&clusters, &globalThermalTSgeneration](Data::Area& area) {
+        for (auto cluster : area.thermal.list.all())
+            if (cluster->doWeGenerateTS(globalThermalTSgeneration))
+                clusters.push_back(cluster.get());
+    });
+
+    return clusters;
+}
+
+void writeThermalResultsToDisk(const Data::Study& study,
                         Solver::IResultWriter& writer,
                         const Data::Area& area,
                         const Data::ThermalCluster& cluster,
@@ -619,21 +633,7 @@ void writeLinksResultsToDisk(const Data::Study& study,
     writer.addEntryFromBuffer(pTempFilename.c_str(), buffer);
 }
 
-std::vector<Data::ThermalCluster*> getAllClustersToGen(Data::AreaList& areas,
-                                                       bool globalThermalTSgeneration)
-{
-    std::vector<Data::ThermalCluster*> clusters;
-
-    areas.each([&clusters, &globalThermalTSgeneration](Data::Area& area) {
-        for (auto cluster : area.thermal.list.all())
-            if (cluster->doWeGenerateTS(globalThermalTSgeneration))
-                clusters.push_back(cluster.get());
-    });
-
-    return clusters;
-}
-
-bool GenerateThermalTimeSeries(Data::Study& study,
+bool generateThermalTimeSeries(Data::Study& study,
                                std::vector<Data::ThermalCluster*> clusters,
                                Solver::IResultWriter& writer,
                                const std::string& savePath)
@@ -643,7 +643,8 @@ bool GenerateThermalTimeSeries(Data::Study& study,
 
     bool archive = (0 != (study.parameters.timeSeriesToArchive & Data::timeSeriesThermal));
 
-    auto generator = std::make_unique<GeneratorTempData>(study, study.parameters.nbTimeSeriesThermal);
+    auto generator = std::make_unique<GeneratorTempData>
+        (study, study.parameters.nbTimeSeriesThermal);
 
     // TODO VP: parallel
     for (auto* cluster : clusters)
@@ -652,7 +653,7 @@ bool GenerateThermalTimeSeries(Data::Study& study,
         (*generator)(*cluster->parentArea, clusterInterface);
 
         if (archive)
-            writeResultsToDisk(study, writer, *cluster->parentArea, *cluster, savePath);
+            writeThermalResultsToDisk(study, writer, *cluster->parentArea, *cluster, savePath);
 
         cluster->calculationOfSpinning();
     }
@@ -668,7 +669,8 @@ bool generateLinkTimeSeries(Data::Study& study,
     logs.info();
     logs.info() << "Generating the links time-series";
 
-    auto generator = std::make_unique<GeneratorTempData>(study, study.parameters.nbTimeSeriesLinks);
+    auto generator = std::make_unique<GeneratorTempData>
+        (study, study.parameters.nbTimeSeriesLinks);
 
     for (auto* link : links)
     {

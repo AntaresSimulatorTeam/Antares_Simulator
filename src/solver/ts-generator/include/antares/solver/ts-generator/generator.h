@@ -65,7 +65,7 @@ void ResizeGeneratedTimeSeries(Data::AreaList& areas, Data::Parameters& params);
 template<enum Data::TimeSeriesType T>
 bool GenerateTimeSeries(Data::Study& study, uint year, IResultWriter& writer);
 
-bool GenerateThermalTimeSeries(Data::Study& study,
+bool generateThermalTimeSeries(Data::Study& study,
                                std::vector<Data::ThermalCluster*> clusters,
                                Solver::IResultWriter& writer,
                                const std::string& savePath);
