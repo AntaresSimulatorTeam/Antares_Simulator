@@ -192,7 +192,9 @@ int main(int argc, char *argv[])
 
     // LINKS
     std::vector<Data::AreaLink*> links;
-    if (!settings.linksListToGen.empty())
+    if (settings.allLinks)
+        links = TSGenerator::getAllLinksToGen(study->areas);
+    else if (!settings.linksListToGen.empty())
         links = getLinksToGen(study->areas, settings.linksListToGen);
 
     for (auto& l : links)

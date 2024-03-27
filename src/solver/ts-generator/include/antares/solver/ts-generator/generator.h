@@ -77,6 +77,9 @@ bool generateLinkTimeSeries(Data::Study& study,
 
 std::vector<Data::ThermalCluster*> getAllClustersToGen(Data::AreaList& areas,
                                                        bool globalThermalTSgeneration);
+
+std::vector<Data::AreaLink*> getAllLinksToGen(Data::AreaList& areas);
+
 /*!
 ** \brief Destroy all TS Generators
 */
