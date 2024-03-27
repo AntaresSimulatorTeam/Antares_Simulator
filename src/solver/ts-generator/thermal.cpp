@@ -585,6 +585,19 @@ std::vector<Data::ThermalCluster*> getAllClustersToGen(Data::AreaList& areas,
     return clusters;
 }
 
+std::vector<Data::AreaLink*> getAllLinksToGen(Data::AreaList& areas)
+{
+    std::vector<Data::AreaLink*> links;
+
+    areas.each([&links](Data::Area& area) {
+        std::ranges::for_each(area.links, [&links](auto& l) {
+            links.push_back(l.second);
+        });
+    });
+
+    return links;
+}
+
 void writeThermalResultsToDisk(const Data::Study& study,
                         Solver::IResultWriter& writer,
                         const Data::Area& area,
