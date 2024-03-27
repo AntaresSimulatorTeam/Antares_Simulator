@@ -6,6 +6,7 @@ target_link_libraries(test-unfeasible-problem-analyzer
 		PRIVATE
 		Boost::unit_test_framework
 		infeasible_problem_analysis
+		ortools::ortools
 )
 
 add_test(NAME test-unfeasible-problem-analyzer COMMAND test-unfeasible-problem-analyzer)
