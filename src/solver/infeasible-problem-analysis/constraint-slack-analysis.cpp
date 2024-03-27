@@ -19,9 +19,9 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 #include <regex>
-#include "constraint-slack-analysis.h"
+#include "antares/solver/infeasible-problem-analysis/constraint-slack-analysis.h"
 #include <antares/logs/logs.h>
-#include "report.h"
+#include "antares/solver/infeasible-problem-analysis/report.h"
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 #include "ortools/linear_solver/linear_solver.h"
