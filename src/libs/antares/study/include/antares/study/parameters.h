@@ -37,6 +37,7 @@
 #include "version.h"
 
 #include <antares/study/UnfeasibleProblemBehavior.hpp>
+#include <antares/optimization-options/options.h>
 
 namespace Antares::Data
 {
@@ -526,6 +527,9 @@ public:
 
     // solver logs
     bool solverLogs;
+
+    //! All options related to optimization
+    Antares::Solver::Optimization::OptimizationOptions optOptions;
 
 private:
     //! Load data from an INI file

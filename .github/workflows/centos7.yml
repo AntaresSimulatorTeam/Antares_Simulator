@@ -5,6 +5,7 @@ on:
     types: [created]
   push:
     branches:
+      - fix/xpress-perf
       - develop
       - dependabot/*
 

@@ -64,9 +64,10 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
             int ret = retrieveAverageNTC(
               study, link->directCapacities.timeSeries, link->timeseriesNumbers, avgDirect);
 
-            ret = retrieveAverageNTC(
-                    study, link->indirectCapacities.timeSeries, link->timeseriesNumbers, avgIndirect)
-                  && ret;
+            ret
+              = retrieveAverageNTC(
+                  study, link->indirectCapacities.timeSeries, link->timeseriesNumbers, avgIndirect)
+                && ret;
             if (!ret)
             {
                 ntcValues.ValeurDeNTCOrigineVersExtremite[j] = avgDirect[decalPasDeTemps];
@@ -85,7 +86,10 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
     try
     {
         NullResultWriter resultWriter;
-        OPT_OptimisationHebdomadaire(createOptimizationOptions(study), &problem, study.parameters.adqPatchParams, resultWriter);
+        OPT_OptimisationHebdomadaire(createOptimizationOptions(study),
+                                     &problem,
+                                     study.parameters.adqPatchParams,
+                                     resultWriter);
     }
     catch (Data::UnfeasibleProblemError&)
     {
@@ -99,8 +103,7 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
 
         for (uint j = 0; j < study.runtime->interconnectionsCount(); ++j)
         {
-            transitMoyenInterconnexionsRecalculQuadratique[j][indx]
-              = ntcValues.ValeurDuFlux[j];
+            transitMoyenInterconnexionsRecalculQuadratique[j][indx] = ntcValues.ValeurDuFlux[j];
         }
     }
 }
@@ -222,20 +225,20 @@ void PrepareRandomNumbers(Data::Study& study,
     study.areas.each([&](const Data::Area& area) {
         double rnd = 0.;
 
-        rnd = randomForYear.pUnsuppliedEnergy[indexArea];
+          rnd = randomForYear.pUnsuppliedEnergy[indexArea];
 
-        double alea;
+          double alea;
 
-        if (area.spreadUnsuppliedEnergyCost == 0)
-        {
-            if (rnd < 0.5)
-                alea = 1.e-4 * (5 + 2 * rnd);
-            else
-                alea = -1.e-4 * (5 + 2 * (rnd - 0.5));
-        }
-        else
-        {
-            alea = (rnd - 0.5) * (area.spreadUnsuppliedEnergyCost);
+          if (area.spreadUnsuppliedEnergyCost == 0)
+          {
+              if (rnd < 0.5)
+                  alea = 1.e-4 * (5 + 2 * rnd);
+              else
+                  alea = -1.e-4 * (5 + 2 * (rnd - 0.5));
+          }
+          else
+          {
+              alea = (rnd - 0.5) * (area.spreadUnsuppliedEnergyCost);
 
             if (std::abs(alea) < 5.e-4)
             {
@@ -247,18 +250,18 @@ void PrepareRandomNumbers(Data::Study& study,
         }
         problem.CoutDeDefaillancePositive[area.index] = area.thermal.unsuppliedEnergyCost + alea;
 
-        rnd = randomForYear.pSpilledEnergy[indexArea];
+          rnd = randomForYear.pSpilledEnergy[indexArea];
 
-        if (area.spreadSpilledEnergyCost == 0)
-        {
-            if (rnd < 0.5)
-                alea = 1.e-4 * (5 + 2 * rnd);
-            else
-                alea = -1.e-4 * (5 + 2 * (rnd - 0.5));
-        }
-        else
-        {
-            alea = (rnd - 0.5) * (area.spreadSpilledEnergyCost);
+          if (area.spreadSpilledEnergyCost == 0)
+          {
+              if (rnd < 0.5)
+                  alea = 1.e-4 * (5 + 2 * rnd);
+              else
+                  alea = -1.e-4 * (5 + 2 * (rnd - 0.5));
+          }
+          else
+          {
+              alea = (rnd - 0.5) * (area.spreadSpilledEnergyCost);
 
             if (std::abs(alea) < 5.e-4)
             {
@@ -301,51 +304,51 @@ void PrepareRandomNumbers(Data::Study& study,
             rnd = randomClusterProdCost;
         }
 
-        //-----------------------------
-        // Hydro noises
-        //-----------------------------
-        auto& noise = problem.BruitSurCoutHydraulique[area.index];
-        switch (study.parameters.power.fluctuations)
-        {
-        case Data::lssFreeModulations:
-        {
-            for (uint j = 0; j != 8784; ++j)
-                noise[j] = randomForYear.pHydroCostsByArea_freeMod[indexArea][j];
+          //-----------------------------
+          // Hydro noises
+          //-----------------------------
+          auto& noise = problem.BruitSurCoutHydraulique[area.index];
+          switch (study.parameters.power.fluctuations)
+          {
+          case Data::lssFreeModulations:
+          {
+              for (uint j = 0; j != 8784; ++j)
+                  noise[j] = randomForYear.pHydroCostsByArea_freeMod[indexArea][j];
 
-            auto& penalty = problem.CaracteristiquesHydrauliques[area.index];
-            penalty.PenalisationDeLaVariationDeProductionHydrauliqueSurSommeDesVariations = 5.e-4;
-            penalty.PenalisationDeLaVariationDeProductionHydrauliqueSurVariationMax = 5.e-4;
-            break;
-        }
+              auto& penalty = problem.CaracteristiquesHydrauliques[area.index];
+              penalty.PenalisationDeLaVariationDeProductionHydrauliqueSurSommeDesVariations = 5.e-4;
+              penalty.PenalisationDeLaVariationDeProductionHydrauliqueSurVariationMax = 5.e-4;
+              break;
+          }
 
-        case Data::lssMinimizeRamping:
-        case Data::lssMinimizeExcursions:
-        {
-            std::fill(noise.begin(), noise.end(), 0);
+          case Data::lssMinimizeRamping:
+          case Data::lssMinimizeExcursions:
+          {
+              std::fill(noise.begin(), noise.end(), 0);
 
-            auto& penalty = problem.CaracteristiquesHydrauliques[area.index];
-            double rnd = randomForYear.pHydroCosts_rampingOrExcursion[indexArea];
+              auto& penalty = problem.CaracteristiquesHydrauliques[area.index];
+              double rnd = randomForYear.pHydroCosts_rampingOrExcursion[indexArea];
 
-            penalty.PenalisationDeLaVariationDeProductionHydrauliqueSurSommeDesVariations
-              = 0.01 * (1. + rnd / 10.);
-            penalty.PenalisationDeLaVariationDeProductionHydrauliqueSurVariationMax
-              = 0.1 * (1. + rnd / 100.);
-            break;
-        }
+              penalty.PenalisationDeLaVariationDeProductionHydrauliqueSurSommeDesVariations
+                = 0.01 * (1. + rnd / 10.);
+              penalty.PenalisationDeLaVariationDeProductionHydrauliqueSurVariationMax
+                = 0.1 * (1. + rnd / 100.);
+              break;
+          }
 
-        case Data::lssUnknown:
-        {
-            assert(false && "invalid power fluctuations");
-            std::fill(noise.begin(), noise.end(), 0);
+          case Data::lssUnknown:
+          {
+              assert(false && "invalid power fluctuations");
+              std::fill(noise.begin(), noise.end(), 0);
 
-            auto& penalty = problem.CaracteristiquesHydrauliques[area.index];
-            penalty.PenalisationDeLaVariationDeProductionHydrauliqueSurSommeDesVariations = 1e-4;
-            penalty.PenalisationDeLaVariationDeProductionHydrauliqueSurVariationMax = 1e-4;
-            break;
-        }
-        }
-        indexArea++;
-    });
+              auto& penalty = problem.CaracteristiquesHydrauliques[area.index];
+              penalty.PenalisationDeLaVariationDeProductionHydrauliqueSurSommeDesVariations = 1e-4;
+              penalty.PenalisationDeLaVariationDeProductionHydrauliqueSurVariationMax = 1e-4;
+              break;
+          }
+          }
+          indexArea++;
+      });
 }
 
 void BuildThermalPartOfWeeklyProblem(Data::Study& study,
@@ -394,7 +397,6 @@ void BuildThermalPartOfWeeklyProblem(Data::Study& study,
                    .PuissanceDisponibleDuPalierThermique;
         }
     }
-
 }
 
 int retrieveAverageNTC(const Data::Study& study,
@@ -458,11 +460,7 @@ void finalizeOptimizationStatistics(PROBLEME_HEBDO& problem,
 
 OptimizationOptions createOptimizationOptions(const Data::Study& study)
 {
-    return {
-        study.parameters.ortoolsUsed,
-        study.parameters.ortoolsSolver
-    };
+    return study.parameters.optOptions;
 }
-
 
 } // namespace Antares::Solver::Simulation

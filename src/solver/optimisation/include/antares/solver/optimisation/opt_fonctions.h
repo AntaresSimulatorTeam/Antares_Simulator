@@ -28,6 +28,7 @@
 #include "antares/study/parameters/adq-patch-params.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include <antares/writer/i_writer.h>
+#include <antares/optimization-options/options.h>
 
 using AdqPatchParams = Antares::Data::AdequacyPatch::AdqPatchParams;
 using OptimizationOptions = Antares::Solver::Optimization::OptimizationOptions;

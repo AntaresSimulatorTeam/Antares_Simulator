@@ -464,4 +464,4 @@ endif()
 include(CPack)
 
 #Last. We need all target defined
-add_subdirectory(packaging)
+# add_subdirectory(packaging)

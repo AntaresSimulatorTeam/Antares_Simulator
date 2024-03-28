@@ -325,6 +325,10 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     {
         loadingException = std::current_exception();
     }
+
+    //For solver
+    study.parameters.optOptions = options.optOptions;
+
     // This settings can only be enabled from the solver
     // Prepare the output for the study
     study.prepareOutput();

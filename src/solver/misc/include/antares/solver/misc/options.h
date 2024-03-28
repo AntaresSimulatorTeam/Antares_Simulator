@@ -27,6 +27,7 @@
 #include <yuni/core/getopt.h>
 
 #include <antares/study/study.h>
+#include <antares/optimization-options/options.h>
 
 /*!
 ** \brief Command line settings for launching the simulation
@@ -61,6 +62,8 @@ public:
 
     bool forceZipOutput = false;
 
+    Antares::Solver::Optimization::OptimizationOptions optOptions;
+
     void checkAndSetStudyFolder(Yuni::String folder);
     void reset();
 }; // class Settings
@@ -73,5 +76,5 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings,
 
 void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOptions& options);
 
-void checkOrtoolsSolver(Data::StudyLoadOptions& options);
+void checkOrtoolsSolver(const Antares::Solver::Optimization::OptimizationOptions& optOptions);
 #endif /* __SOLVER_MISC_GETOPT_H__ */

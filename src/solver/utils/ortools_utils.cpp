@@ -24,10 +24,13 @@
 #include <antares/exception/AssertionError.hpp>
 #include "antares/antares/Enum.hpp"
 #include <filesystem>
+#include "../optimisation/include/antares/solver/optimisation/opt_constants.h"
 
 using namespace operations_research;
 
 const char* const XPRESS_PARAMS = "THREADS 1";
+
+using Antares::Solver::Optimization::OptimizationOptions;
 
 // MPSolverParameters's copy constructor is private
 static void setGenericParameters(MPSolverParameters& params)
@@ -52,9 +55,9 @@ namespace Antares
 namespace Optimization
 {
 ProblemSimplexeNommeConverter::ProblemSimplexeNommeConverter(
-        const std::string& solverName,
-        const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe)
-    : solverName_(solverName), problemeSimplexe_(problemeSimplexe)
+  const std::string& solverName,
+  const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe) :
+ solverName_(solverName), problemeSimplexe_(problemeSimplexe)
 {
     if (problemeSimplexe_->UseNamedProblems())
     {
@@ -63,10 +66,10 @@ ProblemSimplexeNommeConverter::ProblemSimplexeNommeConverter(
     }
 }
 
-MPSolver* ProblemSimplexeNommeConverter::Convert()
+MPSolver* ProblemSimplexeNommeConverter::Convert(const std::string& solverParameters)
 {
     MPSolver* solver = MPSolverFactory(problemeSimplexe_, solverName_);
-    TuneSolverSpecificOptions(solver);
+    TuneSolverSpecificOptions(solver, solverParameters);
 
     // Create the variables and set objective cost.
     CopyVariables(solver);
@@ -75,7 +78,7 @@ MPSolver* ProblemSimplexeNommeConverter::Convert()
     CopyRows(solver);
 
     CopyMatrix(solver);
-    if (problemeSimplexe_->SolverLogs())
+    if (problemeSimplexe_->SolverLogs()) // May override log level if set as specific parameters
     {
         solver->EnableOutput();
     }
@@ -83,7 +86,9 @@ MPSolver* ProblemSimplexeNommeConverter::Convert()
     return solver;
 }
 
-void ProblemSimplexeNommeConverter::TuneSolverSpecificOptions(MPSolver* solver) const
+void ProblemSimplexeNommeConverter::TuneSolverSpecificOptions(
+  MPSolver* solver,
+  const std::string& solverParameters) const
 {
     if (!solver)
         return;
@@ -98,6 +103,8 @@ void ProblemSimplexeNommeConverter::TuneSolverSpecificOptions(MPSolver* solver) 
     default:
         break;
     }
+    // How / When to check if user has input wrong parameters ?
+    solver->SetSolverSpecificParametersAsString(solverParameters);
 }
 
 void ProblemSimplexeNommeConverter::CopyMatrix(const MPSolver* solver)
@@ -126,7 +133,8 @@ void ProblemSimplexeNommeConverter::CreateVariable(unsigned idxVar,
     double min_l = problemeSimplexe_->Xmin[idxVar];
     double max_l = problemeSimplexe_->Xmax[idxVar];
     bool isIntegerVariable = problemeSimplexe_->IntegerVariable(idxVar);
-    const MPVariable* var = solver->MakeVar(min_l, max_l, isIntegerVariable, variableNameManager_.GetName(idxVar));
+    const MPVariable* var
+      = solver->MakeVar(min_l, max_l, isIntegerVariable, variableNameManager_.GetName(idxVar));
     objective->SetCoefficient(var, problemeSimplexe_->CoutLineaire[idxVar]);
 }
 
@@ -195,12 +203,12 @@ static void extractReducedCosts(const std::vector<MPVariable*>& variables,
 static void extractDualValues(const std::vector<MPConstraint*>& constraints,
                               Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe)
 {
-  int nbRows = problemeSimplexe->NombreDeContraintes;
-  for (int idxRow = 0; idxRow < nbRows; ++idxRow)
-  {
-      const MPConstraint* row = constraints[idxRow];
-      problemeSimplexe->CoutsMarginauxDesContraintes[idxRow] = row->dual_value();
-  }
+    int nbRows = problemeSimplexe->NombreDeContraintes;
+    for (int idxRow = 0; idxRow < nbRows; ++idxRow)
+    {
+        const MPConstraint* row = constraints[idxRow];
+        problemeSimplexe->CoutsMarginauxDesContraintes[idxRow] = row->dual_value();
+    }
 }
 
 static void extract_from_MPSolver(const MPSolver* solver,
@@ -211,8 +219,7 @@ static void extract_from_MPSolver(const MPSolver* solver,
 
     const bool isMIP = problemeSimplexe->isMIP();
 
-    extractSolutionValues(solver->variables(),
-                          problemeSimplexe);
+    extractSolutionValues(solver->variables(), problemeSimplexe);
 
     if (isMIP)
     {
@@ -294,13 +301,14 @@ bool solveAndManageStatus(MPSolver* solver, int& resultStatus, const MPSolverPar
 }
 
 MPSolver* ORTOOLS_ConvertIfNeeded(const std::string& solverName,
+                                  const std::string& solverParameters,
                                   const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
                                   MPSolver* solver)
 {
     if (solver == nullptr)
     {
         Antares::Optimization::ProblemSimplexeNommeConverter converter(solverName, Probleme);
-        return converter.Convert();
+        return converter.Convert(solverParameters);
     }
     else
     {
@@ -308,6 +316,11 @@ MPSolver* ORTOOLS_ConvertIfNeeded(const std::string& solverName,
     }
 }
 
+static bool computeUseBasis(const int optimizationNumber, const OptimizationOptions& options)
+{
+    return (optimizationNumber == PREMIERE_OPTIMISATION && options.useBasisOptim1)
+           || (optimizationNumber == DEUXIEME_OPTIMISATION && options.useBasisOptim2);
+}
 template<class SourceT>
 static void transferBasis(std::vector<operations_research::MPSolver::BasisStatus>& destination,
                           const SourceT& source)
@@ -315,22 +328,25 @@ static void transferBasis(std::vector<operations_research::MPSolver::BasisStatus
     destination.resize(source.size());
     for (size_t idx = 0; idx < source.size(); idx++)
     {
-        destination[idx] = source[idx]->basis_status();
+        destination[idx] = source[idx]->assibasis_status();
     }
 }
 
 MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
                            MPSolver* solver,
-                           bool keepBasis)
+                           bool keepBasis,
+                           const int optimizationNumber,
+                           const OptimizationOptions& options)
 {
     MPSolverParameters params;
-    setGenericParameters(params);
-    const bool warmStart = solverSupportsWarmStart(solver->ProblemType());
+    setGenericParameters(
+      params); // Keep generic params for default settings owrking for all solvers
+    const bool useBasis = computeUseBasis(optimizationNumber, options);
+    const bool warmStart = solverSupportsWarmStart(solver->ProblemType()) && useBasis;
     // Provide an initial simplex basis, if any
     if (warmStart && Probleme->basisExists())
     {
-        solver->SetStartingLpBasis(Probleme->StatutDesVariables,
-                                   Probleme->StatutDesContraintes);
+        solver->SetStartingLpBasis(Probleme->StatutDesVariables, Probleme->StatutDesContraintes);
     }
 
     if (solveAndManageStatus(solver, Probleme->ExistenceDUneSolution, params))
@@ -425,15 +441,15 @@ std::list<std::string> getAvailableOrtoolsSolverName()
 
 std::string availableOrToolsSolversString()
 {
-  const std::list<std::string> availableSolverList = getAvailableOrtoolsSolverName();
-  std::ostringstream solvers;
-  for (const std::string& avail : availableSolverList)
-  {
-    bool last = &avail == &availableSolverList.back();
-    std::string sep = last ? "." : ", ";
-    solvers << avail << sep;
-  }
-  return solvers.str();
+    const std::list<std::string> availableSolverList = getAvailableOrtoolsSolverName();
+    std::ostringstream solvers;
+    for (const std::string& avail : availableSolverList)
+    {
+        bool last = &avail == &availableSolverList.back();
+        std::string sep = last ? "." : ", ";
+        solvers << avail << sep;
+    }
+    return solvers.str();
 }
 
 MPSolver* MPSolverFactory(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* probleme,
@@ -450,7 +466,8 @@ MPSolver* MPSolverFactory(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* 
         if (!solver)
         {
             std::string msg_to_throw = "Solver " + solverName + " not found. \n";
-            msg_to_throw += "Please make sure that your OR-Tools install supports solver " + solverName + ".";
+            msg_to_throw
+              += "Please make sure that your OR-Tools install supports solver " + solverName + ".";
 
             throw Antares::Data::AssertionError(msg_to_throw);
         }

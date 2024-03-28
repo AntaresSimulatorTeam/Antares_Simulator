@@ -79,10 +79,10 @@ std::unique_ptr<GetOpt::Parser> CreateParser(Settings& settings,
     // add option for ortools use
     // --use-ortools
     parser->addFlag(
-      options.ortoolsUsed, ' ', "use-ortools", "Use ortools library to launch solver");
+      options.optOptions.ortoolsUsed, ' ', "use-ortools", "Use ortools library to launch solver");
 
     //--ortools-solver
-    parser->add(options.ortoolsSolver,
+    parser->add(options.optOptions.ortoolsSolver,
                 ' ',
                 "ortools-solver",
                 "Ortools solver used for simulation (only available with use-ortools "
@@ -172,6 +172,14 @@ std::unique_ptr<GetOpt::Parser> CreateParser(Settings& settings,
     parser->addFlag(
       options.displayVersion, 'v', "version", "Print the version of antares-solver and exit");
 
+    // --use-basis-optim-1
+    parser->addFlag(
+      options.optOptions.useBasisOptim1, ' ', "use-basis-optim-1", "Activate warm start for optim 1.");
+    
+    // --use-basis-optim-2
+    parser->addFlag(
+      options.optOptions.useBasisOptim2, ' ', "use-basis-optim-2", "Activate warm start for optim 2.");
+
     // The last argument is the study folder.
     // Unlike all other arguments, it does not need to be given after a --flag.
     parser->remainingArguments(options.studyFolder);
@@ -226,7 +234,7 @@ void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOption
     }
 
     options.checkForceSimulationMode();
-    checkOrtoolsSolver(options);
+    checkOrtoolsSolver(options.optOptions);
 
     // PID
     if (!optPID.empty())
@@ -245,20 +253,21 @@ void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOption
     }
 }
 
-void checkOrtoolsSolver(Data::StudyLoadOptions& options)
+void checkOrtoolsSolver(const Antares::Solver::Optimization::OptimizationOptions& optOptions)
 {
-    if (options.ortoolsUsed)
+    if (optOptions.ortoolsUsed)
     {
+        const std::string& solverName = optOptions.ortoolsSolver;
         const std::list<std::string> availableSolverList = getAvailableOrtoolsSolverName();
 
         // Check if solver is available
         bool found
           = (std::find(
-               availableSolverList.begin(), availableSolverList.end(), options.ortoolsSolver)
+               availableSolverList.begin(), availableSolverList.end(), solverName)
              != availableSolverList.end());
         if (!found)
         {
-            throw Error::InvalidSolver(options.ortoolsSolver, availableOrToolsSolversString());
+            throw Error::InvalidSolver(optOptions.ortoolsSolver, availableOrToolsSolversString());
         }
     }
 }

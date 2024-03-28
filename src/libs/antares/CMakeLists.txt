@@ -27,6 +27,8 @@ add_subdirectory(sys)
 add_subdirectory(utils)
 add_subdirectory(writer)
 
+add_subdirectory(optimization-options)
+
 set(HEADERS
         include/antares/antares/antares.h
         include/antares/antares/constants.h

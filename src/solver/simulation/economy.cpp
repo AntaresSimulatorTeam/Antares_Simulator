@@ -81,16 +81,16 @@ bool Economy::simulationBegin()
             }
 
             auto options = createOptimizationOptions(study);
-            weeklyOptProblems_[numSpace] =
-                Antares::Solver::Optimization::WeeklyOptimization::create(
-                                                    study,
-                                                    options,
-                                                    study.parameters.adqPatchParams,
-                                                    &pProblemesHebdo[numSpace],
-                                                    numSpace,
-                                                    resultWriter);
-            postProcessesList_[numSpace] =
-                interfacePostProcessList::create(study.parameters.adqPatchParams,
+            weeklyOptProblems_[numSpace]
+              = Antares::Solver::Optimization::WeeklyOptimization::create(
+                study,
+                options,
+                study.parameters.adqPatchParams,
+                &pProblemesHebdo[numSpace],
+                numSpace,
+                resultWriter);
+            postProcessesList_[numSpace]
+              = interfacePostProcessList::create(study.parameters.adqPatchParams,
                                                  &pProblemesHebdo[numSpace],
                                                  numSpace,
                                                  study.areas,
@@ -107,7 +107,6 @@ bool Economy::simulationBegin()
     pNbWeeks = study.parameters.simulationDays.numberOfWeeks();
     return true;
 }
-
 
 bool Economy::year(Progression::Task& progression,
                    Variable::State& state,
