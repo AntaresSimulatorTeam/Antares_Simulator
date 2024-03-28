@@ -318,7 +318,7 @@ BOOST_AUTO_TEST_CASE(STS_initial_level_is_also_weekly_final_level)
     props.reservoirCapacity = 100;
     props.efficiencyFactor = .9;
     props.initialLevel = .443;
-	props.groupName = std::string("Some STS group");
+    props.groupName = std::string("Some STS group");
     // Default values for series
     sts.series->fillDefaultSeriesIfEmpty();
 
