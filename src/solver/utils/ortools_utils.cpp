@@ -26,7 +26,6 @@
 #include <filesystem>
 #include "../optimisation/include/antares/solver/optimisation/opt_constants.h"
 
-
 using namespace operations_research;
 
 const char* const XPRESS_PARAMS = "THREADS 1";
@@ -34,13 +33,10 @@ const char* const XPRESS_PARAMS = "THREADS 1";
 using Antares::Solver::Optimization::OptimizationOptions;
 
 // MPSolverParameters's copy constructor is private
-static void setGenericParameters(MPSolverParameters& params, const OptimizationOptions& options)
+static void setGenericParameters(MPSolverParameters& params)
 {
-    params.SetIntegerParam(MPSolverParameters::SCALING, options.scaling);
-    params.SetIntegerParam(MPSolverParameters::PRESOLVE, options.presolve);
-    // TODO
-    // params.SetDoubleParam(MPSolverParameters::PRIMAL_TOLERANCE, primalTolerance);
-    // params.SetDoubleParam(MPSolverParameters::DUAL_TOLERANCE, dualTolerance);
+    params.SetIntegerParam(MPSolverParameters::SCALING, 0);
+    params.SetIntegerParam(MPSolverParameters::PRESOLVE, 0);
 }
 
 static bool solverSupportsWarmStart(const MPSolver::OptimizationProblemType solverType)
@@ -70,10 +66,10 @@ ProblemSimplexeNommeConverter::ProblemSimplexeNommeConverter(
     }
 }
 
-MPSolver* ProblemSimplexeNommeConverter::Convert()
+MPSolver* ProblemSimplexeNommeConverter::Convert(const std::string& solverParameters)
 {
     MPSolver* solver = MPSolverFactory(problemeSimplexe_, solverName_);
-    TuneSolverSpecificOptions(solver);
+    TuneSolverSpecificOptions(solver, solverParameters);
 
     // Create the variables and set objective cost.
     CopyVariables(solver);
@@ -82,7 +78,7 @@ MPSolver* ProblemSimplexeNommeConverter::Convert()
     CopyRows(solver);
 
     CopyMatrix(solver);
-    if (problemeSimplexe_->SolverLogs())
+    if (problemeSimplexe_->SolverLogs()) // May override log level if set as specific parameters
     {
         solver->EnableOutput();
     }
@@ -90,7 +86,9 @@ MPSolver* ProblemSimplexeNommeConverter::Convert()
     return solver;
 }
 
-void ProblemSimplexeNommeConverter::TuneSolverSpecificOptions(MPSolver* solver) const
+void ProblemSimplexeNommeConverter::TuneSolverSpecificOptions(
+  MPSolver* solver,
+  const std::string& solverParameters) const
 {
     if (!solver)
         return;
@@ -105,6 +103,8 @@ void ProblemSimplexeNommeConverter::TuneSolverSpecificOptions(MPSolver* solver) 
     default:
         break;
     }
+    // How / When to check if user has input wrong parameters ?
+    solver->SetSolverSpecificParametersAsString(solverParameters);
 }
 
 void ProblemSimplexeNommeConverter::CopyMatrix(const MPSolver* solver)
@@ -301,13 +301,14 @@ bool solveAndManageStatus(MPSolver* solver, int& resultStatus, const MPSolverPar
 }
 
 MPSolver* ORTOOLS_ConvertIfNeeded(const std::string& solverName,
+                                  const std::string& solverParameters,
                                   const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
                                   MPSolver* solver)
 {
     if (solver == nullptr)
     {
         Antares::Optimization::ProblemSimplexeNommeConverter converter(solverName, Probleme);
-        return converter.Convert();
+        return converter.Convert(solverParameters);
     }
     else
     {
@@ -338,7 +339,8 @@ MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probl
                            const OptimizationOptions& options)
 {
     MPSolverParameters params;
-    setGenericParameters(params, options);
+    setGenericParameters(
+      params); // Keep generic params for default settings owrking for all solvers
     const bool useBasis = computeUseBasis(optimizationNumber, options);
     const bool warmStart = solverSupportsWarmStart(solver->ProblemType()) && useBasis;
     // Provide an initial simplex basis, if any

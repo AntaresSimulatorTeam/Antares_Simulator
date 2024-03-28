@@ -47,7 +47,8 @@ void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver,
 std::list<std::string> getAvailableOrtoolsSolverName();
 
 /*!
- *  \brief Return a single string containing all solvers available, separated by a ", " and ending with a ".".
+ *  \brief Return a single string containing all solvers available, separated by a ", " and ending
+ * with a ".".
  *
  */
 std::string availableOrToolsSolversString();
@@ -113,7 +114,7 @@ public:
       const std::string& solverName,
       const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe);
 
-    MPSolver* Convert();
+    MPSolver* Convert(const std::string& solverParameters);
 
 private:
     const std::string& solverName_;
@@ -125,7 +126,7 @@ private:
     void CopyVariables(MPSolver* solver);
     void UpdateContraints(unsigned idxRow, MPSolver* solver);
     void CopyRows(MPSolver* solver);
-    void TuneSolverSpecificOptions(MPSolver* solver) const;
+    void TuneSolverSpecificOptions(MPSolver* solver, const std::string& solverParameters) const;
     void CopyMatrix(const MPSolver* solver);
 };
 } // namespace Optimization

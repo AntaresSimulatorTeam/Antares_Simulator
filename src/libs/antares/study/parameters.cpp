@@ -346,6 +346,8 @@ void Parameters::reset()
 
     // Initialize all seeds
     resetSeeds();
+
+    // Is the management of Antares optOptions default ok with its constructor ?
 }
 
 bool Parameters::isTSGeneratedByPrepro(const TimeSeriesType ts) const
@@ -639,6 +641,12 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
     if (key == "solver-logs")
     {
         return value.to<bool>(d.solverLogs);
+    }
+
+    if (key == "solver-parameters")
+    {
+        d.optOptions.solver_parameters = value;
+        return true;
     }
     return false;
 }
@@ -1612,6 +1620,7 @@ void Parameters::saveToINI(IniFile& ini) const
         section->add("include-unfeasible-problem-behavior",
                      Enum::toString(include.unfeasibleProblemBehavior));
         section->add("solver-logs", solverLogs);
+        section->add("solver-parameters", optOptions.solver_parameters);
     }
 
     // Adequacy patch

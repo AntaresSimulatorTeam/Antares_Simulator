@@ -172,14 +172,6 @@ std::unique_ptr<GetOpt::Parser> CreateParser(Settings& settings,
     parser->addFlag(
       options.displayVersion, 'v', "version", "Print the version of antares-solver and exit");
 
-    // --presolve
-    parser->addFlag(
-      options.optOptions.presolve, ' ', "presolve", "Activate presolve for solver.");
-
-    // --scaling
-    parser->addFlag(
-      options.optOptions.scaling, ' ', "scaling", "Activate scaling for solver (only available for Xpress).");
-
     // --use-basis-optim-1
     parser->addFlag(
       options.optOptions.useBasisOptim1, ' ', "use-basis-optim-1", "Activate warm start for optim 1.");

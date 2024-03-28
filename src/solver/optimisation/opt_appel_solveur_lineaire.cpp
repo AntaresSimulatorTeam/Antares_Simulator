@@ -218,7 +218,8 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
 
     if (options.ortoolsUsed)
     {
-        solver = ORTOOLS_ConvertIfNeeded(options.ortoolsSolver, &Probleme, solver);
+        solver = ORTOOLS_ConvertIfNeeded(
+          options.ortoolsSolver, options.solver_parameters, &Probleme, solver);
     }
     const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
 
@@ -384,7 +385,8 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
         Probleme.SetUseNamedProblems(true);
 
         auto MPproblem = std::shared_ptr<MPSolver>(
-          ProblemSimplexeNommeConverter(options.ortoolsSolver, &Probleme).Convert());
+          ProblemSimplexeNommeConverter(options.ortoolsSolver, &Probleme)
+            .Convert(options.solver_parameters));
 
         auto analyzer = makeUnfeasiblePbAnalyzer();
         analyzer->run(MPproblem.get());
