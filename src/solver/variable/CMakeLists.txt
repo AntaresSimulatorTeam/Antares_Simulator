@@ -103,7 +103,7 @@ set(SRC_VARIABLE_ECONOMY
         include/antares/solver/variable/economy/overflow.h
         include/antares/solver/variable/economy/waterValue.h
         include/antares/solver/variable/economy/hydroCost.h
-        include/antares/solver/variable/economy/shortTermStorage.h
+        include/antares/solver/variable/economy/STSbyGroup.h
         include/antares/solver/variable/economy/STStorageInjectionByCluster.h
         include/antares/solver/variable/economy/STStorageWithdrawalByCluster.h
         include/antares/solver/variable/economy/STStorageLevelsByCluster.h
