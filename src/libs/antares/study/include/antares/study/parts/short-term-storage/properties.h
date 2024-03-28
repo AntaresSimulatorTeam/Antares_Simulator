@@ -63,7 +63,7 @@ public:
     /// Efficiency factor between 0 and 1
     double efficiencyFactor = 1;
     // Used to sort outputs
-    std::string groupName;
+    std::string groupName = "sts-def-group";
     /// cluster name
     std::string name;
 
