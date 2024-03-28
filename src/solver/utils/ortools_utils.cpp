@@ -24,8 +24,8 @@
 #include <antares/exception/AssertionError.hpp>
 #include "antares/antares/Enum.hpp"
 #include <filesystem>
-#include "../optimisation/opt_constants.h"
-#include "../optimisation/opt_structure_probleme_a_resoudre.h"
+#include "../optimisation/include/antares/solver/optimisation/opt_constants.h"
+
 
 using namespace operations_research;
 
@@ -327,7 +327,7 @@ static void transferBasis(std::vector<operations_research::MPSolver::BasisStatus
     destination.resize(source.size());
     for (size_t idx = 0; idx < source.size(); idx++)
     {
-        destination[idx] = source[idx]->basis_status();
+        destination[idx] = source[idx]->assibasis_status();
     }
 }
 

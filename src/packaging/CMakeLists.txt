@@ -52,7 +52,8 @@ set(TARGET_LIBS #No alias
         #
         signal-handling
         antares-solver-variable-info
-        minizip
+        optimization-options
+        # minizip
 )
 
 install(TARGETS ${TARGET_LIBS}

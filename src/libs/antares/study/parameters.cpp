@@ -51,27 +51,29 @@ static bool ConvertCStrToListTimeSeries(const String& value, uint& v)
     if (!value)
         return true;
 
-    value.words(" ,;\t\r\n", [&](const AnyString& element) -> bool {
-        ShortString16 word(element);
-        word.toLower();
-        if (word == "load")
-            v |= timeSeriesLoad;
-        else if (word == "wind")
-            v |= timeSeriesWind;
-        else if (word == "hydro")
-            v |= timeSeriesHydro;
-        else if (word == "thermal")
-            v |= timeSeriesThermal;
-        else if (word == "solar")
-            v |= timeSeriesSolar;
-        else if (word == "renewables")
-            v |= timeSeriesRenewable;
-        else if (word == "ntc")
-            v |= timeSeriesTransmissionCapacities;
-        else if (word == "max-power")
-            v |= timeSeriesHydroMaxPower;
-        return true;
-    });
+    value.words(" ,;\t\r\n",
+                [&](const AnyString& element) -> bool
+                {
+                    ShortString16 word(element);
+                    word.toLower();
+                    if (word == "load")
+                        v |= timeSeriesLoad;
+                    else if (word == "wind")
+                        v |= timeSeriesWind;
+                    else if (word == "hydro")
+                        v |= timeSeriesHydro;
+                    else if (word == "thermal")
+                        v |= timeSeriesThermal;
+                    else if (word == "solar")
+                        v |= timeSeriesSolar;
+                    else if (word == "renewables")
+                        v |= timeSeriesRenewable;
+                    else if (word == "ntc")
+                        v |= timeSeriesTransmissionCapacities;
+                    else if (word == "max-power")
+                        v |= timeSeriesHydroMaxPower;
+                    return true;
+                });
     return true;
 }
 
@@ -218,7 +220,6 @@ void Parameters::resetSeeds()
     for (auto i = (uint)seedTsGenLoad; i != seedMax; ++i)
         seed[i] = (s += increment);
 }
-
 
 void Parameters::resetPlayedYears(uint nbOfYears)
 {
@@ -963,15 +964,17 @@ bool firstKeyLetterIsValid(const String& name)
     return (firstLetter >= 'a' && firstLetter <= 'z');
 }
 
-bool Parameters::loadFromINI(const IniFile& ini, StudyVersion& version, const StudyLoadOptions& options)
+bool Parameters::loadFromINI(const IniFile& ini,
+                             StudyVersion& version,
+                             const StudyLoadOptions& options)
 {
     // Reset inner data
     reset();
     // A temporary buffer, used for the values in lowercase
     using Callback = bool (*)(
-      Parameters&,   // [out] Parameter object to load the data into
-      const String&, // [in] Key, comes left to the '=' sign in the .ini file
-      const String&, // [in] Lowercase value, comes right to the '=' sign in the .ini file
+      Parameters&,    // [out] Parameter object to load the data into
+      const String&,  // [in] Key, comes left to the '=' sign in the .ini file
+      const String&,  // [in] Lowercase value, comes right to the '=' sign in the .ini file
       const String&); // [in] Raw value as writtent right to the '=' sign in the .ini file
 
     static const std::map<String, Callback> sectionAssociatedToKeysProcess
@@ -1059,8 +1062,8 @@ bool Parameters::loadFromINI(const IniFile& ini, StudyVersion& version, const St
         derated = true;
 
     // Define ortools parameters from options
-    ortoolsUsed = options.optOptions.useOrtools;
-    ortoolsSolver = options.optOptions.solverName;
+    ortoolsUsed = options.optOptions.ortoolsUsed;
+    ortoolsSolver = options.optOptions.ortoolsSolver;
 
     namedProblems = options.namedProblems;
     solverLogs = options.solverLogs || solverLogs;
@@ -1090,8 +1093,9 @@ bool Parameters::loadFromINI(const IniFile& ini, StudyVersion& version, const St
 
 void Parameters::fixRefreshIntervals()
 {
-    using T = std::
-      tuple<uint& /* refreshInterval */, enum TimeSeriesType /* ts */, const std::string /* label */>;
+    using T = std::tuple<uint& /* refreshInterval */,
+                         enum TimeSeriesType /* ts */,
+                         const std::string /* label */>;
     const std::list<T> timeSeriesToCheck = {{refreshIntervalLoad, timeSeriesLoad, "load"},
                                             {refreshIntervalSolar, timeSeriesSolar, "solar"},
                                             {refreshIntervalHydro, timeSeriesHydro, "hydro"},
@@ -1138,13 +1142,13 @@ void Parameters::fixGenRefreshForHydroMaxPower()
     {
         timeSeriesToGenerate &= ~timeSeriesHydroMaxPower;
         logs.warning() << "Time-series generation is not available for hydro max power. It "
-                        "will be automatically disabled.";
+                          "will be automatically disabled.";
     }
     if ((timeSeriesHydroMaxPower & timeSeriesToRefresh) != 0)
     {
         timeSeriesToRefresh &= ~timeSeriesHydroMaxPower;
         logs.warning() << "Time-series refresh is not available for hydro max power. It will "
-                        "be automatically disabled.";
+                          "be automatically disabled.";
     }
 }
 
@@ -1386,7 +1390,8 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
 
     if (interModal == timeSeriesLoad || interModal == timeSeriesSolar
         || interModal == timeSeriesWind || interModal == timeSeriesHydro
-        || interModal == timeSeriesThermal || interModal == timeSeriesRenewable || interModal == timeSeriesHydroMaxPower)
+        || interModal == timeSeriesThermal || interModal == timeSeriesRenewable
+        || interModal == timeSeriesHydroMaxPower)
     {
         // Only one timeseries in interModal correlation, which is the same than nothing
         interModal = 0;
@@ -1497,7 +1502,6 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
     }
     // indicated whether solver logs will be printed
     logs.info() << "  :: Printing solver logs : " << (solverLogs ? "True" : "False");
-    
 }
 
 void Parameters::resetPlaylist(uint nbOfYears)
