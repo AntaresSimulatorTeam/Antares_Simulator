@@ -895,6 +895,9 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
                               logs.warning()
                                 << area.name << ": invalid type for reserve " << section.name;
                       }
+                      else
+                          logs.warning()
+                            << area.name << ": invalid key " << tmp << " in file " << buffer;
                   }
                   buffer.clear() << study.folderInput << SEP << "reserves" << SEP << area.id << SEP
                                  << file_name << ".txt";
@@ -903,9 +906,9 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
                   ret = (*tmp_need).loadFromFile(buffer, false) && ret;
                   tmpReserve.need = tmp_need;
                   if (type == 0)
-                      area.newReserves.areaReservesUp[section.name] = tmpReserve;
+                      area.newReserves.areaReservesUp.emplace(section.name, tmpReserve);
                   else if (type == 1)
-                      area.newReserves.areaReservesDown[section.name] = tmpReserve;
+                      area.newReserves.areaReservesDown.emplace(section.name, tmpReserve);
                   else
                   {
                       logs.warning() << area.name << ": invalid type for reserve " << section.name;

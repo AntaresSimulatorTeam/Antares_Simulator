@@ -140,6 +140,23 @@ public:
     */
     Matrix<> modulation;
 
+    /*!
+    ** \brief Returns true if cluster participates in a reserve with this name
+    */
+    bool isParticipatingInReserve(std::string name);
+
+    /*!
+    ** \brief Returns max power for a reserve if participating, -1 otherwise
+    */
+    float reserveMaxPower(std::string name);
+
+    /*!
+    ** \brief Returns participating cost for a reserve if participating, -1 otherwise
+    */
+    float reserveCost(std::string name);
+
+
+
 protected:
     Data::ClusterName pName;
     Data::ClusterName pID;
