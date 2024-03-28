@@ -25,6 +25,8 @@
 #include "../../fwd.h"
 
 #include <antares/writer/i_writer.h>
+#include <antares/study/area/newReserves.h>
+#include <antares/study/parts/common/cluster.h>
 
 #include <algorithm>
 #include <vector>
@@ -127,6 +129,14 @@ public:
     bool loadDataSeriesFromFolder(Study& study,
                                  const AnyString& folder);
 
+    /// @brief Load the reserve participation. For each entry, it checks if the reserve has been
+    /// added to area.newReserves, if not then log the name of the reserve that has not been found.
+    /// @tparam ClusterT Type of the Cluster list
+    /// @param area Reference to area
+    /// @param file File to read the reserve participations entries
+    /// @return false if the file opening failed, true otherwise
+    bool loadReserveParticipations(Area& area, const AnyString& folder);
+
     bool saveDataSeriesToFolder(const AnyString& folder) const;
 
     virtual bool saveToFolder(const AnyString& folder) const = 0;
@@ -148,6 +158,10 @@ public:
     unsigned int allClustersCount() const;
     void addToCompleteList(std::shared_ptr<ClusterT> cluster);
     void sortCompleteList();
+    /// @brief Get the cluster from the vector allClusters_ using it's name
+    /// @param clusterName
+    /// @return nullopt if no clusters found else a pointer to the cluster
+    std::optional<std::shared_ptr<Cluster>> getClusterByName(std::string clusterName);
 
 protected:
     std::vector<std::shared_ptr<ClusterT>> allClusters_;

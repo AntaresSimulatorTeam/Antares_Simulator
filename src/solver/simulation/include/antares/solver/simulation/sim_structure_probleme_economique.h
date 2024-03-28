@@ -257,6 +257,35 @@ struct PDISP_ET_COUTS_HORAIRES_PAR_PALIER
 
 };
 
+struct RESERVE_PARTICIPATION
+{
+    float maxPower=-1;
+    float participationCost=-1;
+};
+
+struct AREA_RESERVE
+{
+    std::vector<RESERVE_PARTICIPATION> AllReservesParticipation; // Vector size is number of thermal clusters in this area
+    std::vector<int> need;      // Vector size is number of hours in year
+    float failureCost = 0;
+    float spillageCost = 0;
+};
+
+
+//Vector size is number of reserves up or down
+struct AREA_RESERVES_VECTOR
+{
+    std::vector<AREA_RESERVE> areaReservesUp;
+    std::vector<AREA_RESERVE> areaReservesDown;
+};
+
+//Vector size is number of areas, contains all the reserves
+struct ALL_AREA_RESERVES
+{
+    std::vector<AREA_RESERVES_VECTOR> thermalAreaReserves;
+    //other types of reserves to be implemented here
+};
+
 struct PALIERS_THERMIQUES
 {
     int NombreDePaliersThermiques;
@@ -516,12 +545,15 @@ struct PROBLEME_HEBDO
     std::vector<PALIERS_THERMIQUES> PaliersThermiquesDuPays;
     std::vector<ENERGIES_ET_PUISSANCES_HYDRAULIQUES> CaracteristiquesHydrauliques;
 
+    ALL_AREA_RESERVES allReserves;
+
     uint32_t NumberOfShortTermStorages = 0;
     // problemeHebdo->ShortTermStorage[areaIndex][clusterIndex].capacity;
     std::vector<::ShortTermStorage::AREA_INPUT> ShortTermStorage;
 
     /* Optimization problem */
     uint32_t NbTermesContraintesPourLesCoutsDeDemarrage = 0;
+    uint32_t NbTermesContraintesPourLesReserves = 0;
     std::vector<bool> DefaillanceNegativeUtiliserPMinThermique;
     std::vector<bool> DefaillanceNegativeUtiliserHydro;
     std::vector<bool> DefaillanceNegativeUtiliserConsoAbattue;

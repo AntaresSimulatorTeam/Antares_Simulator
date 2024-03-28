@@ -99,6 +99,38 @@ bool Cluster::loadDataSeriesFromFolder(Study& s, const AnyString& folder)
 }
 #undef SEP
 
+
+void Cluster::addReserveParticipation(
+  std::string name,
+  ClusterReserveParticipation reserveParticipation)
+{
+    clusterReservesParticipations.emplace(name, reserveParticipation);
+}
+
+bool Cluster::isParticipatingInReserve(std::string name)
+{
+    if (clusterReservesParticipations.contains(name))
+        return true;
+    else
+        return false;
+}
+
+float Cluster::reserveMaxPower(std::string name)
+{
+    if (clusterReservesParticipations.contains(name))
+        return clusterReservesParticipations.at(name).maxPower;
+    else
+        return -1;
+}
+
+float Cluster::reserveCost(std::string name)
+{
+    if (clusterReservesParticipations.contains(name))
+        return clusterReservesParticipations.at(name).participationCost;
+    else
+        return -1;
+}
+
 void Cluster::invalidateArea()
 {
     if (parentArea)

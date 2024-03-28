@@ -70,6 +70,16 @@ Area::~Area()
 {
     logs.debug() << "  :: destroying area " << name;
 
+    // freeing memory from reserves
+    for (auto const& [key, val] : newReserves.areaReservesUp)
+    {
+        delete val.need;
+    }
+    for (auto const& [key, val] : newReserves.areaReservesDown)
+    {
+        delete val.need;
+    }
+
     // Delete all links
     clearAllLinks();
 

@@ -109,6 +109,18 @@ void ClusterList<ClusterT>::storeTimeseriesNumbers(Solver::IResultWriter& writer
 }
 
 template<class ClusterT>
+std::optional<std::shared_ptr<Cluster>> ClusterList<ClusterT>::getClusterByName(
+  std::string clusterName)
+{
+    auto it = std::find_if(allClusters_.begin(),
+                           allClusters_.end(),
+                           [&](const auto& cluster) { return cluster->id() == clusterName; });
+
+    return (it != allClusters_.end()) ? std::optional<std::shared_ptr<ClusterT>>(*it)
+                                      : std::nullopt;
+}
+
+template<class ClusterT>
 bool ClusterList<ClusterT>::alreadyInAllClusters(std::string clusterId)
 {
     return std::ranges::any_of(allClusters_, [&clusterId](const auto& c) { return c->id() == clusterId; });
@@ -254,6 +266,65 @@ bool ClusterList<ClusterT>::loadDataSeriesFromFolder(Study& s,
 {
     return std::ranges::all_of(allClusters_,
                                [&](auto c) { return c->loadDataSeriesFromFolder(s, folder); });
+}
+
+template<class ClusterT>
+bool ClusterList<ClusterT>::loadReserveParticipations(Area& area, const AnyString& file)
+{
+    IniFile ini;
+    if (!ini.open(file))
+        return false;
+    ini.each(
+      [&](const IniFile::Section& section)
+      {
+          std::string tmpClusterName;
+          float tmpMaxPower = 0;
+          float tmpParticipationCost = 0;
+          for (auto* p = section.firstProperty; p; p = p->next)
+          {
+              CString<30, false> tmp;
+              tmp = p->key;
+              tmp.toLower();
+
+              if (tmp == "cluster-name")
+              {
+                  tmpClusterName = p->value;
+              }
+              else if (tmp == "max-power")
+              {
+                  if (!p->value.to<float>(tmpMaxPower))
+                  {
+                      logs.warning()
+                        << area.name << ": invalid max power for reserve " << section.name;
+                  }
+              }
+              else if (tmp == "participation-cost")
+              {
+                  if (!p->value.to<float>(tmpParticipationCost))
+                  {
+                      logs.warning()
+                        << area.name << ": invalid participation cost for reserve " << section.name;
+                  }
+              }
+          }
+          if (area.newReserves.getReserveByName(section.name).has_value()
+              && area.thermal.list.getClusterByName(tmpClusterName).has_value())
+          {
+              ClusterReserveParticipation tmpReserveParticipation{
+                area.newReserves.getReserveByName(section.name).value().get(),
+                tmpMaxPower,
+                tmpParticipationCost};
+              area.thermal.list.getClusterByName(tmpClusterName)
+                .value()
+                .get()
+                ->addReserveParticipation(section.name, tmpReserveParticipation);
+          }
+          else
+          {
+              logs.warning() << area.name << ": does not contains this reserve " << section.name;
+          }
+      });
+    return true;
 }
 
 template<class ClusterT>

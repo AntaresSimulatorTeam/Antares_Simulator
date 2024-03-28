@@ -283,6 +283,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         auto& pbPalier = problem.PaliersThermiquesDuPays[i];
         unsigned int clusterCount = area.thermal.list.enabledAndNotMustRunCount();
         pbPalier.NombreDePaliersThermiques = clusterCount;
+        AREA_RESERVES_VECTOR areaReserves;
 
         for (auto cluster : area.thermal.list.each_enabled_and_not_mustrun())
         {
@@ -309,9 +310,64 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
                   ? pbPalier.PmaxDUnGroupeDuPalierThermique[cluster->index]
                   : cluster->minStablePower;
             pbPalier.NomsDesPaliersThermiques[cluster->index] = cluster->name().c_str();
+            
         }
 
+        for (auto const& [key, val] : area.newReserves.areaReservesUp)
+        {
+            AREA_RESERVE areaReservesUp;
+            areaReservesUp.failureCost = val.failureCost;
+            areaReservesUp.spillageCost = val.spillageCost;
+            if (val.need->timeSeries.width > 0)
+            {
+                for (int indexSeries = 0; indexSeries < val.need->timeSeries.height; indexSeries++)
+                {
+                    areaReservesUp.need.push_back(val.need->timeSeries.entry[0][indexSeries]);
+                }
+            }
+            for (auto cluster : area.thermal.list.each_enabled_and_not_mustrun())
+            {
+                RESERVE_PARTICIPATION reserveParticipation;
+                if (cluster->isParticipatingInReserve(key))
+                {
+                    reserveParticipation.maxPower = cluster->reserveMaxPower(key);
+                    reserveParticipation.participationCost = cluster->reserveCost(key);
+                }
+                areaReservesUp.AllReservesParticipation.push_back(reserveParticipation);
+            }
+
+            areaReserves.areaReservesUp.push_back(areaReservesUp);
+        }
+
+        for (auto const& [key, val] : area.newReserves.areaReservesDown)
+        {
+            AREA_RESERVE areaReservesDown;
+            areaReservesDown.failureCost = val.failureCost;
+            areaReservesDown.spillageCost = val.spillageCost;
+            if (val.need->timeSeries.width > 0)
+            {
+                for (int indexSeries = 0; indexSeries < val.need->timeSeries.height; indexSeries++)
+                {
+                    areaReservesDown.need.push_back(val.need->timeSeries.entry[0][indexSeries]);
+                }
+            }
+            for (auto cluster : area.thermal.list.each_enabled_and_not_mustrun())
+            {
+                RESERVE_PARTICIPATION reserveParticipation;
+                if (cluster->isParticipatingInReserve(key))
+                {
+                    reserveParticipation.maxPower = cluster->reserveMaxPower(key);
+                    reserveParticipation.participationCost = cluster->reserveCost(key);
+                }
+                areaReservesDown.AllReservesParticipation.push_back(reserveParticipation);
+            }
+
+            areaReserves.areaReservesDown.push_back(areaReservesDown);
+        }
+        
+
         NombrePaliers += clusterCount;
+        problem.allReserves.thermalAreaReserves.push_back(areaReserves);
     }
 
     problem.NombreDePaliersThermiques = NombrePaliers;

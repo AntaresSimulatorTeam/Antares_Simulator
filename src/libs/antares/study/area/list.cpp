@@ -31,6 +31,7 @@
 #include "antares/study/parts/parts.h"
 #include "antares/study/parts/load/prepro.h"
 #include <antares/study/area/scratchpad.h>
+#include <antares/study/area/newReserves.h>
 
 #define SEP IO::Separator
 
@@ -778,6 +779,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     area.spreadSpilledEnergyCost = 0.;
 
     bool ret = true;
+    IniFile ini;
 
     // DSM, Reserves, D-1
     buffer.clear() << study.folderInput << SEP << "reserves" << SEP << area.id << ".txt";
@@ -840,6 +842,80 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             ret = area.load.series.loadFromFile(buffer.c_str(), averageTs)
                   && ret;
         }
+    }
+
+    // Reserves
+    {
+        buffer.clear() << study.folderInput << SEP << "reserves" << SEP << area.id << SEP
+                       << "reserves.ini";
+        if (!ini.open(buffer))
+            return false;
+        ini.each(
+          [&](const IniFile::Section& section)
+          {
+              if (area.newReserves.contains(section.name))
+              {
+                  logs.warning() << area.name << ": reserve name already exists for reserve "
+                                 << section.name;
+              }
+              else
+              {
+                  AreaReserve tmpReserve;
+                  std::string file_name = NewReserves::toFilename(section.name);
+                  int type = -1;
+                  for (auto* p = section.firstProperty; p; p = p->next)
+                  {
+                      CString<30, false> tmp;
+                      tmp = p->key;
+                      tmp.toLower();
+
+                      if (tmp == "failure-cost")
+                      {
+                          if (!p->value.to<float>(tmpReserve.failureCost))
+                          {
+                              logs.warning() << area.name << ": invalid failure cost for reserve "
+                                             << section.name;
+                          }
+                      }
+                      else if (tmp == "spillage-cost")
+                      {
+                          if (!p->value.to<float>(tmpReserve.spillageCost))
+                          {
+                              logs.warning() << area.name << ": invalid spillage cost for reserve "
+                                             << section.name;
+                          }
+                      }
+                      else if (tmp == "type")
+                      {
+                          if (p->value == "up")
+                              type = 0;
+                          else if (p->value == "down")
+                              type = 1;
+                          else
+                              logs.warning()
+                                << area.name << ": invalid type for reserve " << section.name;
+                      }
+                      else
+                          logs.warning()
+                            << area.name << ": invalid key " << tmp << " in file " << buffer;
+                  }
+                  buffer.clear() << study.folderInput << SEP << "reserves" << SEP << area.id << SEP
+                                 << file_name << ".txt";
+                  TimeSeries::numbers tsnum;
+                  Antares::Data::TimeSeries* tmp_need = new TimeSeries(tsnum);
+                  ret = (*tmp_need).loadFromFile(buffer, false) && ret;
+                  tmpReserve.need = tmp_need;
+                  if (type == 0)
+                      area.newReserves.areaReservesUp.emplace(section.name, tmpReserve);
+                  else if (type == 1)
+                      area.newReserves.areaReservesDown.emplace(section.name, tmpReserve);
+                  else
+                  {
+                      logs.warning() << area.name << ": invalid type for reserve " << section.name;
+                      delete tmp_need;
+                  }
+              }
+          });
     }
 
     // Solar
@@ -937,6 +1013,10 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         // In adequacy mode, all thermal clusters must be in 'mustrun' mode
         if (study.usedByTheSolver && study.parameters.mode == SimulationMode::Adequacy)
             area.thermal.list.enableMustrunForEveryone();
+
+        buffer.clear() << study.folderInput << SEP << "thermal" << SEP << "clusters" << SEP
+                       << area.id << SEP << "reserves.ini";
+        ret = area.thermal.list.loadReserveParticipations(area, buffer) && ret;
     }
 
     // Short term storage
@@ -962,7 +1042,6 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     // Nodal Optimization
     buffer.clear() << study.folderInput << SEP << "areas" << SEP << area.id << SEP
                    << "optimization.ini";
-    IniFile ini;
     if (!ini.open(buffer))
         return false;
 

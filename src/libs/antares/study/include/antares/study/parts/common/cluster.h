@@ -26,6 +26,7 @@
 #include <antares/array/matrix.h>
 #include <antares/series/series.h>
 #include "../../fwd.h"
+#include <antares/study/area/newReserves.h>
 
 #include <set>
 #include <map>
@@ -104,6 +105,12 @@ public:
     bool saveDataSeriesToFolder(const AnyString& folder) const;
     bool loadDataSeriesFromFolder(Study& s, const AnyString& folder);
 
+    /// @brief Add the reserve participation to the current clusterReservesParticipations map
+    /// @param name the name of the reserve to add
+    /// @param reserveParticipation the reserve participation to add
+    void addReserveParticipation(std::string name,
+                                 ClusterReserveParticipation reserveParticipation);
+
     uint unitCount = 0;
 
     bool isEnabled() const { return enabled; }
@@ -133,6 +140,23 @@ public:
     */
     Matrix<> modulation;
 
+    /*!
+    ** \brief Returns true if cluster participates in a reserve with this name
+    */
+    bool isParticipatingInReserve(std::string name);
+
+    /*!
+    ** \brief Returns max power for a reserve if participating, -1 otherwise
+    */
+    float reserveMaxPower(std::string name);
+
+    /*!
+    ** \brief Returns participating cost for a reserve if participating, -1 otherwise
+    */
+    float reserveCost(std::string name);
+
+
+
 protected:
     Data::ClusterName pName;
     Data::ClusterName pID;
@@ -140,6 +164,10 @@ protected:
 
 private:
     virtual unsigned int precision() const = 0;
+    /// @brief Stores the reserves Participations for each reserve, the key is the name of the
+    /// reserve
+    std::map<std::string, ClusterReserveParticipation> clusterReservesParticipations;
+
 };
 } // namespace Data
 } // namespace Antares
