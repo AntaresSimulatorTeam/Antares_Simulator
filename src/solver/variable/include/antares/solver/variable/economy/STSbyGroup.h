@@ -322,6 +322,8 @@ public:
 
     std::string caption(unsigned int column) const
     {
+        static const std::vector<std::string> VAR_POSSIBLE_KINDS
+          = {"injection", "withdrawal", "level"};
         std::string groupName = groupNames_[column / NB_COLS_PER_GROUP];
         std::string variableKind = VAR_POSSIBLE_KINDS[column % NB_COLS_PER_GROUP];
         return groupName + "_" + variableKind;
@@ -396,7 +398,6 @@ private:
     size_t nbColumns_ = 0;
     std::vector<std::string> groupNames_; // Names of group containing the clusters of the area
     std::map<std::string, unsigned int> groupToNumbers_; // Gives to each group (of area) a number
-    const std::vector<std::string> VAR_POSSIBLE_KINDS = {"injection", "withdrawal", "level"};
     const int NB_COLS_PER_GROUP = 3; // Injection + withdrawal + levels = 3 variables
     unsigned int pNbYearsParallel;
 
