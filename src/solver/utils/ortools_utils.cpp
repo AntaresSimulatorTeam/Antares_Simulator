@@ -69,7 +69,7 @@ ProblemSimplexeNommeConverter::ProblemSimplexeNommeConverter(
 MPSolver* ProblemSimplexeNommeConverter::Convert(const std::string& solverParameters)
 {
     MPSolver* solver = MPSolverFactory(problemeSimplexe_, solverName_);
-    TuneSolverSpecificOptions(solver, solverParameters);
+    TuneSolverSpecificOptions(solver, solverParameters); // Pourquoi ici et pas dans le solve ?
 
     // Create the variables and set objective cost.
     CopyVariables(solver);
@@ -328,7 +328,7 @@ static void transferBasis(std::vector<operations_research::MPSolver::BasisStatus
     destination.resize(source.size());
     for (size_t idx = 0; idx < source.size(); idx++)
     {
-        destination[idx] = source[idx]->assibasis_status();
+        destination[idx] = source[idx]->basis_status();
     }
 }
 
@@ -340,7 +340,7 @@ MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probl
 {
     MPSolverParameters params;
     setGenericParameters(
-      params); // Keep generic params for default settings owrking for all solvers
+      params); // Keep generic params for default settings working for all solvers
     const bool useBasis = computeUseBasis(optimizationNumber, options);
     const bool warmStart = solverSupportsWarmStart(solver->ProblemType()) && useBasis;
     // Provide an initial simplex basis, if any
