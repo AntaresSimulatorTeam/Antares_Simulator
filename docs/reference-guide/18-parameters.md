@@ -1,5 +1,3 @@
-## Antares Simulator Parameters
-
 ### General parameters
 These parameters are listed under the `[general]` section in the `.ini` file.  
 
