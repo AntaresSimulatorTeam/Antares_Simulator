@@ -142,16 +142,12 @@ public:
         pNbYearsParallel = study->maxNbYearsInParallel;
         pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
 
-        // Vector of group names the clusters of the are belong to.
-        // In this Group names appear only once
+        // Building the vector of group names the clusters belong to.
+        std::set<std::string> tmp_names;
         for (auto& cluster : area->shortTermStorage.storagesByIndex)
-        {
-            std::string groupName = cluster.properties.groupName;
-            if (std::find(groupNames_.begin(), groupNames_.end(), groupName) == groupNames_.end())
-                groupNames_.push_back(cluster.properties.groupName);
-        }
-        std::sort(groupNames_.begin(), groupNames_.end());
-
+            tmp_names.insert(cluster.properties.groupName);
+        groupNames_ = { tmp_names.begin(), tmp_names.end() };
+        
         // Giving a number to each group
         unsigned int groupNumber{0};
         for (auto name : groupNames_)
@@ -159,10 +155,8 @@ public:
             groupToNumbers_[name] = groupNumber;
             groupNumber++;
         }
-
-        nbGroups_ = groupNames_.size();
-        nbColumns_ = nbGroups_ * 3;
-
+        const int NB_VARS_PER_GROUP = 3; // Injection + withdrawal + levels = 3 variables
+        nbColumns_ = groupNames_.size() * NB_VARS_PER_GROUP;
 
         if (nbColumns_)
         {
@@ -263,7 +257,6 @@ public:
 
     void hourBegin(unsigned int hourInTheYear)
     {
-        // Next variable
         NextType::hourBegin(hourInTheYear);
     }
 
@@ -302,8 +295,8 @@ public:
     }
 
     Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
-      unsigned int column,
-      unsigned int numSpace) const
+        unsigned int column,
+        unsigned int numSpace) const
     {
         return pValuesForTheCurrentYear[numSpace][column].hour;
     }
@@ -326,7 +319,7 @@ public:
 
     std::string unit(unsigned int column) const
     {
-        return (column % 3 == 2) ? "MWh" : "MW"; // Level in MWh, others in "MW"
+        return (column % 3 == 2) ? "MWh" : "MW"; // Levels in MWh, others in "MW"
     }
 
     void localBuildAnnualSurveyReport(SurveyResults& results,
@@ -386,7 +379,6 @@ public:
 private:
     //! Intermediate values for each year
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
-    size_t nbGroups_ = 0;
     size_t nbColumns_ = 0;
     std::vector<std::string> groupNames_; // Names of group containing the clusters of the area
     std::map<std::string, unsigned int> groupToNumbers_; // Gives to each group (of area) a number
