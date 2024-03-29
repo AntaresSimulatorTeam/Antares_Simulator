@@ -100,7 +100,7 @@ bool ClusterUpdater::changeGroup(const wxVariant& value)
     using SetType = std::set<AreaType>;
     SetType set;
 
-    for (auto cluster : clusters)
+    for (auto& cluster : clusters)
     {
         if (cluster->group() != name)
         {
@@ -122,7 +122,7 @@ bool ClusterUpdater::changeUnit(const wxVariant& value)
 {
     using unitT = decltype(Antares::Data::ThermalCluster::unitCount);
     const auto nbUnits = static_cast<unitT>(value.GetLong());
-    for (auto cluster : clusters)
+    for (auto& cluster : clusters)
         cluster->unitCount = nbUnits;
 
     // refresh the installed capacity
@@ -139,13 +139,13 @@ bool ClusterUpdater::changeNominalCapacity(const wxVariant& value)
     double d = value.GetDouble();
     if (d < 0.)
     {
-        for (auto cluster : clusters)
+        for (auto& cluster : clusters)
             cluster->nominalCapacity = 0.;
         pFrame.delayApply();
     }
     else
     {
-        for (auto cluster : clusters)
+        for (auto& cluster : clusters)
             cluster->nominalCapacity = d;
     }
 
@@ -161,7 +161,7 @@ bool ClusterUpdater::changeNominalCapacity(const wxVariant& value)
 bool ClusterUpdater::changeEnabled(const wxVariant& value)
 {
     const bool d = value.GetBool();
-    for (auto cluster : clusters)
+    for (auto& cluster : clusters)
         cluster->enabled = d;
     // Notify
     OnCommonSettingsChanged();

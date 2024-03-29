@@ -58,7 +58,7 @@ std::shared_ptr<ClusterT> ClusterList<ClusterT>::enabledClusterAt(unsigned int i
 template<class ClusterT>
 ClusterT* ClusterList<ClusterT>::findInAll(std::string_view id) const
 {
-    for (auto cluster : all())
+    for (auto& cluster : all())
         if (cluster->id() == id)
             return cluster.get();
     return nullptr;
@@ -98,7 +98,7 @@ void ClusterList<ClusterT>::storeTimeseriesNumbers(Solver::IResultWriter& writer
     Clob path;
     std::string ts_content;
 
-    for (auto cluster : each_enabled())
+    for (auto& cluster : each_enabled())
     {
         path.clear() << "ts-numbers" << SEP << typeID() << SEP << cluster->parentArea->id << SEP
                      << cluster->id() << ".txt";

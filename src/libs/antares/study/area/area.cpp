@@ -272,7 +272,7 @@ void Area::resizeAllTimeseriesNumbers(uint nbYears)
 bool Area::thermalClustersMinStablePowerValidity(std::vector<YString>& output) const
 {
     bool noErrorMinStabPow = true;
-    for (auto cluster : thermal.list.each_enabled())
+    for (auto& cluster : thermal.list.each_enabled())
     {
         logs.debug() << "cluster : " << cluster->name();
         if ((not cluster->checkMinStablePower())

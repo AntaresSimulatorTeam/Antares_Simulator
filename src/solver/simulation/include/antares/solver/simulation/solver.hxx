@@ -695,7 +695,7 @@ void ISimulation<ImplementationType>::computeRandomNumbers(randomNumbers& random
             // logs.info() << "   area : " << a << " :";
             const auto& area = *(study.areas.byIndex[a]);
 
-            for (auto cluster : area.thermal.list.all())
+            for (auto& cluster : area.thermal.list.all())
             {
                 uint clusterIndex = cluster->areaWideIndex;
                 double thermalNoise = runtime.random[Data::seedThermalCosts].next();

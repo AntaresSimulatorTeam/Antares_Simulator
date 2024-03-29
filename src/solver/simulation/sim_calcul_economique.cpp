@@ -284,7 +284,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         unsigned int clusterCount = area.thermal.list.enabledAndNotMustRunCount();
         pbPalier.NombreDePaliersThermiques = clusterCount;
 
-        for (auto cluster : area.thermal.list.each_enabled_and_not_mustrun())
+        for (auto& cluster : area.thermal.list.each_enabled_and_not_mustrun())
         {
             pbPalier.NumeroDuPalierDansLEnsembleDesPaliersThermiques[cluster->index]
               = NombrePaliers + cluster->index;

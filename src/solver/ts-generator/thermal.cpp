@@ -598,7 +598,7 @@ std::vector<Data::ThermalCluster*> getAllClustersToGen(Data::AreaList& areas,
     std::vector<Data::ThermalCluster*> clusters;
 
     areas.each([&clusters, &globalThermalTSgeneration](Data::Area& area) {
-        for (auto cluster : area.thermal.list.all())
+        for (auto& cluster : area.thermal.list.all())
             if (cluster->doWeGenerateTS(globalThermalTSgeneration))
                 clusters.push_back(cluster.get());
     });

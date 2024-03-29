@@ -318,7 +318,7 @@ public:
             assert(NULL != results.data.area);
             const auto& renewable = results.data.area->renewable;
             // Write the data for the current year
-            for (auto cluster : renewable.list.each_enabled())
+            for (auto& cluster : renewable.list.each_enabled())
             {
                 // Write the data for the current year
                 results.variableCaption = cluster->name();

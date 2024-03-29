@@ -311,13 +311,13 @@ bool ThermalClusterLoadFromSection(const AnyString& filename,
 
 void ThermalClusterList::calculationOfSpinning()
 {
-    for (auto cluster : each_enabled())
+    for (auto& cluster : each_enabled())
         cluster->calculationOfSpinning();
 }
 
 void ThermalClusterList::reverseCalculationOfSpinning()
 {
-    for (auto cluster : each_enabled())
+    for (auto& cluster : each_enabled())
         cluster->reverseCalculationOfSpinning();
 }
 
