@@ -41,16 +41,6 @@ public:
     using TimedData = std::vector<double>;
     using TimedDataDict = std::map<std::string, std::vector<TimedData>>;
 
-    double getScalarData(const std::string& key, int scenario = 0) const
-    {
-        return scalarData_.at(key)[scenario];
-    }
-
-    const TimedData& getTimedData(const std::string& key, int scenario = 0) const
-    {
-        return timedData_.at(key)[scenario];
-    }
-
 private:
     // TODO : timestamps or timesteps?
     std::vector<int> timeStamps_;
@@ -83,14 +73,20 @@ public:
     {
         return scalarData_.contains(key);
     }
-    // [[nodiscard]] double getScalarData(const std::string& key) const { return
-    // scalarData_.at(key); }
     [[nodiscard]] bool hasTimedData(const std::string& key) const
     {
         return timedData_.contains(key);
     }
-    // [[nodiscard]] const TimedData& getTimedData(const std::string& key) const { return
-    // timedData_.at(key); }
+
+    [[nodiscard]] double getScalarData(const std::string& key, int scenario = 0) const
+    {
+        return scalarData_.at(key)[scenario];
+    }
+
+    [[nodiscard]] const TimedData& getTimedData(const std::string& key, int scenario = 0) const
+    {
+        return timedData_.at(key)[scenario];
+    }
 
     // TODO: remove this when legacy support is dropped
     // TODO: meanwhile, instead of having a nested struct, create a daughter class?
