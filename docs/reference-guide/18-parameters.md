@@ -466,7 +466,6 @@ These parameters are listed under the `[advanced parameters]` section in the `.i
 - **Default value:** TODO
 - **Usage:** TODO
 
-
 ### Seeds - Mersenne Twister parameters
 These parameters are listed under the `[seeds - Mersenne Twister]` section in the `.ini` file.
 
