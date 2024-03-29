@@ -44,6 +44,7 @@ nav:
     - 'Adequacy patch (v8.3.0+)': 'reference-guide/14-adequacy-patch.md'
     - 'File format changes': 'reference-guide/13-file-format.md'
     - 'Attribution notices': 'reference-guide/12-attribution_notices.md'
+    - 'Simulator parameters': 'reference-guide/18-parameters.md'
   - 'Optimisation problem' : 'reference-guide/11-modeling.md'
   - 'Build':
     - 'Introduction': 'build/0-INSTALL.md'
