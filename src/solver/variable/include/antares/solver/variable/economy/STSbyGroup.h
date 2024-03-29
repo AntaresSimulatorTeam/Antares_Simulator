@@ -150,13 +150,13 @@ public:
 
         // Building the vector of group names the clusters belong to.
         std::set<std::string> tmp_names;
-        for (auto& cluster : area->shortTermStorage.storagesByIndex)
+        for (const auto& cluster : area->shortTermStorage.storagesByIndex)
             tmp_names.insert(cluster.properties.groupName);
         groupNames_ = {tmp_names.begin(), tmp_names.end()};
 
         // Giving a number to each group
         unsigned int groupNumber{0};
-        for (auto name : groupNames_)
+        for (const auto name : groupNames_)
         {
             groupToNumbers_[name] = groupNumber;
             groupNumber++;
@@ -237,169 +237,169 @@ public:
                 pValuesForTheCurrentYear[numSpace][column].computeStatisticsForTheCurrentYear();
                 break;
             }
+        }
+        // Next variable
+        NextType::yearEnd(year, numSpace);
+    }
 
-            // Next variable
-            NextType::yearEnd(year, numSpace);
+    void computeSummary(std::map<unsigned int, unsigned int>& numSpaceToYear,
+                        unsigned int nbYearsForCurrentSummary)
+    {
+        // Here we compute synthesis :
+        //  for each interval of any time period results (hourly, daily, weekly, ...),
+        //  we compute the average over all MC years :
+        //  For instance :
+        //      - we compute the average of the results of the first hour over all MC years
+        //      - or we compute the average of the results of the n-th day over all MC years
+        for (unsigned int numSpace = 0; numSpace < nbYearsForCurrentSummary; ++numSpace)
+        {
+            VariableAccessorType::ComputeSummary(
+              pValuesForTheCurrentYear[numSpace], AncestorType::pResults, numSpaceToYear[numSpace]);
         }
 
-        void computeSummary(std::map<unsigned int, unsigned int> & numSpaceToYear,
-                            unsigned int nbYearsForCurrentSummary)
-        {
-            // Here we compute synthesis :
-            //  for each interval of any time period results (hourly, daily, weekly, ...),
-            //  we compute the average over all MC years :
-            //  For instance :
-            //      - we compute the average of the results of the first hour over all MC years
-            //      - or we compute the average of the results of the n-th day over all MC years
-            for (unsigned int numSpace = 0; numSpace < nbYearsForCurrentSummary; ++numSpace)
-            {
-                VariableAccessorType::ComputeSummary(pValuesForTheCurrentYear[numSpace],
-                                                     AncestorType::pResults,
-                                                     numSpaceToYear[numSpace]);
-            }
+        // Next variable
+        NextType::computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
+    }
 
-            // Next variable
-            NextType::computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
+    void hourBegin(unsigned int hourInTheYear)
+    {
+        NextType::hourBegin(hourInTheYear);
+    }
+
+    void hourForEachArea(State& state, unsigned int numSpace)
+    {
+        using namespace Antares::Data::ShortTermStorage;
+        const auto& shortTermStorage = state.area->shortTermStorage;
+
+        uint clusterIndex = 0;
+        for (const auto& cluster : shortTermStorage.storagesByIndex)
+        {
+            unsigned int groupNumber = groupToNumbers_[cluster.properties.groupName];
+            const auto& result = state.hourlyResults->ShortTermStorage[state.hourInTheWeek];
+            // Injection
+            pValuesForTheCurrentYear[numSpace][NB_COLS_PER_GROUP * groupNumber
+                                               + VariableType::injection][state.hourInTheYear]
+              += result.injection[clusterIndex];
+
+            // Withdrawal
+            pValuesForTheCurrentYear[numSpace][NB_COLS_PER_GROUP * groupNumber
+                                               + VariableType::withdrawal][state.hourInTheYear]
+              += result.withdrawal[clusterIndex];
+
+            // Levels
+            pValuesForTheCurrentYear[numSpace][NB_COLS_PER_GROUP * groupNumber
+                                               + VariableType::level][state.hourInTheYear]
+              += result.level[clusterIndex];
+
+            clusterIndex++;
         }
 
-        void hourBegin(unsigned int hourInTheYear)
+        // Next variable
+        NextType::hourForEachArea(state, numSpace);
+    }
+
+    inline void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
+    {
+        // Ask to build the digest to the next variable
+        NextType::buildDigest(results, digestLevel, dataLevel);
+    }
+
+    Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
+      unsigned int column,
+      unsigned int numSpace) const
+    {
+        return pValuesForTheCurrentYear[numSpace][column].hour;
+    }
+
+    inline uint64_t memoryUsage() const
+    {
+        uint64_t r = (sizeof(IntermediateValues) * nbColumns_ + IntermediateValues::MemoryUsage())
+                     * pNbYearsParallel;
+        r += sizeof(double) * nbColumns_ * maxHoursInAYear * pNbYearsParallel;
+        r += AncestorType::memoryUsage();
+        return r;
+    }
+
+    std::string caption(unsigned int column) const
+    {
+        std::string groupName = groupNames_[column / NB_COLS_PER_GROUP];
+        std::string variableKind = VAR_POSSIBLE_KINDS[column % NB_COLS_PER_GROUP];
+        return groupName + "_" + variableKind;
+    }
+
+    std::string unit(unsigned int column) const
+    {
+        switch (column % NB_COLS_PER_GROUP)
         {
-            NextType::hourBegin(hourInTheYear);
+        case VariableType::level:
+            return "MWh";
+        case VariableType::injection:
+        case VariableType::withdrawal:
+            return "MW";
+        default:
+            return "error";
         }
+    }
 
-        void hourForEachArea(State & state, unsigned int numSpace)
+    void localBuildAnnualSurveyReport(SurveyResults& results,
+                                      int fileLevel,
+                                      int precision,
+                                      unsigned int numSpace) const
+    {
+        // Initializing external pointer on current variable non applicable status
+        results.isCurrentVarNA = AncestorType::isNonApplicable;
+
+        if (!AncestorType::isPrinted[0])
+            return;
+
+        for (unsigned int column = 0; column < nbColumns_; column++)
         {
-            using namespace Antares::Data::ShortTermStorage;
-            const auto& shortTermStorage = state.area->shortTermStorage;
-
-            uint clusterIndex = 0;
-            for (const auto& cluster : shortTermStorage.storagesByIndex)
-            {
-                unsigned int groupNumber = groupToNumbers_[cluster.properties.groupName];
-                // Injection
-                pValuesForTheCurrentYear[numSpace][NB_COLS_PER_GROUP * groupNumber
-                                                   + VariableType::injection][state.hourInTheYear]
-                  += state.hourlyResults->ShortTermStorage[state.hourInTheWeek]
-                       .injection[clusterIndex];
-
-                // Withdrawal
-                pValuesForTheCurrentYear[numSpace][NB_COLS_PER_GROUP * groupNumber
-                                                   + VariableType::withdrawal][state.hourInTheYear]
-                  += state.hourlyResults->ShortTermStorage[state.hourInTheWeek]
-                       .withdrawal[clusterIndex];
-
-                // Levels
-                pValuesForTheCurrentYear[numSpace][NB_COLS_PER_GROUP * groupNumber
-                                                   + VariableType::level][state.hourInTheYear]
-                  += state.hourlyResults->ShortTermStorage[state.hourInTheWeek].level[clusterIndex];
-
-                clusterIndex++;
-            }
-
-            // Next variable
-            NextType::hourForEachArea(state, numSpace);
+            results.variableCaption = caption(column);
+            results.variableUnit = unit(column);
+            pValuesForTheCurrentYear[numSpace][column].template buildAnnualSurveyReport<VCardType>(
+              results, fileLevel, precision);
         }
+    }
 
-        inline void buildDigest(SurveyResults & results, int digestLevel, int dataLevel) const
+    void buildSurveyReport(SurveyResults& results,
+                           int dataLevel,
+                           int fileLevel,
+                           int precision) const
+    {
+        // Building syntheses results
+        // ------------------------------
+        if (!AncestorType::isPrinted[0])
+            return;
+
+        // And only if we match the current data level _and_ precision level
+        if ((dataLevel & VCardType::categoryDataLevel) && (fileLevel & VCardType::categoryFileLevel)
+            && (precision & VCardType::precision))
         {
-            // Ask to build the digest to the next variable
-            NextType::buildDigest(results, digestLevel, dataLevel);
-        }
-
-        Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
-          unsigned int column, unsigned int numSpace) const
-        {
-            return pValuesForTheCurrentYear[numSpace][column].hour;
-        }
-
-        inline uint64_t memoryUsage() const
-        {
-            uint64_t r
-              = (sizeof(IntermediateValues) * nbColumns_ + IntermediateValues::MemoryUsage())
-                * pNbYearsParallel;
-            r += sizeof(double) * nbColumns_ * maxHoursInAYear * pNbYearsParallel;
-            r += AncestorType::memoryUsage();
-            return r;
-        }
-
-        std::string caption(unsigned int column) const
-        {
-            std::string groupName = groupNames_[column / NB_COLS_PER_GROUP];
-            std::string variableKind = VAR_POSSIBLE_KINDS[column % NB_COLS_PER_GROUP];
-            return groupName + "_" + variableKind;
-        }
-
-        std::string unit(unsigned int column) const
-        {
-            switch (column % NB_COLS_PER_GROUP)
-            {
-            case VariableType::level:
-                return "MWh";
-            case VariableType::injection:
-            case VariableType::withdrawal:
-                return "MW";
-            default:
-                return "error";
-            }
-        }
-
-        void localBuildAnnualSurveyReport(
-          SurveyResults & results, int fileLevel, int precision, unsigned int numSpace) const
-        {
-            // Initializing external pointer on current variable non applicable status
-            results.isCurrentVarNA = AncestorType::isNonApplicable;
-
-            if (!AncestorType::isPrinted[0])
-                return;
+            results.isCurrentVarNA[0] = AncestorType::isNonApplicable[0];
 
             for (unsigned int column = 0; column < nbColumns_; column++)
             {
                 results.variableCaption = caption(column);
                 results.variableUnit = unit(column);
-                pValuesForTheCurrentYear[numSpace][column]
-                  .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
+                AncestorType::pResults[column].template buildSurveyReport<ResultsType, VCardType>(
+                  results, AncestorType::pResults[column], dataLevel, fileLevel, precision);
             }
         }
 
-        void buildSurveyReport(SurveyResults & results, int dataLevel, int fileLevel, int precision)
-          const
-        {
-            // Building syntheses results
-            // ------------------------------
-            if (!AncestorType::isPrinted[0])
-                return;
+        // Ask to the next item in the static list to export its results as well
+        NextType::buildSurveyReport(results, dataLevel, fileLevel, precision);
+    }
 
-            // And only if we match the current data level _and_ precision level
-            if ((dataLevel & VCardType::categoryDataLevel)
-                && (fileLevel & VCardType::categoryFileLevel) && (precision & VCardType::precision))
-            {
-                results.isCurrentVarNA[0] = AncestorType::isNonApplicable[0];
+private:
+    //! Intermediate values for each year
+    typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
+    size_t nbColumns_ = 0;
+    std::vector<std::string> groupNames_; // Names of group containing the clusters of the area
+    std::map<std::string, unsigned int> groupToNumbers_; // Gives to each group (of area) a number
+    const std::vector<std::string> VAR_POSSIBLE_KINDS = {"injection", "withdrawal", "level"};
+    const int NB_COLS_PER_GROUP = 3; // Injection + withdrawal + levels = 3 variables
+    unsigned int pNbYearsParallel;
 
-                for (unsigned int column = 0; column < nbColumns_; column++)
-                {
-                    results.variableCaption = caption(column);
-                    results.variableUnit = unit(column);
-                    AncestorType::pResults[column]
-                      .template buildSurveyReport<ResultsType, VCardType>(
-                        results, AncestorType::pResults[column], dataLevel, fileLevel, precision);
-                }
-            }
-
-            // Ask to the next item in the static list to export its results as well
-            NextType::buildSurveyReport(results, dataLevel, fileLevel, precision);
-        }
-
-    private:
-        //! Intermediate values for each year
-        typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
-        size_t nbColumns_ = 0;
-        std::vector<std::string> groupNames_; // Names of group containing the clusters of the area
-        std::map<std::string, unsigned int>
-          groupToNumbers_; // Gives to each group (of area) a number
-        const std::vector<std::string> VAR_POSSIBLE_KINDS = {"injection", "withdrawal", "level"};
-        const int NB_COLS_PER_GROUP = 3; // Injection + withdrawal + levels = 3 variables
-        unsigned int pNbYearsParallel;
-
-    }; // class STSbyGroup
+}; // class STSbyGroup
 
 } // End namespace Antares::Solver::Variable::Economy
