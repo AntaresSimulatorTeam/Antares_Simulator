@@ -91,7 +91,7 @@ template<class NextT = Container::EndOfList>
 class STSbyGroup : public Variable::IVariable<STSbyGroup<NextT>, NextT, VCardSTSbyGroup>
 {
 private:
-    enum VariableTypes
+    enum VariableType
     {
         injection = 0,
         withdrawal = 1,
