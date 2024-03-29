@@ -155,8 +155,8 @@ public:
             groupToNumbers_[name] = groupNumber;
             groupNumber++;
         }
-        const int NB_VARS_PER_GROUP = 3; // Injection + withdrawal + levels = 3 variables
-        nbColumns_ = groupNames_.size() * NB_VARS_PER_GROUP;
+
+        nbColumns_ = groupNames_.size() * NB_COLS_PER_GROUP;
 
         if (nbColumns_)
         {
@@ -220,9 +220,9 @@ public:
 
         for (unsigned int column = 0; column < nbColumns_; column++)
         {
-            bool isAnInjectionColumn = (column % 3) == 0;
-            bool isAnWithdrawalColumn = (column % 3) == 1;
-            bool isALevelColumn = (column % 3) == 2;
+            bool isAnInjectionColumn = (column % NB_COLS_PER_GROUP) == 0;
+            bool isAnWithdrawalColumn = (column % NB_COLS_PER_GROUP) == 1;
+            bool isALevelColumn = (column % NB_COLS_PER_GROUP) == 2;
 
             if (isALevelColumn)
                 pValuesForTheCurrentYear[numSpace][column].computeAveragesForCurrentYearFromHourlyResults();
@@ -270,15 +270,15 @@ public:
         {
             unsigned int groupNumber = groupToNumbers_[cluster.properties.groupName];
             // Injection
-            pValuesForTheCurrentYear[numSpace][3 * groupNumber][state.hourInTheYear]
+            pValuesForTheCurrentYear[numSpace][NB_COLS_PER_GROUP * groupNumber][state.hourInTheYear]
                 += state.hourlyResults->ShortTermStorage[state.hourInTheWeek].injection[clusterIndex];
 
             // Withdrawal
-            pValuesForTheCurrentYear[numSpace][3 * groupNumber + 1][state.hourInTheYear]
+            pValuesForTheCurrentYear[numSpace][NB_COLS_PER_GROUP * groupNumber + 1][state.hourInTheYear]
                 += state.hourlyResults->ShortTermStorage[state.hourInTheWeek].withdrawal[clusterIndex];
 
             // Levels
-            pValuesForTheCurrentYear[numSpace][3 * groupNumber + 2][state.hourInTheYear]
+            pValuesForTheCurrentYear[numSpace][NB_COLS_PER_GROUP * groupNumber + 2][state.hourInTheYear]
                 += state.hourlyResults->ShortTermStorage[state.hourInTheWeek].level[clusterIndex];
 
             clusterIndex++;
@@ -312,14 +312,14 @@ public:
 
     std::string caption(unsigned int column) const
     {
-        std::string groupName = groupNames_[column / 3];
-        std::string variableKind = VAR_POSSIBLE_KINDS[column % 3];
+        std::string groupName = groupNames_[column / NB_COLS_PER_GROUP];
+        std::string variableKind = VAR_POSSIBLE_KINDS[column % NB_COLS_PER_GROUP];
         return groupName + "_" + variableKind;
     }
 
     std::string unit(unsigned int column) const
     {
-        return (column % 3 == 2) ? "MWh" : "MW"; // Levels in MWh, others in "MW"
+        return (column % NB_COLS_PER_GROUP == 2) ? "MWh" : "MW"; // Levels in MWh, others in "MW"
     }
 
     void localBuildAnnualSurveyReport(SurveyResults& results,
@@ -383,6 +383,7 @@ private:
     std::vector<std::string> groupNames_; // Names of group containing the clusters of the area
     std::map<std::string, unsigned int> groupToNumbers_; // Gives to each group (of area) a number
     const std::vector<std::string> VAR_POSSIBLE_KINDS = { "injection", "withdrawal", "level" };
+    const int NB_COLS_PER_GROUP = 3; // Injection + withdrawal + levels = 3 variables
     unsigned int pNbYearsParallel;
 
 }; // class STSbyGroup
