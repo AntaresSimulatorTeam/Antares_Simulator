@@ -85,7 +85,7 @@ void ClusterList<ClusterT>::clearAll()
 template<class ClusterT>
 void ClusterList<ClusterT>::resizeAllTimeseriesNumbers(uint n) const
 {
-    for (auto c : allClusters_)
+    for (auto& c : allClusters_)
         c->series.timeseriesNumbers.reset(1, n);
 }
 
@@ -151,14 +151,14 @@ void ClusterList<ClusterT>::rebuildIndexes()
     //  - Avoids seg faults, for instance when storing thermal noises (solver.hxx).
     //    Indeed : otherwise disabled clusters have an infinite index
     unsigned int index = 0;
-    for (auto c : allClusters_)
+    for (auto& c : allClusters_)
     {
         c->areaWideIndex = index;
         index++;
     }
 
     index = 0;
-    for (auto c : each_enabled())
+    for (auto& c : each_enabled())
     {
         c->areaWideIndex = index;
         index++;
