@@ -1,7 +1,8 @@
 # Study format changes
 This is a list of all recent changes that came with new Antares Simulator features. The main goal of this document is to lower the costs of changing existing interfaces, both GUI and scripts.
 ## v9.1.0
-### (Input) Hydro Maximum Generation/Pumping Power
+## Input 
+### Hydro Maximum Generation/Pumping Power
 * For time series ![Migration diagram](migration.png "Migration diagram"), for more details, see [this Python script](migration.py)
 * In the existing file **settings/scenariobuilder.dat**, under **&lt;ruleset&gt;** section following properties added: **hgp,&lt;area&gt;,&lt;year&gt; = &lt;hgp-value&gt;**
 
@@ -13,6 +14,9 @@ Regarding Hydro time-series, the scenario builder allows the user to choose, for
 This implies that, inside one of the previous categories, the number of available time series is the same
 
 * [Logic changes](17-v91.md)
+
+### Short term storage groups
+STS groups in input are now "dynamic" : group names are no longer fixed by code, user is free to define these groups.
 
 ## v9.0.0
 ### Input
