@@ -33,46 +33,72 @@
 
 namespace Antares::optim::api
 {
-    class LinearProblemData final
+class LinearProblemData final
+{
+public:
+    using ScalarDataDict = std::map<std::string, std::vector<double>>;
+
+    using TimedData = std::vector<double>;
+    using TimedDataDict = std::map<std::string, std::vector<TimedData>>;
+
+    double getScalarData(const std::string& key, int scenario = 0) const
     {
-    public:
-        using ScalarDataDict = std::map<std::string, double>;
+        return scalarData_.at(key)[scenario];
+    }
 
-        using TimedData = std::vector<double>;
-        using TimedDataDict = std::map<std::string, TimedData>;
+    const TimedData& getTimedData(const std::string& key, int scenario = 0) const
+    {
+        return timedData_.at(key)[scenario];
+    }
 
-    private:
-        // TODO : timestamps or timesteps?
-        std::vector<int> timeStamps_;
-        int timeResolutionInMinutes_;
+private:
+    // TODO : timestamps or timesteps?
+    std::vector<int> timeStamps_;
+    int timeResolutionInMinutes_;
 
-        ScalarDataDict scalarData_;
-        TimedDataDict timedData_;
-        // TODO : handle scenarios, and data vectorized on scenarios, on time, or on both
-    public:
-        explicit LinearProblemData(const std::vector<int> &timeStamps, int timeResolutionInMinutes,
-                                   const ScalarDataDict& scalarData,
-                                   const TimedDataDict& timedData) :
-                timeStamps_(timeStamps), timeResolutionInMinutes_(timeResolutionInMinutes),
-                scalarData_(scalarData), timedData_(timedData)
-        {
-            // TODO: some coherence check on data
-            // for example, check that timed data are all of same size = size of timeStamps_
-        };
-        [[nodiscard]] std::vector<int> getTimeStamps() const { return timeStamps_; }
-        [[nodiscard]] int getTimeResolutionInMinutes() const { return timeResolutionInMinutes_; }
-        [[nodiscard]] bool hasScalarData(const std::string& key) const { return scalarData_.contains(key); }
-        [[nodiscard]] double getScalarData(const std::string& key) const { return scalarData_.at(key); }
-        [[nodiscard]] bool hasTimedData(const std::string& key) const { return timedData_.contains(key); }
-        [[nodiscard]] const TimedData& getTimedData(const std::string& key) const { return timedData_.at(key); }
+    ScalarDataDict scalarData_;
+    TimedDataDict timedData_;
+    // TODO : handle scenarios, and data vectorized on scenarios, on time, or on both
+public:
+    explicit LinearProblemData(const std::vector<int>& timeStamps,
+                               int timeResolutionInMinutes,
+                               const ScalarDataDict& scalarData,
+                               const TimedDataDict& timedData) :
+     timeStamps_(timeStamps),
+     timeResolutionInMinutes_(timeResolutionInMinutes),
+     scalarData_(scalarData),
+     timedData_(timedData){
+       // TODO: some coherence check on data
+       // for example, check that timed data are all of same size = size of timeStamps_
+     };
+    [[nodiscard]] std::vector<int> getTimeStamps() const
+    {
+        return timeStamps_;
+    }
+    [[nodiscard]] int getTimeResolutionInMinutes() const
+    {
+        return timeResolutionInMinutes_;
+    }
+    [[nodiscard]] bool hasScalarData(const std::string& key) const
+    {
+        return scalarData_.contains(key);
+    }
+    // [[nodiscard]] double getScalarData(const std::string& key) const { return
+    // scalarData_.at(key); }
+    [[nodiscard]] bool hasTimedData(const std::string& key) const
+    {
+        return timedData_.contains(key);
+    }
+    // [[nodiscard]] const TimedData& getTimedData(const std::string& key) const { return
+    // timedData_.at(key); }
 
-        // TODO: remove this when legacy support is dropped
-        // TODO: meanwhile, instead of having a nested struct, create a daughter class?
-        struct Legacy {
-            const std::vector<CORRESPONDANCES_DES_CONTRAINTES>* constraintMapping;
-            const std::vector<const char*>* areaNames;
-        };
-        Legacy legacy;
+    // TODO: remove this when legacy support is dropped
+    // TODO: meanwhile, instead of having a nested struct, create a daughter class?
+    struct Legacy
+    {
+        const std::vector<CORRESPONDANCES_DES_CONTRAINTES>* constraintMapping;
+        const std::vector<const char*>* areaNames;
     };
-
-}
+    Legacy legacy;
+};
+} // namespace Antares::optim::api
