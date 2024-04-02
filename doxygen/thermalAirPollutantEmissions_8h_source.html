@@ -372,7 +372,7 @@ $(document).ready(function(){initNavTree('thermalAirPollutantEmissions_8h_source
 <div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>    {</div>
 <div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>        <span class="keyword">auto</span> area = state.area;</div>
 <div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>        <span class="keyword">auto</span>&amp; thermal = state.thermal;</div>
-<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> cluster : area-&gt;thermal.list.each_enabled())</div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp; cluster : area-&gt;thermal.list.each_enabled())</div>
 <div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>        {</div>
 <div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>            <span class="comment">// Multiply every pollutant factor with production</span></div>
 <div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>            <span class="keywordflow">for</span> (<span class="keywordtype">int</span> pollutant = 0; pollutant &lt; Antares::Data::Pollutant::POLLUTANT_MAX; pollutant++)</div>

@@ -394,7 +394,7 @@ $(document).ready(function(){initNavTree('profitByPlant_8h_source.html',''); ini
 <div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>        uint hourInTheWeek = state.hourInTheWeek;</div>
 <div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>        uint hourInTheYear = state.hourInTheYear;</div>
 <div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span> </div>
-<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> cluster : area-&gt;thermal.list.each_enabled())</div>
+<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp; cluster : area-&gt;thermal.list.each_enabled())</div>
 <div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>        {</div>
 <div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>            <span class="keywordtype">double</span> hourlyClusterProduction</div>
 <div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>              = thermal[area-&gt;index].thermalClustersProductions[cluster-&gt;areaWideIndex];</div>
@@ -433,7 +433,7 @@ $(document).ready(function(){initNavTree('profitByPlant_8h_source.html',''); ini
 <div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span>            <span class="keyword">const</span> <span class="keyword">auto</span>&amp; thermal = <a class="code hl_function" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>.data.area-&gt;thermal;</div>
 <div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span> </div>
 <div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span>            <span class="comment">// Write the data for the current year</span></div>
-<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span>            <span class="keywordflow">for</span> (<span class="keyword">auto</span> cluster : thermal.list.each_enabled())</div>
+<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span>            <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp; cluster : thermal.list.each_enabled())</div>
 <div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>            {</div>
 <div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span>                <span class="comment">// Write the data for the current year</span></div>
 <div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span>                <a class="code hl_function" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>.variableCaption = cluster-&gt;name(); <span class="comment">// VCardType::Caption();</span></div>

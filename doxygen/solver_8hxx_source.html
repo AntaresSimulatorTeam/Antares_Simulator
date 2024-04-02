@@ -850,7 +850,7 @@ $(document).ready(function(){initNavTree('solver_8hxx_source.html',''); initResi
 <div class="line"><a id="l00695" name="l00695"></a><span class="lineno">  695</span>            <span class="comment">// logs.info() &lt;&lt; &quot;   area : &quot; &lt;&lt; a &lt;&lt; &quot; :&quot;;</span></div>
 <div class="line"><a id="l00696" name="l00696"></a><span class="lineno">  696</span>            <span class="keyword">const</span> <span class="keyword">auto</span>&amp; area = *(study.<a class="code hl_variable" href="classAntares_1_1Data_1_1Study.html#ad4f8a799f2cf9214dada8b0ad8993214">areas</a>.<a class="code hl_variable" href="classAntares_1_1Data_1_1AreaList.html#a9af1ce76fa2e13ff5fdf650710b0b054">byIndex</a>[a]);</div>
 <div class="line"><a id="l00697" name="l00697"></a><span class="lineno">  697</span> </div>
-<div class="line"><a id="l00698" name="l00698"></a><span class="lineno">  698</span>            <span class="keywordflow">for</span> (<span class="keyword">auto</span> cluster : area.thermal.list.all())</div>
+<div class="line"><a id="l00698" name="l00698"></a><span class="lineno">  698</span>            <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp; cluster : area.thermal.list.all())</div>
 <div class="line"><a id="l00699" name="l00699"></a><span class="lineno">  699</span>            {</div>
 <div class="line"><a id="l00700" name="l00700"></a><span class="lineno">  700</span>                uint clusterIndex = cluster-&gt;areaWideIndex;</div>
 <div class="line"><a id="l00701" name="l00701"></a><span class="lineno">  701</span>                <span class="keywordtype">double</span> thermalNoise = runtime.random[Data::seedThermalCosts].next();</div>

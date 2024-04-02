@@ -433,7 +433,7 @@ $(document).ready(function(){initNavTree('productionByDispatchablePlant_8h_sourc
 <div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span>    {</div>
 <div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span>        <span class="keyword">auto</span>&amp; area = state.area;</div>
 <div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>        <span class="keyword">auto</span>&amp; thermal = state.thermal;</div>
-<div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> cluster : area-&gt;thermal.list.each_enabled())</div>
+<div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp; cluster : area-&gt;thermal.list.each_enabled())</div>
 <div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span>        {</div>
 <div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>            <span class="comment">// Production for this hour</span></div>
 <div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span>            pValuesForTheCurrentYear[numSpace][cluster-&gt;areaWideIndex]</div>
@@ -485,7 +485,7 @@ $(document).ready(function(){initNavTree('productionByDispatchablePlant_8h_sourc
 <div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span>            <span class="keyword">const</span> <span class="keyword">auto</span>&amp; thermal = results.data.area-&gt;thermal;</div>
 <div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span> </div>
 <div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span>            <span class="comment">// Write the data for the current year</span></div>
-<div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span>            <span class="keywordflow">for</span> (<span class="keyword">auto</span> cluster : thermal.list.each_enabled())</div>
+<div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span>            <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp; cluster : thermal.list.each_enabled())</div>
 <div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span>            {</div>
 <div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span>                <span class="comment">// Write the data for the current year</span></div>
 <div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span>                results.variableCaption = cluster-&gt;name(); <span class="comment">// VCardType::Caption();</span></div>

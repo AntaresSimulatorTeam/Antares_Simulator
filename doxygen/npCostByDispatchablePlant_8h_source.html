@@ -434,7 +434,7 @@ $(document).ready(function(){initNavTree('npCostByDispatchablePlant_8h_source.ht
 <div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>            <span class="keyword">const</span> <span class="keyword">auto</span>&amp; thermal = <a class="code hl_function" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>.data.area-&gt;thermal;</div>
 <div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span> </div>
 <div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span>            <span class="comment">// Write the data for the current year</span></div>
-<div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>            <span class="keywordflow">for</span> (<span class="keyword">auto</span> cluster : thermal.list.each_enabled())</div>
+<div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>            <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp; cluster : thermal.list.each_enabled())</div>
 <div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span>            {</div>
 <div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span>                <span class="comment">// Write the data for the current year</span></div>
 <div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>                <a class="code hl_function" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>.variableCaption = cluster-&gt;name(); <span class="comment">// VCardType::Caption();</span></div>

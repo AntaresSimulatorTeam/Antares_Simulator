@@ -268,7 +268,7 @@ $(document).ready(function(){initNavTree('area_8inc_8hxx_source.html',''); initR
 <div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>        <span class="comment">// Initializing the state for the current area</span></div>
 <div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>        state.initFromAreaIndex(area.index, numSpace);</div>
 <div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span> </div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> cluster : area.thermal.list.each_enabled())</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; cluster : area.thermal.list.each_enabled())</div>
 <div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>        {</div>
 <div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>            <span class="comment">// Intiializing the state for the current thermal cluster</span></div>
 <div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>            state.initFromThermalClusterIndex(cluster-&gt;areaWideIndex);</div>
@@ -334,7 +334,7 @@ $(document).ready(function(){initNavTree('area_8inc_8hxx_source.html',''); initR
 <div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>        <span class="comment">// Variables</span></div>
 <div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>        <span class="keyword">auto</span>&amp; variablesForArea = pAreas[area.index];</div>
 <div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span> </div>
-<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>        <span class="keywordflow">for</span>(<span class="keyword">auto</span> cluster : area.thermal.list.each_enabled())</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; cluster : area.thermal.list.each_enabled())</div>
 <div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>        {</div>
 <div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>            state.thermalCluster = cluster.get();</div>
 <div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>            state.yearEndResetThermal();</div>

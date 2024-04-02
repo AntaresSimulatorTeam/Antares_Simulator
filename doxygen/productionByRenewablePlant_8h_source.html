@@ -401,7 +401,7 @@ $(document).ready(function(){initNavTree('productionByRenewablePlant_8h_source.h
 <div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span> </div>
 <div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>    <span class="keywordtype">void</span> hourForEachArea(<a class="code hl_class" href="classAntares_1_1State.html">State</a>&amp; state, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace)</div>
 <div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>    {</div>
-<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> renewableCluster : state.area-&gt;renewable.list.each_enabled())</div>
+<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; renewableCluster : state.area-&gt;renewable.list.each_enabled())</div>
 <div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>        {</div>
 <div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>            <span class="keywordtype">double</span> renewableClusterProduction = renewableCluster-&gt;valueAtTimeStep(state.year, state.hourInTheYear);</div>
 <div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span> </div>
@@ -448,7 +448,7 @@ $(document).ready(function(){initNavTree('productionByRenewablePlant_8h_source.h
 <div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span>            assert(NULL != <a class="code hl_function" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>.data.area);</div>
 <div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span>            <span class="keyword">const</span> <span class="keyword">auto</span>&amp; renewable = <a class="code hl_function" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>.data.area-&gt;renewable;</div>
 <div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span>            <span class="comment">// Write the data for the current year</span></div>
-<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span>            <span class="keywordflow">for</span> (<span class="keyword">auto</span> cluster : renewable.list.each_enabled())</div>
+<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span>            <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp; cluster : renewable.list.each_enabled())</div>
 <div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span>            {</div>
 <div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>                <span class="comment">// Write the data for the current year</span></div>
 <div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>                <a class="code hl_function" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>.variableCaption = cluster-&gt;name();</div>
