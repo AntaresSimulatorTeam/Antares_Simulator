@@ -75,7 +75,7 @@ std::vector<Data::ThermalCluster*> getClustersToGen(Data::AreaList& areas,
 
     for (const auto& [areaID, clusterID] : ids)
     {
-        logs.info() << "Generating ts for area: " << areaID << " and cluster: " << clusterID;
+        logs.info() << "Searching for area: " << areaID << " and cluster: " << clusterID;
 
         auto* area = areas.find(areaID);
         if (!area)
@@ -105,7 +105,7 @@ TSGenerator::listOfLinks getLinksToGen(Data::AreaList& areas,
 
     for (const auto& [areaFromID, areaWithID] : ids)
     {
-        logs.info() << "Generating ts for area: " << areaFromID << " and cluster: " << areaWithID;
+        logs.info() << "Searching for link: " << areaFromID << "/" << areaWithID;
 
         auto* link = areas.findLink(areaFromID, areaWithID);
         if (!link)
@@ -196,6 +196,8 @@ int main(int argc, char *argv[])
     for (auto& l : links)
         logs.debug() << l.first->getName();
 
-    return !TSGenerator::generateThermalTimeSeries(*study, clusters, *resultWriter, thermalSavePath)
-        && !TSGenerator::generateLinkTimeSeries(*study, links, *resultWriter, linksSavePath);
+    bool ret = TSGenerator::generateThermalTimeSeries(*study, clusters, *resultWriter, thermalSavePath);
+    ret = TSGenerator::generateLinkTimeSeries(*study, links, *resultWriter, linksSavePath) && ret;
+
+    return !ret; // return 0 for success
 }
