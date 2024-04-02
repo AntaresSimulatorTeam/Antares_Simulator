@@ -114,7 +114,7 @@ public:
       const std::string& solverName,
       const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe);
 
-    MPSolver* Convert(const std::string& solverParameters);
+    MPSolver* Convert();
 
 private:
     const std::string& solverName_;
@@ -126,7 +126,6 @@ private:
     void CopyVariables(MPSolver* solver);
     void UpdateContraints(unsigned idxRow, MPSolver* solver);
     void CopyRows(MPSolver* solver);
-    void TuneSolverSpecificOptions(MPSolver* solver, const std::string& solverParameters) const;
     void CopyMatrix(const MPSolver* solver);
 };
 } // namespace Optimization

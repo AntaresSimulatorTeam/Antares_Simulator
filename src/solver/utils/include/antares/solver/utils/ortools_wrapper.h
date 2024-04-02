@@ -34,7 +34,6 @@ MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probl
                            const Antares::Solver::Optimization::OptimizationOptions& options);
 
 MPSolver* ORTOOLS_ConvertIfNeeded(const std::string& solverName,
-                                  const std::string& solverParameters,
                                   const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
                                   MPSolver* solver);
 
