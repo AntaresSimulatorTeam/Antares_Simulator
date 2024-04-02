@@ -323,7 +323,7 @@ public:
     std::string caption(unsigned int column) const
     {
         static const std::vector<std::string> VAR_POSSIBLE_KINDS
-          = {"injection", "withdrawal", "level"};
+          = {"INJECTION", "WITHDRAWAL", "LEVEL"};
         std::string groupName = groupNames_[column / NB_COLS_PER_GROUP];
         std::string variableKind = VAR_POSSIBLE_KINDS[column % NB_COLS_PER_GROUP];
         return groupName + "_" + variableKind;
