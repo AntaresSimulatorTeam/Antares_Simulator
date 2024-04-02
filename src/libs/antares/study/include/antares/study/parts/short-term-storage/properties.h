@@ -28,21 +28,6 @@
 
 namespace Antares::Data::ShortTermStorage
 {
-enum class Group
-{
-    PSP_open,
-    PSP_closed,
-    Pondage,
-    Battery,
-    Other1,
-    Other2,
-    Other3,
-    Other4,
-    Other5
-};
-
-unsigned int groupIndex(Group group);
-
 class Properties
 {
 public:
@@ -63,7 +48,7 @@ public:
     /// Efficiency factor between 0 and 1
     double efficiencyFactor = 1;
     // Used to sort outputs
-    std::string groupName = "sts-def-group";
+    std::string groupName = "OTHER1";
     /// cluster name
     std::string name;
 

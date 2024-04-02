@@ -18,6 +18,35 @@ This implies that, inside one of the previous categories, the number of availabl
 ### Short term storage groups
 STS groups in input are now "dynamic" : group names are no longer fixed by code, user is free to define these groups.
 
+In the "thematic trimming" section, the new dynamic variable `STS by group` is now used to enable/disable all variables (level/injection/withdrawal) for all groups. The following variables are obsolete and must not be provided
+
+```
+PSP_open_injection
+PSP_open_withdrawal
+PSP_open_level
+...
+
+Other1_injection
+Other1_withdral
+Other1_level
+...
+Other5_injection
+Other5_withdral
+Other5_level
+```
+(3*9=27 variables in total)
+
+The default value for group is "OTHER1".
+
+## Output
+### Hydro maximum generation/pumping power
+In existing directory `ts-numbers`, add sub-directory `hgp` containing TS numbers for hydro max pumping/generation, for each area.
+
+### ST Storage
+- Output columns for ST storage are capitalized (PSP_open_injection -> PSP_OPEN_INJECTION)
+- If a group is empty, no column is produced.
+- There is now a variable number of columns in files values-XXX.txt, depending on the groups of ST storages provided by the user. Note that groups are case-insensitive, for example `battery`, `Battery` and `BATTERY` all represent the same group. If no ST storage exist for a given area, no variables associated to ST storages will be produced.
+
 ## v9.0.0
 ### Input
 ### Study version
