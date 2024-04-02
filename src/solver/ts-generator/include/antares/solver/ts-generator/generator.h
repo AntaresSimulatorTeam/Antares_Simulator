@@ -80,14 +80,14 @@ bool generateThermalTimeSeries(Data::Study& study,
                                const std::string& savePath);
 
 bool generateLinkTimeSeries(Data::Study& study,
-                            std::vector<Data::AreaLink*> links,
+                            listOfLinks links,
                             Solver::IResultWriter& writer,
                             const std::string& savePath);
 
 std::vector<Data::ThermalCluster*> getAllClustersToGen(Data::AreaList& areas,
                                                        bool globalThermalTSgeneration);
 
-std::vector<Data::AreaLink*> getAllLinksToGen(Data::AreaList& areas);
+listOfLinks getAllLinksToGen(Data::AreaList& areas);
 
 /*!
 ** \brief Destroy all TS Generators

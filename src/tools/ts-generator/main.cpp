@@ -97,10 +97,10 @@ std::vector<Data::ThermalCluster*> getClustersToGen(Data::AreaList& areas,
     return clusters;
 }
 
-std::vector<Data::AreaLink*> getLinksToGen(Data::AreaList& areas,
+TSGenerator::listOfLinks getLinksToGen(Data::AreaList& areas,
                                            const std::string& clustersToGen)
 {
-    std::vector<Data::AreaLink*> links;
+    TSGenerator::listOfLinks links;
     const auto ids = splitStringIntoPairs(clustersToGen, ';', '.');
 
     for (const auto& [areaFromID, areaWithID] : ids)
@@ -113,8 +113,10 @@ std::vector<Data::AreaLink*> getLinksToGen(Data::AreaList& areas,
             logs.warning() << "Link not found: " << areaFromID << "/" << areaWithID;
             continue;
         }
-//        if (link.from->id == areaFromID)
-        links.push_back(link);
+        auto direction = (link->from->id == areaFromID) ? TSGenerator::linkDirection::direct :
+                    TSGenerator::linkDirection::indirect;
+
+        links.emplace_back(link, direction);
     }
 
     return links;
@@ -185,14 +187,14 @@ int main(int argc, char *argv[])
         logs.debug() << c->id();
 
     // LINKS
-    std::vector<Data::AreaLink*> links;
+    TSGenerator::listOfLinks links;
     if (settings.allLinks)
         links = TSGenerator::getAllLinksToGen(study->areas);
     else if (!settings.linksListToGen.empty())
         links = getLinksToGen(study->areas, settings.linksListToGen);
 
     for (auto& l : links)
-        logs.debug() << l->getName();
+        logs.debug() << l.first->getName();
 
     return !TSGenerator::generateThermalTimeSeries(*study, clusters, *resultWriter, thermalSavePath)
         && !TSGenerator::generateLinkTimeSeries(*study, links, *resultWriter, linksSavePath);

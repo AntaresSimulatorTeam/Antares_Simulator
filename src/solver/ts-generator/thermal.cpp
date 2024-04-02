@@ -585,13 +585,14 @@ std::vector<Data::ThermalCluster*> getAllClustersToGen(Data::AreaList& areas,
     return clusters;
 }
 
-std::vector<Data::AreaLink*> getAllLinksToGen(Data::AreaList& areas)
+listOfLinks getAllLinksToGen(Data::AreaList& areas)
 {
-    std::vector<Data::AreaLink*> links;
+    listOfLinks links;
 
     areas.each([&links](Data::Area& area) {
         std::ranges::for_each(area.links, [&links](auto& l) {
-            links.push_back(l.second);
+            links.emplace_back(l.second, linkDirection::direct);
+            links.emplace_back(l.second, linkDirection::indirect);
         });
     });
 
@@ -675,7 +676,7 @@ bool generateThermalTimeSeries(Data::Study& study,
 }
 
 bool generateLinkTimeSeries(Data::Study& study,
-                            std::vector<Data::AreaLink*> links,
+                            listOfLinks links,
                             Solver::IResultWriter& writer,
                             const std::string& savePath)
 {
@@ -685,20 +686,19 @@ bool generateLinkTimeSeries(Data::Study& study,
     auto generator = std::make_unique<GeneratorTempData>
         (study, study.parameters.nbTimeSeriesLinks);
 
-    for (auto* link : links)
+    for (auto& [link, direction] : links)
     {
         Data::TimeSeries ts(link->timeseriesNumbers);
         ts.resize(study.parameters.nbTimeSeriesLinks, HOURS_PER_YEAR);
 
-        // direct capacity
-        ThermalInterface clusterInterfaceDirect(link->tsGenerationDirect, ts, link->with->name);
-        (*generator)(*link->from, clusterInterfaceDirect);
-        writeLinksResultsToDisk(study, writer, *link, ts.timeSeries, savePath, true);
+        auto& tsGenStruct = direction == linkDirection::direct ? link->tsGenerationDirect : link->tsGenerationIndirect;
 
-        // indirect capacity
-        ThermalInterface clusterInterfaceIndirect(link->tsGenerationIndirect, ts, link->with->name);
-        (*generator)(*link->from, clusterInterfaceIndirect);
-        writeLinksResultsToDisk(study, writer, *link, ts.timeSeries, savePath, false);
+        ThermalInterface linkInterface(tsGenStruct, ts, link->with->name);
+
+        (*generator)(*link->from, linkInterface);
+
+        writeLinksResultsToDisk(study, writer, *link, ts.timeSeries, savePath, direction == linkDirection::direct);
+
     }
 
     return true;
