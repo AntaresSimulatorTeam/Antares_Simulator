@@ -21,7 +21,7 @@
 
 #include <antares/logs/logs.h>
 #include <stdexcept>
-#include <boost/algorithm/string.hpp>
+#include <boost/algorithm/string/case_conv.hpp>
 
 #include "antares/study/parts/short-term-storage/properties.h"
 
