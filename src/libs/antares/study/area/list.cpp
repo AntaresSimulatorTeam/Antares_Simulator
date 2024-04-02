@@ -1565,7 +1565,7 @@ void AreaList::removeWindTimeseries()
 void AreaList::removeThermalTimeseries()
 {
     each([](Data::Area& area) {
-        for (auto c : area.thermal.list.all())
+        for (auto& c : area.thermal.list.all())
             c->series.reset();
     });
 }

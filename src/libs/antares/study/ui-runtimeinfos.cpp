@@ -72,7 +72,7 @@ void UIRuntimeInfo::reload()
                     set.insert(i->second);
             }
 
-            for (auto cluster : area->thermal.list.each_enabled())
+            for (auto& cluster : area->thermal.list.each_enabled())
             {
                 pClusters.push_back(cluster.get());
             }

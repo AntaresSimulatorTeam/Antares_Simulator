@@ -274,7 +274,7 @@ void PrepareRandomNumbers(Data::Study& study,
         //-----------------------------
         // Thermal noises
         //-----------------------------
-        for (auto cluster : area.thermal.list.each_enabled())
+        for (auto& cluster : area.thermal.list.each_enabled())
         {
             uint clusterIndex = cluster->areaWideIndex;
             double& rnd = randomForYear.pThermalNoisesByArea[indexArea][clusterIndex];
@@ -361,7 +361,7 @@ void BuildThermalPartOfWeeklyProblem(Data::Study& study,
         for (uint areaIdx = 0; areaIdx < nbPays; ++areaIdx)
         {
             auto& area = *study.areas.byIndex[areaIdx];
-            for (auto cluster : area.thermal.list.each_enabled_and_not_mustrun())
+            for (auto& cluster : area.thermal.list.each_enabled_and_not_mustrun())
             {
                     auto& Pt = problem.PaliersThermiquesDuPays[areaIdx]
                                .PuissanceDisponibleEtCout[cluster->index];

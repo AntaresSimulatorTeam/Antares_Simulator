@@ -400,7 +400,7 @@ void HydroManagement::prepareNetDemand(uint year, Data::SimulationMode mode,
                             - ((mode != Data::SimulationMode::Adequacy) ? scratchpad.mustrunSum[hour]
                                                              : scratchpad.originalMustrunSum[hour]);
 
-                for (auto c : area.renewable.list.each_enabled())
+                for (auto& c : area.renewable.list.each_enabled())
                     netdemand -= c->valueAtTimeStep(year, hour);
             }
 
