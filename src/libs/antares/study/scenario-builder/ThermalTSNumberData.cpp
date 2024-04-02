@@ -56,7 +56,7 @@ void thermalTSNumberData::saveToINIFile(const Study& /* study */,
     if (!pArea)
         return;
 
-    for (auto cluster : pArea->thermal.list.all())
+    for (auto& cluster : pArea->thermal.list.all())
     {
         for (uint year = 0; year != pTSNumberRules.height; ++year)
         {
@@ -91,7 +91,7 @@ bool thermalTSNumberData::apply(Study& study)
     assert(pArea->index < study.areas.size());
     const Area& area = *(study.areas.byIndex[pArea->index]);
 
-    for (auto cluster : area.thermal.list.each_enabled())
+    for (auto& cluster : area.thermal.list.each_enabled())
     {
         assert(cluster->areaWideIndex < pTSNumberRules.width);
         const auto& col = pTSNumberRules[cluster->areaWideIndex];

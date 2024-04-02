@@ -125,7 +125,7 @@ static void ExportGridInfosAreas(const Data::Study& study,
         }
 
         // Thermal clusters
-        for (auto cluster : area.thermal.list.each_enabled())
+        for (auto& cluster : area.thermal.list.each_enabled())
         {
             outThermal << area.id << '\t';
             outThermal << cluster->id() << '\t';

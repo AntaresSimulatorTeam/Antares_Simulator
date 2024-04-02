@@ -240,7 +240,7 @@ public:
     {
         auto area = state.area;
         auto& thermal = state.thermal;
-        for (auto cluster : area->thermal.list.each_enabled())
+        for (auto& cluster : area->thermal.list.each_enabled())
         {
             // Multiply every pollutant factor with production
             for (int pollutant = 0; pollutant < Antares::Data::Pollutant::POLLUTANT_MAX; pollutant++)

@@ -158,7 +158,7 @@ static void checkThermalColumnNumber(const Antares::Data::AreaList& areas,
     for (uint areaIndex = 0; areaIndex < areas.size(); ++areaIndex)
     {
         const auto& area = *(areas.byIndex[areaIndex]);
-        for (auto cluster : area.thermal.list.each_enabled())
+        for (auto& cluster : area.thermal.list.each_enabled())
         {
             if (cluster->costgeneration == Antares::Data::setManually)
                 continue;
