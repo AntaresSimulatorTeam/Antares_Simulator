@@ -21,6 +21,7 @@
 
 #include <antares/logs/logs.h>
 #include <stdexcept>
+#include <boost/algorithm/string/case_conv.hpp>
 
 #include "antares/study/parts/short-term-storage/properties.h"
 
@@ -64,6 +65,7 @@ bool Properties::loadKey(const IniFile::Property* p)
     if (p->key == "group")
     {
         this->groupName = p->value.c_str();
+        boost::to_upper(this->groupName);
         return true;
     }
 
