@@ -268,8 +268,8 @@ public:
     uint nbTimeSeriesThermal;
     //! Nb of timeSeries : Solar
     uint nbTimeSeriesSolar;
-    //! Nb of timeSeries : Solar
-    uint nbTimeSeriesLinks;
+    //! Nb of timeSeries : Links
+    uint nbTimeSeriesLinks = 1;
     //@}
 
     //! \name Time-series refresh
