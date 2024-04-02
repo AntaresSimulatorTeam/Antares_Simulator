@@ -103,24 +103,18 @@ std::vector<Data::AreaLink*> getLinksToGen(Data::AreaList& areas,
     std::vector<Data::AreaLink*> links;
     const auto ids = splitStringIntoPairs(clustersToGen, ';', '.');
 
-    for (const auto& [areaID, linkID] : ids)
+    for (const auto& [areaFromID, areaWithID] : ids)
     {
-        logs.info() << "Generating ts for area: " << areaID << " and cluster: " << linkID;
+        logs.info() << "Generating ts for area: " << areaFromID << " and cluster: " << areaWithID;
 
-        auto* area = areas.find(areaID);
-        if (!area)
+        auto* link = areas.findLink(areaFromID, areaWithID);
+        if (!link)
         {
-            logs.warning() << "Area not found: " << areaID;
+            logs.warning() << "Link not found: " << areaFromID << "/" << areaWithID;
             continue;
         }
-
-        auto it = std::ranges::find_if(area->links, [&linkID](auto& l)
-                { return l.second->with->id == linkID;});
-
-        if (it != area->links.end())
-            links.push_back(it->second);
-        else
-            logs.warning() << "Link not found: " << linkID;
+//        if (link.from->id == areaFromID)
+        links.push_back(link);
     }
 
     return links;

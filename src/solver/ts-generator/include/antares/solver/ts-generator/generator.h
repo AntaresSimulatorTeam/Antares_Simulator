@@ -57,6 +57,15 @@ public:
     const std::string& name;
 };
 
+enum class linkDirection
+{
+    direct,
+    indirect
+};
+
+typedef std::vector<std::pair<Data::AreaLink*,linkDirection>> listOfLinks;
+
+
 void ResizeGeneratedTimeSeries(Data::AreaList& areas, Data::Parameters& params);
 
 /*!
