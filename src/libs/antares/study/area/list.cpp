@@ -31,7 +31,7 @@
 #include "antares/study/parts/parts.h"
 #include "antares/study/parts/load/prepro.h"
 #include <antares/study/area/scratchpad.h>
-#include <antares/study/area/newReserves.h>
+#include <antares/study/area/capacityReservation.h>
 
 #define SEP IO::Separator
 
@@ -849,19 +849,23 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         buffer.clear() << study.folderInput << SEP << "reserves" << SEP << area.id << SEP
                        << "reserves.ini";
         if (!ini.open(buffer))
+        {
+            logs.warning() << study.folderInput << SEP << "reserves" << SEP << area.id << SEP
+                           << "reserves.ini";
             return false;
+        }
         ini.each(
           [&](const IniFile::Section& section)
           {
-              if (area.newReserves.contains(section.name))
+              if (area.allCapacityReservations.contains(section.name))
               {
                   logs.warning() << area.name << ": reserve name already exists for reserve "
                                  << section.name;
               }
               else
               {
-                  AreaReserve tmpReserve;
-                  std::string file_name = NewReserves::toFilename(section.name);
+                  CapacityReservation tmpCapacityReservation;
+                  std::string file_name = AllCapacityReservations::toFilename(section.name);
                   int type = -1;
                   for (auto* p = section.firstProperty; p; p = p->next)
                   {
@@ -871,7 +875,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
 
                       if (tmp == "failure-cost")
                       {
-                          if (!p->value.to<float>(tmpReserve.failureCost))
+                          if (!p->value.to<float>(tmpCapacityReservation.failureCost))
                           {
                               logs.warning() << area.name << ": invalid failure cost for reserve "
                                              << section.name;
@@ -879,7 +883,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
                       }
                       else if (tmp == "spillage-cost")
                       {
-                          if (!p->value.to<float>(tmpReserve.spillageCost))
+                          if (!p->value.to<float>(tmpCapacityReservation.spillageCost))
                           {
                               logs.warning() << area.name << ": invalid spillage cost for reserve "
                                              << section.name;
@@ -901,19 +905,13 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
                   }
                   buffer.clear() << study.folderInput << SEP << "reserves" << SEP << area.id << SEP
                                  << file_name << ".txt";
-                  TimeSeries::numbers tsnum;
-                  Antares::Data::TimeSeries* tmp_need = new TimeSeries(tsnum);
-                  ret = (*tmp_need).loadFromFile(buffer, false) && ret;
-                  tmpReserve.need = tmp_need;
+                  ret = tmpCapacityReservation.need.loadFromFile(buffer, false) && ret;
                   if (type == 0)
-                      area.newReserves.areaReservesUp.emplace(section.name, tmpReserve);
+                      area.allCapacityReservations.areaCapacityReservationsUp.emplace(section.name, tmpCapacityReservation);
                   else if (type == 1)
-                      area.newReserves.areaReservesDown.emplace(section.name, tmpReserve);
+                      area.allCapacityReservations.areaCapacityReservationsDown.emplace(section.name, tmpCapacityReservation);
                   else
-                  {
                       logs.warning() << area.name << ": invalid type for reserve " << section.name;
-                      delete tmp_need;
-                  }
               }
           });
     }

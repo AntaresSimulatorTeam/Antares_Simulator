@@ -263,10 +263,10 @@ struct RESERVE_PARTICIPATION
     float participationCost=-1;
 };
 
-struct AREA_RESERVE
+struct CAPACITY_RESERVATION
 {
-    std::vector<RESERVE_PARTICIPATION> AllReservesParticipation; // Vector size is number of thermal clusters in this area
-    std::vector<int> need;      // Vector size is number of hours in year
+    std::vector<RESERVE_PARTICIPATION> AllReservesParticipation;//!< Vector size is number of thermal clusters in this area
+    std::vector<int> need;//!<  Vector size is number of hours in year
     float failureCost = 0;
     float spillageCost = 0;
 };
@@ -275,8 +275,8 @@ struct AREA_RESERVE
 //Vector size is number of reserves up or down
 struct AREA_RESERVES_VECTOR
 {
-    std::vector<AREA_RESERVE> areaReservesUp;
-    std::vector<AREA_RESERVE> areaReservesDown;
+    std::vector<CAPACITY_RESERVATION> areaCapacityReservationsUp;
+    std::vector<CAPACITY_RESERVATION> areaCapacityReservationsDown;
 };
 
 //Vector size is number of areas, contains all the reserves

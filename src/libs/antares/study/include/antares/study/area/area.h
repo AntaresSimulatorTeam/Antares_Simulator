@@ -34,7 +34,7 @@
 #include "ui.h"
 #include "constants.h"
 #include "antares/study/filter.h"
-#include <antares/study/area/newReserves.h>
+#include <antares/study/area/capacityReservation.h>
 
 namespace Antares
 {
@@ -294,8 +294,8 @@ public:
     double spreadSpilledEnergyCost = 0.;
     //@}
 
-    /// \name NewRerserves structure to keep track of the added reserves
-    NewReserves newReserves;
+    /// \name AllCapacityReservations structure to keep track of the added capacity reservations
+    AllCapacityReservations allCapacityReservations;
 
     //! \name Output filtering
     //@{

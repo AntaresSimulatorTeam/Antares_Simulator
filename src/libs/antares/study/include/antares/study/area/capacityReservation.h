@@ -27,42 +27,47 @@
 #include <vector>
 #include <optional>
 #include <antares/series/series.h>
+#include <antares/array/matrix.h>
 
-/// @brief Represents an area reserve using it's name, it's failure cost and it's spillage cost
-struct AreaReserve
+/// @brief Represents an area capacity reservation using it's name, it's failure cost and it's spillage cost
+struct CapacityReservation
 {
-    float failureCost = 0;
-    float spillageCost = 0;
-    Data::TimeSeries* need;
+    CapacityReservation() : failureCost(0), spillageCost(0), need(timeseriesNumbers) {}
+    float failureCost;
+    float spillageCost;
+    Antares::Data::TimeSeries need;
+
+private:
+    Matrix<uint32_t> timeseriesNumbers;
 };
 
-/// @brief Stores all the Reserves in two vectors for the up and down reserves
-struct NewReserves
+/// @brief Stores all the Capacity reservations in two vectors for the up and down reserves
+struct AllCapacityReservations
 {
-    std::map<std::string, AreaReserve> areaReservesUp;
-    std::map<std::string, AreaReserve> areaReservesDown;
+    std::map<std::string, CapacityReservation> areaCapacityReservationsUp;
+    std::map<std::string, CapacityReservation> areaCapacityReservationsDown;
 
-    /// @brief Check if the reserve name already exist in both the up and down reserves
+    /// @brief Check if the capacity reservation name already exist in both the up and down reserves
     /// @param name
-    /// @return true if the reserve already existed
+    /// @return true if the capacity reservation already existed
     bool contains(std::string name)
     {
-        return areaReservesUp.contains(name) || areaReservesDown.contains(name);
+        return areaCapacityReservationsUp.contains(name) || areaCapacityReservationsDown.contains(name);
     }
 
-    /// @brief Get a reserve from both the up and down reserves using its name
+    /// @brief Get a capacity reservation from both the up and down reserves using its name
     /// @param name
-    /// @return an optional of the reserve reference if the reserve was found, and a nullopt
+    /// @return an optional of the capacity reservation reference if the reserve was found, and a nullopt
     /// otherwise
-    std::optional<std::reference_wrapper<AreaReserve>> getReserveByName(Yuni::ShortString256 name)
+    std::optional<std::reference_wrapper<CapacityReservation>> getReserveByName(Yuni::ShortString256 name)
     {
-        if (areaReservesUp.contains(name))
+        if (areaCapacityReservationsUp.contains(name))
         {
-            return areaReservesUp.at(name);
+            return areaCapacityReservationsUp.at(name);
         }
-        else if (areaReservesDown.contains(name))
+        else if (areaCapacityReservationsDown.contains(name))
         {
-            return areaReservesDown.at(name);
+            return areaCapacityReservationsDown.at(name);
         }
         return std::nullopt;
     }
@@ -82,12 +87,14 @@ struct NewReserves
 /// @brief Represents the cluster reserve participation to a given reserve
 struct ClusterReserveParticipation
 {
-    AreaReserve& clusterReserve;
+    std::reference_wrapper<CapacityReservation> capacityReservation;
     float maxPower = 0;
     float participationCost = 0;
 
-    ClusterReserveParticipation(AreaReserve& reserve, float power, float cost) :
-     clusterReserve(reserve), maxPower(power), participationCost(cost)
+    ClusterReserveParticipation(std::reference_wrapper<CapacityReservation> reserve,
+                                float power,
+                                float cost) :
+     capacityReservation(reserve), maxPower(power), participationCost(cost)
     {
     }
 
@@ -97,7 +104,7 @@ struct ClusterReserveParticipation
         if (this != &other)
         {
             // Copy the values from the other object
-            clusterReserve = other.clusterReserve;
+            capacityReservation = other.capacityReservation;
             maxPower = other.maxPower;
             participationCost = other.participationCost;
         }

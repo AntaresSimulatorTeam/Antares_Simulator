@@ -307,17 +307,13 @@ bool ClusterList<ClusterT>::loadReserveParticipations(Area& area, const AnyStrin
                   }
               }
           }
-          if (area.newReserves.getReserveByName(section.name).has_value()
-              && area.thermal.list.getClusterByName(tmpClusterName).has_value())
+          auto reserve = area.allCapacityReservations.getReserveByName(section.name);
+          auto cluster = area.thermal.list.getClusterByName(tmpClusterName);
+          if (reserve && cluster)
           {
               ClusterReserveParticipation tmpReserveParticipation{
-                area.newReserves.getReserveByName(section.name).value().get(),
-                tmpMaxPower,
-                tmpParticipationCost};
-              area.thermal.list.getClusterByName(tmpClusterName)
-                .value()
-                .get()
-                ->addReserveParticipation(section.name, tmpReserveParticipation);
+                reserve.value(), tmpMaxPower, tmpParticipationCost};
+              cluster.value().get()->addReserveParticipation(section.name, tmpReserveParticipation);
           }
           else
           {

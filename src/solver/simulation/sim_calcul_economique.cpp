@@ -313,16 +313,16 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
             
         }
 
-        for (auto const& [key, val] : area.newReserves.areaReservesUp)
+        for (auto const& [key, val] : area.allCapacityReservations.areaCapacityReservationsUp)
         {
-            AREA_RESERVE areaReservesUp;
-            areaReservesUp.failureCost = val.failureCost;
-            areaReservesUp.spillageCost = val.spillageCost;
-            if (val.need->timeSeries.width > 0)
+            CAPACITY_RESERVATION areaCapacityReservationsUp;
+            areaCapacityReservationsUp.failureCost = val.failureCost;
+            areaCapacityReservationsUp.spillageCost = val.spillageCost;
+            if (val.need.timeSeries.width > 0)
             {
-                for (int indexSeries = 0; indexSeries < val.need->timeSeries.height; indexSeries++)
+                for (int indexSeries = 0; indexSeries < val.need.timeSeries.height; indexSeries++)
                 {
-                    areaReservesUp.need.push_back(val.need->timeSeries.entry[0][indexSeries]);
+                    areaCapacityReservationsUp.need.push_back(val.need.timeSeries.entry[0][indexSeries]);
                 }
             }
             for (auto cluster : area.thermal.list.each_enabled_and_not_mustrun())
@@ -333,22 +333,22 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
                     reserveParticipation.maxPower = cluster->reserveMaxPower(key);
                     reserveParticipation.participationCost = cluster->reserveCost(key);
                 }
-                areaReservesUp.AllReservesParticipation.push_back(reserveParticipation);
+                areaCapacityReservationsUp.AllReservesParticipation.push_back(reserveParticipation);
             }
 
-            areaReserves.areaReservesUp.push_back(areaReservesUp);
+            areaReserves.areaCapacityReservationsUp.push_back(areaCapacityReservationsUp);
         }
 
-        for (auto const& [key, val] : area.newReserves.areaReservesDown)
+        for (auto const& [key, val] : area.allCapacityReservations.areaCapacityReservationsDown)
         {
-            AREA_RESERVE areaReservesDown;
-            areaReservesDown.failureCost = val.failureCost;
-            areaReservesDown.spillageCost = val.spillageCost;
-            if (val.need->timeSeries.width > 0)
+            CAPACITY_RESERVATION areaCapacityReservationsDown;
+            areaCapacityReservationsDown.failureCost = val.failureCost;
+            areaCapacityReservationsDown.spillageCost = val.spillageCost;
+            if (val.need.timeSeries.width > 0)
             {
-                for (int indexSeries = 0; indexSeries < val.need->timeSeries.height; indexSeries++)
+                for (int indexSeries = 0; indexSeries < val.need.timeSeries.height; indexSeries++)
                 {
-                    areaReservesDown.need.push_back(val.need->timeSeries.entry[0][indexSeries]);
+                    areaCapacityReservationsDown.need.push_back(val.need.timeSeries.entry[0][indexSeries]);
                 }
             }
             for (auto cluster : area.thermal.list.each_enabled_and_not_mustrun())
@@ -359,10 +359,10 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
                     reserveParticipation.maxPower = cluster->reserveMaxPower(key);
                     reserveParticipation.participationCost = cluster->reserveCost(key);
                 }
-                areaReservesDown.AllReservesParticipation.push_back(reserveParticipation);
+                areaCapacityReservationsDown.AllReservesParticipation.push_back(reserveParticipation);
             }
 
-            areaReserves.areaReservesDown.push_back(areaReservesDown);
+            areaReserves.areaCapacityReservationsDown.push_back(areaCapacityReservationsDown);
         }
         
 

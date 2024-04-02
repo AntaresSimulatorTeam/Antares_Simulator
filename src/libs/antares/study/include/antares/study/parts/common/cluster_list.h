@@ -25,7 +25,7 @@
 #include "../../fwd.h"
 
 #include <antares/writer/i_writer.h>
-#include <antares/study/area/newReserves.h>
+#include <antares/study/area/capacityReservation.h>
 #include <antares/study/parts/common/cluster.h>
 
 #include <algorithm>
@@ -130,7 +130,7 @@ public:
                                  const AnyString& folder);
 
     /// @brief Load the reserve participation. For each entry, it checks if the reserve has been
-    /// added to area.newReserves, if not then log the name of the reserve that has not been found.
+    /// added to area.allCapacityReservations, if not then log the name of the reserve that has not been found.
     /// @tparam ClusterT Type of the Cluster list
     /// @param area Reference to area
     /// @param file File to read the reserve participations entries
