@@ -718,7 +718,11 @@ AreaLink* AreaAddLinkBetweenAreas(Area* area, Area* with, bool warning = true);
 ** \param folder The target folder
 ** \return A non-null value if the operation succeeded, 0 otherwise
 */
-bool AreaLinksLoadFromFolder(Study& s, AreaList* l, Area* area, const AnyString& folder);
+bool AreaLinksLoadFromFolder(Study& s,
+                             AreaList* l,
+                             Area* area,
+                             const AnyString& folder,
+                             bool loadTSGen);
 
 /*!
 ** \brief Save interconnections of a given area into a folder (`input/areas/[area]/ntc`)
@@ -777,9 +781,7 @@ Area* addAreaToListOfAreas(AreaList& list, const AnyString& name);
 ** \param lname The name of the area in lowercase
 ** \return A valid pointer to the area if successful, NULL otherwise
 */
-Area* AreaListAddFromNames(AreaList& list,
-                           const AnyString& name,
-                           const AnyString& lname);
+Area* AreaListAddFromNames(AreaList& list, const AnyString& name, const AnyString& lname);
 
 /*!
 ** \brief Try to establish a link between two areas
@@ -822,6 +824,11 @@ void AreaListEnsureDataHydroPrepro(AreaList* l);
 ** \brief Ensure data for thermal prepro are initialized
 */
 void AreaListEnsureDataThermalPrepro(AreaList* l);
+
+/*!
+** \brief Ensure data for links are initialized
+*/
+void AreaListEnsureDataLinksPrepro(AreaList* l);
 
 /*!
 ** \brief to check that Area name does not contains character *

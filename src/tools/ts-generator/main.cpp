@@ -149,6 +149,7 @@ int main(int argc, char *argv[])
     auto study = std::make_shared<Data::Study>(true);
     Data::StudyLoadOptions studyOptions;
     studyOptions.prepareOutput = true;
+    studyOptions.linksLoadTSGen = true;
 
     if (!study->loadFromFolder(settings.studyFolder, studyOptions))
     {

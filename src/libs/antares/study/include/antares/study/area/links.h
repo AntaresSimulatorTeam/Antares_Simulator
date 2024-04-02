@@ -70,7 +70,7 @@ public:
     ~AreaLink();
     //@}
 
-    bool loadTimeSeries(const Study& study, const AnyString& folder);
+    bool loadTimeSeries(const Study& study, const AnyString& folder, bool loadTSGen);
 
     void storeTimeseriesNumbers(Solver::IResultWriter& writer) const;
 
@@ -123,7 +123,7 @@ public:
 
 private:
     bool linkLoadTimeSeries_for_version_below_810(const AnyString& folder);
-    bool linkLoadTimeSeries_for_version_820_and_later(const AnyString& folder);
+    bool linkLoadTimeSeries_for_version_820_and_later(const AnyString& folder, bool loadTSGen);
     NamePair getNamePair() const;
 
 public:

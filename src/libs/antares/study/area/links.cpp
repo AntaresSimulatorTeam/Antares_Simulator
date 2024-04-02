@@ -111,7 +111,7 @@ bool AreaLink::linkLoadTimeSeries_for_version_below_810(const AnyString& folder)
     return true;
 }
 
-bool AreaLink::linkLoadTimeSeries_for_version_820_and_later(const AnyString& folder)
+bool AreaLink::linkLoadTimeSeries_for_version_820_and_later(const AnyString& folder, bool loadTSGen)
 {
     String capacitiesFolder;
     capacitiesFolder << folder << SEP << "capacities";
@@ -131,6 +131,28 @@ bool AreaLink::linkLoadTimeSeries_for_version_820_and_later(const AnyString& fol
     // Read link's indirect capacities time series
     filename.clear() << capacitiesFolder << SEP << with->id << "_indirect.txt";
     success = indirectCapacities.loadFromFile(filename, false) && success;
+
+    if (loadTSGen)
+    {
+        String preproFolder;
+        preproFolder << folder << SEP << "prepro";
+
+        // Prepro
+        filename.clear() << preproFolder << SEP << with->id << "_direct.txt";
+        success
+          = tsGenerationDirect.prepro->data.loadFromCSVFile(filename, 1, DAYS_PER_YEAR) && success;
+
+        filename.clear() << preproFolder << SEP << with->id << "_indirect.txt";
+        success = tsGenerationIndirect.prepro->data.loadFromCSVFile(filename, 1, DAYS_PER_YEAR)
+                  && success;
+
+        // Modulation
+        filename.clear() << preproFolder << SEP << with->id << "_mod_direct.txt";
+        tsGenerationDirect.modulationCapacity.loadFromCSVFile(filename, 1, HOURS_PER_YEAR);
+
+        filename.clear() << preproFolder << SEP << with->id << "_mod_indirect.txt";
+        tsGenerationIndirect.modulationCapacity.loadFromCSVFile(filename, 1, HOURS_PER_YEAR);
+    }
 
     return success;
 }
@@ -170,12 +192,12 @@ void AreaLink::overrideTransmissionCapacityAccordingToGlobalParameter(
     }
 }
 
-bool AreaLink::loadTimeSeries(const Study& study, const AnyString& folder)
+bool AreaLink::loadTimeSeries(const Study& study, const AnyString& folder, bool loadTSGen)
 {
     if (study.header.version < StudyVersion(8, 2))
         return linkLoadTimeSeries_for_version_below_810(folder);
     else
-        return linkLoadTimeSeries_for_version_820_and_later(folder);
+        return linkLoadTimeSeries_for_version_820_and_later(folder, loadTSGen);
 }
 
 void AreaLink::storeTimeseriesNumbers(Solver::IResultWriter& writer) const
@@ -295,7 +317,39 @@ AreaLink* AreaAddLinkBetweenAreas(Area* area, Area* with, bool warning)
 
 namespace // anonymous
 {
-bool AreaLinksInternalLoadFromProperty(AreaLink& link, const String& key, const String& value)
+bool handleTSGenKey(const std::string& key,
+                    const String& value,
+                    const std::string& prefix,
+                    AreaLink::LinkTsGeneration& out)
+{
+    const auto checkPrefixed
+      = [&prefix, &key](const std::string& s) { return key == prefix + "_" + s; };
+
+    if (checkPrefixed("unitCount"))
+        return value.to<uint>(out.unitCount);
+
+    if (checkPrefixed("nominalCapacity"))
+        return value.to<double>(out.nominalCapacity);
+
+    if (checkPrefixed("law.planned"))
+        return value.to(out.plannedLaw);
+
+    if (checkPrefixed("law.forced"))
+        return value.to(out.forcedLaw);
+
+    if (checkPrefixed("volatility.planned"))
+        return value.to(out.plannedVolatility);
+
+    if (checkPrefixed("volatility.forced"))
+        return value.to(out.forcedVolatility);
+
+    return false;
+}
+
+bool AreaLinksInternalLoadFromProperty(AreaLink& link,
+                                       const String& key,
+                                       const String& value,
+                                       bool loadTSGen)
 {
     if (key == "hurdles-cost")
         return value.to<bool>(link.useHurdlesCost);
@@ -406,7 +460,14 @@ bool AreaLinksInternalLoadFromProperty(AreaLink& link, const String& key, const 
         link.filterYearByYear = stringIntoDatePrecision(value);
         return true;
     }
-
+    if (loadTSGen)
+    {
+        const std::string key_(key); // Conversion from Yuni::String
+        if (key_.starts_with("tsgen_direct"))
+            return handleTSGenKey(key_, value, "tsgen_direct", link.tsGenerationDirect);
+        else if (key_.starts_with("tsgen_indirect"))
+            return handleTSGenKey(key_, value, "tsgen_indirect", link.tsGenerationIndirect);
+    }
     return false;
 }
 
@@ -428,7 +489,11 @@ void logLinkDataCheckErrorDirectIndirect(const AreaLink& link,
 }
 } // anonymous namespace
 
-bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyString& folder)
+bool AreaLinksLoadFromFolder(Study& study,
+                             AreaList* l,
+                             Area* area,
+                             const AnyString& folder,
+                             bool loadTSGen)
 {
     // Assert
     assert(area);
@@ -471,7 +536,7 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
         link.comments.clear();
         link.displayComments = true;
 
-        ret = link.loadTimeSeries(study, folder) && ret;
+        ret = link.loadTimeSeries(study, folder, loadTSGen) && ret;
 
         // Checks on loaded link's data
         if (study.usedByTheSolver)
@@ -556,7 +621,7 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
             key = p->key;
             key.toLower();
             value = p->value;
-            if (!AreaLinksInternalLoadFromProperty(link, key, value))
+            if (!AreaLinksInternalLoadFromProperty(link, key, value, loadTSGen))
                 logs.warning() << '`' << p->key << "`: Unknown property";
         }
 

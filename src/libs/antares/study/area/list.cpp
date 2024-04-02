@@ -810,7 +810,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     // Links
     {
         buffer.clear() << study.folderInput << SEP << "links" << SEP << area.id;
-        ret = AreaLinksLoadFromFolder(study, list, &area, buffer) && ret;
+        ret = AreaLinksLoadFromFolder(study, list, &area, buffer, options.linksLoadTSGen) && ret;
     }
 
     // UI
@@ -1058,6 +1058,9 @@ void AreaList::ensureDataIsInitialized(Parameters& params, bool loadOnlyNeeded)
 
     // Thermal
     AreaListEnsureDataThermalPrepro(this);
+
+    // Links
+    AreaListEnsureDataLinksPrepro(this);
 }
 
 bool AreaList::loadFromFolder(const StudyLoadOptions& options)
@@ -1292,6 +1295,20 @@ void AreaListEnsureDataHydroPrepro(AreaList* l)
 void AreaListEnsureDataThermalPrepro(AreaList* l)
 {
     l->each([&](Data::Area& area) { area.thermal.list.ensureDataPrepro(); });
+}
+
+void AreaListEnsureDataLinksPrepro(AreaList* l)
+{
+    l->each([&](Data::Area& area) {
+        for (auto& [_, link] : area.links)
+        {
+            // TODO decorrelate PreproThermal & ThermalCluster
+            link->tsGenerationDirect.prepro
+              = new Data::PreproThermal(std::weak_ptr<const Data::ThermalCluster>());
+            link->tsGenerationIndirect.prepro
+              = new Data::PreproThermal(std::weak_ptr<const Data::ThermalCluster>());
+        }
+    });
 }
 
 uint64_t AreaList::memoryUsage() const
