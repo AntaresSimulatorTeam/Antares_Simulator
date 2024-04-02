@@ -84,7 +84,7 @@ void renewableTSNumberData::saveToINIFile(const Study& /* study */,
     if (!pArea)
         return;
 
-    for (auto cluster : pArea->renewable.list.all())
+    for (auto& cluster : pArea->renewable.list.all())
     {
         for (uint year = 0; year != pTSNumberRules.height; ++year)
         {

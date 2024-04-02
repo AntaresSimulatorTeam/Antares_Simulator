@@ -265,7 +265,7 @@ public:
         uint hourInTheWeek = state.hourInTheWeek;
         uint hourInTheYear = state.hourInTheYear;
 
-        for (auto cluster : area->thermal.list.each_enabled())
+        for (auto& cluster : area->thermal.list.each_enabled())
         {
             double hourlyClusterProduction
               = thermal[area->index].thermalClustersProductions[cluster->areaWideIndex];
@@ -304,7 +304,7 @@ public:
             const auto& thermal = results.data.area->thermal;
 
             // Write the data for the current year
-            for (auto cluster : thermal.list.each_enabled())
+            for (auto& cluster : thermal.list.each_enabled())
             {
                 // Write the data for the current year
                 results.variableCaption = cluster->name(); // VCardType::Caption();

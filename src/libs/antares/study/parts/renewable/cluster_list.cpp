@@ -59,7 +59,7 @@ bool RenewableClusterList::saveToFolder(const AnyString& folder) const
         IniFile ini;
 
         // Browse all clusters
-        for (auto c : all())
+        for (auto& c : all())
         {
             // Adding a section to the inifile
             IniFile::Section* s = ini.addSection(c->name());

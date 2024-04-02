@@ -58,7 +58,7 @@ std::shared_ptr<ClusterT> ClusterList<ClusterT>::enabledClusterAt(unsigned int i
 template<class ClusterT>
 ClusterT* ClusterList<ClusterT>::findInAll(std::string_view id) const
 {
-    for (auto cluster : all())
+    for (auto& cluster : all())
         if (cluster->id() == id)
             return cluster.get();
     return nullptr;
@@ -85,7 +85,7 @@ void ClusterList<ClusterT>::clearAll()
 template<class ClusterT>
 void ClusterList<ClusterT>::resizeAllTimeseriesNumbers(uint n) const
 {
-    for (auto c : allClusters_)
+    for (auto& c : allClusters_)
         c->series.timeseriesNumbers.reset(1, n);
 }
 
@@ -98,7 +98,7 @@ void ClusterList<ClusterT>::storeTimeseriesNumbers(Solver::IResultWriter& writer
     Clob path;
     std::string ts_content;
 
-    for (auto cluster : each_enabled())
+    for (auto& cluster : each_enabled())
     {
         path.clear() << "ts-numbers" << SEP << typeID() << SEP << cluster->parentArea->id << SEP
                      << cluster->id() << ".txt";
@@ -151,14 +151,14 @@ void ClusterList<ClusterT>::rebuildIndexes()
     //  - Avoids seg faults, for instance when storing thermal noises (solver.hxx).
     //    Indeed : otherwise disabled clusters have an infinite index
     unsigned int index = 0;
-    for (auto c : allClusters_)
+    for (auto& c : allClusters_)
     {
         c->areaWideIndex = index;
         index++;
     }
 
     index = 0;
-    for (auto c : each_enabled())
+    for (auto& c : each_enabled())
     {
         c->areaWideIndex = index;
         index++;
