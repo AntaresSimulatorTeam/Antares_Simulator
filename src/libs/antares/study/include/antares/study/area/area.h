@@ -826,11 +826,6 @@ void AreaListEnsureDataHydroPrepro(AreaList* l);
 void AreaListEnsureDataThermalPrepro(AreaList* l);
 
 /*!
-** \brief Ensure data for links are initialized
-*/
-void AreaListEnsureDataLinksPrepro(AreaList* l);
-
-/*!
 ** \brief to check that Area name does not contains character *
 */
 inline bool CheckForbiddenCharacterInAreaName(const AnyString& name)

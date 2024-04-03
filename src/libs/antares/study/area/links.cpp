@@ -148,10 +148,10 @@ bool AreaLink::linkLoadTimeSeries_for_version_820_and_later(const AnyString& fol
         // Prepro
         filename.clear() << preproFolder << SEP << with->id << "_direct.txt";
         success
-          = tsGenerationDirect.prepro->data.loadFromCSVFile(filename, 1, DAYS_PER_YEAR) && success;
+          = tsGenerationDirect.prepro->data.loadFromCSVFile(filename, Antares::Data::PreproThermal::thermalPreproMax, DAYS_PER_YEAR) && success;
 
         filename.clear() << preproFolder << SEP << with->id << "_indirect.txt";
-        success = tsGenerationIndirect.prepro->data.loadFromCSVFile(filename, 1, DAYS_PER_YEAR)
+        success = tsGenerationIndirect.prepro->data.loadFromCSVFile(filename, Antares::Data::PreproThermal::thermalPreproMax, DAYS_PER_YEAR)
                   && success;
 
         // Modulation
@@ -546,6 +546,14 @@ bool AreaLinksLoadFromFolder(Study& study,
 
         link.comments.clear();
         link.displayComments = true;
+
+        if (loadTSGen)
+        {
+        link.tsGenerationDirect.prepro
+              = new Data::PreproThermal(std::weak_ptr<const Data::ThermalCluster>());
+        link.tsGenerationIndirect.prepro
+              = new Data::PreproThermal(std::weak_ptr<const Data::ThermalCluster>());
+        }
 
         ret = link.loadTimeSeries(study, folder, loadTSGen) && ret;
 
