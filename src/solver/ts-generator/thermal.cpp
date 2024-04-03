@@ -684,12 +684,12 @@ bool generateLinkTimeSeries(Data::Study& study,
     logs.info() << "Generating the links time-series";
 
     auto generator = std::make_unique<GeneratorTempData>
-        (study, study.parameters.nbTimeSeriesLinks);
+        (study, study.parameters.nbLinkTStoGenerate);
 
     for (auto& [link, direction] : links)
     {
         Data::TimeSeries ts(link->timeseriesNumbers);
-        ts.resize(study.parameters.nbTimeSeriesLinks, HOURS_PER_YEAR);
+        ts.resize(study.parameters.nbLinkTStoGenerate, HOURS_PER_YEAR);
 
         auto& tsGenStruct = direction == linkDirection::direct ? link->tsGenerationDirect : link->tsGenerationIndirect;
 

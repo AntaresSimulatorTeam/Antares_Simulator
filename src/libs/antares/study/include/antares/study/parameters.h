@@ -269,7 +269,7 @@ public:
     //! Nb of timeSeries : Solar
     uint nbTimeSeriesSolar;
     //! Nb of timeSeries : Links
-    uint nbTimeSeriesLinks = 1;
+    uint nbLinkTStoGenerate = 1;
     //@}
 
     //! \name Time-series refresh
