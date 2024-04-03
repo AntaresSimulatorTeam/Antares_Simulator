@@ -657,8 +657,7 @@ bool generateThermalTimeSeries(Data::Study& study,
 
     bool archive = (0 != (study.parameters.timeSeriesToArchive & Data::timeSeriesThermal));
 
-    auto generator = std::make_unique<GeneratorTempData>
-        (study, study.parameters.nbTimeSeriesThermal);
+    auto generator = GeneratorTempData(study, study.parameters.nbTimeSeriesThermal);
 
     // TODO VP: parallel
     for (auto* cluster : clusters)
@@ -683,8 +682,7 @@ bool generateLinkTimeSeries(Data::Study& study,
     logs.info();
     logs.info() << "Generating the links time-series";
 
-    auto generator = std::make_unique<GeneratorTempData>
-        (study, study.parameters.nbLinkTStoGenerate);
+    auto generator = GeneratorTempData(study, study.parameters.nbLinkTStoGenerate);
 
     for (auto& [link, direction] : links)
     {
@@ -695,10 +693,9 @@ bool generateLinkTimeSeries(Data::Study& study,
 
         ThermalInterface linkInterface(tsGenStruct, ts, link->with->name);
 
-        (*generator)(*link->from, linkInterface);
+        generator(*link->from, linkInterface);
 
         writeLinksResultsToDisk(study, writer, *link, ts.timeSeries, savePath, direction == linkDirection::direct);
-
     }
 
     return true;
