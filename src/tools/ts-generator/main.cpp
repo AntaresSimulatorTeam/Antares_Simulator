@@ -18,6 +18,7 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
+#include <filesystem>
 #include <memory>
 #include <string>
 
@@ -36,7 +37,7 @@
 
 using namespace Antares;
 
-struct TsGeneratorSettings
+struct Settings
 {
     std::string studyFolder;
 
@@ -51,7 +52,7 @@ struct TsGeneratorSettings
     std::string linksListToGen = "";
 };
 
-std::unique_ptr<Yuni::GetOpt::Parser> createTsGeneratorParser(TsGeneratorSettings& settings)
+std::unique_ptr<Yuni::GetOpt::Parser> createTsGeneratorParser(Settings& settings)
 {
     auto parser = std::make_unique<Yuni::GetOpt::Parser>();
     parser->addParagraph("Antares Time Series generator\n");
@@ -124,7 +125,7 @@ TSGenerator::listOfLinks getLinksToGen(Data::AreaList& areas,
 
 int main(int argc, char *argv[])
 {
-    TsGeneratorSettings settings;
+    Settings settings;
 
     auto parser = createTsGeneratorParser(settings);
     switch (auto ret = parser->operator()(argc, argv); ret)
@@ -172,10 +173,8 @@ int main(int argc, char *argv[])
     auto resultWriter = Solver::resultWriterFactory(
             Data::ResultFormat::legacyFilesDirectories, study->folderOutput, nullptr, nullDurationCollector);
 
-#define SEP Yuni::IO::Separator
-    const std::string thermalSavePath = std::string("ts-generator") + SEP + "thermal";
-    const std::string linksSavePath = std::string("ts-generator") + SEP + "links";
-#undef SEP
+    const auto thermalSavePath = std::filesystem::path("ts-generator") / "thermal";
+    const auto linksSavePath = std::filesystem::path("ts-generator") / "links";
 
     // THERMAL
     std::vector<Data::ThermalCluster*> clusters;

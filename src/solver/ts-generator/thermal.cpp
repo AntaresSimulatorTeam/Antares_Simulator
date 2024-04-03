@@ -74,7 +74,7 @@ class GeneratorTempData final
 public:
     explicit GeneratorTempData(Data::Study&, unsigned);
 
-    void operator()(const Data::Area& area, ThermalInterface& cluster);
+    void generateTS(const Data::Area& area, ThermalInterface& cluster);
 
 public:
     Data::Study& study;
@@ -96,13 +96,10 @@ private:
 
     MersenneTwister& rndgenerator;
 
-    double AVP[366];
     enum
     {
         Log_size = 4000
     };
-    int LOG[Log_size];
-    int LOGP[Log_size];
 
     double lf[366];
     double lp[366];
@@ -113,10 +110,6 @@ private:
     double bf[366];
     double bp[366];
 
-    std::vector<std::vector<double>> FPOW;
-    std::vector<std::vector<double>> PPOW;
-
-    Yuni::String pTempFilename;
 };
 
 GeneratorTempData::GeneratorTempData(Data::Study& study, unsigned nbOfSeriesToGen) :
@@ -127,9 +120,6 @@ GeneratorTempData::GeneratorTempData(Data::Study& study, unsigned nbOfSeriesToGe
     nbThermalTimeseries_ = nbOfSeriesToGen;
 
     derated = parameters.derated;
-
-    FPOW.resize(DAYS_PER_YEAR);
-    PPOW.resize(DAYS_PER_YEAR);
 }
 
 template<class T>
@@ -209,7 +199,7 @@ int GeneratorTempData::durationGenerator(Data::ThermalLaw law,
     return 0;
 }
 
-void GeneratorTempData::operator()(const Data::Area& area, ThermalInterface& cluster)
+void GeneratorTempData::generateTS(const Data::Area& area, ThermalInterface& cluster)
 {
     if (not cluster.prepro)
     {
@@ -248,6 +238,9 @@ void GeneratorTempData::operator()(const Data::Area& area, ThermalInterface& clu
     auto f_law = cluster.forcedLaw;
 
     auto p_law = cluster.plannedLaw;
+
+    std::vector<std::vector<double>> FPOW(DAYS_PER_YEAR);
+    std::vector<std::vector<double>> PPOW(DAYS_PER_YEAR);
 
     int FODOfTheDay;
     int PODOfTheDay;
@@ -297,9 +290,9 @@ void GeneratorTempData::operator()(const Data::Area& area, ThermalInterface& clu
     prepareIndispoFromLaw(f_law, f_volatility, af, bf, FOD);
     prepareIndispoFromLaw(p_law, p_volatility, ap, bp, POD);
 
-    (void)::memset(AVP, 0, sizeof(AVP));
-    (void)::memset(LOG, 0, sizeof(LOG));
-    (void)::memset(LOGP, 0, sizeof(LOGP));
+    std::array<double, 366> AVP {};
+    std::array<double, Log_size> LOG {};
+    std::array<double, Log_size> LOGP {};
 
     int MXO = 0;
 
@@ -599,52 +592,17 @@ listOfLinks getAllLinksToGen(Data::AreaList& areas)
     return links;
 }
 
-void writeThermalResultsToDisk(const Data::Study& study,
+void writeResultsToDisk(const Data::Study& study,
                         Solver::IResultWriter& writer,
-                        const Data::Area& area,
-                        const Data::ThermalCluster& cluster,
+                        Matrix<>& series,
                         const std::string& savePath)
 {
     if (study.parameters.noOutput)
         return;
 
-    Yuni::String pTempFilename;
-    pTempFilename.reserve(study.folderOutput.size() + 256);
-
-    pTempFilename.clear() << savePath << SEP << area.id << SEP << cluster.id() << ".txt";
-
-    enum { precision = 0 };
-
     std::string buffer;
-    cluster.series.timeSeries.saveToBuffer(buffer, precision);
-
-    writer.addEntryFromBuffer(pTempFilename.c_str(), buffer);
-}
-
-void writeLinksResultsToDisk(const Data::Study& study,
-                             Solver::IResultWriter& writer,
-                             const Data::AreaLink& link,
-                             Matrix<>& series,
-                             const std::string& savePath,
-                             bool direct)
-{
-    if (study.parameters.noOutput)
-        return;
-
-    enum { precision = 0 };
-    std::string buffer;
-
-    std::string capacityType = direct ? "_direct" : "_indirect";
-
-    Yuni::String pTempFilename;
-    pTempFilename.reserve(study.folderOutput.size() + 256);
-
-    pTempFilename.clear() << savePath << SEP << link.from->id << SEP <<
-        link.with->id << capacityType << ".txt";
-
-    series.saveToBuffer(buffer, precision);
-
-    writer.addEntryFromBuffer(pTempFilename.c_str(), buffer);
+    series.saveToBuffer(buffer, 0);
+    writer.addEntryFromBuffer(savePath, buffer);
 }
 
 bool generateThermalTimeSeries(Data::Study& study,
@@ -655,19 +613,21 @@ bool generateThermalTimeSeries(Data::Study& study,
     logs.info();
     logs.info() << "Generating the thermal time-series";
 
-    bool archive = (0 != (study.parameters.timeSeriesToArchive & Data::timeSeriesThermal));
+    bool archive = study.parameters.timeSeriesToArchive & Data::timeSeriesThermal;
 
-    auto generator = std::make_unique<GeneratorTempData>
-        (study, study.parameters.nbTimeSeriesThermal);
+    auto generator = GeneratorTempData(study, study.parameters.nbTimeSeriesThermal);
 
     // TODO VP: parallel
     for (auto* cluster : clusters)
     {
         ThermalInterface clusterInterface(cluster);
-        (*generator)(*cluster->parentArea, clusterInterface);
+        generator.generateTS(*cluster->parentArea, clusterInterface);
 
-        if (archive)
-            writeThermalResultsToDisk(study, writer, *cluster->parentArea, *cluster, savePath);
+        if (archive) // compatibilty with in memory
+        {
+            std::string filePath = savePath + SEP + cluster->parentArea->id + SEP + cluster->id() + ".txt";
+            writeResultsToDisk(study, writer, cluster->series.timeSeries, filePath);
+        }
 
         cluster->calculationOfSpinning();
     }
@@ -683,22 +643,24 @@ bool generateLinkTimeSeries(Data::Study& study,
     logs.info();
     logs.info() << "Generating the links time-series";
 
-    auto generator = std::make_unique<GeneratorTempData>
-        (study, study.parameters.nbTimeSeriesLinks);
+    auto generator = GeneratorTempData(study, study.parameters.nbLinkTStoGenerate);
 
     for (auto& [link, direction] : links)
     {
         Data::TimeSeries ts(link->timeseriesNumbers);
-        ts.resize(study.parameters.nbTimeSeriesLinks, HOURS_PER_YEAR);
+        ts.resize(study.parameters.nbLinkTStoGenerate, HOURS_PER_YEAR);
 
         auto& tsGenStruct = direction == linkDirection::direct ? link->tsGenerationDirect : link->tsGenerationIndirect;
 
         ThermalInterface linkInterface(tsGenStruct, ts, link->with->name);
 
-        (*generator)(*link->from, linkInterface);
+        generator.generateTS(*link->from, linkInterface);
 
-        writeLinksResultsToDisk(study, writer, *link, ts.timeSeries, savePath, direction == linkDirection::direct);
+        std::string capacityType = direction == linkDirection::direct ? "_direct" : "_indirect";
+        std::string filePath = savePath + SEP + link->from->id + SEP + link->with->id.c_str()
+            + capacityType + ".txt";
 
+        writeResultsToDisk(study, writer, ts.timeSeries, filePath);
     }
 
     return true;
