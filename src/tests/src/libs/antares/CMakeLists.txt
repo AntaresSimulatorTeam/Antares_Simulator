@@ -1,6 +1,7 @@
 add_subdirectory(concurrency)
 add_subdirectory(writer)
 add_subdirectory(study)
+
 if(WITH_YAMLCPP)
     add_subdirectory(yaml-parser)
 endif()
