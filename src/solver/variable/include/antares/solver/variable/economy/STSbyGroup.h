@@ -324,8 +324,8 @@ public:
     {
         static const std::vector<std::string> VAR_POSSIBLE_KINDS
           = {"INJECTION", "WITHDRAWAL", "LEVEL"};
-        std::string groupName = groupNames_[column / NB_COLS_PER_GROUP];
-        std::string variableKind = VAR_POSSIBLE_KINDS[column % NB_COLS_PER_GROUP];
+        const std::string& groupName = groupNames_[column / NB_COLS_PER_GROUP];
+        const std::string& variableKind = VAR_POSSIBLE_KINDS[column % NB_COLS_PER_GROUP];
         return groupName + "_" + variableKind;
     }
 
