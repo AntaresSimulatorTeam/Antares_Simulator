@@ -192,13 +192,13 @@ $(document).ready(function(){initNavTree('solver_2variable_2include_2antares_2so
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="preprocessor">#include &quot;antares/solver/variable/economy/overflow.h&quot;</span></div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="preprocessor">#include &quot;antares/solver/variable/economy/waterValue.h&quot;</span></div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="preprocessor">#include &quot;antares/solver/variable/economy/hydroCost.h&quot;</span></div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="preprocessor">#include &quot;antares/solver/variable/economy/shortTermStorage.h&quot;</span></div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="preprocessor">#include &quot;antares/solver/variable/economy/unsupliedEnergy.h&quot;</span></div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="preprocessor">#include &quot;antares/solver/variable/adequacy/spilledEnergy.h&quot;</span></div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span><span class="preprocessor">#include &quot;antares/solver/variable/economy/productionByDispatchablePlant.h&quot;</span></div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="preprocessor">#include &quot;antares/solver/variable/economy/productionByRenewablePlant.h&quot;</span></div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span><span class="comment">// Short term storage output variables by cluster</span></div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span><span class="preprocessor">#include &quot;antares/solver/variable/economy/STSbyGroup.h&quot;</span></div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="preprocessor">#include &quot;antares/solver/variable/economy/STStorageInjectionByCluster.h&quot;</span></div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span><span class="preprocessor">#include &quot;antares/solver/variable/economy/STStorageWithdrawalByCluster.h&quot;</span></div>
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span><span class="preprocessor">#include &quot;antares/solver/variable/economy/STStorageLevelsByCluster.h&quot;</span></div>
@@ -277,7 +277,7 @@ $(document).ready(function(){initNavTree('solver_2variable_2include_2antares_2so
 <div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>                     &lt;Variable::Economy::Overflows    <span class="comment">// Hydraulic overflows</span></div>
 <div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>                      &lt;Variable::Economy::WaterValue  <span class="comment">// Water values</span></div>
 <div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>                       &lt;Variable::Economy::HydroCost  <span class="comment">// Hydro costs</span></div>
-<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>                        &lt;Variable::Economy::ShortTermStorageByGroup&lt;</div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>                        &lt;Variable::Economy::STSbyGroup&lt;</div>
 <div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>                          Variable::Economy::STstorageInjectionByCluster&lt;</div>
 <div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>                            Variable::Economy::STstorageWithdrawalByCluster&lt;</div>
 <div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>                              Variable::Economy::STstorageLevelsByCluster&lt;</div>
@@ -342,53 +342,51 @@ $(document).ready(function(){initNavTree('solver_2variable_2include_2antares_2so
 <div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>                                          Variable::Economy::WaterValue,</div>
 <div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>                                          Common::SpatialAggregate&lt;</div>
 <div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>                                            Variable::Economy::HydroCost,</div>
-<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>                                            Common::SpatialAggregate&lt;</div>
-<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>                                              Variable::Economy::ShortTermStorageByGroup,</div>
-<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>                                              Common::SpatialAggregate&lt;</div>
-<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>                                                Variable::Economy::UnsupliedEnergy,</div>
-<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>                                                Common::SpatialAggregate&lt;</div>
-<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>                                                  Variable::Adequacy::SpilledEnergy,</div>
-<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>                                                  <span class="comment">// LOLD</span></div>
-<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>                                                  Common::SpatialAggregate&lt;</div>
-<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>                                                    Variable::Economy::LOLD,</div>
-<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>                                                    Common::SpatialAggregate&lt;</div>
-<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>                                                      Variable::Economy::LOLP,</div>
-<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span> </div>
-<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>                                                      Common::SpatialAggregate&lt;</div>
-<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>                                                        Variable::Economy::AvailableDispatchGen,</div>
-<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>                                                        Common::SpatialAggregate&lt;</div>
-<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>                                                          Variable::Economy::DispatchableGenMargin,</div>
-<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>                                                          Common::SpatialAggregate&lt;</div>
-<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>                                                            Variable::Economy::</div>
-<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>                                                              Marge&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;</div>
-<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>    VariablesPerSetOfAreas;</div>
-<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span> </div>
-<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span><span class="keyword">typedef</span> Variable::Economy::BindingConstMarginCost&lt; <span class="comment">// Marginal cost for a binding constraint</span></div>
-<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>  Container::EndOfList                             <span class="comment">// End of variable list</span></div>
-<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>  &gt;</div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>                                              Common::SpatialAggregate&lt;</div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>                                                Variable::Economy::UnsupliedEnergy,</div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>                                                Common::SpatialAggregate&lt;</div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>                                                  Variable::Adequacy::SpilledEnergy,</div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>                                                  <span class="comment">// LOLD</span></div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>                                                  Common::SpatialAggregate&lt;</div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>                                                    Variable::Economy::LOLD,</div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>                                                    Common::SpatialAggregate&lt;</div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>                                                      Variable::Economy::LOLP,</div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span> </div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>                                                      Common::SpatialAggregate&lt;</div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>                                                        Variable::Economy::AvailableDispatchGen,</div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>                                                        Common::SpatialAggregate&lt;</div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>                                                          Variable::Economy::DispatchableGenMargin,</div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>                                                          Common::SpatialAggregate&lt;</div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>                                                            Variable::Economy::</div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>                                                              Marge&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;</div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>    VariablesPerSetOfAreas;</div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span> </div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span><span class="keyword">typedef</span> Variable::Economy::BindingConstMarginCost&lt; <span class="comment">// Marginal cost for a binding constraint</span></div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>  Container::EndOfList                             <span class="comment">// End of variable list</span></div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>  &gt;</div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span> </div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>  VariablesPerBindingConstraints;</div>
 <div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span> </div>
-<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>  VariablesPerBindingConstraints;</div>
-<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span> </div>
-<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span><span class="keyword">typedef</span> Variable::Join&lt;</div>
-<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>  <span class="comment">// Variables for each area / links attached to the areas</span></div>
-<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>  Variable::Areas&lt;VariablesPerArea&gt;,</div>
-<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>  <span class="comment">// Variables for each set of areas</span></div>
-<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>  Variable::SetsOfAreas&lt;VariablesPerSetOfAreas&gt;,</div>
-<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>  <span class="comment">// Variables for each binding constraint</span></div>
-<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>  Variable::BindingConstraints&lt;VariablesPerBindingConstraints&gt;&gt;</div>
-<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>  ItemList;</div>
-<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span> </div>
-<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span><span class="keyword">typedef</span> Container::List&lt;ItemList&gt; AllVariables;</div>
-<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span> </div>
-<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>} <span class="comment">// namespace Adequacy</span></div>
-<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>} <span class="comment">// namespace Variable</span></div>
-<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>} <span class="comment">// namespace Solver</span></div>
-<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>} <span class="comment">// namespace Antares</span></div>
-<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span> </div>
-<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span><span class="comment">// post include</span></div>
-<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span><span class="preprocessor">#include &quot;links.h&quot;</span></div>
-<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span> </div>
-<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span><span class="preprocessor">#endif </span><span class="comment">// __SOLVER_VARIABLE_ADEQUACY_ALL_H__</span></div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span><span class="keyword">typedef</span> Variable::Join&lt;</div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>  <span class="comment">// Variables for each area / links attached to the areas</span></div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>  Variable::Areas&lt;VariablesPerArea&gt;,</div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>  <span class="comment">// Variables for each set of areas</span></div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>  Variable::SetsOfAreas&lt;VariablesPerSetOfAreas&gt;,</div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>  <span class="comment">// Variables for each binding constraint</span></div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>  Variable::BindingConstraints&lt;VariablesPerBindingConstraints&gt;&gt;</div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>  ItemList;</div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span> </div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span><span class="keyword">typedef</span> Container::List&lt;ItemList&gt; AllVariables;</div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span> </div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>} <span class="comment">// namespace Adequacy</span></div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>} <span class="comment">// namespace Variable</span></div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>} <span class="comment">// namespace Solver</span></div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>} <span class="comment">// namespace Antares</span></div>
+<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span> </div>
+<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span><span class="comment">// post include</span></div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span><span class="preprocessor">#include &quot;links.h&quot;</span></div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span> </div>
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span><span class="preprocessor">#endif </span><span class="comment">// __SOLVER_VARIABLE_ADEQUACY_ALL_H__</span></div>
 <div class="ttc" id="aclassVariable_html"><div class="ttname"><a href="classVariable.html">Variable</a></div><div class="ttdef"><b>Definition</b> variable.h:25</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

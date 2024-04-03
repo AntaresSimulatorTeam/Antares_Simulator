@@ -1,6 +1,5 @@
 var NAVTREEINDEX22 =
 {
-"pages.html":[],
 "panel_8hxx_source.html":[8,0,0,5,2,2,10,0,2],
 "parameter_8h_source.html":[8,0,0,5,2,1,1,1,0,2,0],
 "parameters_8h_source.html":[8,0,0,1,0,22,0,0,0,21],
@@ -90,7 +89,6 @@ var NAVTREEINDEX22 =
 "setofareas_8h_source.html":[8,0,0,2,10,0,0,0,0,19],
 "setofareas_8hxx_source.html":[8,0,0,2,10,0,0,0,0,20],
 "sets_8hxx_source.html":[8,0,0,1,0,22,0,0,0,24],
-"shortTermStorage_8h_source.html":[8,0,0,2,10,0,0,0,0,2,31],
 "sim__alloc__probleme__hebdo_8h_source.html":[8,0,0,2,7,0,0,0,0,9],
 "sim__constants_8h_source.html":[8,0,0,2,7,0,0,0,0,10],
 "sim__extern__variables__globales_8h_source.html":[8,0,0,2,7,0,0,0,0,11],
@@ -147,7 +145,7 @@ var NAVTREEINDEX22 =
 "solver_8hxx_source.html":[8,0,0,2,7,0,0,0,0,18],
 "solver__utils_8h_source.html":[8,0,0,2,7,0,0,0,0,19],
 "spatial-aggregate_8h_source.html":[8,0,0,2,10,0,0,0,0,1,8],
-"spilledEnergyAfterCSR_8h_source.html":[8,0,0,2,10,0,0,0,0,2,33],
+"spilledEnergyAfterCSR_8h_source.html":[8,0,0,2,10,0,0,0,0,2,32],
 "spotlight-provider_8h_source.html":[8,0,0,5,2,2,10,11],
 "spotlight_2spotlight_8h_source.html":[8,0,0,5,1,0,3,9],
 "spotlight_8h_source.html":[8,0,0,5,1,0,5],
@@ -249,5 +247,7 @@ var NAVTREEINDEX22 =
 "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardOverallCost.html":[7,0,0,12,4,0,2],
 "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardOverallCost.html#a854c5d2699f58392bf9403bf3446e5a6":[7,0,0,12,4,0,2,0],
 "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardOverallCost.html#a9e39464214dd3554a1719085d8918e54":[7,0,0,12,4,0,2,1],
-"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html":[7,0,0,12,4,0,3]
+"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html":[7,0,0,12,4,0,3],
+"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html#a92399f65baa263b4d2a01a75ff21c3b0":[7,0,0,12,4,0,3,1],
+"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html#ae8243f6e44a2d7883fa25100f5315363":[7,0,0,12,4,0,3,0]
 };

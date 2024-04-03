@@ -134,7 +134,6 @@ $(document).ready(function(){initNavTree('classAntares_1_1Data_1_1ShortTermStora
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
-<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="classAntares_1_1Data_1_1ShortTermStorage_1_1Properties-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">Antares::Data::ShortTermStorage::Properties Class Reference</div></div>
 </div><!--header-->
@@ -178,10 +177,9 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>initialLevelOptim</b>
 double&#160;</td><td class="memItemRight" valign="bottom"><b>efficiencyFactor</b> = 1</td></tr>
 <tr class="memdesc:a39656473ef02bf1d2ae1ee72a614a00f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Efficiency factor between 0 and 1. <br /></td></tr>
 <tr class="separator:a39656473ef02bf1d2ae1ee72a614a00f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3104c0e67bedcc3b60b8577924100282" id="r_a3104c0e67bedcc3b60b8577924100282"><td class="memItemLeft" align="right" valign="top"><a id="a3104c0e67bedcc3b60b8577924100282" name="a3104c0e67bedcc3b60b8577924100282"></a>
-Group&#160;</td><td class="memItemRight" valign="bottom"><b>group</b> = Group::Other1</td></tr>
-<tr class="memdesc:a3104c0e67bedcc3b60b8577924100282"><td class="mdescLeft">&#160;</td><td class="mdescRight">Used to sort outputs. <br /></td></tr>
-<tr class="separator:a3104c0e67bedcc3b60b8577924100282"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ecdb67ffbd2fdd8b5b899941b792b51" id="r_a1ecdb67ffbd2fdd8b5b899941b792b51"><td class="memItemLeft" align="right" valign="top"><a id="a1ecdb67ffbd2fdd8b5b899941b792b51" name="a1ecdb67ffbd2fdd8b5b899941b792b51"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>groupName</b> = &quot;OTHER1&quot;</td></tr>
+<tr class="separator:a1ecdb67ffbd2fdd8b5b899941b792b51"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab09f8557720004f577be7993dd9fadcb" id="r_ab09f8557720004f577be7993dd9fadcb"><td class="memItemLeft" align="right" valign="top"><a id="ab09f8557720004f577be7993dd9fadcb" name="ab09f8557720004f577be7993dd9fadcb"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>name</b></td></tr>
 <tr class="memdesc:ab09f8557720004f577be7993dd9fadcb"><td class="mdescLeft">&#160;</td><td class="mdescRight">cluster name <br /></td></tr>
@@ -190,44 +188,7 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><b>name</b></td><
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>enabled</b> = true</td></tr>
 <tr class="memdesc:aefac52d03caf5290a94d0170e5792ddc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enabled ? <br /></td></tr>
 <tr class="separator:aefac52d03caf5290a94d0170e5792ddc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
-Static Public Attributes</h2></td></tr>
-<tr class="memitem:a24e192306b67289fcd088bd0e48b3e14" id="r_a24e192306b67289fcd088bd0e48b3e14"><td class="memItemLeft" align="right" valign="top">static const std::map&lt; std::string, enum Group &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1ShortTermStorage_1_1Properties.html#a24e192306b67289fcd088bd0e48b3e14">ST_STORAGE_PROPERTY_GROUP_ENUM</a></td></tr>
-<tr class="separator:a24e192306b67289fcd088bd0e48b3e14"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Data Documentation</h2>
-<a id="a24e192306b67289fcd088bd0e48b3e14" name="a24e192306b67289fcd088bd0e48b3e14"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a24e192306b67289fcd088bd0e48b3e14">&#9670;&#160;</a></span>ST_STORAGE_PROPERTY_GROUP_ENUM</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const std::map&lt; std::string, enum Group &gt; Antares::Data::ShortTermStorage::Properties::ST_STORAGE_PROPERTY_GROUP_ENUM</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= {{<span class="stringliteral">&quot;PSP_open&quot;</span>, Group::PSP_open},</div>
-<div class="line">     {<span class="stringliteral">&quot;PSP_closed&quot;</span>, Group::PSP_closed},</div>
-<div class="line">     {<span class="stringliteral">&quot;Pondage&quot;</span>, Group::Pondage},</div>
-<div class="line">     {<span class="stringliteral">&quot;Battery&quot;</span>, Group::Battery},</div>
-<div class="line">     {<span class="stringliteral">&quot;Other1&quot;</span>, Group::Other1},</div>
-<div class="line">     {<span class="stringliteral">&quot;Other2&quot;</span>, Group::Other2},</div>
-<div class="line">     {<span class="stringliteral">&quot;Other3&quot;</span>, Group::Other3},</div>
-<div class="line">     {<span class="stringliteral">&quot;Other4&quot;</span>, Group::Other4},</div>
-<div class="line">     {<span class="stringliteral">&quot;Other5&quot;</span>, Group::Other5}}</div>
-</div><!-- fragment -->
-</div>
-</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>src/libs/antares/study/include/antares/study/parts/short-term-storage/<a class="el" href="properties_8h_source.html">properties.h</a></li>
 <li>src/libs/antares/study/parts/short-term-storage/<b>properties.cpp</b></li>

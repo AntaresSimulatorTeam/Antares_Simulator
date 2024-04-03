@@ -1,6 +1,5 @@
 var NAVTREEINDEX13 =
 {
-"classAntares_1_1Solver_1_1Simulation_1_1ISimulation.html#a7ba42a043ab3c43a4aa8f6054521423d":[7,0,0,12,3,16,4],
 "classAntares_1_1Solver_1_1Simulation_1_1ISimulation.html#aadfaa7b7a4158b05d21ed8f0fd86ad48":[7,0,0,12,3,16,1],
 "classAntares_1_1Solver_1_1Simulation_1_1ITimeSeriesNumbersWriter.html":[7,0,0,12,3,17],
 "classAntares_1_1Solver_1_1Simulation_1_1InterpolateWaterValuePostProcessCmd.html":[7,0,0,12,3,15],
@@ -249,5 +248,6 @@ var NAVTREEINDEX13 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Pumping.html#a60f93e4c40a22d9d9d6cedadc45d9bc3":[7,0,0,12,4,4,36,1],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Pumping.html#ad3e0cd98441cf1c568e038e2441f65aa":[7,0,0,12,4,4,36,3],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1RenewableGeneration.html":[7,0,0,12,4,4,37],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1RenewableGeneration.html#a4779a52a99b5f0d1c27352d42760dafd":[7,0,0,12,4,4,37,4]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1RenewableGeneration.html#a4779a52a99b5f0d1c27352d42760dafd":[7,0,0,12,4,4,37,4],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1RenewableGeneration.html#a486ce0693a89676ba30a49bce3649b2a":[7,0,0,12,4,4,37,2]
 };
