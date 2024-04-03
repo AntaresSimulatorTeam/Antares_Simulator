@@ -156,10 +156,10 @@ bool AreaLink::linkLoadTimeSeries_for_version_820_and_later(const AnyString& fol
 
         // Modulation
         filename.clear() << preproFolder << SEP << with->id << "_mod_direct.txt";
-        tsGenerationDirect.modulationCapacity.loadFromCSVFile(filename, 1, HOURS_PER_YEAR);
+        success = tsGenerationDirect.modulationCapacity.loadFromCSVFile(filename, 1, HOURS_PER_YEAR) && success;
 
         filename.clear() << preproFolder << SEP << with->id << "_mod_indirect.txt";
-        tsGenerationIndirect.modulationCapacity.loadFromCSVFile(filename, 1, HOURS_PER_YEAR);
+        success = tsGenerationIndirect.modulationCapacity.loadFromCSVFile(filename, 1, HOURS_PER_YEAR) && success;
     }
 
     return success;
