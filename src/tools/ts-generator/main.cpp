@@ -195,8 +195,8 @@ int main(int argc, char *argv[])
     for (auto& l : links)
         logs.debug() << l.first->getName();
 
-    bool ret = TSGenerator::generateThermalTimeSeries(*study, clusters, *resultWriter, thermalSavePath);
-    ret = TSGenerator::generateLinkTimeSeries(*study, links, *resultWriter, linksSavePath) && ret;
+    bool ret = TSGenerator::generateThermalTimeSeries(*study, clusters, *resultWriter, thermalSavePath.string());
+    ret = TSGenerator::generateLinkTimeSeries(*study, links, *resultWriter, linksSavePath.string()) && ret;
 
     return !ret; // return 0 for success
 }
