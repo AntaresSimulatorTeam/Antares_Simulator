@@ -33,7 +33,7 @@ inline std::vector<std::string> sortedUniqueGroups(
     return {names.begin(), names.end()};
 }
 
-inline std::map<std::string, unsigned int> addNumbersToGroups(
+inline std::map<std::string, unsigned int> giveNumbersToGroups(
   const std::vector<std::string>& groupNames)
 {
     unsigned int groupNumber{0};
@@ -174,7 +174,7 @@ public:
 
         // Building the vector of group names the clusters belong to.
         groupNames_ = sortedUniqueGroups(area->shortTermStorage.storagesByIndex);
-        groupToNumbers_ = addNumbersToGroups(groupNames_);
+        groupToNumbers_ = giveNumbersToGroups(groupNames_);
 
         nbColumns_ = groupNames_.size() * NB_COLS_PER_GROUP;
 
