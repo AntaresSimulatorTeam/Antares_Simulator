@@ -87,8 +87,8 @@ private:
     template<class T>
     void prepareIndispoFromLaw(Data::ThermalLaw law,
                                double volatility,
-                               std::array<double, DAYS_PER_YEAR> A,
-                               std::array<double, DAYS_PER_YEAR> B,
+                               double A[],
+                               double B[],
                                const T& duration);
 
 private:
@@ -101,6 +101,14 @@ private:
         Log_size = 4000
     };
 
+    double lf[366];
+    double lp[366];
+    double ff[366];
+    double pp[366];
+    double af[366];
+    double ap[366];
+    double bf[366];
+    double bp[366];
 
 };
 
@@ -117,8 +125,8 @@ GeneratorTempData::GeneratorTempData(Data::Study& study, unsigned nbOfSeriesToGe
 template<class T>
 void GeneratorTempData::prepareIndispoFromLaw(Data::ThermalLaw law,
                                               double volatility,
-                                              std::array<double, DAYS_PER_YEAR> A,
-                                              std::array<double, DAYS_PER_YEAR> B,
+                                              double A[],
+                                              double B[],
                                               const T& duration)
 {
     switch (law)
@@ -233,15 +241,6 @@ void GeneratorTempData::generateTS(const Data::Area& area, ThermalInterface& clu
 
     std::vector<std::vector<double>> FPOW(DAYS_PER_YEAR);
     std::vector<std::vector<double>> PPOW(DAYS_PER_YEAR);
-
-    std::array<double, DAYS_PER_YEAR> lf {};
-    std::array<double, DAYS_PER_YEAR> lp {};
-    std::array<double, DAYS_PER_YEAR> ff {};
-    std::array<double, DAYS_PER_YEAR> pp {};
-    std::array<double, DAYS_PER_YEAR> af {};
-    std::array<double, DAYS_PER_YEAR> ap {};
-    std::array<double, DAYS_PER_YEAR> bf {};
-    std::array<double, DAYS_PER_YEAR> bp {};
 
     int FODOfTheDay;
     int PODOfTheDay;
