@@ -1,5 +1,9 @@
 Antares Changelog
 =================
+Next version 
+--------------------
+## Improvements
+* STS groups are now "dynamic" : group names are no longer fixed by code, user is free to define these groups.
 
 9.0.0
 --------------------
