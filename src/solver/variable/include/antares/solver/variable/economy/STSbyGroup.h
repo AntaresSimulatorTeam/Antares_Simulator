@@ -25,7 +25,7 @@
 namespace
 {
 inline std::vector<std::string> sortedUniqueGroups(
-  const std::vector<Antares::Data::ShortTermStorage::STStorageCluster> storages)
+  const std::vector<Antares::Data::ShortTermStorage::STStorageCluster>& storages)
 {
     std::set<std::string> names;
     for (const auto& cluster : storages)
