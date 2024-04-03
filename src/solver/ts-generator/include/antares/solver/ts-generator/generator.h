@@ -80,7 +80,7 @@ bool generateThermalTimeSeries(Data::Study& study,
                                const std::string& savePath);
 
 bool generateLinkTimeSeries(Data::Study& study,
-                            listOfLinks links,
+                            listOfLinks& links,
                             Solver::IResultWriter& writer,
                             const std::string& savePath);
 

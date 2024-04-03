@@ -92,7 +92,7 @@ private:
                                const T& duration);
 
 private:
-    uint nbThermalTimeseries_;
+    uint nbOfSeriesToGen_;
 
     MersenneTwister& rndgenerator;
 
@@ -113,11 +113,11 @@ private:
 };
 
 GeneratorTempData::GeneratorTempData(Data::Study& study, unsigned nbOfSeriesToGen) :
- study(study), rndgenerator(study.runtime->random[Data::seedTsGenThermal])
+    study(study),
+    nbOfSeriesToGen_(nbOfSeriesToGen),
+    rndgenerator(study.runtime->random[Data::seedTsGenThermal])
 {
     auto& parameters = study.parameters;
-
-    nbThermalTimeseries_ = nbOfSeriesToGen;
 
     derated = parameters.derated;
 }
@@ -315,7 +315,7 @@ void GeneratorTempData::generateTS(const Data::Area& area, ThermalInterface& clu
     auto& modulation = cluster.modulationCapacity;
     double* dstSeries = nullptr;
 
-    const uint tsCount = nbThermalTimeseries_ + 2;
+    const uint tsCount = nbOfSeriesToGen_ + 2;
     for (uint tsIndex = 0; tsIndex != tsCount; ++tsIndex)
     {
         uint hour = 0;
@@ -570,7 +570,7 @@ std::vector<Data::ThermalCluster*> getAllClustersToGen(Data::AreaList& areas,
     std::vector<Data::ThermalCluster*> clusters;
 
     areas.each([&clusters, &globalThermalTSgeneration](Data::Area& area) {
-        for (auto& cluster : area.thermal.list.all())
+        for (const auto& cluster : area.thermal.list.all())
             if (cluster->doWeGenerateTS(globalThermalTSgeneration))
                 clusters.push_back(cluster.get());
     });
@@ -594,7 +594,7 @@ listOfLinks getAllLinksToGen(Data::AreaList& areas)
 
 void writeResultsToDisk(const Data::Study& study,
                         Solver::IResultWriter& writer,
-                        Matrix<>& series,
+                        const Matrix<>& series,
                         const std::string& savePath)
 {
     if (study.parameters.noOutput)
@@ -636,7 +636,7 @@ bool generateThermalTimeSeries(Data::Study& study,
 }
 
 bool generateLinkTimeSeries(Data::Study& study,
-                            listOfLinks links,
+                            listOfLinks& links,
                             Solver::IResultWriter& writer,
                             const std::string& savePath)
 {
@@ -645,7 +645,7 @@ bool generateLinkTimeSeries(Data::Study& study,
 
     auto generator = GeneratorTempData(study, study.parameters.nbLinkTStoGenerate);
 
-    for (auto& [link, direction] : links)
+    for (const auto& [link, direction] : links)
     {
         Data::TimeSeries ts(link->timeseriesNumbers);
         ts.resize(study.parameters.nbLinkTStoGenerate, HOURS_PER_YEAR);
