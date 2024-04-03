@@ -22,6 +22,30 @@
 
 #include "antares/solver/variable/variable.h"
 
+namespace
+{
+inline std::vector<std::string> sortedUniqueGroups(
+  const std::vector<Antares::Data::ShortTermStorage::STStorageCluster>& storages)
+{
+    std::set<std::string> names;
+    for (const auto& cluster : storages)
+        names.insert(cluster.properties.groupName);
+    return {names.begin(), names.end()};
+}
+
+inline std::map<std::string, unsigned int> giveNumbersToGroups(
+  const std::vector<std::string>& groupNames)
+{
+    unsigned int groupNumber{0};
+    std::map<std::string, unsigned int> groupToNumbers;
+    for (const auto& name : groupNames)
+    {
+        groupToNumbers[name] = groupNumber++;
+    }
+    return groupToNumbers;
+}
+} // namespace
+
 namespace Antares::Solver::Variable::Economy
 {
 struct VCardSTSbyGroup
@@ -149,18 +173,8 @@ public:
         pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
 
         // Building the vector of group names the clusters belong to.
-        std::set<std::string> tmp_names;
-        for (const auto& cluster : area->shortTermStorage.storagesByIndex)
-            tmp_names.insert(cluster.properties.groupName);
-        groupNames_ = {tmp_names.begin(), tmp_names.end()};
-
-        // Giving a number to each group
-        unsigned int groupNumber{0};
-        for (const auto name : groupNames_)
-        {
-            groupToNumbers_[name] = groupNumber;
-            groupNumber++;
-        }
+        groupNames_ = sortedUniqueGroups(area->shortTermStorage.storagesByIndex);
+        groupToNumbers_ = giveNumbersToGroups(groupNames_);
 
         nbColumns_ = groupNames_.size() * NB_COLS_PER_GROUP;
 
