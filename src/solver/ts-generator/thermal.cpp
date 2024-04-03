@@ -593,42 +593,17 @@ listOfLinks getAllLinksToGen(Data::AreaList& areas)
     return links;
 }
 
-void writeThermalResultsToDisk(const Data::Study& study,
+void writeResultsToDisk(const Data::Study& study,
                         Solver::IResultWriter& writer,
-                        const Data::Area& area,
-                        const Data::ThermalCluster& cluster,
+                        Matrix<>& series,
                         const std::string& savePath)
 {
     if (study.parameters.noOutput)
         return;
 
-    std::string filePath = savePath + SEP + area.id + SEP + cluster.id() + ".txt";
-
-    enum { precision = 0 };
     std::string buffer;
-    cluster.series.timeSeries.saveToBuffer(buffer, precision);
-    writer.addEntryFromBuffer(filePath, buffer);
-}
-
-void writeLinksResultsToDisk(const Data::Study& study,
-                             Solver::IResultWriter& writer,
-                             const Data::AreaLink& link,
-                             Matrix<>& series,
-                             const std::string& savePath,
-                             bool direct)
-{
-    if (study.parameters.noOutput)
-        return;
-
-    std::string capacityType = direct ? "_direct" : "_indirect";
-
-    std::string filePath = savePath + SEP + link.from->id + SEP + link.with->id.c_str()
-        + capacityType + ".txt";
-
-    enum { precision = 0 };
-    std::string buffer;
-    series.saveToBuffer(buffer, precision);
-    writer.addEntryFromBuffer(filePath, buffer);
+    series.saveToBuffer(buffer, 0);
+    writer.addEntryFromBuffer(savePath, buffer);
 }
 
 bool generateThermalTimeSeries(Data::Study& study,
@@ -649,8 +624,11 @@ bool generateThermalTimeSeries(Data::Study& study,
         ThermalInterface clusterInterface(cluster);
         generator.generateTS(*cluster->parentArea, clusterInterface);
 
-        if (archive)
-            writeThermalResultsToDisk(study, writer, *cluster->parentArea, *cluster, savePath);
+        if (archive) // compatibilty with in memory
+        {
+            std::string filePath = savePath + SEP + cluster->parentArea->id + SEP + cluster->id() + ".txt";
+            writeResultsToDisk(study, writer, cluster->series.timeSeries, filePath);
+        }
 
         cluster->calculationOfSpinning();
     }
@@ -679,7 +657,11 @@ bool generateLinkTimeSeries(Data::Study& study,
 
         generator.generateTS(*link->from, linkInterface);
 
-        writeLinksResultsToDisk(study, writer, *link, ts.timeSeries, savePath, direction == linkDirection::direct);
+        std::string capacityType = direction == linkDirection::direct ? "_direct" : "_indirect";
+        std::string filePath = savePath + SEP + link->from->id + SEP + link->with->id.c_str()
+            + capacityType + ".txt";
+
+        writeResultsToDisk(study, writer, ts.timeSeries, filePath);
     }
 
     return true;
