@@ -25,6 +25,7 @@
 #include "antares/utils/utils.h"
 #include "antares/study/area/links.h"
 #include "antares/study/area/area.h"
+#include <boost/algorithm/string/case_conv.hpp>
 #include <antares/logs/logs.h>
 #include <antares/exception/LoadingError.hpp>
 
@@ -330,12 +331,15 @@ bool handleTSGenKey(const std::string& key,
                     AreaLink::LinkTsGeneration& out)
 {
     const auto checkPrefixed
-      = [&prefix, &key](const std::string& s) { return key == prefix + "_" + s; };
+      = [&prefix, &key](std::string s) {
+        auto key_lowercase(key);
+        boost::to_lower(key_lowercase);
+        return key_lowercase == prefix + "_" + s; };
 
-    if (checkPrefixed("unitCount"))
+    if (checkPrefixed("unitcount"))
         return value.to<uint>(out.unitCount);
 
-    if (checkPrefixed("nominalCapacity"))
+    if (checkPrefixed("nominalcapacity"))
         return value.to<double>(out.nominalCapacity);
 
     if (checkPrefixed("law.planned"))
