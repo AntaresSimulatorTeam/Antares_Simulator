@@ -311,19 +311,19 @@ bool ThermalClusterLoadFromSection(const AnyString& filename,
 
 void ThermalClusterList::calculationOfSpinning()
 {
-    for (auto cluster : each_enabled())
+    for (auto& cluster : each_enabled())
         cluster->calculationOfSpinning();
 }
 
 void ThermalClusterList::reverseCalculationOfSpinning()
 {
-    for (auto cluster : each_enabled())
+    for (auto& cluster : each_enabled())
         cluster->reverseCalculationOfSpinning();
 }
 
 void ThermalClusterList::enableMustrunForEveryone()
 {
-    for (auto c : allClusters_)
+    for (auto& c : allClusters_)
         c->mustrun = true;
 }
 
@@ -348,7 +348,7 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
     // Allocate the inifile structure
     IniFile ini;
 
-    for (auto c : allClusters_)
+    for (auto& c : allClusters_)
     {
         // Adding a section to the inifile
         IniFile::Section* s = ini.addSection(c->name());
@@ -452,7 +452,7 @@ bool ThermalClusterList::savePreproToFolder(const AnyString& folder) const
     Clob buffer;
     bool ret = true;
 
-    for (auto c : allClusters_)
+    for (auto& c : allClusters_)
     {
         if (c->prepro)
         {
@@ -469,7 +469,7 @@ bool ThermalClusterList::saveEconomicCosts(const AnyString& folder) const
     Clob buffer;
     bool ret = true;
 
-    for (auto c : allClusters_)
+    for (auto& c : allClusters_)
     {
         assert(c->parentArea && "cluster: invalid parent area");
         buffer.clear() << folder << SEP << c->parentArea->id << SEP << c->id();

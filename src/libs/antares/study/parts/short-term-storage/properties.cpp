@@ -21,6 +21,7 @@
 
 #include <antares/logs/logs.h>
 #include <stdexcept>
+#include <boost/algorithm/string/case_conv.hpp>
 
 #include "antares/study/parts/short-term-storage/properties.h"
 
@@ -28,43 +29,6 @@
 
 namespace Antares::Data::ShortTermStorage
 {
-const std::map<std::string, enum Group> Properties::ST_STORAGE_PROPERTY_GROUP_ENUM
-  = {{"PSP_open", Group::PSP_open},
-     {"PSP_closed", Group::PSP_closed},
-     {"Pondage", Group::Pondage},
-     {"Battery", Group::Battery},
-     {"Other1", Group::Other1},
-     {"Other2", Group::Other2},
-     {"Other3", Group::Other3},
-     {"Other4", Group::Other4},
-     {"Other5", Group::Other5}};
-
-unsigned int groupIndex(Group group)
-{
-    switch (group)
-    {
-    case Group::PSP_open:
-        return 0;
-    case Group::PSP_closed:
-        return 1;
-    case Group::Pondage:
-        return 2;
-    case Group::Battery:
-        return 3;
-    case Group::Other1:
-        return 4;
-    case Group::Other2:
-        return 5;
-    case Group::Other3:
-        return 6;
-    case Group::Other4:
-        return 7;
-    case Group::Other5:
-        return 8;
-    default:
-        throw std::invalid_argument("Group not recognized");
-    }
-}
 
 bool Properties::loadKey(const IniFile::Property* p)
 {
@@ -100,13 +64,9 @@ bool Properties::loadKey(const IniFile::Property* p)
 
     if (p->key == "group")
     {
-        if (auto it = Properties::ST_STORAGE_PROPERTY_GROUP_ENUM.find(p->value.c_str());
-            it != Properties::ST_STORAGE_PROPERTY_GROUP_ENUM.end())
-        {
-            this->group = it->second;
-            return true;
-        }
-        return false;
+        this->groupName = p->value.c_str();
+        boost::to_upper(this->groupName);
+        return true;
     }
 
     if (p->key == "enabled")
@@ -120,11 +80,7 @@ void Properties::save(IniFile& ini) const
     IniFile::Section* s = ini.addSection(this->name);
 
     s->add("name", this->name);
-
-    for (const auto& [key, value] : ST_STORAGE_PROPERTY_GROUP_ENUM)
-        if (value == this->group)
-            s->add("group", key);
-
+    s->add("group", this->groupName);
     s->add("reservoircapacity", this->reservoirCapacity);
     s->add("initiallevel", this->initialLevel);
     s->add("injectionnominalcapacity", this->injectionNominalCapacity);

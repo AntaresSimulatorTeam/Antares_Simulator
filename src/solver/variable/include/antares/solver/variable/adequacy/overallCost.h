@@ -258,7 +258,7 @@ public:
                     * state.hourlyResults->PompageHoraire[state.hourInTheWeek]);
 
         // Thermal costs
-        for (auto cluster : area->thermal.list.each_enabled())
+        for (auto& cluster : area->thermal.list.each_enabled())
         {
             pValuesForTheCurrentYear[numSpace][state.hourInTheYear]
               += thermal[area->index].thermalClustersOperatingCost[cluster->areaWideIndex];
