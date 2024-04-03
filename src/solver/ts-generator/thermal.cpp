@@ -74,7 +74,7 @@ class GeneratorTempData final
 public:
     explicit GeneratorTempData(Data::Study&, unsigned);
 
-    void operator()(const Data::Area& area, ThermalInterface& cluster);
+    void generateTS(const Data::Area& area, ThermalInterface& cluster);
 
 public:
     Data::Study& study;
@@ -209,7 +209,7 @@ int GeneratorTempData::durationGenerator(Data::ThermalLaw law,
     return 0;
 }
 
-void GeneratorTempData::operator()(const Data::Area& area, ThermalInterface& cluster)
+void GeneratorTempData::generateTS(const Data::Area& area, ThermalInterface& cluster)
 {
     if (not cluster.prepro)
     {
@@ -663,7 +663,7 @@ bool generateThermalTimeSeries(Data::Study& study,
     for (auto* cluster : clusters)
     {
         ThermalInterface clusterInterface(cluster);
-        (*generator)(*cluster->parentArea, clusterInterface);
+        generator.generateTS(*cluster->parentArea, clusterInterface);
 
         if (archive)
             writeThermalResultsToDisk(study, writer, *cluster->parentArea, *cluster, savePath);
@@ -693,7 +693,7 @@ bool generateLinkTimeSeries(Data::Study& study,
 
         ThermalInterface linkInterface(tsGenStruct, ts, link->with->name);
 
-        generator(*link->from, linkInterface);
+        generator.generateTS(*link->from, linkInterface);
 
         writeLinksResultsToDisk(study, writer, *link, ts.timeSeries, savePath, direction == linkDirection::direct);
     }
