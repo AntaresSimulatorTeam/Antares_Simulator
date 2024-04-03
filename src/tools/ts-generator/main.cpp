@@ -172,8 +172,8 @@ int main(int argc, char *argv[])
     auto resultWriter = Solver::resultWriterFactory(
             Data::ResultFormat::legacyFilesDirectories, study->folderOutput, nullptr, nullDurationCollector);
 
-    const std::string thermalSavePath = std::string("ts-generator") + std::filesystem::path::preferred_separator + "thermal";
-    const std::string linksSavePath = std::string("ts-generator") + std::filesystem::path::preferred_separator + "links";
+    const auto thermalSavePath = std::filesystem::path("ts-generator") / "thermal";
+    const auto linksSavePath = std::filesystem::path("ts-generator") / "links";
 
     // THERMAL
     std::vector<Data::ThermalCluster*> clusters;
