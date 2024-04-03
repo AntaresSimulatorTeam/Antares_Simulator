@@ -115,8 +115,6 @@ private:
 
     std::vector<std::vector<double>> FPOW;
     std::vector<std::vector<double>> PPOW;
-
-    Yuni::String pTempFilename;
 };
 
 GeneratorTempData::GeneratorTempData(Data::Study& study, unsigned nbOfSeriesToGen) :
@@ -608,17 +606,12 @@ void writeThermalResultsToDisk(const Data::Study& study,
     if (study.parameters.noOutput)
         return;
 
-    Yuni::String pTempFilename;
-    pTempFilename.reserve(study.folderOutput.size() + 256);
-
-    pTempFilename.clear() << savePath << SEP << area.id << SEP << cluster.id() << ".txt";
+    std::string filePath = savePath + SEP + area.id + SEP + cluster.id() + ".txt";
 
     enum { precision = 0 };
-
     std::string buffer;
     cluster.series.timeSeries.saveToBuffer(buffer, precision);
-
-    writer.addEntryFromBuffer(pTempFilename.c_str(), buffer);
+    writer.addEntryFromBuffer(filePath, buffer);
 }
 
 void writeLinksResultsToDisk(const Data::Study& study,
@@ -631,20 +624,15 @@ void writeLinksResultsToDisk(const Data::Study& study,
     if (study.parameters.noOutput)
         return;
 
-    enum { precision = 0 };
-    std::string buffer;
-
     std::string capacityType = direct ? "_direct" : "_indirect";
 
-    Yuni::String pTempFilename;
-    pTempFilename.reserve(study.folderOutput.size() + 256);
+    std::string filePath = savePath + SEP + link.from->id + SEP + link.with->id.c_str()
+        + capacityType + ".txt";
 
-    pTempFilename.clear() << savePath << SEP << link.from->id << SEP <<
-        link.with->id << capacityType << ".txt";
-
+    enum { precision = 0 };
+    std::string buffer;
     series.saveToBuffer(buffer, precision);
-
-    writer.addEntryFromBuffer(pTempFilename.c_str(), buffer);
+    writer.addEntryFromBuffer(filePath, buffer);
 }
 
 bool generateThermalTimeSeries(Data::Study& study,
