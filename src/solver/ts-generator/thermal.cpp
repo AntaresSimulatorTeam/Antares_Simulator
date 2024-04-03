@@ -96,13 +96,10 @@ private:
 
     MersenneTwister& rndgenerator;
 
-    double AVP[366];
     enum
     {
         Log_size = 4000
     };
-    int LOG[Log_size];
-    int LOGP[Log_size];
 
     double lf[366];
     double lp[366];
@@ -113,8 +110,6 @@ private:
     double bf[366];
     double bp[366];
 
-    std::vector<std::vector<double>> FPOW;
-    std::vector<std::vector<double>> PPOW;
 };
 
 GeneratorTempData::GeneratorTempData(Data::Study& study, unsigned nbOfSeriesToGen) :
@@ -125,9 +120,6 @@ GeneratorTempData::GeneratorTempData(Data::Study& study, unsigned nbOfSeriesToGe
     nbThermalTimeseries_ = nbOfSeriesToGen;
 
     derated = parameters.derated;
-
-    FPOW.resize(DAYS_PER_YEAR);
-    PPOW.resize(DAYS_PER_YEAR);
 }
 
 template<class T>
@@ -247,6 +239,9 @@ void GeneratorTempData::generateTS(const Data::Area& area, ThermalInterface& clu
 
     auto p_law = cluster.plannedLaw;
 
+    std::vector<std::vector<double>> FPOW(DAYS_PER_YEAR);
+    std::vector<std::vector<double>> PPOW(DAYS_PER_YEAR);
+
     int FODOfTheDay;
     int PODOfTheDay;
 
@@ -295,9 +290,9 @@ void GeneratorTempData::generateTS(const Data::Area& area, ThermalInterface& clu
     prepareIndispoFromLaw(f_law, f_volatility, af, bf, FOD);
     prepareIndispoFromLaw(p_law, p_volatility, ap, bp, POD);
 
-    (void)::memset(AVP, 0, sizeof(AVP));
-    (void)::memset(LOG, 0, sizeof(LOG));
-    (void)::memset(LOGP, 0, sizeof(LOGP));
+    std::array<double, 366> AVP {};
+    std::array<double, Log_size> LOG {};
+    std::array<double, Log_size> LOGP {};
 
     int MXO = 0;
 
