@@ -2,7 +2,10 @@ add_subdirectory(concurrency)
 add_subdirectory(writer)
 add_subdirectory(study)
 add_subdirectory(yaml-parser)
-add_subdirectory(antlr4-interface)
+
+if(WITH_ANTLR4)
+  add_subdirectory(antlr-interface)
+endif()
 
 set(src_libs_antares "${CMAKE_SOURCE_DIR}/libs/antares")
 

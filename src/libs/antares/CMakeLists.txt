@@ -26,7 +26,9 @@ add_subdirectory(study)
 add_subdirectory(sys)
 add_subdirectory(utils)
 add_subdirectory(writer)
-add_subdirectory(antlr-interface)
+if(WITH_ANTLR4)
+  add_subdirectory(antlr-interface)
+endif()
 
 set(HEADERS
         include/antares/antares/antares.h
