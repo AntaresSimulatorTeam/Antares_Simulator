@@ -60,7 +60,7 @@ ThermalInterface::ThermalInterface(Data::AreaLink::LinkTsGeneration& source,
  plannedVolatility(source.plannedVolatility),
  forcedLaw(source.forcedLaw),
  plannedLaw(source.plannedLaw),
- prepro(source.prepro),
+ prepro(source.prepro.get()),
  series(capacity),
  modulationCapacity(source.modulationCapacity[0]),
  name(areaDestName)

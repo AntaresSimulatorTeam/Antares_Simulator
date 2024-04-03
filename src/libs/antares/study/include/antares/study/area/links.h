@@ -209,8 +209,6 @@ public:
 
     struct LinkTsGeneration
     {
-        LinkTsGeneration();
-        ~LinkTsGeneration();
         unsigned unitCount;
         double nominalCapacity;
 
@@ -220,7 +218,7 @@ public:
         Data::ThermalLaw forcedLaw;
         Data::ThermalLaw plannedLaw;
 
-        Data::PreproThermal* prepro = nullptr;
+        std::unique_ptr<Data::PreproThermal> prepro = nullptr;
 
         Matrix<> modulationCapacity;
     };

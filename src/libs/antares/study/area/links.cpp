@@ -82,13 +82,6 @@ AreaLink::~AreaLink()
 {
 }
 
-AreaLink::LinkTsGeneration::LinkTsGeneration() = default;
-
-AreaLink::LinkTsGeneration::~LinkTsGeneration()
-{
-    delete prepro;
-}
-
 bool AreaLink::linkLoadTimeSeries_for_version_below_810(const AnyString& folder)
 {
     String buffer;
@@ -550,9 +543,9 @@ bool AreaLinksLoadFromFolder(Study& study,
         if (loadTSGen)
         {
         link.tsGenerationDirect.prepro
-              = new Data::PreproThermal(std::weak_ptr<const Data::ThermalCluster>());
+          = std::make_unique<Data::PreproThermal>(std::weak_ptr<const Data::ThermalCluster>());
         link.tsGenerationIndirect.prepro
-              = new Data::PreproThermal(std::weak_ptr<const Data::ThermalCluster>());
+          = std::make_unique<Data::PreproThermal>(std::weak_ptr<const Data::ThermalCluster>());
         }
 
         ret = link.loadTimeSeries(study, folder, loadTSGen) && ret;
