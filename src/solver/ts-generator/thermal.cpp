@@ -614,7 +614,7 @@ bool generateThermalTimeSeries(Data::Study& study,
     logs.info();
     logs.info() << "Generating the thermal time-series";
 
-    bool archive = (0 != (study.parameters.timeSeriesToArchive & Data::timeSeriesThermal));
+    bool archive = study.parameters.timeSeriesToArchive & Data::timeSeriesThermal;
 
     auto generator = GeneratorTempData(study, study.parameters.nbTimeSeriesThermal);
 
