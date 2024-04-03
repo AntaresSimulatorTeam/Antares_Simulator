@@ -81,6 +81,13 @@ AreaLink::~AreaLink()
 {
 }
 
+AreaLink::LinkTsGeneration::LinkTsGeneration() = default;
+
+AreaLink::LinkTsGeneration::~LinkTsGeneration()
+{
+    delete prepro;
+}
+
 bool AreaLink::linkLoadTimeSeries_for_version_below_810(const AnyString& folder)
 {
     String buffer;
