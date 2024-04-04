@@ -324,7 +324,7 @@ bool handleTSGenKey(const std::string& key,
                     AreaLink::LinkTsGeneration& out)
 {
     const auto checkPrefixed
-      = [&prefix, &key](std::string s) {
+      = [&prefix, &key](const std::string& s) {
         auto key_lowercase(key);
         boost::to_lower(key_lowercase);
         return key_lowercase == prefix + "_" + s; };
