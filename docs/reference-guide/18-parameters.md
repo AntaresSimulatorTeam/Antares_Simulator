@@ -1,9 +1,9 @@
-### General parameters
+## General parameters
 These parameters are listed under the `[general]` section in the `.ini` file.  
 
-#### Study mode
+### Study mode
 
-##### mode
+#### mode
 - **Expected value:** one of the following (case-insensitive):
     - `economy` or `economic`
     - `adequacy`
@@ -18,35 +18,35 @@ These parameters are listed under the `[general]` section in the `.ini` file.
     - `expansion`: Antares simulator will optimize the investments on the grid, minimizing both investments and 
     operational costs. If selected, the simulator will TODO
 
-#### Study horizon
+### Study horizon
 
-##### horizon
+#### horizon
 - **Expected value:** year (string)
 - **Required:** **yes** TODO
 - **Default value:** empty string
 - **Usage:** the horizon of the study
 
-#### Calendar parameters
+### Calendar parameters
 
-##### nbyears
+#### nbyears
 - **Expected value:** unsigned integer
 - **Required:** **yes** TODO
 - **Default value:** TODO
 - **Usage:** number of Monte-Carlo years to simulate
 
-##### simulation.start
+#### simulation.start
 - **Expected value:** unsigned integer
 - **Required:** **yes** TODO
 - **Default value:** 0 ? TODO
 - **Usage:** index of first day to include in study (>= 0)
 
-##### simulation.end
+#### simulation.end
 - **Expected value:** unsigned integer
 - **Required:** **yes** TODO
 - **Default value:** 365 ? TODO
 - **Usage:** index of last day to include in study (<= 365)
 
-##### january.1st
+#### january.1st
 - **Expected value:** string carrying an integer between 0 and 6, or one of (case-insensitive): `monday`/`lundi`, 
   `tuesday`/`mardi`, `wednesday`/`mercredi`, `thursday`/`jeudi`, `friday`/`vendredi`, `saturday`/`samedi`, 
   `sunday`/`dimanche`.
@@ -54,7 +54,7 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 - **Default value:** `monday` TODO
 - **Usage:** this parameter should indicate the day-of-week of january 1st of the given [year](#horizon).
 
-##### first-month-in-year
+#### first-month-in-year
 - **Expected value:** one of the following string (case-insensitive): `jan`/`january`, `feb`/`february`, `mar`/`march`, 
   `apr`/`april`, `may`, `jun`/`june`, `jul`/`july`, `aug`/`august`, `sep`/`september`, `oct`/`october`, 
   `nov`/`november`, `dec`/`december`.
@@ -62,7 +62,7 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 - **Default value:** TODO
 - **Usage:** this is the first month in the studied [year](#horizon).
 
-##### first.weekday
+#### first.weekday
 - **Expected value:** string carrying an integer between 0 and 6, or one of (case-insensitive): `monday`/`lundi`,
   `tuesday`/`mardi`, `wednesday`/`mercredi`, `thursday`/`jeudi`, `friday`/`vendredi`, `saturday`/`samedi`,
   `sunday`/`dimanche`.
@@ -70,15 +70,15 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 - **Default value:** `monday`
 - **Usage:** this is the day-of-week of the first day in the studied [horizon](#horizon).
 
-##### leapyear
+#### leapyear
 - **Expected value:** `true` or `false`
 - **Required:** no
 - **Default value:** `false`
 - **Usage:** indicates if the studied [year](#horizon) is a leap-year.
 
-#### Additional parameters
+### Additional parameters
 
-##### year-by-year
+#### year-by-year
 - **Expected value:** `true` or `false`
 - **Required:** no
 - **Default value:** `false`
@@ -86,7 +86,7 @@ These parameters are listed under the `[general]` section in the `.ini` file.
     - `true`: results will be exported on a yearly basis
     - `false`: results will be all in one file TODO
 
-##### derated
+#### derated
 - **Expected value:** `true` or `false`
 - **Required:** no
 - **Default value:** `false`
@@ -94,7 +94,7 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 
 > ⚠️ this parameter cannot be used with parameter [custom-scenario](#custom-scenario)
 
-##### custom-scenario
+#### custom-scenario
 - **Expected value:** `true` or `false`
 - **Required:** no
 - **Default value:** `false`
@@ -103,7 +103,7 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 > ⚠️ this parameter cannot be used with parameter [derated](#derated)  
 > ⚠️ if set to `true`, parameter [active-rules-scenario](#active-rules-scenario) must be set
 
-##### user-playlist
+#### user-playlist
 - **Expected value:** `true` or `false`
 - **Required:** no
 - **Default value:** `false`
@@ -112,20 +112,20 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 
 > ⚠️ this parameter cannot be used with parameter [derated](#derated)
 
-##### thematic-trimming
+#### thematic-trimming
 - **Expected value:** `true` or `false`
 - **Required:** no
 - **Default value:** `false`
 - **Usage:** set to `true` in order to select a specific subset of the optimization variables to print in the [output files](05-output_files.md), 
   using a thematic filter. Use the [variables selection parameters](#variables-selection-parametrs) to define the filter.
 
-##### geographic-trimming
+#### geographic-trimming
 - **Expected value:** `true` or `false`
 - **Required:** no
 - **Default value:** `false`
 - **Usage:** TODO
 
-##### active-rules-scenario
+#### active-rules-scenario
 - **Expected value:** undefined, or `default ruleset` (case-insensitive)
 - **Required:** no, unless [custom-scenario](#custom-scenario) is set to `true`
 - **Default value:** undefined
@@ -134,7 +134,7 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 
 ### Time-series parameters
 
-##### generate
+#### generate
 - **Expected value:** comma-seperated list of 0 to N elements among the following (case-insensitive): 
   `load`, `wind`, `hydro`, `thermal`, `solar`, `renewables`, `max-power` (ex: `generate = load, hydro, wind`)
 - **Required:** no
@@ -144,42 +144,42 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 
 > ⚠️ time-series generation is not available for transmission capacities (NTC)
 
-##### nbtimeseriesload
+#### nbtimeseriesload
 - **Expected value:** unsigned integer
 - **Required:** no
 - **Default value:** 1
 - **Usage:** if `load` time-series are [automatically generated](#generate), this parameter sets the number of different 
   time-series to generate.
 
-##### nbtimeserieshydro
+#### nbtimeserieshydro
 - **Expected value:** unsigned integer
 - **Required:** no
 - **Default value:** 1
 - **Usage:** if `hydro` time-series are [automatically generated](#generate), this parameter sets the number of different
   time-series to generate.
 
-##### nbtimeserieswind
+#### nbtimeserieswind
 - **Expected value:** unsigned integer
 - **Required:** no
 - **Default value:** 1
 - **Usage:** if `wind` time-series are [automatically generated](#generate), this parameter sets the number of different
   time-series to generate.
 
-##### nbtimeseriesthermal
+#### nbtimeseriesthermal
 - **Expected value:** unsigned integer
 - **Required:** no
 - **Default value:** 1
 - **Usage:** if `thermal` time-series are [automatically generated](#generate), this parameter sets the number of different
   time-series to generate.
 
-##### nbtimeseriessolar
+#### nbtimeseriessolar
 - **Expected value:** unsigned integer
 - **Required:** no
 - **Default value:** 1
 - **Usage:** if `solar` time-series are [automatically generated](#generate), this parameter sets the number of different
   time-series to generate.
 
-##### refreshtimeseries
+#### refreshtimeseries
 - **Expected value:** comma-seperated list of 0 to N elements among the following (case-insensitive):
   `load`, `wind`, `hydro`, `thermal`, `solar`, `renewables`, `max-power`
 - **Required:** no
@@ -189,7 +189,7 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 
 > ⚠️ time-series refresh is not available for transmission capacities (NTC)
 
-##### intra-modal
+#### intra-modal
 - **Expected value:** comma-seperated list of 0 to N elements among the following (case-insensitive):
   `load`, `wind`, `hydro`, `thermal`, `solar`, `renewables`, `ntc`, `max-power`
 - **Required:** no
@@ -200,41 +200,41 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 > ⚠️ inter-modal correlation is not available for transmission capacities (NTC)  
 > ⚠️ this is the historical correlation mode
 
-##### inter-modal
+#### inter-modal
 - **Expected value:** TODO
 - **Required:** **yes** TODO
 - **Default value:** TODO
 - **Usage:** TODO
 
-##### refreshintervalload
+#### refreshintervalload
 - **Expected value:** strictly positive integer
 - **Required:** no
 - **Default value:** 100
 - **Usage:** if `load` time-series are automatically [generated](#generate) and [refreshed](#refreshtimeseries), this 
   parameter sets their refresh interval (in number of Monte-Carlo years).
 
-##### refreshintervalhydro
+#### refreshintervalhydro
 - **Expected value:** strictly positive integer
 - **Required:** no
 - **Default value:** 100
 - **Usage:** if `hydro` time-series are automatically [generated](#generate) and [refreshed](#refreshtimeseries), this
   parameter sets their refresh interval (in number of Monte-Carlo years).
 
-##### refreshintervalwind
+#### refreshintervalwind
 - **Expected value:** strictly positive integer
 - **Required:** no
 - **Default value:** 100
 - **Usage:** if `wind` time-series are automatically [generated](#generate) and [refreshed](#refreshtimeseries), this
   parameter sets their refresh interval (in number of Monte-Carlo years).
 
-##### refreshintervalthermal
+#### refreshintervalthermal
 - **Expected value:** strictly positive integer
 - **Required:** no
 - **Default value:** 100
 - **Usage:** if `thermal` time-series are automatically [generated](#generate) and [refreshed](#refreshtimeseries), this
   parameter sets their refresh interval (in number of Monte-Carlo years).
 
-##### refreshintervalsolar
+#### refreshintervalsolar
 - **Expected value:** strictly positive integer
 - **Required:** no
 - **Default value:** 100
@@ -243,16 +243,16 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 
 ### Pre-processor parameters
 
-##### readonly
+#### readonly
 - **Expected value:** `true` or `false`
 - **Required:** no
 - **Default value:** `false`
 - **Usage:** sets the study to read-only mode: TODO
 
-### Input parameters
+## Input parameters
 These parameters are listed under the `[input]` section in the `.ini` file.
 
-##### import
+#### import
 - **Expected value:** comma-seperated list of 0 to N elements among the following (case-insensitive):
   `load`, `wind`, `hydro`, `thermal`, `solar`, `renewables`, `ntc`, `max-power`
 - **Required:** no
@@ -260,16 +260,16 @@ These parameters are listed under the `[input]` section in the `.ini` file.
 - **Usage:** if some time-series are [automatically generated](#generate), this parameter selects those of them that 
   should be exported into the input files.
 
-### Output parameters
+## Output parameters
 These parameters are listed under the `[output]` section in the `.ini` file.
 
-##### synthesis
+#### synthesis
 - **Expected value:** `true` or `false`
 - **Required:** no
 - **Default value:** `true`
 - **Usage:** set to `true` if you want to write the Monte-Carlo simulation synthesis int the [output files](05-output_files.md).
 
-##### storenewset
+#### storenewset
 - **Expected value:** `true` or `false`
 - **Required:** no
 - **Default value:** `false`
@@ -277,7 +277,7 @@ These parameters are listed under the `[output]` section in the `.ini` file.
 
 > Related to: [Time-series parameters](#time-series-parameters) 
 
-##### archives
+#### archives
 - **Expected value:** comma-seperated list of 0 to N elements among the following (case-insensitive):
   `load`, `wind`, `hydro`, `thermal`, `solar`, `renewables`, `ntc`, `max-power`
 - **Required:** no
@@ -285,10 +285,10 @@ These parameters are listed under the `[output]` section in the `.ini` file.
 - **Usage:** if [storenewset](#storenewset) is set to `true`, this parameter selects those of them that should be 
   written in the [output files](05-output_files.md).
 
-### Optimization parameters
+## Optimization parameters
 These parameters are listed under the `[optimization]` section in the `.ini` file.
 
-##### simplex-range
+#### simplex-range
 - **Expected value:** `day` or `week`
 - **Required:** no
 - **Default value:** `week`
@@ -301,7 +301,7 @@ These parameters are listed under the `[optimization]` section in the `.ini` fil
   
 > More information here: [The heuristic for seasonal hydro pre-allocation](08-miscellaneous.md#the-heuristic-for-seasonal-hydro-pre-allocation)
 
-##### transmission-capacities
+#### transmission-capacities
 - **Expected value:** one of the following (case-insensitive):
     - `local-values`
     - `null-for-all-links`
@@ -317,7 +317,7 @@ These parameters are listed under the `[optimization]` section in the `.ini` fil
     - `infinite-for-physical-links`: override transmission capacities with $\inf$ on **physical links only**
     - `null-for-physical-links`: override transmission capacities with 0 on **physical links only**
 
-##### link-type
+#### link-type
 - **Expected value:** TODO
 - **Required:** **yes** TODO
 - **Default value:** TODO
@@ -325,61 +325,61 @@ These parameters are listed under the `[optimization]` section in the `.ini` fil
   
 > ⚠️ this parameter is ignored since version 8.5.2
 
-##### include-constraints
+#### include-constraints
 - **Expected value:** `true` or `false`
 - **Required:** no
 - **Default value:** `true`
 - **Usage:** set this parameter to `true` if you want to activate binding constraints in the study. TODO add link to binding constraints doc
 
-##### include-hurdlecosts
+#### include-hurdlecosts
 - **Expected value:** `true` or `false`
 - **Required:** no
 - **Default value:** `true`
 - **Usage:** TODO
 
-##### include-tc-minstablepower
+#### include-tc-minstablepower
 - **Expected value:** `true` or `false`
 - **Required:** no
 - **Default value:** `true`
 - **Usage:** set this parameter to `true` if you want to activate, for thermal units, the constraint of minimum stable power
   TODO add link to doc
 
-##### include-tc-min-ud-time
+#### include-tc-min-ud-time
 - **Expected value:** `true` or `false`
 - **Required:** no
 - **Default value:** `true`
 - **Usage:** set this parameter to `true` if you want to activate, for thermal units, the constraint of minimum start-up time
   TODO add link to doc
 
-##### include-dayahead
+#### include-dayahead
 - **Expected value:** `true` or `false`
 - **Required:** no
 - **Default value:** `true`
 - **Usage:** set this parameter to `true` if you want to activate day-ahead reserve constraints ??
   TODO add link to doc
 
-##### include-strategicreserve
+#### include-strategicreserve
 - **Expected value:** `true` or `false`
 - **Required:** no
 - **Default value:** `true`
 - **Usage:** set this parameter to `true` if you want to activate strategic reserve constraints ??
   TODO add link to doc
 
-##### include-spinningreserve
+#### include-spinningreserve
 - **Expected value:** `true` or `false`
 - **Required:** no
 - **Default value:** `true`
 - **Usage:** set this parameter to `true` if you want to activate spinning reserve constraints ??
   TODO add link to doc
 
-##### include-primaryreserve
+#### include-primaryreserve
 - **Expected value:** `true` or `false`
 - **Required:** no
 - **Default value:** `true`
 - **Usage:** set this parameter to `true` if you want to activate primary reserve constraints ??
   TODO add link to doc
 
-##### include-exportmps
+#### include-exportmps
 - **Expected value:** one of the following (case-insensitive):
     - `none` or `false`
     - `optim-1`
@@ -394,20 +394,20 @@ These parameters are listed under the `[optimization]` section in the `.ini` fil
     - `optim-2`: export MPS for [second step]() of the optimization TODO add link
     - `both-optims` or `true`: export MPS for both steps of the optimization
 
-##### include-split-exported-mps
+#### include-split-exported-mps
 - **Expected value:** TODO
 - **Required:** **yes** TODO
 - **Default value:** TODO
 - **Usage:** TODO
 > ⚠️ this parameter is deprecated but needed for testing old studies
 
-##### include-exportstructure
+#### include-exportstructure
 - **Expected value:** `true` or `false`
 - **Required:** no
 - **Default value:** `false`
 - **Usage:** set to `true` to activate writing the [MPS](#include-exportmps) using the [AntaresXpansion](TODO add link) specific format
 
-##### include-unfeasible-problem-behavior
+#### include-unfeasible-problem-behavior
 - **Expected value:** one of the following (case-sensitive):
     - `WARNING_DRY`
     - `WARNING_MPS`
@@ -422,34 +422,34 @@ These parameters are listed under the `[optimization]` section in the `.ini` fil
     - `ERROR_MPS`: stop simulation, and export the MPS of the unfeasible problem
 
 
-### Adequacy-patch parameters
+## Adequacy-patch parameters
 These parameters are listed under the `[adequacy patch]` section in the `.ini` file. They tune the [Adequacy Patch](14-adequacy-patch.md) 
 algorithm.
 
-##### include-adq-patch
+#### include-adq-patch
 - **Expected value:** `true` or `false`
 - **Required:** no
 - **Default value:** `false`
 - **Usage:** set this parameter to `true` if you want to enable the [Adequacy Patch](14-adequacy-patch.md) algorithm.
 
-##### set-to-null-ntc-from-physical-out-to-physical-in-for-first-step
+#### set-to-null-ntc-from-physical-out-to-physical-in-for-first-step
 - **Expected value:** `true` or `false`
 - **Required:** no
 - **Default value:** `true`
 - **Usage:** TODO Transmission capacities from physical areas outside adequacy patch (area type 1) to physical areas 
   inside adequacy patch (area type 2). NTC is set to null (if true) only in the first step of adequacy patch local matching rule.
 
-##### set-to-null-ntc-between-physical-out-for-first-step
+#### set-to-null-ntc-between-physical-out-for-first-step
 - **Expected value:** `true` or `false`
 - **Required:** no
 - **Default value:** `true`
 - **Usage:** TODO Transmission capacities between physical areas outside adequacy patch (area type 1).
   NTC is set to null (if true) only in the first step of adequacy patch local matching rule.
 
-### Other parameters
+## Other parameters
 These parameters are listed under the `[other preferences]` section in the `.ini` file.
 
-##### initial-reservoir-levels
+#### initial-reservoir-levels
 - **Expected value:** one of the following (case-insensitive):
     - `cold start`
     - `hot start`
@@ -459,7 +459,7 @@ These parameters are listed under the `[other preferences]` section in the `.ini
     - `cold start`: TODO
     - `hot start`: TODO
 
-##### hydro-heuristic-policy
+#### hydro-heuristic-policy
 - **Expected value:** one of the following (case-insensitive):
     - `accommodate rule curves`
     - `maximize generation`
@@ -469,7 +469,7 @@ These parameters are listed under the `[other preferences]` section in the `.ini
     - `accommodate rule curves`: TODO
     - `maximize generation`: TODO
 
-##### hydro-pricing-mode
+#### hydro-pricing-mode
 - **Expected value:** one of the following (case-insensitive):
     - `fast`
     - `accurate`
@@ -479,7 +479,7 @@ These parameters are listed under the `[other preferences]` section in the `.ini
     - `fast`: TODO
     - `accurate`: TODO. Please take into consideration that this mode is significantly slower than the fast one.
 
-##### power-fluctuations
+#### power-fluctuations
 - **Expected value:** one of the following (case-insensitive):
     - `minimize ramping`
     - `free modulations`
@@ -491,7 +491,7 @@ These parameters are listed under the `[other preferences]` section in the `.ini
     - `free modulations`: TODO
     - `minimize excursions`: TODO
 
-##### shedding-policy
+#### shedding-policy
 - **Expected value:** one of the following (case-insensitive):
     - `shave peaks`
     - `minimize duration`
@@ -501,7 +501,7 @@ These parameters are listed under the `[other preferences]` section in the `.ini
     - `shave peaks`: TODO
     - `minimize duration`: TODO
 
-##### unit-commitment-mode
+#### unit-commitment-mode
 - **Expected value:** one of the following (case-insensitive):
     - `fast`
     - `accurate`
@@ -513,7 +513,7 @@ These parameters are listed under the `[other preferences]` section in the `.ini
     - `accurate`: Heuristic in which 2 LP problems are solved. Explicit modelling for the number of ON/OFF units. Slower than `fast`. TODO: add details/links
     - `milp`: A single MILP problem is solved, with explicit modelling for the number of ON/OFF units. Slower than `accurate`. TODO: add details/links
 
-##### number-of-cores-mode
+#### number-of-cores-mode
 - **Expected value:** one of the following (case-insensitive):
     - `minimum`
     - `low`
@@ -529,7 +529,7 @@ These parameters are listed under the `[other preferences]` section in the `.ini
     - `high`: TODO
     - `maximum`: TODO
 
-##### renewable-generation-modelling
+#### renewable-generation-modelling
 - **Expected value:** one of the following (case-insensitive):
     - `aggregated`
     - `clusters`
@@ -539,7 +539,7 @@ These parameters are listed under the `[other preferences]` section in the `.ini
     - `aggregated`: TODO
     - `clusters`: TODO
 
-##### day-ahead-reserve-management
+#### day-ahead-reserve-management
 - **Expected value:** TODO
 - **Required:** **yes** TODO
 - **Default value:** TODO
@@ -548,17 +548,17 @@ These parameters are listed under the `[other preferences]` section in the `.ini
 > ⚠️ this parameter is ignored since version 8.4
 
 
-### Advanced parameters
+## Advanced parameters
 These parameters are listed under the `[advanced parameters]` section in the `.ini` file.
 
-##### accuracy-on-correlation
+#### accuracy-on-correlation
 - **Expected value:** comma-seperated list of 0 to N elements among the following (case-insensitive):
   `load`, `wind`, `hydro`, `thermal`, `solar`, `renewables`, `ntc`, `max-power`
 - **Required:** no
 - **Default value:** empty
 - **Usage:** TODO
 
-##### adequacy-block-size
+#### adequacy-block-size
 - **Expected value:** TODO
 - **Required:** **yes** TODO
 - **Default value:** TODO
@@ -566,72 +566,72 @@ These parameters are listed under the `[advanced parameters]` section in the `.i
 
 > ⚠️ this parameter is ignored since version 8.5
 
-### Seeds - Mersenne Twister parameters
+## Seeds - Mersenne Twister parameters
 These parameters are listed under the `[seeds - Mersenne Twister]` section in the `.ini` file.  
 They allow the user to set the seeds of random number generators, in order to ensure the results are repeatable.
 
-##### seed-tsgen-load
+#### seed-tsgen-load
 - **Expected value:** unsigned integer
 - **Required:** **yes**
 - **Usage:** if `load` time-series are [automatically generated](#generate), this parameter fixes the seed for its 
   random generator.
 
-##### seed-tsgen-hydro
+#### seed-tsgen-hydro
 - **Expected value:** unsigned integer
 - **Required:** **yes**
 - **Usage:** if `hydro` time-series are [automatically generated](#generate), this parameter fixes the seed for its
   random generator.
 
-##### seed-tsgen-wind
+#### seed-tsgen-wind
 - **Expected value:** unsigned integer
 - **Required:** **yes**
 - **Usage:** if `wind` time-series are [automatically generated](#generate), this parameter fixes the seed for its
   random generator.
 
-##### seed-tsgen-thermal
+#### seed-tsgen-thermal
 - **Expected value:** unsigned integer
 - **Required:** **yes**
 - **Usage:** if `thermal` time-series are [automatically generated](#generate), this parameter fixes the seed for its
   random generator.
 
-##### seed-tsgen-solar
+#### seed-tsgen-solar
 - **Expected value:** unsigned integer
 - **Required:** **yes**
 - **Usage:** if `solar` time-series are [automatically generated](#generate), this parameter fixes the seed for its
   random generator.
 
-##### seed-tsnumbers
+#### seed-tsnumbers
 - **Expected value:** unsigned integer
 - **Required:** **yes**
 - **Usage:** fixes the seed for the random [Monte-Carlo years](#nbyears) selection.
 
-##### seed-unsupplied-energy-costs
+#### seed-unsupplied-energy-costs
 - **Expected value:** unsigned integer
 - **Required:** **yes**
 - **Usage:** fixes the seed for the random noise generation on unsupplied energy costs.
 
-##### seed-spilled-energy-costs
+#### seed-spilled-energy-costs
 - **Expected value:** unsigned integer
 - **Required:** **yes** TODO
 - **Usage:** fixes the seed for the random noise generation on spilled energy costs.
 
-##### seed-thermal-costs
+#### seed-thermal-costs
 - **Expected value:** unsigned integer
 - **Required:** **yes**
 - **Usage:** fixes the seed for the random noise generation on thermal plants' costs.
 
-##### seed-hydro-costs
+#### seed-hydro-costs
 - **Expected value:** unsigned integer
 - **Required:** **yes**
 - **Usage:** fixes the seed for the random noise generation on hydraulic plants' costs.
 
-##### seed-initial-reservoir-levels
+#### seed-initial-reservoir-levels
 - **Expected value:** unsigned integer
 - **Required:** **yes**
 - **Usage:** TODO
 
 
-### Playlist parameters
+## Playlist parameters
 These parameters are listed under the `[playlist]` section in the `.ini` file.  
 They are **required** if [user-playlist](#user-playlist) is set to `true`.  
 
@@ -650,7 +650,7 @@ They are **required** if [user-playlist](#user-playlist) is set to `true`.
       `playlist_year - = i`, where `i` is the index of the year.
 
 
-### Variables selection parameters
+## Variables selection parameters
 These parameters are listed under the `[variables selection]` section in the `.ini` file.  
 They are **required** if [thematic-trimming](#thematic-trimming) is set to `true`.
 
@@ -668,9 +668,9 @@ They are **required** if [thematic-trimming](#thematic-trimming) is set to `true
     - for every optimization variable that you want the Antares Simulator to **omit** from the outputs, add the 
       parameter entry `select_var - = VAR`, where `VAR` is the name of the variable.
 
-> ⚠️ this parameter is intended to be used by expert users that know the name of the optimization variables created
+> ⚠️ this parameter is intended for use by expert users that know the name of the optimization variables created
 > under-the-hood by Antares Simulator.
 
 
-### Model-wise parameters
+## Model-wise parameters
 see Here : TODO: mettre un lien vers la doc spécifique
