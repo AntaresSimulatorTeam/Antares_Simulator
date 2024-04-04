@@ -477,6 +477,9 @@ static bool SGDIntLoadFamily_General(Parameters& d,
         return value.to<uint>(d.nbTimeSeriesThermal);
     if (key == "nbtimeseriessolar")
         return value.to<uint>(d.nbTimeSeriesSolar);
+    if (key == "nbtimeserieslinks")
+        return value.to<uint>(d.nbLinkTStoGenerate);
+
     // Interval values
     if (key == "refreshintervalload")
         return value.to<uint>(d.refreshIntervalLoad);
@@ -1544,6 +1547,7 @@ void Parameters::saveToINI(IniFile& ini) const
         section->add("nbTimeSeriesWind", nbTimeSeriesWind);
         section->add("nbTimeSeriesThermal", nbTimeSeriesThermal);
         section->add("nbTimeSeriesSolar", nbTimeSeriesSolar);
+        section->add("nbtimeserieslinks", nbLinkTStoGenerate);
 
         // Refresh
         ParametersSaveTimeSeries(section, "refreshTimeSeries", timeSeriesToRefresh);
