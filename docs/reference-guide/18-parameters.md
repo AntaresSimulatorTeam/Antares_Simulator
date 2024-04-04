@@ -5,17 +5,17 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 
 ##### mode
 - **Expected value:** one of the following (case in-sensitive):
-  - `economy` or `economic`
-  - `adequacy`
-  - `expansion`
+    - `economy` or `economic`
+    - `adequacy`
+    - `expansion`
 - **Required:** **yes** TODO
 - **Default value:** `economy`
 - **Usage:** this parameter sets the study mode for Antares
-  - *Economy:* Antares simulator will try to ensure balance between load and generation, while minimizing the economical 
+    - *`economy/economic`:* Antares simulator will try to ensure balance between load and generation, while minimizing the economical 
     cost of the grid's operation (more on this [here](01-introduction.md#transmission-project-profitability)).
-  - *Adequacy:* in this mode, all power plants' operational cost is considered zero. Antares' only objective is to ensure 
+    - *`adequacy`:* in this mode, all power plants' operational cost is considered zero. Antares' only objective is to ensure 
     balance between load and generation (more on this [here](01-introduction.md#generation-adequacy-problems)). 
-  - *Expansion:* Antares simulator will optimize the investments on the grid, minimizing both investments and 
+    - *`expansion`:* Antares simulator will optimize the investments on the grid, minimizing both investments and 
     operational costs. If selected, the simulator will TODO
 
 #### Study horizon
@@ -83,23 +83,25 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 - **Required:** no
 - **Default value:** `false`
 - **Usage:** 
-  - `true`: results will be exported on a yearly basis
-  - `false`: results will be all in one file TODO
+    - `true`: results will be exported on a yearly basis
+    - `false`: results will be all in one file TODO
 
 ##### derated
 - **Expected value:** `true` or `false`
 - **Required:** no
 - **Default value:** `false`
 - **Usage:** TODO  
-  *Note: this parameter cannot be used with [custom-scenario](#custom-scenario)*
+
+> ⚠️ this parameter cannot be used with parameter [custom-scenario](#custom-scenario)
 
 ##### custom-scenario
 - **Expected value:** `true` or `false`
 - **Required:** no
 - **Default value:** `false`
 - **Usage:** TODO  
-  *Note: this parameter cannot be used with [derated](#derated)*  
-  *Note: if set to `true`, [active-rules-scenario](#active-rules-scenario) must be set*
+
+> ⚠️ this parameter cannot be used with parameter [derated](#derated)  
+> ⚠️ if set to `true`, parameter [active-rules-scenario](#active-rules-scenario) must be set
 
 ##### user-playlist
 - **Expected value:** `true` or `false`
@@ -107,13 +109,14 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 - **Default value:** `false`
 - **Usage:** set to `true` in order to select specific Monte-Carlo years to simulate. 
   Use the [playlist parameters](#playlist-parameters) to select these years.  
-  *Note: this parameter cannot be used with [derated](#derated)*
+
+> ⚠️ this parameter cannot be used with parameter [derated](#derated)
 
 ##### thematic-trimming
 - **Expected value:** `true` or `false`
 - **Required:** no
 - **Default value:** `false`
-- **Usage:** set to `true` in order to select a specific subset of the optimization variables to print in the output, 
+- **Usage:** set to `true` in order to select a specific subset of the optimization variables to print in the [output files](05-output_files.md), 
   using a thematic filter. Use the [variables selection parameters](#variables-selection-parametrs) to define the filter.
 
 ##### geographic-trimming
@@ -127,7 +130,7 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 - **Required:** no, unless [custom-scenario](#custom-scenario) is set to `true`
 - **Default value:** undefined
 - **Usage:** TODO defines how scenarios are built. Only one supported value for now:
-  - `default ruleset`: TODO
+    - `default ruleset`: TODO
 
 ### Time-series parameters
 
@@ -139,7 +142,8 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 - **Default value:** empty
 - **Usage:** if set to `import timeseries`, all the time-series will be imported from input files. Else, the time-series 
   listed in this parameter will be generated randomly by the simulator.  
-  *Note: time-series generation is not available for transmission capacities (NTC)*
+
+> ⚠️ time-series generation is not available for transmission capacities (NTC)
 
 ##### nbtimeseriesload
 - **Expected value:** unsigned integer
@@ -184,7 +188,8 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 - **Default value:** empty
 - **Usage:** if some time-series are [automatically generated](#generate), this parameter lists those of them that have 
   to be refreshed on-line ?? TODO  
-  *Note: time-series refresh is not available for transmission capacities (NTC)*
+
+> ⚠️ time-series refresh is not available for transmission capacities (NTC)
 
 ##### intra-modal
 - **Expected value:** empty, or a comma-seperated list of 1 to N elements among the following: `mc`,
@@ -193,8 +198,9 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 - **Default value:** empty
 - **Usage:** if some time-series are [automatically generated](#generate), this parameter lists those of them that are 
   correlated, i.e. for which the same time-series should be used together in a given scenario. ?? TODO  
-  *Note: inter-modal correlation is not available for transmission capacities (NTC)*  
-  *Note: this is the historical correlation mode*
+
+> ⚠️ inter-modal correlation is not available for transmission capacities (NTC)  
+> ⚠️ this is the historical correlation mode
 
 ##### inter-modal
 - **Expected value:** TODO
@@ -243,7 +249,7 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 - **Expected value:** `true` or `false`
 - **Required:** no
 - **Default value:** `false`
-- **Usage:** TODO
+- **Usage:** sets the study to read-only mode: TODO
 
 ### Input parameters
 These parameters are listed under the `[input]` section in the `.ini` file.
@@ -258,31 +264,42 @@ These parameters are listed under the `[input]` section in the `.ini` file.
 These parameters are listed under the `[output]` section in the `.ini` file.
 
 ##### synthesis
-- **Expected value:** TODO
-- **Required:** **yes** TODO
-- **Default value:** TODO
-- **Usage:** TODO
+- **Expected value:** `true` or `false`
+- **Required:** no
+- **Default value:** `true`
+- **Usage:** set to `true` if you want to write the Monte-Carlo simulation synthesis int the [output files](05-output_files.md).
 
-##### storenewest
-- **Expected value:** TODO
-- **Required:** **yes** TODO
-- **Default value:** TODO
-- **Usage:** TODO
+##### storenewset
+- **Expected value:** `true` or `false`
+- **Required:** no
+- **Default value:** `false`
+- **Usage:** set to `true` to store the sampled timeseries numbers in the [output files](05-output_files.md).
+
+> Related to: [Time-series parameters](#time-series-parameters) 
 
 ##### archives
-- **Expected value:** TODO
-- **Required:** **yes** TODO
+- **Expected value:**  empty, or a comma-seperated list of 1 to N elements among the following: `mc`,
+  `output`, `load`, `solar`, `wind`, `hydro`, `thermal`
+- **Required:** no
 - **Default value:** TODO
-- **Usage:** TODO
+- **Usage:** if [storenewset](#storenewset) is set to `true`, this parameter selects those of them that should be 
+  written in the [output files](05-output_files.md).
 
 ### Optimization parameters
 These parameters are listed under the `[optimization]` section in the `.ini` file.
 
 ##### simplex-range
-- **Expected value:** TODO
-- **Required:** **yes** TODO
-- **Default value:** TODO
-- **Usage:** TODO
+- **Expected value:** `day` or `week`
+- **Required:** no
+- **Default value:** `week`
+- **Usage:** the simplex optimization range.  
+  In the formulation of the optimal hydro-thermal unit-commitment and dispatch problem (see dedicated document), 
+  the reference hydro energy $HIT$ used to set the right hand sides of hydro- constraints depends on the value 
+  chosen for this parameter, and is defined as follows:
+    - `day`: for each day **d** of week $\omega$ : $HIT = W_d^2$
+    - `week`: for week $\omega$: $HIT = \sum_{d\in \omega}{W_d^2}$
+  
+> More information here: [The heuristic for seasonal hydro pre-allocation](08-miscellaneous.md#the-heuristic-for-seasonal-hydro-pre-allocation)
 
 ##### transmission-capacities
 - **Expected value:** TODO
