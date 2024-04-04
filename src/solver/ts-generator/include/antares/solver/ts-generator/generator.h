@@ -63,7 +63,7 @@ enum class linkDirection
     indirect
 };
 
-typedef std::vector<std::pair<Data::AreaLink*,linkDirection>> listOfLinks;
+using listOfLinks = std::vector<std::pair<Data::AreaLink*,linkDirection>>;
 
 
 void ResizeGeneratedTimeSeries(Data::AreaList& areas, Data::Parameters& params);
@@ -80,7 +80,7 @@ bool generateThermalTimeSeries(Data::Study& study,
                                const std::string& savePath);
 
 bool generateLinkTimeSeries(Data::Study& study,
-                            listOfLinks& links,
+                            const listOfLinks& links,
                             Solver::IResultWriter& writer,
                             const std::string& savePath);
 

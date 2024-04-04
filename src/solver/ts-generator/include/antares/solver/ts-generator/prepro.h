@@ -26,9 +26,7 @@
 #include <antares/study/parts/thermal/defines.h>
 #include <memory>
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 /*!
 ** \brief Thermal
@@ -54,7 +52,6 @@ public:
         thermalPreproMax,
     };
 
-public:
     //! \name Constructor
     //@{
     /*!
@@ -89,7 +86,7 @@ public:
     ** \param folder The targer folder
     ** \return A non-zero value if the operation succeeded, 0 otherwise
     */
-    bool saveToFolder(const AnyString& folder);
+    bool saveToFolder(const AnyString& folder) const;
 
     /*!
     ** \brief Get the amount of memory used by the class
@@ -110,8 +107,7 @@ public:
     std::weak_ptr<const ThermalCluster> itsThermalCluster;
 }; // class PreproThermal
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
 
 #include "prepro.hxx"
 

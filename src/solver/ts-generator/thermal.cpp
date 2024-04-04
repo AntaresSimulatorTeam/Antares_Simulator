@@ -636,7 +636,7 @@ bool generateThermalTimeSeries(Data::Study& study,
 }
 
 bool generateLinkTimeSeries(Data::Study& study,
-                            listOfLinks& links,
+                            const listOfLinks& links,
                             Solver::IResultWriter& writer,
                             const std::string& savePath)
 {

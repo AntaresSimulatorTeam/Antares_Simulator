@@ -31,9 +31,7 @@ using namespace Yuni;
 
 #define SEP IO::Separator
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 PreproThermal::PreproThermal(std::weak_ptr<const ThermalCluster> cluster) :
  itsThermalCluster(cluster)
@@ -47,7 +45,7 @@ void PreproThermal::copyFrom(const PreproThermal& rhs)
     rhs.data.unloadFromMemory();
 }
 
-bool PreproThermal::saveToFolder(const AnyString& folder)
+bool PreproThermal::saveToFolder(const AnyString& folder) const
 {
     if (IO::Directory::Create(folder))
     {
@@ -74,7 +72,7 @@ bool PreproThermal::loadFromFolder(Study& study, const AnyString& folder)
     // standard loading
     ret = data.loadFromCSVFile(
             buffer, thermalPreproMax, DAYS_PER_YEAR, Matrix<>::optFixedSize, &study.dataBuffer)
-          and ret;
+          && ret;
 
     bool thermalTSglobalGeneration = study.parameters.isTSGeneratedByPrepro(timeSeriesThermal);
     if (study.usedByTheSolver && cluster->doWeGenerateTS(thermalTSglobalGeneration))
@@ -116,27 +114,27 @@ bool PreproThermal::loadFromFolder(Study& study, const AnyString& folder)
                 ++errors;
             }
 
-            if (foRate < 0. or foRate > 1.)
+            if (foRate < 0. || foRate > 1.)
             {
                 logs.error() << "Thermal: Prepro: " << parentArea->id << '/' << cluster->id()
                              << ": invalid value for FO rate (line:" << (i + 1) << ")";
                 ++errors;
             }
 
-            if (poRate < 0. or poRate > 1.)
+            if (poRate < 0. || poRate > 1.)
             {
                 logs.error() << "Thermal: Prepro: " << parentArea->id << '/' << cluster->id()
                              << ": invalid value for PO rate (line:" << (i + 1) << ")";
                 ++errors;
             }
 
-            if (foDuration < 1. or foDuration > 365.)
+            if (foDuration < 1. || foDuration > 365.)
             {
                 logs.error() << "Thermal: Prepro: " << parentArea->id << '/' << cluster->id()
                              << ": invalid value for FO Duration (line:" << (i + 1) << ")";
                 ++errors;
             }
-            if (poDuration < 1. or poDuration > 365.)
+            if (poDuration < 1. || poDuration > 365.)
             {
                 logs.error() << "Thermal: Prepro: " << parentArea->id << '/' << cluster->id()
                              << ": invalid value for PO Duration (line:" << (i + 1) << ")";
@@ -191,11 +189,8 @@ bool PreproThermal::normalizeAndCheckNPO()
     auto& columnNPOMax = data[npoMax];
     auto& columnNPOMin = data[npoMin];
     // errors management
-    uint errors = 0;
-    enum
-    {
-        maxErrors = 10
-    };
+    uint errors = 0, maxErrors = 10;
+
     // Flag to determine whether the column NPO max has been normalized or not
     bool normalized = false;
 
@@ -231,5 +226,4 @@ bool PreproThermal::normalizeAndCheckNPO()
     return (0 == errors);
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
