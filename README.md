@@ -55,11 +55,11 @@ or [its sources](docs/build/0-Introduction.md).
 
 * [AUTHORS](AUTHORS.txt)           -    Antares Simulator authors
 * [CERTIFICATE](CERTIFICATE.txt)	 - A standard DCO that has to be signed by every contributor 
-* [CONTRIBUTING](CONTRIBUTING.md)	     - How to submit patches and discuss about code evolutions
+* [CONTRIBUTING](CONTRIBUTING.md)	     - How to submit patches and discuss code evolutions
 * [COPYING](COPYING.txt)            - The MPL v2 license.
 * [NEWS](NEWS.md)                 - Important modifications between the releases.
 * [README](README.md)             - This file.
-* [ROADMAP](ROADMAP.txt)            - Main orientations for further developements
+* [ROADMAP](ROADMAP.txt)            - Main orientations for further developments
 * [THANKS](THANKS.txt)             - Attribution notices for external libraries and contributors.
 * [resources/](resources)	 - Free sample data sets.
 * [src/analyzer/](src/analyzer)      - source code for the statistical analysis of historical time-series.
