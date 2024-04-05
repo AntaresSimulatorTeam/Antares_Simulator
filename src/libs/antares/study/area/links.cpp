@@ -200,9 +200,9 @@ void AreaLink::overrideTransmissionCapacityAccordingToGlobalParameter(
     }
 }
 
-bool AreaLink::loadTimeSeries(const Study& study, const AnyString& folder, bool loadTSGen)
+bool AreaLink::loadTimeSeries(const StudyVersion &version, const AnyString& folder, bool loadTSGen)
 {
-    if (study.header.version < StudyVersion(8, 2))
+    if (version < StudyVersion(8, 2))
         return linkLoadTimeSeries_for_version_below_810(folder);
     else
         return linkLoadTimeSeries_for_version_820_and_later(folder, loadTSGen);
@@ -561,7 +561,7 @@ bool AreaLinksLoadFromFolder(Study& study,
               id_indirect, link.tsGenerationIndirect.unitCount);
         }
 
-        ret = link.loadTimeSeries(study, folder, loadTSGen) && ret;
+        ret = link.loadTimeSeries(study.header.version, folder, loadTSGen) && ret;
 
         // Checks on loaded link's data
         if (study.usedByTheSolver)

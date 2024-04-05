@@ -13,8 +13,8 @@ with XXX in
 - volatility.planned (double in [0,1])
 - volatility.forced (same)
 
-- "modulation" timeseries => input/links/<link 1>/prepro/<link 2>_{direct, indirect}.txt, 365x6 values, respectively "forced outage duration", "planned outage duration", "forced outage rate", "planned outage rate", "minimum of groups in maintenance", "maximum of groups in maintenance".
-- "prepro" timeseries => input/links/<link 1>/prepro/<link 2>_mod_{direct, indirect}.txt, 8760x1 values each in [0, 1]
+- "prepro" timeseries => input/links/<link 1>/prepro/<link 2>_{direct, indirect}.txt, 365x6 values, respectively "forced outage duration", "planned outage duration", "forced outage rate", "planned outage rate", "minimum of groups in maintenance", "maximum of groups in maintenance".
+- "modulation" timeseries => input/links/<link 1>/prepro/<link 2>_mod_{direct, indirect}.txt, 8760x1 values each in [0, 1]
 - number of TS to generate => generaldata.ini/General/nbtimeserieslinks (unsigned int, default value 1)
 
 Add bool argument to optionally load time-series. This bool is false (default value) in antares-solver, and true in antares-ts-generator. Parameters are loaded in any case.- 

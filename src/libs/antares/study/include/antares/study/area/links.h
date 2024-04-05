@@ -23,6 +23,7 @@
 
 #include <antares/solver/ts-generator/prepro.h>
 #include <antares/solver/ts-generator/law.h>
+#include <antares/study/version.h>
 #include <yuni/yuni.h>
 #include <yuni/core/noncopyable.h>
 #include <yuni/core/string.h>
@@ -69,7 +70,7 @@ public:
     ~AreaLink();
     //@}
 
-    bool loadTimeSeries(const Study& study, const AnyString& folder, bool loadTSGen);
+    bool loadTimeSeries(const StudyVersion& version, const AnyString& folder, bool loadTSGen);
 
     void storeTimeseriesNumbers(Solver::IResultWriter& writer) const;
 
