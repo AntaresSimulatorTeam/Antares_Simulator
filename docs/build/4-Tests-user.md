@@ -1,3 +1,8 @@
+---
+hide:
+  - toc
+---
+
 # Tests (user)
 
 Tests compilation can be enabled at configure time using the option `-DBUILD_TESTING=ON` (`OFF` by default). It is required only for unit-tests and end-to-end tests.
@@ -9,24 +14,12 @@ cd _build
 ctest -C Release --output-on-failure
 ```
 
-All tests are associated to a label and multiple labels can be defined. You can choose which tests will be executed at ctest run.
+All tests are associated to a label and multiple labels can be defined. You can choose which tests will be executed at ctest run.  
+Use `ctest -N` to see all available tests
 
-This is the list of the available labels :
+> For more information on `ctest` call, see [the cmake documentation](https://cmake.org/cmake/help/latest/manual/ctest.1.html)
 
-| Label     | Description |
-|:-------|-----|
-| `units`  | Units tests |
-| `end-to-end`  | End to end tests with antares study creation |
-| `json` | Run examples configured with a .json file (see below) |
-
-Note :
-> Use `ctest -N` to see all available tests
-
-Note :
-> In this case the regex is on name (`-R`) so only short-examples are executed.
-For more information on `ctest` call see [documentation](https://cmake.org/cmake/help/latest/manual/ctest.1.html)
-
-# Running JSON tests
+## Running JSON tests
 To run JSON tests, a [study batch](https://github.com/AntaresSimulatorTeam/SimTest/releases) is first required.
 
 ```bash

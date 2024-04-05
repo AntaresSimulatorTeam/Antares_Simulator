@@ -1,8 +1,8 @@
 # Build
-Before build, make sure that dependencies are installed (see [here](2-Dependencies-install.md) for more informations).
+Before build, make sure that dependencies are [installed](2-Dependencies-install.md).
 
 ## Environment settings
-On CentOS enable `devtoolset-9` and `rh-git227`:
+On CentOS, enable `devtoolset-9` and `rh-git227`:
 ```
 scl enable devtoolset-9 bash
 source /opt/rh/rh-git227/enable
@@ -13,7 +13,7 @@ git submodule update --init src/antares-deps
 ```
 ## Configure build with CMake
 === "Windows"
-    Note :
+    Note:
     > cpack NSIS installer creation need an 'out of source build'. The build directory must be outside `[antares_src]` directory
 
     ```
@@ -30,24 +30,26 @@ git submodule update --init src/antares-deps
     cmake -B _build -S [antares_src] -DCMAKE_BUILD_TYPE=release
     ```
 
-Here is a list of available CMake configure option :
+Here is a list of mandatory or optional CMake configuration options:
 
-|Option | Description |
-|:-------|-------|
-|`CMAKE_BUILD_TYPE` | Define build type. Available values are `Release` and `Debug` |
-|`BUILD_UI`|Enable or disable Antares Simulator UI compilation (default `ON`)|
-|`BUILD_ALL`|Enable build of ALL external libraries (default `OFF`)|
-|`DEPS_INSTALL_DIR`|Define dependencies libraries install directory|
-|`USE_PRECOMPILED_EXT`| This option must be set if you use wxWidget as precompiled external library (default `OFF`)|
-|`BUILD_TESTING`| Enable test build (default `OFF`)|
-|`BUILD_ORTOOLS`| Enable build for OR-Tools and its dependencies (requires an Internet connecton)|
+| Option                | Mandatory | Description                                                                      | Expected value                         | Default value                                             |
+|:----------------------|-----------|----------------------------------------------------------------------------------|----------------------------------------|-----------------------------------------------------------|
+| `CMAKE_C_COMPILER`    | **yes**   | Select C compiler                                                                | `gcc_-0`                               |                                                           |
+| `CMAKE_CXX_COMPILER`  | **yes**   | Select C++ compiler                                                              | `g++-10`                               |                                                           |
+| `CMAKE_BUILD_TYPE`    | **yes**   | Define build type                                                                | `Release` / `Debug` / `RelWithDebInfo` |                                                           |
+| `BUILD_UI`            | no        | Enable or disable Antares Simulator UI compilation                               | `ON` / `OFF`                           | `ON`                                                      |
+| `BUILD_ALL`           | no        | Enable build of ALL external libraries                                           | `ON` / `OFF`                           | `OFF`                                                     |
+| `DEPS_INSTALL_DIR`    | no        | Define dependencies libraries install directory                                  | absolute path to an existing directory | `<antares_checkout_dir>/../rte-antares-deps-<build_type>` |
+| `USE_PRECOMPILED_EXT` | no        | This option must be set if you use wxWidget as precompiled external library      | `ON` / `OFF`                           | `OFF`                                                     |
+| `BUILD_TESTING`       | no        | Enable build for unit tests                                                      | `ON` / `OFF`                           | `OFF`                                                     |
+| `BUILD_ORTOOLS`       | no        | Enable build for OR-Tools and its dependencies (requires an Internet connection) | `ON` / `OFF`                           | `OFF`                                                     |
 
 Additional options for windows
 
-|Option |Description |
-|:-------|-------|
-|`VCPKG_ROOT`|Define vcpkg directory |
-|`VCPKG_TARGET_TRIPLET`|Define [vcpkg-triplet] |
+| Option                 | Description            |
+|:-----------------------|------------------------|
+| `VCPKG_ROOT`           | Define vcpkg directory |
+| `VCPKG_TARGET_TRIPLET` | Define [vcpkg-triplet] |
 
 ## Build
 === "Windows"
@@ -65,7 +67,7 @@ Additional options for windows
     ```
     cmake --build _build --config release -j8
     ```
-Note :
+Note:
 > Compilation can be done on several processors with `-j` option.
 
 The final GUI file can be executed at `_build/ui/simulator/antares-8.7-ui-simulator`

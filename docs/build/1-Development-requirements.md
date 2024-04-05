@@ -1,7 +1,8 @@
 # Development requirements
 
-## [C++ version](#c++-version)
-The compilation of  *antares-xpansion* requires C++17 support.
+## C++
+--------------------
+The compilation of *Antares Simulator* requires C++17 support.
 
 === "Windows"
 
@@ -9,42 +10,41 @@ The compilation of  *antares-xpansion* requires C++17 support.
 
 === "Centos"
 
-    By default, GCC version of Centos7 is 4.8.5.
+    By default, GCC version on Centos is old.
+    Some external repositories must be enabled depedning on your version of the OS:
 
-    Some external repositories must be enabled
-
-=== "Centos 7 (EPEL)"
-
-```
-sudo yum install epel-release
-sudo yum install centos-release-scl
-```
-
-=== "Centos 8 (PowerTools)"
-
-```
-sudo yum install dnf-plugins-core
-sudo yum config-manager --set-enabled PowerTools
-```
-
-You can then use a more recent version of GCC by enabling `devtoolset-9` :
-```
-sudo yum install devtoolset-9
-```
-
-Before compiling *antares-xpansion* we must launch a new shell with `scl` tool :
-```
-scl enable devtoolset-9 bash
-```
+    #### Centos 7
+    You must enable the EPEL repository:
+    ```
+    sudo yum install epel-release
+    sudo yum install centos-release-scl
+    ```
+    
+    #### Centos 8
+    You must enable PowerTools, then install a more recent version of GCC by installing and enabling `devtoolset-9`:
+    ```
+    sudo yum install dnf-plugins-core
+    sudo yum config-manager --set-enabled PowerTools
+    sudo yum install devtoolset-9
+    scl enable devtoolset-9 bash
+    ```
 
 === "Ubuntu/Debian"
 
-For building on Debian 12 or Ubuntu 23.04 the installation requires the following build and test dependencies:
-
-```
+    #### Ubuntu 20.04 or 22.04 / Debian 11
+    You need to install G++ 10:
+    ``` 
+    sudo apt install g++-10
+    ```
+    
+    #### Ubuntu 23.04 / Debian 12
+    The installation requires the following build and test dependencies:
+    ```
     sudo apt install git unzip build-essentials
-```
-## [CMake version](#cmake-version)
+    ```
+
+## CMake version
+--------------------
 CMake 3.x must be used.
 
 === "Windows"
@@ -61,8 +61,8 @@ CMake 3.x must be used.
     ```
     sudo apt install cmake
     ```
-
-## [Python version](#python-version)
+## Python version
+--------------------
 Python 3.x is used for end-to-end test.
 
 === "Windows"
@@ -81,12 +81,13 @@ Python 3.x is used for end-to-end test.
     sudo apt install python3 python3-pip
     ```
 
-Required python modules can be installed with :
+Required python modules can be installed with:
 ```
 pip install -r requirements-tests.txt
 ```
 
-## [Git version](#git-version)
+## Git version
+--------------------
 Git version must be above 2.15 for external dependencies build because `--ignore-whitespace` is not used by default and we have an issue with OR-Tools compilation of ZLib and application of patch on Windows (see https://github.com/google/or-tools/issues/1193).
 
 === "Windows"
@@ -100,7 +101,7 @@ Git version must be above 2.15 for external dependencies build because `--ignore
     sudo yum install git
     ```
     
-    Sometimes we need a 2.x version of git. To enable git 2.27 :
+    Sometimes we need a 2.x version of git. To enable git 2.27:
     ```
     source /opt/rh/rh-git227/enable
     ```
