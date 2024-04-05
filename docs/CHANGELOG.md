@@ -1,5 +1,4 @@
 ---
-description: this is the page I want TOC to only display level 2 max.
 toc_depth: 2
 ---
 
