@@ -57,7 +57,6 @@ or [its sources](docs/build/0-Introduction.md).
 * [CERTIFICATE](CERTIFICATE.txt)	 - A standard DCO that has to be signed by every contributor 
 * [CONTRIBUTING](CONTRIBUTING.md)	     - How to submit patches and discuss about code evolutions
 * [COPYING](COPYING.txt)            - The MPL v2 license.
-* [INSTALL](INSTALL.md)           - Installation and building instructions.
 * [NEWS](NEWS.md)                 - Important modifications between the releases.
 * [README](README.md)             - This file.
 * [ROADMAP](ROADMAP.txt)            - Main orientations for further developements
