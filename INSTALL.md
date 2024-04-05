@@ -2,4 +2,4 @@
 
 For better readability see [readthedocs documentation](readthedocs-antares)
 
-[readthedocs-antares]: https://antares-doc.readthedocs.io/
+[readthedocs-antares]: https://antares-simulator.readthedocs.io/

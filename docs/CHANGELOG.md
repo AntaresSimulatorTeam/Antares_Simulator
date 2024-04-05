@@ -1,53 +1,58 @@
-Antares Changelog
-=================
-Next version 
+---
+description: this is the page I want TOC to only display level 2 max.
+toc_depth: 2
+---
+
+# Antares Changelog
+
+## Next version 
 --------------------
-## Improvements
+### Improvements
 * STS groups are now "dynamic" : group names are no longer fixed by code, user is free to define these groups.
 
-9.0.0
+## 9.0.0
 --------------------
-## License
+### License
 * Use licence MPL 2.0 instead of GPL3_WITH_RTE-Exceptions (#1812)
 
-## Improvements
+### Improvements
 * Include overflow variable in HydroPower constraint (#1903)
 * Add total time logging at the end of the simulation (#1908)
 * Add STS level constraint to suspect list for infeasible problem analysis (#1891)
 
-## For developers
+### For developers
 * Use precompiled OR-Tools for Oracle Linux 8 CI (#1893)
 * Change version behavior to allow more flexibility (#1898)
 
-## Code quality
+### Code quality
 * Use std::shared_ptr instead of indices for active binding constraints in results (#1887)
 * Fix a few compilation warnings (#1880)
 * Scratchpad numspace (#1749)
 
-## Tests
+### Tests
 * Fix invalid index causing segfault in `test-study` test (#1902)
 
-8.8.2
+## 8.8.2
 --------------------
 
-## Bugfix
+### Bugfix
 * Fix segfault caused by uninitialized `cluster.series.timeseriesNumbers` (#1876). This bug was introduced in v8.8.1 by #1752
 * Bump OR-Tools from 9.5 to 9.8 (fix crash with XPRESS) (#1873)
 
-8.8.1 (01/2024)
+## 8.8.1 (01/2024)
 --------------------
 /!\ This version has known bugs, please use 8.8.2 instead.
 
-## Bugfix
+### Bugfix
 * Simplify TS numbers drawings, fix bug related to refresh & local thermal generation (#1752)
 
-## Improvements
+### Improvements
 * Take into account breaking change in OR-Tools's API, enable SCIP & GLPK solvers, bump OR-Tools (#1825). This should improve performances with FICO XPRESS
 * Fail if OR-Tools solver is not found (#1851)
 * Normalize simulation mode Expansion, fix logs (#1771)
 * Add possibility to release without running any tests (#1852)
 
-## Code quality
+### Code quality
 * Use `std::unordered_map` for tmpDataByArea_ (hydro ventilation) (#1855)
 * Remove `mutable` keyword from `PROBLEME_HEBDO` (#1846)
 * Remove `Study::gotFatalError`, throw exceptions instead (#1806)
@@ -55,25 +60,25 @@ Next version
 * Use modern style `for` loops, avoid int cast (#1847)
 * Remove `YUNI_STATIC_ASSERT` (#1863)
 
-## Testing
+### Testing
 * Add tests on short-term storage/thermal cluster/renewable cluster removal (#1841)
 
-## Doc
+### Doc
 * Add precision about `enabled` field in ST storage (#1850)
 * Use dedicated URL path for Doxygen, instead of root (#1865)
 * Fix HTML generation for readthedocs (#1867)
 * Add dark mode switch for Doxygen online documentation (#1792)
 
-8.8.0 (12/2023)
+## 8.8.0 (12/2023)
 --------------------
 
-## New features
+### New features
 * New "cash-flow" variable for ST storage (#1633)
 * Experimental optimization with discrete variables (MILP unit-commitment mode #670)
 * Add `enabled` property for ST storage objects, fix bug related to saving ST objects (#1807)
 * Solver logs can be enabled either by the command-line option (--solver-logs) or in the generaldata.ini
 
-## Improvements
+### Improvements
 * Add shortcut -s for names MPS problems in CLI options (#1613)
 * Use 50% as a default value for ST-storage property initiallevel (#1632)
 * Add warning logs for non-existent output variable (#1638)
@@ -82,14 +87,14 @@ Next version
 * Always check mingen against maxPower, regardless of reservoirManagement (#1656)
 * New log msg when solver not found in or-tools (#1687)
 
-## For developers
+### For developers
 * Fix annoying error log about correlation matrices in tests (#1573)
 
-## Bugfixes (reported by users)
+### Bugfixes (reported by users)
 * Fix output variable PROFIT for thermal clusters (#1767)
 * Bug on renewable cluster (wrong group) (#1631)
 
-## Bugfixes (reported internally)
+### Bugfixes (reported internally)
 * Fix oracle-linux8 binaries missing compression feature (#1741)
 * Named MPS - fix duplicated "ranged" binding constraints (#1569)
 * Fix save for short term storage objects (#1807)
@@ -101,22 +106,22 @@ Next version
 * Fixes swallowed exceptions in computation thread (#1685)
 * Fix writer causing a segfault with OR-Tools (#1584)
 
-## Documentation
+### Documentation
 * Create Doxygen documentation (#1650)
 * Update README.md (#1654)
 * Add advice for developers (#1639)
 * Document the usage of XPRESS (#1596)
 
-## GUI
+### GUI
 * Fix regression on cluster renaming, add unit tests (#1699)
 
-## Dependencies
+### Dependencies
 * Use minizip-ng 4.0.1 (from 3.0.7) (#1696)
 * Bump vcpkg to latest tag (2023.07.21) (#1532)
 * Remove dead code yuni-docmake (#1544)
 * Remove fixed-size ints from Yuni (#1622, #1629)
 
-## Code cleaning / quality
+### Code cleaning / quality
 * Architecture Decision Record for Study breakdown (#1600)
 * Remove dependency to UI, use RAII to handle resources (#1678)
 * De-templatize `HydroManagement::prepareNetDemand` (#1679)
@@ -157,7 +162,7 @@ Next version
 * Remove unused function `getFilenameWithExtension` (#1537)
 * Remove tmpnam from tests (#1506)
 
-## Build
+### Build
 * ACR CMake (#1551)
 * Add "Antares::action" CMake library, build only if BUILD_UI=ON (#1637)
 * Fix conflicting library name (#1590)
@@ -169,43 +174,43 @@ Next version
 * CMake usage improvements (#1548)
 * Fix build for Oracle Linux 8 (#1542)
 
-## Misc
+### Misc
 * Schedule deps compile instead of develop merge (#1530)
 
-8.7.0 (08/2023)
+## 8.7.0 (08/2023)
 --------------------
-## New Features
+### New Features
 * Binding constraint RHS scenarization (#1219)
 * Implement --mps-export command-line option (#1404)
 * Name constraints & variables in MPS files using --named-mps-problems command-lin e option (#1294)
 * Thermal price definition (contributed by RTE-i, #1272)
 
-## Improvements
+### Improvements
 * Write full command-line instead of solver location in logs (#1518)
 
-## Packages
+### Packages
 * Give Oracle Linux 8 assets a proper name instead of "unknown" (#1438)
 * Don't build tools (study-updater, etc.) by default (#1442)
 
-## Bugfixes
+### Bugfixes
 * Fix error when writing files over 80Mb into a zip (#1488)
 * Fix memory leaks (#1468)
 * Fix segfault, add !skipped to enabled constraints (#1441)
 * Backport [v8.4.3](#v843-082023) changes
 
-## GUI
+### GUI
 * Thermal price definition (RTEi's -> CR20) - UI (#1485)
 
-## Docs
+### Docs
 * Fix possible values for ST storage (#1455)
 
-## Tests
+### Tests
 * Add named MPS tests  (#1408)
 * Enforce better unit test isolation (#1486)
 * Add tests for Windows CI when job is scheduled (#1483)
 * Tests for CR20: thermal price definition (#1364), improvements (#1422)
 
-## For developers
+### For developers
 * Remove platform-specific headers (#1523)
 * Remove one `goto` instruction in OPT (#1522)
 * Remove study singleton in application signal handlers (#1513)
@@ -235,36 +240,36 @@ Next version
 * Array, logs jit and correlation in makefile (#1410)
 
 --------------------
-# v8.6.2 (08/2023)
-## Bugfixes
+## v8.6.2 (08/2023)
+### Bugfixes
 * Backport [v8.4.3](#v843-082023) changes
 
-8.6.1 (06/2023)
+## 8.6.1 (06/2023)
 --------------------
-## Bugfixes
+### Bugfixes
 * Fix major bug related to short-term storage & MRG. PRICE (#1377)
 
-8.6.0 (06/2023)
+## 8.6.0 (06/2023)
 --------------------
-## New features
+### New features
 * Short-term storage (#1163).
 * Add pollutant emissions (#1184, #1222)
 * Minimal generation for hydraulic (#1273, RTE/RTE-i/Redstork)
 * Make LMR optional for adequacy patch (#1247)
 
-## Improvements
+### Improvements
 * Use ISO8601 for date format in the logs (#1303)
 * Publish installers for Oracle Linux 8 (#1341)
 * Remove doc from UI/package, publish it as a separate PDF (#1233)
 * Tune XPRESS resolution (#1158), this should improve performance for OR-Tools+XPRESS
 * Performance metrics (produce a JSON file) (#1306)
 
-## Bugfixes
+### Bugfixes
 * Fix a bug in adequacy study mode (#1314)
 * Fix memory errors detected by valgrind (#1302)
 * Fix empty ROR & STORAGE in output using the TS-Generator (#1293)
 
-## Code quality
+### Code quality
 * Simplify if/else (#1309)
 * Max number of columns in an output file (#1159)
 * Fix a few compilation warnings (int -> uint) (#1301)
@@ -277,67 +282,68 @@ Next version
 * INI files load encapsulation (#1057)
 * Remove group{Min,Max}Count, annuityInvestment in thermal clusters (#1350)
 
-## For developers
+### For developers
 * Bumped OR-Tools 9.2 -> 9.5. CMake 3.18+ is required for build if building OR-Tools, and XPRESS 9.0 for execution (previously 8.13).
 
+## v8.5.1 (08/2023)
 --------------------
-# v8.5.1 (08/2023)
-
+### Changes
 * Backport [v8.4.3](#v843-082023) changes
 
-# v8.5.0 (02/2022)
-
-## New features
+## v8.5.0 (02/2022)
+--------------------
+### New features
 * Curtailment Sharing Rule for Adequacy Patch #1062, including a scaling coefficient in hurdle costs #1155. This feature was contributed by RTE-i with support from RTE, ELIA and APG.
 
-## Bugfix
+### Bugfix
 * Hydraulic patch #697
 * Fix link path error in Kirchhoff constraint builder #1157
 
-## For developers
+### For developers
 * Fix build on Ubuntu 22.04 #1160
 * Cleaning #1142, 1146, #1149
 
-## Examples & documentation
+### Examples & documentation
 * Update docs to include CSR #1156
 * Fix examples studies (invalid v8.3.0 -> v8.5.0) #1136
 
-# v8.4.3 (08/2023)
+## v8.4.3 (08/2023)
+--------------------
 
-## Features
+### Features
 * Increase file size limit from 80Mo to 80Go when reading file.
 
-## Bugfix
+### Bugfix
 * Fix "unhandled error" with big studies in zip mode. MPS files were too big and hit file size hard limit
 
 
-v8.4.2 (01/2022)
+## v8.4.2 (01/2022)
 --------------------
 
-## Improvements
+### Improvements
 * Generate a solver-only asset for every release #976, #1080
 * Use MPS writer from solvers, instead of copy-pasted functions #1023
 
-## GUI
+### GUI
 * Allow more than 100 thermal clusters #1011
 * Remove status bar count. The sum was sometimes wrong #1029
 * Remove unused "District marginal prices" button from Advanced Parameters #1067
 
-## Bugfix
+### Bugfix
 * Fix overwritten MPS files when optimization/simplex-range=day #1041
 * Restore warm start for OR-Tools+XPRESS #1079
 * Fix output overwrite when using zip output by adding a -2, -3, etc. suffix #1044
 * Fix crash when generaldata.ini is empty, using default values #892
 
 
-## Testing
+### Testing
 * Introduce missing MPS comparison tests #1035
 
-## For developers
+### For developers
 * Fix empty CMAKE_BUILD_TYPE #1028
 * Fix memory leaks #669
 
-## Code cleaning
+### Code cleaning
 * Clean up Yuni #1055
 * Remove default implementation for hourEnd (see variable.hxx) #1020
 * Remove free functions for areas' mem allocation #922
@@ -350,18 +356,18 @@ v8.4.2 (01/2022)
 * Pass optimization number as an argument #1040
 
 
-## New Contributors
+### New Contributors
 * @JasonMarechal25 made their first contribution in #1055
 
 **Full Changelog**: https://github.com/AntaresSimulatorTeam/Antares_Simulator/compare/v8.4.1...v8.4.2
 
-v8.4.1 (12/2022)
+## v8.4.1 (12/2022)
 --------------------
 
 ### Bugfix
 * Fix formula for profit calculation #1022
 
-v8.4.0 (12/2022)
+## v8.4.0 (12/2022)
 --------------------
 
 ### Features
@@ -406,17 +412,17 @@ v8.4.0 (12/2022)
 * Document how to run JSON tests #902
 * Document option --list-solvers #770
 
-## New Contributors
+### New Contributors
 * @kathvargasr made their first contribution in #967
 
 **Full Changelog**: https://github.com/AntaresSimulatorTeam/Antares_Simulator/compare/v8.3.2..v8.4.0
 
-v8.3.3 (12/2022)
+## v8.3.3 (12/2022)
 --------------------
 ### Bugfix
 - Round renewable production (#985)
 
-v8.3.2 (09/2022)
+## v8.3.2 (09/2022)
 --------------------
 ### Output aggregation change
 - Daily, weekly, monthtly & annual values for link variable "MARG. COST" (EUR/MWh) was previously obtained by a sum. It now computed by average (#881).
@@ -452,7 +458,7 @@ v8.3.2 (09/2022)
 - Input and output format due to addition of BC marginal prices (#836)
 - Fix e-mail address and website (#834)
 
-v8.3.1 (08/2022)
+## v8.3.1 (08/2022)
 --------------------
 ### New features
 - Add execution-info.ini output file, containing execution durations and study info #740 #803 #816
@@ -467,7 +473,7 @@ v8.3.1 (08/2022)
 ### For developers
 - Bump C++11 to C++17
 
-v8.3.0 (07/2022)
+## v8.3.0 (07/2022)
 --------------------
 ### New features
 - Adequacy patch - share the unsupplied energy according to the "local matching rule". This feature was contributed by RTE-i with support from RTE, ELIA and APG #657
@@ -499,19 +505,19 @@ v8.3.0 (07/2022)
 - Generate 2 assets in CentOS 7 : one that includes XPRESS, one that does not #689
 - Upgrade examples 8.1 -> 8.3 (#733)
 
-v8.2.3 (11/2022)
+## v8.2.3 (11/2022)
 --------------------
 ### Bug fixes
 - Round renewable production (#985)
 
-v8.2.2 (04/2022)
+## v8.2.2 (04/2022)
 --------------------
 ### Bug fixes
 - Fix solver crash on parsing command-line parameters #624
 ### GUI
 - Fix crash occuring when switching to the links panel #658
 
-v8.2.1 (03/2022)
+## v8.2.1 (03/2022)
 --------------------
 ### Bug fixes
 - Fix scenario builder data loss when renaming area #610
@@ -527,7 +533,7 @@ v8.2.1 (03/2022)
 - Linux only : fix impossibility to save a study #600
 - Developer version only : fix assertion errors in the GUI #584
 
-v8.2.0 (03/2022)
+## v8.2.0 (03/2022)
 --------------------
 ### New features
 - Multiple timeseries for link capacities (NTC). It is now possible to establish different scenarios for the capacity of a link. Users can now take partial or total outages for links into account #520
@@ -552,7 +558,7 @@ v8.2.0 (03/2022)
 - Use std::shared_ptr instead of Yuni::SmartPtr in most cases #529
 - Simplify and clean some parts of the code #537, #538, #540
 
-v8.1.1 (01/2022)
+## v8.1.1 (01/2022)
 --------------------
 
 ### Bug fixes
@@ -571,7 +577,7 @@ Include antares-analyzer into .zip and .tar.gz archives (#470). This is especial
 In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in particular gcc 9. This allows for C++17 features to be used without hassle.
 
 
-v8.1.0 (09/2021)
+## v8.1.0 (09/2021)
 --------------------
 
 ### New features
@@ -590,7 +596,7 @@ v8.1.0 (09/2021)
 - Fix vcpkg on Github Actions
 - Add build cache for Github Actions to speed up the build (Linux only)
 
-v8.0.3 (05/2021)
+## v8.0.3 (05/2021)
 --------------------
 
 ### Bug fixes
@@ -606,7 +612,7 @@ v8.0.3 (05/2021)
 - Remove openssl and libcurl dependencies
 - Remove dead code
 
-v8.0.2 (04/2021)
+## v8.0.2 (04/2021)
 -------------------- 
 
 ### Bug fixes
@@ -614,7 +620,7 @@ v8.0.2 (04/2021)
 - Fix GUI freeze when area color is changed but user don't validate new color
 - Correction of MC year weight use for PSP and MISC NDG
 
-v8.0.1 (03/2021)
+## v8.0.1 (03/2021)
 -------------------- 
 ### Features
 
@@ -632,7 +638,7 @@ v8.0.1 (03/2021)
 - Add a GitHub action to check if branch name will launch CI
 - Add shared dll in windows .zip archive
 
-v8.0.0 (03/2021)
+## v8.0.0 (03/2021)
 -------------------- 
 
 ### Features
@@ -707,7 +713,7 @@ v8.0.0 (03/2021)
     - Adding pytest scripts to check reference output values
     - Add pytest scripts related to unfeasible problems
 
-v7.2.0 (06/2020)
+## v7.2.0 (06/2020)
 -------------------- 
 
 ### Features
@@ -763,7 +769,7 @@ v7.2.0 (06/2020)
   command line syntax have been introduced and now make it possible
   to launch a sequence of simulations to run in parallel
 
-v7.1.0 (12/2019)
+## v7.1.0 (12/2019)
 -------------------- 
 
 ### Features
@@ -822,7 +828,7 @@ v7.1.0 (12/2019)
   any data for given Areas or Links, avoid creation of empty folders
   named after said Areas or Links
 
-v7.0.1 (04/2019)
+## v7.0.1 (04/2019)
 -------------------- 
 
 ### Features
@@ -833,7 +839,7 @@ v7.0.1 (04/2019)
 - Hydro-storage modelling: added ability to optimize pumping along
   with generation in mode "use heuristic target without leeway"
 
-v7.0.0 (12/2018)
+## v7.0.0 (12/2018)
 -------------------- 
 
 ### Features
@@ -850,7 +856,7 @@ v7.0.0 (12/2018)
 - Documentation: updated optimization problem formulation
 - Documentation: updated examples library
 
-v7.0.0-rc (12/2018)
+## v7.0.0-rc (12/2018)
 -------------------- 
 
 ### Features
@@ -864,7 +870,7 @@ v7.0.0-rc (12/2018)
   min and max values of PST settings are strictly equal
   and constraints are generated for the whole year
 
-v6.5.1 (11/2018)
+## v6.5.1 (11/2018)
 ---------------- 
 
 ### Bugs
@@ -875,7 +881,7 @@ v6.5.1 (11/2018)
 - Kirchhoff's constraint generator: fixed several GUI issues
 - Districts GUI: improved syntax control
 
-v6.5.0 (11/2018)
+## v6.5.0 (11/2018)
 ---------------- 
 
 ### Features
@@ -973,7 +979,7 @@ v6.5.0 (11/2018)
   value (changed to 2 decimal accuracy)
 
 
-v6.1.3 (06/2018)
+## v6.1.3 (06/2018)
 ---------------- 
 
 ### Features
@@ -1004,7 +1010,7 @@ v6.1.3 (06/2018)
 - Example library : upgraded to 6.1 and extended
 
 
-v6.1.2 (11/2017)
+## v6.1.2 (11/2017)
 ---------------- 
 
 ### Features
@@ -1013,7 +1019,7 @@ v6.1.2 (11/2017)
   (Matrix, right hand side, costs)
 
 
-v6.1.1 (11/2017)
+## v6.1.1 (11/2017)
 ---------------- 
 
 ### Features
@@ -1021,7 +1027,7 @@ v6.1.1 (11/2017)
 - Solver: Light changes in Presolve stage
 
 
-v6.1.0 (09/2017)
+## v6.1.0 (09/2017)
 ---------------- 
 
 ### Features
@@ -1033,7 +1039,7 @@ v6.1.0 (09/2017)
   associated with arbitrary offsets (time-lags expressed in hours).
 
 
-v6.0.6 (07/2017)
+## v6.0.6 (07/2017)
 ---------------- 
 
 ### Features
@@ -1046,7 +1052,7 @@ v6.0.6 (07/2017)
 
 
 
-v6.0.5 (07/2017)
+## v6.0.5 (07/2017)
 ---------------- 
 
 ### Bug fixes
@@ -1061,7 +1067,7 @@ v6.0.5 (07/2017)
   cleaning datasets  (detected as of 6.0.0)
 
 
-v6.0.4 (06/2017)
+## v6.0.4 (06/2017)
 ---------------- 
 
 ### Bug fixes
@@ -1073,7 +1079,7 @@ v6.0.4 (06/2017)
   unsupplied energy allowances
 
 
-v6.0.3 (06/2017)
+## v6.0.3 (06/2017)
 ---------------- 
 
 ### Features
@@ -1094,7 +1100,7 @@ v6.0.3 (06/2017)
    circumstances
 
 
-v6.0.2 (06/2017)
+## v6.0.2 (06/2017)
 ---------------- 
 
 ### Features
@@ -1111,7 +1117,7 @@ v6.0.2 (06/2017)
   two years ore more.
 
 
-v6.0.1 (05/2017)
+## v6.0.1 (05/2017)
 ---------------- 
 
 ### Features
@@ -1139,7 +1145,7 @@ v6.0.1 (05/2017)
   listed above
 
 
-v6.0.0 (04/2017)
+## v6.0.0 (04/2017)
 ---------------- 
 
 ### Features
@@ -1176,7 +1182,7 @@ v6.0.0 (04/2017)
   copy to backup folders, registering of studies and archives in catalogues.
 
 
-v5.0.9-SE (04/2017)
+## v5.0.9-SE (04/2017)
 ---------------- 
 
 ### Bug fixes
@@ -1189,7 +1195,7 @@ v5.0.9-SE (04/2017)
   minimum number of committed thermal units (+1 or -1 deviation,
   "accurate" mode only)
 
-v5.0.7-SE (04/2017)
+## v5.0.7-SE (04/2017)
 ---------------- 
 
 ### Features
@@ -1197,7 +1203,7 @@ v5.0.7-SE (04/2017)
 - License control : management of SSL certificates encrypted through SHA-256 algorithm
 
 
-v5.0.7 (12/2016)
+## v5.0.7 (12/2016)
 ---------------- 
 
 ### Bug fixes
@@ -1205,7 +1211,7 @@ v5.0.7 (12/2016)
 - Fixing a packaging error
 
 
-v5.0.6 (12/2016)
+## v5.0.6 (12/2016)
 ---------------- 
 
 ### Bug fixes
@@ -1236,7 +1242,7 @@ v5.0.6 (12/2016)
 
 
 
-v5.0.5 (08/2016)
+## v5.0.5 (08/2016)
 ---------------- 
 
 ### Bug fixes
@@ -1261,7 +1267,7 @@ v5.0.5 (08/2016)
   is locally expressed as a constraint of the optimization problem  (LOLE=0)
 
 
-v5.0.4 (05/2016)
+## v5.0.4 (05/2016)
 ---------------- 
 
 ### Bug fixes
@@ -1277,7 +1283,7 @@ v5.0.4 (05/2016)
   negative values can be used for all classes of constraints (hourly, daily, weekly)
 
 
-v5.0.3 (05/2016)
+## v5.0.3 (05/2016)
 ---------------- 
 
 ### Bug fixes
@@ -1286,7 +1292,7 @@ v5.0.3 (05/2016)
   "true" for thermal clusters
 
 
-v5.0.2 (04/2016)
+## v5.0.2 (04/2016)
 ---------------- 
 
 ### Bug fixes
@@ -1300,7 +1306,7 @@ v5.0.2 (04/2016)
   theoretical monthly targets (formerly, only the largest deviation was penalized).
 
 
-v5.0.1 (04/2016)
+## v5.0.1 (04/2016)
 ---------------- 
 
 ### Bug fixes
@@ -1312,7 +1318,7 @@ v5.0.1 (04/2016)
   performances in some cases. This problem is now solved.
 
 
-v5.0.0 (03/2016)
+## v5.0.0 (03/2016)
 ---------------- 
 
 ### Bug fixes
@@ -1379,7 +1385,7 @@ v5.0.0 (03/2016)
 
 
 
-v4.5.4 (03/2015)
+## v4.5.4 (03/2015)
 ----------------
 
 ### Bug fixes
@@ -1390,7 +1396,7 @@ v4.5.4 (03/2015)
 - Upgrade to 4.5 format of datasets edited in 4.4 format or lower, in which the "scenario builder"
   feature was activated: the conversion to 4.5 format could fail sometimes.
 
-v4.5.3 (02/2015)
+## v4.5.3 (02/2015)
 ----------------
 
 ### Features
@@ -1416,7 +1422,7 @@ v4.5.3 (02/2015)
 - Spillage management, when numerous binding constraints are active: an excessive leeway
   could be observed regarding the level of hydro power allowed to be curtailed
 
-v4.5.2 (06/2014)
+## v4.5.2 (06/2014)
 ----------------
 
 ### Bug fixes
@@ -1424,7 +1430,7 @@ v4.5.2 (06/2014)
 - In the previous version, the average values of interconnection-related variables were multiplied by two
   and this error was propagated to the standard deviation of the same variables
 
-v4.5.1 (06/2014)
+## v4.5.1 (06/2014)
 ----------------
 
 ### Features
@@ -1434,9 +1440,6 @@ v4.5.1 (06/2014)
 
 
 - Load time-series : negative values are now authorized
-
-
-
 
 ### Bug fixes
 
@@ -1449,7 +1452,7 @@ v4.5.1 (06/2014)
 - Copy/paste of nodes : the field "spread on unsupplied energy cost" was not pasted
 
 
-v4.5.0 (04/2014)
+## v4.5.0 (04/2014)
 ----------------
 
 ### Features
@@ -1473,7 +1476,7 @@ v4.5.0 (04/2014)
   within a week was not fully optimized
 
 
-v4.4.1 (05/2013)
+## v4.4.1 (05/2013)
 ----------------
 
 ### Bug fixes
@@ -1489,7 +1492,7 @@ v4.4.1 (05/2013)
 
 
 
-v4.4.0 (04/2013)
+## v4.4.0 (04/2013)
 ----------------
 
 ### Features
@@ -1530,7 +1533,7 @@ v4.4.0 (04/2013)
 
 
 
-v4.3.7 (02/2013)
+## v4.3.7 (02/2013)
 ----------------
 
 ### Features
@@ -1545,7 +1548,7 @@ v4.3.7 (02/2013)
 
 
 
-V4.3.6 (12/2012)
+## V4.3.6 (12/2012)
 ----------------
 
 ### Bug fixes
@@ -1557,7 +1560,7 @@ V4.3.6 (12/2012)
   consideration user- and folder-related quotas
 
 
-V4.3.5 (10/2012)
+## V4.3.5 (10/2012)
 ----------------
 
 ### Features
@@ -1596,7 +1599,7 @@ V4.3.5 (10/2012)
 
 
 
-V4.2.6 (07/2012)
+## V4.2.6 (07/2012)
 ----------------
 
 ### Features
@@ -1628,7 +1631,7 @@ V4.2.6 (07/2012)
 
 
 
-v4.1.0 (06/2012)
+## v4.1.0 (06/2012)
 ----------------
 
 ### Features
@@ -1649,7 +1652,7 @@ v4.1.0 (06/2012)
 
 
 
-v3.8.0 (12/2011)
+## v3.8.0 (12/2011)
 ----------------
 
 ### Features
@@ -1671,7 +1674,7 @@ v3.8.0 (12/2011)
 
 
 
-V3.7.4 (08/2011)
+## V3.7.4 (08/2011)
 ----------------
 
 ### Features
@@ -1699,7 +1702,7 @@ V3.7.4 (08/2011)
 
 
 
-V3.6.4 (04/2011)
+## V3.6.4 (04/2011)
 ----------------
 
 ### Features
@@ -1713,7 +1716,7 @@ V3.6.4 (04/2011)
 
 
 
-V3.5.3 (03/2011)
+## V3.5.3 (03/2011)
 ----------------
 
 ### Features
@@ -1732,7 +1735,7 @@ V3.5.3 (03/2011)
 
 
 
-V3.4.4 (02/2011)
+## V3.4.4 (02/2011)
 ----------------
 
 ### Features
@@ -1743,7 +1746,7 @@ V3.4.4 (02/2011)
 
 
 
-v3.4.3 (10/2010)
+## v3.4.3 (10/2010)
 ----------------
 
 ### Features
@@ -1775,7 +1778,7 @@ v3.4.3 (10/2010)
 
 
 
-v3.3.2 (07/2010)
+## v3.3.2 (07/2010)
 ----------------
 
 ### Features
@@ -1802,7 +1805,7 @@ v3.3.2 (07/2010)
 
 
 
-v3.1.0 (01/2010)
+## v3.1.0 (01/2010)
 ----------------
 
 ### Features
@@ -1819,7 +1822,7 @@ v3.1.0 (01/2010)
 
 
 
-From V1 to V2 (all versions)
+## From V1 to V2 (all versions)
 ----------------------------
 
 - Refer to project development archives (TRAC thread)
