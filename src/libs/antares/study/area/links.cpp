@@ -21,6 +21,7 @@
 
 #include <limits>
 #include <yuni/yuni.h>
+#include <filesystem>
 #include "antares/study//study.h"
 #include "antares/utils/utils.h"
 #include "antares/study/area/links.h"
@@ -136,6 +137,8 @@ bool AreaLink::linkLoadTimeSeries_for_version_820_and_later(const AnyString& fol
     return success;
 }
 
+// This function is "lazy", it only loads files if they exist
+// and set a `valid` flag
 bool AreaLink::loadTSGenTimeSeries(const AnyString& folder)
 {
     const std::string id_direct = std::string(from->id) + "/" + std::string(with->id);
@@ -152,25 +155,47 @@ bool AreaLink::loadTSGenTimeSeries(const AnyString& folder)
     // Prepro
     String filename;
     filename.clear() << preproFolder << SEP << with->id << "_direct.txt";
-    bool success = tsGenerationDirect.prepro->data.loadFromCSVFile(
-      filename, Antares::Data::PreproAvailability::thermalPreproMax, DAYS_PER_YEAR);
-    success = tsGenerationDirect.prepro->validate() && success;
+    bool anyFileWasLoaded = false;
+    if (std::filesystem::exists(filename.to<std::string>()))
+    {
+        anyFileWasLoaded = true;
+        tsGenerationDirect.valid
+          = tsGenerationDirect.prepro->data.loadFromCSVFile(
+              filename, Antares::Data::PreproAvailability::thermalPreproMax, DAYS_PER_YEAR)
+            && tsGenerationDirect.prepro->validate();
+    }
 
     filename.clear() << preproFolder << SEP << with->id << "_indirect.txt";
-    success = tsGenerationIndirect.prepro->data.loadFromCSVFile(
-                filename, Antares::Data::PreproAvailability::thermalPreproMax, DAYS_PER_YEAR)
-              && success;
-    success = tsGenerationIndirect.prepro->validate() && success;
+    if (std::filesystem::exists(filename.to<std::string>()))
+    {
+        anyFileWasLoaded = true;
+        tsGenerationIndirect.valid
+          = tsGenerationIndirect.prepro->data.loadFromCSVFile(
+              filename, Antares::Data::PreproAvailability::thermalPreproMax, DAYS_PER_YEAR)
+            && tsGenerationIndirect.prepro->validate();
+    }
 
     // Modulation
     filename.clear() << preproFolder << SEP << with->id << "_mod_direct.txt";
-    success = tsGenerationDirect.modulationCapacity.loadFromCSVFile(filename, 1, HOURS_PER_YEAR)
-              && success;
+    if (std::filesystem::exists(filename.to<std::string>()))
+    {
+        anyFileWasLoaded = true;
+        tsGenerationDirect.valid
+          &= tsGenerationDirect.modulationCapacity.loadFromCSVFile(filename, 1, HOURS_PER_YEAR);
+    }
 
     filename.clear() << preproFolder << SEP << with->id << "_mod_indirect.txt";
-    success = tsGenerationIndirect.modulationCapacity.loadFromCSVFile(filename, 1, HOURS_PER_YEAR)
-              && success;
-    return success;
+    if (std::filesystem::exists(filename.to<std::string>()))
+    {
+        anyFileWasLoaded = true;
+        tsGenerationIndirect.valid
+          &= tsGenerationIndirect.modulationCapacity.loadFromCSVFile(filename, 1, HOURS_PER_YEAR);
+    }
+    if (anyFileWasLoaded)
+    {
+        return tsGenerationDirect.valid && tsGenerationIndirect.valid;
+    }
+    return true;
 }
 
 bool AreaLink::isLinkPhysical() const
@@ -559,9 +584,6 @@ bool AreaLinksLoadFromFolder(Study& study,
 
         ret = link.loadTimeSeries(study.header.version, folder) && ret;
 
-        if (loadTSGen)
-            ret = link.loadTSGenTimeSeries(folder) && ret;
-
         // Checks on loaded link's data
         if (study.usedByTheSolver)
         {
@@ -647,6 +669,9 @@ bool AreaLinksLoadFromFolder(Study& study,
             if (!AreaLinksInternalLoadFromProperty(link, key, value))
                 logs.warning() << '`' << p->key << "`: Unknown property";
         }
+
+        if (loadTSGen)
+            ret = link.loadTSGenTimeSeries(folder) && ret;
 
         // From the solver only
         if (study.usedByTheSolver)

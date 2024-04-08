@@ -128,6 +128,8 @@ struct LinkTsGeneration
     std::unique_ptr<Data::PreproAvailability> prepro;
 
     Matrix<> modulationCapacity;
+
+    bool valid = false;
 };
 } // namespace Antares::Data
 

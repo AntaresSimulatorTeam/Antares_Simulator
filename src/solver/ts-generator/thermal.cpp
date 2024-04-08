@@ -652,7 +652,11 @@ bool generateLinkTimeSeries(Data::Study& study,
 
         auto& tsGenStruct = direction == linkDirection::direct ? link->tsGenerationDirect
                                                                : link->tsGenerationIndirect;
-
+        if (!tsGenStruct.valid)
+        {
+            logs.error() << "Missing data for link " << link->from << "/" << link->with;
+            return false;
+        }
         ThermalInterface linkInterface(tsGenStruct, ts, link->with->name);
 
         generator.generateTS(*link->from, linkInterface);
