@@ -24,7 +24,6 @@ Antares Simulator is built using CMake.
 - [User tests](4-Tests-user.md)
 - [Developer tests](4-Tests-dev.md)
 - [Installer creation](5-Installer-creation.md)
-- [Developer advice](6-dev-advice.md)
 
 
 [ubuntu_ci_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Ubuntu%20CI%20(push%20and/or%20release)/badge.svg
