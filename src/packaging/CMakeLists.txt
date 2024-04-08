@@ -6,55 +6,86 @@
 include(GNUInstallDirs)
 # generate and install export file
 set(TARGET_LIBS #No alias
-        solver-lib
-        args_helper
-        date
-        benchmarking
-        result_writer
-        sys
-        infoCollection
-        checks
-        misc
-        yuni-static-uuid
-        yuni-static-core
-        ${CMAKE_THREADS_LIBS_INIT}
-        run-mode
-        antares-solver-hydro
-        antares-solver-variable
-        antares-solver-simulation
-        antares-solver-ts-generator
-        model_antares
-        antares-core
-        locale
-        resources
-        locator
-        #deps of deps
-        exception
-        logs
-        infeasible_problem_analysis
+        #each "block" of dependency describe the dependency for a target
+        #not dependency is present since once a dependency is in the export set
+        #it is available for everything
+
+        solver_api #What we want to export
+
+        #solver_api
         study
-        array
-        utils
-        concurrency
-        mersenne
-        application
-        AntaresMemory
-        jit
-        io
-        series
-        path
-        correlation
-        StudyUtils
-        stdcxx
-        inifile
-        antares-config-lib
-        file-tree-study-loader
         study-loader
+        file-tree-study-loader
+        run-mode
+        antares-solver-simulation
         lps
-        #
+        #study
+        yuni-static-core
+        array
+        date
+        inifile
+        stdcxx
+        StudyUtils
+        utils
+        correlation
+        path
+        mersenne
+        result_writer
+        series
+        antares-core
+        antares-solver-hydro
+        exception
+        benchmarking
+        antares-solver-variable
+
+        #study-loader
+        #nothing
+
+        #file-tree-study-loader
+        application
+
+        #run-mode
+        infoCollection
+
+        #antares-solver-simulation
+        concurrency
+        misc
+        model_antares
+        antares-solver-ts-generator
+
+        #lps
+        #nothing
+
+        #array
+        io
+        jit
+        AntaresMemory
+
+        #date
+        logs
+
+        #correlation
+        locator
+
+        #antares-core
+        antares-config-lib
+
+        #application
+        solver-lib
+        sys
         signal-handling
-        antares-solver-variable-info
-        #minizip
+        resources
+
+        #model_antares
+        infeasible_problem_analysis
+
+        #solver-lib
+        args_helper
+        checks
+        locale
+        yuni-static-uuid
+
+        antares-solver #executable
 )
 
 install(TARGETS ${TARGET_LIBS}

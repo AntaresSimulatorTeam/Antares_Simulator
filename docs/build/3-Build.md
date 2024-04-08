@@ -50,7 +50,6 @@ Here is a list of mandatory or optional CMake configuration options:
 | `DEPS_INSTALL_DIR`    | no        | Define dependencies libraries install directory                                  | absolute path to an existing directory | `<antares_checkout_dir>/../rte-antares-deps-<build_type>` |
 | `USE_PRECOMPILED_EXT` | no        | This option must be set if you use wxWidget as precompiled external library      | `ON` / `OFF`                           | `OFF`                                                     |
 | `BUILD_TESTING`       | no        | Enable build for unit tests                                                      | `ON` / `OFF`                           | `OFF`                                                     |
-| `BUILD_ORTOOLS`       | no        | Enable build for OR-Tools and its dependencies (requires an Internet connection) | `ON` / `OFF`                           | `OFF`                                                     |
 
 > 💡 **Disable the UI build to make builds faster**  
 > The UI takes up a good chunk of compilation time. It is enabled by default, but you can disable it by turning off `BUILD_UI`
