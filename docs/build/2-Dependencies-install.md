@@ -74,8 +74,6 @@ These third-party libraries can be installed:
 Apart from OR-Tools, all dependencies can be built at configure time using the option `-DBUILD_ALL=ON` (`OFF` by default). 
 For a list of available options, see [the Antares dependencies compilation repository](https://github.com/AntaresSimulatorTeam/antares-deps).
 
-You can set `-DBUILD_ORTOOLS=ON` to download & build OR-Tools. It is also possible to use a precompiled archive, see below.
-
 For compiling the package yourself from git, additional build dependencies are needed (see [here](1-Development-requirements.md)).
 
 ### Pre-compiled OR-Tools: release+static only
