@@ -9,7 +9,7 @@ target_link_libraries(${execname}
                        PRIVATE
                        yaml-cpp
 		               Boost::unit_test_framework
-                     ) 
+                     )
 
 
 add_test(NAME yaml-parser COMMAND ${execname})

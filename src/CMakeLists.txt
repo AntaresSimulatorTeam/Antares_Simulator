@@ -188,8 +188,8 @@ message(STATUS "Build minizip: ${BUILD_MINIZIP}")
 option(WITH_ANTLR4 "With antlr4" OFF)
 message(STATUS "With antlr4: ${WITH_ANTLR4}")
 
-option(BUILD_YAMLCPP "With yaml-cpp" OFF)
-message(STATUS "With yaml-cpp: ${BUILD_YAMLCPP}")
+option(WITH_YAMLCPP "With yaml-cpp" OFF)
+message(STATUS "With yaml-cpp: ${WITH_YAMLCPP}")
 
 option(BUILD_MERSENNE_TWISTER_PYBIND11 "Build pybind11 bindings for Mersenne-Twister" OFF)
 if (${BUILD_MERSENNE_TWISTER_PYBIND11})
