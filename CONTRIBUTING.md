@@ -49,5 +49,7 @@ Please provide a description in the head comment of the PR. This description wil
 The description should be short but proportional to the length or complexity of the PR. Try to explain the motivation
 of the PR (why) and the method employed (how).
 
-When a pull request is opened, please set it to draft if it is still being worked on or not ready for review.
+When a pull request is opened, please set it to draft if it is still being worked on or not ready for review.  
 
+If your Pull Request changes a part of the code that is [documented](https://antares-simulator.readthedocs.io/), 
+please update the documentation also, in the ["docs"](docs) directory.  
