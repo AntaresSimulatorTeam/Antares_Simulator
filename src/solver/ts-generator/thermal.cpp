@@ -654,7 +654,7 @@ bool generateLinkTimeSeries(Data::Study& study,
                                                                : link->tsGenerationIndirect;
         if (!tsGenStruct.valid)
         {
-            logs.error() << "Missing data for link " << link->from << "/" << link->with;
+            logs.error() << "Missing data for link " << link->from->id << "/" << link->with->id;
             return false;
         }
         AvailabilityTSGeneratorData linkInterface(tsGenStruct, ts, link->with->name);
