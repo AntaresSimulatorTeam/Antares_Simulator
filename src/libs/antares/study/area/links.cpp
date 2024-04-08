@@ -334,7 +334,7 @@ AreaLink* AreaAddLinkBetweenAreas(Area* area, Area* with, bool warning)
 
 namespace // anonymous
 {
-bool handleKey(const String& key, const String& value, Data::AreaLink& link)
+bool handleKey(Data::AreaLink& link, const String& key, const String& value)
 {
     if (key == "hurdles-cost")
         return value.to<bool>(link.useHurdlesCost);
@@ -480,7 +480,7 @@ bool handleTSGenKey_internal(const std::string& key,
     return false;
 }
 
-bool handleTSGenKey(const std::string& key, const String& value, Data::AreaLink& link)
+bool handleTSGenKey(Data::AreaLink& link, const std::string& key, const String& value)
 {
     const std::string key_(key); // Conversion from Yuni::String
     if (key_.starts_with("tsgen_direct"))
@@ -492,7 +492,7 @@ bool handleTSGenKey(const std::string& key, const String& value, Data::AreaLink&
 
 bool AreaLinksInternalLoadFromProperty(AreaLink& link, const String& key, const String& value)
 {
-    return handleKey(key, value, link) || handleTSGenKey(key, value, link);
+    return handleKey(link, key, value) || handleTSGenKey(link, key, value);
 }
 
 void logLinkDataCheckError(const AreaLink& link, const String& msg, int hour)
