@@ -334,42 +334,7 @@ AreaLink* AreaAddLinkBetweenAreas(Area* area, Area* with, bool warning)
 
 namespace // anonymous
 {
-bool handleTSGenKey(const std::string& key,
-                    const String& value,
-                    const std::string& prefix,
-                    Data::LinkTsGeneration& out)
-{
-    const auto checkPrefixed = [&prefix, &key](const std::string& s) {
-        auto key_lowercase(key);
-        boost::to_lower(key_lowercase);
-        return key_lowercase == prefix + "_" + s;
-    };
-
-    if (checkPrefixed("unitcount"))
-        return value.to<uint>(out.unitCount);
-
-    if (checkPrefixed("nominalcapacity"))
-        return value.to<double>(out.nominalCapacity);
-
-    if (checkPrefixed("law.planned"))
-        return value.to(out.plannedLaw);
-
-    if (checkPrefixed("law.forced"))
-        return value.to(out.forcedLaw);
-
-    if (checkPrefixed("volatility.planned"))
-        return value.to(out.plannedVolatility);
-
-    if (checkPrefixed("volatility.forced"))
-        return value.to(out.forcedVolatility);
-
-    return false;
-}
-
-bool AreaLinksInternalLoadFromProperty(AreaLink& link,
-                                       const String& key,
-                                       const String& value,
-                                       bool loadTSGen)
+bool handleKey(const String& key, const String& value, Data::AreaLink& link)
 {
     if (key == "hurdles-cost")
         return value.to<bool>(link.useHurdlesCost);
@@ -480,13 +445,60 @@ bool AreaLinksInternalLoadFromProperty(AreaLink& link,
         link.filterYearByYear = stringIntoDatePrecision(value);
         return true;
     }
-    if (loadTSGen)
+    return false;
+}
+
+bool handleTSGenKey_internal(const std::string& key,
+                             const String& value,
+                             const std::string& prefix,
+                             Data::LinkTsGeneration& out)
+{
+    const auto checkPrefixed = [&prefix, &key](const std::string& s) {
+        auto key_lowercase(key);
+        boost::to_lower(key_lowercase);
+        return key_lowercase == prefix + "_" + s;
+    };
+
+    if (checkPrefixed("unitcount"))
+        return value.to<uint>(out.unitCount);
+
+    if (checkPrefixed("nominalcapacity"))
+        return value.to<double>(out.nominalCapacity);
+
+    if (checkPrefixed("law.planned"))
+        return value.to(out.plannedLaw);
+
+    if (checkPrefixed("law.forced"))
+        return value.to(out.forcedLaw);
+
+    if (checkPrefixed("volatility.planned"))
+        return value.to(out.plannedVolatility);
+
+    if (checkPrefixed("volatility.forced"))
+        return value.to(out.forcedVolatility);
+
+    return false;
+}
+
+bool handleTSGenKey(const std::string& key, const String& value, Data::AreaLink& link)
+{
+    const std::string key_(key); // Conversion from Yuni::String
+    if (key_.starts_with("tsgen_direct"))
+        return handleTSGenKey_internal(key_, value, "tsgen_direct", link.tsGenerationDirect);
+    else if (key_.starts_with("tsgen_indirect"))
+        return handleTSGenKey_internal(key_, value, "tsgen_indirect", link.tsGenerationIndirect);
+    return false;
+}
+
+bool AreaLinksInternalLoadFromProperty(AreaLink& link,
+                                       const String& key,
+                                       const String& value,
+                                       bool loadTSGen)
+{
+    bool found = handleKey(key, value, link);
+    if (!found && loadTSGen)
     {
-        const std::string key_(key); // Conversion from Yuni::String
-        if (key_.starts_with("tsgen_direct"))
-            return handleTSGenKey(key_, value, "tsgen_direct", link.tsGenerationDirect);
-        else if (key_.starts_with("tsgen_indirect"))
-            return handleTSGenKey(key_, value, "tsgen_indirect", link.tsGenerationIndirect);
+        return handleTSGenKey(key, value, link);
     }
     return false;
 }
