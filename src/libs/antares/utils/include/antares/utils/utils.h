@@ -47,6 +47,14 @@ std::vector<std::pair<std::string, std::string>> splitStringIntoPairs(const std:
                                                                       char delimiter1,
                                                                       char delimiter2);
 
+namespace Utils
+{
+
+bool isZero(double d);
+
+double round(double d, unsigned precision);
+
+} // namespace Utils
 } // namespace Antares
 
 #include "utils.hxx"

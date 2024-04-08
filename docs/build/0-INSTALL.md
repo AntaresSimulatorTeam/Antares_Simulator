@@ -17,4 +17,3 @@ This software suite has been tested under:
 - [Build](3-Build.md)
 - [Tests](4-Tests.md)
 - [Installer creation](5-Installer-creation.md)
-- [Developer advice](6-dev-advice.md)

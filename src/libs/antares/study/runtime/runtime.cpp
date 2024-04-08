@@ -23,6 +23,7 @@
 #include "antares/antares/fatal-error.h"
 
 #include "antares/study/area/scratchpad.h"
+#include <antares/utils/utils.h>
 
 using namespace Yuni;
 
@@ -51,7 +52,7 @@ static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos&
             double nE, nS;
             for (uint i = 0; i != 12; ++i)
             {
-                if (!Math::Zero(e[i]))
+                if (!Utils::isZero(e[i]))
                 {
                     // E' = ln(e) - 0.5 * ln(1 + (s*s) / (e*e))
                     // S' = sqrt(ln(1 + (s*s) / (e*e)))
@@ -59,9 +60,9 @@ static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos&
                     nS = sqrt(log(1. + (s[i] * s[i]) / (e[i] * e[i])));
 
                     // asserts
-                    assert(!Math::NaN(nE)
+                    assert(!std::isnan(nE)
                            && "Hydro: NaN value detected for hydro prepro expectation");
-                    assert(!Math::NaN(nS)
+                    assert(!std::isnan(nS)
                            && "Hydro: NaN value detected for hydro prepro expectation");
 
                     e[i] = nE;
@@ -251,10 +252,8 @@ void StudyRuntimeInfos::checkThermalTSGeneration(Study& study)
     thermalTSRefresh = globalThermalTSgeneration;
 
     study.areas.each([this, globalThermalTSgeneration](Data::Area& area) {
-        for (auto c : area.thermal.list.each_enabled_and_not_mustrun())
-        {
+        for (auto& c : area.thermal.list.each_enabled_and_not_mustrun())
             thermalTSRefresh = thermalTSRefresh || c->doWeGenerateTS(globalThermalTSgeneration);
-        }
     });
 }
 

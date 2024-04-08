@@ -191,7 +191,7 @@ public:
         // Somme de toutes les productions disponibles pour l'ensemble des
         // paliers thermiques (+must-run)
         pValuesForTheCurrentYear[numSpace].reset();
-        for (const auto cluster : pArea->thermal.list.each_enabled())
+        for (const auto& cluster : pArea->thermal.list.each_enabled())
         {
             const auto& availableProduction = cluster->series.getColumn(year);
             for (unsigned int hour = 0; hour != cluster->series.timeSeries.height; ++hour)

@@ -304,7 +304,7 @@ BOOST_AUTO_TEST_CASE(error_on_wrong_hydro_data)
 BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_FIXTURE_TEST_SUITE(ONE_AREA__ONE_STS_THERMAL_CLUSTER, StudyFixture)
-BOOST_AUTO_TEST_CASE(sts_initial_level)
+BOOST_AUTO_TEST_CASE(STS_initial_level_is_also_weekly_final_level)
 {
     using namespace Antares::Data::ShortTermStorage;
 	setNumberMCyears(1);
@@ -317,7 +317,7 @@ BOOST_AUTO_TEST_CASE(sts_initial_level)
     props.reservoirCapacity = 100;
     props.efficiencyFactor = .9;
     props.initialLevel = .443;
-    props.group = Group::PSP_open;
+    props.groupName = std::string("Some STS group");
     // Default values for series
     sts.series->fillDefaultSeriesIfEmpty();
 
@@ -348,8 +348,9 @@ BOOST_AUTO_TEST_CASE(sts_initial_level)
 	simulation->create();
 	simulation->run();
 
+	unsigned int groupNb = 0; // Used to reach the first group of STS results 
 	OutputRetriever output(simulation->rawSimu());
-	BOOST_TEST(output.STSLevel_PSP_Open(area).hour(167) == props.initialLevel * props.reservoirCapacity.value(), tt::tolerance(0.001));
+	BOOST_TEST(output.levelForSTSgroup(area, groupNb).hour(167) == props.initialLevel * props.reservoirCapacity.value(), tt::tolerance(0.001));
 }
 BOOST_AUTO_TEST_SUITE_END()
 

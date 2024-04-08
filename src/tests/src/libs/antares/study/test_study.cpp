@@ -86,7 +86,7 @@ BOOST_FIXTURE_TEST_CASE(thermal_cluster_delete, OneAreaStudy)
     areaA->thermal.list.addToCompleteList(enabledCluster);
 
     // Check that "Cluster1" isn't found
-    for (const auto c : areaA->thermal.list.each_enabled())
+    for (const auto& c : areaA->thermal.list.each_enabled())
         BOOST_CHECK(c->name() != "Cluster1");
 }
 
@@ -103,7 +103,7 @@ BOOST_FIXTURE_TEST_CASE(renewable_cluster_delete, OneAreaStudy)
     areaA->renewable.list.addToCompleteList(enabledCluster);
 
     // Check that "Cluster1" isn't found
-    for (const auto c : areaA->renewable.list.each_enabled())
+    for (const auto& c : areaA->renewable.list.each_enabled())
         BOOST_CHECK(c->name() != "Cluster1");
 }
 

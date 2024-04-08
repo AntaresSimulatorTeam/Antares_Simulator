@@ -133,7 +133,7 @@ static void listOfFilesAnDirectoriesToKeepForArea(PathList& e, PathList& p, cons
         buffer.clear() << "input/thermal/clusters/" << id << "/list.ini";
         e.add(buffer);
 
-        for (auto cluster : area->thermal.list.all())
+        for (auto& cluster : area->thermal.list.all())
         {
             buffer.clear() << "input/thermal/prepro/" << id << '/' << cluster->id();
             p.add(buffer);
@@ -162,7 +162,7 @@ static void listOfFilesAnDirectoriesToKeepForArea(PathList& e, PathList& p, cons
         buffer.clear() << "input/renewables/clusters/" << id << "/list.ini";
         e.add(buffer);
 
-        for (const auto cluster : area->renewable.list.all())
+        for (const auto& cluster : area->renewable.list.all())
         {
             buffer.clear() << "input/renewables/series/" << id << '/' << cluster->id();
             p.add(buffer);

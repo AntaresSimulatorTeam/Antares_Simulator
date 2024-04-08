@@ -1406,7 +1406,7 @@ bool Study::checkForFilenameLimits(bool output, const String& chfolder) const
             auto& cname = clustername;
             cname.clear();
 
-            for (auto cluster : area.thermal.list.all())
+            for (auto& cluster : area.thermal.list.all())
                 if (cluster->id().size() > cname.size())
                     cname = cluster->id();
         });

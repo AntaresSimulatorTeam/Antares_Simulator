@@ -33,6 +33,7 @@
 #include <antares/logs/logs.h>
 #include "antares/study/load-options.h"
 #include <climits>
+#include <boost/algorithm/string/case_conv.hpp>
 #include "antares/solver/variable/economy/all.h"
 
 #include <antares/exception/AssertionError.hpp>
@@ -854,6 +855,25 @@ static bool SGDIntLoadFamily_Playlist(Parameters& d,
     return false;
 }
 
+static bool deprecatedVariable(std::string var)
+{
+    static const std::vector<std::string> STSGroups_legacy
+      = {"psp_open_level",      "psp_closed_level",      "pondage_level",
+         "battery_level",       "other1_level",          "other2_level",
+         "other3_level",        "other4_level",          "other5_level",
+
+         "psp_open_injection",  "psp_closed_injection",  "pondage_injection",
+         "battery_injection",   "other1_injection",      "other2_injection",
+         "other3_injection",    "other4_injection",      "other5_injection",
+
+         "psp_open_withdrawal", "psp_closed_withdrawal", "pondage_withdrawal",
+         "battery_withdrawal",  "other1_withdrawal",     "other2_withdrawal",
+         "other3_withdrawal",   "other4_withdrawal",     "other5_withdrawal"};
+    boost::to_lower(var);
+    return std::find(STSGroups_legacy.begin(), STSGroups_legacy.end(), var)
+           != STSGroups_legacy.end();
+}
+
 static bool SGDIntLoadFamily_VariablesSelection(Parameters& d,
                                                 const String& key,
                                                 const String& value,
@@ -867,6 +887,12 @@ static bool SGDIntLoadFamily_VariablesSelection(Parameters& d,
     }
     if (key == "select_var +" || key == "select_var -")
     {
+        if (deprecatedVariable(value.to<std::string>()))
+        {
+            logs.warning() << "Output variable `" << original
+                           << "` no longer exists and has been ignored";
+            return true;
+        }
         // Check if the read output variable exists
         if (not d.variablesPrintInfo.exists(value.to<std::string>()))
         {

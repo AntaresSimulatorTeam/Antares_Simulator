@@ -2,7 +2,6 @@ set(PROJ mersenne)
 set(SRC_PROJ
         mersenne-twister.cpp
         include/antares/mersenne-twister/mersenne-twister.h
-        include/antares/mersenne-twister/mersenne-twister.hxx
 )
 source_group("mersenne-twister" FILES ${SRC_PROJ})
 

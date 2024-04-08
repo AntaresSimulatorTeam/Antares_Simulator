@@ -19,9 +19,9 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #include <yuni/yuni.h>
-#include <yuni/core/math.h>
 #include <algorithm>
 #include <vector>
+#include <cmath>
 #include <functional>
 
 #include "antares/study/binding_constraint/BindingConstraint.h"
@@ -143,7 +143,7 @@ void BindingConstraint::weight(const AreaLink* lnk, double w)
 {
     if (lnk)
     {
-        if (Math::Zero(w))
+        if (Utils::isZero(w))
         {
             auto i = pLinkWeights.find(lnk);
             if (i != pLinkWeights.end())
@@ -159,7 +159,7 @@ void BindingConstraint::weight(const ThermalCluster* cluster, double w)
 {
     if (cluster && cluster->isActive())
     {
-        if (Math::Zero(w))
+        if (Utils::isZero(w))
         {
             auto i = pClusterWeights.find(cluster);
             if (i != pClusterWeights.end())
@@ -180,7 +180,7 @@ void BindingConstraint::offset(const AreaLink* lnk, int o)
 {
     if (lnk)
     {
-        if (Math::Zero(o))
+        if (Utils::isZero(o))
         {
             auto i = pLinkOffsets.find(lnk);
             if (i != pLinkOffsets.end())
@@ -195,7 +195,7 @@ void BindingConstraint::offset(const ThermalCluster* cluster, int o)
 {
     if (cluster && cluster->isActive())
     {
-        if (Math::Zero(o))
+        if (Utils::isZero(o))
         {
             auto i = pClusterOffsets.find(cluster);
             if (i != pClusterOffsets.end())
@@ -407,7 +407,7 @@ void BindingConstraint::buildFormula(String& s) const
             if (o > 0)
                 s << " x (t + " << pLinkOffsets.find(i->first)->second << ')';
             if (o < 0)
-                s << " x (t - " << Math::Abs(pLinkOffsets.find(i->first)->second) << ')';
+                s << " x (t - " << std::abs(pLinkOffsets.find(i->first)->second) << ')';
         }
 
         s << ')';
@@ -429,7 +429,7 @@ void BindingConstraint::buildFormula(String& s) const
             if (o > 0)
                 s << " x (t + " << pClusterOffsets.find(i->first)->second << ')';
             if (o < 0)
-                s << " x (t - " << Math::Abs(pClusterOffsets.find(i->first)->second) << ')';
+                s << " x (t - " << std::abs(pClusterOffsets.find(i->first)->second) << ')';
         }
 
         if (!i->first->isActive())

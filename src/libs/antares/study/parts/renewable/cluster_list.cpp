@@ -22,6 +22,7 @@
 #include "antares/study/parts/renewable/cluster_list.h"
 #include <antares/inifile/inifile.h>
 #include "antares/study/study.h"
+#include <antares/utils/utils.h>
 #include <antares/study/area/area.h>
 
 using namespace Yuni;
@@ -58,7 +59,7 @@ bool RenewableClusterList::saveToFolder(const AnyString& folder) const
         IniFile ini;
 
         // Browse all clusters
-        for (auto c : all())
+        for (auto& c : all())
         {
             // Adding a section to the inifile
             IniFile::Section* s = ini.addSection(c->name());
@@ -72,10 +73,10 @@ bool RenewableClusterList::saveToFolder(const AnyString& folder) const
             if (!c->enabled)
                 s->add("enabled", "false");
 
-            if (!Math::Zero(c->nominalCapacity))
+            if (!Utils::isZero(c->nominalCapacity))
                 s->add("nominalCapacity", c->nominalCapacity);
 
-            if (!Math::Zero(c->unitCount))
+            if (!Utils::isZero(c->unitCount))
                 s->add("unitCount", c->unitCount);
 
             s->add("ts-interpretation", c->getTimeSeriesModeAsString());

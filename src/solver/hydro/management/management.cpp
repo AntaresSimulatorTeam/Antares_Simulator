@@ -25,12 +25,10 @@
 #include <antares/antares/fatal-error.h>
 #include "antares/solver/hydro/management/management.h"
 #include "antares/solver/simulation/sim_extern_variables_globales.h"
-#include <yuni/core/math.h>
 #include <limits>
 #include <antares/study/parts/hydro/container.h>
 #include <numeric>
-
-using namespace Yuni;
+#include <cmath>
 
 namespace Antares
 {
@@ -39,22 +37,24 @@ namespace Solver
 
 double randomReservoirLevel(double min, double avg, double max, MersenneTwister& random)
 {
-    if (Math::Equals(min, max))
+    auto equals = [] (double a, double b) { return std::abs(a - b) < 1.e-6; };
+
+    if (equals(min, max))
         return avg;
-    if (Math::Equals(avg, min) || Math::Equals(avg, max))
+    if (equals(avg, min) || equals(avg, max))
         return avg;
 
     double e = (avg - min) / (max - min);
     double re = 1. - e;
 
-    assert(Math::Abs(1. + e) > 1e-12);
-    assert(Math::Abs(2. - e) > 1e-12);
+    assert(std::abs(1. + e) > 1e-12);
+    assert(std::abs(2. - e) > 1e-12);
 
     double v1 = (e * e) * re / (1. + e);
     double v2 = e * re * re / (2. - e);
-    double v = Math::Min(v1, v2) * .5;
+    double v = std::min(v1, v2) * .5;
 
-    assert(Math::Abs(v) > 1e-12);
+    assert(std::abs(v) > 1e-12);
 
     double a = e * (e * re / v - 1.);
     double b = re * (e * re / v - 1.);
@@ -72,9 +72,9 @@ double GammaVariable(double r, MersenneTwister &random)
         double u = random();
         double v = random();
         double w = u * (1. - u);
-        assert(Math::Abs(w) > 1e-12);
+        assert(std::abs(w) > 1e-12);
         assert(3. * (r - 0.25) / w > 0.);
-        double y = Math::SquareRootNoCheck(3. * (r - 0.25) / w) * (u - 0.5);
+        double y = std::sqrt(3. * (r - 0.25) / w) * (u - 0.5);
 
         x = y + s;
         if (v < 1e-12)
@@ -84,7 +84,7 @@ double GammaVariable(double r, MersenneTwister &random)
         v *= w;
         double z = w * v * v;
 
-        assert(Math::Abs(s) > 1e-12);
+        assert(std::abs(s) > 1e-12);
         assert(z > 0.);
         assert(z / s > 0.);
         if (log(z) <= 2. * (s * log(x / s) - y))
@@ -97,7 +97,7 @@ double BetaVariable(double a, double b, MersenneTwister &random)
 {
     double y = GammaVariable(a, random);
     double z = GammaVariable(b, random);
-    assert(Math::Abs(y + z) > 1e-12);
+    assert(std::abs(y + z) > 1e-12);
     return y / (y + z);
 }
 
@@ -161,7 +161,7 @@ void HydroManagement::prepareInflowsScaling(uint year)
                   if (area.hydro.reservoirManagement)
                   {
                       data.inflows[realmonth] = totalMonthInflows / (area.hydro.reservoirCapacity);
-                      assert(!Math::NaN(data.inflows[month]) && "nan value detect in inflows");
+                      assert(!std::isnan(data.inflows[month]) && "nan value detect in inflows");
                   }
                   else
                   {
@@ -204,7 +204,7 @@ void HydroManagement::minGenerationScaling(uint year)
                   {
                       // Set monthly mingen, used later for h2o_m
                       data.mingens[realmonth] = totalMonthMingen / (area.hydro.reservoirCapacity);
-                      assert(!Math::NaN(data.mingens[month]) && "nan value detect in mingen");
+                      assert(!std::isnan(data.mingens[month]) && "nan value detect in mingen");
                   }
                   else
                   {
@@ -309,7 +309,7 @@ bool HydroManagement::checkGenerationPowerConsistency(uint year) const
     areas_.each(
       [&ret, &year](const Data::Area& area)
       {
-        
+
           auto const& srcmingen = area.hydro.series->mingen.getColumn(year);
           auto const& srcmaxgen = area.hydro.series->maxHourlyGenPower.getColumn(year);
 
@@ -400,11 +400,11 @@ void HydroManagement::prepareNetDemand(uint year, Data::SimulationMode mode,
                             - ((mode != Data::SimulationMode::Adequacy) ? scratchpad.mustrunSum[hour]
                                                              : scratchpad.originalMustrunSum[hour]);
 
-                for (auto c : area.renewable.list.each_enabled())
+                for (auto& c : area.renewable.list.each_enabled())
                     netdemand -= c->valueAtTimeStep(year, hour);
             }
 
-            assert(!Math::NaN(netdemand)
+            assert(!std::isnan(netdemand)
                    && "hydro management: NaN detected when calculating the net demande");
             data.DLN[dayYear] += netdemand;
         }
@@ -429,12 +429,12 @@ void HydroManagement::prepareEffectiveDemand()
                 effectiveDemand += tmpDataByArea_[area].DLN[day] * value;
             });
 
-            assert(!Math::NaN(effectiveDemand) && "nan value detected for effectiveDemand");
+            assert(!std::isnan(effectiveDemand) && "nan value detected for effectiveDemand");
             data.DLE[day] += effectiveDemand;
             data.MLE[realmonth] += effectiveDemand;
 
-            assert(not Math::NaN(data.DLE[day]) && "nan value detected for DLE");
-            assert(not Math::NaN(data.MLE[realmonth]) && "nan value detected for DLE");
+            assert(not std::isnan(data.DLE[day]) && "nan value detected for DLE");
+            assert(not std::isnan(data.MLE[realmonth]) && "nan value detected for DLE");
         }
 
         auto minimumYear = std::numeric_limits<double>::infinity();

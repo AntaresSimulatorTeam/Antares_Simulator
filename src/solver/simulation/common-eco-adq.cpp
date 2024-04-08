@@ -19,18 +19,15 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <yuni/yuni.h>
-#include <yuni/core/math.h>
 #include <antares/study/study.h>
 #include <antares/exception/UnfeasibleProblemError.hpp>
 
 #include "antares/solver/simulation/common-eco-adq.h"
 #include <antares/logs/logs.h>
 #include <cassert>
+#include <cmath>
 #include <map>
 #include "antares/study/simulation.h"
-
-using namespace Yuni;
 
 namespace Antares::Solver::Simulation
 {
@@ -170,7 +167,7 @@ bool ShouldUseQuadraticOptimisation(const Data::Study& study)
 
         for (uint hour = 0; hour < HOURS_PER_YEAR; ++hour)
         {
-            if (Math::Abs(impedances[hour]) >= 1e-100)
+            if (std::abs(impedances[hour]) >= 1e-100)
             {
                 return true;
             }
@@ -240,7 +237,7 @@ void PrepareRandomNumbers(Data::Study& study,
         {
             alea = (rnd - 0.5) * (area.spreadUnsuppliedEnergyCost);
 
-            if (Math::Abs(alea) < 5.e-4)
+            if (std::abs(alea) < 5.e-4)
             {
                 if (alea >= 0)
                     alea += 5.e-4;
@@ -263,7 +260,7 @@ void PrepareRandomNumbers(Data::Study& study,
         {
             alea = (rnd - 0.5) * (area.spreadSpilledEnergyCost);
 
-            if (Math::Abs(alea) < 5.e-4)
+            if (std::abs(alea) < 5.e-4)
             {
                 if (alea >= 0)
                     alea += 5.e-4;
@@ -277,7 +274,7 @@ void PrepareRandomNumbers(Data::Study& study,
         //-----------------------------
         // Thermal noises
         //-----------------------------
-        for (auto cluster : area.thermal.list.each_enabled())
+        for (auto& cluster : area.thermal.list.each_enabled())
         {
             uint clusterIndex = cluster->areaWideIndex;
             double& rnd = randomForYear.pThermalNoisesByArea[indexArea][clusterIndex];
@@ -293,9 +290,9 @@ void PrepareRandomNumbers(Data::Study& study,
             {
                 randomClusterProdCost = (rnd - 0.5) * (cluster->spreadCost);
 
-                if (Math::Abs(randomClusterProdCost) < 5.e-4)
+                if (std::abs(randomClusterProdCost) < 5.e-4)
                 {
-                    if (Math::Abs(randomClusterProdCost) >= 0)
+                    if (std::abs(randomClusterProdCost) >= 0)
                         randomClusterProdCost += 5.e-4;
                     else
                         randomClusterProdCost -= 5.e-4;
@@ -364,7 +361,7 @@ void BuildThermalPartOfWeeklyProblem(Data::Study& study,
         for (uint areaIdx = 0; areaIdx < nbPays; ++areaIdx)
         {
             auto& area = *study.areas.byIndex[areaIdx];
-            for (auto cluster : area.thermal.list.each_enabled_and_not_mustrun())
+            for (auto& cluster : area.thermal.list.each_enabled_and_not_mustrun())
             {
                     auto& Pt = problem.PaliersThermiquesDuPays[areaIdx]
                                .PuissanceDisponibleEtCout[cluster->index];

@@ -23,10 +23,11 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
-#include <yuni/core/math.h>
 #include <antares/logs/logs.h>
 #include <utility>
 #include <cstdlib>
+#include <cmath>
+
 #include <antares/io/statistics.h>
 #include "matrix-to-buffer.h"
 
@@ -148,13 +149,26 @@ public:
     }
 };
 
+
+template<unsigned A, bool B>
+Yuni::CString<A, B> trunc(Yuni::CString<A, B>& str)
+{
+    return str;
+}
+
+template<class T>
+static T trunc(T& in)
+{
+    return static_cast<T>(std::trunc(in));
+}
+
 template<class T, class P>
 class MatrixRound final
 {
 public:
     static T Value(P value)
     {
-        return static_cast<T>(Yuni::Math::Trunc(value));
+        return static_cast<T>(trunc(value));
     }
 };
 
@@ -287,7 +301,7 @@ void Matrix<T, ReadWriteT>::averageTimeseries(bool roundValues)
             for (uint j = 0; j != height; ++j)
             {
                 const double d = first[j] * coeff;
-                first[j] = Yuni::Math::Round(d);
+                first[j] = std::round(d);
             }
         }
         else
@@ -1084,7 +1098,7 @@ bool Matrix<T, ReadWriteT>::containsOnlyZero() const
             auto& column = entry[x];
             for (uint y = 0; y != height; ++y)
             {
-                if (not Yuni::Math::Zero((T)column[y]))
+                if (!Utils::isZero((T)column[y]))
                     return false;
             }
         }
@@ -1103,7 +1117,7 @@ bool Matrix<T, ReadWriteT>::containsOnlyZero(PredicateT& predicate) const
             auto& column = entry[x];
             for (uint y = 0; y != height; ++y)
             {
-                if (not Yuni::Math::Zero((T)predicate(column[y])))
+                if (!Utils::isZero((T)predicate(column[y])))
                     return false;
             }
         }
@@ -1299,21 +1313,21 @@ template<class T, class ReadWriteT>
 template<class U>
 void Matrix<T, ReadWriteT>::multiplyAllEntriesBy(const U& c)
 {
-    if (entry)
-    {
-        if (!Yuni::Math::Zero(c))
-        {
-            for (uint x = 0; x != width; ++x)
-            {
-                ColumnType& column = entry[x];
+    if (!entry)
+        return;
 
-                for (uint y = 0; y != height; ++y)
-                    column[y] *= (T)c;
-            }
+    if (!Utils::isZero(c))
+    {
+        for (uint x = 0; x != width; ++x)
+        {
+            ColumnType& column = entry[x];
+
+            for (uint y = 0; y != height; ++y)
+                column[y] *= (T)c;
         }
-        else
-            zero();
     }
+    else
+        zero();
 }
 
 template<class T, class ReadWriteT>
@@ -1344,7 +1358,7 @@ void Matrix<T, ReadWriteT>::roundAllEntries()
     {
         ColumnType& col = entry[x];
         for (uint y = 0; y != height; ++y)
-            col[y] = (T)Yuni::Math::Round(col[y]);
+            col[y] = (T)std::round(col[y]);
     }
 }
 
@@ -1355,7 +1369,7 @@ void Matrix<T, ReadWriteT>::makeAllEntriesAbsolute()
     {
         ColumnType& col = entry[x];
         for (uint y = 0; y != height; ++y)
-            col[y] = Yuni::Math::Abs<T>(col[y]);
+            col[y] = std::abs(col[y]);
     }
 }
 

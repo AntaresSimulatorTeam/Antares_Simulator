@@ -22,6 +22,7 @@
 #include "antares/study/parts/thermal/cluster_list.h"
 #include "antares/study/parts/common/cluster.h"
 #include "antares/study/study.h"
+#include <antares/utils/utils.h>
 #include <ranges>
 
 namespace // anonymous
@@ -168,7 +169,7 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
             }
             else
                 cluster->minUpDownTime
-                  = Math::Max(cluster->minUpTime, cluster->minDownTime);
+                  = std::max(cluster->minUpTime, cluster->minDownTime);
 
             if (!study.parameters.include.reserve.spinning)
                 cluster->spinning = 0;
@@ -303,26 +304,26 @@ bool ThermalClusterLoadFromSection(const AnyString& filename,
             }
         }
         // update the minUpDownTime
-        cluster.minUpDownTime = Math::Max(cluster.minUpTime, cluster.minDownTime);
+        cluster.minUpDownTime = std::max(cluster.minUpTime, cluster.minDownTime);
     }
     return true;
 }
 
 void ThermalClusterList::calculationOfSpinning()
 {
-    for (auto cluster : each_enabled())
+    for (auto& cluster : each_enabled())
         cluster->calculationOfSpinning();
 }
 
 void ThermalClusterList::reverseCalculationOfSpinning()
 {
-    for (auto cluster : each_enabled())
+    for (auto& cluster : each_enabled())
         cluster->reverseCalculationOfSpinning();
 }
 
 void ThermalClusterList::enableMustrunForEveryone()
 {
-    for (auto c : allClusters_)
+    for (auto& c : allClusters_)
         c->mustrun = true;
 }
 
@@ -347,7 +348,7 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
     // Allocate the inifile structure
     IniFile ini;
 
-    for (auto c : allClusters_)
+    for (auto& c : allClusters_)
     {
         // Adding a section to the inifile
         IniFile::Section* s = ini.addSection(c->name());
@@ -360,9 +361,9 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
             s->add("group", c->group());
         if (!c->enabled)
             s->add("enabled", "false");
-        if (!Math::Zero(c->unitCount))
+        if (!Utils::isZero(c->unitCount))
             s->add("unitCount", c->unitCount);
-        if (!Math::Zero(c->nominalCapacity))
+        if (!Utils::isZero(c->nominalCapacity))
             s->add("nominalCapacity", c->nominalCapacity);
         // TS generation
         if (c->tsGenBehavior != LocalTSGenerationBehavior::useGlobalParameter)
@@ -370,7 +371,7 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
             s->add("gen-ts", c->tsGenBehavior);
         }
         // Min. Stable Power
-        if (!Math::Zero(c->minStablePower))
+        if (!Utils::isZero(c->minStablePower))
             s->add("min-stable-power", c->minStablePower);
 
         // Min up and min down time
@@ -384,7 +385,7 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
             s->add("must-run", "true");
 
         // spinning
-        if (!Math::Zero(c->spinning))
+        if (!Utils::isZero(c->spinning))
             s->add("spinning", c->spinning);
 
         // efficiency
@@ -392,10 +393,10 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
             s->add("efficiency", c->fuelEfficiency);
 
         // volatility
-        if (!Math::Zero(c->forcedVolatility))
-            s->add("volatility.forced", Math::Round(c->forcedVolatility, 3));
-        if (!Math::Zero(c->plannedVolatility))
-            s->add("volatility.planned", Math::Round(c->plannedVolatility, 3));
+        if (!Utils::isZero(c->forcedVolatility))
+            s->add("volatility.forced", Utils::round(c->forcedVolatility, 3));
+        if (!Utils::isZero(c->plannedVolatility))
+            s->add("volatility.planned", Utils::round(c->plannedVolatility, 3));
 
         // laws
         if (c->forcedLaw != thermalLawUniform)
@@ -406,18 +407,18 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
         // costs
         if (c->costgeneration != setManually)
             s->add("costgeneration", c->costgeneration);
-        if (!Math::Zero(c->marginalCost))
-            s->add("marginal-cost", Math::Round(c->marginalCost, 3));
-        if (!Math::Zero(c->spreadCost))
+        if (!Utils::isZero(c->marginalCost))
+            s->add("marginal-cost", Utils::round(c->marginalCost, 3));
+        if (!Utils::isZero(c->spreadCost))
             s->add("spread-cost", c->spreadCost);
-        if (!Math::Zero(c->fixedCost))
-            s->add("fixed-cost", Math::Round(c->fixedCost, 3));
-        if (!Math::Zero(c->startupCost))
-            s->add("startup-cost", Math::Round(c->startupCost, 3));
-        if (!Math::Zero(c->marketBidCost))
-            s->add("market-bid-cost", Math::Round(c->marketBidCost, 3));
-        if (!Math::Zero(c->variableomcost))
-            s->add("variableomcost", Math::Round(c->variableomcost,3));
+        if (!Utils::isZero(c->fixedCost))
+            s->add("fixed-cost", Utils::round(c->fixedCost, 3));
+        if (!Utils::isZero(c->startupCost))
+            s->add("startup-cost", Utils::round(c->startupCost, 3));
+        if (!Utils::isZero(c->marketBidCost))
+            s->add("market-bid-cost", Utils::round(c->marketBidCost, 3));
+        if (!Utils::isZero(c->variableomcost))
+            s->add("variableomcost", Utils::round(c->variableomcost, 3));
 
 
         //pollutant factor
@@ -451,7 +452,7 @@ bool ThermalClusterList::savePreproToFolder(const AnyString& folder) const
     Clob buffer;
     bool ret = true;
 
-    for (auto c : allClusters_)
+    for (auto& c : allClusters_)
     {
         if (c->prepro)
         {
@@ -468,7 +469,7 @@ bool ThermalClusterList::saveEconomicCosts(const AnyString& folder) const
     Clob buffer;
     bool ret = true;
 
-    for (auto c : allClusters_)
+    for (auto& c : allClusters_)
     {
         assert(c->parentArea && "cluster: invalid parent area");
         buffer.clear() << folder << SEP << c->parentArea->id << SEP << c->id();

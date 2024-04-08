@@ -47,7 +47,7 @@ void GetThermalClusterMap(Data::Area* area, ThermalClusterMap& l, const wxString
 {
     wxString grp;
 
-    for (auto cluster : area->thermal.list.all())
+    for (auto& cluster : area->thermal.list.all())
     {
         if (search.empty())
         {
