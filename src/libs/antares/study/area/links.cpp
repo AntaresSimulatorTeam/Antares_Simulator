@@ -153,8 +153,7 @@ bool AreaLink::loadTSGenTimeSeries(const AnyString& folder)
     String filename;
     filename.clear() << preproFolder << SEP << with->id << "_direct.txt";
     bool success = tsGenerationDirect.prepro->data.loadFromCSVFile(
-                     filename, Antares::Data::PreproAvailability::thermalPreproMax, DAYS_PER_YEAR)
-                   && success;
+      filename, Antares::Data::PreproAvailability::thermalPreproMax, DAYS_PER_YEAR);
     success = tsGenerationDirect.prepro->validate() && success;
 
     filename.clear() << preproFolder << SEP << with->id << "_indirect.txt";
