@@ -42,7 +42,7 @@ Here is a list of mandatory or optional CMake configuration options:
 
 | Option                | Mandatory | Description                                                                      | Expected value                         | Default value                                             |
 |:----------------------|-----------|----------------------------------------------------------------------------------|----------------------------------------|-----------------------------------------------------------|
-| `CMAKE_C_COMPILER`    | **yes**   | Select C compiler                                                                | `gcc_-0`                               |                                                           |
+| `CMAKE_C_COMPILER`    | **yes**   | Select C compiler                                                                | `gcc_-10`                               |                                                           |
 | `CMAKE_CXX_COMPILER`  | **yes**   | Select C++ compiler                                                              | `g++-10`                               |                                                           |
 | `CMAKE_BUILD_TYPE`    | **yes**   | Define build type                                                                | `Release` / `Debug` / `RelWithDebInfo` |                                                           |
 | `BUILD_UI`            | no        | Enable or disable Antares Simulator UI compilation                               | `ON` / `OFF`                           | `ON`                                                      |
