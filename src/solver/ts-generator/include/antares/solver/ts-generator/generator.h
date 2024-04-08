@@ -48,7 +48,7 @@ public:
     Data::StatisticalLaw& forcedLaw;
     Data::StatisticalLaw& plannedLaw;
 
-    Data::PreproThermal* prepro;
+    Data::PreproAvailability* prepro;
 
     Data::TimeSeries& series;
 

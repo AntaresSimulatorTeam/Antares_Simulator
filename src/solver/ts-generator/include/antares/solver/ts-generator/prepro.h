@@ -32,7 +32,7 @@ namespace Antares::Data
 /*!
 ** \brief Thermal
 */
-class PreproThermal
+class PreproAvailability
 {
 public:
     enum
@@ -58,7 +58,7 @@ public:
     /*!
     ** \brief Default constructor
     */
-    explicit PreproThermal(const YString& id, unsigned int unitCount);
+    explicit PreproAvailability(const YString& id, unsigned int unitCount);
     //@}
 
     bool forceReload(bool reload) const;
@@ -71,7 +71,7 @@ public:
     void reset();
 
     //! Copy data from another struct
-    void copyFrom(const PreproThermal& rhs);
+    void copyFrom(const PreproAvailability& rhs);
 
     /*!
     ** \brief Load settings for the thermal prepro from a folder
@@ -112,7 +112,7 @@ public:
     // Parent thermal cluster
     YString id;
     unsigned int unitCount;
-}; // class PreproThermal
+}; // class PreproAvailability
 
 struct LinkTsGeneration
 {
@@ -125,7 +125,7 @@ struct LinkTsGeneration
     Data::StatisticalLaw forcedLaw;
     Data::StatisticalLaw plannedLaw;
 
-    std::unique_ptr<Data::PreproThermal> prepro;
+    std::unique_ptr<Data::PreproAvailability> prepro;
 
     Matrix<> modulationCapacity;
 };

@@ -189,7 +189,7 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
     // Making sure that the data related to the prepro and timeseries are present
     // prepro
     if (!prepro)
-        prepro = new PreproThermal(id(), unitCount);
+        prepro = new PreproAvailability(id(), unitCount);
 
     prepro->copyFrom(*cluster.prepro);
     ecoInput.copyFrom(cluster.ecoInput);
@@ -454,7 +454,7 @@ void Data::ThermalCluster::reset()
     //   since the interface may still have a pointer to them.
     //   we must simply reset their content.
     if (!prepro)
-        prepro = new PreproThermal(id(), unitCount);
+        prepro = new PreproAvailability(id(), unitCount);
     prepro->reset();
     ecoInput.reset();
 }

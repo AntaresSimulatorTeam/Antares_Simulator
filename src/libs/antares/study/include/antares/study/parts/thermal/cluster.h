@@ -346,7 +346,7 @@ public:
     std::vector<double> PthetaInf;
 
     //! Data for the preprocessor
-    PreproThermal* prepro = nullptr;
+    PreproAvailability* prepro = nullptr;
 
     /*!
     ** \brief Production Cost, Market Bid Cost and Marginal Cost Matrixes - Per Hour and per Time

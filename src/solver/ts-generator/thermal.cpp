@@ -218,17 +218,17 @@ void GeneratorTempData::generateTS(const Data::Area& area, ThermalInterface& clu
 
     int AUN = (int)cluster.unitCount;
 
-    auto& FOD = preproData.data[Data::PreproThermal::foDuration];
+    auto& FOD = preproData.data[Data::PreproAvailability::foDuration];
 
-    auto& POD = preproData.data[Data::PreproThermal::poDuration];
+    auto& POD = preproData.data[Data::PreproAvailability::poDuration];
 
-    auto& FOR = preproData.data[Data::PreproThermal::foRate];
+    auto& FOR = preproData.data[Data::PreproAvailability::foRate];
 
-    auto& POR = preproData.data[Data::PreproThermal::poRate];
+    auto& POR = preproData.data[Data::PreproAvailability::poRate];
 
-    auto& NPOmin = preproData.data[Data::PreproThermal::npoMin];
+    auto& NPOmin = preproData.data[Data::PreproAvailability::npoMin];
 
-    auto& NPOmax = preproData.data[Data::PreproThermal::npoMax];
+    auto& NPOmax = preproData.data[Data::PreproAvailability::npoMax];
 
     double f_volatility = cluster.forcedVolatility;
 

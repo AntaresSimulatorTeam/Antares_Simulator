@@ -140,11 +140,11 @@ bool AreaLink::loadTSGenTimeSeries(const AnyString& folder)
 {
     const std::string id_direct = std::string(from->id) + "/" + std::string(with->id);
     tsGenerationDirect.prepro
-      = std::make_unique<Data::PreproThermal>(id_direct, tsGenerationDirect.unitCount);
+      = std::make_unique<Data::PreproAvailability>(id_direct, tsGenerationDirect.unitCount);
 
     const std::string id_indirect = std::string(with->id) + "/" + std::string(from->id);
     tsGenerationIndirect.prepro
-      = std::make_unique<Data::PreproThermal>(id_indirect, tsGenerationIndirect.unitCount);
+      = std::make_unique<Data::PreproAvailability>(id_indirect, tsGenerationIndirect.unitCount);
 
     String preproFolder;
     preproFolder << folder << SEP << "prepro";
@@ -153,13 +153,13 @@ bool AreaLink::loadTSGenTimeSeries(const AnyString& folder)
     String filename;
     filename.clear() << preproFolder << SEP << with->id << "_direct.txt";
     bool success = tsGenerationDirect.prepro->data.loadFromCSVFile(
-                     filename, Antares::Data::PreproThermal::thermalPreproMax, DAYS_PER_YEAR)
+                     filename, Antares::Data::PreproAvailability::thermalPreproMax, DAYS_PER_YEAR)
                    && success;
     success = tsGenerationDirect.prepro->validate() && success;
 
     filename.clear() << preproFolder << SEP << with->id << "_indirect.txt";
     success = tsGenerationIndirect.prepro->data.loadFromCSVFile(
-                filename, Antares::Data::PreproThermal::thermalPreproMax, DAYS_PER_YEAR)
+                filename, Antares::Data::PreproAvailability::thermalPreproMax, DAYS_PER_YEAR)
               && success;
     success = tsGenerationIndirect.prepro->validate() && success;
 

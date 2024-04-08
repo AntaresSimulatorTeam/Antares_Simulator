@@ -33,12 +33,12 @@ using namespace Yuni;
 
 namespace Antares::Data
 {
-PreproThermal::PreproThermal(const YString& id, unsigned int unitCount) :
+PreproAvailability::PreproAvailability(const YString& id, unsigned int unitCount) :
  id(id), unitCount(unitCount)
 {
 }
 
-void PreproThermal::copyFrom(const PreproThermal& rhs)
+void PreproAvailability::copyFrom(const PreproAvailability& rhs)
 {
     id = rhs.id;
     unitCount = rhs.unitCount;
@@ -46,7 +46,7 @@ void PreproThermal::copyFrom(const PreproThermal& rhs)
     rhs.data.unloadFromMemory();
 }
 
-bool PreproThermal::saveToFolder(const AnyString& folder) const
+bool PreproAvailability::saveToFolder(const AnyString& folder) const
 {
     if (IO::Directory::Create(folder))
     {
@@ -57,7 +57,7 @@ bool PreproThermal::saveToFolder(const AnyString& folder) const
     return false;
 }
 
-bool PreproThermal::loadFromFolder(Study& study, const AnyString& folder)
+bool PreproAvailability::loadFromFolder(Study& study, const AnyString& folder)
 {
     bool ret = true;
     auto& buffer = study.bufferLoadingTS;
@@ -69,7 +69,7 @@ bool PreproThermal::loadFromFolder(Study& study, const AnyString& folder)
       buffer, thermalPreproMax, DAYS_PER_YEAR, Matrix<>::optFixedSize, &study.dataBuffer);
 }
 
-bool PreproThermal::validate() const
+bool PreproAvailability::validate() const
 {
     const auto& colFoRate = data[foRate];
     const auto& colPoRate = data[poRate];
@@ -144,17 +144,17 @@ bool PreproThermal::validate() const
     return errors == 0;
 }
 
-bool PreproThermal::forceReload(bool reload) const
+bool PreproAvailability::forceReload(bool reload) const
 {
     return data.forceReload(reload);
 }
 
-void PreproThermal::markAsModified() const
+void PreproAvailability::markAsModified() const
 {
     data.markAsModified();
 }
 
-void PreproThermal::reset()
+void PreproAvailability::reset()
 {
     data.reset(thermalPreproMax, DAYS_PER_YEAR, true);
 
@@ -168,7 +168,7 @@ void PreproThermal::reset()
     }
 }
 
-bool PreproThermal::normalizeAndCheckNPO()
+bool PreproAvailability::normalizeAndCheckNPO()
 {
     // alias to our data columns
     auto& columnNPOMax = data[npoMax];

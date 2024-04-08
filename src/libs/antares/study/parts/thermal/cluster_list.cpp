@@ -331,7 +331,7 @@ void ThermalClusterList::ensureDataPrepro()
 {
     for (const auto& c : all())
         if (!c->prepro)
-            c->prepro = new PreproThermal(c->id(), c->unitCount);
+            c->prepro = new PreproAvailability(c->id(), c->unitCount);
 }
 
 bool ThermalClusterList::saveToFolder(const AnyString& folder) const
