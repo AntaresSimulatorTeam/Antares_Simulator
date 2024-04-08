@@ -512,23 +512,14 @@ public:
     uint seed[seedMax];
     //@}
 
-    //! \name Ortools configuration
-    //@{
-    //! Define if ortools is used
-    bool ortoolsUsed;
-    //! Ortool solver used for simulation
-    std::string ortoolsSolver;
-    //@}
+    
     // Format of results. Currently, only single files or zip archive are supported
     ResultFormat resultFormat = legacyFilesDirectories;
 
     // Naming constraints and variables in problems
     bool namedProblems;
 
-    // solver logs
-    bool solverLogs;
-
-    //! All options related to optimization
+    // All options related to optimization
     Antares::Solver::Optimization::OptimizationOptions optOptions;
 
 private:

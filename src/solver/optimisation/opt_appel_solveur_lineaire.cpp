@@ -303,7 +303,7 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
                                                    ProblemeAResoudre->StatutDesVariables,
                                                    ProblemeAResoudre->StatutDesContraintes,
                                                    problemeHebdo->NamedProblems,
-                                                   problemeHebdo->solverLogs);
+                                                   options.solverLogs);
 
     bool PremierPassage = true;
 

@@ -37,7 +37,6 @@ PROBLEME_SIMPLEXE_NOMME::PROBLEME_SIMPLEXE_NOMME(const std::vector<std::string>&
  NomDesVariables(NomDesVariables),
  NomDesContraintes(NomDesContraintes),
  useNamedProblems_(UseNamedProblems),
- solverLogs_(SolverLogs),
  StatutDesVariables(StatutDesVariables),
  StatutDesContraintes(StatutDesContraintes),
  VariablesEntieres(VariablesEntieres)

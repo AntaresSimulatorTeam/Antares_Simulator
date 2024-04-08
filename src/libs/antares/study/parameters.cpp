@@ -326,7 +326,6 @@ void Parameters::reset()
     include.exportMPS = mpsExportStatus::NO_EXPORT;
     include.exportStructure = false;
     namedProblems = false;
-    solverLogs = false;
 
     include.unfeasibleProblemBehavior = UnfeasibleProblemBehavior::ERROR_MPS;
 
@@ -336,9 +335,6 @@ void Parameters::reset()
 
     hydroDebug = false;
 
-    ortoolsUsed = false;
-    ortoolsSolver = "sirius";
-
     resultFormat = legacyFilesDirectories;
 
     // Adequacy patch parameters
@@ -347,7 +343,7 @@ void Parameters::reset()
     // Initialize all seeds
     resetSeeds();
 
-    // Is the management of Antares optOptions default ok with its constructor ?
+    optOptions = Antares::Solver::Optimization::OptimizationOptions();
 }
 
 bool Parameters::isTSGeneratedByPrepro(const TimeSeriesType ts) const
@@ -640,12 +636,12 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
 
     if (key == "solver-logs")
     {
-        return value.to<bool>(d.solverLogs);
+        return value.to<bool>(d.optOptions.solverLogs);
     }
 
     if (key == "solver-parameters")
     {
-        d.optOptions.solver_parameters = value;
+        d.optOptions.solverParameters = value;
         return true;
     }
     return false;
@@ -1069,12 +1065,7 @@ bool Parameters::loadFromINI(const IniFile& ini,
     if (options.forceDerated)
         derated = true;
 
-    // Define ortools parameters from options
-    ortoolsUsed = options.optOptions.ortoolsUsed;
-    ortoolsSolver = options.optOptions.ortoolsSolver;
-
     namedProblems = options.namedProblems;
-    solverLogs = options.solverLogs || solverLogs;
 
     // Attempt to fix bad values if any
     fixBadValues();
@@ -1498,9 +1489,10 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
         logs.info() << "  :: ignoring hurdle costs";
 
     // Indicate ortools solver used
-    if (ortoolsUsed)
+    if (options.optOptions.ortoolsUsed)
     {
-        logs.info() << "  :: ortools solver " << ortoolsSolver << " used for problem resolution";
+        logs.info() << "  :: ortools solver " << options.optOptions.ortoolsSolver
+                    << " used for problem resolution";
     }
 
     // indicated that Problems will be named
@@ -1509,7 +1501,7 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
         logs.info() << "  :: The problems will contain named variables and constraints";
     }
     // indicated whether solver logs will be printed
-    logs.info() << "  :: Printing solver logs : " << (solverLogs ? "True" : "False");
+    logs.info() << "  :: Printing solver logs : " << (optOptions.solverLogs ? "True" : "False");
 }
 
 void Parameters::resetPlaylist(uint nbOfYears)
@@ -1619,8 +1611,8 @@ void Parameters::saveToINI(IniFile& ini) const
         // Unfeasible problem behavior
         section->add("include-unfeasible-problem-behavior",
                      Enum::toString(include.unfeasibleProblemBehavior));
-        section->add("solver-logs", solverLogs);
-        section->add("solver-parameters", optOptions.solver_parameters);
+        section->add("solver-logs", optOptions.solverLogs);
+        section->add("solver-parameters", optOptions.solverParameters);
     }
 
     // Adequacy patch

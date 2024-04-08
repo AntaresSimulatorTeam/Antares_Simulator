@@ -4,10 +4,11 @@ namespace Antares::Solver::Optimization {
 struct OptimizationOptions
 {
     //! Force ortools use
-    bool ortoolsUsed;
+    bool ortoolsUsed = false;
     //! THe solver name, sirius is the default
     std::string ortoolsSolver = "sirius";
-    std::string solver_parameters;
+    bool solverLogs = false;
+    std::string solverParameters = "";
     bool useBasisOptim1 = false;
     bool useBasisOptim2 = true;
 };

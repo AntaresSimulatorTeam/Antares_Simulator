@@ -39,9 +39,7 @@ static void setGenericParameters(MPSolverParameters& params)
     params.SetIntegerParam(MPSolverParameters::PRESOLVE, 0);
 }
 
-static void TuneSolverSpecificOptions(
-  MPSolver* solver,
-  const std::string& solverParameters)
+static void TuneSolverSpecificOptions(MPSolver* solver, const std::string& solverParameters)
 {
     if (!solver)
         return;
@@ -98,10 +96,6 @@ MPSolver* ProblemSimplexeNommeConverter::Convert()
     CopyRows(solver);
 
     CopyMatrix(solver);
-    if (problemeSimplexe_->SolverLogs()) // May override log level if set as specific parameters
-    {
-        solver->EnableOutput();
-    }
 
     return solver;
 }
@@ -339,7 +333,11 @@ MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probl
     MPSolverParameters params;
     setGenericParameters(
       params); // Keep generic params for default settings working for all solvers
-    TuneSolverSpecificOptions(solver, options.solver_parameters);
+    if (options.solverLogs) // May be overriden by log level if set as specific parameters
+    {
+        solver->EnableOutput();
+    }
+    TuneSolverSpecificOptions(solver, options.solverParameters);
     const bool useBasis = computeUseBasis(optimizationNumber, options);
     const bool warmStart = solverSupportsWarmStart(solver->ProblemType()) && useBasis;
     // Provide an initial simplex basis, if any
