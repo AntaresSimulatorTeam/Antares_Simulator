@@ -37,7 +37,7 @@
 
 namespace Antares::TSGenerator
 {
-ThermalInterface::ThermalInterface(Data::ThermalCluster* source) :
+AvailabilityTSGeneratorData::AvailabilityTSGeneratorData(Data::ThermalCluster* source) :
  unitCount(source->unitCount),
  nominalCapacity(source->nominalCapacity),
  forcedVolatility(source->forcedVolatility),
@@ -51,7 +51,7 @@ ThermalInterface::ThermalInterface(Data::ThermalCluster* source) :
 {
 }
 
-ThermalInterface::ThermalInterface(Data::LinkTsGeneration& source,
+AvailabilityTSGeneratorData::AvailabilityTSGeneratorData(Data::LinkTsGeneration& source,
                                    Data::TimeSeries& capacity,
                                    const std::string& areaDestName) :
  unitCount(source.unitCount),
@@ -74,7 +74,7 @@ class GeneratorTempData final
 public:
     explicit GeneratorTempData(Data::Study&, unsigned);
 
-    void generateTS(const Data::Area& area, ThermalInterface& cluster);
+    void generateTS(const Data::Area& area, AvailabilityTSGeneratorData& cluster);
 
 public:
     Data::Study& study;
@@ -198,7 +198,7 @@ int GeneratorTempData::durationGenerator(Data::StatisticalLaw law,
     return 0;
 }
 
-void GeneratorTempData::generateTS(const Data::Area& area, ThermalInterface& cluster)
+void GeneratorTempData::generateTS(const Data::Area& area, AvailabilityTSGeneratorData& cluster)
 {
     if (not cluster.prepro)
     {
@@ -619,7 +619,7 @@ bool generateThermalTimeSeries(Data::Study& study,
     // TODO VP: parallel
     for (auto* cluster : clusters)
     {
-        ThermalInterface clusterInterface(cluster);
+        AvailabilityTSGeneratorData clusterInterface(cluster);
         generator.generateTS(*cluster->parentArea, clusterInterface);
 
         if (archive) // compatibilty with in memory
@@ -657,7 +657,7 @@ bool generateLinkTimeSeries(Data::Study& study,
             logs.error() << "Missing data for link " << link->from << "/" << link->with;
             return false;
         }
-        ThermalInterface linkInterface(tsGenStruct, ts, link->with->name);
+        AvailabilityTSGeneratorData linkInterface(tsGenStruct, ts, link->with->name);
 
         generator.generateTS(*link->from, linkInterface);
 

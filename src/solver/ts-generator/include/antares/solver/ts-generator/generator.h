@@ -33,11 +33,11 @@
 
 namespace Antares::TSGenerator
 {
-class ThermalInterface
+class AvailabilityTSGeneratorData
 {
 public:
-    explicit ThermalInterface(Data::ThermalCluster*);
-    ThermalInterface(Data::LinkTsGeneration&, Data::TimeSeries&, const std::string& name);
+    explicit AvailabilityTSGeneratorData(Data::ThermalCluster*);
+    AvailabilityTSGeneratorData(Data::LinkTsGeneration&, Data::TimeSeries&, const std::string& name);
 
     const unsigned& unitCount;
     const double& nominalCapacity;
