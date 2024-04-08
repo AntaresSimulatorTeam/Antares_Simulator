@@ -106,7 +106,7 @@ MPSolver* ProblemSimplexeNommeConverter::Convert()
     return solver;
 }
 
-void ProblemSimplexeNommeConverter::CopyMatrix(const MPSolver* solver)
+void ProblemSimplexeNommeConverter::CopyMatrix(const MPSolver* solver) const
 {
     auto variables = solver->variables();
     auto constraints = solver->constraints();
@@ -127,7 +127,7 @@ void ProblemSimplexeNommeConverter::CopyMatrix(const MPSolver* solver)
 
 void ProblemSimplexeNommeConverter::CreateVariable(unsigned idxVar,
                                                    MPSolver* solver,
-                                                   MPObjective* const objective)
+                                                   MPObjective* const objective) const
 {
     double min_l = problemeSimplexe_->Xmin[idxVar];
     double max_l = problemeSimplexe_->Xmax[idxVar];
@@ -137,7 +137,7 @@ void ProblemSimplexeNommeConverter::CreateVariable(unsigned idxVar,
     objective->SetCoefficient(var, problemeSimplexe_->CoutLineaire[idxVar]);
 }
 
-void ProblemSimplexeNommeConverter::CopyVariables(MPSolver* solver)
+void ProblemSimplexeNommeConverter::CopyVariables(MPSolver* solver) const
 
 {
     MPObjective* const objective = solver->MutableObjective();
@@ -147,7 +147,7 @@ void ProblemSimplexeNommeConverter::CopyVariables(MPSolver* solver)
     }
 }
 
-void ProblemSimplexeNommeConverter::UpdateContraints(unsigned idxRow, MPSolver* solver)
+void ProblemSimplexeNommeConverter::UpdateContraints(unsigned idxRow, MPSolver* solver) const
 {
     double bMin = -MPSolver::infinity(), bMax = MPSolver::infinity();
     if (problemeSimplexe_->Sens[idxRow] == '=')
@@ -166,7 +166,7 @@ void ProblemSimplexeNommeConverter::UpdateContraints(unsigned idxRow, MPSolver* 
     solver->MakeRowConstraint(bMin, bMax, constraintNameManager_.GetName(idxRow));
 }
 
-void ProblemSimplexeNommeConverter::CopyRows(MPSolver* solver)
+void ProblemSimplexeNommeConverter::CopyRows(MPSolver* solver) const
 {
     for (int idxRow = 0; idxRow < problemeSimplexe_->NombreDeContraintes; ++idxRow)
     {

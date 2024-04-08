@@ -973,7 +973,7 @@ bool firstKeyLetterIsValid(const String& name)
 }
 
 bool Parameters::loadFromINI(const IniFile& ini,
-                             StudyVersion& version,
+                             const StudyVersion& version,
                              const StudyLoadOptions& options)
 {
     // Reset inner data

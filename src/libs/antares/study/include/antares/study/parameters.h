@@ -533,7 +533,7 @@ public:
 
 private:
     //! Load data from an INI file
-    bool loadFromINI(const IniFile& ini, StudyVersion& version, const StudyLoadOptions& options);
+    bool loadFromINI(const IniFile& ini, const StudyVersion& version, const StudyLoadOptions& options);
 
     void resetPlayedYears(uint nbOfYears);
 
