@@ -37,7 +37,7 @@ class ThermalInterface
 {
 public:
     explicit ThermalInterface(Data::ThermalCluster*);
-    ThermalInterface(Data::AreaLink::LinkTsGeneration&, Data::TimeSeries&, const std::string& name);
+    ThermalInterface(Data::LinkTsGeneration&, Data::TimeSeries&, const std::string& name);
 
     const unsigned& unitCount;
     const double& nominalCapacity;
@@ -45,8 +45,8 @@ public:
     const double& forcedVolatility;
     const double& plannedVolatility;
 
-    Data::ThermalLaw& forcedLaw;
-    Data::ThermalLaw& plannedLaw;
+    Data::StatisticalLaw& forcedLaw;
+    Data::StatisticalLaw& plannedLaw;
 
     Data::PreproThermal* prepro;
 
@@ -63,8 +63,7 @@ enum class linkDirection
     indirect
 };
 
-using listOfLinks = std::vector<std::pair<Data::AreaLink*,linkDirection>>;
-
+using listOfLinks = std::vector<std::pair<Data::AreaLink*, linkDirection>>;
 
 void ResizeGeneratedTimeSeries(Data::AreaList& areas, Data::Parameters& params);
 

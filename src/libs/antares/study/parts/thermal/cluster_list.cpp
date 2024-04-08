@@ -399,9 +399,9 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
             s->add("volatility.planned", Utils::round(c->plannedVolatility, 3));
 
         // laws
-        if (c->forcedLaw != thermalLawUniform)
+        if (c->forcedLaw != LawUniform)
             s->add("law.forced", c->forcedLaw);
-        if (c->plannedLaw != thermalLawUniform)
+        if (c->plannedLaw != LawUniform)
             s->add("law.planned", c->plannedLaw);
 
         // costs

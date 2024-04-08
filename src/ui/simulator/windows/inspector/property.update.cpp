@@ -977,15 +977,15 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
     if (name == "cluster.forcedlaw")
     {
         long index = value.GetLong();
-        Data::ThermalLaw law = Data::thermalLawUniform;
+        Data::StatisticalLaw law = Data::LawUniform;
 
         switch (index)
         {
         case 0:
-            law = Data::thermalLawUniform;
+            law = Data::LawUniform;
             break;
         case 1:
-            law = Data::thermalLawGeometric;
+            law = Data::LawGeometric;
             break;
         default:
             return false;
@@ -998,15 +998,15 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
     if (name == "cluster.plannedlaw")
     {
         long index = value.GetLong();
-        Data::ThermalLaw law = Data::thermalLawUniform;
+        Data::StatisticalLaw law = Data::LawUniform;
 
         switch (index)
         {
         case 0:
-            law = Data::thermalLawUniform;
+            law = Data::LawUniform;
             break;
         case 1:
-            law = Data::thermalLawGeometric;
+            law = Data::LawGeometric;
             break;
         default:
             return false;

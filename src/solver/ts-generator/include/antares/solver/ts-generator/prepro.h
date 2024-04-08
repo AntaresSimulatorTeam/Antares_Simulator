@@ -24,6 +24,7 @@
 #include <antares/array/matrix.h>
 #include <antares/study/fwd.h>
 #include <antares/study/parts/thermal/defines.h>
+#include <antares/solver/ts-generator/law.h>
 #include <memory>
 
 namespace Antares::Data
@@ -113,6 +114,21 @@ public:
     unsigned int unitCount;
 }; // class PreproThermal
 
+struct LinkTsGeneration
+{
+    unsigned unitCount;
+    double nominalCapacity;
+
+    double forcedVolatility;
+    double plannedVolatility;
+
+    Data::StatisticalLaw forcedLaw;
+    Data::StatisticalLaw plannedLaw;
+
+    std::unique_ptr<Data::PreproThermal> prepro;
+
+    Matrix<> modulationCapacity;
+};
 } // namespace Antares::Data
 
 #include "prepro.hxx"

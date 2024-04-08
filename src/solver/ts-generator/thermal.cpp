@@ -51,7 +51,7 @@ ThermalInterface::ThermalInterface(Data::ThermalCluster* source) :
 {
 }
 
-ThermalInterface::ThermalInterface(Data::AreaLink::LinkTsGeneration& source,
+ThermalInterface::ThermalInterface(Data::LinkTsGeneration& source,
                                    Data::TimeSeries& capacity,
                                    const std::string& areaDestName) :
  unitCount(source.unitCount),
@@ -82,10 +82,10 @@ public:
     bool derated;
 
 private:
-    int durationGenerator(Data::ThermalLaw law, int expec, double volat, double a, double b);
+    int durationGenerator(Data::StatisticalLaw law, int expec, double volat, double a, double b);
 
     template<class T>
-    void prepareIndispoFromLaw(Data::ThermalLaw law,
+    void prepareIndispoFromLaw(Data::StatisticalLaw law,
                                double volatility,
                                double A[],
                                double B[],
@@ -109,13 +109,12 @@ private:
     double ap[366];
     double bf[366];
     double bp[366];
-
 };
 
 GeneratorTempData::GeneratorTempData(Data::Study& study, unsigned nbOfSeriesToGen) :
-    study(study),
-    nbOfSeriesToGen_(nbOfSeriesToGen),
-    rndgenerator(study.runtime->random[Data::seedTsGenThermal])
+ study(study),
+ nbOfSeriesToGen_(nbOfSeriesToGen),
+ rndgenerator(study.runtime->random[Data::seedTsGenThermal])
 {
     auto& parameters = study.parameters;
 
@@ -123,7 +122,7 @@ GeneratorTempData::GeneratorTempData(Data::Study& study, unsigned nbOfSeriesToGe
 }
 
 template<class T>
-void GeneratorTempData::prepareIndispoFromLaw(Data::ThermalLaw law,
+void GeneratorTempData::prepareIndispoFromLaw(Data::StatisticalLaw law,
                                               double volatility,
                                               double A[],
                                               double B[],
@@ -131,7 +130,7 @@ void GeneratorTempData::prepareIndispoFromLaw(Data::ThermalLaw law,
 {
     switch (law)
     {
-    case Data::thermalLawUniform:
+    case Data::LawUniform:
     {
         for (uint d = 0; d < DAYS_PER_YEAR; ++d)
         {
@@ -142,7 +141,7 @@ void GeneratorTempData::prepareIndispoFromLaw(Data::ThermalLaw law,
         }
         break;
     }
-    case Data::thermalLawGeometric:
+    case Data::LawGeometric:
     {
         for (uint d = 0; d < DAYS_PER_YEAR; ++d)
         {
@@ -168,7 +167,7 @@ void GeneratorTempData::prepareIndispoFromLaw(Data::ThermalLaw law,
     }
 }
 
-int GeneratorTempData::durationGenerator(Data::ThermalLaw law,
+int GeneratorTempData::durationGenerator(Data::StatisticalLaw law,
                                          int expec,
                                          double volat,
                                          double a,
@@ -180,11 +179,11 @@ int GeneratorTempData::durationGenerator(Data::ThermalLaw law,
     double rndnumber = rndgenerator.next();
     switch (law)
     {
-    case Data::thermalLawUniform:
+    case Data::LawUniform:
     {
         return (int(a + rndnumber * b));
     }
-    case Data::thermalLawGeometric:
+    case Data::LawGeometric:
     {
         int resultat = (1 + int(a + (b)*log(rndnumber)));
         enum
@@ -290,9 +289,9 @@ void GeneratorTempData::generateTS(const Data::Area& area, ThermalInterface& clu
     prepareIndispoFromLaw(f_law, f_volatility, af, bf, FOD);
     prepareIndispoFromLaw(p_law, p_volatility, ap, bp, POD);
 
-    std::array<double, 366> AVP {};
-    std::array<double, Log_size> LOG {};
-    std::array<double, Log_size> LOGP {};
+    std::array<double, 366> AVP{};
+    std::array<double, Log_size> LOG{};
+    std::array<double, Log_size> LOGP{};
 
     int MXO = 0;
 
@@ -625,7 +624,8 @@ bool generateThermalTimeSeries(Data::Study& study,
 
         if (archive) // compatibilty with in memory
         {
-            std::string filePath = savePath + SEP + cluster->parentArea->id + SEP + cluster->id() + ".txt";
+            std::string filePath
+              = savePath + SEP + cluster->parentArea->id + SEP + cluster->id() + ".txt";
             writeResultsToDisk(study, writer, cluster->series.timeSeries, filePath);
         }
 
@@ -650,15 +650,16 @@ bool generateLinkTimeSeries(Data::Study& study,
         Data::TimeSeries ts(link->timeseriesNumbers);
         ts.resize(study.parameters.nbLinkTStoGenerate, HOURS_PER_YEAR);
 
-        auto& tsGenStruct = direction == linkDirection::direct ? link->tsGenerationDirect : link->tsGenerationIndirect;
+        auto& tsGenStruct = direction == linkDirection::direct ? link->tsGenerationDirect
+                                                               : link->tsGenerationIndirect;
 
         ThermalInterface linkInterface(tsGenStruct, ts, link->with->name);
 
         generator.generateTS(*link->from, linkInterface);
 
         std::string capacityType = direction == linkDirection::direct ? "_direct" : "_indirect";
-        std::string filePath = savePath + SEP + link->from->id + SEP + link->with->id.c_str()
-            + capacityType + ".txt";
+        std::string filePath
+          = savePath + SEP + link->from->id + SEP + link->with->id.c_str() + capacityType + ".txt";
 
         writeResultsToDisk(study, writer, ts.timeSeries, filePath);
     }

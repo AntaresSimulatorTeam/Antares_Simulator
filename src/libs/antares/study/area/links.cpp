@@ -112,7 +112,7 @@ bool AreaLink::linkLoadTimeSeries_for_version_below_810(const AnyString& folder)
     return true;
 }
 
-bool AreaLink::linkLoadTimeSeries_for_version_820_and_later(const AnyString& folder, bool loadTSGen)
+bool AreaLink::linkLoadTimeSeries_for_version_820_and_later(const AnyString& folder)
 {
     String capacitiesFolder;
     capacitiesFolder << folder << SEP << "capacities";
@@ -133,35 +133,44 @@ bool AreaLink::linkLoadTimeSeries_for_version_820_and_later(const AnyString& fol
     filename.clear() << capacitiesFolder << SEP << with->id << "_indirect.txt";
     success = indirectCapacities.loadFromFile(filename, false) && success;
 
-    if (loadTSGen)
-    {
-        String preproFolder;
-        preproFolder << folder << SEP << "prepro";
+    return success;
+}
 
-        // Prepro
-        filename.clear() << preproFolder << SEP << with->id << "_direct.txt";
-        success = tsGenerationDirect.prepro->data.loadFromCSVFile(
-                    filename, Antares::Data::PreproThermal::thermalPreproMax, DAYS_PER_YEAR)
-                  && success;
-        success = tsGenerationDirect.prepro->validate() && success;
+bool AreaLink::loadTSGenTimeSeries(const AnyString& folder)
+{
+    const std::string id_direct = std::string(from->id) + "/" + std::string(with->id);
+    tsGenerationDirect.prepro
+      = std::make_unique<Data::PreproThermal>(id_direct, tsGenerationDirect.unitCount);
 
-        filename.clear() << preproFolder << SEP << with->id << "_indirect.txt";
-        success = tsGenerationIndirect.prepro->data.loadFromCSVFile(
-                    filename, Antares::Data::PreproThermal::thermalPreproMax, DAYS_PER_YEAR)
-                  && success;
-        success = tsGenerationIndirect.prepro->validate() && success;
+    const std::string id_indirect = std::string(with->id) + "/" + std::string(from->id);
+    tsGenerationIndirect.prepro
+      = std::make_unique<Data::PreproThermal>(id_indirect, tsGenerationIndirect.unitCount);
 
-        // Modulation
-        filename.clear() << preproFolder << SEP << with->id << "_mod_direct.txt";
-        success = tsGenerationDirect.modulationCapacity.loadFromCSVFile(filename, 1, HOURS_PER_YEAR)
-                  && success;
+    String preproFolder;
+    preproFolder << folder << SEP << "prepro";
 
-        filename.clear() << preproFolder << SEP << with->id << "_mod_indirect.txt";
-        success
-          = tsGenerationIndirect.modulationCapacity.loadFromCSVFile(filename, 1, HOURS_PER_YEAR)
-            && success;
-    }
+    // Prepro
+    String filename;
+    filename.clear() << preproFolder << SEP << with->id << "_direct.txt";
+    bool success = tsGenerationDirect.prepro->data.loadFromCSVFile(
+                     filename, Antares::Data::PreproThermal::thermalPreproMax, DAYS_PER_YEAR)
+                   && success;
+    success = tsGenerationDirect.prepro->validate() && success;
 
+    filename.clear() << preproFolder << SEP << with->id << "_indirect.txt";
+    success = tsGenerationIndirect.prepro->data.loadFromCSVFile(
+                filename, Antares::Data::PreproThermal::thermalPreproMax, DAYS_PER_YEAR)
+              && success;
+    success = tsGenerationIndirect.prepro->validate() && success;
+
+    // Modulation
+    filename.clear() << preproFolder << SEP << with->id << "_mod_direct.txt";
+    success = tsGenerationDirect.modulationCapacity.loadFromCSVFile(filename, 1, HOURS_PER_YEAR)
+              && success;
+
+    filename.clear() << preproFolder << SEP << with->id << "_mod_indirect.txt";
+    success = tsGenerationIndirect.modulationCapacity.loadFromCSVFile(filename, 1, HOURS_PER_YEAR)
+              && success;
     return success;
 }
 
@@ -200,12 +209,12 @@ void AreaLink::overrideTransmissionCapacityAccordingToGlobalParameter(
     }
 }
 
-bool AreaLink::loadTimeSeries(const StudyVersion &version, const AnyString& folder, bool loadTSGen)
+bool AreaLink::loadTimeSeries(const StudyVersion& version, const AnyString& folder)
 {
     if (version < StudyVersion(8, 2))
         return linkLoadTimeSeries_for_version_below_810(folder);
     else
-        return linkLoadTimeSeries_for_version_820_and_later(folder, loadTSGen);
+        return linkLoadTimeSeries_for_version_820_and_later(folder);
 }
 
 void AreaLink::storeTimeseriesNumbers(Solver::IResultWriter& writer) const
@@ -328,10 +337,9 @@ namespace // anonymous
 bool handleTSGenKey(const std::string& key,
                     const String& value,
                     const std::string& prefix,
-                    AreaLink::LinkTsGeneration& out)
+                    Data::LinkTsGeneration& out)
 {
-    const auto checkPrefixed = [&prefix, &key](const std::string& s)
-    {
+    const auto checkPrefixed = [&prefix, &key](const std::string& s) {
         auto key_lowercase(key);
         boost::to_lower(key_lowercase);
         return key_lowercase == prefix + "_" + s;
@@ -490,9 +498,7 @@ void logLinkDataCheckError(const AreaLink& link, const String& msg, int hour)
     throw Antares::Error::ReadingStudy();
 }
 
-void logLinkDataCheckErrorDirectIndirect(const AreaLink& link,
-                                         uint direct,
-                                         uint indirect)
+void logLinkDataCheckErrorDirectIndirect(const AreaLink& link, uint direct, uint indirect)
 {
     logs.error() << "Link (" << link.from->name << "/" << link.with->name << "): Found " << direct
                  << " direct TS "
@@ -548,20 +554,10 @@ bool AreaLinksLoadFromFolder(Study& study,
         link.comments.clear();
         link.displayComments = true;
 
+        ret = link.loadTimeSeries(study.header.version, folder) && ret;
+
         if (loadTSGen)
-        {
-            const std::string id_direct
-              = std::string(link.from->id) + "/" + std::string(link.with->id);
-            link.tsGenerationDirect.prepro
-              = std::make_unique<Data::PreproThermal>(id_direct, link.tsGenerationDirect.unitCount);
-
-            const std::string id_indirect
-              = std::string(link.with->id) + "/" + std::string(link.from->id);
-            link.tsGenerationIndirect.prepro = std::make_unique<Data::PreproThermal>(
-              id_indirect, link.tsGenerationIndirect.unitCount);
-        }
-
-        ret = link.loadTimeSeries(study.header.version, folder, loadTSGen) && ret;
+            ret = link.loadTSGenTimeSeries(folder) && ret;
 
         // Checks on loaded link's data
         if (study.usedByTheSolver)
@@ -621,9 +617,8 @@ bool AreaLinksLoadFromFolder(Study& study,
             {
                 if (directHurdlesCost[h] + indirectHurdlesCost[h] < 0)
                 {
-                    logLinkDataCheckError(link,
-                                          "hurdle costs direct + hurdle cost indirect < 0",
-                                          h);
+                    logLinkDataCheckError(
+                      link, "hurdle costs direct + hurdle cost indirect < 0", h);
                     return false;
                 }
             }

@@ -2,9 +2,9 @@
 
 namespace Antares::Data
 {
-enum ThermalLaw
+enum StatisticalLaw
 {
-    thermalLawUniform,
-    thermalLawGeometric
+    LawUniform,
+    LawGeometric
 };
 }
