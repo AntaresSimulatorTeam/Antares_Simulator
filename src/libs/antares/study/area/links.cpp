@@ -490,17 +490,9 @@ bool handleTSGenKey(const std::string& key, const String& value, Data::AreaLink&
     return false;
 }
 
-bool AreaLinksInternalLoadFromProperty(AreaLink& link,
-                                       const String& key,
-                                       const String& value,
-                                       bool loadTSGen)
+bool AreaLinksInternalLoadFromProperty(AreaLink& link, const String& key, const String& value)
 {
-    bool found = handleKey(key, value, link);
-    if (!found && loadTSGen)
-    {
-        return handleTSGenKey(key, value, link);
-    }
-    return false;
+    return handleKey(key, value, link) || handleTSGenKey(key, value, link);
 }
 
 void logLinkDataCheckError(const AreaLink& link, const String& msg, int hour)
@@ -653,7 +645,7 @@ bool AreaLinksLoadFromFolder(Study& study,
             key = p->key;
             key.toLower();
             value = p->value;
-            if (!AreaLinksInternalLoadFromProperty(link, key, value, loadTSGen))
+            if (!AreaLinksInternalLoadFromProperty(link, key, value))
                 logs.warning() << '`' << p->key << "`: Unknown property";
         }
 
