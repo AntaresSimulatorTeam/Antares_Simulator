@@ -1,0 +1,40 @@
+#include "antares/solver/optimisation/constraints/PMaxReserve.h"
+
+void PMaxReserve::add(int pays, int reserve, int cluster, int pdt, bool isUpReserve)
+{
+    if (!data.Simulation)
+    {
+        // 16 bis
+        // constraint : P - M * B <= 0
+
+        CAPACITY_RESERVATION capacityReservation
+          = isUpReserve
+              ? data.areaReserves.thermalAreaReserves[pays].areaCapacityReservationsUp[reserve]
+              : data.areaReserves.thermalAreaReserves[pays].areaCapacityReservationsDown[reserve];
+
+        RESERVE_PARTICIPATION reserveParticipation
+          = capacityReservation.AllReservesParticipation[cluster];
+
+        builder.updateHourWithinWeek(pdt)
+          .DispatchableProduction(cluster, 1.0)
+          .NumberOfDispatchableUnits(cluster, -reserveParticipation.maxPower)
+          .lessThan();
+
+        if (builder.NumberOfVariables() > 0)
+        {
+            ConstraintNamer namer(builder.data.NomDesContraintes);
+            const int hourInTheYear = builder.data.weekInTheYear * 168 + pdt;
+            namer.UpdateTimeStep(hourInTheYear);
+            namer.UpdateArea(builder.data.NomsDesPays[pays]);
+            namer.PMaxReserve(builder.data.nombreDeContraintes,
+                              reserveParticipation.clusterName,
+                              capacityReservation.reserveName);
+        }
+        builder.build();
+    }
+    else
+    {
+        builder.data.NbTermesContraintesPourLesReserves += 1;
+        builder.data.nombreDeContraintes++;
+    }
+}

@@ -22,6 +22,16 @@ public:
                                 int offset = 0,
                                 int delta = 0);
 
+    int& ClusterReserveUpParticipation(unsigned int index,
+                                       unsigned int hourInWeek,
+                                       int offset = 0,
+                                       int delta = 0);
+
+    int& ClusterReserveDownParticipation(unsigned int index,
+                                       unsigned int hourInWeek,
+                                       int offset = 0,
+                                       int delta = 0);
+
     int& NumberOfDispatchableUnits(unsigned int index,
                                    unsigned int hourInWeek,
                                    int offset = 0,

@@ -131,6 +131,10 @@ float Cluster::reserveCost(std::string name)
         return -1;
 }
 
+unsigned int Cluster::reservesCount(){
+    return clusterReservesParticipations.size();
+}
+
 void Cluster::invalidateArea()
 {
     if (parentArea)

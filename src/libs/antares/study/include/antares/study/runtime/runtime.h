@@ -105,6 +105,7 @@ public:
     //! Total
     uint thermalPlantTotalCount;
     uint thermalPlantTotalCountMustRun;
+    uint capacityReservationCount = 0;
 
     uint shortTermStorageCount = 0;
 

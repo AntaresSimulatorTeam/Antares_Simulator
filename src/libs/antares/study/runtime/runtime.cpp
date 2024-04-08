@@ -89,6 +89,7 @@ static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos&
         // statistics
         r.thermalPlantTotalCount += area.thermal.list.enabledAndNotMustRunCount();
         r.thermalPlantTotalCountMustRun += area.thermal.list.enabledAndMustRunCount();
+        r.capacityReservationCount += area.thermal.list.reservesCount();
 
         r.shortTermStorageCount += area.shortTermStorage.count();
     }

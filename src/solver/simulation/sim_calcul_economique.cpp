@@ -318,6 +318,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
             CAPACITY_RESERVATION areaCapacityReservationsUp;
             areaCapacityReservationsUp.failureCost = val.failureCost;
             areaCapacityReservationsUp.spillageCost = val.spillageCost;
+            areaCapacityReservationsUp.reserveName = key;
             if (val.need.timeSeries.width > 0)
             {
                 for (int indexSeries = 0; indexSeries < val.need.timeSeries.height; indexSeries++)
@@ -332,8 +333,10 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
                 {
                     reserveParticipation.maxPower = cluster->reserveMaxPower(key);
                     reserveParticipation.participationCost = cluster->reserveCost(key);
+                    reserveParticipation.clusterName = cluster->name();
+                    areaCapacityReservationsUp.AllReservesParticipation.push_back(
+                      reserveParticipation);
                 }
-                areaCapacityReservationsUp.AllReservesParticipation.push_back(reserveParticipation);
             }
 
             areaReserves.areaCapacityReservationsUp.push_back(areaCapacityReservationsUp);
@@ -344,6 +347,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
             CAPACITY_RESERVATION areaCapacityReservationsDown;
             areaCapacityReservationsDown.failureCost = val.failureCost;
             areaCapacityReservationsDown.spillageCost = val.spillageCost;
+            areaCapacityReservationsDown.reserveName = key;
             if (val.need.timeSeries.width > 0)
             {
                 for (int indexSeries = 0; indexSeries < val.need.timeSeries.height; indexSeries++)
@@ -358,8 +362,10 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
                 {
                     reserveParticipation.maxPower = cluster->reserveMaxPower(key);
                     reserveParticipation.participationCost = cluster->reserveCost(key);
+                    reserveParticipation.clusterName = cluster->name();
+                    areaCapacityReservationsDown.AllReservesParticipation.push_back(
+                      reserveParticipation);
                 }
-                areaCapacityReservationsDown.AllReservesParticipation.push_back(reserveParticipation);
             }
 
             areaReserves.areaCapacityReservationsDown.push_back(areaCapacityReservationsDown);

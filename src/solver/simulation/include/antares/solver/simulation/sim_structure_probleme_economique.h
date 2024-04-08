@@ -45,6 +45,9 @@ struct CORRESPONDANCES_DES_VARIABLES
 
     std::vector<int> NumeroDeVariableDuPalierThermique;
 
+    std::vector<int> clusterReserveUpParticipationIndex;
+    std::vector<int> clusterReserveDownParticipationIndex;
+
     std::vector<int> NumeroDeVariablesDeLaProdHyd;
 
     std::vector<int> NumeroDeVariablesDePompage;
@@ -261,6 +264,8 @@ struct RESERVE_PARTICIPATION
 {
     float maxPower=-1;
     float participationCost=-1;
+
+    std::string clusterName;
 };
 
 struct CAPACITY_RESERVATION
@@ -269,6 +274,8 @@ struct CAPACITY_RESERVATION
     std::vector<int> need;//!<  Vector size is number of hours in year
     float failureCost = 0;
     float spillageCost = 0;
+
+    std::string reserveName;
 };
 
 

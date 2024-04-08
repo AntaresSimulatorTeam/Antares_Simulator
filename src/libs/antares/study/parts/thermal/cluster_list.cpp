@@ -24,6 +24,7 @@
 #include "antares/study/study.h"
 #include <antares/utils/utils.h>
 #include <ranges>
+#include <numeric>
 
 namespace // anonymous
 {
@@ -85,6 +86,15 @@ unsigned int ThermalClusterList::enabledAndNotMustRunCount() const
 unsigned int ThermalClusterList::enabledAndMustRunCount() const
 {
     return std::ranges::count_if(allClusters_, [](auto c) { return c->isEnabled() && c->isMustRun(); });
+}
+
+unsigned int ThermalClusterList::reservesCount() const
+{
+    return std::accumulate(allClusters_.begin(),
+                           allClusters_.end(),
+                           0,
+                           [](int total, const std::shared_ptr<ThermalCluster> cluster)
+                           { return total + cluster->reservesCount(); });
 }
 
 bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, Area* area)

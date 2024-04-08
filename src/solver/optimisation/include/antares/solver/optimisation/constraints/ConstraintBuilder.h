@@ -54,6 +54,7 @@ public:
     const uint32_t& weekInTheYear;
     const uint32_t& NombreDePasDeTemps;
     uint32_t& NbTermesContraintesPourLesCoutsDeDemarrage;
+    uint32_t& NbTermesContraintesPourLesReserves;
 };
 
 /*! \verbatim
@@ -99,6 +100,16 @@ public:
                                               double coeff,
                                               int offset = 0,
                                               int delta = 0);
+
+    ConstraintBuilder& ClusterReserveUpParticipation(unsigned int index,
+                                                     double coeff,
+                                                     int offset = 0,
+                                                     int delta = 0);
+
+    ConstraintBuilder& ClusterReserveDownParticipation(unsigned int index,
+                                                     double coeff,
+                                                     int offset = 0,
+                                                     int delta = 0);
 
     ConstraintBuilder& NumberOfDispatchableUnits(unsigned int index, double coeff);
 
@@ -279,4 +290,10 @@ struct StartUpCostsData
 {
     const std::vector<PALIERS_THERMIQUES>& PaliersThermiquesDuPays;
     bool Simulation;
+};
+
+struct ReserveParticipationData
+{
+    bool Simulation;
+    ALL_AREA_RESERVES& areaReserves;
 };

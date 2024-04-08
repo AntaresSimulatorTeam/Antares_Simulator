@@ -89,9 +89,37 @@ void Namer::SetThermalClusterElementName(unsigned int variable,
       BuildName(elementType, location, TimeIdentifier(timeStep_, HOUR)), variable);
 }
 
+void Namer::SetThermalClusterReserveElementName(unsigned int variable,
+                                                const std::string& elementType,
+                                                const std::string& clusterName,
+                                                const std::string& reserveName)
+{
+    const auto location = LocationIdentifier(area_, AREA) + SEPARATOR + "ThermalCluster" + "<"
+                          + clusterName + ">" + SEPARATOR + "Reserve" + "<" + reserveName + ">";
+
+    targetUpdater_.UpdateTargetAtIndex(
+      BuildName(elementType, location, TimeIdentifier(timeStep_, HOUR)), variable);
+}
+
 void VariableNamer::DispatchableProduction(unsigned int variable, const std::string& clusterName)
 {
     SetThermalClusterElementName(variable, "DispatchableProduction", clusterName);
+}
+
+void VariableNamer::ParticipationOfUnitsToReserve(unsigned int variable,
+                                                  const std::string& clusterName,
+                                                  const std::string& reserveName)
+{
+    SetThermalClusterReserveElementName(
+      variable, "ParticipationOfUnitsToReserve", clusterName, reserveName);
+}
+
+void VariableNamer::ParticipationOfRunningUnitsToReserve(unsigned int variable,
+                                                         const std::string& clusterName,
+                                                         const std::string& reserveName)
+{
+    SetThermalClusterReserveElementName(
+      variable, "ParticipationOfRunningUnitsToReserve", clusterName, reserveName);
 }
 
 void VariableNamer::NODU(unsigned int variable, const std::string& clusterName)
@@ -334,6 +362,13 @@ void ConstraintNamer::NbDispUnitsMinBoundSinceMinUpTime(unsigned int constraint,
 void ConstraintNamer::MinDownTime(unsigned int constraint, const std::string& clusterName)
 {
     SetThermalClusterElementName(constraint, "MinDownTime", clusterName);
+}
+
+void ConstraintNamer::PMaxReserve(unsigned int constraint,
+                                  const std::string& clusterName,
+                                  const std::string& reserveName)
+{
+    SetThermalClusterReserveElementName(constraint, "PMaxReserve", clusterName, reserveName);
 }
 
 void ConstraintNamer::PMaxDispatchableGeneration(unsigned int constraint,

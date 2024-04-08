@@ -66,6 +66,10 @@ public:
     void SetThermalClusterElementName(unsigned int variable,
                                       const std::string& variableType,
                                       const std::string& clusterName);
+    void SetThermalClusterReserveElementName(unsigned int variable,
+                                             const std::string& elementType,
+                                             const std::string& clusterName,
+                                             const std::string& reserveName);
 
     unsigned int timeStep_ = 0;
     std::string origin_;
@@ -79,6 +83,12 @@ class VariableNamer : public Namer
 public:
     using Namer::Namer;
     void DispatchableProduction(unsigned int variable, const std::string& clusterName);
+    void ParticipationOfUnitsToReserve(unsigned int variable,
+                                       const std::string& clusterName,
+                                       const std::string& reserveName);
+    void ParticipationOfRunningUnitsToReserve(unsigned int variable,
+                                              const std::string& clusterName,
+                                              const std::string& reserveName);
     void NODU(unsigned int variable, const std::string& clusterName);
     void NumberStoppingDispatchableUnits(unsigned int variable, const std::string& clusterName);
     void NumberStartingDispatchableUnits(unsigned int variable, const std::string& clusterName);
@@ -140,6 +150,7 @@ public:
     void NbUnitsOutageLessThanNbUnitsStop(unsigned int constraint, const std::string& clusterName);
     void NbDispUnitsMinBoundSinceMinUpTime(unsigned int constraint, const std::string& clusterName);
     void MinDownTime(unsigned int constraint, const std::string& clusterName);
+    void PMaxReserve(unsigned int constraint, const std::string& clusterName, const std::string& reserveName);
     void PMaxDispatchableGeneration(unsigned int constraint, const std::string& clusterName);
     void PMinDispatchableGeneration(unsigned int constraint, const std::string& clusterName);
     void ConsistenceNODU(unsigned int constraint, const std::string& clusterName);

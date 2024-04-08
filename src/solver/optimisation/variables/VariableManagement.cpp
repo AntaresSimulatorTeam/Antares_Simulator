@@ -43,6 +43,26 @@ int& VariableManager::DispatchableProduction(unsigned int index,
     return CorrespondanceVarNativesVarOptim_[pdt].NumeroDeVariableDuPalierThermique[index];
 }
 
+int& VariableManager::ClusterReserveUpParticipation(unsigned int index,
+                                                    unsigned int hourInWeek,
+                                                    int offset,
+                                                    int delta)
+{
+    auto pdt = GetShiftedTimeStep(offset, delta, hourInWeek);
+
+    return CorrespondanceVarNativesVarOptim_[pdt].clusterReserveUpParticipationIndex[index];
+}
+
+int& VariableManager::ClusterReserveDownParticipation(unsigned int index,
+                                                      unsigned int hourInWeek,
+                                                      int offset,
+                                                      int delta)
+{
+    auto pdt = GetShiftedTimeStep(offset, delta, hourInWeek);
+
+    return CorrespondanceVarNativesVarOptim_[pdt].clusterReserveDownParticipationIndex[index];
+}
+
 int& VariableManager::NumberOfDispatchableUnits(unsigned int index,
                                                 unsigned int hourInWeek,
                                                 int offset,

@@ -149,6 +149,8 @@ public:
     //! \brief Returns participating cost for a reserve if participating, -1 otherwise
     float reserveCost(std::string name);
 
+    //! \brief Returns the number of reserves linked to this cluster
+    unsigned int reservesCount();
 
 
 protected:

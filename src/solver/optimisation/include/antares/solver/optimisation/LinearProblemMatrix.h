@@ -32,6 +32,7 @@
 #include "constraints/MaxPumpingGroup.h"
 #include "constraints/AreaHydroLevelGroup.h"
 #include "constraints/FinalStockGroup.h"
+#include "constraints/ReserveParticipationGroup.h"
 
 #include <antares/study/study.h>
 
@@ -54,4 +55,6 @@ private:
     MaxPumpingGroup maxPumpingGroup_;
     AreaHydroLevelGroup areaHydroLevelGroup_;
     FinalStockGroup finalStockGroup_;
+    ReserveParticipationGroup reserveParticipationGroup_;
+
 };
