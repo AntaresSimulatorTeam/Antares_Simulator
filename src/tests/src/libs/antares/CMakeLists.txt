@@ -7,7 +7,7 @@ if(WITH_YAMLCPP)
 endif()
 
 if(WITH_ANTLR4)
-    add_subdirectory(antlr-interface)
+    add_subdirectory(antlr4-interface)
 endif()
 
 set(src_libs_antares "${CMAKE_SOURCE_DIR}/libs/antares")
