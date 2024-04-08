@@ -11,14 +11,22 @@ source /opt/rh/rh-git227/enable
 ```
 git submodule update --init src/antares-deps
 ```
+> 💡 **Ignore submodules to make git operations faster**  
+> Antares_Simulator is quite a large project, with a few large submodules. In file .git/config, you can add this line to all [submodule] sections
+> ```
+> ignore = all
+> ```
+> This way git won't waste time computing diff on these when checking out, diffing commits, etc. git operations should be a lot faster. 
+> Keep in mind that your submodules won't be updated.
+
 ## Configure build with CMake
 === "Windows"
-    Note:
-    > cpack NSIS installer creation need an 'out of source build'. The build directory must be outside `[antares_src]` directory
 
     ```
     cmake -B _build -S [antares_src] -DVCPKG_ROOT=[vcpkg_root] -DVCPKG_TARGET_TRIPLET=[vcpkg-triplet] -DCMAKE_BUILD_TYPE=release
     ```
+    > **Note:** cpack NSIS installer creation needs an 'out-of-source build'. The build directory must be outside `[antares_src]` directory
+
 === "CentOS"
 
     ```
@@ -44,12 +52,23 @@ Here is a list of mandatory or optional CMake configuration options:
 | `BUILD_TESTING`       | no        | Enable build for unit tests                                                      | `ON` / `OFF`                           | `OFF`                                                     |
 | `BUILD_ORTOOLS`       | no        | Enable build for OR-Tools and its dependencies (requires an Internet connection) | `ON` / `OFF`                           | `OFF`                                                     |
 
-Additional options for windows
+> 💡 **Disable the UI build to make builds faster**  
+> The UI takes up a good chunk of compilation time. It is enabled by default, but you can disable it by turning off `BUILD_UI`
+
+Additional options for Windows:  
 
 | Option                 | Description            |
 |:-----------------------|------------------------|
 | `VCPKG_ROOT`           | Define vcpkg directory |
 | `VCPKG_TARGET_TRIPLET` | Define [vcpkg-triplet] |
+
+> 💡 **Use Ninja to speed up target generation by CMake**  
+> At configure time, you may specify Ninja for generation instead of traditional Make. This will speed up the update 
+> step after you make small changes to the code.
+> ```
+> cmake -S src [...] -G Ninja
+> ```
+> Note that you may need to install Ninja first (package `ninja-build` on Ubuntu).
 
 ## Build
 === "Windows"
@@ -67,7 +86,8 @@ Additional options for windows
     ```
     cmake --build _build --config release -j8
     ```
-Note:
-> Compilation can be done on several processors with `-j` option.
 
-The final GUI file can be executed at `_build/ui/simulator/antares-8.7-ui-simulator`
+> 💡 Compilation can be done on several processors with `-j` option.
+  
+
+The final GUI file can be executed at `_build/ui/simulator/antares-X.Y-ui-simulator`
