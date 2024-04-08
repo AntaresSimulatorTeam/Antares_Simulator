@@ -13,6 +13,7 @@ theme:
     - navigation.instant
     - navigation.top
     - navigation.expand
+    - content.tabs.link
   #  - navigation.sections
   #   - header.autohide
   #   - toc.separate
@@ -86,6 +87,7 @@ markdown_extensions:
   - admonition
   - pymdownx.details
   - pymdownx.superfences
-  - pymdownx.tabbed
+  - pymdownx.tabbed:
+      alternate_style: true
 
 copyright: Copyright &copy; 2007 - 2024 RTE
