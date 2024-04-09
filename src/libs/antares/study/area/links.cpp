@@ -518,16 +518,16 @@ bool AreaLinksInternalLoadFromProperty(AreaLink& link, const String& key, const 
     return handleKey(link, key, value) || handleTSGenKey(link, key, value);
 }
 
-[[ noreturn ]]
-void logLinkDataCheckError(const AreaLink& link, const String& msg, int hour)
+[[noreturn]] void logLinkDataCheckError(const AreaLink& link, const String& msg, int hour)
 {
     logs.error() << "Link (" << link.from->name << "/" << link.with->name << "): Invalid values ("
                  << msg << ") for hour " << hour;
     throw Antares::Error::ReadingStudy();
 }
 
-[[ noreturn ]]
-void logLinkDataCheckErrorDirectIndirect(const AreaLink& link, uint direct, uint indirect)
+[[noreturn]] void logLinkDataCheckErrorDirectIndirect(const AreaLink& link,
+                                                      uint direct,
+                                                      uint indirect)
 {
     logs.error() << "Link (" << link.from->name << "/" << link.with->name << "): Found " << direct
                  << " direct TS "
@@ -594,7 +594,6 @@ bool AreaLinksLoadFromFolder(const Study& study,
             if (nbDirectTS != nbIndirectTS)
             {
                 logLinkDataCheckErrorDirectIndirect(link, nbDirectTS, nbIndirectTS);
-                return false;
             }
 
             auto& directHurdlesCost = link.parameters[fhlHurdlesCostDirect];
@@ -614,12 +613,10 @@ bool AreaLinksLoadFromFolder(const Study& study,
                     if (directCapacities[h] < 0.)
                     {
                         logLinkDataCheckError(link, "direct capacity < 0", h);
-                        return false;
                     }
                     if (directCapacities[h] < loopFlow[h])
                     {
                         logLinkDataCheckError(link, "direct capacity < loop flow", h);
-                        return false;
                     }
                 }
 
@@ -629,12 +626,10 @@ bool AreaLinksLoadFromFolder(const Study& study,
                     if (indirectCapacities[h] < 0.)
                     {
                         logLinkDataCheckError(link, "indirect capacitity < 0", h);
-                        return false;
                     }
                     if (indirectCapacities[h] + loopFlow[h] < 0)
                     {
                         logLinkDataCheckError(link, "indirect capacity + loop flow < 0", h);
-                        return false;
                     }
                 }
             }
@@ -645,7 +640,6 @@ bool AreaLinksLoadFromFolder(const Study& study,
                 {
                     logLinkDataCheckError(
                       link, "hurdle costs direct + hurdle cost indirect < 0", h);
-                    return false;
                 }
             }
 
@@ -655,7 +649,6 @@ bool AreaLinksLoadFromFolder(const Study& study,
                 if (PShiftPlus[h] < PShiftMinus[h])
                 {
                     logLinkDataCheckError(link, "phase shift plus < phase shift minus", h);
-                    return false;
                 }
             }
         }
