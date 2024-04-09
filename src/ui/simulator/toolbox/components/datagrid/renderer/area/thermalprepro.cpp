@@ -79,7 +79,7 @@ static double MTBFForPO(Antares::Data::PreproAvailability* preproThermal, int y)
 
 ThermalClusterPrepro::ThermalClusterPrepro(wxWindow* control,
                                            Toolbox::InputSelector::ThermalCluster* notifier) :
- MatrixAncestorType(control), pPreproAvailability(nullptr)
+ MatrixAncestorType(control)
 {
     if (notifier)
         notifier->onThermalClusterChanged.connect(

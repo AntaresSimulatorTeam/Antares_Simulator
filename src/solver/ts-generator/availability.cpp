@@ -180,7 +180,7 @@ int GeneratorTempData::durationGenerator(Data::StatisticalLaw law,
 
 void GeneratorTempData::generateTS(const Data::Area& area, AvailabilityTSGeneratorData& cluster)
 {
-    if (not cluster.prepro)
+    if (!cluster.prepro)
     {
         logs.error()
           << "Cluster: " << area.name << '/' << cluster.name
@@ -314,8 +314,8 @@ void GeneratorTempData::generateTS(const Data::Area& area, AvailabilityTSGenerat
         for (uint dayInTheYear = 0; dayInTheYear < DAYS_PER_YEAR; ++dayInTheYear)
         {
             assert(dayInTheYear < 366);
-            assert(not(lf[dayInTheYear] < 0.));
-            assert(not(lp[dayInTheYear] < 0.));
+            assert(lf[dayInTheYear] >= 0.);
+            assert(lp[dayInTheYear] >= 0.);
 
             PODOfTheDay = (int)POD[dayInTheYear];
             FODOfTheDay = (int)FOD[dayInTheYear];
@@ -552,12 +552,12 @@ void GeneratorTempData::generateTS(const Data::Area& area, AvailabilityTSGenerat
 }
 } // namespace
 
-std::vector<Data::ThermalCluster*> getAllClustersToGen(Data::AreaList& areas,
+std::vector<Data::ThermalCluster*> getAllClustersToGen(const Data::AreaList& areas,
                                                        bool globalThermalTSgeneration)
 {
     std::vector<Data::ThermalCluster*> clusters;
 
-    areas.each([&clusters, &globalThermalTSgeneration](Data::Area& area) {
+    areas.each([&clusters, &globalThermalTSgeneration](const Data::Area& area) {
         for (const auto& cluster : area.thermal.list.all())
             if (cluster->doWeGenerateTS(globalThermalTSgeneration))
                 clusters.push_back(cluster.get());
@@ -594,7 +594,7 @@ void writeResultsToDisk(const Data::Study& study,
 }
 
 bool generateThermalTimeSeries(Data::Study& study,
-                               std::vector<Data::ThermalCluster*>& clusters,
+                               const std::vector<Data::ThermalCluster*>& clusters,
                                Solver::IResultWriter& writer,
                                const std::string& savePath)
 {

@@ -74,7 +74,7 @@ template<enum Data::TimeSeriesType T>
 bool GenerateTimeSeries(Data::Study& study, uint year, IResultWriter& writer);
 
 bool generateThermalTimeSeries(Data::Study& study,
-                               std::vector<Data::ThermalCluster*>& clusters,
+                               const std::vector<Data::ThermalCluster*>& clusters,
                                Solver::IResultWriter& writer,
                                const std::string& savePath);
 
@@ -83,7 +83,7 @@ bool generateLinkTimeSeries(Data::Study& study,
                             Solver::IResultWriter& writer,
                             const std::string& savePath);
 
-std::vector<Data::ThermalCluster*> getAllClustersToGen(Data::AreaList& areas,
+std::vector<Data::ThermalCluster*> getAllClustersToGen(const Data::AreaList& areas,
                                                        bool globalThermalTSgeneration);
 
 listOfLinks getAllLinksToGen(Data::AreaList& areas);
