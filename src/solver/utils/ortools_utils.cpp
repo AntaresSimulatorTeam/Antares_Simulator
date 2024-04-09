@@ -308,11 +308,6 @@ MPSolver* ORTOOLS_ConvertIfNeeded(const std::string& solverName,
     }
 }
 
-static bool computeUseBasis(const int optimizationNumber, const OptimizationOptions& options)
-{
-    return (optimizationNumber == PREMIERE_OPTIMISATION && options.useBasisOptim1)
-           || (optimizationNumber == DEUXIEME_OPTIMISATION && options.useBasisOptim2);
-}
 template<class SourceT>
 static void transferBasis(std::vector<operations_research::MPSolver::BasisStatus>& destination,
                           const SourceT& source)
@@ -332,14 +327,13 @@ MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probl
 {
     MPSolverParameters params;
     setGenericParameters(
-      params); // Keep generic params for default settings working for all solvers
+      params);              // Keep generic params for default settings working for all solvers
     if (options.solverLogs) // May be overriden by log level if set as specific parameters
     {
         solver->EnableOutput();
     }
     TuneSolverSpecificOptions(solver, options.solverParameters);
-    const bool useBasis = computeUseBasis(optimizationNumber, options);
-    const bool warmStart = solverSupportsWarmStart(solver->ProblemType()) && useBasis;
+    const bool warmStart = solverSupportsWarmStart(solver->ProblemType());
     // Provide an initial simplex basis, if any
     if (warmStart && Probleme->basisExists())
     {

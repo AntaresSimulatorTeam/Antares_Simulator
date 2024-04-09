@@ -9,7 +9,5 @@ struct OptimizationOptions
     std::string ortoolsSolver = "sirius";
     bool solverLogs = false;
     std::string solverParameters = "";
-    bool useBasisOptim1 = false;
-    bool useBasisOptim2 = true;
 };
 }
