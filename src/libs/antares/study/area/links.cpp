@@ -161,7 +161,7 @@ bool AreaLink::loadTSGenTimeSeries(const AnyString& folder)
         anyFileWasLoaded = true;
         tsGenerationDirect.valid
           = tsGenerationDirect.prepro->data.loadFromCSVFile(
-              filename, Antares::Data::PreproAvailability::thermalPreproMax, DAYS_PER_YEAR)
+              filename, Antares::Data::PreproAvailability::preproAvailabilityMax, DAYS_PER_YEAR)
             && tsGenerationDirect.prepro->validate();
     }
 
@@ -171,7 +171,7 @@ bool AreaLink::loadTSGenTimeSeries(const AnyString& folder)
         anyFileWasLoaded = true;
         tsGenerationIndirect.valid
           = tsGenerationIndirect.prepro->data.loadFromCSVFile(
-              filename, Antares::Data::PreproAvailability::thermalPreproMax, DAYS_PER_YEAR)
+              filename, Antares::Data::PreproAvailability::preproAvailabilityMax, DAYS_PER_YEAR)
             && tsGenerationIndirect.prepro->validate();
     }
 
