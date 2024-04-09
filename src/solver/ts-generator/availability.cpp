@@ -76,11 +76,16 @@ public:
 
     void generateTS(const Data::Area& area, AvailabilityTSGeneratorData& cluster);
 
+private:
     Data::Study& study;
-
     bool derated;
 
-private:
+    uint nbOfSeriesToGen_;
+
+    MersenneTwister& rndgenerator;
+
+    static constexpr int Log_size = 4000;
+
     int durationGenerator(Data::StatisticalLaw law, int expec, double volat, double a, double b) const;
 
     template<class T>
@@ -89,21 +94,6 @@ private:
                                std::array<double, 366> A,
                                std::array<double, 366> B,
                                const T& duration) const;
-
-    uint nbOfSeriesToGen_;
-
-    MersenneTwister& rndgenerator;
-
-    static constexpr int Log_size = 4000;
-
-    std::array<double, 366> lf;
-    std::array<double, 366> lp;
-    std::array<double, 366> ff;
-    std::array<double, 366> pp;
-    std::array<double, 366> af;
-    std::array<double, 366> ap;
-    std::array<double, 366> bf;
-    std::array<double, 366> bp;
 };
 
 GeneratorTempData::GeneratorTempData(Data::Study& study, unsigned nbOfSeriesToGen) :
@@ -230,6 +220,15 @@ void GeneratorTempData::generateTS(const Data::Area& area, AvailabilityTSGenerat
 
     std::vector<std::vector<double>> FPOW(DAYS_PER_YEAR);
     std::vector<std::vector<double>> PPOW(DAYS_PER_YEAR);
+
+    std::array<double, 366> lf;
+    std::array<double, 366> lp;
+    std::array<double, 366> ff;
+    std::array<double, 366> pp;
+    std::array<double, 366> af;
+    std::array<double, 366> ap;
+    std::array<double, 366> bf;
+    std::array<double, 366> bp;
 
     int FODOfTheDay;
     int PODOfTheDay;
