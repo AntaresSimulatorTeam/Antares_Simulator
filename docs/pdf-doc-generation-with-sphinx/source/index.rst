@@ -5,4 +5,4 @@ Welcome to Antares Simulator User Guide'!
    :maxdepth: 2
    :caption: Contents
 
-   reference-guide/*
+   reference-guide/00-index.md

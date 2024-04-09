@@ -45,7 +45,7 @@ Here is a list of mandatory or optional CMake configuration options:
 | `CMAKE_C_COMPILER`    | **yes**   | Select C compiler                                                                | `gcc_-10`                               |                                                           |
 | `CMAKE_CXX_COMPILER`  | **yes**   | Select C++ compiler                                                              | `g++-10`                               |                                                           |
 | `CMAKE_BUILD_TYPE`    | **yes**   | Define build type                                                                | `Release` / `Debug` / `RelWithDebInfo` |                                                           |
-| `BUILD_UI`            | no        | Enable or disable Antares Simulator UI compilation                               | `ON` / `OFF`                           | `ON`                                                      |
+| `BUILD_UI`            | no        | Enable or disable Antares Simulator UI[^1] compilation                           | `ON` / `OFF`                           | `ON`                                                      |
 | `BUILD_ALL`           | no        | Enable build of ALL external libraries                                           | `ON` / `OFF`                           | `OFF`                                                     |
 | `DEPS_INSTALL_DIR`    | no        | Define dependencies libraries install directory                                  | absolute path to an existing directory | `<antares_checkout_dir>/../rte-antares-deps-<build_type>` |
 | `USE_PRECOMPILED_EXT` | no        | This option must be set if you use wxWidget as precompiled external library      | `ON` / `OFF`                           | `OFF`                                                     |
@@ -91,3 +91,5 @@ Additional options for Windows:
   
 
 The final GUI file can be executed at `_build/ui/simulator/antares-X.Y-ui-simulator`
+
+[^1]: GUI support has been dropped in favor of [Antares Web](https://github.com/AntaresSimulatorTeam/AntaREST)

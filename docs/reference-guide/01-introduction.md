@@ -3,18 +3,17 @@
 This reference guide describes all the main features of the *Antares Simulator*[^1] package.
 [^1]: For simplicity's sake, the *Antares Simulator* application will be simply denoted *Antares*.
 
-It gives useful general information regarding the way data are handled and processed,
-as well as how the Graphic User Interface (GUI) works. To keep this documentation
-as compact as possible, many redundant details (how to mouse-select, etc.) are omitted.
+It gives useful general information regarding the way data are handled and processed.  
+Since the *Antares* GUI support has been dropped (in favor of [Antares Web](https://github.com/AntaresSimulatorTeam/AntaREST)), 
+all its documentation has been removed. If you are still using an old version of *Antares* GUI, you can still find 
+its documentation in the assets of the release, or by browsing older versions of the documentation website.
 
 Real-life use of the software involves a learning curve process that cannot be supported by a
 simple reference guide. In order to be able to address this basic issue, two kinds of resources may be used:
 
-- The ["examples"](https://github.com/AntaresSimulatorTeam/Antares_Simulator_Examples) ?? TODO library, which is meant as a self-teaching way to learn how to use the software.
-It is regularly enriched with the software's new features.
-The contents of this library depend on the installation package it comes from
-(public version vs. users' club version).
-
+- The ["examples"](https://github.com/AntaresSimulatorTeam/Antares_Simulator_Examples) ?? TODO library, which is meant 
+  as a self-teaching way to learn how to use the software. It is regularly enriched with the software's new features.
+  The contents of this library depend on the installation package it comes from (public version vs. users' club version).
 - The [https://antares-simulator.org](https://antares-simulator.org/) website
 
 If you notice an issue in the documentation, please report it on [github.com](https://github.com/AntaresSimulatorTeam/Antares_Simulator/issues/new/choose).
@@ -54,20 +53,13 @@ either automatically or with some degree of man-in-the-loop control, depending o
 
 These steps most often involve:
 
-1. One GUI session dedicated to the initialization or to the updating of input data
-(time-series, grid topology, fleet description, etc.)
+1. Initialize or update the input data (time-series, grid topology, fleet description, etc.)
+2. Define the simulation contexts (definition of the "Monte-Carlo years" to simulate)
+3. Run a simulation to produce actual numeric scenarios, following the directives defined in (2)
+4. Run the optimization, to solve all the optimization problems associated with each of the scenarios produced in (3)
+5. Exploit the detailed results yielded by (4)
 
-2. One GUI session dedicated to the definition of simulation contexts
-(definition of the "Monte-Carlo years" to simulate)
-
-3. One autonomous simulation session producing actual numeric scenarios following the directives defined in (2)
-
-4. One autonomous optimization session aiming at solving all the optimization problems associated with
-each of the scenarios produced in (3)
-
-5. One GUI session dedicated to the exploitation of the detailed results yielded by (4)
-
-The scope of this document is to give a detailed description of the software involved in
+The scope of this reference guide is to give a detailed description of the software involved in
 steps (1) to (5) mostly based on a functional approach, leaving thereby aside a significant
 part of the mathematical content[^2] involved in several of these steps.  
 The following picture gives a functional view of all that is involved in steps (1) to (5).

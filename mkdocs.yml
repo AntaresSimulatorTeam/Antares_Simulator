@@ -12,8 +12,8 @@ theme:
   features:
     - navigation.instant
     - navigation.top
-    - navigation.expand
     - content.tabs.link
+  # - navigation.expand
   #  - navigation.sections
   #   - header.autohide
   #   - toc.separate
@@ -34,6 +34,27 @@ nav:
   - 'Reference guide':
     - 'Introduction': 'reference-guide/01-introduction.md'
     - 'Data organization': 'reference-guide/02-data_organization.md'
+    - 'Time-series generation':
+        - 'Introduction': 'reference-guide/ts-generator/01-introduction.md'
+        - 'Input files': 'reference-guide/ts-generator/02-inputs.md'
+        - 'Output files': 'reference-guide/ts-generator/03-outputs.md'
+        - 'Parameters': 'reference-guide/ts-generator/04-parameters.md'
+        - 'Principles': 'reference-guide/ts-generator/05-principles.md'
+        - 'Command-line instructions': 'reference-guide/ts-generator/06-command-line.md'
+    - 'Solver':
+        - 'Introduction': 'reference-guide/solver/01-introduction.md'
+        - 'Input files': 'reference-guide/solver/02-inputs.md'
+        - 'Output files': 'reference-guide/solver/03-outputs.md'
+        - 'Parameters': 'reference-guide/solver/04-parameters.md'
+        - 'Principles': 'reference-guide/solver/05-principles.md'
+        - 'Command-line instructions': 'reference-guide/solver/06-command-line.md'
+    - 'Kirchhoff''s constraint generator':
+        - 'Introduction': 'reference-guide/kirchhoff-constraints-builder/01-introduction.md'
+        - 'Input files': 'reference-guide/kirchhoff-constraints-builder/02-inputs.md'
+        - 'Output files': 'reference-guide/kirchhoff-constraints-builder/03-outputs.md'
+        - 'Parameters': 'reference-guide/kirchhoff-constraints-builder/04-parameters.md'
+        - 'Principles': 'reference-guide/kirchhoff-constraints-builder/05-principles.md'
+        - 'Command-line instructions': 'reference-guide/kirchhoff-constraints-builder/06-command-line.md'
     - 'Commands': 'reference-guide/03-commands.md'
     - 'Active windows': 'reference-guide/04-active_windows.md'
     - 'Output files': 'reference-guide/05-output_files.md'
