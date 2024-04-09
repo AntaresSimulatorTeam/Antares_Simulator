@@ -33,7 +33,7 @@
 
 #define SEP Yuni::IO::Separator
 
-#define FAILURE_RATE_EQ_1 0.999
+constexpr double FAILURE_RATE_EQ_1 = 0.999;
 
 namespace Antares::TSGenerator
 {
@@ -76,22 +76,20 @@ public:
 
     void generateTS(const Data::Area& area, AvailabilityTSGeneratorData& cluster);
 
-public:
     Data::Study& study;
 
     bool derated;
 
 private:
-    int durationGenerator(Data::StatisticalLaw law, int expec, double volat, double a, double b);
+    int durationGenerator(Data::StatisticalLaw law, int expec, double volat, double a, double b) const;
 
     template<class T>
     void prepareIndispoFromLaw(Data::StatisticalLaw law,
                                double volatility,
                                double A[],
                                double B[],
-                               const T& duration);
+                               const T& duration) const;
 
-private:
     uint nbOfSeriesToGen_;
 
     MersenneTwister& rndgenerator;
@@ -116,9 +114,7 @@ GeneratorTempData::GeneratorTempData(Data::Study& study, unsigned nbOfSeriesToGe
  nbOfSeriesToGen_(nbOfSeriesToGen),
  rndgenerator(study.runtime->random[Data::seedTsGenThermal])
 {
-    auto& parameters = study.parameters;
-
-    derated = parameters.derated;
+    derated = study.parameters.derated;
 }
 
 template<class T>
@@ -126,7 +122,7 @@ void GeneratorTempData::prepareIndispoFromLaw(Data::StatisticalLaw law,
                                               double volatility,
                                               double A[],
                                               double B[],
-                                              const T& duration)
+                                              const T& duration) const
 {
     switch (law)
     {
@@ -134,7 +130,7 @@ void GeneratorTempData::prepareIndispoFromLaw(Data::StatisticalLaw law,
     {
         for (uint d = 0; d < DAYS_PER_YEAR; ++d)
         {
-            double D = (double)duration[d];
+            double D = duration[d];
             double xtemp = volatility * (D - 1.);
             A[d] = D - xtemp;
             B[d] = 2. * xtemp + 1.;
@@ -145,7 +141,7 @@ void GeneratorTempData::prepareIndispoFromLaw(Data::StatisticalLaw law,
     {
         for (uint d = 0; d < DAYS_PER_YEAR; ++d)
         {
-            double D = (double)duration[d];
+            double D = duration[d];
             double xtemp = volatility * volatility * D * (D - 1.);
             if (xtemp != 0)
             {
@@ -171,9 +167,9 @@ int GeneratorTempData::durationGenerator(Data::StatisticalLaw law,
                                          int expec,
                                          double volat,
                                          double a,
-                                         double b)
+                                         double b) const
 {
-    if (volat == 0 or expec == 1)
+    if (volat == 0 || expec == 1)
         return expec;
 
     double rndnumber = rndgenerator.next();
@@ -194,7 +190,7 @@ int GeneratorTempData::durationGenerator(Data::StatisticalLaw law,
         return (resultat <= limit) ? resultat : limit;
     }
     }
-    assert(false and "return is missing");
+    assert(false && "return is missing");
     return 0;
 }
 
@@ -211,7 +207,7 @@ void GeneratorTempData::generateTS(const Data::Area& area, AvailabilityTSGenerat
 
     assert(cluster.prepro);
 
-    if (0 == cluster.unitCount or 0 == cluster.nominalCapacity)
+    if (0 == cluster.unitCount || 0 == cluster.nominalCapacity)
         return;
 
     const auto& preproData = *(cluster.prepro);
@@ -258,10 +254,10 @@ void GeneratorTempData::generateTS(const Data::Area& area, AvailabilityTSGenerat
         lf[d] = FOR[d] / (FOR[d] + (FODOfTheDay) * (1. - FOR[d]));
         lp[d] = POR[d] / (POR[d] + (PODOfTheDay) * (1. - POR[d]));
 
-        if (0. < lf[d] and lf[d] < lp[d])
+        if (0. < lf[d] && lf[d] < lp[d])
             lf[d] *= (1. - lp[d]) / (1. - lf[d]);
 
-        if (0. < lp[d] and lp[d] < lf[d])
+        if (0. < lp[d] && lp[d] < lf[d])
             lp[d] *= (1. - lf[d]) / (1. - lp[d]);
 
         double a = 0.;
@@ -377,7 +373,7 @@ void GeneratorTempData::generateTS(const Data::Area& area, AvailabilityTSGenerat
 
             int POC = 0;
 
-            if (lf[dayInTheYear] > 0. and lf[dayInTheYear] <= FAILURE_RATE_EQ_1)
+            if (lf[dayInTheYear] > 0. && lf[dayInTheYear] <= FAILURE_RATE_EQ_1)
             {
                 A = rndgenerator.next();
                 last = FPOW[dayInTheYear][AUN];
@@ -400,10 +396,10 @@ void GeneratorTempData::generateTS(const Data::Area& area, AvailabilityTSGenerat
                 FOC = (lf[dayInTheYear] > 0.) ? AUN : 0;
             }
 
-            if (lp[dayInTheYear] > 0. and lp[dayInTheYear] <= FAILURE_RATE_EQ_1)
+            if (lp[dayInTheYear] > 0. && lp[dayInTheYear] <= FAILURE_RATE_EQ_1)
             {
                 int AUN_app = AUN;
-                if (stock >= 0 and stock <= AUN)
+                if (stock >= 0 && stock <= AUN)
                     AUN_app -= stock;
                 if (stock > AUN)
                     AUN_app = 0;
@@ -431,7 +427,7 @@ void GeneratorTempData::generateTS(const Data::Area& area, AvailabilityTSGenerat
             }
 
             int candidat = POC + stock;
-            if (0 <= candidat and candidat <= AUN)
+            if (0 <= candidat && candidat <= AUN)
             {
                 POC = candidat;
 
@@ -486,7 +482,7 @@ void GeneratorTempData::generateTS(const Data::Area& area, AvailabilityTSGenerat
 
             if (cluster.unitCount == 1)
             {
-                if (POC == 1 and FOC == 1)
+                if (POC == 1 && FOC == 1)
                 {
                     PPO = 0;
                     PFO = 0;
@@ -517,10 +513,10 @@ void GeneratorTempData::generateTS(const Data::Area& area, AvailabilityTSGenerat
 
             AUN = AUN - (PPO + PFO + MXO);
 
-            if (PFO != 0 or MXO != 0)
+            if (PFO != 0 || MXO != 0)
                 FOD_reel = durationGenerator(
                   f_law, FODOfTheDay, f_volatility, af[dayInTheYear], bf[dayInTheYear]);
-            if (PPO != 0 or MXO != 0)
+            if (PPO != 0 || MXO != 0)
                 POD_reel = durationGenerator(
                   p_law, PODOfTheDay, p_volatility, ap[dayInTheYear], bp[dayInTheYear]);
 
@@ -581,7 +577,7 @@ listOfLinks getAllLinksToGen(Data::AreaList& areas)
 {
     listOfLinks links;
 
-    areas.each([&links](Data::Area& area) {
+    areas.each([&links](const Data::Area& area) {
         std::ranges::for_each(area.links, [&links](auto& l) {
             links.emplace_back(l.second, linkDirection::direct);
             links.emplace_back(l.second, linkDirection::indirect);
@@ -605,7 +601,7 @@ void writeResultsToDisk(const Data::Study& study,
 }
 
 bool generateThermalTimeSeries(Data::Study& study,
-                               std::vector<Data::ThermalCluster*> clusters,
+                               std::vector<Data::ThermalCluster*>& clusters,
                                Solver::IResultWriter& writer,
                                const std::string& savePath)
 {

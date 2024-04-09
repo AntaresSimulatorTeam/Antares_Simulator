@@ -74,7 +74,7 @@ template<enum Data::TimeSeriesType T>
 bool GenerateTimeSeries(Data::Study& study, uint year, IResultWriter& writer);
 
 bool generateThermalTimeSeries(Data::Study& study,
-                               std::vector<Data::ThermalCluster*> clusters,
+                               std::vector<Data::ThermalCluster*>& clusters,
                                Solver::IResultWriter& writer,
                                const std::string& savePath);
 
