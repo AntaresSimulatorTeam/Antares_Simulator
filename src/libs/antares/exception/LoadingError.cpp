@@ -62,18 +62,34 @@ InvalidSimulationMode::InvalidSimulationMode() :
 {
 }
 
-static std::string InvalidSolverHelper(const std::string& solver, const std::string& availableSolvers)
+static std::string InvalidSolverHelper(const std::string& solver,
+                                       const std::string& availableSolvers)
 {
-  std::ostringstream message;
-  message
-    << "Can't use solver '"
-    << solver
-    << "' : it does not match any available OR-Tools solver. Possible choices are "
-    << availableSolvers;
-  return message.str();
+    std::ostringstream message;
+    message << "Can't use solver '" << solver
+            << "' : it does not match any available OR-Tools solver. Possible choices are "
+            << availableSolvers;
+    return message.str();
 }
 
-InvalidSolver::InvalidSolver(const std::string& solver, const std::string& availableSolvers) : LoadingError(InvalidSolverHelper(solver, availableSolvers))
+InvalidSolver::InvalidSolver(const std::string& solver, const std::string& availableSolvers) :
+ LoadingError(InvalidSolverHelper(solver, availableSolvers))
+{
+}
+
+static std::string InvalidSolverSpecificParametersHelper(const std::string& solver,
+                                                         const std::string& solverParameters)
+{
+    std::ostringstream message;
+    message << "Specific parameters '" << solverParameters << "' are not valid for solver "
+            << solver;
+    return message.str();
+}
+
+InvalidSolverSpecificParameters::InvalidSolverSpecificParameters(
+  const std::string& solver,
+  const std::string& solverParameters) :
+ LoadingError(InvalidSolverSpecificParametersHelper(solver, solverParameters))
 {
 }
 

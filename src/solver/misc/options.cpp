@@ -46,8 +46,7 @@ using namespace Yuni;
 using namespace Antares;
 using namespace Antares::Data;
 
-std::unique_ptr<GetOpt::Parser> CreateParser(Settings& settings,
-                                             StudyLoadOptions& options)
+std::unique_ptr<GetOpt::Parser> CreateParser(Settings& settings, StudyLoadOptions& options)
 {
     settings.reset();
 
@@ -95,7 +94,7 @@ std::unique_ptr<GetOpt::Parser> CreateParser(Settings& settings,
       settings.simulationName, 'n', "name", "Set the name of the new simulation to VALUE");
     // --generators-only
     parser->addFlag(
-            settings.tsGeneratorsOnly, 'g', "generators-only", "Run the time-series generators only");
+      settings.tsGeneratorsOnly, 'g', "generators-only", "Run the time-series generators only");
 
     // --comment-file
     parser->add(settings.commentFile,
@@ -253,10 +252,8 @@ void checkOrtoolsSolver(const Antares::Solver::Optimization::OptimizationOptions
         const std::list<std::string> availableSolverList = getAvailableOrtoolsSolverName();
 
         // Check if solver is available
-        bool found
-          = (std::find(
-               availableSolverList.begin(), availableSolverList.end(), solverName)
-             != availableSolverList.end());
+        bool found = (std::find(availableSolverList.begin(), availableSolverList.end(), solverName)
+                      != availableSolverList.end());
         if (!found)
         {
             throw Error::InvalidSolver(optOptions.ortoolsSolver, availableOrToolsSolversString());
