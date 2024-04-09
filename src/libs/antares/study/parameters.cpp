@@ -873,8 +873,7 @@ static bool deprecatedVariable(std::string var)
          "battery_withdrawal",  "other1_withdrawal",     "other2_withdrawal",
          "other3_withdrawal",   "other4_withdrawal",     "other5_withdrawal"};
     boost::to_lower(var);
-    return std::find(STSGroups_legacy.begin(), STSGroups_legacy.end(), var)
-           != STSGroups_legacy.end();
+    return std::ranges::find(STSGroups_legacy, var) != STSGroups_legacy.end();
 }
 
 static bool SGDIntLoadFamily_VariablesSelection(Parameters& d,

@@ -519,6 +519,7 @@ bool AreaLinksInternalLoadFromProperty(AreaLink& link, const String& key, const 
     return handleKey(link, key, value) || handleTSGenKey(link, key, value);
 }
 
+[[ noreturn ]]
 void logLinkDataCheckError(const AreaLink& link, const String& msg, int hour)
 {
     logs.error() << "Link (" << link.from->name << "/" << link.with->name << "): Invalid values ("
@@ -526,6 +527,7 @@ void logLinkDataCheckError(const AreaLink& link, const String& msg, int hour)
     throw Antares::Error::ReadingStudy();
 }
 
+[[ noreturn ]]
 void logLinkDataCheckErrorDirectIndirect(const AreaLink& link, uint direct, uint indirect)
 {
     logs.error() << "Link (" << link.from->name << "/" << link.with->name << "): Found " << direct
@@ -535,7 +537,7 @@ void logLinkDataCheckErrorDirectIndirect(const AreaLink& link, uint direct, uint
 }
 } // anonymous namespace
 
-bool AreaLinksLoadFromFolder(Study& study,
+bool AreaLinksLoadFromFolder(const Study& study,
                              AreaList* l,
                              Area* area,
                              const AnyString& folder,
