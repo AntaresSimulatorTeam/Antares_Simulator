@@ -132,7 +132,7 @@ jobs:
     - name: Install pip dependencies if necessary
       run: pip install -r src/tests/examples/requirements.txt
 
-    - uses: ./.github/workflow/install_minizip
+    - uses: ./.github/workflows/install_minizip
 
     - name: Init submodule
       run: |

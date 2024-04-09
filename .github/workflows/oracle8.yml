@@ -61,7 +61,7 @@ jobs:
            unzip ortools.zip
            rm ortools.zip
 
-    - uses: ./.github/workflow/install_minizip
+    - uses: ./.github/workflows/install_minizip
 
     - name: Init submodule
       run: |
