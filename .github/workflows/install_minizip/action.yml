@@ -19,6 +19,7 @@ runs:
         -D MZ_PKCRYPT=OFF \
         -D MZ_WZAES=OFF \
         -D MZ_OPENSSL=OFF \
-        -D MZ_ICONV=OFF
+        -D MZ_ICONV=OFF \
+        -DZLIB_TAG=develop #Temporary fix for zlib issue https://github.com/zlib-ng/minizip-ng/issues/764
         cmake --build build
         cmake --install build --prefix ../install
