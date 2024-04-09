@@ -37,6 +37,7 @@ jobs:
       run: |
           git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git -b $GITHUB_REF_NAME .
 
+    - uses: ./.github/workflow/install_minizip
     - name: Init submodule
       run: |
            git submodule update --init --recursive src/antares-deps

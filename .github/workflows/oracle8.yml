@@ -61,6 +61,8 @@ jobs:
            unzip ortools.zip
            rm ortools.zip
 
+    - uses: ./.github/workflow/install_minizip
+
     - name: Init submodule
       run: |
            git config --global safe.directory '*'
