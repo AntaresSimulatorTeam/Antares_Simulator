@@ -43,7 +43,7 @@ The GUI is deprecated in favor of [Antares Web](https://github.com/AntaresSimula
 This software suite has been tested under:
 
 *   Ubuntu 20.04 [![Status][ubuntu_ci_svg]][ubuntu_ci_link]
-*   Microsoft Windows with Visual Studio 2019 (64-bit) [![Status][windows_ci_svg]][windows_ci_link]
+*   Microsoft Windows with Visual Studio 2022 (64-bit) [![Status][windows_ci_svg]][windows_ci_link]
 *   Centos7 [![Status][centos_ci_svg]][centos_ci_link]
 *   Oracle Linux [![Status][oraclelinux_ci_svg]][oraclelinux_ci_link]
 
