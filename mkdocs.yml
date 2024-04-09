@@ -8,6 +8,7 @@ theme:
   logo: assets/logo.png
   favicon: assets/Icone.png
   prev_next_buttons_location: none
+  custom_dir: docs/overrides
   features:
     - navigation.instant
     - navigation.top
@@ -29,8 +30,7 @@ theme:
         name: Switch to light mode
 
 nav:
-  - 'Home': index.md
-  - 'Antares ecosystem' : 'https://antares-doc.readthedocs.io'
+  - 'Home': 'index.md'
   - 'Reference guide':
     - 'Introduction': 'reference-guide/01-introduction.md'
     - 'Data organization': 'reference-guide/02-data_organization.md'
@@ -47,7 +47,7 @@ nav:
     - 'Attribution notices': 'reference-guide/12-attribution_notices.md'
   - 'Optimisation problem' : 'reference-guide/11-modeling.md'
   - 'Build':
-    - 'Introduction': 'build/0-INSTALL.md'
+    - 'Introduction': 'build/0-Introduction.md'
     - 'Development requirements': 'build/1-Development-requirements.md'
     - 'Dependencies install': 'build/2-Dependencies-install.md'
     - 'Build': 'build/3-Build.md'
@@ -57,6 +57,11 @@ nav:
     - 'Continuous Integration' : 'build/continuous-integration.md'
     - 'OR-tools integration' : 'build/ortools-integration.md'
   - 'Changelog': 'CHANGELOG.md'
+  - 'External links':
+    - 'Antares ecosystem' : 'https://antares-doc.readthedocs.io'
+    - 'Antares website': 'https://antares-simulator.org'
+    - 'RTE website': 'http://www.rte-france.com/'
+
 
 plugins:
   - search
