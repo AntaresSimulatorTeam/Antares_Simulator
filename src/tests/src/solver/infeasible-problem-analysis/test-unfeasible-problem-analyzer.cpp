@@ -25,6 +25,7 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/test/data/test_case.hpp>
 #include <boost/test/data/dataset.hpp>
+#include <ortools/linear_solver/linear_solver.h>
 
 #include "antares/solver/infeasible-problem-analysis/unfeasible-pb-analyzer.h"
 #include "antares/solver/infeasible-problem-analysis/variables-bounds-consistency.h"
@@ -33,7 +34,7 @@
 
 namespace bdata = boost::unit_test::data;
 
-using operations_research::MPSolver;
+using namespace operations_research;
 
 using Antares::Optimization::VariablesBoundsConsistency;
 using Antares::Optimization::VariableBounds;
