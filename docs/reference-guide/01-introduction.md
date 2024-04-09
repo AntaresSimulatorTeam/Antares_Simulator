@@ -1,4 +1,6 @@
-This document describes all the main features of the *Antares Simulator*[^1] package.
+# Introduction
+
+This reference guide describes all the main features of the *Antares Simulator*[^1] package.
 [^1]: For simplicity's sake, the *Antares Simulator* application will be simply denoted *Antares*.
 
 It gives useful general information regarding the way data are handled and processed,
@@ -81,7 +83,7 @@ The large number and the size of the individual problems to solve often make opt
 
 Depending on user-defined results accuracy requirements, various practical options[^3] allow to simplify either
 the formulation of the problems, or their resolution.
-[^3]: see [hydro-pricing-mode](18-parameters.md#hydro-pricing-mode), [unit-commitment-mode](18-parameters.md#unit-commitment-mode), TODO
+[^3]: See [hydro-pricing-mode](18-parameters.md#hydro-pricing-mode), [unit-commitment-mode](18-parameters.md#unit-commitment-mode), TODO
 
 *Antares* has been designed to handle [adequacy and profitability problems](#applications). 
 
@@ -98,4 +100,4 @@ operation problems (one for each week of each Monte-Carlo year), assumed to be i
 Note that, however, dependency issues such as the management of hydro stock (or any other kind of energy storage
 facility) may bring a significant coupling between the successive problems, which needs to be addressed properly[^4].
 
-[^4] See how stock dependency between successive problems is addressed [here](TODO).
+[^4]: See how *Antares* addresses stock dependency between successive problems [here](TODO).

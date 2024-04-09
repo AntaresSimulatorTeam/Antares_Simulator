@@ -31,7 +31,7 @@ The scope of this document is exclusively devoted to step (4). Note that equival
 
 The following picture gives a functional view of all that is involved in steps (1) to (5). In this illustration, Step (4), whose goal is to solve the problems introduced in this document, is materialized by the red box.
 
-![Antares_Process](Antares_Process.png)
+![Antares_Process](Antares_Process.jpg)
 
 The number and the size of the individual problems to solve (a least-cost hydro-thermal unit-commitment and power schedule, with an hourly resolution and throughout a week, over a large interconnected system) make optimization sessions often computer-intensive. Note that the content of the blue "hydro energy manager" box appearing on the previous figure, whose purpose is to deal with energy storage issues at the seasonal scale, is not detailed in the present document but in the ["Miscellaneous"](08-miscellaneous.md#the-heuristic-for-seasonal-hydro-pre-allocation) section.
 
