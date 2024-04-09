@@ -91,8 +91,8 @@ private:
     template<class T>
     void prepareIndispoFromLaw(Data::StatisticalLaw law,
                                double volatility,
-                               std::array<double, 366> A,
-                               std::array<double, 366> B,
+                               std::array<double, 366>& A,
+                               std::array<double, 366>& B,
                                const T& duration) const;
 };
 
@@ -106,8 +106,8 @@ GeneratorTempData::GeneratorTempData(Data::Study& study, unsigned nbOfSeriesToGe
 template<class T>
 void GeneratorTempData::prepareIndispoFromLaw(Data::StatisticalLaw law,
                                               double volatility,
-                                              std::array<double, 366> A,
-                                              std::array<double, 366> B,
+                                              std::array<double, 366>& A,
+                                              std::array<double, 366>& B,
                                               const T& duration) const
 {
     switch (law)
