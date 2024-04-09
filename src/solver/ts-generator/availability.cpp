@@ -86,8 +86,8 @@ private:
     template<class T>
     void prepareIndispoFromLaw(Data::StatisticalLaw law,
                                double volatility,
-                               double A[],
-                               double B[],
+                               std::array<double, 366> A,
+                               std::array<double, 366> B,
                                const T& duration) const;
 
     uint nbOfSeriesToGen_;
@@ -99,29 +99,28 @@ private:
         Log_size = 4000
     };
 
-    double lf[366];
-    double lp[366];
-    double ff[366];
-    double pp[366];
-    double af[366];
-    double ap[366];
-    double bf[366];
-    double bp[366];
+    std::array<double, 366> lf;
+    std::array<double, 366> lp;
+    std::array<double, 366> ff;
+    std::array<double, 366> pp;
+    std::array<double, 366> af;
+    std::array<double, 366> ap;
+    std::array<double, 366> bf;
+    std::array<double, 366> bp;
 };
 
 GeneratorTempData::GeneratorTempData(Data::Study& study, unsigned nbOfSeriesToGen) :
  study(study),
+ derated(study.parameters.derated),
  nbOfSeriesToGen_(nbOfSeriesToGen),
  rndgenerator(study.runtime->random[Data::seedTsGenThermal])
-{
-    derated = study.parameters.derated;
-}
+{}
 
 template<class T>
 void GeneratorTempData::prepareIndispoFromLaw(Data::StatisticalLaw law,
                                               double volatility,
-                                              double A[],
-                                              double B[],
+                                              std::array<double, 366> A,
+                                              std::array<double, 366> B,
                                               const T& duration) const
 {
     switch (law)
