@@ -359,7 +359,7 @@ bool listOfFilesAnDirectoriesToKeep(StudyCleaningInfos* infos)
                 logs.verbosityLevel = Logs::Verbosity::Warning::level;
                 // load all links
                 buffer.clear() << infos->folder << "/input/links/" << area->id;
-                if (not AreaLinksLoadFromFolder(*study, arealist, area, buffer))
+                if (not AreaLinksLoadFromFolder(*study, arealist, area, buffer, false))
                 {
                     delete arealist;
                     delete study;
@@ -417,4 +417,3 @@ bool listOfFilesAnDirectoriesToKeep(StudyCleaningInfos* infos)
 }
 
 } // namespace Antares::Data
-

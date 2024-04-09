@@ -7,7 +7,7 @@ set(SRC_GENERATORS
         include/antares/solver/ts-generator/generator.h
         include/antares/solver/ts-generator/generator.hxx
         generator.cpp
-        thermal.cpp
+        availability.cpp
         hydro.cpp
 )
 source_group("ts-generator" FILES ${SRC_GENERATORS})

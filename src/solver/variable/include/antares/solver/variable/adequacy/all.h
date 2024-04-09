@@ -51,13 +51,13 @@
 #include "antares/solver/variable/economy/overflow.h"
 #include "antares/solver/variable/economy/waterValue.h"
 #include "antares/solver/variable/economy/hydroCost.h"
-#include "antares/solver/variable/economy/shortTermStorage.h"
+
 #include "antares/solver/variable/economy/unsupliedEnergy.h"
 #include "antares/solver/variable/adequacy/spilledEnergy.h"
 #include "antares/solver/variable/economy/productionByDispatchablePlant.h"
 #include "antares/solver/variable/economy/productionByRenewablePlant.h"
 
-// Short term storage output variables by cluster
+#include "antares/solver/variable/economy/STSbyGroup.h"
 #include "antares/solver/variable/economy/STStorageInjectionByCluster.h"
 #include "antares/solver/variable/economy/STStorageWithdrawalByCluster.h"
 #include "antares/solver/variable/economy/STStorageLevelsByCluster.h"
@@ -142,7 +142,7 @@ typedef                                              // Prices
                      <Variable::Economy::Overflows    // Hydraulic overflows
                       <Variable::Economy::WaterValue  // Water values
                        <Variable::Economy::HydroCost  // Hydro costs
-                        <Variable::Economy::ShortTermStorageByGroup<
+                        <Variable::Economy::STSbyGroup<
                           Variable::Economy::STstorageInjectionByCluster<
                             Variable::Economy::STstorageWithdrawalByCluster<
                               Variable::Economy::STstorageLevelsByCluster<
@@ -210,8 +210,6 @@ typedef // Prices
                                           Variable::Economy::WaterValue,
                                           Common::SpatialAggregate<
                                             Variable::Economy::HydroCost,
-                                            Common::SpatialAggregate<
-                                              Variable::Economy::ShortTermStorageByGroup,
                                               Common::SpatialAggregate<
                                                 Variable::Economy::UnsupliedEnergy,
                                                 Common::SpatialAggregate<
@@ -228,7 +226,7 @@ typedef // Prices
                                                           Variable::Economy::DispatchableGenMargin,
                                                           Common::SpatialAggregate<
                                                             Variable::Economy::
-                                                              Marge>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                                              Marge>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerSetOfAreas;
 
 typedef Variable::Economy::BindingConstMarginCost< // Marginal cost for a binding constraint

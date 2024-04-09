@@ -331,7 +331,7 @@ void ThermalClusterList::ensureDataPrepro()
 {
     for (const auto& c : all())
         if (!c->prepro)
-            c->prepro = new PreproThermal(c);
+            c->prepro = new PreproAvailability(c->id(), c->unitCount);
 }
 
 bool ThermalClusterList::saveToFolder(const AnyString& folder) const
@@ -399,9 +399,9 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
             s->add("volatility.planned", Utils::round(c->plannedVolatility, 3));
 
         // laws
-        if (c->forcedLaw != thermalLawUniform)
+        if (c->forcedLaw != LawUniform)
             s->add("law.forced", c->forcedLaw);
-        if (c->plannedLaw != thermalLawUniform)
+        if (c->plannedLaw != LawUniform)
             s->add("law.planned", c->plannedLaw);
 
         // costs
@@ -478,14 +478,13 @@ bool ThermalClusterList::saveEconomicCosts(const AnyString& folder) const
     return ret;
 }
 
-bool ThermalClusterList::loadPreproFromFolder(Study& study,
-                                              const AnyString& folder)
+bool ThermalClusterList::loadPreproFromFolder(Study& study, const AnyString& folder)
 {
     const bool globalThermalTSgeneration
-        = study.parameters.timeSeriesToGenerate & timeSeriesThermal;
+      = study.parameters.timeSeriesToGenerate & timeSeriesThermal;
 
     Clob buffer;
-    auto hasPrepro = [](auto c) { return (bool) c->prepro; };
+    auto hasPrepro = [](auto c) { return (bool)c->prepro; };
 
     auto loadAndCheckPrepro = [&buffer, &folder, &study, &globalThermalTSgeneration](auto c)
     {
@@ -493,6 +492,11 @@ bool ThermalClusterList::loadPreproFromFolder(Study& study,
         buffer.clear() << folder << SEP << c->parentArea->id << SEP << c->id();
 
         bool result = c->prepro->loadFromFolder(study, buffer);
+
+        if (study.usedByTheSolver && globalThermalTSgeneration)
+        {
+            result = c->prepro->validate() && result;
+        }
 
         if (result && study.usedByTheSolver && c->doWeGenerateTS(globalThermalTSgeneration))
         {

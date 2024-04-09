@@ -24,6 +24,7 @@
 #include <antares/array/matrix.h>
 #include <antares/study/fwd.h>
 #include <antares/study/parts/thermal/defines.h>
+#include <antares/solver/ts-generator/law.h>
 #include <memory>
 
 namespace Antares::Data
@@ -31,7 +32,7 @@ namespace Antares::Data
 /*!
 ** \brief Thermal
 */
-class PreproThermal
+class PreproAvailability
 {
 public:
     enum
@@ -49,7 +50,7 @@ public:
         //! NPO max (nombre maximal de groupes en maintenance)
         npoMax,
         // max
-        thermalPreproMax,
+        preproAvailabilityMax,
     };
 
     //! \name Constructor
@@ -57,7 +58,7 @@ public:
     /*!
     ** \brief Default constructor
     */
-    explicit PreproThermal(std::weak_ptr<const ThermalCluster> cluster);
+    explicit PreproAvailability(const YString& id, unsigned int unitCount);
     //@}
 
     bool forceReload(bool reload) const;
@@ -70,7 +71,7 @@ public:
     void reset();
 
     //! Copy data from another struct
-    void copyFrom(const PreproThermal& rhs);
+    void copyFrom(const PreproAvailability& rhs);
 
     /*!
     ** \brief Load settings for the thermal prepro from a folder
@@ -79,6 +80,11 @@ public:
     ** \return A non-zero value if the operation succeeded, 0 otherwise
     */
     bool loadFromFolder(Study& study, const AnyString& folder);
+
+    /*!
+    ** \brief Validate most settings against min/max rules
+    */
+    bool validate() const;
 
     /*!
     ** \brief Save settings used by the thermal prepro to a folder
@@ -104,9 +110,27 @@ public:
     // max x DAYS_PER_YEAR
     Matrix<> data;
     // Parent thermal cluster
-    std::weak_ptr<const ThermalCluster> itsThermalCluster;
-}; // class PreproThermal
+    YString id;
+    unsigned int unitCount;
+}; // class PreproAvailability
 
+struct LinkTsGeneration
+{
+    unsigned unitCount;
+    double nominalCapacity;
+
+    double forcedVolatility;
+    double plannedVolatility;
+
+    Data::StatisticalLaw forcedLaw;
+    Data::StatisticalLaw plannedLaw;
+
+    std::unique_ptr<Data::PreproAvailability> prepro;
+
+    Matrix<> modulationCapacity;
+
+    bool valid = false;
+};
 } // namespace Antares::Data
 
 #include "prepro.hxx"

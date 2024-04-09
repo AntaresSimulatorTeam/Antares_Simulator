@@ -104,7 +104,7 @@ private:
     virtual void onStudyClosed() override;
 
 private:
-    Antares::Data::PreproThermal* pPreproThermal;
+    Antares::Data::PreproAvailability* pPreproAvailability = nullptr;
     Antares::Data::ThermalCluster* pCluster;
 
 }; // class ThermalClusterPrepro

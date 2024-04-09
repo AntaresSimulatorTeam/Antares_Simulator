@@ -33,11 +33,11 @@
 
 namespace Antares::TSGenerator
 {
-class ThermalInterface
+class AvailabilityTSGeneratorData
 {
 public:
-    explicit ThermalInterface(Data::ThermalCluster*);
-    ThermalInterface(Data::AreaLink::LinkTsGeneration&, Data::TimeSeries&, const std::string& name);
+    explicit AvailabilityTSGeneratorData(Data::ThermalCluster*);
+    AvailabilityTSGeneratorData(Data::LinkTsGeneration&, Data::TimeSeries&, const std::string& name);
 
     const unsigned& unitCount;
     const double& nominalCapacity;
@@ -45,10 +45,10 @@ public:
     const double& forcedVolatility;
     const double& plannedVolatility;
 
-    Data::ThermalLaw& forcedLaw;
-    Data::ThermalLaw& plannedLaw;
+    Data::StatisticalLaw& forcedLaw;
+    Data::StatisticalLaw& plannedLaw;
 
-    Data::PreproThermal* prepro;
+    Data::PreproAvailability* prepro;
 
     Data::TimeSeries& series;
 
@@ -63,8 +63,7 @@ enum class linkDirection
     indirect
 };
 
-using listOfLinks = std::vector<std::pair<Data::AreaLink*,linkDirection>>;
-
+using listOfLinks = std::vector<std::pair<Data::AreaLink*, linkDirection>>;
 
 void ResizeGeneratedTimeSeries(Data::AreaList& areas, Data::Parameters& params);
 
@@ -75,7 +74,7 @@ template<enum Data::TimeSeriesType T>
 bool GenerateTimeSeries(Data::Study& study, uint year, IResultWriter& writer);
 
 bool generateThermalTimeSeries(Data::Study& study,
-                               std::vector<Data::ThermalCluster*> clusters,
+                               const std::vector<Data::ThermalCluster*>& clusters,
                                Solver::IResultWriter& writer,
                                const std::string& savePath);
 
@@ -84,7 +83,7 @@ bool generateLinkTimeSeries(Data::Study& study,
                             Solver::IResultWriter& writer,
                             const std::string& savePath);
 
-std::vector<Data::ThermalCluster*> getAllClustersToGen(Data::AreaList& areas,
+std::vector<Data::ThermalCluster*> getAllClustersToGen(const Data::AreaList& areas,
                                                        bool globalThermalTSgeneration);
 
 listOfLinks getAllLinksToGen(Data::AreaList& areas);

@@ -286,9 +286,9 @@ public:
     double plannedVolatility = 0.;
 
     //! Law (ts-generator)
-    ThermalLaw forcedLaw = thermalLawUniform;
+    StatisticalLaw forcedLaw = LawUniform;
     //! Law (ts-generator)
-    ThermalLaw plannedLaw = thermalLawUniform;
+    StatisticalLaw plannedLaw = LawUniform;
 
     //! \name Costs
     //  Marginal (€/MWh)     MA
@@ -346,7 +346,7 @@ public:
     std::vector<double> PthetaInf;
 
     //! Data for the preprocessor
-    PreproThermal* prepro = nullptr;
+    PreproAvailability* prepro = nullptr;
 
     /*!
     ** \brief Production Cost, Market Bid Cost and Marginal Cost Matrixes - Per Hour and per Time

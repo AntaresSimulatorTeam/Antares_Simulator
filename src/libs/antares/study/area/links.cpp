@@ -21,10 +21,12 @@
 
 #include <limits>
 #include <yuni/yuni.h>
+#include <filesystem>
 #include "antares/study//study.h"
 #include "antares/utils/utils.h"
 #include "antares/study/area/links.h"
 #include "antares/study/area/area.h"
+#include <boost/algorithm/string/case_conv.hpp>
 #include <antares/logs/logs.h>
 #include <antares/exception/LoadingError.hpp>
 
@@ -135,6 +137,67 @@ bool AreaLink::linkLoadTimeSeries_for_version_820_and_later(const AnyString& fol
     return success;
 }
 
+// This function is "lazy", it only loads files if they exist
+// and set a `valid` flag
+bool AreaLink::loadTSGenTimeSeries(const AnyString& folder)
+{
+    const std::string id_direct = std::string(from->id) + "/" + std::string(with->id);
+    tsGenerationDirect.prepro
+      = std::make_unique<Data::PreproAvailability>(id_direct, tsGenerationDirect.unitCount);
+
+    const std::string id_indirect = std::string(with->id) + "/" + std::string(from->id);
+    tsGenerationIndirect.prepro
+      = std::make_unique<Data::PreproAvailability>(id_indirect, tsGenerationIndirect.unitCount);
+
+    String preproFolder;
+    preproFolder << folder << SEP << "prepro";
+
+    // Prepro
+    String filename;
+    filename.clear() << preproFolder << SEP << with->id << "_direct.txt";
+    bool anyFileWasLoaded = false;
+    if (std::filesystem::exists(filename.to<std::string>()))
+    {
+        anyFileWasLoaded = true;
+        tsGenerationDirect.valid
+          = tsGenerationDirect.prepro->data.loadFromCSVFile(
+              filename, Antares::Data::PreproAvailability::preproAvailabilityMax, DAYS_PER_YEAR)
+            && tsGenerationDirect.prepro->validate();
+    }
+
+    filename.clear() << preproFolder << SEP << with->id << "_indirect.txt";
+    if (std::filesystem::exists(filename.to<std::string>()))
+    {
+        anyFileWasLoaded = true;
+        tsGenerationIndirect.valid
+          = tsGenerationIndirect.prepro->data.loadFromCSVFile(
+              filename, Antares::Data::PreproAvailability::preproAvailabilityMax, DAYS_PER_YEAR)
+            && tsGenerationIndirect.prepro->validate();
+    }
+
+    // Modulation
+    filename.clear() << preproFolder << SEP << with->id << "_mod_direct.txt";
+    if (std::filesystem::exists(filename.to<std::string>()))
+    {
+        anyFileWasLoaded = true;
+        tsGenerationDirect.valid
+          &= tsGenerationDirect.modulationCapacity.loadFromCSVFile(filename, 1, HOURS_PER_YEAR);
+    }
+
+    filename.clear() << preproFolder << SEP << with->id << "_mod_indirect.txt";
+    if (std::filesystem::exists(filename.to<std::string>()))
+    {
+        anyFileWasLoaded = true;
+        tsGenerationIndirect.valid
+          &= tsGenerationIndirect.modulationCapacity.loadFromCSVFile(filename, 1, HOURS_PER_YEAR);
+    }
+    if (anyFileWasLoaded)
+    {
+        return tsGenerationDirect.valid && tsGenerationIndirect.valid;
+    }
+    return true;
+}
+
 bool AreaLink::isLinkPhysical() const
 {
     // All link types are physical, except arVirt
@@ -170,9 +233,9 @@ void AreaLink::overrideTransmissionCapacityAccordingToGlobalParameter(
     }
 }
 
-bool AreaLink::loadTimeSeries(const Study& study, const AnyString& folder)
+bool AreaLink::loadTimeSeries(const StudyVersion& version, const AnyString& folder)
 {
-    if (study.header.version < StudyVersion(8, 2))
+    if (version < StudyVersion(8, 2))
         return linkLoadTimeSeries_for_version_below_810(folder);
     else
         return linkLoadTimeSeries_for_version_820_and_later(folder);
@@ -295,7 +358,7 @@ AreaLink* AreaAddLinkBetweenAreas(Area* area, Area* with, bool warning)
 
 namespace // anonymous
 {
-bool AreaLinksInternalLoadFromProperty(AreaLink& link, const String& key, const String& value)
+bool handleKey(Data::AreaLink& link, const String& key, const String& value)
 {
     if (key == "hurdles-cost")
         return value.to<bool>(link.useHurdlesCost);
@@ -406,10 +469,56 @@ bool AreaLinksInternalLoadFromProperty(AreaLink& link, const String& key, const 
         link.filterYearByYear = stringIntoDatePrecision(value);
         return true;
     }
+    return false;
+}
+
+bool handleTSGenKey_internal(const std::string& key,
+                             const String& value,
+                             const std::string& prefix,
+                             Data::LinkTsGeneration& out)
+{
+    const auto checkPrefixed = [&prefix, &key](const std::string& s) {
+        auto key_lowercase(key);
+        boost::to_lower(key_lowercase);
+        return key_lowercase == prefix + "_" + s;
+    };
+
+    if (checkPrefixed("unitcount"))
+        return value.to<uint>(out.unitCount);
+
+    if (checkPrefixed("nominalcapacity"))
+        return value.to<double>(out.nominalCapacity);
+
+    if (checkPrefixed("law.planned"))
+        return value.to(out.plannedLaw);
+
+    if (checkPrefixed("law.forced"))
+        return value.to(out.forcedLaw);
+
+    if (checkPrefixed("volatility.planned"))
+        return value.to(out.plannedVolatility);
+
+    if (checkPrefixed("volatility.forced"))
+        return value.to(out.forcedVolatility);
 
     return false;
 }
 
+bool handleTSGenKey(Data::AreaLink& link, const std::string& key, const String& value)
+{
+    if (key.starts_with("tsgen_direct"))
+        return handleTSGenKey_internal(key, value, "tsgen_direct", link.tsGenerationDirect);
+    else if (key.starts_with("tsgen_indirect"))
+        return handleTSGenKey_internal(key, value, "tsgen_indirect", link.tsGenerationIndirect);
+    return false;
+}
+
+bool AreaLinksInternalLoadFromProperty(AreaLink& link, const String& key, const String& value)
+{
+    return handleKey(link, key, value) || handleTSGenKey(link, key, value);
+}
+
+[[ noreturn ]]
 void logLinkDataCheckError(const AreaLink& link, const String& msg, int hour)
 {
     logs.error() << "Link (" << link.from->name << "/" << link.with->name << "): Invalid values ("
@@ -417,9 +526,8 @@ void logLinkDataCheckError(const AreaLink& link, const String& msg, int hour)
     throw Antares::Error::ReadingStudy();
 }
 
-void logLinkDataCheckErrorDirectIndirect(const AreaLink& link,
-                                         uint direct,
-                                         uint indirect)
+[[ noreturn ]]
+void logLinkDataCheckErrorDirectIndirect(const AreaLink& link, uint direct, uint indirect)
 {
     logs.error() << "Link (" << link.from->name << "/" << link.with->name << "): Found " << direct
                  << " direct TS "
@@ -428,7 +536,11 @@ void logLinkDataCheckErrorDirectIndirect(const AreaLink& link,
 }
 } // anonymous namespace
 
-bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyString& folder)
+bool AreaLinksLoadFromFolder(const Study& study,
+                             AreaList* l,
+                             Area* area,
+                             const AnyString& folder,
+                             bool loadTSGen)
 {
     // Assert
     assert(area);
@@ -471,7 +583,7 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
         link.comments.clear();
         link.displayComments = true;
 
-        ret = link.loadTimeSeries(study, folder) && ret;
+        ret = link.loadTimeSeries(study.header.version, folder) && ret;
 
         // Checks on loaded link's data
         if (study.usedByTheSolver)
@@ -531,9 +643,8 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
             {
                 if (directHurdlesCost[h] + indirectHurdlesCost[h] < 0)
                 {
-                    logLinkDataCheckError(link,
-                                          "hurdle costs direct + hurdle cost indirect < 0",
-                                          h);
+                    logLinkDataCheckError(
+                      link, "hurdle costs direct + hurdle cost indirect < 0", h);
                     return false;
                 }
             }
@@ -559,6 +670,9 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
             if (!AreaLinksInternalLoadFromProperty(link, key, value))
                 logs.warning() << '`' << p->key << "`: Unknown property";
         }
+
+        if (loadTSGen)
+            ret = link.loadTSGenTimeSeries(folder) && ret;
 
         // From the solver only
         if (study.usedByTheSolver)

@@ -42,7 +42,7 @@ using namespace Antares;
 
 namespace Yuni::Extension::CString
 {
-bool Into<Antares::Data::ThermalLaw>::Perform(AnyString string, TargetType& out)
+bool Into<Antares::Data::StatisticalLaw>::Perform(AnyString string, TargetType& out)
 {
     string.trim();
     if (string.empty())
@@ -50,12 +50,12 @@ bool Into<Antares::Data::ThermalLaw>::Perform(AnyString string, TargetType& out)
 
     if (string.equalsInsensitive("uniform"))
     {
-        out = Antares::Data::thermalLawUniform;
+        out = Antares::Data::LawUniform;
         return true;
     }
     if (string.equalsInsensitive("geometric"))
     {
-        out = Antares::Data::thermalLawGeometric;
+        out = Antares::Data::LawGeometric;
         return true;
     }
     return false;
@@ -189,7 +189,7 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
     // Making sure that the data related to the prepro and timeseries are present
     // prepro
     if (!prepro)
-        prepro = new PreproThermal(this->weak_from_this());
+        prepro = new PreproAvailability(id(), unitCount);
 
     prepro->copyFrom(*cluster.prepro);
     ecoInput.copyFrom(cluster.ecoInput);
@@ -431,8 +431,8 @@ void Data::ThermalCluster::reset()
     forcedVolatility = 0.;
     plannedVolatility = 0.;
     // laws
-    plannedLaw = thermalLawUniform;
-    forcedLaw = thermalLawUniform;
+    plannedLaw = LawUniform;
+    forcedLaw = LawUniform;
 
     // costs
     costgeneration = setManually;
@@ -454,7 +454,7 @@ void Data::ThermalCluster::reset()
     //   since the interface may still have a pointer to them.
     //   we must simply reset their content.
     if (!prepro)
-        prepro = new PreproThermal(this->weak_from_this());
+        prepro = new PreproAvailability(id(), unitCount);
     prepro->reset();
     ecoInput.reset();
 }

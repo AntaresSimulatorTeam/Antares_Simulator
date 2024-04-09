@@ -22,7 +22,7 @@
 #define __ANTARES_LIBS_STUDY_LINKS_H__
 
 #include <antares/solver/ts-generator/prepro.h>
-#include <antares/solver/ts-generator/law.h>
+#include <antares/study/version.h>
 #include <yuni/yuni.h>
 #include <yuni/core/noncopyable.h>
 #include <yuni/core/string.h>
@@ -31,9 +31,6 @@
 #include <antares/series/series.h>
 #include <antares/writer/i_writer.h>
 #include <set>
-
-//! The minimal allowed value for hurdle costs when not null
-#define LINK_MINIMAL_HURDLE_COSTS_NOT_NULL 0.005
 
 namespace Antares
 {
@@ -69,7 +66,9 @@ public:
     ~AreaLink();
     //@}
 
-    bool loadTimeSeries(const Study& study, const AnyString& folder);
+    bool loadTimeSeries(const StudyVersion& version, const AnyString& folder);
+
+    bool loadTSGenTimeSeries(const AnyString& folder);
 
     void storeTimeseriesNumbers(Solver::IResultWriter& writer) const;
 
@@ -206,22 +205,6 @@ public:
     int linkWidth;
 
     friend struct CompareLinkName;
-
-    struct LinkTsGeneration
-    {
-        unsigned unitCount;
-        double nominalCapacity;
-
-        double forcedVolatility;
-        double plannedVolatility;
-
-        Data::ThermalLaw forcedLaw;
-        Data::ThermalLaw plannedLaw;
-
-        Data::PreproThermal* prepro;
-
-        Matrix<> modulationCapacity;
-    };
 
     LinkTsGeneration tsGenerationDirect;
     LinkTsGeneration tsGenerationIndirect;

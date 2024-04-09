@@ -102,8 +102,6 @@ set(SRC_STUDY_PART_SHORT_TERM_STORAGE
         include/antares/study/parts/short-term-storage/series.h
         include/antares/study/parts/short-term-storage/cluster.h
         parts/short-term-storage/cluster.cpp
-        include/antares/study/parts/short-term-storage/STStorageOutputCaptions.h
-        parts/short-term-storage/STStorageOutputCaptions.cpp
 )
 source_group("study\\part\\short-term-storage" FILES ${SRC_STUDY_PART_SHORT_TERM_SOTRAGE})
 
