@@ -19,6 +19,6 @@ runs:
         -D MZ_PKCRYPT=OFF \
         -D MZ_WZAES=OFF \
         -D MZ_OPENSSL=OFF \
-        -D MZ_ICONV=OFF \
+        -D MZ_ICONV=OFF
         cmake --build build
         cmake --install build
