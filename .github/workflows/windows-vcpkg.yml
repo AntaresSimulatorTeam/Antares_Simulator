@@ -132,6 +132,8 @@ jobs:
     - name: Install pip dependencies if necessary
       run: pip install -r src/tests/examples/requirements.txt
 
+    - uses: ./.github/workflows/install_minizip
+
     - name: Init submodule
       run: |
         git submodule update --init src/antares-deps
@@ -145,7 +147,7 @@ jobs:
       run: |
            cmake -B _build -S src \
            -DDEPS_INSTALL_DIR=rte-antares-deps-Release \
-           -DCMAKE_PREFIX_PATH="${{ env.ORTOOLS_DIR }}/install" \
+           -DCMAKE_PREFIX_PATH="../install;${{ env.ORTOOLS_DIR }}/install" \
            -DVCPKG_ROOT="${{env.VCPKG_ROOT}}" \
            -DVCPKG_TARGET_TRIPLET=${{ env.triplet }} \
            -DCMAKE_BUILD_TYPE=Release \

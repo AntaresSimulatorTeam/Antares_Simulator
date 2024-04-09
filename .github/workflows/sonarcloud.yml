@@ -69,6 +69,8 @@ jobs:
           python -m pip install --upgrade pip
           pip3 install -r src/tests/examples/requirements.txt
 
+      - uses: ./.github/workflows/install_minizip
+
       - name: Init submodule
         run: |
           git submodule update --init src/antares-deps
