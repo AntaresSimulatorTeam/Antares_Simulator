@@ -21,4 +21,4 @@ runs:
         -D MZ_OPENSSL=OFF \
         -D MZ_ICONV=OFF
         cmake --build build
-        cmake --install build
+        cmake --install build --prefix ${{GITHUB_WORKSPACE}}/install
