@@ -47,7 +47,7 @@ static void importShortTermStorages(
     {
         ShortTermStorageOut[areaIndex].resize(areas[areaIndex]->shortTermStorage.count());
         int storageIndex = 0;
-        for (auto st : areas[areaIndex]->shortTermStorage.storagesByIndex)
+        for (const auto& st : areas[areaIndex]->shortTermStorage.storagesByIndex)
         {
             ::ShortTermStorage::PROPERTIES& toInsert = ShortTermStorageOut[areaIndex][storageIndex];
             toInsert.clusterGlobalIndex = clusterGlobalIndex;
@@ -283,7 +283,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         unsigned int clusterCount = area.thermal.list.enabledAndNotMustRunCount();
         pbPalier.NombreDePaliersThermiques = clusterCount;
 
-        for (auto cluster : area.thermal.list.each_enabled_and_not_mustrun())
+        for (const auto& cluster : area.thermal.list.each_enabled_and_not_mustrun())
         {
             pbPalier.NumeroDuPalierDansLEnsembleDesPaliersThermiques[cluster->index]
               = NombrePaliers + cluster->index;
@@ -607,7 +607,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                 mustRunGen = scratchpad.miscGenSum[hourInYear] + hourlyROR
                              + scratchpad.mustrunSum[hourInYear];
 
-                for (auto c : area.renewable.list.each_enabled())
+                for (const auto& c : area.renewable.list.each_enabled())
                     mustRunGen += c->valueAtTimeStep(year, hourInYear);
             }
 

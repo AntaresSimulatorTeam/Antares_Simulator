@@ -50,7 +50,7 @@ std::shared_ptr<ThermalCluster> addClusterToArea(Area* area, const std::string& 
 
 void addScratchpadToEachArea(Study& study)
 {
-    for (auto [_, area] : study.areas) {
+    for (auto& [_, area] : study.areas) {
         for (unsigned int i = 0; i < study.maxNbYearsInParallel; ++i) {
             area->scratchpad.emplace_back(*study.runtime, *area);
         }
@@ -113,12 +113,11 @@ averageResults OutputRetriever::overallCost(Area* area)
     return averageResults(result->avgdata);
 }
 
-averageResults OutputRetriever::STSLevel_PSP_Open(Area* area)
+averageResults OutputRetriever::levelForSTSgroup(Area* area, unsigned int groupNb)
 {
-    auto result = retrieveAreaResults<Variable::Economy::VCardShortTermStorage>(area);
-    // PSP_open / Level, see STStorageOutputCaptions.cpp
-    const unsigned int PSP_Open_Level = 2;
-    return result[area->index][PSP_Open_Level].avgdata;
+    auto result = retrieveAreaResults<Variable::Economy::VCardSTSbyGroup>(area);
+    unsigned int levelIndex = groupNb * 3 + 2;
+    return result[area->index][levelIndex].avgdata;
 }
 
 averageResults OutputRetriever::load(Area* area)

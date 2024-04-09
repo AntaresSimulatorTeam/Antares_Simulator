@@ -265,7 +265,7 @@ public:
     {
         auto area = state.area;
         auto& thermal = state.thermal;
-        for (auto cluster : area->thermal.list.each_enabled())
+        for (auto& cluster : area->thermal.list.each_enabled())
         {
             pValuesForTheCurrentYear[numSpace][cluster->groupID][state.hourInTheYear]
               += thermal[area->index].thermalClustersProductions[cluster->areaWideIndex];
