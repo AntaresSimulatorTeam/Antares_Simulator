@@ -66,7 +66,7 @@ bool PreproAvailability::loadFromFolder(Study& study, const AnyString& folder)
 
     // standard loading
     return data.loadFromCSVFile(
-      buffer, thermalPreproMax, DAYS_PER_YEAR, Matrix<>::optFixedSize, &study.dataBuffer);
+      buffer, preproAvailabilityMax, DAYS_PER_YEAR, Matrix<>::optFixedSize, &study.dataBuffer);
 }
 
 bool PreproAvailability::validate() const
@@ -156,7 +156,7 @@ void PreproAvailability::markAsModified() const
 
 void PreproAvailability::reset()
 {
-    data.reset(thermalPreproMax, DAYS_PER_YEAR, true);
+    data.reset(preproAvailabilityMax, DAYS_PER_YEAR, true);
 
     auto& colFoDuration = data[foDuration];
     auto& colPoDuration = data[poDuration];

@@ -50,7 +50,7 @@ public:
         //! NPO max (nombre maximal de groupes en maintenance)
         npoMax,
         // max
-        thermalPreproMax,
+        preproAvailabilityMax,
     };
 
     //! \name Constructor
