@@ -94,10 +94,7 @@ private:
 
     MersenneTwister& rndgenerator;
 
-    enum
-    {
-        Log_size = 4000
-    };
+    static constexpr int Log_size = 4000;
 
     std::array<double, 366> lf;
     std::array<double, 366> lp;
@@ -181,10 +178,8 @@ int GeneratorTempData::durationGenerator(Data::StatisticalLaw law,
     case Data::LawGeometric:
     {
         int resultat = (1 + int(a + (b)*log(rndnumber)));
-        enum
-        {
-            limit = Log_size / 2 - 1
-        };
+        int limit = Log_size / 2 - 1;
+
         assert(limit == 1999);
         return (resultat <= limit) ? resultat : limit;
     }
