@@ -506,11 +506,10 @@ bool handleTSGenKey_internal(const std::string& key,
 
 bool handleTSGenKey(Data::AreaLink& link, const std::string& key, const String& value)
 {
-    const std::string key_(key); // Conversion from Yuni::String
-    if (key_.starts_with("tsgen_direct"))
-        return handleTSGenKey_internal(key_, value, "tsgen_direct", link.tsGenerationDirect);
-    else if (key_.starts_with("tsgen_indirect"))
-        return handleTSGenKey_internal(key_, value, "tsgen_indirect", link.tsGenerationIndirect);
+    if (key.starts_with("tsgen_direct"))
+        return handleTSGenKey_internal(key, value, "tsgen_direct", link.tsGenerationDirect);
+    else if (key.starts_with("tsgen_indirect"))
+        return handleTSGenKey_internal(key, value, "tsgen_indirect", link.tsGenerationIndirect);
     return false;
 }
 
