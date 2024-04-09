@@ -1,12 +1,17 @@
+---
+hide:
+  - toc
+---
+
 # Installer creation
-CPack can be used to create the installer after the build phase :
+CPack can be used to create the installer after the build phase:
 
 === "Windows"
     ```
     cd _build
     cpack -GNSIS
     ```
-    Currently missing in NSIS installer :
+    Currently missing in NSIS installer:
     - External libraries sources
 
 === "Centos"
@@ -17,7 +22,7 @@ CPack can be used to create the installer after the build phase :
     cpack3 -G RPM .
     ```
     Note :
-    > `rpm-build` must be installed for RPM creation :  `sudo yum install rpm-build`
+    > `rpm-build` must be installed for RPM creation:  `sudo yum install rpm-build`
 
     ### Linux .tar.gz
     ```
@@ -26,8 +31,7 @@ CPack can be used to create the installer after the build phase :
     ```
     
     ### Required system libraries
-    There are still some system libraries that must be installed if you want to use *ANTARES*:
-    
+    There are still some system libraries that must be installed if you want to use *Antares Simulator*:  
     ```
     sudo yum install epel-release
     sudo yum install wxGTK3
@@ -35,7 +39,7 @@ CPack can be used to create the installer after the build phase :
 
 === "Ubuntu/Debian"
 
-    ### Ubuntu .deb (Experimental)
+    ### Ubuntu .deb (experimental)
     ```
     cd _build
     cpack -G DEB .
@@ -47,7 +51,7 @@ CPack can be used to create the installer after the build phase :
     ```
     
     ### Required system libraries
-    There are still some system libraries that must be installed if you want to use *ANTARES*:
+    There are still some system libraries that must be installed if you want to use *Antares Simulator*:
     ```
     sudo apt install libwxgtk3.0-gtk3-0v5
     ```

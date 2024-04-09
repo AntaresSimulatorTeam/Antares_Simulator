@@ -220,7 +220,6 @@ void Parameters::resetSeeds()
         seed[i] = (s += increment);
 }
 
-
 void Parameters::resetPlayedYears(uint nbOfYears)
 {
     // Set the number of years
@@ -993,15 +992,17 @@ bool firstKeyLetterIsValid(const String& name)
     return (firstLetter >= 'a' && firstLetter <= 'z');
 }
 
-bool Parameters::loadFromINI(const IniFile& ini, StudyVersion& version, const StudyLoadOptions& options)
+bool Parameters::loadFromINI(const IniFile& ini,
+                             StudyVersion& version,
+                             const StudyLoadOptions& options)
 {
     // Reset inner data
     reset();
     // A temporary buffer, used for the values in lowercase
     using Callback = bool (*)(
-      Parameters&,   // [out] Parameter object to load the data into
-      const String&, // [in] Key, comes left to the '=' sign in the .ini file
-      const String&, // [in] Lowercase value, comes right to the '=' sign in the .ini file
+      Parameters&,    // [out] Parameter object to load the data into
+      const String&,  // [in] Key, comes left to the '=' sign in the .ini file
+      const String&,  // [in] Lowercase value, comes right to the '=' sign in the .ini file
       const String&); // [in] Raw value as writtent right to the '=' sign in the .ini file
 
     static const std::map<String, Callback> sectionAssociatedToKeysProcess
@@ -1120,8 +1121,9 @@ bool Parameters::loadFromINI(const IniFile& ini, StudyVersion& version, const St
 
 void Parameters::fixRefreshIntervals()
 {
-    using T = std::
-      tuple<uint& /* refreshInterval */, enum TimeSeriesType /* ts */, const std::string /* label */>;
+    using T = std::tuple<uint& /* refreshInterval */,
+                         enum TimeSeriesType /* ts */,
+                         const std::string /* label */>;
     const std::list<T> timeSeriesToCheck = {{refreshIntervalLoad, timeSeriesLoad, "load"},
                                             {refreshIntervalSolar, timeSeriesSolar, "solar"},
                                             {refreshIntervalHydro, timeSeriesHydro, "hydro"},
@@ -1168,13 +1170,13 @@ void Parameters::fixGenRefreshForHydroMaxPower()
     {
         timeSeriesToGenerate &= ~timeSeriesHydroMaxPower;
         logs.warning() << "Time-series generation is not available for hydro max power. It "
-                        "will be automatically disabled.";
+                          "will be automatically disabled.";
     }
     if ((timeSeriesHydroMaxPower & timeSeriesToRefresh) != 0)
     {
         timeSeriesToRefresh &= ~timeSeriesHydroMaxPower;
         logs.warning() << "Time-series refresh is not available for hydro max power. It will "
-                        "be automatically disabled.";
+                          "be automatically disabled.";
     }
 }
 
@@ -1416,7 +1418,8 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
 
     if (interModal == timeSeriesLoad || interModal == timeSeriesSolar
         || interModal == timeSeriesWind || interModal == timeSeriesHydro
-        || interModal == timeSeriesThermal || interModal == timeSeriesRenewable || interModal == timeSeriesHydroMaxPower)
+        || interModal == timeSeriesThermal || interModal == timeSeriesRenewable
+        || interModal == timeSeriesHydroMaxPower)
     {
         // Only one timeseries in interModal correlation, which is the same than nothing
         interModal = 0;
@@ -1527,7 +1530,6 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
     }
     // indicated whether solver logs will be printed
     logs.info() << "  :: Printing solver logs : " << (solverLogs ? "True" : "False");
-    
 }
 
 void Parameters::resetPlaylist(uint nbOfYears)
