@@ -1,0 +1,24 @@
+name: "Install minizip"
+description: "Download and install system wide minizip library"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Build minizip
+      shell: bash
+      run: |
+        source /opt/rh/devtoolset-10/enable || true # Ignore error if devtoolset-10 is not available
+        wget https://github.com/zlib-ng/minizip-ng/archive/refs/tags/4.0.5.zip
+        unzip 4.0.5.zip
+        cd minizip-ng-4.0.5
+        cmake -S . -B build \
+        -D MZ_BUILD_TESTS=OFF \
+        -D MZ_LZMA=OFF \
+        -D MZ_ZSTD=OFF \
+        -D MZ_BZIP2=OFF \
+        -D MZ_PKCRYPT=OFF \
+        -D MZ_WZAES=OFF \
+        -D MZ_OPENSSL=OFF \
+        -D MZ_ICONV=OFF \
+        cmake --build build
+        cmake --install build
