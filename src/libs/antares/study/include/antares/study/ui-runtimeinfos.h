@@ -24,6 +24,8 @@
 #include <yuni/core/string.h>
 #include <yuni/yuni.h>
 
+#include "antares/study/binding_constraint/BindingConstraintsRepository.h"
+
 #include "area/area.h"
 #include "binding_constraint/BindingConstraint.h"
 #include "fwd.h"

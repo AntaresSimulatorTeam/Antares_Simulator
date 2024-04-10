@@ -21,6 +21,7 @@
 #ifndef __SOLVER_VARIABLE_STORAGE_MINMAX_DATA_H__
 #define __SOLVER_VARIABLE_STORAGE_MINMAX_DATA_H__
 
+#include "antares/solver/variable/storage/intermediate.h"
 #include <antares/memory/memory.h>
 #include <antares/study/study.h>
 

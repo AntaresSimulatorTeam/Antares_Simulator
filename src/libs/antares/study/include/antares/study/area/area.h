@@ -30,10 +30,10 @@
 #include <yuni/yuni.h>
 
 #include "antares/study/filter.h"
+#include "antares/study/parts/parts.h"
 #include <antares/array/matrix.h>
 #include <antares/study/parameters/adq-patch-params.h>
 
-#include "../parts/parts.h"
 #include "constants.h"
 #include "links.h"
 #include "ui.h"

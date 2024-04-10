@@ -21,6 +21,7 @@
 #ifndef __SOLVER_VARIABLE_ECONOMY_LOLD_H__
 #define __SOLVER_VARIABLE_ECONOMY_LOLD_H__
 
+#include "antares/solver/variable/economy/unsupliedEnergy.h"
 #include "antares/solver/variable/variable.h"
 
 namespace Antares

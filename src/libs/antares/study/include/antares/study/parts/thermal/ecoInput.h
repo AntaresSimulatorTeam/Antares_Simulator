@@ -27,7 +27,6 @@
 #include <antares/series/series.h>
 
 #include "../../fwd.h"
-#include "cluster.h"
 #include "defines.h"
 
 namespace Antares::Data
