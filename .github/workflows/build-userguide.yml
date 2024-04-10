@@ -6,6 +6,10 @@ on:
   push:
     branches:
       - release/*
+      - feature/*
+      - features/*
+      - fix/*
+      - issue-*
       - doc/*
       - dependabot/*
   workflow_call:
