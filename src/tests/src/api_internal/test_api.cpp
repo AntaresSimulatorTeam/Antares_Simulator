@@ -65,7 +65,7 @@ BOOST_AUTO_TEST_CASE(api_run_contains_antares_problem)
     auto results = api.run(study_loader.get());
 
     BOOST_CHECK(!results.antares_problems.empty());
-    BOOST_CHECK(results.resultStatus == Antares::API::SimulationResults::ResultStatus::OK);
+    BOOST_CHECK(!results.error);
 }
 
 BOOST_AUTO_TEST_CASE(result_failure_when_study_is_null)
@@ -74,5 +74,5 @@ BOOST_AUTO_TEST_CASE(result_failure_when_study_is_null)
     auto study_loader = std::make_unique<InMemoryStudyLoader>(false);
     auto results = api.run(study_loader.get());
 
-    BOOST_CHECK(results.resultStatus == Antares::API::SimulationResults::ResultStatus::FAIL);
+    BOOST_CHECK(results.error);
 }
