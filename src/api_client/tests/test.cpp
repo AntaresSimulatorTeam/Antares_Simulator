@@ -32,6 +32,7 @@ BOOST_AUTO_TEST_CASE(test_run) {
     BOOST_CHECK(results.error);
     BOOST_CHECK(!results.error->reason.empty());
     auto c = results.error->reason;
+    std::cout << c << std::endl;
     BOOST_CHECK(results.error->reason.find("Study") != std::string::npos);
     BOOST_CHECK(results.error->reason.find("folder") != std::string::npos);
     BOOST_CHECK(results.error->reason.find("not") != std::string::npos);
