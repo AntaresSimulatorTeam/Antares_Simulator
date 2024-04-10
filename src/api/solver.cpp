@@ -26,11 +26,19 @@
 
 namespace Antares::API {
 
-SimulationResults PerformSimulation(std::filesystem::path study_path)
+SimulationResults PerformSimulation(std::filesystem::path study_path) noexcept
 {
-    APIInternal api;
-    auto study_loader = std::make_unique<FileTreeStudyLoader>(study_path);
-    return api.run(study_loader.get());
+    try {
+        APIInternal api;
+        auto study_loader = std::make_unique<FileTreeStudyLoader>(study_path);
+        return api.run(study_loader.get());
+    } catch (const std::exception& e) {
+        Antares::API::Error err{.reason = e.what()};
+        return
+        SimulationResults{
+            .simulationPath = study_path, .antares_problems{}, .error = err
+        };
+    }
 }
 
 }
