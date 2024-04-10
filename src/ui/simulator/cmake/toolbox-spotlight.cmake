@@ -10,5 +10,5 @@ add_library(antares-ui-toolbox-spotlight
 
 
 target_link_libraries(antares-ui-toolbox-spotlight PRIVATE ${wxWidgets_LIBRARIES})
-target_link_libraries(antares-ui-toolbox-spotlight PRIVATE antares-ui-common)
+target_link_libraries(antares-ui-toolbox-spotlight PRIVATE antares-ui-common Antares::resources Antares::locator)
 

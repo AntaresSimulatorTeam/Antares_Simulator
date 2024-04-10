@@ -1,31 +1,52 @@
+/*
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
+**
+** Antares_Simulator is free software: you can redistribute it and/or modify
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
+** (at your option) any later version.
+**
+** Antares_Simulator is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+** Mozilla Public Licence 2.0 for more details.
+**
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+*/
 #include "antares/application/application.h"
 
 #include <antares/sys/policy.h>
 #include <antares/resources/resources.h>
 #include <antares/logs/hostinfo.h>
-#include <antares/fatal-error.h>
+#include <antares/antares/fatal-error.h>
 #include <antares/benchmarking/timer.h>
 
 #include <antares/exception/LoadingError.hpp>
 #include <antares/checks/checkLoadedInputData.h>
-#include <antares/version.h>
+#include <antares/study/version.h>
 #include <antares/writer/writer_factory.h>
 
-#include "signal-handling/public.h"
+#include "antares/signal-handling/public.h"
 
 #include "antares/solver/misc/system-memory.h"
 #include "antares/solver/misc/write-command-line.h"
 
 #include "antares/solver/utils/ortools_utils.h"
-#include "../../config.h"
+#include "antares/config/config.h"
 
 #include <antares/infoCollection/StudyInfoCollector.h>
 
 #include <yuni/datetime/timestamp.h>
-#include <yuni/core/process/rename.h>
 
 
-#include "../simulation/simulation.h"
+#include "antares/study/simulation.h"
+#include "antares/antares/version.h"
+#include "antares/solver/simulation/simulation.h"
 
 using namespace Antares::Check;
 
@@ -46,9 +67,6 @@ Application::Application()
 
 void Application::prepare(int argc, char* argv[])
 {
-    pArgc = argc;
-    pArgv = argv;
-
     // Load the local policy settings
     LocalPolicy::Open();
     LocalPolicy::CheckRootPrefix(argv[0]);
@@ -175,22 +193,6 @@ void Application::prepare(int argc, char* argv[])
         logs.info() << "  The progression is disabled";
 }
 
-void Application::initializeRandomNumberGenerators() const
-{
-    logs.info() << "Initializing random number generators...";
-    const auto& parameters = pStudy->parameters;
-    auto& runtime = *pStudy->runtime;
-
-    for (uint i = 0; i != Data::seedMax; ++i)
-    {
-#ifndef NDEBUG
-        logs.debug() << "  random number generator: " << Data::SeedToCString((Data::SeedIndex)i)
-                     << ", seed: " << parameters.seed[i];
-#endif
-        runtime.random[i].reset(parameters.seed[i]);
-    }
-}
-
 void Application::onLogMessage(int level, const Yuni::String& /*message*/)
 {
     switch (level)
@@ -212,8 +214,6 @@ void Application::execute()
     // pStudy == nullptr e.g when the -h flag is given
     if (!pStudy)
         return;
-
-    processCaption(Yuni::String() << "antares: running \"" << pStudy->header.caption << "\"");
 
     SystemMemoryLogger memoryReport;
     memoryReport.interval(1000 * 60 * 5); // 5 minutes
@@ -270,11 +270,6 @@ void Application::resetLogFilename() const
     }
 }
 
-void Application::processCaption(const Yuni::String& caption)
-{
-    pArgv = Yuni::Process::Rename(pArgc, pArgv, caption);
-}
-
 void Application::prepareWriter(const Antares::Data::Study& study,
                                 Benchmarking::IDurationCollector& duration_collector)
 {
@@ -287,7 +282,6 @@ void Application::prepareWriter(const Antares::Data::Study& study,
 
 void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
 {
-    processCaption(Yuni::String() << "antares: loading \"" << pSettings.studyFolder << "\"");
     auto& study = *pStudy;
 
     // Name of the simulation
@@ -410,9 +404,6 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
 
     // alloc global vectors
     SIM_AllocationTableaux(study);
-
-    // Random-numbers generators
-    initializeRandomNumberGenerators();
 }
 void Application::writeComment(Data::Study& study)
 {
@@ -428,6 +419,18 @@ void Application::writeComment(Data::Study& study)
     }
 }
 
+static void logTotalTime(unsigned duration)
+{
+    std::chrono::milliseconds d(duration);
+    auto hours = std::chrono::duration_cast<std::chrono::hours>(d);
+    d -= hours;
+    auto minutes = std::chrono::duration_cast<std::chrono::minutes>(d);
+    d -= minutes;
+    auto seconds = std::chrono::duration_cast<std::chrono::seconds>(d);
+
+    logs.info().appendFormat("Total simulation time: %02luh%02lum%02lus", hours.count(), minutes.count(), seconds.count());
+}
+
 void Application::writeExectutionInfo()
 {
     if (!pStudy)
@@ -436,6 +439,8 @@ void Application::writeExectutionInfo()
     // Last missing duration to get : measure of total simulation duration
     pTotalTimer.stop();
     pDurationCollector.addDuration("total", pTotalTimer.get_duration());
+
+    logTotalTime(pTotalTimer.get_duration());
 
     // If no writer is available, we can't write
     if (!resultWriter)

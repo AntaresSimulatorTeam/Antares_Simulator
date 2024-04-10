@@ -1,6 +1,28 @@
-#include "cluster_list.h"
+/*
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
+**
+** Antares_Simulator is free software: you can redistribute it and/or modify
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
+** (at your option) any later version.
+**
+** Antares_Simulator is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+** Mozilla Public Licence 2.0 for more details.
+**
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+*/
+
+#include "antares/study/parts/renewable/cluster_list.h"
 #include <antares/inifile/inifile.h>
-#include "../../study.h"
+#include "antares/study/study.h"
+#include <antares/utils/utils.h>
 #include <antares/study/area/area.h>
 
 using namespace Yuni;
@@ -17,6 +39,14 @@ std::string RenewableClusterList::typeID() const
     return "renewables";
 }
 
+uint64_t RenewableClusterList::memoryUsage() const
+{
+    uint64_t ret = sizeof(RenewableClusterList) + (2 * sizeof(void*)) * enabledCount();
+    std::ranges::for_each(each_enabled(), [&ret](const auto c) { ret += c->memoryUsage(); });
+    return ret;
+}
+
+
 bool RenewableClusterList::saveToFolder(const AnyString& folder) const
 {
     // Make sure the folder is created
@@ -29,27 +59,28 @@ bool RenewableClusterList::saveToFolder(const AnyString& folder) const
         IniFile ini;
 
         // Browse all clusters
-        each([&](const Data::RenewableCluster& c) {
+        for (auto& c : all())
+        {
             // Adding a section to the inifile
-            IniFile::Section* s = ini.addSection(c.name());
+            IniFile::Section* s = ini.addSection(c->name());
 
             // The section must not be empty
             // This key will be silently ignored the next time
-            s->add("name", c.name());
+            s->add("name", c->name());
 
-            if (not c.group().empty())
-                s->add("group", c.group());
-            if (not c.enabled)
+            if (!c->group().empty())
+                s->add("group", c->group());
+            if (!c->enabled)
                 s->add("enabled", "false");
 
-            if (not Math::Zero(c.nominalCapacity))
-                s->add("nominalCapacity", c.nominalCapacity);
+            if (!Utils::isZero(c->nominalCapacity))
+                s->add("nominalCapacity", c->nominalCapacity);
 
-            if (not Math::Zero(c.unitCount))
-                s->add("unitCount", c.unitCount);
+            if (!Utils::isZero(c->unitCount))
+                s->add("unitCount", c->unitCount);
 
-            s->add("ts-interpretation", c.getTimeSeriesModeAsString());
-        });
+            s->add("ts-interpretation", c->getTimeSeriesModeAsString());
+        }
 
         // Write the ini file
         buffer.clear() << folder << SEP << "list.ini";
@@ -114,7 +145,7 @@ static bool ClusterLoadFromSection(const AnyString& filename,
                                << "`: Invalid key/value";
                 continue;
             }
-            if (not ClusterLoadFromProperty(cluster, property))
+            if (!ClusterLoadFromProperty(cluster, property))
             {
                 logs.warning() << '`' << filename << "`: `" << section.name << "`/`"
                                << property->key << "`: The property is unknown and ignored";
@@ -151,24 +182,17 @@ bool RenewableClusterList::loadFromFolder(const AnyString& folder, Area* area)
                 auto cluster = std::make_shared<RenewableCluster>(area);
 
                 // Load data of a renewable cluster from a ini file section
-                if (not ClusterLoadFromSection(buffer, *cluster, *section))
+                if (!ClusterLoadFromSection(buffer, *cluster, *section))
                 {
                     continue;
                 }
 
-                // Check the data integrity of the cluster
                 cluster->integrityCheck();
-
-                // adding the renewable cluster
-                if (not add(cluster))
-                {
-                    // This error should never happen
-                    logs.error() << "Impossible to add the renewable cluster '" << cluster->name()
-                                 << "'";
-                    continue;
-                }
+                addToCompleteList(cluster);
             }
         }
+
+        rebuildIndexes();
 
         return ret;
     }

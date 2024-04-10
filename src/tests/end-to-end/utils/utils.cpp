@@ -1,3 +1,23 @@
+/*
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
+**
+** Antares_Simulator is free software: you can redistribute it and/or modify
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
+** (at your option) any later version.
+**
+** Antares_Simulator is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+** Mozilla Public Licence 2.0 for more details.
+**
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+*/
 #define WIN32_LEAN_AND_MEAN
 #include "utils.h"
 
@@ -23,26 +43,23 @@ std::shared_ptr<ThermalCluster> addClusterToArea(Area* area, const std::string& 
     cluster->setName(clusterName);
     cluster->reset();
 
-    auto added = area->thermal.list.add(cluster);
-
-    area->thermal.list.mapping[cluster->id()] = added;
-    area->thermal.prepareAreaWideIndexes();
+    area->thermal.list.addToCompleteList(cluster);
 
     return cluster;
 }
 
 void addScratchpadToEachArea(Study& study)
 {
-    for (auto [_, area] : study.areas) {
+    for (auto& [_, area] : study.areas) {
         for (unsigned int i = 0; i < study.maxNbYearsInParallel; ++i) {
             area->scratchpad.emplace_back(*study.runtime, *area);
         }
     }
 }
-
-TimeSeriesConfigurer& TimeSeriesConfigurer::setColumnCount(unsigned int columnCount)
+// Name should be changed to setTSSize
+TimeSeriesConfigurer& TimeSeriesConfigurer::setColumnCount(unsigned int columnCount, unsigned rowCount)
 {
-    ts_->resize(columnCount, HOURS_PER_YEAR);
+    ts_->resize(columnCount, rowCount);
     return *this;
 }
 
@@ -96,9 +113,22 @@ averageResults OutputRetriever::overallCost(Area* area)
     return averageResults(result->avgdata);
 }
 
+averageResults OutputRetriever::levelForSTSgroup(Area* area, unsigned int groupNb)
+{
+    auto result = retrieveAreaResults<Variable::Economy::VCardSTSbyGroup>(area);
+    unsigned int levelIndex = groupNb * 3 + 2;
+    return result[area->index][levelIndex].avgdata;
+}
+
 averageResults OutputRetriever::load(Area* area)
 {
     auto result = retrieveAreaResults<Variable::Economy::VCardTimeSeriesValuesLoad>(area);
+    return averageResults(result->avgdata);
+}
+
+averageResults OutputRetriever::hydroStorage(Area* area)
+{
+    auto result = retrieveAreaResults<Variable::Economy::VCardHydroStorage>(area);
     return averageResults(result->avgdata);
 }
 

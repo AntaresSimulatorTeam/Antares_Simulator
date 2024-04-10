@@ -1,18 +1,18 @@
 set(SRC_JIT
         # JIT (Just in Time)
-        antares/jit/jit.h
-        antares/jit/jit.hxx
+        include/antares/jit/jit.h
+        include/antares/jit/jit.hxx
         jit.cpp
-        )
+)
 source_group("misc\\jit" FILES ${SRC_JIT})
 
 add_library(jit
         ${SRC_JIT}
-        )
+)
 
 target_include_directories(jit
-        PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}
+                PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 
 target_link_libraries(jit
@@ -20,4 +20,8 @@ target_link_libraries(jit
         yuni-static-core
         PUBLIC
         logs #templated function use logs
-        )
+)
+
+install(DIRECTORY include/antares
+        DESTINATION "include"
+)

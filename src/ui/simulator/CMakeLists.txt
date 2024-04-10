@@ -1,6 +1,6 @@
 
 #Define executable name
-set(execname "antares-${ANTARES_PRG_VERSION}-ui-simulator")
+set(execname "antares-ui-simulator")
 
 # WxCore
 include("cmake/wxcore.cmake")
@@ -149,6 +149,9 @@ set(ANTARES_LIBS
 		Antares::date
 		Antares::study
         Antares::action
+		Antares::resources
+		Antares::locale
+		Antares::locator
 		yuni-static-core
 		yuni-static-uuid
 		model_antares

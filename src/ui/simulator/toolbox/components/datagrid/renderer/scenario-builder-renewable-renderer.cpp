@@ -1,28 +1,22 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
 #include "scenario-builder-renewable-renderer.h"
@@ -43,7 +37,7 @@ int renewableScBuilderRenderer::height() const
 {
     if (!(!study) && !(!pRules) && selectedArea())
     {
-        return (int)selectedArea()->renewable.list.size();
+        return (int)selectedArea()->renewable.list.allClustersCount();
     }
     return 0;
 }
@@ -51,7 +45,7 @@ int renewableScBuilderRenderer::height() const
 wxString renewableScBuilderRenderer::rowCaption(int rowIndx) const
 {
     if (!(!study) && !(!pRules) && selectedArea()
-        && (uint)rowIndx < selectedArea()->renewable.list.size())
+        && (uint)rowIndx < selectedArea()->renewable.list.allClustersCount())
     {
         return wxString() << wxT(
                  " ") << wxStringFromUTF8(selectedArea()->renewable.list[rowIndx]->name())
@@ -63,7 +57,7 @@ wxString renewableScBuilderRenderer::rowCaption(int rowIndx) const
 bool renewableScBuilderRenderer::cellValue(int x, int y, const String& value)
 {
     if (!(!study) && !(!pRules) && (uint)x < study->parameters.nbYears && selectedArea()
-        && (uint)y < selectedArea()->renewable.list.size())
+        && (uint)y < selectedArea()->renewable.list.allClustersCount())
     {
         assert(selectedArea()->index < pRules->areaCount());
         assert((uint)y < pRules->renewable[selectedArea()->index].width());
@@ -79,7 +73,7 @@ bool renewableScBuilderRenderer::cellValue(int x, int y, const String& value)
 double renewableScBuilderRenderer::cellNumericValue(int x, int y) const
 {
     if (!(!study) && !(!pRules) && (uint)x < study->parameters.nbYears && selectedArea()
-        && (uint)y < selectedArea()->renewable.list.size())
+        && (uint)y < selectedArea()->renewable.list.allClustersCount())
     {
         assert((uint)y < pRules->renewable[selectedArea()->index].width());
         assert((uint)x < pRules->renewable[selectedArea()->index].height());

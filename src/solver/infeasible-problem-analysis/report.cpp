@@ -1,3 +1,23 @@
+/*
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
+**
+** Antares_Simulator is free software: you can redistribute it and/or modify
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
+** (at your option) any later version.
+**
+** Antares_Simulator is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+** Mozilla Public Licence 2.0 for more details.
+**
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+*/
 #include "report.h"
 #include "constraint.h"
 #include <antares/logs/logs.h>
@@ -70,6 +90,11 @@ void InfeasibleProblemReport::logSuspiciousConstraints()
     {
         Antares::logs.error() << "* Last resort shedding status,";
     }
+    if (mTypes[ConstraintType::short_term_storage_level] > 0)
+    {
+        Antares::logs.error() << "* Short-term storage reservoir level impossible to manage. Please check inflows, lower & upper curves and initial level (if prescribed),";
+    }
+
     const unsigned int bcCount = mTypes[ConstraintType::binding_constraint_hourly]
                                  + mTypes[ConstraintType::binding_constraint_daily]
                                  + mTypes[ConstraintType::binding_constraint_weekly];

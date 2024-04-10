@@ -1,41 +1,33 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <yuni/yuni.h>
-#include <yuni/core/math.h>
 #include <antares/study/study.h>
 #include <antares/exception/AssertionError.hpp>
-#include "common-eco-adq.h"
+#include "antares/solver/simulation/common-eco-adq.h"
+#include <antares/utils/utils.h>
 #include <antares/logs/logs.h>
 #include <cassert>
-#include "simulation.h"
+#include <cmath>
+#include "antares/study/simulation.h"
 #include <antares/study/area/scratchpad.h>
-
-using namespace Yuni;
 
 #define EPSILON 1e-6
 
@@ -103,7 +95,7 @@ static bool Remix(const Data::AreaList& areas, PROBLEME_HEBDO& problem, uint num
             for (uint i = offset; i < endHour; ++i)
             {
                 double h_d = H[i] + D[i];
-                if (h_d > 0. && Math::Zero(S[i] + M[i]))
+                if (h_d > 0. && Utils::isZero(S[i] + M[i]))
                 {
                     double Li = L[i + hourInYear];
 
@@ -184,17 +176,17 @@ static bool Remix(const Data::AreaList& areas, PROBLEME_HEBDO& problem, uint num
                                  << ": infinite loop detected. please check input data";
                     break;
                 }
-            } while (Math::Abs(ecart) > 0.01);
+            } while (std::abs(ecart) > 0.01);
 
             for (uint i = offset; i != endHour; ++i)
             {
                 H[i] = HE[i];
-                assert(not Math::NaN(HE[i]) && "hydro remix: nan detected");
+                assert(not std::isnan(HE[i]) && "hydro remix: nan detected");
             }
             for (uint i = offset; i != endHour; ++i)
             {
                 D[i] = DE[i];
-                assert(not Math::NaN(DE[i]) && "hydro remix: nan detected");
+                assert(not std::isnan(DE[i]) && "hydro remix: nan detected");
             }
         }
     });

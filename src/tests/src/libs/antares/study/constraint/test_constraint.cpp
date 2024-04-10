@@ -1,3 +1,23 @@
+/*
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
+**
+** Antares_Simulator is free software: you can redistribute it and/or modify
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
+** (at your option) any later version.
+**
+** Antares_Simulator is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+** Mozilla Public Licence 2.0 for more details.
+**
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+*/
 //
 // Created by marechaljas on 13/03/23.
 //
@@ -13,7 +33,7 @@
 #include "antares/study/area/area.h"
 #include <antares/study/study.h>
 #include <filesystem>
-#include "utils.h"
+#include <files-system.h>
 
 using namespace Antares::Data;
 namespace fs = std::filesystem;
@@ -44,7 +64,7 @@ BOOST_AUTO_TEST_CASE( load_basic_attributes ) {
     std::ofstream rhs(working_tmp_dir / "dummy_id_eq.txt");
     rhs.close();
 
-    study->header.version = version870;
+    study->header.version = StudyVersion(8, 7);
     const bool loading_ok = bindingConstraints.loadFromFolder(*study, options, working_tmp_dir.string());
 
     BOOST_CHECK_EQUAL(loading_ok, true);
@@ -94,7 +114,7 @@ BOOST_AUTO_TEST_CASE(BC_load_RHS) {
         rhs << "0.2\t0.4\t0.6\n";
     }
     rhs.close();
-    study->header.version = version870;
+    study->header.version = StudyVersion(8, 7);
     const bool loading_ok = bindingConstraints.loadFromFolder(*study, options, working_tmp_dir.string());
 
     BOOST_CHECK_EQUAL(loading_ok, true);
@@ -143,7 +163,7 @@ BOOST_AUTO_TEST_CASE(BC_load_range_type) {
         gt << "0.4\t0.6\t0.8\n";
     }
     gt.close();
-    study->header.version = version870;
+    study->header.version = StudyVersion(8, 7);
     const bool loading_ok = bindingConstraints.loadFromFolder(*study, options, working_tmp_dir.string());
 
     BOOST_CHECK_EQUAL(loading_ok, true);
@@ -200,7 +220,7 @@ BOOST_AUTO_TEST_CASE(BC_load_legacy) {
     }
     lt.close();
 
-    study->header.version = version860;
+    study->header.version = StudyVersion(8, 6);
     const bool loading_ok = bindingConstraints.loadFromFolder(*study, options, working_tmp_dir.string());
 
     BOOST_CHECK_EQUAL(loading_ok, true);
@@ -244,7 +264,7 @@ BOOST_AUTO_TEST_CASE(BC_load_legacy_range) {
     }
     lt.close();
 
-    study->header.version = version860;
+    study->header.version = StudyVersion(8, 6);
     const bool loading_ok = bindingConstraints.loadFromFolder(*study, options, working_tmp_dir.string());
 
     BOOST_CHECK_EQUAL(loading_ok, true);

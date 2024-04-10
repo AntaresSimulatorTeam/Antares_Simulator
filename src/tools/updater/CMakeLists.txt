@@ -15,7 +15,7 @@ if(WIN32)
 endif(WIN32)
 
 
-set(execname "antares-${ANTARES_PRG_VERSION}-study-updater")
+set(execname "antares-study-updater")
 add_executable(${execname}  ${SRCS})
 install(TARGETS ${execname} EXPORT antares-study-updater DESTINATION bin)
 
@@ -29,7 +29,9 @@ set(UPDATER_LIBS
 		Antares::args_helper
 		Antares::study
 		Antares::sys
+		Antares::locale
 		antares-core #version.h
+		Antares::locale
 		${CMAKE_THREADS_LIBS_INIT}
 		)
 

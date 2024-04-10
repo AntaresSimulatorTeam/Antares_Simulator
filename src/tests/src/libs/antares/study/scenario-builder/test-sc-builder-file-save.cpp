@@ -1,3 +1,23 @@
+/*
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
+**
+** Antares_Simulator is free software: you can redistribute it and/or modify
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
+** (at your option) any later version.
+**
+** Antares_Simulator is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+** Mozilla Public Licence 2.0 for more details.
+**
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+*/
 #define BOOST_TEST_MODULE test save scenario - builder.dat
 #define BOOST_TEST_DYN_LINK
 #include <boost/test/unit_test.hpp>
@@ -6,9 +26,9 @@
 #include <filesystem>
 #include <fstream>
 
-#include <study.h>
-#include <rules.h>
-#include <scenario-builder/sets.h>
+#include <antares/study/study.h>
+#include <antares/study/scenario-builder/rules.h>
+#include <antares/study/scenario-builder/sets.h>
 #include "area/files-helper.h"
 
 using namespace std;
@@ -59,14 +79,12 @@ void referenceScBuilderFile::write()
 
 void addClusterToAreaList(Area* area, std::shared_ptr<ThermalCluster> cluster)
 {
-    area->thermal.clusters.push_back(cluster.get());
-    area->thermal.list.add(cluster);
-    area->thermal.list.mapping[cluster->id()] = cluster;
+    area->thermal.list.addToCompleteList(cluster);
 }
 
 void addClusterToAreaList(Area* area, std::shared_ptr<RenewableCluster> cluster)
 {
-    area->renewable.list.add(cluster);
+    area->renewable.list.addToCompleteList(cluster);
 }
 
 template<class ClusterType>
@@ -122,9 +140,15 @@ struct commonFixture
 
         // Hydro : set the nb of ready made TS
         nbReadyMadeTS = 12;
-        area_1->hydro.series->resizeGenerationTS(nbReadyMadeTS, 1);
-        area_2->hydro.series->resizeGenerationTS(nbReadyMadeTS, 1);
-        area_3->hydro.series->resizeGenerationTS(nbReadyMadeTS, 1);
+        area_1->hydro.series->resizeGenerationTS(nbReadyMadeTS);
+        area_2->hydro.series->resizeGenerationTS(nbReadyMadeTS);
+        area_3->hydro.series->resizeGenerationTS(nbReadyMadeTS);
+
+        // Hydro Max Power : set the nb of ready made TS
+        nbReadyMadeTS = 15;
+        area_1->hydro.series->resizeMaxPowerTS(nbReadyMadeTS);
+        area_2->hydro.series->resizeMaxPowerTS(nbReadyMadeTS);
+        area_3->hydro.series->resizeMaxPowerTS(nbReadyMadeTS);
 
         // Links
         link_12 = AreaAddLinkBetweenAreas(area_1, area_2, false);
@@ -146,11 +170,6 @@ struct commonFixture
         thCluster_12->series.timeSeries.resize(14, 1);
         thCluster_31->series.timeSeries.resize(14, 1);
 
-        // Thermal clusters : update areas local numbering for clusters
-        area_1->thermal.prepareAreaWideIndexes();
-        area_2->thermal.prepareAreaWideIndexes();
-        area_3->thermal.prepareAreaWideIndexes();
-
         // Add renewable clusters
         rnCluster_21 = addClusterToArea<RenewableCluster>(area_2, "rn-cluster-21");
         rnCluster_31 = addClusterToArea<RenewableCluster>(area_3, "rn-cluster-31");
@@ -160,11 +179,6 @@ struct commonFixture
         rnCluster_21->series.timeSeries.resize(9, 1);
         rnCluster_31->series.timeSeries.resize(9, 1);
         rnCluster_32->series.timeSeries.resize(9, 1);
-
-        // Renewable clusters : update areas local numbering for clusters
-        area_1->renewable.prepareAreaWideIndexes();
-        area_2->renewable.prepareAreaWideIndexes();
-        area_3->renewable.prepareAreaWideIndexes();
 
         // Resize all TS numbers storage (1 column x nbYears lines)
         area_1->resizeAllTimeseriesNumbers(study->parameters.nbYears);
@@ -342,6 +356,28 @@ BOOST_FIXTURE_TEST_CASE(
     referenceFile.append("h,area 1,5 = 8");
     referenceFile.append("h,area 2,17 = 12");
     referenceFile.append("h,area 3,18 = 7");
+    referenceFile.write();
+
+    BOOST_CHECK(files_identical(path_to_generated_file, referenceFile.path()));
+}
+
+// =================
+// Tests on Hydro Max Power
+// =================
+BOOST_FIXTURE_TEST_CASE(
+  HYDRO_POWER_CREDITS__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical, saveFixture)
+{
+    my_rule->hydroMaxPower.setTSnumber(area_2->index, 10, 7);
+    my_rule->hydroMaxPower.setTSnumber(area_3->index, 4, 11);
+    my_rule->hydroMaxPower.setTSnumber(area_1->index, 11, 3);
+
+    saveScenarioBuilder();
+
+    // Build reference scenario builder file
+    referenceFile.append("[my rule name]");
+    referenceFile.append("hgp,area 1,11 = 3");
+    referenceFile.append("hgp,area 2,10 = 7");
+    referenceFile.append("hgp,area 3,4 = 11");
     referenceFile.write();
 
     BOOST_CHECK(files_identical(path_to_generated_file, referenceFile.path()));

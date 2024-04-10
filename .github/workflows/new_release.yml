@@ -3,6 +3,9 @@ name: Create new release
 on:
   workflow_dispatch:
     inputs:
+      target_branch:
+        description: "Target branch or full commit SHA (default develop)"
+        default: "develop"
       release_tag:
         description: "Release tag"
         required: true
@@ -12,6 +15,11 @@ on:
       run-tests:
         description: "Run all tests (true/false)"
         required: true
+        type: string
+      set_latest:
+        description: "Set the release as latest"
+        required: true
+        type: boolean
 jobs:
       release:
         name: Release pushed tag
@@ -23,12 +31,15 @@ jobs:
               tag: ${{ github.event.inputs.release_tag }}
               title: ${{ github.event.inputs.release_name }}
               tests: ${{ github.event.inputs.run-tests }}
+              target_branch: ${{ github.event.inputs.target_branch }}
+              latest: ${{ github.event.inputs.set_latest }}
             run: |
               gh release create "$tag" \
                   --repo="$GITHUB_REPOSITORY" \
                   --title="$title" \
-                  --notes="Run tests: $tests"
-
+                  --notes="Run tests: $tests"\
+                  --target="$target_branch" \
+                  --latest=$latest
 
 
       ubuntu:
@@ -36,32 +47,35 @@ jobs:
         needs: release
         uses: ./.github/workflows/ubuntu.yml
         with:
-          run-tests: ${{ fromJSON(inputs.run-tests) }}
+          run-tests: ${{ inputs.run-tests }}
+          target_branch: ${{ inputs.target_branch }}
 
       windows:
         name: Release - Windows
         needs: release
         uses: ./.github/workflows/windows-vcpkg.yml
         with:
-          run-tests: ${{ fromJSON(inputs.run-tests) }}
+          run-tests: ${{ inputs.run-tests }}
+          target_branch: ${{ inputs.target_branch }}
 
       centos7:
         name: Release - centos7
         needs: release
         uses: ./.github/workflows/centos7.yml
         with:
-          run-tests: ${{ fromJSON(inputs.run-tests) }}
+          run-tests: ${{ inputs.run-tests }}
 
       oracle8:
         name: Release - oracle8
         needs: release
         uses: ./.github/workflows/oracle8.yml
         with:
-          run-tests: ${{ fromJSON(inputs.run-tests) }}
+          run-tests: ${{ inputs.run-tests }}
 
       user_guide:
         name: User Guide
         needs: release
         uses: ./.github/workflows/build-userguide.yml
         with:
-          run-tests: ${{ fromJSON(inputs.run-tests) }}
+          run-tests: ${{ inputs.run-tests }}
+          target_branch: ${{ inputs.target_branch }}
