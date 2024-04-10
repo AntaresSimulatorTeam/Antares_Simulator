@@ -21,6 +21,7 @@
 #ifndef __SOLVER_VARIABLE_ADEQUACY_ALL_H__
 #define __SOLVER_VARIABLE_ADEQUACY_ALL_H__
 
+#include "antares/solver/variable/adequacy/links.h"
 #include "antares/solver/variable/adequacy/overallCost.h"
 #include "antares/solver/variable/adequacy/spilledEnergy.h"
 #include "antares/solver/variable/area.h"
@@ -84,21 +85,6 @@ namespace Variable
 {
 namespace Adequacy
 {
-/*!
-** \brief All variables for a single link (economy)
-*/
-typedef Variable::Economy::FlowLinear            // Flow linear
-  <Variable::Economy::FlowLinearAbs              // Flow linear Abs
-   <Variable::Economy::FlowQuad                  // Flow Quad
-    <Variable::Economy::CongestionFee            // Congestion Fee
-     <Variable::Economy::CongestionFeeAbs        // Congestion Fee (Abs)
-      <Variable::Economy::MarginalCost           // Marginal Cost
-       <Variable::Economy::CongestionProbability // Congestion Probability (+/-)
-        <Variable::Economy::HurdleCosts          // Hurdle costs
-         <>>>>>>>>
-    VariablePerLink;
-// forward declaration
-class Links;
 
 /*!
 ** \brief All variables for a single area (economy)

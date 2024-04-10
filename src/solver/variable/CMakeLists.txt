@@ -61,9 +61,8 @@ set(SRC_VARIABLE_COMMON
         include/antares/solver/variable/commons/miscGenMinusRowPSP.h
         include/antares/solver/variable/commons/solar.h
         include/antares/solver/variable/commons/spatial-aggregate.h
-        include/antares/solver/variable/commons/links/links.cpp.inc.hxx
-        include/antares/solver/variable/commons/links/links.h.inc.hxx
-        include/antares/solver/variable/commons/links/links.hxx.inc.hxx
+        include/antares/solver/variable/commons/links/links.h
+        include/antares/solver/variable/commons/links/links.hxx
 )
 source_group("variable\\common" FILES ${SRC_VARIABLE_COMMON})
 
@@ -73,7 +72,6 @@ set(SRC_VARIABLE_ADEQUACY
         adequacy/area.memory-estimation.cpp
         adequacy/bc.memory-estimation.cpp
         include/antares/solver/variable/adequacy/links.h
-        adequacy/links.cpp
         include/antares/solver/variable/adequacy/spilledEnergy.h
         include/antares/solver/variable/adequacy/overallCost.h
 )
@@ -83,7 +81,6 @@ source_group("variable\\adequacy" FILES ${SRC_VARIABLE_ADEQUACY})
 set(SRC_VARIABLE_ECONOMY
         include/antares/solver/variable/economy/all.h
         include/antares/solver/variable/economy/links.h
-        economy/links.cpp
         economy/area.cpp
         economy/area.memory-estimation.cpp
         economy/bc.memory-estimation.cpp

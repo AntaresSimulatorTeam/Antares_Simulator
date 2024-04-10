@@ -21,6 +21,7 @@
 #ifndef __SOLVER_VARIABLE_INC_LINK_HXX__
 #define __SOLVER_VARIABLE_INC_LINK_HXX__
 
+#include "antares/solver/variable/endoflist.h" // For UNUSED_VARIABLE, should be somewhere else
 #include <antares/study/filter.h>
 
 namespace Antares
@@ -29,29 +30,35 @@ namespace Solver
 {
 namespace Variable
 {
-namespace LINK_NAMESPACE
-{
-inline Links::Links()
+
+template<class VariablePerLink>
+inline Links<VariablePerLink>::Links()
 {
     // Do nothing
 }
 
-inline void Links::initializeFromStudy([[maybe_unused]] Data::Study& study)
+template<class VariablePerLink>
+inline void Links<VariablePerLink>::initializeFromStudy([[maybe_unused]] Data::Study& study)
 {
     // Do nothing
 }
 
-inline void Links::initializeFromAreaLink(Data::Study*, Data::AreaLink*)
+template<class VariablePerLink>
+inline void Links<VariablePerLink>::initializeFromAreaLink(Data::Study*, Data::AreaLink*)
 {
     // Nothing to do here
 }
 
-inline void Links::initializeFromThermalCluster(Data::Study*, Data::Area*, Data::ThermalCluster*)
+template<class VariablePerLink>
+inline void Links<VariablePerLink>::initializeFromThermalCluster(Data::Study*,
+                                                                 Data::Area*,
+                                                                 Data::ThermalCluster*)
 {
     // This method should not be called at this stage
 }
 
-inline void Links::broadcastNonApplicability(bool applyNonApplicable)
+template<class VariablePerLink>
+inline void Links<VariablePerLink>::broadcastNonApplicability(bool applyNonApplicable)
 {
     for (uint i = 0; i != pLinkCount; ++i)
     {
@@ -59,7 +66,8 @@ inline void Links::broadcastNonApplicability(bool applyNonApplicable)
     }
 }
 
-inline void Links::getPrintStatusFromStudy(Data::Study& study)
+template<class VariablePerLink>
+inline void Links<VariablePerLink>::getPrintStatusFromStudy(Data::Study& study)
 {
     for (uint i = 0; i != pLinkCount; ++i)
     {
@@ -67,7 +75,8 @@ inline void Links::getPrintStatusFromStudy(Data::Study& study)
     }
 }
 
-inline void Links::supplyMaxNumberOfColumns(Data::Study& study)
+template<class VariablePerLink>
+inline void Links<VariablePerLink>::supplyMaxNumberOfColumns(Data::Study& study)
 {
     for (uint i = 0; i != pLinkCount; ++i)
     {
@@ -75,7 +84,8 @@ inline void Links::supplyMaxNumberOfColumns(Data::Study& study)
     }
 }
 
-inline void Links::yearBegin(uint year, unsigned int numSpace)
+template<class VariablePerLink>
+inline void Links<VariablePerLink>::yearBegin(uint year, unsigned int numSpace)
 {
     for (uint i = 0; i != pLinkCount; ++i)
     {
@@ -83,9 +93,11 @@ inline void Links::yearBegin(uint year, unsigned int numSpace)
     }
 }
 
-inline void Links::yearEndBuildPrepareDataForEachThermalCluster(State& state,
-                                                                uint year,
-                                                                unsigned int numSpace)
+template<class VariablePerLink>
+inline void Links<VariablePerLink>::yearEndBuildPrepareDataForEachThermalCluster(
+  State& state,
+  uint year,
+  unsigned int numSpace)
 {
     for (uint i = 0; i != pLinkCount; ++i)
     {
@@ -93,7 +105,10 @@ inline void Links::yearEndBuildPrepareDataForEachThermalCluster(State& state,
     }
 }
 
-inline void Links::yearEndBuildForEachThermalCluster(State& state, uint year, unsigned int numSpace)
+template<class VariablePerLink>
+inline void Links<VariablePerLink>::yearEndBuildForEachThermalCluster(State& state,
+                                                                      uint year,
+                                                                      unsigned int numSpace)
 {
     for (uint i = 0; i != pLinkCount; ++i)
     {
@@ -101,7 +116,8 @@ inline void Links::yearEndBuildForEachThermalCluster(State& state, uint year, un
     }
 }
 
-inline void Links::yearEndBuild(State& state, uint year)
+template<class VariablePerLink>
+inline void Links<VariablePerLink>::yearEndBuild(State& state, uint year)
 {
     for (uint i = 0; i != pLinkCount; ++i)
     {
@@ -109,7 +125,8 @@ inline void Links::yearEndBuild(State& state, uint year)
     }
 }
 
-inline void Links::yearEnd(uint year, uint numSpace)
+template<class VariablePerLink>
+inline void Links<VariablePerLink>::yearEnd(uint year, uint numSpace)
 {
     for (uint i = 0; i != pLinkCount; ++i)
     {
@@ -117,8 +134,10 @@ inline void Links::yearEnd(uint year, uint numSpace)
     }
 }
 
-inline void Links::computeSummary(std::map<unsigned int, unsigned int>& numSpaceToYear,
-                                  unsigned int nbYearsForCurrentSummary)
+template<class VariablePerLink>
+inline void Links<VariablePerLink>::computeSummary(
+  std::map<unsigned int, unsigned int>& numSpaceToYear,
+  unsigned int nbYearsForCurrentSummary)
 {
     for (uint i = 0; i != pLinkCount; ++i)
     {
@@ -126,7 +145,8 @@ inline void Links::computeSummary(std::map<unsigned int, unsigned int>& numSpace
     }
 }
 
-inline void Links::weekBegin(State& state)
+template<class VariablePerLink>
+inline void Links<VariablePerLink>::weekBegin(State& state)
 {
     for (uint i = 0; i != pLinkCount; ++i)
     {
@@ -134,13 +154,15 @@ inline void Links::weekBegin(State& state)
     }
 }
 
-inline void Links::weekForEachArea(State&, uint numSpace)
+template<class VariablePerLink>
+inline void Links<VariablePerLink>::weekForEachArea(State&, uint numSpace)
 {
     // do nothing
     UNUSED_VARIABLE(numSpace);
 }
 
-inline void Links::weekEnd(State& state)
+template<class VariablePerLink>
+inline void Links<VariablePerLink>::weekEnd(State& state)
 {
     for (uint i = 0; i != pLinkCount; ++i)
     {
@@ -148,7 +170,8 @@ inline void Links::weekEnd(State& state)
     }
 }
 
-inline void Links::hourBegin(uint hourInTheYear)
+template<class VariablePerLink>
+inline void Links<VariablePerLink>::hourBegin(uint hourInTheYear)
 {
     for (uint i = 0; i != pLinkCount; ++i)
     {
@@ -156,7 +179,8 @@ inline void Links::hourBegin(uint hourInTheYear)
     }
 }
 
-inline void Links::hourForEachArea(State& state, unsigned int numSpace)
+template<class VariablePerLink>
+inline void Links<VariablePerLink>::hourForEachArea(State& state, unsigned int numSpace)
 {
     for (uint i = 0; i != pLinkCount; ++i)
     {
@@ -164,12 +188,14 @@ inline void Links::hourForEachArea(State& state, unsigned int numSpace)
     }
 }
 
-inline void Links::hourForEachLink(State& state, unsigned int numSpace)
+template<class VariablePerLink>
+inline void Links<VariablePerLink>::hourForEachLink(State& state, unsigned int numSpace)
 {
     pLinks[state.link->indexForArea].hourForEachLink(state, numSpace);
 }
 
-inline void Links::hourEnd(State& state, uint hourInTheYear)
+template<class VariablePerLink>
+inline void Links<VariablePerLink>::hourEnd(State& state, uint hourInTheYear)
 {
     for (uint i = 0; i != pLinkCount; ++i)
     {
@@ -177,10 +203,11 @@ inline void Links::hourEnd(State& state, uint hourInTheYear)
     }
 }
 
-inline void Links::buildSurveyReport(SurveyResults& results,
-                                     int dataLevel,
-                                     int fileLevel,
-                                     int precision) const
+template<class VariablePerLink>
+inline void Links<VariablePerLink>::buildSurveyReport(SurveyResults& results,
+                                                      int dataLevel,
+                                                      int fileLevel,
+                                                      int precision) const
 {
     int count_int = count;
     bool link_dataLevel = (dataLevel & Category::link);
@@ -233,11 +260,12 @@ inline void Links::buildSurveyReport(SurveyResults& results,
     }
 }
 
-inline void Links::buildAnnualSurveyReport(SurveyResults& results,
-                                           int dataLevel,
-                                           int fileLevel,
-                                           int precision,
-                                           uint numSpace) const
+template<class VariablePerLink>
+inline void Links<VariablePerLink>::buildAnnualSurveyReport(SurveyResults& results,
+                                                            int dataLevel,
+                                                            int fileLevel,
+                                                            int precision,
+                                                            uint numSpace) const
 {
     int count_int = count;
     bool link_dataLevel = (dataLevel & Category::link);
@@ -291,8 +319,9 @@ inline void Links::buildAnnualSurveyReport(SurveyResults& results,
     }
 }
 
+template<class VariablePerLink>
 template<class I>
-inline void Links::provideInformations(I& infos)
+inline void Links<VariablePerLink>::provideInformations(I& infos)
 {
     // Begining of the node
     if (VCardType::nodeDepthForGUI)
@@ -312,13 +341,15 @@ inline void Links::provideInformations(I& infos)
     }
 }
 
+template<class VariablePerLink>
 template<class PredicateT>
-void Links::RetrieveVariableList(PredicateT& predicate)
+void Links<VariablePerLink>::RetrieveVariableList(PredicateT& predicate)
 {
     NextType::RetrieveVariableList(predicate);
 }
 
-inline uint64_t Links::memoryUsage() const
+template<class VariablePerLink>
+inline uint64_t Links<VariablePerLink>::memoryUsage() const
 {
     uint64_t result = 0;
     for (uint i = 0; i != pLinkCount; ++i)
@@ -328,7 +359,100 @@ inline uint64_t Links::memoryUsage() const
     }
     return result;
 }
-} // namespace LINK_NAMESPACE
+
+template<class VariablePerLink>
+Links<VariablePerLink>::~Links()
+{
+    // Releasing the memory occupied by the areas
+    delete[] pLinks;
+}
+
+template<class VariablePerLink>
+void Links<VariablePerLink>::initializeFromArea(Data::Study* study, Data::Area* area)
+{
+    // Assert
+    assert(study && "A study pointer must not be null");
+    assert(area && "An area pointer must not be null");
+
+    pLinkCount = (uint)area->links.size();
+    if (pLinkCount)
+    {
+        pLinks = new NextType[pLinkCount];
+
+        // For each link...
+        uint lnkIndex = 0;
+        auto end = area->links.end();
+        for (auto i = area->links.begin(); i != end; ++i, ++lnkIndex)
+        {
+            // Instancing a new set of variables of the area
+            NextType& n = pLinks[lnkIndex];
+
+            // Initialize the variables
+            // From the study
+            n.initializeFromStudy(*study);
+            // From the area
+            n.initializeFromArea(study, area);
+            // From the link
+            n.initializeFromAreaLink(study, i->second);
+        }
+    }
+    else
+    {
+        pLinks = nullptr;
+    }
+}
+
+template<class VariablePerLink>
+void Links<VariablePerLink>::simulationBegin()
+{
+    for (uint i = 0; i != pLinkCount; ++i)
+    {
+        pLinks[i].simulationBegin();
+    }
+}
+
+template<class VariablePerLink>
+void Links<VariablePerLink>::simulationEnd()
+{
+    for (uint i = 0; i != pLinkCount; ++i)
+    {
+        pLinks[i].simulationEnd();
+    }
+}
+
+template<class VariablePerLink>
+void Links<VariablePerLink>::buildDigest(SurveyResults& results,
+                                         int digestLevel,
+                                         int dataLevel) const
+{
+    int count_int = count;
+    bool linkDataLevel = dataLevel & Category::link;
+    bool areaDataLevel = dataLevel & Category::area;
+    if (count_int && (linkDataLevel || areaDataLevel))
+    {
+        if (not results.data.area->links.empty())
+        {
+            auto end = results.data.area->links.cend();
+            for (auto i = results.data.area->links.cbegin(); i != end; ++i)
+            {
+                results.data.link = i->second;
+                pLinks[results.data.link->indexForArea].buildDigest(results,
+                                                                    digestLevel,
+                                                                    Category::link);
+            }
+        }
+    }
+}
+
+template<class VariablePerLink>
+void Links<VariablePerLink>::beforeYearByYearExport(uint year, uint numSpace)
+{
+    for (uint i = 0; i != pLinkCount; ++i)
+    {
+        pLinks[i].beforeYearByYearExport(year, numSpace);
+    }
+}
+
 } // namespace Variable
 } // namespace Solver
 } // namespace Antares

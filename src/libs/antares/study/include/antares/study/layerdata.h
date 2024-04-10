@@ -24,6 +24,8 @@
 #include <map>
 #include <string>
 
+#include <yuni/yuni.h>
+
 namespace Antares::Data
 {
 /*!

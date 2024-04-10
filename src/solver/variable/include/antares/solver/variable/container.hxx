@@ -26,6 +26,8 @@
 #include <yuni/yuni.h>
 #include <yuni/core/static/types.h>
 
+#include "antares/solver/variable/surveyresults/reportbuilder.hxx"
+
 #define SEP Yuni::IO::Separator
 
 namespace Antares

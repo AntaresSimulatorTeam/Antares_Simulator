@@ -21,6 +21,8 @@
 #ifndef __ANTARES_FS_WALKER_FILEJOB_H__
 #define __ANTARES_FS_WALKER_FILEJOB_H__
 
+#include "registry.inc.hxx"
+
 using namespace Yuni;
 
 namespace FSWalker

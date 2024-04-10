@@ -27,6 +27,8 @@ extern "C"
 #include "srs_api.h"
 }
 
+#include "antares/study/fwd.h"
+
 #include "named_problem.h"
 #include "ortools_utils.h"
 
