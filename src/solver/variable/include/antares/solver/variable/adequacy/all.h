@@ -68,14 +68,7 @@
 #include "antares/solver/variable/economy/avail-dispatchable-generation.h"
 #include "antares/solver/variable/economy/dispatchable-generation-margin.h"
 
-#include "antares/solver/variable/economy/links/flowLinear.h"
-#include "antares/solver/variable/economy/links/flowLinearAbs.h"
-#include "antares/solver/variable/economy/links/flowQuad.h"
-#include "antares/solver/variable/economy/links/hurdleCosts.h"
-#include "antares/solver/variable/economy/links/congestionFee.h"
-#include "antares/solver/variable/economy/links/congestionFeeAbs.h"
-#include "antares/solver/variable/economy/links/marginalCost.h"
-#include "antares/solver/variable/economy/links/congestionProbability.h"
+#include "antares/solver/variable/adequacy/links.h"
 
 // Output variables associated to binding constraints
 #include "antares/solver/variable//economy/bindingConstraints/bindingConstraintsMarginalCost.h"
@@ -91,22 +84,6 @@ namespace Variable
 {
 namespace Adequacy
 {
-/*!
-** \brief All variables for a single link (economy)
-*/
-typedef Variable::Economy::FlowLinear            // Flow linear
-  <Variable::Economy::FlowLinearAbs              // Flow linear Abs
-   <Variable::Economy::FlowQuad                  // Flow Quad
-    <Variable::Economy::CongestionFee            // Congestion Fee
-     <Variable::Economy::CongestionFeeAbs        // Congestion Fee (Abs)
-      <Variable::Economy::MarginalCost           // Marginal Cost
-       <Variable::Economy::CongestionProbability // Congestion Probability (+/-)
-        <Variable::Economy::HurdleCosts          // Hurdle costs
-         <>>>>>>>>
-    VariablePerLink;
-// forward declaration
-class Links;
-
 /*!
 ** \brief All variables for a single area (economy)
 */
@@ -253,8 +230,5 @@ typedef Container::List<ItemList> AllVariables;
 } // namespace Variable
 } // namespace Solver
 } // namespace Antares
-
-// post include
-#include "links.h"
 
 #endif // __SOLVER_VARIABLE_ADEQUACY_ALL_H__
