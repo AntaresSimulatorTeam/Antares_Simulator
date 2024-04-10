@@ -1,6 +1,5 @@
 var NAVTREEINDEX23 =
 {
-"structAntares_1_1Solver_1_1Variable_1_1Areas_1_1Statistics.html":[7,0,0,12,4,8,0],
 "structAntares_1_1Solver_1_1Variable_1_1BindingConstraints_1_1Statistics.html":[7,0,0,12,4,9,0],
 "structAntares_1_1Solver_1_1Variable_1_1Category_1_1MaxRowCount.html":[7,0,0,12,4,1,0],
 "structAntares_1_1Solver_1_1Variable_1_1Category_1_1MaxRowCount_3_01daily_01_4.html":[7,0,0,12,4,1,1],
@@ -249,5 +248,6 @@ var NAVTREEINDEX23 =
 "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average.html#a78db0f8bffc05da1df4366d1b2f25054":[7,0,0,12,4,7,0,0,1],
 "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average_1_1Data.html":[7,0,0,12,4,7,0,0,0],
 "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxBase.html":[7,0,0,12,4,7,0,4],
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxBase.html#a22867a4b6e6809f5c815050b22a524ca":[7,0,0,12,4,7,0,4,0]
+"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxBase.html#a22867a4b6e6809f5c815050b22a524ca":[7,0,0,12,4,7,0,4,0],
+"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxData_1_1Data.html":[7,0,0,12,4,7,0,5,0]
 };

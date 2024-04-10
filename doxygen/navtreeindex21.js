@@ -144,7 +144,6 @@ var NAVTREEINDEX21 =
 "locator_8h_source.html":[8,0,0,1,0,14,0,0,0,0],
 "lock_8h_source.html":[8,0,0,5,1,4],
 "logfile_8h_source.html":[8,0,0,5,2,1,1,1,1,13],
-"logs_8hxx_source.html":[8,0,0,1,0,15,0,0,0,4],
 "lold_8h_source.html":[8,0,0,2,10,0,0,0,0,2,14],
 "lolp_8h_source.html":[8,0,0,2,10,0,0,0,0,2,15],
 "loopFlow_8h_source.html":[8,0,0,2,10,0,0,0,0,2,1,7],
@@ -249,5 +248,6 @@ var NAVTREEINDEX21 =
 "output_8hxx_source.html":[8,0,0,1,0,22,0,0,0,20],
 "outputs_8h_source.html":[8,0,0,5,2,2,10,1,1],
 "overflow_8h_source.html":[8,0,0,2,10,0,0,0,0,2,23],
-"pages.html":[]
+"pages.html":[],
+"panel_8hxx_source.html":[8,0,0,5,2,2,10,0,2]
 };

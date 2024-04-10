@@ -100,10 +100,10 @@ var NAVTREEINDEX =
 "congestionFee_8h_source.html",
 "dir_b8a32678b670e8635940802fe3720571.html",
 "geographic-trimming_8h_source.html",
-"panel_8hxx_source.html",
-"structAntares_1_1Solver_1_1Variable_1_1Areas_1_1Statistics.html",
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxData_1_1Data.html",
-"thermal-cluster-order_8h_source.html"
+"parameter_8h_source.html",
+"structAntares_1_1Solver_1_1Variable_1_1BindingConstraints_1_1Statistics.html",
+"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Or.html",
+"thermal-cluster_8h_source.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

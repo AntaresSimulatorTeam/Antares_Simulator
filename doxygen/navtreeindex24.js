@@ -1,6 +1,5 @@
 var NAVTREEINDEX24 =
 {
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxData_1_1Data.html":[7,0,0,12,4,7,0,5,0],
 "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Or.html":[7,0,0,12,4,7,0,6],
 "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw.html":[7,0,0,12,4,7,0,7],
 "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw.html#a64a09e4897a39e1a1a14ffb548c91e4b":[7,0,0,12,4,7,0,7,1],
@@ -249,5 +248,6 @@ var NAVTREEINDEX24 =
 "tests_2end-to-end_2utils_2utils_8h_source.html":[8,0,0,3,0,0,0],
 "tests_2src_2libs_2antares_2logs_2antares_2logs_2logs_8h_source.html":[8,0,0,3,1,0,0,2,0,0,0],
 "text_8hxx_source.html":[8,0,0,5,0,1,0,9],
-"thermal-cluster-item_8h_source.html":[8,0,0,5,2,1,1,2,1,10]
+"thermal-cluster-item_8h_source.html":[8,0,0,5,2,1,1,2,1,10],
+"thermal-cluster-order_8h_source.html":[8,0,0,5,2,1,1,2,0,4]
 };
