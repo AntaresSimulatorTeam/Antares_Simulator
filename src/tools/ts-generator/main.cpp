@@ -99,10 +99,10 @@ std::vector<Data::ThermalCluster*> getClustersToGen(Data::AreaList& areas,
 }
 
 TSGenerator::listOfLinks getLinksToGen(Data::AreaList& areas,
-                                           const std::string& clustersToGen)
+                                       const std::string& linksToGen)
 {
     TSGenerator::listOfLinks links;
-    const auto ids = splitStringIntoPairs(clustersToGen, ';', '.');
+    const auto ids = splitStringIntoPairs(linksToGen, ';', '.');
 
     for (const auto& [areaFromID, areaWithID] : ids)
     {
