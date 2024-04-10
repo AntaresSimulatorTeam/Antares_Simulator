@@ -46,36 +46,14 @@ the generating units are of paramount importance. Though a thorough survey of ma
 is still required, the number of scenarios to simulate is not as large as in generation adequacy studies.
 In these studies, the default *Antares* option to use is the [`economy`](18-parameters.md#mode) simulation mode.
 
-## General content of an *Antares* session
-
-A typical *Antares* session involves different steps that are usually run in sequence,
-either automatically or with some degree of man-in-the-loop control, depending on the kind of study to perform.
-
-These steps most often involve:
-
-1. Initialize or update the input data (time-series, grid topology, fleet description, etc.)
-2. Define the simulation contexts (definition of the "Monte-Carlo years" to simulate)
-3. Run a simulation to produce actual numeric scenarios, following the directives defined in (2)
-4. Run the optimization, to solve all the optimization problems associated with each of the scenarios produced in (3)
-5. Exploit the detailed results yielded by (4)
-
-The scope of this reference guide is to give a detailed description of the software involved in
-steps (1) to (5) mostly based on a functional approach, leaving thereby aside a significant
-part of the mathematical content[^2] involved in several of these steps.  
-The following picture gives a functional view of all that is involved in steps (1) to (5).
-
-[^2]: A detailed expression of the basic mathematical problem solved in the red box of the following figure can be found in the document ["Optimization problems formulation"](TODO).
-
-![Antares_Process](Antares_Process.jpg)
-
 ## Performance considerations
 Typically, *Antares* has to solve a least-cost hydro-thermal power schedule and unit commitment problem, with an hourly 
 resolution and throughout a week, over a large interconnected system.  
 The large number and the size of the individual problems to solve often make optimization sessions computer-intensive.
 
-Depending on user-defined results accuracy requirements, various practical options[^3] allow to simplify either
+Depending on user-defined results accuracy requirements, various practical options[^2] allow to simplify either
 the formulation of the problems, or their resolution.
-[^3]: See [hydro-pricing-mode](18-parameters.md#hydro-pricing-mode), [unit-commitment-mode](18-parameters.md#unit-commitment-mode), TODO
+[^2]: See [hydro-pricing-mode](18-parameters.md#hydro-pricing-mode), [unit-commitment-mode](18-parameters.md#unit-commitment-mode), TODO
 
 *Antares* has been designed to handle [adequacy and profitability problems](#applications). 
 
@@ -90,6 +68,6 @@ that of the un-supplied energy (generation shortage) or, conversely, that of the
 In other words, adequacy and profitability studies are carried out by solving a series of a large number of week-long 
 operation problems (one for each week of each Monte-Carlo year), assumed to be independent to some extent.  
 Note that, however, dependency issues such as the management of hydro stock (or any other kind of energy storage
-facility) may bring a significant coupling between the successive problems, which needs to be addressed properly[^4].
+facility) may bring a significant coupling between the successive problems, which needs to be addressed properly[^3].
 
-[^4]: See how *Antares* addresses stock dependency between successive problems [here](TODO).
+[^3]: See how *Antares* addresses stock dependency between successive problems [here](TODO).

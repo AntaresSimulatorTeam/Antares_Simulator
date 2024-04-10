@@ -1,5 +1,7 @@
 # Commands
 
+TODO : fetch important content & remove this page
+
 The Antares GUI gives access to a general menu of commands whose name and meanings are described hereafter.
 
 ## File

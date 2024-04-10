@@ -61,7 +61,7 @@ the reference guide is printed to a PDF file and published in the assets. This d
 want to install *Antares Simulator* and be able to consult its documentation off-line.  
 
 In practice, the PDF is generated automatically from Markdown files under [reference-guide](./reference-guide) by 
-[Sphinx](https://www.sphinx-doc.org/). The script for this generation is in [pdf-doc-generation-with-sphinx/create_pdf_doc.sh](./pdf-doc-generation-with-sphinx/create_pdf_doc.sh); 
+[Sphinx](https://www.sphinx-doc.org/) (using LaTeX). The script for this generation is in [pdf-doc-generation-with-sphinx/create_pdf_doc.sh](./pdf-doc-generation-with-sphinx/create_pdf_doc.sh); 
 it is automatically run by a github [action](../.github/workflows/build-userguide.yml) during every release, and for 
 each pull request (in order to verify that the PDF builds).  
 
@@ -87,7 +87,7 @@ Sphinx will create a `reference-guide.pdf` file in `docs/pdf-doc-generation-with
 ### Doxygen
 TODO
 
-### Extra considerations
+## Extra considerations
 
 Like mentioned above, the same source material is used to automatically generate three different formats (mkdocs website, 
 PDF, doxygen website). When writing pages that have to be published in more than one format, please make sure the 
@@ -96,6 +96,6 @@ Here is a **non-exhaustive** list of points to watch out for:
 - When you add a page, make sure you add it to all target supports. For instance, adding a page to the mkdocs website 
   requires creating a `nav` entry in the [mkdocs.yml](../mkdocs.yml) file, while adding it to the Sphinx PDF requires 
   adding an extra entry to an existing index.md file, and, sometimes, creating an extra index.md file (to add a section).
-- Do not use non-standard characters (such as emojis) in the reference guide, as they cannot be rendered by Sphinx 
+- Do not use non-standard characters (such as emojis) in the reference guide, as they cannot be rendered by LaTeX 
   in PDF.
 - Do not use Markdown "notes" (using the `>` character): they do not render well in PDF

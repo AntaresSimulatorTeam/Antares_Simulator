@@ -1,3 +1,5 @@
+# Principles
+
 # Time-series analysis and generation
 
 ## General
@@ -11,7 +13,7 @@ The different categories of time-series call for wholly different generation pro
 - For Hydro-power, the generator works out monthly time-series of energies, based on the assumption that they can be modeled by Log Normal variables with known correlations through space and time. So as to keep the model simple, for an interconnected system made of N areas, the user defines, along with the N expectations and N standard deviations of the monthly energies, the N X N correlation matrix R(n,m) of the logs of the annual hydro energies between the areas n,m, and the N average auto-correlations r(k) between one month and the next in each area k. The correlation **C(n,i,m,j)** between the logs of hydro energies in area **n**, month **i** and area **m**, month **j** is taken to be
 
 $$C(n,i,m,j) = R(n,m)*\sqrt{(r(n) \cdot r(m))^{|j-i|}}$$
- 
+
 
 This most simplified model asks for considerably fewer data than a comprehensive 12N X 12N time-space matrix. Note that if R is positive semi-definite but C is not, matrix C is automatically transformed into a fitting p.s.d matrix and the data generation keeps going on (however, the log report will show a warning message). If the primary matrix R is not p.s.d, data are considered as corrupted, the generation stops and a fatal error message will be displayed in the log report
 
@@ -60,7 +62,7 @@ In the expressions of expectation and variance, $\Gamma(x)$ is the standard Eule
 
 $$\Phi(\theta, \mu, h)\ =\ {1\over A}\ *\ \sum_{i=0, \mu}{\ \sum_{j=h, h+\mu}{e^{-\theta|j-i|}}}$$
 
-**with** 
+**with**
 
 $$A=\mu + 2 \sum_{i=1, \mu; j=1, \mu; j > i}{e^{-\theta(j-i)}}$$
 
@@ -71,9 +73,9 @@ The section of the GUI specific to the generation of wind, solar and load time-s
 
 1. **Spatial correlation matrices that are located within the "spatial correlation" tab of each path "Wind|Solar|Load / &lt;area\_name&gt;"**
 
-	This tab contains a workspace for the description of 12 monthly spatial correlation matrices $\Xi$ and one annual correlation matrix. For the stochastic generators to work properly, these matrices must meet the usual requirements (matrices must be p.s.d, symmetric, with all terms between -100 and +100, and a main diagonal made of 100s). If this is not the case, generators will emit an infeasibility diagnosis. Matrices can be either set up manually OR automatically filled out by the time-series analyzer (see next paragraph).
-	
-	Depending on the choices made in the main "simulation" window, the matrices used will be either the 12 monthly matrices or the annual matrix. Whether to use the first or the second option depends on the quality of the statistical data at hand: with high quality data (for instance, that derived from the analysis of a very large pool of historical data), use of monthly correlations is recommended because monthly differences between matrices have a physical meaning ; with less robust data (derived from a handful of historical data,…), use of the single annual correlation matrix should be preferred because it smooths out the numeric noise which impairs the monthly matrices.
+   This tab contains a workspace for the description of 12 monthly spatial correlation matrices $\Xi$ and one annual correlation matrix. For the stochastic generators to work properly, these matrices must meet the usual requirements (matrices must be p.s.d, symmetric, with all terms between -100 and +100, and a main diagonal made of 100s). If this is not the case, generators will emit an infeasibility diagnosis. Matrices can be either set up manually OR automatically filled out by the time-series analyzer (see next paragraph).
+
+   Depending on the choices made in the main "simulation" window, the matrices used will be either the 12 monthly matrices or the annual matrix. Whether to use the first or the second option depends on the quality of the statistical data at hand: with high quality data (for instance, that derived from the analysis of a very large pool of historical data), use of monthly correlations is recommended because monthly differences between matrices have a physical meaning ; with less robust data (derived from a handful of historical data,…), use of the single annual correlation matrix should be preferred because it smooths out the numeric noise which impairs the monthly matrices.
 
 2. **Four parameters and four subtabs that are located within the "local" tab of each path "Wind|Solar|Load / &lt;area\_name&gt;"**
 
@@ -98,17 +100,17 @@ The section of the GUI specific to the generation of wind, solar and load time-s
 **FOUR SUBTABS**
 
 - Subtab "Coefficients"
-	A twelve-month table of values for the primary parameters $\alpha$, $\beta$, $\gamma$, $\delta$, $\theta$, $\mu$ <br/>
-	This table may be either filled out manually or automatically (use of the time-series analyzer)
+  A twelve-month table of values for the primary parameters $\alpha$, $\beta$, $\gamma$, $\delta$, $\theta$, $\mu$ <br/>
+  This table may be either filled out manually or automatically (use of the time-series analyzer)
 
 - Subtab "Translation"
-	Contains an 8760-hour array T to add to the time-series generated, prior or after scaling. This array can be either filled out manually or by the time-series analyzer.
+  Contains an 8760-hour array T to add to the time-series generated, prior or after scaling. This array can be either filled out manually or by the time-series analyzer.
 
 - Subtab "Daily profile"
-	A 24\*12 table of hourly / monthly coefficients K(hm) that are used to modulate the values of the stationary stochastic process by which the actual process is approximated. This table can be either filled out manually or by the time-series analyzer.
+  A 24\*12 table of hourly / monthly coefficients K(hm) that are used to modulate the values of the stationary stochastic process by which the actual process is approximated. This table can be either filled out manually or by the time-series analyzer.
 
 - Subtab "Conversion"
-	A table of 2 \* N values (with 1&lt;=N&lt;=50) that is used to turn the initial time-series produced by the generators (for instance, wind speeds) into final data (for instance, wind power). The transfer function (speed to power, etc.) is approximated by N discrete points whose abscises X(N) an ordinates Y(N) are given by the table.
+  A table of 2 \* N values (with 1&lt;=N&lt;=50) that is used to turn the initial time-series produced by the generators (for instance, wind speeds) into final data (for instance, wind power). The transfer function (speed to power, etc.) is approximated by N discrete points whose abscises X(N) an ordinates Y(N) are given by the table.
 
 ## Time-series analysis (load, wind, solar)
 
@@ -192,8 +194,8 @@ The primary TS analyzer window shows two tabs:
 ## Time-series generation (thermal)
 
 The thermal time-series generation will only be launched:
-  - On thermal clusters that have the Generated TS parameter set to “Force generation”
-  - And, when in the Simulation window, the Stochastic TS parameter for Thermal is set to "On”, on the thermal clusters that have the Generated TS parameter set to "Use global parameter".
+- On thermal clusters that have the Generated TS parameter set to “Force generation”
+- And, when in the Simulation window, the Stochastic TS parameter for Thermal is set to "On”, on the thermal clusters that have the Generated TS parameter set to "Use global parameter".
 
 The stochastic generator for time-series of available dispatchable power generation works, for each plant of each set (cluster), with the following parameters:
 
@@ -357,23 +359,23 @@ Different ways can be considered to work out values for FOR,POR,FOD,POD from his
 With the following notations:
 
 - D(w) = Overall cumulated statistical observation time available for week (w)  
-	for instance, for w = 1= first week of January : D(w) = 3500 days coming from 10 years of observation of 50 identical plants
+  for instance, for w = 1= first week of January : D(w) = 3500 days coming from 10 years of observation of 50 identical plants
 
 - Df(w) = Within D(w), overall time spent in forced outages, either beginning during week w or before (for instance , Df(1) = 163 days)
 
 - Dp(w) = Within D(w), overall time spent in planned outages, either beginning during week w or before (for instance, Dp(1) = 22 days)
 
 - Kf(w) = Number of forced outages beginning during week (w)  
-	(for instance, Kf(1) = 26)
+  (for instance, Kf(1) = 26)
 
 - Kp(w) = Number of planned outages beginning during week (w)  
-	(for instance, Kp(1) = 3)
+  (for instance, Kp(1) = 3)
 
 - FOT(w) = Overall cumulated time (expressed in days) spent in forced outages beginning during week (w) (for instance, FOT(1)= 260)  
-	Note that if outages last more than one week FOT(w) necessarily includes days from weeks w+1, w+2,…
+  Note that if outages last more than one week FOT(w) necessarily includes days from weeks w+1, w+2,…
 
 - POT(w) = Overall cumulated time (expressed in days) spent in planned outages beginning during week (w) (for instance, POT(1) = 84)  
-	Note that if outages last more than one week POT(w) necessarily includes days from weeks w+1, w+2,…
+  Note that if outages last more than one week POT(w) necessarily includes days from weeks w+1, w+2,…
 
 The following formulas can be used :
 
@@ -412,16 +414,16 @@ In both cases, assuming that a large number of historical time-series of energie
     - **M'(n)** = time-series of K-1 elements obtained by deleting the first element of the time-series Log(M(n))
     - **M''(n)** = time-series of K-1 elements obtained by deleting the last element of the time-series Log(M(n))
 
-	Assess the correlation **IMC(n)** between the random variables **M'(n)** and **M''(n)**. This value (lying in [-1,1]) should be used to fill out the field "inter-monthly correlation value" of the "local data" tab in the "hydro" active window.
+   Assess the correlation **IMC(n)** between the random variables **M'(n)** and **M''(n)**. This value (lying in [-1,1]) should be used to fill out the field "inter-monthly correlation value" of the "local data" tab in the "hydro" active window.
 
 3. For each area n, build up 12 monthly energy time-series derived from the original array **M(n)** by extracting from **M(n)** the values related to each month of the year (**M1(n)**= time-series of energies in January,…, **M12(n)** = time-series of energies in December.)
 
-	Assess the expectations and standard deviations of the 12 random variables **M1(n)** ,…, **M12(n)**. These values should be used to fill out the fields "expectation" and "std deviation" of the "local data" tab in the "hydro" active window.
+   Assess the expectations and standard deviations of the 12 random variables **M1(n)** ,…, **M12(n)**. These values should be used to fill out the fields "expectation" and "std deviation" of the "local data" tab in the "hydro" active window.
 
-	Aside from expectation and standard deviations, minimum and maximum bounds can be freely set on the monthly overall energies (ROR + HS). Whether to assess these bounds by examination of historical data or on the basis of other considerations depends on the context of the studies to carry out.
+   Aside from expectation and standard deviations, minimum and maximum bounds can be freely set on the monthly overall energies (ROR + HS). Whether to assess these bounds by examination of historical data or on the basis of other considerations depends on the context of the studies to carry out.
 
 4. For each area n, extract from the 12 monthly overall energy time-series **M1(n) ,…, M12(n)** the contribution of the 12 monthly time-series of ROR energies **R1(n),…, R12(n)**.
 
-	Assess the expectations of the 12 random variables **R1(n)/M1(n),…., R12(n)/M12(n)** . These values should be used to fill out the fields "ROR share" of the "local data" tab in the "hydro" active window.
+   Assess the expectations of the 12 random variables **R1(n)/M1(n),…., R12(n)/M12(n)** . These values should be used to fill out the fields "ROR share" of the "local data" tab in the "hydro" active window.
 
 [^decay]: Obtained by the generation of purely exponentially autocorrelated values (parameter $\theta$ ) followed by a moving average transformation (parameter $\mu$ ). $\theta$ and $\mu$ should be carefully chosen so as to accommodate at best the experimental data at hand. If meaningful historical data are available, this identification may be directly made using the Antares time-series analyzer.
