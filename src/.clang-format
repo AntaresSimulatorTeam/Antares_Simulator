@@ -275,6 +275,11 @@ IncludeCategories:
   - Regex: '^(<|")antares/.*'
     Priority: 10
     CaseSensitive: false
+  # Main yuni header need to go first...
+  - Regex: '^(<|")yuni/(yuni|core).h(>|")'
+    Priority: 5
+    SortPriority: 4
+    CaseSensitive: false
   # yuni headers
   - Regex: '^(<|")yuni/.*'
     Priority: 5
@@ -282,16 +287,13 @@ IncludeCategories:
   # boost
   - Regex: '^(<|")boost/.*'
     Priority: 2
-    SortPriority: 0
   # stdlib
   - Regex: '^<.*'
     Priority: 1
-    SortPriority: 0
     CaseSensitive: false
   # everything else (targets to be internal lib headers)
   - Regex: '.*'
     Priority: 15
-    SortPriority: 0
     CaseSensitive: false
 
 # Definition of main header of a cpp file
