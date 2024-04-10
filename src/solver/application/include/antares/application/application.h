@@ -20,15 +20,15 @@
 */
 #pragma once
 
-#include <antares/study/study.h>
-#include <antares/study/load-options.h>
-#include <antares/benchmarking/DurationCollector.h>
-#include <antares/benchmarking/timer.h>
+#include <yuni/core/string.h>
+
 #include "antares/infoCollection/StudyInfoCollector.h"
 #include "antares/solver/misc/options.h"
-
+#include <antares/benchmarking/DurationCollector.h>
+#include <antares/benchmarking/timer.h>
+#include <antares/study/load-options.h>
+#include <antares/study/study.h>
 #include <antares/writer/i_writer.h>
-#include <yuni/core/string.h>
 
 namespace Antares::Solver
 {

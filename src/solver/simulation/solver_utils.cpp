@@ -20,13 +20,15 @@
 */
 
 #include "antares/solver/simulation/solver_utils.h"
-#include <yuni/yuni.h>
+
+#include <cmath>
+#include <iomanip>
 #include <iostream>
 #include <limits>
 #include <sstream>
-#include <iomanip>
+
+#include <yuni/yuni.h>
 #include <yuni/io/file.h>
-#include <cmath>
 
 #define SEP Yuni::IO::Separator
 

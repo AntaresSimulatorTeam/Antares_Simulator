@@ -20,8 +20,9 @@
 */
 
 #include "antares/study/scenario-builder/TSnumberData.h"
-#include "antares/study/scenario-builder/scBuilderUtils.h"
+
 #include "antares/study/scenario-builder/applyToMatrix.hxx"
+#include "antares/study/scenario-builder/scBuilderUtils.h"
 
 namespace Antares::Data::ScenarioBuilder
 {

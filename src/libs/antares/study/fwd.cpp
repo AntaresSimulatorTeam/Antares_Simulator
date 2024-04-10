@@ -20,6 +20,7 @@
 */
 
 #include "antares/study/fwd.h"
+
 #include <algorithm>
 
 using namespace Yuni;

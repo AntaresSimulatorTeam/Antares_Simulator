@@ -21,9 +21,9 @@
 #ifndef __EXPORT_STRUCTURE__
 #define __EXPORT_STRUCTURE__
 
-#include <vector>
 #include <optional>
 #include <string>
+#include <vector>
 
 #include <yuni/yuni.h>
 

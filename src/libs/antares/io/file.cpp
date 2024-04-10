@@ -20,17 +20,20 @@
 */
 
 #include "antares/io/file.h"
-#include <yuni/io/file.h>
+
 #include <yuni/core/system/suspend.h>
 #include <yuni/datetime/timestamp.h>
+#include <yuni/io/file.h>
 #ifdef YUNI_OS_WINDOWS
-#include <yuni/core/system/windows.hdr.h>
 #include <io.h>
+
+#include <yuni/core/system/windows.hdr.h>
 #else
-#include <unistd.h>
 #include <sys/types.h>
+#include <unistd.h>
 #endif
 #include <errno.h>
+
 #include <antares/logs/logs.h>
 
 using namespace Yuni;

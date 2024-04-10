@@ -19,12 +19,14 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <algorithm>
 #include "antares/study/scenario-builder/rules.h"
+
+#include <algorithm>
+
+#include "antares/study/scenario-builder/TSnumberData.h"
+#include "antares/study/scenario-builder/scBuilderUtils.h"
 #include "antares/study/study.h"
 #include <antares/logs/logs.h>
-#include "antares/study/scenario-builder/scBuilderUtils.h"
-#include "antares/study/scenario-builder/TSnumberData.h"
 
 using namespace Yuni;
 

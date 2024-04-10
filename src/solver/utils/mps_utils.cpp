@@ -18,12 +18,11 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include <antares/study/study.h>
+#include "antares/solver/utils/mps_utils.h"
 
 #include "antares/solver/simulation/simulation.h"
-
 #include "antares/solver/utils/ortools_utils.h"
-#include "antares/solver/utils/mps_utils.h"
+#include <antares/study/study.h>
 
 using namespace Antares;
 using namespace Antares::Data;
@@ -63,13 +62,14 @@ constexpr size_t OPT_APPEL_SOLVEUR_BUFFER_SIZE = 256;
 **
 ** SPDX-License-Identifier: MPL-2.0
 */
-#include <antares/study/study.h>
+#include <algorithm>
 #include <string>
 #include <vector>
-#include <algorithm>
-#include "antares/solver/utils/filename.h"
+
 #include "antares/solver/optimisation/opt_constants.h"
+#include "antares/solver/utils/filename.h"
 #include "antares/solver/utils/name_translator.h"
+#include <antares/study/study.h>
 
 using namespace Yuni;
 

@@ -20,8 +20,9 @@
 */
 
 #pragma once
-#include <string>
 #include <map>
+#include <string>
+
 #include "cluster.h"
 
 namespace Antares::Data::ShortTermStorage

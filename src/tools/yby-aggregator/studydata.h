@@ -21,10 +21,11 @@
 #ifndef __STUDY_STUDY_DATA_AGGREGATOR_STUDY_DATA_H__
 #define __STUDY_STUDY_DATA_AGGREGATOR_STUDY_DATA_H__
 
-#include <yuni/yuni.h>
-#include <yuni/core/string.h>
 #include <memory>
 #include <set>
+
+#include <yuni/yuni.h>
+#include <yuni/core/string.h>
 
 class StudyData final
 {

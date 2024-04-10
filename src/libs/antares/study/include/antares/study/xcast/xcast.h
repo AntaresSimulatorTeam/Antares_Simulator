@@ -21,10 +21,12 @@
 #ifndef __ANTARES_LIBS_STUDY_XCAST_XCAST_H__
 #define __ANTARES_LIBS_STUDY_XCAST_XCAST_H__
 
-#include <yuni/yuni.h>
-#include <antares/array/matrix.h>
 #include <vector>
+
+#include <yuni/yuni.h>
 #include <yuni/core/noncopyable.h>
+
+#include <antares/array/matrix.h>
 
 namespace Antares::Data
 {

@@ -21,13 +21,15 @@
 #ifndef __ANTARES_SOLVER_HYDRO_MANAGEMENT_MANAGEMENT_H__
 #define __ANTARES_SOLVER_HYDRO_MANAGEMENT_MANAGEMENT_H__
 
-#include <yuni/yuni.h>
 #include <unordered_map>
-#include <antares/study/fwd.h>
-#include <antares/mersenne-twister/mersenne-twister.h>
-#include "antares/solver/simulation/sim_structure_donnees.h"
+
+#include <yuni/yuni.h>
+
 #include "antares/date/date.h"
+#include "antares/solver/simulation/sim_structure_donnees.h"
 #include "antares/writer/i_writer.h"
+#include <antares/mersenne-twister/mersenne-twister.h>
+#include <antares/study/fwd.h>
 
 namespace Antares
 {

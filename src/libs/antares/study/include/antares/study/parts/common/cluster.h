@@ -21,15 +21,17 @@
 #ifndef __LIBS_ANTARES_STUDY_PARTS_COMMON_H__
 #define __LIBS_ANTARES_STUDY_PARTS_COMMON_H__
 
+#include <map>
+#include <set>
+#include <vector>
+
 #include <yuni/yuni.h>
 #include <yuni/core/noncopyable.h>
+
 #include <antares/array/matrix.h>
 #include <antares/series/series.h>
-#include "../../fwd.h"
 
-#include <set>
-#include <map>
-#include <vector>
+#include "../../fwd.h"
 
 namespace Antares
 {

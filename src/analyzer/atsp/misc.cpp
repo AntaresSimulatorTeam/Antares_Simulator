@@ -19,10 +19,10 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "atsp.h"
 #include <assert.h>
-
 #include <cmath>
+
+#include "atsp.h"
 
 using namespace Yuni;
 

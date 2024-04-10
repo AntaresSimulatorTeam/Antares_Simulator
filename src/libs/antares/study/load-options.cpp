@@ -20,9 +20,9 @@
 */
 
 #include "antares/study/load-options.h"
-#include <antares/logs/logs.h>
 
 #include <antares/exception/LoadingError.hpp>
+#include <antares/logs/logs.h>
 
 namespace Antares::Data
 {

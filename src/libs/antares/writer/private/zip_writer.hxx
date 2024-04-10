@@ -21,6 +21,7 @@
 #pragma once
 
 #include "antares/concurrency/concurrency.h"
+
 #include "ensure_queue_started.h"
 
 namespace Antares::Solver

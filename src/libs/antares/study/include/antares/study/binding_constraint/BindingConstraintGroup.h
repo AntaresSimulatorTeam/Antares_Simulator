@@ -26,6 +26,7 @@
 #pragma once
 
 #include <memory>
+
 #include "BindingConstraint.h"
 
 namespace Antares::Data

@@ -19,11 +19,13 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <antares/logs/logs.h>
+#include "antares/study/parts/short-term-storage/properties.h"
+
 #include <stdexcept>
+
 #include <boost/algorithm/string/case_conv.hpp>
 
-#include "antares/study/parts/short-term-storage/properties.h"
+#include <antares/logs/logs.h>
 
 #define SEP Yuni::IO::Separator
 

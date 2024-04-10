@@ -19,10 +19,11 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
+#include "antares/solver/variable/state.h"
+
 #include <cmath>
 
 #include <antares/study/study.h>
-#include "antares/solver/variable/state.h"
 
 namespace Antares::Solver::Variable
 {

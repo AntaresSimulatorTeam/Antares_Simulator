@@ -19,28 +19,26 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
+#include "antares/solver/misc/options.h"
+
+#include <algorithm>
+#include <cassert>
+#include <limits>
+#include <string.h>
+
 #include <yuni/yuni.h>
 #include <yuni/core/system/process.h>
 #include <yuni/io/directory.h>
 #include <yuni/io/file.h>
 
-#include <antares/logs/logs.h>
-#include <antares/study/study.h>
-#include <cassert>
-#include <string.h>
-#include <limits>
-#include <algorithm>
-
-#include "antares/solver/misc/options.h"
-
+#include "antares/antares/Enum.hpp"
 #include "antares/config/config.h"
-
+#include "antares/solver/utils/ortools_utils.h"
+#include <antares/antares/constants.h>
 #include <antares/exception/AssertionError.hpp>
 #include <antares/exception/LoadingError.hpp>
-#include "antares/antares/Enum.hpp"
-#include <antares/antares/constants.h>
-
-#include "antares/solver/utils/ortools_utils.h"
+#include <antares/logs/logs.h>
+#include <antares/study/study.h>
 
 using namespace Yuni;
 using namespace Antares;

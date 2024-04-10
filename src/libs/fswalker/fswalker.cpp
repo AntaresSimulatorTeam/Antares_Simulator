@@ -20,20 +20,24 @@
 */
 
 #include "fswalker.h"
-#include <antares/antares/antares.h>
+
+#include <algorithm>
+#include <list>
 #include <mutex>
 #include <stack>
-#include <list>
-#include <yuni/io/directory/info.h>
+
 #include <yuni/core/noncopyable.h>
-#include <yuni/job/job.h>
-#include <yuni/job/queue/service.h>
 #include <yuni/core/system/cpu.h>
 #include <yuni/core/system/suspend.h>
-#include <algorithm>
-#include "registry.inc.hxx"
-#include "filejob.inc.hxx"
+#include <yuni/io/directory/info.h>
+#include <yuni/job/job.h>
+#include <yuni/job/queue/service.h>
+
+#include <antares/antares/antares.h>
 #include <antares/logs/logs.h>
+
+#include "filejob.inc.hxx"
+#include "registry.inc.hxx"
 
 using namespace Yuni;
 using namespace Antares;

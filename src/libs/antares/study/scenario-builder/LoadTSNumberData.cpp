@@ -23,6 +23,7 @@
 //
 
 #include "antares/study/scenario-builder/LoadTSNumberData.h"
+
 #include "antares/study/scenario-builder/applyToMatrix.hxx"
 
 namespace Antares::Data::ScenarioBuilder

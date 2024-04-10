@@ -20,6 +20,7 @@
 */
 
 #include "result.h"
+
 #include "progress.h"
 
 using namespace Yuni;

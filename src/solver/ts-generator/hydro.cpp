@@ -21,12 +21,12 @@
 
 #include <cmath>
 
-#include "antares/solver/simulation/sim_extern_variables_globales.h"
-#include <antares/antares/fatal-error.h>
-#include <antares/writer/i_writer.h>
-#include <antares/utils/utils.h>
 #include "antares/solver/misc/cholesky.h"
 #include "antares/solver/misc/matrix-dp-make.h"
+#include "antares/solver/simulation/sim_extern_variables_globales.h"
+#include <antares/antares/fatal-error.h>
+#include <antares/utils/utils.h>
+#include <antares/writer/i_writer.h>
 
 using namespace Antares;
 

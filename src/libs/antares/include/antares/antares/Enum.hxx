@@ -25,10 +25,9 @@
 #include <algorithm>
 #include <list>
 
+#include "antares/antares/Enum.hpp"
 #include <antares/exception/AssertionError.hpp>
 #include <antares/stdcxx/class_name.h>
-
-#include "antares/antares/Enum.hpp"
 
 namespace Antares::Data::Enum
 {

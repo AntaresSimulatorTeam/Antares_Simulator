@@ -19,17 +19,15 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
-
-#include "variables/VariableManagerUtils.h"
-#include "antares/solver/simulation/simulation.h"
-#include "antares/solver/simulation/sim_extern_variables_globales.h"
+#include <cmath>
 
 #include "antares/solver/optimisation/opt_fonctions.h"
+#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
+#include "antares/solver/simulation/sim_extern_variables_globales.h"
+#include "antares/solver/simulation/simulation.h"
 
 #include "pi_constantes_externes.h"
-
-#include <cmath>
+#include "variables/VariableManagerUtils.h"
 
 #define ZERO_POUR_LES_VARIABLES_FIXES 1.e-6
 

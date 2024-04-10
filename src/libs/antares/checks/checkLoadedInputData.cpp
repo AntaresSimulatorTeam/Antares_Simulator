@@ -19,14 +19,13 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
+#include <antares/checks/checkLoadedInputData.h>
 #include <antares/exception/InitializationError.hpp>
 #include <antares/exception/LoadingError.hpp>
-#include <antares/study/version.h>
-#include <antares/study/header.h>
-
 #include <antares/series/series.h>
-#include <antares/checks/checkLoadedInputData.h>
 #include <antares/study/area/area.h>
+#include <antares/study/header.h>
+#include <antares/study/version.h>
 
 namespace Antares::Check
 {

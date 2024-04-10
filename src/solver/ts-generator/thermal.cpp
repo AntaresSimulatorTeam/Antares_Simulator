@@ -19,15 +19,14 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
+#include <cmath>
 #include <sstream>
 #include <string>
-#include <cmath>
-
-#include <antares/study/study.h>
-#include <antares/logs/logs.h>
-#include <antares/writer/i_writer.h>
 
 #include "antares/study/simulation.h"
+#include <antares/logs/logs.h>
+#include <antares/study/study.h>
+#include <antares/writer/i_writer.h>
 
 #define SEP Yuni::IO::Separator
 

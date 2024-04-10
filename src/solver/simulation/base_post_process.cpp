@@ -19,10 +19,12 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <memory>
 #include "antares/solver/simulation/base_post_process.h"
-#include "antares/solver/optimisation/optim_post_process_list.h"
+
+#include <memory>
+
 #include "antares/solver/optimisation/adequacy_patch_csr/adq_patch_post_process_list.h"
+#include "antares/solver/optimisation/optim_post_process_list.h"
 
 namespace Antares::Solver::Simulation
 {

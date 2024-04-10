@@ -20,8 +20,9 @@
 */
 
 #include "antares/solver/simulation/adequacy.h"
-#include <antares/exception/UnfeasibleProblemError.hpp>
+
 #include <antares/exception/AssertionError.hpp>
+#include <antares/exception/UnfeasibleProblemError.hpp>
 
 using namespace Yuni;
 using Antares::Constants::nbHoursInAWeek;

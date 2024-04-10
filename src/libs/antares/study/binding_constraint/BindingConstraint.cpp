@@ -18,16 +18,18 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include <yuni/yuni.h>
+#include "antares/study/binding_constraint/BindingConstraint.h"
+
 #include <algorithm>
-#include <vector>
 #include <cmath>
 #include <functional>
+#include <vector>
 
-#include "antares/study/binding_constraint/BindingConstraint.h"
-#include "antares/study/study.h"
+#include <yuni/yuni.h>
+
 #include "antares/study/binding_constraint/BindingConstraintLoader.h"
 #include "antares/study/binding_constraint/BindingConstraintSaver.h"
+#include "antares/study/study.h"
 #include "antares/utils/utils.h"
 
 using namespace Yuni;

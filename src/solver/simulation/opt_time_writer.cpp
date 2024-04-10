@@ -19,6 +19,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #include "antares/solver/simulation/opt_time_writer.h"
+
 #include <filesystem>
 
 OptimizationStatisticsWriter::OptimizationStatisticsWriter(Antares::Solver::IResultWriter& writer,

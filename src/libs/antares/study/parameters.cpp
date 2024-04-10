@@ -18,26 +18,27 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include <algorithm>
+#include "antares/study/parameters.h"
 
-#include <yuni/yuni.h>
-#include <cstdio>
+#include <algorithm>
 #include <cctype>
-#include <tuple>   // std::tuple
+#include <climits>
+#include <cstdio>
 #include <list>    // std::list
 #include <sstream> // std::stringstream
+#include <tuple>   // std::tuple
 
-#include "antares/study/parameters.h"
+#include <boost/algorithm/string/case_conv.hpp>
+
+#include <yuni/yuni.h>
+
+#include "antares/antares/Enum.hpp"
 #include "antares/antares/constants.h"
+#include "antares/solver/variable/economy/all.h"
+#include "antares/study/load-options.h"
+#include <antares/exception/AssertionError.hpp>
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
-#include "antares/study/load-options.h"
-#include <climits>
-#include <boost/algorithm/string/case_conv.hpp>
-#include "antares/solver/variable/economy/all.h"
-
-#include <antares/exception/AssertionError.hpp>
-#include "antares/antares/Enum.hpp"
 
 using namespace Yuni;
 

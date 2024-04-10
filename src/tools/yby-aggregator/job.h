@@ -21,16 +21,18 @@
 #ifndef __STUDY_JOB_AGGREGATOR_JOB_H__
 #define __STUDY_JOB_AGGREGATOR_JOB_H__
 
+#include <memory>
+
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
+#include <yuni/io/file.h>
 #include <yuni/job/job.h>
+#include <yuni/job/queue/service.h>
+
+#include "antares/solver/ts-generator/xcast/studydata.h"
+
 #include "datafile.h"
 #include "output.h"
-#include "antares/solver/ts-generator/xcast/studydata.h"
-#include <yuni/job/queue/service.h>
-#include <yuni/io/file.h>
-
-#include <memory>
 
 class JobFileReader final: public Yuni::Job::IJob
 {

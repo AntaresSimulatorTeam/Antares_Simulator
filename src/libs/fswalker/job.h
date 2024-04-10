@@ -21,11 +21,11 @@
 #ifndef __ANTARES_FS_WALKER_JOB_H__
 #define __ANTARES_FS_WALKER_JOB_H__
 
+#include <atomic>
+#include <memory>
+
 #include <yuni/yuni.h>
 #include <yuni/job/job.h>
-
-#include <memory>
-#include <atomic>
 
 namespace FSWalker
 {

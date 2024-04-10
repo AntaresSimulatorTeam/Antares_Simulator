@@ -20,10 +20,11 @@
 */
 
 #pragma once
+#include <set>
+#include <vector>
+
 #include <antares/study/fwd.h>
 #include <antares/study/study.h>
-#include <vector>
-#include <set>
 
 using adqPatchParamsMode = Antares::Data::AdequacyPatch::AdequacyPatchMode;
 

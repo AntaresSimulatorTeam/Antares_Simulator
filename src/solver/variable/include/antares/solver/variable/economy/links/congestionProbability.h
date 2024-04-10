@@ -21,8 +21,9 @@
 #ifndef __SOLVER_VARIABLE_ECONOMY_CongestionProbability_H__
 #define __SOLVER_VARIABLE_ECONOMY_CongestionProbability_H__
 
-#include "../../variable.h"
 #include <antares/study/area/constants.h>
+
+#include "../../variable.h"
 
 namespace Antares::Solver::Variable::Economy
 {

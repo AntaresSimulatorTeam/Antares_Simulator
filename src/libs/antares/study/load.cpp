@@ -19,11 +19,12 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #include <fstream>
+
+#include "antares/study/scenario-builder/sets.h"
 #include "antares/study/study.h"
+#include "antares/study/ui-runtimeinfos.h"
 #include "antares/study/version.h"
 #include <antares/benchmarking/DurationCollector.h>
-#include "antares/study/scenario-builder/sets.h"
-#include "antares/study/ui-runtimeinfos.h"
 
 using namespace Yuni;
 using Antares::Constants::nbHoursInAWeek;

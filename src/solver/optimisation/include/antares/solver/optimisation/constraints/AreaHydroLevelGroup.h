@@ -20,8 +20,8 @@
  */
 
 #pragma once
-#include "ConstraintGroup.h"
 #include "AreaHydroLevel.h"
+#include "ConstraintGroup.h"
 
 class AreaHydroLevelGroup: public ConstraintGroup
 {

@@ -20,6 +20,7 @@
 */
 
 #include "antares/solver/optimisation/weekly_optimization.h"
+
 #include "antares/solver/optimisation/opt_fonctions.h"
 
 namespace Antares::Solver::Optimization

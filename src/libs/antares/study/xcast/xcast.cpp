@@ -20,11 +20,13 @@
 */
 
 #include "antares/study/xcast/xcast.h"
-#include <antares/logs/logs.h>
-#include <antares/inifile/inifile.h>
-#include "antares/study//study.h"
-#include <antares/utils/utils.h>
+
 #include <limits>
+
+#include "antares/study//study.h"
+#include <antares/inifile/inifile.h>
+#include <antares/logs/logs.h>
+#include <antares/utils/utils.h>
 
 using namespace Yuni;
 

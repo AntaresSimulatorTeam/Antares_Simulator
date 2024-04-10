@@ -33,9 +33,10 @@ extern "C"
 }
 
 #endif
-#include "../daily/h2o_j_donnees_optimisation.h"
-#include <antares/study/study.h>
 #include <antares/mersenne-twister/mersenne-twister.h>
+#include <antares/study/study.h>
+
+#include "../daily/h2o_j_donnees_optimisation.h"
 
 #define LINFINI 1.e+80
 
@@ -114,14 +115,14 @@ typedef struct
 
     std::vector<int> NumeroVar_niveauxFinJours; // Niveaux fin jours
     int NumeroVar_waste;                        // Waste
-    std::vector<int> NumeroVar_overflow; // Deversements (ecarts journaliers entre niveaux et les
-                                         // 100 % du reservoir)
+    std::vector<int> NumeroVar_overflow;   // Deversements (ecarts journaliers entre niveaux et les
+                                           // 100 % du reservoir)
     std::vector<int> NumeroVar_deviations; // Deviations (ecarts journaliers entre turbin?s et
                                            // cr?dits cibles brutes)
     std::vector<int> NumeroVar_violations; // Violations (ecarts journaliers entre niveaux et
                                            // courbes guides sup et inf)
-    int NumeroVar_deviationMax; // Deviation max sur le mois
-    int NumeroVar_violationMax; // Violation max sur le mois
+    int NumeroVar_deviationMax;            // Deviation max sur le mois
+    int NumeroVar_violationMax;            // Violation max sur le mois
 } CORRESPONDANCE_DES_VARIABLES_PB_ETENDU;
 
 /* Structure uniquement exploitee par l'optimisation (donc a ne pas acceder depuis l'exterieur) */

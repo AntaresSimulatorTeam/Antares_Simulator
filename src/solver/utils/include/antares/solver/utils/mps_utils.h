@@ -24,7 +24,6 @@ extern "C"
 {
 #include "spx_definition_arguments.h"
 #include "spx_fonctions.h"
-
 #include "srs_api.h"
 }
 

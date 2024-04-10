@@ -23,11 +23,13 @@
 //
 
 #include "antares/study/binding_constraint/BindingConstraintGroupRepository.h"
+
 #include <algorithm>
-#include <numeric>
 #include <memory>
-#include "antares/study/binding_constraint/BindingConstraintsRepository.h"
+#include <numeric>
+
 #include "antares/study/binding_constraint/BindingConstraintGroup.h"
+#include "antares/study/binding_constraint/BindingConstraintsRepository.h"
 
 namespace Antares::Data
 {

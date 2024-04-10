@@ -1,4 +1,5 @@
 #include <pybind11/pybind11.h>
+
 #include <antares/mersenne-twister/mersenne-twister.h>
 
 namespace py = pybind11;

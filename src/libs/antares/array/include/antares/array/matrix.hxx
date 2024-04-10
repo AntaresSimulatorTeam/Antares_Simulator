@@ -21,14 +21,16 @@
 #ifndef __ANTARES_LIBS_ARRAY_MATRIX_HXX__
 #define __ANTARES_LIBS_ARRAY_MATRIX_HXX__
 
+#include <cmath>
+#include <cstdlib>
+#include <utility>
+
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
-#include <antares/logs/logs.h>
-#include <utility>
-#include <cstdlib>
-#include <cmath>
 
 #include <antares/io/statistics.h>
+#include <antares/logs/logs.h>
+
 #include "matrix-to-buffer.h"
 
 #define ANTARES_MATRIX_CSV_COMMA "\t;,"

@@ -19,22 +19,25 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
+#include <fswalker/fswalker.h>
+
 #include <yuni/yuni.h>
 #include <yuni/core/getopt.h>
-#include <yuni/io/directory/info.h>
 #include <yuni/datetime/timestamp.h>
+#include <yuni/io/directory/info.h>
 #include <yuni/job/job.h>
-#include <yuni/job/queue/service.h>
 #include <yuni/job/queue/q-event.h>
+#include <yuni/job/queue/service.h>
+
 #include "antares/antares/antares.h"
-#include <fswalker/fswalker.h>
-#include <antares/logs/logs.h>
-#include <antares/args/args_to_utf8.h>
 #include <antares/antares/version.h>
+#include <antares/args/args_to_utf8.h>
 #include <antares/locale/locale.h>
-#include "modified-inode.h"
+#include <antares/logs/logs.h>
+
 #include "antares-study.h"
 #include "io.h"
+#include "modified-inode.h"
 
 using namespace Yuni;
 using namespace Antares;

@@ -19,10 +19,11 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
+#include "antares/jit/jit.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "antares/jit/jit.h"
 
 bool JIT::enabled = false;
 

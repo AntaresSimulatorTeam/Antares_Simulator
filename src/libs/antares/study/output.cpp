@@ -20,6 +20,7 @@
 */
 
 #include "antares/study/output.h"
+
 #include <yuni/io/directory/iterator.h>
 
 using namespace Yuni;

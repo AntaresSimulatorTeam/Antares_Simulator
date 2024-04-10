@@ -23,9 +23,10 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
-#include "fwd.h"
+
 #include "area/area.h"
 #include "binding_constraint/BindingConstraint.h"
+#include "fwd.h"
 
 namespace Antares
 {

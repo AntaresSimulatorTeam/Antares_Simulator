@@ -21,10 +21,13 @@
 #ifndef __SOLVER_VARIABLE_STORAGE_RAW_H__
 #define __SOLVER_VARIABLE_STORAGE_RAW_H__
 
-#include <yuni/yuni.h>
 #include <float.h>
-#include "rawdata.h"
+
+#include <yuni/yuni.h>
+
 #include <antares/memory/memory.h>
+
+#include "rawdata.h"
 
 namespace Antares
 {

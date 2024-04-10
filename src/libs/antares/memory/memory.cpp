@@ -20,27 +20,30 @@
 */
 
 #include <mutex>
-#include <yuni/io/directory.h>
-#include <yuni/core/system/windows.hdr.h>
+
 #include <yuni/core/system/environment.h>
+#include <yuni/core/system/windows.hdr.h>
+#include <yuni/io/directory.h>
+
 #include <antares/logs/logs.h>
 #ifndef YUNI_OS_WINDOWS
-#include <unistd.h>
-#include <sys/types.h>
+#include <cerrno>
 #include <cstdio>
 #include <fcntl.h>
 #include <sys/mman.h>
-#include <cerrno>
-// man 2 kill
 #include <sys/types.h>
+#include <unistd.h>
+// man 2 kill
 #include <csignal>
+#include <sys/types.h>
 #endif
 #ifdef YUNI_OS_WINDOWS
 #include <WinIoCtl.h>
 #endif
+#include <yuni/core/system/process.h>
+
 #include "antares/memory/memory.h"
 #include <antares/sys/policy.h>
-#include <yuni/core/system/process.h>
 
 using namespace Yuni;
 

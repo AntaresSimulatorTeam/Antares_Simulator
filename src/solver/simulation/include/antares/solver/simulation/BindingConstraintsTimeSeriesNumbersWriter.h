@@ -22,9 +22,11 @@
 #pragma once
 
 #include <memory>
-#include "ITimeSeriesNumbersWriter.h"
-#include <antares/writer/i_writer.h>
+
 #include "antares/study/binding_constraint/BindingConstraintsRepository.h"
+#include <antares/writer/i_writer.h>
+
+#include "ITimeSeriesNumbersWriter.h"
 
 namespace Antares::Solver::Simulation
 {

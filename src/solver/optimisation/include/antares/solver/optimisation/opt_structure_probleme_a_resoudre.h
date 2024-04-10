@@ -21,8 +21,9 @@
 #ifndef __SOLVER_OPTIMISATION_STRUCTURE_PROBLEME_A_RESOUDRE_H__
 #define __SOLVER_OPTIMISATION_STRUCTURE_PROBLEME_A_RESOUDRE_H__
 
-#include <vector>
 #include <string>
+#include <vector>
+
 #include "opt_constants.h"
 #include "ortools/linear_solver/linear_solver.h"
 

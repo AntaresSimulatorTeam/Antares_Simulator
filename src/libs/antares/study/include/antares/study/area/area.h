@@ -21,19 +21,22 @@
 #ifndef __ANTARES_LIBS_STUDY_AREAS_H__
 #define __ANTARES_LIBS_STUDY_AREAS_H__
 
-#include <yuni/yuni.h>
-#include <yuni/core/string.h>
-#include <yuni/core/noncopyable.h>
-#include <stdlib.h>
-#include <antares/study/parameters/adq-patch-params.h>
-#include <antares/array/matrix.h>
-#include "../parts/parts.h"
-#include <vector>
 #include <set>
+#include <stdlib.h>
+#include <vector>
+
+#include <yuni/yuni.h>
+#include <yuni/core/noncopyable.h>
+#include <yuni/core/string.h>
+
+#include "antares/study/filter.h"
+#include <antares/array/matrix.h>
+#include <antares/study/parameters/adq-patch-params.h>
+
+#include "../parts/parts.h"
+#include "constants.h"
 #include "links.h"
 #include "ui.h"
-#include "constants.h"
-#include "antares/study/filter.h"
 
 namespace Antares
 {

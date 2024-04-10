@@ -21,19 +21,19 @@
 #pragma once
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
+#include <antares/study/study.h>
+
 #include "ProblemMatrixEssential.h"
-#include "constraints/ConstraintGroup.h"
-#include "constraints/Group1.h"
+#include "constraints/AreaHydroLevelGroup.h"
 #include "constraints/BindingConstraintDayGroup.h"
 #include "constraints/BindingConstraintWeekGroup.h"
-#include "constraints/HydroPowerGroup.h"
-#include "constraints/HydraulicSmoothingGroup.h"
-#include "constraints/MinMaxHydroPowerGroup.h"
-#include "constraints/MaxPumpingGroup.h"
-#include "constraints/AreaHydroLevelGroup.h"
+#include "constraints/ConstraintGroup.h"
 #include "constraints/FinalStockGroup.h"
-
-#include <antares/study/study.h>
+#include "constraints/Group1.h"
+#include "constraints/HydraulicSmoothingGroup.h"
+#include "constraints/HydroPowerGroup.h"
+#include "constraints/MaxPumpingGroup.h"
+#include "constraints/MinMaxHydroPowerGroup.h"
 
 using namespace Antares::Data;
 

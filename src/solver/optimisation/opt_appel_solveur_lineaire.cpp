@@ -20,31 +20,29 @@
 */
 
 #include <yuni/yuni.h>
-#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 
-#include "antares/solver/simulation/simulation.h"
-#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
+#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
+#include "antares/solver/simulation/simulation.h"
 
 extern "C"
 {
 #include "spx_definition_arguments.h"
 #include "spx_fonctions.h"
-
 #include "srs_api.h"
 }
 
-#include <antares/logs/logs.h>
-#include <antares/antares/fatal-error.h>
+#include <chrono>
 
-#include "antares/solver/utils/mps_utils.h"
 #include "antares/solver/utils/filename.h"
+#include "antares/solver/utils/mps_utils.h"
+#include <antares/antares/fatal-error.h>
+#include <antares/logs/logs.h>
 
+#include "../infeasible-problem-analysis/constraint-slack-analysis.h"
 #include "../infeasible-problem-analysis/unfeasible-pb-analyzer.h"
 #include "../infeasible-problem-analysis/variables-bounds-consistency.h"
-#include "../infeasible-problem-analysis/constraint-slack-analysis.h"
-
-#include <chrono>
 
 using namespace operations_research;
 

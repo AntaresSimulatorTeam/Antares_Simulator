@@ -21,9 +21,12 @@
 #ifndef __SOLVER_SIMULATION_GENERATE_TIMESERIES_H__
 #define __SOLVER_SIMULATION_GENERATE_TIMESERIES_H__
 
-#include <yuni/yuni.h>
-#include <antares/study/study.h>
 #include <vector>
+
+#include <yuni/yuni.h>
+
+#include <antares/study/study.h>
+
 #include "ITimeSeriesNumbersWriter.h"
 
 namespace Antares::Solver::TimeSeriesNumbers

@@ -21,10 +21,13 @@
 #ifndef __ANTARES_LIBS_STUDY_HEADER_H__
 #define __ANTARES_LIBS_STUDY_HEADER_H__
 
+#include <ctime>
+
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
-#include <ctime>
+
 #include <antares/inifile/inifile.h>
+
 #include "version.h"
 
 //! Default author

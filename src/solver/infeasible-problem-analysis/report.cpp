@@ -19,9 +19,12 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #include "report.h"
-#include "constraint.h"
-#include <antares/logs/logs.h>
+
 #include <algorithm>
+
+#include <antares/logs/logs.h>
+
+#include "constraint.h"
 
 using namespace operations_research;
 

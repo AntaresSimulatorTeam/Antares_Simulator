@@ -19,8 +19,8 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
-#include <vector>
 #include <string>
+#include <vector>
 
 namespace Antares::Data::ShortTermStorage
 {

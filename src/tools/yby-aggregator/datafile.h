@@ -21,10 +21,11 @@
 #ifndef __STUDY_DATA_FILE_AGGREGATOR_DATA_FILE_H__
 #define __STUDY_DATA_FILE_AGGREGATOR_DATA_FILE_H__
 
-#include <yuni/yuni.h>
-#include <yuni/core/string.h>
 #include <memory>
 #include <set>
+
+#include <yuni/yuni.h>
+#include <yuni/core/string.h>
 
 class DataFile final
 {

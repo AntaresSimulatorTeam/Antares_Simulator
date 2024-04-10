@@ -19,8 +19,9 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <yuni/yuni.h>
 #include "antares/solver/variable/storage/rawdata.h"
+
+#include <yuni/yuni.h>
 
 using namespace Yuni;
 

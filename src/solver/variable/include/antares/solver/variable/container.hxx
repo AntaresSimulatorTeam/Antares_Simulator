@@ -21,10 +21,10 @@
 #ifndef __SOLVER_CONTAINER_CONTAINER_HXX__
 #define __SOLVER_CONTAINER_CONTAINER_HXX__
 
+#include <memory>
+
 #include <yuni/yuni.h>
 #include <yuni/core/static/types.h>
-
-#include <memory>
 
 #define SEP Yuni::IO::Separator
 

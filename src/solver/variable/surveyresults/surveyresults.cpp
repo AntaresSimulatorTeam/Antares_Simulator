@@ -19,13 +19,16 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
+#include "antares/solver/variable/surveyresults/surveyresults.h"
+
 #include <algorithm>
 #include <cmath>
+
 #include <yuni/yuni.h>
+
+#include <antares/logs/logs.h>
 #include <antares/study/study.h>
 #include <antares/utils/utils.h>
-#include "antares/solver/variable/surveyresults/surveyresults.h"
-#include <antares/logs/logs.h>
 
 using namespace Yuni;
 using namespace Antares;

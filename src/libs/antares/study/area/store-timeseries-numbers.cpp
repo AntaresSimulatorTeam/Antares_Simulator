@@ -19,11 +19,11 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <antares/writer/i_writer.h>
-#include <antares/study/study.h>
-#include <antares/logs/logs.h>
-
 #include "antares/study/area/store-timeseries-numbers.h"
+
+#include <antares/logs/logs.h>
+#include <antares/study/study.h>
+#include <antares/writer/i_writer.h>
 
 using namespace Yuni;
 

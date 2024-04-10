@@ -21,9 +21,9 @@
 #ifndef __SOLVER_UTILS_STATISTICS_H__
 #define __SOLVER_UTILS_STATISTICS_H__
 
-#include <string>
-#include <cmath>
 #include <atomic>
+#include <cmath>
+#include <string>
 
 class OptimizationStatistics
 {

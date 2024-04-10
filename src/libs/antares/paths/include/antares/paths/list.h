@@ -21,11 +21,12 @@
 #ifndef __ANTARES_LIBS_PATHS_LIST_H__
 #define __ANTARES_LIBS_PATHS_LIST_H__
 
-#include <yuni/yuni.h>
-#include <yuni/core/string.h>
-#include <yuni/core/bind.h>
 #include <cstdio>
 #include <map>
+
+#include <yuni/yuni.h>
+#include <yuni/core/bind.h>
+#include <yuni/core/string.h>
 
 enum PathListOption
 {

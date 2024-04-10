@@ -20,9 +20,11 @@
 */
 
 #include "antares/study/area/ui.h"
-#include <antares/logs/logs.h>
-#include <antares/inifile/inifile.h>
+
 #include <sstream>
+
+#include <antares/inifile/inifile.h>
+#include <antares/logs/logs.h>
 
 using namespace Yuni;
 using namespace Antares;

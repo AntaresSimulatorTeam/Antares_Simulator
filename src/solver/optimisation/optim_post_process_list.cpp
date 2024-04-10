@@ -20,6 +20,7 @@
 */
 
 #include "antares/solver/optimisation/optim_post_process_list.h"
+
 #include "antares/solver/optimisation/post_process_commands.h"
 
 namespace Antares::Solver::Simulation

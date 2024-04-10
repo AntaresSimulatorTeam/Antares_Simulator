@@ -22,6 +22,7 @@
 #define __LIBS_STUDY_SCENARIO_BUILDER_SETS_H__
 
 #include <yuni/yuni.h>
+
 #include "rules.h"
 
 namespace Antares

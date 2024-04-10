@@ -21,15 +21,15 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_COMMON_CLUSTER_LIST_H__
 #define __ANTARES_LIBS_STUDY_PARTS_COMMON_CLUSTER_LIST_H__
 
-#include <antares/logs/logs.h>
-#include "../../fwd.h"
-
-#include <antares/writer/i_writer.h>
-
 #include <algorithm>
-#include <vector>
 #include <memory>
 #include <ranges>
+#include <vector>
+
+#include <antares/logs/logs.h>
+#include <antares/writer/i_writer.h>
+
+#include "../../fwd.h"
 
 namespace Antares
 {

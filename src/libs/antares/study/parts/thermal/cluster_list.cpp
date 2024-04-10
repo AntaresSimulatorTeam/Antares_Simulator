@@ -20,10 +20,12 @@
 */
 
 #include "antares/study/parts/thermal/cluster_list.h"
+
+#include <ranges>
+
 #include "antares/study/parts/common/cluster.h"
 #include "antares/study/study.h"
 #include <antares/utils/utils.h>
-#include <ranges>
 
 namespace // anonymous
 {

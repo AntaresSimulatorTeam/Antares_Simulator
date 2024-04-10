@@ -19,9 +19,10 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "../../variable.h"
 #include <antares/study/area/area.h>
+
 #include "../../setofareas.h"
+#include "../../variable.h"
 
 using namespace Yuni;
 

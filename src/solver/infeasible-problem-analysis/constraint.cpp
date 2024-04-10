@@ -18,12 +18,12 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include <cassert>
-
 #include "constraint.h"
-#include <sstream>
-#include <iomanip>
+
 #include <algorithm>
+#include <cassert>
+#include <iomanip>
+#include <sstream>
 
 namespace
 {

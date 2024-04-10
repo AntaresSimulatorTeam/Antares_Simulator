@@ -19,13 +19,15 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
+#include "antares/study/cleaner.h"
+
 #include <yuni/yuni.h>
 #include <yuni/string.h>
-#include "antares/study/cleaner.h"
-#include "antares/study/version.h"
-#include <antares/study/header.h>
+
 #include "antares/study/cleaner/versions.h"
+#include "antares/study/version.h"
 #include <antares/logs/logs.h>
+#include <antares/study/header.h>
 
 using namespace Yuni;
 

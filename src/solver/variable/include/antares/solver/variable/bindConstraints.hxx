@@ -20,10 +20,12 @@
 */
 #pragma once
 
-#include <vector>
 #include <utility>
+#include <vector>
+
 #include "antares/study/binding_constraint/BindingConstraint.h"
 #include "antares/study/fwd.h"
+
 #include "bindConstraints.h"
 
 namespace Antares::Solver::Variable

@@ -21,12 +21,13 @@
 
 #include "antares/sys/appdata.h"
 #ifdef YUNI_OS_WINDOWS
-#include <yuni/core/system/windows.hdr.h>
 #include <Shlobj.h>
-#endif
-#include <yuni/core/system/environment.h>
 
+#include <yuni/core/system/windows.hdr.h>
+#endif
 #include <ostream>
+
+#include <yuni/core/system/environment.h>
 
 using namespace Yuni;
 

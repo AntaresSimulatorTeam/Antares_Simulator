@@ -22,10 +22,12 @@
 #define __ANTARES_LIB_FINDER_FINDER_H__
 
 #include <mutex>
+
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
-#include "antares/study/study.h"
 #include <yuni/io/directory/iterator.h>
+
+#include "antares/study/study.h"
 
 #include "../version.h"
 

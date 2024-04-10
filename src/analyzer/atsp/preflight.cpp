@@ -19,9 +19,11 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "atsp.h"
-#include <antares/inifile/inifile.h>
 #include <yuni/io/directory.h>
+
+#include <antares/inifile/inifile.h>
+
+#include "atsp.h"
 
 using namespace Yuni;
 

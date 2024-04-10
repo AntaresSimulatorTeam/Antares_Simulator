@@ -19,6 +19,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #include "antares/writer/writer_factory.h"
+
 #include "antares/writer/in_memory_writer.h"
 
 #include "private/immediate_file_writer.h"

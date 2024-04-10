@@ -22,11 +22,13 @@
 #define __ANTARES_SOLVER_timeSeries_GENERATOR_H__
 
 #include <yuni/yuni.h>
+
 #include <antares/study/fwd.h>
 #include <antares/study/parameters.h>
-#include <antares/study/study.h>
 #include <antares/study/parts/thermal/cluster.h>
+#include <antares/study/study.h>
 #include <antares/writer/i_writer.h>
+
 #include "xcast/xcast.h"
 
 namespace Antares::TSGenerator

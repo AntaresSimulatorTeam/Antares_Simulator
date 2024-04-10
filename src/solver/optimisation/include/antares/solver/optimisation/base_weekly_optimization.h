@@ -22,6 +22,7 @@
 #pragma once
 
 #include <yuni/yuni.h> // for "uint" definition
+
 #include "antares/solver/simulation/sim_structure_donnees.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include <antares/study/parameters/adq-patch-params.h>

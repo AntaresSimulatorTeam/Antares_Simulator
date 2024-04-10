@@ -22,7 +22,9 @@
 #define __SOLVER_END_OF_LIST_END_OF_LIST_H__
 
 #include <yuni/yuni.h>
+
 #include <antares/study/study.h>
+
 #include "state.h"
 #include "surveyresults.h"
 

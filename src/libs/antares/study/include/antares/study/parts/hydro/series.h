@@ -21,9 +21,10 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_HYDRO_TIMESERIES_H__
 #define __ANTARES_LIBS_STUDY_PARTS_HYDRO_TIMESERIES_H__
 
-#include <antares/series/series.h>
 #include <antares/array/matrix.h>
+#include <antares/series/series.h>
 #include <antares/study/version.h>
+
 #include "../../fwd.h"
 
 namespace Antares

@@ -21,9 +21,9 @@
 #ifndef __SOLVER_VARIABLE_STORAGE_STD_DEVIATION_H__
 #define __SOLVER_VARIABLE_STORAGE_STD_DEVIATION_H__
 
+#include <cmath>
 #include <float.h>
 #include <limits>
-#include <cmath>
 
 namespace Antares
 {

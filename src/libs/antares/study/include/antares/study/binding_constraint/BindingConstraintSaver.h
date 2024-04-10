@@ -25,8 +25,8 @@
 
 #pragma once
 
-#include <antares/inifile/inifile.h>
 #include "antares/study/fwd.h"
+#include <antares/inifile/inifile.h>
 
 namespace Antares::Data
 {

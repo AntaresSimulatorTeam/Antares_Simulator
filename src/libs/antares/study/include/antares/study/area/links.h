@@ -21,14 +21,17 @@
 #ifndef __ANTARES_LIBS_STUDY_LINKS_H__
 #define __ANTARES_LIBS_STUDY_LINKS_H__
 
+#include <set>
+
 #include <yuni/yuni.h>
 #include <yuni/core/noncopyable.h>
 #include <yuni/core/string.h>
-#include "../fwd.h"
+
 #include <antares/array/matrix.h>
 #include <antares/series/series.h>
 #include <antares/writer/i_writer.h>
-#include <set>
+
+#include "../fwd.h"
 
 //! The minimal allowed value for hurdle costs when not null
 #define LINK_MINIMAL_HURDLE_COSTS_NOT_NULL 0.005

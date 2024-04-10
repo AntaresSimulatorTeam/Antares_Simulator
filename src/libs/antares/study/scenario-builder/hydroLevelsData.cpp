@@ -19,9 +19,11 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <sstream>
-#include <iomanip>
 #include "antares/study/scenario-builder/hydroLevelsData.h"
+
+#include <iomanip>
+#include <sstream>
+
 #include "antares/study/scenario-builder/scBuilderUtils.h"
 
 namespace Antares::Data::ScenarioBuilder

@@ -21,9 +21,11 @@
 #ifndef __ANTARES_LIBS_DATE_DATE_H__
 #define __ANTARES_LIBS_DATE_DATE_H__
 
+#include <vector>
+
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
-#include <vector>
+
 #include "antares/study/fwd.h"
 
 namespace Antares

@@ -21,8 +21,8 @@
 
 #pragma once
 #include "ConstraintGroup.h"
-#include "MinHydroPower.h"
 #include "MaxHydroPower.h"
+#include "MinHydroPower.h"
 
 class MinMaxHydroPowerGroup: public ConstraintGroup
 {

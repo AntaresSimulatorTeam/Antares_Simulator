@@ -20,6 +20,7 @@
 */
 
 #include "antares/solver/optimisation/constraints/ConsistenceNumberOfDispatchableUnitsGroup.h"
+
 #include "antares/solver/optimisation/constraints/ConsistenceNumberOfDispatchableUnits.h"
 
 /**

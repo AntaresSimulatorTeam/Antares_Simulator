@@ -23,9 +23,10 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
-#include <antares/study/study.h>
-#include "antares/study/area/constants.h"
+
 #include "antares/solver/constraints-builder/grid.h"
+#include "antares/study/area/constants.h"
+#include <antares/study/study.h>
 
 #define CB_PREFIX "@UTO_"
 

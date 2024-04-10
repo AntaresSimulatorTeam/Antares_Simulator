@@ -22,9 +22,10 @@
 #ifndef __SOLVER_VARIABLE_PRINT_POLICY_H__
 #define __SOLVER_VARIABLE_PRINT_POLICY_H__
 
+#include <map>
 #include <string>
 #include <vector>
-#include <map>
+
 #include <yuni/yuni.h>
 #include <yuni/core/fwd.h>
 #include <yuni/core/string.h>

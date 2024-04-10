@@ -21,10 +21,11 @@
 #ifndef __STUDY_OUTPUT_AGGREGATOR_OUTPUT_H__
 #define __STUDY_OUTPUT_AGGREGATOR_OUTPUT_H__
 
-#include <yuni/core/string.h>
-#include <set>
-#include <memory>
 #include <atomic>
+#include <memory>
+#include <set>
+
+#include <yuni/core/string.h>
 
 #include "result.h"
 

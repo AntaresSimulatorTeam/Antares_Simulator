@@ -1,12 +1,11 @@
 #include <algorithm>
 
-#include <antares/writer/in_memory_writer.h>
-#include <antares/logs/logs.h>
-
-#include <antares/benchmarking/timer.h>
-#include <antares/benchmarking/DurationCollector.h>
-
 #include <yuni/io/file.h> // Yuni::IO::File::LoadFromFile
+
+#include <antares/benchmarking/DurationCollector.h>
+#include <antares/benchmarking/timer.h>
+#include <antares/logs/logs.h>
+#include <antares/writer/in_memory_writer.h>
 
 namespace Antares::Solver
 {

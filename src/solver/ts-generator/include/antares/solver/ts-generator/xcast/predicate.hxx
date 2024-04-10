@@ -23,10 +23,11 @@
 
 #include <cmath>
 
-#include <antares/series/series.h>
 #include <yuni/yuni.h>
-#include <antares/study/area/area.h>
+
 #include "antares/study/parts/load/prepro.h"
+#include <antares/series/series.h>
+#include <antares/study/area/area.h>
 
 namespace Antares
 {

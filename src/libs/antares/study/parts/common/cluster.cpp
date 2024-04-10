@@ -18,11 +18,12 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include <yuni/yuni.h>
-#include <yuni/io/file.h>
-#include <yuni/io/directory.h>
-
 #include "antares/study/parts/common/cluster.h"
+
+#include <yuni/yuni.h>
+#include <yuni/io/directory.h>
+#include <yuni/io/file.h>
+
 #include "antares/study/study.h"
 #include <antares/utils/utils.h>
 

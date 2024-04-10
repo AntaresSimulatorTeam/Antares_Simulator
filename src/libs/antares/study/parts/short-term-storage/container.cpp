@@ -19,13 +19,15 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <antares/logs/logs.h>
-#include <yuni/io/file.h>
-#include <filesystem>
+#include "antares/study/parts/short-term-storage/container.h"
+
 #include <algorithm>
+#include <filesystem>
 #include <string>
 
-#include "antares/study/parts/short-term-storage/container.h"
+#include <yuni/io/file.h>
+
+#include <antares/logs/logs.h>
 
 #define SEP Yuni::IO::Separator
 

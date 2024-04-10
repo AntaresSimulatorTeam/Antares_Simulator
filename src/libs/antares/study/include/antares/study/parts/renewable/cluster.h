@@ -23,10 +23,12 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/noncopyable.h>
+
 #include <antares/array/matrix.h>
-#include "defines.h"
-#include "../common/cluster.h"
+
 #include "../../fwd.h"
+#include "../common/cluster.h"
+#include "defines.h"
 
 namespace Antares
 {

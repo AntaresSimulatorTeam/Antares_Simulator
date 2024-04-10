@@ -21,16 +21,15 @@
 #ifndef __SOLVER_SIMULATION_ECONOMY_H__
 #define __SOLVER_SIMULATION_ECONOMY_H__
 
-#include "antares/solver/variable/variable.h"
+#include "antares/infoCollection/StudyInfoCollector.h"
+#include "antares/solver/optimisation/base_weekly_optimization.h"
+#include "antares/solver/simulation/opt_time_writer.h"
+#include "antares/solver/simulation/solver.h" // for definition of type yearRandomNumbers
 #include "antares/solver/variable/economy/all.h"
 #include "antares/solver/variable/state.h"
+#include "antares/solver/variable/variable.h"
 
-#include "antares/solver/optimisation/base_weekly_optimization.h"
 #include "base_post_process.h"
-
-#include "antares/solver/simulation/solver.h" // for definition of type yearRandomNumbers
-#include "antares/infoCollection/StudyInfoCollector.h"
-#include "antares/solver/simulation/opt_time_writer.h"
 
 namespace Antares::Solver::Simulation
 {

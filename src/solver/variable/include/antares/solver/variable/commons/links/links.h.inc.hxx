@@ -24,8 +24,9 @@
 // NOTE : template includes are used here to reduce template instanciation
 // which still seems to be really cpu/memory consuming
 
-#include "../../state.h"
 #include <vector>
+
+#include "../../state.h"
 
 namespace Antares
 {

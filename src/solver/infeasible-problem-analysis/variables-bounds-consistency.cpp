@@ -19,6 +19,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #include "variables-bounds-consistency.h"
+
 #include <antares/logs/logs.h>
 
 using namespace operations_research;

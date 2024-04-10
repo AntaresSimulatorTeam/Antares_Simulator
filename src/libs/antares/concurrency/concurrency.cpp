@@ -18,9 +18,11 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include <memory>
-#include "yuni/job/job.h"
 #include "antares/concurrency/concurrency.h"
+
+#include <memory>
+
+#include "yuni/job/job.h"
 
 namespace Antares::Concurrency
 {

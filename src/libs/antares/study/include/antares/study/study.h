@@ -21,33 +21,32 @@
 #ifndef __ANTARES_LIBS_STUDY_STUDY_H__
 #define __ANTARES_LIBS_STUDY_STUDY_H__
 
-#include <yuni/yuni.h>
-#include <yuni/core/string.h>
-#include <yuni/thread/thread.h>
-#include <yuni/core/noncopyable.h>
-#include <yuni/job/queue/service.h>
+#include <memory>
 
-#include <antares/writer/i_writer.h>
+#include <yuni/yuni.h>
+#include <yuni/core/noncopyable.h>
+#include <yuni/core/string.h>
+#include <yuni/job/queue/service.h>
+#include <yuni/thread/thread.h>
 
 #include "antares/antares/antares.h"
-#include "fwd.h"
-
-#include "simulation.h"
-#include "parameters.h"
-#include "binding_constraint/BindingConstraint.h"
-#include "header.h"
-#include "version.h"
-#include "sets.h"
-#include "progression/progression.h"
-#include "load-options.h"
-#include <antares/date/date.h>
-#include "layerdata.h"
-#include <antares/correlation/correlation.h>
-#include "area/store-timeseries-numbers.h"
-#include "antares/study/binding_constraint/BindingConstraintsRepository.h"
 #include "antares/study/binding_constraint/BindingConstraintGroupRepository.h"
+#include "antares/study/binding_constraint/BindingConstraintsRepository.h"
+#include <antares/correlation/correlation.h>
+#include <antares/date/date.h>
+#include <antares/writer/i_writer.h>
 
-#include <memory>
+#include "area/store-timeseries-numbers.h"
+#include "binding_constraint/BindingConstraint.h"
+#include "fwd.h"
+#include "header.h"
+#include "layerdata.h"
+#include "load-options.h"
+#include "parameters.h"
+#include "progression/progression.h"
+#include "sets.h"
+#include "simulation.h"
+#include "version.h"
 
 namespace Antares::Data
 {
@@ -706,7 +705,7 @@ YString StudyCreateOutputPath(SimulationMode mode,
                               int64_t startTime);
 } // namespace Antares::Data
 
-#include "study.hxx"
 #include "runtime.h"
+#include "study.hxx"
 
 #endif /* __ANTARES_LIBS_STUDY_STUDY_H__ */

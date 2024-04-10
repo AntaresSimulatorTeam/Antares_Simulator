@@ -22,10 +22,9 @@
 #include <initializer_list>
 #include <string>
 
+#include "antares/antares/Enum.hpp"
 #include <antares/exception/AssertionError.hpp>
 #include <antares/study/UnfeasibleProblemBehavior.hpp>
-
-#include "antares/antares/Enum.hpp"
 
 namespace Antares::Data
 {

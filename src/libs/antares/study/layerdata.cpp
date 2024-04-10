@@ -19,12 +19,14 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <yuni/core/string.h>
-#include <yuni/yuni.h>
+#include "antares/study/layerdata.h"
+
 #include <fstream>
 
+#include <yuni/yuni.h>
+#include <yuni/core/string.h>
+
 #include <antares/inifile/inifile.h>
-#include "antares/study/layerdata.h"
 #include <antares/logs/logs.h>
 
 using namespace Yuni;

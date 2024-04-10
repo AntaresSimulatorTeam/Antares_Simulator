@@ -18,13 +18,14 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include "variables/VariableManagerUtils.h"
-#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
-#include "antares/solver/simulation/sim_extern_variables_globales.h"
+#include <spx_constantes_externes.h>
+
 #include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/optimisation/opt_rename_problem.h"
+#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
+#include "antares/solver/simulation/sim_extern_variables_globales.h"
 
-#include <spx_constantes_externes.h>
+#include "variables/VariableManagerUtils.h"
 
 void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBDO* problemeHebdo)
 {

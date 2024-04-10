@@ -27,7 +27,8 @@
 #define LINK_NAMESPACE Adequacy
 
 #include <yuni/yuni.h>
-#include "all.h"
+
 #include "../commons/links/links.h.inc.hxx"
+#include "all.h"
 
 #endif // __SOLVER_VARIABLE_ADEQUACY_LINK_H__

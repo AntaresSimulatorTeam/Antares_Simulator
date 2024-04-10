@@ -21,8 +21,8 @@
 #ifndef __ANTARES_STUDY_H__
 #define __ANTARES_STUDY_H__
 
-#include <mutex>
 #include <fswalker/fswalker.h>
+#include <mutex>
 
 class AntaresStudy: public FSWalker::IExtension
 {

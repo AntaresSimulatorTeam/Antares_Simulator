@@ -21,8 +21,8 @@
 #ifndef __MODIFIED_INODE_H__
 #define __MODIFIED_INODE_H__
 
-#include <mutex>
 #include <fswalker/fswalker.h>
+#include <mutex>
 
 class ModifiedINode: public FSWalker::IExtension
 {

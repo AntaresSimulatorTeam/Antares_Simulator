@@ -19,11 +19,12 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <antares/benchmarking/DurationCollector.h>
-#include <antares/logs/logs.h>
+#include "antares/solver/simulation/economy.h"
+
 #include "antares/application/application.h"
 #include "antares/solver/simulation/solver.h"
-#include "antares/solver/simulation/economy.h"
+#include <antares/benchmarking/DurationCollector.h>
+#include <antares/logs/logs.h>
 
 namespace Antares::Solver
 {

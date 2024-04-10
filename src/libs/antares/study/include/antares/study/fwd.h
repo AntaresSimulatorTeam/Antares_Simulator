@@ -21,11 +21,13 @@
 #ifndef __ANTARES_LIBS_STUDY_FWD_H__
 #define __ANTARES_LIBS_STUDY_FWD_H__
 
+#include <map>
+
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
+
 #include "antares/antares/antares.h"
 #include "antares/antares/constants.h"
-#include <map>
 
 namespace Antares
 {

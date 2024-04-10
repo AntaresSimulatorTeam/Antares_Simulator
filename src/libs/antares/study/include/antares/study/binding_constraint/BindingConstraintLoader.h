@@ -26,9 +26,11 @@
 #pragma once
 
 #include <memory>
+
 #include "antares/study/area/area.h"
-#include "EnvForLoading.h"
+
 #include "BindingConstraint.h"
+#include "EnvForLoading.h"
 
 namespace Antares::Data
 {

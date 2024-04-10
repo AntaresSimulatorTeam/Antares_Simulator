@@ -21,10 +21,11 @@
 
 #pragma once
 
-#include "../base_weekly_optimization.h"
-#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/solver/simulation/sim_structure_donnees.h"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/study/area/area.h"
+
+#include "../base_weekly_optimization.h"
 
 using Antares::Data::AreaList;
 

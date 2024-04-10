@@ -20,26 +20,27 @@
 */
 
 #include <yuni/yuni.h>
-#include <antares/logs/logs.h>
 #include <yuni/core/getopt.h>
-#include <antares/args/args_to_utf8.h>
-#include <antares/utils/utils.h>
-#include <antares/antares/version.h>
-#include <antares/sys/policy.h>
 #include <yuni/core/system/cpu.h>
 #include <yuni/core/system/process.h>
-#include <yuni/io/directory/info.h>
 #include <yuni/core/system/suspend.h>
+#include <yuni/io/directory/info.h>
 #include <yuni/io/file.h>
-#include <antares/memory/memory.h>
-#include <antares/logs/hostinfo.h>
-#include <antares/locale/locale.h>
-#include "antares/config/config.h"
 
-#include "output.h"
-#include "datafile.h"
+#include "antares/config/config.h"
 #include "antares/solver/ts-generator/xcast/studydata.h"
+#include <antares/antares/version.h>
+#include <antares/args/args_to_utf8.h>
+#include <antares/locale/locale.h>
+#include <antares/logs/hostinfo.h>
+#include <antares/logs/logs.h>
+#include <antares/memory/memory.h>
+#include <antares/sys/policy.h>
+#include <antares/utils/utils.h>
+
+#include "datafile.h"
 #include "job.h"
+#include "output.h"
 #include "progress.h"
 
 using namespace Yuni;

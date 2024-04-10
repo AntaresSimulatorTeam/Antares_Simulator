@@ -21,9 +21,10 @@
 #ifndef __ANTARES_FS_WALKER_REGISTRY_H__
 #define __ANTARES_FS_WALKER_REGISTRY_H__
 
+#include <vector>
+
 #include <yuni/yuni.h>
 #include <yuni/core/noncopyable.h>
-#include <vector>
 
 namespace FSWalker
 {

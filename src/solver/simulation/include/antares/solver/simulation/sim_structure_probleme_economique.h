@@ -22,13 +22,14 @@
 #ifndef __SOLVER_SIMULATION_ECO_STRUCTS_H__
 #define __SOLVER_SIMULATION_ECO_STRUCTS_H__
 
+#include <memory>
+#include <optional>
+#include <vector>
+
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
+#include "antares/solver/utils/optimization_statistics.h"
 #include "antares/study/fwd.h"
 #include "antares/study/study.h"
-#include "antares/solver/utils/optimization_statistics.h"
-#include <vector>
-#include <optional>
-#include <memory>
 
 class AdequacyPatchRuntimeData;
 

@@ -22,76 +22,73 @@
 #define __SOLVER_VARIABLE_ECONOMY_ALL_H__
 
 #include "antares/solver/variable/variable.h"
-#include "../area.h"
-#include "../setofareas.h"
-#include "../bindConstraints.h"
 
-#include "price.h"
-#include "balance.h"
-#include "../commons/load.h"
-#include "../commons/wind.h"
+#include "../area.h"
+#include "../bindConstraints.h"
 #include "../commons/hydro.h"
-#include "../commons/rowBalance.h"
-#include "../commons/psp.h"
-#include "../commons/miscGenMinusRowPSP.h"
-#include "../commons/solar.h"
 #include "../commons/join.h"
+#include "../commons/load.h"
+#include "../commons/miscGenMinusRowPSP.h"
+#include "../commons/psp.h"
+#include "../commons/rowBalance.h"
+#include "../commons/solar.h"
 #include "../commons/spatial-aggregate.h"
+#include "../commons/wind.h"
+#include "../setofareas.h"
+#include "balance.h"
+#include "price.h"
 
 // For General values
+#include "avail-dispatchable-generation.h"
+#include "dispatchable-generation-margin.h"
 #include "dispatchableGeneration.h"
-#include "thermalAirPollutantEmissions.h"
-#include "renewableGeneration.h"
-#include "overallCost.h"
-#include "operatingCost.h"
-#include "nonProportionalCost.h"
-#include "nbOfDispatchedUnits.h"
-#include "hydrostorage.h"
-#include "pumping.h"
-#include "reservoirlevel.h"
-#include "inflow.h"
-#include "overflow.h"
-#include "waterValue.h"
-#include "hydroCost.h"
-#include "unsupliedEnergy.h"
 #include "domesticUnsuppliedEnergy.h"
-#include "localMatchingRuleViolations.h"
-#include "spilledEnergyAfterCSR.h"
 #include "dtgMarginAfterCsr.h"
-#include "spilledEnergy.h"
-
+#include "hydroCost.h"
+#include "hydrostorage.h"
+#include "inflow.h"
+#include "localMatchingRuleViolations.h"
 #include "lold.h"
 #include "lolp.h"
 #include "max-mrg.h"
-
-#include "avail-dispatchable-generation.h"
-#include "dispatchable-generation-margin.h"
+#include "nbOfDispatchedUnits.h"
+#include "nonProportionalCost.h"
+#include "operatingCost.h"
+#include "overallCost.h"
+#include "overflow.h"
+#include "pumping.h"
+#include "renewableGeneration.h"
+#include "reservoirlevel.h"
+#include "spilledEnergy.h"
+#include "spilledEnergyAfterCSR.h"
+#include "thermalAirPollutantEmissions.h"
+#include "unsupliedEnergy.h"
+#include "waterValue.h"
 
 // By thermal plant
-#include "productionByDispatchablePlant.h"
-#include "npCostByDispatchablePlant.h"
 #include "nbOfDispatchedUnitsByPlant.h"
+#include "npCostByDispatchablePlant.h"
+#include "productionByDispatchablePlant.h"
 #include "profitByPlant.h"
 
 // By RES plant
+#include "STSbyGroup.h"
+#include "STStorageCashFlowByCluster.h"
+#include "STStorageInjectionByCluster.h"
+#include "STStorageLevelsByCluster.h"
+#include "STStorageWithdrawalByCluster.h"
 #include "productionByRenewablePlant.h"
 
-#include "STSbyGroup.h"
-#include "STStorageInjectionByCluster.h"
-#include "STStorageWithdrawalByCluster.h"
-#include "STStorageLevelsByCluster.h"
-#include "STStorageCashFlowByCluster.h"
-
 // Output variables associated to links
-#include "links/flowLinear.h"
-#include "links/flowLinearAbs.h"
-#include "links/loopFlow.h"
-#include "links/flowQuad.h"
-#include "links/hurdleCosts.h"
 #include "links/congestionFee.h"
 #include "links/congestionFeeAbs.h"
-#include "links/marginalCost.h"
 #include "links/congestionProbability.h"
+#include "links/flowLinear.h"
+#include "links/flowLinearAbs.h"
+#include "links/flowQuad.h"
+#include "links/hurdleCosts.h"
+#include "links/loopFlow.h"
+#include "links/marginalCost.h"
 
 // Output variables associated to binding constraints
 #include "bindingConstraints/bindingConstraintsMarginalCost.h"
@@ -146,7 +143,7 @@ typedef          // Prices
                      <Overflows        // Hydraulic overflows
                       <WaterValue      // Water values
                        <HydroCost      // Hydro costs
-                                  // <ShortTermStorageByGroup
+                                       // <ShortTermStorageByGroup
                         <STSbyGroup<STstorageInjectionByCluster<STstorageWithdrawalByCluster<
                           STstorageLevelsByCluster<STstorageCashFlowByCluster<
                             UnsupliedEnergy           // Unsuplied Energy

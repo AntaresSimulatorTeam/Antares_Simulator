@@ -19,8 +19,9 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "antares/study/study.h"
 #include "antares/study/version.h"
+
+#include "antares/study/study.h"
 #include <antares/config/config.h>
 
 using namespace Yuni;

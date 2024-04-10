@@ -21,19 +21,20 @@
 #ifndef __SOLVER_VARIABLE_SURVEYRESULTS_REPORT_BUILDER_HXX__
 #define __SOLVER_VARIABLE_SURVEYRESULTS_REPORT_BUILDER_HXX__
 
+#include <limits>
+
 #include <yuni/yuni.h>
-#include <yuni/core/string.h>
 #include <yuni/core/static/types.h>
+#include <yuni/core/string.h>
 #include <yuni/io/directory.h>
 
 #include <antares/logs/logs.h>
-
-#include "../endoflist.h"
-#include "../categories.h"
-#include "../surveyresults.h"
-#include "../info.h"
 #include <antares/study/filter.h>
-#include <limits>
+
+#include "../categories.h"
+#include "../endoflist.h"
+#include "../info.h"
+#include "../surveyresults.h"
 
 #define SEP Yuni::IO::Separator
 

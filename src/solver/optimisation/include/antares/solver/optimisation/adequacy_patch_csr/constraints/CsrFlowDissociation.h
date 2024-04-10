@@ -20,7 +20,6 @@
 */
 #pragma once
 #include "antares/solver/optimisation/constraints/ConstraintBuilder.h"
-
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 
 struct CsrFlowDissociationData

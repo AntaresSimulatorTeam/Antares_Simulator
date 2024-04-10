@@ -19,22 +19,24 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
+#include <iostream>
+#include <map>
+#include <string>
+
+#include <yuni/core/getopt.h>
+#include <yuni/core/nullable.h>
+#include <yuni/core/string.h>
+
 #include "antares/antares/antares.h"
 #include "antares/locator/locator.h"
-#include <antares/logs/logs.h>
-#include <antares/solver/simulation/solver.h>
-#include <antares/resources/resources.h>
-#include <yuni/core/nullable.h>
-#include <map>
-#include <iostream>
-#include <string>
-#include <yuni/core/string.h>
-#include <yuni/core/getopt.h>
-#include <antares/study/finder/finder.h>
-#include <antares/args/args_to_utf8.h>
 #include <antares/antares/version.h>
+#include <antares/args/args_to_utf8.h>
 #include <antares/locale/locale.h>
+#include <antares/logs/logs.h>
+#include <antares/resources/resources.h>
+#include <antares/solver/simulation/solver.h>
 #include <antares/solver/utils/ortools_utils.h>
+#include <antares/study/finder/finder.h>
 
 #ifdef YUNI_OS_WINDOWS
 #include <process.h>

@@ -20,9 +20,11 @@
 */
 
 #pragma once
-#include <string>
 #include <memory>
+#include <string>
+
 #include <antares/inifile/inifile.h>
+
 #include "properties.h"
 #include "series.h"
 

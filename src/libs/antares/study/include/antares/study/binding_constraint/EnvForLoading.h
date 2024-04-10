@@ -22,8 +22,9 @@
 #pragma once
 
 #include "yuni/core/fwd.h"
-#include <antares/inifile/inifile.h>
+
 #include <antares/array/matrix.h>
+#include <antares/inifile/inifile.h>
 #include <antares/study/version.h>
 
 namespace Antares::Data

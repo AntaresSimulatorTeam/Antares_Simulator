@@ -19,11 +19,13 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
+#include <cassert>
+
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
-#include <cassert>
-#include <antares/date/date.h>
 #include <yuni/io/file.h>
+
+#include <antares/date/date.h>
 #include <antares/logs/logs.h>
 
 using namespace Yuni;

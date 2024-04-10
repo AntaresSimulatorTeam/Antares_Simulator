@@ -28,14 +28,15 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/static/if.h>
+
+#include "categories.h"
+#include "constants.h"
 #include "container.h"
-#include "surveyresults.h"
+#include "endoflist.h"
+#include "info.h"
 #include "storage/intermediate.h"
 #include "storage/results.h"
-#include "endoflist.h"
-#include "constants.h"
-#include "categories.h"
-#include "info.h"
+#include "surveyresults.h"
 
 namespace Antares
 {

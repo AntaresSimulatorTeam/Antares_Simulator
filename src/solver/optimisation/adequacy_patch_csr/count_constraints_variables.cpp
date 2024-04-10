@@ -20,6 +20,7 @@
 */
 
 #include "antares/solver/optimisation/adequacy_patch_csr/count_constraints_variables.h"
+
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 
 namespace Antares::Data::AdequacyPatch

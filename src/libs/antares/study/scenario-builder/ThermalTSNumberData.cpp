@@ -23,6 +23,7 @@
 //
 
 #include "antares/study/scenario-builder/ThermalTSNumberData.h"
+
 #include "antares/study/scenario-builder/applyToMatrix.hxx"
 
 namespace Antares::Data::ScenarioBuilder

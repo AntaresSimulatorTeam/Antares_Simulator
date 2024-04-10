@@ -22,8 +22,8 @@
 #pragma once
 #include "AbstractStartUpCostsGroup.h"
 #include "ConstraintGroup.h"
-#include "PMinDispatchableGeneration.h"
 #include "PMaxDispatchableGeneration.h"
+#include "PMinDispatchableGeneration.h"
 
 /**
  * @brief Group of Pmin/PmaxDispatchableGenerationGroup constraints

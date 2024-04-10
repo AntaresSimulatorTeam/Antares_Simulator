@@ -20,11 +20,13 @@
 */
 
 #include "antares/study/header.h"
+
+#include <cassert>
 #include <cstdlib>
 #include <ctime>
-#include <cassert>
-#include <antares/logs/logs.h>
+
 #include "antares/study/version.h"
+#include <antares/logs/logs.h>
 
 using namespace Yuni;
 

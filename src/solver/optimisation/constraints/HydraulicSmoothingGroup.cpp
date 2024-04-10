@@ -20,9 +20,10 @@
 */
 
 #include "antares/solver/optimisation/constraints/HydraulicSmoothingGroup.h"
-#include "antares/solver/optimisation/constraints/HydroPowerSmoothingUsingVariationSum.h"
+
 #include "antares/solver/optimisation/constraints/HydroPowerSmoothingUsingVariationMaxDown.h"
 #include "antares/solver/optimisation/constraints/HydroPowerSmoothingUsingVariationMaxUp.h"
+#include "antares/solver/optimisation/constraints/HydroPowerSmoothingUsingVariationSum.h"
 
 void HydraulicSmoothingGroup::BuildConstraints()
 {

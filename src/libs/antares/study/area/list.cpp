@@ -19,17 +19,18 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "antares/antares/antares.h"
-#include <yuni/io/file.h>
-#include "antares/study//study.h"
 #include <cassert>
-#include "antares/utils/utils.h"
+
+#include <yuni/io/file.h>
+
+#include "antares/antares/antares.h"
+#include "antares/study//study.h"
 #include "antares/study/area/area.h"
+#include "antares/study/parts/load/prepro.h"
+#include "antares/study/parts/parts.h"
+#include "antares/utils/utils.h"
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
-#include "antares/antares/antares.h"
-#include "antares/study/parts/parts.h"
-#include "antares/study/parts/load/prepro.h"
 #include <antares/study/area/scratchpad.h>
 
 #define SEP IO::Separator

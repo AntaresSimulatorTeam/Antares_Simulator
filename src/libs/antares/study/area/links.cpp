@@ -19,14 +19,17 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <limits>
-#include <yuni/yuni.h>
-#include "antares/study//study.h"
-#include "antares/utils/utils.h"
 #include "antares/study/area/links.h"
+
+#include <limits>
+
+#include <yuni/yuni.h>
+
+#include "antares/study//study.h"
 #include "antares/study/area/area.h"
-#include <antares/logs/logs.h>
+#include "antares/utils/utils.h"
 #include <antares/exception/LoadingError.hpp>
+#include <antares/logs/logs.h>
 
 using namespace Yuni;
 using namespace Antares;

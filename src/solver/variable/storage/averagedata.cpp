@@ -19,9 +19,11 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <yuni/yuni.h>
-#include "antares/solver/variable/storage/intermediate.h"
 #include "antares/solver/variable/storage/averagedata.h"
+
+#include <yuni/yuni.h>
+
+#include "antares/solver/variable/storage/intermediate.h"
 
 using namespace Yuni;
 

@@ -23,8 +23,8 @@
 #define __ANTARES_LIBS_STUDY_PARTS_RENEWABLE_CLUSTER_LIST_H__
 
 #include "../../fwd.h"
-#include "cluster.h"
 #include "../common/cluster_list.h"
+#include "cluster.h"
 
 namespace Antares
 {

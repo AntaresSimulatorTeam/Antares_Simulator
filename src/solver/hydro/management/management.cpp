@@ -19,16 +19,19 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <yuni/yuni.h>
-#include <antares/study/study.h>
-#include <antares/study/area/scratchpad.h>
-#include <antares/antares/fatal-error.h>
 #include "antares/solver/hydro/management/management.h"
-#include "antares/solver/simulation/sim_extern_variables_globales.h"
-#include <limits>
-#include <antares/study/parts/hydro/container.h>
-#include <numeric>
+
 #include <cmath>
+#include <limits>
+#include <numeric>
+
+#include <yuni/yuni.h>
+
+#include "antares/solver/simulation/sim_extern_variables_globales.h"
+#include <antares/antares/fatal-error.h>
+#include <antares/study/area/scratchpad.h>
+#include <antares/study/parts/hydro/container.h>
+#include <antares/study/study.h>
 
 namespace Antares
 {

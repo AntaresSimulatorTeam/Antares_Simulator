@@ -27,12 +27,13 @@
 
 #pragma once
 
-#include <stdexcept>
 #include <list>
 #include <map>
+#include <stdexcept>
 
 #include <yuni/yuni.h>
 #include <yuni/string.h>
+
 #include "antares/study/fwd.h"
 
 namespace Antares

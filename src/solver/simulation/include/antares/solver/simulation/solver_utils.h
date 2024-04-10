@@ -21,14 +21,16 @@
 #ifndef __SOLVER_SIMULATION_SOLVER_UTILS_H__
 #define __SOLVER_SIMULATION_SOLVER_UTILS_H__
 
-#include <vector>
-#include <map>
-#include <antares/writer/i_writer.h>
-#include <antares/study/fwd.h>
-#include <limits>  // For std numeric_limits
-#include <sstream> // For ostringstream
 #include <iomanip> // For setprecision
+#include <limits>  // For std numeric_limits
+#include <map>
+#include <sstream> // For ostringstream
+#include <vector>
+
 #include <yuni/yuni.h>
+
+#include <antares/study/fwd.h>
+#include <antares/writer/i_writer.h>
 
 namespace Antares::Solver::Simulation
 {

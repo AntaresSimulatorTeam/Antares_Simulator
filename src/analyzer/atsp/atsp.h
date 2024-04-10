@@ -21,11 +21,13 @@
 #ifndef __PREPROCESSOR_ATSP_H__
 #define __PREPROCESSOR_ATSP_H__
 
-#include <yuni/yuni.h>
 #include <memory>
+
+#include <yuni/yuni.h>
 #include <yuni/core/string.h>
-#include <antares/study/xcast/xcast.h>
+
 #include <antares/study/study.h>
+#include <antares/study/xcast/xcast.h>
 
 namespace Antares
 {

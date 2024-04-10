@@ -20,15 +20,16 @@
 */
 
 #include <yuni/yuni.h>
-#include <antares/logs/logs.h>
-#include <antares/study/finder/finder.h>
 #include <yuni/core/getopt.h>
-#include <antares/args/args_to_utf8.h>
-#include <antares/utils/utils.h>
-#include <antares/study/cleaner.h>
+
 #include <antares/antares/version.h>
-#include <antares/sys/policy.h>
+#include <antares/args/args_to_utf8.h>
 #include <antares/locale/locale.h>
+#include <antares/logs/logs.h>
+#include <antares/study/cleaner.h>
+#include <antares/study/finder/finder.h>
+#include <antares/sys/policy.h>
+#include <antares/utils/utils.h>
 
 using namespace Yuni;
 using namespace Antares;

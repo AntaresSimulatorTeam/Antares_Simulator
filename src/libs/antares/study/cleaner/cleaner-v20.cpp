@@ -20,8 +20,9 @@
 */
 
 #include <yuni/yuni.h>
-#include "antares/study/study.h"
+
 #include "antares/study/cleaner.h"
+#include "antares/study/study.h"
 #include <antares/inifile/inifile.h>
 
 using namespace Yuni;

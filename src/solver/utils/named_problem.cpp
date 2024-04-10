@@ -19,6 +19,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #include "antares/solver/utils/named_problem.h"
+
 #include <algorithm>
 
 namespace Antares::Optimization

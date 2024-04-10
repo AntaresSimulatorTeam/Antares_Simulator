@@ -19,15 +19,16 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <antares/study/study.h>
-#include <antares/exception/UnfeasibleProblemError.hpp>
-
 #include "antares/solver/simulation/common-eco-adq.h"
-#include <antares/logs/logs.h>
+
 #include <cassert>
 #include <cmath>
 #include <map>
+
 #include "antares/study/simulation.h"
+#include <antares/exception/UnfeasibleProblemError.hpp>
+#include <antares/logs/logs.h>
+#include <antares/study/study.h>
 
 namespace Antares::Solver::Simulation
 {

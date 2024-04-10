@@ -48,10 +48,12 @@
 ** SPDX-License-Identifier: MPL-2.0
 */
 
-#include <sstream>
-#include <iomanip>
-#include "antares/study/scenario-builder/applyToMatrix.hxx"
 #include "antares/study/scenario-builder/BindingConstraintsTSNumbersData.h"
+
+#include <iomanip>
+#include <sstream>
+
+#include "antares/study/scenario-builder/applyToMatrix.hxx"
 
 namespace Antares::Data::ScenarioBuilder
 {

@@ -20,8 +20,9 @@
 */
 #pragma once
 
-#include "../../variable.h"
 #include "antares/study/binding_constraint/BindingConstraint.h"
+
+#include "../../variable.h"
 
 namespace Antares
 {

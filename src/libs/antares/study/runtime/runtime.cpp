@@ -20,8 +20,8 @@
 */
 
 #include "antares/study/runtime/runtime.h"
-#include "antares/antares/fatal-error.h"
 
+#include "antares/antares/fatal-error.h"
 #include "antares/study/area/scratchpad.h"
 #include <antares/utils/utils.h>
 

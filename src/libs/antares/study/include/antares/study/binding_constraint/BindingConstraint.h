@@ -20,22 +20,25 @@
 */
 #pragma once
 
-#include <yuni/yuni.h>
-#include <yuni/core/string.h>
-#include <yuni/core/noncopyable.h>
-#include "../fwd.h"
-#include "antares/antares/antares.h"
-#include "../area/links.h"
-#include "../parts/thermal/cluster.h"
-#include <antares/array/matrix.h>
-#include <antares/inifile/inifile.h>
-#include "EnvForLoading.h"
-#include "antares/study/filter.h"
-#include "BindingConstraintStructures.h"
 #include <memory>
+#include <set>
 #include <utility>
 #include <vector>
-#include <set>
+
+#include <yuni/yuni.h>
+#include <yuni/core/noncopyable.h>
+#include <yuni/core/string.h>
+
+#include "antares/antares/antares.h"
+#include "antares/study/filter.h"
+#include <antares/array/matrix.h>
+#include <antares/inifile/inifile.h>
+
+#include "../area/links.h"
+#include "../fwd.h"
+#include "../parts/thermal/cluster.h"
+#include "BindingConstraintStructures.h"
+#include "EnvForLoading.h"
 
 namespace Antares::Data
 {

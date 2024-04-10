@@ -19,15 +19,18 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <numeric>
+#include "antares/study/parts/thermal/cluster.h"
+
 #include <algorithm>
+#include <cassert>
+#include <numeric>
+
+#include <boost/algorithm/string/case_conv.hpp>
 
 #include <yuni/yuni.h>
 #include <yuni/io/file.h>
-#include <cassert>
-#include <boost/algorithm/string/case_conv.hpp>
+
 #include "antares/study/study.h"
-#include "antares/study/parts/thermal/cluster.h"
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
 #include <antares/utils/utils.h>

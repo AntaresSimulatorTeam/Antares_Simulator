@@ -20,6 +20,7 @@
 */
 #pragma once
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
+
 #include "opt_export_structure.h"
 
 const std::string SEPARATOR = "::";

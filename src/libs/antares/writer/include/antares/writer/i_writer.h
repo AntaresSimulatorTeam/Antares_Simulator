@@ -20,11 +20,11 @@
 */
 #pragma once
 
-#include <yuni/core/string.h>
-
 #include <memory>
-#include <string>
 #include <stdexcept>
+#include <string>
+
+#include <yuni/core/string.h>
 
 namespace Antares::Solver
 {

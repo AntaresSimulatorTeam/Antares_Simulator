@@ -20,8 +20,8 @@
  */
 
 #pragma once
-#include "ConstraintGroup.h"
 #include "BindingConstraintWeek.h"
+#include "ConstraintGroup.h"
 
 class BindingConstraintWeekGroup: public ConstraintGroup
 {

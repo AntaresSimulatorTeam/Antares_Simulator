@@ -20,6 +20,7 @@
 */
 
 #include "antares/solver/simulation/apply-scenario.h"
+
 #include <antares/study/scenario-builder/sets.h>
 
 namespace Antares::Solver

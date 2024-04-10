@@ -20,6 +20,7 @@
 */
 
 #include "antares/solver/optimisation/opt_rename_problem.h"
+
 #include <sstream>
 
 const std::string HOUR("hour");

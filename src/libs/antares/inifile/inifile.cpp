@@ -21,9 +21,10 @@
 
 #include "antares/inifile/inifile.h"
 
-#include <antares/logs/logs.h>
-#include <antares/io/statistics.h>
 #include <sstream>
+
+#include <antares/io/statistics.h>
+#include <antares/logs/logs.h>
 
 using namespace Yuni;
 

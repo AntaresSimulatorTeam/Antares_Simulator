@@ -20,11 +20,12 @@
 */
 #pragma once
 
+#include <memory>
 #include <string>
 #include <vector>
-#include <memory>
 
 #include "antares/solver/utils/ortools_utils.h"
+
 #include "unfeasibility-analysis.h"
 
 namespace Antares::Optimization

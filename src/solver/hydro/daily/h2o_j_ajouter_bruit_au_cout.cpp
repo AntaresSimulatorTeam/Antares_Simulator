@@ -18,9 +18,9 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include <antares/mersenne-twister/mersenne-twister.h>
 #include "antares/solver/hydro/daily/h2o_j_donnees_mensuelles.h"
 #include "antares/solver/hydro/daily/h2o_j_fonctions.h"
+#include <antares/mersenne-twister/mersenne-twister.h>
 
 namespace Constants
 {

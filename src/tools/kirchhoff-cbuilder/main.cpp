@@ -19,14 +19,14 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <antares/resources/resources.h>
-#include <antares/sys/policy.h>
-#include <antares/locale/locale.h>
-#include <antares/study/study.h>
-#include <antares/logs/logs.h>
 #include <string>
 
 #include "antares/solver/constraints-builder/cbuilder.h"
+#include <antares/locale/locale.h>
+#include <antares/logs/logs.h>
+#include <antares/resources/resources.h>
+#include <antares/study/study.h>
+#include <antares/sys/policy.h>
 
 #include "kirchhoff-cbuilder.h"
 

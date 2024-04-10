@@ -20,9 +20,10 @@
 */
 
 #include "antares/utils/utils.h"
-#include <antares/logs/logs.h>
 
 #include <sstream>
+
+#include <antares/logs/logs.h>
 
 using namespace Yuni;
 

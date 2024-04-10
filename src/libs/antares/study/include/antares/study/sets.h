@@ -21,12 +21,14 @@
 #ifndef __ANTARES_LIBS_STUDY_SETS_H__
 #define __ANTARES_LIBS_STUDY_SETS_H__
 
-#include <yuni/yuni.h>
-#include <yuni/core/string.h>
+#include <cassert>
 #include <map>
 #include <memory>
 #include <set>
-#include <cassert>
+
+#include <yuni/yuni.h>
+#include <yuni/core/string.h>
+
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
 

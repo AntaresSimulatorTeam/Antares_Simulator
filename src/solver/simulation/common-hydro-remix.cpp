@@ -19,15 +19,16 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <antares/study/study.h>
-#include <antares/exception/AssertionError.hpp>
-#include "antares/solver/simulation/common-eco-adq.h"
-#include <antares/utils/utils.h>
-#include <antares/logs/logs.h>
 #include <cassert>
 #include <cmath>
+
+#include "antares/solver/simulation/common-eco-adq.h"
 #include "antares/study/simulation.h"
+#include <antares/exception/AssertionError.hpp>
+#include <antares/logs/logs.h>
 #include <antares/study/area/scratchpad.h>
+#include <antares/study/study.h>
+#include <antares/utils/utils.h>
 
 #define EPSILON 1e-6
 

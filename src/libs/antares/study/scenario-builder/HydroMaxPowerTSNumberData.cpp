@@ -1,6 +1,7 @@
 
 
 #include "antares/study/scenario-builder/HydroMaxPowerTSNumberData.h"
+
 #include "antares/study/scenario-builder/applyToMatrix.hxx"
 
 // ================================

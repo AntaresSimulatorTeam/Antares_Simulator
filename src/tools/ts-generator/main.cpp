@@ -21,18 +21,18 @@
 #include <memory>
 #include <string>
 
-#include <antares/solver/ts-generator/generator.h>
-#include <antares/exception/LoadingError.hpp>
-#include <antares/study/header.h>
-#include <antares/study/study.h>
-#include <antares/logs/logs.h>
-#include <antares/utils/utils.h>
 #include <yuni/core/getopt.h>
 
 #include <antares/benchmarking/DurationCollector.h>
-#include <antares/writer/writer_factory.h>
-#include <antares/writer/result_format.h>
 #include <antares/checks/checkLoadedInputData.h>
+#include <antares/exception/LoadingError.hpp>
+#include <antares/logs/logs.h>
+#include <antares/solver/ts-generator/generator.h>
+#include <antares/study/header.h>
+#include <antares/study/study.h>
+#include <antares/utils/utils.h>
+#include <antares/writer/result_format.h>
+#include <antares/writer/writer_factory.h>
 
 using namespace Antares;
 

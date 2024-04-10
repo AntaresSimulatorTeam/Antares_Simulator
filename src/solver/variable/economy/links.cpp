@@ -20,4 +20,5 @@
 */
 
 #include "antares/solver/variable/economy/links.h"
+
 #include "antares/solver/variable/commons/links/links.cpp.inc.hxx"

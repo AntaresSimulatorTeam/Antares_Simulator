@@ -19,19 +19,20 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <algorithm>  // std::adjacent_find
-#include <iterator>   // std::back_inserter
-#include <functional> // std::not_equal_to
-#include <map>
-#include <string>
+#include "antares/solver/simulation/timeseries-numbers.h"
+
+#include <algorithm> // std::adjacent_find
 #include <array>
 #include <filesystem>
+#include <functional> // std::not_equal_to
+#include <iterator>   // std::back_inserter
+#include <map>
+#include <string>
 #include <utility>
 
-#include "antares/study/fwd.h"
-#include "antares/solver/simulation/timeseries-numbers.h"
-#include "antares/solver/simulation/ITimeSeriesNumbersWriter.h"
 #include "antares/solver/simulation/BindingConstraintsTimeSeriesNumbersWriter.h"
+#include "antares/solver/simulation/ITimeSeriesNumbersWriter.h"
+#include "antares/study/fwd.h"
 
 using namespace Yuni;
 using namespace Antares::Data;

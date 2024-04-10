@@ -22,10 +22,11 @@
 #define __ANTARES_LIBS_ARRAY_CORRELATION_H__
 
 #include <yuni/yuni.h>
-#include <antares/array/matrix.h>
-#include <antares/inifile/inifile.h>
+
 #include "antares/study/fwd.h"
 #include "antares/study/version.h"
+#include <antares/array/matrix.h>
+#include <antares/inifile/inifile.h>
 
 namespace Antares::Data
 {
@@ -233,6 +234,7 @@ IniFile* InterAreaCorrelationSaveToIniFile(const Matrix<>* m, const AreaList* l)
 } // namespace Antares::Data
 
 #include <antares/study/area/area.h>
+
 #include "correlation.hxx"
 
 #endif /* __ANTARES_LIBS_ARRAY_CORRELATION_H__ */

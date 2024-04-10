@@ -22,6 +22,7 @@
 #define ANTARES_CONCURRENCY_H
 
 #include <future>
+
 #include "yuni/job/queue/service.h"
 
 namespace Antares::Concurrency

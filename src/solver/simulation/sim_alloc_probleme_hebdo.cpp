@@ -18,16 +18,16 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
+#include "antares/solver/simulation/sim_alloc_probleme_hebdo.h"
+
 #include <yuni/yuni.h>
-#include <antares/study/study.h>
 
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
-
-#include "antares/study/simulation.h"
+#include "antares/solver/simulation/sim_extern_variables_globales.h"
 #include "antares/solver/simulation/sim_structure_donnees.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
-#include "antares/solver/simulation/sim_alloc_probleme_hebdo.h"
-#include "antares/solver/simulation/sim_extern_variables_globales.h"
+#include "antares/study/simulation.h"
+#include <antares/study/study.h>
 
 using namespace Antares;
 

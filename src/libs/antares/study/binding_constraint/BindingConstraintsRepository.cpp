@@ -23,15 +23,17 @@
 //
 
 #include "antares/study/binding_constraint/BindingConstraintsRepository.h"
+
 #include <algorithm>
 #include <memory>
 #include <utility>
 #include <vector>
+
 #include "antares/study/binding_constraint/BindingConstraint.h"
-#include <antares/study/study.h>
 #include "antares/study/binding_constraint/BindingConstraintLoader.h"
 #include "antares/study/binding_constraint/BindingConstraintSaver.h"
 #include "antares/utils/utils.h"
+#include <antares/study/study.h>
 
 void Data::BindingConstraintsRepository::clear()
 {

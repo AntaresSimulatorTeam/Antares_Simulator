@@ -21,15 +21,18 @@
 #ifndef __ANTARES_LIBS_STUDY_AREA_SCRATCHPAD_H__
 #define __ANTARES_LIBS_STUDY_AREA_SCRATCHPAD_H__
 
-#include <yuni/yuni.h>
-#include <yuni/core/string.h>
-#include <yuni/core/noncopyable.h>
-#include "../fwd.h"
-#include <antares/array/matrix.h>
-#include <vector>
-#include <set>
 #include <numeric>
+#include <set>
+#include <vector>
+
+#include <yuni/yuni.h>
+#include <yuni/core/noncopyable.h>
+#include <yuni/core/string.h>
+
+#include <antares/array/matrix.h>
 #include <antares/series/series.h>
+
+#include "../fwd.h"
 
 namespace Antares::Data
 {

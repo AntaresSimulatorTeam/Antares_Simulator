@@ -23,12 +23,12 @@
 #include <mutex>
 #include <string>
 
-#include <yuni/job/queue/service.h>
 #include <yuni/core/string.h>
+#include <yuni/job/queue/service.h>
 
+#include "antares/concurrency/concurrency.h"
 #include "antares/writer/i_writer.h"
 #include <antares/benchmarking/DurationCollector.h>
-#include "antares/concurrency/concurrency.h"
 
 namespace Antares::Solver
 {

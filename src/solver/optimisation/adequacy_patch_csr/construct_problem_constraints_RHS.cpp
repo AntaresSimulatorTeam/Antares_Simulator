@@ -20,9 +20,9 @@
 */
 
 #include "antares/solver/optimisation/adequacy_patch_csr/hourly_csr_problem.h"
-#include <antares/logs/logs.h>
-#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
+#include <antares/logs/logs.h>
 
 void HourlyCSRProblem::setRHSvalueOnFlows()
 {

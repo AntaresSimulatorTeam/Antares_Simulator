@@ -23,10 +23,13 @@
 //
 
 #include "antares/study/binding_constraint/BindingConstraintLoader.h"
+
 #include <memory>
 #include <vector>
-#include "antares/study/binding_constraint/BindingConstraint.h"
+
 #include "yuni/core/string/string.h"
+
+#include "antares/study/binding_constraint/BindingConstraint.h"
 #include "antares/study/version.h"
 #include <antares/utils/utils.h>
 

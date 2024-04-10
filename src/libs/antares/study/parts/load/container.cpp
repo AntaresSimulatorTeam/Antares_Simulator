@@ -19,10 +19,12 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <yuni/yuni.h>
-#include "antares/study/study.h"
 #include "antares/study/parts/load/container.h"
+
+#include <yuni/yuni.h>
+
 #include "antares/study/parts/load/prepro.h"
+#include "antares/study/study.h"
 
 using namespace Yuni;
 

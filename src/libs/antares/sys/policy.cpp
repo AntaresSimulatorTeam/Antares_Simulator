@@ -20,20 +20,23 @@
 */
 
 #include "antares/sys/policy.h"
-#include <mutex>
+
 #include <map>
-#include <yuni/io/file.h>
-#include "antares/sys/appdata.h"
-#include <antares/logs/logs.h>
-#include <antares/inifile/inifile.h>
-#include <antares/logs/hostname.hxx>
-#include "antares/config/config.h"
-#include <antares/antares/fatal-error.h>
+#include <mutex>
+
+#include <yuni/core/system/cpu.h>
 #include <yuni/core/system/environment.h>
+#include <yuni/core/system/memory.h>
 #include <yuni/core/system/process.h>
 #include <yuni/core/system/username.h>
-#include <yuni/core/system/cpu.h>
-#include <yuni/core/system/memory.h>
+#include <yuni/io/file.h>
+
+#include "antares/config/config.h"
+#include "antares/sys/appdata.h"
+#include <antares/antares/fatal-error.h>
+#include <antares/inifile/inifile.h>
+#include <antares/logs/hostname.hxx>
+#include <antares/logs/logs.h>
 
 using namespace Yuni;
 using namespace Antares;

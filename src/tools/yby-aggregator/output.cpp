@@ -20,6 +20,7 @@
 */
 
 #include "output.h"
+
 #include <antares/logs/logs.h>
 
 using namespace Yuni;

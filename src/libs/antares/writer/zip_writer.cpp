@@ -18,25 +18,27 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
+#include "private/zip_writer.h"
+
 #include <memory>
+
 #include <yuni/io/file.h> // Yuni::IO::File::LoadFromFile
 
-#include "private/zip_writer.h"
 #include "antares/logs/logs.h"
-#include <antares/benchmarking/timer.h>
 #include <antares/benchmarking/DurationCollector.h>
+#include <antares/benchmarking/timer.h>
 
 extern "C"
 {
 #include <mz.h>
-#include <mz_zip.h>
 #include <mz_strm.h>
+#include <mz_zip.h>
 #include <mz_zip_rw.h>
 }
 
 #include <ctime> // std::time
-#include <utility>
 #include <sstream>
+#include <utility>
 
 namespace Antares::Solver
 {

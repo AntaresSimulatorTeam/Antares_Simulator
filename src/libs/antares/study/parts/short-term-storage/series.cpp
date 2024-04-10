@@ -18,14 +18,15 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include <yuni/io/file.h>
-#include <antares/logs/logs.h>
-#include "antares/antares/constants.h"
-
-#include <iomanip>
-#include <fstream>
-
 #include "antares/study/parts/short-term-storage/series.h"
+
+#include <fstream>
+#include <iomanip>
+
+#include <yuni/io/file.h>
+
+#include "antares/antares/constants.h"
+#include <antares/logs/logs.h>
 
 #define SEP Yuni::IO::Separator
 

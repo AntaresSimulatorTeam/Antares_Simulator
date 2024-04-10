@@ -20,14 +20,14 @@
 */
 #pragma once
 
-#include "spx_definition_arguments.h"
-#include "spx_fonctions.h"
-
-#include <vector>
-#include <string>
 #include <algorithm>
 #include <iterator>
+#include <string>
+#include <vector>
+
 #include "ortools/linear_solver/linear_solver.h"
+#include "spx_definition_arguments.h"
+#include "spx_fonctions.h"
 
 namespace Antares
 {

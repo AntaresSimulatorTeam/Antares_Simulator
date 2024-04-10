@@ -19,30 +19,30 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "antares/antares/antares.h"
-#include <yuni/yuni.h>
-#include <yuni/core/system/windows.hdr.h>
-#include <yuni/core/string.h>
-#include <yuni/io/file.h>
-#include <yuni/datetime/timestamp.h>
+#include "antares/study/study.h"
 
-#include <sstream> // std::ostringstream
 #include <cassert>
 #include <climits>
+#include <cmath> // For use of floor(...) and ceil(...)
 #include <optional>
+#include <sstream> // std::ostringstream
 
-#include "antares/utils/utils.h"
-#include "antares/study/study.h"
+#include <yuni/yuni.h>
+#include <yuni/core/string.h>
+#include <yuni/core/system/cpu.h> // For use of Yuni::System::CPU::Count()
+#include <yuni/core/system/windows.hdr.h>
+#include <yuni/datetime/timestamp.h>
+#include <yuni/io/file.h>
+
+#include "antares/antares/antares.h"
+#include "antares/study/area/constants.h"
+#include "antares/study/correlation-updater.hxx"
 #include "antares/study/runtime.h"
 #include "antares/study/scenario-builder/sets.h"
-#include "antares/study/correlation-updater.hxx"
 #include "antares/study/scenario-builder/updater.hxx"
-#include "antares/study/area/constants.h"
-
-#include <yuni/core/system/cpu.h> // For use of Yuni::System::CPU::Count()
-#include <cmath>                  // For use of floor(...) and ceil(...)
-#include <antares/writer/writer_factory.h>
 #include "antares/study/ui-runtimeinfos.h"
+#include "antares/utils/utils.h"
+#include <antares/writer/writer_factory.h>
 
 using namespace Yuni;
 

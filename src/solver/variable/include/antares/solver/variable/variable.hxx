@@ -22,6 +22,7 @@
 #define __SOLVER_VARIABLE_VARIABLE_HXX__
 
 #include <yuni/core/static/types.h>
+
 #include <antares/study/variable-print-info.h>
 
 namespace Antares::Solver::Variable

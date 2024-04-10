@@ -20,6 +20,7 @@
 */
 
 #include "antares/solver/optimisation/adequacy_patch_local_matching/adq_patch_local_matching.h"
+
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 
 namespace Antares::Data::AdequacyPatch

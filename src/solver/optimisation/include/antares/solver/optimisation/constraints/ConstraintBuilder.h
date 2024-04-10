@@ -20,14 +20,15 @@
 */
 #pragma once
 
-#include <antares/logs/logs.h>
-#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
-#include "../opt_rename_problem.h"
-#include "../opt_fonctions.h"
-#include "../variables/VariableManagement.h"
-#include "antares/solver/simulation/sim_structure_probleme_economique.h"
-
 #include <utility>
+
+#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
+#include <antares/logs/logs.h>
+
+#include "../opt_fonctions.h"
+#include "../opt_rename_problem.h"
+#include "../variables/VariableManagement.h"
 
 // TODO God struct should be decomposed
 class ConstraintBuilderData

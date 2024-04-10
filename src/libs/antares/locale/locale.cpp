@@ -20,9 +20,11 @@
 */
 
 #include "antares/locale/locale.h"
-#include <yuni/yuni.h>
+
 #include <clocale>
 #include <iostream>
+
+#include <yuni/yuni.h>
 
 namespace Antares
 {

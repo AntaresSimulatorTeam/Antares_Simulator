@@ -19,14 +19,18 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <yuni/yuni.h>
-#include <yuni/io/file.h>
-#include <yuni/core/math.h>
+#include "antares/study/parts/renewable/cluster.h"
+
 #include <cassert>
 #include <cmath>
+
 #include <boost/algorithm/string/case_conv.hpp>
+
+#include <yuni/yuni.h>
+#include <yuni/core/math.h>
+#include <yuni/io/file.h>
+
 #include "antares/study/study.h"
-#include "antares/study/parts/renewable/cluster.h"
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
 #include <antares/utils/utils.h>

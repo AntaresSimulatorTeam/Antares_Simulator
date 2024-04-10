@@ -19,11 +19,13 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <sstream>
-#include <iomanip>
-#include <string>
-#include <yuni/core/string/string.h>
 #include "antares/study/scenario-builder/scBuilderUtils.h"
+
+#include <iomanip>
+#include <sstream>
+#include <string>
+
+#include <yuni/core/string/string.h>
 
 namespace Antares::Data::ScenarioBuilder
 {

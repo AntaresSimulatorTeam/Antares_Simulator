@@ -19,10 +19,11 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <sstream>
-#include "antares/solver/simulation/sim_structure_probleme_economique.h"
-
 #include "antares/solver/optimisation/opt_export_structure.h"
+
+#include <sstream>
+
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 ////////////////////////////////////////////////////////////////////
 // Export de la structure des LPs

@@ -21,19 +21,22 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_THERMAL_CLUSTER_H__
 #define __ANTARES_LIBS_STUDY_PARTS_THERMAL_CLUSTER_H__
 
-#include <yuni/yuni.h>
-#include <yuni/core/noncopyable.h>
-#include <antares/array/matrix.h>
-#include "defines.h"
-#include "prepro.h"
-#include "ecoInput.h"
-#include "../common/cluster.h"
-#include "../../fwd.h"
-#include "pollutant.h"
-#include <set>
 #include <map>
 #include <memory>
+#include <set>
 #include <vector>
+
+#include <yuni/yuni.h>
+#include <yuni/core/noncopyable.h>
+
+#include <antares/array/matrix.h>
+
+#include "../../fwd.h"
+#include "../common/cluster.h"
+#include "defines.h"
+#include "ecoInput.h"
+#include "pollutant.h"
+#include "prepro.h"
 
 namespace Antares
 {

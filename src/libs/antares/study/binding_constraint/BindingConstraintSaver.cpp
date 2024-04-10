@@ -22,10 +22,13 @@
 // Created by marechaljas on 16/05/23.
 //
 #include "antares/study/binding_constraint/BindingConstraintSaver.h"
-#include "antares/study/binding_constraint/BindingConstraint.h"
-#include <yuni/yuni.h>
+
 #include <string>
+
+#include <yuni/yuni.h>
+
 #include "antares/study/area/area.h"
+#include "antares/study/binding_constraint/BindingConstraint.h"
 #include "antares/study/fwd.h"
 
 namespace Antares::Data

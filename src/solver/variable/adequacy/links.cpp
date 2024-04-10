@@ -20,4 +20,5 @@
 */
 
 #include "antares/solver/variable/adequacy/links.h"
+
 #include "antares/solver/variable/commons/links/links.cpp.inc.hxx"

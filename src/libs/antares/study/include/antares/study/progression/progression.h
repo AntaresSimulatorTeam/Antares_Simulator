@@ -21,16 +21,19 @@
 #ifndef __ANTARES_LIBS_SOLVER_SIMULATION_PROGRESSION_H__
 #define __ANTARES_LIBS_SOLVER_SIMULATION_PROGRESSION_H__
 
-#include <yuni/core/singleton.h>
-#include <yuni/thread/timer.h>
-#include <mutex>
-#include <map>
-#include <list>
-#include <vector>
 #include <atomic>
-#include "../fwd.h"
+#include <list>
+#include <map>
+#include <mutex>
+#include <vector>
+
+#include <yuni/core/singleton.h>
 #include <yuni/io/file.h>
+#include <yuni/thread/timer.h>
+
 #include <antares/writer/i_writer.h>
+
+#include "../fwd.h"
 
 namespace Antares
 {

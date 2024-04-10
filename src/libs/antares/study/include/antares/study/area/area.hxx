@@ -20,8 +20,8 @@
 */
 #pragma once
 
-#include "antares/study/parts/parts.h"
 #include "antares/study/parts/load/prepro.h"
+#include "antares/study/parts/parts.h"
 
 namespace Antares::Data
 {

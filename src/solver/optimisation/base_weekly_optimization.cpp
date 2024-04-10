@@ -19,10 +19,12 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <memory>
 #include "antares/solver/optimisation/base_weekly_optimization.h"
-#include "antares/solver/optimisation/weekly_optimization.h"
+
+#include <memory>
+
 #include "antares/solver/optimisation/adequacy_patch_local_matching/adequacy_patch_weekly_optimization.h"
+#include "antares/solver/optimisation/weekly_optimization.h"
 
 using AdqPatchParams = Antares::Data::AdequacyPatch::AdqPatchParams;
 

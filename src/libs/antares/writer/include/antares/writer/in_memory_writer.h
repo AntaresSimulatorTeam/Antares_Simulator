@@ -20,9 +20,9 @@
 */
 #pragma once
 
+#include <map>
 #include <mutex>
 #include <string>
-#include <map>
 
 #include <yuni/core/string.h>
 

@@ -21,6 +21,7 @@
 #pragma once
 
 #include <functional>
+
 #include "../common/cluster_list.h"
 #include "cluster.h"
 

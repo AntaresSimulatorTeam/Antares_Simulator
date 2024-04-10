@@ -20,10 +20,12 @@
 */
 
 #include "antares/study/variable-print-info.h"
+
 #include <algorithm>
 #include <cassert>
-#include <antares/study/study.h>
+
 #include "antares/solver/variable/categories.h"
+#include <antares/study/study.h>
 
 using namespace Antares::Solver::Variable;
 

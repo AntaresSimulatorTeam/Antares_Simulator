@@ -20,8 +20,8 @@
  */
 
 #pragma once
-#include "ConstraintGroup.h"
 #include "BindingConstraintDay.h"
+#include "ConstraintGroup.h"
 
 class BindingConstraintDayGroup: public ConstraintGroup
 {

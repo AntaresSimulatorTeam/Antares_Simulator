@@ -20,6 +20,7 @@
 */
 
 #include "antares/study/study.h"
+
 #include <cassert>
 
 using namespace Yuni;

@@ -26,8 +26,9 @@
 #ifndef YUNI_OS_WINDOWS
 #include <netdb.h>
 #else
-#include <yuni/core/system/windows.hdr.h>
 #include <Windns.h>
+
+#include <yuni/core/system/windows.hdr.h>
 #endif
 
 namespace // anonymous

@@ -19,11 +19,13 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
+#include "antares/study/finder/finder.h"
+
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
 #include <yuni/io/directory/iterator.h>
+
 #include "antares/study/study.h"
-#include "antares/study/finder/finder.h"
 
 using namespace Yuni;
 

@@ -22,13 +22,14 @@
 #define __ANTARES_LIBS_LOGS_LOGS_H__
 
 #include <yuni/yuni.h>
-#include "antares/antares/constants.h"
 #include "yuni/core/logs/decorators/message.h"
 #include "yuni/core/logs/decorators/time.h"
 #include "yuni/core/logs/decorators/verbositylevel.h"
 #include "yuni/core/logs/handler/file.h"
 #include "yuni/core/logs/handler/stdcout.h"
 #include "yuni/core/logs/logs.h"
+
+#include "antares/antares/constants.h"
 
 /*!
 ** \defgroup logs Logs

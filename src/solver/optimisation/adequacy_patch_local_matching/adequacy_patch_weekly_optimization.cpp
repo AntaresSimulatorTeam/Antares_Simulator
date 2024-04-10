@@ -20,6 +20,7 @@
 */
 
 #include "antares/solver/optimisation/adequacy_patch_local_matching/adequacy_patch_weekly_optimization.h"
+
 #include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 #include "antares/study/fwd.h"

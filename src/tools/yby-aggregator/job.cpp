@@ -20,8 +20,11 @@
 */
 
 #include "job.h"
-#include <antares/logs/logs.h>
+
 #include <mutex>
+
+#include <antares/logs/logs.h>
+
 #include "progress.h"
 
 using namespace Yuni;

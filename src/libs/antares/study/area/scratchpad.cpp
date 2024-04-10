@@ -20,9 +20,11 @@
 */
 
 #include "antares/study/area/scratchpad.h"
+
+#include <limits>
+
 #include "antares/antares/antares.h"
 #include "antares/study/study.h"
-#include <limits>
 
 using namespace Yuni;
 
