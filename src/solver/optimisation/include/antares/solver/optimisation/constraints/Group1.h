@@ -27,7 +27,7 @@
 #include "FlowDissociation.h"
 #include "BindingConstraintHour.h"
 
-class Group1 : public ConstraintGroup
+class Group1: public ConstraintGroup
 {
 public:
     using ConstraintGroup::ConstraintGroup;

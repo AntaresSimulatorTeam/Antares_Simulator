@@ -28,8 +28,9 @@
 class ConstraintGroup
 {
 public:
-    explicit ConstraintGroup(PROBLEME_HEBDO* problemeHebdo, ConstraintBuilder& builder) :
-     problemeHebdo_(problemeHebdo), builder_(builder)
+    explicit ConstraintGroup(PROBLEME_HEBDO* problemeHebdo, ConstraintBuilder& builder):
+        problemeHebdo_(problemeHebdo),
+        builder_(builder)
     {
     }
 

@@ -81,23 +81,33 @@ bool ATSP::loadFromINIFile(const String& filename)
                     if (key == "target")
                     {
                         if (value == "load")
+                        {
                             pTimeseries = Data::timeSeriesLoad;
+                        }
                         else if (value == "solar")
+                        {
                             pTimeseries = Data::timeSeriesSolar;
+                        }
                         else if (value == "wind")
+                        {
                             pTimeseries = Data::timeSeriesWind;
+                        }
                         continue;
                     }
                     if (key == "width")
                     {
                         if (not value.to(pTimeseriesCount))
+                        {
                             logs.error() << "impossible to read the number of timeseries";
+                        }
                         continue;
                     }
                     if (key == "height")
                     {
                         if (not value.to(pMHeight))
+                        {
                             logs.error() << "impossible to read the height";
+                        }
                         continue;
                     }
                     if (key == "medium-term-autocorrelation")
@@ -148,7 +158,9 @@ bool ATSP::loadFromINIFile(const String& filename)
                             pLimitMemory *= 1024u * 1024u;
                         }
                         else
+                        {
                             pLimitMemory *= 1024u * 1024u;
+                        }
                         continue;
                     }
                     if (key == "clean")
@@ -213,7 +225,9 @@ bool ATSP::loadFromINIFile(const String& filename)
         }
 
         if (!checkStudyVersion())
+        {
             return false;
+        }
 
         logs.info() << "Target study: " << pStudyFolder;
 
@@ -304,8 +318,8 @@ bool ATSP::checkStudyVersion() const
     }
     if (v < Data::StudyVersion::latest())
     {
-        logs.error() << "The study folder must be upgraded from v" << v.toString()
-                     << " to v"<< Data::StudyVersion::latest().toString();
+        logs.error() << "The study folder must be upgraded from v" << v.toString() << " to v"
+                     << Data::StudyVersion::latest().toString();
         return false;
     }
     return true;

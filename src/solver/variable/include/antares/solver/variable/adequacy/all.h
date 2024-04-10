@@ -210,23 +210,23 @@ typedef // Prices
                                           Variable::Economy::WaterValue,
                                           Common::SpatialAggregate<
                                             Variable::Economy::HydroCost,
+                                            Common::SpatialAggregate<
+                                              Variable::Economy::UnsupliedEnergy,
                                               Common::SpatialAggregate<
-                                                Variable::Economy::UnsupliedEnergy,
+                                                Variable::Adequacy::SpilledEnergy,
+                                                // LOLD
                                                 Common::SpatialAggregate<
-                                                  Variable::Adequacy::SpilledEnergy,
-                                                  // LOLD
+                                                  Variable::Economy::LOLD,
                                                   Common::SpatialAggregate<
-                                                    Variable::Economy::LOLD,
-                                                    Common::SpatialAggregate<
-                                                      Variable::Economy::LOLP,
+                                                    Variable::Economy::LOLP,
 
+                                                    Common::SpatialAggregate<
+                                                      Variable::Economy::AvailableDispatchGen,
                                                       Common::SpatialAggregate<
-                                                        Variable::Economy::AvailableDispatchGen,
+                                                        Variable::Economy::DispatchableGenMargin,
                                                         Common::SpatialAggregate<
-                                                          Variable::Economy::DispatchableGenMargin,
-                                                          Common::SpatialAggregate<
-                                                            Variable::Economy::
-                                                              Marge>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                                          Variable::Economy::
+                                                            Marge>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerSetOfAreas;
 
 typedef Variable::Economy::BindingConstMarginCost< // Marginal cost for a binding constraint

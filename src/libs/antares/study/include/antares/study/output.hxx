@@ -33,9 +33,13 @@ inline bool Output::operator<(const Output& rhs) const
 inline void Output::RetrieveListFromStudy(List& out, const Study::Ptr& study)
 {
     if (!study)
+    {
         out.clear();
+    }
     else
+    {
         RetrieveListFromStudy(out, *study);
+    }
 }
 
 } // namespace Data

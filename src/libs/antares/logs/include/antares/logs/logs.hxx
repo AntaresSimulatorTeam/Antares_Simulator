@@ -26,10 +26,10 @@ extern "C"
 {
 #endif
 
-    inline int LogHasErrors(void)
-    {
-        return (LogErrorCount() or LogWarningCount());
-    }
+inline int LogHasErrors(void)
+{
+    return (LogErrorCount() or LogWarningCount());
+}
 
 #ifdef __cplusplus
 }

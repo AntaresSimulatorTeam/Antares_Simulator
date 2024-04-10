@@ -68,7 +68,9 @@ void Links::initializeFromArea(Data::Study* study, Data::Area* area)
         }
     }
     else
+    {
         pLinks = nullptr;
+    }
 }
 
 void Links::simulationBegin()
@@ -100,8 +102,9 @@ void Links::buildDigest(SurveyResults& results, int digestLevel, int dataLevel) 
             for (auto i = results.data.area->links.cbegin(); i != end; ++i)
             {
                 results.data.link = i->second;
-                pLinks[results.data.link->indexForArea].buildDigest(
-                  results, digestLevel, Category::link);
+                pLinks[results.data.link->indexForArea].buildDigest(results,
+                                                                    digestLevel,
+                                                                    Category::link);
             }
         }
     }
@@ -110,7 +113,9 @@ void Links::buildDigest(SurveyResults& results, int digestLevel, int dataLevel) 
 void Links::beforeYearByYearExport(uint year, uint numSpace)
 {
     for (uint i = 0; i != pLinkCount; ++i)
+    {
         pLinks[i].beforeYearByYearExport(year, numSpace);
+    }
 }
 
 } // namespace LINK_NAMESPACE

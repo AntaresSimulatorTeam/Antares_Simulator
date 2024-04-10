@@ -29,10 +29,10 @@
  * @brief Group of Pmin/PmaxDispatchableGenerationGroup constraints
  *
  */
-class PMinMaxDispatchableGenerationGroup : public AbstractStartUpCostsGroup
+class PMinMaxDispatchableGenerationGroup: public AbstractStartUpCostsGroup
 {
 public:
     using AbstractStartUpCostsGroup::AbstractStartUpCostsGroup;
 
-        void BuildConstraints() override;
+    void BuildConstraints() override;
 };

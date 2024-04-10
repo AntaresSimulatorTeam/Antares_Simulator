@@ -51,6 +51,7 @@ double XCast::GammaEuler(double z)
     {
         g = 6,
     };
+
     double x;
     const double t = z + double(g) + 0.5;
     double rho;
@@ -72,7 +73,9 @@ double XCast::GammaEuler(double z)
         x = p[0];
 
         for (int i = 1; i < g + 3; ++i)
+        {
             x += p[i] / (z + double(i));
+        }
 
         x = 1. / (2.506628275 * pow(t, z + 0.5) * exp(-t) * x);
     }
@@ -83,7 +86,9 @@ double XCast::GammaEuler(double z)
         x = p[0];
 
         for (int i = 1; i < g + 3; ++i)
+        {
             x += p[i] / (z + double(i));
+        }
 
         x = 2.506628275 * pow(t, z + 0.5) * exp(-t) * x;
     }
@@ -92,6 +97,3 @@ double XCast::GammaEuler(double z)
 }
 
 } // namespace Antares::TSGenerator::XCast
-
-
-

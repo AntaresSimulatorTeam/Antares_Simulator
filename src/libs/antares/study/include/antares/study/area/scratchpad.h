@@ -69,12 +69,12 @@ public:
     // This variable is initialized every MC-year
     double originalMustrunSum[HOURS_PER_YEAR];
 
-       /*!
-    ** \brief Dispatchable Generation Margin
-    **
-    ** Those values, written by the output, must be calculated before
-    ** running the hydro remix.
-    */
+    /*!
+     ** \brief Dispatchable Generation Margin
+     **
+     ** Those values, written by the output, must be calculated before
+     ** running the hydro remix.
+     */
     double dispatchableGenerationMargin[168];
 
     /*!

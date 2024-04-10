@@ -146,6 +146,7 @@ private:
     IntermediateValues(const IntermediateValues&)
     {
     }
+
     IntermediateValues& operator=(const IntermediateValues&)
     {
         return *this;

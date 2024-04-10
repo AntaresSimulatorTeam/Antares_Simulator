@@ -94,9 +94,7 @@ public:
     ** \param version Format version expected. Use studyVersionUnknown to use the format version
     **   of the given study
     */
-    bool loadFromFile(Study& study,
-                      const AnyString& filename,
-                      bool warnings = true);
+    bool loadFromFile(Study& study, const AnyString& filename, bool warnings = true);
 
     /*!
     ** \brief Save the correlation matrices into an INI file
@@ -233,7 +231,6 @@ int InterAreaCorrelationLoadFromIniFile(Matrix<>* m, AreaList* l, IniFile* ini, 
 IniFile* InterAreaCorrelationSaveToIniFile(const Matrix<>* m, const AreaList* l);
 
 } // namespace Antares::Data
-
 
 #include <antares/study/area/area.h>
 #include "correlation.hxx"

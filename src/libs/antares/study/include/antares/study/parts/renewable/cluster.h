@@ -36,7 +36,7 @@ namespace Data
 /*
 ** \brief A single renewable cluster
 */
-class RenewableCluster final : public Cluster
+class RenewableCluster final: public Cluster
 {
 public:
     enum RenewableGroup
@@ -76,6 +76,7 @@ public:
 
     //! Set of renewable clusters
     using Set = std::set<RenewableCluster*, CompareClusterName>;
+
 public:
     //! \name Constructor & Destructor
     //@{

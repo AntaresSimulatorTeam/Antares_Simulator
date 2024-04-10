@@ -42,11 +42,13 @@ struct VCardAllLinks
     {
         return "Links";
     }
+
     //! Unit
     static std::string Unit()
     {
         return "";
     }
+
     //! The short description of the variable
     static const char* Description()
     {
@@ -98,7 +100,8 @@ public:
     {
         enum
         {
-            count = NextType::template Statistics<CDataLevel, CFile>::count
+            count = NextType::template Statistics < CDataLevel,
+            CFile > ::count
         };
     };
 

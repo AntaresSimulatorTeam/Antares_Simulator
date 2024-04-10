@@ -32,8 +32,7 @@ void OPT_InitialiserLesPminHebdo(PROBLEME_HEBDO* problemeHebdo)
 
     for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        PALIERS_THERMIQUES& PaliersThermiquesDuPays
-          = problemeHebdo->PaliersThermiquesDuPays[pays];
+        PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
         std::vector<PDISP_ET_COUTS_HORAIRES_PAR_PALIER>& PuissanceDisponibleEtCout
           = PaliersThermiquesDuPays.PuissanceDisponibleEtCout;
         for (int palier = 0; palier < PaliersThermiquesDuPays.NombreDePaliersThermiques; palier++)

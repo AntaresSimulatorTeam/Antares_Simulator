@@ -25,10 +25,10 @@ using namespace operations_research;
 
 namespace Antares::Optimization
 {
-    
+
 void VariablesBoundsConsistency::run(MPSolver* problem)
 {
-    for (const auto& var : problem->variables())
+    for (const auto& var: problem->variables())
     {
         double lowBound = var->lb();
         double upBound = var->ub();
@@ -40,10 +40,14 @@ void VariablesBoundsConsistency::run(MPSolver* problem)
     }
 
     if (foundIncorrectVariables())
+    {
         hasDetectedInfeasibilityCause_ = true;
+    }
 }
 
-void VariablesBoundsConsistency::storeIncorrectVariable(std::string name, double lowBound, double upBound)
+void VariablesBoundsConsistency::storeIncorrectVariable(std::string name,
+                                                        double lowBound,
+                                                        double upBound)
 {
     incorrectVars_.push_back(VariableBounds(name, lowBound, upBound));
 }
@@ -55,9 +59,10 @@ bool VariablesBoundsConsistency::foundIncorrectVariables()
 
 void VariablesBoundsConsistency::printReport() const
 {
-    for (const auto& var : incorrectVars_)
+    for (const auto& var: incorrectVars_)
     {
-        logs.notice() << var.name << " : low bound = " << var.lowBound << ", up bound = " << var.upBound;
+        logs.notice() << var.name << " : low bound = " << var.lowBound
+                      << ", up bound = " << var.upBound;
     }
 }
-}   // namespace Antares::Optimization
+} // namespace Antares::Optimization

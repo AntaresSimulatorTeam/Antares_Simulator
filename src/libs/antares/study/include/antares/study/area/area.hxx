@@ -160,4 +160,4 @@ inline AreaList::const_reverse_iterator AreaList::rend() const
     return areas.rend();
 }
 
-} // namespace Antares
+} // namespace Antares::Data

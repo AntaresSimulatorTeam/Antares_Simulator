@@ -33,10 +33,11 @@ namespace Antares
 {
 namespace Optimization
 {
-struct PROBLEME_SIMPLEXE_NOMME : public PROBLEME_SIMPLEXE
+struct PROBLEME_SIMPLEXE_NOMME: public PROBLEME_SIMPLEXE
 {
 private:
     using BasisStatus = operations_research::MPSolver::BasisStatus;
+
 public:
     PROBLEME_SIMPLEXE_NOMME(const std::vector<std::string>& NomDesVariables,
                             const std::vector<std::string>& NomDesContraintes,

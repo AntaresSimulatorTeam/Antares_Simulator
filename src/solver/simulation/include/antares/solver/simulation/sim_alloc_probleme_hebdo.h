@@ -40,5 +40,5 @@ void SIM_AllocationConstraints(PROBLEME_HEBDO& problem,
                                unsigned NombreDePasDeTemps);
 
 void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
-                               const Antares::Data::Study& study,
-                               unsigned NombreDePasDeTemps);
+                       const Antares::Data::Study& study,
+                       unsigned NombreDePasDeTemps);

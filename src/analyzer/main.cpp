@@ -76,7 +76,9 @@ static bool OpenLogFilename(const String& optSettings)
         nowstr[0] = '\0';
     }
     else
+    {
         nowstr[result] = '\0';
+    }
 
     filename << SEP << "analyzer-" << (const char*)nowstr << ".log";
 
@@ -103,7 +105,9 @@ int main(int argc, char* argv[])
     std::set_new_handler(&NotEnoughMemory);
 
     if (not memory.initializeTemporaryFolder())
+    {
         return EXIT_FAILURE;
+    }
 
     // locale
     InitializeDefaultLocale();
@@ -131,7 +135,9 @@ int main(int argc, char* argv[])
         options.addFlag(optVersion, 'v', "version", "Print the version and exit");
 
         if (options(argc, argv) == GetOpt::ReturnCode::error)
+        {
             return options.errors() ? 1 : 0;
+        }
 
         if (optVersion)
         {
@@ -147,7 +153,9 @@ int main(int argc, char* argv[])
     }
 
     if (!OpenLogFilename(optSettings))
+    {
         return 1;
+    }
 
     // Starting !
     logs.checkpoint() << "Antares Analyzer v" << Antares::VersionToCString();
@@ -173,7 +181,9 @@ int main(int argc, char* argv[])
             atsp.printSummary();
             // Prepare data
             if (atsp.preflight())
+            {
                 atsp.computeMonthlyCorrelations(); // monthly correlations
+            }
         }
     }
 

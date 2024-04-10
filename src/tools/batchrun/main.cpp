@@ -45,7 +45,7 @@ using namespace Antares;
 
 namespace // anonymous
 {
-class MyStudyFinder final : public Data::StudyFinder
+class MyStudyFinder final: public Data::StudyFinder
 {
 public:
     void onStudyFound(const String& folder, const Data::StudyVersion&) override
@@ -113,32 +113,42 @@ int main(int argc, char* argv[])
 
         // Simulation mode
         options.addParagraph("\nSimulation mode");
-        options.addFlag(
-          optForceExpansion, ' ', "economy", "Force the simulation(s) in expansion mode");
+        options.addFlag(optForceExpansion,
+                        ' ',
+                        "economy",
+                        "Force the simulation(s) in expansion mode");
         options.addFlag(optForceEconomy, ' ', "economy", "Force the simulation(s) in economy mode");
-        options.addFlag(
-          optForceAdequacy, ' ', "adequacy", "Force the simulation(s) in adequacy mode");
+        options.addFlag(optForceAdequacy,
+                        ' ',
+                        "adequacy",
+                        "Force the simulation(s) in adequacy mode");
 
         options.addParagraph("\nParameters");
         options.add(optName, 'n', "name", "Set the name of the new simulation outputs");
         options.add(optYears, 'y', "year", "Override the number of MC years");
         options.addFlag(optForce, 'f', "force", "Ignore all warnings at loading");
-        options.addFlag(
-          optNoOutput, ' ', "no-output", "Do not write the results in the output folder");
+        options.addFlag(optNoOutput,
+                        ' ',
+                        "no-output",
+                        "Do not write the results in the output folder");
         options.addFlag(optYearByYear,
                         ' ',
                         "year-by-year",
                         "Force the writing of the result output for each year");
 
         options.addParagraph("\nOptimization");
-        options.addFlag(
-          optNoTSImport, ' ', "no-ts-import", "Do not import timeseries into the input folder.");
+        options.addFlag(optNoTSImport,
+                        ' ',
+                        "no-ts-import",
+                        "Do not import timeseries into the input folder.");
         options.addFlag(optIgnoreAllConstraints, ' ', "no-constraints", "Ignore all constraints");
 
         options.addParagraph("\nExtras");
         options.add(optSolver, ' ', "solver", "Specify the antares-solver location");
-        options.addFlag(
-          optParallel, 'p', "parallel", "Enable the parallel computation of MC years");
+        options.addFlag(optParallel,
+                        'p',
+                        "parallel",
+                        "Enable the parallel computation of MC years");
         options.add(optForceParallel,
                     ' ',
                     "force-parallel",
@@ -164,7 +174,9 @@ int main(int argc, char* argv[])
         options.addFlag(optVerbose, ' ', "verbose", "Displays study runs outputs");
 
         if (options(argc, argv) == GetOpt::ReturnCode::error)
+        {
             return options.errors() ? 1 : 0;
+        }
 
         if (optVersion)
         {
@@ -193,8 +205,9 @@ int main(int argc, char* argv[])
         if (ortoolsUsed)
         {
             const auto availableSolvers = getAvailableOrtoolsSolverName();
-            if (auto it
-                = std::find(availableSolvers.begin(), availableSolvers.end(), ortoolsSolver);
+            if (auto it = std::find(availableSolvers.begin(),
+                                    availableSolvers.end(),
+                                    ortoolsSolver);
                 it == availableSolvers.end())
             {
                 logs.error() << "Please specify a solver using --ortools-solver. Available solvers "
@@ -240,9 +253,13 @@ int main(int argc, char* argv[])
         if (not finder.list.empty())
         {
             if (finder.list.size() > 1)
+            {
                 logs.info() << "Found " << finder.list.size() << " studyies";
+            }
             else
+            {
                 logs.info() << "Found 1 study";
+            }
             logs.info() << "Starting...";
 
             if (!(!optName))
@@ -266,63 +283,105 @@ int main(int argc, char* argv[])
 
                 logs.info();
                 if (optVerbose)
+                {
                     logs.info();
+                }
 
                 logs.checkpoint() << "Running simulation: `" << studypath << "` (" << studyIndx
                                   << '/' << (uint)finder.list.size() << ')';
                 if (optVerbose)
+                {
                     logs.debug();
+                }
 
                 cmd.clear();
                 if (not System::windows)
+                {
                     cmd << "nice ";
+                }
                 else
+                {
                     cmd << "call "; // why is it required for working ???
+                }
                 cmd << "\"" << solver << "\"";
                 if (optForce)
+                {
                     cmd << " --force";
+                }
                 if (optForceExpansion)
+                {
                     cmd << " --economy";
+                }
                 if (optForceEconomy)
+                {
                     cmd << " --economy";
+                }
                 if (optForceAdequacy)
+                {
                     cmd << " --adequacy";
+                }
                 if (!(!optName))
+                {
                     cmd << " --name=\"" << *optName << "\"";
+                }
                 if (!(!optYears))
+                {
                     cmd << " --year=" << *optYears;
+                }
                 if (optNoOutput)
+                {
                     cmd << " --no-output";
+                }
                 if (optYearByYear)
+                {
                     cmd << " --year-by-year";
+                }
                 if (optNoTSImport)
+                {
                     cmd << " --no-ts-import";
+                }
                 if (optIgnoreAllConstraints)
+                {
                     cmd << " --no-constraints";
+                }
                 if (optParallel)
+                {
                     cmd << " --parallel";
+                }
                 if (optForceParallel)
+                {
                     cmd << " --force-parallel=" << *optForceParallel;
+                }
                 if (ortoolsUsed)
+                {
                     cmd << " --use-ortools --ortools-solver=" << ortoolsSolver;
+                }
 
                 cmd << " \"" << studypath << "\"";
                 if (!optVerbose)
+                {
                     cmd << sendToNull();
+                }
 
                 // Changing the current working directory
                 IO::Directory::Current::Set(dirname);
                 // Executing the converter
                 if (optVerbose)
+                {
                     logs.info() << "Executing " << cmd;
+                }
 
                 // Execute the command
                 int cmd_return_code = system(cmd.c_str());
 
                 if (cmd_return_code != 0)
+                {
                     logs.error() << "An error occured.";
+                }
                 else
+                {
                     logs.info() << "Success.";
+                }
 
                 if (cmd_return_code == -1)
                 {

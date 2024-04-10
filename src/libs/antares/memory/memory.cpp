@@ -61,7 +61,9 @@ bool Memory::initializeTemporaryFolder()
 {
     std::lock_guard locker(gMutex);
     if (pAlreadyInitialized)
+    {
         return true;
+    }
 
     pAlreadyInitialized = true;
     pAllowedToChangeCacheFolder = LocalPolicy::ReadAsBool("allow_custom_cache_folder", true);
@@ -85,7 +87,9 @@ bool Memory::initializeTemporaryFolder()
                 {
                     System::Environment::Read("TEMPDIR", pCacheFolder);
                     if (pCacheFolder.empty())
+                    {
                         pCacheFolder = "/tmp";
+                    }
                 }
             }
         }
@@ -97,7 +101,9 @@ bool Memory::initializeTemporaryFolder()
             {
                 System::Environment::Read("TMP", pCacheFolder);
                 if (pCacheFolder.empty())
+                {
                     pCacheFolder = "C:";
+                }
             }
         }
     }
@@ -137,7 +143,9 @@ void Memory::cacheFolder(const AnyString& folder)
 {
     std::lock_guard locker(gMutex);
     if (pAllowedToChangeCacheFolder)
+    {
         pCacheFolder = folder;
+    }
 }
 
 } // namespace Antares

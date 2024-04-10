@@ -19,7 +19,6 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-
 #include <antares/benchmarking/DurationCollector.h>
 #include <antares/logs/logs.h>
 #include "antares/application/application.h"
@@ -47,4 +46,3 @@ void Application::runSimulationInEconomicMode()
     }
 }
 } // namespace Antares::Solver
-

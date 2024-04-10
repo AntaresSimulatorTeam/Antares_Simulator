@@ -56,7 +56,9 @@ bool FindFile(Yuni::String& out, const AnyString& filename)
             IO::Normalize(out, tmp);
 
             if (IO::File::Exists(out))
+            {
                 return true;
+            }
         }
     }
     out.clear();
@@ -79,14 +81,18 @@ bool FindExampleFolder(Yuni::String& folder)
     s.clear() << RootFolder << SEP << ".." << SEP << "examples";
     IO::Normalize(folder, s);
     if (IO::Directory::Exists(folder))
+    {
         return true;
+    }
 #else
     // First guess - typical unix install
     s.clear() << RootFolder << SEP << ".." << SEP << "examples";
     s.clear() << "/usr/share/antares/" << ANTARES_VERSION << "/examples";
     IO::Normalize(folder, s);
     if (IO::Directory::Exists(folder))
+    {
         return true;
+    }
 #endif
 
     // Second guess : Dev mode, from the source repository
@@ -94,7 +100,9 @@ bool FindExampleFolder(Yuni::String& folder)
               << SEP << "examples";
     IO::Normalize(folder, s);
     if (IO::Directory::Exists(folder))
+    {
         return true;
+    }
 
 // Other guesses, Dev mode, special folders when ran from the SVN
 // repository and from Visual Studio
@@ -104,14 +112,18 @@ bool FindExampleFolder(Yuni::String& folder)
         s.clear() << RootFolder << "\\..\\Debug\\..\\..\\..\\..\\resources\\examples";
         IO::Normalize(folder, s);
         if (IO::Directory::Exists(folder))
+        {
             return true;
+        }
     }
     else
     {
         s.clear() << RootFolder << "\\..\\Release\\..\\..\\..\\..\\resources\\examples";
         IO::Normalize(folder, s);
         if (IO::Directory::Exists(folder))
+        {
             return true;
+        }
     }
 #endif
 
@@ -181,7 +193,9 @@ bool FindFirstOf(String& out, const char* const* const list)
             tmp.clear() << SearchPaths[i] << list[j];
             IO::Normalize(out, tmp);
             if (IO::File::Exists(out))
+            {
                 return true;
+            }
         }
     }
     out.clear();

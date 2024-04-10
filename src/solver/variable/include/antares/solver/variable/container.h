@@ -40,7 +40,7 @@ namespace Antares::Solver::Variable::Container
 ** This structure is merely a static linked list with all variables
 */
 template<class NextT = Container::EndOfList>
-class List : public NextT
+class List: public NextT
 {
 public:
     //! Type of the next static variable
@@ -233,9 +233,6 @@ private:
 }; // class List
 
 } // namespace Antares::Solver::Variable::Container
-
-
-
 
 #include "surveyresults/reportbuilder.hxx"
 #include "container.hxx"

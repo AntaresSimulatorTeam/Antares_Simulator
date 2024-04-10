@@ -39,10 +39,12 @@ static bool onProgress(uint)
     return true;
 }
 
-class StudyFinderCleaner final : public Data::StudyFinder
+class StudyFinderCleaner final: public Data::StudyFinder
 {
 public:
-    StudyFinderCleaner() : listOnly(false), mrproper(false)
+    StudyFinderCleaner():
+        listOnly(false),
+        mrproper(false)
     {
     }
 
@@ -67,7 +69,9 @@ public:
         cleaner->setCustomExcludeList(exclude);
         cleaner->onProgress = &onProgress;
         if (cleaner->analyze())
+        {
             cleaner->performCleanup();
+        }
         delete cleaner;
 
         if (mrproper)
@@ -129,7 +133,9 @@ int main(int argc, char* argv[])
         options.addFlag(optVersion, 'v', "version", "Print the version and exit");
 
         if (options(argc, argv) == GetOpt::ReturnCode::error)
+        {
             return options.errors() ? 1 : 0;
+        }
 
         if (optVersion)
         {

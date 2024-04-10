@@ -35,20 +35,21 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
-    int nombreDePasDeTempsPourUneOptimisation
-      = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+    int nombreDePasDeTempsPourUneOptimisation = problemeHebdo
+                                                  ->NombreDePasDeTempsPourUneOptimisation;
     int& nombreDeVariables = ProblemeAResoudre->NombreDeVariables;
     VariableNamer variableNamer(ProblemeAResoudre->NomDesVariables);
     const bool intVariables = problemeHebdo->OptimisationAvecVariablesEntieres;
     for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
         variableNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
-        const PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
+        const PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo
+                                                              ->PaliersThermiquesDuPays[pays];
 
         for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
         {
-            const int palier
-              = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+            const int palier = PaliersThermiquesDuPays
+                                 .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
             const auto& clusterName = PaliersThermiquesDuPays.NomsDesPaliersThermiques[index];
             auto variableManager = VariableManagerFromProblemHebdo(problemeHebdo);
 

@@ -30,15 +30,19 @@ namespace
 
 using namespace Antares::Data::AdequacyPatch;
 
-double calculateQuadraticCost(const PROBLEME_HEBDO* problemeHebdo, const AdqPatchPTO priceTakingOrder, int hour, int area)
+double calculateQuadraticCost(const PROBLEME_HEBDO* problemeHebdo,
+                              const AdqPatchPTO priceTakingOrder,
+                              int hour,
+                              int area)
 {
     using namespace Data::AdequacyPatch;
     double priceTakingOrders = 0.0; // PTO
     if (priceTakingOrder == AdqPatchPTO::isLoad)
     {
-        priceTakingOrders
-          = problemeHebdo->ConsommationsAbattues[hour].ConsommationAbattueDuPays[area]
-            + problemeHebdo->AllMustRunGeneration[hour].AllMustRunGenerationOfArea[area];
+        priceTakingOrders = problemeHebdo->ConsommationsAbattues[hour]
+                              .ConsommationAbattueDuPays[area]
+                            + problemeHebdo->AllMustRunGeneration[hour]
+                                .AllMustRunGenerationOfArea[area];
     }
     else // AdqPatchPTO::isDens
     {
@@ -46,9 +50,13 @@ double calculateQuadraticCost(const PROBLEME_HEBDO* problemeHebdo, const AdqPatc
     }
 
     if (priceTakingOrders <= 0.0)
+    {
         return 0.0;
+    }
     else
+    {
         return (1. / priceTakingOrders);
+    }
 }
 } // namespace
 
@@ -69,10 +77,11 @@ void HourlyCSRProblem::setQuadraticCost()
             int var = variableManager_.PositiveUnsuppliedEnergy(area, triggeredHour);
             if (var >= 0 && var < problemeAResoudre_.NombreDeVariables)
             {
-                problemeAResoudre_.CoutQuadratique[var] = calculateQuadraticCost(problemeHebdo_, 
-                                                                                 adqPatchParams_.curtailmentSharing.priceTakingOrder, 
-                                                                                 triggeredHour, 
-                                                                                 area);
+                problemeAResoudre_.CoutQuadratique[var] = calculateQuadraticCost(
+                  problemeHebdo_,
+                  adqPatchParams_.curtailmentSharing.priceTakingOrder,
+                  triggeredHour,
+                  area);
                 logs.debug() << var << ". Quad C = " << problemeAResoudre_.CoutQuadratique[var];
             }
         }
@@ -100,8 +109,8 @@ void HourlyCSRProblem::setLinearCost()
         {
             continue;
         }
-        const double coeff
-          = problemeHebdo_->adequacyPatchRuntimeData->hurdleCostCoefficients[Interco];
+        const double coeff = problemeHebdo_->adequacyPatchRuntimeData
+                               ->hurdleCostCoefficients[Interco];
 
         const COUTS_DE_TRANSPORT& TransportCost = problemeHebdo_->CoutDeTransport[Interco];
         // flow
@@ -116,10 +125,16 @@ void HourlyCSRProblem::setLinearCost()
         if (var >= 0 && var < problemeAResoudre_.NombreDeVariables)
         {
             if (!TransportCost.IntercoGereeAvecDesCouts)
+            {
                 problemeAResoudre_.CoutLineaire[var] = 0;
+            }
             else
-                problemeAResoudre_.CoutLineaire[var]
-                  = TransportCost.CoutDeTransportOrigineVersExtremite[triggeredHour] * coeff;
+            {
+                problemeAResoudre_.CoutLineaire[var] = TransportCost
+                                                         .CoutDeTransportOrigineVersExtremite
+                                                           [triggeredHour]
+                                                       * coeff;
+            }
             logs.debug() << var << ". Linear C = " << problemeAResoudre_.CoutLineaire[var];
         }
 
@@ -127,10 +142,16 @@ void HourlyCSRProblem::setLinearCost()
         if (var >= 0 && var < problemeAResoudre_.NombreDeVariables)
         {
             if (!TransportCost.IntercoGereeAvecDesCouts)
+            {
                 problemeAResoudre_.CoutLineaire[var] = 0;
+            }
             else
-                problemeAResoudre_.CoutLineaire[var]
-                  = TransportCost.CoutDeTransportExtremiteVersOrigine[triggeredHour] * coeff;
+            {
+                problemeAResoudre_.CoutLineaire[var] = TransportCost
+                                                         .CoutDeTransportExtremiteVersOrigine
+                                                           [triggeredHour]
+                                                       * coeff;
+            }
             logs.debug() << var << ". Linear C = " << problemeAResoudre_.CoutLineaire[var];
         }
     }

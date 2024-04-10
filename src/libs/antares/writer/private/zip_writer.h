@@ -30,7 +30,6 @@
 #include <antares/benchmarking/DurationCollector.h>
 #include "antares/concurrency/concurrency.h"
 
-
 namespace Antares::Solver
 {
 enum class ZipState
@@ -50,11 +49,13 @@ class ZipWriteJob
 {
 public:
     ZipWriteJob(ZipWriter& writer,
-                std::string  entryPath,
+                std::string entryPath,
                 ContentT& content,
                 Benchmarking::IDurationCollector& duration_collector);
     void writeEntry();
-    void operator()() {
+
+    void operator()()
+    {
         writeEntry();
     }
 
@@ -73,7 +74,7 @@ private:
     Benchmarking::IDurationCollector& pDurationCollector;
 };
 
-class ZipWriter : public IResultWriter
+class ZipWriter: public IResultWriter
 {
 public:
     ZipWriter(std::shared_ptr<Yuni::Job::QueueService> qs,
@@ -110,6 +111,5 @@ private:
     void addEntryFromBufferHelper(const std::string& entryPath, ContentType& entryContent);
 };
 } // namespace Antares::Solver
-
 
 #include "zip_writer.hxx"

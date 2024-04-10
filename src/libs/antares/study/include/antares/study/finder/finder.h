@@ -29,7 +29,6 @@
 
 #include "../version.h"
 
-
 namespace Antares
 {
 namespace Data
@@ -40,7 +39,8 @@ namespace Data
 class StudyFinder
 {
 public:
-    enum {
+    enum
+    {
         //! The default value for the timeout
         defaultTimeout = 10000, // 10s
     };
@@ -124,8 +124,10 @@ public: // Events
     virtual void onLookupAborted()
     {
     }
+
 protected:
     std::mutex mutex;
+
 private:
     Yuni::IO::Directory::IIterator<true>* pLycos;
 

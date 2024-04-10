@@ -35,8 +35,8 @@ namespace Antares
 {
 namespace Data
 {
-PreproThermal::PreproThermal(std::weak_ptr<const ThermalCluster> cluster) :
- itsThermalCluster(cluster)
+PreproThermal::PreproThermal(std::weak_ptr<const ThermalCluster> cluster):
+    itsThermalCluster(cluster)
 {
 }
 
@@ -65,15 +65,20 @@ bool PreproThermal::loadFromFolder(Study& study, const AnyString& folder)
 
     auto cluster = itsThermalCluster.lock();
     if (!cluster)
+    {
         return false;
+    }
 
     auto parentArea = cluster->parentArea;
 
     buffer.clear() << folder << SEP << "data.txt";
 
     // standard loading
-    ret = data.loadFromCSVFile(
-            buffer, thermalPreproMax, DAYS_PER_YEAR, Matrix<>::optFixedSize, &study.dataBuffer)
+    ret = data.loadFromCSVFile(buffer,
+                               thermalPreproMax,
+                               DAYS_PER_YEAR,
+                               Matrix<>::optFixedSize,
+                               &study.dataBuffer)
           and ret;
 
     bool thermalTSglobalGeneration = study.parameters.isTSGeneratedByPrepro(timeSeriesThermal);
@@ -157,7 +162,7 @@ bool PreproThermal::loadFromFolder(Study& study, const AnyString& folder)
 
 bool PreproThermal::forceReload(bool reload) const
 {
-    return data.forceReload(reload); 
+    return data.forceReload(reload);
 }
 
 void PreproThermal::markAsModified() const
@@ -183,7 +188,9 @@ bool PreproThermal::normalizeAndCheckNPO()
 {
     auto cluster = itsThermalCluster.lock();
     if (!cluster)
+    {
         return false;
+    }
 
     auto parentArea = cluster->parentArea;
 
@@ -192,10 +199,12 @@ bool PreproThermal::normalizeAndCheckNPO()
     auto& columnNPOMin = data[npoMin];
     // errors management
     uint errors = 0;
+
     enum
     {
         maxErrors = 10
     };
+
     // Flag to determine whether the column NPO max has been normalized or not
     bool normalized = false;
 
@@ -220,12 +229,16 @@ bool PreproThermal::normalizeAndCheckNPO()
     }
 
     if (errors >= maxErrors)
+    {
         logs.error() << cluster->id() << " in area " << parentArea->id
                      << ": too many errors. skipping (total: " << errors << ')';
+    }
 
     if (normalized)
+    {
         logs.info() << "  NPO max for the thermal cluster '" << parentArea->id
                     << "' has been normalized";
+    }
 
     data.markAsModified();
     return (0 == errors);

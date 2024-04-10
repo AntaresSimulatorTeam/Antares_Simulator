@@ -26,7 +26,6 @@
 #include <antares/study/version.h>
 #include "../../fwd.h"
 
-
 namespace Antares
 {
 namespace Data
@@ -59,7 +58,6 @@ public:
     void resizeGenerationTS(uint nbSeries);
     void resizeMaxPowerTS(uint nbSeries);
 
-
     /*!
     ** \brief Load all data not already loaded
     **
@@ -80,7 +78,7 @@ public:
     bool LoadMaxPower(const AreaName& areaID, const AnyString& folder);
 
     void buildHourlyMaxPowerFromDailyTS(const Matrix<double>::ColumnType& DailyMaxGenPower,
-                                  const Matrix<double>::ColumnType& DailyMaxPumpPower);
+                                        const Matrix<double>::ColumnType& DailyMaxPumpPower);
 
     /*!
     ** \brief Save data series for hydro into a folder (`input/hydro/series`)
@@ -148,22 +146,25 @@ public:
     Matrix<uint32_t> timeseriesNumbers;
     Matrix<uint32_t> timeseriesNumbersHydroMaxPower;
 
-    // Equalizing max generation and max pumping numbers of TS's    
+    // Equalizing max generation and max pumping numbers of TS's
     void EqualizeMaxPowerTSsizes(Area& area);
 
     void setHydroModulability(Area& area) const;
 
-    // Getters for generation (ror, storage and mingen) and 
+    // Getters for generation (ror, storage and mingen) and
     // max power (generation and pumping) number of TS
     uint TScount() const;
     uint maxPowerTScount() const;
-    void setMaxPowerTScount(uint count) { maxPowerTScount_ = count;}
+
+    void setMaxPowerTScount(uint count)
+    {
+        maxPowerTScount_ = count;
+    }
 
     // Setting TS's when derated mode is on
     void resizeTSinDeratedMode(bool derated, StudyVersion version, bool useBySolver);
 
 private:
-    
     // The number of time-series about generation (ror, inflows (=storage), mingen)
     // They all should have the same number of columns (width), as they each year receives a common
     // TS number for all three.
@@ -173,7 +174,6 @@ private:
     // They both should have the same number of columns (width), as they each year receives a common
     // TS number for all three.
     uint maxPowerTScount_ = 0;
-
 
 }; // class DataSeriesHydro
 } // namespace Data

@@ -54,25 +54,33 @@ inline void Links::initializeFromThermalCluster(Data::Study*, Data::Area*, Data:
 inline void Links::broadcastNonApplicability(bool applyNonApplicable)
 {
     for (uint i = 0; i != pLinkCount; ++i)
+    {
         pLinks[i].broadcastNonApplicability(applyNonApplicable);
+    }
 }
 
 inline void Links::getPrintStatusFromStudy(Data::Study& study)
 {
     for (uint i = 0; i != pLinkCount; ++i)
+    {
         pLinks[i].getPrintStatusFromStudy(study);
+    }
 }
 
 inline void Links::supplyMaxNumberOfColumns(Data::Study& study)
 {
     for (uint i = 0; i != pLinkCount; ++i)
+    {
         pLinks[i].supplyMaxNumberOfColumns(study);
+    }
 }
 
 inline void Links::yearBegin(uint year, unsigned int numSpace)
 {
     for (uint i = 0; i != pLinkCount; ++i)
+    {
         pLinks[i].yearBegin(year, numSpace);
+    }
 }
 
 inline void Links::yearEndBuildPrepareDataForEachThermalCluster(State& state,
@@ -121,7 +129,9 @@ inline void Links::computeSummary(std::map<unsigned int, unsigned int>& numSpace
 inline void Links::weekBegin(State& state)
 {
     for (uint i = 0; i != pLinkCount; ++i)
+    {
         pLinks[i].weekBegin(state);
+    }
 }
 
 inline void Links::weekForEachArea(State&, uint numSpace)
@@ -133,19 +143,25 @@ inline void Links::weekForEachArea(State&, uint numSpace)
 inline void Links::weekEnd(State& state)
 {
     for (uint i = 0; i != pLinkCount; ++i)
+    {
         pLinks[i].weekEnd(state);
+    }
 }
 
 inline void Links::hourBegin(uint hourInTheYear)
 {
     for (uint i = 0; i != pLinkCount; ++i)
+    {
         pLinks[i].hourBegin(hourInTheYear);
+    }
 }
 
 inline void Links::hourForEachArea(State& state, unsigned int numSpace)
 {
     for (uint i = 0; i != pLinkCount; ++i)
+    {
         pLinks[i].hourForEachArea(state, numSpace);
+    }
 }
 
 inline void Links::hourForEachLink(State& state, unsigned int numSpace)
@@ -156,7 +172,9 @@ inline void Links::hourForEachLink(State& state, unsigned int numSpace)
 inline void Links::hourEnd(State& state, uint hourInTheYear)
 {
     for (uint i = 0; i != pLinkCount; ++i)
+    {
         pLinks[i].hourEnd(state, hourInTheYear);
+    }
 }
 
 inline void Links::buildSurveyReport(SurveyResults& results,
@@ -179,23 +197,33 @@ inline void Links::buildSurveyReport(SurveyResults& results,
         {
         case Category::hourly:
             if (!(link.filterSynthesis & Data::filterHourly))
+            {
                 return;
+            }
             break;
         case Category::daily:
             if (!(link.filterSynthesis & Data::filterDaily))
+            {
                 return;
+            }
             break;
         case Category::weekly:
             if (!(link.filterSynthesis & Data::filterWeekly))
+            {
                 return;
+            }
             break;
         case Category::monthly:
             if (!(link.filterSynthesis & Data::filterMonthly))
+            {
                 return;
+            }
             break;
         case Category::annual:
             if (!(link.filterSynthesis & Data::filterAnnual))
+            {
                 return;
+            }
             break;
         case Category::all:
             break;
@@ -225,23 +253,33 @@ inline void Links::buildAnnualSurveyReport(SurveyResults& results,
         {
         case Category::hourly:
             if (not(link.filterYearByYear & Data::filterHourly))
+            {
                 return;
+            }
             break;
         case Category::daily:
             if (not(link.filterYearByYear & Data::filterDaily))
+            {
                 return;
+            }
             break;
         case Category::weekly:
             if (not(link.filterYearByYear & Data::filterWeekly))
+            {
                 return;
+            }
             break;
         case Category::monthly:
             if (not(link.filterYearByYear & Data::filterMonthly))
+            {
                 return;
+            }
             break;
         case Category::annual:
             if (not(link.filterYearByYear & Data::filterAnnual))
+            {
                 return;
+            }
             break;
         case Category::all:
             break;

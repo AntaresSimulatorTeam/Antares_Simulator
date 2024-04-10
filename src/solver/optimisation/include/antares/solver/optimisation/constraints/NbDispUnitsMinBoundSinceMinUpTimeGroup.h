@@ -29,12 +29,12 @@
  *
  */
 
-class NbDispUnitsMinBoundSinceMinUpTimeGroup : public AbstractStartUpCostsGroup
+class NbDispUnitsMinBoundSinceMinUpTimeGroup: public AbstractStartUpCostsGroup
 {
 public:
     using AbstractStartUpCostsGroup::AbstractStartUpCostsGroup;
 
-        void BuildConstraints() override;
+    void BuildConstraints() override;
 
 private:
     NbDispUnitsMinBoundSinceMinUpTimeData

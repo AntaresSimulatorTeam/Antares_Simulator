@@ -33,16 +33,18 @@ static bool compareSlackSolutions(const Antares::Optimization::Constraint& a,
 
 namespace Antares::Optimization
 {
-InfeasibleProblemReport::InfeasibleProblemReport(const std::vector<const MPVariable*>& slackVariables)
+InfeasibleProblemReport::InfeasibleProblemReport(
+  const std::vector<const MPVariable*>& slackVariables)
 {
     turnSlackVarsIntoConstraints(slackVariables);
     sortConstraints();
     trimConstraints();
 }
 
-void InfeasibleProblemReport::turnSlackVarsIntoConstraints(const std::vector<const MPVariable*>& slackVariables)
+void InfeasibleProblemReport::turnSlackVarsIntoConstraints(
+  const std::vector<const MPVariable*>& slackVariables)
 {
-    for (const MPVariable* slack : slackVariables)
+    for (const MPVariable* slack: slackVariables)
     {
         mConstraints.emplace_back(slack->name(), slack->solution_value());
     }
@@ -63,7 +65,7 @@ void InfeasibleProblemReport::trimConstraints()
 
 void InfeasibleProblemReport::extractItems()
 {
-    for (auto& c : mConstraints)
+    for (auto& c: mConstraints)
     {
         if (c.extractItems() == 0)
         {
@@ -76,7 +78,7 @@ void InfeasibleProblemReport::extractItems()
 void InfeasibleProblemReport::logSuspiciousConstraints()
 {
     Antares::logs.error() << "The following constraints are suspicious (first = most suspicious)";
-    for (const auto& c : mConstraints)
+    for (const auto& c: mConstraints)
     {
         Antares::logs.error() << c.prettyPrint();
     }
@@ -92,7 +94,9 @@ void InfeasibleProblemReport::logSuspiciousConstraints()
     }
     if (mTypes[ConstraintType::short_term_storage_level] > 0)
     {
-        Antares::logs.error() << "* Short-term storage reservoir level impossible to manage. Please check inflows, lower & upper curves and initial level (if prescribed),";
+        Antares::logs.error()
+          << "* Short-term storage reservoir level impossible to manage. Please check inflows, "
+             "lower & upper curves and initial level (if prescribed),";
     }
 
     const unsigned int bcCount = mTypes[ConstraintType::binding_constraint_hourly]

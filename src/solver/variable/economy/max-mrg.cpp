@@ -32,8 +32,9 @@ template<bool WithSimplexT>
 struct SpillageSelector
 {
     template<class U>
-    static auto Value(const State&, const U& weeklyResults, uint)
-      -> decltype(weeklyResults.ValeursHorairesDeDefaillanceNegative)
+    static auto Value(const State&,
+                      const U& weeklyResults,
+                      uint) -> decltype(weeklyResults.ValeursHorairesDeDefaillanceNegative)
     {
         return weeklyResults.ValeursHorairesDeDefaillanceNegative;
     }
@@ -54,6 +55,7 @@ inline void PrepareMaxMRGFor(const State& state, double* opmrg, uint numSpace)
 {
     assert(168 + state.hourInTheYear <= HOURS_PER_YEAR);
     assert(opmrg && "Invalid OP.MRG target");
+
     enum
     {
         offset = 0,
@@ -89,19 +91,25 @@ inline void PrepareMaxMRGFor(const State& state, double* opmrg, uint numSpace)
         {
             // H.STOR
             for (uint i = offset; i != endHour; ++i)
+            {
                 WH += H[i];
+            }
         }
 
         if (Utils::isZero(WH)) // no hydro
         {
             for (uint i = offset; i != endHour; ++i)
+            {
                 opmrg[i] = +S[i] + M[i] - D[i];
+            }
             return;
         }
 
         // initialisation
         for (uint i = offset; i != endHour; ++i)
+        {
             OI[i] = +S[i] + M[i] - D[i];
+        }
     }
 
     double bottom = +std::numeric_limits<double>::max();
@@ -111,9 +119,13 @@ inline void PrepareMaxMRGFor(const State& state, double* opmrg, uint numSpace)
     {
         double oii = OI[i];
         if (oii > top)
+        {
             top = oii;
+        }
         if (oii < bottom)
+        {
             bottom = oii;
+        }
     }
 
     double ecart = 1.;
@@ -134,7 +146,8 @@ inline void PrepareMaxMRGFor(const State& state, double* opmrg, uint numSpace)
             assert(i < HOURS_PER_YEAR && "calendar overflow");
             if (niveau > OI[i])
             {
-                opmrg[i] = std::min(niveau, OI[i] + P.getCoefficient(y, i + state.hourInTheYear) - H[i]);
+                opmrg[i] = std::min(niveau,
+                                    OI[i] + P.getCoefficient(y, i + state.hourInTheYear) - H[i]);
                 SM += opmrg[i] - OI[i];
             }
             else
@@ -146,9 +159,13 @@ inline void PrepareMaxMRGFor(const State& state, double* opmrg, uint numSpace)
 
         ecart = SP - SM;
         if (ecart > 0)
+        {
             bottom = niveau;
+        }
         else
+        {
             top = niveau;
+        }
 
         if (!--loop)
         {
@@ -162,9 +179,13 @@ inline void PrepareMaxMRGFor(const State& state, double* opmrg, uint numSpace)
 void PrepareMaxMRG(const State& state, double* opmrg, uint numSpace)
 {
     if (state.simplexRunNeeded)
+    {
         PrepareMaxMRGFor<true>(state, opmrg, numSpace);
+    }
     else
+    {
         PrepareMaxMRGFor<false>(state, opmrg, numSpace);
+    }
 }
 
 } // namespace Antares::Solver::Variable::Economy

@@ -24,7 +24,6 @@
 #include "private/immediate_file_writer.h"
 #include "private/zip_writer.h"
 
-
 namespace Antares::Solver
 {
 IResultWriter::Ptr resultWriterFactory(Antares::Data::ResultFormat fmt,
@@ -45,4 +44,3 @@ IResultWriter::Ptr resultWriterFactory(Antares::Data::ResultFormat fmt,
     }
 }
 } // namespace Antares::Solver
-

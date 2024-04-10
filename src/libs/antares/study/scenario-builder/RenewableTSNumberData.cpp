@@ -33,7 +33,9 @@ void renewableTSNumberData::setTSnumber(const Antares::Data::RenewableCluster* c
 {
     assert(cluster != nullptr);
     if (year < pTSNumberRules.height && cluster->areaWideIndex < pTSNumberRules.width)
+    {
         pTSNumberRules[cluster->areaWideIndex][year] = value;
+    }
 }
 
 bool renewableTSNumberData::apply(Study& study)
@@ -52,7 +54,7 @@ bool renewableTSNumberData::apply(Study& study)
 
     const uint tsGenCountRenewable = get_tsGenCount(study);
 
-    for (const auto& cluster : area.renewable.list.each_enabled())
+    for (const auto& cluster: area.renewable.list.each_enabled())
     {
         // alias to the current column
         assert(cluster->areaWideIndex < pTSNumberRules.width);
@@ -82,18 +84,22 @@ void renewableTSNumberData::saveToINIFile(const Study& /* study */,
     prefix += get_prefix();
 
     if (!pArea)
+    {
         return;
+    }
 
-    for (auto& cluster : pArea->renewable.list.all())
+    for (auto& cluster: pArea->renewable.list.all())
     {
         for (uint year = 0; year != pTSNumberRules.height; ++year)
         {
             const uint val = get(cluster.get(), year);
             // Equals to zero means 'auto', which is the default mode
             if (!val)
+            {
                 continue;
-            file << prefix << pArea->id << "," << year << ','
-                 << cluster->id() << " = " << val << '\n';
+            }
+            file << prefix << pArea->id << "," << year << ',' << cluster->id() << " = " << val
+                 << '\n';
         }
     }
 }
@@ -113,4 +119,4 @@ bool renewableTSNumberData::reset(const Study& study)
     pTSNumberRules.reset(clusterCount, nbYears);
     return true;
 }
-}
+} // namespace Antares::Data::ScenarioBuilder

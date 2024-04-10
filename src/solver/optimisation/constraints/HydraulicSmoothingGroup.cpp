@@ -35,10 +35,12 @@ void HydraulicSmoothingGroup::BuildConstraints()
         for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)
         {
             if (!problemeHebdo_->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable)
+            {
                 continue;
+            }
 
-            hydroPowerSmoothingUsingVariationSum.add(
-              pays, problemeHebdo_->NombreDePasDeTempsPourUneOptimisation);
+            hydroPowerSmoothingUsingVariationSum
+              .add(pays, problemeHebdo_->NombreDePasDeTempsPourUneOptimisation);
         }
     }
 
@@ -47,7 +49,9 @@ void HydraulicSmoothingGroup::BuildConstraints()
         for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)
         {
             if (!problemeHebdo_->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable)
+            {
                 continue;
+            }
 
             for (int pdt = 0; pdt < problemeHebdo_->NombreDePasDeTempsPourUneOptimisation; pdt++)
             {

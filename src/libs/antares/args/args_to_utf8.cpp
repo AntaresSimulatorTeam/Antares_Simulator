@@ -32,7 +32,9 @@
 #include <shellapi.h>
 #endif // YUNI_OS_WINDOWS
 
-IntoUTF8ArgsTranslator::IntoUTF8ArgsTranslator(int argc, char** argv) : argc_(argc), argv_(argv)
+IntoUTF8ArgsTranslator::IntoUTF8ArgsTranslator(int argc, char** argv):
+    argc_(argc),
+    argv_(argv)
 {
 }
 
@@ -58,7 +60,9 @@ IntoUTF8ArgsTranslator::~IntoUTF8ArgsTranslator()
 {
 #ifdef YUNI_OS_WINDOWS
     for (int i = 0; i != argc_; ++i)
+    {
         free(argv_[i]);
+    }
     free(argv_);
 #endif
 }

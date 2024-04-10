@@ -28,8 +28,7 @@
 // Export de la structure des LPs
 ////////////////////////////////////////////////////////////////////
 
-void OPT_ExportInterco(Antares::Solver::IResultWriter& writer,
-                       PROBLEME_HEBDO* problemeHebdo)
+void OPT_ExportInterco(Antares::Solver::IResultWriter& writer, PROBLEME_HEBDO* problemeHebdo)
 {
     Yuni::Clob Flot;
     for (uint32_t i(0); i < problemeHebdo->NombreDInterconnexions; ++i)

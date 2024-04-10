@@ -42,10 +42,11 @@ namespace Antares::Data
 // Forward declaration
 struct CompareBindingConstraintName;
 
-class BindingConstraint final : public Yuni::NonCopyable<BindingConstraint>
+class BindingConstraint final: public Yuni::NonCopyable<BindingConstraint>
 {
     friend class BindingConstraintLoader;
     friend class BindingConstraintSaver;
+
 public:
     enum Type
     {
@@ -60,6 +61,7 @@ public:
         //! The maximum number of types
         typeMax
     };
+
     enum Operator
     {
         opUnknown = 0,
@@ -69,6 +71,7 @@ public:
         opBoth,
         opMax
     };
+
     enum Column
     {
         columnInferior = 0,
@@ -189,10 +192,9 @@ public:
     bool skipped() const;
     bool isActive() const;
 
-    //Ref to prevent copy. const ref to prevent modification.
+    // Ref to prevent copy. const ref to prevent modification.
     const Matrix<>& RHSTimeSeries() const;
     Matrix<>& RHSTimeSeries();
-
 
     bool hasAllWeightedLinksOnLayer(size_t layerID);
 
@@ -372,14 +374,15 @@ public:
     BindingConstraintStructures initLinkArrays() const;
 
     template<class Env>
-    std::string timeSeriesFileName(const Env &env) const;
+    std::string timeSeriesFileName(const Env& env) const;
 
 private:
     //! Raw name
     ConstraintName pName;
     //! Raw ID
     ConstraintName pID;
-    //! Time series of the binding constraint. Width = number of series. Height = nbTimeSteps. Only store series for operatorType
+    //! Time series of the binding constraint. Width = number of series. Height = nbTimeSteps. Only
+    //! store series for operatorType
     Matrix<> RHSTimeSeries_;
     //! Weights for links
     linkWeightMap pLinkWeights;
@@ -408,7 +411,7 @@ private:
 
     void clear();
 
-    void copyFrom(BindingConstraint const *original);
+    void copyFrom(const BindingConstraint* original);
 
 }; // class BindingConstraint
 
@@ -416,7 +419,8 @@ private:
 
 struct CompareBindingConstraintName final
 {
-    bool operator()(const std::shared_ptr<BindingConstraint>& s1, const std::shared_ptr<BindingConstraint>& s2) const
+    bool operator()(const std::shared_ptr<BindingConstraint>& s1,
+                    const std::shared_ptr<BindingConstraint>& s2) const
     {
         return s1->name() < s2->name();
     }

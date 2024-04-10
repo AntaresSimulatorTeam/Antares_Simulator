@@ -30,11 +30,12 @@
 #include "constraints/ExchangeBalanceGroup.h"
 #include "ProblemMatrixEssential.h"
 
-class QuadraticProblemMatrix : public ProblemMatrixEssential
+class QuadraticProblemMatrix: public ProblemMatrixEssential
 {
 public:
-    QuadraticProblemMatrix(PROBLEME_HEBDO* problem_hebdo, ConstraintBuilder& builder) :
-     ProblemMatrixEssential(problem_hebdo), exchangeBalanceGroup_(problem_hebdo, builder)
+    QuadraticProblemMatrix(PROBLEME_HEBDO* problem_hebdo, ConstraintBuilder& builder):
+        ProblemMatrixEssential(problem_hebdo),
+        exchangeBalanceGroup_(problem_hebdo, builder)
     {
         constraintgroups_ = {&exchangeBalanceGroup_};
     }

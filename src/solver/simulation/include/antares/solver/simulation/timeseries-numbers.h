@@ -33,7 +33,7 @@ namespace Antares::Solver::TimeSeriesNumbers
 */
 bool Generate(Data::Study& study);
 
-void StoreTimeSeriesNumbersIntoOuput(Data::Study &study, IResultWriter& resultWriter);
+void StoreTimeSeriesNumbersIntoOuput(Data::Study& study, IResultWriter& resultWriter);
 
 // Exported for unit-tests
 bool checkAllElementsIdenticalOrOne(std::vector<uint> w);

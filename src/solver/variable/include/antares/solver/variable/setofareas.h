@@ -37,6 +37,7 @@ struct VCardAllSetsOfAreas
     {
         return "Sets of Areas";
     }
+
     //! Unit
     static std::string Unit()
     {
@@ -95,7 +96,8 @@ public:
     {
         enum
         {
-            count = NextType::template Statistics<CDataLevel, CFile>::count
+            count = NextType::template Statistics < CDataLevel,
+            CFile > ::count
         };
     };
 

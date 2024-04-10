@@ -95,12 +95,14 @@ static NtcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatus(PROBLEME_HEBDO* probl
                                                            const AdqPatchParams& adqPatchParams,
                                                            int Interco)
 {
-    AdequacyPatchMode OriginNodeAdequacyPatchType
-      = problemeHebdo->adequacyPatchRuntimeData->originAreaMode[Interco];
-    AdequacyPatchMode ExtremityNodeAdequacyPatchType
-      = problemeHebdo->adequacyPatchRuntimeData->extremityAreaMode[Interco];
-    bool setToZeroNTCfromOutToIn_AdqPatch = adqPatchParams.localMatching.setToZeroOutsideInsideLinks;
-    bool setToZeroNTCfromOutToOut_AdqPatch = adqPatchParams.localMatching.setToZeroOutsideOutsideLinks;
+    AdequacyPatchMode OriginNodeAdequacyPatchType = problemeHebdo->adequacyPatchRuntimeData
+                                                      ->originAreaMode[Interco];
+    AdequacyPatchMode ExtremityNodeAdequacyPatchType = problemeHebdo->adequacyPatchRuntimeData
+                                                         ->extremityAreaMode[Interco];
+    bool setToZeroNTCfromOutToIn_AdqPatch = adqPatchParams.localMatching
+                                              .setToZeroOutsideInsideLinks;
+    bool setToZeroNTCfromOutToOut_AdqPatch = adqPatchParams.localMatching
+                                               .setToZeroOutsideOutsideLinks;
 
     switch (OriginNodeAdequacyPatchType)
     {

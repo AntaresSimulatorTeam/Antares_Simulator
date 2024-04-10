@@ -41,7 +41,9 @@ public:
     using Vector = std::vector<Ptr>;
 
 public:
-    Output(const YString& target, const YString::Vector& cols) : path(target), columns(cols)
+    Output(const YString& target, const YString::Vector& cols):
+        path(target),
+        columns(cols)
     {
     }
 

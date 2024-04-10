@@ -41,7 +41,9 @@ void Application::resetProcessPriority() const
     if (System::CPU::Count() <= 2)
     {
         if (not SetPriorityClass(GetCurrentProcess(), BELOW_NORMAL_PRIORITY_CLASS))
+        {
             logs.info() << "  :: impossible to reset the process priority";
+        }
     }
 #endif
 }

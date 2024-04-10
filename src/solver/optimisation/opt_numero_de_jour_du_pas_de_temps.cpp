@@ -28,8 +28,8 @@
 
 void OPT_NumeroDeJourDuPasDeTemps(PROBLEME_HEBDO* problemeHebdo)
 {
-    problemeHebdo->NombreDeJours
-      = problemeHebdo->NombreDePasDeTemps / problemeHebdo->NombreDePasDeTempsDUneJournee;
+    problemeHebdo->NombreDeJours = problemeHebdo->NombreDePasDeTemps
+                                   / problemeHebdo->NombreDePasDeTempsDUneJournee;
     for (uint pdtHebdo = 0; pdtHebdo < problemeHebdo->NombreDePasDeTemps; pdtHebdo++)
     {
         double X = pdtHebdo / problemeHebdo->NombreDePasDeTempsDUneJournee;

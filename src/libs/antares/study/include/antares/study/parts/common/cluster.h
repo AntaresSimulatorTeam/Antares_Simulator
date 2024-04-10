@@ -36,6 +36,7 @@ namespace Antares
 namespace Data
 {
 class Cluster;
+
 struct CompareClusterName final
 {
     bool operator()(const Cluster* s1, const Cluster* s2) const;
@@ -106,7 +107,11 @@ public:
 
     uint unitCount = 0;
 
-    bool isEnabled() const { return enabled; }
+    bool isEnabled() const
+    {
+        return enabled;
+    }
+
     bool enabled = true;
 
     //! The associate area (alias)

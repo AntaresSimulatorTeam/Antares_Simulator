@@ -38,8 +38,10 @@ public:
 
 public:
     template<class StringT, class StringT2>
-    DataFile(const StringT& data, const StringT2& time, uint i) :
-     index(i), dataLevel(data), timeLevel(time)
+    DataFile(const StringT& data, const StringT2& time, uint i):
+        index(i),
+        dataLevel(data),
+        timeLevel(time)
     {
     }
 

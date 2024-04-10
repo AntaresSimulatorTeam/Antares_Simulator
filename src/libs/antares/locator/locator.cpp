@@ -58,7 +58,7 @@ bool FindLocation(String& location)
 #ifdef NDEBUG
         searchpaths.directories.push_back((s = root) << "\\..\\..\\..\\solver\\Release"); // msvc
 #else
-        searchpaths.directories.push_back((s = root) << "\\..\\..\\..\\solver\\Debug");   // msvc
+        searchpaths.directories.push_back((s = root) << "\\..\\..\\..\\solver\\Debug"); // msvc
 #endif
 
         searchpaths.directories.push_back((s = root) << "\\..\\..\\solver"); // mingw
@@ -199,4 +199,3 @@ bool FindYearByYearAggregator(Yuni::String& location)
 }
 
 } // namespace Antares::Solver
-

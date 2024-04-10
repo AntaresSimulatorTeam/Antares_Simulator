@@ -46,7 +46,6 @@ uint64_t RenewableClusterList::memoryUsage() const
     return ret;
 }
 
-
 bool RenewableClusterList::saveToFolder(const AnyString& folder) const
 {
     // Make sure the folder is created
@@ -59,7 +58,7 @@ bool RenewableClusterList::saveToFolder(const AnyString& folder) const
         IniFile ini;
 
         // Browse all clusters
-        for (auto& c : all())
+        for (auto& c: all())
         {
             // Adding a section to the inifile
             IniFile::Section* s = ini.addSection(c->name());
@@ -69,15 +68,23 @@ bool RenewableClusterList::saveToFolder(const AnyString& folder) const
             s->add("name", c->name());
 
             if (!c->group().empty())
+            {
                 s->add("group", c->group());
+            }
             if (!c->enabled)
+            {
                 s->add("enabled", "false");
+            }
 
             if (!Utils::isZero(c->nominalCapacity))
+            {
                 s->add("nominalCapacity", c->nominalCapacity);
+            }
 
             if (!Utils::isZero(c->unitCount))
+            {
                 s->add("unitCount", c->unitCount);
+            }
 
             s->add("ts-interpretation", c->getTimeSeriesModeAsString());
         }
@@ -98,7 +105,9 @@ bool RenewableClusterList::saveToFolder(const AnyString& folder) const
 static bool ClusterLoadFromProperty(RenewableCluster& cluster, const IniFile::Property* p)
 {
     if (p->key.empty())
+    {
         return false;
+    }
 
     if (p->key == "group")
     {
@@ -107,19 +116,29 @@ static bool ClusterLoadFromProperty(RenewableCluster& cluster, const IniFile::Pr
     }
 
     if (p->key == "name")
+    {
         return true;
+    }
 
     if (p->key == "enabled")
+    {
         return p->value.to<bool>(cluster.enabled);
+    }
 
     if (p->key == "unitcount")
+    {
         return p->value.to<uint>(cluster.unitCount);
+    }
 
     if (p->key == "nominalcapacity")
+    {
         return p->value.to<double>(cluster.nominalCapacity);
+    }
 
     if (p->key == "ts-interpretation")
+    {
         return cluster.setTimeSeriesModeFromString(p->value);
+    }
 
     // The property is unknown
     return false;
@@ -130,7 +149,9 @@ static bool ClusterLoadFromSection(const AnyString& filename,
                                    const IniFile::Section& section)
 {
     if (section.name.empty())
+    {
         return false;
+    }
 
     cluster.setName(section.name);
 
@@ -177,7 +198,9 @@ bool RenewableClusterList::loadFromFolder(const AnyString& folder, Area* area)
             for (auto* section = ini.firstSection; section; section = section->next)
             {
                 if (section->name.empty())
+                {
                     continue;
+                }
 
                 auto cluster = std::make_shared<RenewableCluster>(area);
 

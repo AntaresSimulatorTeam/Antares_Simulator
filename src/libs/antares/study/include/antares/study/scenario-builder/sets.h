@@ -33,7 +33,7 @@ namespace ScenarioBuilder
 /*!
 ** \brief Sets for TS numbers, for all years and a single timeseries
 */
-class Sets final : private Yuni::NonCopyable<Sets>
+class Sets final: private Yuni::NonCopyable<Sets>
 {
 public:
     //! Iterator

@@ -31,7 +31,9 @@ namespace Antares::Data::ShortTermStorage
 bool STStorageCluster::loadFromSection(const IniFile::Section& section)
 {
     if (!section.firstProperty)
+    {
         return false;
+    }
 
     for (auto* property = section.firstProperty; property; property = property->next)
     {
@@ -48,7 +50,9 @@ bool STStorageCluster::loadFromSection(const IniFile::Section& section)
     }
 
     if (properties.name.empty())
+    {
         return false;
+    }
 
     Yuni::CString<50, false> tmp;
     TransformNameIntoID(properties.name, tmp);
@@ -65,7 +69,9 @@ bool STStorageCluster::enabled() const
 bool STStorageCluster::validate() const
 {
     if (!enabled())
+    {
         return true;
+    }
 
     logs.debug() << "Validating properties and series for st storage: " << id;
     return properties.validate() && series->validate();

@@ -216,6 +216,7 @@ public:
                        bool print_dimensions,
                        PredicateT& predicate,
                        bool saveEvenIfAllZero = false) const;
+
     //@}
 
     virtual Yuni::IO::Error loadFromFileToBuffer(BufferType& buffer,

@@ -28,7 +28,7 @@
 
 namespace Antares::Data
 {
-Cluster::Cluster(Area* parent) :
+Cluster::Cluster(Area* parent):
     parentArea(parent),
     series(tsNumbers)
 {
@@ -64,15 +64,20 @@ void Cluster::setName(const AnyString& newname)
 }
 
 #define SEP Yuni::IO::Separator
+
 bool Cluster::saveDataSeriesToFolder(const AnyString& folder) const
 {
     if (folder.empty())
+    {
         return true;
+    }
 
     Yuni::Clob buffer;
     buffer.clear() << folder << SEP << parentArea->id << SEP << id();
     if (!Yuni::IO::Directory::Create(buffer))
+    {
         return true;
+    }
 
     buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "series.txt";
     return series.timeSeries.saveToCSVFile(buffer, precision());
@@ -81,28 +86,35 @@ bool Cluster::saveDataSeriesToFolder(const AnyString& folder) const
 bool Cluster::loadDataSeriesFromFolder(Study& s, const AnyString& folder)
 {
     if (folder.empty())
+    {
         return true;
+    }
 
     auto& buffer = s.bufferLoadingTS;
 
     bool ret = true;
     buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "series."
-        << s.inputExtension;
+                   << s.inputExtension;
     ret = series.timeSeries.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &s.dataBuffer) && ret;
 
     if (s.usedByTheSolver && s.parameters.derated)
+    {
         series.timeSeries.averageTimeseries();
+    }
 
     series.timeseriesNumbers.clear();
 
     return ret;
 }
+
 #undef SEP
 
 void Cluster::invalidateArea()
 {
     if (parentArea)
+    {
         parentArea->forceReload();
+    }
 }
 
 bool Cluster::isVisibleOnLayer(const size_t& layerID) const
@@ -125,4 +137,3 @@ bool CompareClusterName::operator()(const Cluster* s1, const Cluster* s2) const
 }
 
 } // namespace Antares::Data
-

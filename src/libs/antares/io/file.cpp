@@ -47,7 +47,9 @@ bool IOFileSetContent(const AnyString& filename, const AnyString& content)
     {
         // On Windows,  there is still the hard limit to 256 chars even if the API allows more
         if (filename.size() >= 256)
+        {
             logs.warning() << "I/O error: Maximum path length limitation (> 256 characters)";
+        }
     }
 
     uint attempt = 0;
@@ -93,7 +95,9 @@ bool IOFileSetContent(const AnyString& filename, const AnyString& content)
         }
 
         if (content.empty()) // ok, good, it's over
+        {
             return true;
+        }
 
         // little io trick : when the size if greater than a page size, it is possible
         // to use ftruncate to reduce block disk allocation
@@ -114,7 +118,9 @@ bool IOFileSetContent(const AnyString& filename, const AnyString& content)
             }
         }
         if (content.size() != out.write(content))
+        {
             continue; // not enough disk space
+        }
 
         // OK, good
         // Notifying the user / logs that we can safely continue. It could be interresting

@@ -112,11 +112,12 @@ const std::initializer_list<std::string>& getNames<UnfeasibleProblemBehavior>()
 {
     // Enum must be stored in lower case and without spaces because values  are trimmed and lowered
     // in ini load
-    static std::initializer_list<std::string> s_unfeasibleProblemBehaviorNames{
-      "warning-dry", "warning-verbose", "error-dry", "error-verbose"};
+    static std::initializer_list<std::string> s_unfeasibleProblemBehaviorNames{"warning-dry",
+                                                                               "warning-verbose",
+                                                                               "error-dry",
+                                                                               "error-verbose"};
     return s_unfeasibleProblemBehaviorNames;
 }
 } // namespace Enum
 
 } // namespace Antares::Data
-

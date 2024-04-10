@@ -28,7 +28,8 @@
 
 struct PROBLEME_HEBDO;
 
-// TODO remove when global variables have been removed (looking at you, transitMoyenInterconnexionsRecalculQuadratique)
+// TODO remove when global variables have been removed (looking at you,
+// transitMoyenInterconnexionsRecalculQuadratique)
 void SIM_AllocationTableaux(const Antares::Data::Study& study);
 
 /*!

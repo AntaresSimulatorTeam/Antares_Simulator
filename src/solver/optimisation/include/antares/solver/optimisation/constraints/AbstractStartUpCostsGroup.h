@@ -24,7 +24,7 @@
 #include "PMinDispatchableGeneration.h"
 #include "PMaxDispatchableGeneration.h"
 
-class AbstractStartUpCostsGroup : public ConstraintGroup
+class AbstractStartUpCostsGroup: public ConstraintGroup
 {
 public:
     AbstractStartUpCostsGroup(PROBLEME_HEBDO* problemeHebdo,

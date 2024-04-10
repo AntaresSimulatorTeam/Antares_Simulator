@@ -25,8 +25,8 @@ HydroPowerData HydroPowerGroup::GetHydroPowerDataFromProblemHebdo()
 {
     return {
       .CaracteristiquesHydrauliques = problemeHebdo_->CaracteristiquesHydrauliques,
-      .NombreDePasDeTempsPourUneOptimisation
-      = problemeHebdo_->NombreDePasDeTempsPourUneOptimisation,
+      .NombreDePasDeTempsPourUneOptimisation = problemeHebdo_
+                                                 ->NombreDePasDeTempsPourUneOptimisation,
       .NumeroDeContrainteEnergieHydraulique = problemeHebdo_->NumeroDeContrainteEnergieHydraulique};
 }
 

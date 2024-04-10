@@ -183,6 +183,7 @@ public:
     using ShortString12 = Yuni::CString<11, false>;
     //! Short string representation with maximum 8 characters
     using ShortString8 = Yuni::CString<7, false>;
+
     enum
     {
         //! The maximum number of hours in a year
@@ -329,10 +330,12 @@ public:
     ** \brief Default constructor
     */
     Calendar();
+
     //! Destructor
     ~Calendar()
     {
     }
+
     //@}
 
     /*!

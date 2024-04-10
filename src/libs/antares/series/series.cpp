@@ -28,22 +28,24 @@ using namespace Yuni;
 
 #define SEP IO::Separator
 
-
 namespace Antares::Data
 {
 
-TimeSeries::TimeSeries(numbers& tsNumbers) : timeseriesNumbers(tsNumbers)
-{}
+TimeSeries::TimeSeries(numbers& tsNumbers):
+    timeseriesNumbers(tsNumbers)
+{
+}
 
-bool TimeSeries::loadFromFile(const std::string& path,
-                              const bool average)
+bool TimeSeries::loadFromFile(const std::string& path, const bool average)
 {
     bool ret = true;
     Matrix<>::BufferType dataBuffer;
     ret = timeSeries.loadFromCSVFile(path, 1, HOURS_PER_YEAR, &dataBuffer) && ret;
 
     if (average)
+    {
         timeSeries.averageTimeseries();
+    }
 
     timeseriesNumbers.clear();
 
@@ -82,7 +84,9 @@ uint32_t TimeSeries::getSeriesIndex(uint32_t year) const
 double* TimeSeries::operator[](uint32_t index)
 {
     if (timeSeries.width <= index)
+    {
         return nullptr;
+    }
     return timeSeries[index];
 }
 

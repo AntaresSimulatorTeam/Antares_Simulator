@@ -31,7 +31,6 @@
 #include <memory>
 #include <ranges>
 
-
 namespace Antares
 {
 namespace Data
@@ -67,7 +66,10 @@ public:
     */
     bool exists(const Data::ClusterName& id) const;
 
-    auto each_enabled() const { return allClusters_ | std::views::filter(&ClusterT::isEnabled); }
+    auto each_enabled() const
+    {
+        return allClusters_ | std::views::filter(&ClusterT::isEnabled);
+    }
 
     std::vector<std::shared_ptr<ClusterT>> all() const;
 
@@ -90,8 +92,15 @@ public:
 
     //@}
 
-    SharedPtr operator[](std::size_t idx) { return allClusters_[idx]; }
-    SharedPtr operator[](std::size_t idx) const { return allClusters_[idx]; }
+    SharedPtr operator[](std::size_t idx)
+    {
+        return allClusters_[idx];
+    }
+
+    SharedPtr operator[](std::size_t idx) const
+    {
+        return allClusters_[idx];
+    }
 
     SharedPtr enabledClusterAt(unsigned int index) const;
     /*!
@@ -115,7 +124,6 @@ public:
     */
     void markAsModified() const;
 
-
     /*!
     ** \brief Get the size (bytes) occupied in memory by a `ClusterList` structure
     ** \return A size (in bytes)
@@ -124,8 +132,7 @@ public:
 
     /// \name IO functions
     /// @{
-    bool loadDataSeriesFromFolder(Study& study,
-                                 const AnyString& folder);
+    bool loadDataSeriesFromFolder(Study& study, const AnyString& folder);
 
     bool saveDataSeriesToFolder(const AnyString& folder) const;
 

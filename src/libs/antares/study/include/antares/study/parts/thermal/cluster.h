@@ -70,7 +70,7 @@ enum class LocalTSGenerationBehavior
 /*!
 ** \brief A single thermal cluster
 */
-class ThermalCluster final : public Cluster, public std::enable_shared_from_this<ThermalCluster>
+class ThermalCluster final: public Cluster, public std::enable_shared_from_this<ThermalCluster>
 {
 public:
     enum ThermalDispatchableGroup
@@ -239,7 +239,11 @@ public:
 
     //! Mustrun
     bool mustrun = false;
-    bool isMustRun() const { return mustrun; }
+
+    bool isMustRun() const
+    {
+        return mustrun;
+    }
 
     //! Mustrun (as it were at the loading of the data)
     //
@@ -258,7 +262,10 @@ public:
 
     struct DivModulation
     {
-        DivModulation() : value(0.0), isCalculated(false), isValidated(false)
+        DivModulation():
+            value(0.0),
+            isCalculated(false),
+            isValidated(false)
         {
         }
 
@@ -361,6 +368,7 @@ public:
         std::array<double, HOURS_PER_YEAR> marketBidCostTS;
         std::array<double, HOURS_PER_YEAR> marginalCostTS;
     };
+
     std::vector<CostsTimeSeries> costsTimeSeries;
 
     EconomicInputData ecoInput;
@@ -378,20 +386,18 @@ private:
     //
     // Calculation of market bid and marginals costs per hour
     //
-    // These time series can be set 
+    // These time series can be set
     // Market bid and marginal costs are set manually.
     // Or if time series are used the formula is:
     // Marginal_Cost[€/MWh] = Market_Bid_Cost[€/MWh] = (Fuel_Cost[€/GJ] * 3.6 * 100 / Efficiency[%])
     // CO2_emission_factor[tons/MWh] * C02_cost[€/tons] + Variable_O&M_cost[€/MWh]
-    
+
     void fillMarketBidCostTS();
     void fillMarginalCostTS();
     void resizeCostTS();
     void ComputeMarketBidTS();
     void MarginalCostEqualsMarketBid();
     void ComputeProductionCostTS();
-
-
 
 }; // class ThermalCluster
 } // namespace Data

@@ -38,12 +38,14 @@ bool Study::resetFolderIcon() const
         buffer.clear() << folder << SEP << "Desktop.ini";
         IO::File::Stream file;
         if (not file.openRW(buffer))
+        {
             return false;
+        }
         buffer.clear() << "[.shellclassinfo]\r\n"
                        << "iconfile = settings/resources/study.ico\r\n"
                        << "iconindex = 0\r\n"
-                       << "infotip = Antares Study" << header.version.toString()
-                       << ": " << header.caption << "\r\n";
+                       << "infotip = Antares Study" << header.version.toString() << ": "
+                       << header.caption << "\r\n";
         file << buffer;
     }
 
@@ -52,7 +54,9 @@ bool Study::resetFolderIcon() const
         // The file should be closed at this point
         Yuni::WString wbuffer(folder);
         if (not wbuffer.empty())
+        {
             SetFileAttributesW(wbuffer.c_str(), FILE_ATTRIBUTE_SYSTEM);
+        }
     }
 #endif
 
@@ -62,7 +66,9 @@ bool Study::resetFolderIcon() const
 bool Study::saveToFolder(const AnyString& newfolder)
 {
     if (newfolder.empty())
+    {
         return false;
+    }
 
     logs.notice() << "Exporting the study...";
     const String location = newfolder;
@@ -134,7 +140,9 @@ bool Study::saveToFolder(const AnyString& newfolder)
         markAsModified();
         // Invalidate the scenario builder data
         if (not scenarioRules)
+        {
             scenarioRulesCreate();
+        }
     }
 
     buffer.clear() << folder << Yuni::IO::Separator << "ConstraintBuilder" << Yuni::IO::Separator
@@ -257,4 +265,3 @@ bool Study::saveToFolder(const AnyString& newfolder)
 }
 
 } // namespace Antares::Data
-

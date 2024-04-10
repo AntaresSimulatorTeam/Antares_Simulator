@@ -30,7 +30,7 @@ namespace Antares
 /*!
 ** \brief Custom memory allocator for managed pointers
 */
-class Memory final : public Yuni::Policy::ObjectLevelLockable<Memory>
+class Memory final: public Yuni::Policy::ObjectLevelLockable<Memory>
 {
 public:
     template<class T>

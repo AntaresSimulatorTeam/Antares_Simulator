@@ -25,14 +25,16 @@
 #include <iomanip>
 #include <algorithm>
 
-namespace {
+namespace
+{
 const std::string kUnknown = "<unknown>";
 }
 
 namespace Antares::Optimization
 {
-Constraint::Constraint(const std::string& input, const double slackValue) :
- mInput(input), mSlackValue(slackValue)
+Constraint::Constraint(const std::string& input, const double slackValue):
+    mInput(input),
+    mSlackValue(slackValue)
 {
 }
 
@@ -64,10 +66,11 @@ double Constraint::getSlackValue() const
     return mSlackValue;
 }
 
-class StringIsNotWellFormated : public std::runtime_error
+class StringIsNotWellFormated: public std::runtime_error
 {
 public:
-    StringIsNotWellFormated(const std::string& error_message) : std::runtime_error(error_message)
+    StringIsNotWellFormated(const std::string& error_message):
+        std::runtime_error(error_message)
     {
     }
 };
@@ -126,7 +129,7 @@ std::string Constraint::getTimeStepInYear() const
     case ConstraintType::fictitious_load:
     case ConstraintType::hydro_reservoir_level:
     case ConstraintType::short_term_storage_level:
-        return StringBetweenAngleBrackets (mItems.at(mItems.size()-2));
+        return StringBetweenAngleBrackets(mItems.at(mItems.size() - 2));
     default:
         return kUnknown;
     }
@@ -177,10 +180,14 @@ std::string Constraint::getBindingConstraintName() const
 
 std::string Constraint::getSTSName() const
 {
-  if (getType() == ConstraintType::short_term_storage_level)
-      return StringBetweenAngleBrackets(mItems.at(2));
-  else
-      return kUnknown;
+    if (getType() == ConstraintType::short_term_storage_level)
+    {
+        return StringBetweenAngleBrackets(mItems.at(2));
+    }
+    else
+    {
+        return kUnknown;
+    }
 }
 
 std::string Constraint::prettyPrint() const
@@ -203,7 +210,8 @@ std::string Constraint::prettyPrint() const
         return "Hydro reservoir constraint at area '" + getAreaName() + "' at hour "
                + getTimeStepInYear();
     case ConstraintType::short_term_storage_level:
-        return "Short-term-storage reservoir constraint at area '" + getAreaName() + "' in STS '" + getSTSName() + "' at hour " + getTimeStepInYear();
+        return "Short-term-storage reservoir constraint at area '" + getAreaName() + "' in STS '"
+               + getSTSName() + "' at hour " + getTimeStepInYear();
 
     default:
         return kUnknown;

@@ -24,12 +24,12 @@
 #include "MinHydroPower.h"
 #include "MaxHydroPower.h"
 
-class MinMaxHydroPowerGroup : public ConstraintGroup
+class MinMaxHydroPowerGroup: public ConstraintGroup
 {
 public:
     using ConstraintGroup::ConstraintGroup;
 
-        void BuildConstraints() override;
+    void BuildConstraints() override;
 
 private:
     MinHydroPowerData GetMinHydroPowerData();

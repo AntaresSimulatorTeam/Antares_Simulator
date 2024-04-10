@@ -22,6 +22,7 @@
 #include "antares/solver/optimisation/constraints/ConstraintBuilder.h"
 
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
+
 struct CsrAreaBalanceData
 {
     const std::vector<adqPatchParamsMode>& areaMode;
@@ -39,13 +40,15 @@ struct CsrAreaBalanceData
     const uint32_t NombreDePays;
 };
 
-class CsrAreaBalance : private ConstraintFactory
+class CsrAreaBalance: private ConstraintFactory
 {
 public:
-    CsrAreaBalance(ConstraintBuilder& builder, CsrAreaBalanceData& data) :
-     ConstraintFactory(builder), data(data)
+    CsrAreaBalance(ConstraintBuilder& builder, CsrAreaBalanceData& data):
+        ConstraintFactory(builder),
+        data(data)
     {
     }
+
     void add();
 
 private:

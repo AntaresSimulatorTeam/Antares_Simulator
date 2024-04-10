@@ -23,15 +23,17 @@
 #include <antares/study/study.h>
 #include "antares/solver/ts-generator/xcast/studydata.h"
 
-
 using namespace Yuni;
 
 namespace Antares::TSGenerator::XCast
 {
-StudyData::StudyData() : mode(Data::Correlation::modeNone)
+StudyData::StudyData():
+    mode(Data::Correlation::modeNone)
 {
     for (uint realmonth = 0; realmonth != 12; ++realmonth)
+    {
         correlation[realmonth] = nullptr;
+    }
 }
 
 StudyData::~StudyData()
@@ -41,7 +43,9 @@ StudyData::~StudyData()
     case Data::Correlation::modeMonthly:
     {
         for (uint realmonth = 0; realmonth != 12; ++realmonth)
+        {
             delete correlation[realmonth];
+        }
         break;
     }
     case Data::Correlation::modeAnnual:
@@ -90,7 +94,9 @@ void StudyData::reloadDataFromAreaList(const Data::Correlation& originalCorrelat
             prepareMatrix(*m, *(originalCorrelation.annual));
 
             for (uint realmonth = 0; realmonth != 12; ++realmonth)
+            {
                 correlation[realmonth] = m;
+            }
             break;
         }
         case Data::Correlation::modeMonthly:
@@ -110,11 +116,10 @@ void StudyData::reloadDataFromAreaList(const Data::Correlation& originalCorrelat
     else
     {
         for (uint realmonth = 0; realmonth != 12; ++realmonth)
+        {
             correlation[realmonth] = nullptr;
+        }
     }
 }
 
 } // namespace Antares::TSGenerator::XCast
-
-
-

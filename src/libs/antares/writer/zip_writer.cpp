@@ -48,20 +48,20 @@ void logErrorAndThrow(const std::string& errorMessage)
     logs.error() << errorMessage;
     throw IOError(errorMessage);
 }
-}
+} // namespace
 
 // Class ZipWriteJob
 template<class ContentT>
 ZipWriteJob<ContentT>::ZipWriteJob(ZipWriter& writer,
                                    std::string entryPath,
                                    ContentT& content,
-                                   Benchmarking::IDurationCollector& duration_collector) :
- pZipHandle(writer.pZipHandle),
- pZipMutex(writer.pZipMutex),
- pState(writer.pState),
- pEntryPath(std::move(entryPath)),
- pContent(std::move(content)),
- pDurationCollector(duration_collector)
+                                   Benchmarking::IDurationCollector& duration_collector):
+    pZipHandle(writer.pZipHandle),
+    pZipMutex(writer.pZipMutex),
+    pState(writer.pState),
+    pEntryPath(std::move(entryPath)),
+    pContent(std::move(content)),
+    pDurationCollector(duration_collector)
 {
 }
 
@@ -81,7 +81,9 @@ void ZipWriteJob<ContentT>::writeEntry()
 {
     // Don't write data if finalize() has been called
     if (pState != ZipState::can_receive_data)
+    {
         return;
+    }
 
     auto file_info = createInfo(pEntryPath);
 
@@ -100,7 +102,7 @@ void ZipWriteJob<ContentT>::writeEntry()
     if (static_cast<unsigned int>(bw) != pContent.size())
     {
         logErrorAndThrow("Error writing entry " + pEntryPath + "(written = " + std::to_string(bw)
-                                                + ", size = " + std::to_string(pContent.size()) + ")");
+                         + ", size = " + std::to_string(pContent.size()) + ")");
     }
 
     timer_write.stop();
@@ -110,16 +112,17 @@ void ZipWriteJob<ContentT>::writeEntry()
 // Class ZipWriter
 ZipWriter::ZipWriter(std::shared_ptr<Yuni::Job::QueueService> qs,
                      const char* archivePath,
-                     Benchmarking::IDurationCollector& duration_collector) :
- pQueueService(qs),
- pState(ZipState::can_receive_data),
- pArchivePath(std::string(archivePath) + ".zip"),
- pDurationCollector(duration_collector)
+                     Benchmarking::IDurationCollector& duration_collector):
+    pQueueService(qs),
+    pState(ZipState::can_receive_data),
+    pArchivePath(std::string(archivePath) + ".zip"),
+    pDurationCollector(duration_collector)
 {
     pZipHandle = mz_zip_writer_create();
     if (int32_t ret = mz_zip_writer_open_file(pZipHandle, pArchivePath.c_str(), 0, 0); ret != MZ_OK)
     {
-        logErrorAndThrow("Error opening zip file " + pArchivePath + " (" + std::to_string(ret) + ")");
+        logErrorAndThrow("Error opening zip file " + pArchivePath + " (" + std::to_string(ret)
+                         + ")");
     }
     // TODO : make level of compression configurable
     mz_zip_writer_set_compress_level(pZipHandle, MZ_COMPRESS_LEVEL_FAST);
@@ -128,7 +131,9 @@ ZipWriter::ZipWriter(std::shared_ptr<Yuni::Job::QueueService> qs,
 ZipWriter::~ZipWriter()
 {
     if (!pZipHandle)
+    {
         return;
+    }
 
     try
     {
@@ -163,7 +168,7 @@ void ZipWriter::addEntryFromFile(const std::string& entryPath, const std::string
     case errNotFound:
         logErrorAndThrow(filePath + ": file does not exist");
         break;
-   case errReadFailed:
+    case errReadFailed:
         logErrorAndThrow("Read failed '" + filePath + "'");
         break;
     case errMemoryLimit:
@@ -182,27 +187,35 @@ bool ZipWriter::needsTheJobQueue() const
 
 void ZipWriter::finalize(bool verbose)
 {
-    //wait for completion of pending writing tasks
+    // wait for completion of pending writing tasks
     flush();
 
     // Prevent new jobs from being submitted
     pState = ZipState::blocking;
 
     if (!pZipHandle)
+    {
         return;
+    }
 
     if (verbose)
+    {
         logs.notice() << "Writing results...";
+    }
 
     std::lock_guard guard(pZipMutex);
     if (int ret = mz_zip_writer_close(pZipHandle); ret != MZ_OK && verbose)
+    {
         logs.warning() << "Error closing the zip file " << pArchivePath << " (" << ret << ")";
+    }
 
     mz_zip_writer_delete(&pZipHandle);
     pZipHandle = nullptr;
 
     if (verbose)
+    {
         logs.notice() << "Done";
+    }
 }
 
 void ZipWriter::flush()

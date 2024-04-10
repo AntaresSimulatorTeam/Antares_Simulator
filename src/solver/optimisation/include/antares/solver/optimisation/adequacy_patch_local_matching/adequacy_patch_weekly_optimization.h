@@ -30,7 +30,7 @@ using Antares::Data::AreaList;
 
 namespace Antares::Solver::Optimization
 {
-class AdequacyPatchOptimization : public WeeklyOptimization
+class AdequacyPatchOptimization: public WeeklyOptimization
 {
 public:
     explicit AdequacyPatchOptimization(const Antares::Data::Study& study,
@@ -42,6 +42,7 @@ public:
 
     ~AdequacyPatchOptimization() override = default;
     void solve() override;
+
 private:
     const Antares::Data::Study& study_;
 };

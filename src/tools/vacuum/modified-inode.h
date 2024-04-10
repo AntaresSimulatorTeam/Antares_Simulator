@@ -24,10 +24,11 @@
 #include <mutex>
 #include <fswalker/fswalker.h>
 
-class ModifiedINode : public FSWalker::IExtension
+class ModifiedINode: public FSWalker::IExtension
 {
 public:
     ModifiedINode(int64_t dateLimit);
+
     virtual ~ModifiedINode()
     {
     }

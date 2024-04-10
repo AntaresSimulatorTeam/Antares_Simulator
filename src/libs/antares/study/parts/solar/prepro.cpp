@@ -32,7 +32,8 @@ namespace Data
 {
 namespace Solar
 {
-Prepro::Prepro() : xcast(timeSeriesSolar)
+Prepro::Prepro():
+    xcast(timeSeriesSolar)
 {
 }
 

@@ -30,8 +30,8 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
-    int NombreDePasDeTempsPourUneOptimisation
-      = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+    int NombreDePasDeTempsPourUneOptimisation = problemeHebdo
+                                                  ->NombreDePasDeTempsPourUneOptimisation;
     int NombreDeVariables = 0;
     VariableNamer variableNamer(ProblemeAResoudre->NomDesVariables);
     auto variableManager = VariableManagerFromProblemHebdo(problemeHebdo);
@@ -45,10 +45,10 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
             variableManager.NTCDirect(interco, pdt) = NombreDeVariables;
             ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
 
-            const auto origin
-              = problemeHebdo->NomsDesPays[problemeHebdo->PaysOrigineDeLInterconnexion[interco]];
-            const auto destination
-              = problemeHebdo->NomsDesPays[problemeHebdo->PaysExtremiteDeLInterconnexion[interco]];
+            const auto origin = problemeHebdo->NomsDesPays
+                                  [problemeHebdo->PaysOrigineDeLInterconnexion[interco]];
+            const auto destination = problemeHebdo->NomsDesPays
+                                       [problemeHebdo->PaysExtremiteDeLInterconnexion[interco]];
             variableNamer.NTCDirect(NombreDeVariables, origin, destination);
             NombreDeVariables++;
 
@@ -69,13 +69,13 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
 
         for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
-            const PALIERS_THERMIQUES& PaliersThermiquesDuPays
-              = problemeHebdo->PaliersThermiquesDuPays[pays];
+            const PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo
+                                                                  ->PaliersThermiquesDuPays[pays];
             variableNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
             for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
             {
-                const int palier
-                  = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+                const int palier = PaliersThermiquesDuPays
+                                     .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
                 const auto& clusterName = PaliersThermiquesDuPays.NomsDesPaliersThermiques[index];
                 variableManager.DispatchableProduction(palier, pdt) = NombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
@@ -84,7 +84,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
                 NombreDeVariables++;
             }
 
-            for (const auto& storage : problemeHebdo->ShortTermStorage[pays])
+            for (const auto& storage: problemeHebdo->ShortTermStorage[pays])
             {
                 const int clusterGlobalIndex = storage.clusterGlobalIndex;
                 // 1. Injection
@@ -134,7 +134,9 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
                 NombreDeVariables++;
             }
             else
+            {
                 variableManager.HydProd(pays, pdt) = -1;
+            }
             variableManager.HydProdDown(pays, pdt) = -1;
             variableManager.HydProdUp(pays, pdt) = -1;
             if (problemeHebdo->TypeDeLissageHydraulique
@@ -183,7 +185,9 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
                 NombreDeVariables++;
             }
             else
+            {
                 variableManager.Pumping(pays, pdt) = -1;
+            }
 
             if (problemeHebdo->CaracteristiquesHydrauliques[pays].SuiviNiveauHoraire)
             {
@@ -209,7 +213,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
     for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
         variableNamer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168
-                                      + NombreDePasDeTempsPourUneOptimisation - 1);
+                                     + NombreDePasDeTempsPourUneOptimisation - 1);
         variableNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
         if (problemeHebdo->CaracteristiquesHydrauliques[pays].AccurateWaterValue)
         {

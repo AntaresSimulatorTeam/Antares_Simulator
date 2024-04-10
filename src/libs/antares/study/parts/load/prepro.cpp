@@ -25,11 +25,10 @@
 
 using namespace Yuni;
 
-
-
 namespace Antares::Data::Load
 {
-Prepro::Prepro() : xcast(timeSeriesLoad)
+Prepro::Prepro():
+    xcast(timeSeriesLoad)
 {
 }
 
@@ -48,5 +47,3 @@ bool Prepro::saveToFolder(const AnyString& folder) const
 }
 
 } // namespace Antares::Data::Load
-
-

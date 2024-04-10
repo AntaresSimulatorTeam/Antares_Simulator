@@ -182,13 +182,15 @@ static void NotifyStatistics(const String& logprefix,
 
 namespace // anonymous
 {
-class DirectoryCleanerJob : public Job::IJob
+class DirectoryCleanerJob: public Job::IJob
 {
 public:
-    DirectoryCleanerJob(const String& directory, int64_t dateLimit) :
-     directory(directory), dateLimit(dateLimit)
+    DirectoryCleanerJob(const String& directory, int64_t dateLimit):
+        directory(directory),
+        dateLimit(dateLimit)
     {
     }
+
     virtual ~DirectoryCleanerJob()
     {
     }
@@ -284,7 +286,9 @@ int main(int argc, char** argv)
         options.addFlag(optVersion, 'v', "version", "Print the version and exit");
 
         if (options(argc, argv) == GetOpt::ReturnCode::error)
+        {
             return options.errors() ? 42 : 0;
+        }
 
         if (optVersion)
         {
@@ -293,7 +297,9 @@ int main(int argc, char** argv)
         }
 
         if (not optLogs.empty())
+        {
             logs.logfile(optLogs);
+        }
 
         if (!optMaxDays)
         {
@@ -302,7 +308,9 @@ int main(int argc, char** argv)
         }
 
         if (optDelete)
+        {
             dry = false;
+        }
     }
 
     logs.notice() << "Antares Vacuum v" << VersionToCString();
@@ -317,21 +325,29 @@ int main(int argc, char** argv)
     }
 
     if (dry)
+    {
         logs.info() << "dry run mode (nothing will de deleted)";
+    }
 
     foreach (auto& input, optInput)
+    {
         inputFolders.insert(input);
+    }
 
     foreach (auto& path, optEachFolderIn)
     {
         IO::Directory::Info info(path);
         for (auto i = info.folder_begin(); i.valid(); ++i)
+        {
             inputFolders.insert(i.filename());
+        }
     }
     optEachFolderIn.clear();
 
     foreach (auto& input, inputFolders)
+    {
         logs.info() << "added directory " << input;
+    }
     else logs.warning() << "no directory to analyze";
 
     // GO !
@@ -343,7 +359,9 @@ int main(int argc, char** argv)
         queueservice.maximumThreadCount(4);
 
         foreach (auto& input, inputFolders)
+        {
             queueservice += new DirectoryCleanerJob(input, dateLimit);
+        }
 
         queueservice.start();
         queueservice.wait(Yuni::qseIdle);

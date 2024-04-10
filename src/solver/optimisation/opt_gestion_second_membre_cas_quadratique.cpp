@@ -33,7 +33,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeQuadratique(PROBLEME_HEBDO* probleme
     for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays - 1; pays++)
     {
         int cnt = problemeHebdo->NumeroDeContrainteDeSoldeDEchange[pays];
-        ProblemeAResoudre->SecondMembre[cnt]
-          = problemeHebdo->SoldeMoyenHoraire[PdtHebdo].SoldeMoyenDuPays[pays];
+        ProblemeAResoudre->SecondMembre[cnt] = problemeHebdo->SoldeMoyenHoraire[PdtHebdo]
+                                                 .SoldeMoyenDuPays[pays];
     }
 }

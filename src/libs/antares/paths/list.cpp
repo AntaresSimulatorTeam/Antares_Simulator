@@ -62,14 +62,18 @@ size_t PathList::totalSizeInBytes() const
 
     const ItemList::const_iterator end = item.end();
     for (ItemList::const_iterator i = item.begin(); i != end; ++i)
+    {
         size += i->second.size;
+    }
     return size;
 }
 
 uint PathList::internalDeleteAllEmptyFolders()
 {
     if (!pTmp || item.empty())
+    {
         return 0;
+    }
 
     Clob buffer;
     uint count = 0;
@@ -83,9 +87,13 @@ uint PathList::internalDeleteAllEmptyFolders()
             buffer.clear() << pTmp << SEP << i->first;
 
             if (IO::Directory::Remove(buffer) || !IO::Directory::Exists(buffer))
+            {
                 ++count;
+            }
             else
+            {
                 logs.warning() << "I/O error: could not remove " << buffer;
+            }
         }
     }
     return count;
@@ -94,7 +102,9 @@ uint PathList::internalDeleteAllEmptyFolders()
 uint PathList::internalDeleteAllFiles()
 {
     if (!pTmp || item.empty())
+    {
         return 0;
+    }
 
     Clob buffer;
     uint count = 0;
@@ -107,25 +117,32 @@ uint PathList::internalDeleteAllFiles()
         {
             buffer.clear() << pTmp << SEP << i->first;
             if (IO::File::Delete(buffer) || !IO::File::Exists(buffer))
+            {
                 ++count;
+            }
             else
+            {
                 logs.warning() << "I/O error: could not delete " << buffer;
+            }
         }
     }
     return count;
 }
 
-class PathListIterator : public IO::Directory::IIterator<true>
+class PathListIterator: public IO::Directory::IIterator<true>
 {
 public:
     using IteratorType = IO::Directory::IIterator<true>;
     using Flow = IO::Flow;
 
 public:
-    PathListIterator(PathList& l, const PathList& e, std::function<bool(uint)>& progress) :
-     list(l), exclude(e), onProgress(progress)
+    PathListIterator(PathList& l, const PathList& e, std::function<bool(uint)>& progress):
+        list(l),
+        exclude(e),
+        onProgress(progress)
     {
     }
+
     virtual ~PathListIterator()
     {
         // For code robustness and to avoid corrupt vtable
@@ -152,7 +169,9 @@ protected:
     virtual Flow onFile(const String& filename, const String&, const String&, uint64_t size)
     {
         if (pathListOptNotFound == exclude.find(filename.c_str() + offset))
+        {
             list.add(filename.c_str() + offset, (size_t)size);
+        }
         return IO::flowContinue;
     }
 

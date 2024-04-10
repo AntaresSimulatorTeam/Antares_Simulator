@@ -43,8 +43,10 @@ void ApplyCustomScenario(Data::Study& study)
             rules->apply();
         }
         else
+        {
             logs.error() << "Scenario Builder: Impossible to find the active ruleset '" << rulename
                          << "'";
+        }
     }
 
     study.scenarioRulesDestroy();

@@ -36,8 +36,8 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(
   const int DernierPdtDeLIntervalle)
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
-    int NombreDePasDeTempsPourUneOptimisation
-      = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+    int NombreDePasDeTempsPourUneOptimisation = problemeHebdo
+                                                  ->NombreDePasDeTempsPourUneOptimisation;
 
     std::vector<double*>& AdresseOuPlacerLaValeurDesVariablesOptimisees
       = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees;
@@ -50,15 +50,15 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(
     {
         for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
-            const PALIERS_THERMIQUES& PaliersThermiquesDuPays
-              = problemeHebdo->PaliersThermiquesDuPays[pays];
+            const PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo
+                                                                  ->PaliersThermiquesDuPays[pays];
 
             for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
             {
                 const PDISP_ET_COUTS_HORAIRES_PAR_PALIER& PuissanceDisponibleEtCout
                   = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[index];
-                const int palier
-                  = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+                const int palier = PaliersThermiquesDuPays
+                                     .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
                 const std::vector<int>& NombreMaxDeGroupesEnMarcheDuPalierThermique
                   = PuissanceDisponibleEtCout.NombreMaxDeGroupesEnMarcheDuPalierThermique;
                 const std::vector<int>& NombreMinDeGroupesEnMarcheDuPalierThermique
@@ -96,7 +96,9 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(
                 int t1 = pdtHebdo;
                 int t1moins1 = t1 - 1;
                 if (t1moins1 < 0)
+                {
                     t1moins1 = NombreDePasDeTempsPourUneOptimisation + t1moins1;
+                }
                 Xmax[var] = 0;
                 if (NombreMaxDeGroupesEnMarcheDuPalierThermique[t1moins1]
                       - NombreMaxDeGroupesEnMarcheDuPalierThermique[t1]

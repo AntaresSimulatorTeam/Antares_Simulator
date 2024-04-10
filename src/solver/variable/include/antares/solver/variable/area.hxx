@@ -81,23 +81,33 @@ void Areas<NextT>::buildSurveyReport(SurveyResults& results,
             {
             case Category::hourly:
                 if (not(area.filterSynthesis & Data::filterHourly))
+                {
                     return;
+                }
                 break;
             case Category::daily:
                 if (not(area.filterSynthesis & Data::filterDaily))
+                {
                     return;
+                }
                 break;
             case Category::weekly:
                 if (not(area.filterSynthesis & Data::filterWeekly))
+                {
                     return;
+                }
                 break;
             case Category::monthly:
                 if (not(area.filterSynthesis & Data::filterMonthly))
+                {
                     return;
+                }
                 break;
             case Category::annual:
                 if (not(area.filterSynthesis & Data::filterAnnual))
+                {
                     return;
+                }
                 break;
             case Category::all:
                 break;
@@ -132,23 +142,33 @@ void Areas<NextT>::buildAnnualSurveyReport(SurveyResults& results,
             {
             case Category::hourly:
                 if (!(area.filterYearByYear & Data::filterHourly))
+                {
                     return;
+                }
                 break;
             case Category::daily:
                 if (!(area.filterYearByYear & Data::filterDaily))
+                {
                     return;
+                }
                 break;
             case Category::weekly:
                 if (!(area.filterYearByYear & Data::filterWeekly))
+                {
                     return;
+                }
                 break;
             case Category::monthly:
                 if (!(area.filterYearByYear & Data::filterMonthly))
+                {
                     return;
+                }
                 break;
             case Category::annual:
                 if (!(area.filterYearByYear & Data::filterAnnual))
+                {
                     return;
+                }
                 break;
             case Category::all:
                 break;
@@ -156,8 +176,11 @@ void Areas<NextT>::buildAnnualSurveyReport(SurveyResults& results,
         }
 
         // Build the survey results for the given area
-        pAreas[area.index].buildAnnualSurveyReport(
-          results, dataLevel, fileLevel, precision, numSpace);
+        pAreas[area.index].buildAnnualSurveyReport(results,
+                                                   dataLevel,
+                                                   fileLevel,
+                                                   precision,
+                                                   numSpace);
     }
 }
 
@@ -257,8 +280,8 @@ inline void Areas<NextT>::retrieveResultsForThermalCluster(
   typename Storage<VCardToFindT>::ResultsType** result,
   const Data::ThermalCluster* cluster)
 {
-    pAreas[cluster->parentArea->index].template retrieveResultsForThermalCluster<VCardToFindT>(
-      result, cluster);
+    pAreas[cluster->parentArea->index]
+      .template retrieveResultsForThermalCluster<VCardToFindT>(result, cluster);
 }
 
 template<class NextT>

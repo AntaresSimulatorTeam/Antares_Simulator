@@ -33,8 +33,9 @@ namespace Antares::Data
 class LayerData
 {
 public:
-    LayerData(size_t activeLayer, bool showLayer) :
-     activeLayerID(activeLayer), showAllLayer(showLayer)
+    LayerData(size_t activeLayer, bool showLayer):
+        activeLayerID(activeLayer),
+        showAllLayer(showLayer)
     {
     }
 

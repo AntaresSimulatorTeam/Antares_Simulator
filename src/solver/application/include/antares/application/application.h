@@ -32,7 +32,7 @@
 
 namespace Antares::Solver
 {
-class Application final : public Yuni::IEventObserver<Application, Yuni::Policy::SingleThreaded>
+class Application final: public Yuni::IEventObserver<Application, Yuni::Policy::SingleThreaded>
 {
 public:
     //! \name Constructor & Destructor
@@ -71,6 +71,7 @@ public:
     void resetProcessPriority() const;
 
     void writeExectutionInfo();
+
 private:
     /*!
     ** \brief Reset the log filename and open it
@@ -112,4 +113,3 @@ private:
     void writeComment(Data::Study& study);
 }; // class Application
 } // namespace Antares::Solver
-

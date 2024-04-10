@@ -28,15 +28,17 @@ struct MinHydroPowerData
     const int& NombreDePasDeTempsPourUneOptimisation;
     std::vector<int>& NumeroDeContrainteMinEnergieHydraulique;
 };
+
 /*!
  * represent 'Min Hydraulic Power' constraint type
  */
 
-class MinHydroPower : private ConstraintFactory
+class MinHydroPower: private ConstraintFactory
 {
 public:
-    MinHydroPower(ConstraintBuilder& builder, MinHydroPowerData& data) :
-     ConstraintFactory(builder), data(data)
+    MinHydroPower(ConstraintBuilder& builder, MinHydroPowerData& data):
+        ConstraintFactory(builder),
+        data(data)
     {
     }
 

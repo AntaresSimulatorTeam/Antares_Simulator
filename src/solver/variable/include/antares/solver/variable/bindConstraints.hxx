@@ -35,7 +35,9 @@ void BindingConstraints<NextT>::buildSurveyReport(SurveyResults& results,
                                                   int precision) const
 {
     if (bool bcDataLevel = dataLevel & Category::bindingConstraint; !bcDataLevel)
+    {
         return;
+    }
 
     for (uint i = 0; i != pBCcount; ++i)
     {
@@ -53,7 +55,9 @@ void BindingConstraints<NextT>::buildAnnualSurveyReport(SurveyResults& results,
                                                         uint numSpace) const
 {
     if (bool bcDataLevel = dataLevel & Category::bindingConstraint; !bcDataLevel)
+    {
         return;
+    }
 
     for (uint i = 0; i != pBCcount; ++i)
     {
@@ -95,8 +99,8 @@ inline void BindingConstraints<NextT>::provideInformations(I& infos)
 template<class NextT>
 void BindingConstraints<NextT>::initializeFromStudy(Data::Study& study)
 {
-    const std::vector<std::shared_ptr<Data::BindingConstraint>> inequalityByPtr
-        = study.bindingConstraints.getPtrForInequalityBindingConstraints();
+    const std::vector<std::shared_ptr<Data::BindingConstraint>>
+      inequalityByPtr = study.bindingConstraints.getPtrForInequalityBindingConstraints();
 
     // The total number of inequality binding constraints count
     // (we don't count BCs with equality sign)
@@ -126,10 +130,10 @@ void BindingConstraints<NextT>::initializeFromStudy(Data::Study& study)
     // Instead, we have a few lines as a hack.
     // What we have to do is add to the print info collector a single VariablePrintInfo
     // that has a max columns size of : (nb of inequality BCs) x ResultsType::count
-    // But note that for now, BC output variables are chained statically (one output variable per inequality BC).
-    // The hack is to make the first BC output variable able to supply max columns size for all BC output variables
-    // with its method getMaxNumberColumns().
-    // A solution would be to make BC output variables (like BindingConstMarginCost) some DYNAMIC variables.
+    // But note that for now, BC output variables are chained statically (one output variable per
+    // inequality BC). The hack is to make the first BC output variable able to supply max columns
+    // size for all BC output variables with its method getMaxNumberColumns(). A solution would be
+    // to make BC output variables (like BindingConstMarginCost) some DYNAMIC variables.
     if (pBCcount > 0)
     {
         NextType& bc = pBindConstraints[0];
@@ -173,20 +177,26 @@ template<class NextT>
 void BindingConstraints<NextT>::weekBegin(State& state)
 {
     for (uint i = 0; i != pBCcount; ++i)
+    {
         pBindConstraints[i].weekBegin(state);
+    }
 }
 
 template<class NextT>
 void BindingConstraints<NextT>::hourBegin(uint hourInTheYear)
 {
     for (uint i = 0; i != pBCcount; ++i)
+    {
         pBindConstraints[i].hourBegin(hourInTheYear);
+    }
 }
 
 template<class NextT>
 void BindingConstraints<NextT>::hourEnd(State& state, uint hourInTheYear)
 {
     for (uint i = 0; i != pBCcount; ++i)
+    {
         pBindConstraints[i].hourEnd(state, hourInTheYear);
+    }
 }
 } // namespace Antares::Solver::Variable

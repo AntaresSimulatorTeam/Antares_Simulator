@@ -30,10 +30,12 @@
 using namespace Yuni;
 using namespace Antares;
 
-class MyStudyFinder : public Data::StudyFinder
+class MyStudyFinder: public Data::StudyFinder
 {
 public:
-    MyStudyFinder() : extra(false), csv(false)
+    MyStudyFinder():
+        extra(false),
+        csv(false)
     {
     }
 
@@ -47,9 +49,13 @@ public:
         if (extra)
         {
             if (csv)
+            {
                 std::cout << ";" << version.toString();
+            }
             else
+            {
                 std::cout << " (" << version.toString() << ')';
+            }
         }
         std::cout << '\n';
     }
@@ -96,7 +102,9 @@ int main(int argc, char* argv[])
         options.addFlag(optVersion, 'v', "version", "Print the version and exit");
 
         if (options(argc, argv) == GetOpt::ReturnCode::error)
+        {
             return options.errors() ? 1 : 0;
+        }
 
         if (optVersion)
         {

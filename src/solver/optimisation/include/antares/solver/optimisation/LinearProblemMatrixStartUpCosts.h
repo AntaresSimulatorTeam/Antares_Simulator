@@ -35,7 +35,7 @@
 
 using namespace Antares::Data;
 
-class LinearProblemMatrixStartUpCosts : public ProblemMatrixEssential
+class LinearProblemMatrixStartUpCosts: public ProblemMatrixEssential
 {
 public:
     explicit LinearProblemMatrixStartUpCosts(PROBLEME_HEBDO* problemeHebdo,

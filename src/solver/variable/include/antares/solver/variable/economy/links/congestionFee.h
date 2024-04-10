@@ -38,6 +38,7 @@ struct VCardCongestionFee
     {
         return "CONG. FEE (ALG.)";
     }
+
     //! Unit
     static std::string Unit()
     {
@@ -91,7 +92,7 @@ struct VCardCongestionFee
 ** \brief Marginal CongestionFee
 */
 template<class NextT = Container::EndOfList>
-class CongestionFee : public Variable::IVariable<CongestionFee<NextT>, NextT, VCardCongestionFee>
+class CongestionFee: public Variable::IVariable<CongestionFee<NextT>, NextT, VCardCongestionFee>
 {
 public:
     //! Type of the next static variable
@@ -117,11 +118,11 @@ public:
     {
         enum
         {
-            count
-            = ((VCardType::categoryDataLevel & CDataLevel && VCardType::categoryFileLevel & CFile)
-                 ? (NextType::template Statistics<CDataLevel, CFile>::count
-                    + VCardType::columnCount * ResultsType::count)
-                 : NextType::template Statistics<CDataLevel, CFile>::count),
+            count = ((VCardType::categoryDataLevel & CDataLevel
+                      && VCardType::categoryFileLevel & CFile)
+                       ? (NextType::template Statistics<CDataLevel, CFile>::count
+                          + VCardType::columnCount * ResultsType::count)
+                       : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
 
@@ -142,7 +143,9 @@ public:
         // Intermediate values
         pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+        {
             pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);
+        }
 
         // Next
         NextType::initializeFromStudy(study);
@@ -229,8 +232,10 @@ public:
       .CoutsMarginauxHoraires[state.hourInTheWeek]
 
         // Congestion Fee
-        pValuesForTheCurrentYear[numSpace].hour[state.hourInTheYear]
-          = state.ntc.ValeurDuFlux[state.link->index] * (UPSTREAM_PRICE - DOWNSTREAM_PRICE);
+        pValuesForTheCurrentYear[numSpace].hour[state.hourInTheYear] = state.ntc.ValeurDuFlux
+                                                                         [state.link->index]
+                                                                       * (UPSTREAM_PRICE
+                                                                          - DOWNSTREAM_PRICE);
         // Next item in the list
         NextType::hourForEachLink(state, numSpace);
 
@@ -264,8 +269,8 @@ public:
             // Write the data for the current year
             results.variableCaption = VCardType::Caption();
             results.variableUnit = VCardType::Unit();
-            pValuesForTheCurrentYear[numSpace].template buildAnnualSurveyReport<VCardType>(
-              results, fileLevel, precision);
+            pValuesForTheCurrentYear[numSpace]
+              .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
         }
     }
 

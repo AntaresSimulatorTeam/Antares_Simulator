@@ -41,10 +41,12 @@ public:
     ** \brief Default constructor
     */
     SimulationComments(Study& study);
+
     //! Destructor
     ~SimulationComments()
     {
     }
+
     //@}
 
     /*!

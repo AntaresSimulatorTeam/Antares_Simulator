@@ -34,10 +34,13 @@ using namespace Yuni;
 namespace Antares::Data
 {
 StudyCleaningInfos::StudyCleaningInfos()
-{}
+{
+}
 
-StudyCleaningInfos::StudyCleaningInfos(const AnyString& path) : folder(path)
-{}
+StudyCleaningInfos::StudyCleaningInfos(const AnyString& path):
+    folder(path)
+{
+}
 
 StudyCleaningInfos::~StudyCleaningInfos() = default;
 
@@ -79,9 +82,13 @@ bool StudyCleaningInfos::analyze()
     if (not intruders.empty())
     {
         if (intruders.size() == 1)
+        {
             logs.info() << "  :: 1 file/folder will be removed";
+        }
         else
+        {
             logs.info() << "  :: " << intruders.size() << " files/folders will be removed";
+        }
         return true;
     }
     else
@@ -113,4 +120,3 @@ void StudyCleaningInfos::setCustomExcludeList(const Yuni::String& c)
     customExclude = c;
 }
 } // namespace Antares::Data
-

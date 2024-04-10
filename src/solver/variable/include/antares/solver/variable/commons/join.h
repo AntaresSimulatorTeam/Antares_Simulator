@@ -37,6 +37,7 @@ struct VCardJoin
     {
         return "";
     }
+
     //! Unit
     static std::string Unit()
     {
@@ -77,7 +78,6 @@ struct VCardJoin
         spatialAggregatePostProcessing = 0,
         //! Intermediate values
         hasIntermediateValues = 0,
-
     };
 
 }; // class VCard
@@ -86,10 +86,10 @@ struct VCardJoin
 ** \brief Join
 */
 template<class LeftT, class RightT, class BindConstT>
-class Join : public Variable::IVariable<Join<LeftT, RightT, BindConstT>, Yuni::Default, VCardJoin>,
-             public LeftT,
-             public RightT,
-             public BindConstT
+class Join: public Variable::IVariable<Join<LeftT, RightT, BindConstT>, Yuni::Default, VCardJoin>,
+            public LeftT,
+            public RightT,
+            public BindConstT
 {
 public:
     typedef LeftT LeftType;
@@ -118,9 +118,10 @@ public:
     {
         enum
         {
-            count = LeftType::template Statistics<CDataLevel, CFile>::count
-                    + RightType::template Statistics<CDataLevel, CFile>::count
-                    + BindConstType::template Statistics<CDataLevel, CFile>::count,
+            count = LeftType::template Statistics < CDataLevel,
+            CFile > ::count + RightType::template Statistics < CDataLevel,
+            CFile > ::count + BindConstType::template Statistics < CDataLevel,
+            CFile > ::count,
         };
     };
 
@@ -326,10 +327,12 @@ public:
                                          std::map<unsigned int, unsigned int>& numSpaceToYear,
                                          unsigned int nbYearsForCurrentSummary)
     {
-        LeftType ::template computeSpatialAggregatesSummary(
-          allVars, numSpaceToYear, nbYearsForCurrentSummary);
-        RightType::template computeSpatialAggregatesSummary(
-          allVars, numSpaceToYear, nbYearsForCurrentSummary);
+        LeftType ::template computeSpatialAggregatesSummary(allVars,
+                                                            numSpaceToYear,
+                                                            nbYearsForCurrentSummary);
+        RightType::template computeSpatialAggregatesSummary(allVars,
+                                                            numSpaceToYear,
+                                                            nbYearsForCurrentSummary);
     }
 
     template<class V>

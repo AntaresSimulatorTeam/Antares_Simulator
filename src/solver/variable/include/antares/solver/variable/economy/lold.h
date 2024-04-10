@@ -38,6 +38,7 @@ struct VCardLOLD
     {
         return "LOLD";
     }
+
     //! Unit
     static std::string Unit()
     {
@@ -96,7 +97,7 @@ struct VCardLOLD
 ** \brief
 */
 template<class NextT = Container::EndOfList>
-class LOLD : public Variable::IVariable<LOLD<NextT>, NextT, VCardLOLD>
+class LOLD: public Variable::IVariable<LOLD<NextT>, NextT, VCardLOLD>
 {
 public:
     //! Type of the next static variable
@@ -122,11 +123,11 @@ public:
     {
         enum
         {
-            count
-            = ((VCardType::categoryDataLevel & CDataLevel && VCardType::categoryFileLevel & CFile)
-                 ? (NextType::template Statistics<CDataLevel, CFile>::count
-                    + VCardType::columnCount * ResultsType::count)
-                 : NextType::template Statistics<CDataLevel, CFile>::count),
+            count = ((VCardType::categoryDataLevel & CDataLevel
+                      && VCardType::categoryFileLevel & CFile)
+                       ? (NextType::template Statistics<CDataLevel, CFile>::count
+                          + VCardType::columnCount * ResultsType::count)
+                       : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
 
@@ -145,7 +146,9 @@ public:
 
         pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+        {
             pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);
+        }
         // Next
         NextType::initializeFromStudy(study);
     }
@@ -171,7 +174,9 @@ public:
     void simulationBegin()
     {
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+        {
             pValuesForTheCurrentYear[numSpace].reset();
+        }
         // Next
         NextType::simulationBegin();
     }
@@ -229,7 +234,9 @@ public:
     {
         // LOLD
         if (state.hourlyResults->ValeursHorairesDeDefaillancePositive[state.hourInTheWeek] > 0.5)
+        {
             pValuesForTheCurrentYear[numSpace][state.hourInTheYear] = 1.;
+        }
 
         // Next variable
         NextType::hourForEachArea(state, numSpace);
@@ -255,8 +262,8 @@ public:
             // Write the data for the current year
             results.variableCaption = VCardType::Caption();
             results.variableUnit = VCardType::Unit();
-            pValuesForTheCurrentYear[numSpace].template buildAnnualSurveyReport<VCardType>(
-              results, fileLevel, precision);
+            pValuesForTheCurrentYear[numSpace]
+              .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
         }
     }
 

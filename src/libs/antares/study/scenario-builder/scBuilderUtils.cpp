@@ -51,13 +51,19 @@ double fromStringToHydroLevel(const Yuni::String& value, const double maxLevel)
     }
 
     if (result_tmp < 0.)
+    {
         result = 0.;
+    }
     else
     {
         if (result_tmp > maxLevel)
+        {
             result = maxLevel;
+        }
         else
+        {
             result = result_tmp;
+        }
     }
     return result;
 }
@@ -79,17 +85,21 @@ uint fromStringToTSnumber(const Yuni::String& value)
     }
 
     if (result_dbl < 0.)
+    {
         result = 0;
+    }
     else
     {
         if (result_dbl > maxTSnumber)
+        {
             result = maxTSnumber;
+        }
         else
+        {
             result = (uint)result_dbl;
+        }
     }
     return result;
 }
 
 } // namespace Antares::Data::ScenarioBuilder
-
-

@@ -36,26 +36,32 @@ extern "C"
 
 using namespace Antares;
 
-void OPT_LiberationProblemesSimplexe(const OptimizationOptions& options, const PROBLEME_HEBDO* problemeHebdo)
+void OPT_LiberationProblemesSimplexe(const OptimizationOptions& options,
+                                     const PROBLEME_HEBDO* problemeHebdo)
 {
     int NombreDePasDeTempsPourUneOptimisation;
     if (!problemeHebdo->OptimisationAuPasHebdomadaire)
+    {
         NombreDePasDeTempsPourUneOptimisation = problemeHebdo->NombreDePasDeTempsDUneJournee;
+    }
     else
+    {
         NombreDePasDeTempsPourUneOptimisation = problemeHebdo->NombreDePasDeTemps;
+    }
 
     int nbIntervalles = problemeHebdo->NombreDePasDeTemps / NombreDePasDeTempsPourUneOptimisation;
 
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
     if (!ProblemeAResoudre)
+    {
         return;
+    }
 
     if (!problemeHebdo->LeProblemeADejaEteInstancie)
     {
         for (int numIntervalle = 0; numIntervalle < nbIntervalles; numIntervalle++)
         {
-            auto ProbSpx
-              = (PROBLEME_SPX*)(ProblemeAResoudre->ProblemesSpx[numIntervalle]);
+            auto ProbSpx = (PROBLEME_SPX*)(ProblemeAResoudre->ProblemesSpx[numIntervalle]);
             auto solver = (MPSolver*)(ProblemeAResoudre->ProblemesSpx[numIntervalle]);
 
             if (options.useOrtools && solver != NULL)

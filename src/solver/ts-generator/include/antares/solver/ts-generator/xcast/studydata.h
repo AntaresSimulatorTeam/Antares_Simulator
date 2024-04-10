@@ -96,9 +96,6 @@ private:
 
 } // namespace Antares::TSGenerator::XCast
 
-
-
-
 #include "studydata.hxx"
 
 #endif // __ANTARES_SOLVER_TS_GENERATOR_XCAST_STUDY_DATA_H__

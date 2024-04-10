@@ -84,13 +84,15 @@ static void optimisationAllocateProblem(PROBLEME_HEBDO* problemeHebdo, const int
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
-    int NombreDePasDeTempsPourUneOptimisation
-      = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+    int NombreDePasDeTempsPourUneOptimisation = problemeHebdo
+                                                  ->NombreDePasDeTempsPourUneOptimisation;
 
     int Sparsity = mxPaliers * problemeHebdo->NombreDePays;
     Sparsity += problemeHebdo->NombreDInterconnexions;
     if (Sparsity > 100)
+    {
         Sparsity = 100;
+    }
 
     int NbTermes = 0;
     NbTermes += ProblemeAResoudre->NombreDeContraintes;

@@ -25,11 +25,12 @@
 #include <antares/logs/logs.h>
 #include <atomic>
 
-class Progress final : public Yuni::Thread::Timer
+class Progress final: public Yuni::Thread::Timer
 {
 public:
     //! The threading policy
     using ThreadingPolicy = Yuni::Thread::Timer::ThreadingPolicy;
+
     //! Different states related to the progression
     enum State
     {

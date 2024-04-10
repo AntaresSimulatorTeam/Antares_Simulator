@@ -27,7 +27,6 @@
 using namespace Yuni;
 using namespace Antares;
 
-
 namespace Antares::Data
 {
 PartRenewable::PartRenewable()
@@ -56,4 +55,3 @@ void PartRenewable::reset()
 }
 
 } // namespace Antares::Data
-

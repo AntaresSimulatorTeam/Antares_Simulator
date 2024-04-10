@@ -32,10 +32,10 @@
 
 static const std::string systemCostFilename = "annualSystemCost.txt";
 static const std::string criterionsCostsFilename = "checkIntegrity.txt";
-static const std::string optimizationTimeFilename
-  = std::string("optimization") + SEP + "solve-durations.txt";
-static const std::string updateTimeFilename
-  = std::string("optimization") + SEP + "update-durations.txt";
+static const std::string optimizationTimeFilename = std::string("optimization") + SEP
+                                                    + "solve-durations.txt";
+static const std::string updateTimeFilename = std::string("optimization") + SEP
+                                              + "update-durations.txt";
 
 static std::ostream& toScientific(std::ostream& os)
 {
@@ -61,9 +61,13 @@ void costStatistics::addCost(const double cost)
 
     // Min and Max
     if (cost < costMin)
+    {
         costMin = cost;
+    }
     if (cost > costMax)
+    {
         costMax = cost;
+    }
 }
 
 void costStatistics::endStandardDeviation()
@@ -82,7 +86,7 @@ void annualCostsStatistics::setNbPerformedYears(uint n)
     optimizationTime1.setNbPerformedYears(n);
     optimizationTime2.setNbPerformedYears(n);
     updateTime.setNbPerformedYears(n);
-};
+}
 
 void annualCostsStatistics::endStandardDeviations()
 {
@@ -92,7 +96,7 @@ void annualCostsStatistics::endStandardDeviations()
     optimizationTime1.endStandardDeviation();
     optimizationTime2.endStandardDeviation();
     updateTime.endStandardDeviation();
-};
+}
 
 void annualCostsStatistics::writeToOutput(IResultWriter& writer)
 {
@@ -118,8 +122,7 @@ void annualCostsStatistics::writeCriterionCostsToOutput(IResultWriter& writer) c
 {
     using std::endl;
     std::ostringstream buffer;
-    buffer << toScientific
-           << criterionCost1.costAverage << endl
+    buffer << toScientific << criterionCost1.costAverage << endl
            << criterionCost1.costStdDeviation << endl
            << criterionCost1.costMin << endl
            << criterionCost1.costMax << endl

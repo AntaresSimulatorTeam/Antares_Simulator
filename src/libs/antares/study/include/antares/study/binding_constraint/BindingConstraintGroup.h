@@ -27,13 +27,20 @@
 
 #include <memory>
 #include "BindingConstraint.h"
-namespace Antares::Data {
 
-class BindingConstraintGroup {
+namespace Antares::Data
+{
+
+class BindingConstraintGroup
+{
 public:
     explicit BindingConstraintGroup(std::string name);
 
-    [[nodiscard]] std::string name() { return name_; }
+    [[nodiscard]] std::string name()
+    {
+        return name_;
+    }
+
     void add(const std::shared_ptr<BindingConstraint>& constraint);
     [[nodiscard]] std::set<std::shared_ptr<BindingConstraint>> constraints() const;
     [[nodiscard]] unsigned numberOfTimeseries() const;
@@ -47,4 +54,4 @@ private:
     std::string name_;
 };
 
-} // Data
+} // namespace Antares::Data

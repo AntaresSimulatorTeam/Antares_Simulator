@@ -28,7 +28,7 @@
 
 namespace Antares::Data
 {
-class XCast final : private Yuni::NonCopyable<XCast>
+class XCast final: private Yuni::NonCopyable<XCast>
 {
 public:
     //! Vector
@@ -210,7 +210,6 @@ protected:
 }; // class XCast
 
 } // namespace Antares::Data
-
 
 #include "xcast.hxx"
 

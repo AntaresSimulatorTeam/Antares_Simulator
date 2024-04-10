@@ -27,7 +27,8 @@ using namespace Yuni;
 
 namespace Antares::Data
 {
-UIRuntimeInfo::UIRuntimeInfo(Study& study) : pStudy(study)
+UIRuntimeInfo::UIRuntimeInfo(Study& study):
+    pStudy(study)
 {
     reloadAll();
 }
@@ -69,10 +70,12 @@ void UIRuntimeInfo::reload()
             {
                 const AreaLink::Map::iterator end = area->links.end();
                 for (AreaLink::Map::iterator i = area->links.begin(); i != end; ++i)
+                {
                     set.insert(i->second);
+                }
             }
 
-            for (auto& cluster : area->thermal.list.each_enabled())
+            for (auto& cluster: area->thermal.list.each_enabled())
             {
                 pClusters.push_back(cluster.get());
             }
@@ -108,7 +111,8 @@ void UIRuntimeInfo::reloadBindingConstraints()
     {
         const auto end = pStudy.bindingConstraints.end();
         auto i = pStudy.bindingConstraints.begin();
-        for (; i != end; ++i) {
+        for (; i != end; ++i)
+        {
             auto bc = *i;
             orderedConstraint.insert(bc);
         }
@@ -149,7 +153,9 @@ uint UIRuntimeInfo::countItems(BindingConstraint::Operator op, BindingConstraint
     {
         VectorByType::const_iterator j = i->second.find(type);
         if (j != i->second.end())
+        {
             return (uint)j->second.size();
+        }
     }
     return 0;
 }
@@ -161,7 +167,9 @@ uint UIRuntimeInfo::visibleClustersCount(uint layerID)
     for (auto cluster = pClusters.begin(); cluster != cEnd; cluster++)
     {
         if ((*cluster)->isVisibleOnLayer(layerID))
+        {
             count++;
+        }
     }
     return count;
 }
@@ -173,10 +181,11 @@ uint UIRuntimeInfo::visibleLinksCount(uint layerID)
     for (auto link = pLink.begin(); link != lEnd; link++)
     {
         if ((*link)->isVisibleOnLayer(layerID))
+        {
             count++;
+        }
     }
     return count;
 }
 
 } // namespace Antares::Data
-

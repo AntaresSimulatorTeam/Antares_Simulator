@@ -29,7 +29,9 @@
 void OPT_DecompteDesVariablesEtDesContraintesCoutsDeDemarrage(PROBLEME_HEBDO* problemeHebdo)
 {
     if (!problemeHebdo->OptimisationAvecCoutsDeDemarrage)
+    {
         return;
+    }
 
     auto builder_data = NewGetConstraintBuilderFromProblemHebdo(problemeHebdo);
     ConstraintBuilder builder(builder_data);

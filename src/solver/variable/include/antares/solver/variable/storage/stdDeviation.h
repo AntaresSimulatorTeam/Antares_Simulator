@@ -36,7 +36,7 @@ namespace R
 namespace AllYears
 {
 template<class NextT = Empty, int FileFilter = Variable::Category::allFile>
-struct StdDeviation : public NextT
+struct StdDeviation: public NextT
 {
 public:
     //! Type of the net item in the list
@@ -105,16 +105,24 @@ protected:
         unsigned int i;
         // StdDeviation value for each hour throughout all years
         for (i = 0; i != maxHoursInAYear; ++i)
+        {
             stdDeviationHourly[i] += rhs.hour[i] * rhs.hour[i] * pRatio;
+        }
         // StdDeviation value for each day throughout all years
         for (i = 0; i != maxDaysInAYear; ++i)
+        {
             stdDeviationDaily[i] += rhs.day[i] * rhs.day[i] * pRatio;
+        }
         // StdDeviation value for each week throughout all years
         for (i = 0; i != maxWeeksInAYear; ++i)
+        {
             stdDeviationWeekly[i] += rhs.week[i] * rhs.week[i] * pRatio;
+        }
         // StdDeviation value for each month throughout all years
         for (i = 0; i != maxMonths; ++i)
+        {
             stdDeviationMonthly[i] += rhs.month[i] * rhs.month[i] * pRatio;
+        }
         // StdDeviation value throughout all years
         stdDeviationYear += rhs.year * rhs.year * pRatio;
 
@@ -135,29 +143,39 @@ protected:
             {
             case Category::hourly:
                 InternalExportValues<S, maxHoursInAYear, VCardT, Category::hourly>(
-                  report, results, Memory::RawPointer(stdDeviationHourly));
+                  report,
+                  results,
+                  Memory::RawPointer(stdDeviationHourly));
                 break;
             case Category::daily:
-                InternalExportValues<S, maxDaysInAYear, VCardT, Category::daily>(
-                  report, results, stdDeviationDaily);
+                InternalExportValues<S, maxDaysInAYear, VCardT, Category::daily>(report,
+                                                                                 results,
+                                                                                 stdDeviationDaily);
                 break;
             case Category::weekly:
                 InternalExportValues<S, maxWeeksInAYear, VCardT, Category::weekly>(
-                  report, results, stdDeviationWeekly);
+                  report,
+                  results,
+                  stdDeviationWeekly);
                 break;
             case Category::monthly:
-                InternalExportValues<S, maxMonths, VCardT, Category::monthly>(
-                  report, results, stdDeviationMonthly);
+                InternalExportValues<S, maxMonths, VCardT, Category::monthly>(report,
+                                                                              results,
+                                                                              stdDeviationMonthly);
                 break;
             case Category::annual:
-                InternalExportValues<S, 1, VCardT, Category::annual>(
-                  report, results, &stdDeviationYear);
+                InternalExportValues<S, 1, VCardT, Category::annual>(report,
+                                                                     results,
+                                                                     &stdDeviationYear);
                 break;
             }
         }
         // Next
-        NextType::template buildSurveyReport<S, VCardT>(
-          report, results, dataLevel, fileLevel, precision);
+        NextType::template buildSurveyReport<S, VCardT>(report,
+                                                        results,
+                                                        dataLevel,
+                                                        fileLevel,
+                                                        precision);
     }
 
     uint64_t memoryUsage() const
@@ -169,7 +187,9 @@ protected:
     Antares::Memory::Stored<double>::ConstReturnType hourlyValuesForSpatialAggregate() const
     {
         if (Yuni::Static::Type::StrictlyEqual<DecoratorT<Empty, 0>, StdDeviation<Empty, 0>>::Yes)
+        {
             return stdDeviationHourly;
+        }
         return NextType::template hourlyValuesForSpatialAggregate<DecoratorT>();
     }
 
@@ -192,8 +212,8 @@ private:
         report.captions[2][report.data.columnIndex] = "std";
 
         // Precision
-        report.precision[report.data.columnIndex]
-          = PrecisionToPrintfFormat<VCardT::decimal>::Value();
+        report.precision[report.data.columnIndex] = PrecisionToPrintfFormat<
+          VCardT::decimal>::Value();
 
         // Non applicability
         report.nonApplicableStatus[report.data.columnIndex] = *report.isCurrentVarNA;
@@ -209,29 +229,37 @@ private:
         case Category::hourly:
         {
             for (unsigned int i = 0; i != Size; ++i)
+            {
                 target[i] = squareRootChecked(
                   array[i] - results.avgdata.hourly[i] * results.avgdata.hourly[i]);
+            }
         }
         break;
         case Category::daily:
         {
             for (unsigned int i = 0; i != Size; ++i)
+            {
                 target[i] = squareRootChecked(
                   array[i] - results.avgdata.daily[i] * results.avgdata.daily[i]);
+            }
         }
         break;
         case Category::weekly:
         {
             for (unsigned int i = 0; i != Size; ++i)
+            {
                 target[i] = squareRootChecked(
                   array[i] - results.avgdata.weekly[i] * results.avgdata.weekly[i]);
+            }
         }
         break;
         case Category::monthly:
         {
             for (unsigned int i = 0; i != Size; ++i)
+            {
                 target[i] = squareRootChecked(
                   array[i] - results.avgdata.monthly[i] * results.avgdata.monthly[i]);
+            }
         }
         break;
         case Category::annual:
@@ -250,7 +278,9 @@ private:
     void InternalExportValuesMC(SurveyResults& report, const S& /*results*/, const A& array) const
     {
         if (not(PrecisionT & Category::annual))
+        {
             return;
+        }
         assert(report.data.columnIndex < report.maxVariables && "Column index out of bounds");
 
         // Caption
@@ -259,8 +289,8 @@ private:
         report.captions[2][report.data.columnIndex] = "std";
 
         // Precision
-        report.precision[report.data.columnIndex]
-          = PrecisionToPrintfFormat<VCardT::decimal>::Value();
+        report.precision[report.data.columnIndex] = PrecisionToPrintfFormat<
+          VCardT::decimal>::Value();
 
         // Non applicability
         report.nonApplicableStatus[report.data.columnIndex] = *report.isCurrentVarNA;

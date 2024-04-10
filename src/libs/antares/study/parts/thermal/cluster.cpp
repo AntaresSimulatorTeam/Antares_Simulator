@@ -45,7 +45,9 @@ bool Into<Antares::Data::ThermalLaw>::Perform(AnyString string, TargetType& out)
 {
     string.trim();
     if (string.empty())
+    {
         return false;
+    }
 
     if (string.equalsInsensitive("uniform"))
     {
@@ -64,7 +66,9 @@ bool Into<Antares::Data::CostGeneration>::Perform(AnyString string, TargetType& 
 {
     string.trim();
     if (string.empty())
+    {
         return false;
+    }
 
     if (string.equalsInsensitive("setManually"))
     {
@@ -83,7 +87,9 @@ bool Into<Antares::Data::LocalTSGenerationBehavior>::Perform(AnyString string, T
 {
     string.trim();
     if (string.empty())
+    {
         return false;
+    }
 
     if (string.equalsInsensitive("use global"))
     {
@@ -105,13 +111,11 @@ bool Into<Antares::Data::LocalTSGenerationBehavior>::Perform(AnyString string, T
 
 } // namespace Yuni::Extension::CString
 
-
-
 namespace Antares
 {
 namespace Data
 {
-Data::ThermalCluster::ThermalCluster(Area* parent) :
+Data::ThermalCluster::ThermalCluster(Area* parent):
     Cluster(parent),
     PthetaInf(HOURS_PER_YEAR, 0),
     costsTimeSeries(1, CostsTimeSeries())
@@ -192,7 +196,9 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
     // Making sure that the data related to the prepro and timeseries are present
     // prepro
     if (!prepro)
+    {
         prepro = new PreproThermal(this->weak_from_this());
+    }
 
     prepro->copyFrom(*cluster.prepro);
     ecoInput.copyFrom(cluster.ecoInput);
@@ -205,27 +211,29 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
     // The parent must be invalidated to make sure that the clusters are really
     // re-written at the next 'Save' from the user interface.
     if (parentArea)
+    {
         parentArea->forceReload();
+    }
 }
 
 static Data::ThermalCluster::ThermalDispatchableGroup stringToGroup(Data::ClusterName& newgrp)
 {
     using namespace Antares::Data;
-    const static std::map<ClusterName, ThermalCluster::ThermalDispatchableGroup> mapping
-      = {{"nuclear", ThermalCluster::thermalDispatchGrpNuclear},
-         {"lignite", ThermalCluster::thermalDispatchGrpLignite},
-         {"hard coal", ThermalCluster::thermalDispatchGrpHardCoal},
-         {"gas", ThermalCluster::thermalDispatchGrpGas},
-         {"oil", ThermalCluster::thermalDispatchGrpOil},
-         {"mixed fuel", ThermalCluster::thermalDispatchGrpMixedFuel},
-         {"other", ThermalCluster::thermalDispatchGrpOther1},
-         {"other 1", ThermalCluster::thermalDispatchGrpOther1},
-         {"other 2", ThermalCluster::thermalDispatchGrpOther2},
-         {"other 3", ThermalCluster::thermalDispatchGrpOther3},
-         {"other 4", ThermalCluster::thermalDispatchGrpOther4}};
+    const static std::map<ClusterName, ThermalCluster::ThermalDispatchableGroup> mapping = {
+      {"nuclear", ThermalCluster::thermalDispatchGrpNuclear},
+      {"lignite", ThermalCluster::thermalDispatchGrpLignite},
+      {"hard coal", ThermalCluster::thermalDispatchGrpHardCoal},
+      {"gas", ThermalCluster::thermalDispatchGrpGas},
+      {"oil", ThermalCluster::thermalDispatchGrpOil},
+      {"mixed fuel", ThermalCluster::thermalDispatchGrpMixedFuel},
+      {"other", ThermalCluster::thermalDispatchGrpOther1},
+      {"other 1", ThermalCluster::thermalDispatchGrpOther1},
+      {"other 2", ThermalCluster::thermalDispatchGrpOther2},
+      {"other 3", ThermalCluster::thermalDispatchGrpOther3},
+      {"other 4", ThermalCluster::thermalDispatchGrpOther4}};
 
     boost::to_lower(newgrp);
-    if (auto res = mapping.find(newgrp);res != mapping.end())
+    if (auto res = mapping.find(newgrp); res != mapping.end())
     {
         return res->second;
     }
@@ -251,7 +259,9 @@ bool Data::ThermalCluster::forceReload(bool reload) const
     ret = modulation.forceReload(reload) && ret;
     ret = series.forceReload(reload) && ret;
     if (prepro)
+    {
         ret = prepro->forceReload(reload) && ret;
+    }
     ret = ecoInput.forceReload(reload) && ret;
     return ret;
 }
@@ -261,7 +271,9 @@ void Data::ThermalCluster::markAsModified() const
     modulation.markAsModified();
     series.markAsModified();
     if (prepro)
+    {
         prepro->markAsModified();
+    }
     ecoInput.markAsModified();
 }
 
@@ -354,7 +366,7 @@ void ThermalCluster::ComputeMarketBidTS()
 
 void ThermalCluster::MarginalCostEqualsMarketBid()
 {
-    for (auto& timeSeries : costsTimeSeries)
+    for (auto& timeSeries: costsTimeSeries)
     {
         auto& source = timeSeries.marketBidCostTS;
         auto& destination = timeSeries.marginalCostTS;
@@ -365,9 +377,11 @@ void ThermalCluster::MarginalCostEqualsMarketBid()
 void ThermalCluster::ComputeProductionCostTS()
 {
     if (modulation.width == 0)
+    {
         return;
+    }
 
-    for (auto& timeSeries : costsTimeSeries)
+    for (auto& timeSeries: costsTimeSeries)
     {
         auto& productionCostTS = timeSeries.productionCostTs;
         auto& marginalCostTS = timeSeries.marginalCostTS;
@@ -380,10 +394,9 @@ void ThermalCluster::ComputeProductionCostTS()
     }
 }
 
-
 double Data::ThermalCluster::computeMarketBidCost(double fuelCost,
-                                                         double co2EmissionFactor,
-                                                         double co2cost)
+                                                  double co2EmissionFactor,
+                                                  double co2cost)
 {
     return fuelCost * 360.0 / fuelEfficiency + co2EmissionFactor * co2cost + variableomcost;
 }
@@ -458,7 +471,9 @@ void Data::ThermalCluster::reset()
     //   since the interface may still have a pointer to them.
     //   we must simply reset their content.
     if (!prepro)
+    {
         prepro = new PreproThermal(this->weak_from_this());
+    }
     prepro->reset();
     ecoInput.reset();
 }
@@ -516,9 +531,13 @@ bool Data::ThermalCluster::integrityCheck()
     if (spinning < 0. or spinning > 100.)
     {
         if (spinning < 0.)
+        {
             spinning = 0;
+        }
         else
+        {
             spinning = 100.;
+        }
         logs.error() << "Thermal cluster: " << parentArea->name << '/' << pName
                      << ": The spinning must be within the range [0,+100] (rounded to " << spinning
                      << ')';
@@ -614,7 +633,9 @@ uint64_t ThermalCluster::memoryUsage() const
 {
     uint64_t amount = sizeof(ThermalCluster) + modulation.memoryUsage();
     if (prepro)
+    {
         amount += prepro->memoryUsage();
+    }
     amount += series.memoryUsage();
     amount += ecoInput.memoryUsage();
     return amount;
@@ -643,7 +664,9 @@ void ThermalCluster::calculatMinDivModulation()
 bool ThermalCluster::checkMinStablePower()
 {
     if (!minDivModulation.isCalculated) // not has been initialized
+    {
         calculatMinDivModulation();
+    }
 
     if (minDivModulation.value < 0)
     {
@@ -655,10 +678,14 @@ bool ThermalCluster::checkMinStablePower()
     double nomCapacityWithSpinning = nominalCapacity * (1 - spinning / 101);
 
     if (Utils::isZero(1 - spinning / 101))
+    {
         minDivModulation.border = .0;
+    }
     else
-        minDivModulation.border
-          = std::min(nomCapacityWithSpinning, minStablePower) / nomCapacityWithSpinning;
+    {
+        minDivModulation.border = std::min(nomCapacityWithSpinning, minStablePower)
+                                  / nomCapacityWithSpinning;
+    }
 
     if (minDivModulation.value < minDivModulation.border)
     {
@@ -673,7 +700,9 @@ bool ThermalCluster::checkMinStablePower()
 bool ThermalCluster::checkMinStablePowerWithNewModulation(uint idx, double value)
 {
     if (!minDivModulation.isCalculated || idx == minDivModulation.index)
+    {
         calculatMinDivModulation();
+    }
     else
     {
         double div = value / ceil(value);
@@ -768,9 +797,8 @@ void ThermalCluster::checkAndCorrectAvailability()
     {
         for (uint x = 0; x != series.timeSeries.width; ++x)
         {
-            auto rightpart
-              = PminDUnGroupeDuPalierThermique
-                * ceil(series.timeSeries.entry[x][y] / PmaxDUnGroupeDuPalierThermique);
+            auto rightpart = PminDUnGroupeDuPalierThermique
+                             * ceil(series.timeSeries.entry[x][y] / PmaxDUnGroupeDuPalierThermique);
             condition = rightpart > series.timeSeries.entry[x][y];
             if (condition)
             {
@@ -781,11 +809,14 @@ void ThermalCluster::checkAndCorrectAvailability()
     }
 
     if (report)
+    {
         logs.warning() << "Area : " << parentArea->name << " cluster name : " << name()
                        << " available power lifted to match Pmin and Pnom requirements";
+    }
 }
 
-bool ThermalCluster::isActive() const {
+bool ThermalCluster::isActive() const
+{
     return enabled && !mustrun;
 }
 

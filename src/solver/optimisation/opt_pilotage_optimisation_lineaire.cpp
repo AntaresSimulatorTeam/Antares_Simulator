@@ -51,8 +51,8 @@ bool OPT_PilotageOptimisationLineaire(const OptimizationOptions& options,
             }
             else
             {
-                problemeHebdo->NombreDePasDeTempsPourUneOptimisation
-                  = problemeHebdo->NombreDePasDeTemps;
+                problemeHebdo->NombreDePasDeTempsPourUneOptimisation = problemeHebdo
+                                                                         ->NombreDePasDeTemps;
             }
 
             OPT_AllocDuProblemeAOptimiser(problemeHebdo);

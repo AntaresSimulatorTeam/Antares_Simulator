@@ -30,7 +30,9 @@ void WriteCommandLineIntoLogs(int argc, char** argv)
     {
         buffer << argv[arg];
         if (arg + 1 != argc)
+        {
             buffer << " ";
+        }
     }
     logs.info() << "  :: command: " << buffer.str();
 }

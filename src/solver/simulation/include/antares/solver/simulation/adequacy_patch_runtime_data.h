@@ -26,6 +26,7 @@
 #include <set>
 
 using adqPatchParamsMode = Antares::Data::AdequacyPatch::AdequacyPatchMode;
+
 class AdequacyPatchRuntimeData
 {
 private:

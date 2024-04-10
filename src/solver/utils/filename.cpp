@@ -32,16 +32,19 @@ std::shared_ptr<OptPeriodStringGenerator> createOptPeriodAsString(bool isOptimiz
                                                                   unsigned int year)
 {
     if (isOptimizationWeekly)
+    {
         return std::make_shared<OptWeeklyStringGenerator>(week, year);
+    }
     else
+    {
         return std::make_shared<OptDailyStringGenerator>(day, week, year);
+    }
 }
 
-std::string createOptimizationFilename(
-  const std::string& title,
-  const OptPeriodStringGenerator& optPeriodStringGenerator,
-  unsigned int optNumber,
-  const std::string& extension)
+std::string createOptimizationFilename(const std::string& title,
+                                       const OptPeriodStringGenerator& optPeriodStringGenerator,
+                                       unsigned int optNumber,
+                                       const std::string& extension)
 {
     std::ostringstream outputFile;
     outputFile << title.c_str() << "-";

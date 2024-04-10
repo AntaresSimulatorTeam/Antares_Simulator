@@ -43,11 +43,12 @@ class Results;
 **   are `Raw`, `Average`, `Min`, `Max`... This parameter is a static list.
 */
 template<class FirstDecoratorT, template<class, int> class DecoratorForSpatialAggregateT>
-class Results : public FirstDecoratorT
+class Results: public FirstDecoratorT
 {
 public:
     //! Type of the first decorator
     typedef FirstDecoratorT DecoratorType;
+
     enum
     {
         //! The count if item in the list

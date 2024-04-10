@@ -34,7 +34,7 @@ namespace Data
 ** \brief List of renewable clusters
 ** \ingroup renewableclusters
 */
-class RenewableClusterList : public ClusterList<RenewableCluster>
+class RenewableClusterList: public ClusterList<RenewableCluster>
 {
 public:
     std::string typeID() const override;

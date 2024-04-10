@@ -61,7 +61,9 @@ void InternalAppendHostname(AnyStringT& out)
     {
         const char* const name = p->ai_canonname;
         if (name and '\0' != *name)
+        {
             out << name;
+        }
     }
 
     freeaddrinfo(info);
@@ -80,11 +82,15 @@ void InternalAppendHostname(AnyStringT& out)
             out << (const char*)name;
         }
         else
+        {
             out << "<unknown>";
+        }
         WSACleanup();
     }
     else
+    {
         out << "<unknown>";
+    }
 
 #endif
 }

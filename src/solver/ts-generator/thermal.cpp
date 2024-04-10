@@ -75,10 +75,12 @@ private:
     MersenneTwister& rndgenerator;
 
     double AVP[366];
+
     enum
     {
         Log_size = 4000
     };
+
     int LOG[Log_size];
     int LOGP[Log_size];
 
@@ -101,7 +103,7 @@ private:
 
 GeneratorTempData::GeneratorTempData(Data::Study& study,
                                      Solver::Progression::Task& progr,
-                                     Solver::IResultWriter& writer) :
+                                     Solver::IResultWriter& writer):
     study(study),
     rndgenerator(study.runtime->random[Data::seedTsGenThermal]),
     pProgression(progr),
@@ -196,7 +198,9 @@ int GeneratorTempData::durationGenerator(Data::ThermalLaw law,
                                          double b)
 {
     if (volat == 0 or expec == 1)
+    {
         return expec;
+    }
 
     double rndnumber = rndgenerator.next();
     switch (law)
@@ -208,10 +212,12 @@ int GeneratorTempData::durationGenerator(Data::ThermalLaw law,
     case Data::thermalLawGeometric:
     {
         int resultat = (1 + int(a + (b)*log(rndnumber)));
+
         enum
         {
             limit = Log_size / 2 - 1
         };
+
         assert(limit == 1999);
         return (resultat <= limit) ? resultat : limit;
     }
@@ -236,7 +242,9 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
     if (0 == cluster.unitCount or 0 == cluster.nominalCapacity)
     {
         if (archive)
+        {
             writeResultsToDisk(area, cluster);
+        }
         return;
     }
 
@@ -282,10 +290,14 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
         lp[d] = POR[d] / (POR[d] + (PODOfTheDay) * (1. - POR[d]));
 
         if (0. < lf[d] and lf[d] < lp[d])
+        {
             lf[d] *= (1. - lp[d]) / (1. - lf[d]);
+        }
 
         if (0. < lp[d] and lp[d] < lf[d])
+        {
             lp[d] *= (1. - lf[d]) / (1. - lp[d]);
+        }
 
         double a = 0.;
         double b = 0.;
@@ -344,7 +356,9 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
         uint hour = 0;
 
         if (tsIndex > 1)
+        {
             dstSeries = cluster.series.timeSeries[tsIndex - 2];
+        }
 
         for (uint dayInTheYear = 0; dayInTheYear < DAYS_PER_YEAR; ++dayInTheYear)
         {
@@ -370,7 +384,9 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
                 for (int index = 1; index < Log_size; ++index)
                 {
                     if (cumul_retour == cible_retour)
+                    {
                         break;
+                    }
 
                     if (LOGP[(NOW + index) % Log_size] + cumul_retour >= cible_retour)
                     {
@@ -415,7 +431,9 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
                         cumul += last;
                         FOC = d;
                         if (A <= cumul)
+                        {
                             break;
+                        }
                     }
                 }
             }
@@ -428,9 +446,13 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
             {
                 int AUN_app = AUN;
                 if (stock >= 0 and stock <= AUN)
+                {
                     AUN_app -= stock;
+                }
                 if (stock > AUN)
+                {
                     AUN_app = 0;
+                }
 
                 last = PPOW[dayInTheYear][AUN_app];
                 A = rndgenerator.next();
@@ -440,12 +462,14 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
                     cumul = last;
                     for (int d = 1; d < AUN_app + 1; ++d)
                     {
-                        last
-                          = ((last * pp[dayInTheYear]) * ((double)(AUN_app + 1. - d))) / (double)d;
+                        last = ((last * pp[dayInTheYear]) * ((double)(AUN_app + 1. - d)))
+                               / (double)d;
                         cumul += last;
                         POC = d;
                         if (A <= cumul)
+                        {
                             break;
+                        }
                     }
                 }
             }
@@ -542,11 +566,21 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
             AUN = AUN - (PPO + PFO + MXO);
 
             if (PFO != 0 or MXO != 0)
-                FOD_reel = durationGenerator(
-                  f_law, FODOfTheDay, f_volatility, af[dayInTheYear], bf[dayInTheYear]);
+            {
+                FOD_reel = durationGenerator(f_law,
+                                             FODOfTheDay,
+                                             f_volatility,
+                                             af[dayInTheYear],
+                                             bf[dayInTheYear]);
+            }
             if (PPO != 0 or MXO != 0)
-                POD_reel = durationGenerator(
-                  p_law, PODOfTheDay, p_volatility, ap[dayInTheYear], bp[dayInTheYear]);
+            {
+                POD_reel = durationGenerator(p_law,
+                                             PODOfTheDay,
+                                             p_volatility,
+                                             ap[dayInTheYear],
+                                             bp[dayInTheYear]);
+            }
 
             assert(FUT < Log_size);
             if (PFO != 0)
@@ -583,10 +617,14 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
     }
 
     if (derated)
+    {
         cluster.series.timeSeries.averageTimeseries();
+    }
 
     if (archive)
+    {
         writeResultsToDisk(area, cluster);
+    }
 
     cluster.calculationOfSpinning();
 }
@@ -597,11 +635,17 @@ std::vector<Data::ThermalCluster*> getAllClustersToGen(Data::AreaList& areas,
 {
     std::vector<Data::ThermalCluster*> clusters;
 
-    areas.each([&clusters, &globalThermalTSgeneration](Data::Area& area) {
-        for (auto& cluster : area.thermal.list.all())
-            if (cluster->doWeGenerateTS(globalThermalTSgeneration))
-                clusters.push_back(cluster.get());
-    });
+    areas.each(
+      [&clusters, &globalThermalTSgeneration](Data::Area& area)
+      {
+          for (auto& cluster: area.thermal.list.all())
+          {
+              if (cluster->doWeGenerateTS(globalThermalTSgeneration))
+              {
+                  clusters.push_back(cluster.get());
+              }
+          }
+      });
 
     return clusters;
 }
@@ -620,8 +664,10 @@ bool GenerateThermalTimeSeries(Data::Study& study,
     generator->currentYear = year;
 
     // TODO VP: parallel
-    for (auto* cluster : clusters)
+    for (auto* cluster: clusters)
+    {
         (*generator)(*cluster->parentArea, *cluster);
+    }
 
     delete generator;
 

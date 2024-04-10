@@ -139,7 +139,9 @@ bool Study::IsInsideStudyFolder(const AnyString& path, String& location, String&
         // Looking for the next folder separator
         p = path.find(IO::Separator, offset);
         if (p >= path.size())
+        {
             return false;
+        }
 
         AnyString tmp(path, 0, p);
         if (!tmp.empty())
@@ -157,4 +159,3 @@ bool Study::IsInsideStudyFolder(const AnyString& path, String& location, String&
 }
 
 } // namespace Antares::Data
-

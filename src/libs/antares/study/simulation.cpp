@@ -36,7 +36,8 @@ namespace Antares
 {
 namespace Data
 {
-SimulationComments::SimulationComments(Study& study) : pStudy(study)
+SimulationComments::SimulationComments(Study& study):
+    pStudy(study)
 {
 }
 
@@ -57,7 +58,9 @@ bool SimulationComments::saveToFolder(const AnyString& folder) const
     b = folder;
     b << SEP << "comments.txt";
     if (IO::File::SetContent(b, comments))
+    {
         return true;
+    }
     logs.error() << "I/O: impossible to write " << b;
     return false;
 }
@@ -77,7 +80,9 @@ bool SimulationComments::loadFromFolder(const StudyLoadOptions& options)
     {
         pStudy.buffer.clear() << pStudy.folderSettings << SEP << "comments.txt";
         if (IO::errNone != IO::File::LoadFromFile(comments, pStudy.buffer))
+        {
             logs.warning() << pStudy.buffer << ": Impossible to read the file";
+        }
     }
     return true;
 }

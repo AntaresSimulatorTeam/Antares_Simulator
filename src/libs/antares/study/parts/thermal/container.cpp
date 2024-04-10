@@ -35,7 +35,9 @@ namespace Antares
 namespace Data
 {
 
-PartThermal::PartThermal() : unsuppliedEnergyCost(0.), spilledEnergyCost(0.)
+PartThermal::PartThermal():
+    unsuppliedEnergyCost(0.),
+    spilledEnergyCost(0.)
 {
 }
 
@@ -64,21 +66,20 @@ void PartThermal::resizeAllTimeseriesNumbers(uint n) const
     list.resizeAllTimeseriesNumbers(n);
 }
 
-
 bool PartThermal::hasForcedTimeseriesGeneration() const
 {
     using Behavior = LocalTSGenerationBehavior;
-    return std::ranges::any_of(list.all(), [](const ThermalClusterList::SharedPtr& cluster) {
-        return cluster->tsGenBehavior == Behavior::forceGen;
-    });
+    return std::ranges::any_of(list.all(),
+                               [](const ThermalClusterList::SharedPtr& cluster)
+                               { return cluster->tsGenBehavior == Behavior::forceGen; });
 }
 
 bool PartThermal::hasForcedNoTimeseriesGeneration() const
 {
     using Behavior = LocalTSGenerationBehavior;
-    return std::ranges::any_of(list.all(), [](const ThermalClusterList::SharedPtr& cluster) {
-        return cluster->tsGenBehavior == Behavior::forceNoGen;
-    });
+    return std::ranges::any_of(list.all(),
+                               [](const ThermalClusterList::SharedPtr& cluster)
+                               { return cluster->tsGenBehavior == Behavior::forceNoGen; });
 }
 
 void PartThermal::checkAndCorrectAvailability() const

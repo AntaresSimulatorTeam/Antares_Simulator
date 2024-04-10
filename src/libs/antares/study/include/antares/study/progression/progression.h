@@ -54,6 +54,7 @@ public:
         sectImportTS,
         sectMax
     };
+
     enum
     {
         npos = (uint)-1,
@@ -160,14 +161,17 @@ protected:
     void end(Part& part);
 
 private:
-    class Meter final : public Yuni::Thread::Timer
+    class Meter final: public Yuni::Thread::Timer
     {
     public:
         Meter();
+
         virtual ~Meter()
         {
             if (logsContainer)
+            {
                 delete[] logsContainer;
+            }
         }
 
         void allocateLogsContainer(uint nb);

@@ -28,12 +28,13 @@
 void OPT_InitialiserNombreMinEtMaxDeGroupesCoutsDeDemarrage(PROBLEME_HEBDO* problemeHebdo)
 {
     if (!problemeHebdo->OptimisationAvecCoutsDeDemarrage)
+    {
         return;
+    }
 
     for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        PALIERS_THERMIQUES& PaliersThermiquesDuPays
-          = problemeHebdo->PaliersThermiquesDuPays[pays];
+        PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
         std::vector<PDISP_ET_COUTS_HORAIRES_PAR_PALIER>& PuissanceDisponibleEtCout
           = PaliersThermiquesDuPays.PuissanceDisponibleEtCout;
 
@@ -55,13 +56,13 @@ void OPT_InitialiserNombreMinEtMaxDeGroupesCoutsDeDemarrage(PROBLEME_HEBDO* prob
             {
                 if (TailleUnitaireDUnGroupeDuPalierThermique != 0)
                 {
-                    NombreMaxDeGroupesEnMarcheDuPalierThermique[pdtHebdo]
-                      = (int)ceil(PuissanceDisponibleDuPalierThermiqueRef[pdtHebdo]
-                                  / TailleUnitaireDUnGroupeDuPalierThermique);
+                    NombreMaxDeGroupesEnMarcheDuPalierThermique[pdtHebdo] = (int)ceil(
+                      PuissanceDisponibleDuPalierThermiqueRef[pdtHebdo]
+                      / TailleUnitaireDUnGroupeDuPalierThermique);
 
-                    NombreMinDeGroupesEnMarcheDuPalierThermique[pdtHebdo]
-                      = (int)ceil(PuissanceMinDuPalierThermiqueRef[pdtHebdo]
-                                  / TailleUnitaireDUnGroupeDuPalierThermique);
+                    NombreMinDeGroupesEnMarcheDuPalierThermique[pdtHebdo] = (int)ceil(
+                      PuissanceMinDuPalierThermiqueRef[pdtHebdo]
+                      / TailleUnitaireDUnGroupeDuPalierThermique);
                 }
                 else
                 {

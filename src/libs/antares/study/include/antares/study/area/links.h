@@ -44,7 +44,7 @@ struct CompareLinkName;
 **
 ** \ingroup area
 */
-class AreaLink final : public Yuni::NonCopyable<AreaLink>
+class AreaLink final: public Yuni::NonCopyable<AreaLink>
 {
 public:
     //! Vector of links

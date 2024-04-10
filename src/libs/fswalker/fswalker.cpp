@@ -41,7 +41,7 @@ using namespace Antares;
 namespace FSWalker
 {
 
-static std::mutex gsMutex;//!< Mutex for the global queueservice
+static std::mutex gsMutex; //!< Mutex for the global queueservice
 static bool queueserviceInitialized = false;
 //! Global Queue service
 static Job::QueueService queueservice;
@@ -96,12 +96,14 @@ protected:
     void waitForAllJobs() const;
 
 private:
-    class DirectoryContext final : private Yuni::NonCopyable<DirectoryContext>
+    class DirectoryContext final: private Yuni::NonCopyable<DirectoryContext>
     {
     public:
         using Stack = std::stack<DirectoryContext*>;
 
-        explicit DirectoryContext(const String& path) : info(path), cursor(info.begin())
+        explicit DirectoryContext(const String& path):
+            info(path),
+            cursor(info.begin())
         {
             // Currently bug
             // info.directory() = path;
@@ -111,6 +113,7 @@ private:
         IO::Directory::Info info;
         IO::Directory::Info::iterator cursor;
     };
+
     //! Directory stack
     std::list<String> pStack;
     //! Context
@@ -128,7 +131,9 @@ private:
 
 }; // class WalkerThread
 
-WalkerThread::WalkerThread(Statistics& stats) : pFileJob(nullptr), pOriginalStatistics(stats)
+WalkerThread::WalkerThread(Statistics& stats):
+    pFileJob(nullptr),
+    pOriginalStatistics(stats)
 {
     pJobCounter = std::make_shared<std::atomic<int>>();
     pShouldStop = false;
@@ -141,11 +146,17 @@ WalkerThread::WalkerThread(Statistics& stats) : pFileJob(nullptr), pOriginalStat
         // jobCount == 0
         uint core = System::CPU::Count();
         if (core < 3)
+        {
             core = 3;
+        }
         else if (core >= 16)
+        {
             core -= 4;
+        }
         else if (core > 4)
+        {
             core -= 1;
+        }
         logs.info() << "queueservice: " << core << " workers";
         queueservice.maximumThreadCount(core);
 
@@ -274,9 +285,12 @@ bool WalkerThread::triggerFileEvent(const String& filename,
                     // timeout in ms based on constants
                     timeout = maxFilesPerJob * maxJobsInQueueReducedPressure / 4,
                 };
+
                 SuspendMilliSeconds(timeout);
                 if (pShouldStop)
+                {
                     return false;
+                }
             } while (queueservice.waitingJobsCount() > maxJobsInQueueReducedPressure);
             logs.debug() << logPrefix << "  :: resuming";
         }
@@ -293,7 +307,9 @@ bool WalkerThread::triggerFileEvent(const String& filename,
 void WalkerThread::walk(const String& path)
 {
     if (not onDirectoryEnter(path)) // nothing to walk through
+    {
         return;
+    }
 
     // Should we take care of files ?
     bool handleSingleFiles = not events.file.access.empty();
@@ -304,7 +320,9 @@ void WalkerThread::walk(const String& path)
         auto& context = *(pContext.top());
 
         if (pShouldStop)
+        {
             break;
+        }
 
         // Iterating all files
         {
@@ -321,7 +339,9 @@ void WalkerThread::walk(const String& path)
                         auto size = context.cursor.size();
                         auto modified = context.cursor.modified();
                         if (not triggerFileEvent(filename, parent, modified, size))
+                        {
                             return;
+                        }
                     }
 
                     // next entry
@@ -337,7 +357,9 @@ void WalkerThread::walk(const String& path)
                         ++context.cursor;
 
                         if (pShouldStop)
+                        {
                             break;
+                        }
                     }
                     else
                     {
@@ -351,7 +373,9 @@ void WalkerThread::walk(const String& path)
             }
 
             if (reloop)
+            {
                 continue;
+            }
         }
 
         // Leaving directories
@@ -359,7 +383,9 @@ void WalkerThread::walk(const String& path)
         {
             onDirectoryLeave();
             if (pStack.empty() || pContext.top()->cursor.valid())
+            {
                 break;
+            }
         } while (true);
     } while (not pStack.empty());
 
@@ -414,7 +440,9 @@ void WalkerThread::waitForAllJobs() const
             Suspend(2);
             // checking if we were asked to stop
             if (pShouldStop)
+            {
                 break;
+            }
         } while (true);
     }
 }
@@ -429,11 +457,14 @@ void WalkerThread::dispatchJob(IJob::Ptr job) const
     queueservice += job;
 }
 
-Walker::Walker() : pJobCount(0)
+Walker::Walker():
+    pJobCount(0)
 {
 }
 
-Walker::Walker(const AnyString& logprefix) : pJobCount(0), pLogPrefix(logprefix)
+Walker::Walker(const AnyString& logprefix):
+    pJobCount(0),
+    pLogPrefix(logprefix)
 {
 }
 
@@ -467,19 +498,22 @@ void Walker::run()
     pStats.aborted = false;
 
     if (pDirectory.empty())
+    {
         return;
+    }
 
     // If there is no extensions, there is nothing to do
     if (pExtensions.empty())
+    {
         return;
+    }
 
     // Sorting extensions by they priority in the reverse order
     // higher priority must be executed first
     std::sort(pExtensions.begin(),
               pExtensions.end(),
-              [](const IExtension::Ptr& a, const IExtension::Ptr& b) {
-                  return b->priority() < a->priority();
-              });
+              [](const IExtension::Ptr& a, const IExtension::Ptr& b)
+              { return b->priority() < a->priority(); });
 
     // The process has aborted by default from now on
     pStats.aborted = true;
@@ -512,6 +546,8 @@ void Walker::retrieveStatistics(Statistics& out)
 void Walker::add(IExtension::Ptr extension)
 {
     if (!(!extension))
+    {
         pExtensions.push_back(extension);
+    }
 }
 } // namespace FSWalker

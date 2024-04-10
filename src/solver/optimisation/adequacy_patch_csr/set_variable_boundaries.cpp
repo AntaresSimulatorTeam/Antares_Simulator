@@ -43,9 +43,9 @@ void HourlyCSRProblem::setBoundsOnENS()
             int var = variableManager_.PositiveUnsuppliedEnergy(area, triggeredHour);
 
             problemeAResoudre_.Xmin[var] = -belowThisThresholdSetToZero;
-            problemeAResoudre_.Xmax[var]
-              = problemeHebdo_->ResultatsHoraires[area].ValeursHorairesDENS[triggeredHour]
-                + belowThisThresholdSetToZero;
+            problemeAResoudre_.Xmax[var] = problemeHebdo_->ResultatsHoraires[area]
+                                             .ValeursHorairesDENS[triggeredHour]
+                                           + belowThisThresholdSetToZero;
 
             problemeAResoudre_.X[var] = problemeHebdo_->ResultatsHoraires[area]
                                           .ValeursHorairesDeDefaillancePositive[triggeredHour];
@@ -112,23 +112,33 @@ void HourlyCSRProblem::setBoundsOnFlows()
 
         // flow
         int var = variableManager_.NTCDirect(Interco, triggeredHour);
-        Xmax[var] = ValeursDeNTC.ValeurDeNTCOrigineVersExtremite[Interco] + belowThisThresholdSetToZero;
-        Xmin[var] = -(ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine[Interco]) - belowThisThresholdSetToZero;
+        Xmax[var] = ValeursDeNTC.ValeurDeNTCOrigineVersExtremite[Interco]
+                    + belowThisThresholdSetToZero;
+        Xmin[var] = -(ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine[Interco])
+                    - belowThisThresholdSetToZero;
         problemeAResoudre_.X[var] = ValeursDeNTC.ValeurDuFlux[Interco];
 
         if (std::isinf(Xmax[var]))
         {
             if (std::isinf(Xmin[var]))
+            {
                 problemeAResoudre_.TypeDeVariable[var] = VARIABLE_NON_BORNEE;
+            }
             else
+            {
                 problemeAResoudre_.TypeDeVariable[var] = VARIABLE_BORNEE_INFERIEUREMENT;
+            }
         }
         else
         {
             if (std::isinf(Xmin[var]))
+            {
                 problemeAResoudre_.TypeDeVariable[var] = VARIABLE_BORNEE_SUPERIEUREMENT;
+            }
             else
+            {
                 problemeAResoudre_.TypeDeVariable[var] = VARIABLE_BORNEE_DES_DEUX_COTES;
+            }
         }
 
         double* AdresseDuResultat = &(ValeursDeNTC.ValeurDuFlux[Interco]);
@@ -141,7 +151,8 @@ void HourlyCSRProblem::setBoundsOnFlows()
         var = variableManager_.IntercoDirectCost(Interco, triggeredHour);
 
         Xmin[var] = -belowThisThresholdSetToZero;
-        Xmax[var] = ValeursDeNTC.ValeurDeNTCOrigineVersExtremite[Interco] + belowThisThresholdSetToZero;
+        Xmax[var] = ValeursDeNTC.ValeurDeNTCOrigineVersExtremite[Interco]
+                    + belowThisThresholdSetToZero;
         problemeAResoudre_.TypeDeVariable[var] = VARIABLE_BORNEE_DES_DEUX_COTES;
         if (std::isinf(Xmax[var]))
         {
@@ -154,7 +165,8 @@ void HourlyCSRProblem::setBoundsOnFlows()
         var = variableManager_.IntercoIndirectCost(Interco, triggeredHour);
 
         Xmin[var] = -belowThisThresholdSetToZero;
-        Xmax[var] = ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine[Interco] + belowThisThresholdSetToZero;
+        Xmax[var] = ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine[Interco]
+                    + belowThisThresholdSetToZero;
         problemeAResoudre_.TypeDeVariable[var] = VARIABLE_BORNEE_DES_DEUX_COTES;
         if (std::isinf(Xmax[var]))
         {

@@ -32,8 +32,8 @@ void PMinMaxDispatchableGenerationGroup::BuildConstraints()
     PMinDispatchableGeneration pMinDispatchableGeneration(builder_, data);
     for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)
     {
-        const PALIERS_THERMIQUES& PaliersThermiquesDuPays
-          = problemeHebdo_->PaliersThermiquesDuPays[pays];
+        const PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo_
+                                                              ->PaliersThermiquesDuPays[pays];
         for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
         {
             for (int pdt = 0; pdt < problemeHebdo_->NombreDePasDeTempsPourUneOptimisation; pdt++)

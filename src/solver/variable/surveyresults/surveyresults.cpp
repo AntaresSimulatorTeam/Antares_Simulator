@@ -69,7 +69,9 @@ void InternalExportDigestLinksMatrix(const Data::Study& study,
             {
                 v = matrix[x][y];
                 if (std::isnan(v))
+                {
                     buffer.append("\t--");
+                }
                 else
                 {
                     if (Utils::isZero(v))
@@ -81,16 +83,24 @@ void InternalExportDigestLinksMatrix(const Data::Study& study,
 // The snprintf routine is required since we may not have the ending zero
 // with the standard printf. The conversion may require a bigger buffer.
 #ifdef YUNI_OS_MSVC
-                        sizePrintf = ::sprintf_s(
-                          conversionBuffer + 1, sizeof(conversionBuffer) - 2, "%.0f", v);
+                        sizePrintf = ::sprintf_s(conversionBuffer + 1,
+                                                 sizeof(conversionBuffer) - 2,
+                                                 "%.0f",
+                                                 v);
 #else
-                        sizePrintf = ::snprintf(
-                          conversionBuffer + 1, sizeof(conversionBuffer) - 2, "%.0f", v);
+                        sizePrintf = ::snprintf(conversionBuffer + 1,
+                                                sizeof(conversionBuffer) - 2,
+                                                "%.0f",
+                                                v);
 #endif
                         if (sizePrintf >= 0)
+                        {
                             buffer.append((const char*)conversionBuffer);
+                        }
                         else
+                        {
                             buffer.append("\tERR");
+                        }
                     }
                 }
             }
@@ -113,40 +123,45 @@ static void ExportGridInfosAreas(const Data::Study& study,
                   "min stable power\tmin up/down time\tspinning\tco2\t"
                   "marginal cost\tfixed cost\tstartup cost\tmarket bid cost\tspread cost\n";
 
-    study.areas.each([&](const Data::Area& area) {
-        out << area.id << '\t';
-        out << area.name << '\n';
+    study.areas.each(
+      [&](const Data::Area& area)
+      {
+          out << area.id << '\t';
+          out << area.name << '\n';
 
-        // Areas
-        {
-            auto end = area.links.end();
-            for (auto i = area.links.begin(); i != end; ++i)
-                outLinks << area.id << '\t' << i->second->with->id << '\n';
-        }
+          // Areas
+          {
+              auto end = area.links.end();
+              for (auto i = area.links.begin(); i != end; ++i)
+              {
+                  outLinks << area.id << '\t' << i->second->with->id << '\n';
+              }
+          }
 
-        // Thermal clusters
-        for (auto& cluster : area.thermal.list.each_enabled())
-        {
-            outThermal << area.id << '\t';
-            outThermal << cluster->id() << '\t';
-            outThermal << cluster->name() << '\t';
-            outThermal << Data::ThermalCluster::GroupName(cluster->groupID) << '\t';
-            outThermal << cluster->unitCount << '\t';
-            outThermal << cluster->nominalCapacity << '\t';
-            outThermal << cluster->minStablePower << '\t';
-            outThermal << cluster->minUpTime << '\t';
-            outThermal << cluster->minDownTime << '\t';
-            outThermal << cluster->spinning << '\t';
-            outThermal << cluster->emissions.factors[Antares::Data::Pollutant::CO2] << '\t';
-            outThermal << cluster->marginalCost << '\t';
-            outThermal << cluster->fixedCost << '\t';
-            outThermal << cluster->startupCost << '\t';
-            outThermal << cluster->marketBidCost << '\t';
-            outThermal << cluster->spreadCost << '\n';
+          // Thermal clusters
+          for (auto& cluster: area.thermal.list.each_enabled())
+          {
+              outThermal << area.id << '\t';
+              outThermal << cluster->id() << '\t';
+              outThermal << cluster->name() << '\t';
+              outThermal << Data::ThermalCluster::GroupName(cluster->groupID) << '\t';
+              outThermal << cluster->unitCount << '\t';
+              outThermal << cluster->nominalCapacity << '\t';
+              outThermal << cluster->minStablePower << '\t';
+              outThermal << cluster->minUpTime << '\t';
+              outThermal << cluster->minDownTime << '\t';
+              outThermal << cluster->spinning << '\t';
+              outThermal << cluster->emissions.factors[Antares::Data::Pollutant::CO2] << '\t';
+              outThermal << cluster->marginalCost << '\t';
+              outThermal << cluster->fixedCost << '\t';
+              outThermal << cluster->startupCost << '\t';
+              outThermal << cluster->marketBidCost << '\t';
+              outThermal << cluster->spreadCost << '\n';
 
-        } // each thermal cluster
-    });   // each area
-    auto add = [&writer, &originalOutput](const YString& filename, Clob&& buffer) {
+          } // each thermal cluster
+      }); // each area
+    auto add = [&writer, &originalOutput](const YString& filename, Clob&& buffer)
+    {
         YString path;
         path << originalOutput << SEP << "grid" << SEP << filename;
         writer.addEntryFromBuffer(path.c_str(), buffer);
@@ -157,16 +172,16 @@ static void ExportGridInfosAreas(const Data::Study& study,
     add("thermal.txt", std::move(outThermal));
 }
 
-SurveyResultsData::SurveyResultsData(const Data::Study& s, const String& o) :
- columnIndex((uint)-1),
- thermalCluster(nullptr),
- area(nullptr),
- link(nullptr),
- setOfAreasIndex((uint)-1),
- study(s),
- nbYears(s.parameters.nbYears),
- effectiveNbYears(s.parameters.effectiveNbYears),
- originalOutput(o)
+SurveyResultsData::SurveyResultsData(const Data::Study& s, const String& o):
+    columnIndex((uint)-1),
+    thermalCluster(nullptr),
+    area(nullptr),
+    link(nullptr),
+    setOfAreasIndex((uint)-1),
+    study(s),
+    nbYears(s.parameters.nbYears),
+    effectiveNbYears(s.parameters.effectiveNbYears),
+    originalOutput(o)
 {
 }
 
@@ -204,18 +219,13 @@ void SurveyResultsData::exportGridInfos(IResultWriter& writer)
 }
 } // namespace Antares::Solver::Variable::Private
 
-
-
-
 namespace Antares
 {
 namespace Solver
 {
 namespace Variable
 {
-static inline uint GetRangeLimit(const Data::Study& study,
-                                 int precisionLevel,
-                                 int index)
+static inline uint GetRangeLimit(const Data::Study& study, int precisionLevel, int index)
 {
     assert(study.runtime && "invalid runtime data");
     switch (precisionLevel)
@@ -250,15 +260,23 @@ inline void SurveyResults::writeDateToFileDescriptor(uint row, int precisionLeve
         out << '\t' << row << '\t';
         uint d = 1 + hourinfo.dayMonth; // 1 + h.day;
         if (d < 10)
+        {
             out << '0' << d;
+        }
         else
+        {
             out << d;
+        }
         out << '\t';
         out << calendar.text.months[hourinfo.month].shortUpperName << '\t';
         if (hourinfo.dayHour < 10)
+        {
             out << '0' << (uint)hourinfo.dayHour;
+        }
         else
+        {
             out << (uint)hourinfo.dayHour;
+        }
         out.append(":00", 3);
         break;
     }
@@ -271,9 +289,13 @@ inline void SurveyResults::writeDateToFileDescriptor(uint row, int precisionLeve
         out << '\t';
         uint dp1 = 1 + dayinfo.dayMonth;
         if (dp1 < 10)
+        {
             out << '0' << dp1;
+        }
         else
+        {
             out << dp1;
+        }
         out << '\t' << calendar.text.months[dayinfo.month].shortUpperName;
         break;
     }
@@ -281,18 +303,26 @@ inline void SurveyResults::writeDateToFileDescriptor(uint row, int precisionLeve
     {
         out << '\t';
         if (row - 1 < calendar.maxWeeksInYear)
+        {
             out << calendar.weeks[row - 1].userweek;
+        }
         else
+        {
             out << '?';
+        }
         break;
     }
     case Category::monthly:
     {
         assert(row - 1 < 12);
         if (row - 1 < 12)
+        {
             out << '\t' << row << '\t' << calendar.text.months[row - 1].shortUpperName;
+        }
         else
+        {
             out.append("\t\t", 2);
+        }
         break;
     }
     case Category::annual:
@@ -327,7 +357,9 @@ inline void SurveyResults::AppendDoubleValue(uint& error,
             {
                 // We should disabled errors on NaN if the quadratic optimization has failed
                 if (not data.study.runtime->quadraticOptimizationHasFailed)
+                {
                     logs.error() << "'NaN' value detected";
+                }
             }
         }
         else
@@ -336,16 +368,22 @@ inline void SurveyResults::AppendDoubleValue(uint& error,
             {
                 buffer.append((v > 0) ? "\t+inf" : "\t-inf", 5);
                 if (++error == 1)
+                {
                     logs.error() << "'infinite' value detected";
+                }
             }
             else
             {
 #ifdef YUNI_OS_MSVC
-                int sizePrintf = ::sprintf_s(
-                  conversionBuffer + 1, sizeof(conversionBuffer) - 2, precision.c_str(), v);
+                int sizePrintf = ::sprintf_s(conversionBuffer + 1,
+                                             sizeof(conversionBuffer) - 2,
+                                             precision.c_str(),
+                                             v);
 #else
-                int sizePrintf = ::snprintf(
-                  conversionBuffer + 1, sizeof(conversionBuffer) - 2, precision.c_str(), v);
+                int sizePrintf = ::snprintf(conversionBuffer + 1,
+                                            sizeof(conversionBuffer) - 2,
+                                            precision.c_str(),
+                                            v);
 #endif
 
                 if (sizePrintf >= 0)
@@ -355,12 +393,16 @@ inline void SurveyResults::AppendDoubleValue(uint& error,
                     buffer.append((const char*)conversionBuffer, 1 + sizePrintf);
                 }
                 else
+                {
                     buffer += "\tERR";
+                }
             }
         }
     }
     else
+    {
         buffer.append("\t0", 2);
+    }
 }
 
 /*!
@@ -463,19 +505,19 @@ static inline void WriteIndexHeaderToFileDescriptor(int precisionLevel,
     assert(Row < SurveyResults::captionCount);
 
     for (uint x = 0; x != columnIndex; ++x)
+    {
         s << '\t' << captions[Row][x];
+    }
     s += '\n';
 }
 
-SurveyResults::SurveyResults(const Data::Study& s,
-                             const String& o,
-                             IResultWriter& writer) :
- data(s, o),
- yearByYearResults(false),
- isCurrentVarNA(nullptr),
- isPrinted(nullptr),
- pResultWriter(writer)
-{    
+SurveyResults::SurveyResults(const Data::Study& s, const String& o, IResultWriter& writer):
+    data(s, o),
+    yearByYearResults(false),
+    isCurrentVarNA(nullptr),
+    isPrinted(nullptr),
+    pResultWriter(writer)
+{
     variableCaption.reserve(10);
 
     maxVariables = s.parameters.variablesPrintInfo.getTotalMaxColumnsCount();
@@ -494,17 +536,23 @@ SurveyResults::SurveyResults(const Data::Study& s,
 
     // captions
     for (uint i = 0; i != captionCount; ++i)
+    {
         captions[i] = new CaptionType[maxVariables];
+    }
 
     // precision
     precision = new PrecisionType[maxVariables];
     for (uint i = 0; i != maxVariables; ++i)
+    {
         precision[i] = PrecisionToPrintfFormat<0>::Value();
+    }
 
     // non applicable status
     nonApplicableStatus = new bool[maxVariables];
     for (uint i = 0; i != maxVariables; ++i)
+    {
         nonApplicableStatus[i] = false;
+    }
 
     uint nbAreas = s.areas.size();
     uint nbSetsOfAreas = s.areas.size();
@@ -514,7 +562,9 @@ SurveyResults::SurveyResults(const Data::Study& s,
     {
         digestNonApplicableStatus[i] = new bool[maxVariables];
         for (uint v = 0; v < maxVariables; v++)
+        {
             digestNonApplicableStatus[i][v] = false;
+        }
     }
 }
 
@@ -523,23 +573,31 @@ SurveyResults::~SurveyResults()
     if (values)
     {
         for (uint i = 0; i != maxVariables; ++i)
+        {
             delete[] values[i];
+        }
         delete[] values;
     }
 
     for (uint i = 0; i != captionCount; ++i)
+    {
         delete[] captions[i];
+    }
     delete[] precision;
     delete[] nonApplicableStatus;
     for (uint i = 0; i < digestSize; i++)
+    {
         delete[] digestNonApplicableStatus[i];
+    }
     delete[] digestNonApplicableStatus;
 }
 
 void SurveyResults::resetValuesAtLine(uint j)
 {
     for (uint i = 0; i < maxVariables; i++)
+    {
         values[i][j] = 0.;
+    }
 }
 
 void SurveyResults::exportDigestAllYears(std::string& buffer)
@@ -613,9 +671,13 @@ void SurveyResults::exportDigestAllYears(std::string& buffer)
                                         values[i][y]);
 #endif
                 if (sizePrintf >= 0)
+                {
                     buffer.append((const char*)conversionBuffer);
+                }
                 else
+                {
                     buffer.append("\tERR");
+                }
             }
         }
 
@@ -645,9 +707,13 @@ void SurveyResults::saveToFile(int dataLevel, int fileLevel, int precisionLevel)
 
     // Big header
     if (data.area)
+    {
         data.fileBuffer << data.area->name;
+    }
     else
+    {
         data.fileBuffer << "system";
+    }
 
     data.fileBuffer << '\t';
     Category::DataLevelToStream(data.fileBuffer, dataLevel);
@@ -658,7 +724,9 @@ void SurveyResults::saveToFile(int dataLevel, int fileLevel, int precisionLevel)
     data.fileBuffer << '\n';
 
     if (data.link)
+    {
         data.fileBuffer << data.link->with->name;
+    }
     data.fileBuffer << "\tVARIABLES\tBEGIN\tEND\n";
     data.fileBuffer << '\t' << data.columnIndex << '\t' << (heightBegin + 1) << '\t' << heightEnd
                     << '\n';
@@ -669,21 +737,39 @@ void SurveyResults::saveToFile(int dataLevel, int fileLevel, int precisionLevel)
     if (data.area)
     {
         auto& areaname = data.area->name;
-        WriteIndexHeaderToFileDescriptor<0>(
-          precisionLevel, data.fileBuffer, areaname, captions, data.columnIndex);
-        WriteIndexHeaderToFileDescriptor<1>(
-          precisionLevel, data.fileBuffer, areaname, captions, data.columnIndex);
-        WriteIndexHeaderToFileDescriptor<2>(
-          precisionLevel, data.fileBuffer, areaname, captions, data.columnIndex);
+        WriteIndexHeaderToFileDescriptor<0>(precisionLevel,
+                                            data.fileBuffer,
+                                            areaname,
+                                            captions,
+                                            data.columnIndex);
+        WriteIndexHeaderToFileDescriptor<1>(precisionLevel,
+                                            data.fileBuffer,
+                                            areaname,
+                                            captions,
+                                            data.columnIndex);
+        WriteIndexHeaderToFileDescriptor<2>(precisionLevel,
+                                            data.fileBuffer,
+                                            areaname,
+                                            captions,
+                                            data.columnIndex);
     }
     else
     {
-        WriteIndexHeaderToFileDescriptor<0>(
-          precisionLevel, data.fileBuffer, "system", captions, data.columnIndex);
-        WriteIndexHeaderToFileDescriptor<1>(
-          precisionLevel, data.fileBuffer, "system", captions, data.columnIndex);
-        WriteIndexHeaderToFileDescriptor<2>(
-          precisionLevel, data.fileBuffer, "system", captions, data.columnIndex);
+        WriteIndexHeaderToFileDescriptor<0>(precisionLevel,
+                                            data.fileBuffer,
+                                            "system",
+                                            captions,
+                                            data.columnIndex);
+        WriteIndexHeaderToFileDescriptor<1>(precisionLevel,
+                                            data.fileBuffer,
+                                            "system",
+                                            captions,
+                                            data.columnIndex);
+        WriteIndexHeaderToFileDescriptor<2>(precisionLevel,
+                                            data.fileBuffer,
+                                            "system",
+                                            captions,
+                                            data.columnIndex);
     }
 
     char conversionBuffer[256];
@@ -693,7 +779,9 @@ void SurveyResults::saveToFile(int dataLevel, int fileLevel, int precisionLevel)
 #ifndef NDEBUG
     // A few preliminary checks
     for (uint x = 0; x != data.columnIndex; ++x)
+    {
         assert(not precision[x].empty() && "invalid precision");
+    }
 #endif
 
     // Each row
@@ -708,12 +796,14 @@ void SurveyResults::saveToFile(int dataLevel, int fileLevel, int precisionLevel)
         assert(data.columnIndex <= maxVariables);
 
         for (uint x = 0; x != data.columnIndex; ++x)
+        {
             AppendDoubleValue(error,
-                    values[x][y],
-                    data.fileBuffer,
-                    conversionBuffer,
-                    precision[x],
-                    nonApplicableStatus[x]);
+                              values[x][y],
+                              data.fileBuffer,
+                              conversionBuffer,
+                              precision[x],
+                              nonApplicableStatus[x]);
+        }
 
         // End of line
         data.fileBuffer += '\n';

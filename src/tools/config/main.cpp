@@ -56,7 +56,9 @@ int main(int argc, char* argv[])
     options.addFlag(optVersion, 'v', "version", "Print the version and exit");
 
     if (options(argc, argv) == GetOpt::ReturnCode::error)
+    {
         return options.errors() ? EXIT_FAILURE : 0;
+    }
 
     if (optVersion)
     {

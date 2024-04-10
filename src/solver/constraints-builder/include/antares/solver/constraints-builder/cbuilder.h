@@ -39,6 +39,7 @@ public:
         ptr = area;
         nodeName = area->name.to<std::string>();
     }
+
     std::string getName()
     {
         return nodeName;
@@ -79,6 +80,7 @@ public:
             return lhs->getWeightWithImpedance() < rhs->getWeightWithImpedance();
         }
     };
+
     struct comparepWeightWithImpedance
     {
         inline bool operator()(const linkInfo* lhs, const linkInfo* rhs) const
@@ -86,6 +88,7 @@ public:
             return lhs->getWeightWithImpedance() < rhs->getWeightWithImpedance();
         }
     };
+
     struct addpWeight
     {
         double operator()(double i, const linkInfo* o) const
@@ -93,6 +96,7 @@ public:
             return (o->getWeightWithImpedance() + i);
         }
     };
+
     struct addpWeightWithImpedance
     {
         double operator()(double i, const linkInfo* o) const
@@ -100,6 +104,7 @@ public:
             return (o->getWeightWithImpedance() + i);
         }
     };
+
     bool operator<(const linkInfo& other) const
     {
         return getWeightWithImpedance() < other.getWeightWithImpedance()
@@ -113,12 +118,13 @@ public:
 class State
 {
 public:
-    State(std::vector<double> impedancesList, uint time, double infinite = 1000000) :
-     secondMember(3, time), impedances(impedancesList)
+    State(std::vector<double> impedancesList, uint time, double infinite = 1000000):
+        secondMember(3, time),
+        impedances(impedancesList)
     {
         secondMember.fillColumn(1, -1 * infinite);
         secondMember.fillColumn(0, infinite);
-    };
+    }
 
     Matrix<double, double> secondMember;
     std::vector<double> impedances;
@@ -128,8 +134,11 @@ public:
 class Cycle
 {
 public:
-    Cycle(const std::vector<linkInfo*>& linkList, double infinite = 1000000) :
-     time(0), loop(linkList), opType(Data::BindingConstraint::opEquality), pInfinite(infinite)
+    Cycle(const std::vector<linkInfo*>& linkList, double infinite = 1000000):
+        time(0),
+        loop(linkList),
+        opType(Data::BindingConstraint::opEquality),
+        pInfinite(infinite)
     {
         uint columnImpedance = (uint)Antares::Data::fhlImpedances;
 
@@ -140,7 +149,9 @@ public:
         {
             if ((*line)->nImpedanceChanges > 0
                 || ((*line)->type == Antares::Data::atAC && (!(*line)->hasPShiftsEqual)))
+            {
                 opType = Data::BindingConstraint::opBoth;
+            }
             impedances.push_back((*line)->ptr->parameters[columnImpedance][0]);
 
             time = HOURS_PER_YEAR; /*BC loading always expects 8786 values heigth will
@@ -163,7 +174,9 @@ public:
                     currentLineSign *= -1;
                 }
                 else
+                {
                     assert(0 and "links of the loops do not connect or are not in the right order");
+                }
             }
 
             sign.push_back(currentLineSign);
@@ -175,18 +188,19 @@ public:
 
     State& getState(std::vector<double>& impedances)
     {
-        std::vector<State>::iterator stIT
-          = std::find_if(states.begin(), states.end(), [&impedances](State& s) -> bool {
-                return s.impedances == impedances;
-            });
+        std::vector<State>::iterator stIT = std::find_if(states.begin(),
+                                                         states.end(),
+                                                         [&impedances](State& s) -> bool
+                                                         { return s.impedances == impedances; });
 
         if (stIT == states.end())
         {
             State state(impedances, time, pInfinite);
             states.push_back(state);
-            stIT = std::find_if(states.begin(), states.end(), [&impedances](State& s) -> bool {
-                return s.impedances == impedances;
-            });
+            stIT = std::find_if(states.begin(),
+                                states.end(),
+                                [&impedances](State& s) -> bool
+                                { return s.impedances == impedances; });
         }
         return *stIT;
     }
@@ -245,17 +259,27 @@ public:
     //! find an edge from node names
     linkInfo* findLinkInfoFromNodeNames(Data::AreaName& u, Data::AreaName& v)
     {
-        auto linkIT
-          = std::find_if(pLink.begin(), pLink.end(), [&u, &v](const linkInfo* edgeP) -> bool {
-                if (edgeP->ptr->from->id == u && edgeP->ptr->with->id == v)
-                    return true;
-                if (edgeP->ptr->from->id == v && edgeP->ptr->with->id == u)
-                    return true;
-                else
-                    return false;
-            });
+        auto linkIT = std::find_if(pLink.begin(),
+                                   pLink.end(),
+                                   [&u, &v](const linkInfo* edgeP) -> bool
+                                   {
+                                       if (edgeP->ptr->from->id == u && edgeP->ptr->with->id == v)
+                                       {
+                                           return true;
+                                       }
+                                       if (edgeP->ptr->from->id == v && edgeP->ptr->with->id == u)
+                                       {
+                                           return true;
+                                       }
+                                       else
+                                       {
+                                           return false;
+                                       }
+                                   });
         if (linkIT != pLink.end())
+        {
             return *linkIT;
+        }
 
         return nullptr;
     }
@@ -264,20 +288,27 @@ public:
     void buildAreaToLinkInfosMap()
     {
         areaToLinks.clear();
-        for (auto& area : pStudy->areas)
+        for (auto& area: pStudy->areas)
         {
             auto a = area.second;
-            std::for_each(pLink.begin(), pLink.end(), [&a, this](linkInfo* edgeP) {
-                if (edgeP->ptr->from == a || edgeP->ptr->with == a)
-                    this->areaToLinks[a].insert(edgeP);
-            });
+            std::for_each(pLink.begin(),
+                          pLink.end(),
+                          [&a, this](linkInfo* edgeP)
+                          {
+                              if (edgeP->ptr->from == a || edgeP->ptr->with == a)
+                              {
+                                  this->areaToLinks[a].insert(edgeP);
+                              }
+                          });
         }
     }
 
     linkInfo* getLink(uint i)
     {
         if (i < pLink.size())
+        {
             return pLink[i];
+        }
         return nullptr;
     }
 
@@ -363,6 +394,7 @@ public:
     {
         calendarEnd = end;
     }
+
     uint getCalendarStart()
     {
         return calendarStart;
@@ -377,11 +409,12 @@ private:
     /*!
     ** \brief add one constraint to the study
     */
-    std::shared_ptr<Antares::Data::BindingConstraint> addConstraint(const Data::ConstraintName& name,
-                                                    const Yuni::String& op,
-                                                    const Yuni::String& type,
-                                                    const WeightMap& weights,
-                                                    const double& secondMember);
+    std::shared_ptr<Antares::Data::BindingConstraint> addConstraint(
+      const Data::ConstraintName& name,
+      const Yuni::String& op,
+      const Yuni::String& type,
+      const WeightMap& weights,
+      const double& secondMember);
 
 public:
     Vector pLink;

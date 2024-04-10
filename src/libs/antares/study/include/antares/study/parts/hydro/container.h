@@ -158,7 +158,8 @@ public:
 
     //! Data for time-series
     DataSeriesHydro* series;
-    // TODO : following time series could be hosted by the series data member above (of type DataSeriesHydro),
+    // TODO : following time series could be hosted by the series data member above (of type
+    // DataSeriesHydro),
     //        which contains other time.
     Matrix<double, double> dailyNbHoursAtGenPmax;
     Matrix<double, double> dailyNbHoursAtPumpPmax;

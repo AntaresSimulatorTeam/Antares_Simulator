@@ -34,7 +34,9 @@ namespace Data
 void Study::importLogsToOutputFolder(Solver::IResultWriter& resultWriter) const
 {
     if (!logs.logfile())
+    {
         return;
+    }
 
     std::string logPath("simulation.log");
     String from;

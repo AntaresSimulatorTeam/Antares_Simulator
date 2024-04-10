@@ -32,7 +32,8 @@ namespace Load
 {
 
 class Prepro;
-class Container final : private Yuni::NonCopyable<Container>
+
+class Container final: private Yuni::NonCopyable<Container>
 {
 public:
     //! \name Constructor & Destructor

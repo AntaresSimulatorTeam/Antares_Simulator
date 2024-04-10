@@ -42,7 +42,9 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique(PROBLEME_HEBDO* p
     auto variableManager = VariableManagerFromProblemHebdo(problemeHebdo);
 
     for (int i = 0; i < ProblemeAResoudre->NombreDeVariables; i++)
+    {
         ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[i] = nullptr;
+    }
 
     VALEURS_DE_NTC_ET_RESISTANCES& ValeursDeNTC = problemeHebdo->ValeursDeNTC[PdtHebdo];
 
@@ -55,27 +57,36 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique(PROBLEME_HEBDO* p
         if (ProblemeAResoudre->Xmax[var] - ProblemeAResoudre->Xmin[var]
             < ZERO_POUR_LES_VARIABLES_FIXES)
         {
-            ProblemeAResoudre->X[var]
-              = 0.5 * (ProblemeAResoudre->Xmax[var] - ProblemeAResoudre->Xmin[var]);
+            ProblemeAResoudre->X[var] = 0.5
+                                        * (ProblemeAResoudre->Xmax[var]
+                                           - ProblemeAResoudre->Xmin[var]);
             ProblemeAResoudre->TypeDeVariable[var] = VARIABLE_FIXE;
         }
         else
         {
             const double Xmin = ProblemeAResoudre->Xmin[var];
-            const double Xmax =  ProblemeAResoudre->Xmax[var];
+            const double Xmax = ProblemeAResoudre->Xmax[var];
             if (std::isinf(Xmax) && Xmax > 0)
             {
                 if (std::isinf(Xmin) && Xmin < 0)
+                {
                     ProblemeAResoudre->TypeDeVariable[var] = VARIABLE_NON_BORNEE;
+                }
                 else
+                {
                     ProblemeAResoudre->TypeDeVariable[var] = VARIABLE_BORNEE_INFERIEUREMENT;
+                }
             }
             else
             {
                 if (std::isinf(Xmin) && Xmin < 0)
+                {
                     ProblemeAResoudre->TypeDeVariable[var] = VARIABLE_BORNEE_SUPERIEUREMENT;
+                }
                 else
+                {
                     ProblemeAResoudre->TypeDeVariable[var] = VARIABLE_BORNEE_DES_DEUX_COTES;
+                }
             }
         }
         double* adresseDuResultat = &(ValeursDeNTC.ValeurDuFlux[interco]);

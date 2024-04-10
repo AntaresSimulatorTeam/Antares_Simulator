@@ -28,5 +28,7 @@ using namespace Antares;
 void Output::incrementError()
 {
     if (++errors == 100)
+    {
         logs.fatal() << "Too many errors for " << path;
+    }
 }

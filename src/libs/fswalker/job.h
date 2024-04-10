@@ -36,7 +36,7 @@ class WalkerThread;
 //! Internal job counter
 using InternalJobCounter = std::shared_ptr<std::atomic<int>>;
 
-class IJob : public Yuni::Job::IJob
+class IJob: public Yuni::Job::IJob
 {
 public:
     //! The most suitable smart pointer for the class
@@ -46,6 +46,7 @@ public:
     IJob()
     {
     }
+
     virtual ~IJob();
 
 protected:

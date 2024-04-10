@@ -38,7 +38,9 @@ void AppendToBuffer(StringT& out, const char* buffer)
 
 } // anonymous namespace
 
-CellColumnData::CellColumnData() : rows(nullptr), height(0)
+CellColumnData::CellColumnData():
+    rows(nullptr),
+    height(0)
 {
 }
 
@@ -50,11 +52,17 @@ CellColumnData::~CellColumnData()
 {
 }
 
-ResultMatrix::ResultMatrix() : columns(nullptr), width(0), heightAfterAggregation(0)
+ResultMatrix::ResultMatrix():
+    columns(nullptr),
+    width(0),
+    heightAfterAggregation(0)
 {
 }
 
-ResultMatrix::ResultMatrix(const ResultMatrix&) : columns(NULL), width(0), heightAfterAggregation(0)
+ResultMatrix::ResultMatrix(const ResultMatrix&):
+    columns(NULL),
+    width(0),
+    heightAfterAggregation(0)
 {
 }
 
@@ -74,7 +82,9 @@ bool ResultMatrix::saveToCSVFile(const String& filename) const
 {
     IO::File::Stream file;
     if (!file.openRW(filename))
+    {
         return false;
+    }
 
     Progress::Total = heightAfterAggregation;
     String buffer;
@@ -93,19 +103,25 @@ bool ResultMatrix::saveToCSVFile(const String& filename) const
         {
             buffer << '\t';
             for (uint i = 0; i < width; ++i)
+            {
                 buffer << '\t' << "year";
+            }
             buffer << '\n';
 
             buffer << '\t';
             for (uint i = 0; i < width; ++i)
+            {
                 buffer << '\t' << (i + 1);
+            }
             buffer << '\n';
         }
         for (uint r = 0; r != 1; ++r)
         {
             buffer << '\t';
             for (uint i = 0; i < width; ++i)
+            {
                 buffer << '\t';
+            }
             buffer << '\n';
         }
     }
@@ -116,9 +132,12 @@ bool ResultMatrix::saveToCSVFile(const String& filename) const
         {
             dataBufferHeight = 100
         };
+
         CellData* dataBuffer[dataBufferHeight];
         for (uint d = 0; d != dataBufferHeight; ++d)
+        {
             dataBuffer[d] = new CellData[width];
+        }
 
         uint dataBufferOffset = 0;
         for (uint y = 0; y != heightAfterAggregation; ++y)
@@ -133,8 +152,9 @@ bool ResultMatrix::saveToCSVFile(const String& filename) const
                         for (uint offset = 0; offset != maxH; ++offset)
                         {
                             assert(offset + y < columns[x].height);
-                            memcpy(
-                              dataBuffer[offset][x], columns[x].rows[offset + y], maxSizePerCell);
+                            memcpy(dataBuffer[offset][x],
+                                   columns[x].rows[offset + y],
+                                   maxSizePerCell);
                         }
                     }
                     else
@@ -142,8 +162,9 @@ bool ResultMatrix::saveToCSVFile(const String& filename) const
                         for (uint offset = 0; offset != dataBufferHeight; ++offset)
                         {
                             assert(offset + y < columns[x].height);
-                            memcpy(
-                              dataBuffer[offset][x], columns[x].rows[offset + y], maxSizePerCell);
+                            memcpy(dataBuffer[offset][x],
+                                   columns[x].rows[offset + y],
+                                   maxSizePerCell);
                         }
                     }
                 }
@@ -165,11 +186,15 @@ bool ResultMatrix::saveToCSVFile(const String& filename) const
             buffer << '\n';
             ++Progress::Current;
             if (++dataBufferOffset == dataBufferHeight)
+            {
                 dataBufferOffset = 0;
+            }
         }
 
         for (uint d = 0; d != dataBufferHeight; ++d)
+        {
             delete[] dataBuffer[d];
+        }
     }
     else
     {
@@ -177,12 +202,16 @@ bool ResultMatrix::saveToCSVFile(const String& filename) const
         {
             buffer << '\t' << (1 + y) << '\t';
             if (columns[0].rows)
+            {
                 AppendToBuffer(buffer, columns[0].rows[y]);
+            }
             for (uint x = 1; x < width; ++x)
             {
                 buffer << '\t';
                 if (columns[x].rows)
+                {
                     AppendToBuffer(buffer, columns[x].rows[y]);
+                }
 
                 if (buffer.size() > 1024 * 1024 * 8)
                 {
@@ -196,6 +225,8 @@ bool ResultMatrix::saveToCSVFile(const String& filename) const
     }
 
     if (not buffer.empty())
+    {
         file << buffer;
+    }
     return true;
 }

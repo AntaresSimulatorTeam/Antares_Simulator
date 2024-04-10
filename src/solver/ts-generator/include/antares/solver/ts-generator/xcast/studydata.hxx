@@ -52,7 +52,4 @@ void StudyData::loadFromStudy(Data::Study& study,
 
 } // namespace Antares::TSGenerator::XCast
 
-
-
-
 #endif // __ANTARES_SOLVER_TS_GENERATOR_XCAST_STUDY_DATA_HXX__

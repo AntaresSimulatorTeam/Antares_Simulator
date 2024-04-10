@@ -24,18 +24,21 @@
 #include <clocale>
 #include <iostream>
 
-
 namespace Antares
 {
 void InitializeDefaultLocale()
 {
 #ifdef YUNI_OS_WINDOWS
     if (NULL == std::setlocale(LC_ALL, "English"))
+    {
         std::cerr << "impossible to set locale to English" << std::endl;
+    }
 
 #else
     if (NULL == std::setlocale(LC_ALL, "en_US.utf8"))
+    {
         std::cerr << "impossible to set locale to en_US.utf8" << std::endl;
+    }
 #endif
 }
-}
+} // namespace Antares

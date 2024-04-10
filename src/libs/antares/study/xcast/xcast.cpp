@@ -47,13 +47,19 @@ XCast::TSTranslationUse XCast::CStringToTSTranslationUse(const AnyString& str)
         CString<40, false> s(str);
         s.toLower();
         if (s == "never" || s == "do not use" || s == "none" || s == "no")
+        {
             return tsTranslationNone;
+        }
         if (s == "before-conversion" || s == "add before conversion" || s == "before conversion"
             || s == "before" || s == "before scaling" || s == "add before scaling")
+        {
             return tsTranslationBeforeConversion;
+        }
         if (s == "after-conversion" || s == "add after conversion" || s == "after conversion"
             || s == "after" || s == "after scaling" || s == "add after scaling")
+        {
             return tsTranslationAfterConversion;
+        }
     }
     return tsTranslationNone;
 }
@@ -106,28 +112,40 @@ XCast::Distribution XCast::StringToDistribution(AnyString text)
     {
         // The most usefull probability distribution is the Beta distribution
         if (id == "beta")
+        {
             return dtBeta;
+        }
         if (id == "uniform")
+        {
             return dtUniform;
+        }
         if (id == "normal" || id == "normale")
+        {
             return dtNormal;
+        }
         if (id == "weibullshapea" || id == "weibull" || id == "weibul")
+        {
             return dtWeibullShapeA;
+        }
         if (id == "gammashapea" || id == "gamma")
+        {
             return dtGammaShapeA;
+        }
         // auto-fix for intermediate studies in 3.3.x. Can be removed in future releases
         if (id == "weibulshapea")
+        {
             return dtWeibullShapeA;
+        }
     }
     return dtNone;
 }
 
-XCast::XCast(TimeSeriesType ts) :
- useTranslation(tsTranslationNone),
- distribution(dtBeta),
- capacity(0),
- useConversion(false),
- timeSeries(ts)
+XCast::XCast(TimeSeriesType ts):
+    useTranslation(tsTranslationNone),
+    distribution(dtBeta),
+    capacity(0),
+    useConversion(false),
+    timeSeries(ts)
 {
     K.resize(12, 24);
     data.resize((uint)dataMax, 12);
@@ -185,54 +203,58 @@ bool XCast::loadFromFolder(const AnyString& folder)
         const IniFile::Property* p;
         CString<30, false> key;
 
-        ini.each([&](const IniFile::Section& section) {
-            // For each property
-            if (section.name == "general")
-            {
-                for (p = section.firstProperty; p != nullptr; p = p->next)
-                {
-                    key = p->key;
-                    key.toLower();
-                    if (key == "distribution")
-                    {
-                        distribution = StringToDistribution(p->value);
-                        if (distribution == dtNone)
-                        {
-                            logs.warning() << buffer
-                                           << ": Invalid probability distribution. The beta "
-                                              "distribution will be used";
-                            distribution = dtBeta;
-                        }
-                        continue;
-                    }
-                    if (key == "capacity")
-                    {
-                        capacity = p->value.to<double>();
-                        if (capacity < 0.)
-                        {
-                            logs.warning()
-                              << buffer << ": The capacity can not be a negative value";
-                            capacity = 0.;
-                        }
-                        continue;
-                    }
-                    if (key == "conversion" || key == "transfer-function" || key == "convertion")
-                    {
-                        useConversion = p->value.to<bool>();
-                        continue;
-                    }
-                    if (key == "translation" || key == "ts-average")
-                    {
-                        useTranslation = CStringToTSTranslationUse(p->value);
-                        continue;
-                    }
+        ini.each(
+          [&](const IniFile::Section& section)
+          {
+              // For each property
+              if (section.name == "general")
+              {
+                  for (p = section.firstProperty; p != nullptr; p = p->next)
+                  {
+                      key = p->key;
+                      key.toLower();
+                      if (key == "distribution")
+                      {
+                          distribution = StringToDistribution(p->value);
+                          if (distribution == dtNone)
+                          {
+                              logs.warning() << buffer
+                                             << ": Invalid probability distribution. The beta "
+                                                "distribution will be used";
+                              distribution = dtBeta;
+                          }
+                          continue;
+                      }
+                      if (key == "capacity")
+                      {
+                          capacity = p->value.to<double>();
+                          if (capacity < 0.)
+                          {
+                              logs.warning()
+                                << buffer << ": The capacity can not be a negative value";
+                              capacity = 0.;
+                          }
+                          continue;
+                      }
+                      if (key == "conversion" || key == "transfer-function" || key == "convertion")
+                      {
+                          useConversion = p->value.to<bool>();
+                          continue;
+                      }
+                      if (key == "translation" || key == "ts-average")
+                      {
+                          useTranslation = CStringToTSTranslationUse(p->value);
+                          continue;
+                      }
 
-                    logs.warning() << buffer << ": Unknown property '" << p->key << "'";
-                }
-            }
-            else
-                logs.warning() << buffer << ": unknown section '" << section.name << "'";
-        });
+                      logs.warning() << buffer << ": Unknown property '" << p->key << "'";
+                  }
+              }
+              else
+              {
+                  logs.warning() << buffer << ": unknown section '" << section.name << "'";
+              }
+          });
     }
     else
     {
@@ -248,7 +270,7 @@ bool XCast::loadFromFolder(const AnyString& folder)
 
     // Performing normal loading
     ret = data.loadFromCSVFile(buffer, (uint)dataMax, 12, Matrix<>::optFixedSize, &readBuffer)
-        && ret;
+          && ret;
 
     // K
     buffer.clear() << folder << SEP << "k.txt";
@@ -296,7 +318,9 @@ bool XCast::loadFromFolder(const AnyString& folder)
             for (uint x = 1; x < conversion.width - 1; ++x)
             {
                 if (conversion[x][0] <= -1.0e+19 || conversion[x][0] >= +1.0e+19)
+                {
                     logs.error() << "TS-Generator: Conversion: Invalid range: " << buffer;
+                }
             }
             conversion[conversion.width - 1][0]
               = (float)1.0e+19; // + std::numeric_limits<float>::max();
@@ -357,13 +381,21 @@ bool XCast::saveToFolder(const AnyString& folder) const
     IniFile ini;
     IniFile::Section* s = ini.addSection("general");
     if (distribution != dtBeta)
+    {
         s->add("distribution", DistributionToNameID(distribution));
+    }
     if (!Utils::isZero(capacity))
+    {
         s->add("capacity", capacity);
+    }
     if (useConversion)
+    {
         s->add("conversion", useConversion);
+    }
     if (useTranslation != tsTranslationNone)
+    {
         s->add("translation", TSTranslationUseToCString(useTranslation));
+    }
 
     // Writing the INI file
     buffer.clear() << folder << SEP << "settings.ini";
@@ -419,4 +451,3 @@ void XCast::copyFrom(const XCast& rhs)
 }
 
 } // namespace Antares::Data
-

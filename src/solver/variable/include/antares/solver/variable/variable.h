@@ -47,7 +47,7 @@ namespace Variable
 ** \brief Interface for any variable
 */
 template<class ChildT, class NextT, class VCardT>
-class IVariable : protected NextT
+class IVariable: protected NextT
 {
 public:
     //! Child
@@ -77,10 +77,10 @@ public:
     {
         enum
         {
-            count
-            = ((categoryDataLevel & CDataLevel && categoryFileLevel & CFile)
-                 ? (NextType::template Statistics<CDataLevel, CFile>::count + ResultsType::count)
-                 : NextType::template Statistics<CDataLevel, CFile>::count),
+            count = ((categoryDataLevel & CDataLevel && categoryFileLevel & CFile)
+                       ? (NextType::template Statistics<CDataLevel, CFile>::count
+                          + ResultsType::count)
+                       : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
 
@@ -104,7 +104,6 @@ public:
 
     void getPrintStatusFromStudy(Data::Study& study);
     void supplyMaxNumberOfColumns(Data::Study& study);
-
 
 public:
     //! \name Constructor

@@ -34,7 +34,8 @@ namespace // anonymous
 class ScenarioBuilderUpdater
 {
 public:
-    ScenarioBuilderUpdater(Data::Study& study) : pStudy(study)
+    ScenarioBuilderUpdater(Data::Study& study):
+        pStudy(study)
     {
         using namespace Yuni;
         // We can store the INI files in disk because it may not fit in memory

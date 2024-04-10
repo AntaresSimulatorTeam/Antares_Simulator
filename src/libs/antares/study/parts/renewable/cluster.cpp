@@ -38,7 +38,7 @@ using namespace Antares;
 
 namespace Antares::Data
 {
-Data::RenewableCluster::RenewableCluster(Area* parent) :    
+Data::RenewableCluster::RenewableCluster(Area* parent):
     Cluster(parent)
 {
     // assert
@@ -77,21 +77,21 @@ void Data::RenewableCluster::copyFrom(const RenewableCluster& cluster)
     // The parent must be invalidated to make sure that the clusters are really
     // re-written at the next 'Save' from the user interface.
     if (parentArea)
+    {
         parentArea->forceReload();
+    }
 }
 
-const std::map < RenewableCluster::RenewableGroup, const char* > groupToName =
-{
-    {RenewableCluster::thermalSolar, "solar thermal"},
-    {RenewableCluster::PVSolar, "solar pv"},
-    {RenewableCluster::rooftopSolar, "solar rooftop"},
-    {RenewableCluster::windOnShore, "wind onshore"},
-    {RenewableCluster::windOffShore,"wind offshore"},
-    {RenewableCluster::renewableOther1, "other res 1"},
-    {RenewableCluster::renewableOther2, "other res 2"},
-    {RenewableCluster::renewableOther3, "other res 3"},
-    {RenewableCluster::renewableOther4, "other res 4"}
-};
+const std::map<RenewableCluster::RenewableGroup, const char*> groupToName = {
+  {RenewableCluster::thermalSolar, "solar thermal"},
+  {RenewableCluster::PVSolar, "solar pv"},
+  {RenewableCluster::rooftopSolar, "solar rooftop"},
+  {RenewableCluster::windOnShore, "wind onshore"},
+  {RenewableCluster::windOffShore, "wind offshore"},
+  {RenewableCluster::renewableOther1, "other res 1"},
+  {RenewableCluster::renewableOther2, "other res 2"},
+  {RenewableCluster::renewableOther3, "other res 3"},
+  {RenewableCluster::renewableOther4, "other res 4"}};
 
 void Data::RenewableCluster::setGroup(Data::ClusterName newgrp)
 {
@@ -104,13 +104,13 @@ void Data::RenewableCluster::setGroup(Data::ClusterName newgrp)
     pGroup = newgrp;
     boost::to_lower(newgrp);
 
-    for (const auto& [group, name] : groupToName)
+    for (const auto& [group, name]: groupToName)
     {
         if (newgrp == name)
         {
             groupID = group;
             return;
-        }        
+        }
     }
 
     // assigning a default value
@@ -182,7 +182,9 @@ YString Data::RenewableCluster::getTimeSeriesModeAsString() const
 double RenewableCluster::valueAtTimeStep(uint year, uint hourInYear) const
 {
     if (!enabled)
+    {
         return 0.;
+    }
 
     const double tsValue = series.getCoefficient(year, hourInYear);
     switch (tsMode)
@@ -207,4 +209,3 @@ unsigned int RenewableCluster::precision() const
     return 4;
 }
 } // namespace Antares::Data
-

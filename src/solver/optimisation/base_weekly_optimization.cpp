@@ -32,7 +32,7 @@ WeeklyOptimization::WeeklyOptimization(const OptimizationOptions& options,
                                        PROBLEME_HEBDO* problemesHebdo,
                                        AdqPatchParams& adqPatchParams,
                                        uint thread_number,
-                                       IResultWriter& writer) :
+                                       IResultWriter& writer):
     options_(options),
     problemeHebdo_(problemesHebdo),
     adqPatchParams_(adqPatchParams),
@@ -41,18 +41,30 @@ WeeklyOptimization::WeeklyOptimization(const OptimizationOptions& options,
 {
 }
 
-std::unique_ptr<WeeklyOptimization> WeeklyOptimization::create(
-    const Antares::Data::Study& study,
-    const OptimizationOptions& options,
-    AdqPatchParams& adqPatchParams,
-    PROBLEME_HEBDO* problemeHebdo,
-    uint thread_number,
-    IResultWriter& writer)
+std::unique_ptr<WeeklyOptimization> WeeklyOptimization::create(const Antares::Data::Study& study,
+                                                               const OptimizationOptions& options,
+                                                               AdqPatchParams& adqPatchParams,
+                                                               PROBLEME_HEBDO* problemeHebdo,
+                                                               uint thread_number,
+                                                               IResultWriter& writer)
 {
     if (adqPatchParams.enabled && adqPatchParams.localMatching.enabled)
-        return std::make_unique<AdequacyPatchOptimization>(study, options, problemeHebdo, adqPatchParams, thread_number, writer);
+    {
+        return std::make_unique<AdequacyPatchOptimization>(study,
+                                                           options,
+                                                           problemeHebdo,
+                                                           adqPatchParams,
+                                                           thread_number,
+                                                           writer);
+    }
     else
-        return std::make_unique<DefaultWeeklyOptimization>(options, problemeHebdo, adqPatchParams, thread_number, writer);
+    {
+        return std::make_unique<DefaultWeeklyOptimization>(options,
+                                                           problemeHebdo,
+                                                           adqPatchParams,
+                                                           thread_number,
+                                                           writer);
+    }
 }
 
 } // namespace Antares::Solver::Optimization

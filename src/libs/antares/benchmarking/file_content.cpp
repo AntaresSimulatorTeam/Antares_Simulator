@@ -58,12 +58,14 @@ void FileContent::addDurationItem(const string& name, unsigned int duration, int
 std::string FileContent::saveToBufferAsIni()
 {
     Antares::IniFile ini;
-    for (const auto& [sectionName, content] : *this)
+    for (const auto& [sectionName, content]: *this)
     {
         // Loop on properties
         auto* section = ini.addSection(sectionName);
-        for (const auto& [key, value] : content)
+        for (const auto& [key, value]: content)
+        {
             section->add(key, value);
+        }
     }
     std::string buffer;
     ini.saveToString(buffer);

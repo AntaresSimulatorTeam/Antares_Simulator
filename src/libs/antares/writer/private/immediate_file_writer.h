@@ -26,7 +26,7 @@
 
 namespace Antares::Solver
 {
-class ImmediateFileResultWriter : public IResultWriter
+class ImmediateFileResultWriter: public IResultWriter
 {
 public:
     ImmediateFileResultWriter(const char* folderOutput);
@@ -43,4 +43,3 @@ private:
     Yuni::String pOutputFolder;
 };
 } // namespace Antares::Solver
-

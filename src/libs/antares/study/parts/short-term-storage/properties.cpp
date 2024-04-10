@@ -32,7 +32,8 @@ namespace Antares::Data::ShortTermStorage
 
 bool Properties::loadKey(const IniFile::Property* p)
 {
-    auto valueForOptional = [p](std::optional<double>& opt) {
+    auto valueForOptional = [p](std::optional<double>& opt)
+    {
         if (double tmp; p->value.to<double>(tmp))
         {
             opt = tmp;
@@ -42,25 +43,39 @@ bool Properties::loadKey(const IniFile::Property* p)
     };
 
     if (p->key == "injectionnominalcapacity")
+    {
         return valueForOptional(this->injectionNominalCapacity);
+    }
 
     if (p->key == "withdrawalnominalcapacity")
+    {
         return valueForOptional(this->withdrawalNominalCapacity);
+    }
 
     if (p->key == "reservoircapacity")
+    {
         return valueForOptional(this->reservoirCapacity);
+    }
 
     if (p->key == "efficiency")
+    {
         return p->value.to<double>(this->efficiencyFactor);
+    }
 
     if (p->key == "name")
+    {
         return p->value.to<std::string>(this->name);
+    }
 
     if (p->key == "initiallevel")
+    {
         return p->value.to<double>(this->initialLevel);
+    }
 
     if (p->key == "initialleveloptim")
+    {
         return p->value.to<bool>(this->initialLevelOptim);
+    }
 
     if (p->key == "group")
     {
@@ -70,7 +85,9 @@ bool Properties::loadKey(const IniFile::Property* p)
     }
 
     if (p->key == "enabled")
-       return p->value.to<bool>(this->enabled);
+    {
+        return p->value.to<bool>(this->enabled);
+    }
 
     return false;
 }
@@ -93,7 +110,8 @@ void Properties::save(IniFile& ini) const
 
 bool Properties::validate()
 {
-    auto checkMandatory = [this](const std::optional<double>& prop, const std::string& label) {
+    auto checkMandatory = [this](const std::optional<double>& prop, const std::string& label)
+    {
         if (!prop.has_value())
         {
             logs.error() << "Property " << label << " is mandatory for short term storage "
@@ -104,13 +122,19 @@ bool Properties::validate()
     };
 
     if (!checkMandatory(injectionNominalCapacity, "injectionnominalcapacity"))
+    {
         return false;
+    }
 
     if (!checkMandatory(withdrawalNominalCapacity, "withdrawalnominalcapacity"))
+    {
         return false;
+    }
 
     if (!checkMandatory(reservoirCapacity, "reservoircapacity"))
+    {
         return false;
+    }
 
     if (injectionNominalCapacity < 0)
     {
@@ -126,37 +150,35 @@ bool Properties::validate()
     }
     if (reservoirCapacity < 0)
     {
-        logs.error() << "Property reservoircapacity must be >= 0 "
-                     << "for short term storage " << name;
+        logs.error() << "Property reservoircapacity must be >= 0 " << "for short term storage "
+                     << name;
         return false;
     }
 
     if (efficiencyFactor < 0)
     {
-        logs.warning() << "Property efficiency must be >= 0 "
-                       << "for short term storage " << name;
+        logs.warning() << "Property efficiency must be >= 0 " << "for short term storage " << name;
         efficiencyFactor = 0;
     }
 
     if (efficiencyFactor > 1)
     {
-        logs.warning() << "Property efficiency must be <= 1 "
-                       << "for short term storage " << name;
+        logs.warning() << "Property efficiency must be <= 1 " << "for short term storage " << name;
         efficiencyFactor = 1;
     }
 
     if (initialLevel < 0)
     {
         initialLevel = initiallevelDefault;
-        logs.warning() << "initiallevel for cluster: " << name << " should be positive, value has been set to " << initialLevel;
-
+        logs.warning() << "initiallevel for cluster: " << name
+                       << " should be positive, value has been set to " << initialLevel;
     }
 
     if (initialLevel > 1)
     {
         initialLevel = initiallevelDefault;
-        logs.warning() << "initiallevel for cluster: " << name << " should be inferior to 1, value has been set to " << initialLevel;
-
+        logs.warning() << "initiallevel for cluster: " << name
+                       << " should be inferior to 1, value has been set to " << initialLevel;
     }
 
     return true;

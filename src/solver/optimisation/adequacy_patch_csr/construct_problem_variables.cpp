@@ -25,6 +25,7 @@
 #include "antares/solver/optimisation/adequacy_patch_csr/hourly_csr_problem.h"
 
 #include "pi_constantes_externes.h"
+
 void HourlyCSRProblem::constructVariableENS()
 {
     int& NumberOfVariables = problemeAResoudre_.NombreDeVariables;

@@ -61,7 +61,9 @@ void LayerData::loadLayers(const AnyString& filename)
                 p = p->next;
 
                 if (p)
+                {
                     showAllLayer = p->value.to<bool>();
+                }
             }
             return;
         }
@@ -78,15 +80,15 @@ bool LayerData::saveLayers(const AnyString& filename)
         CString<256, true> data;
         data << "[layers]\n";
 
-        for (const auto& [key, value] : layers)
+        for (const auto& [key, value]: layers)
+        {
             data << key << " = " << value << '\n';
+        }
 
         data << "[activeLayer]\n";
-        data << "activeLayerID"
-             << " = " << activeLayerID;
+        data << "activeLayerID" << " = " << activeLayerID;
         data << '\n';
-        data << "showAllLayer"
-             << " = " << showAllLayer;
+        data << "showAllLayer" << " = " << showAllLayer;
 
         file << data;
 

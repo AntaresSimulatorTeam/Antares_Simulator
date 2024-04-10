@@ -411,7 +411,7 @@ SeparateDefinitionBlocks: Always
 
 # If true, clang-format will sort #includes
 # -> false: see coding guidelines
-SortIncludes: true
+SortIncludes: false
 
 # If true, clang-format will sort using declarations
 # -> LexicographicNumeric to take into account sub-namespaces

@@ -40,7 +40,9 @@ public:
 
 public:
     template<class StringT>
-    StudyData(const StringT& n, uint i) : index(i), name(n)
+    StudyData(const StringT& n, uint i):
+        index(i),
+        name(n)
     {
     }
 

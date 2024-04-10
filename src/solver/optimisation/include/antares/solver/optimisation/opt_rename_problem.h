@@ -28,7 +28,8 @@ const std::string AREA_SEP = "$$";
 class TargetVectorUpdater
 {
 public:
-    explicit TargetVectorUpdater(std::vector<std::string>& target) : target_(target)
+    explicit TargetVectorUpdater(std::vector<std::string>& target):
+        target_(target)
     {
     }
 
@@ -44,7 +45,8 @@ private:
 class Namer
 {
 public:
-    explicit Namer(std::vector<std::string>& target) : targetUpdater_(target)
+    explicit Namer(std::vector<std::string>& target):
+        targetUpdater_(target)
     {
     }
 
@@ -57,6 +59,7 @@ public:
     {
         area_ = area;
     }
+
     void SetLinkElementName(unsigned int variable, const std::string& variableType);
     void SetAreaElementNameHour(unsigned int variable, const std::string& variableType);
     void SetAreaElementNameWeek(unsigned int variable, const std::string& variableType);
@@ -74,7 +77,7 @@ public:
     TargetVectorUpdater targetUpdater_;
 };
 
-class VariableNamer : public Namer
+class VariableNamer: public Namer
 {
 public:
     using Namer::Namer;
@@ -116,7 +119,7 @@ private:
                                          const std::string& shortTermStorageName);
 };
 
-class ConstraintNamer : public Namer
+class ConstraintNamer: public Namer
 {
 public:
     using Namer::Namer;

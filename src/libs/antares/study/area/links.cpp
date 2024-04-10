@@ -53,25 +53,25 @@ namespace Antares
 {
 namespace Data
 {
-AreaLink::AreaLink() :
- from(nullptr),
- with(nullptr),
- parameters(fhlMax, HOURS_PER_YEAR),
- directCapacities(timeseriesNumbers),
- indirectCapacities(timeseriesNumbers),
- useLoopFlow(false),
- usePST(false),
- useHurdlesCost(false),
- transmissionCapacities(LocalTransmissionCapacities::enabled),
- assetType(Data::atAC),
- index(0),
- indexForArea(0),
- displayComments(true),
- filterSynthesis(filterAll),
- filterYearByYear(filterAll),
- color{112, 112, 112},
- style(stPlain),
- linkWidth(1)
+AreaLink::AreaLink():
+    from(nullptr),
+    with(nullptr),
+    parameters(fhlMax, HOURS_PER_YEAR),
+    directCapacities(timeseriesNumbers),
+    indirectCapacities(timeseriesNumbers),
+    useLoopFlow(false),
+    usePST(false),
+    useHurdlesCost(false),
+    transmissionCapacities(LocalTransmissionCapacities::enabled),
+    assetType(Data::atAC),
+    index(0),
+    indexForArea(0),
+    displayComments(true),
+    filterSynthesis(filterAll),
+    filterYearByYear(filterAll),
+    color{112, 112, 112},
+    style(stPlain),
+    linkWidth(1)
 {
     directCapacities.reset();
     indirectCapacities.reset();
@@ -89,8 +89,10 @@ bool AreaLink::linkLoadTimeSeries_for_version_below_810(const AnyString& folder)
     // Load link's data
     Matrix<> tmpMatrix;
     const uint matrixWidth = 8;
-    if (!tmpMatrix.loadFromCSVFile(
-          buffer, matrixWidth, HOURS_PER_YEAR, Matrix<>::optFixedSize | Matrix<>::optImmediate))
+    if (!tmpMatrix.loadFromCSVFile(buffer,
+                                   matrixWidth,
+                                   HOURS_PER_YEAR,
+                                   Matrix<>::optFixedSize | Matrix<>::optImmediate))
     {
         return false;
     }
@@ -158,12 +160,16 @@ void AreaLink::overrideTransmissionCapacityAccordingToGlobalParameter(
         break;
     case GlobalTransmissionCapacities::nullForPhysicalLinks: // Use '0' only for physical links
         if (isLinkPhysical())
+        {
             transmissionCapacities = LocalTransmissionCapacities::null;
+        }
         break;
     case GlobalTransmissionCapacities::infiniteForPhysicalLinks: // Use 'infinity' only for physical
                                                                  // links
         if (isLinkPhysical())
+        {
             transmissionCapacities = LocalTransmissionCapacities::infinite;
+        }
         break;
     default:
         logs.error() << "Wrong global transmission capacity given to function" << __FUNCTION__;
@@ -173,9 +179,13 @@ void AreaLink::overrideTransmissionCapacityAccordingToGlobalParameter(
 bool AreaLink::loadTimeSeries(const Study& study, const AnyString& folder)
 {
     if (study.header.version < StudyVersion(8, 2))
+    {
         return linkLoadTimeSeries_for_version_below_810(folder);
+    }
     else
+    {
         return linkLoadTimeSeries_for_version_820_and_later(folder);
+    }
 }
 
 void AreaLink::storeTimeseriesNumbers(Solver::IResultWriter& writer) const
@@ -266,7 +276,9 @@ void AreaLink::reverse()
 bool AreaLink::isVisibleOnLayer(const size_t& layerID) const
 {
     if (from && with)
+    {
         return from->isVisibleOnLayer(layerID) && with->isVisibleOnLayer(layerID);
+    }
     return false;
 }
 
@@ -277,7 +289,9 @@ AreaLink* AreaAddLinkBetweenAreas(Area* area, Area* with, bool warning)
     assert(with);
 
     if (warning && area->id > with->id)
+    {
         logs.warning() << "Link: `" << area->id << "` - `" << with->id << "`: Invalid orientation";
+    }
 
     if (area->id == with->id)
     {
@@ -298,19 +312,25 @@ namespace // anonymous
 bool AreaLinksInternalLoadFromProperty(AreaLink& link, const String& key, const String& value)
 {
     if (key == "hurdles-cost")
+    {
         return value.to<bool>(link.useHurdlesCost);
+    }
     if (key == "loop-flow")
+    {
         return value.to<bool>(link.useLoopFlow);
+    }
     if (key == "use-phase-shifter")
+    {
         return value.to<bool>(link.usePST);
+    }
     if (key == "copper-plate")
     {
         bool copperPlate;
         if (value.to<bool>(copperPlate))
         {
             using LocalNTCtype = Data::LocalTransmissionCapacities;
-            link.transmissionCapacities
-              = copperPlate ? LocalNTCtype::infinite : LocalNTCtype::enabled;
+            link.transmissionCapacities = copperPlate ? LocalNTCtype::infinite
+                                                      : LocalNTCtype::enabled;
             return true;
         }
         return false;
@@ -318,15 +338,25 @@ bool AreaLinksInternalLoadFromProperty(AreaLink& link, const String& key, const 
     if (key == "asset-type")
     {
         if (value == "ac")
+        {
             link.assetType = atAC;
+        }
         else if (value == "dc")
+        {
             link.assetType = atDC;
+        }
         else if (value == "gaz")
+        {
             link.assetType = atGas;
+        }
         else if (value == "virt")
+        {
             link.assetType = atVirt;
+        }
         else if (value == "other")
+        {
             link.assetType = atOther;
+        }
         else
         {
             link.assetType = atOther;
@@ -337,13 +367,21 @@ bool AreaLinksInternalLoadFromProperty(AreaLink& link, const String& key, const 
     if (key == "link-style")
     {
         if (value == "plain")
+        {
             link.style = stPlain;
+        }
         else if (value == "dot")
+        {
             link.style = stDot;
+        }
         else if (value == "dash")
+        {
             link.style = stDash;
+        }
         else if (value == "dotdash")
+        {
             link.style = stDotDash;
+        }
         else
         {
             link.style = stPlain;
@@ -376,11 +414,17 @@ bool AreaLinksInternalLoadFromProperty(AreaLink& link, const String& key, const 
     {
         using LocalNTCtype = Data::LocalTransmissionCapacities;
         if (value == "enabled")
+        {
             link.transmissionCapacities = LocalNTCtype::enabled;
+        }
         else if (value == "infinite")
+        {
             link.transmissionCapacities = LocalNTCtype::infinite;
+        }
         else if (value == "ignore")
+        {
             link.transmissionCapacities = LocalNTCtype::null;
+        }
         else
         {
             link.transmissionCapacities = LocalNTCtype::null;
@@ -390,7 +434,9 @@ bool AreaLinksInternalLoadFromProperty(AreaLink& link, const String& key, const 
     }
 
     if (key == "display-comments")
+    {
         return value.to<bool>(link.displayComments);
+    }
     if (key == "comments")
     {
         link.comments = value;
@@ -417,13 +463,11 @@ void logLinkDataCheckError(const AreaLink& link, const String& msg, int hour)
     throw Antares::Error::ReadingStudy();
 }
 
-void logLinkDataCheckErrorDirectIndirect(const AreaLink& link,
-                                         uint direct,
-                                         uint indirect)
+void logLinkDataCheckErrorDirectIndirect(const AreaLink& link, uint direct, uint indirect)
 {
     logs.error() << "Link (" << link.from->name << "/" << link.with->name << "): Found " << direct
-                 << " direct TS "
-                 << " and " << indirect << " indirect TS, expected the same number";
+                 << " direct TS " << " and " << indirect
+                 << " indirect TS, expected the same number";
     throw Antares::Error::ReadingStudy();
 }
 } // anonymous namespace
@@ -439,7 +483,9 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
 
     IniFile ini;
     if (!ini.open(buffer))
+    {
         return 0;
+    }
 
     bool ret = true;
     String key;
@@ -557,7 +603,9 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
             key.toLower();
             value = p->value;
             if (!AreaLinksInternalLoadFromProperty(link, key, value))
+            {
                 logs.warning() << '`' << p->key << "`: Unknown property";
+            }
         }
 
         // From the solver only
@@ -661,7 +709,9 @@ bool saveAreaLinksConfigurationFileToFolder(const Area* area, const char* const 
         section->add("colorb", link.color[2]);
         section->add("display-comments", link.displayComments);
         if (!link.comments.empty())
+        {
             section->add("comments", link.comments);
+        }
         section->add("filter-synthesis", datePrecisionIntoString(link.filterSynthesis));
         section->add("filter-year-by-year", datePrecisionIntoString(link.filterYearByYear));
     }
@@ -684,10 +734,14 @@ bool AreaLinksSaveToFolder(const Area* area, const char* const folder)
     }
 
     if (!saveAreaLinksConfigurationFileToFolder(area, folder))
+    {
         return false;
+    }
 
     if (!saveAreaLinksTimeSeriesToFolder(area, folder))
+    {
         return false;
+    }
 
     return true;
 }
@@ -695,7 +749,9 @@ bool AreaLinksSaveToFolder(const Area* area, const char* const folder)
 void AreaLinkRemove(AreaLink* link)
 {
     if (!link)
+    {
         return;
+    }
 
     // Asserts
     assert(link->from);

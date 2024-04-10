@@ -66,6 +66,7 @@ public:
     IExtension()
     {
     }
+
     /*!
     ** \brief Destructor
     */
@@ -122,7 +123,7 @@ public:
 /*!
 ** This class is thread-safe.
 */
-class Walker final : public Yuni::NonCopyable<Walker>
+class Walker final: public Yuni::NonCopyable<Walker>
 {
 public:
     Walker();

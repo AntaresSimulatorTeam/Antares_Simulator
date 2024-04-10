@@ -41,37 +41,39 @@ void OPT_InitialiserLesCoutsLineaireCoutsDeDemarrage(PROBLEME_HEBDO* problemeHeb
     {
         for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
-            const PALIERS_THERMIQUES& PaliersThermiquesDuPays
-              = problemeHebdo->PaliersThermiquesDuPays[pays];
+            const PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo
+                                                                  ->PaliersThermiquesDuPays[pays];
 
             for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
             {
-                const int palier
-                  = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+                const int palier = PaliersThermiquesDuPays
+                                     .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
 
                 int var = variableManager.NumberOfDispatchableUnits(palier, pdtJour);
                 if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                 {
-                    CoutLineaire[var]
-                      = PaliersThermiquesDuPays.CoutFixeDeMarcheDUnGroupeDuPalierThermique[index];
+                    CoutLineaire[var] = PaliersThermiquesDuPays
+                                          .CoutFixeDeMarcheDUnGroupeDuPalierThermique[index];
                 }
 
                 var = variableManager.NumberStoppingDispatchableUnits(palier, pdtJour);
                 if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                 {
-                    CoutLineaire[var]
-                      = PaliersThermiquesDuPays.CoutDArretDUnGroupeDuPalierThermique[index];
+                    CoutLineaire[var] = PaliersThermiquesDuPays
+                                          .CoutDArretDUnGroupeDuPalierThermique[index];
                 }
 
                 var = variableManager.NumberBreakingDownDispatchableUnits(palier, pdtJour);
                 if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
+                {
                     CoutLineaire[var] = 0;
+                }
 
                 var = variableManager.NumberStartingDispatchableUnits(palier, pdtJour);
                 if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                 {
-                    CoutLineaire[var]
-                      = PaliersThermiquesDuPays.CoutDeDemarrageDUnGroupeDuPalierThermique[index];
+                    CoutLineaire[var] = PaliersThermiquesDuPays
+                                          .CoutDeDemarrageDUnGroupeDuPalierThermique[index];
                 }
             }
         }

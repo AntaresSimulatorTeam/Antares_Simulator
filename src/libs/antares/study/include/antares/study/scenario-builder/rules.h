@@ -47,7 +47,7 @@ namespace ScenarioBuilder
 /*!
 ** \brief Rules for TS numbers, for all years and a single timeseries
 */
-class Rules final : private Yuni::NonCopyable<Rules>
+class Rules final: private Yuni::NonCopyable<Rules>
 {
 public:
     //! Smart pointer
@@ -139,8 +139,7 @@ private:
     bool readSolar(const AreaName::Vector& instrs, String value, bool updaterMode);
     bool readHydroLevels(const AreaName::Vector& instrs, String value, bool updaterMode);
     bool readLink(const AreaName::Vector& instrs, String value, bool updaterMode);
-    bool readBindingConstraints(const AreaName::Vector &splitKey, String value);
-
+    bool readBindingConstraints(const AreaName::Vector& splitKey, String value);
 
     Data::Area* getArea(const AreaName& areaname, bool updaterMode);
     Data::AreaLink* getLink(const AreaName& fromAreaName,

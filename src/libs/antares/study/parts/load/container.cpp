@@ -28,7 +28,9 @@ using namespace Yuni;
 
 namespace Antares::Data::Load
 {
-Container::Container() : prepro(nullptr), series(tsNumbers)
+Container::Container():
+    prepro(nullptr),
+    series(tsNumbers)
 {
 }
 
@@ -43,7 +45,9 @@ bool Container::forceReload(bool reload) const
     bool ret = true;
     ret = series.forceReload(reload) && ret;
     if (prepro)
+    {
         ret = prepro->forceReload(reload) && ret;
+    }
     return ret;
 }
 
@@ -51,7 +55,9 @@ void Container::markAsModified() const
 {
     series.markAsModified();
     if (prepro)
+    {
         prepro->markAsModified();
+    }
 }
 
 uint64_t Container::memoryUsage() const
@@ -63,9 +69,9 @@ void Container::resetToDefault()
 {
     series.reset();
     if (prepro)
+    {
         prepro->resetToDefault();
+    }
 }
 
 } // namespace Antares::Data::Load
-
-

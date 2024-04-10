@@ -36,7 +36,8 @@
 #include <antares/study/study.h>
 
 using namespace Antares::Data;
-class LinearProblemMatrix : public ProblemMatrixEssential
+
+class LinearProblemMatrix: public ProblemMatrixEssential
 {
 public:
     explicit LinearProblemMatrix(PROBLEME_HEBDO* problemeHebdo, ConstraintBuilder& builder);

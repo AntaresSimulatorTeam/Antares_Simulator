@@ -24,10 +24,11 @@
 #include <mutex>
 #include <fswalker/fswalker.h>
 
-class AntaresStudy : public FSWalker::IExtension
+class AntaresStudy: public FSWalker::IExtension
 {
 public:
     AntaresStudy(int64_t dateLimit);
+
     virtual ~AntaresStudy()
     {
     }

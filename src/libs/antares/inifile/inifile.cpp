@@ -97,11 +97,15 @@ static inline IniFile::Section* AnalyzeIniLine(const String& pFilename,
     if (typeProperty == type)
     {
         if (section and *value != '\0' and value)
+        {
             section->add(key, value);
+        }
         return section;
     }
     if (typeSection == type and value and '\0' != *value)
+    {
         return d->addSection(value);
+    }
 
     CString<255, false> k = key;
     k.trim(" \r\n\t");
@@ -113,13 +117,16 @@ static inline IniFile::Section* AnalyzeIniLine(const String& pFilename,
     return section;
 }
 
-IniFile::Property::Property(const AnyString& key) : key(key), next(nullptr)
+IniFile::Property::Property(const AnyString& key):
+    key(key),
+    next(nullptr)
 {
     this->key.trim();
     this->key.toLower();
 }
 
-IniFile::Property::Property() : next(nullptr)
+IniFile::Property::Property():
+    next(nullptr)
 {
 }
 
@@ -138,12 +145,16 @@ template<class StreamT>
 void IniFile::Section::saveToStream(StreamT& file, uint64_t& written) const
 {
     if (!firstProperty)
+    {
         return;
+    }
     file << '[' << name << "]\n";
     written += 4 /* []\n\n */ + name.size();
 
     for (auto* property = firstProperty; property; property = property->next)
+    {
         property->saveToStream(file, written);
+    }
 
     file << '\n';
 }
@@ -163,11 +174,15 @@ IniFile::Section::~Section()
     }
 }
 
-IniFile::IniFile() : firstSection(nullptr), lastSection(nullptr)
+IniFile::IniFile():
+    firstSection(nullptr),
+    lastSection(nullptr)
 {
 }
 
-IniFile::IniFile(const AnyString& filename) : firstSection(nullptr), lastSection(nullptr)
+IniFile::IniFile(const AnyString& filename):
+    firstSection(nullptr),
+    lastSection(nullptr)
 {
     open(filename);
 }
@@ -224,7 +239,9 @@ void IniFile::clear()
 uint IniFile::Section::size() const
 {
     if (!firstProperty)
+    {
         return 0;
+    }
     uint count = 0;
     auto* p = firstProperty;
     do
@@ -249,6 +266,7 @@ bool IniFile::open(const AnyString& filename, bool warnings)
         {
             lineHardLimit = 2048
         };
+
         auto* line = new char[lineHardLimit];
 
         IniFile::Section* lastSection = nullptr;
@@ -256,18 +274,24 @@ bool IniFile::open(const AnyString& filename, bool warnings)
 
         // analyzing each line
         while (file.readline(line, lineHardLimit))
+        {
             lastSection = AnalyzeIniLine(pFilename, this, lastSection, line, read);
+        }
 
         delete[] line;
 
         if (read)
+        {
             Statistics::HasReadFromDisk(read);
+        }
         return true;
     }
 
     // Error
     if (warnings)
+    {
         logs.error() << "I/O error: " << filename << ": Impossible to read the file";
+    }
     pFilename.clear();
     return false;
 }
@@ -278,10 +302,14 @@ void IniFile::saveToString(std::string& str) const
     std::ostringstream ostream;
     // save all sections
     for (auto* section = firstSection; section; section = section->next)
+    {
         section->saveToStream(ostream, written);
+    }
 
     if (written != 0)
+    {
         Statistics::HasWrittenToDisk(written);
+    }
 
     str = ostream.str();
 }
@@ -297,10 +325,14 @@ bool IniFile::save(const AnyString& filename) const
 
         // save all sections
         for (auto* section = firstSection; section; section = section->next)
+        {
             section->saveToStream(f, written);
+        }
 
         if (written != 0)
+        {
             Statistics::HasWrittenToDisk(written);
+        }
         return true;
     }
     else
@@ -316,7 +348,9 @@ IniFile::Property* IniFile::Section::find(const AnyString& key)
     for (auto* property = firstProperty; property; property = property->next)
     {
         if (property->key == key)
+        {
             return property;
+        }
     }
     return nullptr;
 }
@@ -326,7 +360,9 @@ const IniFile::Property* IniFile::Section::find(const AnyString& key) const
     for (auto* property = firstProperty; property; property = property->next)
     {
         if (property->key == key)
+        {
             return property;
+        }
     }
     return nullptr;
 }
@@ -336,7 +372,9 @@ IniFile::Section* IniFile::find(const AnyString& name)
     for (auto* section = firstSection; section; section = section->next)
     {
         if (section->name == name)
+        {
             return section;
+        }
     }
     return nullptr;
 }
@@ -346,7 +384,9 @@ const IniFile::Section* IniFile::find(const AnyString& name) const
     for (auto* section = firstSection; section; section = section->next)
     {
         if (section->name == name)
+        {
             return section;
+        }
     }
     return nullptr;
 }

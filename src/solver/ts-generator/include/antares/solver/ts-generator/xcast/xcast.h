@@ -42,7 +42,7 @@ namespace XCast
 **
 ** \see predicate.hxx for specializations
 */
-class XCast final : private Yuni::NonCopyable<XCast>
+class XCast final: private Yuni::NonCopyable<XCast>
 {
 public:
     /*!

@@ -38,11 +38,13 @@ class InfeasibleProblemReport
 {
 public:
     InfeasibleProblemReport() = delete;
-    explicit InfeasibleProblemReport(const std::vector<const operations_research::MPVariable*>& slackVariables);
+    explicit InfeasibleProblemReport(
+      const std::vector<const operations_research::MPVariable*>& slackVariables);
     void prettyPrint();
 
 private:
-    void turnSlackVarsIntoConstraints(const std::vector<const operations_research::MPVariable*>& slackVariables);
+    void turnSlackVarsIntoConstraints(
+      const std::vector<const operations_research::MPVariable*>& slackVariables);
     void sortConstraints();
     void trimConstraints();
     void extractItems();

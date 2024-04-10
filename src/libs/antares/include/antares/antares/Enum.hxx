@@ -63,7 +63,7 @@ std::list<E> enumList()
 {
     std::list<E> result;
     const auto& names = getNames<E>();
-    for (auto name : names)
+    for (auto name: names)
     {
         result.push_back(fromString<E>(name));
     }
@@ -72,9 +72,5 @@ std::list<E> enumList()
 }
 
 } // namespace Antares::Data::Enum
-
-
-
-
 
 #endif // ANTARES_DATA_ENUM_HXX

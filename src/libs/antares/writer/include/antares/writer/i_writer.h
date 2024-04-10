@@ -32,7 +32,7 @@ namespace Antares::Solver
 /*!
  * A generic I/O exception that may be thrown by writer operations.
  */
-class IOError : public std::runtime_error
+class IOError: public std::runtime_error
 {
 public:
     using std::runtime_error::runtime_error;
@@ -55,13 +55,14 @@ public:
     virtual void finalize(bool verbose) = 0;
 };
 
-class NullResultWriter: public Solver::IResultWriter {
-    void addEntryFromBuffer(const std::string &, Yuni::Clob &) override;
-    void addEntryFromBuffer(const std::string &, std::string &) override;
-    void addEntryFromFile(const std::string &, const std::string &) override;
+class NullResultWriter: public Solver::IResultWriter
+{
+    void addEntryFromBuffer(const std::string&, Yuni::Clob&) override;
+    void addEntryFromBuffer(const std::string&, std::string&) override;
+    void addEntryFromFile(const std::string&, const std::string&) override;
     void flush() override;
     bool needsTheJobQueue() const override;
-    void finalize(bool ) override;
+    void finalize(bool) override;
 };
 
 } // namespace Antares::Solver

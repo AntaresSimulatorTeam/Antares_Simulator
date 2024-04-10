@@ -62,4 +62,4 @@ bool hydroTSNumberData::apply(Study& study)
     return ret;
 }
 
-}
+} // namespace Antares::Data::ScenarioBuilder

@@ -28,8 +28,8 @@ DefaultWeeklyOptimization::DefaultWeeklyOptimization(const OptimizationOptions& 
                                                      PROBLEME_HEBDO* problemeHebdo,
                                                      AdqPatchParams& adqPatchParams,
                                                      uint thread_number,
-                                                     IResultWriter& writer) :
- WeeklyOptimization(options, problemeHebdo, adqPatchParams, thread_number, writer)
+                                                     IResultWriter& writer):
+    WeeklyOptimization(options, problemeHebdo, adqPatchParams, thread_number, writer)
 {
 }
 
