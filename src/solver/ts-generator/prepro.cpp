@@ -59,7 +59,6 @@ bool PreproAvailability::saveToFolder(const AnyString& folder) const
 
 bool PreproAvailability::loadFromFolder(Study& study, const AnyString& folder)
 {
-    bool ret = true;
     auto& buffer = study.bufferLoadingTS;
 
     buffer.clear() << folder << SEP << "data.txt";
@@ -154,6 +153,11 @@ void PreproAvailability::markAsModified() const
     data.markAsModified();
 }
 
+uint64_t PreproAvailability::memoryUsage() const
+{
+    return sizeof(PreproAvailability);
+}
+
 void PreproAvailability::reset()
 {
     data.reset(preproAvailabilityMax, DAYS_PER_YEAR, true);
@@ -174,7 +178,8 @@ bool PreproAvailability::normalizeAndCheckNPO()
     auto& columnNPOMax = data[npoMax];
     auto& columnNPOMin = data[npoMin];
     // errors management
-    uint errors = 0, maxErrors = 10;
+    uint errors = 0;
+    uint maxErrors = 10;
 
     // Flag to determine whether the column NPO max has been normalized or not
     bool normalized = false;
@@ -187,14 +192,11 @@ bool PreproAvailability::normalizeAndCheckNPO()
             normalized = true;
         }
 
-        if (columnNPOMin[y] > columnNPOMax[y])
+        if (columnNPOMin[y] > columnNPOMax[y] && ++errors < maxErrors)
         {
-            if (++errors < maxErrors)
-            {
-                logs.error() << id << ": NPO min can not be greater than NPO max (hour: " << (y + 1)
-                             << ", npo-min: " << columnNPOMin[y] << ", npo-max: " << columnNPOMax[y]
-                             << ')';
-            }
+            logs.error() << id << ": NPO min can not be greater than NPO max (hour: " << (y + 1)
+                         << ", npo-min: " << columnNPOMin[y] << ", npo-max: " << columnNPOMax[y]
+                         << ')';
         }
     }
 

@@ -133,6 +133,4 @@ struct LinkTsGeneration
 };
 } // namespace Antares::Data
 
-#include "prepro.hxx"
-
 #endif // __ANTARES_LIBS_STUDY_PARTS_THERMAL_PREPRO_HXX__

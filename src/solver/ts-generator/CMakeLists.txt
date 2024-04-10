@@ -25,7 +25,6 @@ set(SRC_XCAST
 	prepro.cpp
 
 	include/antares/solver/ts-generator/prepro.h
-	include/antares/solver/ts-generator/prepro.hxx
 	xcast/studydata.cpp
 	xcast/gamma-euler.cpp
 	xcast/gamma-inc.cpp
