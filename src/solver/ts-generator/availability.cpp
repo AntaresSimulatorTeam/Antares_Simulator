@@ -74,10 +74,9 @@ class GeneratorTempData final
 public:
     explicit GeneratorTempData(Data::Study&, unsigned);
 
-    void generateTS(const Data::Area& area, AvailabilityTSGeneratorData& cluster);
+    void generateTS(const Data::Area& area, AvailabilityTSGeneratorData& cluster) const;
 
 private:
-    Data::Study& study;
     bool derated;
 
     uint nbOfSeriesToGen_;
@@ -97,7 +96,6 @@ private:
 };
 
 GeneratorTempData::GeneratorTempData(Data::Study& study, unsigned nbOfSeriesToGen) :
- study(study),
  derated(study.parameters.derated),
  nbOfSeriesToGen_(nbOfSeriesToGen),
  rndgenerator(study.runtime->random[Data::seedTsGenThermal])
@@ -178,7 +176,7 @@ int GeneratorTempData::durationGenerator(Data::StatisticalLaw law,
     return 0;
 }
 
-void GeneratorTempData::generateTS(const Data::Area& area, AvailabilityTSGeneratorData& cluster)
+void GeneratorTempData::generateTS(const Data::Area& area, AvailabilityTSGeneratorData& cluster) const
 {
     if (!cluster.prepro)
     {
@@ -196,7 +194,7 @@ void GeneratorTempData::generateTS(const Data::Area& area, AvailabilityTSGenerat
 
     const auto& preproData = *(cluster.prepro);
 
-    int AUN = (int)cluster.unitCount;
+    int AUN = cluster.unitCount;
 
     auto& FOD = preproData.data[Data::PreproAvailability::foDuration];
 
