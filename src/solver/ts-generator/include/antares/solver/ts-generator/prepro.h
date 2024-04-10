@@ -116,14 +116,14 @@ public:
 
 struct LinkTsGeneration
 {
-    unsigned unitCount;
-    double nominalCapacity;
+    unsigned unitCount = 0;
+    double nominalCapacity = 0;
 
-    double forcedVolatility;
-    double plannedVolatility;
+    double forcedVolatility = 0.;
+    double plannedVolatility = 0.;
 
-    Data::StatisticalLaw forcedLaw;
-    Data::StatisticalLaw plannedLaw;
+    Data::StatisticalLaw forcedLaw = LawUniform;
+    Data::StatisticalLaw plannedLaw = LawUniform;
 
     std::unique_ptr<Data::PreproAvailability> prepro;
 
