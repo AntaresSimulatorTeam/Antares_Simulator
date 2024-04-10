@@ -26,6 +26,7 @@
 #include "antares/solver/misc/options.h"
 #include "antares/infoCollection/StudyInfoCollector.h"
 #include "antares/benchmarking/DurationCollector.h"
+#include "antares/exception/LoadingError.hpp"
 #include <antares/writer/writer_factory.h>
 #include <SimulationObserver.h>
 
@@ -33,6 +34,16 @@ namespace Antares::API
 {
 SimulationResults APIInternal::run(IStudyLoader* study_loader)
 {
+    try {
+        study_ = study_loader->load();
+    } catch (const ::Antares::Error::StudyFolderDoesNotExist& e) {
+        Antares::API::Error err{.reason = e.what()};
+        return {
+          .simulationPath = "",
+          .antares_problems = {},
+          .error = err
+        };
+    }
     study_ = study_loader->load();
     return execute();
 }
@@ -41,11 +52,11 @@ SimulationResults APIInternal::execute() const
 {
     // study_ == nullptr e.g when the -h flag is given
     if (!study_)
-        return {
-          .simulationPath = "",
-          .antares_problems = {},
-          .resultStatus = SimulationResults::ResultStatus::FAIL
-        };
+    {
+        using namespace std::string_literals;
+        Antares::API::Error err{.reason = "Couldn't create study"s};
+        return {.simulationPath{}, .antares_problems{}, .error = err};
+    }
 
     study_->computePThetaInfForThermalClusters();
 
@@ -95,7 +106,7 @@ SimulationResults APIInternal::execute() const
     {
         .simulationPath = study_->folderOutput.c_str(),
         .antares_problems = simulationObserver->acquireLps(),
-        .resultStatus = SimulationResults::ResultStatus::OK
+        .error{}
     };
 }
 } // namespace Antares::API
