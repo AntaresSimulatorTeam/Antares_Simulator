@@ -18,7 +18,7 @@ var searchData=
   ['variablesboundsconsistency_15',['VariablesBoundsConsistency',['../classAntares_1_1Optimization_1_1VariablesBoundsConsistency.html',1,'Antares::Optimization']]],
   ['vcardallareas_16',['VCardAllAreas',['../structAntares_1_1Solver_1_1Variable_1_1VCardAllAreas.html',1,'Antares::Solver::Variable']]],
   ['vcardallbindingconstraints_17',['VCardAllBindingConstraints',['../structAntares_1_1Solver_1_1Variable_1_1VCardAllBindingConstraints.html',1,'Antares::Solver::Variable']]],
-  ['vcardalllinks_18',['VCardAllLinks',['../structAntares_1_1Solver_1_1Variable_1_1LINK__NAMESPACE_1_1VCardAllLinks.html',1,'Antares::Solver::Variable::LINK_NAMESPACE']]],
+  ['vcardalllinks_18',['VCardAllLinks',['../structAntares_1_1Solver_1_1Variable_1_1VCardAllLinks.html',1,'Antares::Solver::Variable']]],
   ['vcardallsetsofareas_19',['VCardAllSetsOfAreas',['../structAntares_1_1Solver_1_1Variable_1_1VCardAllSetsOfAreas.html',1,'Antares::Solver::Variable']]],
   ['vcardavailabledispatchgen_20',['VCardAvailableDispatchGen',['../structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardAvailableDispatchGen.html',1,'Antares::Solver::Variable::Economy']]],
   ['vcardbalance_21',['VCardBalance',['../structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBalance.html',1,'Antares::Solver::Variable::Economy']]],

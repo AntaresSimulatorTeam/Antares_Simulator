@@ -643,10 +643,6 @@ var annotated_dup =
             [ "VCardWaterValue", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue.html", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue" ],
             [ "WaterValue", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1WaterValue.html", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1WaterValue" ]
           ] ],
-          [ "LINK_NAMESPACE", null, [
-            [ "Links", "classAntares_1_1Solver_1_1Variable_1_1LINK__NAMESPACE_1_1Links.html", "classAntares_1_1Solver_1_1Variable_1_1LINK__NAMESPACE_1_1Links" ],
-            [ "VCardAllLinks", "structAntares_1_1Solver_1_1Variable_1_1LINK__NAMESPACE_1_1VCardAllLinks.html", "structAntares_1_1Solver_1_1Variable_1_1LINK__NAMESPACE_1_1VCardAllLinks" ]
-          ] ],
           [ "Private", null, [
             [ "SurveyResultsData", "classAntares_1_1Solver_1_1Variable_1_1Private_1_1SurveyResultsData.html", "classAntares_1_1Solver_1_1Variable_1_1Private_1_1SurveyResultsData" ]
           ] ],
@@ -670,6 +666,7 @@ var annotated_dup =
           [ "IntermediateValues", "classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html", "classAntares_1_1Solver_1_1Variable_1_1IntermediateValues" ],
           [ "IVariable", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", "classAntares_1_1Solver_1_1Variable_1_1IVariable" ],
           [ "Join", "classAntares_1_1Solver_1_1Variable_1_1Join.html", "classAntares_1_1Solver_1_1Variable_1_1Join" ],
+          [ "Links", "classAntares_1_1Solver_1_1Variable_1_1Links.html", "classAntares_1_1Solver_1_1Variable_1_1Links" ],
           [ "PrecisionToPrintfFormat", "structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat.html", null ],
           [ "PrecisionToPrintfFormat< 0 >", "structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_010_01_4.html", null ],
           [ "PrecisionToPrintfFormat< 1 >", "structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_011_01_4.html", null ],
@@ -701,6 +698,7 @@ var annotated_dup =
           [ "VariableAccessor< ResultsT, Category::singleColumn >", "structAntares_1_1Solver_1_1Variable_1_1VariableAccessor_3_01ResultsT_00_01Category_1_1singleColumn_01_4.html", null ],
           [ "VCardAllAreas", "structAntares_1_1Solver_1_1Variable_1_1VCardAllAreas.html", "structAntares_1_1Solver_1_1Variable_1_1VCardAllAreas" ],
           [ "VCardAllBindingConstraints", "structAntares_1_1Solver_1_1Variable_1_1VCardAllBindingConstraints.html", "structAntares_1_1Solver_1_1Variable_1_1VCardAllBindingConstraints" ],
+          [ "VCardAllLinks", "structAntares_1_1Solver_1_1Variable_1_1VCardAllLinks.html", "structAntares_1_1Solver_1_1Variable_1_1VCardAllLinks" ],
           [ "VCardAllSetsOfAreas", "structAntares_1_1Solver_1_1Variable_1_1VCardAllSetsOfAreas.html", "structAntares_1_1Solver_1_1Variable_1_1VCardAllSetsOfAreas" ],
           [ "VCardJoin", "structAntares_1_1Solver_1_1Variable_1_1VCardJoin.html", "structAntares_1_1Solver_1_1Variable_1_1VCardJoin" ]
         ] ],

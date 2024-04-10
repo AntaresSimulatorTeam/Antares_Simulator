@@ -162,16 +162,37 @@ $(document).ready(function(){initNavTree('solver_2variable_2include_2antares_2so
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#ifndef __SOLVER_VARIABLE_ADEQUACY_LINK_H__</span></div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#define __SOLVER_VARIABLE_ADEQUACY_LINK_H__</span></div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#ifdef LINK_NAMESPACE</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#undef LINK_NAMESPACE</span></div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#define LINK_NAMESPACE Adequacy</span></div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#include &lt;yuni/yuni.h&gt;</span></div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#include &quot;all.h&quot;</span></div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="preprocessor">#include &quot;../commons/links/links.h.inc.hxx&quot;</span></div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="preprocessor">#endif </span><span class="comment">// __SOLVER_VARIABLE_ADEQUACY_LINK_H__</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;yuni/yuni.h&gt;</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="comment">// TODO SL: should be moved to common</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &quot;antares/solver/variable//commons/links/links.h&quot;</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#include &quot;antares/solver/variable/economy/links/congestionFee.h&quot;</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#include &quot;antares/solver/variable/economy/links/congestionFeeAbs.h&quot;</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#include &quot;antares/solver/variable/economy/links/congestionProbability.h&quot;</span></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="preprocessor">#include &quot;antares/solver/variable/economy/links/flowLinear.h&quot;</span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="preprocessor">#include &quot;antares/solver/variable/economy/links/flowLinearAbs.h&quot;</span></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="preprocessor">#include &quot;antares/solver/variable/economy/links/flowQuad.h&quot;</span></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="preprocessor">#include &quot;antares/solver/variable/economy/links/hurdleCosts.h&quot;</span></div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="preprocessor">#include &quot;antares/solver/variable/economy/links/marginalCost.h&quot;</span></div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="keyword">namespace </span>Antares::Solver::Variable::Adequacy</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>{</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="keyword">using </span>VariablePerLink = Economy::FlowLinear <span class="comment">// Flow linear</span></div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>  &lt;Economy::FlowLinearAbs                   <span class="comment">// Flow linear Abs</span></div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>   &lt;Economy::FlowQuad                       <span class="comment">// Flow Quad</span></div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    &lt;Economy::CongestionFee                 <span class="comment">// Congestion Fee</span></div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>     &lt;Economy::CongestionFeeAbs             <span class="comment">// Congestion Fee (Abs)</span></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>      &lt;Economy::MarginalCost                <span class="comment">// Marginal Cost</span></div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>       &lt;Economy::CongestionProbability      <span class="comment">// Congestion Probability (+/-)</span></div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>        &lt;Economy::HurdleCosts               <span class="comment">// Hurdle costs</span></div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>         &lt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;;</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="keyword">using </span>Links = <a class="code hl_class" href="classAntares_1_1Solver_1_1Variable_1_1Links.html">Antares::Solver::Variable::Links&lt;VariablePerLink&gt;</a>;</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>} <span class="comment">// namespace Antares::Solver::Variable::Adequacy</span></div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="preprocessor">#endif </span><span class="comment">// __SOLVER_VARIABLE_ADEQUACY_LINK_H__</span></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Links_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Links.html">Antares::Solver::Variable::Links</a></div><div class="ttdef"><b>Definition</b> links.h:84</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

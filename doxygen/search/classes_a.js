@@ -17,7 +17,7 @@ var searchData=
   ['linkntcgrid_14',['linkNTCgrid',['../classAntares_1_1Window_1_1linkNTCgrid.html',1,'Antares::Window']]],
   ['linkoffsets_15',['LinkOffsets',['../classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1BindingConstraint_1_1LinkOffsets.html',1,'Antares::Component::Datagrid::Renderer::BindingConstraint']]],
   ['linkparametersgrid_16',['linkParametersGrid',['../classAntares_1_1Window_1_1linkParametersGrid.html',1,'Antares::Window']]],
-  ['links_17',['links',['../classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ConstraintsBuilder_1_1Links.html',1,'Antares::Component::Datagrid::Renderer::ConstraintsBuilder::Links'],['../classAntares_1_1Solver_1_1Variable_1_1LINK__NAMESPACE_1_1Links.html',1,'Antares::Solver::Variable::LINK_NAMESPACE::Links']]],
+  ['links_17',['links',['../classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ConstraintsBuilder_1_1Links.html',1,'Antares::Component::Datagrid::Renderer::ConstraintsBuilder::Links'],['../classAntares_1_1Solver_1_1Variable_1_1Links.html',1,'Antares::Solver::Variable::Links&lt; VariablePerLink &gt;']]],
   ['linkstrimming_18',['linksTrimming',['../classAntares_1_1Window_1_1Options_1_1linksTrimming.html',1,'Antares::Window::Options']]],
   ['linkstrimminggrid_19',['linksTrimmingGrid',['../classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1linksTrimmingGrid.html',1,'Antares::Component::Datagrid::Renderer']]],
   ['linkvariable_20',['LinkVariable',['../structHourlyCSRProblem_1_1LinkVariable.html',1,'HourlyCSRProblem']]],

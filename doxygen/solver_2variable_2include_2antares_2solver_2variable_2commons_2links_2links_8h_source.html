@@ -1,0 +1,399 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<!-- BEGIN opengraph metadata -->
+<meta property="og:title" content="Antares Simulator" />
+<meta property="og:image" content="https://github.com/AntaresSimulatorTeam/Antares_Simulator/blob/develop/docs/assets/antares.png" />
+<meta property="og:description" content="Power System Simulator." />
+<meta property="og:url" content="https://antares-simulator.org/" />
+<!-- END opengraph metadata -->
+<!-- BEGIN twitter metadata -->
+<meta name="twitter:image:src" content="https://github.com/AntaresSimulatorTeam/Antares_Simulator/blob/develop/docs/assets/logo.png" />
+<meta name="twitter:title" content="Antares Simulator" />
+<meta name="twitter:description" content="Power System Simulator." />
+<!-- END twitter metadata -->
+<title>Antares Simulator: src/solver/variable/include/antares/solver/variable/commons/links/links.h Source File</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="doxygen-awesome-darkmode-toggle.js"></script>
+<script type="text/javascript" src="doxygen-awesome-fragment-copy-button.js"></script>
+<script type="text/javascript" src="doxygen-awesome-paragraph-link.js"></script>
+<script type="text/javascript" src="doxygen-awesome-interactive-toc.js"></script>
+<script type="text/javascript" src="doxygen-awesome-tabs.js"></script>
+<script type="text/javascript" src="toggle-alternative-theme.js"></script>
+<script type="text/javascript">
+    DoxygenAwesomeFragmentCopyButton.init()
+    DoxygenAwesomeDarkModeToggle.init()
+    DoxygenAwesomeParagraphLink.init()
+    DoxygenAwesomeInteractiveToc.init()
+    DoxygenAwesomeTabs.init()
+</script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+<link href="custom.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only-darkmode-toggle.css" rel="stylesheet" type="text/css"/>
+<link href="custom-alternative.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- https://github.com/AntaresSimulatorTeam/Antares_Simulator/ -->
+<a href="https://github.com/AntaresSimulatorTeam/Antares_Simulator" class="github-corner" title="View source on GitHub" target="_blank">
+    <svg viewBox="0 0 250 250" width="40" height="40" style="position: absolute; top: 0; border: 0; right: 0; z-index: 99;" aria-hidden="true">
+    <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">Antares Simulator
+   </div>
+   <div id="projectbrief">Power System Simulator</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function() { init_codefold(0); });
+/* @license-end */
+</script>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('solver_2variable_2include_2antares_2solver_2variable_2commons_2links_2links_8h_source.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">links.h</div></div>
+</div><!--header-->
+<div class="contents">
+<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/*</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">** Copyright 2007-2024, RTE (https://www.rte-france.com)</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment">** See AUTHORS.txt</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment">** SPDX-License-Identifier: MPL-2.0</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment">** This file is part of Antares-Simulator,</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment">** Adequacy and Performance assessment for interconnected energy networks.</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment">**</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="comment">** Antares_Simulator is free software: you can redistribute it and/or modify</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="comment">** it under the terms of the Mozilla Public Licence 2.0 as published by</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="comment">** the Mozilla Foundation, either version 2 of the License, or</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="comment">** (at your option) any later version.</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="comment">**</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="comment">** Antares_Simulator is distributed in the hope that it will be useful,</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="comment">** but WITHOUT ANY WARRANTY; without even the implied warranty of</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="comment">** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="comment">** Mozilla Public Licence 2.0 for more details.</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="comment">**</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="comment">** You should have received a copy of the Mozilla Public Licence 2.0</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="comment">** along with Antares_Simulator. If not, see &lt;https://opensource.org/license/mpl-2-0/&gt;.</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="comment">*/</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#ifndef __SOLVER_VARIABLE_INC_LINK_H__</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#define __SOLVER_VARIABLE_INC_LINK_H__</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="comment">// NOTE : template includes are used here to reduce template instanciation</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="comment">// which still seems to be really cpu/memory consuming</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#include &quot;antares/solver/variable/info.h&quot;</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#include &quot;antares/solver/variable/storage/results.h&quot;</span></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="preprocessor">#include &quot;../../state.h&quot;</span></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="keyword">namespace </span>Antares</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>{</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="keyword">namespace </span>Solver</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>{</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="keyword">namespace </span><a class="code hl_class" href="classVariable.html">Variable</a></div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>{</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
+<div class="foldopen" id="foldopen00041" data-start="{" data-end="};">
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1Variable_1_1VCardAllLinks.html">   41</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structAntares_1_1Solver_1_1Variable_1_1VCardAllLinks.html">VCardAllLinks</a></div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>{</div>
+<div class="foldopen" id="foldopen00044" data-start="{" data-end="}">
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1Variable_1_1VCardAllLinks.html#a2e86bab0d4bf9e0420949fd2d29cea0d">   44</a></span>    <span class="keyword">static</span> std::string <a class="code hl_function" href="structAntares_1_1Solver_1_1Variable_1_1VCardAllLinks.html#a2e86bab0d4bf9e0420949fd2d29cea0d">Caption</a>()</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    {</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        <span class="keywordflow">return</span> <span class="stringliteral">&quot;Links&quot;</span>;</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    }</div>
+</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
+<div class="foldopen" id="foldopen00050" data-start="{" data-end="}">
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1Variable_1_1VCardAllLinks.html#a1d67e8e6ea450a8a6571133343c12e25">   50</a></span>    <span class="keyword">static</span> std::string <a class="code hl_function" href="structAntares_1_1Solver_1_1Variable_1_1VCardAllLinks.html#a1d67e8e6ea450a8a6571133343c12e25">Unit</a>()</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    {</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>        <span class="keywordflow">return</span> <span class="stringliteral">&quot;&quot;</span>;</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    }</div>
+</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
+<div class="foldopen" id="foldopen00056" data-start="{" data-end="}">
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1Variable_1_1VCardAllLinks.html#a2c31e0a721f19e52ef091f786fb42019">   56</a></span>    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">char</span>* <a class="code hl_function" href="structAntares_1_1Solver_1_1Variable_1_1VCardAllLinks.html#a2c31e0a721f19e52ef091f786fb42019">Description</a>()</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    {</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        <span class="keywordflow">return</span> <span class="stringliteral">&quot;&quot;</span>;</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    }</div>
+</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1Variable_1_1VCardAllLinks.html#a3fb862fe2eabfef1fd6705a593943529">   62</a></span>    <span class="keyword">using </span><a class="code hl_class" href="classAntares_1_1Solver_1_1Variable_1_1Results.html">ResultsType</a> = <a class="code hl_class" href="classAntares_1_1Solver_1_1Variable_1_1Results.html">Results&lt;&gt;</a>;</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    <span class="keyword">enum</span></div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    {</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1Variable_1_1VCardAllLinks.html#aafee5b1a1b6fb7d753449615b4b92c9fab5cfe58aa1aadfda0dc26975ee4da288">   67</a></span>        <a class="code hl_enumvalue" href="structAntares_1_1Solver_1_1Variable_1_1VCardAllLinks.html#aafee5b1a1b6fb7d753449615b4b92c9fab5cfe58aa1aadfda0dc26975ee4da288">categoryDataLevel</a> = Category::link,</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1Variable_1_1VCardAllLinks.html#aafee5b1a1b6fb7d753449615b4b92c9faa117409936f45286bf68ad5e5f1b5d3a">   69</a></span>        <a class="code hl_enumvalue" href="structAntares_1_1Solver_1_1Variable_1_1VCardAllLinks.html#aafee5b1a1b6fb7d753449615b4b92c9faa117409936f45286bf68ad5e5f1b5d3a">categoryFileLevel</a> = ResultsType::categoryFile,</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1Variable_1_1VCardAllLinks.html#aafee5b1a1b6fb7d753449615b4b92c9fa4a7cd69f89034b0fa08001142972f1d5">   71</a></span>        <a class="code hl_enumvalue" href="structAntares_1_1Solver_1_1Variable_1_1VCardAllLinks.html#aafee5b1a1b6fb7d753449615b4b92c9fa4a7cd69f89034b0fa08001142972f1d5">nodeDepthForGUI</a> = +1,</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1Variable_1_1VCardAllLinks.html#aafee5b1a1b6fb7d753449615b4b92c9fa04cc82aabb32fafbec77c1240fb3aeff">   73</a></span>        <a class="code hl_enumvalue" href="structAntares_1_1Solver_1_1Variable_1_1VCardAllLinks.html#aafee5b1a1b6fb7d753449615b4b92c9fa04cc82aabb32fafbec77c1240fb3aeff">columnCount</a> = 0,</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1Variable_1_1VCardAllLinks.html#aafee5b1a1b6fb7d753449615b4b92c9fa5ac8d08a8ab52a3390dc3e6897383a60">   75</a></span>        <a class="code hl_enumvalue" href="structAntares_1_1Solver_1_1Variable_1_1VCardAllLinks.html#aafee5b1a1b6fb7d753449615b4b92c9fa5ac8d08a8ab52a3390dc3e6897383a60">spatialAggregate</a> = Category::spatialAggregateSum,</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1Variable_1_1VCardAllLinks.html#aafee5b1a1b6fb7d753449615b4b92c9fac58071c4ce87350e274167f2c403844d">   77</a></span>        <a class="code hl_enumvalue" href="structAntares_1_1Solver_1_1Variable_1_1VCardAllLinks.html#aafee5b1a1b6fb7d753449615b4b92c9fac58071c4ce87350e274167f2c403844d">hasIntermediateValues</a> = 0,</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    };</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span> </div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>}; <span class="comment">// class VCard</span></div>
+</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span> </div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> VariablePerLink&gt;</div>
+<div class="foldopen" id="foldopen00083" data-start="{" data-end="};">
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno"><a class="line" href="classAntares_1_1Solver_1_1Variable_1_1Links.html">   83</a></span><span class="keyword">class </span><a class="code hl_class" href="classAntares_1_1Solver_1_1Variable_1_1Links.html">Links</a></div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>{</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno"><a class="line" href="classAntares_1_1Solver_1_1Variable_1_1Links.html#adf6481292678776dcb1a194c1eaf290b">   87</a></span>    <span class="keyword">using </span><a class="code hl_typedef" href="classAntares_1_1Solver_1_1Variable_1_1Links.html#adf6481292678776dcb1a194c1eaf290b">NextType</a> = VariablePerLink;</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno"><a class="line" href="classAntares_1_1Solver_1_1Variable_1_1Links.html#a12124ccd769019441a46c57759b73fcc">   89</a></span>    <span class="keyword">using </span><a class="code hl_struct" href="structAntares_1_1Solver_1_1Variable_1_1VCardAllLinks.html">VCardType</a> = <a class="code hl_struct" href="structAntares_1_1Solver_1_1Variable_1_1VCardAllLinks.html">VCardAllLinks</a>;</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    <span class="comment">// using AncestorType = Variable::IVariable&lt;Links&lt;NextT&gt;, NextT, VCardType&gt;;</span></div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span> </div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno"><a class="line" href="classAntares_1_1Solver_1_1Variable_1_1Links.html#a9e1270b32653a40ca97ed7bdc7fb1efc">   94</a></span>    <span class="keyword">using </span><a class="code hl_class" href="classAntares_1_1Solver_1_1Variable_1_1Results.html">ResultsType</a> = <a class="code hl_typedef" href="structAntares_1_1Solver_1_1Variable_1_1VCardAllLinks.html#a3fb862fe2eabfef1fd6705a593943529">VCardType::ResultsType</a>;</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span> </div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    <span class="keyword">enum</span></div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    {</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno"><a class="line" href="classAntares_1_1Solver_1_1Variable_1_1Links.html#a3a7ac112548b96b94f36fd5ba2f79b1aa79f349cd9c7df17b5b8428c9098f9f82">   99</a></span>        <a class="code hl_enumvalue" href="classAntares_1_1Solver_1_1Variable_1_1Links.html#a3a7ac112548b96b94f36fd5ba2f79b1aa79f349cd9c7df17b5b8428c9098f9f82">count</a> = NextType::count,</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    };</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span> </div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>    <span class="keyword">template</span>&lt;<span class="keywordtype">int</span> CDataLevel, <span class="keywordtype">int</span> CFile&gt;</div>
+<div class="foldopen" id="foldopen00103" data-start="{" data-end="};">
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1Variable_1_1Links_1_1Statistics.html">  103</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="structAntares_1_1Solver_1_1Variable_1_1Links_1_1Statistics.html">Statistics</a></div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    {</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>        <span class="keyword">enum</span></div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>        {</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>            count = NextType::template <a class="code hl_struct" href="structAntares_1_1Solver_1_1Variable_1_1Links_1_1Statistics.html">Statistics</a> &lt; CDataLevel,</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>            CFile &gt; ::count</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>        };</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    };</div>
+</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span> </div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> PredicateT&gt;</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classAntares_1_1Solver_1_1Variable_1_1Links.html#a52dc723fbf86261a56eab535fa268499">RetrieveVariableList</a>(PredicateT&amp; predicate);</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span> </div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span> </div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span> </div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>    <a class="code hl_function" href="classAntares_1_1Solver_1_1Variable_1_1Links.html#afeb8ccbc484446dd48456a49c5e8d46c">Links</a>();</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>    <a class="code hl_function" href="classAntares_1_1Solver_1_1Variable_1_1Links.html#ad00057fdb22e614a1679000da26d9c81">~Links</a>();</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span> </div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>    <span class="keywordtype">void</span> initializeFromStudy(<a class="code hl_class" href="classAntares_1_1Data_1_1Study.html">Data::Study</a>&amp; study);</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>    <span class="keywordtype">void</span> initializeFromArea(<a class="code hl_class" href="classAntares_1_1Data_1_1Study.html">Data::Study</a>*, <a class="code hl_class" href="classAntares_1_1Data_1_1Area.html">Data::Area</a>*);</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>    <span class="keywordtype">void</span> initializeFromThermalCluster(<a class="code hl_class" href="classAntares_1_1Data_1_1Study.html">Data::Study</a>*, <a class="code hl_class" href="classAntares_1_1Data_1_1Area.html">Data::Area</a>*, <a class="code hl_class" href="classAntares_1_1Data_1_1ThermalCluster.html">Data::ThermalCluster</a>*);</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>    <span class="keywordtype">void</span> initializeFromAreaLink(<a class="code hl_class" href="classAntares_1_1Data_1_1Study.html">Data::Study</a>*, <a class="code hl_class" href="classAntares_1_1Data_1_1AreaLink.html">Data::AreaLink</a>*);</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span> </div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>    <span class="keywordtype">void</span> broadcastNonApplicability(<span class="keywordtype">bool</span> applyNonApplicable);</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>    <span class="keywordtype">void</span> getPrintStatusFromStudy(<a class="code hl_class" href="classAntares_1_1Data_1_1Study.html">Data::Study</a>&amp; study);</div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>    <span class="keywordtype">void</span> supplyMaxNumberOfColumns(<a class="code hl_class" href="classAntares_1_1Data_1_1Study.html">Data::Study</a>&amp; study);</div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span> </div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>    <span class="keywordtype">void</span> simulationBegin();</div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>    <span class="keywordtype">void</span> simulationEnd();</div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span> </div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>    <span class="keywordtype">void</span> yearBegin(uint year, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace);</div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span> </div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>    <span class="keywordtype">void</span> yearEndBuildPrepareDataForEachThermalCluster(<a class="code hl_class" href="classAntares_1_1Solver_1_1Variable_1_1State.html">State</a>&amp; state, uint year, uint numSpace);</div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>    <span class="keywordtype">void</span> yearEndBuildForEachThermalCluster(<a class="code hl_class" href="classAntares_1_1Solver_1_1Variable_1_1State.html">State</a>&amp; state, uint year, uint numSpace);</div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span> </div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>    <span class="keywordtype">void</span> yearEndBuild(<a class="code hl_class" href="classAntares_1_1Solver_1_1Variable_1_1State.html">State</a>&amp; state, uint year);</div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span> </div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>    <span class="keywordtype">void</span> yearEnd(uint year, uint numSpace);</div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span> </div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>    <span class="keywordtype">void</span> computeSummary(std::map&lt;unsigned int, unsigned int&gt;&amp; numSpaceToYear,</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>                        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> nbYearsForCurrentSummary);</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span> </div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>    <span class="keywordtype">void</span> weekBegin(<a class="code hl_class" href="classAntares_1_1Solver_1_1Variable_1_1State.html">State</a>&amp; state);</div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span> </div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>    <span class="keywordtype">void</span> weekForEachArea(<a class="code hl_class" href="classAntares_1_1Solver_1_1Variable_1_1State.html">State</a>&amp; state, uint numSpace);</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>    <span class="keywordtype">void</span> weekEnd(<a class="code hl_class" href="classAntares_1_1Solver_1_1Variable_1_1State.html">State</a>&amp; state);</div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span> </div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>    <span class="keywordtype">void</span> hourBegin(uint hourInTheYear);</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>    <span class="keywordtype">void</span> hourForEachArea(<a class="code hl_class" href="classAntares_1_1Solver_1_1Variable_1_1State.html">State</a>&amp; state, uint numSpace);</div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>    <span class="keywordtype">void</span> hourForEachLink(<a class="code hl_class" href="classAntares_1_1Solver_1_1Variable_1_1State.html">State</a>&amp; state, uint numSpace);</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span> </div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>    <span class="keywordtype">void</span> hourEnd(<a class="code hl_class" href="classAntares_1_1Solver_1_1Variable_1_1State.html">State</a>&amp; state, uint hourInTheYear);</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span> </div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>    <span class="keywordtype">void</span> buildSurveyReport(<a class="code hl_class" href="classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html">SurveyResults</a>&amp; results,</div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>                           <span class="keywordtype">int</span> dataLevel,</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>                           <span class="keywordtype">int</span> fileLevel,</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>                           <span class="keywordtype">int</span> precision) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span> </div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>    <span class="keywordtype">void</span> buildAnnualSurveyReport(<a class="code hl_class" href="classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html">SurveyResults</a>&amp; results,</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>                                 <span class="keywordtype">int</span> dataLevel,</div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>                                 <span class="keywordtype">int</span> fileLevel,</div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>                                 <span class="keywordtype">int</span> precision,</div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>                                 uint numSpace) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span> </div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>    <span class="keywordtype">void</span> beforeYearByYearExport(uint year, uint numSpace);</div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span> </div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>    uint64_t memoryUsage() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span> </div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>    <span class="keywordtype">void</span> buildDigest(<a class="code hl_class" href="classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html">SurveyResults</a>&amp; results, <span class="keywordtype">int</span> digestLevel, <span class="keywordtype">int</span> dataLevel) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span> </div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> I&gt;</div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> provideInformations(I&amp; infos);</div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span> </div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> VCardToFindT&gt;</div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>    <span class="keyword">inline</span> <span class="keyword">const</span> <span class="keywordtype">double</span>* retrieveHourlyResultsForCurrentYear(uint)<span class="keyword"> const</span></div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span><span class="keyword">    </span>{</div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>        <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>    }</div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span> </div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> VCardToFindT&gt;</div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>    <span class="keywordtype">void</span> retrieveResultsForArea(<a class="code hl_typedef" href="structAntares_1_1Solver_1_1Variable_1_1Storage.html#a57926881b164d4e92ae6218126c7e079">Storage&lt;VCardToFindT&gt;::ResultsType</a>** result, <span class="keyword">const</span> <a class="code hl_class" href="classAntares_1_1Data_1_1Area.html">Data::Area</a>*)</div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>    {</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>        *result = NULL;</div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>    }</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span> </div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> VCardToFindT&gt;</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>    <span class="keywordtype">void</span> retrieveResultsForThermalCluster(<a class="code hl_typedef" href="structAntares_1_1Solver_1_1Variable_1_1Storage.html#a57926881b164d4e92ae6218126c7e079">Storage&lt;VCardToFindT&gt;::ResultsType</a>** result,</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>                                          <span class="keyword">const</span> <a class="code hl_class" href="classAntares_1_1Data_1_1ThermalCluster.html">Data::ThermalCluster</a>*)</div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>    {</div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>        *result = NULL;</div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>    }</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span> </div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> VCardToFindT&gt;</div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>    <span class="keywordtype">void</span> retrieveResultsForLink(<a class="code hl_typedef" href="structAntares_1_1Solver_1_1Variable_1_1Storage.html#a57926881b164d4e92ae6218126c7e079">Storage&lt;VCardToFindT&gt;::ResultsType</a>** result,</div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>                                <span class="keyword">const</span> <a class="code hl_class" href="classAntares_1_1Data_1_1AreaLink.html">Data::AreaLink</a>* link)</div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>    {</div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>        <a class="code hl_variable" href="classAntares_1_1Solver_1_1Variable_1_1Links.html#ae177822aebc0962abb39c8813c96db4a">pLinks</a>[link-&gt;indexForArea].template retrieveResultsForLink&lt;VCardToFindT&gt;(result, link);</div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>    }</div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span> </div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> SearchVCardT, <span class="keyword">class</span> O&gt;</div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>    <span class="keywordtype">void</span> computeSpatialAggregateWith(O&amp;, uint)</div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>    {</div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>        <span class="comment">// Do nothing</span></div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>    }</div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span> </div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno"><a class="line" href="classAntares_1_1Solver_1_1Variable_1_1Links.html#ae177822aebc0962abb39c8813c96db4a">  221</a></span>    <a class="code hl_typedef" href="classAntares_1_1Solver_1_1Variable_1_1Links.html#adf6481292678776dcb1a194c1eaf290b">NextType</a>* <a class="code hl_variable" href="classAntares_1_1Solver_1_1Variable_1_1Links.html#ae177822aebc0962abb39c8813c96db4a">pLinks</a>;</div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno"><a class="line" href="classAntares_1_1Solver_1_1Variable_1_1Links.html#a20e87659088d39b4e7abd6a8f8a60287">  223</a></span>    uint <a class="code hl_variable" href="classAntares_1_1Solver_1_1Variable_1_1Links.html#a20e87659088d39b4e7abd6a8f8a60287">pLinkCount</a>;</div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span> </div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>}; <span class="comment">// class Links</span></div>
+</div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span> </div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>} <span class="comment">// namespace Variable</span></div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>} <span class="comment">// namespace Solver</span></div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>} <span class="comment">// namespace Antares</span></div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span> </div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span><span class="preprocessor">#include &quot;links.hxx&quot;</span></div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span> </div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span><span class="preprocessor">#endif </span><span class="comment">// __SOLVER_VARIABLE_INC_LINK_H__</span></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1AreaLink_html"><div class="ttname"><a href="classAntares_1_1Data_1_1AreaLink.html">Antares::Data::AreaLink</a></div><div class="ttdoc">Definition of a link between two areas (Interconnection)</div><div class="ttdef"><b>Definition</b> links.h:48</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1Area_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Area.html">Antares::Data::Area</a></div><div class="ttdoc">Definition for a single area.</div><div class="ttdef"><b>Definition</b> area.h:48</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1Study_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a></div><div class="ttdef"><b>Definition</b> study.h:60</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1ThermalCluster_html"><div class="ttname"><a href="classAntares_1_1Data_1_1ThermalCluster.html">Antares::Data::ThermalCluster</a></div><div class="ttdoc">A single thermal cluster.</div><div class="ttdef"><b>Definition</b> cluster.h:74</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Links_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Links.html">Antares::Solver::Variable::Links</a></div><div class="ttdef"><b>Definition</b> links.h:84</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Links_html_a20e87659088d39b4e7abd6a8f8a60287"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Links.html#a20e87659088d39b4e7abd6a8f8a60287">Antares::Solver::Variable::Links::pLinkCount</a></div><div class="ttdeci">uint pLinkCount</div><div class="ttdoc">The total number of links.</div><div class="ttdef"><b>Definition</b> links.h:223</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Links_html_a3a7ac112548b96b94f36fd5ba2f79b1aa79f349cd9c7df17b5b8428c9098f9f82"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Links.html#a3a7ac112548b96b94f36fd5ba2f79b1aa79f349cd9c7df17b5b8428c9098f9f82">Antares::Solver::Variable::Links::count</a></div><div class="ttdeci">@ count</div><div class="ttdoc">How many items have we got.</div><div class="ttdef"><b>Definition</b> links.h:99</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Links_html_a52dc723fbf86261a56eab535fa268499"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Links.html#a52dc723fbf86261a56eab535fa268499">Antares::Solver::Variable::Links::RetrieveVariableList</a></div><div class="ttdeci">static void RetrieveVariableList(PredicateT &amp;predicate)</div><div class="ttdoc">Retrieve the list of all individual variables.</div><div class="ttdef"><b>Definition</b> links.hxx:346</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Links_html_ad00057fdb22e614a1679000da26d9c81"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Links.html#ad00057fdb22e614a1679000da26d9c81">Antares::Solver::Variable::Links::~Links</a></div><div class="ttdeci">~Links()</div><div class="ttdoc">Destructor.</div><div class="ttdef"><b>Definition</b> links.hxx:364</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Links_html_adf6481292678776dcb1a194c1eaf290b"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Links.html#adf6481292678776dcb1a194c1eaf290b">Antares::Solver::Variable::Links::NextType</a></div><div class="ttdeci">VariablePerLink NextType</div><div class="ttdoc">Type of the next static variable.</div><div class="ttdef"><b>Definition</b> links.h:87</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Links_html_ae177822aebc0962abb39c8813c96db4a"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Links.html#ae177822aebc0962abb39c8813c96db4a">Antares::Solver::Variable::Links::pLinks</a></div><div class="ttdeci">NextType * pLinks</div><div class="ttdoc">Area list.</div><div class="ttdef"><b>Definition</b> links.h:221</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Links_html_afeb8ccbc484446dd48456a49c5e8d46c"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Links.html#afeb8ccbc484446dd48456a49c5e8d46c">Antares::Solver::Variable::Links::Links</a></div><div class="ttdeci">Links()</div><div class="ttdoc">Default constructor.</div><div class="ttdef"><b>Definition</b> links.hxx:35</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Results_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Results.html">Antares::Solver::Variable::Results</a></div><div class="ttdef"><b>Definition</b> results.h:47</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1State_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1State.html">Antares::Solver::Variable::State</a></div><div class="ttdef"><b>Definition</b> state.h:71</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1SurveyResults_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html">Antares::Solver::Variable::SurveyResults</a></div><div class="ttdoc">Class utility for building CSV results files.</div><div class="ttdef"><b>Definition</b> surveyresults.h:39</div></div>
+<div class="ttc" id="aclassVariable_html"><div class="ttname"><a href="classVariable.html">Variable</a></div><div class="ttdef"><b>Definition</b> variable.h:25</div></div>
+<div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1Links_1_1Statistics_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1Links_1_1Statistics.html">Antares::Solver::Variable::Links::Statistics</a></div><div class="ttdef"><b>Definition</b> links.h:104</div></div>
+<div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1Storage_html_a57926881b164d4e92ae6218126c7e079"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1Storage.html#a57926881b164d4e92ae6218126c7e079">Antares::Solver::Variable::Storage::ResultsType</a></div><div class="ttdeci">VariableAccessor&lt; typenameVCardT::ResultsType, VCardT::columnCount &gt;::Type ResultsType</div><div class="ttdoc">The true type used for the results.</div><div class="ttdef"><b>Definition</b> info.h:721</div></div>
+<div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1VCardAllLinks_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1VCardAllLinks.html">Antares::Solver::Variable::VCardAllLinks</a></div><div class="ttdef"><b>Definition</b> links.h:42</div></div>
+<div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1VCardAllLinks_html_a1d67e8e6ea450a8a6571133343c12e25"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1VCardAllLinks.html#a1d67e8e6ea450a8a6571133343c12e25">Antares::Solver::Variable::VCardAllLinks::Unit</a></div><div class="ttdeci">static std::string Unit()</div><div class="ttdoc">Unit.</div><div class="ttdef"><b>Definition</b> links.h:50</div></div>
+<div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1VCardAllLinks_html_a2c31e0a721f19e52ef091f786fb42019"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1VCardAllLinks.html#a2c31e0a721f19e52ef091f786fb42019">Antares::Solver::Variable::VCardAllLinks::Description</a></div><div class="ttdeci">static const char * Description()</div><div class="ttdoc">The short description of the variable.</div><div class="ttdef"><b>Definition</b> links.h:56</div></div>
+<div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1VCardAllLinks_html_a2e86bab0d4bf9e0420949fd2d29cea0d"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1VCardAllLinks.html#a2e86bab0d4bf9e0420949fd2d29cea0d">Antares::Solver::Variable::VCardAllLinks::Caption</a></div><div class="ttdeci">static std::string Caption()</div><div class="ttdoc">Caption.</div><div class="ttdef"><b>Definition</b> links.h:44</div></div>
+<div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1VCardAllLinks_html_a3fb862fe2eabfef1fd6705a593943529"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1VCardAllLinks.html#a3fb862fe2eabfef1fd6705a593943529">Antares::Solver::Variable::VCardAllLinks::ResultsType</a></div><div class="ttdeci">Results&lt;&gt; ResultsType</div><div class="ttdoc">The expecte results.</div><div class="ttdef"><b>Definition</b> links.h:62</div></div>
+<div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1VCardAllLinks_html_aafee5b1a1b6fb7d753449615b4b92c9fa04cc82aabb32fafbec77c1240fb3aeff"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1VCardAllLinks.html#aafee5b1a1b6fb7d753449615b4b92c9fa04cc82aabb32fafbec77c1240fb3aeff">Antares::Solver::Variable::VCardAllLinks::columnCount</a></div><div class="ttdeci">@ columnCount</div><div class="ttdoc">Number of columns used by the variable (One ResultsType per column)</div><div class="ttdef"><b>Definition</b> links.h:73</div></div>
+<div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1VCardAllLinks_html_aafee5b1a1b6fb7d753449615b4b92c9fa4a7cd69f89034b0fa08001142972f1d5"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1VCardAllLinks.html#aafee5b1a1b6fb7d753449615b4b92c9fa4a7cd69f89034b0fa08001142972f1d5">Antares::Solver::Variable::VCardAllLinks::nodeDepthForGUI</a></div><div class="ttdeci">@ nodeDepthForGUI</div><div class="ttdoc">Indentation (GUI)</div><div class="ttdef"><b>Definition</b> links.h:71</div></div>
+<div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1VCardAllLinks_html_aafee5b1a1b6fb7d753449615b4b92c9fa5ac8d08a8ab52a3390dc3e6897383a60"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1VCardAllLinks.html#aafee5b1a1b6fb7d753449615b4b92c9fa5ac8d08a8ab52a3390dc3e6897383a60">Antares::Solver::Variable::VCardAllLinks::spatialAggregate</a></div><div class="ttdeci">@ spatialAggregate</div><div class="ttdoc">The Spatial aggregation.</div><div class="ttdef"><b>Definition</b> links.h:75</div></div>
+<div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1VCardAllLinks_html_aafee5b1a1b6fb7d753449615b4b92c9faa117409936f45286bf68ad5e5f1b5d3a"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1VCardAllLinks.html#aafee5b1a1b6fb7d753449615b4b92c9faa117409936f45286bf68ad5e5f1b5d3a">Antares::Solver::Variable::VCardAllLinks::categoryFileLevel</a></div><div class="ttdeci">@ categoryFileLevel</div><div class="ttdoc">File level (provided by the type of the results)</div><div class="ttdef"><b>Definition</b> links.h:69</div></div>
+<div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1VCardAllLinks_html_aafee5b1a1b6fb7d753449615b4b92c9fab5cfe58aa1aadfda0dc26975ee4da288"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1VCardAllLinks.html#aafee5b1a1b6fb7d753449615b4b92c9fab5cfe58aa1aadfda0dc26975ee4da288">Antares::Solver::Variable::VCardAllLinks::categoryDataLevel</a></div><div class="ttdeci">@ categoryDataLevel</div><div class="ttdoc">Data Level.</div><div class="ttdef"><b>Definition</b> links.h:67</div></div>
+<div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1VCardAllLinks_html_aafee5b1a1b6fb7d753449615b4b92c9fac58071c4ce87350e274167f2c403844d"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1VCardAllLinks.html#aafee5b1a1b6fb7d753449615b4b92c9fac58071c4ce87350e274167f2c403844d">Antares::Solver::Variable::VCardAllLinks::hasIntermediateValues</a></div><div class="ttdeci">@ hasIntermediateValues</div><div class="ttdoc">Intermediate values.</div><div class="ttdef"><b>Definition</b> links.h:77</div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_041db6ad6a3d44280e40e5af409429cb.html">solver</a></li><li class="navelem"><a class="el" href="dir_3e822a6ee4d724687cb7bda3e29a5b91.html">variable</a></li><li class="navelem"><a class="el" href="dir_20840d7036cd3874771cb5f002fb682a.html">include</a></li><li class="navelem"><a class="el" href="dir_788e7f05e8620bbe44f03aee5eae2ddd.html">antares</a></li><li class="navelem"><a class="el" href="dir_8f58b5f8d3a1b7f0f618eab98f86bc8f.html">solver</a></li><li class="navelem"><a class="el" href="dir_6eccbe1c151b0c708db2d7dc07169755.html">variable</a></li><li class="navelem"><a class="el" href="dir_975cde24ce853807f10143515c4f97c7.html">commons</a></li><li class="navelem"><a class="el" href="dir_f0a90e62a1a9f5ef86f667baefa1eed2.html">links</a></li><li class="navelem"><b>links.h</b></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+  </ul>
+</div>
+</body>
+</html>
