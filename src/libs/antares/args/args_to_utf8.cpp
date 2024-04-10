@@ -24,13 +24,19 @@
 #include <yuni/yuni.h>
 
 #ifdef YUNI_OS_WINDOWS
-#include <cstdlib>
+// Turning off format because order of windows and shellapi matters,
+// apparently
+// clang-format off
+
 #include <string.h>
+#include <cstdlib>
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN 1
 #endif // WIN32_LEAN_AND_MEAN
-#include <shellapi.h>
 #include <windows.h>
+#include <shellapi.h>
+
+// clang-format on
 #endif // YUNI_OS_WINDOWS
 
 IntoUTF8ArgsTranslator::IntoUTF8ArgsTranslator(int argc, char** argv):
