@@ -189,4 +189,17 @@ void BindingConstraints<NextT>::hourEnd(State& state, uint hourInTheYear)
     for (uint i = 0; i != pBCcount; ++i)
         pBindConstraints[i].hourEnd(state, hourInTheYear);
 }
+
+template<class NextT>
+uint64_t BindingConstraints<NextT>::memoryUsage() const
+{
+    uint64_t result = 0;
+    for (unsigned int i = 0; i != pBCcount; ++i)
+    {
+        result += sizeof(NextType) + sizeof(void*); // overhead vector
+        result += pBindConstraints[i].memoryUsage();
+    }
+    return result;
+}
+
 } // namespace Antares::Solver::Variable
