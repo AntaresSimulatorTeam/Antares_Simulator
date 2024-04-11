@@ -34,6 +34,7 @@
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 #include "antares/solver/simulation/simulation.h"
 #include <antares/antares/fatal-error.h>
+#include <antares/logs/logs.h>
 
 using namespace Antares;
 using namespace Antares::Data;
@@ -785,6 +786,8 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                         weekTarget_tmp += hydroVentilationResults[k]
                                             .HydrauliqueModulableQuotidien[day];
                     }
+
+                    logs.notice() << weekTarget_tmp ;
 
                     if (weekTarget_tmp != 0.)
                         weekGenerationTarget = weekTarget_tmp;

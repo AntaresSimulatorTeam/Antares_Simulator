@@ -39,6 +39,7 @@
 #include "antares/solver/variable/state.h"
 #include <array>
 #include <numeric>
+#include <antares/logs/logs.h>
 
 using namespace Yuni;
 
@@ -496,8 +497,8 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
                 for (uint day = firstDay; day != endDay; ++day)
                 {
                     ventilationResults.HydrauliqueModulableQuotidien[day]
-                      = problem.Turbine[dayMonth] * reservoirCapacity;
-
+                      = problem.Turbine[dayMonth] * reservoirCapacity + problem.overflows[dayMonth];
+                    logs.notice() << "Pour le jour " << dayMonth << " turbine : " << problem.Turbine[dayMonth] << " overflow " << problem.overflows[dayMonth] ;
                     ventilationResults.NiveauxReservoirsFinJours[day] = problem.niveauxFinJours[dayMonth];
 
                     if (debugData)
