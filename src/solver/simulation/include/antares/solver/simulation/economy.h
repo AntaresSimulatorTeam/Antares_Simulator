@@ -81,9 +81,7 @@ protected:
               bool isFirstPerformedYearOfSimulation,
               const HYDRO_VENTILATION_RESULTS&,
               OptimizationStatisticsWriter& optWriter,
-              const Antares::Data::Area::ScratchMap& scratchmap,
-              Simulation::ISimulationObserver* simulationObserver
-              );
+              const Antares::Data::Area::ScratchMap& scratchmap);
 
     void incrementProgression(Progression::Task& progression);
 
