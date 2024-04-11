@@ -98,12 +98,12 @@ var NAVTREEINDEX =
 "classAntares_1_1Window_1_1Renewable_1_1Panel.html",
 "classIntoUTF8ArgsTranslator.html",
 "connectioncreator_8h_source.html",
-"dir_ba5fe6713bda1950ee09cc832eb38800.html",
-"greaterthanorequalsto_8h_source.html",
-"playlist_8h_source.html",
-"structAntares_1_1Solver_1_1Variable_1_1Category_1_1MaxRowCount_3_01monthly_01_4.html",
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation_1_1Data.html",
-"thermal_2defines_8h_source.html"
+"dir_b89309f7b0994e54c2ca58e16db6405e.html",
+"geographic-trimming-grid_8h_source.html",
+"parameters_8h_source.html",
+"structAntares_1_1Solver_1_1Variable_1_1BindingConstraints_1_1Statistics.html",
+"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw.html#a64a09e4897a39e1a1a14ffb548c91e4b",
+"thermal-cluster_8h_source.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
