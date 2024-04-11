@@ -449,28 +449,28 @@ void ISimulation<ImplementationType>::regenerateTimeSeries(uint year)
     // Load
     if (pData.haveToRefreshTSLoad && (year % pData.refreshIntervalLoad == 0))
     {
-        durationCollector("tsgen_load") << [] {
+        durationCollector("tsgen_load") << [&] {
             GenerateTimeSeries<Data::timeSeriesLoad>(study, year, pResultWriter);
         };
     }
     // Solar
     if (pData.haveToRefreshTSSolar && (year % pData.refreshIntervalSolar == 0))
     {
-        durationCollector("tsgen_solar") << [] {
+        durationCollector("tsgen_solar") << [&] {
             GenerateTimeSeries<Data::timeSeriesSolar>(study, year, pResultWriter);
         };
     }
     // Wind
     if (pData.haveToRefreshTSWind && (year % pData.refreshIntervalWind == 0))
     {
-        durationCollector("tsgen_wind") << [] {
+        durationCollector("tsgen_wind") << [&] {
             GenerateTimeSeries<Data::timeSeriesWind>(study, year, pResultWriter);
         };
     }
     // Hydro
     if (pData.haveToRefreshTSHydro && (year % pData.refreshIntervalHydro == 0))
     {
-        durationCollector("tsgen_hydro") << [] {
+        durationCollector("tsgen_hydro") << [&] {
             GenerateTimeSeries<Data::timeSeriesHydro>(study, year, pResultWriter);
         };
     }
