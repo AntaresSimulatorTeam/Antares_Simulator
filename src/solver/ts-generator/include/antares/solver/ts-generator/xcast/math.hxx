@@ -23,9 +23,9 @@
 
 #include <yuni/yuni.h>
 
-#include "antares/solver/ts-generator/xcast/xcast.h"
 #include <antares/logs/logs.h>
 #include <antares/study/study.h>
+#include "antares/solver/ts-generator/xcast/xcast.h"
 
 #include "constants.h"
 

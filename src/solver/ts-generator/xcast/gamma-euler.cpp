@@ -24,9 +24,9 @@
 #include <yuni/yuni.h>
 #include <yuni/core/math.h>
 
-#include "antares/solver/ts-generator/xcast/xcast.h"
 #include <antares/logs/logs.h>
 #include <antares/study/study.h>
+#include "antares/solver/ts-generator/xcast/xcast.h"
 
 using namespace Yuni;
 

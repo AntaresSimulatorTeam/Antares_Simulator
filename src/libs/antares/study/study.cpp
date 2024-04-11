@@ -34,6 +34,7 @@
 #include <yuni/datetime/timestamp.h>
 #include <yuni/io/file.h>
 
+#include <antares/writer/writer_factory.h>
 #include "antares/antares/antares.h"
 #include "antares/study/area/constants.h"
 #include "antares/study/correlation-updater.hxx"
@@ -42,7 +43,6 @@
 #include "antares/study/scenario-builder/updater.hxx"
 #include "antares/study/ui-runtimeinfos.h"
 #include "antares/utils/utils.h"
-#include <antares/writer/writer_factory.h>
 
 using namespace Yuni;
 

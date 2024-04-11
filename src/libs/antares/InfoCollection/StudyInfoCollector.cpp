@@ -24,9 +24,9 @@
 
 #include "antares/infoCollection/StudyInfoCollector.h"
 
+#include <antares/config/config.h>
 #include "antares/benchmarking/DurationCollector.h"
 #include "antares/benchmarking/file_content.h"
-#include <antares/config/config.h>
 
 using namespace Antares::Data;
 

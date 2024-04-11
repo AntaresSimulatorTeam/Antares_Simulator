@@ -27,8 +27,6 @@
 #include <yuni/io/directory/info.h>
 #include <yuni/io/file.h>
 
-#include "antares/config/config.h"
-#include "antares/solver/ts-generator/xcast/studydata.h"
 #include <antares/antares/version.h>
 #include <antares/args/args_to_utf8.h>
 #include <antares/locale/locale.h>
@@ -37,6 +35,8 @@
 #include <antares/memory/memory.h>
 #include <antares/sys/policy.h>
 #include <antares/utils/utils.h>
+#include "antares/config/config.h"
+#include "antares/solver/ts-generator/xcast/studydata.h"
 
 #include "datafile.h"
 #include "job.h"

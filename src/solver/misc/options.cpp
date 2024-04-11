@@ -31,14 +31,14 @@
 #include <yuni/io/directory.h>
 #include <yuni/io/file.h>
 
-#include "antares/antares/Enum.hpp"
-#include "antares/config/config.h"
-#include "antares/solver/utils/ortools_utils.h"
 #include <antares/antares/constants.h>
 #include <antares/exception/AssertionError.hpp>
 #include <antares/exception/LoadingError.hpp>
 #include <antares/logs/logs.h>
 #include <antares/study/study.h>
+#include "antares/antares/Enum.hpp"
+#include "antares/config/config.h"
+#include "antares/solver/utils/ortools_utils.h"
 
 using namespace Yuni;
 using namespace Antares;

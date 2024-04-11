@@ -24,10 +24,10 @@
 #include <yuni/yuni.h>
 #include <yuni/string.h>
 
-#include "antares/study/cleaner/versions.h"
-#include "antares/study/version.h"
 #include <antares/logs/logs.h>
 #include <antares/study/header.h>
+#include "antares/study/cleaner/versions.h"
+#include "antares/study/version.h"
 
 using namespace Yuni;
 

@@ -24,8 +24,8 @@
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
 
-#include "antares/config/config.h"
 #include <antares/logs/logs.h>
+#include "antares/config/config.h"
 
 using namespace Yuni;
 

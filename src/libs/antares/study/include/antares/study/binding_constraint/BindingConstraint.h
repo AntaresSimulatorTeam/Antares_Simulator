@@ -29,10 +29,10 @@
 #include <yuni/core/noncopyable.h>
 #include <yuni/core/string.h>
 
-#include "antares/antares/antares.h"
-#include "antares/study/filter.h"
 #include <antares/array/matrix.h>
 #include <antares/inifile/inifile.h>
+#include "antares/antares/antares.h"
+#include "antares/study/filter.h"
 
 #include "../area/links.h"
 #include "../fwd.h"

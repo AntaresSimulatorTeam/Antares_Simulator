@@ -271,11 +271,17 @@ IncludeBlocks: Regroup
 
 # First main header, then std libs, then boost, then yuni, then antares
 IncludeCategories:
-  # antares headers
-  - Regex: '^(<|")antares/.*'
+  # antares headers with "
+  - Regex: '^"antares/.*'
     Priority: 10
+    SortPriority: 10
     CaseSensitive: false
-  # Main yuni header need to go first...
+  # antares headers with <
+  - Regex: '^<antares/.*'
+    Priority: 10
+    SortPriority: 9
+    CaseSensitive: false
+  # Main yuni headers need to go first...
   - Regex: '^(<|")yuni/(yuni|core).h(>|")'
     Priority: 5
     SortPriority: 4

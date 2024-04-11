@@ -29,9 +29,9 @@
 
 #include "yuni/core/string/string.h"
 
+#include <antares/utils/utils.h>
 #include "antares/study/binding_constraint/BindingConstraint.h"
 #include "antares/study/version.h"
-#include <antares/utils/utils.h>
 
 namespace Antares::Data
 {

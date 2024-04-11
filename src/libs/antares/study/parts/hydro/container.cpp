@@ -21,9 +21,9 @@
 
 #include "antares/study/parts/hydro/container.h"
 
+#include <antares/inifile/inifile.h>
 #include "antares/study/parts/hydro/hydromaxtimeseriesreader.h"
 #include "antares/study/study.h"
-#include <antares/inifile/inifile.h>
 
 using namespace Antares;
 using namespace Yuni;

@@ -24,9 +24,9 @@
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
 
-#include "antares/antares/constants.h"
 #include <antares/study/study.h>
 #include <antares/writer/i_writer.h>
+#include "antares/antares/constants.h"
 
 namespace Antares
 {

@@ -27,10 +27,10 @@
 
 #include <yuni/yuni.h>
 
-#include "antares/solver/ts-generator/xcast/predicate.hxx"
 #include <antares/antares/fatal-error.h>
 #include <antares/logs/logs.h>
 #include <antares/study/study.h>
+#include "antares/solver/ts-generator/xcast/predicate.hxx"
 
 using namespace Yuni;
 

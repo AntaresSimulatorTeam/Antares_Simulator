@@ -24,15 +24,15 @@
 #include <yuni/core/string.h>
 #include <yuni/job/queue/service.h>
 
+#include <antares/benchmarking/DurationCollector.h>
+#include <antares/logs/logs.h>
+#include <antares/study/study.h>
+#include <antares/writer/writer_factory.h>
 #include "antares/solver/hydro/management/management.h"
 #include "antares/solver/misc/options.h"
 #include "antares/solver/simulation/solver.data.h"
 #include "antares/solver/simulation/solver_utils.h"
 #include "antares/solver/variable/state.h"
-#include <antares/benchmarking/DurationCollector.h>
-#include <antares/logs/logs.h>
-#include <antares/study/study.h>
-#include <antares/writer/writer_factory.h>
 
 namespace Antares::Solver::Simulation
 {

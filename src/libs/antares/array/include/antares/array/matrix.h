@@ -27,10 +27,10 @@
 #include <yuni/yuni.h>
 #include <yuni/io/file.h>
 
+#include <antares/memory/memory.h>
 #include "antares/antares/antares.h"
 #include "antares/jit/jit.h"
 #include "antares/study/fwd.h"
-#include <antares/memory/memory.h>
 
 namespace Antares
 {

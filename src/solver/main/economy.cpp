@@ -21,10 +21,10 @@
 
 #include "antares/solver/simulation/economy.h"
 
-#include "antares/application/application.h"
-#include "antares/solver/simulation/solver.h"
 #include <antares/benchmarking/DurationCollector.h>
 #include <antares/logs/logs.h>
+#include "antares/application/application.h"
+#include "antares/solver/simulation/solver.h"
 
 namespace Antares::Solver
 {

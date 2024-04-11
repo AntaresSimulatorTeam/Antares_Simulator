@@ -35,10 +35,10 @@ extern "C"
 
 #include <chrono>
 
-#include "antares/solver/utils/filename.h"
-#include "antares/solver/utils/mps_utils.h"
 #include <antares/antares/fatal-error.h>
 #include <antares/logs/logs.h>
+#include "antares/solver/utils/filename.h"
+#include "antares/solver/utils/mps_utils.h"
 
 #include "../infeasible-problem-analysis/constraint-slack-analysis.h"
 #include "../infeasible-problem-analysis/unfeasible-pb-analyzer.h"

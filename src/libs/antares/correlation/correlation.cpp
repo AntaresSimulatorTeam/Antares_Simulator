@@ -21,10 +21,10 @@
 
 #include "antares/correlation/correlation.h"
 
-#include "antares/study/area/area.h"
-#include "antares/study/study.h"
 #include <antares/array/matrix.h>
 #include <antares/utils/utils.h>
+#include "antares/study/area/area.h"
+#include "antares/study/study.h"
 
 using namespace Yuni;
 using namespace Antares;

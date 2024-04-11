@@ -25,12 +25,12 @@
 
 #include <yuni/yuni.h>
 
-#include "antares/date/date.h"
-#include "antares/solver/simulation/sim_structure_donnees.h"
-#include "antares/writer/i_writer.h"
 #include <antares/mersenne-twister/mersenne-twister.h>
 #include <antares/study/area/area.h>
 #include <antares/study/fwd.h>
+#include "antares/date/date.h"
+#include "antares/solver/simulation/sim_structure_donnees.h"
+#include "antares/writer/i_writer.h"
 
 namespace Antares
 {

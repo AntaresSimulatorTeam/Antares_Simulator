@@ -23,8 +23,8 @@
 
 #include <memory>
 
-#include "antares/study/binding_constraint/BindingConstraintsRepository.h"
 #include <antares/writer/i_writer.h>
+#include "antares/study/binding_constraint/BindingConstraintsRepository.h"
 
 #include "ITimeSeriesNumbersWriter.h"
 

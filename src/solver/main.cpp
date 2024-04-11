@@ -20,12 +20,12 @@
 */
 #include <yuni/core/system/suspend.h>
 
-#include "antares/application/application.h"
 #include <antares/antares/fatal-error.h>
 #include <antares/args/args_to_utf8.h>
 #include <antares/locale/locale.h>
 #include <antares/logs/logs.h>
 #include <antares/memory/memory.h>
+#include "antares/application/application.h"
 
 using namespace Antares;
 using namespace Yuni;

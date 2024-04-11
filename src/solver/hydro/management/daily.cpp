@@ -29,6 +29,11 @@
 #include <yuni/io/directory.h>
 #include <yuni/io/file.h>
 
+#include <antares/antares/fatal-error.h>
+#include <antares/study/area/scratchpad.h>
+#include <antares/study/study.h>
+#include <antares/utils/utils.h>
+#include <antares/writer/i_writer.h>
 #include "antares/solver/hydro/daily/h2o_j_donnees_mensuelles.h"
 #include "antares/solver/hydro/daily/h2o_j_fonctions.h"
 #include "antares/solver/hydro/daily2/h2o2_j_donnees_mensuelles.h"
@@ -36,11 +41,6 @@
 #include "antares/solver/hydro/management/management.h"
 #include "antares/solver/simulation/sim_extern_variables_globales.h"
 #include "antares/solver/variable/state.h"
-#include <antares/antares/fatal-error.h>
-#include <antares/study/area/scratchpad.h>
-#include <antares/study/study.h>
-#include <antares/utils/utils.h>
-#include <antares/writer/i_writer.h>
 
 using namespace Yuni;
 

@@ -27,9 +27,9 @@
 #include <yuni/yuni.h>
 #include <yuni/io/file.h>
 
+#include <antares/logs/logs.h>
 #include "antares/antares/constants.h"
 #include "antares/study/study.h"
-#include <antares/logs/logs.h>
 
 using namespace Yuni;
 

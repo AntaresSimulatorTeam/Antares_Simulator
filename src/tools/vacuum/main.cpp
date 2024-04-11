@@ -29,11 +29,11 @@
 #include <yuni/job/queue/q-event.h>
 #include <yuni/job/queue/service.h>
 
-#include "antares/antares/antares.h"
 #include <antares/antares/version.h>
 #include <antares/args/args_to_utf8.h>
 #include <antares/locale/locale.h>
 #include <antares/logs/logs.h>
+#include "antares/antares/antares.h"
 
 #include "antares-study.h"
 #include "io.h"
