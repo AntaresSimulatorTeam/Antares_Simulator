@@ -1,8 +1,5 @@
 var NAVTREEINDEX24 =
 {
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw_1_1Data.html":[7,0,0,12,4,6,0,7,0],
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html":[7,0,0,12,4,6,0,9],
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#ae75c526742c65aca4a309c6c16561506":[7,0,0,12,4,6,0,9,1],
 "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation_1_1Data.html":[7,0,0,12,4,6,0,9,0],
 "structAntares_1_1Solver_1_1Variable_1_1SetsOfAreas_1_1Statistics.html":[7,0,0,12,4,23,0],
 "structAntares_1_1Solver_1_1Variable_1_1SpatialAggregateOperation.html":[7,0,0,12,4,24],
@@ -239,7 +236,7 @@ var NAVTREEINDEX24 =
 "suffix-for-constraint-names_8hxx_source.html":[8,0,0,5,0,1,0,1,7],
 "summary_8h_source.html":[8,0,0,5,2,1,1,1,1,4,0],
 "surveyresults_2surveyresults_8h_source.html":[8,0,0,2,10,0,0,0,0,4,2],
-"surveyresults_8h_source.html":[8,0,0,2,10,0,0,0,0,23],
+"surveyresults_8h_source.html":[8,0,0,2,10,0,0,0,0,20],
 "system-memory_8h_source.html":[8,0,0,2,4,0,0,0,0,5],
 "temp-folder_8h_source.html":[8,0,0,5,2,2,9,6,0],
 "tests-matrix-load_8h_source.html":[8,0,0,3,1,0,0,0,2],
@@ -249,5 +246,8 @@ var NAVTREEINDEX24 =
 "text_8hxx_source.html":[8,0,0,5,0,1,0,9],
 "thermal-cluster-item_8h_source.html":[8,0,0,5,2,1,1,2,1,10],
 "thermal-cluster-order_8h_source.html":[8,0,0,5,2,1,1,2,0,4],
-"thermal-cluster_8h_source.html":[8,0,0,5,2,1,5,6]
+"thermal-cluster_8h_source.html":[8,0,0,5,2,1,5,6],
+"thermalAirPollutantEmissions_8h_source.html":[8,0,0,2,10,0,0,0,0,2,38],
+"thermal_2cluster_8hxx_source.html":[8,0,0,1,0,22,0,0,0,5,6,1],
+"thermal_2cluster__list_8h_source.html":[8,0,0,1,0,22,0,0,0,5,6,2]
 };

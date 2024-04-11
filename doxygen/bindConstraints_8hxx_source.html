@@ -332,7 +332,20 @@ $(document).ready(function(){initNavTree('bindConstraints_8hxx_source.html','');
 <div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>    <span class="keywordflow">for</span> (uint i = 0; i != pBCcount; ++i)</div>
 <div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>        pBindConstraints[i].hourEnd(state, hourInTheYear);</div>
 <div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>}</div>
-<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>} <span class="comment">// namespace Antares::Solver::Variable</span></div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span> </div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> NextT&gt;</div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>uint64_t BindingConstraints&lt;NextT&gt;::memoryUsage()<span class="keyword"> const</span></div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span><span class="keyword"></span>{</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>    uint64_t result = 0;</div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i = 0; i != pBCcount; ++i)</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>    {</div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>        result += <span class="keyword">sizeof</span>(NextType) + <span class="keyword">sizeof</span>(<span class="keywordtype">void</span>*); <span class="comment">// overhead vector</span></div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>        result += pBindConstraints[i].memoryUsage();</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>    }</div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>    <span class="keywordflow">return</span> result;</div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>}</div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span> </div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>} <span class="comment">// namespace Antares::Solver::Variable</span></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Study_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a></div><div class="ttdef"><b>Definition</b> study.h:60</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Study_html_a24abc348d810c423a622796e34afe476"><div class="ttname"><a href="classAntares_1_1Data_1_1Study.html#a24abc348d810c423a622796e34afe476">Antares::Data::Study::bindingConstraints</a></div><div class="ttdeci">BindingConstraintsRepository bindingConstraints</div><div class="ttdoc">Binding constraints.</div><div class="ttdef"><b>Definition</b> study.h:576</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1BindingConstraints_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1BindingConstraints.html">Antares::Solver::Variable::BindingConstraints</a></div><div class="ttdef"><b>Definition</b> bindConstraints.h:73</div></div>
