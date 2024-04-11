@@ -82,7 +82,7 @@ protected:
               Simulation::ISimulationObserver* simulationObserver
               );
 
-    void incrementProgression(Progression::Task& progression);
+    void incrementProgression(Progression::Task& progression) const;
 
     void simulationEnd();
 
