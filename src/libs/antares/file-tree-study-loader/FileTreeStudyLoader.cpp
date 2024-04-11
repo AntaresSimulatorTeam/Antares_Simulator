@@ -31,17 +31,32 @@ FileTreeStudyLoader::FileTreeStudyLoader(std::filesystem::path study_path)
 
 }
 
+namespace {
+std::unique_ptr<char[]> copy(std::string_view str) {
+    auto copy = std::unique_ptr<char[]>(new char[str.size() + 1]);
+    std::strcpy(copy.get(), str.data());
+    return copy;
+}
+
+void prepareArgs(std::array<char*, 3>& argv, std::string_view study_path)
+{
+    using namespace std::literals::string_literals;
+    auto arg0 = copy(""s);
+    auto arg1 = copy(study_path);
+    auto arg2 = copy("-s"s);
+    argv[0] = arg0.get();
+    argv[1] = arg1.get();
+    argv[2] = arg2.get();
+}
+} // namespace
+
+
 std::shared_ptr<Antares::Data::Study> FileTreeStudyLoader::load() {
     Antares::Solver::Application application;
-    using namespace std::literals::string_literals;
-    char* argv[] = {"api", "", "-s"};
-    auto argc = 3;
-    auto arg1 = study_path_.string().data();
-    auto arg2 = "-s"s;
-    argv[1] = arg1;
-    argv[2] = arg2.data();
-
-    application.prepare(argc, argv);
+    constexpr unsigned int argc = 3;
+    std::array<char*, argc> argv;
+    prepareArgs(argv, study_path_.string());
+    application.prepare(argc, argv.data());
 
     return application.study();
 }
