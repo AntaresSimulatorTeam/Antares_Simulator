@@ -212,12 +212,11 @@ bool Adequacy::year(Progression::Task& progression,
 
             try
             {
-                NullSimulationObserver simulationObserver;
                 OPT_OptimisationHebdomadaire(createOptimizationOptions(study),
                                              &currentProblem,
                                              study.parameters.adqPatchParams,
                                              resultWriter,
-                                             &simulationObserver);
+                                             simulationObserver);
 
                 computingHydroLevels(study.areas, currentProblem, false);
 
@@ -379,7 +378,7 @@ bool Adequacy::year(Progression::Task& progression,
     return true;
 }
 
-void Adequacy::incrementProgression(Progression::Task& progression)
+void Adequacy::incrementProgression(Progression::Task& progression) const
 {
     for (uint w = 0; w < pNbWeeks; ++w)
     {
