@@ -21,6 +21,7 @@
 #pragma once
 
 #include <memory>
+#include <string>
 
 namespace operations_research
 {
