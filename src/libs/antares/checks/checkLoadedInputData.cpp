@@ -87,7 +87,7 @@ void checkStudyVersion(const AnyString& optStudyFolder)
         throw Error::InvalidStudy(optStudyFolder);
 
     if (version > StudyVersion::latest())
-        throw Error::InvalidVersion(version.toString(),StudyVersion::latest().toString());
+        throw Error::InvalidVersion(version.toString(), StudyVersion::latest().toString());
 }
 // CHECK incompatible de choix simultané des options « simplex range= daily » et « hydro-pricing
 // = MILP ».
@@ -179,8 +179,9 @@ void checkMinStablePower(bool tsGenThermal, const Antares::Data::AreaList& areas
 // Number of columns for Fuel & CO2 cost in thermal clusters must be one, or same as the number of
 // TS
 template<class ExceptionT>
-static void checkThermalColumnNumber(const Antares::Data::AreaList& areas,
-        Antares::Data::TimeSeries::TS Antares::Data::EconomicInputData::*matrix)
+static void checkThermalColumnNumber(
+  const Antares::Data::AreaList& areas,
+  Antares::Data::TimeSeries::TS Antares::Data::EconomicInputData::*matrix)
 {
     ExceptionT exception;
     bool error = false;
@@ -207,14 +208,14 @@ static void checkThermalColumnNumber(const Antares::Data::AreaList& areas,
 
 void checkFuelCostColumnNumber(const Antares::Data::AreaList& areas)
 {
-    checkThermalColumnNumber<Antares::Error::IncompatibleFuelCostColumns>(areas,
-                             &Antares::Data::EconomicInputData::fuelcost);
+    checkThermalColumnNumber<Antares::Error::IncompatibleFuelCostColumns>(
+      areas, &Antares::Data::EconomicInputData::fuelcost);
 }
 
 void checkCO2CostColumnNumber(const Antares::Data::AreaList& areas)
 {
-    checkThermalColumnNumber<Antares::Error::IncompatibleCO2CostColumns>(areas,
-                             &Antares::Data::EconomicInputData::co2cost);
+    checkThermalColumnNumber<Antares::Error::IncompatibleCO2CostColumns>(
+      areas, &Antares::Data::EconomicInputData::co2cost);
 }
 
 } // namespace Antares::Check

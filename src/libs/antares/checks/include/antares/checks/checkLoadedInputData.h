@@ -18,12 +18,16 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include <antares/optimization-options/options.h>
+#include "antares/study/fwd.h"
+#include "antares/optimization-options/options.h"
+
 namespace Antares::Check
 {
+
 void checkOrtoolsUsage(Antares::Data::UnitCommitmentMode ucMode,
                        bool ortoolsUsed,
                        const std::string& solverName);
+
 void checkOrtoolsSolverSpecificParameters(
   const Antares::Data::UnitCommitmentMode& ucMode,
   const Antares::Solver::Optimization::OptimizationOptions& optOptions);
