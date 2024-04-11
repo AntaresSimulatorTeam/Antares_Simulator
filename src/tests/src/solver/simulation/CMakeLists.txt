@@ -93,7 +93,7 @@ set_property(TEST time_series PROPERTY LABELS unit)
 # Tests on hydro final reservoir level functions
 # ===================================
 set(SRC_HYDRO_FINAL_LEVEL
-	${src_libs_antares_study}/parts/hydro/finallevelinflowsmodifyer.h
+	${src_libs_antares_study}/include/antares/study/parts/hydro/finallevelinflowsmodifyer.h
 	${src_libs_antares_study}/parts/hydro/finallevelinflowsmodifyer.cpp
 )
 

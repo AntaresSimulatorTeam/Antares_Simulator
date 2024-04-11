@@ -33,6 +33,7 @@
 namespace Antares::Data
 {
 class PartHydro;
+
 /*!
  ** \brief Final Reservoir Level data for a single area
  */

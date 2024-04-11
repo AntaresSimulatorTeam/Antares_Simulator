@@ -6,7 +6,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <boost/test/unit_test.hpp>
 
-#include "hydro-final-reservoir-level-functions.h"
+#include "include/antares/solver/simulation/hydro-final-reservoir-level-functions.h"
 #include <antares/study/study.h>
 
 using namespace Antares::Solver;
