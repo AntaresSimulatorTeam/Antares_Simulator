@@ -19,6 +19,7 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 #pragma once
+#include <memory>
 #include <antares/inifile/inifile.h>
 #include "properties.h"
 #include "series.h"
