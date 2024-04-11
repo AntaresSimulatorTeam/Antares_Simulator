@@ -27,7 +27,7 @@ namespace Antares::API
 {
 void SimulationObserver::notifyHebdoProblem(const PROBLEME_HEBDO* problemeHebdo,
                                             int optimizationNumber,
-                                            std::string name)
+                                            std::string_view name)
 {
     if (optimizationNumber != 1) return; //We only care about first optimization
     Solver::HebdoProblemToLpsTranslator translator;
@@ -36,7 +36,7 @@ void SimulationObserver::notifyHebdoProblem(const PROBLEME_HEBDO* problemeHebdo,
     if (year == 1 && week == 1) {
         lps_.replaceConstantData(translator.commonProblemData(problemeHebdo->ProblemeAResoudre.get()));
     }
-    lps_.addHebdoData({year, week}, translator.translate(problemeHebdo->ProblemeAResoudre.get(), std::move(name)));
+    lps_.addHebdoData({year, week}, translator.translate(problemeHebdo->ProblemeAResoudre.get(), name));
 }
 Solver::LpsFromAntares&& SimulationObserver::acquireLps() noexcept
 {

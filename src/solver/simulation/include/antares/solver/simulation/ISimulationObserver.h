@@ -32,7 +32,7 @@ public:
     virtual ~ISimulationObserver() = default;
     virtual void notifyHebdoProblem(const PROBLEME_HEBDO* problemeHebdo,
                                     int optimizationNumber,
-                                    std::string name)
+                                    std::string_view name)
       = 0;
 };
 
@@ -40,7 +40,7 @@ class NullSimulationObserver : public ISimulationObserver
 {
 public:
     ~NullSimulationObserver() override = default;
-    void notifyHebdoProblem(const PROBLEME_HEBDO*, int, std::string) override
+    void notifyHebdoProblem(const PROBLEME_HEBDO*, int, std::string_view) override
     {
     }
 };
