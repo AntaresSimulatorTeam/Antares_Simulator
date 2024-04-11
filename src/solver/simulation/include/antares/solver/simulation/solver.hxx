@@ -363,7 +363,7 @@ void ISimulation<ImplementationType>::run()
         logs.info() << " Starting the simulation";
         uint finalYear = 1 + study.runtime->rangeLimits.year[Data::rangeEnd];
         {
-            duration_collector("mc_years") << [&finalYear, state] {
+            durationCollector("mc_years") << [&finalYear, state] {
                 loopThroughYears(0, finalYear, state);
             };
         }
@@ -372,8 +372,8 @@ void ISimulation<ImplementationType>::run()
         TSGenerator::DestroyAll(study);
 
         // Post operations
-        duration_collector("post_processing") << [] {
-            ImplementationType::simulationEnd()
+        durationCollector("post_processing") << [] {
+            ImplementationType::simulationEnd();
         };
 
         ImplementationType::variables.simulationEnd();
@@ -449,28 +449,28 @@ void ISimulation<ImplementationType>::regenerateTimeSeries(uint year)
     // Load
     if (pData.haveToRefreshTSLoad && (year % pData.refreshIntervalLoad == 0))
     {
-        duration_collector("tsgen_load") << [] {
+        durationCollector("tsgen_load") << [] {
             GenerateTimeSeries<Data::timeSeriesLoad>(study, year, pResultWriter);
         };
     }
     // Solar
     if (pData.haveToRefreshTSSolar && (year % pData.refreshIntervalSolar == 0))
     {
-        duration_collector("tsgen_solar") << [] {
+        durationCollector("tsgen_solar") << [] {
             GenerateTimeSeries<Data::timeSeriesSolar>(study, year, pResultWriter);
         };
     }
     // Wind
     if (pData.haveToRefreshTSWind && (year % pData.refreshIntervalWind == 0))
     {
-        duration_collector("tsgen_wind") << [] {
+        durationCollector("tsgen_wind") << [] {
             GenerateTimeSeries<Data::timeSeriesWind>(study, year, pResultWriter);
         };
     }
     // Hydro
     if (pData.haveToRefreshTSHydro && (year % pData.refreshIntervalHydro == 0))
     {
-        duration_collector("tsgen_hydro") << [] {
+        durationCollector("tsgen_hydro") << [] {
             GenerateTimeSeries<Data::timeSeriesHydro>(study, year, pResultWriter);
         };
     }
@@ -478,7 +478,7 @@ void ISimulation<ImplementationType>::regenerateTimeSeries(uint year)
     // Thermal
     const bool refreshTSonCurrentYear = (year % pData.refreshIntervalThermal == 0);
 
-    duration_collector("tsgen_thermal") << [&]
+    durationCollector("tsgen_thermal") << [&]
     {
         if (refreshTSonCurrentYear)
         {

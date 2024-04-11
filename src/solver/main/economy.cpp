@@ -38,10 +38,9 @@ void Application::runSimulationInEconomicMode()
 
     if (!(pSettings.noOutput || pSettings.tsGeneratorsOnly))
     {
-        Benchmarking::Timer timer;
-        simulation.writeResults(/*synthesis:*/ true);
-        timer.stop();
-        pDurationCollector.addDuration("synthesis_export", timer.get_duration());
+        durationCollector("synthesis_export") << [&simulation] {
+            simulation.writeResults(/*synthesis:*/ true);
+        };
 
         this->pOptimizationInfo = simulation.getOptimizationInfo();
     }
