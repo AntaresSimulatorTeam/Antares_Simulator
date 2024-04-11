@@ -477,17 +477,17 @@ void ISimulation<ImplementationType>::regenerateTimeSeries(uint year)
 
     // Thermal
     const bool refreshTSonCurrentYear = (year % pData.refreshIntervalThermal == 0);
-    Benchmarking::Timer timer;
 
-    if (refreshTSonCurrentYear)
+    duration_collector("tsgen_thermal") << [&]
     {
-        auto clusters = getAllClustersToGen(study.areas, pData.haveToRefreshTSThermal);
+        if (refreshTSonCurrentYear)
+        {
+            auto clusters = getAllClustersToGen(study.areas, pData.haveToRefreshTSThermal);
 
-        GenerateThermalTimeSeries(study, clusters, year, pResultWriter);
-    }
+            GenerateThermalTimeSeries(study, clusters, year, pResultWriter);
+        }
+    };
 
-    timer.stop();
-    pDurationCollector.addDuration("tsgen_thermal", timer.get_duration());
 }
 
 template<class ImplementationType>
