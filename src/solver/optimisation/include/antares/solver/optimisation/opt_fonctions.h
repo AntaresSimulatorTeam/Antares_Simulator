@@ -26,7 +26,6 @@
 #include "adequacy_patch_csr/hourly_csr_problem.h"
 #include "opt_period_string_generator_base.h"
 #include "antares/study/parameters/adq-patch-params.h"
-#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include <antares/writer/i_writer.h>
 
 using AdqPatchParams = Antares::Data::AdequacyPatch::AdqPatchParams;
@@ -117,6 +116,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(PROB
 void OPT_InitialiserLesCoutsLineaireCoutsDeDemarrage(PROBLEME_HEBDO*, const int, const int);
 void OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HEBDO*, int, int);
 void OPT_DecompteDesVariablesEtDesContraintesCoutsDeDemarrage(PROBLEME_HEBDO*);
+void OPT_DecompteDesVariablesEtDesContraintesReserves(PROBLEME_HEBDO*);
 void OPT_InitialiserNombreMinEtMaxDeGroupesCoutsDeDemarrage(PROBLEME_HEBDO*);
 void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO*);
 double OPT_SommeDesPminThermiques(const PROBLEME_HEBDO*, int, uint);

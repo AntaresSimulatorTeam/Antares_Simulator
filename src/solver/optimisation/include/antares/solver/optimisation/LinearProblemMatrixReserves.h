@@ -21,38 +21,23 @@
 #pragma once
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
-#include "ProblemMatrixEssential.h"
 #include "constraints/ConstraintGroup.h"
-#include "constraints/Group1.h"
-#include "constraints/BindingConstraintDayGroup.h"
-#include "constraints/BindingConstraintWeekGroup.h"
-#include "constraints/HydroPowerGroup.h"
-#include "constraints/HydraulicSmoothingGroup.h"
-#include "constraints/MinMaxHydroPowerGroup.h"
-#include "constraints/MaxPumpingGroup.h"
-#include "constraints/AreaHydroLevelGroup.h"
-#include "constraints/FinalStockGroup.h"
+#include "ProblemMatrixEssential.h"
+#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
+#include "constraints/ReserveParticipationGroup.h"
 
 #include <antares/study/study.h>
 
 using namespace Antares::Data;
-class LinearProblemMatrix : public ProblemMatrixEssential
+
+class LinearProblemMatrixReserves : public ProblemMatrixEssential
 {
 public:
-    explicit LinearProblemMatrix(PROBLEME_HEBDO* problemeHebdo, ConstraintBuilder& builder);
-
-    void Run() override;
+    explicit LinearProblemMatrixReserves(PROBLEME_HEBDO* problemeHebdo,
+                                        bool Simulation,
+                                        ConstraintBuilder& builder);
 
 private:
-    ConstraintBuilder& builder_;
-    Group1 group1_;
-    BindingConstraintDayGroup bindingConstraintDayGroup_;
-    BindingConstraintWeekGroup bindingConstraintWeekGroup_;
-    HydroPowerGroup hydroPowerGroup_;
-    HydraulicSmoothingGroup hydraulicSmoothingGroup_;
-    MinMaxHydroPowerGroup minMaxHydroPowerGroup_;
-    MaxPumpingGroup maxPumpingGroup_;
-    AreaHydroLevelGroup areaHydroLevelGroup_;
-    FinalStockGroup finalStockGroup_;
-
+    bool simulation_ = false;
+    ReserveParticipationGroup reserveParticipationGroup_;
 };

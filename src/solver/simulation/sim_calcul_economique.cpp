@@ -312,63 +312,65 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
             pbPalier.NomsDesPaliersThermiques[cluster->index] = cluster->name().c_str();
             
         }
-
-        for (auto const& [key, val] : area.allCapacityReservations.areaCapacityReservationsUp)
+        if (study.parameters.unitCommitment.ucMode
+            != Antares::Data::UnitCommitmentMode::ucHeuristicFast)
         {
-            CAPACITY_RESERVATION areaCapacityReservationsUp;
-            areaCapacityReservationsUp.failureCost = val.failureCost;
-            areaCapacityReservationsUp.spillageCost = val.spillageCost;
-            areaCapacityReservationsUp.reserveName = key;
-            if (val.need.timeSeries.width > 0)
+            for (auto const& [key, val] : area.allCapacityReservations.areaCapacityReservationsUp)
             {
-                for (int indexSeries = 0; indexSeries < val.need.timeSeries.height; indexSeries++)
+                CAPACITY_RESERVATION areaCapacityReservationsUp;
+                areaCapacityReservationsUp.failureCost = val.failureCost;
+                areaCapacityReservationsUp.spillageCost = val.spillageCost;
+                areaCapacityReservationsUp.reserveName = key;
+                if (val.need.timeSeries.width > 0)
                 {
-                    areaCapacityReservationsUp.need.push_back(val.need.timeSeries.entry[0][indexSeries]);
+                    for (int indexSeries = 0; indexSeries < val.need.timeSeries.height; indexSeries++)
+                    {
+                        areaCapacityReservationsUp.need.push_back(val.need.timeSeries.entry[0][indexSeries]);
+                    }
                 }
-            }
-            for (auto cluster : area.thermal.list.each_enabled_and_not_mustrun())
-            {
-                RESERVE_PARTICIPATION reserveParticipation;
-                if (cluster->isParticipatingInReserve(key))
+                for (auto cluster : area.thermal.list.each_enabled_and_not_mustrun())
                 {
-                    reserveParticipation.maxPower = cluster->reserveMaxPower(key);
-                    reserveParticipation.participationCost = cluster->reserveCost(key);
-                    reserveParticipation.clusterName = cluster->name();
-                    areaCapacityReservationsUp.AllReservesParticipation.push_back(
-                      reserveParticipation);
+                    RESERVE_PARTICIPATION reserveParticipation;
+                    if (cluster->isParticipatingInReserve(key))
+                    {
+                        reserveParticipation.maxPower = cluster->reserveMaxPower(key);
+                        reserveParticipation.participationCost = cluster->reserveCost(key);
+                        reserveParticipation.clusterName = cluster->name();
+                        areaCapacityReservationsUp.AllReservesParticipation.push_back(
+                          reserveParticipation);
+                    }
                 }
-            }
 
-            areaReserves.areaCapacityReservationsUp.push_back(areaCapacityReservationsUp);
-        }
-
-        for (auto const& [key, val] : area.allCapacityReservations.areaCapacityReservationsDown)
-        {
-            CAPACITY_RESERVATION areaCapacityReservationsDown;
-            areaCapacityReservationsDown.failureCost = val.failureCost;
-            areaCapacityReservationsDown.spillageCost = val.spillageCost;
-            areaCapacityReservationsDown.reserveName = key;
-            if (val.need.timeSeries.width > 0)
-            {
-                for (int indexSeries = 0; indexSeries < val.need.timeSeries.height; indexSeries++)
-                {
-                    areaCapacityReservationsDown.need.push_back(val.need.timeSeries.entry[0][indexSeries]);
-                }
+                areaReserves.areaCapacityReservationsUp.push_back(areaCapacityReservationsUp);
             }
-            for (auto cluster : area.thermal.list.each_enabled_and_not_mustrun())
+            for (auto const& [key, val] : area.allCapacityReservations.areaCapacityReservationsDown)
             {
-                RESERVE_PARTICIPATION reserveParticipation;
-                if (cluster->isParticipatingInReserve(key))
+                CAPACITY_RESERVATION areaCapacityReservationsDown;
+                areaCapacityReservationsDown.failureCost = val.failureCost;
+                areaCapacityReservationsDown.spillageCost = val.spillageCost;
+                areaCapacityReservationsDown.reserveName = key;
+                if (val.need.timeSeries.width > 0)
                 {
-                    reserveParticipation.maxPower = cluster->reserveMaxPower(key);
-                    reserveParticipation.participationCost = cluster->reserveCost(key);
-                    reserveParticipation.clusterName = cluster->name();
-                    areaCapacityReservationsDown.AllReservesParticipation.push_back(
-                      reserveParticipation);
+                    for (int indexSeries = 0; indexSeries < val.need.timeSeries.height; indexSeries++)
+                    {
+                        areaCapacityReservationsDown.need.push_back(val.need.timeSeries.entry[0][indexSeries]);
+                    }
                 }
-            }
+                for (auto cluster : area.thermal.list.each_enabled_and_not_mustrun())
+                {
+                    RESERVE_PARTICIPATION reserveParticipation;
+                    if (cluster->isParticipatingInReserve(key))
+                    {
+                        reserveParticipation.maxPower = cluster->reserveMaxPower(key);
+                        reserveParticipation.participationCost = cluster->reserveCost(key);
+                        reserveParticipation.clusterName = cluster->name();
+                        areaCapacityReservationsDown.AllReservesParticipation.push_back(
+                          reserveParticipation);
+                    }
+                }
 
-            areaReserves.areaCapacityReservationsDown.push_back(areaCapacityReservationsDown);
+                areaReserves.areaCapacityReservationsDown.push_back(areaCapacityReservationsDown);
+            }
         }
         
 

@@ -288,7 +288,7 @@ bool ClusterList<ClusterT>::loadReserveParticipations(Area& area, const AnyStrin
 
               if (tmp == "cluster-name")
               {
-                  tmpClusterName = p->value;
+                  TransformNameIntoID(p->value, tmpClusterName);
               }
               else if (tmp == "max-power")
               {
@@ -317,7 +317,11 @@ bool ClusterList<ClusterT>::loadReserveParticipations(Area& area, const AnyStrin
           }
           else
           {
-              logs.warning() << area.name << ": does not contains this reserve " << section.name;
+              if (!reserve)
+                logs.warning() << area.name << ": does not contains this reserve " << section.name;
+              if (!cluster)
+                  logs.warning() << area.name << ": does not contains this cluster "
+                                 << tmpClusterName;
           }
       });
     return true;

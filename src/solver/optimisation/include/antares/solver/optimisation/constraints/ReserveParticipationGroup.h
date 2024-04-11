@@ -20,19 +20,22 @@
  */
 
 #pragma once
+#include "AbstractStartUpCostsGroup.h"
 #include "ConstraintGroup.h"
 #include "PMaxReserve.h"
 
 /**
- * @brief Group of MinDownTime constraints
+ * @brief Group of reserve constraints
  *
  */
 
-class ReserveParticipationGroup : public ConstraintGroup
+class ReserveParticipationGroup : public AbstractStartUpCostsGroup
 {
 public:
-    using ConstraintGroup::ConstraintGroup;
-
+    using AbstractStartUpCostsGroup::AbstractStartUpCostsGroup;
+    ReserveParticipationGroup(PROBLEME_HEBDO* problemeHebdo,
+                              bool simulation,
+                              ConstraintBuilder& builder);
     void BuildConstraints() override;
 
 private:

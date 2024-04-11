@@ -21,6 +21,16 @@
 
 #include "antares/solver/optimisation/constraints/ReserveParticipationGroup.h"
 
+
+ReserveParticipationGroup::ReserveParticipationGroup(PROBLEME_HEBDO* problemeHebdo,
+                                                     bool simulation,
+                                                     ConstraintBuilder& builder) :
+AbstractStartUpCostsGroup(problemeHebdo,simulation,builder)
+{
+    this->simulation_ = simulation;
+}
+
+
 PMaxReserveData ReserveParticipationGroup::GetPMaxReserveDataFromProblemHebdo()
 {
     return {.Simulation = simulation_, .areaReserves = problemeHebdo_->allReserves};

@@ -252,31 +252,11 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
     }
 
     //Reserves
-    for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
-    {
-        for (auto vectorReserveUp :
-             problemeHebdo->allReserves.thermalAreaReserves[pays].areaCapacityReservationsUp)
-        {
-            for (auto clusterUp : vectorReserveUp.AllReservesParticipation)
-            {
-                if (clusterUp.maxPower != -1)
-                    ProblemeAResoudre->NombreDeContraintes += nombreDePasDeTempsPourUneOptimisation;
-            }
-        }
-        for (auto vectorReserveDown :
-             problemeHebdo->allReserves.thermalAreaReserves[pays].areaCapacityReservationsDown)
-        {
-            for (auto clusterDown : vectorReserveDown.AllReservesParticipation)
-            {
-                if (clusterDown.maxPower != -1)
-                    ProblemeAResoudre->NombreDeContraintes += nombreDePasDeTempsPourUneOptimisation;
-            }
-        }
-    }
-
+    //OPT_DecompteDesVariablesEtDesContraintesReserves(problemeHebdo);
     if (problemeHebdo->OptimisationAvecCoutsDeDemarrage)
     {
         OPT_DecompteDesVariablesEtDesContraintesCoutsDeDemarrage(problemeHebdo);
+        OPT_DecompteDesVariablesEtDesContraintesReserves(problemeHebdo);
     }
 
     return mxPaliers;

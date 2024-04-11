@@ -39,8 +39,7 @@ LinearProblemMatrix::LinearProblemMatrix(PROBLEME_HEBDO* problemeHebdo,
  minMaxHydroPowerGroup_(problemeHebdo, builder),
  maxPumpingGroup_(problemeHebdo, builder),
  areaHydroLevelGroup_(problemeHebdo, builder),
- finalStockGroup_(problemeHebdo, builder),
- reserveParticipationGroup_(problemeHebdo, builder)
+ finalStockGroup_(problemeHebdo, builder)
 {
     constraintgroups_ = {&group1_,
                          &bindingConstraintDayGroup_,
@@ -50,8 +49,7 @@ LinearProblemMatrix::LinearProblemMatrix(PROBLEME_HEBDO* problemeHebdo,
                          &minMaxHydroPowerGroup_,
                          &maxPumpingGroup_,
                          &areaHydroLevelGroup_,
-                         &finalStockGroup_,
-                         &reserveParticipationGroup_};
+                         &finalStockGroup_};
 }
 
 void LinearProblemMatrix::Run()
