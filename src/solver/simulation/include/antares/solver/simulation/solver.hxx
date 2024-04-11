@@ -23,6 +23,7 @@
 
 #include "antares/solver//variable/constants.h"
 #include <antares/logs/logs.h>
+#include <antares/timer/timer.h>
 #include <antares/date/date.h>
 #include <antares/benchmarking/timer.h>
 #include <antares/exception/InitializationError.hpp>
@@ -167,10 +168,10 @@ public:
             simulation_->prepareClustersInMustRunMode(scratchmap, y);
 
             // 4 - Hydraulic ventilation
-            Benchmarking::Timer timer;
-            hydroManagement.makeVentilation(randomReservoirLevel, state[numSpace], y, scratchmap);
-            timer.stop();
-            pDurationCollector.addDuration("hydro_ventilation", timer.get_duration());
+            durationCollector("hydro_ventilation") << [&]
+            {
+                hydroManagement.makeVentilation(randomReservoirLevel, state[numSpace], y, scratchmap);
+            };
 
             // Updating the state
             state[numSpace].year = y;
