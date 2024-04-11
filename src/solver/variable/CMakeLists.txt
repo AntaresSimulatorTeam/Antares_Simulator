@@ -67,8 +67,6 @@ source_group("variable\\common" FILES ${SRC_VARIABLE_COMMON})
 
 set(SRC_VARIABLE_ADEQUACY
         include/antares/solver/variable/adequacy/all.h
-        adequacy/area.memory-estimation.cpp
-        adequacy/bc.memory-estimation.cpp
         include/antares/solver/variable/adequacy/links.h
         include/antares/solver/variable/adequacy/spilledEnergy.h
         include/antares/solver/variable/adequacy/overallCost.h
@@ -79,8 +77,6 @@ source_group("variable\\adequacy" FILES ${SRC_VARIABLE_ADEQUACY})
 set(SRC_VARIABLE_ECONOMY
         include/antares/solver/variable/economy/all.h
         include/antares/solver/variable/economy/links.h
-        economy/area.memory-estimation.cpp
-        economy/bc.memory-estimation.cpp
 
         # Variables for Economy
         include/antares/solver/variable/economy/max-mrg.h
@@ -167,10 +163,6 @@ target_link_libraries(antares-solver-variable
 add_library(antares-solver-variable-info
         include/antares/solver/variable/adequacy/all.h
         include/antares/solver/variable/economy/all.h
-        economy/area.memory-estimation.cpp
-        adequacy/area.memory-estimation.cpp
-        economy/bc.memory-estimation.cpp
-        adequacy/bc.memory-estimation.cpp
         include/antares/solver/variable/surveyresults.h
         include/antares/solver/variable/surveyresults/surveyresults.h
         include/antares/solver/variable/surveyresults/data.h
