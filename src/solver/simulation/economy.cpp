@@ -122,9 +122,7 @@ bool Economy::year(Progression::Task& progression,
                    bool isFirstPerformedYearOfSimulation,
                    const HYDRO_VENTILATION_RESULTS& hydroVentilationResults,
                    OptimizationStatisticsWriter& optWriter,
-                   const Antares::Data::Area::ScratchMap& scratchmap,
-                   Simulation::ISimulationObserver* simulationObserver
-                   )
+                   const Antares::Data::Area::ScratchMap& scratchmap)
 {
     // No failed week at year start
     failedWeekList.clear();
