@@ -24,8 +24,12 @@
 // NOTE : template includes are used here to reduce template instanciation
 // which still seems to be really cpu/memory consuming
 
-#include "../../state.h"
 #include <vector>
+
+#include "antares/solver/variable/info.h"
+#include "antares/solver/variable/storage/results.h"
+
+#include "../../state.h"
 
 namespace Antares
 {
@@ -33,8 +37,7 @@ namespace Solver
 {
 namespace Variable
 {
-namespace LINK_NAMESPACE
-{
+
 struct VCardAllLinks
 {
     //! Caption
@@ -42,11 +45,13 @@ struct VCardAllLinks
     {
         return "Links";
     }
+
     //! Unit
     static std::string Unit()
     {
         return "";
     }
+
     //! The short description of the variable
     static const char* Description()
     {
@@ -74,7 +79,8 @@ struct VCardAllLinks
 
 }; // class VCard
 
-class Links //: public Variable::IVariable<Links<NextT>, NextT, VCardAllLinks>
+template<class VariablePerLink>
+class Links
 {
 public:
     //! Type of the next static variable
@@ -98,7 +104,8 @@ public:
     {
         enum
         {
-            count = NextType::template Statistics<CDataLevel, CFile>::count
+            count = NextType::template Statistics < CDataLevel,
+            CFile > ::count
         };
     };
 
@@ -184,21 +191,20 @@ public:
     }
 
     template<class VCardToFindT>
-    void retrieveResultsForArea(typename Storage<VCardToFindT>::ResultsType** result,
-                                const Data::Area*)
+    void retrieveResultsForArea(Storage<VCardToFindT>::ResultsType** result, const Data::Area*)
     {
         *result = NULL;
     }
 
     template<class VCardToFindT>
-    void retrieveResultsForThermalCluster(typename Storage<VCardToFindT>::ResultsType** result,
+    void retrieveResultsForThermalCluster(Storage<VCardToFindT>::ResultsType** result,
                                           const Data::ThermalCluster*)
     {
         *result = NULL;
     }
 
     template<class VCardToFindT>
-    void retrieveResultsForLink(typename Storage<VCardToFindT>::ResultsType** result,
+    void retrieveResultsForLink(Storage<VCardToFindT>::ResultsType** result,
                                 const Data::AreaLink* link)
     {
         pLinks[link->indexForArea].template retrieveResultsForLink<VCardToFindT>(result, link);
@@ -218,11 +224,10 @@ public:
 
 }; // class Links
 
-} // namespace LINK_NAMESPACE
 } // namespace Variable
 } // namespace Solver
 } // namespace Antares
 
-#include "links.hxx.inc.hxx"
+#include "links.hxx"
 
 #endif // __SOLVER_VARIABLE_INC_LINK_H__

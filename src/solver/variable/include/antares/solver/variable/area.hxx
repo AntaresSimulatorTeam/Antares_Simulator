@@ -23,6 +23,8 @@
 
 #include <antares/study/filter.h>
 
+#include "antares/solver/variable/economy/dispatchable-generation-margin.h"
+
 namespace Antares
 {
 namespace Solver
@@ -268,6 +270,251 @@ inline void Areas<NextT>::retrieveResultsForLink(
   const Data::AreaLink* link)
 {
     pAreas[link->from->index].template retrieveResultsForLink<VCardToFindT>(result, link);
+}
+
+template<class NextT>
+Areas<NextT>::~Areas()
+{
+    // Releasing the memory occupied by the areas
+    delete[] pAreas;
+}
+
+template<class NextT>
+void Areas<NextT>::initializeFromStudy(Data::Study& study)
+{
+    // The total number of areas
+    pAreaCount = study.areas.size();
+
+    // Reserving the memory
+    pAreas = new NextType[pAreaCount];
+
+    // For each area...
+    uint tick = 6;
+    uint oldPercent = 0;
+    for (uint i = 0; i != pAreaCount; ++i)
+    {
+        // Instancing a new set of variables of the area
+        auto* currentArea = study.areas.byIndex[i];
+        if (!(--tick))
+        {
+            uint newPercent = ((i * 100u) / pAreaCount);
+            if (newPercent != oldPercent)
+            {
+                logs.info() << "Allocating resources " << ((i * 100u) / pAreaCount) << "%";
+                oldPercent = newPercent;
+            }
+            // Reset the tick
+            tick = 6;
+        }
+
+        // Initialize the variables
+        // From the study
+        pAreas[i].initializeFromStudy(study);
+        // From the area
+        pAreas[i].initializeFromArea(&study, currentArea);
+        // Does current output variable appears non applicable in areas' output files, not
+        // districts'. Note that digest gather area and district results.
+        pAreas[i].broadcastNonApplicability(not currentArea->hydro.reservoirManagement);
+
+        // For each current area's variable, getting the print status, that is :
+        // is variable's column(s) printed in output (areas) reports ?
+        pAreas[i].getPrintStatusFromStudy(study);
+
+        pAreas[i].supplyMaxNumberOfColumns(study);
+    }
+}
+
+template<class NextT>
+void Areas<NextT>::simulationBegin()
+{
+    for (uint i = 0; i != pAreaCount; ++i)
+    {
+        pAreas[i].simulationBegin();
+    }
+}
+
+template<class NextT>
+void Areas<NextT>::simulationEnd()
+{
+    for (uint i = 0; i != pAreaCount; ++i)
+    {
+        pAreas[i].simulationEnd();
+    }
+}
+
+template<class NextT>
+void Areas<NextT>::hourForEachArea(State& state, uint numSpace)
+{
+    // For each area...
+    state.study.areas.each(
+      [&](Data::Area& area)
+      {
+          state.area = &area; // the current area
+
+          // Initializing the state for the current area
+          state.initFromAreaIndex(area.index, numSpace);
+
+          for (const auto& cluster : area.thermal.list.each_enabled())
+          {
+              // Intiializing the state for the current thermal cluster
+              state.initFromThermalClusterIndex(cluster->areaWideIndex);
+          }
+
+          // Variables
+          auto& variablesForArea = pAreas[area.index];
+          variablesForArea.hourForEachArea(state, numSpace);
+
+          // All links
+          auto end = area.links.end();
+          for (auto i = area.links.begin(); i != end; ++i)
+          {
+              state.link = i->second;
+              // Variables
+              variablesForArea.hourForEachLink(state, numSpace);
+          }
+      }); // for each area
+}
+
+template<class NextT>
+void Areas<NextT>::weekForEachArea(State& state, uint numSpace)
+{
+    // For each area...
+    state.study.areas.each(
+      [&](Data::Area& area)
+      {
+          state.area = &area; // the current area
+
+          // Initializing the state for the current area
+          state.initFromAreaIndex(area.index, numSpace);
+
+          auto& variablesForArea = pAreas[area.index];
+
+          // DTG MRG
+          state.dispatchableMargin
+            = variablesForArea
+                .template retrieveHourlyResultsForCurrentYear<Economy::VCardDispatchableGenMargin>(
+                  numSpace);
+
+          variablesForArea.weekForEachArea(state, numSpace);
+
+          // NOTE
+          // currently, the event is not broadcasted to thermal
+          // clusters and links
+      }); // for each area
+}
+
+template<class NextT>
+void Areas<NextT>::yearBegin(uint year, uint numSpace)
+{
+    for (uint i = 0; i != pAreaCount; ++i)
+        pAreas[i].yearBegin(year, numSpace);
+}
+
+template<class NextT>
+void Areas<NextT>::yearEndBuild(State& state, uint year, uint numSpace)
+{
+    // For each area...
+    state.study.areas.each(
+      [&](Data::Area& area)
+      {
+          state.area = &area; // the current area
+
+          // Initializing the state for the current area
+          state.initFromAreaIndex(area.index, numSpace);
+
+          // Variables
+          auto& variablesForArea = pAreas[area.index];
+
+          for (const auto& cluster : area.thermal.list.each_enabled())
+          {
+              state.thermalCluster = cluster.get();
+              state.yearEndResetThermal();
+
+              // Variables
+              variablesForArea.yearEndBuildPrepareDataForEachThermalCluster(state, year, numSpace);
+
+              // Building the end of year
+              state.yearEndBuildFromThermalClusterIndex(cluster->areaWideIndex);
+
+              // Variables
+              variablesForArea.yearEndBuildForEachThermalCluster(state, year, numSpace);
+          } // for each thermal cluster
+      });   // for each area
+}
+
+template<class NextT>
+void Areas<NextT>::yearEnd(uint year, uint numSpace)
+{
+    for (uint i = 0; i != pAreaCount; ++i)
+    {
+        // Broadcast to all areas
+        pAreas[i].yearEnd(year, numSpace);
+    }
+}
+
+template<class NextT>
+void Areas<NextT>::computeSummary(std::map<unsigned int, unsigned int>& numSpaceToYear,
+                                  unsigned int nbYearsForCurrentSummary)
+{
+    for (uint i = 0; i != pAreaCount; ++i)
+    {
+        // Broadcast to all areas
+        pAreas[i].computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
+    }
+}
+
+template<class NextT>
+void Areas<NextT>::weekBegin(State& state)
+{
+    for (uint i = 0; i != pAreaCount; ++i)
+        pAreas[i].weekBegin(state);
+}
+
+template<class NextT>
+void Areas<NextT>::weekEnd(State& state)
+{
+    for (uint i = 0; i != pAreaCount; ++i)
+        pAreas[i].weekEnd(state);
+}
+
+template<class NextT>
+void Areas<NextT>::hourBegin(uint hourInTheYear)
+{
+    for (uint i = 0; i != pAreaCount; ++i)
+        pAreas[i].hourBegin(hourInTheYear);
+}
+
+template<class NextT>
+void Areas<NextT>::hourForEachLink(State& state, uint numSpace)
+{
+    for (uint i = 0; i != pAreaCount; ++i)
+        pAreas[i].hourForEachLink(state, numSpace);
+}
+
+template<class NextT>
+void Areas<NextT>::hourEnd(State& state, uint hourInTheYear)
+{
+    for (uint i = 0; i != pAreaCount; ++i)
+        pAreas[i].hourEnd(state, hourInTheYear);
+}
+
+template<class NextT>
+void Areas<NextT>::beforeYearByYearExport(uint year, uint numSpace)
+{
+    for (uint i = 0; i != pAreaCount; ++i)
+        pAreas[i].beforeYearByYearExport(year, numSpace);
+}
+
+template<class NextT>
+uint64_t Areas<NextT>::memoryUsage() const
+{
+    uint64_t result = 0;
+    for (unsigned int i = 0; i != pAreaCount; ++i)
+    {
+        result += sizeof(NextType) + sizeof(void*); // overhead vector
+        result += pAreas[i].memoryUsage();
+    }
+    return result;
 }
 
 } // namespace Variable

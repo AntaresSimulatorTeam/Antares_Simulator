@@ -2,7 +2,6 @@ set(PROJ logs)
 set(HEADERS
         include/antares/${PROJ}/cleaner.h
         include/antares/${PROJ}/logs.h
-        include/antares/${PROJ}/logs.hxx
         include/antares/${PROJ}/hostinfo.h
         include/antares/${PROJ}/hostname.hxx
 )

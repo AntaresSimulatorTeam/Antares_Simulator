@@ -195,10 +195,11 @@ target_link_libraries(model_antares
 		PUBLIC
 		utils
 		sirius_solver
-		infeasible_problem_analysis
 		antares-solver-simulation
 		Antares::benchmarking
         Antares::optimization-options
+		PRIVATE
+		infeasible_problem_analysis
 )
 
 target_include_directories(model_antares
