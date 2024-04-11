@@ -33,15 +33,8 @@ struct ProblemHebdoId
 {
     unsigned int year;
     unsigned int week;
-
-    bool operator<(const ProblemHebdoId& other) const
-    {
-        if (year < other.year)
-            return true;
-        if (year == other.year)
-            return week < other.week;
-        return false;
-    }
+    //Order of comparison is order of member declaration
+    auto operator<=>(const ProblemHebdoId& other) const = default;
 };
 
 // Type de données inutile car les matrices de tous les pbs hebdo sont

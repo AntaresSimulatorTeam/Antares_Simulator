@@ -28,6 +28,11 @@
 
 namespace Antares::Solver
 {
+class HebdoProblemTranslationException: public std::runtime_error
+{
+public:
+    explicit HebdoProblemTranslationException(const std::string& string) noexcept;
+};
 
 class HebdoProblemToLpsTranslator
 {

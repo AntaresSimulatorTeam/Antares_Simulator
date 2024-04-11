@@ -58,18 +58,18 @@ ConstantDataFromAntaresPtr HebdoProblemToLpsTranslator::commonProblemData(const 
         return nullptr;
 
     if (problem->NombreDeVariables <= 0) {
-        throw std::runtime_error("NombreDeVariables must be strictly positive");
+        throw HebdoProblemTranslationException("NombreDeVariables must be strictly positive");
     }
     if (problem->NombreDeContraintes <= 0) {
-        throw std::runtime_error("NombreDeContraintes must be strictly positive");
+        throw HebdoProblemTranslationException("NombreDeContraintes must be strictly positive");
     }
 
     if (problem->NombreDeContraintes > problem->IndicesDebutDeLigne.size()) {
-        throw std::runtime_error("NombreDeContraintes exceed IndicesDebutDeLigne size");
+        throw HebdoProblemTranslationException("NombreDeContraintes exceed IndicesDebutDeLigne size");
     }
 
     if (problem->NombreDeContraintes > problem->NombreDeTermesDesLignes.size()) {
-        throw std::runtime_error("NombreDeContraintes exceed NombreDeTermesDesLignes size");
+        throw HebdoProblemTranslationException("NombreDeContraintes exceed NombreDeTermesDesLignes size");
     }
 
     auto ret = std::make_unique<ConstantDataFromAntares>();
@@ -88,5 +88,11 @@ ConstantDataFromAntaresPtr HebdoProblemToLpsTranslator::commonProblemData(const 
 
     copy(problem->IndicesDebutDeLigne, ret->Mdeb);
     return ret;
+}
+
+HebdoProblemTranslationException::HebdoProblemTranslationException(
+  const std::string& string) noexcept
+: std::runtime_error{string}
+{
 }
 } // namespace Antares::Solver
