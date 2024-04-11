@@ -213,13 +213,13 @@ public:
             // 9 - Write results for the current year
             if (yearByYear)
             {
-                Benchmarking::Timer timerYear;
-                // Before writing, some variable may require minor modifications
-                simulation_->variables.beforeYearByYearExport(y, numSpace);
-                // writing the results for the current year into the output
-                simulation_->writeResults(false, y, numSpace); // false for synthesis
-                timerYear.stop();
-                pDurationCollector.addDuration("yby_export", timerYear.get_duration());
+                durationCollector("yby_export") << [&]
+                {
+                    // Before writing, some variable may require minor modifications
+                    simulation_->variables.beforeYearByYearExport(y, numSpace);
+                    // writing the results for the current year into the output
+                    simulation_->writeResults(false, y, numSpace); // false for synthesis
+                };
             }
         }
         else
@@ -363,22 +363,18 @@ void ISimulation<ImplementationType>::run()
         logs.info() << " Starting the simulation";
         uint finalYear = 1 + study.runtime->rangeLimits.year[Data::rangeEnd];
         {
-            Benchmarking::Timer timer;
-            loopThroughYears(0, finalYear, state);
-            timer.stop();
-            pDurationCollector.addDuration("mc_years", timer.get_duration());
+            duration_collector("mc_years") << [&finalYear, state] {
+                loopThroughYears(0, finalYear, state);
+            };
         }
         // Destroy the TS Generators if any
         // It will export the time-series into the output in the same time
         TSGenerator::DestroyAll(study);
 
         // Post operations
-        {
-            Benchmarking::Timer timer;
-            ImplementationType::simulationEnd();
-            timer.stop();
-            pDurationCollector.addDuration("post_processing", timer.get_duration());
-        }
+        duration_collector("post_processing") << [] {
+            ImplementationType::simulationEnd()
+        };
 
         ImplementationType::variables.simulationEnd();
 
@@ -453,34 +449,30 @@ void ISimulation<ImplementationType>::regenerateTimeSeries(uint year)
     // Load
     if (pData.haveToRefreshTSLoad && (year % pData.refreshIntervalLoad == 0))
     {
-        Benchmarking::Timer timer;
-        GenerateTimeSeries<Data::timeSeriesLoad>(study, year, pResultWriter);
-        timer.stop();
-        pDurationCollector.addDuration("tsgen_load", timer.get_duration());
+        duration_collector("tsgen_load") << [] {
+            GenerateTimeSeries<Data::timeSeriesLoad>(study, year, pResultWriter);
+        };
     }
     // Solar
     if (pData.haveToRefreshTSSolar && (year % pData.refreshIntervalSolar == 0))
     {
-        Benchmarking::Timer timer;
-        GenerateTimeSeries<Data::timeSeriesSolar>(study, year, pResultWriter);
-        timer.stop();
-        pDurationCollector.addDuration("tsgen_solar", timer.get_duration());
+        duration_collector("tsgen_solar") << [] {
+            GenerateTimeSeries<Data::timeSeriesSolar>(study, year, pResultWriter);
+        };
     }
     // Wind
     if (pData.haveToRefreshTSWind && (year % pData.refreshIntervalWind == 0))
     {
-        Benchmarking::Timer timer;
-        GenerateTimeSeries<Data::timeSeriesWind>(study, year, pResultWriter);
-        timer.stop();
-        pDurationCollector.addDuration("tsgen_wind", timer.get_duration());
+        duration_collector("tsgen_wind") << [] {
+            GenerateTimeSeries<Data::timeSeriesWind>(study, year, pResultWriter);
+        };
     }
     // Hydro
     if (pData.haveToRefreshTSHydro && (year % pData.refreshIntervalHydro == 0))
     {
-        Benchmarking::Timer timer;
-        GenerateTimeSeries<Data::timeSeriesHydro>(study, year, pResultWriter);
-        timer.stop();
-        pDurationCollector.addDuration("tsgen_hydro", timer.get_duration());
+        duration_collector("tsgen_hydro") << [] {
+            GenerateTimeSeries<Data::timeSeriesHydro>(study, year, pResultWriter);
+        };
     }
 
     // Thermal
@@ -907,6 +899,7 @@ void ISimulation<ImplementationType>::computeAnnualCostsStatistics(
             pAnnualStatistics.updateTime.addCost(s.averageUpdateTime);
         }
     }
+    durationCollector.summary();
 }
 
 static inline void logPerformedYearsInAset(setOfParallelYears& set)
