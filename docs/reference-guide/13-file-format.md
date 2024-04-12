@@ -1,8 +1,8 @@
 # Study format changes
 This is a list of all recent changes that came with new Antares Simulator features. The main goal of this document is to lower the costs of changing existing interfaces, both GUI and scripts.
 ## v9.1.0
-## Input 
-### Hydro Maximum Generation/Pumping Power
+### Input 
+#### Hydro Maximum Generation/Pumping Power
 * For time series ![Migration diagram](migration.png "Migration diagram"), for more details, see [this Python script](migration.py)
 * In the existing file **settings/scenariobuilder.dat**, under **&lt;ruleset&gt;** section following properties added: **hgp,&lt;area&gt;,&lt;year&gt; = &lt;hgp-value&gt;**
 
@@ -15,7 +15,7 @@ This implies that, inside one of the previous categories, the number of availabl
 
 * [Logic changes](17-v91.md)
 
-### Short term storage groups
+#### Short term storage groups
 STS groups in input are now "dynamic" : group names are no longer fixed by code, user is free to define these groups.
 
 In the "thematic trimming" section, the new dynamic variable `STS by group` is now used to enable/disable all variables (level/injection/withdrawal) for all groups. The following variables are obsolete and must not be provided
@@ -38,18 +38,22 @@ Other5_level
 
 The default value for group is "OTHER1".
 
-## Output
-### Hydro maximum generation/pumping power
+#### Optimization : solver parameters (expert option)
+
+In file **settings/generaldata.ini**, in section `optimization` add property `solver-parameters` [str]. Default value = `""`. Allows to specify solver specific parameters in a string formatted as `param1 value1 param2 value2`
+
+### Output
+#### Hydro maximum generation/pumping power
 In existing directory `ts-numbers`, add sub-directory `hgp` containing TS numbers for hydro max pumping/generation, for each area.
 
-### ST Storage
+#### ST Storage
 - Output columns for ST storage are capitalized. For any STS group name my_group, 3 output columns are created : `MY_GROUP_INJECTION`, `MY_GROUP_WITHDRAWAL`, `MY_GROUP_LEVEL`.
 - If a group is empty, no column is produced.
 - There is now a variable number of columns in files values-XXX.txt, depending on the groups of ST storages provided by the user. Note that groups are case-insensitive, for example `battery`, `Battery` and `BATTERY` all represent the same group. If no ST storage exist for a given area, no variables associated to ST storages will be produced.
 
 ## v9.0.0
 ### Input
-### Study version
+#### Study version
 Breaking change in the study format, file **study.antares**
 ```
 version = 900
