@@ -16,6 +16,7 @@ target_sources(solver_api
         solver.cpp
         API.cpp
         SimulationObserver.cpp
+        SimulationResults.cpp
         ${PUBLIC_HEADERS}
         ${PRIVATE_HEADERS}
 )
