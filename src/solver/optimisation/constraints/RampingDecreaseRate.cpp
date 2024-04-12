@@ -6,10 +6,8 @@ void RampingDecreaseRate::add(int pays, int index, int pdt)
     {
         int cluster = data.PaliersThermiquesDuPays[pays]
                         .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
-        int rampingClusterIndex
-          = data.PaliersThermiquesDuPays[pays].clusterRampingVariablesIndex[index];
         double maxDownwardPowerRampingRate
-          = data.PaliersThermiquesDuPays[pays].maxDownwardPowerRampingRate[rampingClusterIndex];
+          = data.PaliersThermiquesDuPays[pays].maxDownwardPowerRampingRate[index];
         double pmaxDUnGroupeDuPalierThermique
           = data.PaliersThermiquesDuPays[pays].PmaxDUnGroupeDuPalierThermique[index];
         // constraint : P(t) - P(t-1) + R^- * M(t) + u * M^-(t) + u * M^--(t) > 0

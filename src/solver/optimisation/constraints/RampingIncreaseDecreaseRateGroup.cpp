@@ -36,7 +36,7 @@ void RampingIncreaseDecreaseRateGroup::BuildConstraints()
           = problemeHebdo_->PaliersThermiquesDuPays[pays];
         for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
         {
-            if (PaliersThermiquesDuPays.clusterRampingVariablesIndex[index] >= 0)
+            if (PaliersThermiquesDuPays.maxUpwardPowerRampingRate[index] >= 0)
             {
                 RampingIncreaseRate rampingIncreaseRate(builder_, data);
                 RampingDecreaseRate rampingDecreaseRate(builder_, data);

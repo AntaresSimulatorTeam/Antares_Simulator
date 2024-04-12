@@ -51,28 +51,25 @@ void OPT_InitialiserLesCoutsLineaireRampesThermiques(PROBLEME_HEBDO* problemeHeb
             const PALIERS_THERMIQUES& PaliersThermiquesDuPays  = problemeHebdo->PaliersThermiquesDuPays[pays];
             int var;
 
-            for (int Index = 0; Index < PaliersThermiquesDuPays.NombreDePaliersThermiques; Index++)
+            for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
             {
-                if (PaliersThermiquesDuPays.clusterRampingVariablesIndex[Index] >= 0)
+                if (PaliersThermiquesDuPays.maxUpwardPowerRampingRate[index] >= 0 )
                 {
                     int palier = PaliersThermiquesDuPays
-                                   .NumeroDuPalierDansLEnsembleDesPaliersThermiques[Index];
-
-                    int rampingClusterIndex
-                      = PaliersThermiquesDuPays.clusterRampingVariablesIndex[Index];
+                                   .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
 
                     var = CorrespondanceVarNativesVarOptim.powerRampingDecreaseIndex[palier];
                     if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                     {
                         ProblemeAResoudre->CoutLineaire[var]
-                          = PaliersThermiquesDuPays.downwardRampingCost[rampingClusterIndex];
+                          = PaliersThermiquesDuPays.downwardRampingCost[index];
                     }
 
                     var = CorrespondanceVarNativesVarOptim.powerRampingIncreaseIndex[palier];
                     if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                     {
                         ProblemeAResoudre->CoutLineaire[var]
-                          = PaliersThermiquesDuPays.upwardRampingCost[rampingClusterIndex];
+                          = PaliersThermiquesDuPays.upwardRampingCost[index];
                     }
                 }
             }

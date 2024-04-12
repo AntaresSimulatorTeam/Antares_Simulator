@@ -36,7 +36,7 @@ void PowerOutputVariationGroup::BuildConstraints()
           = problemeHebdo_->PaliersThermiquesDuPays[pays];
         for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
         {
-            if (PaliersThermiquesDuPays.clusterRampingVariablesIndex[index] >= 0)
+            if (PaliersThermiquesDuPays.maxUpwardPowerRampingRate[index] >= 0)
             {
                 PowerOutputVariation powerOutputVariation(builder_, data);
                 for (int pdt = 0; pdt < problemeHebdo_->NombreDePasDeTempsPourUneOptimisation;
