@@ -34,7 +34,6 @@
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 #include "antares/solver/simulation/simulation.h"
 #include <antares/antares/fatal-error.h>
-#include <antares/logs/logs.h>
 
 using namespace Antares;
 using namespace Antares::Data;
@@ -787,8 +786,6 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                                             .HydrauliqueModulableQuotidien[day];
                     }
 
-                    logs.notice() << weekTarget_tmp ;
-
                     if (weekTarget_tmp != 0.)
                         weekGenerationTarget = weekTarget_tmp;
 
@@ -796,8 +793,8 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
 
                     if (problem.CaracteristiquesHydrauliques[k].NiveauInitialReservoir
                         < weekTarget_tmp)
-                        logs.notice() << " Niveau initial insufissant " ;
                         // marginGen = problem.CaracteristiquesHydrauliques[k].NiveauInitialReservoir;
+                        // Je pense qu'ici, il faudrait plutôt vérifier si le niveau initial plus les apports sont suffisants pour atteindre la cible. Mais je pense aussi que cette condition est toujours remplie grâce à l'heuristique.
                 }
 
                 if (not problem.CaracteristiquesHydrauliques[k].TurbinageEntreBornes)
@@ -810,7 +807,6 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                           = hydroVentilationResults[k].HydrauliqueModulableQuotidien[day]
                             * problem.CaracteristiquesHydrauliques[k].WeeklyGeneratingModulation
                             * marginGen / weekGenerationTarget;
-                        logs.notice() << " On définit ici la valeur CntEnergieH2OParIntervalleOptimise du jour " << j << " par : " << problem.CaracteristiquesHydrauliques[k].CntEnergieH2OParIntervalleOptimise[j] << " qui est composé de " << hydroVentilationResults[k].HydrauliqueModulableQuotidien[day] << " et " << problem.CaracteristiquesHydrauliques[k].WeeklyGeneratingModulation* marginGen / weekGenerationTarget ;
                     }
                 }
 
