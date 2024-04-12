@@ -43,17 +43,6 @@ void copy(const T& in, U& out)
 }
 }
 
-/**
- * @brief Translates a weekly problem to a linear programming problem.
- *
- * This function takes a pointer to a PROBLEME_ANTARES_A_RESOUDRE object and a string_view representing the name of the problem.
- * It translates the weekly problem to a linear programming problem and returns a HebdoDataFromAntaresPtr to the translated problem.
- * Datas from the PROBLEME_ANTARES_A_RESOUDRE are copied to the HebdoDataFromAntaresPtr.
- *
- * @param problem A pointer to the weekly problem to be translated.
- * @param name The name of the problem.
- * @return HebdoDataFromAntaresPtr A HebdoDataFromAntaresPtr to the translated problem.
- */
 HebdoDataFromAntaresPtr HebdoProblemToLpsTranslator::translate(
   const PROBLEME_ANTARES_A_RESOUDRE* problem,
   std::string_view name) const
@@ -75,15 +64,6 @@ HebdoDataFromAntaresPtr HebdoProblemToLpsTranslator::translate(
     return ret;
 }
 
-/**
- * @brief Retrieves common problem data, the part common to every weekly problems
- *
- * This function takes a pointer to a PROBLEME_ANTARES_A_RESOUDRE object and retrieves the common problem data.
- * It returns a ConstantDataFromAntaresPtr to the common problem data.
- *
- * @param problem A pointer to the problem from which to retrieve the common data.
- * @return ConstantDataFromAntaresPtr A ConstantDataFromAntaresPtr to the common problem data.
- */
 ConstantDataFromAntaresPtr HebdoProblemToLpsTranslator::commonProblemData(const PROBLEME_ANTARES_A_RESOUDRE* problem) const {
     if (problem == nullptr)
         return nullptr;
