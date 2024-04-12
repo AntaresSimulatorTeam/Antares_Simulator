@@ -29,6 +29,7 @@
 #include <antares/exception/LoadingError.hpp>
 #include <antares/checks/checkLoadedInputData.h>
 #include <antares/study/version.h>
+#include <antares/timer/timer.h>
 #include <antares/writer/writer_factory.h>
 
 #include "antares/signal-handling/public.h"
@@ -299,14 +300,13 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     std::exception_ptr loadingException;
     try
     {
-        if (study.loadFromFolder(pSettings.studyFolder, options))
-        {
-            logs.info() << "The study is loaded.";
-            logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
-        }
-
-        timer.stop();
-        pDurationCollector.addDuration("study_loading", timer.get_duration());
+        durationCollector("study_loading") << [&] {
+            if (study.loadFromFolder(pSettings.studyFolder, options))
+            {
+                logs.info() << "The study is loaded.";
+                logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
+            }
+        };
 
         if (study.areas.empty())
         {

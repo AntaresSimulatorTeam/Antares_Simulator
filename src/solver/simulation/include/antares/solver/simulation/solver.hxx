@@ -363,7 +363,7 @@ void ISimulation<ImplementationType>::run()
         logs.info() << " Starting the simulation";
         uint finalYear = 1 + study.runtime->rangeLimits.year[Data::rangeEnd];
         {
-            durationCollector("mc_years") << [&finalYear, state] {
+            durationCollector("mc_years") << [&] {
                 loopThroughYears(0, finalYear, state);
             };
         }
@@ -372,7 +372,7 @@ void ISimulation<ImplementationType>::run()
         TSGenerator::DestroyAll(study);
 
         // Post operations
-        durationCollector("post_processing") << [] {
+        durationCollector("post_processing") << [&] {
             ImplementationType::simulationEnd();
         };
 
