@@ -1,6 +1,7 @@
 #include <algorithm>
 
 #include <antares/writer/in_memory_writer.h>
+#include <antares/timer/timer.h>
 #include <antares/logs/logs.h>
 
 #include <antares/benchmarking/timer.h>
@@ -31,15 +32,13 @@ void logErrorAndThrow [[noreturn]] (const std::string& errorMessage)
                  '\\',
                  '/');
 
-    Benchmarking::Timer timer_wait;
-    std::lock_guard lock(mutex);
-    timer_wait.stop();
-    duration_collector.addDuration("in_memory_wait", timer_wait.get_duration());
+    durationCollector("in_memory_wait") << [&] {
+        std::lock_guard lock(mutex);
+    };
 
-    Benchmarking::Timer timer_insert;
-    entries.insert({entryPathSanitized, content});
-    timer_insert.stop();
-    duration_collector.addDuration("in_memory_insert", timer_insert.get_duration());
+    durationCollector("in_memory_insert") << [&] {
+        entries.insert({entryPathSanitized, content});
+    };
   }
 }
 
