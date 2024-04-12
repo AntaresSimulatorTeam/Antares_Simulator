@@ -75,6 +75,7 @@ void checkOrtoolsSolverSpecificParameters(
             throw Error::InvalidSolverSpecificParameters(optOptions.ortoolsSolver,
                                                          optOptions.solverParameters);
         }
+        ORTOOLS_LibererProbleme(solver);
     }
 }
 

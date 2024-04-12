@@ -29,23 +29,41 @@
 BOOST_AUTO_TEST_CASE(test_valid_solver_parameters_does_not_raise_exception)
 {
     auto ucMode = Antares::Data::UnitCommitmentMode::ucMILP;
+
+    bool ortoolsUsed = true;
+    std::string ortoolsSolver = "xpress";
+    bool solverLogs = false;
+    std::string solverParameters = "THREADS 1 PRESOLVE 3";
+
     auto options
-      = Antares::Solver::Optimization::OptimizationOptions(true, "xpress", false, "THREADS 1 PRESOLVE 3");
+      = Antares::Solver::Optimization::OptimizationOptions(ortoolsUsed, ortoolsSolver, solverLogs, solverParameters);
     BOOST_CHECK_NO_THROW(Antares::Check::checkOrtoolsSolverSpecificParameters(ucMode, options));
 }
 
 BOOST_AUTO_TEST_CASE(test_invalid_solver_parameters_raises_exception)
 {
     auto ucMode = Antares::Data::UnitCommitmentMode::ucMILP;
+
+    bool ortoolsUsed = true;
+    std::string ortoolsSolver = "xpress";
+    bool solverLogs = false;
+    std::string solverParameters = "INVALID_PARAM 1";
+
     auto options
-      = Antares::Solver::Optimization::OptimizationOptions(true, "xpress", false, "INVALID_PARAM 1");
+      = Antares::Solver::Optimization::OptimizationOptions(ortoolsUsed, ortoolsSolver, solverLogs, solverParameters);
     BOOST_CHECK_THROW(Antares::Check::checkOrtoolsSolverSpecificParameters(ucMode, options), Antares::Error::InvalidSolverSpecificParameters);
 }
 
 BOOST_AUTO_TEST_CASE(test_if_no_ortools_solver_is_used_it_should_exit_normally)
 {
     auto ucMode = Antares::Data::UnitCommitmentMode::ucMILP;
+
+    bool ortoolsUsed = false;
+    std::string ortoolsSolver = "sirius";
+    bool solverLogs = false;
+    std::string solverParameters = "INVALID_PARAM 1";
+
     auto options
-      = Antares::Solver::Optimization::OptimizationOptions(false, "sirius", false, "INVALID_PARAM 1");
+      = Antares::Solver::Optimization::OptimizationOptions(ortoolsUsed, ortoolsSolver, solverLogs, solverParameters);
     BOOST_CHECK_NO_THROW(Antares::Check::checkOrtoolsSolverSpecificParameters(ucMode, options));
 }
