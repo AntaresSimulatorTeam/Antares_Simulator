@@ -80,7 +80,8 @@ namespace {
 }
 } // namespace
 
-std::shared_ptr<Antares::Data::Study> FileTreeStudyLoader::load() {
+std::shared_ptr<Antares::Data::Study> FileTreeStudyLoader::load() const
+{
     Antares::Solver::Application application;
     constexpr unsigned int argc = 3;
     std::array<char*, argc> argv;
