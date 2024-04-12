@@ -27,16 +27,34 @@
 #include <antares/writer/i_writer.h>
 #include <filesystem>
 
-
 namespace Antares
 {
 
-class FileTreeStudyLoader: public IStudyLoader
+/**
+ * @class FileTreeStudyLoader
+ * @brief A class to load studies from the file tree.
+ *
+ * This class is responsible for loading studies from files in file system.
+ *
+ * @note This class inherits from the IStudyLoader interface.
+ */
+class FileTreeStudyLoader : public IStudyLoader
 {
 public:
     explicit FileTreeStudyLoader(std::filesystem::path study_path);
     ~FileTreeStudyLoader() override = default;
+
+    /**
+     * @brief Loads a study from the file tree.
+     *
+     * This function prepares the arguments required by the Antares Solver application and then
+     * calls the application's prepare method.
+     * It then returns the study loaded by the application.
+     *
+     * @return std::shared_ptr<Antares::Data::Study> A shared_ptr to the loaded Study object.
+     */
     [[nodiscard]] std::shared_ptr<Antares::Data::Study> load() override;
+
 private:
     std::filesystem::path study_path_;
 };
