@@ -49,7 +49,7 @@ This software suite has been tested under:
 
 Antares Simulator is built using CMake.
 For installation instructions, please visit the [documentation website](https://antares-simulator.readthedocs.io/) 
-or [its sources](docs/build/0-Introduction.md).
+or [its sources](docs/developer-guide/0-Introduction.md).
 
 # Source Code Content
 

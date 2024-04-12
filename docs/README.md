@@ -1,7 +1,7 @@
 # Antares_Simulator documentation sources
 
 This directory contains the source files for building the *Antares Simulator* [documentation website](https://antares-simulator.readthedocs.io/), 
-the PDF reference guides that are published in every [release](https://github.com/AntaresSimulatorTeam/Antares_Simulator/releases), 
+the PDF user guides that are published in every [release](https://github.com/AntaresSimulatorTeam/Antares_Simulator/releases), 
 as well as the [Doxygen documentation](https://antaressimulatorteam.github.io/Antares_Simulator/doxygen/).
 
 Please help us keep this documentation alive:
@@ -14,7 +14,7 @@ Please help us keep this documentation alive:
 
 As noted above, these sources serve two purposes:
 1. Building the website
-2. Building the PDF reference guide
+2. Building the PDF user guide
 3. Building the Doxygen documentation
 
 While most of the source code is common, some code is specific.
@@ -55,28 +55,28 @@ mkdocs serve
 Then click on the produced link (most likely `http://127.0.0.1:8000/`) to open the website in your browser.  
 As long as this process is running, updating any doc file automatically regenerates the website and refreshed the browser. 
 
-### Building the PDF reference guide
+### Building the PDF user guide
 In every *Antares Simulator* [release](https://github.com/AntaresSimulatorTeam/Antares_Simulator/releases), 
-the reference guide is printed to a PDF file and published in the assets. This document can be downloaded by users who 
+the user guide is printed to a PDF file and published in the assets. This document can be downloaded by users who 
 want to install *Antares Simulator* and be able to consult its documentation off-line.  
 
-In practice, the PDF is generated automatically from Markdown files under [reference-guide](./reference-guide) by 
+In practice, the PDF is generated automatically from Markdown files under [reference-guide](./user-guide) by 
 [Sphinx](https://www.sphinx-doc.org/) (using LaTeX). The script for this generation is in [pdf-doc-generation-with-sphinx/create_pdf_doc.sh](./pdf-doc-generation-with-sphinx/create_pdf_doc.sh); 
 it is automatically run by a github [action](../.github/workflows/build-userguide.yml) during every release, and for 
 each pull request (in order to verify that the PDF builds).  
 
-While the source material used for the PDF reference guide are the same as the ones used for the mkdocs website (i.e. 
+While the source material used for the PDF user guide are the same as the ones used for the mkdocs website (i.e. 
 Markdown files under `reference-guide`), some extra source files are needed:
 - As for all Sphinx projects, this one needs a configuration file: [conf.py](./pdf-doc-generation-with-sphinx/source/conf.py). 
   This file allows you to customize the Sphinx build, in the same way mkdoks.yml allows you to customize mkdocs build. 
 - Sphinx navigation is built iteratively, using "index" files that refer to each other. The top-most index file is 
   [pdf-doc-generation-with-sphinx/source/index.rst](./pdf-doc-generation-with-sphinx/source/index.rst). It points to 
-  [reference-guide/00-index.md](./reference-guide/00-index.md), which in turns points to other pages or indexes, 
-  defining the whole navigation tree of the documentation. **This [reference-guide/00-index.md](./reference-guide/00-index.md) 
+  [reference-guide/00-index.md](user-guide/00-index.md), which in turns points to other pages or indexes, 
+  defining the whole navigation tree of the documentation. **This [reference-guide/00-index.md](user-guide/00-index.md) 
   file should be updated** in the same way mkdocs.yml is, in order to keep the navigation tree of the PDF document 
   synchronized with the navigation tree of the mkdocs website.
 
-When modifying the reference guide content, you can easily preview the resulting PDF on your PC by navigating to the 
+When modifying the user guide content, you can easily preview the resulting PDF on your PC by navigating to the 
 root of the project and running:
 ```bash
 cd docs/pdf-doc-generation-with-sphinx
@@ -96,6 +96,6 @@ Here is a **non-exhaustive** list of points to watch out for:
 - When you add a page, make sure you add it to all target supports. For instance, adding a page to the mkdocs website 
   requires creating a `nav` entry in the [mkdocs.yml](../mkdocs.yml) file, while adding it to the Sphinx PDF requires 
   adding an extra entry to an existing index.md file, and, sometimes, creating an extra index.md file (to add a section).
-- Do not use non-standard characters (such as emojis) in the reference guide, as they cannot be rendered by LaTeX 
+- Do not use non-standard characters (such as emojis) in the user guide, as they cannot be rendered by LaTeX 
   in PDF.
 - Do not use Markdown "notes" (using the `>` character): they do not render well in PDF
