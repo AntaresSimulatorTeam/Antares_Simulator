@@ -1,15 +1,15 @@
 cmake_minimum_required(VERSION 3.14) # FetchContent_MakeAvailable
 
 # Version
-set(ANTARES_VERSION_HI	      8)
-set(ANTARES_VERSION_LO	      7)
+set(ANTARES_VERSION_HI	      9)
+set(ANTARES_VERSION_LO	      1)
 set(ANTARES_VERSION_REVISION  0)
 
 # Beta release
 set(ANTARES_BETA 0)
 set(ANTARES_RC 0)
 
-set(ANTARES_VERSION_YEAR      2023)
+set(ANTARES_VERSION_YEAR      2024)
 
 project(antares
         VERSION ${ANTARES_VERSION_HI}.${ANTARES_VERSION_LO}.${ANTARES_VERSION_REVISION})
@@ -35,7 +35,7 @@ include(CheckCXXCompilerFlag)
 include(CMakeDependentOption)
 include(FetchContent)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 
 if (DEFINED VCPKG_ROOT)
     include(${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake)
@@ -65,8 +65,6 @@ execute_process(COMMAND
   WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
   OUTPUT_VARIABLE GIT_SHA1_SHORT
   ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE)
-
-string(TOLOWER ${CMAKE_BUILD_TYPE} CMAKE_BUILD_TYPE)
 
 # Build Configuration
 set(ANTARES_TARGET "${CMAKE_BUILD_TYPE}")
@@ -143,7 +141,7 @@ OMESSAGE("")
 OMESSAGE("")
 
 #Display Build Configuration (debug or release)
-if("${CMAKE_BUILD_TYPE}" STREQUAL "release" OR "${CMAKE_BUILD_TYPE}" STREQUAL "tuning")
+if("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
 	OMESSAGE("{antares} Build Configuration: RELEASE")
 else()
 	OMESSAGE("{antares} Build Configuration: DEBUG")
@@ -152,7 +150,7 @@ endif()
 #
 # Yuni Framework
 #
-if("${CMAKE_BUILD_TYPE}" STREQUAL "release" OR "${CMAKE_BUILD_TYPE}" STREQUAL "tuning")
+if("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
 	set(YUNI_TARGET_MODE "release")
 	set(ANTARES_VERSION_TARGET  "release")
 else()
@@ -187,6 +185,11 @@ message(STATUS "Build OR-Tools: ${BUILD_ORTOOLS}")
 option(BUILD_MINIZIP "Build minizip" OFF)
 message(STATUS "Build minizip: ${BUILD_MINIZIP}")
 
+option(BUILD_MERSENNE_TWISTER_PYBIND11 "Build pybind11 bindings for Mersenne-Twister" OFF)
+if (${BUILD_MERSENNE_TWISTER_PYBIND11})
+    find_package(pybind11 REQUIRED)
+endif()
+
 #Define install directory
 if (NOT DEPS_INSTALL_DIR)
     SET(DEPS_INSTALL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../rte-antares-deps-${CMAKE_BUILD_TYPE})
@@ -199,7 +202,7 @@ endif()
 
 
 # Add DEPS_INSTALL_DIR with antares-xpansion CMAKE_BUILD_TYPE
-if ("${CMAKE_BUILD_TYPE}" STREQUAL "release")
+if ("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
 
 	string(REPLACE ${CMAKE_BUILD_TYPE} Release
 			DEPS_INSTALL_DIR_XPANSION
@@ -269,7 +272,8 @@ message(STATUS "OR-Tools tag ${ORTOOLS_TAG}")
   set(BUILD_SAMPLES "OFF" CACHE INTERNAL "")
   set(BUILD_FLATZINC "OFF" CACHE INTERNAL "")
   set(BUILD_EXAMPLES "OFF" CACHE INTERNAL "")
-  set(USE_SCIP "OFF" CACHE INTERNAL "")
+  set(USE_SCIP "ON" CACHE INTERNAL "")
+  set(USE_GLPK "ON" CACHE INTERNAL "")
   # We build OR-Tools as a static lib. Cyclic dependencies are detected
   # without this flag.
   set(BUILD_SHARED_LIBS "OFF" CACHE INTERNAL "")
@@ -280,9 +284,15 @@ message(STATUS "OR-Tools tag ${ORTOOLS_TAG}")
   FetchContent_MakeAvailable(ortools)
 endif()
 
-find_package(minizip)
+find_package(minizip QUIET)
 
 if(NOT minizip_FOUND OR BUILD_MINIZIP)
+	if (NOT minizip_FOUND)
+		message("minizip not found, downloading")
+	endif ()
+	if (BUILD_MINIZIP)
+		message("BUILD_MINIZIP set, downloading")
+	endif ()
     # Repository + tag
     set(MZ_REPOSITORY "https://github.com/zlib-ng/minizip-ng.git")
     set(MZ_TAG "4.0.1")
@@ -295,12 +305,15 @@ if(NOT minizip_FOUND OR BUILD_MINIZIP)
     set(MZ_OPENSSL "OFF" CACHE INTERNAL "")
     set(MZ_ICONV "OFF" CACHE INTERNAL "")
 
-    FetchContent_Declare(minizip
-    GIT_REPOSITORY ${MZ_REPOSITORY}
-    GIT_TAG ${MZ_TAG})
+	FetchContent_Declare(minizip
+		GIT_REPOSITORY ${MZ_REPOSITORY}
+		GIT_TAG ${MZ_TAG}
+		OVERRIDE_FIND_PACKAGE
+	)
 
-    FetchContent_MakeAvailable(minizip)
+	FetchContent_MakeAvailable(minizip)
 endif()
+find_package(minizip REQUIRED)
 
 #wxWidget not needed for all library find is done in ui CMakeLists.txt
 if (VCPKG_TOOLCHAIN AND NOT BUILD_wxWidgets) 
@@ -311,9 +324,11 @@ endif()
 # TODO : review Standard Settings
 include(cmake/common-settings.cmake)
 
+add_subdirectory(config)
+
 # Configure config.h with current ANTARES version
-configure_file("config.h.cmake" "${CMAKE_CURRENT_BINARY_DIR}/config.h")
-configure_file("config.h.cmake" "${CMAKE_CURRENT_SOURCE_DIR}/config.h")
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/config/config.h.in"
+		"${CMAKE_CURRENT_SOURCE_DIR}/config/include/antares/config/config.h")
 
 # Yuni Framework
 configure_file("cmake/ProfileBuild.template.cmake" "ext/yuni/src/ProfileBuild.cmake")
@@ -355,11 +370,11 @@ OMESSAGE("")
 # Informations for NSIS
 if(WIN32 OR WIN64)
 	if(MSVC)
-		if("${CMAKE_BUILD_TYPE}" STREQUAL "release" OR "${CMAKE_BUILD_TYPE}" STREQUAL "tuning")
+		if("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
 			set(NSIS_TARGET "Release")
-		else("${CMAKE_BUILD_TYPE}" STREQUAL "release" OR "${CMAKE_BUILD_TYPE}" STREQUAL "tuning")
+		else()
 			set(NSIS_TARGET "Debug")
-		endif("${CMAKE_BUILD_TYPE}" STREQUAL "release" OR "${CMAKE_BUILD_TYPE}" STREQUAL "tuning")
+		endif()
 		set(COMPILER_MARK "v")
 		#set(COMPILER_INCLUDE "vs9")
 	else(MSVC)
@@ -436,7 +451,7 @@ else()
 	set(CPACK_PACKAGE_VERSION_MINOR ${ANTARES_VERSION_LO})
 	set(CPACK_PACKAGE_VERSION_PATCH ${ANTARES_VERSION_REVISION}${ANTARES_VERSION_TAG})
 
-	set(CPACK_DEBIAN_PACKAGE_DEPENDS "libwxgtk3.0-gtk3-0v5")
+	set(CPACK_DEBIAN_PACKAGE_DEPENDS "libwxgtk3.0-gtk3-0v5 | libwxgtk3.2-dev")
     set(CPACK_RPM_PACKAGE_REQUIRES "wxGTK3")
     set(CPACK_RPM_PACKAGE_AUTOREQPROV "0")
 
@@ -448,3 +463,5 @@ endif()
 # Load packaging facilities.
 include(CPack)
 
+#Last. We need all target defined
+add_subdirectory(packaging)

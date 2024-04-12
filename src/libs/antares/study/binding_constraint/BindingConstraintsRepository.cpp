@@ -1,21 +1,42 @@
+/*
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
+**
+** Antares_Simulator is free software: you can redistribute it and/or modify
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
+** (at your option) any later version.
+**
+** Antares_Simulator is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+** Mozilla Public Licence 2.0 for more details.
+**
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+*/
 //
 // Created by marechaljas on 11/05/23.
 //
 
-#include "BindingConstraintsRepository.h"
+#include "antares/study/binding_constraint/BindingConstraintsRepository.h"
 #include <algorithm>
 #include <memory>
 #include <utility>
 #include <vector>
-#include "BindingConstraint.h"
+#include "antares/study/binding_constraint/BindingConstraint.h"
 #include <antares/study/study.h>
-#include "BindingConstraintLoader.h"
-#include "BindingConstraintSaver.h"
+#include "antares/study/binding_constraint/BindingConstraintLoader.h"
+#include "antares/study/binding_constraint/BindingConstraintSaver.h"
+#include "antares/utils/utils.h"
 
 void Data::BindingConstraintsRepository::clear()
 {
     constraints_.clear();
-    activeConstraints_.reset();
+    activeConstraints_.clear();
 }
 
 namespace Antares::Data {
@@ -90,6 +111,7 @@ std::shared_ptr<BindingConstraint> BindingConstraintsRepository::add(const AnySt
 {
     auto bc = std::make_shared<BindingConstraint>();
     bc->name(name);
+    bc->pId(name);
     constraints_.push_back(bc);
     std::sort(constraints_.begin(), constraints_.end(), compareConstraints);
     return bc;
@@ -122,6 +144,7 @@ bool BindingConstraintsRepository::rename(BindingConstraint *bc, const AnyString
         return false;
     }
     bc->name(name);
+    bc->pId(name);
     JIT::Invalidate(bc->RHSTimeSeries().jit);
     return true;
 }
@@ -224,12 +247,10 @@ bool BindingConstraintsRepository::internalSaveToFolder(BindingConstraintSaver::
     bool ret = true;
     uint index = 0;
     auto end = constraints_.end();
-    Yuni::ShortString64 text;
 
     for (auto i = constraints_.begin(); i != end; ++i, ++index)
     {
-        text = index;
-        env.section = ini.addSection(text);
+        env.section = ini.addSection(std::to_string(index));
         ret = Antares::Data::BindingConstraintSaver::saveToEnv(env, i->get()) && ret;
     }
 
@@ -282,7 +303,7 @@ void BindingConstraintsRepository::remove(const Area* area)
     RemovePredicate<Area> predicate(area);
     auto e = std::remove_if(constraints_.begin(), constraints_.end(), predicate);
     constraints_.erase(e, constraints_.end());
-    activeConstraints_.reset();
+    activeConstraints_.clear();
 }
 
 void BindingConstraintsRepository::remove(const AreaLink* lnk)
@@ -290,7 +311,7 @@ void BindingConstraintsRepository::remove(const AreaLink* lnk)
     RemovePredicate<AreaLink> predicate(lnk);
     auto e = std::remove_if(constraints_.begin(), constraints_.end(), predicate);
     constraints_.erase(e, constraints_.end());
-    activeConstraints_.reset();
+    activeConstraints_.clear();
 }
 
 void BindingConstraintsRepository::remove(const BindingConstraint* bc)
@@ -298,7 +319,7 @@ void BindingConstraintsRepository::remove(const BindingConstraint* bc)
     RemovePredicate<BindingConstraint> predicate(bc);
     auto e = std::remove_if(constraints_.begin(), constraints_.end(), predicate);
     constraints_.erase(e, constraints_.end());
-    activeConstraints_.reset();
+    activeConstraints_.clear();
 }
 
 
@@ -328,18 +349,16 @@ void BindingConstraintsRepository::markAsModified() const
         i->markAsModified();
 }
 
-std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintsRepository::activeContraints() const {
-    if (activeConstraints_) {
-        return activeConstraints_.value();
-    } else {
-        std::vector<std::shared_ptr<BindingConstraint>> out;
-        std::copy_if(constraints_.begin(), constraints_.end(), std::back_inserter(out),
-                     [](const auto &bc) {
-                         return bc->isActive();
-                     });
-        activeConstraints_ = std::move(out);
-        return activeConstraints_.value();
-    }
+std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintsRepository::activeConstraints() const
+{
+    if (!activeConstraints_.empty())
+        return activeConstraints_;
+
+    for (auto& bc : constraints_)
+        if(bc->isActive())
+            activeConstraints_.push_back(bc);
+
+    return activeConstraints_;
 }
 
 static bool isBindingConstraintTypeInequality(const Data::BindingConstraint& bc)
@@ -347,22 +366,17 @@ static bool isBindingConstraintTypeInequality(const Data::BindingConstraint& bc)
     return bc.operatorType() == BindingConstraint::opLess || bc.operatorType() == BindingConstraint::opGreater;
 }
 
-std::vector<uint> BindingConstraintsRepository::getIndicesForInequalityBindingConstraints() const
+BindingConstraintsRepository::Vector
+BindingConstraintsRepository::getPtrForInequalityBindingConstraints() const
 {
-    auto activeConstraints = activeContraints();
-    const auto firstBC = activeConstraints.begin();
-    const auto lastBC = activeConstraints.end();
+    auto activeBC = activeConstraints();
+    Vector ptr;
 
-    std::vector<uint> indices;
-    for (auto bc = firstBC; bc < lastBC; bc++)
-    {
-        if (isBindingConstraintTypeInequality(*(*bc)))
-        {
-            auto index = static_cast<uint>(std::distance(firstBC, bc));
-            indices.push_back(index);
-        }
-    }
-    return indices;
+    for (auto& bc : activeBC)
+        if (isBindingConstraintTypeInequality(*bc))
+            ptr.push_back(bc);
+
+    return ptr;
 }
 
 void BindingConstraintsRepository::forceReload(bool reload) const

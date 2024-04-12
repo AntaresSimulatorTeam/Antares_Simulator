@@ -43,6 +43,6 @@ add_Library(antares-ui-windows-output
 		${SRC_UI_OUTPUT_PROVIDERS})
 
 target_link_libraries(antares-ui-windows-output  PRIVATE ${wxWidgets_LIBRARIES})
-target_link_libraries(antares-ui-windows-output  PRIVATE antares-ui-common)
+target_link_libraries(antares-ui-windows-output  PRIVATE antares-ui-common Antares::resources antares-solver-variable Antares::locator)
 
  

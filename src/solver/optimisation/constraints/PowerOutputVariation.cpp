@@ -1,19 +1,16 @@
-#include "PowerOutputVariation.h"
+#include "antares/solver/optimisation/constraints/PowerOutputVariation.h"
 
-void PowerOutputVariation::add(int pays, int cluster, int clusterIndex, int pdt, bool Simulation)
+void PowerOutputVariation::add(int pays, int index, int pdt)
 {
-    if (!Simulation)
+    if (!data.Simulation)
     {
-        const PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
-        int rampingClusterIndex
-          = PaliersThermiquesDuPays.clusterRampingVariablesIndex[clusterIndex];
-        double maxUpwardPowerRampingRate
-          = PaliersThermiquesDuPays.maxUpwardPowerRampingRate[rampingClusterIndex];
-        double pmaxDUnGroupeDuPalierThermique = PaliersThermiquesDuPays.PmaxDUnGroupeDuPalierThermique[clusterIndex];
+        int cluster = data.PaliersThermiquesDuPays[pays].NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+        double pmaxDUnGroupeDuPalierThermique
+          = data.PaliersThermiquesDuPays[pays].PmaxDUnGroupeDuPalierThermique[index];
         // constraint : P(t) - P(t-1) - u * M^+(t) - P^+ + P^- + u * M^-(t) = 0
         builder.updateHourWithinWeek(pdt)
             .DispatchableProduction(cluster, 1.0)
-            .DispatchableProduction(cluster, -1.0, -1, problemeHebdo->NombreDePasDeTempsPourUneOptimisation)
+            .DispatchableProduction(cluster, -1.0, -1, builder.data.NombreDePasDeTempsPourUneOptimisation)
           .NumberStartingDispatchableUnits(cluster, -pmaxDUnGroupeDuPalierThermique)
             .ProductionIncreaseAboveMin(cluster, -1.0)
           .ProductionDecreaseAboveMin(cluster, 1.0)
@@ -22,18 +19,20 @@ void PowerOutputVariation::add(int pays, int cluster, int clusterIndex, int pdt,
    
         if (builder.NumberOfVariables() > 0)
         {
-            ConstraintNamer namer(problemeHebdo->ProblemeAResoudre->NomDesContraintes);
+            ConstraintNamer namer(builder.data.NomDesContraintes);
 
-            namer.UpdateTimeStep(problemeHebdo->weekInTheYear * 168 + pdt);
-            namer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
+            namer.UpdateTimeStep(builder.data.weekInTheYear * 168 + pdt);
+            namer.UpdateArea(builder.data.NomsDesPays[pays]);
 
-            namer.ProductionOutputVariation(problemeHebdo->ProblemeAResoudre->NombreDeContraintes, PaliersThermiquesDuPays.NomsDesPaliersThermiques[clusterIndex]);
+            namer.ProductionOutputVariation(
+              builder.data.nombreDeContraintes,
+              data.PaliersThermiquesDuPays[pays].NomsDesPaliersThermiques[index]);
         }
         builder.build();
     }
     else
     {
-        problemeHebdo->NbTermesContraintesPourLesRampes += 5;
-        problemeHebdo->ProblemeAResoudre->NombreDeContraintes++;
+        builder.data.NbTermesContraintesPourLesRampes += 5;
+        builder.data.nombreDeContraintes++;
     }
 }

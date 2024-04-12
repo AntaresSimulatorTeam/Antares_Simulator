@@ -1,40 +1,36 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "../../antares.h"
+#include "antares/antares/antares.h"
 #include <yuni/io/file.h>
-#include "../study.h"
+#include "antares/study//study.h"
 #include <cassert>
-#include "area.h"
+#include "antares/utils/utils.h"
+#include "antares/study/area/area.h"
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
-#include "constants.h"
+#include "antares/antares/antares.h"
 #include "antares/study/parts/parts.h"
 #include "antares/study/parts/load/prepro.h"
+#include <antares/study/area/scratchpad.h>
 
 #define SEP IO::Separator
 
@@ -79,7 +75,7 @@ static bool AreaListLoadThermalDataFromFile(AreaList& list, const Clob& filename
 
                 // New scheme
                 // MBO 30/10/2014 - Allow negative values
-                if (Math::Abs(area->thermal.unsuppliedEnergyCost) < 5.e-3)
+                if (std::abs(area->thermal.unsuppliedEnergyCost) < 5.e-3)
                     area->thermal.unsuppliedEnergyCost = 0.;
                 else
                 {
@@ -118,7 +114,7 @@ static bool AreaListLoadThermalDataFromFile(AreaList& list, const Clob& filename
                 // positive";
 
                 // MBO 30/10/2014 - allow negative values
-                if (Math::Abs(area->thermal.spilledEnergyCost) < 5.e-3)
+                if (std::abs(area->thermal.spilledEnergyCost) < 5.e-3)
                     area->thermal.spilledEnergyCost = 0.;
                 else
                 {
@@ -150,14 +146,14 @@ static bool AreaListSaveThermalDataToFile(const AreaList& list, const AnyString&
     IniFile::Section* s = ini.addSection("unserverdenergycost");
     list.each([&](const Data::Area& area) {
         // 0 values are skipped
-        if (!Math::Zero(area.thermal.unsuppliedEnergyCost))
+        if (!Utils::isZero(area.thermal.unsuppliedEnergyCost))
             s->add(area.id, area.thermal.unsuppliedEnergyCost);
     });
 
     s = ini.addSection("spilledenergycost");
     list.each([&](const Data::Area& area) {
         // 0 values are skipped
-        if (!Math::Zero(area.thermal.spilledEnergyCost))
+        if (!Utils::isZero(area.thermal.spilledEnergyCost))
             s->add(area.id, area.thermal.spilledEnergyCost);
     });
 
@@ -215,11 +211,8 @@ static bool AreaListSaveToFolderSingleArea(const Area& area, Clob& buffer, const
                            << area.id;
             ret = area.load.prepro->saveToFolder(buffer) && ret;
         }
-        if (area.load.series) // Series
-        {
-            buffer.clear() << folder << SEP << "input" << SEP << "load" << SEP << "series";
-            ret = DataSeriesLoadSaveToFolder(area.load.series, area.id, buffer.c_str()) && ret;
-        }
+        buffer.clear() << folder << SEP << "input" << SEP << "load" << SEP << "series";
+        area.load.series.saveToFolder(area.id, buffer.c_str(), "load_") && ret;
     }
 
     // Solar
@@ -230,11 +223,8 @@ static bool AreaListSaveToFolderSingleArea(const Area& area, Clob& buffer, const
                            << area.id;
             ret = area.solar.prepro->saveToFolder(buffer) && ret;
         }
-        if (area.solar.series) // Series
-        {
-            buffer.clear() << folder << SEP << "input" << SEP << "solar" << SEP << "series";
-            ret = DataSeriesSolarSaveToFolder(area.solar.series, area.id, buffer.c_str()) && ret;
-        }
+        buffer.clear() << folder << SEP << "input" << SEP << "solar" << SEP << "series";
+        ret = area.solar.series.saveToFolder(area.id, buffer.c_str(), "solar_") && ret;
     }
 
     // Hydro
@@ -263,11 +253,9 @@ static bool AreaListSaveToFolderSingleArea(const Area& area, Clob& buffer, const
                            << area.id;
             ret = area.wind.prepro->saveToFolder(buffer) && ret;
         }
-        if (area.wind.series) // Series
-        {
-            buffer.clear() << folder << SEP << "input" << SEP << "wind" << SEP << "series";
-            ret = DataSeriesWindSaveToFolder(area.wind.series, area.id, buffer.c_str()) && ret;
-        }
+
+        buffer.clear() << folder << SEP << "input" << SEP << "wind" << SEP << "series";
+        ret = area.wind.series.saveToFolder(area.id, buffer.c_str(), "wind_") && ret;
     }
 
     // Thermal cluster list
@@ -746,7 +734,7 @@ bool AreaList::saveToFolder(const AnyString& folder) const
 template<class StringT>
 static void readAdqPatchMode(Study& study, Area& area, StringT& buffer)
 {
-    if (study.header.version >= 830)
+    if (study.header.version >= StudyVersion(8, 3))
     {
         buffer.clear() << study.folderInput << SEP << "areas" << SEP << area.id << SEP
                        << "adequacy_patch.ini";
@@ -781,14 +769,6 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
                                              StringT& buffer,
                                              const StudyLoadOptions& options)
 {
-    // Progression
-    options.progressTicks = 0;
-    options.progressTickCount
-      = area.thermal.list.size() * (options.loadOnlyNeeded ? 1 : 2) // prepro+series
-        + 1                                                         // links
-        + 4                                                         // load,solar,wind,hydro
-        + 1;                                                        // DSM,misc...
-
     // Reset
     area.filterSynthesis = filterAll;
     area.filterYearByYear = filterAll;
@@ -798,6 +778,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     area.spreadSpilledEnergyCost = 0.;
 
     bool ret = true;
+    const auto studyVersion = study.header.version;
 
     // DSM, Reserves, D-1
     buffer.clear() << study.folderInput << SEP << "reserves" << SEP << area.id << ".txt";
@@ -827,15 +808,10 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         MatrixTestForPositiveValues_LimitWidth(buffer.c_str(), &area.miscGen, fhhPSP);
     }
 
-    ++options.progressTicks;
-    options.pushProgressLogs();
-
     // Links
     {
         buffer.clear() << study.folderInput << SEP << "links" << SEP << area.id;
         ret = AreaLinksLoadFromFolder(study, list, &area, buffer) && ret;
-        ++options.progressTicks;
-        options.pushProgressLogs();
     }
 
     // UI
@@ -848,6 +824,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         ret = area.ui->loadFromFile(buffer) && ret;
     }
 
+    bool averageTs = (study.usedByTheSolver && study.parameters.derated);
     // Load
     {
         if (area.load.prepro) // Prepro
@@ -857,15 +834,13 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
                            << area.id;
             ret = area.load.prepro->loadFromFolder(buffer) && ret;
         }
-        if (area.load.series && (!options.loadOnlyNeeded || !area.load.prepro)) // Series
+        if (!options.loadOnlyNeeded || !area.load.prepro) // Series
         {
-            buffer.clear() << study.folderInput << SEP << "load" << SEP << "series";
-            ret = DataSeriesLoadLoadFromFolder(study, area.load.series, area.id, buffer.c_str())
+            buffer.clear() << study.folderInput << SEP << "load" << SEP << "series" << SEP
+                           << "load_" << area.id << ".txt";
+            ret = area.load.series.loadFromFile(buffer.c_str(), averageTs)
                   && ret;
         }
-
-        ++options.progressTicks;
-        options.pushProgressLogs();
     }
 
     // Solar
@@ -877,15 +852,14 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
                            << area.id;
             ret = area.solar.prepro->loadFromFolder(buffer) && ret;
         }
-        if (area.solar.series && (!options.loadOnlyNeeded || !area.solar.prepro)) // Series
+        if (!options.loadOnlyNeeded || !area.solar.prepro) // Series
         {
-            buffer.clear() << study.folderInput << SEP << "solar" << SEP << "series";
-            ret = DataSeriesSolarLoadFromFolder(study, area.solar.series, area.id, buffer.c_str())
-                && ret;
-        }
+            buffer.clear() << study.folderInput << SEP << "solar" << SEP << "series" << SEP
+                           << "solar_" << area.id << ".txt";
+            ret = area.solar.series.loadFromFile(buffer.c_str(), averageTs)
+                  && ret;
 
-        ++options.progressTicks;
-        options.pushProgressLogs();
+        }
     }
 
     // Hydro
@@ -901,14 +875,38 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "prepro";
             ret = area.hydro.prepro->loadFromFolder(study, area.id, buffer.c_str()) && ret;
         }
-        if (area.hydro.series && (!options.loadOnlyNeeded || !area.hydro.prepro)) // Series
+
+        auto* hydroSeries = area.hydro.series;
+        if (!options.loadOnlyNeeded || !area.hydro.prepro) // Series
         {
             buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "series";
-            ret = area.hydro.series->loadFromFolder(study, area.id, buffer) && ret;
+            ret = hydroSeries->loadGenerationTS(area.id, buffer, studyVersion) && ret;
+
+            hydroSeries->EqualizeGenerationTSsizes(area, study.usedByTheSolver);
         }
 
-        ++options.progressTicks;
-        options.pushProgressLogs();
+        if (studyVersion < StudyVersion(9,1))
+        {
+            buffer.clear() << study.folderInput << SEP << "hydro";
+
+            HydroMaxTimeSeriesReader reader(area.hydro, area.id.to<std::string>(), area.name.to<std::string>());
+            ret = reader.read(buffer, study.usedByTheSolver) && ret;
+        }
+        else
+        {
+            buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "series";
+            ret = hydroSeries->LoadMaxPower(area.id, buffer) && ret;
+
+            if (study.usedByTheSolver)
+            {
+                hydroSeries->EqualizeMaxPowerTSsizes(area);
+            }
+            else
+                hydroSeries->setHydroModulability(area);
+        }
+
+        hydroSeries->resizeTSinDeratedMode(
+            study.parameters.derated, studyVersion, study.usedByTheSolver);
     }
 
     // Wind
@@ -920,32 +918,30 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
                            << area.id;
             ret = area.wind.prepro->loadFromFolder(buffer) && ret;
         }
-        if (area.wind.series && (!options.loadOnlyNeeded || !area.wind.prepro)) // Series
+        if (!options.loadOnlyNeeded || !area.wind.prepro) // Series
         {
-            buffer.clear() << study.folderInput << SEP << "wind" << SEP << "series";
-            ret = DataSeriesWindLoadFromFolder(study, area.wind.series, area.id, buffer.c_str())
+            buffer.clear() << study.folderInput << SEP << "wind" << SEP << "series" << SEP
+                           << "wind_" << area.id << ".txt";
+            ret = area.wind.series.loadFromFile(buffer.c_str(), averageTs)
                   && ret;
         }
-
-        ++options.progressTicks;
-        options.pushProgressLogs();
     }
 
     // Thermal cluster list
     {
         buffer.clear() << study.folderInput << SEP << "thermal" << SEP << "prepro";
-        ret = area.thermal.list.loadPreproFromFolder(study, options, buffer) && ret;
+        ret = area.thermal.list.loadPreproFromFolder(study, buffer) && ret;
         buffer.clear() << study.folderInput << SEP << "thermal" << SEP << "series";
-        ret = area.thermal.list.loadDataSeriesFromFolder(study, options, buffer) && ret;
+        ret = area.thermal.list.loadDataSeriesFromFolder(study, buffer) && ret;
         ret = area.thermal.list.loadEconomicCosts(study, buffer) && ret;
 
         // In adequacy mode, all thermal clusters must be in 'mustrun' mode
-        if (study.usedByTheSolver && study.parameters.mode == stdmAdequacy)
+        if (study.usedByTheSolver && study.parameters.mode == SimulationMode::Adequacy)
             area.thermal.list.enableMustrunForEveryone();
     }
 
     // Short term storage
-    if (study.header.version >= 860)
+    if (studyVersion >= StudyVersion(8, 6))
     {
         buffer.clear() << study.folderInput << SEP << "st-storage" << SEP << "series"
             << SEP << area.id;
@@ -955,10 +951,10 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     }
 
     // Renewable cluster list
-    if (study.header.version >= 810)
+    if (studyVersion >= StudyVersion(8, 1))
     {
         buffer.clear() << study.folderInput << SEP << "renewables" << SEP << "series";
-        ret = area.renewable.list.loadDataSeriesFromFolder(study, options, buffer) && ret;
+        ret = area.renewable.list.loadDataSeriesFromFolder(study, buffer) && ret;
     }
 
     // Adequacy patch
@@ -1036,12 +1032,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
 
 void AreaList::ensureDataIsInitialized(Parameters& params, bool loadOnlyNeeded)
 {
-    AreaListEnsureDataLoadTimeSeries(this);
-    AreaListEnsureDataSolarTimeSeries(this);
-    AreaListEnsureDataWindTimeSeries(this);
     AreaListEnsureDataHydroTimeSeries(this);
-    AreaListEnsureDataThermalTimeSeries(this);
-    AreaListEnsureDataRenewableTimeSeries(this);
 
     if (loadOnlyNeeded)
     {
@@ -1074,6 +1065,7 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
 {
     bool ret = true;
     Clob buffer;
+    auto studyVersion = pStudy.header.version;
 
     // Load the list of all available areas
     {
@@ -1108,12 +1100,11 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
             Area& area = *(i->second);
             buffer.clear() << pStudy.folderInput << thermalPlant << area.id;
             ret = area.thermal.list.loadFromFolder(pStudy, buffer.c_str(), &area) && ret;
-            area.thermal.prepareAreaWideIndexes();
         }
     }
 
     // Short term storage data, specific to areas
-    if (pStudy.header.version >= 860)
+    if (studyVersion >= StudyVersion(8, 6))
     {
         logs.info() << "Loading short term storage clusters...";
         buffer.clear() << pStudy.folderInput << SEP << "st-storage";
@@ -1134,7 +1125,7 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
     }
 
     // Renewable data, specific to areas
-    if (pStudy.header.version >= 810)
+    if (studyVersion >= StudyVersion(8, 1))
     {
         // The cluster list must be loaded before the method
         // ensureDataIsInitialized is called
@@ -1148,7 +1139,6 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
             Area& area = *(i->second);
             buffer.clear() << pStudy.folderInput << renewablePlant << area.id;
             ret = area.renewable.list.loadFromFolder(buffer.c_str(), &area) && ret;
-            area.renewable.prepareAreaWideIndexes();
         }
     }
 
@@ -1203,8 +1193,8 @@ Area* AreaList::findFromPosition(const int x, const int y) const
         {
             auto lastArea = i->second;
             if (lastArea->ui)
-                if (Math::Abs(lastArea->ui->x - x) < nearestDistance
-                    && Math::Abs(lastArea->ui->y - y) < nearestDistance)
+                if (std::abs(lastArea->ui->x - x) < nearestDistance
+                    && std::abs(lastArea->ui->y - y) < nearestDistance)
                 {
                     nearestItem = lastArea;
                 }
@@ -1246,17 +1236,6 @@ Area* AreaListFindPtr(AreaList* l, const Area* ptr)
     return nullptr;
 }
 
-void AreaListEnsureDataLoadTimeSeries(AreaList* l)
-{
-    /* Asserts */
-    assert(l);
-
-    l->each([&](Data::Area& area) {
-        if (!area.load.series)
-            area.load.series = new DataSeriesLoad();
-    });
-}
-
 void AreaListEnsureDataLoadPrepro(AreaList* l)
 {
     /* Asserts */
@@ -1268,17 +1247,6 @@ void AreaListEnsureDataLoadPrepro(AreaList* l)
     });
 }
 
-void AreaListEnsureDataSolarTimeSeries(AreaList* l)
-{
-    /* Asserts */
-    assert(l);
-
-    l->each([&](Data::Area& area) {
-        if (!area.solar.series)
-            area.solar.series = new DataSeriesSolar();
-    });
-}
-
 void AreaListEnsureDataSolarPrepro(AreaList* l)
 {
     /* Asserts */
@@ -1287,17 +1255,6 @@ void AreaListEnsureDataSolarPrepro(AreaList* l)
     l->each([&](Data::Area& area) {
         if (!area.solar.prepro)
             area.solar.prepro = new Antares::Data::Solar::Prepro();
-    });
-}
-
-void AreaListEnsureDataWindTimeSeries(AreaList* l)
-{
-    /* Asserts */
-    assert(l);
-
-    l->each([&](Data::Area& area) {
-        if (!area.wind.series)
-            area.wind.series = new DataSeriesWind();
     });
 }
 
@@ -1334,21 +1291,8 @@ void AreaListEnsureDataHydroPrepro(AreaList* l)
     });
 }
 
-void AreaListEnsureDataThermalTimeSeries(AreaList* l)
-{
-    assert(l);
-    l->each([&](Data::Area& area) { area.thermal.list.ensureDataTimeSeries(); });
-}
-
-void AreaListEnsureDataRenewableTimeSeries(AreaList* l)
-{
-    assert(l);
-    l->each([&](Data::Area& area) { area.renewable.list.ensureDataTimeSeries(); });
-}
-
 void AreaListEnsureDataThermalPrepro(AreaList* l)
 {
-    assert(l && "The area list must not be nullptr");
     l->each([&](Data::Area& area) { area.thermal.list.ensureDataPrepro(); });
 }
 
@@ -1515,7 +1459,6 @@ void AreaList::fixOrientationForAllInterconnections(BindingConstraintsRepository
                 // Reference to the link
                 auto& link = *(i->second);
                 // Asserts
-                assert(&link);
                 assert(link.from);
                 assert(link.with);
 
@@ -1587,8 +1530,7 @@ ThermalCluster* AreaList::findClusterFromINIKey(const AnyString& key)
     Area* parentArea = findFromName(parentName);
     if (parentArea == nullptr)
         return nullptr;
-    ThermalCluster* i = parentArea->thermal.list.find(id);
-    return (i != nullptr) ? i : nullptr;
+    return parentArea->thermal.list.findInAll(id);
 }
 
 void AreaList::updateNameIDSet() const
@@ -1604,35 +1546,38 @@ void AreaList::updateNameIDSet() const
 
 void AreaList::removeLoadTimeseries()
 {
-    each([&](Data::Area& area) { area.load.series->timeSeries.reset(1, HOURS_PER_YEAR); });
+    each([](Data::Area& area) { area.load.series.reset(); });
 }
 
 void AreaList::removeHydroTimeseries()
 {
-    each([&](Data::Area& area) {
-        area.hydro.series->ror.reset(1, HOURS_PER_YEAR);
-        area.hydro.series->storage.reset(1, DAYS_PER_YEAR);
-        area.hydro.series->mingen.reset(1, HOURS_PER_YEAR);
-        area.hydro.series->count = 1;
-    });
+    each([](Data::Area& area) { area.hydro.series->reset(); });
 }
 
 void AreaList::removeSolarTimeseries()
 {
-    each([&](Data::Area& area) { area.solar.series->timeSeries.reset(1, HOURS_PER_YEAR); });
+    each([](Data::Area& area) { area.solar.series.reset(); });
 }
 
 void AreaList::removeWindTimeseries()
 {
-    each([&](Data::Area& area) { area.wind.series->timeSeries.reset(1, HOURS_PER_YEAR); });
+    each([](Data::Area& area) { area.wind.series.reset(); });
 }
 
 void AreaList::removeThermalTimeseries()
 {
-    each([&](Data::Area& area) {
-        area.thermal.list.each(
-          [&](Data::ThermalCluster& cluster) { cluster.series->timeSeries.reset(1, HOURS_PER_YEAR); });
+    each([](Data::Area& area) {
+        for (auto& c : area.thermal.list.all())
+            c->series.reset();
     });
+}
+
+Area::ScratchMap AreaList::buildScratchMap(uint numspace)
+{
+    Area::ScratchMap scratchmap;
+    each([&scratchmap, &numspace](Area& a) {
+            scratchmap.try_emplace(&a, a.scratchpad[numspace]); });
+    return scratchmap;
 }
 
 } // namespace Antares::Data

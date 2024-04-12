@@ -1,28 +1,22 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
 #include <numeric>
@@ -30,11 +24,10 @@
 
 #include <yuni/yuni.h>
 #include <yuni/io/file.h>
-#include <yuni/core/math.h>
 #include <cassert>
 #include <boost/algorithm/string/case_conv.hpp>
-#include "../../study.h"
-#include "cluster.h"
+#include "antares/study/study.h"
+#include "antares/study/parts/thermal/cluster.h"
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
 #include <antares/utils/utils.h>
@@ -46,11 +39,7 @@ using namespace Antares;
 
 #define SEP IO::Separator
 
-namespace Yuni
-{
-namespace Extension
-{
-namespace CString
+namespace Yuni::Extension::CString
 {
 bool Into<Antares::Data::ThermalLaw>::Perform(AnyString string, TargetType& out)
 {
@@ -114,9 +103,9 @@ bool Into<Antares::Data::LocalTSGenerationBehavior>::Perform(AnyString string, T
     return false;
 }
 
-} // namespace CString
-} // namespace Extension
-} // namespace Yuni
+} // namespace Yuni::Extension::CString
+
+
 
 namespace Antares
 {
@@ -124,29 +113,16 @@ namespace Data
 {
 Data::ThermalCluster::ThermalCluster(Area* parent) :
     Cluster(parent),
-    groupID(thermalDispatchGrpOther1),
-    mustrun(false),
-    mustrunOrigin(false),
-    nominalCapacityWithSpinning(0.),
-    minStablePower(0.),
-    minUpTime(1),
-    minDownTime(1),
-    spinning(0.),
-    forcedVolatility(0.),
-    plannedVolatility(0.),
-    forcedLaw(thermalLawUniform),
-    plannedLaw(thermalLawUniform),
     PthetaInf(HOURS_PER_YEAR, 0),
     costsTimeSeries(1, CostsTimeSeries())
 {
     // assert
-    assert(parent and "A parent for a thermal dispatchable cluster can not be null");
+    assert(parent && "A parent for a thermal dispatchable cluster can not be null");
 }
 
 Data::ThermalCluster::~ThermalCluster()
 {
     delete prepro;
-    delete series;
 }
 
 uint ThermalCluster::groupId() const
@@ -218,18 +194,16 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
 
     // Making sure that the data related to the prepro and timeseries are present
     // prepro
-    if (not prepro)
+    if (!prepro)
         prepro = new PreproThermal(this->weak_from_this());
-    if (not series)
-        series = new DataSeriesCommon();
 
     prepro->copyFrom(*cluster.prepro);
     ecoInput.copyFrom(cluster.ecoInput);
     // timseries
 
-    series->timeSeries = cluster.series->timeSeries;
-    cluster.series->timeSeries.unloadFromMemory();
-    series->timeseriesNumbers.clear();
+    series.timeSeries = cluster.series.timeSeries;
+    cluster.series.timeSeries.unloadFromMemory();
+    series.timeseriesNumbers.clear();
 
     // The parent must be invalidated to make sure that the clusters are really
     // re-written at the next 'Save' from the user interface.
@@ -277,11 +251,10 @@ void Data::ThermalCluster::setGroup(Data::ClusterName newgrp)
 bool Data::ThermalCluster::forceReload(bool reload) const
 {
     bool ret = true;
-    ret = modulation.forceReload(reload) and ret;
-    if (series)
-        ret = series->forceReload(reload) and ret;
+    ret = modulation.forceReload(reload) && ret;
+    ret = series.forceReload(reload) && ret;
     if (prepro)
-        ret = prepro->forceReload(reload) and ret;
+        ret = prepro->forceReload(reload) && ret;
     ret = ecoInput.forceReload(reload) && ret;
     return ret;
 }
@@ -289,8 +262,7 @@ bool Data::ThermalCluster::forceReload(bool reload) const
 void Data::ThermalCluster::markAsModified() const
 {
     modulation.markAsModified();
-    if (series)
-        series->markAsModified();
+    series.markAsModified();
     if (prepro)
         prepro->markAsModified();
     ecoInput.markAsModified();
@@ -298,18 +270,16 @@ void Data::ThermalCluster::markAsModified() const
 
 void Data::ThermalCluster::calculationOfSpinning()
 {
-    assert(this->series);
-
     // nominal capacity (for solver)
     nominalCapacityWithSpinning = nominalCapacity;
 
     // Nothing to do if the spinning is equal to zero
     // because it will the same multiply all entries of the matrix by 1.
-    if (not Math::Zero(spinning))
+    if (!Utils::isZero(spinning))
     {
         logs.debug() << "  Calculation of spinning... " << parentArea->name << "::" << pName;
 
-        auto& ts = series->timeSeries;
+        auto& ts = series.timeSeries;
         // The formula
         // const double s = 1. - cluster.spinning / 100.; */
 
@@ -423,16 +393,14 @@ double Data::ThermalCluster::computeMarketBidCost(double fuelCost,
 
 void Data::ThermalCluster::reverseCalculationOfSpinning()
 {
-    assert(this->series);
-
     // Nothing to do if the spinning is equal to zero
     // because it will the same multiply all entries of the matrix by 1.
-    if (not Math::Zero(spinning))
+    if (!Utils::isZero(spinning))
     {
         logs.debug() << "  Calculation of spinning (reverse)... " << parentArea->name
                      << "::" << pName;
 
-        auto& ts = series->timeSeries;
+        auto& ts = series.timeSeries;
         // The formula
         // const double s = 1. - cluster.spinning / 100.;
 
@@ -495,7 +463,7 @@ void Data::ThermalCluster::reset()
     // warning: the variables `prepro` and `series` __must__ not be destroyed
     //   since the interface may still have a pointer to them.
     //   we must simply reset their content.
-    if (not prepro)
+    if (!prepro)
         prepro = new PreproThermal(this->weak_from_this());
     prepro->reset();
     ecoInput.reset();
@@ -503,24 +471,24 @@ void Data::ThermalCluster::reset()
 
 bool Data::ThermalCluster::integrityCheck()
 {
-    if (not parentArea)
+    if (!parentArea)
     {
         logs.error() << "Thermal cluster " << pName << ": The parent area is missing";
         return false;
     }
 
-    if (Math::NaN(marketBidCost))
+    if (std::isnan(marketBidCost))
     {
         logs.error() << "Thermal cluster " << pName << ": NaN detected for market bid cost";
         return false;
     }
-    if (Math::NaN(marginalCost))
+    if (std::isnan(marginalCost))
     {
         logs.error() << "Thermal cluster " << parentArea->name << '/' << pName
                      << ": NaN detected for marginal cost";
         return false;
     }
-    if (Math::NaN(spreadCost))
+    if (std::isnan(spreadCost))
     {
         logs.error() << "Thermal cluster " << parentArea->name << '/' << pName
                      << ": NaN detected for marginal cost";
@@ -600,7 +568,7 @@ bool Data::ThermalCluster::integrityCheck()
     {
         CString<ant_k_cluster_name_max_length + ant_k_area_name_max_length + 50, false> buffer;
         buffer << "Thermal cluster: " << parentArea->name << '/' << pName << ": Modulation";
-        ret = MatrixTestForPositiveValues(buffer.c_str(), &modulation) and ret;
+        ret = MatrixTestForPositiveValues(buffer.c_str(), &modulation) && ret;
     }
 
     // la valeur minStablePower should not be modified
@@ -665,8 +633,7 @@ uint64_t ThermalCluster::memoryUsage() const
     uint64_t amount = sizeof(ThermalCluster) + modulation.memoryUsage();
     if (prepro)
         amount += prepro->memoryUsage();
-    if (series)
-        amount += series->memoryUsage();
+    amount += series.memoryUsage();
     amount += ecoInput.memoryUsage();
     return amount;
 }
@@ -674,7 +641,7 @@ uint64_t ThermalCluster::memoryUsage() const
 void ThermalCluster::calculatMinDivModulation()
 {
     minDivModulation.value = (modulation[thermalModulationCapacity][0]
-                              / Math::Ceil(modulation[thermalModulationCapacity][0]));
+                              / std::ceil(modulation[thermalModulationCapacity][0]));
     minDivModulation.index = 0;
 
     for (uint t = 1; t < modulation.height; t++)
@@ -693,7 +660,7 @@ void ThermalCluster::calculatMinDivModulation()
 
 bool ThermalCluster::checkMinStablePower()
 {
-    if (not minDivModulation.isCalculated) // not has been initialized
+    if (!minDivModulation.isCalculated) // not has been initialized
         calculatMinDivModulation();
 
     if (minDivModulation.value < 0)
@@ -705,11 +672,11 @@ bool ThermalCluster::checkMinStablePower()
     // calculate nominalCapacityWithSpinning
     double nomCapacityWithSpinning = nominalCapacity * (1 - spinning / 101);
 
-    if (Math::Zero(1 - spinning / 101))
+    if (Utils::isZero(1 - spinning / 101))
         minDivModulation.border = .0;
     else
         minDivModulation.border
-          = Math::Min(nomCapacityWithSpinning, minStablePower) / nomCapacityWithSpinning;
+          = std::min(nomCapacityWithSpinning, minStablePower) / nomCapacityWithSpinning;
 
     if (minDivModulation.value < minDivModulation.border)
     {
@@ -721,9 +688,9 @@ bool ThermalCluster::checkMinStablePower()
     return true;
 }
 
-bool ThermalCluster::checkMinStablePowerWithNewModulation(uint index, double value)
+bool ThermalCluster::checkMinStablePowerWithNewModulation(uint idx, double value)
 {
-    if (not minDivModulation.isCalculated || index == minDivModulation.index)
+    if (!minDivModulation.isCalculated || idx == minDivModulation.index)
         calculatMinDivModulation();
     else
     {
@@ -731,7 +698,7 @@ bool ThermalCluster::checkMinStablePowerWithNewModulation(uint index, double val
         if (div < minDivModulation.value)
         {
             minDivModulation.value = div;
-            minDivModulation.index = index;
+            minDivModulation.index = idx;
         }
     }
 
@@ -765,7 +732,7 @@ double ThermalCluster::getOperatingCost(uint serieIndex, uint hourInTheYear) con
     }
     else
     {
-        const uint tsIndex = Math::Min(serieIndex, costsTimeSeries.size() - 1);
+        const uint tsIndex = std::min(serieIndex, (uint)costsTimeSeries.size() - 1);
         return costsTimeSeries[tsIndex].productionCostTs[hourInTheYear];
     }
 }
@@ -780,17 +747,17 @@ double ThermalCluster::getMarginalCost(uint serieIndex, uint hourInTheYear) cons
     }
     else
     {
-        const uint tsIndex = Math::Min(serieIndex, costsTimeSeries.size() - 1);
+        const uint tsIndex = std::min(serieIndex, (uint)costsTimeSeries.size() - 1);
         return costsTimeSeries[tsIndex].marginalCostTS[hourInTheYear] * mod;
     }
-    /* Math::Min is necessary in case Availability has e.g 10 TS and both FuelCost & Co2Cost have
+    /* std::min is necessary in case Availability has e.g 10 TS and both FuelCost & Co2Cost have
      only 1TS. Then - > In order to save memory marginalCostTS vector has only one array
      inside -> that is used for all (e.g.10) TS*/
 }
 
 double ThermalCluster::getMarketBidCost(uint hourInTheYear, uint year) const
 {
-    uint serieIndex = (series->timeSeries.width == 1) ? 0 : series->timeseriesNumbers[0][year];
+    uint serieIndex = series.getSeriesIndex(year);
 
     double mod = modulation[thermalModulationMarketBid][serieIndex];
 
@@ -800,7 +767,7 @@ double ThermalCluster::getMarketBidCost(uint hourInTheYear, uint year) const
     }
     else
     {
-        const uint tsIndex = Math::Min(serieIndex, costsTimeSeries.size() - 1);
+        const uint tsIndex = std::min(serieIndex, (uint)costsTimeSeries.size() - 1);
         return costsTimeSeries[tsIndex].marketBidCostTS[hourInTheYear] * mod;
     }
 }
@@ -815,17 +782,17 @@ void ThermalCluster::checkAndCorrectAvailability()
     bool condition = false;
     bool report = false;
 
-    for (uint y = 0; y != series->timeSeries.height; ++y)
+    for (uint y = 0; y != series.timeSeries.height; ++y)
     {
-        for (uint x = 0; x != series->timeSeries.width; ++x)
+        for (uint x = 0; x != series.timeSeries.width; ++x)
         {
             auto rightpart
               = PminDUnGroupeDuPalierThermique
-                * ceil(series->timeSeries.entry[x][y] / PmaxDUnGroupeDuPalierThermique);
-            condition = rightpart > series->timeSeries.entry[x][y];
+                * ceil(series.timeSeries.entry[x][y] / PmaxDUnGroupeDuPalierThermique);
+            condition = rightpart > series.timeSeries.entry[x][y];
             if (condition)
             {
-                series->timeSeries.entry[x][y] = rightpart;
+                series.timeSeries.entry[x][y] = rightpart;
                 report = true;
             }
         }

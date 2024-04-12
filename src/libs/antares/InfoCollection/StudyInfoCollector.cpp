@@ -1,3 +1,23 @@
+/*
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
+**
+** Antares_Simulator is free software: you can redistribute it and/or modify
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
+** (at your option) any later version.
+**
+** Antares_Simulator is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+** Mozilla Public Licence 2.0 for more details.
+**
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+*/
 //
 // Created by marechaljas on 22/08/23.
 //
@@ -5,7 +25,7 @@
 #include "antares/infoCollection/StudyInfoCollector.h"
 #include "antares/benchmarking/DurationCollector.h"
 #include "antares/benchmarking/file_content.h"
-#include "../../../config.h"
+#include <antares/config/config.h>
 
 using namespace Antares::Data;
 namespace Benchmarking {
@@ -58,14 +78,8 @@ void StudyInfoCollector::enabledThermalClustersCountToFileContent(FileContent& f
     auto end = study_.areas.end();
     for (auto i = study_.areas.begin(); i != end; ++i)
     {
-        Area& area = *(i->second);
-        auto end = area.thermal.list.end();
-        for (auto i = area.thermal.list.begin(); i != end; ++i)
-        {
-            auto& cluster = i->second;
-            if (cluster->enabled)
-                nbEnabledThermalClusters++;
-        }
+        const Area& area = *(i->second);
+        nbEnabledThermalClusters += area.thermal.list.enabledAndNotMustRunCount();
     }
 
     // Adding an item related to number of enabled thermal clusters to the file content
@@ -74,15 +88,15 @@ void StudyInfoCollector::enabledThermalClustersCountToFileContent(FileContent& f
 
 void StudyInfoCollector::enabledBindingConstraintsCountToFileContent(FileContent& file_content)
 {
-    auto activeContraints = study_.bindingConstraints.activeContraints();
-    auto nbEnabledBC = activeContraints.size();
+    auto activeConstraints = study_.bindingConstraints.activeConstraints();
+    auto nbEnabledBC = activeConstraints.size();
     unsigned nbEnabledHourlyBC(0);
     unsigned nbEnabledDailyBC(0);
     unsigned nbEnabledWeeklyBC(0);
 
-    for (uint i = 0; i < nbEnabledBC; i++)
+    for (const auto& bc : activeConstraints)
     {
-        switch (activeContraints[i]->type())
+        switch (bc->type())
         {
             case BindingConstraint::Type::typeHourly:
                 nbEnabledHourlyBC++;

@@ -1,15 +1,13 @@
 project(result-writer)
-add_library(result_writer
-        # Interface class (public API)
-        antares/writer/i_writer.h
-        antares/writer/result_format.h
+find_package(minizip)
 
+add_library(result_writer
         # Helper class
         private/ensure_queue_started.h
         ensure_queue_started.cpp
 
         # Generic factory (public API)
-        antares/writer/writer_factory.h
+        include/antares/writer/writer_factory.h
         writer_factory.cpp
 
         # Immediate file writer (private)
@@ -19,14 +17,17 @@ add_library(result_writer
         # Add entry to zip, using a job queue (private)
         zip_writer.cpp
         private/zip_writer.h
-        antares/writer/result_format.h
+
+        in_memory_writer.cpp
+        include/antares/writer/in_memory_writer.h # Public (for tests)
+        include/antares/writer/result_format.h
 )
 
 add_library(Antares::result_writer ALIAS result_writer)
 
 target_include_directories(result_writer
     PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 
 target_link_libraries(result_writer
@@ -39,7 +40,8 @@ target_link_libraries(result_writer
         inifile
         io
         Antares::concurrency
-    )
+)
 
-
-
+install(DIRECTORY include/antares
+        DESTINATION "include"
+)

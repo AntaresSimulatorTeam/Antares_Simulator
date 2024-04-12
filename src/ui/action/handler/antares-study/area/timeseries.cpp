@@ -1,28 +1,22 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
 #include "timeseries.h"
@@ -56,6 +50,9 @@ DataTimeseries::DataTimeseries(Data::TimeSeriesType ts, const AnyString& areanam
         break;
     case Data::timeSeriesThermal:
         pInfos.caption << "Thermal : Timeseries";
+        break;
+    case Data::timeSeriesHydroMaxPower:
+        pInfos.caption << "Max-Power : Timeseries";
         break;
     default:
         break;
@@ -103,6 +100,9 @@ void DataTimeseries::registerViewsWL(Context& ctx)
     case Data::timeSeriesThermal:
         ctx.view["6:Thermal"]["1:TS"] = this;
         break;
+    case Data::timeSeriesHydroMaxPower:
+        ctx.view["7:Max-Power"]["1:TS"] = this;
+        break;
     default:
         break;
     }
@@ -137,42 +137,38 @@ bool DataTimeseries::performWL(Context& ctx)
                 {
                 case Data::timeSeriesLoad:
                 {
-                    ctx.area->load.series->timeSeries = source->load.series->timeSeries;
-                    source->load.series->timeSeries.unloadFromMemory();
+                    ctx.area->load.series.timeSeries = source->load.series.timeSeries;
+                    source->load.series.timeSeries.unloadFromMemory();
                     break;
                 }
                 case Data::timeSeriesSolar:
                 {
-                    ctx.area->solar.series->timeSeries = source->solar.series->timeSeries;
-                    source->solar.series->timeSeries.unloadFromMemory();
+                    ctx.area->solar.series.timeSeries = source->solar.series.timeSeries;
+                    source->solar.series.timeSeries.unloadFromMemory();
                     break;
                 }
                 case Data::timeSeriesWind:
                 {
-                    ctx.area->wind.series->timeSeries = source->wind.series->timeSeries;
-                    source->wind.series->timeSeries.unloadFromMemory();
+                    ctx.area->wind.series.timeSeries = source->wind.series.timeSeries;
+                    source->wind.series.timeSeries.unloadFromMemory();
                     break;
                 }
                 case Data::timeSeriesHydro:
                 {
-                    ctx.area->hydro.series->ror = source->hydro.series->ror;
-                    ctx.area->hydro.series->storage = source->hydro.series->storage;
-                    ctx.area->hydro.series->mingen = source->hydro.series->mingen;
-
-                    ctx.area->hydro.series->count = source->hydro.series->count;
-
-                    source->hydro.series->ror.unloadFromMemory();
-                    source->hydro.series->storage.unloadFromMemory();
-                    source->hydro.series->mingen.unloadFromMemory();
-                                        
+                    ctx.area->hydro.series->copyGenerationTS(*source->hydro.series);
+                    break;
+                }
+                case Data::timeSeriesHydroMaxPower:
+                {
+                    ctx.area->hydro.series->copyMaxPowerTS(*source->hydro.series);
                     break;
                 }
                 case Data::timeSeriesThermal:
                 {
                     if (ctx.cluster && ctx.originalPlant && ctx.cluster != ctx.originalPlant)
                     {
-                        ctx.cluster->series->timeSeries = ctx.originalPlant->series->timeSeries;
-                        ctx.originalPlant->series->timeSeries.unloadFromMemory();
+                        ctx.cluster->series.timeSeries = ctx.originalPlant->series.timeSeries;
+                        ctx.originalPlant->series.timeSeries.unloadFromMemory();
                     }
                     break;
                 }

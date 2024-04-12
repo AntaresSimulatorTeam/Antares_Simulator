@@ -4,6 +4,8 @@
 Data can be reviewed, updated, deleted by selecting different possible active windows whose list and content
 are described hereafter. On launching Antares, the default active window is "System Maps".
 
+__DISCLAIMER: this section sometimes refers to the original interfaces of Antares-Simulator, which are deprecated. Please refer to the [AntaresWeb online documentation](https://antares-web.readthedocs.io/en/latest/) for the description of the current interface.__
+
 ## System Maps
 
 This window is used to define the general structure of the system, i.e. the list of areas and that of the interconnections. Only the area's names, location and the topology of the grid are defined at this stage. Different colors may be assigned to different areas. These colors may later be used as sorting options in most windows. They are useful to edit data in a fashion that has a geographic meaning (which the lexicographic order may not have). This window displays copy/paste/select all icons equivalent to the relevant EDIT menu commands.
@@ -97,10 +99,10 @@ These two parts are detailed hereafter.
 
 ### RIGHT PART: Time-series management
 
-For the different kinds of time-series that Antares manages in a non-deterministic way (load, thermal generation, hydro power, wind power, solar power or renewable depending on the option chosen):
+For the different kinds of time-series that Antares manages in a non-deterministic way (load, thermal generation, hydro power, hydro max power, wind power, solar power or renewable depending on the option chosen):
 
 1. **Choice of the kind of time-series to use**
-Either « ready-made » or «stochastic » (i.e. Antares-generated), defined by setting the value to either "on" or "off". Note that for Thermal time-series, the cluster-wise parameter may overrule this global parameter (see Thermal window description below).
+Either « ready-made » or «stochastic » (i.e. Antares-generated), defined by setting the value to either "on" or "off". Exception is hydro max power that can only be « ready-made ». Note that for Thermal time-series, the cluster-wise parameter may overrule this global parameter (see Thermal window description below).
 
 2. **For stochastic TS only**:
     - **Number** Number of TS to generate
@@ -134,6 +136,8 @@ A full meteorological correlation (for each MC year, one single number for all m
 A built-in notepad for recording comments regarding the study. Such comments typically help to track successive input data updates (upgrading such interconnection, removing such plant, etc.). Another simple use is to register what has been stored in the "user" subfolder and why. Such notes may prove useful to sort and interpret the results of multiple simulations carried out at different times on various configurations of the power system.
 
 ## Load
+
+_[Documentation of the AntaresWeb interface for this section](https://antares-web.readthedocs.io/en/latest/user-guide/study/areas/02-load/)_
 
 This window is used to handle all input data regarding load. In Antares load should include transmission losses. It should preferably not include the power absorbed by pumped storage power plants. If it does, the user should neither use the "PSP" array (see window "Misc. Gen") nor the explicit modeling of PSP plants
 
@@ -182,6 +186,8 @@ The user may pick any area appearing in the list and is then given access to dif
     - The "digest" tab displays for all areas a short account of the local data
 
 ## Thermal
+
+_[Documentation of the AntaresWeb interface for this section](https://antares-web.readthedocs.io/en/latest/user-guide/study/areas/03-thermals/)_
 
 This window is used to handle all input data regarding thermal dispatchable power.
 
@@ -247,7 +253,7 @@ Durations are expressed in days and rates belong to [0 , 1].
     - Minimum Up time (hours)
     - Minimum Down time (hours)
     - Default contribution to the spinning reserve (% of nominal capacity)
-    - CO2 tons emitted per electric MWh
+    - tons of different pollutant types (CO2, SO2, etc.) emitted per electric MWh
     - Fuel efficiency (%)
     - Cost generation [Set manually / Use cost timeseries]
     - Marginal operating cost (€/MWh)
@@ -279,13 +285,46 @@ Durations are expressed in days and rates belong to [0 , 1].
     - _Note that:_
 
         - _If `Cost generation` is set to `Set manually` Marginal and Market bid costs (€/MWh) are specified directly in `Common` tab and have the same value for all time-series and hours._
-        - _If `Cost generation` is set to `Use cost timeseries` Marginal and Market bid costs (€/MWh) are calculated separately for all the time-series and hours using following equation:_\
-        _Marginal_Cost[€/MWh] = Market_Bid_Cost[€/MWh] = (Fuel_Cost[€/GJ] * 3.6 * 100 / Efficiency[%]) + CO2_emission_factor[tons/MWh] * C02_cost[€/tons] + Variable_O&M_cost[€/MWh]_\
-        _where Efficiency[%], CO2_emission_factor[tons/MWh] and Variable_O&M_cost[€/MWh] are specified in `Common` tab under operating costs and parameters, while Fuel_Cost[€/GJ] and C02_cost[€/tons] are provided as time-series in separate tabs._
+        - _If `Cost generation` is set to `Use cost timeseries` Marginal and Market bid costs (€/MWh) are calculated separately for all the time-series and hours using the following equation:_  
+        _Marginal_Cost[€/MWh] = Market_Bid_Cost[€/MWh] = (Fuel_Cost[€/GJ] * 3.6 * 100 / Efficiency[%]) + CO2_emission_factor[tons/MWh] * C02_cost[€/tons] + Variable_O&M_cost[€/MWh]_  
+        _where Efficiency[%], CO2_emission_factor[tons/MWh] and Variable_O&M_cost[€/MWh] are specified in the `Common` tab under operating costs and parameters, while Fuel_Cost[€/GJ] and C02_cost[€/tons] are provided as time-series in separate tabs._
+
+
+## Storages
+
+_[Documentation of the AntaresWeb interface for this section](https://antares-web.readthedocs.io/en/latest/user-guide/study/areas/08-st-storages/)_
+
+This window is used to create and edit short-term storage objects. An individual short-term storage component is defined as an object with the following characteristics:
+
+- Storage managed with a filling level which is identical at the start and end of each Antares optimization window;
+- Rule curves that frame permissible storage levels hour by hour - the admissible range is a coefficient comprised between 0 and 1;
+- Time-series of hourly modulation of the maximum injection and withdrawal power;
+- Time-series of natural inflows (case of an open-cycle PSP).
+
+The user may pick any area appearing in the area list and is then given access to the list of short-term storages defined for the area. Once a given storage has been selected, the following characteristics can be set:
+
+- General characteristics of the storage:
+	- Name
+	- Group: the type of storage, based on a predefined list of storages ("PSP_open", "PSP_closed", "Pondage", "Battery", "Other1", "Other2", ..., "Other5")
+	- Withdrawal (MW): the maximum withdrawal power for the storage - withdrawal refers to the flow from the storage to the power system
+	- Injection (MW): the maximum injection power for the storage - withdrawal refers to the flow from the power system to the storage
+	- Stock (MWh): the capacity of the storage in MWh
+	- Efficiency (%): the energy efficiency of the storage, i.e. the ratio for a given volume between the energy taken from the system to be injected into the storage and the energy returned to the system during its withdrawal. This efficiency factor is applied when injecting energy into the storage.
+	- Initial level (%): the imposed initial filling rate of the storage at the beginning of each optimisation period.
+	- Initial level optimal: if the parameter is activated, the "Initial level" parameter is ignored and the initial storage level is optimized by Antares for each optimization period to minimize its objective function.  
+	_Note: setting this parameter to "True" implies that there is no guarantee that the initial storage level of week N is the same as the final storage level of week N-1. However, the final level of week N is always equal to the initial level of the same week N plus/minus the injections/withdrawals occuring at the last hour of week N._
+	
+- "Injections/withdrawal capacities": a hourly time-series of modulation factors of the injection and withdrawal capacity for each hour (between 0 and 1), reflecting a lower availability of the structures during certain periods. At a given hour, the overall injection/withdrawal capacities of the storage are the product of this modulation factor by the "Withdrawal" and "Injection" parameters in the General data.
+
+- "Rule curves": a hourly time-series of rule curves (between 0 and 1), which are the lower and upper limits of the storage level imposed at each hour. 
+
+- "Inflows": a hourly time-series of inflows filling the storage (in MWh). The values can be negative, corresponding to withdrawals imposed on the storage for other uses.
 
 ## Hydro
 
-This section of the GUI is meant to handle all input data regarding hydro power,
+_[Documentation of the AntaresWeb interface for this section](https://antares-web.readthedocs.io/en/latest/user-guide/study/areas/05-hydro/)_
+
+This section of the AntaresWeb interface for this section is meant to handle all input data regarding hydro power,
 as well as any other kind of energy storage system of any size (from a small battery to a large
 conventional hydro-storage reservoir with or without pumping facilities, etc.): Hydro power being
 historically the first and largest form of power storage, it stood to reason that it should play in
@@ -295,11 +334,11 @@ which explains the comparatively long length of this chapter.
 
 In the main Window, the user may pick any area appearing in the list and is then given access to different tabs:
 
-- The "time-series" tab displays the "ready-made" time-series already available for simulation purposes. There are two categories of time-series (displayed in two different subtabs): the Run of River (ROR) time-series on the one hand and the Storage power (SP) time-series on the other hand.
+- The "time-series" tab displays the "ready-made" time-series already available for simulation purposes. There are five categories of time-series (displayed in five different subtabs): the Run of River (ROR) time-series, the Storage power (SP) time-series, the Minimum Generation power, the Maximum Generation power and the Maximum Pumping Power.
 
-    ROR time-series are defined at the hourly scale; each of the 8760 values represents the ROR power expected at a given hour, expressed in round number and in MW. The SP time-series are defined at the daily scale; each of the 365 values represents an overall SP energy expected in the day, expressed in round number and in MWh. These natural inflows are considered to be storable into a reservoir for later use.
+    ROR time-series are defined at the hourly scale; each of the 8760 values represents the ROR power expected at a given hour, expressed in round number and in MW. The SP time-series are defined at the daily scale; each of the 365 values represents an overall SP energy expected in the day, expressed in round number and in MWh. These natural inflows are considered to be storable into a reservoir for later use. The Minimum Generation time-series are defined at the hourly scale; each of the 8760 values represents the Minimum Generation power expected at a given hour expressed in round number and in MW. The Maximum Generation time-series are defined at the hourly scale; each of the 8760 values represents the Maximum Generation power expected at a given hour expressed in round number and in MW. The Maximum Pumping time-series are defined at the hourly scale; each of the 8760 values represents the Maximum Pumping power expected at a given hour expressed in round number and in MW.
 
-    Both types of data may come from any origin outside Antares, or may have been formerly generated by the Antares time-series stochastic generator and stored as input data on the user's request. Different ways to update data are:
+    ROR time-series and SP time-series may come from any origin outside Antares, or may have been formerly generated by the Antares time-series stochastic generator and stored as input data on the user's request. Minimum Generation, Maximum Generation and Maximum Pumping may come from any origin outside Antares, but they can not be generated by the Antares time-series stochastic generator. Different ways to update data are:
 
     - direct typing
     - copy/paste a selected field to/from the clipboard
@@ -313,7 +352,8 @@ In the main Window, the user may pick any area appearing in the list and is then
 
     - _Note that:_
 
-        - _For a given area, the number of ROR time-series and SP times-series **must** be identical_
+        - _For a given area, the number of ROR time-series, SP times-series and Minimum Generation **must** be identical_
+        - _For a given area, the number of Maximum Generation and Maximum Pumping **must** be identical_
         - _If the "intra-modal correlated draws" option was not selected in the_ **simulation** _window,
       MC adequacy or economy simulations can take place even if the number of hydro time-series is not the same
       in all areas (e.g. 2 , 5 , 1 , 45 ,...)_
@@ -376,10 +416,10 @@ the weekly optimal hydro-thermal unit-commitment and dispatch process.
 Standard credits (Bottom part)
 
 The bottom part displays two daily time-series (365 values) defined for energy generation/storage
-(hydro turbines or hydro pumps). In each case, the first array defines the maximum power (generated or absorbed),
-and the second defines the maximum daily energy (either generated or stored).
+(hydro turbines or hydro pumps). Both arrays represents the maximum daily energy (either generated or stored).
 
-For the sake of clarity, maximum daily energies are expressed as a number of hours at maximum power.
+For the sake of clarity, maximum daily energies are expressed as a number of hours at maximum power and these values
+are used along with the Maximum Generation and Maximum Pumping TS's to calculate daily mean energy.
 
 Credit modulation (Upper part)
 
@@ -447,6 +487,8 @@ regardless of whether a pre-allocation heuristic is used or not.
 
 ## Wind
 
+_[Documentation of the AntaresWeb interface for this section](https://antares-web.readthedocs.io/en/latest/user-guide/study/areas/06-wind/)_
+
 This window is used to handle all input data regarding Wind power.
 This window is only accessible when the advanced parameter Renewable Generation modeling is set to "Aggregated".
 
@@ -486,6 +528,8 @@ The user may pick any area appearing in the list and is then given access to dif
 
 
 ## Solar
+
+_[Documentation of the AntaresWeb interface for this section](https://antares-web.readthedocs.io/en/latest/user-guide/study/areas/07-solar/)_
 
 This window is used to handle all input data regarding Solar power. Both thermal solar generation and PV solar generation are assumed to be bundled in this data section.
 _This window is only accessible when the advanced parameter Renewable Generation modeling is set to "aggregated”._
@@ -527,6 +571,8 @@ The user may pick any area appearing in the list and is then given access to dif
 
 
 ## Renewable
+
+_[Documentation of the AntaresWeb interface for this section](https://antares-web.readthedocs.io/en/latest/user-guide/study/areas/04-renewables/)_
 
 This window is used to handle all input data regarding renewable generation.
 _This window is only accessible when the advanced parameter Renewable Generation modeling is set to "cluster” (default value)._
@@ -575,6 +621,8 @@ The user may pick any area appearing in the area list and is then given access t
 
 ## Misc. Gen.
 
+_[Documentation of the AntaresWeb interface for this section](https://antares-web.readthedocs.io/en/latest/user-guide/study/areas/10-misc-gen/)_
+
 This window is used to handle all input data regarding miscellaneous non dispatchable generation.
 
 On picking any area in the primary list, the user gets direct access to all data regarding the area, which amount to **8** ready-made 8760-hour time-series (expressed in MW):
@@ -608,6 +656,8 @@ On picking any area in the primary list, the user gets direct access to all data
 
 ## Reserves / DSM
 
+_[Documentation of the AntaresWeb interface for this section](https://antares-web.readthedocs.io/en/latest/user-guide/study/areas/09-reserves/)_
+
 This window is used to handle all input data regarding reserves and the potential of "smart" load management (when not modeled using "fake" thermal dispatchable plants). On picking any area in the primary list, the user gets direct access to all data regarding the area, which amount to **four** ready-made 8760-hour time-series (expressed in MW). Those reserves are available in either "adequacy" or "economy" simulations:
 
 - Day-ahead reserve: power accounted for in setting up the optimal unit-commitment and schedule of the following day(s), which must consider possible forecasting errors or last-minute incidents. If the optimization range is of one day, the reserve will be actually seen as "day-ahead". If the optimization range is of one week, the need for reserve will be interpreted as "week-ahead". (Adequacy and Economy simulations)
@@ -632,15 +682,15 @@ This window is used to handle all input data regarding the interconnections. On 
 
 	- Hurdle cost indirect: a downstream-to-upstream transmission fee, in €/MWh
 
-	- Impedance: used in economy simulations to give a physical meaning to raw outputs, when no binding constraints have been defined to enforce Kirchhoff's laws (see "Output" section, variable "Flow Quad") OR used by the Kirchhoff's constraint generator to build up proper flow constraints (AC flow computed with the classical "DC approximation"). Since voltage levels are not explicitly defined and handled within Antares, all impedances are assumed to be scaled to some reference \\( U_{ref} \\)
+	- Impedance: used in economy simulations to give a physical meaning to raw outputs, when no binding constraints have been defined to enforce Kirchhoff's laws (see "Output" section, variable "Flow Quad") OR used by the Kirchhoff's constraint generator to build up proper flow constraints (AC flow computed with the classical "DC approximation"). Since voltage levels are not explicitly defined and handled within Antares, all impedances are assumed to be scaled to some reference $ U_{ref} $
 
 	- Loop flow: amount of power flowing circularly though the grid when all "nodes" are perfectly balanced (no import and no export). Such loop flows may be expected on any "simplified" grid in which large regions (or even countries) are modeled by a small number of "macro" nodes, and should accordingly be accounted for.
 
-	- PST min (denoted \\(Y^-\\) in [Kirchhoff Constraints Generator](07-kirchhoffs_constraint_generator.md)): lower bound of phase-shifting that can be reached by a PST installed on the link, if any (note : the effect of the active loop flow generated by the PST may be superimposed to that of the passive loop flow)
+	- PST min (denoted $Y^-$ in [Kirchhoff Constraints Generator](07-kirchhoffs_constraint_generator.md)): lower bound of phase-shifting that can be reached by a PST installed on the link, if any (note : the effect of the active loop flow generated by the PST may be superimposed to that of the passive loop flow)
 
-	- PST max (denoted \\(Y^+\\) in [Kirchhoff Constraints Generator](07-kirchhoffs_constraint_generator.md)): upper bound of phase-shifting that can be reached by a PST installed on the link, if any (note : the effect of the active loop flow generated by the PST may be superimposed to that of the passive loop flow)
+	- PST max (denoted $Y^+$ in [Kirchhoff Constraints Generator](07-kirchhoffs_constraint_generator.md)): upper bound of phase-shifting that can be reached by a PST installed on the link, if any (note : the effect of the active loop flow generated by the PST may be superimposed to that of the passive loop flow)
 
-	For the sake of simplicity and homogeneity with the convention used for impedance, PST settings are assumed to be expressed in \\( rad/U^2_{ref} \\)
+	For the sake of simplicity and homogeneity with the convention used for impedance, PST settings are assumed to be expressed in $ rad/U^2_{ref} $
 
 
 - The "Transmission capacities" tab displays "ready-made" 8760-hour time-series already available for simulation purposes.
@@ -668,7 +718,7 @@ In this tab, the table "Direct" describes the upstream-to-downstream capacity, i
 
 ## Binding constraints
 
-This section of the GUI is used to handle all data regarding special constraints that one may wish to include in the formulation of the optimization problems to solve.
+This section of the AntaresWeb interface for this section is used to handle all data regarding special constraints that one may wish to include in the formulation of the optimization problems to solve.
 
 The set of tabs described hereafter provides for that purpose all the means required to define arbitrary linear constraints on any subset of continuous variables involved in the modeling of the power system.
 
@@ -678,10 +728,10 @@ A typical situation in which this feature proves useful is, for instance, encoun
 
 In such cases, assuming that:
 
-- \\(Z_l\\) denotes the impedance of interconnections \\(l=1, L\\)
-- A preliminary study of the graph modeling the grid has shown that it can be described by a set of independent meshes \\(c=1, C\\)(cycle basis of the graph)
+- $Z_l$ denotes the impedance of interconnections $l=1, L$
+- A preliminary study of the graph modeling the grid has shown that it can be described by a set of independent meshes $c=1, C$(cycle basis of the graph)
 
-Then the DC flow approximation may be implemented, for each time-step of the simulation, by a set of C binding constraints between AC flows \\(F_l\\):
+Then the DC flow approximation may be implemented, for each time-step of the simulation, by a set of C binding constraints between AC flows $F_l$:
 
 $$ c= 1, ..., C : \sum_{i \in C}{sign(l,c)F_lZ_l = 0}$$
 
@@ -697,7 +747,7 @@ More generally, Antares allows to define three categories of binding constraints
 
 - "weekly" binding constraints, that are applied to weekly energies. Like the previous ones, these constraints may be used to model commercial contracts or various phenomena, such as the operation of a pumped storage power plant operated on a weekly cycle.
 
-The Binding Constraints section of the GUI involves six main tabs described hereafter:
+The Binding Constraints section of the AntaresWeb interface for this section involves six main tabs described hereafter:
 
 - **TAB "summary"**
 Creation, edition or removal of a binding constraint. A binding constraint is here defined by four macroscopic attributes that can be set by the edit command:

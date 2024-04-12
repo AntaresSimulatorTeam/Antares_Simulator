@@ -1,0 +1,9 @@
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+find_dependency(ortools)
+find_dependency(minizip)
+
+include("${CMAKE_CURRENT_LIST_DIR}/AntaresTargets.cmake")
+
+check_required_components(Antares)

@@ -15,7 +15,7 @@ jobs:
         os: [ubuntu-20.04]
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: ccache
       uses: hendrikmuhs/ccache-action@v1.2
@@ -25,9 +25,10 @@ jobs:
            sudo apt-get update
            sudo apt-get install uuid-dev libwxgtk3.0-gtk3-dev
            sudo apt-get install libboost-test-dev
+           sudo apt-get install g++-10 gcc-10
 
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: 3.8
 
@@ -42,11 +43,11 @@ jobs:
 
     - name: Configure
       run: |
-           cmake -B _build -S src -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON
+           cmake -B _build -S src -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_C_COMPILER=/usr/bin/gcc-10 -DCMAKE_CXX_COMPILER=/usr/bin/g++-10 -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON
 
     - name: Build
       run: |
-           cmake --build _build --config release -j2
+           cmake --build _build --config release -j$(nproc)
 
     - name: Installer .deb creation
       run: |

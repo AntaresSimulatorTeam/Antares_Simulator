@@ -17,7 +17,7 @@ namespace Extension
 namespace CString
 {
 template<class CStringT, class T, class Alloc>
-struct Append<CStringT, Yuni::Nullable<T, Alloc>> final
+class Append<CStringT, Yuni::Nullable<T, Alloc>> final
 {
     static void Perform(CStringT& s, const Yuni::Nullable<T, Alloc>& rhs)
     {

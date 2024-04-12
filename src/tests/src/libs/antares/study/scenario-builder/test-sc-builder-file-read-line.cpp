@@ -1,3 +1,23 @@
+/*
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
+**
+** Antares_Simulator is free software: you can redistribute it and/or modify
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
+** (at your option) any later version.
+**
+** Antares_Simulator is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+** Mozilla Public Licence 2.0 for more details.
+**
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+*/
 #define BOOST_TEST_MODULE test read scenario-builder.dat 
 #define BOOST_TEST_DYN_LINK
 
@@ -5,8 +25,8 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include <study.h>
-#include <rules.h>
+#include <antares/study/study.h>
+#include <antares/study/scenario-builder/rules.h>
 
 using namespace std;
 using namespace Antares::Data;
@@ -18,15 +38,12 @@ using namespace Antares::Data;
 
 void addClusterToAreaList(Area* area, std::shared_ptr<ThermalCluster> cluster)
 {
-	area->thermal.clusters.push_back(cluster.get());
-	area->thermal.list.add(cluster);
-	area->thermal.list.mapping[cluster->id()] = cluster;
+	area->thermal.list.addToCompleteList(cluster);
 }
 
 void addClusterToAreaList(Area* area, std::shared_ptr<RenewableCluster> cluster)
 {
-	area->renewable.clusters.push_back(cluster.get());
-	area->renewable.list.add(cluster);
+	area->renewable.list.addToCompleteList(cluster);
 }
 
 template<class ClusterType>
@@ -34,7 +51,6 @@ std::shared_ptr<ClusterType> addClusterToArea(Area* area, const std::string& clu
 {
 	auto cluster = std::make_shared<ClusterType>(area);
 	cluster->setName(clusterName);
-	cluster->series = new DataSeriesCommon();
 
 	addClusterToAreaList(area, cluster);
 
@@ -65,28 +81,34 @@ struct Fixture
 
 		// Load : set the nb of ready made TS
 		uint nbReadyMadeTS = 13;
-		area_1->load.series->timeSeries.resize(nbReadyMadeTS, 1);
-		area_2->load.series->timeSeries.resize(nbReadyMadeTS, 1);
-		area_3->load.series->timeSeries.resize(nbReadyMadeTS, 1);
+		area_1->load.series.timeSeries.resize(nbReadyMadeTS, 1);
+		area_2->load.series.timeSeries.resize(nbReadyMadeTS, 1);
+		area_3->load.series.timeSeries.resize(nbReadyMadeTS, 1);
 
 		// Wind : set the nb of ready made TS
 		nbReadyMadeTS = 17;
-		area_1->wind.series->timeSeries.resize(nbReadyMadeTS, 1);
-		area_2->wind.series->timeSeries.resize(nbReadyMadeTS, 1);
-		area_3->wind.series->timeSeries.resize(nbReadyMadeTS, 1);
+		area_1->wind.series.timeSeries.resize(nbReadyMadeTS, 1);
+		area_2->wind.series.timeSeries.resize(nbReadyMadeTS, 1);
+		area_3->wind.series.timeSeries.resize(nbReadyMadeTS, 1);
 
 		// Solar : set the nb of ready made TS
 		nbReadyMadeTS = 9;
-		area_1->solar.series->timeSeries.resize(nbReadyMadeTS, 1);
-		area_2->solar.series->timeSeries.resize(nbReadyMadeTS, 1);
-		area_3->solar.series->timeSeries.resize(nbReadyMadeTS, 1);
+		area_1->solar.series.timeSeries.resize(nbReadyMadeTS, 1);
+		area_2->solar.series.timeSeries.resize(nbReadyMadeTS, 1);
+		area_3->solar.series.timeSeries.resize(nbReadyMadeTS, 1);
 
 		// Hydro : set the nb of ready made TS
 		nbReadyMadeTS = 12;
-		area_1->hydro.series->count = nbReadyMadeTS;
-		area_2->hydro.series->count = nbReadyMadeTS;
-		area_3->hydro.series->count = nbReadyMadeTS;
-
+		area_1->hydro.series->resizeGenerationTS(nbReadyMadeTS);
+		area_2->hydro.series->resizeGenerationTS(nbReadyMadeTS);
+		area_3->hydro.series->resizeGenerationTS(nbReadyMadeTS);
+		
+		// Hydro Max Power: set the nb of ready made TS
+		nbReadyMadeTS = 15;
+		area_1->hydro.series->resizeMaxPowerTS(nbReadyMadeTS);
+		area_2->hydro.series->resizeMaxPowerTS(nbReadyMadeTS);
+		area_3->hydro.series->resizeMaxPowerTS(nbReadyMadeTS);
+		
 		// Links
 		link_12 = AreaAddLinkBetweenAreas(area_1, area_2, false);
 		link_12->directCapacities.resize(15, 1);
@@ -103,14 +125,9 @@ struct Fixture
 		thCluster_31 = addClusterToArea<ThermalCluster>(area_3, "th-cluster-31");
 
 		// Thermal clusters : set the nb of ready made TS
-		thCluster_11->series->timeSeries.resize(14, 1);
-		thCluster_12->series->timeSeries.resize(14, 1);
-		thCluster_31->series->timeSeries.resize(14, 1);
-
-		// Thermal clusters : update areas local numbering for clusters
-		area_1->thermal.prepareAreaWideIndexes();
-		area_2->thermal.prepareAreaWideIndexes();
-		area_3->thermal.prepareAreaWideIndexes();
+		thCluster_11->series.timeSeries.resize(14, 1);
+		thCluster_12->series.timeSeries.resize(14, 1);
+		thCluster_31->series.timeSeries.resize(14, 1);
 
 		// Add renewable clusters
 		rnCluster_21 = addClusterToArea<RenewableCluster>(area_2, "rn-cluster-21");
@@ -118,14 +135,9 @@ struct Fixture
 		rnCluster_32 = addClusterToArea<RenewableCluster>(area_3, "rn-cluster-32");
 
 		// Renewable clusters : set the nb of ready made TS
-		rnCluster_21->series->timeSeries.resize(9, 1);
-		rnCluster_31->series->timeSeries.resize(9, 1);
-		rnCluster_32->series->timeSeries.resize(9, 1);
-
-		// Renewable clusters : update areas local numbering for clusters
-		area_1->renewable.prepareAreaWideIndexes();
-		area_2->renewable.prepareAreaWideIndexes();
-		area_3->renewable.prepareAreaWideIndexes();
+		rnCluster_21->series.timeSeries.resize(9, 1);
+		rnCluster_31->series.timeSeries.resize(9, 1);
+		rnCluster_32->series.timeSeries.resize(9, 1);
 
 		// Resize all TS numbers storage (1 column x nbYears lines) 
 		area_1->resizeAllTimeseriesNumbers(study->parameters.nbYears);
@@ -181,7 +193,7 @@ BOOST_FIXTURE_TEST_CASE(on_area2_and_on_year_18__load_TS_number_11_is_chosen__re
 	BOOST_CHECK_EQUAL(my_rule.load.get_value(yearNumber.to<uint>(), area_2->index), tsNumber.to<uint>());
 
 	BOOST_CHECK(my_rule.apply());
-	BOOST_CHECK_EQUAL(area_2->load.series->timeseriesNumbers[0][yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
+	BOOST_CHECK_EQUAL(area_2->load.series.timeseriesNumbers[0][yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
 }
 
 // =================
@@ -197,7 +209,7 @@ BOOST_FIXTURE_TEST_CASE(on_area3_and_on_year_7__wind_TS_number_5_is_chosen__read
 	BOOST_CHECK_EQUAL(my_rule.wind.get_value(yearNumber.to<uint>(), area_3->index), tsNumber.to<uint>());
 
 	BOOST_CHECK(my_rule.apply());
-	BOOST_CHECK_EQUAL(area_3->wind.series->timeseriesNumbers[0][yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
+	BOOST_CHECK_EQUAL(area_3->wind.series.timeseriesNumbers[0][yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
 }
 
 // =================
@@ -213,7 +225,7 @@ BOOST_FIXTURE_TEST_CASE(on_area1_and_on_year_4__solar_TS_number_8_is_chosen__rea
 	BOOST_CHECK_EQUAL(my_rule.solar.get_value(yearNumber.to<uint>(), area_1->index), tsNumber.to<uint>());
 
 	BOOST_CHECK(my_rule.apply());
-	BOOST_CHECK_EQUAL(area_1->solar.series->timeseriesNumbers[0][yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
+	BOOST_CHECK_EQUAL(area_1->solar.series.timeseriesNumbers[0][yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
 }
 
 // =================
@@ -232,6 +244,22 @@ BOOST_FIXTURE_TEST_CASE(on_area2_and_on_year_15__solar_TS_number_3_is_chosen__re
 	BOOST_CHECK_EQUAL(area_2->hydro.series->timeseriesNumbers[0][yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
 }
 
+// =================
+// Tests on Hydro Max Power
+// =================
+BOOST_FIXTURE_TEST_CASE(on_area3_and_on_year_10__hydro_power_credits_TS_number_6_is_chosen__reading_OK, Fixture)
+{
+	AreaName yearNumber = "7";
+	String tsNumber = "6";
+	AreaName::Vector splitKey = { "hgp", "area 3", yearNumber };
+	BOOST_CHECK(my_rule.readLine(splitKey, tsNumber, false));
+
+	BOOST_CHECK_EQUAL(my_rule.hydroMaxPower.get_value(yearNumber.to<uint>(), area_3->index), tsNumber.to<uint>());
+
+	BOOST_CHECK(my_rule.apply());
+	BOOST_CHECK_EQUAL(area_3->hydro.series->timeseriesNumbersHydroMaxPower[0][yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
+}
+
 
 // ===========================
 // Tests on Thermal clusters
@@ -246,7 +274,7 @@ BOOST_FIXTURE_TEST_CASE(on_th_cluster11_of_area1_and_on_year_6__solar_TS_number_
 	BOOST_CHECK_EQUAL(my_rule.thermal[area_1->index].get(thCluster_11.get(), yearNumber.to<uint>()), tsNumber.to<uint>());
 
 	BOOST_CHECK(my_rule.apply());
-	BOOST_CHECK_EQUAL(thCluster_11->series->timeseriesNumbers[0][yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
+	BOOST_CHECK_EQUAL(thCluster_11->series.timeseriesNumbers[0][yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
 }
 
 BOOST_FIXTURE_TEST_CASE(on_th_cluster12_of_area1_and_on_year_13__solar_TS_number_5_is_chosen__reading_OK, Fixture)
@@ -259,7 +287,7 @@ BOOST_FIXTURE_TEST_CASE(on_th_cluster12_of_area1_and_on_year_13__solar_TS_number
 	BOOST_CHECK_EQUAL(my_rule.thermal[area_1->index].get(thCluster_12.get(), yearNumber.to<uint>()), tsNumber.to<uint>());
 
 	BOOST_CHECK(my_rule.apply());
-	BOOST_CHECK_EQUAL(thCluster_12->series->timeseriesNumbers[0][yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
+	BOOST_CHECK_EQUAL(thCluster_12->series.timeseriesNumbers[0][yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
 }
 
 BOOST_FIXTURE_TEST_CASE(on_th_cluster31_of_area3_and_on_year_10__solar_TS_number_7_is_chosen__reading_OK, Fixture)
@@ -272,7 +300,7 @@ BOOST_FIXTURE_TEST_CASE(on_th_cluster31_of_area3_and_on_year_10__solar_TS_number
 	BOOST_CHECK_EQUAL(my_rule.thermal[area_3->index].get(thCluster_31.get(), yearNumber.to<uint>()), tsNumber.to<uint>());
 
 	BOOST_CHECK(my_rule.apply());
-	BOOST_CHECK_EQUAL(thCluster_31->series->timeseriesNumbers[0][yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
+	BOOST_CHECK_EQUAL(thCluster_31->series.timeseriesNumbers[0][yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
 }
 
 
@@ -291,7 +319,7 @@ BOOST_FIXTURE_TEST_CASE(on_rn_cluster21_of_area2_and_on_year_16__solar_TS_number
 	BOOST_CHECK_EQUAL(my_rule.renewable[area_2->index].get(rnCluster_21.get(), yearNumber.to<uint>()), tsNumber.to<uint>());
 
 	BOOST_CHECK(my_rule.apply());
-	BOOST_CHECK_EQUAL(rnCluster_21->series->timeseriesNumbers[0][yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
+	BOOST_CHECK_EQUAL(rnCluster_21->series.timeseriesNumbers[0][yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
 }
 
 BOOST_FIXTURE_TEST_CASE(on_rn_cluster32_of_area3_and_on_year_2__solar_TS_number_4_is_chosen__reading_OK, Fixture)
@@ -306,7 +334,7 @@ BOOST_FIXTURE_TEST_CASE(on_rn_cluster32_of_area3_and_on_year_2__solar_TS_number_
 	BOOST_CHECK_EQUAL(my_rule.renewable[area_3->index].get(rnCluster_32.get(), yearNumber.to<uint>()), tsNumber.to<uint>());
 
 	BOOST_CHECK(my_rule.apply());
-	BOOST_CHECK_EQUAL(rnCluster_32->series->timeseriesNumbers[0][yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
+	BOOST_CHECK_EQUAL(rnCluster_32->series.timeseriesNumbers[0][yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
 }
 
 
@@ -409,6 +437,27 @@ BOOST_FIXTURE_TEST_CASE(binding_constraints_group_groupTest__Load_TS_4_for_year_
     BOOST_CHECK(my_rule.apply());
     auto actual = study->bindingConstraintsGroups["groupTest"]->timeseriesNumbers[0][yearNumber];
     BOOST_CHECK_EQUAL(actual, tsNumber-1);
+}
+
+// ========================
+// Tests on TSNumberData
+// ========================
+BOOST_FIXTURE_TEST_CASE(thermalTSNumberData, Fixture)
+{
+    ScenarioBuilder::thermalTSNumberData tsdata;
+    tsdata.attachArea(area_1);
+    tsdata.reset(*study);
+    tsdata.setTSnumber(thCluster_12.get(), 2, 22);
+    tsdata.setTSnumber(thCluster_12.get(), 5, 32); //out of bounds
+
+    study->parameters.nbTimeSeriesThermal = 1;
+    thCluster_12->tsGenBehavior = LocalTSGenerationBehavior::forceNoGen;
+    thCluster_12->series.timeSeries.resize(30, 8760);
+
+    tsdata.apply(*study);
+
+    BOOST_CHECK_EQUAL(thCluster_12->series.timeseriesNumbers[0][2], 21);
+    BOOST_CHECK_EQUAL(thCluster_12->series.timeseriesNumbers[0][5], 0);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -1,48 +1,44 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
 #include <yuni/yuni.h>
 #include <antares/study/study.h>
 #include <antares/study/area/scratchpad.h>
+#include <antares/utils/utils.h>
 #include <yuni/io/file.h>
 #include <yuni/io/directory.h>
-#include "management.h"
-#include <antares/fatal-error.h>
+#include "antares/solver/hydro/management/management.h"
+#include <antares/antares/fatal-error.h>
 #include <antares/writer/i_writer.h>
-#include "../daily/h2o_j_donnees_mensuelles.h"
-#include "../daily/h2o_j_fonctions.h"
-#include "../daily2/h2o2_j_donnees_mensuelles.h"
-#include "../daily2/h2o2_j_fonctions.h"
-#include "../../simulation/sim_extern_variables_globales.h"
+#include "antares/solver/hydro/daily/h2o_j_donnees_mensuelles.h"
+#include "antares/solver/hydro/daily/h2o_j_fonctions.h"
+#include "antares/solver/hydro/daily2/h2o2_j_donnees_mensuelles.h"
+#include "antares/solver/hydro/daily2/h2o2_j_fonctions.h"
+#include "antares/solver/simulation/sim_extern_variables_globales.h"
 #include <sstream>
 #include <cassert>
 #include <limits>
-#include <variable/state.h>
+#include "antares/solver/variable/state.h"
 #include <array>
+#include <numeric>
 
 using namespace Yuni;
 
@@ -81,7 +77,6 @@ enum
 
 struct DebugData
 {
-    using InflowsType = Matrix<double, int32_t>::ColumnType;
     using MaxPowerType = Matrix<double, double>::ColumnType;
     using ReservoirLevelType = Matrix<double>::ColumnType;
 
@@ -100,7 +95,7 @@ struct DebugData
     Solver::IResultWriter& pWriter;
     const TmpDataByArea& data;
     const VENTILATION_HYDRO_RESULTS_BY_AREA& ventilationResults;
-    const InflowsType& srcinflows;
+    const double* srcinflows;
     const MaxPowerType& maxP;
     const MaxPowerType& maxE;
     const double* dailyTargetGen;
@@ -110,7 +105,7 @@ struct DebugData
     DebugData(Solver::IResultWriter& writer,
               const TmpDataByArea& data,
               const VENTILATION_HYDRO_RESULTS_BY_AREA& ventilationResults,
-              const InflowsType& srcinflows,
+              const double* srcinflows,
               const MaxPowerType& maxP,
               const MaxPowerType& maxE,
               const double* dailyTargetGen,
@@ -225,19 +220,17 @@ struct DebugData
 inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::State& state,
                                                             Data::Area& area,
                                                             uint y,
-                                                            uint numSpace)
+                                                            Antares::Data::Area::ScratchMap& scratchmap)
 {
-    uint z = area.index;
-    assert(z < areas_.size());
+    auto const srcinflows = area.hydro.series->storage.getColumn(y);
 
-    auto& inflowsmatrix = area.hydro.series->storage;
+    auto& data = tmpDataByArea_[&area];
 
-    auto tsIndex = area.hydro.series->getIndex(y);
-    auto const& srcinflows = inflowsmatrix[tsIndex < inflowsmatrix.width ? tsIndex : 0];
+    auto& scratchpad = scratchmap.at(&area);
 
-    auto& data = tmpDataByArea_[numSpace][z];
+    auto& meanMaxDailyGenPower = scratchpad.meanMaxDailyGenPower;
 
-    auto& scratchpad = area.scratchpad[numSpace];
+    const uint tsIndex =  meanMaxDailyGenPower.getSeriesIndex(y);
 
     int initReservoirLvlMonth = area.hydro.initializeReservoirLevelDate;
 
@@ -249,12 +242,13 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
 
     uint dayYear = 0;
 
-    auto const& maxPower = area.hydro.maxPower;
+    auto const& dailyNbHoursAtGenPmax = area.hydro.dailyNbHoursAtGenPmax;
 
-    auto const& maxP = maxPower[Data::PartHydro::genMaxP];
-    auto const& maxE = maxPower[Data::PartHydro::genMaxE];
+    
+    auto const& maxP = meanMaxDailyGenPower[tsIndex];
+    auto const& maxE = dailyNbHoursAtGenPmax[0];
 
-    auto& ventilationResults = ventilationResults_[numSpace][z];
+    auto& ventilationResults = ventilationResults_[area.index];
 
     std::shared_ptr<DebugData> debugData(nullptr);
 
@@ -276,14 +270,13 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
         auto daysPerMonth = calendar_.months[month].days;
         assert(daysPerMonth <= maxOPP);
         assert(daysPerMonth <= maxDailyTargetGen);
-        assert(daysPerMonth + dayYear - 1 < maxPower.height);
+        assert(daysPerMonth + dayYear - 1 < meanMaxDailyGenPower.timeSeries.height);
 
         for (uint day = 0; day != daysPerMonth; ++day)
         {
             auto dYear = day + dayYear;
             assert(day < 32);
             assert(dYear < 366);
-            scratchpad.optimalMaxPower[dYear] = maxP[dYear];
 
             if (debugData)
                 debugData->OPP[dYear] = maxP[dYear] * maxE[dYear];
@@ -326,16 +319,16 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
                         demandMax = data.DLE[dYear];
                 }
 
-                if (not Math::Zero(demandMax))
+                if (!Utils::isZero(demandMax))
                 {
-                    assert(Math::Abs(demandMax) > 1e-12);
+                    assert(std::abs(demandMax) > 1e-12);
                     double coeff = 0.;
 
                     for (uint day = 0; day != daysPerMonth; ++day)
                     {
                         auto dYear = day + dayYear;
-                        coeff += Math::Power(data.DLE[dYear] / demandMax,
-                                             area.hydro.interDailyBreakdown);
+                        coeff += std::pow(data.DLE[dYear] / demandMax,
+                                area.hydro.interDailyBreakdown);
                     }
                     coeff = data.MOG[realmonth] / coeff;
 
@@ -343,7 +336,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
                     {
                         auto dYear = day + dayYear;
                         dailyTargetGen[dYear] = coeff
-                                                * Math::Power(data.DLE[dYear] / demandMax,
+                                                * std::pow(data.DLE[dYear] / demandMax,
                                                               area.hydro.interDailyBreakdown);
                     }
                 }
@@ -425,8 +418,8 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
 #ifndef NDEBUG
             for (uint day = firstDay; day != endDay; ++day)
             {
-                assert(!Math::NaN(ventilationResults.HydrauliqueModulableQuotidien[day]));
-                assert(!Math::Infinite(ventilationResults.HydrauliqueModulableQuotidien[day]));
+                assert(!std::isnan(ventilationResults.HydrauliqueModulableQuotidien[day]));
+                assert(!std::isinf(ventilationResults.HydrauliqueModulableQuotidien[day]));
             }
 #endif
         }
@@ -539,7 +532,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
         }
 
         uint firstDaySimu = parameters_.simulationDays.first;
-        state.problemeHebdo->previousSimulationFinalLevel[z]
+        state.problemeHebdo->previousSimulationFinalLevel[area.index]
           = ventilationResults.NiveauxReservoirsDebutJours[firstDaySimu] * reservoirCapacity;
 
         if (debugData)
@@ -551,12 +544,11 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
 
 void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::State& state,
                                                      uint y,
-                                                     uint numSpace)
+                                                     Antares::Data::Area::ScratchMap& scratchmap)
 {
     areas_.each(
       [&](Data::Area& area) {
-          prepareDailyOptimalGenerations(state, area, y, numSpace);
+          prepareDailyOptimalGenerations(state, area, y, scratchmap);
           });
 }
-
 } // namespace Antares

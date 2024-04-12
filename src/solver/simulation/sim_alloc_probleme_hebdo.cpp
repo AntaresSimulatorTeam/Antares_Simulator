@@ -1,39 +1,33 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #include <yuni/yuni.h>
 #include <antares/study/study.h>
 
-#include "../optimisation/opt_structure_probleme_a_resoudre.h"
+#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 
-#include "simulation.h"
-#include "sim_structure_donnees.h"
-#include "sim_structure_probleme_economique.h"
-#include "sim_alloc_probleme_hebdo.h"
-#include "sim_extern_variables_globales.h"
+#include "antares/study/simulation.h"
+#include "antares/solver/simulation/sim_structure_donnees.h"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
+#include "antares/solver/simulation/sim_alloc_probleme_hebdo.h"
+#include "antares/solver/simulation/sim_extern_variables_globales.h"
 
 using namespace Antares;
 
@@ -116,7 +110,7 @@ void SIM_AllocationProblemeDonneesGenerales(PROBLEME_HEBDO& problem,
     problem.CorrespondanceCntNativesCntOptim.resize(NombreDePasDeTemps);
     problem.VariablesDualesDesContraintesDeNTC.resize(NombreDePasDeTemps);
 
-    auto activeConstraints = study.bindingConstraints.activeContraints();
+    auto activeConstraints = study.bindingConstraints.activeConstraints();
     problem.NombreDeContraintesCouplantes = activeConstraints.size();
     problem.MatriceDesContraintesCouplantes.resize(activeConstraints.size());
     problem.PaliersThermiquesDuPays.resize(nbPays);
@@ -144,9 +138,6 @@ void SIM_AllocationProblemeDonneesGenerales(PROBLEME_HEBDO& problem,
 
     problem.coutOptimalSolution1.assign(7, 0.);
     problem.coutOptimalSolution2.assign(7, 0.);
-
-    problem.tempsResolution1.assign(7, 0.);
-    problem.tempsResolution2.assign(7, 0.);
 }
 
 void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
@@ -158,7 +149,7 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
     const uint linkCount = study.runtime->interconnectionsCount();
     const uint shortTermStorageCount = study.runtime->shortTermStorageCount;
 
-    auto activeConstraints = study.bindingConstraints.activeContraints();
+    auto activeConstraints = study.bindingConstraints.activeConstraints();
 
     for (uint k = 0; k < NombreDePasDeTemps; k++)
     {
@@ -281,7 +272,7 @@ void SIM_AllocationConstraints(PROBLEME_HEBDO& problem,
                                const Antares::Data::Study& study,
                                unsigned NombreDePasDeTemps)
 {
-    auto activeConstraints = study.bindingConstraints.activeContraints();
+    auto activeConstraints = study.bindingConstraints.activeConstraints();
 
     problem.CorrespondanceCntNativesCntOptimJournalieres.resize(7);
     for (uint k = 0; k < 7; k++)
@@ -296,37 +287,36 @@ void SIM_AllocationConstraints(PROBLEME_HEBDO& problem,
         .assign(activeConstraints.size(), 0);
 
     const auto& bindingConstraintCount = activeConstraints.size();
-    problem.ResultatsContraintesCouplantes.resize(bindingConstraintCount);
 
-    for (unsigned k = 0; k < bindingConstraintCount; k++)
+    for (unsigned constraintIndex = 0; constraintIndex != bindingConstraintCount; ++constraintIndex)
     {
-        assert(k < activeConstraints.size());
-        assert(activeConstraints[k]->linkCount() < 50000000);
-        assert(activeConstraints[k]->clusterCount() < 50000000);
+        assert(constraintIndex < bindingConstraintCount);
 
-        problem.MatriceDesContraintesCouplantes[k].SecondMembreDeLaContrainteCouplante
+        auto bc = activeConstraints[constraintIndex];
+
+        problem.MatriceDesContraintesCouplantes[constraintIndex].SecondMembreDeLaContrainteCouplante
           .assign(NombreDePasDeTemps, 0.);
 
-        problem.MatriceDesContraintesCouplantes[k].NumeroDeLInterconnexion
-          .assign(activeConstraints[k]->linkCount(), 0);
-        problem.MatriceDesContraintesCouplantes[k].PoidsDeLInterconnexion
-          .assign(activeConstraints[k]->linkCount(), 0.);
-        problem.MatriceDesContraintesCouplantes[k].OffsetTemporelSurLInterco
-          .assign(activeConstraints[k]->linkCount(), 0);
+        problem.MatriceDesContraintesCouplantes[constraintIndex].NumeroDeLInterconnexion
+          .assign(bc->linkCount(), 0);
+        problem.MatriceDesContraintesCouplantes[constraintIndex].PoidsDeLInterconnexion
+          .assign(bc->linkCount(), 0.);
+        problem.MatriceDesContraintesCouplantes[constraintIndex].OffsetTemporelSurLInterco
+          .assign(bc->linkCount(), 0);
 
-        problem.MatriceDesContraintesCouplantes[k].NumeroDuPalierDispatch
-          .assign(activeConstraints[k]->clusterCount(), 0);
-        problem.MatriceDesContraintesCouplantes[k].PoidsDuPalierDispatch
-          .assign(activeConstraints[k]->clusterCount(), 0.);
-        problem.MatriceDesContraintesCouplantes[k].OffsetTemporelSurLePalierDispatch
-          .assign(activeConstraints[k]->clusterCount(), 0);
-        problem.MatriceDesContraintesCouplantes[k].PaysDuPalierDispatch
-          .assign(activeConstraints[k]->clusterCount(), 0);
+        problem.MatriceDesContraintesCouplantes[constraintIndex].NumeroDuPalierDispatch
+          .assign(bc->clusterCount(), 0);
+        problem.MatriceDesContraintesCouplantes[constraintIndex].PoidsDuPalierDispatch
+          .assign(bc->clusterCount(), 0.);
+        problem.MatriceDesContraintesCouplantes[constraintIndex].OffsetTemporelSurLePalierDispatch
+          .assign(bc->clusterCount(), 0);
+        problem.MatriceDesContraintesCouplantes[constraintIndex].PaysDuPalierDispatch
+          .assign(bc->clusterCount(), 0);
 
 
         // TODO : create a numberOfTimeSteps method in class of runtime->bindingConstraint
         unsigned int nbTimeSteps;
-        switch (activeConstraints[k]->type())
+        switch (bc->type())
         {
             using namespace Antares::Data;
         case BindingConstraint::typeHourly:
@@ -343,7 +333,9 @@ void SIM_AllocationConstraints(PROBLEME_HEBDO& problem,
             break;
         }
         if (nbTimeSteps > 0)
-            problem.ResultatsContraintesCouplantes[k].variablesDuales.assign(nbTimeSteps, 0.);
+            problem.ResultatsContraintesCouplantes.emplace(std::piecewise_construct,
+                                                           std::forward_as_tuple(bc),
+                                                           std::forward_as_tuple(nbTimeSteps, 0.));
     }
 }
 
@@ -356,16 +348,16 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
 
     for (unsigned k = 0; k < nbPays; k++)
     {
-         const uint nbPaliers = study.areas.byIndex[k]->thermal.list.size();
+        const uint nbPaliers = study.areas.byIndex[k]->thermal.list.enabledAndNotMustRunCount();
 
-         // count clusters with ramping enabled
-         uint nRampingClusters = 0;
-         for (uint clusterIndex = 0; clusterIndex != nbPaliers; ++clusterIndex)
-         {
-             auto& cluster = *(study.areas.byIndex[k]->thermal.list.byIndex[clusterIndex]);
-             if (cluster.ramping)
-                 nRampingClusters++;
-         }
+        // count clusters with ramping enabled
+        uint nRampingClusters = 0;
+        for (uint clusterIndex = 0; clusterIndex != nbPaliers; ++clusterIndex)
+        {
+            auto& cluster = *(study.areas.byIndex[k]->thermal.list[clusterIndex]);
+            if (cluster.ramping)
+                nRampingClusters++;
+        }
 
         problem.PaliersThermiquesDuPays[k].minUpDownTime.assign(nbPaliers, 0);
         problem.PaliersThermiquesDuPays[k].PminDuPalierThermiquePendantUneHeure
@@ -477,6 +469,7 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
           .assign(NombreDePasDeTemps, 0.);
         problem.ResultatsHoraires[k].debordementsHoraires
           .assign(NombreDePasDeTemps, 0.);
+
         problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout.resize(nbPaliers);
         problem.ResultatsHoraires[k].ProductionThermique.resize(NombreDePasDeTemps);
 
@@ -541,4 +534,3 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
         }
     }
 }
-

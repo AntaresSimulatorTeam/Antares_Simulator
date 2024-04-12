@@ -1,28 +1,22 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
 #include <yuni/yuni.h>
@@ -37,38 +31,23 @@
 #include <limits>
 #include <algorithm>
 
-#include "options.h"
-#include "../config.h"
+#include "antares/solver/misc/options.h"
 
-#include "../../config.h"
+#include "antares/config/config.h"
 
 #include <antares/exception/AssertionError.hpp>
 #include <antares/exception/LoadingError.hpp>
-#include <antares/Enum.hpp>
-#include <antares/constants.h>
+#include "antares/antares/Enum.hpp"
+#include <antares/antares/constants.h>
 
-#include "utils/ortools_utils.h"
+#include "antares/solver/utils/ortools_utils.h"
 
 using namespace Yuni;
 using namespace Antares;
 using namespace Antares::Data;
 
-static std::string availableOrToolsSolversString()
-{
-    const std::list<std::string> availableSolverList = getAvailableOrtoolsSolverName();
-    std::string availableSolverListStr;
-    for (auto it = availableSolverList.begin(); it != availableSolverList.end(); it++)
-    {
-        availableSolverListStr += *it + ";";
-    }
-    // Remove last semicolumn
-    if (!availableSolverListStr.empty())
-        availableSolverListStr.pop_back();
-    return availableSolverListStr;
-}
-
 std::unique_ptr<GetOpt::Parser> CreateParser(Settings& settings,
-                                             Antares::Data::StudyLoadOptions& options)
+                                             StudyLoadOptions& options)
 {
     settings.reset();
 
@@ -116,7 +95,7 @@ std::unique_ptr<GetOpt::Parser> CreateParser(Settings& settings,
       settings.simulationName, 'n', "name", "Set the name of the new simulation to VALUE");
     // --generators-only
     parser->addFlag(
-      settings.tsGeneratorsOnly, 'g', "generators-only", "Run the time-series generators only");
+            settings.tsGeneratorsOnly, 'g', "generators-only", "Run the time-series generators only");
 
     // --comment-file
     parser->add(settings.commentFile,
@@ -173,6 +152,9 @@ std::unique_ptr<GetOpt::Parser> CreateParser(Settings& settings,
                     's',
                     "named-mps-problems",
                     "Export named constraints and variables in mps (both optim).");
+
+    // --solver-logs
+    parser->addFlag(options.solverLogs, ' ', "solver-logs", "Print solver logs.");
 
     parser->addParagraph("\nMisc.");
     // --progress
@@ -265,26 +247,18 @@ void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOption
 
 void checkOrtoolsSolver(Data::StudyLoadOptions& options)
 {
-    std::string baseSolver = "sirius";
     if (options.ortoolsUsed)
     {
         const std::list<std::string> availableSolverList = getAvailableOrtoolsSolverName();
-        if (availableSolverList.empty())
-        {
-            throw Error::InvalidSolver(options.ortoolsSolver);
-        }
 
         // Check if solver is available
         bool found
           = (std::find(
                availableSolverList.begin(), availableSolverList.end(), options.ortoolsSolver)
              != availableSolverList.end());
-
         if (!found)
         {
-            logs.warning() << "Invalid ortools-solver option. Got '" << options.ortoolsSolver
-                           << "'. reset to " << baseSolver;
-            options.ortoolsSolver = baseSolver;
+            throw Error::InvalidSolver(options.ortoolsSolver, availableOrToolsSolversString());
         }
     }
 }

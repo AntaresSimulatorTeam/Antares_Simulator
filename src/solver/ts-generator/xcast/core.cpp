@@ -1,48 +1,38 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
+#include <cmath>
+
 #include <yuni/yuni.h>
-#include <yuni/core/math.h>
 #include <antares/study/study.h>
 #include <antares/logs/logs.h>
-#include "xcast.h"
-#include "constants.h"
-#include "../../misc/cholesky.h"
-#include "../../misc/matrix-dp-make.h"
-#include "math.hxx"
+#include <antares/utils/utils.h>
+#include "antares/solver/ts-generator/xcast/xcast.h"
+#include "antares/antares/constants.h"
+#include "antares/solver/misc/cholesky.h"
+#include "antares/solver/misc/matrix-dp-make.h"
+#include "antares/solver/ts-generator/xcast/math.hxx"
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Solver
-{
-namespace TSGenerator
-{
-namespace XCast
+namespace Antares::TSGenerator::XCast
 {
 bool XCast::generateValuesForTheCurrentDay()
 {
@@ -155,7 +145,7 @@ bool XCast::generateValuesForTheCurrentDay()
                 for (uint t = 0; t < s; ++t)
                 {
                     x = T[s] * T[t] * STDE[s] * STDE[t];
-                    if (Math::Zero(x))
+                    if (Utils::isZero(x))
                         CORR[s][t] = 0.f;
                     else
                     {
@@ -193,7 +183,7 @@ bool XCast::generateValuesForTheCurrentDay()
                 {
                     x = T[s] * T[t] * STDE[s] * STDE[t];
                     float z = D_COPIE[t] * STDE[s];
-                    if (Math::Zero(x))
+                    if (Utils::isZero(x))
                         CORR[s][t] = 0.f;
                     else
                     {
@@ -381,7 +371,7 @@ bool XCast::generateValuesForTheCurrentDay()
                         auto& userMonthlyCorr = pCorrMonth->column(s);
                         for (uint t = 0; t < s; ++t)
                         {
-                            if (Math::Zero(DIFF[s]) || Math::Zero(DIFF[t]))
+                            if (Utils::isZero(DIFF[s]) || Utils::isZero(DIFF[t]))
                                 corr_s[t] = 0;
                             else
                             {
@@ -475,7 +465,7 @@ bool XCast::generateValuesForTheCurrentDay()
                 if (data_si > MA[s])
                 {
                     data_si = MA[s];
-                    if (Math::Abs(FO[s][i]) > 0.f)
+                    if (std::abs(FO[s][i]) > 0.f)
                     {
                         POSI[s] = MA[s] / FO[s][i];
                         POSI[s] -= G[s];
@@ -488,7 +478,7 @@ bool XCast::generateValuesForTheCurrentDay()
                 if (data_si < MI[s])
                 {
                     data_si = MI[s];
-                    if (Math::Abs(FO[s][i]) > 0.f)
+                    if (std::abs(FO[s][i]) > 0.f)
                     {
                         POSI[s] = MI[s] / FO[s][i];
                         POSI[s] -= G[s];
@@ -519,7 +509,7 @@ bool XCast::generateValuesForTheCurrentDay()
                 }
             }
 
-            assert(0 == Math::Infinite(data_si) && "Infinite value");
+            assert(!std::isinf(data_si) && "Infinite value");
             DATA[s][i] = data_si;
         }
     }
@@ -554,7 +544,7 @@ bool XCast::generateValuesForTheCurrentDay()
     return true;
 }
 
-} // namespace XCast
-} // namespace TSGenerator
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::TSGenerator::XCast
+
+
+

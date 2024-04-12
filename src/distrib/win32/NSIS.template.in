@@ -32,7 +32,7 @@
 
 BrandingText "      Antares_Simulator for Windows  "
 
-!define ANTARES_BIN "antares-${CMAKE_SIMPLE_VERSION}-ui-simulator.exe"
+!define ANTARES_BIN "antares-ui-simulator.exe"
 
 
 
@@ -290,21 +290,22 @@ ${MementoSection} "$(LngCoreFiles)" SecCore
 ;	!insertmacro AppendCoreFiles
 
 	${SetOutPath} "$INSTDIR\bin"
-	${File} "${ANTARES_BUILD_DIR}\ui\simulator\${TARGET}"         "antares-${CMAKE_SIMPLE_VERSION}-ui-simulator.exe"
+	${File} "${ANTARES_BUILD_DIR}\ui\simulator\${TARGET}"         "antares-ui-simulator.exe"
 	
 	;.ddl are available only with shared dependencies link FileOptionnal used
 	${FileOptionnal} "${ANTARES_BUILD_DIR}\ui\simulator\${TARGET}"         "*.dll"
 	
-	${File} "${ANTARES_BUILD_DIR}\solver\${TARGET}"               "antares-${CMAKE_SIMPLE_VERSION}-solver.exe"
+	${File} "${ANTARES_BUILD_DIR}\solver\${TARGET}"               "antares-solver.exe"
 	${FileOptionnal} "${ANTARES_BUILD_DIR}\solver\${TARGET}"      "*.dll"
 	
-	${File} "${ANTARES_BUILD_DIR}\analyzer\${TARGET}"             "antares-${CMAKE_SIMPLE_VERSION}-analyzer.exe"
-	${File} "${ANTARES_BUILD_DIR}\tools\yby-aggregator\${TARGET}" "antares-${CMAKE_SIMPLE_VERSION}-ybyaggregator.exe"
-	${File} "${ANTARES_BUILD_DIR}\tools\batchrun\${TARGET}"       "antares-${CMAKE_SIMPLE_VERSION}-batchrun.exe"
-	${File} "${ANTARES_BUILD_DIR}\tools\finder\${TARGET}"         "antares-${CMAKE_SIMPLE_VERSION}-study-finder.exe"
-	${File} "${ANTARES_BUILD_DIR}\tools\updater\${TARGET}"        "antares-${CMAKE_SIMPLE_VERSION}-study-updater.exe"
-	${File} "${ANTARES_BUILD_DIR}\tools\cleaner\${TARGET}"        "antares-${CMAKE_SIMPLE_VERSION}-study-cleaner.exe"
-	${File} "${ANTARES_BUILD_DIR}\tools\config\${TARGET}"         "antares-${CMAKE_SIMPLE_VERSION}-config.exe"
+	${File} "${ANTARES_BUILD_DIR}\analyzer\${TARGET}"             "antares-analyzer.exe"
+	${File} "${ANTARES_BUILD_DIR}\tools\yby-aggregator\${TARGET}" "antares-ybyaggregator.exe"
+	${File} "${ANTARES_BUILD_DIR}\tools\batchrun\${TARGET}"       "antares-batchrun.exe"
+	${File} "${ANTARES_BUILD_DIR}\tools\finder\${TARGET}"         "antares-study-finder.exe"
+	${File} "${ANTARES_BUILD_DIR}\tools\updater\${TARGET}"        "antares-study-updater.exe"
+	${File} "${ANTARES_BUILD_DIR}\tools\cleaner\${TARGET}"        "antares-study-cleaner.exe"
+	${File} "${ANTARES_BUILD_DIR}\tools\ts-generator\${TARGET}"        "antares-ts-generator.exe"
+	${File} "${ANTARES_BUILD_DIR}\tools\config\${TARGET}"         "antares-config.exe"
 	${File} "${ANTARES_BUILD_DIR}\ui\simulator\resources\icons"   "study.ico"
 	
 	;Add system runtime libs (defined in src/CMakeList.txt)
@@ -343,7 +344,7 @@ ${MementoSection} "$(LngCoreFiles)" SecCore
 	${registerExtension} "$INSTDIR\bin\${ANTARES_BIN}" ".antares" "Antares Study ${CMAKE_SIMPLE_VERSION}"
 	${registerExtension} "$INSTDIR\bin\${ANTARES_BIN}" ".antares-output" "Antares Study Results ${CMAKE_SIMPLE_VERSION}"
 
-	CreateShortCut "$INSTDIR\antares-${CMAKE_SIMPLE_VERSION}-ui-simulator.lnk" "$INSTDIR\bin\${ANTARES_BIN}" "" ""
+	CreateShortCut "$INSTDIR\antares-ui-simulator.lnk" "$INSTDIR\bin\${ANTARES_BIN}" "" ""
 ${Mementosectionend}
 
 
@@ -533,7 +534,7 @@ section Uninstall
 
 	delete "$INSTDIR\${UninstLog}"
 	delete "$INSTDIR\bin\${ANTARES_BIN}"
-	delete "$INSTDIR\antares-${CMAKE_SIMPLE_VERSION}-ui-simulator.lnk"
+	delete "$INSTDIR\antares-ui-simulator.lnk"
 	delete "$SMPROGRAMS\RTE Antares ${PRODUCT_VERSION}\Antares Simulator ${PRODUCT_VERSION}.lnk"
 	delete "$INSTDIR\Documentation\Data Organizer reference guide (PDF).lnk"
 	delete "$SMPROGRAMS\RTE Antares ${PRODUCT_VERSION}\Documentation\Data Organizer reference guide (PDF).lnk"

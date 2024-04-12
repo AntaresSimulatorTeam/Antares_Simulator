@@ -16,7 +16,6 @@ target_link_libraries(tests-simple-study
 						antares-solver-main-economy
 						antares-solver-main-adequacy
 						antares-solver-hydro
-						antares-solver-aleatoire
 						antares-solver-variable
 						antares-solver-simulation
 						antares-solver-ts-generator
@@ -33,9 +32,6 @@ target_include_directories(tests-simple-study
 add_test(NAME end-to-end-simple-study COMMAND tests-simple-study)
 set_property(TEST end-to-end-simple-study PROPERTY LABELS end-to-end)
 set_target_properties(tests-simple-study PROPERTIES FOLDER Unit-tests/end_to_end)
-
-
-copy_dependency(sirius_solver tests-simple-study)
 
 # Storing tests-simple-study under the folder Unit-tests in the IDE
 

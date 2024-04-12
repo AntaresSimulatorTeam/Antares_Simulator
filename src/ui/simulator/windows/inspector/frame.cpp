@@ -1,45 +1,35 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
 #include "frame.h"
+#include "constants.h"
 #include "../../application/main.h"
 #include <wx/wupdlock.h>
-#include <wx/fontdlg.h>
-#include <wx/propgrid/editors.h>
 
+#include <wx/propgrid/editors.h>
 #include <antares/study/study.h>
-#include <antares/study/area/constants.h>
 #include "../../application/study.h"
 #include "editor-calendar.h"
-#include "../../toolbox/resources.h"
 #include "../../toolbox/components/map/component.h"
 #include "../../toolbox/components/mainpanel.h"
-#include "../../toolbox/components/button.h"
-#include <ui/common/lock.h>
 #include "grid.h"
 
 using namespace Yuni;
@@ -178,9 +168,8 @@ void Frame::onSelectAllPlants(wxCommandEvent&)
         for (auto i = data->areas.begin(); i != areaEnd; ++i)
         {
             Data::Area& area = *(*i);
-            auto end = area.thermal.list.end();
-            for (auto i = area.thermal.list.begin(); i != end; ++i)
-                data->ThClusters.insert(i->second.get());
+            for (auto c : area.thermal.list.all())
+                data->ThClusters.insert(c.get());
         }
         data->areas.clear();
         data->links.clear();
@@ -197,26 +186,6 @@ void Frame::onSelectPlant(wxCommandEvent& evt)
     {
         data->ThClusters.clear();
         data->ThClusters.insert((Data::ThermalCluster*)mapIDPointer[evt.GetId()]);
-        data->areas.clear();
-        data->links.clear();
-        data->empty = data->ThClusters.empty();
-        gInspector->delayApplyGlobalSelection();
-    }
-}
-
-// gp : never used - to be removed
-void Frame::onSelectAllPlantsFromArea(wxCommandEvent& evt)
-{
-    InspectorData::Ptr data = gData;
-    if (!(!data) and gInspector and evt.GetEventObject())
-    {
-        Data::Area* area = (Data::Area*)mapIDPointer[evt.GetId()];
-        if (!area)
-            return;
-        data->ThClusters.clear();
-        auto end = area->thermal.list.end();
-        for (auto i = area->thermal.list.begin(); i != end; ++i)
-            data->ThClusters.insert(i->second.get());
         data->areas.clear();
         data->links.clear();
         data->empty = data->ThClusters.empty();
@@ -340,7 +309,7 @@ Frame::Frame(wxWindow* parent, bool allowAnyObject) :
     // --- STUDIES ---
     pPGStudyTitle = Group(pg, wxT("GENERAL PARAMETERS"), wxT("study.title"));
     pPGStudyGrpSimulation = Category(pg, wxT("Simulation"), wxT("study.context"));
-    pPGStudyMode = P_ENUM("Mode", "study.mode", studyMode);
+    pPGSimulationMode = P_ENUM("Mode", "study.mode", simulationMode);
     pPGStudyCalendarBegin = P_UINT("First day", "study.cal.begin");
     pPGStudyCalendarEnd = P_UINT("Last day", "study.cal.end");
     pg->SetPropertyEditor(pPGStudyCalendarBegin, wxPG_EDITOR(StudyCalendarBtnEditor));
@@ -743,7 +712,7 @@ void Frame::apply(const InspectorData::Ptr& data)
     if (!hide)
     {
         // Context
-        Accumulator<PStudyMode>::Apply(pPGStudyMode, data->studies);
+        Accumulator<PSimulationMode>::Apply(pPGSimulationMode, data->studies);
         Accumulator<PStudyHorizon>::Apply(pPGStudyHorizon, data->studies);
         Accumulator<PStudyCalendarMonth>::Apply(pPGStudyCalendarMonth, data->studies);
         Accumulator<PStudyCalendarWeek>::Apply(pPGStudyCalendarWeek, data->studies);
@@ -804,7 +773,7 @@ void Frame::apply(const InspectorData::Ptr& data)
         {
             const Data::Area& area = *(*i);
             nbLinks += (uint)area.links.size();
-            nbThermalClusters += area.thermal.list.size();
+            nbThermalClusters += area.thermal.list.allClustersCount();
         }
         pPGAreaLinks->SetValueFromInt(nbLinks);
         pPGAreaPlants->SetValueFromInt(nbThermalClusters);

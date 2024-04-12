@@ -1,33 +1,28 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
 #include "atsp.h"
+#include <antares/utils/utils.h>
 #include <antares/date/date.h>
-#include "../solver/misc/matrix-dp-make.h"
+#include "antares/solver/misc/matrix-dp-make.h"
 
 using namespace Yuni;
 
@@ -263,7 +258,7 @@ bool ATSP::computeMonthlyCorrelations()
             auto& column = CORR_MNP[i];
             for (uint j = 0; j < i; ++j)
             {
-                if (Math::Abs(column[j]) < RTZ)
+                if (std::abs(column[j]) < RTZ)
                 {
                     column[j] = 0.;
                     CORR_MNP[j][i] = 0.;
@@ -286,7 +281,7 @@ bool ATSP::computeMonthlyCorrelations()
             auto& column = CORR_MNPZ[i];
             for (uint j = 0; j < i; ++j)
             {
-                if (Math::Abs(column[j]) < RTZ)
+                if (std::abs(column[j]) < RTZ)
                 {
                     column[j] = 0.;
                     CORR_MNPZ[j][i] = 0.;
@@ -420,7 +415,7 @@ bool ATSP::computeMonthlyCorrelations()
         auto& column = CORR_YNP[i];
         for (uint j = 0; j < i; ++j)
         {
-            if (Math::Abs(column[j]) < RTZ)
+            if (std::abs(column[j]) < RTZ)
             {
                 column[j] = 0.;
                 CORR_YNP[j][i] = 0.;
@@ -443,7 +438,7 @@ bool ATSP::computeMonthlyCorrelations()
         auto& column = CORR_YNPZ[i];
         for (uint j = 0; j < i; ++j)
         {
-            if (Math::Abs(column[j]) < RTZ)
+            if (std::abs(column[j]) < RTZ)
             {
                 column[j] = 0.;
                 CORR_YNPZ[j][i] = 0.;
@@ -565,7 +560,7 @@ bool ATSP::computeMonthlyCorrelations()
                 const auto& col = resultNDP[iZ];
                 for (uint jZ = iZ + 1; jZ < realAreaCount; ++jZ)
                 {
-                    if (not Math::Zero(col[jZ]))
+                    if (!Utils::isZero(col[jZ]))
                     {
                         const uint j = mapping[jZ];
                         f << pArea[i]->name << '%' << pArea[j]->name << " = " << col[jZ] << '\n';
@@ -599,7 +594,7 @@ bool ATSP::computeMonthlyCorrelations()
                     const auto& col = CORR_MNP.entry[iZ];
                     for (uint jZ = iZ + 1; jZ < realAreaCount; ++jZ)
                     {
-                        if (not Math::Zero(col[jZ]))
+                        if (!Utils::isZero(col[jZ]))
                         {
                             const uint j = mapping[jZ];
                             f << pArea[i]->name << '%' << pArea[j]->name << " = " << col[jZ]

@@ -1,33 +1,27 @@
 /*
-** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
+** Copyright 2007-2024, RTE (https://www.rte-france.com)
+** See AUTHORS.txt
+** SPDX-License-Identifier: MPL-2.0
+** This file is part of Antares-Simulator,
+** Adequacy and Performance assessment for interconnected energy networks.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
+** it under the terms of the Mozilla Public Licence 2.0 as published by
+** the Mozilla Foundation, either version 2 of the License, or
 ** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
+** Mozilla Public Licence 2.0 for more details.
 **
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+** You should have received a copy of the Mozilla Public Licence 2.0
+** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
 #include <yuni/yuni.h>
-#include "../study.h"
-#include "../cleaner.h"
+#include "antares/study/study.h"
+#include "antares/study/cleaner.h"
 #include <antares/inifile/inifile.h>
 
 using namespace Yuni;
@@ -35,9 +29,7 @@ using namespace Antares;
 
 #define SEP IO::Separator
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 namespace // anonymous
 {
@@ -87,7 +79,9 @@ static void listOfFilesAnDirectoriesToKeepForArea(PathList& e, PathList& p, cons
     e.add(buffer);
     buffer.clear() << "input/hydro/common/capacity/inflowPattern_" << id << ".txt";
     e.add(buffer);
-    buffer.clear() << "input/hydro/common/capacity/maxpower_" << id << ".txt";
+    buffer.clear() << "input/hydro/common/capacity/maxDailyGenEnergy_" << id << ".txt";
+    e.add(buffer);
+    buffer.clear() << "input/hydro/common/capacity/maxDailyPumpEnergy_" << id << ".txt";
     e.add(buffer);
     buffer.clear() << "input/hydro/common/capacity/reservoir_" << id << ".txt";
     e.add(buffer);
@@ -98,7 +92,11 @@ static void listOfFilesAnDirectoriesToKeepForArea(PathList& e, PathList& p, cons
     buffer.clear() << "input/hydro/series/" << id << "/mod.txt";
     e.add(buffer);
     buffer.clear() << "input/hydro/series/" << id << "/mingen.txt";
-    e.add(buffer);    
+    e.add(buffer);
+    buffer.clear() << "input/hydro/series/" << id << "/maxHourlyGenPower.txt";
+    e.add(buffer);
+    buffer.clear() << "input/hydro/series/" << id << "/maxHourlyPumpPower.txt";
+    e.add(buffer);
     buffer.clear() << "input/hydro/allocation/" << id << ".ini";
     p.add(buffer);
     buffer.clear() << "input/hydro/prepro/" << id;
@@ -135,23 +133,19 @@ static void listOfFilesAnDirectoriesToKeepForArea(PathList& e, PathList& p, cons
         buffer.clear() << "input/thermal/clusters/" << id << "/list.ini";
         e.add(buffer);
 
-        auto end = area->thermal.list.end();
-        for (auto i = area->thermal.list.begin(); i != end; ++i)
+        for (auto& cluster : area->thermal.list.all())
         {
-            // Reference to the thermal cluster
-            auto& cluster = *(i->second);
-
-            buffer.clear() << "input/thermal/prepro/" << id << '/' << cluster.id();
+            buffer.clear() << "input/thermal/prepro/" << id << '/' << cluster->id();
             p.add(buffer);
-            buffer.clear() << "input/thermal/series/" << id << '/' << cluster.id();
+            buffer.clear() << "input/thermal/series/" << id << '/' << cluster->id();
             p.add(buffer);
 
-            buffer.clear() << "input/thermal/series/" << id << '/' << cluster.id() << "/series.txt";
+            buffer.clear() << "input/thermal/series/" << id << '/' << cluster->id() << "/series.txt";
             e.add(buffer);
 
-            buffer.clear() << "input/thermal/prepro/" << id << '/' << cluster.id() << "/data.txt";
+            buffer.clear() << "input/thermal/prepro/" << id << '/' << cluster->id() << "/data.txt";
             e.add(buffer);
-            buffer.clear() << "input/thermal/prepro/" << id << '/' << cluster.id()
+            buffer.clear() << "input/thermal/prepro/" << id << '/' << cluster->id()
                            << "/modulation.txt";
             e.add(buffer);
         }
@@ -168,16 +162,12 @@ static void listOfFilesAnDirectoriesToKeepForArea(PathList& e, PathList& p, cons
         buffer.clear() << "input/renewables/clusters/" << id << "/list.ini";
         e.add(buffer);
 
-        auto end = area->renewable.list.end();
-        for (auto i = area->renewable.list.begin(); i != end; ++i)
+        for (const auto& cluster : area->renewable.list.all())
         {
-            // Reference to the thermal cluster
-            auto& cluster = *(i->second);
-
-            buffer.clear() << "input/renewables/series/" << id << '/' << cluster.id();
+            buffer.clear() << "input/renewables/series/" << id << '/' << cluster->id();
             p.add(buffer);
 
-            buffer.clear() << "input/renewables/series/" << id << '/' << cluster.id()
+            buffer.clear() << "input/renewables/series/" << id << '/' << cluster->id()
                            << "/series.txt";
             e.add(buffer);
         }
@@ -361,7 +351,7 @@ bool listOfFilesAnDirectoriesToKeep(StudyCleaningInfos* infos)
             // Exclude
             listOfFilesAnDirectoriesToKeepForArea(e, p, area, buffer);
             // Clear the memory used by the thermal clusters of the area
-            area->thermal.list.clear();
+            area->thermal.list.clearAll();
 
             // Interconnections
             {
@@ -426,5 +416,5 @@ bool listOfFilesAnDirectoriesToKeep(StudyCleaningInfos* infos)
     return true;
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+
