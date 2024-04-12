@@ -5,15 +5,15 @@ set(EXECUTABLE_NAME tests-adq-patch)
 add_executable(${EXECUTABLE_NAME} adequacy_patch.cpp)
 
 target_include_directories(${EXECUTABLE_NAME}
-							PRIVATE
-						   "${src_solver_optimisation}"
+        PRIVATE
+        "${src_solver_optimisation}"
 )
 
 target_link_libraries(${EXECUTABLE_NAME}
-                      PRIVATE
-                      Boost::unit_test_framework
-                      model_antares
- 					  array
+        PRIVATE
+        Boost::unit_test_framework
+        model_antares
+        array
 )
 
 # Storing tests-ts-numbers under the folder Unit-tests in the IDE
