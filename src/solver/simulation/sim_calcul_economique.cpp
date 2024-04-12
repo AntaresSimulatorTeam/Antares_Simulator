@@ -796,7 +796,8 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
 
                     if (problem.CaracteristiquesHydrauliques[k].NiveauInitialReservoir
                         < weekTarget_tmp)
-                        marginGen = problem.CaracteristiquesHydrauliques[k].NiveauInitialReservoir;
+                        logs.notice() << " Niveau initial insufissant " ;
+                        // marginGen = problem.CaracteristiquesHydrauliques[k].NiveauInitialReservoir;
                 }
 
                 if (not problem.CaracteristiquesHydrauliques[k].TurbinageEntreBornes)
@@ -809,6 +810,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                           = hydroVentilationResults[k].HydrauliqueModulableQuotidien[day]
                             * problem.CaracteristiquesHydrauliques[k].WeeklyGeneratingModulation
                             * marginGen / weekGenerationTarget;
+                        logs.notice() << " On définit ici la valeur CntEnergieH2OParIntervalleOptimise du jour " << j << " par : " << problem.CaracteristiquesHydrauliques[k].CntEnergieH2OParIntervalleOptimise[j] << " qui est composé de " << hydroVentilationResults[k].HydrauliqueModulableQuotidien[day] << " et " << problem.CaracteristiquesHydrauliques[k].WeeklyGeneratingModulation* marginGen / weekGenerationTarget ;
                     }
                 }
 
