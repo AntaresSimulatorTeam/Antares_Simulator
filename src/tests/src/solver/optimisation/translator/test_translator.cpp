@@ -26,6 +26,7 @@
 
 #include <boost/test/unit_test.hpp>
 #include <antares/solver/optimisation/HebdoProblemToLpsTranslator.h>
+#include <span>
 #include "antares/solver/optimisation/opt_period_string_generator_base.h"
 
 using namespace Antares::Solver;
@@ -118,10 +119,10 @@ BOOST_AUTO_TEST_CASE(common_data_properly_copied) {
     auto ret = translator.commonProblemData(&problemHebdo);
     BOOST_CHECK_EQUAL(ret->NombreDeVariables, problemHebdo.NombreDeVariables);
     BOOST_CHECK_EQUAL(ret->NombreDeContraintes, problemHebdo.NombreDeContraintes);
-    BOOST_CHECK(ret->TypeDeVariable == problemHebdo.TypeDeVariable);
+    BOOST_CHECK(std::ranges::equal(ret->TypeDeVariable, problemHebdo.TypeDeVariable));
     BOOST_CHECK(ret->CoefficientsDeLaMatriceDesContraintes == problemHebdo.CoefficientsDeLaMatriceDesContraintes);
-    BOOST_CHECK(ret->IndicesColonnes == problemHebdo.IndicesColonnes);
-    BOOST_CHECK(ret->Mdeb == problemHebdo.IndicesDebutDeLigne);
+    BOOST_CHECK(std::ranges::equal(ret->IndicesColonnes, problemHebdo.IndicesColonnes));
+    BOOST_CHECK(std::ranges::equal(ret->Mdeb, problemHebdo.IndicesDebutDeLigne));
 }
 
 //throw exception if NombreDeVariables is 0

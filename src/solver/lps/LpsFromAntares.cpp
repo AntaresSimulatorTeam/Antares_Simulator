@@ -25,21 +25,21 @@ namespace Antares::Solver
 {
 bool LpsFromAntares::empty() const
 {
-    return _constant == nullptr || _hebdo.empty();
+    return constantProblemData == nullptr || hebdoProblems.empty();
 }
 void LpsFromAntares::replaceConstantData(ConstantDataFromAntaresPtr uniquePtr)
 {
-    _constant = std::move(uniquePtr);
+    constantProblemData = std::move(uniquePtr);
 }
 
 void LpsFromAntares::addHebdoData(ProblemHebdoId id, HebdoDataFromAntaresPtr uniquePtr)
 {
-    _hebdo.emplace(id, std::move(uniquePtr));
+    hebdoProblems.emplace(id, std::move(uniquePtr));
 }
 const HebdoDataFromAntares* LpsFromAntares::hebdoData(ProblemHebdoId id) const
 {
-    auto it = _hebdo.find(id);
-    if (it == _hebdo.end())
+    auto it = hebdoProblems.find(id);
+    if (it == hebdoProblems.end())
     {
         return nullptr;
     }

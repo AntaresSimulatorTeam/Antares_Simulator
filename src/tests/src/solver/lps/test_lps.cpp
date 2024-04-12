@@ -45,7 +45,7 @@ BOOST_AUTO_TEST_CASE(lps_with_only_constant_data_is_empty)
 BOOST_AUTO_TEST_CASE(lps_with_only_hebdo_data_is_empty)
 {
     LpsFromAntares lps;
-    lps._hebdo.emplace(0, std::make_unique<HebdoDataFromAntares>());
+    lps.addHebdoData({0, 0}, std::make_unique<HebdoDataFromAntares>());
     BOOST_CHECK(lps.empty());
 }
 
@@ -53,7 +53,7 @@ BOOST_AUTO_TEST_CASE(lps_with_both_constant_and_hebdo_data_is_not_empty)
 {
     LpsFromAntares lps;
     lps.replaceConstantData(std::make_unique<ConstantDataFromAntares>());
-    lps._hebdo.emplace(0, std::make_unique<HebdoDataFromAntares>());
+    lps.addHebdoData({0, 0}, std::make_unique<HebdoDataFromAntares>());
     BOOST_CHECK(!lps.empty());
 }
 

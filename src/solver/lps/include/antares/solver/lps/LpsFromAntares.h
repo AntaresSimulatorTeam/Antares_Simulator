@@ -30,6 +30,10 @@
 namespace Antares::Solver
 {
 
+/**
+ * @struct ProblemHebdoId
+ * @brief The ProblemHebdoId struct is used to identify a weekly problem by year and week.
+ */
 struct ProblemHebdoId
 {
     unsigned int year;
@@ -42,29 +46,32 @@ struct ProblemHebdoId
 // identiques. Cela pourra changer à l'avenir si des coefficients de contraintes
 // couplantes peuvent varier au cours du temps (ex: rendement d'une pompe à
 // chaleur qui varie selon la température, FlowBased ?, etc)
-
-class ConstantDataFromAntares
+/**
+ * @class ConstantDataFromAntares
+ * @brief The ConstantDataFromAntares class is used to store constant data across all weeks
+ * of Antares problems.
+ */
+struct ConstantDataFromAntares
 {
-public:
-    int NombreDeVariables; // Mathématiquement : Nb colonnes de la matrice,
+    unsigned NombreDeVariables; // Mathématiquement : Nb colonnes de la matrice,
     // Informatiquement = TypeDeVariable.size()
-    int NombreDeContraintes; // Mathématiqument : Nb lignes de la matrice,
+    unsigned NombreDeContraintes; // Mathématiqument : Nb lignes de la matrice,
     // Informatiquement = Mdeb.size()
-    int NombreDeCoefficients; // Mathématiquement : Nb coeffs non nuls de la
+    unsigned NombreDeCoefficients; // Mathématiquement : Nb coeffs non nuls de la
     // matrice, Informatiquement = Nbterm.size() =
     // IndicesColonnes.size()=
     // CoefficientsDeLaMatriceDesContraintes.size()
 
-    std::vector<int> TypeDeVariable; // Variables entières ou biniaires
-    std::vector<int> Mdeb;           // Indique dans les indices dans le vecteur IndicesColonnes qui
+    std::vector<unsigned> TypeDeVariable; // Variables entières ou biniaires
+    std::vector<unsigned> Mdeb;           // Indique dans les indices dans le vecteur IndicesColonnes qui
     // correspondent au début de chaque ligne. Ex : Mdeb[3] = 8 et
     // Mdeb[4] = 13 -> Les termes IndicesColonnes[8] à
     // IndicesColonnes[12] correspondent à des Id de colonnes de la
     // ligne 3 de la matrice (en supposant que les lignes sont indexées
     // à partir de 0)
-    std::vector<int> Nbterm; // Nombre de termes non nuls sur chaque ligne.
+    std::vector<unsigned> Nbterm; // Nombre de termes non nuls sur chaque ligne.
     // Inutile car NbTerm[i] = Mdeb[i+1] - Mdeb[i]
-    std::vector<int> IndicesColonnes; // Id des colonnes des termes de
+    std::vector<unsigned> IndicesColonnes; // Id des colonnes des termes de
     // CoefficientsDeLaMatriceDesContraintes : Ex
     // IndicesColonnes[3] = 8 ->
     // CoefficientsDeLaMatriceDesContraintes[8] donne la
@@ -76,9 +83,12 @@ public:
     std::vector<std::string> SignificationMetierDesContraintes;
 };
 
-class HebdoDataFromAntares
+/**
+ * @class HebdoDataFromAntares
+ * @brief The HebdoDataFromAntares class is used to store weekly data for an Antares Problem.
+ */
+struct HebdoDataFromAntares
 {
-public:
     std::vector<char> Sens; // Sens de la contrainte : < ou > ou =, taille =
     // NombreDeContraintes
     std::vector<double> Xmax; // Borne max des variables de la semaine
@@ -99,15 +109,34 @@ using ConstantDataFromAntaresPtr = std::unique_ptr<ConstantDataFromAntares>;
 using HebdoDataFromAntaresPtr = std::unique_ptr<HebdoDataFromAntares>;
 using YearWeekHebdoDataFromAntares = std::map<ProblemHebdoId, HebdoDataFromAntaresPtr>;
 
+/**
+ * @class LpsFromAntares
+ * @brief The LpsFromAntares class is used to manage the constant and weekly data for Antares problems.
+ */
 class LpsFromAntares
 {
 public:
-    ConstantDataFromAntaresPtr _constant;
-    YearWeekHebdoDataFromAntares _hebdo;
+    /*
+     * @brief Checks if the LpsFromAntares object is empty.
+     * Emptiness is defined by either the constant data or the weekly data being empty.
+     */
     bool empty() const;
+    /*
+     * @brief Replaces the constant data in the LpsFromAntares object.
+     */
     void replaceConstantData(ConstantDataFromAntaresPtr uniquePtr);
+    /*
+     * @brief Adds weekly data to the LpsFromAntares object.
+     */
     void addHebdoData(ProblemHebdoId id, HebdoDataFromAntaresPtr uniquePtr);
+    /*
+     * @brief Retrieves weekly data from the LpsFromAntares object.
+     */
     const HebdoDataFromAntares* hebdoData(ProblemHebdoId id) const;
+
+private:
+    ConstantDataFromAntaresPtr constantProblemData;
+    YearWeekHebdoDataFromAntares hebdoProblems;
 };
 
 }
