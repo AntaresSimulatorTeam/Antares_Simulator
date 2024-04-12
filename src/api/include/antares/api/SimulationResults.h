@@ -25,14 +25,35 @@
 
 namespace Antares::API
 {
+/**
+ * @struct Error
+ * @brief The Error structure is used to represent an error that occurred during the simulation.
+ */
 struct Error {
+    /**
+     * @brief The reason for the error.
+     */
     std::string reason;
 };
 
-struct [[nodiscard("Contains results and status")]] SimulationResults
+/**
+ * @struct SimulationResults
+ * @brief The SimulationResults structure is used to represent the results of a simulation.
+ * @details It contains the path to the simulation, weekly problems, and an optional error.
+ */
+struct [[nodiscard("Contains results and potential error")]] SimulationResults
 {
+    /**
+     * @brief The path to the simulation (output).
+     */
     std::filesystem::path simulationPath;
+    /**
+     * @brief weekly problems
+     */
     Antares::Solver::LpsFromAntares antares_problems;
+    /**
+     * @brief An optional error that occurred during the simulation.
+     */
     std::optional<Error> error;
 };
 
