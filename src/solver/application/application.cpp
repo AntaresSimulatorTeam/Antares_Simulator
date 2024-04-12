@@ -436,11 +436,10 @@ void Application::writeExectutionInfo()
     if (!pStudy)
         return;
 
-    // Last missing duration to get : measure of total simulation duration
-    pTotalTimer.stop();
-    pDurationCollector.addDuration("total", pTotalTimer.get_duration());
 
-    logTotalTime(pTotalTimer.get_duration());
+    /* logTotalTime(pTotalTimer.get_duration()); */
+
+    durationCollector.summary();
 
     // If no writer is available, we can't write
     if (!resultWriter)

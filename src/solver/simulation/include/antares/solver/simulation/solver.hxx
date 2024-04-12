@@ -899,7 +899,6 @@ void ISimulation<ImplementationType>::computeAnnualCostsStatistics(
             pAnnualStatistics.updateTime.addCost(s.averageUpdateTime);
         }
     }
-    durationCollector.summary();
 }
 
 static inline void logPerformedYearsInAset(setOfParallelYears& set)

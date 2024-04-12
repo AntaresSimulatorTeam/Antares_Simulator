@@ -27,6 +27,7 @@
 #include <antares/antares/fatal-error.h>
 #include <antares/memory/memory.h>
 #include <antares/locale/locale.h>
+#include <antares/timer/timer.h>
 
 using namespace Antares;
 using namespace Yuni;
@@ -109,23 +110,27 @@ int main(int argc, char** argv)
 {
     try {
 
-        logs.info(ANTARES_LOGO);
-        logs.info(MPL_ANNOUNCEMENT);
-        // Name of the running application for the logger
-        logs.applicationName("solver");
-
-        if (not memory.initializeTemporaryFolder())
-            throw FatalError("Could not initialize temporary folder");
-
-        // locale
-        InitializeDefaultLocale();
-
-        // Getting real UTF8 arguments
-        IntoUTF8ArgsTranslator toUTF8ArgsTranslator(argc, argv);
-        std::tie(argc, argv) = toUTF8ArgsTranslator.convert();
         Antares::Solver::Application application;
-        application.prepare(argc, argv);
-        application.execute();
+
+        durationCollector("total") << [&]
+        {
+            logs.info(ANTARES_LOGO);
+            logs.info(MPL_ANNOUNCEMENT);
+            // Name of the running application for the logger
+            logs.applicationName("solver");
+
+            if (not memory.initializeTemporaryFolder())
+                throw FatalError("Could not initialize temporary folder");
+
+            // locale
+            InitializeDefaultLocale();
+
+            // Getting real UTF8 arguments
+            IntoUTF8ArgsTranslator toUTF8ArgsTranslator(argc, argv);
+            std::tie(argc, argv) = toUTF8ArgsTranslator.convert();
+            application.prepare(argc, argv);
+            application.execute();
+        };
         application.writeExectutionInfo();
 
         // to avoid a bug from wxExecute, we should wait a little before returning
