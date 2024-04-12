@@ -24,9 +24,18 @@
 #include <antares/study/study.h>
 
 namespace Antares {
+/**
+ * @class IStudyLoader
+ * @brief The IStudyLoader class is an interface for loading studies.
+ * @details It declares the load method.
+ */
 class IStudyLoader {
 public:
     virtual ~IStudyLoader() = default;
+    /**
+     * @brief The load method is used to load a study.
+     * @return A shared pointer to a Study object.
+     */
     [[nodiscard]] virtual std::shared_ptr<Antares::Data::Study> load() = 0;
 };
 }
