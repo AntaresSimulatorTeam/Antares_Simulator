@@ -42,7 +42,7 @@ public:
      * @param study_loader A pointer to an IStudyLoader object. The IStudyLoader object is used to load the study that will be simulated.
      * @return SimulationResults object which contains the results of the simulation.
      */
-    SimulationResults run(IStudyLoader* study_loader);
+    SimulationResults run(const IStudyLoader& study_loader);
 private:
     std::shared_ptr<Antares::Data::Study> study_;
     SimulationResults execute() const;

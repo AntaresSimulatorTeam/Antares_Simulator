@@ -32,10 +32,10 @@
 
 namespace Antares::API
 {
-SimulationResults APIInternal::run(IStudyLoader* study_loader)
+SimulationResults APIInternal::run(const IStudyLoader& study_loader)
 {
     try {
-        study_ = study_loader->load();
+        study_ = study_loader.load();
     } catch (const ::Antares::Error::StudyFolderDoesNotExist& e) {
         Antares::API::Error err{.reason = e.what()};
         return {
@@ -44,7 +44,6 @@ SimulationResults APIInternal::run(IStudyLoader* study_loader)
           .error = err
         };
     }
-    study_ = study_loader->load();
     return execute();
 }
 
