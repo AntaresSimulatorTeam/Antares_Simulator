@@ -81,7 +81,7 @@ static std::string InvalidSolverSpecificParametersHelper(const std::string& solv
                                                          const std::string& solverParameters)
 {
     std::ostringstream message;
-    message << "Specific parameters '" << solverParameters << "' are not valid for solver "
+    message << "Specific parameters '" << solverParameters << "' are not valid or not supported for solver "
             << solver;
     return message.str();
 }

@@ -70,7 +70,6 @@ void checkOrtoolsSolverSpecificParameters(
         }
 
         bool status = solver->SetSolverSpecificParametersAsString(optOptions.solverParameters);
-        // Some solvers like SCIP will only raise a warning and not an error if invalid parameters are passed, therefore no exception will be raise here
         if (!status)
         {
             throw Error::InvalidSolverSpecificParameters(optOptions.ortoolsSolver,

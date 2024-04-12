@@ -51,7 +51,7 @@ BOOST_AUTO_TEST_CASE(test_if_setting_solver_specific_settings_fails_do_not_raise
 
     auto options
       = Antares::Solver::Optimization::OptimizationOptions(ortoolsUsed, ortoolsSolver, solverLogs, solverParameters);
-    BOOST_CHECK_NO_THROW(Antares::Check::checkOrtoolsSolverSpecificParameters(ucMode, options));
+    BOOST_CHECK_THROW(Antares::Check::checkOrtoolsSolverSpecificParameters(ucMode, options), Antares::Error::InvalidSolverSpecificParameters);
 }
 
 BOOST_AUTO_TEST_CASE(test_if_no_ortools_solver_is_used_it_should_exit_normally)
