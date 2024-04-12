@@ -4,10 +4,7 @@
 
 ## Context
 
-Originialy exists one install target to install the various antares executables. Most notably they're packaged in the realease
-assets.
-We may not want to produce a single package with both executables and libraries as they target different users much like 
-with apt it is possible to install a binaries and a development (devel) packages.
+Originally, there exists a single install target designated to deploy the diverse Antares executables, predominantly packaged within the release assets. However, there's a rationale behind avoiding the creation of a unified package containing both executables and libraries, given that they cater to distinct user demographics. This mirrors the flexibility offered by package managers such as apt, where users can opt to install binary packages and separate development (devel) packages according to their requirements.
 
 ## Decision
 
