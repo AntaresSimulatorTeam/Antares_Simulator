@@ -54,7 +54,8 @@ BOOST_DATA_TEST_CASE(test_std_oneWeek_oneNode_oneBattery_oneThermal,
       timeResolution, // TODO : move to LinearProblem ?
       {{"initialStock_battery1", 0}},
       {{"consumption_nodeA", {50, 50, 150, 120}}, {"cost_thermal1", {1, 3, 10, 8}}});
-    linearProblemBuilder.build(linearProblemData, {});
+    BuildContext buildCtx(0, timeStamps, {&linearProblemData});
+    linearProblemBuilder.build(linearProblemData, buildCtx);
     auto solution = linearProblemBuilder.solve({});
 
     // Consumption is greater than thermal maximum production in TS 2 & 3
@@ -119,7 +120,8 @@ BOOST_DATA_TEST_CASE(test_std_oneWeek_oneNode_oneBattery_twoThermals,
                                         {{"consumption_nodeA", {0, 150, 150, 150}},
                                          {"cost_thermal1", {1, 4, 8, 11}},
                                          {"cost_thermal2", {2, 3, 10, 9}}});
-    linearProblemBuilder.build(linearProblemData, {});
+    BuildContext buildCtx(0, timeStamps, {&linearProblemData});
+    linearProblemBuilder.build(linearProblemData, buildCtx);
     auto solution = linearProblemBuilder.solve({});
 
     // Thermal production is cheap in TS 0, then very expensive.

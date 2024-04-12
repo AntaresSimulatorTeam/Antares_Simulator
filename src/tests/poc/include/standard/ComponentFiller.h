@@ -77,7 +77,7 @@ void ComponentFiller::addConstraints(LinearProblem& problem,
         {
             throw;
         }
-        double initialStock = data.getScalarData("initialStock_" + component_.getId());
+        double initialStock = ctx.getScalarData("initialStock_" + component_.getId());
         for (auto ts : data.getTimeStamps())
         {
             string pVarName = "P_" + component_.getId() + "_" + to_string(ts);
@@ -109,7 +109,7 @@ void ComponentFiller::addConstraints(LinearProblem& problem,
         {
             throw;
         }
-        auto consumption = data.getTimedData("consumption_" + nodeName);
+        auto consumption = ctx.getTimedData("consumption_" + nodeName);
         for (auto ts : data.getTimeStamps())
         {
             // <!> IMPORTANT : we have to use the convention -production = -consumption, in order to
@@ -176,6 +176,7 @@ map<string, double> ComponentFiller::getPortPin(string name,
             {
                 throw;
             }
+            // TODO BuildContext
             double cost = data.getTimedData("cost_" + component_.getId()).at(timestamp);
             return {{pVarName, cost}};
         }

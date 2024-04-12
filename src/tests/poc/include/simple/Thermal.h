@@ -51,7 +51,7 @@ void Thermal::addVariables(LinearProblem& problem,
     {
         throw;
     }
-    pCost_ = data.getTimedData("cost_" + id_);
+    pCost_ = ctx.getTimedData("cost_" + id_);
 }
 
 void Thermal::addConstraints(LinearProblem& problem,

@@ -49,7 +49,7 @@ void Balance::addConstraints(LinearProblem& problem,
     {
         throw;
     }
-    auto consumption = data.getTimedData("consumption_" + nodeName_);
+    auto consumption = ctx.getTimedData("consumption_" + nodeName_);
     // <!> IMPORTANT : we have to use the convention -production = -consumption, in order to be
     // compatible with the legacy code's balance constraint
     for (auto ts : data.getTimeStamps())
@@ -83,6 +83,7 @@ void Balance::update(Antares::optim::api::LinearProblem& problem, const LinearPr
     {
         throw;
     }
+    // TODO BuildContext
     auto consumption = data.getTimedData("consumption_" + nodeName_);
     for (auto ts : data.getTimeStamps())
     {

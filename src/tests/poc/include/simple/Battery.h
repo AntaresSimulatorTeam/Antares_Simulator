@@ -66,7 +66,7 @@ void Battery::addConstraints(LinearProblem& problem,
     {
         throw;
     }
-    double initialStock = data.getScalarData("initialStock_" + id_);
+    double initialStock = ctx.getScalarData("initialStock_" + id_);
     for (auto ts : data.getTimeStamps())
     {
         auto p = &problem.getVariable(pVarNames[ts]);

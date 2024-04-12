@@ -239,7 +239,8 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
           = &problemeHebdo->CorrespondanceCntNativesCntOptim;
         gLinearProblemData.legacy.areaNames = &problemeHebdo->NomsDesPays;
         // TODO : add data here
-        linearProblemBuilder.build(gLinearProblemData, {});
+        BuildContext buildCtx(0, {}, {&gLinearProblemData});
+        linearProblemBuilder.build(gLinearProblemData, buildCtx);
         solver = legacyLinearProblem.getMpSolver();
         // TODO: because of LinearProblemImpl's destructor, when we exit this scope, the MPSolver
         // instance is destroyed We have to work around this in order for the current "update"

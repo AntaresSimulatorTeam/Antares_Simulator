@@ -78,7 +78,8 @@ BOOST_DATA_TEST_CASE(test_scaling_simple_problem,
     }
 
     LinearProblemData linearProblemData(timeStamps, timeResolution, {}, timedData);
-    linearProblemBuilder.build(linearProblemData, {});
+    BuildContext buildCtx(0, timeStamps, {&linearProblemData});
+    linearProblemBuilder.build(linearProblemData, buildCtx);
     auto solution = linearProblemBuilder.solve({});
 
     for (int i = 1; i <= nUnits; ++i)

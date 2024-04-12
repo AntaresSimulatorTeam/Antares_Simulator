@@ -32,16 +32,6 @@
 
 namespace Antares::optim::api
 {
-// TODO[FOM] Move to dedicated header file
-struct BuildContext final
-{
-    using ScenarioID = unsigned int;
-    using TimeStepID = unsigned int;
-
-    std::vector<ScenarioID> scenarios;
-    std::vector<TimeStepID> timesteps;
-};
-
 class LinearProblemData final
 {
 private:
@@ -96,6 +86,32 @@ public:
         const std::vector<const char*>* areaNames;
     };
     Legacy legacy;
+};
+
+// TODO[FOM] Move to dedicated header file
+struct BuildContext final
+{
+    using ScenarioID = unsigned int;
+    using TimeStepID = int;
+    BuildContext(ScenarioID scenario,
+                 std::vector<TimeStepID> timesteps,
+                 std::vector<LinearProblemData*> linearProblemData) :
+     scenario(scenario), timesteps(timesteps), linearProblemData(linearProblemData)
+    {
+    }
+
+    // TODO Multiple scenarios ?
+    const ScenarioID scenario;
+    const std::vector<TimeStepID> timesteps;
+    [[nodiscard]] const std::vector<double>& getTimedData(const std::string& key) const
+    {
+        return linearProblemData[scenario]->getTimedData(key);
+    }
+    [[nodiscard]] double getScalarData(const std::string& key) const
+    {
+        return linearProblemData[scenario]->getScalarData(key);
+    }
+    std::vector<LinearProblemData*> linearProblemData;
 };
 
 } // namespace Antares::optim::api
