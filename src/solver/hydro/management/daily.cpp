@@ -497,6 +497,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
                 {
                     ventilationResults.HydrauliqueModulableQuotidien[day]
                       = problem.Turbine[dayMonth] * reservoirCapacity + problem.overflows[dayMonth] * reservoirCapacity;
+                    ventilationResults.NiveauxReservoirsFinJours[day] = problem.niveauxFinJours[dayMonth];
 
                     if (debugData)
                     {
