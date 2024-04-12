@@ -26,32 +26,32 @@
 #include "antares/checks/checkLoadedInputData.h"
 #include "antares/exception/LoadingError.hpp"
 
-BOOST_AUTO_TEST_CASE(test_valid_solver_parameters_does_not_raise_exception)
+BOOST_AUTO_TEST_CASE(test_if_setting_solver_specific_settings_succeeds_do_not_raise_exception)
 {
     auto ucMode = Antares::Data::UnitCommitmentMode::ucMILP;
 
     bool ortoolsUsed = true;
-    std::string ortoolsSolver = "xpress";
+    std::string ortoolsSolver = "scip";
     bool solverLogs = false;
-    std::string solverParameters = "THREADS 1 PRESOLVE 3";
+    std::string solverParameters = "lp/threads = 4, lp/presolving = TRUE";
 
     auto options
       = Antares::Solver::Optimization::OptimizationOptions(ortoolsUsed, ortoolsSolver, solverLogs, solverParameters);
     BOOST_CHECK_NO_THROW(Antares::Check::checkOrtoolsSolverSpecificParameters(ucMode, options));
 }
 
-BOOST_AUTO_TEST_CASE(test_invalid_solver_parameters_raises_exception)
+BOOST_AUTO_TEST_CASE(test_if_setting_solver_specific_settings_fails_do_not_raise_exception)
 {
     auto ucMode = Antares::Data::UnitCommitmentMode::ucMILP;
 
     bool ortoolsUsed = true;
-    std::string ortoolsSolver = "xpress";
+    std::string ortoolsSolver = "coin";
     bool solverLogs = false;
-    std::string solverParameters = "INVALID_PARAM 1";
+    std::string solverParameters = "presolve 1";
 
     auto options
       = Antares::Solver::Optimization::OptimizationOptions(ortoolsUsed, ortoolsSolver, solverLogs, solverParameters);
-    BOOST_CHECK_THROW(Antares::Check::checkOrtoolsSolverSpecificParameters(ucMode, options), Antares::Error::InvalidSolverSpecificParameters);
+    BOOST_CHECK_NO_THROW(Antares::Check::checkOrtoolsSolverSpecificParameters(ucMode, options));
 }
 
 BOOST_AUTO_TEST_CASE(test_if_no_ortools_solver_is_used_it_should_exit_normally)
