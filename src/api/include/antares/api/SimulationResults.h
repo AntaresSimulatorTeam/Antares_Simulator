@@ -21,6 +21,8 @@
 
 #pragma once
 #include <filesystem>
+#include <optional>
+#include <string>
 #include "antares/solver/lps/LpsFromAntares.h"
 
 namespace Antares::API
