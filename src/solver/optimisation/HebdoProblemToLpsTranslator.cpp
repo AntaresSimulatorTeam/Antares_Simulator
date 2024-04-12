@@ -26,10 +26,13 @@
 namespace Antares::Solver
 {
 
+namespace
+{
 template<class T, class U>
 void copy(const T& in, U& out)
 {
     std::ranges::copy(in, std::back_inserter(out));
+}
 }
 
 HebdoDataFromAntaresPtr HebdoProblemToLpsTranslator::translate(

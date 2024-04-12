@@ -36,7 +36,8 @@ class FileTreeStudyLoader: public IStudyLoader
 public:
     explicit FileTreeStudyLoader(std::filesystem::path study_path);
     ~FileTreeStudyLoader() override = default;
-    std::shared_ptr<Antares::Data::Study> load() override;
+    [[nodiscard]] std::shared_ptr<Antares::Data::Study> load() override;
+private:
     std::filesystem::path study_path_;
 };
 } // namespace Antares

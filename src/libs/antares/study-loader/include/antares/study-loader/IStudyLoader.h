@@ -27,6 +27,6 @@ namespace Antares {
 class IStudyLoader {
 public:
     virtual ~IStudyLoader() = default;
-    virtual std::shared_ptr<Antares::Data::Study> load() = 0;
+    [[nodiscard]] virtual std::shared_ptr<Antares::Data::Study> load() = 0;
 };
 }

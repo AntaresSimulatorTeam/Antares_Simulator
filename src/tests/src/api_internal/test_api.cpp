@@ -33,7 +33,7 @@ class InMemoryStudyLoader : public Antares::IStudyLoader
 {
 public:
     explicit InMemoryStudyLoader(bool success = true) : success_(success) {};
-    std::shared_ptr<Antares::Data::Study> load() override {
+    [[nodiscard]] std::shared_ptr<Antares::Data::Study> load() override {
         if (!success_) {
         return nullptr;
       }
