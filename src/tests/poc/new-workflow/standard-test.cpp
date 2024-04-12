@@ -50,12 +50,11 @@ BOOST_DATA_TEST_CASE(test_std_oneWeek_oneNode_oneBattery_oneThermal,
     portConnectionsManager.addConnection({priceMinimFiller, "cost"}, {batteryFiller, "cost"});
 
     LinearProblemData linearProblemData(
-      timeStamps,     // TODO : move to LinearProblem ?
       timeResolution, // TODO : move to LinearProblem ?
-      {{"initialStock_battery1", 0}},
-      {{"consumption_nodeA", {50, 50, 150, 120}}, {"cost_thermal1", {1, 3, 10, 8}}});
-    BuildContext buildCtx(0, timeStamps, {&linearProblemData});
-    linearProblemBuilder.build(linearProblemData, buildCtx);
+      {{"initialStock_battery1", {0}}},
+      {{"consumption_nodeA", {{50, 50, 150, 120}}}, {"cost_thermal1", {{1, 3, 10, 8}}}});
+    BuildContext ctx({0}, timeStamps);
+    linearProblemBuilder.build(linearProblemData, ctx);
     auto solution = linearProblemBuilder.solve({});
 
     // Consumption is greater than thermal maximum production in TS 2 & 3
@@ -68,13 +67,13 @@ BOOST_DATA_TEST_CASE(test_std_oneWeek_oneNode_oneBattery_oneThermal,
     // Thermal : 100, 100, 70, 100
     // Battery : -50, -50, 80, 20
 
-    vector<double> actualThermalP
-      = solution.getOptimalValues({"P_thermal1_0", "P_thermal1_1", "P_thermal1_2", "P_thermal1_3"});
+    vector<double> actualThermalP = solution.getOptimalValues(
+      {"P_thermal1_0_0", "P_thermal1_1_0", "P_thermal1_2_0", "P_thermal1_3_0"});
     vector<double> expectedThermalP({100., 100., 70., 100.});
     BOOST_TEST(actualThermalP == expectedThermalP, tt::per_element()); // TODO add tolerance
 
-    vector<double> actualBatteryP
-      = solution.getOptimalValues({"P_battery1_0", "P_battery1_1", "P_battery1_2", "P_battery1_3"});
+    vector<double> actualBatteryP = solution.getOptimalValues(
+      {"P_battery1_0_0", "P_battery1_1_0", "P_battery1_2_0", "P_battery1_3_0"});
     vector<double> expectedBatteryP({-50, -50, 80, 20});
     BOOST_TEST(actualBatteryP == expectedBatteryP, tt::per_element()); // TODO add tolerance
 }
@@ -114,39 +113,41 @@ BOOST_DATA_TEST_CASE(test_std_oneWeek_oneNode_oneBattery_twoThermals,
     portConnectionsManager.addConnection({priceMinimFiller, "cost"}, {thermal2Filler, "cost"});
     portConnectionsManager.addConnection({priceMinimFiller, "cost"}, {batteryFiller, "cost"});
 
-    LinearProblemData linearProblemData(timeStamps,     // TODO : move to LinearProblem ?
-                                        timeResolution, // TODO : move to LinearProblem ?
-                                        {{"initialStock_battery1", 0}},
-                                        {{"consumption_nodeA", {0, 150, 150, 150}},
-                                         {"cost_thermal1", {1, 4, 8, 11}},
-                                         {"cost_thermal2", {2, 3, 10, 9}}});
-    BuildContext buildCtx(0, timeStamps, {&linearProblemData});
-    linearProblemBuilder.build(linearProblemData, buildCtx);
+    LinearProblemData linearProblemData(timeResolution, // TODO : move to LinearProblem ?
+                                        {{"initialStock_battery1", {0}}},
+                                        {{"consumption_nodeA", {{0, 150, 150, 150}}},
+                                         {"cost_thermal1", {{1, 4, 8, 11}}},
+                                         {"cost_thermal2", {{2, 3, 10, 9}}}});
+
+    BuildContext ctx({0}, timeStamps);
+    linearProblemBuilder.build(linearProblemData, ctx);
+
     auto solution = linearProblemBuilder.solve({});
 
     // Thermal production is cheap in TS 0, then very expensive.
-    // Battery must charge up to its max during TS 0, then discharge mostly when thermal production
-    // is most expensive (mostly in TS 3, then in TS 2). It is limited in power and stock, it can
-    // charge 180 MW in TS 0 and 20 MW in TS 2. Thermal production will complete the rest, following
-    // merit order imposed by their respective costs. Expected power plans are:
+    // Battery must charge up to its max during TS 0, then discharge mostly when thermal
+    // production is most expensive (mostly in TS 3, then in TS 2). It is limited in power and
+    // stock, it can charge 180 MW in TS 0 and 20 MW in TS 2. Thermal production will complete
+    // the rest, following merit order imposed by their respective costs. Expected power plans
+    // are:
     // - Battery: -180, -20, 50, 150
     // - Thermal1: 100, 70, 100, 0
     // - Thermal2: 80, 100, 0, 0
 
-    vector<double> actualBatteryP
-      = solution.getOptimalValues({"P_battery1_0", "P_battery1_1", "P_battery1_2", "P_battery1_3"});
+    vector<double> actualBatteryP = solution.getOptimalValues(
+      {"P_battery1_0_0", "P_battery1_1_0", "P_battery1_2_0", "P_battery1_3_0"});
     vector<double> expectedBatteryP({-180, -20, 50, 150});
     BOOST_TEST(actualBatteryP == expectedBatteryP, tt::per_element());
     // TODO add tolerance with boost version >= 1.73.0
-    // BOOST_TEST(actualBatteryP == expectedBatteryP, tt::tolerance( 1e-3 ) << "comparison to ground
-    // truth failed" << tt::per_element());
+    // BOOST_TEST(actualBatteryP == expectedBatteryP, tt::tolerance( 1e-3 ) << "comparison to
+    // ground truth failed" << tt::per_element());
 
-    vector<double> actualThermal1P
-      = solution.getOptimalValues({"P_thermal1_0", "P_thermal1_1", "P_thermal1_2", "P_thermal1_3"});
+    vector<double> actualThermal1P = solution.getOptimalValues(
+      {"P_thermal1_0_0", "P_thermal1_1_0", "P_thermal1_2_0", "P_thermal1_3_0"});
     vector<double> expectedThermal1P({100, 70, 100, 0});
     BOOST_TEST(actualThermal1P == expectedThermal1P, tt::per_element()); // TODO add tolerance
-    vector<double> actualThermal2P
-      = solution.getOptimalValues({"P_thermal2_0", "P_thermal2_1", "P_thermal2_2", "P_thermal2_3"});
+    vector<double> actualThermal2P = solution.getOptimalValues(
+      {"P_thermal2_0_0", "P_thermal2_1_0", "P_thermal2_2_0", "P_thermal2_3_0"});
     vector<double> expectedThermal2P({80, 100, 0, 0});
     BOOST_TEST(actualThermal2P == expectedThermal2P, tt::per_element()); // TODO add tolerance
 }

@@ -38,13 +38,13 @@ BOOST_DATA_TEST_CASE(test_scaling_simple_problem,
     std::vector<int> timeStamps(nTimesteps);
     std::iota(timeStamps.begin(), timeStamps.end(), 0);
 
-    std::map<std::string, std::vector<double>> timedData;
+    std::map<std::string, std::vector<std::vector<double>>> timedData;
 
     // Build increasing consumption vector beginning at 0 MW, and increasing by 1 MW at every
     // timestep
     std::vector<double> consumption(nTimesteps);
     std::iota(consumption.begin(), consumption.end(), 1);
-    timedData.insert({"consumption_nodeA", consumption});
+    timedData.insert({"consumption_nodeA", {consumption}});
 
     LinearProblemImpl linearProblem(false, solverName);
     LinearProblemBuilder linearProblemBuilder(linearProblem);
@@ -71,14 +71,14 @@ BOOST_DATA_TEST_CASE(test_scaling_simple_problem,
         shared_ptr<ComponentFiller> thermalFiller
           = make_shared<ComponentFiller>(thermal, portConnectionsManager);
         vector<double> cost(nTimesteps, 1.0 * i);
-        timedData.insert({"cost_" + id, cost});
+        timedData.insert({"cost_" + id, {cost}});
         linearProblemBuilder.addFiller(thermalFiller);
         portConnectionsManager.addConnection({balanceAFiller, "P"}, {thermalFiller, "P"});
         portConnectionsManager.addConnection({priceMinimFiller, "cost"}, {thermalFiller, "cost"});
     }
 
-    LinearProblemData linearProblemData(timeStamps, timeResolution, {}, timedData);
-    BuildContext buildCtx(0, timeStamps, {&linearProblemData});
+    LinearProblemData linearProblemData(timeResolution, {{}}, timedData);
+    BuildContext buildCtx({0}, timeStamps);
     linearProblemBuilder.build(linearProblemData, buildCtx);
     auto solution = linearProblemBuilder.solve({});
 
@@ -91,7 +91,7 @@ BOOST_DATA_TEST_CASE(test_scaling_simple_problem,
         expectedP.reserve(nTimesteps);
         for (int ts : timeStamps)
         {
-            pVarNames.push_back(pVarNamePrefix + to_string(ts));
+            pVarNames.push_back(pVarNamePrefix + to_string(ts) + "_0");
             expectedP.push_back(min(10.0, max(0.0, consumption[ts] - (i - 1) * 10)));
         }
         vector<double> actualP = solution.getOptimalValues(pVarNames);

@@ -239,7 +239,7 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
           = &problemeHebdo->CorrespondanceCntNativesCntOptim;
         gLinearProblemData.legacy.areaNames = &problemeHebdo->NomsDesPays;
         // TODO : add data here
-        BuildContext buildCtx(0, {}, {&gLinearProblemData});
+        BuildContext buildCtx({0}, {0});
         linearProblemBuilder.build(gLinearProblemData, buildCtx);
         solver = legacyLinearProblem.getMpSolver();
         // TODO: because of LinearProblemImpl's destructor, when we exit this scope, the MPSolver

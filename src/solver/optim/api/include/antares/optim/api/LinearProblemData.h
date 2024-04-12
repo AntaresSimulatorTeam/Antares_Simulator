@@ -36,27 +36,21 @@ class LinearProblemData final
 {
 private:
     // TODO : timestamps or timesteps?
-    std::vector<int> timeStamps_;
     int timeResolutionInMinutes_;
-    std::map<std::string, double> scalarData_;
-    std::map<std::string, std::vector<double>> timedData_;
+    std::map<std::string, std::vector<double>> scalarData_;
+    std::map<std::string, std::vector<std::vector<double>>> timedData_;
     // TODO : handle scenarios, and data vectorized on scenarios, on time, or on both
 public:
-    explicit LinearProblemData(const std::vector<int>& timeStamps,
-                               int timeResolutionInMinutes,
-                               const std::map<std::string, double>& scalarData,
-                               const std::map<std::string, std::vector<double>>& timedData) :
-     timeStamps_(timeStamps),
+    explicit LinearProblemData(
+      int timeResolutionInMinutes,
+      const std::map<std::string, std::vector<double>>& scalarData,
+      const std::map<std::string, std::vector<std::vector<double>>>& timedData) :
      timeResolutionInMinutes_(timeResolutionInMinutes),
      scalarData_(scalarData),
      timedData_(timedData){
        // TODO: some coherence check on data
        // for example, check that timed data are all of same size = size of timeStamps_
      };
-    [[nodiscard]] std::vector<int> getTimeStamps() const
-    {
-        return timeStamps_;
-    }
     [[nodiscard]] int getTimeResolutionInMinutes() const
     {
         return timeResolutionInMinutes_;
@@ -65,17 +59,30 @@ public:
     {
         return scalarData_.contains(key);
     }
-    [[nodiscard]] double getScalarData(const std::string& key) const
+    [[nodiscard]] double getScalarData(const std::string& key, unsigned int scenario) const
     {
-        return scalarData_.at(key);
+        switch (scalarData_.at(key).size())
+        {
+        case 1:
+            return scalarData_.at(key)[0];
+        default:
+            return scalarData_.at(key)[scenario];
+        }
     }
     [[nodiscard]] bool hasTimedData(const std::string& key) const
     {
         return timedData_.contains(key);
     }
-    [[nodiscard]] const std::vector<double>& getTimedData(const std::string& key) const
+    [[nodiscard]] const std::vector<double>& getTimedData(const std::string& key,
+                                                          unsigned int scenario) const
     {
-        return timedData_.at(key);
+        switch (timedData_.at(key).size())
+        {
+        case 1:
+            return timedData_.at(key)[0];
+        default:
+            return timedData_.at(key)[scenario];
+        }
     }
 
     // TODO: remove this when legacy support is dropped
@@ -86,32 +93,30 @@ public:
         const std::vector<const char*>* areaNames;
     };
     Legacy legacy;
-};
+}; // namespace Antares::optim::api
 
 // TODO[FOM] Move to dedicated header file
 struct BuildContext final
 {
     using ScenarioID = unsigned int;
-    using TimeStepID = int;
-    BuildContext(ScenarioID scenario,
-                 std::vector<TimeStepID> timesteps,
-                 std::vector<LinearProblemData*> linearProblemData) :
-     scenario(scenario), timesteps(timesteps), linearProblemData(linearProblemData)
+    using TimeStampID = int;
+
+    [[nodiscard]] std::vector<TimeStampID> getTimeStamps() const
     {
+        return timeStamps;
     }
 
-    // TODO Multiple scenarios ?
-    const ScenarioID scenario;
-    const std::vector<TimeStepID> timesteps;
-    [[nodiscard]] const std::vector<double>& getTimedData(const std::string& key) const
+    [[nodiscard]] std::vector<ScenarioID> getScenarios() const
     {
-        return linearProblemData[scenario]->getTimedData(key);
+        return scenarios;
     }
-    [[nodiscard]] double getScalarData(const std::string& key) const
+
+    BuildContext(std::vector<ScenarioID> scenarios, std::vector<TimeStampID> timeStamps) :
+     scenarios(scenarios), timeStamps(timeStamps)
     {
-        return linearProblemData[scenario]->getScalarData(key);
     }
-    std::vector<LinearProblemData*> linearProblemData;
+    const std::vector<ScenarioID> scenarios;
+    const std::vector<TimeStampID> timeStamps;
 };
 
 } // namespace Antares::optim::api
