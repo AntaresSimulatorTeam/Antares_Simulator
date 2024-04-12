@@ -13,23 +13,24 @@ namespace bdata = boost::unit_test::data;
 using namespace Antares::optim::api;
 using namespace std;
 
-static constexpr std::array solverNames =
-        {
-                "xpress",
-                "sirius",
-                "coin",
-                //"scip" // TODO activate this after adding tolerance
-        };
+static constexpr std::array solverNames = {
+  "xpress",
+  "sirius",
+  "coin",
+  //"scip" // TODO activate this after adding tolerance
+};
 
-static constexpr std::array timestepNumbers =
-        {
-                24, // 1 day
-                168, // 1 week
-                744, // 1 month
-                4380 // 6 months
-        };
+static constexpr std::array timestepNumbers = {
+  24,  // 1 day
+  168, // 1 week
+  744, // 1 month
+  4380 // 6 months
+};
 
-BOOST_DATA_TEST_CASE(test_scaling_simple_problem, bdata::make(solverNames)*bdata::make(timestepNumbers), solverName, nTimesteps)
+BOOST_DATA_TEST_CASE(test_scaling_simple_problem,
+                     bdata::make(solverNames) * bdata::make(timestepNumbers),
+                     solverName,
+                     nTimesteps)
 {
     int timeResolution = 60;
 
@@ -39,7 +40,8 @@ BOOST_DATA_TEST_CASE(test_scaling_simple_problem, bdata::make(solverNames)*bdata
 
     std::map<std::string, std::vector<double>> timedData;
 
-    // Build increasing consumption vector beginning at 0 MW, and increasing by 1 MW at every timestep
+    // Build increasing consumption vector beginning at 0 MW, and increasing by 1 MW at every
+    // timestep
     std::vector<double> consumption(nTimesteps);
     std::iota(consumption.begin(), consumption.end(), 1);
     timedData.insert({"consumption_nodeA", consumption});
@@ -49,21 +51,25 @@ BOOST_DATA_TEST_CASE(test_scaling_simple_problem, bdata::make(solverNames)*bdata
     PortConnectionsManager portConnectionsManager;
 
     Component balance("balanceA", BALANCE, {}, {{"nodeName", "nodeA"}});
-    shared_ptr<ComponentFiller> balanceAFiller = make_shared<ComponentFiller>(balance, portConnectionsManager);
+    shared_ptr<ComponentFiller> balanceAFiller
+      = make_shared<ComponentFiller>(balance, portConnectionsManager);
     linearProblemBuilder.addFiller(balanceAFiller);
 
     Component priceMinim("priceMinim", PRICE_MINIM, {}, {});
-    shared_ptr<ComponentFiller> priceMinimFiller = make_shared<ComponentFiller>(priceMinim, portConnectionsManager);
+    shared_ptr<ComponentFiller> priceMinimFiller
+      = make_shared<ComponentFiller>(priceMinim, portConnectionsManager);
     linearProblemBuilder.addFiller(priceMinimFiller);
 
     // Create thermal production units
     // Every unit can produce up to 10 MW
     // Price is stable in time but increase for every unit
     int nUnits = ceil(1.0 * (nTimesteps - 1) / 10.0);
-    for (int i = 1; i <= nUnits; ++i) {
+    for (int i = 1; i <= nUnits; ++i)
+    {
         string id = "thermal" + to_string(i);
         Component thermal(id, THERMAL, {{"maxP", 10}}, {});
-        shared_ptr<ComponentFiller> thermalFiller = make_shared<ComponentFiller>(thermal, portConnectionsManager);
+        shared_ptr<ComponentFiller> thermalFiller
+          = make_shared<ComponentFiller>(thermal, portConnectionsManager);
         vector<double> cost(nTimesteps, 1.0 * i);
         timedData.insert({"cost_" + id, cost});
         linearProblemBuilder.addFiller(thermalFiller);
@@ -72,16 +78,18 @@ BOOST_DATA_TEST_CASE(test_scaling_simple_problem, bdata::make(solverNames)*bdata
     }
 
     LinearProblemData linearProblemData(timeStamps, timeResolution, {}, timedData);
-    linearProblemBuilder.build(linearProblemData);
+    linearProblemBuilder.build(linearProblemData, {});
     auto solution = linearProblemBuilder.solve({});
 
-    for (int i = 1; i <= nUnits; ++i) {
-        string pVarNamePrefix  = "P_thermal" + to_string(i) + "_";
+    for (int i = 1; i <= nUnits; ++i)
+    {
+        string pVarNamePrefix = "P_thermal" + to_string(i) + "_";
         vector<string> pVarNames;
         pVarNames.reserve(nTimesteps);
         vector<double> expectedP;
         expectedP.reserve(nTimesteps);
-        for (int ts: timeStamps) {
+        for (int ts : timeStamps)
+        {
             pVarNames.push_back(pVarNamePrefix + to_string(ts));
             expectedP.push_back(min(10.0, max(0.0, consumption[ts] - (i - 1) * 10)));
         }
