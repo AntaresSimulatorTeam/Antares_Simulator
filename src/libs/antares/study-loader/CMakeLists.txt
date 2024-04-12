@@ -1,3 +1,4 @@
+#Header only library, nothing is compiled hence usage of INTERFACE
 add_library(study-loader INTERFACE)
 add_library(Antares::study-loader ALIAS study-loader)
 
