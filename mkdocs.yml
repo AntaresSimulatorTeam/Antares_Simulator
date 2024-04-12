@@ -45,7 +45,9 @@ nav:
     - 'Adequacy patch (v8.3.0+)': 'reference-guide/14-adequacy-patch.md'
     - 'File format changes': 'reference-guide/13-file-format.md'
     - 'Attribution notices': 'reference-guide/12-attribution_notices.md'
-  - 'Optimisation problem' : 'reference-guide/11-modeling.md'
+  - 'Optimisation':
+    - 'Optimisation problem' : 'optimisation/01-modeling.md'
+    - 'Thermal heuristic': 'optimisation/02-thermal-heuristic.md'
   - 'Build':
     - 'Introduction': 'build/0-Introduction.md'
     - 'Development requirements': 'build/1-Development-requirements.md'
