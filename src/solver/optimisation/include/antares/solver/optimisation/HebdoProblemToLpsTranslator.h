@@ -28,12 +28,25 @@
 
 namespace Antares::Solver
 {
+
+/**
+ * @class HebdoProblemTranslationException
+ * @brief Exception class for errors during the translation of a weekly problem.
+ *
+ * This class is a custom exception class that is thrown when an error occurs during the translation of a weekly problem.
+ */
 class HebdoProblemTranslationException: public std::runtime_error
 {
 public:
     explicit HebdoProblemTranslationException(const std::string& string) noexcept;
 };
 
+/**
+ * @class HebdoProblemToLpsTranslator
+ * @brief Class for translating a weekly problem to a linear programming problem.
+ *
+ * This class is responsible for translating a weekly problem to a linear programming problem.
+ */
 class HebdoProblemToLpsTranslator
 {
 public:
