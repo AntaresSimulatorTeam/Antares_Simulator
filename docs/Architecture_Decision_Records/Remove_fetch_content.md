@@ -4,12 +4,14 @@
 
 ## Context
 
-Trying to publish a library require publishing a cmake package. The proper way to do so is to export the project targets
-When using fetch_content for a dependency, this dependency is promoted as a third party component of the project. This
-means that targets of this dependency must also be exported. In itself it is already a issue but manageable albeit painfully.
-However when a developer make the choice of using a installed package of a dependency instead of rellying on fetch_content, this
-library is treated as third party, targets don't have to be exported, even worse won't be found elligible for export leading to maintain two behaviour 
-and export sets.
+Efficiently publishing a library involves creating a CMake package for distribution. The recommended approach is to export the project targets.
+
+When integrating dependencies through fetch_content, they are elevated to the status of first-party components within the project's ecosystem. This
+means that targets of this dependency must also be exported. Consequently, it becomes necessary to export the targets associated with these dependencies. While this presents a challenge, it's manageable, though not without some complexity.
+
+However, opting to utilize an installed package of a dependency rather than relying on fetch_content complicates matters further.
+In such cases, the library is still considered a third-party entity, yet the targets associated must not be exported.
+This discrepancy can lead to inconsistencies in behavior and export sets, necessitating the maintenance of two distinct approaches.
 
 ## Decision
 

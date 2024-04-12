@@ -4,11 +4,11 @@
 
 ## Context
 
-Some clients (e.g. Xpansion) would prefer to use a library than a CLI tool. Exposing a library require exposing a public API.
-The API can be exposed either as pure C or as C++.
-A C API can always be developped as a facade on top of a C++ API.
-C++ API will not have to care about ABI compatibility because Simulator lib will be provided as static, meaning a client
-upgrading would need to be recompiled and relink with the new lib version.
+Several clients, such as Xpansion, express a preference for utilizing a library over a command-line interface (CLI) tool. Exposing a library necessitates the exposure of a public API.
+
+This API can be presented in either pure C or C++. It's worth noting that a C API can always serve as a facade atop a C++ API.
+
+In the case of a C++ API, concerns regarding ABI compatibility are alleviated, as the Simulator library is provided in a static form. Consequently, when a client upgrades, they would simply need to recompile and relink with the new version of the library.
 
 ## Decision
 
