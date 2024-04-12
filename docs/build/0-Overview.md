@@ -3,7 +3,7 @@ hide:
  - toc
 ---
 
-# Introduction
+# Overview
 
 *ANTARES* is developed mainly in **C++**
 

@@ -1,4 +1,4 @@
-# Introduction
+# Overview
 
 This reference guide describes all the main features of the *Antares Simulator*[^1] package.
 [^1]: For simplicity's sake, the *Antares Simulator* application will be simply denoted *Antares*.

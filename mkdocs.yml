@@ -32,25 +32,25 @@ theme:
 nav:
   - 'Home': 'index.md'
   - 'Reference guide':
-    - 'Introduction': 'reference-guide/01-introduction.md'
-    - 'Installation instructions': 'reference-guide/02-install.md'
+    - 'Overview': 'reference-guide/01-overview.md'
+    - 'Installation': 'reference-guide/02-install.md'
     - 'Getting started': 'reference-guide/03-getting_started.md'
-    - 'Time-Series analysis and generation':
-        - 'Introduction': 'reference-guide/ts-analyzer-generator/01-introduction.md'
+    - 'Time-Series generation':
+        - 'Overview': 'reference-guide/ts-analyzer-generator/01-overview.md'
         - 'Input files': 'reference-guide/ts-analyzer-generator/02-inputs.md'
         - 'Output files': 'reference-guide/ts-analyzer-generator/03-outputs.md'
         - 'Parameters': 'reference-guide/ts-analyzer-generator/04-parameters.md'
         - 'Principles': 'reference-guide/ts-analyzer-generator/05-principles.md'
         - 'Command-line instructions': 'reference-guide/ts-analyzer-generator/06-command-line.md'
     - 'Solver':
-        - 'Introduction': 'reference-guide/solver/01-introduction.md'
+        - 'Overview': 'reference-guide/solver/01-overview.md'
         - 'Input files': 'reference-guide/solver/02-inputs.md'
         - 'Output files': 'reference-guide/solver/03-outputs.md'
         - 'Parameters': 'reference-guide/solver/04-parameters.md'
         - 'Principles': 'reference-guide/solver/05-principles.md'
         - 'Command-line instructions': 'reference-guide/solver/06-command-line.md'
     - 'Kirchhoff''s constraint generator':
-        - 'Introduction': 'reference-guide/kirchhoff-constraints-builder/01-introduction.md'
+        - 'Overview': 'reference-guide/kirchhoff-constraints-builder/01-overview.md'
         - 'Input files': 'reference-guide/kirchhoff-constraints-builder/02-inputs.md'
         - 'Output files': 'reference-guide/kirchhoff-constraints-builder/03-outputs.md'
         - 'Parameters': 'reference-guide/kirchhoff-constraints-builder/04-parameters.md'
@@ -70,7 +70,7 @@ nav:
     - 'Attribution notices': 'reference-guide/12-attribution_notices.md'
   - 'Optimisation problem': 'reference-guide/11-modeling.md'
   - 'Build':
-    - 'Introduction': 'build/0-Introduction.md'
+    - 'Overview': 'build/0-Overview.md'
     - 'Development requirements': 'build/1-Development-requirements.md'
     - 'Dependencies install': 'build/2-Dependencies-install.md'
     - 'Build': 'build/3-Build.md'

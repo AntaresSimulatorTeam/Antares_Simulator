@@ -1,9 +1,9 @@
 [//]: # (Index used by Sphinx to generate correct PDF tree)
-# Feature: Time-series generator
+# Time-Series generator
 
 ```{toctree}
 :hidden:
-01-introduction.md
+01-overview.md
 02-inputs.md
 03-outputs.md
 04-parameters.md

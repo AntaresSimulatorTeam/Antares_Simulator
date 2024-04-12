@@ -2,10 +2,10 @@
 
 ```{toctree}
 :hidden:
-01-introduction.md
+01-overview.md
 02-install.md
 03-getting_started.md
-ts-generator/00-index.md
+ts-analyzer-generator/00-index.md
 solver/00-index.md
 kirchhoff-constraints-builder/00-index.md
 other-features/00-index.md
