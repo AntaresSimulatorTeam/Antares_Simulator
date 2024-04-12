@@ -26,17 +26,31 @@
 namespace Antares::API
 {
 
+/**
+ * @class SimulationObserver
+ * @brief The SimulationObserver class is used to observe the simulation.
+ * @details It inherits from the ISimulationObserver interface and overrides the notifyHebdoProblem method.
+ */
 class SimulationObserver: public Solver::Simulation::ISimulationObserver
 {
 public:
+    /**
+     * @brief The notifyHebdoProblem method is used to notify of a problem during the simulation.
+     * @param problemeHebdo A pointer to a PROBLEME_HEBDO object representing the problem.
+     * @param optimizationNumber The number of the optimization.
+     * @param name The name of the problem.
+     */
     void notifyHebdoProblem(const PROBLEME_HEBDO* problemeHebdo,
                             int optimizationNumber,
                             std::string_view name) override;
+
+    /**
+     * @brief The acquireLps method is used to take ownership of Antares problems.
+     * @return An LpsFromAntares object containing the linear programming problems.
+     */
+    Solver::LpsFromAntares&& acquireLps() noexcept;
 private:
     Solver::LpsFromAntares lps_;
-
-public:
-    Solver::LpsFromAntares&& acquireLps() noexcept;
 };
 
 } // namespace Api

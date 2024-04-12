@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2007-2024, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
@@ -20,15 +19,4 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#pragma once
-#include "SimulationResults.h"
-
-namespace Antares::API {
-/**
- * @brief The PerformSimulation function is used to perform a simulation.
- * @param study_path The path to the study to be simulated.
- * @return SimulationResults object which contains the results of the simulation.
- * @exception noexcept This function does not throw exceptions.
- */
-SimulationResults PerformSimulation(std::filesystem::path study_path) noexcept;
-}
+#include "antares/api/SimulationResults.h"
