@@ -35,7 +35,6 @@ class DurationCollector
 public:
     using clock = std::chrono::steady_clock;
 
-    std::map<std::string, long> times;
 
     struct OperationTimer
     {
@@ -59,11 +58,20 @@ public:
         auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end_ - start_).count();
         op.collector.times[op.key] += duration_ms;
     }
+
     void summary()
     {
         for (auto& [k, v] : times)
             std::cout << k << '\t' << v << '\n';
     }
+
+    void addCustomTime(std::string& name, long time)
+    {
+        times.try_emplace(name, time);
+    }
+
+private:
+    std::map<std::string, long> times;
 };
 
 extern DurationCollector durationCollector;
