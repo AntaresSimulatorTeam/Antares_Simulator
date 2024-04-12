@@ -48,6 +48,12 @@ SimulationResults APIInternal::run(IStudyLoader* study_loader)
     return execute();
 }
 
+/**
+ * @brief The execute method is used to execute the simulation.
+ * @return SimulationResults object which contains the results of the simulation.
+ *
+ * This method is a copy of Application::execute
+ */
 SimulationResults APIInternal::execute() const
 {
     // study_ == nullptr e.g when the -h flag is given
