@@ -80,14 +80,6 @@ namespace {
 }
 } // namespace
 
-/**
- * @brief Loads a study from the file tree.
- *
- * This function prepares the arguments required by the Antares Solver application and then calls the application's prepare method.
- * It then returns the study loaded by the application.
- *
- * @return std::shared_ptr<Antares::Data::Study> A shared_ptr to the loaded Study object.
- */
 std::shared_ptr<Antares::Data::Study> FileTreeStudyLoader::load() {
     Antares::Solver::Application application;
     constexpr unsigned int argc = 3;
