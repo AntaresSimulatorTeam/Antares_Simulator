@@ -27,7 +27,6 @@
 #include <antares/antares/fatal-error.h>
 #include <antares/memory/memory.h>
 #include <antares/locale/locale.h>
-#include <antares/timer/timer.h>
 
 using namespace Antares;
 using namespace Yuni;

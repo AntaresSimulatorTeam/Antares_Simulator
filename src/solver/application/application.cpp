@@ -29,7 +29,6 @@
 #include <antares/exception/LoadingError.hpp>
 #include <antares/checks/checkLoadedInputData.h>
 #include <antares/study/version.h>
-#include <antares/timer/timer.h>
 #include <antares/writer/writer_factory.h>
 
 #include "antares/signal-handling/public.h"

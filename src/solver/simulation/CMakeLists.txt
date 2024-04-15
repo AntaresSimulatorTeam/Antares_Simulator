@@ -69,7 +69,6 @@ target_link_libraries(antares-solver-simulation
 		Antares::concurrency
 		Antares::solverUtils
 		Antares::misc
-		Antares::timer
 		model_antares
 		antares-solver-hydro
 		antares-solver-variable

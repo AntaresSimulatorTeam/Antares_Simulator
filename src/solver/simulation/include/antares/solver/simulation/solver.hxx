@@ -23,7 +23,6 @@
 
 #include "antares/solver//variable/constants.h"
 #include <antares/logs/logs.h>
-#include <antares/timer/timer.h>
 #include <antares/date/date.h>
 #include <antares/benchmarking/timer.h>
 #include <antares/exception/InitializationError.hpp>
