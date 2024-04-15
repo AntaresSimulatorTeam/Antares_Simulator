@@ -437,7 +437,7 @@ void Application::writeExectutionInfo()
         return;
 
 
-    /* logTotalTime(pTotalTimer.get_duration()); */
+    logTotalTime(durationCollector.getTime("total"));
 
     durationCollector.summary();
 
