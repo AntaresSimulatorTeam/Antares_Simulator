@@ -66,7 +66,7 @@ private:
     void storeDeltaLevels(unsigned int year);
     double calculateTotalInflows(unsigned int year) const;
     bool SimulationThroughWholeYear(unsigned int year) const;
-    bool preCheckYearlyInflow(double totalYearInflows, unsigned int year) const;
+    bool finalLevelValidity(double totalYearInflows, unsigned int year) const;
     bool preCheckRuleCurves(unsigned int year) const;
 
     unsigned int lastSimulationDay_ = 0;

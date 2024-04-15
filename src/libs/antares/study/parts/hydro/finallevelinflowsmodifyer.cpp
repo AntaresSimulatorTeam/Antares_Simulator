@@ -95,7 +95,7 @@ bool FinalLevelInflowsModifier::SimulationThroughWholeYear(unsigned int year) co
     return false;
 }
 
-bool FinalLevelInflowsModifier::preCheckYearlyInflow(double totalYearInflows, unsigned int year) const
+bool FinalLevelInflowsModifier::finalLevelValidity(double totalYearInflows, unsigned int year) const
 {
     double reservoirCapacity = hydro_.reservoirCapacity;
     if (-deltaReservoirLevel_ * reservoirCapacity > totalYearInflows)
@@ -166,7 +166,7 @@ bool FinalLevelInflowsModifier::makeChecks(unsigned int year)
 
     // Reservoir_levelDay_365 – reservoir_levelDay_1 ≤ yearly_inflows
     double totalInflows = calculateTotalInflows(year);
-    checksOk = preCheckYearlyInflow(totalInflows, year) && checksOk;
+    checksOk = finalLevelValidity(totalInflows, year) && checksOk;
 
     // Final reservoir level set by the user is within the
     // rule curves for the final day
