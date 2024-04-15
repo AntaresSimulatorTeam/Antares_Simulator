@@ -37,7 +37,7 @@ void Application::runSimulationInAdequacyMode()
 
     if (!(pSettings.noOutput || pSettings.tsGeneratorsOnly))
     {
-        durationCollector("synthesis_export") << [&simulation] {
+        pDurationCollector("synthesis_export") << [&simulation] {
             simulation.writeResults(/*synthesis:*/ true);
         };
 
