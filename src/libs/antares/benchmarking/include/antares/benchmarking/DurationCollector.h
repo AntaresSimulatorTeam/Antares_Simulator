@@ -20,6 +20,8 @@
 */
 #pragma once
 
+#include <functional>
+#include <chrono>
 #include <vector>
 #include <map>
 #include <string>
@@ -54,10 +56,38 @@ public:
     virtual ~DurationCollector() = default;
 
     void toFileContent(FileContent& file_content);
-    void addDuration(const std::string& name, int64_t duration) override;
+    void addDuration(const std::string& name, long duration) override;
+
+    using clock = std::chrono::steady_clock;
+
+    struct OperationTimer
+    {
+        OperationTimer(DurationCollector& collector, const std::string& key):
+            collector(collector), key(key) {}
+
+        DurationCollector& collector;
+        const std::string key;
+    };
+
+    OperationTimer operator()(const std::string& key)
+    {
+        return OperationTimer(*this, key);
+    }
+
+    friend void operator<<(const OperationTimer& op, std::function<void(void)> f)
+    {
+        static std::mutex mutex_;
+
+        auto start_ = clock::now();
+        f();
+        auto end_ = clock::now();
+        auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end_ - start_).count();
+        const std::lock_guard<std::mutex> lock(mutex_);
+        op.collector.duration_items_[op.key].push_back(duration_ms);
+    }
 
 private:
-    std::map<std::string, std::vector<int64_t>> duration_items_;
+    std::map<std::string, std::vector<long>> duration_items_;
 
     // Durations can be added in a context of multi-threading, so we need to protect
     // these additions from thread concurrency
