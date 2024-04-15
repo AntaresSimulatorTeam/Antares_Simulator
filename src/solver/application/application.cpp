@@ -300,7 +300,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     std::exception_ptr loadingException;
     try
     {
-        durationCollector("study_loading") << [&] {
+        pDurationCollector("study_loading") << [&] {
             if (study.loadFromFolder(pSettings.studyFolder, options))
             {
                 logs.info() << "The study is loaded.";
@@ -436,10 +436,12 @@ void Application::writeExectutionInfo()
     if (!pStudy)
         return;
 
+    pTotalTimer.stop();
+    pDurationCollector.addDuration("total", pTotalTimer.get_duration());
 
-    logTotalTime(durationCollector.getTime("total"));
+    logTotalTime(pTotalTimer.get_duration());
 
-    durationCollector.summary();
+    /* pDurationCollector.summary(); */
 
     // If no writer is available, we can't write
     if (!resultWriter)

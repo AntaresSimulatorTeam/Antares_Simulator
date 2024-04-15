@@ -23,8 +23,6 @@
 
 #include "private/zip_writer.h"
 #include "antares/logs/logs.h"
-#include <antares/timer/timer.h>
-#include <antares/benchmarking/timer.h>
 #include <antares/benchmarking/DurationCollector.h>
 
 extern "C"
@@ -86,11 +84,11 @@ void ZipWriteJob<ContentT>::writeEntry()
 
     auto file_info = createInfo(pEntryPath);
 
-    durationCollector("zip_wait") << [&] {
+    pDurationCollector("zip_wait") << [&] {
         pZipMutex.lock(); // Wait
     };
 
-    durationCollector("zip_write") << [&] {
+    pDurationCollector("zip_write") << [&] {
         if (int32_t ret = mz_zip_writer_entry_open(pZipHandle, file_info.get()); ret != MZ_OK)
         {
             logErrorAndThrow("Error opening entry " + pEntryPath + " (" + std::to_string(ret) + ")");
