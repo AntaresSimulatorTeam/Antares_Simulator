@@ -272,7 +272,7 @@ void Application::resetLogFilename() const
 }
 
 void Application::prepareWriter(const Antares::Data::Study& study,
-                                Benchmarking::IDurationCollector& duration_collector)
+                                Benchmarking::DurationCollector& duration_collector)
 {
     ioQueueService = std::make_shared<Yuni::Job::QueueService>();
     ioQueueService->maximumThreadCount(1);

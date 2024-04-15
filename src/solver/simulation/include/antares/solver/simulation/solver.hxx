@@ -59,7 +59,7 @@ public:
             Data::Study& pStudy,
             std::vector<Variable::State>& pState,
             bool pYearByYear,
-            Benchmarking::IDurationCollector& durationCollector,
+            Benchmarking::DurationCollector& durationCollector,
             IResultWriter& resultWriter) :
      simulation_(simulation),
      y(pY),
@@ -101,7 +101,7 @@ private:
     std::vector<Variable::State>& state;
     bool yearByYear;
     bool hydroHotStart;
-    Benchmarking::IDurationCollector& pDurationCollector;
+    Benchmarking::DurationCollector& pDurationCollector;
     IResultWriter& pResultWriter;
     HydroManagement hydroManagement;
     Antares::Data::Area::ScratchMap scratchmap;
@@ -239,7 +239,7 @@ public:
 template<class ImplementationType>
 inline ISimulation<ImplementationType>::ISimulation(Data::Study& study,
     const ::Settings& settings,
-    Benchmarking::IDurationCollector& duration_collector,
+    Benchmarking::DurationCollector& duration_collector,
     IResultWriter& resultWriter) :
     ImplementationType(study, resultWriter),
     study(study),

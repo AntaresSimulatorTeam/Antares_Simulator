@@ -32,21 +32,14 @@
 namespace Benchmarking
 {
 
-class IDurationCollector
-{
-public:
-    virtual ~IDurationCollector() = default;
-    virtual void addDuration(const std::string& name, int64_t duration) = 0;
-};
-
-class DurationCollector : public IDurationCollector
+class DurationCollector
 {
 public:
     DurationCollector() = default;
     virtual ~DurationCollector() = default;
 
     void toFileContent(FileContent& file_content);
-    void addDuration(const std::string& name, long duration) override;
+    void addDuration(const std::string& name, long duration);
 
     using clock = std::chrono::steady_clock;
 

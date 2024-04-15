@@ -56,7 +56,7 @@ template<class ContentT>
 ZipWriteJob<ContentT>::ZipWriteJob(ZipWriter& writer,
                                    std::string entryPath,
                                    ContentT& content,
-                                   Benchmarking::IDurationCollector& duration_collector) :
+                                   Benchmarking::DurationCollector& duration_collector) :
  pZipHandle(writer.pZipHandle),
  pZipMutex(writer.pZipMutex),
  pState(writer.pState),
@@ -108,7 +108,7 @@ void ZipWriteJob<ContentT>::writeEntry()
 // Class ZipWriter
 ZipWriter::ZipWriter(std::shared_ptr<Yuni::Job::QueueService> qs,
                      const char* archivePath,
-                     Benchmarking::IDurationCollector& duration_collector) :
+                     Benchmarking::DurationCollector& duration_collector) :
  pQueueService(qs),
  pState(ZipState::can_receive_data),
  pArchivePath(std::string(archivePath) + ".zip"),

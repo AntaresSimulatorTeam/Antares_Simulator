@@ -24,7 +24,7 @@ void logErrorAndThrow [[noreturn]] (const std::string& errorMessage)
                 const std::string& entryPath,
                 ContentT& content,
                 std::mutex& mutex,
-                Benchmarking::IDurationCollector& duration_collector)
+                Benchmarking::DurationCollector& duration_collector)
   {
     std::string entryPathSanitized = entryPath;
     std::replace(entryPathSanitized.begin(),
@@ -44,7 +44,7 @@ void logErrorAndThrow [[noreturn]] (const std::string& errorMessage)
 }
 
 
-InMemoryWriter::InMemoryWriter(Benchmarking::IDurationCollector& duration_collector) : pDurationCollector(duration_collector) {}
+InMemoryWriter::InMemoryWriter(Benchmarking::DurationCollector& duration_collector) : pDurationCollector(duration_collector) {}
 
 InMemoryWriter::~InMemoryWriter() = default;
 
