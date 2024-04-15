@@ -25,6 +25,7 @@
 #include <thread>
 #include <chrono>
 #include <iostream>
+#include <mutex>
 #include <map>
 
 namespace Antares
@@ -34,7 +35,6 @@ class DurationCollector
 {
 public:
     using clock = std::chrono::steady_clock;
-
 
     struct OperationTimer
     {
@@ -52,6 +52,9 @@ public:
 
     friend void operator<<(const OperationTimer& op, std::function<void(void)> f)
     {
+        static std::mutex mutex_;
+        const std::lock_guard<std::mutex> lock(mutex_);
+
         auto start_ = clock::now();
         f();
         auto end_ = clock::now();
