@@ -100,27 +100,27 @@ void checkZipContent(ZipReaderHandle handle, const std::string& path, const std:
     mz_zip_reader_entry_close(handle);
 }
 
-/* BOOST_AUTO_TEST_CASE(test_zip) */
-/* { */
-/*     // Writer some content to test.zip, possibly from 2 threads */
-/*     auto working_tmp_dir = CREATE_TMP_DIR_BASED_ON_TEST_NAME(); */
-/*     auto zipPath = working_tmp_dir / "test.zip"; */
-/*     auto context = createContext(zipPath, 2, Antares::Data::zipArchive); */
-/*     std::string content1 = "test-content1"; */
-/*     std::string content2 = "test-content2"; */
-/*     context.writer->addEntryFromBuffer("test-path", content1); */
-/*     context.writer->addEntryFromBuffer("test-second-path", content2); */
-/*     context.writer->flush(); */
-/*     context.writer->finalize(true); */
+BOOST_AUTO_TEST_CASE(test_zip)
+{
+    // Writer some content to test.zip, possibly from 2 threads
+    auto working_tmp_dir = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
+    auto zipPath = working_tmp_dir / "test.zip";
+    auto context = createContext(zipPath, 2, Antares::Data::zipArchive);
+    std::string content1 = "test-content1";
+    std::string content2 = "test-content2";
+    context.writer->addEntryFromBuffer("test-path", content1);
+    context.writer->addEntryFromBuffer("test-second-path", content2);
+    context.writer->flush();
+    context.writer->finalize(true);
 
-/*     // Check content is correct */
-/*     ZipReaderHandle readerHandle = mz_zip_reader_create(); */
-/*     std::string zipPathStr = zipPath.string(); */
-/*     BOOST_CHECK(mz_zip_reader_open_file(readerHandle, zipPathStr.c_str()) == MZ_OK); */
-/*     checkZipContent(readerHandle, "test-path", "test-content1"); */
-/*     checkZipContent(readerHandle, "test-second-path", "test-content2"); */
-/*     mz_zip_reader_close(readerHandle); */
-/* } */
+    // Check content is correct
+    ZipReaderHandle readerHandle = mz_zip_reader_create();
+    std::string zipPathStr = zipPath.string();
+    BOOST_CHECK(mz_zip_reader_open_file(readerHandle, zipPathStr.c_str()) == MZ_OK);
+    checkZipContent(readerHandle, "test-path", "test-content1");
+    checkZipContent(readerHandle, "test-second-path", "test-content2");
+    mz_zip_reader_close(readerHandle);
+}
 
 
 BOOST_AUTO_TEST_CASE(test_in_memory_concrete)
