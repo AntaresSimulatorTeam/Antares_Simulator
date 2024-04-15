@@ -33,12 +33,13 @@ void logErrorAndThrow [[noreturn]] (const std::string& errorMessage)
                  '/');
 
     durationCollector("in_memory_wait") << [&] {
-        std::lock_guard lock(mutex);
+        mutex.lock();
     };
 
     durationCollector("in_memory_insert") << [&] {
         entries.insert({entryPathSanitized, content});
     };
+    mutex.unlock();
   }
 }
 
