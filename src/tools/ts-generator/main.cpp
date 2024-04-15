@@ -136,7 +136,7 @@ int main(int argc, char *argv[])
         Antares::logs.error() << ex.what();
     }
 
-    Benchmarking::NullDurationCollector nullDurationCollector;
+    Benchmarking::DurationCollector nullDurationCollector;
 
     auto resultWriter = Solver::resultWriterFactory(
             Data::ResultFormat::legacyFilesDirectories, study->folderOutput, nullptr, nullDurationCollector);

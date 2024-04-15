@@ -39,7 +39,7 @@ extern "C"
 }
 
 using namespace Yuni::Job;
-using Benchmarking::NullDurationCollector;
+using Benchmarking::DurationCollector;
 using Benchmarking::IDurationCollector;
 using Antares::Solver::IResultWriter;
 
@@ -72,7 +72,7 @@ std::string removeExtension(const std::string& name, const std::string& ext)
 TestContext createContext(const std::filesystem::path zipPath, int threadCount, Antares::Data::ResultFormat fmt)
 {
     auto threadPool = createThreadPool(threadCount);
-    std::unique_ptr<IDurationCollector> durationCollector = std::make_unique<Benchmarking::NullDurationCollector>();
+    std::unique_ptr<IDurationCollector> durationCollector = std::make_unique<Benchmarking::DurationCollector>();
     std::string archiveName = zipPath.string();
     auto writer = Antares::Solver::resultWriterFactory(
             fmt,
@@ -129,7 +129,7 @@ BOOST_AUTO_TEST_CASE(test_in_memory_concrete)
     std::string content1 = "test-content1";
     std::string content2 = "test-content2";
 
-    Benchmarking::NullDurationCollector durationCollector;
+    Benchmarking::DurationCollector durationCollector;
     Antares::Solver::InMemoryWriter writer(durationCollector);
 
     writer.addEntryFromBuffer("folder/test", content1);
