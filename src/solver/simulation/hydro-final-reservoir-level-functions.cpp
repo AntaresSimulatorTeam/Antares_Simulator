@@ -44,7 +44,7 @@ void initializeFinalLevelData(const Data::Study& study)
 
 void CheckFinalReservoirLevelsForYear(const Data::Study& study, uint year)
 {
-    study.areas.each([&study, &year](Data::Area& area)
+    study.areas.each([&year](Data::Area& area)
     {
         if (!area.hydro.finalLevelInflowsModifier.CheckInfeasibility(year))
         {
