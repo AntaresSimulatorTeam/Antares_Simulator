@@ -82,7 +82,7 @@ double FinalLevelInflowsModifier::calculateTotalInflows(unsigned int year) const
     return totalYearInflows;
 }
 
-bool FinalLevelInflowsModifier::preCheckStartAndEndSim(unsigned int year) const
+bool FinalLevelInflowsModifier::SimulationThroughWholeYear(unsigned int year) const
 {
     
     int initReservoirLvlMonth = hydro_.initializeReservoirLevelDate; // month [0-11]
@@ -162,7 +162,7 @@ void FinalLevelInflowsModifier::logInfoFinLvlNotApplicable(unsigned int year)
 bool FinalLevelInflowsModifier::makeChecks(unsigned int year)
 {
     // Simulation must end on day 365 and reservoir level must be initiated in January
-    bool checksOk = preCheckStartAndEndSim(year);
+    bool checksOk = SimulationThroughWholeYear(year);
 
     // Reservoir_levelDay_365 – reservoir_levelDay_1 ≤ yearly_inflows
     double totalInflows = calculateTotalInflows(year);

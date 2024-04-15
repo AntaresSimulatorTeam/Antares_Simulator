@@ -34,7 +34,7 @@ struct Fixture
         area_1->hydro.useWaterValue = false;
         area_2->hydro.useWaterValue = false;
 
-        // Level date must be 0, see preCheckStartAndEndSim function
+        // Level date must be 0, see SimulationThroughWholeYear function
         area_1->hydro.initializeReservoirLevelDate = 0;
         area_2->hydro.initializeReservoirLevelDate = 0;
 
