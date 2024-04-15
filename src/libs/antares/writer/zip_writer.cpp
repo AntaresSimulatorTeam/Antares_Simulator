@@ -88,9 +88,6 @@ void ZipWriteJob<ContentT>::writeEntry()
 
     durationCollector("zip_wait") << [&] {
         std::lock_guard guard(pZipMutex); // Wait
-    };
-
-
 
     durationCollector("zip_write") << [&] {
         if (int32_t ret = mz_zip_writer_entry_open(pZipHandle, file_info.get()); ret != MZ_OK)
@@ -103,6 +100,7 @@ void ZipWriteJob<ContentT>::writeEntry()
             logErrorAndThrow("Error writing entry " + pEntryPath + "(written = " + std::to_string(bw)
                                                     + ", size = " + std::to_string(pContent.size()) + ")");
         }
+    };
     };
 }
 

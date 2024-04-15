@@ -52,13 +52,13 @@ public:
 
     friend void operator<<(const OperationTimer& op, std::function<void(void)> f)
     {
-        /* static std::mutex mutex_; */
+        static std::mutex mutex_;
 
         auto start_ = clock::now();
         f();
         auto end_ = clock::now();
         auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end_ - start_).count();
-        /* const std::lock_guard<std::mutex> lock(mutex_); */
+        const std::lock_guard<std::mutex> lock(mutex_);
         op.collector.times[op.key] += duration_ms;
     }
 
