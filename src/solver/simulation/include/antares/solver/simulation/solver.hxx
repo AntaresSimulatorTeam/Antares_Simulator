@@ -168,7 +168,7 @@ public:
             simulation_->prepareClustersInMustRunMode(scratchmap, y);
 
             // 4 - Hydraulic ventilation
-            durationCollector("hydro_ventilation") << [&]
+            pDurationCollector("hydro_ventilation") << [&]
             {
                 hydroManagement.makeVentilation(randomReservoirLevel, state[numSpace], y, scratchmap);
             };
@@ -213,7 +213,7 @@ public:
             // 9 - Write results for the current year
             if (yearByYear)
             {
-                durationCollector("yby_export") << [&]
+                pDurationCollector("yby_export") << [&]
                 {
                     // Before writing, some variable may require minor modifications
                     simulation_->variables.beforeYearByYearExport(y, numSpace);
@@ -363,7 +363,7 @@ void ISimulation<ImplementationType>::run()
         logs.info() << " Starting the simulation";
         uint finalYear = 1 + study.runtime->rangeLimits.year[Data::rangeEnd];
         {
-            durationCollector("mc_years") << [&] {
+            pDurationCollector("mc_years") << [&] {
                 loopThroughYears(0, finalYear, state);
             };
         }
@@ -372,7 +372,7 @@ void ISimulation<ImplementationType>::run()
         TSGenerator::DestroyAll(study);
 
         // Post operations
-        durationCollector("post_processing") << [&] {
+        pDurationCollector("post_processing") << [&] {
             ImplementationType::simulationEnd();
         };
 
@@ -449,28 +449,28 @@ void ISimulation<ImplementationType>::regenerateTimeSeries(uint year)
     // Load
     if (pData.haveToRefreshTSLoad && (year % pData.refreshIntervalLoad == 0))
     {
-        durationCollector("tsgen_load") << [&] {
+        pDurationCollector("tsgen_load") << [&] {
             GenerateTimeSeries<Data::timeSeriesLoad>(study, year, pResultWriter);
         };
     }
     // Solar
     if (pData.haveToRefreshTSSolar && (year % pData.refreshIntervalSolar == 0))
     {
-        durationCollector("tsgen_solar") << [&] {
+        pDurationCollector("tsgen_solar") << [&] {
             GenerateTimeSeries<Data::timeSeriesSolar>(study, year, pResultWriter);
         };
     }
     // Wind
     if (pData.haveToRefreshTSWind && (year % pData.refreshIntervalWind == 0))
     {
-        durationCollector("tsgen_wind") << [&] {
+        pDurationCollector("tsgen_wind") << [&] {
             GenerateTimeSeries<Data::timeSeriesWind>(study, year, pResultWriter);
         };
     }
     // Hydro
     if (pData.haveToRefreshTSHydro && (year % pData.refreshIntervalHydro == 0))
     {
-        durationCollector("tsgen_hydro") << [&] {
+        pDurationCollector("tsgen_hydro") << [&] {
             GenerateTimeSeries<Data::timeSeriesHydro>(study, year, pResultWriter);
         };
     }
@@ -478,7 +478,7 @@ void ISimulation<ImplementationType>::regenerateTimeSeries(uint year)
     // Thermal
     const bool refreshTSonCurrentYear = (year % pData.refreshIntervalThermal == 0);
 
-    durationCollector("tsgen_thermal") << [&]
+    pDurationCollector("tsgen_thermal") << [&]
     {
         if (refreshTSonCurrentYear)
         {
