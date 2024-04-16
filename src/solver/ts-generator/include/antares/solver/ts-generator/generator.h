@@ -50,7 +50,7 @@ public:
 
     Data::PreproAvailability* prepro;
 
-    Data::TimeSeries& series;
+    Matrix<>& series;
 
     Matrix<>::ColumnType& modulationCapacity;
 

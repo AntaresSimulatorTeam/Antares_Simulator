@@ -45,15 +45,15 @@ AvailabilityTSGeneratorData::AvailabilityTSGeneratorData(Data::ThermalCluster* s
  forcedLaw(source->forcedLaw),
  plannedLaw(source->plannedLaw),
  prepro(source->prepro),
- series(source->series),
+ series(source->series.timeSeries),
  modulationCapacity(source->modulation[Data::thermalModulationCapacity]),
  name(source->name())
 {
 }
 
 AvailabilityTSGeneratorData::AvailabilityTSGeneratorData(Data::LinkTsGeneration& source,
-                                   Data::TimeSeries& capacity,
-                                   const std::string& areaDestName) :
+                                                         Data::TimeSeries& capacity,
+                                                         const std::string& areaDestName) :
  unitCount(source.unitCount),
  nominalCapacity(source.nominalCapacity),
  forcedVolatility(source.forcedVolatility),
@@ -61,7 +61,7 @@ AvailabilityTSGeneratorData::AvailabilityTSGeneratorData(Data::LinkTsGeneration&
  forcedLaw(source.forcedLaw),
  plannedLaw(source.plannedLaw),
  prepro(source.prepro.get()),
- series(capacity),
+ series(capacity.timeSeries),
  modulationCapacity(source.modulationCapacity[0]),
  name(areaDestName)
 {
@@ -307,7 +307,7 @@ void GeneratorTempData::generateTS(const Data::Area& area, AvailabilityTSGenerat
         uint hour = 0;
 
         if (tsIndex > 1)
-            dstSeries = cluster.series.timeSeries[tsIndex - 2];
+            dstSeries = cluster.series[tsIndex - 2];
 
         for (uint dayInTheYear = 0; dayInTheYear < DAYS_PER_YEAR; ++dayInTheYear)
         {
@@ -546,7 +546,7 @@ void GeneratorTempData::generateTS(const Data::Area& area, AvailabilityTSGenerat
     }
 
     if (derated)
-        cluster.series.timeSeries.averageTimeseries();
+        cluster.series.averageTimeseries();
 }
 } // namespace
 
