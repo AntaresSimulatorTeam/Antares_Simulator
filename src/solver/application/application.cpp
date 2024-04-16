@@ -440,8 +440,6 @@ void Application::writeExectutionInfo()
 
     logTotalTime(pTotalTimer.get_duration());
 
-    /* pDurationCollector.summary(); */
-
     // If no writer is available, we can't write
     if (!resultWriter)
         return;

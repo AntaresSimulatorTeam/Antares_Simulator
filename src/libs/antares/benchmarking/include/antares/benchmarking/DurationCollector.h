@@ -57,15 +57,15 @@ public:
         return OperationTimer(*this, key);
     }
 
-    friend void operator<<(const OperationTimer& op, std::function<void(void)> f)
+    friend void operator<<(const OperationTimer& op, const std::function<void(void)>& f)
     {
-        static std::mutex mutex_;
+        static std::mutex mutex;
 
         auto start_ = clock::now();
         f();
         auto end_ = clock::now();
         auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end_ - start_).count();
-        const std::lock_guard<std::mutex> lock(mutex_);
+        const std::scoped_lock lock(mutex);
         op.collector.duration_items_[op.key].push_back(duration_ms);
     }
 
