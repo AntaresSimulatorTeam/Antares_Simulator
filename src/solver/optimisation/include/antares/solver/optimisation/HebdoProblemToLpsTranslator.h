@@ -30,16 +30,16 @@ namespace Antares::Solver
 {
 
 /**
- * @class HebdoProblemTranslationException
+ * @class WeeklyProblemTranslationException
  * @brief Exception class for errors during the translation of a weekly problem.
  *
  * This class is a custom exception class that is thrown when an error occurs during the translation
  * of a weekly problem.
  */
-class HebdoProblemTranslationException : public std::runtime_error
+class WeeklyProblemTranslationException : public std::runtime_error
 {
 public:
-    explicit HebdoProblemTranslationException(const std::string& string) noexcept;
+    explicit WeeklyProblemTranslationException(const std::string& string) noexcept;
 };
 
 /**
@@ -56,14 +56,14 @@ public:
      *
      * This function takes a pointer to a PROBLEME_ANTARES_A_RESOUDRE object and a string_view
      * representing the name of the problem. It translates the weekly problem to a linear
-     * programming problem and returns a HebdoDataFromAntaresPtr to the translated problem. Datas
-     * from the PROBLEME_ANTARES_A_RESOUDRE are copied to the HebdoDataFromAntaresPtr.
+     * programming problem and returns a WeeklyDataFromAntaresPtr to the translated problem. Datas
+     * from the PROBLEME_ANTARES_A_RESOUDRE are copied to the WeeklyDataFromAntaresPtr.
      *
      * @param problem A pointer to the weekly problem to be translated.
      * @param name The name of the problem.
-     * @return HebdoDataFromAntaresPtr A HebdoDataFromAntaresPtr to the translated problem.
+     * @return WeeklyDataFromAntaresPtr A WeeklyDataFromAntaresPtr to the translated problem.
      */
-    [[nodiscard]] HebdoDataFromAntaresPtr translate(const PROBLEME_ANTARES_A_RESOUDRE* problem,
+    [[nodiscard]] WeeklyDataFromAntaresPtr translate(const PROBLEME_ANTARES_A_RESOUDRE* problem,
                                                     std::string_view name) const;
 
     /**
