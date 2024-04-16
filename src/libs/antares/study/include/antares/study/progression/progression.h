@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 #ifndef __ANTARES_LIBS_SOLVER_SIMULATION_PROGRESSION_H__
 #define __ANTARES_LIBS_SOLVER_SIMULATION_PROGRESSION_H__
 
@@ -31,10 +31,9 @@
 #include "../fwd.h"
 #include <yuni/io/file.h>
 #include <antares/writer/i_writer.h>
+#include <functional>
 
-namespace Antares
-{
-namespace Solver
+namespace Antares::Solver
 {
 /*!
 ** \brief Progress meter about any operation performed on the attached study
@@ -62,15 +61,12 @@ public:
     const char* SectionToCStr(Section section);
 
 private:
-    class Part final
+    struct Part final
     {
-    public:
         using MapPerSection = std::map<Section, Part>;
         using Map = std::map<uint, MapPerSection>;
-        // using ListRef = Yuni::LinkedList<Part*>;
         using ListRef = std::list<Part*>;
 
-    public:
         //! The total number of ticks to achieve
         int maxTickCount;
         //! The current number of ticks
@@ -88,30 +84,33 @@ public:
     public:
         Task(const Antares::Data::Study& study, Section section);
         Task(const Antares::Data::Study& study, uint year, Section section);
+        Task(const Task&) = default;
+        Task(Task&&) = default;
+        Task& operator=(const Task&) = default;
+        Task& operator=(Task&&) = default;
 
         ~Task()
         {
-            pProgression.end(pPart);
+            pProgression.get().end(pPart);
         }
 
         Task& operator++()
         {
-            ++pPart.tickCount;
+            ++pPart.get().tickCount;
             return *this;
         }
 
         Task& operator+=(int value)
         {
-            pPart.tickCount += value;
+            pPart.get().tickCount += value;
             return *this;
         }
 
     private:
-        Progression& pProgression;
-        Part& pPart;
+        std::reference_wrapper<Progression> pProgression;
+        std::reference_wrapper<Part> pPart;
     };
 
-public:
     //! \name Constructor & Destructor
     //@{
     /*!
@@ -123,6 +122,11 @@ public:
     */
     ~Progression();
     //@}
+
+    Progression(const Progression&) = delete;
+    Progression(Progression&&) noexcept;
+    Progression& operator=(const Progression&) = default;
+    Progression& operator=(Progression&&) noexcept;
 
     /*!
     ** \brief Declare a new part of the progression
@@ -163,13 +167,6 @@ private:
     class Meter final : public Yuni::Thread::Timer
     {
     public:
-        Meter();
-        virtual ~Meter()
-        {
-            if (logsContainer)
-                delete[] logsContainer;
-        }
-
         void allocateLogsContainer(uint nb);
 
         /*!
@@ -185,12 +182,12 @@ private:
         Progression::Part::Map parts;
         Part::ListRef inUse;
         std::mutex mutex;
-        uint nbParallelYears;
+        uint nbParallelYears = 0;
 
         // Because writing something to the logs might be expensive, we have to
         // reduce the time spent in locking the mutex.
         // We will use a temp vector of string to delay the writing into the logs
-        Yuni::CString<256, false>* logsContainer;
+        std::vector<Yuni::CString<256, false>> logsContainer;
 
     }; // class Meter
 
@@ -205,8 +202,7 @@ private:
 
 }; // class Progression
 
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver
 
 #include "progression.hxx"
 

@@ -36,6 +36,6 @@ public:
      * @brief The load method is used to load a study.
      * @return A shared pointer to a Study object.
      */
-    [[nodiscard]] virtual std::shared_ptr<Antares::Data::Study> load() const = 0;
+    [[nodiscard]] virtual std::unique_ptr<Antares::Data::Study> load() const = 0;
 };
 }

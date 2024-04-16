@@ -22,7 +22,7 @@
 #include "in-memory-study.h"
 
 
-void initializeStudy(Study::Ptr study)
+void initializeStudy(Study* study)
 {
     study->parameters.reset();
 }
@@ -200,10 +200,10 @@ StudyBuilder::StudyBuilder()
     // Make logs shrink to errors (and higher) only
     logs.verbosityLevel = Logs::Verbosity::Error::level;
 
-    study = std::make_shared<Study>(true);
+    study = std::make_unique<Study>(true);
     simulation = std::make_shared<SimulationHandler>(*study);
 
-    initializeStudy(study);
+    initializeStudy(study.get());
 }
 
 void StudyBuilder::simulationBetweenDays(const unsigned int firstDay, const unsigned int lastDay)

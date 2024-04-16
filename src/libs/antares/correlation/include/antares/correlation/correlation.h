@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 #ifndef __ANTARES_LIBS_ARRAY_CORRELATION_H__
 #define __ANTARES_LIBS_ARRAY_CORRELATION_H__
 
@@ -40,7 +40,6 @@ public:
         modeMonthly = 2,
     };
 
-public:
     /*!
     ** \brief Convert a correlation mode into its string representation
     */
@@ -51,7 +50,6 @@ public:
     */
     static Mode CStringToMode(const AnyString& str);
 
-public:
     //! \name Constructor & Destructor
     //@{
     /*!
@@ -63,6 +61,10 @@ public:
     */
     ~Correlation();
     //@}
+    Correlation(const Correlation&) = default;
+    Correlation(Correlation&&) = default;
+    Correlation& operator=(const Correlation&) = default;
+    Correlation& operator=(Correlation&&) = default;
 
     //! \name Mode
     //@{
@@ -144,7 +146,6 @@ public:
     */
     void markAsModified() const;
 
-public:
     //! The correlation matrix for the whole year
     Matrix<>* annual;
     //! All correlation matrices per month (12)
@@ -161,7 +162,6 @@ private:
 
     void internalSaveToINI(Study& study, Yuni::IO::File::Stream& file) const;
 
-private:
     Mode pMode;
 
 }; // class Correlation

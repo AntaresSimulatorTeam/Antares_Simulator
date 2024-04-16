@@ -1529,5 +1529,49 @@ void Study::computePThetaInfForThermalClusters() const
         }
     }
 }
+
+Study& Study::operator=(Study&& other) noexcept {
+    if (this != &other) {
+        header = std::move(other.header);
+        simulationComments = std::move(other.simulationComments);
+        parameters = std::move(other.parameters);
+        calendar = std::move(other.calendar);
+        areas = std::move(other.areas);
+        bindingConstraints = std::move(other.bindingConstraints);
+        preproLoadCorrelation = std::move(other.preproLoadCorrelation);
+        preproSolarCorrelation = std::move(other.preproSolarCorrelation);
+        preproWindCorrelation = std::move(other.preproWindCorrelation);
+        preproHydroCorrelation = std::move(other.preproHydroCorrelation);
+        setsOfAreas = std::move(other.setsOfAreas);
+        setsOfLinks = std::move(other.setsOfLinks);
+        runtime = std::move(other.runtime);
+        uiinfo = std::move(other.uiinfo);
+        progression = std::move(other.progression);
+    }
+  return *this;
+}
+
+Study::Study(size_t activeLayer, bool showLayer, Study&& other) noexcept
+:
+ LayerData(activeLayer, showLayer),
+ header{std::move(other.header)},
+ simulationComments{std::move(other.simulationComments)},
+ parameters{std::move(other.parameters)},
+ calendar{std::move(other.calendar)},
+ areas(std::move(other.areas)),
+ bindingConstraints{std::move(other.bindingConstraints)},
+ preproLoadCorrelation{std::move(other.preproLoadCorrelation)},
+ preproSolarCorrelation{std::move(other.preproSolarCorrelation)},
+ preproWindCorrelation{std::move(other.preproWindCorrelation)},
+ preproHydroCorrelation{std::move(other.preproHydroCorrelation)},
+ setsOfAreas{std::move(other.setsOfAreas)},
+ setsOfLinks{std::move(other.setsOfLinks)},
+ runtime{std::move(other.runtime)},
+ uiinfo{std::move(other.uiinfo)},
+ progression{std::move(other.progression)},
+ usedByTheSolver{other.usedByTheSolver}
+{
+
+}
 } // namespace Antares::Data
 

@@ -71,7 +71,10 @@ public:
     void resetProcessPriority() const;
 
     void writeExectutionInfo();
-    std::shared_ptr<Data::Study> study() const { return pStudy; }
+    Data::Study* study() const { return pStudy.get(); }
+    std::unique_ptr<Data::Study> acquireStudy() {
+        return std::move(pStudy);
+    }
 private:
     /*!
     ** \brief Reset the log filename and open it
@@ -91,7 +94,7 @@ private:
     //! The settings given from the command line
     Settings pSettings;
     //! The current Antares study
-    Antares::Data::Study::Ptr pStudy = nullptr;
+    std::unique_ptr<Antares::Data::Study> pStudy;
     //! General data related to the current study
     Antares::Data::Parameters* pParameters = nullptr;
     //! The total number of errors which have been generated

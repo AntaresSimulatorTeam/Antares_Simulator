@@ -184,7 +184,7 @@ void Application::startSimulation(Data::StudyLoadOptions& options)
 
     logs.callback.connect(this, &Application::onLogMessage);
 
-    pStudy = std::make_shared<Antares::Data::Study>(true /* for the solver */);
+    pStudy = std::make_unique<Antares::Data::Study>(true /* for the solver */);
 
     pParameters = &(pStudy->parameters);
 

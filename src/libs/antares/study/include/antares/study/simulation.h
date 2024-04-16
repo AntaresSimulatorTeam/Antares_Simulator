@@ -1,33 +1,32 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 #ifndef __ANTARES_LIBS_STUDY_SIMULATION_H__
 #define __ANTARES_LIBS_STUDY_SIMULATION_H__
 
 #include <yuni/yuni.h>
 #include <antares/writer/i_writer.h>
 #include "fwd.h"
+#include <functional>
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 /*!
 ** \brief Set of settings for a simulation
@@ -40,12 +39,14 @@ public:
     /*!
     ** \brief Default constructor
     */
-    SimulationComments(Study& study);
+    explicit SimulationComments(Study& study);
     //! Destructor
-    ~SimulationComments()
-    {
-    }
+    ~SimulationComments() = default;
     //@}
+    SimulationComments(const SimulationComments&) = default;
+    SimulationComments(SimulationComments&&) = default;
+    SimulationComments& operator=(const SimulationComments&) = default;
+    SimulationComments& operator=(SimulationComments&&) = default;
 
     /*!
     ** \brief Load a simulation from a folder
@@ -64,18 +65,16 @@ public:
     //! Get (in bytes) the amount of memory used by the class
     uint64_t memoryUsage() const;
 
-public:
     //! Comments
     YString comments;
     //! name
     YString name;
 
 private:
-    Study& pStudy;
+    std::reference_wrapper<Study> pStudy;
 
 }; // class SimulationComments
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
 
 #endif // __ANTARES_LIBS_STUDY_SIMULATION_H__
