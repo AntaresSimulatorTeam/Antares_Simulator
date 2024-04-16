@@ -46,7 +46,8 @@ namespace {
  */
 [[nodiscard]] std::unique_ptr<char[]> copy(std::string_view str) {
     auto copy = std::unique_ptr<char[]>(new char[str.size() + 1]);
-    std::strncpy(copy.get(), str.data(), str.size());
+    copy.get()[0] = '\0';
+    std::strncpy(copy.get(), str.data(), str.size()+1); //Also copy null terminated
     return copy;
 }
 
