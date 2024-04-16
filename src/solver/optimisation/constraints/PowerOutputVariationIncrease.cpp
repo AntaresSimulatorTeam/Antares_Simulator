@@ -1,21 +1,19 @@
-#include "antares/solver/optimisation/constraints/PowerOutputVariation.h"
+#include "antares/solver/optimisation/constraints/PowerOutputVariationIncrease.h"
 
-void PowerOutputVariation::add(int pays, int index, int pdt)
+void PowerOutputVariationIncrease::add(int pays, int index, int pdt)
 {
     if (!data.Simulation)
     {
         int cluster = data.PaliersThermiquesDuPays[pays].NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
         double pmaxDUnGroupeDuPalierThermique
           = data.PaliersThermiquesDuPays[pays].PmaxDUnGroupeDuPalierThermique[index];
-        // constraint : P(t) - P(t-1) - u * M^+(t) - P^+ + P^- + u * M^-(t) = 0
+        // constraint : P(t) - P(t-1) - u * M^+(t) - P^+ <= 0
         builder.updateHourWithinWeek(pdt)
             .DispatchableProduction(cluster, 1.0)
             .DispatchableProduction(cluster, -1.0, -1, builder.data.NombreDePasDeTempsPourUneOptimisation)
           .NumberStartingDispatchableUnits(cluster, -pmaxDUnGroupeDuPalierThermique)
             .ProductionIncreaseAboveMin(cluster, -1.0)
-          .ProductionDecreaseAboveMin(cluster, 1.0)
-          .NumberStoppingDispatchableUnits(cluster, pmaxDUnGroupeDuPalierThermique)
-            .equalTo();
+            .lessThan();
    
         if (builder.NumberOfVariables() > 0)
         {
@@ -32,7 +30,7 @@ void PowerOutputVariation::add(int pays, int index, int pdt)
     }
     else
     {
-        builder.data.NbTermesContraintesPourLesRampes += 5;
+        builder.data.NbTermesContraintesPourLesRampes += 4;
         builder.data.nombreDeContraintes++;
     }
 }

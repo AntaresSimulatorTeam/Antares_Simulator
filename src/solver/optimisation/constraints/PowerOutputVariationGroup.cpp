@@ -38,11 +38,14 @@ void PowerOutputVariationGroup::BuildConstraints()
         {
             if (PaliersThermiquesDuPays.maxUpwardPowerRampingRate[index] >= 0)
             {
-                PowerOutputVariation powerOutputVariation(builder_, data);
+                PowerOutputVariationIncrease powerOutputVariationIncrease(builder_, data);
+                PowerOutputVariationDecrease powerOutputVariationDecrease(builder_, data);
+
                 for (int pdt = 0; pdt < problemeHebdo_->NombreDePasDeTempsPourUneOptimisation;
                      pdt++)
                 {
-                    powerOutputVariation.add(pays, index, pdt);
+                    powerOutputVariationIncrease.add(pays, index, pdt);
+                    powerOutputVariationDecrease.add(pays, index, pdt);
                 }
             }
         }

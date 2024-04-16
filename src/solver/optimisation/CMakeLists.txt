@@ -135,8 +135,10 @@ set(RTESOLVER_OPT
 		constraints/RampingIncreaseRate.cpp
 		include/antares/solver/optimisation/constraints/RampingDecreaseRate.h
 		constraints/RampingDecreaseRate.cpp
-		include/antares/solver/optimisation/constraints/PowerOutputVariation.h
-		constraints/PowerOutputVariation.cpp
+		include/antares/solver/optimisation/constraints/PowerOutputVariationIncrease.h
+		constraints/PowerOutputVariationIncrease.cpp
+		include/antares/solver/optimisation/constraints/PowerOutputVariationDecrease.h
+		constraints/PowerOutputVariationDecrease.cpp
 
 		include/antares/solver/optimisation/ProblemMatrixEssential.h
 		ProblemMatrixEssential.cpp

@@ -22,7 +22,8 @@
 #pragma once
 #include "AbstractStartUpCostsGroup.h"
 #include "ConstraintGroup.h"
-#include "PowerOutputVariation.h"
+#include "PowerOutputVariationIncrease.h"
+#include "PowerOutputVariationDecrease.h"
 
 /**
  * @brief Group of PowerOutputVariationGroup constraints

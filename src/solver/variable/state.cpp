@@ -203,25 +203,28 @@ void State::initFromThermalClusterIndexProduction(const uint clusterAreaWideInde
         if (unitCommitmentMode == Antares::Data::UnitCommitmentMode::ucHeuristicAccurate
             && thermalCluster->ramping)
         {
-            double startingProduction
-              = (newUnitCount <= previousUnitCount)
-                  ? 0.
-                  : (newUnitCount - previousUnitCount)
-                      * thermal[area->index].pminOfAGroup[clusterAreaWideIndex];
-            double rampingProduction
-              = p - thermal[area->index].productionLastHour[clusterAreaWideIndex]
-                - startingProduction;
+            double startingStoppingProduction
+              = (newUnitCount - previousUnitCount)
+                      * thermalCluster->nominalCapacityWithSpinning;
 
-            if (rampingProduction >= 0)
-            {
+            double startingProduction = std::max(0., startingStoppingProduction);
+            double stoppingProduction = std::max(0., -startingStoppingProduction);
+
+            double rampingIncrease
+              = std::max(p - thermal[area->index].productionLastHour[clusterAreaWideIndex]
+                           - startingProduction,
+                         0.);
+
+            double rampingDecrease
+              = std::max(thermal[area->index].productionLastHour[clusterAreaWideIndex] - p
+                           - stoppingProduction,
+                         0.);
+
+            thermal[area->index].thermalClustersOperatingCost[clusterAreaWideIndex]
+              += rampingIncrease * thermalCluster->ramping->powerIncreaseCost;
+
                 thermal[area->index].thermalClustersOperatingCost[clusterAreaWideIndex]
-                  += rampingProduction * thermalCluster->ramping->powerIncreaseCost;
-            }
-            else
-            {
-                thermal[area->index].thermalClustersOperatingCost[clusterAreaWideIndex]
-                  += -rampingProduction * thermalCluster->ramping->powerDecreaseCost; 
-            }
+              += rampingDecrease * thermalCluster->ramping->powerDecreaseCost; 
         }
 
         // Storing the new unit count for the next hour
@@ -408,7 +411,8 @@ void State::yearEndBuildCalculateRampingCosts(
                 thermalClusterLastProduction = thermalClusterProductionForYear[last_index];
             }
 
-            double rampingStartupProduction = 0;
+            double startingStoppingProduction
+              = 0.;
 
             if (h >= startHourForCurrentYear + 1) // starting hour +1 (fron start hour)
             {
@@ -416,22 +420,29 @@ void State::yearEndBuildCalculateRampingCosts(
                 int delta
                   = (maxDurationON == 0) ? ON_min[h] - ON_min[h - 1] : ON_opt[h] - ON_opt[h - 1];
 
-                rampingStartupProduction = std::max(0, delta) * currentCluster->minStablePower;
-            }
+                startingStoppingProduction = delta 
+                                                    * currentCluster->nominalCapacityWithSpinning;
 
-            double rampingProduction
-              = thermalClusterProduction - thermalClusterLastProduction - rampingStartupProduction;
+            }
+            double startingProduction = std::max(0., startingStoppingProduction);
+            double stoppingProduction = std::max(0., -startingStoppingProduction);
 
-            if (rampingProduction >= 0)
-            {
-                thermalClusterRampingCostForYear[h]
-                  = rampingProduction * currentCluster->ramping->powerIncreaseCost;
-            }
-            else
-            {
-                thermalClusterRampingCostForYear[h]
-                  = -rampingProduction * currentCluster->ramping->powerDecreaseCost;
-            }
+            double rampingIncrease = std::max(
+              thermalClusterProduction - thermalClusterLastProduction
+                           - startingProduction,
+                         0.);
+
+            double rampingDecrease = std::max(
+              thermalClusterLastProduction - thermalClusterProduction
+                           - stoppingProduction,
+                         0.);
+
+            thermalClusterRampingCostForYear[h]
+              = rampingIncrease * currentCluster->ramping->powerIncreaseCost;
+
+            thermalClusterRampingCostForYear[h]
+              += rampingDecrease * currentCluster->ramping->powerDecreaseCost; 
+
             thermalClusterOperatingCostForYear[h] += thermalClusterRampingCostForYear[h];
         }
     }
