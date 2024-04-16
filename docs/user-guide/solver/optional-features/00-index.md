@@ -3,6 +3,7 @@
 
 ```{toctree}
 :hidden:
-14-adequacy-patch.md
-16-xpress.md
+multi-threading.md
+adequacy-patch.md
+xpress.md
 ```

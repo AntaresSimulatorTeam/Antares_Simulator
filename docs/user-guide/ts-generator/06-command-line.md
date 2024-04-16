@@ -1,5 +1,12 @@
+---
+hide:
+ - toc
+---
+
 # Command-line instructions
 
-## Multi-threading
-TODO : est-ce utile?
-All I/O operations on Input / Output files in *Antares* automatically benefit from full multi-threading on the local machine's CPU cores. 
+| command         | meaning                                                                                                                 |
+|:----------------|:------------------------------------------------------------------------------------------------------------------------|
+| --all-thermal   | Generate TS for all thermal clusters                                                                                    | 
+| --thermal=VALUE | Generate TS for a list of area IDs and thermal clusters IDs, example: `--thermal="area1ID.clusterID;area2ID.clusterID"` | 
+| -h, --help      | Display this help and exit                                                                                              |

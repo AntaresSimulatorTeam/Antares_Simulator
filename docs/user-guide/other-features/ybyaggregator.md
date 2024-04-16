@@ -1,3 +1,8 @@
+---
+hide:
+ - toc
+---
+
 # Year-by-Year Aggregator
 
 ---

@@ -37,7 +37,7 @@ The amount of RAM required for a simulation depends on:
 - The number of ready-made Time-Series and that of Time-Series to be generated at runtime
 - The simulation [mode](18-parameters.md#mode)
 - The [unit commitment resolution mode](18-parameters.md#unit-commitment-mode)
-- If the [multi-threading](solver/06-command-line.md#multi-threading) option is used
+- If the [multi-threading](solver/optional-features/multi-threading.md) option is used
 
 If you encounter memory issues, consider tweaking the aforementioned parameters or reducing your study size. 
 

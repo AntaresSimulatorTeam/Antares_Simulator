@@ -3,7 +3,6 @@
 
 ```{toctree}
 :hidden:
-01-overview.md
 analyzer.md
 batchrun.md
 config.md

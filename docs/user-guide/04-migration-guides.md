@@ -13,7 +13,7 @@ Regarding Hydro time-series, the scenario builder allows the user to choose, for
 - max power for generation and pumping
 This implies that, inside one of the previous categories, the number of available time series is the same
 
-* [Logic changes](v9.1.0.md)
+![Logic changes](img/logic-hydro-maxP.png "Logic changes")
 
 #### Short term storage groups
 STS groups in input are now "dynamic" : group names are no longer fixed by code, user is free to define these groups.

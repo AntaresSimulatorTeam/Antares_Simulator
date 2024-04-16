@@ -4,7 +4,7 @@ This user guide describes all the main features of the *Antares Simulator*[^1] p
 [^1]: For simplicity's sake, the *Antares Simulator* application will be simply denoted *Antares*.
 
 It gives useful general information regarding the way data are handled and processed.  
-Since the *Antares* GUI support has been dropped (in favor of [Antares Web](https://github.com/AntaresSimulatorTeam/AntaREST)), 
+Since the *Antares* GUI support has been dropped (in favor of [Antares Web](https://antares-web.readthedocs.io)), 
 all its documentation has been removed. If you are still using an old version of *Antares* GUI, you can still find 
 its documentation in the assets of the release, or by browsing older versions of the documentation website.
 

@@ -1,6 +1,8 @@
 # Adequacy Patch calculation
 (available since v8.3.0)
 
+_**This section is under construction**_
+
 ## Foreword
 
 The operational algorithm of Euphémia market coupling implements "de-optimization" rules in order to fix the sharing of “Energy Not Served” (ENS) between the market areas when there is any (in a way to ensure a certain fairness in the sharing of this ENS): this is what we call the adequacy patch.

@@ -8,6 +8,8 @@
 03-outputs.md
 04-parameters.md
 05-model.md
-06-command-line.md
+06-heuristics.md
+07-command-line.md
 optional-features/00-index.md
+08-appendix.md
 ```

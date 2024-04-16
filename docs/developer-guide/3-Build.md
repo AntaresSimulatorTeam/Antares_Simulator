@@ -92,4 +92,4 @@ Additional options for Windows:
 
 The final GUI file can be executed at `_build/ui/simulator/antares-X.Y-ui-simulator`
 
-[^1]: GUI support has been dropped in favor of [Antares Web](https://github.com/AntaresSimulatorTeam/AntaREST)
+[^1]: GUI support has been dropped in favor of [Antares Web](https://antares-web.readthedocs.io)

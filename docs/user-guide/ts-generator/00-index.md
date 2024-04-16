@@ -1,5 +1,5 @@
 [//]: # (Index used by Sphinx to generate correct PDF tree)
-# Time-Series generator
+# Time-series generator
 
 ```{toctree}
 :hidden:

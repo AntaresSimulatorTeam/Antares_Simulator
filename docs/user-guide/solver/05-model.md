@@ -1,562 +1,560 @@
-# Algorithm
+# Optimization model
 
-# Miscellaneous
+_**This section is under construction**_
 
-## Antares at one glance
+**_Antares\_Simulator Modeling and Optimization_**
 
-This section gives a summary of the whole simulation process followed by Antares in Economy simulations (Adequacy being simplified variant of it):
+**Document available on : [https://antares-simulator.org](https://antares-simulator.org/)**
 
-1. Load or Generate [stochastic generators] Time-series of every kind for all system areas
+## Introduction
 
-2. For each Monte-Carlo year, pick up at random or not [scenario builder] one time-series of each kind for each area/link
+The purpose of this document is to give every user of the **Antares\_Simulator** model (regardless of its version number), a detailed and comprehensive formulation of the main optimization problems solved by the application's inner optimization engine.
 
-3. For each area and each reservoir:
+The aim of the information presented hereafter is to provide a transparent access to the inner workings of the software from a **formal** standpoint. Note that, aside from this conceptual transparency, the software itself offers an option that makes it possible for the user to print, in a standardized format, any or all of the optimization problems actually solved in the course of an **Antares\_Simulator** session [^1].
 
-    1. Split up the annual overall hydro storage inflows into monthly hydro storage generation, taking into account reservoir constraints, hydro management policy and operation conditions (demand, must-run generation, etc.) [heuristic + optimizer]
+Used together with the elements developed in the next pages, this **practical** access to the internal model implemented the tool allows fair and open benchmarking with comparable software. Besides, another important issue regarding transparency is addressed by the release of **Antares\_Simulator** as an Open Source Gnu GPL 3.0 application, now changed to MPL-2.0.
 
-    2. For every day of each month, break down the monthly hydro energy into daily blocks, taking into account hydro management policy and operation conditions (demand, must-run generation, etc.) [heuristic + optimizer]. Aggregate daily blocks back into weekly hydro storage energy credits (used if the final optimization is run with full weekly 168-hour span)
+So as to delimit the scope of the present document with as much clarity as possible, it is important to notice that a typical **Antares\_Simulator** session involves different steps that are usually run in sequence, either automatically or with some degree of man-in-the-loop control, depending on the kind of study to perform.
 
-    3. For each week of the year (daily/weekly hydro energy credits are now known in every area), run a three-stage 168-hour optimization cycle (or seven 24-hour optimizations, if the optimization preference is set to "daily"). This aim of this cycle is to minimize the sum of all costs throughout the optimization period. This sum may include regular proportional fuel costs, start-up and no-load heat costs, unsupplied and spilled energy costs, and hurdle costs on interconnection. The solution has to respect minimum and maximum limits on the power output of each plant, minimum up and down durations, as well as interconnection capacity limits and "binding constraints" at large (which may be technical – e.g. DC flow rules – or commercial – e.g. contracts). Note that an accurate resolution of this problem requires mixed integer linear programming (because of dynamic constraints on thermal units). A simplified implementation of this approach is used when the advanced parameter "Unit commitment" is set on "accurate". This high quality option may imply long calculation times. This is why, when "Unit commitment" is set on "fast", Antares makes further simplifications that save a lot of time (starting costs are not taken into account within the optimization step but are simply added afterwards, units within a thermal cluster are subject to starting up/shutting down constraints more stringent than the minimum up/down durations). In both cases, the general optimization sequence is as follows:
+These steps most often involve:
 
-       i. Minimization of the overall system cost throughout the week in a continuous relaxed linear optimization. Prior to the optimization, an 8760-hourly vector of operating reserve R3 (see next section) may be added to the load vector (this will lead in step (ii) to identify plants that would not be called if there were no reserve requirements. Their actual output will be that found in step (iii), wherein the load used in the computations takes back its original value)
+1. GUI session dedicated to the initialization or to the updating of various input data sections (load time-series, grid topology, wind speed probability distribution, etc.)
+2. GUI session dedicated to the definition of simulation contexts (definition of the number and consistency of the "Monte-Carlo years" to simulate)
+3. Simulation session producing actual numeric scenarios following the directives defined in (2)
+4. Optimization session aiming at solving all of the optimization problems associated with each of the scenarios produced in (3).
+5. GUI session dedicated to the exploitation of the detailed results yielded by (4)
 
-       ii. So as to accommodate the schedule resulting from (i), search for integer values of the on/off variables that satisfy the dynamic constraints with the smallest possible cost increase.
+The scope of this document is exclusively devoted to step (4). Note that equivalent information regarding the other steps may be found in other documents made available either:
 
-       iii. Take into account the integer variables found in (ii) and solve again the optimal schedule problem for the week.
+- Within the application itself, in the "?" menu
+- On the **Antares\_Simulator** [^2] website (download section) : [https://antares-simulator.org](https://antares-simulator.org/)
+- In technical publications referenced in the bibliography section of the website
 
-## Operating reserves modeling
+The following picture gives a functional view of all that is involved in steps (1) to (5). In this illustration, Step (4), whose goal is to solve the problems introduced in this document, is materialized by the red box.
 
-Many definitions may be encountered regarding the different operating reserves (spinning / non-spinning, fast / delayed, primary-secondary-tertiary, frequency containment reserve – frequency restoration reserve – replacement reserve, etc.).
+![Antares_Process](../img/Antares_Process.jpg)
 
-Besides, all of them need not be modeled with the same level of accuracy in a simulator such as Antares. Furthermore, the best way to use the concept is not always quite the same in pure Adequacy studies and in Economy studies.
+The number and the size of the individual problems to solve (a least-cost hydro-thermal unit-commitment and power schedule, with an hourly resolution and throughout a week, over a large interconnected system) make optimization sessions often computer-intensive. Note that the content of the blue "hydro energy manager" box appearing on the previous figure, whose purpose is to deal with energy storage issues at the seasonal scale, is not detailed in the present document but in the ["Miscellaneous"](../08-miscellaneous.md#the-heuristic-for-seasonal-hydro-pre-allocation) section.
 
-Several classes of reserves may therefore be used in Antares; how to use them at best depend on the kind and quality of operational data at hand, and on the aim of the studies to carry out; though all kinds of reserves may always be defined in the INPUT dataset, the set of reserves that will effectively be used depends on the kind of simulations to run. Note that any or all classes of reserves may be ignored in a given simulation (without being removed from the INPUT dataset) by setting the matching "optimization preference" to "ignore reserve X":
+Depending on user-defined results accuracy requirements, various practical options allow to simplify either the formulation of the weekly UC & dispatch problems (e.g. do not account for constraints associated with operational reserves) or their resolution (i.e. find, for the native MILP, an approximate solution based on two successive LPs). For the sake of simplicity and clarity, the way these options are used to revise the primary problem formulation is not detailed hereafter. Likewise, many simplifications are introduced to keep notations as light as possible. This is why, for instance, the overall sum of load, wind power generation, solar power generation, run of the river generation, and all other kinds of so-called "must-run" generation is simply denoted "load" in the present document.
 
-- **Pre-allocated reserve on dispatchable thermal plants (R0)** <br/>
-  This reserve (which corresponds to the parameter "spinning" attached to the thermal plants) is expressed as a percentage of the nominal capacity of the plants. It is simply used as a derating parameter: for instance, a 1000 MW plant with a 2.5% spinning parameter will not be able to generate more than 975 MW. It is important to notice that, if the plant is not scheduled on, it will NOT contribute to the spinning reserve (to be effectively available, the 25 MW of reserve would need the plant to be started). This first class of reserve is available for **Adequacy** as well as for **Economy**.
+## Typology of the problems solved
 
-- **Day-ahead reserve (R3):** <br/>
-  This reserve is available in **Adequacy** and **Economy** simulations, with the following meaning:
-  "For any day D, to be able to accommodate last-minute random variations of the expected demand and/or generation (as they were seen from day D -1), a certain amount of power (R3) should be ready to be available at short notice".
-  <br/>
-  In actual operating terms, R3 is a complex (spinning/non-spinning) mix as well as (hydro/thermal) mix. It may involve or not part of the primary and secondary power/frequency regulation reserves. R3 may represent as much as the overall amount of frequency containment reserve, frequency restoration reserve and replacement reserve required for operation on day D, as seen from day D-1.
-  <br/>
-  In the simulations, R3 is construed as a "virtual" increase of the load to serve, which influences the optimal unit commitment and dispatch (because of minimum stable power levels and minimum On / Down times).
+In terms of power studies, the different fields of application Antares has been designed for are the following:
 
-**IMPORTANT:**
+- **Generation adequacy problems :** assessment of the need for new generating plants so as to keep the security of supply above a given critical threshold
 
-The optimization makes sure that, should the need arise, reserve R3 will actually be available where it is needed **BUT** there is no commitment regarding whether this service should be provided by an increase of local generation, a decrease of exports or even an increase of imports: the optimizer will choose the mix leading to the minimal cost for the system.
+What is most important in these studies is to survey a great number of scenarios that represent well enough the random factors that may affect the balance between load and generation. Economic parameters do not play as much a critical role as they do in the other kinds of studies, since the stakes are mainly to know if and when supply security is likely to be jeopardized (detailed costs incurred in more ordinary conditions are of comparatively lower importance). In these studies, the default Antares option to use is the "Adequacy" simulation mode.
 
-Note that this "standard" feature of Antares makes it possible to assess the potential value of keeping some headroom in interconnections for the purpose of transferring operating reserves, when "remote" reserves are less expensive than domestic ones.
+- **Transmission project profitability :** assessment of the savings brought by a specific reinforcement of the grid, in terms of decrease of the overall system generation cost (using an assumption of fair and perfect market) and/or improvement of the security of supply (reduction of the loss-of-load expectation).
 
-The table below gives an overview of the different reserves available in Antares
+In these studies, economic parameters and the physical modeling of the dynamic constraints bearing on the generating units are of paramount importance. Though a thorough survey of many "Monte-Carlo years" is still required, the number of scenarios to simulate is not as large as in generation adequacy studies. In these studies, the default Antares option to use is the "Economy" simulation mode.
 
-|      | _Economy_ | _Adequacy_ |
-|------|-----------|------------|
-| _R0_ | _Yes_     | _Yes_      |
-| _R3_ | _Yes_     | _Yes_      |
+- **Generation and/or Transmission expansion planning:** rough assessment of the location and consistency of profitable reinforcements of the generating fleet and/or of the grid at a given horizon, on the basis of relevant reference costs and taking into account feasibility local constraints (bounds on the capacity of realistic reinforcements).
 
+These long term studies clearly differ from the previous ones in the sense that the generation and transmission assets that define the consistency of the power system are no longer passive parameters but are given the status of active problem variables. In the light of both the nature and the magnitude of the economic stakes, there is comparatively a lesser need than before for an accurate physical modeling of fine operational constraints or for an intensive exploration of a great many random scenarios. The computer intensiveness of expansion studies is, however, much higher than that of the other types because the generic optimization problem to address happens to be much larger.
 
-## The heuristic for seasonal hydro pre-allocation
+The common rationale of the modeling used in all of these studies is, whenever it is possible, to decompose the general issue (representation of the system behavior throughout many years, with a time step of one hour) into a series of standardized smaller problems.
 
+In **Antares\_Simulator**, the "elementary" optimization problem resulting from this approach is that of the minimization of the overall system operation cost over a week, taking into account all proportional and non-proportional generation costs, as well as transmission charges and "external" costs such as that of the unsupplied energy (generation shortage) or, conversely, that of the spilled energy (generation excess).
 
-This heuristic, first introduced in broad terms in [Active windows](04-active_windows.md), chapter "hydro", is fully detailed in this paragraph.
+In this light, carrying out generation adequacy studies or transmission projects studies means formulating and solving a series of a great many week-long operation problems (one for each week of each Monte-Carlo year ), assumed to be independent. This generic optimization problem will be further denoted $\mathcal{P}^k$, where $k$ is an index encompassing all weeks of all Monte-Carlo years.
 
-Basically, the seasonal hydro pre-allocation process comprises two stages carried out two times
-(first time: monthly scale; second time: daily scale).
+Note that this independency assumption may sometimes be too lax, because in many contexts weekly problems are actually coupled to some degree, as a result of energy constraints (management of reservoir-type hydro resources, refueling of nuclear power plants, etc.). When appropriate, these effects are therefore dealt with before the actual decomposition in weekly problems takes place, this being done[^3] either of the following way (depending on simulation options):
 
-- Stage 1: Definition of an allocation ideal modulation profile, which may be based (or not) on local and/or
-  remote load profiles.
-- Stage 2: Mitigation of the previous raw profile to obtain a feasible hydro ideal target,
-  compatible as much as possible with reservoir rule curves.
+1. Use of an economic signal (typically, a shadow "water value") yielded by an external preliminary stochastic dynamic programming optimization of the use of energy-constrained resources.
+2. Use of heuristics that provide an assessment of the relevant energy credits that should be used for each period, fitted so as to accommodate with sufficient versatility different operational rules.
 
-The description given hereafter makes use of the following local notations,
-not be confused with those of the document "optimization problem formulation"
-(dedicated to the optimal hydro-thermal unit-commitment and dispatch problem):
+Quite different is the situation that prevails in expansion studies, in which weekly problems cannot at all be separated from a formal standpoint, because new assets should be paid for all year-long, regardless of the fact that they are used or not during such or such week : the generic expansion problem encompasses therefore all the weeks of all the Monte-Carlo years at the same time. It will be further denoted $\mathcal{P}$.
 
-- $Z$ Number of Areas (zones $z$) in the system
-- $M_{zh}$ Hourly time-series of cumulated must-generation of all kinds for zone $z$
-- $M_{zd}$ Daily time-series of cumulated must-generation of all kinds for zone $z$ (sum of $M_{zh}$)
-- $M_{zm}$ Monthly time-series of cumulated must-generation of all kinds for zone $z$ (sum of $M_{zh}$)
-- $M_{z.}$ Either $M_{zd}$ or $M_{zm}$, relevant time index "." is defined by the context
-- $L_{z.}$ Time-series of "natural" load for zone $z$
-- $A$ Inter-area hydro-allocation matrix (dimension_ $x Z$ ) $A_{uv}$ is a weight given to the load
-  of area $u$ in the definition of the monthly and daily primary hydro generation target of area $v$
-  Extreme cases are:
+The next sections of this document develop the following subjects:
 
-    - **A is the identity matrix**  
-      The hydro storage energy monthly and weekly profiles of each zone $z$ depend only on the local demand and
-      must-run generation in $z$
-    - **A has a main diagonal of zeroes**  
-      The hydro storage energy monthly and weekly profiles of each zone $z$ do not depend at all on the local
-      demand and must-run generation in $z$
-- $L_{z.}^+$ Time-series of "net" load for zone $z$, defined as: $L{z.}^+ = L{z.} - M{z.}$
-- $L_{z.}$ Time-series of "weighted" load for zone $z$, defined as:_ $L_{z.} = A^t L_{z.}^+$
+- Notations used for $\mathcal{P}^k$
 
-<ins>All following parameters are related to the generic zone $z$:</ins>
+- Formulation of $\mathcal{P}^k$
 
-- $\alpha$ "inter-monthly generation breakdown" parameter
+- Complements to the standard problems (how to make **Antares\_Simulator** work as a SCOPF )
 
-- $\beta$ "inter-daily generation breakdown" parameter
+- Miscellaneous complements to the standard problems
 
-- $j$ "follow-load" parameter
+## Notations
 
-- $\mu$ "reservoir-management" parameter
+### General notations
 
-- $S$ Reservoir size
+| Notation             | Explanation                                                                                                        |
+| ------------         | -------------                                                                                                      |
+| $k \in  K$     | optimization periods (weeks) over which $P$ and $P^k$ are defined (omitted for simplicity)                 |
+| $t \in T$        | individual time steps of any optimization period $ k\in K$ (hours of the week)                                 |
+| $G(N,L)$         | undirected graph of the power system (connected)                                                                   |
+| $n \in N$        | vertices of $G$, $N$ is an ordered set                                                                     |
+| $l \in L$        | edges of $G$                                                                                                   |
+| $A$              | incidence matrix of $G$, dimension $N\times L$                                                             |
+| $g$              | spanning tree of $G$                                                                                           |
+| $C_g$            | cycle basis associated with $g$, dimension $L\times (L+1-N)$                                               |
+| $L_n^+\subset L$ | set of edges for which $n$ is the upstream vertex                                                              |
+| $L_n^-\subset L$ | set of edges for which $n$ is the downstream vertex                                                            |
+| $u_l \in N$      | vertex upstream from $l$                                                                                       |
+| $d_l \in N$      | vertex downstream from $l$                                                                                     |
+| $u \cdot v$      | inner product of vectors $u$ and $v$                                                                       |
+| $u_\uparrow^p$   | vector resulting from the permutation on $u \in \mathbb{R}^s$ : $ u\_\uparrow^p(i)=u(i+p\, \mathrm{mod}\,s)$ |
 
-- $\overline{S_d}$ Reservoir maximum level at the end of day d, expressed as a fraction of $S$ (rule curve)
+Problems $P^k$ and $P$ call for the definition of many parameters and variables further described.
+
+The power system is supposed to be operated so as to be able to face some amount of unexpected demand increase with redispatching actions only (no change in the unit commitment). Two operating states are therefore modelled:
+
+- **nominal**: Actual conditions match exactly all standard forecast. Demand is supplied by optimal generation dispatch (variable notation: _Var_).
+
+- **uplifted**: Additional demand increases are applied to the nominal state and call for redispatch (activation of security reserves; variable notation: _$Var^s$_).
+
+Note: Almost all variables of the system are defined twice (one value per state). For clarity's sake, only the definition of the nominal variables (_Var_) are given hereafter, the definition of variables _$Var^s$_ are implicit.
+
+### Grid
+
+| Notation                                      | Explanation                                                                                            |
+| ------------                                  | -------------                                                                                          |
+| $C_l^+ \in \mathbb{R}^T_+$                | initial transmission capacity from $u_l$ to $d_l$ (variable of $P$ and $P^k$)          |
+| $ \overline{C}\_l^+ \in \mathbb{R}^T\_+ $ | maximum transmission capacity from $u_l$ to $d_l$ (variable of $P$, not used in $P^k$) |
+| $C_l^- \in \mathbb{R}^T_+$                | initial transmission capacity from $d_l$ to $u_l$ (variable of $P$ and $P^k$)          |
+| $ \overline{C}^{-}\_l\in \mathbb{R}^T\_{+} $   | maximum transmission capacity from $d_l$ to $u_l$ (variable of $P$, not used in $P^k$) |
+| $\Psi_l \in \mathbb{R}_+$                 | weekly cost of a maximum capacity investment                                                           |
+| $x_l \in [0,1]$                           | transmission capacity investment level                                                                 |
+| $F_l^+ \in \mathbb{R}^T_+$                | power flow through $l$, from $u_l$ to $d_l$                                                |
+| $F_l^- \in \mathbb{R}^T_+$                | power flow through $l$, from $d_l$ to $u_l$                                                |
+| $F_l\in \mathbb{R}^T$                     | total power flow through $l$, $F_l=F_l^+-F_l^-$                                                |
+| $\tilde{F}_t \in \mathbb{R}^T$            | system flow snapshot at time $t$                                                                   |
+| $\gamma_l^+\in \mathbb{R}^T$              | transmission cost through $l$, from $u_l$ to $d_l$. Proportional to the power flow         |
+| $\gamma_l^-\in \mathbb{R}^T$              | transmission cost through $l$, from $d_l$ to $u_l$. Proportional to the power flow         |
+| $Z_l \in \mathbb{R}\_+$                   | overall impedance of $l$                                                                           |
+
+### Thermal units
+
+| Notation                                                      | Explanation                                                                            |
+| ------------                                                  | -------------                                                                          |
+| $\theta \in \Theta_n$                                     | thermal clusters (sets of identical units) installed in node $n$                   |
+| $\Theta$                                                  | set of all thermal clusters of the power system $\Theta = \cup_{n\in N} \Theta_n$  |
+| $\overline{P}\_\theta \in \mathbb{R}^T_+$                 | maximum power output from cluster $\theta$, depends on units availability          |
+| $\underline{P}\_\theta \in \mathbb{R}^T_+$                | mimimum power output from cluster $\theta$, units availability allowing            |
+| $P_\theta \in \mathbb{R}^T_+$                             | power output from cluster $\theta$                                                 |
+| $\chi_\theta \in \mathbb{R}^T$                            | power output from cluster $\theta$                                                 |
+| $\sigma_\theta^+ \in \mathbb{R}^T$                        | startup cost of a single unit in cluster $\theta$                                  |
+| $\tau_\theta \in \mathbb{R}^T$                            | running unit in $\theta$ : cost independent from output level (aka NoLoadHeatCost) |
+| $l_\theta \in \mathbb{R}_+$                               | unit in $\theta$ : minimum stable power output when running                        |
+| $u_\theta \in \mathbb{R}_+$                               | unit in $\theta$ : maximum net power output when running                           |
+| $\Delta_\theta^+ \in \lbrace 1,\dots, \|T\|\rbrace$       | unit in $\theta$ : minumum on time when running                                    |
+| $\Delta_\theta^- \in \lbrace 1,\dots, \|T\|\rbrace$        | unit in $\theta$ : minumum off time when not running                               |
+| $\Delta_\theta = \max(\Delta_\theta^-, \Delta_\theta^+) $ | duration above which both state changes are allowed                                    |
+| $M_\theta \in \mathbb{N}^T$                               | number of running units in cluster $\theta$                                        |
+| $\overline{M}_\theta \in \mathbb{N}^T$                    | maximum number of running units in cluster $\theta$                                |
+| $\underline{M}_\theta \in \mathbb{N}^T$                   | minimum number of running units in cluster $\theta$                                |
+| $M_\theta^+ \in \mathbb{N}^T$                             | number of units in cluster changing from state off to state on in cluster $\theta$ |
+| $M_\theta^- \in \mathbb{N}^T$                             | number of units in cluster changing from state on to state off in cluster $\theta$ |
+| $M_\theta^{--} \in \mathbb{N}^T$                                   | number of units in cluster changing from state on to state outage cluster $\theta$ |
+
+### Reservoir-type hydropower units (or other power storage facilities)
+
+| Notation                                         | Explanation                                                                                                                          |
+| ------------                                     | -------------                
+| $\lambda \in \Lambda_n$                      | reservoirs connected to node $n$                                                                                                 |
+| $\Sigma_\lambda \in \mathbb{R}_+$            | size of reservoir $\lambda$ : amount of energy that can be stored in $\lambda$                                               |
+| $Q\in \mathbb{N}$                                     | number of discrete levels defined in reservoir                                                                                       |
+| $\overline{W}\_\lambda \in \mathbb{R}_+$     | maximum energy output from $\lambda$ throughout the optimization period                                                          |
+| $\underline{W}\_\lambda \in \mathbb{R}_+$    | minimum energy output from $\lambda$ throughout the optimization period                                                          |
+| $\overline{H}\_\lambda \in \mathbb{R}_+^T$   | maximum power output from reservoir $\lambda$. Note : $\sum_{t\in T} \overline{H}\_{\lambda\_t} \geq \underline{W}\_\lambda$ |
+| $\underline{H}\_\lambda \in \mathbb{R}_+^T$  | minimum power output from reservoir $\lambda$. Note : $\sum_{t\in T} \underline{H}\_{\lambda\_t} \leq \overline{W}\_\lambda$ |
+| $H\_\lambda \in \mathbb{R}_+^T$              | power output from reservoir $\lambda$                                                                                            |
+| $r\_\lambda \in \mathbb{R}_+$                | maximum ratio between output power daily peak and daily average ($1 \leq r\_\lambda \leq 24$)                                    |
+| $\varepsilon\_\lambda \in \mathbb{R}$                 | reference water value associated with the reservoir's initial state (date, level)                                         | $\eta\_\lambda \in \mathbb{R}^Q$             | reference water value associated with the reservoir's final state (date) <br> if _hydro pricing option := fast_ then : $\eta\_\lambda \leftarrow 0$                                                  <br> if _hydro pricing option := accurate_ then : $v_\lambda \leftarrow 0$ |
+| $\epsilon\_\lambda^1 \in \mathbb{R}$             | penalty fee on hydro generation variations (dispatch smoothing effect) <br> if _hydro power fluctuations option := free modulations_ then $\epsilon_\lambda^1 \leftarrow O $|
+| $\epsilon\_\lambda^2 \in \mathbb{R}$             | penalty fee on hydro generation maximum varition (dispatch smoothing effect) <br> if _hydro power fluctuations option := free modulations_ then $\epsilon_\lambda^2 \leftarrow O $|
+| $\omega\_\lambda \in \mathbb{R}$             | overflow value (value of energy impossible to store in reservoir $\lambda$              |           |
+| $\varepsilon^*\_\lambda \in \mathbb{R}$               | random component added to the water value (dispatch smoothing effect)                                                                |
+| $\eta\_\lambda \in \mathbb{R}^Q$             | reference water value associated with the reservoir's final state (date)                                                             |
+| $\rho\_\lambda \in \mathbb{R}_+$             | efficiency ratio of pumping units (or equivalent devices) available in reservoir $\lambda$                                       |
+| $\overline{\Pi}\_\lambda \in \mathbb{R}_+^T$ | maximum power absorbed by pumps of reservoir $\lambda$                                                                           |
+| $\Pi\_\lambda \in \mathbb{R}_+^T$            | power absorbed by pumps of reservoir $\lambda$                                                                                   |
+| $I\_\lambda \in \mathbb{R}^T_+$              | natural power inflow to reservoir $\lambda$                                                                                      |
+| $O\_\lambda \in \mathbb{R}_+^T$              | power overflowing from reservoir $\lambda$ : part of inflow that cannot be stored                                                |
+| $\overline{R}\_\lambda \in \mathbb{R}_+^T$   | upper bound of the admissible level in reservoir $\lambda$                                                                       |
+| $\underline{R}\_\lambda \in \mathbb{R}_+^T$  | lower bound of the admissible level in reservoir $\lambda$                                                                       |
+| $R\_\lambda \in \mathbb{R}^T_+$              | stored energy level in reservoir $\lambda$                                                                                       |
+| $\mathfrak{R}\_{\lambda_q} \in \mathbb{R}_+$ | filling level of reservoir layer $q$ at time $T$ (end of the week)                                                           |
 
-- $\underline{S_d}$ Reservoir minimum level at the end of day d, expressed as a fraction of $S$ (rule curve)
+### Binding constraints
 
-- $S_0$ Reservoir initial level at the beginning of the first day of the "hydro-year"
+In problems $\mathcal{P}^k$, the need for a versatile modelling of the power system calls for the introduction of an arbitrary number of linear binding constraints between system's variables throughout the grid, expressed either in terms of hourly power, daily energies or weekly energies.
+These constraints may bind together synchronous flows as well as thermal units power outputs. They may be related to synchronous values or bear on different times.
+Herebelow, the generic notation size is used for the relevant dimension of the set to which parameters belong.
 
-- $I_d$ Natural inflow of energy to the reservoir during day d
+These dimensions stand as follow
 
-- $I_m$ Natural inflow of energy to the reservoir during month m (sum of $I_d$
+$\mathrm{size}=T=168$ : applicable to lower and upper bounds of constraints between hourly powers
+$\mathrm{size}=\frac{T}{7}=24$ : applicable to lower and upper bounds of constraints between daily energies
+$\mathrm{size}=\frac{T}{168}=1$ : applicable to lower and upper bounds of constraints between weekly energies
 
-- $\overline{W_d}$ Maximum energy that can be generated on day d (standard credit)
+Generic notations for binding constraints :
 
-<ins> All following variables, defined for both stages, are related to the generic zone: </ins>
+| Notation                                 | Explanation                                                                                                 |
+| ------------                             | -------------                                                                                               |
+| $e \in E$                            | set of all grid interconnections and thermal clusters. $E = L \cup \Theta$                              |
+| $b \in B$                            | binding constraints                                                                                         |
+| $B_h \subset B$                      | subset of $B$ containing the binding constraints between hourly powers                                  |
+| $B_d \subset B$                      | subset of $B$ containing the binding constraints between daily energies                                 |
+| $B_w \subset B$                      | subset of $B$ containing the binding constraints between weekly energies                                |
+| $\alpha_e^b \in \mathbb{R}$          | weight of $e$ (flow within $e$ or output from $e$) in the expression of constraint $b$      |
+| $o_e^b \in \mathbb{N}$               | time offset of $e$ (flow within $e$ or output from $e$) in the expression of constraint $b$ |
+| $u^b \in \mathbb{R}^{\mathrm{size}}$ | upper bound of binding constraint $b$                                                                   |
+| $l^b \in \mathbb{R}^{\mathrm{size}}$ | lower bound of binding constraint $b$                                                                   |
 
-- $S_d^k$ Reservoir level at the end of day d, at the end of stage k of pre-allocation
+### Demand, security uplift, unsupplied and spilled energies
 
-- $S_m^k$ Reservoir level at the end of month m, at the end of stage k of pre-allocation
+| Notation                          | Explanation                                                                            |
+| ------------                      | -------------                                                                          |
+| $D_n \in \mathbb{R}^T$        | net power demand expressed in node $n$, including must-run generation              |
+| $S_n \in \mathbb{R}^T_+$      | demand security uplift to be faced in node $n$, by activation of security reserves |
+| $\delta_n^+ \in \mathbb{R}^T$ | normative unsupplied energy value in node $n$. Value of lost load - VOLL           |
+| $G_n^+ \in \mathbb{R}^T_+$    | unsupplied power in the nominal state                                                  |
+| $\delta_n^- \in \mathbb{R}^T$ | normative spilled energy value in node $n$ (value of wasted energy)                |
+| $G_n^- \in \mathbb{R}^T_+$    | spilled power in the nominal state                                                     |
 
-- $O_d^k$ Overflow from the reservoir on day d, at the end of stage k of pre-allocation (inflow in excess to an already full reservoir)
 
-- $W_d^k$ Energy to generate on day d, at the end of stage k of pre-allocation
+## Formulation of problem $\mathcal{P}^k$
 
-- $W_m^k$ Energy to generate on month m, at the end of stage k of pre-allocation
+Superscript k is implicit in all subsequent notations of this section (omitted for simplicity's sake)
 
+## Objective
+$$
+\min\_{M\_\theta \in \mathrm{Argmin} \Omega\_{\mathrm{unit com}}}(\Omega\_{\mathrm{dispatch}})
+$$
 
-Following variables and parameters are local to linear optimization problems $M$ &amp; $D(m)$
-solved within the heuristic. For the sake of clarity, the same generic index is used for all time steps,
-knowing that in $M$ there are 12 monthly time-steps, while in $D(m)t$ there are from 28 to 31 daily
-time-steps. Costs $\gamma_{Var}$ given to these variables are chosen to enforce a logical hierarchy
-of penalties (letting the reservoir overflow is worse than violating rule curves, which is worse than deviating
-from the generation objective assessed in stage 1, etc.)
 
-- $Y$ Generation deficit at the end of the period, as compared to the objective aimed at
+with
 
-- $O_t$ Overflow from the reservoir on time step $t$
 
-- $G_t, \overline{G_t}$ Optimal generation and maximum generation on time step $t$
+$$
+\Omega\_{\mathrm{dispatch}} = \Omega\_{\mathrm{transmission}}+\Omega\_{\mathrm{hydro}}+\Omega\_{\mathrm{thermal}}+\Omega\_{\mathrm{unsupplied}}+\Omega\_{\mathrm{spillage}}
+$$
 
-- $T_t$ Generation objective assessed in the first stage, for time step t ( $W_m^1$ or $W_d^1$)
 
-- $S_t, \overline{S_t}, \underline{S_t}$ Optimal stock level, maximum level, minimum level at the end of time step $t$
+$$
+\Omega\_{\mathrm{transmission}}=\sum_{l \in L} \gamma_l^+ \cdot F_l^+ + \gamma_l^- \cdot F_l^-
+$$
 
-- $I_t$ Natural inflow on time step $t$
 
-- $D_t$ Deviation (absolute difference) between target reached and initial aim
+$$
+\Omega\_{\mathrm{hydro}} = \sum\_{n \in N} \sum\_{\lambda in \Lambda\_n} (\varepsilon\_\lambda + \varepsilon^*\_\lambda)\cdot(H\_\lambda - \rho\_\lambda \Pi\_\lambda + O\_\lambda) - \sum\_{n \in N} \sum\_{\lambda \in \Lambda\_n}\sum\_{q=1}^Q \eta\_{\lambda\_q} \mathfrak{R}\_{\lambda_q}
+$$
 
-- $\Delta$ Maximum deviation throughout the period
 
-- $V_t^+$ Amplitude of the violation of the upper rule curve at time step $t$
+$$
+\Omega\_{\mathrm{thermal}}=\sum\_{n \in N} \sum\_{\theta \in \Theta\_n} \chi\_\theta \cdot P\_\theta + \sigma\_\theta^+ \cdot M\_\theta^+ + \tau\_\theta \cdot M\_\theta
+$$
 
-- $V_t^-$ Amplitude of the violation of the lower rule curve at time step $t$
 
-- $Y$ Maximum violation of lower rule curve throughout the period
+$$
+\Omega\_{\mathrm{unsupplied}}=\sum\_{n \in N} \delta_n^+ \cdot G_n^+
+$$
 
 
-**General heuristic for each zone**
+$$
+\Omega\_{\mathrm{spillage}}=\sum\_{n \in N} \delta_n^- \cdot G_n^-
+$$
 
-_Begin_
+$\Omega\_{\mathrm{unit com}}$ is the expression derived from $\Omega\_{\mathrm{dispatch}}$ by replacing all variables that depend on the system's state by their equivalent in the uplifted state.
 
-$$if (not.\mu) : \{ S \leftarrow \infty ; \underline{S_d} \leftarrow 0; \overline{S_d}; S_0 \leftarrow S/2 \}$$
+## Constraints related to the nominal system state
 
-_M1:_
+### Balance between load and generation:
 
-$$if (j \text{ and } \mu) : \text{for } m\in [1, 12]: W_m^1 \leftarrow \frac{L_m^{\alpha}.(\sum_{m}{I_m})}{(\sum_{m}{L_m^{\alpha}})}$$
+First Kirchhoff's law:
 
-$$else: \text{for } m\in [1, 12]: \{W_m^1 \leftarrow I_m\}$$
+$$
+\forall n \in N, \sum\_{l \in L\_n^+} F_l - \sum\_{l \in L\_n^-} F_l = \left( G\_n^+ + \sum\_{\lambda \in \Lambda\_n}(H\_\lambda - \Pi\_\lambda) + \sum\_{\theta \ \in \Theta\_n} P\_\theta\right)-(G\_n^-+D\_n)
+$$
 
 
-_M2:_
+On each node, the unsupplied power is bounded by the net positive demand:
 
-$$\text{for } m\in [1, 12]: W_m^2 \leftarrow \text{Solution of linear problem M}$$
+$$
+\forall n \in N, 0 \leq G\_n^+ \leq \max(0, D_n)
+$$
 
-_D1:_
+On each node, the spilled power is bounded by the overall generation of the node (must-run + dispatchable power):
 
-$$if (j): \text{for } d\in [1, 31]: W_d^1 \leftarrow \frac{L_d^{\beta}. (W_m^2)}{(\sum_{d\in m}{L_d^{\beta}})}$$
+$$
+\forall n \in N, 0 \leq G_n^- \leq -\min(0, D_n) + \sum\_{\lambda \in \Lambda\_n}H\_\lambda + \sum\_{\theta \ \in \Theta\_n} P\_\theta
+$$
 
-$$else: \text{for } d\in [1, 31]: W_d^1 \leftarrow \frac{I_d . (W_m^2)} {(\sum_{d\in m}{I_d})}$$
+Flows on the grid:
 
-_D2:_
+$$
+\forall l \in L, 0 \leq F\_l^+ \leq C\_l^+ +(\overline{C}^{+}\_l - C\_l^+)x\_l
+$$
 
-$$\text{for } m \in [1, 12]: W_{d\in m}^2 \leftarrow \text{Solution of linear problem D(m)}$$
+$$
+\forall l \in L, 0 \leq F\_l^- \leq C\_l^- +(\overline{C}^{-}\_l - C\_l^-)x\_l
+$$
 
-_End_
+$$
+\forall l \in L, F\_l = F\_l^+ - F\_l^-
+$$
 
-Note: In the formulation of the optimal hydro-thermal unit-commitment and dispatch problem (see dedicated document), the reference hydro energy __HIT__ used to set the right hand sides of hydro- constraints depends on the value chosen for the optimization preference "simplex range" and is defined as follows:
+Flows are bounded by the sum of an initial capacity and of a complement brought by investment
 
-- Daily : for each day **d** of week $\omega$ : $HIT = W_d^2$
-- Weekly : for week $\omega$: $HIT = \sum_{d\in \omega}{W_d^2}$
+Binding constraints :
 
-**Optimization problem M**
+$$
+\forall b \in B\_h, l^b \leq \sum\_{e \in E} \alpha\_e^b (F\_e)\_{\uparrow}^{o\_e^b} \leq u^b
+$$
 
-$$\min_{G_t, S_t, ...}{\gamma_{\Delta}\Delta + \gamma_Y Y + \sum_{t}{(\gamma_D D_t + \gamma_{V+} V_t^+ + \gamma_{V-} V_t^-)}}$$
+$$
+\forall b \in B\_d, \forall k \in \lbrace 0,\dots,6\rbrace, l^b \leq \sum\_{e \in E} \alpha\_e^b \sum\_{t \in \lbrace 1,\dots,24\rbrace} (F\_e)\_{\uparrow {24k+t}}^{o\_e^b} \leq u^b
+$$
 
-s.t
+$$
+\forall b \in B\_w, l^b \leq \sum\_{e \in E} \alpha\_e^b \sum\_{t \in T} F\_{e\_t} \leq u^b
+$$
 
-$$S_t \geq 0$$
+### Binding constraints:
 
-$$S_t \leq S$$
+$$
+\forall n \in N, \forall \lambda \in \Lambda\_n, \underline{W}\_{\lambda} \ leq \sum\_{t\in T} H\_{\lambda\_t} \leq \overline{W}\_{\lambda}
+$$
 
-$S_t + G_t - S_{t-1} = I_t$ (see note [^monthly_allocation])
+FIXME : RHS
+$$
+\forall n \in N, \forall \lambda \in \Lambda\_n, \sum\_{t\in T} H\_{\lambda\_t} - \sum\_{t\in T} \rho\_t \Pi\_{\lambda\_t} = \overline{W}\_{\lambda}
+$$
 
-$$\sum_{t}{G_t} = \sum_{t}{T_t}$$
+Instantaneous generating power is bounded
 
-$$G_t - D_t \leq T_t$$
+$$
+\forall n \in N, \forall \lambda \in \Lambda\_n, \underline{H}\_{\lambda} \leq H\_{\lambda} \leq \overline{H}\_{\lambda}
+$$
 
-$$G_t + D_t \geq T_t$$
+Intra-daily power modulations are bounded and power fluctuations may be subject to penalty fees [^12]
 
-$$V_t^- + S_t \geq \underline{S_t}$$
+$$
+\forall n \in N, \forall \lambda \in \Lambda\_n, \forall k \in \lbrace 1, \ldots, 6 \rbrace, \frac{\max\_{t \in \lbrace 24k+1,\ldots, 24k+24 \rbrace} H\_{\lambda\_t}}{\sum\_{t \in \lbrace 24k+1,\ldots, 24k+24 \rbrace} H\_{\lambda\_t}} \leq r\_{\lambda}
+$$
 
-$$V_t^+ - S_t \geq -\overline{S_t}$$
+Instantaneous pumping power is bounded
 
-$$Y - V_t^- \geq 0$$
+$$
+\forall n \in N, \forall \lambda \in \Lambda\_n, 0 \leq \Pi\_{\lambda} \leq \overline{\Pi}\_{\lambda}
+$$
 
+Reservoir level evolution depends on generating power, pumping power, pumping efficiency, natural inflows and overflows
 
-**Optimization problems $D(m)$**
+$$
+(14)(a) \forall n \in N, \forall \lambda \in \Lambda\_n, \forall t \in T, R_{\lambda_t} - R_{\lambda_{t-1}} = \rho_\lambda \Pi_{\lambda_t} - H_{\lambda_t} + I_{\lambda_t} - O_{\lambda_t}
+$$
 
-$$\min_{G_t, S_t, ...}{\gamma_{\Delta}\Delta + \gamma_Y Y + \sum_{t}{(\gamma_D D_t + \gamma_{V-} V_t^- + \gamma_{O} O_t + \gamma_S S_t)}}$$
-s.t
+$$
+(14)(b) \forall n \in N, \forall \lambda \in \Lambda\_n, R_{\lambda T} = \sum_{q=1,Q} \mathfrak{R}_{\lambda_q}
+$$
 
-$$S_t \geq 0$$
+$$
+(14)(c) \forall n \in N, \forall \lambda \in \Lambda\_n, q=1,Q, \mathfrak{R}\_{\lambda_q} \leq \sum\_{\lambda} \frac{1}{Q}
+$$
 
-$$S_t \leq S$$
+Reservoir level is bounded by admissible lower and upper bounds (rule curves)
 
-$$G_t \geq 0$$
+$$
+(15) \forall n \in N, \forall \lambda \in \Lambda\_n, \underline{R}\_\lambda \leq R_\lambda \leq \overline{R}_\lambda
+$$
 
-$$G_t \leq \overline{G_t}$$
+### Thermal units : [^8]
 
-$S_t + G_t + O_t - S_{t-1} = I_t$ (see note [^daily_allocation])
+Power output is bounded by must-run commitments and power availability
 
-$\sum_{t}{G_t + Y} = \sum_{t}{T_t} + Y_{m-1}$ (value of Y previously found in solving **$D(m-1)$**)
+$$
+(16) \forall n \in N, \forall \theta \in \Theta\_n, \underline{P_\theta} \leq P_\theta \leq \overline{P_\theta}
+$$
 
-$$G_t - D_t \leq T_t$$
+The number of running units is bounded
 
-$$G_t + D_t \geq T_t$$
+$$
+(17) \forall n \in N, \forall \theta \in \Theta\_n, \underline{M_\theta} \leq M_\theta \leq \overline{M_\theta}
+$$
 
-$$\Delta - D_t \geq 0$$
+Power output remains within limits set by minimum stable power and maximum capacity thresholds
 
-$$V_t^- + S_t \geq \underline{S_t}$$
+$$
+(18) \forall n \in N, \forall \theta \in \Theta\_n, l_\theta M_\theta \leq M_\theta \leq u_\theta M_\theta
+$$
 
-$$Y - V_t^- \geq 0$$
 
-## Conventions regarding colors and names
+Minimum running and not-running durations contribute to the unit-commitment plan. Note that this modeling requires[^9] that one at least of the following conditions is met: $\Delta_\theta^- \leq \Delta_\theta^+$ or $\overline{M}_\theta \leq 1_T$
 
-- Names for areas, thermal plants, etc.
-  Name length should not exceed 256 characters.
-  Characters must belong to:
-  { A-Z , a-z , 0-9 , - , \_ , ( , ) , &amp; , comma , space }
+$$
+(19) \forall n \in N, \forall \theta \in \Theta\_n, \forall t \in T, M_{\theta_t} = M_{\theta_{t-1}} + M_{\theta_t}^+ - M_{\theta_t}^-
+$$
 
+$$
+(20) \forall n \in N, \forall \theta \in \Theta\_n, \forall t \in T, {M_\theta^{- -}}_t \leq {M _ \theta^{-}}_t
+$$
 
-- Colors:
-  After being entered in the GUI, some numeric fields can see their color change. The meaning of that is:
-    - Turn to red: invalid value. Saving the study in this state is possible, but the field will have to be corrected at some point in the future. Should the simulator be launched on the dataset, it will detect an error and stop.
+$$
+(21) \forall n \in N, \forall \theta \in \Theta\_n, \forall t \in T, {M_\theta^{- -}}\_t \leq \max(0, \overline{M}\_{\theta_{t-1}} - \overline{M}\_{\theta_t})
+$$
 
-    - Turn to orange: value is valid, though unusual (user may want to double-check data).
+$$
+(22) \forall n \in N, \forall \theta \in \Theta\_n, \forall t \in T, M_{\theta_ t} \geq \sum_{k=t+1-\Delta_\theta^+}^{k=t}(M_{\theta_k}^+ - {M_\theta^{- -}}_k)
+$$
 
+$$
+(23) \forall n \in N, \forall \theta \in \Theta\_n, \forall t \in T, M_{\theta_t} \leq \overline{M}\_{\theta_{t - \Delta_\theta^-}} + \sum_{k=t+1-\Delta_\theta^+}^{k=t} \max(0, \overline{M}\_{\theta_k} - \overline{M}\_{\theta_{k-1}}) - \sum_{k=t+1-\Delta_\theta^+}^{k=t}(M_{\theta_k}^-)
+$$
 
-- Abbreviations :  
-  - Fields requiring to be filled out with "YES" or "NO" can alternatively accept "Y" , "1" or "N" , "0"  
-  - Fields requiring to be filled out with "ON" or " OFF" can alternatively accept "true", "1" or "false", "0"  
-  - Fields requiring to be filled out with "annual" or "monthly" can alternatively accept "a" or "m"  
-  - Fields requiring to be filled out with: "Raw" ,"Detrended"," Beta", "Normal", "Uniform", " Gamma", " Weibull" can alternatively accept: "R", "D", " B", "N", "U", "G", "W"
+### Constraints related to the uplifted system state (activation of security reserves)
 
+All constraints (1) to (23) previously defined for regular operation conditions are repeated with replacement of all variables _Var_ by their twins _$Var^s$_ when they exist.
 
-## Definition of regional districts
+Besides, in the expression of constraints , all occurrences of are replaced by $D_n + S_n$
 
-Typical uses of the "district" feature are:
+## Antares as a SCOPF ("flow-based model")
 
-1) On a large system, define an "all system" zone to get an overall synthesis on all the system nodes
+When problems $\mathcal{P}^k$ do not include any instance of so-called "binding constraints" and if no market pools are defined, the flows within the grid are only committed to meet the bounds set on the initial transmission capacities, potentially reinforced by investments (problem ).In other words, there are no electrical laws enforcing any particular pattern on the flows, even though hurdles costs and may influence flow directions through an economic signal.
 
-2) In a study involving different countries modeled by different regions, define "country" macro-nodes to aggregate regional results to the national level.
+In the general case, such a raw backbone model is a very simplified representation of a real power system whose topology and consistency are much more complex. While the full detailed modeling of the system within Antares is most often out of the question, it may happen that additional data and/or observations can be incorporated in the problems solved by the software.
 
-3) In a study using some specific modeling such as PSP modeling with fake nodes, define a local cluster involving all the relevant real and fake nodes to simplify the edition of results.
+In a particularly favorable case, various upstream studies, taking account the detailed system characteristics in different operation conditions (generating units outages and/or grid components outages N, N-1 , N-k,…) may prove able to provide a translation of all relevant system limits as a set of additional linear constraints on the power flowing on the graph $G(N,L)$ handled by Antares.
 
-Hereafter is described the process to follow to bypass the GUI for the definition of districts. <br/>
-It is based on the edition of a special "sets.ini" file.
+These can therefore be readily translated as "hourly binding constraints", without any loss of information. This kind of model will be further referred to as a "flow-based model"[^FB]. Its potential downside is the fact that data may prove to be volatile in short-term studies and difficult to assess in long-term studies.
 
-**IMPORTANT :**
-- Make sure that the sets.ini file is ready for use before opening the Antares study. Attempts to update the sets.ini file while the study is opened will not be effective.
-- Definition of meaningless districts (references to nodes that do not exist,…) will generate warnings in the GUI log files.
+## Antares as a SCOPF ("KL model")
 
-**HOW TO UPDATE / CREATE the file** : Use Notepad (or equivalent)
+When a full flow-based model cannot be set up (lack of robust data for the relevant horizon), it remains possible that classical power system studies carried on the detailed system yield sufficient information to enrich the raw backbone model. An occurrence of particular interest is when these studies show that the physics of the active power flow within the real system can be valuably approached by considering that the edges $l$ of $G(N,L)$ behave as simple impedances $Z_l$.This model can be further improved if a residual (passive) loop flow is to be expected on the real system when all nodes have a zero net import and export balance (situation typically encountered when individual nodes actually represent large regions of the real system). This passive loop flow should therefore be added to the classical flow dictated by Kirchhoff's rules on the basis of impedances $Z_l$. This model will be further referred to as a "KL model"[^KL]. Different categories of binding constraints, presented hereafter, make it possible to implement this feature in $\mathcal{P}^k$ and $\mathcal{P}$.
 
-**WHERE TO FIND / STORE THE FILE** : INPUT/areas/sets.ini
+### Implementation of Kirchhoff's second law
 
-**PRINCIPLE:**
+The implementation ofKirchhoff's second law for the reference state calls for the following additional hourly binding $L+1-N$ constraints:
 
-The file is divided in consecutive sections, one for each district to define.
+$$
+\forall t \in T, C\_{g}^t Diag(Z\_{l}) \tilde{F}\_{t} = 0
+$$
 
-A section contains:
+### Implementation of a passive loop flow
 
-a) A header line that gives its name to the district. The header syntax is: `[district_name]`   
-To avoid confusion with the real area names, the results regarding this macro-area will later be found in the OUTPUT files under a name bearing the prefix "@", i.e. `@district_name`
+In cases where a residual passive loop flow $\tilde{\phi}\_{t}$ should be incorporated in the model to complete the enforcement of regular Kirchhoff's rules, the binding constraints mentioned in 7.1 should be replaced by:
 
-b) A list of parametrized building rules to be processed in their apparition order.  
-The different elementary rules are:  
-+= area\_name : add the area "area\_name" to the district <br/>
--= area\_name : remove the area "area\_name" from the district <br/>
-apply-filter = add-all : add all areas to the district <br/>
-apply-filter = remove-all : remove all areas (clear the district)
+$$
+\forall t \in T, C\_{g}^t Diag(Z\_{l}) \tilde{F}\_{t} = C\_{g}^t Diag(Z\_{l}) \tilde{\phi}\_{t}
+$$
 
-c) A special "output" parameter that defines whether the results for the district will actually be computed or not
-(this latter option allows inactivating parts of the sets.ini without altering the file).  
-The syntax is: `output=false` or `output= true`.
+### Modelling of phase-shifting transformers
 
-**EXAMPLES OF SETS.INI FILES**
+In cases where the power system is equipped with phase-shifting transformers whose ratings are known, ad hoc classical power studies can be carried out to identify the minimum and maximum flow deviations and phase-shift that each component may induce on the grid. The following additional notations are in order:
 
-a) File defining a single district named "set1" involving three areas named "area1, area3, area42":
+| Notation             | Explanation                                                                                                        |
+| ------------         | -------------                                                                                                      |
+| $\Pi\_{l}^{+shift} \in \mathbb{R}\_{+}$  | Maximum positive shifting ability of a device equipping link $l$|
+| $\Pi^{+shift} \in \mathbb{R}^{L}$ | Snapshots formed by all positive synchronous deviations $\Pi\_{l}^{+shift} \in \mathbb{R}\_{+}$ |
+| $\Pi\_{l}^{+shift} \in \mathbb{R}\_{-}$  | Maximum negative shifting ability of a device equipping link $l$|
+| $\Pi^{-shift} \in \mathbb{R}^{L}$ | Snapshots formed by all negative synchronous deviations $\Pi\_{l}^{-shift} \in \mathbb{R}\_{-}$ |
 
-```ini
-[set1]
-+ = area1
-+ = area3 <br/>
-+ = area42
-output = true
-```
+The enhancement of the model with a representation of the phase-shifting components of the real system then requires to re-formulate as follows the binding constraints defined in 7.2:
 
-b) File defining a district gathering all areas but five:
+$$
+\forall t \in T, C\_{g}^t Diag(Z\_{l}) \tilde{\phi}\_{t} - \Pi^{-shift} \leq C\_{g}^t Diag(Z\_{l}) \tilde{F}\_{t} \leq C\_{g}^t Diag(Z\_{l}) \tilde{\phi}\_{t} + \Pi^{+shift}
+$$
 
-```ini
-[most of the system]
-apply-filter = add-al
-- = country 
-- = neighbour 
-- = fake antenna 1
-- = region 
-- = region 3
-output = true
-```
-c) File defining two districts, the current simulation will ignore the second one:
+### Modelling of DC components
 
-```ini
-[All countries]
-apply-filter= add-all
-output=true
+When the power system graph contains edges that represent DC components, additional notations need be defined:
 
+| Notation             | Explanation                                                                                                        |
+| ------------         | -------------                                                                                                      |
+|$L^* \subset L$ | subset of edges representing AC components|
+|$G^*(N,L^*)$ | subgraph of $G(N,L)$ |
+|$g^*$ | spanning tree of $G^*(N,L^*)$ |
+|$C^*_{g^*}$ | cycle matric of $G^*(N,L^*)$ associated with $g^*$ |
 
-[All but one]
-apply-filter = add-all
--= special region 12
-output=false
-```
+The proper modeling of the system then requires that all "load flow" constraints defined previously be formulated using notations $(L^*, G^*(N,L^*), C^*\_{g^*})$ instead of $(L, G(N,L), C_{g})$.
 
-## The Annual System Cost Output file
+### Implementation of security rules N-1,..., N-k
 
-In addition to the general files introduced in [Output Files](05-output_files.md), the Output folder of each economic or adequacy simulation includes, at its root, a file "Annual\_System\_Cost.txt" It presents the metrics of a global Monte-Carlo variable further denoted ASC.
+It is assumed here that upstream power system classical calculations on the detailed system are assumed to have provided appropriate estimates for line outage distribution factors (LODFs) for all components involved in the contingency situations to consider. The following additional notations can therefore be introduced:
 
-The value of ASC for any given simulated year is defined as the sum, over all areas and links, of the annual values of the area-variable "OV.COST" and of the link-variable "HURD. COST".
+| Notation             | Explanation                                                                                                        |
+| ------------         | -------------                                                                                                      |
+|$O \subset PL$ | set of situations (single or multiple outages) considered in the contingency analysis|
+|$Q \in O$ | situation (incident) considered in the contingency analysis|
+|${}^Qp_l^m \in [-1,1]$ | LODFs from component $m$ (involved in $Q$) on component $l$ if $Q$ occurs |
+| $\underline{F}_l^Q \in \mathbb{R}^T$ | lower bound of the power flow through $l$ if $Q$ occurs |
+| $\overline{F}_l^Q \in \mathbb{R}^T$ | upper bound of the power flow through $l$ if $Q$ occurs |
 
-The metrics displayed in the "Annual system cost" file take the form of four values:
+The implementation of security rules for the chosen situations requires the following $|L||O|$ additional binding constraints:
 
-- Expectation EASC
+$$
+\forall Q \in O, \forall l \in L, \underline{F}\_l^Q \leq F_l + \sum_{m \in Q} {}^Qp_l^m F_m \leq \overline{F}_l^Q
+$$
 
-- Standard deviation SASC
+## Random and Epsilon parameters in Antares
 
-- Minimum LASC
+The description given beforehand of the standard optimization problem solved each week within an Antares simulation session does not address some numeric issues that are of great importance in the operational value of simulation outputs. This paragraph gives therefore some details about the role played in Antares by several kinds of parameters that represent neither regular costs nor physical limits of the power system components.
 
-- Maximum UASC
+The first general category of such numbers is a ”low-level” one, which is not actually dealt with by Antares, since it involves only parameters defined and used by the software called by Antares to solve the problems once they are completely defined. These numbers, out of reach of the Antares user[^user], mainly include numeric accuracy requirements (various deterministic tolerance thresholds) and perturbations which aim either at
+speeding up the walk toward an optimal solution (counter-measures against degeneracy) or at discovering more than one optimal solution, when such multiple optima do exist.
 
-As with all other random variables displayed in the Antares Output section, the computed standard deviation of the variable can be used to give a measure of the confidence interval attached to the estimate of the expectation. For a number of Monte-Carlo years N, the law of large numbers states for instance that there is a 95 % probability for the actual expectation of ASC to lie within the interval:
+Within this set of parameters, random numbers are normally generated by an appropriate algorithm using deterministic seeds that do not depend on the state of the machine at runtime. As a result, successive resolutions of the same problem on different machines, by the same solver, should yield exactly the same
+solutions[^solutions]. Unfortunately, this does not imply at all that successive resolutions of the same problem with different solvers would produce the same solutions.
 
-<center>**EASC +/- 1.96 (SASC / sqrt(N))**</center>
+Even more importantly, there is absolutely no guarantee that different weekly problems that look very much alike[^alike] will not lead to optimal solutions that are unrealistically close though they are mathematically valid. The risk exists indeed that the solver’s outputs show repetitive patterns that may be wrongly taken for meaningful economic invariants.
 
-There is also a 99.8 % probability that it lies within the interval:
+To address both the issues of stability (no dependency to either the solver or the machine used) and diversity (variables that play identical roles should contribute with equal shares to the long-run simulation statistics), sets of “high level” random epsilons are incorporated by Antares to the description of the optimization problem defined by the raw power system input data.
 
-<center>**EASC +/- 3 (SASC / sqrt(N))**</center>
+These numbers take the form of numeric noises on thermal generation costs, hydro generation costs, unsupplied energy costs and spilled energy costs[^costs]. They are generated by several instances of the “Mersenne Twister” algorithm (MT19937), whose seeds are made accessible through the standard user interface.
 
-## The "export mps" optimization preference
+Aside from these random epsilons, there is in Antares a need for a large set of other random numbers that are required to define in detail the consistency of each Monte-Carlo scenarios. This includes the setting up of the initial (hydro) reservoir levels, the automatic generation of several kinds of time-series (if the built-in timeseries generators are activated), the draws of time-series (either ready-made or generated on the spot) and, possibly, random deviations from the standard costs prescribed by the user (spreads). All of these numbers are, again, generated by dedicated instances of MT19937.
 
-This preference can be set either on "false" or "true". Choosing either value does not influence the way calculations are carried out, nor does it change their results.
+For the sake of exhaustiveness, it has to be noted that there is, aside from random epsilons, a handful of deterministic epsilons that help define the way hydro or other storable resources should be managed. In the course of the simulation, these auxiliary parameters take the form of penalties that may be put or not on hydro hourly power fluctuations (two types of penalties may be used for that purpose, they appear explicitly in the problem formulation with notations $\epsilon_\lambda^1$ and $\epsilon_\lambda^2$).
 
-The effect of this preference is that, if the "true" value is selected, Antares will produce and store in the simulation output folder two files for every linear problem solved in the whole simulation.
+Finally, upstream of the proper optimization, there is a last set of hydro-related parameters that help drive the hydro heuristic engine (this code is deemed to provide a way for Antares to use storable resources when no actual stock value is available). Note that, since the heuristic stage is completely independent from the actual optimization, the absolute magnitude of the hydro-drivers has absolutely no influence on the output of the weekly problem (large numbers could be used instead of epsilons, provided their relative scale is preserved).
 
-The first file ("problem" file) contains a standardized description of the mathematical problem solved by Antares' built-in linear solver. The format standard used in this file is known as "mps".
+The following diagram summarizes the situation regarding both random and epsilon numbers defined and used within Antares. They are meant to build up, along with the regular description of the power system (physical limits and standard costs), an optimization framework that is up to the complex tasks at hand: balanced Monte- Carlo draws, reproducible simulations exploring the whole span of optimal operating configurations.
 
-The second file ("criterion" file) contains the value of the optimal (minimum) value found for the objective function of the optimization problem (overall system cost throughout a day or a week).
+![Random_Parameters](img/Random_Parameters.png)
 
-All commercial as well as Open Source linear solvers are able to process mps files. As a consequence, tests aiming at comparing Antares' solver with other commercial solutions can be easily carried out: all that has to be done is to submit the mps problem to the solver at hand and measure its performances (calculation time, criterion value) with those of Antares.
+| Random Epsilons | Minimum absolute value  | Maximum absolute value   |
+|-----------------|-------------------------|--------------------------|
+| N_THERMAL       | $5 \cdot 10^{-4} €/MWh$ | $6 \cdot 10^{-4} €/MWh$  |
+| N_UNSUPPLIED    | $5 \cdot 10^{-4} €/MWh$ | $6 \cdot 10^{-4} €/MWh$  |
+| N_SPILLAGE      | $5 \cdot 10^{-4} €/MWh$ | $6 \cdot 10^{-4} €/MWh$  |
+| N_HYDRO         | $5 \cdot 10^{-4} €/MWh$ | $10 \cdot 10^{-4} €/MWh$ |
 
-Note that this kind of comparison brings no information regarding the quality of the physical modelling on which the simulation is based. It is useful, however, to gather evidence on mathematical grounds.
+It can be noted that, in absolute value, all random epsilons are smaller than the lower bound of the (non-zero) actual costs that can be defined through the user interface (CLB – cost lower bound : $5 \cdot 10^{-3} €/MWh$)
 
-File names are structured as follows:
+[^1]: User guide , section « optimization preferences : "export mps problems"
 
-- When the optimization preference "simplex range" is set on "week": <br/>
-  Problem-MC year-week number-date-time.mps <br/>
-  Criterion-MC year-week number-date-time.txt
+[^2]: For the sake of simplicity, the **Antares\_Simulator** application will be further denoted « Antares »
 
-- When the optimization preference "simplex range" is set on "day": <br/>
-  Problem-MC year-week number-date-time-day number.mps <br/>
-  Criterion-MC year-week number-date-time-day number.txt
+[^3]: See «hydro» sections of the General User guide ("hydro" standing as a generic name for all types of energy storage facilities)
 
-Besides, each economic problem generally demands to be solved through two successive optimization problems. Files related to these two problems will bear almost the same name, the only difference being the "time" suffix. The files related to the second optimization (final Antares results) are those that bear the latest tag.
+Copyright © RTE 2007-2023 – Version 8.6.0
 
-Finally, it is possible that, on special occasions (very small files), the files attached to the two optimization rounds begin to be printed within the same second. In that case, an additional suffix is added before the mps or txt extension.
+Last Rev : M. Doquet - 25 JAN 2023
 
-**Note that:**
+[^10]: Contraints 10(a) are not implemented if the "heuristic" mode is used without any leeway and if there are no pumping capacities. <br> Contraints 10(b) are implemented if the "heuristic" mode is used without any leeway. <br> Contraints 10(c) are implemented if there are pumping capacities.
 
-- _The disk space used to store mps file is not included in the disk resources assessment displayed in the resources monitor menu._
+[^12]: Contraints 12(a) are implemented only if the "heuristic" mode is used. <br> Contraints 12(b) are implemented only if the "power fluctuations" option is set to "minimize ramping". <br> Contraints 12(c) are implemented only if the "power fluctuations" option is set to "minimize excursion".
 
-- _The extra runtime and disk space resulting from the activation of the "mps" option may be quite significant. This option should therefore be used only when a comparison of results with those of other solvers is actually intended._
+[^14]: Constraints 14(a) are not implemented if the "heuristic" mode is used without any leeway and if there are no pumping capacities. <br> Constraints 14(b) and 14(c) are implemented only if the option "hydro pricing mode" is set to "accurate".
 
-## The "Unfeasible Problems Behavior" optimization preference
+[^14a]: In the equation attached to the first time slot t, $R_{\lambda_{t-1}}$ is not a variable but a parameter (reservoir initial level)
 
-This preference can take any of the four values:
+[^8]: The constraints implemented depend on the option selected for unit commitment. In "fast" mode, implementation is restricted to (16), whereas "accurate" mode involved modelling of constraints (16) to (23). Note that in both cases, a heuristic stage takes place between the "uplifted" and "nominal" optimization runs to deal with integrity issues.
 
-Error Dry, Error Verbose, Warning Dry, Warning Verbose
+[^9]: This does not actually limit the model's field of application: all datasets can easily be put in a format that meets this commitment.
 
-If "Error Dry" or "Error Verbose" is selected, the simulation will stop right after encountering the first mathematically unfeasible optimization (daily or weekly) problem. No output will be produced beyond this point. Should the dataset contain several unfeasible problems (i.e. regarding different weeks of different MC years), it is possible that successive runs of the same simulation stop at different points (if parallel computation is used, the triggering problem may differ from one run to the other).
+[^FB]: FB stands for "flow-based", denomination used in the framework given to the internal electricity market of western Europe.
 
-If "Warning Dry" or "Warning Verbose" is selected, the simulation will skip all mathematically unfeasible optimization (daily or weekly) problems encountered, fill out all results regarding these problems with zeroes and resume the simulation. The hydro reservoir levels used for resuming the simulation are those reached at the end of the last successful week.
+[^KL]: KL stands for "Kirchhoff-and-Loop". Such a model was used in the European [E-Highway project](http://www;e-highwy2050.eu).
 
-With "Dry" options no specific data are printed regarding the faulty problem(s). With "Verbose" options, the full expression of the faulty problem(s) is printed in the standard "mps" format, thus allowing further analysis of the infeasibility issue.
+[^user]: And sometimes out of reach of the solver user as well (if the code is in closed form and if the user is not given access to the parameters by the solver’s interface)
 
-## The "Reservoir Level Initialization" advanced parameter
+[^solutions]: Provided that the code be compiled with hardware-independent floating point-related options (IEEE754 arithmetic and micro-coding of math library functions).
 
-This parameter can take the two values "cold start" or "hot start". [default: cold start]. Simulations results may in some circumstances be heavily impacted by this setting, hence proper attention should be paid to its meaning before considering changing the default value.
+[^alike]: Consider for instance a case where a fleet of ten exactly identical plants, in a highly symmetric system, is expected to generate an overall amount of power roughly equivalent to the nominal capacity of two of them. Simulations results indicating that this power should exclusively be provided by a specific pair of units (the other eight remaining always idle, throughout all Monte Carlo scenarios), would appear heavily biased, though not mathematically wrong.
 
-**General:**
-
-This parameter is meant to define the initial reservoir levels that should be used, in each system area, when processing data related to the hydro-power storage resources to consider in each specific Monte-Carlo year (see [Active windows](04-active_windows.md)).
-
-As a consequence, Areas which fall in either of the two following categories are not impacted by the value of the parameter:
-- No hydro-storage capability installed
-- Hydro-storage capability installed, but the "reservoir management" option is set to "False"
-
-Areas that have some hydro-storage capability installed and for which explicit reservoir management is required are concerned by the parameter. The developments that follow concern only this category of Areas.
-
-**Cold Start:**
-
-On starting the simulation of a new Monte-Carlo year, the reservoir level to consider in each Area on the first day of the initialization month (see [Active Windows](04-active_windows)) is randomly drawn between the extreme levels defined for the Area on that day.
-
-More precisely:
-
-- The value is drawn according to the probability distribution function of a "Beta" random variable, whose four internal parameters are set so as to adopt the following behavior:  
-  Lower bound: Minimum reservoir level.  
-  Upper bound: Maximum reservoir level  
-  Expectation: Average reservoir level  
-  Standard Deviation: (1/3) (Upper bound-Lower bound)
-
-- The random number generator used for that purpose works with a dedicated seed that ensures that results can be reproduced
-  [^17] from one run to another, regardless of the simulation runtime mode (sequential or parallel)
-  and regardless of the number of Monte-Carlo years to be simulated [^18].
-
-**Hot Start:**
-
-On starting the simulation of a new Monte-Carlo year, the reservoir level to consider in each Area on the first day of the initialization month is set to the value reached at the end of the previous simulated year, if three conditions are met:
-
-- The simulation calendar is defined throughout the whole year, and the simulation starts on the day chosen for initializing the reservoir levels of all Areas.
-
-- The Monte-Carlo year considered is not the first to simulate, or does not belong to the first batch of years to be simulated in parallel. In sequential runtime mode, that means that year #N may start with the level reached at the end of year #(N-1). In parallel runtime mode, if the simulation is carried out with batches of B years over as many CPU cores, years of the k-th batch
-  [^19] may start with the ending levels of the years processed in the (k-1)-th batch.
-
-- The parallelization context (see [System requirements](09-system_requirements)) must be set so as to ensure that the M Monte-Carlo years to simulate will be processed in a round number of K consecutive batches of B years in parallel (i.e. M = K\*B and all time-series refresh intervals are exact multiple of B).
-
-The first year of the simulation, and more generally years belonging to the first simulation batch in parallel mode, are initialized as they would be in the cold start option.
-
-**Note that:**
-
-- _Depending on the hydro management options used, the amount of hydro-storage energy generated throughout the year may either match closely the overall amount of natural inflows of the same year, or differ to a lesser or greater extent. In the case of a close match, the ending reservoir level will be similar to the starting level. If the energy generated exceeds the inflows (either natural or pumped), the ending level will be lower than the starting level (and conversely, be higher if generation does not reach the inflow credit). Using the "hot start" option allows to take this phenomenon into account in a very realistic fashion, since the consequences of hydro decisions taken at any time have a decisive influence on the system's long term future._
-
-- _When using the reservoir level "hot start" option, comparisons between different simulations make sense only if they rely on the exact same options, i.e. either sequential mode or parallel mode over the same number of CPU cores._
-
-- _More generally, it has to be pointed out that the "hydro-storage" model implemented in Antares can be used to model "storable" resources quite different from actual hydro reserves: batteries, gas subterraneous stocks, etc._
-
-## The "Hydro Heuristic policy" advanced parameter
-
-This parameter can take the two values "Accommodate rule curves" or "Maximize generation". [default: Accommodate rule curves].
-
-**General:**
-
-This parameter is meant to define how the reservoir level should be managed throughout the year, either with emphasis put on the respect of rule curves or on the maximization of the use of natural inflows.
-
-**Accommodate rule curves:**
-
-Upper and lower rule curves are accommodated in both monthly and daily heuristic stages (described page 58). In the second stage, violations of the lower rule curve are avoided as much as possible (penalty cost on $\Psi$. higher than penalty cost on Y).  This policy may result in a restriction of the overall yearly energy generated from the natural inflows.
-
-**Maximize generation:**
-
-Upper and lower rule curves are accommodated in both monthly and daily heuristic stages (described page 58). In the second stage, incomplete use of natural inflows is avoided as much as possible (penalty cost on Y higher than penalty cost on $\Psi$). This policy may result in violations of the lower rule curve.
-
-## The "Hydro Pricing mode" advanced parameter
-
-This parameter can take the two values "fast" or "accurate". [default: fast].
-
-Simulations carried out in "accurate" mode yield results that are theoretically optimal as far as the techno-economic modelling of hydro (or equivalent) energy reserves is concerned. It may, however, require noticeably longer computation time than the simpler "fast" mode.
-
-Simulations carried out in "fast" mode are less demanding in computer resources. From a qualitative standpoint, they are expected to lead to somewhat more intensive (less cautious) use of stored energy.
-
-**General:**
-
-This parameter is meant to define how the reservoir level difference between the beginning and the end of an optimization week should be reflected in the hydro economic signal (water value) used in the computation of optimal hourly generated /pumped power during this week.
-
-**Fast:**
-
-The water value is taken to remain about the same throughout the week, and a constant value equal to that found at the date and for the level at which the week_ **begins** _is used in the course of the optimization. A value interpolated from the reference table for the exact level reached at each time step within the week is used ex-post in the assessment of the variable "H.COST" (positive for generation, negative for pumping) defined in [Output Files](05-output_files.md). This option should be reserved to simulations in which computation resources are an issue or to simulations in which level-dependent water value variations throughout a week are known to be small.
-
-**Accurate:**
-
-The water value is considered as variable throughout the week. As a consequence, a different cost is used for each "layer" of the stock from/to which energy can be withdrawn/injected, in an internal hydro merit-order involving the 100 tabulated water-values found at the date at which the week **ends**. A value interpolated from the reference table for the exact level reached at each time step within the week is used ex-post in the assessment of the variable "H.COST" (positive for generation, negative for pumping) defined in [Output Files](05-output_files.md). This option should be used if computation resources are not an issue and if level-dependent water value variations throughout a week must be accounted for.
-
-## The "Unit Commitment mode" advanced parameter
-
-This parameter can take the two values "fast" or "accurate". [default: fast].
-
-Simulations carried out in "accurate" mode yield results that are expected to be close to the theoretical optimum as far as the techno-economic modelling of thermal units is concerned. They may, however, require much longer computation time than the simpler "fast" mode.
-
-Simulations carried out in "fast" mode are less demanding in computer resources. From a qualitative standpoint, they are expected to lead to a more costly use of thermal energy. This potential bias is partly due to the fact that in this mode, start-up costs do not participate as such to the optimization process but are simply added ex post.
-
-**General:**
-
-In its native form [^20], the weekly optimization problem belongs to the MILP (Mixed Integer Linear Program) class. The Integer variables reflect, for each time step, the operational status (running or not) of each thermal unit. Besides, the amount of power generated from each unit can be described as a so-called semi-continuous variable (its value is either 0 or some point within the interval [Pmin , Pmax]). Finally, the periods during which each unit is either generating or not cannot be shorter than minimal (on- and off-) thresholds depending on its technology.
-
-The Unit Commitment mode parameter defines two different ways to address the issue of the mathematical resolution of this problem. In both cases, two successive so-called "relaxed" LP global optimizations are carried out. In-between those two LPs, a number of local IP (unit commitment of each thermal cluster) are carried out.
-
-Besides, dynamic thermal constraints (minimum on- and off- time durations) are formulated on time-indices rolling over the week; this simplification brings the ability to run a simulation over a short period of time, such as one single week extracted from a whole year, while avoiding the downside (data management complexity, increased runtime) of a standard implementation based on longer simulations tiled over each other (illustration below).
-
-![Standard_Implementation](img/Standard_Implementation.png)
-
-![Antares_Implementation](img/Antares_Implementation.png)
-
-**Fast:**
-
-In the first optimization stage, integrity constraints are removed from the problem and replaced by simpler continuous constraints.
-
-For each thermal cluster, the intermediate IP looks simply for an efficient unit-commitment compatible with the operational status obtained in the first stage, with the additional condition (more stringent than what is actually required) that on- and off- periods should be exact multiple of the higher of the two thresholds specified in the dataset.
-
-In the second optimization stage, the unit commitment set by the intermediate IPs is considered as a context to use in a new comprehensive optimal hydro-thermal schedule assessment. The amount of day-ahead (spinning) reserve, if any, is added to the demand considered in the first stage and subtracted in the second stage. Start-up costs as well as No-Load Heat costs are assessed in accordance with the unit-commitment determined in the first stage and are added ex post.
-
-**Accurate:**
-
-In the first optimization stage, integrity constraints are properly relaxed. Integer variables describing the start-up process of each unit are given relevant start-up costs, and variables attached to running units are given No-Load Heat costs (if any), regardless of their generation output level. Fuel costs / Market bids are attached to variables representing the generation output levels.
-
-For each thermal cluster, the intermediate IP looks for a unit-commitment compatible with the integrity constraints in the immediate neighborhood of the relaxed solution obtained in the first stage. In this process, the dynamic thresholds (min on-time, min off-time) are set to their exact values, without any additional constraint.
-
-In the second optimization stage, the unit commitment set by the intermediate IP is considered as a context to use in a new comprehensive optimal hydro-thermal schedule assessment. The amount of day-ahead (spinning) reserve, if any, is added to the demand considered in the first stage and subtracted in the second stage.
-
-## The "Renewable Generation modeling" advanced parameter
-
-This parameter can take the two values “aggregated” or “cluster”. For a new study, it will default to cluster. For a legacy (Antares version <8.1.0) study it will default to aggregated.
-
-If the parameter is set to “aggregated”, the user will have access to the Wind & Solar windows, but not the Renewable window. When the parameter is set to “cluster”, the Renewable window will be available, but not the Wind nor the Solar windows. The data stored in the windows that are not available will always be conserved. However, only Renewable data (and not the wind and solar data) will be considered for the calculations when the parameter is set to “cluster”. And only the wind and solar data (and not the renewable data) will be considered for the calculations when the parameter is set to “aggregated”.
-
-The Renewable window can be filled out with the different renewable clusters inside each node. Each renewable cluster needs to have a group specified or will default to the «Other RES 1» group. Production Timeseries can be filled out much like the Thermal production ones. Note that unlike thermal clusters, negative production values are allowed. The Renewable window is described in more details in the “4. Active Windows” section. In the Simulation window, only “Ready-made” timeseries can be selected for renewables for now. This should be modified in a future release. The MC scenario builder for Renewables works the same way as for Thermal Clusters.
-
-[^monthly_allocation]: In the first equation, $S_{t-1}$ is either the initial stock $S_0$ or the final stock of the previous year (hydro hot start)
-
-[^daily_allocation]: In the first equation, $S_{t-1}$ is either the initial stock used in M or the final stock of the previous month ($D(m-1)$
-
-[^17]: As long as the System's list of Areas does not change
-
-[^18]:E.g. : if three playlists A,B,C are defined over 1000 years (A: years 1 to 1000, B: years 1 to 100, C: Years 13,42,57,112), initial reservoir levels in each Area are identical in the playlists' intersection (years 13,42,57)
-
-[^19]: If the playlist is full, these years have numbers # (k-1)B+1 ,…., #kB
-
-[^20]: Described in the note "Optimization Problems Formulation" 
-
+[^costs]: These random noises affect only cost-related parameters and not RHS parameters (such perturbations, which have not been implemented so far, might bring some benefits as regards degeneracy). It can also be noted that, in the special case of hydro, the random noise is present in the problem formulation given in this document, with notation $\epsilon_\lambda^0$.
