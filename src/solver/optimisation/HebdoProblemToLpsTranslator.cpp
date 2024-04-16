@@ -43,21 +43,21 @@ void copy(const T& in, U& out)
 }
 }
 
-HebdoDataFromAntaresPtr HebdoProblemToLpsTranslator::translate(
+WeeklyDataFromAntaresPtr HebdoProblemToLpsTranslator::translate(
   const PROBLEME_ANTARES_A_RESOUDRE* problem,
   std::string_view name) const
 {
     if (problem == nullptr)
         return {};
-    auto ret = std::make_unique<HebdoDataFromAntares>();
+    auto ret = std::make_unique<WeeklyDataFromAntares>();
 
-    copy(problem->CoutLineaire, ret->CoutLineaire);
+    copy(problem->CoutLineaire, ret->LinearCost);
     copy(problem->Xmax, ret->Xmax);
     copy(problem->Xmin, ret->Xmin);
     copy(problem->NomDesVariables, ret->variables);
     copy(problem->NomDesContraintes, ret->constraints);
-    copy(problem->SecondMembre, ret->SecondMembre);
-    copy(problem->Sens, ret->Sens);
+    copy(problem->SecondMembre, ret->RHS);
+    copy(problem->Sens, ret->Direction);
 
     copy(name, ret->name);
 
@@ -69,39 +69,39 @@ ConstantDataFromAntaresPtr HebdoProblemToLpsTranslator::commonProblemData(const 
         return nullptr;
 
     if (problem->NombreDeVariables <= 0) {
-        throw HebdoProblemTranslationException("NombreDeVariables must be strictly positive");
+        throw WeeklyProblemTranslationException("VariablesCount must be strictly positive");
     }
     if (problem->NombreDeContraintes <= 0) {
-        throw HebdoProblemTranslationException("NombreDeContraintes must be strictly positive");
+        throw WeeklyProblemTranslationException("ConstraintesCount must be strictly positive");
     }
 
     if (problem->NombreDeContraintes > problem->IndicesDebutDeLigne.size()) {
-        throw HebdoProblemTranslationException("NombreDeContraintes exceed IndicesDebutDeLigne size");
+        throw WeeklyProblemTranslationException("ConstraintesCount exceed IndicesDebutDeLigne size");
     }
 
     if (problem->NombreDeContraintes > problem->NombreDeTermesDesLignes.size()) {
-        throw HebdoProblemTranslationException("NombreDeContraintes exceed NombreDeTermesDesLignes size");
+        throw WeeklyProblemTranslationException("ConstraintesCount exceed NombreDeTermesDesLignes size");
     }
 
     auto ret = std::make_unique<ConstantDataFromAntares>();
 
-    ret->NombreDeVariables = problem->NombreDeVariables;
-    ret->NombreDeContraintes = problem->NombreDeContraintes;
+    ret->VariablesCount = problem->NombreDeVariables;
+    ret->ConstraintesCount = problem->NombreDeContraintes;
 
-    ret->NombreDeCoefficients = problem->IndicesDebutDeLigne[problem->NombreDeContraintes - 1] +
+    ret->CoeffCount = problem->IndicesDebutDeLigne[problem->NombreDeContraintes - 1] +
                                 problem->NombreDeTermesDesLignes[problem->NombreDeContraintes - 1];
 
-    copy(problem->TypeDeVariable, ret->TypeDeVariable);
+    copy(problem->TypeDeVariable, ret->VariablesType);
 
     copy(problem->CoefficientsDeLaMatriceDesContraintes,
-    ret->CoefficientsDeLaMatriceDesContraintes);
-    copy(problem->IndicesColonnes, ret->IndicesColonnes);
+    ret->ConstraintsMatrixCoeff);
+    copy(problem->IndicesColonnes, ret->ColumnIndexes);
 
     copy(problem->IndicesDebutDeLigne, ret->Mdeb);
     return ret;
 }
 
-HebdoProblemTranslationException::HebdoProblemTranslationException(
+WeeklyProblemTranslationException::WeeklyProblemTranslationException(
   const std::string& string) noexcept
 : std::runtime_error{string}
 {

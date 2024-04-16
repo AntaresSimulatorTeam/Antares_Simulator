@@ -31,18 +31,18 @@ namespace Antares::Solver
 {
 
 /**
- * @struct ProblemHebdoId
- * @brief The ProblemHebdoId struct is used to identify a weekly problem by year and week.
+ * @struct WeeklyProblemId
+ * @brief The WeeklyProblemId struct is used to identify a weekly problem by year and week.
  */
-struct ProblemHebdoId
+struct WeeklyProblemId
 {
     unsigned int year;
     unsigned int week;
     //Order of comparison is order of member declaration
-    auto operator<=>(const ProblemHebdoId& other) const = default;
+    auto operator<=>(const WeeklyProblemId& other) const = default;
 };
 
-// Type de données inutile car les matrices de tous les pbs hebdo sont
+// Type de données inutile car les matrices de tous les pbs Weekly sont
 // identiques. Cela pourra changer à l'avenir si des coefficients de contraintes
 // couplantes peuvent varier au cours du temps (ex: rendement d'une pompe à
 // chaleur qui varie selon la température, FlowBased ?, etc)
@@ -53,51 +53,51 @@ struct ProblemHebdoId
  */
 struct ConstantDataFromAntares
 {
-    unsigned NombreDeVariables; // Mathématiquement : Nb colonnes de la matrice,
+    unsigned VariablesCount; // Mathématiquement : Nb colonnes de la matrice,
     // Informatiquement = TypeDeVariable.size()
-    unsigned NombreDeContraintes; // Mathématiqument : Nb lignes de la matrice,
+    unsigned ConstraintesCount; // Mathématiqument : Nb lignes de la matrice,
     // Informatiquement = Mdeb.size()
-    unsigned NombreDeCoefficients; // Mathématiquement : Nb coeffs non nuls de la
+    unsigned CoeffCount; // Mathématiquement : Nb coeffs non nuls de la
     // matrice, Informatiquement = Nbterm.size() =
     // IndicesColonnes.size()=
     // CoefficientsDeLaMatriceDesContraintes.size()
 
-    std::vector<unsigned> TypeDeVariable; // Variables entières ou biniaires
+    std::vector<unsigned> VariablesType; // Variables entières ou biniaires
     std::vector<unsigned> Mdeb;           // Indique dans les indices dans le vecteur IndicesColonnes qui
     // correspondent au début de chaque ligne. Ex : Mdeb[3] = 8 et
     // Mdeb[4] = 13 -> Les termes IndicesColonnes[8] à
     // IndicesColonnes[12] correspondent à des Id de colonnes de la
     // ligne 3 de la matrice (en supposant que les lignes sont indexées
     // à partir de 0)
-    std::vector<unsigned> Nbterm; // Nombre de termes non nuls sur chaque ligne.
+    std::vector<unsigned> NotNullTermCount; // Nombre de termes non nuls sur chaque ligne.
     // Inutile car NbTerm[i] = Mdeb[i+1] - Mdeb[i]
-    std::vector<unsigned> IndicesColonnes; // Id des colonnes des termes de
+    std::vector<unsigned> ColumnIndexes; // Id des colonnes des termes de
     // CoefficientsDeLaMatriceDesContraintes : Ex
     // IndicesColonnes[3] = 8 ->
     // CoefficientsDeLaMatriceDesContraintes[8] donne la
     // valeur du terme de la colonne 8, et de la ligne i où
     // i est tel que Mdeb[i] <= 3 < Mdeb[i+1]
-    std::vector<double> CoefficientsDeLaMatriceDesContraintes; // Coefficients de la matrice
+    std::vector<double> ConstraintsMatrixCoeff; // Coefficients de la matrice
 
-    std::vector<std::string> SignificationMetierDesVariables;
-    std::vector<std::string> SignificationMetierDesContraintes;
+    std::vector<std::string> VariablesMeaning;
+    std::vector<std::string> ConstraintsMeaning;
 };
 
 /**
- * @class HebdoDataFromAntares
- * @brief The HebdoDataFromAntares class is used to store weekly data for an Antares Problem.
+ * @class WeeklyDataFromAntares
+ * @brief The WeeklyDataFromAntares class is used to store weekly data for an Antares Problem.
  */
-struct HebdoDataFromAntares
+struct WeeklyDataFromAntares
 {
-    std::vector<char> Sens; // Sens de la contrainte : < ou > ou =, taille =
+    std::vector<char> Direction; // Sens de la contrainte : < ou > ou =, taille =
     // NombreDeContraintes
     std::vector<double> Xmax; // Borne max des variables de la semaine
     // considérée, taille = NombreDeVariables
     std::vector<double> Xmin; // Borne min des variables de la semaine
     // considérée, taille =  NombreDeVariables
-    std::vector<double> CoutLineaire; // Coefficients du vecteur de coût de la fonction objectif,
+    std::vector<double> LinearCost; // Coefficients du vecteur de coût de la fonction objectif,
     // taille = NombreDeVariables
-    std::vector<double> SecondMembre; // Vecteur des second membre des contraintes, taille =
+    std::vector<double> RHS; // Vecteur des second membre des contraintes, taille =
     // NombreDeContraintes
     std::string name;
 
@@ -106,8 +106,8 @@ struct HebdoDataFromAntares
 };
 
 using ConstantDataFromAntaresPtr = std::unique_ptr<ConstantDataFromAntares>;
-using HebdoDataFromAntaresPtr = std::unique_ptr<HebdoDataFromAntares>;
-using YearWeekHebdoDataFromAntares = std::map<ProblemHebdoId, HebdoDataFromAntaresPtr>;
+using WeeklyDataFromAntaresPtr = std::unique_ptr<WeeklyDataFromAntares>;
+using YearWeekWeeklyDataFromAntares = std::map<WeeklyProblemId, WeeklyDataFromAntaresPtr>;
 
 /**
  * @class LpsFromAntares
@@ -128,15 +128,15 @@ public:
     /*
      * @brief Adds weekly data to the LpsFromAntares object.
      */
-    void addHebdoData(ProblemHebdoId id, HebdoDataFromAntaresPtr uniquePtr);
+    void addWeeklyData(WeeklyProblemId id, WeeklyDataFromAntaresPtr uniquePtr);
     /*
      * @brief Retrieves weekly data from the LpsFromAntares object.
      */
-    const HebdoDataFromAntares* hebdoData(ProblemHebdoId id) const;
+    const WeeklyDataFromAntares* weeklyData(WeeklyProblemId id) const;
 
 private:
     ConstantDataFromAntaresPtr constantProblemData;
-    YearWeekHebdoDataFromAntares hebdoProblems;
+    YearWeekWeeklyDataFromAntares weeklyProblems;
 };
 
 }

@@ -63,10 +63,10 @@ BOOST_AUTO_TEST_CASE(Data_properly_copied) {
     problemHebdo.SecondMembre = {30, 31, 32};
 
     auto ret = translator.translate(&problemHebdo, std::string());
-    BOOST_CHECK(ret->CoutLineaire == problemHebdo.CoutLineaire);
+    BOOST_CHECK(ret->LinearCost == problemHebdo.CoutLineaire);
     BOOST_CHECK(ret->Xmax == problemHebdo.Xmax);
     BOOST_CHECK(ret->Xmin == problemHebdo.Xmin);
-    BOOST_CHECK(ret->SecondMembre == problemHebdo.SecondMembre);
+    BOOST_CHECK(ret->RHS == problemHebdo.SecondMembre);
 
     BOOST_CHECK(ret->variables == problemHebdo.NomDesVariables);
     BOOST_CHECK(ret->constraints == problemHebdo.NomDesContraintes);
@@ -78,7 +78,7 @@ BOOST_AUTO_TEST_CASE(translate_sens) {
     problemHebdo.Sens = "<=>";
 
     auto ret = translator.translate(&problemHebdo, std::string());
-    BOOST_CHECK(ret->Sens == std::vector({'<','=','>'}));
+    BOOST_CHECK(ret->Direction == std::vector({'<','=','>'}));
 }
 
 BOOST_AUTO_TEST_CASE(translate_name_is_filled) {
@@ -117,11 +117,11 @@ BOOST_AUTO_TEST_CASE(common_data_properly_copied) {
 
 
     auto ret = translator.commonProblemData(&problemHebdo);
-    BOOST_CHECK_EQUAL(ret->NombreDeVariables, problemHebdo.NombreDeVariables);
-    BOOST_CHECK_EQUAL(ret->NombreDeContraintes, problemHebdo.NombreDeContraintes);
-    BOOST_CHECK(std::ranges::equal(ret->TypeDeVariable, problemHebdo.TypeDeVariable));
-    BOOST_CHECK(ret->CoefficientsDeLaMatriceDesContraintes == problemHebdo.CoefficientsDeLaMatriceDesContraintes);
-    BOOST_CHECK(std::ranges::equal(ret->IndicesColonnes, problemHebdo.IndicesColonnes));
+    BOOST_CHECK_EQUAL(ret->VariablesCount, problemHebdo.NombreDeVariables);
+    BOOST_CHECK_EQUAL(ret->ConstraintesCount, problemHebdo.NombreDeContraintes);
+    BOOST_CHECK(std::ranges::equal(ret->VariablesType, problemHebdo.TypeDeVariable));
+    BOOST_CHECK(ret->ConstraintsMatrixCoeff == problemHebdo.CoefficientsDeLaMatriceDesContraintes);
+    BOOST_CHECK(std::ranges::equal(ret->ColumnIndexes, problemHebdo.IndicesColonnes));
     BOOST_CHECK(std::ranges::equal(ret->Mdeb, problemHebdo.IndicesDebutDeLigne));
 }
 
@@ -177,6 +177,6 @@ BOOST_AUTO_TEST_CASE(NombreDeCoefficients_is_properly_computed)
     problemHebdo.IndicesColonnes = {0, 1, 2, 3, 4, 5, 6, 7, 8};
 
     auto ret = translator.commonProblemData(&problemHebdo);
-    BOOST_CHECK_EQUAL(ret->NombreDeCoefficients, 9);
+    BOOST_CHECK_EQUAL(ret->CoeffCount, 9);
 }
 

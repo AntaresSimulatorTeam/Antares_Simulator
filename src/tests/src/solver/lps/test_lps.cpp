@@ -42,18 +42,18 @@ BOOST_AUTO_TEST_CASE(lps_with_only_constant_data_is_empty)
     BOOST_CHECK(lps.empty());
 }
 
-BOOST_AUTO_TEST_CASE(lps_with_only_hebdo_data_is_empty)
+BOOST_AUTO_TEST_CASE(lps_with_only_weekly_data_is_empty)
 {
     LpsFromAntares lps;
-    lps.addHebdoData({0, 0}, std::make_unique<HebdoDataFromAntares>());
+    lps.addWeeklyData({0, 0}, std::make_unique<WeeklyDataFromAntares>());
     BOOST_CHECK(lps.empty());
 }
 
-BOOST_AUTO_TEST_CASE(lps_with_both_constant_and_hebdo_data_is_not_empty)
+BOOST_AUTO_TEST_CASE(lps_with_both_constant_and_weekly_data_is_not_empty)
 {
     LpsFromAntares lps;
     lps.replaceConstantData(std::make_unique<ConstantDataFromAntares>());
-    lps.addHebdoData({0, 0}, std::make_unique<HebdoDataFromAntares>());
+    lps.addWeeklyData({0, 0}, std::make_unique<WeeklyDataFromAntares>());
     BOOST_CHECK(!lps.empty());
 }
 
@@ -64,9 +64,9 @@ BOOST_AUTO_TEST_CASE(replace_const_data_leave_source_empty) {
         BOOST_CHECK(constData == nullptr);
 }
 
-//Add hebdo data for week 1 year 1
-BOOST_AUTO_TEST_CASE(add_hebdo_data_for_week_1_year_1) {
+//Add weekly data for week 1 year 1
+BOOST_AUTO_TEST_CASE(add_weekly_data_for_week_1_year_1) {
     LpsFromAntares lps;
-    lps.addHebdoData({1, 1}, std::make_unique<HebdoDataFromAntares>());
-    BOOST_CHECK(lps.hebdoData({1, 1}) != nullptr);
+    lps.addWeeklyData({1, 1}, std::make_unique<WeeklyDataFromAntares>());
+    BOOST_CHECK(lps.weeklyData({1, 1}) != nullptr);
 }
