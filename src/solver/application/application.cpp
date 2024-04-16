@@ -327,7 +327,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
         loadingException = std::current_exception();
     }
 
-    //For solver
+    // For solver
     study.parameters.optOptions = options.optOptions;
 
     // This settings can only be enabled from the solver

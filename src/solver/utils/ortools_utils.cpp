@@ -24,7 +24,6 @@
 #include <antares/exception/AssertionError.hpp>
 #include "antares/antares/Enum.hpp"
 #include <filesystem>
-#include "../optimisation/include/antares/solver/optimisation/opt_constants.h"
 
 using namespace operations_research;
 
@@ -322,7 +321,6 @@ static void transferBasis(std::vector<operations_research::MPSolver::BasisStatus
 MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
                            MPSolver* solver,
                            bool keepBasis,
-                           const int optimizationNumber,
                            const OptimizationOptions& options)
 {
     MPSolverParameters params;

@@ -30,7 +30,6 @@ using namespace operations_research;
 MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
                            MPSolver* ProbSpx,
                            bool keepBasis,
-                           const int optimizationNumber,
                            const Antares::Solver::Optimization::OptimizationOptions& options);
 
 MPSolver* ORTOOLS_ConvertIfNeeded(const std::string& solverName,
