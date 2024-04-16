@@ -22,12 +22,12 @@ public:
                                 int offset = 0,
                                 int delta = 0);
 
-    int& ClusterReserveUpParticipation(unsigned int index,
+    int& RunningClusterReserveParticipation(unsigned int index,
                                        unsigned int hourInWeek,
                                        int offset = 0,
                                        int delta = 0);
 
-    int& ClusterReserveDownParticipation(unsigned int index,
+    int& ClusterReserveParticipation(unsigned int index,
                                        unsigned int hourInWeek,
                                        int offset = 0,
                                        int delta = 0);

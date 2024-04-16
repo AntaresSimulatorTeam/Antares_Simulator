@@ -64,8 +64,17 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReservesThermi
                           = PaliersThermiquesDuPays.NomsDesPaliersThermiques[clusterIndex];
                         if (!Simulation)
                         {
+                            // For running units in cluster
                             CorrespondanceVarNativesVarOptim
-                              .clusterReserveUpParticipationIndex[index]
+                              .runningClusterReserveParticipationIndex[index]
+                              = NombreDeVariables;
+                            ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
+                              = VARIABLE_BORNEE_DES_DEUX_COTES;
+                            variableNamer.ParticipationOfRunningUnitsToReserve(
+                              NombreDeVariables, clusterName, areaReserveUp.reserveName);
+
+                            // For all units in cluster (off units can participate to the reserves)
+                            CorrespondanceVarNativesVarOptim.clusterReserveParticipationIndex[index]
                               = NombreDeVariables;
                             ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                               = VARIABLE_BORNEE_DES_DEUX_COTES;
@@ -78,7 +87,6 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReservesThermi
                     }
                 }
             }
-            index = 0;
             for (const auto& areaReserveDown : areaReserves.areaCapacityReservationsDown)
             {
                 int clusterIndex = 0;
@@ -91,8 +99,17 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReservesThermi
                           = PaliersThermiquesDuPays.NomsDesPaliersThermiques[clusterIndex];
                         if (!Simulation)
                         {
+                            // For running units in cluster
                             CorrespondanceVarNativesVarOptim
-                              .clusterReserveDownParticipationIndex[index]
+                              .runningClusterReserveParticipationIndex[index]
+                              = NombreDeVariables;
+                            ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
+                              = VARIABLE_BORNEE_DES_DEUX_COTES;
+                            variableNamer.ParticipationOfRunningUnitsToReserve(
+                              NombreDeVariables, clusterName, areaReserveDown.reserveName);
+
+                            // For all units in cluster (off units can participate to the reserves)
+                            CorrespondanceVarNativesVarOptim.clusterReserveParticipationIndex[index]
                               = NombreDeVariables;
                             ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                               = VARIABLE_BORNEE_DES_DEUX_COTES;

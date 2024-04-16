@@ -101,12 +101,12 @@ public:
                                               int offset = 0,
                                               int delta = 0);
 
-    ConstraintBuilder& ClusterReserveUpParticipation(unsigned int index,
+    ConstraintBuilder& RunningClusterReserveParticipation(unsigned int index,
                                                      double coeff,
                                                      int offset = 0,
                                                      int delta = 0);
 
-    ConstraintBuilder& ClusterReserveDownParticipation(unsigned int index,
+    ConstraintBuilder& ClusterReserveParticipation(unsigned int index,
                                                      double coeff,
                                                      int offset = 0,
                                                      int delta = 0);

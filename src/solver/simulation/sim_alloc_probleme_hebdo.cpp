@@ -173,9 +173,9 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
           .assign(linkCount, 0);
         variablesMapping.NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion
           .assign(linkCount, 0);
-        variablesMapping.clusterReserveUpParticipationIndex
+        variablesMapping.runningClusterReserveParticipationIndex
           .assign(study.runtime->capacityReservationCount, 0);
-        variablesMapping.clusterReserveDownParticipationIndex
+        variablesMapping.clusterReserveParticipationIndex
           .assign(study.runtime->capacityReservationCount, 0);
 
         variablesMapping.NumeroDeVariableDuPalierThermique

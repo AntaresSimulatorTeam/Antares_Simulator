@@ -49,19 +49,19 @@ ConstraintBuilder& ConstraintBuilder::DispatchableProduction(unsigned int index,
     return *this;
 }
 
-ConstraintBuilder& ConstraintBuilder::ClusterReserveUpParticipation(unsigned int index,
+ConstraintBuilder& ConstraintBuilder::RunningClusterReserveParticipation(unsigned int index,
                                                                    double coeff,
                                                                    int offset,
                                                                    int delta){
-    AddVariable(variableManager_.ClusterReserveUpParticipation(index, hourInWeek_, offset, delta), coeff);
+    AddVariable(variableManager_.RunningClusterReserveParticipation(index, hourInWeek_, offset, delta), coeff);
     return *this;
 }
 
-ConstraintBuilder& ConstraintBuilder::ClusterReserveDownParticipation(unsigned int index,
+ConstraintBuilder& ConstraintBuilder::ClusterReserveParticipation(unsigned int index,
                                                                    double coeff,
                                                                    int offset,
                                                                    int delta){
-    AddVariable(variableManager_.ClusterReserveDownParticipation(index, hourInWeek_, offset, delta), coeff);
+    AddVariable(variableManager_.ClusterReserveParticipation(index, hourInWeek_, offset, delta), coeff);
     return *this;
 }
 

@@ -45,8 +45,8 @@ struct CORRESPONDANCES_DES_VARIABLES
 
     std::vector<int> NumeroDeVariableDuPalierThermique;
 
-    std::vector<int> clusterReserveUpParticipationIndex;
-    std::vector<int> clusterReserveDownParticipationIndex;
+    std::vector<int> runningClusterReserveParticipationIndex;
+    std::vector<int> clusterReserveParticipationIndex;
 
     std::vector<int> NumeroDeVariablesDeLaProdHyd;
 

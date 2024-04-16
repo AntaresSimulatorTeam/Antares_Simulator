@@ -5,7 +5,11 @@ void PMaxReserve::add(int pays, int reserve, int cluster, int pdt, bool isUpRese
     if (!data.Simulation)
     {
         // 16 bis
+        // Participation to the reserve is bounded for a cluster
         // constraint : P - M * B <= 0
+        // P : Participation power
+        // M : Number of running units in the cluster
+        // B : Maximum accessible power if each unit running on the cluster for the reserve 
 
         CAPACITY_RESERVATION capacityReservation
           = isUpReserve
@@ -16,7 +20,7 @@ void PMaxReserve::add(int pays, int reserve, int cluster, int pdt, bool isUpRese
           = capacityReservation.AllReservesParticipation[cluster];
 
         builder.updateHourWithinWeek(pdt)
-          .DispatchableProduction(cluster, 1.0)
+          .RunningClusterReserveParticipation(cluster, 1.0)
           .NumberOfDispatchableUnits(cluster, -reserveParticipation.maxPower)
           .lessThan();
 
