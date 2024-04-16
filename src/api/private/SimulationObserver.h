@@ -51,6 +51,7 @@ public:
     Solver::LpsFromAntares&& acquireLps() noexcept;
 private:
     Solver::LpsFromAntares lps_;
+    std::mutex mutex_;
 };
 
 } // namespace Api
