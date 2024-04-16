@@ -30,7 +30,7 @@ using namespace Antares::Solver;
 using namespace Antares::Solver::Simulation;
 using namespace Antares::Data::ScenarioBuilder;
 
-void initializeStudy(Study::Ptr study);
+void initializeStudy(Study* study);
 void configureLinkCapacities(AreaLink* link);
 
 
@@ -187,7 +187,7 @@ struct StudyBuilder
     void giveWeightToYear(float weight, unsigned int year);
 
     // Data members
-    std::shared_ptr<Study> study;
+    std::unique_ptr<Study> study;
     std::shared_ptr<SimulationHandler> simulation;
 };
 

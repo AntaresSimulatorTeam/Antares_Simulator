@@ -53,7 +53,7 @@ public:
      *
      * @return std::shared_ptr<Antares::Data::Study> A shared_ptr to the loaded Study object.
      */
-    [[nodiscard]] std::shared_ptr<Antares::Data::Study> load() const override;
+    [[nodiscard]] std::unique_ptr<Antares::Data::Study> load() const override;
 
 private:
     std::filesystem::path study_path_;

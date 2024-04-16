@@ -80,7 +80,7 @@ namespace {
 }
 } // namespace
 
-std::shared_ptr<Antares::Data::Study> FileTreeStudyLoader::load() const
+std::unique_ptr<Antares::Data::Study> FileTreeStudyLoader::load() const
 {
     Antares::Solver::Application application;
     constexpr unsigned int argc = 3;
@@ -88,7 +88,7 @@ std::shared_ptr<Antares::Data::Study> FileTreeStudyLoader::load() const
     auto keep_alive = prepareArgs(argv, study_path_.string());
     application.prepare(argc, argv.data());
 
-    return application.study();
+    return application.acquireStudy();
 }
 
 } // namespace Antares
