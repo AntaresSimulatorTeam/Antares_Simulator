@@ -98,4 +98,3 @@ Here is a **non-exhaustive** list of points to watch out for:
   adding an extra entry to an existing index.md file, and, sometimes, creating an extra index.md file (to add a section).
 - Do not use non-standard characters (such as emojis) in the user guide, as they cannot be rendered by LaTeX 
   in PDF.
-- Do not use Markdown "notes" (using the `>` character): they do not render well in PDF
