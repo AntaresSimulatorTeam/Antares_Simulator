@@ -33,6 +33,7 @@ namespace Antares::Data
 
 bool isValidLevel(double level)
 {
+    // gp : why not check level < 100 ?
     return level >= 0. && !isnan(level);
 }
 
@@ -45,9 +46,11 @@ FinalLevelInflowsModifier::FinalLevelInflowsModifier(const PartHydro& hydro,
 
 bool FinalLevelInflowsModifier::CheckInfeasibility(unsigned int year)
 {
-    ComputeDelta(year);
-    logInfoFinLvlNotApplicable(year);
+    ComputeDelta(year); // gp : we don't need this computation now
+    logInfoFinLvlNotApplicable(year); // gp : kind of duplication with isActive() content
 
+    // gp : should be moved up (first line ?) and renamed into doWeSkip()
+    // gp : isActive means nothing.
     if (!isActive())
         return true;
 
@@ -56,13 +59,13 @@ bool FinalLevelInflowsModifier::CheckInfeasibility(unsigned int year)
 
     storeDeltaLevels(year);
     return true;
-
 }
 
 void FinalLevelInflowsModifier::ComputeDelta(unsigned int year)
 {
     initialReservoirLevel_ = (*InitialLevels_)[year];
     finalReservoirLevel_ = (*FinalLevels_)[year];
+    // gp : try the reverse (more expected) : final - init
     deltaReservoirLevel_ = initialReservoirLevel_ - finalReservoirLevel_;
 }
 
@@ -84,7 +87,7 @@ double FinalLevelInflowsModifier::calculateTotalInflows(unsigned int year) const
 
 bool FinalLevelInflowsModifier::SimulationThroughWholeYear(unsigned int year) const
 {
-    
+    // gp : initReservoirLvlMonth == 0 is suspect
     int initReservoirLvlMonth = hydro_.initializeReservoirLevelDate; // month [0-11]
     if (lastSimulationDay_ == DAYS_PER_YEAR && initReservoirLvlMonth == 0)
         return true;
@@ -98,6 +101,7 @@ bool FinalLevelInflowsModifier::SimulationThroughWholeYear(unsigned int year) co
 bool FinalLevelInflowsModifier::finalLevelValidity(double totalYearInflows, unsigned int year) const
 {
     double reservoirCapacity = hydro_.reservoirCapacity;
+    // gp : shouldn't we have : -deltaReservoirLevel_ * reservoirCapacity < totalYearInflows ?
     if (-deltaReservoirLevel_ * reservoirCapacity > totalYearInflows)
     {
         logs.error() << "Year: " << year + 1 << ". Area: " << areaName_
@@ -145,11 +149,12 @@ bool FinalLevelInflowsModifier::isActive()
             isValidLevel(initialReservoirLevel_);
 }
 
-// if the user specifies the final reservoir level, but does not specifies initial reservoir level
+// if the user specifies the final reservoir level, but does not specify initial reservoir level
 // or uses wrong hydro options
-// we should inform the user that the final reservoir level wont be reached
+// we should inform the user that the final reservoir level won't be reached
 void FinalLevelInflowsModifier::logInfoFinLvlNotApplicable(unsigned int year)
 {
+    // gp : it's a code duplication with isActive().
     if (isValidLevel(finalReservoirLevel_)
         && (!hydro_.reservoirManagement || hydro_.useWaterValue
             || !isValidLevel(initialReservoirLevel_)))
@@ -166,10 +171,12 @@ bool FinalLevelInflowsModifier::makeChecks(unsigned int year)
 
     // Reservoir_levelDay_365 – reservoir_levelDay_1 ≤ yearly_inflows
     double totalInflows = calculateTotalInflows(year);
+    // gp : why not call the check : finalLevelReachable()
     checksOk = finalLevelValidity(totalInflows, year) && checksOk;
 
     // Final reservoir level set by the user is within the
     // rule curves for the final day
+    // gp : a better name could be isBetweenRuleCurves(...)
     checksOk = preCheckRuleCurves(year) && checksOk;
 
     isApplicable_.at(year) = checksOk;
