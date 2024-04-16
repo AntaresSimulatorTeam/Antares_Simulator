@@ -35,9 +35,6 @@ namespace Benchmarking
 class DurationCollector
 {
 public:
-    DurationCollector() = default;
-    virtual ~DurationCollector() = default;
-
     void toFileContent(FileContent& file_content);
     void addDuration(const std::string& name, long duration);
 
