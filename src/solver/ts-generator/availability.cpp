@@ -606,8 +606,8 @@ bool generateThermalTimeSeries(Data::Study& study,
     // TODO VP: parallel
     for (auto* cluster : clusters)
     {
-        AvailabilityTSGeneratorData clusterInterface(cluster);
-        generator.generateTS(*cluster->parentArea, clusterInterface);
+        AvailabilityTSGeneratorData tsConfigData(cluster);
+        generator.generateTS(*cluster->parentArea, tsConfigData);
 
         if (archive) // compatibilty with in memory
         {
@@ -644,9 +644,9 @@ bool generateLinkTimeSeries(Data::Study& study,
             logs.error() << "Missing data for link " << link->from->id << "/" << link->with->id;
             return false;
         }
-        AvailabilityTSGeneratorData linkInterface(tsGenStruct, ts, link->with->name);
+        AvailabilityTSGeneratorData tsConfigData(tsGenStruct, ts, link->with->name);
 
-        generator.generateTS(*link->from, linkInterface);
+        generator.generateTS(*link->from, tsConfigData);
 
         std::string capacityType = direction == linkDirection::direct ? "_direct" : "_indirect";
         std::string filePath
