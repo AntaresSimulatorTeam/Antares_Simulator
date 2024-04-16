@@ -24,6 +24,7 @@
 #include "antares/solver/utils/filename.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/optimisation/LinearProblemMatrixStartUpCosts.h"
+#include "antares/solver/optimisation/LinearProblemMatrixRamping.h"
 
 using namespace Antares::Data;
 
@@ -61,6 +62,7 @@ void LinearProblemMatrix::Run()
     if (problemeHebdo_->OptimisationAvecCoutsDeDemarrage)
     {
         LinearProblemMatrixStartUpCosts(problemeHebdo_, false, builder_).Run();
+        LinearProblemMatrixRamping(problemeHebdo_, false, builder_).Run();
     }
 
     return;

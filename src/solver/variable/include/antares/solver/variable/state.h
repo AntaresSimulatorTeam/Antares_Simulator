@@ -100,6 +100,7 @@ public:
 
     void yearEndBuildFromThermalClusterIndex(const unsigned int areaWideIndex);
 
+
 private:
     /*!
     ** \brief Initialize some variable according a thermal cluster index
@@ -111,6 +112,12 @@ private:
     void initFromThermalClusterIndexProduction(const unsigned int areaWideIndex);
 
     void yearEndBuildThermalClusterCalculateStartupCosts(
+      const uint& maxDurationON,
+      const std::array<uint, Variable::maxHoursInAYear>& ON_min,
+      const std::array<uint, Variable::maxHoursInAYear>& ON_opt,
+      const Data::ThermalCluster* currentCluster);
+
+    void yearEndBuildCalculateRampingCosts(
       const uint& maxDurationON,
       const std::array<uint, Variable::maxHoursInAYear>& ON_min,
       const std::array<uint, Variable::maxHoursInAYear>& ON_opt,
@@ -190,6 +197,8 @@ public:
     double thermalClusterNonProportionalCostForYear[Variable::maxHoursInAYear];
     //! Minimum power of the cluster for the whole year
     double thermalClusterPMinOfTheClusterForYear[Variable::maxHoursInAYear];
+    //! Ramping cost of the thermal cluster for the whole year
+    double thermalClusterRampingCostForYear[Variable::maxHoursInAYear];
 
     double renewableClusterProduction;
 

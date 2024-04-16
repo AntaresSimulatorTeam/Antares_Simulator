@@ -27,6 +27,7 @@
 #include "antares/solver/variable/surveyresults/surveyresults.h"
 #include <antares/logs/logs.h>
 
+
 using namespace Yuni;
 using namespace Antares;
 
@@ -111,7 +112,8 @@ static void ExportGridInfosAreas(const Data::Study& study,
     outLinks << "upstream\tdownstream\n";
     outThermal << "area id\tid\tname\tgroup\tunit count\tnominal capacity\t"
                   "min stable power\tmin up/down time\tspinning\tco2\t"
-                  "marginal cost\tfixed cost\tstartup cost\tmarket bid cost\tspread cost\n";
+                  "marginal cost\tfixed cost\tstartup cost\tmarket bid cost\tspread cost\t"
+                  "power increase cost`\rpower decrease cost\t max power upward rate\t max power downward rate\n ";
 
     study.areas.each([&](const Data::Area& area) {
         out << area.id << '\t';
@@ -143,10 +145,18 @@ static void ExportGridInfosAreas(const Data::Study& study,
             outThermal << cluster->startupCost << '\t';
             outThermal << cluster->marketBidCost << '\t';
             outThermal << cluster->spreadCost << '\n';
+            if (cluster->ramping)
+            {
+                outThermal << cluster->ramping.value().powerIncreaseCost << '\t';
+                outThermal << cluster->ramping.value().powerDecreaseCost << '\t';
+                outThermal << cluster->ramping.value().maxUpwardPowerRampingRate << '\t';
+                outThermal << cluster->ramping.value().maxDownwardPowerRampingRate << '\n';
+            }
 
         } // each thermal cluster
     });   // each area
-    auto add = [&writer, &originalOutput](const YString& filename, Clob&& buffer) {
+    // buffer must be copied since addEntryFromBuffer has no std::string&& variant, unfortunately
+    auto add = [&writer, &originalOutput](const YString& filename, std::string buffer) {
         YString path;
         path << originalOutput << SEP << "grid" << SEP << filename;
         writer.addEntryFromBuffer(path.c_str(), buffer);

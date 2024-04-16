@@ -284,6 +284,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         unsigned int clusterCount = area.thermal.list.enabledAndNotMustRunCount();
         pbPalier.NombreDePaliersThermiques = clusterCount;
 
+
         for (const auto& cluster : area.thermal.list.each_enabled_and_not_mustrun())
         {
             pbPalier.NumeroDuPalierDansLEnsembleDesPaliersThermiques[cluster->index]
@@ -301,6 +302,19 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
               = cluster->minUpTime;
             pbPalier.DureeMinimaleDArretDUnGroupeDuPalierThermique[cluster->index]
               = cluster->minDownTime;
+
+            // ramping (if enabled)
+            if (cluster->ramping)
+            {
+                pbPalier.upwardRampingCost[cluster->index]
+                  = cluster->ramping.value().powerIncreaseCost;
+                pbPalier.downwardRampingCost[cluster->index]
+                  = cluster->ramping.value().powerDecreaseCost;
+                pbPalier.maxDownwardPowerRampingRate[cluster->index]
+                  = cluster->ramping.value().maxDownwardPowerRampingRate;
+                pbPalier.maxUpwardPowerRampingRate[cluster->index]
+                  = cluster->ramping.value().maxUpwardPowerRampingRate;
+            }
 
             pbPalier.PmaxDUnGroupeDuPalierThermique[cluster->index]
               = cluster->nominalCapacityWithSpinning;

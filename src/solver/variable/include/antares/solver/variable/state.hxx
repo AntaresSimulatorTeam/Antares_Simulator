@@ -41,6 +41,9 @@ inline void State::startANewYear()
            0,
            sizeof(thermalClusterDispatchedUnitsCountForYear));
 
+    //if (unitCommitmentMode == Antares::Data::UnitCommitmentMode::ucHeuristicAccurate)
+    memset(thermalClusterRampingCostForYear, 0, sizeof(thermalClusterRampingCostForYear));
+
     // Re-initializing annual costs (to be printed in output into separate files)
     annualSystemCost = 0.;
     optimalSolutionCost1 = 0.;
@@ -61,6 +64,7 @@ inline void State::yearEndResetThermal()
     memset(thermalClusterDispatchedUnitsCountForYear,
            0,
            sizeof(thermalClusterDispatchedUnitsCountForYear));
+    memset(thermalClusterRampingCostForYear, 0, sizeof(thermalClusterRampingCostForYear));
 }
 
 inline void State::initFromAreaIndex(const unsigned int areaIndex, uint numSpace)

@@ -124,6 +124,7 @@ static void optimisationAllocateProblem(PROBLEME_HEBDO* problemeHebdo, const int
     NbTermes += 101; /* constraint expressing final level as a sum of stock layers */
 
     NbTermes += problemeHebdo->NbTermesContraintesPourLesCoutsDeDemarrage;
+    NbTermes += problemeHebdo->NbTermesContraintesPourLesRampes;
 
     logs.info();
     logs.info()
