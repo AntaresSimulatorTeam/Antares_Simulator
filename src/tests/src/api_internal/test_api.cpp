@@ -33,7 +33,7 @@ class InMemoryStudyLoader : public Antares::IStudyLoader
 {
 public:
     explicit InMemoryStudyLoader(bool success = true) : success_(success) {};
-    [[nodiscard]] std::shared_ptr<Antares::Data::Study> load() override {
+    [[nodiscard]] std::unique_ptr<Antares::Data::Study> load() const override {
         if (!success_) {
         return nullptr;
       }
@@ -43,7 +43,7 @@ public:
       builder.study->initializeRuntimeInfos();
       builder.study->parameters.resultFormat = ResultFormat::inMemory;
       builder.study->prepareOutput();
-      return builder.study;
+      return std::move(builder.study);
     };
     bool success_ = true;
 };
