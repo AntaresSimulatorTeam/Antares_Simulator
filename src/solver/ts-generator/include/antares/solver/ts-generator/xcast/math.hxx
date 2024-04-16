@@ -54,7 +54,8 @@ float Minimum(float a,float b,float g,float d,int l)
 }
 */
 
-static float maximum(float a, float b, float g, float d, int l)
+static float
+maximum(float a, float b, float g, float d, int l)
 {
     switch (Data::XCast::Distribution(l))
     {
@@ -93,7 +94,8 @@ static float maximum(float a, float b, float g, float d, int l)
 **
 ** Valeur exprimee en valeur relative par rapport au minimum
 */
-static float esperance(float a, float b, float g, float d, int l)
+static float
+esperance(float a, float b, float g, float d, int l)
 {
     // note : valeur exprimee en valeur relative par rapport au minimum
     switch (Data::XCast::Distribution(l))
@@ -121,7 +123,8 @@ static float esperance(float a, float b, float g, float d, int l)
 }
 
 //! Ecart type de la variable de loi L
-static float standard(float a, float b, float g, float d, int l)
+static float
+standard(float a, float b, float g, float d, int l)
 {
     switch (Data::XCast::Distribution(l))
     {
@@ -144,12 +147,12 @@ static float standard(float a, float b, float g, float d, int l)
     }
     case Data::XCast::dtWeibullShapeA:
     {
-        const float x = (float)(XCast::GammaEuler(1. + 2. / double(a))
-                                - pow(XCast::GammaEuler(1. + 1. / double(a)), 2.));
+        const float x = (float)(XCast::GammaEuler(1. + 2. / double(a)) -
+                                pow(XCast::GammaEuler(1. + 1. / double(a)), 2.));
         if (x < 0.f)
         {
             logs.warning()
-              << "TS Generator: error when computing the standard deviation (Weibul Shape A)";
+                    << "TS Generator: error when computing the standard deviation (Weibul Shape A)";
             return 0.f;
         }
         return b * sqrt(x);
@@ -167,7 +170,8 @@ static float standard(float a, float b, float g, float d, int l)
 }
 
 //! Coefficient de diffusion d'un processus
-static float diffusion(float a, float b, float g, float d, int l, float t, float x)
+static float
+diffusion(float a, float b, float g, float d, int l, float t, float x)
 {
     switch (Data::XCast::Distribution(l))
     {
@@ -248,7 +252,8 @@ static float diffusion(float a, float b, float g, float d, int l, float t, float
         return true;
 }*/
 
-static bool verification(float a, float b, float g, float d, int l, float t)
+static bool
+verification(float a, float b, float g, float d, int l, float t)
 {
     switch (Data::XCast::Distribution(l))
     {
@@ -262,8 +267,8 @@ static bool verification(float a, float b, float g, float d, int l, float t)
     }
     case Data::XCast::dtNormal:
     {
-        return !(d < g || g < INFININ / 2.f || d > INFINIP / 2.f || a < INFININ / 2.f
-                 || a > INFINIP / 2.f || t < 0.f || b < 0.f);
+        return !(d < g || g < INFININ / 2.f || d > INFINIP / 2.f || a < INFININ / 2.f ||
+                 a > INFINIP / 2.f || t < 0.f || b < 0.f);
     }
     case Data::XCast::dtWeibullShapeA:
     {
@@ -282,7 +287,8 @@ static bool verification(float a, float b, float g, float d, int l, float t)
 }
 
 //! Valeur maximale du coefficient de diffusion du processus de loi L
-static float maxiDiffusion(float a, float b, float g, float d, int l, float t)
+static float
+maxiDiffusion(float a, float b, float g, float d, int l, float t)
 {
     switch (Data::XCast::Distribution(l))
     {

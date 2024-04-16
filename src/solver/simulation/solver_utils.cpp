@@ -34,12 +34,13 @@
 
 static const std::string systemCostFilename = "annualSystemCost.txt";
 static const std::string criterionsCostsFilename = "checkIntegrity.txt";
-static const std::string optimizationTimeFilename = std::string("optimization") + SEP
-                                                    + "solve-durations.txt";
-static const std::string updateTimeFilename = std::string("optimization") + SEP
-                                              + "update-durations.txt";
+static const std::string optimizationTimeFilename = std::string("optimization") + SEP +
+                                                    "solve-durations.txt";
+static const std::string updateTimeFilename = std::string("optimization") + SEP +
+                                              "update-durations.txt";
 
-static std::ostream& toScientific(std::ostream& os)
+static std::ostream&
+toScientific(std::ostream& os)
 {
     return os << std::scientific << std::setprecision(14);
 }
@@ -47,13 +48,15 @@ static std::ostream& toScientific(std::ostream& os)
 namespace Antares::Solver::Simulation
 {
 
-void costStatistics::setNbPerformedYears(uint n)
+void
+costStatistics::setNbPerformedYears(uint n)
 {
     assert(n);
     nbPerformedYears = n;
 }
 
-void costStatistics::addCost(const double cost)
+void
+costStatistics::addCost(const double cost)
 {
     // Average
     costAverage += cost / nbPerformedYears;
@@ -72,7 +75,8 @@ void costStatistics::addCost(const double cost)
     }
 }
 
-void costStatistics::endStandardDeviation()
+void
+costStatistics::endStandardDeviation()
 {
     costStdDeviation = std::sqrt(costStdDeviation - costAverage * costAverage);
 }
@@ -80,7 +84,8 @@ void costStatistics::endStandardDeviation()
 // annualCostsStatistics
 annualCostsStatistics::annualCostsStatistics() = default;
 
-void annualCostsStatistics::setNbPerformedYears(uint n)
+void
+annualCostsStatistics::setNbPerformedYears(uint n)
 {
     systemCost.setNbPerformedYears(n);
     criterionCost1.setNbPerformedYears(n);
@@ -90,7 +95,8 @@ void annualCostsStatistics::setNbPerformedYears(uint n)
     updateTime.setNbPerformedYears(n);
 }
 
-void annualCostsStatistics::endStandardDeviations()
+void
+annualCostsStatistics::endStandardDeviations()
 {
     systemCost.endStandardDeviation();
     criterionCost1.endStandardDeviation();
@@ -100,7 +106,8 @@ void annualCostsStatistics::endStandardDeviations()
     updateTime.endStandardDeviation();
 }
 
-void annualCostsStatistics::writeToOutput(IResultWriter& writer)
+void
+annualCostsStatistics::writeToOutput(IResultWriter& writer)
 {
     writeSystemCostToOutput(writer);
     writeCriterionCostsToOutput(writer);
@@ -108,7 +115,8 @@ void annualCostsStatistics::writeToOutput(IResultWriter& writer)
     writeUpdateTimes(writer);
 }
 
-void annualCostsStatistics::writeSystemCostToOutput(IResultWriter& writer)
+void
+annualCostsStatistics::writeSystemCostToOutput(IResultWriter& writer)
 {
     std::ostringstream buffer;
     buffer << "EXP : " << std::round(systemCost.costAverage) << '\n';
@@ -120,7 +128,8 @@ void annualCostsStatistics::writeSystemCostToOutput(IResultWriter& writer)
     writer.addEntryFromBuffer(systemCostFilename, s);
 }
 
-void annualCostsStatistics::writeCriterionCostsToOutput(IResultWriter& writer) const
+void
+annualCostsStatistics::writeCriterionCostsToOutput(IResultWriter& writer) const
 {
     using std::endl;
     std::ostringstream buffer;
@@ -137,7 +146,8 @@ void annualCostsStatistics::writeCriterionCostsToOutput(IResultWriter& writer) c
     writer.addEntryFromBuffer(criterionsCostsFilename, s);
 }
 
-void annualCostsStatistics::writeUpdateTimes(IResultWriter& writer) const
+void
+annualCostsStatistics::writeUpdateTimes(IResultWriter& writer) const
 {
     std::ostringstream buffer;
     buffer << "EXP (ms) : " << updateTime.costAverage << "\n";
@@ -149,7 +159,8 @@ void annualCostsStatistics::writeUpdateTimes(IResultWriter& writer) const
     writer.addEntryFromBuffer(updateTimeFilename, s);
 }
 
-void annualCostsStatistics::writeOptimizationTimeToOutput(IResultWriter& writer) const
+void
+annualCostsStatistics::writeOptimizationTimeToOutput(IResultWriter& writer) const
 {
     std::ostringstream buffer;
     buffer << "First optimization :\n";

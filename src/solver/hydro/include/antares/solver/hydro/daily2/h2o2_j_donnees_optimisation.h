@@ -99,11 +99,11 @@ typedef struct
                                                           */
 
     std::vector<int>
-      PositionDeLaVariable; /* Vecteur a passer au Simplexe pour recuperer la base optimale */
+            PositionDeLaVariable; /* Vecteur a passer au Simplexe pour recuperer la base optimale */
     std::vector<int>
-      ComplementDeLaBase; /* Vecteur a passer au Simplexe pour recuperer la base optimale */
+            ComplementDeLaBase; /* Vecteur a passer au Simplexe pour recuperer la base optimale */
     std::vector<double>
-      CoutsReduits; /* Vecteur a passer au Simplexe pour recuperer les couts reduits */
+            CoutsReduits; /* Vecteur a passer au Simplexe pour recuperer les couts reduits */
     std::vector<double> CoutsMarginauxDesContraintes; /* Vecteur a passer au Simplexe pour recuperer
                                              les couts marginaux */
 } PROBLEME_LINEAIRE_ETENDU_PARTIE_VARIABLE;
@@ -139,7 +139,7 @@ typedef struct
     std::vector<PROBLEME_LINEAIRE_ETENDU_PARTIE_VARIABLE> ProblemeLineaireEtenduPartieVariable;
 
     std::vector<PROBLEME_SPX*>
-      ProblemeSpx; /* Il y en a 1 par reservoir. Un probleme couvre 1 mois */
+            ProblemeSpx; /* Il y en a 1 par reservoir. Un probleme couvre 1 mois */
 } PROBLEME_HYDRAULIQUE_ETENDU;
 
 namespace Antares::Constants

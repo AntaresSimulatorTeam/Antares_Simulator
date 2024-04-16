@@ -26,7 +26,8 @@
 
 namespace Antares::Solver
 {
-void initializeSignalHandlers(std::weak_ptr<IResultWriter> writer)
+void
+initializeSignalHandlers(std::weak_ptr<IResultWriter> writer)
 {
     setApplicationResultWriter(writer);
     std::signal(SIGTERM, &signalCtrl_term);

@@ -12,18 +12,20 @@ namespace Antares::Solver
 
 namespace
 {
-void logErrorAndThrow [[noreturn]] (const std::string& errorMessage)
+void
+logErrorAndThrow [[noreturn]] (const std::string& errorMessage)
 {
     Antares::logs.error() << errorMessage;
     throw IOError(errorMessage);
 }
 
 template<class ContentT>
-void addToMap(InMemoryWriter::MapType& entries,
-              const std::string& entryPath,
-              ContentT& content,
-              std::mutex& mutex,
-              Benchmarking::IDurationCollector& duration_collector)
+void
+addToMap(InMemoryWriter::MapType& entries,
+         const std::string& entryPath,
+         ContentT& content,
+         std::mutex& mutex,
+         Benchmarking::IDurationCollector& duration_collector)
 {
     std::string entryPathSanitized = entryPath;
     std::replace(entryPathSanitized.begin(), entryPathSanitized.end(), '\\', '/');
@@ -47,17 +49,20 @@ InMemoryWriter::InMemoryWriter(Benchmarking::IDurationCollector& duration_collec
 
 InMemoryWriter::~InMemoryWriter() = default;
 
-void InMemoryWriter::addEntryFromBuffer(const std::string& entryPath, Yuni::Clob& entryContent)
+void
+InMemoryWriter::addEntryFromBuffer(const std::string& entryPath, Yuni::Clob& entryContent)
 {
     addToMap(pEntries, entryPath, entryContent, pMapMutex, pDurationCollector);
 }
 
-void InMemoryWriter::addEntryFromBuffer(const std::string& entryPath, std::string& entryContent)
+void
+InMemoryWriter::addEntryFromBuffer(const std::string& entryPath, std::string& entryContent)
 {
     addToMap(pEntries, entryPath, entryContent, pMapMutex, pDurationCollector);
 }
 
-void InMemoryWriter::addEntryFromFile(const std::string& entryPath, const std::string& filePath)
+void
+InMemoryWriter::addEntryFromFile(const std::string& entryPath, const std::string& filePath)
 {
     // Shamelessly copy-pasted from zip_writer.cpp
     // TODO refactor
@@ -80,23 +85,27 @@ void InMemoryWriter::addEntryFromFile(const std::string& entryPath, const std::s
     }
 }
 
-void InMemoryWriter::flush()
+void
+InMemoryWriter::flush()
 {
     // Nothing to do here
 }
 
-bool InMemoryWriter::needsTheJobQueue() const
+bool
+InMemoryWriter::needsTheJobQueue() const
 {
     // We may reconsider if performance is atrocious
     return false;
 }
 
-void InMemoryWriter::finalize(bool /* verbose */)
+void
+InMemoryWriter::finalize(bool /* verbose */)
 {
     // Nothing to do here
 }
 
-const InMemoryWriter::MapType& InMemoryWriter::getMap() const
+const InMemoryWriter::MapType&
+InMemoryWriter::getMap() const
 {
     return pEntries;
 }

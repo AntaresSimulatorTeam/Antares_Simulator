@@ -532,7 +532,7 @@ struct PROBLEME_HEBDO
     uint32_t NombreDeContraintesCouplantes = 0;
     std::vector<CONTRAINTES_COUPLANTES> MatriceDesContraintesCouplantes;
     std::unordered_map<std::shared_ptr<Data::BindingConstraint>, std::vector<double>>
-      ResultatsContraintesCouplantes;
+            ResultatsContraintesCouplantes;
 
     std::vector<SOLDE_MOYEN_DES_ECHANGES> SoldeMoyenHoraire; // Used for quadratic opt
     /* Implementation details : I/O, error management, etc. */
@@ -551,7 +551,7 @@ struct PROBLEME_HEBDO
     std::vector<CORRESPONDANCES_DES_VARIABLES> CorrespondanceVarNativesVarOptim;
     std::vector<CORRESPONDANCES_DES_CONTRAINTES> CorrespondanceCntNativesCntOptim;
     std::vector<CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES>
-      CorrespondanceCntNativesCntOptimJournalieres;
+            CorrespondanceCntNativesCntOptimJournalieres;
     CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES CorrespondanceCntNativesCntOptimHebdomadaires;
 
     std::vector<RESERVE_JMOINS1> ReserveJMoins1;

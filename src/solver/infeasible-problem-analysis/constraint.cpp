@@ -38,7 +38,8 @@ Constraint::Constraint(const std::string& input, const double slackValue):
 {
 }
 
-std::size_t Constraint::extractItems()
+std::size_t
+Constraint::extractItems()
 {
     const auto beg = mInput.begin();
     const auto end = mInput.end();
@@ -61,7 +62,8 @@ std::size_t Constraint::extractItems()
     return mItems.size();
 }
 
-double Constraint::getSlackValue() const
+double
+Constraint::getSlackValue() const
 {
     return mSlackValue;
 }
@@ -75,7 +77,8 @@ public:
     }
 };
 
-std::string StringBetweenAngleBrackets(const std::string& str)
+std::string
+StringBetweenAngleBrackets(const std::string& str)
 {
     const auto& begin = str.begin();
     const auto& end = str.end();
@@ -109,18 +112,20 @@ std::string StringBetweenAngleBrackets(const std::string& str)
     return std::string(left + 1, right);
 }
 
-std::string Constraint::getAreaName() const
+std::string
+Constraint::getAreaName() const
 {
-    if ((getType() == ConstraintType::binding_constraint_hourly)
-        || (getType() == ConstraintType::binding_constraint_daily)
-        || (getType() == ConstraintType::binding_constraint_weekly))
+    if ((getType() == ConstraintType::binding_constraint_hourly) ||
+        (getType() == ConstraintType::binding_constraint_daily) ||
+        (getType() == ConstraintType::binding_constraint_weekly))
     {
         return "<none>";
     }
     return StringBetweenAngleBrackets(mItems.at(1));
 }
 
-std::string Constraint::getTimeStepInYear() const
+std::string
+Constraint::getTimeStepInYear() const
 {
     switch (getType())
     {
@@ -135,7 +140,8 @@ std::string Constraint::getTimeStepInYear() const
     }
 }
 
-ConstraintType Constraint::getType() const
+ConstraintType
+Constraint::getType() const
 {
     assert(mItems.size() > 1);
     if (mItems.at(1) == "hourly")
@@ -165,7 +171,8 @@ ConstraintType Constraint::getType() const
     return ConstraintType::none;
 }
 
-std::string Constraint::getBindingConstraintName() const
+std::string
+Constraint::getBindingConstraintName() const
 {
     switch (getType())
     {
@@ -178,7 +185,8 @@ std::string Constraint::getBindingConstraintName() const
     }
 }
 
-std::string Constraint::getSTSName() const
+std::string
+Constraint::getSTSName() const
 {
     if (getType() == ConstraintType::short_term_storage_level)
     {
@@ -190,28 +198,29 @@ std::string Constraint::getSTSName() const
     }
 }
 
-std::string Constraint::prettyPrint() const
+std::string
+Constraint::prettyPrint() const
 {
     switch (getType())
     {
     case ConstraintType::binding_constraint_hourly:
-        return "Hourly binding constraint '" + getBindingConstraintName() + "' at hour "
-               + getTimeStepInYear();
+        return "Hourly binding constraint '" + getBindingConstraintName() + "' at hour " +
+               getTimeStepInYear();
     case ConstraintType::binding_constraint_daily:
-        return "Daily binding constraint '" + getBindingConstraintName() + "' at day "
-               + getTimeStepInYear();
+        return "Daily binding constraint '" + getBindingConstraintName() + "' at day " +
+               getTimeStepInYear();
     case ConstraintType::binding_constraint_weekly:
         return "Weekly binding constraint '" + getBindingConstraintName();
 
     case ConstraintType::fictitious_load:
-        return "Last resort shedding status at area '" + getAreaName() + "' at hour "
-               + getTimeStepInYear();
+        return "Last resort shedding status at area '" + getAreaName() + "' at hour " +
+               getTimeStepInYear();
     case ConstraintType::hydro_reservoir_level:
-        return "Hydro reservoir constraint at area '" + getAreaName() + "' at hour "
-               + getTimeStepInYear();
+        return "Hydro reservoir constraint at area '" + getAreaName() + "' at hour " +
+               getTimeStepInYear();
     case ConstraintType::short_term_storage_level:
-        return "Short-term-storage reservoir constraint at area '" + getAreaName() + "' in STS '"
-               + getSTSName() + "' at hour " + getTimeStepInYear();
+        return "Short-term-storage reservoir constraint at area '" + getAreaName() + "' in STS '" +
+               getSTSName() + "' at hour " + getTimeStepInYear();
 
     default:
         return kUnknown;

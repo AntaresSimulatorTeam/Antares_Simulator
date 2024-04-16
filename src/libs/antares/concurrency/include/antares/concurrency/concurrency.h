@@ -120,9 +120,10 @@ private:
 } // namespace Detail
 
 template<class T>
-TaskFuture AddTask(Yuni::Job::QueueService& threadPool,
-                   const std::shared_ptr<T>& task,
-                   Yuni::Job::Priority priority)
+TaskFuture
+AddTask(Yuni::Job::QueueService& threadPool,
+        const std::shared_ptr<T>& task,
+        Yuni::Job::Priority priority)
 {
     Task wrappedTask = Detail::CopyableCallable<T>(task);
     return AddTask(threadPool, wrappedTask, priority);

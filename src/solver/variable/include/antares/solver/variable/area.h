@@ -150,10 +150,8 @@ public:
     void weekForEachArea(State& state, uint numSpace);
     void weekEnd(State& state);
 
-    void buildSurveyReport(SurveyResults& results,
-                           int dataLevel,
-                           int fileLevel,
-                           int precision) const;
+    void
+    buildSurveyReport(SurveyResults& results, int dataLevel, int fileLevel, int precision) const;
 
     void buildAnnualSurveyReport(SurveyResults& results,
                                  int dataLevel,

@@ -28,7 +28,8 @@
 namespace Antares
 {
 template<class StringT>
-void TransformNameIntoID(const AnyString& name, StringT& out)
+void
+TransformNameIntoID(const AnyString& name, StringT& out)
 {
     if (not name.empty())
     {
@@ -38,8 +39,8 @@ void TransformNameIntoID(const AnyString& name, StringT& out)
         for (uint i = 0; i != name.size(); ++i)
         {
             const char c = name[i];
-            if ((c >= 'a' and c <= 'z') or (c >= 'A' and c <= 'Z') or (c >= '0' and c <= '9')
-                or c == '_' or c == '-' or c == '(' or c == ')' or c == ',' or c == '&' or c == ' ')
+            if ((c >= 'a' and c <= 'z') or (c >= 'A' and c <= 'Z') or (c >= '0' and c <= '9') or
+                c == '_' or c == '-' or c == '(' or c == ')' or c == ',' or c == '&' or c == ' ')
             {
                 duppl = false;
                 out += c;

@@ -24,7 +24,8 @@
 namespace stdcxx
 {
 
-std::string simpleClassName(const char* className)
+std::string
+simpleClassName(const char* className)
 {
     const std::string& strClassName = className;
     std::size_t index = strClassName.find_last_of("::");
@@ -34,7 +35,8 @@ std::string simpleClassName(const char* className)
 }
 
 template<>
-std::string simpleClassName(const std::type_info& type)
+std::string
+simpleClassName(const std::type_info& type)
 {
     return simpleClassName(type.name());
 }

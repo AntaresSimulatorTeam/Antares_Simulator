@@ -109,7 +109,8 @@ StudyFinder::~StudyFinder()
     }
 }
 
-void StudyFinder::stop(uint timeout)
+void
+StudyFinder::stop(uint timeout)
 {
     std::lock_guard locker(mutex);
     if (pLycos)
@@ -118,7 +119,8 @@ void StudyFinder::stop(uint timeout)
     }
 }
 
-void StudyFinder::wait()
+void
+StudyFinder::wait()
 {
     std::lock_guard locker(mutex);
     if (pLycos)
@@ -127,7 +129,8 @@ void StudyFinder::wait()
     }
 }
 
-void StudyFinder::wait(uint timeout)
+void
+StudyFinder::wait(uint timeout)
 {
     std::lock_guard locker(mutex);
     if (pLycos)
@@ -136,7 +139,8 @@ void StudyFinder::wait(uint timeout)
     }
 }
 
-void StudyFinder::lookup(const Yuni::String::Vector& folder)
+void
+StudyFinder::lookup(const Yuni::String::Vector& folder)
 {
     std::lock_guard locker(mutex);
     if (pLycos)
@@ -158,7 +162,8 @@ void StudyFinder::lookup(const Yuni::String::Vector& folder)
     pLycos->start();
 }
 
-void StudyFinder::lookup(const Yuni::String::List& folder)
+void
+StudyFinder::lookup(const Yuni::String::List& folder)
 {
     std::lock_guard locker(mutex);
     if (pLycos)
@@ -179,7 +184,8 @@ void StudyFinder::lookup(const Yuni::String::List& folder)
     pLycos->start();
 }
 
-void StudyFinder::lookup(const String& folder)
+void
+StudyFinder::lookup(const String& folder)
 {
     std::lock_guard locker(mutex);
     if (pLycos)

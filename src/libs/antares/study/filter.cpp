@@ -25,7 +25,8 @@ using namespace Yuni;
 
 namespace Antares::Data
 {
-std::string datePrecisionIntoString(uint datePrecisionFilter)
+std::string
+datePrecisionIntoString(uint datePrecisionFilter)
 {
     std::string to_return;
     if (datePrecisionFilter & filterHourly)
@@ -72,7 +73,8 @@ std::string datePrecisionIntoString(uint datePrecisionFilter)
     return to_return;
 }
 
-uint stringIntoDatePrecision(const AnyString& string)
+uint
+stringIntoDatePrecision(const AnyString& string)
 {
     if (string.empty())
     {
@@ -116,7 +118,8 @@ uint stringIntoDatePrecision(const AnyString& string)
     return flag;
 }
 
-uint addTimeIntervallToDatePrecisionFilter(const uint index)
+uint
+addTimeIntervallToDatePrecisionFilter(const uint index)
 {
     uint flag = 0;
     switch (index)

@@ -39,12 +39,14 @@ Progress::Progress():
     Total = 0;
 }
 
-bool Progress::completed() const
+bool
+Progress::completed() const
 {
     return pCompleted;
 }
 
-bool Progress::onInterval(uint)
+bool
+Progress::onInterval(uint)
 {
     // Do nothing if in silent mode
     if (state == stSilent)

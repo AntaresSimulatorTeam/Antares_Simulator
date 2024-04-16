@@ -33,18 +33,18 @@ using namespace Yuni;
 namespace Antares::Date
 {
 static const uint StandardDaysPerMonths[12] = {
-  31, // january
-  28, // february
-  31, // march
-  30, // april
-  31, // may
-  30, // june
-  31, // july
-  31, // august
-  30, // september
-  31, // october
-  30, // november
-  31, // december
+        31, // january
+        28, // february
+        31, // march
+        30, // april
+        31, // may
+        30, // june
+        31, // july
+        31, // august
+        30, // september
+        31, // october
+        30, // november
+        31, // december
 };
 
 static const char* const monthNames[] = {"January",
@@ -73,64 +73,32 @@ static const char* const monthNamesLower[] = {"january",
                                               "november",
                                               "december"};
 
-static const char* const monthShortNames[] = {"Jan",
-                                              "Feb",
-                                              "Mar",
-                                              "Apr",
-                                              "May",
-                                              "Jun",
-                                              "Jul",
-                                              "Aug",
-                                              "Sep",
-                                              "Oct",
-                                              "Nov",
-                                              "Dec"};
+static const char* const monthShortNames[] =
+        {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
 
-static const char* const monthShortLowerNames[] = {"jan",
-                                                   "feb",
-                                                   "mar",
-                                                   "apr",
-                                                   "may",
-                                                   "jun",
-                                                   "jul",
-                                                   "aug",
-                                                   "sep",
-                                                   "oct",
-                                                   "nov",
-                                                   "dec"};
+static const char* const monthShortLowerNames[] =
+        {"jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"};
 
-static const char* const monthShortUpperNames[] = {"JAN",
-                                                   "FEB",
-                                                   "MAR",
-                                                   "APR",
-                                                   "MAY",
-                                                   "JUN",
-                                                   "JUL",
-                                                   "AUG",
-                                                   "SEP",
-                                                   "OCT",
-                                                   "NOV",
-                                                   "DEC"};
+static const char* const monthShortUpperNames[] =
+        {"JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"};
 
-uint DayInterval::numberOfWeeks() const
+uint
+DayInterval::numberOfWeeks() const
 {
     return (end - first) / 7;
 }
 
-const char* DayOfTheWeekToString(DayOfTheWeek d)
+const char*
+DayOfTheWeekToString(DayOfTheWeek d)
 {
-    static const char* const days[] = {"Monday",
-                                       "Tuesday",
-                                       "Wednesday",
-                                       "Thursday",
-                                       "Friday",
-                                       "Saturday",
-                                       "Sunday"};
+    static const char* const days[] =
+            {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
 
     return days[(uint)d % 7];
 }
 
-bool StringToMonth(MonthName& out, AnyString text)
+bool
+StringToMonth(MonthName& out, AnyString text)
 {
     if (text.empty())
     {
@@ -166,63 +134,68 @@ bool StringToMonth(MonthName& out, AnyString text)
     return false;
 }
 
-const char* MonthToString(int m, int offset)
+const char*
+MonthToString(int m, int offset)
 {
     return monthNames[(m - offset) % 12];
 }
 
-const char* MonthToLowerString(int m, int offset)
+const char*
+MonthToLowerString(int m, int offset)
 {
     return monthNamesLower[(m - offset) % 12];
 }
 
-const char* MonthToShortString(int m, int offset)
+const char*
+MonthToShortString(int m, int offset)
 {
     return monthShortNames[(m - offset) % 12];
 }
 
-const char* MonthToUpperShortString(int m, int offset)
+const char*
+MonthToUpperShortString(int m, int offset)
 {
     return monthShortUpperNames[(m - offset) % 12];
 }
 
-const char* WeekdayToString(int m)
+const char*
+WeekdayToString(int m)
 {
-    static const char* const wdays[] = {"Monday",
-                                        "Tuesday",
-                                        "Wednesday",
-                                        "Thursday",
-                                        "Friday",
-                                        "Saturday",
-                                        "Sunday"};
+    static const char* const wdays[] =
+            {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
     return wdays[m % 7];
 }
 
-const char* WeekdayToShortString(int m)
+const char*
+WeekdayToShortString(int m)
 {
     static const char* const wdays[] = {"Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"};
     return wdays[m % 7];
 }
 
-const char* WeekdayToShortUpperString(int m)
+const char*
+WeekdayToShortUpperString(int m)
 {
     static const char* const wdays[] = {"MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"};
     return wdays[m % 7];
 }
 
-const char* WeekdayToShortLowerString(int m)
+const char*
+WeekdayToShortLowerString(int m)
 {
     static const char* const wdays[] = {"mon", "tue", "wed", "thu", "fri", "sat", "sun"};
     return wdays[m % 7];
 }
 
-const wchar_t* WeekdayToLShortString(int m)
+const wchar_t*
+WeekdayToLShortString(int m)
 {
     static const wchar_t* const wdays[] = {L"Mo", L"Tu", L"We", L"Th", L"Fr", L"Sa", L"Su"};
     return wdays[m % 7];
 }
 
-bool StringToDayOfTheWeek(DayOfTheWeek& v, const AnyString& text)
+bool
+StringToDayOfTheWeek(DayOfTheWeek& v, const AnyString& text)
 {
     if (text.empty())
     {
@@ -357,7 +330,8 @@ bool StringToDayOfTheWeek(DayOfTheWeek& v, const AnyString& text)
     return false;
 }
 
-bool Calendar::saveToCSVFile(const AnyString& filename) const
+bool
+Calendar::saveToCSVFile(const AnyString& filename) const
 {
     IO::File::Stream file;
     if (file.openRW(filename))
@@ -469,18 +443,21 @@ Calendar::Calendar()
     settings_.weekday1rstJanuary = monday;
 }
 
-void Calendar::reset(Settings settings)
+void
+Calendar::reset(Settings settings)
 {
     settings_ = settings;
     reset();
 }
 
-static inline DayOfTheWeek NextDayOfTheWeek(DayOfTheWeek weekday)
+static inline DayOfTheWeek
+NextDayOfTheWeek(DayOfTheWeek weekday)
 {
     return (weekday == sunday) ? monday : (DayOfTheWeek)(((uint)weekday) + 1);
 }
 
-void Calendar::reset()
+void
+Calendar::reset()
 {
 #ifndef NDEBUG
     logs.debug() << "  reset calendar" << ", month : " << MonthToString(settings_.firstMonth)

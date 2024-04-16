@@ -21,11 +21,12 @@
 
 #include "antares/solver/optimisation/constraints/MaxHydroPower.h"
 
-void MaxHydroPower::add(int pays)
+void
+MaxHydroPower::add(int pays)
 {
-    if (data.CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable
-        && (data.CaracteristiquesHydrauliques[pays].TurbinageEntreBornes
-            || data.CaracteristiquesHydrauliques[pays].PresenceDePompageModulable))
+    if (data.CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable &&
+        (data.CaracteristiquesHydrauliques[pays].TurbinageEntreBornes ||
+         data.CaracteristiquesHydrauliques[pays].PresenceDePompageModulable))
     {
         data.NumeroDeContrainteMaxEnergieHydraulique[pays] = builder.data.nombreDeContraintes;
 

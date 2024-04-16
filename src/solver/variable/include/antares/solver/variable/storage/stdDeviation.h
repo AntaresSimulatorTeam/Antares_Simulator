@@ -143,9 +143,9 @@ protected:
             {
             case Category::hourly:
                 InternalExportValues<S, maxHoursInAYear, VCardT, Category::hourly>(
-                  report,
-                  results,
-                  Memory::RawPointer(stdDeviationHourly));
+                        report,
+                        results,
+                        Memory::RawPointer(stdDeviationHourly));
                 break;
             case Category::daily:
                 InternalExportValues<S, maxDaysInAYear, VCardT, Category::daily>(report,
@@ -154,9 +154,9 @@ protected:
                 break;
             case Category::weekly:
                 InternalExportValues<S, maxWeeksInAYear, VCardT, Category::weekly>(
-                  report,
-                  results,
-                  stdDeviationWeekly);
+                        report,
+                        results,
+                        stdDeviationWeekly);
                 break;
             case Category::monthly:
                 InternalExportValues<S, maxMonths, VCardT, Category::monthly>(report,
@@ -213,7 +213,7 @@ private:
 
         // Precision
         report.precision[report.data.columnIndex] = PrecisionToPrintfFormat<
-          VCardT::decimal>::Value();
+                VCardT::decimal>::Value();
 
         // Non applicability
         report.nonApplicableStatus[report.data.columnIndex] = *report.isCurrentVarNA;
@@ -230,8 +230,8 @@ private:
         {
             for (unsigned int i = 0; i != Size; ++i)
             {
-                target[i] = squareRootChecked(
-                  array[i] - results.avgdata.hourly[i] * results.avgdata.hourly[i]);
+                target[i] = squareRootChecked(array[i] - results.avgdata.hourly[i] *
+                                                                 results.avgdata.hourly[i]);
             }
         }
         break;
@@ -239,8 +239,8 @@ private:
         {
             for (unsigned int i = 0; i != Size; ++i)
             {
-                target[i] = squareRootChecked(
-                  array[i] - results.avgdata.daily[i] * results.avgdata.daily[i]);
+                target[i] = squareRootChecked(array[i] -
+                                              results.avgdata.daily[i] * results.avgdata.daily[i]);
             }
         }
         break;
@@ -248,8 +248,8 @@ private:
         {
             for (unsigned int i = 0; i != Size; ++i)
             {
-                target[i] = squareRootChecked(
-                  array[i] - results.avgdata.weekly[i] * results.avgdata.weekly[i]);
+                target[i] = squareRootChecked(array[i] - results.avgdata.weekly[i] *
+                                                                 results.avgdata.weekly[i]);
             }
         }
         break;
@@ -257,8 +257,8 @@ private:
         {
             for (unsigned int i = 0; i != Size; ++i)
             {
-                target[i] = squareRootChecked(
-                  array[i] - results.avgdata.monthly[i] * results.avgdata.monthly[i]);
+                target[i] = squareRootChecked(array[i] - results.avgdata.monthly[i] *
+                                                                 results.avgdata.monthly[i]);
             }
         }
         break;
@@ -290,7 +290,7 @@ private:
 
         // Precision
         report.precision[report.data.columnIndex] = PrecisionToPrintfFormat<
-          VCardT::decimal>::Value();
+                VCardT::decimal>::Value();
 
         // Non applicability
         report.nonApplicableStatus[report.data.columnIndex] = *report.isCurrentVarNA;

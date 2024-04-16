@@ -21,20 +21,20 @@
 
 #include "antares/solver/optimisation/constraints/MinDownTime.h"
 
-void MinDownTime::add(int pays, int index, int pdt)
+void
+MinDownTime::add(int pays, int index, int pdt)
 {
-    const int DureeMinimaleDArretDUnGroupeDuPalierThermique
-      = data.PaliersThermiquesDuPays[pays].DureeMinimaleDArretDUnGroupeDuPalierThermique[index];
+    const int DureeMinimaleDArretDUnGroupeDuPalierThermique =
+            data.PaliersThermiquesDuPays[pays].DureeMinimaleDArretDUnGroupeDuPalierThermique[index];
     auto cluster = data.PaliersThermiquesDuPays[pays]
-                     .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+                           .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
 
     data.CorrespondanceCntNativesCntOptim[pdt]
-      .NumeroDeContrainteDesContraintesDeDureeMinDArret[cluster]
-      = -1;
+            .NumeroDeContrainteDesContraintesDeDureeMinDArret[cluster] = -1;
     if (!data.Simulation)
     {
         int NombreDePasDeTempsPourUneOptimisation = builder.data
-                                                      .NombreDePasDeTempsPourUneOptimisation;
+                                                            .NombreDePasDeTempsPourUneOptimisation;
 
         builder.updateHourWithinWeek(pdt).NumberOfDispatchableUnits(cluster, 1.0);
 
@@ -52,8 +52,8 @@ void MinDownTime::add(int pays, int index, int pdt)
         if (builder.NumberOfVariables() > 1)
         {
             data.CorrespondanceCntNativesCntOptim[pdt]
-              .NumeroDeContrainteDesContraintesDeDureeMinDArret[cluster]
-              = builder.data.nombreDeContraintes;
+                    .NumeroDeContrainteDesContraintesDeDureeMinDArret
+                            [cluster] = builder.data.nombreDeContraintes;
             ConstraintNamer namer(builder.data.NomDesContraintes);
             namer.UpdateArea(builder.data.NomsDesPays[pays]);
 
@@ -66,8 +66,8 @@ void MinDownTime::add(int pays, int index, int pdt)
     }
     else
     {
-        builder.data.NbTermesContraintesPourLesCoutsDeDemarrage
-          += 1 + DureeMinimaleDArretDUnGroupeDuPalierThermique;
+        builder.data.NbTermesContraintesPourLesCoutsDeDemarrage +=
+                1 + DureeMinimaleDArretDUnGroupeDuPalierThermique;
         builder.data.nombreDeContraintes++;
     }
 }

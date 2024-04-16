@@ -30,13 +30,14 @@ constexpr double noiseAmplitude = 1e-3;
 constexpr unsigned int seed = 0x79686d64; // "hydm" in hexa
 } // namespace Constants
 
-void H2O_M_AjouterBruitAuCout(DONNEES_ANNUELLES& DonneesAnnuelles)
+void
+H2O_M_AjouterBruitAuCout(DONNEES_ANNUELLES& DonneesAnnuelles)
 {
     PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesAnnuelles.ProblemeHydraulique;
     PROBLEME_LINEAIRE_PARTIE_FIXE& ProblemeLineairePartieFixe = ProblemeHydraulique
-                                                                  .ProblemeLineairePartieFixe;
+                                                                        .ProblemeLineairePartieFixe;
     CORRESPONDANCE_DES_VARIABLES& CorrespondanceDesVariables = ProblemeHydraulique
-                                                                 .CorrespondanceDesVariables;
+                                                                       .CorrespondanceDesVariables;
     auto& CoutLineaireBruite = ProblemeLineairePartieFixe.CoutLineaireBruite;
     const auto& CoutLineaire = ProblemeLineairePartieFixe.CoutLineaire;
 
@@ -44,19 +45,19 @@ void H2O_M_AjouterBruitAuCout(DONNEES_ANNUELLES& DonneesAnnuelles)
     noiseGenerator.reset(Constants::seed); // Arbitrary seed, hard-coded since we don't really want
                                            // the user to change it
     const std::vector<const std::vector<int>*> monthlyVariables = {
-      &CorrespondanceDesVariables.NumeroDeVariableVolume,
-      &CorrespondanceDesVariables.NumeroDeVariableTurbine,
-      &CorrespondanceDesVariables.NumeroDeVariableDepassementVolumeMax,
-      &CorrespondanceDesVariables.NumeroDeVariableDepassementVolumeMin,
-      &CorrespondanceDesVariables.NumeroDeVariableDEcartPositifAuTurbineCible,
-      &CorrespondanceDesVariables.NumeroDeVariableDEcartNegatifAuTurbineCible};
+            &CorrespondanceDesVariables.NumeroDeVariableVolume,
+            &CorrespondanceDesVariables.NumeroDeVariableTurbine,
+            &CorrespondanceDesVariables.NumeroDeVariableDepassementVolumeMax,
+            &CorrespondanceDesVariables.NumeroDeVariableDepassementVolumeMin,
+            &CorrespondanceDesVariables.NumeroDeVariableDEcartPositifAuTurbineCible,
+            &CorrespondanceDesVariables.NumeroDeVariableDEcartNegatifAuTurbineCible};
 
     for (const auto& variable: monthlyVariables)
     {
         for (int Var: *variable)
         {
-            CoutLineaireBruite[Var] = CoutLineaire[Var]
-                                      + noiseGenerator() * Constants::noiseAmplitude;
+            CoutLineaireBruite[Var] = CoutLineaire[Var] +
+                                      noiseGenerator() * Constants::noiseAmplitude;
         }
     }
     int Var = CorrespondanceDesVariables.NumeroDeLaVariableViolMaxVolumeMin;

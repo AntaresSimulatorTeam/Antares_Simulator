@@ -138,12 +138,12 @@ enum class GlobalTransmissionCapacities
     infiniteForPhysicalLinks
 }; // enum TransmissionCapacities
 
-std::string GlobalTransmissionCapacitiesToString(
-  GlobalTransmissionCapacities transmissionCapacities);
-std::string GlobalTransmissionCapacitiesToString_Display(
-  GlobalTransmissionCapacities transmissionCapacities);
-bool stringToGlobalTransmissionCapacities(const AnyString& value,
-                                          GlobalTransmissionCapacities& out);
+std::string
+GlobalTransmissionCapacitiesToString(GlobalTransmissionCapacities transmissionCapacities);
+std::string
+GlobalTransmissionCapacitiesToString_Display(GlobalTransmissionCapacities transmissionCapacities);
+bool
+stringToGlobalTransmissionCapacities(const AnyString& value, GlobalTransmissionCapacities& out);
 
 /*!
 ** \brief Transmission capacities mode (applies to individual links)

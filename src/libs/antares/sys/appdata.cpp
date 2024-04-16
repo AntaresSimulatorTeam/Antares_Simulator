@@ -34,7 +34,8 @@ using namespace Yuni;
 namespace OperatingSystem
 {
 #ifdef YUNI_OS_WINDOWS
-static inline bool ConvertWideCharIntoString(String& out, const wchar_t* wpath)
+static inline bool
+ConvertWideCharIntoString(String& out, const wchar_t* wpath)
 {
     int sizeRequired = WideCharToMultiByte(CP_UTF8, 0, wpath, -1, nullptr, 0, nullptr, nullptr);
     if (sizeRequired <= 0)
@@ -49,7 +50,8 @@ static inline bool ConvertWideCharIntoString(String& out, const wchar_t* wpath)
 }
 #endif
 
-bool FindLocalAppData(Yuni::String& out, bool allusers)
+bool
+FindLocalAppData(Yuni::String& out, bool allusers)
 {
     out.clear();
 
@@ -105,7 +107,8 @@ bool FindLocalAppData(Yuni::String& out, bool allusers)
     return false;
 }
 
-bool FindAntaresLocalAppData(Yuni::String& out, bool allusers)
+bool
+FindAntaresLocalAppData(Yuni::String& out, bool allusers)
 {
     if (not FindLocalAppData(out, allusers))
     {

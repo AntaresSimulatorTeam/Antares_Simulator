@@ -29,7 +29,8 @@ using namespace Yuni;
 
 namespace Antares::Data
 {
-static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos& r)
+static void
+StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos& r)
 {
     uint areaCount = study.areas.size();
     uint nbYearsInParallel = study.maxNbYearsInParallel;
@@ -60,10 +61,10 @@ static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos&
                     nS = sqrt(log(1. + (s[i] * s[i]) / (e[i] * e[i])));
 
                     // asserts
-                    assert(!std::isnan(nE)
-                           && "Hydro: NaN value detected for hydro prepro expectation");
-                    assert(!std::isnan(nS)
-                           && "Hydro: NaN value detected for hydro prepro expectation");
+                    assert(!std::isnan(nE) &&
+                           "Hydro: NaN value detected for hydro prepro expectation");
+                    assert(!std::isnan(nS) &&
+                           "Hydro: NaN value detected for hydro prepro expectation");
 
                     e[i] = nE;
                     s[i] = nS;
@@ -96,30 +97,32 @@ static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos&
     }
 }
 
-static void StudyRuntimeInfosInitializeAreaLinks(Study& study, StudyRuntimeInfos& r)
+static void
+StudyRuntimeInfosInitializeAreaLinks(Study& study, StudyRuntimeInfos& r)
 {
     r.areaLink.resize(study.areas.areaLinkCount());
 
     uint indx = 0;
 
     study.areas.each(
-      [&](Data::Area& area)
-      {
-          area.buildLinksIndexes();
+            [&](Data::Area& area)
+            {
+                area.buildLinksIndexes();
 
-          auto end = area.links.end();
-          for (auto i = area.links.begin(); i != end; ++i)
-          {
-              auto* link = i->second;
+                auto end = area.links.end();
+                for (auto i = area.links.begin(); i != end; ++i)
+                {
+                    auto* link = i->second;
 
-              r.areaLink[indx] = link;
-              link->index = indx;
-              ++indx;
-          }
-      });
+                    r.areaLink[indx] = link;
+                    link->index = indx;
+                    ++indx;
+                }
+            });
 }
 
-void StudyRuntimeInfos::initializeRangeLimits(const Study& study, StudyRangeLimits& limits)
+void
+StudyRuntimeInfos::initializeRangeLimits(const Study& study, StudyRangeLimits& limits)
 {
     // Hour
     uint a = study.calendar.days[study.parameters.simulationDays.first].hours.first;
@@ -213,8 +216,8 @@ void StudyRuntimeInfos::initializeRangeLimits(const Study& study, StudyRangeLimi
     }
     else
     {
-        simulationDaysPerMonth[(uint)ca.month] = study.calendar.months[(uint)ca.month].days
-                                                 - ca.dayMonth;
+        simulationDaysPerMonth[(uint)ca.month] = study.calendar.months[(uint)ca.month].days -
+                                                 ca.dayMonth;
         simulationDaysPerMonth[(uint)cb.month] = cb.dayMonth + 1;
         for (uint i = ca.month + 1; i < cb.month; ++i)
         {
@@ -263,23 +266,26 @@ StudyRuntimeInfos::StudyRuntimeInfos():
 {
 }
 
-void StudyRuntimeInfos::checkThermalTSGeneration(Study& study)
+void
+StudyRuntimeInfos::checkThermalTSGeneration(Study& study)
 {
     const auto& gd = study.parameters;
     bool globalThermalTSgeneration = gd.timeSeriesToGenerate & timeSeriesThermal;
     thermalTSRefresh = globalThermalTSgeneration;
 
     study.areas.each(
-      [this, globalThermalTSgeneration](Data::Area& area)
-      {
-          for (auto& c: area.thermal.list.each_enabled_and_not_mustrun())
-          {
-              thermalTSRefresh = thermalTSRefresh || c->doWeGenerateTS(globalThermalTSgeneration);
-          }
-      });
+            [this, globalThermalTSgeneration](Data::Area& area)
+            {
+                for (auto& c: area.thermal.list.each_enabled_and_not_mustrun())
+                {
+                    thermalTSRefresh = thermalTSRefresh ||
+                                       c->doWeGenerateTS(globalThermalTSgeneration);
+                }
+            });
 }
 
-void StudyRuntimeInfos::initializeRandomNumberGenerators(const Parameters& parameters)
+void
+StudyRuntimeInfos::initializeRandomNumberGenerators(const Parameters& parameters)
 {
     logs.info() << "Initializing random number generators...";
     for (uint i = 0; i != Data::seedMax; ++i)
@@ -292,7 +298,8 @@ void StudyRuntimeInfos::initializeRandomNumberGenerators(const Parameters& param
     }
 }
 
-bool StudyRuntimeInfos::loadFromStudy(Study& study)
+bool
+StudyRuntimeInfos::loadFromStudy(Study& study)
 {
     auto& gd = study.parameters;
 
@@ -309,11 +316,11 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     else
     {
         study.calendar.reset(
-          {gd.dayOfThe1stJanuary, gd.firstWeekday, gd.firstMonthInYear, gd.leapYear});
+                {gd.dayOfThe1stJanuary, gd.firstWeekday, gd.firstMonthInYear, gd.leapYear});
     }
     logs.debug() << "  :: generating calendar dedicated to the output";
     study.calendarOutput.reset(
-      {gd.dayOfThe1stJanuary, gd.firstWeekday, gd.firstMonthInYear, gd.leapYear});
+            {gd.dayOfThe1stJanuary, gd.firstWeekday, gd.firstMonthInYear, gd.leapYear});
     initializeRangeLimits(study, rangeLimits);
 
     // Removing disabled short-term storage objects from solver computations
@@ -365,15 +372,17 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     return true;
 }
 
-uint StudyRuntimeInfos::interconnectionsCount() const
+uint
+StudyRuntimeInfos::interconnectionsCount() const
 {
     return static_cast<uint>(areaLink.size());
 }
 
-static void removeClusters(Study& study,
-                           const char* type,
-                           std::function<uint(Area&)> eachArea,
-                           bool verbose = true)
+static void
+removeClusters(Study& study,
+               const char* type,
+               std::function<uint(Area&)> eachArea,
+               bool verbose = true)
 {
     if (verbose)
     {
@@ -402,24 +411,26 @@ static void removeClusters(Study& study,
     }
 }
 
-void StudyRuntimeInfos::removeDisabledShortTermStorageClustersFromSolverComputations(Study& study)
+void
+StudyRuntimeInfos::removeDisabledShortTermStorageClustersFromSolverComputations(Study& study)
 {
     removeClusters(study,
                    "short term storage",
                    [](Area& area) { return area.shortTermStorage.removeDisabledClusters(); });
 }
 
-void StudyRuntimeInfos::removeAllRenewableClustersFromSolverComputations(Study& study)
+void
+StudyRuntimeInfos::removeAllRenewableClustersFromSolverComputations(Study& study)
 {
     removeClusters(
-      study,
-      "renewable",
-      [](Area& area)
-      {
-          area.renewable.reset();
-          return 0;
-      },
-      false);
+            study,
+            "renewable",
+            [](Area& area)
+            {
+                area.renewable.reset();
+                return 0;
+            },
+            false);
 }
 
 StudyRuntimeInfos::~StudyRuntimeInfos()
@@ -428,7 +439,8 @@ StudyRuntimeInfos::~StudyRuntimeInfos()
 }
 
 #ifndef NDEBUG
-void StudyRangeLimits::checkIntegrity() const
+void
+StudyRangeLimits::checkIntegrity() const
 {
     assert(hour[rangeBegin] <= hour[rangeEnd]);
     assert(day[rangeBegin] <= day[rangeEnd]);
@@ -439,22 +451,23 @@ void StudyRangeLimits::checkIntegrity() const
 }
 #endif
 
-void StudyRuntimeInfos::disableAllFilters(Study& study)
+void
+StudyRuntimeInfos::disableAllFilters(Study& study)
 {
     study.areas.each(
-      [&](Data::Area& area)
-      {
-          area.filterSynthesis = filterAll;
-          area.filterYearByYear = filterAll;
+            [&](Data::Area& area)
+            {
+                area.filterSynthesis = filterAll;
+                area.filterYearByYear = filterAll;
 
-          auto end = area.links.end();
-          for (auto i = area.links.begin(); i != end; ++i)
-          {
-              auto& link = *(i->second);
-              link.filterSynthesis = filterAll;
-              link.filterYearByYear = filterAll;
-          }
-      });
+                auto end = area.links.end();
+                for (auto i = area.links.begin(); i != end; ++i)
+                {
+                    auto& link = *(i->second);
+                    link.filterSynthesis = filterAll;
+                    link.filterYearByYear = filterAll;
+                }
+            });
 }
 
 } // namespace Antares::Data

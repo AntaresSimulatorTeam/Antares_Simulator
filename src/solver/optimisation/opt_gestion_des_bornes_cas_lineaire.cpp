@@ -36,7 +36,8 @@ using namespace Antares::Data;
 
 using namespace Yuni;
 
-void OPT_MaxDesPmaxHydrauliques(PROBLEME_HEBDO* problemeHebdo)
+void
+OPT_MaxDesPmaxHydrauliques(PROBLEME_HEBDO* problemeHebdo)
 {
     for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
@@ -45,8 +46,10 @@ void OPT_MaxDesPmaxHydrauliques(PROBLEME_HEBDO* problemeHebdo)
         {
             continue;
         }
-        const std::vector<double>& ContrainteDePmaxHydrauliqueHoraire
-          = problemeHebdo->CaracteristiquesHydrauliques[pays].ContrainteDePmaxHydrauliqueHoraire;
+        const std::vector<double>&
+                ContrainteDePmaxHydrauliqueHoraire = problemeHebdo
+                                                             ->CaracteristiquesHydrauliques[pays]
+                                                             .ContrainteDePmaxHydrauliqueHoraire;
         double pmaxHyd = -1;
         for (uint pdtHebdo = 0; pdtHebdo < problemeHebdo->NombreDePasDeTemps; pdtHebdo++)
         {
@@ -62,34 +65,36 @@ void OPT_MaxDesPmaxHydrauliques(PROBLEME_HEBDO* problemeHebdo)
     return;
 }
 
-double OPT_SommeDesPminThermiques(const PROBLEME_HEBDO* problemeHebdo, int Pays, uint pdtHebdo)
+double
+OPT_SommeDesPminThermiques(const PROBLEME_HEBDO* problemeHebdo, int Pays, uint pdtHebdo)
 {
     double sommeDesPminThermiques = 0.0;
     const PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo
-                                                          ->PaliersThermiquesDuPays[Pays];
-    const std::vector<PDISP_ET_COUTS_HORAIRES_PAR_PALIER>& PuissanceDisponibleEtCout
-      = PaliersThermiquesDuPays.PuissanceDisponibleEtCout;
+                                                                ->PaliersThermiquesDuPays[Pays];
+    const std::vector<PDISP_ET_COUTS_HORAIRES_PAR_PALIER>&
+            PuissanceDisponibleEtCout = PaliersThermiquesDuPays.PuissanceDisponibleEtCout;
 
     for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
     {
         sommeDesPminThermiques += PuissanceDisponibleEtCout[index]
-                                    .PuissanceMinDuPalierThermique[pdtHebdo];
+                                          .PuissanceMinDuPalierThermique[pdtHebdo];
     }
 
     return sommeDesPminThermiques;
 }
 
-void setBoundsForUnsuppliedEnergy(PROBLEME_HEBDO* problemeHebdo,
-                                  const AdqPatchParams& adqPatchParams,
-                                  const int PremierPdtDeLIntervalle,
-                                  const int DernierPdtDeLIntervalle,
-                                  const int optimizationNumber)
+void
+setBoundsForUnsuppliedEnergy(PROBLEME_HEBDO* problemeHebdo,
+                             const AdqPatchParams& adqPatchParams,
+                             const int PremierPdtDeLIntervalle,
+                             const int DernierPdtDeLIntervalle,
+                             const int optimizationNumber)
 {
     // OUTPUT
     std::vector<double>& Xmin = problemeHebdo->ProblemeAResoudre->Xmin;
     std::vector<double>& Xmax = problemeHebdo->ProblemeAResoudre->Xmax;
-    std::vector<double*>& AdresseOuPlacerLaValeurDesVariablesOptimisees
-      = problemeHebdo->ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees;
+    std::vector<double*>& AdresseOuPlacerLaValeurDesVariablesOptimisees =
+            problemeHebdo->ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees;
 
     const bool reserveJm1 = (problemeHebdo->YaDeLaReserveJmoins1);
     const bool opt1 = (optimizationNumber == PREMIERE_OPTIMISATION);
@@ -98,10 +103,10 @@ void setBoundsForUnsuppliedEnergy(PROBLEME_HEBDO* problemeHebdo,
     for (int pdtHebdo = PremierPdtDeLIntervalle, pdtJour = 0; pdtHebdo < DernierPdtDeLIntervalle;
          pdtHebdo++, pdtJour++)
     {
-        const ALL_MUST_RUN_GENERATION& AllMustRunGeneration = problemeHebdo
-                                                                ->AllMustRunGeneration[pdtHebdo];
-        const CONSOMMATIONS_ABATTUES& ConsommationsAbattues = problemeHebdo
-                                                                ->ConsommationsAbattues[pdtHebdo];
+        const ALL_MUST_RUN_GENERATION&
+                AllMustRunGeneration = problemeHebdo->AllMustRunGeneration[pdtHebdo];
+        const CONSOMMATIONS_ABATTUES&
+                ConsommationsAbattues = problemeHebdo->ConsommationsAbattues[pdtHebdo];
 
         for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
@@ -110,7 +115,7 @@ void setBoundsForUnsuppliedEnergy(PROBLEME_HEBDO* problemeHebdo,
             if (reserveJm1 && opt1)
             {
                 ResidualLoadInArea += problemeHebdo->ReserveJMoins1[pays]
-                                        .ReserveHoraireJMoins1[pdtHebdo];
+                                              .ReserveHoraireJMoins1[pdtHebdo];
             }
 
             int var = variableManager.PositiveUnsuppliedEnergy(pays, pdtJour);
@@ -120,7 +125,7 @@ void setBoundsForUnsuppliedEnergy(PROBLEME_HEBDO* problemeHebdo,
             if (AllMustRunGeneration.AllMustRunGenerationOfArea[pays] > 0.)
             {
                 MaxAllMustRunGenerationOfArea = AllMustRunGeneration
-                                                  .AllMustRunGenerationOfArea[pays];
+                                                        .AllMustRunGenerationOfArea[pays];
             }
 
             ResidualLoadInArea += MaxAllMustRunGenerationOfArea;
@@ -134,34 +139,35 @@ void setBoundsForUnsuppliedEnergy(PROBLEME_HEBDO* problemeHebdo,
             }
 
             // adq patch: update ENS <= DENS in 2nd run
-            if (adqPatchParams.enabled && adqPatchParams.localMatching.enabled
-                && !problemeHebdo->adequacyPatchRuntimeData->AdequacyFirstStep
-                && problemeHebdo->adequacyPatchRuntimeData->areaMode[pays]
-                     == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
+            if (adqPatchParams.enabled && adqPatchParams.localMatching.enabled &&
+                !problemeHebdo->adequacyPatchRuntimeData->AdequacyFirstStep &&
+                problemeHebdo->adequacyPatchRuntimeData->areaMode[pays] ==
+                        Data::AdequacyPatch::physicalAreaInsideAdqPatch)
             {
                 Xmax[var] = std::min(
-                  Xmax[var],
-                  problemeHebdo->ResultatsHoraires[pays].ValeursHorairesDENS[pdtHebdo]);
+                        Xmax[var],
+                        problemeHebdo->ResultatsHoraires[pays].ValeursHorairesDENS[pdtHebdo]);
             }
 
-            problemeHebdo->ResultatsHoraires[pays].ValeursHorairesDeDefaillancePositive[pdtHebdo]
-              = 0.0;
+            problemeHebdo->ResultatsHoraires[pays]
+                    .ValeursHorairesDeDefaillancePositive[pdtHebdo] = 0.0;
 
             AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = &(
-              problemeHebdo->ResultatsHoraires[pays]
-                .ValeursHorairesDeDefaillancePositive[pdtHebdo]);
+                    problemeHebdo->ResultatsHoraires[pays]
+                            .ValeursHorairesDeDefaillancePositive[pdtHebdo]);
         }
     }
 }
 
-static void setBoundsForShortTermStorage(PROBLEME_HEBDO* problemeHebdo,
-                                         const int PremierPdtDeLIntervalle,
-                                         const int DernierPdtDeLIntervalle)
+static void
+setBoundsForShortTermStorage(PROBLEME_HEBDO* problemeHebdo,
+                             const int PremierPdtDeLIntervalle,
+                             const int DernierPdtDeLIntervalle)
 {
     std::vector<double>& Xmin = problemeHebdo->ProblemeAResoudre->Xmin;
     std::vector<double>& Xmax = problemeHebdo->ProblemeAResoudre->Xmax;
     std::vector<double*>& AddressForVars = problemeHebdo->ProblemeAResoudre
-                                             ->AdresseOuPlacerLaValeurDesVariablesOptimisees;
+                                                   ->AdresseOuPlacerLaValeurDesVariablesOptimisees;
     int weekFirstHour = problemeHebdo->weekInTheYear * 168;
 
     auto variableManager = VariableManagerFromProblemHebdo(problemeHebdo);
@@ -177,36 +183,36 @@ static void setBoundsForShortTermStorage(PROBLEME_HEBDO* problemeHebdo,
             {
                 const int clusterGlobalIndex = storage.clusterGlobalIndex;
                 auto& STSResult = problemeHebdo->ResultatsHoraires[areaIndex]
-                                    .ShortTermStorage[pdtHebdo];
+                                          .ShortTermStorage[pdtHebdo];
                 // 1. Injection
                 int varInjection = variableManager.ShortTermStorageInjection(clusterGlobalIndex,
                                                                              pdtJour);
                 Xmin[varInjection] = 0.;
-                Xmax[varInjection] = storage.injectionNominalCapacity
-                                     * storage.series->maxInjectionModulation[hourInTheYear];
+                Xmax[varInjection] = storage.injectionNominalCapacity *
+                                     storage.series->maxInjectionModulation[hourInTheYear];
                 AddressForVars[varInjection] = &STSResult.injection[storageIndex];
 
                 // 2. Withdrwal
                 int varWithdrawal = variableManager.ShortTermStorageWithdrawal(clusterGlobalIndex,
                                                                                pdtJour);
                 Xmin[varWithdrawal] = 0.;
-                Xmax[varWithdrawal] = storage.withdrawalNominalCapacity
-                                      * storage.series->maxWithdrawalModulation[hourInTheYear];
+                Xmax[varWithdrawal] = storage.withdrawalNominalCapacity *
+                                      storage.series->maxWithdrawalModulation[hourInTheYear];
                 AddressForVars[varWithdrawal] = &STSResult.withdrawal[storageIndex];
 
                 // 3. Levels
                 int varLevel = variableManager.ShortTermStorageLevel(clusterGlobalIndex, pdtJour);
                 if (pdtHebdo == DernierPdtDeLIntervalle - 1 && !storage.initialLevelOptim)
                 {
-                    Xmin[varLevel] = Xmax[varLevel] = storage.reservoirCapacity
-                                                      * storage.initialLevel;
+                    Xmin[varLevel] = Xmax[varLevel] = storage.reservoirCapacity *
+                                                      storage.initialLevel;
                 }
                 else
                 {
-                    Xmin[varLevel] = storage.reservoirCapacity
-                                     * storage.series->lowerRuleCurve[hourInTheYear];
-                    Xmax[varLevel] = storage.reservoirCapacity
-                                     * storage.series->upperRuleCurve[hourInTheYear];
+                    Xmin[varLevel] = storage.reservoirCapacity *
+                                     storage.series->lowerRuleCurve[hourInTheYear];
+                    Xmax[varLevel] = storage.reservoirCapacity *
+                                     storage.series->upperRuleCurve[hourInTheYear];
                 }
                 AddressForVars[varLevel] = &STSResult.level[storageIndex];
 
@@ -216,18 +222,19 @@ static void setBoundsForShortTermStorage(PROBLEME_HEBDO* problemeHebdo,
     }
 }
 
-void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* problemeHebdo,
-                                                            const AdqPatchParams& adqPatchParams,
-                                                            const int PremierPdtDeLIntervalle,
-                                                            const int DernierPdtDeLIntervalle,
-                                                            const int optimizationNumber)
+void
+OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* problemeHebdo,
+                                                       const AdqPatchParams& adqPatchParams,
+                                                       const int PremierPdtDeLIntervalle,
+                                                       const int DernierPdtDeLIntervalle,
+                                                       const int optimizationNumber)
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
-    std::vector<double*>& AdresseOuPlacerLaValeurDesVariablesOptimisees
-      = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees;
-    std::vector<double*>& AdresseOuPlacerLaValeurDesCoutsReduits
-      = ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits;
+    std::vector<double*>& AdresseOuPlacerLaValeurDesVariablesOptimisees =
+            ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees;
+    std::vector<double*>& AdresseOuPlacerLaValeurDesCoutsReduits =
+            ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits;
     std::vector<double>& Xmin = ProblemeAResoudre->Xmin;
     std::vector<double>& Xmax = ProblemeAResoudre->Xmax;
     std::vector<int>& TypeDeVariable = ProblemeAResoudre->TypeDeVariable;
@@ -280,8 +287,8 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
             }
 
             double* adresseDuResultat = &(
-              problemeHebdo->VariablesDualesDesContraintesDeNTC[pdtHebdo]
-                .VariableDualeParInterconnexion[interco]);
+                    problemeHebdo->VariablesDualesDesContraintesDeNTC[pdtHebdo]
+                            .VariableDualeParInterconnexion[interco]);
             AdresseOuPlacerLaValeurDesCoutsReduits[var] = adresseDuResultat;
 
             adresseDuResultat = &(ValeursDeNTC.ValeurDuFlux[interco]);
@@ -293,8 +300,8 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
 
                 if (CoutDeTransport.IntercoGereeAvecLoopFlow)
                 {
-                    Xmax[var] = ValeursDeNTC.ValeurDeNTCOrigineVersExtremite[interco]
-                                - ValeursDeNTC.ValeurDeLoopFlowOrigineVersExtremite[interco];
+                    Xmax[var] = ValeursDeNTC.ValeurDeNTCOrigineVersExtremite[interco] -
+                                ValeursDeNTC.ValeurDeLoopFlowOrigineVersExtremite[interco];
                 }
                 else
                 {
@@ -314,8 +321,8 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
                 var = variableManager.IntercoIndirectCost(interco, pdtJour);
                 if (CoutDeTransport.IntercoGereeAvecLoopFlow)
                 {
-                    Xmax[var] = ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine[interco]
-                                + ValeursDeNTC.ValeurDeLoopFlowOrigineVersExtremite[interco];
+                    Xmax[var] = ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine[interco] +
+                                ValeursDeNTC.ValeurDeLoopFlowOrigineVersExtremite[interco];
                 }
                 else
                 {
@@ -336,26 +343,27 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
 
         for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
-            const PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo
-                                                                  ->PaliersThermiquesDuPays[pays];
+            const PALIERS_THERMIQUES&
+                    PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
             int maxThermalPlant = PaliersThermiquesDuPays.NombreDePaliersThermiques;
 
             for (int index = 0; index < maxThermalPlant; index++)
             {
                 const int palier = PaliersThermiquesDuPays
-                                     .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+                                           .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
                 int var = variableManager.DispatchableProduction(palier, pdtJour);
-                const PDISP_ET_COUTS_HORAIRES_PAR_PALIER& PuissanceDisponibleEtCout
-                  = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[index];
+                const PDISP_ET_COUTS_HORAIRES_PAR_PALIER&
+                        PuissanceDisponibleEtCout = PaliersThermiquesDuPays
+                                                            .PuissanceDisponibleEtCout[index];
 
                 Xmin[var] = PuissanceDisponibleEtCout.PuissanceMinDuPalierThermique[pdtHebdo];
 
                 Xmax[var] = PuissanceDisponibleEtCout
-                              .PuissanceDisponibleDuPalierThermique[pdtHebdo];
+                                    .PuissanceDisponibleDuPalierThermique[pdtHebdo];
 
                 double* adresseDuResultat = &(problemeHebdo->ResultatsHoraires[pays]
-                                                .ProductionThermique[pdtHebdo]
-                                                .ProductionThermiqueDuPalier[index]);
+                                                      .ProductionThermique[pdtHebdo]
+                                                      .ProductionThermiqueDuPalier[index]);
                 AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat;
             }
 
@@ -364,18 +372,18 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
             if (var >= 0)
             {
                 Xmin[var] = problemeHebdo->CaracteristiquesHydrauliques[pays]
-                              .MingenHoraire[pdtHebdo];
+                                    .MingenHoraire[pdtHebdo];
                 Xmax[var] = problemeHebdo->CaracteristiquesHydrauliques[pays]
-                              .ContrainteDePmaxHydrauliqueHoraire[pdtHebdo];
+                                    .ContrainteDePmaxHydrauliqueHoraire[pdtHebdo];
                 double* adresseDuResultat = &(
-                  problemeHebdo->ResultatsHoraires[pays].TurbinageHoraire[pdtHebdo]);
+                        problemeHebdo->ResultatsHoraires[pays].TurbinageHoraire[pdtHebdo]);
                 AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat;
             }
 
             if (problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable)
             {
-                if (problemeHebdo->TypeDeLissageHydraulique
-                    == LISSAGE_HYDRAULIQUE_SUR_SOMME_DES_VARIATIONS)
+                if (problemeHebdo->TypeDeLissageHydraulique ==
+                    LISSAGE_HYDRAULIQUE_SUR_SOMME_DES_VARIATIONS)
                 {
                     var = variableManager.HydProdDown(pays, pdtJour);
                     if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
@@ -394,16 +402,16 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
                         AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = NULL;
                     }
                 }
-                else if (problemeHebdo->TypeDeLissageHydraulique
-                           == LISSAGE_HYDRAULIQUE_SUR_VARIATION_MAX
-                         && pdtJour == 0)
+                else if (problemeHebdo->TypeDeLissageHydraulique ==
+                                 LISSAGE_HYDRAULIQUE_SUR_VARIATION_MAX &&
+                         pdtJour == 0)
                 {
                     var = variableManager.HydProdDown(pays, pdtJour);
                     if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                     {
                         Xmin[var] = 0.0;
                         Xmax[var] = problemeHebdo->CaracteristiquesHydrauliques[pays]
-                                      .MaxDesPmaxHydrauliques;
+                                            .MaxDesPmaxHydrauliques;
                         AdresseOuPlacerLaValeurDesCoutsReduits[var] = NULL;
                         AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = NULL;
                     }
@@ -413,7 +421,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
                     {
                         Xmin[var] = 0.0;
                         Xmax[var] = problemeHebdo->CaracteristiquesHydrauliques[pays]
-                                      .MaxDesPmaxHydrauliques;
+                                            .MaxDesPmaxHydrauliques;
                         AdresseOuPlacerLaValeurDesCoutsReduits[var] = NULL;
                         AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = NULL;
                     }
@@ -426,9 +434,9 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
             {
                 Xmin[var] = 0.0;
                 Xmax[var] = problemeHebdo->CaracteristiquesHydrauliques[pays]
-                              .ContrainteDePmaxPompageHoraire[pdtHebdo];
+                                    .ContrainteDePmaxPompageHoraire[pdtHebdo];
                 double* adresseDuResultat = &(
-                  problemeHebdo->ResultatsHoraires[pays].PompageHoraire[pdtHebdo]);
+                        problemeHebdo->ResultatsHoraires[pays].PompageHoraire[pdtHebdo]);
                 AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat;
             }
 
@@ -439,7 +447,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
             {
                 Xmin[var] = 0.0;
                 Xmax[var] = problemeHebdo->CaracteristiquesHydrauliques[pays]
-                              .ApportNaturelHoraire[pdtHebdo];
+                                    .ApportNaturelHoraire[pdtHebdo];
                 AdresseOuPlacerLaValeurDesCoutsReduits[var] = NULL;
                 AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = NULL;
             }
@@ -448,11 +456,11 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
             if (var >= 0)
             {
                 Xmin[var] = problemeHebdo->CaracteristiquesHydrauliques[pays]
-                              .NiveauHoraireInf[pdtHebdo];
+                                    .NiveauHoraireInf[pdtHebdo];
                 Xmax[var] = problemeHebdo->CaracteristiquesHydrauliques[pays]
-                              .NiveauHoraireSup[pdtHebdo];
+                                    .NiveauHoraireSup[pdtHebdo];
                 double* adresseDuResultat = &(
-                  problemeHebdo->ResultatsHoraires[pays].niveauxHoraires[pdtHebdo]);
+                        problemeHebdo->ResultatsHoraires[pays].niveauxHoraires[pdtHebdo]);
                 AdresseOuPlacerLaValeurDesCoutsReduits[var] = NULL;
                 AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat;
             }
@@ -465,15 +473,15 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
                 Xmax[var] = LINFINI_ANTARES;
 
                 problemeHebdo->ResultatsHoraires[pays]
-                  .ValeursHorairesDeDefaillanceNegative[pdtHebdo]
-                  = 0.0;
-                double* adresseDuResultat = &(problemeHebdo->ResultatsHoraires[pays]
-                                                .ValeursHorairesDeDefaillanceNegative[pdtHebdo]);
+                        .ValeursHorairesDeDefaillanceNegative[pdtHebdo] = 0.0;
+                double* adresseDuResultat = &(
+                        problemeHebdo->ResultatsHoraires[pays]
+                                .ValeursHorairesDeDefaillanceNegative[pdtHebdo]);
                 AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat;
             }
 
-            problemeHebdo->ResultatsHoraires[pays].ValeursHorairesDeDefaillanceEnReserve[pdtHebdo]
-              = 0.0;
+            problemeHebdo->ResultatsHoraires[pays]
+                    .ValeursHorairesDeDefaillanceEnReserve[pdtHebdo] = 0.0;
         }
     }
 
@@ -510,8 +518,8 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
                 if (var >= 0)
                 {
                     Xmin[var] = 0;
-                    Xmax[var] = problemeHebdo->CaracteristiquesHydrauliques[pays].TailleReservoir
-                                / double(100);
+                    Xmax[var] = problemeHebdo->CaracteristiquesHydrauliques[pays].TailleReservoir /
+                                double(100);
 
                     AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = NULL;
                     AdresseOuPlacerLaValeurDesCoutsReduits[var] = NULL;
@@ -523,9 +531,9 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
     if (problemeHebdo->OptimisationAvecCoutsDeDemarrage)
     {
         OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(
-          problemeHebdo,
-          PremierPdtDeLIntervalle,
-          DernierPdtDeLIntervalle);
+                problemeHebdo,
+                PremierPdtDeLIntervalle,
+                DernierPdtDeLIntervalle);
     }
 
     return;

@@ -52,7 +52,8 @@ LinearProblemMatrix::LinearProblemMatrix(PROBLEME_HEBDO* problemeHebdo, Constrai
                          &finalStockGroup_};
 }
 
-void LinearProblemMatrix::Run()
+void
+LinearProblemMatrix::Run()
 {
     InitializeProblemAResoudreCounters();
 

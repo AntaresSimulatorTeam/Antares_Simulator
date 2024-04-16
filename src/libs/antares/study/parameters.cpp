@@ -47,7 +47,8 @@ namespace Antares::Data
 //! Hard coded maximum number of MC years
 const uint maximumMCYears = 100000;
 
-static bool ConvertCStrToListTimeSeries(const String& value, uint& v)
+static bool
+ConvertCStrToListTimeSeries(const String& value, uint& v)
 {
     v = 0;
     if (!value)
@@ -97,8 +98,9 @@ static bool ConvertCStrToListTimeSeries(const String& value, uint& v)
     return true;
 }
 
-static bool ConvertStringToRenewableGenerationModelling(const AnyString& text,
-                                                        RenewableGenerationModelling& out)
+static bool
+ConvertStringToRenewableGenerationModelling(const AnyString& text,
+                                            RenewableGenerationModelling& out)
 {
     CString<24, false> s = text;
     s.trim();
@@ -120,7 +122,8 @@ static bool ConvertStringToRenewableGenerationModelling(const AnyString& text,
     return false;
 }
 
-static bool ConvertCStrToResultFormat(const AnyString& text, ResultFormat& out)
+static bool
+ConvertCStrToResultFormat(const AnyString& text, ResultFormat& out)
 {
     CString<24, false> s = text;
     s.trim();
@@ -147,7 +150,8 @@ static bool ConvertCStrToResultFormat(const AnyString& text, ResultFormat& out)
     return false;
 }
 
-static void ParametersSaveResultFormat(IniFile::Section* section, ResultFormat fmt)
+static void
+ParametersSaveResultFormat(IniFile::Section* section, ResultFormat fmt)
 {
     const String name = "result-format";
     switch (fmt)
@@ -163,7 +167,8 @@ static void ParametersSaveResultFormat(IniFile::Section* section, ResultFormat f
     }
 }
 
-bool StringToSimulationMode(SimulationMode& mode, CString<20, false> text)
+bool
+StringToSimulationMode(SimulationMode& mode, CString<20, false> text)
 {
     if (!text)
     {
@@ -199,7 +204,8 @@ bool StringToSimulationMode(SimulationMode& mode, CString<20, false> text)
     return false;
 }
 
-const char* SimulationModeToCString(SimulationMode mode)
+const char*
+SimulationModeToCString(SimulationMode mode)
 {
     switch (mode)
     {
@@ -221,17 +227,20 @@ Parameters::Parameters():
 
 Parameters::~Parameters() = default;
 
-bool Parameters::economy() const
+bool
+Parameters::economy() const
 {
     return mode == SimulationMode::Economy;
 }
 
-bool Parameters::adequacy() const
+bool
+Parameters::adequacy() const
 {
     return mode == SimulationMode::Adequacy;
 }
 
-void Parameters::resetSeeds()
+void
+Parameters::resetSeeds()
 {
     // Initialize all seeds
     // For retro-compatibility, the wind ts-generator should produce the
@@ -248,7 +257,8 @@ void Parameters::resetSeeds()
     }
 }
 
-void Parameters::resetPlayedYears(uint nbOfYears)
+void
+Parameters::resetPlayedYears(uint nbOfYears)
 {
     // Set the number of years
     nbYears = std::min(nbOfYears, maximumMCYears);
@@ -258,7 +268,8 @@ void Parameters::resetPlayedYears(uint nbOfYears)
     std::fill(yearsFilter.begin(), yearsFilter.end(), true);
 }
 
-void Parameters::reset()
+void
+Parameters::reset()
 {
     // Mode
     mode = SimulationMode::Economy;
@@ -375,12 +386,14 @@ void Parameters::reset()
     resetSeeds();
 }
 
-bool Parameters::isTSGeneratedByPrepro(const TimeSeriesType ts) const
+bool
+Parameters::isTSGeneratedByPrepro(const TimeSeriesType ts) const
 {
     return (timeSeriesToGenerate & ts);
 }
 
-static void ParametersSaveTimeSeries(IniFile::Section* s, const char* name, uint value)
+static void
+ParametersSaveTimeSeries(IniFile::Section* s, const char* name, uint value)
 {
     CString<60, false> v;
 
@@ -447,10 +460,11 @@ static void ParametersSaveTimeSeries(IniFile::Section* s, const char* name, uint
     s->add(name, v);
 }
 
-static bool SGDIntLoadFamily_General(Parameters& d,
-                                     const String& key,
-                                     const String& value,
-                                     const String& rawvalue)
+static bool
+SGDIntLoadFamily_General(Parameters& d,
+                         const String& key,
+                         const String& value,
+                         const String& rawvalue)
 {
     if (key == "active-rules-scenario")
     {
@@ -646,10 +660,8 @@ static bool SGDIntLoadFamily_General(Parameters& d,
     return false;
 }
 
-static bool SGDIntLoadFamily_Input(Parameters& d,
-                                   const String& key,
-                                   const String& value,
-                                   const String&)
+static bool
+SGDIntLoadFamily_Input(Parameters& d, const String& key, const String& value, const String&)
 {
     if (key == "import")
     {
@@ -659,10 +671,8 @@ static bool SGDIntLoadFamily_Input(Parameters& d,
     return false;
 }
 
-static bool SGDIntLoadFamily_Output(Parameters& d,
-                                    const String& key,
-                                    const String& value,
-                                    const String&)
+static bool
+SGDIntLoadFamily_Output(Parameters& d, const String& key, const String& value, const String&)
 {
     if (key == "archives")
     {
@@ -687,10 +697,8 @@ static bool SGDIntLoadFamily_Output(Parameters& d,
     return false;
 }
 
-static bool SGDIntLoadFamily_Optimization(Parameters& d,
-                                          const String& key,
-                                          const String& value,
-                                          const String&)
+static bool
+SGDIntLoadFamily_Optimization(Parameters& d, const String& key, const String& value, const String&)
 {
     if (key == "include-constraints")
     {
@@ -753,13 +761,13 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
         try
         {
             d.include.unfeasibleProblemBehavior = Enum::fromString<UnfeasibleProblemBehavior>(
-              string);
+                    string);
         }
         catch (AssertionError& ex)
         {
             logs.warning()
-              << "Assertion error for unfeasible problem behavior from string conversion : "
-              << ex.what();
+                    << "Assertion error for unfeasible problem behavior from string conversion : "
+                    << ex.what();
 
             result = false;
             d.include.unfeasibleProblemBehavior = UnfeasibleProblemBehavior::ERROR_MPS;
@@ -787,18 +795,17 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
     return false;
 }
 
-static bool SGDIntLoadFamily_AdqPatch(Parameters& d,
-                                      const String& key,
-                                      const String& value,
-                                      const String&)
+static bool
+SGDIntLoadFamily_AdqPatch(Parameters& d, const String& key, const String& value, const String&)
 {
     return d.adqPatchParams.updateFromKeyValue(key, value);
 }
 
-static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
-                                              const String& key,
-                                              const String& value,
-                                              const String&)
+static bool
+SGDIntLoadFamily_OtherPreferences(Parameters& d,
+                                  const String& key,
+                                  const String& value,
+                                  const String&)
 {
     if (key == "hydro-heuristic-policy")
     {
@@ -902,10 +909,11 @@ static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
     return false;
 }
 
-static bool SGDIntLoadFamily_AdvancedParameters(Parameters& d,
-                                                const String& key,
-                                                const String& value,
-                                                const String&)
+static bool
+SGDIntLoadFamily_AdvancedParameters(Parameters& d,
+                                    const String& key,
+                                    const String& value,
+                                    const String&)
 {
     if (key == "accuracy-on-correlation")
     {
@@ -914,10 +922,8 @@ static bool SGDIntLoadFamily_AdvancedParameters(Parameters& d,
     return false;
 }
 
-static bool SGDIntLoadFamily_Playlist(Parameters& d,
-                                      const String& key,
-                                      const String& value,
-                                      const String&)
+static bool
+SGDIntLoadFamily_Playlist(Parameters& d, const String& key, const String& value, const String&)
 {
     if (key == "playlist_reset")
     {
@@ -984,8 +990,8 @@ static bool SGDIntLoadFamily_Playlist(Parameters& d,
             {
                 valid = false;
                 logs.warning()
-                  << "parameters: invalid MC year index for MC year weight definition. Got '" << y
-                  << "'. Value not used";
+                        << "parameters: invalid MC year index for MC year weight definition. Got '"
+                        << y << "'. Value not used";
             }
 
             if (weight < 0.f)
@@ -1014,29 +1020,31 @@ static bool SGDIntLoadFamily_Playlist(Parameters& d,
     return false;
 }
 
-static bool deprecatedVariable(std::string var)
+static bool
+deprecatedVariable(std::string var)
 {
     static const std::vector<std::string> STSGroups_legacy = {
-      "psp_open_level",      "psp_closed_level",      "pondage_level",
-      "battery_level",       "other1_level",          "other2_level",
-      "other3_level",        "other4_level",          "other5_level",
+            "psp_open_level",      "psp_closed_level",      "pondage_level",
+            "battery_level",       "other1_level",          "other2_level",
+            "other3_level",        "other4_level",          "other5_level",
 
-      "psp_open_injection",  "psp_closed_injection",  "pondage_injection",
-      "battery_injection",   "other1_injection",      "other2_injection",
-      "other3_injection",    "other4_injection",      "other5_injection",
+            "psp_open_injection",  "psp_closed_injection",  "pondage_injection",
+            "battery_injection",   "other1_injection",      "other2_injection",
+            "other3_injection",    "other4_injection",      "other5_injection",
 
-      "psp_open_withdrawal", "psp_closed_withdrawal", "pondage_withdrawal",
-      "battery_withdrawal",  "other1_withdrawal",     "other2_withdrawal",
-      "other3_withdrawal",   "other4_withdrawal",     "other5_withdrawal"};
+            "psp_open_withdrawal", "psp_closed_withdrawal", "pondage_withdrawal",
+            "battery_withdrawal",  "other1_withdrawal",     "other2_withdrawal",
+            "other3_withdrawal",   "other4_withdrawal",     "other5_withdrawal"};
     boost::to_lower(var);
-    return std::find(STSGroups_legacy.begin(), STSGroups_legacy.end(), var)
-           != STSGroups_legacy.end();
+    return std::find(STSGroups_legacy.begin(), STSGroups_legacy.end(), var) !=
+           STSGroups_legacy.end();
 }
 
-static bool SGDIntLoadFamily_VariablesSelection(Parameters& d,
-                                                const String& key,
-                                                const String& value,
-                                                const String& original)
+static bool
+SGDIntLoadFamily_VariablesSelection(Parameters& d,
+                                    const String& key,
+                                    const String& value,
+                                    const String& original)
 {
     if (key == "selected_vars_reset")
     {
@@ -1066,10 +1074,11 @@ static bool SGDIntLoadFamily_VariablesSelection(Parameters& d,
     return false;
 }
 
-static bool SGDIntLoadFamily_SeedsMersenneTwister(Parameters& d,
-                                                  const String& key,
-                                                  const String& value,
-                                                  const String&)
+static bool
+SGDIntLoadFamily_SeedsMersenneTwister(Parameters& d,
+                                      const String& key,
+                                      const String& value,
+                                      const String&)
 {
     if (key.startsWith("seed")) // seeds
     {
@@ -1117,11 +1126,12 @@ static bool SGDIntLoadFamily_SeedsMersenneTwister(Parameters& d,
     return false;
 }
 
-static bool SGDIntLoadFamily_Legacy(Parameters& d,
-                                    const String& key,
-                                    const String& value,
-                                    const String&,
-                                    const StudyVersion& version)
+static bool
+SGDIntLoadFamily_Legacy(Parameters& d,
+                        const String& key,
+                        const String& value,
+                        const String&,
+                        const StudyVersion& version)
 {
     // Comparisons kept for compatibility reasons
 
@@ -1176,36 +1186,36 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
     return false;
 }
 
-bool firstKeyLetterIsValid(const String& name)
+bool
+firstKeyLetterIsValid(const String& name)
 {
     char firstLetter = name.first();
     return (firstLetter >= 'a' && firstLetter <= 'z');
 }
 
-bool Parameters::loadFromINI(const IniFile& ini,
-                             StudyVersion& version,
-                             const StudyLoadOptions& options)
+bool
+Parameters::loadFromINI(const IniFile& ini, StudyVersion& version, const StudyLoadOptions& options)
 {
     // Reset inner data
     reset();
     // A temporary buffer, used for the values in lowercase
     using Callback = bool (*)(
-      Parameters&,    // [out] Parameter object to load the data into
-      const String&,  // [in] Key, comes left to the '=' sign in the .ini file
-      const String&,  // [in] Lowercase value, comes right to the '=' sign in the .ini file
-      const String&); // [in] Raw value as writtent right to the '=' sign in the .ini file
+            Parameters&,    // [out] Parameter object to load the data into
+            const String&,  // [in] Key, comes left to the '=' sign in the .ini file
+            const String&,  // [in] Lowercase value, comes right to the '=' sign in the .ini file
+            const String&); // [in] Raw value as writtent right to the '=' sign in the .ini file
 
     static const std::map<String, Callback> sectionAssociatedToKeysProcess = {
-      {"general", &SGDIntLoadFamily_General},
-      {"input", &SGDIntLoadFamily_Input},
-      {"output", &SGDIntLoadFamily_Output},
-      {"optimization", &SGDIntLoadFamily_Optimization},
-      {"adequacy patch", &SGDIntLoadFamily_AdqPatch},
-      {"other preferences", &SGDIntLoadFamily_OtherPreferences},
-      {"advanced parameters", &SGDIntLoadFamily_AdvancedParameters},
-      {"playlist", &SGDIntLoadFamily_Playlist},
-      {"variables selection", &SGDIntLoadFamily_VariablesSelection},
-      {"seeds - mersenne twister", &SGDIntLoadFamily_SeedsMersenneTwister}};
+            {"general", &SGDIntLoadFamily_General},
+            {"input", &SGDIntLoadFamily_Input},
+            {"output", &SGDIntLoadFamily_Output},
+            {"optimization", &SGDIntLoadFamily_Optimization},
+            {"adequacy patch", &SGDIntLoadFamily_AdqPatch},
+            {"other preferences", &SGDIntLoadFamily_OtherPreferences},
+            {"advanced parameters", &SGDIntLoadFamily_AdvancedParameters},
+            {"playlist", &SGDIntLoadFamily_Playlist},
+            {"variables selection", &SGDIntLoadFamily_VariablesSelection},
+            {"seeds - mersenne twister", &SGDIntLoadFamily_SeedsMersenneTwister}};
 
     Callback handleAllKeysInSection;
     // Foreach section on the ini file...
@@ -1319,7 +1329,8 @@ bool Parameters::loadFromINI(const IniFile& ini,
     return true;
 }
 
-void Parameters::fixRefreshIntervals()
+void
+Parameters::fixRefreshIntervals()
 {
     using T = std::tuple<uint& /* refreshInterval */,
                          enum TimeSeriesType /* ts */,
@@ -1342,7 +1353,8 @@ void Parameters::fixRefreshIntervals()
     }
 }
 
-void Parameters::fixGenRefreshForNTC()
+void
+Parameters::fixGenRefreshForNTC()
 {
     if ((timeSeriesTransmissionCapacities & timeSeriesToGenerate) != 0)
     {
@@ -1364,7 +1376,8 @@ void Parameters::fixGenRefreshForNTC()
     }
 }
 
-void Parameters::fixGenRefreshForHydroMaxPower()
+void
+Parameters::fixGenRefreshForHydroMaxPower()
 {
     if ((timeSeriesHydroMaxPower & timeSeriesToGenerate) != 0)
     {
@@ -1380,7 +1393,8 @@ void Parameters::fixGenRefreshForHydroMaxPower()
     }
 }
 
-void Parameters::fixBadValues()
+void
+Parameters::fixBadValues()
 {
     if (derated)
     {
@@ -1423,19 +1437,22 @@ void Parameters::fixBadValues()
     }
 }
 
-uint64_t Parameters::memoryUsage() const
+uint64_t
+Parameters::memoryUsage() const
 {
-    return sizeof(Parameters) + yearsWeight.size() * sizeof(double)
-           + yearsFilter.size(); // vector of bools, 1 bit per coefficient
+    return sizeof(Parameters) + yearsWeight.size() * sizeof(double) +
+           yearsFilter.size(); // vector of bools, 1 bit per coefficient
 }
 
-void Parameters::resetYearsWeigth()
+void
+Parameters::resetYearsWeigth()
 {
     yearsWeight.clear();
     yearsWeight.assign(nbYears, 1.f);
 }
 
-std::vector<float> Parameters::getYearsWeight() const
+std::vector<float>
+Parameters::getYearsWeight() const
 {
     std::vector<float> result;
 
@@ -1451,7 +1468,8 @@ std::vector<float> Parameters::getYearsWeight() const
     return result;
 }
 
-float Parameters::getYearsWeightSum() const
+float
+Parameters::getYearsWeightSum() const
 {
     float result = 0.f;
 
@@ -1481,13 +1499,15 @@ float Parameters::getYearsWeightSum() const
     return result;
 }
 
-void Parameters::setYearWeight(uint year, float weight)
+void
+Parameters::setYearWeight(uint year, float weight)
 {
     assert(year < yearsWeight.size());
     yearsWeight[year] = weight;
 }
 
-void Parameters::prepareForSimulation(const StudyLoadOptions& options)
+void
+Parameters::prepareForSimulation(const StudyLoadOptions& options)
 {
     // We don't care of the variable `horizon` since it is not used by the solver
     horizon.clear();
@@ -1594,11 +1614,11 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
     {
     case rgClusters:
         logs.info()
-          << "Cluster renewables were chosen. Output will be disabled for aggregated modes.";
+                << "Cluster renewables were chosen. Output will be disabled for aggregated modes.";
         break;
     case rgAggregated:
-        logs.info()
-          << "Aggregate renewables were chosen. Output will be disabled for renewable clusters.";
+        logs.info() << "Aggregate renewables were chosen. Output will be disabled for renewable "
+                       "clusters.";
         break;
     case rgUnknown:
         logs.error() << "Generation should be either `clusters` or `aggregated`";
@@ -1631,10 +1651,10 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
     }
     }
 
-    if (interModal == timeSeriesLoad || interModal == timeSeriesSolar
-        || interModal == timeSeriesWind || interModal == timeSeriesHydro
-        || interModal == timeSeriesThermal || interModal == timeSeriesRenewable
-        || interModal == timeSeriesHydroMaxPower)
+    if (interModal == timeSeriesLoad || interModal == timeSeriesSolar ||
+        interModal == timeSeriesWind || interModal == timeSeriesHydro ||
+        interModal == timeSeriesThermal || interModal == timeSeriesRenewable ||
+        interModal == timeSeriesHydroMaxPower)
     {
         // Only one timeseries in interModal correlation, which is the same than nothing
         interModal = 0;
@@ -1793,13 +1813,15 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
     logs.info() << "  :: Printing solver logs : " << (solverLogs ? "True" : "False");
 }
 
-void Parameters::resetPlaylist(uint nbOfYears)
+void
+Parameters::resetPlaylist(uint nbOfYears)
 {
     resetPlayedYears(nbOfYears);
     resetYearsWeigth();
 }
 
-void Parameters::saveToINI(IniFile& ini) const
+void
+Parameters::saveToINI(IniFile& ini) const
 {
     // -- General --
     {
@@ -2029,9 +2051,10 @@ void Parameters::saveToINI(IniFile& ini) const
     }
 }
 
-bool Parameters::loadFromFile(const AnyString& filename,
-                              StudyVersion& version,
-                              const StudyLoadOptions& options)
+bool
+Parameters::loadFromFile(const AnyString& filename,
+                         StudyVersion& version,
+                         const StudyLoadOptions& options)
 {
     // Loading the INI file
     IniFile ini;
@@ -2048,14 +2071,16 @@ bool Parameters::loadFromFile(const AnyString& filename,
     return false;
 }
 
-bool Parameters::saveToFile(const AnyString& filename) const
+bool
+Parameters::saveToFile(const AnyString& filename) const
 {
     IniFile ini;
     saveToINI(ini);
     return ini.save(filename);
 }
 
-void Parameters::RenewableGeneration::addExcludedVariables(std::vector<std::string>& out) const
+void
+Parameters::RenewableGeneration::addExcludedVariables(std::vector<std::string>& out) const
 {
     const static std::vector<std::string> ren = {"WIND OFFSHORE",
                                                  "WIND ONSHORE",
@@ -2084,7 +2109,8 @@ void Parameters::RenewableGeneration::addExcludedVariables(std::vector<std::stri
     }
 }
 
-bool Parameters::haveToImport(int tsKind) const
+bool
+Parameters::haveToImport(int tsKind) const
 {
     if (tsKind == timeSeriesThermal)
     {
@@ -2095,33 +2121,39 @@ bool Parameters::haveToImport(int tsKind) const
     return (exportTimeSeriesInInput & tsKind) && (timeSeriesToGenerate & tsKind);
 }
 
-RenewableGenerationModelling Parameters::RenewableGeneration::operator()() const
+RenewableGenerationModelling
+Parameters::RenewableGeneration::operator()() const
 {
     return rgModelling;
 }
 
-void Parameters::RenewableGeneration::toAggregated()
+void
+Parameters::RenewableGeneration::toAggregated()
 {
     rgModelling = Antares::Data::rgAggregated;
 }
 
-void Parameters::RenewableGeneration::toClusters()
+void
+Parameters::RenewableGeneration::toClusters()
 {
     rgModelling = Antares::Data::rgClusters;
 }
 
-bool Parameters::RenewableGeneration::isAggregated() const
+bool
+Parameters::RenewableGeneration::isAggregated() const
 {
     return rgModelling == Antares::Data::rgAggregated;
 }
 
-bool Parameters::RenewableGeneration::isClusters() const
+bool
+Parameters::RenewableGeneration::isClusters() const
 {
     return rgModelling == Antares::Data::rgClusters;
 }
 
 // Some variables rely on dual values & marginal costs
-void Parameters::UCMode::addExcludedVariables(std::vector<std::string>& out) const
+void
+Parameters::UCMode::addExcludedVariables(std::vector<std::string>& out) const
 {
     // These variables rely on dual values & marginal costs
     // these don't really make sense for MILP problems

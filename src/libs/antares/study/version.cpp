@@ -30,25 +30,26 @@ using namespace Antares::Data;
 namespace
 {
 constexpr auto supportedVersions = std::to_array({
-  StudyVersion(7, 0),
-  StudyVersion(7, 1),
-  StudyVersion(7, 2),
-  StudyVersion(8, 0),
-  StudyVersion(8, 1),
-  StudyVersion(8, 2),
-  StudyVersion(8, 3),
-  StudyVersion(8, 4),
-  StudyVersion(8, 5),
-  StudyVersion(8, 6),
-  StudyVersion(8, 7),
-  StudyVersion(8, 8),
-  StudyVersion(9, 0),
-  StudyVersion(9, 1)
-  // Add new versions here
+        StudyVersion(7, 0),
+        StudyVersion(7, 1),
+        StudyVersion(7, 2),
+        StudyVersion(8, 0),
+        StudyVersion(8, 1),
+        StudyVersion(8, 2),
+        StudyVersion(8, 3),
+        StudyVersion(8, 4),
+        StudyVersion(8, 5),
+        StudyVersion(8, 6),
+        StudyVersion(8, 7),
+        StudyVersion(8, 8),
+        StudyVersion(9, 0),
+        StudyVersion(9, 1)
+        // Add new versions here
 });
 
 /// Convert a unsigned into a StudyVersion, used for legacy version format (ex: 720)
-StudyVersion legacyVersionIntToVersion(unsigned version)
+StudyVersion
+legacyVersionIntToVersion(unsigned version)
 {
     // It's not necessary to add anything here, since legacy versions should not be created
 
@@ -92,7 +93,8 @@ StudyVersion legacyVersionIntToVersion(unsigned version)
     }
 }
 
-StudyVersion parseLegacyVersion(const std::string& versionStr)
+StudyVersion
+parseLegacyVersion(const std::string& versionStr)
 {
     unsigned versionNumber = 0;
     try
@@ -107,7 +109,8 @@ StudyVersion parseLegacyVersion(const std::string& versionStr)
     return ::legacyVersionIntToVersion(versionNumber);
 }
 
-StudyVersion parseCurrentVersion(const std::string& s, size_t separator)
+StudyVersion
+parseCurrentVersion(const std::string& s, size_t separator)
 {
     unsigned major, minor;
 
@@ -137,7 +140,8 @@ static_assert(StudyVersion(ANTARES_VERSION_HI, ANTARES_VERSION_LO) == ::supporte
 
 namespace Antares::Data
 {
-bool StudyVersion::fromString(const std::string& versionStr)
+bool
+StudyVersion::fromString(const std::string& versionStr)
 {
     // if the string doesn't contains a dot it's legacy format
     if (size_t separator = versionStr.find("."); separator == std::string::npos)
@@ -158,22 +162,26 @@ bool StudyVersion::fromString(const std::string& versionStr)
     return false;
 }
 
-std::string StudyVersion::toString() const
+std::string
+StudyVersion::toString() const
 {
     return std::to_string(major_) + "." + std::to_string(minor_);
 }
 
-StudyVersion StudyVersion::latest()
+StudyVersion
+StudyVersion::latest()
 {
     return ::supportedVersions.back();
 }
 
-StudyVersion StudyVersion::unknown()
+StudyVersion
+StudyVersion::unknown()
 {
     return StudyVersion();
 }
 
-bool StudyVersion::isSupported(bool verbose) const
+bool
+StudyVersion::isSupported(bool verbose) const
 {
     if (std::ranges::find(::supportedVersions, *this) != ::supportedVersions.end())
     {

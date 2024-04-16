@@ -87,9 +87,8 @@ public:
     void NumberStoppingDispatchableUnits(unsigned int variable, const std::string& clusterName);
     void NumberStartingDispatchableUnits(unsigned int variable, const std::string& clusterName);
     void NumberBreakingDownDispatchableUnits(unsigned int variable, const std::string& clusterName);
-    void NTCDirect(unsigned int variable,
-                   const std::string& origin,
-                   const std::string& destination);
+    void
+    NTCDirect(unsigned int variable, const std::string& origin, const std::string& destination);
     void IntercoDirectCost(unsigned int variable,
                            const std::string& origin,
                            const std::string& destination);
@@ -112,9 +111,8 @@ public:
     void AreaBalance(unsigned int variable);
 
 private:
-    void SetAreaVariableName(unsigned int variable,
-                             const std::string& variableType,
-                             int layerIndex);
+    void
+    SetAreaVariableName(unsigned int variable, const std::string& variableType, int layerIndex);
     void SetShortTermStorageVariableName(unsigned int variable,
                                          const std::string& variableType,
                                          const std::string& shortTermStorageName);
@@ -164,12 +162,14 @@ private:
                                  const std::string& type);
 };
 
-inline std::string TimeIdentifier(unsigned int timeStep, const std::string& timeStepType)
+inline std::string
+TimeIdentifier(unsigned int timeStep, const std::string& timeStepType)
 {
     return timeStepType + "<" + std::to_string(timeStep) + ">";
 }
 
-inline std::string LocationIdentifier(const std::string& location, const std::string& locationType)
+inline std::string
+LocationIdentifier(const std::string& location, const std::string& locationType)
 {
     return locationType + "<" + location + ">";
 }

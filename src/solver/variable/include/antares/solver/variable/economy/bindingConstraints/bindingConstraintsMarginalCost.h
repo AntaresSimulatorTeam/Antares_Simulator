@@ -53,12 +53,12 @@ struct VCardBindingConstMarginCost
     }
 
     //! The expecte results
-    typedef Results<R::AllYears::Average< // The average values thoughout all years
-      R::AllYears::StdDeviation<          // The standard deviation values throughout all years
-        R::AllYears::Min<                 // The minimum values thoughout all years
-          R::AllYears::Max<               // The maximum values thoughout all years
-            >>>>>
-      ResultsType;
+    typedef Results<R::AllYears::Average<     // The average values thoughout all years
+            R::AllYears::StdDeviation<        // The standard deviation values throughout all years
+                    R::AllYears::Min<         // The minimum values thoughout all years
+                            R::AllYears::Max< // The maximum values thoughout all years
+                                    >>>>>
+            ResultsType;
 
     enum
     {
@@ -120,11 +120,11 @@ public:
     {
         enum
         {
-            count = ((VCardType::categoryDataLevel & CDataLevel
-                      && VCardType::categoryFileLevel & CFile)
-                       ? (NextType::template Statistics<CDataLevel, CFile>::count
-                          + VCardType::columnCount * ResultsType::count)
-                       : NextType::template Statistics<CDataLevel, CFile>::count),
+            count = ((VCardType::categoryDataLevel & CDataLevel &&
+                      VCardType::categoryFileLevel & CFile)
+                             ? (NextType::template Statistics<CDataLevel, CFile>::count +
+                                VCardType::columnCount * ResultsType::count)
+                             : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
 
@@ -252,9 +252,9 @@ public:
             int dayInTheYear = state.weekInTheYear * 7;
             for (int dayInTheWeek = 0; dayInTheWeek < 7; dayInTheWeek++)
             {
-                pValuesForTheCurrentYear[numSpace].day[dayInTheYear]
-                  -= state.problemeHebdo
-                       ->ResultatsContraintesCouplantes[associatedBC_][dayInTheWeek];
+                pValuesForTheCurrentYear[numSpace]
+                        .day[dayInTheYear] -= state.problemeHebdo->ResultatsContraintesCouplantes
+                                                      [associatedBC_][dayInTheWeek];
 
                 dayInTheYear++;
             }
@@ -266,7 +266,7 @@ public:
         {
             uint weekInTheYear = state.weekInTheYear;
             double weeklyValue = -state.problemeHebdo
-                                    ->ResultatsContraintesCouplantes[associatedBC_][0];
+                                          ->ResultatsContraintesCouplantes[associatedBC_][0];
 
             pValuesForTheCurrentYear[numSpace].week[weekInTheYear] = weeklyValue;
 
@@ -297,27 +297,25 @@ public:
         auto numSpace = state.numSpace;
         if (associatedBC_->type() == Data::BindingConstraint::typeHourly)
         {
-            pValuesForTheCurrentYear[numSpace][hourInTheYear] -= state.problemeHebdo
-                                                                   ->ResultatsContraintesCouplantes
-                                                                     [associatedBC_]
-                                                                     [state.hourInTheWeek];
+            pValuesForTheCurrentYear
+                    [numSpace][hourInTheYear] -= state.problemeHebdo->ResultatsContraintesCouplantes
+                                                         [associatedBC_][state.hourInTheWeek];
         }
 
         NextType::hourEnd(state, hourInTheYear);
     }
 
-    Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
-      unsigned int,
-      unsigned int numSpace) const
+    Antares::Memory::Stored<double>::ConstReturnType
+    retrieveRawHourlyValuesForCurrentYear(unsigned int, unsigned int numSpace) const
     {
         return pValuesForTheCurrentYear[numSpace].hour;
     }
 
-    void localBuildAnnualSurveyReport(
-      SurveyResults& results,
-      int fileLevel,
-      int precision /* printed results : hourly, daily, weekly, ...*/,
-      unsigned int numSpace) const
+    void
+    localBuildAnnualSurveyReport(SurveyResults& results,
+                                 int fileLevel,
+                                 int precision /* printed results : hourly, daily, weekly, ...*/,
+                                 unsigned int numSpace) const
     {
         if (!(precision & associatedBC_->yearByYearFilter()))
         {
@@ -333,14 +331,12 @@ public:
             results.variableCaption = getBindConstraintCaption();
             results.variableUnit = VCardType::Unit();
             pValuesForTheCurrentYear[numSpace]
-              .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
+                    .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
         }
     }
 
-    void buildSurveyReport(SurveyResults& results,
-                           int dataLevel,
-                           int fileLevel,
-                           int precision) const
+    void
+    buildSurveyReport(SurveyResults& results, int dataLevel, int fileLevel, int precision) const
     {
         // Building syntheses results
         // ------------------------------
@@ -350,8 +346,8 @@ public:
         }
 
         // And only if we match the current data level _and_ precision level
-        if ((dataLevel & VCardType::categoryDataLevel) && (fileLevel & VCardType::categoryFileLevel)
-            && (precision & VCardType::precision))
+        if ((dataLevel & VCardType::categoryDataLevel) &&
+            (fileLevel & VCardType::categoryFileLevel) && (precision & VCardType::precision))
         {
             results.isPrinted = AncestorType::isPrinted;
             results.isCurrentVarNA[0] = isCurrentOutputNonApplicable(precision);
@@ -371,8 +367,8 @@ private:
     // ---------------
     std::string getBindConstraintCaption() const
     {
-        std::string mathOperator(
-          Antares::Data::BindingConstraint::MathOperatorToCString(associatedBC_->operatorType()));
+        std::string mathOperator(Antares::Data::BindingConstraint::MathOperatorToCString(
+                associatedBC_->operatorType()));
         return std::string() + associatedBC_->name().c_str() + " (" + mathOperator + ")";
     }
 

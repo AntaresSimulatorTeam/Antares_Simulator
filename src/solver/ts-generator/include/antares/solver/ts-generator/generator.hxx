@@ -31,19 +31,19 @@ namespace Antares::TSGenerator
 bool GenerateHydroTimeSeries(Data::Study& study, uint year, IResultWriter& writer);
 
 template<>
-inline bool GenerateTimeSeries<Data::timeSeriesHydro>(Data::Study& study,
-                                                      uint year,
-                                                      IResultWriter& writer)
+inline bool
+GenerateTimeSeries<Data::timeSeriesHydro>(Data::Study& study, uint year, IResultWriter& writer)
 {
     return GenerateHydroTimeSeries(study, year, writer);
 }
 
 // --- TS Generators using XCast ---
 template<enum Data::TimeSeriesType T>
-bool GenerateTimeSeries(Data::Study& study, uint year, IResultWriter& writer)
+bool
+GenerateTimeSeries(Data::Study& study, uint year, IResultWriter& writer)
 {
     auto* xcast = reinterpret_cast<XCast::XCast*>(
-      study.cacheTSGenerator[Data::TimeSeriesBitPatternIntoIndex<T>::value]);
+            study.cacheTSGenerator[Data::TimeSeriesBitPatternIntoIndex<T>::value]);
 
     if (not xcast)
     {
@@ -82,10 +82,11 @@ bool GenerateTimeSeries(Data::Study& study, uint year, IResultWriter& writer)
 }
 
 template<enum Data::TimeSeriesType T>
-void Destroy(Data::Study& study, uint year)
+void
+Destroy(Data::Study& study, uint year)
 {
     auto* xcast = reinterpret_cast<XCast::XCast*>(
-      study.cacheTSGenerator[Data::TimeSeriesBitPatternIntoIndex<T>::value]);
+            study.cacheTSGenerator[Data::TimeSeriesBitPatternIntoIndex<T>::value]);
     if (not xcast)
     {
         return;
@@ -99,32 +100,32 @@ void Destroy(Data::Study& study, uint year)
     {
     case Data::timeSeriesLoad:
     {
-        shouldDestroy = (parameters.refreshIntervalLoad > parameters.nbYears)
-                        || year + parameters.refreshIntervalLoad > parameters.nbYears;
+        shouldDestroy = (parameters.refreshIntervalLoad > parameters.nbYears) ||
+                        year + parameters.refreshIntervalLoad > parameters.nbYears;
         break;
     }
     case Data::timeSeriesSolar:
     {
-        shouldDestroy = (parameters.refreshIntervalSolar > parameters.nbYears)
-                        || year + parameters.refreshIntervalSolar > parameters.nbYears;
+        shouldDestroy = (parameters.refreshIntervalSolar > parameters.nbYears) ||
+                        year + parameters.refreshIntervalSolar > parameters.nbYears;
         break;
     }
     case Data::timeSeriesHydro:
     {
-        shouldDestroy = (parameters.refreshIntervalHydro > parameters.nbYears)
-                        || year + parameters.refreshIntervalHydro > parameters.nbYears;
+        shouldDestroy = (parameters.refreshIntervalHydro > parameters.nbYears) ||
+                        year + parameters.refreshIntervalHydro > parameters.nbYears;
         break;
     }
     case Data::timeSeriesWind:
     {
-        shouldDestroy = (parameters.refreshIntervalWind > parameters.nbYears)
-                        || year + parameters.refreshIntervalWind > parameters.nbYears;
+        shouldDestroy = (parameters.refreshIntervalWind > parameters.nbYears) ||
+                        year + parameters.refreshIntervalWind > parameters.nbYears;
         break;
     }
     case Data::timeSeriesThermal:
     {
-        shouldDestroy = (parameters.refreshIntervalThermal > parameters.nbYears)
-                        || year + parameters.refreshIntervalThermal > parameters.nbYears;
+        shouldDestroy = (parameters.refreshIntervalThermal > parameters.nbYears) ||
+                        year + parameters.refreshIntervalThermal > parameters.nbYears;
         break;
     }
     default:

@@ -32,7 +32,8 @@ inline IntermediateValues::~IntermediateValues()
     Antares::Memory::Release(hour);
 }
 
-inline void IntermediateValues::reset()
+inline void
+IntermediateValues::reset()
 {
     Antares::Memory::Zero(maxHoursInAYear, hour);
     memset(month, 0, sizeof(month));
@@ -40,26 +41,29 @@ inline void IntermediateValues::reset()
     memset(day, 0, sizeof(day));
 }
 
-inline IntermediateValues::Type& IntermediateValues::operator[](const unsigned int index)
+inline IntermediateValues::Type&
+IntermediateValues::operator[](const unsigned int index)
 {
     return hour[index];
 }
 
-inline const IntermediateValues::Type& IntermediateValues::operator[](
-  const unsigned int index) const
+inline const IntermediateValues::Type&
+IntermediateValues::operator[](const unsigned int index) const
 {
     return hour[index];
 }
 
-inline uint64_t IntermediateValues::MemoryUsage()
+inline uint64_t
+IntermediateValues::MemoryUsage()
 {
     return +sizeof(Type) * maxHoursInAYear;
 }
 
 template<class VCardT>
-inline void IntermediateValues::buildAnnualSurveyReport(SurveyResults& report,
-                                                        int fileLevel,
-                                                        int precision) const
+inline void
+IntermediateValues::buildAnnualSurveyReport(SurveyResults& report,
+                                            int fileLevel,
+                                            int precision) const
 {
     if (!(fileLevel & Category::id))
     {
@@ -85,9 +89,10 @@ inline void IntermediateValues::buildAnnualSurveyReport(SurveyResults& report,
 }
 
 template<unsigned int Size, class VCardT, class A>
-void IntermediateValues::internalExportAnnualValues(SurveyResults& report,
-                                                    const A& array,
-                                                    bool annual) const
+void
+IntermediateValues::internalExportAnnualValues(SurveyResults& report,
+                                               const A& array,
+                                               bool annual) const
 {
     using namespace Yuni;
     assert(report.data.columnIndex < report.maxVariables && "Column index out of bounds");

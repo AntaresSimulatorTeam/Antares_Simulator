@@ -28,7 +28,8 @@ namespace Solver
 namespace Variable
 {
 template<>
-uint64_t BindingConstraints<bc_next_type>::memoryUsage() const
+uint64_t
+BindingConstraints<bc_next_type>::memoryUsage() const
 {
     uint64_t result = 0;
     for (unsigned int i = 0; i != pBCcount; ++i)

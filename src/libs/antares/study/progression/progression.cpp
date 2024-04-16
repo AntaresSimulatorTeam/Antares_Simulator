@@ -42,7 +42,8 @@ Progression::Task::Task(const Antares::Data::Study& study, uint year, Section se
     assert(&pProgression);
 }
 
-void Progression::add(uint year, Section section, int nbTicks)
+void
+Progression::add(uint year, Section section, int nbTicks)
 {
     // This section is not thread-safe because always called before really launching
     // the simulation
@@ -64,7 +65,8 @@ void Progression::add(uint year, Section section, int nbTicks)
     }
 }
 
-void Progression::end(Part& part)
+void
+Progression::end(Part& part)
 {
     // Removing the task from the active task list
     pProgressMeter.mutex.lock();
@@ -112,7 +114,8 @@ void Progression::end(Part& part)
     }
 }
 
-bool Progression::Meter::onInterval(uint)
+bool
+Progression::Meter::onInterval(uint)
 {
     uint count = 0;
 
@@ -132,7 +135,7 @@ bool Progression::Meter::onInterval(uint)
             {
                 part.lastTickCount = part.tickCount;
                 logsContainer[count].clear()
-                  << part.caption << ((part.lastTickCount * 100.f) / part.maxTickCount);
+                        << part.caption << ((part.lastTickCount * 100.f) / part.maxTickCount);
                 ++count;
             }
         }
@@ -159,7 +162,8 @@ Progression::~Progression()
     pProgressMeter.stop();
 }
 
-bool Progression::saveToFile(const Yuni::String& filename, IResultWriter& writer)
+bool
+Progression::saveToFile(const Yuni::String& filename, IResultWriter& writer)
 {
     Yuni::Clob buffer;
     std::lock_guard locker(pProgressMeter.mutex);
@@ -189,14 +193,16 @@ bool Progression::saveToFile(const Yuni::String& filename, IResultWriter& writer
     return true;
 }
 
-void Progression::start()
+void
+Progression::start()
 {
     pStarted = true;
     pProgressMeter.interval(1200 /*ms*/);
     pProgressMeter.start();
 }
 
-void Progression::stop()
+void
+Progression::stop()
 {
     pProgressMeter.stop();
     pStarted = false;

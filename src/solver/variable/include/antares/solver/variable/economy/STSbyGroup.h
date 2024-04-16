@@ -24,8 +24,8 @@
 
 namespace
 {
-inline std::vector<std::string> sortedUniqueGroups(
-  const std::vector<Antares::Data::ShortTermStorage::STStorageCluster>& storages)
+inline std::vector<std::string>
+sortedUniqueGroups(const std::vector<Antares::Data::ShortTermStorage::STStorageCluster>& storages)
 {
     std::set<std::string> names;
     for (const auto& cluster: storages)
@@ -35,8 +35,8 @@ inline std::vector<std::string> sortedUniqueGroups(
     return {names.begin(), names.end()};
 }
 
-inline std::map<std::string, unsigned int> giveNumbersToGroups(
-  const std::vector<std::string>& groupNames)
+inline std::map<std::string, unsigned int>
+giveNumbersToGroups(const std::vector<std::string>& groupNames)
 {
     unsigned int groupNumber{0};
     std::map<std::string, unsigned int> groupToNumbers;
@@ -71,12 +71,12 @@ struct VCardSTSbyGroup
     }
 
     //! The synhesis results
-    typedef Results<R::AllYears::Average< // The average values throughout all years
-      R::AllYears::StdDeviation<          // The standard deviation values throughout all years
-        R::AllYears::Min<                 // The minimum values throughout all years
-          R::AllYears::Max<               // The maximum values throughout all years
-            >>>>>
-      ResultsType;
+    typedef Results<R::AllYears::Average<     // The average values throughout all years
+            R::AllYears::StdDeviation<        // The standard deviation values throughout all years
+                    R::AllYears::Min<         // The minimum values throughout all years
+                            R::AllYears::Max< // The maximum values throughout all years
+                                    >>>>>
+            ResultsType;
 
     //! The VCard to look for for calculating spatial aggregates
     typedef VCardSTSbyGroup VCardForSpatialAggregate;
@@ -149,11 +149,11 @@ public:
     {
         enum
         {
-            count = ((VCardType::categoryDataLevel & CDataLevel
-                      && VCardType::categoryFileLevel & CFile)
-                       ? (NextType::template Statistics<CDataLevel, CFile>::count
-                          + VCardType::columnCount * ResultsType::count)
-                       : NextType::template Statistics<CDataLevel, CFile>::count),
+            count = ((VCardType::categoryDataLevel & CDataLevel &&
+                      VCardType::categoryFileLevel & CFile)
+                             ? (NextType::template Statistics<CDataLevel, CFile>::count +
+                                VCardType::columnCount * ResultsType::count)
+                             : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
 
@@ -191,7 +191,7 @@ public:
             for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
             {
                 pValuesForTheCurrentYear[numSpace] = new VCardType::IntermediateValuesDeepType
-                  [nbColumns_];
+                        [nbColumns_];
             }
 
             for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
@@ -256,7 +256,7 @@ public:
             {
             case VariableType::level:
                 pValuesForTheCurrentYear[numSpace][column]
-                  .computeAveragesForCurrentYearFromHourlyResults();
+                        .computeAveragesForCurrentYearFromHourlyResults();
                 break;
             case VariableType::injection:
             case VariableType::withdrawal:
@@ -304,19 +304,19 @@ public:
             unsigned int groupNumber = groupToNumbers_[cluster.properties.groupName];
             const auto& result = state.hourlyResults->ShortTermStorage[state.hourInTheWeek];
             // Injection
-            pValuesForTheCurrentYear[numSpace][NB_COLS_PER_GROUP * groupNumber
-                                               + VariableType::injection][state.hourInTheYear]
-              += result.injection[clusterIndex];
+            pValuesForTheCurrentYear[numSpace]
+                                    [NB_COLS_PER_GROUP * groupNumber + VariableType::injection]
+                                    [state.hourInTheYear] += result.injection[clusterIndex];
 
             // Withdrawal
-            pValuesForTheCurrentYear[numSpace][NB_COLS_PER_GROUP * groupNumber
-                                               + VariableType::withdrawal][state.hourInTheYear]
-              += result.withdrawal[clusterIndex];
+            pValuesForTheCurrentYear[numSpace]
+                                    [NB_COLS_PER_GROUP * groupNumber + VariableType::withdrawal]
+                                    [state.hourInTheYear] += result.withdrawal[clusterIndex];
 
             // Levels
-            pValuesForTheCurrentYear[numSpace][NB_COLS_PER_GROUP * groupNumber
-                                               + VariableType::level][state.hourInTheYear]
-              += result.level[clusterIndex];
+            pValuesForTheCurrentYear[numSpace]
+                                    [NB_COLS_PER_GROUP * groupNumber + VariableType::level]
+                                    [state.hourInTheYear] += result.level[clusterIndex];
 
             clusterIndex++;
         }
@@ -331,17 +331,16 @@ public:
         NextType::buildDigest(results, digestLevel, dataLevel);
     }
 
-    Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
-      unsigned int column,
-      unsigned int numSpace) const
+    Antares::Memory::Stored<double>::ConstReturnType
+    retrieveRawHourlyValuesForCurrentYear(unsigned int column, unsigned int numSpace) const
     {
         return pValuesForTheCurrentYear[numSpace][column].hour;
     }
 
     inline uint64_t memoryUsage() const
     {
-        uint64_t r = (sizeof(IntermediateValues) * nbColumns_ + IntermediateValues::MemoryUsage())
-                     * pNbYearsParallel;
+        uint64_t r = (sizeof(IntermediateValues) * nbColumns_ + IntermediateValues::MemoryUsage()) *
+                     pNbYearsParallel;
         r += sizeof(double) * nbColumns_ * maxHoursInAYear * pNbYearsParallel;
         r += AncestorType::memoryUsage();
         return r;
@@ -389,14 +388,12 @@ public:
             results.variableCaption = caption(column);
             results.variableUnit = unit(column);
             pValuesForTheCurrentYear[numSpace][column]
-              .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
+                    .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
         }
     }
 
-    void buildSurveyReport(SurveyResults& results,
-                           int dataLevel,
-                           int fileLevel,
-                           int precision) const
+    void
+    buildSurveyReport(SurveyResults& results, int dataLevel, int fileLevel, int precision) const
     {
         // Building syntheses results
         // ------------------------------
@@ -406,8 +403,8 @@ public:
         }
 
         // And only if we match the current data level _and_ precision level
-        if ((dataLevel & VCardType::categoryDataLevel) && (fileLevel & VCardType::categoryFileLevel)
-            && (precision & VCardType::precision))
+        if ((dataLevel & VCardType::categoryDataLevel) &&
+            (fileLevel & VCardType::categoryFileLevel) && (precision & VCardType::precision))
         {
             results.isCurrentVarNA[0] = AncestorType::isNonApplicable[0];
 
@@ -416,11 +413,11 @@ public:
                 results.variableCaption = caption(column);
                 results.variableUnit = unit(column);
                 AncestorType::pResults[column].template buildSurveyReport<ResultsType, VCardType>(
-                  results,
-                  AncestorType::pResults[column],
-                  dataLevel,
-                  fileLevel,
-                  precision);
+                        results,
+                        AncestorType::pResults[column],
+                        dataLevel,
+                        fileLevel,
+                        precision);
             }
         }
 

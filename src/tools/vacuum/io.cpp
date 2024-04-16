@@ -31,7 +31,8 @@ using namespace Yuni;
 
 /*extern*/ std::unordered_set<String> inputFolders;
 
-bool RemoveFile(const String& filename, uint64_t size)
+bool
+RemoveFile(const String& filename, uint64_t size)
 {
     if (dry || IO::errNone == IO::File::Delete(filename))
     {
@@ -42,7 +43,8 @@ bool RemoveFile(const String& filename, uint64_t size)
     return false;
 }
 
-bool RemoveDirectoryIfEmpty(const String& folder)
+bool
+RemoveDirectoryIfEmpty(const String& folder)
 {
     if (inputFolders.count(folder) == 0) // input folders must not be removed
     {

@@ -28,12 +28,14 @@ SpreadGenerator::SpreadGenerator(double range):
 {
 }
 
-void SpreadGenerator::reset(unsigned int seed)
+void
+SpreadGenerator::reset(unsigned int seed)
 {
     mt_.reset(seed);
 }
 
-double SpreadGenerator::generate()
+double
+SpreadGenerator::generate()
 {
     return mt_.next() * range_;
 }

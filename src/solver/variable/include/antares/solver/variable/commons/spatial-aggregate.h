@@ -120,8 +120,8 @@ struct VCardProxy
 
     typedef typename VCardOrigin::IntermediateValuesType IntermediateValuesType;
     typedef typename VCardOrigin::IntermediateValuesBaseType IntermediateValuesBaseType;
-    typedef
-      typename VCardOrigin::IntermediateValuesTypeForSpatialAg IntermediateValuesTypeForSpatialAg;
+    typedef typename VCardOrigin::IntermediateValuesTypeForSpatialAg
+            IntermediateValuesTypeForSpatialAg;
 
     enum
     {
@@ -192,11 +192,11 @@ public:
     {
         enum
         {
-            count = ((VCardType::categoryDataLevel & CDataLevel
-                      && VCardType::categoryFileLevel & CFile)
-                       ? (NextType::template Statistics<CDataLevel, CFile>::count
-                          + VCardType::columnCount * ResultsType::count)
-                       : NextType::template Statistics<CDataLevel, CFile>::count),
+            count = ((VCardType::categoryDataLevel & CDataLevel &&
+                      VCardType::categoryFileLevel & CFile)
+                             ? (NextType::template Statistics<CDataLevel, CFile>::count +
+                                VCardType::columnCount * ResultsType::count)
+                             : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
 
@@ -212,8 +212,8 @@ public:
 
     void initializeFromStudy(Data::Study& study)
     {
-        typedef
-          typename VCardType::VCardOrigin::IntermediateValuesBaseType IntermediateValuesBaseType;
+        typedef typename VCardType::VCardOrigin::IntermediateValuesBaseType
+                IntermediateValuesBaseType;
         pNbYearsParallel = study.maxNbYearsInParallel;
 
         // Intermediate values
@@ -362,10 +362,10 @@ public:
             results.isCurrentVarNA = AncestorType::isNonApplicable;
 
             VariableAccessorType::template BuildDigest<typename VCardType::VCardOrigin>(
-              results,
-              AncestorType::pResults,
-              digestLevel,
-              dataLevel);
+                    results,
+                    AncestorType::pResults,
+                    digestLevel,
+                    dataLevel);
         }
         // Ask to build the digest to the next variable
         NextType::buildDigest(results, digestLevel, dataLevel);
@@ -384,12 +384,12 @@ public:
 
             typedef VariableAccessor<typename VCardType::IntermediateValuesBaseType,
                                      VCardType::columnCount>
-              VAType;
+                    VAType;
             VAType::template BuildAnnualSurveyReport<typename VCardType::VCardOrigin>(
-              results,
-              pValuesForTheCurrentYear[numSpace],
-              fileLevel,
-              precision);
+                    results,
+                    pValuesForTheCurrentYear[numSpace],
+                    fileLevel,
+                    precision);
         }
     }
 
@@ -408,8 +408,9 @@ private:
             for (auto i = set.begin(); i != end; ++i)
             {
                 allVars.template computeSpatialAggregateWith<
-                  typename VCardType::VCardForSpatialAggregate> //<typename VCardType::VCardOrigin>
-                  (pValuesForTheCurrentYear[0], *i /* the current area */, 0);
+                        typename VCardType::VCardForSpatialAggregate> //<typename
+                                                                      //VCardType::VCardOrigin>
+                        (pValuesForTheCurrentYear[0], *i /* the current area */, 0);
             }
 
             // The spatial cluster may be an average
@@ -419,8 +420,8 @@ private:
                                                               1. / set.size());
             }
             // The spatial cluster may be an average
-            if (VCardType::VCardOrigin::spatialAggregate
-                & Category::spatialAggregateSumThen1IfPositive)
+            if (VCardType::VCardOrigin::spatialAggregate &
+                Category::spatialAggregateSumThen1IfPositive)
             {
                 VariableAccessorType::SetTo1IfPositive(pValuesForTheCurrentYear[0]);
             }
@@ -455,8 +456,9 @@ private:
             for (auto i = set.begin(); i != end; ++i)
             {
                 allVars.template computeSpatialAggregateWith<
-                  typename VCardType::VCardForSpatialAggregate> //<typename VCardType::VCardOrigin>
-                  (pValuesForTheCurrentYear[numSpace], *i /* the current area */, numSpace);
+                        typename VCardType::VCardForSpatialAggregate> //<typename
+                                                                      //VCardType::VCardOrigin>
+                        (pValuesForTheCurrentYear[numSpace], *i /* the current area */, numSpace);
             }
 
             // The spatial cluster may be an average
@@ -466,8 +468,8 @@ private:
                                                               1. / set.size());
             }
             // The spatial cluster may be an average
-            if (VCardType::VCardOrigin::spatialAggregate
-                & Category::spatialAggregateSumThen1IfPositive)
+            if (VCardType::VCardOrigin::spatialAggregate &
+                Category::spatialAggregateSumThen1IfPositive)
             {
                 VariableAccessorType::SetTo1IfPositive(pValuesForTheCurrentYear[numSpace]);
             }
@@ -483,12 +485,12 @@ private:
 
         // Compute all statistics for the current year (daily,weekly,monthly,...)
         VariableAccessorType::template ComputeStatistics<VCardOrigin>(
-          pValuesForTheCurrentYear[numSpace]);
+                pValuesForTheCurrentYear[numSpace]);
     }
 
-    void internalSpatialAggregateForParallelYears(
-      std::map<unsigned int, unsigned int>& numSpaceToYear,
-      uint nbYearsForCurrentSummary)
+    void
+    internalSpatialAggregateForParallelYears(std::map<unsigned int, unsigned int>& numSpaceToYear,
+                                             uint nbYearsForCurrentSummary)
     {
         for (unsigned int numSpace = 0; numSpace < nbYearsForCurrentSummary; ++numSpace)
         {

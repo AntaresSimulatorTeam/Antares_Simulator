@@ -21,8 +21,9 @@
 
 #include "antares/solver/hydro/daily2/h2o2_j_donnees_mensuelles.h"
 
-void H2O2_J_InitialiserLesBornesdesVariables(DONNEES_MENSUELLES_ETENDUES& DonneesMensuelles,
-                                             int NumeroDeProbleme)
+void
+H2O2_J_InitialiserLesBornesdesVariables(DONNEES_MENSUELLES_ETENDUES& DonneesMensuelles,
+                                        int NumeroDeProbleme)
 {
     const auto& TurbineMax = DonneesMensuelles.TurbineMax;
     const auto& TurbineMin = DonneesMensuelles.TurbineMin;
@@ -32,10 +33,10 @@ void H2O2_J_InitialiserLesBornesdesVariables(DONNEES_MENSUELLES_ETENDUES& Donnee
     int NbPdt = ProblemeHydrauliqueEtendu.NbJoursDUnProbleme[NumeroDeProbleme];
 
     auto& CorrespondanceDesVariables = ProblemeHydrauliqueEtendu
-                                         .CorrespondanceDesVariables[NumeroDeProbleme];
+                                               .CorrespondanceDesVariables[NumeroDeProbleme];
     auto& ProblemeLineaireEtenduPartieVariable = ProblemeHydrauliqueEtendu
-                                                   .ProblemeLineaireEtenduPartieVariable
-                                                     [NumeroDeProbleme];
+                                                         .ProblemeLineaireEtenduPartieVariable
+                                                                 [NumeroDeProbleme];
 
     auto& NumeroVar_Turbine = CorrespondanceDesVariables.NumeroVar_Turbine;
 

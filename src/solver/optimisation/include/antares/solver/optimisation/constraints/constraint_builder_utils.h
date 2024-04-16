@@ -24,12 +24,13 @@
 #include "ConstraintBuilder.h"
 
 ConstraintBuilderData NewGetConstraintBuilderFromProblemHebdoAndProblemAResoudre(
-  PROBLEME_HEBDO* problemeHebdo,
-  PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre);
+        PROBLEME_HEBDO* problemeHebdo,
+        PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre);
 
-inline ConstraintBuilderData NewGetConstraintBuilderFromProblemHebdoAndProblemAResoudre(
-  PROBLEME_HEBDO* problemeHebdo,
-  std::unique_ptr<PROBLEME_ANTARES_A_RESOUDRE>& ProblemeAResoudre)
+inline ConstraintBuilderData
+NewGetConstraintBuilderFromProblemHebdoAndProblemAResoudre(
+        PROBLEME_HEBDO* problemeHebdo,
+        std::unique_ptr<PROBLEME_ANTARES_A_RESOUDRE>& ProblemeAResoudre)
 {
     /* not good!!!!!!!!!!*/
     auto& problemAResoudreRef = *ProblemeAResoudre.get();
@@ -37,7 +38,8 @@ inline ConstraintBuilderData NewGetConstraintBuilderFromProblemHebdoAndProblemAR
                                                                       problemAResoudreRef);
 }
 
-inline ConstraintBuilderData NewGetConstraintBuilderFromProblemHebdo(PROBLEME_HEBDO* problemeHebdo)
+inline ConstraintBuilderData
+NewGetConstraintBuilderFromProblemHebdo(PROBLEME_HEBDO* problemeHebdo)
 {
     auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
     return NewGetConstraintBuilderFromProblemHebdoAndProblemAResoudre(problemeHebdo,

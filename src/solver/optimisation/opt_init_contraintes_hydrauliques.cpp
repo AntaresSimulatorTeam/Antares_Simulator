@@ -24,29 +24,31 @@
 #include "antares/solver/simulation/sim_structure_donnees.h"
 #include "antares/solver/simulation/simulation.h"
 
-void OPT_InitialiserLesContrainteDEnergieHydrauliqueParIntervalleOptimise(
-  PROBLEME_HEBDO* problemeHebdo)
+void
+OPT_InitialiserLesContrainteDEnergieHydrauliqueParIntervalleOptimise(PROBLEME_HEBDO* problemeHebdo)
 {
     int NombreDePasDeTempsPourUneOptimisation = problemeHebdo
-                                                  ->NombreDePasDeTempsPourUneOptimisation;
-    int NbIntervallesOptimises = problemeHebdo->NombreDePasDeTemps
-                                 / NombreDePasDeTempsPourUneOptimisation;
-    int NombreDeJoursParIntervalle = NombreDePasDeTempsPourUneOptimisation
-                                     / problemeHebdo->NombreDePasDeTempsDUneJournee;
+                                                        ->NombreDePasDeTempsPourUneOptimisation;
+    int NbIntervallesOptimises = problemeHebdo->NombreDePasDeTemps /
+                                 NombreDePasDeTempsPourUneOptimisation;
+    int NombreDeJoursParIntervalle = NombreDePasDeTempsPourUneOptimisation /
+                                     problemeHebdo->NombreDePasDeTempsDUneJournee;
 
     for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        if (!problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable
-            || problemeHebdo->CaracteristiquesHydrauliques[pays].TurbinageEntreBornes)
+        if (!problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable ||
+            problemeHebdo->CaracteristiquesHydrauliques[pays].TurbinageEntreBornes)
         {
             continue;
         }
 
         std::vector<double>& CntEnergieH2OParJour = problemeHebdo
-                                                      ->CaracteristiquesHydrauliques[pays]
-                                                      .CntEnergieH2OParJour;
-        std::vector<double>& CntEnergieH2OParIntervalleOptimise
-          = problemeHebdo->CaracteristiquesHydrauliques[pays].CntEnergieH2OParIntervalleOptimise;
+                                                            ->CaracteristiquesHydrauliques[pays]
+                                                            .CntEnergieH2OParJour;
+        std::vector<double>&
+                CntEnergieH2OParIntervalleOptimise = problemeHebdo
+                                                             ->CaracteristiquesHydrauliques[pays]
+                                                             .CntEnergieH2OParIntervalleOptimise;
 
         for (int intervalle = 0; intervalle < NbIntervallesOptimises; intervalle++)
         {
@@ -66,23 +68,23 @@ void OPT_InitialiserLesContrainteDEnergieHydrauliqueParIntervalleOptimise(
     for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
         bool presenceHydro = problemeHebdo->CaracteristiquesHydrauliques[pays]
-                               .PresenceDHydrauliqueModulable;
+                                     .PresenceDHydrauliqueModulable;
         bool TurbEntreBornes = problemeHebdo->CaracteristiquesHydrauliques[pays]
-                                 .TurbinageEntreBornes;
+                                       .TurbinageEntreBornes;
 
-        if (presenceHydro
-            && (TurbEntreBornes
-                || problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable))
+        if (presenceHydro &&
+            (TurbEntreBornes ||
+             problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable))
         {
             std::vector<double>& CntEnergieH2OParJour = problemeHebdo
-                                                          ->CaracteristiquesHydrauliques[pays]
-                                                          .CntEnergieH2OParJour;
-            std::vector<double>& MinEnergieHydrauParIntervalleOptimise
-              = problemeHebdo->CaracteristiquesHydrauliques[pays]
-                  .MinEnergieHydrauParIntervalleOptimise;
-            std::vector<double>& MaxEnergieHydrauParIntervalleOptimise
-              = problemeHebdo->CaracteristiquesHydrauliques[pays]
-                  .MaxEnergieHydrauParIntervalleOptimise;
+                                                                ->CaracteristiquesHydrauliques[pays]
+                                                                .CntEnergieH2OParJour;
+            std::vector<double>& MinEnergieHydrauParIntervalleOptimise =
+                    problemeHebdo->CaracteristiquesHydrauliques[pays]
+                            .MinEnergieHydrauParIntervalleOptimise;
+            std::vector<double>& MaxEnergieHydrauParIntervalleOptimise =
+                    problemeHebdo->CaracteristiquesHydrauliques[pays]
+                            .MaxEnergieHydrauParIntervalleOptimise;
 
             for (int intervalle = 0; intervalle < NbIntervallesOptimises; intervalle++)
             {
@@ -104,9 +106,9 @@ void OPT_InitialiserLesContrainteDEnergieHydrauliqueParIntervalleOptimise(
 
     for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        std::vector<double>& MaxEnergiePompageParIntervalleOptimise
-          = problemeHebdo->CaracteristiquesHydrauliques[pays]
-              .MaxEnergiePompageParIntervalleOptimise;
+        std::vector<double>& MaxEnergiePompageParIntervalleOptimise =
+                problemeHebdo->CaracteristiquesHydrauliques[pays]
+                        .MaxEnergiePompageParIntervalleOptimise;
 
         for (int intervalle = 0; intervalle < NbIntervallesOptimises; intervalle++)
         {
@@ -124,8 +126,8 @@ void OPT_InitialiserLesContrainteDEnergieHydrauliqueParIntervalleOptimise(
     for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
         std::vector<double>& InflowForTimeInterval = problemeHebdo
-                                                       ->CaracteristiquesHydrauliques[pays]
-                                                       .InflowForTimeInterval;
+                                                             ->CaracteristiquesHydrauliques[pays]
+                                                             .InflowForTimeInterval;
 
         for (int intervalle = 0; intervalle < NbIntervallesOptimises; intervalle++)
         {

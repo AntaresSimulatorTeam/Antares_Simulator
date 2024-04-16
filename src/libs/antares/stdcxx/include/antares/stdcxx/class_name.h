@@ -29,13 +29,15 @@ namespace stdcxx
 std::string simpleClassName(const char* className);
 
 template<typename T>
-std::string simpleClassName()
+std::string
+simpleClassName()
 {
     return simpleClassName(typeid(T).name());
 }
 
 template<typename T>
-std::string simpleClassName(const T& type)
+std::string
+simpleClassName(const T& type)
 {
     return simpleClassName(typeid(type).name());
 }

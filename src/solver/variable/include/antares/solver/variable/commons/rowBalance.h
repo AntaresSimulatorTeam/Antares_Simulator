@@ -55,8 +55,8 @@ struct VCardRowBalance
 
     //! The expecte results
     typedef Results<R::AllYears::Raw< // The raw values
-      >>
-      ResultsType;
+            >>
+            ResultsType;
 
     //! The VCard to look for for calculating spatial aggregates
     typedef VCardRowBalance VCardForSpatialAggregate;
@@ -122,11 +122,11 @@ public:
     {
         enum
         {
-            count = ((VCardType::categoryDataLevel & CDataLevel
-                      && VCardType::categoryFileLevel & CFile)
-                       ? (NextType::template Statistics<CDataLevel, CFile>::count
-                          + VCardType::columnCount * ResultsType::count)
-                       : NextType::template Statistics<CDataLevel, CFile>::count),
+            count = ((VCardType::categoryDataLevel & CDataLevel &&
+                      VCardType::categoryFileLevel & CFile)
+                             ? (NextType::template Statistics<CDataLevel, CFile>::count +
+                                VCardType::columnCount * ResultsType::count)
+                             : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
 
@@ -166,7 +166,7 @@ public:
             for (unsigned int h = 0; h != height; ++h)
             {
                 pValuesForTheCurrentYear.hour[h] -= area->reserves
-                                                      .entry[Data::fhrPrimaryReserve][h];
+                                                            .entry[Data::fhrPrimaryReserve][h];
             }
         }
         // Compute all statistics for the current year (daily,weekly,monthly)

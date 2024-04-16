@@ -102,9 +102,9 @@ struct PROBLEME_ANTARES_A_RESOUDRE
     std::vector<void*> ProblemesSpx;
 
     std::vector<int>
-      PositionDeLaVariable; /* Vecteur a passer au Simplexe pour recuperer la base optimale */
+            PositionDeLaVariable; /* Vecteur a passer au Simplexe pour recuperer la base optimale */
     std::vector<int>
-      ComplementDeLaBase; /* Vecteur a passer au Simplexe pour recuperer la base optimale */
+            ComplementDeLaBase; /* Vecteur a passer au Simplexe pour recuperer la base optimale */
 
     /* Vecteurs de travail pour contruire la matrice des contraintes lineaires */
     std::vector<double> Pi;

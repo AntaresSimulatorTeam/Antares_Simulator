@@ -109,10 +109,10 @@ public:
     bool operator<(const linkInfo& other) const
     {
         return getWeightWithImpedance() < other.getWeightWithImpedance()
-                 ? true
-                 : (getWeightWithImpedance() > other.getWeightWithImpedance()
-                      ? false
-                      : getName() < other.getName());
+                       ? true
+                       : (getWeightWithImpedance() > other.getWeightWithImpedance()
+                                  ? false
+                                  : getName() < other.getName());
     }
 }; // class linkInfo
 
@@ -148,8 +148,8 @@ public:
         double currentLineSign = 1;
         for (auto line = linkList.begin(); line != linkList.end(); line++)
         {
-            if ((*line)->nImpedanceChanges > 0
-                || ((*line)->type == Antares::Data::atAC && (!(*line)->hasPShiftsEqual)))
+            if ((*line)->nImpedanceChanges > 0 ||
+                ((*line)->type == Antares::Data::atAC && (!(*line)->hasPShiftsEqual)))
             {
                 opType = Data::BindingConstraint::opBoth;
             }
@@ -164,13 +164,13 @@ public:
             }
             else
             {
-                if (previousLine->with == (*line)->ptr->from
-                    || previousLine->from
-                         == (*line)->ptr->with) //[(A/B),(B/C),... ] or [(A,B),(C/A),... ]
+                if (previousLine->with == (*line)->ptr->from ||
+                    previousLine->from ==
+                            (*line)->ptr->with) //[(A/B),(B/C),... ] or [(A,B),(C/A),... ]
                 {
                 }
-                else if (previousLine->from == (*line)->ptr->from
-                         || previousLine->with == (*line)->ptr->with)
+                else if (previousLine->from == (*line)->ptr->from ||
+                         previousLine->with == (*line)->ptr->with)
                 {
                     currentLineSign *= -1;
                 }
@@ -410,12 +410,12 @@ private:
     /*!
     ** \brief add one constraint to the study
     */
-    std::shared_ptr<Antares::Data::BindingConstraint> addConstraint(
-      const Data::ConstraintName& name,
-      const Yuni::String& op,
-      const Yuni::String& type,
-      const WeightMap& weights,
-      const double& secondMember);
+    std::shared_ptr<Antares::Data::BindingConstraint>
+    addConstraint(const Data::ConstraintName& name,
+                  const Yuni::String& op,
+                  const Yuni::String& type,
+                  const WeightMap& weights,
+                  const double& secondMember);
 
 public:
     Vector pLink;

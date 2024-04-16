@@ -26,7 +26,8 @@ namespace Antares
 namespace Solver
 {
 template<class T, class U1, class U2, class U3, class U4>
-T MatrixDPMake(U1& L, U2& A, U3& B, U4& C, uint size, T* temp, bool CIsIdentity)
+T
+MatrixDPMake(U1& L, U2& A, U3& B, U4& C, uint size, T* temp, bool CIsIdentity)
 {
     enum
     {

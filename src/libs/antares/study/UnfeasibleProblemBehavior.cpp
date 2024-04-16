@@ -28,7 +28,8 @@
 
 namespace Antares::Data
 {
-const char* getIcon(const UnfeasibleProblemBehavior& unfeasibleProblemBehavior)
+const char*
+getIcon(const UnfeasibleProblemBehavior& unfeasibleProblemBehavior)
 {
     switch (unfeasibleProblemBehavior)
     {
@@ -41,14 +42,14 @@ const char* getIcon(const UnfeasibleProblemBehavior& unfeasibleProblemBehavior)
     case UnfeasibleProblemBehavior::ERROR_MPS:
         return "images/16x16/light_orange.png";
     default:
-        throw AssertionError(
-          "Invalid UnfeasibleProblemBehavior "
-          + std::to_string(static_cast<unsigned long>(unfeasibleProblemBehavior)));
+        throw AssertionError("Invalid UnfeasibleProblemBehavior " +
+                             std::to_string(static_cast<unsigned long>(unfeasibleProblemBehavior)));
         return "";
     }
 }
 
-bool exportMPS(const UnfeasibleProblemBehavior& unfeasibleProblemBehavior)
+bool
+exportMPS(const UnfeasibleProblemBehavior& unfeasibleProblemBehavior)
 {
     switch (unfeasibleProblemBehavior)
     {
@@ -59,14 +60,14 @@ bool exportMPS(const UnfeasibleProblemBehavior& unfeasibleProblemBehavior)
     case UnfeasibleProblemBehavior::ERROR_MPS:
         return true;
     default:
-        throw AssertionError(
-          "Invalid UnfeasibleProblemBehavior "
-          + std::to_string(static_cast<unsigned long>(unfeasibleProblemBehavior)));
+        throw AssertionError("Invalid UnfeasibleProblemBehavior " +
+                             std::to_string(static_cast<unsigned long>(unfeasibleProblemBehavior)));
         return "";
     }
 }
 
-bool stopSimulation(const UnfeasibleProblemBehavior& unfeasibleProblemBehavior)
+bool
+stopSimulation(const UnfeasibleProblemBehavior& unfeasibleProblemBehavior)
 {
     switch (unfeasibleProblemBehavior)
     {
@@ -77,14 +78,14 @@ bool stopSimulation(const UnfeasibleProblemBehavior& unfeasibleProblemBehavior)
     case UnfeasibleProblemBehavior::ERROR_DRY:
         return true;
     default:
-        throw AssertionError(
-          "Invalid UnfeasibleProblemBehavior "
-          + std::to_string(static_cast<unsigned long>(unfeasibleProblemBehavior)));
+        throw AssertionError("Invalid UnfeasibleProblemBehavior " +
+                             std::to_string(static_cast<unsigned long>(unfeasibleProblemBehavior)));
         return "";
     }
 }
 
-std::string getDisplayName(const UnfeasibleProblemBehavior& unfeasibleProblemBehavior)
+std::string
+getDisplayName(const UnfeasibleProblemBehavior& unfeasibleProblemBehavior)
 {
     switch (unfeasibleProblemBehavior)
     {
@@ -97,9 +98,8 @@ std::string getDisplayName(const UnfeasibleProblemBehavior& unfeasibleProblemBeh
     case UnfeasibleProblemBehavior::ERROR_MPS:
         return "Error Verbose";
     default:
-        throw AssertionError(
-          "Invalid UnfeasibleProblemBehavior "
-          + std::to_string(static_cast<unsigned long>(unfeasibleProblemBehavior)));
+        throw AssertionError("Invalid UnfeasibleProblemBehavior " +
+                             std::to_string(static_cast<unsigned long>(unfeasibleProblemBehavior)));
         return "";
     }
 }
@@ -107,7 +107,8 @@ std::string getDisplayName(const UnfeasibleProblemBehavior& unfeasibleProblemBeh
 namespace Enum
 {
 template<>
-const std::initializer_list<std::string>& getNames<UnfeasibleProblemBehavior>()
+const std::initializer_list<std::string>&
+getNames<UnfeasibleProblemBehavior>()
 {
     // Enum must be stored in lower case and without spaces because values  are trimmed and lowered
     // in ini load

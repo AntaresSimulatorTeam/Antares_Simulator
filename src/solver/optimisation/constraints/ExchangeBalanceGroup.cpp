@@ -21,7 +21,8 @@
 
 #include "antares/solver/optimisation/constraints/ExchangeBalanceGroup.h"
 
-ExchangeBalanceData ExchangeBalanceGroup::GetExchangeBalanceDataFromProblemHebdo()
+ExchangeBalanceData
+ExchangeBalanceGroup::GetExchangeBalanceDataFromProblemHebdo()
 {
     return {.IndexDebutIntercoOrigine = problemeHebdo_->IndexDebutIntercoOrigine,
             .IndexSuivantIntercoOrigine = problemeHebdo_->IndexSuivantIntercoOrigine,
@@ -30,7 +31,8 @@ ExchangeBalanceData ExchangeBalanceGroup::GetExchangeBalanceDataFromProblemHebdo
             .NumeroDeContrainteDeSoldeDEchange = problemeHebdo_->NumeroDeContrainteDeSoldeDEchange};
 }
 
-void ExchangeBalanceGroup::BuildConstraints()
+void
+ExchangeBalanceGroup::BuildConstraints()
 {
     auto data = GetExchangeBalanceDataFromProblemHebdo();
     ExchangeBalance exchangeBalance(builder_, data);

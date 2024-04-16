@@ -50,14 +50,16 @@ namespace Antares::Data
 {
 //! Clear then shrink a string
 template<class StringT>
-static inline void ClearAndShrink(StringT& string)
+static inline void
+ClearAndShrink(StringT& string)
 {
     string.clear();
     string.shrink();
 }
 
 template<class T>
-static inline void FreeAndNil(T*& pointer)
+static inline void
+FreeAndNil(T*& pointer)
 {
     delete pointer;
     pointer = nullptr;
@@ -100,7 +102,8 @@ Study::~Study()
     clear();
 }
 
-void Study::clear()
+void
+Study::clear()
 {
     // Releasing runtime infos
     FreeAndNil(runtime);
@@ -130,7 +133,8 @@ void Study::clear()
     inputExtension.clear();
 }
 
-void Study::createAsNew()
+void
+Study::createAsNew()
 {
     inputExtension = "txt";
     // Folders
@@ -181,20 +185,22 @@ void Study::createAsNew()
     reduceMemoryUsage();
 }
 
-void Study::reduceMemoryUsage()
+void
+Study::reduceMemoryUsage()
 {
     ClearAndShrink(buffer);
     ClearAndShrink(dataBuffer);
     ClearAndShrink(bufferLoadingTS);
 }
 
-uint64_t Study::memoryUsage() const
+uint64_t
+Study::memoryUsage() const
 {
     return folder.capacity()
            // Folders paths
-           + folderInput.capacity() + folderOutput.capacity() + folderSettings.capacity()
-           + buffer.capacity() + dataBuffer.capacity()
-           + bufferLoadingTS.capacity()
+           + folderInput.capacity() + folderOutput.capacity() + folderSettings.capacity() +
+           buffer.capacity() + dataBuffer.capacity() +
+           bufferLoadingTS.capacity()
            // Simulation
            + simulationComments.memoryUsage()
            // parameters
@@ -204,12 +210,13 @@ uint64_t Study::memoryUsage() const
            // Binding constraints
            + bindingConstraints.memoryUsage()
            // Correlations matrices
-           + preproLoadCorrelation.memoryUsage() + preproSolarCorrelation.memoryUsage()
-           + preproHydroCorrelation.memoryUsage() + preproWindCorrelation.memoryUsage()
-           + (uiinfo ? uiinfo->memoryUsage() : 0);
+           + preproLoadCorrelation.memoryUsage() + preproSolarCorrelation.memoryUsage() +
+           preproHydroCorrelation.memoryUsage() + preproWindCorrelation.memoryUsage() +
+           (uiinfo ? uiinfo->memoryUsage() : 0);
 }
 
-std::map<std::string, uint> Study::getRawNumberCoresPerLevel()
+std::map<std::string, uint>
+Study::getRawNumberCoresPerLevel()
 {
     std::map<std::string, uint> table;
 
@@ -317,7 +324,8 @@ std::map<std::string, uint> Study::getRawNumberCoresPerLevel()
     return table;
 }
 
-void Study::getNumberOfCores(const bool forceParallel, const uint nbYearsParallelForced)
+void
+Study::getNumberOfCores(const bool forceParallel, const uint nbYearsParallelForced)
 {
     /*
             Getting the number of parallel years based on the number
@@ -412,25 +420,21 @@ void Study::getNumberOfCores(const bool forceParallel, const uint nbYearsParalle
 
         // Do we have to refresh ?
         bool refreshing = false;
-        refreshing = (p.timeSeriesToGenerate & timeSeriesLoad)
-                     && (p.timeSeriesToRefresh & timeSeriesLoad)
-                     && (!y || ((y % p.refreshIntervalLoad) == 0));
-        refreshing = refreshing
-                     || ((p.timeSeriesToGenerate & timeSeriesSolar)
-                         && (p.timeSeriesToRefresh & timeSeriesSolar)
-                         && (!y || ((y % p.refreshIntervalSolar) == 0)));
-        refreshing = refreshing
-                     || ((p.timeSeriesToGenerate & timeSeriesWind)
-                         && (p.timeSeriesToRefresh & timeSeriesWind)
-                         && (!y || ((y % p.refreshIntervalWind) == 0)));
-        refreshing = refreshing
-                     || ((p.timeSeriesToGenerate & timeSeriesHydro)
-                         && (p.timeSeriesToRefresh & timeSeriesHydro)
-                         && (!y || ((y % p.refreshIntervalHydro) == 0)));
-        refreshing = refreshing
-                     || ((p.timeSeriesToGenerate & timeSeriesThermal)
-                         && (p.timeSeriesToRefresh & timeSeriesThermal)
-                         && (!y || ((y % p.refreshIntervalThermal) == 0)));
+        refreshing = (p.timeSeriesToGenerate & timeSeriesLoad) &&
+                     (p.timeSeriesToRefresh & timeSeriesLoad) &&
+                     (!y || ((y % p.refreshIntervalLoad) == 0));
+        refreshing = refreshing || ((p.timeSeriesToGenerate & timeSeriesSolar) &&
+                                    (p.timeSeriesToRefresh & timeSeriesSolar) &&
+                                    (!y || ((y % p.refreshIntervalSolar) == 0)));
+        refreshing = refreshing || ((p.timeSeriesToGenerate & timeSeriesWind) &&
+                                    (p.timeSeriesToRefresh & timeSeriesWind) &&
+                                    (!y || ((y % p.refreshIntervalWind) == 0)));
+        refreshing = refreshing || ((p.timeSeriesToGenerate & timeSeriesHydro) &&
+                                    (p.timeSeriesToRefresh & timeSeriesHydro) &&
+                                    (!y || ((y % p.refreshIntervalHydro) == 0)));
+        refreshing = refreshing || ((p.timeSeriesToGenerate & timeSeriesThermal) &&
+                                    (p.timeSeriesToRefresh & timeSeriesThermal) &&
+                                    (!y || ((y % p.refreshIntervalThermal) == 0)));
 
         buildNewSet = buildNewSet || refreshing;
 
@@ -501,8 +505,8 @@ void Study::getNumberOfCores(const bool forceParallel, const uint nbYearsParalle
 
     // Here we answer the question (useful only if hydro hot start is asked) : do all sets of
     // parallel years have the same size ?
-    if (parameters.initialReservoirLevels.iniLevels == Antares::Data::irlHotStart
-        && setsOfParallelYears.size() && maxNbYearsInParallel > 1)
+    if (parameters.initialReservoirLevels.iniLevels == Antares::Data::irlHotStart &&
+        setsOfParallelYears.size() && maxNbYearsInParallel > 1)
     {
         uint currentSetSize = (uint)setsOfParallelYears[0].size();
         if (setsOfParallelYears.size() > 1)
@@ -519,7 +523,8 @@ void Study::getNumberOfCores(const bool forceParallel, const uint nbYearsParalle
     } // End if hot start
 }
 
-bool Study::checkHydroHotStart()
+bool
+Study::checkHydroHotStart()
 {
     bool hydroHotStart = (parameters.initialReservoirLevels.iniLevels == irlHotStart);
 
@@ -535,7 +540,7 @@ bool Study::checkHydroHotStart()
     {
         logs.error() << "Hot Start Hydro option : conflict with parallelization parameters.";
         logs.error()
-          << "Please update relevant simulation parameters or use Cold Start option.    ";
+                << "Please update relevant simulation parameters or use Cold Start option.    ";
         return false;
     }
 
@@ -545,7 +550,7 @@ bool Study::checkHydroHotStart()
     if (nbDaysInSimulation < 364)
     {
         logs.error()
-          << "Hot Start Hydro option : simulation calendar must cover one complete year.    ";
+                << "Hot Start Hydro option : simulation calendar must cover one complete year.    ";
         logs.error() << "Please update data or use Cold Start option.";
         return false;
     }
@@ -581,8 +586,8 @@ bool Study::checkHydroHotStart()
         if (initLevelOnSimDay != parameters.simulationDays.first)
         {
             logs.error()
-              << "Hot Start Hydro option : area '" << area->name
-              << "' - hydro level must be initialized on the first simulation month.    ";
+                    << "Hot Start Hydro option : area '" << area->name
+                    << "' - hydro level must be initialized on the first simulation month.    ";
             logs.error() << "Please update data or use Cold Start option.";
             return false;
         }
@@ -591,14 +596,16 @@ bool Study::checkHydroHotStart()
     return true;
 }
 
-bool Study::initializeRuntimeInfos()
+bool
+Study::initializeRuntimeInfos()
 {
     delete runtime;
     runtime = new StudyRuntimeInfos();
     return runtime->loadFromStudy(*this);
 }
 
-void Study::performTransformationsBeforeLaunchingSimulation()
+void
+Study::performTransformationsBeforeLaunchingSimulation()
 {
 // Those computations are also made from the TS-Generator (ts-generator/xcast/xcast.cpp)
 #ifndef NDEBUG
@@ -609,40 +616,41 @@ void Study::performTransformationsBeforeLaunchingSimulation()
 
     // ForEach area
     areas.each(
-      [&](Data::Area& area)
-      {
-          if (not parameters.geographicTrimming)
-          {
-              // reset filtering
-              area.filterSynthesis = (uint)filterAll;
-              area.filterYearByYear = (uint)filterAll;
-          }
+            [&](Data::Area& area)
+            {
+                if (not parameters.geographicTrimming)
+                {
+                    // reset filtering
+                    area.filterSynthesis = (uint)filterAll;
+                    area.filterYearByYear = (uint)filterAll;
+                }
 
-          // Informations about time-series for the load
-          auto& matrix = area.load.series.timeSeries;
-          auto& dsmvalues = area.reserves[fhrDSM];
+                // Informations about time-series for the load
+                auto& matrix = area.load.series.timeSeries;
+                auto& dsmvalues = area.reserves[fhrDSM];
 
-          // Adding DSM values
-          for (uint timeSeries = 0; timeSeries < matrix.width; ++timeSeries)
-          {
-              auto& perHour = matrix[timeSeries];
-              for (uint h = 0; h < matrix.height; ++h)
-              {
-                  perHour[h] += dsmvalues[h];
-                  // MBO - 13/05/2014 - #20
-                  // Starting v4.5 load can be negative
-                  /*if (perHour[h] < 0.)
-                  {
-                          logs.warning() << area.id << ", hour " << h << ": `load - dsm` can not be
-                  negative. Reset to 0"; perHour[h] = 0.;
-                  }*/
-              }
-          }
-      });
+                // Adding DSM values
+                for (uint timeSeries = 0; timeSeries < matrix.width; ++timeSeries)
+                {
+                    auto& perHour = matrix[timeSeries];
+                    for (uint h = 0; h < matrix.height; ++h)
+                    {
+                        perHour[h] += dsmvalues[h];
+                        // MBO - 13/05/2014 - #20
+                        // Starting v4.5 load can be negative
+                        /*if (perHour[h] < 0.)
+                        {
+                                logs.warning() << area.id << ", hour " << h << ": `load - dsm` can
+                        not be negative. Reset to 0"; perHour[h] = 0.;
+                        }*/
+                    }
+                }
+            });
 }
 
 // This function is a helper. It should be completed when adding new formats
-static std::string getOutputSuffix(ResultFormat fmt)
+static std::string
+getOutputSuffix(ResultFormat fmt)
 {
     switch (fmt)
     {
@@ -653,11 +661,12 @@ static std::string getOutputSuffix(ResultFormat fmt)
     }
 }
 
-YString StudyCreateOutputPath(SimulationMode mode,
-                              ResultFormat fmt,
-                              const YString& outputRoot,
-                              const YString& label,
-                              int64_t startTime)
+YString
+StudyCreateOutputPath(SimulationMode mode,
+                      ResultFormat fmt,
+                      const YString& outputRoot,
+                      const YString& label,
+                      int64_t startTime)
 {
     auto suffix = getOutputSuffix(fmt);
 
@@ -712,7 +721,8 @@ YString StudyCreateOutputPath(SimulationMode mode,
     return folderOutput;
 }
 
-void Study::prepareOutput()
+void
+Study::prepareOutput()
 {
     pStartTime = DateTime::Now();
 
@@ -732,7 +742,8 @@ void Study::prepareOutput()
     logs.info() << "  Output folder : " << folderOutput;
 }
 
-void Study::saveAboutTheStudy(Solver::IResultWriter& resultWriter)
+void
+Study::saveAboutTheStudy(Solver::IResultWriter& resultWriter)
 {
     String path;
     path.reserve(1024);
@@ -804,7 +815,8 @@ void Study::saveAboutTheStudy(Solver::IResultWriter& resultWriter)
     }
 }
 
-Area* Study::areaAdd(const AreaName& name, bool updateMode)
+Area*
+Study::areaAdd(const AreaName& name, bool updateMode)
 {
     if (name.empty())
     {
@@ -864,7 +876,8 @@ Area* Study::areaAdd(const AreaName& name, bool updateMode)
     return area;
 }
 
-bool Study::areaDelete(Area* area)
+bool
+Study::areaDelete(Area* area)
 {
     if (not area)
     {
@@ -911,7 +924,8 @@ bool Study::areaDelete(Area* area)
     return true;
 }
 
-void Study::areaDelete(Area::Vector& arealist)
+void
+Study::areaDelete(Area::Vector& arealist)
 {
     if (arealist.empty())
     {
@@ -972,7 +986,8 @@ void Study::areaDelete(Area::Vector& arealist)
     }
 }
 
-bool Study::linkDelete(AreaLink* lnk)
+bool
+Study::linkDelete(AreaLink* lnk)
 {
     // Impossible to find the attached area
     // The link might be already deleted
@@ -997,7 +1012,8 @@ bool Study::linkDelete(AreaLink* lnk)
     return true;
 }
 
-bool Study::areaRename(Area* area, AreaName newName)
+bool
+Study::areaRename(Area* area, AreaName newName)
 {
     // A name must not be empty
     if (not area or newName.empty())
@@ -1079,7 +1095,8 @@ bool Study::areaRename(Area* area, AreaName newName)
     return ret;
 }
 
-bool Study::clusterRename(Cluster* cluster, ClusterName newName)
+bool
+Study::clusterRename(Cluster* cluster, ClusterName newName)
 {
     // A name must not be empty
     if (!cluster or newName.empty())
@@ -1180,39 +1197,45 @@ bool Study::clusterRename(Cluster* cluster, ClusterName newName)
     return ret;
 }
 
-void Study::destroyAllLoadTSGeneratorData()
+void
+Study::destroyAllLoadTSGeneratorData()
 {
     areas.each([&](Data::Area& area) { FreeAndNil(area.load.prepro); });
 }
 
-void Study::destroyAllSolarTSGeneratorData()
+void
+Study::destroyAllSolarTSGeneratorData()
 {
     areas.each([&](Data::Area& area) { FreeAndNil(area.solar.prepro); });
 }
 
-void Study::destroyAllHydroTSGeneratorData()
+void
+Study::destroyAllHydroTSGeneratorData()
 {
     areas.each([&](Data::Area& area) { FreeAndNil(area.hydro.prepro); });
 }
 
-void Study::destroyAllWindTSGeneratorData()
+void
+Study::destroyAllWindTSGeneratorData()
 {
     areas.each([&](Data::Area& area) { FreeAndNil(area.wind.prepro); });
 }
 
-void Study::destroyAllThermalTSGeneratorData()
+void
+Study::destroyAllThermalTSGeneratorData()
 {
     areas.each(
-      [&](Data::Area& area)
-      {
-          for (const auto& cluster: area.thermal.list.each_enabled_and_not_mustrun())
-          {
-              FreeAndNil(cluster->prepro);
-          }
-      });
+            [&](Data::Area& area)
+            {
+                for (const auto& cluster: area.thermal.list.each_enabled_and_not_mustrun())
+                {
+                    FreeAndNil(cluster->prepro);
+                }
+            });
 }
 
-void Study::ensureDataAreLoadedForAllBindingConstraints()
+void
+Study::ensureDataAreLoadedForAllBindingConstraints()
 {
     for (const auto& constraint: bindingConstraints)
     {
@@ -1254,7 +1277,8 @@ struct TS final
 
 } // anonymous namespace
 
-void Study::initializeProgressMeter(bool tsGeneratorOnly)
+void
+Study::initializeProgressMeter(bool tsGeneratorOnly)
 {
     uint years = tsGeneratorOnly ? 1 : (runtime->rangeLimits.year[rangeEnd] + 1);
     assert(runtime);
@@ -1369,7 +1393,8 @@ void Study::initializeProgressMeter(bool tsGeneratorOnly)
     progression.setNumberOfParallelYears(maxNbYearsInParallel);
 }
 
-bool Study::forceReload(bool reload) const
+bool
+Study::forceReload(bool reload) const
 {
     bool ret = true;
 
@@ -1388,7 +1413,8 @@ bool Study::forceReload(bool reload) const
     return ret;
 }
 
-void Study::markAsModified() const
+void
+Study::markAsModified() const
 {
     areas.markAsModified();
 
@@ -1403,7 +1429,8 @@ void Study::markAsModified() const
     setsOfLinks.markAsModified();
 }
 
-void Study::relocate(AnyString newFolder)
+void
+Study::relocate(AnyString newFolder)
 {
     folder = newFolder;
     folderInput.clear() << newFolder << SEP << "input";
@@ -1411,14 +1438,16 @@ void Study::relocate(AnyString newFolder)
     folderSettings.clear() << newFolder << SEP << "settings";
 }
 
-void Study::resizeAllTimeseriesNumbers(uint n)
+void
+Study::resizeAllTimeseriesNumbers(uint n)
 {
     logs.debug() << "  resizing timeseries numbers";
     areas.resizeAllTimeseriesNumbers(n);
     bindingConstraintsGroups.resizeAllTimeseriesNumbers(n);
 }
 
-bool Study::checkForFilenameLimits(bool output, const String& chfolder) const
+bool
+Study::checkForFilenameLimits(bool output, const String& chfolder) const
 {
     enum
     {
@@ -1450,35 +1479,35 @@ bool Study::checkForFilenameLimits(bool output, const String& chfolder) const
         String areaname;
 
         areas.each(
-          [&](const Area& area)
-          {
-              if (areaname.size() < area.id.size())
-              {
-                  areaname = area.id;
-              }
+                [&](const Area& area)
+                {
+                    if (areaname.size() < area.id.size())
+                    {
+                        areaname = area.id;
+                    }
 
-              auto end = area.links.end();
-              for (auto i = area.links.begin(); i != end; ++i)
-              {
-                  auto& link = *(i->second);
-                  uint len = link.from->id.size() + link.with->id.size();
-                  len += output ? 3 : 1;
-                  if (len > linkname.size())
-                  {
-                      linkname.clear();
-                      linkname << i->second->from->id;
-                      if (output)
-                      {
-                          linkname << " - "; // 3
-                      }
-                      else
-                      {
-                          linkname << SEP;
-                      }
-                      linkname << i->second->with->id;
-                  }
-              }
-          });
+                    auto end = area.links.end();
+                    for (auto i = area.links.begin(); i != end; ++i)
+                    {
+                        auto& link = *(i->second);
+                        uint len = link.from->id.size() + link.with->id.size();
+                        len += output ? 3 : 1;
+                        if (len > linkname.size())
+                        {
+                            linkname.clear();
+                            linkname << i->second->from->id;
+                            if (output)
+                            {
+                                linkname << " - "; // 3
+                            }
+                            else
+                            {
+                                linkname << SEP;
+                            }
+                            linkname << i->second->with->id;
+                        }
+                    }
+                });
 
         String filename;
         filename << studyfolder << SEP << "output" << SEP;
@@ -1530,23 +1559,23 @@ bool Study::checkForFilenameLimits(bool output, const String& chfolder) const
         // or even constraints
 
         areas.each(
-          [&](const Area& area)
-          {
-              if (areaname.size() < area.id.size())
-              {
-                  areaname = area.id;
-              }
-              auto& cname = clustername;
-              cname.clear();
+                [&](const Area& area)
+                {
+                    if (areaname.size() < area.id.size())
+                    {
+                        areaname = area.id;
+                    }
+                    auto& cname = clustername;
+                    cname.clear();
 
-              for (auto& cluster: area.thermal.list.all())
-              {
-                  if (cluster->id().size() > cname.size())
-                  {
-                      cname = cluster->id();
-                  }
-              }
-          });
+                    for (auto& cluster: area.thermal.list.all())
+                    {
+                        if (cluster->id().size() > cname.size())
+                        {
+                            cname = cluster->id();
+                        }
+                    }
+                });
 
         String filename;
 
@@ -1561,9 +1590,9 @@ bool Study::checkForFilenameLimits(bool output, const String& chfolder) const
             if (filename.size() >= limit)
             {
                 logs.error()
-                  << "OS Maximum path length limitation  obtained with the thermal plant '"
-                  << areaname << "::" << clustername << "' (got " << filename.size()
-                  << " characters)";
+                        << "OS Maximum path length limitation  obtained with the thermal plant '"
+                        << areaname << "::" << clustername << "' (got " << filename.size()
+                        << " characters)";
                 logs.error() << "You may experience problems while accessing to this file: "
                              << filename;
                 return false;
@@ -1596,8 +1625,8 @@ bool Study::checkForFilenameLimits(bool output, const String& chfolder) const
         if (filename.size() >= limit)
         {
             logs.error()
-              << "OS Maximum path length limitation obtained with the binding constraint list"
-              << " (got " << filename.size() << " characters)";
+                    << "OS Maximum path length limitation obtained with the binding constraint list"
+                    << " (got " << filename.size() << " characters)";
             logs.error() << "You may experience problems while accessing to this file: "
                          << filename;
             return false;
@@ -1619,8 +1648,8 @@ bool Study::checkForFilenameLimits(bool output, const String& chfolder) const
                 if (filename.size() >= limit)
                 {
                     logs.error()
-                      << "OS Maximum path length limitation obtained with the constraint '"
-                      << constraint.name() << "' (got " << filename.size() << " characters)";
+                            << "OS Maximum path length limitation obtained with the constraint '"
+                            << constraint.name() << "' (got " << filename.size() << " characters)";
                     logs.error() << "You may experience problems while accessing to this file: "
                                  << filename;
                     return false;
@@ -1631,7 +1660,8 @@ bool Study::checkForFilenameLimits(bool output, const String& chfolder) const
     return true;
 }
 
-void Study::removeTimeseriesIfTSGeneratorEnabled()
+void
+Study::removeTimeseriesIfTSGeneratorEnabled()
 {
     if (0 != parameters.timeSeriesToGenerate)
     {
@@ -1658,7 +1688,8 @@ void Study::removeTimeseriesIfTSGeneratorEnabled()
     }
 }
 
-void Study::computePThetaInfForThermalClusters() const
+void
+Study::computePThetaInfForThermalClusters() const
 {
     for (uint i = 0; i != this->areas.size(); i++)
     {
@@ -1669,8 +1700,8 @@ void Study::computePThetaInfForThermalClusters() const
         {
             for (uint k = 0; k < HOURS_PER_YEAR; k++)
             {
-                cluster->PthetaInf[k] = cluster->modulation[Data::thermalMinGenModulation][k]
-                                        * cluster->unitCount * cluster->nominalCapacity;
+                cluster->PthetaInf[k] = cluster->modulation[Data::thermalMinGenModulation][k] *
+                                        cluster->unitCount * cluster->nominalCapacity;
             }
         }
     }

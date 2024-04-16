@@ -31,12 +31,13 @@ using namespace Antares;
 
 namespace Antares::Data
 {
-static inline void InterAreaCorrelationSetValue(Matrix<>& m,
-                                                const char filename[],
-                                                Area* from,
-                                                Area* to,
-                                                IniFile::Section* s,
-                                                IniFile::Property* p)
+static inline void
+InterAreaCorrelationSetValue(Matrix<>& m,
+                             const char filename[],
+                             Area* from,
+                             Area* to,
+                             IniFile::Section* s,
+                             IniFile::Property* p)
 {
     double v;
 
@@ -44,16 +45,16 @@ static inline void InterAreaCorrelationSetValue(Matrix<>& m,
     if (to == from)
     {
         logs.warning()
-          << filename << ": '" << s->name << "'/'" << p->key << "'='" << p->value
-          << "': This value of correlation is locked (equal to 1.0). The property is ignored";
+                << filename << ": '" << s->name << "'/'" << p->key << "'='" << p->value
+                << "': This value of correlation is locked (equal to 1.0). The property is ignored";
         return;
     }
     // Multiple correlation valueis
     if (m[from->index][to->index] != 0.)
     {
         logs.warning()
-          << filename << ": '" << s->name << "'/'" << p->key << "'='" << p->value
-          << "': This correlation value is already set and will override the previous value";
+                << filename << ": '" << s->name << "'/'" << p->key << "'='" << p->value
+                << "': This correlation value is already set and will override the previous value";
     }
     // Try to convert the value
     if (!p->value.to<double>(v))
@@ -74,9 +75,8 @@ static inline void InterAreaCorrelationSetValue(Matrix<>& m,
     m[to->index][from->index] = v;
 }
 
-static inline bool ReadCorrelationModeFromINI(const IniFile& ini,
-                                              Correlation::Mode& mode,
-                                              bool warnings)
+static inline bool
+ReadCorrelationModeFromINI(const IniFile& ini, Correlation::Mode& mode, bool warnings)
 {
     auto* section = ini.find("general");
     if (!section)
@@ -108,12 +108,13 @@ static inline bool ReadCorrelationModeFromINI(const IniFile& ini,
     return true;
 }
 
-static inline void ReadCorrelationCoefficients(Correlation& correlation,
-                                               Study& study,
-                                               Matrix<>& m,
-                                               const IniFile& ini,
-                                               const IniFile::Section& section,
-                                               bool warnings)
+static inline void
+ReadCorrelationCoefficients(Correlation& correlation,
+                            Study& study,
+                            Matrix<>& m,
+                            const IniFile& ini,
+                            const IniFile::Section& section,
+                            bool warnings)
 {
     double v;
     AreaName nameFrom;
@@ -173,10 +174,11 @@ static inline void ReadCorrelationCoefficients(Correlation& correlation,
     }
 }
 
-static inline void ExportCorrelationCoefficients(Study& study,
-                                                 const Matrix<>& m,
-                                                 IO::File::Stream& file,
-                                                 const std::string& name)
+static inline void
+ExportCorrelationCoefficients(Study& study,
+                              const Matrix<>& m,
+                              IO::File::Stream& file,
+                              const std::string& name)
 {
     if (m.empty() or m.width != m.height)
     {
@@ -203,7 +205,8 @@ static inline void ExportCorrelationCoefficients(Study& study,
     file << '\n';
 }
 
-int InterAreaCorrelationLoadFromIniFile(Matrix<>* m, AreaList* l, IniFile* ini, int warnings)
+int
+InterAreaCorrelationLoadFromIniFile(Matrix<>* m, AreaList* l, IniFile* ini, int warnings)
 {
     // Asserts
     assert(m);
@@ -230,8 +233,8 @@ int InterAreaCorrelationLoadFromIniFile(Matrix<>* m, AreaList* l, IniFile* ini, 
                     {
                         if (warnings)
                         {
-                            logs.warning()
-                              << "Correlation: " << s->name << ": " << p->key << ": Area not found";
+                            logs.warning() << "Correlation: " << s->name << ": " << p->key
+                                           << ": Area not found";
                         }
                     }
                 }
@@ -249,7 +252,8 @@ int InterAreaCorrelationLoadFromIniFile(Matrix<>* m, AreaList* l, IniFile* ini, 
     return 0;
 }
 
-int InterAreaCorrelationLoadFromFile(Matrix<>* m, AreaList* l, const char filename[])
+int
+InterAreaCorrelationLoadFromFile(Matrix<>* m, AreaList* l, const char filename[])
 {
     /* Asserts */
     assert(m);
@@ -266,7 +270,8 @@ int InterAreaCorrelationLoadFromFile(Matrix<>* m, AreaList* l, const char filena
     return 0;
 }
 
-IniFile* InterAreaCorrelationSaveToIniFile(const Matrix<>* m, const AreaList* l)
+IniFile*
+InterAreaCorrelationSaveToIniFile(const Matrix<>* m, const AreaList* l)
 {
     /* Asserts */
     assert(m);
@@ -301,7 +306,8 @@ IniFile* InterAreaCorrelationSaveToIniFile(const Matrix<>* m, const AreaList* l)
     return ini;
 }
 
-int InterAreaCorrelationSaveToFile(const Matrix<>* m, const AreaList* l, const char filename[])
+int
+InterAreaCorrelationSaveToFile(const Matrix<>* m, const AreaList* l, const char filename[])
 {
     /* Asserts */
     assert(m);
@@ -339,7 +345,8 @@ Correlation::~Correlation()
     delete[] monthly;
 }
 
-bool Correlation::loadFromFile(Study& study, const AnyString& filename, bool warnings)
+bool
+Correlation::loadFromFile(Study& study, const AnyString& filename, bool warnings)
 {
 #ifndef NDEBUG
     Antares::logs.debug() << "  " << correlationName << ": loading " << filename;
@@ -348,7 +355,8 @@ bool Correlation::loadFromFile(Study& study, const AnyString& filename, bool war
     return (ini.open(filename)) ? internalLoadFromINI(study, ini, warnings) : false;
 }
 
-bool Correlation::saveToFile(Study& study, const AnyString& filename) const
+bool
+Correlation::saveToFile(Study& study, const AnyString& filename) const
 {
     using namespace Yuni;
     IO::File::Stream file;
@@ -360,7 +368,8 @@ bool Correlation::saveToFile(Study& study, const AnyString& filename) const
     return false;
 }
 
-const char* Correlation::ModeToCString(Mode mode)
+const char*
+Correlation::ModeToCString(Mode mode)
 {
     switch (mode)
     {
@@ -374,7 +383,8 @@ const char* Correlation::ModeToCString(Mode mode)
     return "unknown";
 }
 
-Correlation::Mode Correlation::CStringToMode(const AnyString& str)
+Correlation::Mode
+Correlation::CStringToMode(const AnyString& str)
 {
     ShortString64 s(str);
     s.trim(" \t\r\n");
@@ -390,7 +400,8 @@ Correlation::Mode Correlation::CStringToMode(const AnyString& str)
     return modeNone;
 }
 
-void Correlation::internalSaveToINI(Study& study, IO::File::Stream& file) const
+void
+Correlation::internalSaveToINI(Study& study, IO::File::Stream& file) const
 {
     // General settings
     // (the only mandatory section)
@@ -419,7 +430,8 @@ void Correlation::internalSaveToINI(Study& study, IO::File::Stream& file) const
     }
 }
 
-bool Correlation::internalLoadFromINITry(Study& study, const IniFile& ini, bool warnings)
+bool
+Correlation::internalLoadFromINITry(Study& study, const IniFile& ini, bool warnings)
 {
     if (!ReadCorrelationModeFromINI(ini, pMode, warnings))
     {
@@ -473,7 +485,8 @@ bool Correlation::internalLoadFromINITry(Study& study, const IniFile& ini, bool 
     return true;
 }
 
-void Correlation::reset(Study& study)
+void
+Correlation::reset(Study& study)
 {
     // Clean
     if (annual)
@@ -511,7 +524,8 @@ void Correlation::reset(Study& study)
     }
 }
 
-void Correlation::clear()
+void
+Correlation::clear()
 {
     // Clean
     if (annual)
@@ -526,7 +540,8 @@ void Correlation::clear()
     }
 }
 
-bool Correlation::internalLoadFromINI(Study& study, const IniFile& ini, bool warnings)
+bool
+Correlation::internalLoadFromINI(Study& study, const IniFile& ini, bool warnings)
 {
     // Clean
     if (annual)
@@ -571,7 +586,8 @@ bool Correlation::internalLoadFromINI(Study& study, const IniFile& ini, bool war
     return true;
 }
 
-void Correlation::set(Matrix<>& m, const Area& from, const Area& to, double v)
+void
+Correlation::set(Matrix<>& m, const Area& from, const Area& to, double v)
 {
     if (from.index == to.index)
     {
@@ -600,7 +616,8 @@ void Correlation::set(Matrix<>& m, const Area& from, const Area& to, double v)
     m[to.index][from.index] = v;
 }
 
-void Correlation::retrieveMontlyMatrixArray(const Matrix<>* array[12]) const
+void
+Correlation::retrieveMontlyMatrixArray(const Matrix<>* array[12]) const
 {
     switch (pMode)
     {
@@ -631,7 +648,8 @@ void Correlation::retrieveMontlyMatrixArray(const Matrix<>* array[12]) const
     }
 }
 
-uint64_t Correlation::memoryUsage() const
+uint64_t
+Correlation::memoryUsage() const
 {
     uint64_t r = sizeof(Correlation);
     if (annual)
@@ -648,7 +666,8 @@ uint64_t Correlation::memoryUsage() const
     return r;
 }
 
-bool Correlation::forceReload(bool reload) const
+bool
+Correlation::forceReload(bool reload) const
 {
     bool ret = true;
     if (annual)
@@ -663,7 +682,8 @@ bool Correlation::forceReload(bool reload) const
     return ret;
 }
 
-void Correlation::markAsModified() const
+void
+Correlation::markAsModified() const
 {
     if (annual)
     {
@@ -675,9 +695,8 @@ void Correlation::markAsModified() const
     }
 }
 
-static inline uint FindMappedAreaName(const AreaName& name,
-                                      const Study& study,
-                                      const Area::NameMapping& mapping)
+static inline uint
+FindMappedAreaName(const AreaName& name, const Study& study, const Area::NameMapping& mapping)
 {
     auto i = mapping.find(name);
     if (i != mapping.end())
@@ -689,13 +708,14 @@ static inline uint FindMappedAreaName(const AreaName& name,
     return (!area) ? ((uint)-1) : area->index;
 }
 
-static void CopyFromSingleMatrix(const Matrix<>& mxsrc,
-                                 Matrix<>& mxout,
-                                 const Study& studySource,
-                                 uint areaSource,
-                                 uint areaTarget,
-                                 const Area::NameMapping& mapping,
-                                 const Study& study)
+static void
+CopyFromSingleMatrix(const Matrix<>& mxsrc,
+                     Matrix<>& mxout,
+                     const Study& studySource,
+                     uint areaSource,
+                     uint areaTarget,
+                     const Area::NameMapping& mapping,
+                     const Study& study)
 {
     // for (uint x = 0; x <= areaSource; ++x)
     // We MUST take the original area list, and not the current one
@@ -724,11 +744,12 @@ static void CopyFromSingleMatrix(const Matrix<>& mxsrc,
     }
 }
 
-void Correlation::copyFrom(const Correlation& source,
-                           const Study& studySource,
-                           const AreaName& areaSource,
-                           const Area::NameMapping& mapping,
-                           const Study& study)
+void
+Correlation::copyFrom(const Correlation& source,
+                      const Study& studySource,
+                      const AreaName& areaSource,
+                      const Area::NameMapping& mapping,
+                      const Study& study)
 {
     if (study.areas.size() <= 1)
     {

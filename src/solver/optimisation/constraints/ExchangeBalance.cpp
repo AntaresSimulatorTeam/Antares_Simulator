@@ -21,7 +21,8 @@
 
 #include "antares/solver/optimisation/constraints/ExchangeBalance.h"
 
-void ExchangeBalance::add(uint32_t pays)
+void
+ExchangeBalance::add(uint32_t pays)
 {
     builder.updateHourWithinWeek(0);
 

@@ -25,7 +25,8 @@
 
 using namespace Yuni;
 
-static inline int64_t MilliSecTimer()
+static inline int64_t
+MilliSecTimer()
 {
     Yuni::timeval tv;
     YUNI_SYSTEM_GETTIMEOFDAY(&tv, nullptr);
@@ -39,12 +40,14 @@ Timer::Timer()
     startTime_ = MilliSecTimer();
 }
 
-void Timer::stop()
+void
+Timer::stop()
 {
     duration_ = MilliSecTimer() - startTime_;
 }
 
-int64_t Timer::get_duration()
+int64_t
+Timer::get_duration()
 {
     return duration_;
 }

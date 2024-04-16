@@ -29,7 +29,8 @@ namespace Antares
 namespace Solver
 {
 template<class T, class U1, class U2>
-bool Cholesky(U1& L, U2& A, uint size, T* temp)
+bool
+Cholesky(U1& L, U2& A, uint size, T* temp)
 {
     using namespace Yuni;
 

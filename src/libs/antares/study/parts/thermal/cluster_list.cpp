@@ -56,12 +56,14 @@ ThermalClusterList::~ThermalClusterList()
 
 #define SEP IO::Separator
 
-std::string ThermalClusterList::typeID() const
+std::string
+ThermalClusterList::typeID() const
 {
     return "thermal";
 }
 
-uint64_t ThermalClusterList::memoryUsage() const
+uint64_t
+ThermalClusterList::memoryUsage() const
 {
     uint64_t ret = sizeof(ThermalClusterList) + (2 * sizeof(void*)) * enabledAndMustRunCount();
     std::ranges::for_each(each_enabled_and_not_mustrun(),
@@ -73,7 +75,8 @@ static bool ThermalClusterLoadFromSection(const AnyString& filename,
                                           ThermalCluster& cluster,
                                           const IniFile::Section& section);
 
-void ThermalClusterList::rebuildIndex() const
+void
+ThermalClusterList::rebuildIndex() const
 {
     uint indx = 0;
     for (auto& c: each_enabled_and_not_mustrun())
@@ -82,19 +85,22 @@ void ThermalClusterList::rebuildIndex() const
     }
 }
 
-unsigned int ThermalClusterList::enabledAndNotMustRunCount() const
+unsigned int
+ThermalClusterList::enabledAndNotMustRunCount() const
 {
     return std::ranges::count_if(allClusters_,
                                  [](auto c) { return c->isEnabled() && !c->isMustRun(); });
 }
 
-unsigned int ThermalClusterList::enabledAndMustRunCount() const
+unsigned int
+ThermalClusterList::enabledAndMustRunCount() const
 {
     return std::ranges::count_if(allClusters_,
                                  [](auto c) { return c->isEnabled() && c->isMustRun(); });
 }
 
-bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, Area* area)
+bool
+ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, Area* area)
 {
     assert(area && "A parent area is required");
 
@@ -208,7 +214,8 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
     return ret;
 }
 
-static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFile::Property* p)
+static bool
+ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFile::Property* p)
 {
     if (p->key.empty())
     {
@@ -347,9 +354,10 @@ static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFil
     return false;
 }
 
-bool ThermalClusterLoadFromSection(const AnyString& filename,
-                                   ThermalCluster& cluster,
-                                   const IniFile::Section& section)
+bool
+ThermalClusterLoadFromSection(const AnyString& filename,
+                              ThermalCluster& cluster,
+                              const IniFile::Section& section)
 {
     if (section.name.empty())
     {
@@ -381,7 +389,8 @@ bool ThermalClusterLoadFromSection(const AnyString& filename,
     return true;
 }
 
-void ThermalClusterList::calculationOfSpinning()
+void
+ThermalClusterList::calculationOfSpinning()
 {
     for (auto& cluster: each_enabled())
     {
@@ -389,7 +398,8 @@ void ThermalClusterList::calculationOfSpinning()
     }
 }
 
-void ThermalClusterList::reverseCalculationOfSpinning()
+void
+ThermalClusterList::reverseCalculationOfSpinning()
 {
     for (auto& cluster: each_enabled())
     {
@@ -397,7 +407,8 @@ void ThermalClusterList::reverseCalculationOfSpinning()
     }
 }
 
-void ThermalClusterList::enableMustrunForEveryone()
+void
+ThermalClusterList::enableMustrunForEveryone()
 {
     for (auto& c: allClusters_)
     {
@@ -405,7 +416,8 @@ void ThermalClusterList::enableMustrunForEveryone()
     }
 }
 
-void ThermalClusterList::ensureDataPrepro()
+void
+ThermalClusterList::ensureDataPrepro()
 {
     for (const auto& c: all())
     {
@@ -416,7 +428,8 @@ void ThermalClusterList::ensureDataPrepro()
     }
 }
 
-bool ThermalClusterList::saveToFolder(const AnyString& folder) const
+bool
+ThermalClusterList::saveToFolder(const AnyString& folder) const
 {
     // Make sure the folder is created
     if (!IO::Directory::Create(folder))
@@ -572,7 +585,8 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
     return ret;
 }
 
-bool ThermalClusterList::savePreproToFolder(const AnyString& folder) const
+bool
+ThermalClusterList::savePreproToFolder(const AnyString& folder) const
 {
     Clob buffer;
     bool ret = true;
@@ -589,7 +603,8 @@ bool ThermalClusterList::savePreproToFolder(const AnyString& folder) const
     return ret;
 }
 
-bool ThermalClusterList::saveEconomicCosts(const AnyString& folder) const
+bool
+ThermalClusterList::saveEconomicCosts(const AnyString& folder) const
 {
     Clob buffer;
     bool ret = true;
@@ -603,10 +618,11 @@ bool ThermalClusterList::saveEconomicCosts(const AnyString& folder) const
     return ret;
 }
 
-bool ThermalClusterList::loadPreproFromFolder(Study& study, const AnyString& folder)
+bool
+ThermalClusterList::loadPreproFromFolder(Study& study, const AnyString& folder)
 {
-    const bool globalThermalTSgeneration = study.parameters.timeSeriesToGenerate
-                                           & timeSeriesThermal;
+    const bool globalThermalTSgeneration = study.parameters.timeSeriesToGenerate &
+                                           timeSeriesThermal;
 
     Clob buffer;
     auto hasPrepro = [](auto c) { return (bool)c->prepro; };
@@ -628,7 +644,8 @@ bool ThermalClusterList::loadPreproFromFolder(Study& study, const AnyString& fol
     return std::ranges::all_of(allClusters_ | std::views::filter(hasPrepro), loadAndCheckPrepro);
 }
 
-bool ThermalClusterList::loadEconomicCosts(Study& study, const AnyString& folder)
+bool
+ThermalClusterList::loadEconomicCosts(Study& study, const AnyString& folder)
 {
     return std::ranges::all_of(allClusters_,
                                [&study, folder](const auto& c)
@@ -636,7 +653,7 @@ bool ThermalClusterList::loadEconomicCosts(Study& study, const AnyString& folder
                                    assert(c->parentArea && "cluster: invalid parent area");
                                    Clob buffer;
                                    buffer.clear()
-                                     << folder << SEP << c->parentArea->id << SEP << c->id();
+                                           << folder << SEP << c->parentArea->id << SEP << c->id();
 
                                    bool result = c->ecoInput.loadFromFolder(study, buffer);
                                    c->ComputeCostTimeSeries();

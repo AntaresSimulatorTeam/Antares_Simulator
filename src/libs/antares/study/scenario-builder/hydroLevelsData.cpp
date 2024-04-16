@@ -28,7 +28,8 @@
 
 namespace Antares::Data::ScenarioBuilder
 {
-bool hydroLevelsData::reset(const Study& study)
+bool
+hydroLevelsData::reset(const Study& study)
 {
     const uint nbYears = study.parameters.nbYears;
 
@@ -38,7 +39,8 @@ bool hydroLevelsData::reset(const Study& study)
     return true;
 }
 
-void hydroLevelsData::saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const
+void
+hydroLevelsData::saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const
 {
     // Prefix
     CString<512, false> prefix;
@@ -72,12 +74,14 @@ void hydroLevelsData::saveToINIFile(const Study& study, Yuni::IO::File::Stream& 
     }
 }
 
-void hydroLevelsData::set_value(uint x, uint y, double value)
+void
+hydroLevelsData::set_value(uint x, uint y, double value)
 {
     pHydroLevelsRules.entry[y][x] = value;
 }
 
-bool hydroLevelsData::apply(Study& study)
+bool
+hydroLevelsData::apply(Study& study)
 {
     study.scenarioHydroLevels.copyFrom(pHydroLevelsRules);
     return true;

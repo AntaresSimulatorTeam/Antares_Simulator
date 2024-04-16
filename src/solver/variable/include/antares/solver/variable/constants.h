@@ -102,7 +102,8 @@ struct PrecisionToPrintfFormat<5>
 };
 
 template<class StringT>
-static inline void AssignPrecisionToPrintfFormat(StringT& out, uint precision)
+static inline void
+AssignPrecisionToPrintfFormat(StringT& out, uint precision)
 {
     switch (precision)
     {

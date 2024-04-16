@@ -30,9 +30,10 @@
 namespace Antares::TSGenerator::XCast
 {
 template<class PredicateT>
-void StudyData::loadFromStudy(Data::Study& study,
-                              const Data::Correlation& correlation,
-                              PredicateT& predicate)
+void
+StudyData::loadFromStudy(Data::Study& study,
+                         const Data::Correlation& correlation,
+                         PredicateT& predicate)
 {
     // clear our list of areas
     localareas.clear();

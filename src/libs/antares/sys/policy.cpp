@@ -57,7 +57,8 @@ static PolicyMap* entries = nullptr;
 static std::mutex gsMutex; //!< Mutex for policy entries
 
 template<class StringT>
-static void OpenFromINIFileWL(const String& filename, const StringT& hostname)
+static void
+OpenFromINIFileWL(const String& filename, const StringT& hostname)
 {
     IniFile ini;
     if (not ini.open(filename))
@@ -72,21 +73,21 @@ static void OpenFromINIFileWL(const String& filename, const StringT& hostname)
     hostnameAll << hostname << ":*";
 
     ini.each(
-      [&](const IniFile::Section& section)
-      {
-          // This section is dedicated to another host
-          if (section.name == "*:*" or section.name == "*:" ANTARES_VERSION
-              or section.name.equals(hostnameAll) or section.name.equals(hostnameVersion))
-          {
-              section.each(
-                [&](const IniFile::Property& property)
+            [&](const IniFile::Section& section)
+            {
+                // This section is dedicated to another host
+                if (section.name == "*:*" or section.name == "*:" ANTARES_VERSION or
+                    section.name.equals(hostnameAll) or section.name.equals(hostnameVersion))
                 {
-                    key = property.key;
-                    key.trim(" \t");
-                    (*entries)[key] = property.value;
-                });
-          }
-      });
+                    section.each(
+                            [&](const IniFile::Property& property)
+                            {
+                                key = property.key;
+                                key.trim(" \t");
+                                (*entries)[key] = property.value;
+                            });
+                }
+            });
 }
 
 class PredicateEnv final
@@ -109,7 +110,8 @@ public:
 };
 
 template<class PredicateT, class StringT1, class StringT2>
-static inline uint ExpandWL(StringT1& out, const StringT2& string, PredicateT& predicate)
+static inline uint
+ExpandWL(StringT1& out, const StringT2& string, PredicateT& predicate)
 {
     // checks
     assert(&out != &string and "undefined behavior");
@@ -160,7 +162,8 @@ static inline uint ExpandWL(StringT1& out, const StringT2& string, PredicateT& p
     return count;
 }
 
-static inline void ExpansionWL()
+static inline void
+ExpansionWL()
 {
     PredicateEnv predicate;
     String out;
@@ -178,7 +181,8 @@ static inline void ExpansionWL()
 
 } // anonymous namespace
 
-bool Open(bool expandEntries)
+bool
+Open(bool expandEntries)
 {
     // avoid concurrent changes
     std::lock_guard locker(gsMutex);
@@ -248,7 +252,8 @@ bool Open(bool expandEntries)
     (*entries)[(key = "sys.cpu")] = System::CPU::Count();
     // how much memory ?
     (*entries)[(key = "sys.memory")].clear()
-      << (uint)std::round(((double)(System::Memory::Total() + 1) / 1024 / 1024 / 1024)) << " Go";
+            << (uint)std::round(((double)(System::Memory::Total() + 1) / 1024 / 1024 / 1024))
+            << " Go";
 
     // paths
     (*entries)[(key = "localpolicy.user.path")] = pathLocalPolicy;
@@ -261,7 +266,8 @@ bool Open(bool expandEntries)
     return true;
 }
 
-void Close()
+void
+Close()
 {
     // avoid concurrent changes
     std::lock_guard locker(gsMutex);
@@ -277,7 +283,8 @@ void Close()
     }
 }
 
-bool Read(String& out, const PolicyKey& key)
+bool
+Read(String& out, const PolicyKey& key)
 {
     // avoid concurrent changes
     std::lock_guard locker(gsMutex);
@@ -295,7 +302,8 @@ bool Read(String& out, const PolicyKey& key)
     return false;
 }
 
-bool ReadAsBool(const PolicyKey& key, bool defval)
+bool
+ReadAsBool(const PolicyKey& key, bool defval)
 {
     // avoid concurrent changes
     std::lock_guard locker(gsMutex);
@@ -315,7 +323,8 @@ bool ReadAsBool(const PolicyKey& key, bool defval)
     return defval;
 }
 
-void DumpToString(Clob& out)
+void
+DumpToString(Clob& out)
 {
     // avoid concurrent changes
     std::lock_guard locker(gsMutex);
@@ -353,7 +362,8 @@ void DumpToString(Clob& out)
     }
 }
 
-void DumpToLogs()
+void
+DumpToLogs()
 {
     // avoid concurrent changes
     std::lock_guard locker(gsMutex);
@@ -373,7 +383,8 @@ void DumpToLogs()
     }
 }
 
-void CheckRootPrefix(const char* argv0)
+void
+CheckRootPrefix(const char* argv0)
 {
     // avoid concurrent changes
     std::lock_guard locker(gsMutex);

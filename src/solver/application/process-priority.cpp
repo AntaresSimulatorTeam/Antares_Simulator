@@ -37,7 +37,8 @@ namespace Antares
 {
 namespace Solver
 {
-void Application::resetProcessPriority() const
+void
+Application::resetProcessPriority() const
 {
 #ifdef YUNI_OS_WINDOWS
     if (System::CPU::Count() <= 2)

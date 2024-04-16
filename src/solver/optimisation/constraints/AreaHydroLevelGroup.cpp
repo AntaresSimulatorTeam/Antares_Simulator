@@ -21,13 +21,15 @@
 
 #include "antares/solver/optimisation/constraints/AreaHydroLevelGroup.h"
 
-AreaHydroLevelData AreaHydroLevelGroup::GetAreaHydroLevelData()
+AreaHydroLevelData
+AreaHydroLevelGroup::GetAreaHydroLevelData()
 {
     return {.CorrespondanceCntNativesCntOptim = problemeHebdo_->CorrespondanceCntNativesCntOptim,
             .CaracteristiquesHydrauliques = problemeHebdo_->CaracteristiquesHydrauliques};
 }
 
-void AreaHydroLevelGroup::BuildConstraints()
+void
+AreaHydroLevelGroup::BuildConstraints()
 {
     auto areaHydroLevelData = GetAreaHydroLevelData();
     AreaHydroLevel areaHydroLevel(builder_, areaHydroLevelData);

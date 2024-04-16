@@ -178,9 +178,9 @@ public:
                                 const Data::Area* area);
 
     template<class VCardToFindT>
-    void retrieveResultsForThermalCluster(
-      typename Variable::Storage<VCardToFindT>::ResultsType** result,
-      const Data::ThermalCluster* cluster);
+    void
+    retrieveResultsForThermalCluster(typename Variable::Storage<VCardToFindT>::ResultsType** result,
+                                     const Data::ThermalCluster* cluster);
 
     template<class VCardToFindT>
     void retrieveResultsForLink(typename Variable::Storage<VCardToFindT>::ResultsType** result,
@@ -192,10 +192,8 @@ public:
     /*!
     ** \brief Ask to all variables to fullfil the report
     */
-    void buildSurveyReport(SurveyResults& results,
-                           int dataLevel,
-                           int fileLevel,
-                           int precision) const;
+    void
+    buildSurveyReport(SurveyResults& results, int dataLevel, int fileLevel, int precision) const;
 
     void buildAnnualSurveyReport(SurveyResults& results,
                                  int dataLevel,

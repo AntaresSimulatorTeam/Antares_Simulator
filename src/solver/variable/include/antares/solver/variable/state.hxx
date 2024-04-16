@@ -27,7 +27,8 @@ namespace Solver
 {
 namespace Variable
 {
-inline void State::startANewYear()
+inline void
+State::startANewYear()
 {
     hourInTheSimulation = 0u;
 
@@ -50,7 +51,8 @@ inline void State::startANewYear()
     averageUpdateTime = 0.;
 }
 
-inline void State::yearEndResetThermal()
+inline void
+State::yearEndResetThermal()
 {
     memset(thermalClusterProductionForYear, 0, sizeof(thermalClusterProductionForYear));
     memset(thermalClusterOperatingCostForYear, 0, sizeof(thermalClusterOperatingCostForYear));
@@ -63,7 +65,8 @@ inline void State::yearEndResetThermal()
            sizeof(thermalClusterDispatchedUnitsCountForYear));
 }
 
-inline void State::initFromAreaIndex(const unsigned int areaIndex, uint numSpace)
+inline void
+State::initFromAreaIndex(const unsigned int areaIndex, uint numSpace)
 {
     area = study.areas[areaIndex];
     scratchpad = &area->scratchpad[numSpace];

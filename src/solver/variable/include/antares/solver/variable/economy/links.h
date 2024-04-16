@@ -40,17 +40,17 @@ namespace Antares::Solver::Variable::Economy
 /*!
 ** \brief All variables for a single link (economy)
 */
-typedef FlowLinear             // Flow linear
-  <FlowLinearAbs               // Flow linear Abs
-   <LoopFlow                   // Loop flow
-    <FlowQuad                  // Flow Quad
-     <CongestionFee            // Congestion Fee
-      <CongestionFeeAbs        // Congestion Fee (Abs)
-       <MarginalCost           // Marginal Cost
-        <CongestionProbability // Congestion Probability (+/-)
-         <HurdleCosts          // Hurdle costs
-          <>>>>>>>>>
-    VariablePerLink;
+typedef FlowLinear                   // Flow linear
+        <FlowLinearAbs               // Flow linear Abs
+         <LoopFlow                   // Loop flow
+          <FlowQuad                  // Flow Quad
+           <CongestionFee            // Congestion Fee
+            <CongestionFeeAbs        // Congestion Fee (Abs)
+             <MarginalCost           // Marginal Cost
+              <CongestionProbability // Congestion Probability (+/-)
+               <HurdleCosts          // Hurdle costs
+                <>>>>>>>>>
+                VariablePerLink;
 
 using Links = Antares::Solver::Variable::Links<VariablePerLink>;
 

@@ -41,15 +41,15 @@ namespace Antares::Solver::Variable::Adequacy
 *
 * #
 */
-using VariablePerLink = Economy::FlowLinear // Flow linear
-  <Economy::FlowLinearAbs                   // Flow linear Abs
-   <Economy::FlowQuad                       // Flow Quad
-    <Economy::CongestionFee                 // Congestion Fee
-     <Economy::CongestionFeeAbs             // Congestion Fee (Abs)
-      <Economy::MarginalCost                // Marginal Cost
-       <Economy::CongestionProbability      // Congestion Probability (+/-)
-        <Economy::HurdleCosts               // Hurdle costs
-         <>>>>>>>>;
+using VariablePerLink = Economy::FlowLinear  // Flow linear
+        <Economy::FlowLinearAbs              // Flow linear Abs
+         <Economy::FlowQuad                  // Flow Quad
+          <Economy::CongestionFee            // Congestion Fee
+           <Economy::CongestionFeeAbs        // Congestion Fee (Abs)
+            <Economy::MarginalCost           // Marginal Cost
+             <Economy::CongestionProbability // Congestion Probability (+/-)
+              <Economy::HurdleCosts          // Hurdle costs
+               <>>>>>>>>;
 
 using Links = Antares::Solver::Variable::Links<VariablePerLink>;
 

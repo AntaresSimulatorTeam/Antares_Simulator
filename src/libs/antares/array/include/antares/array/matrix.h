@@ -168,10 +168,8 @@ public:
                                  uint options = optNone,
                                  BufferType* buffer = NULL);
 
-    bool loadFromCSVFile(const AnyString& filename,
-                         uint minWidth,
-                         uint maxHeight,
-                         BufferType* buffer);
+    bool
+    loadFromCSVFile(const AnyString& filename, uint minWidth, uint maxHeight, BufferType* buffer);
 
     bool loadFromCSVFile(const AnyString& filename);
 
@@ -221,8 +219,8 @@ public:
 
     //@}
 
-    virtual Yuni::IO::Error loadFromFileToBuffer(BufferType& buffer,
-                                                 const AnyString& filename) const
+    virtual Yuni::IO::Error
+    loadFromFileToBuffer(BufferType& buffer, const AnyString& filename) const
     {
         return Yuni::IO::File::LoadFromFile(buffer, filename, filesizeHardLimit);
     }
@@ -493,10 +491,8 @@ private:
                              BufferType* buffer = NULL);
 
     //! Initialize the JIT structures and returns true
-    bool internalLoadJITData(const AnyString& filename,
-                             uint minWidth,
-                             uint maxHeight,
-                             uint options);
+    bool
+    internalLoadJITData(const AnyString& filename, uint minWidth, uint maxHeight, uint options);
 
     /*!
     ** \brief Save data to a CSV file

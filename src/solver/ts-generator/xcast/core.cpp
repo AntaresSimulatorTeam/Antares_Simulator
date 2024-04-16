@@ -35,7 +35,8 @@ using namespace Yuni;
 
 namespace Antares::TSGenerator::XCast
 {
-bool XCast::generateValuesForTheCurrentDay()
+bool
+XCast::generateValuesForTheCurrentDay()
 {
     enum
     {
@@ -460,7 +461,7 @@ bool XCast::generateValuesForTheCurrentDay()
                         {
                             // sortie impossible  car on a v�rifi� que C est d.p
                             logs.error()
-                              << "TS " << pTSName << " generator: invalid correlation matrix";
+                                    << "TS " << pTSName << " generator: invalid correlation matrix";
                             return false;
                         }
                         if (shrink < 1.f)

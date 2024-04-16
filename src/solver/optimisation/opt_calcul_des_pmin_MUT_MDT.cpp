@@ -29,12 +29,13 @@
 
 constexpr double ZERO_PMIN = 1.e-2;
 
-double OPT_CalculerAireMaxPminJour(int PremierPdt,
-                                   int DernierPdt,
-                                   int MUTetMDT,
-                                   int NombreDePasDeTemps,
-                                   std::vector<int>& NbGrpCourbeGuide,
-                                   std::vector<int>& NbGrpOpt)
+double
+OPT_CalculerAireMaxPminJour(int PremierPdt,
+                            int DernierPdt,
+                            int MUTetMDT,
+                            int NombreDePasDeTemps,
+                            std::vector<int>& NbGrpCourbeGuide,
+                            std::vector<int>& NbGrpOpt)
 {
     double Cout = 0.0;
     int NbMx = 0;
@@ -91,7 +92,8 @@ double OPT_CalculerAireMaxPminJour(int PremierPdt,
     return (Cout);
 }
 
-void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(PROBLEME_HEBDO* problemeHebdo)
+void
+OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(PROBLEME_HEBDO* problemeHebdo)
 {
     int NombreDePasDeTemps = problemeHebdo->NombreDePasDeTemps;
     std::vector<int>& NbGrpCourbeGuide = problemeHebdo->NbGrpCourbeGuide;
@@ -101,24 +103,25 @@ void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(PROBLEME_HEBDO* problemeH
     {
         const RESULTATS_HORAIRES& ResultatsHoraires = problemeHebdo->ResultatsHoraires[Pays];
         PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[Pays];
-        const std::vector<double>& PminDuPalierThermiquePendantUneHeure
-          = PaliersThermiquesDuPays.PminDuPalierThermiquePendantUneHeure;
-        const std::vector<double>& TailleUnitaireDUnGroupeDuPalierThermique
-          = PaliersThermiquesDuPays.TailleUnitaireDUnGroupeDuPalierThermique;
+        const std::vector<double>& PminDuPalierThermiquePendantUneHeure =
+                PaliersThermiquesDuPays.PminDuPalierThermiquePendantUneHeure;
+        const std::vector<double>& TailleUnitaireDUnGroupeDuPalierThermique =
+                PaliersThermiquesDuPays.TailleUnitaireDUnGroupeDuPalierThermique;
         const std::vector<int>& minUpDownTime = PaliersThermiquesDuPays.minUpDownTime;
 
-        const std::vector<PRODUCTION_THERMIQUE_OPTIMALE>& ProductionThermiqueOptimale
-          = ResultatsHoraires.ProductionThermique;
+        const std::vector<PRODUCTION_THERMIQUE_OPTIMALE>&
+                ProductionThermiqueOptimale = ResultatsHoraires.ProductionThermique;
 
         for (int Palier = 0; Palier < PaliersThermiquesDuPays.NombreDePaliersThermiques; Palier++)
         {
-            PDISP_ET_COUTS_HORAIRES_PAR_PALIER& PuissanceDispoEtCout = PaliersThermiquesDuPays
-                                                                         .PuissanceDisponibleEtCout
-                                                                           [Palier];
-            std::vector<double>& PuissanceMinDuPalierThermique = PuissanceDispoEtCout
-                                                                   .PuissanceMinDuPalierThermique;
-            const std::vector<double>& PuissanceDisponibleDuPalierThermique
-              = PuissanceDispoEtCout.PuissanceDisponibleDuPalierThermique;
+            PDISP_ET_COUTS_HORAIRES_PAR_PALIER&
+                    PuissanceDispoEtCout = PaliersThermiquesDuPays
+                                                   .PuissanceDisponibleEtCout[Palier];
+            std::vector<double>&
+                    PuissanceMinDuPalierThermique = PuissanceDispoEtCout
+                                                            .PuissanceMinDuPalierThermique;
+            const std::vector<double>& PuissanceDisponibleDuPalierThermique =
+                    PuissanceDispoEtCout.PuissanceDisponibleDuPalierThermique;
 
             if (fabs(PminDuPalierThermiquePendantUneHeure[Palier]) < ZERO_PMIN)
             {
@@ -138,7 +141,7 @@ void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(PROBLEME_HEBDO* problemeH
                 if (TailleUnitaireDUnGroupeDuPalierThermique[Palier] > ZERO_PMIN)
                 {
                     NbGrpCourbeGuide[Pdt] = (int)ceil(
-                      P / TailleUnitaireDUnGroupeDuPalierThermique[Palier]);
+                            P / TailleUnitaireDUnGroupeDuPalierThermique[Palier]);
                 }
                 else
                 {
@@ -196,12 +199,11 @@ void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(PROBLEME_HEBDO* problemeH
 
             for (int Pdt = 0; Pdt < NombreDePasDeTemps; Pdt++)
             {
-                if (PminDuPalierThermiquePendantUneHeure[Palier] * NbGrpOpt[Pdt]
-                    > PuissanceMinDuPalierThermique[Pdt])
+                if (PminDuPalierThermiquePendantUneHeure[Palier] * NbGrpOpt[Pdt] >
+                    PuissanceMinDuPalierThermique[Pdt])
                 {
-                    PuissanceMinDuPalierThermique[Pdt] = PminDuPalierThermiquePendantUneHeure
-                                                           [Palier]
-                                                         * NbGrpOpt[Pdt];
+                    PuissanceMinDuPalierThermique
+                            [Pdt] = PminDuPalierThermiquePendantUneHeure[Palier] * NbGrpOpt[Pdt];
                 }
 
                 if (PuissanceMinDuPalierThermique[Pdt] > PuissanceDisponibleDuPalierThermique[Pdt])

@@ -21,21 +21,22 @@
 
 #include "antares/solver/optimisation/constraints/BindingConstraintWeek.h"
 
-void BindingConstraintWeek::add(int cntCouplante)
+void
+BindingConstraintWeek::add(int cntCouplante)
 {
     int semaine = builder.data.weekInTheYear;
 
-    const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
-      = data.MatriceDesContraintesCouplantes[cntCouplante];
+    const CONTRAINTES_COUPLANTES&
+            MatriceDesContraintesCouplantes = data.MatriceDesContraintesCouplantes[cntCouplante];
     if (MatriceDesContraintesCouplantes.TypeDeContrainteCouplante != CONTRAINTE_HEBDOMADAIRE)
     {
         return;
     }
 
     const int nbInterco = MatriceDesContraintesCouplantes
-                            .NombreDInterconnexionsDansLaContrainteCouplante;
+                                  .NombreDInterconnexionsDansLaContrainteCouplante;
     const int nbClusters = MatriceDesContraintesCouplantes
-                             .NombreDePaliersDispatchDansLaContrainteCouplante;
+                                   .NombreDePaliersDispatchDansLaContrainteCouplante;
 
     for (int index = 0; index < nbInterco; index++)
     {
@@ -56,20 +57,20 @@ void BindingConstraintWeek::add(int cntCouplante)
         int pays = MatriceDesContraintesCouplantes.PaysDuPalierDispatch[index];
         const PALIERS_THERMIQUES& PaliersThermiquesDuPays = data.PaliersThermiquesDuPays[pays];
         const int palier = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques
-                             [MatriceDesContraintesCouplantes.NumeroDuPalierDispatch[index]];
+                                   [MatriceDesContraintesCouplantes.NumeroDuPalierDispatch[index]];
         double poids = MatriceDesContraintesCouplantes.PoidsDuPalierDispatch[index];
         int offset = MatriceDesContraintesCouplantes.OffsetTemporelSurLePalierDispatch[index];
         for (int pdt = 0; pdt < builder.data.NombreDePasDeTempsPourUneOptimisation; pdt++)
         {
             builder.updateHourWithinWeek(pdt)
-              .DispatchableProduction(palier, poids, offset, builder.data.NombreDePasDeTemps);
+                    .DispatchableProduction(palier, poids, offset, builder.data.NombreDePasDeTemps);
         }
     }
 
     builder.SetOperator(MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante);
 
     data.NumeroDeContrainteDesContraintesCouplantes[cntCouplante] = builder.data
-                                                                      .nombreDeContraintes;
+                                                                            .nombreDeContraintes;
 
     ConstraintNamer namer(builder.data.NomDesContraintes);
     namer.UpdateTimeStep(semaine);

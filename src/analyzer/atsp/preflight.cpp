@@ -31,7 +31,8 @@ using namespace Yuni;
 
 namespace Antares
 {
-bool ATSP::preflight()
+bool
+ATSP::preflight()
 {
     logs.info();
     logs.checkpoint() << "Extracting coefficients";
@@ -99,7 +100,8 @@ bool ATSP::preflight()
     return (pEnabledAreaCount > 0);
 }
 
-bool ATSP::preflight(const uint areaIndex)
+bool
+ATSP::preflight(const uint areaIndex)
 {
     // Alias to the current area info
     const AreaInfo& info = *(pArea[areaIndex]);
@@ -540,8 +542,9 @@ bool ATSP::preflight(const uint areaIndex)
         // si mu>1 il faut majorer l'ecart-type observe  sur les valeurs lissees
         // pour remonter a l'ecart-type des valeurs des series non-lissees
         double standard_majore = (std::abs(stocha[5] - 1.) < 1e-6)
-                                   ? standard
-                                   : standard / Standard_shrinkage((int)stocha[5], exp(-stocha[4]));
+                                         ? standard
+                                         : standard / Standard_shrinkage((int)stocha[5],
+                                                                         exp(-stocha[4]));
 
         double minimum;
         double maximum;

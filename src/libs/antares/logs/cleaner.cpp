@@ -31,7 +31,8 @@ using namespace Yuni;
 
 namespace Antares
 {
-static inline bool IsLeapYear(uint year)
+static inline bool
+IsLeapYear(uint year)
 {
     if (0 == year % 4)
     {
@@ -44,7 +45,8 @@ static inline bool IsLeapYear(uint year)
     return false;
 }
 
-static bool SuitableForDeletion(const AnyString& name, DateTime::Timestamp now)
+static bool
+SuitableForDeletion(const AnyString& name, DateTime::Timestamp now)
 {
     auto offset = name.find('-');
     if (offset < name.size())
@@ -80,9 +82,9 @@ static bool SuitableForDeletion(const AnyString& name, DateTime::Timestamp now)
                 day.trimLeft("0");
                 month.trimLeft("0");
 
-                DateTime::Timestamp timestamp = seconds.to<uint>() + minutes.to<uint>() * 60
-                                                + hours.to<uint>() * 3600
-                                                + (day.to<uint>() - 1) * 24 * 3600;
+                DateTime::Timestamp timestamp = seconds.to<uint>() + minutes.to<uint>() * 60 +
+                                                hours.to<uint>() * 3600 +
+                                                (day.to<uint>() - 1) * 24 * 3600;
 
                 uint y = year.to<uint>();
                 if (!(y < 9999)) // 4 digits
@@ -135,7 +137,8 @@ static bool SuitableForDeletion(const AnyString& name, DateTime::Timestamp now)
     return false;
 }
 
-void PurgeLogFiles(const AnyString& path, uint retention)
+void
+PurgeLogFiles(const AnyString& path, uint retention)
 {
     if (path.empty())
     {

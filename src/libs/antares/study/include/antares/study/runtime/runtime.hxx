@@ -26,7 +26,8 @@ namespace Antares
 namespace Data
 {
 #ifdef NDEBUG
-inline void StudyRangeLimits::checkIntegrity() const
+inline void
+StudyRangeLimits::checkIntegrity() const
 {
 }
 #endif

@@ -37,7 +37,8 @@ TimeSeries::TimeSeries(numbers& tsNumbers):
 {
 }
 
-bool TimeSeries::loadFromFile(const std::string& path, const bool average)
+bool
+TimeSeries::loadFromFile(const std::string& path, const bool average)
 {
     bool ret = true;
     Matrix<>::BufferType dataBuffer;
@@ -53,36 +54,42 @@ bool TimeSeries::loadFromFile(const std::string& path, const bool average)
     return ret;
 }
 
-int TimeSeries::saveToFolder(const AreaName& areaID,
-                             const std::string& folder,
-                             const std::string& prefix) const
+int
+TimeSeries::saveToFolder(const AreaName& areaID,
+                         const std::string& folder,
+                         const std::string& prefix) const
 {
     Clob buffer;
     buffer.clear() << folder << SEP << prefix << areaID << ".txt";
     return timeSeries.saveToCSVFile(buffer, 0);
 }
 
-int TimeSeries::saveToFile(const std::string& filename, bool saveEvenIfAllZero) const
+int
+TimeSeries::saveToFile(const std::string& filename, bool saveEvenIfAllZero) const
 {
     return timeSeries.saveToCSVFile(filename, 6, false, saveEvenIfAllZero);
 }
 
-double TimeSeries::getCoefficient(uint32_t year, uint32_t timestep) const
+double
+TimeSeries::getCoefficient(uint32_t year, uint32_t timestep) const
 {
     return timeSeries[getSeriesIndex(year)][timestep];
 }
 
-const double* TimeSeries::getColumn(uint32_t year) const
+const double*
+TimeSeries::getColumn(uint32_t year) const
 {
     return timeSeries[getSeriesIndex(year)];
 }
 
-uint32_t TimeSeries::getSeriesIndex(uint32_t year) const
+uint32_t
+TimeSeries::getSeriesIndex(uint32_t year) const
 {
     return timeseriesNumbers[0][year];
 }
 
-double* TimeSeries::operator[](uint32_t index)
+double*
+TimeSeries::operator[](uint32_t index)
 {
     if (timeSeries.width <= index)
     {
@@ -91,52 +98,62 @@ double* TimeSeries::operator[](uint32_t index)
     return timeSeries[index];
 }
 
-void TimeSeries::reset()
+void
+TimeSeries::reset()
 {
     timeSeries.reset(1, HOURS_PER_YEAR);
 }
 
-void TimeSeries::reset(uint32_t width, uint32_t height)
+void
+TimeSeries::reset(uint32_t width, uint32_t height)
 {
     timeSeries.reset(width, height);
 }
 
-void TimeSeries::resize(uint32_t timeSeriesCount, uint32_t timestepCount)
+void
+TimeSeries::resize(uint32_t timeSeriesCount, uint32_t timestepCount)
 {
     timeSeries.resize(timeSeriesCount, timestepCount);
 }
 
-void TimeSeries::fill(double value)
+void
+TimeSeries::fill(double value)
 {
     timeSeries.fill(value);
 }
 
-void TimeSeries::roundAllEntries()
+void
+TimeSeries::roundAllEntries()
 {
     timeSeries.roundAllEntries();
 }
 
-void TimeSeries::averageTimeseries()
+void
+TimeSeries::averageTimeseries()
 {
     timeSeries.averageTimeseries();
 }
 
-void TimeSeries::unloadFromMemory() const
+void
+TimeSeries::unloadFromMemory() const
 {
     timeSeries.unloadFromMemory();
 }
 
-bool TimeSeries::forceReload(bool reload) const
+bool
+TimeSeries::forceReload(bool reload) const
 {
     return timeSeries.forceReload(reload);
 }
 
-void TimeSeries::markAsModified() const
+void
+TimeSeries::markAsModified() const
 {
     timeSeries.markAsModified();
 }
 
-uint64_t TimeSeries::memoryUsage() const
+uint64_t
+TimeSeries::memoryUsage() const
 {
     return timeSeries.memoryUsage();
 }

@@ -43,19 +43,22 @@ PartThermal::PartThermal():
 {
 }
 
-bool PartThermal::forceReload(bool reload) const
+bool
+PartThermal::forceReload(bool reload) const
 {
     bool ret = true;
     ret = list.forceReload(reload) && ret;
     return ret;
 }
 
-void PartThermal::markAsModified() const
+void
+PartThermal::markAsModified() const
 {
     list.markAsModified();
 }
 
-void PartThermal::reset()
+void
+PartThermal::reset()
 {
     unsuppliedEnergyCost = 0.;
     spilledEnergyCost = 0.;
@@ -63,12 +66,14 @@ void PartThermal::reset()
     list.clearAll();
 }
 
-void PartThermal::resizeAllTimeseriesNumbers(uint n) const
+void
+PartThermal::resizeAllTimeseriesNumbers(uint n) const
 {
     list.resizeAllTimeseriesNumbers(n);
 }
 
-bool PartThermal::hasForcedTimeseriesGeneration() const
+bool
+PartThermal::hasForcedTimeseriesGeneration() const
 {
     using Behavior = LocalTSGenerationBehavior;
     return std::ranges::any_of(list.all(),
@@ -76,7 +81,8 @@ bool PartThermal::hasForcedTimeseriesGeneration() const
                                { return cluster->tsGenBehavior == Behavior::forceGen; });
 }
 
-bool PartThermal::hasForcedNoTimeseriesGeneration() const
+bool
+PartThermal::hasForcedNoTimeseriesGeneration() const
 {
     using Behavior = LocalTSGenerationBehavior;
     return std::ranges::any_of(list.all(),
@@ -84,7 +90,8 @@ bool PartThermal::hasForcedNoTimeseriesGeneration() const
                                { return cluster->tsGenBehavior == Behavior::forceNoGen; });
 }
 
-void PartThermal::checkAndCorrectAvailability() const
+void
+PartThermal::checkAndCorrectAvailability() const
 {
     std::ranges::for_each(list.each_enabled(), &ThermalCluster::checkAndCorrectAvailability);
 }

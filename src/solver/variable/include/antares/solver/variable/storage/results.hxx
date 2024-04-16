@@ -28,20 +28,21 @@ namespace Solver
 namespace Variable
 {
 template<class FirstDecoratorT, template<class, int> class DecoratorForSpatialAggregateT>
-inline void Results<FirstDecoratorT, DecoratorForSpatialAggregateT>::initializeFromStudy(
-  Antares::Data::Study& study)
+inline void
+Results<FirstDecoratorT, DecoratorForSpatialAggregateT>::initializeFromStudy(
+        Antares::Data::Study& study)
 {
     DecoratorType::initializeFromStudy(study);
 }
 
 template<class FirstDecoratorT, template<class, int> class DecoratorForSpatialAggregateT>
 template<class S, class VCardT>
-inline void Results<FirstDecoratorT, DecoratorForSpatialAggregateT>::buildSurveyReport(
-  SurveyResults& report,
-  const S& results,
-  int dataLevel,
-  int fileLevel,
-  int precision) const
+inline void
+Results<FirstDecoratorT, DecoratorForSpatialAggregateT>::buildSurveyReport(SurveyResults& report,
+                                                                           const S& results,
+                                                                           int dataLevel,
+                                                                           int fileLevel,
+                                                                           int precision) const
 {
     // Ask to fullfil the report to the first decorator
     DecoratorType::template buildSurveyReport<S, VCardT>(report,
@@ -52,15 +53,16 @@ inline void Results<FirstDecoratorT, DecoratorForSpatialAggregateT>::buildSurvey
 }
 
 template<class FirstDecoratorT, template<class, int> class DecoratorForSpatialAggregateT>
-inline void Results<FirstDecoratorT, DecoratorForSpatialAggregateT>::merge(
-  uint year,
-  const IntermediateValues& data)
+inline void
+Results<FirstDecoratorT, DecoratorForSpatialAggregateT>::merge(uint year,
+                                                               const IntermediateValues& data)
 {
     DecoratorType::merge(year, data);
 }
 
 template<class FirstDecoratorT, template<class, int> class DecoratorForSpatialAggregateT>
-inline void Results<FirstDecoratorT, DecoratorForSpatialAggregateT>::reset()
+inline void
+Results<FirstDecoratorT, DecoratorForSpatialAggregateT>::reset()
 {
     DecoratorType::reset();
 }

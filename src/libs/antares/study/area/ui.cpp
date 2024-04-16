@@ -71,7 +71,8 @@ struct hsv_color final
 };
 
 template<class StringT>
-static inline void Convert(const hsv_color& hsv, StringT& out)
+static inline void
+Convert(const hsv_color& hsv, StringT& out)
 {
     out.clear();
     APPEND_COLOR_VALUE(hsv.hue, out);
@@ -82,7 +83,8 @@ static inline void Convert(const hsv_color& hsv, StringT& out)
 }
 
 template<class StringT>
-static inline void AreaColorToHSVModel(const AreaUI& area, StringT& out)
+static inline void
+AreaColorToHSVModel(const AreaUI& area, StringT& out)
 {
     rgb_color rgb;
     rgb.r = (unsigned char)area.color[0];
@@ -128,7 +130,8 @@ static inline void AreaColorToHSVModel(const AreaUI& area, StringT& out)
 }
 
 template<class StringT>
-static inline bool AreaUIInternalLoadProperty(AreaUI& ui, const StringT& key, const StringT& value)
+static inline bool
+AreaUIInternalLoadProperty(AreaUI& ui, const StringT& key, const StringT& value)
 {
     // Coordinates
     if (key.size() == 1)
@@ -194,7 +197,8 @@ AreaUI::AreaUI():
     mapLayersVisibilityList.push_back(0);
 }
 
-void AreaUI::reset()
+void
+AreaUI::reset()
 {
     x = 0;
     y = 0;
@@ -206,12 +210,14 @@ void AreaUI::reset()
     mapLayersVisibilityList.push_back(0);
 }
 
-void AreaUI::rebuildCache()
+void
+AreaUI::rebuildCache()
 {
     AreaColorToHSVModel(*this, cacheColorHSV);
 }
 
-bool AreaUI::loadFromFile(const AnyString& filename)
+bool
+AreaUI::loadFromFile(const AnyString& filename)
 {
     IniFile ini;
     if (ini.open(filename))
@@ -310,7 +316,8 @@ bool AreaUI::loadFromFile(const AnyString& filename)
     return false;
 }
 
-bool AreaUI::saveToFile(const AnyString& filename, bool force) const
+bool
+AreaUI::saveToFile(const AnyString& filename, bool force) const
 {
     if (pModified || force)
     {
@@ -363,17 +370,20 @@ bool AreaUI::saveToFile(const AnyString& filename, bool force) const
     return true;
 }
 
-uint64_t AreaUI::memoryUsage() const
+uint64_t
+AreaUI::memoryUsage() const
 {
     return sizeof(AreaUI);
 }
 
-bool AreaUI::modified() const
+bool
+AreaUI::modified() const
 {
     return pModified;
 }
 
-void AreaUI::markAsModified()
+void
+AreaUI::markAsModified()
 {
     pModified = true;
 }

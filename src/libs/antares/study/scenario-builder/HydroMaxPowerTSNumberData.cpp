@@ -10,13 +10,15 @@
 
 namespace Antares::Data::ScenarioBuilder
 {
-uint hydroMaxPowerTSNumberData::get_tsGenCount(const Study& /* study */) const
+uint
+hydroMaxPowerTSNumberData::get_tsGenCount(const Study& /* study */) const
 {
     // This function must be overriden because it is inherited from abstract class
     return 0;
 }
 
-bool hydroMaxPowerTSNumberData::apply(Study& study)
+bool
+hydroMaxPowerTSNumberData::apply(Study& study)
 {
     bool ret = true;
     CString<512, false> logprefix;
@@ -41,8 +43,8 @@ bool hydroMaxPowerTSNumberData::apply(Study& study)
                                     logprefix,
                                     *area.hydro.series,
                                     col,
-                                    tsGenCountHydroMaxPower)
-              && ret;
+                                    tsGenCountHydroMaxPower) &&
+              ret;
     }
     return ret;
 }

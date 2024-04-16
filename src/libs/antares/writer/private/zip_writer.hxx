@@ -27,7 +27,8 @@
 namespace Antares::Solver
 {
 template<class ContentType>
-void ZipWriter::addEntryFromBufferHelper(const std::string& entryPath, ContentType& entryContent)
+void
+ZipWriter::addEntryFromBufferHelper(const std::string& entryPath, ContentType& entryContent)
 {
     if (pState != ZipState::can_receive_data)
     {
@@ -36,9 +37,9 @@ void ZipWriter::addEntryFromBufferHelper(const std::string& entryPath, ContentTy
 
     EnsureQueueStartedIfNeeded ensureQueue(this, pQueueService);
     pendingTasks_.add(Concurrency::AddTask(
-      *pQueueService,
-      ZipWriteJob<ContentType>(*this, entryPath, entryContent, pDurationCollector),
-      Yuni::Job::priorityLow));
+            *pQueueService,
+            ZipWriteJob<ContentType>(*this, entryPath, entryContent, pDurationCollector),
+            Yuni::Job::priorityLow));
 }
 
 } // namespace Antares::Solver

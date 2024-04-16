@@ -27,20 +27,23 @@ using namespace Yuni;
 
 namespace Antares
 {
-void ATSP::cacheCreate()
+void
+ATSP::cacheCreate()
 {
     pCacheMatrix = new Matrix<>[pArea.size()];
     pCacheMemoryUsed = sizeof(Matrix<>) * pArea.size();
     pCacheLastValidIndex = 0;
 }
 
-void ATSP::cacheDestroy()
+void
+ATSP::cacheDestroy()
 {
     delete[] pCacheMatrix;
     pCacheMatrix = NULL;
 }
 
-void ATSP::cacheClear()
+void
+ATSP::cacheClear()
 {
     for (uint i = 0; i != pCacheLastValidIndex; ++i)
     {

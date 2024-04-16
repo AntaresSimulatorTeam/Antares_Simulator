@@ -43,14 +43,12 @@ public:
     std::vector<std::shared_ptr<BindingConstraint>> load(EnvForLoading env);
 
 private:
-    static bool SeparateValue(const EnvForLoading& env,
-                              const IniFile::Property* p,
-                              double& w,
-                              int& o);
+    static bool
+    SeparateValue(const EnvForLoading& env, const IniFile::Property* p, double& w, int& o);
 
     bool loadTimeSeries(EnvForLoading& env, BindingConstraint* bindingConstraint);
-    bool loadTimeSeriesLegacyStudies(EnvForLoading& env,
-                                     BindingConstraint* bindingConstraint) const;
+    bool
+    loadTimeSeriesLegacyStudies(EnvForLoading& env, BindingConstraint* bindingConstraint) const;
     bool loadTimeSeries(EnvForLoading& env,
                         BindingConstraint::Operator operatorType,
                         BindingConstraint* bindingConstraint) const;

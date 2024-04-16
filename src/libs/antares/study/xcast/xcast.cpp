@@ -35,14 +35,16 @@ using namespace Yuni;
 namespace Antares::Data
 {
 
-const char* XCast::TSTranslationUseToCString(TSTranslationUse use)
+const char*
+XCast::TSTranslationUseToCString(TSTranslationUse use)
 {
     static const char* const names[3] = {"never", "before-conversion", "after-conversion"};
     assert((int)use < 3);
     return names[use];
 }
 
-XCast::TSTranslationUse XCast::CStringToTSTranslationUse(const AnyString& str)
+XCast::TSTranslationUse
+XCast::CStringToTSTranslationUse(const AnyString& str)
 {
     if (not str.empty())
     {
@@ -52,13 +54,13 @@ XCast::TSTranslationUse XCast::CStringToTSTranslationUse(const AnyString& str)
         {
             return tsTranslationNone;
         }
-        if (s == "before-conversion" || s == "add before conversion" || s == "before conversion"
-            || s == "before" || s == "before scaling" || s == "add before scaling")
+        if (s == "before-conversion" || s == "add before conversion" || s == "before conversion" ||
+            s == "before" || s == "before scaling" || s == "add before scaling")
         {
             return tsTranslationBeforeConversion;
         }
-        if (s == "after-conversion" || s == "add after conversion" || s == "after conversion"
-            || s == "after" || s == "after scaling" || s == "add after scaling")
+        if (s == "after-conversion" || s == "add after conversion" || s == "after conversion" ||
+            s == "after" || s == "after scaling" || s == "add after scaling")
         {
             return tsTranslationAfterConversion;
         }
@@ -66,28 +68,31 @@ XCast::TSTranslationUse XCast::CStringToTSTranslationUse(const AnyString& str)
     return tsTranslationNone;
 }
 
-const char* XCast::DistributionToCString(XCast::Distribution d)
+const char*
+XCast::DistributionToCString(XCast::Distribution d)
 {
     assert((int)d < dtMax);
     static const char* const names[dtMax] = {"", "Uniform", "Beta", "Normal", "Weibull", "Gamma"};
     return names[d];
 }
 
-const char* XCast::DistributionToNameID(XCast::Distribution d)
+const char*
+XCast::DistributionToNameID(XCast::Distribution d)
 {
     static const char* const names[dtMax] = {
-      "unknown",
-      "Uniform",
-      "Beta",
-      "Normal",
-      "WeibullShapeA",
-      "GammaShapeA",
+            "unknown",
+            "Uniform",
+            "Beta",
+            "Normal",
+            "WeibullShapeA",
+            "GammaShapeA",
     };
     assert((int)d < dtMax);
     return names[d];
 }
 
-XCast::Distribution XCast::StringToDistribution(AnyString text)
+XCast::Distribution
+XCast::StringToDistribution(AnyString text)
 {
     // temporary string for text manipulation
     text.trim(" \r\t\n");
@@ -162,7 +167,8 @@ XCast::~XCast()
     conversion.clear();
 }
 
-void XCast::resetToDefaultValues()
+void
+XCast::resetToDefaultValues()
 {
     data.reset(dataMax, 12, true);
     data.fillColumn(dataCoeffAlpha, 1.f);
@@ -181,7 +187,8 @@ void XCast::resetToDefaultValues()
     useTranslation = tsTranslationNone;
 }
 
-bool XCast::loadFromFolder(const AnyString& folder)
+bool
+XCast::loadFromFolder(const AnyString& folder)
 {
     // reset
     distribution = dtBeta;
@@ -206,57 +213,59 @@ bool XCast::loadFromFolder(const AnyString& folder)
         CString<30, false> key;
 
         ini.each(
-          [&](const IniFile::Section& section)
-          {
-              // For each property
-              if (section.name == "general")
-              {
-                  for (p = section.firstProperty; p != nullptr; p = p->next)
-                  {
-                      key = p->key;
-                      key.toLower();
-                      if (key == "distribution")
-                      {
-                          distribution = StringToDistribution(p->value);
-                          if (distribution == dtNone)
-                          {
-                              logs.warning() << buffer
-                                             << ": Invalid probability distribution. The beta "
-                                                "distribution will be used";
-                              distribution = dtBeta;
-                          }
-                          continue;
-                      }
-                      if (key == "capacity")
-                      {
-                          capacity = p->value.to<double>();
-                          if (capacity < 0.)
-                          {
-                              logs.warning()
-                                << buffer << ": The capacity can not be a negative value";
-                              capacity = 0.;
-                          }
-                          continue;
-                      }
-                      if (key == "conversion" || key == "transfer-function" || key == "convertion")
-                      {
-                          useConversion = p->value.to<bool>();
-                          continue;
-                      }
-                      if (key == "translation" || key == "ts-average")
-                      {
-                          useTranslation = CStringToTSTranslationUse(p->value);
-                          continue;
-                      }
+                [&](const IniFile::Section& section)
+                {
+                    // For each property
+                    if (section.name == "general")
+                    {
+                        for (p = section.firstProperty; p != nullptr; p = p->next)
+                        {
+                            key = p->key;
+                            key.toLower();
+                            if (key == "distribution")
+                            {
+                                distribution = StringToDistribution(p->value);
+                                if (distribution == dtNone)
+                                {
+                                    logs.warning()
+                                            << buffer
+                                            << ": Invalid probability distribution. The beta "
+                                               "distribution will be used";
+                                    distribution = dtBeta;
+                                }
+                                continue;
+                            }
+                            if (key == "capacity")
+                            {
+                                capacity = p->value.to<double>();
+                                if (capacity < 0.)
+                                {
+                                    logs.warning() << buffer
+                                                   << ": The capacity can not be a negative value";
+                                    capacity = 0.;
+                                }
+                                continue;
+                            }
+                            if (key == "conversion" || key == "transfer-function" ||
+                                key == "convertion")
+                            {
+                                useConversion = p->value.to<bool>();
+                                continue;
+                            }
+                            if (key == "translation" || key == "ts-average")
+                            {
+                                useTranslation = CStringToTSTranslationUse(p->value);
+                                continue;
+                            }
 
-                      logs.warning() << buffer << ": Unknown property '" << p->key << "'";
-                  }
-              }
-              else
-              {
-                  logs.warning() << buffer << ": unknown section '" << section.name << "'";
-              }
-          });
+                            logs.warning() << buffer << ": Unknown property '" << p->key << "'";
+                        }
+                    }
+                    else
+                    {
+                        logs.warning() << buffer << ": unknown section '" << section.name << "'";
+                    }
+                });
     }
     else
     {
@@ -271,8 +280,8 @@ bool XCast::loadFromFolder(const AnyString& folder)
     buffer.clear() << folder << SEP << "data.txt";
 
     // Performing normal loading
-    ret = data.loadFromCSVFile(buffer, (uint)dataMax, 12, Matrix<>::optFixedSize, &readBuffer)
-          && ret;
+    ret = data.loadFromCSVFile(buffer, (uint)dataMax, 12, Matrix<>::optFixedSize, &readBuffer) &&
+          ret;
 
     // K
     buffer.clear() << folder << SEP << "k.txt";
@@ -324,8 +333,8 @@ bool XCast::loadFromFolder(const AnyString& folder)
                     logs.error() << "TS-Generator: Conversion: Invalid range: " << buffer;
                 }
             }
-            conversion[conversion.width - 1][0]
-              = (float)1.0e+19; // + std::numeric_limits<float>::max();
+            conversion[conversion.width - 1]
+                      [0] = (float)1.0e+19; // + std::numeric_limits<float>::max();
             conversion[conversion.width - 1][1] = conversion[conversion.width - 2][1];
         }
         else
@@ -339,7 +348,8 @@ bool XCast::loadFromFolder(const AnyString& folder)
     return ret;
 }
 
-void XCast::resetTransferFunction()
+void
+XCast::resetTransferFunction()
 {
     conversion.reset(3, 2);
     conversion[0][0] = (float)(-1.0e+19); // - std::numeric_limits<float>::max();
@@ -350,7 +360,8 @@ void XCast::resetTransferFunction()
     conversion[2][1] = 0.f;
 }
 
-bool XCast::saveToFolder(const AnyString& folder) const
+bool
+XCast::saveToFolder(const AnyString& folder) const
 {
     if (!IO::Directory::Create(folder))
     {
@@ -410,7 +421,8 @@ bool XCast::saveToFolder(const AnyString& folder) const
     return ini.save(buffer) && ret;
 }
 
-bool XCast::forceReload(bool reload) const
+bool
+XCast::forceReload(bool reload) const
 {
     bool ret = true;
     ret = data.forceReload(reload) && ret;
@@ -420,7 +432,8 @@ bool XCast::forceReload(bool reload) const
     return ret;
 }
 
-void XCast::markAsModified() const
+void
+XCast::markAsModified() const
 {
     data.markAsModified();
     K.markAsModified();
@@ -428,7 +441,8 @@ void XCast::markAsModified() const
     conversion.markAsModified();
 }
 
-void XCast::copyFrom(const XCast& rhs)
+void
+XCast::copyFrom(const XCast& rhs)
 {
     // Coeffs
     data = rhs.data;

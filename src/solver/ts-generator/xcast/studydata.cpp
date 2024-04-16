@@ -60,7 +60,8 @@ StudyData::~StudyData()
     }
 }
 
-void StudyData::prepareMatrix(Matrix<float>& m, const Matrix<float>& source) const
+void
+StudyData::prepareMatrix(Matrix<float>& m, const Matrix<float>& source) const
 {
     uint areaCount = (uint)localareas.size();
     m.resize(areaCount, areaCount);
@@ -82,7 +83,8 @@ void StudyData::prepareMatrix(Matrix<float>& m, const Matrix<float>& source) con
     }
 }
 
-void StudyData::reloadDataFromAreaList(const Data::Correlation& originalCorrelation)
+void
+StudyData::reloadDataFromAreaList(const Data::Correlation& originalCorrelation)
 {
     mode = originalCorrelation.mode();
 

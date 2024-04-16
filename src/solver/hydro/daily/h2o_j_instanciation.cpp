@@ -22,7 +22,8 @@
 #include "antares/solver/hydro/daily/h2o_j_donnees_mensuelles.h"
 #include "antares/solver/hydro/daily/h2o_j_fonctions.h"
 
-DONNEES_MENSUELLES* H2O_J_Instanciation(void)
+DONNEES_MENSUELLES*
+H2O_J_Instanciation(void)
 {
     DONNEES_MENSUELLES* DonneesMensuelles = new DONNEES_MENSUELLES;
 
@@ -55,17 +56,17 @@ DONNEES_MENSUELLES* H2O_J_Instanciation(void)
 
     ProblemeHydraulique.ProblemeSpx.assign(NombreDeProblemes, nullptr);
 
-    std::vector<CORRESPONDANCE_DES_VARIABLES>& CorrespondanceDesVariables
-      = ProblemeHydraulique.CorrespondanceDesVariables;
+    std::vector<CORRESPONDANCE_DES_VARIABLES>&
+            CorrespondanceDesVariables = ProblemeHydraulique.CorrespondanceDesVariables;
 
-    std::vector<CORRESPONDANCE_DES_CONTRAINTES>& CorrespondanceDesContraintes
-      = ProblemeHydraulique.CorrespondanceDesContraintes;
+    std::vector<CORRESPONDANCE_DES_CONTRAINTES>&
+            CorrespondanceDesContraintes = ProblemeHydraulique.CorrespondanceDesContraintes;
 
-    std::vector<PROBLEME_LINEAIRE_PARTIE_FIXE>& ProblemeLineairePartieFixe
-      = ProblemeHydraulique.ProblemeLineairePartieFixe;
+    std::vector<PROBLEME_LINEAIRE_PARTIE_FIXE>&
+            ProblemeLineairePartieFixe = ProblemeHydraulique.ProblemeLineairePartieFixe;
 
-    std::vector<PROBLEME_LINEAIRE_PARTIE_VARIABLE>& ProblemeLineairePartieVariable
-      = ProblemeHydraulique.ProblemeLineairePartieVariable;
+    std::vector<PROBLEME_LINEAIRE_PARTIE_VARIABLE>&
+            ProblemeLineairePartieVariable = ProblemeHydraulique.ProblemeLineairePartieVariable;
 
     for (int i = 0; i < NombreDeProblemes; i++)
     {
@@ -122,25 +123,25 @@ DONNEES_MENSUELLES* H2O_J_Instanciation(void)
     for (int i = 0; i < NombreDeProblemes; i++)
     {
         H2O_j_ConstruireLesVariables(
-          NbJoursDUnProbleme[i],
-          CorrespondanceDesVariables[i].NumeroDeVariableTurbine,
-          ProblemeLineairePartieVariable[i].Xmin,
-          ProblemeLineairePartieVariable[i].Xmax,
-          ProblemeLineairePartieFixe[i].TypeDeVariable,
-          ProblemeLineairePartieVariable[i].AdresseOuPlacerLaValeurDesVariablesOptimisees,
-          CorrespondanceDesVariables[i]);
+                NbJoursDUnProbleme[i],
+                CorrespondanceDesVariables[i].NumeroDeVariableTurbine,
+                ProblemeLineairePartieVariable[i].Xmin,
+                ProblemeLineairePartieVariable[i].Xmax,
+                ProblemeLineairePartieFixe[i].TypeDeVariable,
+                ProblemeLineairePartieVariable[i].AdresseOuPlacerLaValeurDesVariablesOptimisees,
+                CorrespondanceDesVariables[i]);
 
         H2O_J_ConstruireLesContraintes(
-          NbJoursDUnProbleme[i],
-          CorrespondanceDesVariables[i].NumeroDeVariableTurbine,
-          CorrespondanceDesVariables[i].NumeroDeLaVariableMu,
-          CorrespondanceDesVariables[i].NumeroDeLaVariableXi,
-          ProblemeLineairePartieFixe[i].IndicesDebutDeLigne,
-          ProblemeLineairePartieFixe[i].Sens,
-          ProblemeLineairePartieFixe[i].NombreDeTermesDesLignes,
-          ProblemeLineairePartieFixe[i].CoefficientsDeLaMatriceDesContraintes,
-          ProblemeLineairePartieFixe[i].IndicesColonnes,
-          CorrespondanceDesContraintes[i]);
+                NbJoursDUnProbleme[i],
+                CorrespondanceDesVariables[i].NumeroDeVariableTurbine,
+                CorrespondanceDesVariables[i].NumeroDeLaVariableMu,
+                CorrespondanceDesVariables[i].NumeroDeLaVariableXi,
+                ProblemeLineairePartieFixe[i].IndicesDebutDeLigne,
+                ProblemeLineairePartieFixe[i].Sens,
+                ProblemeLineairePartieFixe[i].NombreDeTermesDesLignes,
+                ProblemeLineairePartieFixe[i].CoefficientsDeLaMatriceDesContraintes,
+                ProblemeLineairePartieFixe[i].IndicesColonnes,
+                CorrespondanceDesContraintes[i]);
 
         for (int j = 0; j < ProblemeLineairePartieFixe[i].NombreDeVariables; j++)
         {
@@ -148,11 +149,9 @@ DONNEES_MENSUELLES* H2O_J_Instanciation(void)
         }
 
         ProblemeLineairePartieFixe[i]
-          .CoutLineaire[CorrespondanceDesVariables[i].NumeroDeLaVariableMu]
-          = 1.0;
+                .CoutLineaire[CorrespondanceDesVariables[i].NumeroDeLaVariableMu] = 1.0;
         ProblemeLineairePartieFixe[i]
-          .CoutLineaire[CorrespondanceDesVariables[i].NumeroDeLaVariableXi]
-          = 1.0;
+                .CoutLineaire[CorrespondanceDesVariables[i].NumeroDeLaVariableXi] = 1.0;
     }
 
     return DonneesMensuelles;

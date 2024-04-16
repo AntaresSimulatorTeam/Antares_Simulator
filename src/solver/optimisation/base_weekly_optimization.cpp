@@ -43,12 +43,13 @@ WeeklyOptimization::WeeklyOptimization(const OptimizationOptions& options,
 {
 }
 
-std::unique_ptr<WeeklyOptimization> WeeklyOptimization::create(const Antares::Data::Study& study,
-                                                               const OptimizationOptions& options,
-                                                               AdqPatchParams& adqPatchParams,
-                                                               PROBLEME_HEBDO* problemeHebdo,
-                                                               uint thread_number,
-                                                               IResultWriter& writer)
+std::unique_ptr<WeeklyOptimization>
+WeeklyOptimization::create(const Antares::Data::Study& study,
+                           const OptimizationOptions& options,
+                           AdqPatchParams& adqPatchParams,
+                           PROBLEME_HEBDO* problemeHebdo,
+                           uint thread_number,
+                           IResultWriter& writer)
 {
     if (adqPatchParams.enabled && adqPatchParams.localMatching.enabled)
     {

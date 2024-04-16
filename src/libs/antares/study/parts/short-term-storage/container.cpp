@@ -33,14 +33,16 @@
 
 namespace Antares::Data::ShortTermStorage
 {
-bool STStorageInput::validate() const
+bool
+STStorageInput::validate() const
 {
     return std::all_of(storagesByIndex.cbegin(),
                        storagesByIndex.cend(),
                        [](auto& cluster) { return cluster.validate(); });
 }
 
-bool STStorageInput::createSTStorageClustersFromIniFile(const std::string& path)
+bool
+STStorageInput::createSTStorageClustersFromIniFile(const std::string& path)
 {
     const std::string pathIni(path + SEP + "list.ini");
     IniFile ini;
@@ -74,7 +76,8 @@ bool STStorageInput::createSTStorageClustersFromIniFile(const std::string& path)
     return true;
 }
 
-bool STStorageInput::loadSeriesFromFolder(const std::string& folder) const
+bool
+STStorageInput::loadSeriesFromFolder(const std::string& folder) const
 {
     if (folder.empty())
     {
@@ -92,7 +95,8 @@ bool STStorageInput::loadSeriesFromFolder(const std::string& folder) const
     return ret;
 }
 
-bool STStorageInput::saveToFolder(const std::string& folder) const
+bool
+STStorageInput::saveToFolder(const std::string& folder) const
 {
     // create empty list.ini if there's no sts in this area
     Yuni::IO::Directory::Create(folder);
@@ -107,7 +111,8 @@ bool STStorageInput::saveToFolder(const std::string& folder) const
     return ini.save(pathIni);
 }
 
-bool STStorageInput::saveDataSeriesToFolder(const std::string& folder) const
+bool
+STStorageInput::saveDataSeriesToFolder(const std::string& folder) const
 {
     Yuni::IO::Directory::Create(folder);
     return std::all_of(storagesByIndex.cbegin(),
@@ -116,14 +121,16 @@ bool STStorageInput::saveDataSeriesToFolder(const std::string& folder) const
                        { return storage.saveSeries(folder + SEP + storage.id); });
 }
 
-std::size_t STStorageInput::count() const
+std::size_t
+STStorageInput::count() const
 {
     return std::count_if(storagesByIndex.begin(),
                          storagesByIndex.end(),
                          [](const STStorageCluster& st) { return st.properties.enabled; });
 }
 
-uint STStorageInput::removeDisabledClusters()
+uint
+STStorageInput::removeDisabledClusters()
 {
     const auto& it = std::remove_if(storagesByIndex.begin(),
                                     storagesByIndex.end(),

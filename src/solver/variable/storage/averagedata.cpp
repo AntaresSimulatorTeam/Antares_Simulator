@@ -43,7 +43,8 @@ AverageData::~AverageData()
     delete[] year;
 }
 
-void AverageData::reset()
+void
+AverageData::reset()
 {
     Antares::Memory::Zero(maxHoursInAYear, hourly);
     (void)::memset(monthly, 0, sizeof(double) * maxMonths);
@@ -52,7 +53,8 @@ void AverageData::reset()
     (void)::memset(year, 0, sizeof(double) * nbYearsCapacity);
 }
 
-void AverageData::initializeFromStudy(Data::Study& study)
+void
+AverageData::initializeFromStudy(Data::Study& study)
 {
     Antares::Memory::Allocate<double>(hourly, maxHoursInAYear);
     nbYearsCapacity = study.runtime->rangeLimits.year[Data::rangeEnd] + 1;
@@ -62,7 +64,8 @@ void AverageData::initializeFromStudy(Data::Study& study)
     yearsWeightSum = study.parameters.getYearsWeightSum();
 }
 
-void AverageData::merge(unsigned int y, const IntermediateValues& rhs)
+void
+AverageData::merge(unsigned int y, const IntermediateValues& rhs)
 {
     unsigned int i;
 

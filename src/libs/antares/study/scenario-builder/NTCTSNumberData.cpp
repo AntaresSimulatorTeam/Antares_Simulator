@@ -28,7 +28,8 @@
 
 namespace Antares::Data::ScenarioBuilder
 {
-bool ntcTSNumberData::reset(const Study& study)
+bool
+ntcTSNumberData::reset(const Study& study)
 {
     const uint nbYears = study.parameters.nbYears;
     assert(pArea != nullptr);
@@ -40,7 +41,8 @@ bool ntcTSNumberData::reset(const Study& study)
     return true;
 }
 
-void ntcTSNumberData::saveToINIFile(const Study& /* study */, Yuni::IO::File::Stream& file) const
+void
+ntcTSNumberData::saveToINIFile(const Study& /* study */, Yuni::IO::File::Stream& file) const
 {
     if (!pArea)
     {
@@ -80,9 +82,8 @@ void ntcTSNumberData::saveToINIFile(const Study& /* study */, Yuni::IO::File::St
     }
 }
 
-void ntcTSNumberData::setDataForLink(const Antares::Data::AreaLink* link,
-                                     const uint year,
-                                     uint value)
+void
+ntcTSNumberData::setDataForLink(const Antares::Data::AreaLink* link, const uint year, uint value)
 {
     assert(link != nullptr);
     if (year < pTSNumberRules.height && link->indexForArea < pTSNumberRules.width)
@@ -91,7 +92,8 @@ void ntcTSNumberData::setDataForLink(const Antares::Data::AreaLink* link,
     }
 }
 
-bool ntcTSNumberData::apply(Study& study)
+bool
+ntcTSNumberData::apply(Study& study)
 {
     bool ret = true;
     CString<512, false> logprefix;
@@ -117,7 +119,8 @@ bool ntcTSNumberData::apply(Study& study)
     return ret;
 }
 
-uint ntcTSNumberData::get_tsGenCount(const Study& /* study */) const
+uint
+ntcTSNumberData::get_tsGenCount(const Study& /* study */) const
 {
     return 0;
 }

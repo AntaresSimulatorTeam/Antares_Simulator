@@ -33,8 +33,9 @@ extern "C"
 
 using namespace Antares;
 
-void OPT_LiberationProblemesSimplexe(const OptimizationOptions& options,
-                                     const PROBLEME_HEBDO* problemeHebdo)
+void
+OPT_LiberationProblemesSimplexe(const OptimizationOptions& options,
+                                const PROBLEME_HEBDO* problemeHebdo)
 {
     int NombreDePasDeTempsPourUneOptimisation;
     if (!problemeHebdo->OptimisationAuPasHebdomadaire)

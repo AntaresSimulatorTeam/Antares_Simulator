@@ -42,14 +42,16 @@ PreproThermal::PreproThermal(std::weak_ptr<const ThermalCluster> cluster):
 {
 }
 
-void PreproThermal::copyFrom(const PreproThermal& rhs)
+void
+PreproThermal::copyFrom(const PreproThermal& rhs)
 {
     itsThermalCluster = rhs.itsThermalCluster;
     data = rhs.data;
     rhs.data.unloadFromMemory();
 }
 
-bool PreproThermal::saveToFolder(const AnyString& folder)
+bool
+PreproThermal::saveToFolder(const AnyString& folder)
 {
     if (IO::Directory::Create(folder))
     {
@@ -60,7 +62,8 @@ bool PreproThermal::saveToFolder(const AnyString& folder)
     return false;
 }
 
-bool PreproThermal::loadFromFolder(Study& study, const AnyString& folder)
+bool
+PreproThermal::loadFromFolder(Study& study, const AnyString& folder)
 {
     bool ret = true;
     auto& buffer = study.bufferLoadingTS;
@@ -80,8 +83,8 @@ bool PreproThermal::loadFromFolder(Study& study, const AnyString& folder)
                                thermalPreproMax,
                                DAYS_PER_YEAR,
                                Matrix<>::optFixedSize,
-                               &study.dataBuffer)
-          and ret;
+                               &study.dataBuffer) and
+          ret;
 
     bool thermalTSglobalGeneration = study.parameters.isTSGeneratedByPrepro(timeSeriesThermal);
     if (study.usedByTheSolver && cluster->doWeGenerateTS(thermalTSglobalGeneration))
@@ -162,17 +165,20 @@ bool PreproThermal::loadFromFolder(Study& study, const AnyString& folder)
     return ret;
 }
 
-bool PreproThermal::forceReload(bool reload) const
+bool
+PreproThermal::forceReload(bool reload) const
 {
     return data.forceReload(reload);
 }
 
-void PreproThermal::markAsModified() const
+void
+PreproThermal::markAsModified() const
 {
     data.markAsModified();
 }
 
-void PreproThermal::reset()
+void
+PreproThermal::reset()
 {
     data.reset(thermalPreproMax, DAYS_PER_YEAR, true);
 
@@ -186,7 +192,8 @@ void PreproThermal::reset()
     }
 }
 
-bool PreproThermal::normalizeAndCheckNPO()
+bool
+PreproThermal::normalizeAndCheckNPO()
 {
     auto cluster = itsThermalCluster.lock();
     if (!cluster)

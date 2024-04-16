@@ -28,21 +28,23 @@ namespace Antares::Solver::Private::Simulation
 namespace
 {
 template<int TS>
-inline static bool CheckTSToRefresh(const Antares::Data::Parameters& g)
+inline static bool
+CheckTSToRefresh(const Antares::Data::Parameters& g)
 {
     return (TS & g.timeSeriesToRefresh) && (TS & g.timeSeriesToGenerate);
 }
 
 } // namespace
 
-void CacheData::initialize(const Antares::Data::Parameters& parameters)
+void
+CacheData::initialize(const Antares::Data::Parameters& parameters)
 {
     haveToRefreshTSLoad = CheckTSToRefresh<Data::timeSeriesLoad>(parameters);
-    haveToRefreshTSSolar = CheckTSToRefresh<Data::timeSeriesSolar>(parameters)
-                           && parameters.renewableGeneration.isAggregated();
+    haveToRefreshTSSolar = CheckTSToRefresh<Data::timeSeriesSolar>(parameters) &&
+                           parameters.renewableGeneration.isAggregated();
     haveToRefreshTSHydro = CheckTSToRefresh<Data::timeSeriesHydro>(parameters);
-    haveToRefreshTSWind = CheckTSToRefresh<Data::timeSeriesWind>(parameters)
-                          && parameters.renewableGeneration.isAggregated();
+    haveToRefreshTSWind = CheckTSToRefresh<Data::timeSeriesWind>(parameters) &&
+                          parameters.renewableGeneration.isAggregated();
     haveToRefreshTSThermal = CheckTSToRefresh<Data::timeSeriesThermal>(parameters);
 
     refreshIntervalLoad = parameters.refreshIntervalLoad;

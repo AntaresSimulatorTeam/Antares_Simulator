@@ -26,7 +26,8 @@
 
 #include "pi_constantes_externes.h"
 
-void HourlyCSRProblem::constructVariableENS()
+void
+HourlyCSRProblem::constructVariableENS()
 {
     int& NumberOfVariables = problemeAResoudre_.NombreDeVariables;
     NumberOfVariables = 0;
@@ -36,8 +37,8 @@ void HourlyCSRProblem::constructVariableENS()
     for (uint32_t area = 0; area < problemeHebdo_->NombreDePays; ++area)
     {
         // Only ENS for areas inside adq patch are considered as variables
-        if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[area]
-            == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
+        if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[area] ==
+            Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
             variableManager_.PositiveUnsuppliedEnergy(area, triggeredHour) = NumberOfVariables;
             problemeAResoudre_.TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
@@ -51,7 +52,8 @@ void HourlyCSRProblem::constructVariableENS()
     }
 }
 
-void HourlyCSRProblem::constructVariableSpilledEnergy()
+void
+HourlyCSRProblem::constructVariableSpilledEnergy()
 {
     int& NumberOfVariables = problemeAResoudre_.NombreDeVariables;
 
@@ -60,8 +62,8 @@ void HourlyCSRProblem::constructVariableSpilledEnergy()
     for (uint32_t area = 0; area < problemeHebdo_->NombreDePays; ++area)
     {
         // Only Spilled Energy  for areas inside adq patch are considered as variables
-        if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[area]
-            == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
+        if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[area] ==
+            Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
             variableManager_.NegativeUnsuppliedEnergy(area, triggeredHour) = NumberOfVariables;
             problemeAResoudre_.TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_INFERIEUREMENT;
@@ -74,45 +76,47 @@ void HourlyCSRProblem::constructVariableSpilledEnergy()
     }
 }
 
-void HourlyCSRProblem::constructVariableFlows()
+void
+HourlyCSRProblem::constructVariableFlows()
 {
     int& NumberOfVariables = problemeAResoudre_.NombreDeVariables;
 
     // variables: transmissin flows (flow, direct_direct and flow_indirect). For links between 2
     // and 2.
-    logs.debug()
-      << " transmissin flows (flow, flow_direct and flow_indirect). For links between 2 and 2:";
+    logs.debug() << " transmissin flows (flow, flow_direct and flow_indirect). For links between 2 "
+                    "and 2:";
     for (uint32_t Interco = 0; Interco < problemeHebdo_->NombreDInterconnexions; Interco++)
     {
         // only consider link between 2 and 2
-        if (problemeHebdo_->adequacyPatchRuntimeData->originAreaMode[Interco]
-              == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch
-            && problemeHebdo_->adequacyPatchRuntimeData->extremityAreaMode[Interco]
-                 == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch)
+        if (problemeHebdo_->adequacyPatchRuntimeData->originAreaMode[Interco] ==
+                    Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch &&
+            problemeHebdo_->adequacyPatchRuntimeData->extremityAreaMode[Interco] ==
+                    Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
             int algebraicFluxVar;
             int directVar;
             int indirectVar;
-            algebraicFluxVar = variableManager_.NTCDirect(Interco, triggeredHour)
-              = NumberOfVariables;
+            algebraicFluxVar = variableManager_.NTCDirect(Interco,
+                                                          triggeredHour) = NumberOfVariables;
             problemeAResoudre_.TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
             logs.debug()
-              << NumberOfVariables << " flow[" << Interco << "]. ["
-              << problemeHebdo_
-                   ->NomsDesPays[problemeHebdo_->PaysExtremiteDeLInterconnexion[Interco]]
-              << "]-["
-              << problemeHebdo_->NomsDesPays[problemeHebdo_->PaysOrigineDeLInterconnexion[Interco]]
-              << "].";
+                    << NumberOfVariables << " flow[" << Interco << "]. ["
+                    << problemeHebdo_->NomsDesPays
+                               [problemeHebdo_->PaysExtremiteDeLInterconnexion[Interco]]
+                    << "]-["
+                    << problemeHebdo_
+                               ->NomsDesPays[problemeHebdo_->PaysOrigineDeLInterconnexion[Interco]]
+                    << "].";
             NumberOfVariables++;
 
-            directVar = variableManager_.IntercoDirectCost(Interco, triggeredHour)
-              = NumberOfVariables;
+            directVar = variableManager_.IntercoDirectCost(Interco,
+                                                           triggeredHour) = NumberOfVariables;
             problemeAResoudre_.TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
             logs.debug() << NumberOfVariables << " direct flow[" << Interco << "]. ";
             NumberOfVariables++;
 
-            indirectVar = variableManager_.IntercoIndirectCost(Interco, triggeredHour)
-              = NumberOfVariables;
+            indirectVar = variableManager_.IntercoIndirectCost(Interco,
+                                                               triggeredHour) = NumberOfVariables;
             problemeAResoudre_.TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
             logs.debug() << NumberOfVariables << " indirect flow[" << Interco << "]. ";
             NumberOfVariables++;

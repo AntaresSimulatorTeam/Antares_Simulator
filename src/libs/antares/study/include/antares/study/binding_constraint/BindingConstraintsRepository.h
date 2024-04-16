@@ -110,9 +110,8 @@ public:
     /*!
     ** \brief Load all binding constraints from a folder
     */
-    [[nodiscard]] bool loadFromFolder(Data::Study& s,
-                                      const Data::StudyLoadOptions& options,
-                                      const AnyString& folder);
+    [[nodiscard]] bool
+    loadFromFolder(Data::Study& s, const Data::StudyLoadOptions& options, const AnyString& folder);
 
     /*!
     ** \brief Save all binding constraints into a folder

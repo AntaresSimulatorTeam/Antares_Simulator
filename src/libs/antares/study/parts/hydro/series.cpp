@@ -36,7 +36,8 @@ using namespace Yuni;
 namespace Antares::Data
 {
 
-static void resizeTSNoDataLoss(TimeSeries& TSToResize, uint width)
+static void
+resizeTSNoDataLoss(TimeSeries& TSToResize, uint width)
 {
     auto& ts = TSToResize.timeSeries;
     ts.resizeWithoutDataLost(width, ts.height);
@@ -46,12 +47,13 @@ static void resizeTSNoDataLoss(TimeSeries& TSToResize, uint width)
     }
 }
 
-static uint EqualizeTSsize(TimeSeries& TScollection1,
-                           TimeSeries& TScollection2,
-                           const std::string& fatalErrorMsg,
-                           Area& area,
-                           unsigned int height1 = HOURS_PER_YEAR,
-                           unsigned int height2 = HOURS_PER_YEAR)
+static uint
+EqualizeTSsize(TimeSeries& TScollection1,
+               TimeSeries& TScollection2,
+               const std::string& fatalErrorMsg,
+               Area& area,
+               unsigned int height1 = HOURS_PER_YEAR,
+               unsigned int height2 = HOURS_PER_YEAR)
 {
     const auto ts1Width = TScollection1.timeSeries.width;
     const auto ts2Width = TScollection2.timeSeries.width;
@@ -92,11 +94,12 @@ static uint EqualizeTSsize(TimeSeries& TScollection1,
     return maxWidth;
 }
 
-static bool loadTSfromFile(Matrix<double>& ts,
-                           const AreaName& areaID,
-                           const AnyString& folder,
-                           const std::string& filename,
-                           unsigned int height)
+static bool
+loadTSfromFile(Matrix<double>& ts,
+               const AreaName& areaID,
+               const AnyString& folder,
+               const std::string& filename,
+               unsigned int height)
 {
     YString filePath;
     Matrix<>::BufferType fileContent;
@@ -104,8 +107,9 @@ static bool loadTSfromFile(Matrix<double>& ts,
     return ts.loadFromCSVFile(filePath, 1, height, &fileContent);
 }
 
-static void ConvertDailyTSintoHourlyTS(const Matrix<double>::ColumnType& dailyColumn,
-                                       Matrix<double>::ColumnType& hourlyColumn)
+static void
+ConvertDailyTSintoHourlyTS(const Matrix<double>::ColumnType& dailyColumn,
+                           Matrix<double>::ColumnType& hourlyColumn)
 {
     uint hour = 0;
     uint day = 0;
@@ -137,7 +141,8 @@ DataSeriesHydro::DataSeriesHydro():
     maxHourlyPumpPower.reset();
 }
 
-void DataSeriesHydro::copyGenerationTS(const DataSeriesHydro& source)
+void
+DataSeriesHydro::copyGenerationTS(const DataSeriesHydro& source)
 {
     ror.timeSeries = source.ror.timeSeries;
     storage.timeSeries = source.storage.timeSeries;
@@ -150,7 +155,8 @@ void DataSeriesHydro::copyGenerationTS(const DataSeriesHydro& source)
     source.mingen.unloadFromMemory();
 }
 
-void DataSeriesHydro::copyMaxPowerTS(const DataSeriesHydro& source)
+void
+DataSeriesHydro::copyMaxPowerTS(const DataSeriesHydro& source)
 {
     maxHourlyGenPower.timeSeries = source.maxHourlyGenPower.timeSeries;
     maxHourlyPumpPower.timeSeries = source.maxHourlyPumpPower.timeSeries;
@@ -161,13 +167,15 @@ void DataSeriesHydro::copyMaxPowerTS(const DataSeriesHydro& source)
     source.maxHourlyPumpPower.unloadFromMemory();
 }
 
-void DataSeriesHydro::reset()
+void
+DataSeriesHydro::reset()
 {
     resizeGenerationTS(1);
     resizeMaxPowerTS(1);
 }
 
-void DataSeriesHydro::resizeGenerationTS(uint nbSeries)
+void
+DataSeriesHydro::resizeGenerationTS(uint nbSeries)
 {
     storage.reset(nbSeries, DAYS_PER_YEAR);
     ror.reset(nbSeries, HOURS_PER_YEAR);
@@ -176,7 +184,8 @@ void DataSeriesHydro::resizeGenerationTS(uint nbSeries)
     generationTScount_ = nbSeries;
 }
 
-void DataSeriesHydro::resizeMaxPowerTS(uint nbSeries)
+void
+DataSeriesHydro::resizeMaxPowerTS(uint nbSeries)
 {
     maxHourlyGenPower.reset(nbSeries, HOURS_PER_YEAR);
     maxHourlyPumpPower.reset(nbSeries, HOURS_PER_YEAR);
@@ -184,7 +193,8 @@ void DataSeriesHydro::resizeMaxPowerTS(uint nbSeries)
     maxPowerTScount_ = nbSeries;
 }
 
-bool DataSeriesHydro::forceReload(bool reload) const
+bool
+DataSeriesHydro::forceReload(bool reload) const
 {
     bool ret = true;
     ret = ror.forceReload(reload) && ret;
@@ -195,7 +205,8 @@ bool DataSeriesHydro::forceReload(bool reload) const
     return ret;
 }
 
-void DataSeriesHydro::markAsModified() const
+void
+DataSeriesHydro::markAsModified() const
 {
     ror.markAsModified();
     storage.markAsModified();
@@ -204,7 +215,8 @@ void DataSeriesHydro::markAsModified() const
     maxHourlyPumpPower.markAsModified();
 }
 
-void DataSeriesHydro::EqualizeGenerationTSsizes(Area& area, bool usedByTheSolver)
+void
+DataSeriesHydro::EqualizeGenerationTSsizes(Area& area, bool usedByTheSolver)
 {
     if (!usedByTheSolver) // From GUI, no need to equalize TS collections sizes
     {
@@ -237,9 +249,10 @@ void DataSeriesHydro::EqualizeGenerationTSsizes(Area& area, bool usedByTheSolver
                 << "': ROR and MINGEN time series were both set to : " << generationTScount_;
 }
 
-bool DataSeriesHydro::loadGenerationTS(const AreaName& areaID,
-                                       const AnyString& folder,
-                                       StudyVersion studyVersion)
+bool
+DataSeriesHydro::loadGenerationTS(const AreaName& areaID,
+                                  const AnyString& folder,
+                                  StudyVersion studyVersion)
 {
     timeseriesNumbers.clear();
 
@@ -247,35 +260,39 @@ bool DataSeriesHydro::loadGenerationTS(const AreaName& areaID,
     ret = loadTSfromFile(storage.timeSeries, areaID, folder, "mod.txt", DAYS_PER_YEAR) && ret;
     if (studyVersion >= StudyVersion(8, 6))
     {
-        ret = loadTSfromFile(mingen.timeSeries, areaID, folder, "mingen.txt", HOURS_PER_YEAR)
-              && ret;
+        ret = loadTSfromFile(mingen.timeSeries, areaID, folder, "mingen.txt", HOURS_PER_YEAR) &&
+              ret;
     }
 
     return ret;
 }
 
-bool DataSeriesHydro::LoadMaxPower(const AreaName& areaID, const AnyString& folder)
+bool
+DataSeriesHydro::LoadMaxPower(const AreaName& areaID, const AnyString& folder)
 {
     bool ret = true;
     YString filepath;
     Matrix<>::BufferType fileContent;
 
     filepath.clear() << folder << SEP << areaID << SEP << "maxHourlyGenPower.txt";
-    ret = maxHourlyGenPower.timeSeries.loadFromCSVFile(filepath, 1, HOURS_PER_YEAR, &fileContent)
-          && ret;
+    ret = maxHourlyGenPower.timeSeries.loadFromCSVFile(filepath, 1, HOURS_PER_YEAR, &fileContent) &&
+          ret;
 
     filepath.clear() << folder << SEP << areaID << SEP << "maxHourlyPumpPower.txt";
-    ret = maxHourlyPumpPower.timeSeries.loadFromCSVFile(filepath, 1, HOURS_PER_YEAR, &fileContent)
-          && ret;
+    ret = maxHourlyPumpPower.timeSeries.loadFromCSVFile(filepath,
+                                                        1,
+                                                        HOURS_PER_YEAR,
+                                                        &fileContent) &&
+          ret;
 
     timeseriesNumbersHydroMaxPower.clear();
 
     return ret;
 }
 
-void DataSeriesHydro::buildHourlyMaxPowerFromDailyTS(
-  const Matrix<double>::ColumnType& DailyMaxGenPower,
-  const Matrix<double>::ColumnType& DailyMaxPumpPower)
+void
+DataSeriesHydro::buildHourlyMaxPowerFromDailyTS(const Matrix<double>::ColumnType& DailyMaxGenPower,
+                                                const Matrix<double>::ColumnType& DailyMaxPumpPower)
 {
     maxPowerTScount_ = 1;
 
@@ -286,7 +303,8 @@ void DataSeriesHydro::buildHourlyMaxPowerFromDailyTS(
     ConvertDailyTSintoHourlyTS(DailyMaxPumpPower, maxHourlyPumpPower.timeSeries[0]);
 }
 
-bool DataSeriesHydro::saveToFolder(const AreaName& areaID, const AnyString& folder) const
+bool
+DataSeriesHydro::saveToFolder(const AreaName& areaID, const AnyString& folder) const
 {
     String buffer;
     buffer.clear() << folder << SEP << areaID;
@@ -312,13 +330,15 @@ bool DataSeriesHydro::saveToFolder(const AreaName& areaID, const AnyString& fold
     return false;
 }
 
-uint64_t DataSeriesHydro::memoryUsage() const
+uint64_t
+DataSeriesHydro::memoryUsage() const
 {
-    return sizeof(double) + ror.memoryUsage() + storage.memoryUsage() + mingen.memoryUsage()
-           + maxHourlyGenPower.memoryUsage() + maxHourlyPumpPower.memoryUsage();
+    return sizeof(double) + ror.memoryUsage() + storage.memoryUsage() + mingen.memoryUsage() +
+           maxHourlyGenPower.memoryUsage() + maxHourlyPumpPower.memoryUsage();
 }
 
-void DataSeriesHydro::EqualizeMaxPowerTSsizes(Area& area)
+void
+DataSeriesHydro::EqualizeMaxPowerTSsizes(Area& area)
 {
     std::string fatalErrorMsg = "Hydro Max Power: " + area.id.to<std::string>() + " : ";
     fatalErrorMsg += "generation and pumping must have the same number of TS.";
@@ -329,7 +349,8 @@ void DataSeriesHydro::EqualizeMaxPowerTSsizes(Area& area)
                 << "TS were both set to : " << maxPowerTScount_;
 }
 
-void DataSeriesHydro::setHydroModulability(Area& area) const
+void
+DataSeriesHydro::setHydroModulability(Area& area) const
 {
     if (MatrixTestForAtLeastOnePositiveValue(maxHourlyGenPower.timeSeries))
     {
@@ -337,19 +358,20 @@ void DataSeriesHydro::setHydroModulability(Area& area) const
     }
 }
 
-uint DataSeriesHydro::TScount() const
+uint
+DataSeriesHydro::TScount() const
 {
     return generationTScount_;
 }
 
-uint DataSeriesHydro::maxPowerTScount() const
+uint
+DataSeriesHydro::maxPowerTScount() const
 {
     return maxPowerTScount_;
 }
 
-void DataSeriesHydro::resizeTSinDeratedMode(bool derated,
-                                            StudyVersion studyVersion,
-                                            bool usedBySolver)
+void
+DataSeriesHydro::resizeTSinDeratedMode(bool derated, StudyVersion studyVersion, bool usedBySolver)
 {
     if (!(derated && usedBySolver))
     {

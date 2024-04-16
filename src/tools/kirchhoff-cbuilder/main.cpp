@@ -33,7 +33,8 @@
 using namespace Yuni;
 using namespace Antares;
 
-int main(int argc, char* argv[])
+int
+main(int argc, char* argv[])
 {
     logs.applicationName("k-cbuild");
     if (argc < 2)
@@ -72,9 +73,10 @@ int main(int argc, char* argv[])
     return 0;
 }
 
-bool runKirchhoffConstraints(std::shared_ptr<Data::Study> study,
-                             const std::string& studyPath,
-                             const std::string& kirchhoffOptionPath)
+bool
+runKirchhoffConstraints(std::shared_ptr<Data::Study> study,
+                        const std::string& studyPath,
+                        const std::string& kirchhoffOptionPath)
 {
     study->areas.ensureDataIsInitialized(study->parameters, false);
 
@@ -104,8 +106,8 @@ bool runKirchhoffConstraints(std::shared_ptr<Data::Study> study,
         return false;
     }
 
-    auto bindingPath = studyPath + Yuni::IO::Separator + "input" + Yuni::IO::Separator
-                       + "bindingconstraints";
+    auto bindingPath = studyPath + Yuni::IO::Separator + "input" + Yuni::IO::Separator +
+                       "bindingconstraints";
 
     if (!study->bindingConstraints.saveToFolder(bindingPath))
     {
@@ -116,12 +118,14 @@ bool runKirchhoffConstraints(std::shared_ptr<Data::Study> study,
     return true;
 }
 
-static void NotEnoughMemory()
+static void
+NotEnoughMemory()
 {
     logs.fatal() << "Not enough memory. aborting.";
 }
 
-bool initResources(int argc, char* argv[])
+bool
+initResources(int argc, char* argv[])
 {
     std::set_new_handler(&NotEnoughMemory);
 
@@ -137,7 +141,8 @@ bool initResources(int argc, char* argv[])
     return true;
 }
 
-bool initComponents(std::shared_ptr<Data::Study> study, const std::string& studyPath)
+bool
+initComponents(std::shared_ptr<Data::Study> study, const std::string& studyPath)
 {
     study->header.version = Data::StudyHeader::tryToFindTheVersion(studyPath);
     if (study->header.version == Data::StudyVersion::unknown())
@@ -159,8 +164,8 @@ bool initComponents(std::shared_ptr<Data::Study> study, const std::string& study
     }
     logs.info() << "Areas loaded.";
 
-    auto bindingPath = studyPath + Yuni::IO::Separator + "input" + Yuni::IO::Separator
-                       + "bindingconstraints";
+    auto bindingPath = studyPath + Yuni::IO::Separator + "input" + Yuni::IO::Separator +
+                       "bindingconstraints";
 
     if (!study->bindingConstraints.loadFromFolder(*study, options, bindingPath))
     {

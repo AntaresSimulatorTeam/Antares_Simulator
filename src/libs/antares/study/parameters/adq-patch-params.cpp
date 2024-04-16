@@ -31,13 +31,15 @@ namespace Antares::Data::AdequacyPatch
 // Local matching
 // -------------------
 
-void LocalMatching::reset()
+void
+LocalMatching::reset()
 {
     setToZeroOutsideInsideLinks = true;
     setToZeroOutsideOutsideLinks = true;
 }
 
-bool LocalMatching::updateFromKeyValue(const Yuni::String& key, const Yuni::String& value)
+bool
+LocalMatching::updateFromKeyValue(const Yuni::String& key, const Yuni::String& value)
 {
     if (key == "set-to-null-ntc-from-physical-out-to-physical-in-for-first-step")
     {
@@ -54,7 +56,8 @@ bool LocalMatching::updateFromKeyValue(const Yuni::String& key, const Yuni::Stri
     return false;
 }
 
-void LocalMatching::addProperties(IniFile::Section* section) const
+void
+LocalMatching::addProperties(IniFile::Section* section) const
 {
     section->add("set-to-null-ntc-from-physical-out-to-physical-in-for-first-step",
                  setToZeroOutsideInsideLinks);
@@ -66,7 +69,8 @@ void LocalMatching::addProperties(IniFile::Section* section) const
 // -----------------------
 // Curtailment sharing
 // -----------------------
-void CurtailmentSharing::reset()
+void
+CurtailmentSharing::reset()
 {
     priceTakingOrder = AdqPatchPTO::isDens;
     includeHurdleCost = false;
@@ -74,7 +78,8 @@ void CurtailmentSharing::reset()
     resetThresholds();
 }
 
-void CurtailmentSharing::resetThresholds()
+void
+CurtailmentSharing::resetThresholds()
 {
     // Initialize all thresholds values for adequacy patch
     thresholdRun = defaultThresholdToRunCurtailmentSharing;
@@ -82,8 +87,8 @@ void CurtailmentSharing::resetThresholds()
     thresholdVarBoundsRelaxation = defaultValueThresholdVarBoundsRelaxation;
 }
 
-static bool StringToPriceTakingOrder(const AnyString& PTO_as_string,
-                                     AdequacyPatch::AdqPatchPTO& PTO_as_enum)
+static bool
+StringToPriceTakingOrder(const AnyString& PTO_as_string, AdequacyPatch::AdqPatchPTO& PTO_as_enum)
 {
     Yuni::CString<24, false> s = PTO_as_string;
     s.trim();
@@ -104,7 +109,8 @@ static bool StringToPriceTakingOrder(const AnyString& PTO_as_string,
     return false;
 }
 
-bool CurtailmentSharing::updateFromKeyValue(const Yuni::String& key, const Yuni::String& value)
+bool
+CurtailmentSharing::updateFromKeyValue(const Yuni::String& key, const Yuni::String& value)
 {
     // Price taking order
     if (key == "price-taking-order")
@@ -138,7 +144,8 @@ bool CurtailmentSharing::updateFromKeyValue(const Yuni::String& key, const Yuni:
     return false;
 }
 
-const char* PriceTakingOrderToString(AdequacyPatch::AdqPatchPTO pto)
+const char*
+PriceTakingOrderToString(AdequacyPatch::AdqPatchPTO pto)
 {
     switch (pto)
     {
@@ -151,7 +158,8 @@ const char* PriceTakingOrderToString(AdequacyPatch::AdqPatchPTO pto)
     }
 }
 
-void CurtailmentSharing::addProperties(IniFile::Section* section) const
+void
+CurtailmentSharing::addProperties(IniFile::Section* section) const
 {
     section->add("price-taking-order", PriceTakingOrderToString(priceTakingOrder));
     section->add("include-hurdle-cost-csr", includeHurdleCost);
@@ -166,7 +174,8 @@ void CurtailmentSharing::addProperties(IniFile::Section* section) const
 // ------------------------
 // Adq patch parameters
 // ------------------------
-void AdqPatchParams::reset()
+void
+AdqPatchParams::reset()
 {
     enabled = false;
 
@@ -174,7 +183,8 @@ void AdqPatchParams::reset()
     curtailmentSharing.reset();
 }
 
-void AdqPatchParams::addExcludedVariables(std::vector<std::string>& out) const
+void
+AdqPatchParams::addExcludedVariables(std::vector<std::string>& out) const
 {
     if (!enabled)
     {
@@ -191,18 +201,20 @@ void AdqPatchParams::addExcludedVariables(std::vector<std::string>& out) const
     }
 }
 
-bool AdqPatchParams::updateFromKeyValue(const Yuni::String& key, const Yuni::String& value)
+bool
+AdqPatchParams::updateFromKeyValue(const Yuni::String& key, const Yuni::String& value)
 {
     if (key == "include-adq-patch")
     {
         return value.to<bool>(enabled);
     }
 
-    return curtailmentSharing.updateFromKeyValue(key, value)
-           != localMatching.updateFromKeyValue(key, value); // XOR
+    return curtailmentSharing.updateFromKeyValue(key, value) !=
+           localMatching.updateFromKeyValue(key, value); // XOR
 }
 
-void AdqPatchParams::saveToINI(IniFile& ini) const
+void
+AdqPatchParams::saveToINI(IniFile& ini) const
 {
     auto* section = ini.addSection("adequacy patch");
     section->add("include-adq-patch", enabled);
@@ -211,9 +223,10 @@ void AdqPatchParams::saveToINI(IniFile& ini) const
     curtailmentSharing.addProperties(section);
 }
 
-bool AdqPatchParams::checkAdqPatchParams(const SimulationMode simulationMode,
-                                         const AreaList& areas,
-                                         const bool includeHurdleCostParameters) const
+bool
+AdqPatchParams::checkAdqPatchParams(const SimulationMode simulationMode,
+                                    const AreaList& areas,
+                                    const bool includeHurdleCostParameters) const
 {
     checkAdqPatchSimulationModeEconomyOnly(simulationMode);
     checkAdqPatchContainsAdqPatchArea(areas);
@@ -223,8 +236,8 @@ bool AdqPatchParams::checkAdqPatchParams(const SimulationMode simulationMode,
 }
 
 // Adequacy Patch can only be used with Economy Study/Simulation Mode.
-void AdqPatchParams::checkAdqPatchSimulationModeEconomyOnly(
-  const SimulationMode simulationMode) const
+void
+AdqPatchParams::checkAdqPatchSimulationModeEconomyOnly(const SimulationMode simulationMode) const
 {
     if (simulationMode != SimulationMode::Economy)
     {
@@ -233,13 +246,14 @@ void AdqPatchParams::checkAdqPatchSimulationModeEconomyOnly(
 }
 
 // When Adequacy Patch is on at least one area must be inside Adequacy patch mode.
-void AdqPatchParams::checkAdqPatchContainsAdqPatchArea(const Antares::Data::AreaList& areas) const
+void
+AdqPatchParams::checkAdqPatchContainsAdqPatchArea(const Antares::Data::AreaList& areas) const
 {
     const bool containsAdqArea = std::any_of(areas.cbegin(),
                                              areas.cend(),
                                              [](const std::pair<AreaName, Area*>& area) {
-                                                 return area.second->adequacyPatchMode
-                                                        == physicalAreaInsideAdqPatch;
+                                                 return area.second->adequacyPatchMode ==
+                                                        physicalAreaInsideAdqPatch;
                                              });
 
     if (!containsAdqArea)
@@ -248,7 +262,8 @@ void AdqPatchParams::checkAdqPatchContainsAdqPatchArea(const Antares::Data::Area
     }
 }
 
-void AdqPatchParams::checkAdqPatchIncludeHurdleCost(const bool includeHurdleCostParameters) const
+void
+AdqPatchParams::checkAdqPatchIncludeHurdleCost(const bool includeHurdleCostParameters) const
 {
     if (curtailmentSharing.includeHurdleCost && !includeHurdleCostParameters)
     {

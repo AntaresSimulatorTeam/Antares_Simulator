@@ -23,25 +23,28 @@
 
 #include "antares/solver/optimisation/constraints/constraint_builder_utils.h"
 
-BindingConstraintWeekData BindingConstraintWeekGroup::GetBindingConstraintWeekDataFromProblemHebdo()
+BindingConstraintWeekData
+BindingConstraintWeekGroup::GetBindingConstraintWeekDataFromProblemHebdo()
 {
     return {.MatriceDesContraintesCouplantes = problemeHebdo_->MatriceDesContraintesCouplantes,
             .PaliersThermiquesDuPays = problemeHebdo_->PaliersThermiquesDuPays,
-            .NumeroDeContrainteDesContraintesCouplantes
-            = problemeHebdo_->CorrespondanceCntNativesCntOptimHebdomadaires
-                .NumeroDeContrainteDesContraintesCouplantes};
+            .NumeroDeContrainteDesContraintesCouplantes =
+                    problemeHebdo_->CorrespondanceCntNativesCntOptimHebdomadaires
+                            .NumeroDeContrainteDesContraintesCouplantes};
 }
 
-void BindingConstraintWeekGroup::BuildConstraints()
+void
+BindingConstraintWeekGroup::BuildConstraints()
 {
     auto bindingConstraintWeekData = GetBindingConstraintWeekDataFromProblemHebdo();
     BindingConstraintWeek bindingConstraintWeek(builder_, bindingConstraintWeekData);
 
-    if (problemeHebdo_->NombreDePasDeTempsPourUneOptimisation
-        > problemeHebdo_->NombreDePasDeTempsDUneJournee)
+    if (problemeHebdo_->NombreDePasDeTempsPourUneOptimisation >
+        problemeHebdo_->NombreDePasDeTempsDUneJournee)
     {
-        CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES& CorrespondanceCntNativesCntOptimHebdomadaires
-          = problemeHebdo_->CorrespondanceCntNativesCntOptimHebdomadaires;
+        CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES&
+                CorrespondanceCntNativesCntOptimHebdomadaires =
+                        problemeHebdo_->CorrespondanceCntNativesCntOptimHebdomadaires;
         for (uint32_t cntCouplante = 0;
              cntCouplante < problemeHebdo_->NombreDeContraintesCouplantes;
              cntCouplante++)

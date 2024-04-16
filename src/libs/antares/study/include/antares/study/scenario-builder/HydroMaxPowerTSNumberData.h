@@ -18,7 +18,8 @@ public:
     virtual ~hydroMaxPowerTSNumberData() = default;
 };
 
-inline CString<512, false> hydroMaxPowerTSNumberData::get_prefix() const
+inline CString<512, false>
+hydroMaxPowerTSNumberData::get_prefix() const
 {
     return "hgp,";
 }

@@ -25,7 +25,8 @@
 #include "../application.h"
 #include "common.h"
 
-BOOL WINAPI ConsoleHandler(DWORD dwType)
+BOOL WINAPI
+ConsoleHandler(DWORD dwType)
 {
     switch (dwType)
     {
@@ -42,7 +43,8 @@ BOOL WINAPI ConsoleHandler(DWORD dwType)
 
 namespace Antares::Solver
 {
-void initializeSignalHandlers(std::weak_ptr<IResultWriter> writer)
+void
+initializeSignalHandlers(std::weak_ptr<IResultWriter> writer)
 {
     setApplicationResultWriter(writer);
     SetConsoleCtrlHandler((PHANDLER_ROUTINE)ConsoleHandler, TRUE);

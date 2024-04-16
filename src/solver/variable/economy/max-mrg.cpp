@@ -53,7 +53,8 @@ struct SpillageSelector<false>
 };
 
 template<bool WithSimplexT>
-inline void PrepareMaxMRGFor(const State& state, double* opmrg, uint numSpace)
+inline void
+PrepareMaxMRGFor(const State& state, double* opmrg, uint numSpace)
 {
     assert(168 + state.hourInTheYear <= HOURS_PER_YEAR);
     assert(opmrg && "Invalid OP.MRG target");
@@ -178,7 +179,8 @@ inline void PrepareMaxMRGFor(const State& state, double* opmrg, uint numSpace)
     } while (ecart * ecart > 0.25);
 }
 
-void PrepareMaxMRG(const State& state, double* opmrg, uint numSpace)
+void
+PrepareMaxMRG(const State& state, double* opmrg, uint numSpace)
 {
     if (state.simplexRunNeeded)
     {

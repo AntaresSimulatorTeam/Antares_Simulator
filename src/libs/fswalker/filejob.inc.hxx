@@ -56,7 +56,8 @@ protected:
 
 }; // class FileJob
 
-void FileJob::onExecute()
+void
+FileJob::onExecute()
 {
     for (uint e = 0; e != events.file.access.size(); ++e)
     {

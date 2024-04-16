@@ -97,8 +97,8 @@ struct BrowseAllVariables
         list.template buildSurveyResults<S, CDataLevel, CFile>(results);
         // Go to the next status
         BrowseAllVariables<NextT, nextDataLevel, nextFileLevel>::template buildSurveyResults<L, S>(
-          list,
-          results);
+                list,
+                results);
     }
 };
 
@@ -116,7 +116,7 @@ struct BrowseAllVariables<NextT, Category::maxDataLevel, Category::maxFileLevel>
     {
         // Exporting data for the current state
         list.template buildSurveyResults<S, Category::maxDataLevel, Category::maxFileLevel>(
-          results);
+                results);
         // This is the final available state
     }
 };
@@ -211,8 +211,8 @@ public:
     static void Run(const ListType& list, SurveyResults& results, unsigned int numSpace = 9999)
     {
         // Area - Thermal clusters - Links
-        if (CDataLevel & Category::area || CDataLevel & Category::link
-            || CDataLevel & Category::thermalAggregate)
+        if (CDataLevel & Category::area || CDataLevel & Category::link ||
+            CDataLevel & Category::thermalAggregate)
         {
             RunForEachArea(list, results, numSpace);
         }
@@ -279,7 +279,7 @@ private:
 
         // No need to do anything for any area here if no zonal variables were selected.
         uint selectedZonalVarsCount = results.data.study.parameters.variablesPrintInfo
-                                        .getNbSelectedZonalVars();
+                                              .getNbSelectedZonalVars();
 
         // All values related to an area
         // Note: A thermal cluster is attached to an area
@@ -304,8 +304,8 @@ private:
             // ... Do we skip the current area's result directory creation because no results were
             // asked
             //	   in the inspector for the current area ?
-            bool skipDirectory = (!printingSynthesis && filterAllYearByYear)
-                                 || (printingSynthesis && filterAllSynthesis);
+            bool skipDirectory = (!printingSynthesis && filterAllYearByYear) ||
+                                 (printingSynthesis && filterAllSynthesis);
 
             // ... Or do we skip the current area's result directory creation because no zonal
             //	   variables were selected ?
@@ -335,9 +335,8 @@ private:
         }
     }
 
-    static void RunForEachThermalCluster(const ListType& list,
-                                         SurveyResults& results,
-                                         unsigned int numSpace)
+    static void
+    RunForEachThermalCluster(const ListType& list, SurveyResults& results, unsigned int numSpace)
     {
         // Only do something if there is at least one column to write somewhere
         // See below: if (CDataLevel & Category::thermalAggregate)
@@ -365,7 +364,7 @@ private:
 
         // No need to do anything for any link here if no link variables were selected.
         uint selectedLinkVarsCount = results.data.study.parameters.variablesPrintInfo
-                                       .getNbSelectedLinkVars();
+                                             .getNbSelectedLinkVars();
         if (!selectedLinkVarsCount)
         {
             return;
@@ -393,8 +392,8 @@ private:
                 // ... Do we skip the current link's result directory creation because no results
                 // were asked
                 //	   in the inspector for the current link ?
-                bool skipDirectory = (!printingSynthesis && filterAllYearByYear)
-                                     || (printingSynthesis && filterAllSynthesis);
+                bool skipDirectory = (!printingSynthesis && filterAllYearByYear) ||
+                                     (printingSynthesis && filterAllSynthesis);
 
                 if (!skipDirectory)
                 {
@@ -412,9 +411,8 @@ private:
         }
     }
 
-    static void RunForEachSetOfAreas(const ListType& list,
-                                     SurveyResults& results,
-                                     unsigned int numSpace)
+    static void
+    RunForEachSetOfAreas(const ListType& list, SurveyResults& results, unsigned int numSpace)
     {
         using namespace ::Antares;
         using namespace ::Yuni;
@@ -422,7 +420,7 @@ private:
         // No need to do anything for any district (set of areas) here if no zonal variables were
         // selected.
         uint selectedZonalVarsCount = results.data.study.parameters.variablesPrintInfo
-                                        .getNbSelectedZonalVars();
+                                              .getNbSelectedZonalVars();
         if (!selectedZonalVarsCount)
         {
             return;
@@ -454,9 +452,8 @@ private:
         }
     }
 
-    static void RunForEachBindingConstraint(const ListType& list,
-                                            SurveyResults& results,
-                                            unsigned int numSpace)
+    static void
+    RunForEachBindingConstraint(const ListType& list, SurveyResults& results, unsigned int numSpace)
     {
         using namespace Yuni;
 

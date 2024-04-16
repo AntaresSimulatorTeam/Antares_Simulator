@@ -42,14 +42,16 @@ IntermediateValues::IntermediateValues():
     (void)::memset(day, 0, sizeof(Type) * maxDaysInAYear);
 }
 
-void IntermediateValues::initializeFromStudy(Data::Study& study)
+void
+IntermediateValues::initializeFromStudy(Data::Study& study)
 {
     pRange = &study.runtime->rangeLimits;
     calendar = &study.calendarOutput;
     pRuntimeInfo = study.runtime;
 }
 
-void IntermediateValues::computeStatisticsAdequacyForTheCurrentYear()
+void
+IntermediateValues::computeStatisticsAdequacyForTheCurrentYear()
 {
     year = 0.;
 
@@ -67,7 +69,8 @@ void IntermediateValues::computeStatisticsAdequacyForTheCurrentYear()
     }
 }
 
-void IntermediateValues::computeStatisticsForTheCurrentYear()
+void
+IntermediateValues::computeStatisticsForTheCurrentYear()
 {
     uint i;
     uint j;
@@ -123,7 +126,8 @@ void IntermediateValues::computeStatisticsForTheCurrentYear()
     }
 }
 
-void IntermediateValues::computeStatisticsOrForTheCurrentYear()
+void
+IntermediateValues::computeStatisticsOrForTheCurrentYear()
 {
     uint i;
     uint j;
@@ -184,7 +188,8 @@ void IntermediateValues::computeStatisticsOrForTheCurrentYear()
     }
 }
 
-void IntermediateValues::computeAveragesForCurrentYearFromHourlyResults()
+void
+IntermediateValues::computeAveragesForCurrentYearFromHourlyResults()
 {
     // Detecting large buffer overflow
     assert(pRange);
@@ -198,20 +203,23 @@ void IntermediateValues::computeAveragesForCurrentYearFromHourlyResults()
     computeYearlyAveragesForCurrentYear();
 }
 
-void IntermediateValues::computeAveragesForCurrentYearFromDailyResults()
+void
+IntermediateValues::computeAveragesForCurrentYearFromDailyResults()
 {
     computeWeeklyAveragesForCurrentYear();
     computeMonthlyAveragesForCurrentYear();
     computeYearlyAveragesForCurrentYear();
 }
 
-void IntermediateValues::computeAveragesForCurrentYearFromWeeklyResults()
+void
+IntermediateValues::computeAveragesForCurrentYearFromWeeklyResults()
 {
     computeMonthlyAveragesForCurrentYear();
     computeYearlyAveragesForCurrentYear();
 }
 
-void IntermediateValues::computeDailyAveragesForCurrentYear()
+void
+IntermediateValues::computeDailyAveragesForCurrentYear()
 {
     // Compute days average for each day of the year
     double day_sum;
@@ -229,7 +237,8 @@ void IntermediateValues::computeDailyAveragesForCurrentYear()
     }
 }
 
-void IntermediateValues::computeWeeklyAveragesForCurrentYear()
+void
+IntermediateValues::computeWeeklyAveragesForCurrentYear()
 {
     // Re-initialization (a previous MC year could have left non-nil values)
     for (int w = 0; w != maxWeeksInAYear; ++w)
@@ -248,7 +257,8 @@ void IntermediateValues::computeWeeklyAveragesForCurrentYear()
     }
 }
 
-void IntermediateValues::computeMonthlyAveragesForCurrentYear()
+void
+IntermediateValues::computeMonthlyAveragesForCurrentYear()
 {
     // Compute monthly averages for each month in the year :
     //    We need daily values in order to compute monthly averages.
@@ -270,7 +280,8 @@ void IntermediateValues::computeMonthlyAveragesForCurrentYear()
     }
 }
 
-void IntermediateValues::computeYearlyAveragesForCurrentYear()
+void
+IntermediateValues::computeYearlyAveragesForCurrentYear()
 {
     year = 0.; // Re-initialization (a previous MC year could have left a non-nil value)
 
@@ -282,7 +293,8 @@ void IntermediateValues::computeYearlyAveragesForCurrentYear()
     year /= pRange->week[Data::rangeCount];
 }
 
-void IntermediateValues::computeProbabilitiesForTheCurrentYear()
+void
+IntermediateValues::computeProbabilitiesForTheCurrentYear()
 {
     uint i;
     uint j;
@@ -356,7 +368,8 @@ void IntermediateValues::computeProbabilitiesForTheCurrentYear()
     }
 }
 
-void IntermediateValues::adjustValuesWhenRelatedToAPrice()
+void
+IntermediateValues::adjustValuesWhenRelatedToAPrice()
 {
     uint i;
     double ratio;
@@ -386,7 +399,8 @@ void IntermediateValues::adjustValuesWhenRelatedToAPrice()
     year /= pRange->hour[Data::rangeCount];
 }
 
-void IntermediateValues::adjustValuesAdequacyWhenRelatedToAPrice()
+void
+IntermediateValues::adjustValuesAdequacyWhenRelatedToAPrice()
 {
     // Year
     year /= pRange->hour[Data::rangeCount];

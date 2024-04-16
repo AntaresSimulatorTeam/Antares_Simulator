@@ -45,7 +45,8 @@ namespace Antares
 {
 namespace Resources
 {
-bool FindFile(Yuni::String& out, const AnyString& filename)
+bool
+FindFile(Yuni::String& out, const AnyString& filename)
 {
     if (not filename.empty())
     {
@@ -67,12 +68,14 @@ bool FindFile(Yuni::String& out, const AnyString& filename)
     return false;
 }
 
-void GetRootFolder(Yuni::String& out)
+void
+GetRootFolder(Yuni::String& out)
 {
     out = RootFolder;
 }
 
-bool FindExampleFolder(Yuni::String& folder)
+bool
+FindExampleFolder(Yuni::String& folder)
 {
     // Temporary string
     String s;
@@ -134,7 +137,8 @@ bool FindExampleFolder(Yuni::String& folder)
     return false;
 }
 
-void Initialize(int argc, char** argv, bool initializeSearchPath)
+void
+Initialize(int argc, char** argv, bool initializeSearchPath)
 {
     if (argc < 1 or argv[0] == NULL)
     {
@@ -184,7 +188,8 @@ void Initialize(int argc, char** argv, bool initializeSearchPath)
     }
 }
 
-bool FindFirstOf(String& out, const char* const* const list)
+bool
+FindFirstOf(String& out, const char* const* const list)
 {
     String tmp;
     uint searchPathsCount = (uint)SearchPaths.size();

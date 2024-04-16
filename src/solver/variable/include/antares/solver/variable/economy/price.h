@@ -52,12 +52,12 @@ struct VCardPrice
     }
 
     //! The expecte results
-    typedef Results<R::AllYears::Average< // The average values thoughout all years
-      R::AllYears::StdDeviation<          // The standard deviation values throughout all years
-        R::AllYears::Min<                 // The minimum values thoughout all years
-          R::AllYears::Max<               // The maximum values thoughout all years
-            >>>>>
-      ResultsType;
+    typedef Results<R::AllYears::Average<     // The average values thoughout all years
+            R::AllYears::StdDeviation<        // The standard deviation values throughout all years
+                    R::AllYears::Min<         // The minimum values thoughout all years
+                            R::AllYears::Max< // The maximum values thoughout all years
+                                    >>>>>
+            ResultsType;
 
     //! The VCard to look for for calculating spatial aggregates
     typedef VCardPrice VCardForSpatialAggregate;
@@ -123,11 +123,11 @@ public:
     {
         enum
         {
-            count = ((VCardType::categoryDataLevel & CDataLevel
-                      && VCardType::categoryFileLevel & CFile)
-                       ? (NextType::template Statistics<CDataLevel, CFile>::count
-                          + VCardType::columnCount * ResultsType::count)
-                       : NextType::template Statistics<CDataLevel, CFile>::count),
+            count = ((VCardType::categoryDataLevel & CDataLevel &&
+                      VCardType::categoryFileLevel & CFile)
+                             ? (NextType::template Statistics<CDataLevel, CFile>::count +
+                                VCardType::columnCount * ResultsType::count)
+                             : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
 
@@ -232,16 +232,15 @@ public:
         // Marginal Price
         // Note: The marginal price provided by the solver is negative
         // (naming convention).
-        pValuesForTheCurrentYear[numSpace][state.hourInTheYear] -= state.hourlyResults
-                                                                     ->CoutsMarginauxHoraires
-                                                                       [state.hourInTheWeek];
+        pValuesForTheCurrentYear[numSpace]
+                                [state.hourInTheYear] -= state.hourlyResults->CoutsMarginauxHoraires
+                                                                 [state.hourInTheWeek];
         // Next variable
         NextType::hourForEachArea(state, numSpace);
     }
 
-    Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
-      uint,
-      unsigned int numSpace) const
+    Antares::Memory::Stored<double>::ConstReturnType
+    retrieveRawHourlyValuesForCurrentYear(uint, unsigned int numSpace) const
     {
         return pValuesForTheCurrentYear[numSpace].hour;
     }
@@ -260,7 +259,7 @@ public:
             results.variableCaption = VCardType::Caption();
             results.variableUnit = VCardType::Unit();
             pValuesForTheCurrentYear[numSpace]
-              .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
+                    .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
         }
     }
 

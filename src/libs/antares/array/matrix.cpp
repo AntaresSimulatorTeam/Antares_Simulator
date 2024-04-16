@@ -33,7 +33,8 @@ enum
                    + sizeof(void*) * 2 // entry, jit
 };
 
-int MatrixTestForPositiveValues(const char* msg, const Matrix<>* m)
+int
+MatrixTestForPositiveValues(const char* msg, const Matrix<>* m)
 {
     uint x = 0;
     uint y;
@@ -57,7 +58,8 @@ int MatrixTestForPositiveValues(const char* msg, const Matrix<>* m)
     return 1;
 }
 
-int MatrixTestIfValuesAreHigherThan(const char* msg, const Matrix<>* m, const double value)
+int
+MatrixTestIfValuesAreHigherThan(const char* msg, const Matrix<>* m, const double value)
 {
     uint x = 0;
     uint y;
@@ -82,7 +84,8 @@ int MatrixTestIfValuesAreHigherThan(const char* msg, const Matrix<>* m, const do
     return 1;
 }
 
-int MatrixTestIfValuesAreLowerThan(const char* msg, const Matrix<>* m, const double value)
+int
+MatrixTestIfValuesAreLowerThan(const char* msg, const Matrix<>* m, const double value)
 {
     uint x = 0;
     uint y;
@@ -107,7 +110,8 @@ int MatrixTestIfValuesAreLowerThan(const char* msg, const Matrix<>* m, const dou
     return 1;
 }
 
-int MatrixTestForPositiveValues_LimitWidth(const char* msg, const Matrix<>* m, uint maxWidth)
+int
+MatrixTestForPositiveValues_LimitWidth(const char* msg, const Matrix<>* m, uint maxWidth)
 {
     logs.debug() << "Checking : " << msg;
     if (m->width and m->height and maxWidth)

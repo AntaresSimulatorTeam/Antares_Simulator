@@ -46,7 +46,8 @@ using namespace Antares;
 namespace Antares::Data
 {
 
-BindingConstraint::Operator BindingConstraint::StringToOperator(const AnyString& text)
+BindingConstraint::Operator
+BindingConstraint::StringToOperator(const AnyString& text)
 {
     ShortString16 l(text);
     l.toLower();
@@ -70,7 +71,8 @@ BindingConstraint::Operator BindingConstraint::StringToOperator(const AnyString&
     return opUnknown;
 }
 
-BindingConstraint::Type BindingConstraint::StringToType(const AnyString& text)
+BindingConstraint::Type
+BindingConstraint::StringToType(const AnyString& text)
 {
     if (!text.empty())
     {
@@ -107,33 +109,33 @@ BindingConstraint::Type BindingConstraint::StringToType(const AnyString& text)
     return typeUnknown;
 }
 
-const char* BindingConstraint::TypeToCString(const BindingConstraint::Type type)
+const char*
+BindingConstraint::TypeToCString(const BindingConstraint::Type type)
 {
     static const char* const names[typeMax + 1] = {"", "hourly", "daily", "weekly", ""};
     assert((uint)type < (uint)(typeMax + 1));
     return names[type];
 }
 
-const char* BindingConstraint::OperatorToCString(BindingConstraint::Operator o)
+const char*
+BindingConstraint::OperatorToCString(BindingConstraint::Operator o)
 {
     static const char* const names[opMax + 1] = {"", "equal", "less", "greater", "both", ""};
     assert((uint)o < (uint)(opMax + 1));
     return names[o];
 }
 
-const char* BindingConstraint::OperatorToShortCString(BindingConstraint::Operator o)
+const char*
+BindingConstraint::OperatorToShortCString(BindingConstraint::Operator o)
 {
-    static const char* const names[opMax + 1] = {"",
-                                                 "equality",
-                                                 "bounded above",
-                                                 "bounded below",
-                                                 "bounded on both sides",
-                                                 ""};
+    static const char* const names[opMax + 1] =
+            {"", "equality", "bounded above", "bounded below", "bounded on both sides", ""};
     assert((uint)o < (uint)(opMax + 1));
     return names[o];
 }
 
-const char* BindingConstraint::MathOperatorToCString(BindingConstraint::Operator o)
+const char*
+BindingConstraint::MathOperatorToCString(BindingConstraint::Operator o)
 {
     static const char* const names[opMax + 1] = {"", "=", "<", ">", "< and >", ""};
     assert((uint)o < (uint)(opMax + 1));
@@ -148,18 +150,21 @@ BindingConstraint::~BindingConstraint()
 #endif
 }
 
-void BindingConstraint::name(const AnyString& newname)
+void
+BindingConstraint::name(const AnyString& newname)
 {
     pName = newname;
 }
 
-void BindingConstraint::pId(const AnyString& name)
+void
+BindingConstraint::pId(const AnyString& name)
 {
     pID.clear();
     Antares::TransformNameIntoID(name, pID);
 }
 
-void BindingConstraint::weight(const AreaLink* lnk, double w)
+void
+BindingConstraint::weight(const AreaLink* lnk, double w)
 {
     if (lnk)
     {
@@ -178,7 +183,8 @@ void BindingConstraint::weight(const AreaLink* lnk, double w)
     }
 }
 
-void BindingConstraint::weight(const ThermalCluster* cluster, double w)
+void
+BindingConstraint::weight(const ThermalCluster* cluster, double w)
 {
     if (cluster && cluster->isActive())
     {
@@ -197,13 +203,15 @@ void BindingConstraint::weight(const ThermalCluster* cluster, double w)
     }
 }
 
-void BindingConstraint::removeAllWeights()
+void
+BindingConstraint::removeAllWeights()
 {
     pLinkWeights.clear();
     pClusterWeights.clear();
 }
 
-void BindingConstraint::offset(const AreaLink* lnk, int o)
+void
+BindingConstraint::offset(const AreaLink* lnk, int o)
 {
     if (lnk)
     {
@@ -222,7 +230,8 @@ void BindingConstraint::offset(const AreaLink* lnk, int o)
     }
 }
 
-void BindingConstraint::offset(const ThermalCluster* cluster, int o)
+void
+BindingConstraint::offset(const ThermalCluster* cluster, int o)
 {
     if (cluster && cluster->isActive())
     {
@@ -241,7 +250,8 @@ void BindingConstraint::offset(const ThermalCluster* cluster, int o)
     }
 }
 
-void BindingConstraint::resetToDefaultValues()
+void
+BindingConstraint::resetToDefaultValues()
 {
     pEnabled = true;
     pComments.clear();
@@ -249,11 +259,11 @@ void BindingConstraint::resetToDefaultValues()
     markAsModified();
 }
 
-void BindingConstraint::copyWeights(
-  const Study& study,
-  const BindingConstraint& rhs,
-  bool emptyBefore,
-  const std::function<void(AreaName&, const AreaName&)>& translate)
+void
+BindingConstraint::copyWeights(const Study& study,
+                               const BindingConstraint& rhs,
+                               bool emptyBefore,
+                               const std::function<void(AreaName&, const AreaName&)>& translate)
 {
     if (emptyBefore)
     {
@@ -311,7 +321,7 @@ void BindingConstraint::copyWeights(
             if (localParent)
             {
                 const ThermalCluster* localTC = localParent->thermal.list.findInAll(
-                  thermalCluster->id());
+                        thermalCluster->id());
                 if (localTC)
                 {
                     pClusterWeights[localTC] = weight;
@@ -321,11 +331,11 @@ void BindingConstraint::copyWeights(
     }
 }
 
-void BindingConstraint::copyOffsets(
-  const Study& study,
-  const BindingConstraint& rhs,
-  bool emptyBefore,
-  const std::function<void(AreaName&, const AreaName&)>& translate)
+void
+BindingConstraint::copyOffsets(const Study& study,
+                               const BindingConstraint& rhs,
+                               bool emptyBefore,
+                               const std::function<void(AreaName&, const AreaName&)>& translate)
 {
     if (emptyBefore)
     {
@@ -381,7 +391,7 @@ void BindingConstraint::copyOffsets(
             if (localParent)
             {
                 const ThermalCluster* localTC = localParent->thermal.list.findInAll(
-                  thermalCluster->id());
+                        thermalCluster->id());
                 if (localTC)
                 {
                     pClusterOffsets[localTC] = offset;
@@ -391,7 +401,8 @@ void BindingConstraint::copyOffsets(
     }
 }
 
-void BindingConstraint::clear()
+void
+BindingConstraint::clear()
 {
     // Name / ID
     this->pName.clear();
@@ -408,7 +419,8 @@ void BindingConstraint::clear()
     this->pEnabled = true;
 }
 
-void BindingConstraint::reverseWeightSign(const AreaLink* lnk)
+void
+BindingConstraint::reverseWeightSign(const AreaLink* lnk)
 {
     auto i = pLinkWeights.find(lnk);
     if (i != pLinkWeights.end())
@@ -418,7 +430,8 @@ void BindingConstraint::reverseWeightSign(const AreaLink* lnk)
     }
 }
 
-bool BindingConstraint::contains(const Area* area) const
+bool
+BindingConstraint::contains(const Area* area) const
 {
     const auto end = pLinkWeights.end();
     for (auto i = pLinkWeights.begin(); i != end; ++i)
@@ -441,7 +454,8 @@ bool BindingConstraint::contains(const Area* area) const
     return false;
 }
 
-void BindingConstraint::buildFormula(String& s) const
+void
+BindingConstraint::buildFormula(String& s) const
 {
     char tmp[42];
     bool first = true;
@@ -507,7 +521,8 @@ void BindingConstraint::buildFormula(String& s) const
     }
 }
 
-uint64_t BindingConstraint::memoryUsage() const
+uint64_t
+BindingConstraint::memoryUsage() const
 {
     return sizeof(BindingConstraint)
            // comments
@@ -524,44 +539,52 @@ uint64_t BindingConstraint::memoryUsage() const
            + pClusterOffsets.size() * (sizeof(int) + 3 * sizeof(void*));
 }
 
-bool BindingConstraint::contains(const BindingConstraint* bc) const
+bool
+BindingConstraint::contains(const BindingConstraint* bc) const
 {
     return (this == bc);
 }
 
-bool BindingConstraint::contains(const AreaLink* lnk) const
+bool
+BindingConstraint::contains(const AreaLink* lnk) const
 {
     const auto i = pLinkWeights.find(lnk);
     return (i != pLinkWeights.end());
 }
 
-bool BindingConstraint::contains(const ThermalCluster* cluster) const
+bool
+BindingConstraint::contains(const ThermalCluster* cluster) const
 {
     const auto i = pClusterWeights.find(cluster);
     return (i != pClusterWeights.end());
 }
 
-void BindingConstraint::enabled(bool v)
+void
+BindingConstraint::enabled(bool v)
 {
     pEnabled = v;
 }
 
-void BindingConstraint::operatorType(BindingConstraint::Operator o)
+void
+BindingConstraint::operatorType(BindingConstraint::Operator o)
 {
     pOperator = o;
 }
 
-uint BindingConstraint::yearByYearFilter() const
+uint
+BindingConstraint::yearByYearFilter() const
 {
     return pFilterYearByYear;
 }
 
-uint BindingConstraint::synthesisFilter() const
+uint
+BindingConstraint::synthesisFilter() const
 {
     return pFilterSynthesis;
 }
 
-bool BindingConstraint::hasAllWeightedLinksOnLayer(size_t layerID)
+bool
+BindingConstraint::hasAllWeightedLinksOnLayer(size_t layerID)
 {
     if (layerID == 0 || (linkCount() == 0 && clusterCount() == 0))
     {
@@ -586,7 +609,8 @@ bool BindingConstraint::hasAllWeightedLinksOnLayer(size_t layerID)
     return true;
 }
 
-bool BindingConstraint::hasAllWeightedClustersOnLayer(size_t layerID)
+bool
+BindingConstraint::hasAllWeightedClustersOnLayer(size_t layerID)
 {
     if (layerID == 0 || (linkCount() == 0 && clusterCount() == 0))
     {
@@ -611,31 +635,36 @@ bool BindingConstraint::hasAllWeightedClustersOnLayer(size_t layerID)
     return true;
 }
 
-double BindingConstraint::weight(const AreaLink* lnk) const
+double
+BindingConstraint::weight(const AreaLink* lnk) const
 {
     auto i = pLinkWeights.find(lnk);
     return (i != pLinkWeights.end()) ? i->second : 0.;
 }
 
-double BindingConstraint::weight(const ThermalCluster* cluster) const
+double
+BindingConstraint::weight(const ThermalCluster* cluster) const
 {
     auto i = pClusterWeights.find(cluster);
     return (i != pClusterWeights.end()) ? i->second : 0.;
 }
 
-int BindingConstraint::offset(const AreaLink* lnk) const
+int
+BindingConstraint::offset(const AreaLink* lnk) const
 {
     auto i = pLinkOffsets.find(lnk);
     return (i != pLinkOffsets.end()) ? i->second : 0;
 }
 
-int BindingConstraint::offset(const ThermalCluster* lnk) const
+int
+BindingConstraint::offset(const ThermalCluster* lnk) const
 {
     auto i = pClusterOffsets.find(lnk);
     return (i != pClusterOffsets.end()) ? i->second : 0;
 }
 
-BindingConstraintStructures BindingConstraint::initLinkArrays() const
+BindingConstraintStructures
+BindingConstraint::initLinkArrays() const
 {
     std::vector<long> linkIndex;
     std::vector<double> linkWeight;
@@ -696,29 +725,32 @@ BindingConstraintStructures BindingConstraint::initLinkArrays() const
     }
 
     return {
-      linkIndex,
-      linkWeight,
-      clusterWeight,
-      linkOffset,
-      clusterOffset,
-      clusterIndex,
-      clustersAreaIndex,
+            linkIndex,
+            linkWeight,
+            clusterWeight,
+            linkOffset,
+            clusterOffset,
+            clusterIndex,
+            clustersAreaIndex,
     };
 }
 
-bool BindingConstraint::forceReload(bool reload) const
+bool
+BindingConstraint::forceReload(bool reload) const
 {
     return RHSTimeSeries().forceReload(reload);
 }
 
-void BindingConstraint::markAsModified() const
+void
+BindingConstraint::markAsModified() const
 {
     RHSTimeSeries().markAsModified();
 }
 
-void BindingConstraint::clearAndReset(const AnyString& name,
-                                      BindingConstraint::Type newType,
-                                      BindingConstraint::Operator op)
+void
+BindingConstraint::clearAndReset(const AnyString& name,
+                                 BindingConstraint::Type newType,
+                                 BindingConstraint::Operator op)
 {
     // Name / ID
     pName = name;
@@ -771,28 +803,33 @@ void BindingConstraint::clearAndReset(const AnyString& name,
     RHSTimeSeries_.markAsModified();
 }
 
-std::string BindingConstraint::group() const
+std::string
+BindingConstraint::group() const
 {
     return group_;
 }
 
-void BindingConstraint::group(std::string group_name)
+void
+BindingConstraint::group(std::string group_name)
 {
     group_ = std::move(group_name);
     markAsModified();
 }
 
-const Matrix<>& BindingConstraint::RHSTimeSeries() const
+const Matrix<>&
+BindingConstraint::RHSTimeSeries() const
 {
     return RHSTimeSeries_;
 }
 
-Matrix<>& BindingConstraint::RHSTimeSeries()
+Matrix<>&
+BindingConstraint::RHSTimeSeries()
 {
     return RHSTimeSeries_;
 }
 
-void BindingConstraint::copyFrom(const BindingConstraint* original)
+void
+BindingConstraint::copyFrom(const BindingConstraint* original)
 {
     clearAndReset(original->name(), original->type(), original->operatorType());
     pLinkWeights = original->pLinkWeights;

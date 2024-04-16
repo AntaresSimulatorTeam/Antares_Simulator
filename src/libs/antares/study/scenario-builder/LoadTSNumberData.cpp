@@ -28,7 +28,8 @@
 
 namespace Antares::Data::ScenarioBuilder
 {
-uint loadTSNumberData::get_tsGenCount(const Study& study) const
+uint
+loadTSNumberData::get_tsGenCount(const Study& study) const
 {
     // General data
     auto& parameters = study.parameters;
@@ -37,7 +38,8 @@ uint loadTSNumberData::get_tsGenCount(const Study& study) const
     return tsGenLoad ? parameters.nbTimeSeriesLoad : 0u;
 }
 
-bool loadTSNumberData::apply(Study& study)
+bool
+loadTSNumberData::apply(Study& study)
 {
     bool ret = true;
     CString<512, false> logprefix;

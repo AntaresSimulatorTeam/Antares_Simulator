@@ -29,9 +29,10 @@
 
 namespace Antares::Check
 {
-void checkOrtoolsUsage(Antares::Data::UnitCommitmentMode ucMode,
-                       bool ortoolsUsed,
-                       const std::string& solverName)
+void
+checkOrtoolsUsage(Antares::Data::UnitCommitmentMode ucMode,
+                  bool ortoolsUsed,
+                  const std::string& solverName)
 {
     using namespace Antares::Data;
     if (ucMode == UnitCommitmentMode::ucMILP)
@@ -48,7 +49,8 @@ void checkOrtoolsUsage(Antares::Data::UnitCommitmentMode ucMode,
     }
 }
 
-void checkStudyVersion(const AnyString& optStudyFolder)
+void
+checkStudyVersion(const AnyString& optStudyFolder)
 {
     using namespace Antares::Data;
     auto version = StudyHeader::tryToFindTheVersion(optStudyFolder);
@@ -66,8 +68,9 @@ void checkStudyVersion(const AnyString& optStudyFolder)
 
 // CHECK incompatible de choix simultané des options « simplex range= daily » et « hydro-pricing
 // = MILP ».
-void checkSimplexRangeHydroPricing(Antares::Data::SimplexOptimization optRange,
-                                   Antares::Data::HydroPricingMode hpMode)
+void
+checkSimplexRangeHydroPricing(Antares::Data::SimplexOptimization optRange,
+                              Antares::Data::HydroPricingMode hpMode)
 {
     using namespace Antares::Data;
     if (optRange == SimplexOptimization::sorDay && hpMode == HydroPricingMode::hpMILP)
@@ -78,11 +81,12 @@ void checkSimplexRangeHydroPricing(Antares::Data::SimplexOptimization optRange,
 
 // CHECK incompatible de choix simultané des options « simplex range= daily » et «
 // unit-commitment = MILP ».
-void checkSimplexRangeUnitCommitmentMode(Antares::Data::SimplexOptimization optRange,
-                                         Antares::Data::UnitCommitmentMode ucMode)
+void
+checkSimplexRangeUnitCommitmentMode(Antares::Data::SimplexOptimization optRange,
+                                    Antares::Data::UnitCommitmentMode ucMode)
 {
-    if (optRange == Antares::Data::SimplexOptimization::sorDay
-        && ucMode == Antares::Data::UnitCommitmentMode::ucMILP)
+    if (optRange == Antares::Data::SimplexOptimization::sorDay &&
+        ucMode == Antares::Data::UnitCommitmentMode::ucMILP)
     {
         throw Error::IncompatibleOptRangeUCMode();
     }
@@ -90,8 +94,9 @@ void checkSimplexRangeUnitCommitmentMode(Antares::Data::SimplexOptimization optR
 
 // Daily simplex optimisation and any area's use heurictic target turned to "No" are not
 // compatible.
-void checkSimplexRangeHydroHeuristic(Antares::Data::SimplexOptimization optRange,
-                                     const Antares::Data::AreaList& areas)
+void
+checkSimplexRangeHydroHeuristic(Antares::Data::SimplexOptimization optRange,
+                                const Antares::Data::AreaList& areas)
 {
     if (optRange == Antares::Data::SimplexOptimization::sorDay)
     {
@@ -106,8 +111,9 @@ void checkSimplexRangeHydroHeuristic(Antares::Data::SimplexOptimization optRange
     }
 }
 
-bool areasThermalClustersMinStablePowerValidity(const Antares::Data::AreaList& areas,
-                                                std::map<int, YString>& areaClusterNames)
+bool
+areasThermalClustersMinStablePowerValidity(const Antares::Data::AreaList& areas,
+                                           std::map<int, YString>& areaClusterNames)
 {
     YString areaname = "";
     bool resultat = true;
@@ -135,7 +141,8 @@ bool areasThermalClustersMinStablePowerValidity(const Antares::Data::AreaList& a
     return resultat;
 }
 
-void checkMinStablePower(bool tsGenThermal, const Antares::Data::AreaList& areas)
+void
+checkMinStablePower(bool tsGenThermal, const Antares::Data::AreaList& areas)
 {
     if (tsGenThermal)
     {
@@ -154,9 +161,9 @@ void checkMinStablePower(bool tsGenThermal, const Antares::Data::AreaList& areas
 // Number of columns for Fuel & CO2 cost in thermal clusters must be one, or same as the number of
 // TS
 template<class ExceptionT>
-static void checkThermalColumnNumber(
-  const Antares::Data::AreaList& areas,
-  Antares::Data::TimeSeries::TS Antares::Data::EconomicInputData::*matrix)
+static void
+checkThermalColumnNumber(const Antares::Data::AreaList& areas,
+                         Antares::Data::TimeSeries::TS Antares::Data::EconomicInputData::*matrix)
 {
     ExceptionT exception;
     bool error = false;
@@ -185,18 +192,20 @@ static void checkThermalColumnNumber(
     }
 }
 
-void checkFuelCostColumnNumber(const Antares::Data::AreaList& areas)
+void
+checkFuelCostColumnNumber(const Antares::Data::AreaList& areas)
 {
     checkThermalColumnNumber<Antares::Error::IncompatibleFuelCostColumns>(
-      areas,
-      &Antares::Data::EconomicInputData::fuelcost);
+            areas,
+            &Antares::Data::EconomicInputData::fuelcost);
 }
 
-void checkCO2CostColumnNumber(const Antares::Data::AreaList& areas)
+void
+checkCO2CostColumnNumber(const Antares::Data::AreaList& areas)
 {
     checkThermalColumnNumber<Antares::Error::IncompatibleCO2CostColumns>(
-      areas,
-      &Antares::Data::EconomicInputData::co2cost);
+            areas,
+            &Antares::Data::EconomicInputData::co2cost);
 }
 
 } // namespace Antares::Check

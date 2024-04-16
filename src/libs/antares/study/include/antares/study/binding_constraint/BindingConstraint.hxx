@@ -22,52 +22,62 @@
 
 namespace Antares::Data
 {
-inline const ConstraintName& BindingConstraint::name() const
+inline const ConstraintName&
+BindingConstraint::name() const
 {
     return pName;
 }
 
-inline const ConstraintName& BindingConstraint::id() const
+inline const ConstraintName&
+BindingConstraint::id() const
 {
     return pID;
 }
 
-inline const YString& BindingConstraint::comments() const
+inline const YString&
+BindingConstraint::comments() const
 {
     return pComments;
 }
 
-inline void BindingConstraint::comments(const AnyString& newcomments)
+inline void
+BindingConstraint::comments(const AnyString& newcomments)
 {
     pComments = newcomments;
 }
 
-inline uint BindingConstraint::linkCount() const
+inline uint
+BindingConstraint::linkCount() const
 {
     return (uint)pLinkWeights.size();
 }
 
-inline uint BindingConstraint::clusterCount() const
+inline uint
+BindingConstraint::clusterCount() const
 {
     return (uint)pClusterWeights.size();
 }
 
-inline bool BindingConstraint::enabled() const
+inline bool
+BindingConstraint::enabled() const
 {
     return pEnabled;
 }
 
-inline BindingConstraint::Operator BindingConstraint::operatorType() const
+inline BindingConstraint::Operator
+BindingConstraint::operatorType() const
 {
     return pOperator;
 }
 
-inline BindingConstraint::Type BindingConstraint::type() const
+inline BindingConstraint::Type
+BindingConstraint::type() const
 {
     return pType;
 }
 
-inline void BindingConstraint::setTimeGranularity(Type t)
+inline void
+BindingConstraint::setTimeGranularity(Type t)
 {
     if (t != typeUnknown and t != typeMax)
     {
@@ -75,50 +85,57 @@ inline void BindingConstraint::setTimeGranularity(Type t)
     }
 }
 
-inline bool BindingConstraint::skipped() const
+inline bool
+BindingConstraint::skipped() const
 {
     return linkCount() == 0 && clusterCount() == 0;
 }
 
-inline bool BindingConstraint::isActive() const
+inline bool
+BindingConstraint::isActive() const
 {
     return enabled() && !skipped();
 }
 
-inline BindingConstraint::iterator BindingConstraint::begin()
+inline BindingConstraint::iterator
+BindingConstraint::begin()
 {
     return pLinkWeights.begin();
 }
 
-inline BindingConstraint::iterator BindingConstraint::end()
+inline BindingConstraint::iterator
+BindingConstraint::end()
 {
     return pLinkWeights.end();
 }
 
-inline BindingConstraint::const_iterator BindingConstraint::begin() const
+inline BindingConstraint::const_iterator
+BindingConstraint::begin() const
 {
     return pLinkWeights.begin();
 }
 
-inline BindingConstraint::const_iterator BindingConstraint::end() const
+inline BindingConstraint::const_iterator
+BindingConstraint::end() const
 {
     return pLinkWeights.end();
 }
 
 template<class Env>
-inline std::string BindingConstraint::timeSeriesFileName(const Env& env) const
+inline std::string
+BindingConstraint::timeSeriesFileName(const Env& env) const
 {
     switch (operatorType())
     {
     case BindingConstraint::opLess:
-        return std::string() + env.folder.c_str() + Yuni::IO::Separator + id().c_str() + "_lt"
-               + ".txt";
+        return std::string() + env.folder.c_str() + Yuni::IO::Separator + id().c_str() + "_lt" +
+               ".txt";
     case BindingConstraint::opGreater:
-        return std::string() + env.folder.c_str() + Yuni::IO::Separator + id().c_str() + "_gt"
-               + ".txt";
+        return std::string() + env.folder.c_str() + Yuni::IO::Separator + id().c_str() + "_gt" +
+               ".txt";
     case BindingConstraint::opEquality:
-        return std::string() + env.folder.c_str() + Yuni::IO::Separator + id().c_str() + "_eq"
-               + ".txt";
+        return std::string() + env.folder.c_str() + Yuni::IO::Separator + id().c_str() + "_eq" +
+               ".txt";
     default:
         logs.error("Cannot load/save time series of type other that eq/gt/lt");
         return "";

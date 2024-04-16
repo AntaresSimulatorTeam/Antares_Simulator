@@ -69,9 +69,8 @@ public:
     **   and to retrive some specific data from the area
     */
     template<class PredicateT>
-    void loadFromStudy(Data::Study& study,
-                       const Data::Correlation& correlation,
-                       PredicateT& predicate);
+    void
+    loadFromStudy(Data::Study& study, const Data::Correlation& correlation, PredicateT& predicate);
 
 public:
     //! List of all areas (sub-set of the complete list)

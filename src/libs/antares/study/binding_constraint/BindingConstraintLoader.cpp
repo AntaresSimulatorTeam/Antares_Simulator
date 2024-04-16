@@ -37,7 +37,8 @@ namespace Antares::Data
 {
 using namespace Yuni;
 
-std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintLoader::load(EnvForLoading env)
+std::vector<std::shared_ptr<BindingConstraint>>
+BindingConstraintLoader::load(EnvForLoading env)
 {
     auto bc = std::make_shared<BindingConstraint>();
     bc->clear();
@@ -234,10 +235,11 @@ std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintLoader::load(En
     return {};
 }
 
-bool BindingConstraintLoader::SeparateValue(const EnvForLoading& env,
-                                            const IniFile::Property* p,
-                                            double& w,
-                                            int& o)
+bool
+BindingConstraintLoader::SeparateValue(const EnvForLoading& env,
+                                       const IniFile::Property* p,
+                                       double& w,
+                                       int& o)
 {
     bool ret = true;
     CString<64> stringWO = p->value;
@@ -281,8 +283,8 @@ bool BindingConstraintLoader::SeparateValue(const EnvForLoading& env,
     return ret;
 }
 
-bool BindingConstraintLoader::loadTimeSeries(EnvForLoading& env,
-                                             BindingConstraint* bindingConstraint)
+bool
+BindingConstraintLoader::loadTimeSeries(EnvForLoading& env, BindingConstraint* bindingConstraint)
 {
     if (env.version >= StudyVersion(8, 7))
     {
@@ -292,17 +294,18 @@ bool BindingConstraintLoader::loadTimeSeries(EnvForLoading& env,
     return loadTimeSeriesLegacyStudies(env, bindingConstraint);
 }
 
-bool BindingConstraintLoader::loadTimeSeries(EnvForLoading& env,
-                                             BindingConstraint::Operator operatorType,
-                                             BindingConstraint* bindingConstraint) const
+bool
+BindingConstraintLoader::loadTimeSeries(EnvForLoading& env,
+                                        BindingConstraint::Operator operatorType,
+                                        BindingConstraint* bindingConstraint) const
 {
     env.buffer.clear() << bindingConstraint->timeSeriesFileName(env);
     bool load_ok = bindingConstraint->RHSTimeSeries_.loadFromCSVFile(
-      env.buffer,
-      1,
-      (bindingConstraint->type() == BindingConstraint::typeHourly) ? 8784 : 366,
-      Matrix<>::optImmediate,
-      &env.matrixBuffer);
+            env.buffer,
+            1,
+            (bindingConstraint->type() == BindingConstraint::typeHourly) ? 8784 : 366,
+            Matrix<>::optImmediate,
+            &env.matrixBuffer);
     if (load_ok)
     {
         logs.info() << " loaded time series for `" << bindingConstraint->name() << "` ("
@@ -319,9 +322,9 @@ bool BindingConstraintLoader::loadTimeSeries(EnvForLoading& env,
     }
 }
 
-bool BindingConstraintLoader::loadTimeSeriesLegacyStudies(
-  EnvForLoading& env,
-  BindingConstraint* bindingConstraint) const
+bool
+BindingConstraintLoader::loadTimeSeriesLegacyStudies(EnvForLoading& env,
+                                                     BindingConstraint* bindingConstraint) const
 {
     env.buffer.clear() << env.folder << IO::Separator << bindingConstraint->pID << ".txt";
     Matrix<> intermediate;

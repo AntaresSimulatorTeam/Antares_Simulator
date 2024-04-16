@@ -21,21 +21,23 @@
 
 #include "antares/solver/optimisation/constraints/AreaBalance.h"
 
-static void shortTermStorageBalance(const ::ShortTermStorage::AREA_INPUT& shortTermStorageInput,
-                                    ConstraintBuilder& constraintBuilder)
+static void
+shortTermStorageBalance(const ::ShortTermStorage::AREA_INPUT& shortTermStorageInput,
+                        ConstraintBuilder& constraintBuilder)
 {
     for (const auto& storage: shortTermStorageInput)
     {
         unsigned index = storage.clusterGlobalIndex;
         constraintBuilder.ShortTermStorageInjection(index, 1.0)
-          .ShortTermStorageWithdrawal(index, -1.0);
+                .ShortTermStorageWithdrawal(index, -1.0);
     }
 }
 
-void AreaBalance::add(int pdt, int pays)
+void
+AreaBalance::add(int pdt, int pays)
 {
-    data.CorrespondanceCntNativesCntOptim[pdt].NumeroDeContrainteDesBilansPays[pays]
-      = builder.data.nombreDeContraintes;
+    data.CorrespondanceCntNativesCntOptim[pdt]
+            .NumeroDeContrainteDesBilansPays[pays] = builder.data.nombreDeContraintes;
 
     ConstraintNamer namer(builder.data.NomDesContraintes);
     namer.UpdateTimeStep(builder.data.weekInTheYear * 168 + pdt);
@@ -60,9 +62,9 @@ void AreaBalance::add(int pdt, int pays)
 
     ExportPaliers(data.PaliersThermiquesDuPays[pays], builder);
     builder.HydProd(pays, -1.0)
-      .Pumping(pays, 1.0)
-      .PositiveUnsuppliedEnergy(pays, -1.0)
-      .NegativeUnsuppliedEnergy(pays, 1.0);
+            .Pumping(pays, 1.0)
+            .PositiveUnsuppliedEnergy(pays, -1.0)
+            .NegativeUnsuppliedEnergy(pays, 1.0);
 
     shortTermStorageBalance(data.ShortTermStorage[pays], builder);
 

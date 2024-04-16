@@ -35,7 +35,8 @@ using namespace Antares;
 
 #define SEP Yuni::IO::Separator
 
-static bool onProgress(uint)
+static bool
+onProgress(uint)
 {
     return true;
 }
@@ -93,7 +94,8 @@ public:
     Yuni::String exclude;
 }; // class StudyFinderCleaner
 
-int main(int argc, char* argv[])
+int
+main(int argc, char* argv[])
 {
     // locale
     InitializeDefaultLocale();

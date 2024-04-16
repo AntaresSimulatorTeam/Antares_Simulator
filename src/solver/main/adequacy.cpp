@@ -30,7 +30,8 @@ namespace Antares
 {
 namespace Solver
 {
-void Application::runSimulationInAdequacyMode()
+void
+Application::runSimulationInAdequacyMode()
 {
     // Type of the simulation
     typedef Solver::Simulation::ISimulation<Solver::Simulation::Adequacy> SimulationType;

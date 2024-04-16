@@ -28,7 +28,8 @@ namespace TSGenerator
 {
 namespace XCast
 {
-void XCast::normal(float& x, float& y)
+void
+XCast::normal(float& x, float& y)
 {
     assert(random != NULL);
 

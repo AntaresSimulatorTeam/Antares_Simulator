@@ -44,7 +44,8 @@ using namespace Yuni;
 using namespace Antares;
 using namespace Antares::Data;
 
-std::unique_ptr<GetOpt::Parser> CreateParser(Settings& settings, StudyLoadOptions& options)
+std::unique_ptr<GetOpt::Parser>
+CreateParser(Settings& settings, StudyLoadOptions& options)
 {
     settings.reset();
 
@@ -91,8 +92,8 @@ std::unique_ptr<GetOpt::Parser> CreateParser(Settings& settings, StudyLoadOption
                 ' ',
                 "ortools-solver",
                 "Ortools solver used for simulation (only available with use-ortools "
-                "option)\nAvailable solver list : "
-                  + availableOrToolsSolversString());
+                "option)\nAvailable solver list : " +
+                        availableOrToolsSolversString());
 
     parser->addParagraph("\nParameters");
     // --name
@@ -196,7 +197,8 @@ std::unique_ptr<GetOpt::Parser> CreateParser(Settings& settings, StudyLoadOption
     return parser;
 }
 
-void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOptions& options)
+void
+checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOptions& options)
 {
     const auto& optPID = settings.PID;
     if (!optPID.empty())
@@ -278,7 +280,8 @@ void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOption
     }
 }
 
-void checkOrtoolsSolver(Data::StudyLoadOptions& options)
+void
+checkOrtoolsSolver(Data::StudyLoadOptions& options)
 {
     if (options.ortoolsUsed)
     {
@@ -287,8 +290,7 @@ void checkOrtoolsSolver(Data::StudyLoadOptions& options)
         // Check if solver is available
         bool found = (std::find(availableSolverList.begin(),
                                 availableSolverList.end(),
-                                options.ortoolsSolver)
-                      != availableSolverList.end());
+                                options.ortoolsSolver) != availableSolverList.end());
         if (!found)
         {
             throw Error::InvalidSolver(options.ortoolsSolver, availableOrToolsSolversString());
@@ -296,7 +298,8 @@ void checkOrtoolsSolver(Data::StudyLoadOptions& options)
     }
 }
 
-void Settings::checkAndSetStudyFolder(Yuni::String folder)
+void
+Settings::checkAndSetStudyFolder(Yuni::String folder)
 {
     // The study folder
     if (folder.empty())
@@ -319,7 +322,8 @@ void Settings::checkAndSetStudyFolder(Yuni::String folder)
     studyFolder = folder;
 }
 
-void Settings::reset()
+void
+Settings::reset()
 {
     studyFolder.clear();
     simulationName.clear();

@@ -105,8 +105,8 @@ protected:
             {
             case Category::hourly:
                 InternalExportValues<Category::hourly, maxHoursInAYear, VCardT>(
-                  report,
-                  ::Antares::Memory::RawPointer(rawdata.hourly));
+                        report,
+                        ::Antares::Memory::RawPointer(rawdata.hourly));
                 break;
             case Category::daily:
                 InternalExportValues<Category::daily, maxDaysInAYear, VCardT>(report,
@@ -135,8 +135,8 @@ protected:
     template<class VCardT>
     void buildDigest(SurveyResults& report, int digestLevel, int dataLevel) const
     {
-        if ((dataLevel & Category::area || dataLevel & Category::setOfAreas)
-            && digestLevel & Category::digestAllYears)
+        if ((dataLevel & Category::area || dataLevel & Category::setOfAreas) &&
+            digestLevel & Category::digestAllYears)
         {
             assert(report.data.columnIndex < report.maxVariables && "Column index out of bounds");
 
@@ -146,12 +146,12 @@ protected:
 
             // Precision
             report.precision[report.data.columnIndex] = PrecisionToPrintfFormat<
-              VCardT::decimal>::Value();
+                    VCardT::decimal>::Value();
             // Value
             report.values[report.data.columnIndex][report.data.rowIndex] = rawdata.allYears;
             // Non applicability
-            report.digestNonApplicableStatus[report.data.rowIndex][report.data.columnIndex]
-              = *report.isCurrentVarNA;
+            report.digestNonApplicableStatus[report.data.rowIndex]
+                                            [report.data.columnIndex] = *report.isCurrentVarNA;
 
             ++(report.data.columnIndex);
         }
@@ -190,7 +190,7 @@ private:
         report.captions[2][report.data.columnIndex] = "values";
         // Precision
         report.precision[report.data.columnIndex] = Solver::Variable::PrecisionToPrintfFormat<
-          VCardT::decimal>::Value();
+                VCardT::decimal>::Value();
         // Non applicability
         report.nonApplicableStatus[report.data.columnIndex] = *report.isCurrentVarNA;
 
@@ -228,7 +228,7 @@ private:
         report.captions[2][report.data.columnIndex] = "values";
         // Precision
         report.precision[report.data.columnIndex] = Solver::Variable::PrecisionToPrintfFormat<
-          VCardT::decimal>::Value();
+                VCardT::decimal>::Value();
         // Non applicability
         report.nonApplicableStatus[report.data.columnIndex] = *report.isCurrentVarNA;
 

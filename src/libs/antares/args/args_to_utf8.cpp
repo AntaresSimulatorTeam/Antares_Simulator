@@ -45,7 +45,8 @@ IntoUTF8ArgsTranslator::IntoUTF8ArgsTranslator(int argc, char** argv):
 {
 }
 
-std::pair<int, char**> IntoUTF8ArgsTranslator::convert()
+std::pair<int, char**>
+IntoUTF8ArgsTranslator::convert()
 {
 #ifdef YUNI_OS_WINDOWS
     wchar_t** wargv = CommandLineToArgvW(GetCommandLineW(), &argc_);

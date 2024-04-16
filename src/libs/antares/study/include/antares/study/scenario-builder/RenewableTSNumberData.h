@@ -56,8 +56,8 @@ private:
     const Area* pArea = nullptr;
 };
 
-inline uint renewableTSNumberData::get(const Antares::Data::RenewableCluster* cluster,
-                                       const uint year) const
+inline uint
+renewableTSNumberData::get(const Antares::Data::RenewableCluster* cluster, const uint year) const
 {
     assert(cluster != nullptr);
     if (year < pTSNumberRules.height && cluster->areaWideIndex < pTSNumberRules.width)
@@ -68,7 +68,8 @@ inline uint renewableTSNumberData::get(const Antares::Data::RenewableCluster* cl
     return 0;
 }
 
-inline CString<512, false> renewableTSNumberData::get_prefix() const
+inline CString<512, false>
+renewableTSNumberData::get_prefix() const
 {
     return "r,";
 }

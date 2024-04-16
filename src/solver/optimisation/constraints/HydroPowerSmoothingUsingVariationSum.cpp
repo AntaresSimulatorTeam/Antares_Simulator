@@ -21,8 +21,8 @@
 
 #include "antares/solver/optimisation/constraints/HydroPowerSmoothingUsingVariationSum.h"
 
-void HydroPowerSmoothingUsingVariationSum::add(int pays,
-                                               const int nombreDePasDeTempsPourUneOptimisation)
+void
+HydroPowerSmoothingUsingVariationSum::add(int pays, const int nombreDePasDeTempsPourUneOptimisation)
 {
     for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
     {
@@ -37,13 +37,13 @@ void HydroPowerSmoothingUsingVariationSum::add(int pays,
         namer.HydroPowerSmoothingUsingVariationSum(builder.data.nombreDeContraintes);
 
         builder.updateHourWithinWeek(pdt)
-          .HydProd(pays, 1.0)
-          .updateHourWithinWeek(pdt1)
-          .HydProd(pays, -1.0)
-          .updateHourWithinWeek(pdt)
-          .HydProdDown(pays, -1.0)
-          .HydProdUp(pays, 1.0)
-          .equalTo()
-          .build();
+                .HydProd(pays, 1.0)
+                .updateHourWithinWeek(pdt1)
+                .HydProd(pays, -1.0)
+                .updateHourWithinWeek(pdt)
+                .HydProdDown(pays, -1.0)
+                .HydProdUp(pays, 1.0)
+                .equalTo()
+                .build();
     }
 }

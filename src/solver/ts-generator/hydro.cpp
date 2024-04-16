@@ -37,27 +37,29 @@ using namespace Antares;
 namespace Antares::TSGenerator
 {
 
-static void PreproRoundAllEntriesPlusDerated(Data::Study& study)
+static void
+PreproRoundAllEntriesPlusDerated(Data::Study& study)
 {
     bool derated = study.parameters.derated;
 
     study.areas.each(
-      [&](Data::Area& area)
-      {
-          auto& hydroseries = *(area.hydro.series);
+            [&](Data::Area& area)
+            {
+                auto& hydroseries = *(area.hydro.series);
 
-          hydroseries.ror.roundAllEntries();
-          hydroseries.storage.roundAllEntries();
+                hydroseries.ror.roundAllEntries();
+                hydroseries.storage.roundAllEntries();
 
-          if (derated)
-          {
-              hydroseries.ror.averageTimeseries();
-              hydroseries.storage.averageTimeseries();
-          }
-      });
+                if (derated)
+                {
+                    hydroseries.ror.averageTimeseries();
+                    hydroseries.storage.averageTimeseries();
+                }
+            });
 }
 
-bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, Solver::IResultWriter& writer)
+bool
+GenerateHydroTimeSeries(Data::Study& study, uint currentYear, Solver::IResultWriter& writer)
 {
     logs.info() << "Generating the hydro time-series";
 
@@ -109,8 +111,8 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, Solver::IResu
 
             x = std::abs(((int)(i % 12) - (int)(j % 12)) / 2.);
 
-            corre[j] = annualCorrAreaI[areaIndexJ]
-                       * pow(prepro->intermonthlyCorrelation * preproJ->intermonthlyCorrelation, x);
+            corre[j] = annualCorrAreaI[areaIndexJ] *
+                       pow(prepro->intermonthlyCorrelation * preproJ->intermonthlyCorrelation, x);
 
             assert(not std::isnan(corre[j]) and "TS generator Hydro: NaN value detected");
         }
@@ -269,8 +271,8 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, Solver::IResu
                 sumInflowPatterns -= dailyInflowPattern;
             }
 
-            assert(not std::isnan(monthlyStorage)
-                   && "TS generator Hydro: NaN value detected in timeseries");
+            assert(not std::isnan(monthlyStorage) &&
+                   "TS generator Hydro: NaN value detected in timeseries");
 
             cumul += daysPerMonth;
         }
@@ -295,26 +297,26 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, Solver::IResu
             const int precision = 0;
             Yuni::String output;
             study.areas.each(
-              [&](const Data::Area& area)
-              {
-                  study.buffer.clear() << "ts-generator" << SEP << "hydro" << SEP << "mc-"
-                                       << currentYear << SEP << area.id;
+                    [&](const Data::Area& area)
+                    {
+                        study.buffer.clear() << "ts-generator" << SEP << "hydro" << SEP << "mc-"
+                                             << currentYear << SEP << area.id;
 
-                  {
-                      std::string buffer;
-                      area.hydro.series->ror.timeSeries.saveToBuffer(buffer, precision);
-                      output.clear() << study.buffer << SEP << "ror.txt";
-                      writer.addEntryFromBuffer(output.c_str(), buffer);
-                  }
+                        {
+                            std::string buffer;
+                            area.hydro.series->ror.timeSeries.saveToBuffer(buffer, precision);
+                            output.clear() << study.buffer << SEP << "ror.txt";
+                            writer.addEntryFromBuffer(output.c_str(), buffer);
+                        }
 
-                  {
-                      std::string buffer;
-                      area.hydro.series->storage.timeSeries.saveToBuffer(buffer, precision);
-                      output.clear() << study.buffer << SEP << "storage.txt";
-                      writer.addEntryFromBuffer(output.c_str(), buffer);
-                  }
-                  ++progression;
-              });
+                        {
+                            std::string buffer;
+                            area.hydro.series->storage.timeSeries.saveToBuffer(buffer, precision);
+                            output.clear() << study.buffer << SEP << "storage.txt";
+                            writer.addEntryFromBuffer(output.c_str(), buffer);
+                        }
+                        ++progression;
+                    });
         }
     }
 

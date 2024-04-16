@@ -30,16 +30,18 @@
 
 #include <memory>
 
-void H2O_J_ResoudreLeProblemeLineaire(DONNEES_MENSUELLES* DonneesMensuelles, int NumeroDeProbleme)
+void
+H2O_J_ResoudreLeProblemeLineaire(DONNEES_MENSUELLES* DonneesMensuelles, int NumeroDeProbleme)
 {
     PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
 
-    PROBLEME_LINEAIRE_PARTIE_VARIABLE& ProblemeLineairePartieVariable
-      = ProblemeHydraulique.ProblemeLineairePartieVariable[NumeroDeProbleme];
+    PROBLEME_LINEAIRE_PARTIE_VARIABLE&
+            ProblemeLineairePartieVariable = ProblemeHydraulique.ProblemeLineairePartieVariable
+                                                     [NumeroDeProbleme];
 
-    PROBLEME_LINEAIRE_PARTIE_FIXE& ProblemeLineairePartieFixe = ProblemeHydraulique
-                                                                  .ProblemeLineairePartieFixe
-                                                                    [NumeroDeProbleme];
+    PROBLEME_LINEAIRE_PARTIE_FIXE&
+            ProblemeLineairePartieFixe = ProblemeHydraulique
+                                                 .ProblemeLineairePartieFixe[NumeroDeProbleme];
 
     PROBLEME_SPX* ProbSpx = ProblemeHydraulique.ProblemeSpx[NumeroDeProbleme];
     std::unique_ptr<PROBLEME_SIMPLEXE> Probleme = std::make_unique<PROBLEME_SIMPLEXE>();
@@ -80,8 +82,8 @@ RESOLUTION:
     Probleme->NombreDeTermesDesLignes = ProblemeLineairePartieFixe.NombreDeTermesDesLignes.data();
     Probleme->IndicesColonnes = ProblemeLineairePartieFixe.IndicesColonnes.data();
     Probleme->CoefficientsDeLaMatriceDesContraintes = ProblemeLineairePartieFixe
-                                                        .CoefficientsDeLaMatriceDesContraintes
-                                                        .data();
+                                                              .CoefficientsDeLaMatriceDesContraintes
+                                                              .data();
     Probleme->Sens = ProblemeLineairePartieFixe.Sens.data();
     Probleme->SecondMembre = ProblemeLineairePartieVariable.SecondMembre.data();
 
@@ -101,7 +103,7 @@ RESOLUTION:
     Probleme->CoutMax = 0.0;
 
     Probleme->CoutsMarginauxDesContraintes = ProblemeLineairePartieVariable
-                                               .CoutsMarginauxDesContraintes.data();
+                                                     .CoutsMarginauxDesContraintes.data();
     Probleme->CoutsReduits = ProblemeLineairePartieVariable.CoutsReduits.data();
 
 #ifndef NDEBUG
@@ -128,8 +130,8 @@ RESOLUTION:
 
     ProblemeLineairePartieVariable.ExistenceDUneSolution = Probleme->ExistenceDUneSolution;
 
-    if (ProblemeLineairePartieVariable.ExistenceDUneSolution != OUI_SPX && PremierPassage
-        && ProbSpx)
+    if (ProblemeLineairePartieVariable.ExistenceDUneSolution != OUI_SPX && PremierPassage &&
+        ProbSpx)
     {
         if (ProblemeLineairePartieVariable.ExistenceDUneSolution != SPX_ERREUR_INTERNE)
         {
@@ -153,7 +155,7 @@ RESOLUTION:
         for (int Var = 0; Var < ProblemeLineairePartieFixe.NombreDeVariables; Var++)
         {
             double* pt = ProblemeLineairePartieVariable
-                           .AdresseOuPlacerLaValeurDesVariablesOptimisees[Var];
+                                 .AdresseOuPlacerLaValeurDesVariablesOptimisees[Var];
             if (pt)
             {
                 *pt = ProblemeLineairePartieVariable.X[Var];

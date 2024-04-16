@@ -59,7 +59,8 @@ JIT::Informations::~Informations()
 {
 }
 
-JIT::Informations* JIT::Reset(JIT::Informations* jit)
+JIT::Informations*
+JIT::Reset(JIT::Informations* jit)
 {
     assert(JIT::enabled and "JIT must be enabled");
 
@@ -77,7 +78,8 @@ JIT::Informations* JIT::Reset(JIT::Informations* jit)
     return jit;
 }
 
-JIT::Informations* JIT::Reset(JIT::Informations* jit, const AnyString& filename)
+JIT::Informations*
+JIT::Reset(JIT::Informations* jit, const AnyString& filename)
 {
     assert(JIT::enabled and "JIT must be enabled");
 
@@ -98,7 +100,8 @@ JIT::Informations* JIT::Reset(JIT::Informations* jit, const AnyString& filename)
     return jit;
 }
 
-void JIT::MarkAsNotLoaded(JIT::Informations* jit)
+void
+JIT::MarkAsNotLoaded(JIT::Informations* jit)
 {
     if (jit)
     {
@@ -107,7 +110,8 @@ void JIT::MarkAsNotLoaded(JIT::Informations* jit)
     }
 }
 
-void JIT::Invalidate(JIT::Informations* jit)
+void
+JIT::Invalidate(JIT::Informations* jit)
 {
     if (jit)
     {
@@ -119,7 +123,8 @@ void JIT::Invalidate(JIT::Informations* jit)
     }
 }
 
-void JIT::just_in_time_manager::record_current_jit_state(uint width, uint height)
+void
+JIT::just_in_time_manager::record_current_jit_state(uint width, uint height)
 {
     jit_record_ = new JIT::Informations();
 
@@ -136,7 +141,8 @@ void JIT::just_in_time_manager::record_current_jit_state(uint width, uint height
     }
 }
 
-bool JIT::just_in_time_manager::do_we_force_matrix_load_from_disk()
+bool
+JIT::just_in_time_manager::do_we_force_matrix_load_from_disk()
 {
     // Force the load of the current matrix from disk, for example when we are making a "save as" of
     // a study into a new one. The study "save" operation (after a change in GUI) does not need such

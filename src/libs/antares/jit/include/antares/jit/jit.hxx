@@ -25,17 +25,20 @@
 
 using namespace Antares;
 
-inline bool JIT::IsReady(JIT::Informations* j)
+inline bool
+JIT::IsReady(JIT::Informations* j)
 {
     return (!j or j->alreadyLoaded);
 }
 
-inline uint64_t JIT::Informations::memoryUsage() const
+inline uint64_t
+JIT::Informations::memoryUsage() const
 {
     return sizeof(JIT::Informations) + sourceFilename.capacity();
 }
 
-inline void JIT::Informations::markAsModified()
+inline void
+JIT::Informations::markAsModified()
 {
     modified = true;
     alreadyLoaded = true;
@@ -44,7 +47,8 @@ inline void JIT::Informations::markAsModified()
 using namespace Antares;
 
 template<class T, class ReadWriteT>
-void JIT::just_in_time_manager::clear_matrix(const Matrix<T, ReadWriteT>* mtx)
+void
+JIT::just_in_time_manager::clear_matrix(const Matrix<T, ReadWriteT>* mtx)
 {
     JIT::MarkAsNotLoaded(jit_);
 
@@ -54,7 +58,8 @@ void JIT::just_in_time_manager::clear_matrix(const Matrix<T, ReadWriteT>* mtx)
 }
 
 template<class T, class ReadWriteT>
-void JIT::just_in_time_manager::unload_matrix_properly_from_memory(const Matrix<T, ReadWriteT>* mtx)
+void
+JIT::just_in_time_manager::unload_matrix_properly_from_memory(const Matrix<T, ReadWriteT>* mtx)
 {
     using namespace Antares;
 
@@ -79,10 +84,10 @@ void JIT::just_in_time_manager::unload_matrix_properly_from_memory(const Matrix<
         jit_ = JIT::Reset(jit_, buffer);
         mtx->jit = jit_;
         JIT::MarkAsNotLoaded(jit_);
-        jit_->minWidth = (0
-                          != (jit_recorded_state()->options & Matrix<T, ReadWriteT>::optFixedSize))
-                           ? jit_recorded_state()->minWidth
-                           : 1;
+        jit_->minWidth = (0 !=
+                          (jit_recorded_state()->options & Matrix<T, ReadWriteT>::optFixedSize))
+                                 ? jit_recorded_state()->minWidth
+                                 : 1;
         jit_->maxHeight = jit_recorded_state()->maxHeight;
         jit_->options = jit_recorded_state()->options;
         mtx_not_const->clear();
@@ -90,7 +95,8 @@ void JIT::just_in_time_manager::unload_matrix_properly_from_memory(const Matrix<
 }
 
 template<class T, class ReadWriteT>
-void JIT::just_in_time_manager::load_matrix(const Matrix<T, ReadWriteT>* mtx)
+void
+JIT::just_in_time_manager::load_matrix(const Matrix<T, ReadWriteT>* mtx)
 {
     if (not jit_->alreadyLoaded)
     {

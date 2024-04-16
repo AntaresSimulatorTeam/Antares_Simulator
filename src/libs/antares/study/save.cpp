@@ -33,7 +33,8 @@ using namespace Yuni;
 
 namespace Antares::Data
 {
-bool Study::resetFolderIcon() const
+bool
+Study::resetFolderIcon() const
 {
     // Create the Desktop.ini file to show a different icon for Antares study folder
     {
@@ -65,7 +66,8 @@ bool Study::resetFolderIcon() const
     return true;
 }
 
-bool Study::saveToFolder(const AnyString& newfolder)
+bool
+Study::saveToFolder(const AnyString& newfolder)
 {
     if (newfolder.empty())
     {

@@ -21,13 +21,15 @@
 
 #include "antares/solver/optimisation/constraints/MaxPumpingGroup.h"
 
-MaxPumpingData MaxPumpingGroup::GetMaxPumpingData()
+MaxPumpingData
+MaxPumpingGroup::GetMaxPumpingData()
 {
     return {.CaracteristiquesHydrauliques = problemeHebdo_->CaracteristiquesHydrauliques,
             .NumeroDeContrainteMaxPompage = problemeHebdo_->NumeroDeContrainteMaxPompage};
 }
 
-void MaxPumpingGroup::BuildConstraints()
+void
+MaxPumpingGroup::BuildConstraints()
 {
     auto maxPumpingData = GetMaxPumpingData();
     MaxPumping maxPumping(builder_, maxPumpingData);

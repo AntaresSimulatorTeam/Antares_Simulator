@@ -47,14 +47,16 @@ PROBLEME_SIMPLEXE_NOMME::PROBLEME_SIMPLEXE_NOMME(const std::vector<std::string>&
     AffichageDesTraces = SolverLogs ? OUI_SPX : NON_SPX;
 }
 
-bool PROBLEME_SIMPLEXE_NOMME::isMIP() const
+bool
+PROBLEME_SIMPLEXE_NOMME::isMIP() const
 {
     return std::any_of(VariablesEntieres.cbegin(),
                        VariablesEntieres.cend(),
                        [](bool x) { return x; });
 }
 
-bool PROBLEME_SIMPLEXE_NOMME::basisExists() const
+bool
+PROBLEME_SIMPLEXE_NOMME::basisExists() const
 {
     return !StatutDesVariables.empty() && !StatutDesContraintes.empty();
 }

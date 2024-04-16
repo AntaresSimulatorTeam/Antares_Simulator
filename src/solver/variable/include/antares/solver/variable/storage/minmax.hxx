@@ -34,7 +34,8 @@ namespace R
 namespace AllYears
 {
 template<bool OpInferior, class NextT>
-inline void MinMaxBase<OpInferior, NextT>::initializeFromStudy(Data::Study& study)
+inline void
+MinMaxBase<OpInferior, NextT>::initializeFromStudy(Data::Study& study)
 {
     minmax.initialize();
     // Next
@@ -42,7 +43,8 @@ inline void MinMaxBase<OpInferior, NextT>::initializeFromStudy(Data::Study& stud
 }
 
 template<bool OpInferior, class NextT>
-inline void MinMaxBase<OpInferior, NextT>::reset()
+inline void
+MinMaxBase<OpInferior, NextT>::reset()
 {
     // Reset at the begining of the simulation
     if (OpInferior)
@@ -58,7 +60,8 @@ inline void MinMaxBase<OpInferior, NextT>::reset()
 }
 
 template<bool OpInferior, class NextT>
-inline void MinMaxBase<OpInferior, NextT>::merge(uint year, const IntermediateValues& rhs)
+inline void
+MinMaxBase<OpInferior, NextT>::merge(uint year, const IntermediateValues& rhs)
 {
     if (OpInferior)
     {
@@ -74,9 +77,10 @@ inline void MinMaxBase<OpInferior, NextT>::merge(uint year, const IntermediateVa
 
 template<bool OpInferior, class NextT>
 template<uint Size, class VCardT>
-void MinMaxBase<OpInferior, NextT>::InternalExportIndices(SurveyResults& report,
-                                                          const MinMaxData::Data* array,
-                                                          int fileLevel)
+void
+MinMaxBase<OpInferior, NextT>::InternalExportIndices(SurveyResults& report,
+                                                     const MinMaxData::Data* array,
+                                                     int fileLevel)
 {
     assert(array);
     assert(report.data.columnIndex < report.maxVariables && "Column index out of bounds");
@@ -110,8 +114,9 @@ void MinMaxBase<OpInferior, NextT>::InternalExportIndices(SurveyResults& report,
 
 template<bool OpInferior, class NextT>
 template<uint Size, class VCardT>
-inline void MinMaxBase<OpInferior, NextT>::InternalExportValues(SurveyResults& report,
-                                                                const MinMaxData::Data* array)
+inline void
+MinMaxBase<OpInferior, NextT>::InternalExportValues(SurveyResults& report,
+                                                    const MinMaxData::Data* array)
 {
     assert(array);
     assert(report.data.columnIndex < report.maxVariables && "Column index out of bounds");

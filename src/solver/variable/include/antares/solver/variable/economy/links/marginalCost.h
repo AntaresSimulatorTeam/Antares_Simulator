@@ -54,12 +54,12 @@ struct VCardMarginalCost
     }
 
     //! The expecte results
-    typedef Results<R::AllYears::Average< // The average values throughout all years
-      R::AllYears::StdDeviation<          // The standard deviation values throughout all years
-        R::AllYears::Min<                 // The minimum values throughout all years
-          R::AllYears::Max<               // The maximum values throughout all years
-            >>>>>
-      ResultsType;
+    typedef Results<R::AllYears::Average<     // The average values throughout all years
+            R::AllYears::StdDeviation<        // The standard deviation values throughout all years
+                    R::AllYears::Min<         // The minimum values throughout all years
+                            R::AllYears::Max< // The maximum values throughout all years
+                                    >>>>>
+            ResultsType;
 
     enum
     {
@@ -120,11 +120,11 @@ public:
     {
         enum
         {
-            count = ((VCardType::categoryDataLevel & CDataLevel
-                      && VCardType::categoryFileLevel & CFile)
-                       ? (NextType::template Statistics<CDataLevel, CFile>::count
-                          + VCardType::columnCount * ResultsType::count)
-                       : NextType::template Statistics<CDataLevel, CFile>::count),
+            count = ((VCardType::categoryDataLevel & CDataLevel &&
+                      VCardType::categoryFileLevel & CFile)
+                             ? (NextType::template Statistics<CDataLevel, CFile>::count +
+                                VCardType::columnCount * ResultsType::count)
+                             : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
 
@@ -228,17 +228,17 @@ public:
     void hourForEachLink(State& state, unsigned int numSpace)
     {
         pValuesForTheCurrentYear[numSpace][state.hourInTheYear] = std::abs(
-          state.problemeHebdo->VariablesDualesDesContraintesDeNTC[state.hourInTheWeek]
-            .VariableDualeParInterconnexion[state.link->index]);
+                state.problemeHebdo->VariablesDualesDesContraintesDeNTC[state.hourInTheWeek]
+                        .VariableDualeParInterconnexion[state.link->index]);
 
         // This value should be reset to zero if  (flow_lowerbound) < flow < (flow_upperbound) (with
         // signed values)
         double flow = state.problemeHebdo->ValeursDeNTC[state.hourInTheWeek]
-                        .ValeurDuFlux[state.link->index];
+                              .ValeurDuFlux[state.link->index];
         double flow_lowerbound = -state.problemeHebdo->ValeursDeNTC[state.hourInTheWeek]
-                                    .ValeurDeNTCExtremiteVersOrigine[state.link->index];
+                                          .ValeurDeNTCExtremiteVersOrigine[state.link->index];
         double flow_upperbound = state.problemeHebdo->ValeursDeNTC[state.hourInTheWeek]
-                                   .ValeurDeNTCOrigineVersExtremite[state.link->index];
+                                         .ValeurDeNTCOrigineVersExtremite[state.link->index];
 
         if (flow - 0.001 > flow_lowerbound && flow + 0.001 < flow_upperbound)
         {
@@ -255,9 +255,8 @@ public:
         NextType::buildDigest(results, digestLevel, dataLevel);
     }
 
-    Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
-      uint,
-      uint numSpace) const
+    Antares::Memory::Stored<double>::ConstReturnType
+    retrieveRawHourlyValuesForCurrentYear(uint, uint numSpace) const
     {
         return pValuesForTheCurrentYear[numSpace].hour;
     }
@@ -276,7 +275,7 @@ public:
             results.variableCaption = VCardType::Caption();
             results.variableUnit = VCardType::Unit();
             pValuesForTheCurrentYear[numSpace]
-              .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
+                    .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
         }
     }
 

@@ -64,7 +64,8 @@ XCast::~XCast()
 }
 
 template<class PredicateT>
-void XCast::exportTimeSeriesToTheOutput(Progression::Task& progression, PredicateT& predicate)
+void
+XCast::exportTimeSeriesToTheOutput(Progression::Task& progression, PredicateT& predicate)
 {
     if (study.parameters.noOutput)
     {
@@ -86,21 +87,22 @@ void XCast::exportTimeSeriesToTheOutput(Progression::Task& progression, Predicat
         filename.reserve(output.size() + 80);
 
         study.areas.each(
-          [&](Data::Area& area)
-          {
-              filename.clear() << output << SEP << area.id << ".txt";
-              std::string buffer;
-              predicate.matrix(area).saveToBuffer(buffer);
+                [&](Data::Area& area)
+                {
+                    filename.clear() << output << SEP << area.id << ".txt";
+                    std::string buffer;
+                    predicate.matrix(area).saveToBuffer(buffer);
 
-              pWriter.addEntryFromBuffer(filename.c_str(), buffer);
+                    pWriter.addEntryFromBuffer(filename.c_str(), buffer);
 
-              ++progression;
-          });
+                    ++progression;
+                });
     }
 }
 
 template<class PredicateT>
-void XCast::applyTransferFunction(PredicateT& predicate)
+void
+XCast::applyTransferFunction(PredicateT& predicate)
 {
     enum
     {
@@ -169,7 +171,8 @@ void XCast::applyTransferFunction(PredicateT& predicate)
 }
 
 template<class PredicateT>
-void XCast::updateMissingCoefficients(PredicateT& predicate)
+void
+XCast::updateMissingCoefficients(PredicateT& predicate)
 {
     for (uint realmonth = 0; realmonth != 12; ++realmonth)
     {
@@ -240,7 +243,8 @@ public:
 
 } // namespace
 
-void XCast::allocateTemporaryData()
+void
+XCast::allocateTemporaryData()
 {
     uint p = (uint)pData.localareas.size();
 
@@ -303,7 +307,8 @@ void XCast::allocateTemporaryData()
     }
 }
 
-void XCast::destroyTemporaryData()
+void
+XCast::destroyTemporaryData()
 {
     if (!pNeverInitialized)
     {
@@ -360,7 +365,8 @@ void XCast::destroyTemporaryData()
 }
 
 template<class PredicateT>
-bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progression)
+bool
+XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progression)
 {
     pTSName = predicate.timeSeriesName();
 
@@ -372,9 +378,9 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
     {
         if (not predicate.preproDataIsReader(*pData.localareas[s]))
         {
-            logs.warning()
-              << "The timeseries will not be regenerated. All data related to the ts-generator for "
-              << "'" << predicate.timeSeriesName() << "' have been released.";
+            logs.warning() << "The timeseries will not be regenerated. All data related to the "
+                              "ts-generator for "
+                           << "'" << predicate.timeSeriesName() << "' have been released.";
             return false;
         }
     }
@@ -394,17 +400,16 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
             pUseConversion[s] = (xcast.useConversion && xcast.conversion.width >= 3);
         }
 
-        pAccuracyOnCorrelation = ((study.parameters.timeSeriesAccuracyOnCorrelation
-                                   & timeSeriesType)
-                                  != 0);
+        pAccuracyOnCorrelation = ((study.parameters.timeSeriesAccuracyOnCorrelation &
+                                   timeSeriesType) != 0);
     }
 
     const uint processCount = (uint)pData.localareas.size();
 
     if (study.areas.size() > pData.localareas.size())
     {
-        progression += (nbTimeseries_ * DAYS_PER_YEAR)
-                       * ((uint)study.areas.size() - (uint)pData.localareas.size());
+        progression += (nbTimeseries_ * DAYS_PER_YEAR) *
+                       ((uint)study.areas.size() - (uint)pData.localareas.size());
     }
 
     if (processCount == 0)
@@ -513,8 +518,8 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
 
                     auto& column = srcData.translation[0];
                     float* dailyResults = DATA[s];
-                    assert(hourInTheYear + HOURS_PER_DAY <= srcData.translation.height
-                           && "Bound checking");
+                    assert(hourInTheYear + HOURS_PER_DAY <= srcData.translation.height &&
+                           "Bound checking");
 
                     for (uint h = 0; h != HOURS_PER_DAY; ++h)
                     {
@@ -558,8 +563,8 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
 
                     if (srcData.useTranslation == Data::XCast::tsTranslationAfterConversion)
                     {
-                        assert(hourInTheYear + HOURS_PER_DAY <= srcData.translation.height
-                               && "Bound checking");
+                        assert(hourInTheYear + HOURS_PER_DAY <= srcData.translation.height &&
+                               "Bound checking");
                         auto& tsavg = srcData.translation[0];
                         for (uint h = 0; h != HOURS_PER_DAY; ++h)
                         {
@@ -630,7 +635,8 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
     return true;
 }
 
-bool XCast::run()
+bool
+XCast::run()
 {
     switch (timeSeriesType)
     {

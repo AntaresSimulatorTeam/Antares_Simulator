@@ -21,7 +21,8 @@
 
 #include "antares/solver/optimisation/constraints/HydroPowerSmoothingUsingVariationMaxUp.h"
 
-void HydroPowerSmoothingUsingVariationMaxUp::add(int pays, int pdt)
+void
+HydroPowerSmoothingUsingVariationMaxUp::add(int pays, int pdt)
 {
     ConstraintNamer namer(builder.data.NomDesContraintes);
     namer.UpdateArea(builder.data.NomsDesPays[pays]);
@@ -29,9 +30,9 @@ void HydroPowerSmoothingUsingVariationMaxUp::add(int pays, int pdt)
     namer.HydroPowerSmoothingUsingVariationMaxUp(builder.data.nombreDeContraintes);
 
     builder.updateHourWithinWeek(pdt)
-      .HydProd(pays, 1.0)
-      .updateHourWithinWeek(0)
-      .HydProdUp(pays, -1.0)
-      .greaterThan()
-      .build();
+            .HydProd(pays, 1.0)
+            .updateHourWithinWeek(0)
+            .HydProdUp(pays, -1.0)
+            .greaterThan()
+            .build();
 }

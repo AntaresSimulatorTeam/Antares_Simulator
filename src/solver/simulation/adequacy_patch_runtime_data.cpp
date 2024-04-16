@@ -25,7 +25,8 @@ namespace
 {
 constexpr double thresholdForCostCoefficient = 1.e-12;
 
-double computeHurdleCostCoefficient(double unsuppliedEnergyCost1, double unsuppliedEnergyCost2)
+double
+computeHurdleCostCoefficient(double unsuppliedEnergyCost1, double unsuppliedEnergyCost2)
 {
     double m = std::max(unsuppliedEnergyCost1, unsuppliedEnergyCost2);
     if (std::fabs(m) < thresholdForCostCoefficient)
@@ -36,19 +37,21 @@ double computeHurdleCostCoefficient(double unsuppliedEnergyCost1, double unsuppl
 }
 } // namespace
 
-bool AdequacyPatchRuntimeData::wasCSRTriggeredAtAreaHour(int area, int hour) const
+bool
+AdequacyPatchRuntimeData::wasCSRTriggeredAtAreaHour(int area, int hour) const
 {
     return csrTriggeredHoursPerArea_[area].count(hour) > 0;
 }
 
-void AdequacyPatchRuntimeData::addCSRTriggeredAtAreaHour(int area, int hour)
+void
+AdequacyPatchRuntimeData::addCSRTriggeredAtAreaHour(int area, int hour)
 {
     csrTriggeredHoursPerArea_[area].insert(hour);
 }
 
 AdequacyPatchRuntimeData::AdequacyPatchRuntimeData(
-  const Antares::Data::AreaList& areas,
-  const std::vector<Antares::Data::AreaLink*>& links)
+        const Antares::Data::AreaList& areas,
+        const std::vector<Antares::Data::AreaLink*>& links)
 {
     csrTriggeredHoursPerArea_.resize(areas.size());
     areaMode.resize(areas.size());
@@ -68,7 +71,7 @@ AdequacyPatchRuntimeData::AdequacyPatchRuntimeData(
         originAreaMode[i] = from->adequacyPatchMode;
         extremityAreaMode[i] = with->adequacyPatchMode;
         hurdleCostCoefficients[i] = computeHurdleCostCoefficient(
-          from->thermal.unsuppliedEnergyCost,
-          with->thermal.unsuppliedEnergyCost);
+                from->thermal.unsuppliedEnergyCost,
+                with->thermal.unsuppliedEnergyCost);
     }
 }

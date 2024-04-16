@@ -29,7 +29,8 @@
 
 namespace Antares::Data::ScenarioBuilder
 {
-std::string fromHydroLevelToString(double d)
+std::string
+fromHydroLevelToString(double d)
 {
     std::ostringstream stream;
     stream << std::setprecision(4);
@@ -37,7 +38,8 @@ std::string fromHydroLevelToString(double d)
     return stream.str();
 }
 
-double fromStringToHydroLevel(const Yuni::String& value, const double maxLevel)
+double
+fromStringToHydroLevel(const Yuni::String& value, const double maxLevel)
 {
     double result;
     double result_tmp;
@@ -70,7 +72,8 @@ double fromStringToHydroLevel(const Yuni::String& value, const double maxLevel)
     return result;
 }
 
-uint fromStringToTSnumber(const Yuni::String& value)
+uint
+fromStringToTSnumber(const Yuni::String& value)
 {
     uint result;
     const uint maxTSnumber = 10000;

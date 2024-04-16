@@ -36,10 +36,11 @@ using namespace Antares::Data;
 
 using Antares::Solver::Optimization::OptimizationOptions;
 
-void OPT_OptimisationHebdomadaire(const OptimizationOptions& options,
-                                  PROBLEME_HEBDO* pProblemeHebdo,
-                                  const AdqPatchParams& adqPatchParams,
-                                  Solver::IResultWriter& writer)
+void
+OPT_OptimisationHebdomadaire(const OptimizationOptions& options,
+                             PROBLEME_HEBDO* pProblemeHebdo,
+                             const AdqPatchParams& adqPatchParams,
+                             Solver::IResultWriter& writer)
 {
     if (pProblemeHebdo->TypeDOptimisation == OPTIMISATION_LINEAIRE)
     {
@@ -61,7 +62,7 @@ void OPT_OptimisationHebdomadaire(const OptimizationOptions& options,
     else
     {
         throw FatalError(
-          "Bug: TypeDOptimisation, OPTIMISATION_LINEAIRE ou OPTIMISATION_QUADRATIQUE "
-          "non initialise");
+                "Bug: TypeDOptimisation, OPTIMISATION_LINEAIRE ou OPTIMISATION_QUADRATIQUE "
+                "non initialise");
     }
 }

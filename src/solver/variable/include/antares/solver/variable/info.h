@@ -139,8 +139,8 @@ struct VariableAccessor
             }
             else
             {
-                if (VCardT::spatialAggregatePostProcessing
-                    == (int)Category::spatialAggregatePostProcessingPrice)
+                if (VCardT::spatialAggregatePostProcessing ==
+                    (int)Category::spatialAggregatePostProcessingPrice)
                 {
                     intermediateValues[i].computeAveragesForCurrentYearFromHourlyResults();
                 }
@@ -173,10 +173,8 @@ struct VariableAccessor
     }
 
     template<class VCardT>
-    static void BuildDigest(SurveyResults& results,
-                            const Type& container,
-                            int digestLevel,
-                            int dataLevel)
+    static void
+    BuildDigest(SurveyResults& results, const Type& container, int digestLevel, int dataLevel)
     {
         for (uint i = 0; i != ColumnCountT; ++i)
         {
@@ -243,8 +241,8 @@ struct VariableAccessor
     {
         for (uint i = 0; i != ColumnCountT; ++i)
         {
-            Antares::Memory::Stored<double>::ConstReturnType src
-              = var.retrieveRawHourlyValuesForCurrentYear(i, numSpace);
+            Antares::Memory::Stored<double>::ConstReturnType
+                    src = var.retrieveRawHourlyValuesForCurrentYear(i, numSpace);
 
             assert(src != NULL);
             for (uint h = 0; h != maxHoursInAYear; ++h)
@@ -259,8 +257,8 @@ struct VariableAccessor
     {
         for (uint i = 0; i != ColumnCountT; ++i)
         {
-            Antares::Memory::Stored<double>::ConstReturnType src
-              = var.retrieveRawHourlyValuesForCurrentYear(i, numSpace);
+            Antares::Memory::Stored<double>::ConstReturnType
+                    src = var.retrieveRawHourlyValuesForCurrentYear(i, numSpace);
 
             assert(src != NULL);
             for (uint h = 0; h != maxHoursInAYear; ++h)
@@ -359,8 +357,8 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
             else
             {
                 // Compute all statistics for the current year (daily,weekly,monthly)
-                if (VCardT::spatialAggregatePostProcessing
-                    == (int)Category::spatialAggregatePostProcessingPrice)
+                if (VCardT::spatialAggregatePostProcessing ==
+                    (int)Category::spatialAggregatePostProcessingPrice)
                 {
                     // intermediateValues[i].adjustValuesWhenRelatedToAPrice();
                     intermediateValues[i].computeAveragesForCurrentYearFromHourlyResults();
@@ -395,10 +393,8 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
     }
 
     template<class VCardT>
-    static void BuildDigest(SurveyResults& results,
-                            const Type& container,
-                            int digestLevel,
-                            int dataLevel)
+    static void
+    BuildDigest(SurveyResults& results, const Type& container, int digestLevel, int dataLevel)
     {
         if (*results.isPrinted)
         {
@@ -512,8 +508,8 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
     {
         for (uint i = 0; i != var.results().size(); ++i)
         {
-            Antares::Memory::Stored<double>::ConstReturnType src
-              = var.retrieveRawHourlyValuesForCurrentYear(i, numSpace);
+            Antares::Memory::Stored<double>::ConstReturnType
+                    src = var.retrieveRawHourlyValuesForCurrentYear(i, numSpace);
 
             assert(src != NULL);
             for (uint h = 0; h != maxHoursInAYear; ++h)
@@ -528,8 +524,8 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
     {
         for (uint i = 0; i != var.results().size(); ++i)
         {
-            Antares::Memory::Stored<double>::ConstReturnType src
-              = var.retrieveRawHourlyValuesForCurrentYear(i, numSpace);
+            Antares::Memory::Stored<double>::ConstReturnType
+                    src = var.retrieveRawHourlyValuesForCurrentYear(i, numSpace);
 
             assert(src != NULL);
             for (uint h = 0; h != maxHoursInAYear; ++h)
@@ -600,8 +596,8 @@ struct VariableAccessor<ResultsT, Category::singleColumn /* The default */>
         else
         {
             // Compute all statistics for the current year (daily,weekly,monthly)
-            if (VCardT::spatialAggregatePostProcessing
-                == (int)Category::spatialAggregatePostProcessingPrice)
+            if (VCardT::spatialAggregatePostProcessing ==
+                (int)Category::spatialAggregatePostProcessingPrice)
             {
                 // intermediateValues[i].adjustValuesWhenRelatedToAPrice();
                 intermediateValues.computeAveragesForCurrentYearFromHourlyResults();
@@ -626,10 +622,8 @@ struct VariableAccessor<ResultsT, Category::singleColumn /* The default */>
     }
 
     template<class VCardT>
-    static void BuildDigest(SurveyResults& results,
-                            const Type& container,
-                            int digestLevel,
-                            int dataLevel)
+    static void
+    BuildDigest(SurveyResults& results, const Type& container, int digestLevel, int dataLevel)
     {
         if (*results.isPrinted)
         {
@@ -679,8 +673,8 @@ struct VariableAccessor<ResultsT, Category::singleColumn /* The default */>
     template<class U, class VarT>
     static void ComputeSum(U& out, const VarT& var, uint numSpace)
     {
-        Antares::Memory::Stored<double>::ConstReturnType src
-          = var.retrieveRawHourlyValuesForCurrentYear(-1, numSpace);
+        Antares::Memory::Stored<double>::ConstReturnType
+                src = var.retrieveRawHourlyValuesForCurrentYear(-1, numSpace);
 
         assert(src != NULL);
         for (uint h = 0; h != maxHoursInAYear; ++h)
@@ -692,8 +686,8 @@ struct VariableAccessor<ResultsT, Category::singleColumn /* The default */>
     template<class U, class VarT>
     static void ComputeMax(U& out, const VarT& var, uint numSpace)
     {
-        Antares::Memory::Stored<double>::ConstReturnType src
-          = var.retrieveRawHourlyValuesForCurrentYear(-1, numSpace);
+        Antares::Memory::Stored<double>::ConstReturnType
+                src = var.retrieveRawHourlyValuesForCurrentYear(-1, numSpace);
 
         assert(src != NULL);
         for (uint h = 0; h != maxHoursInAYear; ++h)
@@ -787,7 +781,7 @@ struct Storage
 {
     //! The true type used for the results
     typedef typename VariableAccessor<typename VCardT::ResultsType, VCardT::columnCount>::Type
-      ResultsType;
+            ResultsType;
 };
 
 template<bool Allowed, int OperationT, class VCardT>

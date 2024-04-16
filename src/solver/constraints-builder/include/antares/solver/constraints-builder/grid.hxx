@@ -53,7 +53,8 @@ Grid<NodeT>::~Grid()
 }
 
 template<class NodeT>
-typename Grid<NodeT>::NodeP Grid<NodeT>::addNode(NodeT& n, std::string id)
+typename Grid<NodeT>::NodeP
+Grid<NodeT>::addNode(NodeT& n, std::string id)
 {
     auto nodeIT = std::find_if(pNodesList.begin(),
                                pNodesList.end(),
@@ -74,7 +75,8 @@ typename Grid<NodeT>::NodeP Grid<NodeT>::addNode(NodeT& n, std::string id)
 }
 
 template<class NodeT>
-typename Grid<NodeT>::EdgeP Grid<NodeT>::addEdge(NodeP n1, NodeP n2, long weight)
+typename Grid<NodeT>::EdgeP
+Grid<NodeT>::addEdge(NodeP n1, NodeP n2, long weight)
 {
     std::string s1(n1->getName());
     std::string s2(n2->getName());
@@ -104,7 +106,8 @@ typename Grid<NodeT>::EdgeP Grid<NodeT>::addEdge(NodeP n1, NodeP n2, long weight
 }
 
 template<class NodeT>
-uint Grid<NodeT>::getNumberOfConnectedComponents()
+uint
+Grid<NodeT>::getNumberOfConnectedComponents()
 {
     // create union-find set
     MapNodes uf;
@@ -142,7 +145,8 @@ uint Grid<NodeT>::getNumberOfConnectedComponents()
 }
 
 template<class NodeT>
-void Grid<NodeT>::kruskal()
+void
+Grid<NodeT>::kruskal()
 {
     // clear spanning tree
     pMinSpanningTree.clear();
@@ -183,7 +187,8 @@ void Grid<NodeT>::kruskal()
 }
 
 template<class NodeT>
-bool Grid<NodeT>::buildMesh()
+bool
+Grid<NodeT>::buildMesh()
 {
     // build the minimum spanning tree
     kruskal();
@@ -202,8 +207,8 @@ bool Grid<NodeT>::buildMesh()
     for (auto i = pEdgesList.begin(); i != pEdgesList.end(); i++)
     {
         // check if the link already belong to the skeleton
-        if (std::find(pMinSpanningTree.begin(), pMinSpanningTree.end(), (*i))
-            == pMinSpanningTree.end())
+        if (std::find(pMinSpanningTree.begin(), pMinSpanningTree.end(), (*i)) ==
+            pMinSpanningTree.end())
         {
             linksToBeAdded.push_back(*i);
         }
@@ -229,24 +234,24 @@ bool Grid<NodeT>::buildMesh()
         // par(u+,v-) et (u-,v+)
         for (uint j = 0; j < v.size(); j++)
         {
-            if (std::find(adjacentNodes.begin(), adjacentNodes.end(), v[j]->getOrigin())
-                == adjacentNodes.end())
+            if (std::find(adjacentNodes.begin(), adjacentNodes.end(), v[j]->getOrigin()) ==
+                adjacentNodes.end())
             {
                 adjacentNodes.push_back(v[j]->getOrigin());
             }
-            if (std::find(adjacentNodes.begin(), adjacentNodes.end(), v[j]->getDestination())
-                == adjacentNodes.end())
+            if (std::find(adjacentNodes.begin(), adjacentNodes.end(), v[j]->getDestination()) ==
+                adjacentNodes.end())
             {
                 adjacentNodes.push_back(v[j]->getDestination());
             }
 
             EdgeP ei = polarisedDuplicate.findEdgeFromNodeNames(v[j]->getOrigin()->getName() + "+",
-                                                                v[j]->getDestination()->getName()
-                                                                  + "+");
+                                                                v[j]->getDestination()->getName() +
+                                                                        "+");
 
             NodeP ni1 = polarisedDuplicate.findNodeFromName(v[j]->getOrigin()->getName() + "+");
-            NodeP ni2 = polarisedDuplicate.findNodeFromName(v[j]->getDestination()->getName()
-                                                            + "-");
+            NodeP ni2 = polarisedDuplicate.findNodeFromName(v[j]->getDestination()->getName() +
+                                                            "-");
 
             polarisedDuplicate.addEdge(ni1, ni2, ei->getWeight());
             polarisedDuplicate.removeEdge(ei);
@@ -302,7 +307,8 @@ bool Grid<NodeT>::buildMesh()
 ** \param a reference to a virgin grid object
 */
 template<class NodeT>
-bool Grid<NodeT>::getDuplicatedGrid(Grid<NodeT>& grid)
+bool
+Grid<NodeT>::getDuplicatedGrid(Grid<NodeT>& grid)
 {
     // duplicate nodes
     for (typename VectorNodeP::iterator node = pNodesList.begin(); node != pNodesList.end(); node++)
@@ -323,15 +329,15 @@ bool Grid<NodeT>::getDuplicatedGrid(Grid<NodeT>& grid)
             auto nodeOrigIT = std::find_if(grid.pNodesList.begin(),
                                            grid.pNodesList.end(),
                                            [&e](const NodeP& nodeP) -> bool {
-                                               return nodeP->getName()
-                                                      == (*e)->getOrigin()->getName() + "+";
+                                               return nodeP->getName() ==
+                                                      (*e)->getOrigin()->getName() + "+";
                                            });
 
             auto nodeDestIT = std::find_if(grid.pNodesList.begin(),
                                            grid.pNodesList.end(),
                                            [&e](const NodeP& nodeP) -> bool {
-                                               return nodeP->getName()
-                                                      == (*e)->getDestination()->getName() + "+";
+                                               return nodeP->getName() ==
+                                                      (*e)->getDestination()->getName() + "+";
                                            });
 
             grid.addEdge(*nodeOrigIT, *nodeDestIT, (*e)->getWeight());
@@ -341,15 +347,15 @@ bool Grid<NodeT>::getDuplicatedGrid(Grid<NodeT>& grid)
             auto nodeOrigIT = std::find_if(grid.pNodesList.begin(),
                                            grid.pNodesList.end(),
                                            [&e](const NodeP& nodeP) -> bool {
-                                               return nodeP->getName()
-                                                      == (*e)->getOrigin()->getName() + "-";
+                                               return nodeP->getName() ==
+                                                      (*e)->getOrigin()->getName() + "-";
                                            });
 
             auto nodeDestIT = std::find_if(grid.pNodesList.begin(),
                                            grid.pNodesList.end(),
                                            [&e](const NodeP& nodeP) -> bool {
-                                               return nodeP->getName()
-                                                      == (*e)->getDestination()->getName() + "-";
+                                               return nodeP->getName() ==
+                                                      (*e)->getDestination()->getName() + "-";
                                            });
 
             grid.addEdge(*nodeOrigIT, *nodeDestIT, (*e)->getWeight());
@@ -363,7 +369,8 @@ bool Grid<NodeT>::getDuplicatedGrid(Grid<NodeT>& grid)
 ** \param a reference to a virgin grid object
 */
 template<class NodeT>
-bool Grid<NodeT>::cloneGrid(Grid<NodeT>& grid)
+bool
+Grid<NodeT>::cloneGrid(Grid<NodeT>& grid)
 {
     // duplicate nodes
     for (typename VectorNodeP::iterator node = pNodesList.begin(); node != pNodesList.end(); node++)
@@ -380,15 +387,15 @@ bool Grid<NodeT>::cloneGrid(Grid<NodeT>& grid)
             auto nodeOrigIT = std::find_if(grid.pNodesList.begin(),
                                            grid.pNodesList.end(),
                                            [&e](const NodeP& nodeP) -> bool {
-                                               return nodeP->getName()
-                                                      == (*e)->getOrigin()->getName();
+                                               return nodeP->getName() ==
+                                                      (*e)->getOrigin()->getName();
                                            });
 
             auto nodeDestIT = std::find_if(grid.pNodesList.begin(),
                                            grid.pNodesList.end(),
                                            [&e](const NodeP& nodeP) -> bool {
-                                               return nodeP->getName()
-                                                      == (*e)->getDestination()->getName();
+                                               return nodeP->getName() ==
+                                                      (*e)->getDestination()->getName();
                                            });
 
             grid.addEdge(*nodeOrigIT, *nodeDestIT, (*e)->getWeight());
@@ -398,7 +405,8 @@ bool Grid<NodeT>::cloneGrid(Grid<NodeT>& grid)
 }
 
 template<class NodeT>
-typename Grid<NodeT>::VectorEdgeP Grid<NodeT>::twoLevelPath(VectorNodeP vN)
+typename Grid<NodeT>::VectorEdgeP
+Grid<NodeT>::twoLevelPath(VectorNodeP vN)
 {
     VectorEdgeP SP, minSP;
     double minLength = DBL_MAX, length;
@@ -422,7 +430,8 @@ typename Grid<NodeT>::VectorEdgeP Grid<NodeT>::twoLevelPath(VectorNodeP vN)
 
 //! Find shortest path between the two nodes (Djikstra)
 template<class NodeT>
-typename Grid<NodeT>::VectorEdgeP Grid<NodeT>::findShortestPath(NodeP node1, NodeP node2) const
+typename Grid<NodeT>::VectorEdgeP
+Grid<NodeT>::findShortestPath(NodeP node1, NodeP node2) const
 {
     assert(node1 != node2);
 

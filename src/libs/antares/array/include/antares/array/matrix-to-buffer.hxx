@@ -63,14 +63,14 @@ struct MatrixScalar<double>
         {
             char ConversionBuffer[128];
             const int sizePrintf = Utils::isZero(v - floor(v))
-                                     ? ANTARES_MATRIX_SNPRINTF(ConversionBuffer,
-                                                               sizeof(ConversionBuffer),
-                                                               "%.0f",
-                                                               v)
-                                     : ANTARES_MATRIX_SNPRINTF(ConversionBuffer,
-                                                               sizeof(ConversionBuffer),
-                                                               format,
-                                                               v);
+                                           ? ANTARES_MATRIX_SNPRINTF(ConversionBuffer,
+                                                                     sizeof(ConversionBuffer),
+                                                                     "%.0f",
+                                                                     v)
+                                           : ANTARES_MATRIX_SNPRINTF(ConversionBuffer,
+                                                                     sizeof(ConversionBuffer),
+                                                                     format,
+                                                                     v);
 
             if (sizePrintf >= 0 and sizePrintf < (int)(sizeof(ConversionBuffer)))
             {
@@ -97,14 +97,14 @@ struct MatrixScalar<float>
         {
             char ConversionBuffer[128];
             const int sizePrintf = Utils::isZero(v - floor(v))
-                                     ? ANTARES_MATRIX_SNPRINTF(ConversionBuffer,
-                                                               sizeof(ConversionBuffer),
-                                                               "%.0f",
-                                                               (double)v)
-                                     : ANTARES_MATRIX_SNPRINTF(ConversionBuffer,
-                                                               sizeof(ConversionBuffer),
-                                                               format,
-                                                               (double)v);
+                                           ? ANTARES_MATRIX_SNPRINTF(ConversionBuffer,
+                                                                     sizeof(ConversionBuffer),
+                                                                     "%.0f",
+                                                                     (double)v)
+                                           : ANTARES_MATRIX_SNPRINTF(ConversionBuffer,
+                                                                     sizeof(ConversionBuffer),
+                                                                     format,
+                                                                     (double)v);
 
             if (sizePrintf >= 0 and sizePrintf < (int)(sizeof(ConversionBuffer)))
             {
@@ -121,10 +121,10 @@ struct MatrixScalar<float>
 } // anonymous namespace
 
 template<class T, class ReadWriteT, class PredicateT>
-I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>* matrix_to_buffer_dumper_factory::get_dumper(
-  const Matrix<T, ReadWriteT>* mtx,
-  std::string& data,
-  PredicateT& predicate)
+I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>*
+matrix_to_buffer_dumper_factory::get_dumper(const Matrix<T, ReadWriteT>* mtx,
+                                            std::string& data,
+                                            PredicateT& predicate)
 {
     if (mtx->width == 1)
     {
@@ -137,8 +137,8 @@ I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>* matrix_to_buffer_dumper_facto
 }
 
 template<class T, class ReadWriteT, class PredicateT>
-void I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>::set_print_format(bool isDecimal,
-                                                                         uint precision)
+void
+I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>::set_print_format(bool isDecimal, uint precision)
 {
     // Determining the string format to use according the given precision
     format_ = "%.0f";
@@ -146,23 +146,23 @@ void I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>::set_print_format(bool is
     if (isDecimal and precision)
     {
         const char* const sfmt[] = {
-          "%.0f",
-          "%.1f",
-          "%.2f",
-          "%.3f",
-          "%.4f",
-          "%.5f",
-          "%.6f",
-          "%.7f",
-          "%.8f",
-          "%.9f",
-          "%.10f",
-          "%.11f",
-          "%.12f",
-          "%.13f",
-          "%.14f",
-          "%.15f",
-          "%.16f",
+                "%.0f",
+                "%.1f",
+                "%.2f",
+                "%.3f",
+                "%.4f",
+                "%.5f",
+                "%.6f",
+                "%.7f",
+                "%.8f",
+                "%.9f",
+                "%.10f",
+                "%.11f",
+                "%.12f",
+                "%.13f",
+                "%.14f",
+                "%.15f",
+                "%.16f",
         };
         assert(precision <= 16);
         format_ = sfmt[precision];
@@ -170,7 +170,8 @@ void I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>::set_print_format(bool is
 }
 
 template<class T, class ReadWriteT, class PredicateT>
-void one_column__dumper<T, ReadWriteT, PredicateT>::run()
+void
+one_column__dumper<T, ReadWriteT, PredicateT>::run()
 {
     for (uint y = 0; y != (this->mtx_)->height; ++y)
     {
@@ -182,7 +183,8 @@ void one_column__dumper<T, ReadWriteT, PredicateT>::run()
 }
 
 template<class T, class ReadWriteT, class PredicateT>
-void multiple_columns__dumper<T, ReadWriteT, PredicateT>::run()
+void
+multiple_columns__dumper<T, ReadWriteT, PredicateT>::run()
 {
     for (uint y = 0; y < (this->mtx_)->height; ++y)
     {
@@ -194,7 +196,7 @@ void multiple_columns__dumper<T, ReadWriteT, PredicateT>::run()
             this->buffer_ += '\t';
             MatrixScalar<ReadWriteT>::Append(this->buffer_,
                                              (ReadWriteT)this->predicate_(
-                                               (this->mtx_)->entry[x][y]),
+                                                     (this->mtx_)->entry[x][y]),
                                              this->format_);
         }
         this->buffer_ += '\n';

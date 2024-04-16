@@ -31,7 +31,8 @@ using namespace operations_research;
 namespace Antares::Optimization
 {
 
-void ConstraintSlackAnalysis::run(MPSolver* problem)
+void
+ConstraintSlackAnalysis::run(MPSolver* problem)
 {
     addSlackVariables(problem);
     if (slackVariables_.empty())
@@ -52,7 +53,8 @@ void ConstraintSlackAnalysis::run(MPSolver* problem)
     hasDetectedInfeasibilityCause_ = true;
 }
 
-void ConstraintSlackAnalysis::addSlackVariables(MPSolver* problem)
+void
+ConstraintSlackAnalysis::addSlackVariables(MPSolver* problem)
 {
     /* Optimization:
         We assess that less than 1 every 3 constraint will match
@@ -88,7 +90,8 @@ void ConstraintSlackAnalysis::addSlackVariables(MPSolver* problem)
     }
 }
 
-void ConstraintSlackAnalysis::buildObjective(MPSolver* problem) const
+void
+ConstraintSlackAnalysis::buildObjective(MPSolver* problem) const
 {
     MPObjective* objective = problem->MutableObjective();
     // Reset objective function
@@ -101,7 +104,8 @@ void ConstraintSlackAnalysis::buildObjective(MPSolver* problem) const
     objective->SetMinimization();
 }
 
-void ConstraintSlackAnalysis::printReport() const
+void
+ConstraintSlackAnalysis::printReport() const
 {
     InfeasibleProblemReport report(slackVariables_);
     report.prettyPrint();

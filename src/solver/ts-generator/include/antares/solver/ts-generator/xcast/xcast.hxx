@@ -28,7 +28,8 @@ namespace TSGenerator
 namespace XCast
 {
 template<class PredicateT>
-inline void XCast::loadFromStudy(const Data::Correlation& correlation, PredicateT& predicate)
+inline void
+XCast::loadFromStudy(const Data::Correlation& correlation, PredicateT& predicate)
 {
     pData.template loadFromStudy<PredicateT>(study, correlation, predicate);
 }

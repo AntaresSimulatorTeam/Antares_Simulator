@@ -23,7 +23,8 @@
 
 namespace FSWalker
 {
-void IJob::decrementCounter()
+void
+IJob::decrementCounter()
 {
     auto counter = pJobCounter;
     if (!(!counter))

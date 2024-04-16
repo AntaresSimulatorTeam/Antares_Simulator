@@ -28,11 +28,12 @@
 
 using namespace Antares;
 
-int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO* problemeHebdo)
+int
+OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO* problemeHebdo)
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
     int nombreDePasDeTempsPourUneOptimisation = problemeHebdo
-                                                  ->NombreDePasDeTempsPourUneOptimisation;
+                                                        ->NombreDePasDeTempsPourUneOptimisation;
 
     int mxPaliers = 0;
     ProblemeAResoudre->NombreDeVariables = problemeHebdo->NombreDInterconnexions;
@@ -42,7 +43,7 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
     for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
         ProblemeAResoudre->NombreDeVariables += problemeHebdo->PaliersThermiquesDuPays[pays]
-                                                  .NombreDePaliersThermiques;
+                                                        .NombreDePaliersThermiques;
 
         mxPaliers += problemeHebdo->PaliersThermiquesDuPays[pays].NombreDePaliersThermiques;
 
@@ -84,8 +85,8 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
     for (uint32_t cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
          cntCouplante++)
     {
-        if (problemeHebdo->MatriceDesContraintesCouplantes[cntCouplante].TypeDeContrainteCouplante
-            == CONTRAINTE_HORAIRE)
+        if (problemeHebdo->MatriceDesContraintesCouplantes[cntCouplante]
+                    .TypeDeContrainteCouplante == CONTRAINTE_HORAIRE)
         {
             ProblemeAResoudre->NombreDeContraintes++;
         }
@@ -95,8 +96,8 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
     int nombreDeJoursDansUnIntervalleOptimise;
     if (nombreDePasDeTempsPourUneOptimisation > problemeHebdo->NombreDePasDeTempsDUneJournee)
     {
-        nombreDeJoursDansUnIntervalleOptimise = problemeHebdo->NombreDePasDeTemps
-                                                / problemeHebdo->NombreDePasDeTempsDUneJournee;
+        nombreDeJoursDansUnIntervalleOptimise = problemeHebdo->NombreDePasDeTemps /
+                                                problemeHebdo->NombreDePasDeTempsDUneJournee;
     }
     else
     {
@@ -106,8 +107,8 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
     for (uint32_t cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
          cntCouplante++)
     {
-        if (problemeHebdo->MatriceDesContraintesCouplantes[cntCouplante].TypeDeContrainteCouplante
-            == CONTRAINTE_JOURNALIERE)
+        if (problemeHebdo->MatriceDesContraintesCouplantes[cntCouplante]
+                    .TypeDeContrainteCouplante == CONTRAINTE_JOURNALIERE)
         {
             ProblemeAResoudre->NombreDeContraintes += nombreDeJoursDansUnIntervalleOptimise;
         }
@@ -119,8 +120,7 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
              cntCouplante++)
         {
             if (problemeHebdo->MatriceDesContraintesCouplantes[cntCouplante]
-                  .TypeDeContrainteCouplante
-                == CONTRAINTE_HEBDOMADAIRE)
+                        .TypeDeContrainteCouplante == CONTRAINTE_HEBDOMADAIRE)
             {
                 ProblemeAResoudre->NombreDeContraintes++;
             }
@@ -131,12 +131,12 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
     {
         char Pump = problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable;
         char TurbEntreBornes = problemeHebdo->CaracteristiquesHydrauliques[pays]
-                                 .TurbinageEntreBornes;
+                                       .TurbinageEntreBornes;
         char MonitorHourlyLev = problemeHebdo->CaracteristiquesHydrauliques[pays]
-                                  .SuiviNiveauHoraire;
+                                        .SuiviNiveauHoraire;
 
-        if (!Pump && !TurbEntreBornes && !MonitorHourlyLev
-            && problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable)
+        if (!Pump && !TurbEntreBornes && !MonitorHourlyLev &&
+            problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable)
         {
             ProblemeAResoudre->NombreDeContraintes++;
         }
@@ -147,11 +147,11 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
                                                             energy generated over the period (10a in
                                                             the reference document) */
             ProblemeAResoudre
-              ->NombreDeContraintes++; /* 1 constraint setting the level variation over the period
-                                          (10b in the reference document) */
+                    ->NombreDeContraintes++; /* 1 constraint setting the level variation over the
+                                                period (10b in the reference document) */
             ProblemeAResoudre
-              ->NombreDeContraintes++; /* 1 constraint bounding the overall energy pumped over the
-                                          period (10c in the reference document) */
+                    ->NombreDeContraintes++; /* 1 constraint bounding the overall energy pumped over
+                                                the period (10c in the reference document) */
         }
 
         if (!Pump && TurbEntreBornes && !MonitorHourlyLev)
@@ -195,21 +195,21 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
                                                             energy generated over the period (10a in
                                                             the reference document) */
             ProblemeAResoudre
-              ->NombreDeContraintes++; /* 1 constraint setting the level variation over the period
-                                          (10b in the reference document) */
+                    ->NombreDeContraintes++; /* 1 constraint setting the level variation over the
+                                                period (10b in the reference document) */
             ProblemeAResoudre
-              ->NombreDeContraintes++; /* 1 constraint bounding the overall energy pumped over the
-                                          period (10c in the reference document) */
-            ProblemeAResoudre->NombreDeContraintes
-              += nombreDePasDeTempsPourUneOptimisation; /* T constraints expressing the level hourly
-                                                           variations (14a in the reference
-                                                           document) */
+                    ->NombreDeContraintes++; /* 1 constraint bounding the overall energy pumped over
+                                                the period (10c in the reference document) */
+            ProblemeAResoudre->NombreDeContraintes +=
+                    nombreDePasDeTempsPourUneOptimisation; /* T constraints expressing the level
+                                                              hourly variations (14a in the
+                                                              reference document) */
         }
         if (!Pump && !TurbEntreBornes && MonitorHourlyLev)
         {
             const std::string areaName(problemeHebdo->NomsDesPays[pays]);
-            throw FatalError("Level explicit modeling requires flexible generation in area "
-                             + areaName);
+            throw FatalError("Level explicit modeling requires flexible generation in area " +
+                             areaName);
         }
     }
 
@@ -226,15 +226,15 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
     {
         if (problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable)
         {
-            if (problemeHebdo->TypeDeLissageHydraulique
-                == LISSAGE_HYDRAULIQUE_SUR_SOMME_DES_VARIATIONS)
+            if (problemeHebdo->TypeDeLissageHydraulique ==
+                LISSAGE_HYDRAULIQUE_SUR_SOMME_DES_VARIATIONS)
             {
                 ProblemeAResoudre->NombreDeVariables += nombreDePasDeTempsPourUneOptimisation * 2;
                 ProblemeAResoudre->NombreDeContraintes += nombreDePasDeTempsPourUneOptimisation;
             }
 
-            else if (problemeHebdo->TypeDeLissageHydraulique
-                     == LISSAGE_HYDRAULIQUE_SUR_VARIATION_MAX)
+            else if (problemeHebdo->TypeDeLissageHydraulique ==
+                     LISSAGE_HYDRAULIQUE_SUR_VARIATION_MAX)
             {
                 ProblemeAResoudre->NombreDeVariables += 2;
                 ProblemeAResoudre->NombreDeContraintes += nombreDePasDeTempsPourUneOptimisation * 2;

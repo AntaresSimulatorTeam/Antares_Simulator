@@ -26,7 +26,8 @@ namespace Antares
 namespace Data
 {
 template<class CallbackT>
-inline void HydroAllocation::eachNonNull(const CallbackT& callback) const
+inline void
+HydroAllocation::eachNonNull(const CallbackT& callback) const
 {
     assert(pMustUseValuesFromAreaID);
     auto end = pValuesFromAreaID.end();

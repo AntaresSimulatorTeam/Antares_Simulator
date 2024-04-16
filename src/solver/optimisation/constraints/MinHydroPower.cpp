@@ -21,11 +21,12 @@
 
 #include "antares/solver/optimisation/constraints/MinHydroPower.h"
 
-void MinHydroPower::add(int pays)
+void
+MinHydroPower::add(int pays)
 {
-    if (data.CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable
-        && (data.CaracteristiquesHydrauliques[pays].TurbinageEntreBornes
-            || data.CaracteristiquesHydrauliques[pays].PresenceDePompageModulable))
+    if (data.CaracteristiquesHydrauliques[pays].PresenceDHydrauliqueModulable &&
+        (data.CaracteristiquesHydrauliques[pays].TurbinageEntreBornes ||
+         data.CaracteristiquesHydrauliques[pays].PresenceDePompageModulable))
     {
         data.NumeroDeContrainteMinEnergieHydraulique[pays] = builder.data.nombreDeContraintes;
 

@@ -32,7 +32,8 @@
 namespace Antares::Data::ShortTermStorage
 {
 
-bool Properties::loadKey(const IniFile::Property* p)
+bool
+Properties::loadKey(const IniFile::Property* p)
 {
     auto valueForOptional = [p](std::optional<double>& opt)
     {
@@ -94,7 +95,8 @@ bool Properties::loadKey(const IniFile::Property* p)
     return false;
 }
 
-void Properties::save(IniFile& ini) const
+void
+Properties::save(IniFile& ini) const
 {
     IniFile::Section* s = ini.addSection(this->name);
 
@@ -110,7 +112,8 @@ void Properties::save(IniFile& ini) const
     s->add("enabled", this->enabled);
 }
 
-bool Properties::validate()
+bool
+Properties::validate()
 {
     auto checkMandatory = [this](const std::optional<double>& prop, const std::string& label)
     {

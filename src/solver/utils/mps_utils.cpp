@@ -122,9 +122,10 @@ private:
     std::vector<char*> mConstraintNames;
 };
 
-void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(PROBLEME_SIMPLEXE_NOMME* Prob,
-                                               Solver::IResultWriter& writer,
-                                               const std::string& filename)
+void
+OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(PROBLEME_SIMPLEXE_NOMME* Prob,
+                                          Solver::IResultWriter& writer,
+                                          const std::string& filename)
 {
     logs.info() << "Solver MPS File: `" << filename << "'";
 
@@ -134,7 +135,7 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(PROBLEME_SIMPLEXE_NOMME* Prob,
     {
         auto translator = NameTranslator::create(Prob->UseNamedProblems());
         ProblemConverter
-          converter; // This object must not be destroyed until SRSwritempsprob has been run
+                converter; // This object must not be destroyed until SRSwritempsprob has been run
         converter.copyProbSimplexeToProbMps(mps.get(), Prob, *translator);
         SRSwritempsprob(mps.get(), tmpPath.c_str());
     }
@@ -153,7 +154,8 @@ fullMPSwriter::fullMPSwriter(PROBLEME_SIMPLEXE_NOMME* named_splx_problem, uint o
 {
 }
 
-void fullMPSwriter::runIfNeeded(Solver::IResultWriter& writer, const std::string& filename)
+void
+fullMPSwriter::runIfNeeded(Solver::IResultWriter& writer, const std::string& filename)
 {
     OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(named_splx_problem_, writer, filename);
 }
@@ -167,7 +169,8 @@ fullOrToolsMPSwriter::fullOrToolsMPSwriter(MPSolver* solver, uint optNumber):
 {
 }
 
-void fullOrToolsMPSwriter::runIfNeeded(Solver::IResultWriter& writer, const std::string& filename)
+void
+fullOrToolsMPSwriter::runIfNeeded(Solver::IResultWriter& writer, const std::string& filename)
 {
     ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(solver_, writer, filename);
 }
@@ -187,7 +190,8 @@ mpsWriterFactory::mpsWriterFactory(Data::mpsExportStatus exportMPS,
 {
 }
 
-bool mpsWriterFactory::doWeExportMPS()
+bool
+mpsWriterFactory::doWeExportMPS()
 {
     switch (export_mps_)
     {
@@ -202,7 +206,8 @@ bool mpsWriterFactory::doWeExportMPS()
     }
 }
 
-std::unique_ptr<I_MPS_writer> mpsWriterFactory::create()
+std::unique_ptr<I_MPS_writer>
+mpsWriterFactory::create()
 {
     if (doWeExportMPS())
     {
@@ -212,7 +217,8 @@ std::unique_ptr<I_MPS_writer> mpsWriterFactory::create()
     return std::make_unique<nullMPSwriter>();
 }
 
-std::unique_ptr<I_MPS_writer> mpsWriterFactory::createOnOptimizationError()
+std::unique_ptr<I_MPS_writer>
+mpsWriterFactory::createOnOptimizationError()
 {
     if (export_mps_on_error_ && not doWeExportMPS())
     {
@@ -222,7 +228,8 @@ std::unique_ptr<I_MPS_writer> mpsWriterFactory::createOnOptimizationError()
     return std::make_unique<nullMPSwriter>();
 }
 
-std::unique_ptr<I_MPS_writer> mpsWriterFactory::createFullmpsWriter()
+std::unique_ptr<I_MPS_writer>
+mpsWriterFactory::createFullmpsWriter()
 {
     if (ortools_used_)
     {

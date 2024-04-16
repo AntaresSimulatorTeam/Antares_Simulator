@@ -40,14 +40,16 @@ RawData::~RawData()
     delete[] year;
 }
 
-void RawData::initializeFromStudy(const Data::Study& study)
+void
+RawData::initializeFromStudy(const Data::Study& study)
 {
     Antares::Memory::Allocate<double>(hourly, maxHoursInAYear);
     nbYearsCapacity = study.runtime->rangeLimits.year[Data::rangeEnd] + 1;
     year = new double[nbYearsCapacity];
 }
 
-void RawData::reset()
+void
+RawData::reset()
 {
     // Reset
     Antares::Memory::Zero(maxHoursInAYear, hourly);
@@ -57,7 +59,8 @@ void RawData::reset()
     (void)::memset(year, 0, sizeof(double) * nbYearsCapacity);
 }
 
-void RawData::merge(unsigned int y, const IntermediateValues& rhs)
+void
+RawData::merge(unsigned int y, const IntermediateValues& rhs)
 {
     unsigned int i;
     // StdDeviation value for each hour throughout all years

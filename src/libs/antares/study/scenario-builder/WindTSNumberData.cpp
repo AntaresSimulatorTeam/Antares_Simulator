@@ -27,7 +27,8 @@
 
 namespace Antares::Data::ScenarioBuilder
 {
-uint windTSNumberData::get_tsGenCount(const Study& study) const
+uint
+windTSNumberData::get_tsGenCount(const Study& study) const
 {
     // General data
     auto& parameters = study.parameters;
@@ -36,7 +37,8 @@ uint windTSNumberData::get_tsGenCount(const Study& study) const
     return tsGenWind ? parameters.nbTimeSeriesWind : 0u;
 }
 
-bool windTSNumberData::apply(/*const*/ Study& study)
+bool
+windTSNumberData::apply(/*const*/ Study& study)
 {
     bool ret = true;
     CString<512, false> logprefix;

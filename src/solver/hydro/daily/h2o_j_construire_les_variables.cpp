@@ -33,14 +33,14 @@ extern "C"
 #include "antares/solver/hydro/daily/h2o_j_donnees_mensuelles.h"
 #include "antares/solver/hydro/daily/h2o_j_fonctions.h"
 
-void H2O_j_ConstruireLesVariables(
-  int NbPdt,
-  std::vector<int>& NumeroDeVariableTurbine,
-  std::vector<double>& Xmin,
-  std::vector<double>& Xmax,
-  std::vector<int>& TypeDeVariable,
-  std::vector<double*>& AdresseOuPlacerLaValeurDesVariablesOptimisees,
-  CORRESPONDANCE_DES_VARIABLES& CorrespondanceDesVariables)
+void
+H2O_j_ConstruireLesVariables(int NbPdt,
+                             std::vector<int>& NumeroDeVariableTurbine,
+                             std::vector<double>& Xmin,
+                             std::vector<double>& Xmax,
+                             std::vector<int>& TypeDeVariable,
+                             std::vector<double*>& AdresseOuPlacerLaValeurDesVariablesOptimisees,
+                             CORRESPONDANCE_DES_VARIABLES& CorrespondanceDesVariables)
 {
     int Var = 0;
 

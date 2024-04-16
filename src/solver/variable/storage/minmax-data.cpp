@@ -95,9 +95,8 @@ template<bool OpInferior, uint Size>
 struct MergeArray
 {
     template<class U>
-    static void Do(const uint year,
-                   Antares::Memory::Array<MinMaxData::Data>& results,
-                   const U& values)
+    static void
+    Do(const uint year, Antares::Memory::Array<MinMaxData::Data>& results, const U& values)
     {
         for (uint i = 0; i != Size; ++i)
         {
@@ -129,9 +128,8 @@ template<uint Size>
 struct MergeArray<0, Size>
 {
     template<class U>
-    static void Do(const uint year,
-                   Antares::Memory::Array<MinMaxData::Data>& results,
-                   const U& values)
+    static void
+    Do(const uint year, Antares::Memory::Array<MinMaxData::Data>& results, const U& values)
     {
         for (uint i = 0; i != Size; ++i)
         {
@@ -172,7 +170,8 @@ MinMaxData::~MinMaxData()
     Antares::Memory::Release(hourly);
 }
 
-void MinMaxData::resetInf()
+void
+MinMaxData::resetInf()
 {
     ArrayInitializer<1, true>::Init(&annual);
     ArrayInitializer<maxMonths, true>::Init(monthly);
@@ -181,7 +180,8 @@ void MinMaxData::resetInf()
     ArrayInitializer<maxHoursInAYear, true>::Init(hourly);
 }
 
-void MinMaxData::resetSup()
+void
+MinMaxData::resetSup()
 {
     ArrayInitializer<1, false>::Init(&annual);
     ArrayInitializer<maxMonths, false>::Init(monthly);
@@ -190,12 +190,14 @@ void MinMaxData::resetSup()
     ArrayInitializer<maxHoursInAYear, false>::Init(hourly);
 }
 
-void MinMaxData::initialize()
+void
+MinMaxData::initialize()
 {
     Antares::Memory::Allocate(hourly, maxHoursInAYear);
 }
 
-void MinMaxData::mergeInf(uint year, const IntermediateValues& rhs)
+void
+MinMaxData::mergeInf(uint year, const IntermediateValues& rhs)
 {
     MergeArray<true, maxMonths>::Do(year, monthly, rhs.month);
     MergeArray<true, maxWeeksInAYear>::Do(year, weekly, rhs.week);
@@ -204,7 +206,8 @@ void MinMaxData::mergeInf(uint year, const IntermediateValues& rhs)
     MergeArray<true, 1>::Do(year, &annual, &rhs.year);
 }
 
-void MinMaxData::mergeSup(uint year, const IntermediateValues& rhs)
+void
+MinMaxData::mergeSup(uint year, const IntermediateValues& rhs)
 {
     MergeArray<false, maxMonths>::Do(year, monthly, rhs.month);
     MergeArray<false, maxWeeksInAYear>::Do(year, weekly, rhs.week);

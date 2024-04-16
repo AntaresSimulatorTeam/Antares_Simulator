@@ -35,19 +35,22 @@ namespace Data
 
 #define SEP IO::Separator
 
-std::string RenewableClusterList::typeID() const
+std::string
+RenewableClusterList::typeID() const
 {
     return "renewables";
 }
 
-uint64_t RenewableClusterList::memoryUsage() const
+uint64_t
+RenewableClusterList::memoryUsage() const
 {
     uint64_t ret = sizeof(RenewableClusterList) + (2 * sizeof(void*)) * enabledCount();
     std::ranges::for_each(each_enabled(), [&ret](const auto c) { ret += c->memoryUsage(); });
     return ret;
 }
 
-bool RenewableClusterList::saveToFolder(const AnyString& folder) const
+bool
+RenewableClusterList::saveToFolder(const AnyString& folder) const
 {
     // Make sure the folder is created
     if (IO::Directory::Create(folder))
@@ -103,7 +106,8 @@ bool RenewableClusterList::saveToFolder(const AnyString& folder) const
     return true;
 }
 
-static bool ClusterLoadFromProperty(RenewableCluster& cluster, const IniFile::Property* p)
+static bool
+ClusterLoadFromProperty(RenewableCluster& cluster, const IniFile::Property* p)
 {
     if (p->key.empty())
     {
@@ -145,9 +149,10 @@ static bool ClusterLoadFromProperty(RenewableCluster& cluster, const IniFile::Pr
     return false;
 }
 
-static bool ClusterLoadFromSection(const AnyString& filename,
-                                   RenewableCluster& cluster,
-                                   const IniFile::Section& section)
+static bool
+ClusterLoadFromSection(const AnyString& filename,
+                       RenewableCluster& cluster,
+                       const IniFile::Section& section)
 {
     if (section.name.empty())
     {
@@ -178,7 +183,8 @@ static bool ClusterLoadFromSection(const AnyString& filename,
     return true;
 }
 
-bool RenewableClusterList::loadFromFolder(const AnyString& folder, Area* area)
+bool
+RenewableClusterList::loadFromFolder(const AnyString& folder, Area* area)
 {
     assert(area and "A parent area is required");
 

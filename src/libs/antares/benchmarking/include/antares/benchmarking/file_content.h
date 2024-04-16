@@ -36,9 +36,8 @@ public:
     iterator begin();
 
     void addItemToSection(const std::string& section, const std::string& key, int value);
-    void addItemToSection(const std::string& section,
-                          const std::string& key,
-                          const std::string& value);
+    void
+    addItemToSection(const std::string& section, const std::string& key, const std::string& value);
     void addDurationItem(const std::string& name, unsigned int duration, int nbCalls);
 
     std::string saveToBufferAsIni();
@@ -48,6 +47,6 @@ private:
     // Data of the file content
     std::map<std::string,                        // Sections as keys
              std::map<std::string, std::string>> // Section parameters as name / value
-      sections_;
+            sections_;
 };
 } // namespace Benchmarking

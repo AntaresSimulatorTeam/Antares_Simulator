@@ -27,10 +27,11 @@ namespace Antares
 {
 namespace Data
 {
-inline uint64_t XCast::memoryUsage() const
+inline uint64_t
+XCast::memoryUsage() const
 {
-    return sizeof(XCast) + data.memoryUsage() + K.memoryUsage() + translation.memoryUsage()
-           + conversion.memoryUsage();
+    return sizeof(XCast) + data.memoryUsage() + K.memoryUsage() + translation.memoryUsage() +
+           conversion.memoryUsage();
 }
 
 } // namespace Data

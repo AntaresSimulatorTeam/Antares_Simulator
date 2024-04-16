@@ -71,7 +71,8 @@ inline EventsRegistry::~EventsRegistry()
     finalize();
 }
 
-void EventsRegistry::finalize()
+void
+EventsRegistry::finalize()
 {
     if (extensions.empty())
     {
@@ -103,7 +104,8 @@ void EventsRegistry::finalize()
     extensions.clear();
 }
 
-void EventsRegistry::initialize(const IExtension::Vector& exts, DispatchJobEvent& queue)
+void
+EventsRegistry::initialize(const IExtension::Vector& exts, DispatchJobEvent& queue)
 {
     // release all previously acquired ressources
     finalize();

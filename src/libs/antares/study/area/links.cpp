@@ -84,7 +84,8 @@ AreaLink::~AreaLink()
 {
 }
 
-bool AreaLink::linkLoadTimeSeries_for_version_below_810(const AnyString& folder)
+bool
+AreaLink::linkLoadTimeSeries_for_version_below_810(const AnyString& folder)
 {
     String buffer;
     buffer.clear() << folder << SEP << with->id << ".txt";
@@ -116,7 +117,8 @@ bool AreaLink::linkLoadTimeSeries_for_version_below_810(const AnyString& folder)
     return true;
 }
 
-bool AreaLink::linkLoadTimeSeries_for_version_820_and_later(const AnyString& folder)
+bool
+AreaLink::linkLoadTimeSeries_for_version_820_and_later(const AnyString& folder)
 {
     String capacitiesFolder;
     capacitiesFolder << folder << SEP << "capacities";
@@ -126,8 +128,11 @@ bool AreaLink::linkLoadTimeSeries_for_version_820_and_later(const AnyString& fol
 
     // Read link's parameters times series
     filename.clear() << folder << SEP << with->id << "_parameters.txt";
-    success = parameters.loadFromCSVFile(filename, fhlMax, HOURS_PER_YEAR, Matrix<>::optFixedSize)
-              && success;
+    success = parameters.loadFromCSVFile(filename,
+                                         fhlMax,
+                                         HOURS_PER_YEAR,
+                                         Matrix<>::optFixedSize) &&
+              success;
 
     // Read link's direct capacities time series
     filename.clear() << capacitiesFolder << SEP << with->id << "_direct.txt";
@@ -140,15 +145,17 @@ bool AreaLink::linkLoadTimeSeries_for_version_820_and_later(const AnyString& fol
     return success;
 }
 
-bool AreaLink::isLinkPhysical() const
+bool
+AreaLink::isLinkPhysical() const
 {
     // All link types are physical, except arVirt
     return assetType != atVirt;
 }
 
 // Handle all trivial cases here
-void AreaLink::overrideTransmissionCapacityAccordingToGlobalParameter(
-  GlobalTransmissionCapacities tncGlobal)
+void
+AreaLink::overrideTransmissionCapacityAccordingToGlobalParameter(
+        GlobalTransmissionCapacities tncGlobal)
 {
     switch (tncGlobal)
     {
@@ -179,7 +186,8 @@ void AreaLink::overrideTransmissionCapacityAccordingToGlobalParameter(
     }
 }
 
-bool AreaLink::loadTimeSeries(const Study& study, const AnyString& folder)
+bool
+AreaLink::loadTimeSeries(const Study& study, const AnyString& folder)
 {
     if (study.header.version < StudyVersion(8, 2))
     {
@@ -191,7 +199,8 @@ bool AreaLink::loadTimeSeries(const Study& study, const AnyString& folder)
     }
 }
 
-void AreaLink::storeTimeseriesNumbers(Solver::IResultWriter& writer) const
+void
+AreaLink::storeTimeseriesNumbers(Solver::IResultWriter& writer) const
 {
     Clob path;
     TSNumbersPredicate predicate;
@@ -204,7 +213,8 @@ void AreaLink::storeTimeseriesNumbers(Solver::IResultWriter& writer) const
     writer.addEntryFromBuffer(path.c_str(), buffer);
 }
 
-void AreaLink::detach()
+void
+AreaLink::detach()
 {
     assert(from);
     assert(with);
@@ -215,7 +225,8 @@ void AreaLink::detach()
     from->detachLinkFromItsPointer(this);
 }
 
-void AreaLink::resetToDefaultValues()
+void
+AreaLink::resetToDefaultValues()
 {
     parameters.reset(fhlMax, HOURS_PER_YEAR, true);
     directCapacities.reset();
@@ -244,7 +255,8 @@ void AreaLink::resetToDefaultValues()
     displayComments = true;
 }
 
-void AreaLink::reverse()
+void
+AreaLink::reverse()
 {
     // Logs
     logs.info() << "Reversing the orientation of the link `" << from->id << "` - `" << with->id
@@ -276,7 +288,8 @@ void AreaLink::reverse()
     indirectCapacities.markAsModified();
 }
 
-bool AreaLink::isVisibleOnLayer(const size_t& layerID) const
+bool
+AreaLink::isVisibleOnLayer(const size_t& layerID) const
 {
     if (from && with)
     {
@@ -285,7 +298,8 @@ bool AreaLink::isVisibleOnLayer(const size_t& layerID) const
     return false;
 }
 
-AreaLink* AreaAddLinkBetweenAreas(Area* area, Area* with, bool warning)
+AreaLink*
+AreaAddLinkBetweenAreas(Area* area, Area* with, bool warning)
 {
     /* Asserts */
     assert(area);
@@ -312,7 +326,8 @@ AreaLink* AreaAddLinkBetweenAreas(Area* area, Area* with, bool warning)
 
 namespace // anonymous
 {
-bool AreaLinksInternalLoadFromProperty(AreaLink& link, const String& key, const String& value)
+bool
+AreaLinksInternalLoadFromProperty(AreaLink& link, const String& key, const String& value)
 {
     if (key == "hurdles-cost")
     {
@@ -459,14 +474,16 @@ bool AreaLinksInternalLoadFromProperty(AreaLink& link, const String& key, const 
     return false;
 }
 
-void logLinkDataCheckError(const AreaLink& link, const String& msg, int hour)
+void
+logLinkDataCheckError(const AreaLink& link, const String& msg, int hour)
 {
     logs.error() << "Link (" << link.from->name << "/" << link.with->name << "): Invalid values ("
                  << msg << ") for hour " << hour;
     throw Antares::Error::ReadingStudy();
 }
 
-void logLinkDataCheckErrorDirectIndirect(const AreaLink& link, uint direct, uint indirect)
+void
+logLinkDataCheckErrorDirectIndirect(const AreaLink& link, uint direct, uint indirect)
 {
     logs.error() << "Link (" << link.from->name << "/" << link.with->name << "): Found " << direct
                  << " direct TS " << " and " << indirect
@@ -475,7 +492,8 @@ void logLinkDataCheckErrorDirectIndirect(const AreaLink& link, uint direct, uint
 }
 } // anonymous namespace
 
-bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyString& folder)
+bool
+AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyString& folder)
 {
     // Assert
     assert(area);
@@ -615,7 +633,7 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
         if (study.usedByTheSolver)
         {
             link.overrideTransmissionCapacityAccordingToGlobalParameter(
-              study.parameters.transmissionCapacities);
+                    study.parameters.transmissionCapacities);
 
             if (!link.useHurdlesCost || !study.parameters.include.hurdleCosts)
             {
@@ -651,7 +669,8 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
     return ret;
 } // End AreaLinksLoadFromFolder(...)
 
-bool saveAreaLinksTimeSeriesToFolder(const Area* area, const char* const folder)
+bool
+saveAreaLinksTimeSeriesToFolder(const Area* area, const char* const folder)
 {
     // Initialize
     String capacitiesFolder;
@@ -687,7 +706,8 @@ bool saveAreaLinksTimeSeriesToFolder(const Area* area, const char* const folder)
     return success;
 }
 
-bool saveAreaLinksConfigurationFileToFolder(const Area* area, const char* const folder)
+bool
+saveAreaLinksConfigurationFileToFolder(const Area* area, const char* const folder)
 {
     String filename;
     IniFile ini;
@@ -723,7 +743,8 @@ bool saveAreaLinksConfigurationFileToFolder(const Area* area, const char* const 
     return ini.save(filename);
 }
 
-bool AreaLinksSaveToFolder(const Area* area, const char* const folder)
+bool
+AreaLinksSaveToFolder(const Area* area, const char* const folder)
 {
     /* Assert */
     assert(area);
@@ -749,7 +770,8 @@ bool AreaLinksSaveToFolder(const Area* area, const char* const folder)
     return true;
 }
 
-void AreaLinkRemove(AreaLink* link)
+void
+AreaLinkRemove(AreaLink* link)
 {
     if (!link)
     {
@@ -770,7 +792,8 @@ void AreaLinkRemove(AreaLink* link)
     delete link;
 }
 
-uint64_t AreaLink::memoryUsage() const
+uint64_t
+AreaLink::memoryUsage() const
 {
     uint64_t to_return = sizeof(AreaLink);
     to_return += parameters.valuesMemoryUsage();
@@ -780,27 +803,31 @@ uint64_t AreaLink::memoryUsage() const
     return to_return;
 }
 
-bool AreaLink::forceReload(bool reload) const
+bool
+AreaLink::forceReload(bool reload) const
 {
-    return parameters.forceReload(reload) && directCapacities.forceReload(reload)
-           && indirectCapacities.forceReload(reload);
+    return parameters.forceReload(reload) && directCapacities.forceReload(reload) &&
+           indirectCapacities.forceReload(reload);
 }
 
-void AreaLink::markAsModified() const
+void
+AreaLink::markAsModified() const
 {
     parameters.markAsModified();
     directCapacities.markAsModified();
     indirectCapacities.markAsModified();
 }
 
-String AreaLink::getName() const
+String
+AreaLink::getName() const
 {
     String s;
     s << from->name << "/" << with->name;
     return s;
 }
 
-AreaLink::NamePair AreaLink::getNamePair() const
+AreaLink::NamePair
+AreaLink::getNamePair() const
 {
     return NamePair(from->name, with->name);
 }

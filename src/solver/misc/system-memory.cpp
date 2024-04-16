@@ -37,13 +37,15 @@ SystemMemoryLogger::~SystemMemoryLogger()
     stop();
 }
 
-bool SystemMemoryLogger::onStarting()
+bool
+SystemMemoryLogger::onStarting()
 {
     onInterval(0);
     return true;
 }
 
-bool SystemMemoryLogger::onInterval(uint)
+bool
+SystemMemoryLogger::onInterval(uint)
 {
     System::Memory::Usage memory;
     memory.available /= 1024 * 1024; // Mib

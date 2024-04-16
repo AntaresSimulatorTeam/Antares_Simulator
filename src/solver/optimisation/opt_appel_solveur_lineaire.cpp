@@ -89,14 +89,15 @@ struct SimplexResult
     mpsWriterFactory mps_writer_factory;
 };
 
-static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
-                                          PROBLEME_HEBDO* problemeHebdo,
-                                          Optimization::PROBLEME_SIMPLEXE_NOMME& Probleme,
-                                          const int NumIntervalle,
-                                          const int optimizationNumber,
-                                          const OptPeriodStringGenerator& optPeriodStringGenerator,
-                                          bool PremierPassage,
-                                          IResultWriter& writer)
+static SimplexResult
+OPT_TryToCallSimplex(const OptimizationOptions& options,
+                     PROBLEME_HEBDO* problemeHebdo,
+                     Optimization::PROBLEME_SIMPLEXE_NOMME& Probleme,
+                     const int NumIntervalle,
+                     const int optimizationNumber,
+                     const OptPeriodStringGenerator& optPeriodStringGenerator,
+                     bool PremierPassage,
+                     IResultWriter& writer)
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
     auto ProbSpx = (PROBLEME_SPX*)(ProblemeAResoudre->ProblemesSpx[(int)NumIntervalle]);
@@ -188,8 +189,8 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
     Probleme.NombreDeTermesDesLignes = ProblemeAResoudre->NombreDeTermesDesLignes.data();
     Probleme.IndicesColonnes = ProblemeAResoudre->IndicesColonnes.data();
     Probleme.CoefficientsDeLaMatriceDesContraintes = ProblemeAResoudre
-                                                       ->CoefficientsDeLaMatriceDesContraintes
-                                                       .data();
+                                                             ->CoefficientsDeLaMatriceDesContraintes
+                                                             .data();
     Probleme.Sens = ProblemeAResoudre->Sens.data();
     Probleme.SecondMembre = ProblemeAResoudre->SecondMembre.data();
 
@@ -287,12 +288,13 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
     return {.success = true, .timeMeasure = timeMeasure, .mps_writer_factory = mps_writer_factory};
 }
 
-bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
-                         PROBLEME_HEBDO* problemeHebdo,
-                         int NumIntervalle,
-                         const int optimizationNumber,
-                         const OptPeriodStringGenerator& optPeriodStringGenerator,
-                         IResultWriter& writer)
+bool
+OPT_AppelDuSimplexe(const OptimizationOptions& options,
+                    PROBLEME_HEBDO* problemeHebdo,
+                    int NumIntervalle,
+                    const int optimizationNumber,
+                    const OptPeriodStringGenerator& optPeriodStringGenerator,
+                    IResultWriter& writer)
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
     Optimization::PROBLEME_SIMPLEXE_NOMME Probleme(ProblemeAResoudre->NomDesVariables,
@@ -389,7 +391,7 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
         Probleme.SetUseNamedProblems(true);
 
         auto MPproblem = std::shared_ptr<MPSolver>(
-          ProblemSimplexeNommeConverter(options.solverName, &Probleme).Convert());
+                ProblemSimplexeNommeConverter(options.solverName, &Probleme).Convert());
 
         auto analyzer = makeUnfeasiblePbAnalyzer();
         analyzer->run(MPproblem.get());

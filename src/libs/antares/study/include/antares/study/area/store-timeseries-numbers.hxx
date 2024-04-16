@@ -24,7 +24,8 @@
 namespace Antares::Data
 {
 template<int TimeSeriesT>
-void singleAreaStoreTimeseriesNumbers(Solver::IResultWriter& writer, const Area& area)
+void
+singleAreaStoreTimeseriesNumbers(Solver::IResultWriter& writer, const Area& area)
 {
     switch (TimeSeriesT)
     {
@@ -65,7 +66,8 @@ void singleAreaStoreTimeseriesNumbers(Solver::IResultWriter& writer, const Area&
 }
 
 template<int TimeSeriesT>
-void storeTimeseriesNumbers(Solver::IResultWriter& writer, const AreaList& area)
+void
+storeTimeseriesNumbers(Solver::IResultWriter& writer, const AreaList& area)
 {
     // Each area in the list
     area.each([&writer](const Area& a)

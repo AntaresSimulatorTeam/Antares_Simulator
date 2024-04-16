@@ -62,7 +62,8 @@ public:
 
 } // anonymous namespace
 
-String sendToNull()
+String
+sendToNull()
 {
 #ifdef __linux__
     return " > /dev/null";
@@ -72,7 +73,8 @@ String sendToNull()
 #endif
 }
 
-int main(int argc, char* argv[])
+int
+main(int argc, char* argv[])
 {
     // locale
     InitializeDefaultLocale();
@@ -165,8 +167,8 @@ int main(int argc, char* argv[])
                     ' ',
                     "ortools-solver",
                     "Ortools solver used for simulation (only available with use-ortools "
-                    "option)\nAvailable solver list : "
-                      + availableOrToolsSolversString());
+                    "option)\nAvailable solver list : " +
+                            availableOrToolsSolversString());
 
         options.remainingArguments(optInput);
         // Version
@@ -397,8 +399,8 @@ int main(int argc, char* argv[])
                         logs.error() << "Command interpreter cannot be found";
                         break;
                     case ENOEXEC:
-                        logs.error()
-                          << "Command-interpreter file has invalid format and is not executable";
+                        logs.error() << "Command-interpreter file has invalid format and is not "
+                                        "executable";
                         break;
                     case ENOMEM:
                         logs.error() << "Not enough memory is available to execute command";

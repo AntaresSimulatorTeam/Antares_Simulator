@@ -148,7 +148,8 @@ enum SpatialAggregatePostProcessing
 /*!
 ** \brief Hard limit for the decimal precision according a given File precision level
 */
-static inline uint MaxDecimalPrecision(uint fileLevel)
+static inline uint
+MaxDecimalPrecision(uint fileLevel)
 {
     return (fileLevel != id) ? 2u : 0u;
 }
@@ -163,7 +164,8 @@ struct NextLevel
 };
 
 template<class StreamT>
-inline void DataLevelToStream(StreamT& out, int dataLevel)
+inline void
+DataLevelToStream(StreamT& out, int dataLevel)
 {
     switch (dataLevel)
     {
@@ -185,7 +187,8 @@ inline void DataLevelToStream(StreamT& out, int dataLevel)
 }
 
 template<class StreamT>
-inline void FileLevelToStreamShort(StreamT& out, int fileLevel)
+inline void
+FileLevelToStreamShort(StreamT& out, int fileLevel)
 {
     switch (fileLevel)
     {
@@ -213,7 +216,8 @@ inline void FileLevelToStreamShort(StreamT& out, int fileLevel)
 }
 
 template<class StreamT>
-inline void FileLevelToStream(StreamT& out, int fileLevel)
+inline void
+FileLevelToStream(StreamT& out, int fileLevel)
 {
     switch (fileLevel)
     {
@@ -241,7 +245,8 @@ inline void FileLevelToStream(StreamT& out, int fileLevel)
 }
 
 template<class StreamT>
-inline void PrecisionLevelToStream(StreamT& out, int precisionLevel)
+inline void
+PrecisionLevelToStream(StreamT& out, int precisionLevel)
 {
     switch (precisionLevel)
     {

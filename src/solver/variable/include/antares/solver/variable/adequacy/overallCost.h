@@ -53,10 +53,10 @@ struct VCardOverallCost
 
     //! The expecte results
     typedef Results<R::AllYears::Average< // The average values throughout all years
-                      >,
+                            >,
                     R::AllYears::Average // Use these values for spatial cluster
                     >
-      ResultsType;
+            ResultsType;
 
     //! The VCard to look for for calculating spatial aggregates
     typedef VCardOverallCost VCardForSpatialAggregate;
@@ -123,11 +123,11 @@ public:
     {
         enum
         {
-            count = ((VCardType::categoryDataLevel & CDataLevel
-                      && VCardType::categoryFileLevel & CFile)
-                       ? (NextType::template Statistics<CDataLevel, CFile>::count
-                          + VCardType::columnCount * ResultsType::count)
-                       : NextType::template Statistics<CDataLevel, CFile>::count),
+            count = ((VCardType::categoryDataLevel & CDataLevel &&
+                      VCardType::categoryFileLevel & CFile)
+                             ? (NextType::template Statistics<CDataLevel, CFile>::count +
+                                VCardType::columnCount * ResultsType::count)
+                             : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
 
@@ -245,35 +245,37 @@ public:
         auto& thermal = state.thermal;
         // Total UnsupliedEnergy emissions
         pValuesForTheCurrentYear[numSpace][state.hourInTheYear] +=
-          // Current Hydro Storage generation
-          (state.hourlyResults->ValeursHorairesDeDefaillancePositive[state.hourInTheWeek]
-           * area->thermal.unsuppliedEnergyCost)
-          + ((state.hourlyResults->ValeursHorairesDeDefaillanceNegative[state.hourInTheWeek]
-              + state.resSpilled.entry[area->index][state.hourInTheWeek])
-             * area->thermal.spilledEnergyCost);
+                // Current Hydro Storage generation
+                (state.hourlyResults->ValeursHorairesDeDefaillancePositive[state.hourInTheWeek] *
+                 area->thermal.unsuppliedEnergyCost) +
+                ((state.hourlyResults->ValeursHorairesDeDefaillanceNegative[state.hourInTheWeek] +
+                  state.resSpilled.entry[area->index][state.hourInTheWeek]) *
+                 area->thermal.spilledEnergyCost);
 
         // Hydro costs : water value and pumping
-        pValuesForTheCurrentYear[numSpace].hour[state.hourInTheYear]
-          += state.problemeHebdo->CaracteristiquesHydrauliques[state.area->index]
-               .WeeklyWaterValueStateRegular
-             * (state.hourlyResults->TurbinageHoraire[state.hourInTheWeek]
-                - area->hydro.pumpingEfficiency
-                    * state.hourlyResults->PompageHoraire[state.hourInTheWeek]);
+        pValuesForTheCurrentYear[numSpace].hour
+                [state.hourInTheYear] += state.problemeHebdo
+                                                 ->CaracteristiquesHydrauliques[state.area->index]
+                                                 .WeeklyWaterValueStateRegular *
+                                         (state.hourlyResults
+                                                  ->TurbinageHoraire[state.hourInTheWeek] -
+                                          area->hydro.pumpingEfficiency *
+                                                  state.hourlyResults
+                                                          ->PompageHoraire[state.hourInTheWeek]);
 
         // Thermal costs
         for (auto& cluster: area->thermal.list.each_enabled())
         {
-            pValuesForTheCurrentYear[numSpace][state.hourInTheYear]
-              += thermal[area->index].thermalClustersOperatingCost[cluster->areaWideIndex];
+            pValuesForTheCurrentYear[numSpace][state.hourInTheYear] +=
+                    thermal[area->index].thermalClustersOperatingCost[cluster->areaWideIndex];
         }
 
         // Next variable
         NextType::hourForEachArea(state, numSpace);
     }
 
-    Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
-      unsigned int,
-      unsigned int numSpace) const
+    Antares::Memory::Stored<double>::ConstReturnType
+    retrieveRawHourlyValuesForCurrentYear(unsigned int, unsigned int numSpace) const
     {
         return pValuesForTheCurrentYear[numSpace].hour;
     }
@@ -293,7 +295,7 @@ public:
             results.variableUnit = VCardType::Unit();
 
             pValuesForTheCurrentYear[numSpace]
-              .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
+                    .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
         }
     }
 

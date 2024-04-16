@@ -49,55 +49,64 @@ static std::mutex gMutex;
 
 } // anonymous namespace
 
-uint64_t ReadFromDisk()
+uint64_t
+ReadFromDisk()
 {
     std::lock_guard locker(gMutex);
     return (uint64_t)gReadFromDisk;
 }
 
-uint64_t WrittenToDisk()
+uint64_t
+WrittenToDisk()
 {
     std::lock_guard locker(gMutex);
     return (uint64_t)gWrittenToDisk;
 }
 
-uint64_t ReadFromDiskSinceStartup()
+uint64_t
+ReadFromDiskSinceStartup()
 {
     std::lock_guard locker(gMutex);
     return (uint64_t)gReadFromDiskSinceStartup;
 }
 
-uint64_t WrittenToDiskSinceStartup()
+uint64_t
+WrittenToDiskSinceStartup()
 {
     std::lock_guard locker(gMutex);
     return (int64_t)gWrittenToDiskSinceStartup;
 }
 
-uint64_t ReadFromNetwork()
+uint64_t
+ReadFromNetwork()
 {
     std::lock_guard locker(gMutex);
     return (uint64_t)gReadFromNetwork;
 }
 
-uint64_t WrittenToNetwork()
+uint64_t
+WrittenToNetwork()
 {
     std::lock_guard locker(gMutex);
     return (uint64_t)gWrittenToNetwork;
 }
 
-uint64_t ReadFromNetworkSinceStartup()
+uint64_t
+ReadFromNetworkSinceStartup()
 {
     std::lock_guard locker(gMutex);
     return (uint64_t)gReadFromNetworkSinceStartup;
 }
 
-uint64_t WrittenToNetworkSinceStartup()
+uint64_t
+WrittenToNetworkSinceStartup()
 {
     std::lock_guard locker(gMutex);
     return (uint64_t)gWrittenToNetworkSinceStartup;
 }
 
-void Reset()
+void
+Reset()
 {
     std::lock_guard locker(gMutex);
     gReadFromDisk = 0;
@@ -106,7 +115,8 @@ void Reset()
     gWrittenToNetwork = 0;
 }
 
-void DumpToLogs()
+void
+DumpToLogs()
 {
     std::lock_guard locker(gMutex);
     logs.info() << "[statistics] disk: read: " << (gReadFromDisk / 1024)
@@ -115,28 +125,32 @@ void DumpToLogs()
                 << " ko, written: " << (gWrittenToNetwork / 1024) << " ko";
 }
 
-void HasReadFromDisk(uint64_t size)
+void
+HasReadFromDisk(uint64_t size)
 {
     std::lock_guard locker(gMutex);
     gReadFromDisk += size;
     gReadFromDiskSinceStartup += size;
 }
 
-void HasWrittenToDisk(uint64_t size)
+void
+HasWrittenToDisk(uint64_t size)
 {
     std::lock_guard locker(gMutex);
     gWrittenToDisk += size;
     gWrittenToDiskSinceStartup += size;
 }
 
-void HasReadFromNetwork(uint64_t size)
+void
+HasReadFromNetwork(uint64_t size)
 {
     std::lock_guard locker(gMutex);
     gReadFromNetwork += size;
     gReadFromNetworkSinceStartup += size;
 }
 
-void HasWrittenToNetwork(uint64_t size)
+void
+HasWrittenToNetwork(uint64_t size)
 {
     std::lock_guard locker(gMutex);
     gWrittenToNetwork += size;

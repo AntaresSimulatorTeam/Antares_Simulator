@@ -37,7 +37,8 @@ namespace Antares::Data
 {
 EconomicInputData::EconomicInputData() = default;
 
-void EconomicInputData::copyFrom(const EconomicInputData& rhs)
+void
+EconomicInputData::copyFrom(const EconomicInputData& rhs)
 {
     fuelcost = rhs.fuelcost;
     rhs.fuelcost.unloadFromMemory();
@@ -45,7 +46,8 @@ void EconomicInputData::copyFrom(const EconomicInputData& rhs)
     rhs.co2cost.unloadFromMemory();
 }
 
-bool EconomicInputData::saveToFolder(const AnyString& folder) const
+bool
+EconomicInputData::saveToFolder(const AnyString& folder) const
 {
     bool ret = true;
     if (IO::Directory::Create(folder))
@@ -60,7 +62,8 @@ bool EconomicInputData::saveToFolder(const AnyString& folder) const
     return false;
 }
 
-bool EconomicInputData::loadFromFolder(Study& study, const AnyString& folder)
+bool
+EconomicInputData::loadFromFolder(Study& study, const AnyString& folder)
 {
     bool ret = true;
 
@@ -76,8 +79,8 @@ bool EconomicInputData::loadFromFolder(Study& study, const AnyString& folder)
                                            1,
                                            HOURS_PER_YEAR,
                                            Matrix<>::optImmediate,
-                                           &dataBuffer)
-                  && ret;
+                                           &dataBuffer) &&
+                  ret;
             if (study.usedByTheSolver && study.parameters.derated)
             {
                 fuelcost.averageTimeseries();
@@ -91,8 +94,8 @@ bool EconomicInputData::loadFromFolder(Study& study, const AnyString& folder)
                                           1,
                                           HOURS_PER_YEAR,
                                           Matrix<>::optImmediate,
-                                          &dataBuffer)
-                  && ret;
+                                          &dataBuffer) &&
+                  ret;
             if (study.usedByTheSolver && study.parameters.derated)
             {
                 co2cost.averageTimeseries();
@@ -103,24 +106,28 @@ bool EconomicInputData::loadFromFolder(Study& study, const AnyString& folder)
     return ret;
 }
 
-bool EconomicInputData::forceReload(bool reload) const
+bool
+EconomicInputData::forceReload(bool reload) const
 {
     return fuelcost.forceReload(reload) && co2cost.forceReload(reload);
 }
 
-void EconomicInputData::markAsModified() const
+void
+EconomicInputData::markAsModified() const
 {
     fuelcost.markAsModified();
     co2cost.markAsModified();
 }
 
-void EconomicInputData::reset()
+void
+EconomicInputData::reset()
 {
     fuelcost.reset(1, HOURS_PER_YEAR, true);
     co2cost.reset(1, HOURS_PER_YEAR, true);
 }
 
-uint64_t EconomicInputData::memoryUsage() const
+uint64_t
+EconomicInputData::memoryUsage() const
 {
     return sizeof(EconomicInputData);
 }

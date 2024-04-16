@@ -25,7 +25,8 @@ namespace Antares
 {
 namespace Data
 {
-inline uint64_t PreproThermal::memoryUsage() const
+inline uint64_t
+PreproThermal::memoryUsage() const
 {
     return sizeof(PreproThermal);
 }

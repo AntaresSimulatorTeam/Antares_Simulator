@@ -49,7 +49,8 @@ inline List<NextT>::~List()
 }
 
 template<class NextT>
-inline void List<NextT>::initializeFromStudy(Data::Study& study)
+inline void
+List<NextT>::initializeFromStudy(Data::Study& study)
 {
     // Store a pointer to the current study
     pStudy = &study;
@@ -58,64 +59,71 @@ inline void List<NextT>::initializeFromStudy(Data::Study& study)
 }
 
 template<class NextT>
-inline void List<NextT>::initializeFromArea(Data::Study* study, Data::Area* area)
+inline void
+List<NextT>::initializeFromArea(Data::Study* study, Data::Area* area)
 {
     // Ask to the first variable to do it
     NextType::initializeFromArea(study, area);
 }
 
 template<class NextT>
-inline void List<NextT>::initializeFromLink(Data::Study* study, Data::AreaLink* link)
+inline void
+List<NextT>::initializeFromLink(Data::Study* study, Data::AreaLink* link)
 {
     // Next
     NextType::initializeFromAreaLink(study, link);
 }
 
 template<class NextT>
-inline void List<NextT>::initializeFromThermalCluster(Data::Study* study,
-                                                      Data::Area* area,
-                                                      Data::ThermalCluster* cluster)
+inline void
+List<NextT>::initializeFromThermalCluster(Data::Study* study,
+                                          Data::Area* area,
+                                          Data::ThermalCluster* cluster)
 {
     // Next
     NextType::initializeFromThermalCluster(study, area, cluster);
 }
 
 template<class NextT>
-inline void List<NextT>::simulationBegin()
+inline void
+List<NextT>::simulationBegin()
 {
     NextType::simulationBegin();
 }
 
 template<class NextT>
-inline void List<NextT>::simulationEnd()
+inline void
+List<NextT>::simulationEnd()
 {
     NextType::simulationEnd();
 }
 
 template<class NextT>
-inline void List<NextT>::yearBegin(unsigned int year, unsigned int numSpace)
+inline void
+List<NextT>::yearBegin(unsigned int year, unsigned int numSpace)
 {
     NextType::yearBegin(year, numSpace);
 }
 
 template<class NextT>
-inline void List<NextT>::yearEnd(unsigned int year, unsigned int numSpace)
+inline void
+List<NextT>::yearEnd(unsigned int year, unsigned int numSpace)
 {
     NextType::yearEnd(year, numSpace);
 }
 
 template<class NextT>
-inline void List<NextT>::computeSummary(std::map<unsigned int, unsigned int>& numSpaceToYear,
-                                        unsigned int nbYearsForCurrentSummary)
+inline void
+List<NextT>::computeSummary(std::map<unsigned int, unsigned int>& numSpaceToYear,
+                            unsigned int nbYearsForCurrentSummary)
 {
     NextType::computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
 }
 
 template<class NextT>
 template<class V>
-inline void List<NextT>::yearEndSpatialAggregates(V& allVars,
-                                                  unsigned int year,
-                                                  unsigned int numSpace)
+inline void
+List<NextT>::yearEndSpatialAggregates(V& allVars, unsigned int year, unsigned int numSpace)
 {
     // Next variable
     NextType::template yearEndSpatialAggregates(allVars, year, numSpace);
@@ -123,7 +131,8 @@ inline void List<NextT>::yearEndSpatialAggregates(V& allVars,
 
 template<class NextT>
 template<class V, class SetT>
-inline void List<NextT>::yearEndSpatialAggregates(V& allVars, unsigned int year, const SetT& set)
+inline void
+List<NextT>::yearEndSpatialAggregates(V& allVars, unsigned int year, const SetT& set)
 {
     // Next variable
     NextType::template yearEndSpatialAggregates(allVars, year, set);
@@ -131,10 +140,10 @@ inline void List<NextT>::yearEndSpatialAggregates(V& allVars, unsigned int year,
 
 template<class NextT>
 template<class V>
-inline void List<NextT>::computeSpatialAggregatesSummary(
-  V& allVars,
-  std::map<unsigned int, unsigned int>& numSpaceToYear,
-  unsigned int nbYearsForCurrentSummary)
+inline void
+List<NextT>::computeSpatialAggregatesSummary(V& allVars,
+                                             std::map<unsigned int, unsigned int>& numSpaceToYear,
+                                             unsigned int nbYearsForCurrentSummary)
 {
     // Next variable
     NextType::template computeSpatialAggregatesSummary(allVars,
@@ -144,7 +153,8 @@ inline void List<NextT>::computeSpatialAggregatesSummary(
 
 template<class NextT>
 template<class V>
-inline void List<NextT>::simulationEndSpatialAggregates(V& allVars)
+inline void
+List<NextT>::simulationEndSpatialAggregates(V& allVars)
 {
     // Next variable
     NextType::template simulationEndSpatialAggregates(allVars);
@@ -152,102 +162,112 @@ inline void List<NextT>::simulationEndSpatialAggregates(V& allVars)
 
 template<class NextT>
 template<class V, class SetT>
-inline void List<NextT>::simulationEndSpatialAggregates(V& allVars, const SetT& set)
+inline void
+List<NextT>::simulationEndSpatialAggregates(V& allVars, const SetT& set)
 {
     // Next variable
     NextType::template simulationEndSpatialAggregates(allVars, set);
 }
 
 template<class NextT>
-inline void List<NextT>::hourBegin(unsigned int hourInTheYear)
+inline void
+List<NextT>::hourBegin(unsigned int hourInTheYear)
 {
     NextType::hourBegin(hourInTheYear);
 }
 
 template<class NextT>
-inline void List<NextT>::weekBegin(State& state)
+inline void
+List<NextT>::weekBegin(State& state)
 {
     NextType::weekBegin(state);
 }
 
 template<class NextT>
-inline void List<NextT>::weekEnd(State& state)
+inline void
+List<NextT>::weekEnd(State& state)
 {
     NextType::weekEnd(state);
 }
 
 template<class NextT>
-inline void List<NextT>::hourForEachArea(State& state, unsigned int numSpace)
+inline void
+List<NextT>::hourForEachArea(State& state, unsigned int numSpace)
 {
     NextType::hourForEachArea(state, numSpace);
 }
 
 template<class NextT>
-inline void List<NextT>::hourForEachLink(State& state)
+inline void
+List<NextT>::hourForEachLink(State& state)
 {
     NextType::hourForEachLink(state);
 }
 
 template<class NextT>
-inline void List<NextT>::hourEnd(State& state, unsigned int hourInTheYear)
+inline void
+List<NextT>::hourEnd(State& state, unsigned int hourInTheYear)
 {
     NextType::hourEnd(state, hourInTheYear);
 }
 
 template<class NextT>
 template<class SearchVCardT, class O>
-inline void List<NextT>::computeSpatialAggregateWith(O& out)
+inline void
+List<NextT>::computeSpatialAggregateWith(O& out)
 {
     NextType::template computeSpatialAggregateWith<SearchVCardT, O>(out);
 }
 
 template<class NextT>
 template<class SearchVCardT, class O>
-inline void List<NextT>::computeSpatialAggregateWith(O& out,
-                                                     const Data::Area* area,
-                                                     unsigned int numSpace)
+inline void
+List<NextT>::computeSpatialAggregateWith(O& out, const Data::Area* area, unsigned int numSpace)
 {
     NextType::template computeSpatialAggregateWith<SearchVCardT, O>(out, area, numSpace);
 }
 
 template<class NextT>
 template<class VCardToFindT>
-inline void List<NextT>::retrieveResultsForArea(
-  typename Variable::Storage<VCardToFindT>::ResultsType** result,
-  const Data::Area* area)
+inline void
+List<NextT>::retrieveResultsForArea(typename Variable::Storage<VCardToFindT>::ResultsType** result,
+                                    const Data::Area* area)
 {
     NextType::template retrieveResultsForArea<VCardToFindT>(result, area);
 }
 
 template<class NextT>
 template<class VCardToFindT>
-inline void List<NextT>::retrieveResultsForThermalCluster(
-  typename Variable::Storage<VCardToFindT>::ResultsType** result,
-  const Data::ThermalCluster* cluster)
+inline void
+List<NextT>::retrieveResultsForThermalCluster(
+        typename Variable::Storage<VCardToFindT>::ResultsType** result,
+        const Data::ThermalCluster* cluster)
 {
     NextType::template retrieveResultsForThermalCluster<VCardToFindT>(result, cluster);
 }
 
 template<class NextT>
 template<class VCardToFindT>
-inline void List<NextT>::retrieveResultsForLink(
-  typename Variable::Storage<VCardToFindT>::ResultsType** result,
-  const Data::AreaLink* link)
+inline void
+List<NextT>::retrieveResultsForLink(typename Variable::Storage<VCardToFindT>::ResultsType** result,
+                                    const Data::AreaLink* link)
 {
     NextType::template retrieveResultsForLink<VCardToFindT>(result, link);
 }
 
 template<class NextT>
-inline uint64_t List<NextT>::memoryUsage() const
+inline uint64_t
+List<NextT>::memoryUsage() const
 {
     return sizeof(ListType) + NextType::memoryUsage();
 }
 
 template<class NextT>
-void List<NextT>::buildSurveyReport(SurveyResults& results,
-                                    int dataLevel,
-                                    int fileLevel,
-                                    int precision) const
+void
+List<NextT>::buildSurveyReport(SurveyResults& results,
+                               int dataLevel,
+                               int fileLevel,
+                               int precision) const
 {
     // Reset
     results.data.columnIndex = 0;
@@ -272,11 +292,12 @@ void List<NextT>::buildSurveyReport(SurveyResults& results,
 }
 
 template<class NextT>
-void List<NextT>::buildAnnualSurveyReport(SurveyResults& results,
-                                          int dataLevel,
-                                          int fileLevel,
-                                          int precision,
-                                          unsigned int numSpace) const
+void
+List<NextT>::buildAnnualSurveyReport(SurveyResults& results,
+                                     int dataLevel,
+                                     int fileLevel,
+                                     int precision,
+                                     unsigned int numSpace) const
 {
     // Reset
     results.data.columnIndex = 0;
@@ -301,7 +322,8 @@ void List<NextT>::buildAnnualSurveyReport(SurveyResults& results,
 }
 
 template<class NextT>
-void List<NextT>::buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
+void
+List<NextT>::buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
 {
     // Reset
     results.data.columnIndex = 0;
@@ -315,10 +337,11 @@ void List<NextT>::buildDigest(SurveyResults& results, int digestLevel, int dataL
 }
 
 template<class NextT>
-void List<NextT>::exportSurveyResults(bool global,
-                                      const Yuni::String& output,
-                                      unsigned int numSpace,
-                                      IResultWriter& writer)
+void
+List<NextT>::exportSurveyResults(bool global,
+                                 const Yuni::String& output,
+                                 unsigned int numSpace,
+                                 IResultWriter& writer)
 {
     using namespace Antares;
 

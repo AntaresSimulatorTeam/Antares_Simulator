@@ -52,9 +52,8 @@ typedef Variable::Storage<AvgExchangeVCardBalance>::ResultsType AvgExchangeResul
 ** are performed to be able to make a jump to a given year.
 ** (hot start)
 */
-void PrepareRandomNumbers(Data::Study& study,
-                          PROBLEME_HEBDO& problem,
-                          yearRandomNumbers& randomForYear);
+void
+PrepareRandomNumbers(Data::Study& study, PROBLEME_HEBDO& problem, yearRandomNumbers& randomForYear);
 
 void BuildThermalPartOfWeeklyProblem(Data::Study& study,
                                      PROBLEME_HEBDO& problem,
@@ -158,8 +157,8 @@ int retrieveAverageNTC(const Data::Study& study,
                        const Matrix<uint32_t>& tsNumbers,
                        std::vector<double>& avg);
 
-void finalizeOptimizationStatistics(PROBLEME_HEBDO& problem,
-                                    Antares::Solver::Variable::State& state);
+void
+finalizeOptimizationStatistics(PROBLEME_HEBDO& problem, Antares::Solver::Variable::State& state);
 
 OptimizationOptions createOptimizationOptions(const Data::Study& study);
 

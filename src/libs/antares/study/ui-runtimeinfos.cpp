@@ -35,13 +35,15 @@ UIRuntimeInfo::UIRuntimeInfo(Study& study):
     reloadAll();
 }
 
-void UIRuntimeInfo::reloadAll()
+void
+UIRuntimeInfo::reloadAll()
 {
     reload();
     reloadBindingConstraints();
 }
 
-void UIRuntimeInfo::reload()
+void
+UIRuntimeInfo::reload()
 {
     // Reseting all variables
     pLink.clear();
@@ -104,7 +106,8 @@ void UIRuntimeInfo::reload()
     }
 }
 
-void UIRuntimeInfo::reloadBindingConstraints()
+void
+UIRuntimeInfo::reloadBindingConstraints()
 {
     orderedConstraint.clear();
     pConstraint.clear();
@@ -143,12 +146,14 @@ void UIRuntimeInfo::reloadBindingConstraints()
     }
 }
 
-uint64_t UIRuntimeInfo::memoryUsage() const
+uint64_t
+UIRuntimeInfo::memoryUsage() const
 {
     return sizeof(UIRuntimeInfo) + sizeof(AreaLink*) * pLink.size();
 }
 
-uint UIRuntimeInfo::countItems(BindingConstraint::Operator op, BindingConstraint::Type type)
+uint
+UIRuntimeInfo::countItems(BindingConstraint::Operator op, BindingConstraint::Type type)
 {
     ByOperatorAndType::const_iterator i = byOperator.find(op);
     if (i != byOperator.end())
@@ -162,7 +167,8 @@ uint UIRuntimeInfo::countItems(BindingConstraint::Operator op, BindingConstraint
     return 0;
 }
 
-uint UIRuntimeInfo::visibleClustersCount(uint layerID)
+uint
+UIRuntimeInfo::visibleClustersCount(uint layerID)
 {
     int count = 0;
     auto cEnd = pClusters.end();
@@ -176,7 +182,8 @@ uint UIRuntimeInfo::visibleClustersCount(uint layerID)
     return count;
 }
 
-uint UIRuntimeInfo::visibleLinksCount(uint layerID)
+uint
+UIRuntimeInfo::visibleLinksCount(uint layerID)
 {
     int count = 0;
     auto lEnd = pLink.end();

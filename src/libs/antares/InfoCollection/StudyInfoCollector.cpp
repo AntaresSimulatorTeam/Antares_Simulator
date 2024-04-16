@@ -35,7 +35,8 @@ namespace Benchmarking
 
 // Collecting data study
 // ---------------------------
-void StudyInfoCollector::toFileContent(FileContent& file_content)
+void
+StudyInfoCollector::toFileContent(FileContent& file_content)
 {
     areasCountToFileContent(file_content);
     linksCountToFileContent(file_content);
@@ -49,17 +50,20 @@ void StudyInfoCollector::toFileContent(FileContent& file_content)
     ORToolsSolver(file_content);
 }
 
-void StudyInfoCollector::areasCountToFileContent(FileContent& file_content)
+void
+StudyInfoCollector::areasCountToFileContent(FileContent& file_content)
 {
     file_content.addItemToSection("study", "areas", study_.areas.size());
 }
 
-void StudyInfoCollector::linksCountToFileContent(FileContent& file_content)
+void
+StudyInfoCollector::linksCountToFileContent(FileContent& file_content)
 {
     file_content.addItemToSection("study", "links", study_.areas.areaLinkCount());
 }
 
-void StudyInfoCollector::performedYearsCountToFileContent(FileContent& file_content)
+void
+StudyInfoCollector::performedYearsCountToFileContent(FileContent& file_content)
 {
     // Computing the number of performed years
     unsigned int nbPerformedYears = 0;
@@ -75,7 +79,8 @@ void StudyInfoCollector::performedYearsCountToFileContent(FileContent& file_cont
     file_content.addItemToSection("study", "performed years", nbPerformedYears);
 }
 
-void StudyInfoCollector::enabledThermalClustersCountToFileContent(FileContent& file_content)
+void
+StudyInfoCollector::enabledThermalClustersCountToFileContent(FileContent& file_content)
 {
     // Computing the number of enabled thermal clusters
     unsigned int nbEnabledThermalClusters = 0;
@@ -91,7 +96,8 @@ void StudyInfoCollector::enabledThermalClustersCountToFileContent(FileContent& f
     file_content.addItemToSection("study", "enabled thermal clusters", nbEnabledThermalClusters);
 }
 
-void StudyInfoCollector::enabledBindingConstraintsCountToFileContent(FileContent& file_content)
+void
+StudyInfoCollector::enabledBindingConstraintsCountToFileContent(FileContent& file_content)
 {
     auto activeConstraints = study_.bindingConstraints.activeConstraints();
     auto nbEnabledBC = activeConstraints.size();
@@ -123,34 +129,39 @@ void StudyInfoCollector::enabledBindingConstraintsCountToFileContent(FileContent
     file_content.addItemToSection("study", "enabled weekly BC", nbEnabledWeeklyBC);
 }
 
-void StudyInfoCollector::unitCommitmentModeToFileContent(FileContent& file_content)
+void
+StudyInfoCollector::unitCommitmentModeToFileContent(FileContent& file_content)
 {
     const char* unitCommitment = UnitCommitmentModeToCString(
-      study_.parameters.unitCommitment.ucMode);
+            study_.parameters.unitCommitment.ucMode);
     file_content.addItemToSection("study", "unit commitment", unitCommitment);
 }
 
-void StudyInfoCollector::maxNbYearsInParallelToFileContent(FileContent& file_content)
+void
+StudyInfoCollector::maxNbYearsInParallelToFileContent(FileContent& file_content)
 {
     file_content.addItemToSection("study", "max parallel years", study_.maxNbYearsInParallel);
 }
 
-void StudyInfoCollector::solverVersionToFileContent(FileContent& file_content)
+void
+StudyInfoCollector::solverVersionToFileContent(FileContent& file_content)
 {
     // Example : 8.3.0 -> 830
-    const unsigned int version = 100 * ANTARES_VERSION_HI + 10 * ANTARES_VERSION_LO
-                                 + ANTARES_VERSION_BUILD;
+    const unsigned int version = 100 * ANTARES_VERSION_HI + 10 * ANTARES_VERSION_LO +
+                                 ANTARES_VERSION_BUILD;
 
     file_content.addItemToSection("study", "antares version", version);
 }
 
-void StudyInfoCollector::ORToolsUsed(FileContent& file_content)
+void
+StudyInfoCollector::ORToolsUsed(FileContent& file_content)
 {
     const bool& ortoolsUsed = study_.parameters.ortoolsUsed;
     file_content.addItemToSection("study", "ortools used", ortoolsUsed ? "true" : "false");
 }
 
-void StudyInfoCollector::ORToolsSolver(FileContent& file_content)
+void
+StudyInfoCollector::ORToolsSolver(FileContent& file_content)
 {
     const bool& ortoolsUsed = study_.parameters.ortoolsUsed;
     std::string ortoolsSolver = "none";
@@ -163,7 +174,8 @@ void StudyInfoCollector::ORToolsSolver(FileContent& file_content)
 
 // Collecting data optimization problem
 // -------------------------------------
-void SimulationInfoCollector::toFileContent(FileContent& file_content)
+void
+SimulationInfoCollector::toFileContent(FileContent& file_content)
 {
     file_content.addItemToSection("optimization problem", "variables", opt_info_.nbVariables);
     file_content.addItemToSection("optimization problem", "constraints", opt_info_.nbConstraints);

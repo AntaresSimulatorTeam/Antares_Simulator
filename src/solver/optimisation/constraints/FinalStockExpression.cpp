@@ -21,7 +21,8 @@
 
 #include "antares/solver/optimisation/constraints/FinalStockExpression.h"
 
-void FinalStockExpression::add(int pays)
+void
+FinalStockExpression::add(int pays)
 {
     const auto pdt = builder.data.NombreDePasDeTempsPourUneOptimisation - 1;
 

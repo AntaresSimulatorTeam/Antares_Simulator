@@ -25,10 +25,11 @@
 
 using Antares::Solver::Optimization::OptimizationOptions;
 
-bool OPT_PilotageOptimisationLineaire(const OptimizationOptions& options,
-                                      PROBLEME_HEBDO* problemeHebdo,
-                                      const AdqPatchParams& adqPatchParams,
-                                      Solver::IResultWriter& writer)
+bool
+OPT_PilotageOptimisationLineaire(const OptimizationOptions& options,
+                                 PROBLEME_HEBDO* problemeHebdo,
+                                 const AdqPatchParams& adqPatchParams,
+                                 Solver::IResultWriter& writer)
 {
     if (!problemeHebdo->LeProblemeADejaEteInstancie)
     {
@@ -39,18 +40,18 @@ bool OPT_PilotageOptimisationLineaire(const OptimizationOptions& options,
                 problemeHebdo->CoutDeDefaillanceEnReserve[pays] = 1.e+6;
             }
 
-            problemeHebdo->NombreDeJours = (int)(problemeHebdo->NombreDePasDeTemps
-                                                 / problemeHebdo->NombreDePasDeTempsDUneJournee);
+            problemeHebdo->NombreDeJours = (int)(problemeHebdo->NombreDePasDeTemps /
+                                                 problemeHebdo->NombreDePasDeTempsDUneJournee);
 
             if (!problemeHebdo->OptimisationAuPasHebdomadaire)
             {
-                problemeHebdo->NombreDePasDeTempsPourUneOptimisation
-                  = problemeHebdo->NombreDePasDeTempsDUneJournee;
+                problemeHebdo->NombreDePasDeTempsPourUneOptimisation =
+                        problemeHebdo->NombreDePasDeTempsDUneJournee;
             }
             else
             {
                 problemeHebdo->NombreDePasDeTempsPourUneOptimisation = problemeHebdo
-                                                                         ->NombreDePasDeTemps;
+                                                                               ->NombreDePasDeTemps;
             }
 
             OPT_AllocDuProblemeAOptimiser(problemeHebdo);

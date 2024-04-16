@@ -27,7 +27,8 @@ using namespace operations_research;
 namespace Antares::Optimization
 {
 
-void VariablesBoundsConsistency::run(MPSolver* problem)
+void
+VariablesBoundsConsistency::run(MPSolver* problem)
 {
     for (const auto& var: problem->variables())
     {
@@ -46,19 +47,22 @@ void VariablesBoundsConsistency::run(MPSolver* problem)
     }
 }
 
-void VariablesBoundsConsistency::storeIncorrectVariable(std::string name,
-                                                        double lowBound,
-                                                        double upBound)
+void
+VariablesBoundsConsistency::storeIncorrectVariable(std::string name,
+                                                   double lowBound,
+                                                   double upBound)
 {
     incorrectVars_.push_back(VariableBounds(name, lowBound, upBound));
 }
 
-bool VariablesBoundsConsistency::foundIncorrectVariables()
+bool
+VariablesBoundsConsistency::foundIncorrectVariables()
 {
     return !incorrectVars_.empty();
 }
 
-void VariablesBoundsConsistency::printReport() const
+void
+VariablesBoundsConsistency::printReport() const
 {
     for (const auto& var: incorrectVars_)
     {

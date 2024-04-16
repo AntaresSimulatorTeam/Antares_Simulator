@@ -29,7 +29,8 @@ AbstractStartUpCostsGroup::AbstractStartUpCostsGroup(PROBLEME_HEBDO* problemeHeb
 {
 }
 
-StartUpCostsData AbstractStartUpCostsGroup::GetStartUpCostsDataFromProblemHebdo()
+StartUpCostsData
+AbstractStartUpCostsGroup::GetStartUpCostsDataFromProblemHebdo()
 {
     return {.PaliersThermiquesDuPays = problemeHebdo_->PaliersThermiquesDuPays,
             .Simulation = simulation_};

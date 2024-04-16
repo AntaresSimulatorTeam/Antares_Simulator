@@ -42,32 +42,33 @@ DispatchableMarginPostProcessCmd::DispatchableMarginPostProcessCmd(PROBLEME_HEBD
 {
 }
 
-void DispatchableMarginPostProcessCmd::execute(const optRuntimeData& opt_runtime_data)
+void
+DispatchableMarginPostProcessCmd::execute(const optRuntimeData& opt_runtime_data)
 {
     unsigned int hourInYear = opt_runtime_data.hourInTheYear;
     unsigned int year = opt_runtime_data.year;
     area_list_.each(
-      [&](Data::Area& area)
-      {
-          double* dtgmrg = area.scratchpad[thread_number_].dispatchableGenerationMargin;
-          for (uint h = 0; h != nbHoursInWeek; ++h)
-          {
-              dtgmrg[h] = 0.;
-          }
+            [&](Data::Area& area)
+            {
+                double* dtgmrg = area.scratchpad[thread_number_].dispatchableGenerationMargin;
+                for (uint h = 0; h != nbHoursInWeek; ++h)
+                {
+                    dtgmrg[h] = 0.;
+                }
 
-          auto& hourlyResults = problemeHebdo_->ResultatsHoraires[area.index];
+                auto& hourlyResults = problemeHebdo_->ResultatsHoraires[area.index];
 
-          for (const auto& cluster: area.thermal.list.each_enabled_and_not_mustrun())
-          {
-              const auto& availableProduction = cluster->series.getColumn(year);
-              for (uint h = 0; h != nbHoursInWeek; ++h)
-              {
-                  double production = hourlyResults.ProductionThermique[h]
-                                        .ProductionThermiqueDuPalier[cluster->index];
-                  dtgmrg[h] += availableProduction[h + hourInYear] - production;
-              }
-          }
-      });
+                for (const auto& cluster: area.thermal.list.each_enabled_and_not_mustrun())
+                {
+                    const auto& availableProduction = cluster->series.getColumn(year);
+                    for (uint h = 0; h != nbHoursInWeek; ++h)
+                    {
+                        double production = hourlyResults.ProductionThermique[h]
+                                                    .ProductionThermiqueDuPalier[cluster->index];
+                        dtgmrg[h] += availableProduction[h + hourInYear] - production;
+                    }
+                }
+            });
 }
 
 // -----------------------------
@@ -84,7 +85,8 @@ HydroLevelsUpdatePostProcessCmd::HydroLevelsUpdatePostProcessCmd(PROBLEME_HEBDO*
 {
 }
 
-void HydroLevelsUpdatePostProcessCmd::execute(const optRuntimeData&)
+void
+HydroLevelsUpdatePostProcessCmd::execute(const optRuntimeData&)
 {
     computingHydroLevels(area_list_, *problemeHebdo_, remixWasRun_, computeAnyway_);
 }
@@ -105,7 +107,8 @@ RemixHydroPostProcessCmd::RemixHydroPostProcessCmd(PROBLEME_HEBDO* problemeHebdo
 {
 }
 
-void RemixHydroPostProcessCmd::execute(const optRuntimeData& opt_runtime_data)
+void
+RemixHydroPostProcessCmd::execute(const optRuntimeData& opt_runtime_data)
 {
     unsigned int hourInYear = opt_runtime_data.hourInTheYear;
     RemixHydroForAllAreas(area_list_,
@@ -122,10 +125,10 @@ void RemixHydroPostProcessCmd::execute(const optRuntimeData& opt_runtime_data)
 using namespace Antares::Data::AdequacyPatch;
 
 DTGmarginForAdqPatchPostProcessCmd::DTGmarginForAdqPatchPostProcessCmd(
-  const AdqPatchParams& adqPatchParams,
-  PROBLEME_HEBDO* problemeHebdo,
-  AreaList& areas,
-  unsigned int thread_number):
+        const AdqPatchParams& adqPatchParams,
+        PROBLEME_HEBDO* problemeHebdo,
+        AreaList& areas,
+        unsigned int thread_number):
     basePostProcessCommand(problemeHebdo),
     adqPatchParams_(adqPatchParams),
     area_list_(areas),
@@ -137,7 +140,8 @@ DTGmarginForAdqPatchPostProcessCmd::DTGmarginForAdqPatchPostProcessCmd(
 ** Calculate Dispatchable margin for all areas after CSR optimization and adjust ENS
 ** values if neccessary. If LOLD=1, Sets MRG COST to the max value (unsupplied energy cost)
 ** */
-void DTGmarginForAdqPatchPostProcessCmd::execute(const optRuntimeData&)
+void
+DTGmarginForAdqPatchPostProcessCmd::execute(const optRuntimeData&)
 {
     for (uint32_t Area = 0; Area < problemeHebdo_->NombreDePays; Area++)
     {
@@ -183,16 +187,17 @@ void DTGmarginForAdqPatchPostProcessCmd::execute(const optRuntimeData&)
 // -----------------------------
 
 InterpolateWaterValuePostProcessCmd::InterpolateWaterValuePostProcessCmd(
-  PROBLEME_HEBDO* problemeHebdo,
-  AreaList& areas,
-  const Date::Calendar& calendar):
+        PROBLEME_HEBDO* problemeHebdo,
+        AreaList& areas,
+        const Date::Calendar& calendar):
     basePostProcessCommand(problemeHebdo),
     area_list_(areas),
     calendar_(calendar)
 {
 }
 
-void InterpolateWaterValuePostProcessCmd::execute(const optRuntimeData& opt_runtime_data)
+void
+InterpolateWaterValuePostProcessCmd::execute(const optRuntimeData& opt_runtime_data)
 {
     unsigned int hourInYear = opt_runtime_data.hourInTheYear;
     interpolateWaterValue(area_list_, *problemeHebdo_, calendar_, hourInYear);
@@ -203,14 +208,15 @@ void InterpolateWaterValuePostProcessCmd::execute(const optRuntimeData& opt_runt
 // -----------------------------
 // HydroLevelsFinalUpdatePostProcessCmd
 HydroLevelsFinalUpdatePostProcessCmd::HydroLevelsFinalUpdatePostProcessCmd(
-  PROBLEME_HEBDO* problemeHebdo,
-  AreaList& areas):
+        PROBLEME_HEBDO* problemeHebdo,
+        AreaList& areas):
     basePostProcessCommand(problemeHebdo),
     area_list_(areas)
 {
 }
 
-void HydroLevelsFinalUpdatePostProcessCmd::execute(const optRuntimeData&)
+void
+HydroLevelsFinalUpdatePostProcessCmd::execute(const optRuntimeData&)
 {
     updatingWeeklyFinalHydroLevel(area_list_, *problemeHebdo_);
 }
@@ -219,10 +225,10 @@ void HydroLevelsFinalUpdatePostProcessCmd::execute(const optRuntimeData&)
 //  Curtailment sharing for adq patch
 // --------------------------------------
 CurtailmentSharingPostProcessCmd::CurtailmentSharingPostProcessCmd(
-  const AdqPatchParams& adqPatchParams,
-  PROBLEME_HEBDO* problemeHebdo,
-  AreaList& areas,
-  unsigned int thread_number):
+        const AdqPatchParams& adqPatchParams,
+        PROBLEME_HEBDO* problemeHebdo,
+        AreaList& areas,
+        unsigned int thread_number):
     basePostProcessCommand(problemeHebdo),
     area_list_(areas),
     adqPatchParams_(adqPatchParams),
@@ -230,7 +236,8 @@ CurtailmentSharingPostProcessCmd::CurtailmentSharingPostProcessCmd(
 {
 }
 
-void CurtailmentSharingPostProcessCmd::execute(const optRuntimeData& opt_runtime_data)
+void
+CurtailmentSharingPostProcessCmd::execute(const optRuntimeData& opt_runtime_data)
 {
     unsigned int year = opt_runtime_data.year;
     unsigned int week = opt_runtime_data.week;
@@ -249,7 +256,8 @@ void CurtailmentSharingPostProcessCmd::execute(const optRuntimeData& opt_runtime
     }
 }
 
-double CurtailmentSharingPostProcessCmd::calculateDensNewAndTotalLmrViolation()
+double
+CurtailmentSharingPostProcessCmd::calculateDensNewAndTotalLmrViolation()
 {
     double totalLmrViolation = 0.0;
 
@@ -260,45 +268,46 @@ double CurtailmentSharingPostProcessCmd::calculateDensNewAndTotalLmrViolation()
             for (uint hour = 0; hour < nbHoursInWeek; hour++)
             {
                 const auto [netPositionInit, densNew, totalNodeBalance] = calculateAreaFlowBalance(
-                  problemeHebdo_,
-                  adqPatchParams_.localMatching.setToZeroOutsideInsideLinks,
-                  Area,
-                  hour);
+                        problemeHebdo_,
+                        adqPatchParams_.localMatching.setToZeroOutsideInsideLinks,
+                        Area,
+                        hour);
                 // adjust densNew according to the new specification/request by ELIA
                 /* DENS_new (node A) = max [ 0; ENS_init (node A) + net_position_init (node A)
                                         + ? flows (node 1 -> node A) - DTG.MRG(node A)] */
                 const auto& scratchpad = area_list_[Area]->scratchpad[thread_number_];
                 double dtgMrg = scratchpad.dispatchableGenerationMargin[hour];
                 // write down densNew values for all the hours
-                problemeHebdo_->ResultatsHoraires[Area].ValeursHorairesDENS[hour] = std::max(
-                  0.0,
-                  densNew - dtgMrg);
+                problemeHebdo_->ResultatsHoraires[Area]
+                        .ValeursHorairesDENS[hour] = std::max(0.0, densNew - dtgMrg);
                 ;
                 // copy spilled Energy values into spilled Energy values after CSR
-                problemeHebdo_->ResultatsHoraires[Area].ValeursHorairesSpilledEnergyAfterCSR[hour]
-                  = problemeHebdo_->ResultatsHoraires[Area]
-                      .ValeursHorairesDeDefaillanceNegative[hour];
+                problemeHebdo_->ResultatsHoraires[Area].ValeursHorairesSpilledEnergyAfterCSR
+                        [hour] = problemeHebdo_->ResultatsHoraires[Area]
+                                         .ValeursHorairesDeDefaillanceNegative[hour];
                 // check LMR violations
                 totalLmrViolation += LmrViolationAreaHour(
-                  problemeHebdo_,
-                  totalNodeBalance,
-                  adqPatchParams_.curtailmentSharing.thresholdDisplayViolations,
-                  Area,
-                  hour);
+                        problemeHebdo_,
+                        totalNodeBalance,
+                        adqPatchParams_.curtailmentSharing.thresholdDisplayViolations,
+                        Area,
+                        hour);
             }
         }
     }
     return totalLmrViolation;
 }
 
-std::set<int> CurtailmentSharingPostProcessCmd::getHoursRequiringCurtailmentSharing() const
+std::set<int>
+CurtailmentSharingPostProcessCmd::getHoursRequiringCurtailmentSharing() const
 {
     const auto sumENS = calculateENSoverAllAreasForEachHour();
     return identifyHoursForCurtailmentSharing(sumENS);
 }
 
-std::set<int> CurtailmentSharingPostProcessCmd::identifyHoursForCurtailmentSharing(
-  const std::vector<double>& sumENS) const
+std::set<int>
+CurtailmentSharingPostProcessCmd::identifyHoursForCurtailmentSharing(
+        const std::vector<double>& sumENS) const
 {
     const double threshold = adqPatchParams_.curtailmentSharing.thresholdRun;
     std::set<int> triggerCsrSet;
@@ -313,16 +322,17 @@ std::set<int> CurtailmentSharingPostProcessCmd::identifyHoursForCurtailmentShari
     return triggerCsrSet;
 }
 
-std::vector<double> CurtailmentSharingPostProcessCmd::calculateENSoverAllAreasForEachHour() const
+std::vector<double>
+CurtailmentSharingPostProcessCmd::calculateENSoverAllAreasForEachHour() const
 {
     std::vector<double> sumENS(nbHoursInWeek, 0.0);
     for (uint32_t area = 0; area < problemeHebdo_->NombreDePays; ++area)
     {
-        if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[area]
-            == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
+        if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[area] ==
+            Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
             const std::vector<double>& ENS = problemeHebdo_->ResultatsHoraires[area]
-                                               .ValeursHorairesDeDefaillancePositive;
+                                                     .ValeursHorairesDeDefaillancePositive;
             for (uint h = 0; h < nbHoursInWeek; ++h)
             {
                 sumENS[h] += ENS[h];

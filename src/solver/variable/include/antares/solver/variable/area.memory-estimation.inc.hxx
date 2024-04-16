@@ -33,7 +33,8 @@ namespace Solver
 namespace Variable
 {
 template<>
-uint64_t Areas<NEXTTYPE>::memoryUsage() const
+uint64_t
+Areas<NEXTTYPE>::memoryUsage() const
 {
     uint64_t result = 0;
     for (unsigned int i = 0; i != pAreaCount; ++i)

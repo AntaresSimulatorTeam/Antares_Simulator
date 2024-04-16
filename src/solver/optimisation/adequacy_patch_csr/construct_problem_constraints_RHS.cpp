@@ -24,16 +24,17 @@
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
-void HourlyCSRProblem::setRHSvalueOnFlows()
+void
+HourlyCSRProblem::setRHSvalueOnFlows()
 {
     // constraint: Flow = Flow_direct - Flow_indirect (+ loop flow) for links between nodes of
     // type 2.
     for (uint32_t Interco = 0; Interco < problemeHebdo_->NombreDInterconnexions; Interco++)
     {
-        if (problemeHebdo_->adequacyPatchRuntimeData->originAreaMode[Interco]
-              == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch
-            && problemeHebdo_->adequacyPatchRuntimeData->extremityAreaMode[Interco]
-                 == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch)
+        if (problemeHebdo_->adequacyPatchRuntimeData->originAreaMode[Interco] ==
+                    Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch &&
+            problemeHebdo_->adequacyPatchRuntimeData->extremityAreaMode[Interco] ==
+                    Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
             std::map<int, int>::iterator it = numberOfConstraintCsrFlowDissociation.find(Interco);
             if (it != numberOfConstraintCsrFlowDissociation.end())
@@ -47,7 +48,8 @@ void HourlyCSRProblem::setRHSvalueOnFlows()
     }
 }
 
-void HourlyCSRProblem::setRHSnodeBalanceValue()
+void
+HourlyCSRProblem::setRHSnodeBalanceValue()
 {
     // constraint:
     // ENS(node A) +
@@ -58,8 +60,8 @@ void HourlyCSRProblem::setRHSnodeBalanceValue()
 
     for (uint32_t Area = 0; Area < problemeHebdo_->NombreDePays; Area++)
     {
-        if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[Area]
-            == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
+        if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[Area] ==
+            Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
             std::map<int, int>::iterator it = numberOfConstraintCsrAreaBalance.find(Area);
             if (it != numberOfConstraintCsrAreaBalance.end())
@@ -74,7 +76,8 @@ void HourlyCSRProblem::setRHSnodeBalanceValue()
     }
 }
 
-void HourlyCSRProblem::setRHSbindingConstraintsValue()
+void
+HourlyCSRProblem::setRHSbindingConstraintsValue()
 {
     std::vector<double>& SecondMembre = problemeAResoudre_.SecondMembre;
 
@@ -84,56 +87,57 @@ void HourlyCSRProblem::setRHSbindingConstraintsValue()
     for (uint32_t CntCouplante = 0; CntCouplante < problemeHebdo_->NombreDeContraintesCouplantes;
          CntCouplante++)
     {
-        if (numberOfConstraintCsrHourlyBinding.find(CntCouplante)
-            == numberOfConstraintCsrHourlyBinding.end())
+        if (numberOfConstraintCsrHourlyBinding.find(CntCouplante) ==
+            numberOfConstraintCsrHourlyBinding.end())
         {
             continue;
         }
 
-        const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
-          = problemeHebdo_->MatriceDesContraintesCouplantes[CntCouplante];
+        const CONTRAINTES_COUPLANTES&
+                MatriceDesContraintesCouplantes = problemeHebdo_->MatriceDesContraintesCouplantes
+                                                          [CntCouplante];
 
         int Cnt = numberOfConstraintCsrHourlyBinding[CntCouplante];
 
         // 1. The original RHS of bingding constraint
         SecondMembre[Cnt] = MatriceDesContraintesCouplantes
-                              .SecondMembreDeLaContrainteCouplante[triggeredHour];
+                                    .SecondMembreDeLaContrainteCouplante[triggeredHour];
 
         // 2. RHS part 2: flow other than 2<->2
         int NbInterco = MatriceDesContraintesCouplantes
-                          .NombreDInterconnexionsDansLaContrainteCouplante;
+                                .NombreDInterconnexionsDansLaContrainteCouplante;
         for (int Index = 0; Index < NbInterco; Index++)
         {
             int Interco = MatriceDesContraintesCouplantes.NumeroDeLInterconnexion[Index];
             double Poids = MatriceDesContraintesCouplantes.PoidsDeLInterconnexion[Index];
 
-            if (problemeHebdo_->adequacyPatchRuntimeData->originAreaMode[Interco]
-                  != Data::AdequacyPatch::physicalAreaInsideAdqPatch
-                || problemeHebdo_->adequacyPatchRuntimeData->extremityAreaMode[Interco]
-                     != Data::AdequacyPatch::physicalAreaInsideAdqPatch)
+            if (problemeHebdo_->adequacyPatchRuntimeData->originAreaMode[Interco] !=
+                        Data::AdequacyPatch::physicalAreaInsideAdqPatch ||
+                problemeHebdo_->adequacyPatchRuntimeData->extremityAreaMode[Interco] !=
+                        Data::AdequacyPatch::physicalAreaInsideAdqPatch)
             {
                 double ValueOfFlow = problemeHebdo_->ValeursDeNTC[triggeredHour]
-                                       .ValeurDuFlux[Interco];
+                                             .ValeurDuFlux[Interco];
                 SecondMembre[Cnt] -= ValueOfFlow * Poids;
             }
         }
 
         // 3. RHS part 3: - cluster
         int NbClusters = MatriceDesContraintesCouplantes
-                           .NombreDePaliersDispatchDansLaContrainteCouplante;
+                                 .NombreDePaliersDispatchDansLaContrainteCouplante;
 
         for (int Index = 0; Index < NbClusters; Index++)
         {
             int Area = MatriceDesContraintesCouplantes.PaysDuPalierDispatch[Index];
 
             int IndexNumeroDuPalierDispatch = MatriceDesContraintesCouplantes
-                                                .NumeroDuPalierDispatch[Index];
+                                                      .NumeroDuPalierDispatch[Index];
 
             double Poids = MatriceDesContraintesCouplantes.PoidsDuPalierDispatch[Index];
 
             double ValueOfVar = problemeHebdo_->ResultatsHoraires[Area]
-                                  .ProductionThermique[triggeredHour]
-                                  .ProductionThermiqueDuPalier[IndexNumeroDuPalierDispatch];
+                                        .ProductionThermique[triggeredHour]
+                                        .ProductionThermiqueDuPalier[IndexNumeroDuPalierDispatch];
 
             SecondMembre[Cnt] -= ValueOfVar * Poids;
         }

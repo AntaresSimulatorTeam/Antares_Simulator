@@ -31,7 +31,8 @@ using namespace Yuni;
 
 namespace Antares
 {
-bool CBuilder::completeFromStudy()
+bool
+CBuilder::completeFromStudy()
 {
     uint nCount(1);
     const Data::Area::Map::iterator end = pStudy->areas.end();

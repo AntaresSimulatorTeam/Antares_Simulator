@@ -34,7 +34,8 @@ extern "C"
 #include "antares/solver/hydro/daily/h2o_j_donnees_mensuelles.h"
 #include "antares/solver/hydro/daily/h2o_j_fonctions.h"
 
-void H2O_J_Free(DONNEES_MENSUELLES* DonneesMensuelles)
+void
+H2O_J_Free(DONNEES_MENSUELLES* DonneesMensuelles)
 {
     PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
 

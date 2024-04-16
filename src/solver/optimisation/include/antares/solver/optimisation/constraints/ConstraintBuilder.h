@@ -97,10 +97,8 @@ public:
      *  @return reference of *this
      */
     //@{
-    ConstraintBuilder& DispatchableProduction(unsigned int index,
-                                              double coeff,
-                                              int offset = 0,
-                                              int delta = 0);
+    ConstraintBuilder&
+    DispatchableProduction(unsigned int index, double coeff, int offset = 0, int delta = 0);
 
     ConstraintBuilder& NumberOfDispatchableUnits(unsigned int index, double coeff);
 
@@ -120,10 +118,8 @@ public:
 
     ConstraintBuilder& ShortTermStorageWithdrawal(unsigned int index, double coeff);
 
-    ConstraintBuilder& ShortTermStorageLevel(unsigned int index,
-                                             double coeff,
-                                             int offset = 0,
-                                             int delta = 0);
+    ConstraintBuilder&
+    ShortTermStorageLevel(unsigned int index, double coeff, int offset = 0, int delta = 0);
 
     ConstraintBuilder& HydProd(unsigned int index, double coeff);
 
@@ -254,13 +250,14 @@ public:
 };
 
 // Helper functions
-inline void ExportPaliers(const PALIERS_THERMIQUES& PaliersThermiquesDuPays,
-                          ConstraintBuilder& newConstraintBuilder)
+inline void
+ExportPaliers(const PALIERS_THERMIQUES& PaliersThermiquesDuPays,
+              ConstraintBuilder& newConstraintBuilder)
 {
     for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
     {
         const int palier = PaliersThermiquesDuPays
-                             .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+                                   .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
         newConstraintBuilder.DispatchableProduction(palier, -1.0);
     }
 }

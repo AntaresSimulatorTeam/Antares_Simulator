@@ -29,7 +29,8 @@ using namespace Antares;
 namespace // anonymous
 {
 template<class StringT>
-void AppendToBuffer(StringT& out, const char* buffer)
+void
+AppendToBuffer(StringT& out, const char* buffer)
 {
     uint length = 0;
     for (; buffer[length] != '\0'; ++length)
@@ -72,14 +73,16 @@ ResultMatrix::~ResultMatrix()
     delete[] columns;
 }
 
-void ResultMatrix::resize(uint i)
+void
+ResultMatrix::resize(uint i)
 {
     delete[] columns;
     columns = new CellColumnData[i];
     width = i;
 }
 
-bool ResultMatrix::saveToCSVFile(const String& filename) const
+bool
+ResultMatrix::saveToCSVFile(const String& filename) const
 {
     IO::File::Stream file;
     if (!file.openRW(filename))

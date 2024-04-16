@@ -38,7 +38,8 @@ namespace Antares
 namespace Solver
 {
 
-double randomReservoirLevel(double min, double avg, double max, MersenneTwister& random)
+double
+randomReservoirLevel(double min, double avg, double max, MersenneTwister& random)
 {
     auto equals = [](double a, double b) { return std::abs(a - b) < 1.e-6; };
 
@@ -70,7 +71,8 @@ double randomReservoirLevel(double min, double avg, double max, MersenneTwister&
     return x * max + (1. - x) * min;
 }
 
-double GammaVariable(double r, MersenneTwister& random)
+double
+GammaVariable(double r, MersenneTwister& random)
 {
     double x = 0.;
     do
@@ -104,7 +106,8 @@ double GammaVariable(double r, MersenneTwister& random)
     return x;
 }
 
-double BetaVariable(double a, double b, MersenneTwister& random)
+double
+BetaVariable(double a, double b, MersenneTwister& random)
 {
     double y = GammaVariable(a, random);
     double z = GammaVariable(b, random);
@@ -142,114 +145,121 @@ HydroManagement::HydroManagement(const Data::AreaList& areas,
     }
 }
 
-void HydroManagement::prepareInflowsScaling(uint year)
+void
+HydroManagement::prepareInflowsScaling(uint year)
 {
     areas_.each(
-      [&](const Data::Area& area)
-      {
-          const auto& srcinflows = area.hydro.series->storage.getColumn(year);
+            [&](const Data::Area& area)
+            {
+                const auto& srcinflows = area.hydro.series->storage.getColumn(year);
 
-          auto& data = tmpDataByArea_[&area];
-          double totalYearInflows = 0.0;
+                auto& data = tmpDataByArea_[&area];
+                double totalYearInflows = 0.0;
 
-          for (uint month = 0; month != 12; ++month)
-          {
-              uint realmonth = calendar_.months[month].realmonth;
+                for (uint month = 0; month != 12; ++month)
+                {
+                    uint realmonth = calendar_.months[month].realmonth;
 
-              double totalMonthInflows = 0.0;
+                    double totalMonthInflows = 0.0;
 
-              uint firstDayOfMonth = calendar_.months[month].daysYear.first;
+                    uint firstDayOfMonth = calendar_.months[month].daysYear.first;
 
-              uint firstDayOfNextMonth = calendar_.months[month].daysYear.end;
+                    uint firstDayOfNextMonth = calendar_.months[month].daysYear.end;
 
-              for (uint d = firstDayOfMonth; d != firstDayOfNextMonth; ++d)
-              {
-                  totalMonthInflows += srcinflows[d];
-              }
+                    for (uint d = firstDayOfMonth; d != firstDayOfNextMonth; ++d)
+                    {
+                        totalMonthInflows += srcinflows[d];
+                    }
 
-              data.totalMonthInflows[realmonth] = totalMonthInflows;
-              totalYearInflows += totalMonthInflows;
+                    data.totalMonthInflows[realmonth] = totalMonthInflows;
+                    totalYearInflows += totalMonthInflows;
 
-              if (not(area.hydro.reservoirCapacity < 1e-4))
-              {
-                  if (area.hydro.reservoirManagement)
-                  {
-                      data.inflows[realmonth] = totalMonthInflows / (area.hydro.reservoirCapacity);
-                      assert(!std::isnan(data.inflows[month]) && "nan value detect in inflows");
-                  }
-                  else
-                  {
-                      data.inflows[realmonth] = totalMonthInflows;
-                  }
-              }
-              else
-              {
-                  data.inflows[realmonth] = totalMonthInflows;
-              }
-          }
-          data.totalYearInflows = totalYearInflows;
-      });
+                    if (not(area.hydro.reservoirCapacity < 1e-4))
+                    {
+                        if (area.hydro.reservoirManagement)
+                        {
+                            data.inflows[realmonth] = totalMonthInflows /
+                                                      (area.hydro.reservoirCapacity);
+                            assert(!std::isnan(data.inflows[month]) &&
+                                   "nan value detect in inflows");
+                        }
+                        else
+                        {
+                            data.inflows[realmonth] = totalMonthInflows;
+                        }
+                    }
+                    else
+                    {
+                        data.inflows[realmonth] = totalMonthInflows;
+                    }
+                }
+                data.totalYearInflows = totalYearInflows;
+            });
 }
 
-void HydroManagement::minGenerationScaling(uint year)
+void
+HydroManagement::minGenerationScaling(uint year)
 {
     areas_.each(
-      [this, &year](const Data::Area& area)
-      {
-          const auto& srcmingen = area.hydro.series->mingen.getColumn(year);
+            [this, &year](const Data::Area& area)
+            {
+                const auto& srcmingen = area.hydro.series->mingen.getColumn(year);
 
-          auto& data = tmpDataByArea_[&area];
-          double totalYearMingen = 0.0;
+                auto& data = tmpDataByArea_[&area];
+                double totalYearMingen = 0.0;
 
-          for (uint month = 0; month != 12; ++month)
-          {
-              uint realmonth = calendar_.months[month].realmonth;
-              uint firstDayOfMonth = calendar_.months[month].daysYear.first;
-              uint firstDayOfNextMonth = calendar_.months[month].daysYear.end;
+                for (uint month = 0; month != 12; ++month)
+                {
+                    uint realmonth = calendar_.months[month].realmonth;
+                    uint firstDayOfMonth = calendar_.months[month].daysYear.first;
+                    uint firstDayOfNextMonth = calendar_.months[month].daysYear.end;
 
-              double totalMonthMingen = std::accumulate(srcmingen + firstDayOfMonth * 24,
-                                                        srcmingen + firstDayOfNextMonth * 24,
-                                                        0.);
+                    double totalMonthMingen = std::accumulate(srcmingen + firstDayOfMonth * 24,
+                                                              srcmingen + firstDayOfNextMonth * 24,
+                                                              0.);
 
-              data.totalMonthMingen[realmonth] = totalMonthMingen;
-              totalYearMingen += totalMonthMingen;
+                    data.totalMonthMingen[realmonth] = totalMonthMingen;
+                    totalYearMingen += totalMonthMingen;
 
-              if (!(area.hydro.reservoirCapacity < 1e-4))
-              {
-                  if (area.hydro.reservoirManagement)
-                  {
-                      // Set monthly mingen, used later for h2o_m
-                      data.mingens[realmonth] = totalMonthMingen / (area.hydro.reservoirCapacity);
-                      assert(!std::isnan(data.mingens[month]) && "nan value detect in mingen");
-                  }
-                  else
-                  {
-                      data.mingens[realmonth] = totalMonthMingen;
-                  }
-              }
-              else
-              {
-                  data.mingens[realmonth] = totalMonthMingen;
-              }
+                    if (!(area.hydro.reservoirCapacity < 1e-4))
+                    {
+                        if (area.hydro.reservoirManagement)
+                        {
+                            // Set monthly mingen, used later for h2o_m
+                            data.mingens[realmonth] = totalMonthMingen /
+                                                      (area.hydro.reservoirCapacity);
+                            assert(!std::isnan(data.mingens[month]) &&
+                                   "nan value detect in mingen");
+                        }
+                        else
+                        {
+                            data.mingens[realmonth] = totalMonthMingen;
+                        }
+                    }
+                    else
+                    {
+                        data.mingens[realmonth] = totalMonthMingen;
+                    }
 
-              // Set daily mingen, used later for h2o_d
-              uint simulationMonth = calendar_.mapping.months[realmonth];
-              auto daysPerMonth = calendar_.months[simulationMonth].days;
-              uint firstDay = calendar_.months[simulationMonth].daysYear.first;
-              uint endDay = firstDay + daysPerMonth;
+                    // Set daily mingen, used later for h2o_d
+                    uint simulationMonth = calendar_.mapping.months[realmonth];
+                    auto daysPerMonth = calendar_.months[simulationMonth].days;
+                    uint firstDay = calendar_.months[simulationMonth].daysYear.first;
+                    uint endDay = firstDay + daysPerMonth;
 
-              for (uint day = firstDay; day != endDay; ++day)
-              {
-                  data.dailyMinGen[day] = std::accumulate(srcmingen + day * 24,
-                                                          srcmingen + day * 24 + 24,
-                                                          0.);
-              }
-          }
-          data.totalYearMingen = totalYearMingen;
-      });
+                    for (uint day = firstDay; day != endDay; ++day)
+                    {
+                        data.dailyMinGen[day] = std::accumulate(srcmingen + day * 24,
+                                                                srcmingen + day * 24 + 24,
+                                                                0.);
+                    }
+                }
+                data.totalYearMingen = totalYearMingen;
+            });
 }
 
-bool HydroManagement::checkMonthlyMinGeneration(uint year, const Data::Area& area) const
+bool
+HydroManagement::checkMonthlyMinGeneration(uint year, const Data::Area& area) const
 {
     const auto& data = tmpDataByArea_.at(&area);
     for (uint month = 0; month != 12; ++month)
@@ -269,7 +279,8 @@ bool HydroManagement::checkMonthlyMinGeneration(uint year, const Data::Area& are
     return true;
 }
 
-bool HydroManagement::checkYearlyMinGeneration(uint year, const Data::Area& area) const
+bool
+HydroManagement::checkYearlyMinGeneration(uint year, const Data::Area& area) const
 {
     const auto& data = tmpDataByArea_.at(&area);
     if (data.totalYearMingen > data.totalYearInflows)
@@ -284,7 +295,8 @@ bool HydroManagement::checkYearlyMinGeneration(uint year, const Data::Area& area
     return true;
 }
 
-bool HydroManagement::checkWeeklyMinGeneration(uint year, const Data::Area& area) const
+bool
+HydroManagement::checkWeeklyMinGeneration(uint year, const Data::Area& area) const
 {
     const auto& srcinflows = area.hydro.series->storage.getColumn(year);
     const auto& srcmingen = area.hydro.series->mingen.getColumn(year);
@@ -318,210 +330,218 @@ bool HydroManagement::checkWeeklyMinGeneration(uint year, const Data::Area& area
     return true;
 }
 
-bool HydroManagement::checkGenerationPowerConsistency(uint year) const
+bool
+HydroManagement::checkGenerationPowerConsistency(uint year) const
 {
     bool ret = true;
 
     areas_.each(
-      [&ret, &year](const Data::Area& area)
-      {
-          const auto& srcmingen = area.hydro.series->mingen.getColumn(year);
-          const auto& srcmaxgen = area.hydro.series->maxHourlyGenPower.getColumn(year);
+            [&ret, &year](const Data::Area& area)
+            {
+                const auto& srcmingen = area.hydro.series->mingen.getColumn(year);
+                const auto& srcmaxgen = area.hydro.series->maxHourlyGenPower.getColumn(year);
 
-          const uint tsIndexMin = area.hydro.series->mingen.getSeriesIndex(year);
-          const uint tsIndexMax = area.hydro.series->maxHourlyGenPower.getSeriesIndex(year);
+                const uint tsIndexMin = area.hydro.series->mingen.getSeriesIndex(year);
+                const uint tsIndexMax = area.hydro.series->maxHourlyGenPower.getSeriesIndex(year);
 
-          for (uint h = 0; h < HOURS_PER_YEAR; ++h)
-          {
-              const auto& min = srcmingen[h];
-              const auto& max = srcmaxgen[h];
-
-              if (max < min)
-              {
-                  logs.error() << "In area: " << area.name << " [hourly] minimum generation of "
-                               << min << " MW in timestep " << h + 1 << " of TS-" << tsIndexMin + 1
-                               << " is incompatible with the maximum generation of " << max
-                               << " MW in timestep " << h + 1 << " of TS-" << tsIndexMax + 1
-                               << " MW.";
-                  ret = false;
-                  return;
-              }
-          }
-      });
-
-    return ret;
-}
-
-bool HydroManagement::checkMinGeneration(uint year) const
-{
-    bool ret = true;
-    areas_.each(
-      [this, &ret, &year](const Data::Area& area)
-      {
-          bool useHeuristicTarget = area.hydro.useHeuristicTarget;
-          bool followLoadModulations = area.hydro.followLoadModulations;
-          bool reservoirManagement = area.hydro.reservoirManagement;
-
-          if (!useHeuristicTarget)
-          {
-              return;
-          }
-
-          if (!followLoadModulations)
-          {
-              ret = checkWeeklyMinGeneration(year, area) && ret;
-              return;
-          }
-
-          if (reservoirManagement)
-          {
-              ret = checkYearlyMinGeneration(year, area) && ret;
-          }
-          else
-          {
-              ret = checkMonthlyMinGeneration(year, area) && ret;
-          }
-      });
-    return ret;
-}
-
-void HydroManagement::prepareNetDemand(uint year,
-                                       Data::SimulationMode mode,
-                                       const Antares::Data::Area::ScratchMap& scratchmap)
-{
-    areas_.each(
-      [this, &year, &scratchmap, &mode](const Data::Area& area)
-      {
-          const auto& scratchpad = scratchmap.at(&area);
-
-          const auto& rormatrix = area.hydro.series->ror;
-          const auto* ror = rormatrix.getColumn(year);
-
-          auto& data = tmpDataByArea_[&area];
-          const double* loadSeries = area.load.series.getColumn(year);
-          const double* windSeries = area.wind.series.getColumn(year);
-          const double* solarSeries = area.solar.series.getColumn(year);
-
-          for (uint hour = 0; hour != HOURS_PER_YEAR; ++hour)
-          {
-              auto dayYear = calendar_.hours[hour].dayYear;
-
-              double netdemand = 0;
-
-              // Aggregated renewable production: wind & solar
-              if (parameters_.renewableGeneration.isAggregated())
-              {
-                  netdemand = +loadSeries[hour] - windSeries[hour] - scratchpad.miscGenSum[hour]
-                              - solarSeries[hour] - ror[hour]
-                              - ((mode != Data::SimulationMode::Adequacy)
-                                   ? scratchpad.mustrunSum[hour]
-                                   : scratchpad.originalMustrunSum[hour]);
-              }
-
-              // Renewable clusters, if enabled
-              else if (parameters_.renewableGeneration.isClusters())
-              {
-                  netdemand = loadSeries[hour] - scratchpad.miscGenSum[hour] - ror[hour]
-                              - ((mode != Data::SimulationMode::Adequacy)
-                                   ? scratchpad.mustrunSum[hour]
-                                   : scratchpad.originalMustrunSum[hour]);
-
-                  for (auto& c: area.renewable.list.each_enabled())
-                  {
-                      netdemand -= c->valueAtTimeStep(year, hour);
-                  }
-              }
-
-              assert(!std::isnan(netdemand)
-                     && "hydro management: NaN detected when calculating the net demande");
-              data.DLN[dayYear] += netdemand;
-          }
-      });
-}
-
-void HydroManagement::prepareEffectiveDemand()
-{
-    areas_.each(
-      [&](Data::Area& area)
-      {
-          auto& data = tmpDataByArea_[&area];
-
-          for (uint day = 0; day != 365; ++day)
-          {
-              auto month = calendar_.days[day].month;
-              assert(month < 12 && "Invalid month index");
-              auto realmonth = calendar_.months[month].realmonth;
-
-              double effectiveDemand = 0;
-              // area.hydro.allocation is indexed by area index
-              area.hydro.allocation.eachNonNull(
-                [&](unsigned areaIndex, double value)
+                for (uint h = 0; h < HOURS_PER_YEAR; ++h)
                 {
-                    const auto* area = areas_.byIndex[areaIndex];
-                    effectiveDemand += tmpDataByArea_[area].DLN[day] * value;
-                });
+                    const auto& min = srcmingen[h];
+                    const auto& max = srcmaxgen[h];
 
-              assert(!std::isnan(effectiveDemand) && "nan value detected for effectiveDemand");
-              data.DLE[day] += effectiveDemand;
-              data.MLE[realmonth] += effectiveDemand;
+                    if (max < min)
+                    {
+                        logs.error()
+                                << "In area: " << area.name << " [hourly] minimum generation of "
+                                << min << " MW in timestep " << h + 1 << " of TS-" << tsIndexMin + 1
+                                << " is incompatible with the maximum generation of " << max
+                                << " MW in timestep " << h + 1 << " of TS-" << tsIndexMax + 1
+                                << " MW.";
+                        ret = false;
+                        return;
+                    }
+                }
+            });
 
-              assert(not std::isnan(data.DLE[day]) && "nan value detected for DLE");
-              assert(not std::isnan(data.MLE[realmonth]) && "nan value detected for DLE");
-          }
-
-          auto minimumYear = std::numeric_limits<double>::infinity();
-          auto dayYear = 0u;
-
-          for (uint month = 0; month != 12; ++month)
-          {
-              auto minimumMonth = +std::numeric_limits<double>::infinity();
-              auto daysPerMonth = calendar_.months[month].days;
-              auto realmonth = calendar_.months[month].realmonth;
-
-              for (uint d = 0; d != daysPerMonth; ++d)
-              {
-                  auto dYear = d + dayYear;
-                  if (data.DLE[dYear] < minimumMonth)
-                  {
-                      minimumMonth = data.DLE[dYear];
-                  }
-              }
-
-              if (minimumMonth < 0.)
-              {
-                  for (uint d = 0; d != daysPerMonth; ++d)
-                  {
-                      data.DLE[dayYear + d] -= minimumMonth - 1e-4;
-                  }
-              }
-
-              if (data.MLE[realmonth] < minimumYear)
-              {
-                  minimumYear = data.MLE[realmonth];
-              }
-
-              dayYear += daysPerMonth;
-          }
-
-          if (minimumYear < 0.)
-          {
-              for (uint realmonth = 0; realmonth != 12; ++realmonth)
-              {
-                  data.MLE[realmonth] -= minimumYear - 1e-4;
-              }
-          }
-      });
+    return ret;
 }
 
-bool HydroManagement::checksOnGenerationPowerBounds(uint year) const
+bool
+HydroManagement::checkMinGeneration(uint year) const
+{
+    bool ret = true;
+    areas_.each(
+            [this, &ret, &year](const Data::Area& area)
+            {
+                bool useHeuristicTarget = area.hydro.useHeuristicTarget;
+                bool followLoadModulations = area.hydro.followLoadModulations;
+                bool reservoirManagement = area.hydro.reservoirManagement;
+
+                if (!useHeuristicTarget)
+                {
+                    return;
+                }
+
+                if (!followLoadModulations)
+                {
+                    ret = checkWeeklyMinGeneration(year, area) && ret;
+                    return;
+                }
+
+                if (reservoirManagement)
+                {
+                    ret = checkYearlyMinGeneration(year, area) && ret;
+                }
+                else
+                {
+                    ret = checkMonthlyMinGeneration(year, area) && ret;
+                }
+            });
+    return ret;
+}
+
+void
+HydroManagement::prepareNetDemand(uint year,
+                                  Data::SimulationMode mode,
+                                  const Antares::Data::Area::ScratchMap& scratchmap)
+{
+    areas_.each(
+            [this, &year, &scratchmap, &mode](const Data::Area& area)
+            {
+                const auto& scratchpad = scratchmap.at(&area);
+
+                const auto& rormatrix = area.hydro.series->ror;
+                const auto* ror = rormatrix.getColumn(year);
+
+                auto& data = tmpDataByArea_[&area];
+                const double* loadSeries = area.load.series.getColumn(year);
+                const double* windSeries = area.wind.series.getColumn(year);
+                const double* solarSeries = area.solar.series.getColumn(year);
+
+                for (uint hour = 0; hour != HOURS_PER_YEAR; ++hour)
+                {
+                    auto dayYear = calendar_.hours[hour].dayYear;
+
+                    double netdemand = 0;
+
+                    // Aggregated renewable production: wind & solar
+                    if (parameters_.renewableGeneration.isAggregated())
+                    {
+                        netdemand = +loadSeries[hour] - windSeries[hour] -
+                                    scratchpad.miscGenSum[hour] - solarSeries[hour] - ror[hour] -
+                                    ((mode != Data::SimulationMode::Adequacy)
+                                             ? scratchpad.mustrunSum[hour]
+                                             : scratchpad.originalMustrunSum[hour]);
+                    }
+
+                    // Renewable clusters, if enabled
+                    else if (parameters_.renewableGeneration.isClusters())
+                    {
+                        netdemand = loadSeries[hour] - scratchpad.miscGenSum[hour] - ror[hour] -
+                                    ((mode != Data::SimulationMode::Adequacy)
+                                             ? scratchpad.mustrunSum[hour]
+                                             : scratchpad.originalMustrunSum[hour]);
+
+                        for (auto& c: area.renewable.list.each_enabled())
+                        {
+                            netdemand -= c->valueAtTimeStep(year, hour);
+                        }
+                    }
+
+                    assert(!std::isnan(netdemand) &&
+                           "hydro management: NaN detected when calculating the net demande");
+                    data.DLN[dayYear] += netdemand;
+                }
+            });
+}
+
+void
+HydroManagement::prepareEffectiveDemand()
+{
+    areas_.each(
+            [&](Data::Area& area)
+            {
+                auto& data = tmpDataByArea_[&area];
+
+                for (uint day = 0; day != 365; ++day)
+                {
+                    auto month = calendar_.days[day].month;
+                    assert(month < 12 && "Invalid month index");
+                    auto realmonth = calendar_.months[month].realmonth;
+
+                    double effectiveDemand = 0;
+                    // area.hydro.allocation is indexed by area index
+                    area.hydro.allocation.eachNonNull(
+                            [&](unsigned areaIndex, double value)
+                            {
+                                const auto* area = areas_.byIndex[areaIndex];
+                                effectiveDemand += tmpDataByArea_[area].DLN[day] * value;
+                            });
+
+                    assert(!std::isnan(effectiveDemand) &&
+                           "nan value detected for effectiveDemand");
+                    data.DLE[day] += effectiveDemand;
+                    data.MLE[realmonth] += effectiveDemand;
+
+                    assert(not std::isnan(data.DLE[day]) && "nan value detected for DLE");
+                    assert(not std::isnan(data.MLE[realmonth]) && "nan value detected for DLE");
+                }
+
+                auto minimumYear = std::numeric_limits<double>::infinity();
+                auto dayYear = 0u;
+
+                for (uint month = 0; month != 12; ++month)
+                {
+                    auto minimumMonth = +std::numeric_limits<double>::infinity();
+                    auto daysPerMonth = calendar_.months[month].days;
+                    auto realmonth = calendar_.months[month].realmonth;
+
+                    for (uint d = 0; d != daysPerMonth; ++d)
+                    {
+                        auto dYear = d + dayYear;
+                        if (data.DLE[dYear] < minimumMonth)
+                        {
+                            minimumMonth = data.DLE[dYear];
+                        }
+                    }
+
+                    if (minimumMonth < 0.)
+                    {
+                        for (uint d = 0; d != daysPerMonth; ++d)
+                        {
+                            data.DLE[dayYear + d] -= minimumMonth - 1e-4;
+                        }
+                    }
+
+                    if (data.MLE[realmonth] < minimumYear)
+                    {
+                        minimumYear = data.MLE[realmonth];
+                    }
+
+                    dayYear += daysPerMonth;
+                }
+
+                if (minimumYear < 0.)
+                {
+                    for (uint realmonth = 0; realmonth != 12; ++realmonth)
+                    {
+                        data.MLE[realmonth] -= minimumYear - 1e-4;
+                    }
+                }
+            });
+}
+
+bool
+HydroManagement::checksOnGenerationPowerBounds(uint year) const
 {
     return (checkMinGeneration(year) && checkGenerationPowerConsistency(year)) ? true : false;
 }
 
-void HydroManagement::makeVentilation(double* randomReservoirLevel,
-                                      Solver::Variable::State& state,
-                                      uint y,
-                                      Antares::Data::Area::ScratchMap& scratchmap)
+void
+HydroManagement::makeVentilation(double* randomReservoirLevel,
+                                 Solver::Variable::State& state,
+                                 uint y,
+                                 Antares::Data::Area::ScratchMap& scratchmap)
 {
     prepareInflowsScaling(y);
     minGenerationScaling(y);

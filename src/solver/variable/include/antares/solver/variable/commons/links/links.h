@@ -164,10 +164,8 @@ public:
 
     void hourEnd(State& state, uint hourInTheYear);
 
-    void buildSurveyReport(SurveyResults& results,
-                           int dataLevel,
-                           int fileLevel,
-                           int precision) const;
+    void
+    buildSurveyReport(SurveyResults& results, int dataLevel, int fileLevel, int precision) const;
 
     void buildAnnualSurveyReport(SurveyResults& results,
                                  int dataLevel,
@@ -204,8 +202,8 @@ public:
     }
 
     template<class VCardToFindT>
-    void retrieveResultsForLink(Storage<VCardToFindT>::ResultsType** result,
-                                const Data::AreaLink* link)
+    void
+    retrieveResultsForLink(Storage<VCardToFindT>::ResultsType** result, const Data::AreaLink* link)
     {
         pLinks[link->indexForArea].template retrieveResultsForLink<VCardToFindT>(result, link);
     }

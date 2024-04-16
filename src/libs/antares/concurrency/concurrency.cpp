@@ -58,9 +58,8 @@ private:
 
 } // namespace
 
-std::future<void> AddTask(Yuni::Job::QueueService& threadPool,
-                          const Task& task,
-                          Yuni::Job::Priority priority)
+std::future<void>
+AddTask(Yuni::Job::QueueService& threadPool, const Task& task, Yuni::Job::Priority priority)
 {
     auto job = std::make_unique<PackagedJob>(task);
     auto future = job->getFuture();
@@ -68,13 +67,15 @@ std::future<void> AddTask(Yuni::Job::QueueService& threadPool,
     return future;
 }
 
-void FutureSet::add(TaskFuture&& f)
+void
+FutureSet::add(TaskFuture&& f)
 {
     std::lock_guard lock(mutex_);
     futures_.push_back(std::move(f));
 }
 
-void FutureSet::join()
+void
+FutureSet::join()
 {
     std::vector<TaskFuture> toBeJoined;
     {

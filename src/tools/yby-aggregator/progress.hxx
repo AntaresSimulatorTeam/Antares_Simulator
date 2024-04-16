@@ -26,7 +26,8 @@ inline Progress::~Progress()
 }
 
 template<class StringT>
-void Progress::message(const StringT& msg)
+void
+Progress::message(const StringT& msg)
 {
     using namespace Antares;
     logs.info() << msg;

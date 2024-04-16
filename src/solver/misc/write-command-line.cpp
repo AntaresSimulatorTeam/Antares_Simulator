@@ -24,7 +24,8 @@
 
 namespace Antares::Solver
 {
-void WriteCommandLineIntoLogs(int argc, char** argv)
+void
+WriteCommandLineIntoLogs(int argc, char** argv)
 {
     std::ostringstream buffer;
     for (int arg = 0; arg < argc; ++arg)

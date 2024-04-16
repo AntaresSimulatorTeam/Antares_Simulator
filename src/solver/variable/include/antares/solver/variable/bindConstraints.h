@@ -135,10 +135,8 @@ public:
     void hourBegin(uint hourInTheYear);
     void hourEnd(State& state, uint hourInTheYear);
 
-    void buildSurveyReport(SurveyResults& results,
-                           int dataLevel,
-                           int fileLevel,
-                           int precision) const;
+    void
+    buildSurveyReport(SurveyResults& results, int dataLevel, int fileLevel, int precision) const;
 
     void buildAnnualSurveyReport(SurveyResults& results,
                                  int dataLevel,

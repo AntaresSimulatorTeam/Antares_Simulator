@@ -49,8 +49,8 @@ struct VCardCongestionProbability
 
     //! The expecte results
     typedef Results<R::AllYears::Raw< // The raw values throughout all years
-      >>
-      ResultsType;
+            >>
+            ResultsType;
 
     enum
     {
@@ -133,11 +133,11 @@ public:
     {
         enum
         {
-            count = ((VCardType::categoryDataLevel & CDataLevel
-                      && VCardType::categoryFileLevel & CFile)
-                       ? (NextType::template Statistics<CDataLevel, CFile>::count
-                          + VCardType::columnCount * ResultsType::count)
-                       : NextType::template Statistics<CDataLevel, CFile>::count),
+            count = ((VCardType::categoryDataLevel & CDataLevel &&
+                      VCardType::categoryFileLevel & CFile)
+                             ? (NextType::template Statistics<CDataLevel, CFile>::count +
+                                VCardType::columnCount * ResultsType::count)
+                             : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
 
@@ -283,14 +283,14 @@ public:
         const auto& linkDirectCapa = state.link->directCapacities;
         const auto& linkIndirectCapa = state.link->indirectCapacities;
         // CONG. PROB +
-        if (state.ntc.ValeurDuFlux[state.link->index]
-            > +linkDirectCapa.getCoefficient(state.year, state.hourInTheYear) - 10e-6)
+        if (state.ntc.ValeurDuFlux[state.link->index] >
+            +linkDirectCapa.getCoefficient(state.year, state.hourInTheYear) - 10e-6)
         {
             pValuesForTheCurrentYear[numSpace][0].hour[state.hourInTheYear] += 100.0 * ratio;
         }
         // CONG. PROB -
-        if (state.ntc.ValeurDuFlux[state.link->index]
-            < -linkIndirectCapa.getCoefficient(state.year, state.hourInTheYear) + 10e-6)
+        if (state.ntc.ValeurDuFlux[state.link->index] <
+            -linkIndirectCapa.getCoefficient(state.year, state.hourInTheYear) + 10e-6)
         {
             pValuesForTheCurrentYear[numSpace][1].hour[state.hourInTheYear] += 100.0 * ratio;
         }
@@ -305,55 +305,36 @@ public:
         {
             for (uint h = 0; h != maxHoursInAYear; ++h)
             {
-                pValuesForYearLocalReport[numSpace][i].hour[h] = (pValuesForTheCurrentYear[numSpace]
-                                                                                          [i]
-                                                                                            .hour[h]
-                                                                  > 0.)
-                                                                   ? 100.
-                                                                   : 0.;
+                pValuesForYearLocalReport[numSpace][i]
+                        .hour[h] = (pValuesForTheCurrentYear[numSpace][i].hour[h] > 0.) ? 100. : 0.;
             }
 
             for (uint d = 0; d != maxDaysInAYear; ++d)
             {
-                pValuesForYearLocalReport[numSpace][i].day[d] = (pValuesForTheCurrentYear[numSpace]
-                                                                                         [i]
-                                                                                           .day[d]
-                                                                 > 0.)
-                                                                  ? 100.
-                                                                  : 0.;
+                pValuesForYearLocalReport[numSpace][i]
+                        .day[d] = (pValuesForTheCurrentYear[numSpace][i].day[d] > 0.) ? 100. : 0.;
             }
 
             for (uint w = 0; w != maxWeeksInAYear; ++w)
             {
-                pValuesForYearLocalReport[numSpace][i].week[w] = (pValuesForTheCurrentYear[numSpace]
-                                                                                          [i]
-                                                                                            .week[w]
-                                                                  > 0.)
-                                                                   ? 100.
-                                                                   : 0.;
+                pValuesForYearLocalReport[numSpace][i]
+                        .week[w] = (pValuesForTheCurrentYear[numSpace][i].week[w] > 0.) ? 100. : 0.;
             }
 
             for (uint m = 0; m != maxMonths; ++m)
             {
-                pValuesForYearLocalReport[numSpace][i].month[m] = (pValuesForTheCurrentYear
-                                                                     [numSpace][i]
-                                                                       .month[m]
-                                                                   > 0.)
-                                                                    ? 100.
-                                                                    : 0.;
+                pValuesForYearLocalReport[numSpace][i]
+                        .month[m] = (pValuesForTheCurrentYear[numSpace][i].month[m] > 0.) ? 100.
+                                                                                          : 0.;
             }
 
-            pValuesForYearLocalReport[numSpace][i].year = (pValuesForTheCurrentYear[numSpace][i]
-                                                             .year
-                                                           > 0.)
-                                                            ? 100.
-                                                            : 0.;
+            pValuesForYearLocalReport[numSpace][i]
+                    .year = (pValuesForTheCurrentYear[numSpace][i].year > 0.) ? 100. : 0.;
         }
     }
 
-    Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
-      uint column,
-      uint numSpace) const
+    Antares::Memory::Stored<double>::ConstReturnType
+    retrieveRawHourlyValuesForCurrentYear(uint column, uint numSpace) const
     {
         return pValuesForTheCurrentYear[numSpace][column].hour;
     }
@@ -374,7 +355,7 @@ public:
                 results.variableCaption = VCardType::Multiple::Caption(i);
                 results.variableUnit = VCardType::Multiple::Unit(i);
                 pValuesForYearLocalReport[numSpace][i]
-                  .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
+                        .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
             }
             results.isCurrentVarNA++;
         }

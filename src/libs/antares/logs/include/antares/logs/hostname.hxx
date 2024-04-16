@@ -34,7 +34,8 @@
 namespace // anonymous
 {
 template<class AnyStringT>
-void InternalAppendHostname(AnyStringT& out)
+void
+InternalAppendHostname(AnyStringT& out)
 {
 #ifndef YUNI_OS_WINDOWS
     char hostname[256];

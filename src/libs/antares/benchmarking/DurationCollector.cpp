@@ -26,13 +26,15 @@
 namespace Benchmarking
 {
 
-void DurationCollector::addDuration(const std::string& name, int64_t duration)
+void
+DurationCollector::addDuration(const std::string& name, int64_t duration)
 {
     const std::lock_guard lock(mutex_);
     duration_items_[name].push_back(duration);
 }
 
-void DurationCollector::toFileContent(FileContent& file_content)
+void
+DurationCollector::toFileContent(FileContent& file_content)
 {
     for (const auto& [name, durations]: duration_items_)
     {

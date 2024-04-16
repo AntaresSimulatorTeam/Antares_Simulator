@@ -47,8 +47,8 @@ private:
     std::map<std::string, MatrixType> rules_;
 };
 
-inline unsigned BindingConstraintsTSNumberData::get(const std::string& group_name,
-                                                    const unsigned year) const
+inline unsigned
+BindingConstraintsTSNumberData::get(const std::string& group_name, const unsigned year) const
 {
     auto it = rules_.find(group_name);
     if (it == rules_.end())
@@ -58,12 +58,14 @@ inline unsigned BindingConstraintsTSNumberData::get(const std::string& group_nam
     return it->second[0][year];
 }
 
-inline CString<512, false> BindingConstraintsTSNumberData::get_prefix() const
+inline CString<512, false>
+BindingConstraintsTSNumberData::get_prefix() const
 {
     return "bc,";
 }
 
-inline unsigned BindingConstraintsTSNumberData::get_tsGenCount(const Study&) const
+inline unsigned
+BindingConstraintsTSNumberData::get_tsGenCount(const Study&) const
 {
     return 0;
 }

@@ -38,25 +38,24 @@ namespace Antares::Data::ScenarioBuilder
 static constexpr unsigned maxErrors = 20;
 
 template<class D>
-static inline bool CheckValidity(uint value, const D& data, uint tsGenMax)
+static inline bool
+CheckValidity(uint value, const D& data, uint tsGenMax)
 {
     // When the TS-Generators are not used
     return (!tsGenMax) ? (value < data.timeSeries.width) : (value < tsGenMax);
 }
 
 template<>
-inline bool CheckValidity<Data::DataSeriesHydro>(uint value,
-                                                 const Data::DataSeriesHydro& data,
-                                                 uint tsGenMax)
+inline bool
+CheckValidity<Data::DataSeriesHydro>(uint value, const Data::DataSeriesHydro& data, uint tsGenMax)
 {
     // When the TS-Generators are not used
     return (!tsGenMax) ? (value < data.TScount()) : (value < tsGenMax);
 }
 
 template<>
-inline bool CheckValidity<Data::AreaLink>(uint value,
-                                          const Data::AreaLink& data,
-                                          uint /* tsGenMax */)
+inline bool
+CheckValidity<Data::AreaLink>(uint value, const Data::AreaLink& data, uint /* tsGenMax */)
 {
     // Value = index of time series
     // Direct Capacities = all time series
@@ -65,26 +64,27 @@ inline bool CheckValidity<Data::AreaLink>(uint value,
 }
 
 template<>
-inline bool CheckValidity<BindingConstraintGroup>(uint value,
-                                                  const BindingConstraintGroup& group,
-                                                  uint)
+inline bool
+CheckValidity<BindingConstraintGroup>(uint value, const BindingConstraintGroup& group, uint)
 {
     return value < group.numberOfTimeseries();
 }
 
 template<class D>
-static inline bool CheckValidityHydroMaxPower(uint value, const D& data, uint tsGenMax)
+static inline bool
+CheckValidityHydroMaxPower(uint value, const D& data, uint tsGenMax)
 {
     // TS Generator never used
     return (!tsGenMax) ? (value < data.maxPowerTScount()) : (value < tsGenMax);
 }
 
 template<class StringT, class D>
-bool ApplyToMatrix(uint& errors,
-                   StringT& logprefix,
-                   D& data,
-                   const TSNumberData::MatrixType::ColumnType& years,
-                   uint tsGenMax)
+bool
+ApplyToMatrix(uint& errors,
+              StringT& logprefix,
+              D& data,
+              const TSNumberData::MatrixType::ColumnType& years,
+              uint tsGenMax)
 {
     bool ret = true;
 
@@ -129,11 +129,12 @@ bool ApplyToMatrix(uint& errors,
 }
 
 template<class StringT, class D>
-bool ApplyToMatrixMaxPower(uint& errors,
-                           StringT& logprefix,
-                           D& data,
-                           const TSNumberData::MatrixType::ColumnType& years,
-                           uint tsGenMax)
+bool
+ApplyToMatrixMaxPower(uint& errors,
+                      StringT& logprefix,
+                      D& data,
+                      const TSNumberData::MatrixType::ColumnType& years,
+                      uint tsGenMax)
 {
     bool ret = true;
 

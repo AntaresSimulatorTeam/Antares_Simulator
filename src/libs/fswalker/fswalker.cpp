@@ -92,10 +92,8 @@ protected:
 
     void walk(const String& path);
 
-    bool triggerFileEvent(const String& filename,
-                          const String& parent,
-                          int64_t modified,
-                          uint64_t size);
+    bool
+    triggerFileEvent(const String& filename, const String& parent, int64_t modified, uint64_t size);
 
     void waitForAllJobs() const;
 
@@ -175,7 +173,8 @@ WalkerThread::~WalkerThread()
     releaseResources();
 }
 
-void WalkerThread::releaseResources()
+void
+WalkerThread::releaseResources()
 {
     // using the C++ idiom Clear-and-minimize to really deallocate the memory.
     if (not pStack.empty())
@@ -194,7 +193,8 @@ void WalkerThread::releaseResources()
     pFileJob = nullptr;
 }
 
-bool WalkerThread::onDirectoryEnter(const String& path)
+bool
+WalkerThread::onDirectoryEnter(const String& path)
 {
     // Context for this directory
     auto* context = new DirectoryContext(path);
@@ -232,14 +232,16 @@ bool WalkerThread::onDirectoryEnter(const String& path)
     return true;
 }
 
-inline void WalkerThread::onDirectoryLeave()
+inline void
+WalkerThread::onDirectoryLeave()
 {
     pStack.pop_back();
     delete pContext.top();
     pContext.pop();
 }
 
-void WalkerThread::run()
+void
+WalkerThread::run()
 {
     // We will have to deal with files, preparing the future job
     if (not events.file.access.empty())
@@ -262,10 +264,11 @@ void WalkerThread::run()
     pOriginalStatistics = statistics;
 }
 
-bool WalkerThread::triggerFileEvent(const String& filename,
-                                    const String& parent,
-                                    int64_t modified,
-                                    uint64_t size)
+bool
+WalkerThread::triggerFileEvent(const String& filename,
+                               const String& parent,
+                               int64_t modified,
+                               uint64_t size)
 {
     assert(pFileJob != NULL);
 
@@ -308,7 +311,8 @@ bool WalkerThread::triggerFileEvent(const String& filename,
     return true;
 }
 
-void WalkerThread::walk(const String& path)
+void
+WalkerThread::walk(const String& path)
 {
     if (not onDirectoryEnter(path)) // nothing to walk through
     {
@@ -408,7 +412,8 @@ void WalkerThread::walk(const String& path)
     logs.info() << logPrefix << "operation completed";
 }
 
-void WalkerThread::waitForAllJobs() const
+void
+WalkerThread::waitForAllJobs() const
 {
     // Previous number of jobs
     int lastremain = -1;
@@ -451,7 +456,8 @@ void WalkerThread::waitForAllJobs() const
     }
 }
 
-void WalkerThread::dispatchJob(IJob::Ptr job) const
+void
+WalkerThread::dispatchJob(IJob::Ptr job) const
 {
     // get the shared counter
     job->pJobCounter = pJobCounter;
@@ -476,7 +482,8 @@ Walker::~Walker()
 {
 }
 
-void Walker::directory(const AnyString& path)
+void
+Walker::directory(const AnyString& path)
 {
     if (not path.empty())
     {
@@ -495,7 +502,8 @@ void Walker::directory(const AnyString& path)
     }
 }
 
-void Walker::run()
+void
+Walker::run()
 {
     // reset statistics
     pStats.reset();
@@ -537,17 +545,20 @@ void Walker::run()
     delete thread;
 }
 
-YString Walker::directory() const
+YString
+Walker::directory() const
 {
     return pDirectory;
 }
 
-void Walker::retrieveStatistics(Statistics& out)
+void
+Walker::retrieveStatistics(Statistics& out)
 {
     out = pStats;
 }
 
-void Walker::add(IExtension::Ptr extension)
+void
+Walker::add(IExtension::Ptr extension)
 {
     if (!(!extension))
     {

@@ -21,25 +21,28 @@
 
 #include "antares/solver/optimisation/constraints/MinMaxHydroPowerGroup.h"
 
-MinHydroPowerData MinMaxHydroPowerGroup::GetMinHydroPowerData()
+MinHydroPowerData
+MinMaxHydroPowerGroup::GetMinHydroPowerData()
 {
     return {.CaracteristiquesHydrauliques = problemeHebdo_->CaracteristiquesHydrauliques,
-            .NombreDePasDeTempsPourUneOptimisation = problemeHebdo_
-                                                       ->NombreDePasDeTempsPourUneOptimisation,
-            .NumeroDeContrainteMinEnergieHydraulique = problemeHebdo_
-                                                         ->NumeroDeContrainteMinEnergieHydraulique};
+            .NombreDePasDeTempsPourUneOptimisation =
+                    problemeHebdo_->NombreDePasDeTempsPourUneOptimisation,
+            .NumeroDeContrainteMinEnergieHydraulique =
+                    problemeHebdo_->NumeroDeContrainteMinEnergieHydraulique};
 }
 
-MaxHydroPowerData MinMaxHydroPowerGroup::GetMaxHydroPowerData()
+MaxHydroPowerData
+MinMaxHydroPowerGroup::GetMaxHydroPowerData()
 {
     return {.CaracteristiquesHydrauliques = problemeHebdo_->CaracteristiquesHydrauliques,
-            .NombreDePasDeTempsPourUneOptimisation = problemeHebdo_
-                                                       ->NombreDePasDeTempsPourUneOptimisation,
-            .NumeroDeContrainteMaxEnergieHydraulique = problemeHebdo_
-                                                         ->NumeroDeContrainteMaxEnergieHydraulique};
+            .NombreDePasDeTempsPourUneOptimisation =
+                    problemeHebdo_->NombreDePasDeTempsPourUneOptimisation,
+            .NumeroDeContrainteMaxEnergieHydraulique =
+                    problemeHebdo_->NumeroDeContrainteMaxEnergieHydraulique};
 }
 
-void MinMaxHydroPowerGroup::BuildConstraints()
+void
+MinMaxHydroPowerGroup::BuildConstraints()
 {
     auto minHydroPowerData = GetMinHydroPowerData();
     MinHydroPower minHydroPower(builder_, minHydroPowerData);

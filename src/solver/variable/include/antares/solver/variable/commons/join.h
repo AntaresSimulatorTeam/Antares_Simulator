@@ -51,12 +51,12 @@ struct VCardJoin
     }
 
     //! The expecte results
-    typedef Results<R::AllYears::Average< // The average values throughout all years
-      R::AllYears::StdDeviation<          // The standard deviation values throughout all years
-        R::AllYears::Min<                 // The minimum values throughout all years
-          R::AllYears::Max<               // The maximum values throughout all years
-            >>>>>
-      ResultsType;
+    typedef Results<R::AllYears::Average<     // The average values throughout all years
+            R::AllYears::StdDeviation<        // The standard deviation values throughout all years
+                    R::AllYears::Min<         // The minimum values throughout all years
+                            R::AllYears::Max< // The maximum values throughout all years
+                                    >>>>>
+            ResultsType;
 
     enum
     {
@@ -100,7 +100,7 @@ public:
     typedef VCardJoin VCardType;
     //! Ancestor
     typedef Variable::IVariable<Join<LeftT, RightT, BindConstT>, Yuni::Default, VCardType>
-      AncestorType;
+            AncestorType;
 
     //! List of expected results
     typedef typename VCardType::ResultsType ResultsType;
@@ -266,10 +266,8 @@ public:
         BindConstType::hourEnd(state, hourInTheYear);
     }
 
-    void buildSurveyReport(SurveyResults& results,
-                           int dataLevel,
-                           int fileLevel,
-                           int precision) const
+    void
+    buildSurveyReport(SurveyResults& results, int dataLevel, int fileLevel, int precision) const
     {
         LeftType::buildSurveyReport(results, dataLevel, fileLevel, precision);
         RightType::buildSurveyReport(results, dataLevel, fileLevel, precision);
@@ -373,9 +371,9 @@ public:
     }
 
     template<class VCardToFindT>
-    void retrieveResultsForThermalCluster(
-      typename Variable::Storage<VCardToFindT>::ResultsType** result,
-      const Data::ThermalCluster* cluster)
+    void
+    retrieveResultsForThermalCluster(typename Variable::Storage<VCardToFindT>::ResultsType** result,
+                                     const Data::ThermalCluster* cluster)
     {
         LeftType::template retrieveResultsForThermalCluster<VCardToFindT>(result, cluster);
         RightType::template retrieveResultsForThermalCluster<VCardToFindT>(result, cluster);

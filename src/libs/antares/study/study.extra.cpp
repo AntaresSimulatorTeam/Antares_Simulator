@@ -32,7 +32,8 @@ namespace Antares::Data
 // The path to the Icon file to use when writing a study
 String StudyIconFile;
 
-void Study::scenarioRulesCreate()
+void
+Study::scenarioRulesCreate()
 {
     // releasing the previous instance of the scenario builder
     delete scenarioRules;
@@ -42,7 +43,8 @@ void Study::scenarioRulesCreate()
     scenarioRules->loadFromStudy(*this);
 }
 
-void Study::scenarioRulesCreate(const RulesScenarioName& /*thisoneonly*/)
+void
+Study::scenarioRulesCreate(const RulesScenarioName& /*thisoneonly*/)
 {
     // releasing the previous instance of the scenario builder
     delete scenarioRules;
@@ -51,7 +53,8 @@ void Study::scenarioRulesCreate(const RulesScenarioName& /*thisoneonly*/)
     scenarioRules->loadFromStudy(*this);
 }
 
-void Study::scenarioRulesDestroy()
+void
+Study::scenarioRulesDestroy()
 {
     if (scenarioRules)
     {
@@ -63,7 +66,8 @@ void Study::scenarioRulesDestroy()
     }
 }
 
-void Study::scenarioRulesLoadIfNotAvailable()
+void
+Study::scenarioRulesLoadIfNotAvailable()
 {
     if (!scenarioRules)
     {
@@ -73,7 +77,8 @@ void Study::scenarioRulesLoadIfNotAvailable()
     }
 }
 
-bool Study::modifyAreaNameIfAlreadyTaken(AreaName& out, const AreaName& basename)
+bool
+Study::modifyAreaNameIfAlreadyTaken(AreaName& out, const AreaName& basename)
 {
     out = basename;
     AreaName id = out;
@@ -98,7 +103,8 @@ bool Study::modifyAreaNameIfAlreadyTaken(AreaName& out, const AreaName& basename
     return true;
 }
 
-bool Study::TitleFromStudyFolder(const AnyString& folder, String& out, bool warnings)
+bool
+Study::TitleFromStudyFolder(const AnyString& folder, String& out, bool warnings)
 {
     String b;
     b << folder << IO::Separator << "study.antares";
@@ -112,21 +118,24 @@ bool Study::TitleFromStudyFolder(const AnyString& folder, String& out, bool warn
     return false;
 }
 
-bool Study::IsRootStudy(const AnyString& folder)
+bool
+Study::IsRootStudy(const AnyString& folder)
 {
     String buffer;
     buffer.reserve(folder.size() + 16);
     return IsRootStudy(folder, buffer);
 }
 
-bool Study::IsRootStudy(const AnyString& folder, String& buffer)
+bool
+Study::IsRootStudy(const AnyString& folder, String& buffer)
 {
     buffer.clear() << folder << IO::Separator << "study.antares";
     StudyHeader header;
     return (header.loadFromFile(buffer, false));
 }
 
-bool Study::IsInsideStudyFolder(const AnyString& path, String& location, String& title)
+bool
+Study::IsInsideStudyFolder(const AnyString& path, String& location, String& title)
 {
     if (TitleFromStudyFolder(path, title, false))
     {

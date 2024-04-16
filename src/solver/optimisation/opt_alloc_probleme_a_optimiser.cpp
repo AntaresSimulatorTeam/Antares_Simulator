@@ -32,8 +32,9 @@ using namespace Antares;
 #define SNPRINTF snprintf
 #endif
 
-void OPT_AllocateFromNumberOfVariableConstraints(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
-                                                 int NbTermes)
+void
+OPT_AllocateFromNumberOfVariableConstraints(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
+                                            int NbTermes)
 {
     const size_t nbVariables = ProblemeAResoudre->NombreDeVariables;
     const size_t nbConstraints = ProblemeAResoudre->NombreDeContraintes;
@@ -77,12 +78,13 @@ void OPT_AllocateFromNumberOfVariableConstraints(PROBLEME_ANTARES_A_RESOUDRE* Pr
     ProblemeAResoudre->VariablesEntieres.resize(nbVariables);
 }
 
-static void optimisationAllocateProblem(PROBLEME_HEBDO* problemeHebdo, const int mxPaliers)
+static void
+optimisationAllocateProblem(PROBLEME_HEBDO* problemeHebdo, const int mxPaliers)
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
     int NombreDePasDeTempsPourUneOptimisation = problemeHebdo
-                                                  ->NombreDePasDeTempsPourUneOptimisation;
+                                                        ->NombreDePasDeTempsPourUneOptimisation;
 
     int Sparsity = mxPaliers * problemeHebdo->NombreDePays;
     Sparsity += problemeHebdo->NombreDInterconnexions;
@@ -117,8 +119,8 @@ static void optimisationAllocateProblem(PROBLEME_HEBDO* problemeHebdo, const int
     NbTermes += problemeHebdo->NombreDePays * NombreDePasDeTempsPourUneOptimisation * 4;
     NbTermes += problemeHebdo->NombreDePays * NombreDePasDeTempsPourUneOptimisation * 5;
 
-    NbTermes += problemeHebdo->NombreDePays * NombreDePasDeTempsPourUneOptimisation
-                * 2; /*inequality constraint on final hydros level*/
+    NbTermes += problemeHebdo->NombreDePays * NombreDePasDeTempsPourUneOptimisation *
+                2;   /*inequality constraint on final hydros level*/
     NbTermes += 1;   /* constraint includes hydro generation, pumping and final level */
     NbTermes += 101; /* constraint expressing final level as a sum of stock layers */
 
@@ -126,7 +128,7 @@ static void optimisationAllocateProblem(PROBLEME_HEBDO* problemeHebdo, const int
 
     logs.info();
     logs.info()
-      << " Starting Memory Allocation for a Weekly Optimization problem in Canonical form ";
+            << " Starting Memory Allocation for a Weekly Optimization problem in Canonical form ";
     logs.info() << " ( Problem Size :" << ProblemeAResoudre->NombreDeVariables << " variables "
                 << ProblemeAResoudre->NombreDeContraintes << " Constraints) ";
     logs.info() << " Expected Number of Non-zero terms in Problem Matrix : " << NbTermes;
@@ -143,7 +145,8 @@ static void optimisationAllocateProblem(PROBLEME_HEBDO* problemeHebdo, const int
     logs.info();
 }
 
-void OPT_AllocDuProblemeAOptimiser(PROBLEME_HEBDO* problemeHebdo)
+void
+OPT_AllocDuProblemeAOptimiser(PROBLEME_HEBDO* problemeHebdo)
 {
     problemeHebdo->ProblemeAResoudre = std::make_unique<PROBLEME_ANTARES_A_RESOUDRE>();
 
@@ -152,7 +155,8 @@ void OPT_AllocDuProblemeAOptimiser(PROBLEME_HEBDO* problemeHebdo)
     optimisationAllocateProblem(problemeHebdo, mxPaliers);
 }
 
-void OPT_AugmenterLaTailleDeLaMatriceDesContraintes(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
+void
+OPT_AugmenterLaTailleDeLaMatriceDesContraintes(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
 {
     int NbTermes = ProblemeAResoudre->NombreDeTermesAllouesDansLaMatriceDesContraintes;
     NbTermes += ProblemeAResoudre->IncrementDAllocationMatriceDesContraintes;

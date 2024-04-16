@@ -43,9 +43,8 @@ void TransformNameIntoID(const AnyString& name, StringT& out);
 void BeautifyName(YString& out, AnyString oldname);
 void BeautifyName(std::string& out, const std::string& oldname);
 
-std::vector<std::pair<std::string, std::string>> splitStringIntoPairs(const std::string& s,
-                                                                      char delimiter1,
-                                                                      char delimiter2);
+std::vector<std::pair<std::string, std::string>>
+splitStringIntoPairs(const std::string& s, char delimiter1, char delimiter2);
 
 namespace Utils
 {

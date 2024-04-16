@@ -21,18 +21,19 @@
 
 #include "antares/solver/optimisation/constraints/PMaxDispatchableGeneration.h"
 
-void PMaxDispatchableGeneration::add(int pays, int index, int pdt)
+void
+PMaxDispatchableGeneration::add(int pays, int index, int pdt)
 {
     if (!data.Simulation)
     {
         double pmaxDUnGroupeDuPalierThermique = data.PaliersThermiquesDuPays[pays]
-                                                  .PmaxDUnGroupeDuPalierThermique[index];
+                                                        .PmaxDUnGroupeDuPalierThermique[index];
         int cluster = data.PaliersThermiquesDuPays[pays]
-                        .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+                              .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
         builder.updateHourWithinWeek(pdt)
-          .DispatchableProduction(cluster, 1.0)
-          .NumberOfDispatchableUnits(cluster, -pmaxDUnGroupeDuPalierThermique)
-          .lessThan();
+                .DispatchableProduction(cluster, 1.0)
+                .NumberOfDispatchableUnits(cluster, -pmaxDUnGroupeDuPalierThermique)
+                .lessThan();
         if (builder.NumberOfVariables() > 0)
         {
             ConstraintNamer namer(builder.data.NomDesContraintes);
@@ -41,8 +42,8 @@ void PMaxDispatchableGeneration::add(int pays, int index, int pdt)
             namer.UpdateArea(builder.data.NomsDesPays[pays]);
 
             namer.PMaxDispatchableGeneration(
-              builder.data.nombreDeContraintes,
-              data.PaliersThermiquesDuPays[pays].NomsDesPaliersThermiques[index]);
+                    builder.data.nombreDeContraintes,
+                    data.PaliersThermiquesDuPays[pays].NomsDesPaliersThermiques[index]);
         }
         builder.build();
     }

@@ -52,12 +52,12 @@ struct VCardCongestionFee
     }
 
     //! The expecte results
-    typedef Results<R::AllYears::Average< // The average values throughout all years
-      R::AllYears::StdDeviation<          // The standard deviation values throughout all years
-        R::AllYears::Min<                 // The minimum values throughout all years
-          R::AllYears::Max<               // The maximum values throughout all years
-            >>>>>
-      ResultsType;
+    typedef Results<R::AllYears::Average<     // The average values throughout all years
+            R::AllYears::StdDeviation<        // The standard deviation values throughout all years
+                    R::AllYears::Min<         // The minimum values throughout all years
+                            R::AllYears::Max< // The maximum values throughout all years
+                                    >>>>>
+            ResultsType;
 
     enum
     {
@@ -118,11 +118,11 @@ public:
     {
         enum
         {
-            count = ((VCardType::categoryDataLevel & CDataLevel
-                      && VCardType::categoryFileLevel & CFile)
-                       ? (NextType::template Statistics<CDataLevel, CFile>::count
-                          + VCardType::columnCount * ResultsType::count)
-                       : NextType::template Statistics<CDataLevel, CFile>::count),
+            count = ((VCardType::categoryDataLevel & CDataLevel &&
+                      VCardType::categoryFileLevel & CFile)
+                             ? (NextType::template Statistics<CDataLevel, CFile>::count +
+                                VCardType::columnCount * ResultsType::count)
+                             : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
 
@@ -226,16 +226,15 @@ public:
     {
 #define UPSTREAM_PRICE                                              \
     state.problemeHebdo->ResultatsHoraires[state.link->from->index] \
-      .CoutsMarginauxHoraires[state.hourInTheWeek]
+            .CoutsMarginauxHoraires[state.hourInTheWeek]
 #define DOWNSTREAM_PRICE                                            \
     state.problemeHebdo->ResultatsHoraires[state.link->with->index] \
-      .CoutsMarginauxHoraires[state.hourInTheWeek]
+            .CoutsMarginauxHoraires[state.hourInTheWeek]
 
         // Congestion Fee
-        pValuesForTheCurrentYear[numSpace].hour[state.hourInTheYear] = state.ntc.ValeurDuFlux
-                                                                         [state.link->index]
-                                                                       * (UPSTREAM_PRICE
-                                                                          - DOWNSTREAM_PRICE);
+        pValuesForTheCurrentYear[numSpace]
+                .hour[state.hourInTheYear] = state.ntc.ValeurDuFlux[state.link->index] *
+                                             (UPSTREAM_PRICE - DOWNSTREAM_PRICE);
         // Next item in the list
         NextType::hourForEachLink(state, numSpace);
 
@@ -249,9 +248,8 @@ public:
         NextType::buildDigest(results, digestLevel, dataLevel);
     }
 
-    Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
-      uint,
-      uint numSpace) const
+    Antares::Memory::Stored<double>::ConstReturnType
+    retrieveRawHourlyValuesForCurrentYear(uint, uint numSpace) const
     {
         return pValuesForTheCurrentYear[numSpace].hour;
     }
@@ -270,7 +268,7 @@ public:
             results.variableCaption = VCardType::Caption();
             results.variableUnit = VCardType::Unit();
             pValuesForTheCurrentYear[numSpace]
-              .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
+                    .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
         }
     }
 

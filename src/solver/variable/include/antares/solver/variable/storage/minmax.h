@@ -151,9 +151,8 @@ protected:
 
 private:
     template<uint Size, class VCardT>
-    static void InternalExportIndices(SurveyResults& report,
-                                      const MinMaxData::Data* array,
-                                      int fileLevel);
+    static void
+    InternalExportIndices(SurveyResults& report, const MinMaxData::Data* array, int fileLevel);
 
     template<uint Size, class VCardT>
     static void InternalExportValues(SurveyResults& report, const MinMaxData::Data* array);

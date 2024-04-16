@@ -25,12 +25,14 @@ namespace Antares
 {
 namespace Data
 {
-inline bool Output::operator<(const Output& rhs) const
+inline bool
+Output::operator<(const Output& rhs) const
 {
     return not(title < rhs.title);
 }
 
-inline void Output::RetrieveListFromStudy(List& out, const Study::Ptr& study)
+inline void
+Output::RetrieveListFromStudy(List& out, const Study::Ptr& study)
 {
     if (!study)
     {

@@ -39,8 +39,8 @@ void storeTimeseriesNumbersForWind(Solver::IResultWriter& writer, const Area& ar
 void storeTimeseriesNumbersForHydro(Solver::IResultWriter& writer, const Area& area);
 void storeTimeseriesNumbersForThermal(Solver::IResultWriter& writer, const Area& area);
 void storeTimeseriesNumbersForRenewable(Solver::IResultWriter& writer, const Area& area);
-void storeTimeseriesNumbersForTransmissionCapacities(Solver::IResultWriter& writer,
-                                                     const Area& area);
+void
+storeTimeseriesNumbersForTransmissionCapacities(Solver::IResultWriter& writer, const Area& area);
 void storeTimeseriesNumbersForHydroMaxPower(Solver::IResultWriter& writer, const Area& area);
 
 } // namespace Antares::Data

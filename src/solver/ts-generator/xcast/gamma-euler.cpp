@@ -34,7 +34,8 @@ using namespace Yuni;
 
 namespace Antares::TSGenerator::XCast
 {
-double XCast::GammaEuler(double z)
+double
+XCast::GammaEuler(double z)
 {
     if (Yuni::Logs::Verbosity::Debug::enabled)
     {

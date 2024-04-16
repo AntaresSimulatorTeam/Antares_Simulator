@@ -27,7 +27,8 @@
 namespace Antares::Data::ScenarioBuilder
 {
 
-bool TSNumberData::reset(const Study& study)
+bool
+TSNumberData::reset(const Study& study)
 {
     const uint nbYears = study.parameters.nbYears;
 
@@ -36,7 +37,8 @@ bool TSNumberData::reset(const Study& study)
     return true;
 }
 
-void TSNumberData::saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const
+void
+TSNumberData::saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const
 {
     // Prefix
     CString<512, false> prefix;
@@ -63,7 +65,8 @@ void TSNumberData::saveToINIFile(const Study& study, Yuni::IO::File::Stream& fil
     }
 }
 
-void TSNumberData::setTSnumber(uint areaindex, uint year, uint value)
+void
+TSNumberData::setTSnumber(uint areaindex, uint year, uint value)
 {
     assert(areaindex < pTSNumberRules.width);
     if (year < pTSNumberRules.height)
@@ -72,7 +75,8 @@ void TSNumberData::setTSnumber(uint areaindex, uint year, uint value)
     }
 }
 
-void TSNumberData::set_value(uint x, uint y, uint value)
+void
+TSNumberData::set_value(uint x, uint y, uint value)
 {
     pTSNumberRules.entry[y][x] = value;
 }

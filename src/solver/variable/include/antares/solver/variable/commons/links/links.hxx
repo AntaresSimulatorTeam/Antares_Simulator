@@ -38,27 +38,31 @@ inline Links<VariablePerLink>::Links()
 }
 
 template<class VariablePerLink>
-inline void Links<VariablePerLink>::initializeFromStudy([[maybe_unused]] Data::Study& study)
+inline void
+Links<VariablePerLink>::initializeFromStudy([[maybe_unused]] Data::Study& study)
 {
     // Do nothing
 }
 
 template<class VariablePerLink>
-inline void Links<VariablePerLink>::initializeFromAreaLink(Data::Study*, Data::AreaLink*)
+inline void
+Links<VariablePerLink>::initializeFromAreaLink(Data::Study*, Data::AreaLink*)
 {
     // Nothing to do here
 }
 
 template<class VariablePerLink>
-inline void Links<VariablePerLink>::initializeFromThermalCluster(Data::Study*,
-                                                                 Data::Area*,
-                                                                 Data::ThermalCluster*)
+inline void
+Links<VariablePerLink>::initializeFromThermalCluster(Data::Study*,
+                                                     Data::Area*,
+                                                     Data::ThermalCluster*)
 {
     // This method should not be called at this stage
 }
 
 template<class VariablePerLink>
-inline void Links<VariablePerLink>::broadcastNonApplicability(bool applyNonApplicable)
+inline void
+Links<VariablePerLink>::broadcastNonApplicability(bool applyNonApplicable)
 {
     for (uint i = 0; i != pLinkCount; ++i)
     {
@@ -67,7 +71,8 @@ inline void Links<VariablePerLink>::broadcastNonApplicability(bool applyNonAppli
 }
 
 template<class VariablePerLink>
-inline void Links<VariablePerLink>::getPrintStatusFromStudy(Data::Study& study)
+inline void
+Links<VariablePerLink>::getPrintStatusFromStudy(Data::Study& study)
 {
     for (uint i = 0; i != pLinkCount; ++i)
     {
@@ -76,7 +81,8 @@ inline void Links<VariablePerLink>::getPrintStatusFromStudy(Data::Study& study)
 }
 
 template<class VariablePerLink>
-inline void Links<VariablePerLink>::supplyMaxNumberOfColumns(Data::Study& study)
+inline void
+Links<VariablePerLink>::supplyMaxNumberOfColumns(Data::Study& study)
 {
     for (uint i = 0; i != pLinkCount; ++i)
     {
@@ -85,7 +91,8 @@ inline void Links<VariablePerLink>::supplyMaxNumberOfColumns(Data::Study& study)
 }
 
 template<class VariablePerLink>
-inline void Links<VariablePerLink>::yearBegin(uint year, unsigned int numSpace)
+inline void
+Links<VariablePerLink>::yearBegin(uint year, unsigned int numSpace)
 {
     for (uint i = 0; i != pLinkCount; ++i)
     {
@@ -94,10 +101,10 @@ inline void Links<VariablePerLink>::yearBegin(uint year, unsigned int numSpace)
 }
 
 template<class VariablePerLink>
-inline void Links<VariablePerLink>::yearEndBuildPrepareDataForEachThermalCluster(
-  State& state,
-  uint year,
-  unsigned int numSpace)
+inline void
+Links<VariablePerLink>::yearEndBuildPrepareDataForEachThermalCluster(State& state,
+                                                                     uint year,
+                                                                     unsigned int numSpace)
 {
     for (uint i = 0; i != pLinkCount; ++i)
     {
@@ -106,9 +113,10 @@ inline void Links<VariablePerLink>::yearEndBuildPrepareDataForEachThermalCluster
 }
 
 template<class VariablePerLink>
-inline void Links<VariablePerLink>::yearEndBuildForEachThermalCluster(State& state,
-                                                                      uint year,
-                                                                      unsigned int numSpace)
+inline void
+Links<VariablePerLink>::yearEndBuildForEachThermalCluster(State& state,
+                                                          uint year,
+                                                          unsigned int numSpace)
 {
     for (uint i = 0; i != pLinkCount; ++i)
     {
@@ -117,7 +125,8 @@ inline void Links<VariablePerLink>::yearEndBuildForEachThermalCluster(State& sta
 }
 
 template<class VariablePerLink>
-inline void Links<VariablePerLink>::yearEndBuild(State& state, uint year)
+inline void
+Links<VariablePerLink>::yearEndBuild(State& state, uint year)
 {
     for (uint i = 0; i != pLinkCount; ++i)
     {
@@ -126,7 +135,8 @@ inline void Links<VariablePerLink>::yearEndBuild(State& state, uint year)
 }
 
 template<class VariablePerLink>
-inline void Links<VariablePerLink>::yearEnd(uint year, uint numSpace)
+inline void
+Links<VariablePerLink>::yearEnd(uint year, uint numSpace)
 {
     for (uint i = 0; i != pLinkCount; ++i)
     {
@@ -135,9 +145,9 @@ inline void Links<VariablePerLink>::yearEnd(uint year, uint numSpace)
 }
 
 template<class VariablePerLink>
-inline void Links<VariablePerLink>::computeSummary(
-  std::map<unsigned int, unsigned int>& numSpaceToYear,
-  unsigned int nbYearsForCurrentSummary)
+inline void
+Links<VariablePerLink>::computeSummary(std::map<unsigned int, unsigned int>& numSpaceToYear,
+                                       unsigned int nbYearsForCurrentSummary)
 {
     for (uint i = 0; i != pLinkCount; ++i)
     {
@@ -146,7 +156,8 @@ inline void Links<VariablePerLink>::computeSummary(
 }
 
 template<class VariablePerLink>
-inline void Links<VariablePerLink>::weekBegin(State& state)
+inline void
+Links<VariablePerLink>::weekBegin(State& state)
 {
     for (uint i = 0; i != pLinkCount; ++i)
     {
@@ -155,14 +166,16 @@ inline void Links<VariablePerLink>::weekBegin(State& state)
 }
 
 template<class VariablePerLink>
-inline void Links<VariablePerLink>::weekForEachArea(State&, uint numSpace)
+inline void
+Links<VariablePerLink>::weekForEachArea(State&, uint numSpace)
 {
     // do nothing
     UNUSED_VARIABLE(numSpace);
 }
 
 template<class VariablePerLink>
-inline void Links<VariablePerLink>::weekEnd(State& state)
+inline void
+Links<VariablePerLink>::weekEnd(State& state)
 {
     for (uint i = 0; i != pLinkCount; ++i)
     {
@@ -171,7 +184,8 @@ inline void Links<VariablePerLink>::weekEnd(State& state)
 }
 
 template<class VariablePerLink>
-inline void Links<VariablePerLink>::hourBegin(uint hourInTheYear)
+inline void
+Links<VariablePerLink>::hourBegin(uint hourInTheYear)
 {
     for (uint i = 0; i != pLinkCount; ++i)
     {
@@ -180,7 +194,8 @@ inline void Links<VariablePerLink>::hourBegin(uint hourInTheYear)
 }
 
 template<class VariablePerLink>
-inline void Links<VariablePerLink>::hourForEachArea(State& state, unsigned int numSpace)
+inline void
+Links<VariablePerLink>::hourForEachArea(State& state, unsigned int numSpace)
 {
     for (uint i = 0; i != pLinkCount; ++i)
     {
@@ -189,13 +204,15 @@ inline void Links<VariablePerLink>::hourForEachArea(State& state, unsigned int n
 }
 
 template<class VariablePerLink>
-inline void Links<VariablePerLink>::hourForEachLink(State& state, unsigned int numSpace)
+inline void
+Links<VariablePerLink>::hourForEachLink(State& state, unsigned int numSpace)
 {
     pLinks[state.link->indexForArea].hourForEachLink(state, numSpace);
 }
 
 template<class VariablePerLink>
-inline void Links<VariablePerLink>::hourEnd(State& state, uint hourInTheYear)
+inline void
+Links<VariablePerLink>::hourEnd(State& state, uint hourInTheYear)
 {
     for (uint i = 0; i != pLinkCount; ++i)
     {
@@ -204,17 +221,18 @@ inline void Links<VariablePerLink>::hourEnd(State& state, uint hourInTheYear)
 }
 
 template<class VariablePerLink>
-inline void Links<VariablePerLink>::buildSurveyReport(SurveyResults& results,
-                                                      int dataLevel,
-                                                      int fileLevel,
-                                                      int precision) const
+inline void
+Links<VariablePerLink>::buildSurveyReport(SurveyResults& results,
+                                          int dataLevel,
+                                          int fileLevel,
+                                          int precision) const
 {
     int count_int = count;
     bool link_dataLevel = (dataLevel & Category::link);
     if (count_int && link_dataLevel)
     {
-        assert(results.data.link != NULL
-               && "The link must not be null to generate a survey report");
+        assert(results.data.link != NULL &&
+               "The link must not be null to generate a survey report");
 
         // Build the survey results for the given area
         auto& link = *results.data.link;
@@ -261,18 +279,19 @@ inline void Links<VariablePerLink>::buildSurveyReport(SurveyResults& results,
 }
 
 template<class VariablePerLink>
-inline void Links<VariablePerLink>::buildAnnualSurveyReport(SurveyResults& results,
-                                                            int dataLevel,
-                                                            int fileLevel,
-                                                            int precision,
-                                                            uint numSpace) const
+inline void
+Links<VariablePerLink>::buildAnnualSurveyReport(SurveyResults& results,
+                                                int dataLevel,
+                                                int fileLevel,
+                                                int precision,
+                                                uint numSpace) const
 {
     int count_int = count;
     bool link_dataLevel = (dataLevel & Category::link);
     if (count_int && link_dataLevel)
     {
-        assert(results.data.link != NULL
-               && "The link must not be null to generate a survey report");
+        assert(results.data.link != NULL &&
+               "The link must not be null to generate a survey report");
 
         auto& link = *results.data.link;
 
@@ -321,7 +340,8 @@ inline void Links<VariablePerLink>::buildAnnualSurveyReport(SurveyResults& resul
 
 template<class VariablePerLink>
 template<class I>
-inline void Links<VariablePerLink>::provideInformations(I& infos)
+inline void
+Links<VariablePerLink>::provideInformations(I& infos)
 {
     // Begining of the node
     if (VCardType::nodeDepthForGUI)
@@ -343,13 +363,15 @@ inline void Links<VariablePerLink>::provideInformations(I& infos)
 
 template<class VariablePerLink>
 template<class PredicateT>
-void Links<VariablePerLink>::RetrieveVariableList(PredicateT& predicate)
+void
+Links<VariablePerLink>::RetrieveVariableList(PredicateT& predicate)
 {
     NextType::RetrieveVariableList(predicate);
 }
 
 template<class VariablePerLink>
-inline uint64_t Links<VariablePerLink>::memoryUsage() const
+inline uint64_t
+Links<VariablePerLink>::memoryUsage() const
 {
     uint64_t result = 0;
     for (uint i = 0; i != pLinkCount; ++i)
@@ -368,7 +390,8 @@ Links<VariablePerLink>::~Links()
 }
 
 template<class VariablePerLink>
-void Links<VariablePerLink>::initializeFromArea(Data::Study* study, Data::Area* area)
+void
+Links<VariablePerLink>::initializeFromArea(Data::Study* study, Data::Area* area)
 {
     // Assert
     assert(study && "A study pointer must not be null");
@@ -403,7 +426,8 @@ void Links<VariablePerLink>::initializeFromArea(Data::Study* study, Data::Area* 
 }
 
 template<class VariablePerLink>
-void Links<VariablePerLink>::simulationBegin()
+void
+Links<VariablePerLink>::simulationBegin()
 {
     for (uint i = 0; i != pLinkCount; ++i)
     {
@@ -412,7 +436,8 @@ void Links<VariablePerLink>::simulationBegin()
 }
 
 template<class VariablePerLink>
-void Links<VariablePerLink>::simulationEnd()
+void
+Links<VariablePerLink>::simulationEnd()
 {
     for (uint i = 0; i != pLinkCount; ++i)
     {
@@ -421,9 +446,8 @@ void Links<VariablePerLink>::simulationEnd()
 }
 
 template<class VariablePerLink>
-void Links<VariablePerLink>::buildDigest(SurveyResults& results,
-                                         int digestLevel,
-                                         int dataLevel) const
+void
+Links<VariablePerLink>::buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
 {
     int count_int = count;
     bool linkDataLevel = dataLevel & Category::link;
@@ -445,7 +469,8 @@ void Links<VariablePerLink>::buildDigest(SurveyResults& results,
 }
 
 template<class VariablePerLink>
-void Links<VariablePerLink>::beforeYearByYearExport(uint year, uint numSpace)
+void
+Links<VariablePerLink>::beforeYearByYearExport(uint year, uint numSpace)
 {
     for (uint i = 0; i != pLinkCount; ++i)
     {

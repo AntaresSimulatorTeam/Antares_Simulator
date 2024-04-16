@@ -100,9 +100,9 @@ protected:
             switch (precision)
             {
             case Category::hourly:
-                InternalExportValues<maxHoursInAYear, VCardT, Category::hourly>(report,
-                                                                                Memory::RawPointer(
-                                                                                  avgdata.hourly));
+                InternalExportValues<maxHoursInAYear, VCardT, Category::hourly>(
+                        report,
+                        Memory::RawPointer(avgdata.hourly));
                 break;
             case Category::daily:
                 InternalExportValues<maxDaysInAYear, VCardT, Category::daily>(report,
@@ -131,29 +131,29 @@ protected:
     template<class VCardT>
     void buildDigest(SurveyResults& report, int digestLevel, int dataLevel) const
     {
-        const bool isCluster = (VCardT::categoryFileLevel & Category::de)
-                               || (VCardT::categoryFileLevel & Category::de_res);
+        const bool isCluster = (VCardT::categoryFileLevel & Category::de) ||
+                               (VCardT::categoryFileLevel & Category::de_res);
         const bool isBindingConstraint = VCardT::categoryFileLevel & Category::bc;
         const bool isDigest = digestLevel & Category::digestAllYears;
-        if ((dataLevel & Category::area || dataLevel & Category::setOfAreas) && isDigest
-            && !isCluster && !isBindingConstraint)
+        if ((dataLevel & Category::area || dataLevel & Category::setOfAreas) && isDigest &&
+            !isCluster && !isBindingConstraint)
         {
             assert(report.data.columnIndex < report.maxVariables && "Column index out of bounds");
 
             report.captions[0][report.data.columnIndex] = report.variableCaption;
             report.captions[1][report.data.columnIndex] = report.variableUnit;
             report.captions[2][report.data.columnIndex] = (report.variableCaption == "LOLP")
-                                                            ? "values"
-                                                            : "EXP";
+                                                                  ? "values"
+                                                                  : "EXP";
 
             // Precision
             report.precision[report.data.columnIndex] = PrecisionToPrintfFormat<
-              VCardT::decimal>::Value();
+                    VCardT::decimal>::Value();
             // Value
             report.values[report.data.columnIndex][report.data.rowIndex] = avgdata.allYears;
             // Non applicability
-            report.digestNonApplicableStatus[report.data.rowIndex][report.data.columnIndex]
-              = *report.isCurrentVarNA;
+            report.digestNonApplicableStatus[report.data.rowIndex]
+                                            [report.data.columnIndex] = *report.isCurrentVarNA;
 
             ++(report.data.columnIndex);
         }
@@ -193,7 +193,7 @@ private:
                                                                                          : "EXP";
         // Precision
         report.precision[report.data.columnIndex] = PrecisionToPrintfFormat<
-          VCardT::decimal>::Value();
+                VCardT::decimal>::Value();
         // Non applicability
         report.nonApplicableStatus[report.data.columnIndex] = *report.isCurrentVarNA;
 

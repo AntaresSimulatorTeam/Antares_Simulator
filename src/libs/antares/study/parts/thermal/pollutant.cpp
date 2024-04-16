@@ -25,21 +25,22 @@ namespace Antares::Data
 {
 
 const std::map<enum Pollutant::PollutantEnum, const std::string>
-  Pollutant::pollutantNamesOutputVariables = {{CO2, "CO2 EMIS."},
-                                              {NH3, "NH3 EMIS."},
-                                              {SO2, "SO2 EMIS."},
-                                              {NOX, "NOX EMIS."},
-                                              {PM2_5, "PM2_5 EMIS."},
-                                              {PM5, "PM5 EMIS."},
-                                              {PM10, "PM10 EMIS."},
-                                              {NMVOC, "NMVOC EMIS."},
-                                              {OP1, "OP1 EMIS."},
-                                              {OP2, "OP2 EMIS."},
-                                              {OP3, "OP3 EMIS."},
-                                              {OP4, "OP4 EMIS."},
-                                              {OP5, "OP5 EMIS."}};
+        Pollutant::pollutantNamesOutputVariables = {{CO2, "CO2 EMIS."},
+                                                    {NH3, "NH3 EMIS."},
+                                                    {SO2, "SO2 EMIS."},
+                                                    {NOX, "NOX EMIS."},
+                                                    {PM2_5, "PM2_5 EMIS."},
+                                                    {PM5, "PM5 EMIS."},
+                                                    {PM10, "PM10 EMIS."},
+                                                    {NMVOC, "NMVOC EMIS."},
+                                                    {OP1, "OP1 EMIS."},
+                                                    {OP2, "OP2 EMIS."},
+                                                    {OP3, "OP3 EMIS."},
+                                                    {OP4, "OP4 EMIS."},
+                                                    {OP5, "OP5 EMIS."}};
 
-const std::string& Pollutant::getPollutantName(int index)
+const std::string&
+Pollutant::getPollutantName(int index)
 {
     return pollutantNamesOutputVariables.at(PollutantEnum(index));
 }

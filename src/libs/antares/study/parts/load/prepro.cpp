@@ -38,12 +38,14 @@ Prepro::~Prepro()
 {
 }
 
-bool Prepro::loadFromFolder(const AnyString& folder)
+bool
+Prepro::loadFromFolder(const AnyString& folder)
 {
     return xcast.loadFromFolder(folder);
 }
 
-bool Prepro::saveToFolder(const AnyString& folder) const
+bool
+Prepro::saveToFolder(const AnyString& folder) const
 {
     return xcast.saveToFolder(folder);
 }

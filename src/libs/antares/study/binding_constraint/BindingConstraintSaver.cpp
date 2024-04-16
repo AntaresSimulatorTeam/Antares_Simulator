@@ -36,8 +36,8 @@ namespace Antares::Data
 
 using namespace Yuni;
 
-bool BindingConstraintSaver::saveToEnv(EnvForSaving& env,
-                                       const BindingConstraint* bindingConstraint)
+bool
+BindingConstraintSaver::saveToEnv(EnvForSaving& env, const BindingConstraint* bindingConstraint)
 {
     env.section->add("name", bindingConstraint->pName);
     env.section->add("id", bindingConstraint->pID);
@@ -70,8 +70,8 @@ bool BindingConstraintSaver::saveToEnv(EnvForSaving& env,
             env.key.clear() << lnk.from->id << '%' << lnk.with->id;
             String value;
             value << i->second;
-            if (bindingConstraint->pLinkOffsets.find(i->first)
-                != bindingConstraint->pLinkOffsets.end())
+            if (bindingConstraint->pLinkOffsets.find(i->first) !=
+                bindingConstraint->pLinkOffsets.end())
             {
                 value << '%' << bindingConstraint->pLinkOffsets.at(i->first);
             }
@@ -91,8 +91,8 @@ bool BindingConstraintSaver::saveToEnv(EnvForSaving& env,
             env.key.clear() << clstr.getFullName();
             String value;
             value << i->second;
-            if (bindingConstraint->pClusterOffsets.find(i->first)
-                != bindingConstraint->pClusterOffsets.end())
+            if (bindingConstraint->pClusterOffsets.find(i->first) !=
+                bindingConstraint->pClusterOffsets.end())
             {
                 value << '%' << bindingConstraint->pClusterOffsets.at(i->first);
             }

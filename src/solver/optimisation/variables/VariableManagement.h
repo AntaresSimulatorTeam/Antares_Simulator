@@ -43,15 +43,11 @@ public:
 
     int& NTCDirect(unsigned int index, unsigned int hourInWeek, int offset = 0, int delta = 0);
 
-    int& IntercoDirectCost(unsigned int index,
-                           unsigned int hourInWeek,
-                           int offset = 0,
-                           int delta = 0);
+    int&
+    IntercoDirectCost(unsigned int index, unsigned int hourInWeek, int offset = 0, int delta = 0);
 
-    int& IntercoIndirectCost(unsigned int index,
-                             unsigned int hourInWeek,
-                             int offset = 0,
-                             int delta = 0);
+    int&
+    IntercoIndirectCost(unsigned int index, unsigned int hourInWeek, int offset = 0, int delta = 0);
 
     int& ShortTermStorageInjection(unsigned int index,
                                    unsigned int hourInWeek,

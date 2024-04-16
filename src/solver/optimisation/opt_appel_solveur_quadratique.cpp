@@ -42,8 +42,8 @@ extern "C"
 
 using namespace Antares;
 
-bool OPT_AppelDuSolveurQuadratique(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
-                                   const int PdtHebdo)
+bool
+OPT_AppelDuSolveurQuadratique(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre, const int PdtHebdo)
 {
     PROBLEME_POINT_INTERIEUR Probleme;
 
@@ -72,8 +72,8 @@ bool OPT_AppelDuSolveurQuadratique(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudr
     Probleme.NombreDeTermesDesLignes = ProblemeAResoudre->NombreDeTermesDesLignes.data();
     Probleme.IndicesColonnes = ProblemeAResoudre->IndicesColonnes.data();
     Probleme.CoefficientsDeLaMatriceDesContraintes = ProblemeAResoudre
-                                                       ->CoefficientsDeLaMatriceDesContraintes
-                                                       .data();
+                                                             ->CoefficientsDeLaMatriceDesContraintes
+                                                             .data();
     Probleme.Sens = ProblemeAResoudre->Sens.data();
     Probleme.SecondMembre = ProblemeAResoudre->SecondMembre.data();
 
@@ -82,12 +82,12 @@ bool OPT_AppelDuSolveurQuadratique(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudr
     Probleme.UtiliserLaToleranceDAdmissibiliteParDefaut = ChoixToleranceParDefautSurLAdmissibilite;
     Probleme.ToleranceDAdmissibilite = ToleranceSurLAdmissibilite;
 
-    Probleme.UtiliserLaToleranceDeStationnariteParDefaut
-      = ChoixToleranceParDefautSurLaStationnarite;
+    Probleme.UtiliserLaToleranceDeStationnariteParDefaut =
+            ChoixToleranceParDefautSurLaStationnarite;
     Probleme.ToleranceDeStationnarite = ToleranceSurLaStationnarite;
 
-    Probleme.UtiliserLaToleranceDeComplementariteParDefaut
-      = ChoixToleranceParDefautSurLaComplementarite;
+    Probleme.UtiliserLaToleranceDeComplementariteParDefaut =
+            ChoixToleranceParDefautSurLaComplementarite;
     Probleme.ToleranceDeComplementarite = ToleranceSurLaComplementarite;
 
     Probleme.CoutsMarginauxDesContraintes = ProblemeAResoudre->CoutsMarginauxDesContraintes.data();
@@ -152,12 +152,12 @@ bool OPT_AppelDuSolveurQuadratique(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudr
                 {
                     int var = ProblemeAResoudre->IndicesColonnes[il];
                     logs.info().appendFormat(
-                      "      coeff %e var %ld xmin %e xmax %e type %ld",
-                      ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes[il],
-                      var,
-                      ProblemeAResoudre->Xmin[var],
-                      ProblemeAResoudre->Xmax[var],
-                      ProblemeAResoudre->TypeDeVariable[var]);
+                            "      coeff %e var %ld xmin %e xmax %e type %ld",
+                            ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes[il],
+                            var,
+                            ProblemeAResoudre->Xmin[var],
+                            ProblemeAResoudre->Xmax[var],
+                            ProblemeAResoudre->TypeDeVariable[var]);
                 }
             }
         }

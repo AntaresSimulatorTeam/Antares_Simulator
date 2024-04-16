@@ -26,7 +26,8 @@
 using namespace Yuni;
 using namespace Antares;
 
-void Output::incrementError()
+void
+Output::incrementError()
 {
     if (++errors == 100)
     {

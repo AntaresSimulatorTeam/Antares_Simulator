@@ -31,8 +31,9 @@ using namespace Yuni;
 namespace Antares::Data
 {
 
-bool doWeHaveOnePositiveMaxDailyEnergy(const Matrix<double>& dailyPower,
-                                       const Matrix<double>::ColumnType& nbHoursAtPmaxPerDay)
+bool
+doWeHaveOnePositiveMaxDailyEnergy(const Matrix<double>& dailyPower,
+                                  const Matrix<double>::ColumnType& nbHoursAtPmaxPerDay)
 {
     for (uint tsNumber = 0; tsNumber < dailyPower.width; ++tsNumber)
     {
@@ -48,15 +49,16 @@ bool doWeHaveOnePositiveMaxDailyEnergy(const Matrix<double>& dailyPower,
     return false;
 }
 
-void CalculateDailyMeanPower(const Matrix<double>::ColumnType& hourlyColumn,
-                             Matrix<double>::ColumnType& dailyColumn)
+void
+CalculateDailyMeanPower(const Matrix<double>::ColumnType& hourlyColumn,
+                        Matrix<double>::ColumnType& dailyColumn)
 {
     for (uint day = 0; day < DAYS_PER_YEAR; ++day)
     {
         dailyColumn[day] = std::accumulate(hourlyColumn + day * HOURS_PER_DAY,
                                            hourlyColumn + day * HOURS_PER_DAY + HOURS_PER_DAY,
-                                           0)
-                           / 24.;
+                                           0) /
+                           24.;
     }
 }
 
@@ -162,7 +164,7 @@ AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area):
     {
         assert(area.hydro.series);
         hydroHasInflows = MatrixTestForAtLeastOnePositiveValue(
-          area.hydro.series->storage.timeSeries);
+                area.hydro.series->storage.timeSeries);
     }
     else
     {
@@ -196,9 +198,10 @@ AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area):
                                                    dailyNbHoursAtPumpPmax);
 }
 
-void AreaScratchpad::CalculateMeanDailyMaxPowerMatrices(const Matrix<double>& hourlyMaxGenMatrix,
-                                                        const Matrix<double>& hourlyMaxPumpMatrix,
-                                                        uint nbOfMaxPowerTimeSeries)
+void
+AreaScratchpad::CalculateMeanDailyMaxPowerMatrices(const Matrix<double>& hourlyMaxGenMatrix,
+                                                   const Matrix<double>& hourlyMaxPumpMatrix,
+                                                   uint nbOfMaxPowerTimeSeries)
 {
     for (uint nbOfTimeSeries = 0; nbOfTimeSeries < nbOfMaxPowerTimeSeries; ++nbOfTimeSeries)
     {

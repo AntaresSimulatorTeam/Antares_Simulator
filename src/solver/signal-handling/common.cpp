@@ -33,7 +33,8 @@ namespace Antares::Solver
 // nothing when receiving the signal.
 static std::weak_ptr<IResultWriter> APPLICATION_WRITER;
 
-void setApplicationResultWriter(std::weak_ptr<IResultWriter> writer)
+void
+setApplicationResultWriter(std::weak_ptr<IResultWriter> writer)
 {
     APPLICATION_WRITER = writer;
 }
@@ -42,7 +43,8 @@ void setApplicationResultWriter(std::weak_ptr<IResultWriter> writer)
 
 namespace
 {
-void finalizeWrite()
+void
+finalizeWrite()
 {
     if (auto writer = Antares::Solver::APPLICATION_WRITER.lock())
     {
@@ -59,13 +61,15 @@ void finalizeWrite()
 
 } // namespace
 
-void signalCtrl_term(int)
+void
+signalCtrl_term(int)
 {
     logs.notice() << "[signal] received signal SIGTERM. Exiting...";
     finalizeWrite();
 }
 
-void signalCtrl_int(int)
+void
+signalCtrl_int(int)
 {
     logs.notice() << "[signal] received signal SIGINT. Exiting...";
     finalizeWrite();

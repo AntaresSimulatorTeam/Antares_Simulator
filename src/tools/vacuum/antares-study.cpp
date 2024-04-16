@@ -83,7 +83,8 @@ protected:
 
 }; // class AntaresStudyAnalyzerJob
 
-bool AntaresStudyAnalyzerJob::shouldBeDestroyed() const
+bool
+AntaresStudyAnalyzerJob::shouldBeDestroyed() const
 {
     String filename;
     String text;
@@ -276,7 +277,8 @@ protected:
 
 }; // class AntaresStudyAnalyzerJob
 
-void AntaresStudyAnalyzerJob::onExecute()
+void
+AntaresStudyAnalyzerJob::onExecute()
 {
     if (traces)
     {
@@ -355,7 +357,8 @@ void AntaresStudyAnalyzerJob::onExecute()
     }
 }
 
-static FSWalker::Flow OnDirectoryEvent(const String& path, bool empty, void* user)
+static FSWalker::Flow
+OnDirectoryEvent(const String& path, bool empty, void* user)
 {
     if (not empty)
     {
@@ -371,7 +374,8 @@ static FSWalker::Flow OnDirectoryEvent(const String& path, bool empty, void* use
     return FSWalker::flContinue;
 }
 
-const char* AntaresStudy::caption() const
+const char*
+AntaresStudy::caption() const
 {
     return "antares study";
 }
@@ -384,12 +388,14 @@ AntaresStudy::AntaresStudy(int64_t dateLimit):
 {
 }
 
-FSWalker::OnDirectoryEvent AntaresStudy::directoryEvent()
+FSWalker::OnDirectoryEvent
+AntaresStudy::directoryEvent()
 {
     return &OnDirectoryEvent;
 }
 
-void* AntaresStudy::userdataCreate(FSWalker::DispatchJobEvent& queue)
+void*
+AntaresStudy::userdataCreate(FSWalker::DispatchJobEvent& queue)
 {
     auto* user = new UserData();
     user->queue = queue;
@@ -397,7 +403,8 @@ void* AntaresStudy::userdataCreate(FSWalker::DispatchJobEvent& queue)
     return user;
 }
 
-void AntaresStudy::userdataDestroy(void* userdata)
+void
+AntaresStudy::userdataDestroy(void* userdata)
 {
     {
         std::lock_guard lock(pMutex);

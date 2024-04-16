@@ -34,7 +34,8 @@ extern "C"
 #include "antares/solver/hydro/monthly/h2o_m_donnees_annuelles.h"
 #include "antares/solver/hydro/monthly/h2o_m_fonctions.h"
 
-void H2O_M_Free(DONNEES_ANNUELLES& DonneesAnnuelles)
+void
+H2O_M_Free(DONNEES_ANNUELLES& DonneesAnnuelles)
 {
     PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesAnnuelles.ProblemeHydraulique;
 

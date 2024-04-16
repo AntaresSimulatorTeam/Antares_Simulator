@@ -53,8 +53,8 @@ private:
     const Area* pArea = nullptr;
 };
 
-inline uint thermalTSNumberData::get(const Antares::Data::ThermalCluster* cluster,
-                                     const uint year) const
+inline uint
+thermalTSNumberData::get(const Antares::Data::ThermalCluster* cluster, const uint year) const
 {
     assert(cluster != nullptr);
     if (year < pTSNumberRules.height && cluster->areaWideIndex < pTSNumberRules.width)
@@ -65,7 +65,8 @@ inline uint thermalTSNumberData::get(const Antares::Data::ThermalCluster* cluste
     return 0;
 }
 
-inline CString<512, false> thermalTSNumberData::get_prefix() const
+inline CString<512, false>
+thermalTSNumberData::get_prefix() const
 {
     return "t,";
 }

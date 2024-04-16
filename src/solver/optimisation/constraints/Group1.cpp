@@ -21,7 +21,8 @@
 
 #include "antares/solver/optimisation/constraints/Group1.h"
 
-AreaBalanceData Group1::GetAreaBalanceData()
+AreaBalanceData
+Group1::GetAreaBalanceData()
 {
     return {.CorrespondanceCntNativesCntOptim = problemeHebdo_->CorrespondanceCntNativesCntOptim,
             .IndexDebutIntercoOrigine = problemeHebdo_->IndexDebutIntercoOrigine,
@@ -32,22 +33,25 @@ AreaBalanceData Group1::GetAreaBalanceData()
             .ShortTermStorage = problemeHebdo_->ShortTermStorage};
 }
 
-FictitiousLoadData Group1::GetFictitiousLoadData()
+FictitiousLoadData
+Group1::GetFictitiousLoadData()
 {
     return {.CorrespondanceCntNativesCntOptim = problemeHebdo_->CorrespondanceCntNativesCntOptim,
             .PaliersThermiquesDuPays = problemeHebdo_->PaliersThermiquesDuPays,
             .DefaillanceNegativeUtiliserHydro = problemeHebdo_->DefaillanceNegativeUtiliserHydro};
 }
 
-ShortTermStorageLevelData Group1::GetShortTermStorageLevelData()
+ShortTermStorageLevelData
+Group1::GetShortTermStorageLevelData()
 {
     return {
-      .CorrespondanceCntNativesCntOptim = problemeHebdo_->CorrespondanceCntNativesCntOptim,
-      .ShortTermStorage = problemeHebdo_->ShortTermStorage,
+            .CorrespondanceCntNativesCntOptim = problemeHebdo_->CorrespondanceCntNativesCntOptim,
+            .ShortTermStorage = problemeHebdo_->ShortTermStorage,
     };
 }
 
-FlowDissociationData Group1::GetFlowDissociationData()
+FlowDissociationData
+Group1::GetFlowDissociationData()
 {
     return {.CorrespondanceCntNativesCntOptim = problemeHebdo_->CorrespondanceCntNativesCntOptim,
             .CoutDeTransport = problemeHebdo_->CoutDeTransport,
@@ -55,16 +59,18 @@ FlowDissociationData Group1::GetFlowDissociationData()
             .PaysExtremiteDeLInterconnexion = problemeHebdo_->PaysExtremiteDeLInterconnexion};
 }
 
-BindingConstraintHourData Group1::GetBindingConstraintHourData()
+BindingConstraintHourData
+Group1::GetBindingConstraintHourData()
 {
     return
 
-      {.MatriceDesContraintesCouplantes = problemeHebdo_->MatriceDesContraintesCouplantes,
-       .CorrespondanceCntNativesCntOptim = problemeHebdo_->CorrespondanceCntNativesCntOptim,
-       .PaliersThermiquesDuPays = problemeHebdo_->PaliersThermiquesDuPays};
+            {.MatriceDesContraintesCouplantes = problemeHebdo_->MatriceDesContraintesCouplantes,
+             .CorrespondanceCntNativesCntOptim = problemeHebdo_->CorrespondanceCntNativesCntOptim,
+             .PaliersThermiquesDuPays = problemeHebdo_->PaliersThermiquesDuPays};
 }
 
-void Group1::BuildConstraints()
+void
+Group1::BuildConstraints()
 {
     auto areaBalanceData = GetAreaBalanceData();
     AreaBalance areaBalance(builder_, areaBalanceData);
@@ -82,7 +88,7 @@ void Group1::BuildConstraints()
     BindingConstraintHour bindingConstraintHour(builder_, bindingConstraintHourData);
 
     int nombreDePasDeTempsPourUneOptimisation = problemeHebdo_
-                                                  ->NombreDePasDeTempsPourUneOptimisation;
+                                                        ->NombreDePasDeTempsPourUneOptimisation;
 
     for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
     {

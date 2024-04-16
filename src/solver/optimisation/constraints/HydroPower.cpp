@@ -21,13 +21,15 @@
 
 #include "antares/solver/optimisation/constraints/HydroPower.h"
 
-void HydroPower::add(int pays)
+void
+HydroPower::add(int pays)
 {
-    const int NombreDePasDeTempsPourUneOptimisation = builder.data
-                                                        .NombreDePasDeTempsPourUneOptimisation;
+    const int
+            NombreDePasDeTempsPourUneOptimisation = builder.data
+                                                            .NombreDePasDeTempsPourUneOptimisation;
     const auto& caracteristiquesHydrauliques = data.CaracteristiquesHydrauliques[pays];
-    if (caracteristiquesHydrauliques.PresenceDHydrauliqueModulable
-        && !caracteristiquesHydrauliques.TurbinageEntreBornes)
+    if (caracteristiquesHydrauliques.PresenceDHydrauliqueModulable &&
+        !caracteristiquesHydrauliques.TurbinageEntreBornes)
     {
         if (caracteristiquesHydrauliques.PresenceDePompageModulable)
         {
@@ -37,9 +39,9 @@ void HydroPower::add(int pays)
             for (int pdt = 0; pdt < NombreDePasDeTempsPourUneOptimisation; pdt++)
             {
                 builder.updateHourWithinWeek(pdt)
-                  .HydProd(pays, 1.0)
-                  .Pumping(pays, -pumpingRatio)
-                  .Overflow(pays, 1.0);
+                        .HydProd(pays, 1.0)
+                        .Pumping(pays, -pumpingRatio)
+                        .Overflow(pays, 1.0);
             }
         }
         else

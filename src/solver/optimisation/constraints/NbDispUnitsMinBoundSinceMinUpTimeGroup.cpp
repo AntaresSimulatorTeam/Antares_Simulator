@@ -22,7 +22,7 @@
 #include "antares/solver/optimisation/constraints/NbDispUnitsMinBoundSinceMinUpTimeGroup.h"
 
 NbDispUnitsMinBoundSinceMinUpTimeData
-  NbDispUnitsMinBoundSinceMinUpTimeGroup::GetNbDispUnitsMinBoundSinceMinUpTimeDataFromProblemHebdo()
+NbDispUnitsMinBoundSinceMinUpTimeGroup::GetNbDispUnitsMinBoundSinceMinUpTimeDataFromProblemHebdo()
 {
     return {.PaliersThermiquesDuPays = problemeHebdo_->PaliersThermiquesDuPays,
             .Simulation = simulation_,
@@ -33,14 +33,15 @@ NbDispUnitsMinBoundSinceMinUpTimeData
  * @brief build NbUnitsOutageLessThanNbUnitsStopGroup constraints with
  * respect to default order
  */
-void NbDispUnitsMinBoundSinceMinUpTimeGroup::BuildConstraints()
+void
+NbDispUnitsMinBoundSinceMinUpTimeGroup::BuildConstraints()
 {
     auto data = GetNbDispUnitsMinBoundSinceMinUpTimeDataFromProblemHebdo();
     NbDispUnitsMinBoundSinceMinUpTime nbDispUnitsMinBoundSinceMinUpTime(builder_, data);
     for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)
     {
         const PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo_
-                                                              ->PaliersThermiquesDuPays[pays];
+                                                                    ->PaliersThermiquesDuPays[pays];
         for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
         {
             if (PaliersThermiquesDuPays.DureeMinimaleDeMarcheDUnGroupeDuPalierThermique[index] <= 0)

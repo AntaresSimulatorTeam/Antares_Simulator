@@ -28,7 +28,8 @@
 
 namespace Antares::Data::ScenarioBuilder
 {
-bool thermalTSNumberData::reset(const Study& study)
+bool
+thermalTSNumberData::reset(const Study& study)
 {
     const uint nbYears = study.parameters.nbYears;
     assert(pArea != nullptr);
@@ -46,8 +47,8 @@ bool thermalTSNumberData::reset(const Study& study)
     return true;
 }
 
-void thermalTSNumberData::saveToINIFile(const Study& /* study */,
-                                        Yuni::IO::File::Stream& file) const
+void
+thermalTSNumberData::saveToINIFile(const Study& /* study */, Yuni::IO::File::Stream& file) const
 {
     // Prefix
     CString<512, false> prefix;
@@ -74,9 +75,10 @@ void thermalTSNumberData::saveToINIFile(const Study& /* study */,
     }
 }
 
-void thermalTSNumberData::setTSnumber(const Antares::Data::ThermalCluster* cluster,
-                                      const uint year,
-                                      uint value)
+void
+thermalTSNumberData::setTSnumber(const Antares::Data::ThermalCluster* cluster,
+                                 const uint year,
+                                 uint value)
 {
     assert(cluster != nullptr);
     if (year < pTSNumberRules.height && cluster->areaWideIndex < pTSNumberRules.width)
@@ -85,7 +87,8 @@ void thermalTSNumberData::setTSnumber(const Antares::Data::ThermalCluster* clust
     }
 }
 
-bool thermalTSNumberData::apply(Study& study)
+bool
+thermalTSNumberData::apply(Study& study)
 {
     bool ret = true;
     CString<512, false> logprefix;
@@ -103,8 +106,8 @@ bool thermalTSNumberData::apply(Study& study)
         const auto& col = pTSNumberRules[cluster->areaWideIndex];
 
         uint tsGenCount = cluster->tsGenBehavior == LocalTSGenerationBehavior::forceNoGen
-                            ? cluster->series.timeSeries.width
-                            : get_tsGenCount(study);
+                                  ? cluster->series.timeSeries.width
+                                  : get_tsGenCount(study);
 
         logprefix.clear() << "Thermal: area '" << area.name << "', cluster: '" << cluster->name()
                           << "': ";
@@ -113,7 +116,8 @@ bool thermalTSNumberData::apply(Study& study)
     return ret;
 }
 
-uint thermalTSNumberData::get_tsGenCount(const Study& study) const
+uint
+thermalTSNumberData::get_tsGenCount(const Study& study) const
 {
     // General data
     auto& parameters = study.parameters;

@@ -44,7 +44,8 @@ using namespace Antares;
 
 namespace Yuni::Extension::CString
 {
-bool Into<Antares::Data::ThermalLaw>::Perform(AnyString string, TargetType& out)
+bool
+Into<Antares::Data::ThermalLaw>::Perform(AnyString string, TargetType& out)
 {
     string.trim();
     if (string.empty())
@@ -65,7 +66,8 @@ bool Into<Antares::Data::ThermalLaw>::Perform(AnyString string, TargetType& out)
     return false;
 }
 
-bool Into<Antares::Data::CostGeneration>::Perform(AnyString string, TargetType& out)
+bool
+Into<Antares::Data::CostGeneration>::Perform(AnyString string, TargetType& out)
 {
     string.trim();
     if (string.empty())
@@ -86,7 +88,8 @@ bool Into<Antares::Data::CostGeneration>::Perform(AnyString string, TargetType& 
     return false;
 }
 
-bool Into<Antares::Data::LocalTSGenerationBehavior>::Perform(AnyString string, TargetType& out)
+bool
+Into<Antares::Data::LocalTSGenerationBehavior>::Perform(AnyString string, TargetType& out)
 {
     string.trim();
     if (string.empty())
@@ -132,12 +135,14 @@ Data::ThermalCluster::~ThermalCluster()
     delete prepro;
 }
 
-uint ThermalCluster::groupId() const
+uint
+ThermalCluster::groupId() const
 {
     return groupID;
 }
 
-void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
+void
+Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
 {
     // Note: In this method, only the data can be copied (and not the name or
     //   the ID for example)
@@ -219,21 +224,22 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
     }
 }
 
-static Data::ThermalCluster::ThermalDispatchableGroup stringToGroup(Data::ClusterName& newgrp)
+static Data::ThermalCluster::ThermalDispatchableGroup
+stringToGroup(Data::ClusterName& newgrp)
 {
     using namespace Antares::Data;
     const static std::map<ClusterName, ThermalCluster::ThermalDispatchableGroup> mapping = {
-      {"nuclear", ThermalCluster::thermalDispatchGrpNuclear},
-      {"lignite", ThermalCluster::thermalDispatchGrpLignite},
-      {"hard coal", ThermalCluster::thermalDispatchGrpHardCoal},
-      {"gas", ThermalCluster::thermalDispatchGrpGas},
-      {"oil", ThermalCluster::thermalDispatchGrpOil},
-      {"mixed fuel", ThermalCluster::thermalDispatchGrpMixedFuel},
-      {"other", ThermalCluster::thermalDispatchGrpOther1},
-      {"other 1", ThermalCluster::thermalDispatchGrpOther1},
-      {"other 2", ThermalCluster::thermalDispatchGrpOther2},
-      {"other 3", ThermalCluster::thermalDispatchGrpOther3},
-      {"other 4", ThermalCluster::thermalDispatchGrpOther4}};
+            {"nuclear", ThermalCluster::thermalDispatchGrpNuclear},
+            {"lignite", ThermalCluster::thermalDispatchGrpLignite},
+            {"hard coal", ThermalCluster::thermalDispatchGrpHardCoal},
+            {"gas", ThermalCluster::thermalDispatchGrpGas},
+            {"oil", ThermalCluster::thermalDispatchGrpOil},
+            {"mixed fuel", ThermalCluster::thermalDispatchGrpMixedFuel},
+            {"other", ThermalCluster::thermalDispatchGrpOther1},
+            {"other 1", ThermalCluster::thermalDispatchGrpOther1},
+            {"other 2", ThermalCluster::thermalDispatchGrpOther2},
+            {"other 3", ThermalCluster::thermalDispatchGrpOther3},
+            {"other 4", ThermalCluster::thermalDispatchGrpOther4}};
 
     boost::to_lower(newgrp);
     if (auto res = mapping.find(newgrp); res != mapping.end())
@@ -244,7 +250,8 @@ static Data::ThermalCluster::ThermalDispatchableGroup stringToGroup(Data::Cluste
     return ThermalCluster::thermalDispatchGrpOther1;
 }
 
-void Data::ThermalCluster::setGroup(Data::ClusterName newgrp)
+void
+Data::ThermalCluster::setGroup(Data::ClusterName newgrp)
 {
     if (newgrp.empty())
     {
@@ -256,7 +263,8 @@ void Data::ThermalCluster::setGroup(Data::ClusterName newgrp)
     groupID = stringToGroup(newgrp);
 }
 
-bool Data::ThermalCluster::forceReload(bool reload) const
+bool
+Data::ThermalCluster::forceReload(bool reload) const
 {
     bool ret = true;
     ret = modulation.forceReload(reload) && ret;
@@ -269,7 +277,8 @@ bool Data::ThermalCluster::forceReload(bool reload) const
     return ret;
 }
 
-void Data::ThermalCluster::markAsModified() const
+void
+Data::ThermalCluster::markAsModified() const
 {
     modulation.markAsModified();
     series.markAsModified();
@@ -280,7 +289,8 @@ void Data::ThermalCluster::markAsModified() const
     ecoInput.markAsModified();
 }
 
-void Data::ThermalCluster::calculationOfSpinning()
+void
+Data::ThermalCluster::calculationOfSpinning()
 {
     // nominal capacity (for solver)
     nominalCapacityWithSpinning = nominalCapacity;
@@ -304,7 +314,8 @@ void Data::ThermalCluster::calculationOfSpinning()
     }
 }
 
-void Data::ThermalCluster::ComputeCostTimeSeries()
+void
+Data::ThermalCluster::ComputeCostTimeSeries()
 {
     switch (costgeneration)
     {
@@ -321,21 +332,24 @@ void Data::ThermalCluster::ComputeCostTimeSeries()
     }
 }
 
-void Data::ThermalCluster::fillMarketBidCostTS()
+void
+Data::ThermalCluster::fillMarketBidCostTS()
 {
     std::fill(costsTimeSeries[0].marketBidCostTS.begin(),
               costsTimeSeries[0].marketBidCostTS.end(),
               marketBidCost);
 }
 
-void Data::ThermalCluster::fillMarginalCostTS()
+void
+Data::ThermalCluster::fillMarginalCostTS()
 {
     std::fill(costsTimeSeries[0].marginalCostTS.begin(),
               costsTimeSeries[0].marginalCostTS.end(),
               marginalCost);
 }
 
-void ThermalCluster::resizeCostTS()
+void
+ThermalCluster::resizeCostTS()
 {
     const uint fuelCostWidth = ecoInput.fuelcost.width;
     const uint co2CostWidth = ecoInput.co2cost.width;
@@ -344,7 +358,8 @@ void ThermalCluster::resizeCostTS()
     costsTimeSeries.resize(tsCount, CostsTimeSeries());
 }
 
-void ThermalCluster::ComputeMarketBidTS()
+void
+ThermalCluster::ComputeMarketBidTS()
 {
     const uint fuelCostWidth = ecoInput.fuelcost.width;
     const uint co2CostWidth = ecoInput.co2cost.width;
@@ -367,7 +382,8 @@ void ThermalCluster::ComputeMarketBidTS()
     }
 }
 
-void ThermalCluster::MarginalCostEqualsMarketBid()
+void
+ThermalCluster::MarginalCostEqualsMarketBid()
 {
     for (auto& timeSeries: costsTimeSeries)
     {
@@ -377,7 +393,8 @@ void ThermalCluster::MarginalCostEqualsMarketBid()
     }
 }
 
-void ThermalCluster::ComputeProductionCostTS()
+void
+ThermalCluster::ComputeProductionCostTS()
 {
     if (modulation.width == 0)
     {
@@ -397,14 +414,16 @@ void ThermalCluster::ComputeProductionCostTS()
     }
 }
 
-double Data::ThermalCluster::computeMarketBidCost(double fuelCost,
-                                                  double co2EmissionFactor,
-                                                  double co2cost)
+double
+Data::ThermalCluster::computeMarketBidCost(double fuelCost,
+                                           double co2EmissionFactor,
+                                           double co2cost)
 {
     return fuelCost * 360.0 / fuelEfficiency + co2EmissionFactor * co2cost + variableomcost;
 }
 
-void Data::ThermalCluster::reverseCalculationOfSpinning()
+void
+Data::ThermalCluster::reverseCalculationOfSpinning()
 {
     // Nothing to do if the spinning is equal to zero
     // because it will the same multiply all entries of the matrix by 1.
@@ -426,7 +445,8 @@ void Data::ThermalCluster::reverseCalculationOfSpinning()
     }
 }
 
-void Data::ThermalCluster::reset()
+void
+Data::ThermalCluster::reset()
 {
     Cluster::reset();
 
@@ -481,7 +501,8 @@ void Data::ThermalCluster::reset()
     ecoInput.reset();
 }
 
-bool Data::ThermalCluster::integrityCheck()
+bool
+Data::ThermalCluster::integrityCheck()
 {
     if (!parentArea)
     {
@@ -601,7 +622,8 @@ bool Data::ThermalCluster::integrityCheck()
     return ret;
 }
 
-const char* Data::ThermalCluster::GroupName(enum ThermalDispatchableGroup grp)
+const char*
+Data::ThermalCluster::GroupName(enum ThermalDispatchableGroup grp)
 {
     switch (grp)
     {
@@ -632,7 +654,8 @@ const char* Data::ThermalCluster::GroupName(enum ThermalDispatchableGroup grp)
     return "";
 }
 
-uint64_t ThermalCluster::memoryUsage() const
+uint64_t
+ThermalCluster::memoryUsage() const
 {
     uint64_t amount = sizeof(ThermalCluster) + modulation.memoryUsage();
     if (prepro)
@@ -644,16 +667,17 @@ uint64_t ThermalCluster::memoryUsage() const
     return amount;
 }
 
-void ThermalCluster::calculatMinDivModulation()
+void
+ThermalCluster::calculatMinDivModulation()
 {
-    minDivModulation.value = (modulation[thermalModulationCapacity][0]
-                              / std::ceil(modulation[thermalModulationCapacity][0]));
+    minDivModulation.value = (modulation[thermalModulationCapacity][0] /
+                              std::ceil(modulation[thermalModulationCapacity][0]));
     minDivModulation.index = 0;
 
     for (uint t = 1; t < modulation.height; t++)
     {
-        double div = modulation[thermalModulationCapacity][t]
-                     / ceil(modulation[thermalModulationCapacity][t]);
+        double div = modulation[thermalModulationCapacity][t] /
+                     ceil(modulation[thermalModulationCapacity][t]);
 
         if (div < minDivModulation.value)
         {
@@ -664,7 +688,8 @@ void ThermalCluster::calculatMinDivModulation()
     minDivModulation.isCalculated = true;
 }
 
-bool ThermalCluster::checkMinStablePower()
+bool
+ThermalCluster::checkMinStablePower()
 {
     if (!minDivModulation.isCalculated) // not has been initialized
     {
@@ -686,8 +711,8 @@ bool ThermalCluster::checkMinStablePower()
     }
     else
     {
-        minDivModulation.border = std::min(nomCapacityWithSpinning, minStablePower)
-                                  / nomCapacityWithSpinning;
+        minDivModulation.border = std::min(nomCapacityWithSpinning, minStablePower) /
+                                  nomCapacityWithSpinning;
     }
 
     if (minDivModulation.value < minDivModulation.border)
@@ -700,7 +725,8 @@ bool ThermalCluster::checkMinStablePower()
     return true;
 }
 
-bool ThermalCluster::checkMinStablePowerWithNewModulation(uint idx, double value)
+bool
+ThermalCluster::checkMinStablePowerWithNewModulation(uint idx, double value)
 {
     if (!minDivModulation.isCalculated || idx == minDivModulation.index)
     {
@@ -719,7 +745,8 @@ bool ThermalCluster::checkMinStablePowerWithNewModulation(uint idx, double value
     return checkMinStablePower();
 }
 
-bool ThermalCluster::doWeGenerateTS(bool globalTSgeneration) const
+bool
+ThermalCluster::doWeGenerateTS(bool globalTSgeneration) const
 {
     switch (tsGenBehavior)
     {
@@ -732,12 +759,14 @@ bool ThermalCluster::doWeGenerateTS(bool globalTSgeneration) const
     }
 }
 
-unsigned int ThermalCluster::precision() const
+unsigned int
+ThermalCluster::precision() const
 {
     return 0;
 }
 
-double ThermalCluster::getOperatingCost(uint serieIndex, uint hourInTheYear) const
+double
+ThermalCluster::getOperatingCost(uint serieIndex, uint hourInTheYear) const
 {
     if (costgeneration == Data::setManually)
     {
@@ -751,7 +780,8 @@ double ThermalCluster::getOperatingCost(uint serieIndex, uint hourInTheYear) con
     }
 }
 
-double ThermalCluster::getMarginalCost(uint serieIndex, uint hourInTheYear) const
+double
+ThermalCluster::getMarginalCost(uint serieIndex, uint hourInTheYear) const
 {
     const double mod = modulation[Data::thermalModulationCost][hourInTheYear];
 
@@ -769,7 +799,8 @@ double ThermalCluster::getMarginalCost(uint serieIndex, uint hourInTheYear) cons
      inside -> that is used for all (e.g.10) TS*/
 }
 
-double ThermalCluster::getMarketBidCost(uint hourInTheYear, uint year) const
+double
+ThermalCluster::getMarketBidCost(uint hourInTheYear, uint year) const
 {
     uint serieIndex = series.getSeriesIndex(year);
 
@@ -786,12 +817,13 @@ double ThermalCluster::getMarketBidCost(uint hourInTheYear, uint year) const
     }
 }
 
-void ThermalCluster::checkAndCorrectAvailability()
+void
+ThermalCluster::checkAndCorrectAvailability()
 {
     const auto PmaxDUnGroupeDuPalierThermique = nominalCapacityWithSpinning;
     const auto PminDUnGroupeDuPalierThermique = (nominalCapacityWithSpinning < minStablePower)
-                                                  ? nominalCapacityWithSpinning
-                                                  : minStablePower;
+                                                        ? nominalCapacityWithSpinning
+                                                        : minStablePower;
 
     bool condition = false;
     bool report = false;
@@ -800,8 +832,8 @@ void ThermalCluster::checkAndCorrectAvailability()
     {
         for (uint x = 0; x != series.timeSeries.width; ++x)
         {
-            auto rightpart = PminDUnGroupeDuPalierThermique
-                             * ceil(series.timeSeries.entry[x][y] / PmaxDUnGroupeDuPalierThermique);
+            auto rightpart = PminDUnGroupeDuPalierThermique *
+                             ceil(series.timeSeries.entry[x][y] / PmaxDUnGroupeDuPalierThermique);
             condition = rightpart > series.timeSeries.entry[x][y];
             if (condition)
             {
@@ -818,7 +850,8 @@ void ThermalCluster::checkAndCorrectAvailability()
     }
 }
 
-bool ThermalCluster::isActive() const
+bool
+ThermalCluster::isActive() const
 {
     return enabled && !mustrun;
 }

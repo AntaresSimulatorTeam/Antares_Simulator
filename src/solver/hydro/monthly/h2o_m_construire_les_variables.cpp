@@ -33,15 +33,16 @@ extern "C"
 #include "antares/solver/hydro/monthly/h2o_m_donnees_annuelles.h"
 #include "antares/solver/hydro/monthly/h2o_m_fonctions.h"
 
-void H2O_M_ConstruireLesVariables(DONNEES_ANNUELLES& DonneesAnnuelles)
+void
+H2O_M_ConstruireLesVariables(DONNEES_ANNUELLES& DonneesAnnuelles)
 {
     PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesAnnuelles.ProblemeHydraulique;
-    PROBLEME_LINEAIRE_PARTIE_VARIABLE& ProblemeLineairePartieVariable
-      = ProblemeHydraulique.ProblemeLineairePartieVariable;
+    PROBLEME_LINEAIRE_PARTIE_VARIABLE&
+            ProblemeLineairePartieVariable = ProblemeHydraulique.ProblemeLineairePartieVariable;
     PROBLEME_LINEAIRE_PARTIE_FIXE& ProblemeLineairePartieFixe = ProblemeHydraulique
-                                                                  .ProblemeLineairePartieFixe;
+                                                                        .ProblemeLineairePartieFixe;
     CORRESPONDANCE_DES_VARIABLES& CorrespondanceDesVariables = ProblemeHydraulique
-                                                                 .CorrespondanceDesVariables;
+                                                                       .CorrespondanceDesVariables;
 
     const int NbPdt = DonneesAnnuelles.NombreDePasDeTemps;
     int Var = 0;
@@ -53,7 +54,7 @@ void H2O_M_ConstruireLesVariables(DONNEES_ANNUELLES& DonneesAnnuelles)
         ProblemeLineairePartieVariable.Xmax[Var] = 1.0;
         ProblemeLineairePartieFixe.TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
         ProblemeLineairePartieVariable.AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = &(
-          DonneesAnnuelles.Volume[Pdt]);
+                DonneesAnnuelles.Volume[Pdt]);
         Var++;
     }
 
@@ -64,7 +65,7 @@ void H2O_M_ConstruireLesVariables(DONNEES_ANNUELLES& DonneesAnnuelles)
         ProblemeLineairePartieVariable.Xmax[Var] = 0.0;
         ProblemeLineairePartieFixe.TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
         ProblemeLineairePartieVariable.AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = &(
-          DonneesAnnuelles.Turbine[Pdt]);
+                DonneesAnnuelles.Turbine[Pdt]);
         Var++;
     }
 

@@ -36,31 +36,33 @@ inline Areas<NextT>::Areas()
 }
 
 template<class NextT>
-inline void Areas<NextT>::initializeFromArea(Data::Study*, Data::Area*)
+inline void
+Areas<NextT>::initializeFromArea(Data::Study*, Data::Area*)
 {
     // Nothing to do here
     // This method is called by initializeFromStudy() to all children
 }
 
 template<class NextT>
-inline void Areas<NextT>::initializeFromAreaLink(Data::Study*, Data::AreaLink*)
+inline void
+Areas<NextT>::initializeFromAreaLink(Data::Study*, Data::AreaLink*)
 {
     // Nothing to do here
 }
 
 template<class NextT>
-inline void Areas<NextT>::initializeFromThermalCluster(Data::Study*,
-                                                       Data::Area*,
-                                                       Data::ThermalCluster*)
+inline void
+Areas<NextT>::initializeFromThermalCluster(Data::Study*, Data::Area*, Data::ThermalCluster*)
 {
     // This method should not be called at this point
 }
 
 template<class NextT>
-void Areas<NextT>::buildSurveyReport(SurveyResults& results,
-                                     int dataLevel,
-                                     int fileLevel,
-                                     int precision) const
+void
+Areas<NextT>::buildSurveyReport(SurveyResults& results,
+                                int dataLevel,
+                                int fileLevel,
+                                int precision) const
 {
     int count_int = count;
     bool linkDataLevel = dataLevel & Category::link;
@@ -68,8 +70,8 @@ void Areas<NextT>::buildSurveyReport(SurveyResults& results,
     bool thermalAggregateDataLevel = dataLevel & Category::thermalAggregate;
     if (count_int && (linkDataLevel || areaDataLevel || thermalAggregateDataLevel))
     {
-        assert(results.data.area != NULL
-               && "The area must not be null to generate a survey report");
+        assert(results.data.area != NULL &&
+               "The area must not be null to generate a survey report");
 
         // Build the survey results for the given area
         auto& area = *results.data.area;
@@ -118,11 +120,12 @@ void Areas<NextT>::buildSurveyReport(SurveyResults& results,
 }
 
 template<class NextT>
-void Areas<NextT>::buildAnnualSurveyReport(SurveyResults& results,
-                                           int dataLevel,
-                                           int fileLevel,
-                                           int precision,
-                                           uint numSpace) const
+void
+Areas<NextT>::buildAnnualSurveyReport(SurveyResults& results,
+                                      int dataLevel,
+                                      int fileLevel,
+                                      int precision,
+                                      uint numSpace) const
 {
     int count_int = count;
     bool linkDataLevel = dataLevel & Category::link;
@@ -130,8 +133,8 @@ void Areas<NextT>::buildAnnualSurveyReport(SurveyResults& results,
     bool thermalAggregateDataLevel = dataLevel & Category::thermalAggregate;
     if (count_int && (linkDataLevel || areaDataLevel || thermalAggregateDataLevel))
     {
-        assert(results.data.area != NULL
-               && "The area must not be null to generate a survey report");
+        assert(results.data.area != NULL &&
+               "The area must not be null to generate a survey report");
 
         auto& area = *results.data.area;
 
@@ -185,7 +188,8 @@ void Areas<NextT>::buildAnnualSurveyReport(SurveyResults& results,
 }
 
 template<class NextT>
-void Areas<NextT>::buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
+void
+Areas<NextT>::buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
 {
     int count_int = count;
     if (count_int)
@@ -216,14 +220,16 @@ void Areas<NextT>::buildDigest(SurveyResults& results, int digestLevel, int data
 
 template<class NextT>
 template<class PredicateT>
-inline void Areas<NextT>::RetrieveVariableList(PredicateT& predicate)
+inline void
+Areas<NextT>::RetrieveVariableList(PredicateT& predicate)
 {
     NextType::RetrieveVariableList(predicate);
 }
 
 template<class NextT>
 template<class I>
-inline void Areas<NextT>::provideInformations(I& infos)
+inline void
+Areas<NextT>::provideInformations(I& infos)
 {
     // Begining of the node
     if (VCardType::nodeDepthForGUI)
@@ -245,14 +251,16 @@ inline void Areas<NextT>::provideInformations(I& infos)
 
 template<class NextT>
 template<class SearchVCardT, class O>
-inline void Areas<NextT>::computeSpatialAggregateWith(O&)
+inline void
+Areas<NextT>::computeSpatialAggregateWith(O&)
 {
     // Do nothing
 }
 
 template<class NextT>
 template<class SearchVCardT, class O>
-inline void Areas<NextT>::computeSpatialAggregateWith(O& out, const Data::Area* area, uint numSpace)
+inline void
+Areas<NextT>::computeSpatialAggregateWith(O& out, const Data::Area* area, uint numSpace)
 {
     assert(NULL != area);
     pAreas[area->index].template computeSpatialAggregateWith<SearchVCardT, O>(out, numSpace);
@@ -260,35 +268,36 @@ inline void Areas<NextT>::computeSpatialAggregateWith(O& out, const Data::Area* 
 
 template<class NextT>
 template<class VCardToFindT>
-const double* Areas<NextT>::retrieveHourlyResultsForCurrentYear() const
+const double*
+Areas<NextT>::retrieveHourlyResultsForCurrentYear() const
 {
     return nullptr;
 }
 
 template<class NextT>
 template<class VCardToFindT>
-inline void Areas<NextT>::retrieveResultsForArea(
-  typename Storage<VCardToFindT>::ResultsType** result,
-  const Data::Area* area)
+inline void
+Areas<NextT>::retrieveResultsForArea(typename Storage<VCardToFindT>::ResultsType** result,
+                                     const Data::Area* area)
 {
     pAreas[area->index].template retrieveResultsForArea<VCardToFindT>(result, area);
 }
 
 template<class NextT>
 template<class VCardToFindT>
-inline void Areas<NextT>::retrieveResultsForThermalCluster(
-  typename Storage<VCardToFindT>::ResultsType** result,
-  const Data::ThermalCluster* cluster)
+inline void
+Areas<NextT>::retrieveResultsForThermalCluster(typename Storage<VCardToFindT>::ResultsType** result,
+                                               const Data::ThermalCluster* cluster)
 {
     pAreas[cluster->parentArea->index]
-      .template retrieveResultsForThermalCluster<VCardToFindT>(result, cluster);
+            .template retrieveResultsForThermalCluster<VCardToFindT>(result, cluster);
 }
 
 template<class NextT>
 template<class VCardToFindT>
-inline void Areas<NextT>::retrieveResultsForLink(
-  typename Storage<VCardToFindT>::ResultsType** result,
-  const Data::AreaLink* link)
+inline void
+Areas<NextT>::retrieveResultsForLink(typename Storage<VCardToFindT>::ResultsType** result,
+                                     const Data::AreaLink* link)
 {
     pAreas[link->from->index].template retrieveResultsForLink<VCardToFindT>(result, link);
 }

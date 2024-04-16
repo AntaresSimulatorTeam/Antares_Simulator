@@ -91,9 +91,8 @@ protected:
     void initializeState(Variable::State& state, uint numSpace);
 
 private:
-    bool simplexIsRequired(uint hourInTheYear,
-                           uint numSpace,
-                           const HYDRO_VENTILATION_RESULTS&) const;
+    bool
+    simplexIsRequired(uint hourInTheYear, uint numSpace, const HYDRO_VENTILATION_RESULTS&) const;
 
     uint pNbWeeks;
     uint pStartTime;

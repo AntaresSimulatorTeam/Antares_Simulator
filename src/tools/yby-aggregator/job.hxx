@@ -21,7 +21,8 @@
 #ifndef __STUDY_JOB_AGGREGATOR_JOB_HXX__
 #define __STUDY_JOB_AGGREGATOR_JOB_HXX__
 
-inline void JobFileReader::resizeJumpTable(uint newsize)
+inline void
+JobFileReader::resizeJumpTable(uint newsize)
 {
     pJumpTable.clear();
     pJumpTable.resize(newsize);

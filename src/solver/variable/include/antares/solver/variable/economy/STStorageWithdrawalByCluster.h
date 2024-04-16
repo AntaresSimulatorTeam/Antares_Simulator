@@ -46,8 +46,8 @@ struct VCardSTstorageWithdrawalByCluster
 
     //! The expecte results
     typedef Results<R::AllYears::Average< // The average values throughout all years
-      >>
-      ResultsType;
+            >>
+            ResultsType;
 
     //! The VCard to look for for calculating spatial aggregates
     typedef VCardSTstorageWithdrawalByCluster VCardForSpatialAggregate;
@@ -114,11 +114,11 @@ public:
     {
         enum
         {
-            count = ((VCardType::categoryDataLevel & CDataLevel
-                      && VCardType::categoryFileLevel & CFile)
-                       ? (NextType::template Statistics<CDataLevel, CFile>::count
-                          + VCardType::columnCount * ResultsType::count)
-                       : NextType::template Statistics<CDataLevel, CFile>::count),
+            count = ((VCardType::categoryDataLevel & CDataLevel &&
+                      VCardType::categoryFileLevel & CFile)
+                             ? (NextType::template Statistics<CDataLevel, CFile>::count +
+                                VCardType::columnCount * ResultsType::count)
+                             : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
 
@@ -152,7 +152,7 @@ public:
             for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
             {
                 pValuesForTheCurrentYear[numSpace] = new VCardType::IntermediateValuesDeepType
-                  [nbClusters_];
+                        [nbClusters_];
             }
 
             for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
@@ -219,8 +219,8 @@ public:
             {
                 // Merge all those values with the global results
                 AncestorType::pResults[clusterIndex].merge(
-                  numSpaceToYear[numSpace],
-                  pValuesForTheCurrentYear[numSpace][clusterIndex]);
+                        numSpaceToYear[numSpace],
+                        pValuesForTheCurrentYear[numSpace][clusterIndex]);
             }
         }
 
@@ -240,8 +240,10 @@ public:
              ++clusterIndex)
         {
             // ST storage withdrawal for the current cluster and this hour
-            pValuesForTheCurrentYear[numSpace][clusterIndex].hour[state.hourInTheYear]
-              = state.hourlyResults->ShortTermStorage[state.hourInTheWeek].withdrawal[clusterIndex];
+            pValuesForTheCurrentYear[numSpace][clusterIndex]
+                    .hour[state.hourInTheYear] = state.hourlyResults
+                                                         ->ShortTermStorage[state.hourInTheWeek]
+                                                         .withdrawal[clusterIndex];
         }
 
         // Next variable
@@ -254,17 +256,17 @@ public:
         NextType::buildDigest(results, digestLevel, dataLevel);
     }
 
-    Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
-      unsigned int column,
-      unsigned int numSpace) const
+    Antares::Memory::Stored<double>::ConstReturnType
+    retrieveRawHourlyValuesForCurrentYear(unsigned int column, unsigned int numSpace) const
     {
         return pValuesForTheCurrentYear[numSpace][column].hour;
     }
 
     inline uint64_t memoryUsage() const
     {
-        uint64_t r = (sizeof(IntermediateValues) * nbClusters_ + IntermediateValues::MemoryUsage())
-                     * pNbYearsParallel;
+        uint64_t r = (sizeof(IntermediateValues) * nbClusters_ +
+                      IntermediateValues::MemoryUsage()) *
+                     pNbYearsParallel;
         r += sizeof(double) * nbClusters_ * maxHoursInAYear * pNbYearsParallel;
         r += AncestorType::memoryUsage();
         return r;
@@ -291,7 +293,7 @@ public:
                 results.variableCaption = cluster.properties.name;
                 results.variableUnit = VCardType::Unit();
                 pValuesForTheCurrentYear[numSpace][clusterIndex]
-                  .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
+                        .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
 
                 clusterIndex++;
             }

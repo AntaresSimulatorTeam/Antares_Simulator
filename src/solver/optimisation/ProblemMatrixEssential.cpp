@@ -25,7 +25,8 @@ ProblemMatrixEssential::ProblemMatrixEssential(PROBLEME_HEBDO* problemeHebdo):
 {
 }
 
-void ProblemMatrixEssential::Run()
+void
+ProblemMatrixEssential::Run()
 {
     for (auto& group: constraintgroups_)
     {
@@ -33,7 +34,8 @@ void ProblemMatrixEssential::Run()
     }
 }
 
-void ProblemMatrixEssential::InitializeProblemAResoudreCounters()
+void
+ProblemMatrixEssential::InitializeProblemAResoudreCounters()
 {
     auto& ProblemeAResoudre = problemeHebdo_->ProblemeAResoudre;
     ProblemeAResoudre->NombreDeContraintes = 0;

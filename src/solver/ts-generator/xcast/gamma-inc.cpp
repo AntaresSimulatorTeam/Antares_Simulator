@@ -34,7 +34,8 @@ namespace TSGenerator
 {
 namespace XCast
 {
-double XCast::GammaInc(double s, double z)
+double
+XCast::GammaInc(double s, double z)
 {
     enum
     {

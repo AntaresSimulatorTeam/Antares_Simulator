@@ -32,9 +32,10 @@ using Antares::Solver::Optimization::OptimizationOptions;
 
 namespace
 {
-double OPT_ObjectiveFunctionResult(const PROBLEME_HEBDO* Probleme,
-                                   const int NumeroDeLIntervalle,
-                                   const int optimizationNumber)
+double
+OPT_ObjectiveFunctionResult(const PROBLEME_HEBDO* Probleme,
+                            const int NumeroDeLIntervalle,
+                            const int optimizationNumber)
 {
     if (optimizationNumber == PREMIERE_OPTIMISATION)
     {
@@ -46,11 +47,12 @@ double OPT_ObjectiveFunctionResult(const PROBLEME_HEBDO* Probleme,
     }
 }
 
-void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(
-  double optimalSolutionCost,
-  const OptPeriodStringGenerator& optPeriodStringGenerator,
-  int optimizationNumber,
-  Solver::IResultWriter& writer)
+void
+OPT_EcrireResultatFonctionObjectiveAuFormatTXT(
+        double optimalSolutionCost,
+        const OptPeriodStringGenerator& optPeriodStringGenerator,
+        int optimizationNumber,
+        Solver::IResultWriter& writer)
 {
     Yuni::Clob buffer;
     auto filename = createCriterionFilename(optPeriodStringGenerator, optimizationNumber);
@@ -61,14 +63,16 @@ void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(
     writer.addEntryFromBuffer(filename, buffer);
 }
 
-bool runWeeklyOptimization(const OptimizationOptions& options,
-                           PROBLEME_HEBDO* problemeHebdo,
-                           const AdqPatchParams& adqPatchParams,
-                           Solver::IResultWriter& writer,
-                           int optimizationNumber)
+bool
+runWeeklyOptimization(const OptimizationOptions& options,
+                      PROBLEME_HEBDO* problemeHebdo,
+                      const AdqPatchParams& adqPatchParams,
+                      Solver::IResultWriter& writer,
+                      int optimizationNumber)
 {
-    const int NombreDePasDeTempsPourUneOptimisation = problemeHebdo
-                                                        ->NombreDePasDeTempsPourUneOptimisation;
+    const int
+            NombreDePasDeTempsPourUneOptimisation = problemeHebdo
+                                                            ->NombreDePasDeTempsPourUneOptimisation;
 
     int DernierPdtDeLIntervalle;
     for (uint pdtHebdo = 0, numeroDeLIntervalle = 0; pdtHebdo < problemeHebdo->NombreDePasDeTemps;
@@ -97,10 +101,10 @@ bool runWeeklyOptimization(const OptimizationOptions& options,
         // depending whether the optimization is daily or weekly.
         // These sequences are used when building the names of MPS or criterion files.
         auto optPeriodStringGenerator = createOptPeriodAsString(
-          problemeHebdo->OptimisationAuPasHebdomadaire,
-          numeroDeLIntervalle,
-          problemeHebdo->weekInTheYear,
-          problemeHebdo->year);
+                problemeHebdo->OptimisationAuPasHebdomadaire,
+                numeroDeLIntervalle,
+                problemeHebdo->weekInTheYear,
+                problemeHebdo->year);
 
         if (!OPT_AppelDuSimplexe(options,
                                  problemeHebdo,
@@ -126,7 +130,8 @@ bool runWeeklyOptimization(const OptimizationOptions& options,
     return true;
 }
 
-void runThermalHeuristic(PROBLEME_HEBDO* problemeHebdo)
+void
+runThermalHeuristic(PROBLEME_HEBDO* problemeHebdo)
 {
     if (problemeHebdo->OptimisationAvecCoutsDeDemarrage)
     {
@@ -139,15 +144,17 @@ void runThermalHeuristic(PROBLEME_HEBDO* problemeHebdo)
 }
 } // namespace
 
-bool OPT_OptimisationLineaire(const OptimizationOptions& options,
-                              PROBLEME_HEBDO* problemeHebdo,
-                              const AdqPatchParams& adqPatchParams,
-                              Solver::IResultWriter& writer)
+bool
+OPT_OptimisationLineaire(const OptimizationOptions& options,
+                         PROBLEME_HEBDO* problemeHebdo,
+                         const AdqPatchParams& adqPatchParams,
+                         Solver::IResultWriter& writer)
 {
     if (!problemeHebdo->OptimisationAuPasHebdomadaire)
     {
-        problemeHebdo->NombreDePasDeTempsPourUneOptimisation = problemeHebdo
-                                                                 ->NombreDePasDeTempsDUneJournee;
+        problemeHebdo
+                ->NombreDePasDeTempsPourUneOptimisation = problemeHebdo
+                                                                  ->NombreDePasDeTempsDUneJournee;
     }
     else
     {

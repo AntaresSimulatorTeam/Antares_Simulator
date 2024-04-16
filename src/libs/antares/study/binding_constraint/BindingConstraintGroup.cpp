@@ -30,7 +30,8 @@
 namespace Antares::Data
 {
 
-void BindingConstraintGroup::add(const std::shared_ptr<BindingConstraint>& constraint)
+void
+BindingConstraintGroup::add(const std::shared_ptr<BindingConstraint>& constraint)
 {
     constraints_.insert(constraint);
 }
@@ -40,12 +41,14 @@ BindingConstraintGroup::BindingConstraintGroup(std::string name):
 {
 }
 
-std::set<std::shared_ptr<BindingConstraint>> BindingConstraintGroup::constraints() const
+std::set<std::shared_ptr<BindingConstraint>>
+BindingConstraintGroup::constraints() const
 {
     return constraints_;
 }
 
-unsigned BindingConstraintGroup::numberOfTimeseries() const
+unsigned
+BindingConstraintGroup::numberOfTimeseries() const
 {
     // Assume all BC in a group have the same width
     if (constraints_.empty())

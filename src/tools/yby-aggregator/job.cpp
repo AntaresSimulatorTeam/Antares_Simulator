@@ -37,7 +37,8 @@ static std::atomic<int> gNbJobs = 0;
 
 std::mutex gResultsMutex;
 
-bool JobFileReader::RemainJobsToExecute()
+bool
+JobFileReader::RemainJobsToExecute()
 {
     return 0 != gNbJobs;
 }
@@ -70,7 +71,8 @@ JobFileReader::~JobFileReader()
     --gNbJobs;
 }
 
-void JobFileReader::onExecute()
+void
+JobFileReader::onExecute()
 {
     if (!datafile || !output || !path || !output->canContinue())
     {
@@ -99,7 +101,8 @@ void JobFileReader::onExecute()
     }
 }
 
-bool JobFileReader::openCSVFile()
+bool
+JobFileReader::openCSVFile()
 {
     pFilename.clear();
     pFilename << path << SEP;
@@ -121,7 +124,8 @@ bool JobFileReader::openCSVFile()
     return true;
 }
 
-bool JobFileReader::readRawData()
+bool
+JobFileReader::readRawData()
 {
     // The number of variables to fetch
     const uint nbVars = (uint)output->columns.size();
@@ -212,7 +216,7 @@ bool JobFileReader::readRawData()
                 else
                 {
                     logs.warning()
-                      << "Got an empty line at " << (pLineCount + 8) << "*: " << pFilename;
+                            << "Got an empty line at " << (pLineCount + 8) << "*: " << pFilename;
                 }
 
                 // Another line has been found
@@ -232,7 +236,8 @@ bool JobFileReader::readRawData()
     return true;
 }
 
-void JobFileReader::readLine(const AnyString& line, uint y)
+void
+JobFileReader::readLine(const AnyString& line, uint y)
 {
     assert(not line.empty());
     assert(y < maxRows);
@@ -318,7 +323,8 @@ void JobFileReader::readLine(const AnyString& line, uint y)
     } while (!eol);
 }
 
-bool JobFileReader::storeResults()
+bool
+JobFileReader::storeResults()
 {
     if (!pLineCount)
     {
@@ -383,7 +389,8 @@ bool JobFileReader::storeResults()
     return true;
 }
 
-bool JobFileReader::prepareJumpTable()
+bool
+JobFileReader::prepareJumpTable()
 {
     // Looking for the 5th line
     if (!pFile.read(buffer, buffer.chunkSize))

@@ -35,7 +35,8 @@
 #include "antares/study/binding_constraint/BindingConstraintSaver.h"
 #include "antares/utils/utils.h"
 
-void Data::BindingConstraintsRepository::clear()
+void
+Data::BindingConstraintsRepository::clear()
 {
     constraints_.clear();
     activeConstraints_.clear();
@@ -43,7 +44,8 @@ void Data::BindingConstraintsRepository::clear()
 
 namespace Antares::Data
 {
-std::shared_ptr<Data::BindingConstraint> BindingConstraintsRepository::find(const AnyString& id)
+std::shared_ptr<Data::BindingConstraint>
+BindingConstraintsRepository::find(const AnyString& id)
 {
     for (const auto& i: constraints_)
     {
@@ -55,8 +57,8 @@ std::shared_ptr<Data::BindingConstraint> BindingConstraintsRepository::find(cons
     return nullptr;
 }
 
-std::shared_ptr<const Data::BindingConstraint> BindingConstraintsRepository::find(
-  const AnyString& id) const
+std::shared_ptr<const Data::BindingConstraint>
+BindingConstraintsRepository::find(const AnyString& id) const
 {
     for (const auto& i: constraints_)
     {
@@ -68,7 +70,8 @@ std::shared_ptr<const Data::BindingConstraint> BindingConstraintsRepository::fin
     return nullptr;
 }
 
-BindingConstraint* BindingConstraintsRepository::findByName(const AnyString& name)
+BindingConstraint*
+BindingConstraintsRepository::findByName(const AnyString& name)
 {
     for (const auto& i: constraints_)
     {
@@ -80,7 +83,8 @@ BindingConstraint* BindingConstraintsRepository::findByName(const AnyString& nam
     return nullptr;
 }
 
-const BindingConstraint* BindingConstraintsRepository::findByName(const AnyString& name) const
+const BindingConstraint*
+BindingConstraintsRepository::findByName(const AnyString& name) const
 {
     for (const auto& i: constraints_)
     {
@@ -92,14 +96,16 @@ const BindingConstraint* BindingConstraintsRepository::findByName(const AnyStrin
     return nullptr;
 }
 
-void BindingConstraintsRepository::removeConstraintsWhoseNameConstains(const AnyString& filter)
+void
+BindingConstraintsRepository::removeConstraintsWhoseNameConstains(const AnyString& filter)
 {
     WhoseNameContains pred(filter);
     constraints_.erase(std::remove_if(constraints_.begin(), constraints_.end(), pred),
                        constraints_.end());
 }
 
-static int valueForSort(BindingConstraint::Operator op)
+static int
+valueForSort(BindingConstraint::Operator op)
 {
     switch (op)
     {
@@ -116,8 +122,9 @@ static int valueForSort(BindingConstraint::Operator op)
     }
 }
 
-bool compareConstraints(const std::shared_ptr<BindingConstraint>& s1,
-                        const std::shared_ptr<BindingConstraint>& s2)
+bool
+compareConstraints(const std::shared_ptr<BindingConstraint>& s1,
+                   const std::shared_ptr<BindingConstraint>& s2)
 {
     if (s1->name() != s2->name())
     {
@@ -129,7 +136,8 @@ bool compareConstraints(const std::shared_ptr<BindingConstraint>& s1,
     }
 }
 
-std::shared_ptr<BindingConstraint> BindingConstraintsRepository::add(const AnyString& name)
+std::shared_ptr<BindingConstraint>
+BindingConstraintsRepository::add(const AnyString& name)
 {
     auto bc = std::make_shared<BindingConstraint>();
     bc->name(name);
@@ -139,21 +147,23 @@ std::shared_ptr<BindingConstraint> BindingConstraintsRepository::add(const AnySt
     return bc;
 }
 
-std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintsRepository::LoadBindingConstraint(
-  EnvForLoading env)
+std::vector<std::shared_ptr<BindingConstraint>>
+BindingConstraintsRepository::LoadBindingConstraint(EnvForLoading env)
 {
     BindingConstraintLoader loader;
     return loader.load(std::move(env));
 }
 
-bool BindingConstraintsRepository::saveToFolder(const AnyString& folder) const
+bool
+BindingConstraintsRepository::saveToFolder(const AnyString& folder) const
 {
     BindingConstraintSaver::EnvForSaving env;
     env.folder = folder;
     return internalSaveToFolder(env);
 }
 
-bool BindingConstraintsRepository::rename(BindingConstraint* bc, const AnyString& newname)
+bool
+BindingConstraintsRepository::rename(BindingConstraint* bc, const AnyString& newname)
 {
     // Copy of the name
     ConstraintName name;
@@ -176,9 +186,10 @@ bool BindingConstraintsRepository::rename(BindingConstraint* bc, const AnyString
     return true;
 }
 
-bool BindingConstraintsRepository::loadFromFolder(Study& study,
-                                                  const StudyLoadOptions& options,
-                                                  const AnyString& folder)
+bool
+BindingConstraintsRepository::loadFromFolder(Study& study,
+                                             const StudyLoadOptions& options,
+                                             const AnyString& folder)
 {
     // Log entries
     logs.info(); // space for beauty
@@ -253,22 +264,23 @@ bool BindingConstraintsRepository::loadFromFolder(Study& study,
     return true;
 }
 
-void BindingConstraintsRepository::changeConstraintsWeeklyToDaily()
+void
+BindingConstraintsRepository::changeConstraintsWeeklyToDaily()
 {
     each(
-      [](BindingConstraint& constraint)
-      {
-          if (constraint.type() == BindingConstraint::typeWeekly)
-          {
-              logs.info() << "  The type of the constraint '" << constraint.name()
-                          << "' is now 'daily'";
-              constraint.setTimeGranularity(BindingConstraint::typeDaily);
-          }
-      });
+            [](BindingConstraint& constraint)
+            {
+                if (constraint.type() == BindingConstraint::typeWeekly)
+                {
+                    logs.info() << "  The type of the constraint '" << constraint.name()
+                                << "' is now 'daily'";
+                    constraint.setTimeGranularity(BindingConstraint::typeDaily);
+                }
+            });
 }
 
-bool BindingConstraintsRepository::internalSaveToFolder(
-  BindingConstraintSaver::EnvForSaving& env) const
+bool
+BindingConstraintsRepository::internalSaveToFolder(BindingConstraintSaver::EnvForSaving& env) const
 {
     if (constraints_.empty())
     {
@@ -311,12 +323,14 @@ bool BindingConstraintsRepository::internalSaveToFolder(
     return ini.save(env.folder) && ret;
 }
 
-void BindingConstraintsRepository::reverseWeightSign(const AreaLink* lnk)
+void
+BindingConstraintsRepository::reverseWeightSign(const AreaLink* lnk)
 {
     each([&lnk](BindingConstraint& constraint) { constraint.reverseWeightSign(lnk); });
 }
 
-uint64_t BindingConstraintsRepository::memoryUsage() const
+uint64_t
+BindingConstraintsRepository::memoryUsage() const
 {
     uint64_t m = sizeof(BindingConstraintsRepository);
     for (const auto& i: constraints_)
@@ -354,7 +368,8 @@ private:
 
 } // anonymous namespace
 
-void BindingConstraintsRepository::remove(const Area* area)
+void
+BindingConstraintsRepository::remove(const Area* area)
 {
     RemovePredicate<Area> predicate(area);
     auto e = std::remove_if(constraints_.begin(), constraints_.end(), predicate);
@@ -362,7 +377,8 @@ void BindingConstraintsRepository::remove(const Area* area)
     activeConstraints_.clear();
 }
 
-void BindingConstraintsRepository::remove(const AreaLink* lnk)
+void
+BindingConstraintsRepository::remove(const AreaLink* lnk)
 {
     RemovePredicate<AreaLink> predicate(lnk);
     auto e = std::remove_if(constraints_.begin(), constraints_.end(), predicate);
@@ -370,7 +386,8 @@ void BindingConstraintsRepository::remove(const AreaLink* lnk)
     activeConstraints_.clear();
 }
 
-void BindingConstraintsRepository::remove(const BindingConstraint* bc)
+void
+BindingConstraintsRepository::remove(const BindingConstraint* bc)
 {
     RemovePredicate<BindingConstraint> predicate(bc);
     auto e = std::remove_if(constraints_.begin(), constraints_.end(), predicate);
@@ -378,27 +395,32 @@ void BindingConstraintsRepository::remove(const BindingConstraint* bc)
     activeConstraints_.clear();
 }
 
-BindingConstraintsRepository::iterator BindingConstraintsRepository::begin()
+BindingConstraintsRepository::iterator
+BindingConstraintsRepository::begin()
 {
     return constraints_.begin();
 }
 
-BindingConstraintsRepository::const_iterator BindingConstraintsRepository::begin() const
+BindingConstraintsRepository::const_iterator
+BindingConstraintsRepository::begin() const
 {
     return constraints_.begin();
 }
 
-BindingConstraintsRepository::iterator BindingConstraintsRepository::end()
+BindingConstraintsRepository::iterator
+BindingConstraintsRepository::end()
 {
     return constraints_.end();
 }
 
-BindingConstraintsRepository::const_iterator BindingConstraintsRepository::end() const
+BindingConstraintsRepository::const_iterator
+BindingConstraintsRepository::end() const
 {
     return constraints_.end();
 }
 
-void BindingConstraintsRepository::markAsModified() const
+void
+BindingConstraintsRepository::markAsModified() const
 {
     for (const auto& i: constraints_)
     {
@@ -406,8 +428,8 @@ void BindingConstraintsRepository::markAsModified() const
     }
 }
 
-std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintsRepository::activeConstraints()
-  const
+std::vector<std::shared_ptr<BindingConstraint>>
+BindingConstraintsRepository::activeConstraints() const
 {
     if (!activeConstraints_.empty())
     {
@@ -425,14 +447,15 @@ std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintsRepository::ac
     return activeConstraints_;
 }
 
-static bool isBindingConstraintTypeInequality(const Data::BindingConstraint& bc)
+static bool
+isBindingConstraintTypeInequality(const Data::BindingConstraint& bc)
 {
-    return bc.operatorType() == BindingConstraint::opLess
-           || bc.operatorType() == BindingConstraint::opGreater;
+    return bc.operatorType() == BindingConstraint::opLess ||
+           bc.operatorType() == BindingConstraint::opGreater;
 }
 
 BindingConstraintsRepository::Vector
-  BindingConstraintsRepository::getPtrForInequalityBindingConstraints() const
+BindingConstraintsRepository::getPtrForInequalityBindingConstraints() const
 {
     auto activeBC = activeConstraints();
     Vector ptr;
@@ -448,7 +471,8 @@ BindingConstraintsRepository::Vector
     return ptr;
 }
 
-void BindingConstraintsRepository::forceReload(bool reload) const
+void
+BindingConstraintsRepository::forceReload(bool reload) const
 {
     if (!constraints_.empty())
     {

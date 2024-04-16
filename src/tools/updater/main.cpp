@@ -34,7 +34,8 @@
 using namespace Yuni;
 using namespace Antares;
 
-static bool onProgress(uint)
+static bool
+onProgress(uint)
 {
     return true;
 }
@@ -127,7 +128,8 @@ public:
 
 // Useful for information addition in help content
 // ... Extracting base name from full path
-const char* ExtractFilenameOnly(const char* argv)
+const char*
+ExtractFilenameOnly(const char* argv)
 {
     const char* result = argv;
     while ('\0' != *argv)
@@ -143,7 +145,8 @@ const char* ExtractFilenameOnly(const char* argv)
 }
 
 // ... Getting the size of a char* (ending with '\0')
-int getFilenameSize(const char* filename)
+int
+getFilenameSize(const char* filename)
 {
     int count = 0;
     while ('\0' != *filename)
@@ -155,7 +158,8 @@ int getFilenameSize(const char* filename)
 }
 
 // ... Building a left margin with as many spaces as the int in parameter
-std::string getMargin(int size)
+std::string
+getMargin(int size)
 {
     std::string margin;
     for (int i = 0; i < size; i++)
@@ -166,7 +170,8 @@ std::string getMargin(int size)
     return margin;
 }
 
-int main(int argc, char* argv[])
+int
+main(int argc, char* argv[])
 {
     // locale
     InitializeDefaultLocale();

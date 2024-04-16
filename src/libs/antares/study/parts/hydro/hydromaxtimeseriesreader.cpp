@@ -47,8 +47,8 @@ HydroMaxTimeSeriesReader::HydroMaxTimeSeriesReader(PartHydro& hydro,
     dailyMaxPumpAndGen.reset(4U, DAYS_PER_YEAR, true);
 }
 
-bool HydroMaxTimeSeriesReader::loadDailyMaxPowersAndEnergies(const AnyString& folder,
-                                                             bool usedBySolver)
+bool
+HydroMaxTimeSeriesReader::loadDailyMaxPowersAndEnergies(const AnyString& folder, bool usedBySolver)
 {
     YString filePath;
     Matrix<>::BufferType fileContent;
@@ -74,8 +74,8 @@ bool HydroMaxTimeSeriesReader::loadDailyMaxPowersAndEnergies(const AnyString& fo
                                                  4U,
                                                  DAYS_PER_YEAR,
                                                  Matrix<>::optFixedSize,
-                                                 &fileContent)
-              && ret;
+                                                 &fileContent) &&
+              ret;
 
         if (enabledModeIsChanged)
         {
@@ -88,8 +88,8 @@ bool HydroMaxTimeSeriesReader::loadDailyMaxPowersAndEnergies(const AnyString& fo
                                                  4U,
                                                  DAYS_PER_YEAR,
                                                  Matrix<>::optFixedSize,
-                                                 &fileContent)
-              && ret;
+                                                 &fileContent) &&
+              ret;
 
         bool errorPowers = false;
         for (uint i = 0; i < 4U; ++i)
@@ -109,13 +109,15 @@ bool HydroMaxTimeSeriesReader::loadDailyMaxPowersAndEnergies(const AnyString& fo
     return ret;
 }
 
-void HydroMaxTimeSeriesReader::copyDailyMaxEnergy() const
+void
+HydroMaxTimeSeriesReader::copyDailyMaxEnergy() const
 {
     copyDailyMaxGenerationEnergy();
     copyDailyMaxPumpingEnergy();
 }
 
-void HydroMaxTimeSeriesReader::copyDailyMaxGenerationEnergy() const
+void
+HydroMaxTimeSeriesReader::copyDailyMaxGenerationEnergy() const
 {
     auto& dailyNbHoursAtGenPmax = hydro_.dailyNbHoursAtGenPmax;
     const auto& dailyMaxGenE = dailyMaxPumpAndGen[genMaxE];
@@ -125,7 +127,8 @@ void HydroMaxTimeSeriesReader::copyDailyMaxGenerationEnergy() const
     dailyNbHoursAtGenPmax.pasteToColumn(0, dailyMaxGenE);
 }
 
-void HydroMaxTimeSeriesReader::copyDailyMaxPumpingEnergy() const
+void
+HydroMaxTimeSeriesReader::copyDailyMaxPumpingEnergy() const
 {
     auto& dailyNbHoursAtPumpPmax = hydro_.dailyNbHoursAtPumpPmax;
     const auto& dailyMaxPumpE = dailyMaxPumpAndGen[pumpMaxE];
@@ -135,7 +138,8 @@ void HydroMaxTimeSeriesReader::copyDailyMaxPumpingEnergy() const
     dailyNbHoursAtPumpPmax.pasteToColumn(0, dailyMaxPumpE);
 }
 
-bool HydroMaxTimeSeriesReader::read(const AnyString& folder, bool usedBySolver)
+bool
+HydroMaxTimeSeriesReader::read(const AnyString& folder, bool usedBySolver)
 {
     bool ret = loadDailyMaxPowersAndEnergies(folder, usedBySolver);
     copyDailyMaxEnergy();

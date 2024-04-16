@@ -32,14 +32,14 @@ extern "C"
 
 #include "antares/solver/hydro/daily2/h2o2_j_donnees_mensuelles.h"
 
-void H2O2_j_ConstruireLesVariables(
-  int NbPdt,
-  DONNEES_MENSUELLES_ETENDUES& DonneesMensuellesEtendues,
-  std::vector<double>& Xmin,
-  std::vector<double>& Xmax,
-  std::vector<int>& TypeDeVariable,
-  std::vector<double*>& AdresseOuPlacerLaValeurDesVariablesOptimisees,
-  CORRESPONDANCE_DES_VARIABLES_PB_ETENDU& CorrespondanceDesVariables)
+void
+H2O2_j_ConstruireLesVariables(int NbPdt,
+                              DONNEES_MENSUELLES_ETENDUES& DonneesMensuellesEtendues,
+                              std::vector<double>& Xmin,
+                              std::vector<double>& Xmax,
+                              std::vector<int>& TypeDeVariable,
+                              std::vector<double*>& AdresseOuPlacerLaValeurDesVariablesOptimisees,
+                              CORRESPONDANCE_DES_VARIABLES_PB_ETENDU& CorrespondanceDesVariables)
 {
     int Var = 0;
 
@@ -50,7 +50,7 @@ void H2O2_j_ConstruireLesVariables(
         Xmax[Var] = 0.0;
         TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
         AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = &(
-          DonneesMensuellesEtendues.Turbine[Pdt]);
+                DonneesMensuellesEtendues.Turbine[Pdt]);
         Var++;
     }
 
@@ -61,7 +61,7 @@ void H2O2_j_ConstruireLesVariables(
         Xmax[Var] = 1.0;
         TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
         AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = &(
-          DonneesMensuellesEtendues.niveauxFinJours[Pdt]);
+                DonneesMensuellesEtendues.niveauxFinJours[Pdt]);
         Var++;
     }
 
@@ -79,7 +79,7 @@ void H2O2_j_ConstruireLesVariables(
         Xmax[Var] = LINFINI;
         TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
         AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = &(
-          DonneesMensuellesEtendues.overflows[Pdt]);
+                DonneesMensuellesEtendues.overflows[Pdt]);
         Var++;
     }
 
@@ -90,7 +90,7 @@ void H2O2_j_ConstruireLesVariables(
         Xmax[Var] = LINFINI;
         TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
         AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = &(
-          DonneesMensuellesEtendues.deviations[Pdt]);
+                DonneesMensuellesEtendues.deviations[Pdt]);
         Var++;
     }
 
@@ -101,7 +101,7 @@ void H2O2_j_ConstruireLesVariables(
         Xmax[Var] = LINFINI;
         TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
         AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = &(
-          DonneesMensuellesEtendues.violations[Pdt]);
+                DonneesMensuellesEtendues.violations[Pdt]);
         Var++;
     }
 

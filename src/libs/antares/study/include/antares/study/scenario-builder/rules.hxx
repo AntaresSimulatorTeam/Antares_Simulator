@@ -27,17 +27,20 @@ namespace Data
 {
 namespace ScenarioBuilder
 {
-inline uint Rules::areaCount() const
+inline uint
+Rules::areaCount() const
 {
     return pAreaCount;
 }
 
-inline const RulesScenarioName& Rules::name() const
+inline const RulesScenarioName&
+Rules::name() const
 {
     return pName;
 }
 
-inline void Rules::setName(RulesScenarioName name)
+inline void
+Rules::setName(RulesScenarioName name)
 {
     pName = name;
 }

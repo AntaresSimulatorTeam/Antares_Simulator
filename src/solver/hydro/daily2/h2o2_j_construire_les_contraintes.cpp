@@ -22,14 +22,14 @@
 #include "antares/solver/hydro/daily2/h2o2_j_donnees_mensuelles.h"
 #include "antares/solver/hydro/daily2/h2o2_j_fonctions.h"
 
-void H2O2_J_ConstruireLesContraintes(
-  int NbPdt,
-  std::vector<int>& IndicesDebutDeLigne,
-  std::vector<char>& Sens,
-  std::vector<int>& NombreDeTermesDesLignes,
-  std::vector<double>& CoefficientsDeLaMatriceDesContraintes,
-  std::vector<int>& IndicesColonnes,
-  CORRESPONDANCE_DES_VARIABLES_PB_ETENDU& CorrespondanceDesVariables)
+void
+H2O2_J_ConstruireLesContraintes(int NbPdt,
+                                std::vector<int>& IndicesDebutDeLigne,
+                                std::vector<char>& Sens,
+                                std::vector<int>& NombreDeTermesDesLignes,
+                                std::vector<double>& CoefficientsDeLaMatriceDesContraintes,
+                                std::vector<int>& IndicesColonnes,
+                                CORRESPONDANCE_DES_VARIABLES_PB_ETENDU& CorrespondanceDesVariables)
 {
     int NombreDeContraintes = 0;
     int il = 0;

@@ -30,18 +30,21 @@
 namespace Antares::Data
 {
 
-inline uint BindingConstraintsRepository::size() const
+inline uint
+BindingConstraintsRepository::size() const
 {
     return (uint)constraints_.size();
 }
 
-inline bool BindingConstraintsRepository::empty() const
+inline bool
+BindingConstraintsRepository::empty() const
 {
     return constraints_.empty();
 }
 
 template<class PredicateT>
-inline void BindingConstraintsRepository::each(const PredicateT& predicate)
+inline void
+BindingConstraintsRepository::each(const PredicateT& predicate)
 {
     for (auto bc: constraints_)
     {
@@ -50,7 +53,8 @@ inline void BindingConstraintsRepository::each(const PredicateT& predicate)
 }
 
 template<class PredicateT>
-inline void BindingConstraintsRepository::each(const PredicateT& predicate) const
+inline void
+BindingConstraintsRepository::each(const PredicateT& predicate) const
 {
     for (auto bc: constraints_)
     {

@@ -53,8 +53,8 @@ struct VCardFlowQuad
 
     //! The expecte results
     typedef Results<R::AllYears::Raw< // Raw values
-      >>
-      ResultsType;
+            >>
+            ResultsType;
 
     enum
     {
@@ -114,11 +114,11 @@ public:
     {
         enum
         {
-            count = ((VCardType::categoryDataLevel & CDataLevel
-                      && VCardType::categoryFileLevel & CFile)
-                       ? (NextType::template Statistics<CDataLevel, CFile>::count
-                          + VCardType::columnCount * ResultsType::count)
-                       : NextType::template Statistics<CDataLevel, CFile>::count),
+            count = ((VCardType::categoryDataLevel & CDataLevel &&
+                      VCardType::categoryFileLevel & CFile)
+                             ? (NextType::template Statistics<CDataLevel, CFile>::count +
+                                VCardType::columnCount * ResultsType::count)
+                             : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
 
@@ -229,28 +229,27 @@ public:
             if (digestLevel & Category::digestFlowQuad)
             {
                 results.data.matrix
-                  .entry[results.data.link->from->index][results.data.link->with->index]
-                  = AncestorType::pResults.rawdata.allYears;
+                        .entry[results.data.link->from->index]
+                              [results.data.link->with->index] = AncestorType::pResults.rawdata
+                                                                         .allYears;
                 results.data.matrix
-                  .entry[results.data.link->with->index][results.data.link->from->index]
-                  = -AncestorType::pResults.rawdata.allYears;
+                        .entry[results.data.link->with->index]
+                              [results.data.link->from->index] = -AncestorType::pResults.rawdata
+                                                                          .allYears;
             }
         }
         // Next
         NextType::buildDigest(results, digestLevel, dataLevel);
     }
 
-    Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
-      uint,
-      uint) const
+    Antares::Memory::Stored<double>::ConstReturnType
+    retrieveRawHourlyValuesForCurrentYear(uint, uint) const
     {
         return pValuesForTheCurrentYear.hour;
     }
 
-    void localBuildAnnualSurveyReport(SurveyResults& results,
-                                      int fileLevel,
-                                      int precision,
-                                      uint) const
+    void
+    localBuildAnnualSurveyReport(SurveyResults& results, int fileLevel, int precision, uint) const
     {
         // Initializing external pointer on current variable non applicable status
         results.isCurrentVarNA = AncestorType::isNonApplicable;

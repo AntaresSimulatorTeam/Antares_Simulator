@@ -53,8 +53,8 @@ struct VCardNonProportionalCostByDispatchablePlant
 
     //! The expected results
     typedef Results<R::AllYears::Average< // The average values throughout all years
-      >>
-      ResultsType;
+            >>
+            ResultsType;
 
     //! The VCard to look for for calculating spatial aggregates
     typedef VCardNonProportionalCostByDispatchablePlant VCardForSpatialAggregate;
@@ -108,7 +108,7 @@ public:
     typedef VCardNonProportionalCostByDispatchablePlant VCardType;
     //! Ancestor
     typedef Variable::IVariable<NonProportionalCostByDispatchablePlant<NextT>, NextT, VCardType>
-      AncestorType;
+            AncestorType;
 
     //! List of expected results
     typedef typename VCardType::ResultsType ResultsType;
@@ -126,11 +126,11 @@ public:
     {
         enum
         {
-            count = ((VCardType::categoryDataLevel & CDataLevel
-                      && VCardType::categoryFileLevel & CFile)
-                       ? (NextType::template Statistics<CDataLevel, CFile>::count
-                          + VCardType::columnCount * ResultsType::count)
-                       : NextType::template Statistics<CDataLevel, CFile>::count),
+            count = ((VCardType::categoryDataLevel & CDataLevel &&
+                      VCardType::categoryFileLevel & CFile)
+                             ? (NextType::template Statistics<CDataLevel, CFile>::count +
+                                VCardType::columnCount * ResultsType::count)
+                             : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
 
@@ -170,7 +170,7 @@ public:
             for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
             {
                 pValuesForTheCurrentYear[numSpace] = new VCardType::IntermediateValuesDeepType
-                  [pSize];
+                        [pSize];
             }
 
             for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
@@ -242,8 +242,8 @@ public:
              i <= state.study.runtime->rangeLimits.hour[Data::rangeEnd];
              ++i)
         {
-            pValuesForTheCurrentYear[numSpace][state.thermalCluster->areaWideIndex].hour[i]
-              = state.thermalClusterNonProportionalCostForYear[i];
+            pValuesForTheCurrentYear[numSpace][state.thermalCluster->areaWideIndex]
+                    .hour[i] = state.thermalClusterNonProportionalCostForYear[i];
         }
 
         // Next variable
@@ -299,9 +299,8 @@ public:
         NextType::hourForEachArea(state, numSpace);
     }
 
-    Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
-      unsigned int,
-      unsigned int numSpace) const
+    Antares::Memory::Stored<double>::ConstReturnType
+    retrieveRawHourlyValuesForCurrentYear(unsigned int, unsigned int numSpace) const
     {
         return pValuesForTheCurrentYear[numSpace]->hour;
     }
@@ -326,7 +325,7 @@ public:
                 results.variableCaption = cluster->name(); // VCardType::Caption();
                 results.variableUnit = VCardType::Unit();
                 pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex]
-                  .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
+                        .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
             }
         }
     }

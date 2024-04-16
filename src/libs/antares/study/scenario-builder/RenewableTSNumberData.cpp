@@ -28,9 +28,10 @@
 
 namespace Antares::Data::ScenarioBuilder
 {
-void renewableTSNumberData::setTSnumber(const Antares::Data::RenewableCluster* cluster,
-                                        const uint year,
-                                        uint value)
+void
+renewableTSNumberData::setTSnumber(const Antares::Data::RenewableCluster* cluster,
+                                   const uint year,
+                                   uint value)
 {
     assert(cluster != nullptr);
     if (year < pTSNumberRules.height && cluster->areaWideIndex < pTSNumberRules.width)
@@ -39,7 +40,8 @@ void renewableTSNumberData::setTSnumber(const Antares::Data::RenewableCluster* c
     }
 }
 
-bool renewableTSNumberData::apply(Study& study)
+bool
+renewableTSNumberData::apply(Study& study)
 {
     bool ret = true;
     CString<512, false> logprefix;
@@ -68,7 +70,8 @@ bool renewableTSNumberData::apply(Study& study)
     return ret;
 }
 
-uint renewableTSNumberData::get_tsGenCount(const Study& study) const
+uint
+renewableTSNumberData::get_tsGenCount(const Study& study) const
 {
     // General data
     auto& parameters = study.parameters;
@@ -77,8 +80,8 @@ uint renewableTSNumberData::get_tsGenCount(const Study& study) const
     return tsGenRenewable ? 1 : 0u;
 }
 
-void renewableTSNumberData::saveToINIFile(const Study& /* study */,
-                                          Yuni::IO::File::Stream& file) const
+void
+renewableTSNumberData::saveToINIFile(const Study& /* study */, Yuni::IO::File::Stream& file) const
 {
     // Prefix
     CString<512, false> prefix;
@@ -105,7 +108,8 @@ void renewableTSNumberData::saveToINIFile(const Study& /* study */,
     }
 }
 
-bool renewableTSNumberData::reset(const Study& study)
+bool
+renewableTSNumberData::reset(const Study& study)
 {
     const uint nbYears = study.parameters.nbYears;
     assert(pArea != nullptr);

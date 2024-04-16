@@ -66,8 +66,8 @@ InvalidSimulationMode::InvalidSimulationMode():
 {
 }
 
-static std::string InvalidSolverHelper(const std::string& solver,
-                                       const std::string& availableSolvers)
+static std::string
+InvalidSolverHelper(const std::string& solver, const std::string& availableSolvers)
 {
     std::ostringstream message;
     message << "Can't use solver '" << solver
@@ -82,14 +82,14 @@ InvalidSolver::InvalidSolver(const std::string& solver, const std::string& avail
 }
 
 InvalidStudy::InvalidStudy(const Yuni::String& study):
-    LoadingError(std::string("The folder `") + study.c_str()
-                 + "` does not seem to be a valid study")
+    LoadingError(std::string("The folder `") + study.c_str() +
+                 "` does not seem to be a valid study")
 {
 }
 
 InvalidVersion::InvalidVersion(const std::string& version, const std::string& latest):
-    LoadingError(std::string("Invalid version for the study : found `") + version
-                 + "`, expected <=`" + latest + '`')
+    LoadingError(std::string("Invalid version for the study : found `") + version +
+                 "`, expected <=`" + latest + '`')
 {
 }
 
@@ -99,8 +99,8 @@ NoStudyProvided::NoStudyProvided():
 }
 
 InvalidNumberOfMCYears::InvalidNumberOfMCYears(uint nbYears):
-    LoadingError("Invalid number of MC years, got " + std::to_string(nbYears)
-                 + ", expected <= 50000")
+    LoadingError("Invalid number of MC years, got " + std::to_string(nbYears) +
+                 ", expected <= 50000")
 {
 }
 
@@ -130,15 +130,15 @@ IncompatibleOptRangeUCMode::IncompatibleOptRangeUCMode():
 }
 
 IncompatibleDailyOptHeuristicForArea::IncompatibleDailyOptHeuristicForArea(
-  const Antares::Data::AreaName& name):
-    LoadingError(
-      std::string("Area ") + name.c_str()
-      + " : simplex daily optimization and use heuristic target == no are not compatible")
+        const Antares::Data::AreaName& name):
+    LoadingError(std::string("Area ") + name.c_str() +
+                 " : simplex daily optimization and use heuristic target == no are not compatible")
 {
 }
 
-std::string InvalidParametersForThermalClusters::buildMessage(
-  const std::map<int, Yuni::String>& clusterNames) const
+std::string
+InvalidParametersForThermalClusters::buildMessage(
+        const std::map<int, Yuni::String>& clusterNames) const
 {
     const std::string startMessage("Conflict between Min Stable Power, Pnom, spinning and capacity "
                                    "modulation for the following clusters : ");
@@ -156,14 +156,14 @@ std::string InvalidParametersForThermalClusters::buildMessage(
 }
 
 InvalidParametersForThermalClusters::InvalidParametersForThermalClusters(
-  const std::map<int, Yuni::String>& clusterNames):
+        const std::map<int, Yuni::String>& clusterNames):
     LoadingError(buildMessage(clusterNames))
 {
 }
 
 CommandLineArguments::CommandLineArguments(uint errors):
-    LoadingError("Invalid command-line arguments provided : " + std::to_string(errors)
-                 + " error(s) found")
+    LoadingError("Invalid command-line arguments provided : " + std::to_string(errors) +
+                 " error(s) found")
 {
 }
 
@@ -194,13 +194,13 @@ IncompatibleOutputOptions::IncompatibleOutputOptions(const std::string& text):
 
 IncompatibleCO2CostColumns::IncompatibleCO2CostColumns():
     LoadingError(
-      "Number of columns for CO2 Cost can be one or same as number of TS in Availability")
+            "Number of columns for CO2 Cost can be one or same as number of TS in Availability")
 {
 }
 
 IncompatibleFuelCostColumns::IncompatibleFuelCostColumns():
     LoadingError(
-      "Number of columns for Fuel Cost can be one or same as number of TS in Availability")
+            "Number of columns for Fuel Cost can be one or same as number of TS in Availability")
 {
 }
 

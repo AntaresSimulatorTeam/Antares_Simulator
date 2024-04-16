@@ -28,7 +28,8 @@
 
 namespace Antares::Solver
 {
-void Application::runSimulationInEconomicMode()
+void
+Application::runSimulationInEconomicMode()
 {
     // Type of the simulation
     typedef Solver::Simulation::ISimulation<Solver::Simulation::Economy> SimulationType;

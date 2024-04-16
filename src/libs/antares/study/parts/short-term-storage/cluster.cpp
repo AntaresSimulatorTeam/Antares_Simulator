@@ -29,7 +29,8 @@
 namespace Antares::Data::ShortTermStorage
 {
 
-bool STStorageCluster::loadFromSection(const IniFile::Section& section)
+bool
+STStorageCluster::loadFromSection(const IniFile::Section& section)
 {
     if (!section.firstProperty)
     {
@@ -62,12 +63,14 @@ bool STStorageCluster::loadFromSection(const IniFile::Section& section)
     return true;
 }
 
-bool STStorageCluster::enabled() const
+bool
+STStorageCluster::enabled() const
 {
     return properties.enabled;
 }
 
-bool STStorageCluster::validate() const
+bool
+STStorageCluster::validate() const
 {
     if (!enabled())
     {
@@ -78,19 +81,22 @@ bool STStorageCluster::validate() const
     return properties.validate() && series->validate();
 }
 
-bool STStorageCluster::loadSeries(const std::string& folder) const
+bool
+STStorageCluster::loadSeries(const std::string& folder) const
 {
     bool ret = series->loadFromFolder(folder);
     series->fillDefaultSeriesIfEmpty(); // fill series if no file series
     return ret;
 }
 
-void STStorageCluster::saveProperties(IniFile& ini) const
+void
+STStorageCluster::saveProperties(IniFile& ini) const
 {
     properties.save(ini);
 }
 
-bool STStorageCluster::saveSeries(const std::string& path) const
+bool
+STStorageCluster::saveSeries(const std::string& path) const
 {
     return series->saveToFolder(path);
 }

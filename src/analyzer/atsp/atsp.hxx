@@ -23,7 +23,8 @@
 
 namespace Antares
 {
-inline bool ATSP::cacheFetch(uint index, Matrix<>& out) const
+inline bool
+ATSP::cacheFetch(uint index, Matrix<>& out) const
 {
     if (pCacheMatrix[index].width > 0)
     {

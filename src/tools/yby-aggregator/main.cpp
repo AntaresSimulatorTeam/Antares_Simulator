@@ -54,7 +54,8 @@ static Output::Vector AllOutputs;
 /*!
 ** \brief Get the optimal number of jobs to run simultaneously
 */
-static inline uint FindNbProcessors()
+static inline uint
+FindNbProcessors()
 {
     // The value will be based on the number of virtual CPUs
     uint n = System::CPU::Count();
@@ -63,7 +64,8 @@ static inline uint FindNbProcessors()
     return (n > 4) ? 4 : n;
 }
 
-static bool DetermineOutputType(String& out, const String& original)
+static bool
+DetermineOutputType(String& out, const String& original)
 {
     out.clear() << original << SEP << "economy";
     if (IO::Directory::Exists(out))
@@ -95,13 +97,15 @@ static bool DetermineOutputType(String& out, const String& original)
     return false;
 }
 
-static bool FindOutputFolder(IO::Directory::Info& info)
+static bool
+FindOutputFolder(IO::Directory::Info& info)
 {
     String original = info.directory();
     return DetermineOutputType(info.directory(), original);
 }
 
-static void ConvertVarNameToID(String& id, const String& name)
+static void
+ConvertVarNameToID(String& id, const String& name)
 {
     id.clear();
 
@@ -128,7 +132,8 @@ static void ConvertVarNameToID(String& id, const String& name)
     id.trimRight('-');
 }
 
-static void AbortProgram(int code)
+static void
+AbortProgram(int code)
 {
     // Importing logs
     if (!logs.logfile())
@@ -144,10 +149,11 @@ static void AbortProgram(int code)
     exit(code);
 }
 
-static void PrepareTheWork(const String::Vector& outputs,
-                           const DataFile::Vector& dataFiles,
-                           const StudyData::Vector& studydata,
-                           const String::Vector& columns)
+static void
+PrepareTheWork(const String::Vector& outputs,
+               const DataFile::Vector& dataFiles,
+               const StudyData::Vector& studydata,
+               const String::Vector& columns)
 {
     logs.checkpoint() << "Preparing the aggregation";
     progressBar.interval(1500 /*ms*/);
@@ -295,7 +301,8 @@ static void PrepareTheWork(const String::Vector& outputs,
     Progress::Total = nbJobs;
 }
 
-static void ReadCommandLineOptions(int argc, char** argv)
+static void
+ReadCommandLineOptions(int argc, char** argv)
 {
     String::Vector optOutputs;
     uint optJobs = FindNbProcessors();
@@ -479,7 +486,8 @@ static void ReadCommandLineOptions(int argc, char** argv)
     PrepareTheWork(optOutputs, dataFiles, studydata, optColumns);
 }
 
-static bool WriteAggregates()
+static bool
+WriteAggregates()
 {
     const Output::Vector::iterator end = AllOutputs.end();
     for (Output::Vector::iterator i = AllOutputs.begin(); i != end; ++i)
@@ -584,9 +592,9 @@ static bool WriteAggregates()
                                     if (column.height != requiredHeight)
                                     {
                                         logs.error()
-                                          << "All columns must have the same number of rows ("
-                                          << column.height << " found, " << requiredHeight
-                                          << " expected): " << output->path;
+                                                << "All columns must have the same number of rows ("
+                                                << column.height << " found, " << requiredHeight
+                                                << " expected): " << output->path;
                                         output->incrementError();
                                         break;
                                     }
@@ -614,9 +622,9 @@ static bool WriteAggregates()
                         // Writing DATA
                         if (!requiredHeight)
                         {
-                            logs.info()
-                              << " No data for the variable " << studyItemName << '/'
-                              << dataLevelName << '/' << timeLevelName << '/' << output->columns[v];
+                            logs.info() << " No data for the variable " << studyItemName << '/'
+                                        << dataLevelName << '/' << timeLevelName << '/'
+                                        << output->columns[v];
                             path << ".nodata";
                             if (!IO::File::CreateEmptyFile(path))
                             {
@@ -642,7 +650,8 @@ static bool WriteAggregates()
     return true;
 }
 
-int main(int argc, char* argv[])
+int
+main(int argc, char* argv[])
 {
     // locale
     InitializeDefaultLocale();

@@ -28,16 +28,18 @@
 #define SNPRINTF snprintf
 #endif
 
-void H2O2_J_ResoudreLeProblemeLineaire(DONNEES_MENSUELLES_ETENDUES& DonneesMensuelles,
-                                       int NumeroDeProbleme)
+void
+H2O2_J_ResoudreLeProblemeLineaire(DONNEES_MENSUELLES_ETENDUES& DonneesMensuelles,
+                                  int NumeroDeProbleme)
 {
     auto& ProblemeHydrauliqueEtendu = DonneesMensuelles.ProblemeHydrauliqueEtendu;
 
     auto& ProblemeLineaireEtenduPartieVariable = ProblemeHydrauliqueEtendu
-                                                   .ProblemeLineaireEtenduPartieVariable
-                                                     [NumeroDeProbleme];
+                                                         .ProblemeLineaireEtenduPartieVariable
+                                                                 [NumeroDeProbleme];
     auto& ProblemeLineaireEtenduPartieFixe = ProblemeHydrauliqueEtendu
-                                               .ProblemeLineaireEtenduPartieFixe[NumeroDeProbleme];
+                                                     .ProblemeLineaireEtenduPartieFixe
+                                                             [NumeroDeProbleme];
 
     PROBLEME_SPX* ProbSpx = ProblemeHydrauliqueEtendu.ProblemeSpx[NumeroDeProbleme];
     auto Probleme = std::make_unique<PROBLEME_SIMPLEXE>();
@@ -76,11 +78,11 @@ RESOLUTION:
     Probleme->NombreDeContraintes = ProblemeLineaireEtenduPartieFixe.NombreDeContraintes;
     Probleme->IndicesDebutDeLigne = ProblemeLineaireEtenduPartieFixe.IndicesDebutDeLigne.data();
     Probleme->NombreDeTermesDesLignes = ProblemeLineaireEtenduPartieFixe.NombreDeTermesDesLignes
-                                          .data();
+                                                .data();
     Probleme->IndicesColonnes = ProblemeLineaireEtenduPartieFixe.IndicesColonnes.data();
     Probleme->CoefficientsDeLaMatriceDesContraintes = ProblemeLineaireEtenduPartieFixe
-                                                        .CoefficientsDeLaMatriceDesContraintes
-                                                        .data();
+                                                              .CoefficientsDeLaMatriceDesContraintes
+                                                              .data();
     Probleme->Sens = ProblemeLineaireEtenduPartieFixe.Sens.data();
     Probleme->SecondMembre = ProblemeLineaireEtenduPartieVariable.SecondMembre.data();
 
@@ -91,7 +93,7 @@ RESOLUTION:
     Probleme->StrategieAntiDegenerescence = AGRESSIF;
 
     Probleme->PositionDeLaVariable = ProblemeLineaireEtenduPartieVariable.PositionDeLaVariable
-                                       .data();
+                                             .data();
     Probleme->NbVarDeBaseComplementaires = 0;
     Probleme->ComplementDeLaBase = ProblemeLineaireEtenduPartieVariable.ComplementDeLaBase.data();
 
@@ -101,7 +103,7 @@ RESOLUTION:
     Probleme->CoutMax = 0.0;
 
     Probleme->CoutsMarginauxDesContraintes = ProblemeLineaireEtenduPartieVariable
-                                               .CoutsMarginauxDesContraintes.data();
+                                                     .CoutsMarginauxDesContraintes.data();
     Probleme->CoutsReduits = ProblemeLineaireEtenduPartieVariable.CoutsReduits.data();
 
 #ifndef NDEBUG
@@ -128,8 +130,8 @@ RESOLUTION:
 
     ProblemeLineaireEtenduPartieVariable.ExistenceDUneSolution = Probleme->ExistenceDUneSolution;
 
-    if (ProblemeLineaireEtenduPartieVariable.ExistenceDUneSolution != OUI_SPX && premierPassage
-        && ProbSpx)
+    if (ProblemeLineaireEtenduPartieVariable.ExistenceDUneSolution != OUI_SPX && premierPassage &&
+        ProbSpx)
     {
         if (ProblemeLineaireEtenduPartieVariable.ExistenceDUneSolution != SPX_ERREUR_INTERNE)
         {
@@ -159,7 +161,7 @@ RESOLUTION:
         for (int Var = 0; Var < ProblemeLineaireEtenduPartieFixe.NombreDeVariables; Var++)
         {
             double* pt = ProblemeLineaireEtenduPartieVariable
-                           .AdresseOuPlacerLaValeurDesVariablesOptimisees[Var];
+                                 .AdresseOuPlacerLaValeurDesVariablesOptimisees[Var];
             if (pt)
             {
                 *pt = ProblemeLineaireEtenduPartieVariable.X[Var];

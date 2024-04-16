@@ -33,7 +33,8 @@ namespace Antares
 {
 namespace Data
 {
-void Study::importLogsToOutputFolder(Solver::IResultWriter& resultWriter) const
+void
+Study::importLogsToOutputFolder(Solver::IResultWriter& resultWriter) const
 {
     if (!logs.logfile())
     {

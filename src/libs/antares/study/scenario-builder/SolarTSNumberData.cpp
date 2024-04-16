@@ -28,7 +28,8 @@
 
 namespace Antares::Data::ScenarioBuilder
 {
-uint solarTSNumberData::get_tsGenCount(const Study& study) const
+uint
+solarTSNumberData::get_tsGenCount(const Study& study) const
 {
     // General data
     auto& parameters = study.parameters;
@@ -37,7 +38,8 @@ uint solarTSNumberData::get_tsGenCount(const Study& study) const
     return tsGenSolar ? parameters.nbTimeSeriesSolar : 0u;
 }
 
-bool solarTSNumberData::apply(Study& study)
+bool
+solarTSNumberData::apply(Study& study)
 {
     bool ret = true;
     CString<512, false> logprefix;

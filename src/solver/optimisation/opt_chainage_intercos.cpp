@@ -23,7 +23,8 @@
 #include "antares/solver/simulation/sim_extern_variables_globales.h"
 #include "antares/solver/simulation/simulation.h"
 
-void OPT_ChainagesDesIntercoPartantDUnNoeud(PROBLEME_HEBDO* problemeHebdo)
+void
+OPT_ChainagesDesIntercoPartantDUnNoeud(PROBLEME_HEBDO* problemeHebdo)
 {
     for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {

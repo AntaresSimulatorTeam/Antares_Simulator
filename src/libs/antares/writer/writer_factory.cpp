@@ -27,10 +27,11 @@
 
 namespace Antares::Solver
 {
-IResultWriter::Ptr resultWriterFactory(Antares::Data::ResultFormat fmt,
-                                       const YString& folderOutput,
-                                       std::shared_ptr<Yuni::Job::QueueService> qs,
-                                       Benchmarking::IDurationCollector& duration_collector)
+IResultWriter::Ptr
+resultWriterFactory(Antares::Data::ResultFormat fmt,
+                    const YString& folderOutput,
+                    std::shared_ptr<Yuni::Job::QueueService> qs,
+                    Benchmarking::IDurationCollector& duration_collector)
 {
     using namespace Antares::Data;
     switch (fmt)

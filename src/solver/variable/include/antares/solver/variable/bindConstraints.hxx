@@ -31,10 +31,11 @@
 namespace Antares::Solver::Variable
 {
 template<class NextT>
-void BindingConstraints<NextT>::buildSurveyReport(SurveyResults& results,
-                                                  int dataLevel,
-                                                  int fileLevel,
-                                                  int precision) const
+void
+BindingConstraints<NextT>::buildSurveyReport(SurveyResults& results,
+                                             int dataLevel,
+                                             int fileLevel,
+                                             int precision) const
 {
     if (bool bcDataLevel = dataLevel & Category::bindingConstraint; !bcDataLevel)
     {
@@ -50,11 +51,12 @@ void BindingConstraints<NextT>::buildSurveyReport(SurveyResults& results,
 }
 
 template<class NextT>
-void BindingConstraints<NextT>::buildAnnualSurveyReport(SurveyResults& results,
-                                                        int dataLevel,
-                                                        int fileLevel,
-                                                        int precision,
-                                                        uint numSpace) const
+void
+BindingConstraints<NextT>::buildAnnualSurveyReport(SurveyResults& results,
+                                                   int dataLevel,
+                                                   int fileLevel,
+                                                   int precision,
+                                                   uint numSpace) const
 {
     if (bool bcDataLevel = dataLevel & Category::bindingConstraint; !bcDataLevel)
     {
@@ -71,14 +73,16 @@ void BindingConstraints<NextT>::buildAnnualSurveyReport(SurveyResults& results,
 
 template<class NextT>
 template<class PredicateT>
-inline void BindingConstraints<NextT>::RetrieveVariableList(PredicateT& predicate)
+inline void
+BindingConstraints<NextT>::RetrieveVariableList(PredicateT& predicate)
 {
     NextType::RetrieveVariableList(predicate);
 }
 
 template<class NextT>
 template<class I>
-inline void BindingConstraints<NextT>::provideInformations(I& infos)
+inline void
+BindingConstraints<NextT>::provideInformations(I& infos)
 {
     // Begining of the node
     if (VCardType::nodeDepthForGUI)
@@ -99,10 +103,11 @@ inline void BindingConstraints<NextT>::provideInformations(I& infos)
 }
 
 template<class NextT>
-void BindingConstraints<NextT>::initializeFromStudy(Data::Study& study)
+void
+BindingConstraints<NextT>::initializeFromStudy(Data::Study& study)
 {
     const std::vector<std::shared_ptr<Data::BindingConstraint>>
-      inequalityByPtr = study.bindingConstraints.getPtrForInequalityBindingConstraints();
+            inequalityByPtr = study.bindingConstraints.getPtrForInequalityBindingConstraints();
 
     // The total number of inequality binding constraints count
     // (we don't count BCs with equality sign)
@@ -145,8 +150,9 @@ void BindingConstraints<NextT>::initializeFromStudy(Data::Study& study)
 }
 
 template<class NextT>
-void BindingConstraints<NextT>::computeSummary(std::map<unsigned int, unsigned int>& numSpaceToYear,
-                                               unsigned int nbYearsForCurrentSummary)
+void
+BindingConstraints<NextT>::computeSummary(std::map<unsigned int, unsigned int>& numSpaceToYear,
+                                          unsigned int nbYearsForCurrentSummary)
 {
     for (uint i = 0; i != pBCcount; ++i)
     {
@@ -156,7 +162,8 @@ void BindingConstraints<NextT>::computeSummary(std::map<unsigned int, unsigned i
 }
 
 template<class NextT>
-void BindingConstraints<NextT>::yearBegin(uint year, uint numSpace)
+void
+BindingConstraints<NextT>::yearBegin(uint year, uint numSpace)
 {
     // Broadcast to all binding constraints
     for (uint i = 0; i != pBCcount; ++i)
@@ -166,7 +173,8 @@ void BindingConstraints<NextT>::yearBegin(uint year, uint numSpace)
 }
 
 template<class NextT>
-void BindingConstraints<NextT>::yearEnd(uint year, uint numSpace)
+void
+BindingConstraints<NextT>::yearEnd(uint year, uint numSpace)
 {
     // Broadcast to all binding constraints
     for (uint i = 0; i != pBCcount; ++i)
@@ -176,7 +184,8 @@ void BindingConstraints<NextT>::yearEnd(uint year, uint numSpace)
 }
 
 template<class NextT>
-void BindingConstraints<NextT>::weekBegin(State& state)
+void
+BindingConstraints<NextT>::weekBegin(State& state)
 {
     for (uint i = 0; i != pBCcount; ++i)
     {
@@ -185,7 +194,8 @@ void BindingConstraints<NextT>::weekBegin(State& state)
 }
 
 template<class NextT>
-void BindingConstraints<NextT>::hourBegin(uint hourInTheYear)
+void
+BindingConstraints<NextT>::hourBegin(uint hourInTheYear)
 {
     for (uint i = 0; i != pBCcount; ++i)
     {
@@ -194,7 +204,8 @@ void BindingConstraints<NextT>::hourBegin(uint hourInTheYear)
 }
 
 template<class NextT>
-void BindingConstraints<NextT>::hourEnd(State& state, uint hourInTheYear)
+void
+BindingConstraints<NextT>::hourEnd(State& state, uint hourInTheYear)
 {
     for (uint i = 0; i != pBCcount; ++i)
     {

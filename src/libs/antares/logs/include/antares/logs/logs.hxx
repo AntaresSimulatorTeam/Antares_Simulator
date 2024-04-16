@@ -26,7 +26,8 @@ extern "C"
 {
 #endif
 
-inline int LogHasErrors(void)
+inline int
+LogHasErrors(void)
 {
     return (LogErrorCount() or LogWarningCount());
 }

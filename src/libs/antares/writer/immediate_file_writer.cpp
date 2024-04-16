@@ -30,7 +30,8 @@
 // Don't complain if directories already exist
 // Example. Assuming /root exists, `createDirectoryHierarchy("/root", "a/b/c");`
 // Creates /root/a, /root/a/b, /root/a/b/c
-static bool createDirectory(const Yuni::String& path)
+static bool
+createDirectory(const Yuni::String& path)
 {
     using namespace Yuni;
     if (!IO::Directory::Exists(path))
@@ -46,7 +47,8 @@ static bool createDirectory(const Yuni::String& path)
     return true;
 }
 
-static bool createDirectoryHierarchy(const Yuni::String& root, const Yuni::String& toCreate)
+static bool
+createDirectoryHierarchy(const Yuni::String& root, const Yuni::String& toCreate)
 {
     using namespace Yuni;
     String::Vector dirs;
@@ -83,17 +85,17 @@ ImmediateFileResultWriter::ImmediateFileResultWriter(const char* folderOutput):
 
 ImmediateFileResultWriter::~ImmediateFileResultWriter() = default;
 
-static bool prepareDirectoryHierarchy(const YString& root,
-                                      const std::string& entryPath,
-                                      Yuni::String& output)
+static bool
+prepareDirectoryHierarchy(const YString& root, const std::string& entryPath, Yuni::String& output)
 {
     output << root << Yuni::IO::Separator << entryPath.c_str();
     return createDirectoryHierarchy(root, entryPath.c_str());
 }
 
 // Write to file immediately, creating directories if needed
-void ImmediateFileResultWriter::addEntryFromBuffer(const std::string& entryPath,
-                                                   Yuni::Clob& entryContent)
+void
+ImmediateFileResultWriter::addEntryFromBuffer(const std::string& entryPath,
+                                              Yuni::Clob& entryContent)
 {
     Yuni::String output;
     if (prepareDirectoryHierarchy(pOutputFolder, entryPath, output))
@@ -103,8 +105,9 @@ void ImmediateFileResultWriter::addEntryFromBuffer(const std::string& entryPath,
 }
 
 // Write to file immediately, creating directories if needed
-void ImmediateFileResultWriter::addEntryFromBuffer(const std::string& entryPath,
-                                                   std::string& entryContent)
+void
+ImmediateFileResultWriter::addEntryFromBuffer(const std::string& entryPath,
+                                              std::string& entryContent)
 {
     Yuni::String output;
     if (prepareDirectoryHierarchy(pOutputFolder, entryPath, output))
@@ -113,8 +116,9 @@ void ImmediateFileResultWriter::addEntryFromBuffer(const std::string& entryPath,
     }
 }
 
-void ImmediateFileResultWriter::addEntryFromFile(const std::string& entryPath,
-                                                 const std::string& filePath)
+void
+ImmediateFileResultWriter::addEntryFromFile(const std::string& entryPath,
+                                            const std::string& filePath)
 {
     Yuni::String fullPath;
     if (!prepareDirectoryHierarchy(pOutputFolder, entryPath, fullPath))
@@ -142,42 +146,51 @@ void ImmediateFileResultWriter::addEntryFromFile(const std::string& entryPath,
     }
 }
 
-void ImmediateFileResultWriter::flush()
+void
+ImmediateFileResultWriter::flush()
 {
 }
 
-bool ImmediateFileResultWriter::needsTheJobQueue() const
+bool
+ImmediateFileResultWriter::needsTheJobQueue() const
 {
     return false;
 }
 
-void ImmediateFileResultWriter::finalize(bool /*verbose*/)
+void
+ImmediateFileResultWriter::finalize(bool /*verbose*/)
 {
     // Do nothing
 }
 
-void NullResultWriter::addEntryFromBuffer(const std::string&, Yuni::Clob&)
+void
+NullResultWriter::addEntryFromBuffer(const std::string&, Yuni::Clob&)
 {
 }
 
-void NullResultWriter::addEntryFromBuffer(const std::string&, std::string&)
+void
+NullResultWriter::addEntryFromBuffer(const std::string&, std::string&)
 {
 }
 
-void NullResultWriter::addEntryFromFile(const std::string&, const std::string&)
+void
+NullResultWriter::addEntryFromFile(const std::string&, const std::string&)
 {
 }
 
-void NullResultWriter::flush()
+void
+NullResultWriter::flush()
 {
 }
 
-bool NullResultWriter::needsTheJobQueue() const
+bool
+NullResultWriter::needsTheJobQueue() const
 {
     return false;
 }
 
-void NullResultWriter::finalize(bool)
+void
+NullResultWriter::finalize(bool)
 {
 }
 } // namespace Solver

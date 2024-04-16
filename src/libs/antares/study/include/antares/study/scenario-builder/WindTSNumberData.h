@@ -33,7 +33,8 @@ public:
     uint get_tsGenCount(const Study& study) const override;
 };
 
-inline CString<512, false> windTSNumberData::get_prefix() const
+inline CString<512, false>
+windTSNumberData::get_prefix() const
 {
     return "w,";
 }

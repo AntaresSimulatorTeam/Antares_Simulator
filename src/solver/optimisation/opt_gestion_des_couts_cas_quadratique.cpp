@@ -26,7 +26,8 @@
 
 #include "variables/VariableManagerUtils.h"
 
-void OPT_InitialiserLesCoutsQuadratiques(PROBLEME_HEBDO* problemeHebdo, int PdtHebdo)
+void
+OPT_InitialiserLesCoutsQuadratiques(PROBLEME_HEBDO* problemeHebdo, int PdtHebdo)
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
@@ -34,7 +35,7 @@ void OPT_InitialiserLesCoutsQuadratiques(PROBLEME_HEBDO* problemeHebdo, int PdtH
     auto variableManager = VariableManagerFromProblemHebdo(problemeHebdo);
 
     const VALEURS_DE_NTC_ET_RESISTANCES& ValeursDeResistances = problemeHebdo
-                                                                  ->ValeursDeNTC[PdtHebdo];
+                                                                        ->ValeursDeNTC[PdtHebdo];
 
     for (uint32_t interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
     {
@@ -42,7 +43,7 @@ void OPT_InitialiserLesCoutsQuadratiques(PROBLEME_HEBDO* problemeHebdo, int PdtH
         if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
         {
             ProblemeAResoudre->CoutQuadratique[var] = ValeursDeResistances
-                                                        .ResistanceApparente[interco];
+                                                              .ResistanceApparente[interco];
         }
     }
 }

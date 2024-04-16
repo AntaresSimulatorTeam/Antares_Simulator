@@ -52,12 +52,12 @@ struct VCardFlowLinear
     }
 
     //! The expecte results
-    typedef Results<R::AllYears::Average< // The average values throughout all years
-      R::AllYears::StdDeviation<          // The standard deviation values throughout all years
-        R::AllYears::Min<                 // The minimum values throughout all years
-          R::AllYears::Max<               // The maximum values throughout all years
-            >>>>>
-      ResultsType;
+    typedef Results<R::AllYears::Average<     // The average values throughout all years
+            R::AllYears::StdDeviation<        // The standard deviation values throughout all years
+                    R::AllYears::Min<         // The minimum values throughout all years
+                            R::AllYears::Max< // The maximum values throughout all years
+                                    >>>>>
+            ResultsType;
 
     enum
     {
@@ -118,11 +118,11 @@ public:
     {
         enum
         {
-            count = ((VCardType::categoryDataLevel & CDataLevel
-                      && VCardType::categoryFileLevel & CFile)
-                       ? (NextType::template Statistics<CDataLevel, CFile>::count
-                          + VCardType::columnCount * ResultsType::count)
-                       : NextType::template Statistics<CDataLevel, CFile>::count),
+            count = ((VCardType::categoryDataLevel & CDataLevel &&
+                      VCardType::categoryFileLevel & CFile)
+                             ? (NextType::template Statistics<CDataLevel, CFile>::count +
+                                VCardType::columnCount * ResultsType::count)
+                             : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
 
@@ -230,8 +230,8 @@ public:
     void hourForEachLink(State& state, unsigned int numSpace)
     {
         // Flow assessed over all MC years (linear)
-        pValuesForTheCurrentYear[numSpace].hour[state.hourInTheYear] += state.ntc.ValeurDuFlux
-                                                                          [state.link->index];
+        pValuesForTheCurrentYear[numSpace]
+                .hour[state.hourInTheYear] += state.ntc.ValeurDuFlux[state.link->index];
         // Next item in the list
         NextType::hourForEachLink(state, numSpace);
     }
@@ -243,11 +243,13 @@ public:
             if (digestLevel & Category::digestFlowLinear)
             {
                 results.data.matrix
-                  .entry[results.data.link->from->index][results.data.link->with->index]
-                  = AncestorType::pResults.avgdata.allYears;
+                        .entry[results.data.link->from->index]
+                              [results.data.link->with->index] = AncestorType::pResults.avgdata
+                                                                         .allYears;
                 results.data.matrix
-                  .entry[results.data.link->with->index][results.data.link->from->index]
-                  = -AncestorType::pResults.avgdata.allYears;
+                        .entry[results.data.link->with->index]
+                              [results.data.link->from->index] = -AncestorType::pResults.avgdata
+                                                                          .allYears;
             }
         }
 
@@ -255,9 +257,8 @@ public:
         NextType::buildDigest(results, digestLevel, dataLevel);
     }
 
-    Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
-      uint,
-      uint numSpace) const
+    Antares::Memory::Stored<double>::ConstReturnType
+    retrieveRawHourlyValuesForCurrentYear(uint, uint numSpace) const
     {
         return pValuesForTheCurrentYear[numSpace].hour;
     }
@@ -276,7 +277,7 @@ public:
             results.variableCaption = VCardType::Caption();
             results.variableUnit = VCardType::Unit();
             pValuesForTheCurrentYear[numSpace]
-              .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
+                    .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
         }
     }
 

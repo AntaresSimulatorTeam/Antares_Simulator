@@ -27,42 +27,50 @@ namespace Data
 {
 namespace ScenarioBuilder
 {
-inline uint Sets::size() const
+inline uint
+Sets::size() const
 {
     return (uint)pMap.size();
 }
 
-inline bool Sets::empty() const
+inline bool
+Sets::empty() const
 {
     return pMap.empty();
 }
 
-inline Sets::iterator Sets::begin()
+inline Sets::iterator
+Sets::begin()
 {
     return pMap.begin();
 }
 
-inline Sets::const_iterator Sets::begin() const
+inline Sets::const_iterator
+Sets::begin() const
 {
     return pMap.begin();
 }
 
-inline Sets::iterator Sets::end()
+inline Sets::iterator
+Sets::end()
 {
     return pMap.end();
 }
 
-inline Sets::const_iterator Sets::end() const
+inline Sets::const_iterator
+Sets::end() const
 {
     return pMap.end();
 }
 
-inline bool Sets::exists(const RulesScenarioName& lname) const
+inline bool
+Sets::exists(const RulesScenarioName& lname) const
 {
     return pMap.find(lname) != pMap.end();
 }
 
-inline Rules::Ptr Sets::find(const RulesScenarioName& lname) const
+inline Rules::Ptr
+Sets::find(const RulesScenarioName& lname) const
 {
     using namespace Yuni;
     const_iterator i = pMap.find(lname);
@@ -74,14 +82,16 @@ inline Rules::Ptr Sets::find(const RulesScenarioName& lname) const
 }
 
 template<class StringT>
-inline bool Sets::saveToINIFile(const StringT& filename)
+inline bool
+Sets::saveToINIFile(const StringT& filename)
 {
     const AnyString adapter(filename);
     return internalSaveToIniFile(adapter);
 }
 
 template<class StringT>
-bool Sets::loadFromINIFile(const StringT& filename)
+bool
+Sets::loadFromINIFile(const StringT& filename)
 {
     // If the source code below is changed, please change it in loadFromStudy too
     const AnyString adapter(filename);

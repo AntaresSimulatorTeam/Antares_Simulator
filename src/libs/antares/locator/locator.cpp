@@ -37,7 +37,8 @@ using namespace Yuni;
 
 namespace Antares::Solver
 {
-bool FindLocation(String& location)
+bool
+FindLocation(String& location)
 {
     // reset
     location.clear();
@@ -85,7 +86,8 @@ bool FindLocation(String& location)
     return false;
 }
 
-bool FindAnalyzerLocation(String& location)
+bool
+FindAnalyzerLocation(String& location)
 {
     // reset
     location.clear();
@@ -122,7 +124,8 @@ bool FindAnalyzerLocation(String& location)
     return searchpaths.find(location, "analyzer");
 }
 
-bool FindConstraintsBuilderLocation(String& location)
+bool
+FindConstraintsBuilderLocation(String& location)
 {
     // reset
     location.clear();
@@ -161,7 +164,8 @@ bool FindConstraintsBuilderLocation(String& location)
     return searchpaths.find(location, "constraints-builder");
 }
 
-bool FindYearByYearAggregator(Yuni::String& location)
+bool
+FindYearByYearAggregator(Yuni::String& location)
 {
     // reset
     location.clear();
@@ -182,7 +186,7 @@ bool FindYearByYearAggregator(Yuni::String& location)
         searchpaths.directories.push_back((s = root) << "\\Resources\\tools");
 #ifdef NDEBUG
         searchpaths.directories.push_back(
-          (s = root) << "\\..\\..\\..\\tools\\yby-aggregator\\Release"); // msvc
+                (s = root) << "\\..\\..\\..\\tools\\yby-aggregator\\Release"); // msvc
 #else
         searchpaths.directories.push_back((s = root)
                                           << "\\..\\..\\..\\tools\\yby-aggregator\\Debug"); // msvc

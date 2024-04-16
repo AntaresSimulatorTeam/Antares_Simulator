@@ -32,7 +32,7 @@
 namespace Antares::Solver::Simulation
 {
 BindingConstraintsTimeSeriesNumbersWriter::BindingConstraintsTimeSeriesNumbersWriter(
-  IResultWriter& writer):
+        IResultWriter& writer):
     writer_(writer)
 {
 }
@@ -49,14 +49,15 @@ struct TSNumbersPredicate
 } // anonymous namespace
 
 // TODO : remove duplication
-static void genericStoreTimeseriesNumbers(Solver::IResultWriter& writer,
-                                          const Matrix<uint32_t>& timeseriesNumbers,
-                                          const std::string& id,
-                                          const std::string& directory)
+static void
+genericStoreTimeseriesNumbers(Solver::IResultWriter& writer,
+                              const Matrix<uint32_t>& timeseriesNumbers,
+                              const std::string& id,
+                              const std::string& directory)
 {
     TSNumbersPredicate predicate;
-    std::filesystem::path path = std::filesystem::path() / "ts-numbers" / directory.c_str()
-                                 / id.c_str();
+    std::filesystem::path path = std::filesystem::path() / "ts-numbers" / directory.c_str() /
+                                 id.c_str();
     path.replace_extension("txt");
 
     std::string buffer;
@@ -69,8 +70,9 @@ static void genericStoreTimeseriesNumbers(Solver::IResultWriter& writer,
     writer.addEntryFromBuffer(path.string(), buffer);
 }
 
-void BindingConstraintsTimeSeriesNumbersWriter::write(
-  const Data::BindingConstraintGroupRepository& bindingConstraintGroupRepository)
+void
+BindingConstraintsTimeSeriesNumbersWriter::write(
+        const Data::BindingConstraintGroupRepository& bindingConstraintGroupRepository)
 {
     for (const auto& group: bindingConstraintGroupRepository)
     {

@@ -21,7 +21,8 @@
 
 #include "antares/solver/optimisation/QuadraticProblemMatrix.h"
 
-void QuadraticProblemMatrix::Run()
+void
+QuadraticProblemMatrix::Run()
 {
     InitializeProblemAResoudreCounters();
 

@@ -35,29 +35,34 @@ Cluster::Cluster(Area* parent):
 {
 }
 
-const ClusterName& Cluster::group() const
+const ClusterName&
+Cluster::group() const
 {
     return pGroup;
 }
 
-const ClusterName& Cluster::name() const
+const ClusterName&
+Cluster::name() const
 {
     return pName;
 }
 
-const ClusterName& Cluster::id() const
+const ClusterName&
+Cluster::id() const
 {
     return pID;
 }
 
-Yuni::String Cluster::getFullName() const
+Yuni::String
+Cluster::getFullName() const
 {
     Yuni::String s;
     s << parentArea->name << "." << pID;
     return s;
 }
 
-void Cluster::setName(const AnyString& newname)
+void
+Cluster::setName(const AnyString& newname)
 {
     pName = newname;
     pID.clear();
@@ -66,7 +71,8 @@ void Cluster::setName(const AnyString& newname)
 
 #define SEP Yuni::IO::Separator
 
-bool Cluster::saveDataSeriesToFolder(const AnyString& folder) const
+bool
+Cluster::saveDataSeriesToFolder(const AnyString& folder) const
 {
     if (folder.empty())
     {
@@ -84,7 +90,8 @@ bool Cluster::saveDataSeriesToFolder(const AnyString& folder) const
     return series.timeSeries.saveToCSVFile(buffer, precision());
 }
 
-bool Cluster::loadDataSeriesFromFolder(Study& s, const AnyString& folder)
+bool
+Cluster::loadDataSeriesFromFolder(Study& s, const AnyString& folder)
 {
     if (folder.empty())
     {
@@ -110,7 +117,8 @@ bool Cluster::loadDataSeriesFromFolder(Study& s, const AnyString& folder)
 
 #undef SEP
 
-void Cluster::invalidateArea()
+void
+Cluster::invalidateArea()
 {
     if (parentArea)
     {
@@ -118,12 +126,14 @@ void Cluster::invalidateArea()
     }
 }
 
-bool Cluster::isVisibleOnLayer(const size_t& layerID) const
+bool
+Cluster::isVisibleOnLayer(const size_t& layerID) const
 {
     return parentArea ? parentArea->isVisibleOnLayer(layerID) : false;
 }
 
-void Cluster::reset()
+void
+Cluster::reset()
 {
     unitCount = 0;
     enabled = true;
@@ -132,7 +142,8 @@ void Cluster::reset()
     series.timeSeries.reset(1, HOURS_PER_YEAR);
 }
 
-bool CompareClusterName::operator()(const Cluster* s1, const Cluster* s2) const
+bool
+CompareClusterName::operator()(const Cluster* s1, const Cluster* s2) const
 {
     return (s1->getFullName() < s2->getFullName());
 }

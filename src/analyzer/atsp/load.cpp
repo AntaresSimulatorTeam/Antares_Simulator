@@ -29,7 +29,8 @@ using namespace Yuni;
 
 namespace Antares
 {
-bool ATSP::loadFromINIFile(const String& filename)
+bool
+ATSP::loadFromINIFile(const String& filename)
 {
     pArea.clear();
     pStudyFolder.clear();
@@ -152,8 +153,8 @@ bool ATSP::loadFromINIFile(const String& filename)
                         pLimitMemory = value.to<size_t>();
                         if (pLimitMemory > 16384)
                         {
-                            logs.warning()
-                              << "The limit of the memory cache size has been shrinked to 16Go";
+                            logs.warning() << "The limit of the memory cache size has been "
+                                              "shrinked to 16Go";
                             pLimitMemory = 16384u; // splitted into 2 parts to avoid constant out of
                                                    // range on Visual Studio
                             pLimitMemory *= 1024u * 1024u;
@@ -282,14 +283,14 @@ bool ATSP::loadFromINIFile(const String& filename)
         // Checking  0 < AUM < AUC < 1
         if (AUC <= 0. or AUC >= 1.)
         {
-            logs.error()
-              << "The short-term auto-correlation adjustment must be strictly between 0 and 1";
+            logs.error() << "The short-term auto-correlation adjustment must be strictly between 0 "
+                            "and 1";
             return false;
         }
         if (AUM <= 0. or AUM >= 1.)
         {
-            logs.error()
-              << "The medium-term auto-correlation adjustment must be strictly between 0 and 1";
+            logs.error() << "The medium-term auto-correlation adjustment must be strictly between "
+                            "0 and 1";
             return false;
         }
         if (AUC < AUM)
@@ -304,7 +305,8 @@ bool ATSP::loadFromINIFile(const String& filename)
     return false;
 }
 
-bool ATSP::checkStudyVersion() const
+bool
+ATSP::checkStudyVersion() const
 {
     auto v = Data::StudyHeader::tryToFindTheVersion(pStudyFolder);
     if (v == Data::StudyVersion::unknown())

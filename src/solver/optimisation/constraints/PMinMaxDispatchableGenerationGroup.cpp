@@ -25,7 +25,8 @@
  * @brief build P{min,max}DispatchableGeneration constraints with
  * respect to default order
  */
-void PMinMaxDispatchableGenerationGroup::BuildConstraints()
+void
+PMinMaxDispatchableGenerationGroup::BuildConstraints()
 {
     auto data = GetStartUpCostsDataFromProblemHebdo();
     PMaxDispatchableGeneration pMaxDispatchableGeneration(builder_, data);
@@ -33,7 +34,7 @@ void PMinMaxDispatchableGenerationGroup::BuildConstraints()
     for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)
     {
         const PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo_
-                                                              ->PaliersThermiquesDuPays[pays];
+                                                                    ->PaliersThermiquesDuPays[pays];
         for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
         {
             for (int pdt = 0; pdt < problemeHebdo_->NombreDePasDeTempsPourUneOptimisation; pdt++)

@@ -25,7 +25,8 @@
 #include "antares/solver/simulation/sim_extern_variables_globales.h"
 #include "antares/solver/simulation/simulation.h"
 
-void OPT_DecompteDesVariablesEtDesContraintesCoutsDeDemarrage(PROBLEME_HEBDO* problemeHebdo)
+void
+OPT_DecompteDesVariablesEtDesContraintesCoutsDeDemarrage(PROBLEME_HEBDO* problemeHebdo)
 {
     if (!problemeHebdo->OptimisationAvecCoutsDeDemarrage)
     {

@@ -33,7 +33,8 @@
 namespace Antares::Data::ShortTermStorage
 {
 
-bool Series::loadFromFolder(const std::string& folder)
+bool
+Series::loadFromFolder(const std::string& folder)
 {
     bool ret = true;
 
@@ -46,7 +47,8 @@ bool Series::loadFromFolder(const std::string& folder)
     return ret;
 }
 
-bool loadFile(const std::string& path, std::vector<double>& vect)
+bool
+loadFile(const std::string& path, std::vector<double>& vect)
 {
     logs.debug() << "  :: loading file " << path;
 
@@ -97,7 +99,8 @@ bool loadFile(const std::string& path, std::vector<double>& vect)
     return true;
 }
 
-void Series::fillDefaultSeriesIfEmpty()
+void
+Series::fillDefaultSeriesIfEmpty()
 {
     auto fillIfEmpty = [](std::vector<double>& v, double value)
     {
@@ -114,7 +117,8 @@ void Series::fillDefaultSeriesIfEmpty()
     fillIfEmpty(upperRuleCurve, 1.0);
 }
 
-bool Series::saveToFolder(const std::string& folder) const
+bool
+Series::saveToFolder(const std::string& folder) const
 {
     logs.debug() << "Saving series into folder: " << folder;
     if (!Yuni::IO::Directory::Create(folder))
@@ -137,7 +141,8 @@ bool Series::saveToFolder(const std::string& folder) const
     return ret;
 }
 
-bool writeVectorToFile(const std::string& path, const std::vector<double>& vect)
+bool
+writeVectorToFile(const std::string& path, const std::vector<double>& vect)
 {
     try
     {
@@ -158,13 +163,15 @@ bool writeVectorToFile(const std::string& path, const std::vector<double>& vect)
     return true;
 }
 
-bool Series::validate() const
+bool
+Series::validate() const
 {
-    return validateSizes() && validateMaxInjection() && validateMaxWithdrawal()
-           && validateRuleCurves();
+    return validateSizes() && validateMaxInjection() && validateMaxWithdrawal() &&
+           validateRuleCurves();
 }
 
-static bool checkVectBetweenZeroOne(const std::vector<double>& v, const std::string& name)
+static bool
+checkVectBetweenZeroOne(const std::vector<double>& v, const std::string& name)
 {
     if (!std::all_of(v.begin(), v.end(), [](double d) { return (d >= 0.0 && d <= 1.0); }))
     {
@@ -174,11 +181,12 @@ static bool checkVectBetweenZeroOne(const std::vector<double>& v, const std::str
     return true;
 }
 
-bool Series::validateSizes() const
+bool
+Series::validateSizes() const
 {
-    if (maxInjectionModulation.size() != HOURS_PER_YEAR
-        || maxWithdrawalModulation.size() != HOURS_PER_YEAR || inflows.size() != HOURS_PER_YEAR
-        || lowerRuleCurve.size() != HOURS_PER_YEAR || upperRuleCurve.size() != HOURS_PER_YEAR)
+    if (maxInjectionModulation.size() != HOURS_PER_YEAR ||
+        maxWithdrawalModulation.size() != HOURS_PER_YEAR || inflows.size() != HOURS_PER_YEAR ||
+        lowerRuleCurve.size() != HOURS_PER_YEAR || upperRuleCurve.size() != HOURS_PER_YEAR)
     {
         logs.warning() << "Size of series for short term storage is wrong";
         return false;
@@ -186,17 +194,20 @@ bool Series::validateSizes() const
     return true;
 }
 
-bool Series::validateMaxInjection() const
+bool
+Series::validateMaxInjection() const
 {
     return checkVectBetweenZeroOne(maxInjectionModulation, "PMAX injection");
 }
 
-bool Series::validateMaxWithdrawal() const
+bool
+Series::validateMaxWithdrawal() const
 {
     return checkVectBetweenZeroOne(maxWithdrawalModulation, "PMAX withdrawal");
 }
 
-bool Series::validateRuleCurves() const
+bool
+Series::validateRuleCurves() const
 {
     if (!validateUpperRuleCurve() || !validateLowerRuleCurve())
     {
@@ -214,12 +225,14 @@ bool Series::validateRuleCurves() const
     return true;
 }
 
-bool Series::validateUpperRuleCurve() const
+bool
+Series::validateUpperRuleCurve() const
 {
     return checkVectBetweenZeroOne(upperRuleCurve, "upper rule curve");
 }
 
-bool Series::validateLowerRuleCurve() const
+bool
+Series::validateLowerRuleCurve() const
 {
     return checkVectBetweenZeroOne(maxInjectionModulation, "lower rule curve");
 }

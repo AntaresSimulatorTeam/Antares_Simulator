@@ -53,9 +53,8 @@ std::list<E> enumList();
 } // namespace Enum
 
 template<typename E>
-inline typename std::enable_if<std::is_enum<E>::value, std::ostream&>::type operator<<(
-  std::ostream& stream,
-  const E& value)
+inline typename std::enable_if<std::is_enum<E>::value, std::ostream&>::type
+operator<<(std::ostream& stream, const E& value)
 {
     stream << Data::Enum::toString(value);
     return stream;

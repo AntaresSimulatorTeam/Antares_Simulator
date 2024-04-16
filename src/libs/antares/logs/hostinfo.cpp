@@ -30,7 +30,8 @@
 using namespace Yuni;
 using namespace Antares;
 
-void WriteHostInfoIntoLogs()
+void
+WriteHostInfoIntoLogs()
 {
 #ifdef YUNI_OS_32
     logs.info() << "  :: built for 32-bit architectures, "
@@ -46,7 +47,8 @@ void WriteHostInfoIntoLogs()
     logs.info() << "  :: hostname = " << buffer;
 }
 
-void AppendHostName(Yuni::String& out)
+void
+AppendHostName(Yuni::String& out)
 {
     InternalAppendHostname(out);
 }

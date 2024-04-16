@@ -28,7 +28,8 @@
 #include "pi_constantes_externes.h"
 #include "variables/VariableManagerUtils.h"
 
-void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique(PROBLEME_HEBDO* problemeHebdo)
+void
+OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique(PROBLEME_HEBDO* problemeHebdo)
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
     assert(ProblemeAResoudre != NULL);

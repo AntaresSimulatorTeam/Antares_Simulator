@@ -49,12 +49,14 @@ Data::RenewableCluster::RenewableCluster(Area* parent):
     assert(parent and "A parent for a renewable dispatchable cluster can not be null");
 }
 
-uint RenewableCluster::groupId() const
+uint
+RenewableCluster::groupId() const
 {
     return groupID;
 }
 
-void Data::RenewableCluster::copyFrom(const RenewableCluster& cluster)
+void
+Data::RenewableCluster::copyFrom(const RenewableCluster& cluster)
 {
     // Note: In this method, only the data can be copied (and not the name or
     //   the ID for example)
@@ -87,17 +89,18 @@ void Data::RenewableCluster::copyFrom(const RenewableCluster& cluster)
 }
 
 const std::map<RenewableCluster::RenewableGroup, const char*> groupToName = {
-  {RenewableCluster::thermalSolar, "solar thermal"},
-  {RenewableCluster::PVSolar, "solar pv"},
-  {RenewableCluster::rooftopSolar, "solar rooftop"},
-  {RenewableCluster::windOnShore, "wind onshore"},
-  {RenewableCluster::windOffShore, "wind offshore"},
-  {RenewableCluster::renewableOther1, "other res 1"},
-  {RenewableCluster::renewableOther2, "other res 2"},
-  {RenewableCluster::renewableOther3, "other res 3"},
-  {RenewableCluster::renewableOther4, "other res 4"}};
+        {RenewableCluster::thermalSolar, "solar thermal"},
+        {RenewableCluster::PVSolar, "solar pv"},
+        {RenewableCluster::rooftopSolar, "solar rooftop"},
+        {RenewableCluster::windOnShore, "wind onshore"},
+        {RenewableCluster::windOffShore, "wind offshore"},
+        {RenewableCluster::renewableOther1, "other res 1"},
+        {RenewableCluster::renewableOther2, "other res 2"},
+        {RenewableCluster::renewableOther3, "other res 3"},
+        {RenewableCluster::renewableOther4, "other res 4"}};
 
-void Data::RenewableCluster::setGroup(Data::ClusterName newgrp)
+void
+Data::RenewableCluster::setGroup(Data::ClusterName newgrp)
 {
     if (newgrp.empty())
     {
@@ -121,22 +124,26 @@ void Data::RenewableCluster::setGroup(Data::ClusterName newgrp)
     groupID = renewableOther1;
 }
 
-bool Data::RenewableCluster::forceReload(bool reload) const
+bool
+Data::RenewableCluster::forceReload(bool reload) const
 {
     return series.forceReload(reload);
 }
 
-void Data::RenewableCluster::markAsModified() const
+void
+Data::RenewableCluster::markAsModified() const
 {
     series.markAsModified();
 }
 
-void Data::RenewableCluster::reset()
+void
+Data::RenewableCluster::reset()
 {
     Cluster::reset();
 }
 
-bool Data::RenewableCluster::integrityCheck()
+bool
+Data::RenewableCluster::integrityCheck()
 {
     if (not parentArea)
     {
@@ -156,7 +163,8 @@ bool Data::RenewableCluster::integrityCheck()
     return ret;
 }
 
-bool Data::RenewableCluster::setTimeSeriesModeFromString(const YString& value)
+bool
+Data::RenewableCluster::setTimeSeriesModeFromString(const YString& value)
 {
     if (value == "power-generation")
     {
@@ -171,7 +179,8 @@ bool Data::RenewableCluster::setTimeSeriesModeFromString(const YString& value)
     return false;
 }
 
-YString Data::RenewableCluster::getTimeSeriesModeAsString() const
+YString
+Data::RenewableCluster::getTimeSeriesModeAsString() const
 {
     switch (tsMode)
     {
@@ -183,7 +192,8 @@ YString Data::RenewableCluster::getTimeSeriesModeAsString() const
     return "unknown";
 }
 
-double RenewableCluster::valueAtTimeStep(uint year, uint hourInYear) const
+double
+RenewableCluster::valueAtTimeStep(uint year, uint hourInYear) const
 {
     if (!enabled)
     {
@@ -201,14 +211,16 @@ double RenewableCluster::valueAtTimeStep(uint year, uint hourInYear) const
     return 0.;
 }
 
-uint64_t RenewableCluster::memoryUsage() const
+uint64_t
+RenewableCluster::memoryUsage() const
 {
     uint64_t amount = sizeof(RenewableCluster);
     amount += series.memoryUsage();
     return amount;
 }
 
-unsigned int RenewableCluster::precision() const
+unsigned int
+RenewableCluster::precision() const
 {
     return 4;
 }

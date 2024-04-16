@@ -165,13 +165,13 @@ public:
                                    pEdgesList.end(),
                                    [&u, &v](const EdgeP& edgeP) -> bool
                                    {
-                                       if (edgeP->getOrigin()->getName() == u
-                                           && edgeP->getDestination()->getName() == v)
+                                       if (edgeP->getOrigin()->getName() == u &&
+                                           edgeP->getDestination()->getName() == v)
                                        {
                                            return true;
                                        }
-                                       if (edgeP->getDestination()->getName() == u
-                                           && edgeP->getOrigin()->getName() == v)
+                                       if (edgeP->getDestination()->getName() == u &&
+                                           edgeP->getOrigin()->getName() == v)
                                        {
                                            return true;
                                        }
@@ -194,13 +194,13 @@ public:
                                    pMinSpanningTree.end(),
                                    [&u, &v](const EdgeP& edgeP) -> bool
                                    {
-                                       if (edgeP->getOrigin()->getName() == u
-                                           && edgeP->getDestination()->getName() == v)
+                                       if (edgeP->getOrigin()->getName() == u &&
+                                           edgeP->getDestination()->getName() == v)
                                        {
                                            return true;
                                        }
-                                       if (edgeP->getDestination()->getName() == u
-                                           && edgeP->getOrigin()->getName() == v)
+                                       if (edgeP->getDestination()->getName() == u &&
+                                           edgeP->getOrigin()->getName() == v)
                                        {
                                            return true;
                                        }

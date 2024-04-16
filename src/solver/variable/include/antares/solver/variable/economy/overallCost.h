@@ -53,10 +53,10 @@ struct VCardOverallCost
 
     //! The expecte results
     typedef Results<R::AllYears::Average< // The average values throughout all years
-                      >,
+                            >,
                     R::AllYears::Average // Use these values for spatial cluster
                     >
-      ResultsType;
+            ResultsType;
 
     //! The VCard to look for for calculating spatial aggregates
     typedef VCardOverallCost VCardForSpatialAggregate;
@@ -123,11 +123,11 @@ public:
     {
         enum
         {
-            count = ((VCardType::categoryDataLevel & CDataLevel
-                      && VCardType::categoryFileLevel & CFile)
-                       ? (NextType::template Statistics<CDataLevel, CFile>::count
-                          + VCardType::columnCount * ResultsType::count)
-                       : NextType::template Statistics<CDataLevel, CFile>::count),
+            count = ((VCardType::categoryDataLevel & CDataLevel &&
+                      VCardType::categoryFileLevel & CFile)
+                             ? (NextType::template Statistics<CDataLevel, CFile>::count +
+                                VCardType::columnCount * ResultsType::count)
+                             : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
 
@@ -246,16 +246,16 @@ public:
     void hourForEachArea(State& state, unsigned int numSpace)
     {
         const double costForSpilledOrUnsuppliedEnergy =
-          // Total UnsupliedEnergy emissions
-          (state.hourlyResults->ValeursHorairesDeDefaillancePositive[state.hourInTheWeek]
-           * state.area->thermal.unsuppliedEnergyCost)
-          + (state.hourlyResults->ValeursHorairesDeDefaillanceNegative[state.hourInTheWeek]
-             * state.area->thermal.spilledEnergyCost)
-          // Current hydro storage and pumping generation costs
-          + (state.hourlyResults->valeurH2oHoraire[state.hourInTheWeek]
-             * (state.hourlyResults->TurbinageHoraire[state.hourInTheWeek]
-                - state.area->hydro.pumpingEfficiency
-                    * state.hourlyResults->PompageHoraire[state.hourInTheWeek]));
+                // Total UnsupliedEnergy emissions
+                (state.hourlyResults->ValeursHorairesDeDefaillancePositive[state.hourInTheWeek] *
+                 state.area->thermal.unsuppliedEnergyCost) +
+                (state.hourlyResults->ValeursHorairesDeDefaillanceNegative[state.hourInTheWeek] *
+                 state.area->thermal.spilledEnergyCost)
+                // Current hydro storage and pumping generation costs
+                + (state.hourlyResults->valeurH2oHoraire[state.hourInTheWeek] *
+                   (state.hourlyResults->TurbinageHoraire[state.hourInTheWeek] -
+                    state.area->hydro.pumpingEfficiency *
+                            state.hourlyResults->PompageHoraire[state.hourInTheWeek]));
 
         pValuesForTheCurrentYear[numSpace][state.hourInTheYear] += costForSpilledOrUnsuppliedEnergy;
 
@@ -266,9 +266,8 @@ public:
         NextType::hourForEachArea(state, numSpace);
     }
 
-    Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
-      unsigned int,
-      unsigned int numSpace) const
+    Antares::Memory::Stored<double>::ConstReturnType
+    retrieveRawHourlyValuesForCurrentYear(unsigned int, unsigned int numSpace) const
     {
         return pValuesForTheCurrentYear[numSpace].hour;
     }
@@ -287,7 +286,7 @@ public:
             results.variableCaption = VCardType::Caption();
             results.variableUnit = VCardType::Unit();
             pValuesForTheCurrentYear[numSpace]
-              .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
+                    .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
         }
     }
 

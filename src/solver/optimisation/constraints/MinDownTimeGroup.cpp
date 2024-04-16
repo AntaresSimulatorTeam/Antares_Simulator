@@ -21,7 +21,8 @@
 
 #include "antares/solver/optimisation/constraints/MinDownTimeGroup.h"
 
-MinDownTimeData MinDownTimeGroup::GetMinDownTimeDataFromProblemHebdo()
+MinDownTimeData
+MinDownTimeGroup::GetMinDownTimeDataFromProblemHebdo()
 {
     return {.PaliersThermiquesDuPays = problemeHebdo_->PaliersThermiquesDuPays,
             .Simulation = simulation_,
@@ -32,14 +33,15 @@ MinDownTimeData MinDownTimeGroup::GetMinDownTimeDataFromProblemHebdo()
  * @brief build MinDownTime constraints with
  * respect to default order
  */
-void MinDownTimeGroup::BuildConstraints()
+void
+MinDownTimeGroup::BuildConstraints()
 {
     auto data = GetMinDownTimeDataFromProblemHebdo();
     MinDownTime minDownTime(builder_, data);
     for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)
     {
         const PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo_
-                                                              ->PaliersThermiquesDuPays[pays];
+                                                                    ->PaliersThermiquesDuPays[pays];
         for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
         {
             for (int pdt = 0; pdt < problemeHebdo_->NombreDePasDeTempsPourUneOptimisation; pdt++)

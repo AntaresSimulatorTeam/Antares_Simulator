@@ -78,17 +78,20 @@ protected:
 
 // class TSNumberData : inline functions
 
-inline uint TSNumberData::width() const
+inline uint
+TSNumberData::width() const
 {
     return pTSNumberRules.width;
 }
 
-inline uint TSNumberData::height() const
+inline uint
+TSNumberData::height() const
 {
     return pTSNumberRules.height;
 }
 
-inline double TSNumberData::get_value(uint x, uint y) const
+inline double
+TSNumberData::get_value(uint x, uint y) const
 {
     return pTSNumberRules.entry[y][x];
 }

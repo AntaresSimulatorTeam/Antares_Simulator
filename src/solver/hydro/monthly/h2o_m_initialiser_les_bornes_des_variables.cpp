@@ -22,15 +22,16 @@
 #include "antares/solver/hydro/monthly/h2o_m_donnees_annuelles.h"
 #include "antares/solver/hydro/monthly/h2o_m_fonctions.h"
 
-void H2O_M_InitialiserBornesEtCoutsDesVariables(DONNEES_ANNUELLES& DonneesAnnuelles)
+void
+H2O_M_InitialiserBornesEtCoutsDesVariables(DONNEES_ANNUELLES& DonneesAnnuelles)
 {
     PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesAnnuelles.ProblemeHydraulique;
-    PROBLEME_LINEAIRE_PARTIE_VARIABLE& ProblemeLineairePartieVariable
-      = ProblemeHydraulique.ProblemeLineairePartieVariable;
-    const CORRESPONDANCE_DES_VARIABLES& CorrespondanceDesVariables = ProblemeHydraulique
-                                                                       .CorrespondanceDesVariables;
+    PROBLEME_LINEAIRE_PARTIE_VARIABLE&
+            ProblemeLineairePartieVariable = ProblemeHydraulique.ProblemeLineairePartieVariable;
+    const CORRESPONDANCE_DES_VARIABLES&
+            CorrespondanceDesVariables = ProblemeHydraulique.CorrespondanceDesVariables;
     PROBLEME_LINEAIRE_PARTIE_FIXE& ProblemeLineairePartieFixe = ProblemeHydraulique
-                                                                  .ProblemeLineairePartieFixe;
+                                                                        .ProblemeLineairePartieFixe;
 
     DonneesAnnuelles.Volume[0] = DonneesAnnuelles.VolumeInitial;
 

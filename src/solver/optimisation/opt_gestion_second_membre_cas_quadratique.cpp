@@ -24,7 +24,8 @@
 #include "antares/solver/simulation/sim_extern_variables_globales.h"
 #include "antares/solver/simulation/simulation.h"
 
-void OPT_InitialiserLeSecondMembreDuProblemeQuadratique(PROBLEME_HEBDO* problemeHebdo, int PdtHebdo)
+void
+OPT_InitialiserLeSecondMembreDuProblemeQuadratique(PROBLEME_HEBDO* problemeHebdo, int PdtHebdo)
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
@@ -32,6 +33,6 @@ void OPT_InitialiserLeSecondMembreDuProblemeQuadratique(PROBLEME_HEBDO* probleme
     {
         int cnt = problemeHebdo->NumeroDeContrainteDeSoldeDEchange[pays];
         ProblemeAResoudre->SecondMembre[cnt] = problemeHebdo->SoldeMoyenHoraire[PdtHebdo]
-                                                 .SoldeMoyenDuPays[pays];
+                                                       .SoldeMoyenDuPays[pays];
     }
 }

@@ -33,9 +33,8 @@ namespace Antares
 {
 namespace Data
 {
-static const Area* FindMappedAreaName(const AreaName& id,
-                                      const Study& study,
-                                      const AreaNameMapping& mapping)
+static const Area*
+FindMappedAreaName(const AreaName& id, const Study& study, const AreaNameMapping& mapping)
 {
     auto i = mapping.find(id);
     if (i != mapping.end())
@@ -56,7 +55,8 @@ HydroAllocation::~HydroAllocation()
 {
 }
 
-void HydroAllocation::remove(const AreaName& areaid)
+void
+HydroAllocation::remove(const AreaName& areaid)
 {
     assert(!pMustUseValuesFromAreaID);
     auto i = pValues.find(areaid);
@@ -66,7 +66,8 @@ void HydroAllocation::remove(const AreaName& areaid)
     }
 }
 
-void HydroAllocation::rename(const AreaName& oldid, const AreaName& newid)
+void
+HydroAllocation::rename(const AreaName& oldid, const AreaName& newid)
 {
     assert(!pMustUseValuesFromAreaID);
     auto i = pValues.find(oldid);
@@ -78,36 +79,42 @@ void HydroAllocation::rename(const AreaName& oldid, const AreaName& newid)
     }
 }
 
-double HydroAllocation::fromArea(const Area& area) const
+double
+HydroAllocation::fromArea(const Area& area) const
 {
     return fromArea(area.id);
 }
 
-double HydroAllocation::fromArea(const Area* area) const
+double
+HydroAllocation::fromArea(const Area* area) const
 {
     return area ? fromArea(area->id) : 0.;
 }
 
-double HydroAllocation::operator[](const AreaName& areaid) const
+double
+HydroAllocation::operator[](const AreaName& areaid) const
 {
     assert(!pMustUseValuesFromAreaID);
     auto i = pValues.find(areaid);
     return (i != pValues.end()) ? i->second : 0.;
 }
 
-double HydroAllocation::operator[](const Area& area) const
+double
+HydroAllocation::operator[](const Area& area) const
 {
     assert(!pMustUseValuesFromAreaID);
     auto i = pValues.find(area.id);
     return (i != pValues.end()) ? i->second : 0.;
 }
 
-void HydroAllocation::fromArea(const Area& area, double value)
+void
+HydroAllocation::fromArea(const Area& area, double value)
 {
     fromArea(area.id, value);
 }
 
-void HydroAllocation::fromArea(const Area* area, double value)
+void
+HydroAllocation::fromArea(const Area* area, double value)
 {
     if (area)
     {
@@ -115,14 +122,16 @@ void HydroAllocation::fromArea(const Area* area, double value)
     }
 }
 
-double HydroAllocation::fromArea(const AreaName& areaid) const
+double
+HydroAllocation::fromArea(const AreaName& areaid) const
 {
     assert(!pMustUseValuesFromAreaID);
     auto i = pValues.find(areaid);
     return (i != pValues.end()) ? i->second : 0.;
 }
 
-void HydroAllocation::fromArea(const AreaName& areaid, double value)
+void
+HydroAllocation::fromArea(const AreaName& areaid, double value)
 {
     assert(!pMustUseValuesFromAreaID);
     if (Utils::isZero(value))
@@ -139,7 +148,8 @@ void HydroAllocation::fromArea(const AreaName& areaid, double value)
     }
 }
 
-void HydroAllocation::prepareForSolver(const AreaList& list)
+void
+HydroAllocation::prepareForSolver(const AreaList& list)
 {
     pValuesFromAreaID.clear();
     auto end = pValues.end();
@@ -158,7 +168,8 @@ void HydroAllocation::prepareForSolver(const AreaList& list)
 #endif
 }
 
-void HydroAllocation::clear()
+void
+HydroAllocation::clear()
 {
     pValues.clear();
     pValuesFromAreaID.clear();
@@ -167,7 +178,8 @@ void HydroAllocation::clear()
 #endif
 }
 
-bool HydroAllocation::loadFromFile(const AreaName& referencearea, const AnyString& filename)
+bool
+HydroAllocation::loadFromFile(const AreaName& referencearea, const AnyString& filename)
 {
     clear();
 
@@ -178,19 +190,19 @@ bool HydroAllocation::loadFromFile(const AreaName& referencearea, const AnyStrin
         {
             AreaName areaname;
             ini.each(
-              [&](const IniFile::Section& section)
-              {
-                  for (auto* p = section.firstProperty; p; p = p->next)
-                  {
-                      double coeff = p->value.to<double>();
-                      if (!Utils::isZero(coeff))
-                      {
-                          areaname = p->key;
-                          areaname.toLower();
-                          pValues[areaname] = coeff;
-                      }
-                  }
-              });
+                    [&](const IniFile::Section& section)
+                    {
+                        for (auto* p = section.firstProperty; p; p = p->next)
+                        {
+                            double coeff = p->value.to<double>();
+                            if (!Utils::isZero(coeff))
+                            {
+                                areaname = p->key;
+                                areaname.toLower();
+                                pValues[areaname] = coeff;
+                            }
+                        }
+                    });
         }
     }
     else
@@ -200,7 +212,8 @@ bool HydroAllocation::loadFromFile(const AreaName& referencearea, const AnyStrin
     return true;
 }
 
-bool HydroAllocation::saveToFile(const AnyString& filename) const
+bool
+HydroAllocation::saveToFile(const AnyString& filename) const
 {
     if (pValues.empty())
     {
@@ -231,10 +244,11 @@ bool HydroAllocation::saveToFile(const AnyString& filename) const
     }
 }
 
-void HydroAllocation::copyFrom(const HydroAllocation& source,
-                               const Study& studySource,
-                               const AreaNameMapping& mapping,
-                               const Study& study)
+void
+HydroAllocation::copyFrom(const HydroAllocation& source,
+                          const Study& studySource,
+                          const AreaNameMapping& mapping,
+                          const Study& study)
 {
     // clear all coefficients first
     clear();
@@ -259,7 +273,8 @@ void HydroAllocation::copyFrom(const HydroAllocation& source,
     }
 }
 
-const HydroAllocation::Coefficients& HydroAllocation::coefficients() const
+const HydroAllocation::Coefficients&
+HydroAllocation::coefficients() const
 {
     return pValues;
 }

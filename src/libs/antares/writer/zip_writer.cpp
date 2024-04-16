@@ -45,7 +45,8 @@ namespace Antares::Solver
 
 namespace
 {
-void logErrorAndThrow(const std::string& errorMessage)
+void
+logErrorAndThrow(const std::string& errorMessage)
 {
     logs.error() << errorMessage;
     throw IOError(errorMessage);
@@ -67,7 +68,8 @@ ZipWriteJob<ContentT>::ZipWriteJob(ZipWriter& writer,
 {
 }
 
-static std::unique_ptr<mz_zip_file> createInfo(const std::string& entryPath)
+static std::unique_ptr<mz_zip_file>
+createInfo(const std::string& entryPath)
 {
     auto info = std::make_unique<mz_zip_file>();
     memset(info.get(), 0, sizeof(mz_zip_file));
@@ -79,7 +81,8 @@ static std::unique_ptr<mz_zip_file> createInfo(const std::string& entryPath)
 }
 
 template<class ContentT>
-void ZipWriteJob<ContentT>::writeEntry()
+void
+ZipWriteJob<ContentT>::writeEntry()
 {
     // Don't write data if finalize() has been called
     if (pState != ZipState::can_receive_data)
@@ -103,8 +106,8 @@ void ZipWriteJob<ContentT>::writeEntry()
     int32_t bw = mz_zip_writer_entry_write(pZipHandle, pContent.data(), pContent.size());
     if (static_cast<unsigned int>(bw) != pContent.size())
     {
-        logErrorAndThrow("Error writing entry " + pEntryPath + "(written = " + std::to_string(bw)
-                         + ", size = " + std::to_string(pContent.size()) + ")");
+        logErrorAndThrow("Error writing entry " + pEntryPath + "(written = " + std::to_string(bw) +
+                         ", size = " + std::to_string(pContent.size()) + ")");
     }
 
     timer_write.stop();
@@ -123,8 +126,8 @@ ZipWriter::ZipWriter(std::shared_ptr<Yuni::Job::QueueService> qs,
     pZipHandle = mz_zip_writer_create();
     if (int32_t ret = mz_zip_writer_open_file(pZipHandle, pArchivePath.c_str(), 0, 0); ret != MZ_OK)
     {
-        logErrorAndThrow("Error opening zip file " + pArchivePath + " (" + std::to_string(ret)
-                         + ")");
+        logErrorAndThrow("Error opening zip file " + pArchivePath + " (" + std::to_string(ret) +
+                         ")");
     }
     // TODO : make level of compression configurable
     mz_zip_writer_set_compress_level(pZipHandle, MZ_COMPRESS_LEVEL_FAST);
@@ -147,17 +150,20 @@ ZipWriter::~ZipWriter()
     }
 }
 
-void ZipWriter::addEntryFromBuffer(const std::string& entryPath, Yuni::Clob& entryContent)
+void
+ZipWriter::addEntryFromBuffer(const std::string& entryPath, Yuni::Clob& entryContent)
 {
     addEntryFromBufferHelper<Yuni::Clob>(entryPath, entryContent);
 }
 
-void ZipWriter::addEntryFromBuffer(const std::string& entryPath, std::string& entryContent)
+void
+ZipWriter::addEntryFromBuffer(const std::string& entryPath, std::string& entryContent)
 {
     addEntryFromBufferHelper<std::string>(entryPath, entryContent);
 }
 
-void ZipWriter::addEntryFromFile(const std::string& entryPath, const std::string& filePath)
+void
+ZipWriter::addEntryFromFile(const std::string& entryPath, const std::string& filePath)
 {
     // Read file into buffer immediately, write into archive async
     Yuni::Clob buffer;
@@ -182,12 +188,14 @@ void ZipWriter::addEntryFromFile(const std::string& entryPath, const std::string
     }
 }
 
-bool ZipWriter::needsTheJobQueue() const
+bool
+ZipWriter::needsTheJobQueue() const
 {
     return true;
 }
 
-void ZipWriter::finalize(bool verbose)
+void
+ZipWriter::finalize(bool verbose)
 {
     // wait for completion of pending writing tasks
     flush();
@@ -220,7 +228,8 @@ void ZipWriter::finalize(bool verbose)
     }
 }
 
-void ZipWriter::flush()
+void
+ZipWriter::flush()
 {
     pendingTasks_.join();
 }

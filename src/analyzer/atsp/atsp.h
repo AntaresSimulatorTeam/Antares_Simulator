@@ -105,11 +105,8 @@ private:
     static void Colonne_moyenne(double* out, const Matrix<>& MTRX, uint nblig, uint nbcol);
 
     // retourne le maximum ou le minimum de MTRX selon le code
-    static void Mtrx_bound(double& rmin,
-                           double& rmax,
-                           const Matrix<>& MTRX,
-                           uint nblig,
-                           uint nbcol);
+    static void
+    Mtrx_bound(double& rmin, double& rmax, const Matrix<>& MTRX, uint nblig, uint nbcol);
 
     // met dans OUT la valeur absolue de MTRX
     static void Mtrx_abs(Matrix<>& out, const Matrix<>& MTRX, uint nblig, uint nbcol);
@@ -127,11 +124,8 @@ private:
     static void Square(double* A, const double* B, uint nblig);
 
     // met (B- le scalaire x) dans A
-    static void Retranche_scalaire(Matrix<>& A,
-                                   const Matrix<>& B,
-                                   double x,
-                                   uint nblig,
-                                   uint nbcol);
+    static void
+    Retranche_scalaire(Matrix<>& A, const Matrix<>& B, double x, uint nblig, uint nbcol);
 
     // met (B /scalaire x) dans A
     static void Divise_scalaire(Matrix<>& A, const Matrix<>& B, double x, uint nblig, uint nbcol);
@@ -204,10 +198,8 @@ private:
     void cacheClear();
     bool cacheFetch(uint index, Matrix<>& out) const;
 
-    bool cachePreload(uint index,
-                      const AnyString& filename,
-                      uint height,
-                      Matrix<>::BufferType& buffer);
+    bool
+    cachePreload(uint index, const AnyString& filename, uint height, Matrix<>::BufferType& buffer);
 
 private:
     AreaInfo::Vector pArea;

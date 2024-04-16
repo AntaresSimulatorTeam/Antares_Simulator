@@ -34,8 +34,8 @@ namespace Antares::Data::AdequacyPatch
  * @return uint from an enumeration that describes the type of restrictions to put on this link for
  * adq purposes.
  */
-static NtcSetToZeroStatus_AdqPatchStep1 SetNTCForAdequacyFirstStepOriginNodeInsideAdq(
-  AdequacyPatchMode ExtremityNodeAdequacyPatchType)
+static NtcSetToZeroStatus_AdqPatchStep1
+SetNTCForAdequacyFirstStepOriginNodeInsideAdq(AdequacyPatchMode ExtremityNodeAdequacyPatchType)
 {
     switch (ExtremityNodeAdequacyPatchType)
     {
@@ -62,21 +62,21 @@ static NtcSetToZeroStatus_AdqPatchStep1 SetNTCForAdequacyFirstStepOriginNodeInsi
  * @return uint from an enumeration that describes the type of restrictions to put on this link for
  * adq purposes.
  */
-static NtcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatusOriginNodeOutsideAdq(
-  AdequacyPatchMode ExtremityNodeAdequacyPatchType,
-  bool setToZeroNTCfromOutToIn_AdqPatch,
-  bool setToZeroNTCfromOutToOut_AdqPatch)
+static NtcSetToZeroStatus_AdqPatchStep1
+getNTCtoZeroStatusOriginNodeOutsideAdq(AdequacyPatchMode ExtremityNodeAdequacyPatchType,
+                                       bool setToZeroNTCfromOutToIn_AdqPatch,
+                                       bool setToZeroNTCfromOutToOut_AdqPatch)
 {
     switch (ExtremityNodeAdequacyPatchType)
     {
     case physicalAreaInsideAdqPatch:
         return setToZeroNTCfromOutToIn_AdqPatch
-                 ? NtcSetToZeroStatus_AdqPatchStep1::setToZero
-                 : NtcSetToZeroStatus_AdqPatchStep1::setExtremityOriginToZero;
+                       ? NtcSetToZeroStatus_AdqPatchStep1::setToZero
+                       : NtcSetToZeroStatus_AdqPatchStep1::setExtremityOriginToZero;
     case physicalAreaOutsideAdqPatch:
         return setToZeroNTCfromOutToOut_AdqPatch
-                 ? NtcSetToZeroStatus_AdqPatchStep1::setToZero
-                 : NtcSetToZeroStatus_AdqPatchStep1::leaveLocalValues;
+                       ? NtcSetToZeroStatus_AdqPatchStep1::setToZero
+                       : NtcSetToZeroStatus_AdqPatchStep1::leaveLocalValues;
     default:
         return NtcSetToZeroStatus_AdqPatchStep1::leaveLocalValues;
     }
@@ -92,18 +92,17 @@ static NtcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatusOriginNodeOutsideAdq(
  * @return uint from an enumeration that describes the type of restrictions to put on this link for
  * adq purposes.
  */
-static NtcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatus(PROBLEME_HEBDO* problemeHebdo,
-                                                           const AdqPatchParams& adqPatchParams,
-                                                           int Interco)
+static NtcSetToZeroStatus_AdqPatchStep1
+getNTCtoZeroStatus(PROBLEME_HEBDO* problemeHebdo, const AdqPatchParams& adqPatchParams, int Interco)
 {
     AdequacyPatchMode OriginNodeAdequacyPatchType = problemeHebdo->adequacyPatchRuntimeData
-                                                      ->originAreaMode[Interco];
+                                                            ->originAreaMode[Interco];
     AdequacyPatchMode ExtremityNodeAdequacyPatchType = problemeHebdo->adequacyPatchRuntimeData
-                                                         ->extremityAreaMode[Interco];
+                                                               ->extremityAreaMode[Interco];
     bool setToZeroNTCfromOutToIn_AdqPatch = adqPatchParams.localMatching
-                                              .setToZeroOutsideInsideLinks;
+                                                    .setToZeroOutsideInsideLinks;
     bool setToZeroNTCfromOutToOut_AdqPatch = adqPatchParams.localMatching
-                                               .setToZeroOutsideOutsideLinks;
+                                                     .setToZeroOutsideOutsideLinks;
 
     switch (OriginNodeAdequacyPatchType)
     {
@@ -119,12 +118,13 @@ static NtcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatus(PROBLEME_HEBDO* probl
     }
 }
 
-void setNTCbounds(double& Xmax,
-                  double& Xmin,
-                  const VALEURS_DE_NTC_ET_RESISTANCES& ValeursDeNTC,
-                  const int Interco,
-                  PROBLEME_HEBDO* problemeHebdo,
-                  const AdqPatchParams& adqPatchParams)
+void
+setNTCbounds(double& Xmax,
+             double& Xmin,
+             const VALEURS_DE_NTC_ET_RESISTANCES& ValeursDeNTC,
+             const int Interco,
+             PROBLEME_HEBDO* problemeHebdo,
+             const AdqPatchParams& adqPatchParams)
 {
     NtcSetToZeroStatus_AdqPatchStep1 ntcToZeroStatusForAdqPatch;
 
@@ -133,8 +133,8 @@ void setNTCbounds(double& Xmax,
     Xmin = -(ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine[Interco]);
 
     // set for adq patch first step
-    if (adqPatchParams.enabled && adqPatchParams.localMatching.enabled
-        && problemeHebdo->adequacyPatchRuntimeData->AdequacyFirstStep)
+    if (adqPatchParams.enabled && adqPatchParams.localMatching.enabled &&
+        problemeHebdo->adequacyPatchRuntimeData->AdequacyFirstStep)
     {
         ntcToZeroStatusForAdqPatch = getNTCtoZeroStatus(problemeHebdo, adqPatchParams, Interco);
 

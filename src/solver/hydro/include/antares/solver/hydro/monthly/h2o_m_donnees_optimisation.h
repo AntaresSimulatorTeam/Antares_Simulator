@@ -91,11 +91,11 @@ typedef struct
                                                  */
 
     std::vector<int>
-      PositionDeLaVariable; /* Vecteur a passer au Simplexe pour recuperer la base optimale */
+            PositionDeLaVariable; /* Vecteur a passer au Simplexe pour recuperer la base optimale */
     std::vector<int>
-      ComplementDeLaBase; /* Vecteur a passer au Simplexe pour recuperer la base optimale */
+            ComplementDeLaBase; /* Vecteur a passer au Simplexe pour recuperer la base optimale */
     std::vector<double>
-      CoutsReduits; /* Vecteur a passer au Simplexe pour recuperer les couts reduits */
+            CoutsReduits; /* Vecteur a passer au Simplexe pour recuperer les couts reduits */
     std::vector<double> CoutsMarginauxDesContraintes; /* Vecteur a passer au Simplexe pour recuperer
                                              les couts marginaux */
 } PROBLEME_LINEAIRE_PARTIE_VARIABLE;
@@ -109,9 +109,9 @@ typedef struct
     std::vector<int> NumeroDeVariableDepassementVolumeMin; /* Depassement du volume min */
     int NumeroDeLaVariableViolMaxVolumeMin;                // Depassement max du volume min
     std::vector<int>
-      NumeroDeVariableDEcartPositifAuTurbineCible; /* Ecart positif au volume cible */
+            NumeroDeVariableDEcartPositifAuTurbineCible; /* Ecart positif au volume cible */
     std::vector<int>
-      NumeroDeVariableDEcartNegatifAuTurbineCible; /* Ecart negatif au volume cible */
+            NumeroDeVariableDEcartNegatifAuTurbineCible; /* Ecart negatif au volume cible */
     int NumeroDeLaVariableXi; /* Variable decrivant l'ecart max au turbine cible */
 } CORRESPONDANCE_DES_VARIABLES;
 

@@ -28,7 +28,8 @@
 
 namespace Antares
 {
-void InitializeDefaultLocale()
+void
+InitializeDefaultLocale()
 {
 #ifdef YUNI_OS_WINDOWS
     if (NULL == std::setlocale(LC_ALL, "English"))

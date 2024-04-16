@@ -22,7 +22,8 @@
 #include "antares/solver/hydro/daily2/h2o2_j_donnees_mensuelles.h"
 #include "antares/solver/hydro/daily2/h2o2_j_fonctions.h"
 
-DONNEES_MENSUELLES_ETENDUES H2O2_J_Instanciation()
+DONNEES_MENSUELLES_ETENDUES
+H2O2_J_Instanciation()
 {
     DONNEES_MENSUELLES_ETENDUES DonneesMensuellesEtendues;
 
@@ -61,9 +62,9 @@ DONNEES_MENSUELLES_ETENDUES H2O2_J_Instanciation()
 
     auto& CorrespondanceDesVariables = ProblemeHydrauliqueEtendu.CorrespondanceDesVariables;
     auto& ProblemeLineaireEtenduPartieFixe = ProblemeHydrauliqueEtendu
-                                               .ProblemeLineaireEtenduPartieFixe;
+                                                     .ProblemeLineaireEtenduPartieFixe;
     auto& ProblemeLineaireEtenduPartieVariable = ProblemeHydrauliqueEtendu
-                                                   .ProblemeLineaireEtenduPartieVariable;
+                                                         .ProblemeLineaireEtenduPartieVariable;
 
     for (int i = 0; i < NombreDeProblemes; i++)
     {
@@ -146,23 +147,23 @@ DONNEES_MENSUELLES_ETENDUES H2O2_J_Instanciation()
 
     for (int i = 0; i < NombreDeProblemes; i++)
     {
-        H2O2_j_ConstruireLesVariables(
-          NbJoursDUnProbleme[i],
-          DonneesMensuellesEtendues,
-          ProblemeLineaireEtenduPartieVariable[i].Xmin,
-          ProblemeLineaireEtenduPartieVariable[i].Xmax,
-          ProblemeLineaireEtenduPartieFixe[i].TypeDeVariable,
-          ProblemeLineaireEtenduPartieVariable[i].AdresseOuPlacerLaValeurDesVariablesOptimisees,
-          CorrespondanceDesVariables[i]);
+        H2O2_j_ConstruireLesVariables(NbJoursDUnProbleme[i],
+                                      DonneesMensuellesEtendues,
+                                      ProblemeLineaireEtenduPartieVariable[i].Xmin,
+                                      ProblemeLineaireEtenduPartieVariable[i].Xmax,
+                                      ProblemeLineaireEtenduPartieFixe[i].TypeDeVariable,
+                                      ProblemeLineaireEtenduPartieVariable[i]
+                                              .AdresseOuPlacerLaValeurDesVariablesOptimisees,
+                                      CorrespondanceDesVariables[i]);
 
         H2O2_J_ConstruireLesContraintes(
-          NbJoursDUnProbleme[i],
-          ProblemeLineaireEtenduPartieFixe[i].IndicesDebutDeLigne,
-          ProblemeLineaireEtenduPartieFixe[i].Sens,
-          ProblemeLineaireEtenduPartieFixe[i].NombreDeTermesDesLignes,
-          ProblemeLineaireEtenduPartieFixe[i].CoefficientsDeLaMatriceDesContraintes,
-          ProblemeLineaireEtenduPartieFixe[i].IndicesColonnes,
-          CorrespondanceDesVariables[i]);
+                NbJoursDUnProbleme[i],
+                ProblemeLineaireEtenduPartieFixe[i].IndicesDebutDeLigne,
+                ProblemeLineaireEtenduPartieFixe[i].Sens,
+                ProblemeLineaireEtenduPartieFixe[i].NombreDeTermesDesLignes,
+                ProblemeLineaireEtenduPartieFixe[i].CoefficientsDeLaMatriceDesContraintes,
+                ProblemeLineaireEtenduPartieFixe[i].IndicesColonnes,
+                CorrespondanceDesVariables[i]);
     }
 
     return DonneesMensuellesEtendues;

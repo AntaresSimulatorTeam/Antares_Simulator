@@ -37,7 +37,8 @@ using namespace Antares;
 
 #define SEP Yuni::IO::Separator
 
-static bool OpenLogFilename(const String& optSettings)
+static bool
+OpenLogFilename(const String& optSettings)
 {
     IniFile ini;
     if (not ini.open(optSettings))
@@ -95,13 +96,15 @@ static bool OpenLogFilename(const String& optSettings)
     return true;
 }
 
-static void NotEnoughMemory()
+static void
+NotEnoughMemory()
 {
     logs.fatal() << "Not enough memory. aborting.";
     exit(42);
 }
 
-int main(int argc, char* argv[])
+int
+main(int argc, char* argv[])
 {
     // Dealing with the lack of memory
     std::set_new_handler(&NotEnoughMemory);

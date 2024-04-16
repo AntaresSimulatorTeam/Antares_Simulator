@@ -42,10 +42,11 @@ struct TSNumbersPredicate
 };
 } // anonymous namespace
 
-static void storeTSnumbers(Solver::IResultWriter& writer,
-                           const Matrix<uint32_t>& timeseriesNumbers,
-                           const String& id,
-                           const String& directory)
+static void
+storeTSnumbers(Solver::IResultWriter& writer,
+               const Matrix<uint32_t>& timeseriesNumbers,
+               const String& id,
+               const String& directory)
 {
     TSNumbersPredicate predicate;
     Clob path;
@@ -61,43 +62,50 @@ static void storeTSnumbers(Solver::IResultWriter& writer,
     writer.addEntryFromBuffer(path.c_str(), buffer);
 }
 
-void storeTimeseriesNumbersForLoad(Solver::IResultWriter& writer, const Area& area)
+void
+storeTimeseriesNumbersForLoad(Solver::IResultWriter& writer, const Area& area)
 {
     storeTSnumbers(writer, area.load.series.timeseriesNumbers, area.id, "load");
 }
 
-void storeTimeseriesNumbersForSolar(Solver::IResultWriter& writer, const Area& area)
+void
+storeTimeseriesNumbersForSolar(Solver::IResultWriter& writer, const Area& area)
 {
     storeTSnumbers(writer, area.solar.series.timeseriesNumbers, area.id, "solar");
 }
 
-void storeTimeseriesNumbersForHydro(Solver::IResultWriter& writer, const Area& area)
+void
+storeTimeseriesNumbersForHydro(Solver::IResultWriter& writer, const Area& area)
 {
     storeTSnumbers(writer, area.hydro.series->timeseriesNumbers, area.id, "hydro");
 }
 
-void storeTimeseriesNumbersForHydroMaxPower(Solver::IResultWriter& writer, const Area& area)
+void
+storeTimeseriesNumbersForHydroMaxPower(Solver::IResultWriter& writer, const Area& area)
 {
     storeTSnumbers(writer, area.hydro.series->timeseriesNumbersHydroMaxPower, area.id, "hgp");
 }
 
-void storeTimeseriesNumbersForWind(Solver::IResultWriter& writer, const Area& area)
+void
+storeTimeseriesNumbersForWind(Solver::IResultWriter& writer, const Area& area)
 {
     storeTSnumbers(writer, area.wind.series.timeseriesNumbers, area.id, "wind");
 }
 
-void storeTimeseriesNumbersForThermal(Solver::IResultWriter& writer, const Area& area)
+void
+storeTimeseriesNumbersForThermal(Solver::IResultWriter& writer, const Area& area)
 {
     area.thermal.list.storeTimeseriesNumbers(writer);
 }
 
-void storeTimeseriesNumbersForRenewable(Solver::IResultWriter& writer, const Area& area)
+void
+storeTimeseriesNumbersForRenewable(Solver::IResultWriter& writer, const Area& area)
 {
     area.renewable.list.storeTimeseriesNumbers(writer);
 }
 
-void storeTimeseriesNumbersForTransmissionCapacities(Solver::IResultWriter& writer,
-                                                     const Area& area)
+void
+storeTimeseriesNumbersForTransmissionCapacities(Solver::IResultWriter& writer, const Area& area)
 {
     // No links originating from this area
     // do not create an empty directory

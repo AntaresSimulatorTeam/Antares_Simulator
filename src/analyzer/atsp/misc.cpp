@@ -31,7 +31,8 @@ using namespace Yuni;
 
 namespace Antares
 {
-void ATSP::roundMatrixValues(Matrix<>& m)
+void
+ATSP::roundMatrixValues(Matrix<>& m)
 {
     if (pUseUpperBound)
     {
@@ -71,12 +72,13 @@ void ATSP::roundMatrixValues(Matrix<>& m)
     }
 }
 
-void ATSP::Extrait_bloc(Matrix<>& out,
-                        uint indlig,
-                        uint indcol,
-                        const Matrix<>& MTRX,
-                        uint nblig,
-                        uint nbcol)
+void
+ATSP::Extrait_bloc(Matrix<>& out,
+                   uint indlig,
+                   uint indcol,
+                   const Matrix<>& MTRX,
+                   uint nblig,
+                   uint nbcol)
 {
     for (uint j = 0; j < nbcol; ++j)
     {
@@ -89,7 +91,8 @@ void ATSP::Extrait_bloc(Matrix<>& out,
     }
 }
 
-void ATSP::Colonne_moyenne(double* out, const Matrix<>& MTRX, uint nblig, uint nbcol)
+void
+ATSP::Colonne_moyenne(double* out, const Matrix<>& MTRX, uint nblig, uint nbcol)
 {
     assert(nbcol > 0 && "Invalid column count, it will produce a division by 0");
 
@@ -106,7 +109,8 @@ void ATSP::Colonne_moyenne(double* out, const Matrix<>& MTRX, uint nblig, uint n
 }
 
 /* retourne le maximum ou le minimum de MTRX selon le code */
-void ATSP::Mtrx_bound(double& rmin, double& rmax, const Matrix<>& MTRX, uint nblig, uint nbcol)
+void
+ATSP::Mtrx_bound(double& rmin, double& rmax, const Matrix<>& MTRX, uint nblig, uint nbcol)
 {
     rmax = -1e+30;
     rmin = +1e+30;
@@ -129,7 +133,8 @@ void ATSP::Mtrx_bound(double& rmin, double& rmax, const Matrix<>& MTRX, uint nbl
 }
 
 // met dans OUT la valeur absolue de MTRX
-void ATSP::Mtrx_abs(Matrix<>& out, const Matrix<>& MTRX, uint nblig, uint nbcol)
+void
+ATSP::Mtrx_abs(Matrix<>& out, const Matrix<>& MTRX, uint nblig, uint nbcol)
 {
     for (uint j = 0; j < nbcol; ++j)
     {
@@ -141,7 +146,8 @@ void ATSP::Mtrx_abs(Matrix<>& out, const Matrix<>& MTRX, uint nblig, uint nbcol)
 }
 
 // retourne la moyenne des éléments de A
-double ATSP::Moyenne_generale(double* A, uint nblig)
+double
+ATSP::Moyenne_generale(double* A, uint nblig)
 {
     double x = 0.;
     for (uint i = 0; i < nblig; ++i)
@@ -152,7 +158,8 @@ double ATSP::Moyenne_generale(double* A, uint nblig)
 }
 
 // retranche de MTRX le vecteur A
-void ATSP::Retranche_mtrx(Matrix<>& MTRX, const double* A, uint nblig, uint nbcol)
+void
+ATSP::Retranche_mtrx(Matrix<>& MTRX, const double* A, uint nblig, uint nbcol)
 {
     for (uint j = 0; j < nbcol; ++j)
     {
@@ -165,7 +172,8 @@ void ATSP::Retranche_mtrx(Matrix<>& MTRX, const double* A, uint nblig, uint nbco
 }
 
 // range dans OUT les nblig première lignes de la colonne de MTRX d'indice indcol
-void ATSP::Extrait_col(double* out, const Matrix<>& MTRX, uint nblig, uint indcol)
+void
+ATSP::Extrait_col(double* out, const Matrix<>& MTRX, uint nblig, uint indcol)
 {
     const Matrix<>::ColumnType& col = MTRX.entry[indcol];
     for (uint i = 0; i < nblig; ++i)
@@ -175,7 +183,8 @@ void ATSP::Extrait_col(double* out, const Matrix<>& MTRX, uint nblig, uint indco
 }
 
 // met dans A le carre de B
-void ATSP::Square(double* A, const double* B, uint nblig)
+void
+ATSP::Square(double* A, const double* B, uint nblig)
 {
     for (uint i = 0; i < nblig; ++i)
     {
@@ -184,7 +193,8 @@ void ATSP::Square(double* A, const double* B, uint nblig)
 }
 
 // met (B- le scalaire x) dans A
-void ATSP::Retranche_scalaire(Matrix<>& A, const Matrix<>& B, double x, uint nblig, uint nbcol)
+void
+ATSP::Retranche_scalaire(Matrix<>& A, const Matrix<>& B, double x, uint nblig, uint nbcol)
 {
     for (uint j = 0; j < nbcol; ++j)
     {
@@ -198,7 +208,8 @@ void ATSP::Retranche_scalaire(Matrix<>& A, const Matrix<>& B, double x, uint nbl
 }
 
 // met (B /scalaire x) dans A
-void ATSP::Divise_scalaire(Matrix<>& A, const Matrix<>& B, double x, uint nblig, uint nbcol)
+void
+ATSP::Divise_scalaire(Matrix<>& A, const Matrix<>& B, double x, uint nblig, uint nbcol)
 {
     for (uint j = 0; j < nbcol; ++j)
     {
@@ -213,7 +224,8 @@ void ATSP::Divise_scalaire(Matrix<>& A, const Matrix<>& B, double x, uint nblig,
 }
 
 // met dans A le cube de B
-void ATSP::Cube(double* A, const double* B, uint nblig)
+void
+ATSP::Cube(double* A, const double* B, uint nblig)
 {
     for (uint i = 0; i < nblig; ++i)
     {
@@ -222,7 +234,8 @@ void ATSP::Cube(double* A, const double* B, uint nblig)
 }
 
 // met dans A B^4
-void ATSP::Dsquare(double* A, const double* B, uint nblig)
+void
+ATSP::Dsquare(double* A, const double* B, uint nblig)
 {
     for (uint i = 0; i < nblig; ++i)
     {
@@ -231,7 +244,8 @@ void ATSP::Dsquare(double* A, const double* B, uint nblig)
 }
 
 // range dans OUT  nblig elements de MTRX pris a partir de l'indice indlig
-void ATSP::Extrait_seg(double* out, const double* src, uint nblig, uint indlig)
+void
+ATSP::Extrait_seg(double* out, const double* src, uint nblig, uint indlig)
 {
     for (uint i = 0; i < nblig; ++i)
     {
@@ -243,14 +257,15 @@ void ATSP::Extrait_seg(double* out, const double* src, uint nblig, uint indlig)
 //   si code = 0 : les espérances et écarts-types des variables représentées par  A et B sont à
 //   calculer si code = 1 : des estimations des espérances et écarts-types sont fournis dans
 //   EA,EB,SA,SB
-double ATSP::Correlation(double* A,
-                         double* B,
-                         uint nblig,
-                         double EA,
-                         double EB,
-                         double SA,
-                         double SB,
-                         int code)
+double
+ATSP::Correlation(double* A,
+                  double* B,
+                  uint nblig,
+                  double EA,
+                  double EB,
+                  double SA,
+                  double SB,
+                  int code)
 {
     double sigma_A = 0.;
     double sigma_B = 0.;
@@ -341,7 +356,8 @@ double ATSP::Correlation(double* A,
     return rho;
 }
 
-double ATSP::Ecart(double T1, double P1, double T2, double P2, int M, double T)
+double
+ATSP::Ecart(double T1, double P1, double T2, double P2, int M, double T)
 {
     const double R = exp(-T);
     const double PP1 = autocorr_average((int)T1, M, R);
@@ -356,7 +372,8 @@ double ATSP::Ecart(double T1, double P1, double T2, double P2, int M, double T)
     return x;
 }
 
-double ATSP::autocorr_average(int H, int M, double R)
+double
+ATSP::autocorr_average(int H, int M, double R)
 {
     if (R < 0.) // ceci ne doit jamais se produire
     {
@@ -387,13 +404,14 @@ double ATSP::autocorr_average(int H, int M, double R)
     return x / y;
 }
 
-void ATSP::Analyse_auto(double* A,
-                        int nblig,
-                        double auc,
-                        double aum,
-                        double hor,
-                        double& theta,
-                        double& mu)
+void
+ATSP::Analyse_auto(double* A,
+                   int nblig,
+                   double auc,
+                   double aum,
+                   double hor,
+                   double& theta,
+                   double& mu)
 {
     // calcul des heures TC et TM
 
@@ -570,7 +588,8 @@ void ATSP::Analyse_auto(double* A,
     }
 }
 
-double ATSP::GammaEuler(double z)
+double
+ATSP::GammaEuler(double z)
 {
     // checking for parameter validity
     if (Yuni::Logs::Verbosity::Debug::enabled) // static check
@@ -640,15 +659,16 @@ double ATSP::GammaEuler(double z)
 // ajustement de la densité de probabilité en fonction des bornes L, U, de l'espérance E et de
 // l'écart-type S selon une loi "type" : calcule alpha=A, beta = B, gamma = C, delta = D retourne 0
 // si le calage est possible et 1 sinon */
-bool ATSP::Probab_density_funct(double L,
-                                double U,
-                                double E,
-                                double S,
-                                Data::XCast::Distribution law,
-                                double& A,
-                                double& B,
-                                double& C,
-                                double& D)
+bool
+ATSP::Probab_density_funct(double L,
+                           double U,
+                           double E,
+                           double S,
+                           Data::XCast::Distribution law,
+                           double& A,
+                           double& B,
+                           double& C,
+                           double& D)
 {
     enum
     {
@@ -802,7 +822,8 @@ bool ATSP::Probab_density_funct(double L,
     return false;
 }
 
-double ATSP::Standard_shrinkage(int M, double R)
+double
+ATSP::Standard_shrinkage(int M, double R)
 {
     if (R < 0.) // ceci ne doit jamais se produire
     {

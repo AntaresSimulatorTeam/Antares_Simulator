@@ -22,15 +22,16 @@
 #include "antares/solver/hydro/daily2/h2o2_j_donnees_mensuelles.h"
 #include "antares/solver/hydro/daily2/h2o2_j_fonctions.h"
 
-void H2O2_J_OptimiserUnMois(DONNEES_MENSUELLES_ETENDUES& DonneesMensuelles)
+void
+H2O2_J_OptimiserUnMois(DONNEES_MENSUELLES_ETENDUES& DonneesMensuelles)
 {
     auto& ProblemeHydrauliqueEtendu = DonneesMensuelles.ProblemeHydrauliqueEtendu;
 
     int NumeroDeProbleme = -1;
     for (int i = 0; i < ProblemeHydrauliqueEtendu.NombreDeProblemes; i++)
     {
-        if (DonneesMensuelles.NombreDeJoursDuMois
-            == ProblemeHydrauliqueEtendu.NbJoursDUnProbleme[i])
+        if (DonneesMensuelles.NombreDeJoursDuMois ==
+            ProblemeHydrauliqueEtendu.NbJoursDUnProbleme[i])
         {
             NumeroDeProbleme = i;
             break;

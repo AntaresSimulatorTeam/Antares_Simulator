@@ -44,7 +44,8 @@ enum
     retryTimeout = 35, // seconds
 };
 
-bool IOFileSetContent(const AnyString& filename, const AnyString& content)
+bool
+IOFileSetContent(const AnyString& filename, const AnyString& content)
 {
     if (System::windows)
     {

@@ -53,8 +53,8 @@ struct VCardProfitByPlant
 
     //! The expected results
     typedef Results<R::AllYears::Average< // The average values throughout all years
-      >>
-      ResultsType;
+            >>
+            ResultsType;
 
     //! The VCard to look for calculating spatial aggregates
     typedef VCardProfitByPlant VCardForSpatialAggregate;
@@ -119,11 +119,11 @@ public:
     {
         enum
         {
-            count = ((VCardType::categoryDataLevel & CDataLevel
-                      && VCardType::categoryFileLevel & CFile)
-                       ? (NextType::template Statistics<CDataLevel, CFile>::count
-                          + VCardType::columnCount * ResultsType::count)
-                       : NextType::template Statistics<CDataLevel, CFile>::count),
+            count = ((VCardType::categoryDataLevel & CDataLevel &&
+                      VCardType::categoryFileLevel & CFile)
+                             ? (NextType::template Statistics<CDataLevel, CFile>::count +
+                                VCardType::columnCount * ResultsType::count)
+                             : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
 
@@ -163,7 +163,7 @@ public:
             for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
             {
                 pValuesForTheCurrentYear[numSpace] = new VCardType::IntermediateValuesDeepType
-                  [pNbClustersOfArea];
+                        [pNbClustersOfArea];
             }
 
             for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
@@ -282,25 +282,24 @@ public:
 
         for (auto& cluster: area->thermal.list.each_enabled())
         {
-            double hourlyClusterProduction = thermal[area->index]
-                                               .thermalClustersProductions[cluster->areaWideIndex];
+            double hourlyClusterProduction = thermal[area->index].thermalClustersProductions
+                                                     [cluster->areaWideIndex];
             double pMin = thermal[area->index].PMinOfClusters[cluster->areaWideIndex];
             uint tsIndex = cluster->series.timeseriesNumbers[0][state.year];
 
             // Thermal cluster profit
-            pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex].hour[hourInTheYear]
-              = (hourlyClusterProduction - pMin)
-                * (-areaMarginalCosts[hourInTheWeek]
-                   - cluster->getMarginalCost(tsIndex, hourInTheYear));
+            pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex]
+                    .hour[hourInTheYear] = (hourlyClusterProduction - pMin) *
+                                           (-areaMarginalCosts[hourInTheWeek] -
+                                            cluster->getMarginalCost(tsIndex, hourInTheYear));
         }
 
         // Next variable
         NextType::hourForEachArea(state, numSpace);
     }
 
-    Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
-      unsigned int,
-      unsigned int numSpace) const
+    Antares::Memory::Stored<double>::ConstReturnType
+    retrieveRawHourlyValuesForCurrentYear(unsigned int, unsigned int numSpace) const
     {
         return pValuesForTheCurrentYear[numSpace]->hour;
     }
@@ -325,7 +324,7 @@ public:
                 results.variableCaption = cluster->name(); // VCardType::Caption();
                 results.variableUnit = VCardType::Unit();
                 pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex]
-                  .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
+                        .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
             }
         }
     }

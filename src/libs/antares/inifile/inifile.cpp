@@ -30,11 +30,12 @@ using namespace Yuni;
 
 namespace Antares
 {
-static inline IniFile::Section* AnalyzeIniLine(const String& pFilename,
-                                               IniFile* d,
-                                               IniFile::Section* section,
-                                               char* line,
-                                               uint64_t& read)
+static inline IniFile::Section*
+AnalyzeIniLine(const String& pFilename,
+               IniFile* d,
+               IniFile::Section* section,
+               char* line,
+               uint64_t& read)
 {
     enum Type
     {
@@ -82,8 +83,8 @@ static inline IniFile::Section* AnalyzeIniLine(const String& pFilename,
             }
             else
             {
-                if (('\n' == *p)
-                    or ('\r' == *p)) // or (*p == '/' and ('/' == *(p + 1) or '*' == *(p + 1))))
+                if (('\n' == *p) or
+                    ('\r' == *p)) // or (*p == '/' and ('/' == *(p + 1) or '*' == *(p + 1))))
                 {
                     *p = '\0';
                     break;
@@ -136,14 +137,16 @@ IniFile::Property::~Property()
 }
 
 template<class StreamT>
-inline void IniFile::Property::saveToStream(StreamT& file, uint64_t& written) const
+inline void
+IniFile::Property::saveToStream(StreamT& file, uint64_t& written) const
 {
     written += key.size() + value.size() + 4;
     file << key << " = " << value << '\n';
 }
 
 template<class StreamT>
-void IniFile::Section::saveToStream(StreamT& file, uint64_t& written) const
+void
+IniFile::Section::saveToStream(StreamT& file, uint64_t& written) const
 {
     if (!firstProperty)
     {
@@ -203,7 +206,8 @@ IniFile::~IniFile()
     }
 }
 
-IniFile::Section* IniFile::add(IniFile::Section* s)
+IniFile::Section*
+IniFile::add(IniFile::Section* s)
 {
     assert(s and "The section can not be null");
 
@@ -220,7 +224,8 @@ IniFile::Section* IniFile::add(IniFile::Section* s)
     return s;
 }
 
-void IniFile::clear()
+void
+IniFile::clear()
 {
     if (firstSection)
     {
@@ -237,7 +242,8 @@ void IniFile::clear()
     }
 }
 
-uint IniFile::Section::size() const
+uint
+IniFile::Section::size() const
 {
     if (!firstProperty)
     {
@@ -253,7 +259,8 @@ uint IniFile::Section::size() const
     return count;
 }
 
-bool IniFile::open(const AnyString& filename, bool warnings)
+bool
+IniFile::open(const AnyString& filename, bool warnings)
 {
     // clear
     clear();
@@ -297,7 +304,8 @@ bool IniFile::open(const AnyString& filename, bool warnings)
     return false;
 }
 
-void IniFile::saveToString(std::string& str) const
+void
+IniFile::saveToString(std::string& str) const
 {
     uint64_t written = 0;
     std::ostringstream ostream;
@@ -315,7 +323,8 @@ void IniFile::saveToString(std::string& str) const
     str = ostream.str();
 }
 
-bool IniFile::save(const AnyString& filename) const
+bool
+IniFile::save(const AnyString& filename) const
 {
     logs.debug() << "  :: writing `" << filename << '`';
     IO::File::Stream f;
@@ -344,7 +353,8 @@ bool IniFile::save(const AnyString& filename) const
     }
 }
 
-IniFile::Property* IniFile::Section::find(const AnyString& key)
+IniFile::Property*
+IniFile::Section::find(const AnyString& key)
 {
     for (auto* property = firstProperty; property; property = property->next)
     {
@@ -356,7 +366,8 @@ IniFile::Property* IniFile::Section::find(const AnyString& key)
     return nullptr;
 }
 
-const IniFile::Property* IniFile::Section::find(const AnyString& key) const
+const IniFile::Property*
+IniFile::Section::find(const AnyString& key) const
 {
     for (auto* property = firstProperty; property; property = property->next)
     {
@@ -368,7 +379,8 @@ const IniFile::Property* IniFile::Section::find(const AnyString& key) const
     return nullptr;
 }
 
-IniFile::Section* IniFile::find(const AnyString& name)
+IniFile::Section*
+IniFile::find(const AnyString& name)
 {
     for (auto* section = firstSection; section; section = section->next)
     {
@@ -380,7 +392,8 @@ IniFile::Section* IniFile::find(const AnyString& name)
     return nullptr;
 }
 
-const IniFile::Section* IniFile::find(const AnyString& name) const
+const IniFile::Section*
+IniFile::find(const AnyString& name) const
 {
     for (auto* section = firstSection; section; section = section->next)
     {

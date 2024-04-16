@@ -25,17 +25,18 @@
 
 namespace Antares::Data::AdequacyPatch
 {
-int countConstraints(const PROBLEME_HEBDO* problemeHebdo)
+int
+countConstraints(const PROBLEME_HEBDO* problemeHebdo)
 {
     int numberOfConstraints = 0;
     // constraint: Flow = Flow_direct - Flow_indirect (+ loop flow) for links between nodes of
     // type 2.
     for (uint32_t Interco = 0; Interco < problemeHebdo->NombreDInterconnexions; Interco++)
     {
-        if (problemeHebdo->adequacyPatchRuntimeData->originAreaMode[Interco]
-              == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch
-            && problemeHebdo->adequacyPatchRuntimeData->extremityAreaMode[Interco]
-                 == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch)
+        if (problemeHebdo->adequacyPatchRuntimeData->originAreaMode[Interco] ==
+                    Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch &&
+            problemeHebdo->adequacyPatchRuntimeData->extremityAreaMode[Interco] ==
+                    Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
             numberOfConstraints++;
         }
@@ -49,8 +50,8 @@ int countConstraints(const PROBLEME_HEBDO* problemeHebdo)
     // for all areas inside adequacy patch
     for (uint32_t Area = 0; Area < problemeHebdo->NombreDePays; ++Area)
     {
-        if (problemeHebdo->adequacyPatchRuntimeData->areaMode[Area]
-            == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
+        if (problemeHebdo->adequacyPatchRuntimeData->areaMode[Area] ==
+            Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
             numberOfConstraints++;
         }
@@ -68,15 +69,16 @@ int countConstraints(const PROBLEME_HEBDO* problemeHebdo)
     return numberOfConstraints;
 }
 
-int countVariables(const PROBLEME_HEBDO* problemeHebdo)
+int
+countVariables(const PROBLEME_HEBDO* problemeHebdo)
 {
     int numberOfVariables = 0;
     // variables: ENS of each area inside adq patch
     for (uint32_t area = 0; area < problemeHebdo->NombreDePays; ++area)
     {
         // Only ENS for areas inside adq patch are considered as variables
-        if (problemeHebdo->adequacyPatchRuntimeData->areaMode[area]
-            == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
+        if (problemeHebdo->adequacyPatchRuntimeData->areaMode[area] ==
+            Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
             numberOfVariables += 2; // ENS, spilled energy
         }
@@ -85,10 +87,10 @@ int countVariables(const PROBLEME_HEBDO* problemeHebdo)
     for (uint32_t Interco = 0; Interco < problemeHebdo->NombreDInterconnexions; Interco++)
     {
         // only consider link between 2 and 2
-        if (problemeHebdo->adequacyPatchRuntimeData->originAreaMode[Interco]
-              == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch
-            && problemeHebdo->adequacyPatchRuntimeData->extremityAreaMode[Interco]
-                 == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch)
+        if (problemeHebdo->adequacyPatchRuntimeData->originAreaMode[Interco] ==
+                    Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch &&
+            problemeHebdo->adequacyPatchRuntimeData->extremityAreaMode[Interco] ==
+                    Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
             numberOfVariables += 3; // algebraic flow, direct flow, indirect flow
         }

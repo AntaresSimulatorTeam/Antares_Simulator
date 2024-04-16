@@ -35,7 +35,8 @@ using namespace Yuni;
 
 namespace Antares::Data
 {
-void Area::internalInitialize()
+void
+Area::internalInitialize()
 {
     // Make sure we have
     if (JIT::usedFromGUI)
@@ -85,7 +86,8 @@ Area::~Area()
     ui = nullptr;
 }
 
-void Area::clearAllLinks()
+void
+Area::clearAllLinks()
 {
     if (not links.empty())
     {
@@ -102,7 +104,8 @@ void Area::clearAllLinks()
     }
 }
 
-void Area::detachAllLinks()
+void
+Area::detachAllLinks()
 {
     while (not links.empty())
     {
@@ -110,7 +113,8 @@ void Area::detachAllLinks()
     }
 }
 
-AreaLink* Area::findExistingLinkWith(Area& with)
+AreaLink*
+Area::findExistingLinkWith(Area& with)
 {
     if (&with == this)
     {
@@ -141,7 +145,8 @@ AreaLink* Area::findExistingLinkWith(Area& with)
     return nullptr;
 }
 
-const AreaLink* Area::findExistingLinkWith(const Area& with) const
+const AreaLink*
+Area::findExistingLinkWith(const Area& with) const
 {
     if (&with != this)
     {
@@ -171,7 +176,8 @@ const AreaLink* Area::findExistingLinkWith(const Area& with) const
     return nullptr;
 }
 
-uint64_t Area::memoryUsage() const
+uint64_t
+Area::memoryUsage() const
 {
     uint64_t ret = 0;
 
@@ -217,13 +223,15 @@ uint64_t Area::memoryUsage() const
     return ret;
 }
 
-void Area::createMissingData()
+void
+Area::createMissingData()
 {
     createMissingTimeSeries();
     createMissingPrepros();
 }
 
-void Area::createMissingTimeSeries()
+void
+Area::createMissingTimeSeries()
 {
     if (!hydro.series)
     {
@@ -231,7 +239,8 @@ void Area::createMissingTimeSeries()
     }
 }
 
-void Area::createMissingPrepros()
+void
+Area::createMissingPrepros()
 {
     if (!load.prepro)
     {
@@ -252,7 +261,8 @@ void Area::createMissingPrepros()
     thermal.list.ensureDataPrepro();
 }
 
-void Area::resetToDefaultValues()
+void
+Area::resetToDefaultValues()
 {
     // Nodal optimization
     nodalOptimization = anoAll;
@@ -287,7 +297,8 @@ void Area::resetToDefaultValues()
     invalidateJIT = true;
 }
 
-void Area::resizeAllTimeseriesNumbers(uint nbYears)
+void
+Area::resizeAllTimeseriesNumbers(uint nbYears)
 {
     assert(hydro.series and "series must not be nullptr !");
 
@@ -305,15 +316,15 @@ void Area::resizeAllTimeseriesNumbers(uint nbYears)
     renewable.resizeAllTimeseriesNumbers(nbYears);
 }
 
-bool Area::thermalClustersMinStablePowerValidity(std::vector<YString>& output) const
+bool
+Area::thermalClustersMinStablePowerValidity(std::vector<YString>& output) const
 {
     bool noErrorMinStabPow = true;
     for (auto& cluster: thermal.list.each_enabled())
     {
         logs.debug() << "cluster : " << cluster->name();
-        if ((not cluster->checkMinStablePower())
-            || (cluster->minStablePower
-                > cluster->nominalCapacity * (1 - cluster->spinning / 100.)))
+        if ((not cluster->checkMinStablePower()) ||
+            (cluster->minStablePower > cluster->nominalCapacity * (1 - cluster->spinning / 100.)))
         {
             output.push_back(cluster->name());
             noErrorMinStabPow = false;
@@ -322,7 +333,8 @@ bool Area::thermalClustersMinStablePowerValidity(std::vector<YString>& output) c
     return noErrorMinStabPow;
 }
 
-bool Area::forceReload(bool reload) const
+bool
+Area::forceReload(bool reload) const
 {
     // To not break the entire constness design of the library
     // this method should remain const event if the operations
@@ -366,7 +378,8 @@ bool Area::forceReload(bool reload) const
     return ret;
 }
 
-void Area::markAsModified() const
+void
+Area::markAsModified() const
 {
     // Misc Gen
     miscGen.markAsModified();
@@ -400,7 +413,8 @@ void Area::markAsModified() const
     }
 }
 
-void Area::detachLinkFromID(const AreaName& id)
+void
+Area::detachLinkFromID(const AreaName& id)
 {
     auto i = links.find(id);
     if (i != links.end())
@@ -409,7 +423,8 @@ void Area::detachLinkFromID(const AreaName& id)
     }
 }
 
-void Area::detachLink(const AreaLink* lnk)
+void
+Area::detachLink(const AreaLink* lnk)
 {
     assert(lnk);
     assert(lnk->from);
@@ -418,19 +433,22 @@ void Area::detachLink(const AreaLink* lnk)
     lnk->from->detachLinkFromID(lnk->with->id);
 }
 
-AreaLink* Area::findLinkByID(const AreaName& id)
+AreaLink*
+Area::findLinkByID(const AreaName& id)
 {
     auto i = links.find(id);
     return (i != links.end()) ? i->second : nullptr;
 }
 
-const AreaLink* Area::findLinkByID(const AreaName& id) const
+const AreaLink*
+Area::findLinkByID(const AreaName& id) const
 {
     auto i = links.find(id);
     return (i != links.end()) ? i->second : nullptr;
 }
 
-void Area::buildLinksIndexes()
+void
+Area::buildLinksIndexes()
 {
     uint areaIndx = 0;
 

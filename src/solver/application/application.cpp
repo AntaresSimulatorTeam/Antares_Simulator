@@ -45,7 +45,8 @@ using namespace Antares::Check;
 
 namespace
 {
-void printSolvers()
+void
+printSolvers()
 {
     std::cout << "Available solvers: " << availableOrToolsSolversString() << std::endl;
 }
@@ -58,7 +59,8 @@ Application::Application()
     resetProcessPriority();
 }
 
-void Application::prepare(int argc, char* argv[])
+void
+Application::prepare(int argc, char* argv[])
 {
     // Load the local policy settings
     LocalPolicy::Open();
@@ -165,9 +167,8 @@ void Application::prepare(int argc, char* argv[])
                                                         pParameters->include.hurdleCosts);
     }
 
-    bool tsGenThermal = (0
-                         != (pParameters->timeSeriesToGenerate
-                             & Antares::Data::TimeSeriesType::timeSeriesThermal));
+    bool tsGenThermal = (0 != (pParameters->timeSeriesToGenerate &
+                               Antares::Data::TimeSeriesType::timeSeriesThermal));
 
     checkMinStablePower(tsGenThermal, pStudy->areas);
 
@@ -194,7 +195,8 @@ void Application::prepare(int argc, char* argv[])
     }
 }
 
-void Application::onLogMessage(int level, const Yuni::String& /*message*/)
+void
+Application::onLogMessage(int level, const Yuni::String& /*message*/)
 {
     switch (level)
     {
@@ -210,7 +212,8 @@ void Application::onLogMessage(int level, const Yuni::String& /*message*/)
     }
 }
 
-void Application::execute()
+void
+Application::execute()
 {
     // pStudy == nullptr e.g when the -h flag is given
     if (!pStudy)
@@ -247,7 +250,8 @@ void Application::execute()
     pStudy->progression.stop();
 }
 
-void Application::resetLogFilename() const
+void
+Application::resetLogFilename() const
 {
     // Assigning the log file
     Yuni::String logfile;
@@ -256,8 +260,8 @@ void Application::resetLogFilename() const
     // Making sure that the folder
     if (!Yuni::IO::Directory::Create(logfile))
     {
-        throw FatalError(std::string("Impossible to create the log folder at ") + logfile.c_str()
-                         + ". Aborting now.");
+        throw FatalError(std::string("Impossible to create the log folder at ") + logfile.c_str() +
+                         ". Aborting now.");
     }
 
     // Date/time
@@ -274,8 +278,9 @@ void Application::resetLogFilename() const
     }
 }
 
-void Application::prepareWriter(const Antares::Data::Study& study,
-                                Benchmarking::IDurationCollector& duration_collector)
+void
+Application::prepareWriter(const Antares::Data::Study& study,
+                           Benchmarking::IDurationCollector& duration_collector)
 {
     ioQueueService = std::make_shared<Yuni::Job::QueueService>();
     ioQueueService->maximumThreadCount(1);
@@ -286,7 +291,8 @@ void Application::prepareWriter(const Antares::Data::Study& study,
                                        duration_collector);
 }
 
-void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
+void
+Application::readDataForTheStudy(Data::StudyLoadOptions& options)
 {
     auto& study = *pStudy;
 
@@ -382,10 +388,10 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
         else
         {
             LogDisplayErrorInfos(
-              0,
-              pWarningCount,
-              "As requested, the warnings can be ignored and the simulation will continue",
-              false /* not an error */);
+                    0,
+                    pWarningCount,
+                    "As requested, the warnings can be ignored and the simulation will continue",
+                    false /* not an error */);
             // Actually importing the log file is useless here.
             // However, since we have warnings/errors, it allows to have a piece of
             // log when the unexpected happens.
@@ -422,7 +428,8 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     SIM_AllocationTableaux(study);
 }
 
-void Application::writeComment(Data::Study& study)
+void
+Application::writeComment(Data::Study& study)
 {
     study.buffer.clear() << "simulation-comments.txt";
 
@@ -436,7 +443,8 @@ void Application::writeComment(Data::Study& study)
     }
 }
 
-static void logTotalTime(unsigned duration)
+static void
+logTotalTime(unsigned duration)
 {
     std::chrono::milliseconds d(duration);
     auto hours = std::chrono::duration_cast<std::chrono::hours>(d);
@@ -451,7 +459,8 @@ static void logTotalTime(unsigned duration)
                              seconds.count());
 }
 
-void Application::writeExectutionInfo()
+void
+Application::writeExectutionInfo()
 {
     if (!pStudy)
     {

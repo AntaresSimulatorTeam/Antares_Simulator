@@ -54,31 +54,36 @@ inline Sets<T>::~Sets()
 }
 
 template<class T>
-typename Sets<T>::iterator Sets<T>::begin()
+typename Sets<T>::iterator
+Sets<T>::begin()
 {
     return pMap.begin();
 }
 
 template<class T>
-typename Sets<T>::const_iterator Sets<T>::begin() const
+typename Sets<T>::const_iterator
+Sets<T>::begin() const
 {
     return pMap.begin();
 }
 
 template<class T>
-typename Sets<T>::iterator Sets<T>::end()
+typename Sets<T>::iterator
+Sets<T>::end()
 {
     return pMap.end();
 }
 
 template<class T>
-typename Sets<T>::const_iterator Sets<T>::end() const
+typename Sets<T>::const_iterator
+Sets<T>::end() const
 {
     return pMap.end();
 }
 
 template<class T>
-void Sets<T>::clear()
+void
+Sets<T>::clear()
 {
     if (pByIndex)
     {
@@ -96,14 +101,16 @@ void Sets<T>::clear()
 }
 
 template<class T>
-inline T& Sets<T>::operator[](uint i)
+inline T&
+Sets<T>::operator[](uint i)
 {
     assert(i < pMap.size() && "Sets: operator[] index out of bounds");
     return *(pByIndex[i]);
 }
 
 template<class T>
-inline const T& Sets<T>::operator[](uint i) const
+inline const T&
+Sets<T>::operator[](uint i) const
 {
     assert(i < pMap.size() && "Sets: operator[] index out of bounds");
     return *(pByIndex[i]);
@@ -111,7 +118,8 @@ inline const T& Sets<T>::operator[](uint i) const
 
 template<class T>
 template<class L>
-void Sets<T>::dumpToLogs(L& log) const
+void
+Sets<T>::dumpToLogs(L& log) const
 {
     using namespace Yuni;
     const typename MapType::const_iterator end = pMap.end();
@@ -124,7 +132,8 @@ void Sets<T>::dumpToLogs(L& log) const
 }
 
 template<class T>
-void Sets<T>::defaultForAreas()
+void
+Sets<T>::defaultForAreas()
 {
     using namespace Yuni;
     clear();
@@ -138,7 +147,8 @@ void Sets<T>::defaultForAreas()
 }
 
 template<class T>
-YString Sets<T>::toString()
+YString
+Sets<T>::toString()
 {
     using namespace Yuni;
     using namespace Antares;
@@ -171,7 +181,8 @@ YString Sets<T>::toString()
 
 template<class T>
 template<class StringT>
-bool Sets<T>::saveToFile(const StringT& filename) const
+bool
+Sets<T>::saveToFile(const StringT& filename) const
 {
     using namespace Yuni;
     using namespace Antares;
@@ -211,7 +222,8 @@ bool Sets<T>::saveToFile(const StringT& filename) const
 
 template<class T>
 template<class StringT>
-bool Sets<T>::loadFromFile(const StringT& filename)
+bool
+Sets<T>::loadFromFile(const StringT& filename)
 {
     using namespace Yuni;
     using namespace Antares;
@@ -310,7 +322,8 @@ bool Sets<T>::loadFromFile(const StringT& filename)
 
 template<class T>
 template<class HandlerT>
-inline void Sets<T>::rebuildAllFromRules(HandlerT& handler)
+inline void
+Sets<T>::rebuildAllFromRules(HandlerT& handler)
 {
     for (uint i = 0; i != pMap.size(); ++i)
     {
@@ -320,7 +333,8 @@ inline void Sets<T>::rebuildAllFromRules(HandlerT& handler)
 
 template<class T>
 template<class HandlerT>
-void Sets<T>::rebuildFromRules(const IDType& id, HandlerT& handler)
+void
+Sets<T>::rebuildFromRules(const IDType& id, HandlerT& handler)
 {
     using namespace Yuni;
     using namespace Antares;
@@ -400,7 +414,8 @@ void Sets<T>::rebuildFromRules(const IDType& id, HandlerT& handler)
 }
 
 template<class T>
-void Sets<T>::rebuildIndexes()
+void
+Sets<T>::rebuildIndexes()
 {
     delete[] pByIndex;
     delete[] pNameByIndex;
@@ -427,7 +442,8 @@ void Sets<T>::rebuildIndexes()
 
 template<class T>
 template<class StringT>
-inline bool Sets<T>::hasOutput(const StringT& s) const
+inline bool
+Sets<T>::hasOutput(const StringT& s) const
 {
     // Assert, if a C* container can not be found at compile time
     static_assert(Yuni::Traits::CString<StringT>::valid);
@@ -437,14 +453,16 @@ inline bool Sets<T>::hasOutput(const StringT& s) const
 }
 
 template<class T>
-inline bool Sets<T>::hasOutput(const uint index) const
+inline bool
+Sets<T>::hasOutput(const uint index) const
 {
     return hasOutput(IDType(pNameByIndex[index]));
 }
 
 template<class T>
 template<class StringT>
-inline uint Sets<T>::resultSize(const StringT& s) const
+inline uint
+Sets<T>::resultSize(const StringT& s) const
 {
     // Assert, if a C* container can not be found at compile time
     static_assert(Yuni::Traits::CString<StringT>::valid);
@@ -455,7 +473,8 @@ inline uint Sets<T>::resultSize(const StringT& s) const
 
 template<class T>
 template<class StringT>
-inline typename Sets<T>::IDType Sets<T>::caption(const StringT& s) const
+inline typename Sets<T>::IDType
+Sets<T>::caption(const StringT& s) const
 {
     // Assert, if a C* container can not be found at compile time
     static_assert(Yuni::Traits::CString<StringT>::valid);
@@ -465,19 +484,22 @@ inline typename Sets<T>::IDType Sets<T>::caption(const StringT& s) const
 }
 
 template<class T>
-inline typename Sets<T>::IDType Sets<T>::caption(const uint i) const
+inline typename Sets<T>::IDType
+Sets<T>::caption(const uint i) const
 {
     return caption(IDType(pNameByIndex[i]));
 }
 
 template<class T>
-inline uint Sets<T>::resultSize(const uint index) const
+inline uint
+Sets<T>::resultSize(const uint index) const
 {
     return resultSize(IDType(pNameByIndex[index]));
 }
 
 template<class T>
-inline uint Sets<T>::size() const
+inline uint
+Sets<T>::size() const
 {
     return (uint)pMap.size();
 }

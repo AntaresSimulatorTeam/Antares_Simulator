@@ -23,7 +23,8 @@
 #include <algorithm>
 #include <iterator>
 
-char** RealName::translate(const std::vector<std::string>& src, std::vector<char*>& pointerVec)
+char**
+RealName::translate(const std::vector<std::string>& src, std::vector<char*>& pointerVec)
 {
     std::transform(src.begin(),
                    src.end(),
@@ -33,13 +34,15 @@ char** RealName::translate(const std::vector<std::string>& src, std::vector<char
     return pointerVec.data();
 }
 
-char** NullName::translate(const std::vector<std::string>& src, std::vector<char*>& pointerVec)
+char**
+NullName::translate(const std::vector<std::string>& src, std::vector<char*>& pointerVec)
 {
     pointerVec.assign(src.size(), nullptr);
     return pointerVec.data();
 }
 
-std::unique_ptr<NameTranslator> NameTranslator::create(bool useRealNames)
+std::unique_ptr<NameTranslator>
+NameTranslator::create(bool useRealNames)
 {
     if (useRealNames)
     {

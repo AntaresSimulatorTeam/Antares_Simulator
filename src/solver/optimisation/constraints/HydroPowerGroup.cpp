@@ -21,16 +21,18 @@
 
 #include "antares/solver/optimisation/constraints/HydroPowerGroup.h"
 
-HydroPowerData HydroPowerGroup::GetHydroPowerDataFromProblemHebdo()
+HydroPowerData
+HydroPowerGroup::GetHydroPowerDataFromProblemHebdo()
 {
-    return {
-      .CaracteristiquesHydrauliques = problemeHebdo_->CaracteristiquesHydrauliques,
-      .NombreDePasDeTempsPourUneOptimisation = problemeHebdo_
-                                                 ->NombreDePasDeTempsPourUneOptimisation,
-      .NumeroDeContrainteEnergieHydraulique = problemeHebdo_->NumeroDeContrainteEnergieHydraulique};
+    return {.CaracteristiquesHydrauliques = problemeHebdo_->CaracteristiquesHydrauliques,
+            .NombreDePasDeTempsPourUneOptimisation =
+                    problemeHebdo_->NombreDePasDeTempsPourUneOptimisation,
+            .NumeroDeContrainteEnergieHydraulique = problemeHebdo_
+                                                            ->NumeroDeContrainteEnergieHydraulique};
 }
 
-void HydroPowerGroup::BuildConstraints()
+void
+HydroPowerGroup::BuildConstraints()
 {
     auto hydroPowerData = GetHydroPowerDataFromProblemHebdo();
     HydroPower hydroPower(builder_, hydroPowerData);

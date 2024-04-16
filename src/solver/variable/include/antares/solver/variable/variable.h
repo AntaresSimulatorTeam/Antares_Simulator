@@ -79,9 +79,9 @@ public:
         enum
         {
             count = ((categoryDataLevel & CDataLevel && categoryFileLevel & CFile)
-                       ? (NextType::template Statistics<CDataLevel, CFile>::count
-                          + ResultsType::count)
-                       : NextType::template Statistics<CDataLevel, CFile>::count),
+                             ? (NextType::template Statistics<CDataLevel, CFile>::count +
+                                ResultsType::count)
+                             : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
 
@@ -259,10 +259,8 @@ public:
 
     //! \name User Reports
     //@{
-    void buildSurveyReport(SurveyResults& results,
-                           int dataLevel,
-                           int fileLevel,
-                           int precision) const;
+    void
+    buildSurveyReport(SurveyResults& results, int dataLevel, int fileLevel, int precision) const;
 
     void buildAnnualSurveyReport(SurveyResults& results,
                                  int dataLevel,
@@ -326,9 +324,8 @@ public:
     void retrieveResultsForLink(typename Storage<VCardToFindT>::ResultsType** result,
                                 const Data::AreaLink* link);
 
-    Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
-      uint column,
-      uint) const;
+    Antares::Memory::Stored<double>::ConstReturnType
+    retrieveRawHourlyValuesForCurrentYear(uint column, uint) const;
     //@}
 
     //! The results

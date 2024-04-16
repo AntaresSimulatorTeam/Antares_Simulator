@@ -47,8 +47,8 @@ bool GenerateThermalTimeSeries(Data::Study& study,
                                uint year,
                                Solver::IResultWriter& writer);
 
-std::vector<Data::ThermalCluster*> getAllClustersToGen(Data::AreaList& areas,
-                                                       bool globalThermalTSgeneration);
+std::vector<Data::ThermalCluster*>
+getAllClustersToGen(Data::AreaList& areas, bool globalThermalTSgeneration);
 /*!
 ** \brief Destroy all TS Generators
 */

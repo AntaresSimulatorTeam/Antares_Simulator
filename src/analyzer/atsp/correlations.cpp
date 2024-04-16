@@ -31,7 +31,8 @@ using namespace Yuni;
 
 namespace Antares
 {
-bool ATSP::computeMonthlyCorrelations()
+bool
+ATSP::computeMonthlyCorrelations()
 {
     logs.checkpoint() << "Monthly correlation values";
 
@@ -351,10 +352,10 @@ bool ATSP::computeMonthlyCorrelations()
             }
             else
             {
-                logs.warning()
-                  << "TS-Analyzer: " << Date::MonthToString(m)
-                  << ": correlation matrix was shrinked by " << shrink
-                  << ". to reach admissibility (stage 1)- Consider using lower trimming threshold";
+                logs.warning() << "TS-Analyzer: " << Date::MonthToString(m)
+                               << ": correlation matrix was shrinked by " << shrink
+                               << ". to reach admissibility (stage 1)- Consider using lower "
+                                  "trimming threshold";
             }
         }
         // Replace original matrix with zero by the admissible matrix
@@ -514,9 +515,9 @@ bool ATSP::computeMonthlyCorrelations()
         }
         else
         {
-            logs.warning()
-              << "TS-Analyzer: annual: correlation matrix was shrinked by " << shrink
-              << ". to reach admissibility (stage 1)- Consider using lower trimming threshold";
+            logs.warning() << "TS-Analyzer: annual: correlation matrix was shrinked by " << shrink
+                           << ". to reach admissibility (stage 1)- Consider using lower trimming "
+                              "threshold";
         }
     }
 
@@ -570,8 +571,8 @@ bool ATSP::computeMonthlyCorrelations()
         else
         {
             logs.info()
-              << "TS-Analyzer: annual: some terms of the correlation matrix were shrinked by "
-              << shrink << ". to reach admissibility (hidden signal padding)";
+                    << "TS-Analyzer: annual: some terms of the correlation matrix were shrinked by "
+                    << shrink << ". to reach admissibility (hidden signal padding)";
         }
     }
     for (uint y = 1; y < resultNDP.height; ++y)

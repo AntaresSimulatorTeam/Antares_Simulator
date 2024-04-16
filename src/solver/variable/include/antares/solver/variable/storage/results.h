@@ -99,7 +99,7 @@ public:
     Antares::Memory::Stored<double>::ConstReturnType hourlyValuesForSpatialAggregate() const
     {
         return DecoratorType::template hourlyValuesForSpatialAggregate<
-          DecoratorForSpatialAggregateT>();
+                DecoratorForSpatialAggregateT>();
     }
 
 }; // class Results

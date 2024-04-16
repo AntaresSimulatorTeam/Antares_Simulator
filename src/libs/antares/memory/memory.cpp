@@ -60,7 +60,8 @@ namespace // anonymous
 static std::mutex gMutex;
 } // anonymous namespace
 
-bool Memory::initializeTemporaryFolder()
+bool
+Memory::initializeTemporaryFolder()
 {
     std::lock_guard locker(gMutex);
     if (pAlreadyInitialized)
@@ -112,8 +113,8 @@ bool Memory::initializeTemporaryFolder()
     }
 
     // Trying to create the folder
-    if (not pCacheFolder.empty() and not pAllowedToChangeCacheFolder
-        and not IO::Directory::Create(pCacheFolder))
+    if (not pCacheFolder.empty() and not pAllowedToChangeCacheFolder and
+        not IO::Directory::Create(pCacheFolder))
     {
         logs.warning() << "Impossible to create the cache folder " << pCacheFolder;
         pCacheFolder.clear();
@@ -121,7 +122,8 @@ bool Memory::initializeTemporaryFolder()
     return true;
 }
 
-void Memory::displayInfo() const
+void
+Memory::displayInfo() const
 {
 #ifdef YUNI_OS_WINDOWS
     SYSTEM_INFO info;
@@ -136,13 +138,15 @@ void Memory::displayInfo() const
     logs.info() << "  memory pool: cache folder: " << pCacheFolder;
 }
 
-const String& Memory::cacheFolder() const
+const String&
+Memory::cacheFolder() const
 {
     std::lock_guard locker(gMutex);
     return pCacheFolder;
 }
 
-void Memory::cacheFolder(const AnyString& folder)
+void
+Memory::cacheFolder(const AnyString& folder)
 {
     std::lock_guard locker(gMutex);
     if (pAllowedToChangeCacheFolder)

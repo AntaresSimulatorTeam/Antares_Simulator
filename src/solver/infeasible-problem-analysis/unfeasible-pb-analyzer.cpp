@@ -33,7 +33,8 @@ using namespace operations_research;
 namespace Antares::Optimization
 {
 
-std::unique_ptr<UnfeasiblePbAnalyzer> makeUnfeasiblePbAnalyzer()
+std::unique_ptr<UnfeasiblePbAnalyzer>
+makeUnfeasiblePbAnalyzer()
 {
     std::vector<std::unique_ptr<UnfeasibilityAnalysis>> analysisList;
     analysisList.push_back(std::make_unique<VariablesBoundsConsistency>());
@@ -43,12 +44,13 @@ std::unique_ptr<UnfeasiblePbAnalyzer> makeUnfeasiblePbAnalyzer()
 }
 
 UnfeasiblePbAnalyzer::UnfeasiblePbAnalyzer(
-  std::vector<std::unique_ptr<UnfeasibilityAnalysis>> analysisList):
+        std::vector<std::unique_ptr<UnfeasibilityAnalysis>> analysisList):
     analysisList_(std::move(analysisList))
 {
 }
 
-void UnfeasiblePbAnalyzer::run(MPSolver* problem)
+void
+UnfeasiblePbAnalyzer::run(MPSolver* problem)
 {
     logs.info();
     logs.info() << "Solver: Starting unfeasibility analysis...";
@@ -67,7 +69,8 @@ void UnfeasiblePbAnalyzer::run(MPSolver* problem)
     }
 }
 
-void UnfeasiblePbAnalyzer::printReport() const
+void
+UnfeasiblePbAnalyzer::printReport() const
 {
     for (auto& analysis: analysisList_)
     {

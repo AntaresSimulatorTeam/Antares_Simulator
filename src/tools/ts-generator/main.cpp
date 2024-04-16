@@ -46,7 +46,8 @@ struct TsGeneratorSettings
     std::string thermalListToGen = "";
 };
 
-std::unique_ptr<Yuni::GetOpt::Parser> createTsGeneratorParser(TsGeneratorSettings& settings)
+std::unique_ptr<Yuni::GetOpt::Parser>
+createTsGeneratorParser(TsGeneratorSettings& settings)
 {
     auto parser = std::make_unique<Yuni::GetOpt::Parser>();
     parser->addParagraph("Antares Time Series generator\n");
@@ -67,8 +68,8 @@ std::unique_ptr<Yuni::GetOpt::Parser> createTsGeneratorParser(TsGeneratorSetting
     return parser;
 }
 
-std::vector<Data::ThermalCluster*> getClustersToGen(Data::AreaList& areas,
-                                                    const std::string& clustersToGen)
+std::vector<Data::ThermalCluster*>
+getClustersToGen(Data::AreaList& areas, const std::string& clustersToGen)
 {
     std::vector<Data::ThermalCluster*> clusters;
     const auto ids = splitStringIntoPairs(clustersToGen, ';', '.');
@@ -97,7 +98,8 @@ std::vector<Data::ThermalCluster*> getClustersToGen(Data::AreaList& areas,
     return clusters;
 }
 
-int main(int argc, char* argv[])
+int
+main(int argc, char* argv[])
 {
     TsGeneratorSettings settings;
 

@@ -25,7 +25,8 @@
 #include "antares/solver/simulation/sim_structure_donnees.h"
 #include "antares/solver/simulation/simulation.h"
 
-void OPT_RestaurerLesDonnees(PROBLEME_HEBDO* problemeHebdo)
+void
+OPT_RestaurerLesDonnees(PROBLEME_HEBDO* problemeHebdo)
 {
     const std::vector<int>& NumeroDeJourDuPasDeTemps = problemeHebdo->NumeroDeJourDuPasDeTemps;
     const int DernierPasDeTemps = problemeHebdo->NombreDePasDeTemps;
@@ -37,10 +38,10 @@ void OPT_RestaurerLesDonnees(PROBLEME_HEBDO* problemeHebdo)
             if (COUTS_DE_TRANSPORT& CoutDeTransport = problemeHebdo->CoutDeTransport[interco];
                 CoutDeTransport.IntercoGereeAvecDesCouts)
             {
-                CoutDeTransport.CoutDeTransportOrigineVersExtremite[pdt]
-                  = CoutDeTransport.CoutDeTransportOrigineVersExtremiteRef[pdt];
-                CoutDeTransport.CoutDeTransportExtremiteVersOrigine[pdt]
-                  = CoutDeTransport.CoutDeTransportExtremiteVersOrigineRef[pdt];
+                CoutDeTransport.CoutDeTransportOrigineVersExtremite
+                        [pdt] = CoutDeTransport.CoutDeTransportOrigineVersExtremiteRef[pdt];
+                CoutDeTransport.CoutDeTransportExtremiteVersOrigine
+                        [pdt] = CoutDeTransport.CoutDeTransportExtremiteVersOrigineRef[pdt];
             }
         }
     }
@@ -49,8 +50,9 @@ void OPT_RestaurerLesDonnees(PROBLEME_HEBDO* problemeHebdo)
     {
         for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
-            ENERGIES_ET_PUISSANCES_HYDRAULIQUES& CaracteristiquesHydrauliques
-              = problemeHebdo->CaracteristiquesHydrauliques[pays];
+            ENERGIES_ET_PUISSANCES_HYDRAULIQUES&
+                    CaracteristiquesHydrauliques = problemeHebdo
+                                                           ->CaracteristiquesHydrauliques[pays];
 
             if (!CaracteristiquesHydrauliques.PresenceDHydrauliqueModulable)
             {
@@ -58,7 +60,7 @@ void OPT_RestaurerLesDonnees(PROBLEME_HEBDO* problemeHebdo)
             }
 
             double& hourlyPmax = CaracteristiquesHydrauliques
-                                   .ContrainteDePmaxHydrauliqueHoraire[pdt];
+                                         .ContrainteDePmaxHydrauliqueHoraire[pdt];
             hourlyPmax = CaracteristiquesHydrauliques.ContrainteDePmaxHydrauliqueHoraireRef[pdt];
             if (CaracteristiquesHydrauliques.SansHeuristique)
             {
@@ -74,7 +76,7 @@ void OPT_RestaurerLesDonnees(PROBLEME_HEBDO* problemeHebdo)
             {
                 // Hydro generating power required to make use of energy stored from pumps
                 double PmaxHydUplift = CaracteristiquesHydrauliques
-                                         .ContrainteDePmaxPompageHoraire[pdt];
+                                               .ContrainteDePmaxPompageHoraire[pdt];
                 PmaxHydUplift *= problemeHebdo->CoefficientEcretementPMaxHydraulique[pays];
                 PmaxHydEcretee = std::max(PmaxHydUplift, PmaxHydEcretee);
             }
@@ -89,14 +91,15 @@ void OPT_RestaurerLesDonnees(PROBLEME_HEBDO* problemeHebdo)
         for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
             PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo
-                                                            ->PaliersThermiquesDuPays[pays];
+                                                                  ->PaliersThermiquesDuPays[pays];
             for (int palier = 0; palier < PaliersThermiquesDuPays.NombreDePaliersThermiques;
                  palier++)
             {
-                PDISP_ET_COUTS_HORAIRES_PAR_PALIER& PuissanceDisponibleEtCout
-                  = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[palier];
-                PuissanceDisponibleEtCout.PuissanceMinDuPalierThermique[pdt]
-                  = PuissanceDisponibleEtCout.PuissanceMinDuPalierThermiqueRef[pdt];
+                PDISP_ET_COUTS_HORAIRES_PAR_PALIER&
+                        PuissanceDisponibleEtCout = PaliersThermiquesDuPays
+                                                            .PuissanceDisponibleEtCout[palier];
+                PuissanceDisponibleEtCout.PuissanceMinDuPalierThermique
+                        [pdt] = PuissanceDisponibleEtCout.PuissanceMinDuPalierThermiqueRef[pdt];
             }
         }
     }
@@ -106,28 +109,32 @@ void OPT_RestaurerLesDonnees(PROBLEME_HEBDO* problemeHebdo)
         for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
             PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo
-                                                            ->PaliersThermiquesDuPays[pays];
+                                                                  ->PaliersThermiquesDuPays[pays];
             for (int palier = 0; palier < PaliersThermiquesDuPays.NombreDePaliersThermiques;
                  palier++)
             {
-                PDISP_ET_COUTS_HORAIRES_PAR_PALIER& PuissanceDisponibleEtCout
-                  = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[palier];
-                PuissanceDisponibleEtCout.PuissanceDisponibleDuPalierThermique[pdt]
-                  = PuissanceDisponibleEtCout.PuissanceDisponibleDuPalierThermiqueRef[pdt];
+                PDISP_ET_COUTS_HORAIRES_PAR_PALIER&
+                        PuissanceDisponibleEtCout = PaliersThermiquesDuPays
+                                                            .PuissanceDisponibleEtCout[palier];
+                PuissanceDisponibleEtCout.PuissanceDisponibleDuPalierThermique
+                        [pdt] = PuissanceDisponibleEtCout
+                                        .PuissanceDisponibleDuPalierThermiqueRef[pdt];
 
-                if (PuissanceDisponibleEtCout.PuissanceMinDuPalierThermique[pdt]
-                    > PuissanceDisponibleEtCout.PuissanceDisponibleDuPalierThermique[pdt])
+                if (PuissanceDisponibleEtCout.PuissanceMinDuPalierThermique[pdt] >
+                    PuissanceDisponibleEtCout.PuissanceDisponibleDuPalierThermique[pdt])
                 {
-                    PuissanceDisponibleEtCout.PuissanceDisponibleDuPalierThermique[pdt]
-                      = PuissanceDisponibleEtCout.PuissanceMinDuPalierThermique[pdt];
+                    PuissanceDisponibleEtCout.PuissanceDisponibleDuPalierThermique
+                            [pdt] = PuissanceDisponibleEtCout.PuissanceMinDuPalierThermique[pdt];
 
-                    if (PuissanceDisponibleEtCout.PuissanceDisponibleDuPalierThermique[pdt]
-                        > PuissanceDisponibleEtCout.PuissanceDisponibleDuPalierThermiqueRef[pdt])
+                    if (PuissanceDisponibleEtCout.PuissanceDisponibleDuPalierThermique[pdt] >
+                        PuissanceDisponibleEtCout.PuissanceDisponibleDuPalierThermiqueRef[pdt])
                     {
-                        PuissanceDisponibleEtCout.PuissanceDisponibleDuPalierThermique[pdt]
-                          = PuissanceDisponibleEtCout.PuissanceDisponibleDuPalierThermiqueRef[pdt];
-                        PuissanceDisponibleEtCout.PuissanceMinDuPalierThermique[pdt]
-                          = PuissanceDisponibleEtCout.PuissanceDisponibleDuPalierThermiqueRef[pdt];
+                        PuissanceDisponibleEtCout.PuissanceDisponibleDuPalierThermique
+                                [pdt] = PuissanceDisponibleEtCout
+                                                .PuissanceDisponibleDuPalierThermiqueRef[pdt];
+                        PuissanceDisponibleEtCout.PuissanceMinDuPalierThermique
+                                [pdt] = PuissanceDisponibleEtCout
+                                                .PuissanceDisponibleDuPalierThermiqueRef[pdt];
                     }
                 }
             }

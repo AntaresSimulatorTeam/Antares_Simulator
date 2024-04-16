@@ -38,7 +38,8 @@ namespace Antares
 {
 namespace Data
 {
-static bool PreproHydroSaveSettings(PreproHydro* h, const char* filename)
+static bool
+PreproHydroSaveSettings(PreproHydro* h, const char* filename)
 {
     IniFile ini;
     auto* s = ini.addSection("prepro");
@@ -46,7 +47,8 @@ static bool PreproHydroSaveSettings(PreproHydro* h, const char* filename)
     return ini.save(filename);
 }
 
-static bool PreproHydroLoadSettings(PreproHydro* h, const char* filename)
+static bool
+PreproHydroLoadSettings(PreproHydro* h, const char* filename)
 {
     IniFile ini;
     IniFile::Section* s;
@@ -92,12 +94,14 @@ PreproHydro::PreproHydro()
 {
 }
 
-uint64_t PreproHydroMemoryUsage(PreproHydro* h)
+uint64_t
+PreproHydroMemoryUsage(PreproHydro* h)
 {
     return (h) ? sizeof(double) : 0;
 }
 
-void PreproHydro::reset()
+void
+PreproHydro::reset()
 {
     intermonthlyCorrelation = 0.5;
     // data
@@ -110,14 +114,16 @@ void PreproHydro::reset()
     }
 }
 
-void PreproHydro::copyFrom(const PreproHydro& rhs)
+void
+PreproHydro::copyFrom(const PreproHydro& rhs)
 {
     intermonthlyCorrelation = rhs.intermonthlyCorrelation;
     data = rhs.data;
     rhs.data.unloadFromMemory();
 }
 
-bool PreproHydro::saveToFolder(const AreaName& areaID, const char* folder)
+bool
+PreproHydro::saveToFolder(const AreaName& areaID, const char* folder)
 {
     assert(folder);
     assert('\0' != *folder);
@@ -145,7 +151,8 @@ bool PreproHydro::saveToFolder(const AreaName& areaID, const char* folder)
     return false;
 }
 
-bool PreproHydro::loadFromFolder(Study& s, const AreaName& areaID, const char* folder)
+bool
+PreproHydro::loadFromFolder(Study& s, const AreaName& areaID, const char* folder)
 {
     /* Asserts */
     assert(folder);
@@ -252,12 +259,14 @@ bool PreproHydro::loadFromFolder(Study& s, const AreaName& areaID, const char* f
     return ret;
 }
 
-bool PreproHydro::forceReload(bool reload) const
+bool
+PreproHydro::forceReload(bool reload) const
 {
     return data.forceReload(reload);
 }
 
-void PreproHydro::markAsModified() const
+void
+PreproHydro::markAsModified() const
 {
     return data.markAsModified();
 }

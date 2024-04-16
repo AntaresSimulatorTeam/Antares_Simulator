@@ -53,12 +53,12 @@ struct VCardDispatchableGenMargin
     }
 
     //! The expecte results
-    typedef Results<R::AllYears::Average< // The average values thoughout all years
-      R::AllYears::StdDeviation<          // The standard deviation values throughout all years
-        R::AllYears::Min<                 // The minimum values thoughout all years
-          R::AllYears::Max<               // The maximum values thoughout all years
-            >>>>>
-      ResultsType;
+    typedef Results<R::AllYears::Average<     // The average values thoughout all years
+            R::AllYears::StdDeviation<        // The standard deviation values throughout all years
+                    R::AllYears::Min<         // The minimum values thoughout all years
+                            R::AllYears::Max< // The maximum values thoughout all years
+                                    >>>>>
+            ResultsType;
 
     //! The VCard to look for for calculating spatial aggregates
     typedef VCardDispatchableGenMargin VCardForSpatialAggregate;
@@ -125,11 +125,11 @@ public:
     {
         enum
         {
-            count = ((VCardType::categoryDataLevel & CDataLevel
-                      && VCardType::categoryFileLevel & CFile)
-                       ? (NextType::template Statistics<CDataLevel, CFile>::count
-                          + VCardType::columnCount * ResultsType::count)
-                       : NextType::template Statistics<CDataLevel, CFile>::count),
+            count = ((VCardType::categoryDataLevel & CDataLevel &&
+                      VCardType::categoryFileLevel & CFile)
+                             ? (NextType::template Statistics<CDataLevel, CFile>::count +
+                                VCardType::columnCount * ResultsType::count)
+                             : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
 
@@ -237,9 +237,10 @@ public:
 
     void hourForEachArea(State& state, unsigned int numSpace)
     {
-        pValuesForTheCurrentYear[numSpace][state.hourInTheYear] += state.scratchpad
-                                                                     ->dispatchableGenerationMargin
-                                                                       [state.hourInTheWeek];
+        pValuesForTheCurrentYear[numSpace]
+                                [state.hourInTheYear] += state.scratchpad
+                                                                 ->dispatchableGenerationMargin
+                                                                         [state.hourInTheWeek];
         // Next variable
         NextType::hourForEachArea(state, numSpace);
     }
@@ -248,16 +249,16 @@ public:
     inline const double* retrieveHourlyResultsForCurrentYear(unsigned int numSpace) const
     {
         typedef RetrieveResultsAssignment<
-          Yuni::Static::Type::StrictlyEqual<VCardType, VCardToFindT>::Yes>
-          AssignT;
+                Yuni::Static::Type::StrictlyEqual<VCardType, VCardToFindT>::Yes>
+                AssignT;
         return (AssignT::Yes)
-                 ? Memory::RawPointer(pValuesForTheCurrentYear[numSpace].hour)
-                 : NextType::template retrieveHourlyResultsForCurrentYear<VCardToFindT>(numSpace);
+                       ? Memory::RawPointer(pValuesForTheCurrentYear[numSpace].hour)
+                       : NextType::template retrieveHourlyResultsForCurrentYear<VCardToFindT>(
+                                 numSpace);
     }
 
-    Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
-      unsigned int,
-      unsigned int numSpace) const
+    Antares::Memory::Stored<double>::ConstReturnType
+    retrieveRawHourlyValuesForCurrentYear(unsigned int, unsigned int numSpace) const
     {
         return pValuesForTheCurrentYear[numSpace].hour;
     }
@@ -276,7 +277,7 @@ public:
             results.variableCaption = VCardType::Caption();
             results.variableUnit = VCardType::Unit();
             pValuesForTheCurrentYear[numSpace]
-              .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
+                    .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
         }
     }
 

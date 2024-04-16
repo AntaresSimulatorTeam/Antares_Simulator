@@ -27,7 +27,8 @@
 
 using namespace Antares;
 
-void SIM_AllocationTableaux(const Data::Study& study)
+void
+SIM_AllocationTableaux(const Data::Study& study)
 {
     transitMoyenInterconnexionsRecalculQuadratique.resize(study.runtime->interconnectionsCount());
 

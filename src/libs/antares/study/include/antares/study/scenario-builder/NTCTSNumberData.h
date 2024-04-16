@@ -52,7 +52,8 @@ private:
     const Area* pArea = nullptr;
 };
 
-inline uint ntcTSNumberData::get(const Antares::Data::AreaLink* link, const uint year) const
+inline uint
+ntcTSNumberData::get(const Antares::Data::AreaLink* link, const uint year) const
 {
     assert(link != nullptr);
     if (year < pTSNumberRules.height && link->indexForArea < pTSNumberRules.width)
@@ -63,7 +64,8 @@ inline uint ntcTSNumberData::get(const Antares::Data::AreaLink* link, const uint
     return 0;
 }
 
-inline CString<512, false> ntcTSNumberData::get_prefix() const
+inline CString<512, false>
+ntcTSNumberData::get_prefix() const
 {
     return "ntc,";
 }

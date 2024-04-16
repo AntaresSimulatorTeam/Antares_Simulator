@@ -23,12 +23,12 @@
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/simulation/sim_structure_donnees.h"
 
-void OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-  PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
-  std::vector<double>& Pi,
-  std::vector<int>& Colonne,
-  int NombreDeTermesDeLaContrainte,
-  char SensContrainte)
+void
+OPT_ChargerLaContrainteDansLaMatriceDesContraintes(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
+                                                   std::vector<double>& Pi,
+                                                   std::vector<int>& Colonne,
+                                                   int NombreDeTermesDeLaContrainte,
+                                                   char SensContrainte)
 {
     int& nombreDeTermes = ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes;
     int& nombreDeContraintes = ProblemeAResoudre->NombreDeContraintes;

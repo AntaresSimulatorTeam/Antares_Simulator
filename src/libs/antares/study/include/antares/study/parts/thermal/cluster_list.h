@@ -84,14 +84,14 @@ public:
 
     auto each_mustrun_and_enabled() const
     {
-        return allClusters_ | std::views::filter(&ThermalCluster::isMustRun)
-               | std::views::filter(&ThermalCluster::isEnabled);
+        return allClusters_ | std::views::filter(&ThermalCluster::isMustRun) |
+               std::views::filter(&ThermalCluster::isEnabled);
     }
 
     auto each_enabled_and_not_mustrun() const
     {
-        return allClusters_ | std::views::filter(&ThermalCluster::isEnabled)
-               | std::views::filter(std::not_fn(&ThermalCluster::isMustRun));
+        return allClusters_ | std::views::filter(&ThermalCluster::isEnabled) |
+               std::views::filter(std::not_fn(&ThermalCluster::isMustRun));
     }
 
     /*!

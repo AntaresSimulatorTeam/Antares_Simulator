@@ -51,7 +51,6 @@ double LmrViolationAreaHour(PROBLEME_HEBDO* problemeHebdo,
  * calculates total LMR violations and LMR violations per area per hour inside
  * problemeHebdo->ResultatsHoraires[Area].ValeursHorairesLmrViolations[hour]
  */
-double calculateDensNewAndTotalLmrViolation(PROBLEME_HEBDO* problemeHebdo,
-                                            AreaList& areas,
-                                            uint numSpace);
+double
+calculateDensNewAndTotalLmrViolation(PROBLEME_HEBDO* problemeHebdo, AreaList& areas, uint numSpace);
 } // namespace Antares::Data::AdequacyPatch

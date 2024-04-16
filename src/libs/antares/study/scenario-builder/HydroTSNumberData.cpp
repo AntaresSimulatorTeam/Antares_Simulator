@@ -28,7 +28,8 @@
 
 namespace Antares::Data::ScenarioBuilder
 {
-uint hydroTSNumberData::get_tsGenCount(const Study& study) const
+uint
+hydroTSNumberData::get_tsGenCount(const Study& study) const
 {
     // General data
     auto& parameters = study.parameters;
@@ -37,7 +38,8 @@ uint hydroTSNumberData::get_tsGenCount(const Study& study) const
     return tsGenHydro ? parameters.nbTimeSeriesHydro : 0u;
 }
 
-bool hydroTSNumberData::apply(Study& study)
+bool
+hydroTSNumberData::apply(Study& study)
 {
     bool ret = true;
     CString<512, false> logprefix;

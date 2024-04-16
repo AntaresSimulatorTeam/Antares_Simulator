@@ -25,19 +25,22 @@ namespace Antares
 {
 namespace Data
 {
-inline bool Study::readonly() const
+inline bool
+Study::readonly() const
 {
     return (parameters.readonly);
 }
 
 template<unsigned int TimeSeriesT>
-inline void Study::storeTimeSeriesNumbers(Solver::IResultWriter& resultWriter) const
+inline void
+Study::storeTimeSeriesNumbers(Solver::IResultWriter& resultWriter) const
 {
     storeTimeseriesNumbers<TimeSeriesT>(resultWriter, areas);
 }
 
 template<enum TimeSeriesType TS>
-inline void Study::destroyTSGeneratorData()
+inline void
+Study::destroyTSGeneratorData()
 {
     switch (TS)
     {

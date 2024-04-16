@@ -23,12 +23,14 @@
 
 namespace Antares
 {
-inline bool IniFile::loaded() const
+inline bool
+IniFile::loaded() const
 {
     return not pFilename.empty();
 }
 
-inline bool IniFile::empty() const
+inline bool
+IniFile::empty() const
 {
     return not firstSection;
 }
@@ -59,13 +61,15 @@ IniFile::Property::Property(const AnyString& key, const U& value):
     this->value.trim();
 }
 
-inline bool IniFile::Section::empty() const
+inline bool
+IniFile::Section::empty() const
 {
     return (NULL == firstProperty);
 }
 
 template<class U>
-IniFile::Property* IniFile::Section::add(const AnyString& key, const U& value)
+IniFile::Property*
+IniFile::Section::add(const AnyString& key, const U& value)
 {
     auto* p = new Property(key, value);
     if (!lastProperty)
@@ -81,7 +85,8 @@ IniFile::Property* IniFile::Section::add(const AnyString& key, const U& value)
 }
 
 template<class U>
-IniFile::Property* IniFile::Section::add(const AnyString& key, const std::optional<U>& value)
+IniFile::Property*
+IniFile::Section::add(const AnyString& key, const std::optional<U>& value)
 {
     if (value.has_value())
     {
@@ -91,24 +96,28 @@ IniFile::Property* IniFile::Section::add(const AnyString& key, const std::option
 }
 
 template<class U, class StringT>
-inline U IniFile::Section::read(const StringT& key, const U& defValue) const
+inline U
+IniFile::Section::read(const StringT& key, const U& defValue) const
 {
     auto* property = find(key);
     return (property ? property->value.template to<U>() : defValue);
 }
 
-inline IniFile::Section* IniFile::addSection(const AnyString& name)
+inline IniFile::Section*
+IniFile::addSection(const AnyString& name)
 {
     return add(new Section(name));
 }
 
-inline const YString& IniFile::filename() const
+inline const YString&
+IniFile::filename() const
 {
     return pFilename;
 }
 
 template<class CallbackT>
-void IniFile::each(const CallbackT& callback)
+void
+IniFile::each(const CallbackT& callback)
 {
     for (auto* section = firstSection; section; section = section->next)
     {
@@ -117,7 +126,8 @@ void IniFile::each(const CallbackT& callback)
 }
 
 template<class CallbackT>
-void IniFile::each(const CallbackT& callback) const
+void
+IniFile::each(const CallbackT& callback) const
 {
     for (auto* section = firstSection; section; section = section->next)
     {
@@ -126,7 +136,8 @@ void IniFile::each(const CallbackT& callback) const
 }
 
 template<class CallbackT>
-void IniFile::Section::each(const CallbackT& callback)
+void
+IniFile::Section::each(const CallbackT& callback)
 {
     for (auto* property = firstProperty; property; property = property->next)
     {
@@ -135,7 +146,8 @@ void IniFile::Section::each(const CallbackT& callback)
 }
 
 template<class CallbackT>
-void IniFile::Section::each(const CallbackT& callback) const
+void
+IniFile::Section::each(const CallbackT& callback) const
 {
     for (auto* property = firstProperty; property; property = property->next)
     {
@@ -144,7 +156,8 @@ void IniFile::Section::each(const CallbackT& callback) const
 }
 
 template<class CallbackT>
-void IniFile::properties(const CallbackT& callback)
+void
+IniFile::properties(const CallbackT& callback)
 {
     for (auto* section = firstSection; section; section = section->next)
     {
@@ -156,7 +169,8 @@ void IniFile::properties(const CallbackT& callback)
 }
 
 template<class CallbackT>
-void IniFile::properties(const CallbackT& callback) const
+void
+IniFile::properties(const CallbackT& callback) const
 {
     for (auto* section = firstSection; section; section = section->next)
     {

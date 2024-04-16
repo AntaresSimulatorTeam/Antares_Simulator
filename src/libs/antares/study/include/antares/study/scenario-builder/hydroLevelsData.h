@@ -81,7 +81,8 @@ private:
 
 // class hydroLevelsData : inline functions
 
-inline void hydroLevelsData::setTSnumber(uint areaindex, uint year, double value)
+inline void
+hydroLevelsData::setTSnumber(uint areaindex, uint year, double value)
 {
     assert(areaindex < pHydroLevelsRules.width);
     if (year < pHydroLevelsRules.height)
@@ -90,17 +91,20 @@ inline void hydroLevelsData::setTSnumber(uint areaindex, uint year, double value
     }
 }
 
-inline uint hydroLevelsData::width() const
+inline uint
+hydroLevelsData::width() const
 {
     return pHydroLevelsRules.width;
 }
 
-inline uint hydroLevelsData::height() const
+inline uint
+hydroLevelsData::height() const
 {
     return pHydroLevelsRules.height;
 }
 
-inline double hydroLevelsData::get_value(uint x, uint y) const
+inline double
+hydroLevelsData::get_value(uint x, uint y) const
 {
     return pHydroLevelsRules.entry[y][x];
 }

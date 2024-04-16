@@ -73,7 +73,8 @@ public:
 
 }; // class UserData
 
-inline void UserData::pushToLogs()
+inline void
+UserData::pushToLogs()
 {
     if (logsEntries.size() >= maxLogEntriesRetention)
     {
@@ -85,7 +86,8 @@ inline void UserData::pushToLogs()
     }
 }
 
-void UserData::syncBeforeRelease()
+void
+UserData::syncBeforeRelease()
 {
     // locking, just in case (it should not be needed)
     MutexLocker locker(mutex);
@@ -155,11 +157,12 @@ void UserData::syncBeforeRelease()
 
 } // anonymous namespace
 
-static void OnFileEvent(const String& filename,
-                        const String& parent,
-                        int64_t modified,
-                        uint64_t size,
-                        void* user)
+static void
+OnFileEvent(const String& filename,
+            const String& parent,
+            int64_t modified,
+            uint64_t size,
+            void* user)
 {
     if (not(modified < ((UserData*)user)->dateLimit))
     {
@@ -206,7 +209,8 @@ static void OnFileEvent(const String& filename,
     userdata->pushToLogs();
 }
 
-static FSWalker::Flow OnDirectoryEvent(const String& path, bool empty, void* user)
+static FSWalker::Flow
+OnDirectoryEvent(const String& path, bool empty, void* user)
 {
     if (empty)
     {
@@ -217,29 +221,34 @@ static FSWalker::Flow OnDirectoryEvent(const String& path, bool empty, void* use
     return FSWalker::flContinue;
 }
 
-const char* ModifiedINode::caption() const
+const char*
+ModifiedINode::caption() const
 {
     return "last modification time";
 }
 
-FSWalker::OnFileEvent ModifiedINode::fileEvent()
+FSWalker::OnFileEvent
+ModifiedINode::fileEvent()
 {
     return &OnFileEvent;
 }
 
-FSWalker::OnDirectoryEvent ModifiedINode::directoryEvent()
+FSWalker::OnDirectoryEvent
+ModifiedINode::directoryEvent()
 {
     return &OnDirectoryEvent;
 }
 
-void* ModifiedINode::userdataCreate(FSWalker::DispatchJobEvent&)
+void*
+ModifiedINode::userdataCreate(FSWalker::DispatchJobEvent&)
 {
     auto* user = new UserData();
     user->dateLimit = pDateLimit;
     return user;
 }
 
-void ModifiedINode::userdataDestroy(void* userdata)
+void
+ModifiedINode::userdataDestroy(void* userdata)
 {
     pQueue = []([[maybe_unused]] FSWalker::IJob::Ptr job) {};
 

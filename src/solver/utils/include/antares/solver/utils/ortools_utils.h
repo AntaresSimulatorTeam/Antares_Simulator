@@ -112,8 +112,8 @@ class ProblemSimplexeNommeConverter
 {
 public:
     explicit ProblemSimplexeNommeConverter(
-      const std::string& solverName,
-      const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe);
+            const std::string& solverName,
+            const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe);
 
     MPSolver* Convert();
 

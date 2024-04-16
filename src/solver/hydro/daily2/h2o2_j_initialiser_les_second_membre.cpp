@@ -21,14 +21,15 @@
 
 #include "antares/solver/hydro/daily2/h2o2_j_donnees_mensuelles.h"
 
-void H2O2_J_InitialiserLeSecondMembre(DONNEES_MENSUELLES_ETENDUES& DonneesMensuelles,
-                                      int NumeroDeProbleme)
+void
+H2O2_J_InitialiserLeSecondMembre(DONNEES_MENSUELLES_ETENDUES& DonneesMensuelles,
+                                 int NumeroDeProbleme)
 {
     auto& ProblemeHydrauliqueEtendu = DonneesMensuelles.ProblemeHydrauliqueEtendu;
 
     auto& ProblemeLineairePartieVariable = ProblemeHydrauliqueEtendu
-                                             .ProblemeLineaireEtenduPartieVariable
-                                               [NumeroDeProbleme];
+                                                   .ProblemeLineaireEtenduPartieVariable
+                                                           [NumeroDeProbleme];
     auto& SecondMembre = ProblemeLineairePartieVariable.SecondMembre;
 
     int NbPdt = ProblemeHydrauliqueEtendu.NbJoursDUnProbleme[NumeroDeProbleme];

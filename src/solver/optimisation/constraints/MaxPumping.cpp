@@ -21,7 +21,8 @@
 
 #include "antares/solver/optimisation/constraints/MaxPumping.h"
 
-void MaxPumping::add(int pays)
+void
+MaxPumping::add(int pays)
 {
     if (data.CaracteristiquesHydrauliques[pays].PresenceDePompageModulable)
     {

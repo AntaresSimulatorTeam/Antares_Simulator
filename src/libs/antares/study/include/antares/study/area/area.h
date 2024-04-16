@@ -828,7 +828,8 @@ void AreaListEnsureDataThermalPrepro(AreaList* l);
 /*!
 ** \brief to check that Area name does not contains character *
 */
-inline bool CheckForbiddenCharacterInAreaName(const AnyString& name)
+inline bool
+CheckForbiddenCharacterInAreaName(const AnyString& name)
 {
     return name.contains('*');
 }

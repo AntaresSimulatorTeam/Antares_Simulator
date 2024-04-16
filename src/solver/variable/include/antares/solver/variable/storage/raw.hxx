@@ -32,7 +32,8 @@ namespace R
 namespace AllYears
 {
 template<class NextT, int FileFilter>
-inline void Raw<NextT, FileFilter>::initializeFromStudy(Antares::Data::Study& study)
+inline void
+Raw<NextT, FileFilter>::initializeFromStudy(Antares::Data::Study& study)
 {
     rawdata.initializeFromStudy(study);
     // Next

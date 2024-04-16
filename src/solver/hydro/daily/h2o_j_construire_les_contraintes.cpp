@@ -22,16 +22,17 @@
 #include "antares/solver/hydro/daily/h2o_j_donnees_mensuelles.h"
 #include "antares/solver/hydro/daily/h2o_j_fonctions.h"
 
-void H2O_J_ConstruireLesContraintes(int NbPdt,
-                                    std::vector<int>& NumeroDeVariableTurbine,
-                                    int NumeroDeLaVariableMu,
-                                    int NumeroDeLaVariableXi,
-                                    std::vector<int>& IndicesDebutDeLigne,
-                                    std::vector<char>& Sens,
-                                    std::vector<int>& NombreDeTermesDesLignes,
-                                    std::vector<double>& CoefficientsDeLaMatriceDesContraintes,
-                                    std::vector<int>& IndicesColonnes,
-                                    CORRESPONDANCE_DES_CONTRAINTES& CorrespondanceDesContraintes)
+void
+H2O_J_ConstruireLesContraintes(int NbPdt,
+                               std::vector<int>& NumeroDeVariableTurbine,
+                               int NumeroDeLaVariableMu,
+                               int NumeroDeLaVariableXi,
+                               std::vector<int>& IndicesDebutDeLigne,
+                               std::vector<char>& Sens,
+                               std::vector<int>& NombreDeTermesDesLignes,
+                               std::vector<double>& CoefficientsDeLaMatriceDesContraintes,
+                               std::vector<int>& IndicesColonnes,
+                               CORRESPONDANCE_DES_CONTRAINTES& CorrespondanceDesContraintes)
 {
     int NombreDeContraintes = 0;
     int NombreDeTermes = 0;

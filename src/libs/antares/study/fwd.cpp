@@ -27,7 +27,8 @@ using namespace Yuni;
 
 namespace Antares::Data
 {
-const char* SeedToCString(SeedIndex seed)
+const char*
+SeedToCString(SeedIndex seed)
 {
     switch (seed)
     {
@@ -59,7 +60,8 @@ const char* SeedToCString(SeedIndex seed)
     return "";
 }
 
-const char* SeedToID(SeedIndex seed)
+const char*
+SeedToID(SeedIndex seed)
 {
     switch (seed)
     {
@@ -92,7 +94,8 @@ const char* SeedToID(SeedIndex seed)
 }
 
 // ... Initial reservoir levels ...
-InitialReservoirLevels StringToInitialReservoirLevels(const AnyString& text)
+InitialReservoirLevels
+StringToInitialReservoirLevels(const AnyString& text)
 {
     if (!text)
     {
@@ -114,7 +117,8 @@ InitialReservoirLevels StringToInitialReservoirLevels(const AnyString& text)
     return irlUnknown;
 }
 
-const char* InitialReservoirLevelsToCString(InitialReservoirLevels iniLevels)
+const char*
+InitialReservoirLevelsToCString(InitialReservoirLevels iniLevels)
 {
     switch (iniLevels)
     {
@@ -129,7 +133,8 @@ const char* InitialReservoirLevelsToCString(InitialReservoirLevels iniLevels)
 }
 
 // ... Hydro heuristic policy ...
-HydroHeuristicPolicy StringToHydroHeuristicPolicy(const AnyString& text)
+HydroHeuristicPolicy
+StringToHydroHeuristicPolicy(const AnyString& text)
 {
     if (!text)
     {
@@ -151,7 +156,8 @@ HydroHeuristicPolicy StringToHydroHeuristicPolicy(const AnyString& text)
     return hhpUnknown;
 }
 
-const char* HydroHeuristicPolicyToCString(HydroHeuristicPolicy hhPolicy)
+const char*
+HydroHeuristicPolicyToCString(HydroHeuristicPolicy hhPolicy)
 {
     switch (hhPolicy)
     {
@@ -166,7 +172,8 @@ const char* HydroHeuristicPolicyToCString(HydroHeuristicPolicy hhPolicy)
 }
 
 // ... Hydro pricing ...
-HydroPricingMode StringToHydroPricingMode(const AnyString& text)
+HydroPricingMode
+StringToHydroPricingMode(const AnyString& text)
 {
     if (!text)
     {
@@ -188,7 +195,8 @@ HydroPricingMode StringToHydroPricingMode(const AnyString& text)
     return hpUnknown;
 }
 
-const char* HydroPricingModeToCString(HydroPricingMode hpm)
+const char*
+HydroPricingModeToCString(HydroPricingMode hpm)
 {
     switch (hpm)
     {
@@ -202,7 +210,8 @@ const char* HydroPricingModeToCString(HydroPricingMode hpm)
     return "";
 }
 
-PowerFluctuations StringToPowerFluctuations(const AnyString& text)
+PowerFluctuations
+StringToPowerFluctuations(const AnyString& text)
 {
     if (!text)
     {
@@ -228,7 +237,8 @@ PowerFluctuations StringToPowerFluctuations(const AnyString& text)
     return lssUnknown;
 }
 
-const char* PowerFluctuationsToCString(PowerFluctuations fluctuations)
+const char*
+PowerFluctuationsToCString(PowerFluctuations fluctuations)
 {
     switch (fluctuations)
     {
@@ -244,7 +254,8 @@ const char* PowerFluctuationsToCString(PowerFluctuations fluctuations)
     return "";
 }
 
-SheddingPolicy StringToSheddingPolicy(const AnyString& text)
+SheddingPolicy
+StringToSheddingPolicy(const AnyString& text)
 {
     if (!text)
     {
@@ -266,7 +277,8 @@ SheddingPolicy StringToSheddingPolicy(const AnyString& text)
     return shpUnknown;
 }
 
-const char* SheddingPolicyToCString(SheddingPolicy strategy)
+const char*
+SheddingPolicyToCString(SheddingPolicy strategy)
 {
     switch (strategy)
     {
@@ -280,7 +292,8 @@ const char* SheddingPolicyToCString(SheddingPolicy strategy)
     return "";
 }
 
-UnitCommitmentMode StringToUnitCommitmentMode(const AnyString& text)
+UnitCommitmentMode
+StringToUnitCommitmentMode(const AnyString& text)
 {
     if (!text)
     {
@@ -306,7 +319,8 @@ UnitCommitmentMode StringToUnitCommitmentMode(const AnyString& text)
     return ucUnknown;
 }
 
-const char* UnitCommitmentModeToCString(UnitCommitmentMode ucommitment)
+const char*
+UnitCommitmentModeToCString(UnitCommitmentMode ucommitment)
 {
     switch (ucommitment)
     {
@@ -322,7 +336,8 @@ const char* UnitCommitmentModeToCString(UnitCommitmentMode ucommitment)
     return "";
 }
 
-NumberOfCoresMode StringToNumberOfCoresMode(const AnyString& text)
+NumberOfCoresMode
+StringToNumberOfCoresMode(const AnyString& text)
 {
     if (!text)
     {
@@ -356,7 +371,8 @@ NumberOfCoresMode StringToNumberOfCoresMode(const AnyString& text)
     return ncUnknown;
 }
 
-const char* NumberOfCoresModeToCString(NumberOfCoresMode ucores)
+const char*
+NumberOfCoresModeToCString(NumberOfCoresMode ucores)
 {
     switch (ucores)
     {
@@ -376,7 +392,8 @@ const char* NumberOfCoresModeToCString(NumberOfCoresMode ucores)
     return "";
 }
 
-const char* RenewableGenerationModellingToCString(RenewableGenerationModelling rgModelling)
+const char*
+RenewableGenerationModellingToCString(RenewableGenerationModelling rgModelling)
 {
     switch (rgModelling)
     {
@@ -390,7 +407,8 @@ const char* RenewableGenerationModellingToCString(RenewableGenerationModelling r
     return "";
 }
 
-std::string mpsExportStatusToString(const mpsExportStatus& mps_export_status)
+std::string
+mpsExportStatusToString(const mpsExportStatus& mps_export_status)
 {
     switch (mps_export_status)
     {
@@ -407,7 +425,8 @@ std::string mpsExportStatusToString(const mpsExportStatus& mps_export_status)
     }
 }
 
-mpsExportStatus stringToMPSexportStatus(const AnyString& value)
+mpsExportStatus
+stringToMPSexportStatus(const AnyString& value)
 {
     if (!value)
     {
@@ -417,8 +436,8 @@ mpsExportStatus stringToMPSexportStatus(const AnyString& value)
     CString<24, false> v = value;
     v.trim();
     v.toLower();
-    if (v == "both-optims"
-        || v == "true") // Case "true" : for compatibily with older study versions
+    if (v == "both-optims" ||
+        v == "true") // Case "true" : for compatibily with older study versions
     {
         return mpsExportStatus::EXPORT_BOTH_OPTIMS;
     }
@@ -438,8 +457,8 @@ mpsExportStatus stringToMPSexportStatus(const AnyString& value)
     return mpsExportStatus::UNKNOWN_EXPORT;
 }
 
-std::string GlobalTransmissionCapacitiesToString(
-  GlobalTransmissionCapacities transmissionCapacities)
+std::string
+GlobalTransmissionCapacitiesToString(GlobalTransmissionCapacities transmissionCapacities)
 {
     switch (transmissionCapacities)
     {
@@ -459,15 +478,16 @@ std::string GlobalTransmissionCapacitiesToString(
     }
 }
 
-std::string GlobalTransmissionCapacitiesToString_Display(
-  GlobalTransmissionCapacities transmissionCapacities)
+std::string
+GlobalTransmissionCapacitiesToString_Display(GlobalTransmissionCapacities transmissionCapacities)
 {
     auto result = GlobalTransmissionCapacitiesToString(transmissionCapacities);
     std::replace(result.begin(), result.end(), '-', ' ');
     return result;
 }
 
-bool stringToGlobalTransmissionCapacities(const AnyString& value, GlobalTransmissionCapacities& out)
+bool
+stringToGlobalTransmissionCapacities(const AnyString& value, GlobalTransmissionCapacities& out)
 {
     using GlobalNTCtype = GlobalTransmissionCapacities;
     CString<64, false> v = value;
@@ -501,7 +521,8 @@ bool stringToGlobalTransmissionCapacities(const AnyString& value, GlobalTransmis
     return false;
 }
 
-std::string transmissionCapacitiesToString(const LocalTransmissionCapacities& tc)
+std::string
+transmissionCapacitiesToString(const LocalTransmissionCapacities& tc)
 {
     switch (tc)
     {
@@ -514,7 +535,8 @@ std::string transmissionCapacitiesToString(const LocalTransmissionCapacities& tc
     }
 }
 
-std::string assetTypeToString(const AssetType& assetType)
+std::string
+assetTypeToString(const AssetType& assetType)
 {
     switch (assetType)
     {
@@ -531,7 +553,8 @@ std::string assetTypeToString(const AssetType& assetType)
     }
 }
 
-std::string styleToString(const StyleType& style)
+std::string
+styleToString(const StyleType& style)
 {
     switch (style)
     {

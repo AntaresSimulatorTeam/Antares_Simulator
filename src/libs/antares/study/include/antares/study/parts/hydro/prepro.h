@@ -117,10 +117,8 @@ public:
 
 }; // class PreproHydro
 
-int PreproHydroLoadFromFolder(Study& s,
-                              PreproHydro* h,
-                              const AreaName& areaID,
-                              const char folder[]);
+int
+PreproHydroLoadFromFolder(Study& s, PreproHydro* h, const AreaName& areaID, const char folder[]);
 
 /*!
 ** \brief Get the size (bytes) occupied in memory by a `PreproHydro` structure

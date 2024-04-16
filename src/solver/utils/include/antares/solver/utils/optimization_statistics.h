@@ -115,9 +115,10 @@ public:
 
     std::string toString() const
     {
-        return "Average solve time: " + std::to_string(std::lround(getAverageSolveTime())) + " ms, "
-               + "average update time: " + std::to_string(std::lround(getAverageUpdateTime()))
-               + " ms";
+        return "Average solve time: " + std::to_string(std::lround(getAverageSolveTime())) +
+               " ms, " +
+               "average update time: " + std::to_string(std::lround(getAverageUpdateTime())) +
+               " ms";
     }
 };
 

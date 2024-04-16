@@ -47,12 +47,12 @@ struct VCardThermalAirPollutantEmissions
     }
 
     //! The expecte results
-    typedef Results<R::AllYears::Average< // The average values throughout all years
-      R::AllYears::StdDeviation<          // The standard deviation values throughout all years
-        R::AllYears::Min<                 // The minimum values throughout all years
-          R::AllYears::Max<               // The maximum values throughout all years
-            >>>>>
-      ResultsType;
+    typedef Results<R::AllYears::Average<     // The average values throughout all years
+            R::AllYears::StdDeviation<        // The standard deviation values throughout all years
+                    R::AllYears::Min<         // The minimum values throughout all years
+                            R::AllYears::Max< // The maximum values throughout all years
+                                    >>>>>
+            ResultsType;
 
     //! The VCard to look for for calculating spatial aggregates
     typedef VCardThermalAirPollutantEmissions VCardForSpatialAggregate;
@@ -137,11 +137,11 @@ public:
     {
         enum
         {
-            count = ((VCardType::categoryDataLevel & CDataLevel
-                      && VCardType::categoryFileLevel & CFile)
-                       ? (NextType::template Statistics<CDataLevel, CFile>::count
-                          + VCardType::columnCount * ResultsType::count)
-                       : NextType::template Statistics<CDataLevel, CFile>::count),
+            count = ((VCardType::categoryDataLevel & CDataLevel &&
+                      VCardType::categoryFileLevel & CFile)
+                             ? (NextType::template Statistics<CDataLevel, CFile>::count +
+                                VCardType::columnCount * ResultsType::count)
+                             : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
 
@@ -223,7 +223,7 @@ public:
     void yearEnd(unsigned int year, unsigned int numSpace)
     {
         VariableAccessorType::template ComputeStatistics<VCardType>(
-          pValuesForTheCurrentYear[numSpace]);
+                pValuesForTheCurrentYear[numSpace]);
 
         // Next variable
         NextType::yearEnd(year, numSpace);
@@ -258,10 +258,10 @@ public:
             for (int pollutant = 0; pollutant < Antares::Data::Pollutant::POLLUTANT_MAX;
                  pollutant++)
             {
-                pValuesForTheCurrentYear[numSpace][pollutant][state.hourInTheYear]
-                  += cluster->emissions.factors[pollutant]
-                     * thermal[state.area->index]
-                         .thermalClustersProductions[cluster->areaWideIndex];
+                pValuesForTheCurrentYear[numSpace][pollutant][state.hourInTheYear] +=
+                        cluster->emissions.factors[pollutant] *
+                        thermal[state.area->index]
+                                .thermalClustersProductions[cluster->areaWideIndex];
             }
         }
 
@@ -269,9 +269,8 @@ public:
         NextType::hourForEachArea(state, numSpace);
     }
 
-    Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
-      unsigned int column,
-      unsigned int numSpace) const
+    Antares::Memory::Stored<double>::ConstReturnType
+    retrieveRawHourlyValuesForCurrentYear(unsigned int column, unsigned int numSpace) const
     {
         return pValuesForTheCurrentYear[numSpace][column].hour;
     }
@@ -292,7 +291,7 @@ public:
                 results.variableCaption = VCardType::Multiple::Caption(i);
                 results.variableUnit = VCardType::Multiple::Unit(i);
                 pValuesForTheCurrentYear[numSpace][i]
-                  .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
+                        .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
             }
             results.isCurrentVarNA++;
         }

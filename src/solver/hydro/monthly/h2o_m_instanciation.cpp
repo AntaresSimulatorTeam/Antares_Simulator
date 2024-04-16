@@ -22,7 +22,8 @@
 #include "antares/solver/hydro/monthly/h2o_m_donnees_annuelles.h"
 #include "antares/solver/hydro/monthly/h2o_m_fonctions.h"
 
-DONNEES_ANNUELLES H2O_M_Instanciation(int NombreDeReservoirs)
+DONNEES_ANNUELLES
+H2O_M_Instanciation(int NombreDeReservoirs)
 {
     DONNEES_ANNUELLES DonneesAnnuelles{};
 
@@ -47,11 +48,11 @@ DONNEES_ANNUELLES H2O_M_Instanciation(int NombreDeReservoirs)
     ProblemeHydraulique.ProblemeSpx.assign(NombreDeReservoirs, nullptr);
 
     CORRESPONDANCE_DES_VARIABLES& CorrespondanceDesVariables = ProblemeHydraulique
-                                                                 .CorrespondanceDesVariables;
+                                                                       .CorrespondanceDesVariables;
     PROBLEME_LINEAIRE_PARTIE_FIXE& ProblemeLineairePartieFixe = ProblemeHydraulique
-                                                                  .ProblemeLineairePartieFixe;
-    PROBLEME_LINEAIRE_PARTIE_VARIABLE& ProblemeLineairePartieVariable
-      = ProblemeHydraulique.ProblemeLineairePartieVariable;
+                                                                        .ProblemeLineairePartieFixe;
+    PROBLEME_LINEAIRE_PARTIE_VARIABLE&
+            ProblemeLineairePartieVariable = ProblemeHydraulique.ProblemeLineairePartieVariable;
 
     CorrespondanceDesVariables.NumeroDeVariableVolume.assign(NbPdt, 0);
     CorrespondanceDesVariables.NumeroDeVariableTurbine.assign(NbPdt, 0);
@@ -113,7 +114,7 @@ DONNEES_ANNUELLES H2O_M_Instanciation(int NombreDeReservoirs)
     ProblemeLineairePartieVariable.SecondMembre.assign(NombreDeContraintes, 0.);
 
     ProblemeLineairePartieVariable.AdresseOuPlacerLaValeurDesVariablesOptimisees
-      .assign(NombreDeVariables, nullptr);
+            .assign(NombreDeVariables, nullptr);
 
     ProblemeLineairePartieVariable.X.assign(NombreDeVariables, 0.);
 

@@ -46,7 +46,8 @@ StudyCleaningInfos::StudyCleaningInfos(const AnyString& path):
 
 StudyCleaningInfos::~StudyCleaningInfos() = default;
 
-bool StudyCleaningInfos::analyze()
+bool
+StudyCleaningInfos::analyze()
 {
     logs.info() << "cleaning study: " << folder;
 
@@ -101,7 +102,8 @@ bool StudyCleaningInfos::analyze()
     return (intruders.size()) ? true : false;
 }
 
-void StudyCleaningInfos::performCleanup()
+void
+StudyCleaningInfos::performCleanup()
 {
     if (version != StudyVersion::unknown() && not intruders.empty())
     {
@@ -112,12 +114,14 @@ void StudyCleaningInfos::performCleanup()
     }
 }
 
-uint64_t StudyCleaningInfos::totalSize() const
+uint64_t
+StudyCleaningInfos::totalSize() const
 {
     return intruders.totalSizeInBytes();
 }
 
-void StudyCleaningInfos::setCustomExcludeList(const Yuni::String& c)
+void
+StudyCleaningInfos::setCustomExcludeList(const Yuni::String& c)
 {
     customExclude = c;
 }

@@ -41,7 +41,8 @@ Container::~Container()
     delete prepro;
 }
 
-bool Container::forceReload(bool reload) const
+bool
+Container::forceReload(bool reload) const
 {
     bool ret = true;
     ret = series.forceReload(reload) && ret;
@@ -52,7 +53,8 @@ bool Container::forceReload(bool reload) const
     return ret;
 }
 
-void Container::markAsModified() const
+void
+Container::markAsModified() const
 {
     series.markAsModified();
     if (prepro)
@@ -61,12 +63,14 @@ void Container::markAsModified() const
     }
 }
 
-uint64_t Container::memoryUsage() const
+uint64_t
+Container::memoryUsage() const
 {
     return sizeof(Container) + series.memoryUsage() + ((!prepro) ? 0 : prepro->memoryUsage());
 }
 
-void Container::resetToDefault()
+void
+Container::resetToDefault()
 {
     series.reset();
     if (prepro)

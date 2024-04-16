@@ -53,8 +53,8 @@ struct VCardProductionByRenewablePlant
 
     //! The expecte results
     typedef Results<R::AllYears::Average< // The average values throughout all years
-      >>
-      ResultsType;
+            >>
+            ResultsType;
 
     //! The VCard to look for for calculating spatial aggregates
     typedef VCardProductionByRenewablePlant VCardForSpatialAggregate;
@@ -121,11 +121,11 @@ public:
     {
         enum
         {
-            count = ((VCardType::categoryDataLevel & CDataLevel
-                      && VCardType::categoryFileLevel & CFile)
-                       ? (NextType::template Statistics<CDataLevel, CFile>::count
-                          + VCardType::columnCount * ResultsType::count)
-                       : NextType::template Statistics<CDataLevel, CFile>::count),
+            count = ((VCardType::categoryDataLevel & CDataLevel &&
+                      VCardType::categoryFileLevel & CFile)
+                             ? (NextType::template Statistics<CDataLevel, CFile>::count +
+                                VCardType::columnCount * ResultsType::count)
+                             : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
 
@@ -166,7 +166,7 @@ public:
             for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
             {
                 pValuesForTheCurrentYear[numSpace] = new VCardType::IntermediateValuesDeepType
-                  [pSize];
+                        [pSize];
             }
 
             for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
@@ -229,9 +229,8 @@ public:
         NextType::yearBegin(year, numSpace);
     }
 
-    void yearEndBuildPrepareDataForEachThermalCluster(State& state,
-                                                      uint year,
-                                                      unsigned int numSpace)
+    void
+    yearEndBuildPrepareDataForEachThermalCluster(State& state, uint year, unsigned int numSpace)
     {
         // Next variable
         NextType::yearEndBuildPrepareDataForEachThermalCluster(state, year, numSpace);
@@ -285,12 +284,11 @@ public:
         for (const auto& renewableCluster: state.area->renewable.list.each_enabled())
         {
             double renewableClusterProduction = renewableCluster->valueAtTimeStep(
-              state.year,
-              state.hourInTheYear);
+                    state.year,
+                    state.hourInTheYear);
 
             pValuesForTheCurrentYear[numSpace][renewableCluster->areaWideIndex]
-              .hour[state.hourInTheYear]
-              += renewableClusterProduction;
+                    .hour[state.hourInTheYear] += renewableClusterProduction;
         }
 
         // Next variable
@@ -303,17 +301,16 @@ public:
         NextType::buildDigest(results, digestLevel, dataLevel);
     }
 
-    Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
-      unsigned int column,
-      unsigned int numSpace) const
+    Antares::Memory::Stored<double>::ConstReturnType
+    retrieveRawHourlyValuesForCurrentYear(unsigned int column, unsigned int numSpace) const
     {
         return pValuesForTheCurrentYear[numSpace][column].hour;
     }
 
     inline uint64_t memoryUsage() const
     {
-        uint64_t r = (sizeof(IntermediateValues) * pSize + IntermediateValues::MemoryUsage())
-                     * pNbYearsParallel;
+        uint64_t r = (sizeof(IntermediateValues) * pSize + IntermediateValues::MemoryUsage()) *
+                     pNbYearsParallel;
         r += sizeof(double) * pSize * maxHoursInAYear * pNbYearsParallel;
         r += AncestorType::memoryUsage();
         return r;
@@ -338,7 +335,7 @@ public:
                 results.variableCaption = cluster->name();
                 results.variableUnit = VCardType::Unit();
                 pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex]
-                  .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
+                        .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
             }
         }
     }

@@ -33,20 +33,23 @@ struct CompareAreaName final
     }
 };
 
-inline Area* AreaList::operator[](uint i)
+inline Area*
+AreaList::operator[](uint i)
 {
     assert(i < areas.size() and "Index out of bounds");
     return byIndex[i];
 }
 
-inline const Area* AreaList::operator[](uint i) const
+inline const Area*
+AreaList::operator[](uint i) const
 {
     assert(i < areas.size() and "Index out of bounds");
     return byIndex[i];
 }
 
 template<enum TimeSeriesType T>
-inline XCast* Area::xcastData()
+inline XCast*
+Area::xcastData()
 {
     switch (T)
     {
@@ -65,7 +68,8 @@ inline XCast* Area::xcastData()
 }
 
 template<enum TimeSeriesType T>
-inline const XCast* Area::xcastData() const
+inline const XCast*
+Area::xcastData() const
 {
     switch (T)
     {
@@ -84,7 +88,8 @@ inline const XCast* Area::xcastData() const
 }
 
 template<class PredicateT>
-inline void AreaList::each(const PredicateT& predicate)
+inline void
+AreaList::each(const PredicateT& predicate)
 {
     auto end = areas.end();
     for (auto i = areas.begin(); i != end; ++i)
@@ -95,7 +100,8 @@ inline void AreaList::each(const PredicateT& predicate)
 }
 
 template<class PredicateT>
-inline void AreaList::each(const PredicateT& predicate) const
+inline void
+AreaList::each(const PredicateT& predicate) const
 {
     auto end = areas.cend();
     for (auto i = areas.cbegin(); i != end; ++i)
@@ -105,57 +111,68 @@ inline void AreaList::each(const PredicateT& predicate) const
     }
 }
 
-inline uint AreaList::size() const
+inline uint
+AreaList::size() const
 {
     return (uint)areas.size();
 }
 
-inline AreaList::iterator AreaList::begin()
+inline AreaList::iterator
+AreaList::begin()
 {
     return areas.begin();
 }
 
-inline AreaList::const_iterator AreaList::begin() const
+inline AreaList::const_iterator
+AreaList::begin() const
 {
     return areas.begin();
 }
 
-inline AreaList::const_iterator AreaList::cbegin() const
+inline AreaList::const_iterator
+AreaList::cbegin() const
 {
     return areas.begin();
 }
 
-inline AreaList::iterator AreaList::end()
+inline AreaList::iterator
+AreaList::end()
 {
     return areas.end();
 }
 
-inline AreaList::const_iterator AreaList::end() const
+inline AreaList::const_iterator
+AreaList::end() const
 {
     return areas.end();
 }
 
-inline AreaList::const_iterator AreaList::cend() const
+inline AreaList::const_iterator
+AreaList::cend() const
 {
     return areas.end();
 }
 
-inline AreaList::reverse_iterator AreaList::rbegin()
+inline AreaList::reverse_iterator
+AreaList::rbegin()
 {
     return areas.rbegin();
 }
 
-inline AreaList::const_reverse_iterator AreaList::rbegin() const
+inline AreaList::const_reverse_iterator
+AreaList::rbegin() const
 {
     return areas.rbegin();
 }
 
-inline AreaList::reverse_iterator AreaList::rend()
+inline AreaList::reverse_iterator
+AreaList::rend()
 {
     return areas.rend();
 }
 
-inline AreaList::const_reverse_iterator AreaList::rend() const
+inline AreaList::const_reverse_iterator
+AreaList::rend() const
 {
     return areas.rend();
 }

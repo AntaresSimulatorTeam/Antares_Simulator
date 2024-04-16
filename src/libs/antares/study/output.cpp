@@ -56,10 +56,8 @@ protected:
         return true;
     }
 
-    virtual Flow onFile(const String& /*filename*/,
-                        const String& parent,
-                        const String& name,
-                        uint64_t)
+    virtual Flow
+    onFile(const String& /*filename*/, const String& parent, const String& name, uint64_t)
     {
         pExtension.clear();
         IO::ExtractExtension(pExtension, name);
@@ -95,13 +93,15 @@ Output::Output(const AnyString& folder):
     loadFromFolder(folder);
 }
 
-bool Output::valid() const
+bool
+Output::valid() const
 {
     // The outputs as we know them was first introduced in Antares 3.0
     return version <= Data::StudyVersion::latest();
 }
 
-bool Output::loadFromFolder(const AnyString& folder)
+bool
+Output::loadFromFolder(const AnyString& folder)
 {
     // reset
     menuID = -1;
@@ -185,7 +185,8 @@ bool Output::loadFromFolder(const AnyString& folder)
     return true;
 }
 
-void Output::RetrieveListFromStudy(List& out, const Study& study)
+void
+Output::RetrieveListFromStudy(List& out, const Study& study)
 {
     out.clear();
 

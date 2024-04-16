@@ -44,7 +44,8 @@ SimulationComments::SimulationComments(Study& study):
 {
 }
 
-bool SimulationComments::saveToFolder(const AnyString& folder) const
+bool
+SimulationComments::saveToFolder(const AnyString& folder) const
 {
     String b;
     b.reserve(folder.size() + 20);
@@ -68,8 +69,8 @@ bool SimulationComments::saveToFolder(const AnyString& folder) const
     return false;
 }
 
-void SimulationComments::saveUsingWriter(Solver::IResultWriter& writer,
-                                         const AnyString& folder) const
+void
+SimulationComments::saveUsingWriter(Solver::IResultWriter& writer, const AnyString& folder) const
 {
     String b = folder;
     b << SEP << "comments.txt";
@@ -77,7 +78,8 @@ void SimulationComments::saveUsingWriter(Solver::IResultWriter& writer,
     writer.addEntryFromBuffer(b.c_str(), comments_copy);
 }
 
-bool SimulationComments::loadFromFolder(const StudyLoadOptions& options)
+bool
+SimulationComments::loadFromFolder(const StudyLoadOptions& options)
 {
     if (!options.loadOnlyNeeded)
     {
@@ -90,7 +92,8 @@ bool SimulationComments::loadFromFolder(const StudyLoadOptions& options)
     return true;
 }
 
-uint64_t SimulationComments::memoryUsage() const
+uint64_t
+SimulationComments::memoryUsage() const
 {
     return name.capacity() + comments.capacity();
 }

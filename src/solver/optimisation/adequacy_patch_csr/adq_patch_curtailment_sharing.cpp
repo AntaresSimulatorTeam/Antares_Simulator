@@ -32,19 +32,20 @@ using namespace Yuni;
 
 namespace Antares::Data::AdequacyPatch
 {
-double LmrViolationAreaHour(PROBLEME_HEBDO* problemeHebdo,
-                            double totalNodeBalance,
-                            double threshold,
-                            int Area,
-                            int hour)
+double
+LmrViolationAreaHour(PROBLEME_HEBDO* problemeHebdo,
+                     double totalNodeBalance,
+                     double threshold,
+                     int Area,
+                     int hour)
 {
     const double ensInit = problemeHebdo->ResultatsHoraires[Area]
-                             .ValeursHorairesDeDefaillancePositive[hour];
+                                   .ValeursHorairesDeDefaillancePositive[hour];
 
     problemeHebdo->ResultatsHoraires[Area].ValeursHorairesLmrViolations[hour] = 0;
     // check LMR violations
-    if ((ensInit > 0.0) && (totalNodeBalance < 0.0)
-        && (std::fabs(totalNodeBalance) > ensInit + std::fabs(threshold)))
+    if ((ensInit > 0.0) && (totalNodeBalance < 0.0) &&
+        (std::fabs(totalNodeBalance) > ensInit + std::fabs(threshold)))
     {
         problemeHebdo->ResultatsHoraires[Area].ValeursHorairesLmrViolations[hour] = 1;
         return std::fabs(totalNodeBalance);
@@ -52,10 +53,11 @@ double LmrViolationAreaHour(PROBLEME_HEBDO* problemeHebdo,
     return 0.0;
 }
 
-std::tuple<double, double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* problemeHebdo,
-                                                            bool setNTCOutsideToInsideToZero,
-                                                            int Area,
-                                                            int hour)
+std::tuple<double, double, double>
+calculateAreaFlowBalance(PROBLEME_HEBDO* problemeHebdo,
+                         bool setNTCOutsideToInsideToZero,
+                         int Area,
+                         int hour)
 {
     double netPositionInit = 0;
     double flowsNode1toNodeA = 0;
@@ -64,13 +66,13 @@ std::tuple<double, double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* prob
     int Interco = problemeHebdo->IndexDebutIntercoOrigine[Area];
     while (Interco >= 0)
     {
-        if (problemeHebdo->adequacyPatchRuntimeData->extremityAreaMode[Interco]
-            == physicalAreaInsideAdqPatch)
+        if (problemeHebdo->adequacyPatchRuntimeData->extremityAreaMode[Interco] ==
+            physicalAreaInsideAdqPatch)
         {
             netPositionInit -= problemeHebdo->ValeursDeNTC[hour].ValeurDuFlux[Interco];
         }
-        else if (problemeHebdo->adequacyPatchRuntimeData->extremityAreaMode[Interco]
-                 == physicalAreaOutsideAdqPatch)
+        else if (problemeHebdo->adequacyPatchRuntimeData->extremityAreaMode[Interco] ==
+                 physicalAreaOutsideAdqPatch)
         {
             flowsNode1toNodeA -= std::min(0.0,
                                           problemeHebdo->ValeursDeNTC[hour].ValeurDuFlux[Interco]);
@@ -80,13 +82,13 @@ std::tuple<double, double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* prob
     Interco = problemeHebdo->IndexDebutIntercoExtremite[Area];
     while (Interco >= 0)
     {
-        if (problemeHebdo->adequacyPatchRuntimeData->originAreaMode[Interco]
-            == physicalAreaInsideAdqPatch)
+        if (problemeHebdo->adequacyPatchRuntimeData->originAreaMode[Interco] ==
+            physicalAreaInsideAdqPatch)
         {
             netPositionInit += problemeHebdo->ValeursDeNTC[hour].ValeurDuFlux[Interco];
         }
-        else if (problemeHebdo->adequacyPatchRuntimeData->originAreaMode[Interco]
-                 == physicalAreaOutsideAdqPatch)
+        else if (problemeHebdo->adequacyPatchRuntimeData->originAreaMode[Interco] ==
+                 physicalAreaOutsideAdqPatch)
         {
             flowsNode1toNodeA += std::max(0.0,
                                           problemeHebdo->ValeursDeNTC[hour].ValeurDuFlux[Interco]);
@@ -95,7 +97,7 @@ std::tuple<double, double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* prob
     }
 
     double ensInit = problemeHebdo->ResultatsHoraires[Area]
-                       .ValeursHorairesDeDefaillancePositive[hour];
+                             .ValeursHorairesDeDefaillancePositive[hour];
     if (!setNTCOutsideToInsideToZero)
     {
         densNew = std::max(0.0, ensInit + netPositionInit + flowsNode1toNodeA);
@@ -110,7 +112,8 @@ std::tuple<double, double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* prob
 
 } // namespace Antares::Data::AdequacyPatch
 
-void HourlyCSRProblem::calculateCsrParameters()
+void
+HourlyCSRProblem::calculateCsrParameters()
 {
     using namespace Antares::Data::AdequacyPatch;
     double netPositionInit;
@@ -124,21 +127,22 @@ void HourlyCSRProblem::calculateCsrParameters()
 
             // calculate netPositionInit and the RHS of the AreaBalance constraints
             std::tie(netPositionInit, std::ignore, std::ignore) = calculateAreaFlowBalance(
-              problemeHebdo_,
-              adqPatchParams_.localMatching.setToZeroOutsideInsideLinks,
-              Area,
-              hour);
+                    problemeHebdo_,
+                    adqPatchParams_.localMatching.setToZeroOutsideInsideLinks,
+                    Area,
+                    hour);
             double ensInit = problemeHebdo_->ResultatsHoraires[Area]
-                               .ValeursHorairesDeDefaillancePositive[hour];
+                                     .ValeursHorairesDeDefaillancePositive[hour];
             double spillageInit = problemeHebdo_->ResultatsHoraires[Area]
-                                    .ValeursHorairesDeDefaillanceNegative[hour];
+                                          .ValeursHorairesDeDefaillanceNegative[hour];
 
             rhsAreaBalanceValues[Area] = ensInit + netPositionInit - spillageInit;
         }
     }
 }
 
-void HourlyCSRProblem::allocateProblem()
+void
+HourlyCSRProblem::allocateProblem()
 {
     using namespace Antares::Data::AdequacyPatch;
     int nbConst;
@@ -150,7 +154,8 @@ void HourlyCSRProblem::allocateProblem()
     OPT_AllocateFromNumberOfVariableConstraints(&problemeAResoudre_, nbTerms);
 }
 
-void HourlyCSRProblem::buildProblemVariables()
+void
+HourlyCSRProblem::buildProblemVariables()
 {
     logs.debug() << "[CSR] variable list:";
 
@@ -159,7 +164,8 @@ void HourlyCSRProblem::buildProblemVariables()
     constructVariableFlows();
 }
 
-void HourlyCSRProblem::buildProblemConstraintsLHS()
+void
+HourlyCSRProblem::buildProblemConstraintsLHS()
 {
     Antares::Solver::Optimization::CsrQuadraticProblem csrProb(problemeHebdo_,
                                                                problemeAResoudre_,
@@ -167,7 +173,8 @@ void HourlyCSRProblem::buildProblemConstraintsLHS()
     csrProb.buildConstraintMatrix();
 }
 
-void HourlyCSRProblem::setVariableBounds()
+void
+HourlyCSRProblem::setVariableBounds()
 {
     for (int var = 0; var < problemeAResoudre_.NombreDeVariables; var++)
     {
@@ -180,7 +187,8 @@ void HourlyCSRProblem::setVariableBounds()
     setBoundsOnFlows();
 }
 
-void HourlyCSRProblem::buildProblemConstraintsRHS()
+void
+HourlyCSRProblem::buildProblemConstraintsRHS()
 {
     logs.debug() << "[CSR] RHS: ";
     setRHSvalueOnFlows();
@@ -188,7 +196,8 @@ void HourlyCSRProblem::buildProblemConstraintsRHS()
     setRHSbindingConstraintsValue();
 }
 
-void HourlyCSRProblem::setProblemCost()
+void
+HourlyCSRProblem::setProblemCost()
 {
     logs.debug() << "[CSR] cost";
     problemeAResoudre_.CoutLineaire.assign(problemeAResoudre_.NombreDeVariables, 0.);
@@ -201,12 +210,14 @@ void HourlyCSRProblem::setProblemCost()
     }
 }
 
-void HourlyCSRProblem::solveProblem(uint week, int year)
+void
+HourlyCSRProblem::solveProblem(uint week, int year)
 {
     ADQ_PATCH_CSR(problemeAResoudre_, *this, adqPatchParams_, week, year);
 }
 
-void HourlyCSRProblem::run(uint week, uint year)
+void
+HourlyCSRProblem::run(uint week, uint year)
 {
     calculateCsrParameters();
     buildProblemVariables();

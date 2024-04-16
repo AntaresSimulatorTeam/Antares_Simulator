@@ -42,14 +42,16 @@
 using namespace Yuni;
 using namespace Antares;
 
-static inline double Round2ndPlace(double v)
+static inline double
+Round2ndPlace(double v)
 {
     v *= 100.;
     v = std::trunc(v);
     return v / 100.;
 }
 
-static void NotifyDuration(int64_t duration)
+static void
+NotifyDuration(int64_t duration)
 {
     switch (duration)
     {
@@ -64,7 +66,8 @@ static void NotifyDuration(int64_t duration)
     }
 }
 
-static void NotifyBytesDeleted(uint64_t bytes)
+static void
+NotifyBytesDeleted(uint64_t bytes)
 {
     String message;
 
@@ -108,7 +111,8 @@ static void NotifyBytesDeleted(uint64_t bytes)
     logs.info() << message;
 }
 
-static void NotifyFilesDeleted(uint64_t count)
+static void
+NotifyFilesDeleted(uint64_t count)
 {
     switch (count)
     {
@@ -123,7 +127,8 @@ static void NotifyFilesDeleted(uint64_t count)
     }
 }
 
-static void NotifyFoldersDeleted(uint64_t count)
+static void
+NotifyFoldersDeleted(uint64_t count)
 {
     switch (count)
     {
@@ -138,9 +143,8 @@ static void NotifyFoldersDeleted(uint64_t count)
     }
 }
 
-static void NotifyStatistics(const String& logprefix,
-                             const FSWalker::Statistics& stats,
-                             uint64_t duration)
+static void
+NotifyStatistics(const String& logprefix, const FSWalker::Statistics& stats, uint64_t duration)
 {
     String message;
 
@@ -240,7 +244,8 @@ protected:
 
 } // anonymous namespace
 
-int main(int argc, char** argv)
+int
+main(int argc, char** argv)
 {
     // locale
     InitializeDefaultLocale();
@@ -273,14 +278,14 @@ int main(int argc, char** argv)
                     'm',
                     "max-days",
                     String("The maximum number of days without modification (default: ")
-                      << optMaxDays << " days)");
+                            << optMaxDays << " days)");
 
         bool optDelete = false;
-        options.addFlag(
-          optDelete,
-          'd',
-          "delete",
-          "Destroy all files and folders which are considered as too old (disabled by default)");
+        options.addFlag(optDelete,
+                        'd',
+                        "delete",
+                        "Destroy all files and folders which are considered as too old (disabled "
+                        "by default)");
 
         options.add(optLogs, 'l', "log", "log file");
 

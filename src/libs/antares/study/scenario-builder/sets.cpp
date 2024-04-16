@@ -40,19 +40,22 @@ Sets::~Sets()
 {
 }
 
-void Sets::setStudy(Study& study)
+void
+Sets::setStudy(Study& study)
 {
     pStudy = &study;
     assert(pStudy && "Invalid study");
 }
 
-void Sets::clear()
+void
+Sets::clear()
 {
     assert(pStudy && "Invalid study");
     pMap.clear();
 }
 
-bool Sets::loadFromStudy(Study& study)
+bool
+Sets::loadFromStudy(Study& study)
 {
     if (not study.usedByTheSolver)
     {
@@ -82,7 +85,8 @@ bool Sets::loadFromStudy(Study& study)
     return r;
 }
 
-Rules::Ptr Sets::createNew(const RulesScenarioName& name)
+Rules::Ptr
+Sets::createNew(const RulesScenarioName& name)
 {
     assert(pStudy != nullptr);
 
@@ -102,7 +106,8 @@ Rules::Ptr Sets::createNew(const RulesScenarioName& name)
     return newRulesSet;
 }
 
-Rules::Ptr Sets::rename(const RulesScenarioName& lname, const RulesScenarioName& newname)
+Rules::Ptr
+Sets::rename(const RulesScenarioName& lname, const RulesScenarioName& newname)
 {
     // Checking in a first time if the name already exists
     RulesScenarioName id = newname;
@@ -128,7 +133,8 @@ Rules::Ptr Sets::rename(const RulesScenarioName& lname, const RulesScenarioName&
     return rules;
 }
 
-bool Sets::remove(const RulesScenarioName& lname)
+bool
+Sets::remove(const RulesScenarioName& lname)
 {
     // Checking in a first time if the name already exists
     if (lname.empty())
@@ -145,7 +151,8 @@ bool Sets::remove(const RulesScenarioName& lname)
     return true;
 }
 
-bool Sets::internalSaveToIniFile(const AnyString& filename) const
+bool
+Sets::internalSaveToIniFile(const AnyString& filename) const
 {
     // Logs
     {
@@ -181,7 +188,8 @@ bool Sets::internalSaveToIniFile(const AnyString& filename) const
     return true;
 }
 
-bool Sets::internalLoadFromINIFile(const AnyString& filename)
+bool
+Sets::internalLoadFromINIFile(const AnyString& filename)
 {
     // Logs
     logs.info() << "  > loading scenario builder data from " << filename;
@@ -195,33 +203,33 @@ bool Sets::internalLoadFromINIFile(const AnyString& filename)
     }
 
     ini.each(
-      [&](const IniFile::Section& section)
-      {
-          if (section.name.empty())
-          {
-              return;
-          }
+            [&](const IniFile::Section& section)
+            {
+                if (section.name.empty())
+                {
+                    return;
+                }
 
-          RulesScenarioName name = section.name;
-          name.trim(" \t");
-          if (!name)
-          {
-              return;
-          }
+                RulesScenarioName name = section.name;
+                name.trim(" \t");
+                if (!name)
+                {
+                    return;
+                }
 
-          // Create a new ruleset
-          Rules::Ptr rulesetptr = createNew(name);
-          Rules& ruleset = *rulesetptr;
-          AreaName::Vector splitKey;
+                // Create a new ruleset
+                Rules::Ptr rulesetptr = createNew(name);
+                Rules& ruleset = *rulesetptr;
+                AreaName::Vector splitKey;
 
-          for (auto* p = section.firstProperty; p != nullptr; p = p->next)
-          {
-              p->key.split(splitKey, ",", true, false);
-              ruleset.readLine(splitKey, p->value, inUpdaterMode);
-          }
+                for (auto* p = section.firstProperty; p != nullptr; p = p->next)
+                {
+                    p->key.split(splitKey, ",", true, false);
+                    ruleset.readLine(splitKey, p->value, inUpdaterMode);
+                }
 
-          ruleset.sendWarningsForDisabledClusters();
-      });
+                ruleset.sendWarningsForDisabledClusters();
+            });
     return true;
 }
 

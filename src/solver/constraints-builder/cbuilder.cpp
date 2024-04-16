@@ -30,12 +30,14 @@ using namespace Yuni;
 
 namespace Antares
 {
-double linkInfo::getWeightWithImpedance() const
+double
+linkInfo::getWeightWithImpedance() const
 {
     return (1 + ((hasPShiftsEqual) ? 0 : 10) + 100 * nImpedanceChanges);
 }
 
-Yuni::String linkInfo::getName() const
+Yuni::String
+linkInfo::getName() const
 {
     /*String s;
     s << ptr->from->name << "/" << ptr->with->name;
@@ -63,14 +65,16 @@ CBuilder::~CBuilder()
     }
 }
 
-bool Antares::CBuilder::isCycleDriver(linkInfo* lnkI)
+bool
+Antares::CBuilder::isCycleDriver(linkInfo* lnkI)
 {
     std::string s1(lnkI->ptr->from->name.to<std::string>());
     std::string s2(lnkI->ptr->with->name.to<std::string>());
     return _grid.findDrivingEdgeFromNodeNames(s1, s2) == nullptr;
 }
 
-uint Antares::CBuilder::cycleCount(linkInfo* lnkI)
+uint
+Antares::CBuilder::cycleCount(linkInfo* lnkI)
 {
     uint n = 0;
     for (auto it = pMesh.begin(); it != pMesh.end(); it++)
@@ -81,15 +85,16 @@ uint Antares::CBuilder::cycleCount(linkInfo* lnkI)
     return n;
 }
 
-bool CBuilder::checkValidityOfNodalLoopFlow(linkInfo* linkInfo, size_t hour)
+bool
+CBuilder::checkValidityOfNodalLoopFlow(linkInfo* linkInfo, size_t hour)
 {
     Data::AreaLink* link = linkInfo->ptr;
 
     for (uint tsIndex = 0; tsIndex < link->indirectCapacities.timeSeries.width; ++tsIndex)
     {
-        if ((-1.0 * link->indirectCapacities[tsIndex][hour]
-             > link->parameters[Data::fhlLoopFlow][hour])
-            || (link->directCapacities[tsIndex][hour] < link->parameters[Data::fhlLoopFlow][hour]))
+        if ((-1.0 * link->indirectCapacities[tsIndex][hour] >
+             link->parameters[Data::fhlLoopFlow][hour]) ||
+            (link->directCapacities[tsIndex][hour] < link->parameters[Data::fhlLoopFlow][hour]))
         {
             logs.error() << "Error on loop flow to NTC comparison validity at hour " << hour + 1
                          << " for line " << linkInfo->getName();
@@ -130,7 +135,8 @@ bool CBuilder::checkValidityOfNodalLoopFlow(linkInfo* linkInfo, size_t hour)
     return true;
 }
 
-bool CBuilder::checkLinkPhaseShift(linkInfo* linkInfo, size_t hour) const
+bool
+CBuilder::checkLinkPhaseShift(linkInfo* linkInfo, size_t hour) const
 {
     if (Data::AreaLink* link = linkInfo->ptr;
         link->parameters[Data::fhlPShiftMinus][hour] > link->parameters[Data::fhlPShiftPlus][hour])
@@ -142,7 +148,8 @@ bool CBuilder::checkLinkPhaseShift(linkInfo* linkInfo, size_t hour) const
     return true;
 }
 
-void CBuilder::updateLinkPhaseShift(linkInfo* linkInfo, size_t hour) const
+void
+CBuilder::updateLinkPhaseShift(linkInfo* linkInfo, size_t hour) const
 {
     if (Data::AreaLink* link = linkInfo->ptr;
         link->parameters[Data::fhlPShiftMinus][hour] != link->parameters[Data::fhlPShiftPlus][hour])
@@ -151,7 +158,8 @@ void CBuilder::updateLinkPhaseShift(linkInfo* linkInfo, size_t hour) const
     }
 }
 
-bool CBuilder::updateLinks()
+bool
+CBuilder::updateLinks()
 {
     for (auto linkInfoIt = pLink.begin(); linkInfoIt != pLink.end(); linkInfoIt++)
     {
@@ -173,8 +181,8 @@ bool CBuilder::updateLinks()
         linkInfo->avgImpedance = link->parameters[columnImpedance][0];
         for (size_t hour = 0; hour < HOURS_PER_YEAR - 1; hour++)
         {
-            if (link->parameters[columnImpedance][hour + 1]
-                != link->parameters[columnImpedance][hour])
+            if (link->parameters[columnImpedance][hour + 1] !=
+                link->parameters[columnImpedance][hour])
             {
                 impedances.insert(link->parameters[columnImpedance][hour + 1]);
             }
@@ -220,7 +228,8 @@ bool CBuilder::updateLinks()
     return true;
 }
 
-bool CBuilder::update()
+bool
+CBuilder::update()
 {
     buildAreaToLinkInfosMap();
     // Keep only enabled AC lines, remove disabled or DC lines
@@ -235,9 +244,9 @@ bool CBuilder::update()
 
     for (auto linkInfoIt = pLink.begin(); linkInfoIt != pLink.end(); linkInfoIt++)
     {
-        if ((*linkInfoIt)->enabled
-            && ((*linkInfoIt)->type
-                == Antares::Data::atAC /*|| (*linkInfoIt)->type == linkInfo::tyACPST*/))
+        if ((*linkInfoIt)->enabled &&
+            ((*linkInfoIt)->type ==
+             Antares::Data::atAC /*|| (*linkInfoIt)->type == linkInfo::tyACPST*/))
         {
             enabledACLines.push_back(*linkInfoIt);
         }
@@ -289,7 +298,8 @@ bool CBuilder::update()
     return true;
 }
 
-bool CBuilder::runConstraintsBuilder(bool standalone)
+bool
+CBuilder::runConstraintsBuilder(bool standalone)
 {
     // build the set of loops which span the grid
     if (!update())
@@ -310,7 +320,8 @@ bool CBuilder::runConstraintsBuilder(bool standalone)
     return result;
 }
 
-bool CBuilder::deletePreviousConstraints()
+bool
+CBuilder::deletePreviousConstraints()
 {
     if (pPrefixDelete.empty())
     {
@@ -336,7 +347,8 @@ bool CBuilder::deletePreviousConstraints()
     return true;
 }
 
-bool CBuilder::saveCBuilderToFile(const String& filename) const
+bool
+CBuilder::saveCBuilderToFile(const String& filename) const
 {
     if (!pStudy)
     {
@@ -378,7 +390,8 @@ bool CBuilder::saveCBuilderToFile(const String& filename) const
     return ini.save(filename);
 }
 
-bool CBuilder::completeCBuilderFromFile(const String& filename)
+bool
+CBuilder::completeCBuilderFromFile(const String& filename)
 {
     YString buffer;
     if (filename == "")
@@ -478,7 +491,8 @@ bool CBuilder::completeCBuilderFromFile(const String& filename)
     return true;
 }
 
-int CBuilder::alreadyExistingNetworkConstraints(const Yuni::String& prefix) const
+int
+CBuilder::alreadyExistingNetworkConstraints(const Yuni::String& prefix) const
 {
     int nSubCount = 0;
     for (auto j = pStudy->bindingConstraints.begin(); j != pStudy->bindingConstraints.end(); j++)

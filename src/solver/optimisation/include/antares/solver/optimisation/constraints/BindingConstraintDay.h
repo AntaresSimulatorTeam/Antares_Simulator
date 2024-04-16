@@ -26,7 +26,7 @@ struct BindingConstraintDayData
     const std::vector<CONTRAINTES_COUPLANTES>& MatriceDesContraintesCouplantes;
     const std::vector<PALIERS_THERMIQUES>& PaliersThermiquesDuPays;
     std::vector<CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES>&
-      CorrespondanceCntNativesCntOptimJournalieres;
+            CorrespondanceCntNativesCntOptimJournalieres;
     const int32_t& NombreDePasDeTempsDUneJournee;
     std::vector<int32_t>& NumeroDeJourDuPasDeTemps;
 };

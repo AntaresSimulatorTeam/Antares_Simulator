@@ -25,7 +25,8 @@
 #include "antares/solver/optimisation/constraints/HydroPowerSmoothingUsingVariationMaxUp.h"
 #include "antares/solver/optimisation/constraints/HydroPowerSmoothingUsingVariationSum.h"
 
-void HydraulicSmoothingGroup::BuildConstraints()
+void
+HydraulicSmoothingGroup::BuildConstraints()
 {
     HydroPowerSmoothingUsingVariationSum hydroPowerSmoothingUsingVariationSum(builder_);
     HydroPowerSmoothingUsingVariationMaxDown hydroPowerSmoothingUsingVariationMaxDown(builder_);
@@ -41,7 +42,7 @@ void HydraulicSmoothingGroup::BuildConstraints()
             }
 
             hydroPowerSmoothingUsingVariationSum
-              .add(pays, problemeHebdo_->NombreDePasDeTempsPourUneOptimisation);
+                    .add(pays, problemeHebdo_->NombreDePasDeTempsPourUneOptimisation);
         }
     }
 

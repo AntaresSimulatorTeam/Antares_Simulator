@@ -28,8 +28,9 @@
 
 using namespace operations_research;
 
-static bool compareSlackSolutions(const Antares::Optimization::Constraint& a,
-                                  const Antares::Optimization::Constraint& b)
+static bool
+compareSlackSolutions(const Antares::Optimization::Constraint& a,
+                      const Antares::Optimization::Constraint& b)
 {
     return a.getSlackValue() > b.getSlackValue();
 }
@@ -37,15 +38,16 @@ static bool compareSlackSolutions(const Antares::Optimization::Constraint& a,
 namespace Antares::Optimization
 {
 InfeasibleProblemReport::InfeasibleProblemReport(
-  const std::vector<const MPVariable*>& slackVariables)
+        const std::vector<const MPVariable*>& slackVariables)
 {
     turnSlackVarsIntoConstraints(slackVariables);
     sortConstraints();
     trimConstraints();
 }
 
-void InfeasibleProblemReport::turnSlackVarsIntoConstraints(
-  const std::vector<const MPVariable*>& slackVariables)
+void
+InfeasibleProblemReport::turnSlackVarsIntoConstraints(
+        const std::vector<const MPVariable*>& slackVariables)
 {
     for (const MPVariable* slack: slackVariables)
     {
@@ -53,12 +55,14 @@ void InfeasibleProblemReport::turnSlackVarsIntoConstraints(
     }
 }
 
-void InfeasibleProblemReport::sortConstraints()
+void
+InfeasibleProblemReport::sortConstraints()
 {
     std::sort(std::begin(mConstraints), std::end(mConstraints), ::compareSlackSolutions);
 }
 
-void InfeasibleProblemReport::trimConstraints()
+void
+InfeasibleProblemReport::trimConstraints()
 {
     if (nbVariables <= mConstraints.size())
     {
@@ -66,7 +70,8 @@ void InfeasibleProblemReport::trimConstraints()
     }
 }
 
-void InfeasibleProblemReport::extractItems()
+void
+InfeasibleProblemReport::extractItems()
 {
     for (auto& c: mConstraints)
     {
@@ -78,7 +83,8 @@ void InfeasibleProblemReport::extractItems()
     }
 }
 
-void InfeasibleProblemReport::logSuspiciousConstraints()
+void
+InfeasibleProblemReport::logSuspiciousConstraints()
 {
     Antares::logs.error() << "The following constraints are suspicious (first = most suspicious)";
     for (const auto& c: mConstraints)
@@ -97,14 +103,14 @@ void InfeasibleProblemReport::logSuspiciousConstraints()
     }
     if (mTypes[ConstraintType::short_term_storage_level] > 0)
     {
-        Antares::logs.error()
-          << "* Short-term storage reservoir level impossible to manage. Please check inflows, "
-             "lower & upper curves and initial level (if prescribed),";
+        Antares::logs.error() << "* Short-term storage reservoir level impossible to manage. "
+                                 "Please check inflows, "
+                                 "lower & upper curves and initial level (if prescribed),";
     }
 
-    const unsigned int bcCount = mTypes[ConstraintType::binding_constraint_hourly]
-                                 + mTypes[ConstraintType::binding_constraint_daily]
-                                 + mTypes[ConstraintType::binding_constraint_weekly];
+    const unsigned int bcCount = mTypes[ConstraintType::binding_constraint_hourly] +
+                                 mTypes[ConstraintType::binding_constraint_daily] +
+                                 mTypes[ConstraintType::binding_constraint_weekly];
     if (bcCount > 0)
     {
         Antares::logs.error() << "* Binding constraints,";
@@ -113,7 +119,8 @@ void InfeasibleProblemReport::logSuspiciousConstraints()
     Antares::logs.error() << "* Negative hurdle costs on lines with infinite capacity (rare).";
 }
 
-void InfeasibleProblemReport::prettyPrint()
+void
+InfeasibleProblemReport::prettyPrint()
 {
     extractItems();
     logSuspiciousConstraints();

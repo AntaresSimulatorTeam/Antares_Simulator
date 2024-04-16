@@ -37,10 +37,11 @@ using namespace Antares;
 
 namespace Antares::Solver::Variable::Private
 {
-void InternalExportDigestLinksMatrix(const Data::Study& study,
-                                     const char* title,
-                                     std::string& buffer,
-                                     const Matrix<>& matrix)
+void
+InternalExportDigestLinksMatrix(const Data::Study& study,
+                                const char* title,
+                                std::string& buffer,
+                                const Matrix<>& matrix)
 {
     // THIS FILE IS DEPRECATED !!!
     buffer.append("\n\n\n\n\t").append(title).append("\n\t\tFrom...\n\t...To");
@@ -112,9 +113,10 @@ void InternalExportDigestLinksMatrix(const Data::Study& study,
     }
 }
 
-static void ExportGridInfosAreas(const Data::Study& study,
-                                 const Yuni::String& originalOutput,
-                                 IResultWriter& writer)
+static void
+ExportGridInfosAreas(const Data::Study& study,
+                     const Yuni::String& originalOutput,
+                     IResultWriter& writer)
 {
     Clob out;
     Clob outLinks;
@@ -127,42 +129,42 @@ static void ExportGridInfosAreas(const Data::Study& study,
                   "marginal cost\tfixed cost\tstartup cost\tmarket bid cost\tspread cost\n";
 
     study.areas.each(
-      [&](const Data::Area& area)
-      {
-          out << area.id << '\t';
-          out << area.name << '\n';
+            [&](const Data::Area& area)
+            {
+                out << area.id << '\t';
+                out << area.name << '\n';
 
-          // Areas
-          {
-              auto end = area.links.end();
-              for (auto i = area.links.begin(); i != end; ++i)
-              {
-                  outLinks << area.id << '\t' << i->second->with->id << '\n';
-              }
-          }
+                // Areas
+                {
+                    auto end = area.links.end();
+                    for (auto i = area.links.begin(); i != end; ++i)
+                    {
+                        outLinks << area.id << '\t' << i->second->with->id << '\n';
+                    }
+                }
 
-          // Thermal clusters
-          for (auto& cluster: area.thermal.list.each_enabled())
-          {
-              outThermal << area.id << '\t';
-              outThermal << cluster->id() << '\t';
-              outThermal << cluster->name() << '\t';
-              outThermal << Data::ThermalCluster::GroupName(cluster->groupID) << '\t';
-              outThermal << cluster->unitCount << '\t';
-              outThermal << cluster->nominalCapacity << '\t';
-              outThermal << cluster->minStablePower << '\t';
-              outThermal << cluster->minUpTime << '\t';
-              outThermal << cluster->minDownTime << '\t';
-              outThermal << cluster->spinning << '\t';
-              outThermal << cluster->emissions.factors[Antares::Data::Pollutant::CO2] << '\t';
-              outThermal << cluster->marginalCost << '\t';
-              outThermal << cluster->fixedCost << '\t';
-              outThermal << cluster->startupCost << '\t';
-              outThermal << cluster->marketBidCost << '\t';
-              outThermal << cluster->spreadCost << '\n';
+                // Thermal clusters
+                for (auto& cluster: area.thermal.list.each_enabled())
+                {
+                    outThermal << area.id << '\t';
+                    outThermal << cluster->id() << '\t';
+                    outThermal << cluster->name() << '\t';
+                    outThermal << Data::ThermalCluster::GroupName(cluster->groupID) << '\t';
+                    outThermal << cluster->unitCount << '\t';
+                    outThermal << cluster->nominalCapacity << '\t';
+                    outThermal << cluster->minStablePower << '\t';
+                    outThermal << cluster->minUpTime << '\t';
+                    outThermal << cluster->minDownTime << '\t';
+                    outThermal << cluster->spinning << '\t';
+                    outThermal << cluster->emissions.factors[Antares::Data::Pollutant::CO2] << '\t';
+                    outThermal << cluster->marginalCost << '\t';
+                    outThermal << cluster->fixedCost << '\t';
+                    outThermal << cluster->startupCost << '\t';
+                    outThermal << cluster->marketBidCost << '\t';
+                    outThermal << cluster->spreadCost << '\n';
 
-          } // each thermal cluster
-      }); // each area
+                } // each thermal cluster
+            }); // each area
     auto add = [&writer, &originalOutput](const YString& filename, Clob&& buffer)
     {
         YString path;
@@ -188,7 +190,8 @@ SurveyResultsData::SurveyResultsData(const Data::Study& s, const String& o):
 {
 }
 
-void SurveyResultsData::initialize(uint maxVariables)
+void
+SurveyResultsData::initialize(uint maxVariables)
 {
     filename.reserve(1024);
     output.reserve(1024);
@@ -215,7 +218,8 @@ void SurveyResultsData::initialize(uint maxVariables)
     }
 }
 
-void SurveyResultsData::exportGridInfos(IResultWriter& writer)
+void
+SurveyResultsData::exportGridInfos(IResultWriter& writer)
 {
     output.clear();
     Solver::Variable::Private::ExportGridInfosAreas(study, originalOutput, writer);
@@ -228,7 +232,8 @@ namespace Solver
 {
 namespace Variable
 {
-static inline uint GetRangeLimit(const Data::Study& study, int precisionLevel, int index)
+static inline uint
+GetRangeLimit(const Data::Study& study, int precisionLevel, int index)
 {
     assert(study.runtime && "invalid runtime data");
     switch (precisionLevel)
@@ -249,7 +254,8 @@ static inline uint GetRangeLimit(const Data::Study& study, int precisionLevel, i
 }
 
 // inline : only used in this cpp file
-inline void SurveyResults::writeDateToFileDescriptor(uint row, int precisionLevel)
+inline void
+SurveyResults::writeDateToFileDescriptor(uint row, int precisionLevel)
 {
     auto& out = data.fileBuffer;
     auto& calendar = data.study.calendarOutput; // data.study.calendar;
@@ -338,12 +344,13 @@ inline void SurveyResults::writeDateToFileDescriptor(uint row, int precisionLeve
 }
 
 template<class StringT, class ConvertT, class PrecisionT>
-inline void SurveyResults::AppendDoubleValue(uint& error,
-                                             double v,
-                                             StringT& buffer,
-                                             ConvertT& conversionBuffer,
-                                             const PrecisionT& precision,
-                                             const bool isNotApplicable)
+inline void
+SurveyResults::AppendDoubleValue(uint& error,
+                                 double v,
+                                 StringT& buffer,
+                                 ConvertT& conversionBuffer,
+                                 const PrecisionT& precision,
+                                 const bool isNotApplicable)
 {
     if (isNotApplicable)
     {
@@ -418,11 +425,12 @@ inline void SurveyResults::AppendDoubleValue(uint& error,
 ** \tparam Row The row index (zero-based)
 */
 template<int Row, class S, class StringT, class CaptionT>
-static inline void WriteIndexHeaderToFileDescriptor(int precisionLevel,
-                                                    S& s,
-                                                    const StringT& areaname,
-                                                    const CaptionT& captions,
-                                                    uint columnIndex)
+static inline void
+WriteIndexHeaderToFileDescriptor(int precisionLevel,
+                                 S& s,
+                                 const StringT& areaname,
+                                 const CaptionT& captions,
+                                 uint columnIndex)
 {
     switch (precisionLevel)
     {
@@ -595,7 +603,8 @@ SurveyResults::~SurveyResults()
     delete[] digestNonApplicableStatus;
 }
 
-void SurveyResults::resetValuesAtLine(uint j)
+void
+SurveyResults::resetValuesAtLine(uint j)
 {
     for (uint i = 0; i < maxVariables; i++)
     {
@@ -603,19 +612,20 @@ void SurveyResults::resetValuesAtLine(uint j)
     }
 }
 
-void SurveyResults::exportDigestAllYears(std::string& buffer)
+void
+SurveyResults::exportDigestAllYears(std::string& buffer)
 {
     // Main Header
     {
         const unsigned int nbLinks = data.study.runtime->interconnectionsCount();
         buffer.append("\tdigest\n\tVARIABLES\tAREAS\tLINKS\n")
-          .append("\t")
-          .append(std::to_string(data.columnIndex))
-          .append("\t")
-          .append(std::to_string(data.rowCaptions.size()))
-          .append("\t")
-          .append(std::to_string(nbLinks))
-          .append("\n\n");
+                .append("\t")
+                .append(std::to_string(data.columnIndex))
+                .append("\t")
+                .append(std::to_string(data.rowCaptions.size()))
+                .append("\t")
+                .append(std::to_string(nbLinks))
+                .append("\n\n");
     }
     // Header - All columns
     for (uint rowIndex = 0; rowIndex != captionCount; ++rowIndex)
@@ -690,12 +700,14 @@ void SurveyResults::exportDigestAllYears(std::string& buffer)
     buffer.append("\n\n");
 }
 
-void SurveyResults::exportDigestMatrix(const char* title, std::string& buffer)
+void
+SurveyResults::exportDigestMatrix(const char* title, std::string& buffer)
 {
     Private::InternalExportDigestLinksMatrix(data.study, title, buffer, data.matrix);
 }
 
-void SurveyResults::saveToFile(int dataLevel, int fileLevel, int precisionLevel)
+void
+SurveyResults::saveToFile(int dataLevel, int fileLevel, int precisionLevel)
 {
     logs.debug() << " :: survey writing `" << data.filename << "`";
 
@@ -816,7 +828,8 @@ void SurveyResults::saveToFile(int dataLevel, int fileLevel, int precisionLevel)
     pResultWriter.addEntryFromBuffer(data.filename.c_str(), data.fileBuffer);
 }
 
-void SurveyResults::exportGridInfos()
+void
+SurveyResults::exportGridInfos()
 {
     data.exportGridInfos(pResultWriter);
 }

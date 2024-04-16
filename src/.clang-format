@@ -138,7 +138,7 @@ AllowShortLoopsOnASingleLine: false
 # The function declaration return type breaking style to use
 # -> None: Break after return type automatically,
 #          according to penalty system
-AlwaysBreakAfterReturnType: None
+AlwaysBreakAfterReturnType: TopLevelDefinitions
 
 # If true, always break before multiline string literals
 # -> false
@@ -181,7 +181,7 @@ BinPackParameters: false
 #          == aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 #        && aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 #             > ccccccccccccccccccccccccccccccccccccccccc;
-BreakBeforeBinaryOperators: All
+BreakBeforeBinaryOperators: None
 
 # The brace breaking style to use
 # -> Allman: Always break before braces, longer but clearer files
@@ -227,7 +227,7 @@ ConstructorInitializerIndentWidth: 4
 
 # Indent width for line continuations
 # -> 2: So that it is differenciable from other identations
-ContinuationIndentWidth: 2
+ContinuationIndentWidth: 8
 
 # If true, format braced lists as best suited for C++11 braced lists
 # -> true
@@ -332,7 +332,7 @@ IndentWidth: 4
 
 # Indent if a function definition or declaration is wrapped after the type
 # -> true: to be clear on the fact that this is not another function declaration
-IndentWrappedFunctionNames: true
+IndentWrappedFunctionNames: false
 
 # We always use braces to identify blocks, even one-lines
 InsertBraces: true
@@ -388,7 +388,7 @@ PenaltyExcessCharacter: 1000000
 # Important to allow method chaining,
 # and not breaking assignment or after function parenthesis
 PenaltyIndentedWhitespace: 0
-PenaltyReturnTypeOnItsOwnLine: 200
+PenaltyReturnTypeOnItsOwnLine: 0
 
 # Pointer and reference alignment style
 # -> Left: the type of a variable is at its left, and the * or the & are part of

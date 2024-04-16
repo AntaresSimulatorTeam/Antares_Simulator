@@ -51,10 +51,11 @@ MersenneTwister::~MersenneTwister()
 {
 }
 
-void MersenneTwister::reset(uint seed)
+void
+MersenneTwister::reset(uint seed)
 {
-    assert(sizeof(uint) == sizeof(uint32_t)
-           && "This version of mersenne twister is dedicated to 32bits words");
+    assert(sizeof(uint) == sizeof(uint32_t) &&
+           "This version of mersenne twister is dedicated to 32bits words");
     mt[0] = seed & 0xffffffffUL;
     for (mti = 1; mti < periodN; ++mti)
     {
@@ -68,7 +69,8 @@ void MersenneTwister::reset(uint seed)
     }
 }
 
-MersenneTwister::Value MersenneTwister::next() const
+MersenneTwister::Value
+MersenneTwister::next() const
 {
     uint32_t y;
     static const uint32_t mag01[2] = {0x0UL, MATRIX_A};
@@ -113,22 +115,26 @@ MersenneTwister::Value MersenneTwister::next() const
     return y * (1.0 / 4294967295.0);
 }
 
-MersenneTwister::Value MersenneTwister::min()
+MersenneTwister::Value
+MersenneTwister::min()
 {
     return 0.;
 }
 
-MersenneTwister::Value MersenneTwister::max()
+MersenneTwister::Value
+MersenneTwister::max()
 {
     return 1.;
 }
 
-void MersenneTwister::reset()
+void
+MersenneTwister::reset()
 {
     reset(defaultSeed);
 }
 
-MersenneTwister::Value MersenneTwister::operator()()
+MersenneTwister::Value
+MersenneTwister::operator()()
 {
     return next();
 }

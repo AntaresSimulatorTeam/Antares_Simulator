@@ -21,24 +21,25 @@
 
 #include "antares/solver/optimisation/constraints/FlowDissociation.h"
 
-void FlowDissociation::add(int pdt, int interco)
+void
+FlowDissociation::add(int pdt, int interco)
 {
     if (const COUTS_DE_TRANSPORT& CoutDeTransport = data.CoutDeTransport[interco];
         CoutDeTransport.IntercoGereeAvecDesCouts)
     {
-        data.CorrespondanceCntNativesCntOptim[pdt].NumeroDeContrainteDeDissociationDeFlux[interco]
-          = builder.data.nombreDeContraintes;
+        data.CorrespondanceCntNativesCntOptim[pdt]
+                .NumeroDeContrainteDeDissociationDeFlux[interco] = builder.data.nombreDeContraintes;
         const auto origin = builder.data.NomsDesPays[data.PaysOrigineDeLInterconnexion[interco]];
         const auto destination = builder.data
-                                   .NomsDesPays[data.PaysExtremiteDeLInterconnexion[interco]];
+                                         .NomsDesPays[data.PaysExtremiteDeLInterconnexion[interco]];
         ConstraintNamer namer(builder.data.NomDesContraintes);
         namer.UpdateTimeStep(builder.data.weekInTheYear * 168 + pdt);
         namer.FlowDissociation(builder.data.nombreDeContraintes, origin, destination);
 
         builder.updateHourWithinWeek(pdt);
         builder.NTCDirect(interco, 1.0)
-          .IntercoDirectCost(interco, -1.0)
-          .IntercoIndirectCost(interco, 1.0);
+                .IntercoDirectCost(interco, -1.0)
+                .IntercoIndirectCost(interco, 1.0);
 
         builder.equalTo();
 

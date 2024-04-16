@@ -32,7 +32,8 @@
 namespace Antares::Data::Enum
 {
 template<typename E, typename>
-E fromString(const std::string& name)
+E
+fromString(const std::string& name)
 {
     const auto& names = getNames<E>();
     const auto& it = std::find(names.begin(), names.end(), name);
@@ -45,20 +46,22 @@ E fromString(const std::string& name)
 }
 
 template<typename E, typename>
-std::string toString(const E& value)
+std::string
+toString(const E& value)
 {
     auto index = static_cast<unsigned long>(value);
     const auto& names = getNames<E>();
     if (index >= names.size())
     {
-        throw AssertionError("Unexpected " + stdcxx::simpleClassName<E>() + " value "
-                             + std::to_string(index));
+        throw AssertionError("Unexpected " + stdcxx::simpleClassName<E>() + " value " +
+                             std::to_string(index));
     }
     return *(names.begin() + index);
 }
 
 template<typename E, typename>
-std::list<E> enumList()
+std::list<E>
+enumList()
 {
     std::list<E> result;
     const auto& names = getNames<E>();

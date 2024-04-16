@@ -57,27 +57,33 @@
 
 namespace Antares::Data::ScenarioBuilder
 {
-bool BindingConstraintsTSNumberData::apply(Study& study)
+bool
+BindingConstraintsTSNumberData::apply(Study& study)
 {
-    return std::all_of(
-      rules_.begin(),
-      rules_.end(),
-      [&study, this](const std::pair<std::string, MatrixType>& args)
-      {
-          const auto& [groupName, tsNumbers] = args;
-          auto group = study.bindingConstraintsGroups[groupName];
-          if (group == nullptr)
-          {
-              logs.error("Group with name '" + groupName + "' does not exists");
-          }
-          uint errors = 0;
-          CString<512, false> logprefix;
-          logprefix.clear() << "Binding constraints: group '" << groupName << "': ";
-          return ApplyToMatrix(errors, logprefix, *group, tsNumbers[0], get_tsGenCount(study));
-      });
+    return std::all_of(rules_.begin(),
+                       rules_.end(),
+                       [&study, this](const std::pair<std::string, MatrixType>& args)
+                       {
+                           const auto& [groupName, tsNumbers] = args;
+                           auto group = study.bindingConstraintsGroups[groupName];
+                           if (group == nullptr)
+                           {
+                               logs.error("Group with name '" + groupName + "' does not exists");
+                           }
+                           uint errors = 0;
+                           CString<512, false> logprefix;
+                           logprefix.clear()
+                                   << "Binding constraints: group '" << groupName << "': ";
+                           return ApplyToMatrix(errors,
+                                                logprefix,
+                                                *group,
+                                                tsNumbers[0],
+                                                get_tsGenCount(study));
+                       });
 }
 
-bool BindingConstraintsTSNumberData::reset(const Study& study)
+bool
+BindingConstraintsTSNumberData::reset(const Study& study)
 {
     const uint nbYears = study.parameters.nbYears;
     std::for_each(study.bindingConstraintsGroups.begin(),
@@ -91,7 +97,8 @@ bool BindingConstraintsTSNumberData::reset(const Study& study)
     return true;
 }
 
-void BindingConstraintsTSNumberData::saveToINIFile(const Study&, Yuni::IO::File::Stream& file) const
+void
+BindingConstraintsTSNumberData::saveToINIFile(const Study&, Yuni::IO::File::Stream& file) const
 {
     // Turning values into strings (precision 4)
     std::ostringstream value_into_string;
@@ -110,9 +117,10 @@ void BindingConstraintsTSNumberData::saveToINIFile(const Study&, Yuni::IO::File:
     }
 }
 
-void BindingConstraintsTSNumberData::setTSnumber(const std::string& group_name,
-                                                 const uint year,
-                                                 uint value)
+void
+BindingConstraintsTSNumberData::setTSnumber(const std::string& group_name,
+                                            const uint year,
+                                            uint value)
 {
     auto& group_ts_numbers = rules_[group_name];
     group_ts_numbers[0][year] = value;

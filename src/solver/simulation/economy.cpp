@@ -40,7 +40,8 @@ Economy::Economy(Data::Study& study, IResultWriter& resultWriter):
 {
 }
 
-Benchmarking::OptimizationInfo Economy::getOptimizationInfo() const
+Benchmarking::OptimizationInfo
+Economy::getOptimizationInfo() const
 {
     const uint numSpace = 0;
     const auto& Pb = pProblemesHebdo[numSpace].ProblemeAResoudre;
@@ -52,18 +53,21 @@ Benchmarking::OptimizationInfo Economy::getOptimizationInfo() const
     return optInfo;
 }
 
-void Economy::setNbPerformedYearsInParallel(uint nbMaxPerformedYearsInParallel)
+void
+Economy::setNbPerformedYearsInParallel(uint nbMaxPerformedYearsInParallel)
 {
     pNbMaxPerformedYearsInParallel = nbMaxPerformedYearsInParallel;
 }
 
-void Economy::initializeState(Variable::State& state, uint numSpace)
+void
+Economy::initializeState(Variable::State& state, uint numSpace)
 {
     state.problemeHebdo = &pProblemesHebdo[numSpace];
     state.numSpace = numSpace;
 }
 
-bool Economy::simulationBegin()
+bool
+Economy::simulationBegin()
 {
     if (!preproOnly)
     {
@@ -83,20 +87,20 @@ bool Economy::simulationBegin()
 
             auto options = createOptimizationOptions(study);
             weeklyOptProblems_[numSpace] = Antares::Solver::Optimization::WeeklyOptimization::
-              create(study,
-                     options,
-                     study.parameters.adqPatchParams,
-                     &pProblemesHebdo[numSpace],
-                     numSpace,
-                     resultWriter);
+                    create(study,
+                           options,
+                           study.parameters.adqPatchParams,
+                           &pProblemesHebdo[numSpace],
+                           numSpace,
+                           resultWriter);
             postProcessesList_[numSpace] = interfacePostProcessList::create(
-              study.parameters.adqPatchParams,
-              &pProblemesHebdo[numSpace],
-              numSpace,
-              study.areas,
-              study.parameters.shedding.policy,
-              study.parameters.simplexOptimizationRange,
-              study.calendar);
+                    study.parameters.adqPatchParams,
+                    &pProblemesHebdo[numSpace],
+                    numSpace,
+                    study.areas,
+                    study.parameters.shedding.policy,
+                    study.parameters.simplexOptimizationRange,
+                    study.calendar);
         }
     }
 
@@ -110,15 +114,16 @@ bool Economy::simulationBegin()
     return true;
 }
 
-bool Economy::year(Progression::Task& progression,
-                   Variable::State& state,
-                   uint numSpace,
-                   yearRandomNumbers& randomForYear,
-                   std::list<uint>& failedWeekList,
-                   bool isFirstPerformedYearOfSimulation,
-                   const HYDRO_VENTILATION_RESULTS& hydroVentilationResults,
-                   OptimizationStatisticsWriter& optWriter,
-                   const Antares::Data::Area::ScratchMap& scratchmap)
+bool
+Economy::year(Progression::Task& progression,
+              Variable::State& state,
+              uint numSpace,
+              yearRandomNumbers& randomForYear,
+              std::list<uint>& failedWeekList,
+              bool isFirstPerformedYearOfSimulation,
+              const HYDRO_VENTILATION_RESULTS& hydroVentilationResults,
+              OptimizationStatisticsWriter& optWriter,
+              const Antares::Data::Area::ScratchMap& scratchmap)
 {
     // No failed week at year start
     failedWeekList.clear();
@@ -202,8 +207,8 @@ bool Economy::year(Progression::Task& progression,
             failedWeekList.push_back(w + 1);
 
             // Stop simulation
-            logs.error("Assertion error for week " + std::to_string(w + 1)
-                       + " simulation is stopped : " + ex.what());
+            logs.error("Assertion error for week " + std::to_string(w + 1) +
+                       " simulation is stopped : " + ex.what());
             return false;
         }
         catch (Data::UnfeasibleProblemError&)
@@ -237,7 +242,8 @@ bool Economy::year(Progression::Task& progression,
     return true;
 }
 
-void Economy::incrementProgression(Progression::Task& progression)
+void
+Economy::incrementProgression(Progression::Task& progression)
 {
     for (uint w = 0; w < pNbWeeks; ++w)
     {
@@ -246,9 +252,8 @@ void Economy::incrementProgression(Progression::Task& progression)
 }
 
 // Retrieve weighted average balance for each area
-static std::vector<AvgExchangeResults*> retrieveBalance(
-  const Data::Study& study,
-  Solver::Variable::Economy::AllVariables& variables)
+static std::vector<AvgExchangeResults*>
+retrieveBalance(const Data::Study& study, Solver::Variable::Economy::AllVariables& variables)
 {
     const uint nbAreas = study.areas.size();
     std::vector<AvgExchangeResults*> balance(nbAreas, nullptr);
@@ -261,7 +266,8 @@ static std::vector<AvgExchangeResults*> retrieveBalance(
     return balance;
 }
 
-void Economy::simulationEnd()
+void
+Economy::simulationEnd()
 {
     if (!preproOnly && study.runtime->interconnectionsCount() > 0)
     {
@@ -270,7 +276,8 @@ void Economy::simulationEnd()
     }
 }
 
-void Economy::prepareClustersInMustRunMode(Data::Area::ScratchMap& scratchmap, uint year)
+void
+Economy::prepareClustersInMustRunMode(Data::Area::ScratchMap& scratchmap, uint year)
 {
     PrepareDataFromClustersInMustrunMode(study, scratchmap, year);
 }

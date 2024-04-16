@@ -35,7 +35,8 @@ namespace Antares
 {
 namespace Data
 {
-bool Study::internalLoadHeader(const String& path)
+bool
+Study::internalLoadHeader(const String& path)
 {
     // Header
     buffer.clear() << path << SEP << "study.antares";
@@ -54,14 +55,16 @@ bool Study::internalLoadHeader(const String& path)
     return true;
 }
 
-bool Study::loadFromFolder(const AnyString& path, const StudyLoadOptions& options)
+bool
+Study::loadFromFolder(const AnyString& path, const StudyLoadOptions& options)
 {
     String normPath;
     IO::Normalize(normPath, path);
     return internalLoadFromFolder(normPath, options);
 }
 
-bool Study::internalLoadIni(const String& path, const StudyLoadOptions& options)
+bool
+Study::internalLoadIni(const String& path, const StudyLoadOptions& options)
 {
     if (!internalLoadHeader(path))
     {
@@ -96,7 +99,8 @@ bool Study::internalLoadIni(const String& path, const StudyLoadOptions& options)
     return true;
 }
 
-void Study::parameterFiller(const StudyLoadOptions& options)
+void
+Study::parameterFiller(const StudyLoadOptions& options)
 {
     if (usedByTheSolver && !options.prepareOutput)
     {
@@ -175,7 +179,8 @@ void Study::parameterFiller(const StudyLoadOptions& options)
     reduceMemoryUsage();
 }
 
-bool Study::internalLoadFromFolder(const String& path, const StudyLoadOptions& options)
+bool
+Study::internalLoadFromFolder(const String& path, const StudyLoadOptions& options)
 {
     // IO statistics
     Statistics::LogsDumper statisticsDumper;
@@ -184,7 +189,8 @@ bool Study::internalLoadFromFolder(const String& path, const StudyLoadOptions& o
     if (!IO::Directory::Exists(path))
     {
         logs.error()
-          << path << ": The directory does not exist (or not enough privileges to read the folder)";
+                << path
+                << ": The directory does not exist (or not enough privileges to read the folder)";
         return false;
     }
 
@@ -231,11 +237,12 @@ bool Study::internalLoadFromFolder(const String& path, const StudyLoadOptions& o
     return ret;
 }
 
-bool Study::internalLoadCorrelationMatrices(const StudyLoadOptions& options)
+bool
+Study::internalLoadCorrelationMatrices(const StudyLoadOptions& options)
 {
     // Load
-    if (!options.loadOnlyNeeded || timeSeriesLoad & parameters.timeSeriesToRefresh
-        || timeSeriesLoad & parameters.timeSeriesToGenerate)
+    if (!options.loadOnlyNeeded || timeSeriesLoad & parameters.timeSeriesToRefresh ||
+        timeSeriesLoad & parameters.timeSeriesToGenerate)
     {
         buffer.clear() << folderInput << SEP << "load" << SEP << "prepro" << SEP
                        << "correlation.ini";
@@ -243,8 +250,8 @@ bool Study::internalLoadCorrelationMatrices(const StudyLoadOptions& options)
     }
 
     // Solar
-    if (!options.loadOnlyNeeded || timeSeriesSolar & parameters.timeSeriesToRefresh
-        || timeSeriesSolar & parameters.timeSeriesToGenerate)
+    if (!options.loadOnlyNeeded || timeSeriesSolar & parameters.timeSeriesToRefresh ||
+        timeSeriesSolar & parameters.timeSeriesToGenerate)
     {
         buffer.clear() << folderInput << SEP << "solar" << SEP << "prepro" << SEP
                        << "correlation.ini";
@@ -253,8 +260,8 @@ bool Study::internalLoadCorrelationMatrices(const StudyLoadOptions& options)
 
     // Wind
     {
-        if (!options.loadOnlyNeeded || timeSeriesWind & parameters.timeSeriesToRefresh
-            || timeSeriesWind & parameters.timeSeriesToGenerate)
+        if (!options.loadOnlyNeeded || timeSeriesWind & parameters.timeSeriesToRefresh ||
+            timeSeriesWind & parameters.timeSeriesToGenerate)
         {
             buffer.clear() << folderInput << SEP << "wind" << SEP << "prepro" << SEP
                            << "correlation.ini";
@@ -264,8 +271,8 @@ bool Study::internalLoadCorrelationMatrices(const StudyLoadOptions& options)
 
     // Hydro
     {
-        if (!options.loadOnlyNeeded || (timeSeriesHydro & parameters.timeSeriesToRefresh)
-            || (timeSeriesHydro & parameters.timeSeriesToGenerate))
+        if (!options.loadOnlyNeeded || (timeSeriesHydro & parameters.timeSeriesToRefresh) ||
+            (timeSeriesHydro & parameters.timeSeriesToGenerate))
         {
             buffer.clear() << folderInput << SEP << "hydro" << SEP << "prepro" << SEP
                            << "correlation.ini";
@@ -275,7 +282,8 @@ bool Study::internalLoadCorrelationMatrices(const StudyLoadOptions& options)
     return true;
 }
 
-bool Study::internalLoadBindingConstraints(const StudyLoadOptions& options)
+bool
+Study::internalLoadBindingConstraints(const StudyLoadOptions& options)
 {
     // All checks are performed in 'loadFromFolder'
     // (actually internalLoadFromFolder)
@@ -379,7 +387,8 @@ private:
 
 }; // class SetHandlerAreas
 
-bool Study::internalLoadSets()
+bool
+Study::internalLoadSets()
 {
     // Set of areas
     logs.info();
@@ -403,34 +412,37 @@ bool Study::internalLoadSets()
     return false;
 }
 
-void Study::reloadCorrelation()
+void
+Study::reloadCorrelation()
 {
     StudyLoadOptions options;
     options.loadOnlyNeeded = false;
     internalLoadCorrelationMatrices(options);
 }
 
-bool Study::reloadXCastData()
+bool
+Study::reloadXCastData()
 {
     // if changes are required, please update AreaListLoadFromFolderSingleArea()
     bool ret = true;
     areas.each(
-      [&](Data::Area& area)
-      {
-          assert(area.load.prepro);
-          assert(area.solar.prepro);
-          assert(area.wind.prepro);
+            [&](Data::Area& area)
+            {
+                assert(area.load.prepro);
+                assert(area.solar.prepro);
+                assert(area.wind.prepro);
 
-          // Load
-          buffer.clear() << folderInput << SEP << "load" << SEP << "prepro" << SEP << area.id;
-          ret = area.load.prepro->loadFromFolder(buffer) && ret;
-          // Solar
-          buffer.clear() << folderInput << SEP << "solar" << SEP << "prepro" << SEP << area.id;
-          ret = area.solar.prepro->loadFromFolder(buffer) && ret;
-          // Wind
-          buffer.clear() << folderInput << SEP << "wind" << SEP << "prepro" << SEP << area.id;
-          ret = area.wind.prepro->loadFromFolder(buffer) && ret;
-      });
+                // Load
+                buffer.clear() << folderInput << SEP << "load" << SEP << "prepro" << SEP << area.id;
+                ret = area.load.prepro->loadFromFolder(buffer) && ret;
+                // Solar
+                buffer.clear() << folderInput << SEP << "solar" << SEP << "prepro" << SEP
+                               << area.id;
+                ret = area.solar.prepro->loadFromFolder(buffer) && ret;
+                // Wind
+                buffer.clear() << folderInput << SEP << "wind" << SEP << "prepro" << SEP << area.id;
+                ret = area.wind.prepro->loadFromFolder(buffer) && ret;
+            });
     return ret;
 }
 

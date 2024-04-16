@@ -48,8 +48,7 @@ typedef struct
     std::vector<double> VolumeMax; /* A renseigner par l'appelant : 1 valeur par mois */
 
     /* Les resultats */
-    char
-      ResultatsValides;          /* Vaut:
+    char ResultatsValides;       /* Vaut:
                                     OUI si la solution est exploitable pour le reservoir
                                     NON s'il y a eu un probleme dans la resolution
                                                                                                                               EMERGENCY_SHUT_DOWN si la resolution du probleme a donne lieu a une erreur interne

@@ -36,12 +36,14 @@ using namespace Antares;
 
 #define SEP IO::Separator
 
-void PathList::clear()
+void
+PathList::clear()
 {
     item.clear();
 }
 
-size_t PathList::internalSizeOnDisk() const
+size_t
+PathList::internalSizeOnDisk() const
 {
     size_t size = 0;
     Clob buffer;
@@ -58,7 +60,8 @@ size_t PathList::internalSizeOnDisk() const
     return size;
 }
 
-size_t PathList::totalSizeInBytes() const
+size_t
+PathList::totalSizeInBytes() const
 {
     size_t size = 0;
 
@@ -70,7 +73,8 @@ size_t PathList::totalSizeInBytes() const
     return size;
 }
 
-uint PathList::internalDeleteAllEmptyFolders()
+uint
+PathList::internalDeleteAllEmptyFolders()
 {
     if (!pTmp || item.empty())
     {
@@ -101,7 +105,8 @@ uint PathList::internalDeleteAllEmptyFolders()
     return count;
 }
 
-uint PathList::internalDeleteAllFiles()
+uint
+PathList::internalDeleteAllFiles()
 {
     if (!pTmp || item.empty())
     {
@@ -184,7 +189,8 @@ private:
     std::function<bool(uint)>& onProgress;
 };
 
-void PathList::internalAddFromFolder(const Clob& folder, const PathList& exclude)
+void
+PathList::internalAddFromFolder(const Clob& folder, const PathList& exclude)
 {
     PathListIterator iterator(*this, exclude, onProgress);
     iterator.add(folder.c_str());

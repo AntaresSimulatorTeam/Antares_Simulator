@@ -25,7 +25,8 @@ namespace Antares
 {
 namespace Data
 {
-inline void PartRenewable::resizeAllTimeseriesNumbers(uint n)
+inline void
+PartRenewable::resizeAllTimeseriesNumbers(uint n)
 {
     list.resizeAllTimeseriesNumbers(n);
 }

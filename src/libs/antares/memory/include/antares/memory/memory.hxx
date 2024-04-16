@@ -23,7 +23,8 @@
 
 namespace Antares
 {
-inline uint64_t Memory::processID() const
+inline uint64_t
+Memory::processID() const
 {
     return pProcessID;
 }
@@ -58,64 +59,74 @@ inline Memory::Array<T>::~Array()
 }
 
 template<class T>
-void Memory::Array<T>::allocate(size_t size)
+void
+Memory::Array<T>::allocate(size_t size)
 {
     delete[] pPointer;
     pPointer = new T[size];
 }
 
 template<class T>
-T& Memory::Array<T>::operator[](uint i)
+T&
+Memory::Array<T>::operator[](uint i)
 {
     return (T&)pPointer[i];
 }
 
 template<class T>
-const T& Memory::Array<T>::operator[](uint i) const
+const T&
+Memory::Array<T>::operator[](uint i) const
 {
     return (const T&)pPointer[i];
 }
 
 template<class T>
-inline void Memory::Release(T*& pointer)
+inline void
+Memory::Release(T*& pointer)
 {
     delete[] pointer;
     pointer = nullptr;
 }
 
 template<class T>
-inline void Memory::Allocate(T*& out, size_t size)
+inline void
+Memory::Allocate(T*& out, size_t size)
 {
     assert(size > 0);
     out = new T[size];
 }
 
 template<class T>
-inline bool Memory::Null(const T* out)
+inline bool
+Memory::Null(const T* out)
 {
     return !out;
 }
 
 template<class T>
-inline bool Memory::StrictNull(const T* out)
+inline bool
+Memory::StrictNull(const T* out)
 {
     return !out;
 }
 
 template<class U>
-inline U* Memory::RawPointer(U* array)
+inline U*
+Memory::RawPointer(U* array)
 {
     return array;
 }
 
 template<class U>
-inline void Memory::Zero(uint count, U* array)
+inline void
+Memory::Zero(uint count, U* array)
 {
     (void)::memset(array, 0, sizeof(U) * count);
 }
 
 template<class U>
-inline void Memory::Assign(uint count, U* array, const U& value)
+inline void
+Memory::Assign(uint count, U* array, const U& value)
 {
     for (uint i = 0; i != count; ++i)
     {

@@ -37,9 +37,9 @@
 using namespace Antares;
 using namespace Antares::Data;
 
-static void importShortTermStorages(
-  const AreaList& areas,
-  std::vector<::ShortTermStorage::AREA_INPUT>& ShortTermStorageOut)
+static void
+importShortTermStorages(const AreaList& areas,
+                        std::vector<::ShortTermStorage::AREA_INPUT>& ShortTermStorageOut)
 {
     int clusterGlobalIndex = 0;
     for (uint areaIndex = 0; areaIndex != areas.size(); areaIndex++)
@@ -69,10 +69,11 @@ static void importShortTermStorages(
     }
 }
 
-void SIM_InitialisationProblemeHebdo(Data::Study& study,
-                                     PROBLEME_HEBDO& problem,
-                                     int NombreDePasDeTemps,
-                                     uint numspace)
+void
+SIM_InitialisationProblemeHebdo(Data::Study& study,
+                                PROBLEME_HEBDO& problem,
+                                int NombreDePasDeTemps,
+                                uint numspace)
 {
     int NombrePaliers;
 
@@ -81,19 +82,19 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     problem.Expansion = (parameters.mode == Data::SimulationMode::Expansion);
     problem.firstWeekOfSimulation = false;
 
-    problem.hydroHotStart = (parameters.initialReservoirLevels.iniLevels
-                             == Antares::Data::irlHotStart);
+    problem.hydroHotStart = (parameters.initialReservoirLevels.iniLevels ==
+                             Antares::Data::irlHotStart);
 
     // gp adq : to be removed
     if (parameters.adqPatchParams.enabled)
     {
         problem.adequacyPatchRuntimeData = std::make_shared<AdequacyPatchRuntimeData>(
-          study.areas,
-          study.runtime->areaLink);
+                study.areas,
+                study.runtime->areaLink);
     }
 
-    problem.WaterValueAccurate = (study.parameters.hydroPricing.hpMode
-                                  == Antares::Data::HydroPricingMode::hpMILP);
+    problem.WaterValueAccurate = (study.parameters.hydroPricing.hpMode ==
+                                  Antares::Data::HydroPricingMode::hpMILP);
 
     SIM_AllocationProblemeHebdo(study, problem, NombreDePasDeTemps);
 
@@ -116,12 +117,11 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     problem.solverLogs = study.parameters.solverLogs;
     problem.exportMPSOnError = Data::exportMPS(parameters.include.unfeasibleProblemBehavior);
 
-    problem.OptimisationAvecCoutsDeDemarrage = (study.parameters.unitCommitment.ucMode
-                                                != Antares::Data::UnitCommitmentMode::
-                                                  ucHeuristicFast);
+    problem.OptimisationAvecCoutsDeDemarrage = (study.parameters.unitCommitment.ucMode !=
+                                                Antares::Data::UnitCommitmentMode::ucHeuristicFast);
 
-    problem.OptimisationAvecVariablesEntieres = (study.parameters.unitCommitment.ucMode
-                                                 == Antares::Data::UnitCommitmentMode::ucMILP);
+    problem.OptimisationAvecVariablesEntieres = (study.parameters.unitCommitment.ucMode ==
+                                                 Antares::Data::UnitCommitmentMode::ucMILP);
 
     problem.OptimisationAuPasHebdomadaire = (parameters.simplexOptimizationRange == Data::sorWeek);
 
@@ -157,39 +157,38 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
 
         problem.CoutDeDefaillanceEnReserve[i] = area.thermal.unsuppliedEnergyCost;
 
-        problem.DefaillanceNegativeUtiliserPMinThermique[i] = (anoOtherDispatchPower
-                                                               & area.nodalOptimization)
-                                                              != 0;
-        problem.DefaillanceNegativeUtiliserHydro[i] = (anoDispatchHydroPower
-                                                       & area.nodalOptimization)
-                                                      != 0;
-        problem.DefaillanceNegativeUtiliserConsoAbattue[i] = (anoNonDispatchPower
-                                                              & area.nodalOptimization)
-                                                             != 0;
+        problem.DefaillanceNegativeUtiliserPMinThermique[i] = (anoOtherDispatchPower &
+                                                               area.nodalOptimization) != 0;
+        problem.DefaillanceNegativeUtiliserHydro[i] = (anoDispatchHydroPower &
+                                                       area.nodalOptimization) != 0;
+        problem.DefaillanceNegativeUtiliserConsoAbattue[i] = (anoNonDispatchPower &
+                                                              area.nodalOptimization) != 0;
 
-        problem.CaracteristiquesHydrauliques[i].PresenceDHydrauliqueModulable = scratchpad
-                                                                                  .hydroHasMod;
+        problem.CaracteristiquesHydrauliques[i]
+                .PresenceDHydrauliqueModulable = scratchpad.hydroHasMod;
 
-        problem.CaracteristiquesHydrauliques[i].PresenceDePompageModulable
-          = area.hydro.reservoirManagement && scratchpad.pumpHasMod
-            && area.hydro.pumpingEfficiency > 0.
-            && problem.CaracteristiquesHydrauliques[i].PresenceDHydrauliqueModulable;
+        problem.CaracteristiquesHydrauliques[i]
+                .PresenceDePompageModulable = area.hydro.reservoirManagement &&
+                                              scratchpad.pumpHasMod &&
+                                              area.hydro.pumpingEfficiency > 0. &&
+                                              problem.CaracteristiquesHydrauliques[i]
+                                                      .PresenceDHydrauliqueModulable;
 
         problem.CaracteristiquesHydrauliques[i].PumpingRatio = area.hydro.pumpingEfficiency;
 
-        problem.CaracteristiquesHydrauliques[i].SansHeuristique = area.hydro.reservoirManagement
-                                                                  && !area.hydro.useHeuristicTarget;
+        problem.CaracteristiquesHydrauliques[i].SansHeuristique = area.hydro.reservoirManagement &&
+                                                                  !area.hydro.useHeuristicTarget;
 
-        problem.CaracteristiquesHydrauliques[i].TurbinageEntreBornes = area.hydro
-                                                                         .reservoirManagement
-                                                                       && (!area.hydro
-                                                                              .useHeuristicTarget
-                                                                           || area.hydro.useLeeway);
+        problem.CaracteristiquesHydrauliques[i]
+                .TurbinageEntreBornes = area.hydro.reservoirManagement &&
+                                        (!area.hydro.useHeuristicTarget || area.hydro.useLeeway);
 
-        problem.CaracteristiquesHydrauliques[i].SuiviNiveauHoraire
-          = area.hydro.reservoirManagement && (problem.OptimisationAuPasHebdomadaire)
-            && (!area.hydro.useHeuristicTarget
-                || problem.CaracteristiquesHydrauliques[i].PresenceDePompageModulable);
+        problem.CaracteristiquesHydrauliques[i]
+                .SuiviNiveauHoraire = area.hydro.reservoirManagement &&
+                                      (problem.OptimisationAuPasHebdomadaire) &&
+                                      (!area.hydro.useHeuristicTarget ||
+                                       problem.CaracteristiquesHydrauliques[i]
+                                               .PresenceDePompageModulable);
 
         problem.CaracteristiquesHydrauliques[i].DirectLevelAccess = false;
         problem.CaracteristiquesHydrauliques[i].AccurateWaterValue = false;
@@ -205,8 +204,9 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         for (int pdt = 0; pdt < NombreDePasDeTemps; pdt++)
         {
             problem.CaracteristiquesHydrauliques[i].NiveauHoraireInf[pdt] = 0;
-            problem.CaracteristiquesHydrauliques[i].NiveauHoraireSup[pdt]
-              = problem.CaracteristiquesHydrauliques[i].TailleReservoir;
+            problem.CaracteristiquesHydrauliques[i]
+                    .NiveauHoraireSup[pdt] = problem.CaracteristiquesHydrauliques[i]
+                                                     .TailleReservoir;
         }
 
         problem.previousSimulationFinalLevel[i] = -1.;
@@ -261,7 +261,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
             break;
         }
         PtMat.SensDeLaContrainteCouplante = *Antares::Data::BindingConstraint::
-                                              MathOperatorToCString(bc->operatorType());
+                                                    MathOperatorToCString(bc->operatorType());
 
         BindingConstraintStructures bindingConstraintStructures = bc->initLinkArrays();
         for (uint j = 0; j < bc->linkCount(); ++j)
@@ -279,7 +279,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
             PtMat.PoidsDuPalierDispatch[j] = bindingConstraintStructures.clusterWeight[j];
 
             PtMat.OffsetTemporelSurLePalierDispatch[j] = bindingConstraintStructures
-                                                           .clusterOffset[j];
+                                                                 .clusterOffset[j];
         }
     }
 
@@ -294,31 +294,31 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
 
         for (const auto& cluster: area.thermal.list.each_enabled_and_not_mustrun())
         {
-            pbPalier.NumeroDuPalierDansLEnsembleDesPaliersThermiques[cluster->index] = NombrePaliers
-                                                                                       + cluster
-                                                                                           ->index;
-            pbPalier.TailleUnitaireDUnGroupeDuPalierThermique[cluster->index]
-              = cluster->nominalCapacityWithSpinning;
+            pbPalier.NumeroDuPalierDansLEnsembleDesPaliersThermiques
+                    [cluster->index] = NombrePaliers + cluster->index;
+            pbPalier.TailleUnitaireDUnGroupeDuPalierThermique
+                    [cluster->index] = cluster->nominalCapacityWithSpinning;
             pbPalier.PminDuPalierThermiquePendantUneHeure[cluster->index] = cluster->minStablePower;
             pbPalier.PminDuPalierThermiquePendantUnJour[cluster->index] = 0;
             pbPalier.minUpDownTime[cluster->index] = cluster->minUpDownTime;
 
-            pbPalier.CoutDeDemarrageDUnGroupeDuPalierThermique[cluster->index] = cluster
-                                                                                   ->startupCost;
+            pbPalier.CoutDeDemarrageDUnGroupeDuPalierThermique
+                    [cluster->index] = cluster->startupCost;
             pbPalier.CoutDArretDUnGroupeDuPalierThermique[cluster->index] = 0;
-            pbPalier.CoutFixeDeMarcheDUnGroupeDuPalierThermique[cluster->index] = cluster
-                                                                                    ->fixedCost;
-            pbPalier.DureeMinimaleDeMarcheDUnGroupeDuPalierThermique[cluster->index]
-              = cluster->minUpTime;
-            pbPalier.DureeMinimaleDArretDUnGroupeDuPalierThermique[cluster->index]
-              = cluster->minDownTime;
+            pbPalier.CoutFixeDeMarcheDUnGroupeDuPalierThermique
+                    [cluster->index] = cluster->fixedCost;
+            pbPalier.DureeMinimaleDeMarcheDUnGroupeDuPalierThermique
+                    [cluster->index] = cluster->minUpTime;
+            pbPalier.DureeMinimaleDArretDUnGroupeDuPalierThermique
+                    [cluster->index] = cluster->minDownTime;
 
-            pbPalier.PmaxDUnGroupeDuPalierThermique[cluster->index]
-              = cluster->nominalCapacityWithSpinning;
-            pbPalier.pminDUnGroupeDuPalierThermique[cluster->index]
-              = (pbPalier.PmaxDUnGroupeDuPalierThermique[cluster->index] < cluster->minStablePower)
-                  ? pbPalier.PmaxDUnGroupeDuPalierThermique[cluster->index]
-                  : cluster->minStablePower;
+            pbPalier.PmaxDUnGroupeDuPalierThermique
+                    [cluster->index] = cluster->nominalCapacityWithSpinning;
+            pbPalier.pminDUnGroupeDuPalierThermique[cluster->index] =
+                    (pbPalier.PmaxDUnGroupeDuPalierThermique[cluster->index] <
+                     cluster->minStablePower)
+                            ? pbPalier.PmaxDUnGroupeDuPalierThermique[cluster->index]
+                            : cluster->minStablePower;
             pbPalier.NomsDesPaliersThermiques[cluster->index] = cluster->name().c_str();
         }
 
@@ -330,12 +330,13 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     problem.LeProblemeADejaEteInstancie = false;
 }
 
-static void prepareBindingConstraint(PROBLEME_HEBDO& problem,
-                                     int PasDeTempsDebut,
-                                     const BindingConstraintsRepository& bindingConstraints,
-                                     const BindingConstraintGroupRepository& bcgroups,
-                                     const uint weekFirstDay,
-                                     int pasDeTemps)
+static void
+prepareBindingConstraint(PROBLEME_HEBDO& problem,
+                         int PasDeTempsDebut,
+                         const BindingConstraintsRepository& bindingConstraints,
+                         const BindingConstraintGroupRepository& bcgroups,
+                         const uint weekFirstDay,
+                         int pasDeTemps)
 {
     auto activeConstraints = bindingConstraints.activeConstraints();
     const auto constraintCount = activeConstraints.size();
@@ -362,8 +363,8 @@ static void prepareBindingConstraint(PROBLEME_HEBDO& problem,
         case BindingConstraint::typeHourly:
         {
             problem.MatriceDesContraintesCouplantes[constraintIndex]
-              .SecondMembreDeLaContrainteCouplante[pasDeTemps]
-              = column[PasDeTempsDebut + pasDeTemps];
+                    .SecondMembreDeLaContrainteCouplante[pasDeTemps] = column[PasDeTempsDebut +
+                                                                              pasDeTemps];
             break;
         }
         case BindingConstraint::typeDaily:
@@ -371,9 +372,9 @@ static void prepareBindingConstraint(PROBLEME_HEBDO& problem,
             assert(timeSeries.width && "Invalid constraint data width");
             assert(weekFirstDay + 6 < timeSeries.height && "Invalid constraint data height");
 
-            std::vector<double>& sndMember = problem
-                                               .MatriceDesContraintesCouplantes[constraintIndex]
-                                               .SecondMembreDeLaContrainteCouplante;
+            std::vector<double>&
+                    sndMember = problem.MatriceDesContraintesCouplantes[constraintIndex]
+                                        .SecondMembreDeLaContrainteCouplante;
 
             for (unsigned day = 0; day != 7; ++day)
             {
@@ -394,8 +395,7 @@ static void prepareBindingConstraint(PROBLEME_HEBDO& problem,
             }
 
             problem.MatriceDesContraintesCouplantes[constraintIndex]
-              .SecondMembreDeLaContrainteCouplante[0]
-              = sum;
+                    .SecondMembreDeLaContrainteCouplante[0] = sum;
             break;
         }
         case BindingConstraint::typeUnknown:
@@ -410,12 +410,13 @@ static void prepareBindingConstraint(PROBLEME_HEBDO& problem,
     }
 }
 
-void SIM_RenseignementProblemeHebdo(const Study& study,
-                                    PROBLEME_HEBDO& problem,
-                                    uint weekInTheYear,
-                                    const int PasDeTempsDebut,
-                                    const HYDRO_VENTILATION_RESULTS& hydroVentilationResults,
-                                    const Antares::Data::Area::ScratchMap& scratchmap)
+void
+SIM_RenseignementProblemeHebdo(const Study& study,
+                               PROBLEME_HEBDO& problem,
+                               uint weekInTheYear,
+                               const int PasDeTempsDebut,
+                               const HYDRO_VENTILATION_RESULTS& hydroVentilationResults,
+                               const Antares::Data::Area::ScratchMap& scratchmap)
 
 {
     const auto& parameters = study.parameters;
@@ -439,11 +440,11 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
         {
             COUTS_DE_TRANSPORT& couts = problem.CoutDeTransport[k];
             couts.IntercoGereeAvecDesCouts = true;
-            const double* direct = ((const double*)((void*)lnk->parameters[fhlHurdlesCostDirect]))
-                                   + PasDeTempsDebut;
-            const double* indirect = ((const double*)((void*)
-                                                        lnk->parameters[fhlHurdlesCostIndirect]))
-                                     + PasDeTempsDebut;
+            const double* direct = ((const double*)((void*)lnk->parameters[fhlHurdlesCostDirect])) +
+                                   PasDeTempsDebut;
+            const double*
+                    indirect = ((const double*)((void*)lnk->parameters[fhlHurdlesCostIndirect])) +
+                               PasDeTempsDebut;
             memcpy(&couts.CoutDeTransportOrigineVersExtremite[0], direct, pasDeTempsSizeDouble);
             memcpy(&couts.CoutDeTransportOrigineVersExtremiteRef[0], direct, pasDeTempsSizeDouble);
             memcpy(&couts.CoutDeTransportExtremiteVersOrigine[0], indirect, pasDeTempsSizeDouble);
@@ -482,12 +483,13 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
 
         if (area.hydro.reservoirManagement)
         {
-            problem.CaracteristiquesHydrauliques[k].NiveauInitialReservoir
-              = problem.previousSimulationFinalLevel[k];
+            problem.CaracteristiquesHydrauliques[k]
+                    .NiveauInitialReservoir = problem.previousSimulationFinalLevel[k];
 
-            problem.CaracteristiquesHydrauliques[k].LevelForTimeInterval
-              = problem.CaracteristiquesHydrauliques[k]
-                  .NiveauInitialReservoir; /*for first 24-hour optim*/
+            problem.CaracteristiquesHydrauliques[k]
+                    .LevelForTimeInterval = problem.CaracteristiquesHydrauliques[k]
+                                                    .NiveauInitialReservoir; /*for first 24-hour
+                                                                                optim*/
             double nivInit = problem.CaracteristiquesHydrauliques[k].NiveauInitialReservoir;
             if (nivInit < 0.)
             {
@@ -507,66 +509,65 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
 
             if (area.hydro.powerToLevel)
             {
-                problem.CaracteristiquesHydrauliques[k].WeeklyGeneratingModulation = Antares::Data::
-                  getWeeklyModulation(problem.previousSimulationFinalLevel[k] * 100
-                                        / area.hydro.reservoirCapacity,
-                                      area.hydro.creditModulation,
-                                      Data::PartHydro::genMod);
+                problem.CaracteristiquesHydrauliques[k]
+                        .WeeklyGeneratingModulation = Antares::Data::getWeeklyModulation(
+                        problem.previousSimulationFinalLevel[k] * 100 /
+                                area.hydro.reservoirCapacity,
+                        area.hydro.creditModulation,
+                        Data::PartHydro::genMod);
 
-                problem.CaracteristiquesHydrauliques[k].WeeklyPumpingModulation = Antares::Data::
-                  getWeeklyModulation(problem.previousSimulationFinalLevel[k] * 100
-                                        / area.hydro.reservoirCapacity,
-                                      area.hydro.creditModulation,
-                                      Data::PartHydro::pumpMod);
+                problem.CaracteristiquesHydrauliques[k]
+                        .WeeklyPumpingModulation = Antares::Data::getWeeklyModulation(
+                        problem.previousSimulationFinalLevel[k] * 100 /
+                                area.hydro.reservoirCapacity,
+                        area.hydro.creditModulation,
+                        Data::PartHydro::pumpMod);
             }
 
             if (area.hydro.useWaterValue)
             {
                 Antares::Data::getWaterValue(
-                  problem.previousSimulationFinalLevel[k] * 100 / area.hydro.reservoirCapacity,
-                  area.hydro.waterValues,
-                  weekFirstDay,
-                  problem.CaracteristiquesHydrauliques[k].WeeklyWaterValueStateRegular);
+                        problem.previousSimulationFinalLevel[k] * 100 /
+                                area.hydro.reservoirCapacity,
+                        area.hydro.waterValues,
+                        weekFirstDay,
+                        problem.CaracteristiquesHydrauliques[k].WeeklyWaterValueStateRegular);
             }
 
             if (problem.CaracteristiquesHydrauliques[k].PresenceDHydrauliqueModulable > 0)
             {
-                if (area.hydro.hardBoundsOnRuleCurves
-                    && problem.CaracteristiquesHydrauliques[k].SuiviNiveauHoraire)
+                if (area.hydro.hardBoundsOnRuleCurves &&
+                    problem.CaracteristiquesHydrauliques[k].SuiviNiveauHoraire)
                 {
                     auto& minLvl = area.hydro.reservoirLevel[Data::PartHydro::minimum];
                     auto& maxLvl = area.hydro.reservoirLevel[Data::PartHydro::maximum];
 
                     for (int day = 0; day < 7; day++)
                     {
-                        levelInterpolBeg = minLvl[weekDayIndex[day]]
-                                           * problem.CaracteristiquesHydrauliques[k]
-                                               .TailleReservoir;
-                        levelInterpolEnd = minLvl[weekDayIndex[day + 1]]
-                                           * problem.CaracteristiquesHydrauliques[k]
-                                               .TailleReservoir;
+                        levelInterpolBeg = minLvl[weekDayIndex[day]] *
+                                           problem.CaracteristiquesHydrauliques[k].TailleReservoir;
+                        levelInterpolEnd = minLvl[weekDayIndex[day + 1]] *
+                                           problem.CaracteristiquesHydrauliques[k].TailleReservoir;
                         delta = (levelInterpolEnd - levelInterpolBeg) / 24.;
 
                         for (int hour = 0; hour < 24; hour++)
                         {
                             problem.CaracteristiquesHydrauliques[k]
-                              .NiveauHoraireInf[24 * day + hour]
-                              = levelInterpolBeg + hour * delta;
+                                    .NiveauHoraireInf[24 * day + hour] = levelInterpolBeg +
+                                                                         hour * delta;
                         }
 
-                        levelInterpolBeg = maxLvl[weekDayIndex[day]]
-                                           * problem.CaracteristiquesHydrauliques[k]
-                                               .TailleReservoir;
-                        levelInterpolEnd = maxLvl[weekDayIndex[day + 1]]
-                                           * problem.CaracteristiquesHydrauliques[k]
-                                               .TailleReservoir;
+                        levelInterpolBeg = maxLvl[weekDayIndex[day]] *
+                                           problem.CaracteristiquesHydrauliques[k].TailleReservoir;
+                        levelInterpolEnd = maxLvl[weekDayIndex[day + 1]] *
+                                           problem.CaracteristiquesHydrauliques[k].TailleReservoir;
                         delta = (levelInterpolEnd - levelInterpolBeg) / 24.;
 
                         for (int hour = 0; hour < 24; hour++)
                         {
                             problem.CaracteristiquesHydrauliques[k]
-                              .NiveauHoraireSup[24 * day + hour]
-                              = levelInterpolBeg + hour * delta;
+                                    .NiveauHoraireSup[24 * day + hour] = levelInterpolBeg +
+                                                                         hour * delta;
                         }
                     }
                 }
@@ -575,10 +576,11 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
             {
                 for (uint layerindex = 0; layerindex < 100; layerindex++)
                 {
-                    problem.CaracteristiquesHydrauliques[k].WaterLayerValues[layerindex]
-                      = 0.5
-                        * (area.hydro.waterValues[layerindex][weekFirstDay + 7]
-                           + area.hydro.waterValues[layerindex + 1][weekFirstDay + 7]);
+                    problem.CaracteristiquesHydrauliques[k].WaterLayerValues
+                            [layerindex] = 0.5 *
+                                           (area.hydro.waterValues[layerindex][weekFirstDay + 7] +
+                                            area.hydro
+                                                    .waterValues[layerindex + 1][weekFirstDay + 7]);
                 }
             }
         }
@@ -624,23 +626,23 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
             const double hourlySolar = area.solar.series.getCoefficient(year, hourInYear);
             const double hourlyROR = area.hydro.series->ror.getCoefficient(year, hourInYear);
             const double hourlyHydroGenPower = area.hydro.series->maxHourlyGenPower
-                                                 .getCoefficient(year, hourInYear);
+                                                       .getCoefficient(year, hourInYear);
             const double hourlyHydroPumpPower = area.hydro.series->maxHourlyPumpPower
-                                                  .getCoefficient(year, hourInYear);
+                                                        .getCoefficient(year, hourInYear);
 
             double& mustRunGen = problem.AllMustRunGeneration[hourInWeek]
-                                   .AllMustRunGenerationOfArea[k];
+                                         .AllMustRunGenerationOfArea[k];
             if (parameters.renewableGeneration.isAggregated())
             {
-                mustRunGen = hourlyWind + hourlySolar + scratchpad.miscGenSum[hourInYear]
-                             + hourlyROR + scratchpad.mustrunSum[hourInYear];
+                mustRunGen = hourlyWind + hourlySolar + scratchpad.miscGenSum[hourInYear] +
+                             hourlyROR + scratchpad.mustrunSum[hourInYear];
             }
 
             // Renewable
             if (parameters.renewableGeneration.isClusters())
             {
-                mustRunGen = scratchpad.miscGenSum[hourInYear] + hourlyROR
-                             + scratchpad.mustrunSum[hourInYear];
+                mustRunGen = scratchpad.miscGenSum[hourInYear] + hourlyROR +
+                             scratchpad.mustrunSum[hourInYear];
 
                 for (const auto& c: area.renewable.list.each_enabled())
                 {
@@ -648,33 +650,32 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                 }
             }
 
-            assert(
-              !std::isnan(problem.AllMustRunGeneration[hourInWeek].AllMustRunGenerationOfArea[k])
-              && "NaN detected for 'AllMustRunGeneration', probably from miscGenSum/mustrunSum");
+            assert(!std::isnan(problem.AllMustRunGeneration[hourInWeek]
+                                       .AllMustRunGenerationOfArea[k]) &&
+                   "NaN detected for 'AllMustRunGeneration', probably from miscGenSum/mustrunSum");
 
-            problem.ConsommationsAbattues[hourInWeek].ConsommationAbattueDuPays[k]
-              = +hourlyLoad
-                - problem.AllMustRunGeneration[hourInWeek].AllMustRunGenerationOfArea[k];
+            problem.ConsommationsAbattues[hourInWeek]
+                    .ConsommationAbattueDuPays[k] = +hourlyLoad -
+                                                    problem.AllMustRunGeneration[hourInWeek]
+                                                            .AllMustRunGenerationOfArea[k];
 
             if (problem.CaracteristiquesHydrauliques[k].PresenceDHydrauliqueModulable > 0)
             {
-                problem.CaracteristiquesHydrauliques[k]
-                  .ContrainteDePmaxHydrauliqueHoraire[hourInWeek]
-                  = hourlyHydroGenPower
-                    * problem.CaracteristiquesHydrauliques[k].WeeklyGeneratingModulation;
+                problem.CaracteristiquesHydrauliques[k].ContrainteDePmaxHydrauliqueHoraire
+                        [hourInWeek] = hourlyHydroGenPower * problem.CaracteristiquesHydrauliques[k]
+                                                                     .WeeklyGeneratingModulation;
             }
 
             if (problem.CaracteristiquesHydrauliques[k].PresenceDePompageModulable)
             {
-                problem.CaracteristiquesHydrauliques[k].ContrainteDePmaxPompageHoraire[hourInWeek]
-                  = hourlyHydroPumpPower
-                    * problem.CaracteristiquesHydrauliques[k].WeeklyPumpingModulation;
+                problem.CaracteristiquesHydrauliques[k].ContrainteDePmaxPompageHoraire
+                        [hourInWeek] = hourlyHydroPumpPower *
+                                       problem.CaracteristiquesHydrauliques[k]
+                                               .WeeklyPumpingModulation;
             }
 
-            problem.ReserveJMoins1[k].ReserveHoraireJMoins1[hourInWeek] = area.reserves
-                                                                            [fhrDayBefore]
-                                                                            [PasDeTempsDebut
-                                                                             + hourInWeek];
+            problem.ReserveJMoins1[k].ReserveHoraireJMoins1
+                    [hourInWeek] = area.reserves[fhrDayBefore][PasDeTempsDebut + hourInWeek];
         }
     }
 
@@ -689,50 +690,50 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
 
                 const auto& dailyMeanMaxGenPower = scratchpad.meanMaxDailyGenPower.getColumn(year);
                 const auto& dailyMeanMaxPumpPower = scratchpad.meanMaxDailyPumpPower.getColumn(
-                  year);
+                        year);
                 const auto& srcinflows = hydroSeries->storage.getColumn(year);
                 const auto& srcmingen = hydroSeries->mingen.getColumn(year);
 
                 for (uint j = 0; j < problem.NombreDePasDeTemps; ++j)
                 {
-                    problem.CaracteristiquesHydrauliques[k].MingenHoraire[j] = srcmingen
-                      [PasDeTempsDebut + j];
+                    problem.CaracteristiquesHydrauliques[k]
+                            .MingenHoraire[j] = srcmingen[PasDeTempsDebut + j];
                 }
 
                 if (area.hydro.reservoirManagement)
                 {
-                    if (not area.hydro.useHeuristicTarget
-                        || (problem.CaracteristiquesHydrauliques[k].PresenceDePompageModulable
-                            && problem.OptimisationAuPasHebdomadaire))
+                    if (not area.hydro.useHeuristicTarget ||
+                        (problem.CaracteristiquesHydrauliques[k].PresenceDePompageModulable &&
+                         problem.OptimisationAuPasHebdomadaire))
                     {
                         for (uint j = 0; j < 7; ++j)
                         {
                             uint day = study.calendar.hours[PasDeTempsDebut + j * 24].dayYear;
 
                             problem.CaracteristiquesHydrauliques[k]
-                              .MinEnergieHydrauParIntervalleOptimise[j]
-                              = 0.;
+                                    .MinEnergieHydrauParIntervalleOptimise[j] = 0.;
                             problem.CaracteristiquesHydrauliques[k]
-                              .MaxEnergieHydrauParIntervalleOptimise[j]
-                              = dailyMeanMaxGenPower[day] * area.hydro.dailyNbHoursAtGenPmax[0][day]
-                                * problem.CaracteristiquesHydrauliques[k]
-                                    .WeeklyGeneratingModulation;
+                                    .MaxEnergieHydrauParIntervalleOptimise
+                                            [j] = dailyMeanMaxGenPower[day] *
+                                                  area.hydro.dailyNbHoursAtGenPmax[0][day] *
+                                                  problem.CaracteristiquesHydrauliques[k]
+                                                          .WeeklyGeneratingModulation;
                         }
                     }
 
-                    if (area.hydro.useHeuristicTarget
-                        && (area.hydro.useLeeway
-                            || (problem.CaracteristiquesHydrauliques[k].PresenceDePompageModulable
-                                && !problem.OptimisationAuPasHebdomadaire)))
+                    if (area.hydro.useHeuristicTarget &&
+                        (area.hydro.useLeeway ||
+                         (problem.CaracteristiquesHydrauliques[k].PresenceDePompageModulable &&
+                          !problem.OptimisationAuPasHebdomadaire)))
                     {
                         std::vector<double>& DGU = problem.CaracteristiquesHydrauliques[k]
-                                                     .MaxEnergieHydrauParIntervalleOptimise;
+                                                           .MaxEnergieHydrauParIntervalleOptimise;
 
                         std::vector<double>& DGL = problem.CaracteristiquesHydrauliques[k]
-                                                     .MinEnergieHydrauParIntervalleOptimise;
+                                                           .MinEnergieHydrauParIntervalleOptimise;
 
                         const std::vector<double>& DNT = hydroVentilationResults[k]
-                                                           .HydrauliqueModulableQuotidien;
+                                                                 .HydrauliqueModulableQuotidien;
 
                         double WSL = problem.CaracteristiquesHydrauliques[k].NiveauInitialReservoir;
 
@@ -747,7 +748,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                             LLB = 1;
                         }
                         double DGM = problem.CaracteristiquesHydrauliques[k]
-                                       .WeeklyGeneratingModulation;
+                                             .WeeklyGeneratingModulation;
 
                         double rc = area.hydro.reservoirCapacity;
 
@@ -767,8 +768,8 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                         {
                             uint day = study.calendar.hours[PasDeTempsDebut + j * 24].dayYear;
 
-                            double DGC = dailyMeanMaxGenPower[day]
-                                         * area.hydro.dailyNbHoursAtGenPmax[0][day];
+                            double DGC = dailyMeanMaxGenPower[day] *
+                                         area.hydro.dailyNbHoursAtGenPmax[0][day];
 
                             DGU_tmp[j] = DNT[day] * LUB;
                             DGL_tmp[j] = DNT[day] * LLB;
@@ -804,9 +805,10 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
 
                             else
                             {
-                                const uint nextWeekFirstDay = study.calendar
-                                                                .hours[PasDeTempsDebut + 7 * 24]
-                                                                .dayYear;
+                                const uint
+                                        nextWeekFirstDay = study.calendar
+                                                                   .hours[PasDeTempsDebut + 7 * 24]
+                                                                   .dayYear;
                                 auto& minLvl = area.hydro.reservoirLevel[Data::PartHydro::minimum];
                                 double V = std::max(0., WSL - minLvl[nextWeekFirstDay] * rc + WNI);
 
@@ -828,15 +830,15 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                 double weekGenerationTarget = 1.;
                 double marginGen = 1.;
 
-                if (area.hydro.reservoirManagement && area.hydro.useHeuristicTarget
-                    && not area.hydro.useLeeway)
+                if (area.hydro.reservoirManagement && area.hydro.useHeuristicTarget &&
+                    not area.hydro.useLeeway)
                 {
                     double weekTarget_tmp = 0.;
                     for (uint j = 0; j < 7; ++j)
                     {
                         uint day = study.calendar.hours[PasDeTempsDebut + j * 24].dayYear;
                         weekTarget_tmp += hydroVentilationResults[k]
-                                            .HydrauliqueModulableQuotidien[day];
+                                                  .HydrauliqueModulableQuotidien[day];
                     }
 
                     if (weekTarget_tmp != 0.)
@@ -846,8 +848,8 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
 
                     marginGen = weekGenerationTarget;
 
-                    if (problem.CaracteristiquesHydrauliques[k].NiveauInitialReservoir
-                        < weekTarget_tmp)
+                    if (problem.CaracteristiquesHydrauliques[k].NiveauInitialReservoir <
+                        weekTarget_tmp)
                     {
                         marginGen = problem.CaracteristiquesHydrauliques[k].NiveauInitialReservoir;
                     }
@@ -858,23 +860,24 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                     for (uint j = 0; j < 7; ++j)
                     {
                         uint day = study.calendar.hours[PasDeTempsDebut + j * 24].dayYear;
-                        problem.CaracteristiquesHydrauliques[k]
-                          .CntEnergieH2OParIntervalleOptimise[j]
-                          = hydroVentilationResults[k].HydrauliqueModulableQuotidien[day]
-                            * problem.CaracteristiquesHydrauliques[k].WeeklyGeneratingModulation
-                            * marginGen / weekGenerationTarget;
+                        problem.CaracteristiquesHydrauliques[k].CntEnergieH2OParIntervalleOptimise
+                                [j] = hydroVentilationResults[k]
+                                              .HydrauliqueModulableQuotidien[day] *
+                                      problem.CaracteristiquesHydrauliques[k]
+                                              .WeeklyGeneratingModulation *
+                                      marginGen / weekGenerationTarget;
                     }
                 }
 
                 for (uint j = 0; j < 7; ++j)
                 {
                     uint day = study.calendar.hours[PasDeTempsDebut + j * 24].dayYear;
-                    problem.CaracteristiquesHydrauliques[k].InflowForTimeInterval[j] = srcinflows
-                      [day];
+                    problem.CaracteristiquesHydrauliques[k]
+                            .InflowForTimeInterval[j] = srcinflows[day];
                     for (int h = 0; h < 24; h++)
                     {
-                        problem.CaracteristiquesHydrauliques[k].ApportNaturelHoraire[j * 24 + h]
-                          = srcinflows[day] / 24;
+                        problem.CaracteristiquesHydrauliques[k]
+                                .ApportNaturelHoraire[j * 24 + h] = srcinflows[day] / 24;
                     }
                 }
 
@@ -890,11 +893,11 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                                 uint day = study.calendar.hours[PasDeTempsDebut + j * 24].dayYear;
 
                                 problem.CaracteristiquesHydrauliques[k]
-                                  .MaxEnergiePompageParIntervalleOptimise[j]
-                                  = dailyMeanMaxPumpPower[day]
-                                    * area.hydro.dailyNbHoursAtPumpPmax[0][day]
-                                    * problem.CaracteristiquesHydrauliques[k]
-                                        .WeeklyPumpingModulation;
+                                        .MaxEnergiePompageParIntervalleOptimise
+                                                [j] = dailyMeanMaxPumpPower[day] *
+                                                      area.hydro.dailyNbHoursAtPumpPmax[0][day] *
+                                                      problem.CaracteristiquesHydrauliques[k]
+                                                              .WeeklyPumpingModulation;
                             }
                         }
 
@@ -907,14 +910,15 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                                 WNI += srcinflows[day];
                             }
 
-                            std::vector<double>& DPU = problem.CaracteristiquesHydrauliques[k]
-                                                         .MaxEnergiePompageParIntervalleOptimise;
+                            std::vector<double>&
+                                    DPU = problem.CaracteristiquesHydrauliques[k]
+                                                  .MaxEnergiePompageParIntervalleOptimise;
 
                             double WSL = problem.CaracteristiquesHydrauliques[k]
-                                           .NiveauInitialReservoir;
+                                                 .NiveauInitialReservoir;
 
                             double DPM = problem.CaracteristiquesHydrauliques[k]
-                                           .WeeklyPumpingModulation;
+                                                 .WeeklyPumpingModulation;
 
                             double pumping_ratio = area.hydro.pumpingEfficiency;
 
@@ -924,8 +928,8 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                             {
                                 uint day = study.calendar.hours[PasDeTempsDebut + j * 24].dayYear;
 
-                                double DPC = dailyMeanMaxPumpPower[day]
-                                             * area.hydro.dailyNbHoursAtPumpPmax[0][day];
+                                double DPC = dailyMeanMaxPumpPower[day] *
+                                             area.hydro.dailyNbHoursAtPumpPmax[0][day];
 
                                 WPU += DPC;
                             }
@@ -936,8 +940,8 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                             {
                                 uint day = study.calendar.hours[PasDeTempsDebut + j * 24].dayYear;
 
-                                double DPC = dailyMeanMaxPumpPower[day]
-                                             * area.hydro.dailyNbHoursAtPumpPmax[0][day];
+                                double DPC = dailyMeanMaxPumpPower[day] *
+                                             area.hydro.dailyNbHoursAtPumpPmax[0][day];
                                 double rc = area.hydro.reservoirCapacity;
 
                                 if (not area.hydro.hardBoundsOnRuleCurves)
@@ -957,14 +961,15 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                                 else
                                 {
                                     const uint nextWeekFirstDay = study.calendar
-                                                                    .hours[PasDeTempsDebut + 7 * 24]
-                                                                    .dayYear;
-                                    auto& maxLvl = area.hydro
-                                                     .reservoirLevel[Data::PartHydro::maximum];
+                                                                          .hours[PasDeTempsDebut +
+                                                                                 7 * 24]
+                                                                          .dayYear;
+                                    auto& maxLvl = area.hydro.reservoirLevel
+                                                           [Data::PartHydro::maximum];
 
                                     double V = std::max(0.,
-                                                        maxLvl[nextWeekFirstDay] * rc
-                                                          - (WNI + WSL));
+                                                        maxLvl[nextWeekFirstDay] * rc -
+                                                                (WNI + WSL));
 
                                     if (Utils::isZero(U))
                                     {
@@ -985,7 +990,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
 
     for (uint k = 0; k < nbPays; ++k)
     {
-        problem.CaracteristiquesHydrauliques[k].ContrainteDePmaxHydrauliqueHoraireRef
-          = problem.CaracteristiquesHydrauliques[k].ContrainteDePmaxHydrauliqueHoraire;
+        problem.CaracteristiquesHydrauliques[k].ContrainteDePmaxHydrauliqueHoraireRef =
+                problem.CaracteristiquesHydrauliques[k].ContrainteDePmaxHydrauliqueHoraire;
     }
 }

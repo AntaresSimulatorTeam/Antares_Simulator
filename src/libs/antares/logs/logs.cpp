@@ -31,7 +31,8 @@ Yuni::Logs::Logger<LoggingHandlers, LoggingDecorators> logs;
 using namespace Antares;
 using namespace Yuni;
 
-int LogCompatibility(const char format[], ...)
+int
+LogCompatibility(const char format[], ...)
 {
     va_list parg;
     va_start(parg, format);
@@ -40,7 +41,8 @@ int LogCompatibility(const char format[], ...)
     return 1;
 }
 
-void LogDisplayErrorInfos(uint errors, uint warnings, const char* message, bool printError)
+void
+LogDisplayErrorInfos(uint errors, uint warnings, const char* message, bool printError)
 {
     ShortString64 error;
     ShortString64 warning;

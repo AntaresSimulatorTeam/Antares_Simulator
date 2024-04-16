@@ -33,7 +33,8 @@ using namespace Yuni;
 
 namespace Antares::Data
 {
-void LayerData::loadLayers(const AnyString& filename)
+void
+LayerData::loadLayers(const AnyString& filename)
 {
     IniFile ini;
     if (std::ifstream(filename.c_str()).good() && ini.open(filename)) // check if file exists
@@ -75,7 +76,8 @@ void LayerData::loadLayers(const AnyString& filename)
     }
 }
 
-bool LayerData::saveLayers(const AnyString& filename)
+bool
+LayerData::saveLayers(const AnyString& filename)
 {
     if (IO::File::Stream file; file.openRW(filename))
     {

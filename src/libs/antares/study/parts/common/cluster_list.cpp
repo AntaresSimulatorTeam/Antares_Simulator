@@ -46,13 +46,15 @@ namespace Antares::Data
 using namespace Antares;
 
 template<class ClusterT>
-inline bool ClusterList<ClusterT>::empty() const
+inline bool
+ClusterList<ClusterT>::empty() const
 {
     return allClusters_.empty();
 }
 
 template<class ClusterT>
-std::shared_ptr<ClusterT> ClusterList<ClusterT>::enabledClusterAt(unsigned int index) const
+std::shared_ptr<ClusterT>
+ClusterList<ClusterT>::enabledClusterAt(unsigned int index) const
 {
     // No operator [] was found for std::view (returned by each_enabled()).
     // The current function is there to replace it.
@@ -60,7 +62,8 @@ std::shared_ptr<ClusterT> ClusterList<ClusterT>::enabledClusterAt(unsigned int i
 }
 
 template<class ClusterT>
-ClusterT* ClusterList<ClusterT>::findInAll(std::string_view id) const
+ClusterT*
+ClusterList<ClusterT>::findInAll(std::string_view id) const
 {
     for (auto& cluster: all())
     {
@@ -73,25 +76,29 @@ ClusterT* ClusterList<ClusterT>::findInAll(std::string_view id) const
 }
 
 template<class ClusterT>
-std::vector<std::shared_ptr<ClusterT>> ClusterList<ClusterT>::all() const
+std::vector<std::shared_ptr<ClusterT>>
+ClusterList<ClusterT>::all() const
 {
     return allClusters_;
 }
 
 template<class ClusterT>
-bool ClusterList<ClusterT>::exists(const Data::ClusterName& id) const
+bool
+ClusterList<ClusterT>::exists(const Data::ClusterName& id) const
 {
     return std::ranges::any_of(allClusters_, [&id](const auto& c) { return c->id() == id; });
 }
 
 template<class ClusterT>
-void ClusterList<ClusterT>::clearAll()
+void
+ClusterList<ClusterT>::clearAll()
 {
     allClusters_.clear();
 }
 
 template<class ClusterT>
-void ClusterList<ClusterT>::resizeAllTimeseriesNumbers(uint n) const
+void
+ClusterList<ClusterT>::resizeAllTimeseriesNumbers(uint n) const
 {
     for (auto& c: allClusters_)
     {
@@ -102,7 +109,8 @@ void ClusterList<ClusterT>::resizeAllTimeseriesNumbers(uint n) const
 #define SEP IO::Separator
 
 template<class ClusterT>
-void ClusterList<ClusterT>::storeTimeseriesNumbers(Solver::IResultWriter& writer) const
+void
+ClusterList<ClusterT>::storeTimeseriesNumbers(Solver::IResultWriter& writer) const
 {
     TSNumbersPredicate predicate;
     Clob path;
@@ -119,14 +127,16 @@ void ClusterList<ClusterT>::storeTimeseriesNumbers(Solver::IResultWriter& writer
 }
 
 template<class ClusterT>
-bool ClusterList<ClusterT>::alreadyInAllClusters(std::string clusterId)
+bool
+ClusterList<ClusterT>::alreadyInAllClusters(std::string clusterId)
 {
     return std::ranges::any_of(allClusters_,
                                [&clusterId](const auto& c) { return c->id() == clusterId; });
 }
 
 template<class ClusterT>
-void ClusterList<ClusterT>::addToCompleteList(std::shared_ptr<ClusterT> cluster)
+void
+ClusterList<ClusterT>::addToCompleteList(std::shared_ptr<ClusterT> cluster)
 {
     if (alreadyInAllClusters(cluster->id()))
     {
@@ -138,25 +148,29 @@ void ClusterList<ClusterT>::addToCompleteList(std::shared_ptr<ClusterT> cluster)
 }
 
 template<class ClusterT>
-void ClusterList<ClusterT>::sortCompleteList()
+void
+ClusterList<ClusterT>::sortCompleteList()
 {
     std::ranges::sort(allClusters_, [](const auto a, const auto b) { return a->id() < b->id(); });
 }
 
 template<class ClusterT>
-unsigned int ClusterList<ClusterT>::enabledCount() const
+unsigned int
+ClusterList<ClusterT>::enabledCount() const
 {
     return std::ranges::count_if(allClusters_, &ClusterT::isEnabled);
 }
 
 template<class ClusterT>
-unsigned int ClusterList<ClusterT>::allClustersCount() const
+unsigned int
+ClusterList<ClusterT>::allClustersCount() const
 {
     return allClusters_.size();
 }
 
 template<class ClusterT>
-void ClusterList<ClusterT>::rebuildIndexes()
+void
+ClusterList<ClusterT>::rebuildIndexes()
 {
     // First, we give an index to every cluster, enabled / must-run or not.
     // We do that to :
@@ -179,7 +193,8 @@ void ClusterList<ClusterT>::rebuildIndexes()
 }
 
 template<class ClusterT>
-bool ClusterList<ClusterT>::rename(Data::ClusterName idToFind, Data::ClusterName newName)
+bool
+ClusterList<ClusterT>::rename(Data::ClusterName idToFind, Data::ClusterName newName)
 {
     if (idToFind.empty() or newName.empty())
     {
@@ -238,14 +253,16 @@ bool ClusterList<ClusterT>::rename(Data::ClusterName idToFind, Data::ClusterName
 }
 
 template<class ClusterT>
-bool ClusterList<ClusterT>::forceReload(bool reload) const
+bool
+ClusterList<ClusterT>::forceReload(bool reload) const
 {
     return std::ranges::all_of(allClusters_,
                                [&reload](const auto& c) { return c->forceReload(reload); });
 }
 
 template<class ClusterT>
-void ClusterList<ClusterT>::markAsModified() const
+void
+ClusterList<ClusterT>::markAsModified() const
 {
     for (const auto& c: allClusters_)
     {
@@ -254,7 +271,8 @@ void ClusterList<ClusterT>::markAsModified() const
 }
 
 template<class ClusterT>
-bool ClusterList<ClusterT>::remove(const Data::ClusterName& id)
+bool
+ClusterList<ClusterT>::remove(const Data::ClusterName& id)
 {
     auto nbDeletion = std::erase_if(allClusters_,
                                     [&id](const SharedPtr& c) { return c->id() == id; });
@@ -266,7 +284,8 @@ bool ClusterList<ClusterT>::remove(const Data::ClusterName& id)
 }
 
 template<class ClusterT>
-bool ClusterList<ClusterT>::saveDataSeriesToFolder(const AnyString& folder) const
+bool
+ClusterList<ClusterT>::saveDataSeriesToFolder(const AnyString& folder) const
 {
     return std::ranges::all_of(allClusters_,
                                [&folder](const auto c)
@@ -274,14 +293,16 @@ bool ClusterList<ClusterT>::saveDataSeriesToFolder(const AnyString& folder) cons
 }
 
 template<class ClusterT>
-bool ClusterList<ClusterT>::loadDataSeriesFromFolder(Study& s, const AnyString& folder)
+bool
+ClusterList<ClusterT>::loadDataSeriesFromFolder(Study& s, const AnyString& folder)
 {
     return std::ranges::all_of(allClusters_,
                                [&](auto c) { return c->loadDataSeriesFromFolder(s, folder); });
 }
 
 template<class ClusterT>
-void ClusterList<ClusterT>::retrieveTotalCapacityAndUnitCount(double& total, uint& unitCount) const
+void
+ClusterList<ClusterT>::retrieveTotalCapacityAndUnitCount(double& total, uint& unitCount) const
 {
     total = 0.;
     unitCount = 0;

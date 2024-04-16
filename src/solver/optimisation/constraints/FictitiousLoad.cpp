@@ -21,10 +21,12 @@
 
 #include "antares/solver/optimisation/constraints/FictitiousLoad.h"
 
-void FictitiousLoad::add(int pdt, int pays)
+void
+FictitiousLoad::add(int pdt, int pays)
 {
-    data.CorrespondanceCntNativesCntOptim[pdt].NumeroDeContraintePourEviterLesChargesFictives[pays]
-      = builder.data.nombreDeContraintes;
+    data.CorrespondanceCntNativesCntOptim[pdt]
+            .NumeroDeContraintePourEviterLesChargesFictives[pays] = builder.data
+                                                                            .nombreDeContraintes;
 
     ConstraintNamer namer(builder.data.NomDesContraintes);
 

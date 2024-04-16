@@ -74,7 +74,8 @@ ATSP::~ATSP()
     }
 }
 
-void ATSP::printSummary() const
+void
+ATSP::printSummary() const
 {
     logs.info();
     logs.info() << "  Summary :";
@@ -132,7 +133,8 @@ void ATSP::printSummary() const
     }
 }
 
-bool ATSP::writeMoments() const
+bool
+ATSP::writeMoments() const
 {
     IO::File::Stream f;
     {
@@ -187,10 +189,11 @@ bool ATSP::writeMoments() const
     return true;
 }
 
-bool ATSP::cachePreload(unsigned index,
-                        const AnyString& filename,
-                        uint height,
-                        Matrix<>::BufferType& buffer)
+bool
+ATSP::cachePreload(unsigned index,
+                   const AnyString& filename,
+                   uint height,
+                   Matrix<>::BufferType& buffer)
 {
     enum
     {

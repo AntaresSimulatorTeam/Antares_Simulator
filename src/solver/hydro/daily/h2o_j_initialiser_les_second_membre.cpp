@@ -22,20 +22,21 @@
 #include "antares/solver/hydro/daily/h2o_j_donnees_mensuelles.h"
 #include "antares/solver/hydro/daily/h2o_j_fonctions.h"
 
-void H2O_J_InitialiserLeSecondMembre(DONNEES_MENSUELLES* DonneesMensuelles, int NumeroDeProbleme)
+void
+H2O_J_InitialiserLeSecondMembre(DONNEES_MENSUELLES* DonneesMensuelles, int NumeroDeProbleme)
 {
     PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
 
-    CORRESPONDANCE_DES_CONTRAINTES& CorrespondanceDesContraintes = ProblemeHydraulique
-                                                                     .CorrespondanceDesContraintes
-                                                                       [NumeroDeProbleme];
+    CORRESPONDANCE_DES_CONTRAINTES&
+            CorrespondanceDesContraintes = ProblemeHydraulique
+                                                   .CorrespondanceDesContraintes[NumeroDeProbleme];
 
     int NumeroDeContrainteDEnergieMensuelle = CorrespondanceDesContraintes
-                                                .NumeroDeContrainteDEnergieMensuelle;
+                                                      .NumeroDeContrainteDEnergieMensuelle;
 
     std::vector<double>& SecondMembre = ProblemeHydraulique
-                                          .ProblemeLineairePartieVariable[NumeroDeProbleme]
-                                          .SecondMembre;
+                                                .ProblemeLineairePartieVariable[NumeroDeProbleme]
+                                                .SecondMembre;
 
     SecondMembre[NumeroDeContrainteDEnergieMensuelle] = DonneesMensuelles->TurbineDuMois;
 

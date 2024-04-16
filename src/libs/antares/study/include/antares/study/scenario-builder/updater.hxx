@@ -47,8 +47,8 @@ public:
             study.scenarioRules->inUpdaterMode = true;
             logs.debug() << "[scenario-builder] updater mode ON";
 
-            logs.debug()
-              << "[scenario-builder] writing data to a temporary file before structure changes";
+            logs.debug() << "[scenario-builder] writing data to a temporary file before structure "
+                            "changes";
             pTempFile << memory.cacheFolder() << SEP << "antares-scenbld-save-"
                       << memory.processID() << '-' << (size_t)(this) << "-scenariobuilder.tmp";
             // Dump the memory

@@ -27,7 +27,8 @@
 
 namespace Antares
 {
-void PrintVersionToStdCout()
+void
+PrintVersionToStdCout()
 {
 #ifdef GIT_SHA1_SHORT_STRING
     std::cout << ANTARES_VERSION_STR << " (revision " << GIT_SHA1_SHORT_STRING << ")" << std::endl;
@@ -36,7 +37,8 @@ void PrintVersionToStdCout()
 #endif
 }
 
-const char* VersionToCString()
+const char*
+VersionToCString()
 {
     return ANTARES_VERSION_PUB_STR;
 }

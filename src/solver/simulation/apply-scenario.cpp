@@ -25,7 +25,8 @@
 
 namespace Antares::Solver
 {
-void ApplyCustomScenario(Data::Study& study)
+void
+ApplyCustomScenario(Data::Study& study)
 {
     auto& parameters = study.parameters;
 

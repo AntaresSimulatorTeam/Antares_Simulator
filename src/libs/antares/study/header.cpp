@@ -35,7 +35,8 @@ using namespace Yuni;
 namespace Antares::Data
 {
 // TODO this method should be removed - use Yuni::String instead
-static inline int ConvertCStrToTimeT(const char* s, time_t* var)
+static inline int
+ConvertCStrToTimeT(const char* s, time_t* var)
 {
     assert(s);
     assert(var);
@@ -44,7 +45,8 @@ static inline int ConvertCStrToTimeT(const char* s, time_t* var)
     return (pend && '\0' == *pend) ? 1 : 0;
 }
 
-void StudyHeader::reset()
+void
+StudyHeader::reset()
 {
     // Caption
     caption = STUDYHEADER_DEFAULT_CAPTION;
@@ -57,7 +59,8 @@ void StudyHeader::reset()
     author = STUDYHEADER_DEFAULT_AUTHOR;
 }
 
-void StudyHeader::CopySettingsToIni(IniFile& ini, bool upgradeVersion)
+void
+StudyHeader::CopySettingsToIni(IniFile& ini, bool upgradeVersion)
 {
     // New section
     IniFile::Section* sect = ini.addSection("antares");
@@ -85,7 +88,8 @@ void StudyHeader::CopySettingsToIni(IniFile& ini, bool upgradeVersion)
     sect->add("author", author);
 }
 
-bool StudyHeader::internalFindVersionFromFile(const IniFile& ini, std::string& version)
+bool
+StudyHeader::internalFindVersionFromFile(const IniFile& ini, std::string& version)
 {
     const IniFile::Section* sect = ini.find("antares");
     if (sect)
@@ -105,7 +109,8 @@ bool StudyHeader::internalFindVersionFromFile(const IniFile& ini, std::string& v
     return false;
 }
 
-bool StudyHeader::internalLoadFromINIFile(const IniFile& ini, bool warnings)
+bool
+StudyHeader::internalLoadFromINIFile(const IniFile& ini, bool warnings)
 {
     const IniFile::Section* sect = ini.find("antares");
     if (sect)
@@ -188,7 +193,8 @@ bool StudyHeader::internalLoadFromINIFile(const IniFile& ini, bool warnings)
     return false;
 }
 
-bool StudyHeader::loadFromFile(const AnyString& filename, bool warnings)
+bool
+StudyHeader::loadFromFile(const AnyString& filename, bool warnings)
 {
     // (Re)Initialize the internal settings
     reset();
@@ -198,14 +204,16 @@ bool StudyHeader::loadFromFile(const AnyString& filename, bool warnings)
     return (ini.open(filename, warnings)) ? internalLoadFromINIFile(ini, warnings) : false;
 }
 
-bool StudyHeader::saveToFile(const AnyString& filename, bool upgradeVersion)
+bool
+StudyHeader::saveToFile(const AnyString& filename, bool upgradeVersion)
 {
     IniFile ini;
     CopySettingsToIni(ini, upgradeVersion);
     return ini.save(filename);
 }
 
-StudyVersion StudyHeader::tryToFindTheVersion(const AnyString& folder)
+StudyVersion
+StudyHeader::tryToFindTheVersion(const AnyString& folder)
 {
     if (folder.empty()) // trivial check
     {
@@ -238,7 +246,8 @@ StudyVersion StudyHeader::tryToFindTheVersion(const AnyString& folder)
     return StudyVersion::unknown();
 }
 
-bool StudyHeader::ReadVersionFromFile(const AnyString& filename, std::string& version)
+bool
+StudyHeader::ReadVersionFromFile(const AnyString& filename, std::string& version)
 {
     IniFile ini;
     if (ini.open(filename))
