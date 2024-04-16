@@ -39,4 +39,21 @@ void DurationCollector::toFileContent(FileContent& file_content)
         file_content.addDurationItem(name, (unsigned int)duration_sum, (int)durations.size());
     }
 }
+
+DurationCollector::OperationTimer DurationCollector::operator()(const std::string& key)
+{
+    return OperationTimer(*this, key);
+}
+
+void operator<<(const DurationCollector::OperationTimer& op, const std::function<void(void)>& f)
+{
+    using clock = std::chrono::steady_clock;
+    auto start_ = clock::now();
+    f();
+    auto end_ = clock::now();
+    auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end_ - start_).count();
+    const std::scoped_lock lock(op.collector.mutex_);
+    op.collector.duration_items_[op.key].push_back(duration_ms);
+}
+
 } // namespace Benchmarking

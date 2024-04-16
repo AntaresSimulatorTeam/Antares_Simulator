@@ -38,7 +38,6 @@ public:
     void toFileContent(FileContent& file_content);
     void addDuration(const std::string& name, long duration);
 
-    using clock = std::chrono::steady_clock;
 
     struct OperationTimer
     {
@@ -49,20 +48,9 @@ public:
         const std::string key;
     };
 
-    OperationTimer operator()(const std::string& key)
-    {
-        return OperationTimer(*this, key);
-    }
+    OperationTimer operator()(const std::string& key);
 
-    friend void operator<<(const OperationTimer& op, const std::function<void(void)>& f)
-    {
-        auto start_ = clock::now();
-        f();
-        auto end_ = clock::now();
-        auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end_ - start_).count();
-        const std::scoped_lock lock(op.collector.mutex_);
-        op.collector.duration_items_[op.key].push_back(duration_ms);
-    }
+    friend void operator<<(const OperationTimer& op, const std::function<void(void)>& f);
 
 private:
     std::map<std::string, std::vector<long>> duration_items_;
