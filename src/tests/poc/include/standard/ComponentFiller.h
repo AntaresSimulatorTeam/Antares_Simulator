@@ -4,6 +4,7 @@
 #include "antares/optim/api/LinearProblemFiller.h"
 #include "Component.h"
 #include "PortConnection.h"
+#include <iostream>
 
 using namespace Antares::optim::api;
 using namespace std;
@@ -139,11 +140,13 @@ void ComponentFiller::addConstraints(LinearProblem& problem,
                   ts);
                 for (const auto& connection : portConnectionsManager_->getConectionsTo(this, "P"))
                 {
-                    for (const auto& varAndCoeff : connection.componentFiller->getPortPin(
+                    for (const auto& [varName, coeff] : connection.componentFiller->getPortPin(
                            connection.portName, ts, data, scenario))
                     {
-                        auto p = &problem.getVariable(varAndCoeff.first);
-                        balanceConstraint->SetCoefficient(p, varAndCoeff.second * -1.0);
+                        std::cerr << "[balanceConstraint->SetCoefficient] '" << varName << "' "
+                                  << coeff << std::endl;
+                        auto p = &problem.getVariable(varName);
+                        balanceConstraint->SetCoefficient(p, coeff * -1.0);
                     }
                 }
             }
@@ -166,11 +169,13 @@ void ComponentFiller::addObjective(Antares::optim::api::LinearProblem& problem,
                 for (const auto& connection :
                      portConnectionsManager_->getConectionsTo(this, "cost"))
                 {
-                    for (const auto& varAndCoeff : connection.componentFiller->getPortPin(
+                    for (const auto& [varName, coeff] : connection.componentFiller->getPortPin(
                            connection.portName, ts, data, scenario))
                     {
-                        auto variable = &problem.getVariable(varAndCoeff.first);
-                        problem.setObjectiveCoefficient(*variable, varAndCoeff.second);
+                        std::cerr << "[setObjectiveCoefficient] '" << varName << "' " << coeff
+                                  << std::endl;
+                        auto variable = &problem.getVariable(varName);
+                        problem.setObjectiveCoefficient(*variable, coeff);
                     }
                 }
             }
@@ -190,33 +195,26 @@ map<string, double> ComponentFiller::getPortPin(string name,
                                                 BuildContext::ScenarioID scenario) const
 {
     // TODO : remplacer par des AST
-    if (component_.getModel() == THERMAL)
+    const std::string pVarName
+      = name + "_" + component_.getId() + "_" + to_string(timestamp) + "_" + to_string(scenario);
+
+    // P BATTERY/THERMAL
+    if (name == "P")
     {
-        string pVarName
-          = "P_" + component_.getId() + "_" + to_string(timestamp) + "_" + to_string(scenario);
-        if (name == "P")
-        {
-            return {{pVarName, 1.0}};
-        }
-        else if (name == "cost")
-        {
-            if (!data.hasTimedData("cost_" + component_.getId()))
-            {
-                throw;
-            }
-            // TODO BuildContext
-            double cost = data.getTimedData("cost_" + component_.getId(), scenario).at(timestamp);
-            return {{pVarName, cost}};
-        }
+        return {{pVarName, 1.0}};
     }
-    else if (component_.getModel() == BATTERY)
+
+    // cost THERMAL
+    if (name == "cost")
     {
-        if (name == "P")
+        if (!data.hasTimedData("cost_" + component_.getId()))
         {
-            string pVarName
-              = "P_" + component_.getId() + "_" + to_string(timestamp) + "_" + to_string(scenario);
-            return {{pVarName, 1.0}};
+            throw;
         }
+        // TODO BuildContext
+        double cost = data.getTimedData("cost_" + component_.getId(), scenario).at(timestamp);
+        return {{pVarName, cost}};
     }
+
     return {};
 }
