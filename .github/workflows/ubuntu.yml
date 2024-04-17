@@ -259,7 +259,7 @@ jobs:
     - name: Run API tests
       run: |
            cmake --install _build --prefix antares_install
-           cd src/api_client
+           cd src/api_client_example
             cmake -B _build -S . \
             -DCMAKE_C_COMPILER_LAUNCHER=ccache \
             -DCMAKE_C_COMPILER=/usr/bin/gcc-10 \
