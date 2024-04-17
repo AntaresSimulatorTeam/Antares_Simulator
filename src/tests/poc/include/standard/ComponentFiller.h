@@ -143,8 +143,6 @@ void ComponentFiller::addConstraints(LinearProblem& problem,
                     for (const auto& [varName, coeff] : connection.componentFiller->getPortPin(
                            connection.portName, ts, data, scenario))
                     {
-                        std::cerr << "[balanceConstraint->SetCoefficient] '" << varName << "' "
-                                  << coeff << std::endl;
                         auto p = &problem.getVariable(varName);
                         balanceConstraint->SetCoefficient(p, coeff * -1.0);
                     }

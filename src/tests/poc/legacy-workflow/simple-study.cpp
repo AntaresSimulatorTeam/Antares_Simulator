@@ -1,11 +1,10 @@
-#define BOOST_TEST_MODULE test - end - to - end tests
+#define BOOST_TEST_MODULE test-end-to-end tests
 #define BOOST_TEST_DYN_LINK
 #include <boost/test/unit_test.hpp>
 #include <boost/test/data/test_case.hpp>
 
 #include "../../../solver/optimisation/opt_global.h"
 #include "../include/standard/ComponentFiller.h"
-#include "../../../solver/optimisation/LegacyLinearProblemFillerImpl.h"
 
 #include "utils.h"
 
@@ -32,70 +31,62 @@ struct StudyFixture : public StudyBuilder
 StudyFixture::StudyFixture()
 {
     simulationBetweenDays(0, 7);
-    area = addAreaToStudy("nodeA");
+    area = addAreaToStudy("some_area");
 
     loadInArea = 7.0;
     loadTSconfig = TimeSeriesConfigurer(area->load.series.timeSeries);
-    loadTSconfig.setColumnCount(1).fillColumnWith(0, loadInArea);
+    loadTSconfig.setColumnCount(1)
+      .fillColumnWith(0, loadInArea);
 };
+
 
 BOOST_FIXTURE_TEST_SUITE(ONE_AREA__ONE_THERMAL_CLUSTER, StudyFixture)
 
 BOOST_AUTO_TEST_CASE(thermal_cluster_fullfills_area_demand)
 {
     setNumberMCyears(1);
+    PortConnectionsManager portConnectionsManager;
 
     std::vector<int> timeStamps(168);
-    std::iota(timeStamps.begin(), timeStamps.end(), 0);
+    std::iota(timeStamps.begin(),
+              timeStamps.end(),
+              0);
     {
         std::vector<double> costThermal1(168, 1.);
         std::vector<double> consumption1(168, 100);
         gLinearProblemData = Antares::optim::api::LinearProblemData(
           60,                               // timeResolutionInMinutes
-          {{"initialStock_battery1", {0}}}, // scalarData
-          {{"cost_thermal1", {std::move(costThermal1)}}, {"consumption_nodeA", {consumption1}}});
-
-        PortConnectionsManager portConnectionsManager;
+          {}, // scalarData
+          {{"cost_thermal1", {std::move(costThermal1)}}, {"consumption_some_area", {consumption1}}});
 
         Component thermal("thermal1", THERMAL, {{"maxP", 100}}, {});
         auto thermalFiller = make_shared<ComponentFiller>(thermal, portConnectionsManager);
+        Component balance("balanceA", BALANCE, {}, {{"nodeName", "some_area"}});
+        auto balanceAFiller = make_shared<ComponentFiller>(balance, portConnectionsManager);
 
-        Component battery("battery1", BATTERY, {{"maxP", 180}, {"maxStock", 200}}, {});
-        auto batteryFiller = make_shared<ComponentFiller>(battery, portConnectionsManager);
-
-        Component priceMinim("priceMinim", PRICE_MINIM, {}, {});
-        auto priceMinimFiller = make_shared<ComponentFiller>(priceMinim, portConnectionsManager);
-
-        Component balance("balance", BALANCE, {}, {{"nodeName", "nodeA"}});
-        auto balanceFiller = make_shared<ComponentFiller>(balance, portConnectionsManager);
-
-        portConnectionsManager.addConnection({balanceFiller, "P"}, {thermalFiller, "P"});
-        portConnectionsManager.addConnection({balanceFiller, "P"}, {batteryFiller, "P"});
-        portConnectionsManager.addConnection({priceMinimFiller, "cost"}, {thermalFiller, "cost"});
+        portConnectionsManager.addConnection({balanceAFiller, "P"}, {thermalFiller, "P"});
 
         gAdditionalFillers.push_back(thermalFiller);
-        gAdditionalFillers.push_back(batteryFiller);
-        gAdditionalFillers.push_back(priceMinimFiller);
+        gAdditionalFillers.push_back(balanceAFiller);
     }
 
     area->thermal.unsuppliedEnergyCost = 1.e3;
     area->thermal.spilledEnergyCost = 1.;
 
     // VERY IMPORTANT
-    study->parameters.namedProblems = true;
     study->parameters.ortoolsUsed = true;
 
     simulation->create();
     simulation->run();
 
     OutputRetriever output(simulation->rawSimu());
-    // BOOST_TEST(output.overallCost(area).hour(0) == loadInArea * clusterCost,
-    // tt::tolerance(0.001));
+    //BOOST_TEST(output.overallCost(area).hour(0) == loadInArea * clusterCost, tt::tolerance(0.001));
     std::vector<double> expectedThermalP(168, loadInArea);
 
     std::vector<std::string> query;
+    int scenario = 0; // defaults to 0 in legacy problems
     for (int timeStamp : timeStamps)
-        query.push_back("P_thermal1_" + std::to_string(timeStamp));
+        query.push_back("P_thermal1_"+std::to_string(timeStamp)+"_"+std::to_string(scenario));
     auto actualThermalP = gMipSolution.getOptimalValues(query);
 
     // Test no unsupplied energy at h=0

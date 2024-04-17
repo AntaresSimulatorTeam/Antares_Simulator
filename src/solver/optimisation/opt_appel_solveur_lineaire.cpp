@@ -245,7 +245,6 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
         BuildContext buildCtx({0}, timeStamps);
         linearProblemBuilder.build(gLinearProblemData, buildCtx);
         solver = legacyLinearProblem.getMpSolver();
-        solver->Write("/tmp/a.mps");
         // TODO: because of LinearProblemImpl's destructor, when we exit this scope, the MPSolver
         // instance is destroyed We have to work around this in order for the current "update"
         // methods to work
