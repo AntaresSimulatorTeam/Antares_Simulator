@@ -23,6 +23,7 @@ struct Fixture
     {
         // Simulation last day must be 365 so that final level checks succeeds 
         study->parameters.simulationDays.end = 365;
+        study->parameters.firstMonthInYear = january;
         uint nbYears = study->parameters.nbYears = 2;
 
         area_1 = study->areaAdd("Area1");
@@ -34,7 +35,7 @@ struct Fixture
         area_1->hydro.useWaterValue = false;
         area_2->hydro.useWaterValue = false;
 
-        // Level date must be 0, see SimulationThroughWholeYear function
+        // Level date must be 0, see hydroAllocationStartMatchesSimulation function
         area_1->hydro.initializeReservoirLevelDate = 0;
         area_2->hydro.initializeReservoirLevelDate = 0;
 
@@ -111,6 +112,7 @@ BOOST_AUTO_TEST_CASE(initialize_modifier_for_area_1___modifier_is_applicable)
     finLevInfModify.initialize(study->scenarioInitialHydroLevels,
                                study->scenarioFinalHydroLevels,
                                study->parameters.simulationDays.end,
+                               study->parameters.firstMonthInYear,
                                study->parameters.nbYears);
 
     finLevInfModify.CheckInfeasibility(year);
@@ -128,6 +130,7 @@ BOOST_AUTO_TEST_CASE(reservoir_management_is_false_for_area_1___modifier_is_not_
     finLevInfModify.initialize(study->scenarioInitialHydroLevels,
                                study->scenarioFinalHydroLevels,
                                study->parameters.simulationDays.end,
+                               study->parameters.firstMonthInYear,
                                study->parameters.nbYears);
 
     finLevInfModify.CheckInfeasibility(year);
@@ -146,6 +149,7 @@ BOOST_AUTO_TEST_CASE(use_water_value_is_true_for_area_1___modifier_is_not_applic
     finLevInfModify.initialize(study->scenarioInitialHydroLevels,
                                study->scenarioFinalHydroLevels,
                                study->parameters.simulationDays.end,
+                               study->parameters.firstMonthInYear,
                                study->parameters.nbYears);
 
     finLevInfModify.CheckInfeasibility(year);
@@ -164,6 +168,7 @@ BOOST_AUTO_TEST_CASE(initial_level_from_scenariobuilder_is_NaN_for_area_1_and_ye
     finLevInfModify.initialize(study->scenarioInitialHydroLevels,
                                study->scenarioFinalHydroLevels,
                                study->parameters.simulationDays.end,
+                               study->parameters.firstMonthInYear,
                                study->parameters.nbYears);
 
     finLevInfModify.CheckInfeasibility(year);
@@ -187,6 +192,7 @@ BOOST_AUTO_TEST_CASE(checking_level_configuration_is_ok_for_area_1_and_year_0___
     finLevInfModify.initialize(study->scenarioInitialHydroLevels,
                                study->scenarioFinalHydroLevels,
                                study->parameters.simulationDays.end,
+                               study->parameters.firstMonthInYear,
                                study->parameters.nbYears);
 
     finLevInfModify.CheckInfeasibility(year);
@@ -204,6 +210,7 @@ BOOST_AUTO_TEST_CASE(input_level_configuration_has_nothing_wrong_for_area_1___ch
     finLevInfModify.initialize(study->scenarioInitialHydroLevels,
                                study->scenarioFinalHydroLevels,
                                study->parameters.simulationDays.end,
+                               study->parameters.firstMonthInYear,
                                study->parameters.nbYears);
 
     BOOST_CHECK_EQUAL(finLevInfModify.CheckInfeasibility(year), true);
@@ -219,6 +226,7 @@ BOOST_AUTO_TEST_CASE(initial_level_month_for_area_1_is_not_january___check_fails
     finLevInfModify.initialize(study->scenarioInitialHydroLevels,
                                study->scenarioFinalHydroLevels,
                                study->parameters.simulationDays.end,
+                               study->parameters.firstMonthInYear,
                                study->parameters.nbYears);
 
     BOOST_CHECK_EQUAL(finLevInfModify.CheckInfeasibility(year), false);
@@ -234,6 +242,7 @@ BOOST_AUTO_TEST_CASE(simulation_last_day_is_not_365___check_fails)
     finLevInfModify.initialize(study->scenarioInitialHydroLevels,
                                study->scenarioFinalHydroLevels,
                                study->parameters.simulationDays.end,
+                               study->parameters.firstMonthInYear,
                                study->parameters.nbYears);
 
     BOOST_CHECK_EQUAL(finLevInfModify.CheckInfeasibility(year), false);
@@ -250,6 +259,7 @@ BOOST_AUTO_TEST_CASE(Final_level_not_between_rule_curves_for_area_1___check_fail
     finLevInfModify.initialize(study->scenarioInitialHydroLevels,
                                study->scenarioFinalHydroLevels,
                                study->parameters.simulationDays.end,
+                               study->parameters.firstMonthInYear,
                                study->parameters.nbYears);
 
     BOOST_CHECK_EQUAL(finLevInfModify.CheckInfeasibility(year), false);
@@ -270,6 +280,7 @@ BOOST_AUTO_TEST_CASE(diff_between_init_and_final_levels_are_bigger_than_yearly_i
     finLevInfModify.initialize(study->scenarioInitialHydroLevels,
                                study->scenarioFinalHydroLevels,
                                study->parameters.simulationDays.end,
+                               study->parameters.firstMonthInYear,
                                study->parameters.nbYears);
 
     BOOST_CHECK_EQUAL(finLevInfModify.CheckInfeasibility(year), false);

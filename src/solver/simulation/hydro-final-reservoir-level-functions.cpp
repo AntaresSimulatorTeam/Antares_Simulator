@@ -38,6 +38,7 @@ void initializeFinalLevelData(const Data::Study& study)
         area.hydro.finalLevelInflowsModifier.initialize(study.scenarioInitialHydroLevels,
                                                         study.scenarioFinalHydroLevels,
                                                         study.parameters.simulationDays.end,
+                                                        study.parameters.firstMonthInYear,
                                                         study.parameters.nbYears);
     });
 }

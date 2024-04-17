@@ -47,6 +47,7 @@ public:
     void initialize(const Matrix<double>& scenarioInitialHydroLevels,
                     const Matrix<double>& scenarioFinalHydroLevels,
                     const unsigned int lastSimulationDay,
+                    const unsigned int firstMonthOfSimulation,
                     const unsigned int nbYears);
 
     bool CheckInfeasibility(unsigned int year);
@@ -65,11 +66,12 @@ private:
     bool makeChecks(unsigned int year);
     void storeDeltaLevels(unsigned int year);
     double calculateTotalInflows(unsigned int year) const;
-    bool SimulationThroughWholeYear(unsigned int year) const;
+    bool hydroAllocationStartMatchesSimulation(unsigned int year) const;
     bool finalLevelValidity(double totalYearInflows, unsigned int year) const;
     bool preCheckRuleCurves(unsigned int year) const;
 
     unsigned int lastSimulationDay_ = 0;
+    unsigned int firstMonthOfSimulation_ = 0;
 
     // Data from area (remaining unchanged throughout simulation)
     const PartHydro& hydro_;

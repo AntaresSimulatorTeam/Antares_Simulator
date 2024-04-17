@@ -85,16 +85,15 @@ double FinalLevelInflowsModifier::calculateTotalInflows(unsigned int year) const
     return totalYearInflows;
 }
 
-bool FinalLevelInflowsModifier::SimulationThroughWholeYear(unsigned int year) const
+bool FinalLevelInflowsModifier::hydroAllocationStartMatchesSimulation(unsigned int year) const
 {
-    // gp : initReservoirLvlMonth == 0 is suspect
     int initReservoirLvlMonth = hydro_.initializeReservoirLevelDate; // month [0-11]
-    if (lastSimulationDay_ == DAYS_PER_YEAR && initReservoirLvlMonth == 0)
+    if (lastSimulationDay_ == DAYS_PER_YEAR && initReservoirLvlMonth == firstMonthOfSimulation_)
         return true;
 
-    logs.error() << "Year: " << year + 1 << ". Area: " << areaName_
-                    << ". Simulation must end on day 365 and reservoir level must be "
-                    "initiated in January";
+    logs.error() << "Year " << year + 1 << ", area '" << areaName_ << "' : "
+                 << "Hydro allocation must start on the 1st simulation month and "
+                 << "simulation last a whole year";
     return false;
 }
 
@@ -132,6 +131,7 @@ bool FinalLevelInflowsModifier::preCheckRuleCurves(unsigned int year) const
 void FinalLevelInflowsModifier::initialize(const Matrix<double>& scenarioInitialHydroLevels,
                                            const Matrix<double>& scenarioFinalHydroLevels,
                                            const unsigned int lastSimulationDay,
+                                           const unsigned int firstMonthOfSimulation,
                                            const unsigned int nbYears)
 {
     isApplicable_.assign(nbYears, false);
@@ -139,6 +139,7 @@ void FinalLevelInflowsModifier::initialize(const Matrix<double>& scenarioInitial
     InitialLevels_ = &(scenarioInitialHydroLevels.entry[areaIndex_]);
     FinalLevels_ = &(scenarioFinalHydroLevels.entry[areaIndex_]);
     lastSimulationDay_ = lastSimulationDay;
+    firstMonthOfSimulation_ = firstMonthOfSimulation;
 }
 
 bool FinalLevelInflowsModifier::isActive()
@@ -167,7 +168,7 @@ void FinalLevelInflowsModifier::logInfoFinLvlNotApplicable(unsigned int year)
 bool FinalLevelInflowsModifier::makeChecks(unsigned int year)
 {
     // Simulation must end on day 365 and reservoir level must be initiated in January
-    bool checksOk = SimulationThroughWholeYear(year);
+    bool checksOk = hydroAllocationStartMatchesSimulation(year);
 
     // Reservoir_levelDay_365 – reservoir_levelDay_1 ≤ yearly_inflows
     double totalInflows = calculateTotalInflows(year);
