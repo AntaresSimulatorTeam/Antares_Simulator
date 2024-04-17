@@ -72,7 +72,8 @@ This parameter can take the two values "cold start" or "hot start". [default: co
 
 **General:**
 
-This parameter is meant to define the initial reservoir levels that should be used, in each system area, when processing data related to the hydro-power storage resources to consider in each specific Monte-Carlo year (see [Active windows](04-active_windows.md)).
+This parameter is meant to define the initial reservoir levels that should be used, in each system area, when processing 
+data related to the hydropower storage resources to consider in each specific Monte-Carlo year.
 
 As a consequence, Areas which fall in either of the two following categories are not impacted by the value of the parameter:
 - No hydro-storage capability installed
@@ -82,7 +83,8 @@ Areas that have some hydro-storage capability installed and for which explicit r
 
 **Cold Start:**
 
-On starting the simulation of a new Monte-Carlo year, the reservoir level to consider in each Area on the first day of the initialization month (see [Active Windows](04-active_windows)) is randomly drawn between the extreme levels defined for the Area on that day.
+On starting the simulation of a new Monte-Carlo year, the reservoir level to consider in each Area on the first day of 
+the initialization month is randomly drawn between the extreme levels defined for the Area on that day.
 
 More precisely:
 
@@ -105,7 +107,7 @@ On starting the simulation of a new Monte-Carlo year, the reservoir level to con
 - The Monte-Carlo year considered is not the first to simulate, or does not belong to the first batch of years to be simulated in parallel. In sequential runtime mode, that means that year #N may start with the level reached at the end of year #(N-1). In parallel runtime mode, if the simulation is carried out with batches of B years over as many CPU cores, years of the k-th batch
   [^19] may start with the ending levels of the years processed in the (k-1)-th batch.
 
-- The parallelization context (see [System requirements](09-system_requirements)) must be set so as to ensure that the M Monte-Carlo years to simulate will be processed in a round number of K consecutive batches of B years in parallel (i.e. M = K\*B and all time-series refresh intervals are exact multiple of B).
+- The parallelization context (see [Multi-threading](optional-features/multi-threading.md)) must be set to ensure that the M Monte-Carlo years to simulate will be processed in a round number of K consecutive batches of B years in parallel (i.e. M = K\*B and all time-series refresh intervals are exact multiple of B).
 
 The first year of the simulation, and more generally years belonging to the first simulation batch in parallel mode, are initialized as they would be in the cold start option.
 
@@ -151,11 +153,11 @@ This parameter is meant to define how the reservoir level difference between the
 
 **Fast:**
 
-The water value is taken to remain about the same throughout the week, and a constant value equal to that found at the date and for the level at which the week_ **begins** _is used in the course of the optimization. A value interpolated from the reference table for the exact level reached at each time step within the week is used ex-post in the assessment of the variable "H.COST" (positive for generation, negative for pumping) defined in [Output Files](05-output_files.md). This option should be reserved to simulations in which computation resources are an issue or to simulations in which level-dependent water value variations throughout a week are known to be small.
+The water value is taken to remain about the same throughout the week, and a constant value equal to that found at the date and for the level at which the week_ **begins** _is used in the course of the optimization. A value interpolated from the reference table for the exact level reached at each time step within the week is used ex-post in the assessment of the variable "H.COST" (positive for generation, negative for pumping) defined in [Output Files](03-outputs.md). This option should be reserved to simulations in which computation resources are an issue or to simulations in which level-dependent water value variations throughout a week are known to be small.
 
 **Accurate:**
 
-The water value is considered as variable throughout the week. As a consequence, a different cost is used for each "layer" of the stock from/to which energy can be withdrawn/injected, in an internal hydro merit-order involving the 100 tabulated water-values found at the date at which the week **ends**. A value interpolated from the reference table for the exact level reached at each time step within the week is used ex-post in the assessment of the variable "H.COST" (positive for generation, negative for pumping) defined in [Output Files](05-output_files.md). This option should be used if computation resources are not an issue and if level-dependent water value variations throughout a week must be accounted for.
+The water value is considered as variable throughout the week. As a consequence, a different cost is used for each "layer" of the stock from/to which energy can be withdrawn/injected, in an internal hydro merit-order involving the 100 tabulated water-values found at the date at which the week **ends**. A value interpolated from the reference table for the exact level reached at each time step within the week is used ex-post in the assessment of the variable "H.COST" (positive for generation, negative for pumping) defined in [Output Files](03-outputs.md). This option should be used if computation resources are not an issue and if level-dependent water value variations throughout a week must be accounted for.
 
 ## More details on the "unit-commitment-mode" parameter
 [//]: # (TODO: update this paragraph)

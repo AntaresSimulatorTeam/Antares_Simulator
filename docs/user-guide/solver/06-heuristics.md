@@ -5,8 +5,6 @@ _**This section is under construction**_
 
 ## Seasonal hydro pre-allocation
 
-This heuristic, first introduced in broad terms in [Active windows](04-active_windows.md), chapter "hydro", is fully detailed in this paragraph.
-
 Basically, the seasonal hydro pre-allocation process comprises two stages carried out two times
 (first time: monthly scale; second time: daily scale).
 

@@ -204,7 +204,7 @@ Alike Input data, output results can be filtered so as to include only items tha
 
 [^13]: NODU and NP Cost do not appear in "Adequacy" results since these variables are irrelevant in that context
 
-[^adqp]: Please note that this output variable is only available in the economy mode, when the adequacy patch is activated (see [Adequacy Patch](14-adequacy-patch.md))
+[^adqp]: Please note that this output variable is only available in the economy mode, when the adequacy patch is activated (see [Adequacy Patch](optional-features/adequacy-patch.md))
 
 [^14]: This description applies to both « MC synthesis » files and "Year-by-Year" files, with some simplifications in the latter case
 
@@ -216,7 +216,7 @@ Alike Input data, output results can be filtered so as to include only items tha
 
 ### The Annual System Cost Output file
 
-In addition to the general files introduced in [Output Files](05-output_files.md), the Output folder of each economic or adequacy simulation includes, at its root, a file "Annual\_System\_Cost.txt" It presents the metrics of a global Monte-Carlo variable further denoted ASC.
+In addition to the general files introduced in [Output Files](03-outputs.md), the Output folder of each economic or adequacy simulation includes, at its root, a file "Annual\_System\_Cost.txt" It presents the metrics of a global Monte-Carlo variable further denoted ASC.
 
 The value of ASC for any given simulated year is defined as the sum, over all areas and links, of the annual values of the area-variable "OV.COST" and of the link-variable "HURD. COST".
 

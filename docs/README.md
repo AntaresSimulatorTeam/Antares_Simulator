@@ -7,7 +7,7 @@ as well as the [Doxygen documentation](https://antaressimulatorteam.github.io/An
 Please help us keep this documentation alive:
 - If you find that something is missing, outdated, or some mistake, report it in a [new issue](https://github.com/AntaresSimulatorTeam/Antares_Simulator/issues/new) 
   or, better yet, open a [pull request](https://github.com/AntaresSimulatorTeam/Antares_Simulator/compare)!
-- If you add a new feature, change a parameter, change something in the technical workflow, etc, update these 
+- If you add a new feature, change a parameter, change something in the technical workflow, etc., update these 
   sources in the same pull request. Pull requests that do not update the documentation when needed will not be approved.  
 
 ## Contents of this directory
@@ -62,7 +62,7 @@ want to install *Antares Simulator* and be able to consult its documentation off
 
 In practice, the PDF is generated automatically from Markdown files under [reference-guide](./user-guide) by 
 [Sphinx](https://www.sphinx-doc.org/) (using LaTeX). The script for this generation is in [pdf-doc-generation-with-sphinx/create_pdf_doc.sh](./pdf-doc-generation-with-sphinx/create_pdf_doc.sh); 
-it is automatically run by a github [action](../.github/workflows/build-userguide.yml) during every release, and for 
+it is automatically run by a GitHub [action](../.github/workflows/build-userguide.yml) during every release, and for 
 each pull request (in order to verify that the PDF builds).  
 
 While the source material used for the PDF user guide are the same as the ones used for the mkdocs website (i.e. 

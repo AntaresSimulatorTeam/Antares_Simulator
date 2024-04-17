@@ -129,6 +129,7 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 > _**WARNING:**_ this parameter cannot be used with parameter [custom-scenario](#custom-scenario)
 
 #### custom-scenario
+[//]: # (TODO: add specific link to "scenario builder")
 - **Expected value:** `true` or `false`
 - **Required:** no
 - **Default value:** `false`
@@ -137,7 +138,7 @@ These parameters are listed under the `[general]` section in the `.ini` file.
   - `true`: the simulation will be carried out on a mix of deterministic and probabilistic conditions,
     with some time-series randomly drawn and others set to user-defined values. This option allows setting
     up detailed "what if" simulations that may help to understand the phenomena at work and quantify various kinds
-    of risk indicators. To set up the simulation profile, use the [scenario builder](02-inputs.md#scenario-builder).
+    of risk indicators. To set up the simulation profile, use the [scenario builder](02-inputs.md).
 
 > _**WARNING:**_ this parameter cannot be used with parameter [derated](#derated)  
 > _**WARNING:**_ if set to `true`, parameter [active-rules-scenario](#active-rules-scenario) must be set
@@ -153,7 +154,7 @@ These parameters are listed under the `[general]` section in the `.ini` file.
     whose detailed analysis may have shown that they were not physically realistic. A different typical use case consists
     in replaying only a small number of years of specific interest (for instance, years in the course of which Min or Max
     values of a given variable were encountered in a previous simulation).  
-    In addition, each MC year i=1, …, N can be given a relative [weight](#playlist_year_weight).
+    In addition, each MC year i=1, …, N can be given a relative [weight](#playlistyearweight)
 
 > _**WARNING:**_ this parameter cannot be used with parameter [derated](#derated)
 
@@ -161,8 +162,8 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 - **Expected value:** `true` or `false`
 - **Required:** no
 - **Default value:** `false`
-- **Usage:** set to `true` in order to select a specific subset of the optimization variables to print in the [output files](05-output_files.md),
-  using a thematic filter. Use the [variables selection parameters](#variables-selection-parametrs) to define the filter.  
+- **Usage:** set to `true` in order to select a specific subset of the optimization variables to print in the [output files](03-outputs.md),
+  using a thematic filter. Use the [variables selection parameters](#variables-selection-parameters) to define the filter.  
   Thematic Trimming does not reduce computation time, but can bring some benefits on total runtime (smaller files to 
   write). It can save a lot of disk space in simulations where only a few variables are of interest.
 
@@ -227,6 +228,7 @@ These parameters are listed under the `[output]` section in the `.ini` file.
 #### hydro-debug
 [//]: # (TODO: document this parameter)
 _**This section is under construction**_  
+
 - **Expected value:**
 - **Required:** **yes**
 - **Default value:**
@@ -235,6 +237,7 @@ _**This section is under construction**_
 #### result-format
 [//]: # (TODO: document this parameter)
 _**This section is under construction**_  
+
 - **Expected value:**
 - **Required:** **yes**
 - **Default value:**
@@ -247,7 +250,7 @@ _**This section is under construction**_
 - **Required:** no
 - **Default value:**
 - **Usage:** if [storenewset](#storenewset) is set to `true`, this parameter selects those of them that should be
-  written in the [output files](05-output_files.md).
+  written in the [output files](03-outputs.md).
 
 
 ## Optimization parameters
@@ -295,6 +298,7 @@ These parameters are listed under the `[optimization]` section in the `.ini` fil
 #### link-type
 [//]: # (TODO: document this parameter, seems to belong to another category)
 _**This section is under construction**_  
+
 - **Expected value:**
 - **Required:** **yes**
 - **Default value:**
@@ -312,6 +316,7 @@ _**This section is under construction**_
 #### include-hurdlecosts
 [//]: # (TODO: document usage)
 _**This section is under construction**_  
+
 - **Expected value:** `true` or `false`
 - **Required:** no
 - **Default value:** `true`
@@ -320,6 +325,7 @@ _**This section is under construction**_
 #### include-loopflowfee
 [//]: # (TODO: document this parameter, seems to be deprecated)
 _**This section is under construction**_  
+
 - **Expected value:**
 - **Required:** **yes**
 - **Default value:**
@@ -387,10 +393,12 @@ _**This section is under construction**_
 #### include-split-exported-mps
 [//]: # (TODO: document this parameter, seems to belong to another category)
 _**This section is under construction**_  
+
 - **Expected value:**
 - **Required:** **yes**
 - **Default value:**
 - **Usage:**
+
 > _**WARNING:**_ this parameter is deprecated but is still needed for testing old studies
 
 #### include-exportstructure
@@ -419,6 +427,7 @@ _**This section is under construction**_
 #### solver-parameters
 [//]: # (TODO: document this parameter)
 _**This section is under construction**_  
+
 - **Expected value:**
 - **Required:** **yes**
 - **Default value:**
@@ -433,7 +442,7 @@ These parameters are listed under the `[adequacy patch]` section in the `.ini` f
 - **Expected value:** `true` or `false`
 - **Required:** no
 - **Default value:** `false`
-- **Usage:** set this parameter to `true` if you want to enable the [Adequacy Patch](solver/optional-features/14-adequacy-patch.md) algorithm.
+- **Usage:** set this parameter to `true` if you want to enable the [Adequacy Patch](optional-features/adequacy-patch.md) algorithm.
 
 #### set-to-null-ntc-from-physical-out-to-physical-in-for-first-step
 [//]: # (TODO: usage is not clear)
@@ -456,6 +465,7 @@ These parameters are listed under the `[adequacy patch]` section in the `.ini` f
 #### price-taking-order
 [//]: # (TODO: document this parameter)
 _**This section is under construction**_  
+
 - **Expected value:**
 - **Required:** **yes**
 - **Default value:**
@@ -464,6 +474,7 @@ _**This section is under construction**_
 #### include-hurdle-cost-csr
 [//]: # (TODO: document this parameter)
 _**This section is under construction**_  
+
 - **Expected value:**
 - **Required:** **yes**
 - **Default value:**
@@ -472,6 +483,7 @@ _**This section is under construction**_
 #### check-csr-cost-function
 [//]: # (TODO: document this parameter)
 _**This section is under construction**_  
+
 - **Expected value:**
 - **Required:** **yes**
 - **Default value:**
@@ -480,6 +492,7 @@ _**This section is under construction**_
 #### enable-first-step
 [//]: # (TODO: document this parameter)
 _**This section is under construction**_  
+
 - **Expected value:**
 - **Required:** **yes**
 - **Default value:**
@@ -488,6 +501,7 @@ _**This section is under construction**_
 #### threshold-initiate-curtailment-sharing-rule
 [//]: # (TODO: document this parameter)
 _**This section is under construction**_  
+
 - **Expected value:**
 - **Required:** **yes**
 - **Default value:**
@@ -496,6 +510,7 @@ _**This section is under construction**_
 #### threshold-display-local-matching-rule-violations
 [//]: # (TODO: document this parameter)
 _**This section is under construction**_  
+
 - **Expected value:**
 - **Required:** **yes**
 - **Default value:**
@@ -504,6 +519,7 @@ _**This section is under construction**_
 #### threshold-csr-variable-bounds-relaxation
 [//]: # (TODO: document this parameter)
 _**This section is under construction**_  
+
 - **Expected value:**
 - **Required:** **yes**
 - **Default value:**
@@ -641,6 +657,7 @@ These parameters are listed under the `[advanced parameters]` section in the `.i
 #### adequacy-block-size
 [//]: # (TODO: document this parameter, seems to belong to another category)
 _**This section is under construction**_  
+
 - **Expected value:**
 - **Required:** **yes**
 - **Default value:**
@@ -708,6 +725,7 @@ They are **required** if [user-playlist](#user-playlist) is set to `true`.
 #### playlist_year_weight
 [//]: # (TODO: document this parameter)
 _**This section is under construction**_  
+
 - **Expected value:**
 - **Required:** **yes**
 - **Default value:**

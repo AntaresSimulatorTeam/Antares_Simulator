@@ -9,6 +9,7 @@ It is compatible with most of existing open-source & commercial solvers.
 These are the solver names and enum, defined in the [OR-Tools API](https://github.com/google/or-tools/blob/stable/ortools/linear_solver/linear_solver.cc).
 
 ### Linear optimization
+
 | OR-Tools solver name | Enum                      | Usage       | Website                                                                                                            |
 |:---------------------|---------------------------|-------------|--------------------------------------------------------------------------------------------------------------------|
 | `clp`                | CLP_LINEAR_PROGRAMMING    | Free-to-use | [https://github.com/coin-or/Clp](https://github.com/coin-or/Clp)                                                   |
@@ -24,31 +25,36 @@ These are the solver names and enum, defined in the [OR-Tools API](https://githu
 [^1]: SIRIUS solver is only supported in [RTE's builds](https://github.com/rte-france/or-tools-rte/releases) of OR-Tools.
 
 ### Mixed real integer optimization
-| OR-Tools solver name | Enum                               | Usage       | Website                                                                                                    |
-|:---------------------|------------------------------------|-------------|------------------------------------------------------------------------------------------------------------|
-| `scip`               | SCIP_MIXED_INTEGER_PROGRAMMING     | Free-to-use | [https://www.scipopt.org](https://www.scipopt.org)                                                         |
-| `glpk`               | GLPK_MIXED_INTEGER_PROGRAMMING     | Free-to-use | [https://www.gnu.org/software/glpk](https://www.gnu.org/software/glpk)                                     |
-| `cbc`                | CBC_MIXED_INTEGER_PROGRAMMING      | Free-to-use | [https://github.com/coin-or/Cbc](https://github.com/coin-or/Cbc)                                           |
-| `highs`              | HIGHS_MIXED_INTEGER_PROGRAMMING    | Free-to-use | [https://highs.dev](https://highs.dev)                                                                     |
-| `sirius` [^1]        | SIRIUS_MIXED_INTEGER_PROGRAMMING   | Free-to-use | [https://github.com/rte-france/sirius-solver](https://github.com/rte-france/sirius-solver)                 |
-| `gurobi`             | GUROBI_MIXED_INTEGER_PROGRAMMING   | Commercial  | [https://www.gurobi.com](https://www.gurobi.com)                                                           |
-| `cplex`              | CPLEX_MIXED_INTEGER_PROGRAMMING    | Commercial  | [https://www.ibm.com/fr-fr/analytics/cplex-optimizer](https://www.ibm.com/fr-fr/analytics/cplex-optimizer) |
-| `xpress`             | XPRESS_MIXED_INTEGER_PROGRAMMING   | Commercial  | [https://www.fico.com/en/products/fico-xpress-solver](https://www.fico.com/en/products/fico-xpress-solver) |
+
+| OR-Tools solver name | Enum                             | Usage       | Website                                                                                                    |
+|:---------------------|----------------------------------|-------------|------------------------------------------------------------------------------------------------------------|
+| `scip`               | SCIP_MIXED_INTEGER_PROGRAMMING   | Free-to-use | [https://www.scipopt.org](https://www.scipopt.org)                                                         |
+| `glpk`               | GLPK_MIXED_INTEGER_PROGRAMMING   | Free-to-use | [https://www.gnu.org/software/glpk](https://www.gnu.org/software/glpk)                                     |
+| `cbc`                | CBC_MIXED_INTEGER_PROGRAMMING    | Free-to-use | [https://github.com/coin-or/Cbc](https://github.com/coin-or/Cbc)                                           |
+| `highs`              | HIGHS_MIXED_INTEGER_PROGRAMMING  | Free-to-use | [https://highs.dev](https://highs.dev)                                                                     |
+| `sirius` [^1]        | SIRIUS_MIXED_INTEGER_PROGRAMMING | Free-to-use | [https://github.com/rte-france/sirius-solver](https://github.com/rte-france/sirius-solver)                 |
+| `gurobi`             | GUROBI_MIXED_INTEGER_PROGRAMMING | Commercial  | [https://www.gurobi.com](https://www.gurobi.com)                                                           |
+| `cplex`              | CPLEX_MIXED_INTEGER_PROGRAMMING  | Commercial  | [https://www.ibm.com/fr-fr/analytics/cplex-optimizer](https://www.ibm.com/fr-fr/analytics/cplex-optimizer) |
+| `xpress`             | XPRESS_MIXED_INTEGER_PROGRAMMING | Commercial  | [https://www.fico.com/en/products/fico-xpress-solver](https://www.fico.com/en/products/fico-xpress-solver) |
 
 ### Constraint optimization
-| OR-Tools solver name | Enum                                | Usage       | Optimization type |
-|:---------------------|-------------------------------------|-------------|-------------------|
-| `bop`                | BOP_INTEGER_PROGRAMMING             | Free-to-use | Boolean           |
-| `sat`                | SAT_INTEGER_PROGRAMMING             | Free-to-use | Boolean integer   |
-| `knapsack`           | KNAPSACK_MIXED_INTEGER_PROGRAMMING  | Free-to-use |                   |
+
+| OR-Tools solver name | Enum                               | Usage       | Optimization type |
+|:---------------------|------------------------------------|-------------|-------------------|
+| `bop`                | BOP_INTEGER_PROGRAMMING            | Free-to-use | Boolean           |
+| `sat`                | SAT_INTEGER_PROGRAMMING            | Free-to-use | Boolean integer   |
+| `knapsack`           | KNAPSACK_MIXED_INTEGER_PROGRAMMING | Free-to-use |                   |
 
 ## Integration in Antares Simulator
+
 *Antares Simulator* needs 2 types of solvers:
+
 * A linear solver
 * A mixed real integer solver
 
 While the OR-Tools interface allows using multiple solvers, Antares restricts this usage.  
-The *Antares Simulator* user can select the solvers using the `ortools-solver` command-line option. Here are the allowed values:
+The *Antares Simulator* user can select the solvers using the `ortools-solver` command-line option. Here are the allowed
+values:
 
 | `ortools-solver`   | Linear solver                  | Mixed real integer solver        |
 |:-------------------|--------------------------------|----------------------------------|

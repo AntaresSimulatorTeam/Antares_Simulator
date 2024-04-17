@@ -5,21 +5,21 @@ Here is a description of workflows with their associated status.
 
 ## Primary build & release workflows
 
-| OS               | .yml                            | Description                                                                             | Status                                               |
-|:-----------------|---------------------------------|-----------------------------------------------------------------------------------------|------------------------------------------------------|
-| Ubuntu           | `ubuntu.yml`                    | Builds Antares Simulator                                                                | [![Status][ubuntu_ci_svg]][ubuntu_ci_link]           |
-| Windows          | `windows-vcpkg.yml`             | Builds Antares Simulator                                                                | [![Status][windows_ci_svg]][windows_ci_link]         |
-| Centos7          | `centos7.yml`                   | Builds Antares Simulator                                                                | [![Status][centos_ci_svg]][centos_ci_link]           |
-| OracleLinux8     | `oracle8.yml`                   | Builds Antares Simulator                                                                | [![Status][oraclelinux_ci_svg]][oraclelinux_ci_link] |
-| -                | `build-userguide.yml`           | Generates PDF user guide from material in `docs/user-guide` (uses Sphinx)          | [![Status][userguide_svg]][userguide_link]           |
-| All of the above | `new_release.yml`               | When a release is created, runs the aforementioned workflows and publishes their assets | [![Status][new_release_svg]][new_release_link]       |
+| OS               | .yml                  | Description                                                                             | Status                                               |
+|:-----------------|-----------------------|-----------------------------------------------------------------------------------------|------------------------------------------------------|
+| Ubuntu           | `ubuntu.yml`          | Builds Antares Simulator                                                                | [![Status][ubuntu_ci_svg]][ubuntu_ci_link]           |
+| Windows          | `windows-vcpkg.yml`   | Builds Antares Simulator                                                                | [![Status][windows_ci_svg]][windows_ci_link]         |
+| Centos7          | `centos7.yml`         | Builds Antares Simulator                                                                | [![Status][centos_ci_svg]][centos_ci_link]           |
+| OracleLinux8     | `oracle8.yml`         | Builds Antares Simulator                                                                | [![Status][oraclelinux_ci_svg]][oraclelinux_ci_link] |
+| -                | `build-userguide.yml` | Generates PDF user guide from material in `docs/user-guide` (uses Sphinx)               | [![Status][userguide_svg]][userguide_link]           |
+| All of the above | `new_release.yml`     | When a release is created, runs the aforementioned workflows and publishes their assets | [![Status][new_release_svg]][new_release_link]       |
 
 ## Secondary build workflows
 
-| OS               | .yml                            | Description                                                                             | Status                                                     |
-|:-----------------|---------------------------------|-----------------------------------------------------------------------------------------|------------------------------------------------------------|
-| Ubuntu           | `ubuntu-system-deps-build.yml`  | Builds Antares Simulator's dependencies                                                 | [![Status][ubuntu_deps_build_svg]][ubuntu_deps_build_link] |
-| Centos7          | `centos7-system-deps-build.yml` | Builds Antares Simulator's dependencies                                                 | [![Status][centos_deps_build_svg]][centos_deps_build_link] |
+| OS      | .yml                            | Description                             | Status                                                     |
+|:--------|---------------------------------|-----------------------------------------|------------------------------------------------------------|
+| Ubuntu  | `ubuntu-system-deps-build.yml`  | Builds Antares Simulator's dependencies | [![Status][ubuntu_deps_build_svg]][ubuntu_deps_build_link] |
+| Centos7 | `centos7-system-deps-build.yml` | Builds Antares Simulator's dependencies | [![Status][centos_deps_build_svg]][centos_deps_build_link] |
 
 ## Additional workflows
 
