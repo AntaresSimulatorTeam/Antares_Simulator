@@ -197,7 +197,7 @@ BOOST_AUTO_TEST_CASE(checking_level_configuration_is_ok_for_area_1_and_year_0___
 
     finLevInfModify.CheckInfeasibility(year);
 
-    double expectedDeltaLevel = -1.1;
+    double expectedDeltaLevel = 1.1;
     BOOST_CHECK_EQUAL(finLevInfModify.isApplicable(year), true);
     BOOST_CHECK_EQUAL(finLevInfModify.deltaLevel.at(year), expectedDeltaLevel);
 }
@@ -293,14 +293,14 @@ BOOST_AUTO_TEST_CASE(check_all_areas_final_reservoir_levels_when_config_is_ok___
     // Checks on Area 1 modifier
     BOOST_CHECK_EQUAL(area_1->hydro.finalLevelInflowsModifier.isApplicable(0), true);
     BOOST_CHECK_EQUAL(area_1->hydro.finalLevelInflowsModifier.isApplicable(1), true);
-    BOOST_CHECK_EQUAL(area_1->hydro.finalLevelInflowsModifier.deltaLevel.at(0), 2.3 - 3.4);
-    BOOST_CHECK_EQUAL(area_1->hydro.finalLevelInflowsModifier.deltaLevel.at(1), 4.2 - 5.1);
+    BOOST_CHECK_EQUAL(area_1->hydro.finalLevelInflowsModifier.deltaLevel.at(0), 3.4 - 2.3);
+    BOOST_CHECK_EQUAL(area_1->hydro.finalLevelInflowsModifier.deltaLevel.at(1), 5.1 - 4.2);
 
     // Checks on Area 2 modifier
     BOOST_CHECK_EQUAL(area_2->hydro.finalLevelInflowsModifier.isApplicable(0), true);
     BOOST_CHECK_EQUAL(area_2->hydro.finalLevelInflowsModifier.isApplicable(1), true);
-    BOOST_CHECK_EQUAL(area_2->hydro.finalLevelInflowsModifier.deltaLevel.at(0), 1.5 - 3.5);
-    BOOST_CHECK_EQUAL(area_2->hydro.finalLevelInflowsModifier.deltaLevel.at(1), 2.4 - 4.3);
+    BOOST_CHECK_EQUAL(area_2->hydro.finalLevelInflowsModifier.deltaLevel.at(0), 3.5 - 1.5);
+    BOOST_CHECK_EQUAL(area_2->hydro.finalLevelInflowsModifier.deltaLevel.at(1), 4.3 - 2.4);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

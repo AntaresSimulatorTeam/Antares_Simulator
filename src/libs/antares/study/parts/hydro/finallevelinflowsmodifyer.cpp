@@ -99,7 +99,6 @@ bool FinalLevelInflowsModifier::hydroAllocationStartMatchesSimulation(unsigned i
 bool FinalLevelInflowsModifier::finalLevelValidity(double totalYearInflows, unsigned int year) const
 {
     double reservoirCapacity = hydro_.reservoirCapacity;
-    // gp : shouldn't we have : -deltaLevel_ * reservoirCapacity < totalYearInflows ?
     if (deltaLevel_ * reservoirCapacity > totalYearInflows)
     {
         logs.error() << "Year: " << year + 1 << ". Area: " << areaName_
