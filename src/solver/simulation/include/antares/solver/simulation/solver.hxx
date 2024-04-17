@@ -39,7 +39,7 @@
 #include <yuni/job/job.h>
 
 #include "antares/concurrency/concurrency.h"
-
+#include <functional>
 namespace Antares::Solver::Simulation
 {
 
@@ -60,7 +60,7 @@ public:
             bool pYearByYear,
             Benchmarking::IDurationCollector& durationCollector,
             IResultWriter& resultWriter,
-            std::shared_ptr<ISimulationObserver> simulationObserver
+            ISimulationObserver& simulationObserver
             ) :
      simulation_(simulation),
      y(pY),
@@ -105,7 +105,7 @@ private:
     bool hydroHotStart;
     Benchmarking::IDurationCollector& pDurationCollector;
     IResultWriter& pResultWriter;
-    std::shared_ptr<ISimulationObserver> simulationObserver_;
+    std::reference_wrapper<ISimulationObserver> simulationObserver_;
     HydroManagement hydroManagement;
     Antares::Data::Area::ScratchMap scratchmap;
 private:
@@ -244,7 +244,7 @@ inline ISimulation<ImplementationType>::ISimulation(
   const Settings& settings,
   Benchmarking::IDurationCollector& duration_collector,
   IResultWriter& resultWriter,
-  std::shared_ptr<Simulation::ISimulationObserver> simulationObserver
+  Simulation::ISimulationObserver& simulationObserver
   ) :
     ImplementationType(study, resultWriter, simulationObserver),
     study(study),
@@ -1008,7 +1008,7 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
                                                                  pYearByYear,
                                                                  pDurationCollector,
                                                                  pResultWriter,
-                                                                 simulationObserver_
+                                                                 simulationObserver_.get()
                                                                       );
             results.add(Concurrency::AddTask(*pQueueService, task));
         } // End loop over years of the current set of parallel years

@@ -63,10 +63,10 @@ void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(
 
 void notifyProblemHebdo(const PROBLEME_HEBDO* problemeHebdo,
                         int optimizationNumber,
-                        Solver::Simulation::ISimulationObserver* simulationObserver,
+                        Solver::Simulation::ISimulationObserver& simulationObserver,
                         const OptPeriodStringGenerator* optPeriodStringGenerator)
 {
-    simulationObserver->notifyHebdoProblem(problemeHebdo, optimizationNumber, createMPSfilename(*optPeriodStringGenerator, optimizationNumber));
+    simulationObserver.notifyHebdoProblem(problemeHebdo, optimizationNumber, createMPSfilename(*optPeriodStringGenerator, optimizationNumber));
 }
 
 bool runWeeklyOptimization(const OptimizationOptions& options,
@@ -74,7 +74,7 @@ bool runWeeklyOptimization(const OptimizationOptions& options,
                            const AdqPatchParams& adqPatchParams,
                            Solver::IResultWriter& writer,
                            int optimizationNumber,
-                           Solver::Simulation::ISimulationObserver* simulationObserver
+                           Solver::Simulation::ISimulationObserver& simulationObserver
                            )
 {
     const int NombreDePasDeTempsPourUneOptimisation
@@ -149,7 +149,7 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                               PROBLEME_HEBDO* problemeHebdo,
                               const AdqPatchParams& adqPatchParams,
                               Solver::IResultWriter& writer,
-                              Solver::Simulation::ISimulationObserver* simulationObserver
+                              Solver::Simulation::ISimulationObserver& simulationObserver
                               )
 {
     if (!problemeHebdo->OptimisationAuPasHebdomadaire)

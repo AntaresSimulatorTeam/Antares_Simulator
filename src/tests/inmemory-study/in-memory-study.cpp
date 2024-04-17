@@ -181,12 +181,11 @@ void SimulationHandler::create()
 {
     study_.initializeRuntimeInfos();
     addScratchpadToEachArea(study_);
-
     simulation_ = std::make_shared<ISimulation<Economy>>(study_,
                                                          settings_,
                                                          nullDurationCollector_,
                                                          resultWriter_,
-                                                         std::make_shared<NullSimulationObserver>()
+                                                         observer_
                                                            );
     SIM_AllocationTableaux(study_);
 }

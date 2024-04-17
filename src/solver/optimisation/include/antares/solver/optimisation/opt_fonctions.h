@@ -34,10 +34,10 @@ using AdqPatchParams = Antares::Data::AdequacyPatch::AdqPatchParams;
 using OptimizationOptions = Antares::Solver::Optimization::OptimizationOptions;
 
 void OPT_OptimisationHebdomadaire(const OptimizationOptions& options,
-                                  PROBLEME_HEBDO*,
-                                  const AdqPatchParams&,
+                                  PROBLEME_HEBDO* pProblemeHebdo,
+                                  const AdqPatchParams& adqPatchParams,
                                   Solver::IResultWriter& writer,
-                                  Solver::Simulation::ISimulationObserver* simulationObserver);
+                                  Solver::Simulation::ISimulationObserver& simulationObserver);
 void OPT_NumeroDeJourDuPasDeTemps(PROBLEME_HEBDO*);
 void OPT_NumeroDIntervalleOptimiseDuPasDeTemps(PROBLEME_HEBDO*);
 void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBDO*);
@@ -66,10 +66,10 @@ bool ADQ_PATCH_CSR(PROBLEME_ANTARES_A_RESOUDRE&,
                    int year);
 
 bool OPT_PilotageOptimisationLineaire(const OptimizationOptions& options,
-                                      PROBLEME_HEBDO*,
-                                      const AdqPatchParams&,
+                                      PROBLEME_HEBDO* problemeHebdo,
+                                      const AdqPatchParams& adqPatchParams,
                                       Solver::IResultWriter& writer,
-                                      Solver::Simulation::ISimulationObserver* simulationObserver
+                                      Solver::Simulation::ISimulationObserver& simulationObserver
                                       );
 void OPT_VerifierPresenceReserveJmoins1(PROBLEME_HEBDO*);
 bool OPT_PilotageOptimisationQuadratique(PROBLEME_HEBDO*);
@@ -88,10 +88,10 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
 void OPT_LiberationProblemesSimplexe(const OptimizationOptions& options, const PROBLEME_HEBDO*);
 
 bool OPT_OptimisationLineaire(const OptimizationOptions& options,
-                              PROBLEME_HEBDO*,
-                              const AdqPatchParams&,
-                              Antares::Solver::IResultWriter& writer,
-                              Solver::Simulation::ISimulationObserver* simulationObserver
+                              PROBLEME_HEBDO* problemeHebdo,
+                              const AdqPatchParams& adqPatchParams,
+                              Solver::IResultWriter& writer,
+                              Solver::Simulation::ISimulationObserver& simulationObserver
                               );
 void OPT_RestaurerLesDonnees(PROBLEME_HEBDO*);
 /*------------------------------*/

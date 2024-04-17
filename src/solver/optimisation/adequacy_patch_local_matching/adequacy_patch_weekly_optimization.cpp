@@ -35,17 +35,18 @@ AdequacyPatchOptimization::AdequacyPatchOptimization(const Antares::Data::Study&
                                                      PROBLEME_HEBDO* problemeHebdo,
                                                      AdqPatchParams& adqPatchParams,
                                                      uint thread_number,
-                                                     IResultWriter& writer
-                                                     ) :
- WeeklyOptimization(options, problemeHebdo, adqPatchParams, thread_number, writer, nullptr), study_(study)
+                                                     IResultWriter& writer,
+                                                     Simulation::ISimulationObserver& observer)
+ : WeeklyOptimization(options, problemeHebdo, adqPatchParams, thread_number, writer, observer)
+ , study_(study)
 {
 }
 
 void AdequacyPatchOptimization::solve()
 {
-    auto nullSimulationObserver = std::make_shared<Simulation::NullSimulationObserver>();
+    auto nullSimulationObserver = std::make_unique<Simulation::NullSimulationObserver>();
     problemeHebdo_->adequacyPatchRuntimeData->AdequacyFirstStep = true;
-    OPT_OptimisationHebdomadaire(options_, problemeHebdo_, adqPatchParams_, writer_, nullSimulationObserver.get());
+    OPT_OptimisationHebdomadaire(options_, problemeHebdo_, adqPatchParams_, writer_, *nullSimulationObserver);
     problemeHebdo_->adequacyPatchRuntimeData->AdequacyFirstStep = false;
 
     for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; ++pays)
@@ -58,7 +59,7 @@ void AdequacyPatchOptimization::solve()
             std::ranges::fill(problemeHebdo_->ResultatsHoraires[pays].ValeursHorairesDENS, 0);
     }
 
-    OPT_OptimisationHebdomadaire(options_, problemeHebdo_, adqPatchParams_, writer_, nullSimulationObserver.get());
+    OPT_OptimisationHebdomadaire(options_, problemeHebdo_, adqPatchParams_, writer_, *nullSimulationObserver);
 }
 
 } // namespace Antares::Solver::Optimization

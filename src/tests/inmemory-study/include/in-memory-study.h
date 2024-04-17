@@ -169,6 +169,7 @@ private:
     Settings settings_;
     Study& study_;
     NullResultWriter resultWriter_;
+    NullSimulationObserver observer_;
 };
 
 

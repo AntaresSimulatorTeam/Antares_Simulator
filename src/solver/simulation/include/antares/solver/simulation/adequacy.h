@@ -42,7 +42,6 @@ public:
         return "adequacy";
     }
 
-public:
     //! \name Constructor & Destructor
     //@{
     /*!
@@ -50,14 +49,14 @@ public:
     **
     ** \param study The current study
     */
-    Adequacy(Data::Study& study, IResultWriter& resultWriter, std::shared_ptr<Simulation::ISimulationObserver> simulationObserver);
+    Adequacy(Data::Study& study, IResultWriter& resultWriter,
+             Simulation::ISimulationObserver& simulationObserver);
     //! Destructor
     ~Adequacy() = default;
     //@}
 
     Benchmarking::OptimizationInfo getOptimizationInfo() const;
 
-public:
     //! Current study
     Data::Study& study;
     //! All variables
@@ -103,7 +102,7 @@ private:
     Matrix<> pRES;
     IResultWriter& resultWriter;
 
-    std::shared_ptr<Simulation::ISimulationObserver> simulationObserver_;
+    std::reference_wrapper<Simulation::ISimulationObserver> simulationObserver_;
 }; // class Adequacy
 
 } // namespace Antares::Solver::Simulation

@@ -328,13 +328,15 @@ void Application::execute()
 
 void Application::runSimulationInEconomicMode()
 {
+    auto observer = std::make_unique<Simulation::NullSimulationObserver>();
     Solver::runSimulationInEconomicMode(
-      *pStudy, pSettings, pDurationCollector, *resultWriter, pOptimizationInfo, std::make_shared<Simulation::NullSimulationObserver>());
+      *pStudy, pSettings, pDurationCollector, *resultWriter, pOptimizationInfo, *observer);
 }
 
 void Application::runSimulationInAdequacyMode()
 {
-    Solver::runSimulationInAdequacyMode(*pStudy, pSettings, pDurationCollector, *resultWriter, pOptimizationInfo, std::make_shared<Simulation::NullSimulationObserver>());
+    auto observer = std::make_unique<Simulation::NullSimulationObserver>();
+    Solver::runSimulationInAdequacyMode(*pStudy, pSettings, pDurationCollector, *resultWriter, pOptimizationInfo, *observer);
 }
 
 void Application::resetLogFilename() const

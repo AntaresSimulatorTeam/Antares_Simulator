@@ -31,7 +31,7 @@
 #include "antares/solver/simulation/solver.h" // for definition of type yearRandomNumbers
 #include "antares/solver/simulation/opt_time_writer.h"
 #include "antares/infoCollection/StudyInfoCollector.h"
-
+#include <functional>
 
 namespace Antares::Solver::Simulation
 {
@@ -54,7 +54,7 @@ public:
     */
     Economy(Data::Study& study,
             IResultWriter& resultWriter,
-            std::shared_ptr<Simulation::ISimulationObserver> simulationObserver);
+            Simulation::ISimulationObserver& simulationObserver);
     //! Destructor
     ~Economy() = default;
     //@}
@@ -103,7 +103,7 @@ private:
     std::vector<std::unique_ptr<Antares::Solver::Optimization::WeeklyOptimization>> weeklyOptProblems_;
     std::vector<std::unique_ptr<interfacePostProcessList>> postProcessesList_;
     IResultWriter& resultWriter;
-    std::shared_ptr<Simulation::ISimulationObserver> simulationObserver_;
+    std::reference_wrapper<Simulation::ISimulationObserver> simulationObserver_;
 }; // class Economy
 
 } // namespace Antares::Solver::Simulation

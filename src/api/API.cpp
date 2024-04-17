@@ -77,7 +77,7 @@ SimulationResults APIInternal::execute() const
     ioQueueService->start();
     auto resultWriter = Solver::resultWriterFactory(
       study_->parameters.resultFormat, study_->folderOutput, ioQueueService, durationCollector);
-    auto simulationObserver = std::make_shared<SimulationObserver>();
+    auto simulationObserver = std::make_unique<SimulationObserver>();
     // Run the simulation
     switch (study_->runtime->mode)
     {
@@ -88,7 +88,7 @@ SimulationResults APIInternal::execute() const
                                             durationCollector,
                                             *resultWriter,
                                             optimizationInfo,
-                                            simulationObserver);
+                                            *simulationObserver);
         break;
     case Data::SimulationMode::Adequacy:
         Solver::runSimulationInAdequacyMode(*study_,
@@ -96,7 +96,7 @@ SimulationResults APIInternal::execute() const
                                             durationCollector,
                                             *resultWriter,
                                             optimizationInfo,
-                                            simulationObserver);
+                                            *simulationObserver);
         break;
     default:
         break;

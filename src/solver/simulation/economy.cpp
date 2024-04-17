@@ -34,7 +34,7 @@ namespace Antares::Solver::Simulation
 {
 Economy::Economy(Data::Study& study,
                  IResultWriter& resultWriter,
-                 std::shared_ptr<Simulation::ISimulationObserver> simulationObserver) :
+                 Simulation::ISimulationObserver& simulationObserver) :
     study(study),
     preproOnly(false),
     resultWriter(resultWriter),
@@ -92,7 +92,7 @@ bool Economy::simulationBegin()
                                                     &pProblemesHebdo[numSpace],
                                                     numSpace,
                                                     resultWriter,
-                                                    simulationObserver_
+                                                    simulationObserver_.get()
                 );
             postProcessesList_[numSpace] =
                 interfacePostProcessList::create(study.parameters.adqPatchParams,

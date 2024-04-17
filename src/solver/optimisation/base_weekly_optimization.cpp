@@ -33,7 +33,7 @@ WeeklyOptimization::WeeklyOptimization(const OptimizationOptions& options,
                                        AdqPatchParams& adqPatchParams,
                                        uint thread_number,
                                        IResultWriter& writer,
-                                       std::shared_ptr<Simulation::ISimulationObserver> simulationObserver
+                                       Simulation::ISimulationObserver& simulationObserver
                                        ) :
     options_(options),
     problemeHebdo_(problemesHebdo),
@@ -51,11 +51,11 @@ std::unique_ptr<WeeklyOptimization> WeeklyOptimization::create(
     PROBLEME_HEBDO* problemeHebdo,
     uint thread_number,
     IResultWriter& writer,
-    std::shared_ptr<Simulation::ISimulationObserver> simulationObserver
+    Simulation::ISimulationObserver& simulationObserver
   )
 {
     if (adqPatchParams.enabled && adqPatchParams.localMatching.enabled)
-        return std::make_unique<AdequacyPatchOptimization>(study, options, problemeHebdo, adqPatchParams, thread_number, writer);
+        return std::make_unique<AdequacyPatchOptimization>(study, options, problemeHebdo, adqPatchParams, thread_number, writer, simulationObserver);
     else
         return std::make_unique<DefaultWeeklyOptimization>(options, problemeHebdo, adqPatchParams, thread_number, writer, simulationObserver);
 }

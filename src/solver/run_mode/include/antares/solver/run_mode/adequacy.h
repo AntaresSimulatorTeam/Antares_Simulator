@@ -34,5 +34,5 @@ void runSimulationInAdequacyMode(Antares::Data::Study& study,
                                  Benchmarking::IDurationCollector& durationCollector,
                                  IResultWriter& resultWriter,
                                  Benchmarking::OptimizationInfo& info,
-                                 std::shared_ptr<Simulation::ISimulationObserver> simulationObserver);
+                                 Simulation::ISimulationObserver& simulationObserver);
 }
