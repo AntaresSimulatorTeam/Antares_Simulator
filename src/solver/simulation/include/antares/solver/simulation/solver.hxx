@@ -494,6 +494,10 @@ void ISimulation<ImplementationType>::regenerateTimeSeries(uint year)
             "mc-" + std::to_string(year);
 #undef SEP
         generateThermalTimeSeries(study, clusters, pResultWriter, savePath);
+
+        // apply the spinning if we generated some in memory clusters
+        for (auto* cluster : clusters)
+            cluster->calculationOfSpinning();
     }
 
     timer.stop();

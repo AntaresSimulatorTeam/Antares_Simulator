@@ -615,8 +615,6 @@ bool generateThermalTimeSeries(Data::Study& study,
               = savePath + SEP + cluster->parentArea->id + SEP + cluster->id() + ".txt";
             writeResultsToDisk(study, writer, cluster->series.timeSeries, filePath);
         }
-
-        cluster->calculationOfSpinning();
     }
 
     return true;
