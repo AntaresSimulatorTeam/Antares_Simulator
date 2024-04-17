@@ -2,7 +2,7 @@
 
 [//]: # (TODO: the contents of this page may be dispatched in opther pages)
 
-## More details on the "include-exportmps" parameter
+## Details on the "include-exportmps" parameter
 [//]: # (TODO: specify where the MPS files are written)
 
 This [parameter](04-parameters.md#include-exportmps) does not influence the way calculations are carried out, 
@@ -44,7 +44,7 @@ txt extension.
 > _**Note:**_ The extra runtime and disk space resulting from the activation of the "mps" option may be quite significant. 
 > This option should therefore be used only when a comparison of results with those of other solvers is actually intended.
 
-## More details on the "include-unfeasible-problem-behavior" parameter
+## Details on the "include-unfeasible-problem-behavior" parameter
 
 This [parameter](04-parameters.md#include-unfeasible-problem-behavior) can take one of the four values: 
 `ERROR_DRY`, `ERROR_MPS`, `WARNING_DRY`, `WARNING_MPS`
@@ -64,7 +64,7 @@ With `..._MPS` options, the full expression of the faulty problem(s) is printed 
 thus allowing further analysis of the infeasibility issue.
 
 
-## More details on the "initial-reservoir-levels" parameter
+## Details on the "initial-reservoir-levels" parameter
 [//]: # (TODO: update this paragraph)
 _**This section is under construction**_
 
@@ -119,7 +119,7 @@ The first year of the simulation, and more generally years belonging to the firs
 
 - _More generally, it has to be pointed out that the "hydro-storage" model implemented in Antares can be used to model "storable" resources quite different from actual hydro reserves: batteries, gas subterraneous stocks, etc._
 
-## More details on the "hydro-heuristic-policy" parameter
+## Details on the "hydro-heuristic-policy" parameter
 [//]: # (TODO: update this paragraph)
 _**This section is under construction**_
 
@@ -137,7 +137,7 @@ Upper and lower rule curves are accommodated in both monthly and daily heuristic
 
 Upper and lower rule curves are accommodated in both monthly and daily heuristic stages (described page 58). In the second stage, incomplete use of natural inflows is avoided as much as possible (penalty cost on Y higher than penalty cost on $\Psi$). This policy may result in violations of the lower rule curve.
 
-## More details on the "hydro-pricing-mode" parameter
+## Details on the "hydro-pricing-mode" parameter
 [//]: # (TODO: update this paragraph)
 _**This section is under construction**_
 
@@ -159,7 +159,7 @@ The water value is taken to remain about the same throughout the week, and a con
 
 The water value is considered as variable throughout the week. As a consequence, a different cost is used for each "layer" of the stock from/to which energy can be withdrawn/injected, in an internal hydro merit-order involving the 100 tabulated water-values found at the date at which the week **ends**. A value interpolated from the reference table for the exact level reached at each time step within the week is used ex-post in the assessment of the variable "H.COST" (positive for generation, negative for pumping) defined in [Output Files](03-outputs.md). This option should be used if computation resources are not an issue and if level-dependent water value variations throughout a week must be accounted for.
 
-## More details on the "unit-commitment-mode" parameter
+## Details on the "unit-commitment-mode" parameter
 [//]: # (TODO: update this paragraph)
 _**This section is under construction**_
 
@@ -197,7 +197,7 @@ For each thermal cluster, the intermediate IP looks for a unit-commitment compat
 
 In the second optimization stage, the unit commitment set by the intermediate IP is considered as a context to use in a new comprehensive optimal hydro-thermal schedule assessment. The amount of day-ahead (spinning) reserve, if any, is added to the demand considered in the first stage and subtracted in the second stage.
 
-## More details on the "renewable-generation-modelling" parameter
+## Details on the "renewable-generation-modelling" parameter
 [//]: # (TODO: update this paragraph)
 _**This section is under construction**_
 
@@ -206,10 +206,6 @@ This parameter can take the two values “aggregated” or “cluster”. For a 
 If the parameter is set to “aggregated”, the user will have access to the Wind & Solar windows, but not the Renewable window. When the parameter is set to “cluster”, the Renewable window will be available, but not the Wind nor the Solar windows. The data stored in the windows that are not available will always be conserved. However, only Renewable data (and not the wind and solar data) will be considered for the calculations when the parameter is set to “cluster”. And only the wind and solar data (and not the renewable data) will be considered for the calculations when the parameter is set to “aggregated”.
 
 The Renewable window can be filled out with the different renewable clusters inside each node. Each renewable cluster needs to have a group specified or will default to the «Other RES 1» group. Production Timeseries can be filled out much like the Thermal production ones. Note that unlike thermal clusters, negative production values are allowed. The Renewable window is described in more details in the “4. Active Windows” section. In the Simulation window, only “Ready-made” timeseries can be selected for renewables for now. This should be modified in a future release. The MC scenario builder for Renewables works the same way as for Thermal Clusters.
-
-[^monthly_allocation]: In the first equation, $S_{t-1}$ is either the initial stock $S_0$ or the final stock of the previous year (hydro hot start)
-
-[^daily_allocation]: In the first equation, $S_{t-1}$ is either the initial stock used in M or the final stock of the previous month ($D(m-1)$
 
 [^17]: As long as the System's list of Areas does not change
 

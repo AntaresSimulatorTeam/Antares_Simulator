@@ -5,11 +5,14 @@ _**This section is under construction**_
 
 An *Antares* study contains a global parameter file named `generaldata.ini`.
 
+---
 ## General parameters
 These parameters are listed under the `[general]` section in the `.ini` file.
 
+---
 ### Study mode
 
+---
 #### mode
 [//]: # (TODO: verify if required, remove default value)
 [//]: # (TODO: add details 'expansion' behavior)
@@ -30,8 +33,10 @@ These parameters are listed under the `[general]` section in the `.ini` file.
     - `expansion`: Antares simulator will optimize the investments on the grid, minimizing both investments and
       operational costs.
 
+---
 ### Study horizon
 
+---
 #### horizon
 [//]: # (TODO: verify if required, remove default value)
 - **Expected value:** year (string)
@@ -39,8 +44,11 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 - **Default value:** empty string
 - **Usage:** the horizon of the study (static tag, not used in the calculations)
 
+---
+
 ### Calendar parameters
 
+---
 #### nbyears
 [//]: # (TODO: verify if required, verify default value)
 - **Expected value:** unsigned integer
@@ -49,6 +57,7 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 - **Usage:** number of Monte-Carlo (MC) years that should be prepared for the simulation (not always the same as the
   MC years actually simulated, which are defined by [user-playlist](#user-playlist) and [playlist parameters](#playlist-parameters)).
 
+---
 #### simulation.start
 [//]: # (TODO: verify if required, verify default value)
 [//]: # (TODO: verify if index 8 should be replaced by 7 in example -starts at 1 or at 0 ?-)
@@ -58,6 +67,7 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 - **Usage:** index of first day to include in study (>= 0) (e.g. 8 for a simulation beginning on the 
   second week of the first month of the year)
 
+---
 #### simulation.end
 [//]: # (TODO: verify if required, verify default value)
 [//]: # (TODO: verify if index starts at 1 or at 0 for example)
@@ -72,6 +82,7 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 > round number of weeks. If not, the simulation span will be truncated: for instance, (1, 365) will be interpreted as 
 > (1, 364), i.e. 52 weeks (the last day of the last month will not be simulated).
 
+---
 #### january.1st
 [//]: # (TODO: verify default value)
 - **Expected value:** string carrying an integer between 0 and 6, or one of (case-insensitive): `monday`/`lundi`,
@@ -81,6 +92,7 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 - **Default value:** `monday`
 - **Usage:** this parameter should indicate the day-of-week of january 1st of the given [year](#horizon).
 
+---
 #### first-month-in-year
 [//]: # (TODO: verify if required, remove default value)
 - **Expected value:** one of the following string (case-insensitive): `jan`/`january`, `feb`/`february`, `mar`/`march`,
@@ -90,6 +102,7 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 - **Default value:**
 - **Usage:** this is the first month in the input time-series, of the studied [year](#horizon).
 
+---
 #### first.weekday
 - **Expected value:** string carrying an integer between 0 and 6, or one of (case-insensitive): `monday`/`lundi`,
   `tuesday`/`mardi`, `wednesday`/`mercredi`, `thursday`/`jeudi`, `friday`/`vendredi`, `saturday`/`samedi`,
@@ -99,14 +112,17 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 - **Usage:** in economy or adequacy simulations, indicates the frame (Mon-Sun, Sat-Fri, etc.) to use for the edition 
   of weekly results.
 
+---
 #### leapyear
 - **Expected value:** `true` or `false`
 - **Required:** no
 - **Default value:** `false`
 - **Usage:** indicates if the studied [year](#horizon) is a leap-year.
 
+---
 ### Additional parameters
 
+---
 #### year-by-year
 - **Expected value:** `true` or `false`
 - **Required:** no
@@ -116,6 +132,7 @@ These parameters are listed under the `[general]` section in the `.ini` file.
   - `true`: for each simulated year, detailed results will be printed out in an individual directory:
     `Study_name/OUTPUT/simu_tag/Economy/mc-i-number
 
+---
 #### derated
 - **Expected value:** `true` or `false`
 - **Required:** no
@@ -128,6 +145,7 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 
 > _**WARNING:**_ this parameter cannot be used with parameter [custom-scenario](#custom-scenario)
 
+---
 #### custom-scenario
 [//]: # (TODO: add specific link to "scenario builder")
 - **Expected value:** `true` or `false`
@@ -143,6 +161,7 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 > _**WARNING:**_ this parameter cannot be used with parameter [derated](#derated)  
 > _**WARNING:**_ if set to `true`, parameter [active-rules-scenario](#active-rules-scenario) must be set
 
+---
 #### user-playlist
 - **Expected value:** `true` or `false`
 - **Required:** no
@@ -158,6 +177,7 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 
 > _**WARNING:**_ this parameter cannot be used with parameter [derated](#derated)
 
+---
 #### thematic-trimming
 - **Expected value:** `true` or `false`
 - **Required:** no
@@ -167,6 +187,7 @@ These parameters are listed under the `[general]` section in the `.ini` file.
   Thematic Trimming does not reduce computation time, but can bring some benefits on total runtime (smaller files to 
   write). It can save a lot of disk space in simulations where only a few variables are of interest.
 
+---
 #### geographic-trimming
 [//]: # (TODO: verify usage)
 - **Expected value:** `true` or `false`
@@ -186,6 +207,7 @@ These parameters are listed under the `[general]` section in the `.ini` file.
     - Open the inspector module (Main menu, Windows)
     - Set adequate parameters in the "output print status" group
 
+---
 #### active-rules-scenario
 [//]: # (TODO: add usage details)
 - **Expected value:** undefined, or `default ruleset` (case-insensitive)
@@ -194,8 +216,10 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 - **Usage:** defines how scenarios are built. Only one supported value for now:
     - `default ruleset`
 
+---
 ### Pre-processor parameters
 
+---
 #### readonly
 [//]: # (TODO: add usage details)
 - **Expected value:** `true` or `false`
@@ -203,17 +227,20 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 - **Default value:** `false`
 - **Usage:** sets the study to read-only mode
 
+---
 ## Output parameters
 These parameters are listed under the `[output]` section in the `.ini` file.
 
+---
 #### synthesis
 - **Expected value:** `true` or `false`
 - **Required:** no
 - **Default value:** `true`
 - **Usage:**
-  - `true`: synthetic results will be stored in a directory: `Study_name/OUTPUT/simu_tag/Economy/mc-all`
-  - `false`: no general synthesis will be printed out
+    - `true`: synthetic results will be stored in a directory: `Study_name/OUTPUT/simu_tag/Economy/mc-all`
+    - `false`: no general synthesis will be printed out
 
+---
 #### storenewset
 [//]: # (TODO: verify usage)
 [//]: # (TODO: link to specific output folder when it is documented in Outputs doc)
@@ -221,10 +248,11 @@ These parameters are listed under the `[output]` section in the `.ini` file.
 - **Required:** no
 - **Default value:** `false`
 - **Usage:**
-  - `false`: no storage of the time-series numbers (either randomly drawn or user-defined) used to set up the simulation.
-  - `true`: a [specific output folder](03-outputs.md) will be created to store all the time-series numbers drawn 
-    when preparing the Monte-Carlo years.
+    - `false`: no storage of the time-series numbers (either randomly drawn or user-defined) used to set up the simulation.
+    - `true`: a [specific output folder](03-outputs.md) will be created to store all the time-series numbers drawn 
+      when preparing the Monte-Carlo years.
 
+---
 #### hydro-debug
 [//]: # (TODO: document this parameter)
 _**This section is under construction**_  
@@ -234,6 +262,7 @@ _**This section is under construction**_
 - **Default value:**
 - **Usage:**
 
+---
 #### result-format
 [//]: # (TODO: document this parameter)
 _**This section is under construction**_  
@@ -243,6 +272,7 @@ _**This section is under construction**_
 - **Default value:**
 - **Usage:**
 
+---
 #### archives
 [//]: # (TODO: fill default value)
 - **Expected value:** comma-seperated list of 0 to N elements among the following (case-insensitive):
@@ -252,7 +282,7 @@ _**This section is under construction**_
 - **Usage:** if [storenewset](#storenewset) is set to `true`, this parameter selects those of them that should be
   written in the [output files](03-outputs.md).
 
-
+---
 ## Optimization parameters
 [//]: # (TODO: add link to "local parameter values" documentation)
 Options related to the optimization core used in the simulations.
@@ -264,6 +294,7 @@ values will remain untouched. If the preference is afterward set to "local value
 given back their regular capacities (infinite for those being set on "set to infinite").  
 These parameters are listed under the `[optimization]` section in the `.ini` file.
 
+---
 #### simplex-range
 - **Expected value:** `day` or `week`
 - **Required:** no
@@ -279,6 +310,7 @@ These parameters are listed under the `[optimization]` section in the `.ini` fil
 
 > More information here: [The heuristic for seasonal hydro pre-allocation](06-heuristics.md#seasonal-hydro-pre-allocation)
 
+---
 #### transmission-capacities
 - **Expected value:** one of the following (case-insensitive):
     - `local-values`
@@ -295,6 +327,7 @@ These parameters are listed under the `[optimization]` section in the `.ini` fil
     - `infinite-for-physical-links`: override transmission capacities with $\inf$ on **physical links only**
     - `null-for-physical-links`: override transmission capacities with 0 on **physical links only**
 
+---
 #### link-type
 [//]: # (TODO: document this parameter, seems to belong to another category)
 _**This section is under construction**_  
@@ -306,6 +339,7 @@ _**This section is under construction**_
 
 > _**WARNING:**_ this parameter is ignored since version 8.5.2
 
+---
 #### include-constraints
 [//]: # (TODO: add link to binding constraints doc)
 - **Expected value:** `true` or `false`
@@ -313,6 +347,7 @@ _**This section is under construction**_
 - **Default value:** `true`
 - **Usage:** set this parameter to `true` if you want to activate binding constraints in the study. 
 
+---
 #### include-hurdlecosts
 [//]: # (TODO: document usage)
 _**This section is under construction**_  
@@ -322,6 +357,7 @@ _**This section is under construction**_
 - **Default value:** `true`
 - **Usage:**
 
+---
 #### include-loopflowfee
 [//]: # (TODO: document this parameter, seems to be deprecated)
 _**This section is under construction**_  
@@ -331,6 +367,7 @@ _**This section is under construction**_
 - **Default value:**
 - **Usage:**
 
+---
 #### include-tc-minstablepower
 [//]: # (TODO: add link to contraints doc)
 - **Expected value:** `true` or `false`
@@ -338,6 +375,7 @@ _**This section is under construction**_
 - **Default value:** `true`
 - **Usage:** set this parameter to `true` if you want to activate, for thermal units, the constraint of minimum stable power
 
+---
 #### include-tc-min-ud-time
 [//]: # (TODO: add link to contraints doc)
 - **Expected value:** `true` or `false`
@@ -345,6 +383,7 @@ _**This section is under construction**_
 - **Default value:** `true`
 - **Usage:** set this parameter to `true` if you want to activate, for thermal units, the constraint of minimum start-up time
 
+---
 #### include-dayahead
 [//]: # (TODO: add details + link to contraints doc)
 - **Expected value:** `true` or `false`
@@ -352,6 +391,7 @@ _**This section is under construction**_
 - **Default value:** `true`
 - **Usage:** set this parameter to `true` if you want to activate day-ahead reserve constraints
 
+---
 #### include-strategicreserve
 [//]: # (TODO: add details + link to contraints doc)
 - **Expected value:** `true` or `false`
@@ -359,6 +399,7 @@ _**This section is under construction**_
 - **Default value:** `true`
 - **Usage:** set this parameter to `true` if you want to activate strategic reserve constraints
 
+---
 #### include-spinningreserve
 [//]: # (TODO: add details + link to contraints doc)
 - **Expected value:** `true` or `false`
@@ -366,6 +407,7 @@ _**This section is under construction**_
 - **Default value:** `true`
 - **Usage:** set this parameter to `true` if you want to activate spinning reserve constraints
 
+---
 #### include-primaryreserve
 [//]: # (TODO: add details + link to contraints doc)
 - **Expected value:** `true` or `false`
@@ -373,6 +415,7 @@ _**This section is under construction**_
 - **Default value:** `true`
 - **Usage:** set this parameter to `true` if you want to activate primary reserve constraints
 
+---
 #### include-exportmps
 [//]: # (TODO: in usage paragraph, add links to relevant doc of "first step" and "second step" of optimization)
 - **Expected value:** one of the following (case-insensitive):
@@ -388,8 +431,9 @@ _**This section is under construction**_
     - `optim-2`: export MPS for second step of the optimization
     - `both-optims` or `true`: export MPS for both steps of the optimization
 
-> _**Note:**_ You can find more information on this parameter [here](08-appendix.md#more-details-on-the-include-exportmps-parameter).
+> _**Note:**_ You can find more information on this parameter [here](08-appendix.md#details-on-the-include-exportmps-parameter).
 
+---
 #### include-split-exported-mps
 [//]: # (TODO: document this parameter, seems to belong to another category)
 _**This section is under construction**_  
@@ -401,6 +445,7 @@ _**This section is under construction**_
 
 > _**WARNING:**_ this parameter is deprecated but is still needed for testing old studies
 
+---
 #### include-exportstructure
 [//]: # (TODO: add link to AntaresXpansion)
 - **Expected value:** `true` or `false`
@@ -408,6 +453,7 @@ _**This section is under construction**_
 - **Default value:** `false`
 - **Usage:** set to `true` to activate writing the [MPS](#include-exportmps) using the *AntaresXpansion* specific format
 
+---
 #### include-unfeasible-problem-behavior
 - **Expected value:** one of the following (case-sensitive):
     - `WARNING_DRY`
@@ -422,8 +468,9 @@ _**This section is under construction**_
     - `ERROR_DRY`: stop simulation
     - `ERROR_MPS`: stop simulation, and export the MPS of the unfeasible problem  
   
-> _**Note:**_ You can find more information on this parameter [here](08-appendix.md#more-details-on-the-include-unfeasible-problem-behavior-parameter).
+> _**Note:**_ You can find more information on this parameter [here](08-appendix.md#details-on-the-include-unfeasible-problem-behavior-parameter).
 
+---
 #### solver-parameters
 [//]: # (TODO: document this parameter)
 _**This section is under construction**_  
@@ -433,17 +480,20 @@ _**This section is under construction**_
 - **Default value:**
 - **Usage:**
 
+---
 ## Adequacy-patch parameters
 Defines a set of options related to the [adequacy patch](optional-features/adequacy-patch.md).
 The set of preferences is study-specific; it can be changed at any time and saved along with study data.  
 These parameters are listed under the `[adequacy patch]` section in the `.ini` file.  
 
+---
 #### include-adq-patch
 - **Expected value:** `true` or `false`
 - **Required:** no
 - **Default value:** `false`
 - **Usage:** set this parameter to `true` if you want to enable the [Adequacy Patch](optional-features/adequacy-patch.md) algorithm.
 
+---
 #### set-to-null-ntc-from-physical-out-to-physical-in-for-first-step
 [//]: # (TODO: usage is not clear)
 - **Expected value:** `true` or `false`
@@ -453,6 +503,7 @@ These parameters are listed under the `[adequacy patch]` section in the `.ini` f
   inside adequacy patch (area type 2). NTC is set to null (if true) only in the first step of adequacy patch local matching rule.  
   NTC from physical areas outside to physical areas inside adequacy patch (set to null / local values)
 
+---
 #### set-to-null-ntc-between-physical-out-for-first-step
 [//]: # (TODO: usage is not clear)
 - **Expected value:** `true` or `false`
@@ -462,6 +513,7 @@ These parameters are listed under the `[adequacy patch]` section in the `.ini` f
   NTC is set to null (if true) only in the first step of adequacy patch local matching rule.  
   NTC between physical areas outside adequacy patch (set to null / local values)
 
+---
 #### price-taking-order
 [//]: # (TODO: document this parameter)
 _**This section is under construction**_  
@@ -471,6 +523,7 @@ _**This section is under construction**_
 - **Default value:**
 - **Usage:** Price taking order (DENS / Load)
 
+---
 #### include-hurdle-cost-csr
 [//]: # (TODO: document this parameter)
 _**This section is under construction**_  
@@ -480,6 +533,7 @@ _**This section is under construction**_
 - **Default value:**
 - **Usage:** Include hurdle cost in CSR optimization (false / true)
 
+---
 #### check-csr-cost-function
 [//]: # (TODO: document this parameter)
 _**This section is under construction**_  
@@ -489,6 +543,7 @@ _**This section is under construction**_
 - **Default value:**
 - **Usage:** Check CSR cost function value prior and after CSR (false / true)
 
+---
 #### enable-first-step
 [//]: # (TODO: document this parameter)
 _**This section is under construction**_  
@@ -498,6 +553,7 @@ _**This section is under construction**_
 - **Default value:**
 - **Usage:**
 
+---
 #### threshold-initiate-curtailment-sharing-rule
 [//]: # (TODO: document this parameter)
 _**This section is under construction**_  
@@ -507,6 +563,7 @@ _**This section is under construction**_
 - **Default value:**
 - **Usage:**
 
+---
 #### threshold-display-local-matching-rule-violations
 [//]: # (TODO: document this parameter)
 _**This section is under construction**_  
@@ -516,6 +573,7 @@ _**This section is under construction**_
 - **Default value:**
 - **Usage:**
 
+---
 #### threshold-csr-variable-bounds-relaxation
 [//]: # (TODO: document this parameter)
 _**This section is under construction**_  
@@ -525,10 +583,11 @@ _**This section is under construction**_
 - **Default value:**
 - **Usage:**
 
-
+---
 ## Other parameters
 These parameters are listed under the `[other preferences]` section in the `.ini` file.
 
+---
 #### initial-reservoir-levels
 [//]: # (TODO: complete the usage paragraph)
 - **Expected value:** one of the following (case-insensitive):
@@ -540,8 +599,9 @@ These parameters are listed under the `[other preferences]` section in the `.ini
     - `cold start`
     - `hot start`
 
-> _**Note:**_ You can find more information on this parameter [here](08-appendix.md#more-details-on-the-initial-reservoir-levels-parameter).
+> _**Note:**_ You can find more information on this parameter [here](08-appendix.md#details-on-the-initial-reservoir-levels-parameter).
 
+---
 #### hydro-heuristic-policy
 [//]: # (TODO: complete the usage paragraph)
 - **Expected value:** one of the following (case-insensitive):
@@ -553,8 +613,9 @@ These parameters are listed under the `[other preferences]` section in the `.ini
     - `accommodate rule curves`
     - `maximize generation`
 
-> _**Note:**_ You can find more information on this parameter [here](08-appendix.md#more-details-on-the-hydro-heuristic-policy-parameter).
+> _**Note:**_ You can find more information on this parameter [here](08-appendix.md#details-on-the-hydro-heuristic-policy-parameter).
 
+---
 #### hydro-pricing-mode
 [//]: # (TODO: complete the usage paragraph)
 - **Expected value:** one of the following (case-insensitive):
@@ -566,8 +627,9 @@ These parameters are listed under the `[other preferences]` section in the `.ini
     - `fast`
     - `accurate`: Note that this mode is significantly slower than the `fast` mode.
 
-> _**Note:**_ You can find more information on this parameter [here](08-appendix.md#more-details-on-the-hydro-pricing-mode-parameter).
+> _**Note:**_ You can find more information on this parameter [here](08-appendix.md#details-on-the-hydro-pricing-mode-parameter).
 
+---
 #### power-fluctuations
 [//]: # (TODO: complete the usage paragraph)
 - **Expected value:** one of the following (case-insensitive):
@@ -581,6 +643,7 @@ These parameters are listed under the `[other preferences]` section in the `.ini
     - `free modulations`
     - `minimize excursions`
 
+---
 #### shedding-policy
 [//]: # (TODO: complete the usage paragraph)
 - **Expected value:** one of the following (case-insensitive):
@@ -592,6 +655,7 @@ These parameters are listed under the `[other preferences]` section in the `.ini
     - `shave peaks`:
     - `minimize duration`:
 
+---
 #### unit-commitment-mode
 [//]: # (TODO: complete the usage paragraph by adding details & links to relevant UC doc)
 - **Expected value:** one of the following (case-insensitive):
@@ -605,8 +669,9 @@ These parameters are listed under the `[other preferences]` section in the `.ini
     - `accurate`: Heuristic in which 2 LP problems are solved. Explicit modelling for the number of ON/OFF units. Slower than `fast`.
     - `milp`: A single MILP problem is solved, with explicit modelling for the number of ON/OFF units. Slower than `accurate`.
 
-> _**Note:**_ You can find more information on this parameter [here](08-appendix.md#more-details-on-the-unit-commitment-mode-parameter).
+> _**Note:**_ You can find more information on this parameter [here](08-appendix.md#details-on-the-unit-commitment-mode-parameter).
 
+---
 #### number-of-cores-mode
 - **Expected value:** one of the following (case-insensitive):
     - `minimum`
@@ -618,6 +683,7 @@ These parameters are listed under the `[other preferences]` section in the `.ini
 - **Default value:** `medium`
 - **Usage:** use this parameter to configure [multi-threading](optional-features/multi-threading.md).
 
+---
 #### renewable-generation-modelling
 [//]: # (TODO: complete the usage paragraph)
 - **Expected value:** one of the following (case-insensitive):
@@ -629,8 +695,9 @@ These parameters are listed under the `[other preferences]` section in the `.ini
     - `aggregated`
     - `clusters`
 
-> _**Note:**_ You can find more information on this parameter [here](08-appendix.md#more-details-on-the-renewable-generation-modelling-parameter).
+> _**Note:**_ You can find more information on this parameter [here](08-appendix.md#details-on-the-renewable-generation-modelling-parameter).
 
+---
 #### day-ahead-reserve-management
 [//]: # (TODO: document this parameter, doesn't seem to belong to this category)
 - **Expected value:** 
@@ -640,12 +707,13 @@ These parameters are listed under the `[other preferences]` section in the `.ini
 
 > _**WARNING:**_ this parameter is ignored since version 8.4
 
-
+---
 ## Advanced parameters
 Advanced Parameters allow to adjust the simulation behavior regarding issues
 that are more numerical than physical. The set of parameters is study-specific and can be updated at any time.  
 These parameters are listed under the `[advanced parameters]` section in the `.ini` file.
 
+---
 #### accuracy-on-correlation
 [//]: # (TODO: complete the usage paragraph)
 - **Expected value:** comma-seperated list of 0 to N elements among the following (case-insensitive):
@@ -654,6 +722,7 @@ These parameters are listed under the `[advanced parameters]` section in the `.i
 - **Default value:** empty
 - **Usage:**
 
+---
 #### adequacy-block-size
 [//]: # (TODO: document this parameter, seems to belong to another category)
 _**This section is under construction**_  
@@ -665,54 +734,62 @@ _**This section is under construction**_
 
 > _**WARNING:**_ this parameter is ignored since version 8.5
 
-
+---
 ## Seeds - Mersenne Twister parameters
 These parameters are listed under the `[seeds - Mersenne Twister]` section in the `.ini` file.  
 They allow the user to set the seeds of random number generators, in order to ensure the results are repeatable.
 
+---
 #### seed-tsnumbers
 - **Expected value:** unsigned integer
 - **Required:** **yes**
 - **Usage:** fixes the seed for the random [Monte-Carlo years](#nbyears) selection.
 
+---
 #### seed-unsupplied-energy-costs
 - **Expected value:** unsigned integer
 - **Required:** **yes**
 - **Usage:** fixes the seed for the random noise generation on unsupplied energy costs.
 
+---
 #### seed-spilled-energy-costs
 [//]: # (TODO: verify if required, if not, add default value)
 - **Expected value:** unsigned integer
 - **Required:** **yes**
 - **Usage:** fixes the seed for the random noise generation on spilled energy costs.
 
+---
 #### seed-thermal-costs
 - **Expected value:** unsigned integer
 - **Required:** **yes**
 - **Usage:** fixes the seed for the random noise generation on thermal plants' costs.
 
+---
 #### seed-hydro-costs
 - **Expected value:** unsigned integer
 - **Required:** **yes**
 - **Usage:** fixes the seed for the random noise generation on hydraulic plants' costs.
 
+---
 #### seed-initial-reservoir-levels
 [//]: # (TODO: complete the usage paragraph)
 - **Expected value:** unsigned integer
 - **Required:** **yes**
 - **Usage:**
 
-
+---
 ## Playlist parameters
 These parameters are listed under the `[playlist]` section in the `.ini` file.  
 They are **required** if [user-playlist](#user-playlist) is set to `true`.
 
+---
 #### playlist_reset
 [//]: # (TODO: complete the usage paragraph)
 - **Expected value:** `true` or `false`
 - **Required:** **yes**, if [user-playlist](#user-playlist) is set to `true`.
 - **Usage:**
 
+---
 #### playlist_year
 - **Expected value:** `+ =` or `- =`, followed by a positive integer (example: `playlist_year + = 5`)
 - **Required:** **yes**, if [user-playlist](#user-playlist) is set to `true`.
@@ -722,6 +799,7 @@ They are **required** if [user-playlist](#user-playlist) is set to `true`.
     - for every Monte-Carlo year that you want the Antares Simulator to **skip**, add the parameter entry
       `playlist_year - = i`, where `i` is the index of the year.
 
+---
 #### playlist_year_weight
 [//]: # (TODO: document this parameter)
 _**This section is under construction**_  
@@ -735,17 +813,19 @@ The expectation and standard deviation of all random variables will then be comp
 sampled from a probability density function in which MC year i is given the probability 
 $$\frac{W_{i}}{\sum_{j=1,...,N}{W_{j}}}$$
 
-
+---
 ## Variables selection parameters
 These parameters are listed under the `[variables selection]` section in the `.ini` file.  
 They are **required** if [thematic-trimming](#thematic-trimming) is set to `true`.
 
+---
 #### selected_vars_reset
 [//]: # (TODO: complete the usage paragraph)
 - **Expected value:** `true` or `false`
 - **Required:** **yes**, if [thematic-trimming](#thematic-trimming) is set to `true`.
 - **Usage:**
 
+---
 #### select_var
 - **Expected value:** `+ =` or `- =`, followed by a string (example: `select_var + = LOAD`)
 - **Required:** **yes**, if [thematic-trimming](#thematic-trimming) is set to `true`.
@@ -758,7 +838,7 @@ They are **required** if [thematic-trimming](#thematic-trimming) is set to `true
 > _**WARNING:**_ this parameter is intended for use by expert users that know the name of the optimization variables created
 > under-the-hood by Antares Simulator.
 
-
+---
 ## Model-wise parameters
 [//]: # (TODO: link to model-wise parameters documentation)
 _**This section is under construction**_ 

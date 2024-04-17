@@ -5,11 +5,14 @@ _**This section is under construction**_
 [//]: # (TODO: check that these parameters are not used in the solver.)
 [//]: # (If they are used by the solver -but only in case some TS are generated-, keep them here but add cross mentions to them)
 
+---
 ## General parameters
 These parameters are listed under the `[general]` section in the `.ini` file.
 
+---
 ### Time-series parameters
 
+---
 #### generate
 - **Expected value:** comma-seperated list of 0 to N elements among the following (case-insensitive):
   `load`, `wind`, `hydro`, `thermal`, `solar`, `renewables`, `max-power` (ex: `generate = load, hydro, wind`)
@@ -20,6 +23,7 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 
 > _**WARNING:**_ time-series generation is not available for transmission capacities (NTC)
 
+---
 #### nbtimeseriesload
 - **Expected value:** unsigned integer
 - **Required:** no
@@ -27,6 +31,7 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 - **Usage:** if `load` time-series are [automatically generated](#generate), this parameter sets the number of different
   time-series to generate.
 
+---
 #### nbtimeserieshydro
 - **Expected value:** unsigned integer
 - **Required:** no
@@ -34,6 +39,7 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 - **Usage:** if `hydro` time-series are [automatically generated](#generate), this parameter sets the number of different
   time-series to generate.
 
+---
 #### nbtimeserieswind
 - **Expected value:** unsigned integer
 - **Required:** no
@@ -41,6 +47,7 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 - **Usage:** if `wind` time-series are [automatically generated](#generate), this parameter sets the number of different
   time-series to generate.
 
+---
 #### nbtimeseriesthermal
 - **Expected value:** unsigned integer
 - **Required:** no
@@ -48,6 +55,7 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 - **Usage:** if `thermal` time-series are [automatically generated](#generate), this parameter sets the number of different
   time-series to generate.
 
+---
 #### nbtimeseriessolar
 - **Expected value:** unsigned integer
 - **Required:** no
@@ -55,6 +63,7 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 - **Usage:** if `solar` time-series are [automatically generated](#generate), this parameter sets the number of different
   time-series to generate.
 
+---
 #### refreshtimeseries
 [//]: # (TODO: verify usage)
 - **Expected value:** comma-seperated list of 0 to N elements among the following (case-insensitive):
@@ -66,6 +75,7 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 
 > _**WARNING:**_ time-series refresh is not available for transmission capacities (NTC)
 
+---
 #### intra-modal
 [//]: # (TODO: verify usage)
 - **Expected value:** comma-seperated list of 0 to N elements among the following (case-insensitive):
@@ -78,6 +88,7 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 > _**WARNING:**_ inter-modal correlation is not available for transmission capacities (NTC)  
 > _**WARNING:**_ this is the historical correlation mode
 
+---
 #### inter-modal
 [//]: # (TODO: document this parameter)
 _**This section is under construction**_  
@@ -92,6 +103,7 @@ _**This section is under construction**_
 > comprehensive multidimensional meteorological database of ready-made time-series is the crux of the matter when it
 > comes to using this configuration.
 
+---
 #### improveunitsstartup
 [//]: # (TODO: document this parameter -seems deprecated-)
 _**This section is under construction**_  
@@ -100,6 +112,7 @@ _**This section is under construction**_
 - **Default value:** 
 - **Usage:**
 
+---
 #### refreshintervalload
 - **Expected value:** strictly positive integer
 - **Required:** no
@@ -107,6 +120,7 @@ _**This section is under construction**_
 - **Usage:** if `load` time-series are automatically [generated](#generate) and [refreshed](#refreshtimeseries), this
   parameter sets their refresh interval (in number of Monte-Carlo years).
 
+---
 #### refreshintervalhydro
 - **Expected value:** strictly positive integer
 - **Required:** no
@@ -114,6 +128,7 @@ _**This section is under construction**_
 - **Usage:** if `hydro` time-series are automatically [generated](#generate) and [refreshed](#refreshtimeseries), this
   parameter sets their refresh interval (in number of Monte-Carlo years).
 
+---
 #### refreshintervalwind
 - **Expected value:** strictly positive integer
 - **Required:** no
@@ -121,6 +136,7 @@ _**This section is under construction**_
 - **Usage:** if `wind` time-series are automatically [generated](#generate) and [refreshed](#refreshtimeseries), this
   parameter sets their refresh interval (in number of Monte-Carlo years).
 
+---
 #### refreshintervalthermal
 - **Expected value:** strictly positive integer
 - **Required:** no
@@ -128,6 +144,7 @@ _**This section is under construction**_
 - **Usage:** if `thermal` time-series are automatically [generated](#generate) and [refreshed](#refreshtimeseries), this
   parameter sets their refresh interval (in number of Monte-Carlo years).
 
+---
 #### refreshintervalsolar
 - **Expected value:** strictly positive integer
 - **Required:** no
@@ -136,9 +153,11 @@ _**This section is under construction**_
   parameter sets their refresh interval (in number of Monte-Carlo years).
 
 
+---
 ## Input parameters
 These parameters are listed under the `[input]` section in the `.ini` file.
 
+---
 #### import
 - **Expected value:** comma-seperated list of 0 to N elements among the following (case-insensitive):
   `load`, `wind`, `hydro`, `thermal`, `solar`, `renewables`, `ntc`, `max-power`
@@ -150,34 +169,40 @@ These parameters are listed under the `[input]` section in the `.ini` file.
 > _**Note:**_
 > you can also use [archives](../solver/04-parameters.md#archives) to store the time-series in the output folder.
 
+---
 ## Seeds - Mersenne Twister parameters
 These parameters are listed under the `[seeds - Mersenne Twister]` section in the `.ini` file.  
 They allow the user to set the seeds of random number generators, in order to ensure the results are repeatable.
 
+---
 #### seed-tsgen-load
 - **Expected value:** unsigned integer
 - **Required:** **yes**
 - **Usage:** if `load` time-series are [automatically generated](#generate), this parameter fixes the seed for its
   random generator.
 
+---
 #### seed-tsgen-hydro
 - **Expected value:** unsigned integer
 - **Required:** **yes**
 - **Usage:** if `hydro` time-series are [automatically generated](#generate), this parameter fixes the seed for its
   random generator.
 
+---
 #### seed-tsgen-wind
 - **Expected value:** unsigned integer
 - **Required:** **yes**
 - **Usage:** if `wind` time-series are [automatically generated](#generate), this parameter fixes the seed for its
   random generator.
 
+---
 #### seed-tsgen-thermal
 - **Expected value:** unsigned integer
 - **Required:** **yes**
 - **Usage:** if `thermal` time-series are [automatically generated](#generate), this parameter fixes the seed for its
   random generator.
 
+---
 #### seed-tsgen-solar
 - **Expected value:** unsigned integer
 - **Required:** **yes**
