@@ -33,8 +33,7 @@ namespace Antares::Data
 
 bool isValidLevel(double level)
 {
-    // gp : why not check level < 100 ?
-    return level >= 0. && !isnan(level);
+    return level >= 0. && level <= 100. && !isnan(level);
 }
 
 FinalLevelInflowsModifier::FinalLevelInflowsModifier(const PartHydro& hydro,
