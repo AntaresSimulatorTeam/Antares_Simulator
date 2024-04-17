@@ -371,6 +371,18 @@ void ConstraintNamer::PMaxReserve(unsigned int constraint,
     SetThermalClusterReserveElementName(constraint, "PMaxReserve", clusterName, reserveName);
 }
 
+void ConstraintNamer::POutCapacityThreasholdInf(unsigned int constraint,
+                                  const std::string& clusterName)
+{
+    SetThermalClusterElementName(constraint, "POutCapacityThreasholdInf", clusterName);
+}
+
+void ConstraintNamer::POutCapacityThreasholdSup(unsigned int constraint,
+                                  const std::string& clusterName)
+{
+    SetThermalClusterElementName(constraint, "POutCapacityThreasholdSup", clusterName);
+}
+
 void ConstraintNamer::PMaxDispatchableGeneration(unsigned int constraint,
                                                  const std::string& clusterName)
 {

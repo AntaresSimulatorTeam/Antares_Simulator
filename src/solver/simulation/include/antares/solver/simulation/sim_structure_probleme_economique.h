@@ -260,10 +260,11 @@ struct PDISP_ET_COUTS_HORAIRES_PAR_PALIER
 
 };
 
+constexpr float CLUSTER_NOT_PARTICIPATING = -1.0f;
 struct RESERVE_PARTICIPATION
 {
-    float maxPower=-1;
-    float participationCost=-1;
+    float maxPower = CLUSTER_NOT_PARTICIPATING;
+    float participationCost = CLUSTER_NOT_PARTICIPATING;
 
     std::string clusterName;
 };

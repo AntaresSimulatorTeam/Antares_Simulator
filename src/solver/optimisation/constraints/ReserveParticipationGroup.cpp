@@ -36,54 +36,82 @@ PMaxReserveData ReserveParticipationGroup::GetPMaxReserveDataFromProblemHebdo()
     return {.Simulation = simulation_, .areaReserves = problemeHebdo_->allReserves};
 }
 
+POutReserveData ReserveParticipationGroup::GetPOutReserveDataFromProblemHebdo()
+{
+    return {.Simulation = simulation_,
+            .areaReserves = problemeHebdo_->allReserves,
+            .thermalClusters = problemeHebdo_->PaliersThermiquesDuPays};
+}
+
 /**
  * @brief build MinDownTime constraints with
  * respect to default order
  */
 void ReserveParticipationGroup::BuildConstraints()
 {
-    auto data = GetPMaxReserveDataFromProblemHebdo();
-    PMaxReserve pMaxReserve(builder_, data);
-
-    for (int pdt = 0; pdt < problemeHebdo_->NombreDePasDeTempsPourUneOptimisation; pdt++)
     {
-        // Adding constraints for ReservesUp and ReservesDown
-        for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)
-        {
-            auto areaReservesUp
-              = data.areaReserves.thermalAreaReserves[pays].areaCapacityReservationsUp;
-            uint32_t reserve = 0;
-            for (const auto& areaReserveUp : areaReservesUp)
-            {
-                uint32_t cluster = 0;
-                for (const auto& clusterReserveParticipation :
-                     areaReserveUp.AllReservesParticipation)
-                {
-                    if (clusterReserveParticipation.maxPower >= 0)
-                    {
-                        pMaxReserve.add(pays, reserve, cluster, pdt, true);
-                    }
-                    cluster++;
-                }
-                reserve++;
-            }
+        auto data = GetPMaxReserveDataFromProblemHebdo();
+        PMaxReserve pMaxReserve(builder_, data);
 
-            auto areaReservesDown
-              = data.areaReserves.thermalAreaReserves[pays].areaCapacityReservationsDown;
-            reserve = 0;
-            for (const auto& areaReserveDown : areaReservesDown)
+        for (int pdt = 0; pdt < problemeHebdo_->NombreDePasDeTempsPourUneOptimisation; pdt++)
+        {
+            // Adding constraints for ReservesUp and ReservesDown
+            for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)
             {
-                uint32_t cluster = 0;
-                for (const auto& clusterReserveParticipation :
-                     areaReserveDown.AllReservesParticipation)
+                auto areaReservesUp
+                  = data.areaReserves.thermalAreaReserves[pays].areaCapacityReservationsUp;
+                uint32_t reserve = 0;
+                for (const auto& areaReserveUp : areaReservesUp)
                 {
-                    if (clusterReserveParticipation.maxPower >= 0)
+                    uint32_t cluster = 0;
+                    for (const auto& clusterReserveParticipation :
+                         areaReserveUp.AllReservesParticipation)
                     {
-                        pMaxReserve.add(pays, reserve, cluster, pdt, false);
+                        if (clusterReserveParticipation.maxPower >= 0)
+                        {
+                            // 16 bis
+                            pMaxReserve.add(pays, reserve, cluster, pdt, true);
+                        }
+                        cluster++;
                     }
-                    cluster++;
+                    reserve++;
                 }
-                reserve++;
+
+                auto areaReservesDown
+                  = data.areaReserves.thermalAreaReserves[pays].areaCapacityReservationsDown;
+                reserve = 0;
+                for (const auto& areaReserveDown : areaReservesDown)
+                {
+                    uint32_t cluster = 0;
+                    for (const auto& clusterReserveParticipation :
+                         areaReserveDown.AllReservesParticipation)
+                    {
+                        if (clusterReserveParticipation.maxPower >= 0)
+                        {
+                            pMaxReserve.add(pays, reserve, cluster, pdt, false);
+                        }
+                        cluster++;
+                    }
+                    reserve++;
+                }
+            }
+        }
+    }
+    {
+        auto data = GetPOutReserveDataFromProblemHebdo();
+        POutCapacityThreasholds pOutCapacityThreasholds(builder_, data);
+
+        for (int pdt = 0; pdt < problemeHebdo_->NombreDePasDeTempsPourUneOptimisation; pdt++)
+        {
+            for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)
+            {
+                const PALIERS_THERMIQUES& PaliersThermiquesDuPays
+                  = problemeHebdo_->PaliersThermiquesDuPays[pays];
+                for (int cluster = 0; cluster < PaliersThermiquesDuPays.NombreDePaliersThermiques;
+                     cluster++)
+                {
+                    pOutCapacityThreasholds.add(pays, cluster, pdt);
+                }
             }
         }
     }

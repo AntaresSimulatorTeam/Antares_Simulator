@@ -151,6 +151,8 @@ public:
     void NbDispUnitsMinBoundSinceMinUpTime(unsigned int constraint, const std::string& clusterName);
     void MinDownTime(unsigned int constraint, const std::string& clusterName);
     void PMaxReserve(unsigned int constraint, const std::string& clusterName, const std::string& reserveName);
+    void POutCapacityThreasholdInf(unsigned int constraint, const std::string& clusterName);
+    void POutCapacityThreasholdSup(unsigned int constraint, const std::string& clusterName);
     void PMaxDispatchableGeneration(unsigned int constraint, const std::string& clusterName);
     void PMinDispatchableGeneration(unsigned int constraint, const std::string& clusterName);
     void ConsistenceNODU(unsigned int constraint, const std::string& clusterName);

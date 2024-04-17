@@ -23,6 +23,7 @@
 #include "AbstractStartUpCostsGroup.h"
 #include "ConstraintGroup.h"
 #include "PMaxReserve.h"
+#include "POutCapacityThreasholds.h"
 
 /**
  * @brief Group of reserve constraints
@@ -41,4 +42,5 @@ public:
 private:
     bool simulation_ = false;
     PMaxReserveData GetPMaxReserveDataFromProblemHebdo();
+    POutReserveData GetPOutReserveDataFromProblemHebdo();
 };

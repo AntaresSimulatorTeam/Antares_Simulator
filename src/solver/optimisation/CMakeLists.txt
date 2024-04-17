@@ -35,6 +35,7 @@ set(RTESOLVER_OPT
         opt_gestion_second_membre_couts_demarrage.cpp
         opt_gestion_second_membre_couts_demarrage.cpp
         opt_decompte_variables_et_contraintes_couts_demarrage.cpp
+        opt_decompte_variables_et_contraintes_reserves.cpp
         opt_init_minmax_groupes_couts_demarrage.cpp
         opt_nombre_min_groupes_demarres_couts_demarrage.cpp
 		opt_construction_variables_reserves_thermiques.cpp
@@ -129,11 +130,15 @@ set(RTESOLVER_OPT
 		constraints/MinDownTime.cpp
 		include/antares/solver/optimisation/constraints/PMaxReserve.h
 		constraints/PMaxReserve.cpp
+		include/antares/solver/optimisation/constraints/POutCapacityThreasholds.h
+		constraints/POutCapacityThreasholds.cpp
 
 		include/antares/solver/optimisation/ProblemMatrixEssential.h
 		ProblemMatrixEssential.cpp
 		include/antares/solver/optimisation/LinearProblemMatrixStartUpCosts.h
 		LinearProblemMatrixStartUpCosts.cpp
+		include/antares/solver/optimisation/LinearProblemMatrixReserves.h
+		LinearProblemMatrixReserves.cpp
 		include/antares/solver/optimisation/LinearProblemMatrix.h
 		LinearProblemMatrix.cpp
 		include/antares/solver/optimisation/QuadraticProblemMatrix.h
