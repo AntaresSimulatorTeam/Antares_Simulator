@@ -1,5 +1,6 @@
 # Output files
 
+[//]: # (TODO: update this page, list all output files)
 _**This section is under construction**_
 
 The general file organization is the same for Economy and Adequacy simulations.  

@@ -2,8 +2,8 @@
 
 _**This section is under construction**_
 
-TODO: check that these parameters are not used in the solver.
-If they are used by the solver (but only in case some TS are generated), keep them here but add cross mentions to them
+[//]: # (TODO: check that these parameters are not used in the solver.)
+[//]: # (If they are used by the solver -but only in case some TS are generated-, keep them here but add cross mentions to them)
 
 ## General parameters
 These parameters are listed under the `[general]` section in the `.ini` file.
@@ -56,31 +56,35 @@ These parameters are listed under the `[general]` section in the `.ini` file.
   time-series to generate.
 
 #### refreshtimeseries
+[//]: # (TODO: verify usage)
 - **Expected value:** comma-seperated list of 0 to N elements among the following (case-insensitive):
   `load`, `wind`, `hydro`, `thermal`, `solar`, `renewables`, `max-power`
 - **Required:** no
 - **Default value:** empty
 - **Usage:** if some time-series are [automatically generated](#generate), this parameter selects those of them that have
-  to be periodically renewed on-line ?? TODO
+  to be periodically renewed in run-time
 
 > _**WARNING:**_ time-series refresh is not available for transmission capacities (NTC)
 
 #### intra-modal
+[//]: # (TODO: verify usage)
 - **Expected value:** comma-seperated list of 0 to N elements among the following (case-insensitive):
   `load`, `wind`, `hydro`, `thermal`, `solar`, `renewables`, `ntc`, `max-power`
 - **Required:** no
 - **Default value:** empty
 - **Usage:** if some time-series are [automatically generated](#generate), this parameter selects those of them that are
-  correlated, i.e. for which the same time-series should be used together in a given scenario. ?? TODO
+  correlated, i.e. for which the same time-series should be used together in a given scenario.
 
 > _**WARNING:**_ inter-modal correlation is not available for transmission capacities (NTC)  
 > _**WARNING:**_ this is the historical correlation mode
 
 #### inter-modal
-- **Expected value:** TODO
-- **Required:** **yes** TODO
-- **Default value:** TODO
-- **Usage:** TODO
+[//]: # (TODO: document this parameter)
+_**This section is under construction**_  
+- **Expected value:** 
+- **Required:** **yes** 
+- **Default value:** 
+- **Usage:** 
 
 > _**Note:**_
 > A full meteorological correlation (for each MC year) is, from a theoretical standpoint, achievable by activating
@@ -89,10 +93,12 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 > comes to using this configuration.
 
 #### improveunitsstartup
-- **Expected value:** TODO
-- **Required:** **yes** TODO
-- **Default value:** TODO
-- **Usage:** TODO (seems deprecated)
+[//]: # (TODO: document this parameter -seems deprecated-)
+_**This section is under construction**_  
+- **Expected value:** 
+- **Required:** **yes** 
+- **Default value:** 
+- **Usage:**
 
 #### refreshintervalload
 - **Expected value:** strictly positive integer

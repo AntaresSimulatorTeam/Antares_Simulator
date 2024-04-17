@@ -4,7 +4,7 @@ toc_depth: 2
 
 # Antares Changelog
 
-TODO: put this in user guide? 
+[//]: # (TODO: put this in user guide? )
 
 ## Next version 
 --------------------

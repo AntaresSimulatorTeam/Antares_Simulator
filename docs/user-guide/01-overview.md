@@ -11,7 +11,7 @@ its documentation in the assets of the release, or by browsing older versions of
 Real-life use of the software involves a learning curve process that cannot be supported by a
 simple user guide. In order to be able to address this basic issue, two kinds of resources may be used:
 
-- The ["examples"](https://github.com/AntaresSimulatorTeam/Antares_Simulator_Examples) ?? TODO library, which is meant 
+- The ["examples"](https://github.com/AntaresSimulatorTeam/Antares_Simulator_Examples) library, which is meant 
   as a self-teaching way to learn how to use the software. It is regularly enriched with the software's new features.
   The contents of this library depend on the installation package it comes from (public version vs. users' club version).
 - The [https://antares-simulator.org](https://antares-simulator.org/) website
@@ -37,8 +37,9 @@ comparatively lower importance). In these studies, the default *Antares* option 
 [`adequacy`](18-parameters.md#mode) simulation mode.
 
 ### Transmission project profitability
+[//]: # (TODO: explain what "fair and perfect market" means)
 **Transmission project profitability** studies the savings brought by a specific reinforcement of the grid,
-in terms of decrease of the overall system generation cost (using an assumption of a [fair and perfect market](TODO))
+in terms of decrease of the overall system generation cost (using an assumption of a fair and perfect market)
 and/or improvement of the security of supply (reduction of the loss-of-load expectation).
 
 In these studies, economic parameters and the physical modeling of the dynamic constraints bearing on
@@ -53,7 +54,9 @@ The large number and the size of the individual problems to solve often make opt
 
 Depending on user-defined results accuracy requirements, various practical options[^2] allow to simplify either
 the formulation of the problems, or their resolution.
-[^2]: See [hydro-pricing-mode](18-parameters.md#hydro-pricing-mode), [unit-commitment-mode](18-parameters.md#unit-commitment-mode), TODO
+[^2]: See [hydro-pricing-mode](solver/04-parameters.md#hydro-pricing-mode), [unit-commitment-mode](solver/04-parameters.md#unit-commitment-mode)
+
+[//]: # (TODO: list in [^2] the other parameters that have impact on performance)
 
 *Antares* has been designed to handle [adequacy and profitability problems](#applications). 
 
@@ -70,4 +73,4 @@ operation problems (one for each week of each Monte-Carlo year), assumed to be i
 Note that, however, dependency issues such as the management of hydro stock (or any other kind of energy storage
 facility) may bring a significant coupling between the successive problems, which needs to be addressed properly[^3].
 
-[^3]: See how *Antares* addresses stock dependency between successive problems [here](TODO).
+[^3]: See how *Antares* addresses stock dependency between successive problems [here](solver/06-heuristics.md#seasonal-hydro-pre-allocation).

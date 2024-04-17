@@ -1,8 +1,7 @@
 # Optimization model
 
+[//]: # (TODO: update this page)
 _**This section is under construction**_
-
-**_Antares\_Simulator Modeling and Optimization_**
 
 **Document available on : [https://antares-simulator.org](https://antares-simulator.org/)**
 

@@ -1,6 +1,6 @@
 # Active windows
 
-TODO : fetch important content & remove this page
+[//]: # (TODO: fetch important content & remove this page)
 
 ## Simulation
 

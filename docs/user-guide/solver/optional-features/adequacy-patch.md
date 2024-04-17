@@ -1,6 +1,7 @@
 # Adequacy Patch calculation
 (available since v8.3.0)
 
+[//]: # (TODO: update this page if needed)
 _**This section is under construction**_
 
 ## Foreword

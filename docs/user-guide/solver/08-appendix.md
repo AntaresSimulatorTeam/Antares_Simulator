@@ -1,54 +1,72 @@
 # Appendix 
 
-_**This section is under construction**_
+[//]: # (TODO: the contents of this page may be dispatched in opther pages)
 
 ## More details on the "include-exportmps" parameter
+[//]: # (TODO: specify where the MPS files are written)
 
-This preference can be set either on "false" or "true". Choosing either value does not influence the way calculations are carried out, nor does it change their results.
+This [parameter](04-parameters.md#include-exportmps) does not influence the way calculations are carried out, 
+nor does it change their results.
+The effect of this preference is that, if the parameter is activated, *Antares* will produce and store in the 
+simulation output folder two files for every linear problem solved in the whole simulation.
 
-The effect of this preference is that, if the "true" value is selected, Antares will produce and store in the simulation output folder two files for every linear problem solved in the whole simulation.
+- The first file ("problem" file) contains a standardized description of the mathematical problem solved by *Antares'* 
+  built-in linear solver. The format standard used in this file is known as "MPS".
+- The second file ("criterion" file) contains the value of the optimal (minimum) value found for the objective function 
+  of the optimization problem (overall system cost throughout a day or a week).
 
-The first file ("problem" file) contains a standardized description of the mathematical problem solved by Antares' built-in linear solver. The format standard used in this file is known as "mps".
+All commercial as well as open-source linear solvers are able to process MPS files. As a consequence, tests aiming at 
+comparing *Antares* solver with other commercial solutions can be easily carried out: all that has to be done is to 
+submit the MPS problem to the solver at hand and measure its performances (calculation time, criterion value) 
+with those of *Antares*.
 
-The second file ("criterion" file) contains the value of the optimal (minimum) value found for the objective function of the optimization problem (overall system cost throughout a day or a week).
-
-All commercial as well as Open Source linear solvers are able to process mps files. As a consequence, tests aiming at comparing Antares' solver with other commercial solutions can be easily carried out: all that has to be done is to submit the mps problem to the solver at hand and measure its performances (calculation time, criterion value) with those of Antares.
-
-Note that this kind of comparison brings no information regarding the quality of the physical modelling on which the simulation is based. It is useful, however, to gather evidence on mathematical grounds.
+Note that this kind of comparison brings no information regarding the quality of the physical modelling on which the 
+simulation is based. It is useful, however, to gather evidence on mathematical grounds.
 
 File names are structured as follows:
-
-- When the optimization preference "simplex range" is set on "week": <br/>
-  Problem-MC year-week number-date-time.mps <br/>
+- When the optimization parameter [simplex-range](04-parameters.md#simplex-range) is set on `week`:  
+  Problem-MC year-week number-date-time.mps  
   Criterion-MC year-week number-date-time.txt
-
-- When the optimization preference "simplex range" is set on "day": <br/>
-  Problem-MC year-week number-date-time-day number.mps <br/>
+- When the optimization parameter [simplex-range](04-parameters.md#simplex-range) is set on `day`:  
+  Problem-MC year-week number-date-time-day number.mps  
   Criterion-MC year-week number-date-time-day number.txt
 
-Besides, each economic problem generally demands to be solved through two successive optimization problems. Files related to these two problems will bear almost the same name, the only difference being the "time" suffix. The files related to the second optimization (final Antares results) are those that bear the latest tag.
 
-Finally, it is possible that, on special occasions (very small files), the files attached to the two optimization rounds begin to be printed within the same second. In that case, an additional suffix is added before the mps or txt extension.
+[//]: # (TODO: add link to "two successive optimization problems" doc)
+Besides, each economic problem generally needs to be solved through two successive optimization problems. 
+Files related to these two problems will bear almost the same name, the only difference being the "time" suffix. 
+The files related to the second optimization (final *Antares* results) are those that bear the latest tag.
 
-**Note that:**
+Finally, in some rare cases where the problems to solve are small and fast, the files attached to the two optimization 
+rounds may begin to be printed within the same second. In these cases, an additional suffix is added before the mps or 
+txt extension.
 
-- _The disk space used to store mps file is not included in the disk resources assessment displayed in the resources monitor menu._
+> _**Note:**_ The extra runtime and disk space resulting from the activation of the "mps" option may be quite significant. 
+> This option should therefore be used only when a comparison of results with those of other solvers is actually intended.
 
-- _The extra runtime and disk space resulting from the activation of the "mps" option may be quite significant. This option should therefore be used only when a comparison of results with those of other solvers is actually intended._
+## More details on the "include-unfeasible-problem-behavior" parameter
 
-## More details on the "include-unfeasible-problem-behavior" optimization parameter
+This [parameter](04-parameters.md#include-unfeasible-problem-behavior) can take one of the four values: 
+`ERROR_DRY`, `ERROR_MPS`, `WARNING_DRY`, `WARNING_MPS`
 
-This preference can take any of the four values:
+If `ERROR_DRY` or `ERROR_MPS` is selected, the simulation will stop right after encountering the first mathematically 
+unfeasible optimization (daily or weekly) problem. No output will be produced beyond this point. 
+Should the dataset contain several unfeasible problems (i.e. regarding different weeks of different MC years), 
+it is possible that successive runs of the same simulation stop at different points (if parallel computation is used, 
+the triggering problem may differ from one run to the other).
 
-Error Dry, Error Verbose, Warning Dry, Warning Verbose
+If `WARNING_DRY` or `WARNING_MPS` is selected, the simulation will skip all mathematically unfeasible optimization 
+(daily or weekly) problems encountered, fill out all results regarding these problems with zeroes and then resume the 
+simulation. The hydro reservoir levels used for resuming the simulation are those reached at the end of the last successful week.
 
-If "Error Dry" or "Error Verbose" is selected, the simulation will stop right after encountering the first mathematically unfeasible optimization (daily or weekly) problem. No output will be produced beyond this point. Should the dataset contain several unfeasible problems (i.e. regarding different weeks of different MC years), it is possible that successive runs of the same simulation stop at different points (if parallel computation is used, the triggering problem may differ from one run to the other).
+With `..._DRY` options, no specific data is printed regarding the faulty problem(s). 
+With `..._MPS` options, the full expression of the faulty problem(s) is printed in the standard "MPS" format, 
+thus allowing further analysis of the infeasibility issue.
 
-If "Warning Dry" or "Warning Verbose" is selected, the simulation will skip all mathematically unfeasible optimization (daily or weekly) problems encountered, fill out all results regarding these problems with zeroes and resume the simulation. The hydro reservoir levels used for resuming the simulation are those reached at the end of the last successful week.
 
-With "Dry" options no specific data are printed regarding the faulty problem(s). With "Verbose" options, the full expression of the faulty problem(s) is printed in the standard "mps" format, thus allowing further analysis of the infeasibility issue.
-
-## More details on the "initial-reservoir-levels" advanced parameter
+## More details on the "initial-reservoir-levels" parameter
+[//]: # (TODO: update this paragraph)
+_**This section is under construction**_
 
 This parameter can take the two values "cold start" or "hot start". [default: cold start]. Simulations results may in some circumstances be heavily impacted by this setting, hence proper attention should be paid to its meaning before considering changing the default value.
 
@@ -99,7 +117,9 @@ The first year of the simulation, and more generally years belonging to the firs
 
 - _More generally, it has to be pointed out that the "hydro-storage" model implemented in Antares can be used to model "storable" resources quite different from actual hydro reserves: batteries, gas subterraneous stocks, etc._
 
-## More details on the "hydro-heuristic-policy" advanced parameter
+## More details on the "hydro-heuristic-policy" parameter
+[//]: # (TODO: update this paragraph)
+_**This section is under construction**_
 
 This parameter can take the two values "Accommodate rule curves" or "Maximize generation". [default: Accommodate rule curves].
 
@@ -115,7 +135,9 @@ Upper and lower rule curves are accommodated in both monthly and daily heuristic
 
 Upper and lower rule curves are accommodated in both monthly and daily heuristic stages (described page 58). In the second stage, incomplete use of natural inflows is avoided as much as possible (penalty cost on Y higher than penalty cost on $\Psi$). This policy may result in violations of the lower rule curve.
 
-## More details on the "hydro-pricing-mode" advanced parameter
+## More details on the "hydro-pricing-mode" parameter
+[//]: # (TODO: update this paragraph)
+_**This section is under construction**_
 
 This parameter can take the two values "fast" or "accurate". [default: fast].
 
@@ -135,7 +157,9 @@ The water value is taken to remain about the same throughout the week, and a con
 
 The water value is considered as variable throughout the week. As a consequence, a different cost is used for each "layer" of the stock from/to which energy can be withdrawn/injected, in an internal hydro merit-order involving the 100 tabulated water-values found at the date at which the week **ends**. A value interpolated from the reference table for the exact level reached at each time step within the week is used ex-post in the assessment of the variable "H.COST" (positive for generation, negative for pumping) defined in [Output Files](05-output_files.md). This option should be used if computation resources are not an issue and if level-dependent water value variations throughout a week must be accounted for.
 
-## More details on the "unit-commitment-mode" advanced parameter
+## More details on the "unit-commitment-mode" parameter
+[//]: # (TODO: update this paragraph)
+_**This section is under construction**_
 
 This parameter can take the two values "fast" or "accurate". [default: fast].
 
@@ -171,7 +195,9 @@ For each thermal cluster, the intermediate IP looks for a unit-commitment compat
 
 In the second optimization stage, the unit commitment set by the intermediate IP is considered as a context to use in a new comprehensive optimal hydro-thermal schedule assessment. The amount of day-ahead (spinning) reserve, if any, is added to the demand considered in the first stage and subtracted in the second stage.
 
-## More details on the "renewable-generation-modelling" advanced parameter
+## More details on the "renewable-generation-modelling" parameter
+[//]: # (TODO: update this paragraph)
+_**This section is under construction**_
 
 This parameter can take the two values “aggregated” or “cluster”. For a new study, it will default to cluster. For a legacy (Antares version <8.1.0) study it will default to aggregated.
 

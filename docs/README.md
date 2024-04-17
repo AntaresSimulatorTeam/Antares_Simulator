@@ -85,7 +85,8 @@ bash create_pdf_doc.sh reference-guide.pdf
 Sphinx will create a `reference-guide.pdf` file in `docs/pdf-doc-generation-with-sphinx`.
 
 ### Doxygen
-TODO
+[//]: # (TODO)
+_**This section is under construction**_
 
 ## Extra considerations
 

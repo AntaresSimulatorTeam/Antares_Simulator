@@ -5,6 +5,9 @@ hide:
 
 # Multi-threading
 
+[//]: # (TODO: update this page if needed)
+_**This section is under construction**_
+
 Multi-threading is also available on the proper calculation side, on a user-defined basis.
 
 Provided that hardware resources are large enough, this mode may reduce significantly the overall runtime of heavy simulations.

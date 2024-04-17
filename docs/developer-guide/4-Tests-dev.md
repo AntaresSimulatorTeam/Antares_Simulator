@@ -57,6 +57,9 @@ In the future, CentOS 7 should be included as well.
 Every study contains a `check-config.json` file that configures the test. Here is its content.
 
 ### Contents
+[//]: # (TODO)
+_**This section is under construction**_
+
 #### name
 The name of the test. Not really important, and currently not used.
 
@@ -65,14 +68,12 @@ The list of checks that the test should conduct on the results.
 Contains one `output_compare` and one `integrity_compare` json objects.  
 
 ##### output-compare
-Either an empty json object (`{}`), or ?? TODO
 
 ##### integrity-compare
-Either `null`, or ?? TODO
 
 ### Full example
 ```json
-TODO
+
 ```
 
 ## Workflow

@@ -1,9 +1,9 @@
 # Heuristics
 
+[//]: # (TODO: document other heuristics)
 _**This section is under construction**_
 
-## The heuristic for seasonal hydro pre-allocation
-
+## Seasonal hydro pre-allocation
 
 This heuristic, first introduced in broad terms in [Active windows](04-active_windows.md), chapter "hydro", is fully detailed in this paragraph.
 
