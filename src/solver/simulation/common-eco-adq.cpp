@@ -96,7 +96,7 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
                                      &problem,
                                      study.parameters.adqPatchParams,
                                      resultWriter,
-                                     &simulationObserver);
+                                     simulationObserver);
     }
     catch (Data::UnfeasibleProblemError&)
     {

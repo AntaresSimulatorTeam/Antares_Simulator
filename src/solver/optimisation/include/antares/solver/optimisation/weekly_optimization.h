@@ -37,7 +37,7 @@ public:
                                        Antares::Data::AdequacyPatch::AdqPatchParams&,
                                        uint numSpace,
                                      IResultWriter& writer,
-                                       std::shared_ptr<Simulation::ISimulationObserver> simulationObserver
+                                     Simulation::ISimulationObserver& simulationObserver
                                        );
     ~DefaultWeeklyOptimization() override = default;
     void solve() override;

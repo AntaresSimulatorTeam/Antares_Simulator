@@ -30,7 +30,7 @@ bool OPT_PilotageOptimisationLineaire(const OptimizationOptions& options,
                                       PROBLEME_HEBDO* problemeHebdo,
                                       const AdqPatchParams& adqPatchParams,
                                       Solver::IResultWriter& writer,
-                                      Solver::Simulation::ISimulationObserver* simulationObserver)
+                                      Solver::Simulation::ISimulationObserver& simulationObserver)
 {
     if (!problemeHebdo->LeProblemeADejaEteInstancie)
     {

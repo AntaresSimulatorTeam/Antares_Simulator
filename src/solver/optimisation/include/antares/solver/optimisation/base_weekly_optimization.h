@@ -42,7 +42,7 @@ public:
       PROBLEME_HEBDO* problemesHebdo,
       uint numSpace,
                                                       IResultWriter& writer,
-                                                      std::shared_ptr<Simulation::ISimulationObserver> simulationObserver
+                                                      Simulation::ISimulationObserver& simulationObserver
                                                       );
 
 protected:
@@ -51,13 +51,13 @@ protected:
                                 Antares::Data::AdequacyPatch::AdqPatchParams&,
                                 uint numSpace,
                                 IResultWriter& writer,
-                                std::shared_ptr<Simulation::ISimulationObserver> simulationObserver
+                                Simulation::ISimulationObserver& simulationObserver
                                 );
     Antares::Solver::Optimization::OptimizationOptions options_;
     PROBLEME_HEBDO* const problemeHebdo_ = nullptr;
     Antares::Data::AdequacyPatch::AdqPatchParams& adqPatchParams_;
     const uint thread_number_ = 0;
     IResultWriter& writer_;
-    std::shared_ptr<Simulation::ISimulationObserver> simulationObserver_;
+    std::reference_wrapper<Simulation::ISimulationObserver> simulationObserver_;
 };
 } // namespace Antares::Solver::Optimization

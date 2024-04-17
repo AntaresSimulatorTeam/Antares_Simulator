@@ -31,8 +31,8 @@
 #include <antares/exception/InitializationError.hpp>
 #include <antares/logs/logs.h>
 #include "antares/concurrency/concurrency.h"
-#include "antares/solver//variable/constants.h"
-#include "antares/solver//variable/print.h"
+#include "antares/solver/variable/constants.h"
+#include "antares/solver/variable/print.h"
 #include "antares/solver/hydro/management/management.h" // Added for use of randomReservoirLevel(...)
 #include "antares/solver/simulation/apply-scenario.h"
 #include "antares/solver/simulation/opt_time_writer.h"
@@ -59,7 +59,7 @@ public:
             bool pYearByYear,
             Benchmarking::DurationCollector& durationCollector,
             IResultWriter& resultWriter,
-            std::shared_ptr<ISimulationObserver> simulationObserver):
+            ISimulationObserver& simulationObserver):
         simulation_(simulation),
         y(pY),
         yearFailed(pYearFailed),
@@ -103,7 +103,7 @@ private:
     bool hydroHotStart;
     Benchmarking::DurationCollector& pDurationCollector;
     IResultWriter& pResultWriter;
-    std::shared_ptr<ISimulationObserver> simulationObserver_;
+    std::reference_wrapper<ISimulationObserver> simulationObserver_;
     HydroManagement hydroManagement;
     Antares::Data::Area::ScratchMap scratchmap;
 
@@ -248,7 +248,7 @@ inline ISimulation<ImplementationType>::ISimulation(
   const ::Settings& settings,
   Benchmarking::DurationCollector& duration_collector,
   IResultWriter& resultWriter,
-  std::shared_ptr<Simulation::ISimulationObserver> simulationObserver):
+  Simulation::ISimulationObserver& simulationObserver):
     ImplementationType(study, resultWriter, simulationObserver),
     study(study),
     settings(settings),
@@ -1060,7 +1060,7 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
               pYearByYear,
               pDurationCollector,
               pResultWriter,
-              simulationObserver_);
+              simulationObserver_.get());
             results.add(Concurrency::AddTask(*pQueueService, task));
         } // End loop over years of the current set of parallel years
 

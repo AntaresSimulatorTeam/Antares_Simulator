@@ -31,7 +31,7 @@ namespace Antares::Solver::Simulation
 {
 Adequacy::Adequacy(Data::Study& study,
                    IResultWriter& resultWriter,
-                   std::shared_ptr<Simulation::ISimulationObserver> simulationObserver) :
+                   Simulation::ISimulationObserver& simulationObserver) :
  study(study), resultWriter(resultWriter), simulationObserver_(simulationObserver)
 {
 }

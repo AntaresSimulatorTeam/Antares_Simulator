@@ -56,7 +56,7 @@ public:
                 const ::Settings& settings,
                 Benchmarking::DurationCollector& duration_collector,
                 IResultWriter& resultWriter,
-                std::shared_ptr<Simulation::ISimulationObserver> simulationObserver);
+                Simulation::ISimulationObserver& simulationObserver);
     //! Destructor
     ~ISimulation();
     //@}
@@ -78,7 +78,6 @@ public:
     */
     void writeResults(bool synthesis, uint year = 0, uint numSpace = 9999);
 
-public:
     //! Reference to the current study
     Data::Study& study;
     //! The global settings
@@ -138,7 +137,6 @@ private:
     */
     void loopThroughYears(uint firstYear, uint endYear, std::vector<Variable::State>& state);
 
-private:
     //! Some temporary to avoid performing useless complex checks
     Solver::Private::Simulation::CacheData pData;
     //!
@@ -164,7 +162,7 @@ public:
     //! Result writer
     Antares::Solver::IResultWriter& pResultWriter;
 
-    std::shared_ptr<ISimulationObserver> simulationObserver_;
+    std::reference_wrapper<ISimulationObserver> simulationObserver_;
 }; // class ISimulation
 } // namespace Antares::Solver::Simulation
 

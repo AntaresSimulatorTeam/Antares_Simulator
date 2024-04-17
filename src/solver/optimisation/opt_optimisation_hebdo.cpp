@@ -41,7 +41,7 @@ void OPT_OptimisationHebdomadaire(const OptimizationOptions& options,
                                   PROBLEME_HEBDO* pProblemeHebdo,
                                   const AdqPatchParams& adqPatchParams,
                                   Solver::IResultWriter& writer,
-                                  Solver::Simulation::ISimulationObserver* simulationObserver)
+                                  Solver::Simulation::ISimulationObserver& simulationObserver)
 {
     if (pProblemeHebdo->TypeDOptimisation == OPTIMISATION_LINEAIRE)
     {
