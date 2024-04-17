@@ -81,9 +81,9 @@ private:
     const Matrix<double>::ColumnType* FinalLevels_ = nullptr;
 
     // Data changing at each MC year
-    double initialReservoirLevel_ = -1.;
-    double finalReservoirLevel_ = -1.;
-    double deltaReservoirLevel_;
+    double initialLevel_ = -1.;
+    double finalLevel_ = -1.;
+    double deltaLevel_;
 
     std::vector<bool> isApplicable_;
 };
