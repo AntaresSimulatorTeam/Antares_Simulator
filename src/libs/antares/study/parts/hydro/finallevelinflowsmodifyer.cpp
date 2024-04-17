@@ -30,12 +30,6 @@
 
 namespace Antares::Data
 {
-
-bool isValidLevel(double level)
-{
-    return level >= 0. && level <= 100. && !isnan(level);
-}
-
 FinalLevelInflowsModifier::FinalLevelInflowsModifier(const PartHydro& hydro,
                                                      const unsigned int& areaIndex,
                                                      const AreaName& areaName) :
@@ -142,9 +136,7 @@ void FinalLevelInflowsModifier::initialize(const Matrix<double>& scenarioInitial
 bool FinalLevelInflowsModifier::isActive()
 {
     return hydro_.reservoirManagement &&
-           !hydro_.useWaterValue &&
-           isValidLevel(finalLevel_) &&
-           isValidLevel(initialLevel_);
+           !hydro_.useWaterValue;
 }
 
 // if the user specifies the final reservoir level, but does not specify initial reservoir level
@@ -153,9 +145,7 @@ bool FinalLevelInflowsModifier::isActive()
 void FinalLevelInflowsModifier::logInfoFinLvlNotApplicable(unsigned int year)
 {
     // gp : it's a code duplication with isActive().
-    if (isValidLevel(finalLevel_)
-        && (!hydro_.reservoirManagement || hydro_.useWaterValue
-            || !isValidLevel(initialLevel_)))
+    if (!hydro_.reservoirManagement || hydro_.useWaterValue)
         logs.info() << "Final reservoir level not applicable! Year:" << year + 1
                     << ", Area:" << areaName_
                     << ". Check: Reservoir management = Yes, Use water values = No and proper initial "
