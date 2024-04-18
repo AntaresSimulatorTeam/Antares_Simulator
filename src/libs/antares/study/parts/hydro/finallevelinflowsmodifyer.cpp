@@ -44,31 +44,20 @@ FinalLevelInflowsModifier::FinalLevelInflowsModifier(const PartHydro& hydro,
 
 bool FinalLevelInflowsModifier::CheckInfeasibility(unsigned int year)
 {
-    ComputeDelta(year); // gp : we don't need this computation now
+    initialLevel_ = (*InitialLevels_)[year];
+    finalLevel_ = (*FinalLevels_)[year];
 
     if(isSameAsInitLevel())
         return true;
 
-    if (!isActive(year))
+    if (! compatibleWithReservoirProperties(year))
         return true;
 
     if (!makeChecks(year))
         return false;
 
-    storeDeltaLevels(year);
+    deltaLevel.at(year) = finalLevel_ - initialLevel_;
     return true;
-}
-
-void FinalLevelInflowsModifier::ComputeDelta(unsigned int year)
-{
-    initialLevel_ = (*InitialLevels_)[year];
-    finalLevel_ = (*FinalLevels_)[year];
-    deltaLevel_ = finalLevel_ - initialLevel_;
-}
-
-void FinalLevelInflowsModifier::storeDeltaLevels(unsigned int year)
-{
-    deltaLevel.at(year) = deltaLevel_;
 }
 
 double FinalLevelInflowsModifier::calculateTotalInflows(unsigned int year) const
@@ -94,10 +83,12 @@ bool FinalLevelInflowsModifier::hydroAllocationStartMatchesSimulation(unsigned i
     return false;
 }
 
-bool FinalLevelInflowsModifier::finalLevelValidity(double totalYearInflows, unsigned int year) const
+bool FinalLevelInflowsModifier::isFinalLevelReachable(unsigned int year) const
 {
     double reservoirCapacity = hydro_.reservoirCapacity;
-    if (deltaLevel_ * reservoirCapacity > totalYearInflows)
+    double totalYearInflows = calculateTotalInflows(year);
+
+    if ((finalLevel_ - initialLevel_) * reservoirCapacity > totalYearInflows)
     {
         logs.error() << "Year: " << year + 1 << ". Area: " << areaName_
                      << ". Incompatible total inflows: " << totalYearInflows
@@ -108,7 +99,7 @@ bool FinalLevelInflowsModifier::finalLevelValidity(double totalYearInflows, unsi
     return true;
 }
 
-bool FinalLevelInflowsModifier::preCheckRuleCurves(unsigned int year) const
+bool FinalLevelInflowsModifier::isBetweenRuleCurves(unsigned int year) const
 {
     double lowLevelLastDay  = hydro_.reservoirLevel[Data::PartHydro::minimum][DAYS_PER_YEAR - 1];
     double highLevelLastDay = hydro_.reservoirLevel[Data::PartHydro::maximum][DAYS_PER_YEAR - 1];
@@ -138,7 +129,7 @@ void FinalLevelInflowsModifier::initialize(const Matrix<double>& scenarioInitial
     firstMonthOfSimulation_ = firstMonthOfSimulation;
 }
 
-bool FinalLevelInflowsModifier::isActive(unsigned int year)
+bool FinalLevelInflowsModifier::compatibleWithReservoirProperties(unsigned int year)
 {
     if (hydro_.reservoirManagement && !hydro_.useWaterValue)
         return true;
@@ -152,18 +143,9 @@ bool FinalLevelInflowsModifier::isActive(unsigned int year)
 
 bool FinalLevelInflowsModifier::makeChecks(unsigned int year)
 {
-    // Simulation must end on day 365 and reservoir level must be initiated in January
     bool checksOk = hydroAllocationStartMatchesSimulation(year);
-
-    // Reservoir_levelDay_365 – reservoir_levelDay_1 ≤ yearly_inflows
-    double totalInflows = calculateTotalInflows(year);
-    // gp : why not call the check : finalLevelReachable()
-    checksOk = finalLevelValidity(totalInflows, year) && checksOk;
-
-    // Final reservoir level set by the user is within the
-    // rule curves for the final day
-    // gp : a better name could be isBetweenRuleCurves(...)
-    checksOk = preCheckRuleCurves(year) && checksOk;
+    checksOk = isFinalLevelReachable(year) && checksOk;
+    checksOk = isBetweenRuleCurves(year) && checksOk;
 
     isApplicable_.at(year) = checksOk;
 

@@ -61,14 +61,13 @@ public:
 
 private:
     bool isSameAsInitLevel();
-    bool isActive(unsigned int year);
-    void ComputeDelta(unsigned int year);
+    bool compatibleWithReservoirProperties(unsigned int year);
     bool makeChecks(unsigned int year);
-    void storeDeltaLevels(unsigned int year);
+
     double calculateTotalInflows(unsigned int year) const;
     bool hydroAllocationStartMatchesSimulation(unsigned int year) const;
-    bool finalLevelValidity(double totalYearInflows, unsigned int year) const;
-    bool preCheckRuleCurves(unsigned int year) const;
+    bool isFinalLevelReachable(unsigned int year) const;
+    bool isBetweenRuleCurves(unsigned int year) const;
 
     unsigned int lastSimulationDay_ = 0;
     unsigned int firstMonthOfSimulation_ = 0;
@@ -83,7 +82,6 @@ private:
     // Data changing at each MC year
     double initialLevel_ = -1.;
     double finalLevel_ = -1.;
-    double deltaLevel_;
 
     std::vector<bool> isApplicable_;
 };
