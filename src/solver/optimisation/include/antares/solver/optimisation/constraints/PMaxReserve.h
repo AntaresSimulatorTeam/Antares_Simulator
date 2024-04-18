@@ -5,6 +5,7 @@ struct PMaxReserveData
 {
     bool Simulation;
     ALL_AREA_RESERVES& areaReserves;
+    std::vector<PALIERS_THERMIQUES> thermalClusters;
 };
 
 /*!

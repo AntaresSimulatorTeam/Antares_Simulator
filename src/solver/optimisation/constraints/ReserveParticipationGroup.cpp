@@ -33,7 +33,9 @@ AbstractStartUpCostsGroup(problemeHebdo,simulation,builder)
 
 PMaxReserveData ReserveParticipationGroup::GetPMaxReserveDataFromProblemHebdo()
 {
-    return {.Simulation = simulation_, .areaReserves = problemeHebdo_->allReserves};
+    return {.Simulation = simulation_,
+            .areaReserves = problemeHebdo_->allReserves,
+            .thermalClusters = problemeHebdo_->PaliersThermiquesDuPays};
 }
 
 POutReserveData ReserveParticipationGroup::GetPOutReserveDataFromProblemHebdo()

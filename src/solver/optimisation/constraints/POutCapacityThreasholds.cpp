@@ -14,12 +14,15 @@ void POutCapacityThreasholds::add(int pays, int cluster, int pdt)
         // P^on_re+ : Participation of running units in cluster θ to Up reserves 
         // P : Power output from cluster θ
 
+        int globalClusterIdx = data.thermalClusters[pays]
+          .NumeroDuPalierDansLEnsembleDesPaliersThermiques[cluster];
+
         // 17 bis (1) : l * M + Sum(P^on_re-) - P <= 0
         {
             builder.updateHourWithinWeek(pdt)
               .NumberOfDispatchableUnits(
-                cluster, data.thermalClusters[pays].pminDUnGroupeDuPalierThermique[cluster])
-              .DispatchableProduction(cluster, -1);
+                globalClusterIdx, data.thermalClusters[pays].pminDUnGroupeDuPalierThermique[cluster])
+              .DispatchableProduction(globalClusterIdx, -1);
 
             for (const auto& capacityReservation :
                  data.areaReserves.thermalAreaReserves[pays].areaCapacityReservationsDown)
@@ -28,7 +31,7 @@ void POutCapacityThreasholds::add(int pays, int cluster, int pdt)
                      capacityReservation.AllReservesParticipation)
                 {
                     if (reserveParticipations.maxPower != CLUSTER_NOT_PARTICIPATING)
-                        builder.RunningClusterReserveParticipation(cluster, 1);
+                        builder.RunningClusterReserveParticipation(globalClusterIdx, 1);
                 }
             }
 
@@ -50,9 +53,9 @@ void POutCapacityThreasholds::add(int pays, int cluster, int pdt)
          // 17 bis (2) : P - u * M + Sum(P^on_re+) <= 0
         {
             builder.updateHourWithinWeek(pdt)
-              .DispatchableProduction(cluster, 1)
+              .DispatchableProduction(globalClusterIdx, 1)
               .NumberOfDispatchableUnits(
-                cluster, -data.thermalClusters[pays].PmaxDUnGroupeDuPalierThermique[cluster]);
+                globalClusterIdx, -data.thermalClusters[pays].PmaxDUnGroupeDuPalierThermique[cluster]);
 
             for (const auto& capacityReservation :
                  data.areaReserves.thermalAreaReserves[pays].areaCapacityReservationsUp)
@@ -61,7 +64,7 @@ void POutCapacityThreasholds::add(int pays, int cluster, int pdt)
                      capacityReservation.AllReservesParticipation)
                 {
                     if (reserveParticipations.maxPower != CLUSTER_NOT_PARTICIPATING)
-                        builder.RunningClusterReserveParticipation(cluster, 1);
+                        builder.RunningClusterReserveParticipation(globalClusterIdx, 1);
                 }
             }
 

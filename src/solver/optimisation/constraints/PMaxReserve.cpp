@@ -19,9 +19,12 @@ void PMaxReserve::add(int pays, int reserve, int cluster, int pdt, bool isUpRese
         RESERVE_PARTICIPATION reserveParticipation
           = capacityReservation.AllReservesParticipation[cluster];
 
+        int globalClusterIdx = data.thermalClusters[pays]
+          .NumeroDuPalierDansLEnsembleDesPaliersThermiques[cluster];
+
         builder.updateHourWithinWeek(pdt)
-          .RunningClusterReserveParticipation(cluster, 1.0)
-          .NumberOfDispatchableUnits(cluster, -reserveParticipation.maxPower)
+          .RunningClusterReserveParticipation(globalClusterIdx, 1.0)
+          .NumberOfDispatchableUnits(globalClusterIdx, -reserveParticipation.maxPower)
           .lessThan();
 
         if (builder.NumberOfVariables() > 0)
