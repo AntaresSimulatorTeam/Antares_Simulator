@@ -30,6 +30,11 @@
 
 namespace Antares::Data
 {
+bool FinalLevelInflowsModifier::isSameAsInitLevel()
+{
+    return isnan(finalLevel_);
+}
+
 FinalLevelInflowsModifier::FinalLevelInflowsModifier(const PartHydro& hydro,
                                                      const unsigned int& areaIndex,
                                                      const AreaName& areaName) :
@@ -40,11 +45,11 @@ FinalLevelInflowsModifier::FinalLevelInflowsModifier(const PartHydro& hydro,
 bool FinalLevelInflowsModifier::CheckInfeasibility(unsigned int year)
 {
     ComputeDelta(year); // gp : we don't need this computation now
-    logInfoFinLvlNotApplicable(year); // gp : kind of duplication with isActive() content
 
-    // gp : should be moved up (first line ?) and renamed into doWeSkip()
-    // gp : isActive means nothing.
-    if (!isActive())
+    if(isSameAsInitLevel())
+        return true;
+
+    if (!isActive(year))
         return true;
 
     if (!makeChecks(year))
@@ -133,23 +138,16 @@ void FinalLevelInflowsModifier::initialize(const Matrix<double>& scenarioInitial
     firstMonthOfSimulation_ = firstMonthOfSimulation;
 }
 
-bool FinalLevelInflowsModifier::isActive()
+bool FinalLevelInflowsModifier::isActive(unsigned int year)
 {
-    return hydro_.reservoirManagement &&
-           !hydro_.useWaterValue;
-}
+    if (hydro_.reservoirManagement && !hydro_.useWaterValue)
+        return true;
 
-// if the user specifies the final reservoir level, but does not specify initial reservoir level
-// or uses wrong hydro options
-// we should inform the user that the final reservoir level won't be reached
-void FinalLevelInflowsModifier::logInfoFinLvlNotApplicable(unsigned int year)
-{
-    // gp : it's a code duplication with isActive().
-    if (!hydro_.reservoirManagement || hydro_.useWaterValue)
-        logs.info() << "Final reservoir level not applicable! Year:" << year + 1
-                    << ", Area:" << areaName_
-                    << ". Check: Reservoir management = Yes, Use water values = No and proper initial "
-                       "reservoir level is provided ";
+    logs.info() << "Final reservoir level not applicable! Year:" << year + 1
+                << ", Area:" << areaName_
+                << ". Check: Reservoir management = Yes, Use water values = No and proper initial "
+                   "reservoir level is provided ";
+    return false;
 }
 
 bool FinalLevelInflowsModifier::makeChecks(unsigned int year)

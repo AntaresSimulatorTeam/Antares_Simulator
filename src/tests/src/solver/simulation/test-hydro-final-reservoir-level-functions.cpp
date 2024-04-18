@@ -158,6 +158,24 @@ BOOST_AUTO_TEST_CASE(use_water_value_is_true_for_area_1___modifier_is_not_applic
     BOOST_CHECK_EQUAL(finLevInfModify.isApplicable(year), false);
 }
 
+BOOST_AUTO_TEST_CASE(initial_level_from_scenariobuilder_is_NaN_for_area_1_and_year_0____modifier_not_applicable)
+{
+    uint year = 0;
+    study->scenarioFinalHydroLevels[area_1->index][year] = std::numeric_limits<double>::quiet_NaN();
+
+    auto finLevInfModify = FinalLevelInflowsModifier(area_1->hydro, area_1->index, area_1->name);
+
+    finLevInfModify.initialize(study->scenarioInitialHydroLevels,
+                               study->scenarioFinalHydroLevels,
+                               study->parameters.simulationDays.end,
+                               study->parameters.firstMonthInYear,
+                               study->parameters.nbYears);
+
+    finLevInfModify.CheckInfeasibility(year);
+
+    BOOST_CHECK_EQUAL(finLevInfModify.isApplicable(year), false);
+}
+
 BOOST_AUTO_TEST_CASE(final_level_modifier_not_initialized____modifier_not_applicable)
 {
     auto finLevInfModify = FinalLevelInflowsModifier(area_1->hydro, area_1->index, area_1->name);
