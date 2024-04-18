@@ -132,6 +132,8 @@ set(RTESOLVER_OPT
 		constraints/PMaxReserve.cpp
 		include/antares/solver/optimisation/constraints/POutCapacityThreasholds.h
 		constraints/POutCapacityThreasholds.cpp
+		include/antares/solver/optimisation/constraints/PRunningUnits.h
+		constraints/PRunningUnits.cpp
 
 		include/antares/solver/optimisation/ProblemMatrixEssential.h
 		ProblemMatrixEssential.cpp

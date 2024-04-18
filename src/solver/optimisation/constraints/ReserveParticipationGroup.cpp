@@ -47,6 +47,7 @@ void ReserveParticipationGroup::BuildConstraints()
     {
         auto data = GetReserveDataFromProblemHebdo();
         PMaxReserve pMaxReserve(builder_, data);
+        PRunningUnits pRunningUnits(builder_,data);
 
         for (int pdt = 0; pdt < problemeHebdo_->NombreDePasDeTempsPourUneOptimisation; pdt++)
         {
@@ -66,6 +67,9 @@ void ReserveParticipationGroup::BuildConstraints()
                         {
                             // 16 bis
                             pMaxReserve.add(pays, reserve, cluster, pdt, true);
+
+                            // 17 quater
+                            pRunningUnits.add(pays, reserve, cluster, pdt, true);
                         }
                         cluster++;
                     }
@@ -105,6 +109,7 @@ void ReserveParticipationGroup::BuildConstraints()
                 for (int cluster = 0; cluster < PaliersThermiquesDuPays.NombreDePaliersThermiques;
                      cluster++)
                 {
+                    // 17 bis
                     pOutCapacityThreasholds.add(pays, cluster, pdt);
                 }
             }
