@@ -42,6 +42,20 @@ FinalLevelInflowsModifier::FinalLevelInflowsModifier(const PartHydro& hydro,
 {
 }
 
+void FinalLevelInflowsModifier::initialize(const Matrix<double>& scenarioInitialHydroLevels,
+                                           const Matrix<double>& scenarioFinalHydroLevels,
+                                           const unsigned int lastSimulationDay,
+                                           const unsigned int firstMonthOfSimulation,
+                                           const unsigned int nbYears)
+{
+    isApplicable_.assign(nbYears, false);
+    deltaLevel.assign(nbYears, 0.);
+    InitialLevels_ = &(scenarioInitialHydroLevels.entry[areaIndex_]);
+    FinalLevels_ = &(scenarioFinalHydroLevels.entry[areaIndex_]);
+    lastSimulationDay_ = lastSimulationDay;
+    firstMonthOfSimulation_ = firstMonthOfSimulation;
+}
+
 bool FinalLevelInflowsModifier::CheckInfeasibility(unsigned int year)
 {
     initialLevel_ = (*InitialLevels_)[year];
@@ -113,20 +127,6 @@ bool FinalLevelInflowsModifier::isBetweenRuleCurves(unsigned int year) const
         return false;
     }
     return true;
-}
-
-void FinalLevelInflowsModifier::initialize(const Matrix<double>& scenarioInitialHydroLevels,
-                                           const Matrix<double>& scenarioFinalHydroLevels,
-                                           const unsigned int lastSimulationDay,
-                                           const unsigned int firstMonthOfSimulation,
-                                           const unsigned int nbYears)
-{
-    isApplicable_.assign(nbYears, false);
-    deltaLevel.assign(nbYears, 0.);
-    InitialLevels_ = &(scenarioInitialHydroLevels.entry[areaIndex_]);
-    FinalLevels_ = &(scenarioFinalHydroLevels.entry[areaIndex_]);
-    lastSimulationDay_ = lastSimulationDay;
-    firstMonthOfSimulation_ = firstMonthOfSimulation;
 }
 
 bool FinalLevelInflowsModifier::compatibleWithReservoirProperties(unsigned int year)
