@@ -45,5 +45,9 @@ const WeeklyDataFromAntares* LpsFromAntares::weeklyData(WeeklyProblemId id) cons
     }
     return it->second.get();
 }
+size_t LpsFromAntares::weekCount() const noexcept
+{
+    return weeklyProblems.size();
+}
 
 } // namespace Antares::Solver

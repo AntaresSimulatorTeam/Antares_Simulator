@@ -133,8 +133,11 @@ public:
      * @brief Retrieves weekly data from the LpsFromAntares object.
      */
     const WeeklyDataFromAntares* weeklyData(WeeklyProblemId id) const;
+    /*
+     * @brief Retrieves the number of weeks in the LpsFromAntares object.
+     */
+    [[nodiscard]] size_t weekCount() const noexcept;
 
-private:
     ConstantDataFromAntaresPtr constantProblemData;
     YearWeekWeeklyDataFromAntares weeklyProblems;
 };
