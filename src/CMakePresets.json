@@ -1,0 +1,178 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 25,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "Debug-preset",
+      "displayName": "Debug Preset",
+      "description": "Sets build and install directories",
+      "binaryDir": "${sourceDir}/builds/${presetName}",
+      "cacheVariables": {
+          "CMAKE_BUILD_TYPE": {
+          "type": "STRING",
+          "value": "Debug"
+          },
+        "DEPS_INSTALL_DIR": {
+          "type": "FILEPATH",
+          "value": "${sourceDir}/../rte-antares-deps-Debug"
+        }
+      }
+    },
+    {
+      "name": "ninja",
+      "displayName": "Ninja Configure Settings",
+      "description": "Sets build and install directories",
+      "binaryDir": "${sourceDir}/builds/${presetName}",
+      "generator": "Ninja"
+    },
+    {
+      "name": "ninja-toolchain",
+      "displayName": "Ninja Configure Settings with toolchain",
+      "description": "Sets build and install directories",
+      "binaryDir": "${sourceDir}/builds/${presetName}-toolchain",
+      "generator": "Ninja",
+      "toolchainFile": "$env{TOOLCHAINFILE}"
+    },
+    {
+      "name": "ninja-multi-vcpkg",
+      "displayName": "Ninja Multi-Config Configure Settings",
+      "description": "Configure with vcpkg toolchain",
+      "binaryDir": "${sourceDir}/../_build",
+      "generator": "Ninja Multi-Config",
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": {
+          "type": "FILEPATH",
+          "value": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+        },
+        "DEPS_INSTALL_DIR": {
+          "type": "FILEPATH",
+          "value": "${sourceDir}/../rte-antares-deps-Release"
+        },
+        "CMAKE_PREFIX_PATH": "$env{ORTOOLS_DIR}/install",
+        "CMAKE_BUILD_TYPE":"Release",
+        "BUILD_TESTING":"ON",
+        "BUILD_TOOLS":"ON",
+        "BUILD_not_system":"OFF",
+        "BUILD_UI":"OFF",
+        "VCPKG_INSTALLED_DIR": "${sourceDir}/../vcpkg_installed/",
+        "Python3_EXECUTABLE": "$env{Python3_ROOT_DIR}/bin/python"
+      }
+
+    },
+    {
+      "name": "msbuild-vcpkg",
+      "displayName": "MSBuild (vcpkg toolchain) Configure Settings",
+      "description": "Configure with VS generators and with vcpkg toolchain",
+      "binaryDir": "${sourceDir}/../_build",
+      "generator": "Visual Studio 17 2022",
+      "architecture": {
+        "strategy": "set",
+        "value": "x64"
+      },
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": {
+          "type": "FILEPATH",
+          "value": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+        },
+        "DEPS_INSTALL_DIR": {
+          "type": "FILEPATH",
+          "value": "${sourceDir}/../rte-antares-deps-Release"
+        },
+        "CMAKE_PREFIX_PATH": "$env{ORTOOLS_DIR}/install",
+        "CMAKE_BUILD_TYPE":"Release",
+        "BUILD_TESTING":"ON",
+        "BUILD_TOOLS":"ON",
+        "BUILD_UI":"OFF",
+        "BUILD_not_system":"OFF",
+        "VCPKG_INSTALLED_DIR": "${sourceDir}/../vcpkg_installed/",
+        "Python3_EXECUTABLE": "$env{Python3_ROOT_DIR}/python.exe"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "ninja",
+      "configurePreset": "ninja",
+      "displayName": "Build with Ninja",
+      "description": "Build with Ninja"
+    },
+    {
+      "name": "ninja-multi-vcpkg",
+      "configurePreset": "ninja-multi-vcpkg",
+      "displayName": "Build ninja-multi-vcpkg",
+      "description": "Build ninja-multi-vcpkg Configurations"
+    },
+    {
+      "name": "ninja-toolchain",
+      "configurePreset": "ninja-toolchain",
+      "displayName": "Build ninja-toolchain",
+      "description": "Build ninja with a toolchain"
+    },
+    {
+      "name": "msbuild-vcpkg",
+      "configurePreset": "msbuild-vcpkg",
+      "displayName": "Build MSBuild",
+      "description": "Build with MSBuild (VS)"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "ninja",
+      "configurePreset": "ninja"
+    },
+    {
+      "name": "ninja-multi-vcpkg",
+      "configurePreset": "ninja-multi-vcpkg"
+    },
+    {
+      "name": "default-vs",
+      "configurePreset": "msbuild-vcpkg"
+    }
+  ],
+  "workflowPresets": [
+    {
+      "name": "ninja-workflow",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "ninja-multi-vcpkg"
+        },
+        {
+          "type": "build",
+          "name": "ninja-multi-vcpkg"
+        },
+        {
+          "type": "test",
+          "name": "ninja-multi-vcpkg"
+        }
+      ]
+    }
+  ],
+  "packagePresets": [
+    {
+      "packageName": "default-package-name",
+      "packageVersion": "0.1",
+      "name": "default",
+      "configurePreset": "ninja",
+      "generators": [
+        "TGZ"
+      ]
+    },
+    {
+      "packageName": "default-multi-package-name",
+      "packageVersion": "0.1",
+      "name": "ninja-multi-vcpkg",
+      "configurePreset": "ninja-multi-vcpkg",
+      "generators": [
+        "TGZ"
+      ],
+      "configurations": [
+        "Debug"
+      ]
+    }
+  ]
+}
