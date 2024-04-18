@@ -485,8 +485,6 @@ _**This section is under construction**_
       
       - With Xpress : `solver-parameters = THREADS 1 PRESOLVE 1`
       - With SCIP : `solver-parameters = parallel/maxnthreads 1, lp/presolving TRUE`
-    
-    If presolve or scaling are defined in `solver-parameters`, it will override the values from the command line, that depend on whether `--presolve` or `--scaling` are used.
 
 ---
 ## Adequacy-patch parameters
