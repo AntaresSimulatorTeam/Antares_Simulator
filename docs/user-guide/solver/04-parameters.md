@@ -472,13 +472,17 @@ _**This section is under construction**_
 
 ---
 #### solver-parameters
-[//]: # (TODO: document this parameter)
-_**This section is under construction**_  
 
-- **Expected value:**
-- **Required:** **yes**
-- **Default value:**
-- **Usage:**
+- **Expected value:** Any string
+- **Required:** no
+- **Default value:** `""`
+- **Usage:** This parameter has effect only if:
+  - or-tools is used (argument `--use-ortools` from the command line) 
+  - solver `xpress` or `scip` is selected (using `--ortools-solver=<solver>` from the command line) as `sirius, glpk, coin` do not implment this functionality in or-tools. 
+  
+  The format is solver-specific and is the same as the corresponding solver configuration file format. This is an advanced usage and the user should therefore refer to the specific solver documentation to know how to specify the parameters. We give an example to set the maximum number of threads used during solve to 1:
+  - With Xpress : `solver-parameters = THREADS 1`
+  - With SCIP : `solver-parameters = parallel/maxnthreads = 1`
 
 ---
 ## Adequacy-patch parameters
