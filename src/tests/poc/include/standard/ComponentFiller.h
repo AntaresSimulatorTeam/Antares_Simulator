@@ -40,7 +40,7 @@ void ComponentFiller::addVariables(LinearProblem& problem,
                                    const LinearProblemData& data,
                                    const BuildContext& ctx)
 {
-    // TODO : remplacer par des AST
+    // TODO : replace with AST
     for (auto scenario : ctx.getScenarios())
     {
         if (component_.getModel() == THERMAL)
@@ -78,18 +78,11 @@ void ComponentFiller::addConstraints(LinearProblem& problem,
                                      const LinearProblemData& data,
                                      const BuildContext& ctx)
 {
-    // TODO : remplacer par des AST
+    // TODO : replace with AST
     if (component_.getModel() == BATTERY)
     {
-        if (!data.hasScalarData("initialStock_" + component_.getId()))
-        {
-            throw;
-        }
-
         for (auto scenario : ctx.getScenarios())
         {
-            double initialStock
-              = data.getScalarData("initialStock_" + component_.getId(), scenario);
             for (auto ts : ctx.getTimeStamps())
             {
                 string pVarName
@@ -104,18 +97,34 @@ void ComponentFiller::addConstraints(LinearProblem& problem,
                   = &problem.addConstraint("Stock_constr_" + to_string(ts), 0, 0);
                 stockConstraint->SetCoefficient(e, 1);
                 stockConstraint->SetCoefficient(p, data.getTimeResolutionInMinutes() * 1.0 / 60.0);
+
+                int previous_stock_ts;
                 if (ts > 0)
                 {
-                    string stockVarNameTm1 = "Stock_" + component_.getId() + "_" + to_string(ts - 1)
-                                             + "_" + to_string(scenario);
-                    auto previousE = &problem.getVariable(stockVarNameTm1);
-                    stockConstraint->SetCoefficient(previousE, -1);
+                    previous_stock_ts = ts - 1;
                 }
                 else
                 {
-                    stockConstraint->SetLB(initialStock);
-                    stockConstraint->SetUB(initialStock);
+                    // We consider that the battery has to cycle, ie Stock(0-T) = Stock(final t)
+                    previous_stock_ts = ctx.getTimeStamps()[ctx.getTimeStamps().size() - 1];
                 }
+                string stockVarNameTm1 = "Stock_" + component_.getId() + "_"
+                                         + to_string(previous_stock_ts) + "_" + to_string(scenario);
+                auto previousE = &problem.getVariable(stockVarNameTm1);
+                stockConstraint->SetCoefficient(previousE, -1);
+            }
+            if (data.hasScalarData("initialStock_" + component_.getId()))
+            {
+                // If the user has defined in the input data the initial stock strategy, force the
+                // model to reach that stock at the beginning & end of the horizon
+                double initialStock
+                  = data.getScalarData("initialStock_" + component_.getId(), scenario);
+                int final_ts = ctx.getTimeStamps()[ctx.getTimeStamps().size() - 1];
+                string finalStockVarName = "Stock_" + component_.getId() + "_"
+                                         + to_string(final_ts) + "_" + to_string(scenario);
+                auto finalStockVar = &problem.getVariable(finalStockVarName);
+                finalStockVar->SetLB(initialStock);
+                finalStockVar->SetUB(initialStock);
             }
         }
     }
@@ -156,7 +165,7 @@ void ComponentFiller::addObjective(Antares::optim::api::LinearProblem& problem,
                                    const LinearProblemData& data,
                                    const BuildContext& ctx)
 {
-    // TODO : remplacer par des AST
+    // TODO : replace with AST
     if (component_.getModel() == PRICE_MINIM)
     {
         problem.setMinimization(true);
@@ -192,9 +201,9 @@ map<string, double> ComponentFiller::getPortPin(string name,
                                                 const LinearProblemData& data,
                                                 BuildContext::ScenarioID scenario) const
 {
-    // TODO : remplacer par des AST
+    // TODO : replace with AST
     const std::string pVarName
-      = name + "_" + component_.getId() + "_" + to_string(timestamp) + "_" + to_string(scenario);
+      = "P_" + component_.getId() + "_" + to_string(timestamp) + "_" + to_string(scenario);
 
     // P BATTERY/THERMAL
     if (name == "P")
@@ -207,7 +216,7 @@ map<string, double> ComponentFiller::getPortPin(string name,
     {
         if (!data.hasTimedData("cost_" + component_.getId()))
         {
-            throw;
+            return {};
         }
         // TODO BuildContext
         double cost = data.getTimedData("cost_" + component_.getId(), scenario).at(timestamp);
