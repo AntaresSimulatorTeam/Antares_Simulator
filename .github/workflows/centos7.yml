@@ -81,6 +81,8 @@ jobs:
 
     - name: Configure
       run: |
+            PREFIX_PATH="${{github.workspace}}/install;${{ env.ORTOOLSDIR }}/install"
+            echo $PREFIX_PATH
            source /opt/rh/devtoolset-10/enable
            cmake -B _build -S src \
            -DCMAKE_C_COMPILER_LAUNCHER=ccache \
@@ -91,7 +93,7 @@ jobs:
            -DBUILD_not_system=OFF \
            -DBUILD_TOOLS=ON \
            -DBUILD_UI=OFF \
-           -DCMAKE_PREFIX_PATH="../install;${{ env.ORTOOLSDIR }}/install"
+           -DCMAKE_PREFIX_PATH=$PREFIX_PATH
 
     - name: Build
       run: |
