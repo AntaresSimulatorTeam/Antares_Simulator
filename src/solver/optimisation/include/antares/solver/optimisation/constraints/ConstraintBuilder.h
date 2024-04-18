@@ -292,8 +292,9 @@ struct StartUpCostsData
     bool Simulation;
 };
 
-struct ReserveParticipationData
+struct ReserveData
 {
     bool Simulation;
     ALL_AREA_RESERVES& areaReserves;
+    std::vector<PALIERS_THERMIQUES> thermalClusters;
 };

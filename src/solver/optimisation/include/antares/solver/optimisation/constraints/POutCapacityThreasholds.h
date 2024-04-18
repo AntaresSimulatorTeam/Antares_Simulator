@@ -1,20 +1,13 @@
 #pragma once
 #include "ConstraintBuilder.h"
 
-struct POutReserveData
-{
-    bool Simulation;
-    ALL_AREA_RESERVES& areaReserves;
-    std::vector<PALIERS_THERMIQUES> thermalClusters;
-};
-
 /*
  * represent 'POutCapacityThreasholds' Constraint type
  */
 class POutCapacityThreasholds : private ConstraintFactory
 {
 public:
-    POutCapacityThreasholds(ConstraintBuilder& builder, POutReserveData& data) :
+    POutCapacityThreasholds(ConstraintBuilder& builder, ReserveData& data) :
      ConstraintFactory(builder), data(data)
     {
     }
@@ -28,5 +21,5 @@ public:
     void add(int pays, int cluster, int pdt);
 
 private:
-    POutReserveData& data;
+    ReserveData& data;
 };

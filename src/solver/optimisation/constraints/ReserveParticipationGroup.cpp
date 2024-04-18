@@ -31,14 +31,7 @@ AbstractStartUpCostsGroup(problemeHebdo,simulation,builder)
 }
 
 
-PMaxReserveData ReserveParticipationGroup::GetPMaxReserveDataFromProblemHebdo()
-{
-    return {.Simulation = simulation_,
-            .areaReserves = problemeHebdo_->allReserves,
-            .thermalClusters = problemeHebdo_->PaliersThermiquesDuPays};
-}
-
-POutReserveData ReserveParticipationGroup::GetPOutReserveDataFromProblemHebdo()
+ReserveData ReserveParticipationGroup::GetReserveDataFromProblemHebdo()
 {
     return {.Simulation = simulation_,
             .areaReserves = problemeHebdo_->allReserves,
@@ -52,7 +45,7 @@ POutReserveData ReserveParticipationGroup::GetPOutReserveDataFromProblemHebdo()
 void ReserveParticipationGroup::BuildConstraints()
 {
     {
-        auto data = GetPMaxReserveDataFromProblemHebdo();
+        auto data = GetReserveDataFromProblemHebdo();
         PMaxReserve pMaxReserve(builder_, data);
 
         for (int pdt = 0; pdt < problemeHebdo_->NombreDePasDeTempsPourUneOptimisation; pdt++)
@@ -100,7 +93,7 @@ void ReserveParticipationGroup::BuildConstraints()
         }
     }
     {
-        auto data = GetPOutReserveDataFromProblemHebdo();
+        auto data = GetReserveDataFromProblemHebdo();
         POutCapacityThreasholds pOutCapacityThreasholds(builder_, data);
 
         for (int pdt = 0; pdt < problemeHebdo_->NombreDePasDeTempsPourUneOptimisation; pdt++)

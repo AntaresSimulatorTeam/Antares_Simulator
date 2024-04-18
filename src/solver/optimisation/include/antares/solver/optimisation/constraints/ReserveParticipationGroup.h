@@ -41,6 +41,5 @@ public:
 
 private:
     bool simulation_ = false;
-    PMaxReserveData GetPMaxReserveDataFromProblemHebdo();
-    POutReserveData GetPOutReserveDataFromProblemHebdo();
+    ReserveData GetReserveDataFromProblemHebdo();
 };

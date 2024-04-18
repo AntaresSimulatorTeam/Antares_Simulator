@@ -1,20 +1,13 @@
 #pragma once
 #include "ConstraintBuilder.h"
 
-struct PMaxReserveData
-{
-    bool Simulation;
-    ALL_AREA_RESERVES& areaReserves;
-    std::vector<PALIERS_THERMIQUES> thermalClusters;
-};
-
 /*!
  * represent 'ReserveParticipation' Constraint type
  */
 class PMaxReserve : private ConstraintFactory
 {
 public:
-    PMaxReserve(ConstraintBuilder& builder, PMaxReserveData& data) :
+    PMaxReserve(ConstraintBuilder& builder, ReserveData& data) :
      ConstraintFactory(builder), data(data)
     {
     }
@@ -30,5 +23,5 @@ public:
     void add(int pays, int reserve, int cluster, int pdt, bool isUpReserve);
 
 private:
-    PMaxReserveData& data;
+    ReserveData& data;
 };
