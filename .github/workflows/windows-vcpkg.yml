@@ -132,7 +132,7 @@ jobs:
 
     - uses: ./.github/workflows/install_minizip
       with:
-        install-path: ${{github.workspace}}/install
+        install-path: ${GITHUB_WORKSPACE}/install
 
     - name: Init submodule
       run: |
