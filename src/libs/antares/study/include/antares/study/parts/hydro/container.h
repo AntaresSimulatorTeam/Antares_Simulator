@@ -21,6 +21,7 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_HYDRO_CONTAINER_H__
 #define __ANTARES_LIBS_STUDY_PARTS_HYDRO_CONTAINER_H__
 
+#include <optional>
 #include "prepro.h"
 #include "series.h"
 #include "../../fwd.h"
@@ -164,8 +165,7 @@ public:
     Matrix<double, double> dailyNbHoursAtGenPmax;
     Matrix<double, double> dailyNbHoursAtPumpPmax;
 
-    //! Data for final reservoir level
-    FinalLevelInflowsModifier finalLevelInflowsModifier;
+    std::vector<std::optional<double>> deltaBetweenFinalAndInitialLevels;
 }; // class PartHydro
 
 // Interpolates a water value from a table according to a level and a day.

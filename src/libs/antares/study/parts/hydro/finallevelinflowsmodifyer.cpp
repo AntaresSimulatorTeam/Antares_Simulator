@@ -30,81 +30,91 @@
 
 namespace Antares::Data
 {
-bool FinalLevelInflowsModifier::isSameAsInitLevel()
+
+FinalLevelValidator::FinalLevelValidator(PartHydro& hydro,
+                                         unsigned int areaIndex,
+                                         const AreaName areaName, // gp : to std::string
+                                         double initialLevel,
+                                         double finalLevel,
+                                         const unsigned int year,
+                                         const unsigned int lastSimulationDay,
+                                         const unsigned int firstMonthOfSimulation)
+    : hydro_(hydro),
+    areaName_(areaName),
+    areaIndex_(areaIndex),
+    initialLevel_(initialLevel),
+    finalLevel_(finalLevel),
+    year_(year),
+    lastSimulationDay_(lastSimulationDay),
+    firstMonthOfSimulation_(firstMonthOfSimulation)
 {
-    return isnan(finalLevel_);
 }
 
-FinalLevelInflowsModifier::FinalLevelInflowsModifier(const PartHydro& hydro,
-                                                     const unsigned int& areaIndex,
-                                                     const AreaName& areaName) :
-    hydro_(hydro), areaIndex_(areaIndex), areaName_(areaName)
+bool FinalLevelValidator::check()
 {
-}
-
-void FinalLevelInflowsModifier::initialize(const Matrix<double>& scenarioInitialHydroLevels,
-                                           const Matrix<double>& scenarioFinalHydroLevels,
-                                           const unsigned int lastSimulationDay,
-                                           const unsigned int firstMonthOfSimulation,
-                                           const unsigned int nbYears)
-{
-    isApplicable_.assign(nbYears, false);
-    deltaLevel.assign(nbYears, 0.);
-    InitialLevels_ = &(scenarioInitialHydroLevels.entry[areaIndex_]);
-    FinalLevels_ = &(scenarioFinalHydroLevels.entry[areaIndex_]);
-    lastSimulationDay_ = lastSimulationDay;
-    firstMonthOfSimulation_ = firstMonthOfSimulation;
-}
-
-bool FinalLevelInflowsModifier::CheckInfeasibility(unsigned int year)
-{
-    initialLevel_ = (*InitialLevels_)[year];
-    finalLevel_ = (*FinalLevels_)[year];
-
-    if(isSameAsInitLevel())
+    if (skippingFinalLevelUse())
         return true;
-
-    if (! compatibleWithReservoirProperties(year))
-        return true;
-
-    if (!makeChecks(year))
+    if (! checkForInfeasibility())
         return false;
-
-    deltaLevel.at(year) = finalLevel_ - initialLevel_;
+    finalLevelFineForUse_ = true;
     return true;
 }
 
-double FinalLevelInflowsModifier::calculateTotalInflows(unsigned int year) const
+bool FinalLevelValidator::skippingFinalLevelUse()
 {
-    // calculate yearly inflows
-    auto const& srcinflows = hydro_.series->storage.getColumn(year);
-
-    double totalYearInflows = 0.0;
-    for (unsigned int day = 0; day < DAYS_PER_YEAR; ++day)
-        totalYearInflows += srcinflows[day];
-    return totalYearInflows;
+    if(! wasSetInScenarioBuilder())
+        return true;
+    if (! compatibleWithReservoirProperties())
+        return true;
+    return false;
 }
 
-bool FinalLevelInflowsModifier::hydroAllocationStartMatchesSimulation(unsigned int year) const
+bool FinalLevelValidator::wasSetInScenarioBuilder()
+{
+    return ! isnan(finalLevel_);
+}
+
+bool FinalLevelValidator::compatibleWithReservoirProperties()
+{
+    if (hydro_.reservoirManagement && !hydro_.useWaterValue)
+        return true;
+
+    logs.info() << "Final reservoir level not applicable! Year:" << year_ + 1
+                << ", Area:" << areaName_
+                << ". Check: Reservoir management = Yes, Use water values = No and proper initial "
+                   "reservoir level is provided ";
+    return false;
+}
+
+bool FinalLevelValidator::checkForInfeasibility()
+{
+    bool checksOk = hydroAllocationStartMatchesSimulation();
+    checksOk = isFinalLevelReachable() && checksOk;
+    checksOk = isBetweenRuleCurves() && checksOk;
+
+    return checksOk;
+}
+
+bool FinalLevelValidator::hydroAllocationStartMatchesSimulation() const
 {
     int initReservoirLvlMonth = hydro_.initializeReservoirLevelDate; // month [0-11]
     if (lastSimulationDay_ == DAYS_PER_YEAR && initReservoirLvlMonth == firstMonthOfSimulation_)
         return true;
 
-    logs.error() << "Year " << year + 1 << ", area '" << areaName_ << "' : "
+    logs.error() << "Year " << year_ + 1 << ", area '" << areaName_ << "' : "
                  << "Hydro allocation must start on the 1st simulation month and "
                  << "simulation last a whole year";
     return false;
 }
 
-bool FinalLevelInflowsModifier::isFinalLevelReachable(unsigned int year) const
+bool FinalLevelValidator::isFinalLevelReachable() const
 {
     double reservoirCapacity = hydro_.reservoirCapacity;
-    double totalYearInflows = calculateTotalInflows(year);
+    double totalYearInflows = calculateTotalInflows();
 
     if ((finalLevel_ - initialLevel_) * reservoirCapacity > totalYearInflows)
     {
-        logs.error() << "Year: " << year + 1 << ". Area: " << areaName_
+        logs.error() << "Year: " << year_ + 1 << ". Area: " << areaName_
                      << ". Incompatible total inflows: " << totalYearInflows
                      << " with initial: " << initialLevel_
                      << " and final: " << finalLevel_ << " reservoir levels.";
@@ -113,14 +123,25 @@ bool FinalLevelInflowsModifier::isFinalLevelReachable(unsigned int year) const
     return true;
 }
 
-bool FinalLevelInflowsModifier::isBetweenRuleCurves(unsigned int year) const
+double FinalLevelValidator::calculateTotalInflows() const
+{
+    // calculate yearly inflows
+    auto const& srcinflows = hydro_.series->storage.getColumn(year_);
+
+    double totalYearInflows = 0.0;
+    for (unsigned int day = 0; day < DAYS_PER_YEAR; ++day)
+        totalYearInflows += srcinflows[day];
+    return totalYearInflows;
+}
+
+bool FinalLevelValidator::isBetweenRuleCurves() const
 {
     double lowLevelLastDay  = hydro_.reservoirLevel[Data::PartHydro::minimum][DAYS_PER_YEAR - 1];
     double highLevelLastDay = hydro_.reservoirLevel[Data::PartHydro::maximum][DAYS_PER_YEAR - 1];
 
     if (finalLevel_ < lowLevelLastDay || finalLevel_ > highLevelLastDay)
     {
-        logs.error() << "Year: " << year + 1 << ". Area: " << areaName_
+        logs.error() << "Year: " << year_ + 1 << ". Area: " << areaName_
                      << ". Specifed final reservoir level: " << finalLevel_
                      << " is incompatible with reservoir level rule curve [" << lowLevelLastDay
                      << " , " << highLevelLastDay << "]";
@@ -129,34 +150,9 @@ bool FinalLevelInflowsModifier::isBetweenRuleCurves(unsigned int year) const
     return true;
 }
 
-bool FinalLevelInflowsModifier::compatibleWithReservoirProperties(unsigned int year)
+bool FinalLevelValidator::finalLevelFineForUse()
 {
-    if (hydro_.reservoirManagement && !hydro_.useWaterValue)
-        return true;
-
-    logs.info() << "Final reservoir level not applicable! Year:" << year + 1
-                << ", Area:" << areaName_
-                << ". Check: Reservoir management = Yes, Use water values = No and proper initial "
-                   "reservoir level is provided ";
-    return false;
-}
-
-bool FinalLevelInflowsModifier::makeChecks(unsigned int year)
-{
-    bool checksOk = hydroAllocationStartMatchesSimulation(year);
-    checksOk = isFinalLevelReachable(year) && checksOk;
-    checksOk = isBetweenRuleCurves(year) && checksOk;
-
-    isApplicable_.at(year) = checksOk;
-
-    return checksOk;
-}
-
-bool FinalLevelInflowsModifier::isApplicable(unsigned int year)
-{
-    // If isApplicable_.size() == 0, then instance was not properly initialized
-    // and is not applicable.
-    return !isApplicable_.empty() && isApplicable_.at(year);
+    return finalLevelFineForUse_;
 }
 
 } // namespace Antares::Data

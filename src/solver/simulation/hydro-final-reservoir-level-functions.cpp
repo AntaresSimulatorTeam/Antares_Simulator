@@ -26,45 +26,44 @@
 */
 
 #include "antares/solver/simulation/hydro-final-reservoir-level-functions.h"
+#include "antares/study/parts/hydro/finallevelinflowsmodifyer.h"
 #include <antares/antares/fatal-error.h>
 
 namespace Antares::Solver
 {
 
-void initializeFinalLevelData(const Data::Study& study)
-{
-    study.areas.each([&study](Data::Area& area)
-    {
-        area.hydro.finalLevelInflowsModifier.initialize(study.scenarioInitialHydroLevels,
-                                                        study.scenarioFinalHydroLevels,
-                                                        study.parameters.simulationDays.end,
-                                                        study.parameters.firstMonthInYear,
-                                                        study.parameters.nbYears);
-    });
-}
-
-void CheckFinalReservoirLevelsForYear(const Data::Study& study, uint year)
-{
-    study.areas.each([&year](Data::Area& area)
-    {
-        if (!area.hydro.finalLevelInflowsModifier.CheckInfeasibility(year))
-        {
-            throw FatalError("hydro final level : infeasibility");
-        }
-    });
-}
-
 void CheckFinalReservoirLevelsConfiguration(const Data::Study& study)
 {
-    initializeFinalLevelData(study);
-
-    uint nbYears = study.parameters.nbYears;
-
-    for (uint year = 0; year != nbYears; ++year)
+    study.areas.each([&study](Data::Area &area)
     {
-        if (study.parameters.yearsFilter.at(year))
-            CheckFinalReservoirLevelsForYear(study, year);
-    }
-}
+         uint nbYears = study.parameters.nbYears;
+         area.hydro.deltaBetweenFinalAndInitialLevels.resize(nbYears); // gp : should be done elsewhere
+         for (uint year = 0; year != nbYears; ++year)
+         {
+             if (! study.parameters.yearsFilter.at(year))
+                 continue;
+
+             double initialLevel = study.scenarioInitialHydroLevels.entry[area.index][year];
+             double finalLevel = study.scenarioFinalHydroLevels.entry[area.index][year];
+
+             Data::FinalLevelValidator validator(area.hydro,
+                                                 area.index,
+                                                 area.name,
+                                                 initialLevel,
+                                                 finalLevel,
+                                                 year,
+                                                 study.parameters.simulationDays.end,
+                                                 study.parameters.firstMonthInYear);
+             if (! validator.check())
+             {
+                 throw FatalError("hydro final level : infeasibility");
+             }
+             if (validator.finalLevelFineForUse())
+             {
+                 area.hydro.deltaBetweenFinalAndInitialLevels[year] = finalLevel - initialLevel;
+             }
+         }
+    });
+} // End function CheckFinalReservoirLevelsConfiguration
 
 } // namespace Antares::Solver

@@ -49,8 +49,7 @@ PartHydro::PartHydro(const Data::Area& area) :
  pumpingEfficiency(1.),
  hydroModulable(false),
  prepro(nullptr),
- series(nullptr),
- finalLevelInflowsModifier(*this, area.index, area.name)
+ series(nullptr)
 {
 }
 

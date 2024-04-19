@@ -34,56 +34,44 @@ namespace Antares::Data
 {
 class PartHydro;
 
-/*!
- ** \brief Final Reservoir Level data for a single area
- */
-class FinalLevelInflowsModifier
+
+class FinalLevelValidator
 {
 public:
-    FinalLevelInflowsModifier() = delete;
-    FinalLevelInflowsModifier(const PartHydro& hydro,
-                              const unsigned int& areaIndex,
-                              const AreaName& areaName);
-    void initialize(const Matrix<double>& scenarioInitialHydroLevels,
-                    const Matrix<double>& scenarioFinalHydroLevels,
-                    const unsigned int lastSimulationDay,
-                    const unsigned int firstMonthOfSimulation,
-                    const unsigned int nbYears);
-
-    bool CheckInfeasibility(unsigned int year);
-    bool isApplicable(unsigned int year);
-
-    // vectors containing data necessary for final reservoir level calculation
-    // for one area and all MC years
-    // vector indexes correspond to the MC years
-    std::vector<double> deltaLevel;
-
+    FinalLevelValidator(PartHydro& hydro,
+                        unsigned int areaIndex,
+                        const AreaName areaName,
+                        double initialLevel,
+                        double finalLevel,
+                        const unsigned int year,
+                        const unsigned int lastSimulationDay,
+                        const unsigned int firstMonthOfSimulation);
+    bool check();
+    bool finalLevelFineForUse();
 
 private:
-    bool isSameAsInitLevel();
-    bool compatibleWithReservoirProperties(unsigned int year);
-    bool makeChecks(unsigned int year);
+    bool wasSetInScenarioBuilder();
+    bool compatibleWithReservoirProperties();
+    bool skippingFinalLevelUse();
+    bool checkForInfeasibility();
+    bool hydroAllocationStartMatchesSimulation() const;
+    bool isFinalLevelReachable() const;
+    double calculateTotalInflows() const;
+    bool isBetweenRuleCurves() const;
 
-    double calculateTotalInflows(unsigned int year) const;
-    bool hydroAllocationStartMatchesSimulation(unsigned int year) const;
-    bool isFinalLevelReachable(unsigned int year) const;
-    bool isBetweenRuleCurves(unsigned int year) const;
-
+    // Data from simulation
+    unsigned int year_ = 0;
     unsigned int lastSimulationDay_ = 0;
     unsigned int firstMonthOfSimulation_ = 0;
 
-    // Data from area (remaining unchanged throughout simulation)
-    const PartHydro& hydro_;
-    const unsigned int& areaIndex_;
-    const AreaName& areaName_;
-    const Matrix<double>::ColumnType* InitialLevels_ = nullptr;
-    const Matrix<double>::ColumnType* FinalLevels_ = nullptr;
+    // Data from area
+    PartHydro& hydro_;
+    unsigned int areaIndex_;
+    const AreaName areaName_;
+    double initialLevel_;
+    double finalLevel_;
 
-    // Data changing at each MC year
-    double initialLevel_ = -1.;
-    double finalLevel_ = -1.;
-
-    std::vector<bool> isApplicable_;
+    bool finalLevelFineForUse_ = false;
 };
 } // namespace Antares::Data
 
