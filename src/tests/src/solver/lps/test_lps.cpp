@@ -38,7 +38,7 @@ BOOST_AUTO_TEST_CASE(new_lps_is_empty)
 BOOST_AUTO_TEST_CASE(lps_with_only_constant_data_is_empty)
 {
     LpsFromAntares lps;
-    lps.replaceConstantData(ConstantDataFromAntares());
+    lps.setConstantData(ConstantDataFromAntares());
     BOOST_CHECK(lps.empty());
 }
 
@@ -46,7 +46,7 @@ BOOST_AUTO_TEST_CASE(lps_with_no_variabled_is_empty)
 {
     LpsFromAntares lps;
     lps.constantProblemData.VariablesCount = 0;
-    lps.acceptWeeklyData({0, 0}, WeeklyDataFromAntares());
+    lps.addWeeklyData({0, 0}, WeeklyDataFromAntares());
     BOOST_CHECK(lps.empty());
 }
 
@@ -54,7 +54,7 @@ BOOST_AUTO_TEST_CASE(lps_with_both_constant_and_weekly_data_is_not_empty)
 {
     LpsFromAntares lps;
     lps.constantProblemData.VariablesCount = 65;
-    lps.acceptWeeklyData({0, 0}, WeeklyDataFromAntares());
+    lps.addWeeklyData({0, 0}, WeeklyDataFromAntares());
     BOOST_CHECK(!lps.empty());
 }
 
@@ -62,7 +62,7 @@ BOOST_AUTO_TEST_CASE(replace_const_data) {
         LpsFromAntares lps;
         ConstantDataFromAntares var;
         var.VariablesCount = 42;
-        lps.replaceConstantData(std::move(var));
+        lps.setConstantData(var);
         BOOST_CHECK(lps.constantProblemData.VariablesCount == 42);
 }
 
@@ -71,6 +71,6 @@ BOOST_AUTO_TEST_CASE(add_weekly_data_for_week_1_year_1) {
     LpsFromAntares lps;
     WeeklyDataFromAntares w;
     w.RHS.push_back(43);
-    lps.acceptWeeklyData({1, 1}, std::move(w));
+    lps.addWeeklyData({1, 1}, w);
     BOOST_CHECK(lps.weeklyData({1, 1}).RHS.size() != WeeklyDataFromAntares().RHS.size());
 }

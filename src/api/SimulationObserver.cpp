@@ -35,10 +35,10 @@ void SimulationObserver::notifyHebdoProblem(const PROBLEME_HEBDO* problemeHebdo,
     unsigned int const week = problemeHebdo->weekInTheYear + 1;
     std::lock_guard lock(mutex_);
     if (year == 1 && week == 1) {
-        lps_.replaceConstantData(translator.commonProblemData(problemeHebdo->ProblemeAResoudre.get()));
+        lps_.setConstantData(translator.commonProblemData(problemeHebdo->ProblemeAResoudre.get()));
     }
-    lps_.acceptWeeklyData({year, week},
-                          translator.translate(problemeHebdo->ProblemeAResoudre.get(), name));
+    lps_.addWeeklyData({year, week},
+                       translator.translate(problemeHebdo->ProblemeAResoudre.get(), name));
 }
 Solver::LpsFromAntares&& SimulationObserver::acquireLps() noexcept
 {
