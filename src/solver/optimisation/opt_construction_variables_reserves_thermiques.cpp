@@ -50,10 +50,31 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReservesThermi
             variableNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
             auto areaReserves = problemeHebdo->allReserves.thermalAreaReserves[pays];
             int index = 0;
+            int reserveIndex = 0;
             const PALIERS_THERMIQUES& PaliersThermiquesDuPays
               = problemeHebdo->PaliersThermiquesDuPays[pays];
             for (const auto& areaReserveUp : areaReserves.areaCapacityReservationsUp)
             {
+                if (!Simulation)
+                {
+                    // For Unsatisfied Reserves
+                    CorrespondanceVarNativesVarOptim.internalUnsatisfiedReserveIndex[reserveIndex]
+                      = NombreDeVariables;
+                    ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
+                      = VARIABLE_BORNEE_DES_DEUX_COTES;
+                    variableNamer.InternalUnsatisfiedReserve(NombreDeVariables,
+                                                             areaReserveUp.reserveName);
+
+                    // For Excess Reserves
+                    CorrespondanceVarNativesVarOptim.internalExcessReserveIndex[reserveIndex]
+                      = NombreDeVariables;
+                    ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
+                      = VARIABLE_BORNEE_DES_DEUX_COTES;
+                    variableNamer.InternalExcessReserve(NombreDeVariables,
+                                                        areaReserveUp.reserveName);
+                }
+                NombreDeVariables += 2;
+
                 int clusterIndex = 0;
                 for (const auto& clusterReserveParticipation :
                      areaReserveUp.AllReservesParticipation)
@@ -83,12 +104,32 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReservesThermi
                             index++;
                             clusterIndex++;
                         }
-                        NombreDeVariables++;
+                        NombreDeVariables += 2;
                     }
                 }
             }
             for (const auto& areaReserveDown : areaReserves.areaCapacityReservationsDown)
             {
+                if (!Simulation)
+                {
+                    // For Unsatisfied Reserves
+                    CorrespondanceVarNativesVarOptim.internalUnsatisfiedReserveIndex[reserveIndex]
+                      = NombreDeVariables;
+                    ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
+                      = VARIABLE_BORNEE_DES_DEUX_COTES;
+                    variableNamer.InternalUnsatisfiedReserve(NombreDeVariables,
+                                                             areaReserveDown.reserveName);
+
+                    // For Excess Reserves
+                    CorrespondanceVarNativesVarOptim.internalExcessReserveIndex[reserveIndex]
+                      = NombreDeVariables;
+                    ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
+                      = VARIABLE_BORNEE_DES_DEUX_COTES;
+                    variableNamer.InternalExcessReserve(NombreDeVariables,
+                                                        areaReserveDown.reserveName);
+                }
+                NombreDeVariables += 2;
+
                 int clusterIndex = 0;
                 for (const auto& clusterReserveParticipation :
                      areaReserveDown.AllReservesParticipation)
@@ -118,7 +159,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReservesThermi
                             index++;
                             clusterIndex++;
                         }
-                        NombreDeVariables++;
+                        NombreDeVariables += 2;
                     }
                 }
             }

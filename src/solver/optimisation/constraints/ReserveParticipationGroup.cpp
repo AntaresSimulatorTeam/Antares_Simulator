@@ -47,7 +47,8 @@ void ReserveParticipationGroup::BuildConstraints()
     {
         auto data = GetReserveDataFromProblemHebdo();
         PMaxReserve pMaxReserve(builder_, data);
-        PRunningUnits pRunningUnits(builder_,data);
+        PRunningUnits pRunningUnits(builder_, data);
+        ReserveSatisfaction reserveSatisfaction(builder_, data);
 
         for (int pdt = 0; pdt < problemeHebdo_->NombreDePasDeTempsPourUneOptimisation; pdt++)
         {
@@ -59,6 +60,9 @@ void ReserveParticipationGroup::BuildConstraints()
                 uint32_t reserve = 0;
                 for (const auto& areaReserveUp : areaReservesUp)
                 {
+                    // 24
+                    reserveSatisfaction.add(pays, reserve, pdt, true);
+
                     uint32_t cluster = 0;
                     for (const auto& clusterReserveParticipation :
                          areaReserveUp.AllReservesParticipation)
@@ -78,16 +82,22 @@ void ReserveParticipationGroup::BuildConstraints()
 
                 auto areaReservesDown
                   = data.areaReserves.thermalAreaReserves[pays].areaCapacityReservationsDown;
-                reserve = 0;
                 for (const auto& areaReserveDown : areaReservesDown)
                 {
+                    // 24
+                    reserveSatisfaction.add(pays, reserve, pdt, false);
+
                     uint32_t cluster = 0;
                     for (const auto& clusterReserveParticipation :
                          areaReserveDown.AllReservesParticipation)
                     {
                         if (clusterReserveParticipation.maxPower >= 0)
                         {
+                            // 16 bis
                             pMaxReserve.add(pays, reserve, cluster, pdt, false);
+
+                            // 17 quater
+                            pRunningUnits.add(pays, reserve, cluster, pdt, false);
                         }
                         cluster++;
                     }

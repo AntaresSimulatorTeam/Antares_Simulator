@@ -65,6 +65,27 @@ ConstraintBuilder& ConstraintBuilder::ClusterReserveParticipation(unsigned int i
     return *this;
 }
 
+ConstraintBuilder& ConstraintBuilder::InternalUnsatisfiedReserve(unsigned int index,
+                                                                 double coeff,
+                                                                 int offset,
+                                                                 int delta)
+{
+    AddVariable(
+      variableManager_.InternalUnsatisfiedReserve(index, hourInWeek_, offset, delta),
+      coeff);
+    return *this;
+}
+
+ConstraintBuilder& ConstraintBuilder::InternalExcessReserve(unsigned int index,
+                                                            double coeff,
+                                                            int offset,
+                                                            int delta)
+{
+    AddVariable(variableManager_.InternalExcessReserve(index, hourInWeek_, offset, delta),
+                coeff);
+    return *this;
+}
+
 ConstraintBuilder& ConstraintBuilder::NumberOfDispatchableUnits(unsigned int index, double coeff)
 {
     AddVariable(variableManager_.NumberOfDispatchableUnits(index, hourInWeek_), coeff);

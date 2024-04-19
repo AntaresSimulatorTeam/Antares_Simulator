@@ -131,7 +131,7 @@ float Cluster::reserveCost(std::string name)
         return -1;
 }
 
-unsigned int Cluster::reservesCount(){
+unsigned int Cluster::reserveParticipationsCount(){
     return clusterReservesParticipations.size();
 }
 

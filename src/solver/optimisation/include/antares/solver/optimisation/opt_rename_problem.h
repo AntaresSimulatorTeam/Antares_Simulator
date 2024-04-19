@@ -66,9 +66,12 @@ public:
     void SetThermalClusterElementName(unsigned int variable,
                                       const std::string& variableType,
                                       const std::string& clusterName);
+    void SetThermalClusterAndReserveElementName(unsigned int variable,
+                                                const std::string& elementType,
+                                                const std::string& clusterName,
+                                                const std::string& reserveName);
     void SetThermalClusterReserveElementName(unsigned int variable,
                                              const std::string& elementType,
-                                             const std::string& clusterName,
                                              const std::string& reserveName);
 
     unsigned int timeStep_ = 0;
@@ -89,6 +92,8 @@ public:
     void ParticipationOfRunningUnitsToReserve(unsigned int variable,
                                               const std::string& clusterName,
                                               const std::string& reserveName);
+    void InternalUnsatisfiedReserve(unsigned int variable, const std::string& reserveName);
+    void InternalExcessReserve(unsigned int variable, const std::string& reserveName);
     void NODU(unsigned int variable, const std::string& clusterName);
     void NumberStoppingDispatchableUnits(unsigned int variable, const std::string& clusterName);
     void NumberStartingDispatchableUnits(unsigned int variable, const std::string& clusterName);
@@ -153,6 +158,7 @@ public:
     void PMaxReserve(unsigned int constraint, const std::string& clusterName, const std::string& reserveName);
     void POutCapacityThreasholdInf(unsigned int constraint, const std::string& clusterName);
     void POutCapacityThreasholdSup(unsigned int constraint, const std::string& clusterName);
+    void ReserveSatisfaction(unsigned int constraint, const std::string& reserveName);
     void PMaxDispatchableGeneration(unsigned int constraint, const std::string& clusterName);
     void PMinDispatchableGeneration(unsigned int constraint, const std::string& clusterName);
     void ConsistenceNODU(unsigned int constraint, const std::string& clusterName);

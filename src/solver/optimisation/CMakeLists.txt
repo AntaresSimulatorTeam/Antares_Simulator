@@ -134,6 +134,8 @@ set(RTESOLVER_OPT
 		constraints/POutCapacityThreasholds.cpp
 		include/antares/solver/optimisation/constraints/PRunningUnits.h
 		constraints/PRunningUnits.cpp
+		include/antares/solver/optimisation/constraints/ReserveSatisfaction.h
+		constraints/ReserveSatisfaction.cpp
 
 		include/antares/solver/optimisation/ProblemMatrixEssential.h
 		ProblemMatrixEssential.cpp

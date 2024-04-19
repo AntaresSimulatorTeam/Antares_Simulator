@@ -89,13 +89,24 @@ void Namer::SetThermalClusterElementName(unsigned int variable,
       BuildName(elementType, location, TimeIdentifier(timeStep_, HOUR)), variable);
 }
 
-void Namer::SetThermalClusterReserveElementName(unsigned int variable,
-                                                const std::string& elementType,
-                                                const std::string& clusterName,
-                                                const std::string& reserveName)
+void Namer::SetThermalClusterAndReserveElementName(unsigned int variable,
+                                                   const std::string& elementType,
+                                                   const std::string& clusterName,
+                                                   const std::string& reserveName)
 {
     const auto location = LocationIdentifier(area_, AREA) + SEPARATOR + "ThermalCluster" + "<"
                           + clusterName + ">" + SEPARATOR + "Reserve" + "<" + reserveName + ">";
+
+    targetUpdater_.UpdateTargetAtIndex(
+      BuildName(elementType, location, TimeIdentifier(timeStep_, HOUR)), variable);
+}
+
+void Namer::SetThermalClusterReserveElementName(unsigned int variable,
+                                                const std::string& elementType,
+                                                const std::string& reserveName)
+{
+    const auto location
+      = LocationIdentifier(area_, AREA) + SEPARATOR + "Reserve" + "<" + reserveName + ">";
 
     targetUpdater_.UpdateTargetAtIndex(
       BuildName(elementType, location, TimeIdentifier(timeStep_, HOUR)), variable);
@@ -110,7 +121,7 @@ void VariableNamer::ParticipationOfUnitsToReserve(unsigned int variable,
                                                   const std::string& clusterName,
                                                   const std::string& reserveName)
 {
-    SetThermalClusterReserveElementName(
+    SetThermalClusterAndReserveElementName(
       variable, "ParticipationOfUnitsToReserve", clusterName, reserveName);
 }
 
@@ -118,8 +129,19 @@ void VariableNamer::ParticipationOfRunningUnitsToReserve(unsigned int variable,
                                                          const std::string& clusterName,
                                                          const std::string& reserveName)
 {
-    SetThermalClusterReserveElementName(
+    SetThermalClusterAndReserveElementName(
       variable, "ParticipationOfRunningUnitsToReserve", clusterName, reserveName);
+}
+
+void VariableNamer::InternalUnsatisfiedReserve(unsigned int variable,
+                                               const std::string& reserveName)
+{
+    SetThermalClusterReserveElementName(variable, "InternalUnsatisfiedReserve", reserveName);
+}
+
+void VariableNamer::InternalExcessReserve(unsigned int variable, const std::string& reserveName)
+{
+    SetThermalClusterReserveElementName(variable, "InternalExcessReserve", reserveName);
 }
 
 void VariableNamer::NODU(unsigned int variable, const std::string& clusterName)
@@ -368,7 +390,7 @@ void ConstraintNamer::PMaxReserve(unsigned int constraint,
                                   const std::string& clusterName,
                                   const std::string& reserveName)
 {
-    SetThermalClusterReserveElementName(constraint, "PMaxReserve", clusterName, reserveName);
+    SetThermalClusterAndReserveElementName(constraint, "PMaxReserve", clusterName, reserveName);
 }
 
 void ConstraintNamer::POutCapacityThreasholdInf(unsigned int constraint,
@@ -381,6 +403,11 @@ void ConstraintNamer::POutCapacityThreasholdSup(unsigned int constraint,
                                   const std::string& clusterName)
 {
     SetThermalClusterElementName(constraint, "POutCapacityThreasholdSup", clusterName);
+}
+
+void ConstraintNamer::ReserveSatisfaction(unsigned int constraint, const std::string& reserveName)
+{
+    SetThermalClusterReserveElementName(constraint, "ReserveSatisfaction", reserveName);
 }
 
 void ConstraintNamer::PMaxDispatchableGeneration(unsigned int constraint,

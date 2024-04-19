@@ -47,6 +47,8 @@ struct CORRESPONDANCES_DES_VARIABLES
 
     std::vector<int> runningClusterReserveParticipationIndex;
     std::vector<int> clusterReserveParticipationIndex;
+    std::vector<int> internalUnsatisfiedReserveIndex;
+    std::vector<int> internalExcessReserveIndex;
 
     std::vector<int> NumeroDeVariablesDeLaProdHyd;
 

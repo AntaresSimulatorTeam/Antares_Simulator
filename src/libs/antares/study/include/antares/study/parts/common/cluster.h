@@ -150,19 +150,20 @@ public:
     float reserveCost(std::string name);
 
     //! \brief Returns the number of reserves linked to this cluster
-    unsigned int reservesCount();
+    unsigned int reserveParticipationsCount();
 
 
 protected:
     Data::ClusterName pName;
     Data::ClusterName pID;
     Data::ClusterName pGroup;
+    //! reserve
+    std::map<std::string, ClusterReserveParticipation> clusterReservesParticipations;
 
 private:
     virtual unsigned int precision() const = 0;
     //! @brief Stores the reserves Participations for each reserve, the key is the name of the
-    //! reserve
-    std::map<std::string, ClusterReserveParticipation> clusterReservesParticipations;
+    
 
 };
 } // namespace Data

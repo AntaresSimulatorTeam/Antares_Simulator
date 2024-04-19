@@ -63,6 +63,26 @@ int& VariableManager::ClusterReserveParticipation(unsigned int index,
     return CorrespondanceVarNativesVarOptim_[pdt].clusterReserveParticipationIndex[index];
 }
 
+int& VariableManager::InternalUnsatisfiedReserve(unsigned int index,
+                                                 unsigned int hourInWeek,
+                                                 int offset,
+                                                 int delta)
+{
+    auto pdt = GetShiftedTimeStep(offset, delta, hourInWeek);
+
+    return CorrespondanceVarNativesVarOptim_[pdt].internalUnsatisfiedReserveIndex[index];
+}
+
+int& VariableManager::InternalExcessReserve(unsigned int index,
+                                                 unsigned int hourInWeek,
+                                                 int offset,
+                                                 int delta)
+{
+    auto pdt = GetShiftedTimeStep(offset, delta, hourInWeek);
+
+    return CorrespondanceVarNativesVarOptim_[pdt].internalExcessReserveIndex[index];
+}
+
 int& VariableManager::NumberOfDispatchableUnits(unsigned int index,
                                                 unsigned int hourInWeek,
                                                 int offset,

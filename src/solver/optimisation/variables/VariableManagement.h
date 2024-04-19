@@ -32,6 +32,16 @@ public:
                                        int offset = 0,
                                        int delta = 0);
 
+    int& InternalUnsatisfiedReserve(unsigned int index,
+                                    unsigned int hourInWeek,
+                                    int offset = 0,
+                                    int delta = 0);
+
+    int& InternalExcessReserve(unsigned int index,
+                               unsigned int hourInWeek,
+                               int offset = 0,
+                               int delta = 0);
+
     int& NumberOfDispatchableUnits(unsigned int index,
                                    unsigned int hourInWeek,
                                    int offset = 0,

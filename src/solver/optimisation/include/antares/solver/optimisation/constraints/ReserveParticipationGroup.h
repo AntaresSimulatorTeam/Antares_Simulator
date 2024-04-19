@@ -25,6 +25,7 @@
 #include "PMaxReserve.h"
 #include "POutCapacityThreasholds.h"
 #include "PRunningUnits.h"
+#include "ReserveSatisfaction.h"
 
 /**
  * @brief Group of reserve constraints
