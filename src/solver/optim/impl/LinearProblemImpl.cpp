@@ -63,6 +63,11 @@ void LinearProblemImpl::setObjectiveCoefficient(const MPVariable& variable, doub
     mpSolver->MutableObjective()->SetCoefficient(&variable, coefficient);
 }
 
+double LinearProblemImpl::getObjectiveCoefficient(const MPVariable& variable)
+{
+    return mpSolver->MutableObjective()->GetCoefficient(&variable);
+}
+
 void LinearProblemImpl::setMinimization(bool isMinim)
 {
     isMinim ? mpSolver->MutableObjective()->SetMinimization()
@@ -71,7 +76,7 @@ void LinearProblemImpl::setMinimization(bool isMinim)
 
 MipSolution LinearProblemImpl::solve(const operations_research::MPSolverParameters& param)
 {
-    mpSolver->EnableOutput();
+    //mpSolver->EnableOutput();
     // std::string model;
     // std::ofstream m("/tmp/model.lp");
     // if (m && mpSolver->ExportModelAsLpFormat(false, &model))
@@ -85,7 +90,12 @@ MipSolution LinearProblemImpl::solve(const operations_research::MPSolverParamete
     {
         solution.insert({var->name(), var->solution_value()});
     }
-    return {status, solution};
+    return {status, solution, mpSolver->Objective().Value()};
+}
+
+double LinearProblemImpl::infinity()
+{
+    return mpSolver->solver_infinity();
 }
 
 LinearProblemImpl::~LinearProblemImpl() = default;

@@ -53,15 +53,14 @@ void ComponentFiller::addVariables(LinearProblem& problem,
                 problem.addNumVariable(pVarName, 0, maxP);
             }
         }
-        else if (component_.getModel() == BATTERY)
+        else if (component_.getModel() == BATTERY || component_.getModel() == BATTERY_WITH_VARIABLE_SIZING)
         {
             auto timestamps = ctx.getTimeStamps();
             for (auto ts : timestamps)
             {
                 // P < 0 : charge
                 // P > 0 : décharge
-                string pVarName
-                  = "P_" + component_.getId() + "_" + to_string(ts) + "_" + to_string(scenario);
+                string pVarName = "P_" + component_.getId() + "_" + to_string(ts) + "_" + to_string(scenario);
                 double maxP = component_.getDoubleParameterValue("maxP");
                 problem.addNumVariable(pVarName, -maxP, maxP);
 
@@ -72,6 +71,16 @@ void ComponentFiller::addVariables(LinearProblem& problem,
             }
         }
     }
+    if (component_.getModel() == BATTERY_WITH_VARIABLE_SIZING)
+    {
+        string maxPVarName = "maxP_" + component_.getId();
+        double maxP = component_.getDoubleParameterValue("maxP");
+        problem.addNumVariable(maxPVarName, 0, maxP);
+
+        string maxStockVarName = "maxStock_" + component_.getId();
+        double maxStock = component_.getDoubleParameterValue("maxStock");
+        problem.addNumVariable(maxStockVarName, 0, maxStock);
+    }
 }
 
 void ComponentFiller::addConstraints(LinearProblem& problem,
@@ -79,7 +88,7 @@ void ComponentFiller::addConstraints(LinearProblem& problem,
                                      const BuildContext& ctx)
 {
     // TODO : replace with AST
-    if (component_.getModel() == BATTERY)
+    if (component_.getModel() == BATTERY || component_.getModel() == BATTERY_WITH_VARIABLE_SIZING)
     {
         for (auto scenario : ctx.getScenarios())
         {
@@ -90,12 +99,12 @@ void ComponentFiller::addConstraints(LinearProblem& problem,
                 auto p = &problem.getVariable(pVarName);
                 string stockVarName
                   = "Stock_" + component_.getId() + "_" + to_string(ts) + "_" + to_string(scenario);
-                auto e = &problem.getVariable(stockVarName);
+                auto stock = &problem.getVariable(stockVarName);
 
                 // Stock(t) = Stock(t-T) - T/60 * P(t)
                 auto stockConstraint
-                  = &problem.addConstraint("Stock_constr_" + to_string(ts), 0, 0);
-                stockConstraint->SetCoefficient(e, 1);
+                  = &problem.addConstraint("Stock_constr_" + to_string(ts) + "_" + to_string(scenario), 0, 0);
+                stockConstraint->SetCoefficient(stock, 1);
                 stockConstraint->SetCoefficient(p, data.getTimeResolutionInMinutes() * 1.0 / 60.0);
 
                 int previous_stock_ts;
@@ -112,6 +121,27 @@ void ComponentFiller::addConstraints(LinearProblem& problem,
                                          + to_string(previous_stock_ts) + "_" + to_string(scenario);
                 auto previousE = &problem.getVariable(stockVarNameTm1);
                 stockConstraint->SetCoefficient(previousE, -1);
+                if (component_.getModel() == BATTERY_WITH_VARIABLE_SIZING)
+                {
+                    // Sizing constraints
+                    auto maxP = &problem.getVariable("maxP_" + component_.getId());
+                    auto maxStock = &problem.getVariable("maxStock_" + component_.getId());
+                    // P >= -maxP
+                    auto maxPConstraintLB
+                      = &problem.addConstraint("maxStock_constr_" + to_string(ts) + "_" + to_string(scenario), 0, problem.infinity());
+                    maxPConstraintLB->SetCoefficient(p, 1);
+                    maxPConstraintLB->SetCoefficient(maxP, 1);
+                    // P <= maxP
+                    auto maxPConstraintUB
+                      = &problem.addConstraint("maxStock_constr_" + to_string(ts) + "_" + to_string(scenario), 0, problem.infinity());
+                    maxPConstraintUB->SetCoefficient(p, -1);
+                    maxPConstraintUB->SetCoefficient(maxP, 1);
+                    // Stock <= maxStock
+                    auto maxStockConstraint
+                      = &problem.addConstraint("maxStock_constr_" + to_string(ts) + "_" + to_string(scenario), 0, problem.infinity());
+                    maxStockConstraint->SetCoefficient(stock, -1);
+                    maxStockConstraint->SetCoefficient(maxStock, 1);
+                }
             }
             if (data.hasScalarData("initialStock_" + component_.getId()))
             {
@@ -179,10 +209,8 @@ void ComponentFiller::addObjective(Antares::optim::api::LinearProblem& problem,
                     for (const auto& [varName, coeff] : connection.componentFiller->getPortPin(
                            connection.portName, ts, data, scenario))
                     {
-                        std::cerr << "[setObjectiveCoefficient] '" << varName << "' " << coeff
-                                  << std::endl;
                         auto variable = &problem.getVariable(varName);
-                        problem.setObjectiveCoefficient(*variable, coeff);
+                        problem.setObjectiveCoefficient(*variable, coeff / ctx.getScenarios().size() + problem.getObjectiveCoefficient(*variable));
                     }
                 }
             }
@@ -214,13 +242,33 @@ map<string, double> ComponentFiller::getPortPin(string name,
     // cost THERMAL
     if (name == "cost")
     {
-        if (!data.hasTimedData("cost_" + component_.getId()))
+        if (component_.getModel() == BATTERY_WITH_VARIABLE_SIZING)
         {
-            return {};
+            std::string maxPVarName = "maxP_" + component_.getId();
+            std::string maxStockVarName = "maxStock_" + component_.getId();
+
+            // TODO : not very clean since scenario is ignored, which works because
+            // the PRICE_MINIM filler does not add costs for the scenarios
+            double maxPLifeTimeCost = component_.getDoubleParameterValue("maxPLifeTimeCost");
+            double maxStockLifeTimeCost = component_.getDoubleParameterValue("maxStockLifeTimeCost");
+            double lifeTimeInYears = component_.getDoubleParameterValue("lifeTimeInYears");
+            double nTsInLifeTime = lifeTimeInYears * 365.25 * 1440 / (1.0 * data.getTimeResolutionInMinutes());
+            double maxPCostPerTs = maxPLifeTimeCost / nTsInLifeTime;
+            double maxStockCostPerTs = maxStockLifeTimeCost / nTsInLifeTime;
+
+            return {{maxPVarName, maxPCostPerTs}, {maxStockVarName, maxStockCostPerTs}};
+            // TODO: we can add variable cost on P here too, instead of if/else
         }
-        // TODO BuildContext
-        double cost = data.getTimedData("cost_" + component_.getId(), scenario).at(timestamp);
-        return {{pVarName, cost}};
+        else
+        {
+            if (!data.hasTimedData("cost_" + component_.getId()))
+            {
+                return {};
+            }
+            // TODO BuildContext
+            double cost = data.getTimedData("cost_" + component_.getId(), scenario).at(timestamp);
+            return {{pVarName, cost}};
+        }
     }
 
     return {};

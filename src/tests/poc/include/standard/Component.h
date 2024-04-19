@@ -9,6 +9,7 @@ enum Model
 {
     THERMAL,
     BATTERY,
+    BATTERY_WITH_VARIABLE_SIZING,
     BALANCE,
     PRICE_MINIM
 };

@@ -38,8 +38,10 @@ namespace Antares::optim::api
     private:
         operations_research::MPSolver::ResultStatus responseStatus_;
         std::map<std::string, double> solution_;
+        double objectiveValue_;
     public:
-        MipSolution(operations_research::MPSolver::ResultStatus responseStatus, const std::map<std::string, double>& solution) : responseStatus_(responseStatus)
+        MipSolution(operations_research::MPSolver::ResultStatus responseStatus, const std::map<std::string, double>& solution, double objectiveValue) :
+         responseStatus_(responseStatus), objectiveValue_(objectiveValue)
         {
             // Only store non-zero values
             for (const auto& varAndValue : solution)
@@ -67,5 +69,7 @@ namespace Antares::optim::api
             }
             return solution;
         }
+
+        double getObjectiveValue() { return objectiveValue_; }
     };
 }
