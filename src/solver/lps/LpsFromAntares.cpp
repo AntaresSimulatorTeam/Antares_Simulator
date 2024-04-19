@@ -27,15 +27,27 @@ bool LpsFromAntares::empty() const
 {
     return constantProblemData.VariablesCount == 0 || weeklyProblems.empty();
 }
-void LpsFromAntares::replaceConstantData(ConstantDataFromAntares uniquePtr)
+void LpsFromAntares::setConstantData(const ConstantDataFromAntares& data)
 {
-    constantProblemData = std::move(uniquePtr);
+    constantProblemData = data;
 }
 
-void LpsFromAntares::acceptWeeklyData(WeeklyProblemId id, WeeklyDataFromAntares&& data)
+void LpsFromAntares::setConstantData(ConstantDataFromAntares&& data)
+{
+    constantProblemData = std::move(data);
+
+}
+
+void LpsFromAntares::addWeeklyData(WeeklyProblemId id, WeeklyDataFromAntares&& data)
 {
     weeklyProblems.emplace(id, std::move(data));
 }
+
+void LpsFromAntares::addWeeklyData(WeeklyProblemId id, const WeeklyDataFromAntares& data)
+{
+    weeklyProblems.emplace(id, data);
+}
+
 const WeeklyDataFromAntares& LpsFromAntares::weeklyData(WeeklyProblemId id) const
 {
     auto it = weeklyProblems.find(id);

@@ -125,12 +125,19 @@ public:
     bool empty() const;
     /*
      * @brief Replaces the constant data in the LpsFromAntares object.
+     * Copy happens
      */
-    void replaceConstantData(ConstantDataFromAntares uniquePtr);
+    void setConstantData(const ConstantDataFromAntares& data);
+    /*
+     * @brief Replaces the constant data in the LpsFromAntares object.
+     * Move happens
+     */
+    void setConstantData(ConstantDataFromAntares&& data);
     /*
      * @brief Adds weekly data to the LpsFromAntares object.
      */
-    void acceptWeeklyData(WeeklyProblemId id, WeeklyDataFromAntares&& data);
+    void addWeeklyData(WeeklyProblemId id, WeeklyDataFromAntares&& data);
+    void addWeeklyData(WeeklyProblemId id, const WeeklyDataFromAntares& data);
     /*
      * @brief Retrieves weekly data from the LpsFromAntares object.
      */
