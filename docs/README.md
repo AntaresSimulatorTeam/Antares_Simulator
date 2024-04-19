@@ -86,7 +86,11 @@ Sphinx will create a `reference-guide.pdf` file in `docs/pdf-doc-generation-with
 
 ### Doxygen
 [//]: # (TODO)
-_**This section is under construction**_
+we strive to enrich code documentation as it evolves. The doxygen doc is generated automatically each time the develop branch is updated. It is hosted [here](https://antaressimulatorteam.github.io/Antares_Simulator/doxygen), and can also be generated locally with the follow command at the root of the project:
+
+**doxygen-executable** docs/Doxyfile
+
+If you'd like the same rendering as the one published checkout [doxygen-awesome-css](https://github.com/jothepro/doxygen-awesome-css) and do this step before:
 
 ## Extra considerations
 
