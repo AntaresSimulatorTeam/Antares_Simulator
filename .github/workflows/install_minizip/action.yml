@@ -28,4 +28,4 @@ runs:
         -D MZ_ICONV=OFF \
         -DZLIB_TAG=develop #Temporary fix for zlib issue https://github.com/zlib-ng/minizip-ng/issues/764
         cmake --build build --config Release 
-        cmake --install build --prefix ${{inputs.install-path}}
+        cmake --install build --prefix "${{inputs.install-path}}"
