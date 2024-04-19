@@ -38,11 +38,14 @@ Particular cases:
 
 The Antares simulator may be delivered with or without functional extensions that provide additional
 ways to handle input and output data.  
-Many various graphic extensions (programs written in R language) are available at: [https://cran.r-project.org/web/packages/antaresViz/index.html](https://cran.r-project.org/web/packages/antaresViz/index.html)
+Many various extensions (programs written in R language) are available:  
 
-These extensions take the form of companion applications that are independent from the main simulator.
-For information regarding these tools (*Antares Data Organizer*, *AntaresViz* R packages, …) please refer to
-the specific relevant documents.
+- [AntaresEditObject](https://cran.r-project.org/web/packages/antaresEditObject)
+- [AntaresRead](https://cran.r-project.org/web/packages/antaresRead)
+- [AntaresViz](https://cran.r-project.org/web/packages/antaresViz)
+
+These extensions take the form of companion applications that are independent of the main simulator.
+For information regarding these tools, please refer to the relevant documents.
 
 ## Usual workflow of an *Antares* session
 

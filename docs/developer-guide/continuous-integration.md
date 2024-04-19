@@ -3,7 +3,7 @@
 
 Here is a description of workflows with their associated status.
 
-## Primary build & release workflows
+## Build & release workflows
 
 | OS               | .yml                  | Description                                                                             | Status                                               |
 |:-----------------|-----------------------|-----------------------------------------------------------------------------------------|------------------------------------------------------|
@@ -13,13 +13,6 @@ Here is a description of workflows with their associated status.
 | OracleLinux8     | `oracle8.yml`         | Builds Antares Simulator                                                                | [![Status][oraclelinux_ci_svg]][oraclelinux_ci_link] |
 | -                | `build-userguide.yml` | Generates PDF user guide from material in `docs/user-guide` (uses Sphinx)               | [![Status][userguide_svg]][userguide_link]           |
 | All of the above | `new_release.yml`     | When a release is created, runs the aforementioned workflows and publishes their assets | [![Status][new_release_svg]][new_release_link]       |
-
-## Secondary build workflows
-
-| OS      | .yml                            | Description                             | Status                                                     |
-|:--------|---------------------------------|-----------------------------------------|------------------------------------------------------------|
-| Ubuntu  | `ubuntu-system-deps-build.yml`  | Builds Antares Simulator's dependencies | [![Status][ubuntu_deps_build_svg]][ubuntu_deps_build_link] |
-| Centos7 | `centos7-system-deps-build.yml` | Builds Antares Simulator's dependencies | [![Status][centos_deps_build_svg]][centos_deps_build_link] |
 
 ## Additional workflows
 
@@ -39,17 +32,11 @@ Here is a description of workflows with their associated status.
 [ubuntu_ci_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Ubuntu%20CI%20(push%20and/or%20release)/badge.svg
 [ubuntu_ci_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Ubuntu%20CI%20(push%20and/or%20release)"
 
-[ubuntu_deps_build_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Ubuntu%20CI%20(deps.%20compilation)/badge.svg
-[ubuntu_deps_build_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Ubuntu%20CI%20(deps.%20compilation)"
-
 [windows_ci_only_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Windows%20CI%20(pre-compiled%20only)/badge.svg
 [windows_ci_only_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Windows%20CI%20(pre-compiled%20only)"
 
 [windows_ci_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Windows%20CI%20(VCPKG%20and%20pre-compiled)/badge.svg
 [windows_ci_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Windows%20CI%20(VCPKG%20and%20pre-compiled)"
-
-[centos_deps_build_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Centos7%20CI%20(deps.%20compilation)/badge.svg
-[centos_deps_build_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Centos7%20CI%20(deps.%20compilation)"
 
 [centos_ci_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Centos7%20CI%20(push%20and/or%20release)/badge.svg
 [centos_ci_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Centos7%20CI%20(push%20and/or%20release)"
