@@ -12,15 +12,16 @@ namespace tt = boost::test_tools;
 namespace bdata = boost::unit_test::data;
 using namespace Antares::optim::api;
 
-static constexpr std::array solverNames = {
-  "xpress",
-  "sirius",
-  "coin",
-  "scip"
-};
+static constexpr std::array solverNames = {"xpress", "sirius", "coin", "scip"};
 
-MipSolution runBatterySizingLP(string solverName, vector<int> timeStamps, int timeResolution, vector<unsigned int> scenarios, int batteryLifeTime,
-                   vector<vector<double>> consumptionScenarios,vector<vector<double>> thermal1CostScenarios,vector<vector<double>> thermal2CostScenarios )
+MipSolution runBatterySizingLP(string solverName,
+                               vector<int> timeStamps,
+                               int timeResolution,
+                               vector<unsigned int> scenarios,
+                               int batteryLifeTime,
+                               vector<vector<double>> consumptionScenarios,
+                               vector<vector<double>> thermal1CostScenarios,
+                               vector<vector<double>> thermal2CostScenarios)
 {
     LinearProblemImpl linearProblem(false, solverName);
     LinearProblemBuilder linearProblemBuilder(linearProblem);
@@ -34,8 +35,14 @@ MipSolution runBatterySizingLP(string solverName, vector<int> timeStamps, int ti
     auto thermal1Filler = make_shared<ComponentFiller>(thermal1, portConnectionsManager);
     Component thermal2("thermal2", THERMAL, {{"maxP", 100}}, {});
     auto thermal2Filler = make_shared<ComponentFiller>(thermal2, portConnectionsManager);
-    Component battery("battery1", BATTERY_WITH_VARIABLE_SIZING,
-                      {{"maxP", 9999}, {"maxStock", 9999}, {"lifeTimeInYears", batteryLifeTime}, {"maxStockLifeTimeCost", 150e3}, {"maxPLifeTimeCost", 200e3}}, {});
+    Component battery("battery1",
+                      BATTERY_WITH_VARIABLE_SIZING,
+                      {{"maxP", 9999},
+                       {"maxStock", 9999},
+                       {"lifeTimeInYears", batteryLifeTime},
+                       {"maxStockLifeTimeCost", 150e3},
+                       {"maxPLifeTimeCost", 200e3}},
+                      {});
     auto batteryFiller = make_shared<ComponentFiller>(battery, portConnectionsManager);
 
     linearProblemBuilder.addFiller(thermal1Filler);
@@ -65,16 +72,15 @@ MipSolution runBatterySizingLP(string solverName, vector<int> timeStamps, int ti
     return solution;
 }
 
-BOOST_DATA_TEST_CASE(test_battery_sizing_one_scenario,
-                     bdata::make(solverNames),
-                     solverName)
+BOOST_DATA_TEST_CASE(test_battery_sizing_one_scenario, bdata::make(solverNames), solverName)
 {
-    // In this test, we will try to find the best investment in a battery
-    // This is a copy of test in "standard-test" named "test_std_oneWeek_oneNode_oneBattery_twoThermals",
-    // where the battery size (maxP, maxStock) is an optimization variable.
-    // The battery costs 150k€/MWh (on maxStock) and 200k€/MW (on maxP), and lives 15 years
-    // Under these circumstances, the optimal sizing for the one scenario copied from the existing test
-    // should be: maxP = 50 MW, maxStock = 100 MWh, for a total price of 3210.5€ (tested iteratively)
+    // In this test, we will try to find the best investment in a battery.
+    // This is a copy of test in "standard-test" named
+    // "test_std_oneWeek_oneNode_oneBattery_twoThermals", where the battery size (maxP, maxStock) is
+    // an optimization variable. The battery costs 150k€/MWh (on maxStock) and 200k€/MW (on maxP),
+    // and lives 15 years. Under these circumstances, the optimal sizing for the one scenario copied
+    // from the existing test should be: maxP = 50 MW, maxStock = 100 MWh, for a total price of
+    // 3210.5€ (tested iteratively)
 
     auto solution = runBatterySizingLP(solverName,
                                        {0, 1, 2, 3},
@@ -90,15 +96,14 @@ BOOST_DATA_TEST_CASE(test_battery_sizing_one_scenario,
     BOOST_TEST(solution.getObjectiveValue() == 3210.51, tt::tolerance(0.01));
 }
 
-BOOST_DATA_TEST_CASE(test_battery_sizing_three_same_scenarios,
-                     bdata::make(solverNames),
-                     solverName)
+BOOST_DATA_TEST_CASE(test_battery_sizing_three_same_scenarios, bdata::make(solverNames), solverName)
 {
     // Copy of previous test, with the same scenario repeated thrice
-    // (consumption & thermal prices are scenarized)
+    // (consumption & thermal prices have multiple scenarios)
     // Expected result is the same as the previous test
 
-    vector<vector<double>> consumptionScenarios =  {{0, 150, 150, 150}, {0, 150, 150, 150}, {0, 150, 150, 150}};
+    vector<vector<double>> consumptionScenarios
+      = {{0, 150, 150, 150}, {0, 150, 150, 150}, {0, 150, 150, 150}};
     vector<vector<double>> t1CostScenarios = {{1, 4, 8, 11}, {1, 4, 8, 11}, {1, 4, 8, 11}};
     vector<vector<double>> t2CostScenarios = {{2, 3, 10, 9}, {2, 3, 10, 9}, {2, 3, 10, 9}};
 
@@ -116,10 +121,7 @@ BOOST_DATA_TEST_CASE(test_battery_sizing_three_same_scenarios,
     BOOST_TEST(solution.getObjectiveValue() == 3210.51, tt::tolerance(0.01));
 }
 
-
-BOOST_DATA_TEST_CASE(test_battery_sizing_multiple_scenarios,
-                     bdata::make(solverNames),
-                     solverName)
+BOOST_DATA_TEST_CASE(test_battery_sizing_multiple_scenarios, bdata::make(solverNames), solverName)
 {
     // In this test, we will try to find the best investment in a battery
     // We will study 5 7-hour long scenarios (1-hour step), of a system with 2 thermal units
