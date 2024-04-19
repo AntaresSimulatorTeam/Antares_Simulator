@@ -1,5 +1,10 @@
 name: "Install minizip"
 description: "Download and install system wide minizip library"
+inputs:
+  install-path:
+    description: "Path where minizip will be installed"
+    required: false
+    default: ${{github.workspace}}/install
 
 runs:
   using: "composite"
@@ -23,4 +28,4 @@ runs:
         -D MZ_ICONV=OFF \
         -DZLIB_TAG=develop #Temporary fix for zlib issue https://github.com/zlib-ng/minizip-ng/issues/764
         cmake --build build --config Release 
-        cmake --install build --prefix ${{github.workspace}}/install
+        cmake --install build --prefix ${{inputs.install-path}}
