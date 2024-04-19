@@ -25,25 +25,25 @@ namespace Antares::Solver
 {
 bool LpsFromAntares::empty() const
 {
-    return constantProblemData == nullptr || weeklyProblems.empty();
+    return constantProblemData.VariablesCount == 0 || weeklyProblems.empty();
 }
-void LpsFromAntares::replaceConstantData(ConstantDataFromAntaresPtr uniquePtr)
+void LpsFromAntares::replaceConstantData(ConstantDataFromAntares uniquePtr)
 {
     constantProblemData = std::move(uniquePtr);
 }
 
-void LpsFromAntares::addWeeklyData(WeeklyProblemId id, WeeklyDataFromAntaresPtr uniquePtr)
+void LpsFromAntares::acceptWeeklyData(WeeklyProblemId id, WeeklyDataFromAntares&& data)
 {
-    weeklyProblems.emplace(id, std::move(uniquePtr));
+    weeklyProblems.emplace(id, std::move(data));
 }
-const WeeklyDataFromAntares* LpsFromAntares::weeklyData(WeeklyProblemId id) const
+const WeeklyDataFromAntares& LpsFromAntares::weeklyData(WeeklyProblemId id) const
 {
     auto it = weeklyProblems.find(id);
     if (it == weeklyProblems.end())
     {
-        return nullptr;
+        return WeeklyDataFromAntares(); //TODO Better error handling
     }
-    return it->second.get();
+    return it->second;
 }
 size_t LpsFromAntares::weekCount() const noexcept
 {
