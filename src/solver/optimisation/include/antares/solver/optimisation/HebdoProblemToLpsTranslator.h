@@ -63,7 +63,7 @@ public:
      * @param name The name of the problem.
      * @return WeeklyDataFromAntaresPtr A WeeklyDataFromAntaresPtr to the translated problem.
      */
-    [[nodiscard]] WeeklyDataFromAntaresPtr translate(const PROBLEME_ANTARES_A_RESOUDRE* problem,
+    [[nodiscard]] WeeklyDataFromAntares translate(const PROBLEME_ANTARES_A_RESOUDRE* problem,
                                                     std::string_view name) const;
 
     /**
@@ -75,7 +75,7 @@ public:
      * @param problem A pointer to the problem from which to retrieve the common data.
      * @return ConstantDataFromAntaresPtr A ConstantDataFromAntaresPtr to the common problem data.
      */
-    [[nodiscard]] ConstantDataFromAntaresPtr commonProblemData(
+    [[nodiscard]] ConstantDataFromAntares commonProblemData(
       const PROBLEME_ANTARES_A_RESOUDRE* problem) const;
 };
 

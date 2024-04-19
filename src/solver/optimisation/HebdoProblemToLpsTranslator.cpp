@@ -43,30 +43,30 @@ void copy(const T& in, U& out)
 }
 }
 
-WeeklyDataFromAntaresPtr HebdoProblemToLpsTranslator::translate(
+WeeklyDataFromAntares HebdoProblemToLpsTranslator::translate(
   const PROBLEME_ANTARES_A_RESOUDRE* problem,
   std::string_view name) const
 {
     if (problem == nullptr)
         return {};
-    auto ret = std::make_unique<WeeklyDataFromAntares>();
+    auto ret = WeeklyDataFromAntares();
 
-    copy(problem->CoutLineaire, ret->LinearCost);
-    copy(problem->Xmax, ret->Xmax);
-    copy(problem->Xmin, ret->Xmin);
-    copy(problem->NomDesVariables, ret->variables);
-    copy(problem->NomDesContraintes, ret->constraints);
-    copy(problem->SecondMembre, ret->RHS);
-    copy(problem->Sens, ret->Direction);
+    copy(problem->CoutLineaire, ret.LinearCost);
+    copy(problem->Xmax, ret.Xmax);
+    copy(problem->Xmin, ret.Xmin);
+    copy(problem->NomDesVariables, ret.variables);
+    copy(problem->NomDesContraintes, ret.constraints);
+    copy(problem->SecondMembre, ret.RHS);
+    copy(problem->Sens, ret.Direction);
 
-    copy(name, ret->name);
+    copy(name, ret.name);
 
     return ret;
 }
 
-ConstantDataFromAntaresPtr HebdoProblemToLpsTranslator::commonProblemData(const PROBLEME_ANTARES_A_RESOUDRE* problem) const {
+ConstantDataFromAntares HebdoProblemToLpsTranslator::commonProblemData(const PROBLEME_ANTARES_A_RESOUDRE* problem) const {
     if (problem == nullptr)
-        return nullptr;
+        return ConstantDataFromAntares();
 
     if (problem->NombreDeVariables <= 0) {
         throw WeeklyProblemTranslationException("VariablesCount must be strictly positive");
@@ -83,21 +83,21 @@ ConstantDataFromAntaresPtr HebdoProblemToLpsTranslator::commonProblemData(const 
         throw WeeklyProblemTranslationException("ConstraintesCount exceed NombreDeTermesDesLignes size");
     }
 
-    auto ret = std::make_unique<ConstantDataFromAntares>();
+    auto ret = ConstantDataFromAntares();
 
-    ret->VariablesCount = problem->NombreDeVariables;
-    ret->ConstraintesCount = problem->NombreDeContraintes;
+    ret.VariablesCount = problem->NombreDeVariables;
+    ret.ConstraintesCount = problem->NombreDeContraintes;
 
-    ret->CoeffCount = problem->IndicesDebutDeLigne[problem->NombreDeContraintes - 1] +
+    ret.CoeffCount = problem->IndicesDebutDeLigne[problem->NombreDeContraintes - 1] +
                                 problem->NombreDeTermesDesLignes[problem->NombreDeContraintes - 1];
 
-    copy(problem->TypeDeVariable, ret->VariablesType);
+    copy(problem->TypeDeVariable, ret.VariablesType);
 
     copy(problem->CoefficientsDeLaMatriceDesContraintes,
-    ret->ConstraintsMatrixCoeff);
-    copy(problem->IndicesColonnes, ret->ColumnIndexes);
+    ret.ConstraintsMatrixCoeff);
+    copy(problem->IndicesColonnes, ret.ColumnIndexes);
 
-    copy(problem->IndicesDebutDeLigne, ret->Mdeb);
+    copy(problem->IndicesDebutDeLigne, ret.Mdeb);
     return ret;
 }
 

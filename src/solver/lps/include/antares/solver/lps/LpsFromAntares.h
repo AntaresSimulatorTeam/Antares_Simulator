@@ -36,8 +36,8 @@ namespace Antares::Solver
  */
 struct WeeklyProblemId
 {
-    unsigned int year;
-    unsigned int week;
+    unsigned int year = 0;
+    unsigned int week = 0;
     //Order of comparison is order of member declaration
     auto operator<=>(const WeeklyProblemId& other) const = default;
 };
@@ -53,11 +53,11 @@ struct WeeklyProblemId
  */
 struct ConstantDataFromAntares
 {
-    unsigned VariablesCount; // Mathématiquement : Nb colonnes de la matrice,
+    unsigned VariablesCount = 0; // Mathématiquement : Nb colonnes de la matrice,
     // Informatiquement = TypeDeVariable.size()
-    unsigned ConstraintesCount; // Mathématiqument : Nb lignes de la matrice,
+    unsigned ConstraintesCount = 0; // Mathématiqument : Nb lignes de la matrice,
     // Informatiquement = Mdeb.size()
-    unsigned CoeffCount; // Mathématiquement : Nb coeffs non nuls de la
+    unsigned CoeffCount = 0; // Mathématiquement : Nb coeffs non nuls de la
     // matrice, Informatiquement = Nbterm.size() =
     // IndicesColonnes.size()=
     // CoefficientsDeLaMatriceDesContraintes.size()
@@ -81,6 +81,8 @@ struct ConstantDataFromAntares
 
     std::vector<std::string> VariablesMeaning;
     std::vector<std::string> ConstraintsMeaning;
+
+    auto operator<=>(const ConstantDataFromAntares& other) const = default;
 };
 
 /**
@@ -103,11 +105,11 @@ struct WeeklyDataFromAntares
 
     std::vector<std::string> variables;
     std::vector<std::string> constraints;
+
+    auto operator<=>(const WeeklyDataFromAntares& other) const = default;
 };
 
-using ConstantDataFromAntaresPtr = std::unique_ptr<ConstantDataFromAntares>;
-using WeeklyDataFromAntaresPtr = std::unique_ptr<WeeklyDataFromAntares>;
-using YearWeekWeeklyDataFromAntares = std::map<WeeklyProblemId, WeeklyDataFromAntaresPtr>;
+using WeeklyDataByYearWeek = std::map<WeeklyProblemId, WeeklyDataFromAntares>;
 
 /**
  * @class LpsFromAntares
@@ -124,22 +126,22 @@ public:
     /*
      * @brief Replaces the constant data in the LpsFromAntares object.
      */
-    void replaceConstantData(ConstantDataFromAntaresPtr uniquePtr);
+    void replaceConstantData(ConstantDataFromAntares uniquePtr);
     /*
      * @brief Adds weekly data to the LpsFromAntares object.
      */
-    void addWeeklyData(WeeklyProblemId id, WeeklyDataFromAntaresPtr uniquePtr);
+    void acceptWeeklyData(WeeklyProblemId id, WeeklyDataFromAntares&& data);
     /*
      * @brief Retrieves weekly data from the LpsFromAntares object.
      */
-    const WeeklyDataFromAntares* weeklyData(WeeklyProblemId id) const;
+    const WeeklyDataFromAntares& weeklyData(WeeklyProblemId id) const;
     /*
      * @brief Retrieves the number of weeks in the LpsFromAntares object.
      */
     [[nodiscard]] size_t weekCount() const noexcept;
 
-    ConstantDataFromAntaresPtr constantProblemData;
-    YearWeekWeeklyDataFromAntares weeklyProblems;
+    ConstantDataFromAntares constantProblemData;
+    WeeklyDataByYearWeek weeklyProblems;
 };
 
 }

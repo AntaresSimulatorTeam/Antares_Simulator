@@ -41,15 +41,15 @@ public:
 BOOST_AUTO_TEST_CASE(null_hebdo_is_empty_lps) {
     HebdoProblemToLpsTranslator translator;
     auto ret = translator.translate(nullptr, std::string());
-    BOOST_CHECK(ret == nullptr);
+    BOOST_CHECK(ret == WeeklyDataFromAntares());
 }
 
 BOOST_AUTO_TEST_CASE(non_null_hebdo_returns_non_empty_lps) {
     HebdoProblemToLpsTranslator translator;
     PROBLEME_ANTARES_A_RESOUDRE problemHebdo;
-
+    problemHebdo.CoutLineaire.push_back(45);
     auto ret = translator.translate(&problemHebdo, std::string());
-    BOOST_CHECK(ret != nullptr);
+    BOOST_CHECK(ret != WeeklyDataFromAntares());
 }
 
 BOOST_AUTO_TEST_CASE(Data_properly_copied) {
@@ -63,13 +63,13 @@ BOOST_AUTO_TEST_CASE(Data_properly_copied) {
     problemHebdo.SecondMembre = {30, 31, 32};
 
     auto ret = translator.translate(&problemHebdo, std::string());
-    BOOST_CHECK(ret->LinearCost == problemHebdo.CoutLineaire);
-    BOOST_CHECK(ret->Xmax == problemHebdo.Xmax);
-    BOOST_CHECK(ret->Xmin == problemHebdo.Xmin);
-    BOOST_CHECK(ret->RHS == problemHebdo.SecondMembre);
+    BOOST_CHECK(ret.LinearCost == problemHebdo.CoutLineaire);
+    BOOST_CHECK(ret.Xmax == problemHebdo.Xmax);
+    BOOST_CHECK(ret.Xmin == problemHebdo.Xmin);
+    BOOST_CHECK(ret.RHS == problemHebdo.SecondMembre);
 
-    BOOST_CHECK(ret->variables == problemHebdo.NomDesVariables);
-    BOOST_CHECK(ret->constraints == problemHebdo.NomDesContraintes);
+    BOOST_CHECK(ret.variables == problemHebdo.NomDesVariables);
+    BOOST_CHECK(ret.constraints == problemHebdo.NomDesContraintes);
 }
 
 BOOST_AUTO_TEST_CASE(translate_sens) {
@@ -78,7 +78,7 @@ BOOST_AUTO_TEST_CASE(translate_sens) {
     problemHebdo.Sens = "<=>";
 
     auto ret = translator.translate(&problemHebdo, std::string());
-    BOOST_CHECK(ret->Direction == std::vector({'<','=','>'}));
+    BOOST_CHECK(ret.Direction == std::vector({'<','=','>'}));
 }
 
 BOOST_AUTO_TEST_CASE(translate_name_is_filled) {
@@ -86,7 +86,7 @@ BOOST_AUTO_TEST_CASE(translate_name_is_filled) {
     PROBLEME_ANTARES_A_RESOUDRE problemHebdo;
 
     auto ret = translator.translate(&problemHebdo, "dummy");
-    BOOST_CHECK(!ret->name.empty());
+    BOOST_CHECK(!ret.name.empty());
 }
 
 BOOST_AUTO_TEST_CASE(translate_name_is_properly_filled) {
@@ -94,13 +94,13 @@ BOOST_AUTO_TEST_CASE(translate_name_is_properly_filled) {
     PROBLEME_ANTARES_A_RESOUDRE problemHebdo;
 
     auto ret = translator.translate(&problemHebdo, "problem-Plop--optim-nb-1.mps");
-    BOOST_CHECK_EQUAL(ret->name, "problem-Plop--optim-nb-1.mps");
+    BOOST_CHECK_EQUAL(ret.name, "problem-Plop--optim-nb-1.mps");
 }
 
 BOOST_AUTO_TEST_CASE(empty_problem_empty_const_data) {
         HebdoProblemToLpsTranslator translator;
         auto ret = translator.commonProblemData(nullptr);
-        BOOST_CHECK(ret == nullptr);
+        BOOST_CHECK(ret == ConstantDataFromAntares());
 }
 
 BOOST_AUTO_TEST_CASE(common_data_properly_copied) {
@@ -117,12 +117,12 @@ BOOST_AUTO_TEST_CASE(common_data_properly_copied) {
 
 
     auto ret = translator.commonProblemData(&problemHebdo);
-    BOOST_CHECK_EQUAL(ret->VariablesCount, problemHebdo.NombreDeVariables);
-    BOOST_CHECK_EQUAL(ret->ConstraintesCount, problemHebdo.NombreDeContraintes);
-    BOOST_CHECK(std::ranges::equal(ret->VariablesType, problemHebdo.TypeDeVariable));
-    BOOST_CHECK(ret->ConstraintsMatrixCoeff == problemHebdo.CoefficientsDeLaMatriceDesContraintes);
-    BOOST_CHECK(std::ranges::equal(ret->ColumnIndexes, problemHebdo.IndicesColonnes));
-    BOOST_CHECK(std::ranges::equal(ret->Mdeb, problemHebdo.IndicesDebutDeLigne));
+    BOOST_CHECK_EQUAL(ret.VariablesCount, problemHebdo.NombreDeVariables);
+    BOOST_CHECK_EQUAL(ret.ConstraintesCount, problemHebdo.NombreDeContraintes);
+    BOOST_CHECK(std::ranges::equal(ret.VariablesType, problemHebdo.TypeDeVariable));
+    BOOST_CHECK(ret.ConstraintsMatrixCoeff == problemHebdo.CoefficientsDeLaMatriceDesContraintes);
+    BOOST_CHECK(std::ranges::equal(ret.ColumnIndexes, problemHebdo.IndicesColonnes));
+    BOOST_CHECK(std::ranges::equal(ret.Mdeb, problemHebdo.IndicesDebutDeLigne));
 }
 
 //throw exception if NombreDeVariables is 0
@@ -177,6 +177,6 @@ BOOST_AUTO_TEST_CASE(NombreDeCoefficients_is_properly_computed)
     problemHebdo.IndicesColonnes = {0, 1, 2, 3, 4, 5, 6, 7, 8};
 
     auto ret = translator.commonProblemData(&problemHebdo);
-    BOOST_CHECK_EQUAL(ret->CoeffCount, 9);
+    BOOST_CHECK_EQUAL(ret.CoeffCount, 9);
 }
 
