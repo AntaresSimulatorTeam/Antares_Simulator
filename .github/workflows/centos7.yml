@@ -2,7 +2,7 @@ name: Centos7 CI (push and/or release)
 
 on:
   release:
-    types: [created]
+    types: [ created ]
   push:
     branches:
       - develop
@@ -34,110 +34,107 @@ jobs:
 
     steps:
 
-    - name: Checkout
-      run: |
+      - name: Checkout
+        run: |
           git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git -b ${{ env.REF }} .
 
-    - name: Install gcc 10
-      run: |
-        yum install -y centos-release-scl
-        yum install -y devtoolset-10-gcc*
+      - name: Install gcc 10
+        run: |
+          yum install -y centos-release-scl
+          yum install -y devtoolset-10-gcc*
 
-    - uses: ./.github/workflows/install-cmake-328
-    - uses: ./.github/workflows/install_minizip
+      - uses: ./.github/workflows/install-cmake-328
+      - uses: ./.github/workflows/install_minizip
 
-    - name: Init submodule
-      run: |
+      - name: Init submodule
+        run: |
           git submodule update --init --remote src/antares-deps src/tests/resources/Antares_Simulator_Tests
 
-    - name: Download & extract precompiled deps at root
-      run: |
-           ANTARES_DEPS_VERSION=$(cut -d'"' -f4 antares-deps-version.json | grep -Ev '\{|\}')
-           cd /
-           wget https://github.com/AntaresSimulatorTeam/antares-deps/releases/download/v${ANTARES_DEPS_VERSION}/rte-antares-deps-centos7-Release.tar.gz
-           tar -xvf rte-antares-deps-centos7-Release.tar.gz
-           rm -rf rte-antares-deps-centos7-Release.tar.gz
+      - name: Download & extract precompiled deps at root
+        run: |
+          ANTARES_DEPS_VERSION=$(cut -d'"' -f4 antares-deps-version.json | grep -Ev '\{|\}')
+          cd /
+          wget https://github.com/AntaresSimulatorTeam/antares-deps/releases/download/v${ANTARES_DEPS_VERSION}/rte-antares-deps-centos7-Release.tar.gz
+          tar -xvf rte-antares-deps-centos7-Release.tar.gz
+          rm -rf rte-antares-deps-centos7-Release.tar.gz
 
-    - name: Config OR-Tools URL
-      run: |
-           echo "URL_ORTOOLS=https://github.com/rte-france/or-tools/releases/download/$(cat ortools_tag)/ortools_cxx_centos7_static_sirius.zip" >> $GITHUB_ENV
+      - name: Config OR-Tools URL
+        run: |
+          echo "URL_ORTOOLS=https://github.com/rte-france/or-tools/releases/download/$(cat ortools_tag)/ortools_cxx_centos7_static_sirius.zip" >> $GITHUB_ENV
 
-    - name: Download OR-Tools
-      id: ortools
-      run: |
-            mkdir -p ${{ env.ORTOOLSDIR }} && cd ${{ env.ORTOOLSDIR }}
-            wget -q -O ortools.zip ${{ env.URL_ORTOOLS }}
-            unzip -q ortools.zip
-            rm ortools.zip
+      - name: Download OR-Tools
+        id: ortools
+        run: |
+          mkdir -p ${{ env.ORTOOLSDIR }} && cd ${{ env.ORTOOLSDIR }}
+          wget -q -O ortools.zip ${{ env.URL_ORTOOLS }}
+          unzip -q ortools.zip
+          rm ortools.zip
 
-    - name: Install gh if needed
-      if: ${{ env.IS_RELEASE == 'true' }}
-      run: |
-           yum -y install dnf
-           dnf -y install 'dnf-command(config-manager)'
-           dnf -y config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
-           dnf -y install gh
+      - name: Install gh if needed
+        if: ${{ env.IS_RELEASE == 'true' }}
+        run: |
+          yum -y install dnf
+          dnf -y install 'dnf-command(config-manager)'
+          dnf -y config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
+          dnf -y install gh
 
+      - name: Configure
+        run: |
+          source /opt/rh/devtoolset-10/enable
+          cmake -B _build -S src \
+          -DCMAKE_C_COMPILER_LAUNCHER=ccache \
+          -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
+          -DDEPS_INSTALL_DIR=/rte-antares-deps-Release \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DBUILD_TESTING=ON \
+          -DBUILD_not_system=OFF \
+          -DBUILD_TOOLS=ON \
+          -DBUILD_UI=OFF \
+          -DCMAKE_PREFIX_PATH="${{github.workspace}}/install;${{ env.ORTOOLSDIR }}/install"
 
-    - name: Configure
-      run: |
-            PREFIX_PATH="${{github.workspace}}/install;${{ env.ORTOOLSDIR }}/install"
-            echo $PREFIX_PATH
-           source /opt/rh/devtoolset-10/enable
-           cmake -B _build -S src \
-           -DCMAKE_C_COMPILER_LAUNCHER=ccache \
-           -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
-           -DDEPS_INSTALL_DIR=/rte-antares-deps-Release \
-           -DCMAKE_BUILD_TYPE=Release \
-           -DBUILD_TESTING=ON \
-           -DBUILD_not_system=OFF \
-           -DBUILD_TOOLS=ON \
-           -DBUILD_UI=OFF \
-           -DCMAKE_PREFIX_PATH=$PREFIX_PATH
+      - name: Build
+        run: |
+          source /opt/rh/devtoolset-10/enable
+          source /opt/rh/rh-git227/enable
+          cmake --build _build --config Release -j$(nproc)
+          ccache -s
 
-    - name: Build
-      run: |
-           source /opt/rh/devtoolset-10/enable
-           source /opt/rh/rh-git227/enable
-           cmake --build _build --config Release -j$(nproc)
-           ccache -s
+      - name: Installer .rpm creation
+        run: |
+          cd _build
+          cpack -G RPM
 
-    - name: Installer .rpm creation
-      run: |
-           cd _build
-           cpack -G RPM
+      - name: Solver archive creation
+        run: |
+          cd _build
+          cmake --install . --prefix install
+          pushd .
+          cd install/bin
+          tar czf ../../antares-solver_centos7.tar.gz antares-solver libsirius_solver.so
+          popd
+          rm -rf install
 
-    - name: Solver archive creation
-      run: |
-           cd _build
-           cmake --install . --prefix install
-           pushd .
-           cd install/bin
-           tar czf ../../antares-solver_centos7.tar.gz antares-solver libsirius_solver.so
-           popd
-           rm -rf install
+      - name: .tar.gz creation
+        run: |
+          cd _build
+          cpack -G TGZ
 
-    - name: .tar.gz creation
-      run: |
-           cd _build
-           cpack -G TGZ
+      - name: Installer TGZ push
+        uses: actions/upload-artifact@v3
+        with:
+          path: _build/*.tar.gz
 
-    - name: Installer TGZ push
-      uses: actions/upload-artifact@v3
-      with:
-        path: _build/*.tar.gz
+      - name: Installer RPM push
+        uses: actions/upload-artifact@v3
+        with:
+          path: _build/*.rpm
 
-    - name: Installer RPM push
-      uses: actions/upload-artifact@v3
-      with:
-        path: _build/*.rpm
-
-    - name: Publish assets
-      if: ${{ env.IS_RELEASE == 'true' }}
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
-        tag: ${{ github.event.inputs.release_tag }}
-      run: |
-        gh release upload "$tag" _build/*.tar.gz _build/*.rpm
+      - name: Publish assets
+        if: ${{ env.IS_RELEASE == 'true' }}
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          tag: ${{ github.event.inputs.release_tag }}
+        run: |
+          gh release upload "$tag" _build/*.tar.gz _build/*.rpm
 
   
