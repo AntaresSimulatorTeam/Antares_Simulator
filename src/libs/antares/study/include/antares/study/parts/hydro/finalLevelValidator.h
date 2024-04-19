@@ -24,8 +24,7 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_LIBS_STUDY_PARTS_HYDRO_FINAL_LEVEL_INFLOWS_MODIFYER_H__
-#define __ANTARES_LIBS_STUDY_PARTS_HYDRO_FINAL_LEVEL_INFLOWS_MODIFYER_H__
+#pragma once
 
 #include <vector>
 #include <antares/array/matrix.h>
@@ -74,5 +73,3 @@ private:
     bool finalLevelFineForUse_ = false;
 };
 } // namespace Antares::Data
-
-#endif /*__ANTARES_LIBS_STUDY_PARTS_HYDRO_FINAL_LEVEL_INFLOWS_MODIFYER_H__*/

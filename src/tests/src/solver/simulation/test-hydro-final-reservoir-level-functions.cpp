@@ -7,6 +7,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include "include/antares/solver/simulation/hydro-final-reservoir-level-functions.h"
+#include "include/antares/study/parts/hydro/finalLevelValidator.h"
 #include <antares/study/study.h>
 
 using namespace Antares::Solver;

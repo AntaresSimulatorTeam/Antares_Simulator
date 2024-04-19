@@ -25,7 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "antares/study/parts/hydro/finallevelinflowsmodifyer.h"
+#include "antares/study/parts/hydro/finalLevelValidator.h"
 #include "antares/study/parts/hydro/container.h"
 
 namespace Antares::Data

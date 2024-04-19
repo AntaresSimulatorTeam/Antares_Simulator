@@ -26,7 +26,7 @@
 */
 
 #include "antares/solver/simulation/hydro-final-reservoir-level-functions.h"
-#include "antares/study/parts/hydro/finallevelinflowsmodifyer.h"
+#include "antares/study/parts/hydro/finalLevelValidator.h"
 #include <antares/antares/fatal-error.h>
 
 namespace Antares::Solver

@@ -26,7 +26,6 @@
 #include "series.h"
 #include "../../fwd.h"
 #include "allocation.h"
-#include "finallevelinflowsmodifyer.h"
 
 namespace Antares::Data
 {
