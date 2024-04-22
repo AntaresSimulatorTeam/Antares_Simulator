@@ -8,7 +8,10 @@ set(RTESOLVER_OPT
         opt_pilotage_optimisation_lineaire.cpp
         opt_pilotage_optimisation_quadratique.cpp
 		include/antares/solver/optimisation/opt_structure_probleme_a_resoudre.h
+		include/antares/solver/optimisation/basis_status.h
 		include/antares/solver/optimisation/opt_constants.h
+	basis_status.cpp
+	opt_structure_probleme_a_resoudre.cpp
         opt_alloc_probleme_a_optimiser.cpp
         opt_gestion_des_bornes_cas_quadratique.cpp
         opt_construction_variables_optimisees_lineaire.cpp

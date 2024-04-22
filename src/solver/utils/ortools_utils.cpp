@@ -19,6 +19,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #include "antares/solver/utils/ortools_utils.h"
+#include "antares/solver/optimisation/basis_status.h"
 
 #include <antares/logs/logs.h>
 #include <antares/exception/AssertionError.hpp>
@@ -52,9 +53,9 @@ namespace Antares
 namespace Optimization
 {
 ProblemSimplexeNommeConverter::ProblemSimplexeNommeConverter(
-        const std::string& solverName,
-        const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe)
-    : solverName_(solverName), problemeSimplexe_(problemeSimplexe)
+  const std::string& solverName,
+  const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe) :
+ solverName_(solverName), problemeSimplexe_(problemeSimplexe)
 {
     if (problemeSimplexe_->UseNamedProblems())
     {
@@ -126,7 +127,8 @@ void ProblemSimplexeNommeConverter::CreateVariable(unsigned idxVar,
     double min_l = problemeSimplexe_->Xmin[idxVar];
     double max_l = problemeSimplexe_->Xmax[idxVar];
     bool isIntegerVariable = problemeSimplexe_->IntegerVariable(idxVar);
-    const MPVariable* var = solver->MakeVar(min_l, max_l, isIntegerVariable, variableNameManager_.GetName(idxVar));
+    const MPVariable* var
+      = solver->MakeVar(min_l, max_l, isIntegerVariable, variableNameManager_.GetName(idxVar));
     objective->SetCoefficient(var, problemeSimplexe_->CoutLineaire[idxVar]);
 }
 
@@ -195,12 +197,12 @@ static void extractReducedCosts(const std::vector<MPVariable*>& variables,
 static void extractDualValues(const std::vector<MPConstraint*>& constraints,
                               Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe)
 {
-  int nbRows = problemeSimplexe->NombreDeContraintes;
-  for (int idxRow = 0; idxRow < nbRows; ++idxRow)
-  {
-      const MPConstraint* row = constraints[idxRow];
-      problemeSimplexe->CoutsMarginauxDesContraintes[idxRow] = row->dual_value();
-  }
+    int nbRows = problemeSimplexe->NombreDeContraintes;
+    for (int idxRow = 0; idxRow < nbRows; ++idxRow)
+    {
+        const MPConstraint* row = constraints[idxRow];
+        problemeSimplexe->CoutsMarginauxDesContraintes[idxRow] = row->dual_value();
+    }
 }
 
 static void extract_from_MPSolver(const MPSolver* solver,
@@ -211,8 +213,7 @@ static void extract_from_MPSolver(const MPSolver* solver,
 
     const bool isMIP = problemeSimplexe->isMIP();
 
-    extractSolutionValues(solver->variables(),
-                          problemeSimplexe);
+    extractSolutionValues(solver->variables(), problemeSimplexe);
 
     if (isMIP)
     {
@@ -329,8 +330,7 @@ MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probl
     // Provide an initial simplex basis, if any
     if (warmStart && Probleme->basisExists())
     {
-        solver->SetStartingLpBasis(Probleme->StatutDesVariables,
-                                   Probleme->StatutDesContraintes);
+        Probleme->basisStatus.setStarting(solver);
     }
 
     if (solveAndManageStatus(solver, Probleme->ExistenceDUneSolution, params))
@@ -339,8 +339,7 @@ MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probl
         // Save the final simplex basis for next resolutions
         if (warmStart && keepBasis)
         {
-            transferBasis(Probleme->StatutDesVariables, solver->variables());
-            transferBasis(Probleme->StatutDesContraintes, solver->constraints());
+            Probleme->basisStatus.extract(solver);
         }
     }
 
@@ -425,15 +424,15 @@ std::list<std::string> getAvailableOrtoolsSolverName()
 
 std::string availableOrToolsSolversString()
 {
-  const std::list<std::string> availableSolverList = getAvailableOrtoolsSolverName();
-  std::ostringstream solvers;
-  for (const std::string& avail : availableSolverList)
-  {
-    bool last = &avail == &availableSolverList.back();
-    std::string sep = last ? "." : ", ";
-    solvers << avail << sep;
-  }
-  return solvers.str();
+    const std::list<std::string> availableSolverList = getAvailableOrtoolsSolverName();
+    std::ostringstream solvers;
+    for (const std::string& avail : availableSolverList)
+    {
+        bool last = &avail == &availableSolverList.back();
+        std::string sep = last ? "." : ", ";
+        solvers << avail << sep;
+    }
+    return solvers.str();
 }
 
 MPSolver* MPSolverFactory(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* probleme,
@@ -450,7 +449,8 @@ MPSolver* MPSolverFactory(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* 
         if (!solver)
         {
             std::string msg_to_throw = "Solver " + solverName + " not found. \n";
-            msg_to_throw += "Please make sure that your OR-Tools install supports solver " + solverName + ".";
+            msg_to_throw
+              += "Please make sure that your OR-Tools install supports solver " + solverName + ".";
 
             throw Antares::Data::AssertionError(msg_to_throw);
         }
