@@ -46,6 +46,7 @@ struct Fixture
     }
 
     void writeValidFile();
+    void writeInvalidFile();
 };
 
 
@@ -67,8 +68,10 @@ BOOST_FIXTURE_TEST_CASE(reset, Fixture)
 BOOST_FIXTURE_TEST_CASE(loadValid, Fixture)
 {
     options.ortoolsSolver = "xpress";
+
     writeValidFile();
     p.loadFromFile(path.string(), version, options);
+
     BOOST_CHECK_EQUAL(p.nbYears, 5);
     BOOST_CHECK_EQUAL(p.seed[seedTsGenThermal], 5489);
     BOOST_CHECK_EQUAL(p.include.reserve.dayAhead, true);
@@ -94,8 +97,34 @@ BOOST_FIXTURE_TEST_CASE(fixBadValue, Fixture)
     BOOST_CHECK_EQUAL(p.nbYears, 100000);
 }
 
+BOOST_FIXTURE_TEST_CASE(invalidValues, Fixture)
+{
+    writeInvalidFile();
+    p.loadFromFile(path.string(), version, options);
+
+    BOOST_CHECK_EQUAL(p.nbYears, 1);
+    BOOST_CHECK_EQUAL(p.useCustomScenario, 0);
+    BOOST_CHECK_EQUAL(p.firstWeekday, 0);
+    BOOST_CHECK_EQUAL(p.renewableGeneration(), rgUnknown);
+    std::cout << p.firstWeekday;
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
+void Fixture::writeInvalidFile()
+{
+    std::ofstream outfile(path);
+
+    outfile << "[general]" << std::endl;
+    outfile << "nbyears = abc" << std::endl;
+    outfile << "custom-scenario = 27" << std::endl;
+    outfile << "first.weekday = 21" << std::endl;
+
+    outfile << "[other preferences]" << std::endl;
+    outfile << "renewable-generation-modelling = abc" << std::endl;
+
+    outfile.close();
+}
 
 void Fixture::writeValidFile()
 {
@@ -193,7 +222,6 @@ void Fixture::writeValidFile()
     outfile << "seed-thermal-costs = 8005489" << std::endl;
     outfile << "seed-hydro-costs = 9005489" << std::endl;
     outfile << "seed-initial-reservoir-levels = 10005489" << std::endl;
-
 
     outfile.close();
 }
