@@ -42,9 +42,13 @@ struct Fixture
 
 BOOST_AUTO_TEST_SUITE(parameters_tests)
 
-BOOST_AUTO_TEST_CASE(validParam)
+BOOST_FIXTURE_TEST_CASE(reset, Fixture)
 {
-    BOOST_CHECK_EQUAL(0, 0);
+    p.reset();
+    BOOST_CHECK_EQUAL(p.simulationDays.first, 0);
+    BOOST_CHECK_EQUAL(p.nbTimeSeriesThermal, 1);
+    BOOST_CHECK_EQUAL(p.synthesis, true);
+    BOOST_CHECK_EQUAL(p.ortoolsSolver, "sirius");
 }
 
 BOOST_AUTO_TEST_SUITE_END()
