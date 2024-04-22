@@ -37,7 +37,6 @@ class AvailabilityTSGeneratorData
 {
 public:
     explicit AvailabilityTSGeneratorData(Data::ThermalCluster*);
-    AvailabilityTSGeneratorData(Data::LinkTsGeneration&, Data::TimeSeries&, const std::string& name);
 
     const unsigned& unitCount;
     const double& nominalCapacity;
@@ -56,14 +55,6 @@ public:
 
     const std::string& name;
 };
-
-enum class linkDirection
-{
-    direct,
-    indirect
-};
-
-using listOfLinks = std::vector<std::pair<Data::AreaLink*, linkDirection>>;
 
 void ResizeGeneratedTimeSeries(Data::AreaList& areas, Data::Parameters& params);
 
