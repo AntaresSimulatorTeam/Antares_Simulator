@@ -36,7 +36,6 @@ struct BasisStatus;
 
 struct PROBLEME_SIMPLEXE_NOMME : public PROBLEME_SIMPLEXE
 {
-private:
 public:
     PROBLEME_SIMPLEXE_NOMME(const std::vector<std::string>& NomDesVariables,
                             const std::vector<std::string>& NomDesContraintes,
@@ -53,6 +52,7 @@ private:
 
 public:
     const std::vector<bool>& VariablesEntieres;
+    BasisStatus& basisStatus;
 
     bool isMIP() const;
     bool basisExists() const;
@@ -86,7 +86,6 @@ public:
     {
         return solverLogs_;
     }
-    BasisStatus& basisStatus;
 };
 } // namespace Optimization
 } // namespace Antares

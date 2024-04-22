@@ -22,12 +22,9 @@
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/utils/basis_status.h"
 
-PROBLEME_ANTARES_A_RESOUDRE::PROBLEME_ANTARES_A_RESOUDRE()
+PROBLEME_ANTARES_A_RESOUDRE::PROBLEME_ANTARES_A_RESOUDRE() :
+ basisStatus(std::make_unique<Antares::Optimization::BasisStatus>())
 {
-    basisStatus = new Antares::Optimization::BasisStatus();
 }
 
-PROBLEME_ANTARES_A_RESOUDRE::~PROBLEME_ANTARES_A_RESOUDRE()
-{
-    delete basisStatus;
-}
+PROBLEME_ANTARES_A_RESOUDRE::~PROBLEME_ANTARES_A_RESOUDRE() = default;

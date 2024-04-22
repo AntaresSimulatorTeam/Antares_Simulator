@@ -23,6 +23,7 @@
 
 #include <vector>
 #include <string>
+#include <memory>
 #include "opt_constants.h"
 
 /*--------------------------------------------------------------------------------------*/
@@ -125,7 +126,7 @@ struct PROBLEME_ANTARES_A_RESOUDRE
 
 public:
     // PIMPL is used to break dependency to OR-Tools' linear_solver.h (big header)
-    Antares::Optimization::BasisStatus* basisStatus;
+    std::unique_ptr<Antares::Optimization::BasisStatus> basisStatus;
 };
 
 #endif /* __SOLVER_OPTIMISATION_STRUCTURE_PROBLEME_A_RESOUDRE_H__ */
