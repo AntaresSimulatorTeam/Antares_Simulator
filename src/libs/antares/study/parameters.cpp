@@ -477,9 +477,6 @@ static bool SGDIntLoadFamily_General(Parameters& d,
         return value.to<uint>(d.nbTimeSeriesThermal);
     if (key == "nbtimeseriessolar")
         return value.to<uint>(d.nbTimeSeriesSolar);
-    if (key == "nbtimeserieslinks")
-        return value.to<uint>(d.nbLinkTStoGenerate);
-
     // Interval values
     if (key == "refreshintervalload")
         return value.to<uint>(d.refreshIntervalLoad);
@@ -927,8 +924,6 @@ static bool SGDIntLoadFamily_SeedsMersenneTwister(Parameters& d,
                 return value.to<uint>(d.seed[seedTsGenThermal]);
             if (key == "seed_solar")
                 return value.to<uint>(d.seed[seedTsGenSolar]);
-            if (key == "seed_links")
-                return value.to<uint>(d.seed[seedTsGenLinks]);
             if (key == "seed_timeseriesnumbers")
                 return value.to<uint>(d.seed[seedTimeseriesNumbers]);
         }
@@ -1574,7 +1569,6 @@ void Parameters::saveToINI(IniFile& ini) const
         section->add("nbTimeSeriesWind", nbTimeSeriesWind);
         section->add("nbTimeSeriesThermal", nbTimeSeriesThermal);
         section->add("nbTimeSeriesSolar", nbTimeSeriesSolar);
-        section->add("nbtimeserieslinks", nbLinkTStoGenerate);
 
         // Refresh
         ParametersSaveTimeSeries(section, "refreshTimeSeries", timeSeriesToRefresh);

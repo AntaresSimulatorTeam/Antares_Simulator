@@ -350,8 +350,6 @@ enum SeedIndex
     seedHydroCosts,
     //! Seed - Hydro management
     seedHydroManagement,
-    //! The seed for links
-    seedTsGenLinks,
     //! The number of seeds
     seedMax,
 };
