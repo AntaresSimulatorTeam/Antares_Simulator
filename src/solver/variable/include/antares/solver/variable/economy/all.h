@@ -83,37 +83,13 @@
 #include "STStorageCashFlowByCluster.h"
 
 // Output variables associated to links
-#include "links/flowLinear.h"
-#include "links/flowLinearAbs.h"
-#include "links/loopFlow.h"
-#include "links/flowQuad.h"
-#include "links/hurdleCosts.h"
-#include "links/congestionFee.h"
-#include "links/congestionFeeAbs.h"
-#include "links/marginalCost.h"
-#include "links/congestionProbability.h"
+#include "links.h"
 
 // Output variables associated to binding constraints
 #include "bindingConstraints/bindingConstraintsMarginalCost.h"
 
 namespace Antares::Solver::Variable::Economy
 {
-/*!
-** \brief All variables for a single link (economy)
-*/
-typedef FlowLinear             // Flow linear
-  <FlowLinearAbs               // Flow linear Abs
-   <LoopFlow                   // Loop flow
-    <FlowQuad                  // Flow Quad
-     <CongestionFee            // Congestion Fee
-      <CongestionFeeAbs        // Congestion Fee (Abs)
-       <MarginalCost           // Marginal Cost
-        <CongestionProbability // Congestion Probability (+/-)
-         <HurdleCosts          // Hurdle costs
-          <>>>>>>>>>
-    VariablePerLink;
-// forward declaration
-class Links;
 
 /*!
 ** \brief All variables for a single area (economy)
@@ -288,8 +264,5 @@ typedef Variable::Join<
 typedef Container::List<ItemList> AllVariables;
 
 } // namespace Antares::Solver::Variable::Economy
-
-// post include
-#include "links.h"
 
 #endif // __SOLVER_VARIABLE_ECONOMY_ALL_H__

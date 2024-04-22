@@ -18,21 +18,34 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
-#ifndef __ANTARES_LIBS_LOGS_LOGS_H__
-#define __ANTARES_LIBS_LOGS_LOGS_H__
+#pragma once
 
-#ifdef __cplusplus
-extern "C"
+#include <memory>
+#include <string>
+
+namespace operations_research
 {
-#endif
-
-    inline int LogHasErrors(void)
-    {
-        return (LogErrorCount() or LogWarningCount());
-    }
-
-#ifdef __cplusplus
+class MPSolver;
 }
-#endif
+namespace Antares::Optimization
+{
 
-#endif /* __ANTARES_LIBS_LOGS_LOGS_H__ */
+/*!
+ * Interface for all elementary analysis.
+ */
+class UnfeasibilityAnalysis
+{
+public:
+    UnfeasibilityAnalysis() = default;
+    virtual ~UnfeasibilityAnalysis() = default;
+
+    virtual void run(operations_research::MPSolver* problem) = 0;
+    virtual void printReport() const = 0;
+    virtual std::string title() const = 0;
+    bool hasDetectedInfeasibilityCause() const { return hasDetectedInfeasibilityCause_; }
+
+protected:
+    bool hasDetectedInfeasibilityCause_ = false;
+};
+
+}

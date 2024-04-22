@@ -137,6 +137,4 @@ extern "C"
 }
 #endif
 
-#include "logs.hxx"
-
 #endif /* __ANTARES_LIBS_LOGS_LOGS_H__ */
