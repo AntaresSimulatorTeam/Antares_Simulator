@@ -19,7 +19,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #include "antares/solver/utils/ortools_utils.h"
-#include "antares/solver/optimisation/basis_status.h"
+#include "antares/solver/utils/basis_status.h"
 
 #include <antares/logs/logs.h>
 #include <antares/exception/AssertionError.hpp>
@@ -306,17 +306,6 @@ MPSolver* ORTOOLS_ConvertIfNeeded(const std::string& solverName,
     else
     {
         return solver;
-    }
-}
-
-template<class SourceT>
-static void transferBasis(std::vector<operations_research::MPSolver::BasisStatus>& destination,
-                          const SourceT& source)
-{
-    destination.resize(source.size());
-    for (size_t idx = 0; idx < source.size(); idx++)
-    {
-        destination[idx] = source[idx]->basis_status();
     }
 }
 

@@ -21,7 +21,7 @@
 
 #include <yuni/yuni.h>
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
-#include "antares/solver/optimisation/basis_status.h"
+#include "antares/solver/utils/basis_status.h"
 
 #include "antares/solver/simulation/simulation.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"

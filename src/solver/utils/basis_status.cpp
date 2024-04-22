@@ -19,7 +19,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <antares/solver/optimisation/basis_status.h>
+#include <antares/solver/utils/basis_status.h>
 
 namespace Antares::Optimization
 {

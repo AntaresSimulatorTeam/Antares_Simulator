@@ -20,7 +20,7 @@
 */
 
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
-#include "antares/solver/optimisation/basis_status.h"
+#include "antares/solver/utils/basis_status.h"
 
 PROBLEME_ANTARES_A_RESOUDRE::PROBLEME_ANTARES_A_RESOUDRE()
 {
