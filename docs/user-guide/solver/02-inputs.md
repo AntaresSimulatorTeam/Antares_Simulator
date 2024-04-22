@@ -49,7 +49,7 @@ It is based on the edition of a special "sets.ini" file.
 - Make sure that the sets.ini file is ready for use before opening the Antares study. Attempts to update the sets.ini file while the study is opened will not be effective.
 - Definition of meaningless districts (references to nodes that do not exist,…) will generate warnings in the GUI log files.
 
-**HOW TO UPDATE / CREATE the file** : Use Notepad (or equivalent)
+**HOW TO UPDATE / CREATE the file** : using any text editor, or, better yet, [using Antares extensions](../03-getting_started.md#using-extensions).
 
 **WHERE TO FIND / STORE THE FILE** : INPUT/areas/sets.ini
 
