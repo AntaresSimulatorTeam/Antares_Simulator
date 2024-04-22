@@ -811,7 +811,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     // Links
     {
         buffer.clear() << study.folderInput << SEP << "links" << SEP << area.id;
-        ret = AreaLinksLoadFromFolder(study, list, &area, buffer, options.linksLoadTSGen) && ret;
+        ret = AreaLinksLoadFromFolder(study, list, &area, buffer) && ret;
     }
 
     // UI

@@ -68,8 +68,6 @@ public:
 
     bool loadTimeSeries(const StudyVersion& version, const AnyString& folder);
 
-    bool loadTSGenTimeSeries(const AnyString& folder);
-
     void storeTimeseriesNumbers(Solver::IResultWriter& writer) const;
 
     //! \name Area
@@ -205,10 +203,6 @@ public:
     int linkWidth;
 
     friend struct CompareLinkName;
-
-    LinkTsGeneration tsGenerationDirect;
-    LinkTsGeneration tsGenerationIndirect;
-
 }; // class AreaLink
 
 struct CompareLinkName final

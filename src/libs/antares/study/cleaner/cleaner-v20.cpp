@@ -359,7 +359,7 @@ bool listOfFilesAnDirectoriesToKeep(StudyCleaningInfos* infos)
                 logs.verbosityLevel = Logs::Verbosity::Warning::level;
                 // load all links
                 buffer.clear() << infos->folder << "/input/links/" << area->id;
-                if (not AreaLinksLoadFromFolder(*study, arealist, area, buffer, false))
+                if (not AreaLinksLoadFromFolder(*study, arealist, area, buffer))
                 {
                     delete arealist;
                     delete study;

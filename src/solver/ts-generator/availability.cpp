@@ -51,22 +51,6 @@ AvailabilityTSGeneratorData::AvailabilityTSGeneratorData(Data::ThermalCluster* s
 {
 }
 
-AvailabilityTSGeneratorData::AvailabilityTSGeneratorData(Data::LinkTsGeneration& source,
-                                                         Data::TimeSeries& capacity,
-                                                         const std::string& areaDestName) :
- unitCount(source.unitCount),
- nominalCapacity(source.nominalCapacity),
- forcedVolatility(source.forcedVolatility),
- plannedVolatility(source.plannedVolatility),
- forcedLaw(source.forcedLaw),
- plannedLaw(source.plannedLaw),
- prepro(source.prepro.get()),
- series(capacity.timeSeries),
- modulationCapacity(source.modulationCapacity[0]),
- name(areaDestName)
-{
-}
-
 namespace
 {
 class GeneratorTempData final
@@ -564,19 +548,6 @@ std::vector<Data::ThermalCluster*> getAllClustersToGen(const Data::AreaList& are
     return clusters;
 }
 
-listOfLinks getAllLinksToGen(Data::AreaList& areas)
-{
-    listOfLinks links;
-
-    areas.each([&links](const Data::Area& area) {
-        std::ranges::for_each(area.links, [&links](auto& l) {
-            links.emplace_back(l.second, linkDirection::direct);
-            links.emplace_back(l.second, linkDirection::indirect);
-        });
-    });
-
-    return links;
-}
 
 void writeResultsToDisk(const Data::Study& study,
                         Solver::IResultWriter& writer,
@@ -620,39 +591,4 @@ bool generateThermalTimeSeries(Data::Study& study,
     return true;
 }
 
-bool generateLinkTimeSeries(Data::Study& study,
-                            const listOfLinks& links,
-                            Solver::IResultWriter& writer,
-                            const std::string& savePath)
-{
-    logs.info();
-    logs.info() << "Generating the links time-series";
-
-    auto generator = GeneratorTempData(study, study.parameters.nbLinkTStoGenerate);
-
-    for (const auto& [link, direction] : links)
-    {
-        Data::TimeSeries ts(link->timeseriesNumbers);
-        ts.resize(study.parameters.nbLinkTStoGenerate, HOURS_PER_YEAR);
-
-        auto& tsGenStruct = direction == linkDirection::direct ? link->tsGenerationDirect
-                                                               : link->tsGenerationIndirect;
-        if (!tsGenStruct.valid)
-        {
-            logs.error() << "Missing data for link " << link->from->id << "/" << link->with->id;
-            return false;
-        }
-        AvailabilityTSGeneratorData tsConfigData(tsGenStruct, ts, link->with->name);
-
-        generator.generateTS(*link->from, tsConfigData);
-
-        std::string capacityType = direction == linkDirection::direct ? "_direct" : "_indirect";
-        std::string filePath
-          = savePath + SEP + link->from->id + SEP + link->with->id.c_str() + capacityType + ".txt";
-
-        writeResultsToDisk(study, writer, ts.timeSeries, filePath);
-    }
-
-    return true;
-}
 } // namespace Antares::TSGenerator
