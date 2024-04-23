@@ -1,5 +1,5 @@
 project(result-writer)
-find_package(minizip)
+find_package(minizip-ng)
 
 add_library(result_writer
         # Helper class
