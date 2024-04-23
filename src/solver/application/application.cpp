@@ -165,6 +165,66 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
 
     // Save about-the-study files (comments, notes, etc.)
     study.saveAboutTheStudy(*resultWriter);
+
+    // Name of the simulation (again, if the value has been overwritten)
+    if (!pSettings.simulationName.empty())
+        study.simulationComments.name = pSettings.simulationName;
+
+    // Removing all callbacks, which are no longer needed
+    logs.callback.clear();
+    logs.info();
+
+    if (pSettings.noOutput)
+    {
+        logs.info() << "The output has been disabled.";
+        logs.info();
+    }
+
+    // Errors
+    if (pErrorCount || pWarningCount)
+    {
+        if (pErrorCount || !pSettings.ignoreWarningsErrors)
+        {
+            // The loading of the study produces warnings and/or errors
+            // As the option '--force' is not given, we can not continue
+            LogDisplayErrorInfos(pErrorCount, pWarningCount, "The simulation must stop.");
+            throw FatalError("The simulation must stop.");
+        }
+        else
+        {
+            LogDisplayErrorInfos(
+              0,
+              pWarningCount,
+              "As requested, the warnings can be ignored and the simulation will continue",
+              false /* not an error */);
+            // Actually importing the log file is useless here.
+            // However, since we have warnings/errors, it allows to have a piece of
+            // log when the unexpected happens.
+            if (!study.parameters.noOutput)
+                study.importLogsToOutputFolder(*resultWriter);
+            // empty line
+            logs.info();
+        }
+    }
+
+    // Checking for filename length limits
+    if (!pSettings.noOutput)
+    {
+        if (!study.checkForFilenameLimits(true))
+            throw Error::InvalidFileName();
+
+        writeComment(study);
+    }
+
+    // Runtime data dedicated for the solver
+    if (!study.initializeRuntimeInfos())
+        throw Error::RuntimeInfoInitialization();
+
+    // Apply transformations needed by the solver only (and not the interface for example)
+    study.performTransformationsBeforeLaunchingSimulation();
+
+    // alloc global vectors
+    SIM_AllocationTableaux(study);
 }
 
 void Application::startSimulation(Data::StudyLoadOptions& options)
