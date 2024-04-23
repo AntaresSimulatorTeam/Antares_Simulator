@@ -29,7 +29,7 @@
 #include <antares/study/study.h>
 #include <filesystem>
 #include <fstream>
-#include "utils.h"
+#include <files-system.h>
 
 using namespace Antares::Solver;
 using namespace Antares::Data;
@@ -194,7 +194,7 @@ BOOST_FIXTURE_TEST_CASE(Check_empty_file_interpreted_as_all_zeroes, Fixture) {
     std::vector file_names = {working_tmp_dir / "bindingconstraints"/ "dummy_name_lt.txt",
                               working_tmp_dir / "bindingconstraints"/ "dummy_name_gt.txt",
                               working_tmp_dir / "bindingconstraints"/ "dummy_name_eq.txt"};
-    for (auto file_name: file_names) {
+    for (auto& file_name: file_names) {
         std::ofstream ofs;
         ofs.open(file_name, std::ofstream::out | std::ofstream::trunc);
         ofs.close();
@@ -211,7 +211,7 @@ BOOST_FIXTURE_TEST_CASE(Check_missing_file, Fixture) {
     std::vector file_names = {working_tmp_dir / "bindingconstraints"/ "dummy_name_lt.txt",
                               working_tmp_dir / "bindingconstraints"/ "dummy_name_gt.txt",
                               working_tmp_dir / "bindingconstraints"/ "dummy_name_eq.txt"};
-    for (auto file_name: file_names) {
+    for (auto& file_name: file_names) {
         std::filesystem::remove(file_name);
     }
 

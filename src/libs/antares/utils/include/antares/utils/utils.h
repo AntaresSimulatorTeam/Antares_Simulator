@@ -24,6 +24,9 @@
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
 
+#include <string>
+#include <vector>
+
 namespace Antares
 {
 /*!
@@ -40,6 +43,18 @@ void TransformNameIntoID(const AnyString& name, StringT& out);
 void BeautifyName(YString& out, AnyString oldname);
 void BeautifyName(std::string& out, const std::string& oldname);
 
+std::vector<std::pair<std::string, std::string>> splitStringIntoPairs(const std::string& s,
+                                                                      char delimiter1,
+                                                                      char delimiter2);
+
+namespace Utils
+{
+
+bool isZero(double d);
+
+double round(double d, unsigned precision);
+
+} // namespace Utils
 } // namespace Antares
 
 #include "utils.hxx"

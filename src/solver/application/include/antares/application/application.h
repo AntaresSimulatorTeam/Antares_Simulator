@@ -85,11 +85,7 @@ private:
     void runSimulationInAdequacyMode();
     void runSimulationInEconomicMode();
 
-    void initializeRandomNumberGenerators() const;
-
     void onLogMessage(int level, const YString& message);
-
-    void processCaption(const Yuni::String& caption);
 
     //! The settings given from the command line
     Settings pSettings;
@@ -101,9 +97,6 @@ private:
     uint pErrorCount = 0;
     //! The total muber of warnings which have been generated
     uint pWarningCount = 0;
-
-    int pArgc = 0;
-    char** pArgv = nullptr;
 
     // Benchmarking
     Benchmarking::Timer pTotalTimer;

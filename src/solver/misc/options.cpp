@@ -33,12 +33,12 @@
 
 #include "antares/solver/misc/options.h"
 
-#include "../../config.h"
+#include "antares/config/config.h"
 
 #include <antares/exception/AssertionError.hpp>
 #include <antares/exception/LoadingError.hpp>
-#include <antares/Enum.hpp>
-#include <antares/constants.h>
+#include "antares/antares/Enum.hpp"
+#include <antares/antares/constants.h>
 
 #include "antares/solver/utils/ortools_utils.h"
 
@@ -95,7 +95,7 @@ std::unique_ptr<GetOpt::Parser> CreateParser(Settings& settings,
       settings.simulationName, 'n', "name", "Set the name of the new simulation to VALUE");
     // --generators-only
     parser->addFlag(
-      settings.tsGeneratorsOnly, 'g', "generators-only", "Run the time-series generators only");
+            settings.tsGeneratorsOnly, 'g', "generators-only", "Run the time-series generators only");
 
     // --comment-file
     parser->add(settings.commentFile,

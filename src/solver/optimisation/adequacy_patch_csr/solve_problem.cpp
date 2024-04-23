@@ -19,12 +19,12 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "../solver/optimisation/opt_structure_probleme_a_resoudre.h"
+#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 
-#include "../solver/simulation/simulation.h"
-#include "../solver/simulation/sim_structure_probleme_economique.h"
+#include "antares/solver/simulation/simulation.h"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
-#include "../solver/optimisation/opt_fonctions.h"
+#include "antares/solver/optimisation/opt_fonctions.h"
 
 /*
  pi_define.h doesn't include this header, yet it uses struct jmp_buf.

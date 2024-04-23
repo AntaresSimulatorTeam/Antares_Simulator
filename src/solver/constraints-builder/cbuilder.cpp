@@ -19,8 +19,8 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #include <cmath>
-#include "cbuilder.h"
-#include "grid.h"
+#include "antares/solver/constraints-builder/cbuilder.h"
+#include "antares/solver/constraints-builder/grid.h"
 
 using namespace Yuni;
 
@@ -93,7 +93,7 @@ bool CBuilder::checkValidityOfNodalLoopFlow(linkInfo* linkInfo, size_t hour)
     if (checkNodalLoopFlow) // check validity of loop flow values (sum = 0 at node)
     {
         double sum = 0.0;
-        for (auto lnk : areaToLinks[link->from])
+        for (auto* lnk : areaToLinks[link->from])
         {
             sum += link->from == lnk->ptr->from
                 ? -1 * lnk->ptr->parameters[Data::fhlLoopFlow][hour]
@@ -108,7 +108,7 @@ bool CBuilder::checkValidityOfNodalLoopFlow(linkInfo* linkInfo, size_t hour)
         }
 
         sum = 0.0;
-        for (auto lnk : areaToLinks[link->with])
+        for (auto* lnk : areaToLinks[link->with])
         {
             sum += link->with == lnk->ptr->from
                 ? -1 * lnk->ptr->parameters[Data::fhlLoopFlow][hour]

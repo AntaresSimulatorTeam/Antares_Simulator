@@ -19,14 +19,12 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "load-options.h"
+#include "antares/study/load-options.h"
 #include <antares/logs/logs.h>
 
 #include <antares/exception/LoadingError.hpp>
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 StudyLoadOptions::StudyLoadOptions() :
  nbYears(0),
@@ -47,16 +45,6 @@ StudyLoadOptions::StudyLoadOptions() :
 {
 }
 
-void StudyLoadOptions::pushProgressLogs() const
-{
-    if (loadOnlyNeeded && progressTicks)
-    {
-        uint percent = progressTicks * 100 / progressTickCount;
-        if (percent < 100)
-            logs.info() << logMessage << "  " << percent << '%';
-    }
-}
-
 void StudyLoadOptions::checkForceSimulationMode()
 {
     const uint number_of_enabled_force_options
@@ -74,5 +62,5 @@ void StudyLoadOptions::checkForceSimulationMode()
     else if (forceAdequacy)
         forceMode = SimulationMode::Adequacy;
 }
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+

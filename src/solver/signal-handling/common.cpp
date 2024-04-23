@@ -20,7 +20,7 @@
 */
 #include <antares/logs/logs.h>
 #include <antares/study/study.h>
-#include "common.h"
+#include "antares/signal-handling/common.h"
 
 using namespace Antares;
 

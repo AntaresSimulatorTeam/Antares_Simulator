@@ -21,22 +21,23 @@
 #include <algorithm>
 
 #include <yuni/yuni.h>
-#include <stdio.h>
-#include <ctype.h>
+#include <cstdio>
+#include <cctype>
 #include <tuple>   // std::tuple
 #include <list>    // std::list
 #include <sstream> // std::stringstream
 
-#include "parameters.h"
-#include <antares/constants.h>
+#include "antares/study/parameters.h"
+#include "antares/antares/constants.h"
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
-#include "load-options.h"
+#include "antares/study/load-options.h"
 #include <climits>
-#include "../solver/variable/economy/all.h"
+#include <boost/algorithm/string/case_conv.hpp>
+#include "antares/solver/variable/economy/all.h"
 
 #include <antares/exception/AssertionError.hpp>
-#include <antares/Enum.hxx>
+#include "antares/antares/Enum.hpp"
 
 using namespace Yuni;
 
@@ -68,6 +69,8 @@ static bool ConvertCStrToListTimeSeries(const String& value, uint& v)
             v |= timeSeriesRenewable;
         else if (word == "ntc")
             v |= timeSeriesTransmissionCapacities;
+        else if (word == "max-power")
+            v |= timeSeriesHydroMaxPower;
         return true;
     });
     return true;
@@ -106,9 +109,14 @@ static bool ConvertCStrToResultFormat(const AnyString& text, ResultFormat& out)
         out = legacyFilesDirectories;
         return true;
     }
-    if (s == "zip") // Using renewable clusters
+    if (s == "zip")
     {
         out = zipArchive;
+        return true;
+    }
+    if (s == "in-memory")
+    {
+        out = inMemory;
         return true;
     }
 
@@ -125,6 +133,9 @@ static void ParametersSaveResultFormat(IniFile::Section* section, ResultFormat f
     {
     case zipArchive:
         section->add(name, "zip");
+        break;
+    case inMemory:
+        section->add(name, "in-memory");
         break;
     default:
         section->add(name, "txt-files");
@@ -383,6 +394,12 @@ static void ParametersSaveTimeSeries(IniFile::Section* s, const char* name, uint
         if (!v.empty())
             v += ", ";
         v += "ntc";
+    }
+    if (value & timeSeriesHydroMaxPower)
+    {
+        if (!v.empty())
+            v += ", ";
+        v += "max-power";
     }
     s->add(name, v);
 }
@@ -838,6 +855,25 @@ static bool SGDIntLoadFamily_Playlist(Parameters& d,
     return false;
 }
 
+static bool deprecatedVariable(std::string var)
+{
+    static const std::vector<std::string> STSGroups_legacy
+      = {"psp_open_level",      "psp_closed_level",      "pondage_level",
+         "battery_level",       "other1_level",          "other2_level",
+         "other3_level",        "other4_level",          "other5_level",
+
+         "psp_open_injection",  "psp_closed_injection",  "pondage_injection",
+         "battery_injection",   "other1_injection",      "other2_injection",
+         "other3_injection",    "other4_injection",      "other5_injection",
+
+         "psp_open_withdrawal", "psp_closed_withdrawal", "pondage_withdrawal",
+         "battery_withdrawal",  "other1_withdrawal",     "other2_withdrawal",
+         "other3_withdrawal",   "other4_withdrawal",     "other5_withdrawal"};
+    boost::to_lower(var);
+    return std::find(STSGroups_legacy.begin(), STSGroups_legacy.end(), var)
+           != STSGroups_legacy.end();
+}
+
 static bool SGDIntLoadFamily_VariablesSelection(Parameters& d,
                                                 const String& key,
                                                 const String& value,
@@ -851,6 +887,12 @@ static bool SGDIntLoadFamily_VariablesSelection(Parameters& d,
     }
     if (key == "select_var +" || key == "select_var -")
     {
+        if (deprecatedVariable(value.to<std::string>()))
+        {
+            logs.warning() << "Output variable `" << original
+                           << "` no longer exists and has been ignored";
+            return true;
+        }
         // Check if the read output variable exists
         if (not d.variablesPrintInfo.exists(value.to<std::string>()))
         {
@@ -1056,6 +1098,8 @@ bool Parameters::loadFromINI(const IniFile& ini, StudyVersion& version, const St
 
     fixGenRefreshForNTC();
 
+    fixGenRefreshForHydroMaxPower();
+
     // Specific action before launching a simulation
     if (options.usedByTheSolver)
         prepareForSimulation(options);
@@ -1111,6 +1155,22 @@ void Parameters::fixGenRefreshForNTC()
         interModal &= ~timeSeriesTransmissionCapacities;
         logs.error() << "Inter-modal correlation is not available for transmission capacities. It "
                         "will be automatically disabled.";
+    }
+}
+
+void Parameters::fixGenRefreshForHydroMaxPower()
+{
+    if ((timeSeriesHydroMaxPower & timeSeriesToGenerate) != 0)
+    {
+        timeSeriesToGenerate &= ~timeSeriesHydroMaxPower;
+        logs.warning() << "Time-series generation is not available for hydro max power. It "
+                        "will be automatically disabled.";
+    }
+    if ((timeSeriesHydroMaxPower & timeSeriesToRefresh) != 0)
+    {
+        timeSeriesToRefresh &= ~timeSeriesHydroMaxPower;
+        logs.warning() << "Time-series refresh is not available for hydro max power. It will "
+                        "be automatically disabled.";
     }
 }
 
@@ -1352,7 +1412,7 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
 
     if (interModal == timeSeriesLoad || interModal == timeSeriesSolar
         || interModal == timeSeriesWind || interModal == timeSeriesHydro
-        || interModal == timeSeriesThermal || interModal == timeSeriesRenewable)
+        || interModal == timeSeriesThermal || interModal == timeSeriesRenewable || interModal == timeSeriesHydroMaxPower)
     {
         // Only one timeseries in interModal correlation, which is the same than nothing
         interModal = 0;

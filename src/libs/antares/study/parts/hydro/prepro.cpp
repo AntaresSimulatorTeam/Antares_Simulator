@@ -22,8 +22,8 @@
 #include <yuni/yuni.h>
 #include <yuni/io/file.h>
 #include <yuni/io/directory.h>
-#include "../../study.h"
-#include "prepro.h"
+#include "antares/study/study.h"
+#include "antares/study/parts/hydro/prepro.h"
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
 

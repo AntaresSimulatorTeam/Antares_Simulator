@@ -24,7 +24,7 @@
 #include <yuni/core/getopt.h>
 #include <antares/args/args_to_utf8.h>
 #include <antares/utils/utils.h>
-#include <antares/version.h>
+#include <antares/antares/version.h>
 #include <antares/sys/policy.h>
 #include <yuni/core/system/cpu.h>
 #include <yuni/core/system/process.h>
@@ -33,12 +33,12 @@
 #include <yuni/io/file.h>
 #include <antares/memory/memory.h>
 #include <antares/logs/hostinfo.h>
-#include <antares/locale.h>
-#include "../../config.h"
+#include <antares/locale/locale.h>
+#include "antares/config/config.h"
 
 #include "output.h"
 #include "datafile.h"
-#include "studydata.h"
+#include "antares/solver/ts-generator/xcast/studydata.h"
 #include "job.h"
 #include "progress.h"
 

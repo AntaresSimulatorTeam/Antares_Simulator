@@ -21,7 +21,7 @@
 #include <ui/common/wx-wrapper.h>
 #include "../main.h"
 #include "../../windows/studylogs.h"
-#include "../../../config.h"
+#include <antares/config/config.h>
 #include <stdio.h>
 #include <time.h>
 #include <wx/stdpaths.h>
@@ -48,7 +48,7 @@ public:
 using WaitingLogEntries = std::vector<LogInfo*>;
 
 WaitingLogEntries waitingLogEntry;
-Yuni::Mutex logMutex;
+std::mutex logMutex;
 
 std::atomic<int> logUpdateCount;
 

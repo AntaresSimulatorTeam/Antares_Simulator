@@ -19,7 +19,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "h2o2_j_donnees_mensuelles.h"
+#include "antares/solver/hydro/daily2/h2o2_j_donnees_mensuelles.h"
 
 void H2O2_J_InitialiserLesBornesdesVariables(DONNEES_MENSUELLES_ETENDUES& DonneesMensuelles,
                                              int NumeroDeProbleme)

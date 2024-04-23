@@ -37,7 +37,7 @@ int thermalScBuilderRenderer::height() const
 {
     if (!(!study) && !(!pRules) && selectedArea())
     {
-        return (int)selectedArea()->thermal.list.size();
+        return (int)selectedArea()->thermal.list.allClustersCount();
     }
     return 0;
 }
@@ -45,7 +45,7 @@ int thermalScBuilderRenderer::height() const
 wxString thermalScBuilderRenderer::rowCaption(int rowIndx) const
 {
     if (!(!study) && !(!pRules) && selectedArea()
-        && (uint)rowIndx < selectedArea()->thermal.list.size())
+        && (uint)rowIndx < selectedArea()->thermal.list.allClustersCount())
     {
         return wxString() << wxT(" ")
                           << wxStringFromUTF8(selectedArea()->thermal.list[rowIndx]->name())
@@ -57,7 +57,7 @@ wxString thermalScBuilderRenderer::rowCaption(int rowIndx) const
 bool thermalScBuilderRenderer::cellValue(int x, int y, const String& value)
 {
     if (!(!study) && !(!pRules) && (uint)x < study->parameters.nbYears && selectedArea()
-        && (uint)y < selectedArea()->thermal.list.size())
+        && (uint)y < selectedArea()->thermal.list.allClustersCount())
     {
         assert(selectedArea()->index < pRules->areaCount());
         assert((uint)y < pRules->thermal[selectedArea()->index].width());
@@ -72,7 +72,7 @@ bool thermalScBuilderRenderer::cellValue(int x, int y, const String& value)
 double thermalScBuilderRenderer::cellNumericValue(int x, int y) const
 {
     if (!(!study) && !(!pRules) && (uint)x < study->parameters.nbYears && selectedArea()
-        && (uint)y < selectedArea()->thermal.list.size())
+        && (uint)y < selectedArea()->thermal.list.allClustersCount())
     {
         assert((uint)y < pRules->thermal[selectedArea()->index].width());
         assert((uint)x < pRules->thermal[selectedArea()->index].height());

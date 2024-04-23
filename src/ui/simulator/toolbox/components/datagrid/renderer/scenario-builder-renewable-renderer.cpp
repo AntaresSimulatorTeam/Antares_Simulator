@@ -37,7 +37,7 @@ int renewableScBuilderRenderer::height() const
 {
     if (!(!study) && !(!pRules) && selectedArea())
     {
-        return (int)selectedArea()->renewable.list.size();
+        return (int)selectedArea()->renewable.list.allClustersCount();
     }
     return 0;
 }
@@ -45,7 +45,7 @@ int renewableScBuilderRenderer::height() const
 wxString renewableScBuilderRenderer::rowCaption(int rowIndx) const
 {
     if (!(!study) && !(!pRules) && selectedArea()
-        && (uint)rowIndx < selectedArea()->renewable.list.size())
+        && (uint)rowIndx < selectedArea()->renewable.list.allClustersCount())
     {
         return wxString() << wxT(
                  " ") << wxStringFromUTF8(selectedArea()->renewable.list[rowIndx]->name())
@@ -57,7 +57,7 @@ wxString renewableScBuilderRenderer::rowCaption(int rowIndx) const
 bool renewableScBuilderRenderer::cellValue(int x, int y, const String& value)
 {
     if (!(!study) && !(!pRules) && (uint)x < study->parameters.nbYears && selectedArea()
-        && (uint)y < selectedArea()->renewable.list.size())
+        && (uint)y < selectedArea()->renewable.list.allClustersCount())
     {
         assert(selectedArea()->index < pRules->areaCount());
         assert((uint)y < pRules->renewable[selectedArea()->index].width());
@@ -73,7 +73,7 @@ bool renewableScBuilderRenderer::cellValue(int x, int y, const String& value)
 double renewableScBuilderRenderer::cellNumericValue(int x, int y) const
 {
     if (!(!study) && !(!pRules) && (uint)x < study->parameters.nbYears && selectedArea()
-        && (uint)y < selectedArea()->renewable.list.size())
+        && (uint)y < selectedArea()->renewable.list.allClustersCount())
     {
         assert((uint)y < pRules->renewable[selectedArea()->index].width());
         assert((uint)x < pRules->renewable[selectedArea()->index].height());

@@ -21,9 +21,9 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
-#include "resources.h"
+#include "antares/resources/resources.h"
 #include <antares/logs/logs.h>
-#include "../config.h"
+#include "antares/config/config.h"
 
 using namespace Yuni;
 
@@ -131,7 +131,7 @@ void Initialize(int argc, char** argv, bool initializeSearchPath)
     String p;
     IO::MakeAbsolute(p, argv[0]);
     String tt;
-    IO::parentPath(tt, p);
+    IO::parent_path(tt, p);
 
     IO::Normalize(RootFolder, tt);
 

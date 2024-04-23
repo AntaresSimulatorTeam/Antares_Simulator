@@ -18,7 +18,8 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include "generator.h"
+
+#include "antares/solver/ts-generator/generator.h"
 
 namespace Antares::TSGenerator
 {
@@ -48,12 +49,14 @@ void ResizeGeneratedTimeSeries(Data::AreaList& areas, Data::Parameters& params)
         // Hydro
         if (params.timeSeriesToGenerate & Data::timeSeriesHydro)
         {
-            area.hydro.series->resize_ROR_STORAGE_MINGEN_whenGeneratedTS(params.nbTimeSeriesHydro);
+            Data::DataSeriesHydro* const series = area.hydro.series;
+            const uint nbSeries = params.nbTimeSeriesHydro;
+            series->resizeGenerationTS(nbSeries);
         }
 
         // Thermal
         bool globalThermalTSgeneration = params.timeSeriesToGenerate & Data::timeSeriesThermal;
-        for (auto [_, cluster] : area.thermal.list.mapping)
+        for (const auto& cluster : area.thermal.list.all())
         {
             if (cluster->doWeGenerateTS(globalThermalTSgeneration))
                 cluster->series.timeSeries.reset(params.nbTimeSeriesThermal, HOURS_PER_YEAR);

@@ -19,8 +19,9 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "allocation.h"
-#include "../../study.h"
+#include "antares/study/parts/hydro/allocation.h"
+#include <antares/utils/utils.h>
+#include "antares/study/study.h"
 #include <yuni/core/math.h>
 #include <yuni/io/file.h>
 
@@ -116,7 +117,7 @@ double HydroAllocation::fromArea(const AreaName& areaid) const
 void HydroAllocation::fromArea(const AreaName& areaid, double value)
 {
     assert(!pMustUseValuesFromAreaID);
-    if (Math::Zero(value))
+    if (Utils::isZero(value))
     {
         auto i = pValues.find(areaid);
         if (i != pValues.end())
@@ -166,7 +167,7 @@ bool HydroAllocation::loadFromFile(const AreaName& referencearea, const AnyStrin
                 for (auto* p = section.firstProperty; p; p = p->next)
                 {
                     double coeff = p->value.to<double>();
-                    if (!Math::Zero(coeff))
+                    if (!Utils::isZero(coeff))
                     {
                         areaname = p->key;
                         areaname.toLower();
@@ -199,7 +200,7 @@ bool HydroAllocation::saveToFile(const AnyString& filename) const
         for (auto i = pValues.begin(); i != end; ++i)
         {
             double v = i->second;
-            if (not Math::Zero(v))
+            if (!Utils::isZero(v))
             {
                 str = v;
                 if (str.contains('.'))

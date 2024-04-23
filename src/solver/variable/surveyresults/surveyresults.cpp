@@ -20,25 +20,19 @@
 */
 
 #include <algorithm>
+#include <cmath>
 #include <yuni/yuni.h>
 #include <antares/study/study.h>
-#include "surveyresults.h"
+#include <antares/utils/utils.h>
+#include "antares/solver/variable/surveyresults/surveyresults.h"
 #include <antares/logs/logs.h>
-#include <yuni/io/file.h>
-#include <antares/io/file.h>
 
 using namespace Yuni;
 using namespace Antares;
 
 #define SEP IO::Separator
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Variable
-{
-namespace Private
+namespace Antares::Solver::Variable::Private
 {
 void InternalExportDigestLinksMatrix(const Data::Study& study,
                                      const char* title,
@@ -74,11 +68,11 @@ void InternalExportDigestLinksMatrix(const Data::Study& study,
             else
             {
                 v = matrix[x][y];
-                if (Math::NaN(v))
+                if (std::isnan(v))
                     buffer.append("\t--");
                 else
                 {
-                    if (Math::Zero(v))
+                    if (Utils::isZero(v))
                     {
                         buffer.append("\t0");
                     }
@@ -131,27 +125,24 @@ static void ExportGridInfosAreas(const Data::Study& study,
         }
 
         // Thermal clusters
-        for (uint i = 0; i != area.thermal.clusterCount(); ++i)
+        for (auto& cluster : area.thermal.list.each_enabled())
         {
-            assert(NULL != area.thermal.clusters[i]);
-            auto& cluster = *(area.thermal.clusters[i]);
-
             outThermal << area.id << '\t';
-            outThermal << cluster.id() << '\t';
-            outThermal << cluster.name() << '\t';
-            outThermal << Data::ThermalCluster::GroupName(cluster.groupID) << '\t';
-            outThermal << cluster.unitCount << '\t';
-            outThermal << cluster.nominalCapacity << '\t';
-            outThermal << cluster.minStablePower << '\t';
-            outThermal << cluster.minUpTime << '\t';
-            outThermal << cluster.minDownTime << '\t';
-            outThermal << cluster.spinning << '\t';
-            outThermal << cluster.emissions.factors[Antares::Data::Pollutant::CO2] << '\t';
-            outThermal << cluster.marginalCost << '\t';
-            outThermal << cluster.fixedCost << '\t';
-            outThermal << cluster.startupCost << '\t';
-            outThermal << cluster.marketBidCost << '\t';
-            outThermal << cluster.spreadCost << '\n';
+            outThermal << cluster->id() << '\t';
+            outThermal << cluster->name() << '\t';
+            outThermal << Data::ThermalCluster::GroupName(cluster->groupID) << '\t';
+            outThermal << cluster->unitCount << '\t';
+            outThermal << cluster->nominalCapacity << '\t';
+            outThermal << cluster->minStablePower << '\t';
+            outThermal << cluster->minUpTime << '\t';
+            outThermal << cluster->minDownTime << '\t';
+            outThermal << cluster->spinning << '\t';
+            outThermal << cluster->emissions.factors[Antares::Data::Pollutant::CO2] << '\t';
+            outThermal << cluster->marginalCost << '\t';
+            outThermal << cluster->fixedCost << '\t';
+            outThermal << cluster->startupCost << '\t';
+            outThermal << cluster->marketBidCost << '\t';
+            outThermal << cluster->spreadCost << '\n';
 
         } // each thermal cluster
     });   // each area
@@ -211,10 +202,10 @@ void SurveyResultsData::exportGridInfos(IResultWriter& writer)
     output.clear();
     Solver::Variable::Private::ExportGridInfosAreas(study, originalOutput, writer);
 }
-} // namespace Private
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Variable::Private
+
+
+
 
 namespace Antares
 {
@@ -327,9 +318,9 @@ inline void SurveyResults::AppendDoubleValue(uint& error,
         return;
     }
 
-    if (not Math::Zero(v))
+    if (!Utils::isZero(v))
     {
-        if (Math::NaN(v))
+        if (std::isnan(v))
         {
             buffer.append("\tNaN", 4);
             if (++error == 1)
@@ -341,7 +332,7 @@ inline void SurveyResults::AppendDoubleValue(uint& error,
         }
         else
         {
-            if (Math::Infinite(v))
+            if (std::isinf(v))
             {
                 buffer.append((v > 0) ? "\t+inf" : "\t-inf", 5);
                 if (++error == 1)
@@ -602,7 +593,7 @@ void SurveyResults::exportDigestAllYears(std::string& buffer)
                 continue;
             }
 
-            if (Math::Zero(values[i][y]))
+            if (Utils::isZero(values[i][y]))
             {
                 buffer.append("\t0");
             }

@@ -21,6 +21,7 @@
 #ifndef __ANTARES_APPLICATION_WINDOWS_STUDY_LOGS_H__
 #define __ANTARES_APPLICATION_WINDOWS_STUDY_LOGS_H__
 
+#include <mutex>
 #include <antares/study/study.h>
 #include <yuni/core/event.h>
 
@@ -180,7 +181,7 @@ private:
     //! Temporary structure used for displaying the list of all available files
     LogFilenameInfo::Map pLogFilenameInfo;
 
-    Yuni::Mutex pLoadingMutex;
+    std::mutex pLoadingMutex;
 
     //! Flag to display all log files
     bool pShowAllLogsFiles;

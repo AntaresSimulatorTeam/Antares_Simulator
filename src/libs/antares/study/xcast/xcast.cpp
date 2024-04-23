@@ -19,19 +19,18 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "xcast.h"
+#include "antares/study/xcast/xcast.h"
 #include <antares/logs/logs.h>
 #include <antares/inifile/inifile.h>
-#include "../study.h"
+#include "antares/study//study.h"
+#include <antares/utils/utils.h>
 #include <limits>
 
 using namespace Yuni;
 
 #define SEP IO::Separator
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 
 const char* XCast::TSTranslationUseToCString(TSTranslationUse use)
@@ -359,7 +358,7 @@ bool XCast::saveToFolder(const AnyString& folder) const
     IniFile::Section* s = ini.addSection("general");
     if (distribution != dtBeta)
         s->add("distribution", DistributionToNameID(distribution));
-    if (!Math::Zero(capacity))
+    if (!Utils::isZero(capacity))
         s->add("capacity", capacity);
     if (useConversion)
         s->add("conversion", useConversion);
@@ -419,5 +418,5 @@ void XCast::copyFrom(const XCast& rhs)
     distribution = rhs.distribution;
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+

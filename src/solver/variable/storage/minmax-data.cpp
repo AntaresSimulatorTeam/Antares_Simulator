@@ -20,8 +20,8 @@
 */
 
 #include <yuni/yuni.h>
-#include "intermediate.h"
-#include "minmax-data.h"
+#include "antares/solver/variable/storage/intermediate.h"
+#include "antares/solver/variable/storage/minmax-data.h"
 #include <cfloat>
 
 using namespace Yuni;
@@ -30,7 +30,7 @@ namespace Antares::Solver::Variable::R::AllYears
 {
 namespace // anonymous
 {
-double eps = 1.e-7;
+constexpr double eps = 1.e-7;
 
 template<uint Size, bool OpInferior>
 struct ArrayInitializer

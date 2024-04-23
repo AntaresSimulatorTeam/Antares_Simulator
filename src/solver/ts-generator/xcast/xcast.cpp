@@ -23,23 +23,17 @@
 #include <sstream>
 #include <yuni/yuni.h>
 #include <antares/study/study.h>
-#include "xcast.h"
-#include "predicate.hxx"
+#include "antares/solver/ts-generator/xcast/xcast.h"
+#include "antares/solver/ts-generator/xcast/predicate.hxx"
 #include <antares/logs/logs.h>
-#include <antares/fatal-error.h>
+#include <antares/antares/fatal-error.h>
 #include <limits>
-#include <yuni/io/directory.h>
-#include <antares/study/area/constants.h>
 
 using namespace Yuni;
 
 #define SEP (IO::Separator)
 
-namespace Antares
-{
-namespace TSGenerator
-{
-namespace XCast
+namespace Antares::TSGenerator::XCast
 {
 
 enum
@@ -156,7 +150,7 @@ void XCast::applyTransferFunction(PredicateT& predicate)
 
                     if (dailyResults[h] >= pj[x] && dailyResults[h] <= pk[x])
                     {
-                        assert(0 == Math::Infinite(b[j]) && "Infinite value");
+                        assert(!std::isinf(b[j]) && "Infinite value");
                         dailyResults[h] = (a[j] * dailyResults[h]) + b[j];
                         last_i = i;
                         break;
@@ -484,7 +478,7 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
 
                     for (uint h = 0; h != HOURS_PER_DAY; ++h)
                     {
-                        assert(0 == Math::Infinite(dailyResults[h]) && "Infinite value");
+                        assert(!std::isinf(dailyResults[h]) && "Infinite value");
                     }
                 }
 #endif
@@ -505,7 +499,7 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
 
                     for (uint h = 0; h != HOURS_PER_DAY; ++h)
                     {
-                        assert(0 == Math::Infinite(dailyResults[h]) && "Infinite value");
+                        assert(!std::isinf(dailyResults[h]) && "Infinite value");
                         dailyResults[h] += (float)column[hourInTheYear + h];
                     }
                 }
@@ -520,7 +514,7 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
 
                     for (uint h = 0; h != HOURS_PER_DAY; ++h)
                     {
-                        assert(0 == Math::Infinite(dailyResults[h]) && "Infinite value");
+                        assert(!std::isinf(dailyResults[h]) && "Infinite value");
                     }
                 }
 #endif
@@ -539,7 +533,7 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
 
                     for (uint h = 0; h != HOURS_PER_DAY; ++h)
                     {
-                        assert(0 == Math::Infinite(dailyResults[h]) && "Infinite value");
+                        assert(!std::isinf(dailyResults[h]) && "Infinite value");
                         dailyResults[h] *= (float)srcData.capacity;
                     }
 
@@ -554,7 +548,7 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
 
                     assert(hourInTheYear + HOURS_PER_DAY <= series.height && "Bound checking");
                     for (uint h = 0; h != HOURS_PER_DAY; ++h)
-                        column[hourInTheYear + h] = Math::Round(dailyResults[h]);
+                        column[hourInTheYear + h] = std::round(dailyResults[h]);
 
                     ++progression;
                 }
@@ -602,7 +596,7 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
                 for (uint h = 0; h < matrix.height; ++h)
                 {
                     perHour[h] += dsmvalues[h];
-                    assert(!Math::NaN(perHour[h]));
+                    assert(!std::isnan(perHour[h]));
                 }
             }
         }
@@ -651,6 +645,7 @@ bool XCast::run()
     return false;
 }
 
-} // namespace XCast
-} // namespace TSGenerator
-} // namespace Antares
+} // namespace Antares::TSGenerator::XCast
+
+
+

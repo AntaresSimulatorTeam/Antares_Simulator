@@ -22,21 +22,23 @@
 #include <yuni/yuni.h>
 #include <antares/study/study.h>
 #include <antares/study/area/scratchpad.h>
+#include <antares/utils/utils.h>
 #include <yuni/io/file.h>
 #include <yuni/io/directory.h>
-#include "management.h"
-#include <antares/fatal-error.h>
+#include "antares/solver/hydro/management/management.h"
+#include <antares/antares/fatal-error.h>
 #include <antares/writer/i_writer.h>
-#include "../daily/h2o_j_donnees_mensuelles.h"
-#include "../daily/h2o_j_fonctions.h"
-#include "../daily2/h2o2_j_donnees_mensuelles.h"
-#include "../daily2/h2o2_j_fonctions.h"
-#include "../../simulation/sim_extern_variables_globales.h"
+#include "antares/solver/hydro/daily/h2o_j_donnees_mensuelles.h"
+#include "antares/solver/hydro/daily/h2o_j_fonctions.h"
+#include "antares/solver/hydro/daily2/h2o2_j_donnees_mensuelles.h"
+#include "antares/solver/hydro/daily2/h2o2_j_fonctions.h"
+#include "antares/solver/simulation/sim_extern_variables_globales.h"
 #include <sstream>
 #include <cassert>
 #include <limits>
-#include <variable/state.h>
+#include "antares/solver/variable/state.h"
 #include <array>
+#include <numeric>
 
 using namespace Yuni;
 
@@ -226,6 +228,10 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
 
     auto& scratchpad = scratchmap.at(&area);
 
+    auto& meanMaxDailyGenPower = scratchpad.meanMaxDailyGenPower;
+
+    const uint tsIndex =  meanMaxDailyGenPower.getSeriesIndex(y);
+
     int initReservoirLvlMonth = area.hydro.initializeReservoirLevelDate;
 
     double reservoirCapacity = area.hydro.reservoirCapacity;
@@ -236,10 +242,11 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
 
     uint dayYear = 0;
 
-    auto const& maxPower = area.hydro.maxPower;
+    auto const& dailyNbHoursAtGenPmax = area.hydro.dailyNbHoursAtGenPmax;
 
-    auto const& maxP = maxPower[Data::PartHydro::genMaxP];
-    auto const& maxE = maxPower[Data::PartHydro::genMaxE];
+    
+    auto const& maxP = meanMaxDailyGenPower[tsIndex];
+    auto const& maxE = dailyNbHoursAtGenPmax[0];
 
     auto& ventilationResults = ventilationResults_[area.index];
 
@@ -263,14 +270,13 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
         auto daysPerMonth = calendar_.months[month].days;
         assert(daysPerMonth <= maxOPP);
         assert(daysPerMonth <= maxDailyTargetGen);
-        assert(daysPerMonth + dayYear - 1 < maxPower.height);
+        assert(daysPerMonth + dayYear - 1 < meanMaxDailyGenPower.timeSeries.height);
 
         for (uint day = 0; day != daysPerMonth; ++day)
         {
             auto dYear = day + dayYear;
             assert(day < 32);
             assert(dYear < 366);
-            scratchpad.optimalMaxPower[dYear] = maxP[dYear];
 
             if (debugData)
                 debugData->OPP[dYear] = maxP[dYear] * maxE[dYear];
@@ -313,16 +319,16 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
                         demandMax = data.DLE[dYear];
                 }
 
-                if (not Math::Zero(demandMax))
+                if (!Utils::isZero(demandMax))
                 {
-                    assert(Math::Abs(demandMax) > 1e-12);
+                    assert(std::abs(demandMax) > 1e-12);
                     double coeff = 0.;
 
                     for (uint day = 0; day != daysPerMonth; ++day)
                     {
                         auto dYear = day + dayYear;
-                        coeff += Math::Power(data.DLE[dYear] / demandMax,
-                                             area.hydro.interDailyBreakdown);
+                        coeff += std::pow(data.DLE[dYear] / demandMax,
+                                area.hydro.interDailyBreakdown);
                     }
                     coeff = data.MOG[realmonth] / coeff;
 
@@ -330,7 +336,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
                     {
                         auto dYear = day + dayYear;
                         dailyTargetGen[dYear] = coeff
-                                                * Math::Power(data.DLE[dYear] / demandMax,
+                                                * std::pow(data.DLE[dYear] / demandMax,
                                                               area.hydro.interDailyBreakdown);
                     }
                 }
@@ -412,8 +418,8 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
 #ifndef NDEBUG
             for (uint day = firstDay; day != endDay; ++day)
             {
-                assert(!Math::NaN(ventilationResults.HydrauliqueModulableQuotidien[day]));
-                assert(!Math::Infinite(ventilationResults.HydrauliqueModulableQuotidien[day]));
+                assert(!std::isnan(ventilationResults.HydrauliqueModulableQuotidien[day]));
+                assert(!std::isinf(ventilationResults.HydrauliqueModulableQuotidien[day]));
             }
 #endif
         }
@@ -545,5 +551,4 @@ void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::State& st
           prepareDailyOptimalGenerations(state, area, y, scratchmap);
           });
 }
-
 } // namespace Antares

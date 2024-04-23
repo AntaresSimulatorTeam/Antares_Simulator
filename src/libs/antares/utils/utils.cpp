@@ -20,6 +20,10 @@
 */
 
 #include "antares/utils/utils.h"
+#include <antares/logs/logs.h>
+
+
+#include <sstream>
 
 using namespace Yuni;
 
@@ -79,4 +83,44 @@ void BeautifyName(std::string& out, const std::string& oldname)
     out = yuniOut.c_str();
 }
 
+std::vector<std::pair<std::string, std::string>> splitStringIntoPairs(const std::string& s,
+                                                                      char delimiter1,
+                                                                      char delimiter2)
+{
+    std::vector<std::pair<std::string, std::string>> pairs;
+    std::stringstream ss(s);
+    std::string token;
+
+    while (std::getline(ss, token, delimiter1))
+    {
+        size_t pos = token.find(delimiter2);
+        if (pos != std::string::npos)
+        {
+            std::string begin = token.substr(0, pos);
+            std::string end = token.substr(pos + 1);
+            pairs.push_back({begin, end});
+        }
+        else
+            logs.warning() << "Error while parsing: " << token;
+    }
+
+    return pairs;
+}
+
+namespace Utils
+{
+
+bool isZero(double d)
+{
+    constexpr double threshold = 1.e-6;
+    return std::abs(d) < threshold;
+}
+
+double round(double d, unsigned precision)
+{
+    unsigned factor = std::pow(10, precision);
+    return std::round(d * factor) / factor;
+}
+
+} // namespace Utils
 } // namespace Antares

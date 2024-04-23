@@ -279,6 +279,9 @@ void Create::createActionsForAStandardAreaCopy(Context& ctx, bool copyPosition)
     *tsNode += prepro;
     *tsNode += new Action::AntaresStudy::Area::AllocationHydro(pOriginalAreaName);
 
+    //Hydro Max Power
+    *tsNode += new DataTimeseries(Data::timeSeriesHydroMaxPower, pOriginalAreaName);
+
     // Thermal
     auto* area = ctx.extStudy->areas.findFromName(pOriginalAreaName);
     if (area)
@@ -287,7 +290,7 @@ void Create::createActionsForAStandardAreaCopy(Context& ctx, bool copyPosition)
         auto* root = new RootNodePlant(pOriginalAreaName);
 
         // browsing each thermal cluster
-        for (auto& c : area->thermal.list)
+        for (auto c : area->thermal.list.all())
             *root += StandardActionsToCopyThermalCluster(pOriginalAreaName, c->name());
 
         *this += root;

@@ -19,13 +19,15 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #include <yuni/yuni.h>
-#include <yuni/core/math.h>
 #include <algorithm>
 #include <vector>
-#include "BindingConstraint.h"
-#include "../study.h"
-#include "BindingConstraintLoader.h"
-#include "BindingConstraintSaver.h"
+#include <cmath>
+#include <functional>
+
+#include "antares/study/binding_constraint/BindingConstraint.h"
+#include "antares/study/study.h"
+#include "antares/study/binding_constraint/BindingConstraintLoader.h"
+#include "antares/study/binding_constraint/BindingConstraintSaver.h"
 #include "antares/utils/utils.h"
 
 using namespace Yuni;
@@ -39,7 +41,8 @@ using namespace Antares;
 #define SNPRINTF snprintf
 #endif
 
-namespace Antares::Data {
+namespace Antares::Data
+{
 
 BindingConstraint::Operator BindingConstraint::StringToOperator(const AnyString& text)
 {
@@ -140,7 +143,7 @@ void BindingConstraint::weight(const AreaLink* lnk, double w)
 {
     if (lnk)
     {
-        if (Math::Zero(w))
+        if (Utils::isZero(w))
         {
             auto i = pLinkWeights.find(lnk);
             if (i != pLinkWeights.end())
@@ -156,7 +159,7 @@ void BindingConstraint::weight(const ThermalCluster* cluster, double w)
 {
     if (cluster && cluster->isActive())
     {
-        if (Math::Zero(w))
+        if (Utils::isZero(w))
         {
             auto i = pClusterWeights.find(cluster);
             if (i != pClusterWeights.end())
@@ -177,7 +180,7 @@ void BindingConstraint::offset(const AreaLink* lnk, int o)
 {
     if (lnk)
     {
-        if (Math::Zero(o))
+        if (Utils::isZero(o))
         {
             auto i = pLinkOffsets.find(lnk);
             if (i != pLinkOffsets.end())
@@ -192,7 +195,7 @@ void BindingConstraint::offset(const ThermalCluster* cluster, int o)
 {
     if (cluster && cluster->isActive())
     {
-        if (Math::Zero(o))
+        if (Utils::isZero(o))
         {
             auto i = pClusterOffsets.find(cluster);
             if (i != pClusterOffsets.end())
@@ -211,10 +214,11 @@ void BindingConstraint::resetToDefaultValues()
     markAsModified();
 }
 
-void BindingConstraint::copyWeights(const Study &study,
-                                    const BindingConstraint &rhs,
-                                    bool emptyBefore,
-                                    Yuni::Bind<void(AreaName&, const AreaName&)>& translate)
+void BindingConstraint::copyWeights(
+  const Study& study,
+  const BindingConstraint& rhs,
+  bool emptyBefore,
+  const std::function<void(AreaName&, const AreaName&)>& translate)
 {
     if (emptyBefore)
     {
@@ -268,7 +272,7 @@ void BindingConstraint::copyWeights(const Study &study,
             if (localParent)
             {
                 const ThermalCluster *localTC
-                        = localParent->thermal.list.find(thermalCluster->id());
+                        = localParent->thermal.list.findInAll(thermalCluster->id());
                 if (localTC)
                     pClusterWeights[localTC] = weight;
             }
@@ -276,10 +280,11 @@ void BindingConstraint::copyWeights(const Study &study,
     }
 }
 
-void BindingConstraint::copyOffsets(const Study &study,
-                                    const BindingConstraint &rhs,
-                                    bool emptyBefore,
-                                    Yuni::Bind<void(AreaName&, const AreaName&)>& translate)
+void BindingConstraint::copyOffsets(
+  const Study& study,
+  const BindingConstraint& rhs,
+  bool emptyBefore,
+  const std::function<void(AreaName&, const AreaName&)>& translate)
 {
     if (emptyBefore)
         pLinkOffsets.clear();
@@ -329,7 +334,7 @@ void BindingConstraint::copyOffsets(const Study &study,
             if (localParent)
             {
                 const ThermalCluster *localTC
-                        = localParent->thermal.list.find(thermalCluster->id());
+                        = localParent->thermal.list.findInAll(thermalCluster->id());
                 if (localTC)
                     pClusterOffsets[localTC] = offset;
             }
@@ -402,7 +407,7 @@ void BindingConstraint::buildFormula(String& s) const
             if (o > 0)
                 s << " x (t + " << pLinkOffsets.find(i->first)->second << ')';
             if (o < 0)
-                s << " x (t - " << Math::Abs(pLinkOffsets.find(i->first)->second) << ')';
+                s << " x (t - " << std::abs(pLinkOffsets.find(i->first)->second) << ')';
         }
 
         s << ')';
@@ -424,7 +429,7 @@ void BindingConstraint::buildFormula(String& s) const
             if (o > 0)
                 s << " x (t + " << pClusterOffsets.find(i->first)->second << ')';
             if (o < 0)
-                s << " x (t - " << Math::Abs(pClusterOffsets.find(i->first)->second) << ')';
+                s << " x (t - " << std::abs(pClusterOffsets.find(i->first)->second) << ')';
         }
 
         if (!i->first->isActive())

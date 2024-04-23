@@ -19,17 +19,15 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <yuni/yuni.h>
-#include <yuni/core/math.h>
 #include <antares/study/study.h>
 #include <antares/exception/AssertionError.hpp>
-#include "common-eco-adq.h"
+#include "antares/solver/simulation/common-eco-adq.h"
+#include <antares/utils/utils.h>
 #include <antares/logs/logs.h>
 #include <cassert>
-#include "simulation.h"
+#include <cmath>
+#include "antares/study/simulation.h"
 #include <antares/study/area/scratchpad.h>
-
-using namespace Yuni;
 
 #define EPSILON 1e-6
 
@@ -97,7 +95,7 @@ static bool Remix(const Data::AreaList& areas, PROBLEME_HEBDO& problem, uint num
             for (uint i = offset; i < endHour; ++i)
             {
                 double h_d = H[i] + D[i];
-                if (h_d > 0. && Math::Zero(S[i] + M[i]))
+                if (h_d > 0. && Utils::isZero(S[i] + M[i]))
                 {
                     double Li = L[i + hourInYear];
 
@@ -178,17 +176,17 @@ static bool Remix(const Data::AreaList& areas, PROBLEME_HEBDO& problem, uint num
                                  << ": infinite loop detected. please check input data";
                     break;
                 }
-            } while (Math::Abs(ecart) > 0.01);
+            } while (std::abs(ecart) > 0.01);
 
             for (uint i = offset; i != endHour; ++i)
             {
                 H[i] = HE[i];
-                assert(not Math::NaN(HE[i]) && "hydro remix: nan detected");
+                assert(not std::isnan(HE[i]) && "hydro remix: nan detected");
             }
             for (uint i = offset; i != endHour; ++i)
             {
                 D[i] = DE[i];
-                assert(not Math::NaN(DE[i]) && "hydro remix: nan detected");
+                assert(not std::isnan(DE[i]) && "hydro remix: nan detected");
             }
         }
     });

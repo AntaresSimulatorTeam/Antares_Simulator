@@ -25,9 +25,9 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "adequacy_patch_local_matching/adq_patch_local_matching.h"
-#include "adequacy_patch_csr/adq_patch_curtailment_sharing.h"
-#include <adequacy_patch_runtime_data.h>
+#include "antares/solver/optimisation/adequacy_patch_local_matching/adq_patch_local_matching.h"
+#include "antares/solver/optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h"
+#include <antares/solver/simulation/adequacy_patch_runtime_data.h>
 #include "antares/study/parameters/adq-patch-params.h"
 #include <antares/exception/LoadingError.hpp>
 #include <fstream>
@@ -509,7 +509,6 @@ BOOST_AUTO_TEST_CASE(check_valid_adq_param)
     auto p = createParams();
     BOOST_CHECK_NO_THROW(p.checkAdqPatchSimulationModeEconomyOnly(Antares::Data::SimulationMode::Economy));
     BOOST_CHECK_NO_THROW(p.checkAdqPatchIncludeHurdleCost(true));
-    BOOST_CHECK_NO_THROW(p.checkAdqPatchDisabledLocalMatching());
 }
 
 BOOST_AUTO_TEST_CASE(check_adq_param_wrong_mode)
@@ -523,11 +522,4 @@ BOOST_AUTO_TEST_CASE(check_adq_param_wrong_hurdle_cost)
 {
     auto p = createParams();
     BOOST_CHECK_THROW(p.checkAdqPatchIncludeHurdleCost(false), Error::IncompatibleHurdleCostCSR);
-}
-
-BOOST_AUTO_TEST_CASE(check_adq_param_wrong_lmr_disabled)
-{
-    auto p = createParams();
-    p.localMatching.enabled = false;
-    BOOST_CHECK_THROW(p.checkAdqPatchDisabledLocalMatching(), Error::AdqPatchDisabledLMR);
 }

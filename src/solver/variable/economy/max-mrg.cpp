@@ -21,18 +21,12 @@
 
 #include <yuni/yuni.h>
 #include <antares/study/study.h>
-#include "max-mrg.h"
+#include "antares/solver/variable/economy/max-mrg.h"
 #include <antares/study/area/scratchpad.h>
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Variable
-{
-namespace Economy
+namespace Antares::Solver::Variable::Economy
 {
 template<bool WithSimplexT>
 struct SpillageSelector
@@ -98,7 +92,7 @@ inline void PrepareMaxMRGFor(const State& state, double* opmrg, uint numSpace)
                 WH += H[i];
         }
 
-        if (Math::Zero(WH)) // no hydro
+        if (Utils::isZero(WH)) // no hydro
         {
             for (uint i = offset; i != endHour; ++i)
                 opmrg[i] = +S[i] + M[i] - D[i];
@@ -125,10 +119,9 @@ inline void PrepareMaxMRGFor(const State& state, double* opmrg, uint numSpace)
     double ecart = 1.;
     uint loop = 100; // arbitrary - maximum number of iterations
 
-    // ref to the study calendar
-    auto& calendar = state.study.calendar;
     // Pmax
-    const auto& P = area.hydro.maxPower[Data::PartHydro::genMaxP];
+    const uint y = problem.year;
+    const auto& P = area.hydro.series->maxHourlyGenPower;
 
     do
     {
@@ -141,13 +134,12 @@ inline void PrepareMaxMRGFor(const State& state, double* opmrg, uint numSpace)
             assert(i < HOURS_PER_YEAR && "calendar overflow");
             if (niveau > OI[i])
             {
-                uint dayYear = calendar.hours[i + state.hourInTheYear].dayYear;
-                opmrg[i] = Math::Min(niveau, OI[i] + P[dayYear] - H[i]);
+                opmrg[i] = std::min(niveau, OI[i] + P.getCoefficient(y, i + state.hourInTheYear) - H[i]);
                 SM += opmrg[i] - OI[i];
             }
             else
             {
-                opmrg[i] = Math::Max(niveau, OI[i] - H[i]);
+                opmrg[i] = std::max(niveau, OI[i] - H[i]);
                 SP += OI[i] - opmrg[i];
             }
         }
@@ -175,7 +167,4 @@ void PrepareMaxMRG(const State& state, double* opmrg, uint numSpace)
         PrepareMaxMRGFor<false>(state, opmrg, numSpace);
 }
 
-} // namespace Economy
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Variable::Economy

@@ -19,5 +19,5 @@ add_Library(antares-ui-messages ${SRC_UI_MESSAGES})
 
 
 target_link_libraries(antares-ui-messages PUBLIC ${wxWidgets_LIBRARIES})
-target_link_libraries(antares-ui-messages PRIVATE antares-core antares-ui-common)
+target_link_libraries(antares-ui-messages PRIVATE antares-core antares-ui-common Antares::resources Antares::locator)
 

@@ -19,13 +19,13 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "opt_structure_probleme_a_resoudre.h"
+#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 
-#include "../simulation/simulation.h"
-#include "../simulation/sim_structure_donnees.h"
-#include "../simulation/sim_extern_variables_globales.h"
+#include "antares/solver/simulation/simulation.h"
+#include "antares/solver/simulation/sim_structure_donnees.h"
+#include "antares/solver/simulation/sim_extern_variables_globales.h"
 
-#include "opt_fonctions.h"
+#include "antares/solver/optimisation/opt_fonctions.h"
 
 void OPT_RestaurerLesDonnees(PROBLEME_HEBDO* problemeHebdo)
 {
@@ -57,7 +57,8 @@ void OPT_RestaurerLesDonnees(PROBLEME_HEBDO* problemeHebdo)
             if (!CaracteristiquesHydrauliques.PresenceDHydrauliqueModulable)
                 continue;
 
-            CaracteristiquesHydrauliques.ContrainteDePmaxHydrauliqueHoraire[pdt]
+            double& hourlyPmax = CaracteristiquesHydrauliques.ContrainteDePmaxHydrauliqueHoraire[pdt];
+            hourlyPmax
               = CaracteristiquesHydrauliques.ContrainteDePmaxHydrauliqueHoraireRef[pdt];
             if (CaracteristiquesHydrauliques.SansHeuristique)
                 continue;
@@ -73,18 +74,11 @@ void OPT_RestaurerLesDonnees(PROBLEME_HEBDO* problemeHebdo)
                 double PmaxHydUplift
                   = CaracteristiquesHydrauliques.ContrainteDePmaxPompageHoraire[pdt];
                 PmaxHydUplift *= problemeHebdo->CoefficientEcretementPMaxHydraulique[pays];
-
-                if (PmaxHydEcretee < PmaxHydUplift)
-                    PmaxHydEcretee = PmaxHydUplift;
+                PmaxHydEcretee = std::max(PmaxHydUplift, PmaxHydEcretee);
             }
 
             // The generating power allowance cannot exceed the maximum available generating power
-            if (PmaxHydEcretee
-                < CaracteristiquesHydrauliques.ContrainteDePmaxHydrauliqueHoraire[pdt])
-            {
-                CaracteristiquesHydrauliques.ContrainteDePmaxHydrauliqueHoraire[pdt]
-                  = PmaxHydEcretee;
-            }
+            hourlyPmax = std::min(PmaxHydEcretee, hourlyPmax);
         }
     }
 

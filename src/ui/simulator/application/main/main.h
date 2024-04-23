@@ -29,7 +29,7 @@
 #include "../../toolbox/components/map/settings.h"
 #include <list>
 #include "fwd.h"
-#include "config.h"
+#include "antares/config/config.h"
 #include <ui/common/component/frame/local-frame.h>
 #include <antares/study/study.h>
 #include <antares/study/output.h>
@@ -693,6 +693,7 @@ private:
     Component::Notebook::Page* pageScBuilderLoad;
     Component::Notebook::Page* pageScBuilderThermal;
     Component::Notebook::Page* pageScBuilderHydro;
+    Component::Notebook::Page* pageScBuilderHydroMaxPower;
     Component::Notebook::Page* pageScBuilderWind;
     Component::Notebook::Page* pageScBuilderSolar;
     Component::Notebook::Page* pageScBuilderNTC;

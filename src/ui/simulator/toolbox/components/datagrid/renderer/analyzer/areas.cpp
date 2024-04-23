@@ -108,7 +108,7 @@ void Areas::reloadDistributionLawsFromStudy(Data::TimeSeriesType ts)
 
 void Areas::resetStatus(Record::Status status, bool invalidateSize)
 {
-    Yuni::MutexLocker locker(pRecord.mutex);
+    std::lock_guard locker(pRecord.mutex);
     auto end = pRecord.array.end();
     for (auto i = pRecord.array.begin(); i != end; ++i)
     {
@@ -145,7 +145,7 @@ wxString Areas::columnCaption(int colIndx) const
 
 wxString Areas::rowCaption(int rowIndx) const
 {
-    Yuni::MutexLocker locker(pRecord.mutex);
+    std::lock_guard locker(pRecord.mutex);
     if (rowIndx < (int)pRecord.size())
         return pRecord.array[rowIndx].wxAreaName;
     return wxEmptyString;
@@ -153,7 +153,7 @@ wxString Areas::rowCaption(int rowIndx) const
 
 IRenderer::CellStyle Areas::cellStyle(int col, int row) const
 {
-    Yuni::MutexLocker locker(pRecord.mutex);
+    std::lock_guard locker(pRecord.mutex);
     if (row >= (int)pRecord.size())
         return IRenderer::cellStyleError;
     const Record& record = pRecord.array[row];
@@ -189,7 +189,7 @@ wxColour Areas::cellTextColor(int, int) const
 
 wxString Areas::cellValue(int x, int y) const
 {
-    Yuni::MutexLocker locker(pRecord.mutex);
+    std::lock_guard locker(pRecord.mutex);
     if (y >= (int)pRecord.size())
         return wxEmptyString;
     const Record& record = pRecord.array[y];
@@ -224,7 +224,7 @@ wxString Areas::cellValue(int x, int y) const
 
 double Areas::cellNumericValue(int x, int y) const
 {
-    Yuni::MutexLocker locker(pRecord.mutex);
+    std::lock_guard locker(pRecord.mutex);
     if (y >= (int)pRecord.size())
         return IRenderer::cellStyleError;
     const Record& record = pRecord.array[y];
@@ -245,7 +245,7 @@ bool Areas::cellValue(int x, int y, const String& value)
 {
     if (x == 0)
     {
-        Yuni::MutexLocker locker(pRecord.mutex);
+        std::lock_guard locker(pRecord.mutex);
         if (y >= (int)pRecord.size())
             return false;
         pOnBeforeUpdate(x, y);
@@ -261,7 +261,7 @@ bool Areas::cellValue(int x, int y, const String& value)
     }
     if (x == 1) // distribution
     {
-        Yuni::MutexLocker locker(pRecord.mutex);
+        std::lock_guard locker(pRecord.mutex);
         if (y >= (int)pRecord.size())
             return false;
         Record& record = pRecord.array[y];
@@ -278,7 +278,7 @@ bool Areas::cellValue(int x, int y, const String& value)
     }
     if (x == 2) // absolute
     {
-        Yuni::MutexLocker locker(pRecord.mutex);
+        std::lock_guard locker(pRecord.mutex);
         if (y >= (int)pRecord.size())
             return false;
         Record& record = pRecord.array[y];
@@ -303,7 +303,7 @@ bool Areas::cellValue(int x, int y, const String& value)
     }
     if (x == 3)
     {
-        Yuni::MutexLocker locker(pRecord.mutex);
+        std::lock_guard locker(pRecord.mutex);
         if (y >= (int)pRecord.size())
             return false;
         pOnBeforeUpdate(x, y);

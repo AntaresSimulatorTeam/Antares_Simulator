@@ -19,26 +19,22 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <yuni/yuni.h>
-#include "../simulation/sim_extern_variables_globales.h"
-#include <antares/benchmarking/DurationCollector.h>
-#include <antares/fatal-error.h>
+#include <cmath>
+
+#include "antares/solver/simulation/sim_extern_variables_globales.h"
+#include <antares/antares/fatal-error.h>
 #include <antares/writer/i_writer.h>
+#include <antares/utils/utils.h>
 #include "antares/solver/misc/cholesky.h"
 #include "antares/solver/misc/matrix-dp-make.h"
 
 using namespace Antares;
-using namespace Yuni;
 
-#define SEP IO::Separator
+#define SEP Yuni::IO::Separator
 
 #define EPSILON ((double)1.0e-9)
 
-using namespace Antares::Solver;
-
-namespace Antares
-{
-namespace TSGenerator
+namespace Antares::TSGenerator
 {
 
 static void PreproRoundAllEntriesPlusDerated(Data::Study& study)
@@ -59,11 +55,11 @@ static void PreproRoundAllEntriesPlusDerated(Data::Study& study)
     });
 }
 
-bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, IResultWriter& writer)
+bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, Solver::IResultWriter& writer)
 {
     logs.info() << "Generating the hydro time-series";
 
-    Progression::Task progression(study, currentYear, Progression::sectTSGHydro);
+    Solver::Progression::Task progression(study, currentYear, Solver::Progression::sectTSGHydro);
 
     auto& studyRTI = *(study.runtime);
     auto& calendar = study.calendar;
@@ -81,7 +77,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, IResultWriter
     double x, y, z, u;
     double** nullmatrx = nullptr;
 
-    if (1. > MatrixDPMake<double>(CHSKY.entry,
+    if (1. > Solver::MatrixDPMake<double>(CHSKY.entry,
                                   study.preproHydroCorrelation.annual->entry,
                                   B.entry,
                                   nullmatrx,
@@ -109,17 +105,17 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, IResultWriter
             uint areaIndexJ = j / 12;
             auto* preproJ = study.areas.byIndex[areaIndexJ]->hydro.prepro;
 
-            x = Math::Abs(((int)(i % 12) - (int)(j % 12)) / 2.);
+            x = std::abs(((int)(i % 12) - (int)(j % 12)) / 2.);
 
             corre[j] = annualCorrAreaI[areaIndexJ]
                        * pow(prepro->intermonthlyCorrelation * preproJ->intermonthlyCorrelation, x);
 
-            assert(not Math::NaN(corre[j]) and "TS generator Hydro: NaN value detected");
+            assert(not std::isnan(corre[j]) and "TS generator Hydro: NaN value detected");
         }
     }
 
     {
-        double r = MatrixDPMake<double>(
+        double r = Solver::MatrixDPMake<double>(
           CHSKY.entry, CORRE.entry, B.entry, nullmatrx, DIM, QCHOLTemp, true);
         if (r < 1.)
         {
@@ -129,7 +125,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, IResultWriter
         }
     }
 
-    Cholesky<double>(CHSKY.entry, B.entry, DIM, QCHOLTemp);
+    Solver::Cholesky<double>(CHSKY.entry, B.entry, DIM, QCHOLTemp);
 
     B.clear();
     CORRE.clear();
@@ -178,14 +174,14 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, IResultWriter
             uint daysPerMonth = calendar.months[month].days;
 
             assert(l < series.ror.timeSeries.width);
-            assert(not Math::NaN(colPOW[realmonth]));
+            assert(not std::isnan(colPOW[realmonth]));
 
             if (month == 0)
                 cumul = 0;
 
             double EnergieHydrauliqueTotaleMensuelle = 0;
 
-            if (not Math::Zero(colExpectation[realmonth]))
+            if (!Utils::isZero(colExpectation[realmonth]))
             {
                 for (uint j = 0; j < i + 1; ++j)
                     EnergieHydrauliqueTotaleMensuelle += CHSKY[i][j] * NORM[j];
@@ -194,7 +190,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, IResultWriter
                 EnergieHydrauliqueTotaleMensuelle += colExpectation[realmonth];
 
                 EnergieHydrauliqueTotaleMensuelle = exp(EnergieHydrauliqueTotaleMensuelle);
-                assert(not Math::NaN(EnergieHydrauliqueTotaleMensuelle));
+                assert(not std::isnan(EnergieHydrauliqueTotaleMensuelle));
 
                 if (EnergieHydrauliqueTotaleMensuelle < colMinEnergy[realmonth])
                     EnergieHydrauliqueTotaleMensuelle = colMinEnergy[realmonth];
@@ -211,7 +207,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, IResultWriter
             for (uint i = d; i < dend; i++)
                 SIP += area.hydro.inflowPattern[0][i];
 
-            if (Math::Zero(SIP))
+            if (Utils::isZero(SIP))
             {
                 logs.fatal() << "Sum of monthly inflow patterns equals zero.";
                 return false;
@@ -252,7 +248,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, IResultWriter
                 sumInflowPatterns -= dailyInflowPattern;
             }
 
-            assert(not Math::NaN(monthlyStorage)
+            assert(not std::isnan(monthlyStorage)
                    && "TS generator Hydro: NaN value detected in timeseries");
 
             cumul += daysPerMonth;
@@ -274,7 +270,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, IResultWriter
         {
             logs.info() << "Archiving the hydro time-series";
             const int precision = 0;
-            String output;
+            Yuni::String output;
             study.areas.each([&](const Data::Area& area) {
                 study.buffer.clear() << "ts-generator" << SEP << "hydro" << SEP << "mc-"
                                      << currentYear << SEP << area.id;
@@ -302,5 +298,6 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, IResultWriter
     return true;
 }
 
-} // namespace TSGenerator
-} // namespace Antares
+} // namespace Antares::TSGenerator
+
+

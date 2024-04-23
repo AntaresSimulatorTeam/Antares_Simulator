@@ -21,22 +21,15 @@
 
 #include <yuni/yuni.h>
 #include <antares/study/study.h>
-#include "simulation.h"
-#include "sim_structure_donnees.h"
-#include "sim_structure_probleme_economique.h"
-#include "sim_extern_variables_globales.h"
+#include "antares/study/simulation.h"
+#include "antares/solver/simulation/sim_extern_variables_globales.h"
 
 using namespace Antares;
 
-static void AllocateResultsForEconomicMode(const Data::Study& study)
+void SIM_AllocationTableaux(const Data::Study& study)
 {
     transitMoyenInterconnexionsRecalculQuadratique.resize(study.runtime->interconnectionsCount());
 
     for (uint i = 0; i != study.runtime->interconnectionsCount(); i++)
         transitMoyenInterconnexionsRecalculQuadratique[i].assign(HOURS_PER_YEAR, 0.);
-}
-
-void SIM_AllocationTableaux(const Data::Study& study)
-{
-    AllocateResultsForEconomicMode(study);
 }

@@ -25,7 +25,7 @@
 #include "antares/infoCollection/StudyInfoCollector.h"
 #include "antares/benchmarking/DurationCollector.h"
 #include "antares/benchmarking/file_content.h"
-#include "../../../config.h"
+#include <antares/config/config.h>
 
 using namespace Antares::Data;
 namespace Benchmarking {
@@ -78,9 +78,8 @@ void StudyInfoCollector::enabledThermalClustersCountToFileContent(FileContent& f
     auto end = study_.areas.end();
     for (auto i = study_.areas.begin(); i != end; ++i)
     {
-        Area& area = *(i->second);
-        nbEnabledThermalClusters +=
-            std::ranges::count_if(area.thermal.list, [](const auto& c) { return c->enabled; });
+        const Area& area = *(i->second);
+        nbEnabledThermalClusters += area.thermal.list.enabledAndNotMustRunCount();
     }
 
     // Adding an item related to number of enabled thermal clusters to the file content

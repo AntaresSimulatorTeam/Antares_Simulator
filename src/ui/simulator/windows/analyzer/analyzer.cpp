@@ -19,7 +19,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <antares/antares.h>
+#include "antares/antares/antares.h"
 #include "analyzer.h"
 #include <yuni/io/directory.h>
 #include <yuni/io/directory/info.h>
@@ -48,7 +48,7 @@
 #include <antares/logs/logs.h>
 #include <antares/inifile/inifile.h>
 #include "../../application/study.h"
-#include <antares/config.h>
+#include <antares/config/config.h>
 #include <antares/io/statistics.h>
 
 using namespace Yuni;
@@ -183,7 +183,7 @@ protected:
 
 private:
     AnalyzerWizard& pForm;
-    Mutex pDataMutex;
+    std::mutex pDataMutex;
     String pFolder;
     AnalyzerWizard::FileMappingPtr pMapping;
 
@@ -553,7 +553,7 @@ AnalyzerWizard::AnalyzerWizard(wxFrame* parent) :
  pAnalyzeSource(nullptr),
  pCheckRelationship(nullptr),
  pFileSearch(nullptr),
- pTSSelected(Data::timeSeriesCount), // invalid in our case
+ pTSSelected(Data::timeSeriesLoad), // invalid in our case
  pUpdating(false)
 {
     pRefreshTimer = new AnalyzeTimer(*this);

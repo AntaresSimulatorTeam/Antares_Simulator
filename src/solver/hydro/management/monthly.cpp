@@ -24,13 +24,14 @@
 
 #include <yuni/yuni.h>
 #include <antares/study/study.h>
+#include <antares/utils/utils.h>
 #include <yuni/io/directory.h>
 #include <yuni/io/file.h>
-#include "management.h"
-#include <antares/fatal-error.h>
-#include "../../simulation/sim_extern_variables_globales.h"
-#include "../monthly/h2o_m_donnees_annuelles.h"
-#include "../monthly/h2o_m_fonctions.h"
+#include "antares/solver/hydro/management/management.h"
+#include <antares/antares/fatal-error.h>
+#include "antares/solver/simulation/sim_extern_variables_globales.h"
+#include "antares/solver/hydro/monthly/h2o_m_donnees_annuelles.h"
+#include "antares/solver/hydro/monthly/h2o_m_fonctions.h"
 
 using namespace Yuni;
 
@@ -47,7 +48,7 @@ static void CheckHydroAllocationProblem(Data::Area& area,
     bool error = false;
 
     double X = problem.Volume[11] - problem.Turbine[11] + problem.Apport[11];
-    if (not Math::Zero(X - lvi))
+    if (!Utils::isZero(X - lvi))
     {
         logs.fatal() << area.id << ": hydro management: monthly: reservoir error";
         error = true;
@@ -104,24 +105,24 @@ double HydroManagement::prepareMonthlyTargetGenerations(Data::Area& area, TmpDat
             monthlyMaxDemand = data.MLE[realmonth];
     }
 
-    if (not Math::Zero(monthlyMaxDemand))
+    if (!Utils::isZero(monthlyMaxDemand))
     {
         double coeff = 0.;
         for (uint realmonth = 0; realmonth != 12; ++realmonth)
         {
             assert(data.MLE[realmonth] / monthlyMaxDemand >= 0.);
-            coeff += Math::Power(data.MLE[realmonth] / monthlyMaxDemand,
+            coeff += std::pow(data.MLE[realmonth] / monthlyMaxDemand,
                                  area.hydro.intermonthlyBreakdown);
         }
 
-        if (!Math::Zero(coeff))
+        if (!Utils::isZero(coeff))
             coeff = total / coeff;
 
         for (uint realmonth = 0; realmonth != 12; ++realmonth)
         {
             assert(data.MLE[realmonth] / monthlyMaxDemand >= 0.);
             data.MTG[realmonth] = coeff
-                                  * Math::Power(data.MLE[realmonth] / monthlyMaxDemand,
+                                  * std::pow(data.MLE[realmonth] / monthlyMaxDemand,
                                                 area.hydro.intermonthlyBreakdown);
         }
     }
@@ -231,10 +232,10 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
 #ifndef NDEBUG
         for (uint realmonth = 0; realmonth != 12; ++realmonth)
         {
-            assert(!Math::NaN(data.MOG[realmonth]) && "nan value detected for MOG");
-            assert(!Math::NaN(data.MOL[realmonth]) && "nan value detected for MOL");
-            assert(!Math::Infinite(data.MOG[realmonth]) && "infinite value detected for MOG");
-            assert(!Math::Infinite(data.MOL[realmonth]) && "infinite value detected for MOL");
+            assert(!std::isnan(data.MOG[realmonth]) && "nan value detected for MOG");
+            assert(!std::isnan(data.MOL[realmonth]) && "nan value detected for MOL");
+            assert(!std::isinf(data.MOG[realmonth]) && "infinite value detected for MOG");
+            assert(!std::isinf(data.MOL[realmonth]) && "infinite value detected for MOL");
         }
 #endif
         if (parameters_.hydroDebug)

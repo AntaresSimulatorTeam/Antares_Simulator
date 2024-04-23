@@ -34,11 +34,17 @@ namespace Datagrid
 {
 namespace Renderer
 {
-class HydroMonthlyPower final : public Renderer::Matrix<double, double, 2>,
+
+class HydroMonthlyHours final : public Renderer::Matrix<double, double, 2>,
                                 public Renderer::ARendererArea
 {
 public:
     using MatrixAncestorType = Renderer::Matrix<double, double, 2>;
+    enum class HoursType
+    {
+        Generation = 0,
+        Pumping
+    };
 
 public:
     //! \name Constructor & Destructor
@@ -46,19 +52,21 @@ public:
     /*!
     ** \brief Constructor
     */
-    HydroMonthlyPower(wxWindow* control, Toolbox::InputSelector::Area* notifier);
+    HydroMonthlyHours(wxWindow* control, Toolbox::InputSelector::Area* notifier, HoursType type);
     //! Destructor
-    virtual ~HydroMonthlyPower();
+    virtual ~HydroMonthlyHours();
     //@}
 
     virtual int width() const
     {
-        return 4;
+        return 1;
     }
     virtual int height() const
     {
         return DAYS_PER_YEAR;
     }
+
+    HoursType hoursType;
 
     virtual wxString columnCaption(int colIndx) const;
 
@@ -102,7 +110,7 @@ protected:
     //! Event: the study has been loaded
     virtual void onStudyLoaded() override;
 
-}; // class HydroMonthlyPower
+}; // class HydroMonthlyHoursGen
 
 } // namespace Renderer
 } // namespace Datagrid

@@ -43,13 +43,11 @@ namespace Antares::Solver
 
 namespace
 {
-
 void logErrorAndThrow(const std::string& errorMessage)
 {
     logs.error() << errorMessage;
     throw IOError(errorMessage);
 }
-
 }
 
 // Class ZipWriteJob
@@ -88,7 +86,7 @@ void ZipWriteJob<ContentT>::writeEntry()
     auto file_info = createInfo(pEntryPath);
 
     Benchmarking::Timer timer_wait;
-    std::lock_guard<std::mutex> guard(pZipMutex); // Wait
+    std::lock_guard guard(pZipMutex); // Wait
     timer_wait.stop();
     pDurationCollector.addDuration("zip_wait", timer_wait.get_duration());
 
@@ -196,7 +194,7 @@ void ZipWriter::finalize(bool verbose)
     if (verbose)
         logs.notice() << "Writing results...";
 
-    std::lock_guard<std::mutex> guard(pZipMutex);
+    std::lock_guard guard(pZipMutex);
     if (int ret = mz_zip_writer_close(pZipHandle); ret != MZ_OK && verbose)
         logs.warning() << "Error closing the zip file " << pArchivePath << " (" << ret << ")";
 

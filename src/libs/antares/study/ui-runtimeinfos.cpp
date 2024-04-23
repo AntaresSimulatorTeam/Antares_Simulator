@@ -20,14 +20,12 @@
 */
 
 #include <yuni/yuni.h>
-#include "study.h"
-#include "ui-runtimeinfos.h"
+#include "antares/study/study.h"
+#include "antares/study/ui-runtimeinfos.h"
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 UIRuntimeInfo::UIRuntimeInfo(Study& study) : pStudy(study)
 {
@@ -74,10 +72,9 @@ void UIRuntimeInfo::reload()
                     set.insert(i->second);
             }
 
-            for (uint j = 0; j < area->thermal.clusterCount(); ++j)
+            for (auto& cluster : area->thermal.list.each_enabled())
             {
-                ThermalCluster* cluster = area->thermal.clusters[j];
-                pClusters.push_back(cluster);
+                pClusters.push_back(cluster.get());
             }
         }
     }
@@ -181,5 +178,5 @@ uint UIRuntimeInfo::visibleLinksCount(uint layerID)
     return count;
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+

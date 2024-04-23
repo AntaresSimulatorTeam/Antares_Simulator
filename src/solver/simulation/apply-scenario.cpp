@@ -19,7 +19,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "apply-scenario.h"
+#include "antares/solver/simulation/apply-scenario.h"
 #include <antares/study/scenario-builder/sets.h>
 
 namespace Antares::Solver

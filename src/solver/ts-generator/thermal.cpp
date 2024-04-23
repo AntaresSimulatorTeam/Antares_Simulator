@@ -19,30 +19,21 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
+#include <sstream>
 #include <string>
-
-#include <yuni/yuni.h>
-#include <yuni/core/math.h>
-#include <yuni/core/string.h>
+#include <cmath>
 
 #include <antares/study/study.h>
 #include <antares/logs/logs.h>
 #include <antares/writer/i_writer.h>
 
-#include "../simulation/simulation.h"
-#include "../simulation/sim_structure_donnees.h"
-#include "../simulation/sim_structure_probleme_economique.h"
-#include "../simulation/sim_extern_variables_globales.h"
+#include "antares/study/simulation.h"
 
-using namespace Yuni;
-
-#define SEP IO::Separator
+#define SEP Yuni::IO::Separator
 
 #define FAILURE_RATE_EQ_1 0.999
 
-namespace Antares
-{
-namespace TSGenerator
+namespace Antares::TSGenerator
 {
 namespace
 {
@@ -80,8 +71,6 @@ private:
 
 private:
     uint nbThermalTimeseries_;
-    const uint nbHoursPerYear = HOURS_PER_YEAR;
-    const uint daysPerYear = DAYS_PER_YEAR;
 
     MersenneTwister& rndgenerator;
 
@@ -101,10 +90,11 @@ private:
     double ap[366];
     double bf[366];
     double bp[366];
-    double FPOW[366][102];
-    double PPOW[366][102];
 
-    String pTempFilename;
+    std::vector<std::vector<double>> FPOW;
+    std::vector<std::vector<double>> PPOW;
+
+    Yuni::String pTempFilename;
     Solver::Progression::Task& pProgression;
     Solver::IResultWriter& pWriter;
 };
@@ -124,6 +114,9 @@ GeneratorTempData::GeneratorTempData(Data::Study& study,
     nbThermalTimeseries_ = parameters.nbTimeSeriesThermal;
 
     derated = parameters.derated;
+
+    FPOW.resize(DAYS_PER_YEAR);
+    PPOW.resize(DAYS_PER_YEAR);
 }
 
 void GeneratorTempData::writeResultsToDisk(const Data::Area& area,
@@ -161,7 +154,7 @@ void GeneratorTempData::prepareIndispoFromLaw(Data::ThermalLaw law,
     {
     case Data::thermalLawUniform:
     {
-        for (uint d = 0; d < daysPerYear; ++d)
+        for (uint d = 0; d < DAYS_PER_YEAR; ++d)
         {
             double D = (double)duration[d];
             double xtemp = volatility * (D - 1.);
@@ -172,7 +165,7 @@ void GeneratorTempData::prepareIndispoFromLaw(Data::ThermalLaw law,
     }
     case Data::thermalLawGeometric:
     {
-        for (uint d = 0; d < daysPerYear; ++d)
+        for (uint d = 0; d < DAYS_PER_YEAR; ++d)
         {
             double D = (double)duration[d];
             double xtemp = volatility * volatility * D * (D - 1.);
@@ -277,8 +270,11 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
     int FOD_reel = 0;
     int POD_reel = 0;
 
-    for (uint d = 0; d < daysPerYear; ++d)
+    for (uint d = 0; d < DAYS_PER_YEAR; ++d)
     {
+        FPOW[d].resize(cluster.unitCount + 1);
+        PPOW[d].resize(cluster.unitCount + 1);
+
         PODOfTheDay = (int)POD[d];
         FODOfTheDay = (int)FOD[d];
 
@@ -350,9 +346,8 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
         if (tsIndex > 1)
             dstSeries = cluster.series.timeSeries[tsIndex - 2];
 
-        for (uint dayInTheYear = 0; dayInTheYear < daysPerYear; ++dayInTheYear)
+        for (uint dayInTheYear = 0; dayInTheYear < DAYS_PER_YEAR; ++dayInTheYear)
         {
-            assert(AUN <= 100 and "Thermal Prepro: AUN is out of bounds (>=100)");
             assert(dayInTheYear < 366);
             assert(not(lf[dayInTheYear] < 0.));
             assert(not(lp[dayInTheYear] < 0.));
@@ -580,7 +575,7 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
                 double AVPDayInTheYear = AVP[dayInTheYear];
                 for (uint h = 0; h != 24; ++h)
                 {
-                    dstSeries[hour] = Math::Round(AVPDayInTheYear * modulation[hour]);
+                    dstSeries[hour] = std::round(AVPDayInTheYear * modulation[hour]);
                     ++hour;
                 }
             }
@@ -597,11 +592,24 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
 }
 } // namespace
 
+std::vector<Data::ThermalCluster*> getAllClustersToGen(Data::AreaList& areas,
+                                                       bool globalThermalTSgeneration)
+{
+    std::vector<Data::ThermalCluster*> clusters;
+
+    areas.each([&clusters, &globalThermalTSgeneration](Data::Area& area) {
+        for (auto& cluster : area.thermal.list.all())
+            if (cluster->doWeGenerateTS(globalThermalTSgeneration))
+                clusters.push_back(cluster.get());
+    });
+
+    return clusters;
+}
+
 bool GenerateThermalTimeSeries(Data::Study& study,
+                               std::vector<Data::ThermalCluster*> clusters,
                                uint year,
-                               bool globalThermalTSgeneration,
-                               bool refreshTSonCurrentYear,
-                               Antares::Solver::IResultWriter& writer)
+                               Solver::IResultWriter& writer)
 {
     logs.info();
     logs.info() << "Generating the thermal time-series";
@@ -611,25 +619,13 @@ bool GenerateThermalTimeSeries(Data::Study& study,
 
     generator->currentYear = year;
 
-    study.areas.each([&](Data::Area& area) {
-        auto end = area.thermal.list.mapping.end();
-        for (auto it = area.thermal.list.mapping.begin(); it != end; ++it)
-        {
-            auto& cluster = *(it->second);
-
-            if (cluster.doWeGenerateTS(globalThermalTSgeneration) && refreshTSonCurrentYear)
-            {
-                (*generator)(area, cluster);
-            }
-
-            ++progression;
-        }
-    });
+    // TODO VP: parallel
+    for (auto* cluster : clusters)
+        (*generator)(*cluster->parentArea, *cluster);
 
     delete generator;
 
     return true;
 }
 
-} // namespace TSGenerator
-} // namespace Antares
+} // namespace Antares::TSGenerator

@@ -19,10 +19,11 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "study.h"
+#include "antares/study/study.h"
 #include "../../application/study.h"
 #include "../../application/main/main.h"
 #include "../../../common/lock.h"
+#include "study.h"
 
 using namespace Yuni;
 

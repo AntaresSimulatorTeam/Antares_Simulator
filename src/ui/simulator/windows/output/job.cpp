@@ -23,6 +23,7 @@
 #include "antares/utils/utils.h"
 #include <antares/logs/logs.h>
 #include <antares/study/study.h>
+#include <antares/utils/utils.h>
 #include <yuni/io/directory/info.h>
 
 using namespace Yuni;

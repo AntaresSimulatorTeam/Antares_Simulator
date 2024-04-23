@@ -18,9 +18,10 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include "version.h"
-#include "study.h"
-#include "../../../config.h" //used to get versionFromCMake
+
+#include "antares/study/study.h"
+#include "antares/study/version.h"
+#include <antares/config/config.h>
 
 using namespace Yuni;
 using namespace Antares::Data;
@@ -41,7 +42,8 @@ constexpr auto supportedVersions = std::to_array(
     StudyVersion(8, 6),
     StudyVersion(8, 7),
     StudyVersion(8, 8),
-    StudyVersion(9, 0)
+    StudyVersion(9, 0),
+    StudyVersion(9, 1)
     // Add new versions here
 });
 

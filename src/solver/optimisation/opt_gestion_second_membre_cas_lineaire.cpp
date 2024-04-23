@@ -19,13 +19,11 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "opt_structure_probleme_a_resoudre.h"
+#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 
-#include "../simulation/sim_structure_donnees.h"
-#include "../simulation/sim_extern_variables_globales.h"
+#include "antares/solver/simulation/sim_extern_variables_globales.h"
 
-#include "opt_fonctions.h"
-#include <antares/study/study.h>
+#include "antares/solver/optimisation/opt_fonctions.h"
 
 using namespace Antares;
 using namespace Antares::Data;
@@ -85,7 +83,6 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
     for (int i = 0; i < ProblemeAResoudre->NombreDeContraintes; i++)
     {
         AdresseOuPlacerLaValeurDesCoutsMarginaux[i] = nullptr;
-
         SecondMembre[i] = 0.0;
     }
 

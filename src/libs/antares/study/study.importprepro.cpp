@@ -19,16 +19,14 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "study.h"
-#include <assert.h>
+#include "antares/study/study.h"
+#include <cassert>
 
 using namespace Yuni;
 
 #define SEP IO::Separator
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 bool Study::importTimeseriesIntoInput()
 {
@@ -106,10 +104,9 @@ bool Study::importTimeseriesIntoInput()
 
                 // Spinning
                 area.thermal.list.reverseCalculationOfSpinning();
-                area.thermal.mustrunList.reverseCalculationOfSpinning();
 
                 buffer.clear() << folderInput << SEP << "thermal" << SEP << "series";
-                ret = area.thermal.list.saveDataSeriesToFolder(buffer.c_str(), msg) && ret;
+                ret = area.thermal.list.saveDataSeriesToFolder(buffer.c_str()) && ret;
                 ++progression;
             });
         }
@@ -119,5 +116,5 @@ bool Study::importTimeseriesIntoInput()
     return true;
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
+
