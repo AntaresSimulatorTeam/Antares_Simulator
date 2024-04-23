@@ -23,7 +23,7 @@
 
 namespace Antares::Optimization
 {
-void BasisStatus::setStarting(operations_research::MPSolver* solver) const
+void BasisStatus::setStartingBasis(operations_research::MPSolver* solver) const
 {
     solver->SetStartingLpBasis(StatutDesVariables, StatutDesContraintes);
 }
@@ -39,7 +39,7 @@ static void transferBasis(std::vector<operations_research::MPSolver::BasisStatus
     }
 }
 
-void BasisStatus::extract(const operations_research::MPSolver* solver)
+void BasisStatus::extractBasis(const operations_research::MPSolver* solver)
 {
     transferBasis(StatutDesVariables, solver->variables());
     transferBasis(StatutDesContraintes, solver->constraints());

@@ -319,7 +319,7 @@ MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probl
     // Provide an initial simplex basis, if any
     if (warmStart && Probleme->basisExists())
     {
-        Probleme->basisStatus.setStarting(solver);
+        Probleme->basisStatus.setStartingBasis(solver);
     }
 
     if (solveAndManageStatus(solver, Probleme->ExistenceDUneSolution, params))
@@ -328,7 +328,7 @@ MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probl
         // Save the final simplex basis for next resolutions
         if (warmStart && keepBasis)
         {
-            Probleme->basisStatus.extract(solver);
+            Probleme->basisStatus.extractBasis(solver);
         }
     }
 

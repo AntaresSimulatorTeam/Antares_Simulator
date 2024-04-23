@@ -32,8 +32,8 @@ namespace Antares::Optimization
 struct BasisStatus
 {
     bool exists() const;
-    void setStarting(operations_research::MPSolver* solver) const;
-    void extract(const operations_research::MPSolver* solver);
+    void setStartingBasis(operations_research::MPSolver* solver) const;
+    void extractBasis(const operations_research::MPSolver* solver);
     using Status = operations_research::MPSolver::BasisStatus;
     std::vector<Status> StatutDesVariables;
     std::vector<Status> StatutDesContraintes;
