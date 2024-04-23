@@ -24,6 +24,8 @@
 #define WIN32_LEAN_AND_MEAN
 #include <boost/test/unit_test.hpp>
 
+#include <antares/benchmarking/DurationCollector.h>
+
 #include "antares/study/study.h"
 
 using namespace Antares::Data;
@@ -292,5 +294,16 @@ BOOST_AUTO_TEST_CASE(version_parsing)
     BOOST_CHECK(v == StudyVersion::unknown());
 
 }
-
 BOOST_AUTO_TEST_SUITE_END() //version
+
+BOOST_AUTO_TEST_SUITE(durationCollector)
+
+BOOST_AUTO_TEST_CASE(lambda)
+{
+    Benchmarking::DurationCollector d;
+    d("test1") << [] { int a; };
+
+    std::cout << d.getTime("test1");
+}
+
+BOOST_AUTO_TEST_SUITE_END() //DurationCollector

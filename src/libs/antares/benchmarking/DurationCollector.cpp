@@ -56,4 +56,11 @@ void operator<<(const DurationCollector::OperationTimer& op, const std::function
     op.collector.duration_items_[op.key].push_back(duration_ms);
 }
 
+long DurationCollector::getTime(const std::string& name) const
+{
+    const auto& v = duration_items_.at(name);
+
+    return accumulate(v.begin(), v.end(), 0);
+}
+
 } // namespace Benchmarking

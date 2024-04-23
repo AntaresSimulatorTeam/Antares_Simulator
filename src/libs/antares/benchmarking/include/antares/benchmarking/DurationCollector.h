@@ -38,7 +38,6 @@ public:
     void toFileContent(FileContent& file_content);
     void addDuration(const std::string& name, long duration);
 
-
     struct OperationTimer
     {
         OperationTimer(DurationCollector& collector, const std::string& key):
@@ -51,6 +50,8 @@ public:
     OperationTimer operator()(const std::string& key);
 
     friend void operator<<(const OperationTimer& op, const std::function<void(void)>& f);
+
+    long getTime(const std::string& name) const;
 
 private:
     std::map<std::string, std::vector<long>> duration_items_;
