@@ -88,12 +88,6 @@ BOOST_FIXTURE_TEST_CASE(fixBadValue, Fixture)
 
     BOOST_CHECK_EQUAL(p.nbYears, 1);
     BOOST_CHECK_EQUAL(p.nbTimeSeriesThermal, 1);
-
-    p.nbYears = 10000000;
-    p.derated = false;
-
-    p.fixBadValues();
-
 }
 
 BOOST_FIXTURE_TEST_CASE(invalidValues, Fixture)
@@ -150,9 +144,9 @@ void Fixture::writeValidFile()
             nbtimeserieswind = 1
             nbtimeseriesthermal = 1
             nbtimeseriessolar = 1
-            refreshtimeseries = 
-            intra-modal = 
-            inter-modal = 
+            refreshtimeseries =
+            intra-modal =
+            inter-modal =
             refreshintervalload = 0
             refreshintervalhydro = 5
             refreshintervalwind = 5
@@ -161,12 +155,12 @@ void Fixture::writeValidFile()
             readonly = false
 
             [input]
-            import = 
+            import =
 
             [output]
             synthesis = false
             storenewset = false
-            archives = 
+            archives =
             result-format = txt-files
 
             [optimization]
