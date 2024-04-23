@@ -61,12 +61,14 @@ static void TuneSolverSpecificOptions(MPSolver* solver,
     {
     // Allow solver to use only one thread
     case MPSolver::XPRESS_LINEAR_PROGRAMMING:
-    case MPSolver::XPRESS_MIXED_INTEGER_PROGRAMMING: {
+    case MPSolver::XPRESS_MIXED_INTEGER_PROGRAMMING:
+    {
         bool xpressSetThreadStatus = solver->SetSolverSpecificParametersAsString(XPRESS_PARAMS);
         checkSetSolverSpecificParameters(xpressSetThreadStatus, solverName, XPRESS_PARAMS);
         break;
     }
-    case MPSolver::SCIP_MIXED_INTEGER_PROGRAMMING: {
+    case MPSolver::SCIP_MIXED_INTEGER_PROGRAMMING:
+    {
         bool scipSetThreadStatus = solver->SetSolverSpecificParametersAsString(SCIP_PARAMS);
         checkSetSolverSpecificParameters(scipSetThreadStatus, solverName, SCIP_PARAMS);
         break;

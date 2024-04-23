@@ -41,8 +41,11 @@ The default value for group is "OTHER1".
 #### Optimization : solver parameters (expert option)
 
 In file **settings/generaldata.ini**, in section `optimization` add properties `xpress-parameters` and `scip-parameters` [str]. Default value = `empty string`. Allows to specify solver specific parameters in the following format : 
+
 - `xpress-parameters = param1 value1 param2 value2`,
-- `scip-parameters = param1 value1, param2 value2`,
+- `scip-parameters = param1 value1, param2 value2`.
+
+These parameters can also be set from the command-line using `--solver-parameters`. In this case command-line parameters override settings from `generaldata.ini`
 
 ### Output
 #### Hydro maximum generation/pumping power

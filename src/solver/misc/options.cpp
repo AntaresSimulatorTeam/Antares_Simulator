@@ -88,6 +88,12 @@ std::unique_ptr<GetOpt::Parser> CreateParser(Settings& settings, StudyLoadOption
                 "option)\nAvailable solver list : "
                   + availableOrToolsSolversString());
 
+    //--solver-parameters
+    parser->add(options.optOptions.solverParameters,
+                ' ',
+                "solver-parameters",
+                "Set solver specific parameters. The specified string must be wrapped into quotes. The syntax of parameters is solver specfic, examples are given in Antares-Simulator online documentation.");
+
     parser->addParagraph("\nParameters");
     // --name
     parser->add(
