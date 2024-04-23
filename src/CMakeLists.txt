@@ -319,7 +319,7 @@ endif()
 
 # 	FetchContent_MakeAvailable(minizip)
 # endif()
-find_package(minizip REQUIRED)
+find_package(minizip-ng REQUIRED)
 
 
 #wxWidget not needed for all library find is done in ui CMakeLists.txt
