@@ -22,10 +22,6 @@
 
 #include <memory>
 
-// NOTE
-// Try not to include this header too often, if possible, forward-declare BasisStatus
-// since linear_solver.h takes time to compile
-
 namespace Test
 {
     class BasisStatus;
