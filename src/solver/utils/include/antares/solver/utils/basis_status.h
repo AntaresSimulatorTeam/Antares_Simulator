@@ -27,15 +27,23 @@
 #include <vector>
 #include "ortools/linear_solver/linear_solver.h"
 
+namespace Test {
+    class BasisStatus;
+}
+
 namespace Antares::Optimization
 {
-struct BasisStatus
+class BasisStatus
 {
+public:
+    using Status = operations_research::MPSolver::BasisStatus;
+
     bool exists() const;
     void setStartingBasis(operations_research::MPSolver* solver) const;
     void extractBasis(const operations_research::MPSolver* solver);
-    using Status = operations_research::MPSolver::BasisStatus;
+private:
     std::vector<Status> StatutDesVariables;
     std::vector<Status> StatutDesContraintes;
+    friend class Test::BasisStatus; // For tests
 };
 } // namespace Antares::Optimization

@@ -27,6 +27,18 @@
 #include <antares/solver/utils/basis_status.h>
 
 using namespace operations_research;
+
+namespace Test {
+class BasisStatus
+{
+public:
+  BasisStatus(const Antares::Optimization::BasisStatus& b) : StatutDesVariables(b.StatutDesVariables), StatutDesContraintes(b.StatutDesContraintes)
+  {}
+  const std::vector<Antares::Optimization::BasisStatus::Status>& StatutDesVariables;
+  const std::vector<Antares::Optimization::BasisStatus::Status>& StatutDesContraintes;
+};
+}
+
 BOOST_AUTO_TEST_CASE(basisStatusExtract)
 {
   // CLP_LINEAR_PROGRAMMING should be always available
@@ -41,11 +53,12 @@ BOOST_AUTO_TEST_CASE(basisStatusExtract)
   status.extractBasis(&solver);
 
   // Variables
-  BOOST_CHECK_EQUAL(status.StatutDesVariables.size(), 1);
-  BOOST_CHECK_EQUAL(status.StatutDesVariables[0], MPSolver::AT_LOWER_BOUND);
+  Test::BasisStatus test(status);
+  BOOST_CHECK_EQUAL(test.StatutDesVariables.size(), 1);
+  BOOST_CHECK_EQUAL(test.StatutDesVariables[0], MPSolver::AT_LOWER_BOUND);
 
   // Constraints
-  BOOST_CHECK_EQUAL(status.StatutDesContraintes.size(), 1);
-  BOOST_CHECK_EQUAL(status.StatutDesContraintes[0], MPSolver::BASIC);
+  BOOST_CHECK_EQUAL(test.StatutDesContraintes.size(), 1);
+  BOOST_CHECK_EQUAL(test.StatutDesContraintes[0], MPSolver::BASIC);
 }
 
