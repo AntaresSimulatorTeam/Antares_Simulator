@@ -26,7 +26,6 @@
 */
 
 #include "antares/study/parts/hydro/finalLevelValidator.h"
-#include "antares/study/parts/hydro/container.h"
 
 namespace Antares::Data
 {

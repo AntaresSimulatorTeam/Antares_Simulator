@@ -26,13 +26,11 @@
 */
 #pragma once
 
-#include <vector>
-#include <antares/array/matrix.h>
+#include "antares/study/parts/hydro/container.h"
 
 namespace Antares::Data
 {
 class PartHydro;
-
 
 class FinalLevelValidator
 {
