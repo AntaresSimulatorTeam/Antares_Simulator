@@ -89,17 +89,19 @@ struct SimplexResult
     mpsWriterFactory mps_writer_factory;
 };
 
-static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
-                                          PROBLEME_HEBDO* problemeHebdo,
-                                          Optimization::PROBLEME_SIMPLEXE_NOMME& Probleme,
-                                          const int NumIntervalle,
-                                          const int optimizationNumber,
-                                          const OptPeriodStringGenerator& optPeriodStringGenerator,
-                                          bool PremierPassage,
-                                          IResultWriter& writer)
+static SimplexResult OPT_TryToCallSimplex(
+        const OptimizationOptions& options,
+        PROBLEME_HEBDO* problemeHebdo,
+        Optimization::PROBLEME_SIMPLEXE_NOMME& Probleme,
+        const int NumIntervalle,
+        const int optimizationNumber,
+        const OptPeriodStringGenerator& optPeriodStringGenerator,
+        bool PremierPassage,
+        IResultWriter& writer)
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
-    auto ProbSpx = (PROBLEME_SPX*)(ProblemeAResoudre->ProblemesSpx[(int)NumIntervalle]);
+    auto ProbSpx
+      = (PROBLEME_SPX*)(ProblemeAResoudre->ProblemesSpx[(int)NumIntervalle]);
     auto solver = (MPSolver*)(ProblemeAResoudre->ProblemesSpx[(int)NumIntervalle]);
 
     const int opt = optimizationNumber - 1;
@@ -144,9 +146,8 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
             TimeMeasurement updateMeasure;
             if (options.useOrtools)
             {
-                ORTOOLS_ModifierLeVecteurCouts(solver,
-                                               ProblemeAResoudre->CoutLineaire.data(),
-                                               ProblemeAResoudre->NombreDeVariables);
+                ORTOOLS_ModifierLeVecteurCouts(
+                  solver, ProblemeAResoudre->CoutLineaire.data(), ProblemeAResoudre->NombreDeVariables);
                 ORTOOLS_ModifierLeVecteurSecondMembre(solver,
                                                       ProblemeAResoudre->SecondMembre.data(),
                                                       ProblemeAResoudre->Sens.data(),
@@ -159,9 +160,8 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
             }
             else
             {
-                SPX_ModifierLeVecteurCouts(ProbSpx,
-                                           ProblemeAResoudre->CoutLineaire.data(),
-                                           ProblemeAResoudre->NombreDeVariables);
+                SPX_ModifierLeVecteurCouts(
+                  ProbSpx, ProblemeAResoudre->CoutLineaire.data(), ProblemeAResoudre->NombreDeVariables);
                 SPX_ModifierLeVecteurSecondMembre(ProbSpx,
                                                   ProblemeAResoudre->SecondMembre.data(),
                                                   ProblemeAResoudre->Sens.data(),
@@ -196,7 +196,7 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
 
     Probleme.TypeDePricing = PRICING_STEEPEST_EDGE;
 
-    Probleme.FaireDuScaling = (PremierPassage ? OUI_SPX : NON_SPX);
+    Probleme.FaireDuScaling = ( PremierPassage ? OUI_SPX : NON_SPX );
 
     Probleme.StrategieAntiDegenerescence = AGRESSIF;
 
@@ -273,9 +273,8 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
             {
                 logs.info() << " solver: resetting";
             }
-            return {.success = false,
-                    .timeMeasure = timeMeasure,
-                    .mps_writer_factory = mps_writer_factory};
+            return {.success=false, .timeMeasure=timeMeasure,
+                    .mps_writer_factory=mps_writer_factory};
         }
 
         else
@@ -283,7 +282,8 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
             throw FatalError("Internal error: insufficient memory");
         }
     }
-    return {.success = true, .timeMeasure = timeMeasure, .mps_writer_factory = mps_writer_factory};
+    return {.success=true, .timeMeasure=timeMeasure,
+            .mps_writer_factory=mps_writer_factory};
 }
 
 bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
@@ -303,14 +303,9 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
 
     bool PremierPassage = true;
 
-    SimplexResult simplexResult = OPT_TryToCallSimplex(options,
-                                                       problemeHebdo,
-                                                       Probleme,
-                                                       NumIntervalle,
-                                                       optimizationNumber,
-                                                       optPeriodStringGenerator,
-                                                       PremierPassage,
-                                                       writer);
+    SimplexResult simplexResult =
+        OPT_TryToCallSimplex(options, problemeHebdo, Probleme, NumIntervalle, optimizationNumber,
+                optPeriodStringGenerator, PremierPassage, writer);
 
     if (!simplexResult.success)
     {
