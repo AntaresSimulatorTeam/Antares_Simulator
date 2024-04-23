@@ -413,15 +413,15 @@ std::list<std::string> getAvailableOrtoolsSolverName()
 
 std::string availableOrToolsSolversString()
 {
-    const std::list<std::string> availableSolverList = getAvailableOrtoolsSolverName();
-    std::ostringstream solvers;
-    for (const std::string& avail : availableSolverList)
-    {
-        bool last = &avail == &availableSolverList.back();
-        std::string sep = last ? "." : ", ";
-        solvers << avail << sep;
-    }
-    return solvers.str();
+  const std::list<std::string> availableSolverList = getAvailableOrtoolsSolverName();
+  std::ostringstream solvers;
+  for (const std::string& avail : availableSolverList)
+  {
+    bool last = &avail == &availableSolverList.back();
+    std::string sep = last ? "." : ", ";
+    solvers << avail << sep;
+  }
+  return solvers.str();
 }
 
 MPSolver* MPSolverFactory(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* probleme,
@@ -438,8 +438,7 @@ MPSolver* MPSolverFactory(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* 
         if (!solver)
         {
             std::string msg_to_throw = "Solver " + solverName + " not found. \n";
-            msg_to_throw
-              += "Please make sure that your OR-Tools install supports solver " + solverName + ".";
+            msg_to_throw += "Please make sure that your OR-Tools install supports solver " + solverName + ".";
 
             throw Antares::Data::AssertionError(msg_to_throw);
         }

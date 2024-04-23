@@ -310,14 +310,8 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
     if (!simplexResult.success)
     {
         PremierPassage = false;
-        simplexResult = OPT_TryToCallSimplex(options,
-                                             problemeHebdo,
-                                             Probleme,
-                                             NumIntervalle,
-                                             optimizationNumber,
-                                             optPeriodStringGenerator,
-                                             PremierPassage,
-                                             writer);
+        simplexResult = OPT_TryToCallSimplex(options, problemeHebdo, Probleme,  NumIntervalle, optimizationNumber,
+                optPeriodStringGenerator, PremierPassage, writer);
     }
 
     if (ProblemeAResoudre->ExistenceDUneSolution == OUI_SPX)
@@ -375,16 +369,14 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
 
         Probleme.SetUseNamedProblems(true);
 
-        auto MPproblem = std::shared_ptr<MPSolver>(
-          ProblemSimplexeNommeConverter(options.solverName, &Probleme).Convert());
+        auto MPproblem = std::shared_ptr<MPSolver>(ProblemSimplexeNommeConverter(options.solverName, &Probleme).Convert());
 
         auto analyzer = makeUnfeasiblePbAnalyzer();
         analyzer->run(MPproblem.get());
         analyzer->printReport();
 
         auto mps_writer_on_error = simplexResult.mps_writer_factory.createOnOptimizationError();
-        const std::string filename
-          = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
+        const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
         mps_writer_on_error->runIfNeeded(writer, filename);
 
         return false;
