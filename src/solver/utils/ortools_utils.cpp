@@ -22,12 +22,14 @@
 
 #include <antares/logs/logs.h>
 #include <antares/exception/AssertionError.hpp>
+#include <antares/exception/LoadingError.hpp>
 #include "antares/antares/Enum.hpp"
 #include <filesystem>
 
 using namespace operations_research;
 
 const char* const XPRESS_PARAMS = "THREADS 1";
+const char* const SCIP_PARAMS = "parallel/maxnthreads 1";
 
 using Antares::Solver::Optimization::OptimizationOptions;
 
@@ -38,23 +40,44 @@ static void setGenericParameters(MPSolverParameters& params)
     params.SetIntegerParam(MPSolverParameters::PRESOLVE, 0);
 }
 
-static void TuneSolverSpecificOptions(MPSolver* solver, const std::string& solverParameters)
+static void checkSetSolverSpecificParameters(bool status,
+                                             const std::string& solverName,
+                                             const std::string& solverParameters)
+{
+    if (!status)
+    {
+        throw Antares::Error::InvalidSolverSpecificParameters(solverName, solverParameters);
+    }
+}
+
+static void TuneSolverSpecificOptions(MPSolver* solver,
+                                      const std::string& solverName,
+                                      const std::string& solverParameters)
 {
     if (!solver)
         return;
 
     switch (solver->ProblemType())
     {
+    // Allow solver to use only one thread
     case MPSolver::XPRESS_LINEAR_PROGRAMMING:
-    case MPSolver::XPRESS_MIXED_INTEGER_PROGRAMMING:
-        solver->SetSolverSpecificParametersAsString(XPRESS_PARAMS);
+    case MPSolver::XPRESS_MIXED_INTEGER_PROGRAMMING: {
+        bool xpressSetThreadStatus = solver->SetSolverSpecificParametersAsString(XPRESS_PARAMS);
+        checkSetSolverSpecificParameters(xpressSetThreadStatus, solverName, XPRESS_PARAMS);
         break;
-    // Add solver-specific options here
+    }
+    case MPSolver::SCIP_MIXED_INTEGER_PROGRAMMING: {
+        bool scipSetThreadStatus = solver->SetSolverSpecificParametersAsString(SCIP_PARAMS);
+        checkSetSolverSpecificParameters(scipSetThreadStatus, solverName, SCIP_PARAMS);
+        break;
+    }
     default:
         break;
     }
-    // How / When to check if user has input wrong parameters ?
-    solver->SetSolverSpecificParametersAsString(solverParameters);
+
+    // Other solver specific options
+    bool status = solver->SetSolverSpecificParametersAsString(solverParameters);
+    checkSetSolverSpecificParameters(status, solverName, solverParameters);
 }
 
 static bool solverSupportsWarmStart(const MPSolver::OptimizationProblemType solverType)
@@ -330,7 +353,7 @@ MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probl
     {
         solver->EnableOutput();
     }
-    TuneSolverSpecificOptions(solver, options.solverParameters);
+    TuneSolverSpecificOptions(solver, options.ortoolsSolver, options.solverParameters);
     const bool warmStart = solverSupportsWarmStart(solver->ProblemType());
     // Provide an initial simplex basis, if any
     if (warmStart && Probleme->basisExists())

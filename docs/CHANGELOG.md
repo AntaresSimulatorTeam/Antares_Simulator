@@ -8,7 +8,7 @@ toc_depth: 2
 --------------------
 ### Improvements
 * STS groups are now "dynamic" : group names are no longer fixed by code, user is free to define these groups.
-* Solver specific parameters can be specified in the generaldata.ini (#1837)
+* When xpress or scip solver is selected (using ortools), solver specific parameters can be specified in the generaldata.ini (#1837)
 
 ## 9.0.0
 --------------------

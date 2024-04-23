@@ -28,8 +28,6 @@
 #include <antares/checks/checkLoadedInputData.h>
 #include <antares/study/area/area.h>
 
-#include "antares/solver/utils/ortools_utils.h"
-
 namespace Antares::Check
 {
 void checkOrtoolsUsage(Antares::Data::UnitCommitmentMode ucMode,
@@ -48,34 +46,6 @@ void checkOrtoolsUsage(Antares::Data::UnitCommitmentMode ucMode,
         {
             throw Error::IncompatibleMILPOrtoolsSolver();
         }
-    }
-}
-
-void checkOrtoolsSolverSpecificParameters(
-  const Antares::Data::UnitCommitmentMode& ucMode,
-  const Antares::Solver::Optimization::OptimizationOptions& optOptions)
-{
-    if (optOptions.ortoolsUsed)
-    {
-        MPSolver* solver;
-        if (ucMode == Antares::Data::UnitCommitmentMode::ucMILP)
-        {
-            solver = MPSolver::CreateSolver(
-              (OrtoolsUtils::solverMap.at(optOptions.ortoolsSolver)).MIPSolverName);
-        }
-        else
-        {
-            solver = MPSolver::CreateSolver(
-              (OrtoolsUtils::solverMap.at(optOptions.ortoolsSolver)).LPSolverName);
-        }
-
-        bool status = solver->SetSolverSpecificParametersAsString(optOptions.solverParameters);
-        if (!status)
-        {
-            throw Error::InvalidSolverSpecificParameters(optOptions.ortoolsSolver,
-                                                         optOptions.solverParameters);
-        }
-        ORTOOLS_LibererProbleme(solver);
     }
 }
 

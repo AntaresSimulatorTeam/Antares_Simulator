@@ -120,7 +120,7 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
     {
         if (problemeHebdo->ReinitOptimisation)
         {
-            if (options.ortoolsUsed && solver != nullptr)
+            if (options.ortoolsUsed && solver)
             {
                 ORTOOLS_LibererProbleme(solver);
             }
@@ -257,7 +257,7 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
     {
         if (ProblemeAResoudre->ExistenceDUneSolution != SPX_ERREUR_INTERNE)
         {
-            if (options.ortoolsUsed && solver != nullptr)
+            if (options.ortoolsUsed && solver)
             {
                 ORTOOLS_LibererProbleme(solver);
             }

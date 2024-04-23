@@ -155,7 +155,6 @@ void Application::prepare(int argc, char* argv[])
     // Their execution is delayed up to this point.
     checkOrtoolsUsage(
       pParameters->unitCommitment.ucMode, pParameters->optOptions.ortoolsUsed, pParameters->optOptions.ortoolsSolver);
-    checkOrtoolsSolverSpecificParameters(pParameters->unitCommitment.ucMode,pParameters->optOptions);
 
     checkSimplexRangeHydroPricing(pParameters->simplexOptimizationRange,
                                   pParameters->hydroPricing.hpMode);
