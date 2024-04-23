@@ -53,9 +53,9 @@ namespace Antares
 namespace Optimization
 {
 ProblemSimplexeNommeConverter::ProblemSimplexeNommeConverter(
-  const std::string& solverName,
-  const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe) :
- solverName_(solverName), problemeSimplexe_(problemeSimplexe)
+        const std::string& solverName,
+        const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe)
+    : solverName_(solverName), problemeSimplexe_(problemeSimplexe)
 {
     if (problemeSimplexe_->UseNamedProblems())
     {
@@ -127,8 +127,7 @@ void ProblemSimplexeNommeConverter::CreateVariable(unsigned idxVar,
     double min_l = problemeSimplexe_->Xmin[idxVar];
     double max_l = problemeSimplexe_->Xmax[idxVar];
     bool isIntegerVariable = problemeSimplexe_->IntegerVariable(idxVar);
-    const MPVariable* var
-      = solver->MakeVar(min_l, max_l, isIntegerVariable, variableNameManager_.GetName(idxVar));
+    const MPVariable* var = solver->MakeVar(min_l, max_l, isIntegerVariable, variableNameManager_.GetName(idxVar));
     objective->SetCoefficient(var, problemeSimplexe_->CoutLineaire[idxVar]);
 }
 
@@ -197,12 +196,12 @@ static void extractReducedCosts(const std::vector<MPVariable*>& variables,
 static void extractDualValues(const std::vector<MPConstraint*>& constraints,
                               Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe)
 {
-    int nbRows = problemeSimplexe->NombreDeContraintes;
-    for (int idxRow = 0; idxRow < nbRows; ++idxRow)
-    {
-        const MPConstraint* row = constraints[idxRow];
-        problemeSimplexe->CoutsMarginauxDesContraintes[idxRow] = row->dual_value();
-    }
+  int nbRows = problemeSimplexe->NombreDeContraintes;
+  for (int idxRow = 0; idxRow < nbRows; ++idxRow)
+  {
+      const MPConstraint* row = constraints[idxRow];
+      problemeSimplexe->CoutsMarginauxDesContraintes[idxRow] = row->dual_value();
+  }
 }
 
 static void extract_from_MPSolver(const MPSolver* solver,
@@ -213,7 +212,8 @@ static void extract_from_MPSolver(const MPSolver* solver,
 
     const bool isMIP = problemeSimplexe->isMIP();
 
-    extractSolutionValues(solver->variables(), problemeSimplexe);
+    extractSolutionValues(solver->variables(),
+                          problemeSimplexe);
 
     if (isMIP)
     {
