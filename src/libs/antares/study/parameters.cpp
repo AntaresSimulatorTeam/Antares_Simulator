@@ -1091,7 +1091,12 @@ bool Parameters::loadFromINI(const IniFile& ini,
     if (options.forceDerated)
         derated = true;
 
+
     namedProblems = options.namedProblems;
+
+    optOptions.ortoolsUsed = options.optOptions.ortoolsUsed;
+    optOptions.ortoolsSolver = options.optOptions.ortoolsSolver;
+    optOptions.solverLogs = options.optOptions.solverLogs || optOptions.solverLogs;
 
     // Attempt to fix bad values if any
     fixBadValues();
