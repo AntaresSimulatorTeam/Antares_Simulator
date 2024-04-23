@@ -35,7 +35,7 @@ target_link_libraries(result_writer
         Antares::benchmarking
         yuni-static-core
         PRIVATE
-        MINIZIP::minizip
+        MINIZIP::minizip-ng
         logs
         inifile
         io
