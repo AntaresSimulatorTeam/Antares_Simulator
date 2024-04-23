@@ -115,13 +115,13 @@ void Fixture::writeInvalidFile()
 {
     std::ofstream outfile(path);
 
-    outfile << "[general]" << std::endl;
-    outfile << "nbyears = abc" << std::endl;
-    outfile << "custom-scenario = 27" << std::endl;
-    outfile << "first.weekday = 21" << std::endl;
+    outfile << "[general]" << std::endl
+            << "nbyears = abc" << std::endl
+            << "custom-scenario = 27" << std::endl
+            << "first.weekday = 21" << std::endl
 
-    outfile << "[other preferences]" << std::endl;
-    outfile << "renewable-generation-modelling = abc" << std::endl;
+            << "[other preferences]" << std::endl
+            << "renewable-generation-modelling = abc" << std::endl;
 
     outfile.close();
 }
@@ -129,99 +129,99 @@ void Fixture::writeInvalidFile()
 void Fixture::writeValidFile()
 {
     std::ofstream outfile(path);
-    outfile << "[general]" << std::endl;
-    outfile << "mode = Economy" << std::endl;
-    outfile << "horizon = 2000" << std::endl;
-    outfile << "nbyears = 5" << std::endl;
-    outfile << "simulation.start = 1" << std::endl;
-    outfile << "simulation.end = 365" << std::endl;
-    outfile << "january.1st = Monday" << std::endl;
-    outfile << "first-month-in-year = january" << std::endl;
-    outfile << "first.weekday = Monday" << std::endl;
-    outfile << "leapyear = false" << std::endl;
-    outfile << "year-by-year = false" << std::endl;
-    outfile << "derated = false" << std::endl;
-    outfile << "custom-scenario = false" << std::endl;
-    outfile << "user-playlist = false" << std::endl;
-    outfile << "thematic-trimming = false" << std::endl;
-    outfile << "geographic-trimming = false" << std::endl;
-    outfile << "generate = hydro, wind, thermal" << std::endl;
-    outfile << "nbtimeseriesload = 1" << std::endl;
-    outfile << "nbtimeserieshydro = 1" << std::endl;
-    outfile << "nbtimeserieswind = 1" << std::endl;
-    outfile << "nbtimeseriesthermal = 1" << std::endl;
-    outfile << "nbtimeseriessolar = 1" << std::endl;
-    outfile << "refreshtimeseries = " << std::endl;
-    outfile << "intra-modal = " << std::endl;
-    outfile << "inter-modal = " << std::endl;
-    outfile << "refreshintervalload = 0" << std::endl;
-    outfile << "refreshintervalhydro = 5" << std::endl;
-    outfile << "refreshintervalwind = 5" << std::endl;
-    outfile << "refreshintervalthermal = 5" << std::endl;
-    outfile << "refreshintervalsolar = 0" << std::endl;
-    outfile << "readonly = false" << std::endl;
+    outfile << "[general]" << std::endl
+            << "mode = Economy" << std::endl
+            << "horizon = 2000" << std::endl
+            << "nbyears = 5" << std::endl
+            << "simulation.start = 1" << std::endl
+            << "simulation.end = 365" << std::endl
+            << "january.1st = Monday" << std::endl
+            << "first-month-in-year = january" << std::endl
+            << "first.weekday = Monday" << std::endl
+            << "leapyear = false" << std::endl
+            << "year-by-year = false" << std::endl
+            << "derated = false" << std::endl
+            << "custom-scenario = false" << std::endl
+            << "user-playlist = false" << std::endl
+            << "thematic-trimming = false" << std::endl
+            << "geographic-trimming = false" << std::endl
+            << "generate = hydro, wind, thermal" << std::endl
+            << "nbtimeseriesload = 1" << std::endl
+            << "nbtimeserieshydro = 1" << std::endl
+            << "nbtimeserieswind = 1" << std::endl
+            << "nbtimeseriesthermal = 1" << std::endl
+            << "nbtimeseriessolar = 1" << std::endl
+            << "refreshtimeseries = " << std::endl
+            << "intra-modal = " << std::endl
+            << "inter-modal = " << std::endl
+            << "refreshintervalload = 0" << std::endl
+            << "refreshintervalhydro = 5" << std::endl
+            << "refreshintervalwind = 5" << std::endl
+            << "refreshintervalthermal = 5" << std::endl
+            << "refreshintervalsolar = 0" << std::endl
+            << "readonly = false" << std::endl
 
-    outfile << "[input]" << std::endl;
-    outfile << "import = " << std::endl;
+            << "[input]" << std::endl
+            << "import = " << std::endl
 
-    outfile << "[output]" << std::endl;
-    outfile << "synthesis = false" << std::endl;
-    outfile << "storenewset = false" << std::endl;
-    outfile << "archives = " << std::endl;
-    outfile << "result-format = txt-files" << std::endl;
+            << "[output]" << std::endl
+            << "synthesis = false" << std::endl
+            << "storenewset = false" << std::endl
+            << "archives = " << std::endl
+            << "result-format = txt-files" << std::endl
 
-    outfile << "[optimization]" << std::endl;
-    outfile << "simplex-range = day" << std::endl;
-    outfile << "transmission-capacities = local-values" << std::endl;
-    outfile << "include-constraints = true" << std::endl;
-    outfile << "include-hurdlecosts = true" << std::endl;
-    outfile << "include-tc-minstablepower = true" << std::endl;
-    outfile << "include-tc-min-ud-time = true" << std::endl;
-    outfile << "include-dayahead = true" << std::endl;
-    outfile << "include-strategicreserve = true" << std::endl;
-    outfile << "include-spinningreserve = true" << std::endl;
-    outfile << "include-primaryreserve = true" << std::endl;
-    outfile << "include-exportmps = none" << std::endl;
-    outfile << "include-exportstructure = false" << std::endl;
-    outfile << "include-unfeasible-problem-behavior = error-verbose" << std::endl;
+            << "[optimization]" << std::endl
+            << "simplex-range = day" << std::endl
+            << "transmission-capacities = local-values" << std::endl
+            << "include-constraints = true" << std::endl
+            << "include-hurdlecosts = true" << std::endl
+            << "include-tc-minstablepower = true" << std::endl
+            << "include-tc-min-ud-time = true" << std::endl
+            << "include-dayahead = true" << std::endl
+            << "include-strategicreserve = true" << std::endl
+            << "include-spinningreserve = true" << std::endl
+            << "include-primaryreserve = true" << std::endl
+            << "include-exportmps = none" << std::endl
+            << "include-exportstructure = false" << std::endl
+            << "include-unfeasible-problem-behavior = error-verbose" << std::endl
 
-    outfile << "[adequacy patch]" << std::endl;
-    outfile << "include-adq-patch = false" << std::endl;
-    outfile << "set-to-null-ntc-from-physical-out-to-physical-in-for-first-step = true" << std::endl;
-    outfile << "set-to-null-ntc-between-physical-out-for-first-step = true" << std::endl;
-    outfile << "enable-first-step = true" << std::endl;
-    outfile << "price-taking-order = DENS" << std::endl;
-    outfile << "include-hurdle-cost-csr = false" << std::endl;
-    outfile << "check-csr-cost-function = false" << std::endl;
-    outfile << "threshold-initiate-curtailment-sharing-rule = 0.000000" << std::endl;
-    outfile << "threshold-display-local-matching-rule-violations = 0.000000" << std::endl;
-    outfile << "threshold-csr-variable-bounds-relaxation = 3" << std::endl;
+            << "[adequacy patch]" << std::endl
+            << "include-adq-patch = false" << std::endl
+            << "set-to-null-ntc-from-physical-out-to-physical-in-for-first-step = true" << std::endl
+            << "set-to-null-ntc-between-physical-out-for-first-step = true" << std::endl
+            << "enable-first-step = true" << std::endl
+            << "price-taking-order = DENS" << std::endl
+            << "include-hurdle-cost-csr = false" << std::endl
+            << "check-csr-cost-function = false" << std::endl
+            << "threshold-initiate-curtailment-sharing-rule = 0.000000" << std::endl
+            << "threshold-display-local-matching-rule-violations = 0.000000" << std::endl
+            << "threshold-csr-variable-bounds-relaxation = 3" << std::endl
 
-    outfile << "[other preferences]" << std::endl;
-    outfile << "initial-reservoir-levels = cold start" << std::endl;
-    outfile << "hydro-heuristic-policy = accommodate rule curves" << std::endl;
-    outfile << "hydro-pricing-mode = fast" << std::endl;
-    outfile << "power-fluctuations = free modulations" << std::endl;
-    outfile << "shedding-policy = shave peaks" << std::endl;
-    outfile << "unit-commitment-mode = fast" << std::endl;
-    outfile << "number-of-cores-mode = medium" << std::endl;
-    outfile << "renewable-generation-modelling = aggregated" << std::endl;
+            << "[other preferences]" << std::endl
+            << "initial-reservoir-levels = cold start" << std::endl
+            << "hydro-heuristic-policy = accommodate rule curves" << std::endl
+            << "hydro-pricing-mode = fast" << std::endl
+            << "power-fluctuations = free modulations" << std::endl
+            << "shedding-policy = shave peaks" << std::endl
+            << "unit-commitment-mode = fast" << std::endl
+            << "number-of-cores-mode = medium" << std::endl
+            << "renewable-generation-modelling = aggregated" << std::endl
 
-    outfile << "[advanced parameters]" << std::endl;
-    outfile << "accuracy-on-correlation = " << std::endl;
+            << "[advanced parameters]" << std::endl
+            << "accuracy-on-correlation = " << std::endl
 
-    outfile << "[seeds - Mersenne Twister]" << std::endl;
-    outfile << "seed-tsgen-wind = 5489" << std::endl;
-    outfile << "seed-tsgen-load = 5489" << std::endl;
-    outfile << "seed-tsgen-hydro = 5489" << std::endl;
-    outfile << "seed-tsgen-thermal = 5489" << std::endl;
-    outfile << "seed-tsgen-solar = 5489" << std::endl;
-    outfile << "seed-tsnumbers = 5489" << std::endl;
-    outfile << "seed-unsupplied-energy-costs = 6005489" << std::endl;
-    outfile << "seed-spilled-energy-costs = 7005489" << std::endl;
-    outfile << "seed-thermal-costs = 8005489" << std::endl;
-    outfile << "seed-hydro-costs = 9005489" << std::endl;
-    outfile << "seed-initial-reservoir-levels = 10005489" << std::endl;
+            << "[seeds - Mersenne Twister]" << std::endl
+            << "seed-tsgen-wind = 5489" << std::endl
+            << "seed-tsgen-load = 5489" << std::endl
+            << "seed-tsgen-hydro = 5489" << std::endl
+            << "seed-tsgen-thermal = 5489" << std::endl
+            << "seed-tsgen-solar = 5489" << std::endl
+            << "seed-tsnumbers = 5489" << std::endl
+            << "seed-unsupplied-energy-costs = 6005489" << std::endl
+            << "seed-spilled-energy-costs = 7005489" << std::endl
+            << "seed-thermal-costs = 8005489" << std::endl
+            << "seed-hydro-costs = 9005489" << std::endl
+            << "seed-initial-reservoir-levels = 10005489" << std::endl;
 
     outfile.close();
 }
