@@ -115,13 +115,13 @@ void Fixture::writeInvalidFile()
 {
     std::ofstream outfile(path);
 
-    outfile << "[general]" << std::endl
-            << "nbyears = abc" << std::endl
-            << "custom-scenario = 27" << std::endl
-            << "first.weekday = 21" << std::endl
+    outfile << R"([general]
+            nbyears = abc
+            custom-scenario = 27
+            first.weekday = 21
 
-            << "[other preferences]" << std::endl
-            << "renewable-generation-modelling = abc" << std::endl;
+            [other preferences]
+            renewable-generation-modelling = abc)";
 
     outfile.close();
 }
@@ -129,99 +129,99 @@ void Fixture::writeInvalidFile()
 void Fixture::writeValidFile()
 {
     std::ofstream outfile(path);
-    outfile << "[general]" << std::endl
-            << "mode = Economy" << std::endl
-            << "horizon = 2000" << std::endl
-            << "nbyears = 5" << std::endl
-            << "simulation.start = 1" << std::endl
-            << "simulation.end = 365" << std::endl
-            << "january.1st = Monday" << std::endl
-            << "first-month-in-year = january" << std::endl
-            << "first.weekday = Monday" << std::endl
-            << "leapyear = false" << std::endl
-            << "year-by-year = false" << std::endl
-            << "derated = false" << std::endl
-            << "custom-scenario = false" << std::endl
-            << "user-playlist = false" << std::endl
-            << "thematic-trimming = false" << std::endl
-            << "geographic-trimming = false" << std::endl
-            << "generate = hydro, wind, thermal" << std::endl
-            << "nbtimeseriesload = 1" << std::endl
-            << "nbtimeserieshydro = 1" << std::endl
-            << "nbtimeserieswind = 1" << std::endl
-            << "nbtimeseriesthermal = 1" << std::endl
-            << "nbtimeseriessolar = 1" << std::endl
-            << "refreshtimeseries = " << std::endl
-            << "intra-modal = " << std::endl
-            << "inter-modal = " << std::endl
-            << "refreshintervalload = 0" << std::endl
-            << "refreshintervalhydro = 5" << std::endl
-            << "refreshintervalwind = 5" << std::endl
-            << "refreshintervalthermal = 5" << std::endl
-            << "refreshintervalsolar = 0" << std::endl
-            << "readonly = false" << std::endl
+    outfile << R"([general]
+            mode = Economy
+            horizon = 2000
+            nbyears = 5
+            simulation.start = 1
+            simulation.end = 365
+            january.1st = Monday
+            first-month-in-year = january
+            first.weekday = Monday
+            leapyear = false
+            year-by-year = false
+            derated = false
+            custom-scenario = false
+            user-playlist = false
+            thematic-trimming = false
+            geographic-trimming = false
+            generate = hydro, wind, thermal
+            nbtimeseriesload = 1
+            nbtimeserieshydro = 1
+            nbtimeserieswind = 1
+            nbtimeseriesthermal = 1
+            nbtimeseriessolar = 1
+            refreshtimeseries = 
+            intra-modal = 
+            inter-modal = 
+            refreshintervalload = 0
+            refreshintervalhydro = 5
+            refreshintervalwind = 5
+            refreshintervalthermal = 5
+            refreshintervalsolar = 0
+            readonly = false
 
-            << "[input]" << std::endl
-            << "import = " << std::endl
+            [input]
+            import = 
 
-            << "[output]" << std::endl
-            << "synthesis = false" << std::endl
-            << "storenewset = false" << std::endl
-            << "archives = " << std::endl
-            << "result-format = txt-files" << std::endl
+            [output]
+            synthesis = false
+            storenewset = false
+            archives = 
+            result-format = txt-files
 
-            << "[optimization]" << std::endl
-            << "simplex-range = day" << std::endl
-            << "transmission-capacities = local-values" << std::endl
-            << "include-constraints = true" << std::endl
-            << "include-hurdlecosts = true" << std::endl
-            << "include-tc-minstablepower = true" << std::endl
-            << "include-tc-min-ud-time = true" << std::endl
-            << "include-dayahead = true" << std::endl
-            << "include-strategicreserve = true" << std::endl
-            << "include-spinningreserve = true" << std::endl
-            << "include-primaryreserve = true" << std::endl
-            << "include-exportmps = none" << std::endl
-            << "include-exportstructure = false" << std::endl
-            << "include-unfeasible-problem-behavior = error-verbose" << std::endl
+            [optimization]
+            simplex-range = day
+            transmission-capacities = local-values
+            include-constraints = true
+            include-hurdlecosts = true
+            include-tc-minstablepower = true
+            include-tc-min-ud-time = true
+            include-dayahead = true
+            include-strategicreserve = true
+            include-spinningreserve = true
+            include-primaryreserve = true
+            include-exportmps = none
+            include-exportstructure = false
+            include-unfeasible-problem-behavior = error-verbose
 
-            << "[adequacy patch]" << std::endl
-            << "include-adq-patch = false" << std::endl
-            << "set-to-null-ntc-from-physical-out-to-physical-in-for-first-step = true" << std::endl
-            << "set-to-null-ntc-between-physical-out-for-first-step = true" << std::endl
-            << "enable-first-step = true" << std::endl
-            << "price-taking-order = DENS" << std::endl
-            << "include-hurdle-cost-csr = false" << std::endl
-            << "check-csr-cost-function = false" << std::endl
-            << "threshold-initiate-curtailment-sharing-rule = 0.000000" << std::endl
-            << "threshold-display-local-matching-rule-violations = 0.000000" << std::endl
-            << "threshold-csr-variable-bounds-relaxation = 3" << std::endl
+            [adequacy patch]
+            include-adq-patch = false
+            set-to-null-ntc-from-physical-out-to-physical-in-for-first-step = true
+            set-to-null-ntc-between-physical-out-for-first-step = true
+            enable-first-step = true
+            price-taking-order = DENS
+            include-hurdle-cost-csr = false
+            check-csr-cost-function = false
+            threshold-initiate-curtailment-sharing-rule = 0.000000
+            threshold-display-local-matching-rule-violations = 0.000000
+            threshold-csr-variable-bounds-relaxation = 3
 
-            << "[other preferences]" << std::endl
-            << "initial-reservoir-levels = cold start" << std::endl
-            << "hydro-heuristic-policy = accommodate rule curves" << std::endl
-            << "hydro-pricing-mode = fast" << std::endl
-            << "power-fluctuations = free modulations" << std::endl
-            << "shedding-policy = shave peaks" << std::endl
-            << "unit-commitment-mode = fast" << std::endl
-            << "number-of-cores-mode = medium" << std::endl
-            << "renewable-generation-modelling = aggregated" << std::endl
+            [other preferences]
+            initial-reservoir-levels = cold start
+            hydro-heuristic-policy = accommodate rule curves
+            hydro-pricing-mode = fast
+            power-fluctuations = free modulations
+            shedding-policy = shave peaks
+            unit-commitment-mode = fast
+            number-of-cores-mode = medium
+            renewable-generation-modelling = aggregated
 
-            << "[advanced parameters]" << std::endl
-            << "accuracy-on-correlation = " << std::endl
+            [advanced parameters]
+            accuracy-on-correlation =
 
-            << "[seeds - Mersenne Twister]" << std::endl
-            << "seed-tsgen-wind = 5489" << std::endl
-            << "seed-tsgen-load = 5489" << std::endl
-            << "seed-tsgen-hydro = 5489" << std::endl
-            << "seed-tsgen-thermal = 5489" << std::endl
-            << "seed-tsgen-solar = 5489" << std::endl
-            << "seed-tsnumbers = 5489" << std::endl
-            << "seed-unsupplied-energy-costs = 6005489" << std::endl
-            << "seed-spilled-energy-costs = 7005489" << std::endl
-            << "seed-thermal-costs = 8005489" << std::endl
-            << "seed-hydro-costs = 9005489" << std::endl
-            << "seed-initial-reservoir-levels = 10005489" << std::endl;
+            [seeds - Mersenne Twister]
+            seed-tsgen-wind = 5489
+            seed-tsgen-load = 5489
+            seed-tsgen-hydro = 5489
+            seed-tsgen-thermal = 5489
+            seed-tsgen-solar = 5489
+            seed-tsnumbers = 5489
+            seed-unsupplied-energy-costs = 6005489
+            seed-spilled-energy-costs = 7005489
+            seed-thermal-costs = 8005489
+            seed-hydro-costs = 9005489
+            seed-initial-reservoir-levels = 10005489)";
 
     outfile.close();
 }
