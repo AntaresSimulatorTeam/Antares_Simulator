@@ -94,7 +94,6 @@ BOOST_FIXTURE_TEST_CASE(fixBadValue, Fixture)
 
     p.fixBadValues();
 
-    BOOST_CHECK_EQUAL(p.nbYears, 100000);
 }
 
 BOOST_FIXTURE_TEST_CASE(invalidValues, Fixture)

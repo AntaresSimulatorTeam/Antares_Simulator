@@ -93,11 +93,6 @@ NoStudyProvided::NoStudyProvided() :
 {
 }
 
-InvalidNumberOfMCYears::InvalidNumberOfMCYears(uint nbYears) :
- LoadingError("Invalid number of MC years, got " + std::to_string(nbYears) + ", expected <= 50000")
-{
-}
-
 IncompatibleParallelOptions::IncompatibleParallelOptions() :
  LoadingError("Options --parallel and --force-parallel are incompatible")
 {
