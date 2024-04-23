@@ -47,6 +47,10 @@ struct PROBLEME_ANTARES_A_RESOUDRE
 {
     PROBLEME_ANTARES_A_RESOUDRE();
     ~PROBLEME_ANTARES_A_RESOUDRE();
+    PROBLEME_ANTARES_A_RESOUDRE(const PROBLEME_ANTARES_A_RESOUDRE&) = delete;
+    PROBLEME_ANTARES_A_RESOUDRE(PROBLEME_ANTARES_A_RESOUDRE&&) = delete;
+    PROBLEME_ANTARES_A_RESOUDRE& operator=(const PROBLEME_ANTARES_A_RESOUDRE&) = delete;
+    PROBLEME_ANTARES_A_RESOUDRE& operator=(PROBLEME_ANTARES_A_RESOUDRE&&) = delete;
     /* La matrice des contraintes */
     int NombreDeVariables;
     int NombreDeContraintes; /* Il est egal a :
@@ -118,7 +122,6 @@ struct PROBLEME_ANTARES_A_RESOUDRE
 
     std::vector<bool> VariablesEntieres; // true = int, false = continuous
 
-public:
     // PIMPL is used to break dependency to OR-Tools' linear_solver.h (big header)
     std::unique_ptr<Antares::Optimization::BasisStatus> basisStatus;
 };
