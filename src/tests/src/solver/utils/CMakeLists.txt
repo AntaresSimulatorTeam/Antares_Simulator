@@ -1,10 +1,12 @@
+set(src_utils "${CMAKE_SOURCE_DIR}/solver/utils")
+
 set(EXECUTABLE_NAME tests-basis-status)
 add_executable(${EXECUTABLE_NAME} basis_status.cpp)
 
 
 target_include_directories(${EXECUTABLE_NAME}
 							PRIVATE
-						    "${src_solver_optimisation}"
+						    "${src_utils}" # basis_status_impl.h is private
 )
 
 target_link_libraries(${EXECUTABLE_NAME}

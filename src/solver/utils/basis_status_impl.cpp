@@ -19,29 +19,36 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <antares/solver/utils/basis_status.h>
+#include <vector>
 #include "basis_status_impl.h"
+#include "ortools/linear_solver/linear_solver.h"
+
+template<class SourceT>
+static void transferBasis(std::vector<operations_research::MPSolver::BasisStatus>& destination,
+                          const SourceT& source)
+{
+    destination.resize(source.size());
+    for (size_t idx = 0; idx < source.size(); idx++)
+    {
+        destination[idx] = source[idx]->basis_status();
+    }
+}
 
 namespace Antares::Optimization
 {
-BasisStatus::BasisStatus() : impl(std::make_unique<BasisStatusImpl>())
-{
-}
+  void BasisStatusImpl::setStartingBasis(operations_research::MPSolver* solver) const
+  {
+    solver->SetStartingLpBasis(StatutDesVariables, StatutDesContraintes);
+  }
 
-BasisStatus::~BasisStatus() = default;
+  void BasisStatusImpl::extractBasis(const operations_research::MPSolver* solver)
+  {
+    transferBasis(StatutDesVariables, solver->variables());
+    transferBasis(StatutDesContraintes, solver->constraints());
+  }
 
-void BasisStatus::setStartingBasis(operations_research::MPSolver* solver) const
-{
-    impl->setStartingBasis(solver);
+  bool BasisStatusImpl::exists() const
+  {
+    return !StatutDesVariables.empty() && !StatutDesContraintes.empty();
+  }
 }
-
-void BasisStatus::extractBasis(const operations_research::MPSolver* solver)
-{
-    impl->extractBasis(solver);
-}
-
-bool BasisStatus::exists() const
-{
-    return impl->exists();
-}
-} // namespace Antares::Optimization

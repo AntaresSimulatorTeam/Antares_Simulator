@@ -20,30 +20,42 @@
 */
 #pragma once
 
+#include <memory>
+
 // NOTE
 // Try not to include this header too often, if possible, forward-declare BasisStatus
 // since linear_solver.h takes time to compile
 
-#include <vector>
-#include "ortools/linear_solver/linear_solver.h"
-
-namespace Test {
+namespace Test
+{
     class BasisStatus;
+}
+
+namespace operations_research
+{
+    class MPSolver;
 }
 
 namespace Antares::Optimization
 {
+class BasisStatusImpl;
+
 class BasisStatus
 {
 public:
-    using Status = operations_research::MPSolver::BasisStatus;
+    // Prevent copy & move
+    BasisStatus();
+    ~BasisStatus();
+    BasisStatus(const BasisStatus&) = delete;
+    BasisStatus(BasisStatus&&) = delete;
+    BasisStatus& operator=(const BasisStatus&) = delete;
+    BasisStatus& operator=(BasisStatus&&) = delete;
 
     bool exists() const;
     void setStartingBasis(operations_research::MPSolver* solver) const;
     void extractBasis(const operations_research::MPSolver* solver);
 private:
-    std::vector<Status> StatutDesVariables;
-    std::vector<Status> StatutDesContraintes;
+    std::unique_ptr<BasisStatusImpl> impl;
     friend class Test::BasisStatus; // For tests
 };
 } // namespace Antares::Optimization

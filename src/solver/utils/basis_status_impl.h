@@ -19,29 +19,29 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <antares/solver/utils/basis_status.h>
-#include "basis_status_impl.h"
+#pragma once
+
+#include <vector>
+#include "ortools/linear_solver/linear_solver.h"
+
+namespace Test
+{
+    class BasisStatus;
+}
 
 namespace Antares::Optimization
 {
-BasisStatus::BasisStatus() : impl(std::make_unique<BasisStatusImpl>())
-{
-}
+class BasisStatusImpl {
+private:
+  friend class BasisStatus;
+  friend class Test::BasisStatus; // For tests
 
-BasisStatus::~BasisStatus() = default;
+  using Status = operations_research::MPSolver::BasisStatus;
+  std::vector<Status> StatutDesVariables;
+  std::vector<Status> StatutDesContraintes;
 
-void BasisStatus::setStartingBasis(operations_research::MPSolver* solver) const
-{
-    impl->setStartingBasis(solver);
+  void setStartingBasis(operations_research::MPSolver* solver) const;
+  void extractBasis(const operations_research::MPSolver* solver);
+  bool exists() const;
+};
 }
-
-void BasisStatus::extractBasis(const operations_research::MPSolver* solver)
-{
-    impl->extractBasis(solver);
-}
-
-bool BasisStatus::exists() const
-{
-    return impl->exists();
-}
-} // namespace Antares::Optimization

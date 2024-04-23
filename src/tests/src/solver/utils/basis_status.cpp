@@ -24,7 +24,9 @@
 #define WIN32_LEAN_AND_MEAN
 
 #include <boost/test/unit_test.hpp>
+#include "ortools/linear_solver/linear_solver.h"
 #include <antares/solver/utils/basis_status.h>
+#include "basis_status_impl.h"
 
 using namespace operations_research;
 
@@ -32,10 +34,11 @@ namespace Test {
 class BasisStatus
 {
 public:
-  BasisStatus(const Antares::Optimization::BasisStatus& b) : StatutDesVariables(b.StatutDesVariables), StatutDesContraintes(b.StatutDesContraintes)
+  BasisStatus(const Antares::Optimization::BasisStatus& b) : StatutDesVariables(b.impl->StatutDesVariables), StatutDesContraintes(b.impl->StatutDesContraintes)
   {}
-  const std::vector<Antares::Optimization::BasisStatus::Status>& StatutDesVariables;
-  const std::vector<Antares::Optimization::BasisStatus::Status>& StatutDesContraintes;
+  using Status = operations_research::MPSolver::BasisStatus;
+  const std::vector<Status>& StatutDesVariables;
+  const std::vector<Status>& StatutDesContraintes;
 };
 }
 

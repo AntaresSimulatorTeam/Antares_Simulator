@@ -25,6 +25,7 @@
 #include <string>
 #include <memory>
 #include "opt_constants.h"
+#include <antares/solver/utils/basis_status.h>
 
 /*--------------------------------------------------------------------------------------*/
 
@@ -36,11 +37,6 @@ struct OptimizationOptions
     std::string solverName;
 };
 } // namespace Antares::Solver::Optimization
-
-namespace Antares::Optimization
-{
-struct BasisStatus;
-}
 
 /* Le probleme a resoudre */
 struct PROBLEME_ANTARES_A_RESOUDRE
@@ -123,7 +119,7 @@ struct PROBLEME_ANTARES_A_RESOUDRE
     std::vector<bool> VariablesEntieres; // true = int, false = continuous
 
     // PIMPL is used to break dependency to OR-Tools' linear_solver.h (big header)
-    std::unique_ptr<Antares::Optimization::BasisStatus> basisStatus;
+    Antares::Optimization::BasisStatus basisStatus;
 };
 
 #endif /* __SOLVER_OPTIMISATION_STRUCTURE_PROBLEME_A_RESOUDRE_H__ */
