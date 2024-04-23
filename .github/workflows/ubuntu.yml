@@ -29,7 +29,7 @@ env:
   RUN_EXTENDED_TESTS: ${{ github.event_name == 'schedule' || inputs.run-tests == 'true' }}
   REF: ${{ inputs.target_branch =='' && github.ref || inputs.target_branch}}
   VCPKG_ROOT: ${{ github.workspace }}/vcpkg
-  vcpkgPackages: yaml-cpp antlr4 boost-test
+  vcpkgPackages: yaml-cpp antlr4 boost-test minizip-ng
   triplet: x64-linux
   WX_CONFIG: /usr/bin/wx-config
 

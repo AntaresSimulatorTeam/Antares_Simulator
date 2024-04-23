@@ -290,35 +290,35 @@ message(STATUS "OR-Tools tag ${ORTOOLS_TAG}")
   FetchContent_MakeAvailable(ortools)
 endif()
 
-find_package(minizip QUIET)
+# find_package(minizip QUIET)
 
-if(NOT minizip_FOUND OR BUILD_MINIZIP)
-	if (NOT minizip_FOUND)
-		message("minizip not found, downloading")
-	endif ()
-	if (BUILD_MINIZIP)
-		message("BUILD_MINIZIP set, downloading")
-	endif ()
-    # Repository + tag
-    set(MZ_REPOSITORY "https://github.com/zlib-ng/minizip-ng.git")
-    set(MZ_TAG "4.0.1")
-    # CMake flags
-    set(MZ_LZMA "OFF" CACHE INTERNAL "")
-    set(MZ_ZSTD "OFF" CACHE INTERNAL "")
-    set(MZ_BZIP2 "OFF" CACHE INTERNAL "")
-    set(MZ_PKCRYPT "OFF" CACHE INTERNAL "")
-    set(MZ_WZAES "OFF" CACHE INTERNAL "")
-    set(MZ_OPENSSL "OFF" CACHE INTERNAL "")
-    set(MZ_ICONV "OFF" CACHE INTERNAL "")
+# if(NOT minizip_FOUND OR BUILD_MINIZIP)
+# 	if (NOT minizip_FOUND)
+# 		message("minizip not found, downloading")
+# 	endif ()
+# 	if (BUILD_MINIZIP)
+# 		message("BUILD_MINIZIP set, downloading")
+# 	endif ()
+#     # Repository + tag
+#     set(MZ_REPOSITORY "https://github.com/zlib-ng/minizip-ng.git")
+#     set(MZ_TAG "4.0.1")
+#     # CMake flags
+#     set(MZ_LZMA "OFF" CACHE INTERNAL "")
+#     set(MZ_ZSTD "OFF" CACHE INTERNAL "")
+#     set(MZ_BZIP2 "OFF" CACHE INTERNAL "")
+#     set(MZ_PKCRYPT "OFF" CACHE INTERNAL "")
+#     set(MZ_WZAES "OFF" CACHE INTERNAL "")
+#     set(MZ_OPENSSL "OFF" CACHE INTERNAL "")
+#     set(MZ_ICONV "OFF" CACHE INTERNAL "")
 
-	FetchContent_Declare(minizip
-		GIT_REPOSITORY ${MZ_REPOSITORY}
-		GIT_TAG ${MZ_TAG}
-		OVERRIDE_FIND_PACKAGE
-	)
+# 	FetchContent_Declare(minizip
+# 		GIT_REPOSITORY ${MZ_REPOSITORY}
+# 		GIT_TAG ${MZ_TAG}
+# 		OVERRIDE_FIND_PACKAGE
+# 	)
 
-	FetchContent_MakeAvailable(minizip)
-endif()
+# 	FetchContent_MakeAvailable(minizip)
+# endif()
 find_package(minizip REQUIRED)
 
 
