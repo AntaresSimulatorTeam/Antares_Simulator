@@ -309,6 +309,9 @@ target_link_libraries(study
         antares-solver-variable
 )
 
+target_precompile_headers(study PUBLIC "include/antares/study/study.h")
+
+
 target_include_directories(study
              PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>

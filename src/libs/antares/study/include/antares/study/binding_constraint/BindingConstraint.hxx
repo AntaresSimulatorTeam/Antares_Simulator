@@ -20,6 +20,8 @@
 */
 #pragma once
 
+#include "antares/logs/logs.h"
+
 namespace Antares::Data
 {
 inline const ConstraintName& BindingConstraint::name() const
@@ -108,7 +110,7 @@ inline std::string BindingConstraint::timeSeriesFileName(const Env &env) const {
         case BindingConstraint::opEquality:
             return std::string() + env.folder.c_str() + Yuni::IO::Separator + id().c_str() + "_eq" + ".txt";
         default:
-            logs.error("Cannot load/save time series of type other that eq/gt/lt");
+            Antares::logs.error("Cannot load/save time series of type other that eq/gt/lt");
             return "";
     }
 }

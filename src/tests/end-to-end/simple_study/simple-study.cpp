@@ -106,10 +106,11 @@ HydroMaxPowerStudy::HydroMaxPowerStudy()
 BOOST_FIXTURE_TEST_SUITE(ONE_AREA__ONE_THERMAL_CLUSTER, StudyFixture)
 
 BOOST_AUTO_TEST_CASE(thermal_cluster_fullfills_area_demand)
-{	
-	setNumberMCyears(1);
+{
+    int x = 2;
+    setNumberMCyears(1);
 
-	simulation->create();
+    simulation->create();
 	simulation->run();
 
 	OutputRetriever output(simulation->rawSimu());

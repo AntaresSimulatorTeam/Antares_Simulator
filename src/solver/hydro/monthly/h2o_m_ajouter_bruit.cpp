@@ -23,7 +23,7 @@
 #include "antares/solver/hydro/monthly/h2o_m_donnees_annuelles.h"
 #include "antares/solver/hydro/monthly/h2o_m_fonctions.h"
 
-namespace Constants
+namespace Hydro::Constants
 {
 constexpr double noiseAmplitude = 1e-3;
 constexpr unsigned int seed = 0x79686d64; // "hydm" in hexa
@@ -40,8 +40,8 @@ void H2O_M_AjouterBruitAuCout(DONNEES_ANNUELLES& DonneesAnnuelles)
     const auto& CoutLineaire = ProblemeLineairePartieFixe.CoutLineaire;
 
     Antares::MersenneTwister noiseGenerator;
-    noiseGenerator.reset(Constants::seed); // Arbitrary seed, hard-coded since we don't really want
-                                           // the user to change it
+    noiseGenerator.reset(Hydro::Constants::seed); // Arbitrary seed, hard-coded since we don't
+                                                  // really want// the user to change it
     const std::vector<const std::vector<int>*> monthlyVariables
       = {&CorrespondanceDesVariables.NumeroDeVariableVolume,
          &CorrespondanceDesVariables.NumeroDeVariableTurbine,
@@ -55,12 +55,14 @@ void H2O_M_AjouterBruitAuCout(DONNEES_ANNUELLES& DonneesAnnuelles)
         for (int Var : *variable)
         {
             CoutLineaireBruite[Var]
-              = CoutLineaire[Var] + noiseGenerator() * Constants::noiseAmplitude;
+              = CoutLineaire[Var] + noiseGenerator() * Hydro::Constants::noiseAmplitude;
         }
     }
     int Var = CorrespondanceDesVariables.NumeroDeLaVariableViolMaxVolumeMin;
-    CoutLineaireBruite[Var] = CoutLineaire[Var] + noiseGenerator() * Constants::noiseAmplitude;
+    CoutLineaireBruite[Var]
+      = CoutLineaire[Var] + noiseGenerator() * Hydro::Constants::noiseAmplitude;
 
     Var = CorrespondanceDesVariables.NumeroDeLaVariableXi;
-    CoutLineaireBruite[Var] = CoutLineaire[Var] + noiseGenerator() * Constants::noiseAmplitude;
+    CoutLineaireBruite[Var]
+      = CoutLineaire[Var] + noiseGenerator() * Hydro::Constants::noiseAmplitude;
 }
