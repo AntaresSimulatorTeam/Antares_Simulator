@@ -1,5 +1,10 @@
 var NAVTREEINDEX23 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardOverallCost.html#a9e39464214dd3554a1719085d8918e54":[7,0,0,12,4,0,2,1],
+"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html":[7,0,0,12,4,0,3],
+"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html#a92399f65baa263b4d2a01a75ff21c3b0":[7,0,0,12,4,0,3,1],
+"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html#ae8243f6e44a2d7883fa25100f5315363":[7,0,0,12,4,0,3,0],
+"structAntares_1_1Solver_1_1Variable_1_1Areas_1_1Statistics.html":[7,0,0,12,4,7,0],
 "structAntares_1_1Solver_1_1Variable_1_1BindingConstraints_1_1Statistics.html":[7,0,0,12,4,8,0],
 "structAntares_1_1Solver_1_1Variable_1_1Category_1_1MaxRowCount.html":[7,0,0,12,4,1,0],
 "structAntares_1_1Solver_1_1Variable_1_1Category_1_1MaxRowCount_3_01daily_01_4.html":[7,0,0,12,4,1,1],
@@ -244,10 +249,5 @@ var NAVTREEINDEX23 =
 "structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_015_01_4.html":[7,0,0,12,4,20],
 "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average.html":[7,0,0,12,4,6,0,0],
 "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average.html#a78db0f8bffc05da1df4366d1b2f25054":[7,0,0,12,4,6,0,0,1],
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average_1_1Data.html":[7,0,0,12,4,6,0,0,0],
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxBase.html":[7,0,0,12,4,6,0,4],
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxBase.html#a22867a4b6e6809f5c815050b22a524ca":[7,0,0,12,4,6,0,4,0],
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxData_1_1Data.html":[7,0,0,12,4,6,0,5,0],
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Or.html":[7,0,0,12,4,6,0,6],
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw.html":[7,0,0,12,4,6,0,7]
+"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average_1_1Data.html":[7,0,0,12,4,6,0,0,0]
 };

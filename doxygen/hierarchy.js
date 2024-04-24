@@ -65,6 +65,9 @@ var hierarchy =
       [ "Antares::Solver::Simulation::InterpolateWaterValuePostProcessCmd", "classAntares_1_1Solver_1_1Simulation_1_1InterpolateWaterValuePostProcessCmd.html", null ],
       [ "Antares::Solver::Simulation::RemixHydroPostProcessCmd", "classAntares_1_1Solver_1_1Simulation_1_1RemixHydroPostProcessCmd.html", null ]
     ] ],
+    [ "Antares::Optimization::BasisStatus", "classAntares_1_1Optimization_1_1BasisStatus.html", null ],
+    [ "Test::BasisStatus", "classTest_1_1BasisStatus.html", null ],
+    [ "Antares::Optimization::BasisStatusImpl", "classAntares_1_1Optimization_1_1BasisStatusImpl.html", null ],
     [ "unfeasible_problem.behavior_flag", "classunfeasible__problem_1_1behavior__flag.html", null ],
     [ "BindConstT", null, [
       [ "Antares::Solver::Variable::Join< LeftT, RightT, BindConstT >", "classAntares_1_1Solver_1_1Variable_1_1Join.html", null ]

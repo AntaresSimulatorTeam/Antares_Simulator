@@ -16,7 +16,7 @@
 <meta name="twitter:title" content="Antares Simulator" />
 <meta name="twitter:description" content="Power System Simulator." />
 <!-- END twitter metadata -->
-<title>Antares Simulator: src/solver/utils/include/antares/solver/utils/ortools_wrapper.h Source File</title>
+<title>Antares Simulator: src/solver/utils/basis_status_impl.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -110,7 +110,7 @@ $(document).ready(function() { init_codefold(0); });
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('ortools__wrapper_8h_source.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('basis__status__impl_8h_source.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -136,7 +136,7 @@ $(document).ready(function(){initNavTree('ortools__wrapper_8h_source.html',''); 
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">ortools_wrapper.h</div></div>
+  <div class="headertitle"><div class="title">basis_status_impl.h</div></div>
 </div><!--header-->
 <div class="contents">
 <div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/*</span></div>
@@ -159,42 +159,44 @@ $(document).ready(function(){initNavTree('ortools__wrapper_8h_source.html',''); 
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="comment">** You should have received a copy of the Mozilla Public Licence 2.0</span></div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="comment">** along with Antares_Simulator. If not, see &lt;https://opensource.org/license/mpl-2-0/&gt;.</span></div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="comment">*/</span></div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#ifndef __ORTOOLS_WRAPPER__</span></div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#define __ORTOOLS_WRAPPER__</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &quot;named_problem.h&quot;</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &quot;ortools/linear_solver/linear_solver.h&quot;</span></div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="keyword">using namespace </span>operations_research;</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>MPSolver* ORTOOLS_Simplexe(<a class="code hl_struct" href="structAntares_1_1Optimization_1_1PROBLEME__SIMPLEXE__NOMME.html">Antares::Optimization::PROBLEME_SIMPLEXE_NOMME</a>* Probleme,</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>                           MPSolver* ProbSpx,</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>                           <span class="keywordtype">bool</span> keepBasis);</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>MPSolver* ORTOOLS_ConvertIfNeeded(<span class="keyword">const</span> std::string&amp; solverName,</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>                                  <span class="keyword">const</span> <a class="code hl_struct" href="structAntares_1_1Optimization_1_1PROBLEME__SIMPLEXE__NOMME.html">Antares::Optimization::PROBLEME_SIMPLEXE_NOMME</a>* Probleme,</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>                                  MPSolver* solver);</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="keywordtype">void</span> ORTOOLS_ModifierLeVecteurCouts(MPSolver* ProbSpx, <span class="keyword">const</span> <span class="keywordtype">double</span>* costs, <span class="keywordtype">int</span> nbVar);</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="keywordtype">void</span> ORTOOLS_ModifierLeVecteurSecondMembre(MPSolver* ProbSpx,</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>                                           <span class="keyword">const</span> <span class="keywordtype">double</span>* rhs,</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>                                           <span class="keyword">const</span> <span class="keywordtype">char</span>* sens,</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>                                           <span class="keywordtype">int</span> nbRow);</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="keywordtype">void</span> ORTOOLS_CorrigerLesBornes(MPSolver* ProbSpx,</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>                               <span class="keyword">const</span> <span class="keywordtype">double</span>* bMin,</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>                               <span class="keyword">const</span> <span class="keywordtype">double</span>* bMax,</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>                               <span class="keyword">const</span> <span class="keywordtype">int</span>* typeVar,</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>                               <span class="keywordtype">int</span> nbVar);</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="keywordtype">void</span> ORTOOLS_LibererProbleme(MPSolver* ProbSpx);</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="preprocessor">#endif</span></div>
-<div class="ttc" id="astructAntares_1_1Optimization_1_1PROBLEME__SIMPLEXE__NOMME_html"><div class="ttname"><a href="structAntares_1_1Optimization_1_1PROBLEME__SIMPLEXE__NOMME.html">Antares::Optimization::PROBLEME_SIMPLEXE_NOMME</a></div><div class="ttdef"><b>Definition</b> named_problem.h:38</div></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="keyword">namespace </span>Test</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>{</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    <span class="keyword">class </span>BasisStatus;</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>}</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="keyword">namespace </span>Antares::Optimization</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>{</div>
+<div class="foldopen" id="foldopen00034" data-start="{" data-end="};">
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="classAntares_1_1Optimization_1_1BasisStatusImpl.html">   34</a></span><span class="keyword">class </span><a class="code hl_class" href="classAntares_1_1Optimization_1_1BasisStatusImpl.html">BasisStatusImpl</a> {</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>  <span class="keyword">friend</span> <span class="keyword">class </span><a class="code hl_class" href="classAntares_1_1Optimization_1_1BasisStatus.html">BasisStatus</a>;</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>  <span class="keyword">friend</span> <span class="keyword">class </span><a class="code hl_class" href="classTest_1_1BasisStatus.html">Test::BasisStatus</a>; <span class="comment">// For tests</span></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>  <span class="keyword">using </span>Status = operations_research::MPSolver::BasisStatus;</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>  std::vector&lt;Status&gt; StatutDesVariables;</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>  std::vector&lt;Status&gt; StatutDesContraintes;</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>  <span class="keywordtype">void</span> setStartingBasis(operations_research::MPSolver* solver) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>  <span class="keywordtype">void</span> extractBasis(<span class="keyword">const</span> operations_research::MPSolver* solver);</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>  <span class="keywordtype">bool</span> exists() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>};</div>
+</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>}</div>
+<div class="ttc" id="aclassAntares_1_1Optimization_1_1BasisStatusImpl_html"><div class="ttname"><a href="classAntares_1_1Optimization_1_1BasisStatusImpl.html">Antares::Optimization::BasisStatusImpl</a></div><div class="ttdef"><b>Definition</b> basis_status_impl.h:34</div></div>
+<div class="ttc" id="aclassAntares_1_1Optimization_1_1BasisStatus_html"><div class="ttname"><a href="classAntares_1_1Optimization_1_1BasisStatus.html">Antares::Optimization::BasisStatus</a></div><div class="ttdef"><b>Definition</b> basis_status.h:40</div></div>
+<div class="ttc" id="aclassTest_1_1BasisStatus_html"><div class="ttname"><a href="classTest_1_1BasisStatus.html">Test::BasisStatus</a></div><div class="ttdef"><b>Definition</b> basis_status.cpp:35</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_041db6ad6a3d44280e40e5af409429cb.html">solver</a></li><li class="navelem"><a class="el" href="dir_c895c7cee8ef584b26b911de2b4dd891.html">utils</a></li><li class="navelem"><a class="el" href="dir_89cf5ff48c83f4ab0f0c1bb05cb3c92a.html">include</a></li><li class="navelem"><a class="el" href="dir_3f30f22d4279c069a3690fc8f743ea2b.html">antares</a></li><li class="navelem"><a class="el" href="dir_b26ec8c49b27a9aaad3432be2fcf3afe.html">solver</a></li><li class="navelem"><a class="el" href="dir_12b784095a3d9af87b762981abd8f4eb.html">utils</a></li><li class="navelem"><b>ortools_wrapper.h</b></li>
+    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_041db6ad6a3d44280e40e5af409429cb.html">solver</a></li><li class="navelem"><a class="el" href="dir_c895c7cee8ef584b26b911de2b4dd891.html">utils</a></li><li class="navelem"><b>basis_status_impl.h</b></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>

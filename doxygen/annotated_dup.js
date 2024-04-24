@@ -420,6 +420,8 @@ var annotated_dup =
         [ "Settings", "classAntares_1_1Map_1_1Settings.html", null ]
       ] ],
       [ "Optimization", null, [
+        [ "BasisStatus", "classAntares_1_1Optimization_1_1BasisStatus.html", null ],
+        [ "BasisStatusImpl", "classAntares_1_1Optimization_1_1BasisStatusImpl.html", null ],
         [ "Constraint", "classAntares_1_1Optimization_1_1Constraint.html", null ],
         [ "ConstraintSlackAnalysis", "classAntares_1_1Optimization_1_1ConstraintSlackAnalysis.html", null ],
         [ "InfeasibleProblemReport", "classAntares_1_1Optimization_1_1InfeasibleProblemReport.html", null ],
@@ -1108,6 +1110,9 @@ var annotated_dup =
     ] ],
     [ "study_run", null, [
       [ "study_run", "classstudy__run_1_1study__run.html", null ]
+    ] ],
+    [ "Test", null, [
+      [ "BasisStatus", "classTest_1_1BasisStatus.html", null ]
     ] ],
     [ "tolerances", null, [
       [ "Linux_tolerances", "classtolerances_1_1Linux__tolerances.html", null ],
