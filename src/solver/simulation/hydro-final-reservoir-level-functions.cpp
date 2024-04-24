@@ -37,7 +37,6 @@ void CheckFinalReservoirLevelsConfiguration(const Data::Study& study)
     study.areas.each([&study](Data::Area &area)
     {
          uint nbYears = study.parameters.nbYears;
-         area.hydro.deltaBetweenFinalAndInitialLevels.resize(nbYears); // gp : should be done elsewhere
          for (uint year = 0; year != nbYears; ++year)
          {
              if (! study.parameters.yearsFilter.at(year))
