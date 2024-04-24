@@ -193,7 +193,7 @@ else ()
 endif ()
 target_link_libraries(model_antares
         PUBLIC
-        utils
+        Antares::solverUtils
         sirius_solver
         antares-solver-simulation
         Antares::benchmarking
