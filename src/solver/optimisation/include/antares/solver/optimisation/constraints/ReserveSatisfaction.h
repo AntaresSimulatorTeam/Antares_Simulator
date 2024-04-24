@@ -15,7 +15,7 @@ public:
     /*!
      * @brief Add variables to the constraint and update constraints Matrix
      * @param pays : area
-     * @param reserve : global index of the reserve
+     * @param reserve : index of the reserve inside area
      * @param pdt : timestep
      * @param isUpReserve : true if ReserveUp, false if ReserveDown
      */

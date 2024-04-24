@@ -76,6 +76,16 @@ ConstraintBuilder& ConstraintBuilder::InternalUnsatisfiedReserve(unsigned int in
     return *this;
 }
 
+ConstraintBuilder& ConstraintBuilder::NeedReserve(unsigned int index,
+                                                  double coeff,
+                                                  int offset,
+                                                  int delta)
+{
+    AddVariable(variableManager_.NeedReserve(index, hourInWeek_, offset, delta),
+                coeff);
+    return *this;
+}
+
 ConstraintBuilder& ConstraintBuilder::InternalExcessReserve(unsigned int index,
                                                             double coeff,
                                                             int offset,

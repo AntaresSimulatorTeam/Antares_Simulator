@@ -80,6 +80,7 @@ void ReserveParticipationGroup::BuildConstraints()
                     reserve++;
                 }
 
+                reserve = 0;
                 auto areaReservesDown
                   = data.areaReserves.thermalAreaReserves[pays].areaCapacityReservationsDown;
                 for (const auto& areaReserveDown : areaReservesDown)

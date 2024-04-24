@@ -276,6 +276,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     }
 
     NombrePaliers = 0;
+    int globalReserveIndex = 0;
     for (uint i = 0; i < study.areas.size(); ++i)
     {
         const auto& area = *(study.areas.byIndex[i]);
@@ -321,6 +322,8 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
                 areaCapacityReservationsUp.failureCost = val.failureCost;
                 areaCapacityReservationsUp.spillageCost = val.spillageCost;
                 areaCapacityReservationsUp.reserveName = key;
+                areaCapacityReservationsUp.globalReserveIndex = globalReserveIndex;
+                globalReserveIndex++;
                 if (val.need.timeSeries.width > 0)
                 {
                     for (int indexSeries = 0; indexSeries < val.need.timeSeries.height; indexSeries++)
@@ -349,6 +352,8 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
                 areaCapacityReservationsDown.failureCost = val.failureCost;
                 areaCapacityReservationsDown.spillageCost = val.spillageCost;
                 areaCapacityReservationsDown.reserveName = key;
+                areaCapacityReservationsDown.globalReserveIndex = globalReserveIndex;
+                globalReserveIndex++;
                 if (val.need.timeSeries.width > 0)
                 {
                     for (int indexSeries = 0; indexSeries < val.need.timeSeries.height; indexSeries++)

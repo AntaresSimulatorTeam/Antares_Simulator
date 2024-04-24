@@ -150,7 +150,7 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
     const uint shortTermStorageCount = study.runtime->shortTermStorageCount;
 
     auto activeConstraints = study.bindingConstraints.activeConstraints();
-
+    
     for (uint k = 0; k < NombreDePasDeTemps; k++)
     {
         problem.ValeursDeNTC[k].ValeurDeNTCOrigineVersExtremite.assign(linkCount, 0.);
@@ -181,6 +181,8 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
           .assign(study.runtime->capacityReservationCount, 0);
         variablesMapping.internalExcessReserveIndex
           .assign(study.runtime->capacityReservationCount, 0);
+        variablesMapping.needReserveIndex
+            .assign(study.runtime->capacityReservationCount, 0);
 
         variablesMapping.NumeroDeVariableDuPalierThermique
           .assign(study.runtime->thermalPlantTotalCount, 0);

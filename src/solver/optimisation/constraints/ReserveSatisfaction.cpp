@@ -6,11 +6,11 @@ void ReserveSatisfaction::add(int pays, int reserve, int pdt, bool isUpReserve)
     {
         // 24
 
-        // Sum(P_θ) - S + J^+ -J^-
-        // P : Participation power from cluster θ to the reserve res
+        // Sum(P_θ) = S + J^+ -J^-
+        // P_θ : Participation power from cluster θ to the reserve res
         // S : Internal reserve res need for the area
         // J^+ : Amount of internal excess reserve for the reserve res
-        // J^+ : Amount of internal unsatified reserve for the reserve res
+        // J^- : Amount of internal unsatified reserve for the reserve res
 
         builder.updateHourWithinWeek(pdt);
 
@@ -27,8 +27,9 @@ void ReserveSatisfaction::add(int pays, int reserve, int pdt, bool isUpReserve)
                     .NumeroDuPalierDansLEnsembleDesPaliersThermiques[cluster],
                   1);
         }
-
-        capacityReservation.need[pdt];
+        builder.InternalUnsatisfiedReserve(capacityReservation.globalReserveIndex, 1);
+        builder.InternalExcessReserve(capacityReservation.globalReserveIndex, -1);
+        builder.NeedReserve(capacityReservation.globalReserveIndex, -1);
 
         builder.equalTo();
 
@@ -46,7 +47,7 @@ void ReserveSatisfaction::add(int pays, int reserve, int pdt, bool isUpReserve)
     }
     else
     {
-        builder.data.NbTermesContraintesPourLesReserves += 1;
+        builder.data.NbTermesContraintesPourLesReserves += 4;
 
         builder.data.nombreDeContraintes += 1;
     }

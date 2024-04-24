@@ -31,4 +31,8 @@ void OPT_DecompteDesVariablesEtDesContraintesReserves(PROBLEME_HEBDO* problemeHe
     auto builder_data = NewGetConstraintBuilderFromProblemHebdo(problemeHebdo);
     ConstraintBuilder builder(builder_data);
     LinearProblemMatrixReserves(problemeHebdo, true, builder).Run();
+
+    OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReservesThermiques(problemeHebdo,
+                                                                                    true);
 }
+

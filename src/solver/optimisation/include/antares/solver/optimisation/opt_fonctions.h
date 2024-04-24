@@ -110,6 +110,8 @@ void OPT_AugmenterLaTailleDeLaMatriceDesContraintes(PROBLEME_ANTARES_A_RESOUDRE*
 
 void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HEBDO*,
                                                                                    bool);
+void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReservesThermiques(PROBLEME_HEBDO*,
+                                                                                     bool);
 void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HEBDO*,
                                                                             const int,
                                                                             const int);
@@ -120,5 +122,6 @@ void OPT_DecompteDesVariablesEtDesContraintesReserves(PROBLEME_HEBDO*);
 void OPT_InitialiserNombreMinEtMaxDeGroupesCoutsDeDemarrage(PROBLEME_HEBDO*);
 void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO*);
 double OPT_SommeDesPminThermiques(const PROBLEME_HEBDO*, int, uint);
+
 
 #endif /* __SOLVER_OPTIMISATION_FUNCTIONS_H__ */

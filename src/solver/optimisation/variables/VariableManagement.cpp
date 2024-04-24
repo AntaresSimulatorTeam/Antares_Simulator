@@ -83,6 +83,16 @@ int& VariableManager::InternalExcessReserve(unsigned int index,
     return CorrespondanceVarNativesVarOptim_[pdt].internalExcessReserveIndex[index];
 }
 
+int& VariableManager::NeedReserve(unsigned int index,
+                                 unsigned int hourInWeek,
+                                 int offset,
+                                 int delta)
+{
+    auto pdt = GetShiftedTimeStep(offset, delta, hourInWeek);
+
+    return CorrespondanceVarNativesVarOptim_[pdt].needReserveIndex[index];
+}
+
 int& VariableManager::NumberOfDispatchableUnits(unsigned int index,
                                                 unsigned int hourInWeek,
                                                 int offset,

@@ -116,6 +116,11 @@ public:
                                                   int offset = 0,
                                                   int delta = 0);
 
+    ConstraintBuilder& NeedReserve(unsigned int pays,
+                                   double coeff,
+                                   int offset = 0,
+                                   int delta = 0);
+
     ConstraintBuilder& InternalExcessReserve(unsigned int pays,
                                              double coeff,
                                              int offset = 0,

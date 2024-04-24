@@ -108,8 +108,8 @@ void POutCapacityThreasholds::add(int pays, int cluster, int pdt)
             + countReservesFromCluster(
               data.areaReserves.thermalAreaReserves[pays].areaCapacityReservationsDown);
 
-        builder.data.NbTermesContraintesPourLesReserves += nbConstraintsToAdd;
+        builder.data.NbTermesContraintesPourLesReserves += 2*nbConstraintsToAdd;
 
-        builder.data.nombreDeContraintes += nbConstraintsToAdd;
+        builder.data.nombreDeContraintes += 2*nbConstraintsToAdd;
     }
 }

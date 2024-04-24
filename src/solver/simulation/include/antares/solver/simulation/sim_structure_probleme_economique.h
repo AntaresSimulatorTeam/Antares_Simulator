@@ -49,6 +49,7 @@ struct CORRESPONDANCES_DES_VARIABLES
     std::vector<int> clusterReserveParticipationIndex;
     std::vector<int> internalUnsatisfiedReserveIndex;
     std::vector<int> internalExcessReserveIndex;
+    std::vector<int> needReserveIndex;
 
     std::vector<int> NumeroDeVariablesDeLaProdHyd;
 
@@ -279,6 +280,7 @@ struct CAPACITY_RESERVATION
     float spillageCost = 0;
 
     std::string reserveName;
+    int globalReserveIndex;
 };
 
 

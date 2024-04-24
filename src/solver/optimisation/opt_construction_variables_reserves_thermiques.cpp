@@ -55,6 +55,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReservesThermi
               = problemeHebdo->PaliersThermiquesDuPays[pays];
             for (const auto& areaReserveUp : areaReserves.areaCapacityReservationsUp)
             {
+                reserveIndex = areaReserveUp.globalReserveIndex;
                 if (!Simulation)
                 {
                     // For Unsatisfied Reserves
@@ -107,9 +108,14 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReservesThermi
                         NombreDeVariables += 2;
                     }
                 }
+                // Need
+                CorrespondanceVarNativesVarOptim.needReserveIndex[reserveIndex]
+                  = areaReserveUp.need[pdt];
+                NombreDeVariables++;
             }
             for (const auto& areaReserveDown : areaReserves.areaCapacityReservationsDown)
             {
+                reserveIndex = areaReserveDown.globalReserveIndex;
                 if (!Simulation)
                 {
                     // For Unsatisfied Reserves
@@ -162,6 +168,10 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReservesThermi
                         NombreDeVariables += 2;
                     }
                 }
+                // Need
+                CorrespondanceVarNativesVarOptim.needReserveIndex[reserveIndex]
+                  = areaReserveDown.need[pdt];
+                NombreDeVariables++;
             }
         }
     }
