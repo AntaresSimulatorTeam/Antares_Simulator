@@ -93,13 +93,12 @@ BOOST_FIXTURE_TEST_CASE(fixBadValue, Fixture)
 BOOST_FIXTURE_TEST_CASE(invalidValues, Fixture)
 {
     writeInvalidFile();
-    p.loadFromFile(path.string(), version, options);
+    BOOST_CHECK(p.loadFromFile(path.string(), version, options));
 
     BOOST_CHECK_EQUAL(p.nbYears, 1);
     BOOST_CHECK_EQUAL(p.useCustomScenario, 0);
     BOOST_CHECK_EQUAL(p.firstWeekday, 0);
     BOOST_CHECK_EQUAL(p.renewableGeneration(), rgUnknown);
-    std::cout << p.firstWeekday;
 }
 
 BOOST_AUTO_TEST_SUITE_END()
