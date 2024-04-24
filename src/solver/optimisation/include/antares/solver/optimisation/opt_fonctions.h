@@ -116,6 +116,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(PROB
                                                                             const int,
                                                                             const int);
 void OPT_InitialiserLesCoutsLineaireCoutsDeDemarrage(PROBLEME_HEBDO*, const int, const int);
+void OPT_InitialiserLesCoutsLineaireReserves(PROBLEME_HEBDO*, const int, const int);
 void OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HEBDO*, int, int);
 void OPT_DecompteDesVariablesEtDesContraintesCoutsDeDemarrage(PROBLEME_HEBDO*);
 void OPT_DecompteDesVariablesEtDesContraintesReserves(PROBLEME_HEBDO*);
