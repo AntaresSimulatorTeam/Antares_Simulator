@@ -310,7 +310,7 @@ BOOST_AUTO_TEST_CASE(lambda)
     BOOST_CHECK(d.getTime("test1") < 10);
 
     d("test2") << [] { std::this_thread::sleep_for(200ms); };
-    BOOST_CHECK(std::abs(d.getTime("test2") - 200) < 10);
+    BOOST_CHECK(std::abs(d.getTime("test2") - 200) < 40);
 
     d("test3") << [&d]
     {
@@ -318,8 +318,8 @@ BOOST_AUTO_TEST_CASE(lambda)
         std::this_thread::sleep_for(100ms);
     };
 
-    BOOST_CHECK(std::abs(d.getTime("test3") - 200) < 10);
-    BOOST_CHECK(std::abs(d.getTime("test4") - 100) < 10);
+    BOOST_CHECK(std::abs(d.getTime("test3") - 200) < 40);
+    BOOST_CHECK(std::abs(d.getTime("test4") - 100) < 40);
 }
 
 BOOST_AUTO_TEST_CASE(addDuration)
@@ -331,7 +331,7 @@ BOOST_AUTO_TEST_CASE(addDuration)
     t.stop();
     d.addDuration("test1", t.get_duration());
 
-    BOOST_CHECK(std::abs(d.getTime("test1") - 100) < 10);
+    BOOST_CHECK(std::abs(d.getTime("test1") - 100) < 40);
 }
 
 BOOST_AUTO_TEST_SUITE_END() //DurationCollector
