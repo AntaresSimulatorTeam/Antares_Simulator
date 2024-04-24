@@ -25,6 +25,8 @@
 #include <boost/test/unit_test.hpp>
 
 #include <antares/benchmarking/DurationCollector.h>
+#include <antares/benchmarking/timer.h>
+#include <thread>
 
 #include "antares/study/study.h"
 
@@ -298,12 +300,38 @@ BOOST_AUTO_TEST_SUITE_END() //version
 
 BOOST_AUTO_TEST_SUITE(durationCollector)
 
+using namespace std::literals::chrono_literals;
+
 BOOST_AUTO_TEST_CASE(lambda)
 {
     Benchmarking::DurationCollector d;
-    d("test1") << [] { int a; };
 
-    std::cout << d.getTime("test1");
+    d("test1") << [] { int a; };
+    BOOST_CHECK(d.getTime("test1") < 10);
+
+    d("test2") << [] { std::this_thread::sleep_for(200ms); };
+    BOOST_CHECK(std::abs(d.getTime("test2") - 200) < 10);
+
+    d("test3") << [&d]
+    {
+        d("test4") << [] { std::this_thread::sleep_for(100ms); };
+        std::this_thread::sleep_for(100ms);
+    };
+
+    BOOST_CHECK(std::abs(d.getTime("test3") - 200) < 10);
+    BOOST_CHECK(std::abs(d.getTime("test4") - 100) < 10);
+}
+
+BOOST_AUTO_TEST_CASE(addDuration)
+{
+    Benchmarking::DurationCollector d;
+    Benchmarking::Timer t;
+
+    std::this_thread::sleep_for(100ms);
+    t.stop();
+    d.addDuration("test1", t.get_duration());
+
+    BOOST_CHECK(std::abs(d.getTime("test1") - 100) < 10);
 }
 
 BOOST_AUTO_TEST_SUITE_END() //DurationCollector
