@@ -107,9 +107,9 @@ StudyWithBConCluster::StudyWithBConCluster()
     BC->enabled(true);
 }
 
-BOOST_FIXTURE_TEST_SUITE(TESTS_BINDING_CONSTRAINTS_ON_A_LINK, StudyWithBConLink)
+BOOST_AUTO_TEST_SUITE(TESTS_BINDING_CONSTRAINTS_ON_A_LINK)
 
-BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_90)
+BOOST_FIXTURE_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_90, StudyWithBConLink)
 {
     setNumberMCyears(1);
 
@@ -130,7 +130,7 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_90)
 }
 
 
-BOOST_AUTO_TEST_CASE(weekly_BC_restricts_link_direct_capacity_to_50)
+BOOST_FIXTURE_TEST_CASE(weekly_BC_restricts_link_direct_capacity_to_50, StudyWithBConLink)
 {
     setNumberMCyears(1);
 
@@ -152,7 +152,7 @@ BOOST_AUTO_TEST_CASE(weekly_BC_restricts_link_direct_capacity_to_50)
 }
 
 
-BOOST_AUTO_TEST_CASE(daily_BC_restricts_link_direct_capacity_to_60)
+BOOST_FIXTURE_TEST_CASE(daily_BC_restricts_link_direct_capacity_to_60, StudyWithBConLink)
 {
     setNumberMCyears(1);
 
@@ -172,7 +172,7 @@ BOOST_AUTO_TEST_CASE(daily_BC_restricts_link_direct_capacity_to_60)
 }
 
 
-BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_less_than_90)
+BOOST_FIXTURE_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_less_than_90, StudyWithBConLink)
 {
     setNumberMCyears(1);
 
@@ -191,7 +191,7 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_link_direct_capacity_to_less_than_90)
     BOOST_TEST(output.flow(link).hour(100) <= rhsValue, tt::tolerance(0.001));
 }
 
-BOOST_AUTO_TEST_CASE(Daily_BC_restricts_link_direct_capacity_to_greater_than_80)
+BOOST_FIXTURE_TEST_CASE(Daily_BC_restricts_link_direct_capacity_to_greater_than_80, StudyWithBConLink)
 {
     setNumberMCyears(1);
 
@@ -213,9 +213,9 @@ BOOST_AUTO_TEST_CASE(Daily_BC_restricts_link_direct_capacity_to_greater_than_80)
 BOOST_AUTO_TEST_SUITE_END()
 
 
-BOOST_FIXTURE_TEST_SUITE(TESTS_BINDING_CONSTRAINTS_ON_A_CLUSTER, StudyWithBConCluster)
+BOOST_AUTO_TEST_SUITE(TESTS_BINDING_CONSTRAINTS_ON_A_CLUSTER)
 
-BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_cluster_generation_to_90)
+BOOST_FIXTURE_TEST_CASE(Hourly_BC_restricts_cluster_generation_to_90, StudyWithBConLink)
 {
     setNumberMCyears(1);
 
@@ -237,10 +237,10 @@ BOOST_AUTO_TEST_CASE(Hourly_BC_restricts_cluster_generation_to_90)
 BOOST_AUTO_TEST_SUITE_END()
 
 
-BOOST_FIXTURE_TEST_SUITE(TESTING_BC_RHS_SCENARIZATION_WHEN_BC_ON_A_LINK, StudyWithBConLink)
+BOOST_AUTO_TEST_SUITE(TESTING_BC_RHS_SCENARIZATION_WHEN_BC_ON_A_LINK)
 
 
-BOOST_AUTO_TEST_CASE(On_year_2__RHS_TS_number_2_is_taken_into_account)
+BOOST_FIXTURE_TEST_CASE(On_year_2__RHS_TS_number_2_is_taken_into_account, StudyWithBConLink)
 {
     setNumberMCyears(2);
 
@@ -266,7 +266,7 @@ BOOST_AUTO_TEST_CASE(On_year_2__RHS_TS_number_2_is_taken_into_account)
     BOOST_TEST(output.flow(link).hour(0) == bcGroupRHS2, tt::tolerance(0.001));
 }
 
-BOOST_AUTO_TEST_CASE(On_year_9__RHS_TS_number_4_is_taken_into_account)
+BOOST_FIXTURE_TEST_CASE(On_year_9__RHS_TS_number_4_is_taken_into_account, StudyWithBConLink)
 {
     setNumberMCyears(10);
 
@@ -303,7 +303,7 @@ BOOST_AUTO_TEST_CASE(On_year_9__RHS_TS_number_4_is_taken_into_account)
     BOOST_TEST(output.flow(link).hour(0) == 40., tt::tolerance(0.001));
 }
 
-BOOST_AUTO_TEST_CASE(On_year_9__RHS_TS_number_4_out_of_bound_use_random_fallback_to_Oth_column)
+BOOST_FIXTURE_TEST_CASE(On_year_9__RHS_TS_number_4_out_of_bound_use_random_fallback_to_Oth_column, StudyWithBConLink)
 {
     setNumberMCyears(10);
 
