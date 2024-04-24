@@ -71,7 +71,11 @@ public:
     void resetProcessPriority() const;
 
     void writeExectutionInfo();
-private:
+    Data::Study* study() const { return pStudy.get(); }
+    std::unique_ptr<Data::Study> acquireStudy() {
+        return std::move(pStudy);
+    }
+    private:
     /*!
     ** \brief Reset the log filename and open it
     */
@@ -90,7 +94,7 @@ private:
     //! The settings given from the command line
     Settings pSettings;
     //! The current Antares study
-    Antares::Data::Study::Ptr pStudy = nullptr;
+    std::unique_ptr<Antares::Data::Study> pStudy;
     //! General data related to the current study
     Antares::Data::Parameters* pParameters = nullptr;
     //! The total number of errors which have been generated
@@ -115,6 +119,7 @@ private:
     void writeComment(Data::Study& study);
     void startSimulation(Data::StudyLoadOptions& options);
     void handleOptions(const Data::StudyLoadOptions& options);
+    void parseCommandLine(Data::StudyLoadOptions& options);
     void handleParserReturn(Yuni::GetOpt::Parser* parser);
     void postParametersChecks() const;
 }; // class Application

@@ -7,17 +7,17 @@ if (MSVC)
 endif (MSVC)
 
 
-add_subdirectory(infeasible-problem-analysis)
-add_subdirectory(variable)
+add_subdirectory(application)
+add_subdirectory(constraints-builder)
 add_subdirectory(hydro)
+add_subdirectory(infeasible-problem-analysis)
+add_subdirectory(misc)
+add_subdirectory(optimisation)
+add_subdirectory(signal-handling)
 add_subdirectory(simulation)
 add_subdirectory(ts-generator)
 add_subdirectory(utils)
-add_subdirectory(optimisation)
-add_subdirectory(constraints-builder)
-add_subdirectory(application)
-add_subdirectory(misc)
-add_subdirectory(signal-handling)
+add_subdirectory(variable)
 
 #
 # Resource file for Windows
@@ -45,7 +45,9 @@ OMESSAGE("  :: application solver")
 
 set(exec_name "antares-solver")
 
-add_library(solver-lib INTERFACE)
+add_library(solver-lib INTERFACE
+        ${SRCS}
+)
 
 add_executable(antares-solver
         main.cpp
