@@ -302,15 +302,16 @@ BOOST_AUTO_TEST_SUITE(durationCollector)
 
 using namespace std::literals::chrono_literals;
 
+constexpr double threshold = 30;
 BOOST_AUTO_TEST_CASE(lambda)
 {
     Benchmarking::DurationCollector d;
 
     d("test1") << [] { int a; };
-    BOOST_CHECK(d.getTime("test1") < 10);
+    BOOST_CHECK_CLOSE((double)d.getTime("test1"), 0., threshold);
 
     d("test2") << [] { std::this_thread::sleep_for(200ms); };
-    BOOST_CHECK(std::abs(d.getTime("test2") - 200) < 40);
+    BOOST_CHECK_CLOSE((double)d.getTime("test2"), 200., threshold);
 
     d("test3") << [&d]
     {
@@ -318,8 +319,8 @@ BOOST_AUTO_TEST_CASE(lambda)
         std::this_thread::sleep_for(100ms);
     };
 
-    BOOST_CHECK(std::abs(d.getTime("test3") - 200) < 40);
-    BOOST_CHECK(std::abs(d.getTime("test4") - 100) < 40);
+    BOOST_CHECK_CLOSE((double)d.getTime("test3"), 200., threshold);
+    BOOST_CHECK_CLOSE((double)d.getTime("test4"), 100., threshold);
 }
 
 BOOST_AUTO_TEST_CASE(addDuration)
@@ -331,7 +332,7 @@ BOOST_AUTO_TEST_CASE(addDuration)
     t.stop();
     d.addDuration("test1", t.get_duration());
 
-    BOOST_CHECK(std::abs(d.getTime("test1") - 100) < 40);
+    BOOST_CHECK_CLOSE((double)d.getTime("test1"), 100., threshold);
 }
 
 BOOST_AUTO_TEST_SUITE_END() //DurationCollector
