@@ -47,6 +47,8 @@
 #include "antares/study/simulation.h"
 #include "antares/antares/version.h"
 #include "antares/solver/simulation/simulation.h"
+#include "antares/solver/run_mode/economy.h"
+#include "antares/solver/run_mode/adequacy.h"
 
 using namespace Antares::Check;
 
@@ -244,6 +246,15 @@ void Application::execute()
     pStudy->progression.stop();
 }
 
+void Application::runSimulationInEconomicMode()
+{
+    Solver::runSimulationInEconomicMode(*pStudy, pSettings, pDurationCollector, *resultWriter, pOptimizationInfo);
+}
+void Application::runSimulationInAdequacyMode()
+{
+    Solver::runSimulationInAdequacyMode(*pStudy, pSettings, pDurationCollector, *resultWriter, pOptimizationInfo);
+}
+
 void Application::resetLogFilename() const
 {
     // Assigning the log file
@@ -277,7 +288,7 @@ void Application::prepareWriter(const Antares::Data::Study& study,
     ioQueueService->maximumThreadCount(1);
     ioQueueService->start();
     resultWriter = resultWriterFactory(
-            study.parameters.resultFormat, study.folderOutput, ioQueueService, duration_collector);
+      study.parameters.resultFormat, study.folderOutput, ioQueueService, duration_collector);
 }
 
 void Application::readDataForTheStudy(Data::StudyLoadOptions& options)

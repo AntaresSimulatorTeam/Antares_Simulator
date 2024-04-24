@@ -14,7 +14,7 @@ add_subdirectory(simulation)
 add_subdirectory(ts-generator)
 add_subdirectory(utils)
 add_subdirectory(optimisation)
-add_subdirectory(main)
+add_subdirectory(run_mode)
 add_subdirectory(constraints-builder)
 add_subdirectory(application)
 add_subdirectory(misc)
@@ -46,8 +46,9 @@ OMESSAGE("  :: application solver")
 
 set(exec_name "antares-solver")
 
-add_library(solver-lib INTERFACE)
-
+add_library(solver-lib INTERFACE
+        ${SRCS}
+)
 
 add_executable(antares-solver
         main.cpp
@@ -72,8 +73,7 @@ set(ANTARES_SOLVER_LIBS
 )
 
 set(ANTARES_SOLVER_LIBS ${ANTARES_SOLVER_LIBS}
-        antares-solver-main-economy
-        antares-solver-main-adequacy
+        Antares::run-mode
         antares-solver-hydro
         antares-solver-variable
         antares-solver-simulation

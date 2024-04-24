@@ -18,8 +18,7 @@ set(TARGET_LIBS #No alias
         yuni-static-uuid
         yuni-static-core
         ${CMAKE_THREADS_LIBS_INIT}
-        antares-solver-main-economy
-        antares-solver-main-adequacy
+        run-mode
         antares-solver-hydro
         antares-solver-variable
         antares-solver-simulation
