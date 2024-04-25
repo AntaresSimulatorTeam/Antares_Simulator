@@ -19,7 +19,29 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "antares/solver/variable/adequacy/all.h"
+#pragma once
 
-#define NEXTTYPE Adequacy::VariablesPerArea
-#include "antares/solver/variable/area.inc.hxx"
+#include <vector>
+#include "ortools/linear_solver/linear_solver.h"
+
+namespace Test
+{
+    class BasisStatus;
+}
+
+namespace Antares::Optimization
+{
+class BasisStatusImpl {
+private:
+  friend class BasisStatus;
+  friend class Test::BasisStatus; // For tests
+
+  using Status = operations_research::MPSolver::BasisStatus;
+  std::vector<Status> StatutDesVariables;
+  std::vector<Status> StatutDesContraintes;
+
+  void setStartingBasis(operations_research::MPSolver* solver) const;
+  void extractBasis(const operations_research::MPSolver* solver);
+  bool exists() const;
+};
+}

@@ -52,8 +52,7 @@ void AdequacyPatchOptimization::solve()
             problemeHebdo_->ResultatsHoraires[pays].ValeursHorairesDENS
                 = problemeHebdo_->ResultatsHoraires[pays].ValeursHorairesDeDefaillancePositive;
         else
-            std::fill(problemeHebdo_->ResultatsHoraires[pays].ValeursHorairesDENS.begin(),
-                    problemeHebdo_->ResultatsHoraires[pays].ValeursHorairesDENS.end(), 0);
+            std::ranges::fill(problemeHebdo_->ResultatsHoraires[pays].ValeursHorairesDENS, 0);
     }
 
     OPT_OptimisationHebdomadaire(options_, problemeHebdo_, adqPatchParams_, writer_);
