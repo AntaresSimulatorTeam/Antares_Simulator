@@ -393,11 +393,6 @@ bool CBuilder::completeCBuilderFromFile(const String& filename)
                     key = p->key;
                     key.toLower();
 
-                    if (key == "study")
-                    {
-                        pStudyFolder = p->value;
-                        continue;
-                    }
                     if (key == "prefix")
                     {
                         pPrefix = p->value;

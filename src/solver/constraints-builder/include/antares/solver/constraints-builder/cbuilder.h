@@ -387,7 +387,6 @@ public:
     Vector pLink;
 
 private:
-    std::string pStudyFolder;
     std::string pPrefix;
     std::string pPrefixDelete;
     bool pDelete;
