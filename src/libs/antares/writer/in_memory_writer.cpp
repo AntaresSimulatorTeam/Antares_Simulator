@@ -23,6 +23,7 @@
 #include <antares/writer/in_memory_writer.h>
 #include <antares/logs/logs.h>
 
+#include <antares/benchmarking/timer.h>
 #include <antares/benchmarking/DurationCollector.h>
 
 #include <yuni/io/file.h> // Yuni::IO::File::LoadFromFile
@@ -50,14 +51,15 @@ void logErrorAndThrow [[noreturn]] (const std::string& errorMessage)
                  '\\',
                  '/');
 
-    duration_collector("in_memory_wait") << [&] {
-        mutex.lock();
-    };
+    Benchmarking::Timer timer_wait;
+    std::lock_guard lock(mutex);
+    timer_wait.stop();
+    duration_collector.addDuration("in_memory_wait", timer_wait.get_duration());
 
-    duration_collector("in_memory_insert") << [&] {
-        entries.insert({entryPathSanitized, content});
-    };
-    mutex.unlock();
+    Benchmarking::Timer timer_insert;
+    entries.insert({entryPathSanitized, content});
+    timer_insert.stop();
+    duration_collector.addDuration("in_memory_insert", timer_insert.get_duration());
   }
 }
 

@@ -23,6 +23,7 @@
 
 #include "private/zip_writer.h"
 #include "antares/logs/logs.h"
+#include <antares/benchmarking/timer.h>
 #include <antares/benchmarking/DurationCollector.h>
 
 extern "C"
@@ -84,23 +85,26 @@ void ZipWriteJob<ContentT>::writeEntry()
 
     auto file_info = createInfo(pEntryPath);
 
-    pDurationCollector("zip_wait") << [&] {
-        pZipMutex.lock(); // Wait
-    };
+    Benchmarking::Timer timer_wait;
+    std::lock_guard guard(pZipMutex); // Wait
+    timer_wait.stop();
+    pDurationCollector.addDuration("zip_wait", timer_wait.get_duration());
 
-    pDurationCollector("zip_write") << [&] {
-        if (int32_t ret = mz_zip_writer_entry_open(pZipHandle, file_info.get()); ret != MZ_OK)
-        {
-            logErrorAndThrow("Error opening entry " + pEntryPath + " (" + std::to_string(ret) + ")");
-        }
-        int32_t bw = mz_zip_writer_entry_write(pZipHandle, pContent.data(), pContent.size());
-        if (static_cast<unsigned int>(bw) != pContent.size())
-        {
-            logErrorAndThrow("Error writing entry " + pEntryPath + "(written = " + std::to_string(bw)
-                                                    + ", size = " + std::to_string(pContent.size()) + ")");
-        }
-    };
-    pZipMutex.unlock();
+    Benchmarking::Timer timer_write;
+
+    if (int32_t ret = mz_zip_writer_entry_open(pZipHandle, file_info.get()); ret != MZ_OK)
+    {
+        logErrorAndThrow("Error opening entry " + pEntryPath + " (" + std::to_string(ret) + ")");
+    }
+    int32_t bw = mz_zip_writer_entry_write(pZipHandle, pContent.data(), pContent.size());
+    if (static_cast<unsigned int>(bw) != pContent.size())
+    {
+        logErrorAndThrow("Error writing entry " + pEntryPath + "(written = " + std::to_string(bw)
+                                                + ", size = " + std::to_string(pContent.size()) + ")");
+    }
+
+    timer_write.stop();
+    pDurationCollector.addDuration("zip_write", timer_write.get_duration());
 }
 
 // Class ZipWriter
