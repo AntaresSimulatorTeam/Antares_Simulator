@@ -36,7 +36,7 @@ class DurationCollector
 {
 public:
     void toFileContent(FileContent& file_content);
-    void addDuration(const std::string& name, long duration);
+    void addDuration(const std::string& name, int64_t duration);
 
     struct OperationTimer
     {
@@ -51,7 +51,7 @@ public:
 
     friend void operator<<(const OperationTimer& op, const std::function<void(void)>& f);
 
-    long getTime(const std::string& name) const;
+    int64_t getTime(const std::string& name) const;
 
 private:
     std::map<std::string, std::vector<int64_t>> duration_items_;
