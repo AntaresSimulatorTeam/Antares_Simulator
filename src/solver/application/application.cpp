@@ -120,6 +120,8 @@ void Application::startSimulation(Data::StudyLoadOptions options)
 
     readDataForTheStudy(options);
 
+    postParametersChecks();
+
     pStudy->initializeProgressMeter(pSettings.tsGeneratorsOnly);
     if (pSettings.noOutput)
         pSettings.displayProgression = false;
@@ -133,6 +135,34 @@ void Application::startSimulation(Data::StudyLoadOptions options)
     }
     else
         logs.info() << "  The progression is disabled";
+}
+void Application::postParametersChecks() const
+{ // Some more checks require the existence of pParameters, hence of a study.
+    // Their execution is delayed up to this point.
+    checkOrtoolsUsage(
+      this->pParameters->unitCommitment.ucMode, this->pParameters->ortoolsUsed, this->pParameters->ortoolsSolver);
+
+    checkSimplexRangeHydroPricing(this->pParameters->simplexOptimizationRange,
+                                  this->pParameters->hydroPricing.hpMode);
+
+    checkSimplexRangeUnitCommitmentMode(this->pParameters->simplexOptimizationRange,
+                                        this->pParameters->unitCommitment.ucMode);
+
+    checkSimplexRangeHydroHeuristic(this->pParameters->simplexOptimizationRange, this->pStudy->areas);
+
+    if (this->pParameters->adqPatchParams.enabled)
+        this->pParameters->adqPatchParams.checkAdqPatchParams(
+          this->pParameters->mode,
+                                                        this->pStudy->areas,
+                                                        this->pParameters->include.hurdleCosts);
+
+    bool tsGenThermal
+      = (0 != (this->pParameters->timeSeriesToGenerate & Antares::Data::TimeSeriesType::timeSeriesThermal));
+
+    checkMinStablePower(tsGenThermal, this->pStudy->areas);
+
+    checkFuelCostColumnNumber(this->pStudy->areas);
+    checkCO2CostColumnNumber(this->pStudy->areas);
 }
 
 void Application::prepare(int argc, char* argv[])
