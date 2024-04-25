@@ -164,7 +164,7 @@ public:
 
 private:
     std::shared_ptr<ISimulation<Economy>> simulation_;
-    Benchmarking::DurationCollector nullDurationCollector_;
+    Benchmarking::DurationCollector durationCollector_;
     Settings settings_;
     Study& study_;
     NullResultWriter resultWriter_;
