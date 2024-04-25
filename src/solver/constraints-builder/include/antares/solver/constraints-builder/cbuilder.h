@@ -214,7 +214,7 @@ public:
     /*!
     ** \brief Default constructor
     */
-    CBuilder(Antares::Data::Study::Ptr);
+    CBuilder(Antares::Data::Study&);
     //! Destructor
     ~CBuilder();
     //@}
