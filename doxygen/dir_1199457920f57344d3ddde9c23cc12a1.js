@@ -18,7 +18,6 @@ var dir_1199457920f57344d3ddde9c23cc12a1 =
     [ "thermal", "dir_d8c8cc74931533e06803e68822503428.html", "dir_d8c8cc74931533e06803e68822503428" ],
     [ "xcast", "dir_b245aa9f04213457d1e0cb57c55c3610.html", "dir_b245aa9f04213457d1e0cb57c55c3610" ],
     [ "aboutbox.h", "aboutbox_8h_source.html", null ],
-    [ "cleaner.h", "ui_2simulator_2windows_2cleaner_8h_source.html", null ],
     [ "connection.h", "windows_2connection_8h_source.html", null ],
     [ "exportmap.h", "exportmap_8h_source.html", null ],
     [ "exportmap.hxx", "exportmap_8hxx_source.html", null ],

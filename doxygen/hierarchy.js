@@ -668,7 +668,6 @@ var hierarchy =
     ] ],
     [ "Yuni::Thread::IThread", null, [
       [ "Antares::Toolbox::Jobs::JobThread", "classAntares_1_1Toolbox_1_1Jobs_1_1JobThread.html", null ],
-      [ "Antares::Window::CleaningThread", "classAntares_1_1Window_1_1CleaningThread.html", null ],
       [ "Antares::Window::ThreadUpdater", "classAntares_1_1Window_1_1ThreadUpdater.html", null ]
     ] ],
     [ "Antares::Solver::Simulation::ITimeSeriesNumbersWriter", "classAntares_1_1Solver_1_1Simulation_1_1ITimeSeriesNumbersWriter.html", [
@@ -1245,8 +1244,7 @@ var hierarchy =
     [ "Antares::Data::StudyFinder", "classAntares_1_1Data_1_1StudyFinder.html", [
       [ "MyStudyFinder", "classMyStudyFinder.html", null ],
       [ "MyStudyFinder", "classMyStudyFinder.html", null ],
-      [ "MyStudyFinder", "classMyStudyFinder.html", null ],
-      [ "StudyFinderCleaner", "classStudyFinderCleaner.html", null ]
+      [ "MyStudyFinder", "classMyStudyFinder.html", null ]
     ] ],
     [ "Antares::Data::StudyHeader", "classAntares_1_1Data_1_1StudyHeader.html", null ],
     [ "Benchmarking::StudyInfoCollector", "classBenchmarking_1_1StudyInfoCollector.html", null ],
@@ -1480,8 +1478,7 @@ var hierarchy =
       [ "Antares::Window::RaiseWindowBox", "classAntares_1_1Window_1_1RaiseWindowBox.html", null ],
       [ "Antares::Window::SaveAs", "classAntares_1_1Window_1_1SaveAs.html", null ],
       [ "Antares::Window::Simulation::Run", "classAntares_1_1Window_1_1Simulation_1_1Run.html", null ],
-      [ "Antares::Window::StartupWizard", "classAntares_1_1Window_1_1StartupWizard.html", null ],
-      [ "Antares::Window::StudyCleaner", "classAntares_1_1Window_1_1StudyCleaner.html", null ]
+      [ "Antares::Window::StartupWizard", "classAntares_1_1Window_1_1StartupWizard.html", null ]
     ] ],
     [ "wxEvtHandler", null, [
       [ "Antares::Toolbox::Filter::AFilterBase", "classAntares_1_1Toolbox_1_1Filter_1_1AFilterBase.html", [
@@ -1604,7 +1601,6 @@ var hierarchy =
     [ "wxTimer", null, [
       [ "Antares::Toolbox::Jobs::MessageFlusherTimer", "classAntares_1_1Toolbox_1_1Jobs_1_1MessageFlusherTimer.html", null ],
       [ "Antares::Toolbox::Jobs::ReadWriteStatsFlusherTimer", "classAntares_1_1Toolbox_1_1Jobs_1_1ReadWriteStatsFlusherTimer.html", null ],
-      [ "Antares::Window::CleaningInfoRefreshTimer", "classAntares_1_1Window_1_1CleaningInfoRefreshTimer.html", null ],
       [ "Antares::Window::MessageFlusherTimer", "classAntares_1_1Window_1_1MessageFlusherTimer.html", null ],
       [ "Antares::Window::Simulation::ResourcesInfoTimer", "classAntares_1_1Window_1_1Simulation_1_1ResourcesInfoTimer.html", null ]
     ] ],
