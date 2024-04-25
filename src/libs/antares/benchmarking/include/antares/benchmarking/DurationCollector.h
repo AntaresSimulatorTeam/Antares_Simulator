@@ -54,7 +54,7 @@ public:
     long getTime(const std::string& name) const;
 
 private:
-    std::map<std::string, std::vector<long>> duration_items_;
+    std::map<std::string, std::vector<int64_t>> duration_items_;
 
     // Durations can be added in a context of multi-threading, so we need to protect
     // these additions from thread concurrency

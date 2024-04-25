@@ -24,7 +24,7 @@
 
 namespace Benchmarking {
 
-void DurationCollector::addDuration(const std::string& name, long duration)
+void DurationCollector::addDuration(const std::string& name, int64_t duration)
 {
     const std::lock_guard lock(mutex_);
     duration_items_[name].push_back(duration);
@@ -34,7 +34,7 @@ void DurationCollector::toFileContent(FileContent& file_content)
 {
     for (const auto& [name, durations] : duration_items_)
     {
-        const long duration_sum = accumulate(durations.begin(), durations.end(), 0);
+        const int64_t duration_sum = accumulate(durations.begin(), durations.end(), 0);
 
         file_content.addDurationItem(name, (unsigned int)duration_sum, (int)durations.size());
     }
@@ -56,7 +56,7 @@ void operator<<(const DurationCollector::OperationTimer& op, const std::function
     op.collector.duration_items_[op.key].push_back(duration_ms);
 }
 
-long DurationCollector::getTime(const std::string& name) const
+int64_t DurationCollector::getTime(const std::string& name) const
 {
     const auto& v = duration_items_.at(name);
 
