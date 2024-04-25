@@ -214,7 +214,7 @@ public:
     /*!
     ** \brief Default constructor
     */
-    CBuilder(Antares::Data::Study::Ptr);
+    CBuilder(Antares::Data::Study&);
     //! Destructor
     ~CBuilder();
     //@}
@@ -264,7 +264,7 @@ public:
     void buildAreaToLinkInfosMap()
     {
         areaToLinks.clear();
-        for (auto& area : pStudy->areas)
+        for (auto& area : pStudy.areas)
         {
             auto a = area.second;
             std::for_each(pLink.begin(), pLink.end(), [&a, this](linkInfo* edgeP) {
@@ -404,7 +404,7 @@ private:
 
     std::map<Data::Area*, std::set<linkInfo*>> areaToLinks;
 
-    Antares::Data::Study::Ptr pStudy;
+    Antares::Data::Study& pStudy;
 
     Graph::Grid<Antares::Data::Area> _grid;
 
