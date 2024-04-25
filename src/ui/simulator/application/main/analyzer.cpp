@@ -100,7 +100,7 @@ void ApplWnd::evtLaunchAnalyzer(wxCommandEvent& evt)
     // The command line
     {
         String cmd;
-        if (System::unix)
+        if (System::Unix)
             cmd << "nice ";
         cmd << "\"" << analyzerLocation << "\" -i \"" << filename << "\"";
         exec->command(wxStringFromUTF8(cmd));

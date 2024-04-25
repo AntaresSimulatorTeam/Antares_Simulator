@@ -75,7 +75,7 @@ bool Memory::initializeTemporaryFolder()
     if (pCacheFolder.empty())
     {
         // Cache folder
-        if (System::unix)
+        if (System::Unix)
         {
             System::Environment::Read("TMPDIR", pCacheFolder);
             if (pCacheFolder.empty())

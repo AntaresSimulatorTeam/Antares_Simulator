@@ -244,7 +244,7 @@ void ListboxPanel::onDraw(wxPaintEvent&)
                 int x = bounds.x + pLonguestGroupNameSize.GetWidth()
                         - horizontalSpaceBetweenGroupsAndItems - groupBounds.GetWidth();
                 int y = bounds.y + 9 - groupBounds.GetHeight() / 2 - 1;
-                if (System::unix)
+                if (System::Unix)
                     ++y; // on unix, the name is not centered
 
                 dc.DrawText(wxgroup, x, y);

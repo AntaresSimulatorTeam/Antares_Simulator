@@ -469,9 +469,9 @@ enum
     /*! Flag to indicate if the current operating system is Microsoft Windows */
     windows = YUNI_OS_FLAG_WINDOWS,
     /*! Flag to indicate if the current operating system is Unix based */
-    unix = YUNI_OS_FLAG_UNIX,
+    Unix = YUNI_OS_FLAG_UNIX,
     /*! Flag to indicate if the current operating system is Linux based */
-    linux = YUNI_OS_FLAG_LINUX,
+    Linux = YUNI_OS_FLAG_LINUX,
     /*! Flag to indicate if the current operating system is Mac OS */
     macos = YUNI_OS_FLAG_MACOS,
 };

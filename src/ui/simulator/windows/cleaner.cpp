@@ -196,7 +196,7 @@ StudyCleaner::StudyCleaner(wxFrame* parent) :
     pnlBtns->AddSpacer(15);
 
     // Button Panel
-    if (System::unix)
+    if (System::Unix)
         mainSizer->Add(new wxStaticLine(this, wxID_ANY), 0, wxALL | wxEXPAND, 8);
     else
         mainSizer->AddSpacer(8);

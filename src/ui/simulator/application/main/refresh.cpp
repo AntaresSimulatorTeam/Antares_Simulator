@@ -204,7 +204,7 @@ void ApplWnd::refreshMenuOutput()
             if (not(*i)->name.empty())
                 s << wxT(" : ") << wxStringFromUTF8((*i)->name);
 
-            if (System::unix)
+            if (System::Unix)
                 s << wxT("  ");
 
             auto* it = Menu::CreateItem(
@@ -294,7 +294,7 @@ void ApplWnd::refreshMenuOutput()
                     s << wxStringFromUTF8(nowstr);
                     if (not(*i)->name.empty())
                         s << wxT(", ") << wxStringFromUTF8((*i)->name);
-                    if (System::unix)
+                    if (System::Unix)
                         s << wxT("  ");
 
                     auto* it = Menu::CreateItem(menu,

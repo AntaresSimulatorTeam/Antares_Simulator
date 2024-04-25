@@ -1162,7 +1162,7 @@ void RunSimulationOnTheStudy(Data::Study::Ptr study,
 
             // Priority for the process
             // On Windows, it is done by the process itself (see solver/misc/process-priority.cpp)
-            if (System::unix)
+            if (System::Unix)
             {
                 if (System::CPU::Count() <= 2) // nice on unixes is good
                     cmd << "nice ";
