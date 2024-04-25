@@ -578,10 +578,6 @@ private:
 
     void internalFrameClose();
 
-    void evtOnCleanCurrentStudyFolder(wxCommandEvent& evt);
-
-    void evtOnCleanStudyFolder(wxCommandEvent& evt);
-
     void evtLaunchAnalyzer(wxCommandEvent& evt);
 
     void evtLaunchConstraintsBuilder(wxCommandEvent& evt);
