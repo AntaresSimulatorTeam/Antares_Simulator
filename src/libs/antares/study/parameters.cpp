@@ -848,7 +848,6 @@ static bool SGDIntLoadFamily_Playlist(Parameters& d,
                            << value << "'. Value not used";
             return false;
         }
-        return false;
     }
     return false;
 }
