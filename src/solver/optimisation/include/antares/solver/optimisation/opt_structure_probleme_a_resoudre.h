@@ -23,8 +23,9 @@
 
 #include <vector>
 #include <string>
+#include <memory>
 #include "opt_constants.h"
-#include "ortools/linear_solver/linear_solver.h"
+#include <antares/solver/utils/basis_status.h>
 
 /*--------------------------------------------------------------------------------------*/
 
@@ -102,12 +103,8 @@ struct PROBLEME_ANTARES_A_RESOUDRE
 
     std::vector<bool> VariablesEntieres; // true = int, false = continuous
 
-private:
-  using BasisStatus = operations_research::MPSolver::BasisStatus;
-public:
-    std::vector<BasisStatus> StatutDesVariables;
-    std::vector<BasisStatus> StatutDesContraintes;
-
+    // PIMPL is used to break dependency to OR-Tools' linear_solver.h (big header)
+    Antares::Optimization::BasisStatus basisStatus;
 };
 
 #endif /* __SOLVER_OPTIMISATION_STRUCTURE_PROBLEME_A_RESOUDRE_H__ */

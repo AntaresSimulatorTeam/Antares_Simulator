@@ -46,9 +46,7 @@ OMESSAGE("  :: application solver")
 
 set(exec_name "antares-solver")
 
-add_library(solver-lib
-        ${SRCS}
-)
+add_library(solver-lib INTERFACE)
 
 
 add_executable(antares-solver
@@ -85,7 +83,7 @@ set(ANTARES_SOLVER_LIBS ${ANTARES_SOLVER_LIBS}
         antares-core)
 
 target_link_libraries(solver-lib
-        PUBLIC
+        INTERFACE
         ${ANTARES_SOLVER_LIBS}
 )
 

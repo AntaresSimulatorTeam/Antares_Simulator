@@ -19,27 +19,22 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #include "antares/solver/utils/named_problem.h"
+#include "antares/solver/utils/basis_status.h"
 #include <algorithm>
 
 namespace Antares::Optimization
 {
-
-using BasisStatus = operations_research::MPSolver::BasisStatus;
-
 PROBLEME_SIMPLEXE_NOMME::PROBLEME_SIMPLEXE_NOMME(const std::vector<std::string>& NomDesVariables,
                                                  const std::vector<std::string>& NomDesContraintes,
                                                  const std::vector<bool>& VariablesEntieres,
-                                                 std::vector<BasisStatus>& StatutDesVariables,
-                                                 std::vector<BasisStatus>& StatutDesContraintes,
+                                                 BasisStatus& basisStatus,
                                                  bool UseNamedProblems,
-                                                 bool SolverLogs) : PROBLEME_SIMPLEXE(),
-
+                                                 bool SolverLogs) :
  NomDesVariables(NomDesVariables),
  NomDesContraintes(NomDesContraintes),
  useNamedProblems_(UseNamedProblems),
- StatutDesVariables(StatutDesVariables),
- StatutDesContraintes(StatutDesContraintes),
- VariablesEntieres(VariablesEntieres)
+ VariablesEntieres(VariablesEntieres),
+ basisStatus(basisStatus)
 {
     AffichageDesTraces = SolverLogs ? OUI_SPX : NON_SPX;
 }
@@ -52,7 +47,7 @@ bool PROBLEME_SIMPLEXE_NOMME::isMIP() const
 
 bool PROBLEME_SIMPLEXE_NOMME::basisExists() const
 {
-    return !StatutDesVariables.empty() && !StatutDesContraintes.empty();
+    return basisStatus.exists();
 }
 
 } // namespace Antares::Optimization
