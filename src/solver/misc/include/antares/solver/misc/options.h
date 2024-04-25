@@ -35,7 +35,7 @@ class Settings
 {
 public:
     //! Where is my study
-    YString studyFolder;
+    std::string studyFolder;
     //! Name of the simulation
     Yuni::CString<150, false> simulationName;
     //! Comment file
@@ -61,7 +61,7 @@ public:
 
     bool forceZipOutput = false;
 
-    void checkAndSetStudyFolder(Yuni::String folder);
+    void checkAndSetStudyFolder(const std::string& folder);
     void reset();
 }; // class Settings
 

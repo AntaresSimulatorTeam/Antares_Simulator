@@ -263,16 +263,16 @@ void checkOrtoolsSolver(Data::StudyLoadOptions& options)
     }
 }
 
-void Settings::checkAndSetStudyFolder(Yuni::String folder)
+void Settings::checkAndSetStudyFolder(const std::string& folder)
 {
     // The study folder
     if (folder.empty())
         throw Error::NoStudyProvided();
 
     // Making the path absolute
-    String abspath;
-    IO::MakeAbsolute(abspath, folder);
-    IO::Normalize(folder, abspath);
+    std::string abspath;
+    IO::MakeAbsolute((Yuni::String&)abspath, folder);
+    IO::Normalize((Yuni::String&)folder, abspath);
 
     // Checking if the path exists
     if (!IO::Directory::Exists(folder))
