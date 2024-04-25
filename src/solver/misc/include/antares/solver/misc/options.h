@@ -39,7 +39,7 @@ public:
     //! Name of the simulation
     Yuni::CString<150, false> simulationName;
     //! Comment file
-    YString commentFile;
+    std::string commentFile;
 
     //! Simplex optimizatio range
     Yuni::CString<32, false> simplexOptimRange;

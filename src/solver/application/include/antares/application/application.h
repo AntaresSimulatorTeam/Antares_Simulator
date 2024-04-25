@@ -85,7 +85,7 @@ private:
     void runSimulationInAdequacyMode();
     void runSimulationInEconomicMode();
 
-    void onLogMessage(int level, const YString& message);
+    void onLogMessage(int level, const std::string& message);
 
     //! The settings given from the command line
     Settings pSettings;

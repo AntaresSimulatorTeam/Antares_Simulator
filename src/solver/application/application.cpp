@@ -193,7 +193,7 @@ void Application::prepare(int argc, char* argv[])
         logs.info() << "  The progression is disabled";
 }
 
-void Application::onLogMessage(int level, const Yuni::String& /*message*/)
+void Application::onLogMessage(int level, const std::string& /*message*/)
 {
     switch (level)
     {
@@ -415,7 +415,6 @@ void Application::writeComment(Data::Study& study)
                                              this->pSettings.commentFile.c_str());
 
         this->pSettings.commentFile.clear();
-        this->pSettings.commentFile.shrink();
     }
 }
 

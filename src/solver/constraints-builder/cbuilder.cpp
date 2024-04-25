@@ -18,7 +18,9 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
+#include <filesystem>
 #include <cmath>
+
 #include "antares/solver/constraints-builder/cbuilder.h"
 #include "antares/solver/constraints-builder/grid.h"
 
@@ -347,11 +349,9 @@ bool CBuilder::saveCBuilderToFile(const String& filename) const
 
     if (filename == "")
     {
-        YString buffer;
+        std::filesystem::path path = std::filesystem::path(pStudy->folder) / "settings" / "constraintbuilder.ini";
 
-        buffer.clear() << pStudy->folder << Yuni::IO::Separator << "settings" << Yuni::IO::Separator
-                       << "constraintbuilder.ini";
-        return ini.save(buffer);
+        return ini.save(path.string());
     }
 
     return ini.save(filename);

@@ -206,9 +206,9 @@ void ApplWnd::connectLogCallback()
     logs.callback.connect(this, &ApplWnd::onLogMessageDeferred);
 }
 
-void ApplWnd::onLogMessageDeferred(int level, const String& message)
+void ApplWnd::onLogMessageDeferred(int level, const std::string& message)
 {
-    if (not message.empty() and message.first() != '[')
+    if (not message.empty())
     {
         // wxLogError(), like wxLogWarning(), are routine with
         // variadic parameters, like the standard printf.
