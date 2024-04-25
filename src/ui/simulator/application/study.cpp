@@ -1279,7 +1279,10 @@ void RefreshListOfOutputsForTheCurrentStudy()
     if (IsGUIAboutToQuit())
         return;
 
-    if (CurrentStudyIsValid())
+    if (auto study = GetCurrentStudy(); CurrentStudyIsValid())
+    {
+        Data::Output::RetrieveListFromStudy(ListOfOutputsForTheCurrentStudy, *study);
+    }
     {
         auto study = GetCurrentStudy();
         Data::Output::RetrieveListFromStudy(ListOfOutputsForTheCurrentStudy, *study);
