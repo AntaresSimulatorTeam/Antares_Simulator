@@ -36,22 +36,6 @@ FileTreeStudyLoader::FileTreeStudyLoader(std::filesystem::path study_path)
 
 namespace {
 /**
- * @brief Creates a copy of a string_view.
- *
- * This function creates a copy of the input string_view and returns a unique_ptr to a char array.
- * The char array is null-terminated, making it a valid C-string.
- * Use of unique_ptr ensure proper memory management of the new raw string
- * @param str The string_view to copy.
- * @return std::unique_ptr<char[]> A unique_ptr to a char array that contains a copy of the input string.
- */
-[[nodiscard]] std::unique_ptr<char[]> copy(std::string_view str) {
-    auto copy = std::unique_ptr<char[]>(new char[str.size() + 1]);
-    copy.get()[0] = '\0';
-    std::strncpy(copy.get(), str.data(), str.size()+1); //Also copy null terminated
-    return copy;
-}
-
-/**
  * @brief Prepares arguments for the Antares Solver application.
  *
  * This function prepares the arguments required by the Antares Solver application.
@@ -64,25 +48,22 @@ namespace {
  * @param study_path A string_view representing the study path.
  * @return std::vector<std::unique_ptr<char[]>> A vector of unique_ptr to char arrays containing the prepared arguments.
  */
-[[nodiscard]] std::vector<std::unique_ptr<char[]>> prepareArgs(std::span<char*> argv, std::string_view study_path)
+[[nodiscard]] std::vector<std::string> prepareArgs(std::span<char*> argv, std::string_view study_path)
 {
     using namespace std::literals::string_literals;
-    std::vector<std::unique_ptr<char[]>> ret;
-    auto arg0 = copy(""s);
-    auto arg1 = copy(study_path);
-    auto arg2 = copy("-s"s);
-    argv[0] = arg0.get();
-    argv[1] = arg1.get();
-    argv[2] = arg2.get();
-    ret.push_back(std::move(arg0));
-    ret.push_back(std::move(arg1));
-    ret.push_back(std::move(arg2));
-    return ret;
+    std::string arg0{""s};
+    std::string arg1{study_path};
+    std::string arg2{"-s"s};
+    argv[0] = arg0.data();
+    argv[1] = arg1.data();
+    argv[2] = arg2.data();
+    return {std::move(arg0), std::move(arg1), std::move(arg2)};
 }
 } // namespace
 
 std::unique_ptr<Antares::Data::Study> FileTreeStudyLoader::load() const
 {
+    using namespace std::literals::string_literals;
     Antares::Solver::Application application;
     constexpr unsigned int argc = 3;
     std::array<char*, argc> argv;
