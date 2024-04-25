@@ -53,7 +53,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReservesThermi
             int reserveIndex = 0;
             const PALIERS_THERMIQUES& PaliersThermiquesDuPays
               = problemeHebdo->PaliersThermiquesDuPays[pays];
-            for (const auto& areaReserveUp : areaReserves.areaCapacityReservationsUp)
+            for (auto& areaReserveUp : areaReserves.areaCapacityReservationsUp)
             {
                 reserveIndex = areaReserveUp.globalReserveIndex;
                 if (!Simulation)
@@ -77,7 +77,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReservesThermi
                 NombreDeVariables += 2;
 
                 int clusterIndex = 0;
-                for (const auto& clusterReserveParticipation :
+                for (auto& clusterReserveParticipation :
                      areaReserveUp.AllReservesParticipation)
                 {
                     if (clusterReserveParticipation.maxPower >= 0)
@@ -102,6 +102,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReservesThermi
                               = VARIABLE_BORNEE_DES_DEUX_COTES;
                             variableNamer.ParticipationOfUnitsToReserve(
                               NombreDeVariables, clusterName, areaReserveUp.reserveName);
+                            clusterReserveParticipation.indexClusterParticipation = index;
                             index++;
                             clusterIndex++;
                         }
@@ -113,7 +114,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReservesThermi
                   = areaReserveUp.need[pdt];
                 NombreDeVariables++;
             }
-            for (const auto& areaReserveDown : areaReserves.areaCapacityReservationsDown)
+            for (auto& areaReserveDown : areaReserves.areaCapacityReservationsDown)
             {
                 reserveIndex = areaReserveDown.globalReserveIndex;
                 if (!Simulation)
@@ -137,7 +138,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReservesThermi
                 NombreDeVariables += 2;
 
                 int clusterIndex = 0;
-                for (const auto& clusterReserveParticipation :
+                for (auto& clusterReserveParticipation :
                      areaReserveDown.AllReservesParticipation)
                 {
                     if (clusterReserveParticipation.maxPower >= 0)
@@ -162,6 +163,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReservesThermi
                               = VARIABLE_BORNEE_DES_DEUX_COTES;
                             variableNamer.ParticipationOfUnitsToReserve(
                               NombreDeVariables, clusterName, areaReserveDown.reserveName);
+                            clusterReserveParticipation.indexClusterParticipation = index;
                             index++;
                             clusterIndex++;
                         }

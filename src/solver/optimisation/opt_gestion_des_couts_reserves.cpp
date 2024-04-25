@@ -43,10 +43,37 @@ void OPT_InitialiserLesCoutsLineaireReserves(PROBLEME_HEBDO* problemeHebdo,
         {
             auto reservesDuPays = problemeHebdo->allReserves.thermalAreaReserves[pays];
 
+            const PALIERS_THERMIQUES& PaliersThermiquesDuPays
+              = problemeHebdo->PaliersThermiquesDuPays[pays];
+            int var;
+
+            
+
             for (int index = 0; index < reservesDuPays.areaCapacityReservationsUp.size(); index++)
             {
-
-                int var = variableManager.InternalExcessReserve(
+                for (const auto& clusterReserveParticipation :
+                     reservesDuPays.areaCapacityReservationsUp[index].AllReservesParticipation)
+                {
+                    if (clusterReserveParticipation.maxPower >= 0)
+                    {
+                        var = variableManager.ClusterReserveParticipation(
+                          clusterReserveParticipation.indexClusterParticipation,
+                          pdtHebdo);
+                        CoutLineaire[var] = clusterReserveParticipation.participationCost;
+                    }
+                }
+                for (const auto& clusterReserveParticipation :
+                     reservesDuPays.areaCapacityReservationsDown[index].AllReservesParticipation)
+                {
+                    if (clusterReserveParticipation.maxPower >= 0)
+                    {
+                        var = variableManager.ClusterReserveParticipation(
+                          clusterReserveParticipation.indexClusterParticipation, pdtHebdo);
+                        CoutLineaire[var] = clusterReserveParticipation.participationCost;
+                    }
+                }
+                    
+                var = variableManager.InternalExcessReserve(
                   reservesDuPays.areaCapacityReservationsUp[index].globalReserveIndex, pdtHebdo);
                 if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                 {
@@ -63,7 +90,7 @@ void OPT_InitialiserLesCoutsLineaireReserves(PROBLEME_HEBDO* problemeHebdo,
             }
             for (int index = 0; index < reservesDuPays.areaCapacityReservationsDown.size(); index++)
             {
-                int var = variableManager.InternalExcessReserve(
+                var = variableManager.InternalExcessReserve(
                   reservesDuPays.areaCapacityReservationsDown[index].globalReserveIndex, pdtHebdo);
                 if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                 {
