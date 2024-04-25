@@ -40,13 +40,13 @@ namespace {
  *
  * This function prepares the arguments required by the Antares Solver application.
  * It takes a span of char pointers and a string_view representing the study path.
- * The function creates copies of the required arguments and stores them in a vector of unique_ptr to char arrays.
+ * The function creates copies of the required arguments and stores them in a vector.
  * The original char pointers in the span are updated to point to the newly created copies.
  * Lifetime of values inside argv is determined be the content of the returned vector
  *
  * @param argv A span of char pointers to be filled with the prepared arguments.
  * @param study_path A string_view representing the study path.
- * @return std::vector<std::unique_ptr<char[]>> A vector of unique_ptr to char arrays containing the prepared arguments.
+ * @return std::vector<std::string> A vector of strings containing the prepared arguments.
  */
 [[nodiscard]] std::vector<std::string> prepareArgs(std::span<char*> argv, std::string_view study_path)
 {
