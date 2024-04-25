@@ -140,29 +140,29 @@ void Application::postParametersChecks() const
 { // Some more checks require the existence of pParameters, hence of a study.
     // Their execution is delayed up to this point.
     checkOrtoolsUsage(
-      this->pParameters->unitCommitment.ucMode, this->pParameters->ortoolsUsed, this->pParameters->ortoolsSolver);
+      pParameters->unitCommitment.ucMode, pParameters->ortoolsUsed, pParameters->ortoolsSolver);
 
-    checkSimplexRangeHydroPricing(this->pParameters->simplexOptimizationRange,
-                                  this->pParameters->hydroPricing.hpMode);
+    checkSimplexRangeHydroPricing(pParameters->simplexOptimizationRange,
+                                  pParameters->hydroPricing.hpMode);
 
-    checkSimplexRangeUnitCommitmentMode(this->pParameters->simplexOptimizationRange,
-                                        this->pParameters->unitCommitment.ucMode);
+    checkSimplexRangeUnitCommitmentMode(pParameters->simplexOptimizationRange,
+                                        pParameters->unitCommitment.ucMode);
 
-    checkSimplexRangeHydroHeuristic(this->pParameters->simplexOptimizationRange, this->pStudy->areas);
+    checkSimplexRangeHydroHeuristic(pParameters->simplexOptimizationRange, pStudy->areas);
 
-    if (this->pParameters->adqPatchParams.enabled)
-        this->pParameters->adqPatchParams.checkAdqPatchParams(
-          this->pParameters->mode,
-                                                        this->pStudy->areas,
-                                                        this->pParameters->include.hurdleCosts);
+    if (pParameters->adqPatchParams.enabled)
+        pParameters->adqPatchParams.checkAdqPatchParams(
+          pParameters->mode,
+                                                        pStudy->areas,
+                                                        pParameters->include.hurdleCosts);
 
     bool tsGenThermal
-      = (0 != (this->pParameters->timeSeriesToGenerate & Antares::Data::TimeSeriesType::timeSeriesThermal));
+      = (0 != (pParameters->timeSeriesToGenerate & Antares::Data::TimeSeriesType::timeSeriesThermal));
 
-    checkMinStablePower(tsGenThermal, this->pStudy->areas);
+    checkMinStablePower(tsGenThermal, pStudy->areas);
 
-    checkFuelCostColumnNumber(this->pStudy->areas);
-    checkCO2CostColumnNumber(this->pStudy->areas);
+    checkFuelCostColumnNumber(pStudy->areas);
+    checkCO2CostColumnNumber(pStudy->areas);
 }
 
 void Application::prepare(int argc, char* argv[])
@@ -423,13 +423,13 @@ void Application::writeComment(Data::Study& study)
 {
     study.buffer.clear() << "simulation-comments.txt";
 
-    if (!this->pSettings.commentFile.empty())
+    if (!pSettings.commentFile.empty())
     {
-        this->resultWriter->addEntryFromFile(study.buffer.c_str(),
-                                             this->pSettings.commentFile.c_str());
+        resultWriter->addEntryFromFile(study.buffer.c_str(),
+                                             pSettings.commentFile.c_str());
 
-        this->pSettings.commentFile.clear();
-        this->pSettings.commentFile.shrink();
+        pSettings.commentFile.clear();
+        pSettings.commentFile.shrink();
     }
 }
 
