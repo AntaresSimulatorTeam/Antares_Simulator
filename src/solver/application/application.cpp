@@ -97,7 +97,7 @@ void Application::handleOptions(const Data::StudyLoadOptions& options)
     }
 }
 
-void Application::startSimulation(Data::StudyLoadOptions options)
+void Application::startSimulation(Data::StudyLoadOptions& options)
 {
     // Starting !
     #ifdef GIT_SHA1_SHORT_STRING
