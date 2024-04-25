@@ -46,12 +46,11 @@ OMESSAGE("  :: application solver")
 
 set(exec_name "antares-solver")
 
-add_library(solver-lib INTERFACE
-        ${SRCS}
-)
+add_library(solver-lib INTERFACE)
 
 add_executable(antares-solver
         main.cpp
+        ${SRCS}
 )
 
 set_target_properties(antares-solver PROPERTIES OUTPUT_NAME ${exec_name})
