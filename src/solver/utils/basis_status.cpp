@@ -19,8 +19,29 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "antares/solver/variable/adequacy/all.h"
+#include <antares/solver/utils/basis_status.h>
+#include "basis_status_impl.h"
 
-using bc_next_type = Solver::Variable::Adequacy::VariablesPerBindingConstraints;
+namespace Antares::Optimization
+{
+BasisStatus::BasisStatus() : impl(std::make_unique<BasisStatusImpl>())
+{
+}
 
-#include "antares/solver/variable/bc.memory-estimation.inc.hxx"
+BasisStatus::~BasisStatus() = default;
+
+void BasisStatus::setStartingBasis(operations_research::MPSolver* solver) const
+{
+    impl->setStartingBasis(solver);
+}
+
+void BasisStatus::extractBasis(const operations_research::MPSolver* solver)
+{
+    impl->extractBasis(solver);
+}
+
+bool BasisStatus::exists() const
+{
+    return impl->exists();
+}
+} // namespace Antares::Optimization

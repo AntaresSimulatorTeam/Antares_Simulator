@@ -27,22 +27,20 @@
 #include <string>
 #include <algorithm>
 #include <iterator>
-#include "ortools/linear_solver/linear_solver.h"
 
 namespace Antares
 {
 namespace Optimization
 {
+struct BasisStatus;
+
 struct PROBLEME_SIMPLEXE_NOMME : public PROBLEME_SIMPLEXE
 {
-private:
-    using BasisStatus = operations_research::MPSolver::BasisStatus;
 public:
     PROBLEME_SIMPLEXE_NOMME(const std::vector<std::string>& NomDesVariables,
                             const std::vector<std::string>& NomDesContraintes,
                             const std::vector<bool>& VariablesEntieres,
-                            std::vector<BasisStatus>& StatutDesVariables,
-                            std::vector<BasisStatus>& StatutDesContraintes,
+                            BasisStatus& basisStatus,
                             bool UseNamedProblems,
                             bool SolverLogs);
 
@@ -53,9 +51,8 @@ private:
     bool solverLogs_;
 
 public:
-    std::vector<BasisStatus>& StatutDesVariables;
-    std::vector<BasisStatus>& StatutDesContraintes;
     const std::vector<bool>& VariablesEntieres;
+    BasisStatus& basisStatus;
 
     bool isMIP() const;
     bool basisExists() const;

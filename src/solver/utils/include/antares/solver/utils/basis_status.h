@@ -18,8 +18,40 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
+#pragma once
 
-#include "antares/solver/variable/adequacy/all.h"
+#include <memory>
 
-using NEXTTYPE = Solver::Variable::Adequacy::VariablesPerArea;
-#include "antares/solver/variable/area.memory-estimation.inc.hxx"
+namespace Test
+{
+    class BasisStatus;
+}
+
+namespace operations_research
+{
+    class MPSolver;
+}
+
+namespace Antares::Optimization
+{
+class BasisStatusImpl;
+
+class BasisStatus
+{
+public:
+    // Prevent copy & move
+    BasisStatus();
+    ~BasisStatus();
+    BasisStatus(const BasisStatus&) = delete;
+    BasisStatus(BasisStatus&&) = delete;
+    BasisStatus& operator=(const BasisStatus&) = delete;
+    BasisStatus& operator=(BasisStatus&&) = delete;
+
+    bool exists() const;
+    void setStartingBasis(operations_research::MPSolver* solver) const;
+    void extractBasis(const operations_research::MPSolver* solver);
+private:
+    std::unique_ptr<BasisStatusImpl> impl;
+    friend class Test::BasisStatus; // For tests
+};
+} // namespace Antares::Optimization
