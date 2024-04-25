@@ -387,9 +387,9 @@ public:
     Vector pLink;
 
 private:
-    YString pStudyFolder;
-    YString pPrefix;
-    YString pPrefixDelete;
+    std::string pStudyFolder;
+    std::string pPrefix;
+    std::string pPrefixDelete;
     bool pDelete;
     bool includeLoopFlow = true;
     bool includePhaseShift = true;

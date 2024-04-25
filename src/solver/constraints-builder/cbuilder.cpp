@@ -359,24 +359,23 @@ bool CBuilder::saveCBuilderToFile(const String& filename) const
 
 bool CBuilder::completeCBuilderFromFile(const String& filename)
 {
-    YString buffer;
+    std::filesystem::path path;
     if (filename == "")
     {
-        buffer.clear() << pStudy->folder << Yuni::IO::Separator << "settings" << Yuni::IO::Separator
-                       << "constraintbuilder.ini";
-        if (!IO::File::Exists(buffer))
+        path = std::filesystem::path(pStudy->folder) / "settings" / "constraintbuilder.ini";
+        if (!IO::File::Exists(path.string()))
         {
             return false;
         }
     }
     else
     {
-        buffer = filename;
+        path = filename;
     }
 
     logs.info() << "Read data";
     IniFile ini;
-    if (ini.open(buffer))
+    if (ini.open(path.string()))
     {
         // logs.info() << "Reading " << filename;
         logs.info() << "Read data (INI file)";
