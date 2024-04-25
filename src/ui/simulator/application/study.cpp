@@ -1283,10 +1283,6 @@ void RefreshListOfOutputsForTheCurrentStudy()
     {
         Data::Output::RetrieveListFromStudy(ListOfOutputsForTheCurrentStudy, *study);
     }
-    {
-        auto study = GetCurrentStudy();
-        Data::Output::RetrieveListFromStudy(ListOfOutputsForTheCurrentStudy, *study);
-    }
     else
     {
         ListOfOutputsForTheCurrentStudy.clear();
