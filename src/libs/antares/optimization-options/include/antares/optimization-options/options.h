@@ -20,8 +20,11 @@
 */
 
 #pragma once
+#include <map>
 
-namespace Antares::Solver::Optimization {
+namespace Antares::Solver::Optimization
+{
+
 struct OptimizationOptions
 {
     //! Force ortools use
@@ -29,6 +32,6 @@ struct OptimizationOptions
     //! The solver name, sirius is the default
     std::string ortoolsSolver = "sirius";
     bool solverLogs = false;
-    std::string solverParameters = "";
+    std::map<std::string, std::string> solverParameters = {{"xpress", ""}, {"scip", ""}};
 };
-}
+} // namespace Antares::Solver::Optimization

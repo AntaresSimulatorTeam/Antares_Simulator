@@ -29,8 +29,8 @@
 
 using namespace operations_research;
 
-const char* const XPRESS_PARAMS = "THREADS 1";
-const char* const SCIP_PARAMS = "parallel/maxnthreads 1";
+const std::string XPRESS_PARAMS = "THREADS 1";
+const std::string SCIP_PARAMS = "parallel/maxnthreads 1";
 
 using Antares::Solver::Optimization::OptimizationOptions;
 
@@ -43,20 +43,23 @@ static void setGenericParameters(MPSolverParameters& params)
 
 static void checkSetSolverSpecificParameters(bool status,
                                              const std::string& solverName,
-                                             const std::string& solverParameters)
+                                             const std::string& specificParameters)
 {
     if (!status)
     {
-        throw Antares::Error::InvalidSolverSpecificParameters(solverName, solverParameters);
+        throw Antares::Error::InvalidSolverSpecificParameters(solverName, specificParameters);
     }
 }
 
 static void TuneSolverSpecificOptions(MPSolver* solver,
                                       const std::string& solverName,
-                                      const std::string& solverParameters)
+                                      const std::map<std::string, std::string>& solverParameters)
 {
     if (!solver)
         return;
+
+    bool status;
+    std::string specificParams;
 
     switch (solver->ProblemType())
     {
@@ -64,23 +67,21 @@ static void TuneSolverSpecificOptions(MPSolver* solver,
     case MPSolver::XPRESS_LINEAR_PROGRAMMING:
     case MPSolver::XPRESS_MIXED_INTEGER_PROGRAMMING:
     {
-        bool xpressSetThreadStatus = solver->SetSolverSpecificParametersAsString(XPRESS_PARAMS);
-        checkSetSolverSpecificParameters(xpressSetThreadStatus, solverName, XPRESS_PARAMS);
+        specificParams = XPRESS_PARAMS + " " + solverParameters.at("xpress");
+        status = solver->SetSolverSpecificParametersAsString(specificParams);
+        checkSetSolverSpecificParameters(status, solverName, specificParams);
         break;
     }
     case MPSolver::SCIP_MIXED_INTEGER_PROGRAMMING:
     {
-        bool scipSetThreadStatus = solver->SetSolverSpecificParametersAsString(SCIP_PARAMS);
-        checkSetSolverSpecificParameters(scipSetThreadStatus, solverName, SCIP_PARAMS);
+        specificParams = SCIP_PARAMS + ", " + solverParameters.at("scip");
+        status = solver->SetSolverSpecificParametersAsString(specificParams);
+        checkSetSolverSpecificParameters(status, solverName, specificParams);
         break;
     }
     default:
         break;
     }
-
-    // Other solver specific options
-    bool status = solver->SetSolverSpecificParametersAsString(solverParameters);
-    checkSetSolverSpecificParameters(status, solverName, solverParameters);
 }
 
 static bool solverSupportsWarmStart(const MPSolver::OptimizationProblemType solverType)

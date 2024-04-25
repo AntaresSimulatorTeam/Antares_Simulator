@@ -138,6 +138,11 @@ public:
     ** \brief Reset to default all adequacy patch values
     */
     void resetAdqPatchParameters();
+    
+    /*!
+    ** \brief Handle priority between command-line option and configuration file
+    */
+    void handleOptimizationOptions(const StudyLoadOptions& options);
 
     /*!
     ** \brief Try to detect then fix any bad value

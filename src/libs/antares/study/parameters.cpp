@@ -643,15 +643,15 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
     // Set solver specific paramters only if the solver corresponding to the parameter field name is
     // indeed used. This requires that optOptions.ortoolsSolver has been correctly set from the
     // command line argument before reading the ini file.
-    if (key == "scip-parameters" && d.optOptions.ortoolsSolver == "scip")
+    if (key == "scip-parameters")
     {
-        d.optOptions.solverParameters = value;
+        d.optOptions.solverParameters.at("scip") = value;
         return true;
     }
 
-    if (key == "xpress-parameters" && d.optOptions.ortoolsSolver == "xpress")
+    if (key == "xpress-parameters")
     {
-        d.optOptions.solverParameters = value;
+        d.optOptions.solverParameters.at("xpress") = value;
         return true;
     }
     return false;
@@ -1010,11 +1010,6 @@ bool Parameters::loadFromINI(const IniFile& ini,
     // Reset inner data
     reset();
 
-    // this->optOptions.ortoolsSolver must set before reading the ini file as we need to know which
-    // solver is used to correctly populate the field optOptions.solverParameters
-    optOptions.ortoolsUsed = options.optOptions.ortoolsUsed;
-    optOptions.ortoolsSolver = options.optOptions.ortoolsSolver;
-
     // A temporary buffer, used for the values in lowercase
     using Callback = bool (*)(
       Parameters&,    // [out] Parameter object to load the data into
@@ -1108,14 +1103,7 @@ bool Parameters::loadFromINI(const IniFile& ini,
 
     namedProblems = options.namedProblems;
 
-    optOptions.solverLogs = options.optOptions.solverLogs || optOptions.solverLogs;
-    if (options.optOptions.solverParameters != "") {
-        // Command line arguments will override ini file parameters
-        optOptions.solverParameters = options.optOptions.solverParameters;
-    }
-    if (optOptions.solverParameters != "") {
-        logs.info() << "  solver specific parameters: " << optOptions.solverParameters;
-    }
+    handleOptimizationOptions(options);
 
     // Attempt to fix bad values if any
     fixBadValues();
@@ -1138,6 +1126,29 @@ bool Parameters::loadFromINI(const IniFile& ini,
     // We currently always returns true to not block any loading process
     // Anyway we already have reported all problems
     return true;
+}
+
+void Parameters::handleOptimizationOptions(const StudyLoadOptions& options)
+{
+    // Options only set from the command-line
+    optOptions.ortoolsUsed = options.optOptions.ortoolsUsed;
+    optOptions.ortoolsSolver = options.optOptions.ortoolsSolver;
+
+    // Options that can be set both in command-line and file
+    optOptions.solverLogs = options.optOptions.solverLogs || optOptions.solverLogs;
+
+    for (auto& [solver, param] : optOptions.solverParameters)
+    {
+        if (!options.optOptions.solverParameters.at(solver).empty())
+        {
+            // Command line arguments will override ini file parameters
+            param = options.optOptions.solverParameters.at(solver);
+        }
+        if (!param.empty())
+        {
+            logs.info() << "  " + solver + " solver specific parameters: " << param;
+        }
+    }
 }
 
 void Parameters::fixRefreshIntervals()
@@ -1662,14 +1673,8 @@ void Parameters::saveToINI(IniFile& ini) const
         section->add("include-unfeasible-problem-behavior",
                      Enum::toString(include.unfeasibleProblemBehavior));
         section->add("solver-logs", optOptions.solverLogs);
-        if (optOptions.ortoolsSolver == "xpress")
-        {
-            section->add("xpress-parameters", optOptions.solverParameters);
-        }
-        else if (optOptions.ortoolsSolver == "scip")
-        {
-            section->add("scip-parameters", optOptions.solverParameters);
-        }
+        section->add("scip-parameters", optOptions.solverParameters.at("scip"));
+        section->add("xpress-parameters", optOptions.solverParameters.at("xpress"));
     }
 
     // Adequacy patch

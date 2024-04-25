@@ -78,18 +78,18 @@ InvalidSolver::InvalidSolver(const std::string& solver, const std::string& avail
 }
 
 static std::string InvalidSolverSpecificParametersHelper(const std::string& solver,
-                                                         const std::string& solverParameters)
+                                                         const std::string& specificParameters)
 {
     std::ostringstream message;
-    message << "Specific parameters '" << solverParameters << "' are not valid or not supported for solver "
+    message << "Specific parameters '" << specificParameters << "' are not valid or not supported for solver "
             << solver;
     return message.str();
 }
 
 InvalidSolverSpecificParameters::InvalidSolverSpecificParameters(
   const std::string& solver,
-  const std::string& solverParameters) :
- LoadingError(InvalidSolverSpecificParametersHelper(solver, solverParameters))
+  const std::string& specificParameters) :
+ LoadingError(InvalidSolverSpecificParametersHelper(solver, specificParameters))
 {
 }
 
