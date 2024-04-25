@@ -13,7 +13,6 @@ add_executable(tests-simple-study
 target_link_libraries(tests-simple-study
         PRIVATE
         test_utils
-        Antares::run-mode
         antares-solver-hydro
         antares-solver-variable
         antares-solver-simulation

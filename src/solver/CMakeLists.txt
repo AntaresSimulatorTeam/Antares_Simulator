@@ -14,7 +14,6 @@ add_subdirectory(simulation)
 add_subdirectory(ts-generator)
 add_subdirectory(utils)
 add_subdirectory(optimisation)
-add_subdirectory(run_mode)
 add_subdirectory(constraints-builder)
 add_subdirectory(application)
 add_subdirectory(misc)
@@ -72,13 +71,13 @@ set(ANTARES_SOLVER_LIBS
 )
 
 set(ANTARES_SOLVER_LIBS ${ANTARES_SOLVER_LIBS}
-        Antares::run-mode
         antares-solver-hydro
         antares-solver-variable
         antares-solver-simulation
         antares-solver-ts-generator
         model_antares
-        antares-core)
+        antares-core
+)
 
 target_link_libraries(solver-lib
         INTERFACE

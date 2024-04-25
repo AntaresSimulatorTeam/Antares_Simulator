@@ -18,7 +18,6 @@ set(TARGET_LIBS #No alias
         yuni-static-uuid
         yuni-static-core
         ${CMAKE_THREADS_LIBS_INIT}
-        run-mode
         antares-solver-hydro
         antares-solver-variable
         antares-solver-simulation

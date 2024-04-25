@@ -19,20 +19,20 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#include "antares/solver/run_mode/adequacy.h"
+#include "antares/solver/simulation/economy_mode.h"
 #include "antares/solver/simulation/solver.h"
-#include "antares/solver/simulation/adequacy.h"
+#include "antares/solver/simulation/economy.h"
 
 namespace Antares::Solver
 {
-void runSimulationInAdequacyMode(Antares::Data::Study& study,
+void runSimulationInEconomicMode(Antares::Data::Study& study,
                                  const Settings& settings,
                                  Benchmarking::IDurationCollector& durationCollector,
                                  IResultWriter& resultWriter,
                                  Benchmarking::OptimizationInfo& info)
 {
     // Type of the simulation
-    typedef Solver::Simulation::ISimulation<Solver::Simulation::Adequacy> SimulationType;
+    typedef Solver::Simulation::ISimulation<Solver::Simulation::Economy> SimulationType;
     SimulationType simulation(study, settings, durationCollector, resultWriter);
     simulation.checkWriter();
     simulation.run();

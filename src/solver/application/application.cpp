@@ -47,8 +47,8 @@
 #include "antares/study/simulation.h"
 #include "antares/antares/version.h"
 #include "antares/solver/simulation/simulation.h"
-#include "antares/solver/run_mode/economy.h"
-#include "antares/solver/run_mode/adequacy.h"
+#include "antares/solver/simulation/economy_mode.h"
+#include "antares/solver/simulation/adequacy_mode.h"
 
 using namespace Antares::Check;
 
