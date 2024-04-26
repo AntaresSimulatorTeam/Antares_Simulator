@@ -39,7 +39,7 @@ void runSimulationInEconomicMode(Antares::Data::Study& study,
 
     if (!(settings.noOutput || settings.tsGeneratorsOnly))
     {
-        pDurationCollector("synthesis_export") << [&simulation] {
+        durationCollector("synthesis_export") << [&simulation] {
             simulation.writeResults(/*synthesis:*/ true);
         };
 
