@@ -44,7 +44,6 @@ jobs:
           yum install -y devtoolset-10-gcc*
 
       - uses: ./.github/workflows/install-cmake-328
-      - uses: ./.github/workflows/install_minizip
 
       - name: Init submodule
         run: |
@@ -90,7 +89,7 @@ jobs:
           -DBUILD_not_system=OFF \
           -DBUILD_TOOLS=ON \
           -DBUILD_UI=OFF \
-          -DCMAKE_PREFIX_PATH="${{github.workspace}}/install;${{ env.ORTOOLSDIR }}/install"
+          -DCMAKE_PREFIX_PATH=${{ env.ORTOOLSDIR }}/install
 
       - name: Build
         run: |

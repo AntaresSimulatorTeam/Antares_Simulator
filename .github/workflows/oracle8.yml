@@ -61,8 +61,6 @@ jobs:
            unzip ortools.zip
            rm ortools.zip
 
-    - uses: ./.github/workflows/install_minizip
-
     - name: Init submodule
       run: |
            git config --global safe.directory '*'
@@ -87,7 +85,7 @@ jobs:
              -DBUILD_TESTING=ON \
              -DBUILD_TOOLS=ON \
              -DBUILD_UI=OFF \
-             -DCMAKE_PREFIX_PATH="${{github.workspace}}/install;${{ env.ORTOOLS_DIR }}/install"
+             -DCMAKE_PREFIX_PATH=${{ env.ORTOOLS_DIR }}/install
 
     - name: Build
       run: |
