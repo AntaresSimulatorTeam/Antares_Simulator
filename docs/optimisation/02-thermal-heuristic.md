@@ -20,12 +20,13 @@ The general principle of the linear resolution is that two iterations of the wee
 
 Between these two steps, a heuristic is used to fix the values of the integer variables which will be used in the second resolution (step 2).
 
-Finally, a final annual heuristic is applied on the NODUs of the whole year to resolve potential inconsistencies caused by the decoupling of weeks.
+Finally, a final annual heuristic is applied on the NODUs of the whole year to resolve potential inconsistencies caused by the decoupling of weeks. Economic variables (e.g. OV. COST and OP. COST) are also computed at that stage.
 
-The way steps 1 and 2 are performed depends on a parameter set by the user in the "Advanced parameters" section, which is the "unit-commitment mode". This parameter can take two values:
+The way steps 1 and 2 are performed depends on a parameter set by the user in the "Advanced parameters" section, which is the "unit-commitment mode". This parameter can take three values:
 
 - The "fast" unit-commitment mode uses simplified methods to accelerate the weekly problem solving, while providing a consistent approximated solution.
 - The "accurate" unit-commitment mode embeds a more complex approach, which provides solutions which are closer to the optimum, at the cost of longer calculation times.
+- The "MILP" commitment mode involves an exact weekly resolution of the weekly problems, at the expense of longer and more variables computation times. If the MILP resolution of the adequacy problem is chosen by the user, no heuristic is applied, the problem is solved directly considering integer variables. This section is therefore not applicable for the MILP mode.
 
 **IMPORTANT:** As explained in the following parts of this section, the fast mode implies that startup and fixed costs are not considered in the optimisation problem. It should then be discarded in studies involving significant thermal clusters startup and fixed costs. Additionally, the fast mode implies that minimum on and off durations are approximated to be of the same duration (the maximum of the two).
 
