@@ -20,10 +20,47 @@
 */
 
 #pragma once
-#include <map>
+#include <antares/logs/logs.h>
 
 namespace Antares::Solver::Optimization
 {
+
+class SolverParameters
+{
+public:
+    std::string xpress;
+    std::string scip;
+
+    void overrideByOtherIfNotEmpty(const SolverParameters& other)
+    {
+        xpress = overrideParameterStringByOtherIfNotEmpty(xpress, other.xpress);
+        displayParameterString(xpress, "xpress");
+
+        scip = overrideParameterStringByOtherIfNotEmpty(scip, other.scip);
+        displayParameterString(scip, "scip");
+    }
+
+private:
+    static std::string overrideParameterStringByOtherIfNotEmpty(
+      const std::string& srcParameters,
+      const std::string& otherParameters)
+    {
+        if (!otherParameters.empty())
+        {
+            return otherParameters;
+        }
+        return srcParameters;
+    }
+
+    static void displayParameterString(const std::string& parameterString,
+                                       const std::string& solverName)
+    {
+        if (!parameterString.empty())
+        {
+            logs.info() << " " + solverName + " solver specific parameters: " << parameterString;
+        }
+    }
+};
 
 struct OptimizationOptions
 {
@@ -32,6 +69,6 @@ struct OptimizationOptions
     //! The solver name, sirius is the default
     std::string ortoolsSolver = "sirius";
     bool solverLogs = false;
-    std::map<std::string, std::string> solverParameters = {{"xpress", ""}, {"scip", ""}};
+    SolverParameters solverParameters;
 };
 } // namespace Antares::Solver::Optimization

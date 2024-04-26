@@ -90,7 +90,7 @@ std::unique_ptr<GetOpt::Parser> CreateParser(Settings& settings, StudyLoadOption
 
     //--xpress-parameters
     parser->add(
-      options.optOptions.solverParameters.at("xpress"),
+      options.optOptions.solverParameters.xpress,
       ' ',
       "xpress-parameters",
       "Set xpress solver specific parameters. The specified string must be wrapped into quotes: "
@@ -99,7 +99,7 @@ std::unique_ptr<GetOpt::Parser> CreateParser(Settings& settings, StudyLoadOption
 
     //--scip-parameters
     parser->add(
-      options.optOptions.solverParameters.at("scip"),
+      options.optOptions.solverParameters.scip,
       ' ',
       "scip-parameters",
       "Set scip solver specific parameters. The specified string must be wrapped into quotes: "

@@ -645,13 +645,13 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
     // command line argument before reading the ini file.
     if (key == "scip-parameters")
     {
-        d.optOptions.solverParameters.at("scip") = value;
+        d.optOptions.solverParameters.scip = value;
         return true;
     }
 
     if (key == "xpress-parameters")
     {
-        d.optOptions.solverParameters.at("xpress") = value;
+        d.optOptions.solverParameters.xpress = value;
         return true;
     }
     return false;
@@ -1137,18 +1137,8 @@ void Parameters::handleOptimizationOptions(const StudyLoadOptions& options)
     // Options that can be set both in command-line and file
     optOptions.solverLogs = options.optOptions.solverLogs || optOptions.solverLogs;
 
-    for (auto& [solver, param] : optOptions.solverParameters)
-    {
-        if (!options.optOptions.solverParameters.at(solver).empty())
-        {
-            // Command line arguments will override ini file parameters
-            param = options.optOptions.solverParameters.at(solver);
-        }
-        if (!param.empty())
-        {
-            logs.info() << "  " + solver + " solver specific parameters: " << param;
-        }
-    }
+    // Command line arguments will override ini file parameters
+    optOptions.solverParameters.overrideByOtherIfNotEmpty(options.optOptions.solverParameters);
 }
 
 void Parameters::fixRefreshIntervals()
@@ -1673,8 +1663,8 @@ void Parameters::saveToINI(IniFile& ini) const
         section->add("include-unfeasible-problem-behavior",
                      Enum::toString(include.unfeasibleProblemBehavior));
         section->add("solver-logs", optOptions.solverLogs);
-        section->add("scip-parameters", optOptions.solverParameters.at("scip"));
-        section->add("xpress-parameters", optOptions.solverParameters.at("xpress"));
+        section->add("scip-parameters", optOptions.solverParameters.scip);
+        section->add("xpress-parameters", optOptions.solverParameters.xpress);
     }
 
     // Adequacy patch

@@ -49,11 +49,15 @@ static void checkSetSolverSpecificParameters(bool status,
     {
         throw Antares::Error::InvalidSolverSpecificParameters(solverName, specificParameters);
     }
+    else {
+        Antares::logs.info() << "  Successfully set " + solverName + " solver specific parameters";
+    }
 }
 
-static void TuneSolverSpecificOptions(MPSolver* solver,
-                                      const std::string& solverName,
-                                      const std::map<std::string, std::string>& solverParameters)
+static void TuneSolverSpecificOptions(
+  MPSolver* solver,
+  const std::string& solverName,
+  const Antares::Solver::Optimization::SolverParameters& solverParameters)
 {
     if (!solver)
         return;
@@ -67,14 +71,14 @@ static void TuneSolverSpecificOptions(MPSolver* solver,
     case MPSolver::XPRESS_LINEAR_PROGRAMMING:
     case MPSolver::XPRESS_MIXED_INTEGER_PROGRAMMING:
     {
-        specificParams = XPRESS_PARAMS + " " + solverParameters.at("xpress");
+        specificParams = XPRESS_PARAMS + " " + solverParameters.xpress;
         status = solver->SetSolverSpecificParametersAsString(specificParams);
         checkSetSolverSpecificParameters(status, solverName, specificParams);
         break;
     }
     case MPSolver::SCIP_MIXED_INTEGER_PROGRAMMING:
     {
-        specificParams = SCIP_PARAMS + ", " + solverParameters.at("scip");
+        specificParams = SCIP_PARAMS + ", " + solverParameters.scip;
         status = solver->SetSolverSpecificParametersAsString(specificParams);
         checkSetSolverSpecificParameters(status, solverName, specificParams);
         break;
