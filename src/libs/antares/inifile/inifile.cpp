@@ -239,10 +239,10 @@ uint IniFile::Section::size() const
 bool IniFile::open(const AnyString& filename, bool warnings)
 {
     clear();
-    std::string filePath = filename;
+    std::string filePath = filename.to<std::string>();
     const unsigned int lineMaxSize = 2048;
 
-    std::ifstream file(filename.to<std::string>());
+    std::ifstream file(filePath);
     if (file.is_open())
     {
         std::string line;
