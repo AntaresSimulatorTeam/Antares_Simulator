@@ -21,8 +21,8 @@
  */
 
 #include "API.h"
-#include "antares/solver/run_mode/economy.h"
-#include "antares/solver/run_mode/adequacy.h"
+#include "antares/solver/simulation/economy_mode.h"
+#include "antares/solver/simulation/adequacy_mode.h"
 #include "antares/solver/misc/options.h"
 #include "antares/infoCollection/StudyInfoCollector.h"
 #include "antares/benchmarking/DurationCollector.h"
