@@ -792,11 +792,6 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                     marginGen = weekGenerationTarget;
 
                     if (problem.CaracteristiquesHydrauliques[k].NiveauInitialReservoir
-                        < weekTarget_tmp){
-                            marginGen = weekGenerationTarget;
-                        }
-                        
-                        // Je pense qu'ici, il faudrait plutôt vérifier si le niveau initial plus les apports sont suffisants pour atteindre la cible. Mais je pense aussi que cette condition est toujours remplie grâce à l'heuristique.
                 }
 
                 if (not problem.CaracteristiquesHydrauliques[k].TurbinageEntreBornes)
