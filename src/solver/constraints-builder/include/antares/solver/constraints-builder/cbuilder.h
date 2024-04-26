@@ -235,7 +235,7 @@ public:
     bool deletePreviousConstraints();
 
     bool saveCBuilderToFile(const String& filename = "") const;
-    bool completeCBuilderFromFile(const String& filename = "");
+    bool completeCBuilderFromFile(const std::string& filename = "");
 
     /*!
     ** \brief check if network constraints already exists in the study

@@ -358,7 +358,7 @@ bool CBuilder::saveCBuilderToFile(const String& filename) const
     return ini.save(filename);
 }
 
-bool CBuilder::completeCBuilderFromFile(const String& filename)
+bool CBuilder::completeCBuilderFromFile(const std::string& filename)
 {
     std::filesystem::path path;
     std::string folder = pStudy->folder;
