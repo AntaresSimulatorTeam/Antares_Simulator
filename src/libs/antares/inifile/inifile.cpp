@@ -24,15 +24,16 @@
 #include <antares/logs/logs.h>
 #include <antares/io/statistics.h>
 #include <sstream>
+#include <fstream>
 
 using namespace Yuni;
 
 namespace Antares
 {
-static inline IniFile::Section* AnalyzeIniLine(const String& pFilename,
+static inline IniFile::Section* AnalyzeIniLine(const std::string filename,
                                                IniFile* d,
                                                IniFile::Section* section,
-                                               char* line,
+                                               std::string line,
                                                uint64_t& read)
 {
     enum Type
@@ -44,8 +45,8 @@ static inline IniFile::Section* AnalyzeIniLine(const String& pFilename,
 
     uint bytesRead = 0;
     Type type = typeUnknown;
-    char* p = line;
-    const char* key = line;
+    char* p = &line[0];
+    const char* key = &line[0];
     const char* value = nullptr;
 
     while ('\0' != *p)
@@ -107,7 +108,7 @@ static inline IniFile::Section* AnalyzeIniLine(const String& pFilename,
     k.trim(" \r\n\t");
     if (not k.empty() and k[0] != ';' and k[0] != '#')
     {
-        logs.error() << pFilename << ": invalid INI format. Got a key without any value '" << k
+        logs.error() << filename << ": invalid INI format. Got a key without any value '" << k
                      << "'";
     }
     return section;
@@ -237,29 +238,20 @@ uint IniFile::Section::size() const
 
 bool IniFile::open(const AnyString& filename, bool warnings)
 {
-    // clear
     clear();
-    pFilename = filename;
+    std::string filePath = filename;
+    const unsigned int lineMaxSize = 2048;
 
-    // Load the file
-    IO::File::Stream file;
-    if (file.open(filename))
+    std::ifstream file(filename.to<std::string>());
+    if (file.is_open())
     {
-        enum
-        {
-            lineHardLimit = 2048
-        };
-        auto* line = new char[lineHardLimit];
-
+        std::string line;
         IniFile::Section* lastSection = nullptr;
         uint64_t read = 0;
 
-        // analyzing each line
-        while (file.readline(line, lineHardLimit))
-            lastSection = AnalyzeIniLine(pFilename, this, lastSection, line, read);
-
-        delete[] line;
-
+        while (std::getline(file, line))
+            lastSection = AnalyzeIniLine(filePath, this, lastSection, line, read);
+        
         if (read)
             Statistics::HasReadFromDisk(read);
         return true;
@@ -289,26 +281,25 @@ void IniFile::saveToString(std::string& str) const
 bool IniFile::save(const AnyString& filename) const
 {
     logs.debug() << "  :: writing `" << filename << '`';
-    IO::File::Stream f;
-    if (f.openRW(filename))
+    
+    std::ofstream f(filename.to<std::string>());
+    if (f.good())
     {
-        pFilename = filename;
         uint64_t written = 0;
-
-        // save all sections
         for (auto* section = firstSection; section; section = section->next)
             section->saveToStream(f, written);
-
         if (written != 0)
             Statistics::HasWrittenToDisk(written);
         return true;
     }
     else
     {
-        pFilename.clear();
         logs.error() << "I/O error: " << filename << ": Impossible to write the file";
         return false;
     }
+
+    
+
 }
 
 IniFile::Property* IniFile::Section::find(const AnyString& key)
