@@ -43,7 +43,7 @@ void runSimulationInAdequacyMode(Antares::Data::Study& study,
             simulation.writeResults(/*synthesis:*/ true);
         };
 
-        this->pOptimizationInfo = simulation.getOptimizationInfo();
+        info = simulation.getOptimizationInfo();
     }
 }
 } // namespace Antares::Solver
