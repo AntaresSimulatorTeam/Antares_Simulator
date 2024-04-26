@@ -349,7 +349,8 @@ bool CBuilder::saveCBuilderToFile(const String& filename) const
 
     if (filename == "")
     {
-        std::filesystem::path path = std::filesystem::path(pStudy->folder) / "settings" / "constraintbuilder.ini";
+        const std::string& folder = pStudy->folder;
+        std::filesystem::path path = std::filesystem::path(folder) / "settings" / "constraintbuilder.ini";
 
         return ini.save(path.string());
     }
