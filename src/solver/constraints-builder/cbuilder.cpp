@@ -361,9 +361,10 @@ bool CBuilder::saveCBuilderToFile(const String& filename) const
 bool CBuilder::completeCBuilderFromFile(const String& filename)
 {
     std::filesystem::path path;
+    std::string folder = pStudy->folder;
     if (filename == "")
     {
-        path = std::filesystem::path(pStudy->folder) / "settings" / "constraintbuilder.ini";
+        path = std::filesystem::path(folder) / "settings" / "constraintbuilder.ini";
         if (!IO::File::Exists(path.string()))
         {
             return false;
