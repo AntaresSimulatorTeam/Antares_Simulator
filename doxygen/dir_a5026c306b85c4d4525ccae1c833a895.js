@@ -1,12 +1,14 @@
 var dir_a5026c306b85c4d4525ccae1c833a895 =
 [
     [ "adequacy.h", "adequacy_8h_source.html", null ],
+    [ "adequacy_mode.h", "adequacy__mode_8h_source.html", null ],
     [ "adequacy_patch_runtime_data.h", "adequacy__patch__runtime__data_8h_source.html", null ],
     [ "apply-scenario.h", "apply-scenario_8h_source.html", null ],
     [ "base_post_process.h", "base__post__process_8h_source.html", null ],
     [ "BindingConstraintsTimeSeriesNumbersWriter.h", "BindingConstraintsTimeSeriesNumbersWriter_8h_source.html", null ],
     [ "common-eco-adq.h", "common-eco-adq_8h_source.html", null ],
     [ "economy.h", "economy_8h_source.html", null ],
+    [ "economy_mode.h", "economy__mode_8h_source.html", null ],
     [ "ITimeSeriesNumbersWriter.h", "ITimeSeriesNumbersWriter_8h_source.html", null ],
     [ "opt_time_writer.h", "opt__time__writer_8h_source.html", null ],
     [ "sim_alloc_probleme_hebdo.h", "sim__alloc__probleme__hebdo_8h_source.html", null ],

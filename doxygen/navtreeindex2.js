@@ -1,5 +1,6 @@
 var NAVTREEINDEX2 =
 {
+"classAntares_1_1Action_1_1Settings_1_1SuffixPlantName.html#a3f4446cfdf546ff80eecd3cc5441ea30":[7,0,0,0,1,3,4],
 "classAntares_1_1Action_1_1Settings_1_1SuffixPlantName.html#a6624c501301c5679b6faecd2ae99a228":[7,0,0,0,1,3,7],
 "classAntares_1_1Action_1_1Settings_1_1SuffixPlantName.html#a683f6dd2f7b692ecf7149861c5773f06":[7,0,0,0,1,3,3],
 "classAntares_1_1Action_1_1Settings_1_1SuffixPlantName.html#a9f98e9c15ab09f91e2be50e6bd772ddf":[7,0,0,0,1,3,2],
@@ -248,6 +249,5 @@ var NAVTREEINDEX2 =
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1CommonClusterSummarySingleArea.html#a6f0716d9d5f4707accca6c7952c2a325":[7,0,0,1,0,0,17,8],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1CommonClusterSummarySingleArea.html#aa2f163155bade7ef33d9f128004fb376":[7,0,0,1,0,0,17,1],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1CommonClusterSummarySingleArea.html#ab28a481c6e942194a62696248c03b2d9":[7,0,0,1,0,0,17,3],
-"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1CommonClusterSummarySingleArea.html#ab33e2a38b7527a40be85a0be49676870":[7,0,0,1,0,0,17,4],
-"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1CommonClusterSummarySingleArea.html#ad21ace567061e262a91503239dac0758":[7,0,0,1,0,0,17,5]
+"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1CommonClusterSummarySingleArea.html#ab33e2a38b7527a40be85a0be49676870":[7,0,0,1,0,0,17,4]
 };

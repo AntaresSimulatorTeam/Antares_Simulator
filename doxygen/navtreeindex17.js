@@ -1,5 +1,6 @@
 var NAVTREEINDEX17 =
 {
+"classAntares_1_1Window_1_1PerformerDialog.html#aa5150432e17a25c7d3e70b925011bf4d":[7,0,0,17,45,0],
 "classAntares_1_1Window_1_1RaiseWindowBox.html":[7,0,0,17,47],
 "classAntares_1_1Window_1_1Renewable_1_1CommonProperties.html":[7,0,0,17,4,0],
 "classAntares_1_1Window_1_1Renewable_1_1Panel.html":[7,0,0,17,4,1],
@@ -248,6 +249,5 @@ var NAVTREEINDEX17 =
 "classIProvider.html#afe23d5d59fdc13c722ec9e2db9854f01":[7,0,120,2],
 "classI__MPS__writer.html":[7,0,117],
 "classIntoUTF8ArgsTranslator.html":[7,0,119],
-"classJIT.html":[7,0,121],
-"classJIT_1_1Informations.html":[7,0,121,0]
+"classJIT.html":[7,0,121]
 };

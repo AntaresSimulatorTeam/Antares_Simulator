@@ -1,5 +1,6 @@
 var NAVTREEINDEX18 =
 {
+"classJIT_1_1Informations.html":[7,0,121,0],
 "classJIT_1_1Informations.html#a0008cfdb31ed223ee90759a949a03245":[7,0,121,0,11],
 "classJIT_1_1Informations.html#a099cbe47c83c8ca89d0ca0e2685494ca":[7,0,121,0,0],
 "classJIT_1_1Informations.html#a523b6a56ae7d3f26d9bac6d8af275f90":[7,0,121,0,8],
@@ -108,8 +109,8 @@ var NAVTREEINDEX18 =
 "classProgress.html#ac4b5ef750872e2013c6925c203a35d4cadfe3149fcd3440053bcdf797ab68efc8":[7,0,185,1,0],
 "classProgress.html#ac871f3914f9fb67fa2da2783d5be9a0f":[7,0,185,4],
 "classPublicStudy.html":[7,0,186],
-"classPublicStudy.html#a7bd1904c52c42533e39390182c2d1726":[7,0,186,0],
 "classPublicStudy.html#a7bd1904c52c42533e39390182c2d1726":[7,0,186,1],
+"classPublicStudy.html#a7bd1904c52c42533e39390182c2d1726":[7,0,186,0],
 "classQuadraticProblemMatrix.html":[7,0,187],
 "classRealName.html":[7,0,188],
 "classResultMatrix.html":[7,0,194],
@@ -227,7 +228,7 @@ var NAVTREEINDEX18 =
 "color_8h_source.html":[8,0,0,5,0,0,0,0,3],
 "column_8h_source.html":[8,0,0,5,2,1,1,1,1,8],
 "columnindex_8h_source.html":[8,0,0,5,2,1,1,1,0,0,1],
-"common-eco-adq_8h_source.html":[8,0,0,2,7,0,0,0,0,5],
+"common-eco-adq_8h_source.html":[8,0,0,2,7,0,0,0,0,6],
 "common_2cluster__list_8h_source.html":[8,0,0,1,0,22,0,0,0,5,0,1],
 "common_2component_2frame_2frame_8h_source.html":[8,0,0,5,1,0,0,0],
 "common_2component_2panel_2group_8h_source.html":[8,0,0,5,1,0,1,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX18 =
 "congestionProbability_8h_source.html":[8,0,0,2,10,0,0,0,0,2,1,2],
 "connection_8hxx_source.html":[8,0,0,5,2,1,1,3,1,2],
 "connectioncreator_8h_source.html":[8,0,0,5,2,1,1,3,2,0],
-"constraint-slack-analysis_8h_source.html":[8,0,0,2,3,0,0,0,0,0],
-"constraint_2comments_8h_source.html":[8,0,0,5,0,0,0,1,0]
+"constraint-slack-analysis_8h_source.html":[8,0,0,2,3,0,0,0,0,0]
 };
