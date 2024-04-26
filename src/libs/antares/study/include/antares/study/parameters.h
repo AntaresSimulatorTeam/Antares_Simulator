@@ -208,7 +208,7 @@ public:
 
     //! \name Horizon
     //@{
-    //! Horizon year
+    //! Horizon year, not used by the solver
     Yuni::String horizon;
     //@}
 

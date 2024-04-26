@@ -43,8 +43,6 @@ using namespace Yuni;
 
 namespace Antares::Data
 {
-//! Hard coded maximum number of MC years
-const uint maximumMCYears = 100000;
 
 static bool ConvertCStrToListTimeSeries(const String& value, uint& v)
 {
@@ -224,7 +222,7 @@ void Parameters::resetSeeds()
 void Parameters::resetPlayedYears(uint nbOfYears)
 {
     // Set the number of years
-    nbYears = std::min(nbOfYears, maximumMCYears);
+    nbYears = nbOfYears;
 
     // Reset the filter
     yearsFilter.resize(nbYears);
@@ -850,7 +848,6 @@ static bool SGDIntLoadFamily_Playlist(Parameters& d,
                            << value << "'. Value not used";
             return false;
         }
-        return false;
     }
     return false;
 }
@@ -1181,18 +1178,6 @@ void Parameters::fixBadValues()
         // Force the number of years to 1
         resetPlayedYears(1);
         resetYearsWeigth();
-    }
-    else
-    {
-        // Nb years
-        if (nbYears > maximumMCYears)
-        {
-            // The maximal amount of years is an hard-coded value
-            // If some changes are needed, please check in the same time the assert
-            // in the routine MatrixResize()
-            logs.error() << "The number of MC years is too high (>" << (uint)maximumMCYears << ")";
-            nbYears = maximumMCYears;
-        }
     }
 
     if (!nbTimeSeriesLoad)
