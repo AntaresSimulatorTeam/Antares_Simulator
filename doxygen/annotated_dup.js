@@ -360,7 +360,6 @@ var annotated_dup =
         [ "IncompatibleParallelOptions", "classAntares_1_1Error_1_1IncompatibleParallelOptions.html", null ],
         [ "IncompatibleSimulationModeForAdqPatch", "classAntares_1_1Error_1_1IncompatibleSimulationModeForAdqPatch.html", null ],
         [ "InvalidFileName", "classAntares_1_1Error_1_1InvalidFileName.html", null ],
-        [ "InvalidNumberOfMCYears", "classAntares_1_1Error_1_1InvalidNumberOfMCYears.html", null ],
         [ "InvalidOptimizationRange", "classAntares_1_1Error_1_1InvalidOptimizationRange.html", null ],
         [ "InvalidParametersForThermalClusters", "classAntares_1_1Error_1_1InvalidParametersForThermalClusters.html", null ],
         [ "InvalidSimulationMode", "classAntares_1_1Error_1_1InvalidSimulationMode.html", null ],

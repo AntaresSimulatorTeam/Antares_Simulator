@@ -1035,7 +1035,6 @@ var hierarchy =
         [ "Antares::Error::IncompatibleParallelOptions", "classAntares_1_1Error_1_1IncompatibleParallelOptions.html", null ],
         [ "Antares::Error::IncompatibleSimulationModeForAdqPatch", "classAntares_1_1Error_1_1IncompatibleSimulationModeForAdqPatch.html", null ],
         [ "Antares::Error::InvalidFileName", "classAntares_1_1Error_1_1InvalidFileName.html", null ],
-        [ "Antares::Error::InvalidNumberOfMCYears", "classAntares_1_1Error_1_1InvalidNumberOfMCYears.html", null ],
         [ "Antares::Error::InvalidOptimizationRange", "classAntares_1_1Error_1_1InvalidOptimizationRange.html", null ],
         [ "Antares::Error::InvalidParametersForThermalClusters", "classAntares_1_1Error_1_1InvalidParametersForThermalClusters.html", null ],
         [ "Antares::Error::InvalidSimulationMode", "classAntares_1_1Error_1_1InvalidSimulationMode.html", null ],
