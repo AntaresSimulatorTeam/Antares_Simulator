@@ -195,11 +195,6 @@ void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOption
     if (!options.simulationName.empty())
         settings.simulationName = options.simulationName;
 
-    if (options.nbYears > MAX_NB_MC_YEARS)
-    {
-        throw Error::InvalidNumberOfMCYears(options.nbYears);
-    }
-
     if (options.maxNbYearsInParallel)
         options.forceParallel = true;
 
