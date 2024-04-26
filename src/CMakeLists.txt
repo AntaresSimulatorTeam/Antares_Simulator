@@ -179,6 +179,12 @@ message(STATUS "Build antares ui simulator: ${BUILD_UI}")
 option(BUILD_TOOLS "Build antares tools" OFF)
 message(STATUS "Build antares tools: ${BUILD_TOOLS}")
 
+option(BUILD_ORTOOLS "Build OR-Tools" OFF)
+message(STATUS "Build OR-Tools: ${BUILD_ORTOOLS}")
+
+option(BUILD_MINIZIP "Build minizip" OFF)
+message(STATUS "Build minizip: ${BUILD_MINIZIP}")
+
 option(BUILD_MERSENNE_TWISTER_PYBIND11 "Build pybind11 bindings for Mersenne-Twister" OFF)
 if (${BUILD_MERSENNE_TWISTER_PYBIND11})
     find_package(pybind11 REQUIRED)
@@ -252,7 +258,61 @@ endif()
 set(GFLAGS_USE_TARGET_NAMESPACE TRUE) 
 find_package(gflags)
 
-find_package(ortools REQUIRED)
+find_package(ortools)
+if(NOT ortools_FOUND OR BUILD_ORTOOLS)
+message(STATUS "OR-Tools tag ${ORTOOLS_TAG}")
+  FetchContent_Declare(ortools
+    GIT_REPOSITORY "https://github.com/rte-france/or-tools"
+    GIT_TAG ${ORTOOLS_TAG}
+    GIT_SHALLOW TRUE
+    )
+
+  # Pass options to OR-Tools's CMake
+  set(BUILD_DEPS "ON" CACHE INTERNAL "")
+  set(BUILD_SAMPLES "OFF" CACHE INTERNAL "")
+  set(BUILD_FLATZINC "OFF" CACHE INTERNAL "")
+  set(BUILD_EXAMPLES "OFF" CACHE INTERNAL "")
+  set(USE_SCIP "ON" CACHE INTERNAL "")
+  set(USE_GLPK "ON" CACHE INTERNAL "")
+  # We build OR-Tools as a static lib. Cyclic dependencies are detected
+  # without this flag.
+  set(BUILD_SHARED_LIBS "OFF" CACHE INTERNAL "")
+  # In mode optimization error analysis, we call Sirius through or-tools
+  # So we need to activate Sirius in or-tools configuration (OFF by default)
+  set(USE_SIRIUS "ON" CACHE INTERNAL "")
+
+  FetchContent_MakeAvailable(ortools)
+endif()
+
+find_package(minizip QUIET)
+
+if(NOT minizip_FOUND OR BUILD_MINIZIP)
+	if (NOT minizip_FOUND)
+		message("minizip not found, downloading")
+	endif ()
+	if (BUILD_MINIZIP)
+		message("BUILD_MINIZIP set, downloading")
+	endif ()
+    # Repository + tag
+    set(MZ_REPOSITORY "https://github.com/zlib-ng/minizip-ng.git")
+    set(MZ_TAG "4.0.1")
+    # CMake flags
+    set(MZ_LZMA "OFF" CACHE INTERNAL "")
+    set(MZ_ZSTD "OFF" CACHE INTERNAL "")
+    set(MZ_BZIP2 "OFF" CACHE INTERNAL "")
+    set(MZ_PKCRYPT "OFF" CACHE INTERNAL "")
+    set(MZ_WZAES "OFF" CACHE INTERNAL "")
+    set(MZ_OPENSSL "OFF" CACHE INTERNAL "")
+    set(MZ_ICONV "OFF" CACHE INTERNAL "")
+
+	FetchContent_Declare(minizip
+		GIT_REPOSITORY ${MZ_REPOSITORY}
+		GIT_TAG ${MZ_TAG}
+		OVERRIDE_FIND_PACKAGE
+	)
+
+	FetchContent_MakeAvailable(minizip)
+endif()
 find_package(minizip REQUIRED)
 
 #wxWidget not needed for all library find is done in ui CMakeLists.txt
