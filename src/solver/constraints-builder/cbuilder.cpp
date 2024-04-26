@@ -44,7 +44,7 @@ Yuni::String linkInfo::getName() const
 
 template class Graph::Grid<areaInfo>;
 
-CBuilder::CBuilder(Antares::Data::Study::Ptr study) :
+CBuilder::CBuilder(Antares::Data::Study& study) :
  pPrefix(CB_PREFIX), pPrefixDelete(CB_PREFIX), pDelete(false), pStudy(study)
 {
 }
@@ -287,7 +287,7 @@ bool CBuilder::runConstraintsBuilder(bool standalone)
 
     if (standalone)
     {
-        pStudy->saveToFolder(pStudy->folder);
+        pStudy.saveToFolder(pStudy.folder);
     }
     // return result;
     return result;
@@ -301,8 +301,8 @@ bool CBuilder::deletePreviousConstraints()
     logs.info() << "Deleting previously built network constraints (with prefix  " << pPrefixDelete
                 << ")";
 
-    // Data::BindingConstraintsList::iterator it = pStudy->bindingConstraints.begin();
-    pStudy->bindingConstraints.removeConstraintsWhoseNameConstains(pPrefixDelete);
+    // Data::BindingConstraintsList::iterator it = pStudy.bindingConstraints.begin();
+    pStudy.bindingConstraints.removeConstraintsWhoseNameConstains(pPrefixDelete);
 
     for (auto linkInfoIt = pLink.begin(); linkInfoIt != pLink.end(); linkInfoIt++)
     {
@@ -319,15 +319,13 @@ bool CBuilder::deletePreviousConstraints()
 
 bool CBuilder::saveCBuilderToFile(const String& filename) const
 {
-    if (!pStudy)
-        return false;
     String tmp;
 
     IniFile ini;
     auto* mainSection = ini.addSection(".general");
 
     // Study
-    mainSection->add("study", pStudy->folder);
+    mainSection->add("study", pStudy.folder);
 
     // Tmp
     /*wxStringToString(pPathTemp->GetValue(), tmp);
@@ -349,7 +347,7 @@ bool CBuilder::saveCBuilderToFile(const String& filename) const
     {
         YString buffer;
 
-        buffer.clear() << pStudy->folder << Yuni::IO::Separator << "settings" << Yuni::IO::Separator
+        buffer.clear() << pStudy.folder << Yuni::IO::Separator << "settings" << Yuni::IO::Separator
                        << "constraintbuilder.ini";
         return ini.save(buffer);
     }
@@ -362,7 +360,7 @@ bool CBuilder::completeCBuilderFromFile(const String& filename)
     YString buffer;
     if (filename == "")
     {
-        buffer.clear() << pStudy->folder << Yuni::IO::Separator << "settings" << Yuni::IO::Separator
+        buffer.clear() << pStudy.folder << Yuni::IO::Separator << "settings" << Yuni::IO::Separator
                        << "constraintbuilder.ini";
         if (!IO::File::Exists(buffer))
         {
@@ -460,7 +458,7 @@ bool CBuilder::completeCBuilderFromFile(const String& filename)
 int CBuilder::alreadyExistingNetworkConstraints(const Yuni::String& prefix) const
 {
     int nSubCount = 0;
-    for (auto j = pStudy->bindingConstraints.begin(); j != pStudy->bindingConstraints.end(); j++)
+    for (auto j = pStudy.bindingConstraints.begin(); j != pStudy.bindingConstraints.end(); j++)
     {
         std::string name = (*j)->name().c_str();
         if (name.find(prefix.to<std::string>()) == 0) // name starts with the prefix

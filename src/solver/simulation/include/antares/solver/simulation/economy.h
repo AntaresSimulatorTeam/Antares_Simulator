@@ -29,8 +29,9 @@
 #include "base_post_process.h"
 
 #include "antares/solver/simulation/solver.h" // for definition of type yearRandomNumbers
-#include "antares/infoCollection/StudyInfoCollector.h"
 #include "antares/solver/simulation/opt_time_writer.h"
+#include "antares/infoCollection/StudyInfoCollector.h"
+
 
 namespace Antares::Solver::Simulation
 {
