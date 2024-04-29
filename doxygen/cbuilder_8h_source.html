@@ -379,7 +379,7 @@ $(document).ready(function(){initNavTree('cbuilder_8h_source.html',''); initResi
 <div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classAntares_1_1CBuilder.html#afc2334d042cd988519ce7f83f60b7574">deletePreviousConstraints</a>();</div>
 <div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span> </div>
 <div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>    <span class="keywordtype">bool</span> saveCBuilderToFile(<span class="keyword">const</span> String&amp; filename = <span class="stringliteral">&quot;&quot;</span>) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>    <span class="keywordtype">bool</span> completeCBuilderFromFile(<span class="keyword">const</span> String&amp; filename = <span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>    <span class="keywordtype">bool</span> completeCBuilderFromFile(<span class="keyword">const</span> std::string&amp; filename = <span class="stringliteral">&quot;&quot;</span>);</div>
 <div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span> </div>
 <div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>    <span class="keywordtype">int</span> <a class="code hl_function" href="classAntares_1_1CBuilder.html#a94c2a61134fb2362011457daceac1021">alreadyExistingNetworkConstraints</a>(<span class="keyword">const</span> Yuni::String&amp; prefix) <span class="keyword">const</span>;</div>
 <div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span> </div>
@@ -524,42 +524,41 @@ $(document).ready(function(){initNavTree('cbuilder_8h_source.html',''); initResi
 <div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span>    Vector pLink;</div>
 <div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span> </div>
 <div class="line"><a id="l00389" name="l00389"></a><span class="lineno">  389</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span>    YString pStudyFolder;</div>
-<div class="line"><a id="l00391" name="l00391"></a><span class="lineno">  391</span>    YString pPrefix;</div>
-<div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span>    YString pPrefixDelete;</div>
-<div class="line"><a id="l00393" name="l00393"></a><span class="lineno">  393</span>    <span class="keywordtype">bool</span> pDelete;</div>
-<div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span>    <span class="keywordtype">bool</span> includeLoopFlow = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00395" name="l00395"></a><span class="lineno">  395</span>    <span class="keywordtype">bool</span> includePhaseShift = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span>    <span class="keywordtype">bool</span> isUpToDate = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00397" name="l00397"></a><span class="lineno">  397</span>    <span class="keywordtype">bool</span> checkNodalLoopFlow = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00398" name="l00398"></a><span class="lineno">  398</span>    <span class="keywordtype">double</span> infiniteSecondMember = 1000000;</div>
-<div class="line"><a id="l00399" name="l00399"></a><span class="lineno">  399</span> </div>
-<div class="line"><a id="l00400" name="l00400"></a><span class="lineno">  400</span>    uint calendarStart = 1;</div>
-<div class="line"><a id="l00401" name="l00401"></a><span class="lineno">  401</span>    uint calendarEnd = 8760;</div>
-<div class="line"><a id="l00402" name="l00402"></a><span class="lineno">  402</span> </div>
-<div class="line"><a id="l00403" name="l00403"></a><span class="lineno">  403</span>    std::vector&lt;std::vector&lt;linkInfo*&gt;&gt; pMesh;</div>
-<div class="line"><a id="l00404" name="l00404"></a><span class="lineno">  404</span> </div>
-<div class="line"><a id="l00405" name="l00405"></a><span class="lineno">  405</span>    std::map&lt;Data::Area*, std::set&lt;linkInfo*&gt;&gt; areaToLinks;</div>
-<div class="line"><a id="l00406" name="l00406"></a><span class="lineno">  406</span> </div>
-<div class="line"><a id="l00407" name="l00407"></a><span class="lineno">  407</span>    <a class="code hl_class" href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a>&amp; pStudy;</div>
-<div class="line"><a id="l00408" name="l00408"></a><span class="lineno">  408</span> </div>
-<div class="line"><a id="l00409" name="l00409"></a><span class="lineno">  409</span>    <a class="code hl_class" href="classAntares_1_1Graph_1_1Grid.html">Graph::Grid&lt;Antares::Data::Area&gt;</a> _grid;</div>
-<div class="line"><a id="l00410" name="l00410"></a><span class="lineno">  410</span> </div>
-<div class="line"><a id="l00411" name="l00411"></a><span class="lineno">  411</span>}; <span class="comment">// class cbuilder</span></div>
+<div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span>    std::string pPrefix;</div>
+<div class="line"><a id="l00391" name="l00391"></a><span class="lineno">  391</span>    std::string pPrefixDelete;</div>
+<div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span>    <span class="keywordtype">bool</span> pDelete;</div>
+<div class="line"><a id="l00393" name="l00393"></a><span class="lineno">  393</span>    <span class="keywordtype">bool</span> includeLoopFlow = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span>    <span class="keywordtype">bool</span> includePhaseShift = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00395" name="l00395"></a><span class="lineno">  395</span>    <span class="keywordtype">bool</span> isUpToDate = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span>    <span class="keywordtype">bool</span> checkNodalLoopFlow = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00397" name="l00397"></a><span class="lineno">  397</span>    <span class="keywordtype">double</span> infiniteSecondMember = 1000000;</div>
+<div class="line"><a id="l00398" name="l00398"></a><span class="lineno">  398</span> </div>
+<div class="line"><a id="l00399" name="l00399"></a><span class="lineno">  399</span>    uint calendarStart = 1;</div>
+<div class="line"><a id="l00400" name="l00400"></a><span class="lineno">  400</span>    uint calendarEnd = 8760;</div>
+<div class="line"><a id="l00401" name="l00401"></a><span class="lineno">  401</span> </div>
+<div class="line"><a id="l00402" name="l00402"></a><span class="lineno">  402</span>    std::vector&lt;std::vector&lt;linkInfo*&gt;&gt; pMesh;</div>
+<div class="line"><a id="l00403" name="l00403"></a><span class="lineno">  403</span> </div>
+<div class="line"><a id="l00404" name="l00404"></a><span class="lineno">  404</span>    std::map&lt;Data::Area*, std::set&lt;linkInfo*&gt;&gt; areaToLinks;</div>
+<div class="line"><a id="l00405" name="l00405"></a><span class="lineno">  405</span> </div>
+<div class="line"><a id="l00406" name="l00406"></a><span class="lineno">  406</span>    <a class="code hl_class" href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a>&amp; pStudy;</div>
+<div class="line"><a id="l00407" name="l00407"></a><span class="lineno">  407</span> </div>
+<div class="line"><a id="l00408" name="l00408"></a><span class="lineno">  408</span>    <a class="code hl_class" href="classAntares_1_1Graph_1_1Grid.html">Graph::Grid&lt;Antares::Data::Area&gt;</a> _grid;</div>
+<div class="line"><a id="l00409" name="l00409"></a><span class="lineno">  409</span> </div>
+<div class="line"><a id="l00410" name="l00410"></a><span class="lineno">  410</span>}; <span class="comment">// class cbuilder</span></div>
 </div>
-<div class="line"><a id="l00412" name="l00412"></a><span class="lineno">  412</span> </div>
-<div class="line"><a id="l00413" name="l00413"></a><span class="lineno">  413</span>} <span class="comment">// namespace Antares</span></div>
-<div class="line"><a id="l00414" name="l00414"></a><span class="lineno">  414</span> </div>
-<div class="line"><a id="l00415" name="l00415"></a><span class="lineno">  415</span><span class="preprocessor">#endif </span><span class="comment">// __ANTARES_CONSTRAINTSBUILDER_BUILDER_CBUILDER_H__</span></div>
+<div class="line"><a id="l00411" name="l00411"></a><span class="lineno">  411</span> </div>
+<div class="line"><a id="l00412" name="l00412"></a><span class="lineno">  412</span>} <span class="comment">// namespace Antares</span></div>
+<div class="line"><a id="l00413" name="l00413"></a><span class="lineno">  413</span> </div>
+<div class="line"><a id="l00414" name="l00414"></a><span class="lineno">  414</span><span class="preprocessor">#endif </span><span class="comment">// __ANTARES_CONSTRAINTSBUILDER_BUILDER_CBUILDER_H__</span></div>
 <div class="ttc" id="aclassAntares_1_1CBuilder_html"><div class="ttname"><a href="classAntares_1_1CBuilder.html">Antares::CBuilder</a></div><div class="ttdef"><b>Definition</b> cbuilder.h:203</div></div>
 <div class="ttc" id="aclassAntares_1_1CBuilder_html_a1bd14f54af46617403fad6ee541cf2ab"><div class="ttname"><a href="classAntares_1_1CBuilder.html#a1bd14f54af46617403fad6ee541cf2ab">Antares::CBuilder::findLinkInfoFromNodeNames</a></div><div class="ttdeci">linkInfo * findLinkInfoFromNodeNames(Data::AreaName &amp;u, Data::AreaName &amp;v)</div><div class="ttdoc">find an edge from node names</div><div class="ttdef"><b>Definition</b> cbuilder.h:246</div></div>
 <div class="ttc" id="aclassAntares_1_1CBuilder_html_a43770aa46f54102f70c8d7c85ee6c14c"><div class="ttname"><a href="classAntares_1_1CBuilder.html#a43770aa46f54102f70c8d7c85ee6c14c">Antares::CBuilder::completeFromStudy</a></div><div class="ttdeci">bool completeFromStudy()</div><div class="ttdoc">Complete the settings with the data from the study.</div><div class="ttdef"><b>Definition</b> load.cpp:33</div></div>
 <div class="ttc" id="aclassAntares_1_1CBuilder_html_a87999f37a78313ba91b7e9493dbc5182"><div class="ttname"><a href="classAntares_1_1CBuilder.html#a87999f37a78313ba91b7e9493dbc5182">Antares::CBuilder::buildAreaToLinkInfosMap</a></div><div class="ttdeci">void buildAreaToLinkInfosMap()</div><div class="ttdoc">build list of edges from area</div><div class="ttdef"><b>Definition</b> cbuilder.h:264</div></div>
-<div class="ttc" id="aclassAntares_1_1CBuilder_html_a94c2a61134fb2362011457daceac1021"><div class="ttname"><a href="classAntares_1_1CBuilder.html#a94c2a61134fb2362011457daceac1021">Antares::CBuilder::alreadyExistingNetworkConstraints</a></div><div class="ttdeci">int alreadyExistingNetworkConstraints(const Yuni::String &amp;prefix) const</div><div class="ttdoc">check if network constraints already exists in the study</div><div class="ttdef"><b>Definition</b> cbuilder.cpp:458</div></div>
+<div class="ttc" id="aclassAntares_1_1CBuilder_html_a94c2a61134fb2362011457daceac1021"><div class="ttname"><a href="classAntares_1_1CBuilder.html#a94c2a61134fb2362011457daceac1021">Antares::CBuilder::alreadyExistingNetworkConstraints</a></div><div class="ttdeci">int alreadyExistingNetworkConstraints(const Yuni::String &amp;prefix) const</div><div class="ttdoc">check if network constraints already exists in the study</div><div class="ttdef"><b>Definition</b> cbuilder.cpp:453</div></div>
 <div class="ttc" id="aclassAntares_1_1CBuilder_html_a9a0508f1e4bcc1a3aad2ba1ba6b467dc"><div class="ttname"><a href="classAntares_1_1CBuilder.html#a9a0508f1e4bcc1a3aad2ba1ba6b467dc">Antares::CBuilder::createConstraints</a></div><div class="ttdeci">bool createConstraints(const std::vector&lt; Vector &gt; &amp;)</div><div class="ttdoc">create all the network constraints based on a mesh</div><div class="ttdef"><b>Definition</b> create.cpp:31</div></div>
-<div class="ttc" id="aclassAntares_1_1CBuilder_html_aa1bfff28e46d09bd442451544badf74e"><div class="ttname"><a href="classAntares_1_1CBuilder.html#aa1bfff28e46d09bd442451544badf74e">Antares::CBuilder::~CBuilder</a></div><div class="ttdeci">~CBuilder()</div><div class="ttdoc">Destructor.</div><div class="ttdef"><b>Definition</b> cbuilder.cpp:52</div></div>
-<div class="ttc" id="aclassAntares_1_1CBuilder_html_ad978d16efa6f14e71b1b81cb41d51daf"><div class="ttname"><a href="classAntares_1_1CBuilder.html#ad978d16efa6f14e71b1b81cb41d51daf">Antares::CBuilder::runConstraintsBuilder</a></div><div class="ttdeci">bool runConstraintsBuilder(bool standalone=false)</div><div class="ttdoc">Independent function to run the constraint generator from a study.</div><div class="ttdef"><b>Definition</b> cbuilder.cpp:277</div></div>
-<div class="ttc" id="aclassAntares_1_1CBuilder_html_afc2334d042cd988519ce7f83f60b7574"><div class="ttname"><a href="classAntares_1_1CBuilder.html#afc2334d042cd988519ce7f83f60b7574">Antares::CBuilder::deletePreviousConstraints</a></div><div class="ttdeci">bool deletePreviousConstraints()</div><div class="ttdoc">Delete the network constraints.</div><div class="ttdef"><b>Definition</b> cbuilder.cpp:296</div></div>
+<div class="ttc" id="aclassAntares_1_1CBuilder_html_aa1bfff28e46d09bd442451544badf74e"><div class="ttname"><a href="classAntares_1_1CBuilder.html#aa1bfff28e46d09bd442451544badf74e">Antares::CBuilder::~CBuilder</a></div><div class="ttdeci">~CBuilder()</div><div class="ttdoc">Destructor.</div><div class="ttdef"><b>Definition</b> cbuilder.cpp:54</div></div>
+<div class="ttc" id="aclassAntares_1_1CBuilder_html_ad978d16efa6f14e71b1b81cb41d51daf"><div class="ttname"><a href="classAntares_1_1CBuilder.html#ad978d16efa6f14e71b1b81cb41d51daf">Antares::CBuilder::runConstraintsBuilder</a></div><div class="ttdeci">bool runConstraintsBuilder(bool standalone=false)</div><div class="ttdoc">Independent function to run the constraint generator from a study.</div><div class="ttdef"><b>Definition</b> cbuilder.cpp:279</div></div>
+<div class="ttc" id="aclassAntares_1_1CBuilder_html_afc2334d042cd988519ce7f83f60b7574"><div class="ttname"><a href="classAntares_1_1CBuilder.html#afc2334d042cd988519ce7f83f60b7574">Antares::CBuilder::deletePreviousConstraints</a></div><div class="ttdeci">bool deletePreviousConstraints()</div><div class="ttdoc">Delete the network constraints.</div><div class="ttdef"><b>Definition</b> cbuilder.cpp:298</div></div>
 <div class="ttc" id="aclassAntares_1_1Cycle_html"><div class="ttname"><a href="classAntares_1_1Cycle.html">Antares::Cycle</a></div><div class="ttdef"><b>Definition</b> cbuilder.h:129</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1AreaLink_html"><div class="ttname"><a href="classAntares_1_1Data_1_1AreaLink.html">Antares::Data::AreaLink</a></div><div class="ttdoc">Definition of a link between two areas (Interconnection)</div><div class="ttdef"><b>Definition</b> links.h:48</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1AreaLink_html_a736cd7f2b772f33fcc738ebb0bbb46b4"><div class="ttname"><a href="classAntares_1_1Data_1_1AreaLink.html#a736cd7f2b772f33fcc738ebb0bbb46b4">Antares::Data::AreaLink::with</a></div><div class="ttdeci">Area * with</div><div class="ttdoc">The other area | Hash ID: with-&gt;id.</div><div class="ttdef"><b>Definition</b> links.h:132</div></div>
