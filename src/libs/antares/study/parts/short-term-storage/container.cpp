@@ -21,7 +21,6 @@
 
 #include <antares/logs/logs.h>
 #include <yuni/io/file.h>
-#include <filesystem>
 #include <algorithm>
 #include <string>
 
@@ -38,17 +37,17 @@ bool STStorageInput::validate() const
     });
 }
 
-bool STStorageInput::createSTStorageClustersFromIniFile(const std::string& path)
+bool STStorageInput::createSTStorageClustersFromIniFile(const std::filesystem::path& path)
 {
-    const std::string pathIni(path + SEP + "list.ini");
+    const std::filesystem::path pathIni = path / "list.ini";
     IniFile ini;
-    if (!ini.open(pathIni))
+    if (!ini.open(pathIni.string()))
         return false;
 
     if (!ini.firstSection)
         return true;
 
-    logs.debug() << "  :: loading `" << pathIni << "`";
+    logs.debug() << "  :: loading `" << pathIni.string() << "`";
 
     for (auto* section = ini.firstSection; section; section = section->next)
     {

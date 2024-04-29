@@ -20,6 +20,7 @@
 */
 
 #pragma once
+#include <filesystem>
 #include <string>
 #include <map>
 #include "cluster.h"
@@ -31,7 +32,7 @@ class STStorageInput
 public:
     bool validate() const;
     /// 1. Read list.ini
-    bool createSTStorageClustersFromIniFile(const std::string& path);
+    bool createSTStorageClustersFromIniFile(const std::filesystem::path& path);
     /// 2. Read ALL series
     bool loadSeriesFromFolder(const std::string& folder) const;
     /// Number of enabled ST storages, ignoring disabled ST storages

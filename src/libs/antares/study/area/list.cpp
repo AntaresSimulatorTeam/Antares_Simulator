@@ -1107,14 +1107,15 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
     if (studyVersion >= StudyVersion(8, 6))
     {
         logs.info() << "Loading short term storage clusters...";
-        buffer.clear() << pStudy.folderInput << SEP << "st-storage";
+        std::filesystem::path stsFolder = std::filesystem::path(pStudy.folderInput.c_str()) / "st-storage";
 
-        if (IO::Directory::Exists(buffer))
+        if (std::filesystem::exists(stsFolder))
         {
             for (const auto& [id, area] : areas)
             {
-                buffer.clear() << pStudy.folderInput << SEP << "st-storage" << SEP << "clusters" << SEP << area->id;
-                ret = area->shortTermStorage.createSTStorageClustersFromIniFile(buffer.c_str())
+                std::filesystem::path folder = stsFolder / "clusters" / area->id.c_str();
+
+                ret = area->shortTermStorage.createSTStorageClustersFromIniFile(folder)
                       && ret;
             }
         }
