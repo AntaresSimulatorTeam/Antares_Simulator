@@ -361,28 +361,6 @@ BOOST_FIXTURE_TEST_CASE(
     BOOST_CHECK(files_identical(path_to_generated_file, referenceFile.path()));
 }
 
-// =================
-// Tests on Hydro Max Power
-// =================
-BOOST_FIXTURE_TEST_CASE(
-  HYDRO_POWER_CREDITS__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical, saveFixture)
-{
-    my_rule->hydroMaxPower.setTSnumber(area_2->index, 10, 7);
-    my_rule->hydroMaxPower.setTSnumber(area_3->index, 4, 11);
-    my_rule->hydroMaxPower.setTSnumber(area_1->index, 11, 3);
-
-    saveScenarioBuilder();
-
-    // Build reference scenario builder file
-    referenceFile.append("[my rule name]");
-    referenceFile.append("hgp,area 1,11 = 3");
-    referenceFile.append("hgp,area 2,10 = 7");
-    referenceFile.append("hgp,area 3,4 = 11");
-    referenceFile.write();
-
-    BOOST_CHECK(files_identical(path_to_generated_file, referenceFile.path()));
-}
-
 // ===========================
 // Tests on Thermal clusters
 // ===========================

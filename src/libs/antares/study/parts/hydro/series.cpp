@@ -112,16 +112,16 @@ static void ConvertDailyTSintoHourlyTS(const Matrix<double>::ColumnType& dailyCo
 }
 
 DataSeriesHydro::DataSeriesHydro() :
-    ror(timeseriesNumbers),
-    storage(timeseriesNumbers),
-    mingen(timeseriesNumbers),
-    maxHourlyGenPower(timeseriesNumbersHydroMaxPower),
-    maxHourlyPumpPower(timeseriesNumbersHydroMaxPower)
+ ror(timeseriesNumbers),
+ storage(timeseriesNumbers),
+ mingen(timeseriesNumbers),
+ maxHourlyGenPower(timeseriesNumbers),
+ maxHourlyPumpPower(timeseriesNumbers)
 {
     // Pmin was introduced in v8.6
     // The previous behavior was Pmin=0
-    // For compatibility reasons with existing studies, mingen, maxHourlyGenPower and maxHourlyPumpPower are set to one
-    // column of zeros by default
+    // For compatibility reasons with existing studies, mingen, maxHourlyGenPower and
+    // maxHourlyPumpPower are set to one column of zeros by default
     mingen.reset();
     maxHourlyGenPower.reset();
     maxHourlyPumpPower.reset();
@@ -223,15 +223,15 @@ bool DataSeriesHydro::LoadMaxPower(const AreaName& areaID, const AnyString& fold
     ret = maxHourlyGenPower.timeSeries.loadFromCSVFile(filepath, 1, HOURS_PER_YEAR, &fileContent) && ret;
 
     filepath.clear() << folder << SEP << areaID << SEP << "maxHourlyPumpPower.txt";
-    ret = maxHourlyPumpPower.timeSeries.loadFromCSVFile(filepath, 1, HOURS_PER_YEAR, &fileContent) && ret;
-
-    timeseriesNumbersHydroMaxPower.clear();
+    ret = maxHourlyPumpPower.timeSeries.loadFromCSVFile(filepath, 1, HOURS_PER_YEAR, &fileContent)
+          && ret;
 
     return ret;
 }
 
-void DataSeriesHydro::buildHourlyMaxPowerFromDailyTS(const Matrix<double>::ColumnType& DailyMaxGenPower,
-                                               const Matrix<double>::ColumnType& DailyMaxPumpPower)
+void DataSeriesHydro::buildHourlyMaxPowerFromDailyTS(
+  const Matrix<double>::ColumnType& DailyMaxGenPower,
+  const Matrix<double>::ColumnType& DailyMaxPumpPower)
 {
     maxPowerTScount_ = 1;
 

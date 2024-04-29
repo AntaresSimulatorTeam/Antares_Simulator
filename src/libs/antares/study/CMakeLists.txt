@@ -23,8 +23,6 @@ set(SRC_STUDY_SCENARIO_BUILDER
         include/antares/study/scenario-builder/ThermalTSNumberData.h
         include/antares/study/scenario-builder/HydroTSNumberData.h
         scenario-builder/HydroTSNumberData.cpp
-        include/antares/study/scenario-builder/HydroMaxPowerTSNumberData.h
-        scenario-builder/HydroMaxPowerTSNumberData.cpp
         scenario-builder/SolarTSNumberData.cpp
         include/antares/study/scenario-builder/solarTSNumberData.h
         include/antares/study/scenario-builder/WindTSNumberData.h

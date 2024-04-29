@@ -349,39 +349,6 @@ BOOST_AUTO_TEST_CASE(two_areas_3_renew_clusters_with_different_number_of_ready_m
 	BOOST_CHECK(not Generate(*study));
 }
 
-BOOST_AUTO_TEST_CASE(check_intra_modal_on_hydro_max_power_time_series)
-{
-	unsigned int nbYears = 3;
-	auto study = std::make_shared<Study>();
-	initializeStudy(study, nbYears);
-
-	study->parameters.intraModal |= timeSeriesHydroMaxPower;
-
-	unsigned int hydroMaxPowerTSsize = 3;
-
-	Area* area_1 = addAreaToStudy(study, "Area 1");
-	Area* area_2 = addAreaToStudy(study, "Area 2");
-	Area* area_3 = addAreaToStudy(study, "Area 3");
-
-	area_1->hydro.series->resizeMaxPowerTS(hydroMaxPowerTSsize);
-	area_2->hydro.series->resizeMaxPowerTS(hydroMaxPowerTSsize);
-	area_3->hydro.series->resizeMaxPowerTS(hydroMaxPowerTSsize);
-
-	study->areas.resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
-
-	BOOST_CHECK(TimeSeriesNumbers::Generate(*study));
-
-	for (unsigned int year = 0; year < nbYears; year++)
-	{
-		unsigned int ts_number_1 = area_1->hydro.series->timeseriesNumbersHydroMaxPower[0][year];
-		unsigned int ts_number_2 = area_2->hydro.series->timeseriesNumbersHydroMaxPower[0][year];
-		unsigned int ts_number_3 = area_3->hydro.series->timeseriesNumbersHydroMaxPower[0][year];
-
-		BOOST_CHECK_EQUAL(ts_number_1, ts_number_2);
-		BOOST_CHECK_EQUAL(ts_number_1, ts_number_3);
-	}
-}
-
 // =======================
 // Checks on inter-modal
 // =======================
