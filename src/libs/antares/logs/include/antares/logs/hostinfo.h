@@ -21,8 +21,8 @@
 #ifndef __ANTARES_LIBS_HOST_INFO_H__
 #define __ANTARES_LIBS_HOST_INFO_H__
 
-#include <yuni/yuni.h>
 #include <yuni/core/string.h>
+#include <yuni/yuni.h>
 
 /*!
 ** \brief Write the host info into logs

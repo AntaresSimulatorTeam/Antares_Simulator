@@ -22,13 +22,15 @@
 #define __SOLVER_SIMULATION_H__
 
 #include "antares/config/config.h"
-#include "sim_structure_donnees.h"
-#include <antares/study/study.h>
 #include "antares/solver/hydro/management/management.h"
+#include <antares/study/study.h>
+
+#include "sim_structure_donnees.h"
 
 struct PROBLEME_HEBDO;
 
-// TODO remove when global variables have been removed (looking at you, transitMoyenInterconnexionsRecalculQuadratique)
+// TODO remove when global variables have been removed (looking at you,
+// transitMoyenInterconnexionsRecalculQuadratique)
 void SIM_AllocationTableaux(const Antares::Data::Study& study);
 
 /*!

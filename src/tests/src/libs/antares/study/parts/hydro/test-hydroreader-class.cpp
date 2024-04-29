@@ -3,10 +3,12 @@
 
 #define WIN32_LEAN_AND_MEAN
 
-#include <boost/test/unit_test.hpp>
-#include <antares/study/study.h>
-#include <antares/array/matrix.h>
 #include <files-system.h>
+
+#include <boost/test/unit_test.hpp>
+
+#include <antares/array/matrix.h>
+#include <antares/study/study.h>
 
 #define SEP "/"
 
@@ -24,7 +26,9 @@ bool equalDailyMaxPowerAsHourlyTs(const Matrix<double>::ColumnType& hourlyColumn
         for (uint i = 0; i < HOURS_PER_DAY; ++i)
         {
             if (hourlyColumn[hour] != dailyColumn[day])
+            {
                 return false;
+            }
             ++hour;
         }
         ++day;
@@ -33,12 +37,15 @@ bool equalDailyMaxPowerAsHourlyTs(const Matrix<double>::ColumnType& hourlyColumn
     return true;
 }
 
-bool equalDailyMaxEnergyTs(const Matrix<double>::ColumnType& col1, const Matrix<double>::ColumnType& col2)
+bool equalDailyMaxEnergyTs(const Matrix<double>::ColumnType& col1,
+                           const Matrix<double>::ColumnType& col2)
 {
     for (uint h = 0; h < DAYS_PER_YEAR; ++h)
     {
         if (col1[h] != col2[h])
+        {
             return false;
+        }
     }
 
     return true;
@@ -60,8 +67,9 @@ struct Fixture
         area_1 = study->areaAdd("Area1");
         study->areas.rebuildIndexes();
         dailyMaxPumpAndGen.reset(4U, DAYS_PER_YEAR);
-        reader = std::make_shared<HydroMaxTimeSeriesReader>(
-          area_1->hydro, area_1->id.to<std::string>(), area_1->name.to<std::string>());
+        reader = std::make_shared<HydroMaxTimeSeriesReader>(area_1->hydro,
+                                                            area_1->id.to<std::string>(),
+                                                            area_1->name.to<std::string>());
 
         // Create necessary folders and files for these two areas
         createFoldersAndFiles();

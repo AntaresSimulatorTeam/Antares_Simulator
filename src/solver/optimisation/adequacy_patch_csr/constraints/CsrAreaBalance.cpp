@@ -26,7 +26,9 @@ void CsrAreaBalance::add()
     for (uint32_t Area = 0; Area < data.NombreDePays; ++Area)
     {
         if (data.areaMode[Area] != Data::AdequacyPatch::physicalAreaInsideAdqPatch)
+        {
             continue;
+        }
 
         // + ENS
         builder.updateHourWithinWeek(data.hour).PositiveUnsuppliedEnergy(Area, 1.0);

@@ -21,13 +21,15 @@
 #ifndef __ANTARES_SOLVER_HYDRO_MANAGEMENT_MANAGEMENT_H__
 #define __ANTARES_SOLVER_HYDRO_MANAGEMENT_MANAGEMENT_H__
 
-#include <yuni/yuni.h>
 #include <unordered_map>
-#include <antares/study/fwd.h>
-#include <antares/mersenne-twister/mersenne-twister.h>
-#include "antares/solver/simulation/sim_structure_donnees.h"
+
+#include <yuni/yuni.h>
+
 #include "antares/date/date.h"
+#include "antares/solver/simulation/sim_structure_donnees.h"
 #include "antares/writer/i_writer.h"
+#include <antares/mersenne-twister/mersenne-twister.h>
+#include <antares/study/fwd.h>
 
 namespace Antares
 {
@@ -39,8 +41,8 @@ class State;
 }
 
 double randomReservoirLevel(double min, double avg, double max, MersenneTwister& random);
-double BetaVariable(double a, double b, MersenneTwister &random);
-double GammaVariable(double a, MersenneTwister &random);
+double BetaVariable(double a, double b, MersenneTwister& random);
+double GammaVariable(double a, MersenneTwister& random);
 
 } // namespace Solver
 
@@ -90,14 +92,13 @@ struct TmpDataByArea
 typedef struct
 {
     std::vector<double> HydrauliqueModulableQuotidien; /* indice par jour */
-    std::vector<double> NiveauxReservoirsDebutJours;   //Niveaux (quotidiens) du reservoir de début
-    //de jour (en cas de gestion des reservoirs).
-    std::vector<double> NiveauxReservoirsFinJours; //Niveaux (quotidiens) du reservoir de fin
-    //de jour (en cas de gestion des reservoirs).
+    std::vector<double> NiveauxReservoirsDebutJours; // Niveaux (quotidiens) du reservoir de début
+    // de jour (en cas de gestion des reservoirs).
+    std::vector<double> NiveauxReservoirsFinJours; // Niveaux (quotidiens) du reservoir de fin
+    // de jour (en cas de gestion des reservoirs).
 } VENTILATION_HYDRO_RESULTS_BY_AREA;
 
 using HYDRO_VENTILATION_RESULTS = std::vector<VENTILATION_HYDRO_RESULTS_BY_AREA>;
-
 
 class HydroManagement final
 {
@@ -114,7 +115,10 @@ public:
                          uint y,
                          Antares::Data::Area::ScratchMap& scratchmap);
 
-    const HYDRO_VENTILATION_RESULTS& ventilationResults() { return ventilationResults_; }
+    const HYDRO_VENTILATION_RESULTS& ventilationResults()
+    {
+        return ventilationResults_;
+    }
 
 private:
     //! Prepare inflows scaling for each area
@@ -134,7 +138,8 @@ private:
     //! check minimum generation is lower than available inflows
     bool checkMinGeneration(uint year) const;
     //! Prepare the net demand for each area
-    void prepareNetDemand(uint year, Data::SimulationMode mode,
+    void prepareNetDemand(uint year,
+                          Data::SimulationMode mode,
                           const Antares::Data::Area::ScratchMap& scratchmap);
     //! Prepare the effective demand for each area
     void prepareEffectiveDemand();
@@ -154,7 +159,6 @@ private:
                                         Data::Area& area,
                                         uint y,
                                         Antares::Data::Area::ScratchMap& scratchmap);
-
 
 private:
     std::unordered_map<const Data::Area*, TmpDataByArea> tmpDataByArea_;

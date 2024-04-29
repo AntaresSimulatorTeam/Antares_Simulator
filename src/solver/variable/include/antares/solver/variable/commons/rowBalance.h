@@ -21,8 +21,8 @@
 #ifndef __SOLVER_VARIABLE_ECONOMY_RowBalance_H__
 #define __SOLVER_VARIABLE_ECONOMY_RowBalance_H__
 
-#include "antares/solver/variable/variable.h"
 #include "antares/solver/simulation/sim_extern_variables_globales.h"
+#include "antares/solver/variable/variable.h"
 #include <antares/study/area/constants.h>
 
 namespace Antares
@@ -40,6 +40,7 @@ struct VCardRowBalance
     {
         return "ROW BAL.";
     }
+
     //! Unit
     static std::string Unit()
     {
@@ -95,7 +96,7 @@ struct VCardRowBalance
 ** \brief Marginal RowBalance
 */
 template<class NextT = Container::EndOfList>
-class RowBalance : public Variable::IVariable<RowBalance<NextT>, NextT, VCardRowBalance>
+class RowBalance: public Variable::IVariable<RowBalance<NextT>, NextT, VCardRowBalance>
 {
 public:
     //! Type of the next static variable
@@ -121,11 +122,11 @@ public:
     {
         enum
         {
-            count
-            = ((VCardType::categoryDataLevel & CDataLevel && VCardType::categoryFileLevel & CFile)
-                 ? (NextType::template Statistics<CDataLevel, CFile>::count
-                    + VCardType::columnCount * ResultsType::count)
-                 : NextType::template Statistics<CDataLevel, CFile>::count),
+            count = ((VCardType::categoryDataLevel & CDataLevel
+                      && VCardType::categoryFileLevel & CFile)
+                       ? (NextType::template Statistics<CDataLevel, CFile>::count
+                          + VCardType::columnCount * ResultsType::count)
+                       : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
 
@@ -163,8 +164,10 @@ public:
         if (study->parameters.mode == Data::SimulationMode::Adequacy)
         {
             for (unsigned int h = 0; h != height; ++h)
-                pValuesForTheCurrentYear.hour[h]
-                  -= area->reserves.entry[Data::fhrPrimaryReserve][h];
+            {
+                pValuesForTheCurrentYear.hour[h] -= area->reserves
+                                                      .entry[Data::fhrPrimaryReserve][h];
+            }
         }
         // Compute all statistics for the current year (daily,weekly,monthly)
         pValuesForTheCurrentYear.computeStatisticsForTheCurrentYear();
@@ -243,8 +246,9 @@ public:
             // Write the data for the current year
             results.variableCaption = VCardType::Caption();
             results.variableUnit = VCardType::Unit();
-            pValuesForTheCurrentYear.template buildAnnualSurveyReport<VCardType>(
-              results, fileLevel, precision);
+            pValuesForTheCurrentYear.template buildAnnualSurveyReport<VCardType>(results,
+                                                                                 fileLevel,
+                                                                                 precision);
         }
     }
 

@@ -26,16 +26,17 @@
 #pragma warning(disable : 4503)
 #endif
 
-#include <yuni/yuni.h>
 #include <yuni/core/static/if.h>
+#include <yuni/yuni.h>
+
+#include "categories.h"
+#include "constants.h"
 #include "container.h"
-#include "surveyresults.h"
+#include "endoflist.h"
+#include "info.h"
 #include "storage/intermediate.h"
 #include "storage/results.h"
-#include "endoflist.h"
-#include "constants.h"
-#include "categories.h"
-#include "info.h"
+#include "surveyresults.h"
 
 namespace Antares
 {
@@ -47,7 +48,7 @@ namespace Variable
 ** \brief Interface for any variable
 */
 template<class ChildT, class NextT, class VCardT>
-class IVariable : protected NextT
+class IVariable: protected NextT
 {
 public:
     //! Child
@@ -77,10 +78,10 @@ public:
     {
         enum
         {
-            count
-            = ((categoryDataLevel & CDataLevel && categoryFileLevel & CFile)
-                 ? (NextType::template Statistics<CDataLevel, CFile>::count + ResultsType::count)
-                 : NextType::template Statistics<CDataLevel, CFile>::count),
+            count = ((categoryDataLevel & CDataLevel && categoryFileLevel & CFile)
+                       ? (NextType::template Statistics<CDataLevel, CFile>::count
+                          + ResultsType::count)
+                       : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
 
@@ -104,7 +105,6 @@ public:
 
     void getPrintStatusFromStudy(Data::Study& study);
     void supplyMaxNumberOfColumns(Data::Study& study);
-
 
 public:
     //! \name Constructor

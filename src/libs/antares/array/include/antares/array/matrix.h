@@ -21,14 +21,16 @@
 #ifndef __ANTARES_LIBS_ARRAY_MATRIX_H__
 #define __ANTARES_LIBS_ARRAY_MATRIX_H__
 
-#include <yuni/yuni.h>
-#include <yuni/io/file.h>
 #include <cassert>
-#include "antares/jit/jit.h"
-#include "antares/antares/antares.h"
 #include <set>
-#include <antares/memory/memory.h>
+
+#include <yuni/io/file.h>
+#include <yuni/yuni.h>
+
+#include "antares/antares/antares.h"
+#include "antares/jit/jit.h"
 #include "antares/study/fwd.h"
+#include <antares/memory/memory.h>
 
 namespace Antares
 {
@@ -216,6 +218,7 @@ public:
                        bool print_dimensions,
                        PredicateT& predicate,
                        bool saveEvenIfAllZero = false) const;
+
     //@}
 
     virtual Yuni::IO::Error loadFromFileToBuffer(BufferType& buffer,

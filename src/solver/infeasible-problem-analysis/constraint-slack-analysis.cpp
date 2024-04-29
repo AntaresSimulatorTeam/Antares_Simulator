@@ -18,10 +18,12 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
-#include <regex>
 #include "antares/solver/infeasible-problem-analysis/constraint-slack-analysis.h"
-#include <antares/logs/logs.h>
+
+#include <regex>
+
 #include "antares/solver/infeasible-problem-analysis/report.h"
+#include <antares/logs/logs.h>
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 #include "ortools/linear_solver/linear_solver.h"
@@ -64,22 +66,24 @@ void ConstraintSlackAnalysis::addSlackVariables(MPSolver* problem)
     slackVariables_.reserve(problem->NumConstraints() / selectedConstraintsInverseRatio);
     std::regex rgx(constraint_name_pattern);
     const double infinity = MPSolver::infinity();
-    for (MPConstraint* constraint : problem->constraints())
+    for (MPConstraint* constraint: problem->constraints())
     {
         if (std::regex_search(constraint->name(), rgx))
         {
             if (constraint->lb() != -infinity)
             {
-                const MPVariable* slack
-                    = problem->MakeNumVar(0, infinity, constraint->name() + "::low");
+                const MPVariable* slack = problem->MakeNumVar(0,
+                                                              infinity,
+                                                              constraint->name() + "::low");
                 constraint->SetCoefficient(slack, 1.);
                 slackVariables_.push_back(slack);
             }
 
             if (constraint->ub() != infinity)
             {
-                const MPVariable* slack
-                    = problem->MakeNumVar(0, infinity, constraint->name() + "::up");
+                const MPVariable* slack = problem->MakeNumVar(0,
+                                                              infinity,
+                                                              constraint->name() + "::up");
                 constraint->SetCoefficient(slack, -1.);
                 slackVariables_.push_back(slack);
             }
@@ -93,7 +97,7 @@ void ConstraintSlackAnalysis::buildObjective(MPSolver* problem) const
     // Reset objective function
     objective->Clear();
     // Only slack variables have a non-zero cost
-    for (const MPVariable* slack : slackVariables_)
+    for (const MPVariable* slack: slackVariables_)
     {
         objective->SetCoefficient(slack, 1.);
     }

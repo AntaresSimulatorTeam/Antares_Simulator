@@ -21,14 +21,15 @@
 #ifndef __ANTARES_LIBS_LOGS_LOGS_H__
 #define __ANTARES_LIBS_LOGS_LOGS_H__
 
-#include <yuni/yuni.h>
-#include "antares/antares/constants.h"
 #include "yuni/core/logs/decorators/message.h"
 #include "yuni/core/logs/decorators/time.h"
 #include "yuni/core/logs/decorators/verbositylevel.h"
 #include "yuni/core/logs/handler/file.h"
 #include "yuni/core/logs/handler/stdcout.h"
 #include "yuni/core/logs/logs.h"
+#include <yuni/yuni.h>
+
+#include "antares/antares/constants.h"
 
 /*!
 ** \defgroup logs Logs
@@ -101,37 +102,34 @@ extern "C"
 {
 #endif
 
-    /*!
-    ** \brief Levels for logging
-    */
-    enum LogLevel
-    {
-        logUnknown = 0,
-        logProgress, /* not really a real log level */
-        logFatal,
-        logError,
-        logWarning,
-        logNotice,
-        logInfo,
-        logDebug
-    };
+/*!
+** \brief Levels for logging
+*/
+enum LogLevel
+{
+    logUnknown = 0,
+    logProgress, /* not really a real log level */
+    logFatal,
+    logError,
+    logWarning,
+    logNotice,
+    logInfo,
+    logDebug
+};
 
-    /*!
-    ** \brief Generate a compatibility notice
-    ** \ingroup logs
-    **
-    ** \param format The format string
-    ** \return Always 0
-    */
-    int LogCompatibility(const char format[], ...);
+/*!
+** \brief Generate a compatibility notice
+** \ingroup logs
+**
+** \param format The format string
+** \return Always 0
+*/
+int LogCompatibility(const char format[], ...);
 
-    /*!
-    ** \brief Display informations about encountered errors
-    */
-    void LogDisplayErrorInfos(uint errors,
-                              uint warnings,
-                              const char* message,
-                              bool printError = true);
+/*!
+** \brief Display informations about encountered errors
+*/
+void LogDisplayErrorInfos(uint errors, uint warnings, const char* message, bool printError = true);
 
 #ifdef __cplusplus
 }

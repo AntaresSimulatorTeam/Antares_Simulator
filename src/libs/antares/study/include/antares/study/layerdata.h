@@ -21,8 +21,8 @@
 #ifndef __ANTARES_LIBS_STUDY_LAYERDATA_H__
 #define __ANTARES_LIBS_STUDY_LAYERDATA_H__
 
-#include <string>
 #include <map>
+#include <string>
 
 namespace Antares::Data
 {
@@ -33,8 +33,9 @@ namespace Antares::Data
 class LayerData
 {
 public:
-    LayerData(size_t activeLayer, bool showLayer) :
-     activeLayerID(activeLayer), showAllLayer(showLayer)
+    LayerData(size_t activeLayer, bool showLayer):
+        activeLayerID(activeLayer),
+        showAllLayer(showLayer)
     {
     }
 

@@ -19,11 +19,12 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <yuni/yuni.h>
-#include <antares/study/study.h>
-#include "antares/solver/ts-generator/xcast/xcast.h"
 #include <yuni/core/math.h>
+#include <yuni/yuni.h>
+
+#include "antares/solver/ts-generator/xcast/xcast.h"
 #include <antares/logs/logs.h>
+#include <antares/study/study.h>
 
 using namespace Yuni;
 

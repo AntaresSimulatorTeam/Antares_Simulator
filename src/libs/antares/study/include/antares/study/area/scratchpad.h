@@ -21,15 +21,18 @@
 #ifndef __ANTARES_LIBS_STUDY_AREA_SCRATCHPAD_H__
 #define __ANTARES_LIBS_STUDY_AREA_SCRATCHPAD_H__
 
-#include <yuni/yuni.h>
-#include <yuni/core/string.h>
-#include <yuni/core/noncopyable.h>
-#include "../fwd.h"
-#include <antares/array/matrix.h>
-#include <vector>
-#include <set>
 #include <numeric>
+#include <set>
+#include <vector>
+
+#include <yuni/core/noncopyable.h>
+#include <yuni/core/string.h>
+#include <yuni/yuni.h>
+
+#include <antares/array/matrix.h>
 #include <antares/series/series.h>
+
+#include "../fwd.h"
 
 namespace Antares::Data
 {
@@ -69,12 +72,12 @@ public:
     // This variable is initialized every MC-year
     double originalMustrunSum[HOURS_PER_YEAR];
 
-       /*!
-    ** \brief Dispatchable Generation Margin
-    **
-    ** Those values, written by the output, must be calculated before
-    ** running the hydro remix.
-    */
+    /*!
+     ** \brief Dispatchable Generation Margin
+     **
+     ** Those values, written by the output, must be calculated before
+     ** running the hydro remix.
+     */
     double dispatchableGenerationMargin[168];
 
     /*!

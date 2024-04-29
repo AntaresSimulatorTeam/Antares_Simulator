@@ -21,9 +21,10 @@
 #ifndef __ANTARES_LIBS_INIFILE_INIFILE_H__
 #define __ANTARES_LIBS_INIFILE_INIFILE_H__
 
-#include <yuni/yuni.h>
-#include <yuni/core/string.h>
 #include <optional>
+
+#include <yuni/core/string.h>
+#include <yuni/yuni.h>
 
 namespace Antares
 {

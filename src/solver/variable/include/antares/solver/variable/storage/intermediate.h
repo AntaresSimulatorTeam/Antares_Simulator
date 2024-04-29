@@ -21,10 +21,12 @@
 #ifndef __SOLVER_VARIABLE_STORAGE_INTERMEDIATE_H__
 #define __SOLVER_VARIABLE_STORAGE_INTERMEDIATE_H__
 
-#include <yuni/yuni.h>
 #include <yuni/core/string.h>
+#include <yuni/yuni.h>
+
 #include "antares/antares/constants.h"
 #include <antares/study/study.h>
+
 #include "../categories.h"
 #include "../surveyresults.h"
 
@@ -146,6 +148,7 @@ private:
     IntermediateValues(const IntermediateValues&)
     {
     }
+
     IntermediateValues& operator=(const IntermediateValues&)
     {
         return *this;

@@ -21,10 +21,10 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_HYDRO_CONTAINER_H__
 #define __ANTARES_LIBS_STUDY_PARTS_HYDRO_CONTAINER_H__
 
-#include "prepro.h"
-#include "series.h"
 #include "../../fwd.h"
 #include "allocation.h"
+#include "prepro.h"
+#include "series.h"
 
 namespace Antares::Data
 {
@@ -158,7 +158,8 @@ public:
 
     //! Data for time-series
     DataSeriesHydro* series;
-    // TODO : following time series could be hosted by the series data member above (of type DataSeriesHydro),
+    // TODO : following time series could be hosted by the series data member above (of type
+    // DataSeriesHydro),
     //        which contains other time.
     Matrix<double, double> dailyNbHoursAtGenPmax;
     Matrix<double, double> dailyNbHoursAtPumpPmax;

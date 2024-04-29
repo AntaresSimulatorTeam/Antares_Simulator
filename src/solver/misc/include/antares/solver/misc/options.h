@@ -22,9 +22,10 @@
 #define __SOLVER_MISC_GETOPT_H__
 
 #include <memory>
-#include <yuni/yuni.h>
-#include <yuni/core/string.h>
+
 #include <yuni/core/getopt.h>
+#include <yuni/core/string.h>
+#include <yuni/yuni.h>
 
 #include <antares/study/study.h>
 

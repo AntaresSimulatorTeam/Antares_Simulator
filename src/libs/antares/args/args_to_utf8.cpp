@@ -19,20 +19,23 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <yuni/yuni.h>
 #include "antares/args/args_to_utf8.h"
 
+#include <yuni/yuni.h>
+
 #ifdef YUNI_OS_WINDOWS
-#include <string.h>
 #include <cstdlib>
+#include <string.h>
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN 1
 #endif // WIN32_LEAN_AND_MEAN
-#include <windows.h>
 #include <shellapi.h>
+#include <windows.h>
 #endif // YUNI_OS_WINDOWS
 
-IntoUTF8ArgsTranslator::IntoUTF8ArgsTranslator(int argc, char** argv) : argc_(argc), argv_(argv)
+IntoUTF8ArgsTranslator::IntoUTF8ArgsTranslator(int argc, char** argv):
+    argc_(argc),
+    argv_(argv)
 {
 }
 
@@ -58,7 +61,9 @@ IntoUTF8ArgsTranslator::~IntoUTF8ArgsTranslator()
 {
 #ifdef YUNI_OS_WINDOWS
     for (int i = 0; i != argc_; ++i)
+    {
         free(argv_[i]);
+    }
     free(argv_);
 #endif
 }

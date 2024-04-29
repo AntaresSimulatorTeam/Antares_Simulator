@@ -19,15 +19,16 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <yuni/yuni.h>
-#include <yuni/core/string.h>
 #include <cassert>
-#include <antares/date/date.h>
+
+#include <yuni/core/string.h>
 #include <yuni/io/file.h>
+#include <yuni/yuni.h>
+
+#include <antares/date/date.h>
 #include <antares/logs/logs.h>
 
 using namespace Yuni;
-
 
 namespace Antares::Date
 {
@@ -72,14 +73,44 @@ static const char* const monthNamesLower[] = {"january",
                                               "november",
                                               "december"};
 
-static const char* const monthShortNames[]
-  = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+static const char* const monthShortNames[] = {"Jan",
+                                              "Feb",
+                                              "Mar",
+                                              "Apr",
+                                              "May",
+                                              "Jun",
+                                              "Jul",
+                                              "Aug",
+                                              "Sep",
+                                              "Oct",
+                                              "Nov",
+                                              "Dec"};
 
-static const char* const monthShortLowerNames[]
-  = {"jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"};
+static const char* const monthShortLowerNames[] = {"jan",
+                                                   "feb",
+                                                   "mar",
+                                                   "apr",
+                                                   "may",
+                                                   "jun",
+                                                   "jul",
+                                                   "aug",
+                                                   "sep",
+                                                   "oct",
+                                                   "nov",
+                                                   "dec"};
 
-static const char* const monthShortUpperNames[]
-  = {"JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"};
+static const char* const monthShortUpperNames[] = {"JAN",
+                                                   "FEB",
+                                                   "MAR",
+                                                   "APR",
+                                                   "MAY",
+                                                   "JUN",
+                                                   "JUL",
+                                                   "AUG",
+                                                   "SEP",
+                                                   "OCT",
+                                                   "NOV",
+                                                   "DEC"};
 
 uint DayInterval::numberOfWeeks() const
 {
@@ -88,8 +119,13 @@ uint DayInterval::numberOfWeeks() const
 
 const char* DayOfTheWeekToString(DayOfTheWeek d)
 {
-    static const char* const days[]
-      = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
+    static const char* const days[] = {"Monday",
+                                       "Tuesday",
+                                       "Wednesday",
+                                       "Thursday",
+                                       "Friday",
+                                       "Saturday",
+                                       "Sunday"};
 
     return days[(uint)d % 7];
 }
@@ -97,7 +133,9 @@ const char* DayOfTheWeekToString(DayOfTheWeek d)
 bool StringToMonth(MonthName& out, AnyString text)
 {
     if (text.empty())
+    {
         return false;
+    }
     text.trim();
     CString<12, false> t = text;
     t.toLower();
@@ -150,8 +188,13 @@ const char* MonthToUpperShortString(int m, int offset)
 
 const char* WeekdayToString(int m)
 {
-    static const char* const wdays[]
-      = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
+    static const char* const wdays[] = {"Monday",
+                                        "Tuesday",
+                                        "Wednesday",
+                                        "Thursday",
+                                        "Friday",
+                                        "Saturday",
+                                        "Sunday"};
     return wdays[m % 7];
 }
 
@@ -221,23 +264,33 @@ bool StringToDayOfTheWeek(DayOfTheWeek& v, const AnyString& text)
             return true;
         }
         if (str == "mardi")
+        {
             return 0 != (v = tuesday);
+        }
         if (str == "mercredi")
+        {
             return 0 != (v = wednesday);
+        }
         break;
     }
     case 't':
     {
         if (str == "tuesday")
+        {
             return 0 != (v = tuesday);
+        }
         if (str == "thursday")
+        {
             return 0 != (v = thursday);
+        }
         break;
     }
     case 'f':
     {
         if (str == "friday")
+        {
             return 0 != (v = friday);
+        }
         break;
     }
 
@@ -253,35 +306,49 @@ bool StringToDayOfTheWeek(DayOfTheWeek& v, const AnyString& text)
     case 's':
     {
         if (str == "saturday")
+        {
             return 0 != (v = saturday);
+        }
         if (str == "sunday")
+        {
             return 0 != (v = sunday);
+        }
         if (str == "samedi")
+        {
             return 0 != (v = saturday);
+        }
         break;
     }
     case 'w':
     {
         if (str == "wednesday")
+        {
             return 0 != (v = wednesday);
+        }
         break;
     }
     case 'j':
     {
         if (str == "jeudi")
+        {
             return 0 != (v = thursday);
+        }
         break;
     }
     case 'v':
     {
         if (str == "vendredi")
+        {
             return 0 != (v = friday);
+        }
         break;
     }
     case 'd':
     {
         if (str == "dimanche")
+        {
             return 0 != (v = sunday);
+        }
         break;
     }
     }
@@ -375,11 +442,17 @@ bool Calendar::saveToCSVFile(const AnyString& filename) const
         {
             file << report.hours[i] << '\t';
             if (i < report.days.size())
+            {
                 file << report.days[i] << '\t';
+            }
             if (i < report.weeks.size())
+            {
                 file << report.weeks[i] << '\t';
+            }
             if (i < report.months.size())
+            {
                 file << report.months[i] << '\t';
+            }
             file << '\n';
         }
         return true;
@@ -410,8 +483,7 @@ static inline DayOfTheWeek NextDayOfTheWeek(DayOfTheWeek weekday)
 void Calendar::reset()
 {
 #ifndef NDEBUG
-    logs.debug() << "  reset calendar"
-                 << ", month : " << MonthToString(settings_.firstMonth)
+    logs.debug() << "  reset calendar" << ", month : " << MonthToString(settings_.firstMonth)
                  << ", january 1rst : " << DayOfTheWeekToString(settings_.weekday1rstJanuary)
                  << ", first weekday : " << DayOfTheWeekToString(settings_.weekFirstDay);
 #endif
@@ -426,7 +498,9 @@ void Calendar::reset()
     {
         uint realmonth = (m + (uint)settings_.firstMonth) % 12;
         if (m < 12)
+        {
             mapping.months[realmonth] = m;
+        }
         months[m].days = StandardDaysPerMonths[realmonth];
         months[m].realmonth = (MonthName)realmonth;
 
@@ -438,7 +512,9 @@ void Calendar::reset()
 
     // leap year
     if (settings_.leapYear)
+    {
         months[mapping.months[february]].days += 1;
+    }
 
     // looking for the weekday of the first month
     auto weekday = settings_.weekday1rstJanuary;
@@ -449,7 +525,9 @@ void Calendar::reset()
         {
             uint nbdays = (int)months[mapping.months[m]].days;
             for (uint d = 0; d != nbdays; ++d)
+            {
                 weekday = (weekday == monday) ? sunday : ((DayOfTheWeek)((uint)weekday - 1));
+            }
         }
     }
 
@@ -562,13 +640,17 @@ void Calendar::reset()
         // next weeks...
         uint userweek = (startuserweek == 53 ? 1 : 2);
         for (int w = weekindex + 1; w < maxWeeksInYear; ++w, ++userweek)
+        {
             weeks[w].userweek = userweek;
+        }
 
         // previous weeks...
         // userweek = (startuserweek == 1  ? 53 : 52);
         userweek = 52; // always 52 from now on
         for (int w = weekindex - 1; w >= 0; --w, --userweek)
+        {
             weeks[w].userweek = userweek;
+        }
     }
 
     // Caution :
@@ -585,21 +667,33 @@ void Calendar::reset()
             // Hour in the year - 1..8760
             uint hour = hourYear + 1;
             if (hour >= 1000)
+            {
                 hourtext << hour;
+            }
             else if (hour < 10)
+            {
                 hourtext << "000" << hour;
+            }
             else if (hour < 100)
+            {
                 hourtext << "00" << hour;
+            }
             else if (hour < 1000)
+            {
                 hourtext << '0' << hour;
+            }
 
             // week
             hourtext << " (";
             uint week = weeks[hourinfo.week].userweek;
             if (week >= 10)
+            {
                 hourtext << week;
+            }
             else
+            {
                 hourtext << '0' << week;
+            }
             hourtext << ')';
 
             hourtext << " - ";
@@ -609,16 +703,24 @@ void Calendar::reset()
             hourtext << text.months[hourinfo.month].shortUpperName;
             hourtext << ' ';
             if (hourinfo.dayMonth + 1 < 10)
+            {
                 hourtext << '0' << (hourinfo.dayMonth + 1);
+            }
             else
+            {
                 hourtext << (hourinfo.dayMonth + 1);
+            }
 
             hourtext << ' ';
 
             if (hourinfo.dayHour >= 10)
+            {
                 hourtext << hourinfo.dayHour;
+            }
             else
+            {
                 hourtext << '0' << hourinfo.dayHour;
+            }
             hourtext << ":00";
         }
 
@@ -630,19 +732,29 @@ void Calendar::reset()
             auto& dayinfo = days[d];
             uint day = d + 1;
             if (day < 10)
+            {
                 str << "00" << day;
+            }
             else if (day < 100)
+            {
                 str << '0' << day;
+            }
             else
+            {
                 str << day;
+            }
 
             // week
             str << " (";
             uint week = weeks[dayinfo.week].userweek;
             if (week >= 10)
+            {
                 str << week;
+            }
             else
+            {
                 str << '0' << week;
+            }
 
             str << ") - ";
             str << WeekdayToShortUpperString((uint)dayinfo.weekday);
@@ -650,12 +762,15 @@ void Calendar::reset()
             str << text.months[dayinfo.month].shortUpperName;
             str << ' ';
             if (dayinfo.dayMonth + 1 < 10)
+            {
                 str << '0' << (dayinfo.dayMonth + 1);
+            }
             else
+            {
                 str << (dayinfo.dayMonth + 1);
+            }
         }
     }
 }
 
 } // namespace Antares::Date
-

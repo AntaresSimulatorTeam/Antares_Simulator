@@ -20,8 +20,9 @@
  */
 
 #include "antares/solver/simulation/economy_mode.h"
-#include "antares/solver/simulation/solver.h"
+
 #include "antares/solver/simulation/economy.h"
+#include "antares/solver/simulation/solver.h"
 
 namespace Antares::Solver
 {

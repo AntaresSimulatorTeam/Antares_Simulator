@@ -21,19 +21,20 @@
 #ifndef __SOLVER_VARIABLE_SURVEYRESULTS_REPORT_BUILDER_HXX__
 #define __SOLVER_VARIABLE_SURVEYRESULTS_REPORT_BUILDER_HXX__
 
-#include <yuni/yuni.h>
-#include <yuni/core/string.h>
+#include <limits>
+
 #include <yuni/core/static/types.h>
+#include <yuni/core/string.h>
 #include <yuni/io/directory.h>
+#include <yuni/yuni.h>
 
 #include <antares/logs/logs.h>
-
-#include "../endoflist.h"
-#include "../categories.h"
-#include "../surveyresults.h"
-#include "../info.h"
 #include <antares/study/filter.h>
-#include <limits>
+
+#include "../categories.h"
+#include "../endoflist.h"
+#include "../info.h"
+#include "../surveyresults.h"
 
 #define SEP Yuni::IO::Separator
 
@@ -53,8 +54,11 @@ struct VariablesStatsByDataLevel
     enum
     {
         nextFileLevel = (CFile * 2 > (int)Category::maxFileLevel) ? 1 : CFile * 2,
-        currentVariableCount = NextT::template Statistics<CDataLevel, CFile>::count,
-        nextVariableCount = VariablesStatsByDataLevel<NextT, CDataLevel, nextFileLevel>::count,
+        currentVariableCount = NextT::template Statistics < CDataLevel,
+        CFile > ::count,
+        nextVariableCount = VariablesStatsByDataLevel < NextT,
+        CDataLevel,
+        nextFileLevel > ::count,
 
         //! Hpw many variables for this data level
         count = currentVariableCount + nextVariableCount,
@@ -77,8 +81,11 @@ struct BrowseAllVariables
     {
         nextFileLevel = (CFile * 2 > (int)Category::maxFileLevel) ? 1 : CFile * 2,
         nextDataLevel = (CDataLevel * 2 > (int)Category::maxDataLevel) ? 1 : CDataLevel * 2,
-        currentValue = NextT::template Statistics<CDataLevel, CFile>::count,
-        nextValue = BrowseAllVariables<NextT, nextDataLevel, nextFileLevel>::maxValue,
+        currentValue = NextT::template Statistics < CDataLevel,
+        CFile > ::count,
+        nextValue = BrowseAllVariables < NextT,
+        nextDataLevel,
+        nextFileLevel > ::maxValue,
 
         maxValue = (currentValue > (int)nextValue) ? currentValue : (int)nextValue,
     };
@@ -90,7 +97,8 @@ struct BrowseAllVariables
         list.template buildSurveyResults<S, CDataLevel, CFile>(results);
         // Go to the next status
         BrowseAllVariables<NextT, nextDataLevel, nextFileLevel>::template buildSurveyResults<L, S>(
-          list, results);
+          list,
+          results);
     }
 };
 
@@ -99,7 +107,8 @@ struct BrowseAllVariables<NextT, Category::maxDataLevel, Category::maxFileLevel>
 {
     enum
     {
-        maxValue = NextT::template Statistics<Category::maxDataLevel, Category::maxFileLevel>::count
+        maxValue = NextT::template Statistics < Category::maxDataLevel,
+        Category::maxFileLevel > ::count
     };
 
     template<class L, class S>
@@ -117,6 +126,7 @@ class SurveyReportBuilderFile
 {
 public:
     using ListType = NextT;
+
     enum
     {
         //! A non-zero value to write down the results for the simulation
@@ -128,9 +138,13 @@ public:
     static void Run(const ListType& list, SurveyResults& results, unsigned int numSpace)
     {
         if (globalResults)
+        {
             RunGlobalResults(list, results);
+        }
         else
+        {
             RunAnnual(list, results, numSpace);
+        }
 
         // The survey type
         using SurveyRBFileType = SurveyReportBuilderFile<GlobalT, NextT, CDataLevel, nextFileLevel>;
@@ -175,6 +189,7 @@ class SurveyReportBuilderFile<GlobalT, NextT, N, 2 * Category::maxFileLevel>
 {
 public:
     using ListType = NextT;
+
     // dead end
     static inline void Run(const ListType&, SurveyResults&, unsigned int)
     {
@@ -187,6 +202,7 @@ class SurveyReportBuilder
 public:
     //! List
     using ListType = NextT;
+
     enum
     {
         nextDataLevel = CDataLevel * 2,
@@ -197,15 +213,21 @@ public:
         // Area - Thermal clusters - Links
         if (CDataLevel & Category::area || CDataLevel & Category::link
             || CDataLevel & Category::thermalAggregate)
+        {
             RunForEachArea(list, results, numSpace);
+        }
 
         // Set of Areas
         if (CDataLevel & Category::setOfAreas)
+        {
             RunForEachSetOfAreas(list, results, numSpace);
+        }
 
         // Binding constraints level
         if (CDataLevel & Category::bindingConstraint)
+        {
             RunForEachBindingConstraint(list, results, numSpace);
+        }
 
         // Go to the next data level
         SurveyReportBuilder<GlobalT, NextT, nextDataLevel>::Run(list, results, numSpace);
@@ -256,8 +278,8 @@ private:
         using namespace Yuni;
 
         // No need to do anything for any area here if no zonal variables were selected.
-        uint selectedZonalVarsCount
-          = results.data.study.parameters.variablesPrintInfo.getNbSelectedZonalVars();
+        uint selectedZonalVarsCount = results.data.study.parameters.variablesPrintInfo
+                                        .getNbSelectedZonalVars();
 
         // All values related to an area
         // Note: A thermal cluster is attached to an area
@@ -302,10 +324,14 @@ private:
 
             // Thermal clusters for the current area
             if (CDataLevel & Category::thermalAggregate)
+            {
                 RunForEachThermalCluster(list, results, numSpace);
+            }
             // Links
             if (CDataLevel & Category::link && !area.links.empty())
+            {
                 RunForEachLink(list, results, numSpace);
+            }
         }
     }
 
@@ -318,7 +344,7 @@ private:
         if (VariablesStatsByDataLevel<NextT, Category::thermalAggregate>::count)
         {
             auto& area = *results.data.area;
-            for (auto& cluster : area.thermal.list.each_enabled_and_not_mustrun())
+            for (auto& cluster: area.thermal.list.each_enabled_and_not_mustrun())
             {
                 results.data.thermalCluster = cluster.get();
 
@@ -338,10 +364,12 @@ private:
         using namespace Yuni;
 
         // No need to do anything for any link here if no link variables were selected.
-        uint selectedLinkVarsCount
-          = results.data.study.parameters.variablesPrintInfo.getNbSelectedLinkVars();
+        uint selectedLinkVarsCount = results.data.study.parameters.variablesPrintInfo
+                                       .getNbSelectedLinkVars();
         if (!selectedLinkVarsCount)
+        {
             return;
+        }
 
         int count_int = VariablesStatsByDataLevel<NextT, Category::link>::count;
         if (count_int)
@@ -357,8 +385,8 @@ private:
                 // Skipping the creation of a result directory if it is meant to be empty.
                 // ... Getting few indicators value before deciding if we skip the results directory
                 // creation.
-                bool printingSynthesis
-                  = GlobalT; // Are we printing synthesis or year-by-year results ?
+                bool printingSynthesis = GlobalT; // Are we printing synthesis or year-by-year
+                                                  // results ?
                 bool filterAllYearByYear = !(link.filterYearByYear & Data::filterAll);
                 bool filterAllSynthesis = !(link.filterSynthesis & Data::filterAll);
 
@@ -376,8 +404,9 @@ private:
                     results.data.output.clear();
                     results.data.output << results.data.originalOutput << SEP << "links" << SEP
                                         << area.id << " - " << results.data.link->with->id;
-                    SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(
-                      list, results, numSpace);
+                    SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(list,
+                                                                             results,
+                                                                             numSpace);
                 }
             }
         }
@@ -392,10 +421,12 @@ private:
 
         // No need to do anything for any district (set of areas) here if no zonal variables were
         // selected.
-        uint selectedZonalVarsCount
-          = results.data.study.parameters.variablesPrintInfo.getNbSelectedZonalVars();
+        uint selectedZonalVarsCount = results.data.study.parameters.variablesPrintInfo
+                                        .getNbSelectedZonalVars();
         if (!selectedZonalVarsCount)
+        {
             return;
+        }
 
         results.data.area = nullptr;
         results.data.thermalCluster = nullptr;
@@ -408,7 +439,9 @@ private:
         for (unsigned int i = 0; i != sets.size(); ++i)
         {
             if (!sets.hasOutput(i) || !sets.resultSize(i))
+            {
                 continue;
+            }
 
             logs.info() << "Exporting results : " << sets.caption(i);
             // The new output
@@ -445,6 +478,7 @@ class SurveyReportBuilder<GlobalT, NextT, 2 * Category::maxDataLevel>
 {
 public:
     using ListType = NextT;
+
     // Dead end
     static void Run(const ListType&, SurveyResults&, unsigned int)
     {

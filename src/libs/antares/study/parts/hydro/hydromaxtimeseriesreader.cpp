@@ -25,8 +25,9 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "antares/study/study.h"
 #include "antares/study/parts/hydro/hydromaxtimeseriesreader.h"
+
+#include "antares/study/study.h"
 #include <antares/inifile/inifile.h>
 
 using namespace Yuni;
@@ -38,8 +39,10 @@ namespace Antares::Data
 
 HydroMaxTimeSeriesReader::HydroMaxTimeSeriesReader(PartHydro& hydro,
                                                    std::string areaID,
-                                                   std::string areaName) :
- hydro_(hydro), areaID_(areaID), areaName_(areaName)
+                                                   std::string areaName):
+    hydro_(hydro),
+    areaID_(areaID),
+    areaName_(areaName)
 {
     dailyMaxPumpAndGen.reset(4U, DAYS_PER_YEAR, true);
 }
@@ -67,17 +70,25 @@ bool HydroMaxTimeSeriesReader::loadDailyMaxPowersAndEnergies(const AnyString& fo
             enabledModeIsChanged = true;
         }
 
-        ret = dailyMaxPumpAndGen.loadFromCSVFile(
-                filePath, 4U, DAYS_PER_YEAR, Matrix<>::optFixedSize, &fileContent)
+        ret = dailyMaxPumpAndGen.loadFromCSVFile(filePath,
+                                                 4U,
+                                                 DAYS_PER_YEAR,
+                                                 Matrix<>::optFixedSize,
+                                                 &fileContent)
               && ret;
 
         if (enabledModeIsChanged)
+        {
             JIT::enabled = true; // Back to the previous loading mode.
+        }
     }
     else
     {
-        ret = dailyMaxPumpAndGen.loadFromCSVFile(
-                filePath, 4U, DAYS_PER_YEAR, Matrix<>::optFixedSize, &fileContent)
+        ret = dailyMaxPumpAndGen.loadFromCSVFile(filePath,
+                                                 4U,
+                                                 DAYS_PER_YEAR,
+                                                 Matrix<>::optFixedSize,
+                                                 &fileContent)
               && ret;
 
         bool errorPowers = false;
@@ -128,7 +139,8 @@ bool HydroMaxTimeSeriesReader::read(const AnyString& folder, bool usedBySolver)
 {
     bool ret = loadDailyMaxPowersAndEnergies(folder, usedBySolver);
     copyDailyMaxEnergy();
-    hydro_.series->buildHourlyMaxPowerFromDailyTS(dailyMaxPumpAndGen[genMaxP], dailyMaxPumpAndGen[pumpMaxP]);
+    hydro_.series->buildHourlyMaxPowerFromDailyTS(dailyMaxPumpAndGen[genMaxP],
+                                                  dailyMaxPumpAndGen[pumpMaxP]);
 
     return ret;
 }

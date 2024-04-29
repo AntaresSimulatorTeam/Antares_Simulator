@@ -21,8 +21,9 @@
 #ifndef __ANTARES_SOLVER_MISC_MATRIX_DP_MAKE_H__
 #define __ANTARES_SOLVER_MISC_MATRIX_DP_MAKE_H__
 
-#include <yuni/yuni.h>
 #include <yuni/core/math.h>
+#include <yuni/yuni.h>
+
 #include "cholesky.h"
 
 namespace Antares

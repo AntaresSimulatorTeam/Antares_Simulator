@@ -21,8 +21,8 @@
 #ifndef __ANTARES_LIBS_SYS_APPDATA_H__
 #define __ANTARES_LIBS_SYS_APPDATA_H__
 
-#include <yuni/yuni.h>
 #include <yuni/core/string.h>
+#include <yuni/yuni.h>
 
 namespace OperatingSystem
 {

@@ -19,9 +19,12 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <mutex>
 #include "antares/io/statistics.h"
+
+#include <mutex>
+
 #include <yuni/core/atomic/int.h>
+
 #include <antares/logs/logs.h>
 
 using namespace Yuni;

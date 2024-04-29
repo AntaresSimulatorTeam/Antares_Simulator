@@ -21,11 +21,13 @@
 #ifndef __ANTARES_LIBS_STUDY_CLEANER_H__
 #define __ANTARES_LIBS_STUDY_CLEANER_H__
 
-#include <yuni/yuni.h>
-#include <yuni/core/string.h>
 #include <yuni/core/bind.h>
-#include "version.h"
+#include <yuni/core/string.h>
+#include <yuni/yuni.h>
+
 #include <antares/paths/list.h>
+
+#include "version.h"
 
 namespace Antares::Data
 {

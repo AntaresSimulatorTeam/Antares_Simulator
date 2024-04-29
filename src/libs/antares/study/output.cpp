@@ -20,6 +20,7 @@
 */
 
 #include "antares/study/output.h"
+
 #include <yuni/io/directory/iterator.h>
 
 using namespace Yuni;
@@ -30,16 +31,18 @@ namespace Antares::Data
 {
 namespace // anonymous
 {
-class OutputFolderIterator : public IO::Directory::IIterator<true>
+class OutputFolderIterator: public IO::Directory::IIterator<true>
 {
 public:
     using IteratorType = IO::Directory::IIterator<true>;
     using Flow = IO::Flow;
 
 public:
-    OutputFolderIterator(Data::Output::List& list) : pList(list)
+    OutputFolderIterator(Data::Output::List& list):
+        pList(list)
     {
     }
+
     virtual ~OutputFolderIterator()
     {
         // For code robustness and to avoid corrupt vtable
@@ -66,7 +69,9 @@ protected:
         {
             auto info = std::make_shared<Data::Output>(parent);
             if (info->valid())
+            {
                 pList.push_back(info);
+            }
             return IO::flowSkip;
         }
         return IO::flowContinue;
@@ -80,8 +85,12 @@ private:
 
 } // anonymous namespace
 
-Output::Output(const AnyString& folder) :
- timestamp(0), mode(Data::SimulationMode::Economy), menuID(-1), viewMenuID(-1), outputViewerID(-1)
+Output::Output(const AnyString& folder):
+    timestamp(0),
+    mode(Data::SimulationMode::Economy),
+    menuID(-1),
+    viewMenuID(-1),
+    outputViewerID(-1)
 {
     loadFromFolder(folder);
 }
@@ -138,7 +147,9 @@ bool Output::loadFromFolder(const AnyString& folder)
         else
         {
             if (p->key == "title")
+            {
                 title = p->value;
+            }
             else
             {
                 if (p->key == "mode")
@@ -148,11 +159,15 @@ bool Output::loadFromFolder(const AnyString& folder)
                 else
                 {
                     if (p->key == "timestamp")
+                    {
                         timestamp = p->value.to<uint>();
+                    }
                     else
                     {
                         if (p->key == "name")
+                        {
                             name = p->value;
+                        }
                     }
                 }
             }
@@ -163,7 +178,9 @@ bool Output::loadFromFolder(const AnyString& folder)
 
     // Post-processing about the title
     if (not name.empty())
+    {
         title << " - " << name;
+    }
 
     return true;
 }
@@ -198,4 +215,3 @@ void Output::RetrieveListFromStudy(List& out, const Study& study)
 }
 
 } // namespace Antares::Data
-

@@ -21,8 +21,8 @@
 #ifndef __LIB_ANTARES_RANDOM_MERSENNE_H__
 #define __LIB_ANTARES_RANDOM_MERSENNE_H__
 
-#include <yuni/yuni.h>
 #include <yuni/core/math/random/distribution.h>
+#include <yuni/yuni.h>
 
 namespace Antares
 {
@@ -40,14 +40,15 @@ namespace Antares
 class MersenneTwister final
 {
 public:
-
     // Name of the distribution
     static const char* Name()
     {
         return "Mersenne Twister random numbers";
     }
+
     //! Type of a single random
     using Value = double;
+
     enum
     {
         //! A default seed
@@ -100,6 +101,7 @@ private:
         periodN = 624,
         periodM = 397,
     };
+
     //! State vector
     mutable uint32_t mt[periodN];
     //

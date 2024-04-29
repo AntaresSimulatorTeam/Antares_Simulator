@@ -21,15 +21,18 @@
 #ifndef __SOLVER_VARIABLE_STATE_H__
 #define __SOLVER_VARIABLE_STATE_H__
 
-#include <vector>
 #include <array>
+#include <vector>
+
 #include <yuni/yuni.h>
-#include "constants.h"
-#include <antares/study/fwd.h>
-#include <antares/study/area/scratchpad.h>
+
+#include "antares/solver/simulation/sim_extern_variables_globales.h"
 #include "antares/solver/simulation/sim_structure_donnees.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
-#include "antares/solver/simulation/sim_extern_variables_globales.h"
+#include <antares/study/area/scratchpad.h>
+#include <antares/study/fwd.h>
+
+#include "constants.h"
 
 namespace Antares::Solver::Variable
 {

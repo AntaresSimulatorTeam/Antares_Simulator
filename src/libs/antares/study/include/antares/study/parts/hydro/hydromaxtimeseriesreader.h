@@ -67,8 +67,7 @@ private:
      *  This function provides reading from deprecated files which
      *  contains daily maximum generation/pumping power and energy data.
      */
-    bool loadDailyMaxPowersAndEnergies(const AnyString& folder,
-                                       bool usedBySolver);
+    bool loadDailyMaxPowersAndEnergies(const AnyString& folder, bool usedBySolver);
 
     /**
      * \brief Copy energy functions

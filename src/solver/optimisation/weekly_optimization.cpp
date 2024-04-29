@@ -20,6 +20,7 @@
 */
 
 #include "antares/solver/optimisation/weekly_optimization.h"
+
 #include "antares/solver/optimisation/opt_fonctions.h"
 
 namespace Antares::Solver::Optimization
@@ -28,8 +29,8 @@ DefaultWeeklyOptimization::DefaultWeeklyOptimization(const OptimizationOptions& 
                                                      PROBLEME_HEBDO* problemeHebdo,
                                                      AdqPatchParams& adqPatchParams,
                                                      uint thread_number,
-                                                     IResultWriter& writer) :
- WeeklyOptimization(options, problemeHebdo, adqPatchParams, thread_number, writer)
+                                                     IResultWriter& writer):
+    WeeklyOptimization(options, problemeHebdo, adqPatchParams, thread_number, writer)
 {
 }
 

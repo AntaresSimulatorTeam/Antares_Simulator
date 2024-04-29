@@ -21,9 +21,10 @@
 #ifndef __LIBS_STUDY_SCENARIO_BUILDER_DATA_UTILS_H__
 #define __LIBS_STUDY_SCENARIO_BUILDER_DATA_UTILS_H__
 
-#include <yuni/yuni.h>
-#include <yuni/core/fwd.h>
 #include <string>
+
+#include <yuni/core/fwd.h>
+#include <yuni/yuni.h>
 
 namespace Antares
 {

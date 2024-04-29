@@ -24,15 +24,15 @@
 FinalStockEquivalentData FinalStockGroup::GetFinalStockEquivalentData()
 {
     return {.CaracteristiquesHydrauliques = problemeHebdo_->CaracteristiquesHydrauliques,
-            .NumeroDeContrainteEquivalenceStockFinal
-            = problemeHebdo_->NumeroDeContrainteEquivalenceStockFinal};
+            .NumeroDeContrainteEquivalenceStockFinal = problemeHebdo_
+                                                         ->NumeroDeContrainteEquivalenceStockFinal};
 }
 
 FinalStockExpressionData FinalStockGroup::GetFinalStockExpressionData()
 {
     return {.CaracteristiquesHydrauliques = problemeHebdo_->CaracteristiquesHydrauliques,
-            .NumeroDeContrainteExpressionStockFinal
-            = problemeHebdo_->NumeroDeContrainteExpressionStockFinal};
+            .NumeroDeContrainteExpressionStockFinal = problemeHebdo_
+                                                        ->NumeroDeContrainteExpressionStockFinal};
 }
 
 void FinalStockGroup::BuildConstraints()

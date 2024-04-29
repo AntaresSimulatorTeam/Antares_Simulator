@@ -19,16 +19,21 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <yuni/yuni.h>
-#include <yuni/core/math.h>
-#include <antares/study/study.h>
 #include "antares/solver/variable/storage/intermediate.h"
+
+#include <yuni/core/math.h>
+#include <yuni/yuni.h>
+
+#include <antares/study/study.h>
 
 using namespace Yuni;
 
 namespace Antares::Solver::Variable
 {
-IntermediateValues::IntermediateValues() : pRange(nullptr), calendar(nullptr), year(0.)
+IntermediateValues::IntermediateValues():
+    pRange(nullptr),
+    calendar(nullptr),
+    year(0.)
 {
     Antares::Memory::Allocate<Type>(hour, maxHoursInAYear);
     Antares::Memory::Zero(maxHoursInAYear, hour);
@@ -57,7 +62,9 @@ void IntermediateValues::computeStatisticsAdequacyForTheCurrentYear()
     // For each day in the year
 
     for (uint i = pRange->hour[Data::rangeBegin]; i <= pRange->hour[Data::rangeEnd]; ++i)
+    {
         year += hour[i];
+    }
 }
 
 void IntermediateValues::computeStatisticsForTheCurrentYear()
@@ -92,9 +99,13 @@ void IntermediateValues::computeStatisticsForTheCurrentYear()
 
     // weeks
     for (i = 0; i != maxWeeksInAYear; ++i)
+    {
         week[i] = 0.;
+    }
     for (i = pRange->day[Data::rangeBegin]; i <= pRange->day[Data::rangeEnd]; ++i)
+    {
         week[calendar->days[i].week] += day[i];
+    }
 
     // x(m)
     indx = calendar->months[pRange->month[Data::rangeBegin]].daysYear.first;
@@ -135,18 +146,24 @@ void IntermediateValues::computeStatisticsOrForTheCurrentYear()
         {
             assert(indx < maxHoursInAYear);
             if (hour[indx] > 0.)
+            {
                 day[i] = 100.;
+            }
             ++indx;
         }
     }
 
     // weeks
     for (i = 0; i != maxWeeksInAYear; ++i)
+    {
         week[i] = 0.;
+    }
     for (i = pRange->day[Data::rangeBegin]; i <= pRange->day[Data::rangeEnd]; ++i)
     {
         if (day[i] > 0)
+        {
             week[calendar->days[i].week] = 100.;
+        }
     }
 
     // x(m)
@@ -216,13 +233,19 @@ void IntermediateValues::computeWeeklyAveragesForCurrentYear()
 {
     // Re-initialization (a previous MC year could have left non-nil values)
     for (int w = 0; w != maxWeeksInAYear; ++w)
+    {
         week[w] = 0.;
+    }
 
     // Compute weekly averages for each week in the year
     for (uint d = pRange->day[Data::rangeBegin]; d <= pRange->day[Data::rangeEnd]; ++d)
+    {
         week[calendar->days[d].week] += day[d];
+    }
     for (uint w = pRange->week[Data::rangeBegin]; w <= pRange->week[Data::rangeEnd]; ++w)
+    {
         week[w] /= pRuntimeInfo->simulationDaysPerWeek[w];
+    }
 }
 
 void IntermediateValues::computeMonthlyAveragesForCurrentYear()
@@ -283,7 +306,9 @@ void IntermediateValues::computeProbabilitiesForTheCurrentYear()
         for (j = 0; j != maxHoursInADay; ++j)
         {
             if (hour[indx] > 0.)
+            {
                 d = ratio;
+            }
             ++indx;
         }
         day[i] = d;
@@ -300,7 +325,9 @@ void IntermediateValues::computeProbabilitiesForTheCurrentYear()
 
     // weeks
     for (i = 0; i != maxWeeksInAYear; ++i)
+    {
         week[i] = 0.;
+    }
     for (i = pRange->day[Data::rangeBegin]; i <= pRange->day[Data::rangeEnd]; ++i)
     {
         if (day[i] > 0.)
@@ -320,7 +347,9 @@ void IntermediateValues::computeProbabilitiesForTheCurrentYear()
         {
             assert(indx < 7 * 53 + 1);
             if (day[indx] > 0.)
+            {
                 d = ratio;
+            }
             ++indx;
         }
         month[i] = d;
@@ -335,17 +364,23 @@ void IntermediateValues::adjustValuesWhenRelatedToAPrice()
     // Months
     ratio = 1. / pRange->month[Data::rangeCount];
     for (i = pRange->month[Data::rangeBegin]; i <= pRange->month[Data::rangeEnd]; ++i)
+    {
         month[i] *= ratio;
+    }
 
     // Weeks
     ratio = 1. / pRange->week[Data::rangeCount];
     for (i = pRange->week[Data::rangeBegin]; i <= pRange->week[Data::rangeEnd]; ++i)
+    {
         week[i] *= ratio;
+    }
 
     // Days
     ratio = 1. / pRange->day[Data::rangeCount];
     for (i = pRange->day[Data::rangeBegin]; i <= pRange->day[Data::rangeEnd]; ++i)
+    {
         day[i] *= ratio;
+    }
 
     // Year
     year /= pRange->hour[Data::rangeCount];
@@ -358,5 +393,3 @@ void IntermediateValues::adjustValuesAdequacyWhenRelatedToAPrice()
 }
 
 } // namespace Antares::Solver::Variable
-
-

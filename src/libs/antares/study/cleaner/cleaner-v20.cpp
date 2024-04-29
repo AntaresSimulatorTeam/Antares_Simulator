@@ -20,8 +20,9 @@
 */
 
 #include <yuni/yuni.h>
-#include "antares/study/study.h"
+
 #include "antares/study/cleaner.h"
+#include "antares/study/study.h"
 #include <antares/inifile/inifile.h>
 
 using namespace Yuni;
@@ -34,8 +35,10 @@ namespace Antares::Data
 namespace // anonymous
 {
 template<class StringT>
-static void listOfFilesAnDirectoriesToKeepForArea(PathList& e, PathList& p, const Area* area,
-        StringT& buffer)
+static void listOfFilesAnDirectoriesToKeepForArea(PathList& e,
+                                                  PathList& p,
+                                                  const Area* area,
+                                                  StringT& buffer)
 {
     // ID of the current area
     const AreaName& id = area->id;
@@ -133,14 +136,15 @@ static void listOfFilesAnDirectoriesToKeepForArea(PathList& e, PathList& p, cons
         buffer.clear() << "input/thermal/clusters/" << id << "/list.ini";
         e.add(buffer);
 
-        for (auto& cluster : area->thermal.list.all())
+        for (auto& cluster: area->thermal.list.all())
         {
             buffer.clear() << "input/thermal/prepro/" << id << '/' << cluster->id();
             p.add(buffer);
             buffer.clear() << "input/thermal/series/" << id << '/' << cluster->id();
             p.add(buffer);
 
-            buffer.clear() << "input/thermal/series/" << id << '/' << cluster->id() << "/series.txt";
+            buffer.clear() << "input/thermal/series/" << id << '/' << cluster->id()
+                           << "/series.txt";
             e.add(buffer);
 
             buffer.clear() << "input/thermal/prepro/" << id << '/' << cluster->id() << "/data.txt";
@@ -162,7 +166,7 @@ static void listOfFilesAnDirectoriesToKeepForArea(PathList& e, PathList& p, cons
         buffer.clear() << "input/renewables/clusters/" << id << "/list.ini";
         e.add(buffer);
 
-        for (const auto& cluster : area->renewable.list.all())
+        for (const auto& cluster: area->renewable.list.all())
         {
             buffer.clear() << "input/renewables/series/" << id << '/' << cluster->id();
             p.add(buffer);
@@ -209,19 +213,16 @@ void listOfFilesAnDirectoriesToKeepForLinks(PathList& p, const Area* area, Strin
         auto& link = *(i->second);
         // Parameters
         buffer.clear() << "input" << SEP << "links" << SEP << link.from->id << SEP << link.with->id
-                       << "_parameters"
-                       << ".txt";
+                       << "_parameters" << ".txt";
         p.add(buffer);
 
         // Indirect capacities
         buffer.clear() << "input" << SEP << "links" << SEP << link.from->id << SEP << "capacities"
-                       << SEP << link.with->id << "_direct"
-                       << ".txt";
+                       << SEP << link.with->id << "_direct" << ".txt";
         p.add(buffer);
         // Direct capacities
         buffer.clear() << "input" << SEP << "links" << SEP << link.from->id << SEP << "capacities"
-                       << SEP << link.with->id << "_indirect"
-                       << ".txt";
+                       << SEP << link.with->id << "_indirect" << ".txt";
         p.add(buffer);
     }
 }
@@ -261,10 +262,12 @@ bool listOfFilesAnDirectoriesToKeep(StudyCleaningInfos* infos)
     e.add("input/thermal/areas.ini");
 
     // Also exclude custom files/folders provided by the user
-    infos->customExclude.words(":", [&e](const AnyString& word) {
-        e.add(word);
-        return true;
-    });
+    infos->customExclude.words(":",
+                               [&e](const AnyString& word)
+                               {
+                                   e.add(word);
+                                   return true;
+                               });
 
     // Post
     p.add("logs");
@@ -390,21 +393,23 @@ bool listOfFilesAnDirectoriesToKeep(StudyCleaningInfos* infos)
     {
         String v;
 
-        ini.each([&](const IniFile::Section& section) {
-            auto* property = section.firstProperty;
-            for (; property; property = property->next)
-            {
-                if (property->key == "id")
-                {
-                    v = property->value;
-                    v.toLower();
-                    buffer.clear() << "input/bindingconstraints/" << v << ".txt";
-                    e.add(buffer);
-                    // Go to the next binding constraint
-                    break;
-                }
-            }
-        });
+        ini.each(
+          [&](const IniFile::Section& section)
+          {
+              auto* property = section.firstProperty;
+              for (; property; property = property->next)
+              {
+                  if (property->key == "id")
+                  {
+                      v = property->value;
+                      v.toLower();
+                      buffer.clear() << "input/bindingconstraints/" << v << ".txt";
+                      e.add(buffer);
+                      // Go to the next binding constraint
+                      break;
+                  }
+              }
+          });
     }
     else
     {
@@ -417,4 +422,3 @@ bool listOfFilesAnDirectoriesToKeep(StudyCleaningInfos* infos)
 }
 
 } // namespace Antares::Data
-

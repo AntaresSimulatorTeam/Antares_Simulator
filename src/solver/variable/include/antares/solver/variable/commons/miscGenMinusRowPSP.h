@@ -21,8 +21,8 @@
 #ifndef __SOLVER_VARIABLE_ECONOMY_MiscGenMinusRowPSP_H__
 #define __SOLVER_VARIABLE_ECONOMY_MiscGenMinusRowPSP_H__
 
-#include "antares/solver/variable/variable.h"
 #include "antares/solver/simulation/sim_extern_variables_globales.h"
+#include "antares/solver/variable/variable.h"
 #include <antares/study/area/constants.h>
 
 namespace Antares
@@ -40,6 +40,7 @@ struct VCardMiscGenMinusRowPSP
     {
         return "MISC. NDG";
     }
+
     //! Unit
     static std::string Unit()
     {
@@ -95,7 +96,7 @@ struct VCardMiscGenMinusRowPSP
 */
 template<class NextT = Container::EndOfList>
 class MiscGenMinusRowPSP
- : public Variable::IVariable<MiscGenMinusRowPSP<NextT>, NextT, VCardMiscGenMinusRowPSP>
+    : public Variable::IVariable<MiscGenMinusRowPSP<NextT>, NextT, VCardMiscGenMinusRowPSP>
 {
 public:
     //! Type of the next static variable
@@ -121,11 +122,11 @@ public:
     {
         enum
         {
-            count
-            = ((VCardType::categoryDataLevel & CDataLevel && VCardType::categoryFileLevel & CFile)
-                 ? (NextType::template Statistics<CDataLevel, CFile>::count
-                    + VCardType::columnCount * ResultsType::count)
-                 : NextType::template Statistics<CDataLevel, CFile>::count),
+            count = ((VCardType::categoryDataLevel & CDataLevel
+                      && VCardType::categoryFileLevel & CFile)
+                       ? (NextType::template Statistics<CDataLevel, CFile>::count
+                          + VCardType::columnCount * ResultsType::count)
+                       : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
 
@@ -145,7 +146,9 @@ public:
         // Intermediate values
         pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+        {
             pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);
+        }
 
         // Next
         NextType::initializeFromStudy(study);
@@ -167,7 +170,9 @@ public:
                 {
                     const Matrix<>::ColumnType& col = area->miscGen.entry[x];
                     for (unsigned int y = 0; y != area->miscGen.height; ++y)
+                    {
                         pValuesForTheCurrentYear[numSpace].hour[y] += col[y];
+                    }
                 }
             }
         }
@@ -224,8 +229,10 @@ public:
                         unsigned int nbYearsForCurrentSummary)
     {
         for (unsigned int numSpace = 0; numSpace < nbYearsForCurrentSummary; ++numSpace)
+        {
             AncestorType::pResults.merge(numSpaceToYear[numSpace],
                                          pValuesForTheCurrentYear[numSpace]);
+        }
 
         // Next variable
         NextType::computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
@@ -263,8 +270,8 @@ public:
             // Write the data for the current year
             results.variableCaption = VCardType::Caption();
             results.variableUnit = VCardType::Unit();
-            pValuesForTheCurrentYear[numSpace].template buildAnnualSurveyReport<VCardType>(
-              results, fileLevel, precision);
+            pValuesForTheCurrentYear[numSpace]
+              .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
         }
     }
 

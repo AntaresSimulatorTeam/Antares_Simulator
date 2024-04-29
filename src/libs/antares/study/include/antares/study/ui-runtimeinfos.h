@@ -21,11 +21,12 @@
 #ifndef __ANTARES_LIBS_STUDY_UI_RUNTIME_INFOS_H__
 #define __ANTARES_LIBS_STUDY_UI_RUNTIME_INFOS_H__
 
-#include <yuni/yuni.h>
 #include <yuni/core/string.h>
-#include "fwd.h"
+#include <yuni/yuni.h>
+
 #include "area/area.h"
 #include "binding_constraint/BindingConstraint.h"
+#include "fwd.h"
 
 namespace Antares
 {
@@ -34,7 +35,8 @@ namespace Data
 class UIRuntimeInfo final
 {
 public:
-    using VectorByType = std::map<enum BindingConstraint::Type, BindingConstraintsRepository::Vector>;
+    using VectorByType = std::map<enum BindingConstraint::Type,
+                                  BindingConstraintsRepository::Vector>;
     using ByOperatorAndType = std::map<enum BindingConstraint::Operator, VectorByType>;
 
 public:
@@ -44,10 +46,12 @@ public:
     ** \brief Constructor
     */
     UIRuntimeInfo(Study& study);
+
     //! Destructor
     ~UIRuntimeInfo()
     {
     }
+
     //@}
 
     /*!
@@ -86,6 +90,7 @@ public:
         assert(i < pLink.size());
         return pLink[i];
     }
+
     const AreaLink* link(uint i) const
     {
         assert(i < pLink.size());
@@ -100,6 +105,7 @@ public:
         assert(i < pClusters.size());
         return pClusters[i];
     }
+
     const ThermalCluster* cluster(uint i) const
     {
         assert(i < pClusters.size());
@@ -111,11 +117,13 @@ public:
         assert(i < pConstraint.size());
         return pConstraint[i].get();
     }
+
     const BindingConstraint* constraint(uint i) const
     {
         assert(i < pConstraint.size());
         return pConstraint[i].get();
     }
+
     uint constraintCount() const
     {
         return (uint)pConstraint.size();

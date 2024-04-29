@@ -19,14 +19,13 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "antares/solver/simulation/sim_structure_probleme_economique.h"
-#include "antares/solver/optimisation/opt_fonctions.h"
-#include "antares/solver/optimisation/opt_export_structure.h"
-
-#include <antares/logs/logs.h>
-#include "antares/solver/utils/filename.h"
 #include "antares/solver/optimisation/LinearProblemMatrix.h"
 #include "antares/solver/optimisation/constraints/constraint_builder_utils.h"
+#include "antares/solver/optimisation/opt_export_structure.h"
+#include "antares/solver/optimisation/opt_fonctions.h"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
+#include "antares/solver/utils/filename.h"
+#include <antares/logs/logs.h>
 using namespace Antares;
 using namespace Yuni;
 using Antares::Solver::Optimization::OptimizationOptions;
@@ -38,9 +37,13 @@ double OPT_ObjectiveFunctionResult(const PROBLEME_HEBDO* Probleme,
                                    const int optimizationNumber)
 {
     if (optimizationNumber == PREMIERE_OPTIMISATION)
+    {
         return Probleme->coutOptimalSolution1[NumeroDeLIntervalle];
+    }
     else
+    {
         return Probleme->coutOptimalSolution2[NumeroDeLIntervalle];
+    }
 }
 
 void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(
@@ -64,8 +67,8 @@ bool runWeeklyOptimization(const OptimizationOptions& options,
                            Solver::IResultWriter& writer,
                            int optimizationNumber)
 {
-    const int NombreDePasDeTempsPourUneOptimisation
-      = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+    const int NombreDePasDeTempsPourUneOptimisation = problemeHebdo
+                                                        ->NombreDePasDeTempsPourUneOptimisation;
 
     int DernierPdtDeLIntervalle;
     for (uint pdtHebdo = 0, numeroDeLIntervalle = 0; pdtHebdo < problemeHebdo->NombreDePasDeTemps;
@@ -86,17 +89,18 @@ bool runWeeklyOptimization(const OptimizationOptions& options,
                                                         numeroDeLIntervalle,
                                                         optimizationNumber);
 
-        OPT_InitialiserLesCoutsLineaire(
-          problemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle);
+        OPT_InitialiserLesCoutsLineaire(problemeHebdo,
+                                        PremierPdtDeLIntervalle,
+                                        DernierPdtDeLIntervalle);
 
         // An optimization period represents a sequence as <year>-<week> or <year>-<week>-<day>,
         // depending whether the optimization is daily or weekly.
         // These sequences are used when building the names of MPS or criterion files.
-        auto optPeriodStringGenerator
-          = createOptPeriodAsString(problemeHebdo->OptimisationAuPasHebdomadaire,
-                                    numeroDeLIntervalle,
-                                    problemeHebdo->weekInTheYear,
-                                    problemeHebdo->year);
+        auto optPeriodStringGenerator = createOptPeriodAsString(
+          problemeHebdo->OptimisationAuPasHebdomadaire,
+          numeroDeLIntervalle,
+          problemeHebdo->weekInTheYear,
+          problemeHebdo->year);
 
         if (!OPT_AppelDuSimplexe(options,
                                  problemeHebdo,
@@ -104,14 +108,19 @@ bool runWeeklyOptimization(const OptimizationOptions& options,
                                  optimizationNumber,
                                  *optPeriodStringGenerator,
                                  writer))
+        {
             return false;
+        }
 
         if (problemeHebdo->ExportMPS != Data::mpsExportStatus::NO_EXPORT)
         {
-            double optimalSolutionCost
-              = OPT_ObjectiveFunctionResult(problemeHebdo, numeroDeLIntervalle, optimizationNumber);
-            OPT_EcrireResultatFonctionObjectiveAuFormatTXT(
-              optimalSolutionCost, *optPeriodStringGenerator, optimizationNumber, writer);
+            double optimalSolutionCost = OPT_ObjectiveFunctionResult(problemeHebdo,
+                                                                     numeroDeLIntervalle,
+                                                                     optimizationNumber);
+            OPT_EcrireResultatFonctionObjectiveAuFormatTXT(optimalSolutionCost,
+                                                           *optPeriodStringGenerator,
+                                                           optimizationNumber,
+                                                           writer);
         }
     }
     return true;
@@ -137,8 +146,8 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
 {
     if (!problemeHebdo->OptimisationAuPasHebdomadaire)
     {
-        problemeHebdo->NombreDePasDeTempsPourUneOptimisation
-          = problemeHebdo->NombreDePasDeTempsDUneJournee;
+        problemeHebdo->NombreDePasDeTempsPourUneOptimisation = problemeHebdo
+                                                                 ->NombreDePasDeTempsDUneJournee;
     }
     else
     {
@@ -162,8 +171,11 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
         OPT_ExportStructures(problemeHebdo, writer);
     }
 
-    bool ret = runWeeklyOptimization(
-      options, problemeHebdo, adqPatchParams, writer, PREMIERE_OPTIMISATION);
+    bool ret = runWeeklyOptimization(options,
+                                     problemeHebdo,
+                                     adqPatchParams,
+                                     writer,
+                                     PREMIERE_OPTIMISATION);
 
     // We only need the 2nd optimization when NOT solving with integer variables
     // We also skip the 2nd optimization in the hidden 'Expansion' mode
@@ -172,8 +184,11 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
     {
         // We need to adjust some stuff before running the 2nd optimisation
         runThermalHeuristic(problemeHebdo);
-        return runWeeklyOptimization(
-          options, problemeHebdo, adqPatchParams, writer, DEUXIEME_OPTIMISATION);
+        return runWeeklyOptimization(options,
+                                     problemeHebdo,
+                                     adqPatchParams,
+                                     writer,
+                                     DEUXIEME_OPTIMISATION);
     }
     return ret;
 }

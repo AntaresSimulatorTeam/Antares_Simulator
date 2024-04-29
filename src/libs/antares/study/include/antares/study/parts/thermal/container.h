@@ -22,6 +22,7 @@
 #define __ANTARES_LIBS_STUDY_PARTS_THERMAL_CONTAINER_H__
 
 #include <yuni/yuni.h>
+
 #include "cluster_list.h"
 
 namespace Antares

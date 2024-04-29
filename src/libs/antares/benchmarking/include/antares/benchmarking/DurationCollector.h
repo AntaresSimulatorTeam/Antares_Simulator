@@ -20,10 +20,10 @@
 */
 #pragma once
 
-#include <vector>
 #include <map>
-#include <string>
 #include <mutex>
+#include <string>
+#include <vector>
 
 #include "file_content.h"
 
@@ -37,17 +37,18 @@ public:
     virtual void addDuration(const std::string& name, int64_t duration) = 0;
 };
 
-class NullDurationCollector : public IDurationCollector
+class NullDurationCollector: public IDurationCollector
 {
 public:
     NullDurationCollector() = default;
     virtual ~NullDurationCollector() = default;
+
     void addDuration(const std::string& /* name */, int64_t /* duration */) override
     { /* Do nothing */
     }
 };
 
-class DurationCollector : public IDurationCollector
+class DurationCollector: public IDurationCollector
 {
 public:
     DurationCollector() = default;

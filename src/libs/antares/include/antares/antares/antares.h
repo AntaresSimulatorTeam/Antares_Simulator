@@ -21,8 +21,8 @@
 #ifndef __ANTARES_H__
 #define __ANTARES_H__
 
-#include <yuni/yuni.h>
 #include <yuni/core/foreach.h>
+#include <yuni/yuni.h>
 
 #define foreach YUNI_FOREACH
 
