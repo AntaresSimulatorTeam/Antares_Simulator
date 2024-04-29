@@ -218,10 +218,10 @@ int main(int argc, char* argv[])
         }
         else
         {
-            String tmp;
-            IO::MakeAbsolute(tmp, *optSolver);
-            IO::Normalize(solver, tmp);
-            if (not IO::File::Exists(solver))
+            std::string tmp = *optSolver;
+            std::filesystem::path solverPath = std::filesystem::absolute(tmp);
+            solverPath = solverPath.lexically_normal();
+            if (!std::filesystem::exists(solverPath))
             {
                 logs.fatal() << "The solver has not been found. specify --solver=" << solver;
                 return EXIT_FAILURE;
