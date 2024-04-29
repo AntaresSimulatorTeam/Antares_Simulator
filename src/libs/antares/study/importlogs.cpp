@@ -47,7 +47,7 @@ void Study::importLogsToOutputFolder(Solver::IResultWriter& resultWriter) const
         logs.closeLogfile();
     }
 
-    resultWriter.addEntryFromFile(logPath, from.string());
+    resultWriter.addEntryFromFile(logPath.string(), from.string());
 
     if (System::windows)
     {
