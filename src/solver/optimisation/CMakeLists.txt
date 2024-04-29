@@ -32,6 +32,7 @@ set(RTESOLVER_OPT
         opt_construction_variables_couts_demarrages.cpp
         opt_gestion_des_bornes_couts_demarrage.cpp
         opt_gestion_des_couts_couts_demarrage.cpp
+        opt_gestion_des_couts_reserves.cpp
         opt_gestion_second_membre_couts_demarrage.cpp
         opt_gestion_second_membre_couts_demarrage.cpp
         opt_decompte_variables_et_contraintes_couts_demarrage.cpp
