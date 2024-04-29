@@ -644,29 +644,25 @@ YString StudyCreateOutputPath(SimulationMode mode,
         break;
     }
 
-    // Temporary buffer
-    String buffer;
-    buffer.reserve(1024);
-
+    std::string idLabel;
     // Folder output
     if (not label.empty())
     {
-        buffer.clear();
-        TransformNameIntoID(label, buffer);
-        folderOutput << '-' << buffer;
+        TransformNameIntoID(label, idLabel);
+        folderOutput << '-' << idLabel;
     }
 
-    buffer.clear() << folderOutput << suffix;
+    std::string outpath = folderOutput.c_str() + suffix;
     // avoid creating the same output twice
-    if (IO::Exists(buffer))
+    if (std::filesystem::exists(outpath))
     {
-        String newpath;
+        std::string newpath;
         uint index = 1; // will start from 2
         do
         {
             ++index;
-            newpath.clear() << folderOutput << '-' << index << suffix;
-        } while (IO::Exists(newpath) and index < 2000);
+            newpath = folderOutput + '-' + std::to_string(index) + suffix;
+        } while (std::filesystem::exists(newpath) and index < 2000);
 
         folderOutput << '-' << index;
     }
