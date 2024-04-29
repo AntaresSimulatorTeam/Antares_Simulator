@@ -56,7 +56,7 @@ bool Study::internalLoadHeader(const String& path)
 bool Study::loadFromFolder(const std::string& path, const StudyLoadOptions& options)
 {
     std::filesystem::path normPath = path;
-    normPath.lexically_normal();
+    normPath = normPath.lexically_normal();
     return internalLoadFromFolder(normPath, options);
 }
 

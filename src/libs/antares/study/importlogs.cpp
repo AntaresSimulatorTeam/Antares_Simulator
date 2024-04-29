@@ -38,7 +38,7 @@ void Study::importLogsToOutputFolder(Solver::IResultWriter& resultWriter) const
 
     std::filesystem::path logPath = "simulation.log";
     std::filesystem::path from = logs.logfile().c_str();
-    from.lexically_normal();
+    from = from.lexically_normal();
 
     if (System::windows)
     {

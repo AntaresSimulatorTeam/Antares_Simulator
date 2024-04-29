@@ -266,7 +266,7 @@ void Settings::checkAndSetStudyFolder(const std::string& folder)
 
     // Making the path absolute
     std::filesystem::path abspath = std::filesystem::absolute(folder);
-    abspath.lexically_normal();
+    abspath = abspath.lexically_normal();
 
     // Checking if the path exists
     if (!std::filesystem::exists(abspath))

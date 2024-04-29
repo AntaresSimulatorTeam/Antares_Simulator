@@ -200,7 +200,7 @@ StudyVersion StudyHeader::tryToFindTheVersion(const std::string& folder)
 
     // folder normalization
     std::filesystem::path abspath = std::filesystem::absolute(folder);
-    abspath.lexically_normal();
+    abspath = abspath.lexically_normal();
 
     if (!abspath.empty() && std::filesystem::exists(abspath))
     {
