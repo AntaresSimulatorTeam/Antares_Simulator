@@ -174,10 +174,10 @@ void Output::RetrieveListFromStudy(List& out, const Study& study)
 
     if (not study.folder.empty())
     {
-        String folder;
-        folder << study.folder << SEP << "output";
+        using fs = std::filesystem;
+        fs::path folder = fs::path(study.folder.c_str()) / "output";
 
-        if (IO::Directory::Exists(folder))
+        if (fs::exists(folder))
         {
             OutputFolderIterator iterator(out);
             iterator.add(folder);
@@ -198,4 +198,3 @@ void Output::RetrieveListFromStudy(List& out, const Study& study)
 }
 
 } // namespace Antares::Data
-
