@@ -102,7 +102,7 @@ public:
      ** \param folder The folder where data are located
      ** \return The version of the study. `unknown` if not found
      */
-     static StudyVersion tryToFindTheVersion(const AnyString& folder);
+     static StudyVersion tryToFindTheVersion(const std::string& folder);
 
 public:
     //! Caption of the study

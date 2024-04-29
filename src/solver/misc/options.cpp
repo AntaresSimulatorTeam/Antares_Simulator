@@ -264,10 +264,8 @@ void Settings::checkAndSetStudyFolder(const std::string& folder)
     if (folder.empty())
         throw Error::NoStudyProvided();
 
-    using path = std::filesystem::path;
     // Making the path absolute
-    path p = folder;
-    path abspath = std::filesystem::absolute(p);
+    std::filesystem::path abspath = std::filesystem::absolute(folder);
     abspath.lexically_normal();
 
     // Checking if the path exists

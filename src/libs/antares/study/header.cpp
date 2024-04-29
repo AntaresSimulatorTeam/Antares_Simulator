@@ -20,6 +20,7 @@
 */
 
 #include "antares/study/header.h"
+#include <filesystem>
 #include <cstdlib>
 #include <ctime>
 #include <cassert>
@@ -193,25 +194,23 @@ bool StudyHeader::saveToFile(const AnyString& filename, bool upgradeVersion)
     return ini.save(filename);
 }
 
-StudyVersion StudyHeader::tryToFindTheVersion(const AnyString& folder)
+StudyVersion StudyHeader::tryToFindTheVersion(const std::string& folder)
 {
     if (folder.empty()) // trivial check
         return StudyVersion::unknown();
 
-    // foldernormalization
-    String abspath, directory;
-    IO::MakeAbsolute(abspath, folder);
-    IO::Normalize(directory, abspath);
+    // folder normalization
+    std::filesystem::path abspath = std::filesystem::absolute(folder);
+    abspath.lexically_normal();
 
-    if (not directory.empty() and IO::Directory::Exists(directory))
+    if (!abspath.empty() && std::filesystem::exists(abspath))
     {
-        abspath.reserve(directory.size() + 20);
-        abspath.clear() << directory << SEP << "study.antares";
-        if (IO::File::Exists(abspath))
+        abspath /= "study.antares";
+        if (std::filesystem::exists(abspath))
         {
             // The raw version number
             std::string versionStr;
-            if (!ReadVersionFromFile(abspath, versionStr))
+            if (!ReadVersionFromFile(abspath.string(), versionStr))
                 return StudyVersion::unknown();
 
             StudyVersion v;
