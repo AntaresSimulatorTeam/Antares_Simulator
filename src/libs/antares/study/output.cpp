@@ -182,7 +182,7 @@ void Output::RetrieveListFromStudy(List& out, const Study& study)
         if (fs::exists(folder))
         {
             OutputFolderIterator iterator(out);
-            iterator.add(folder);
+            iterator.add(folder.string());
             iterator.start();
             iterator.wait(15000); // 15s - arbitrary
         }

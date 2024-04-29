@@ -46,6 +46,7 @@
 
 using namespace Yuni;
 
+namespace fs = std::filesystem;
 
 namespace Antares::Data
 {
@@ -654,7 +655,7 @@ YString StudyCreateOutputPath(SimulationMode mode,
 
     std::string outpath = folderOutput + suffix;
     // avoid creating the same output twice
-    if (std::filesystem::exists(outpath))
+    if (fs::exists(outpath))
     {
         std::string newpath;
         uint index = 1; // will start from 2
@@ -662,7 +663,7 @@ YString StudyCreateOutputPath(SimulationMode mode,
         {
             ++index;
             newpath = folderOutput + '-' + std::to_string(index) + suffix;
-        } while (std::filesystem::exists(newpath) and index < 2000);
+        } while (fs::exists(newpath) and index < 2000);
 
         folderOutput << '-' << index;
     }
