@@ -61,7 +61,7 @@ public:
 
     bool forceZipOutput = false;
 
-    void checkAndSetStudyFolder(Yuni::String folder);
+    void checkAndSetStudyFolder(const std::string& folder);
     void reset();
 }; // class Settings
 
