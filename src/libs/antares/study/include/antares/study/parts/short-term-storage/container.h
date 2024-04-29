@@ -20,8 +20,11 @@
 */
 
 #pragma once
+
+#include <filesystem>
 #include <string>
-#include <map>
+#include <vector>
+
 #include "cluster.h"
 
 namespace Antares::Data::ShortTermStorage
@@ -41,7 +44,7 @@ public:
 
 
     bool saveToFolder(const std::string& folder) const;
-    bool saveDataSeriesToFolder(const std::string& folder) const;
+    bool saveDataSeriesToFolder(const std::filesystem::path& folder) const;
 
     std::vector<STStorageCluster> storagesByIndex;
 };

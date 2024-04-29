@@ -97,11 +97,12 @@ bool STStorageInput::saveToFolder(const std::string& folder) const
     return ini.save(pathIni);
 }
 
-bool STStorageInput::saveDataSeriesToFolder(const std::string& folder) const
+bool STStorageInput::saveDataSeriesToFolder(const std::filesystem::path& folder) const
 {
-    Yuni::IO::Directory::Create(folder);
+    std::filesystem::create_directory(folder);
+
     return std::all_of(storagesByIndex.cbegin(), storagesByIndex.cend(), [&folder](auto& storage) {
-        return storage.saveSeries(folder + SEP + storage.id);
+        return storage.saveSeries(folder / storage.id);
     });
 }
 
