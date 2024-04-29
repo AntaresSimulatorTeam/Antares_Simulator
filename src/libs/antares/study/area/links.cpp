@@ -428,17 +428,16 @@ void logLinkDataCheckErrorDirectIndirect(const AreaLink& link,
 }
 } // anonymous namespace
 
-bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyString& folder)
+bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const std::filesystem::path& folder)
 {
     // Assert
     assert(area);
 
     /* Initialize */
-    String buffer;
-    buffer << folder << SEP << "properties.ini";
+    std::filesystem::path path = folder / "properties.ini";
 
     IniFile ini;
-    if (!ini.open(buffer))
+    if (!ini.open(path.string()))
         return 0;
 
     bool ret = true;
@@ -449,7 +448,7 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
     for (auto* s = ini.firstSection; s; s = s->next)
     {
         // Getting the name of the area
-        buffer.clear();
+        String buffer;
         TransformNameIntoID(s->name, buffer);
 
         // Trying to find it
@@ -471,7 +470,7 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
         link.comments.clear();
         link.displayComments = true;
 
-        ret = link.loadTimeSeries(study, folder) && ret;
+        ret = link.loadTimeSeries(study, folder.string()) && ret;
 
         // Checks on loaded link's data
         if (study.usedByTheSolver)
