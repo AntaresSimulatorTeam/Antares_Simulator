@@ -219,7 +219,7 @@ public:
     ** \brief Load a rule set from an INI File
     */
     template<class StringT>
-    bool loadFromFile(const StringT& filename);
+    bool loadFromFile(const std::filesystem::path& filename);
 
     template<class StringT>
     bool saveToFile(const StringT& filename) const;

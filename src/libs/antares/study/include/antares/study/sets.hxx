@@ -194,7 +194,7 @@ bool Sets<T>::saveToFile(const StringT& filename) const
 
 template<class T>
 template<class StringT>
-bool Sets<T>::loadFromFile(const StringT& filename)
+bool Sets<T>::loadFromFile(const std::filesystem::path& filename)
 {
     using namespace Yuni;
     using namespace Antares;
@@ -203,12 +203,12 @@ bool Sets<T>::loadFromFile(const StringT& filename)
     clear();
 
     // Loading the INI file
-    if (!IO::File::Exists(filename))
+    if (!std::filesystem::exists(filename))
         // Error silently ignored
         return true;
 
     IniFile ini;
-    if (ini.open(filename))
+    if (ini.open(filename.string()))
     {
         Yuni::String value;
 
