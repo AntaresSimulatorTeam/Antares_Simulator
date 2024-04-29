@@ -336,6 +336,7 @@ void DumpToLogs()
     }
 }
 
+// TODO VP: delete
 void CheckRootPrefix(const char* argv0)
 {
     // avoid concurrent changes
