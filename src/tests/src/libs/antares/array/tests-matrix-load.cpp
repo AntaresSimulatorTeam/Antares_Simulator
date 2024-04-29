@@ -290,8 +290,8 @@ BOOST_AUTO_TEST_CASE(
 {
     // CAUTION :
     //	In load from buffer function, the code in charge to detect encoding (ex : little endian
-    //utf-16, ...) 	is dead code. It is be used, but does not seem to detect anything. 	Anyway, binary
-    //file are not used in Antares.
+    // utf-16, ...) 	is dead code. It is be used, but does not seem to detect anything.
+    // Anyway, binary file are not used in Antares.
 
     // Creating an utf-16 binary file -----------------------------------------------------------
     // ... UTF-16le data (if host system is little-endian)

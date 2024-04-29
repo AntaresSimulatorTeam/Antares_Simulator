@@ -119,7 +119,7 @@ typedef          // Prices
                      <Overflows        // Hydraulic overflows
                       <WaterValue      // Water values
                        <HydroCost      // Hydro costs
-                                  // <ShortTermStorageByGroup
+                                       // <ShortTermStorageByGroup
                         <STSbyGroup<STstorageInjectionByCluster<STstorageWithdrawalByCluster<
                           STstorageLevelsByCluster<STstorageCashFlowByCluster<
                             UnsupliedEnergy           // Unsuplied Energy

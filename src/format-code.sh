@@ -4,7 +4,7 @@ if [ $# -eq 0 ]
 then
     # No arguments: format all
     SOURCE_DIRS="analyzer/ ext/ libs/ solver/ tools/ ui/ config/ tests/ packaging/"
-    SOURCE_FILES=$(find -regextype egrep -regex ".*/*\.(c|cxx|cpp|cc|h|hxx|hpp)$")
+    SOURCE_FILES=$(find $SOURCE_DIRS -regextype egrep -regex ".*/*\.(c|cxx|cpp|cc|h|hxx|hpp)$")
 else
     # Format files provided as arguments
     SOURCE_FILES="$@"
