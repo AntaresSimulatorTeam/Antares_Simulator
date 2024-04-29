@@ -652,7 +652,7 @@ YString StudyCreateOutputPath(SimulationMode mode,
         folderOutput << '-' << idLabel;
     }
 
-    std::string outpath = folderOutput.c_str() + suffix;
+    std::string outpath = folderOutput + suffix;
     // avoid creating the same output twice
     if (std::filesystem::exists(outpath))
     {
