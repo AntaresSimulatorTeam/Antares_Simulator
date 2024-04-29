@@ -23,6 +23,7 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
+#include <filesystem>
 #include <ctime>
 #include <antares/inifile/inifile.h>
 #include "version.h"
@@ -49,7 +50,7 @@ public:
     ** \param filename The filename to read
     ** \return The version of the study, or 0 if unknown (invalid header)
     */
-    static bool ReadVersionFromFile(const AnyString& filename, std::string& version);
+    static bool readVersionFromFile(const std::filesystem::path& filename, std::string& version);
 
 public:
     //! \name Constructor & Destructor

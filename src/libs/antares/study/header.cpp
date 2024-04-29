@@ -20,7 +20,6 @@
 */
 
 #include "antares/study/header.h"
-#include <filesystem>
 #include <cstdlib>
 #include <ctime>
 #include <cassert>
@@ -64,7 +63,7 @@ void StudyHeader::CopySettingsToIni(IniFile& ini, bool upgradeVersion)
     // Version
     // For performance reasons, the version should be in written first to
     // be able to quickly check the version of the study when calling
-    // StudyHeader::ReadVersionFromFile().
+    // StudyHeader::readVersionFromFile().
     if (upgradeVersion)
         version = Data::StudyVersion::latest();
     sect->add("version", Data::StudyVersion::latest().toString());
@@ -210,7 +209,7 @@ StudyVersion StudyHeader::tryToFindTheVersion(const std::string& folder)
         {
             // The raw version number
             std::string versionStr;
-            if (!ReadVersionFromFile(abspath.string(), versionStr))
+            if (!readVersionFromFile(abspath, versionStr))
                 return StudyVersion::unknown();
 
             StudyVersion v;
@@ -221,10 +220,10 @@ StudyVersion StudyHeader::tryToFindTheVersion(const std::string& folder)
     return StudyVersion::unknown();
 }
 
-bool StudyHeader::ReadVersionFromFile(const AnyString& filename, std::string& version)
+bool StudyHeader::readVersionFromFile(const std::filesystem::path& filename, std::string& version)
 {
     IniFile ini;
-    if (ini.open(filename))
+    if (ini.open(filename.string()))
         return internalFindVersionFromFile(ini, version);
 
     logs.error() << "Couldn't open study.antares to find the version number";
