@@ -28,6 +28,7 @@
 #include <antares/study/parameters/adq-patch-params.h>
 #include <antares/array/matrix.h>
 #include "../parts/parts.h"
+#include <filesystem>
 #include <vector>
 #include <set>
 #include "links.h"
