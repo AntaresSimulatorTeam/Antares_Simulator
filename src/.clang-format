@@ -323,8 +323,8 @@ IndentRequiresClause: false
 IndentWidth: 4
 
 # Indent if a function definition or declaration is wrapped after the type
-# -> true: to be clear on the fact that this is not another function declaration
-IndentWrappedFunctionNames: true
+# -> false: to be clear on the fact that this is not another function declaration
+IndentWrappedFunctionNames: false
 
 # We always use braces to identify blocks, even one-lines
 InsertBraces: true
