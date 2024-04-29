@@ -1286,7 +1286,7 @@ void Study::markAsModified() const
     setsOfLinks.markAsModified();
 }
 
-void Study::relocate(AnyString newFolder)
+void Study::relocate(const std::string& newFolder)
 {
     folder = newFolder;
     folderInput.clear() << newFolder << SEP << "input";

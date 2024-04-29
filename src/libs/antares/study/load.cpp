@@ -53,10 +53,10 @@ bool Study::internalLoadHeader(const String& path)
     return true;
 }
 
-bool Study::loadFromFolder(const AnyString& path, const StudyLoadOptions& options)
+bool Study::loadFromFolder(const std::string& path, const StudyLoadOptions& options)
 {
-    String normPath;
-    IO::Normalize(normPath, path);
+    std::filesystem::path normPath = path;
+    normPath.lexically_normal();
     return internalLoadFromFolder(normPath, options);
 }
 
@@ -151,16 +151,16 @@ void Study::parameterFiller(const StudyLoadOptions& options)
     reduceMemoryUsage();
 }
 
-bool Study::internalLoadFromFolder(const String& path, const StudyLoadOptions& options)
+bool Study::internalLoadFromFolder(const std::filesystem::path& path, const StudyLoadOptions& options)
 {
     // IO statistics
     Statistics::LogsDumper statisticsDumper;
 
     // Check if the path is correct
-    if (!IO::Directory::Exists(path))
+    if (!std::filesystem::exists(path))
     {
         logs.error()
-          << path << ": The directory does not exist (or not enough privileges to read the folder)";
+          << path.string() << ": The directory does not exist (or not enough privileges to read the folder)";
         return false;
     }
 
@@ -172,7 +172,7 @@ bool Study::internalLoadFromFolder(const String& path, const StudyLoadOptions& o
     this->bufferLoadingTS.reserve(2096);
     assert(this->bufferLoadingTS.capacity() > 0);
 
-    if (!internalLoadIni(path, options))
+    if (!internalLoadIni(path.string(), options))
     {
         return false;
     }

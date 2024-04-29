@@ -157,7 +157,7 @@ public:
     ** This method does not have any effect except modifying
     ** internal variables (`folder`, `folderInput`, ...).
     */
-    void relocate(AnyString newFolder);
+    void relocate(const std::string& newFolder);
 
     /*!
     ** \brief Load a study from a folder
@@ -165,7 +165,7 @@ public:
     ** \param path The path where data are located
     ** \return True if succeeded, false otherwise
     */
-    bool loadFromFolder(const AnyString& path, const StudyLoadOptions& options);
+    bool loadFromFolder(const std::string& path, const StudyLoadOptions& options);
 
     /*!
     ** \brief Clear all ressources held by the study
@@ -669,7 +669,7 @@ protected:
     //! \name Loading
     //@{
     //! Load a study from a folder
-    bool internalLoadFromFolder(const YString& path, const StudyLoadOptions& options);
+    bool internalLoadFromFolder(const std::filesystem::path& path, const StudyLoadOptions& options);
     //! Load the study header
     bool internalLoadHeader(const YString& folder);
     //! Load all correlation matrices
