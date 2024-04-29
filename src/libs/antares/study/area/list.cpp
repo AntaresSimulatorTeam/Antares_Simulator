@@ -810,7 +810,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
 
     // Links
     {
-        std::filesystem::path folder = std::filesystem::path(study.folderInput) / "links" / area.id.c_str();
+        std::filesystem::path folder = std::filesystem::path(study.folderInput.c_str()) / "links" / area.id.c_str();
         ret = AreaLinksLoadFromFolder(study, list, &area, folder) && ret;
     }
 
