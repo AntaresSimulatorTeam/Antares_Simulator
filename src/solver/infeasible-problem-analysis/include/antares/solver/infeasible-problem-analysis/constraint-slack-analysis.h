@@ -20,6 +20,8 @@
  */
 #pragma once
 
+#include <vector>
+
 #include "unfeasibility-analysis.h"
 
 namespace operations_research

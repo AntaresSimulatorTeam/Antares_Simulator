@@ -24,6 +24,8 @@
 
 #include <vector>
 
+#include <boost/test/unit_test.hpp>
+
 #include <antares/array/matrix.h>
 
 using namespace std;

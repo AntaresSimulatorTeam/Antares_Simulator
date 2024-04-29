@@ -21,6 +21,8 @@
 #ifndef __ANTARES_TEST_LIBS_JIT_H__
 #define __ANTARES_TEST_LIBS_JIT_H__
 
+#include "antares/jit/jit.h"
+
 class global_JIT_manager
 {
 public:
