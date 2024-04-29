@@ -28,7 +28,7 @@
 
 using namespace Yuni;
 
-#define SEP IO::Separator
+namespace fs = std::filesystem;
 
 namespace Antares::Data
 {
@@ -199,13 +199,13 @@ StudyVersion StudyHeader::tryToFindTheVersion(const std::string& folder)
         return StudyVersion::unknown();
 
     // folder normalization
-    std::filesystem::path abspath = std::filesystem::absolute(folder);
+    fs::path abspath = fs::absolute(folder);
     abspath = abspath.lexically_normal();
 
-    if (!abspath.empty() && std::filesystem::exists(abspath))
+    if (!abspath.empty() && fs::exists(abspath))
     {
         abspath /= "study.antares";
-        if (std::filesystem::exists(abspath))
+        if (fs::exists(abspath))
         {
             // The raw version number
             std::string versionStr;
@@ -220,7 +220,7 @@ StudyVersion StudyHeader::tryToFindTheVersion(const std::string& folder)
     return StudyVersion::unknown();
 }
 
-bool StudyHeader::readVersionFromFile(const std::filesystem::path& filename, std::string& version)
+bool StudyHeader::readVersionFromFile(const fs::path& filename, std::string& version)
 {
     IniFile ini;
     if (ini.open(filename.string()))

@@ -36,6 +36,8 @@
 
 using namespace Yuni;
 
+namespace fs = std::filesystem;
+
 namespace Antares::Data
 {
 namespace // anonymous
@@ -810,7 +812,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
 
     // Links
     {
-        std::filesystem::path folder = std::filesystem::path(study.folderInput.c_str()) / "links" / area.id.c_str();
+        fs::path folder = fs::path(study.folderInput.c_str()) / "links" / area.id.c_str();
         ret = AreaLinksLoadFromFolder(study, list, &area, folder) && ret;
     }
 
@@ -1107,13 +1109,13 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
     if (studyVersion >= StudyVersion(8, 6))
     {
         logs.info() << "Loading short term storage clusters...";
-        std::filesystem::path stsFolder = std::filesystem::path(pStudy.folderInput.c_str()) / "st-storage";
+        fs::path stsFolder = fs::path(pStudy.folderInput.c_str()) / "st-storage";
 
-        if (std::filesystem::exists(stsFolder))
+        if (fs::exists(stsFolder))
         {
             for (const auto& [id, area] : areas)
             {
-                std::filesystem::path folder = stsFolder / "clusters" / area->id.c_str();
+                fs::path folder = stsFolder / "clusters" / area->id.c_str();
 
                 ret = area->shortTermStorage.createSTStorageClustersFromIniFile(folder)
                       && ret;

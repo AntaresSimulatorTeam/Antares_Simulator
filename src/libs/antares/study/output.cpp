@@ -20,9 +20,12 @@
 */
 
 #include "antares/study/output.h"
+#include <filesystem>
 #include <yuni/io/directory/iterator.h>
 
 using namespace Yuni;
+
+namespace fs = std::filesystem;
 
 #define SEP IO::Separator
 
@@ -174,7 +177,6 @@ void Output::RetrieveListFromStudy(List& out, const Study& study)
 
     if (not study.folder.empty())
     {
-        using fs = std::filesystem;
         fs::path folder = fs::path(study.folder.c_str()) / "output";
 
         if (fs::exists(folder))
