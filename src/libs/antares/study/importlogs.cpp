@@ -36,9 +36,9 @@ void Study::importLogsToOutputFolder(Solver::IResultWriter& resultWriter) const
     if (!logs.logfile())
         return;
 
-    std::string logPath("simulation.log");
-    String from;
-    IO::Normalize(from, logs.logfile());
+    std::filesystem::path logPath = "simulation.log";
+    std::filesystem::path from = logs.logfile().c_str();
+    from.lexically_normal();
 
     if (System::windows)
     {
@@ -47,12 +47,12 @@ void Study::importLogsToOutputFolder(Solver::IResultWriter& resultWriter) const
         logs.closeLogfile();
     }
 
-    resultWriter.addEntryFromFile(logPath, from.c_str());
+    resultWriter.addEntryFromFile(logPath, from.string());
 
     if (System::windows)
     {
         // Reopen the log file
-        logs.logfile(from);
+        logs.logfile(from.string());
     }
 }
 
