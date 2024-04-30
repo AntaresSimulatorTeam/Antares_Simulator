@@ -25,8 +25,8 @@
 #include <cstdlib>
 #include <ctime>
 
-#include "antares/study/version.h"
 #include <antares/logs/logs.h>
+#include "antares/study/version.h"
 
 using namespace Yuni;
 

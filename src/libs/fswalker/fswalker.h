@@ -23,11 +23,11 @@
 
 #include <memory>
 
+#include <yuni/yuni.h>
 #include <yuni/core/bind.h>
 #include <yuni/core/noncopyable.h>
 #include <yuni/core/string.h>
 #include <yuni/thread/thread.h>
-#include <yuni/yuni.h>
 
 #include "job.h"
 #include "statistics.h"

@@ -21,13 +21,13 @@
 #ifndef __SOLVER_VARIABLE_SURVEY_RESULTS_SURVEY_RESULTS_H__
 #define __SOLVER_VARIABLE_SURVEY_RESULTS_SURVEY_RESULTS_H__
 
-#include <yuni/core/string.h>
 #include <yuni/yuni.h>
+#include <yuni/core/string.h>
 
-#include "antares/antares/constants.h"
 #include <antares/study/study.h>
 #include <antares/study/variable-print-info.h>
 #include <antares/writer/i_writer.h>
+#include "antares/antares/constants.h"
 
 #include "../categories.h"
 #include "data.h"

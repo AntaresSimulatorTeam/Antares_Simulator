@@ -21,8 +21,8 @@
 #pragma once
 #include <sstream>
 
-#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include <antares/writer/i_writer.h>
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 #include "simulation.h"
 

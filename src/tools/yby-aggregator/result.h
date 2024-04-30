@@ -23,11 +23,11 @@
 
 #include <map>
 
-#include <yuni/core/string.h>
 #include <yuni/yuni.h>
+#include <yuni/core/string.h>
 
-#include "antares/solver/ts-generator/xcast/studydata.h"
 #include <antares/memory/memory.h>
+#include "antares/solver/ts-generator/xcast/studydata.h"
 
 #include "datafile.h"
 #include "studydata.h"

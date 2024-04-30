@@ -23,9 +23,9 @@
 
 #include <mutex>
 
+#include <yuni/yuni.h>
 #include <yuni/core/string.h>
 #include <yuni/io/directory/iterator.h>
-#include <yuni/yuni.h>
 
 #include "antares/study/study.h"
 

@@ -27,11 +27,11 @@
 
 #include <yuni/yuni.h>
 
-#include "antares/solver/simulation/sim_extern_variables_globales.h"
 #include <antares/antares/fatal-error.h>
 #include <antares/study/area/scratchpad.h>
 #include <antares/study/parts/hydro/container.h>
 #include <antares/study/study.h>
+#include "antares/solver/simulation/sim_extern_variables_globales.h"
 
 namespace Antares
 {

@@ -23,9 +23,9 @@
 
 #include <ranges>
 
+#include <antares/utils/utils.h>
 #include "antares/study/parts/common/cluster.h"
 #include "antares/study/study.h"
-#include <antares/utils/utils.h>
 
 namespace // anonymous
 {

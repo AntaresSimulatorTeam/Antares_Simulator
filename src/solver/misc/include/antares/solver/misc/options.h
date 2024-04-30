@@ -23,9 +23,9 @@
 
 #include <memory>
 
+#include <yuni/yuni.h>
 #include <yuni/core/getopt.h>
 #include <yuni/core/string.h>
-#include <yuni/yuni.h>
 
 #include <antares/study/study.h>
 

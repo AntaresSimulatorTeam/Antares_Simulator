@@ -21,10 +21,10 @@
 
 #include "antares/locator/locator.h"
 
+#include <yuni/yuni.h>
 #include "yuni/io/filename-manipulation.h"
 #include <yuni/core/string.h>
 #include <yuni/io/searchpath.h>
-#include <yuni/yuni.h>
 
 #include "antares/config/config.h"
 #include "antares/resources/resources.h"

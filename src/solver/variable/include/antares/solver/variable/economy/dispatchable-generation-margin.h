@@ -21,8 +21,8 @@
 #ifndef __SOLVER_VARIABLE_ECONOMY_DispatchableGenMargin_H__
 #define __SOLVER_VARIABLE_ECONOMY_DispatchableGenMargin_H__
 
-#include "antares/solver/variable/variable.h"
 #include <antares/study/area/scratchpad.h>
+#include "antares/solver/variable/variable.h"
 
 namespace Antares
 {

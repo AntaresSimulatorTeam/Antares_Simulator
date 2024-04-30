@@ -23,8 +23,8 @@
 
 #include <vector>
 
-#include <yuni/core/noncopyable.h>
 #include <yuni/yuni.h>
+#include <yuni/core/noncopyable.h>
 
 #include <antares/array/matrix.h>
 

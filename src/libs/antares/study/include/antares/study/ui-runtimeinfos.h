@@ -21,8 +21,8 @@
 #ifndef __ANTARES_LIBS_STUDY_UI_RUNTIME_INFOS_H__
 #define __ANTARES_LIBS_STUDY_UI_RUNTIME_INFOS_H__
 
-#include <yuni/core/string.h>
 #include <yuni/yuni.h>
+#include <yuni/core/string.h>
 
 #include "antares/study/binding_constraint/BindingConstraintsRepository.h"
 

@@ -21,8 +21,8 @@
 
 #include "antares/study/version.h"
 
-#include "antares/study/study.h"
 #include <antares/config/config.h>
+#include "antares/study/study.h"
 
 using namespace Yuni;
 using namespace Antares::Data;

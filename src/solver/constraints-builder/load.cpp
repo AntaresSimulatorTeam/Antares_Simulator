@@ -20,10 +20,10 @@
 */
 #include <yuni/io/file.h>
 
+#include <antares/inifile/inifile.h>
 #include "antares/config/config.h"
 #include "antares/solver/constraints-builder/cbuilder.h"
 #include "antares/study/area/constants.h"
-#include <antares/inifile/inifile.h>
 
 using namespace Yuni;
 

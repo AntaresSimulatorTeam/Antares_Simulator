@@ -21,8 +21,8 @@
 #ifndef __ANTARES_LOGS_CLEANER_H__
 #define __ANTARES_LOGS_CLEANER_H__
 
-#include <yuni/core/string.h>
 #include <yuni/yuni.h>
+#include <yuni/core/string.h>
 
 namespace Antares
 {

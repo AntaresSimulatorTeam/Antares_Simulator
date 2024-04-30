@@ -21,8 +21,8 @@
 #ifndef __ANTARES_LIBS_SOLVER_LOAD_OPTIONS_H__
 #define __ANTARES_LIBS_SOLVER_LOAD_OPTIONS_H__
 
-#include <yuni/core/string.h>
 #include <yuni/yuni.h>
+#include <yuni/core/string.h>
 
 #include "parameters.h"
 

@@ -24,9 +24,9 @@
 
 #include <yuni/io/file.h> // Yuni::IO::File::LoadFromFile
 
-#include "antares/logs/logs.h"
 #include <antares/benchmarking/DurationCollector.h>
 #include <antares/benchmarking/timer.h>
+#include "antares/logs/logs.h"
 
 extern "C"
 {

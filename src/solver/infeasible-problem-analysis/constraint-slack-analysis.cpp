@@ -22,8 +22,8 @@
 
 #include <regex>
 
-#include "antares/solver/infeasible-problem-analysis/report.h"
 #include <antares/logs/logs.h>
+#include "antares/solver/infeasible-problem-analysis/report.h"
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 #include "ortools/linear_solver/linear_solver.h"

@@ -31,11 +31,11 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "antares/solver/simulation/BindingConstraintsTimeSeriesNumbersWriter.h"
-#include "antares/solver/simulation/timeseries-numbers.h"
 #include <antares/benchmarking/DurationCollector.h>
 #include <antares/writer/result_format.h>
 #include <antares/writer/writer_factory.h>
+#include "antares/solver/simulation/BindingConstraintsTimeSeriesNumbersWriter.h"
+#include "antares/solver/simulation/timeseries-numbers.h"
 
 using namespace Antares::Solver;
 using namespace Antares::Data;

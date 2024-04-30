@@ -21,11 +21,11 @@
 
 #include "antares/logs/hostinfo.h"
 
-#include <yuni/core/system/cpu.h>
 #include <yuni/yuni.h>
+#include <yuni/core/system/cpu.h>
 
-#include "antares/logs/hostname.hxx"
 #include <antares/logs/logs.h>
+#include "antares/logs/hostname.hxx"
 
 using namespace Yuni;
 using namespace Antares;

@@ -26,14 +26,14 @@
 
 #include <boost/algorithm/string/case_conv.hpp>
 
+#include <yuni/yuni.h>
 #include <yuni/core/math.h>
 #include <yuni/io/file.h>
-#include <yuni/yuni.h>
 
-#include "antares/study/study.h"
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
 #include <antares/utils/utils.h>
+#include "antares/study/study.h"
 
 using namespace Yuni;
 using namespace Antares;

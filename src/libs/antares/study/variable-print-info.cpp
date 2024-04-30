@@ -24,8 +24,8 @@
 #include <algorithm>
 #include <cassert>
 
-#include "antares/solver/variable/categories.h"
 #include <antares/study/study.h>
+#include "antares/solver/variable/categories.h"
 
 using namespace Antares::Solver::Variable;
 

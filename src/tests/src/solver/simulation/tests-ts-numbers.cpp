@@ -27,9 +27,9 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "antares/solver/ts-generator/generator.h"
 #include <antares/solver/simulation/timeseries-numbers.h>
 #include <antares/utils/utils.h>
+#include "antares/solver/ts-generator/generator.h"
 
 using namespace Yuni;
 using namespace Antares::Data;

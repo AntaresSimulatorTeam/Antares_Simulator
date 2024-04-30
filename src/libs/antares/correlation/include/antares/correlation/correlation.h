@@ -23,10 +23,10 @@
 
 #include <yuni/yuni.h>
 
-#include "antares/study/fwd.h"
-#include "antares/study/version.h"
 #include <antares/array/matrix.h>
 #include <antares/inifile/inifile.h>
+#include "antares/study/fwd.h"
+#include "antares/study/version.h"
 
 namespace Antares::Data
 {

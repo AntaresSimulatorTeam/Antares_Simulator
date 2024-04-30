@@ -22,10 +22,10 @@
 
 #include <filesystem>
 
-#include "antares/antares/Enum.hpp"
-#include "antares/solver/utils/basis_status.h"
 #include <antares/exception/AssertionError.hpp>
 #include <antares/logs/logs.h>
+#include "antares/antares/Enum.hpp"
+#include "antares/solver/utils/basis_status.h"
 
 using namespace operations_research;
 

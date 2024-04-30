@@ -25,8 +25,8 @@
 #include <cstdlib>
 #include <utility>
 
-#include <yuni/core/string.h>
 #include <yuni/yuni.h>
+#include <yuni/core/string.h>
 
 #include <antares/io/statistics.h>
 #include <antares/logs/logs.h>

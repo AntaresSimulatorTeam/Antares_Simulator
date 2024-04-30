@@ -21,8 +21,8 @@
 
 #include "antares/solver/variable/storage/intermediate.h"
 
-#include <yuni/core/math.h>
 #include <yuni/yuni.h>
+#include <yuni/core/math.h>
 
 #include <antares/study/study.h>
 

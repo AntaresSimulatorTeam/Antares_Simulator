@@ -21,12 +21,12 @@
 
 #include "antares/solver/simulation/economy.h"
 
+#include <antares/exception/AssertionError.hpp>
+#include <antares/exception/UnfeasibleProblemError.hpp>
 #include "antares/solver/optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/simulation/common-eco-adq.h"
 #include "antares/solver/simulation/simulation.h"
-#include <antares/exception/AssertionError.hpp>
-#include <antares/exception/UnfeasibleProblemError.hpp>
 
 using namespace Yuni;
 using Antares::Constants::nbHoursInAWeek;

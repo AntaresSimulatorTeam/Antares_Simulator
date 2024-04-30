@@ -20,11 +20,11 @@
 */
 #include <fstream>
 
+#include <antares/benchmarking/DurationCollector.h>
 #include "antares/study/scenario-builder/sets.h"
 #include "antares/study/study.h"
 #include "antares/study/ui-runtimeinfos.h"
 #include "antares/study/version.h"
-#include <antares/benchmarking/DurationCollector.h>
 
 using namespace Yuni;
 using Antares::Constants::nbHoursInAWeek;

@@ -20,12 +20,12 @@
 */
 #include "antares/study/parts/common/cluster.h"
 
+#include <yuni/yuni.h>
 #include <yuni/io/directory.h>
 #include <yuni/io/file.h>
-#include <yuni/yuni.h>
 
-#include "antares/study/study.h"
 #include <antares/utils/utils.h>
+#include "antares/study/study.h"
 
 namespace Antares::Data
 {

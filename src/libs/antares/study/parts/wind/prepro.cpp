@@ -21,11 +21,11 @@
 
 #include "antares/study/parts/wind/prepro.h"
 
-#include <yuni/io/directory.h>
 #include <yuni/yuni.h>
+#include <yuni/io/directory.h>
 
-#include "antares/study/study.h"
 #include <antares/logs/logs.h>
+#include "antares/study/study.h"
 
 using namespace Yuni;
 using namespace Antares;

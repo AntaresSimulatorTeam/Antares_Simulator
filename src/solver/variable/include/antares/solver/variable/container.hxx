@@ -23,8 +23,8 @@
 
 #include <memory>
 
-#include <yuni/core/static/types.h>
 #include <yuni/yuni.h>
+#include <yuni/core/static/types.h>
 
 #include "antares/solver/variable/surveyresults/reportbuilder.hxx"
 

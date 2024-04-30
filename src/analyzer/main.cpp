@@ -19,8 +19,8 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <yuni/core/getopt.h>
 #include <yuni/yuni.h>
+#include <yuni/core/getopt.h>
 
 #include <antares/antares/version.h>
 #include <antares/args/args_to_utf8.h>

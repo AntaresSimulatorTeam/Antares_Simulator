@@ -23,9 +23,9 @@
 
 #include <ctime>
 
+#include <yuni/yuni.h>
 #include <yuni/io/directory.h>
 #include <yuni/io/directory/iterator.h>
-#include <yuni/yuni.h>
 #ifdef YUNI_OS_WINDOWS
 #include <direct.h>
 #endif

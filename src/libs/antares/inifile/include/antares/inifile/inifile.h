@@ -23,8 +23,8 @@
 
 #include <optional>
 
-#include <yuni/core/string.h>
 #include <yuni/yuni.h>
+#include <yuni/core/string.h>
 
 namespace Antares
 {

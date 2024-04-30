@@ -42,8 +42,8 @@
 #endif
 #include <yuni/core/system/process.h>
 
-#include "antares/memory/memory.h"
 #include <antares/sys/policy.h>
+#include "antares/memory/memory.h"
 
 using namespace Yuni;
 

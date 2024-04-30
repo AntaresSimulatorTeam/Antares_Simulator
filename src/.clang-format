@@ -271,10 +271,20 @@ IncludeBlocks: Regroup
 
 # First main header, then std libs, then boost, then yuni, then antares
 IncludeCategories:
-  # antares headers
-  - Regex: '^(<|")antares/.*'
+  # antares headers with "
+  - Regex: '^"antares/.*'
     Priority: 10
+    SortPriority: 10
     CaseSensitive: false
+  # antares headers with <
+  - Regex: '^<antares/.*'
+    Priority: 10
+    SortPriority: 9
+    CaseSensitive: false
+  # Main yuni headers need to go first...
+  - Regex: '^(<|")yuni/(yuni|core).h(>|")'
+    Priority: 5
+    SortPriority: 4
   # yuni headers
   - Regex: '^(<|")yuni/.*'
     Priority: 5
@@ -282,16 +292,13 @@ IncludeCategories:
   # boost
   - Regex: '^(<|")boost/.*'
     Priority: 2
-    SortPriority: 0
   # stdlib
   - Regex: '^<.*'
     Priority: 1
-    SortPriority: 0
     CaseSensitive: false
   # everything else (targets to be internal lib headers)
   - Regex: '.*'
     Priority: 15
-    SortPriority: 0
     CaseSensitive: false
 
 # Definition of main header of a cpp file
@@ -323,7 +330,7 @@ IndentRequiresClause: false
 IndentWidth: 4
 
 # Indent if a function definition or declaration is wrapped after the type
-# -> false: to be clear on the fact that this is not another function declaration
+# -> false: so that function name remains at indentation level
 IndentWrappedFunctionNames: false
 
 # We always use braces to identify blocks, even one-lines

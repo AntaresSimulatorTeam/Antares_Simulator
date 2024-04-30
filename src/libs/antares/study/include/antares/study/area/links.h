@@ -23,9 +23,9 @@
 
 #include <set>
 
+#include <yuni/yuni.h>
 #include <yuni/core/noncopyable.h>
 #include <yuni/core/string.h>
-#include <yuni/yuni.h>
 
 #include <antares/array/matrix.h>
 #include <antares/series/series.h>

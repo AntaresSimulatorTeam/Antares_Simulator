@@ -22,17 +22,17 @@
 #include <limits>
 #include <sstream>
 
+#include <yuni/yuni.h>
 #include <yuni/io/directory.h>
 #include <yuni/io/file.h>
-#include <yuni/yuni.h>
 
+#include <antares/antares/fatal-error.h>
+#include <antares/study/study.h>
+#include <antares/utils/utils.h>
 #include "antares/solver/hydro/management/management.h"
 #include "antares/solver/hydro/monthly/h2o_m_donnees_annuelles.h"
 #include "antares/solver/hydro/monthly/h2o_m_fonctions.h"
 #include "antares/solver/simulation/sim_extern_variables_globales.h"
-#include <antares/antares/fatal-error.h>
-#include <antares/study/study.h>
-#include <antares/utils/utils.h>
 
 using namespace Yuni;
 

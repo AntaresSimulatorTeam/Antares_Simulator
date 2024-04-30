@@ -23,9 +23,9 @@
 
 #include <yuni/core/string/wstring.h>
 
+#include <antares/benchmarking/DurationCollector.h>
 #include "antares/study/scenario-builder/sets.h"
 #include "antares/study/study.h"
-#include <antares/benchmarking/DurationCollector.h>
 
 using namespace Yuni;
 

@@ -21,9 +21,9 @@
 #ifndef __SOLVER_VARIABLE_LIST_H__
 #define __SOLVER_VARIABLE_LIST_H__
 
+#include <yuni/yuni.h>
 #include <yuni/core/static/types.h>
 #include <yuni/core/string.h>
-#include <yuni/yuni.h>
 
 #include <antares/logs/logs.h>
 

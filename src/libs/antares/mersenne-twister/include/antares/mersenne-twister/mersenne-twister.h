@@ -21,8 +21,8 @@
 #ifndef __LIB_ANTARES_RANDOM_MERSENNE_H__
 #define __LIB_ANTARES_RANDOM_MERSENNE_H__
 
-#include <yuni/core/math/random/distribution.h>
 #include <yuni/yuni.h>
+#include <yuni/core/math/random/distribution.h>
 
 namespace Antares
 {

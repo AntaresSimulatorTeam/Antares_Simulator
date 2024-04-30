@@ -19,9 +19,9 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "antares/solver/misc/matrix-dp-make.h"
 #include <antares/date/date.h>
 #include <antares/utils/utils.h>
+#include "antares/solver/misc/matrix-dp-make.h"
 
 #include "atsp.h"
 

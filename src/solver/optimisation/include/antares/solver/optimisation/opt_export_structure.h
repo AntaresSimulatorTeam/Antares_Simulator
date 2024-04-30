@@ -27,9 +27,9 @@
 
 #include <yuni/yuni.h>
 
+#include <antares/study/study.h>
 #include "antares/antares/Enum.hpp"
 #include "antares/writer/i_writer.h"
-#include <antares/study/study.h>
 
 namespace Antares
 {

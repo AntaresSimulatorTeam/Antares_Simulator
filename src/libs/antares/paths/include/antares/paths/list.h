@@ -24,9 +24,9 @@
 #include <cstdio>
 #include <map>
 
+#include <yuni/yuni.h>
 #include <yuni/core/bind.h>
 #include <yuni/core/string.h>
-#include <yuni/yuni.h>
 
 enum PathListOption
 {

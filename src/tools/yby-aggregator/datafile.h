@@ -24,8 +24,8 @@
 #include <memory>
 #include <set>
 
-#include <yuni/core/string.h>
 #include <yuni/yuni.h>
+#include <yuni/core/string.h>
 
 class DataFile final
 {

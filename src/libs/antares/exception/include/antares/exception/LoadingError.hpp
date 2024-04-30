@@ -31,8 +31,8 @@
 #include <map>
 #include <stdexcept>
 
-#include <yuni/string.h>
 #include <yuni/yuni.h>
+#include <yuni/string.h>
 
 #include "antares/study/fwd.h"
 

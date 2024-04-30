@@ -23,9 +23,9 @@
 #include <algorithm>
 #include <fstream>
 
+#include <antares/logs/logs.h>
 #include "antares/solver/infeasible-problem-analysis/constraint-slack-analysis.h"
 #include "antares/solver/infeasible-problem-analysis/variables-bounds-consistency.h"
-#include <antares/logs/logs.h>
 
 using namespace operations_research;
 

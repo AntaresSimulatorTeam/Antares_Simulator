@@ -25,15 +25,15 @@
 #include <cstdlib>
 #include <vector>
 
-#include <yuni/core/string.h>
 #include <yuni/yuni.h>
+#include <yuni/core/string.h>
 
-#include "antares/antares/antares.h"
-#include "antares/study/fwd.h"
 #include <antares/date/date.h>
 #include <antares/inifile/inifile.h>
 #include <antares/study/UnfeasibleProblemBehavior.hpp>
 #include <antares/writer/result_format.h>
+#include "antares/antares/antares.h"
+#include "antares/study/fwd.h"
 
 #include "parameters/adq-patch-params.h"
 #include "variable-print-info.h"

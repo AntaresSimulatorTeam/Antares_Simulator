@@ -23,10 +23,10 @@
 
 #include <limits>
 
+#include <yuni/yuni.h>
 #include <yuni/core/static/types.h>
 #include <yuni/core/string.h>
 #include <yuni/io/directory.h>
-#include <yuni/yuni.h>
 
 #include <antares/logs/logs.h>
 #include <antares/study/filter.h>

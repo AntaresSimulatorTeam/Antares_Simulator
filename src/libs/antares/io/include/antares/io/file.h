@@ -21,8 +21,8 @@
 #ifndef __LIBS_ANTARES_IO_FILE_H__
 #define __LIBS_ANTARES_IO_FILE_H__
 
-#include <yuni/core/string.h>
 #include <yuni/yuni.h>
+#include <yuni/core/string.h>
 
 /*!
 ** \brief Reset the content of a file

@@ -27,8 +27,8 @@
 
 #include "antares/study/parts/hydro/hydromaxtimeseriesreader.h"
 
-#include "antares/study/study.h"
 #include <antares/inifile/inifile.h>
+#include "antares/study/study.h"
 
 using namespace Yuni;
 

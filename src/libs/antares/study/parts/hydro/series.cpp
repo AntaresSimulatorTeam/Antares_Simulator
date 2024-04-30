@@ -21,13 +21,13 @@
 
 #include "antares/study/parts/hydro/series.h"
 
-#include <yuni/io/file.h>
 #include <yuni/yuni.h>
+#include <yuni/io/file.h>
 
-#include "antares/study/study.h"
 #include <antares/exception/LoadingError.hpp>
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
+#include "antares/study/study.h"
 
 using namespace Yuni;
 

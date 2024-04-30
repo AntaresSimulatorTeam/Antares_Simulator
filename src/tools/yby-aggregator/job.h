@@ -23,11 +23,11 @@
 
 #include <memory>
 
+#include <yuni/yuni.h>
 #include <yuni/core/string.h>
 #include <yuni/io/file.h>
 #include <yuni/job/job.h>
 #include <yuni/job/queue/service.h>
-#include <yuni/yuni.h>
 
 #include "antares/solver/ts-generator/xcast/studydata.h"
 

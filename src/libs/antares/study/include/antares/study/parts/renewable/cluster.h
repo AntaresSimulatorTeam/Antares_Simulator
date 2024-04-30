@@ -21,8 +21,8 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_RENEWABLE_CLUSTER_H__
 #define __ANTARES_LIBS_STUDY_PARTS_RENEWABLE_CLUSTER_H__
 
-#include <yuni/core/noncopyable.h>
 #include <yuni/yuni.h>
+#include <yuni/core/noncopyable.h>
 
 #include <antares/array/matrix.h>
 

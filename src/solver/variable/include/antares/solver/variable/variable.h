@@ -26,8 +26,8 @@
 #pragma warning(disable : 4503)
 #endif
 
-#include <yuni/core/static/if.h>
 #include <yuni/yuni.h>
+#include <yuni/core/static/if.h>
 
 #include "categories.h"
 #include "constants.h"

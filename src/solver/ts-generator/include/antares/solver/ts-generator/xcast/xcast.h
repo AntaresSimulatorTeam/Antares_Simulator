@@ -21,14 +21,14 @@
 #ifndef __ANTARES_SOLVER_TS_GENERATOR_XCAST_XCAST_H__
 #define __ANTARES_SOLVER_TS_GENERATOR_XCAST_XCAST_H__
 
-#include <yuni/core/noncopyable.h>
 #include <yuni/yuni.h>
+#include <yuni/core/noncopyable.h>
 
-#include "antares/solver/ts-generator/xcast/studydata.h"
 #include <antares/mersenne-twister/mersenne-twister.h>
 #include <antares/study/fwd.h>
 #include <antares/study/progression/progression.h>
 #include <antares/writer/i_writer.h>
+#include "antares/solver/ts-generator/xcast/studydata.h"
 
 using namespace Antares::Solver;
 

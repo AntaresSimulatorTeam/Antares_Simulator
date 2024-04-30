@@ -23,18 +23,18 @@
 
 #include <memory>
 
+#include <yuni/yuni.h>
 #include <yuni/core/noncopyable.h>
 #include <yuni/core/string.h>
 #include <yuni/job/queue/service.h>
 #include <yuni/thread/thread.h>
-#include <yuni/yuni.h>
 
-#include "antares/antares/antares.h"
-#include "antares/study/binding_constraint/BindingConstraintGroupRepository.h"
-#include "antares/study/binding_constraint/BindingConstraintsRepository.h"
 #include <antares/correlation/correlation.h>
 #include <antares/date/date.h>
 #include <antares/writer/i_writer.h>
+#include "antares/antares/antares.h"
+#include "antares/study/binding_constraint/BindingConstraintGroupRepository.h"
+#include "antares/study/binding_constraint/BindingConstraintsRepository.h"
 
 #include "area/store-timeseries-numbers.h"
 #include "binding_constraint/BindingConstraint.h"

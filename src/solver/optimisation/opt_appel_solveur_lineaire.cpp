@@ -36,11 +36,11 @@ extern "C"
 
 #include <chrono>
 
+#include <antares/antares/fatal-error.h>
+#include <antares/logs/logs.h>
 #include "antares/solver/infeasible-problem-analysis/unfeasible-pb-analyzer.h"
 #include "antares/solver/utils/filename.h"
 #include "antares/solver/utils/mps_utils.h"
-#include <antares/antares/fatal-error.h>
-#include <antares/logs/logs.h>
 
 using namespace operations_research;
 

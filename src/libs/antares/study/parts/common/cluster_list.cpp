@@ -25,8 +25,8 @@
 
 #include <boost/algorithm/string/case_conv.hpp>
 
-#include "antares/study/study.h"
 #include <antares/utils/utils.h>
+#include "antares/study/study.h"
 
 using namespace Yuni;
 

@@ -21,8 +21,8 @@
 #ifndef __SOLVER_VARIABLE_AREA_HXX__
 #define __SOLVER_VARIABLE_AREA_HXX__
 
-#include "antares/solver/variable/economy/dispatchable-generation-margin.h"
 #include <antares/study/filter.h>
+#include "antares/solver/variable/economy/dispatchable-generation-margin.h"
 
 namespace Antares
 {

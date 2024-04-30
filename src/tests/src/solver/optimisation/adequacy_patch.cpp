@@ -29,11 +29,11 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include <antares/exception/LoadingError.hpp>
+#include <antares/solver/simulation/adequacy_patch_runtime_data.h>
 #include "antares/solver/optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h"
 #include "antares/solver/optimisation/adequacy_patch_local_matching/adq_patch_local_matching.h"
 #include "antares/study/parameters/adq-patch-params.h"
-#include <antares/exception/LoadingError.hpp>
-#include <antares/solver/simulation/adequacy_patch_runtime_data.h>
 
 static double origineExtremite = -1;
 static double extremiteOrigine = 5;

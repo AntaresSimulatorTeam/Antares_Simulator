@@ -21,10 +21,10 @@
 
 #include "antares/study/parts/renewable/cluster_list.h"
 
-#include "antares/study/study.h"
 #include <antares/inifile/inifile.h>
 #include <antares/study/area/area.h>
 #include <antares/utils/utils.h>
+#include "antares/study/study.h"
 
 using namespace Yuni;
 

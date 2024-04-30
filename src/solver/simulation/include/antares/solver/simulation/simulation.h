@@ -21,9 +21,9 @@
 #ifndef __SOLVER_SIMULATION_H__
 #define __SOLVER_SIMULATION_H__
 
+#include <antares/study/study.h>
 #include "antares/config/config.h"
 #include "antares/solver/hydro/management/management.h"
-#include <antares/study/study.h>
 
 #include "sim_structure_donnees.h"
 

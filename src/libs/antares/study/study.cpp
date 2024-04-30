@@ -27,13 +27,14 @@
 #include <optional>
 #include <sstream> // std::ostringstream
 
+#include <yuni/yuni.h>
 #include <yuni/core/string.h>
 #include <yuni/core/system/cpu.h> // For use of Yuni::System::CPU::Count()
 #include <yuni/core/system/windows.hdr.h>
 #include <yuni/datetime/timestamp.h>
 #include <yuni/io/file.h>
-#include <yuni/yuni.h>
 
+#include <antares/writer/writer_factory.h>
 #include "antares/antares/antares.h"
 #include "antares/study/area/constants.h"
 #include "antares/study/correlation-updater.hxx"
@@ -42,7 +43,6 @@
 #include "antares/study/scenario-builder/updater.hxx"
 #include "antares/study/ui-runtimeinfos.h"
 #include "antares/utils/utils.h"
-#include <antares/writer/writer_factory.h>
 
 using namespace Yuni;
 

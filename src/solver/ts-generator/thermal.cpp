@@ -23,10 +23,10 @@
 #include <sstream>
 #include <string>
 
-#include "antares/study/simulation.h"
 #include <antares/logs/logs.h>
 #include <antares/study/study.h>
 #include <antares/writer/i_writer.h>
+#include "antares/study/simulation.h"
 
 #define SEP Yuni::IO::Separator
 

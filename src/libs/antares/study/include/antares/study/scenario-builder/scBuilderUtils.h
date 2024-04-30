@@ -23,8 +23,8 @@
 
 #include <string>
 
-#include <yuni/core/fwd.h>
 #include <yuni/yuni.h>
+#include <yuni/core/fwd.h>
 
 namespace Antares
 {

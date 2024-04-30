@@ -26,9 +26,9 @@
 #include <string>
 #include <vector>
 
+#include <yuni/yuni.h>
 #include <yuni/core/fwd.h>
 #include <yuni/core/string.h>
-#include <yuni/yuni.h>
 
 namespace Antares
 {

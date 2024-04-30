@@ -24,8 +24,8 @@
 #include <yuni/core/math.h>
 #include <yuni/io/file.h>
 
-#include "antares/study/study.h"
 #include <antares/utils/utils.h>
+#include "antares/study/study.h"
 
 using namespace Yuni;
 

@@ -24,8 +24,8 @@
 #include <atomic>
 #include <memory>
 
-#include <yuni/job/job.h>
 #include <yuni/yuni.h>
+#include <yuni/job/job.h>
 
 namespace FSWalker
 {

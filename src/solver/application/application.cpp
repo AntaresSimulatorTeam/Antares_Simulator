@@ -22,16 +22,6 @@
 
 #include <yuni/datetime/timestamp.h>
 
-#include "antares/antares/version.h"
-#include "antares/config/config.h"
-#include "antares/signal-handling/public.h"
-#include "antares/solver/misc/system-memory.h"
-#include "antares/solver/misc/write-command-line.h"
-#include "antares/solver/simulation/adequacy_mode.h"
-#include "antares/solver/simulation/economy_mode.h"
-#include "antares/solver/simulation/simulation.h"
-#include "antares/solver/utils/ortools_utils.h"
-#include "antares/study/simulation.h"
 #include <antares/antares/fatal-error.h>
 #include <antares/benchmarking/timer.h>
 #include <antares/checks/checkLoadedInputData.h>
@@ -42,6 +32,16 @@
 #include <antares/study/version.h>
 #include <antares/sys/policy.h>
 #include <antares/writer/writer_factory.h>
+#include "antares/antares/version.h"
+#include "antares/config/config.h"
+#include "antares/signal-handling/public.h"
+#include "antares/solver/misc/system-memory.h"
+#include "antares/solver/misc/write-command-line.h"
+#include "antares/solver/simulation/adequacy_mode.h"
+#include "antares/solver/simulation/economy_mode.h"
+#include "antares/solver/simulation/simulation.h"
+#include "antares/solver/utils/ortools_utils.h"
+#include "antares/study/simulation.h"
 
 using namespace Antares::Check;
 

@@ -30,10 +30,10 @@
 
 #include <yuni/io/file.h>
 
-#include "antares/study/parts/thermal/cluster_list.h"
 #include <antares/checks/checkLoadedInputData.h>
 #include <antares/exception/LoadingError.hpp>
 #include <antares/study/study.h>
+#include "antares/study/parts/thermal/cluster_list.h"
 
 using namespace Antares::Data;
 using std::filesystem::temp_directory_path;

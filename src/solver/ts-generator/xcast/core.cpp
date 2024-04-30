@@ -22,14 +22,14 @@
 
 #include <yuni/yuni.h>
 
+#include <antares/logs/logs.h>
+#include <antares/study/study.h>
+#include <antares/utils/utils.h>
 #include "antares/antares/constants.h"
 #include "antares/solver/misc/cholesky.h"
 #include "antares/solver/misc/matrix-dp-make.h"
 #include "antares/solver/ts-generator/xcast/math.hxx"
 #include "antares/solver/ts-generator/xcast/xcast.h"
-#include <antares/logs/logs.h>
-#include <antares/study/study.h>
-#include <antares/utils/utils.h>
 
 using namespace Yuni;
 
