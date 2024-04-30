@@ -161,7 +161,6 @@ void DataSeriesHydro::resizeGenerationTS(uint nbSeries)
 {
     storage.reset(nbSeries, DAYS_PER_YEAR);
     ror.reset(nbSeries, HOURS_PER_YEAR);
-    mingen.reset(nbSeries, HOURS_PER_YEAR);
 
     generationTScount_ = nbSeries;
 }
