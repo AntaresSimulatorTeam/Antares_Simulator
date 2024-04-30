@@ -76,7 +76,7 @@ void LinearProblemImpl::setMinimization(bool isMinim)
 
 MipSolution LinearProblemImpl::solve(const operations_research::MPSolverParameters& param)
 {
-    //mpSolver->EnableOutput();
+    // mpSolver->EnableOutput();
     // std::string model;
     // std::ofstream m("/tmp/model.lp");
     // if (m && mpSolver->ExportModelAsLpFormat(false, &model))
