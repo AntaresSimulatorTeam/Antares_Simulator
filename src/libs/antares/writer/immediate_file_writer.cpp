@@ -25,48 +25,7 @@
 #include <antares/io/file.h>
 #include <antares/logs/logs.h>
 
-
-// Create directory hierarchy (incl. root)
-// Don't complain if directories already exist
-// Example. Assuming /root exists, `createDirectoryHierarchy("/root", "a/b/c");`
-// Creates /root/a, /root/a/b, /root/a/b/c
-static bool createDirectory(const Yuni::String& path)
-{
-    using namespace Yuni;
-    if (!IO::Directory::Exists(path))
-    {
-        const bool ret = IO::Directory::Create(path);
-
-        if (!ret)
-        {
-            Antares::logs.error() << "Error creating directory " << path;
-            return false;
-        }
-    }
-    return true;
-}
-
-static bool createDirectoryHierarchy(const Yuni::String& root, const Yuni::String& toCreate)
-{
-    using namespace Yuni;
-    String::Vector dirs;
-    toCreate.split(dirs, IO::SeparatorAsString);
-    String currentDir = root;
-
-    if (!createDirectory(root))
-        return false;
-
-    // Remove file component
-    dirs.pop_back();
-
-    for (auto& dir : dirs)
-    {
-        currentDir << Yuni::IO::Separator << dir;
-        if (!createDirectory(currentDir))
-            return false;
-    }
-    return true;
-}
+namespace fs = std::filesystem;
 
 namespace Antares
 {
@@ -79,12 +38,17 @@ ImmediateFileResultWriter::ImmediateFileResultWriter(const char* folderOutput) :
 
 ImmediateFileResultWriter::~ImmediateFileResultWriter() = default;
 
-static bool prepareDirectoryHierarchy(const YString& root,
+static bool prepareDirectoryHierarchy(const std::string& root,
                                       const std::string& entryPath,
                                       Yuni::String& output)
 {
-    output << root << Yuni::IO::Separator << entryPath.c_str();
-    return createDirectoryHierarchy(root, entryPath.c_str());
+
+    fs::path fullPath = root;
+    fullPath /= entryPath;
+
+    output << fullPath.string();
+
+    return fs::create_directories(fullPath);
 }
 
 // Write to file immediately, creating directories if needed
