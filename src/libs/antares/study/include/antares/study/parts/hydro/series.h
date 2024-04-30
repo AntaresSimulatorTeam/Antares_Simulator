@@ -104,10 +104,12 @@ public:
 
     //@}
 
+    TimeSeries::Numbers timeseriesNumbers;
+    TimeSeries::Numbers timeseriesNumbersHydroMaxPower;
+
     /*!
     ** \brief Run-of-the-river - ROR (MW)
     **
-
     ** (it was DAYS_PER_YEAR before 3.9)
     */
     TimeSeries ror;
@@ -141,10 +143,6 @@ public:
     ** Merely a matrix of TimeSeriesCount * HOURS_PER_YEAR values
     */
     TimeSeries maxHourlyPumpPower;
-
-    // TS's number matrices for Generation and Maximum Power
-    TimeSeries::Numbers timeseriesNumbers;
-    TimeSeries::Numbers timeseriesNumbersHydroMaxPower;
 
     // Equalizing max generation and max pumping numbers of TS's    
     void EqualizeMaxPowerTSsizes(Area& area);

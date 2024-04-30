@@ -66,10 +66,12 @@ public:
 public:
     //! Data for the pre-processor
     Data::Wind::Prepro* prepro;
+
+    TimeSeries::Numbers tsNumbers;
+
     /*! Data for time-series */
     TimeSeries series;
 
-    TimeSeries::Numbers tsNumbers;
 
 }; // class Container
 

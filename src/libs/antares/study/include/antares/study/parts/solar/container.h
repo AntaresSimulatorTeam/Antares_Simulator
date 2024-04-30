@@ -66,10 +66,11 @@ public:
 public:
     //! Data for the pre-processor
     Data::Solar::Prepro* prepro;
-    /*! Data for time-series */
-    TimeSeries series;
 
     TimeSeries::Numbers tsNumbers;
+
+    /*! Data for time-series */
+    TimeSeries series;
 
 }; // class Container
 

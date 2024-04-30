@@ -120,10 +120,11 @@ public:
     // (initialized in the same time that the runtime data)
     uint areaWideIndex = (uint)-1;
 
+    //! tsNumbers must be constructed before series
+    TimeSeries::Numbers tsNumbers;
+
     //! Series
     TimeSeries series;
-
-    TimeSeries::Numbers tsNumbers;
 
     /*!
     ** \brief Modulation matrix
