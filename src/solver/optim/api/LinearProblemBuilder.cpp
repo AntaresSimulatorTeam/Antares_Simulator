@@ -11,29 +11,33 @@ void LinearProblemBuilder::addFiller(std::shared_ptr<LinearProblemFiller> filler
     fillers_.push_back(filler);
 }
 
-void LinearProblemBuilder::build(const LinearProblemData& data) {
-    if (built) {
+void LinearProblemBuilder::build(const LinearProblemData& data, const BuildContext& buildCtx)
+{
+    if (built)
+    {
         // TODO
         throw;
     }
     for (auto filler : fillers_)
     {
-        filler->addVariables(*linearProblem_, data);
+        filler->addVariables(*linearProblem_, data, buildCtx);
     }
     for (auto filler : fillers_)
     {
-        filler->addConstraints(*linearProblem_, data);
+        filler->addConstraints(*linearProblem_, data, buildCtx);
     }
     for (auto filler : fillers_)
     {
-        filler->addObjective(*linearProblem_, data);
+        filler->addObjective(*linearProblem_, data, buildCtx);
     }
     built = true;
 }
 
-void LinearProblemBuilder::update(const LinearProblemData& data) const {
+void LinearProblemBuilder::update(const LinearProblemData& data) const
+{
     // TODO : throw if timestamps have changed ?
-    if (!built) {
+    if (!built)
+    {
         // TODO
         throw;
     }
@@ -46,7 +50,8 @@ void LinearProblemBuilder::update(const LinearProblemData& data) const {
 MipSolution LinearProblemBuilder::solve(const operations_research::MPSolverParameters& param)
 {
     // TODO : move to new interface LinearProblemSolver ??
-    if (!built) {
+    if (!built)
+    {
         // TODO
         throw;
     }

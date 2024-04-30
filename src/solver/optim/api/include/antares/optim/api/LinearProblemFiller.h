@@ -31,20 +31,31 @@
 
 namespace Antares::optim::api
 {
-    class LinearProblemFiller
-    {
-    public:
-        virtual void addVariables(LinearProblem& problem, const LinearProblemData& data) = 0;
-        virtual void addConstraints(LinearProblem& problem, const LinearProblemData& data) = 0;
-        virtual void addObjective(LinearProblem& problem, const LinearProblemData& data) = 0;
-        virtual void update(LinearProblem& problem, const LinearProblemData& data) = 0;
-        // TODO : see if update is really needed in target solution
-        // Currently used to update the MIP from week to week by only changing LB/UB & coefs
-        // (see sim_structure_contrainte_economique.h & ApportNaturelHoraire)
-        // This may be dropped in the target solution (thus we'll have to re-create the MIP) for 2 reasons:
-        // - we may have to add/remove variables & constraints
-        // - OR-Tools does not allow changing the names of variables & constraints, which is necessary if we want the
-        //   variables & constraints to be indexed by the number of the week in the year
-        virtual ~LinearProblemFiller() = default;
-    };
-}
+class LinearProblemFiller
+{
+public:
+    virtual void addVariables(LinearProblem& problem,
+                              const LinearProblemData& data,
+                              const BuildContext&)
+      = 0;
+    virtual void addConstraints(LinearProblem& problem,
+                                const LinearProblemData& data,
+                                const BuildContext&)
+      = 0;
+    virtual void addObjective(LinearProblem& problem,
+                              const LinearProblemData& data,
+                              const BuildContext&)
+      = 0;
+    virtual void update(LinearProblem& problem, const LinearProblemData& data) = 0;
+    // TODO : see if update is really needed in target solution
+    // Currently used to update the MIP from week to week by only changing LB/UB & coefs
+    // (see sim_structure_contrainte_economique.h & ApportNaturelHoraire)
+    // This may be dropped in the target solution (thus we'll have to re-create the MIP) for 2
+    // reasons:
+    // - we may have to add/remove variables & constraints
+    // - OR-Tools does not allow changing the names of variables & constraints, which is necessary
+    // if we want the
+    //   variables & constraints to be indexed by the number of the week in the year
+    virtual ~LinearProblemFiller() = default;
+};
+} // namespace Antares::optim::api

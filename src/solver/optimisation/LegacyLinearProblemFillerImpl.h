@@ -34,11 +34,22 @@ class LegacyLinearProblemFillerImpl final : public Antares::optim::api::LinearPr
 {
 private:
     const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* legacyProblem_;
-    static void declareBalanceConstraints(LegacyLinearProblemImpl* legacyLinearProblem, const LinearProblemData::Legacy& legacy);
+    static void declareBalanceConstraints(LegacyLinearProblemImpl* legacyLinearProblem,
+                                          const LinearProblemData::Legacy& legacy);
+
 public:
-    explicit LegacyLinearProblemFillerImpl(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* legacyProblem) : legacyProblem_(legacyProblem) {};
-    void addVariables(Antares::optim::api::LinearProblem& problem, const Antares::optim::api::LinearProblemData& data) override;
-    void addConstraints(Antares::optim::api::LinearProblem& problem, const Antares::optim::api::LinearProblemData& data) override;
-    void addObjective(Antares::optim::api::LinearProblem& problem, const Antares::optim::api::LinearProblemData& data) override;
-    void update(Antares::optim::api::LinearProblem& problem, const Antares::optim::api::LinearProblemData& data) override;
+    explicit LegacyLinearProblemFillerImpl(
+      const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* legacyProblem) :
+     legacyProblem_(legacyProblem){};
+    void addVariables(Antares::optim::api::LinearProblem& problem,
+                      const Antares::optim::api::LinearProblemData& data,
+                      const BuildContext&) override;
+    void addConstraints(Antares::optim::api::LinearProblem& problem,
+                        const Antares::optim::api::LinearProblemData& data,
+                        const BuildContext&) override;
+    void addObjective(Antares::optim::api::LinearProblem& problem,
+                      const Antares::optim::api::LinearProblemData& data,
+                      const BuildContext&) override;
+    void update(Antares::optim::api::LinearProblem& problem,
+                const Antares::optim::api::LinearProblemData& data) override;
 };

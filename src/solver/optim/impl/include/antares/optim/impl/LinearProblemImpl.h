@@ -36,16 +36,31 @@ protected:
     operations_research::MPSolver* mpSolver{};
     // TODO: remove this constructor when legacy support is dropped
     LinearProblemImpl();
-public :
+    std::set<std::string> constraintNames_;
+
+public:
     LinearProblemImpl(bool isMip, const std::string& solverName);
-    operations_research::MPVariable& addNumVariable(std::string name, double lb, double ub) override;
-    operations_research::MPVariable& addIntVariable(std::string name, double lb, double ub) override;
+    operations_research::MPVariable& addNumVariable(std::string name,
+                                                    double lb,
+                                                    double ub) override;
+    operations_research::MPVariable& addIntVariable(std::string name,
+                                                    double lb,
+                                                    double ub) override;
     operations_research::MPVariable& getVariable(std::string name) override;
-    operations_research::MPConstraint& addConstraint(std::string name, double lb, double ub) override;
-    operations_research::MPConstraint& addBalanceConstraint(std::string name, double bound, std::string nodeName, int timestep) override;
+    operations_research::MPConstraint& addConstraint(std::string name,
+                                                     double lb,
+                                                     double ub) override;
+    operations_research::MPConstraint& addBalanceConstraint(std::string name,
+                                                            double bound,
+                                                            std::string nodeName,
+                                                            int timestep) override;
     operations_research::MPConstraint& getConstraint(std::string name) override;
-    void setObjectiveCoefficient(const operations_research::MPVariable& variable, double coefficient) override;
+    void setObjectiveCoefficient(const operations_research::MPVariable& variable,
+                                 double coefficient) override;
+    double getObjectiveCoefficient(const operations_research::MPVariable& variable) override;
     void setMinimization(bool isMinim) override;
-    Antares::optim::api::MipSolution solve(const operations_research::MPSolverParameters& param) override;
+    Antares::optim::api::MipSolution solve(
+      const operations_research::MPSolverParameters& param) override;
+    double infinity() override;
     virtual ~LinearProblemImpl() override;
 };

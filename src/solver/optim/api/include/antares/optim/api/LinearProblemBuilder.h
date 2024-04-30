@@ -26,22 +26,23 @@
 */
 #pragma once
 
+#include <vector>
 #include "LinearProblemFiller.h"
-#include "vector"
 
 namespace Antares::optim::api
 {
-    class LinearProblemBuilder final
-    {
-    private:
-        LinearProblem* linearProblem_;
-        std::vector<std::shared_ptr<LinearProblemFiller>> fillers_{};
-        bool built = false;
-    public:
-        explicit LinearProblemBuilder(LinearProblem& linearProblem) : linearProblem_(&linearProblem) {};
-        void addFiller(std::shared_ptr<LinearProblemFiller> filler);
-        void build(const LinearProblemData& data);
-        void update(const LinearProblemData& data) const;
-        MipSolution solve(const operations_research::MPSolverParameters& param);
-    };
-}
+class LinearProblemBuilder final
+{
+private:
+    LinearProblem* linearProblem_;
+    std::vector<std::shared_ptr<LinearProblemFiller>> fillers_{};
+    bool built = false;
+
+public:
+    explicit LinearProblemBuilder(LinearProblem& linearProblem) : linearProblem_(&linearProblem){};
+    void addFiller(std::shared_ptr<LinearProblemFiller> filler);
+    void build(const LinearProblemData& data, const BuildContext& ctx);
+    void update(const LinearProblemData& data) const;
+    MipSolution solve(const operations_research::MPSolverParameters& param);
+};
+} // namespace Antares::optim::api

@@ -4,8 +4,7 @@
 #include <boost/test/data/test_case.hpp>
 
 #include "../../../solver/optimisation/opt_global.h"
-#include "../include/simple/Thermal.h"
-#include "../include/simple/Balance.h"
+#include "../include/standard/ComponentFiller.h"
 
 #include "utils.h"
 
@@ -15,37 +14,38 @@ namespace tt = boost::test_tools;
 using namespace Antares::Data;
 
 // =================================
-// Basic fixture 
+// Basic fixture
 // =================================
 struct StudyFixture : public StudyBuilder
 {
-	using StudyBuilder::StudyBuilder;
-	StudyFixture();
+    using StudyBuilder::StudyBuilder;
+    StudyFixture();
 
-	// Data members
-	std::shared_ptr<ThermalCluster> cluster;
-	Area* area = nullptr;
-	double loadInArea = 0.;
-	TimeSeriesConfigurer loadTSconfig;
+    // Data members
+    std::shared_ptr<ThermalCluster> cluster;
+    Area* area = nullptr;
+    double loadInArea = 0.;
+    TimeSeriesConfigurer loadTSconfig;
 };
 
 StudyFixture::StudyFixture()
 {
-	simulationBetweenDays(0, 7);
-	area = addAreaToStudy("some_area");
+    simulationBetweenDays(0, 7);
+    area = addAreaToStudy("some_area");
 
-	loadInArea = 7.0;
-	loadTSconfig = TimeSeriesConfigurer(area->load.series.timeSeries);
-	loadTSconfig.setColumnCount(1)
-				.fillColumnWith(0, loadInArea);
+    loadInArea = 7.0;
+    loadTSconfig = TimeSeriesConfigurer(area->load.series.timeSeries);
+    loadTSconfig.setColumnCount(1)
+      .fillColumnWith(0, loadInArea);
 };
 
 
 BOOST_FIXTURE_TEST_SUITE(ONE_AREA__ONE_THERMAL_CLUSTER, StudyFixture)
 
 BOOST_AUTO_TEST_CASE(thermal_cluster_fullfills_area_demand)
-{	
-	setNumberMCyears(1);
+{
+    setNumberMCyears(1);
+    PortConnectionsManager portConnectionsManager;
 
     std::vector<int> timeStamps(168);
     std::iota(timeStamps.begin(),
@@ -54,19 +54,20 @@ BOOST_AUTO_TEST_CASE(thermal_cluster_fullfills_area_demand)
     {
         std::vector<double> costThermal1(168, 1.);
         std::vector<double> consumption1(168, 100);
-        gLinearProblemData = Antares::optim::api::LinearProblemData(timeStamps,
-                                                                    60, // timeResolutionInMinutes
-                                                                    {}, // scalarData
-                                                                    {{"cost_thermal1", std::move(costThermal1)},
-                                                                     {"consumption_some_area", consumption1}});
+        gLinearProblemData = Antares::optim::api::LinearProblemData(
+          60,                               // timeResolutionInMinutes
+          {}, // scalarData
+          {{"cost_thermal1", {std::move(costThermal1)}}, {"consumption_some_area", {consumption1}}});
 
-        auto thermal = std::make_shared<Thermal>("thermal1", 100);
-        gAdditionalFillers.push_back(thermal);
-        // For some reason, this doesn't compile with g++-10
-        // gAdditionalFillers.push_back(std::make_shared<Balance>("some_area", {}, {thermal}));
-        // brace-init seems to be the issue, so we need to be more explicit with types
-        auto balance = std::make_shared<Balance>("some_area", std::vector<std::shared_ptr<Battery>>{}, std::vector<std::shared_ptr<Thermal>>({thermal}));
-        gAdditionalFillers.push_back(balance);
+        Component thermal("thermal1", THERMAL, {{"maxP", 100}}, {});
+        auto thermalFiller = make_shared<ComponentFiller>(thermal, portConnectionsManager);
+        Component balance("balanceA", BALANCE, {}, {{"nodeName", "some_area"}});
+        auto balanceAFiller = make_shared<ComponentFiller>(balance, portConnectionsManager);
+
+        portConnectionsManager.addConnection({balanceAFiller, "P"}, {thermalFiller, "P"});
+
+        gAdditionalFillers.push_back(thermalFiller);
+        gAdditionalFillers.push_back(balanceAFiller);
     }
 
     area->thermal.unsuppliedEnergyCost = 1.e3;
@@ -83,8 +84,9 @@ BOOST_AUTO_TEST_CASE(thermal_cluster_fullfills_area_demand)
     std::vector<double> expectedThermalP(168, loadInArea);
 
     std::vector<std::string> query;
+    int scenario = 0; // defaults to 0 in legacy problems
     for (int timeStamp : timeStamps)
-       query.push_back("P_thermal1_"+std::to_string(timeStamp));
+        query.push_back("P_thermal1_"+std::to_string(timeStamp)+"_"+std::to_string(scenario));
     auto actualThermalP = gMipSolution.getOptimalValues(query);
 
     // Test no unsupplied energy at h=0
@@ -93,6 +95,3 @@ BOOST_AUTO_TEST_CASE(thermal_cluster_fullfills_area_demand)
     BOOST_TEST(actualThermalP == expectedThermalP, tt::per_element()); // TODO add tolerance
 }
 BOOST_AUTO_TEST_SUITE_END()
-
-
-

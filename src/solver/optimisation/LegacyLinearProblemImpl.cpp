@@ -9,8 +9,10 @@
 using namespace Antares::optim::api;
 using namespace std;
 
-LegacyLinearProblemImpl::LegacyLinearProblemImpl(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME *legacyProblem,
-                                                 const std::string &solverName) : LinearProblemImpl()
+LegacyLinearProblemImpl::LegacyLinearProblemImpl(
+  const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* legacyProblem,
+  const std::string& solverName) :
+ LinearProblemImpl()
 {
     this->mpSolver = MPSolverFactory(legacyProblem, solverName);
     Antares::Optimization::ProblemSimplexeNommeConverter converter(solverName, legacyProblem);
@@ -18,38 +20,51 @@ LegacyLinearProblemImpl::LegacyLinearProblemImpl(const Antares::Optimization::PR
     mpSolver->MutableObjective()->SetMinimization();
 }
 
-MPConstraint& LegacyLinearProblemImpl::addBalanceConstraint(string name, double bound, string nodeName, int timestamp)
+MPConstraint& LegacyLinearProblemImpl::addBalanceConstraint(string name,
+                                                            double bound,
+                                                            string nodeName,
+                                                            int timestamp)
 {
     string key = getBalanceConstraintKey(nodeName, timestamp);
-    if (balanceConstraintPerNodeName.contains(key)) {
+    if (balanceConstraintPerNodeName.contains(key))
+    {
         // add new name declared by filler to list of aliases of the existing constraint
         balanceConstraintPerNodeName.at(key).second.push_back(name);
         // return the existing constraint
         return *balanceConstraintPerNodeName.at(key).first;
     }
-    MPConstraint *constraint = mpSolver->MakeRowConstraint(bound, bound, name);
+    MPConstraint* constraint = mpSolver->MakeRowConstraint(bound, bound, name);
     balanceConstraintPerNodeName.insert({key, {constraint, {name}}});
     return *constraint;
 }
 
 void LegacyLinearProblemImpl::setMinimization(bool isMinim)
 {
-    if (!isMinim) {
+    if (!isMinim)
+    {
         // TODO: improve exception
         throw;
-    } else {
+    }
+    else
+    {
         mpSolver->MutableObjective()->SetMinimization();
     }
 }
 
-void LegacyLinearProblemImpl::declareBalanceConstraint(const string &nodeName, int timestamp, MPConstraint *constraint)
+void LegacyLinearProblemImpl::declareBalanceConstraint(const string& nodeName,
+                                                       int timestamp,
+                                                       MPConstraint* constraint)
 {
-    if (balanceConstraintPerNodeName.contains(nodeName)) {
+    if (balanceConstraintPerNodeName.contains(nodeName))
+    {
         // TODO: improve exception
         throw;
-    } else {
+    }
+    else
+    {
         auto name = constraint->name();
-        balanceConstraintPerNodeName.insert({getBalanceConstraintKey(nodeName, timestamp), {constraint, {name}}});
+        balanceConstraintPerNodeName.insert(
+          {getBalanceConstraintKey(nodeName, timestamp), {constraint, {name}}});
     }
 }
 

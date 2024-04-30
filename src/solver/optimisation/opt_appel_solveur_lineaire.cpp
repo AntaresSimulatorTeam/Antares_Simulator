@@ -96,19 +96,17 @@ struct SimplexResult
     mpsWriterFactory mps_writer_factory;
 };
 
-static SimplexResult OPT_TryToCallSimplex(
-        const OptimizationOptions& options,
-        PROBLEME_HEBDO* problemeHebdo,
-        Optimization::PROBLEME_SIMPLEXE_NOMME& Probleme,
-        const int NumIntervalle,
-        const int optimizationNumber,
-        const OptPeriodStringGenerator& optPeriodStringGenerator,
-        bool PremierPassage,
-        IResultWriter& writer)
+static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
+                                          PROBLEME_HEBDO* problemeHebdo,
+                                          Optimization::PROBLEME_SIMPLEXE_NOMME& Probleme,
+                                          const int NumIntervalle,
+                                          const int optimizationNumber,
+                                          const OptPeriodStringGenerator& optPeriodStringGenerator,
+                                          bool PremierPassage,
+                                          IResultWriter& writer)
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
-    auto ProbSpx
-            = (PROBLEME_SPX*)(ProblemeAResoudre->ProblemesSpx[(int)NumIntervalle]);
+    auto ProbSpx = (PROBLEME_SPX*)(ProblemeAResoudre->ProblemesSpx[(int)NumIntervalle]);
     auto solver = (MPSolver*)(ProblemeAResoudre->ProblemesSpx[(int)NumIntervalle]);
 
     const int opt = optimizationNumber - 1;
@@ -154,8 +152,9 @@ static SimplexResult OPT_TryToCallSimplex(
             if (options.useOrtools)
             {
                 // TODO comment gérer le update ??? => ajouter une méthode update à LinearProblem ?
-                ORTOOLS_ModifierLeVecteurCouts(
-                        solver, ProblemeAResoudre->CoutLineaire.data(), ProblemeAResoudre->NombreDeVariables);
+                ORTOOLS_ModifierLeVecteurCouts(solver,
+                                               ProblemeAResoudre->CoutLineaire.data(),
+                                               ProblemeAResoudre->NombreDeVariables);
                 ORTOOLS_ModifierLeVecteurSecondMembre(solver,
                                                       ProblemeAResoudre->SecondMembre.data(),
                                                       ProblemeAResoudre->Sens.data(),
@@ -168,8 +167,9 @@ static SimplexResult OPT_TryToCallSimplex(
             }
             else
             {
-                SPX_ModifierLeVecteurCouts(
-                        ProbSpx, ProblemeAResoudre->CoutLineaire.data(), ProblemeAResoudre->NombreDeVariables);
+                SPX_ModifierLeVecteurCouts(ProbSpx,
+                                           ProblemeAResoudre->CoutLineaire.data(),
+                                           ProblemeAResoudre->NombreDeVariables);
                 SPX_ModifierLeVecteurSecondMembre(ProbSpx,
                                                   ProblemeAResoudre->SecondMembre.data(),
                                                   ProblemeAResoudre->Sens.data(),
@@ -196,7 +196,7 @@ static SimplexResult OPT_TryToCallSimplex(
     Probleme.NombreDeTermesDesLignes = ProblemeAResoudre->NombreDeTermesDesLignes.data();
     Probleme.IndicesColonnes = ProblemeAResoudre->IndicesColonnes.data();
     Probleme.CoefficientsDeLaMatriceDesContraintes
-            = ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes.data();
+      = ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes.data();
     Probleme.Sens = ProblemeAResoudre->Sens.data();
     Probleme.SecondMembre = ProblemeAResoudre->SecondMembre.data();
 
@@ -204,7 +204,7 @@ static SimplexResult OPT_TryToCallSimplex(
 
     Probleme.TypeDePricing = PRICING_STEEPEST_EDGE;
 
-    Probleme.FaireDuScaling = ( PremierPassage ? OUI_SPX : NON_SPX );
+    Probleme.FaireDuScaling = (PremierPassage ? OUI_SPX : NON_SPX);
 
     Probleme.StrategieAntiDegenerescence = AGRESSIF;
 
@@ -226,7 +226,8 @@ static SimplexResult OPT_TryToCallSimplex(
     LinearProblemBuilder linearProblemBuilder(legacyLinearProblem);
     if (options.useOrtools)
     {
-        auto filler = std::make_shared<LegacyLinearProblemFillerImpl>(&Probleme); // TODO: merge this with LegacyLinearProblemImpl ?
+        auto filler = std::make_shared<LegacyLinearProblemFillerImpl>(
+          &Probleme); // TODO: merge this with LegacyLinearProblemImpl ?
         linearProblemBuilder.addFiller(filler);
         // TODO: we can add extra fillers here
         for (const auto& additionalFiller : gAdditionalFillers)
@@ -234,13 +235,19 @@ static SimplexResult OPT_TryToCallSimplex(
 
         // sinon renvoyer le builder ou le problem à une autre classe
         // Required for the balance constraint indices
-        gLinearProblemData.legacy.constraintMapping = &problemeHebdo->CorrespondanceCntNativesCntOptim;
+        gLinearProblemData.legacy.constraintMapping
+          = &problemeHebdo->CorrespondanceCntNativesCntOptim;
         gLinearProblemData.legacy.areaNames = &problemeHebdo->NomsDesPays;
         // TODO : add data here
-        linearProblemBuilder.build(gLinearProblemData);
+        std::vector<int> timeStamps(168);
+        std::iota(timeStamps.begin(), timeStamps.end(), 0);
+
+        BuildContext buildCtx({0}, timeStamps);
+        linearProblemBuilder.build(gLinearProblemData, buildCtx);
         solver = legacyLinearProblem.getMpSolver();
-        // TODO: because of LinearProblemImpl's destructor, when we exit this scope, the MPSolver instance is destroyed
-        // We have to work around this in order for the current "update" methods to work
+        // TODO: because of LinearProblemImpl's destructor, when we exit this scope, the MPSolver
+        // instance is destroyed We have to work around this in order for the current "update"
+        // methods to work
     }
     const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
 
@@ -258,10 +265,7 @@ static SimplexResult OPT_TryToCallSimplex(
     if (options.useOrtools)
     {
         const bool keepBasis = (optimizationNumber == PREMIERE_OPTIMISATION);
-        solver = ORTOOLS_Simplexe(&Probleme,
-                                  solver,
-                                  linearProblemBuilder,
-                                  keepBasis);
+        solver = ORTOOLS_Simplexe(&Probleme, solver, linearProblemBuilder, keepBasis);
         if (solver != nullptr)
         {
             ProblemeAResoudre->ProblemesSpx[NumIntervalle] = (void*)solver;
@@ -300,8 +304,9 @@ static SimplexResult OPT_TryToCallSimplex(
             {
                 logs.info() << " solver: resetting";
             }
-            return {.success=false, .timeMeasure=timeMeasure,
-                    .mps_writer_factory=mps_writer_factory};
+            return {.success = false,
+                    .timeMeasure = timeMeasure,
+                    .mps_writer_factory = mps_writer_factory};
         }
 
         else
@@ -309,8 +314,7 @@ static SimplexResult OPT_TryToCallSimplex(
             throw FatalError("Internal error: insufficient memory");
         }
     }
-    return {.success=true, .timeMeasure=timeMeasure,
-            .mps_writer_factory=mps_writer_factory};
+    return {.success = true, .timeMeasure = timeMeasure, .mps_writer_factory = mps_writer_factory};
 }
 
 bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
@@ -331,16 +335,27 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
 
     bool PremierPassage = true;
 
-    SimplexResult simplexResult =
-        OPT_TryToCallSimplex(options, problemeHebdo, Probleme, NumIntervalle, optimizationNumber,
-                optPeriodStringGenerator, PremierPassage, writer);
+    SimplexResult simplexResult = OPT_TryToCallSimplex(options,
+                                                       problemeHebdo,
+                                                       Probleme,
+                                                       NumIntervalle,
+                                                       optimizationNumber,
+                                                       optPeriodStringGenerator,
+                                                       PremierPassage,
+                                                       writer);
 
     if (!simplexResult.success)
     {
         // TODO : why ??
         PremierPassage = false;
-        simplexResult = OPT_TryToCallSimplex(options, problemeHebdo, Probleme,  NumIntervalle, optimizationNumber,
-                optPeriodStringGenerator, PremierPassage, writer);
+        simplexResult = OPT_TryToCallSimplex(options,
+                                             problemeHebdo,
+                                             Probleme,
+                                             NumIntervalle,
+                                             optimizationNumber,
+                                             optPeriodStringGenerator,
+                                             PremierPassage,
+                                             writer);
     }
 
     if (ProblemeAResoudre->ExistenceDUneSolution == OUI_SPX)
@@ -399,14 +414,16 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
         Probleme.SetUseNamedProblems(true);
 
         // Analyse d'infaisa en clonant le MPSolver existant => on peut ignorer ça pour l'instant
-        auto MPproblem = std::shared_ptr<MPSolver>(ProblemSimplexeNommeConverter(options.solverName, &Probleme).Convert());
+        auto MPproblem = std::shared_ptr<MPSolver>(
+          ProblemSimplexeNommeConverter(options.solverName, &Probleme).Convert());
 
         auto analyzer = makeUnfeasiblePbAnalyzer();
         analyzer->run(MPproblem.get());
         analyzer->printReport();
 
         auto mps_writer_on_error = simplexResult.mps_writer_factory.createOnOptimizationError();
-        const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
+        const std::string filename
+          = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
         mps_writer_on_error->runIfNeeded(writer, filename);
 
         return false;

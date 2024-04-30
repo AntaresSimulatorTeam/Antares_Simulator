@@ -32,40 +32,54 @@
 
 namespace Antares::optim::api
 {
-    class MipSolution final
+class MipSolution final
+{
+    // TODO: improve this by removing dependency to OR-Tools
+private:
+    operations_research::MPSolver::ResultStatus responseStatus_;
+    std::map<std::string, double> solution_;
+    double objectiveValue_;
+
+public:
+    MipSolution(operations_research::MPSolver::ResultStatus responseStatus,
+                const std::map<std::string, double>& solution,
+                double objectiveValue) :
+     responseStatus_(responseStatus), objectiveValue_(objectiveValue)
     {
-        // TODO: improve this by removing dependency to OR-Tools
-    private:
-        operations_research::MPSolver::ResultStatus responseStatus_;
-        std::map<std::string, double> solution_;
-    public:
-        MipSolution(operations_research::MPSolver::ResultStatus responseStatus, const std::map<std::string, double>& solution) : responseStatus_(responseStatus)
+        // Only store non-zero values
+        for (const auto& varAndValue : solution)
         {
-            // Only store non-zero values
-            for (const auto& varAndValue : solution)
+            if (abs(varAndValue.second) > 1e-6) // TODO: is this tolerance OK?
             {
-                if (abs(varAndValue.second) > 1e-6) // TODO: is this tolerance OK?
-                {
-                    solution_.insert(varAndValue);
-                }
+                solution_.insert(varAndValue);
             }
         }
+    }
 
-        operations_research::MPSolver::ResultStatus getStatus() { return responseStatus_; }
+    operations_research::MPSolver::ResultStatus getStatus()
+    {
+        return responseStatus_;
+    }
 
-        double getOptimalValue(const std::string& variableName)
+    double getOptimalValue(const std::string& variableName)
+    {
+        return solution_.contains(variableName) ? solution_.at(variableName) : 0;
+    }
+
+    std::vector<double> getOptimalValues(const std::vector<std::string>& variableNames)
+    {
+        std::vector<double> solution;
+        solution.reserve(variableNames.size());
+        for (const auto& varName : variableNames)
         {
-            return solution_.contains(variableName) ? solution_.at(variableName) : 0;
+            solution.push_back(getOptimalValue(varName));
         }
+        return solution;
+    }
 
-        std::vector<double> getOptimalValues(const std::vector<std::string>& variableNames)
-        {
-            std::vector<double> solution;
-            solution.reserve(variableNames.size());
-            for (const auto& varName : variableNames) {
-                solution.push_back(getOptimalValue(varName));
-            }
-            return solution;
-        }
-    };
-}
+    double getObjectiveValue()
+    {
+        return objectiveValue_;
+    }
+};
+} // namespace Antares::optim::api
