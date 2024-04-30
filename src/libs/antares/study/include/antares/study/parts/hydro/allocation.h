@@ -24,6 +24,7 @@
 #include "../../fwd.h"
 #include <map>
 #include <unordered_map>
+#include <filesystem>
 
 namespace Antares
 {
@@ -89,7 +90,7 @@ public:
     /*!
     ** \brief Load allocation coefficients from a file
     */
-    bool loadFromFile(const AreaName& referencearea, const AnyString& filename);
+    bool loadFromFile(const AreaName& referencearea, const std::filesystem::path& filename);
 
     /*!
     ** \brief Load allocation coefficients from a file

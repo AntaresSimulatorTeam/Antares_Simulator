@@ -869,7 +869,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         // Allocation
         buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "allocation" << SEP
                        << area.id << ".ini";
-        ret = area.hydro.allocation.loadFromFile(area.id, buffer) && ret;
+        ret = area.hydro.allocation.loadFromFile(area.id, buffer.c_str()) && ret;
 
         if (area.hydro.prepro) /* Hydro */
         {
