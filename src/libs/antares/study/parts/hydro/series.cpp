@@ -161,15 +161,14 @@ void DataSeriesHydro::resizeGenerationTS(uint nbSeries)
 {
     storage.reset(nbSeries, DAYS_PER_YEAR);
     ror.reset(nbSeries, HOURS_PER_YEAR);
-    mingen.reset(nbSeries, HOURS_PER_YEAR);
 
     generationTScount_ = nbSeries;
 }
 
 void DataSeriesHydro::resizeMaxPowerTS(uint nbSeries)
 {
-    maxHourlyGenPower.reset(nbSeries, HOURS_PER_YEAR);
-    maxHourlyPumpPower.reset(nbSeries, HOURS_PER_YEAR);
+    // maxHourlyGenPower.reset(nbSeries, HOURS_PER_YEAR);
+    // maxHourlyPumpPower.reset(nbSeries, HOURS_PER_YEAR);
 
     maxPowerTScount_ = nbSeries;
 }

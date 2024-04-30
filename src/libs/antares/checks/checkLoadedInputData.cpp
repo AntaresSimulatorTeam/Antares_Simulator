@@ -27,6 +27,7 @@
 #include <antares/series/series.h>
 #include <antares/checks/checkLoadedInputData.h>
 #include <antares/study/area/area.h>
+#include <antares/solver/simulation/timeseries-numbers.h>
 
 namespace Antares::Check
 {
@@ -187,5 +188,40 @@ void checkCO2CostColumnNumber(const Antares::Data::AreaList& areas)
     checkThermalColumnNumber<Antares::Error::IncompatibleCO2CostColumns>(areas,
                              &Antares::Data::EconomicInputData::co2cost);
 }
+
+static void checkHydroSingleArea(const Antares::Data::DataSeriesHydro* series,
+                                 const YString& areaID,
+                                 bool generateHydro,
+                                 uint nbGeneratedHydroTS)
+{
+    std::vector<uint> numberOfColumns;
+    if (generateHydro) {
+        numberOfColumns.push_back(nbGeneratedHydroTS);
+    }
+    else
+    {
+        numberOfColumns.push_back(series->ror.timeSeries.width);
+        numberOfColumns.push_back(series->storage.timeSeries.width);
+    }
+
+    numberOfColumns.push_back(series->mingen.timeSeries.width);
+
+    numberOfColumns.push_back(series->maxHourlyGenPower.timeSeries.width);
+    numberOfColumns.push_back(series->maxHourlyPumpPower.timeSeries.width);
+
+    if (!Antares::Solver::TimeSeriesNumbers::checkAllElementsIdenticalOrOne(numberOfColumns))
+        throw Antares::Error::IncompatibleHydroColumns(areaID.to<std::string>());
+}
+
+void checkHydroColumnNumber(const Antares::Data::AreaList& areas,
+                            bool generateHydro,
+                            uint nbGeneratedHydroTS)
+{
+    for (const auto& [_, area] : areas)
+    {
+      checkHydroSingleArea(area->hydro.series, area->id, generateHydro, nbGeneratedHydroTS);
+    }
+}
+
 
 } // namespace Antares::Check

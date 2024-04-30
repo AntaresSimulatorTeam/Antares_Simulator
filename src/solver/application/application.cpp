@@ -165,6 +165,10 @@ void Application::postParametersChecks() const
 
     checkFuelCostColumnNumber(pStudy->areas);
     checkCO2CostColumnNumber(pStudy->areas);
+
+    checkHydroColumnNumber(pStudy->areas,
+                           (pParameters->timeSeriesToGenerate & Antares::Data::TimeSeriesType::timeSeriesHydro),
+                           pParameters->nbTimeSeriesHydro);
 }
 
 void Application::prepare(int argc, char* argv[])

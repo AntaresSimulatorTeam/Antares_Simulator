@@ -187,5 +187,10 @@ IncompatibleFuelCostColumns::IncompatibleFuelCostColumns() :
 {
 }
 
+IncompatibleHydroColumns::IncompatibleHydroColumns(const std::string& areaID) :
+ LoadingError("Number of columns for mingen, ror, storage, maxGen, maxPump must be 1 or identical, please check hydro input data for area " + areaID)
+{
+}
+
 } // namespace Error
 } // namespace Antares

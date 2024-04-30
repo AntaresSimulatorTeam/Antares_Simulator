@@ -210,5 +210,11 @@ public:
     IncompatibleFuelCostColumns();
 };
 
+class IncompatibleHydroColumns : public LoadingError
+{
+public:
+    IncompatibleHydroColumns(const std::string& areaID);
+};
+
 } // namespace Error
 } // namespace Antares
