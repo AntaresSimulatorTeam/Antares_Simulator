@@ -38,6 +38,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReservesThermi
       = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
     int& NombreDeVariables = ProblemeAResoudre->NombreDeVariables;
     VariableNamer variableNamer(ProblemeAResoudre->NomDesVariables);
+    auto variableManager = VariableManagerFromProblemHebdo(problemeHebdo);
 
     for (int pdt = 0; pdt < NombreDePasDeTempsPourUneOptimisation; pdt++)
     {
@@ -56,25 +57,29 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReservesThermi
             for (auto& areaReserveUp : areaReserves.areaCapacityReservationsUp)
             {
                 reserveIndex = areaReserveUp.globalReserveIndex;
-                if (!Simulation)
+                if (Simulation)
+                {
+                    NombreDeVariables += 2;
+                }
+                else
                 {
                     // For Unsatisfied Reserves
-                    CorrespondanceVarNativesVarOptim.internalUnsatisfiedReserveIndex[reserveIndex]
+                    variableManager.InternalUnsatisfiedReserve(reserveIndex, pdt)
                       = NombreDeVariables;
                     ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                       = VARIABLE_BORNEE_DES_DEUX_COTES;
                     variableNamer.InternalUnsatisfiedReserve(NombreDeVariables,
                                                              areaReserveUp.reserveName);
+                    NombreDeVariables++;
 
                     // For Excess Reserves
-                    CorrespondanceVarNativesVarOptim.internalExcessReserveIndex[reserveIndex]
-                      = NombreDeVariables;
+                    variableManager.InternalExcessReserve(reserveIndex, pdt) = NombreDeVariables;
                     ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                       = VARIABLE_BORNEE_DES_DEUX_COTES;
                     variableNamer.InternalExcessReserve(NombreDeVariables,
                                                         areaReserveUp.reserveName);
+                    NombreDeVariables++;
                 }
-                NombreDeVariables += 2;
 
                 int clusterIndex = 0;
                 for (auto& clusterReserveParticipation :
@@ -84,58 +89,75 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReservesThermi
                     {
                         const auto& clusterName
                           = PaliersThermiquesDuPays.NomsDesPaliersThermiques[clusterIndex];
-                        if (!Simulation)
+                        if (Simulation)
+                        {
+                            NombreDeVariables += 2;
+                        }
+                        else
                         {
                             // For running units in cluster
-                            CorrespondanceVarNativesVarOptim
-                              .runningClusterReserveParticipationIndex[index]
+                            variableManager.ClusterReserveParticipation(index, pdt)
                               = NombreDeVariables;
                             ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                               = VARIABLE_BORNEE_DES_DEUX_COTES;
                             variableNamer.ParticipationOfRunningUnitsToReserve(
                               NombreDeVariables, clusterName, areaReserveUp.reserveName);
+                            NombreDeVariables++;
 
                             // For all units in cluster (off units can participate to the reserves)
-                            CorrespondanceVarNativesVarOptim.clusterReserveParticipationIndex[index]
+                            variableManager.RunningClusterReserveParticipation(index, pdt)
                               = NombreDeVariables;
                             ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                               = VARIABLE_BORNEE_DES_DEUX_COTES;
                             variableNamer.ParticipationOfUnitsToReserve(
                               NombreDeVariables, clusterName, areaReserveUp.reserveName);
+                            NombreDeVariables++;
+
                             clusterReserveParticipation.indexClusterParticipation = index;
                             index++;
                             clusterIndex++;
                         }
-                        NombreDeVariables += 2;
                     }
                 }
-                // Need
-                CorrespondanceVarNativesVarOptim.needReserveIndex[reserveIndex]
-                  = areaReserveUp.need[pdt];
-                NombreDeVariables++;
+                if (Simulation)
+                {
+                    NombreDeVariables++;
+                }
+                else
+                {
+                    // Need
+                    variableManager.NeedReserve(reserveIndex, pdt) = areaReserveUp.need[pdt];
+                    ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
+                      = VARIABLE_BORNEE_DES_DEUX_COTES;
+                    NombreDeVariables++;
+                }
             }
             for (auto& areaReserveDown : areaReserves.areaCapacityReservationsDown)
             {
                 reserveIndex = areaReserveDown.globalReserveIndex;
-                if (!Simulation)
+                if (Simulation)
+                {
+                    NombreDeVariables += 2;
+                }
+                else
                 {
                     // For Unsatisfied Reserves
-                    CorrespondanceVarNativesVarOptim.internalUnsatisfiedReserveIndex[reserveIndex]
+                    variableManager.InternalUnsatisfiedReserve(reserveIndex, pdt)
                       = NombreDeVariables;
                     ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                       = VARIABLE_BORNEE_DES_DEUX_COTES;
                     variableNamer.InternalUnsatisfiedReserve(NombreDeVariables,
                                                              areaReserveDown.reserveName);
+                    NombreDeVariables++;
 
                     // For Excess Reserves
-                    CorrespondanceVarNativesVarOptim.internalExcessReserveIndex[reserveIndex]
-                      = NombreDeVariables;
+                    variableManager.InternalExcessReserve(reserveIndex, pdt) = NombreDeVariables;
                     ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                       = VARIABLE_BORNEE_DES_DEUX_COTES;
                     variableNamer.InternalExcessReserve(NombreDeVariables,
                                                         areaReserveDown.reserveName);
+                    NombreDeVariables++;
                 }
-                NombreDeVariables += 2;
 
                 int clusterIndex = 0;
                 for (auto& clusterReserveParticipation :
@@ -145,35 +167,48 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReservesThermi
                     {
                         const auto& clusterName
                           = PaliersThermiquesDuPays.NomsDesPaliersThermiques[clusterIndex];
-                        if (!Simulation)
+                        if (Simulation)
+                        {
+                            NombreDeVariables += 2;
+                        }
+                        else
                         {
                             // For running units in cluster
-                            CorrespondanceVarNativesVarOptim
-                              .runningClusterReserveParticipationIndex[index]
+                            variableManager.ClusterReserveParticipation(index, pdt)
                               = NombreDeVariables;
                             ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                               = VARIABLE_BORNEE_DES_DEUX_COTES;
                             variableNamer.ParticipationOfRunningUnitsToReserve(
                               NombreDeVariables, clusterName, areaReserveDown.reserveName);
+                            NombreDeVariables++;
 
                             // For all units in cluster (off units can participate to the reserves)
-                            CorrespondanceVarNativesVarOptim.clusterReserveParticipationIndex[index]
+                            variableManager.RunningClusterReserveParticipation(index, pdt)
                               = NombreDeVariables;
                             ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                               = VARIABLE_BORNEE_DES_DEUX_COTES;
                             variableNamer.ParticipationOfUnitsToReserve(
                               NombreDeVariables, clusterName, areaReserveDown.reserveName);
+                            NombreDeVariables++;
+
                             clusterReserveParticipation.indexClusterParticipation = index;
                             index++;
                             clusterIndex++;
                         }
-                        NombreDeVariables += 2;
                     }
                 }
-                // Need
-                CorrespondanceVarNativesVarOptim.needReserveIndex[reserveIndex]
-                  = areaReserveDown.need[pdt];
-                NombreDeVariables++;
+                if (Simulation)
+                {
+                    NombreDeVariables++;
+                }
+                else
+                {
+                    // Need
+                    variableManager.NeedReserve(reserveIndex, pdt) = areaReserveDown.need[pdt];
+                    ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
+                      = VARIABLE_BORNEE_DES_DEUX_COTES;
+                    NombreDeVariables++;
+                }
             }
         }
     }
