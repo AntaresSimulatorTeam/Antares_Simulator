@@ -76,6 +76,8 @@ const double* TimeSeries::getColumn(uint32_t year) const
 
 uint32_t TimeSeries::getSeriesIndex(uint32_t year) const
 {
+    if (timeSeries.width == 1)
+        return 0;
     return timeseriesNumbers[0][year];
 }
 
