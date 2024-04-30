@@ -416,16 +416,6 @@ void logLinkDataCheckError(const AreaLink& link, const String& msg, int hour)
                  << msg << ") for hour " << hour;
     throw Antares::Error::ReadingStudy();
 }
-
-void logLinkDataCheckErrorDirectIndirect(const AreaLink& link,
-                                         uint direct,
-                                         uint indirect)
-{
-    logs.error() << "Link (" << link.from->name << "/" << link.with->name << "): Found " << direct
-                 << " direct TS "
-                 << " and " << indirect << " indirect TS, expected the same number";
-    throw Antares::Error::ReadingStudy();
-}
 } // anonymous namespace
 
 bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyString& folder)
@@ -476,15 +466,7 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
         // Checks on loaded link's data
         if (study.usedByTheSolver)
         {
-            // Short names for link's properties
             const uint nbDirectTS = link.directCapacities.timeSeries.width;
-            const uint nbIndirectTS = link.indirectCapacities.timeSeries.width;
-            if (nbDirectTS != nbIndirectTS)
-            {
-                logLinkDataCheckErrorDirectIndirect(link, nbDirectTS, nbIndirectTS);
-                return false;
-            }
-
             auto& directHurdlesCost = link.parameters[fhlHurdlesCostDirect];
             auto& indirectHurdlesCost = link.parameters[fhlHurdlesCostIndirect];
             auto& loopFlow = link.parameters[fhlLoopFlow];

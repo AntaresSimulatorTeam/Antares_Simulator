@@ -45,7 +45,7 @@ struct Fixture
         tsnum[0][0] = 0;
     }
     TimeSeries ts;
-    TimeSeries::numbers tsnum;
+    TimeSeries::Numbers tsnum;
     std::string folder;
 
     void fillColumn(unsigned int idx);

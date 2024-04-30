@@ -194,30 +194,6 @@ void DataSeriesHydro::markAsModified() const
     maxHourlyPumpPower.markAsModified();
 }
 
-void DataSeriesHydro::EqualizeGenerationTSsizes(Area& area, bool usedByTheSolver)
-{
-    if (!usedByTheSolver) // From GUI, no need to equalize TS collections sizes
-        return;
-
-    // Equalize ROR and INFLOWS time series sizes
-    // ------------------------------------------
-    std::string fatalErrorMsg = "Hydro : area `" + area.id.to<std::string>() + "` : ";
-    fatalErrorMsg += "ROR and INFLOWS must have the same number of time series.";
-
-    generationTScount_ = EqualizeTSsize(ror, storage, fatalErrorMsg, area, HOURS_PER_YEAR, DAYS_PER_YEAR);
-
-    logs.info() << "  '" << area.id << "': ROR and INFLOWS time series were both set to : " << generationTScount_;
-
-    // Equalize ROR and MINGEN time series sizes
-    // -----------------------------------------
-    fatalErrorMsg = "Hydro : area `" + area.id.to<std::string>() + "` : ";
-    fatalErrorMsg += "ROR and MINGEN must have the same number of time series.";
-
-    generationTScount_ = EqualizeTSsize(ror, mingen, fatalErrorMsg, area);
-
-    logs.info() << "  '" << area.id << "': ROR and MINGEN time series were both set to : " << generationTScount_;
-}
-
 bool DataSeriesHydro::loadGenerationTS(const AreaName& areaID,
                                        const AnyString& folder,
                                        StudyVersion studyVersion)

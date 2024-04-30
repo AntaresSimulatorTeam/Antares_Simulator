@@ -143,7 +143,7 @@ public:
     TimeSeries indirectCapacities;
 
     //! Monte-Carlo
-    Matrix<uint32_t> timeseriesNumbers;
+    TimeSeries::Numbers timeseriesNumbers;
 
     //! Flag for using loop flow
     bool useLoopFlow;

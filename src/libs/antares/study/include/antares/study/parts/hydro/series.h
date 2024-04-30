@@ -70,8 +70,6 @@ public:
     void markAsModified() const;
     //@}
 
-    void EqualizeGenerationTSsizes(Area& area, bool usedByTheSolver);
-
     // Loading hydro time series collection
     // Returned boolean : reading from file failed
     bool loadGenerationTS(const AreaName& areaID, const AnyString& folder, StudyVersion version);
@@ -145,8 +143,8 @@ public:
     TimeSeries maxHourlyPumpPower;
 
     // TS's number matrices for Generation and Maximum Power
-    Matrix<uint32_t> timeseriesNumbers;
-    Matrix<uint32_t> timeseriesNumbersHydroMaxPower;
+    TimeSeries::Numbers timeseriesNumbers;
+    TimeSeries::Numbers timeseriesNumbersHydroMaxPower;
 
     // Equalizing max generation and max pumping numbers of TS's    
     void EqualizeMaxPowerTSsizes(Area& area);

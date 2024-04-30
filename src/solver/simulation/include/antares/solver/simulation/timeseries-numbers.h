@@ -28,6 +28,8 @@
 
 namespace Antares::Solver::TimeSeriesNumbers
 {
+bool CheckNumberOfColumns(const Data::Study& study);
+
 /*!
 ** \brief Generate all time-series numbers for a given set
 */

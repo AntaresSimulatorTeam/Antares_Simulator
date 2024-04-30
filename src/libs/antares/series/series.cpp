@@ -23,6 +23,8 @@
 #include <yuni/io/file.h>
 #include <yuni/io/directory.h>
 #include "antares/series/series.h"
+#include <algorithm>
+#include <vector>
 
 using namespace Yuni;
 
@@ -31,9 +33,31 @@ using namespace Yuni;
 
 namespace Antares::Data
 {
+void TimeSeries::Numbers::registerSeries(const TimeSeries* s)
+{
+    series.push_back(s);
+}
 
-TimeSeries::TimeSeries(numbers& tsNumbers) : timeseriesNumbers(tsNumbers)
-{}
+// TODO[FOM] Code duplication
+static bool checkAllElementsIdenticalOrOne(std::vector<uint> w)
+{
+    auto first_one = std::remove(w.begin(), w.end(), 1); // Reject all 1 to the end
+    return std::adjacent_find(w.begin(), first_one, std::not_equal_to<uint>()) == first_one;
+}
+
+bool TimeSeries::Numbers::checkSeriesNumberOfColumnsConsistency() const
+{
+    std::vector<uint> width;
+    for (const auto* s : series)
+        width.push_back(s->numberOfColumns());
+
+    return checkAllElementsIdenticalOrOne(width);
+}
+
+TimeSeries::TimeSeries(Numbers& tsNumbers) : timeseriesNumbers(tsNumbers)
+{
+    tsNumbers.registerSeries(this);
+}
 
 bool TimeSeries::loadFromFile(const std::string& path,
                               const bool average)
@@ -94,6 +118,11 @@ void TimeSeries::reset()
 void TimeSeries::reset(uint32_t width, uint32_t height)
 {
     timeSeries.reset(width, height);
+}
+
+uint32_t TimeSeries::numberOfColumns() const
+{
+    return timeSeries.width;
 }
 
 void TimeSeries::resize(uint32_t timeSeriesCount, uint32_t timestepCount)

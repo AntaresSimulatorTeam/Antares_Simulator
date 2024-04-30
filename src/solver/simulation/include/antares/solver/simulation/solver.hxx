@@ -339,6 +339,11 @@ void ISimulation<ImplementationType>::run()
         // for a single simulation
         study.resizeAllTimeseriesNumbers(1 + study.runtime->rangeLimits.year[Data::rangeEnd]);
         // Now, we will prepare the time-series numbers
+        if (not TimeSeriesNumbers::CheckNumberOfColumns(study))
+        {
+            throw FatalError("Inconsistent number of time-series detected. Please check your input data.");
+        }
+
         if (not TimeSeriesNumbers::Generate(study))
         {
             throw FatalError("An unrecoverable error has occured. Can not continue.");

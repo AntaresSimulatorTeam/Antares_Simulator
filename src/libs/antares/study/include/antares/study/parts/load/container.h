@@ -71,7 +71,7 @@ public:
     /*! Data for time-series */
     TimeSeries series;
 
-    TimeSeries::numbers tsNumbers;
+    TimeSeries::Numbers tsNumbers;
 
 }; // class Container
 

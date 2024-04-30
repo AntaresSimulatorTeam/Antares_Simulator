@@ -35,10 +35,17 @@ namespace Antares::Data
 class TimeSeries
 {
 public:
-    using numbers = Matrix<uint32_t>;
+    struct Numbers : public Matrix<uint32_t> // TODO[FOM] remove inheritance, it was added mostly to avoid breaking existing code
+    {
+    public:
+        void registerSeries(const TimeSeries* s);
+        bool checkSeriesNumberOfColumnsConsistency() const;
+    private:
+        std::vector<const TimeSeries*> series;
+    };
     using TS = Matrix<double>;
 
-    explicit TimeSeries(numbers& tsNumbers);
+    explicit TimeSeries(Numbers& tsNumbers);
     /*!
      ** \brief Load series from a file
      **
@@ -72,6 +79,7 @@ public:
 
     void reset();
     void reset(uint32_t width, uint32_t height);
+    uint32_t numberOfColumns() const;
     void unloadFromMemory() const;
     void roundAllEntries();
     void resize(uint32_t timeSeriesCount, uint32_t timestepCount);
@@ -83,7 +91,7 @@ public:
     uint64_t memoryUsage() const;
 
     TS timeSeries;
-    numbers& timeseriesNumbers;
+    Numbers& timeseriesNumbers;
 
     static const std::vector<double> emptyColumn; ///< used in getColumn if timeSeries empty
 };
