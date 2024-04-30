@@ -193,7 +193,6 @@ bool Sets<T>::saveToFile(const StringT& filename) const
 }
 
 template<class T>
-template<class StringT>
 bool Sets<T>::loadFromFile(const std::filesystem::path& filename)
 {
     using namespace Yuni;
@@ -266,7 +265,7 @@ bool Sets<T>::loadFromFile(const std::filesystem::path& filename)
                     continue;
                 }
 
-                logs.warning() << "sets: `" << filename << "`: Invalid property `" << p->key
+                logs.warning() << "sets: `" << filename.string() << "`: Invalid property `" << p->key
                                << '\'';
             }
 

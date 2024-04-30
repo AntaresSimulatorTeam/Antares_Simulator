@@ -28,6 +28,8 @@
 using namespace Yuni;
 using Antares::Constants::nbHoursInAWeek;
 
+namespace fs = std::filesystem;
+
 #define SEP IO::Separator
 
 namespace Antares
@@ -55,7 +57,7 @@ bool Study::internalLoadHeader(const String& path)
 
 bool Study::loadFromFolder(const std::string& path, const StudyLoadOptions& options)
 {
-    std::filesystem::path normPath = path;
+    fs::path normPath = path;
     normPath = normPath.lexically_normal();
     return internalLoadFromFolder(normPath, options);
 }
@@ -151,13 +153,13 @@ void Study::parameterFiller(const StudyLoadOptions& options)
     reduceMemoryUsage();
 }
 
-bool Study::internalLoadFromFolder(const std::filesystem::path& path, const StudyLoadOptions& options)
+bool Study::internalLoadFromFolder(const fs::path& path, const StudyLoadOptions& options)
 {
     // IO statistics
     Statistics::LogsDumper statisticsDumper;
 
     // Check if the path is correct
-    if (!std::filesystem::exists(path))
+    if (!fs::exists(path))
     {
         logs.error()
           << path.string() << ": The directory does not exist (or not enough privileges to read the folder)";
@@ -349,6 +351,7 @@ private:
 
 bool Study::internalLoadSets()
 {
+    const fs::path path = fs::path(folderInput.c_str()) / "areas" / "sets.ini";
     // Set of areas
     logs.info();
     logs.info() << "Loading sets of areas...";
@@ -357,7 +360,7 @@ bool Study::internalLoadSets()
     buffer.clear() << folderInput << SEP << "areas" << SEP << "sets.ini";
 
     // Load the rules
-    if (setsOfAreas.loadFromFile(buffer))
+    if (setsOfAreas.loadFromFile(path))
     {
         // Apply the rules
         SetHandlerAreas handler(*this);

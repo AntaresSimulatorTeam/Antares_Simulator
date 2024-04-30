@@ -218,7 +218,6 @@ public:
     /*!
     ** \brief Load a rule set from an INI File
     */
-    template<class StringT>
     bool loadFromFile(const std::filesystem::path& filename);
 
     template<class StringT>
