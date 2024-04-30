@@ -34,54 +34,6 @@ using namespace Yuni;
 namespace Antares::Data
 {
 
-static void resizeTSNoDataLoss(TimeSeries& TSToResize, uint width)
-{
-    auto& ts = TSToResize.timeSeries;
-    ts.resizeWithoutDataLost(width, ts.height);
-    for (uint x = 1; x < width; ++x)
-        ts.pasteToColumn(x, ts[0]);
-}
-
-static uint EqualizeTSsize(TimeSeries& TScollection1,
-                           TimeSeries& TScollection2,
-                           const std::string& fatalErrorMsg,
-                           Area& area,
-                           unsigned int height1 = HOURS_PER_YEAR,
-                           unsigned int height2 = HOURS_PER_YEAR)
-{
-    const auto ts1Width = TScollection1.timeSeries.width;
-    const auto ts2Width = TScollection2.timeSeries.width;
-    const auto maxWidth = std::max(ts1Width, ts2Width);
-
-    if (ts1Width == 0 && ts2Width == 0)
-    {
-        TScollection1.reset(1, height1);
-        TScollection2.reset(1, height2);
-        return 1;
-    }
-
-    if (ts1Width == ts2Width)
-        return maxWidth;
-
-    if (ts1Width > 1 && ts2Width > 1)
-    {
-        logs.fatal() << fatalErrorMsg;
-        return 0;
-    }
-
-    // At this point, one TS collection size is > 1 and the other is of size 1.
-
-    // This following instruction to force reloading all area's TS when saving the study (GUI)
-    area.invalidateJIT = true;
-
-    if (ts1Width == 1)
-        resizeTSNoDataLoss(TScollection1, maxWidth);
-    if (ts2Width == 1)
-        resizeTSNoDataLoss(TScollection2, maxWidth);
-
-    return maxWidth;
-}
-
 static bool loadTSfromFile(Matrix<double>& ts,
                     const AreaName& areaID,
                     const AnyString& folder,
@@ -193,30 +145,6 @@ void DataSeriesHydro::markAsModified() const
     maxHourlyPumpPower.markAsModified();
 }
 
-void DataSeriesHydro::EqualizeGenerationTSsizes(Area& area, bool usedByTheSolver)
-{
-    if (!usedByTheSolver) // From GUI, no need to equalize TS collections sizes
-        return;
-
-    // Equalize ROR and INFLOWS time series sizes
-    // ------------------------------------------
-    std::string fatalErrorMsg = "Hydro : area `" + area.id.to<std::string>() + "` : ";
-    fatalErrorMsg += "ROR and INFLOWS must have the same number of time series.";
-
-    generationTScount_ = EqualizeTSsize(ror, storage, fatalErrorMsg, area, HOURS_PER_YEAR, DAYS_PER_YEAR);
-
-    logs.info() << "  '" << area.id << "': ROR and INFLOWS time series were both set to : " << generationTScount_;
-
-    // Equalize ROR and MINGEN time series sizes
-    // -----------------------------------------
-    fatalErrorMsg = "Hydro : area `" + area.id.to<std::string>() + "` : ";
-    fatalErrorMsg += "ROR and MINGEN must have the same number of time series.";
-
-    generationTScount_ = EqualizeTSsize(ror, mingen, fatalErrorMsg, area);
-
-    logs.info() << "  '" << area.id << "': ROR and MINGEN time series were both set to : " << generationTScount_;
-}
-
 bool DataSeriesHydro::loadGenerationTS(const AreaName& areaID,
                                        const AnyString& folder,
                                        StudyVersion studyVersion)
@@ -290,18 +218,6 @@ uint64_t DataSeriesHydro::memoryUsage() const
 {
     return sizeof(double) + ror.memoryUsage() + storage.memoryUsage() + mingen.memoryUsage()
            + maxHourlyGenPower.memoryUsage() + maxHourlyPumpPower.memoryUsage();
-}
-
-void DataSeriesHydro::EqualizeMaxPowerTSsizes(Area& area)
-{
-    std::string fatalErrorMsg = "Hydro Max Power: " + area.id.to<std::string>() + " : ";
-    fatalErrorMsg += "generation and pumping must have the same number of TS.";
-
-    maxPowerTScount_
-      = EqualizeTSsize(maxHourlyGenPower, maxHourlyPumpPower, fatalErrorMsg, area);
-
-    logs.info() << "  '" << area.id << "': The number of hydro max power (generation and pumping) "
-                << "TS were both set to : " << maxPowerTScount_;
 }
 
 void DataSeriesHydro::setHydroModulability(Area& area) const
