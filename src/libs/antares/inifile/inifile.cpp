@@ -240,7 +240,6 @@ bool IniFile::open(const AnyString& filename, bool warnings)
 {
     clear();
     std::string filePath = filename.to<std::string>();
-    const unsigned int lineMaxSize = 2048;
 
     std::ifstream file(filePath);
     if (file.is_open())
