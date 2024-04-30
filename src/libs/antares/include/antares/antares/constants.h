@@ -65,9 +65,6 @@ extern const std::array<unsigned int, 12> daysPerMonth;
 extern const unsigned int nbHoursInAWeek;
 } // namespace Antares::Constants
 
-/*! Max number of MC years */
-constexpr unsigned int MAX_NB_MC_YEARS = 50000;
-
 enum AntaresConstants
 {
     ant_k_area_name_max_length = 128,

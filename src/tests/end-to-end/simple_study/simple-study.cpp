@@ -103,12 +103,11 @@ HydroMaxPowerStudy::HydroMaxPowerStudy()
     hydro->reservoirManagement = true;
 };
 
-BOOST_FIXTURE_TEST_SUITE(ONE_AREA__ONE_THERMAL_CLUSTER, StudyFixture)
+BOOST_AUTO_TEST_SUITE(ONE_AREA__ONE_THERMAL_CLUSTER)
 
-BOOST_AUTO_TEST_CASE(thermal_cluster_fullfills_area_demand)
-{
-    int x = 2;
-    setNumberMCyears(1);
+BOOST_FIXTURE_TEST_CASE(thermal_cluster_fullfills_area_demand, StudyFixture)
+{	
+	setNumberMCyears(1);
 
     simulation->create();
 	simulation->run();
@@ -118,7 +117,7 @@ BOOST_AUTO_TEST_CASE(thermal_cluster_fullfills_area_demand)
 	BOOST_TEST(output.load(area).hour(0) == loadInArea, tt::tolerance(0.001));
 }
 
-BOOST_AUTO_TEST_CASE(two_MC_years__thermal_cluster_fullfills_area_demand_on_2nd_year_as_well)
+BOOST_FIXTURE_TEST_CASE(two_MC_years__thermal_cluster_fullfills_area_demand_on_2nd_year_as_well, StudyFixture)
 {
 	setNumberMCyears(2);
 
@@ -131,7 +130,7 @@ BOOST_AUTO_TEST_CASE(two_MC_years__thermal_cluster_fullfills_area_demand_on_2nd_
 	BOOST_TEST(output.load(area).hour(0) == loadInArea, tt::tolerance(0.001));
 }
 
-BOOST_AUTO_TEST_CASE(two_mc_years__two_ts_identical)
+BOOST_FIXTURE_TEST_CASE(two_mc_years__two_ts_identical, StudyFixture)
 {
 	setNumberMCyears(2);
 
@@ -151,7 +150,7 @@ BOOST_AUTO_TEST_CASE(two_mc_years__two_ts_identical)
 	BOOST_TEST(output.load(area).hour(0) == loadInArea, tt::tolerance(0.001));
 }
 
-BOOST_AUTO_TEST_CASE(two_mc_years__two_ts_for_load)
+BOOST_FIXTURE_TEST_CASE(two_mc_years__two_ts_for_load, StudyFixture)
 {
 	setNumberMCyears(2);
 
@@ -172,7 +171,7 @@ BOOST_AUTO_TEST_CASE(two_mc_years__two_ts_for_load)
 	BOOST_TEST(output.overallCost(area).hour(0) == averageLoad * clusterCost, tt::tolerance(0.001));
 }
 
-BOOST_AUTO_TEST_CASE(two_mc_years_with_different_weight__two_ts)
+BOOST_FIXTURE_TEST_CASE(two_mc_years_with_different_weight__two_ts, StudyFixture)
 {
 	setNumberMCyears(2);
 
@@ -197,7 +196,7 @@ BOOST_AUTO_TEST_CASE(two_mc_years_with_different_weight__two_ts)
 	BOOST_TEST(output.overallCost(area).hour(0) == averageLoad * clusterCost, tt::tolerance(0.001));
 }
 
-BOOST_AUTO_TEST_CASE(milp_two_mc_single_unit_single_scenario)
+BOOST_FIXTURE_TEST_CASE(milp_two_mc_single_unit_single_scenario, StudyFixture)
 {
     setNumberMCyears(1);
 
@@ -222,7 +221,7 @@ BOOST_AUTO_TEST_CASE(milp_two_mc_single_unit_single_scenario)
     BOOST_TEST(output.overallCost(area).hour(0) == loadInArea * clusterCost, tt::tolerance(0.001));
 }
 
-BOOST_AUTO_TEST_CASE(milp_two_mc_two_unit_single_scenario)
+BOOST_FIXTURE_TEST_CASE(milp_two_mc_two_unit_single_scenario, StudyFixture)
 {
     setNumberMCyears(1);
 
@@ -250,7 +249,7 @@ BOOST_AUTO_TEST_CASE(milp_two_mc_two_unit_single_scenario)
     BOOST_TEST(output.thermalNbUnitsON(cluster.get()).hour(10) == 2, tt::tolerance(0.001));
 }
 
-BOOST_AUTO_TEST_CASE(parallel)
+BOOST_FIXTURE_TEST_CASE(parallel, StudyFixture)
 {
 	setNumberMCyears(10);
     study->maxNbYearsInParallel = 2;
@@ -263,7 +262,7 @@ BOOST_AUTO_TEST_CASE(parallel)
 	BOOST_TEST(output.load(area).hour(0) == loadInArea, tt::tolerance(0.001));
 }
 
-BOOST_AUTO_TEST_CASE(parallel2)
+BOOST_FIXTURE_TEST_CASE(parallel2, StudyFixture)
 {
 	setNumberMCyears(2);
     study->maxNbYearsInParallel = 2;
@@ -288,7 +287,7 @@ BOOST_AUTO_TEST_SUITE_END()
 
 
 BOOST_AUTO_TEST_SUITE(error_cases)
-BOOST_AUTO_TEST_CASE(error_on_wrong_hydro_data)
+BOOST_FIXTURE_TEST_CASE(error_on_wrong_hydro_data, StudyFixture)
 {
     StudyBuilder builder;
     builder.simulationBetweenDays(0, 7);
@@ -305,8 +304,9 @@ BOOST_AUTO_TEST_CASE(error_on_wrong_hydro_data)
 }
 BOOST_AUTO_TEST_SUITE_END()
 
-BOOST_FIXTURE_TEST_SUITE(ONE_AREA__ONE_STS_THERMAL_CLUSTER, StudyFixture)
-BOOST_AUTO_TEST_CASE(STS_initial_level_is_also_weekly_final_level)
+BOOST_AUTO_TEST_SUITE(ONE_AREA__ONE_STS_THERMAL_CLUSTER)
+
+BOOST_FIXTURE_TEST_CASE(STS_initial_level_is_also_weekly_final_level, StudyFixture)
 {
     using namespace Antares::Data::ShortTermStorage;
 	setNumberMCyears(1);
@@ -356,9 +356,9 @@ BOOST_AUTO_TEST_CASE(STS_initial_level_is_also_weekly_final_level)
 }
 BOOST_AUTO_TEST_SUITE_END()
 
-BOOST_FIXTURE_TEST_SUITE(HYDRO_MAX_POWER, HydroMaxPowerStudy)
+BOOST_AUTO_TEST_SUITE(HYDRO_MAX_POWER)
 
-BOOST_AUTO_TEST_CASE(basic)
+BOOST_FIXTURE_TEST_CASE(basic, HydroMaxPowerStudy)
 {
     simulation->create();
     simulation->run();
@@ -369,7 +369,7 @@ BOOST_AUTO_TEST_CASE(basic)
 	BOOST_TEST(output.overallCost(area).hour(0) == (loadInArea - output.hydroStorage(area).hour(0)) * area->thermal.unsuppliedEnergyCost, tt::tolerance(0.001));
 }
 
-BOOST_AUTO_TEST_CASE(scenario_builder)
+BOOST_FIXTURE_TEST_CASE(scenario_builder, HydroMaxPowerStudy)
 {
     hydro->series->setMaxPowerTScount(3U);
     setNumberMCyears(3);

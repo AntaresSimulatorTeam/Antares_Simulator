@@ -33,8 +33,8 @@ namespace Antares
 bool CBuilder::completeFromStudy()
 {
     uint nCount(1);
-    const Data::Area::Map::iterator end = pStudy->areas.end();
-    for (Data::Area::Map::iterator i = pStudy->areas.begin(); i != end; ++i)
+    const Data::Area::Map::iterator end = pStudy.areas.end();
+    for (Data::Area::Map::iterator i = pStudy.areas.begin(); i != end; ++i)
     {
         Data::Area& area = *(i->second);
         const Data::AreaLink::Map::iterator end = area.links.end();

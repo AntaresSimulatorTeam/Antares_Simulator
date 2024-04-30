@@ -81,12 +81,6 @@ public:
     explicit WritingPID(const Yuni::String& file);
 };
 
-class InvalidNumberOfMCYears : public LoadingError
-{
-public:
-    explicit InvalidNumberOfMCYears(uint nbYears);
-};
-
 class IncompatibleParallelOptions : public LoadingError
 {
 public:

@@ -74,7 +74,7 @@ bool runKirchhoffConstraints(std::shared_ptr<Data::Study> study,
 {
     study->areas.ensureDataIsInitialized(study->parameters, false);
 
-    CBuilder constraintBuilder(study);
+    CBuilder constraintBuilder(*study);
     logs.info() << "CBuilder created";
 
     if (!constraintBuilder.completeFromStudy())
