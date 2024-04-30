@@ -21,8 +21,8 @@
 #ifdef YUNI_OS_WINDOWS
 
 #include <windows.h>
-#include "common.h"
-#include "../application.h"
+#include "antares/signal-handling/common.h"
+#include "antares/signal-handling/public.h"
 
 BOOL WINAPI ConsoleHandler(DWORD dwType)
 {
