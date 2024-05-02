@@ -79,23 +79,15 @@ void ImmediateFileResultWriter::addEntryFromFile(const fs::path& entryPath,
     if (!prepareDirectoryHierarchy(pOutputFolder, entryPath, fullPath))
         return;
 
-    switch (Yuni::IO::File::Copy(filePath.c_str(), fullPath.string()))
+    std::error_code ec;
+    fs::copy(filePath, fullPath, ec);
+
+    if (ec)
     {
-        using namespace Yuni::IO;
-    case errNone:
-        break;
-    case errNotFound:
-        logs.error() << filePath.string() << ": file does not exist";
-        break;
-    case errReadFailed:
-        logs.error() << "Read failed '" << filePath.string() << "'";
-        break;
-    case errWriteFailed:
-        logs.error() << "Write failed '" << fullPath.string() << "'";
-        break;
-    default:
-        logs.error() << "Unhandled error";
-        break;
+        if (ec == std::errc::no_such_file_or_directory)
+            logs.error() << filePath.string() << ": file does not exist";
+        else
+            logs.error() << "Error: " << ec.message();
     }
 }
 
