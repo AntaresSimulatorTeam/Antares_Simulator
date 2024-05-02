@@ -7,6 +7,14 @@
       "platform": "windows"
     },
     {
+      "name": "boost-test",
+      "platform": "windows"
+    },
+    {
+      "name": "boost-algorithm",
+      "platform": "windows"
+    },
+    {
       "name": "minizip-ng",
       "default-features": false,
       "features": [
