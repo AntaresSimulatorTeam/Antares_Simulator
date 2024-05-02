@@ -139,5 +139,4 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
         tag: ${{ github.event.inputs.release_tag }}
       run: |
-        apt install -y gh
         gh release upload "$tag" /build/*.tar.gz /build/*.rpm
