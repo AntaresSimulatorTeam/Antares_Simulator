@@ -55,6 +55,7 @@ jobs:
         key: vcpkg-cache-ubuntu-${{ hashFiles('vcpkg.json', '.git/modules/HEAD') }}
         # Allows to restore a cache when deps have only partially changed (like adding a dependency)
         restore-keys: vcpkg-cache-ubuntu-*
+        save-always: true
 
     - name: Install VCPKG
       run: git submodule update --init vcpkg && ./vcpkg/bootstrap-vcpkg.sh -disableMetrics
