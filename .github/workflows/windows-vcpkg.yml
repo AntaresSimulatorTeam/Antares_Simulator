@@ -136,7 +136,7 @@ jobs:
           -DCMAKE_PREFIX_PATH="${{ env.ORTOOLS_DIR }}/install" \
           -DVCPKG_ROOT="${{env.VCPKG_ROOT}}" \
           -DVCPKG_TARGET_TRIPLET=${{ env.triplet }} \
-          -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake \
+          -DCMAKE_TOOLCHAIN_FILE="${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake" \
           -DCMAKE_BUILD_TYPE=Release \
           -DBUILD_TESTING=ON  \
           -DBUILD_TOOLS=ON \
