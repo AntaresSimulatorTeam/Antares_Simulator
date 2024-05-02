@@ -34,7 +34,7 @@ jobs:
     container:
       image: 'antaresrte/rte-antares:centos7-simulator-no-deps'
       volumes:
-        - _build:/_build
+        - ${{ github.workspace }}/_build:/_build
 
     steps:
 
