@@ -29,7 +29,6 @@ jobs:
     name: Build
     env:
       ORTOOLSDIR: ${{ github.workspace }}/or-tools
-      VCPKG_ROOT: ${{ github.workspace }}/vcpkg
 
     runs-on: ubuntu-latest
     container: 'antaresrte/rte-antares:centos7-simulator-no-deps'
@@ -40,24 +39,16 @@ jobs:
       run: |
           git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git -b ${{ env.REF }} .
 
+    - name: Install gcc 10
+      run: |
+        yum install -y centos-release-scl
+        yum install -y devtoolset-10-gcc*
+
+    - name: Install cmake 3.28
+      run: pip3 install cmake==3.28.4
+
     - name: Install VCPKG
       run: git submodule update --init vcpkg && ./vcpkg/bootstrap-vcpkg.sh -disableMetrics
-
-    - name: Current directory
-      run: echo $PWD
-      continue-on-error: true
-
-    - name: List files
-      run: ls vcpkg
-      continue-on-error: true
-
-    - name: List files
-      run: ls ${{ env.VCPKG_ROOT }}
-      continue-on-error: true
-
-    - name: List files
-      run: ls vcpkg
-      continue-on-error: true
 
     - name: Init submodule
       run: |
@@ -90,7 +81,6 @@ jobs:
            dnf -y install 'dnf-command(config-manager)'
            dnf -y config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
            dnf -y install gh
-
 
     - name: Configure
       run: |
