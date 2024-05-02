@@ -185,6 +185,29 @@ BOOST_FIXTURE_TEST_CASE(getCoefficientSpecificData, Fixture)
     BOOST_CHECK_EQUAL(ts.getCoefficient(1, 0), 12.5);
 }
 
+// SINGLE COLUMN
+BOOST_FIXTURE_TEST_CASE(getCoefficient_SingleColumn, Fixture)
+{
+    ts.resize(1, 2);
+
+    // Here, we provide 2 time series numbers...
+    tsnum.resize(1, 2);
+    for (unsigned int i = 0; i < ts.timeSeries.width; i++)
+        tsnum[0][i] = i;
+
+    // ...but only one column
+    ts.timeSeries[0][0] = 12.5;
+    ts.timeSeries[0][1] = 74.74;
+
+    // year=1
+    BOOST_CHECK_EQUAL(ts.getCoefficient(0, 0), 12.5);
+    BOOST_CHECK_EQUAL(ts.getCoefficient(0, 1), 74.74);
+
+    // year=2
+    BOOST_CHECK_EQUAL(ts.getCoefficient(1, 0), 12.5);
+    BOOST_CHECK_EQUAL(ts.getCoefficient(1, 1), 74.74);
+}
+
 // VALID CONFIGURATIONS
 BOOST_FIXTURE_TEST_CASE(checkSizeOK_1TS, FixtureMultipleTS)
 {
