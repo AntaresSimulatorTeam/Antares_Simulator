@@ -7,6 +7,7 @@ on:
     branches:
       - develop
       - dependabot/*
+      - feature/vcpkg-linux
 
   schedule:
     - cron: '21 2 * * *'
@@ -49,6 +50,9 @@ jobs:
       run: |
            git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git -b ${{ env.REF }} .
 
+    - name: Install VCPKG
+      run: git submodule update --init vcpkg && ./vcpkg/bootstrap-vcpkg.sh -disableMetrics
+
     - name: Config OR-Tools URL
       run: |
           echo "ORTOOLS_URL=https://github.com/rte-france/or-tools/releases/download/$(cat ortools_tag)/ortools_cxx_oraclelinux-8_static_sirius.zip" >> $GITHUB_ENV
@@ -79,13 +83,14 @@ jobs:
 
     - name: Configure
       run: |
-           source /opt/rh/gcc-toolset-11/enable
-           cmake -B _build -S src \
-             -DCMAKE_BUILD_TYPE=Release \
-             -DBUILD_TESTING=ON \
-             -DBUILD_TOOLS=ON \
-             -DBUILD_UI=OFF \
-             -DCMAKE_PREFIX_PATH=${{ env.ORTOOLS_DIR }}/install
+        source /opt/rh/gcc-toolset-11/enable
+        cmake -B _build -S src \
+          -DCMAKE_TOOLCHAIN_FILE=$GITHUB_WORKSPACE/vcpkg/scripts/buildsystems/vcpkg.cmake \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DBUILD_TESTING=ON \
+          -DBUILD_TOOLS=ON \
+          -DBUILD_UI=OFF \
+          -DCMAKE_PREFIX_PATH=${{ env.ORTOOLS_DIR }}/install
 
     - name: Build
       run: |
