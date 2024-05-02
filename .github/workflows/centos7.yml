@@ -41,8 +41,6 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: 'antaresrte/rte-antares:centos7-simulator-no-deps'
-      volumes:
-        - ${{ github.workspace }}/_build:/_build
 
     steps:
     - name: Install gcc 10
@@ -125,13 +123,13 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: targz
-        path: /build/*.tar.gz
+        path: _build/*.tar.gz
 
     - name: Installer RPM push
       uses: actions/upload-artifact@v4
       with:
         name: rpm
-        path: /build/*.rpm
+        path: _build/*.rpm
 
     - name: Publish assets
       if: ${{ env.IS_RELEASE == 'true' }}
@@ -139,4 +137,4 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
         tag: ${{ github.event.inputs.release_tag }}
       run: |
-        gh release upload "$tag" /build/*.tar.gz /build/*.rpm
+        gh release upload "$tag" _build/*.tar.gz _build/*.rpm
