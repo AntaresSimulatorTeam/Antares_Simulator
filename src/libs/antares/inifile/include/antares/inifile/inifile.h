@@ -304,12 +304,15 @@ public:
     //@}
 
 public:
+
     //! The first section
     Section* firstSection;
     //! The last section
     Section* lastSection;
 
 private:
+    void readStream(std::istream& in_stream, std::string filePath, bool warnings);
+
     /*!
     ** \brief The last filename used for loading/saving
     **

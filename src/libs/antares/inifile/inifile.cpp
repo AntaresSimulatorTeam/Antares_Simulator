@@ -237,27 +237,31 @@ uint IniFile::Section::size() const
     return count;
 }
 
+void IniFile::readStream(std::istream& in_stream, std::string filePath, bool warnings)
+{
+    std::string line;
+    IniFile::Section* lastSection = nullptr;
+    uint64_t read = 0;
+
+    while (std::getline(in_stream, line))
+        lastSection = AnalyzeIniLine(filePath, this, lastSection, line, read);
+
+    if (read)
+        Statistics::HasReadFromDisk(read);
+}
+
 bool IniFile::open(const AnyString& filename, bool warnings)
 {
     clear();
+    pFilename = filename; // storing filename for further use
     std::string filePath = filename.to<std::string>();
 
-    std::ifstream file(filePath);
-    if (file.is_open())
+    if (std::ifstream file(filePath); file.is_open())
     {
-        std::string line;
-        IniFile::Section* lastSection = nullptr;
-        uint64_t read = 0;
-
-        while (std::getline(file, line))
-            lastSection = AnalyzeIniLine(filePath, this, lastSection, line, read);
-        
-        if (read)
-            Statistics::HasReadFromDisk(read);
+        readStream(file, filePath, warnings);
         return true;
     }
 
-    // Error
     if (warnings)
         logs.error() << "I/O error: " << filename << ": Impossible to read the file";
     pFilename.clear();
