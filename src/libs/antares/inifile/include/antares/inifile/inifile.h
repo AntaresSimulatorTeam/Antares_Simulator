@@ -48,8 +48,7 @@ public:
         Property(const AnyString& key, const U& value);
         ~Property();
 
-        template<class StreamT>
-        void saveToStream(StreamT& file, uint64_t& written) const;
+        void saveToStream(std::ostream& file, uint64_t& written) const;
 
     public:
         //! The key
@@ -80,8 +79,7 @@ public:
         template<class U>
         Property* add(const AnyString& key, const std::optional<U>& value);
 
-        template<class StreamT>
-        void saveToStream(StreamT& file, uint64_t& written) const;
+        void saveToStream(std::ostream& file, uint64_t& written) const;
 
         Property* find(const AnyString& key);
         const Property* find(const AnyString& key) const;

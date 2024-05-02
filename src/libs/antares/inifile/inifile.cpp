@@ -129,15 +129,13 @@ IniFile::Property::~Property()
 {
 }
 
-template<class StreamT>
-inline void IniFile::Property::saveToStream(StreamT& file, uint64_t& written) const
+inline void IniFile::Property::saveToStream(std::ostream& file, uint64_t& written) const
 {
     written += key.size() + value.size() + 4;
     file << key << " = " << value << '\n';
 }
 
-template<class StreamT>
-void IniFile::Section::saveToStream(StreamT& file, uint64_t& written) const
+void IniFile::Section::saveToStream(std::ostream& file, uint64_t& written) const
 {
     if (!firstProperty)
         return;
