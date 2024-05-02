@@ -6,8 +6,6 @@
       "name": "wxwidgets",
       "platform": "windows"
     },
-    "boost-algorithm",
-    "boost-test",
     {
       "name": "minizip-ng",
       "default-features": false,

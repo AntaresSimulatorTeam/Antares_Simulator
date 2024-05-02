@@ -66,9 +66,10 @@ jobs:
 
     - name: Install libraries
       run: |
-           sudo apt-get update
-           sudo apt-get install uuid-dev libwxgtk3.0-gtk3-dev
-           sudo apt-get install g++-10 gcc-10
+        sudo apt-get update
+        sudo apt-get install uuid-dev libwxgtk3.0-gtk3-dev
+        sudo apt-get install libboost-test-dev
+        sudo apt-get install g++-10 gcc-10
 
     - name: Read antares-deps version
       id: antares-deps-version
