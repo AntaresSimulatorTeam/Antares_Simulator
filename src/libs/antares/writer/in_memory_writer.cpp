@@ -8,6 +8,8 @@
 
 #include <yuni/io/file.h> // Yuni::IO::File::LoadFromFile
 
+namespace fs = std::filesystem;
+
 namespace Antares::Solver {
 
 namespace
@@ -65,7 +67,7 @@ void InMemoryWriter::addEntryFromBuffer(const std::string& entryPath, std::strin
             pDurationCollector);
 }
 
-void InMemoryWriter::addEntryFromFile(const std::string& entryPath, const std::string& filePath)
+void InMemoryWriter::addEntryFromFile(const fs::path& entryPath, const fs::path& filePath)
 {
     // Shamelessly copy-pasted from zip_writer.cpp
     // TODO refactor
@@ -81,9 +83,9 @@ void InMemoryWriter::addEntryFromFile(const std::string& entryPath, const std::s
                   pDurationCollector);
         break;
     // Since logErrorAndThrow does not return, we don't need 'break's here
-    case errNotFound: logErrorAndThrow(filePath + ": file does not exist");
-    case errReadFailed: logErrorAndThrow("Read failed '" + filePath + "'");
-    case errMemoryLimit: logErrorAndThrow("Size limit hit for file '" + filePath + "'");
+    case errNotFound: logErrorAndThrow(filePath.string() + ": file does not exist");
+    case errReadFailed: logErrorAndThrow("Read failed '" + filePath.string() + "'");
+    case errMemoryLimit: logErrorAndThrow("Size limit hit for file '" + filePath.string() + "'");
     default: logErrorAndThrow("Unhandled error");
     }
 }

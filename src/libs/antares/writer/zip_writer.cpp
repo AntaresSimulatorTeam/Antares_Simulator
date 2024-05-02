@@ -38,6 +38,8 @@ extern "C"
 #include <utility>
 #include <sstream>
 
+namespace fs = std::filesystem;
+
 namespace Antares::Solver
 {
 
@@ -150,7 +152,7 @@ void ZipWriter::addEntryFromBuffer(const std::string& entryPath, std::string& en
     addEntryFromBufferHelper<std::string>(entryPath, entryContent);
 }
 
-void ZipWriter::addEntryFromFile(const std::string& entryPath, const std::string& filePath)
+void ZipWriter::addEntryFromFile(const fs::path& entryPath, const fs::path& filePath)
 {
     // Read file into buffer immediately, write into archive async
     Yuni::Clob buffer;
@@ -161,13 +163,13 @@ void ZipWriter::addEntryFromFile(const std::string& entryPath, const std::string
         addEntryFromBufferHelper<Yuni::Clob>(entryPath, buffer);
         break;
     case errNotFound:
-        logErrorAndThrow(filePath + ": file does not exist");
+        logErrorAndThrow(filePath.string() + ": file does not exist");
         break;
    case errReadFailed:
-        logErrorAndThrow("Read failed '" + filePath + "'");
+        logErrorAndThrow("Read failed '" + filePath.string() + "'");
         break;
     case errMemoryLimit:
-        logErrorAndThrow("Size limit hit for file '" + filePath + "'");
+        logErrorAndThrow("Size limit hit for file '" + filePath.string() + "'");
         break;
     default:
         logErrorAndThrow("Unhandled error");

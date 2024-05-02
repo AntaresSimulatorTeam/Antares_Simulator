@@ -72,8 +72,8 @@ void ImmediateFileResultWriter::addEntryFromBuffer(const std::string& entryPath,
         IOFileSetContent(output.string(), entryContent);
 }
 
-void ImmediateFileResultWriter::addEntryFromFile(const std::string& entryPath,
-                                                 const std::string& filePath)
+void ImmediateFileResultWriter::addEntryFromFile(const fs::path& entryPath,
+                                                 const fs::path& filePath)
 {
     fs::path fullPath;
     if (!prepareDirectoryHierarchy(pOutputFolder, entryPath, fullPath))
@@ -85,10 +85,10 @@ void ImmediateFileResultWriter::addEntryFromFile(const std::string& entryPath,
     case errNone:
         break;
     case errNotFound:
-        logs.error() << filePath << ": file does not exist";
+        logs.error() << filePath.string() << ": file does not exist";
         break;
     case errReadFailed:
-        logs.error() << "Read failed '" << filePath << "'";
+        logs.error() << "Read failed '" << filePath.string() << "'";
         break;
     case errWriteFailed:
         logs.error() << "Write failed '" << fullPath.string() << "'";
@@ -116,7 +116,7 @@ void NullResultWriter::addEntryFromBuffer(const std::string&, Yuni::Clob&)
 {}
 void NullResultWriter::addEntryFromBuffer(const std::string&, std::string&)
 {}
-void NullResultWriter::addEntryFromFile(const std::string&, const std::string&)
+void NullResultWriter::addEntryFromFile(const fs::path&, const fs::path&)
 {}
 void NullResultWriter::flush()
 {}
