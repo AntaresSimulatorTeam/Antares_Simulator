@@ -85,6 +85,7 @@ jobs:
     - name: Configure
       run: |
         source /opt/rh/devtoolset-10/enable
+        source /opt/rh/rh-git227/enable
         cmake -B _build -S src \
         -DCMAKE_C_COMPILER_LAUNCHER=ccache \
         -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
