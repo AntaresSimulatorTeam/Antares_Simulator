@@ -98,7 +98,7 @@ jobs:
         cmake -B _build -S src \
         -DCMAKE_C_COMPILER_LAUNCHER=ccache \
         -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
-        -DCMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake \
+        -DCMAKE_TOOLCHAIN_FILE=${{ env.GITHUB_WORKSPACE }}/vcpkg/scripts/buildsystems/vcpkg.cmake \
         -DDEPS_INSTALL_DIR=/rte-antares-deps-Release \
         -DCMAKE_BUILD_TYPE=Release \
         -DBUILD_TESTING=ON \
