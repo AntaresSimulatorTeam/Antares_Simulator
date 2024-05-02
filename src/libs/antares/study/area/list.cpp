@@ -894,8 +894,6 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         {
             buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "series";
             ret = hydroSeries->LoadMaxPower(area.id, buffer) && ret;
-
-            hydroSeries->setHydroModulability(area);
         }
 
         hydroSeries->resizeTSinDeratedMode(

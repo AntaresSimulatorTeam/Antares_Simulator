@@ -141,9 +141,6 @@ public:
     //! Daily Inflow Patern ([default 1, 0<x<dayspermonth]x365)
     Matrix<double> inflowPattern;
 
-    // Useful for solver RAM estimation
-    bool hydroModulable;
-
     //! Daily reservoir level ({min,avg,max}x365)
     Matrix<double> reservoirLevel;
 

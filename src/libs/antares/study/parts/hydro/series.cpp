@@ -226,14 +226,6 @@ uint64_t DataSeriesHydro::memoryUsage() const
            + maxHourlyGenPower.memoryUsage() + maxHourlyPumpPower.memoryUsage();
 }
 
-void DataSeriesHydro::setHydroModulability(Area& area) const
-{
-    if (MatrixTestForAtLeastOnePositiveValue(maxHourlyGenPower.timeSeries))
-    {
-        area.hydro.hydroModulable = true;
-    }
-}
-
 uint DataSeriesHydro::TScount() const
 {
     return generationTScount_;
