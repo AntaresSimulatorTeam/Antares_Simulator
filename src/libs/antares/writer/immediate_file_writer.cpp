@@ -59,7 +59,7 @@ void ImmediateFileResultWriter::addEntryFromBuffer(const std::string& entryPath,
                                                    Yuni::Clob& entryContent)
 {
     fs::path output;
-    prepareDirectoryHierarchy(pOutputFolder, entryPath, output);
+    if (prepareDirectoryHierarchy(pOutputFolder, entryPath, output))
         IOFileSetContent(output.string(), entryContent);
 }
 
@@ -68,7 +68,7 @@ void ImmediateFileResultWriter::addEntryFromBuffer(const std::string& entryPath,
                                                    std::string& entryContent)
 {
     fs::path output;
-    prepareDirectoryHierarchy(pOutputFolder, entryPath, output);
+    if (prepareDirectoryHierarchy(pOutputFolder, entryPath, output))
         IOFileSetContent(output.string(), entryContent);
 }
 
