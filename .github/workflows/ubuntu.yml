@@ -36,6 +36,8 @@ jobs:
     env:
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
       os: ubuntu-20.04
+      # Caching strategy of VCPKG dependencies
+      VCPKG_BINARY_SOURCES: "clear;files,${{ github.workspace }}/vcpkg_cache,readwrite"
 
     runs-on: ubuntu-20.04
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
@@ -44,6 +46,18 @@ jobs:
     - uses: actions/checkout@v4
       with:
         ref: ${{ env.REF }}
+
+    - name: Cache vcpkg binary dir
+      id: cache-vcpkg-binary
+      uses: actions/cache@v4
+      with:
+        path: ${{ github.workspace }}/vcpkg_cache
+        key: vcpkg-cache-ubuntu-${{ hashFiles('vcpkg.json', '.git/modules/HEAD') }}
+        # Allows to restore a cache when deps have only partially changed (like adding a dependency)
+        restore-keys: vcpkg-cache-ubuntu-*
+
+    - name: Install VCPKG
+      run: ./vcpkg/bootstrap-vcpkg.sh -disableMetrics
 
     - name: ccache
       uses: hendrikmuhs/ccache-action@v1.2
@@ -54,7 +68,6 @@ jobs:
       run: |
            sudo apt-get update
            sudo apt-get install uuid-dev libwxgtk3.0-gtk3-dev
-           sudo apt-get install libboost-test-dev
            sudo apt-get install g++-10 gcc-10
 
     - name: Read antares-deps version
@@ -95,23 +108,23 @@ jobs:
 
     - name: Configure
       run: |
-           cmake -B _build -S src \
-           -DCMAKE_C_COMPILER_LAUNCHER=ccache \
-           -DCMAKE_C_COMPILER=/usr/bin/gcc-10 \
-           -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
-           -DCMAKE_CXX_COMPILER=/usr/bin/g++-10 \
-           -DDEPS_INSTALL_DIR=${{github.workspace}}/rte-antares-deps-Release \
-           -DCMAKE_BUILD_TYPE=Release \
-           -DBUILD_TESTING=ON \
-           -DBUILD_not_system=OFF \
-           -DBUILD_TOOLS=ON \
-           -DCMAKE_PREFIX_PATH=${{ env.ORTOOLS_DIR }}/install \
-           -DPython3_EXECUTABLE="${{ env.Python3_ROOT_DIR }}/bin/python"
+        cmake -B _build -S src \
+        -DCMAKE_C_COMPILER_LAUNCHER=ccache \
+        -DCMAKE_C_COMPILER=/usr/bin/gcc-10 \
+        -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
+        -DCMAKE_CXX_COMPILER=/usr/bin/g++-10 \
+        -DCMAKE_TOOLCHAIN_FILE=vcpkg/scripts/buildsystems/vcpkg.cmake \
+        -DDEPS_INSTALL_DIR=${{github.workspace}}/rte-antares-deps-Release \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DBUILD_TESTING=ON \
+        -DBUILD_not_system=OFF \
+        -DBUILD_TOOLS=ON \
+        -DCMAKE_PREFIX_PATH=${{ env.ORTOOLS_DIR }}/install \
+        -DPython3_EXECUTABLE="${{ env.Python3_ROOT_DIR }}/bin/python"
 
     - name: Build
       run: |
              cmake --build _build -j$(nproc)
-
 
     # simtest
     - name: Read simtest version

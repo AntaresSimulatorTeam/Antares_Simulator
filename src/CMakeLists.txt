@@ -254,10 +254,6 @@ if (NOT sirius_solver_FOUND)
 	message (FATAL_ERROR "Sirius solver not found. Sirius solver can be compiled with -DBUILD_sirius=ON or you can specify previous dependency install directory with -DCMAKE_PREFIX_PATH or -DDEPS_INSTALL_DIR")
 endif()
 
-#gflags needed for ortools
-set(GFLAGS_USE_TARGET_NAMESPACE TRUE) 
-find_package(gflags)
-
 find_package(ortools)
 if(NOT ortools_FOUND OR BUILD_ORTOOLS)
 message(STATUS "OR-Tools tag ${ORTOOLS_TAG}")
@@ -284,36 +280,7 @@ message(STATUS "OR-Tools tag ${ORTOOLS_TAG}")
   FetchContent_MakeAvailable(ortools)
 endif()
 
-find_package(minizip QUIET)
-
-if(NOT minizip_FOUND OR BUILD_MINIZIP)
-	if (NOT minizip_FOUND)
-		message("minizip not found, downloading")
-	endif ()
-	if (BUILD_MINIZIP)
-		message("BUILD_MINIZIP set, downloading")
-	endif ()
-    # Repository + tag
-    set(MZ_REPOSITORY "https://github.com/zlib-ng/minizip-ng.git")
-    set(MZ_TAG "4.0.1")
-    # CMake flags
-    set(MZ_LZMA "OFF" CACHE INTERNAL "")
-    set(MZ_ZSTD "OFF" CACHE INTERNAL "")
-    set(MZ_BZIP2 "OFF" CACHE INTERNAL "")
-    set(MZ_PKCRYPT "OFF" CACHE INTERNAL "")
-    set(MZ_WZAES "OFF" CACHE INTERNAL "")
-    set(MZ_OPENSSL "OFF" CACHE INTERNAL "")
-    set(MZ_ICONV "OFF" CACHE INTERNAL "")
-
-	FetchContent_Declare(minizip
-		GIT_REPOSITORY ${MZ_REPOSITORY}
-		GIT_TAG ${MZ_TAG}
-		OVERRIDE_FIND_PACKAGE
-	)
-
-	FetchContent_MakeAvailable(minizip)
-endif()
-find_package(minizip REQUIRED)
+find_package(minizip-ng REQUIRED)
 
 #wxWidget not needed for all library find is done in ui CMakeLists.txt
 if (VCPKG_TOOLCHAIN AND NOT BUILD_wxWidgets) 

@@ -1,0 +1,19 @@
+{
+  "name": "antares-simulator",
+  "version-string": "9.1.0",
+  "dependencies": [
+    {
+      "name": "wxwidgets",
+      "platform": "windows"
+    },
+    "boost-algorithm",
+    "boost-test",
+    {
+      "name": "minizip-ng",
+      "default-features": false,
+      "features": [
+        "zlib"
+      ]
+    }
+  ]
+}

@@ -1,5 +1,4 @@
 project(result-writer)
-find_package(minizip)
 
 add_library(result_writer
         # Helper class
@@ -35,7 +34,7 @@ target_link_libraries(result_writer
         Antares::benchmarking
         yuni-static-core
         PRIVATE
-        MINIZIP::minizip
+        MINIZIP::minizip-ng
         logs
         inifile
         io
