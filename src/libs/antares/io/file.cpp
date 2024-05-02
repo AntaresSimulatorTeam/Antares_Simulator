@@ -72,6 +72,7 @@ bool IOFileSetContent(const AnyString& filename, const AnyString& content)
         }
         ++attempt;
 
+        logs.notice() << filename;
         IO::File::Stream out(filename, IO::OpenMode::write);
         if (not out.opened())
         {

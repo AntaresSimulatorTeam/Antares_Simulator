@@ -48,7 +48,7 @@ static bool prepareDirectoryHierarchy(const std::string& root,
 
     output << fullPath.string();
 
-    return fs::create_directories(fullPath);
+    return fs::create_directories(fullPath.remove_filename());
 }
 
 // Write to file immediately, creating directories if needed
