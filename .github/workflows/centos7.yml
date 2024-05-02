@@ -33,7 +33,7 @@ jobs:
           ref: ${{ env.REF }}
 
   build:
-  needs: checkout
+    needs: checkout
     name: build
     env:
       ORTOOLSDIR: ${{ github.workspace }}/or-tools
