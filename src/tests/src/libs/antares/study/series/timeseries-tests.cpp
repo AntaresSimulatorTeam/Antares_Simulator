@@ -23,9 +23,13 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <vector>
+#include <memory>
+
 #include <boost/test/unit_test.hpp>
 
 #include <antares/series/series.h>
+#include <antares/solver/simulation/timeseries-numbers.h>
 
 using namespace Antares::Data;
 
@@ -73,6 +77,26 @@ void Fixture::fillTsnum()
     for (unsigned int i = 0; i < ts.timeSeries.width; i++)
         tsnum[0][i] = i;
 }
+
+class FixtureMultipleTS : public Fixture
+{
+public:
+  void init(const std::vector<int>& width)
+  {
+    const int height = 10; // Arbitrary
+    ts.resize(width.size());
+    for (size_t idx = 0;int w : width)
+    {
+        // TimeSeries::TimeSeries does not exist, so we use pointers
+        ts[idx] = std::make_unique<TimeSeries>(tsnum);
+        ts[idx]->reset(w, height);
+        idx++;
+    }
+  }
+
+  private:
+     std::vector<std::unique_ptr<TimeSeries>> ts;
+};
 
 // ==================
 // Tests section
@@ -158,6 +182,38 @@ BOOST_FIXTURE_TEST_CASE(getCoefficientSpecificData, Fixture)
     BOOST_CHECK_EQUAL(ts.getCoefficient(1, 1), 74.74);
     BOOST_CHECK_EQUAL(ts.getCoefficient(0, 0), -57);
     BOOST_CHECK_EQUAL(ts.getCoefficient(1, 0), 12.5);
+}
+
+// VALID CONFIGURATIONS
+BOOST_FIXTURE_TEST_CASE(checkSizeOK_1TS, FixtureMultipleTS)
+{
+    init({11});
+    BOOST_CHECK(tsnum.checkSeriesNumberOfColumnsConsistency());
+}
+
+BOOST_FIXTURE_TEST_CASE(checkSizeOK_2TS, FixtureMultipleTS)
+{
+    init({12, 12});
+    BOOST_CHECK(tsnum.checkSeriesNumberOfColumnsConsistency());
+}
+
+BOOST_FIXTURE_TEST_CASE(checkSizeOK_4TS, FixtureMultipleTS)
+{
+    init({22, 22, 1, 22});
+    BOOST_CHECK(tsnum.checkSeriesNumberOfColumnsConsistency());
+}
+
+// INVALID CONFIGURATIONS (note the '!')
+BOOST_FIXTURE_TEST_CASE(checkSizeKO_2TS, FixtureMultipleTS)
+{
+    init({11, 12});
+    BOOST_CHECK(!tsnum.checkSeriesNumberOfColumnsConsistency());
+}
+
+BOOST_FIXTURE_TEST_CASE(checkSizeKO_4TS, FixtureMultipleTS)
+{
+    init({22, 22, 1, 21});
+    BOOST_CHECK(!tsnum.checkSeriesNumberOfColumnsConsistency());
 }
 
 BOOST_AUTO_TEST_SUITE_END()
