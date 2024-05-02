@@ -5,6 +5,7 @@ on:
     types: [created]
   push:
     branches:
+      - fix/*
       - develop
       - dependabot/*
 
@@ -30,7 +31,10 @@ jobs:
       ORTOOLSDIR: ${{ github.workspace }}/or-tools
 
     runs-on: ubuntu-latest
-    container: 'antaresrte/rte-antares:centos7-simulator-no-deps'
+    container:
+      image: 'antaresrte/rte-antares:centos7-simulator-no-deps'
+      volumes:
+        - _build/_build
 
     steps:
 
@@ -119,6 +123,8 @@ jobs:
            cd _build
            cpack -G TGZ
 
+  upload:
+    runs-on: ubuntu-latest
     - name: Installer TGZ push
       uses: actions/upload-artifact@v4
       with:
@@ -138,5 +144,3 @@ jobs:
         tag: ${{ github.event.inputs.release_tag }}
       run: |
         gh release upload "$tag" _build/*.tar.gz _build/*.rpm
-
-  
