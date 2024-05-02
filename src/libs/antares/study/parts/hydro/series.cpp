@@ -157,6 +157,11 @@ void DataSeriesHydro::reset()
     resizeMaxPowerTS(1);
 }
 
+void DataSeriesHydro::computeTSCount()
+{
+    generationTScount_ = std::max(storage.numberOfColumns(), ror.numberOfColumns());
+}
+
 void DataSeriesHydro::resizeGenerationTS(uint nbSeries)
 {
     storage.reset(nbSeries, DAYS_PER_YEAR);
@@ -204,6 +209,7 @@ bool DataSeriesHydro::loadGenerationTS(const AreaName& areaID,
     if (studyVersion >= StudyVersion(8, 6))
         ret = loadTSfromFile(mingen.timeSeries, areaID, folder, "mingen.txt", HOURS_PER_YEAR) && ret;
 
+    computeTSCount();
     return ret;
 }
 

@@ -152,6 +152,7 @@ public:
     // Getters for generation (ror, storage and mingen) and 
     // max power (generation and pumping) number of TS
     uint TScount() const;
+    void computeTSCount();
     uint maxPowerTScount() const;
     void setMaxPowerTScount(uint count) { maxPowerTScount_ = count;}
 
