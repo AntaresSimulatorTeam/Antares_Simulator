@@ -160,7 +160,7 @@ void ZipWriter::addEntryFromFile(const fs::path& entryPath, const fs::path& file
     {
         using namespace Yuni::IO;
     case errNone:
-        addEntryFromBufferHelper<Yuni::Clob>(entryPath, buffer);
+        addEntryFromBufferHelper<Yuni::Clob>(entryPath.string(), buffer);
         break;
     case errNotFound:
         logErrorAndThrow(filePath.string() + ": file does not exist");
