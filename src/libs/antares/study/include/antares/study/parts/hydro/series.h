@@ -144,8 +144,6 @@ public:
     */
     TimeSeries maxHourlyPumpPower;
 
-    // TS's number matrices for Generation and Maximum Power
-    Matrix<uint32_t> timeseriesNumbers;
 
     // Equalizing max generation and max pumping numbers of TS's    
     void EqualizeMaxPowerTSsizes(Area& area);
