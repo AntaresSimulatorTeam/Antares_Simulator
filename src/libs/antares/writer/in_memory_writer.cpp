@@ -1,12 +1,12 @@
 #include <algorithm>
+#include <iterator>
+#include <fstream>
 
 #include <antares/writer/in_memory_writer.h>
 #include <antares/logs/logs.h>
 
 #include <antares/benchmarking/timer.h>
 #include <antares/benchmarking/DurationCollector.h>
-
-#include <yuni/io/file.h> // Yuni::IO::File::LoadFromFile
 
 namespace fs = std::filesystem;
 
@@ -67,27 +67,26 @@ void InMemoryWriter::addEntryFromBuffer(const std::string& entryPath, std::strin
             pDurationCollector);
 }
 
+static std::string readFile(const fs::path& filePath)
+{
+    std::ifstream file(filePath, std::ios_base::binary | std::ios_base::in);
+    if (!file.is_open())
+        logErrorAndThrow(filePath.string() + ": file does not exist");
+
+    using Iterator = std::istreambuf_iterator<char>;
+    std::string content(Iterator{file}, Iterator{});
+    if (!file)
+        logErrorAndThrow("Read failed '" + filePath.string() + "'");
+    return content;
+}
+
 void InMemoryWriter::addEntryFromFile(const fs::path& entryPath, const fs::path& filePath)
 {
     // Shamelessly copy-pasted from zip_writer.cpp
     // TODO refactor
-    Yuni::Clob buffer;
-    switch (Yuni::IO::File::LoadFromFile(buffer, filePath.c_str()))
-    {
-        using namespace Yuni::IO;
-    case errNone:
-         addToMap(pEntries,
-                  entryPath.string(),
-                  buffer,
-                  pMapMutex,
-                  pDurationCollector);
-        break;
-    // Since logErrorAndThrow does not return, we don't need 'break's here
-    case errNotFound: logErrorAndThrow(filePath.string() + ": file does not exist");
-    case errReadFailed: logErrorAndThrow("Read failed '" + filePath.string() + "'");
-    case errMemoryLimit: logErrorAndThrow("Size limit hit for file '" + filePath.string() + "'");
-    default: logErrorAndThrow("Unhandled error");
-    }
+    std::string buffer = readFile(filePath);
+
+    addToMap(pEntries, entryPath.string(), buffer, pMapMutex, pDurationCollector);
 }
 void InMemoryWriter::flush()
 {
