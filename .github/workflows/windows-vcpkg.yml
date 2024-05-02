@@ -116,6 +116,8 @@ jobs:
         with:
           architecture: 'x64'
           python-version: '3.12'
+          cache: 'pip'
+          cache-dependency-path: 'requirements*.txt'
 
       - name: Install pip dependencies if necessary
         run: pip install -r src/tests/examples/requirements.txt
@@ -136,7 +138,7 @@ jobs:
           -DCMAKE_PREFIX_PATH="${{ env.ORTOOLS_DIR }}/install" \
           -DVCPKG_ROOT="${{env.VCPKG_ROOT}}" \
           -DVCPKG_TARGET_TRIPLET=${{ env.triplet }} \
-          -DCMAKE_TOOLCHAIN_FILE="${{ env.GITHUB_WORKSPACE }}/vcpkg/scripts/buildsystems/vcpkg.cmake" \
+          -DCMAKE_TOOLCHAIN_FILE="${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake" \
           -DCMAKE_BUILD_TYPE=Release \
           -DBUILD_TESTING=ON  \
           -DBUILD_TOOLS=ON \
