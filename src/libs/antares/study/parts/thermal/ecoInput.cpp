@@ -64,10 +64,9 @@ bool EconomicInputData::loadFromFolder(Study& study, const std::string& folder)
 
     if (study.header.version >= StudyVersion(8, 7))
     {
-        fs::path filename;
         Yuni::Clob dataBuffer;
 
-        filename = fs::path(folder) / "fuelCost.txt";
+        fs::path filename = fs::path(folder) / "fuelCost.txt";
         if (fs::exists(filename))
         {
             ret = fuelcost.loadFromCSVFile(filename.string(), 1, HOURS_PER_YEAR, Matrix<>::optImmediate, &dataBuffer) && ret;

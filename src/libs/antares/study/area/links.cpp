@@ -31,6 +31,8 @@
 using namespace Yuni;
 using namespace Antares;
 
+namespace fs = std::filesystem;
+
 namespace // anonymous
 {
 struct TSNumbersPredicate
@@ -428,13 +430,13 @@ void logLinkDataCheckErrorDirectIndirect(const AreaLink& link,
 }
 } // anonymous namespace
 
-bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const std::filesystem::path& folder)
+bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const fs::path& folder)
 {
     // Assert
     assert(area);
 
     /* Initialize */
-    std::filesystem::path path = folder / "properties.ini";
+    fs::path path = folder / "properties.ini";
 
     IniFile ini;
     if (!ini.open(path.string()))
