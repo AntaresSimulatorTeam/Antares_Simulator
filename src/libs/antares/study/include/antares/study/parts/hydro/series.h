@@ -144,10 +144,6 @@ public:
     */
     TimeSeries maxHourlyPumpPower;
 
-
-    // Equalizing max generation and max pumping numbers of TS's    
-    void EqualizeMaxPowerTSsizes(Area& area);
-
     void setHydroModulability(Area& area) const;
 
     // Getters for generation (ror, storage and mingen) and 
