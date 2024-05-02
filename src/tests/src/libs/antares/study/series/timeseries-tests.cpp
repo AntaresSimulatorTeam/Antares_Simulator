@@ -192,7 +192,7 @@ BOOST_FIXTURE_TEST_CASE(getCoefficient_SingleColumn, Fixture)
 
     // Here, we provide 2 time series numbers...
     tsnum.resize(1, 2);
-    for (unsigned int i = 0; i < ts.timeSeries.width; i++)
+    for (unsigned int i = 0; i < 2; i++)
         tsnum[0][i] = i;
 
     // ...but only one column
