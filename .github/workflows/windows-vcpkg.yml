@@ -80,15 +80,14 @@ jobs:
         with:
           key: windows
 
-      - name: Cache vcpkg binary dir
+      - name: Restore vcpkg binary dir from cache
         id: cache-vcpkg-binary
-        uses: actions/cache@v4
+        uses: actions/cache/restore@v4
         with:
           path: ${{ github.workspace }}/vcpkg_cache
           key: vcpkg-cache-windows-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
           # Allows to restore a cache when deps have only partially changed (like adding a dependency)
           restore-keys: vcpkg-cache-windows-*
-          save-always: true
 
       - name: Install VCPKG
         shell: bash
@@ -333,3 +332,11 @@ jobs:
         run: |
           gh release upload "$tag" _build/*.zip _build/*.exe
         shell: bash
+
+      - name: Cache vcpkg binary dir
+        if: always()
+        id: save-cache-vcpkg-binary
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ github.workspace }}/vcpkg_cache
+          key: vcpkg-cache-windows-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
