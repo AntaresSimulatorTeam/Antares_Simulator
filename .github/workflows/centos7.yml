@@ -27,12 +27,13 @@ jobs:
 
   build:
     name: Build
-    env:
-      ORTOOLSDIR: ${{ github.workspace }}/or-tools
-      VCPKG_ROOT: ${{ github.workspace }}/vcpkg
 
     runs-on: ubuntu-latest
     container: 'antaresrte/rte-antares:centos7-simulator-no-deps'
+
+    env:
+      ORTOOLSDIR: ${{ env.GITHUB_WORKSPACE }}/or-tools
+      VCPKG_ROOT: ${{ env.GITHUB_WORKSPACE }}/vcpkg
 
     steps:
 
