@@ -19,12 +19,13 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "antares/inifile/inifile.h"
+#include <fstream>
+#include <sstream>
+#include <boost/algorithm/string.hpp>
 
+#include "antares/inifile/inifile.h"
 #include <antares/logs/logs.h>
 #include <antares/io/statistics.h>
-#include <sstream>
-#include <fstream>
 
 using namespace Yuni;
 
@@ -104,8 +105,8 @@ static inline IniFile::Section* AnalyzeIniLine(const std::string filename,
     if (typeSection == type and value and '\0' != *value)
         return d->addSection(value);
 
-    CString<255, false> k = key;
-    k.trim(" \r\n\t");
+    std::string k{ key };
+    boost::trim(k);
     if (not k.empty() and k[0] != ';' and k[0] != '#')
     {
         logs.error() << filename << ": invalid INI format. Got a key without any value '" << k
