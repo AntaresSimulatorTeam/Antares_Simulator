@@ -48,7 +48,12 @@ static bool prepareDirectoryHierarchy(const std::string& root,
 
     output << fullPath.string();
 
-    return fs::create_directories(fullPath.remove_filename());
+    fullPath.remove_filename(); // only create directories
+
+    if (fs::exists(fullPath))
+        return true;
+
+    return fs::create_directories(fullPath);
 }
 
 // Write to file immediately, creating directories if needed
@@ -56,7 +61,7 @@ void ImmediateFileResultWriter::addEntryFromBuffer(const std::string& entryPath,
                                                    Yuni::Clob& entryContent)
 {
     Yuni::String output;
-    if (prepareDirectoryHierarchy(pOutputFolder, entryPath, output))
+    prepareDirectoryHierarchy(pOutputFolder, entryPath, output);
         IOFileSetContent(output, entryContent);
 }
 
@@ -65,7 +70,7 @@ void ImmediateFileResultWriter::addEntryFromBuffer(const std::string& entryPath,
                                                    std::string& entryContent)
 {
     Yuni::String output;
-    if (prepareDirectoryHierarchy(pOutputFolder, entryPath, output))
+    prepareDirectoryHierarchy(pOutputFolder, entryPath, output);
         IOFileSetContent(output, entryContent);
 }
 
