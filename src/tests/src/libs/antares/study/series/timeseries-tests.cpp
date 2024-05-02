@@ -78,24 +78,25 @@ void Fixture::fillTsnum()
         tsnum[0][i] = i;
 }
 
-class FixtureMultipleTS : public Fixture
+class FixtureMultipleTS
 {
 public:
   void init(const std::vector<int>& width)
   {
     const int height = 10; // Arbitrary
     ts.resize(width.size());
-    for (size_t idx = 0;int w : width)
+    for (size_t idx = 0; int w : width)
     {
         // TimeSeries::TimeSeries does not exist, so we use pointers
-        ts[idx] = std::make_unique<TimeSeries>(tsnum);
+        ts[idx] = std::make_unique<TimeSeries>(tsnum); // ts[idx] is registered to tsnum here
         ts[idx]->reset(w, height);
         idx++;
     }
   }
-
-  private:
-     std::vector<std::unique_ptr<TimeSeries>> ts;
+public:
+  TimeSeries::Numbers tsnum;
+private:
+  std::vector<std::unique_ptr<TimeSeries>> ts;
 };
 
 // ==================
