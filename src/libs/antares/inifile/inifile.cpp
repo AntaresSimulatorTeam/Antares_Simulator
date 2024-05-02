@@ -266,7 +266,7 @@ bool IniFile::open(const AnyString& filename, bool warnings)
     return false;
 }
 
-void IniFile::saveToString(std::string& str) const
+std::string IniFile::saveToString() const
 {
     uint64_t written = 0;
     std::ostringstream ostream;
@@ -277,7 +277,7 @@ void IniFile::saveToString(std::string& str) const
     if (written != 0)
         Statistics::HasWrittenToDisk(written);
 
-    str = ostream.str();
+    return ostream.str();
 }
 
 bool IniFile::save(const AnyString& filename) const

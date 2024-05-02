@@ -65,8 +65,6 @@ std::string FileContent::saveToBufferAsIni()
         for (const auto& [key, value] : content)
             section->add(key, value);
     }
-    std::string buffer;
-    ini.saveToString(buffer);
-    return buffer;
+    return ini.saveToString();
 }
 } // namespace Benchmarking

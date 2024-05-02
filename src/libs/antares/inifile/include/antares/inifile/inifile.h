@@ -199,7 +199,7 @@ public:
     */
     bool save(const AnyString& filename) const;
 
-    void saveToString(std::string& str) const;
+    std::string saveToString() const;
 
     //! Get the last filename saved or loaded
     const YString& filename() const;
