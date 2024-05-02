@@ -21,7 +21,6 @@
 #include <iterator>
 #include <fstream>
 #include <memory>
-#include <yuni/io/file.h> // Yuni::IO::File::LoadFromFile
 
 #include "private/zip_writer.h"
 #include "antares/logs/logs.h"

@@ -77,7 +77,7 @@ void InMemoryWriter::addEntryFromFile(const fs::path& entryPath, const fs::path&
         using namespace Yuni::IO;
     case errNone:
          addToMap(pEntries,
-                  entryPath,
+                  entryPath.string(),
                   buffer,
                   pMapMutex,
                   pDurationCollector);
