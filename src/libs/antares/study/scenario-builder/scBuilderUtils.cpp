@@ -39,19 +39,17 @@ std::string fromHydroLevelToString(double d)
 double fromStringToHydroLevel(const Yuni::String& value, const double maxLevel)
 {
     double result;
-    double result_tmp;
-
     std::string val = value.to<std::string>();
     try
     {
-        result_tmp = stod(val);
+        result = stod(val);
     }
     catch (std::invalid_argument&)
     {
         return std::nan("");
     }
 
-    return std::clamp(result_tmp, 0., maxLevel);
+    return std::clamp(result, 0., maxLevel);
 }
 
 uint fromStringToTSnumber(const Yuni::String& value)
