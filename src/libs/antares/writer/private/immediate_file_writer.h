@@ -41,7 +41,7 @@ public:
     void finalize(bool verbose) override;
 
 private:
-    Yuni::String pOutputFolder;
+    std::string pOutputFolder;
 };
 } // namespace Antares::Solver
 

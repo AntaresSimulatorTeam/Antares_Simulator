@@ -38,15 +38,13 @@ ImmediateFileResultWriter::ImmediateFileResultWriter(const char* folderOutput) :
 
 ImmediateFileResultWriter::~ImmediateFileResultWriter() = default;
 
-static bool prepareDirectoryHierarchy(const std::string& root,
-                                      const std::string& entryPath,
-                                      Yuni::String& output)
+static bool prepareDirectoryHierarchy(const fs::path& root,
+                                      const fs::path& entryPath,
+                                      fs::path& output)
 {
+    fs::path fullPath = root / entryPath;
 
-    fs::path fullPath = root;
-    fullPath /= entryPath;
-
-    output << fullPath.string();
+    output = fullPath;
 
     fullPath.remove_filename(); // only create directories
 
@@ -60,28 +58,28 @@ static bool prepareDirectoryHierarchy(const std::string& root,
 void ImmediateFileResultWriter::addEntryFromBuffer(const std::string& entryPath,
                                                    Yuni::Clob& entryContent)
 {
-    Yuni::String output;
+    fs::path output;
     prepareDirectoryHierarchy(pOutputFolder, entryPath, output);
-        IOFileSetContent(output, entryContent);
+        IOFileSetContent(output.string(), entryContent);
 }
 
 // Write to file immediately, creating directories if needed
 void ImmediateFileResultWriter::addEntryFromBuffer(const std::string& entryPath,
                                                    std::string& entryContent)
 {
-    Yuni::String output;
+    fs::path output;
     prepareDirectoryHierarchy(pOutputFolder, entryPath, output);
-        IOFileSetContent(output, entryContent);
+        IOFileSetContent(output.string(), entryContent);
 }
 
 void ImmediateFileResultWriter::addEntryFromFile(const std::string& entryPath,
                                                  const std::string& filePath)
 {
-    Yuni::String fullPath;
+    fs::path fullPath;
     if (!prepareDirectoryHierarchy(pOutputFolder, entryPath, fullPath))
         return;
 
-    switch (Yuni::IO::File::Copy(filePath.c_str(), fullPath))
+    switch (Yuni::IO::File::Copy(filePath.c_str(), fullPath.string()))
     {
         using namespace Yuni::IO;
     case errNone:
@@ -93,7 +91,7 @@ void ImmediateFileResultWriter::addEntryFromFile(const std::string& entryPath,
         logs.error() << "Read failed '" << filePath << "'";
         break;
     case errWriteFailed:
-        logs.error() << "Write failed '" << fullPath << "'";
+        logs.error() << "Write failed '" << fullPath.string() << "'";
         break;
     default:
         logs.error() << "Unhandled error";
