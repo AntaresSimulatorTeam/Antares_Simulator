@@ -56,8 +56,12 @@ public:
     */
     void reset();
 
-    void resizeGenerationTS(uint nbSeries);
+private:
+    // This method erases data
     void resizeMaxPowerTS(uint nbSeries);
+public:
+    // This method erases data
+    void resizeGenerationTS(uint nbSeries);
 
 
     /*!
