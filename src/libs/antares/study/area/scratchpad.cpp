@@ -116,14 +116,13 @@ AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area) :
     //  Hourly maximum generation/pumping power matrices and their number of TS's (width of matrices)
     auto const& maxHourlyGenPower = area.hydro.series->maxHourlyGenPower.timeSeries;
     auto const& maxHourlyPumpPower = area.hydro.series->maxHourlyPumpPower.timeSeries;
-    uint nbOfMaxPowerTimeSeries = area.hydro.series->maxPowerTScount();
 
     //  Setting width and height of daily mean maximum generation/pumping power matrices
-    meanMaxDailyGenPower.timeSeries.reset(nbOfMaxPowerTimeSeries, DAYS_PER_YEAR);
-    meanMaxDailyPumpPower.timeSeries.reset(nbOfMaxPowerTimeSeries, DAYS_PER_YEAR);
+    meanMaxDailyGenPower.timeSeries.reset(maxHourlyGenPower.width, DAYS_PER_YEAR);
+    meanMaxDailyPumpPower.timeSeries.reset(maxHourlyPumpPower.width, DAYS_PER_YEAR);
 
     // Instantiate daily mean maximum generation/pumping power matrices
-    CalculateMeanDailyMaxPowerMatrices(maxHourlyGenPower, maxHourlyPumpPower, nbOfMaxPowerTimeSeries);
+    CalculateMeanDailyMaxPowerMatrices(maxHourlyGenPower, maxHourlyPumpPower);
 
     // ===============
     // hydroHasMod
@@ -179,19 +178,21 @@ AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area) :
 }
 
 void AreaScratchpad::CalculateMeanDailyMaxPowerMatrices(const Matrix<double>& hourlyMaxGenMatrix,
-                                                        const Matrix<double>& hourlyMaxPumpMatrix,
-                                                        uint nbOfMaxPowerTimeSeries)
+                                                        const Matrix<double>& hourlyMaxPumpMatrix)
 {
-    for (uint nbOfTimeSeries = 0; nbOfTimeSeries < nbOfMaxPowerTimeSeries; ++nbOfTimeSeries)
-    {
-        auto& hourlyMaxGenColumn = hourlyMaxGenMatrix[nbOfTimeSeries];
-        auto& hourlyMaxPumpColumn = hourlyMaxPumpMatrix[nbOfTimeSeries];
-        auto& MeanMaxDailyGenPowerColumn = meanMaxDailyGenPower.timeSeries[nbOfTimeSeries];
-        auto& MeanMaxDailyPumpPowerColumn = meanMaxDailyPumpPower.timeSeries[nbOfTimeSeries];
+  for (uint nbOfTimeSeries = 0; nbOfTimeSeries < hourlyMaxGenMatrix.width; ++nbOfTimeSeries)
+  {
+      auto& hourlyMaxGenColumn = hourlyMaxGenMatrix[nbOfTimeSeries];
+      auto& MeanMaxDailyGenPowerColumn = meanMaxDailyGenPower.timeSeries[nbOfTimeSeries];
+      CalculateDailyMeanPower(hourlyMaxGenColumn, MeanMaxDailyGenPowerColumn);
+  }
 
-        CalculateDailyMeanPower(hourlyMaxGenColumn, MeanMaxDailyGenPowerColumn);
-        CalculateDailyMeanPower(hourlyMaxPumpColumn, MeanMaxDailyPumpPowerColumn);
-    }
+  for (uint nbOfTimeSeries = 0; nbOfTimeSeries < hourlyMaxPumpMatrix.width; ++nbOfTimeSeries)
+  {
+      auto& MeanMaxDailyPumpPowerColumn = meanMaxDailyPumpPower.timeSeries[nbOfTimeSeries];
+      auto& hourlyMaxPumpColumn = hourlyMaxPumpMatrix[nbOfTimeSeries];
+      CalculateDailyMeanPower(hourlyMaxPumpColumn, MeanMaxDailyPumpPowerColumn);
+  }
 }
 } // namespace Antares::Data
 

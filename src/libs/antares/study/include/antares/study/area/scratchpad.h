@@ -94,8 +94,7 @@ private:
     ** power matrices meanMaxDailyGenPower/meanMaxDailyPumpPower
     */
     void CalculateMeanDailyMaxPowerMatrices(const Matrix<double>& hourlyMaxGenMatrix,
-                                            const Matrix<double>& hourlyMaxPumpMatrix,
-                                            uint nbOfMaxPowerTimeSeries);
+                                            const Matrix<double>& hourlyMaxPumpMatrix);
 
 }; // class AreaScratchpad
 
