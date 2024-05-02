@@ -299,9 +299,6 @@ bool IniFile::save(const AnyString& filename) const
         logs.error() << "I/O error: " << filename << ": Impossible to write the file";
         return false;
     }
-
-    
-
 }
 
 IniFile::Property* IniFile::Section::find(const AnyString& key)

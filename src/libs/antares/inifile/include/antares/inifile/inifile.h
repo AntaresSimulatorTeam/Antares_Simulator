@@ -302,7 +302,6 @@ public:
     //@}
 
 public:
-
     //! The first section
     Section* firstSection;
     //! The last section
