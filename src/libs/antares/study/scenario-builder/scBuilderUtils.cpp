@@ -25,6 +25,7 @@
 #include <iomanip>
 #include <sstream>
 #include <string>
+
 #include <yuni/core/string/string.h>
 
 namespace Antares::Data::ScenarioBuilder
