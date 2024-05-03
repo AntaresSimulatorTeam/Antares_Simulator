@@ -112,11 +112,11 @@ static void ConvertDailyTSintoHourlyTS(const Matrix<double>::ColumnType& dailyCo
 }
 
 DataSeriesHydro::DataSeriesHydro() :
-    ror(timeseriesNumbers),
-    storage(timeseriesNumbers),
-    mingen(timeseriesNumbers),
-    maxHourlyGenPower(timeseriesNumbersHydroMaxPower),
-    maxHourlyPumpPower(timeseriesNumbersHydroMaxPower)
+    ror(timeseriesNumbers, "ror"),
+    storage(timeseriesNumbers, "storage"),
+    mingen(timeseriesNumbers, "mingen"),
+    maxHourlyGenPower(timeseriesNumbersHydroMaxPower, "maxGenenerationPower"),
+    maxHourlyPumpPower(timeseriesNumbersHydroMaxPower, "maxPumpingPower")
 {
     // Pmin was introduced in v8.6
     // The previous behavior was Pmin=0

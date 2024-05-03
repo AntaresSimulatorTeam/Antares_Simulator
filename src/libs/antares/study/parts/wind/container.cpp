@@ -27,7 +27,7 @@ using namespace Yuni;
 
 namespace Antares::Data::Wind
 {
-Container::Container() : prepro(nullptr), series(tsNumbers)
+Container::Container() : prepro(nullptr), series(tsNumbers, "wind")
 {
 }
 

@@ -28,7 +28,7 @@ using namespace Yuni;
 
 namespace Antares::Data::Solar
 {
-Container::Container() : prepro(nullptr), series(tsNumbers)
+Container::Container() : prepro(nullptr), series(tsNumbers, "solar")
 {}
 
 Container::~Container()

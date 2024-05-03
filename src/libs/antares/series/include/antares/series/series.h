@@ -38,14 +38,14 @@ public:
     struct Numbers : public Matrix<uint32_t> // TODO[FOM] remove inheritance, it was added mostly to avoid breaking existing code
     {
     public:
-        void registerSeries(const TimeSeries* s);
+        void registerSeries(const TimeSeries* s, std::string label);
         bool checkSeriesNumberOfColumnsConsistency() const;
     private:
         std::vector<const TimeSeries*> series;
     };
     using TS = Matrix<double>;
 
-    explicit TimeSeries(Numbers& tsNumbers);
+    explicit TimeSeries(Numbers& tsNumbers, std::string label);
     /*!
      ** \brief Load series from a file
      **

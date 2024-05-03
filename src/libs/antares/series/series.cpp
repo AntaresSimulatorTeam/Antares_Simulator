@@ -33,7 +33,7 @@ using namespace Yuni;
 
 namespace Antares::Data
 {
-void TimeSeries::Numbers::registerSeries(const TimeSeries* s)
+void TimeSeries::Numbers::registerSeries(const TimeSeries* s, std::string label)
 {
     series.push_back(s);
 }
@@ -54,9 +54,9 @@ bool TimeSeries::Numbers::checkSeriesNumberOfColumnsConsistency() const
     return checkAllElementsIdenticalOrOne(width);
 }
 
-TimeSeries::TimeSeries(Numbers& tsNumbers) : timeseriesNumbers(tsNumbers)
+TimeSeries::TimeSeries(Numbers& tsNumbers, std::string label) : timeseriesNumbers(tsNumbers)
 {
-    tsNumbers.registerSeries(this);
+    tsNumbers.registerSeries(this, std::move(label));
 }
 
 bool TimeSeries::loadFromFile(const std::string& path,

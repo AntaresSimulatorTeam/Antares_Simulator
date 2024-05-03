@@ -57,8 +57,8 @@ void CalculateDailyMeanPower(const Matrix<double>::ColumnType& hourlyColumn,
 }
 
 AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area) :
- meanMaxDailyGenPower(area.hydro.series->timeseriesNumbersHydroMaxPower),
- meanMaxDailyPumpPower(area.hydro.series->timeseriesNumbersHydroMaxPower)
+  meanMaxDailyGenPower(area.hydro.series->timeseriesNumbersHydroMaxPower, "dailyGenPower"),
+ meanMaxDailyPumpPower(area.hydro.series->timeseriesNumbersHydroMaxPower, "dailyPumpPower")
 {
     // alias to the simulation mode
     auto mode = rinfos.mode;
