@@ -23,7 +23,9 @@
 #include <yuni/io/file.h>
 #include <yuni/io/directory.h>
 #include "antares/series/series.h"
+#include <antares/logs/logs.h>
 #include <algorithm>
+#include <sstream>
 #include <vector>
 
 using namespace Yuni;
@@ -35,7 +37,7 @@ namespace Antares::Data
 {
 void TimeSeries::Numbers::registerSeries(const TimeSeries* s, std::string label)
 {
-    series.push_back(s);
+    series[label] = s;
 }
 
 // TODO[FOM] Code duplication
@@ -45,13 +47,28 @@ static bool checkAllElementsIdenticalOrOne(std::vector<uint> w)
     return std::adjacent_find(w.begin(), first_one, std::not_equal_to<uint>()) == first_one;
 }
 
-bool TimeSeries::Numbers::checkSeriesNumberOfColumnsConsistency() const
+static std::string errorMessage(const std::map<std::string, const TimeSeries*>& series)
+{
+    std::ostringstream msg;
+    msg << "Inconsistent number of time-series, please check that all series have the same number of columns or 1 column (possibly both) ";
+    for (const auto& [label, s] : series)
+    {
+        msg << "\t{" << label << ": " << s->numberOfColumns() << "}\n";
+    }
+    return msg.str();
+}
+
+std::optional<std::string> TimeSeries::Numbers::checkSeriesNumberOfColumnsConsistency() const
 {
     std::vector<uint> width;
-    for (const auto* s : series)
+    for (const auto& [_, s] : series)
         width.push_back(s->numberOfColumns());
 
-    return checkAllElementsIdenticalOrOne(width);
+    if (!checkAllElementsIdenticalOrOne(width))
+    {
+        return errorMessage(series);
+    }
+    return std::nullopt;
 }
 
 TimeSeries::TimeSeries(Numbers& tsNumbers, std::string label) : timeseriesNumbers(tsNumbers)

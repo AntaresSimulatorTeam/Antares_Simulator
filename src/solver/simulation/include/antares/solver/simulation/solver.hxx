@@ -339,7 +339,7 @@ void ISimulation<ImplementationType>::run()
         // for a single simulation
         study.resizeAllTimeseriesNumbers(1 + study.runtime->rangeLimits.year[Data::rangeEnd]);
         // Now, we will prepare the time-series numbers
-        if (not TimeSeriesNumbers::CheckNumberOfColumns(study))
+        if (not TimeSeriesNumbers::CheckNumberOfColumns(study.areas))
         {
             throw FatalError("Inconsistent number of time-series detected. Please check your input data.");
         }

@@ -682,10 +682,12 @@ bool TimeSeriesNumbers::checkAllElementsIdenticalOrOne(std::vector<uint> w)
     return std::adjacent_find(w.begin(), first_one, std::not_equal_to<uint>()) == first_one;
 }
 
-bool TimeSeriesNumbers::CheckNumberOfColumns(const Study& study)
+using Checks = std::map<const Antares::Data::TimeSeries::Numbers*, std::string>;
+
+static Checks buildChecksFromStudy(const AreaList& areas)
 {
-    std::map<const Antares::Data::TimeSeries::Numbers*, std::string> toCheck;
-    for (const auto& [_, area] : study.areas)
+    Checks toCheck;
+    for (const auto& [_, area] : areas)
     {
         const std::string areaID = area->id.to<std::string>();
         for (const auto& [_, link] : area->links)
@@ -702,17 +704,29 @@ bool TimeSeriesNumbers::CheckNumberOfColumns(const Study& study)
 
         toCheck[&area->hydro.series->timeseriesNumbers] = "hydro " + areaID;
     }
+    return toCheck;
+}
 
+static bool performChecks(const Checks& toCheck)
+{
     bool ret = true;
     for (const auto& [tsNumber, context] : toCheck)
     {
-        if (!tsNumber->checkSeriesNumberOfColumnsConsistency())
+        const auto errorMessageMaybe = tsNumber->checkSeriesNumberOfColumnsConsistency();
+        if (errorMessageMaybe.has_value())
         {
             logs.error() << "Inconsistent number of columns for " << context;
+	    logs.error() << errorMessageMaybe.value();
             ret = false;
         }
     }
     return ret;
+}
+
+bool TimeSeriesNumbers::CheckNumberOfColumns(const AreaList& areas)
+{
+    Checks toCheck = buildChecksFromStudy(areas);
+    return performChecks(toCheck);
 }
 
 bool TimeSeriesNumbers::Generate(Study& study)

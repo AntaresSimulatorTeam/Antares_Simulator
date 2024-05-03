@@ -21,6 +21,9 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_COMMON_TIMESERIES_H__
 #define __ANTARES_LIBS_STUDY_PARTS_COMMON_TIMESERIES_H__
 
+#include <map>
+#include <string>
+#include <optional>
 #include <antares/array/matrix.h>
 
 namespace Antares::Data
@@ -39,9 +42,9 @@ public:
     {
     public:
         void registerSeries(const TimeSeries* s, std::string label);
-        bool checkSeriesNumberOfColumnsConsistency() const;
+        std::optional<std::string> checkSeriesNumberOfColumnsConsistency() const;
     private:
-        std::vector<const TimeSeries*> series;
+        std::map<std::string, const TimeSeries*> series;
     };
     using TS = Matrix<double>;
 
