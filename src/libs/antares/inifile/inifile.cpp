@@ -203,8 +203,10 @@ bool IniFile::readStream(std::istream& in_stream)
 {
     std::string line;
     IniFile::Section* currentSection(nullptr);
+    uint64_t read = 0;
     while (std::getline(in_stream, line))
     {
+        read += line.size();
         if (startingSection(line))
         {
             currentSection = addSection(getSectionName(line));
@@ -224,6 +226,9 @@ bool IniFile::readStream(std::istream& in_stream)
         logs.error() << "Invalid INI line format : '" << line << "'";
         return false;
     }
+    if (read)
+        Statistics::HasReadFromDisk(read);
+
     return true;
 }
 
