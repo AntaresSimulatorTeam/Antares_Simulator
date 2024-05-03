@@ -31,15 +31,15 @@ namespace Statistics
 {
 namespace // anonymous namespace
 {
-static std::atomic<uint64_t> gReadFromDisk;
-static std::atomic<uint64_t> gWrittenToDisk;
-static std::atomic<uint64_t> gReadFromNetwork;
-static std::atomic<uint64_t> gWrittenToNetwork;
+std::atomic<uint64_t> gReadFromDisk;
+std::atomic<uint64_t> gWrittenToDisk;
+std::atomic<uint64_t> gReadFromNetwork;
+std::atomic<uint64_t> gWrittenToNetwork;
 
-static std::atomic<uint64_t> gReadFromDiskSinceStartup;
-static std::atomic<uint64_t> gWrittenToDiskSinceStartup;
-static std::atomic<uint64_t> gReadFromNetworkSinceStartup;
-static std::atomic<uint64_t> gWrittenToNetworkSinceStartup;
+std::atomic<uint64_t> gReadFromDiskSinceStartup;
+std::atomic<uint64_t> gWrittenToDiskSinceStartup;
+std::atomic<uint64_t> gReadFromNetworkSinceStartup;
+std::atomic<uint64_t> gWrittenToNetworkSinceStartup;
 
 } // anonymous namespace
 
