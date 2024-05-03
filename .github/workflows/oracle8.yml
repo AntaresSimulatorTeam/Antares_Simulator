@@ -7,7 +7,6 @@ on:
     branches:
       - develop
       - dependabot/*
-      - feature/vcpkg-linux
 
   schedule:
     - cron: '21 2 * * *'
