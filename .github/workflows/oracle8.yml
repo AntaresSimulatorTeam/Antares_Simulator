@@ -50,17 +50,19 @@ jobs:
         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git -b ${{ env.REF }} .
         git config --global safe.directory '*'
 
-    - name: Set VCPKG path
+    - name: Install VCPKG
+      # Note: we need to use environment variables instead of workflow variables
+      #       because github messes up path variables when running in container,
+      #       see https://github.com/actions/runner/issues/2058
       run: |
+        git submodule update --init vcpkg && ./vcpkg/bootstrap-vcpkg.sh -disableMetrics
         echo "VCPKG_ROOT=$GITHUB_WORKSPACE/vcpkg" >> $GITHUB_ENV
         echo "VCPKG_CACHE_DIR=$GITHUB_WORKSPACE/vcpkg_cache" >> $GITHUB_ENV
         echo "VCPKG_BINARY_SOURCES=clear;files,$GITHUB_WORKSPACE/vcpkg_cache,readwrite" >> $GITHUB_ENV
 
-    - name: Install VCPKG
-      run: git submodule update --init vcpkg && ./vcpkg/bootstrap-vcpkg.sh -disableMetrics
-
     - name: Restore vcpkg binary dir from cache
       id: cache-vcpkg-binary
+      # Note: we are stuck with v3, because v4 is not compatible with oracle8 image
       uses: actions/cache/restore@v3
       with:
         path: ${{ env.VCPKG_CACHE_DIR }}
