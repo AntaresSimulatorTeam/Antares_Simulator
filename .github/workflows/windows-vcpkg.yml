@@ -92,7 +92,7 @@ jobs:
           path: ${{ github.workspace }}/vcpkg_cache
           key: vcpkg-cache-windows-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
           # Allows to restore a cache when deps have only partially changed (like adding a dependency)
-          restore-keys: vcpkg-cache-windows-*
+          restore-keys: vcpkg-cache-windows-
 
       - name: Read antares-deps version
         id: antares-deps-version
