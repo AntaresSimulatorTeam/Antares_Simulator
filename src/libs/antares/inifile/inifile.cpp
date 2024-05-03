@@ -251,7 +251,7 @@ void IniFile::readStream(std::istream& in_stream, std::string filePath, bool war
 bool IniFile::open(const AnyString& filename, bool warnings)
 {
     clear();
-    pFilename = filename; // storing filename for further use
+    filename_ = filename; // storing filename for further use
     std::string filePath = filename.to<std::string>();
 
     if (std::ifstream file(filePath); file.is_open())
@@ -262,7 +262,7 @@ bool IniFile::open(const AnyString& filename, bool warnings)
 
     if (warnings)
         logs.error() << "I/O error: " << filename << ": Impossible to read the file";
-    pFilename.clear();
+    filename_.clear();
     return false;
 }
 

@@ -202,7 +202,7 @@ public:
     std::string saveToString() const;
 
     //! Get the last filename saved or loaded
-    const YString& filename() const;
+    const std::string& filename() const;
     //@}
 
     //! \name Sections
@@ -316,7 +316,7 @@ private:
     ** \internal This variable to keep const-correctness for the
     ** public API (cf save).
     */
-    mutable YString pFilename;
+    std::string filename_;
 
 }; // class IniFile
 

@@ -25,7 +25,7 @@ namespace Antares
 {
 inline bool IniFile::loaded() const
 {
-    return not pFilename.empty();
+    return not filename_.empty();
 }
 
 inline bool IniFile::empty() const
@@ -88,9 +88,9 @@ inline IniFile::Section* IniFile::addSection(const AnyString& name)
     return add(new Section(name));
 }
 
-inline const YString& IniFile::filename() const
+inline const std::string& IniFile::filename() const
 {
-    return pFilename;
+    return filename_;
 }
 
 template<class CallbackT>
