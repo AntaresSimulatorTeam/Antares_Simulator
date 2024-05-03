@@ -54,6 +54,15 @@ jobs:
     - name: Install VCPKG
       run: git submodule update --init vcpkg && ./vcpkg/bootstrap-vcpkg.sh -disableMetrics
 
+    - name: Restore vcpkg binary dir from cache
+      id: cache-vcpkg-binary
+      uses: actions/cache/restore@v3
+      with:
+        path: ${{ github.workspace }}/vcpkg_cache
+        key: vcpkg-cache-windows-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
+        # Allows to restore a cache when deps have only partially changed (like adding a dependency)
+        restore-keys: vcpkg-cache-windows-
+
     - name: Config OR-Tools URL
       run: |
           echo "ORTOOLS_URL=https://github.com/rte-france/or-tools/releases/download/$(cat ortools_tag)/ortools_cxx_oraclelinux-8_static_sirius.zip" >> $GITHUB_ENV
@@ -139,3 +148,11 @@ jobs:
         tag: ${{ github.event.inputs.release_tag }}
       run: |
         gh release upload "$tag" _build/*.tar.gz _build/*.rpm
+
+    - name: Cache vcpkg binary dir
+      if: always()
+      id: save-cache-vcpkg-binary
+      uses: actions/cache/save@v3
+      with:
+        path: ${{ github.workspace }}/vcpkg_cache
+        key: vcpkg-cache-windows-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
