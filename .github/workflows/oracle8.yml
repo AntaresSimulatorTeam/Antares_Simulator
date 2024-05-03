@@ -59,9 +59,9 @@ jobs:
       uses: actions/cache/restore@v3
       with:
         path: ${{ github.workspace }}/vcpkg_cache
-        key: vcpkg-cache-windows-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
+        key: vcpkg-cache-oracle8-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
         # Allows to restore a cache when deps have only partially changed (like adding a dependency)
-        restore-keys: vcpkg-cache-windows-
+        restore-keys: vcpkg-cache-oracle8-
 
     - name: Config OR-Tools URL
       run: |
@@ -155,4 +155,4 @@ jobs:
       uses: actions/cache/save@v3
       with:
         path: ${{ github.workspace }}/vcpkg_cache
-        key: vcpkg-cache-windows-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
+        key: vcpkg-cache-oracle8-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
