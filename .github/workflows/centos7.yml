@@ -41,6 +41,8 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: 'antaresrte/rte-antares:centos7-simulator-no-deps'
+      volumes:
+        - /build:/build
 
     steps:
     - name: Install gcc 10
@@ -77,7 +79,7 @@ jobs:
     - name: Configure
       run: |
            source /opt/rh/devtoolset-10/enable
-           cmake -B _build -S src \
+           cmake -B /build -S src \
            -DCMAKE_C_COMPILER_LAUNCHER=ccache \
            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
            -DDEPS_INSTALL_DIR=/rte-antares-deps-Release \
@@ -92,17 +94,17 @@ jobs:
       run: |
            source /opt/rh/devtoolset-10/enable
            source /opt/rh/rh-git227/enable
-           cmake --build _build --config Release -j$(nproc)
+           cmake --build /build --config Release -j$(nproc)
            ccache -s
 
     - name: Installer .rpm creation
       run: |
-           cd _build
+           cd /build
            cpack -G RPM
 
     - name: Solver archive creation
       run: |
-           cd _build
+           cd /build
            cmake --install . --prefix install
            pushd .
            cd install/bin
@@ -112,7 +114,7 @@ jobs:
 
     - name: .tar.gz creation
       run: |
-           cd _build
+           cd /build
            cpack -G TGZ
 
   upload:
@@ -123,13 +125,13 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: targz
-        path: _build/*.tar.gz
+        path: /build/*.tar.gz
 
     - name: Installer RPM push
       uses: actions/upload-artifact@v4
       with:
         name: rpm
-        path: _build/*.rpm
+        path: /build/*.rpm
 
     - name: Publish assets
       if: ${{ env.IS_RELEASE == 'true' }}
@@ -137,4 +139,4 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
         tag: ${{ github.event.inputs.release_tag }}
       run: |
-        gh release upload "$tag" _build/*.tar.gz _build/*.rpm
+        gh release upload "$tag" /build/*.tar.gz /build/*.rpm
