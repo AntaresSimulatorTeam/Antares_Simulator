@@ -30,7 +30,7 @@ namespace Antares::Data
 {
 Cluster::Cluster(Area* parent) :
     parentArea(parent),
-    series(tsNumbers, "availability")
+    series(tsNumbers, "thermal-availability")
 {
 }
 

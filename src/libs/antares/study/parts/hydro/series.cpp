@@ -115,8 +115,8 @@ DataSeriesHydro::DataSeriesHydro() :
     ror(timeseriesNumbers, "ror"),
     storage(timeseriesNumbers, "storage"),
     mingen(timeseriesNumbers, "mingen"),
-    maxHourlyGenPower(timeseriesNumbersHydroMaxPower, "maxGenenerationPower"),
-    maxHourlyPumpPower(timeseriesNumbersHydroMaxPower, "maxPumpingPower")
+    maxHourlyGenPower(timeseriesNumbersHydroMaxPower, "max-geneneration-power"),
+    maxHourlyPumpPower(timeseriesNumbersHydroMaxPower, "max-pumping-power")
 {
     // Pmin was introduced in v8.6
     // The previous behavior was Pmin=0
