@@ -199,7 +199,7 @@ bool isEmpty(std::string line)
     return line.empty();
 }
 
-void IniFile::readStream(std::istream& in_stream, std::string filePath)
+bool IniFile::readStream(std::istream& in_stream)
 {
     std::string line;
     IniFile::Section* currentSection(nullptr);
@@ -221,8 +221,10 @@ void IniFile::readStream(std::istream& in_stream, std::string filePath)
         if (isComment(line) || isEmpty(line))
             continue;
 
-        logs.error() << filePath << ": invalid INI line format : '" << line << "'";
+        logs.error() << "Invalid INI line format : '" << line << "'";
+        return false;
     }
+    return true;
 }
 
 bool IniFile::open(const AnyString& filename, bool warnings)
@@ -233,13 +235,16 @@ bool IniFile::open(const AnyString& filename, bool warnings)
 
     if (std::ifstream file(filePath); file.is_open())
     {
-        readStream(file, filePath);
+        if (!readStream(file) && warnings)
+        {
+            logs.error() << "Invalid INI file : " << filePath;
+            return false;
+        }
         return true;
     }
 
     if (warnings)
         logs.error() << "I/O error: " << filename << ": Impossible to read the file";
-    filename_.clear();
     return false;
 }
 
