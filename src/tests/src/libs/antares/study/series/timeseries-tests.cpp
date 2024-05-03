@@ -42,7 +42,7 @@ struct Fixture
     Fixture(const Fixture&& f) = delete;
     Fixture& operator=(const Fixture& f) = delete;
     Fixture& operator=(const Fixture&& f) = delete;
-    Fixture() : ts(tsnum)
+    Fixture() : ts(tsnum, "")
     {
         ts.reset(1, HOURS_PER_YEAR);
         tsnum.resize(1, 1);
@@ -88,7 +88,7 @@ public:
     for (size_t idx = 0; int w : width)
     {
         // TimeSeries::TimeSeries does not exist, so we use pointers
-        ts[idx] = std::make_unique<TimeSeries>(tsnum); // ts[idx] is registered to tsnum here
+        ts[idx] = std::make_unique<TimeSeries>(tsnum, std::to_string(idx)); // ts[idx] is registered to tsnum here
         ts[idx]->reset(w, height);
         idx++;
     }
@@ -212,32 +212,31 @@ BOOST_FIXTURE_TEST_CASE(getCoefficient_SingleColumn, Fixture)
 BOOST_FIXTURE_TEST_CASE(checkSizeOK_1TS, FixtureMultipleTS)
 {
     init({11});
-    BOOST_CHECK(tsnum.checkSeriesNumberOfColumnsConsistency());
+    BOOST_CHECK(!tsnum.checkSeriesNumberOfColumnsConsistency());
 }
 
 BOOST_FIXTURE_TEST_CASE(checkSizeOK_2TS, FixtureMultipleTS)
 {
     init({12, 12});
-    BOOST_CHECK(tsnum.checkSeriesNumberOfColumnsConsistency());
+    BOOST_CHECK(!tsnum.checkSeriesNumberOfColumnsConsistency());
 }
 
 BOOST_FIXTURE_TEST_CASE(checkSizeOK_4TS, FixtureMultipleTS)
 {
     init({22, 22, 1, 22});
-    BOOST_CHECK(tsnum.checkSeriesNumberOfColumnsConsistency());
+    BOOST_CHECK(!tsnum.checkSeriesNumberOfColumnsConsistency());
 }
 
-// INVALID CONFIGURATIONS (note the '!')
 BOOST_FIXTURE_TEST_CASE(checkSizeKO_2TS, FixtureMultipleTS)
 {
     init({11, 12});
-    BOOST_CHECK(!tsnum.checkSeriesNumberOfColumnsConsistency());
+    BOOST_CHECK(tsnum.checkSeriesNumberOfColumnsConsistency());
 }
 
 BOOST_FIXTURE_TEST_CASE(checkSizeKO_4TS, FixtureMultipleTS)
 {
     init({22, 22, 1, 21});
-    BOOST_CHECK(!tsnum.checkSeriesNumberOfColumnsConsistency());
+    BOOST_CHECK(tsnum.checkSeriesNumberOfColumnsConsistency());
 }
 
 BOOST_AUTO_TEST_SUITE_END()

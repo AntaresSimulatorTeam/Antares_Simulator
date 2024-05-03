@@ -42,6 +42,7 @@ public:
     {
     public:
         void registerSeries(const TimeSeries* s, std::string label);
+        // Return a description of the error in case of inconsistent number of columns, std::nullopt otherwis
         std::optional<std::string> checkSeriesNumberOfColumnsConsistency() const;
     private:
         std::map<std::string, const TimeSeries*> series;

@@ -49,10 +49,14 @@ static bool checkAllElementsIdenticalOrOne(std::vector<uint> w)
 static std::string errorMessage(const std::map<std::string, const TimeSeries*>& series)
 {
     std::ostringstream msg;
-    msg << "Inconsistent number of time-series, please check that all series have the same number of columns or 1 column (possibly both) ";
-    for (const auto& [label, s] : series)
+    auto isLast = [&series](std::size_t& idx)
     {
-        msg << "\t{" << label << ": " << s->numberOfColumns() << "}\n";
+	idx++;
+        return idx == series.size();
+    };
+    for (std::size_t idx = 0; const auto& [label, s] : series)
+    {
+        msg << label << ": " << s->numberOfColumns() << (isLast(idx) ? "" : ", ");
     }
     return msg.str();
 }

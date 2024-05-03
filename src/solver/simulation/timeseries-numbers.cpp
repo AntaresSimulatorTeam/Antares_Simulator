@@ -715,11 +715,13 @@ static bool performChecks(const Checks& toCheck)
         const auto errorMessageMaybe = tsNumber->checkSeriesNumberOfColumnsConsistency();
         if (errorMessageMaybe.has_value())
         {
-            logs.error() << "Inconsistent number of columns for " << context;
-	    logs.error() << errorMessageMaybe.value();
+            logs.error() << "Inconsistent number of columns for " << context << " (" << errorMessageMaybe.value() << ")";
             ret = false;
         }
     }
+    if (!ret)
+        logs.error() << "Please check that all series have the same number of columns or 1 column, or a combination of 1 column and the same number of columns";
+
     return ret;
 }
 
