@@ -1,6 +1,16 @@
 name: Windows CI (VCPKG and pre-compiled)
 
 on:
+  push:
+    branches:
+      - develop
+      - feature/*
+      - features/*
+      - fix/*
+      - issue-*
+      - release/*
+      - doc/*
+      - dependabot/*
   schedule:
     - cron: '21 2 * * *'
   workflow_call:
