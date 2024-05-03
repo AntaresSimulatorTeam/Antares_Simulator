@@ -80,6 +80,11 @@ jobs:
         with:
           key: windows
 
+      - name: Install VCPKG
+        shell: bash
+        run: |
+          git submodule update --init vcpkg && ./vcpkg/bootstrap-vcpkg.bat -disableMetrics
+
       - name: Restore vcpkg binary dir from cache
         id: cache-vcpkg-binary
         uses: actions/cache/restore@v4
@@ -88,11 +93,6 @@ jobs:
           key: vcpkg-cache-windows-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
           # Allows to restore a cache when deps have only partially changed (like adding a dependency)
           restore-keys: vcpkg-cache-windows-*
-
-      - name: Install VCPKG
-        shell: bash
-        run: |
-          git submodule update --init vcpkg && ./vcpkg/bootstrap-vcpkg.bat -disableMetrics
 
       - name: Read antares-deps version
         id: antares-deps-version
