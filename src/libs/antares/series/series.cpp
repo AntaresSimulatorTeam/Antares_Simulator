@@ -23,7 +23,6 @@
 #include <yuni/io/file.h>
 #include <yuni/io/directory.h>
 #include "antares/series/series.h"
-#include <antares/logs/logs.h>
 #include <algorithm>
 #include <sstream>
 #include <vector>
