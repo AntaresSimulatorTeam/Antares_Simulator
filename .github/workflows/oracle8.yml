@@ -54,7 +54,7 @@ jobs:
       run: |
         echo "VCPKG_ROOT=$GITHUB_WORKSPACE/vcpkg" >> $GITHUB_ENV
         echo "VCPKG_CACHE_DIR=$GITHUB_WORKSPACE/vcpkg_cache" >> $GITHUB_ENV
-        echo "VCPKG_BINARY_SOURCES=\"clear;files,$GITHUB_WORKSPACE/vcpkg_cache,readwrite\"" >> $GITHUB_ENV
+        echo "VCPKG_BINARY_SOURCES=clear;files,$GITHUB_WORKSPACE/vcpkg_cache,readwrite" >> $GITHUB_ENV
 
     - name: Install VCPKG
       run: git submodule update --init vcpkg && ./vcpkg/bootstrap-vcpkg.sh -disableMetrics
