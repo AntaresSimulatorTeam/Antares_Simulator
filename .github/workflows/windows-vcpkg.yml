@@ -115,8 +115,6 @@ jobs:
         with:
           architecture: 'x64'
           python-version: '3.12'
-          cache: 'pip'
-          cache-dependency-path: 'requirements*.txt'
 
       - name: Install pip dependencies if necessary
         run: pip install -r src/tests/examples/requirements.txt
@@ -318,11 +316,11 @@ jobs:
           cd _build
           cpack -G ZIP
           
-          - name: Installer upload
-            uses: actions/upload-artifact@v4
-            with:
-              name: installer
-              path: _build/${{env.NSIS_NAME}}
+      - name: Installer upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: installer
+          path: _build/${{env.NSIS_NAME}}
 
       - name: Publish assets
         if: ${{ env.IS_RELEASE == 'true' }}
