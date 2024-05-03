@@ -24,17 +24,9 @@ env:
   REF: ${{ inputs.target_branch =='' && github.ref_name || inputs.target_branch}}
 
 jobs:
-  checkout:
-    runs-on: ubuntu-latest
-    steps:
-      - name: checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ env.REF }}
 
   build:
-    needs: checkout
-    name: build
+    name: Build
     env:
       ORTOOLSDIR: ${{ github.workspace }}/or-tools
 
@@ -45,6 +37,11 @@ jobs:
         - /build:/build
 
     steps:
+
+    - name: Checkout
+      run: |
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git -b ${{ env.REF }} .
+
     - name: Install gcc 10
       run: |
         yum install -y centos-release-scl
