@@ -21,6 +21,7 @@
 
 #include <fstream>
 #include <sstream>
+#include <utility>
 #include <boost/algorithm/string.hpp>
 
 #include "antares/inifile/inifile.h"
@@ -31,89 +32,6 @@ using namespace Yuni;
 
 namespace Antares
 {
-static inline IniFile::Section* AnalyzeIniLine(const std::string filename,
-                                               IniFile* d,
-                                               IniFile::Section* section,
-                                               std::string line,
-                                               uint64_t& read)
-{
-    enum Type
-    {
-        typeUnknown = 0,
-        typeSection = 1,
-        typeProperty = 2,
-    };
-
-    uint bytesRead = 0;
-    Type type = typeUnknown;
-    char* p = &line[0];
-    const char* key = &line[0];
-    const char* value = nullptr;
-
-    while ('\0' != *p)
-    {
-        ++bytesRead;
-        if (typeUnknown == type)
-        {
-            if ('[' == *p)
-            {
-                type = typeSection;
-                ++p;
-                value = p;
-                continue;
-            }
-            else if ('=' == *p)
-            {
-                type = typeProperty;
-                *p = '\0';
-                ++p;
-                value = p;
-                continue;
-            }
-        }
-        else
-        {
-            if (typeSection == type)
-            {
-                if (']' == *p)
-                {
-                    *p = '\0';
-                    break;
-                }
-            }
-            else
-            {
-                if (('\n' == *p)
-                    or ('\r' == *p)) // or (*p == '/' and ('/' == *(p + 1) or '*' == *(p + 1))))
-                {
-                    *p = '\0';
-                    break;
-                }
-            }
-        }
-        ++p;
-    }
-
-    read += bytesRead;
-
-    if (typeProperty == type)
-    {
-        if (section and *value != '\0' and value)
-            section->add(key, value);
-        return section;
-    }
-    if (typeSection == type and value and '\0' != *value)
-        return d->addSection(value);
-
-    std::string k{ key };
-    boost::trim(k);
-    if (not k.empty() and k[0] != ';' and k[0] != '#')
-    {
-        logs.error() << filename << ": invalid INI format. Got a key without any value '" << k
-                     << "'";
-    }
-    return section;
-}
 
 IniFile::Property::Property(const AnyString& key) : key(key), next(nullptr)
 {
@@ -235,17 +153,76 @@ uint IniFile::Section::size() const
     return count;
 }
 
-void IniFile::readStream(std::istream& in_stream, std::string filePath, bool warnings)
+bool startingSection(std::string line)
+{
+    boost::trim(line);
+    if (boost::starts_with(line, "[") && boost::ends_with(line, "]"))
+        return true;
+    return false;
+}
+
+std::string getSectionName(std::string line)
+{
+    std::vector<std::string> splitLine;
+    boost::split(splitLine, line, boost::is_any_of("[]"));
+    return splitLine[1];
+}
+
+bool isProperty(std::string line)
+{
+    if (std::count(line.begin(), line.end(), '=') == 1)
+        return true;
+    return false;
+}
+
+std::pair<std::string, std::string> getKeyValuePair(std::string line)
+{
+    boost::trim(line);
+
+    std::vector<std::string> splitLine;
+    boost::split(splitLine, line, boost::is_any_of("="));
+
+    return std::make_pair(splitLine[0], splitLine[1]);
+}
+
+bool isComment(std::string line)
+{
+    boost::trim_left(line);
+    if (boost::starts_with(line, "#") || boost::starts_with(line, ";"))
+        return true;
+    return false;
+}
+
+bool isEmpty(std::string line)
+{
+    boost::trim_left(line);
+    return line.empty();
+}
+
+void IniFile::readStream(std::istream& in_stream, std::string filePath)
 {
     std::string line;
-    IniFile::Section* lastSection = nullptr;
-    uint64_t read = 0;
-
+    IniFile::Section* currentSection(nullptr);
     while (std::getline(in_stream, line))
-        lastSection = AnalyzeIniLine(filePath, this, lastSection, line, read);
+    {
+        if (startingSection(line))
+        {
+            currentSection = addSection(getSectionName(line));
+            continue;
+        }
 
-    if (read)
-        Statistics::HasReadFromDisk(read);
+        if (isProperty(line))
+        {
+            std::pair<std::string, std::string> pair = getKeyValuePair(line);
+            currentSection->add(pair.first, pair.second);
+            continue;
+        }
+
+        if (isComment(line) || isEmpty(line))
+            continue;
+
+        logs.error() << filePath << ": invalid INI line format : '" << line << "'";
+    }
 }
 
 bool IniFile::open(const AnyString& filename, bool warnings)

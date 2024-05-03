@@ -308,7 +308,7 @@ public:
     Section* lastSection;
 
 private:
-    void readStream(std::istream& in_stream, std::string filePath, bool warnings);
+    void readStream(std::istream& in_stream, std::string filePath);
 
     /*!
     ** \brief The last filename used for loading/saving
