@@ -233,7 +233,7 @@ bool IniFile::open(const AnyString& filename, bool warnings)
 
     if (std::ifstream file(filePath); file.is_open())
     {
-        readStream(file, filePath, warnings);
+        readStream(file, filePath);
         return true;
     }
 
