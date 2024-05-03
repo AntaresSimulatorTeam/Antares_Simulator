@@ -105,6 +105,55 @@ jobs:
           -DBUILD_UI=OFF \
           -DCMAKE_PREFIX_PATH=${{ env.ORTOOLS_DIR }}/install
 
+    - name: Build
+      run: |
+           source /opt/rh/gcc-toolset-11/enable
+           cmake --build _build --config Release -j$(nproc)
+
+    - name: Run unit and end-to-end tests
+      if: ${{ env.IS_PUSH == 'true' }}
+      run: |
+        cd _build
+        ctest -C Release --output-on-failure -L "unit|end-to-end"
+
+    - name: Installer .rpm creation
+      run: |
+           cd _build
+           cpack -G RPM
+
+    - name: Solver archive creation
+      run: |
+           cd _build
+           cmake --install . --prefix install
+           pushd .
+           cd install/bin
+           tar czf ../../antares-solver_oracle8.tar.gz antares-solver libsirius_solver.so
+           popd
+           rm -rf install
+
+    - name: .tar.gz creation
+      run: |
+           cd _build
+           cpack -G TGZ
+
+    - name: Installer TGZ push
+      uses: actions/upload-artifact@v3
+      with:
+        path: _build/*.tar.gz
+
+    - name: Installer RPM push
+      uses: actions/upload-artifact@v3
+      with:
+        path: _build/*.rpm
+
+    - name: Publish assets
+      if: ${{ env.IS_RELEASE == 'true' }}
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+        tag: ${{ github.event.inputs.release_tag }}
+      run: |
+        gh release upload "$tag" _build/*.tar.gz _build/*.rpm
+
     - name: Cache vcpkg binary dir
       if: always()
       id: save-cache-vcpkg-binary
