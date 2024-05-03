@@ -22,8 +22,6 @@ env:
   IS_RELEASE: ${{ github.event_name == 'workflow_dispatch' }}
   IS_PUSH: ${{ github.event_name == 'push' }}
   REF: ${{ inputs.target_branch =='' && github.ref_name || inputs.target_branch}}
-  # Caching strategy of VCPKG dependencies
-  VCPKG_BINARY_SOURCES: "clear;files,${{ github.workspace }}/vcpkg_cache,readwrite"
 
 jobs:
 
@@ -52,6 +50,12 @@ jobs:
         git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git -b ${{ env.REF }} .
         git config --global safe.directory '*'
 
+    - name: Set VCPKG path
+      run: |
+        echo "VCPKG_ROOT=$GITHUB_WORKSPACE/vcpkg" >> $GITHUB_ENV
+        echo "VCPKG_CACHE_DIR=$GITHUB_WORKSPACE/vcpkg_cache" >> $GITHUB_ENV
+        echo "VCPKG_BINARY_SOURCES="clear;files,$GITHUB_WORKSPACE/vcpkg_cache,readwrite" >> $GITHUB_ENV
+
     - name: Install VCPKG
       run: git submodule update --init vcpkg && ./vcpkg/bootstrap-vcpkg.sh -disableMetrics
 
@@ -59,7 +63,7 @@ jobs:
       id: cache-vcpkg-binary
       uses: actions/cache/restore@v3
       with:
-        path: ${{ github.workspace }}/vcpkg_cache
+        path: ${{ env.VCPKG_CACHE_DIR }}
         key: vcpkg-cache-oracle8-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
         # Allows to restore a cache when deps have only partially changed (like adding a dependency)
         restore-keys: vcpkg-cache-oracle8-
@@ -155,5 +159,5 @@ jobs:
       id: save-cache-vcpkg-binary
       uses: actions/cache/save@v3
       with:
-        path: ${{ github.workspace }}/vcpkg_cache
+        path: ${{ env.VCPKG_CACHE_DIR }}
         key: vcpkg-cache-oracle8-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
