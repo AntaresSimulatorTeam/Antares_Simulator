@@ -41,9 +41,8 @@ extern "C"
 }
 
 using namespace Yuni::Job;
-using Benchmarking::DurationCollector;
-using Benchmarking::DurationCollector;
 using Antares::Solver::IResultWriter;
+using Benchmarking::DurationCollector;
 using Benchmarking::IDurationCollector;
 using Benchmarking::NullDurationCollector;
 
@@ -78,7 +77,8 @@ TestContext createContext(const std::filesystem::path zipPath,
                           Antares::Data::ResultFormat fmt)
 {
     auto threadPool = createThreadPool(threadCount);
-    std::unique_ptr<DurationCollector> durationCollector = std::make_unique<Benchmarking::DurationCollector>();
+    std::unique_ptr<DurationCollector>
+      durationCollector = std::make_unique<Benchmarking::DurationCollector>();
     std::string archiveName = zipPath.string();
     auto writer = Antares::Solver::resultWriterFactory(fmt,
                                                        removeExtension(zipPath.string(), ".zip"),

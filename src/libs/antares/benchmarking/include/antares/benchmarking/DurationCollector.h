@@ -20,9 +20,8 @@
 */
 #pragma once
 
-#include <functional>
 #include <chrono>
-#include <vector>
+#include <functional>
 #include <map>
 #include <mutex>
 #include <string>
@@ -42,7 +41,11 @@ public:
     struct OperationTimer
     {
         OperationTimer(DurationCollector& collector, const std::string& key):
-            collector(collector), key(key) {}
+            collector(collector),
+            key(key)
+        {
+        }
+
         void addDuration(int64_t duration_ms) const;
 
         DurationCollector& collector;

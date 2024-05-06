@@ -146,8 +146,10 @@ int main(int argc, char* argv[])
 
     Benchmarking::DurationCollector durationCollector;
 
-    auto resultWriter = Solver::resultWriterFactory(
-            Data::ResultFormat::legacyFilesDirectories, study->folderOutput, nullptr, durationCollector);
+    auto resultWriter = Solver::resultWriterFactory(Data::ResultFormat::legacyFilesDirectories,
+                                                    study->folderOutput,
+                                                    nullptr,
+                                                    durationCollector);
 
     std::vector<Data::ThermalCluster*> clusters;
 

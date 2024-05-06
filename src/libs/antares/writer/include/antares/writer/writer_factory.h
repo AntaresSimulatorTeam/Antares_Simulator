@@ -27,8 +27,9 @@
 #include "i_writer.h"
 #include "result_format.h"
 
-namespace Benchmarking {
-    class DurationCollector;
+namespace Benchmarking
+{
+class DurationCollector;
 }
 
 namespace Antares::Solver

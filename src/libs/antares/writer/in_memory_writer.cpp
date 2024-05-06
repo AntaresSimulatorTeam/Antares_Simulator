@@ -38,13 +38,13 @@ void logErrorAndThrow [[noreturn]] (const std::string& errorMessage)
     throw IOError(errorMessage);
 }
 
-  template<class ContentT>
-  void addToMap(InMemoryWriter::MapType& entries,
-                const std::string& entryPath,
-                ContentT& content,
-                std::mutex& mutex,
-                Benchmarking::DurationCollector& duration_collector)
-  {
+template<class ContentT>
+void addToMap(InMemoryWriter::MapType& entries,
+              const std::string& entryPath,
+              ContentT& content,
+              std::mutex& mutex,
+              Benchmarking::DurationCollector& duration_collector)
+{
     std::string entryPathSanitized = entryPath;
     std::replace(entryPathSanitized.begin(), entryPathSanitized.end(), '\\', '/');
 
@@ -60,8 +60,10 @@ void logErrorAndThrow [[noreturn]] (const std::string& errorMessage)
 }
 } // namespace
 
-
-InMemoryWriter::InMemoryWriter(Benchmarking::DurationCollector& duration_collector) : pDurationCollector(duration_collector) {}
+InMemoryWriter::InMemoryWriter(Benchmarking::DurationCollector& duration_collector):
+    pDurationCollector(duration_collector)
+{
+}
 
 InMemoryWriter::~InMemoryWriter() = default;
 

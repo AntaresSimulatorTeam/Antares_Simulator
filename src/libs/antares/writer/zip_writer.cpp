@@ -57,13 +57,13 @@ template<class ContentT>
 ZipWriteJob<ContentT>::ZipWriteJob(ZipWriter& writer,
                                    std::string entryPath,
                                    ContentT& content,
-                                   Benchmarking::DurationCollector& duration_collector) :
- pZipHandle(writer.pZipHandle),
- pZipMutex(writer.pZipMutex),
- pState(writer.pState),
- pEntryPath(std::move(entryPath)),
- pContent(std::move(content)),
- pDurationCollector(duration_collector)
+                                   Benchmarking::DurationCollector& duration_collector):
+    pZipHandle(writer.pZipHandle),
+    pZipMutex(writer.pZipMutex),
+    pState(writer.pState),
+    pEntryPath(std::move(entryPath)),
+    pContent(std::move(content)),
+    pDurationCollector(duration_collector)
 {
 }
 
@@ -114,11 +114,11 @@ void ZipWriteJob<ContentT>::writeEntry()
 // Class ZipWriter
 ZipWriter::ZipWriter(std::shared_ptr<Yuni::Job::QueueService> qs,
                      const char* archivePath,
-                     Benchmarking::DurationCollector& duration_collector) :
- pQueueService(qs),
- pState(ZipState::can_receive_data),
- pArchivePath(std::string(archivePath) + ".zip"),
- pDurationCollector(duration_collector)
+                     Benchmarking::DurationCollector& duration_collector):
+    pQueueService(qs),
+    pState(ZipState::can_receive_data),
+    pArchivePath(std::string(archivePath) + ".zip"),
+    pDurationCollector(duration_collector)
 {
     pZipHandle = mz_zip_writer_create();
     if (int32_t ret = mz_zip_writer_open_file(pZipHandle, pArchivePath.c_str(), 0, 0); ret != MZ_OK)

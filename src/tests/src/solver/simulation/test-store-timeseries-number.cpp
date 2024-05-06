@@ -68,8 +68,10 @@ BOOST_AUTO_TEST_CASE(BC_group_TestGroup_has_output_file)
     auto working_tmp_dir = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
 
     Benchmarking::DurationCollector durationCollector;
-    auto resultWriter = resultWriterFactory(ResultFormat::legacyFilesDirectories, working_tmp_dir.string().c_str(),
-                                              nullptr, durationCollector);
+    auto resultWriter = resultWriterFactory(ResultFormat::legacyFilesDirectories,
+                                            working_tmp_dir.string().c_str(),
+                                            nullptr,
+                                            durationCollector);
     fs::path bc_path = working_tmp_dir / "ts-numbers" / "bindingconstraints" / "TestGroup.txt";
 
     initializeStudy(*study);
@@ -92,8 +94,10 @@ BOOST_AUTO_TEST_CASE(BC_output_ts_numbers_file_for_each_group)
     auto working_tmp_dir = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
 
     Benchmarking::DurationCollector durationCollector;
-    auto resultWriter = resultWriterFactory(ResultFormat::legacyFilesDirectories, working_tmp_dir.string().c_str(),
-                                              nullptr, durationCollector);
+    auto resultWriter = resultWriterFactory(ResultFormat::legacyFilesDirectories,
+                                            working_tmp_dir.string().c_str(),
+                                            nullptr,
+                                            durationCollector);
 
     initializeStudy(*study);
     TimeSeriesNumbers::Generate(*study);
@@ -119,8 +123,10 @@ BOOST_AUTO_TEST_CASE(BC_timeseries_numbers_store_values)
     auto working_tmp_dir = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
 
     Benchmarking::DurationCollector durationCollector;
-    auto resultWriter = resultWriterFactory(ResultFormat::legacyFilesDirectories, working_tmp_dir.string().c_str(),
-                                              nullptr, durationCollector);
+    auto resultWriter = resultWriterFactory(ResultFormat::legacyFilesDirectories,
+                                            working_tmp_dir.string().c_str(),
+                                            nullptr,
+                                            durationCollector);
 
     initializeStudy(*study);
     TimeSeriesNumbers::Generate(*study);

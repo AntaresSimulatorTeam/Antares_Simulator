@@ -292,5 +292,4 @@ BOOST_AUTO_TEST_CASE(version_parsing)
     BOOST_CHECK(!v.fromString("4.5"));
     BOOST_CHECK(v == StudyVersion::unknown());
 }
-BOOST_AUTO_TEST_SUITE_END() //version
-
+BOOST_AUTO_TEST_SUITE_END() // version
