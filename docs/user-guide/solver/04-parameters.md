@@ -471,22 +471,31 @@ _**This section is under construction**_
 > _**Note:**_ You can find more information on this parameter [here](08-appendix.md#details-on-the-include-unfeasible-problem-behavior-parameter).
 
 ---
-#### solver-parameters
+#### xpress-parameters
 
 - **Expected value:** any string
 - **Required:** no
 - **Default value:** empty string
 - **Usage:** This parameter has effect only if:
     - or-tools is used (argument `--use-ortools` from the command line) 
-    - solver `xpress` or `scip` is selected (using `--ortools-solver=<solver>` from the command line) as `sirius, glpk, coin` do not implment this functionality in or-tools. 
+    - solver `xpress` (using `--ortools-solver=<solver>` from the command line) 
   
-    The format is solver-specific and is the same as the corresponding solver configuration file format. This is an advanced usage and the user should therefore refer to the specific solver documentation to know how to specify the parameters. We give an example to set the maximum number of threads used during solve to 1 and to activate the presolve:
-      
-      
-      - With Xpress : `solver-parameters = THREADS 1 PRESOLVE 1`
-      - With SCIP : `solver-parameters = parallel/maxnthreads 1, lp/presolving TRUE`
+    The format is xpress-specific and is the same as xpress configuration file format. This is an advanced usage and the user should therefore refer to [xpress documentation](https://www.fico.com/fico-xpress-optimization/docs/dms2019-03/solver/optimizer/HTML/chapter7.html) to know how to specify the parameters. We give an example to set the maximum number of threads used during solve to 1 and to activate the presolve: `xpress-parameters = THREADS 1 PRESOLVE 1`
 
 ---
+#### scip-parameters
+
+- **Expected value:** any string
+- **Required:** no
+- **Default value:** empty string
+- **Usage:** This parameter has effect only if:
+    - or-tools is used (argument `--use-ortools` from the command line) 
+    - solver `scip` (using `--ortools-solver=<solver>` from the command line) 
+  
+    The format is sip-specific and is the same as scip configuration file format. This is an advanced usage and the user should therefore refer to the [scip documentation](https://www.scipopt.org/doc/html/PARAMETERS.php) to know how to specify the parameters. We give an example to set the maximum number of threads used during solve to 1 and to activate the presolve: `scip-parameters = parallel/maxnthreads 1, lp/presolving TRUE`
+
+---
+
 ## Adequacy-patch parameters
 Defines a set of options related to the [adequacy patch](optional-features/adequacy-patch.md).
 The set of preferences is study-specific; it can be changed at any time and saved along with study data.  
