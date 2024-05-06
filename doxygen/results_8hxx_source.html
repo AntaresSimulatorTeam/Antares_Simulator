@@ -187,40 +187,43 @@ $(document).ready(function(){initNavTree('results_8hxx_source.html',''); initRes
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>  <span class="keywordtype">int</span> precision)<span class="keyword"> const</span></div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="keyword"></span>{</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="comment">// Ask to fullfil the report to the first decorator</span></div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    DecoratorType::template buildSurveyReport&lt;S, VCardT&gt;(</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>      report, results, dataLevel, fileLevel, precision);</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>}</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> FirstDecoratorT, <span class="keyword">template</span>&lt;<span class="keyword">class</span>, <span class="keywordtype">int</span>&gt; <span class="keyword">class </span>DecoratorForSpatialAggregateT&gt;</div>
-<div class="foldopen" id="foldopen00052" data-start="{" data-end="}">
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno"><a class="line" href="classAntares_1_1Solver_1_1Variable_1_1Results.html#ab00d2cca3f033160690d4bf697d1d666">   52</a></span><span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classAntares_1_1Solver_1_1Variable_1_1Results.html#ab00d2cca3f033160690d4bf697d1d666">Results&lt;FirstDecoratorT, DecoratorForSpatialAggregateT&gt;::merge</a>(</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>  uint year,</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>  <span class="keyword">const</span> <a class="code hl_class" href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html">IntermediateValues</a>&amp; data)</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>{</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    DecoratorType::merge(year, data);</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>}</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    DecoratorType::template buildSurveyReport&lt;S, VCardT&gt;(report,</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>                                                         results,</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>                                                         dataLevel,</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>                                                         fileLevel,</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>                                                         precision);</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>}</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> FirstDecoratorT, <span class="keyword">template</span>&lt;<span class="keyword">class</span>, <span class="keywordtype">int</span>&gt; <span class="keyword">class </span>DecoratorForSpatialAggregateT&gt;</div>
+<div class="foldopen" id="foldopen00055" data-start="{" data-end="}">
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno"><a class="line" href="classAntares_1_1Solver_1_1Variable_1_1Results.html#ab00d2cca3f033160690d4bf697d1d666">   55</a></span><span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classAntares_1_1Solver_1_1Variable_1_1Results.html#ab00d2cca3f033160690d4bf697d1d666">Results&lt;FirstDecoratorT, DecoratorForSpatialAggregateT&gt;::merge</a>(</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>  uint year,</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>  <span class="keyword">const</span> <a class="code hl_class" href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html">IntermediateValues</a>&amp; data)</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>{</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    DecoratorType::merge(year, data);</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>}</div>
 </div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> FirstDecoratorT, <span class="keyword">template</span>&lt;<span class="keyword">class</span>, <span class="keywordtype">int</span>&gt; <span class="keyword">class </span>DecoratorForSpatialAggregateT&gt;</div>
-<div class="foldopen" id="foldopen00060" data-start="{" data-end="}">
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno"><a class="line" href="classAntares_1_1Solver_1_1Variable_1_1Results.html#a3375b5d47c33bbc6ac7389704c9940c2">   60</a></span><span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classAntares_1_1Solver_1_1Variable_1_1Results.html#a3375b5d47c33bbc6ac7389704c9940c2">Results&lt;FirstDecoratorT, DecoratorForSpatialAggregateT&gt;::reset</a>()</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>{</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    DecoratorType::reset();</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>}</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> FirstDecoratorT, <span class="keyword">template</span>&lt;<span class="keyword">class</span>, <span class="keywordtype">int</span>&gt; <span class="keyword">class </span>DecoratorForSpatialAggregateT&gt;</div>
+<div class="foldopen" id="foldopen00063" data-start="{" data-end="}">
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno"><a class="line" href="classAntares_1_1Solver_1_1Variable_1_1Results.html#a3375b5d47c33bbc6ac7389704c9940c2">   63</a></span><span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classAntares_1_1Solver_1_1Variable_1_1Results.html#a3375b5d47c33bbc6ac7389704c9940c2">Results&lt;FirstDecoratorT, DecoratorForSpatialAggregateT&gt;::reset</a>()</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>{</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    DecoratorType::reset();</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>}</div>
 </div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>} <span class="comment">// namespace Variable</span></div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>} <span class="comment">// namespace Solver</span></div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>} <span class="comment">// namespace Antares</span></div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span> </div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span><span class="preprocessor">#endif </span><span class="comment">// __SOLVER_VARIABLE_STORAGE_RESULTS_HXX__</span></div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>} <span class="comment">// namespace Variable</span></div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>} <span class="comment">// namespace Solver</span></div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>} <span class="comment">// namespace Antares</span></div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span><span class="preprocessor">#endif </span><span class="comment">// __SOLVER_VARIABLE_STORAGE_RESULTS_HXX__</span></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Study_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a></div><div class="ttdef"><b>Definition</b> study.h:60</div></div>
-<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1IntermediateValues_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html">Antares::Solver::Variable::IntermediateValues</a></div><div class="ttdoc">Temporary buffer for allocating results for a single year.</div><div class="ttdef"><b>Definition</b> intermediate.h:44</div></div>
-<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Results_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Results.html">Antares::Solver::Variable::Results</a></div><div class="ttdef"><b>Definition</b> results.h:47</div></div>
-<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Results_html_a3375b5d47c33bbc6ac7389704c9940c2"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Results.html#a3375b5d47c33bbc6ac7389704c9940c2">Antares::Solver::Variable::Results::reset</a></div><div class="ttdeci">void reset()</div><div class="ttdoc">Reset all values.</div><div class="ttdef"><b>Definition</b> results.hxx:60</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1IntermediateValues_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html">Antares::Solver::Variable::IntermediateValues</a></div><div class="ttdoc">Temporary buffer for allocating results for a single year.</div><div class="ttdef"><b>Definition</b> intermediate.h:46</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Results_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Results.html">Antares::Solver::Variable::Results</a></div><div class="ttdef"><b>Definition</b> results.h:48</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Results_html_a3375b5d47c33bbc6ac7389704c9940c2"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Results.html#a3375b5d47c33bbc6ac7389704c9940c2">Antares::Solver::Variable::Results::reset</a></div><div class="ttdeci">void reset()</div><div class="ttdoc">Reset all values.</div><div class="ttdef"><b>Definition</b> results.hxx:63</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Results_html_aad087abd96ae1fab8c64a78a7457d778"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Results.html#aad087abd96ae1fab8c64a78a7457d778">Antares::Solver::Variable::Results::initializeFromStudy</a></div><div class="ttdeci">void initializeFromStudy(Antares::Data::Study &amp;)</div><div class="ttdoc">Initialize result outputs from study.</div><div class="ttdef"><b>Definition</b> results.hxx:31</div></div>
-<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Results_html_ab00d2cca3f033160690d4bf697d1d666"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Results.html#ab00d2cca3f033160690d4bf697d1d666">Antares::Solver::Variable::Results::merge</a></div><div class="ttdeci">void merge(uint year, const IntermediateValues &amp;data)</div><div class="ttdoc">Merge the intermediate values.</div><div class="ttdef"><b>Definition</b> results.hxx:52</div></div>
-<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1SurveyResults_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html">Antares::Solver::Variable::SurveyResults</a></div><div class="ttdoc">Class utility for building CSV results files.</div><div class="ttdef"><b>Definition</b> surveyresults.h:39</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Results_html_ab00d2cca3f033160690d4bf697d1d666"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Results.html#ab00d2cca3f033160690d4bf697d1d666">Antares::Solver::Variable::Results::merge</a></div><div class="ttdeci">void merge(uint year, const IntermediateValues &amp;data)</div><div class="ttdoc">Merge the intermediate values.</div><div class="ttdef"><b>Definition</b> results.hxx:55</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1SurveyResults_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html">Antares::Solver::Variable::SurveyResults</a></div><div class="ttdoc">Class utility for building CSV results files.</div><div class="ttdef"><b>Definition</b> surveyresults.h:41</div></div>
 <div class="ttc" id="aclassVariable_html"><div class="ttname"><a href="classVariable.html">Variable</a></div><div class="ttdef"><b>Definition</b> variable.h:25</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

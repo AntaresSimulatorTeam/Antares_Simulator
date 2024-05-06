@@ -167,26 +167,27 @@ $(document).ready(function(){initNavTree('solarTSNumberData_8h_source.html','');
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#include &quot;TSnumberData.h&quot;</span></div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="keyword">namespace </span>Antares::Data::ScenarioBuilder</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>{</div>
-<div class="foldopen" id="foldopen00031" data-start="{" data-end="};">
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1solarTSNumberData.html">   31</a></span><span class="keyword">class </span><a class="code hl_class" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1solarTSNumberData.html">solarTSNumberData</a> : <span class="keyword">public</span> <a class="code hl_class" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1TSNumberData.html">TSNumberData</a></div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>{</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1solarTSNumberData.html#a272f8bffff5433729d4ded5157908e37">apply</a>(<a class="code hl_class" href="classAntares_1_1Data_1_1Study.html">Study</a>&amp; study) <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    CString&lt;512, false&gt; get_prefix() <span class="keyword">const override</span>;</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    uint get_tsGenCount(<span class="keyword">const</span> <a class="code hl_class" href="classAntares_1_1Data_1_1Study.html">Study</a>&amp; study) <span class="keyword">const override</span>;</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>};</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="keyword">namespace </span>Antares::Data::ScenarioBuilder</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>{</div>
+<div class="foldopen" id="foldopen00032" data-start="{" data-end="};">
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1solarTSNumberData.html">   32</a></span><span class="keyword">class </span><a class="code hl_class" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1solarTSNumberData.html">solarTSNumberData</a>: <span class="keyword">public</span> <a class="code hl_class" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1TSNumberData.html">TSNumberData</a></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>{</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1solarTSNumberData.html#a272f8bffff5433729d4ded5157908e37">apply</a>(<a class="code hl_class" href="classAntares_1_1Data_1_1Study.html">Study</a>&amp; study) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    CString&lt;512, false&gt; get_prefix() <span class="keyword">const override</span>;</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    uint get_tsGenCount(<span class="keyword">const</span> <a class="code hl_class" href="classAntares_1_1Data_1_1Study.html">Study</a>&amp; study) <span class="keyword">const override</span>;</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>};</div>
 </div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="keyword">inline</span> CString&lt;512, false&gt; solarTSNumberData::get_prefix()<span class="keyword"> const</span></div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="keyword"></span>{</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="keywordflow">return</span> <span class="stringliteral">&quot;s,&quot;</span>;</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>}</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="keyword">inline</span> CString&lt;512, false&gt; solarTSNumberData::get_prefix()<span class="keyword"> const</span></div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="keyword"></span>{</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="keywordflow">return</span> <span class="stringliteral">&quot;s,&quot;</span>;</div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>}</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>} <span class="comment">// namespace Antares::Data::ScenarioBuilder</span></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1ScenarioBuilder_1_1TSNumberData_html"><div class="ttname"><a href="classAntares_1_1Data_1_1ScenarioBuilder_1_1TSNumberData.html">Antares::Data::ScenarioBuilder::TSNumberData</a></div><div class="ttdoc">Rules for TS numbers, for all years and a single timeseries.</div><div class="ttdef"><b>Definition</b> TSnumberData.h:32</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1ScenarioBuilder_1_1solarTSNumberData_html"><div class="ttname"><a href="classAntares_1_1Data_1_1ScenarioBuilder_1_1solarTSNumberData.html">Antares::Data::ScenarioBuilder::solarTSNumberData</a></div><div class="ttdef"><b>Definition</b> solarTSNumberData.h:32</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1ScenarioBuilder_1_1solarTSNumberData_html_a272f8bffff5433729d4ded5157908e37"><div class="ttname"><a href="classAntares_1_1Data_1_1ScenarioBuilder_1_1solarTSNumberData.html#a272f8bffff5433729d4ded5157908e37">Antares::Data::ScenarioBuilder::solarTSNumberData::apply</a></div><div class="ttdeci">bool apply(Study &amp;study) override</div><div class="ttdoc">Apply the changes to the study corresponding data (time series, hydro levels, ...)</div><div class="ttdef"><b>Definition</b> SolarTSNumberData.cpp:39</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1ScenarioBuilder_1_1solarTSNumberData_html"><div class="ttname"><a href="classAntares_1_1Data_1_1ScenarioBuilder_1_1solarTSNumberData.html">Antares::Data::ScenarioBuilder::solarTSNumberData</a></div><div class="ttdef"><b>Definition</b> solarTSNumberData.h:33</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1ScenarioBuilder_1_1solarTSNumberData_html_a272f8bffff5433729d4ded5157908e37"><div class="ttname"><a href="classAntares_1_1Data_1_1ScenarioBuilder_1_1solarTSNumberData.html#a272f8bffff5433729d4ded5157908e37">Antares::Data::ScenarioBuilder::solarTSNumberData::apply</a></div><div class="ttdeci">bool apply(Study &amp;study) override</div><div class="ttdoc">Apply the changes to the study corresponding data (time series, hydro levels, ...)</div><div class="ttdef"><b>Definition</b> SolarTSNumberData.cpp:40</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Study_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a></div><div class="ttdef"><b>Definition</b> study.h:60</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

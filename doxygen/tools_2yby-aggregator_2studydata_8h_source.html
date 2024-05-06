@@ -162,47 +162,50 @@ $(document).ready(function(){initNavTree('tools_2yby-aggregator_2studydata_8h_so
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#ifndef __STUDY_STUDY_DATA_AGGREGATOR_STUDY_DATA_H__</span></div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#define __STUDY_STUDY_DATA_AGGREGATOR_STUDY_DATA_H__</span></div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;yuni/yuni.h&gt;</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &lt;yuni/core/string.h&gt;</span></div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &lt;memory&gt;</span></div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &lt;set&gt;</span></div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
-<div class="foldopen" id="foldopen00029" data-start="{" data-end="};">
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno"><a class="line" href="classStudyData.html">   29</a></span><span class="keyword">class </span><a class="code hl_class" href="classStudyData.html">StudyData</a> final</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>{</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="classStudyData.html#afd28a35c2a5d4eacabb6ac999e0bb3e7">   33</a></span>    <span class="keyword">using </span><a class="code hl_typedef" href="classStudyData.html#afd28a35c2a5d4eacabb6ac999e0bb3e7">Ptr</a> = std::shared_ptr&lt;StudyData&gt;;</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno"><a class="line" href="classStudyData.html#a39dbd52c27f50e27fa292f8857146e41">   35</a></span>    <span class="keyword">using </span><a class="code hl_typedef" href="classStudyData.html#a39dbd52c27f50e27fa292f8857146e41">Vector</a> = std::vector&lt;Ptr&gt;;</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno"><a class="line" href="classStudyData.html#ab0cb4f587c6f86084f64d7a1fea90e9b">   37</a></span>    <span class="keyword">using </span><a class="code hl_typedef" href="classStudyData.html#ab0cb4f587c6f86084f64d7a1fea90e9b">ShortString</a> = Yuni::CString&lt;10, false&gt;;</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="classStudyData.html#ab8124828569c97b656cb24c380e88321">   39</a></span>    <span class="keyword">using </span><a class="code hl_typedef" href="classStudyData.html#ab8124828569c97b656cb24c380e88321">ShortString512</a> = Yuni::CString&lt;512, false&gt;;</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> StringT&gt;</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <a class="code hl_class" href="classStudyData.html">StudyData</a>(<span class="keyword">const</span> StringT&amp; n, uint i) : <a class="code hl_variable" href="classStudyData.html#a8f6d4379748e859804f2ee469a056cf9">index</a>(i), <a class="code hl_variable" href="classStudyData.html#ab71b327bb8c6a08357f9e4545e3c0e08">name</a>(n)</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    {</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    }</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> StringT&gt;</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="keywordtype">void</span> append(StringT&amp; out)<span class="keyword"> const</span></div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="keyword">    </span>{</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        out &lt;&lt; <a class="code hl_variable" href="classStudyData.html#ab71b327bb8c6a08357f9e4545e3c0e08">name</a>;</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    }</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno"><a class="line" href="classStudyData.html#a8f6d4379748e859804f2ee469a056cf9">   55</a></span>    uint <a class="code hl_variable" href="classStudyData.html#a8f6d4379748e859804f2ee469a056cf9">index</a>;</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno"><a class="line" href="classStudyData.html#ab71b327bb8c6a08357f9e4545e3c0e08">   57</a></span>    <span class="keyword">const</span> <a class="code hl_typedef" href="classStudyData.html#ab8124828569c97b656cb24c380e88321">ShortString512</a> <a class="code hl_variable" href="classStudyData.html#ab71b327bb8c6a08357f9e4545e3c0e08">name</a>;</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>}; <span class="comment">// class StudyData</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;memory&gt;</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &lt;set&gt;</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &lt;yuni/yuni.h&gt;</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#include &lt;yuni/core/string.h&gt;</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
+<div class="foldopen" id="foldopen00030" data-start="{" data-end="};">
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="classStudyData.html">   30</a></span><span class="keyword">class </span><a class="code hl_class" href="classStudyData.html">StudyData</a> final</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>{</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="classStudyData.html#afd28a35c2a5d4eacabb6ac999e0bb3e7">   34</a></span>    <span class="keyword">using </span><a class="code hl_typedef" href="classStudyData.html#afd28a35c2a5d4eacabb6ac999e0bb3e7">Ptr</a> = std::shared_ptr&lt;StudyData&gt;;</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="classStudyData.html#a39dbd52c27f50e27fa292f8857146e41">   36</a></span>    <span class="keyword">using </span><a class="code hl_typedef" href="classStudyData.html#a39dbd52c27f50e27fa292f8857146e41">Vector</a> = std::vector&lt;Ptr&gt;;</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="classStudyData.html#ab0cb4f587c6f86084f64d7a1fea90e9b">   38</a></span>    <span class="keyword">using </span><a class="code hl_typedef" href="classStudyData.html#ab0cb4f587c6f86084f64d7a1fea90e9b">ShortString</a> = Yuni::CString&lt;10, false&gt;;</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno"><a class="line" href="classStudyData.html#ab8124828569c97b656cb24c380e88321">   40</a></span>    <span class="keyword">using </span><a class="code hl_typedef" href="classStudyData.html#ab8124828569c97b656cb24c380e88321">ShortString512</a> = Yuni::CString&lt;512, false&gt;;</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> StringT&gt;</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    <a class="code hl_class" href="classStudyData.html">StudyData</a>(<span class="keyword">const</span> StringT&amp; n, uint i):</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        <a class="code hl_variable" href="classStudyData.html#a8f6d4379748e859804f2ee469a056cf9">index</a>(i),</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        <a class="code hl_variable" href="classStudyData.html#ab71b327bb8c6a08357f9e4545e3c0e08">name</a>(n)</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    {</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    }</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> StringT&gt;</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="keywordtype">void</span> append(StringT&amp; out)<span class="keyword"> const</span></div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="keyword">    </span>{</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        out &lt;&lt; <a class="code hl_variable" href="classStudyData.html#ab71b327bb8c6a08357f9e4545e3c0e08">name</a>;</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    }</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno"><a class="line" href="classStudyData.html#a8f6d4379748e859804f2ee469a056cf9">   58</a></span>    uint <a class="code hl_variable" href="classStudyData.html#a8f6d4379748e859804f2ee469a056cf9">index</a>;</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno"><a class="line" href="classStudyData.html#ab71b327bb8c6a08357f9e4545e3c0e08">   60</a></span>    <span class="keyword">const</span> <a class="code hl_typedef" href="classStudyData.html#ab8124828569c97b656cb24c380e88321">ShortString512</a> <a class="code hl_variable" href="classStudyData.html#ab71b327bb8c6a08357f9e4545e3c0e08">name</a>;</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>}; <span class="comment">// class StudyData</span></div>
 </div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="preprocessor">#endif </span><span class="comment">// __STUDY_STUDY_DATA_AGGREGATOR_STUDY_DATA_H__</span></div>
-<div class="ttc" id="aclassStudyData_html"><div class="ttname"><a href="classStudyData.html">StudyData</a></div><div class="ttdef"><b>Definition</b> studydata.h:30</div></div>
-<div class="ttc" id="aclassStudyData_html_a39dbd52c27f50e27fa292f8857146e41"><div class="ttname"><a href="classStudyData.html#a39dbd52c27f50e27fa292f8857146e41">StudyData::Vector</a></div><div class="ttdeci">std::vector&lt; Ptr &gt; Vector</div><div class="ttdoc">Vector.</div><div class="ttdef"><b>Definition</b> studydata.h:35</div></div>
-<div class="ttc" id="aclassStudyData_html_a8f6d4379748e859804f2ee469a056cf9"><div class="ttname"><a href="classStudyData.html#a8f6d4379748e859804f2ee469a056cf9">StudyData::index</a></div><div class="ttdeci">uint index</div><div class="ttdoc">Local index.</div><div class="ttdef"><b>Definition</b> studydata.h:55</div></div>
-<div class="ttc" id="aclassStudyData_html_ab0cb4f587c6f86084f64d7a1fea90e9b"><div class="ttname"><a href="classStudyData.html#ab0cb4f587c6f86084f64d7a1fea90e9b">StudyData::ShortString</a></div><div class="ttdeci">Yuni::CString&lt; 10, false &gt; ShortString</div><div class="ttdoc">Short string.</div><div class="ttdef"><b>Definition</b> studydata.h:37</div></div>
-<div class="ttc" id="aclassStudyData_html_ab71b327bb8c6a08357f9e4545e3c0e08"><div class="ttname"><a href="classStudyData.html#ab71b327bb8c6a08357f9e4545e3c0e08">StudyData::name</a></div><div class="ttdeci">const ShortString512 name</div><div class="ttdoc">type + Name of the area or the link</div><div class="ttdef"><b>Definition</b> studydata.h:57</div></div>
-<div class="ttc" id="aclassStudyData_html_ab8124828569c97b656cb24c380e88321"><div class="ttname"><a href="classStudyData.html#ab8124828569c97b656cb24c380e88321">StudyData::ShortString512</a></div><div class="ttdeci">Yuni::CString&lt; 512, false &gt; ShortString512</div><div class="ttdoc">Short string.</div><div class="ttdef"><b>Definition</b> studydata.h:39</div></div>
-<div class="ttc" id="aclassStudyData_html_afd28a35c2a5d4eacabb6ac999e0bb3e7"><div class="ttname"><a href="classStudyData.html#afd28a35c2a5d4eacabb6ac999e0bb3e7">StudyData::Ptr</a></div><div class="ttdeci">std::shared_ptr&lt; StudyData &gt; Ptr</div><div class="ttdoc">The most suitable smart pointer.</div><div class="ttdef"><b>Definition</b> studydata.h:33</div></div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="preprocessor">#endif </span><span class="comment">// __STUDY_STUDY_DATA_AGGREGATOR_STUDY_DATA_H__</span></div>
+<div class="ttc" id="aclassStudyData_html"><div class="ttname"><a href="classStudyData.html">StudyData</a></div><div class="ttdef"><b>Definition</b> studydata.h:31</div></div>
+<div class="ttc" id="aclassStudyData_html_a39dbd52c27f50e27fa292f8857146e41"><div class="ttname"><a href="classStudyData.html#a39dbd52c27f50e27fa292f8857146e41">StudyData::Vector</a></div><div class="ttdeci">std::vector&lt; Ptr &gt; Vector</div><div class="ttdoc">Vector.</div><div class="ttdef"><b>Definition</b> studydata.h:36</div></div>
+<div class="ttc" id="aclassStudyData_html_a8f6d4379748e859804f2ee469a056cf9"><div class="ttname"><a href="classStudyData.html#a8f6d4379748e859804f2ee469a056cf9">StudyData::index</a></div><div class="ttdeci">uint index</div><div class="ttdoc">Local index.</div><div class="ttdef"><b>Definition</b> studydata.h:58</div></div>
+<div class="ttc" id="aclassStudyData_html_ab0cb4f587c6f86084f64d7a1fea90e9b"><div class="ttname"><a href="classStudyData.html#ab0cb4f587c6f86084f64d7a1fea90e9b">StudyData::ShortString</a></div><div class="ttdeci">Yuni::CString&lt; 10, false &gt; ShortString</div><div class="ttdoc">Short string.</div><div class="ttdef"><b>Definition</b> studydata.h:38</div></div>
+<div class="ttc" id="aclassStudyData_html_ab71b327bb8c6a08357f9e4545e3c0e08"><div class="ttname"><a href="classStudyData.html#ab71b327bb8c6a08357f9e4545e3c0e08">StudyData::name</a></div><div class="ttdeci">const ShortString512 name</div><div class="ttdoc">type + Name of the area or the link</div><div class="ttdef"><b>Definition</b> studydata.h:60</div></div>
+<div class="ttc" id="aclassStudyData_html_ab8124828569c97b656cb24c380e88321"><div class="ttname"><a href="classStudyData.html#ab8124828569c97b656cb24c380e88321">StudyData::ShortString512</a></div><div class="ttdeci">Yuni::CString&lt; 512, false &gt; ShortString512</div><div class="ttdoc">Short string.</div><div class="ttdef"><b>Definition</b> studydata.h:40</div></div>
+<div class="ttc" id="aclassStudyData_html_afd28a35c2a5d4eacabb6ac999e0bb3e7"><div class="ttname"><a href="classStudyData.html#afd28a35c2a5d4eacabb6ac999e0bb3e7">StudyData::Ptr</a></div><div class="ttdeci">std::shared_ptr&lt; StudyData &gt; Ptr</div><div class="ttdoc">The most suitable smart pointer.</div><div class="ttdef"><b>Definition</b> studydata.h:34</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

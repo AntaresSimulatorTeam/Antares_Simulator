@@ -209,11 +209,12 @@ $(document).ready(function(){initNavTree('store-timeseries-numbers_8hxx_source.h
 <div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span><span class="keywordtype">void</span> storeTimeseriesNumbers(Solver::IResultWriter&amp; writer, <span class="keyword">const</span> AreaList&amp; area)</div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>{</div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    <span class="comment">// Each area in the list</span></div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    area.each([&amp;writer](<span class="keyword">const</span> Area&amp; a) { singleAreaStoreTimeseriesNumbers&lt;TimeSeriesT&gt;(writer, a); });</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>}</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>} <span class="comment">//namespace Antares::Data</span></div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span><span class="preprocessor">#endif </span><span class="comment">// __ANTARES_LIBS_STUDY_STORE_TIMESERIES_HXX__</span></div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    area.each([&amp;writer](<span class="keyword">const</span> Area&amp; a)</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>              { singleAreaStoreTimeseriesNumbers&lt;TimeSeriesT&gt;(writer, a); });</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>}</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>} <span class="comment">// namespace Antares::Data</span></div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span><span class="preprocessor">#endif </span><span class="comment">// __ANTARES_LIBS_STUDY_STORE_TIMESERIES_HXX__</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

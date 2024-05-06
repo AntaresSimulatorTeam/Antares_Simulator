@@ -162,57 +162,63 @@ $(document).ready(function(){initNavTree('filejob_8inc_8hxx_source.html',''); in
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#ifndef __ANTARES_FS_WALKER_FILEJOB_H__</span></div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#define __ANTARES_FS_WALKER_FILEJOB_H__</span></div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="keyword">using namespace </span>Yuni;</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &quot;registry.inc.hxx&quot;</span></div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="keyword">namespace </span>FSWalker</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>{</div>
-<div class="foldopen" id="foldopen00028" data-start="{" data-end="};">
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="classFSWalker_1_1FileJob.html">   28</a></span><span class="keyword">class </span><a class="code hl_class" href="classFSWalker_1_1FileJob.html">FileJob</a> : <span class="keyword">public</span> <a class="code hl_class" href="classFSWalker_1_1IJob.html">IJob</a></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="keyword">using namespace </span>Yuni;</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keyword">namespace </span>FSWalker</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>{</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    <a class="code hl_class" href="classFSWalker_1_1FileJob.html">FileJob</a>(<a class="code hl_class" href="classFSWalker_1_1EventsRegistry.html">EventsRegistry</a>&amp; <a class="code hl_variable" href="classFSWalker_1_1FileJob.html#a912183db9eb4c9c0831be8d021f6e713">events</a>) : <a class="code hl_variable" href="classFSWalker_1_1FileJob.html#a912183db9eb4c9c0831be8d021f6e713">events</a>(<a class="code hl_variable" href="classFSWalker_1_1FileJob.html#a912183db9eb4c9c0831be8d021f6e713">events</a>)</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    {</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    }</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <span class="keyword">virtual</span> <a class="code hl_class" href="classFSWalker_1_1FileJob.html">~FileJob</a>()</div>
+<div class="foldopen" id="foldopen00030" data-start="{" data-end="};">
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="classFSWalker_1_1FileJob.html">   30</a></span><span class="keyword">class </span><a class="code hl_class" href="classFSWalker_1_1FileJob.html">FileJob</a>: <span class="keyword">public</span> <a class="code hl_class" href="classFSWalker_1_1IJob.html">IJob</a></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>{</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    <a class="code hl_class" href="classFSWalker_1_1FileJob.html">FileJob</a>(<a class="code hl_class" href="classFSWalker_1_1EventsRegistry.html">EventsRegistry</a>&amp; <a class="code hl_variable" href="classFSWalker_1_1FileJob.html#a912183db9eb4c9c0831be8d021f6e713">events</a>):</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>        <a class="code hl_variable" href="classFSWalker_1_1FileJob.html#a912183db9eb4c9c0831be8d021f6e713">events</a>(<a class="code hl_variable" href="classFSWalker_1_1FileJob.html#a912183db9eb4c9c0831be8d021f6e713">events</a>)</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    {</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    }</div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno"><a class="line" href="classFSWalker_1_1FileJob.html#ad8544807d242d347996ff65494ba7e8e">   40</a></span>    String::Vector <a class="code hl_variable" href="classFSWalker_1_1FileJob.html#ad8544807d242d347996ff65494ba7e8e">files</a>;</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno"><a class="line" href="classFSWalker_1_1FileJob.html#acebc112215a82f7ddc8a6e37e7f538f1">   42</a></span>    String::Vector <a class="code hl_variable" href="classFSWalker_1_1FileJob.html#acebc112215a82f7ddc8a6e37e7f538f1">parents</a>;</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno"><a class="line" href="classFSWalker_1_1FileJob.html#a52e6946eab304a4a3c4f7b6226f4bf1f">   44</a></span>    std::vector&lt;uint64_t&gt; <a class="code hl_variable" href="classFSWalker_1_1FileJob.html#a52e6946eab304a4a3c4f7b6226f4bf1f">filessize</a>;</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="classFSWalker_1_1FileJob.html#a6c215690b8b3b8481774ff2fa44cebfb">   46</a></span>    std::vector&lt;int64_t&gt; <a class="code hl_variable" href="classFSWalker_1_1FileJob.html#a6c215690b8b3b8481774ff2fa44cebfb">modified</a>;</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno"><a class="line" href="classFSWalker_1_1FileJob.html#a912183db9eb4c9c0831be8d021f6e713">   48</a></span>    <a class="code hl_class" href="classFSWalker_1_1EventsRegistry.html">EventsRegistry</a>&amp; <a class="code hl_variable" href="classFSWalker_1_1FileJob.html#a912183db9eb4c9c0831be8d021f6e713">events</a>;</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="keyword">protected</span>:</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="keyword">virtual</span> <span class="keywordtype">void</span> onExecute();</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>}; <span class="comment">// class FileJob</span></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    <span class="keyword">virtual</span> <a class="code hl_class" href="classFSWalker_1_1FileJob.html">~FileJob</a>()</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    {</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    }</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno"><a class="line" href="classFSWalker_1_1FileJob.html#ad8544807d242d347996ff65494ba7e8e">   44</a></span>    String::Vector <a class="code hl_variable" href="classFSWalker_1_1FileJob.html#ad8544807d242d347996ff65494ba7e8e">files</a>;</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="classFSWalker_1_1FileJob.html#acebc112215a82f7ddc8a6e37e7f538f1">   46</a></span>    String::Vector <a class="code hl_variable" href="classFSWalker_1_1FileJob.html#acebc112215a82f7ddc8a6e37e7f538f1">parents</a>;</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno"><a class="line" href="classFSWalker_1_1FileJob.html#a52e6946eab304a4a3c4f7b6226f4bf1f">   48</a></span>    std::vector&lt;uint64_t&gt; <a class="code hl_variable" href="classFSWalker_1_1FileJob.html#a52e6946eab304a4a3c4f7b6226f4bf1f">filessize</a>;</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno"><a class="line" href="classFSWalker_1_1FileJob.html#a6c215690b8b3b8481774ff2fa44cebfb">   50</a></span>    std::vector&lt;int64_t&gt; <a class="code hl_variable" href="classFSWalker_1_1FileJob.html#a6c215690b8b3b8481774ff2fa44cebfb">modified</a>;</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno"><a class="line" href="classFSWalker_1_1FileJob.html#a912183db9eb4c9c0831be8d021f6e713">   52</a></span>    <a class="code hl_class" href="classFSWalker_1_1EventsRegistry.html">EventsRegistry</a>&amp; <a class="code hl_variable" href="classFSWalker_1_1FileJob.html#a912183db9eb4c9c0831be8d021f6e713">events</a>;</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="keyword">protected</span>:</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="keyword">virtual</span> <span class="keywordtype">void</span> onExecute();</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>}; <span class="comment">// class FileJob</span></div>
 </div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="keywordtype">void</span> FileJob::onExecute()</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>{</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="keywordflow">for</span> (uint e = 0; e != <a class="code hl_variable" href="classFSWalker_1_1FileJob.html#a912183db9eb4c9c0831be8d021f6e713">events</a>.file.access.size(); ++e)</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    {</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        <span class="comment">// event to trigger</span></div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>        <span class="keyword">auto</span> access = <a class="code hl_variable" href="classFSWalker_1_1FileJob.html#a912183db9eb4c9c0831be8d021f6e713">events</a>.file.access[e];</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>        <span class="keywordtype">void</span>* user = <a class="code hl_variable" href="classFSWalker_1_1FileJob.html#a912183db9eb4c9c0831be8d021f6e713">events</a>.file.userdata[e];</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        <span class="keywordflow">for</span> (uint i = 0; i != <a class="code hl_variable" href="classFSWalker_1_1FileJob.html#ad8544807d242d347996ff65494ba7e8e">files</a>.size(); ++i)</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>            (*access)(<a class="code hl_variable" href="classFSWalker_1_1FileJob.html#ad8544807d242d347996ff65494ba7e8e">files</a>[i], <a class="code hl_variable" href="classFSWalker_1_1FileJob.html#acebc112215a82f7ddc8a6e37e7f538f1">parents</a>[i], <a class="code hl_variable" href="classFSWalker_1_1FileJob.html#a6c215690b8b3b8481774ff2fa44cebfb">modified</a>[i], <a class="code hl_variable" href="classFSWalker_1_1FileJob.html#a52e6946eab304a4a3c4f7b6226f4bf1f">filessize</a>[i], user);</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    }</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>}</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>} <span class="comment">// namespace FSWalker</span></div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span><span class="preprocessor">#endif </span><span class="comment">// __ANTARES_FS_WALKER_FILEJOB_H__</span></div>
-<div class="ttc" id="aclassFSWalker_1_1EventsRegistry_html"><div class="ttname"><a href="classFSWalker_1_1EventsRegistry.html">FSWalker::EventsRegistry</a></div><div class="ttdef"><b>Definition</b> registry.inc.hxx:31</div></div>
-<div class="ttc" id="aclassFSWalker_1_1FileJob_html"><div class="ttname"><a href="classFSWalker_1_1FileJob.html">FSWalker::FileJob</a></div><div class="ttdef"><b>Definition</b> filejob.inc.hxx:29</div></div>
-<div class="ttc" id="aclassFSWalker_1_1FileJob_html_a52e6946eab304a4a3c4f7b6226f4bf1f"><div class="ttname"><a href="classFSWalker_1_1FileJob.html#a52e6946eab304a4a3c4f7b6226f4bf1f">FSWalker::FileJob::filessize</a></div><div class="ttdeci">std::vector&lt; uint64_t &gt; filessize</div><div class="ttdoc">All associated sizes.</div><div class="ttdef"><b>Definition</b> filejob.inc.hxx:44</div></div>
-<div class="ttc" id="aclassFSWalker_1_1FileJob_html_a6c215690b8b3b8481774ff2fa44cebfb"><div class="ttname"><a href="classFSWalker_1_1FileJob.html#a6c215690b8b3b8481774ff2fa44cebfb">FSWalker::FileJob::modified</a></div><div class="ttdeci">std::vector&lt; int64_t &gt; modified</div><div class="ttdoc">Modification.</div><div class="ttdef"><b>Definition</b> filejob.inc.hxx:46</div></div>
-<div class="ttc" id="aclassFSWalker_1_1FileJob_html_a912183db9eb4c9c0831be8d021f6e713"><div class="ttname"><a href="classFSWalker_1_1FileJob.html#a912183db9eb4c9c0831be8d021f6e713">FSWalker::FileJob::events</a></div><div class="ttdeci">EventsRegistry &amp; events</div><div class="ttdoc">Reference.</div><div class="ttdef"><b>Definition</b> filejob.inc.hxx:48</div></div>
-<div class="ttc" id="aclassFSWalker_1_1FileJob_html_acebc112215a82f7ddc8a6e37e7f538f1"><div class="ttname"><a href="classFSWalker_1_1FileJob.html#acebc112215a82f7ddc8a6e37e7f538f1">FSWalker::FileJob::parents</a></div><div class="ttdeci">String::Vector parents</div><div class="ttdoc">Parent.</div><div class="ttdef"><b>Definition</b> filejob.inc.hxx:42</div></div>
-<div class="ttc" id="aclassFSWalker_1_1FileJob_html_ad8544807d242d347996ff65494ba7e8e"><div class="ttname"><a href="classFSWalker_1_1FileJob.html#ad8544807d242d347996ff65494ba7e8e">FSWalker::FileJob::files</a></div><div class="ttdeci">String::Vector files</div><div class="ttdoc">All files.</div><div class="ttdef"><b>Definition</b> filejob.inc.hxx:40</div></div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span><span class="keywordtype">void</span> FileJob::onExecute()</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>{</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <span class="keywordflow">for</span> (uint e = 0; e != <a class="code hl_variable" href="classFSWalker_1_1FileJob.html#a912183db9eb4c9c0831be8d021f6e713">events</a>.file.access.size(); ++e)</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    {</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        <span class="comment">// event to trigger</span></div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>        <span class="keyword">auto</span> access = <a class="code hl_variable" href="classFSWalker_1_1FileJob.html#a912183db9eb4c9c0831be8d021f6e713">events</a>.file.access[e];</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>        <span class="keywordtype">void</span>* user = <a class="code hl_variable" href="classFSWalker_1_1FileJob.html#a912183db9eb4c9c0831be8d021f6e713">events</a>.file.userdata[e];</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>        <span class="keywordflow">for</span> (uint i = 0; i != <a class="code hl_variable" href="classFSWalker_1_1FileJob.html#ad8544807d242d347996ff65494ba7e8e">files</a>.size(); ++i)</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>        {</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>            (*access)(<a class="code hl_variable" href="classFSWalker_1_1FileJob.html#ad8544807d242d347996ff65494ba7e8e">files</a>[i], <a class="code hl_variable" href="classFSWalker_1_1FileJob.html#acebc112215a82f7ddc8a6e37e7f538f1">parents</a>[i], <a class="code hl_variable" href="classFSWalker_1_1FileJob.html#a6c215690b8b3b8481774ff2fa44cebfb">modified</a>[i], <a class="code hl_variable" href="classFSWalker_1_1FileJob.html#a52e6946eab304a4a3c4f7b6226f4bf1f">filessize</a>[i], user);</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>        }</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    }</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>}</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>} <span class="comment">// namespace FSWalker</span></div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span><span class="preprocessor">#endif </span><span class="comment">// __ANTARES_FS_WALKER_FILEJOB_H__</span></div>
+<div class="ttc" id="aclassFSWalker_1_1EventsRegistry_html"><div class="ttname"><a href="classFSWalker_1_1EventsRegistry.html">FSWalker::EventsRegistry</a></div><div class="ttdef"><b>Definition</b> registry.inc.hxx:32</div></div>
+<div class="ttc" id="aclassFSWalker_1_1FileJob_html"><div class="ttname"><a href="classFSWalker_1_1FileJob.html">FSWalker::FileJob</a></div><div class="ttdef"><b>Definition</b> filejob.inc.hxx:31</div></div>
+<div class="ttc" id="aclassFSWalker_1_1FileJob_html_a52e6946eab304a4a3c4f7b6226f4bf1f"><div class="ttname"><a href="classFSWalker_1_1FileJob.html#a52e6946eab304a4a3c4f7b6226f4bf1f">FSWalker::FileJob::filessize</a></div><div class="ttdeci">std::vector&lt; uint64_t &gt; filessize</div><div class="ttdoc">All associated sizes.</div><div class="ttdef"><b>Definition</b> filejob.inc.hxx:48</div></div>
+<div class="ttc" id="aclassFSWalker_1_1FileJob_html_a6c215690b8b3b8481774ff2fa44cebfb"><div class="ttname"><a href="classFSWalker_1_1FileJob.html#a6c215690b8b3b8481774ff2fa44cebfb">FSWalker::FileJob::modified</a></div><div class="ttdeci">std::vector&lt; int64_t &gt; modified</div><div class="ttdoc">Modification.</div><div class="ttdef"><b>Definition</b> filejob.inc.hxx:50</div></div>
+<div class="ttc" id="aclassFSWalker_1_1FileJob_html_a912183db9eb4c9c0831be8d021f6e713"><div class="ttname"><a href="classFSWalker_1_1FileJob.html#a912183db9eb4c9c0831be8d021f6e713">FSWalker::FileJob::events</a></div><div class="ttdeci">EventsRegistry &amp; events</div><div class="ttdoc">Reference.</div><div class="ttdef"><b>Definition</b> filejob.inc.hxx:52</div></div>
+<div class="ttc" id="aclassFSWalker_1_1FileJob_html_acebc112215a82f7ddc8a6e37e7f538f1"><div class="ttname"><a href="classFSWalker_1_1FileJob.html#acebc112215a82f7ddc8a6e37e7f538f1">FSWalker::FileJob::parents</a></div><div class="ttdeci">String::Vector parents</div><div class="ttdoc">Parent.</div><div class="ttdef"><b>Definition</b> filejob.inc.hxx:46</div></div>
+<div class="ttc" id="aclassFSWalker_1_1FileJob_html_ad8544807d242d347996ff65494ba7e8e"><div class="ttname"><a href="classFSWalker_1_1FileJob.html#ad8544807d242d347996ff65494ba7e8e">FSWalker::FileJob::files</a></div><div class="ttdeci">String::Vector files</div><div class="ttdoc">All files.</div><div class="ttdef"><b>Definition</b> filejob.inc.hxx:44</div></div>
 <div class="ttc" id="aclassFSWalker_1_1IJob_html"><div class="ttname"><a href="classFSWalker_1_1IJob.html">FSWalker::IJob</a></div><div class="ttdef"><b>Definition</b> job.h:40</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

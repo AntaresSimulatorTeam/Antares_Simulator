@@ -164,25 +164,26 @@ $(document).ready(function(){initNavTree('ConsistenceNumberOfDispatchableUnits_8
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &quot;ConstraintBuilder.h&quot;</span></div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
 <div class="foldopen" id="foldopen00028" data-start="{" data-end="};">
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="classConsistenceNumberOfDispatchableUnits.html">   28</a></span><span class="keyword">class </span><a class="code hl_class" href="classConsistenceNumberOfDispatchableUnits.html">ConsistenceNumberOfDispatchableUnits</a> : <span class="keyword">private</span> <a class="code hl_class" href="classConstraintFactory.html">ConstraintFactory</a></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="classConsistenceNumberOfDispatchableUnits.html">   28</a></span><span class="keyword">class </span><a class="code hl_class" href="classConsistenceNumberOfDispatchableUnits.html">ConsistenceNumberOfDispatchableUnits</a>: <span class="keyword">private</span> <a class="code hl_class" href="classConstraintFactory.html">ConstraintFactory</a></div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>{</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    <a class="code hl_class" href="classConsistenceNumberOfDispatchableUnits.html">ConsistenceNumberOfDispatchableUnits</a>(<a class="code hl_class" href="classConstraintBuilder.html">ConstraintBuilder</a>&amp; builder,</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>                                         <a class="code hl_struct" href="structStartUpCostsData.html">StartUpCostsData</a>&amp; data) :</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>     <a class="code hl_class" href="classConstraintFactory.html">ConstraintFactory</a>(builder), data(data)</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    <a class="code hl_class" href="classConsistenceNumberOfDispatchableUnits.html">ConsistenceNumberOfDispatchableUnits</a>(<a class="code hl_class" href="classConstraintBuilder.html">ConstraintBuilder</a>&amp; builder, <a class="code hl_struct" href="structStartUpCostsData.html">StartUpCostsData</a>&amp; data):</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        <a class="code hl_class" href="classConstraintFactory.html">ConstraintFactory</a>(builder),</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        data(data)</div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    {</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    }</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classConsistenceNumberOfDispatchableUnits.html#aecd29524ff5dd06cb34e9bd7033dca69">add</a>(<span class="keywordtype">int</span> pays, <span class="keywordtype">int</span> index, <span class="keywordtype">int</span> pdt);</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <a class="code hl_struct" href="structStartUpCostsData.html">StartUpCostsData</a>&amp; data;</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>};</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classConsistenceNumberOfDispatchableUnits.html#aecd29524ff5dd06cb34e9bd7033dca69">add</a>(<span class="keywordtype">int</span> pays, <span class="keywordtype">int</span> index, <span class="keywordtype">int</span> pdt);</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <a class="code hl_struct" href="structStartUpCostsData.html">StartUpCostsData</a>&amp; data;</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>};</div>
 </div>
 <div class="ttc" id="aclassConsistenceNumberOfDispatchableUnits_html"><div class="ttname"><a href="classConsistenceNumberOfDispatchableUnits.html">ConsistenceNumberOfDispatchableUnits</a></div><div class="ttdef"><b>Definition</b> ConsistenceNumberOfDispatchableUnits.h:29</div></div>
 <div class="ttc" id="aclassConsistenceNumberOfDispatchableUnits_html_aecd29524ff5dd06cb34e9bd7033dca69"><div class="ttname"><a href="classConsistenceNumberOfDispatchableUnits.html#aecd29524ff5dd06cb34e9bd7033dca69">ConsistenceNumberOfDispatchableUnits::add</a></div><div class="ttdeci">void add(int pays, int index, int pdt)</div><div class="ttdoc">Add variables to the constraint and update constraints Matrix.</div><div class="ttdef"><b>Definition</b> ConsistenceNumberOfDispatchableUnits.cpp:24</div></div>
-<div class="ttc" id="aclassConstraintBuilder_html"><div class="ttname"><a href="classConstraintBuilder.html">ConstraintBuilder</a></div><div class="ttdef"><b>Definition</b> ConstraintBuilder.h:72</div></div>
-<div class="ttc" id="aclassConstraintFactory_html"><div class="ttname"><a href="classConstraintFactory.html">ConstraintFactory</a></div><div class="ttdef"><b>Definition</b> ConstraintBuilder.h:239</div></div>
-<div class="ttc" id="astructStartUpCostsData_html"><div class="ttname"><a href="structStartUpCostsData.html">StartUpCostsData</a></div><div class="ttdef"><b>Definition</b> ConstraintBuilder.h:279</div></div>
+<div class="ttc" id="aclassConstraintBuilder_html"><div class="ttname"><a href="classConstraintBuilder.html">ConstraintBuilder</a></div><div class="ttdef"><b>Definition</b> ConstraintBuilder.h:73</div></div>
+<div class="ttc" id="aclassConstraintFactory_html"><div class="ttname"><a href="classConstraintFactory.html">ConstraintFactory</a></div><div class="ttdef"><b>Definition</b> ConstraintBuilder.h:244</div></div>
+<div class="ttc" id="astructStartUpCostsData_html"><div class="ttname"><a href="structStartUpCostsData.html">StartUpCostsData</a></div><div class="ttdef"><b>Definition</b> ConstraintBuilder.h:287</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

@@ -179,7 +179,7 @@ $(document).ready(function(){initNavTree('h2o2__j__donnees__mensuelles_8h_source
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    <span class="comment">/* En entree: seules les donnees ci-dessous doivent etre renseignees par l&#39;appelant apres</span></div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="comment">       avoir appele H2O2_J_Instanciation */</span></div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    <span class="keywordtype">int</span> NombreDeJoursDuMois; <span class="comment">/* A renseigner par l&#39;appelant */</span></div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="keywordtype">double</span> TurbineDuMois; <span class="comment">/* A renseigner par l&#39;appelant (somme des turbines cibles du mois) */</span></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="keywordtype">double</span> TurbineDuMois;    <span class="comment">/* A renseigner par l&#39;appelant (somme des turbines cibles du mois) */</span></div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    std::vector&lt;double&gt; TurbineMax;   <span class="comment">/* A renseigner par l&#39;appelant : 1 valeur par jour */</span></div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    std::vector&lt;double&gt; TurbineMin;   <span class="comment">/*Minimum Hourly Hydro-Storage Generation*/</span></div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    std::vector&lt;double&gt; TurbineCible; <span class="comment">/* A renseigner par l&#39;appelant : 1 valeur par jour */</span></div>
@@ -189,13 +189,13 @@ $(document).ready(function(){initNavTree('h2o2__j__donnees__mensuelles_8h_source
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    std::vector&lt;double&gt; apports;</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="comment">/* Les resultats */</span></div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="keywordtype">char</span> ResultatsValides; <span class="comment">/* Vaut:</span></div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="comment">                                                         OUI si la solution est exploitable pour</span></div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="comment">                              le reservoir NON s&#39;il y a eu un probleme dans la resolution</span></div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="comment">                                                         EMERGENCY_SHUT_DOWN si la resolution du</span></div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="comment">                              probleme a donne lieu a une erreur interne</span></div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="comment">                                                   */</span></div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    std::vector&lt;double&gt; Turbine;       <span class="comment">/* Resultat a recuperer par l&#39;appelant */</span></div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="keywordtype">char</span> ResultatsValides;       <span class="comment">/* Vaut:</span></div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="comment">                                                               OUI si la solution est exploitable pour</span></div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="comment">                                    le reservoir NON s&#39;il y a eu un probleme dans la resolution</span></div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="comment">                                                               EMERGENCY_SHUT_DOWN si la resolution du</span></div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="comment">                                    probleme a donne lieu a une erreur interne</span></div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="comment">                                                         */</span></div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    std::vector&lt;double&gt; Turbine; <span class="comment">/* Resultat a recuperer par l&#39;appelant */</span></div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    std::vector&lt;double&gt; niveauxFinJours;</div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    std::vector&lt;double&gt; overflows;</div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    std::vector&lt;double&gt; deviations;</div>
@@ -215,7 +215,7 @@ $(document).ready(function(){initNavTree('h2o2__j__donnees__mensuelles_8h_source
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span> </div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="astructDONNEES__MENSUELLES__ETENDUES_html"><div class="ttname"><a href="structDONNEES__MENSUELLES__ETENDUES.html">DONNEES_MENSUELLES_ETENDUES</a></div><div class="ttdef"><b>Definition</b> h2o2_j_donnees_mensuelles.h:36</div></div>
-<div class="ttc" id="astructPROBLEME__HYDRAULIQUE__ETENDU_html"><div class="ttname"><a href="structPROBLEME__HYDRAULIQUE__ETENDU.html">PROBLEME_HYDRAULIQUE_ETENDU</a></div><div class="ttdef"><b>Definition</b> h2o2_j_donnees_optimisation.h:127</div></div>
+<div class="ttc" id="astructPROBLEME__HYDRAULIQUE__ETENDU_html"><div class="ttname"><a href="structPROBLEME__HYDRAULIQUE__ETENDU.html">PROBLEME_HYDRAULIQUE_ETENDU</a></div><div class="ttdef"><b>Definition</b> h2o2_j_donnees_optimisation.h:130</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

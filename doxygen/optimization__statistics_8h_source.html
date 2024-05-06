@@ -162,9 +162,9 @@ $(document).ready(function(){initNavTree('optimization__statistics_8h_source.htm
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#ifndef __SOLVER_UTILS_STATISTICS_H__</span></div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#define __SOLVER_UTILS_STATISTICS_H__</span></div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;atomic&gt;</span></div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &lt;cmath&gt;</span></div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &lt;atomic&gt;</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
 <div class="foldopen" id="foldopen00028" data-start="{" data-end="};">
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="classOptimizationStatistics.html">   28</a></span><span class="keyword">class </span><a class="code hl_class" href="classOptimizationStatistics.html">OptimizationStatistics</a></div>
@@ -190,17 +190,17 @@ $(document).ready(function(){initNavTree('optimization__statistics_8h_source.htm
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        this-&gt;reset();</div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    }</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <a class="code hl_class" href="classOptimizationStatistics.html">OptimizationStatistics</a>(<a class="code hl_class" href="classOptimizationStatistics.html">OptimizationStatistics</a> &amp;&amp;rhs)</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>        :</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        totalSolveTime(rhs.totalSolveTime.load()),</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        nbSolve(rhs.nbSolve.load()),</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        totalUpdateTime(rhs.totalUpdateTime.load()),</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>        nbUpdate(rhs.nbUpdate.load())</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    {}</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <a class="code hl_class" href="classOptimizationStatistics.html">OptimizationStatistics</a>(<a class="code hl_class" href="classOptimizationStatistics.html">OptimizationStatistics</a>&amp;&amp; rhs):</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>        totalSolveTime(rhs.totalSolveTime.load()),</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        nbSolve(rhs.nbSolve.load()),</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        totalUpdateTime(rhs.totalUpdateTime.load()),</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        nbUpdate(rhs.nbUpdate.load())</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    {</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    }</div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <a class="code hl_class" href="classOptimizationStatistics.html">OptimizationStatistics</a>(<span class="keyword">const</span> <a class="code hl_class" href="classOptimizationStatistics.html">OptimizationStatistics</a>&amp;) = <span class="keyword">delete</span>;</div>
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <a class="code hl_class" href="classOptimizationStatistics.html">OptimizationStatistics</a>&amp; operator=(<span class="keyword">const</span> <a class="code hl_class" href="classOptimizationStatistics.html">OptimizationStatistics</a>&amp;) = <span class="keyword">delete</span>;</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <a class="code hl_class" href="classOptimizationStatistics.html">OptimizationStatistics</a>&amp; operator=( <a class="code hl_class" href="classOptimizationStatistics.html">OptimizationStatistics</a>&amp;&amp;) = <span class="keyword">delete</span>;</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <a class="code hl_class" href="classOptimizationStatistics.html">OptimizationStatistics</a>&amp; operator=(<a class="code hl_class" href="classOptimizationStatistics.html">OptimizationStatistics</a>&amp;&amp;) = <span class="keyword">delete</span>;</div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <span class="keywordtype">void</span> add(<span class="keyword">const</span> <a class="code hl_class" href="classOptimizationStatistics.html">OptimizationStatistics</a>&amp; other)</div>
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    {</div>
@@ -240,27 +240,31 @@ $(document).ready(function(){initNavTree('optimization__statistics_8h_source.htm
 <div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    <span class="keywordtype">double</span> getAverageUpdateTime()<span class="keyword"> const</span></div>
 <div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span><span class="keyword">    </span>{</div>
 <div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>        <span class="keywordflow">if</span> (nbUpdate == 0)</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>            <span class="keywordflow">return</span> 0.0;</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>        <span class="keywordflow">return</span> ((<span class="keywordtype">double</span>)totalUpdateTime) / nbUpdate;</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    }</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span> </div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    <span class="keywordtype">double</span> getAverageSolveTime()<span class="keyword"> const</span></div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span><span class="keyword">    </span>{</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>        <span class="keywordflow">if</span> (nbSolve == 0)</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>            <span class="keywordflow">return</span> 0.0;</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>        <span class="keywordflow">return</span> ((<span class="keywordtype">double</span>)totalSolveTime) / nbSolve;</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    }</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span> </div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    std::string toString()<span class="keyword"> const</span></div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span><span class="keyword">    </span>{</div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>        <span class="keywordflow">return</span> <span class="stringliteral">&quot;Average solve time: &quot;</span> + std::to_string(std::lround(getAverageSolveTime())) + <span class="stringliteral">&quot; ms, &quot;</span></div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>               + <span class="stringliteral">&quot;average update time: &quot;</span> + std::to_string(std::lround(getAverageUpdateTime()))</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>               + <span class="stringliteral">&quot; ms&quot;</span>;</div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>    }</div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>};</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>        {</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>            <span class="keywordflow">return</span> 0.0;</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>        }</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>        <span class="keywordflow">return</span> ((<span class="keywordtype">double</span>)totalUpdateTime) / nbUpdate;</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    }</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span> </div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    <span class="keywordtype">double</span> getAverageSolveTime()<span class="keyword"> const</span></div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span><span class="keyword">    </span>{</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>        <span class="keywordflow">if</span> (nbSolve == 0)</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>        {</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>            <span class="keywordflow">return</span> 0.0;</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>        }</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>        <span class="keywordflow">return</span> ((<span class="keywordtype">double</span>)totalSolveTime) / nbSolve;</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    }</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span> </div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    std::string toString()<span class="keyword"> const</span></div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span><span class="keyword">    </span>{</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>        <span class="keywordflow">return</span> <span class="stringliteral">&quot;Average solve time: &quot;</span> + std::to_string(std::lround(getAverageSolveTime())) + <span class="stringliteral">&quot; ms, &quot;</span></div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>               + <span class="stringliteral">&quot;average update time: &quot;</span> + std::to_string(std::lround(getAverageUpdateTime()))</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>               + <span class="stringliteral">&quot; ms&quot;</span>;</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    }</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>};</div>
 </div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span> </div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span> </div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aclassOptimizationStatistics_html"><div class="ttname"><a href="classOptimizationStatistics.html">OptimizationStatistics</a></div><div class="ttdef"><b>Definition</b> optimization_statistics.h:29</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

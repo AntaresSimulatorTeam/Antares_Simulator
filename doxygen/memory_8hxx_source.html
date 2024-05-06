@@ -271,12 +271,14 @@ $(document).ready(function(){initNavTree('memory_8hxx_source.html',''); initResi
 <div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span><span class="keyword">inline</span> <span class="keywordtype">void</span> Memory::Assign(uint count, U* array, <span class="keyword">const</span> U&amp; value)</div>
 <div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>{</div>
 <div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    <span class="keywordflow">for</span> (uint i = 0; i != count; ++i)</div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>        array[i] = value;</div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>}</div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span> </div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>} <span class="comment">// namespace Antares</span></div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    {</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>        array[i] = value;</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    }</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>}</div>
 <div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span> </div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span><span class="preprocessor">#endif </span><span class="comment">// __ANTARES_LIBS_MEMORY_MEMORY_HXX__</span></div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>} <span class="comment">// namespace Antares</span></div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span> </div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span><span class="preprocessor">#endif </span><span class="comment">// __ANTARES_LIBS_MEMORY_MEMORY_HXX__</span></div>
 <div class="ttc" id="aclassAntares_1_1Memory_1_1Array_html"><div class="ttname"><a href="classAntares_1_1Memory_1_1Array.html">Antares::Memory::Array</a></div><div class="ttdef"><b>Definition</b> memory.h:38</div></div>
 <div class="ttc" id="aclassAntares_1_1Memory_1_1Array_html_a5c11e140cd32937825fe193f288a29da"><div class="ttname"><a href="classAntares_1_1Memory_1_1Array.html#a5c11e140cd32937825fe193f288a29da">Antares::Memory::Array::Array</a></div><div class="ttdeci">Array()=default</div><div class="ttdoc">Default constructor.</div></div>
 <div class="ttc" id="aclassAntares_1_1Memory_1_1Array_html_afd84b46bef393a5d301cb2a0184b8c24"><div class="ttname"><a href="classAntares_1_1Memory_1_1Array.html#afd84b46bef393a5d301cb2a0184b8c24">Antares::Memory::Array::~Array</a></div><div class="ttdeci">~Array()</div><div class="ttdoc">Destructor.</div><div class="ttdef"><b>Definition</b> memory.hxx:54</div></div>

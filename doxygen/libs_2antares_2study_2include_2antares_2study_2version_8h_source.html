@@ -174,24 +174,30 @@ $(document).ready(function(){initNavTree('libs_2antares_2study_2include_2antares
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1StudyVersion.html#a188ee2697e85307e84228ab806b817ee">   39</a></span>    <span class="keyword">auto</span> <a class="code hl_function" href="classAntares_1_1Data_1_1StudyVersion.html#a188ee2697e85307e84228ab806b817ee">operator&lt;=&gt;</a>(<span class="keyword">const</span> <a class="code hl_class" href="classAntares_1_1Data_1_1StudyVersion.html">StudyVersion</a>&amp;) <span class="keyword">const</span> = <span class="keywordflow">default</span>;</div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="keyword">constexpr</span> <a class="code hl_class" href="classAntares_1_1Data_1_1StudyVersion.html">StudyVersion</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="keyword">constexpr</span> <a class="code hl_class" href="classAntares_1_1Data_1_1StudyVersion.html">StudyVersion</a>(<span class="keywordtype">unsigned</span> major, <span class="keywordtype">unsigned</span> minor) : major_(major), minor_(minor) {}</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <a class="code hl_class" href="classAntares_1_1Data_1_1StudyVersion.html">~StudyVersion</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <span class="keywordtype">bool</span> isSupported(<span class="keywordtype">bool</span> verbose) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="keywordtype">bool</span> fromString(<span class="keyword">const</span> std::string&amp; versionStr);</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keyword">constexpr</span> <a class="code hl_class" href="classAntares_1_1Data_1_1StudyVersion.html">StudyVersion</a>(<span class="keywordtype">unsigned</span> major, <span class="keywordtype">unsigned</span> minor):</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>        major_(major),</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        minor_(minor)</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    {</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    }</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    std::string toString() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <a class="code hl_class" href="classAntares_1_1Data_1_1StudyVersion.html">~StudyVersion</a>() = <span class="keywordflow">default</span>;</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="keyword">static</span> <a class="code hl_class" href="classAntares_1_1Data_1_1StudyVersion.html">StudyVersion</a> latest();</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="keyword">static</span> <a class="code hl_class" href="classAntares_1_1Data_1_1StudyVersion.html">StudyVersion</a> unknown();</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="keywordtype">unsigned</span> major_ = 0;</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="keywordtype">unsigned</span> minor_ = 0;</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>};</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="keywordtype">bool</span> isSupported(<span class="keywordtype">bool</span> verbose) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="keywordtype">bool</span> fromString(<span class="keyword">const</span> std::string&amp; versionStr);</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    std::string toString() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="keyword">static</span> <a class="code hl_class" href="classAntares_1_1Data_1_1StudyVersion.html">StudyVersion</a> latest();</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <span class="keyword">static</span> <a class="code hl_class" href="classAntares_1_1Data_1_1StudyVersion.html">StudyVersion</a> unknown();</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <span class="keywordtype">unsigned</span> major_ = 0;</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    <span class="keywordtype">unsigned</span> minor_ = 0;</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>};</div>
 </div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>} <span class="comment">// namespace Antares::Data</span></div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>} <span class="comment">// namespace Antares::Data</span></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1StudyVersion_html"><div class="ttname"><a href="classAntares_1_1Data_1_1StudyVersion.html">Antares::Data::StudyVersion</a></div><div class="ttdoc">Version of a study.</div><div class="ttdef"><b>Definition</b> version.h:36</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1StudyVersion_html_a188ee2697e85307e84228ab806b817ee"><div class="ttname"><a href="classAntares_1_1Data_1_1StudyVersion.html#a188ee2697e85307e84228ab806b817ee">Antares::Data::StudyVersion::operator&lt;=&gt;</a></div><div class="ttdeci">auto operator&lt;=&gt;(const StudyVersion &amp;) const =default</div><div class="ttdoc">allows automatic members comparison</div></div>
 </div><!-- fragment --></div><!-- contents -->

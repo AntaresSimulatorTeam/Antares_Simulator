@@ -162,82 +162,85 @@ $(document).ready(function(){initNavTree('result_8h_source.html',''); initResiza
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#ifndef __STUDY_RESULT_AGGREGATOR_RESULT_H__</span></div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#define __STUDY_RESULT_AGGREGATOR_RESULT_H__</span></div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;yuni/yuni.h&gt;</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &lt;yuni/core/string.h&gt;</span></div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &lt;map&gt;</span></div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &lt;antares/memory/memory.h&gt;</span></div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#include &quot;datafile.h&quot;</span></div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#include &quot;antares/solver/ts-generator/xcast/studydata.h&quot;</span></div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#include &quot;studydata.h&quot;</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;map&gt;</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &lt;yuni/yuni.h&gt;</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &lt;yuni/core/string.h&gt;</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#include &lt;antares/memory/memory.h&gt;</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#include &quot;antares/solver/ts-generator/xcast/studydata.h&quot;</span></div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="keyword">using namespace </span>Yuni;</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="keyword">enum</span></div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>{</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    maxSizePerCell = 42,</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>};</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="keyword">using </span>CellData = <span class="keywordtype">char</span>[maxSizePerCell];</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="preprocessor">#include &quot;datafile.h&quot;</span></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="preprocessor">#include &quot;studydata.h&quot;</span></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="keyword">using namespace </span>Yuni;</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="keyword">enum</span></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>{</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    maxSizePerCell = 42,</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>};</div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
-<div class="foldopen" id="foldopen00043" data-start="{" data-end="};">
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="classCellColumnData.html">   43</a></span><span class="keyword">class </span><a class="code hl_class" href="classCellColumnData.html">CellColumnData</a> final</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>{</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <a class="code hl_function" href="classCellColumnData.html#a9de1ff0803326e7a7cddc04ec579871c">CellColumnData</a>();</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <a class="code hl_function" href="classCellColumnData.html#a9de1ff0803326e7a7cddc04ec579871c">CellColumnData</a>(<span class="keyword">const</span> <a class="code hl_class" href="classCellColumnData.html">CellColumnData</a>&amp;);</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <a class="code hl_function" href="classCellColumnData.html#a2b8c47c484cfd3364a20b1597f17bc16">~CellColumnData</a>();</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno"><a class="line" href="classCellColumnData.html#acf382fdbf28ef94507b5a787a122e3d5">   60</a></span>    Antares::Memory::Stored&lt;CellData&gt;::Type <a class="code hl_variable" href="classCellColumnData.html#acf382fdbf28ef94507b5a787a122e3d5">rows</a>;</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno"><a class="line" href="classCellColumnData.html#a13728f9093d577c292c9b3cbf328cb52">   62</a></span>    uint <a class="code hl_variable" href="classCellColumnData.html#a13728f9093d577c292c9b3cbf328cb52">height</a>;</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>}; <span class="comment">// class CellColumnData</span></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="keyword">using </span>CellData = <span class="keywordtype">char</span>[maxSizePerCell];</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
+<div class="foldopen" id="foldopen00046" data-start="{" data-end="};">
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="classCellColumnData.html">   46</a></span><span class="keyword">class </span><a class="code hl_class" href="classCellColumnData.html">CellColumnData</a> final</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>{</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <a class="code hl_function" href="classCellColumnData.html#a9de1ff0803326e7a7cddc04ec579871c">CellColumnData</a>();</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <a class="code hl_function" href="classCellColumnData.html#a9de1ff0803326e7a7cddc04ec579871c">CellColumnData</a>(<span class="keyword">const</span> <a class="code hl_class" href="classCellColumnData.html">CellColumnData</a>&amp;);</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <a class="code hl_function" href="classCellColumnData.html#a2b8c47c484cfd3364a20b1597f17bc16">~CellColumnData</a>();</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno"><a class="line" href="classCellColumnData.html#acf382fdbf28ef94507b5a787a122e3d5">   63</a></span>    Antares::Memory::Stored&lt;CellData&gt;::Type <a class="code hl_variable" href="classCellColumnData.html#acf382fdbf28ef94507b5a787a122e3d5">rows</a>;</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno"><a class="line" href="classCellColumnData.html#a13728f9093d577c292c9b3cbf328cb52">   65</a></span>    uint <a class="code hl_variable" href="classCellColumnData.html#a13728f9093d577c292c9b3cbf328cb52">height</a>;</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>}; <span class="comment">// class CellColumnData</span></div>
 </div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
-<div class="foldopen" id="foldopen00066" data-start="{" data-end="};">
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno"><a class="line" href="classResultMatrix.html">   66</a></span><span class="keyword">class </span><a class="code hl_class" href="classResultMatrix.html">ResultMatrix</a> final</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>{</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    <a class="code hl_function" href="classResultMatrix.html#a1704cdc155238f241dcea82d3475a34d">ResultMatrix</a>();</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    <a class="code hl_function" href="classResultMatrix.html#a1704cdc155238f241dcea82d3475a34d">ResultMatrix</a>(<span class="keyword">const</span> <a class="code hl_class" href="classResultMatrix.html">ResultMatrix</a>&amp;);</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    <a class="code hl_function" href="classResultMatrix.html#acd979781db10d4ed101199b5b0cb7dc0">~ResultMatrix</a>();</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span> </div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classResultMatrix.html#a0d28646f3d8929398765214d4b27d0f7">resize</a>(uint i);</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span> </div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classResultMatrix.html#a0ebd6169199f31ef26dcf8b3ac389084">saveToCSVFile</a>(<span class="keyword">const</span> Yuni::String&amp; filename) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span> </div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    <a class="code hl_class" href="classCellColumnData.html">CellColumnData</a>* columns;</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno"><a class="line" href="classResultMatrix.html#a3b15782001a37e00af3269be8412c5b7">   94</a></span>    uint <a class="code hl_variable" href="classResultMatrix.html#a3b15782001a37e00af3269be8412c5b7">width</a>;</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno"><a class="line" href="classResultMatrix.html#af9eed7f021e169e95ea28bd47ab1b266">   96</a></span>    uint <a class="code hl_variable" href="classResultMatrix.html#af9eed7f021e169e95ea28bd47ab1b266">heightAfterAggregation</a>;</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span> </div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>}; <span class="comment">// class ResultMatrix</span></div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span> </div>
+<div class="foldopen" id="foldopen00069" data-start="{" data-end="};">
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno"><a class="line" href="classResultMatrix.html">   69</a></span><span class="keyword">class </span><a class="code hl_class" href="classResultMatrix.html">ResultMatrix</a> final</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>{</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    <a class="code hl_function" href="classResultMatrix.html#a1704cdc155238f241dcea82d3475a34d">ResultMatrix</a>();</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    <a class="code hl_function" href="classResultMatrix.html#a1704cdc155238f241dcea82d3475a34d">ResultMatrix</a>(<span class="keyword">const</span> <a class="code hl_class" href="classResultMatrix.html">ResultMatrix</a>&amp;);</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    <a class="code hl_function" href="classResultMatrix.html#acd979781db10d4ed101199b5b0cb7dc0">~ResultMatrix</a>();</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span> </div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classResultMatrix.html#a0d28646f3d8929398765214d4b27d0f7">resize</a>(uint i);</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span> </div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classResultMatrix.html#a0ebd6169199f31ef26dcf8b3ac389084">saveToCSVFile</a>(<span class="keyword">const</span> Yuni::String&amp; filename) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span> </div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    <a class="code hl_class" href="classCellColumnData.html">CellColumnData</a>* columns;</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno"><a class="line" href="classResultMatrix.html#a3b15782001a37e00af3269be8412c5b7">   97</a></span>    uint <a class="code hl_variable" href="classResultMatrix.html#a3b15782001a37e00af3269be8412c5b7">width</a>;</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno"><a class="line" href="classResultMatrix.html#af9eed7f021e169e95ea28bd47ab1b266">   99</a></span>    uint <a class="code hl_variable" href="classResultMatrix.html#af9eed7f021e169e95ea28bd47ab1b266">heightAfterAggregation</a>;</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span> </div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>}; <span class="comment">// class ResultMatrix</span></div>
 </div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span> </div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span><span class="keyword">using </span>ResultsAllVars = std::vector&lt;ResultMatrix&gt;;</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span> </div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span><span class="keyword">using </span>ResultsForAllTimeLevels = std::map&lt;DataFile::ShortString, ResultsAllVars&gt;;</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span><span class="keyword">using </span>ResultsForAllDataLevels = std::map&lt;DataFile::ShortString, ResultsForAllTimeLevels&gt;;</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span> </div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span><span class="keyword">using </span>ResultsAllVars = std::vector&lt;ResultMatrix&gt;;</div>
 <div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span> </div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span><span class="keyword">using </span>ResultsForAllStudyItems = std::map&lt;StudyData::ShortString512, ResultsForAllDataLevels&gt;;</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span> </div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span><span class="preprocessor">#endif </span><span class="comment">// __STUDY_RESULT_AGGREGATOR_RESULT_H__</span></div>
-<div class="ttc" id="aclassCellColumnData_html"><div class="ttname"><a href="classCellColumnData.html">CellColumnData</a></div><div class="ttdoc">A single column.</div><div class="ttdef"><b>Definition</b> result.h:44</div></div>
-<div class="ttc" id="aclassCellColumnData_html_a13728f9093d577c292c9b3cbf328cb52"><div class="ttname"><a href="classCellColumnData.html#a13728f9093d577c292c9b3cbf328cb52">CellColumnData::height</a></div><div class="ttdeci">uint height</div><div class="ttdoc">The height of the column.</div><div class="ttdef"><b>Definition</b> result.h:62</div></div>
-<div class="ttc" id="aclassCellColumnData_html_a2b8c47c484cfd3364a20b1597f17bc16"><div class="ttname"><a href="classCellColumnData.html#a2b8c47c484cfd3364a20b1597f17bc16">CellColumnData::~CellColumnData</a></div><div class="ttdeci">~CellColumnData()</div><div class="ttdoc">Destructor.</div><div class="ttdef"><b>Definition</b> result.cpp:49</div></div>
-<div class="ttc" id="aclassCellColumnData_html_a9de1ff0803326e7a7cddc04ec579871c"><div class="ttname"><a href="classCellColumnData.html#a9de1ff0803326e7a7cddc04ec579871c">CellColumnData::CellColumnData</a></div><div class="ttdeci">CellColumnData()</div><div class="ttdoc">Default constructor.</div><div class="ttdef"><b>Definition</b> result.cpp:41</div></div>
-<div class="ttc" id="aclassCellColumnData_html_acf382fdbf28ef94507b5a787a122e3d5"><div class="ttname"><a href="classCellColumnData.html#acf382fdbf28ef94507b5a787a122e3d5">CellColumnData::rows</a></div><div class="ttdeci">Antares::Memory::Stored&lt; CellData &gt;::Type rows</div><div class="ttdoc">All rows.</div><div class="ttdef"><b>Definition</b> result.h:60</div></div>
-<div class="ttc" id="aclassResultMatrix_html"><div class="ttname"><a href="classResultMatrix.html">ResultMatrix</a></div><div class="ttdef"><b>Definition</b> result.h:67</div></div>
-<div class="ttc" id="aclassResultMatrix_html_a0d28646f3d8929398765214d4b27d0f7"><div class="ttname"><a href="classResultMatrix.html#a0d28646f3d8929398765214d4b27d0f7">ResultMatrix::resize</a></div><div class="ttdeci">void resize(uint i)</div><div class="ttdoc">Resize the pseudo matrix.</div><div class="ttdef"><b>Definition</b> result.cpp:66</div></div>
-<div class="ttc" id="aclassResultMatrix_html_a0ebd6169199f31ef26dcf8b3ac389084"><div class="ttname"><a href="classResultMatrix.html#a0ebd6169199f31ef26dcf8b3ac389084">ResultMatrix::saveToCSVFile</a></div><div class="ttdeci">bool saveToCSVFile(const Yuni::String &amp;filename) const</div><div class="ttdoc">Export the content of the matrix into a CSV file.</div><div class="ttdef"><b>Definition</b> result.cpp:73</div></div>
-<div class="ttc" id="aclassResultMatrix_html_a1704cdc155238f241dcea82d3475a34d"><div class="ttname"><a href="classResultMatrix.html#a1704cdc155238f241dcea82d3475a34d">ResultMatrix::ResultMatrix</a></div><div class="ttdeci">ResultMatrix()</div><div class="ttdoc">Default constructor.</div><div class="ttdef"><b>Definition</b> result.cpp:53</div></div>
-<div class="ttc" id="aclassResultMatrix_html_a3b15782001a37e00af3269be8412c5b7"><div class="ttname"><a href="classResultMatrix.html#a3b15782001a37e00af3269be8412c5b7">ResultMatrix::width</a></div><div class="ttdeci">uint width</div><div class="ttdoc">Width of the matrix.</div><div class="ttdef"><b>Definition</b> result.h:94</div></div>
-<div class="ttc" id="aclassResultMatrix_html_acd979781db10d4ed101199b5b0cb7dc0"><div class="ttname"><a href="classResultMatrix.html#acd979781db10d4ed101199b5b0cb7dc0">ResultMatrix::~ResultMatrix</a></div><div class="ttdeci">~ResultMatrix()</div><div class="ttdoc">Destructor.</div><div class="ttdef"><b>Definition</b> result.cpp:61</div></div>
-<div class="ttc" id="aclassResultMatrix_html_af9eed7f021e169e95ea28bd47ab1b266"><div class="ttname"><a href="classResultMatrix.html#af9eed7f021e169e95ea28bd47ab1b266">ResultMatrix::heightAfterAggregation</a></div><div class="ttdeci">uint heightAfterAggregation</div><div class="ttdoc">Valid Height found after aggregation.</div><div class="ttdef"><b>Definition</b> result.h:96</div></div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span><span class="keyword">using </span>ResultsForAllTimeLevels = std::map&lt;DataFile::ShortString, ResultsAllVars&gt;;</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span><span class="keyword">using </span>ResultsForAllDataLevels = std::map&lt;DataFile::ShortString, ResultsForAllTimeLevels&gt;;</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span> </div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span><span class="keyword">using </span>ResultsForAllStudyItems = std::map&lt;StudyData::ShortString512, ResultsForAllDataLevels&gt;;</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span> </div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span><span class="preprocessor">#endif </span><span class="comment">// __STUDY_RESULT_AGGREGATOR_RESULT_H__</span></div>
+<div class="ttc" id="aclassCellColumnData_html"><div class="ttname"><a href="classCellColumnData.html">CellColumnData</a></div><div class="ttdoc">A single column.</div><div class="ttdef"><b>Definition</b> result.h:47</div></div>
+<div class="ttc" id="aclassCellColumnData_html_a13728f9093d577c292c9b3cbf328cb52"><div class="ttname"><a href="classCellColumnData.html#a13728f9093d577c292c9b3cbf328cb52">CellColumnData::height</a></div><div class="ttdeci">uint height</div><div class="ttdoc">The height of the column.</div><div class="ttdef"><b>Definition</b> result.h:65</div></div>
+<div class="ttc" id="aclassCellColumnData_html_a2b8c47c484cfd3364a20b1597f17bc16"><div class="ttname"><a href="classCellColumnData.html#a2b8c47c484cfd3364a20b1597f17bc16">CellColumnData::~CellColumnData</a></div><div class="ttdeci">~CellColumnData()</div><div class="ttdoc">Destructor.</div><div class="ttdef"><b>Definition</b> result.cpp:52</div></div>
+<div class="ttc" id="aclassCellColumnData_html_a9de1ff0803326e7a7cddc04ec579871c"><div class="ttname"><a href="classCellColumnData.html#a9de1ff0803326e7a7cddc04ec579871c">CellColumnData::CellColumnData</a></div><div class="ttdeci">CellColumnData()</div><div class="ttdoc">Default constructor.</div><div class="ttdef"><b>Definition</b> result.cpp:42</div></div>
+<div class="ttc" id="aclassCellColumnData_html_acf382fdbf28ef94507b5a787a122e3d5"><div class="ttname"><a href="classCellColumnData.html#acf382fdbf28ef94507b5a787a122e3d5">CellColumnData::rows</a></div><div class="ttdeci">Antares::Memory::Stored&lt; CellData &gt;::Type rows</div><div class="ttdoc">All rows.</div><div class="ttdef"><b>Definition</b> result.h:63</div></div>
+<div class="ttc" id="aclassResultMatrix_html"><div class="ttname"><a href="classResultMatrix.html">ResultMatrix</a></div><div class="ttdef"><b>Definition</b> result.h:70</div></div>
+<div class="ttc" id="aclassResultMatrix_html_a0d28646f3d8929398765214d4b27d0f7"><div class="ttname"><a href="classResultMatrix.html#a0d28646f3d8929398765214d4b27d0f7">ResultMatrix::resize</a></div><div class="ttdeci">void resize(uint i)</div><div class="ttdoc">Resize the pseudo matrix.</div><div class="ttdef"><b>Definition</b> result.cpp:75</div></div>
+<div class="ttc" id="aclassResultMatrix_html_a0ebd6169199f31ef26dcf8b3ac389084"><div class="ttname"><a href="classResultMatrix.html#a0ebd6169199f31ef26dcf8b3ac389084">ResultMatrix::saveToCSVFile</a></div><div class="ttdeci">bool saveToCSVFile(const Yuni::String &amp;filename) const</div><div class="ttdoc">Export the content of the matrix into a CSV file.</div><div class="ttdef"><b>Definition</b> result.cpp:82</div></div>
+<div class="ttc" id="aclassResultMatrix_html_a1704cdc155238f241dcea82d3475a34d"><div class="ttname"><a href="classResultMatrix.html#a1704cdc155238f241dcea82d3475a34d">ResultMatrix::ResultMatrix</a></div><div class="ttdeci">ResultMatrix()</div><div class="ttdoc">Default constructor.</div><div class="ttdef"><b>Definition</b> result.cpp:56</div></div>
+<div class="ttc" id="aclassResultMatrix_html_a3b15782001a37e00af3269be8412c5b7"><div class="ttname"><a href="classResultMatrix.html#a3b15782001a37e00af3269be8412c5b7">ResultMatrix::width</a></div><div class="ttdeci">uint width</div><div class="ttdoc">Width of the matrix.</div><div class="ttdef"><b>Definition</b> result.h:97</div></div>
+<div class="ttc" id="aclassResultMatrix_html_acd979781db10d4ed101199b5b0cb7dc0"><div class="ttname"><a href="classResultMatrix.html#acd979781db10d4ed101199b5b0cb7dc0">ResultMatrix::~ResultMatrix</a></div><div class="ttdeci">~ResultMatrix()</div><div class="ttdoc">Destructor.</div><div class="ttdef"><b>Definition</b> result.cpp:70</div></div>
+<div class="ttc" id="aclassResultMatrix_html_af9eed7f021e169e95ea28bd47ab1b266"><div class="ttname"><a href="classResultMatrix.html#af9eed7f021e169e95ea28bd47ab1b266">ResultMatrix::heightAfterAggregation</a></div><div class="ttdeci">uint heightAfterAggregation</div><div class="ttdoc">Valid Height found after aggregation.</div><div class="ttdef"><b>Definition</b> result.h:99</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

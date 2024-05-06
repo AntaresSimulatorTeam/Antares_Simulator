@@ -162,35 +162,37 @@ $(document).ready(function(){initNavTree('HydroPower_8h_source.html',''); initRe
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &quot;ConstraintBuilder.h&quot;</span></div>
-<div class="foldopen" id="foldopen00024" data-start="{" data-end="};">
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="structHydroPowerData.html">   24</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structHydroPowerData.html">HydroPowerData</a></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>{</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    <span class="keyword">const</span> std::vector&lt;ENERGIES_ET_PUISSANCES_HYDRAULIQUES&gt;&amp; CaracteristiquesHydrauliques;</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    <span class="keyword">const</span> <span class="keywordtype">int</span>&amp; NombreDePasDeTempsPourUneOptimisation;</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    std::vector&lt;int&gt;&amp; NumeroDeContrainteEnergieHydraulique;</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>};</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
+<div class="foldopen" id="foldopen00025" data-start="{" data-end="};">
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno"><a class="line" href="structHydroPowerData.html">   25</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structHydroPowerData.html">HydroPowerData</a></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>{</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    <span class="keyword">const</span> std::vector&lt;ENERGIES_ET_PUISSANCES_HYDRAULIQUES&gt;&amp; CaracteristiquesHydrauliques;</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    <span class="keyword">const</span> <span class="keywordtype">int</span>&amp; NombreDePasDeTempsPourUneOptimisation;</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    std::vector&lt;int&gt;&amp; NumeroDeContrainteEnergieHydraulique;</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>};</div>
 </div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
-<div class="foldopen" id="foldopen00035" data-start="{" data-end="};">
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno"><a class="line" href="classHydroPower.html">   35</a></span><span class="keyword">class </span><a class="code hl_class" href="classHydroPower.html">HydroPower</a> : <span class="keyword">private</span> <a class="code hl_class" href="classConstraintFactory.html">ConstraintFactory</a></div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>{</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    <a class="code hl_class" href="classHydroPower.html">HydroPower</a>(<a class="code hl_class" href="classConstraintBuilder.html">ConstraintBuilder</a>&amp; builder, <a class="code hl_struct" href="structHydroPowerData.html">HydroPowerData</a>&amp; data) :</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>     <a class="code hl_class" href="classConstraintFactory.html">ConstraintFactory</a>(builder), data(data)</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    {</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    }</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classHydroPower.html#a5adbb80ce19ed4eee75f77670bbae7e7">add</a>(<span class="keywordtype">int</span> pays);</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <a class="code hl_struct" href="structHydroPowerData.html">HydroPowerData</a>&amp; data;</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>};</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
+<div class="foldopen" id="foldopen00036" data-start="{" data-end="};">
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="classHydroPower.html">   36</a></span><span class="keyword">class </span><a class="code hl_class" href="classHydroPower.html">HydroPower</a>: <span class="keyword">private</span> <a class="code hl_class" href="classConstraintFactory.html">ConstraintFactory</a></div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>{</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    <a class="code hl_class" href="classHydroPower.html">HydroPower</a>(<a class="code hl_class" href="classConstraintBuilder.html">ConstraintBuilder</a>&amp; builder, <a class="code hl_struct" href="structHydroPowerData.html">HydroPowerData</a>&amp; data):</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>        <a class="code hl_class" href="classConstraintFactory.html">ConstraintFactory</a>(builder),</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>        data(data)</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    {</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    }</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classHydroPower.html#a5adbb80ce19ed4eee75f77670bbae7e7">add</a>(<span class="keywordtype">int</span> pays);</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <a class="code hl_struct" href="structHydroPowerData.html">HydroPowerData</a>&amp; data;</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>};</div>
 </div>
-<div class="ttc" id="aclassConstraintBuilder_html"><div class="ttname"><a href="classConstraintBuilder.html">ConstraintBuilder</a></div><div class="ttdef"><b>Definition</b> ConstraintBuilder.h:72</div></div>
-<div class="ttc" id="aclassConstraintFactory_html"><div class="ttname"><a href="classConstraintFactory.html">ConstraintFactory</a></div><div class="ttdef"><b>Definition</b> ConstraintBuilder.h:239</div></div>
-<div class="ttc" id="aclassHydroPower_html"><div class="ttname"><a href="classHydroPower.html">HydroPower</a></div><div class="ttdef"><b>Definition</b> HydroPower.h:36</div></div>
+<div class="ttc" id="aclassConstraintBuilder_html"><div class="ttname"><a href="classConstraintBuilder.html">ConstraintBuilder</a></div><div class="ttdef"><b>Definition</b> ConstraintBuilder.h:73</div></div>
+<div class="ttc" id="aclassConstraintFactory_html"><div class="ttname"><a href="classConstraintFactory.html">ConstraintFactory</a></div><div class="ttdef"><b>Definition</b> ConstraintBuilder.h:244</div></div>
+<div class="ttc" id="aclassHydroPower_html"><div class="ttname"><a href="classHydroPower.html">HydroPower</a></div><div class="ttdef"><b>Definition</b> HydroPower.h:37</div></div>
 <div class="ttc" id="aclassHydroPower_html_a5adbb80ce19ed4eee75f77670bbae7e7"><div class="ttname"><a href="classHydroPower.html#a5adbb80ce19ed4eee75f77670bbae7e7">HydroPower::add</a></div><div class="ttdeci">void add(int pays)</div><div class="ttdoc">Add variables to the constraint and update constraints Matrix.</div><div class="ttdef"><b>Definition</b> HydroPower.cpp:24</div></div>
-<div class="ttc" id="astructHydroPowerData_html"><div class="ttname"><a href="structHydroPowerData.html">HydroPowerData</a></div><div class="ttdef"><b>Definition</b> HydroPower.h:25</div></div>
+<div class="ttc" id="astructHydroPowerData_html"><div class="ttname"><a href="structHydroPowerData.html">HydroPowerData</a></div><div class="ttdef"><b>Definition</b> HydroPower.h:26</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

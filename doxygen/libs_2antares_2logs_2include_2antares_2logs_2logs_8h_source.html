@@ -224,30 +224,27 @@ $(document).ready(function(){initNavTree('libs_2antares_2logs_2include_2antares_
 <div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>{</div>
 <div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span> </div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    <span class="keyword">enum</span> LogLevel</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    {</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>        logUnknown = 0,</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>        logProgress, <span class="comment">/* not really a real log level */</span></div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>        logFatal,</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>        logError,</div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>        logWarning,</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>        logNotice,</div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>        logInfo,</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>        logDebug</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    };</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span><span class="keyword">enum</span> LogLevel</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>{</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>    logUnknown = 0,</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    logProgress, <span class="comment">/* not really a real log level */</span></div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    logFatal,</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    logError,</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    logWarning,</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    logNotice,</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    logInfo,</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    logDebug</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>};</div>
 <div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span> </div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>    <span class="keywordtype">int</span> <a class="code hl_function" href="group__logs.html#gaeeecaed35d419d20ac8985edff942068">LogCompatibility</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> format[], ...);</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span><span class="keywordtype">int</span> <a class="code hl_function" href="group__logs.html#gaeeecaed35d419d20ac8985edff942068">LogCompatibility</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> format[], ...);</div>
 <div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span> </div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>    <span class="keywordtype">void</span> LogDisplayErrorInfos(uint errors,</div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>                              uint warnings,</div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>                              <span class="keyword">const</span> <span class="keywordtype">char</span>* message,</div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>                              <span class="keywordtype">bool</span> printError = <span class="keyword">true</span>);</div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span> </div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span><span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>}</div>
-<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span> </div>
-<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span><span class="preprocessor">#endif </span><span class="comment">/* __ANTARES_LIBS_LOGS_LOGS_H__ */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span><span class="keywordtype">void</span> LogDisplayErrorInfos(uint errors, uint warnings, <span class="keyword">const</span> <span class="keywordtype">char</span>* message, <span class="keywordtype">bool</span> printError = <span class="keyword">true</span>);</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span> </div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span><span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>}</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span> </div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span><span class="preprocessor">#endif </span><span class="comment">/* __ANTARES_LIBS_LOGS_LOGS_H__ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="agroup__logs_html_gaeeecaed35d419d20ac8985edff942068"><div class="ttname"><a href="group__logs.html#gaeeecaed35d419d20ac8985edff942068">LogCompatibility</a></div><div class="ttdeci">int LogCompatibility(const char format[],...)</div><div class="ttdoc">Generate a compatibility notice.</div><div class="ttdef"><b>Definition</b> logs.cpp:34</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
