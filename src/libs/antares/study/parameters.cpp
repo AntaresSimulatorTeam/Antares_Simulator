@@ -781,9 +781,6 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
         return value.to<bool>(d.optOptions.solverLogs);
     }
 
-    // Set solver specific paramters only if the solver corresponding to the parameter field name is
-    // indeed used. This requires that optOptions.ortoolsSolver has been correctly set from the
-    // command line argument before reading the ini file.
     if (key == "scip-parameters")
     {
         d.optOptions.solverParameters.scip = value;
