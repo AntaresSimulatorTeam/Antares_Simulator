@@ -43,8 +43,6 @@ extern "C"
 using namespace Yuni::Job;
 using Antares::Solver::IResultWriter;
 using Benchmarking::DurationCollector;
-using Benchmarking::IDurationCollector;
-using Benchmarking::NullDurationCollector;
 
 // Handles lifetime of necessary objects
 struct TestContext
