@@ -21,6 +21,7 @@
 
 #pragma once
 #include "ConstraintBuilder.h"
+
 struct HydroPowerData
 {
     const std::vector<ENERGIES_ET_PUISSANCES_HYDRAULIQUES>& CaracteristiquesHydrauliques;
@@ -32,11 +33,12 @@ struct HydroPowerData
  * represent 'Hydraulic Power' constraint type
  */
 
-class HydroPower : private ConstraintFactory
+class HydroPower: private ConstraintFactory
 {
 public:
-    HydroPower(ConstraintBuilder& builder, HydroPowerData& data) :
-     ConstraintFactory(builder), data(data)
+    HydroPower(ConstraintBuilder& builder, HydroPowerData& data):
+        ConstraintFactory(builder),
+        data(data)
     {
     }
 

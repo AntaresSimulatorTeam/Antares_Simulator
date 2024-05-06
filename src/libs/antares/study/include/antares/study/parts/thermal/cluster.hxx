@@ -89,6 +89,7 @@ class Into<Antares::Data::ThermalLaw>
 {
 public:
     using TargetType = Antares::Data::ThermalLaw;
+
     enum
     {
         valid = 1
@@ -131,6 +132,7 @@ class Into<Antares::Data::LocalTSGenerationBehavior>
 {
 public:
     using TargetType = Antares::Data::LocalTSGenerationBehavior;
+
     enum
     {
         valid = 1

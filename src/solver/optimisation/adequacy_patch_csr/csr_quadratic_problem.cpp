@@ -19,18 +19,19 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <vector>
-#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
-
-#include "antares/solver/simulation/adequacy_patch_runtime_data.h"
-#include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/optimisation/adequacy_patch_csr/csr_quadratic_problem.h"
-#include "antares/solver/optimisation/adequacy_patch_csr/hourly_csr_problem.h"
-#include "antares/solver/simulation/sim_structure_probleme_economique.h"
-#include "antares/solver/optimisation/adequacy_patch_csr/constraints/CsrFlowDissociation.h"
+
+#include <vector>
+
 #include "antares/solver/optimisation/adequacy_patch_csr/constraints/CsrAreaBalance.h"
 #include "antares/solver/optimisation/adequacy_patch_csr/constraints/CsrBindingConstraintHour.h"
+#include "antares/solver/optimisation/adequacy_patch_csr/constraints/CsrFlowDissociation.h"
+#include "antares/solver/optimisation/adequacy_patch_csr/hourly_csr_problem.h"
 #include "antares/solver/optimisation/constraints/constraint_builder_utils.h"
+#include "antares/solver/optimisation/opt_fonctions.h"
+#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
+#include "antares/solver/simulation/adequacy_patch_runtime_data.h"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 using namespace Antares::Data;
 
@@ -41,15 +42,15 @@ void CsrQuadraticProblem::setConstraintsOnFlows(ConstraintBuilder& builder)
 {
     int hour = hourlyCsrProblem_.triggeredHour;
     //!\ TODO not associated problemHebdo && probleamAressoudre
-    CsrFlowDissociationData csrFlowDissociationData
-      = {.numberOfConstraintCsrFlowDissociation
-         = hourlyCsrProblem_.numberOfConstraintCsrFlowDissociation,
-         .NombreDInterconnexions = problemeHebdo_->NombreDInterconnexions,
-         .originAreaMode = problemeHebdo_->adequacyPatchRuntimeData->originAreaMode,
-         .extremityAreaMode = problemeHebdo_->adequacyPatchRuntimeData->extremityAreaMode,
-         .PaysOrigineDeLInterconnexion = problemeHebdo_->PaysOrigineDeLInterconnexion,
-         .PaysExtremiteDeLInterconnexion = problemeHebdo_->PaysExtremiteDeLInterconnexion,
-         .hour = hour};
+    CsrFlowDissociationData csrFlowDissociationData = {
+      .numberOfConstraintCsrFlowDissociation = hourlyCsrProblem_
+                                                 .numberOfConstraintCsrFlowDissociation,
+      .NombreDInterconnexions = problemeHebdo_->NombreDInterconnexions,
+      .originAreaMode = problemeHebdo_->adequacyPatchRuntimeData->originAreaMode,
+      .extremityAreaMode = problemeHebdo_->adequacyPatchRuntimeData->extremityAreaMode,
+      .PaysOrigineDeLInterconnexion = problemeHebdo_->PaysOrigineDeLInterconnexion,
+      .PaysExtremiteDeLInterconnexion = problemeHebdo_->PaysExtremiteDeLInterconnexion,
+      .hour = hour};
     CsrFlowDissociation csrFlowDissociation(builder, csrFlowDissociationData);
     csrFlowDissociation.add();
 }
@@ -95,13 +96,15 @@ void CsrQuadraticProblem::setBindingConstraints(ConstraintBuilder& builder)
       .numberOfConstraintCsrHourlyBinding = hourlyCsrProblem_.numberOfConstraintCsrHourlyBinding};
 
     CsrBindingConstraintHour csrBindingConstraintHour(
-      builder, csrBindingConstraintHourData); // Special case of the binding constraints
+      builder,
+      csrBindingConstraintHourData); // Special case of the binding constraints
     for (uint32_t CntCouplante = 0; CntCouplante < problemeHebdo_->NombreDeContraintesCouplantes;
          CntCouplante++)
     {
         csrBindingConstraintHour.add(CntCouplante);
     }
 }
+
 void CsrQuadraticProblem::buildConstraintMatrix()
 {
     logs.debug() << "[CSR] constraint list:";
@@ -112,7 +115,8 @@ void CsrQuadraticProblem::buildConstraintMatrix()
     problemeAResoudre_.NombreDeContraintes = 0;
     problemeAResoudre_.NombreDeTermesDansLaMatriceDesContraintes = 0;
     auto builder_data = NewGetConstraintBuilderFromProblemHebdoAndProblemAResoudre(
-      problemeHebdo_, problemeAResoudre_);
+      problemeHebdo_,
+      problemeAResoudre_);
 
     auto builder = ConstraintBuilder(builder_data);
     setConstraintsOnFlows(builder);

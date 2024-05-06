@@ -46,6 +46,7 @@ struct PrecisionToPrintfFormat
         return "%.6f";
     }
 };
+
 template<>
 struct PrecisionToPrintfFormat<0>
 {
@@ -54,6 +55,7 @@ struct PrecisionToPrintfFormat<0>
         return "%.0f";
     }
 };
+
 template<>
 struct PrecisionToPrintfFormat<1>
 {
@@ -62,6 +64,7 @@ struct PrecisionToPrintfFormat<1>
         return "%.1f";
     }
 };
+
 template<>
 struct PrecisionToPrintfFormat<2>
 {
@@ -70,6 +73,7 @@ struct PrecisionToPrintfFormat<2>
         return "%.2f";
     }
 };
+
 template<>
 struct PrecisionToPrintfFormat<3>
 {
@@ -78,6 +82,7 @@ struct PrecisionToPrintfFormat<3>
         return "%.3f";
     }
 };
+
 template<>
 struct PrecisionToPrintfFormat<4>
 {
@@ -86,6 +91,7 @@ struct PrecisionToPrintfFormat<4>
         return "%.4f";
     }
 };
+
 template<>
 struct PrecisionToPrintfFormat<5>
 {

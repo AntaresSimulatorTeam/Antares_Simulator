@@ -30,15 +30,15 @@ struct FictitiousLoadData
     const std::vector<bool>& DefaillanceNegativeUtiliserHydro;
 };
 
-
 /*!
  * represent 'Fictitious Load' constraint type
  */
-class FictitiousLoad : private ConstraintFactory
+class FictitiousLoad: private ConstraintFactory
 {
 public:
-    FictitiousLoad(ConstraintBuilder& builder, FictitiousLoadData& data) :
-     ConstraintFactory(builder), data(data)
+    FictitiousLoad(ConstraintBuilder& builder, FictitiousLoadData& data):
+        ConstraintFactory(builder),
+        data(data)
     {
     }
 

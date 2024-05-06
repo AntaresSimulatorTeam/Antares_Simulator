@@ -25,9 +25,10 @@
 #pragma once
 
 #include "TSnumberData.h"
+
 namespace Antares::Data::ScenarioBuilder
 {
-class thermalTSNumberData : public TSNumberData
+class thermalTSNumberData: public TSNumberData
 {
 public:
     thermalTSNumberData() = default;
@@ -68,4 +69,4 @@ inline CString<512, false> thermalTSNumberData::get_prefix() const
 {
     return "t,";
 }
-}
+} // namespace Antares::Data::ScenarioBuilder

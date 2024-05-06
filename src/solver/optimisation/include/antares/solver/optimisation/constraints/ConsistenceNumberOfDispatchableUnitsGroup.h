@@ -28,7 +28,7 @@
  *
  */
 
-class ConsistenceNumberOfDispatchableUnitsGroup : public AbstractStartUpCostsGroup
+class ConsistenceNumberOfDispatchableUnitsGroup: public AbstractStartUpCostsGroup
 {
 public:
     using AbstractStartUpCostsGroup::AbstractStartUpCostsGroup;

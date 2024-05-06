@@ -20,8 +20,9 @@
 */
 
 #include "antares/study/scenario-builder/TSnumberData.h"
-#include "antares/study/scenario-builder/scBuilderUtils.h"
+
 #include "antares/study/scenario-builder/applyToMatrix.hxx"
+#include "antares/study/scenario-builder/scBuilderUtils.h"
 
 namespace Antares::Data::ScenarioBuilder
 {
@@ -53,7 +54,9 @@ void TSNumberData::saveToINIFile(const Study& study, Yuni::IO::File::Stream& fil
             const MatrixType::Type value = col[y];
             // Equals to zero means 'auto', which is the default mode
             if (!value)
+            {
                 continue;
+            }
             assert(index < study.areas.size());
             file << prefix << study.areas.byIndex[index]->id << ',' << y << " = " << value << '\n';
         }
@@ -64,7 +67,9 @@ void TSNumberData::setTSnumber(uint areaindex, uint year, uint value)
 {
     assert(areaindex < pTSNumberRules.width);
     if (year < pTSNumberRules.height)
+    {
         pTSNumberRules[areaindex][year] = value;
+    }
 }
 
 void TSNumberData::set_value(uint x, uint y, uint value)
@@ -72,4 +77,4 @@ void TSNumberData::set_value(uint x, uint y, uint value)
     pTSNumberRules.entry[y][x] = value;
 }
 
-} // namespace Antares
+} // namespace Antares::Data::ScenarioBuilder

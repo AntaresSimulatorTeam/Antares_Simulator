@@ -118,7 +118,9 @@ template<class U>
 inline void Memory::Assign(uint count, U* array, const U& value)
 {
     for (uint i = 0; i != count; ++i)
+    {
         array[i] = value;
+    }
 }
 
 } // namespace Antares

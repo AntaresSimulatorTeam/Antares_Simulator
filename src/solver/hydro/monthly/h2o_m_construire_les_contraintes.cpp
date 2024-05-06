@@ -25,13 +25,13 @@
 void H2O_M_ConstruireLesContraintes(DONNEES_ANNUELLES& DonneesAnnuelles)
 {
     PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesAnnuelles.ProblemeHydraulique;
-    CORRESPONDANCE_DES_VARIABLES& CorrespondanceDesVariables
-        = ProblemeHydraulique.CorrespondanceDesVariables;
-    PROBLEME_LINEAIRE_PARTIE_FIXE& ProblemeLineairePartieFixe
-        = ProblemeHydraulique.ProblemeLineairePartieFixe;
+    CORRESPONDANCE_DES_VARIABLES& CorrespondanceDesVariables = ProblemeHydraulique
+                                                                 .CorrespondanceDesVariables;
+    PROBLEME_LINEAIRE_PARTIE_FIXE& ProblemeLineairePartieFixe = ProblemeHydraulique
+                                                                  .ProblemeLineairePartieFixe;
 
-    auto& CoefficientsDeLaMatriceDesContraintes
-      = ProblemeLineairePartieFixe.CoefficientsDeLaMatriceDesContraintes;
+    auto& CoefficientsDeLaMatriceDesContraintes = ProblemeLineairePartieFixe
+                                                    .CoefficientsDeLaMatriceDesContraintes;
     auto& IndicesColonnes = ProblemeLineairePartieFixe.IndicesColonnes;
     auto& IndicesDebutDeLigne = ProblemeLineairePartieFixe.IndicesDebutDeLigne;
     auto& Sens = ProblemeLineairePartieFixe.Sens;
@@ -39,10 +39,10 @@ void H2O_M_ConstruireLesContraintes(DONNEES_ANNUELLES& DonneesAnnuelles)
 
     auto& NumeroDeVariableVolume = CorrespondanceDesVariables.NumeroDeVariableVolume;
     auto& NumeroDeVariableTurbine = CorrespondanceDesVariables.NumeroDeVariableTurbine;
-    auto& NumeroDeVariableDepassementVolumeMax
-      = CorrespondanceDesVariables.NumeroDeVariableDepassementVolumeMax;
-    auto& NumeroDeVariableDepassementVolumeMin
-      = CorrespondanceDesVariables.NumeroDeVariableDepassementVolumeMin;
+    auto& NumeroDeVariableDepassementVolumeMax = CorrespondanceDesVariables
+                                                   .NumeroDeVariableDepassementVolumeMax;
+    auto& NumeroDeVariableDepassementVolumeMin = CorrespondanceDesVariables
+                                                   .NumeroDeVariableDepassementVolumeMin;
     auto& NumeroDeVariableDEcartPositifAuTurbineCible
       = CorrespondanceDesVariables.NumeroDeVariableDEcartPositifAuTurbineCible;
     auto& NumeroDeVariableDEcartNegatifAuTurbineCible

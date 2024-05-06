@@ -21,9 +21,10 @@
 #ifndef __ANTARES_LIBS_STUDY_UI_H__
 #define __ANTARES_LIBS_STUDY_UI_H__
 
+#include <map>
+
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
-#include <map>
 
 namespace Antares
 {
