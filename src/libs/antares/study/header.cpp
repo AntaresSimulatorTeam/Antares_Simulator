@@ -20,9 +20,11 @@
 */
 
 #include "antares/study/header.h"
+
+#include <cassert>
 #include <cstdlib>
 #include <ctime>
-#include <cassert>
+
 #include <antares/logs/logs.h>
 #include "antares/study/version.h"
 
@@ -65,7 +67,9 @@ void StudyHeader::CopySettingsToIni(IniFile& ini, bool upgradeVersion)
     // be able to quickly check the version of the study when calling
     // StudyHeader::readVersionFromFile().
     if (upgradeVersion)
+    {
         version = Data::StudyVersion::latest();
+    }
     sect->add("version", Data::StudyVersion::latest().toString());
 
     // Caption
@@ -133,7 +137,9 @@ bool StudyHeader::internalLoadFromINIFile(const IniFile& ini, bool warnings)
                 if (ConvertCStrToTimeT(p->value.c_str(), &dateCreated) && !dateCreated)
                 {
                     if (warnings)
+                    {
                         logs.error() << "Study header: The date of creation is invalid";
+                    }
                     dateCreated = ::time(nullptr);
                 }
                 continue;
@@ -143,7 +149,9 @@ bool StudyHeader::internalLoadFromINIFile(const IniFile& ini, bool warnings)
                 if (ConvertCStrToTimeT(p->value.c_str(), &dateLastSave) && !dateLastSave)
                 {
                     if (warnings)
+                    {
                         logs.error() << "Study header: The date of the last save is invalid";
+                    }
                     dateLastSave = ::time(nullptr);
                 }
                 continue;
@@ -153,7 +161,9 @@ bool StudyHeader::internalLoadFromINIFile(const IniFile& ini, bool warnings)
     else
     {
         if (warnings)
+        {
             logs.error() << "The main section has not been found. The study seems invalid.";
+        }
     }
 
     if (version >= StudyVersion(7, 0))
@@ -163,8 +173,8 @@ bool StudyHeader::internalLoadFromINIFile(const IniFile& ini, bool warnings)
             if (warnings)
             {
                 logs.error() << "Header: This version is not supported (version found:"
-                             << version.toString() << ", expected: <="
-                             << Data::StudyVersion::latest().toString() << ')';
+                             << version.toString()
+                             << ", expected: <=" << Data::StudyVersion::latest().toString() << ')';
             }
             return false;
         }
@@ -172,7 +182,9 @@ bool StudyHeader::internalLoadFromINIFile(const IniFile& ini, bool warnings)
     }
 
     if (warnings)
+    {
         logs.error() << "Study header: Invalid format";
+    }
     return false;
 }
 
@@ -196,7 +208,9 @@ bool StudyHeader::saveToFile(const AnyString& filename, bool upgradeVersion)
 StudyVersion StudyHeader::tryToFindTheVersion(const std::string& folder)
 {
     if (folder.empty()) // trivial check
+    {
         return StudyVersion::unknown();
+    }
 
     // folder normalization
     fs::path abspath = fs::absolute(folder);
@@ -211,6 +225,7 @@ StudyVersion StudyHeader::tryToFindTheVersion(const std::string& folder)
             std::string versionStr;
             if (!readVersionFromFile(abspath, versionStr))
                 return StudyVersion::unknown();
+            }
 
             StudyVersion v;
             v.fromString(versionStr);
@@ -225,10 +240,10 @@ bool StudyHeader::readVersionFromFile(const fs::path& filename, std::string& ver
     IniFile ini;
     if (ini.open(filename.string()))
         return internalFindVersionFromFile(ini, version);
+    }
 
     logs.error() << "Couldn't open study.antares to find the version number";
     return false;
 }
 
 } // namespace Antares::Data
-

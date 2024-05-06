@@ -20,10 +20,12 @@
 */
 
 #include <string>
+
 #include <yuni/yuni.h>
-#include "antares/study/study.h"
-#include <antares/logs/logs.h>
 #include <yuni/io/file.h>
+
+#include <antares/logs/logs.h>
+#include "antares/study/study.h"
 
 using namespace Yuni;
 
@@ -34,7 +36,9 @@ namespace Data
 void Study::importLogsToOutputFolder(Solver::IResultWriter& resultWriter) const
 {
     if (!logs.logfile())
+    {
         return;
+    }
 
     std::filesystem::path from = logs.logfile().c_str();
     from = from.lexically_normal();

@@ -21,12 +21,14 @@
 #pragma once
 
 #include <string>
+
 #include <yuni/core/string.h>
+
 #include "antares/writer/i_writer.h"
 
 namespace Antares::Solver
 {
-class ImmediateFileResultWriter : public IResultWriter
+class ImmediateFileResultWriter: public IResultWriter
 {
 public:
     ImmediateFileResultWriter(const char* folderOutput);
@@ -43,4 +45,3 @@ private:
     std::string pOutputFolder;
 };
 } // namespace Antares::Solver
-

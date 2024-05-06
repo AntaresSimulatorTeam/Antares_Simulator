@@ -19,12 +19,12 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-
 #include "antares/solver/simulation/sim_spread_generator.h"
 
 namespace SIM
 {
-SpreadGenerator::SpreadGenerator(double range) : range_(range)
+SpreadGenerator::SpreadGenerator(double range):
+    range_(range)
 {
 }
 

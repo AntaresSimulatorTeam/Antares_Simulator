@@ -19,7 +19,6 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "private/immediate_file_writer.h"
 #include <antares/io/file.h>
 #include <antares/logs/logs.h>
 
@@ -29,8 +28,8 @@ namespace Antares
 {
 namespace Solver
 {
-ImmediateFileResultWriter::ImmediateFileResultWriter(const char* folderOutput) :
- pOutputFolder(folderOutput)
+ImmediateFileResultWriter::ImmediateFileResultWriter(const char* folderOutput):
+    pOutputFolder(folderOutput)
 {
 }
 
@@ -75,7 +74,9 @@ void ImmediateFileResultWriter::addEntryFromFile(const fs::path& entryPath,
 {
     fs::path fullPath;
     if (!prepareDirectoryHierarchy(pOutputFolder, entryPath, fullPath))
+    {
         return;
+    }
 
     std::error_code ec;
     fs::copy(filePath, fullPath, ec);
@@ -90,7 +91,8 @@ void ImmediateFileResultWriter::addEntryFromFile(const fs::path& entryPath,
 }
 
 void ImmediateFileResultWriter::flush()
-{}
+{
+}
 
 bool ImmediateFileResultWriter::needsTheJobQueue() const
 {
@@ -103,19 +105,24 @@ void ImmediateFileResultWriter::finalize(bool /*verbose*/)
 }
 
 void NullResultWriter::addEntryFromBuffer(const std::string&, Yuni::Clob&)
-{}
+{
+}
+
 void NullResultWriter::addEntryFromBuffer(const std::string&, std::string&)
 {}
 void NullResultWriter::addEntryFromFile(const fs::path&, const fs::path&)
 {}
 void NullResultWriter::flush()
-{}
+{
+}
 
 bool NullResultWriter::needsTheJobQueue() const
 {
     return false;
 }
+
 void NullResultWriter::finalize(bool)
-{}
+{
+}
 } // namespace Solver
 } // namespace Antares

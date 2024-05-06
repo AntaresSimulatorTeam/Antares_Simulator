@@ -21,10 +21,11 @@
 #define BOOST_TEST_MODULE "test parameters"
 #define BOOST_TEST_DYN_LINK
 
-#include <boost/test/unit_test.hpp>
 #include <filesystem>
-#include <iostream>
 #include <fstream>
+#include <iostream>
+
+#include <boost/test/unit_test.hpp>
 
 #include <antares/study/study.h>
 
@@ -48,7 +49,6 @@ struct Fixture
     void writeValidFile();
     void writeInvalidFile();
 };
-
 
 // ==================
 // Tests section

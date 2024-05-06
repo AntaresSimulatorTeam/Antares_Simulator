@@ -19,7 +19,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "antares/logs/cleaner.h"
+#include "log_cleaner.h"
 #include "antares/antares/constants.h"
 #include <yuni/io/directory/info.h>
 #include <yuni/datetime/timestamp.h>

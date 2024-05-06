@@ -22,11 +22,12 @@
 
 #pragma once
 #include "ConstraintBuilder.h"
+
 /*!
  * represent 'Hydraulic Power Smoothing Using Variation Sum' constraint type
  */
 
-class HydroPowerSmoothingUsingVariationSum : private ConstraintFactory
+class HydroPowerSmoothingUsingVariationSum: private ConstraintFactory
 {
 public:
     using ConstraintFactory::ConstraintFactory;

@@ -23,7 +23,14 @@
 #include <yuni/yuni.h>
 #include "antares/study/study.h"
 #include "antares/study/parts/thermal/ecoInput.h"
+
+#include <yuni/yuni.h>
+#include <yuni/core/math.h>
+#include <yuni/io/directory.h>
+#include <yuni/io/file.h>
+
 #include <antares/logs/logs.h>
+#include "antares/study/study.h"
 
 using namespace Yuni;
 
@@ -71,7 +78,9 @@ bool EconomicInputData::loadFromFolder(Study& study, const std::string& folder)
         {
             ret = fuelcost.loadFromCSVFile(filename.string(), 1, HOURS_PER_YEAR, Matrix<>::optImmediate, &dataBuffer) && ret;
             if (study.usedByTheSolver && study.parameters.derated)
+            {
                 fuelcost.averageTimeseries();
+            }
         }
 
         filename = fs::path(folder) / "CO2Cost.txt";
@@ -80,7 +89,9 @@ bool EconomicInputData::loadFromFolder(Study& study, const std::string& folder)
             ret = co2cost.loadFromCSVFile(filename.string(), 1, HOURS_PER_YEAR, Matrix<>::optImmediate, &dataBuffer)
                   && ret;
             if (study.usedByTheSolver && study.parameters.derated)
+            {
                 co2cost.averageTimeseries();
+            }
         }
     }
 

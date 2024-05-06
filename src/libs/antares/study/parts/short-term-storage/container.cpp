@@ -22,9 +22,12 @@
 #include <antares/logs/logs.h>
 #include <yuni/io/file.h>
 #include <algorithm>
+#include <filesystem>
 #include <string>
 
-#include "antares/study/parts/short-term-storage/container.h"
+#include <yuni/io/file.h>
+
+#include <antares/logs/logs.h>
 
 #define SEP Yuni::IO::Separator
 
@@ -34,9 +37,9 @@ namespace Antares::Data::ShortTermStorage
 {
 bool STStorageInput::validate() const
 {
-    return std::all_of(storagesByIndex.cbegin(), storagesByIndex.cend(), [](auto& cluster) {
-        return cluster.validate();
-    });
+    return std::all_of(storagesByIndex.cbegin(),
+                       storagesByIndex.cend(),
+                       [](auto& cluster) { return cluster.validate(); });
 }
 
 bool STStorageInput::createSTStorageClustersFromIniFile(const fs::path& path)
@@ -45,9 +48,12 @@ bool STStorageInput::createSTStorageClustersFromIniFile(const fs::path& path)
     IniFile ini;
     if (!ini.open(pathIni.string()))
         return false;
+    }
 
     if (!ini.firstSection)
+    {
         return true;
+    }
 
     logs.debug() << "  :: loading `" << pathIni.string() << "`";
 
@@ -55,14 +61,16 @@ bool STStorageInput::createSTStorageClustersFromIniFile(const fs::path& path)
     {
         STStorageCluster cluster;
         if (!cluster.loadFromSection(*section))
+        {
             return false;
+        }
 
         storagesByIndex.push_back(cluster);
     }
 
-    std::sort(storagesByIndex.begin(), storagesByIndex.end(), [&](const auto& a, const auto& b){
-        return a.properties.name < b.properties.name;
-    });
+    std::sort(storagesByIndex.begin(),
+              storagesByIndex.end(),
+              [&](const auto& a, const auto& b) { return a.properties.name < b.properties.name; });
 
     return true;
 }
@@ -70,11 +78,13 @@ bool STStorageInput::createSTStorageClustersFromIniFile(const fs::path& path)
 bool STStorageInput::loadSeriesFromFolder(const std::string& folder) const
 {
     if (folder.empty())
+    {
         return false;
+    }
 
     bool ret = true;
 
-    for (auto& cluster : storagesByIndex)
+    for (auto& cluster: storagesByIndex)
     {
         const std::string buffer(folder + SEP + cluster.id);
         ret = cluster.loadSeries(buffer) && ret;
@@ -91,9 +101,9 @@ bool STStorageInput::saveToFolder(const std::string& folder) const
     IniFile ini;
 
     logs.debug() << "saving file " << pathIni;
-    std::for_each(storagesByIndex.cbegin(), storagesByIndex.cend(), [&ini](auto& storage) {
-        return storage.saveProperties(ini);
-    });
+    std::for_each(storagesByIndex.cbegin(),
+                  storagesByIndex.cend(),
+                  [&ini](auto& storage) { return storage.saveProperties(ini); });
 
     return ini.save(pathIni);
 }
@@ -101,24 +111,24 @@ bool STStorageInput::saveToFolder(const std::string& folder) const
 bool STStorageInput::saveDataSeriesToFolder(const std::string& folder) const
 {
     Yuni::IO::Directory::Create(folder);
-    return std::all_of(storagesByIndex.cbegin(), storagesByIndex.cend(), [&folder](auto& storage) {
-        return storage.saveSeries(folder + SEP + storage.id);
-    });
+    return std::all_of(storagesByIndex.cbegin(),
+                       storagesByIndex.cend(),
+                       [&folder](auto& storage)
+                       { return storage.saveSeries(folder + SEP + storage.id); });
 }
 
 std::size_t STStorageInput::count() const
 {
-  return std::count_if(storagesByIndex.begin(),
-                       storagesByIndex.end(),
-                       [](const STStorageCluster& st) {
-                           return st.properties.enabled;
-                       });
+    return std::count_if(storagesByIndex.begin(),
+                         storagesByIndex.end(),
+                         [](const STStorageCluster& st) { return st.properties.enabled; });
 }
 
 uint STStorageInput::removeDisabledClusters()
 {
-    const auto& it = std::remove_if(storagesByIndex.begin(), storagesByIndex.end(),
-        [](const auto& c) { return !c.enabled(); });
+    const auto& it = std::remove_if(storagesByIndex.begin(),
+                                    storagesByIndex.end(),
+                                    [](const auto& c) { return !c.enabled(); });
 
     uint disabledCount = std::distance(it, storagesByIndex.end());
     storagesByIndex.erase(it, storagesByIndex.end());

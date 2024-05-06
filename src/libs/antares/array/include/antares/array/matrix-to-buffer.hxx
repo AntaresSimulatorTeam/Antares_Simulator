@@ -40,9 +40,13 @@ struct MatrixScalar
     static inline void Append(std::string& file, T v, const char* const)
     {
         if (Utils::isZero(v))
+        {
             file.append(std::to_string(0));
+        }
         else
+        {
             file.append(std::to_string(v));
+        }
     }
 };
 
@@ -58,15 +62,24 @@ struct MatrixScalar<double>
         else
         {
             char ConversionBuffer[128];
-            const int sizePrintf
-              = Utils::isZero(v - floor(v))
-                  ? ANTARES_MATRIX_SNPRINTF(ConversionBuffer, sizeof(ConversionBuffer), "%.0f", v)
-                  : ANTARES_MATRIX_SNPRINTF(ConversionBuffer, sizeof(ConversionBuffer), format, v);
+            const int sizePrintf = Utils::isZero(v - floor(v))
+                                     ? ANTARES_MATRIX_SNPRINTF(ConversionBuffer,
+                                                               sizeof(ConversionBuffer),
+                                                               "%.0f",
+                                                               v)
+                                     : ANTARES_MATRIX_SNPRINTF(ConversionBuffer,
+                                                               sizeof(ConversionBuffer),
+                                                               format,
+                                                               v);
 
             if (sizePrintf >= 0 and sizePrintf < (int)(sizeof(ConversionBuffer)))
+            {
                 file += (const char*)ConversionBuffer;
+            }
             else
+            {
                 file += "ERR";
+            }
         }
     }
 };
@@ -83,17 +96,24 @@ struct MatrixScalar<float>
         else
         {
             char ConversionBuffer[128];
-            const int sizePrintf
-              = Utils::isZero(v - floor(v))
-                  ? ANTARES_MATRIX_SNPRINTF(
-                    ConversionBuffer, sizeof(ConversionBuffer), "%.0f", (double)v)
-                  : ANTARES_MATRIX_SNPRINTF(
-                    ConversionBuffer, sizeof(ConversionBuffer), format, (double)v);
+            const int sizePrintf = Utils::isZero(v - floor(v))
+                                     ? ANTARES_MATRIX_SNPRINTF(ConversionBuffer,
+                                                               sizeof(ConversionBuffer),
+                                                               "%.0f",
+                                                               (double)v)
+                                     : ANTARES_MATRIX_SNPRINTF(ConversionBuffer,
+                                                               sizeof(ConversionBuffer),
+                                                               format,
+                                                               (double)v);
 
             if (sizePrintf >= 0 and sizePrintf < (int)(sizeof(ConversionBuffer)))
+            {
                 file += (const char*)ConversionBuffer;
+            }
             else
+            {
                 file += "ERR";
+            }
         }
     }
 };
@@ -107,9 +127,13 @@ I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>* matrix_to_buffer_dumper_facto
   PredicateT& predicate)
 {
     if (mtx->width == 1)
+    {
         return new one_column__dumper<T, ReadWriteT, PredicateT>(mtx, data, predicate);
+    }
     else
+    {
         return new multiple_columns__dumper<T, ReadWriteT, PredicateT>(mtx, data, predicate);
+    }
 }
 
 template<class T, class ReadWriteT, class PredicateT>
@@ -150,8 +174,9 @@ void one_column__dumper<T, ReadWriteT, PredicateT>::run()
 {
     for (uint y = 0; y != (this->mtx_)->height; ++y)
     {
-        MatrixScalar<ReadWriteT>::Append(
-          this->buffer_, (ReadWriteT)this->predicate_((this->mtx_)->entry[0][y]), this->format_);
+        MatrixScalar<ReadWriteT>::Append(this->buffer_,
+                                         (ReadWriteT)this->predicate_((this->mtx_)->entry[0][y]),
+                                         this->format_);
         this->buffer_ += '\n';
     }
 }
@@ -161,15 +186,16 @@ void multiple_columns__dumper<T, ReadWriteT, PredicateT>::run()
 {
     for (uint y = 0; y < (this->mtx_)->height; ++y)
     {
-        MatrixScalar<ReadWriteT>::Append(
-          this->buffer_, (ReadWriteT)this->predicate_((this->mtx_)->entry[0][y]), this->format_);
+        MatrixScalar<ReadWriteT>::Append(this->buffer_,
+                                         (ReadWriteT)this->predicate_((this->mtx_)->entry[0][y]),
+                                         this->format_);
         for (uint x = 1; x < (this->mtx_)->width; ++x)
         {
             this->buffer_ += '\t';
-            MatrixScalar<ReadWriteT>::Append(
-              this->buffer_,
-              (ReadWriteT)this->predicate_((this->mtx_)->entry[x][y]),
-              this->format_);
+            MatrixScalar<ReadWriteT>::Append(this->buffer_,
+                                             (ReadWriteT)this->predicate_(
+                                               (this->mtx_)->entry[x][y]),
+                                             this->format_);
         }
         this->buffer_ += '\n';
     }

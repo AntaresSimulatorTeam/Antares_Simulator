@@ -47,7 +47,8 @@ void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver,
 std::list<std::string> getAvailableOrtoolsSolverName();
 
 /*!
- *  \brief Return a single string containing all solvers available, separated by a ", " and ending with a ".".
+ *  \brief Return a single string containing all solvers available, separated by a ", " and ending
+ * with a ".".
  *
  */
 std::string availableOrToolsSolversString();
@@ -83,7 +84,8 @@ class Nomenclature
 public:
     Nomenclature() = delete;
 
-    explicit Nomenclature(char prefix) : prefix_(prefix)
+    explicit Nomenclature(char prefix):
+        prefix_(prefix)
     {
     }
 

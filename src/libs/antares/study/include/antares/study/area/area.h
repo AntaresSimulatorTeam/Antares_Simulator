@@ -31,10 +31,21 @@
 #include <filesystem>
 #include <vector>
 #include <set>
+#include <stdlib.h>
+#include <vector>
+
+#include <yuni/yuni.h>
+#include <yuni/core/noncopyable.h>
+#include <yuni/core/string.h>
+
+#include <antares/array/matrix.h>
+#include <antares/study/parameters/adq-patch-params.h>
+#include "antares/study/filter.h"
+#include "antares/study/parts/parts.h"
+
+#include "constants.h"
 #include "links.h"
 #include "ui.h"
-#include "constants.h"
-#include "antares/study/filter.h"
 
 namespace Antares
 {
@@ -45,7 +56,7 @@ struct CompareAreaName;
 /*!
 ** \brief Definition for a single area
 */
-class Area final : private Yuni::NonCopyable<Area>
+class Area final: private Yuni::NonCopyable<Area>
 {
 public:
     using NameSet = std::set<AreaName>;
@@ -83,6 +94,7 @@ public:
     ** \brief Destructor
     */
     ~Area();
+
     //@}
 
     // !\name isVisibleOnLayer
@@ -93,11 +105,14 @@ public:
     bool isVisibleOnLayer(const size_t& layerID) const
     {
         if (ui == nullptr)
+        {
             return false;
+        }
 
         std::vector<size_t>& layerList = ui->mapLayersVisibilityList;
-        std::vector<size_t>::iterator layerPosition
-          = std::find(layerList.begin(), layerList.end(), layerID);
+        std::vector<size_t>::iterator layerPosition = std::find(layerList.begin(),
+                                                                layerList.end(),
+                                                                layerID);
         return layerPosition != layerList.end();
     }
 
@@ -307,7 +322,7 @@ public:
     //! Information for the UI
     AreaUI* ui = nullptr;
     //@}
-    
+
     //! \name Dynamic
     //@{
     /*!
@@ -366,7 +381,7 @@ bool saveAreaAdequacyPatchIniFile(const Area& area, const Yuni::Clob& buffer);
 ** printf("Area name : `%s`\n", (*(l->byIndex[2])).name);
 ** \endcode
 */
-class AreaList final : public Yuni::NonCopyable<AreaList>
+class AreaList final: public Yuni::NonCopyable<AreaList>
 {
 public:
     //! An iterator
@@ -537,7 +552,6 @@ public:
     //! Get if the container is empty
     bool empty() const;
 
-
     /*!
     ** \brief Invalidate all areas
     **
@@ -655,7 +669,6 @@ public:
     /*!
     ** \brief Try to estimate the amount of memory required by the class for a simulation
     */
-
 
     /*!
     ** \brief Get the average amount of memory currently used by each area
@@ -778,9 +791,7 @@ Area* addAreaToListOfAreas(AreaList& list, const AnyString& name);
 ** \param lname The name of the area in lowercase
 ** \return A valid pointer to the area if successful, NULL otherwise
 */
-Area* AreaListAddFromNames(AreaList& list,
-                           const AnyString& name,
-                           const AnyString& lname);
+Area* AreaListAddFromNames(AreaList& list, const AnyString& name, const AnyString& lname);
 
 /*!
 ** \brief Try to establish a link between two areas
@@ -817,7 +828,6 @@ void AreaListEnsureDataHydroTimeSeries(AreaList* l);
 ** \brief Ensure data for hydro prepro are initialized
 */
 void AreaListEnsureDataHydroPrepro(AreaList* l);
-
 
 /*!
 ** \brief Ensure data for thermal prepro are initialized

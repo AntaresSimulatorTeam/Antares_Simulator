@@ -21,10 +21,11 @@
 #ifndef __ANTARES_LIB_STUDY_AREA_HYDRO_ALLOCATION_H__
 #define __ANTARES_LIB_STUDY_AREA_HYDRO_ALLOCATION_H__
 
-#include "../../fwd.h"
 #include <map>
 #include <unordered_map>
 #include <filesystem>
+
+#include "../../fwd.h"
 
 namespace Antares
 {

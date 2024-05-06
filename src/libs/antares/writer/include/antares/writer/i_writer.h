@@ -24,8 +24,10 @@
 
 #include <filesystem>
 #include <memory>
-#include <string>
 #include <stdexcept>
+#include <string>
+
+#include <yuni/core/string.h>
 
 namespace Antares::Solver
 {
@@ -33,7 +35,7 @@ namespace Antares::Solver
 /*!
  * A generic I/O exception that may be thrown by writer operations.
  */
-class IOError : public std::runtime_error
+class IOError: public std::runtime_error
 {
 public:
     using std::runtime_error::runtime_error;
@@ -63,7 +65,7 @@ class NullResultWriter: public Solver::IResultWriter {
     void addEntryFromFile(const std::filesystem::path &, const std::filesystem::path &) override;
     void flush() override;
     bool needsTheJobQueue() const override;
-    void finalize(bool ) override;
+    void finalize(bool) override;
 };
 
 } // namespace Antares::Solver

@@ -20,10 +20,12 @@
 */
 
 #include "antares/study/parts/hydro/allocation.h"
-#include <antares/utils/utils.h>
-#include "antares/study/study.h"
+
 #include <yuni/core/math.h>
 #include <yuni/io/file.h>
+
+#include <antares/utils/utils.h>
+#include "antares/study/study.h"
 
 using namespace Yuni;
 
@@ -37,7 +39,9 @@ static const Area* FindMappedAreaName(const AreaName& id,
 {
     auto i = mapping.find(id);
     if (i != mapping.end())
+    {
         return study.areas.findFromName(i->second);
+    }
     return study.areas.findFromName(id);
 }
 
@@ -57,7 +61,9 @@ void HydroAllocation::remove(const AreaName& areaid)
     assert(!pMustUseValuesFromAreaID);
     auto i = pValues.find(areaid);
     if (i != pValues.end())
+    {
         pValues.erase(i);
+    }
 }
 
 void HydroAllocation::rename(const AreaName& oldid, const AreaName& newid)
@@ -104,7 +110,9 @@ void HydroAllocation::fromArea(const Area& area, double value)
 void HydroAllocation::fromArea(const Area* area, double value)
 {
     if (area)
+    {
         fromArea(area->id, value);
+    }
 }
 
 double HydroAllocation::fromArea(const AreaName& areaid) const
@@ -121,10 +129,14 @@ void HydroAllocation::fromArea(const AreaName& areaid, double value)
     {
         auto i = pValues.find(areaid);
         if (i != pValues.end())
+        {
             pValues.erase(i);
+        }
     }
     else
+    {
         pValues[areaid] = value;
+    }
 }
 
 void HydroAllocation::prepareForSolver(const AreaList& list)
@@ -135,7 +147,9 @@ void HydroAllocation::prepareForSolver(const AreaList& list)
     {
         auto* targetarea = list.find(i->first);
         if (targetarea)
+        {
             pValuesFromAreaID[targetarea->index] = i->second;
+        }
     }
 
     pValues.clear();
@@ -163,18 +177,20 @@ bool HydroAllocation::loadFromFile(const AreaName& referencearea, const std::fil
         if (!ini.empty())
         {
             AreaName areaname;
-            ini.each([&](const IniFile::Section& section) {
-                for (auto* p = section.firstProperty; p; p = p->next)
-                {
-                    double coeff = p->value.to<double>();
-                    if (!Utils::isZero(coeff))
-                    {
-                        areaname = p->key;
-                        areaname.toLower();
-                        pValues[areaname] = coeff;
-                    }
-                }
-            });
+            ini.each(
+              [&](const IniFile::Section& section)
+              {
+                  for (auto* p = section.firstProperty; p; p = p->next)
+                  {
+                      double coeff = p->value.to<double>();
+                      if (!Utils::isZero(coeff))
+                      {
+                          areaname = p->key;
+                          areaname.toLower();
+                          pValues[areaname] = coeff;
+                      }
+                  }
+              });
         }
     }
     else
