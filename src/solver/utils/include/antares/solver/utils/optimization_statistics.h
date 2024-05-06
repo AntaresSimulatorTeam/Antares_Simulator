@@ -21,9 +21,9 @@
 #ifndef __SOLVER_UTILS_STATISTICS_H__
 #define __SOLVER_UTILS_STATISTICS_H__
 
-#include <string>
-#include <cmath>
 #include <atomic>
+#include <cmath>
+#include <string>
 
 class OptimizationStatistics
 {
@@ -48,17 +48,17 @@ public:
         this->reset();
     }
 
-    OptimizationStatistics(OptimizationStatistics &&rhs)
-        :
+    OptimizationStatistics(OptimizationStatistics&& rhs):
         totalSolveTime(rhs.totalSolveTime.load()),
         nbSolve(rhs.nbSolve.load()),
         totalUpdateTime(rhs.totalUpdateTime.load()),
         nbUpdate(rhs.nbUpdate.load())
-    {}
+    {
+    }
 
     OptimizationStatistics(const OptimizationStatistics&) = delete;
     OptimizationStatistics& operator=(const OptimizationStatistics&) = delete;
-    OptimizationStatistics& operator=( OptimizationStatistics&&) = delete;
+    OptimizationStatistics& operator=(OptimizationStatistics&&) = delete;
 
     void add(const OptimizationStatistics& other)
     {
@@ -98,14 +98,18 @@ public:
     double getAverageUpdateTime() const
     {
         if (nbUpdate == 0)
+        {
             return 0.0;
+        }
         return ((double)totalUpdateTime) / nbUpdate;
     }
 
     double getAverageSolveTime() const
     {
         if (nbSolve == 0)
+        {
             return 0.0;
+        }
         return ((double)totalSolveTime) / nbSolve;
     }
 

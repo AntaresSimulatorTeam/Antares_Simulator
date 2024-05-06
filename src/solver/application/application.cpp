@@ -1,52 +1,47 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 #include "antares/application/application.h"
-
-#include <antares/sys/policy.h>
-#include <antares/resources/resources.h>
-#include <antares/logs/hostinfo.h>
-#include <antares/antares/fatal-error.h>
-#include <antares/benchmarking/timer.h>
-
-#include <antares/exception/LoadingError.hpp>
-#include <antares/checks/checkLoadedInputData.h>
-#include <antares/study/version.h>
-#include <antares/writer/writer_factory.h>
-
-#include "antares/signal-handling/public.h"
-
-#include "antares/solver/misc/system-memory.h"
-#include "antares/solver/misc/write-command-line.h"
-
-#include "antares/solver/utils/ortools_utils.h"
-#include "antares/config/config.h"
-
-#include <antares/infoCollection/StudyInfoCollector.h>
 
 #include <yuni/datetime/timestamp.h>
 
-
-#include "antares/study/simulation.h"
+#include <antares/antares/fatal-error.h>
+#include <antares/benchmarking/timer.h>
+#include <antares/checks/checkLoadedInputData.h>
+#include <antares/exception/LoadingError.hpp>
+#include <antares/infoCollection/StudyInfoCollector.h>
+#include <antares/logs/hostinfo.h>
+#include <antares/resources/resources.h>
+#include <antares/study/version.h>
+#include <antares/sys/policy.h>
+#include <antares/writer/writer_factory.h>
 #include "antares/antares/version.h"
+#include "antares/config/config.h"
+#include "antares/signal-handling/public.h"
+#include "antares/solver/misc/system-memory.h"
+#include "antares/solver/misc/write-command-line.h"
+#include "antares/solver/simulation/adequacy_mode.h"
+#include "antares/solver/simulation/economy_mode.h"
 #include "antares/solver/simulation/simulation.h"
+#include "antares/solver/utils/ortools_utils.h"
+#include "antares/study/simulation.h"
 
 using namespace Antares::Check;
 
@@ -65,8 +60,119 @@ Application::Application()
     resetProcessPriority();
 }
 
+void Application::handleParserReturn(Yuni::GetOpt::Parser* parser)
+{
+    auto ret = parser->operator()(pArgc, pArgv);
+    switch (ret)
+    {
+    case Yuni::GetOpt::ReturnCode::error:
+        throw Error::CommandLineArguments(parser->errors());
+    case Yuni::GetOpt::ReturnCode::help:
+        pStudy = nullptr;
+        return;
+    default:
+        break;
+    }
+}
+
+void Application::handleOptions(const Data::StudyLoadOptions& options)
+{
+    if (options.displayVersion)
+    {
+        PrintVersionToStdCout();
+        pStudy = nullptr;
+        return;
+    }
+
+    if (options.listSolvers)
+    {
+        printSolvers();
+        pStudy = nullptr;
+        return;
+    }
+}
+
+void Application::startSimulation(Data::StudyLoadOptions& options)
+{
+// Starting !
+#ifdef GIT_SHA1_SHORT_STRING
+    logs.checkpoint() << "Antares Solver v" << ANTARES_VERSION_STR << " (" << GIT_SHA1_SHORT_STRING
+                      << ")";
+#else
+    logs.checkpoint() << "Antares Solver v" << ANTARES_VERSION_STR;
+#endif
+    WriteHostInfoIntoLogs();
+
+    WriteCommandLineIntoLogs(pArgc, pArgv);
+
+    logs.info() << "  :: log filename: " << logs.logfile();
+
+    logs.callback.connect(this, &Application::onLogMessage);
+
+    pStudy = std::make_shared<Antares::Data::Study>(true /* for the solver */);
+
+    pParameters = &(pStudy->parameters);
+
+    readDataForTheStudy(options);
+
+    postParametersChecks();
+
+    pStudy->initializeProgressMeter(pSettings.tsGeneratorsOnly);
+    if (pSettings.noOutput)
+    {
+        pSettings.displayProgression = false;
+    }
+
+    if (pSettings.displayProgression)
+    {
+        auto& filename = pStudy->buffer;
+        filename.clear() << "about-the-study" << Yuni::IO::Separator << "map";
+        pStudy->progression.saveToFile(filename, *resultWriter);
+        pStudy->progression.start();
+    }
+    else
+    {
+        logs.info() << "  The progression is disabled";
+    }
+}
+
+void Application::postParametersChecks() const
+{ // Some more checks require the existence of pParameters, hence of a study.
+    // Their execution is delayed up to this point.
+    checkOrtoolsUsage(pParameters->unitCommitment.ucMode,
+                      pParameters->optOptions.ortoolsUsed,
+                      pParameters->optOptions.ortoolsSolver);
+
+    checkSimplexRangeHydroPricing(pParameters->simplexOptimizationRange,
+                                  pParameters->hydroPricing.hpMode);
+
+    checkSimplexRangeUnitCommitmentMode(pParameters->simplexOptimizationRange,
+                                        pParameters->unitCommitment.ucMode);
+
+    checkSimplexRangeHydroHeuristic(pParameters->simplexOptimizationRange, pStudy->areas);
+
+    if (pParameters->adqPatchParams.enabled)
+    {
+        pParameters->adqPatchParams.checkAdqPatchParams(pParameters->mode,
+                                                        pStudy->areas,
+                                                        pParameters->include.hurdleCosts);
+    }
+
+    bool tsGenThermal = (0
+                         != (pParameters->timeSeriesToGenerate
+                             & Antares::Data::TimeSeriesType::timeSeriesThermal));
+
+    checkMinStablePower(tsGenThermal, pStudy->areas);
+
+    checkFuelCostColumnNumber(pStudy->areas);
+    checkCO2CostColumnNumber(pStudy->areas);
+}
+
 void Application::prepare(int argc, char* argv[])
 {
+    pArgc = argc;
+    pArgv = argv;
+
     // Load the local policy settings
     LocalPolicy::Open();
     LocalPolicy::CheckRootPrefix(argv[0]);
@@ -87,32 +193,9 @@ void Application::prepare(int argc, char* argv[])
     auto parser = CreateParser(pSettings, options);
     // Parse the command line arguments
 
-    switch (auto ret = parser->operator()(argc, argv); ret)
-    {
-        using namespace Yuni::GetOpt;
-    case ReturnCode::error:
-        throw Error::CommandLineArguments(parser->errors());
-    case ReturnCode::help:
-        // End the program
-        pStudy = nullptr;
-        return;
-    default:
-        break;
-    }
+    handleParserReturn(parser.get());
 
-    if (options.displayVersion)
-    {
-        PrintVersionToStdCout();
-        pStudy = nullptr;
-        return;
-    }
-
-    if (options.listSolvers)
-    {
-        printSolvers();
-        pStudy = nullptr;
-        return;
-    }
+    handleOptions(options);
 
     // Perform some checks
     checkAndCorrectSettingsAndOptions(pSettings, options);
@@ -124,76 +207,10 @@ void Application::prepare(int argc, char* argv[])
     // Determine the log filename to use for this simulation
     resetLogFilename();
 
-    // Starting !
-#ifdef GIT_SHA1_SHORT_STRING
-    logs.checkpoint() << "Antares Solver v" << ANTARES_VERSION_STR << " (" << GIT_SHA1_SHORT_STRING
-                      << ")";
-#else
-    logs.checkpoint() << "Antares Solver v" << ANTARES_VERSION_STR;
-#endif
-    WriteHostInfoIntoLogs();
-
-    // Write command-line options into logs
-    // Incidentally, it also seems to contain the full path to the executable
-    logs.info();
-    WriteCommandLineIntoLogs(argc, argv);
-
-    logs.info() << "  :: log filename: " << logs.logfile();
-    // Temporary use a callback to count the number of errors and warnings
-    logs.callback.connect(this, &Application::onLogMessage);
-
-    // Allocate a study
-    pStudy = std::make_shared<Antares::Data::Study>(true /* for the solver */);
-
-    // Setting global variables for backward compatibility
-    pParameters = &(pStudy->parameters);
-
-    // Loading the study
-    readDataForTheStudy(options);
-
-    // Some more checks require the existence of pParameters, hence of a study.
-    // Their execution is delayed up to this point.
-    checkOrtoolsUsage(
-      pParameters->unitCommitment.ucMode, pParameters->optOptions.ortoolsUsed, pParameters->optOptions.ortoolsSolver);
-
-    checkSimplexRangeHydroPricing(pParameters->simplexOptimizationRange,
-                                  pParameters->hydroPricing.hpMode);
-
-    checkSimplexRangeUnitCommitmentMode(pParameters->simplexOptimizationRange,
-                                        pParameters->unitCommitment.ucMode);
-
-    checkSimplexRangeHydroHeuristic(pParameters->simplexOptimizationRange, pStudy->areas);
-
-    if (pParameters->adqPatchParams.enabled)
-        pParameters->adqPatchParams.checkAdqPatchParams(pParameters->mode,
-                                                        pStudy->areas,
-                                                        pParameters->include.hurdleCosts);
-
-    bool tsGenThermal
-      = (0 != (pParameters->timeSeriesToGenerate & Antares::Data::TimeSeriesType::timeSeriesThermal));
-
-    checkMinStablePower(tsGenThermal, pStudy->areas);
-
-    checkFuelCostColumnNumber(pStudy->areas);
-    checkCO2CostColumnNumber(pStudy->areas);
-
-    // Start the progress meter
-    pStudy->initializeProgressMeter(pSettings.tsGeneratorsOnly);
-    if (pSettings.noOutput)
-        pSettings.displayProgression = false;
-
-    if (pSettings.displayProgression)
-    {
-        auto& filename = pStudy->buffer;
-        filename.clear() << "about-the-study" << Yuni::IO::Separator << "map";
-        pStudy->progression.saveToFile(filename, *resultWriter);
-        pStudy->progression.start();
-    }
-    else
-        logs.info() << "  The progression is disabled";
+    startSimulation(options);
 }
 
-void Application::onLogMessage(int level, const Yuni::String& /*message*/)
+void Application::onLogMessage(int level, const std::string& /*message*/)
 {
     switch (level)
     {
@@ -213,7 +230,9 @@ void Application::execute()
 {
     // pStudy == nullptr e.g when the -h flag is given
     if (!pStudy)
+    {
         return;
+    }
 
     SystemMemoryLogger memoryReport;
     memoryReport.interval(1000 * 60 * 5); // 5 minutes
@@ -244,6 +263,24 @@ void Application::execute()
     pStudy->progression.stop();
 }
 
+void Application::runSimulationInEconomicMode()
+{
+    Solver::runSimulationInEconomicMode(*pStudy,
+                                        pSettings,
+                                        pDurationCollector,
+                                        *resultWriter,
+                                        pOptimizationInfo);
+}
+
+void Application::runSimulationInAdequacyMode()
+{
+    Solver::runSimulationInAdequacyMode(*pStudy,
+                                        pSettings,
+                                        pDurationCollector,
+                                        *resultWriter,
+                                        pOptimizationInfo);
+}
+
 void Application::resetLogFilename() const
 {
     // Assigning the log file
@@ -253,7 +290,8 @@ void Application::resetLogFilename() const
     // Making sure that the folder
     if (!Yuni::IO::Directory::Create(logfile))
     {
-        throw FatalError(std::string("Impossible to create the log folder at ") + logfile.c_str() + ". Aborting now.");
+        throw FatalError(std::string("Impossible to create the log folder at ") + logfile.c_str()
+                         + ". Aborting now.");
     }
 
     // Date/time
@@ -271,13 +309,15 @@ void Application::resetLogFilename() const
 }
 
 void Application::prepareWriter(const Antares::Data::Study& study,
-                                Benchmarking::IDurationCollector& duration_collector)
+                                Benchmarking::DurationCollector& duration_collector)
 {
     ioQueueService = std::make_shared<Yuni::Job::QueueService>();
     ioQueueService->maximumThreadCount(1);
     ioQueueService->start();
-    resultWriter = resultWriterFactory(
-            study.parameters.resultFormat, study.folderOutput, ioQueueService, duration_collector);
+    resultWriter = resultWriterFactory(study.parameters.resultFormat,
+                                       study.folderOutput,
+                                       ioQueueService,
+                                       duration_collector);
 }
 
 void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
@@ -286,7 +326,9 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
 
     // Name of the simulation
     if (!pSettings.simulationName.empty())
+    {
         study.simulationComments.name = pSettings.simulationName;
+    }
 
     // Force some options
     options.prepareOutput = !pSettings.noOutput;
@@ -299,14 +341,14 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     std::exception_ptr loadingException;
     try
     {
-        if (study.loadFromFolder(pSettings.studyFolder, options))
+        pDurationCollector("study_loading") << [&]
         {
-            logs.info() << "The study is loaded.";
-            logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
-        }
-
-        timer.stop();
-        pDurationCollector.addDuration("study_loading", timer.get_duration());
+            if (study.loadFromFolder(pSettings.studyFolder, options))
+            {
+                logs.info() << "The study is loaded.";
+                logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
+            }
+        };
 
         if (study.areas.empty())
         {
@@ -351,7 +393,9 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
 
     // Name of the simulation (again, if the value has been overwritten)
     if (!pSettings.simulationName.empty())
+    {
         study.simulationComments.name = pSettings.simulationName;
+    }
 
     // Removing all callbacks, which are no longer needed
     logs.callback.clear();
@@ -384,7 +428,9 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
             // However, since we have warnings/errors, it allows to have a piece of
             // log when the unexpected happens.
             if (!study.parameters.noOutput)
+            {
                 study.importLogsToOutputFolder(*resultWriter);
+            }
             // empty line
             logs.info();
         }
@@ -394,14 +440,18 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     if (!pSettings.noOutput)
     {
         if (!study.checkForFilenameLimits(true))
+        {
             throw Error::InvalidFileName();
+        }
 
         writeComment(study);
     }
 
     // Runtime data dedicated for the solver
     if (!study.initializeRuntimeInfos())
+    {
         throw Error::RuntimeInfoInitialization();
+    }
 
     // Apply transformations needed by the solver only (and not the interface for example)
     study.performTransformationsBeforeLaunchingSimulation();
@@ -409,17 +459,16 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     // alloc global vectors
     SIM_AllocationTableaux(study);
 }
+
 void Application::writeComment(Data::Study& study)
 {
     study.buffer.clear() << "simulation-comments.txt";
 
-    if (!this->pSettings.commentFile.empty())
+    if (!pSettings.commentFile.empty())
     {
-        this->resultWriter->addEntryFromFile(study.buffer.c_str(),
-                                             this->pSettings.commentFile.c_str());
+        resultWriter->addEntryFromFile(study.buffer.c_str(), pSettings.commentFile.c_str());
 
-        this->pSettings.commentFile.clear();
-        this->pSettings.commentFile.shrink();
+        pSettings.commentFile.clear();
     }
 }
 
@@ -432,15 +481,19 @@ static void logTotalTime(unsigned duration)
     d -= minutes;
     auto seconds = std::chrono::duration_cast<std::chrono::seconds>(d);
 
-    logs.info().appendFormat("Total simulation time: %02luh%02lum%02lus", hours.count(), minutes.count(), seconds.count());
+    logs.info().appendFormat("Total simulation time: %02luh%02lum%02lus",
+                             hours.count(),
+                             minutes.count(),
+                             seconds.count());
 }
 
 void Application::writeExectutionInfo()
 {
     if (!pStudy)
+    {
         return;
+    }
 
-    // Last missing duration to get : measure of total simulation duration
     pTotalTimer.stop();
     pDurationCollector.addDuration("total", pTotalTimer.get_duration());
 
@@ -448,7 +501,9 @@ void Application::writeExectutionInfo()
 
     // If no writer is available, we can't write
     if (!resultWriter)
+    {
         return;
+    }
 
     // Info collectors : they retrieve data from study and simulation
     Benchmarking::StudyInfoCollector study_info_collector(*pStudy);
@@ -477,7 +532,10 @@ Application::~Application()
         try
         {
             logs.info() << LOG_UI_SOLVER_DONE;
-        } catch (...) {}; //Catching log exception
+        }
+        catch (...)
+        {
+        }; // Catching log exception
 
         // Copy the log file if a result writer is available
         if (!pStudy->parameters.noOutput && resultWriter)

@@ -38,6 +38,7 @@ struct VCardPumping
     {
         return "H. PUMP";
     }
+
     //! Unit
     static std::string Unit()
     {
@@ -96,7 +97,7 @@ struct VCardPumping
 ** \brief Reservoir level
 */
 template<class NextT = Container::EndOfList>
-class Pumping : public Variable::IVariable<Pumping<NextT>, NextT, VCardPumping>
+class Pumping: public Variable::IVariable<Pumping<NextT>, NextT, VCardPumping>
 {
 public:
     //! Type of the next static variable
@@ -122,11 +123,11 @@ public:
     {
         enum
         {
-            count
-            = ((VCardType::categoryDataLevel & CDataLevel && VCardType::categoryFileLevel & CFile)
-                 ? (NextType::template Statistics<CDataLevel, CFile>::count
-                    + VCardType::columnCount * ResultsType::count)
-                 : NextType::template Statistics<CDataLevel, CFile>::count),
+            count = ((VCardType::categoryDataLevel & CDataLevel
+                      && VCardType::categoryFileLevel & CFile)
+                       ? (NextType::template Statistics<CDataLevel, CFile>::count
+                          + VCardType::columnCount * ResultsType::count)
+                       : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
 
@@ -144,7 +145,9 @@ public:
 
         pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+        {
             pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);
+        }
 
         // Next
         NextType::initializeFromStudy(study);
@@ -172,7 +175,9 @@ public:
     void simulationBegin()
     {
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+        {
             pValuesForTheCurrentYear[numSpace].reset();
+        }
         // Next
         NextType::simulationBegin();
     }
@@ -230,8 +235,9 @@ public:
     void hourForEachArea(State& state, unsigned int numSpace)
     {
         // Retrieving the hourly pumping energy
-        pValuesForTheCurrentYear[numSpace].hour[state.hourInTheYear]
-          = state.hourlyResults->PompageHoraire[state.hourInTheWeek];
+        pValuesForTheCurrentYear[numSpace].hour[state.hourInTheYear] = state.hourlyResults
+                                                                         ->PompageHoraire
+                                                                           [state.hourInTheWeek];
 
         // Next variable
         NextType::hourForEachArea(state, numSpace);
@@ -257,8 +263,8 @@ public:
             // Write the data for the current year
             results.variableCaption = VCardType::Caption();
             results.variableUnit = VCardType::Unit();
-            pValuesForTheCurrentYear[numSpace].template buildAnnualSurveyReport<VCardType>(
-              results, fileLevel, precision);
+            pValuesForTheCurrentYear[numSpace]
+              .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
         }
     }
 

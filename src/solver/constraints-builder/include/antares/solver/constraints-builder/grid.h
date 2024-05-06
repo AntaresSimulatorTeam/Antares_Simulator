@@ -21,14 +21,16 @@
 #ifndef CONSTRAINTSBUILDER_BUILDER_GRID_H
 #define CONSTRAINTSBUILDER_BUILDER_GRID_H
 
-#include <yuni/yuni.h>
-#include <yuni/core/string.h>
-#include <antares/study/study.h>
 #include <numeric>
 
-//#include <map>
-//#include <assert.h>
-//#include <utility>
+#include <yuni/yuni.h>
+#include <yuni/core/string.h>
+
+#include <antares/study/study.h>
+
+// #include <map>
+// #include <assert.h>
+// #include <utility>
 
 namespace Antares
 {
@@ -48,12 +50,12 @@ public:
     virtual std::string getName()
     {
         return name;
-    };
+    }
 
     virtual void setName(std::string newName)
     {
         name = newName;
-    };
+    }
 
 public:
     std::string name;
@@ -74,22 +76,27 @@ public:
     {
         return weight;
     }
+
     void setWeight(long w)
     {
         weight = w;
     }
+
     Node<NodeT>* getOrigin()
     {
         return originNode;
     }
+
     Node<NodeT>* getDestination()
     {
         return destinationNode;
     }
+
     void setOrigin(Node<NodeT>* from)
     {
         originNode = from;
     }
+
     void setDestination(Node<NodeT>* to)
     {
         destinationNode = to;
@@ -154,34 +161,58 @@ public:
     //! find an edge from node names
     EdgeP findEdgeFromNodeNames(std::string u, std::string v)
     {
-        auto edgeIT = std::find_if(
-          pEdgesList.begin(), pEdgesList.end(), [&u, &v](const EdgeP& edgeP) -> bool {
-              if (edgeP->getOrigin()->getName() == u && edgeP->getDestination()->getName() == v)
-                  return true;
-              if (edgeP->getDestination()->getName() == u && edgeP->getOrigin()->getName() == v)
-                  return true;
-              else
-                  return false;
-          });
+        auto edgeIT = std::find_if(pEdgesList.begin(),
+                                   pEdgesList.end(),
+                                   [&u, &v](const EdgeP& edgeP) -> bool
+                                   {
+                                       if (edgeP->getOrigin()->getName() == u
+                                           && edgeP->getDestination()->getName() == v)
+                                       {
+                                           return true;
+                                       }
+                                       if (edgeP->getDestination()->getName() == u
+                                           && edgeP->getOrigin()->getName() == v)
+                                       {
+                                           return true;
+                                       }
+                                       else
+                                       {
+                                           return false;
+                                       }
+                                   });
         if (edgeIT != pEdgesList.end())
+        {
             return *edgeIT;
+        }
 
         return nullptr;
     }
 
     EdgeP findDrivingEdgeFromNodeNames(std::string u, std::string v)
     {
-        auto edgeIT = std::find_if(
-          pMinSpanningTree.begin(), pMinSpanningTree.end(), [&u, &v](const EdgeP& edgeP) -> bool {
-              if (edgeP->getOrigin()->getName() == u && edgeP->getDestination()->getName() == v)
-                  return true;
-              if (edgeP->getDestination()->getName() == u && edgeP->getOrigin()->getName() == v)
-                  return true;
-              else
-                  return false;
-          });
+        auto edgeIT = std::find_if(pMinSpanningTree.begin(),
+                                   pMinSpanningTree.end(),
+                                   [&u, &v](const EdgeP& edgeP) -> bool
+                                   {
+                                       if (edgeP->getOrigin()->getName() == u
+                                           && edgeP->getDestination()->getName() == v)
+                                       {
+                                           return true;
+                                       }
+                                       if (edgeP->getDestination()->getName() == u
+                                           && edgeP->getOrigin()->getName() == v)
+                                       {
+                                           return true;
+                                       }
+                                       else
+                                       {
+                                           return false;
+                                       }
+                                   });
         if (edgeIT != pMinSpanningTree.end())
+        {
             return *edgeIT;
+        }
 
         return nullptr;
     }
@@ -205,13 +236,17 @@ public:
     //! find a node from it's name
     NodeP findNodeFromName(std::string name)
     {
-        auto nodeIT = std::find_if(pNodesList.begin(), pNodesList.end(), [&name](NodeP& n) -> bool {
-            return n->getName() == name;
-        });
+        auto nodeIT = std::find_if(pNodesList.begin(),
+                                   pNodesList.end(),
+                                   [&name](NodeP& n) -> bool { return n->getName() == name; });
         if (nodeIT != pNodesList.end())
+        {
             return *nodeIT;
+        }
         else
+        {
             return nullptr;
+        }
     }
 
     /*!
@@ -280,7 +315,9 @@ public:
         for (uint i = 0; i < pEdgesList.size(); i++)
         {
             if (std::find(vE.begin(), vE.end(), pEdgesList[i]) != vE.end())
+            {
                 Ei[i] = true;
+            }
         }
         return Ei;
     }
@@ -305,7 +342,9 @@ public:
         for (uint i = 0; i < pEdgesList.size(); i++)
         {
             if (vI[i] == true)
+            {
                 vE.push_back(pEdgesList[i]);
+            }
         }
         return vE;
     }

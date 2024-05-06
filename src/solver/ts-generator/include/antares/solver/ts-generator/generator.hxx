@@ -87,7 +87,9 @@ void Destroy(Data::Study& study, uint year)
     auto* xcast = reinterpret_cast<XCast::XCast*>(
       study.cacheTSGenerator[Data::TimeSeriesBitPatternIntoIndex<T>::value]);
     if (not xcast)
+    {
         return;
+    }
 
     // releasing
     auto& parameters = study.parameters;

@@ -49,8 +49,8 @@ void H2O2_j_ConstruireLesVariables(
         Xmin[Var] = 0.0;
         Xmax[Var] = 0.0;
         TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
-        AdresseOuPlacerLaValeurDesVariablesOptimisees[Var]
-          = &(DonneesMensuellesEtendues.Turbine[Pdt]);
+        AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = &(
+          DonneesMensuellesEtendues.Turbine[Pdt]);
         Var++;
     }
 
@@ -60,8 +60,8 @@ void H2O2_j_ConstruireLesVariables(
         Xmin[Var] = 0.0;
         Xmax[Var] = 1.0;
         TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
-        AdresseOuPlacerLaValeurDesVariablesOptimisees[Var]
-          = &(DonneesMensuellesEtendues.niveauxFinJours[Pdt]);
+        AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = &(
+          DonneesMensuellesEtendues.niveauxFinJours[Pdt]);
         Var++;
     }
 
@@ -78,8 +78,8 @@ void H2O2_j_ConstruireLesVariables(
         Xmin[Var] = 0.0;
         Xmax[Var] = LINFINI;
         TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
-        AdresseOuPlacerLaValeurDesVariablesOptimisees[Var]
-          = &(DonneesMensuellesEtendues.overflows[Pdt]);
+        AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = &(
+          DonneesMensuellesEtendues.overflows[Pdt]);
         Var++;
     }
 
@@ -89,8 +89,8 @@ void H2O2_j_ConstruireLesVariables(
         Xmin[Var] = 0.0;
         Xmax[Var] = LINFINI;
         TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
-        AdresseOuPlacerLaValeurDesVariablesOptimisees[Var]
-          = &(DonneesMensuellesEtendues.deviations[Pdt]);
+        AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = &(
+          DonneesMensuellesEtendues.deviations[Pdt]);
         Var++;
     }
 
@@ -100,8 +100,8 @@ void H2O2_j_ConstruireLesVariables(
         Xmin[Var] = 0.0;
         Xmax[Var] = LINFINI;
         TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
-        AdresseOuPlacerLaValeurDesVariablesOptimisees[Var]
-          = &(DonneesMensuellesEtendues.violations[Pdt]);
+        AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = &(
+          DonneesMensuellesEtendues.violations[Pdt]);
         Var++;
     }
 

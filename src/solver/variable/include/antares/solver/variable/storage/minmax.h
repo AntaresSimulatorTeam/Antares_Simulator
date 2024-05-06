@@ -39,7 +39,7 @@ template<class NextT = Empty>
 class Max;
 
 template<bool OpInferior, class NextT>
-struct MinMaxBase : public NextT
+struct MinMaxBase: public NextT
 {
 public:
     //! Type of the net item in the list
@@ -83,8 +83,9 @@ protected:
             switch (precision)
             {
             case Category::hourly:
-                InternalExportIndices<maxHoursInAYear, VCardT>(
-                  report, Memory::RawPointer(minmax.hourly), fileLevel);
+                InternalExportIndices<maxHoursInAYear, VCardT>(report,
+                                                               Memory::RawPointer(minmax.hourly),
+                                                               fileLevel);
                 break;
             case Category::daily:
                 InternalExportIndices<maxDaysInAYear, VCardT>(report, minmax.daily, fileLevel);
@@ -123,8 +124,11 @@ protected:
             }
         }
         // Next
-        NextType::template buildSurveyReport<S, VCardT>(
-          report, results, dataLevel, fileLevel, precision);
+        NextType::template buildSurveyReport<S, VCardT>(report,
+                                                        results,
+                                                        dataLevel,
+                                                        fileLevel,
+                                                        precision);
     }
 
     void reset();
@@ -157,7 +161,7 @@ private:
 }; // class MinMaxBase
 
 template<class NextT>
-class Min : public MinMaxBase<true, NextT>
+class Min: public MinMaxBase<true, NextT>
 {
 public:
     //! Implementation
@@ -171,6 +175,7 @@ public:
     {
         return "min";
     }
+
     enum
     {
         //! The count if item in the list
@@ -179,7 +184,7 @@ public:
 };
 
 template<class NextT>
-class Max : public MinMaxBase<false, NextT>
+class Max: public MinMaxBase<false, NextT>
 {
 public:
     //! Implementation
@@ -193,6 +198,7 @@ public:
     {
         return "max";
     }
+
     enum
     {
         //! The count if item in the list

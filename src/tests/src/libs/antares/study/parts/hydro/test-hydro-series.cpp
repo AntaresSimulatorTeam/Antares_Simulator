@@ -3,10 +3,12 @@
 
 #define WIN32_LEAN_AND_MEAN
 
-#include <boost/test/unit_test.hpp>
-#include <antares/study/study.h>
-#include <antares/array/matrix.h>
 #include <files-system.h>
+
+#include <boost/test/unit_test.hpp>
+
+#include <antares/array/matrix.h>
+#include <antares/study/study.h>
 
 #define SEP "/"
 
@@ -141,7 +143,9 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_both_matrix_equal_width_and_d
     BOOST_CHECK(ret);
 
     area_1->hydro.series->EqualizeMaxPowerTSsizes(*area_1);
-    area_1->hydro.series->resizeTSinDeratedMode(study->parameters.derated, studyVersion, usedBySolver);
+    area_1->hydro.series->resizeTSinDeratedMode(study->parameters.derated,
+                                                studyVersion,
+                                                usedBySolver);
 
     BOOST_CHECK_EQUAL(maxHourlyGenPower.width, 1);
     BOOST_CHECK_EQUAL(maxHourlyPumpPower.width, 1);

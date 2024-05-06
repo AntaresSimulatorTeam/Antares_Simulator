@@ -22,7 +22,9 @@
 #define __ORTOOLS_WRAPPER__
 
 #include <string>
+
 #include <antares/optimization-options/options.h>
+
 #include "named_problem.h"
 
 using namespace operations_research;

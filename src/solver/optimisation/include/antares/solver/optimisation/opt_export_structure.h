@@ -21,15 +21,15 @@
 #ifndef __EXPORT_STRUCTURE__
 #define __EXPORT_STRUCTURE__
 
-#include <vector>
 #include <optional>
 #include <string>
+#include <vector>
 
 #include <yuni/yuni.h>
 
+#include <antares/study/study.h>
 #include "antares/antares/Enum.hpp"
 #include "antares/writer/i_writer.h"
-#include <antares/study/study.h>
 
 namespace Antares
 {
@@ -42,8 +42,7 @@ class Study;
 
 struct PROBLEME_HEBDO;
 
-void OPT_ExportInterco(Antares::Solver::IResultWriter& writer,
-                       PROBLEME_HEBDO* problemeHebdo);
+void OPT_ExportInterco(Antares::Solver::IResultWriter& writer, PROBLEME_HEBDO* problemeHebdo);
 void OPT_ExportAreaName(Antares::Solver::IResultWriter& writer,
                         const std::vector<const char*>& areaNames);
 void OPT_ExportStructures(PROBLEME_HEBDO* problemeHebdo, Antares::Solver::IResultWriter& writer);

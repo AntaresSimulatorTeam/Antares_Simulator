@@ -24,12 +24,12 @@
 
 namespace Test
 {
-    class BasisStatus;
+class BasisStatus;
 }
 
 namespace operations_research
 {
-    class MPSolver;
+class MPSolver;
 }
 
 namespace Antares::Optimization
@@ -50,6 +50,7 @@ public:
     bool exists() const;
     void setStartingBasis(operations_research::MPSolver* solver) const;
     void extractBasis(const operations_research::MPSolver* solver);
+
 private:
     std::unique_ptr<BasisStatusImpl> impl;
     friend class Test::BasisStatus; // For tests

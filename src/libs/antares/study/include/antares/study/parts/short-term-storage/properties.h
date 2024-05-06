@@ -20,9 +20,9 @@
 */
 #pragma once
 
+#include <map>
 #include <optional>
 #include <string>
-#include <map>
 
 #include <antares/inifile/inifile.h>
 

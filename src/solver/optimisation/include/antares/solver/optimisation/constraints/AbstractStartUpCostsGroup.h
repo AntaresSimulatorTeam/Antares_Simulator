@@ -21,10 +21,10 @@
 
 #pragma once
 #include "ConstraintGroup.h"
-#include "PMinDispatchableGeneration.h"
 #include "PMaxDispatchableGeneration.h"
+#include "PMinDispatchableGeneration.h"
 
-class AbstractStartUpCostsGroup : public ConstraintGroup
+class AbstractStartUpCostsGroup: public ConstraintGroup
 {
 public:
     AbstractStartUpCostsGroup(PROBLEME_HEBDO* problemeHebdo,

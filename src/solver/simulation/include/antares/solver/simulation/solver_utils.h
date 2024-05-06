@@ -21,15 +21,16 @@
 #ifndef __SOLVER_SIMULATION_SOLVER_UTILS_H__
 #define __SOLVER_SIMULATION_SOLVER_UTILS_H__
 
-#include <vector>
+#include <iomanip> // For setprecision
+#include <limits>  // For std numeric_limits
 #include <map>
-#include <antares/writer/i_writer.h>
-#include <antares/study/fwd.h>
-#include <limits>   // For std numeric_limits
-#include <sstream>  // For ostringstream
-#include <iomanip>  // For setprecision
+#include <sstream> // For ostringstream
+#include <vector>
+
 #include <yuni/yuni.h>
 
+#include <antares/study/fwd.h>
+#include <antares/writer/i_writer.h>
 
 namespace Antares::Solver::Simulation
 {
@@ -129,7 +130,9 @@ public:
 
         // Thermal noises
         for (uint a = 0; a != pNbAreas; a++)
+        {
             delete[] pThermalNoisesByArea[a];
+        }
         delete[] pThermalNoisesByArea;
 
         // Reservoir levels, spilled and unsupplied energy
@@ -143,7 +146,9 @@ public:
         case Data::lssFreeModulations:
         {
             for (uint a = 0; a != pNbAreas; a++)
+            {
                 delete[] pHydroCostsByArea_freeMod[a];
+            }
             delete[] pHydroCostsByArea_freeMod;
             break;
         }
@@ -177,7 +182,9 @@ public:
 
         // Thermal noises
         for (uint a = 0; a != pNbAreas; a++)
+        {
             memset(pThermalNoisesByArea[a], 0, pNbClustersByArea[a] * sizeof(double));
+        }
 
         // Reservoir levels, spilled and unsupplied energy costs
         memset(pReservoirLevels, 0, pNbAreas * sizeof(double));
@@ -190,7 +197,9 @@ public:
         case Data::lssFreeModulations:
         {
             for (uint a = 0; a != pNbAreas; a++)
+            {
                 memset(pHydroCostsByArea_freeMod[a], 0, 8784 * sizeof(double));
+            }
             break;
         }
 
@@ -229,15 +238,17 @@ public:
 class randomNumbers
 {
 public:
-    randomNumbers(uint maxNbPerformedYearsInAset, Data::PowerFluctuations powerFluctuations) :
-     pMaxNbPerformedYears(maxNbPerformedYearsInAset)
+    randomNumbers(uint maxNbPerformedYearsInAset, Data::PowerFluctuations powerFluctuations):
+        pMaxNbPerformedYears(maxNbPerformedYearsInAset)
     {
         // Allocate a table of parallel years structures
         pYears = new yearRandomNumbers[maxNbPerformedYearsInAset];
 
         // Tells these structures their power fluctuations mode
         for (uint y = 0; y < maxNbPerformedYearsInAset; ++y)
+        {
             pYears[y].setPowerFluctuations(powerFluctuations);
+        }
     }
 
     ~randomNumbers()
@@ -248,7 +259,9 @@ public:
     void reset()
     {
         for (uint i = 0; i < pMaxNbPerformedYears; i++)
+        {
             pYears[i].reset();
+        }
 
         yearNumberToIndex.clear();
     }
@@ -270,13 +283,17 @@ public:
 class hydroCostNoise
 {
 public:
-    hydroCostNoise(double v, uint i) : value(v), index(i)
+    hydroCostNoise(double v, uint i):
+        value(v),
+        index(i)
     {
     }
+
     inline double getValue() const
     {
         return value;
     }
+
     inline uint getIndex() const
     {
         return index;

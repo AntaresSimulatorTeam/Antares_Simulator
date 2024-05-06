@@ -8,7 +8,7 @@
 
 namespace Antares::Data::ScenarioBuilder
 {
-class hydroMaxPowerTSNumberData : public TSNumberData
+class hydroMaxPowerTSNumberData: public TSNumberData
 {
 public:
     bool apply(Study& study) override;
@@ -22,4 +22,4 @@ inline CString<512, false> hydroMaxPowerTSNumberData::get_prefix() const
 {
     return "hgp,";
 }
-}
+} // namespace Antares::Data::ScenarioBuilder

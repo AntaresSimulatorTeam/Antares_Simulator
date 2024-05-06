@@ -24,7 +24,8 @@ namespace Antares
 {
 namespace Data
 {
-AssertionError::AssertionError(const std::string& message) : std::runtime_error(message)
+AssertionError::AssertionError(const std::string& message):
+    std::runtime_error(message)
 {
 }
 

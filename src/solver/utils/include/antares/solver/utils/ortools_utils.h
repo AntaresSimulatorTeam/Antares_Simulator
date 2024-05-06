@@ -84,7 +84,8 @@ class Nomenclature
 public:
     Nomenclature() = delete;
 
-    explicit Nomenclature(char prefix) : prefix_(prefix)
+    explicit Nomenclature(char prefix):
+        prefix_(prefix)
     {
     }
 

@@ -14,7 +14,6 @@ add_subdirectory(simulation)
 add_subdirectory(ts-generator)
 add_subdirectory(utils)
 add_subdirectory(optimisation)
-add_subdirectory(main)
 add_subdirectory(constraints-builder)
 add_subdirectory(application)
 add_subdirectory(misc)
@@ -48,9 +47,9 @@ set(exec_name "antares-solver")
 
 add_library(solver-lib INTERFACE)
 
-
 add_executable(antares-solver
         main.cpp
+        ${SRCS}
 )
 
 set_target_properties(antares-solver PROPERTIES OUTPUT_NAME ${exec_name})
@@ -73,14 +72,13 @@ set(ANTARES_SOLVER_LIBS
 )
 
 set(ANTARES_SOLVER_LIBS ${ANTARES_SOLVER_LIBS}
-        antares-solver-main-economy
-        antares-solver-main-adequacy
         antares-solver-hydro
         antares-solver-variable
         antares-solver-simulation
         antares-solver-ts-generator
         model_antares
-        antares-core)
+        antares-core
+)
 
 target_link_libraries(solver-lib
         INTERFACE

@@ -19,13 +19,14 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #include "antares/solver/utils/ortools_utils.h"
-#include "antares/solver/utils/basis_status.h"
 
-#include <antares/logs/logs.h>
+#include <filesystem>
+
 #include <antares/exception/AssertionError.hpp>
 #include <antares/exception/LoadingError.hpp>
+#include <antares/logs/logs.h>
 #include "antares/antares/Enum.hpp"
-#include <filesystem>
+#include "antares/solver/utils/basis_status.h"
 
 using namespace operations_research;
 
@@ -49,7 +50,8 @@ static void checkSetSolverSpecificParameters(bool status,
     {
         throw Antares::Error::InvalidSolverSpecificParameters(solverName, specificParameters);
     }
-    else {
+    else
+    {
         Antares::logs.info() << "  Successfully set " + solverName + " solver specific parameters";
     }
 }
@@ -60,7 +62,9 @@ static void TuneSolverSpecificOptions(
   const Antares::Solver::Optimization::SolverParameters& solverParameters)
 {
     if (!solver)
+    {
         return;
+    }
 
     bool status;
     std::string specificParams;
@@ -105,8 +109,9 @@ namespace Optimization
 {
 ProblemSimplexeNommeConverter::ProblemSimplexeNommeConverter(
   const std::string& solverName,
-  const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe) :
- solverName_(solverName), problemeSimplexe_(problemeSimplexe)
+  const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe):
+    solverName_(solverName),
+    problemeSimplexe_(problemeSimplexe)
 {
     if (problemeSimplexe_->UseNamedProblems())
     {
@@ -129,6 +134,7 @@ MPSolver* ProblemSimplexeNommeConverter::Convert()
 
     return solver;
 }
+
 
 void ProblemSimplexeNommeConverter::CopyMatrix(const MPSolver* solver) const
 {
@@ -156,8 +162,10 @@ void ProblemSimplexeNommeConverter::CreateVariable(unsigned idxVar,
     double min_l = problemeSimplexe_->Xmin[idxVar];
     double max_l = problemeSimplexe_->Xmax[idxVar];
     bool isIntegerVariable = problemeSimplexe_->IntegerVariable(idxVar);
-    const MPVariable* var
-      = solver->MakeVar(min_l, max_l, isIntegerVariable, variableNameManager_.GetName(idxVar));
+    const MPVariable* var = solver->MakeVar(min_l,
+                                            max_l,
+                                            isIntegerVariable,
+                                            variableNameManager_.GetName(idxVar));
     objective->SetCoefficient(var, problemeSimplexe_->CoutLineaire[idxVar]);
 }
 
@@ -390,11 +398,17 @@ void ORTOOLS_ModifierLeVecteurSecondMembre(MPSolver* solver,
     for (int idxRow = 0; idxRow < nbRow; ++idxRow)
     {
         if (sens[idxRow] == '=')
+        {
             constraints[idxRow]->SetBounds(rhs[idxRow], rhs[idxRow]);
+        }
         else if (sens[idxRow] == '<')
+        {
             constraints[idxRow]->SetBounds(-MPSolver::infinity(), rhs[idxRow]);
+        }
         else if (sens[idxRow] == '>')
+        {
             constraints[idxRow]->SetBounds(rhs[idxRow], MPSolver::infinity());
+        }
     }
 }
 
@@ -425,24 +439,26 @@ void ORTOOLS_LibererProbleme(MPSolver* solver)
     delete solver;
 }
 
-const std::map<std::string, struct OrtoolsUtils::SolverNames> OrtoolsUtils::solverMap
-  = {{"xpress", {"xpress_lp", "xpress"}},
-     {"sirius", {"sirius_lp", "sirius"}},
-     {"coin", {"clp", "cbc"}},
-     {"glpk", {"glpk_lp", "glpk"}},
-     {"scip", {"scip", "scip"}}};
+const std::map<std::string, struct OrtoolsUtils::SolverNames> OrtoolsUtils::solverMap = {
+  {"xpress", {"xpress_lp", "xpress"}},
+  {"sirius", {"sirius_lp", "sirius"}},
+  {"coin", {"clp", "cbc"}},
+  {"glpk", {"glpk_lp", "glpk"}},
+  {"scip", {"scip", "scip"}}};
 
 std::list<std::string> getAvailableOrtoolsSolverName()
 {
     std::list<std::string> result;
 
-    for (const auto& solverName : OrtoolsUtils::solverMap)
+    for (const auto& solverName: OrtoolsUtils::solverMap)
     {
         MPSolver::OptimizationProblemType solverType;
         MPSolver::ParseSolverType(solverName.second.LPSolverName, &solverType);
 
         if (MPSolver::SupportsProblemType(solverType))
+        {
             result.push_back(solverName.first);
+        }
     }
     return result;
 }
@@ -451,7 +467,7 @@ std::string availableOrToolsSolversString()
 {
     const std::list<std::string> availableSolverList = getAvailableOrtoolsSolverName();
     std::ostringstream solvers;
-    for (const std::string& avail : availableSolverList)
+    for (const std::string& avail: availableSolverList)
     {
         bool last = &avail == &availableSolverList.back();
         std::string sep = last ? "." : ", ";
@@ -467,15 +483,19 @@ MPSolver* MPSolverFactory(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* 
     try
     {
         if (probleme->isMIP())
+        {
             solver = MPSolver::CreateSolver((OrtoolsUtils::solverMap.at(solverName)).MIPSolverName);
+        }
         else
+        {
             solver = MPSolver::CreateSolver((OrtoolsUtils::solverMap.at(solverName)).LPSolverName);
+        }
 
         if (!solver)
         {
             std::string msg_to_throw = "Solver " + solverName + " not found. \n";
-            msg_to_throw
-              += "Please make sure that your OR-Tools install supports solver " + solverName + ".";
+            msg_to_throw += "Please make sure that your OR-Tools install supports solver "
+                            + solverName + ".";
 
             throw Antares::Data::AssertionError(msg_to_throw);
         }

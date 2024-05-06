@@ -20,14 +20,14 @@
  */
 
 #pragma once
-#include "ConstraintGroup.h"
 #include "AreaBalance.h"
-#include "FictitiousLoad.h"
-#include "ShortTermStorageLevel.h"
-#include "FlowDissociation.h"
 #include "BindingConstraintHour.h"
+#include "ConstraintGroup.h"
+#include "FictitiousLoad.h"
+#include "FlowDissociation.h"
+#include "ShortTermStorageLevel.h"
 
-class Group1 : public ConstraintGroup
+class Group1: public ConstraintGroup
 {
 public:
     using ConstraintGroup::ConstraintGroup;

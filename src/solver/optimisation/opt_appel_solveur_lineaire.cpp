@@ -20,29 +20,27 @@
  */
 
 #include <yuni/yuni.h>
-#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
-#include "antares/solver/utils/basis_status.h"
 
-#include "antares/solver/simulation/simulation.h"
-#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
+#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
+#include "antares/solver/simulation/simulation.h"
+#include "antares/solver/utils/basis_status.h"
 
 extern "C"
 {
 #include "spx_definition_arguments.h"
 #include "spx_fonctions.h"
-
 #include "srs_api.h"
 }
 
-#include <antares/logs/logs.h>
-#include <antares/antares/fatal-error.h>
-
-#include "antares/solver/utils/mps_utils.h"
-#include "antares/solver/utils/filename.h"
-#include "antares/solver/infeasible-problem-analysis/unfeasible-pb-analyzer.h"
-
 #include <chrono>
+
+#include <antares/antares/fatal-error.h>
+#include <antares/logs/logs.h>
+#include "antares/solver/infeasible-problem-analysis/unfeasible-pb-analyzer.h"
+#include "antares/solver/utils/filename.h"
+#include "antares/solver/utils/mps_utils.h"
 
 using namespace operations_research;
 
@@ -187,8 +185,9 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
     Probleme.IndicesDebutDeLigne = ProblemeAResoudre->IndicesDebutDeLigne.data();
     Probleme.NombreDeTermesDesLignes = ProblemeAResoudre->NombreDeTermesDesLignes.data();
     Probleme.IndicesColonnes = ProblemeAResoudre->IndicesColonnes.data();
-    Probleme.CoefficientsDeLaMatriceDesContraintes
-      = ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes.data();
+    Probleme.CoefficientsDeLaMatriceDesContraintes = ProblemeAResoudre
+                                                       ->CoefficientsDeLaMatriceDesContraintes
+                                                       .data();
     Probleme.Sens = ProblemeAResoudre->Sens.data();
     Probleme.SecondMembre = ProblemeAResoudre->SecondMembre.data();
 
@@ -216,8 +215,7 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
 
     if (options.ortoolsUsed)
     {
-        solver = ORTOOLS_ConvertIfNeeded(
-          options.ortoolsSolver, &Probleme, solver);
+        solver = ORTOOLS_ConvertIfNeeded(options.ortoolsSolver, &Probleme, solver);
     }
     const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
 
@@ -342,11 +340,15 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
 
             pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[i];
             if (pt != nullptr)
+            {
                 *pt = ProblemeAResoudre->X[i];
+            }
 
             pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits[i];
             if (pt != nullptr)
+            {
                 *pt = ProblemeAResoudre->CoutsReduits[i];
+            }
         }
 
         {
@@ -368,7 +370,9 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
         {
             pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux[Cnt];
             if (pt != nullptr)
+            {
                 *pt = ProblemeAResoudre->CoutsMarginauxDesContraintes[Cnt];
+            }
         }
     }
 
@@ -382,16 +386,15 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
         Probleme.SetUseNamedProblems(true);
 
         auto MPproblem = std::shared_ptr<MPSolver>(
-          ProblemSimplexeNommeConverter(options.ortoolsSolver, &Probleme)
-            .Convert());
+          ProblemSimplexeNommeConverter(options.ortoolsSolver, &Probleme).Convert());
 
         auto analyzer = makeUnfeasiblePbAnalyzer();
         analyzer->run(MPproblem.get());
         analyzer->printReport();
 
         auto mps_writer_on_error = simplexResult.mps_writer_factory.createOnOptimizationError();
-        const std::string filename
-          = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
+        const std::string filename = createMPSfilename(optPeriodStringGenerator,
+                                                       optimizationNumber);
         mps_writer_on_error->runIfNeeded(writer, filename);
 
         return false;

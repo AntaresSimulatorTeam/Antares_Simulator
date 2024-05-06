@@ -23,6 +23,7 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
+
 #include <antares/optimization-options/options.h>
 
 #include "parameters.h"

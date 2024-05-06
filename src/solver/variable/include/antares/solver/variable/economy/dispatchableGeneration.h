@@ -38,6 +38,7 @@ struct VCardDispatchableGeneration
     {
         return "Dispatch. Gen.";
     }
+
     //! Unit
     static std::string Unit()
     {
@@ -121,6 +122,7 @@ struct VCardDispatchableGeneration
                 return "<unknown>";
             }
         }
+
         static std::string Unit([[maybe_unused]] const unsigned int indx)
         {
             return VCardDispatchableGeneration::Unit();
@@ -133,7 +135,7 @@ struct VCardDispatchableGeneration
 */
 template<class NextT = Container::EndOfList>
 class DispatchableGeneration
- : public Variable::IVariable<DispatchableGeneration<NextT>, NextT, VCardDispatchableGeneration>
+    : public Variable::IVariable<DispatchableGeneration<NextT>, NextT, VCardDispatchableGeneration>
 {
 public:
     //! Type of the next static variable
@@ -159,11 +161,11 @@ public:
     {
         enum
         {
-            count
-            = ((VCardType::categoryDataLevel & CDataLevel && VCardType::categoryFileLevel & CFile)
-                 ? (NextType::template Statistics<CDataLevel, CFile>::count
-                    + VCardType::columnCount * ResultsType::count)
-                 : NextType::template Statistics<CDataLevel, CFile>::count),
+            count = ((VCardType::categoryDataLevel & CDataLevel
+                      && VCardType::categoryFileLevel & CFile)
+                       ? (NextType::template Statistics<CDataLevel, CFile>::count
+                          + VCardType::columnCount * ResultsType::count)
+                       : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
 
@@ -181,8 +183,12 @@ public:
 
         pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; ++numSpace)
+        {
             for (unsigned int i = 0; i != VCardType::columnCount; ++i)
+            {
                 pValuesForTheCurrentYear[numSpace][i].initializeFromStudy(study);
+            }
+        }
 
         // Next
         NextType::initializeFromStudy(study);
@@ -225,7 +231,9 @@ public:
     {
         // Reset the values for the current year
         for (unsigned int i = 0; i != VCardType::columnCount; ++i)
+        {
             pValuesForTheCurrentYear[numSpace][i].reset();
+        }
         // Next variable
         NextType::yearBegin(year, numSpace);
     }
@@ -249,8 +257,11 @@ public:
                         unsigned int nbYearsForCurrentSummary)
     {
         for (unsigned int numSpace = 0; numSpace < nbYearsForCurrentSummary; ++numSpace)
-            VariableAccessorType::ComputeSummary(
-              pValuesForTheCurrentYear[numSpace], AncestorType::pResults, numSpaceToYear[numSpace]);
+        {
+            VariableAccessorType::ComputeSummary(pValuesForTheCurrentYear[numSpace],
+                                                 AncestorType::pResults,
+                                                 numSpaceToYear[numSpace]);
+        }
         // Next variable
         NextType::computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
     }
@@ -265,7 +276,7 @@ public:
     {
         auto area = state.area;
         auto& thermal = state.thermal;
-        for (auto& cluster : area->thermal.list.each_enabled())
+        for (auto& cluster: area->thermal.list.each_enabled())
         {
             pValuesForTheCurrentYear[numSpace][cluster->groupID][state.hourInTheYear]
               += thermal[area->index].thermalClustersProductions[cluster->areaWideIndex];
@@ -297,8 +308,8 @@ public:
                 // Write the data for the current year
                 results.variableCaption = VCardType::Multiple::Caption(i);
                 results.variableUnit = VCardType::Multiple::Unit(i);
-                pValuesForTheCurrentYear[numSpace][i].template buildAnnualSurveyReport<VCardType>(
-                  results, fileLevel, precision);
+                pValuesForTheCurrentYear[numSpace][i]
+                  .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
             }
             results.isCurrentVarNA++;
         }

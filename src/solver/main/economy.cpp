@@ -19,12 +19,12 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
+#include "antares/solver/simulation/economy.h"
 
 #include <antares/benchmarking/DurationCollector.h>
 #include <antares/logs/logs.h>
 #include "antares/application/application.h"
 #include "antares/solver/simulation/solver.h"
-#include "antares/solver/simulation/economy.h"
 
 namespace Antares::Solver
 {
@@ -38,13 +38,10 @@ void Application::runSimulationInEconomicMode()
 
     if (!(pSettings.noOutput || pSettings.tsGeneratorsOnly))
     {
-        Benchmarking::Timer timer;
-        simulation.writeResults(/*synthesis:*/ true);
-        timer.stop();
-        pDurationCollector.addDuration("synthesis_export", timer.get_duration());
+        pDurationCollector("synthesis_export")
+          << [&simulation] { simulation.writeResults(/*synthesis:*/ true); };
 
         this->pOptimizationInfo = simulation.getOptimizationInfo();
     }
 }
 } // namespace Antares::Solver
-

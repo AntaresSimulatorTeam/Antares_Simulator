@@ -19,15 +19,18 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <string>
-#include <sstream>
-#include <yuni/yuni.h>
-#include <antares/study/study.h>
 #include "antares/solver/ts-generator/xcast/xcast.h"
-#include "antares/solver/ts-generator/xcast/predicate.hxx"
-#include <antares/logs/logs.h>
-#include <antares/antares/fatal-error.h>
+
 #include <limits>
+#include <sstream>
+#include <string>
+
+#include <yuni/yuni.h>
+
+#include <antares/antares/fatal-error.h>
+#include <antares/logs/logs.h>
+#include <antares/study/study.h>
+#include "antares/solver/ts-generator/xcast/predicate.hxx"
 
 using namespace Yuni;
 
@@ -46,12 +49,12 @@ enum
     mu = Data::XCast::dataCoeffMu,
 };
 
-XCast::XCast(Data::Study& study, Data::TimeSeriesType ts, IResultWriter& writer) :
- study(study),
- timeSeriesType(ts),
- pNeverInitialized(true),
- pAccuracyOnCorrelation(false),
- pWriter(writer)
+XCast::XCast(Data::Study& study, Data::TimeSeriesType ts, IResultWriter& writer):
+    study(study),
+    timeSeriesType(ts),
+    pNeverInitialized(true),
+    pAccuracyOnCorrelation(false),
+    pWriter(writer)
 {
 }
 
@@ -66,7 +69,9 @@ void XCast::exportTimeSeriesToTheOutput(Progression::Task& progression, Predicat
     if (study.parameters.noOutput)
     {
         for (uint i = 0; i != study.areas.size(); ++i)
+        {
             ++progression;
+        }
     }
     else
     {
@@ -80,15 +85,17 @@ void XCast::exportTimeSeriesToTheOutput(Progression::Task& progression, Predicat
         output << "ts-generator" << SEP << predicate.timeSeriesName() << SEP << "mc-" << year;
         filename.reserve(output.size() + 80);
 
-        study.areas.each([&](Data::Area& area) {
-            filename.clear() << output << SEP << area.id << ".txt";
-            std::string buffer;
-            predicate.matrix(area).saveToBuffer(buffer);
+        study.areas.each(
+          [&](Data::Area& area)
+          {
+              filename.clear() << output << SEP << area.id << ".txt";
+              std::string buffer;
+              predicate.matrix(area).saveToBuffer(buffer);
 
-            pWriter.addEntryFromBuffer(filename.c_str(), buffer);
+              pWriter.addEntryFromBuffer(filename.c_str(), buffer);
 
-            ++progression;
-        });
+              ++progression;
+          });
     }
 }
 
@@ -130,8 +137,8 @@ void XCast::applyTransferFunction(PredicateT& predicate)
                 if (p1[x] <= p0[x])
                 {
                     std::ostringstream msg;
-                    msg << "Transfer function: invalid X-coordinate at index (" << i
-                        << ", " << (i + 1) << ")";
+                    msg << "Transfer function: invalid X-coordinate at index (" << i << ", "
+                        << (i + 1) << ")";
                     throw FatalError(msg.str());
                 }
                 a[i] = (p1[y] - p0[y]) / (p1[x] - p0[x]);
@@ -199,13 +206,16 @@ template<int DebugT>
 class Allocator
 {
 public:
-    Allocator() : allocated(0)
+    Allocator():
+        allocated(0)
     {
     }
+
     ~Allocator()
     {
         logs.debug() << "  allocated " << (allocated / 1024) << "Ko";
     }
+
     template<class T>
     inline T* allocate(const size_t s)
     {
@@ -384,20 +394,25 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
             pUseConversion[s] = (xcast.useConversion && xcast.conversion.width >= 3);
         }
 
-        pAccuracyOnCorrelation
-          = ((study.parameters.timeSeriesAccuracyOnCorrelation & timeSeriesType) != 0);
+        pAccuracyOnCorrelation = ((study.parameters.timeSeriesAccuracyOnCorrelation
+                                   & timeSeriesType)
+                                  != 0);
     }
 
     const uint processCount = (uint)pData.localareas.size();
 
     if (study.areas.size() > pData.localareas.size())
-        progression
-          += (nbTimeseries_ * DAYS_PER_YEAR) * ((uint)study.areas.size() - (uint)pData.localareas.size());
+    {
+        progression += (nbTimeseries_ * DAYS_PER_YEAR)
+                       * ((uint)study.areas.size() - (uint)pData.localareas.size());
+    }
 
     if (processCount == 0)
     {
         if (study.parameters.timeSeriesToArchive & timeSeriesType)
+        {
             exportTimeSeriesToTheOutput(progression, predicate);
+        }
         return true;
     }
 
@@ -468,7 +483,9 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
             for (uint j = 0; j != nbDaysPerMonth; ++j)
             {
                 if (not generateValuesForTheCurrentDay())
+                {
                     throw FatalError("xcast: Failed to generate values.");
+                }
 
 #ifndef NDEBUG
 
@@ -490,7 +507,9 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
 
                     auto& srcData = predicate.xcastData(currentArea);
                     if (srcData.useTranslation != Data::XCast::tsTranslationBeforeConversion)
+                    {
                         continue;
+                    }
 
                     auto& column = srcData.translation[0];
                     float* dailyResults = DATA[s];
@@ -543,12 +562,16 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
                                && "Bound checking");
                         auto& tsavg = srcData.translation[0];
                         for (uint h = 0; h != HOURS_PER_DAY; ++h)
+                        {
                             dailyResults[h] += (float)tsavg[hourInTheYear + h];
+                        }
                     }
 
                     assert(hourInTheYear + HOURS_PER_DAY <= series.height && "Bound checking");
                     for (uint h = 0; h != HOURS_PER_DAY; ++h)
+                    {
                         column[hourInTheYear + h] = std::round(dailyResults[h]);
+                    }
 
                     ++progression;
                 }
@@ -574,7 +597,9 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
     }
 
     if (study.parameters.timeSeriesToArchive & timeSeriesType)
+    {
         exportTimeSeriesToTheOutput(progression, predicate);
+    }
 
     if (timeSeriesType == Data::timeSeriesLoad)
     {
@@ -646,6 +671,3 @@ bool XCast::run()
 }
 
 } // namespace Antares::TSGenerator::XCast
-
-
-

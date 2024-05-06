@@ -35,6 +35,7 @@ public:
     {
         return NULL;
     }
+
     enum
     {
         //! The count if item in the list

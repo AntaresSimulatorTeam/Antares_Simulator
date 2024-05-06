@@ -21,23 +21,24 @@
 #ifndef __ANTARES_LIBS_STUDY_PARAMETERS_H__
 #define __ANTARES_LIBS_STUDY_PARAMETERS_H__
 
+#include <cassert>
+#include <cstdlib>
 #include <vector>
 
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
-#include "antares/antares/antares.h"
-#include <cstdlib>
-#include <cassert>
-#include <antares/writer/result_format.h>
+
 #include <antares/date/date.h>
 #include <antares/inifile/inifile.h>
-#include "antares/study/fwd.h"
-#include "variable-print-info.h"
-#include "parameters/adq-patch-params.h"
-#include "version.h"
-
-#include <antares/study/UnfeasibleProblemBehavior.hpp>
 #include <antares/optimization-options/options.h>
+#include <antares/study/UnfeasibleProblemBehavior.hpp>
+#include <antares/writer/result_format.h>
+#include "antares/antares/antares.h"
+#include "antares/study/fwd.h"
+
+#include "parameters/adq-patch-params.h"
+#include "variable-print-info.h"
+#include "version.h"
 
 namespace Antares::Data
 {
@@ -89,7 +90,9 @@ public:
     ** \param version Current study version
     ** \return True if the settings have been loaded, false if at least one error has occured
     */
-    bool loadFromFile(const AnyString& filename, StudyVersion& version, const StudyLoadOptions& options);
+    bool loadFromFile(const AnyString& filename,
+                      StudyVersion& version,
+                      const StudyLoadOptions& options);
 
     /*!
     ** \brief Prepare all settings for a simulation
@@ -138,7 +141,7 @@ public:
     ** \brief Reset to default all adequacy patch values
     */
     void resetAdqPatchParameters();
-    
+
     /*!
     ** \brief Handle priority between command-line option and configuration file
     */
@@ -214,7 +217,7 @@ public:
 
     //! \name Horizon
     //@{
-    //! Horizon year
+    //! Horizon year, not used by the solver
     Yuni::String horizon;
     //@}
 
@@ -443,6 +446,7 @@ public:
         //! Some variables rely on dual values & marginal costs
         void addExcludedVariables(std::vector<std::string>&) const;
     };
+
     UCMode unitCommitment;
 
     struct
@@ -517,7 +521,6 @@ public:
     uint seed[seedMax];
     //@}
 
-    
     // Format of results. Currently, only single files or zip archive are supported
     ResultFormat resultFormat = legacyFilesDirectories;
 
@@ -529,7 +532,9 @@ public:
 
 private:
     //! Load data from an INI file
-    bool loadFromINI(const IniFile& ini, const StudyVersion& version, const StudyLoadOptions& options);
+    bool loadFromINI(const IniFile& ini,
+                     const StudyVersion& version,
+                     const StudyLoadOptions& options);
 
     void resetPlayedYears(uint nbOfYears);
 
