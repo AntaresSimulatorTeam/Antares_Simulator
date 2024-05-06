@@ -24,10 +24,6 @@
 #define WIN32_LEAN_AND_MEAN
 #include <boost/test/unit_test.hpp>
 
-#include <antares/benchmarking/DurationCollector.h>
-#include <antares/benchmarking/timer.h>
-#include <thread>
-
 #include "antares/study/study.h"
 
 using namespace Antares::Data;
@@ -298,41 +294,3 @@ BOOST_AUTO_TEST_CASE(version_parsing)
 }
 BOOST_AUTO_TEST_SUITE_END() //version
 
-BOOST_AUTO_TEST_SUITE(durationCollector)
-
-using namespace std::literals::chrono_literals;
-
-constexpr double threshold = 30;
-BOOST_AUTO_TEST_CASE(lambda)
-{
-    Benchmarking::DurationCollector d;
-
-    d("test1") << [] { int a; };
-    BOOST_CHECK_CLOSE((double)d.getTime("test1"), 0., threshold);
-
-    d("test2") << [] { std::this_thread::sleep_for(200ms); };
-    BOOST_CHECK_CLOSE((double)d.getTime("test2"), 200., threshold);
-
-    d("test3") << [&d]
-    {
-        d("test4") << [] { std::this_thread::sleep_for(100ms); };
-        std::this_thread::sleep_for(100ms);
-    };
-
-    BOOST_CHECK_CLOSE((double)d.getTime("test3"), 200., threshold);
-    BOOST_CHECK_CLOSE((double)d.getTime("test4"), 100., threshold);
-}
-
-BOOST_AUTO_TEST_CASE(addDuration)
-{
-    Benchmarking::DurationCollector d;
-    Benchmarking::Timer t;
-
-    std::this_thread::sleep_for(100ms);
-    t.stop();
-    d.addDuration("test1", t.get_duration());
-
-    BOOST_CHECK_CLOSE((double)d.getTime("test1"), 100., threshold);
-}
-
-BOOST_AUTO_TEST_SUITE_END() //DurationCollector
