@@ -251,6 +251,7 @@ var hierarchy =
     [ "DONNEES_MENSUELLES", "structDONNEES__MENSUELLES.html", null ],
     [ "DONNEES_MENSUELLES_ETENDUES", "structDONNEES__MENSUELLES__ETENDUES.html", null ],
     [ "Antares::Map::DrawingContext", "classAntares_1_1Map_1_1DrawingContext.html", null ],
+    [ "Benchmarking::DurationCollector", "classBenchmarking_1_1DurationCollector.html", null ],
     [ "Antares::Data::EconomicInputData", "classAntares_1_1Data_1_1EconomicInputData.html", null ],
     [ "Antares::Solver::Simulation::Economy", "classAntares_1_1Solver_1_1Simulation_1_1Economy.html", [
       [ "Antares::Solver::Simulation::ISimulation< Antares::Solver::Simulation::Economy >", "classAntares_1_1Solver_1_1Simulation_1_1ISimulation.html", null ]
@@ -378,10 +379,6 @@ var hierarchy =
           [ "Antares::Component::HTMLListbox::Datasource::ThermalClustersByAlphaReverseOrder", "classAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1ThermalClustersByAlphaReverseOrder.html", null ]
         ] ]
       ] ]
-    ] ],
-    [ "Benchmarking::IDurationCollector", "classBenchmarking_1_1IDurationCollector.html", [
-      [ "Benchmarking::DurationCollector", "classBenchmarking_1_1DurationCollector.html", null ],
-      [ "Benchmarking::NullDurationCollector", "classBenchmarking_1_1NullDurationCollector.html", null ]
     ] ],
     [ "Yuni::IEventObserver", null, [
       [ "Antares::Component::Datagrid::Component", "classAntares_1_1Component_1_1Datagrid_1_1Component.html", null ],
@@ -863,6 +860,7 @@ var hierarchy =
       [ "RenewableClusterStudy", "structRenewableClusterStudy.html", null ],
       [ "ThermalClusterStudy", "structThermalClusterStudy.html", null ]
     ] ],
+    [ "Benchmarking::DurationCollector::OperationTimer", "structBenchmarking_1_1DurationCollector_1_1OperationTimer.html", null ],
     [ "Benchmarking::OptimizationInfo", "structBenchmarking_1_1OptimizationInfo.html", null ],
     [ "Antares::Solver::Optimization::OptimizationOptions", "structAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html", null ],
     [ "OptimizationStatistics", "classOptimizationStatistics.html", null ],

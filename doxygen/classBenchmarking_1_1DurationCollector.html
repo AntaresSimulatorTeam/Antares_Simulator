@@ -132,68 +132,40 @@ $(document).ready(function(){initNavTree('classBenchmarking_1_1DurationCollector
 
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#friends">Friends</a> &#124;
 <a href="classBenchmarking_1_1DurationCollector-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">Benchmarking::DurationCollector Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="dynheader">
-Inheritance diagram for Benchmarking::DurationCollector:</div>
-<div class="dyncontent">
- <div class="center">
-  <img src="classBenchmarking_1_1DurationCollector.png" usemap="#Benchmarking::DurationCollector_map" alt=""/>
-  <map id="Benchmarking::DurationCollector_map" name="Benchmarking::DurationCollector_map">
-<area href="classBenchmarking_1_1IDurationCollector.html" alt="Benchmarking::IDurationCollector" shape="rect" coords="0,0,200,24"/>
-  </map>
-</div></div>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structBenchmarking_1_1DurationCollector_1_1OperationTimer.html">OperationTimer</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:aa1e365a24d8b5245c4b784472c40b4ae" id="r_aa1e365a24d8b5245c4b784472c40b4ae"><td class="memItemLeft" align="right" valign="top"><a id="aa1e365a24d8b5245c4b784472c40b4ae" name="aa1e365a24d8b5245c4b784472c40b4ae"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>toFileContent</b> (<a class="el" href="classBenchmarking_1_1FileContent.html">FileContent</a> &amp;file_content)</td></tr>
 <tr class="separator:aa1e365a24d8b5245c4b784472c40b4ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5f8c4ef810a7f72e8f2994141d618299" id="r_a5f8c4ef810a7f72e8f2994141d618299"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBenchmarking_1_1DurationCollector.html#a5f8c4ef810a7f72e8f2994141d618299">addDuration</a> (const std::string &amp;name, int64_t duration) override</td></tr>
-<tr class="separator:a5f8c4ef810a7f72e8f2994141d618299"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a81fba389717b019116f65369e8b548db" id="r_a81fba389717b019116f65369e8b548db"><td class="memItemLeft" align="right" valign="top"><a id="a81fba389717b019116f65369e8b548db" name="a81fba389717b019116f65369e8b548db"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>addDuration</b> (const std::string &amp;name, int64_t duration)</td></tr>
+<tr class="separator:a81fba389717b019116f65369e8b548db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a211ff36e93cb5a17192c8c4e3e4d764e" id="r_a211ff36e93cb5a17192c8c4e3e4d764e"><td class="memItemLeft" align="right" valign="top"><a id="a211ff36e93cb5a17192c8c4e3e4d764e" name="a211ff36e93cb5a17192c8c4e3e4d764e"></a>
+<a class="el" href="structBenchmarking_1_1DurationCollector_1_1OperationTimer.html">OperationTimer</a>&#160;</td><td class="memItemRight" valign="bottom"><b>operator()</b> (const std::string &amp;key)</td></tr>
+<tr class="separator:a211ff36e93cb5a17192c8c4e3e4d764e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4ea5bde080f8ed88eb84ecd6299b25da" id="r_a4ea5bde080f8ed88eb84ecd6299b25da"><td class="memItemLeft" align="right" valign="top"><a id="a4ea5bde080f8ed88eb84ecd6299b25da" name="a4ea5bde080f8ed88eb84ecd6299b25da"></a>
+int64_t&#160;</td><td class="memItemRight" valign="bottom"><b>getTime</b> (const std::string &amp;name) const</td></tr>
+<tr class="separator:a4ea5bde080f8ed88eb84ecd6299b25da"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="friends" name="friends"></a>
+Friends</h2></td></tr>
+<tr class="memitem:a46790528446652a2b634d4cdc6b69894" id="r_a46790528446652a2b634d4cdc6b69894"><td class="memItemLeft" align="right" valign="top"><a id="a46790528446652a2b634d4cdc6b69894" name="a46790528446652a2b634d4cdc6b69894"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>operator&lt;&lt;</b> (const <a class="el" href="structBenchmarking_1_1DurationCollector_1_1OperationTimer.html">OperationTimer</a> &amp;op, const std::function&lt; void(void)&gt; &amp;f)</td></tr>
+<tr class="separator:a46790528446652a2b634d4cdc6b69894"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Function Documentation</h2>
-<a id="a5f8c4ef810a7f72e8f2994141d618299" name="a5f8c4ef810a7f72e8f2994141d618299"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5f8c4ef810a7f72e8f2994141d618299">&#9670;&#160;</a></span>addDuration()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Benchmarking::DurationCollector::addDuration </td>
-          <td>(</td>
-          <td class="paramtype">const std::string &amp;&#160;</td>
-          <td class="paramname"><em>name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int64_t&#160;</td>
-          <td class="paramname"><em>duration</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Implements <a class="el" href="classBenchmarking_1_1IDurationCollector.html">Benchmarking::IDurationCollector</a>.</p>
-
-</div>
-</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>src/libs/antares/benchmarking/include/antares/benchmarking/<a class="el" href="DurationCollector_8h_source.html">DurationCollector.h</a></li>
 <li>src/libs/antares/benchmarking/<b>DurationCollector.cpp</b></li>

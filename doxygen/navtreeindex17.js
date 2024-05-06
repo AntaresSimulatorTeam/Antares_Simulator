@@ -80,11 +80,9 @@ var NAVTREEINDEX17 =
 "classAreaHydroLevelGroup.html":[7,0,39],
 "classBenchmarking_1_1DurationCollector.html":[7,0,2,0],
 "classBenchmarking_1_1FileContent.html":[7,0,2,1],
-"classBenchmarking_1_1IDurationCollector.html":[7,0,2,2],
-"classBenchmarking_1_1NullDurationCollector.html":[7,0,2,3],
-"classBenchmarking_1_1SimulationInfoCollector.html":[7,0,2,5],
-"classBenchmarking_1_1StudyInfoCollector.html":[7,0,2,6],
-"classBenchmarking_1_1Timer.html":[7,0,2,7],
+"classBenchmarking_1_1SimulationInfoCollector.html":[7,0,2,3],
+"classBenchmarking_1_1StudyInfoCollector.html":[7,0,2,4],
+"classBenchmarking_1_1Timer.html":[7,0,2,5],
 "classBindingConstraintData.html":[7,0,41],
 "classBindingConstraintDay.html":[7,0,42],
 "classBindingConstraintDay.html#a2e34353696b4c761e4f3abd6eab832d9":[7,0,42,0],
@@ -249,5 +247,7 @@ var NAVTREEINDEX17 =
 "classI__MPS__writer.html":[7,0,117],
 "classIntoUTF8ArgsTranslator.html":[7,0,119],
 "classJIT.html":[7,0,121],
-"classJIT_1_1Informations.html":[7,0,121,0]
+"classJIT_1_1Informations.html":[7,0,121,0],
+"classJIT_1_1Informations.html#a0008cfdb31ed223ee90759a949a03245":[7,0,121,0,11],
+"classJIT_1_1Informations.html#a099cbe47c83c8ca89d0ca0e2685494ca":[7,0,121,0,0]
 };

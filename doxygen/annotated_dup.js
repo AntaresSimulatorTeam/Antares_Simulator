@@ -1025,10 +1025,8 @@ var annotated_dup =
       [ "StudyList", "classbenchmark_1_1StudyList.html", null ]
     ] ],
     [ "Benchmarking", null, [
-      [ "DurationCollector", "classBenchmarking_1_1DurationCollector.html", null ],
+      [ "DurationCollector", "classBenchmarking_1_1DurationCollector.html", "classBenchmarking_1_1DurationCollector" ],
       [ "FileContent", "classBenchmarking_1_1FileContent.html", null ],
-      [ "IDurationCollector", "classBenchmarking_1_1IDurationCollector.html", null ],
-      [ "NullDurationCollector", "classBenchmarking_1_1NullDurationCollector.html", null ],
       [ "OptimizationInfo", "structBenchmarking_1_1OptimizationInfo.html", null ],
       [ "SimulationInfoCollector", "classBenchmarking_1_1SimulationInfoCollector.html", null ],
       [ "StudyInfoCollector", "classBenchmarking_1_1StudyInfoCollector.html", null ],
