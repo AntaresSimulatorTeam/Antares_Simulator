@@ -51,7 +51,7 @@ void ResizeGeneratedTimeSeries(Data::AreaList& areas, Data::Parameters& params)
         {
             Data::DataSeriesHydro* const series = area.hydro.series;
             const uint nbSeries = params.nbTimeSeriesHydro;
-            series->resizeGenerationTS(nbSeries);
+            series->resizeTS(nbSeries);
         }
 
         // Thermal

@@ -19,6 +19,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
+#include <algorithm>
 #include <yuni/yuni.h>
 #include <yuni/io/file.h>
 #include "antares/study/parts/hydro/series.h"
@@ -47,11 +48,11 @@ static bool loadTSfromFile(Matrix<double>& ts,
 }
 
 static void ConvertDailyTSintoHourlyTS(const Matrix<double>::ColumnType& dailyColumn,
-                                Matrix<double>::ColumnType& hourlyColumn)
+                                       Matrix<double>::ColumnType& hourlyColumn)
 {
     uint hour = 0;
     uint day = 0;
-
+    
     while (hour < HOURS_PER_YEAR && day < DAYS_PER_YEAR)
     {
         for (uint i = 0; i < HOURS_PER_DAY; ++i)
@@ -85,7 +86,7 @@ void DataSeriesHydro::copyGenerationTS(const DataSeriesHydro& source)
     storage.timeSeries = source.storage.timeSeries;
     mingen.timeSeries = source.mingen.timeSeries;
 
-    generationTScount_ = source.generationTScount_;
+    TScount_ = source.TScount_;
 
     source.ror.unloadFromMemory();
     source.storage.unloadFromMemory();
@@ -97,37 +98,33 @@ void DataSeriesHydro::copyMaxPowerTS(const DataSeriesHydro& source)
     maxHourlyGenPower.timeSeries = source.maxHourlyGenPower.timeSeries;
     maxHourlyPumpPower.timeSeries = source.maxHourlyPumpPower.timeSeries;
 
-    maxPowerTScount_ = source.maxPowerTScount_;
-
     source.maxHourlyGenPower.unloadFromMemory();
     source.maxHourlyPumpPower.unloadFromMemory();
 }
 
 void DataSeriesHydro::reset()
 {
-    resizeGenerationTS(1);
-    resizeMaxPowerTS(1);
+    resizeTS(1);
 }
 
 void DataSeriesHydro::computeTSCount()
 {
-    generationTScount_ = std::max(storage.numberOfColumns(), ror.numberOfColumns());
+   const std::vector<uint32_t> nbColumns({
+        storage.numberOfColumns(),
+        ror.numberOfColumns(),
+        mingen.numberOfColumns(),
+        maxHourlyGenPower.numberOfColumns(),
+        maxHourlyPumpPower.numberOfColumns()
+    });
+    TScount_ = *std::max_element(nbColumns.begin(), nbColumns.end());
 }
 
-void DataSeriesHydro::resizeGenerationTS(uint nbSeries)
+void DataSeriesHydro::resizeTS(uint nbSeries)
 {
     storage.reset(nbSeries, DAYS_PER_YEAR);
     ror.reset(nbSeries, HOURS_PER_YEAR);
 
-    generationTScount_ = nbSeries;
-}
-
-void DataSeriesHydro::resizeMaxPowerTS(uint nbSeries)
-{
-    maxHourlyGenPower.reset(nbSeries, HOURS_PER_YEAR);
-    maxHourlyPumpPower.reset(nbSeries, HOURS_PER_YEAR);
-
-    maxPowerTScount_ = nbSeries;
+    TScount_ = nbSeries;
 }
 
 bool DataSeriesHydro::forceReload(bool reload) const
@@ -161,7 +158,6 @@ bool DataSeriesHydro::loadGenerationTS(const AreaName& areaID,
     if (studyVersion >= StudyVersion(8, 6))
         ret = loadTSfromFile(mingen.timeSeries, areaID, folder, "mingen.txt", HOURS_PER_YEAR) && ret;
 
-    computeTSCount();
     return ret;
 }
 
@@ -185,10 +181,8 @@ void DataSeriesHydro::buildHourlyMaxPowerFromDailyTS(
   const Matrix<double>::ColumnType& DailyMaxGenPower,
   const Matrix<double>::ColumnType& DailyMaxPumpPower)
 {
-    maxPowerTScount_ = 1;
-
-    maxHourlyGenPower.reset(maxPowerTScount_, HOURS_PER_YEAR);
-    maxHourlyPumpPower.reset(maxPowerTScount_, HOURS_PER_YEAR);
+    maxHourlyGenPower.reset(TScount_, HOURS_PER_YEAR);
+    maxHourlyPumpPower.reset(TScount_, HOURS_PER_YEAR);
 
     ConvertDailyTSintoHourlyTS(DailyMaxGenPower, maxHourlyGenPower.timeSeries[0]);
     ConvertDailyTSintoHourlyTS(DailyMaxPumpPower, maxHourlyPumpPower.timeSeries[0]);
@@ -228,12 +222,7 @@ uint64_t DataSeriesHydro::memoryUsage() const
 
 uint DataSeriesHydro::TScount() const
 {
-    return generationTScount_;
-}
-
-uint DataSeriesHydro::maxPowerTScount() const
-{
-    return maxPowerTScount_;
+    return TScount_;
 }
 
 void DataSeriesHydro::resizeTSinDeratedMode(bool derated,
@@ -247,13 +236,12 @@ void DataSeriesHydro::resizeTSinDeratedMode(bool derated,
     storage.averageTimeseries();
     if (studyVersion >= StudyVersion(8,6))
         mingen.averageTimeseries();
-    generationTScount_ = 1;
+    TScount_ = 1;
 
     if (studyVersion >= StudyVersion(9,1))
     {
         maxHourlyGenPower.averageTimeseries();
         maxHourlyPumpPower.averageTimeseries();
-        maxPowerTScount_ = 1;
     }
 }
 
