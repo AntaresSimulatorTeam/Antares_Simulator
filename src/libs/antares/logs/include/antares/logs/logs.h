@@ -36,10 +36,10 @@
 ** \ingroup toolbox
 */
 
-#ifndef LOG_APPLICATION_NAME
-/* This value should be defined by CMake */
-#define LOG_APPLICATION_NAME "unknown-app"
-#endif
+/*! Name of the app to use into logs */
+#define LOG_APPLICATION_NAME "antares"
+/*! Vendor */
+#define LOG_APPLICATION_VENDOR "RTE"
 
 /*! Special message to the interface */
 #define LOG_UI "[UI] "

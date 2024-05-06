@@ -19,12 +19,8 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
+#include <atomic>
 #include "antares/io/statistics.h"
-
-#include <mutex>
-
-#include <yuni/core/atomic/int.h>
-
 #include <antares/logs/logs.h>
 
 using namespace Yuni;
@@ -35,71 +31,60 @@ namespace Statistics
 {
 namespace // anonymous namespace
 {
-static uint64_t gReadFromDisk;
-static uint64_t gWrittenToDisk;
-static uint64_t gReadFromNetwork;
-static uint64_t gWrittenToNetwork;
+std::atomic<uint64_t> gReadFromDisk;
+std::atomic<uint64_t> gWrittenToDisk;
+std::atomic<uint64_t> gReadFromNetwork;
+std::atomic<uint64_t> gWrittenToNetwork;
 
-static uint64_t gReadFromDiskSinceStartup;
-static uint64_t gWrittenToDiskSinceStartup;
-static uint64_t gReadFromNetworkSinceStartup;
-static uint64_t gWrittenToNetworkSinceStartup;
-
-static std::mutex gMutex;
+std::atomic<uint64_t> gReadFromDiskSinceStartup;
+std::atomic<uint64_t> gWrittenToDiskSinceStartup;
+std::atomic<uint64_t> gReadFromNetworkSinceStartup;
+std::atomic<uint64_t> gWrittenToNetworkSinceStartup;
 
 } // anonymous namespace
 
 uint64_t ReadFromDisk()
 {
-    std::lock_guard locker(gMutex);
-    return (uint64_t)gReadFromDisk;
+    return gReadFromDisk;
 }
 
 uint64_t WrittenToDisk()
 {
-    std::lock_guard locker(gMutex);
-    return (uint64_t)gWrittenToDisk;
+    return gWrittenToDisk;
 }
 
 uint64_t ReadFromDiskSinceStartup()
 {
-    std::lock_guard locker(gMutex);
-    return (uint64_t)gReadFromDiskSinceStartup;
+    return gReadFromDiskSinceStartup;
 }
 
 uint64_t WrittenToDiskSinceStartup()
 {
-    std::lock_guard locker(gMutex);
     return (int64_t)gWrittenToDiskSinceStartup;
 }
 
 uint64_t ReadFromNetwork()
 {
-    std::lock_guard locker(gMutex);
-    return (uint64_t)gReadFromNetwork;
+    return gReadFromNetwork;
 }
 
 uint64_t WrittenToNetwork()
 {
-    std::lock_guard locker(gMutex);
-    return (uint64_t)gWrittenToNetwork;
+    return gWrittenToNetwork;
 }
 
 uint64_t ReadFromNetworkSinceStartup()
 {
-    std::lock_guard locker(gMutex);
-    return (uint64_t)gReadFromNetworkSinceStartup;
+    return gReadFromNetworkSinceStartup;
 }
 
 uint64_t WrittenToNetworkSinceStartup()
 {
-    std::lock_guard locker(gMutex);
-    return (uint64_t)gWrittenToNetworkSinceStartup;
+    return gWrittenToNetworkSinceStartup;
 }
 
 void Reset()
 {
-    std::lock_guard locker(gMutex);
     gReadFromDisk = 0;
     gReadFromNetwork = 0;
     gWrittenToDisk = 0;
@@ -108,7 +93,6 @@ void Reset()
 
 void DumpToLogs()
 {
-    std::lock_guard locker(gMutex);
     logs.info() << "[statistics] disk: read: " << (gReadFromDisk / 1024)
                 << " ko, written: " << (gWrittenToDisk / 1024) << " ko";
     logs.info() << "[statistics] network: read: " << (gReadFromNetwork / 1024)
@@ -117,28 +101,24 @@ void DumpToLogs()
 
 void HasReadFromDisk(uint64_t size)
 {
-    std::lock_guard locker(gMutex);
     gReadFromDisk += size;
     gReadFromDiskSinceStartup += size;
 }
 
 void HasWrittenToDisk(uint64_t size)
 {
-    std::lock_guard locker(gMutex);
     gWrittenToDisk += size;
     gWrittenToDiskSinceStartup += size;
 }
 
 void HasReadFromNetwork(uint64_t size)
 {
-    std::lock_guard locker(gMutex);
     gReadFromNetwork += size;
     gReadFromNetworkSinceStartup += size;
 }
 
 void HasWrittenToNetwork(uint64_t size)
 {
-    std::lock_guard locker(gMutex);
     gWrittenToNetwork += size;
     gWrittenToNetworkSinceStartup += size;
 }
