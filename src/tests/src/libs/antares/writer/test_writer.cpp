@@ -41,6 +41,8 @@ extern "C"
 }
 
 using namespace Yuni::Job;
+using Benchmarking::DurationCollector;
+using Benchmarking::DurationCollector;
 using Antares::Solver::IResultWriter;
 using Benchmarking::IDurationCollector;
 using Benchmarking::NullDurationCollector;
@@ -49,7 +51,7 @@ using Benchmarking::NullDurationCollector;
 struct TestContext
 {
     std::shared_ptr<QueueService> threadPool;
-    std::unique_ptr<IDurationCollector> durationCollector;
+    std::unique_ptr<DurationCollector> durationCollector;
     std::shared_ptr<IResultWriter> writer;
 };
 
@@ -76,8 +78,7 @@ TestContext createContext(const std::filesystem::path zipPath,
                           Antares::Data::ResultFormat fmt)
 {
     auto threadPool = createThreadPool(threadCount);
-    std::unique_ptr<IDurationCollector>
-      durationCollector = std::make_unique<Benchmarking::NullDurationCollector>();
+    std::unique_ptr<DurationCollector> durationCollector = std::make_unique<Benchmarking::DurationCollector>();
     std::string archiveName = zipPath.string();
     auto writer = Antares::Solver::resultWriterFactory(fmt,
                                                        removeExtension(zipPath.string(), ".zip"),
@@ -129,7 +130,7 @@ BOOST_AUTO_TEST_CASE(test_in_memory_concrete)
     std::string content1 = "test-content1";
     std::string content2 = "test-content2";
 
-    Benchmarking::NullDurationCollector durationCollector;
+    Benchmarking::DurationCollector durationCollector;
     Antares::Solver::InMemoryWriter writer(durationCollector);
 
     writer.addEntryFromBuffer("folder/test", content1);

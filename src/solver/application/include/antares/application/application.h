@@ -111,7 +111,7 @@ private:
     IResultWriter::Ptr resultWriter = nullptr;
 
     void prepareWriter(const Antares::Data::Study& study,
-                       Benchmarking::IDurationCollector& duration_collector);
+                       Benchmarking::DurationCollector& duration_collector);
 
     void writeComment(Data::Study& study);
     void startSimulation(Data::StudyLoadOptions& options);

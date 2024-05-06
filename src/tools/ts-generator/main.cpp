@@ -144,12 +144,10 @@ int main(int argc, char* argv[])
         Antares::logs.error() << ex.what();
     }
 
-    Benchmarking::NullDurationCollector nullDurationCollector;
+    Benchmarking::DurationCollector durationCollector;
 
-    auto resultWriter = Solver::resultWriterFactory(Data::ResultFormat::legacyFilesDirectories,
-                                                    study->folderOutput,
-                                                    nullptr,
-                                                    nullDurationCollector);
+    auto resultWriter = Solver::resultWriterFactory(
+            Data::ResultFormat::legacyFilesDirectories, study->folderOutput, nullptr, durationCollector);
 
     std::vector<Data::ThermalCluster*> clusters;
 

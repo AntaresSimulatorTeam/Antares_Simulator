@@ -53,7 +53,7 @@ public:
     */
     ISimulation(Data::Study& study,
                 const ::Settings& settings,
-                Benchmarking::IDurationCollector& duration_collector,
+                Benchmarking::DurationCollector& duration_collector,
                 IResultWriter& resultWriter);
     //! Destructor
     ~ISimulation();
@@ -154,7 +154,7 @@ private:
     annualCostsStatistics pAnnualStatistics;
 
     // Collecting durations inside the simulation
-    Benchmarking::IDurationCollector& pDurationCollector;
+    Benchmarking::DurationCollector& pDurationCollector;
 
 public:
     //! The queue service that runs every set of parallel years

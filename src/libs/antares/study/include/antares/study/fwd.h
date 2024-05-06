@@ -564,7 +564,7 @@ class Sets;
 
 namespace Benchmarking
 {
-class IDurationCollector;
+class DurationCollector;
 }
 
 #endif // __ANTARES_LIBS_STUDY_FWD_H__

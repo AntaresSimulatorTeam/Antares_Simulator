@@ -182,7 +182,6 @@ private:
 // =====================
 // Simulation handler
 // =====================
-using namespace Benchmarking;
 
 class SimulationHandler
 {
@@ -207,7 +206,7 @@ public:
 
 private:
     std::shared_ptr<ISimulation<Economy>> simulation_;
-    NullDurationCollector nullDurationCollector_;
+    Benchmarking::DurationCollector durationCollector_;
     Settings settings_;
     Study& study_;
     NullResultWriter resultWriter_;

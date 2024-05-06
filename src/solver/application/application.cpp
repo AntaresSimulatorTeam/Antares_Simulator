@@ -309,7 +309,7 @@ void Application::resetLogFilename() const
 }
 
 void Application::prepareWriter(const Antares::Data::Study& study,
-                                Benchmarking::IDurationCollector& duration_collector)
+                                Benchmarking::DurationCollector& duration_collector)
 {
     ioQueueService = std::make_shared<Yuni::Job::QueueService>();
     ioQueueService->maximumThreadCount(1);
@@ -341,14 +341,13 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     std::exception_ptr loadingException;
     try
     {
-        if (study.loadFromFolder(pSettings.studyFolder, options))
-        {
-            logs.info() << "The study is loaded.";
-            logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
-        }
-
-        timer.stop();
-        pDurationCollector.addDuration("study_loading", timer.get_duration());
+        pDurationCollector("study_loading") << [&] {
+            if (study.loadFromFolder(pSettings.studyFolder, options))
+            {
+                logs.info() << "The study is loaded.";
+                logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
+            }
+        };
 
         if (study.areas.empty())
         {
@@ -490,7 +489,6 @@ void Application::writeExectutionInfo()
         return;
     }
 
-    // Last missing duration to get : measure of total simulation duration
     pTotalTimer.stop();
     pDurationCollector.addDuration("total", pTotalTimer.get_duration());
 

@@ -20,6 +20,9 @@
 */
 #pragma once
 
+#include <functional>
+#include <chrono>
+#include <vector>
 #include <map>
 #include <mutex>
 #include <string>
@@ -30,32 +33,27 @@
 namespace Benchmarking
 {
 
-class IDurationCollector
+class DurationCollector
 {
 public:
-    virtual ~IDurationCollector() = default;
-    virtual void addDuration(const std::string& name, int64_t duration) = 0;
-};
-
-class NullDurationCollector: public IDurationCollector
-{
-public:
-    NullDurationCollector() = default;
-    virtual ~NullDurationCollector() = default;
-
-    void addDuration(const std::string& /* name */, int64_t /* duration */) override
-    { /* Do nothing */
-    }
-};
-
-class DurationCollector: public IDurationCollector
-{
-public:
-    DurationCollector() = default;
-    virtual ~DurationCollector() = default;
-
     void toFileContent(FileContent& file_content);
-    void addDuration(const std::string& name, int64_t duration) override;
+    void addDuration(const std::string& name, int64_t duration);
+
+    struct OperationTimer
+    {
+        OperationTimer(DurationCollector& collector, const std::string& key):
+            collector(collector), key(key) {}
+        void addDuration(int64_t duration_ms) const;
+
+        DurationCollector& collector;
+        const std::string key;
+    };
+
+    OperationTimer operator()(const std::string& key);
+
+    friend void operator<<(const OperationTimer& op, const std::function<void(void)>& f);
+
+    int64_t getTime(const std::string& name) const;
 
 private:
     std::map<std::string, std::vector<int64_t>> duration_items_;

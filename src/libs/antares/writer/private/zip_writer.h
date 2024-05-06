@@ -51,7 +51,7 @@ public:
     ZipWriteJob(ZipWriter& writer,
                 std::string entryPath,
                 ContentT& content,
-                Benchmarking::IDurationCollector& duration_collector);
+                Benchmarking::DurationCollector& duration_collector);
     void writeEntry();
 
     void operator()()
@@ -71,7 +71,7 @@ private:
     // Content of the new file
     ContentT pContent;
     // Benchmarking. How long do we wait ? How long does the zip write take ?
-    Benchmarking::IDurationCollector& pDurationCollector;
+    Benchmarking::DurationCollector& pDurationCollector;
 };
 
 class ZipWriter: public IResultWriter
@@ -79,7 +79,7 @@ class ZipWriter: public IResultWriter
 public:
     ZipWriter(std::shared_ptr<Yuni::Job::QueueService> qs,
               const char* archivePath,
-              Benchmarking::IDurationCollector& duration_collector);
+              Benchmarking::DurationCollector& duration_collector);
     virtual ~ZipWriter();
     void addEntryFromBuffer(const std::string& entryPath, Yuni::Clob& entryContent) override;
     void addEntryFromBuffer(const std::string& entryPath, std::string& entryContent) override;
@@ -102,7 +102,7 @@ private:
     // Absolute path to the archive
     const std::string pArchivePath;
     // Benchmarking. Passed to jobs
-    Benchmarking::IDurationCollector& pDurationCollector;
+    Benchmarking::DurationCollector& pDurationCollector;
 
     Concurrency::FutureSet pendingTasks_;
 
