@@ -29,8 +29,6 @@
 #include "yuni/core/logs/handler/stdcout.h"
 #include "yuni/core/logs/logs.h"
 
-#include "antares/antares/constants.h"
-
 /*!
 ** \defgroup logs Logs
 ** \ingroup toolbox
