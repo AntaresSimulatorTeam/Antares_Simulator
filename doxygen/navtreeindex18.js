@@ -108,8 +108,8 @@ var NAVTREEINDEX18 =
 "classProgress.html#ac4b5ef750872e2013c6925c203a35d4cadfe3149fcd3440053bcdf797ab68efc8":[7,0,185,1,0],
 "classProgress.html#ac871f3914f9fb67fa2da2783d5be9a0f":[7,0,185,4],
 "classPublicStudy.html":[7,0,186],
-"classPublicStudy.html#a7bd1904c52c42533e39390182c2d1726":[7,0,186,1],
 "classPublicStudy.html#a7bd1904c52c42533e39390182c2d1726":[7,0,186,0],
+"classPublicStudy.html#a7bd1904c52c42533e39390182c2d1726":[7,0,186,1],
 "classQuadraticProblemMatrix.html":[7,0,187],
 "classRealName.html":[7,0,188],
 "classResultMatrix.html":[7,0,194],
@@ -221,6 +221,7 @@ var NAVTREEINDEX18 =
 "classunfeasible__problem_1_1behavior__flag.html":[7,0,26,0],
 "classunfeasible__problem_1_1unfeasible__problem.html":[7,0,26,1],
 "classunfeasible__problem_1_1weeks__in__year.html":[7,0,26,2],
+"cleaner_8h_source.html":[8,0,0,1,0,22,0,0,0,10],
 "clipboard_8h_source.html":[8,0,0,5,2,1,0,0],
 "cluster-item_8h_source.html":[8,0,0,5,2,1,1,2,1,2],
 "cluster-order_8h_source.html":[8,0,0,5,2,1,1,2,0,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX18 =
 "congestionProbability_8h_source.html":[8,0,0,2,10,0,0,0,0,2,1,2],
 "connection_8hxx_source.html":[8,0,0,5,2,1,1,3,1,2],
 "connectioncreator_8h_source.html":[8,0,0,5,2,1,1,3,2,0],
-"constraint-slack-analysis_8h_source.html":[8,0,0,2,3,0,0,0,0,0],
-"constraint_2comments_8h_source.html":[8,0,0,5,0,0,0,1,0]
+"constraint-slack-analysis_8h_source.html":[8,0,0,2,3,0,0,0,0,0]
 };

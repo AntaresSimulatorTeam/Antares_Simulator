@@ -1,5 +1,6 @@
 var NAVTREEINDEX23 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Category_1_1MaxRowCount_3_01daily_01_4.html":[7,0,0,12,4,1,1],
 "structAntares_1_1Solver_1_1Variable_1_1Category_1_1MaxRowCount_3_01hourly_01_4.html":[7,0,0,12,4,1,2],
 "structAntares_1_1Solver_1_1Variable_1_1Category_1_1MaxRowCount_3_01monthly_01_4.html":[7,0,0,12,4,1,3],
 "structAntares_1_1Solver_1_1Variable_1_1Category_1_1MaxRowCount_3_01weekly_01_4.html":[7,0,0,12,4,1,4],
@@ -248,6 +249,5 @@ var NAVTREEINDEX23 =
 "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Or.html":[7,0,0,12,4,6,0,6],
 "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw.html":[7,0,0,12,4,6,0,7],
 "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw.html#a64a09e4897a39e1a1a14ffb548c91e4b":[7,0,0,12,4,6,0,7,1],
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw_1_1Data.html":[7,0,0,12,4,6,0,7,0],
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html":[7,0,0,12,4,6,0,9]
+"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw_1_1Data.html":[7,0,0,12,4,6,0,7,0]
 };

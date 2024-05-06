@@ -97,12 +97,12 @@ var NAVTREEINDEX =
 "classAntares_1_1Window_1_1AnalyzerWizard.html#a3e69ad1fae7c2d9f3aef23446886c419",
 "classAntares_1_1Window_1_1RaiseWindowBox.html",
 "classJIT_1_1Informations.html#a0008cfdb31ed223ee90759a949a03245",
-"constraint_2comments_8hxx_source.html",
-"dir_b9ec0c1f9dc878482b334000850e6169.html",
-"global__JIT__manager_8h_source.html",
-"performer_8h_source.html",
-"structAntares_1_1Solver_1_1Variable_1_1Category_1_1MaxRowCount_3_01hourly_01_4.html",
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#ae75c526742c65aca4a309c6c16561506",
+"constraint_2comments_8h_source.html",
+"dir_b9bf6eda63046244e43e0b7d97d54c27.html",
+"geographic-trimming_8h_source.html",
+"pathlistitem_8h_source.html",
+"structAntares_1_1Solver_1_1Variable_1_1Category_1_1MaxRowCount_3_01daily_01_4.html",
+"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html",
 "thermal_2cluster_8hxx_source.html"
 ];
 
