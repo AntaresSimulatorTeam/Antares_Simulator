@@ -35,7 +35,7 @@ class InMemoryWriter : public IResultWriter
 {
 public:
     using MapType = std::map<std::string, std::string, std::less<>>;
-    explicit InMemoryWriter(Benchmarking::IDurationCollector& duration_collector);
+    explicit InMemoryWriter(Benchmarking::DurationCollector& duration_collector);
     virtual ~InMemoryWriter();
     void addEntryFromBuffer(const std::string& entryPath, Yuni::Clob& entryContent) override;
     void addEntryFromBuffer(const std::string& entryPath, std::string& entryContent) override;
@@ -49,7 +49,7 @@ private:
     // minizip-ng requires a void* as a zip handle.
     MapType pEntries;
     // State, to allow/prevent new jobs being added to the queue
-    Benchmarking::IDurationCollector& pDurationCollector;
+    Benchmarking::DurationCollector& pDurationCollector;
 };
 } // namespace Antares::Solver
 

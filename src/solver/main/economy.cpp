@@ -18,24 +18,32 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#ifndef __ANTARES_LIBS_TIME_ELAPSED__TIME_ELAPSED_H__
-#define __ANTARES_LIBS_TIME_ELAPSED__TIME_ELAPSED_H__
 
-#include <cstdint>
 
-namespace Benchmarking
+#include <antares/benchmarking/DurationCollector.h>
+#include <antares/logs/logs.h>
+#include "antares/application/application.h"
+#include "antares/solver/simulation/solver.h"
+#include "antares/solver/simulation/economy.h"
+
+namespace Antares::Solver
 {
-class Timer
+void Application::runSimulationInEconomicMode()
 {
-public:
-    Timer();
-    void stop();
-    int64_t get_duration();
+    // Type of the simulation
+    typedef Solver::Simulation::ISimulation<Solver::Simulation::Economy> SimulationType;
+    SimulationType simulation(*pStudy, pSettings, pDurationCollector, *resultWriter);
+    simulation.checkWriter();
+    simulation.run();
 
-private:
-    int64_t startTime_ = 0;
-    int64_t duration_ = 0;
-};
-} // namespace Benchmarking
+    if (!(pSettings.noOutput || pSettings.tsGeneratorsOnly))
+    {
+        pDurationCollector("synthesis_export") << [&simulation] {
+            simulation.writeResults(/*synthesis:*/ true);
+        };
 
-#endif // __ANTARES_LIBS_TIME_ELAPSED__TIME_ELAPSED_H__
+        this->pOptimizationInfo = simulation.getOptimizationInfo();
+    }
+}
+} // namespace Antares::Solver
+

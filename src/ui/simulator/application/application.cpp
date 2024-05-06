@@ -152,7 +152,7 @@ static void AbortProgram(int code)
         }
         else
         {
-            Benchmarking::NullDurationCollector duration_collector;
+            Benchmarking::DurationCollector duration_collector;
             auto resultWriter = Antares::Solver::resultWriterFactory(
                 currentStudy->parameters.resultFormat,
                 currentStudy->folderOutput,
