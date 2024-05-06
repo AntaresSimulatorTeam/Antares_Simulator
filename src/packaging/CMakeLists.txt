@@ -18,8 +18,6 @@ set(TARGET_LIBS #No alias
         yuni-static-uuid
         yuni-static-core
         ${CMAKE_THREADS_LIBS_INIT}
-        antares-solver-main-economy
-        antares-solver-main-adequacy
         antares-solver-hydro
         antares-solver-variable
         antares-solver-simulation
@@ -52,7 +50,6 @@ set(TARGET_LIBS #No alias
         #
         signal-handling
         antares-solver-variable-info
-        minizip
 )
 
 install(TARGETS ${TARGET_LIBS}
@@ -87,10 +84,4 @@ install(FILES
         "${CMAKE_CURRENT_BINARY_DIR}/AntaresConfig.cmake"
         "${CMAKE_CURRENT_BINARY_DIR}/AntaresConfigVersion.cmake"
         DESTINATION lib/cmake/Antares
-)
-
-# generate the export targets for the build tree
-export(EXPORT AntaresTargets
-        FILE "${CMAKE_CURRENT_BINARY_DIR}/lib/cmake/AntaresTargets.cmake"
-        NAMESPACE Antares::
 )

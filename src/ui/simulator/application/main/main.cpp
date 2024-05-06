@@ -84,7 +84,6 @@ EVT_MENU(mnIDNew, ApplWnd::evtOnNewStudy)
 EVT_MENU(mnIDOpen, ApplWnd::evtOnOpenStudy)
 EVT_AUITOOLBAR_TOOL_DROPDOWN(mnIDOpen, ApplWnd::evtOnDropDownRecents)
 EVT_MENU(mnIDClose, ApplWnd::evtOnCloseStudy)
-EVT_MENU(mnIDCleanOpenedStudyFolder, ApplWnd::evtOnCleanCurrentStudyFolder)
 EVT_MENU(mnIDOpenExplorer, ApplWnd::evtOnOpenStudyFolderInExplorer)
 EVT_MENU(mnUpdateInterfaceAfterLoadingAStudy, ApplWnd::evtOnUpdateInterfaceAfterLoadedStudy)
 
@@ -141,8 +140,6 @@ EVT_MENU(mnIDRunTheSimulation, ApplWnd::evtOnRunSimulation)
 EVT_MENU(mnIDRunTheTSGenerators, ApplWnd::evtOnRunTSGenerators)
 EVT_MENU(mnIDRunTheTSAnalyzer, ApplWnd::evtOnRunTSAnalyzer)
 EVT_MENU(mnIDRunTheConstraintsBuilder, ApplWnd::evtOnRunConstraintsBuilder)
-// Tools
-EVT_MENU(mnIDCleanAStudyFolder, ApplWnd::evtOnCleanStudyFolder)
 
 // Options
 EVT_MENU(mnIDOptionTempFolder, ApplWnd::evtOnOptionsTempFolder)

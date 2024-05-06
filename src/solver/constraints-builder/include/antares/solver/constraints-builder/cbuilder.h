@@ -214,7 +214,7 @@ public:
     /*!
     ** \brief Default constructor
     */
-    CBuilder(Antares::Data::Study::Ptr);
+    CBuilder(Antares::Data::Study&);
     //! Destructor
     ~CBuilder();
     //@}
@@ -235,7 +235,7 @@ public:
     bool deletePreviousConstraints();
 
     bool saveCBuilderToFile(const String& filename = "") const;
-    bool completeCBuilderFromFile(const String& filename = "");
+    bool completeCBuilderFromFile(const std::string& filename = "");
 
     /*!
     ** \brief check if network constraints already exists in the study
@@ -264,7 +264,7 @@ public:
     void buildAreaToLinkInfosMap()
     {
         areaToLinks.clear();
-        for (auto& area : pStudy->areas)
+        for (auto& area : pStudy.areas)
         {
             auto a = area.second;
             std::for_each(pLink.begin(), pLink.end(), [&a, this](linkInfo* edgeP) {
@@ -387,9 +387,8 @@ public:
     Vector pLink;
 
 private:
-    YString pStudyFolder;
-    YString pPrefix;
-    YString pPrefixDelete;
+    std::string pPrefix;
+    std::string pPrefixDelete;
     bool pDelete;
     bool includeLoopFlow = true;
     bool includePhaseShift = true;
@@ -404,7 +403,7 @@ private:
 
     std::map<Data::Area*, std::set<linkInfo*>> areaToLinks;
 
-    Antares::Data::Study::Ptr pStudy;
+    Antares::Data::Study& pStudy;
 
     Graph::Grid<Antares::Data::Area> _grid;
 

@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 #ifndef __SOLVER_SIMULATION_SOLVER_HXX__
 #define __SOLVER_SIMULATION_SOLVER_HXX__
 
@@ -58,7 +58,7 @@ public:
             Data::Study& pStudy,
             std::vector<Variable::State>& pState,
             bool pYearByYear,
-            Benchmarking::IDurationCollector& durationCollector,
+            Benchmarking::DurationCollector& durationCollector,
             IResultWriter& resultWriter) :
      simulation_(simulation),
      y(pY),
@@ -100,7 +100,7 @@ private:
     std::vector<Variable::State>& state;
     bool yearByYear;
     bool hydroHotStart;
-    Benchmarking::IDurationCollector& pDurationCollector;
+    Benchmarking::DurationCollector& pDurationCollector;
     IResultWriter& pResultWriter;
     HydroManagement hydroManagement;
     Antares::Data::Area::ScratchMap scratchmap;
@@ -114,11 +114,10 @@ private:
     */
     void logFailedWeek(int y, const Data::Study& study, const std::list<uint>& failedWeekList)
     {
-        if (failedWeekList.size() != 0)
+        if (!failedWeekList.empty())
         {
             std::stringstream failedWeekStr;
-            std::copy(failedWeekList.begin(),
-                      failedWeekList.end(),
+            std::ranges::copy(failedWeekList,
                       std::ostream_iterator<int>(failedWeekStr, " "));
 
             std::string s = failedWeekStr.str();
@@ -167,10 +166,10 @@ public:
             simulation_->prepareClustersInMustRunMode(scratchmap, y);
 
             // 4 - Hydraulic ventilation
-            Benchmarking::Timer timer;
-            hydroManagement.makeVentilation(randomReservoirLevel, state[numSpace], y, scratchmap);
-            timer.stop();
-            pDurationCollector.addDuration("hydro_ventilation", timer.get_duration());
+            pDurationCollector("hydro_ventilation") << [&]
+            {
+                hydroManagement.makeVentilation(randomReservoirLevel, state[numSpace], y, scratchmap);
+            };
 
             // Updating the state
             state[numSpace].year = y;
@@ -212,13 +211,13 @@ public:
             // 9 - Write results for the current year
             if (yearByYear)
             {
-                Benchmarking::Timer timerYear;
-                // Before writing, some variable may require minor modifications
-                simulation_->variables.beforeYearByYearExport(y, numSpace);
-                // writing the results for the current year into the output
-                simulation_->writeResults(false, y, numSpace); // false for synthesis
-                timerYear.stop();
-                pDurationCollector.addDuration("yby_export", timerYear.get_duration());
+                pDurationCollector("yby_export") << [&]
+                {
+                    // Before writing, some variable may require minor modifications
+                    simulation_->variables.beforeYearByYearExport(y, numSpace);
+                    // writing the results for the current year into the output
+                    simulation_->writeResults(false, y, numSpace); // false for synthesis
+                };
             }
         }
         else
@@ -238,7 +237,7 @@ public:
 template<class ImplementationType>
 inline ISimulation<ImplementationType>::ISimulation(Data::Study& study,
     const ::Settings& settings,
-    Benchmarking::IDurationCollector& duration_collector,
+    Benchmarking::DurationCollector& duration_collector,
     IResultWriter& resultWriter) :
     ImplementationType(study, resultWriter),
     study(study),
@@ -362,22 +361,18 @@ void ISimulation<ImplementationType>::run()
         logs.info() << " Starting the simulation";
         uint finalYear = 1 + study.runtime->rangeLimits.year[Data::rangeEnd];
         {
-            Benchmarking::Timer timer;
-            loopThroughYears(0, finalYear, state);
-            timer.stop();
-            pDurationCollector.addDuration("mc_years", timer.get_duration());
+            pDurationCollector("mc_years") << [&] {
+                loopThroughYears(0, finalYear, state);
+            };
         }
         // Destroy the TS Generators if any
         // It will export the time-series into the output in the same time
         TSGenerator::DestroyAll(study);
 
         // Post operations
-        {
-            Benchmarking::Timer timer;
+        pDurationCollector("post_processing") << [&] {
             ImplementationType::simulationEnd();
-            timer.stop();
-            pDurationCollector.addDuration("post_processing", timer.get_duration());
-        }
+        };
 
         ImplementationType::variables.simulationEnd();
 
@@ -452,49 +447,45 @@ void ISimulation<ImplementationType>::regenerateTimeSeries(uint year)
     // Load
     if (pData.haveToRefreshTSLoad && (year % pData.refreshIntervalLoad == 0))
     {
-        Benchmarking::Timer timer;
-        GenerateTimeSeries<Data::timeSeriesLoad>(study, year, pResultWriter);
-        timer.stop();
-        pDurationCollector.addDuration("tsgen_load", timer.get_duration());
+        pDurationCollector("tsgen_load") << [&] {
+            GenerateTimeSeries<Data::timeSeriesLoad>(study, year, pResultWriter);
+        };
     }
     // Solar
     if (pData.haveToRefreshTSSolar && (year % pData.refreshIntervalSolar == 0))
     {
-        Benchmarking::Timer timer;
-        GenerateTimeSeries<Data::timeSeriesSolar>(study, year, pResultWriter);
-        timer.stop();
-        pDurationCollector.addDuration("tsgen_solar", timer.get_duration());
+        pDurationCollector("tsgen_solar") << [&] {
+            GenerateTimeSeries<Data::timeSeriesSolar>(study, year, pResultWriter);
+        };
     }
     // Wind
     if (pData.haveToRefreshTSWind && (year % pData.refreshIntervalWind == 0))
     {
-        Benchmarking::Timer timer;
-        GenerateTimeSeries<Data::timeSeriesWind>(study, year, pResultWriter);
-        timer.stop();
-        pDurationCollector.addDuration("tsgen_wind", timer.get_duration());
+        pDurationCollector("tsgen_wind") << [&] {
+            GenerateTimeSeries<Data::timeSeriesWind>(study, year, pResultWriter);
+        };
     }
     // Hydro
     if (pData.haveToRefreshTSHydro && (year % pData.refreshIntervalHydro == 0))
     {
-        Benchmarking::Timer timer;
-        GenerateTimeSeries<Data::timeSeriesHydro>(study, year, pResultWriter);
-        timer.stop();
-        pDurationCollector.addDuration("tsgen_hydro", timer.get_duration());
+        pDurationCollector("tsgen_hydro") << [&] {
+            GenerateTimeSeries<Data::timeSeriesHydro>(study, year, pResultWriter);
+        };
     }
 
     // Thermal
     const bool refreshTSonCurrentYear = (year % pData.refreshIntervalThermal == 0);
-    Benchmarking::Timer timer;
 
-    if (refreshTSonCurrentYear)
+    pDurationCollector("tsgen_thermal") << [&]
     {
-        auto clusters = getAllClustersToGen(study.areas, pData.haveToRefreshTSThermal);
+        if (refreshTSonCurrentYear)
+        {
+            auto clusters = getAllClustersToGen(study.areas, pData.haveToRefreshTSThermal);
 
-        GenerateThermalTimeSeries(study, clusters, year, pResultWriter);
-    }
+            GenerateThermalTimeSeries(study, clusters, year, pResultWriter);
+        }
+    };
 
-    timer.stop();
-    pDurationCollector.addDuration("tsgen_thermal", timer.get_duration());
 }
 
 template<class ImplementationType>
@@ -914,7 +905,7 @@ static inline void logPerformedYearsInAset(setOfParallelYears& set)
                 << " perfomed)";
 
     std::string performedYearsToLog = "";
-    std::for_each(std::begin(set.yearsIndices), std::end(set.yearsIndices), [&](uint const& y) {
+    std::ranges::for_each(set.yearsIndices, [&](uint const& y) {
         if (set.isYearPerformed[y])
             performedYearsToLog += std::to_string(y + 1) + " ";
     });

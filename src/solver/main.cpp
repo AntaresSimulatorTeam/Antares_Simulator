@@ -107,8 +107,8 @@ void logAbortion()
 */
 int main(int argc, char** argv)
 {
-    try {
-
+    try
+    {
         logs.info(ANTARES_LOGO);
         logs.info(MPL_ANNOUNCEMENT);
         // Name of the running application for the logger

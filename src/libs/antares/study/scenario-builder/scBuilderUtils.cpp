@@ -22,6 +22,7 @@
 #include <sstream>
 #include <iomanip>
 #include <string>
+#include <algorithm>
 #include <yuni/core/string/string.h>
 #include "antares/study/scenario-builder/scBuilderUtils.h"
 
@@ -38,28 +39,17 @@ std::string fromHydroLevelToString(double d)
 double fromStringToHydroLevel(const Yuni::String& value, const double maxLevel)
 {
     double result;
-    double result_tmp;
-
     std::string val = value.to<std::string>();
     try
     {
-        result_tmp = stod(val);
+        result = stod(val);
     }
     catch (std::invalid_argument&)
     {
         return std::nan("");
     }
 
-    if (result_tmp < 0.)
-        result = 0.;
-    else
-    {
-        if (result_tmp > maxLevel)
-            result = maxLevel;
-        else
-            result = result_tmp;
-    }
-    return result;
+    return std::clamp(result, 0., maxLevel);
 }
 
 uint fromStringToTSnumber(const Yuni::String& value)
