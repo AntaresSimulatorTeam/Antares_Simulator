@@ -45,6 +45,12 @@ DurationCollector::OperationTimer DurationCollector::operator()(const std::strin
     return OperationTimer(*this, key);
 }
 
+void DurationCollector::OperationTimer::addDuration(int64_t duration_ms) const
+{
+    const std::scoped_lock lock(collector.mutex_);
+    collector.duration_items_[key].push_back(duration_ms);
+}
+
 void operator<<(const DurationCollector::OperationTimer& op, const std::function<void(void)>& f)
 {
     using clock = std::chrono::steady_clock;
@@ -52,8 +58,7 @@ void operator<<(const DurationCollector::OperationTimer& op, const std::function
     f();
     auto end_ = clock::now();
     auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end_ - start_).count();
-    const std::scoped_lock lock(op.collector.mutex_);
-    op.collector.duration_items_[op.key].push_back(duration_ms);
+    op.addDuration(duration_ms);
 }
 
 int64_t DurationCollector::getTime(const std::string& name) const

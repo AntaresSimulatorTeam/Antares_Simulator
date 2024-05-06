@@ -42,6 +42,7 @@ public:
     {
         OperationTimer(DurationCollector& collector, const std::string& key):
             collector(collector), key(key) {}
+        void addDuration(int64_t duration_ms) const;
 
         DurationCollector& collector;
         const std::string key;
