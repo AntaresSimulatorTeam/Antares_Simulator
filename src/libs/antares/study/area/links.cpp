@@ -488,7 +488,6 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const fs::pa
     IniFile ini;
     if (!ini.open(path.string()))
         return 0;
-    }
 
     bool ret = true;
     String key;

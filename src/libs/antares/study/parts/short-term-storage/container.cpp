@@ -19,8 +19,8 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <antares/logs/logs.h>
-#include <yuni/io/file.h>
+#include "antares/study/parts/short-term-storage/container.h"
+
 #include <algorithm>
 #include <filesystem>
 #include <string>
@@ -48,7 +48,6 @@ bool STStorageInput::createSTStorageClustersFromIniFile(const fs::path& path)
     IniFile ini;
     if (!ini.open(pathIni.string()))
         return false;
-    }
 
     if (!ini.firstSection)
     {

@@ -225,7 +225,6 @@ StudyVersion StudyHeader::tryToFindTheVersion(const std::string& folder)
             std::string versionStr;
             if (!readVersionFromFile(abspath, versionStr))
                 return StudyVersion::unknown();
-            }
 
             StudyVersion v;
             v.fromString(versionStr);
@@ -240,7 +239,6 @@ bool StudyHeader::readVersionFromFile(const fs::path& filename, std::string& ver
     IniFile ini;
     if (ini.open(filename.string()))
         return internalFindVersionFromFile(ini, version);
-    }
 
     logs.error() << "Couldn't open study.antares to find the version number";
     return false;

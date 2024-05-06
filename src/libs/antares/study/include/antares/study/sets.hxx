@@ -222,7 +222,6 @@ bool Sets<T>::loadFromFile(const std::filesystem::path& filename)
     if (!std::filesystem::exists(filename))
         // Error silently ignored
         return true;
-    }
 
     IniFile ini;
     if (ini.open(filename.string()))

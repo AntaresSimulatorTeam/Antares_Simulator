@@ -19,6 +19,10 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
+#include "immediate_file_writer.h"
+
+#include <filesystem>
+
 #include <antares/io/file.h>
 #include <antares/logs/logs.h>
 
