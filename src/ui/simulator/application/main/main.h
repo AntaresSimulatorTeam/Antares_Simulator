@@ -584,7 +584,7 @@ private:
 
     void onMouseMoved(wxMouseEvent& evt);
 
-    void onLogMessageDeferred(int level, const Yuni::String& message);
+    void onLogMessageDeferred(int level, const std::string& message);
     void onLogMessage(wxCommandEvent& evt);
 
     void onStudyLoaded();
