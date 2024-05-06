@@ -277,6 +277,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
 
     NombrePaliers = 0;
     int globalReserveIndex = 0;
+    int globalClusterParticipationIndex = 0;
     for (uint i = 0; i < study.areas.size(); ++i)
     {
         const auto& area = *(study.areas.byIndex[i]);
@@ -339,6 +340,8 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
                         reserveParticipation.maxPower = cluster->reserveMaxPower(key);
                         reserveParticipation.participationCost = cluster->reserveCost(key);
                         reserveParticipation.clusterName = cluster->name();
+                        reserveParticipation.indexClusterParticipation
+                          = globalClusterParticipationIndex++;
                         areaCapacityReservationsUp.AllReservesParticipation.push_back(
                           reserveParticipation);
                     }
@@ -369,6 +372,8 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
                         reserveParticipation.maxPower = cluster->reserveMaxPower(key);
                         reserveParticipation.participationCost = cluster->reserveCost(key);
                         reserveParticipation.clusterName = cluster->name();
+                        reserveParticipation.indexClusterParticipation
+                          = globalClusterParticipationIndex++;
                         areaCapacityReservationsDown.AllReservesParticipation.push_back(
                           reserveParticipation);
                     }
