@@ -19,14 +19,13 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #include <algorithm>
-#include <iterator>
 #include <fstream>
+#include <iterator>
 
-#include <antares/writer/in_memory_writer.h>
-#include <antares/logs/logs.h>
-
-#include <antares/benchmarking/timer.h>
 #include <antares/benchmarking/DurationCollector.h>
+#include <antares/benchmarking/timer.h>
+#include <antares/logs/logs.h>
+#include <antares/writer/in_memory_writer.h>
 
 namespace fs = std::filesystem;
 
@@ -89,12 +88,16 @@ static std::string readFile(const fs::path& filePath)
 {
     std::ifstream file(filePath, std::ios_base::binary | std::ios_base::in);
     if (!file.is_open())
+    {
         logErrorAndThrow(filePath.string() + ": file does not exist");
+    }
 
     using Iterator = std::istreambuf_iterator<char>;
     std::string content(Iterator{file}, Iterator{});
     if (!file)
+    {
         logErrorAndThrow("Read failed '" + filePath.string() + "'");
+    }
     return content;
 }
 

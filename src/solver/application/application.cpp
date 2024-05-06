@@ -303,7 +303,8 @@ void Application::resetLogFilename() const
 
     if (!fs::exists(logfile) && !fs::create_directory(logfile))
     {
-        throw FatalError(std::string("Impossible to create the log folder at ") + logfile.string() + ". Aborting now.");
+        throw FatalError(std::string("Impossible to create the log folder at ") + logfile.string()
+                         + ". Aborting now.");
     }
 
     logfile /= "solver-";               // append the filename

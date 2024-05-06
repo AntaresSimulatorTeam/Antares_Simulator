@@ -62,12 +62,14 @@ bool Sets::loadFromStudy(Study& study)
     setStudy(study);
 
     // Loading from the INI file
-    std::filesystem::path filename = std::filesystem::path(study.folder.c_str())
-        / "settings" / "scenariobuilder.dat";
+    std::filesystem::path filename = std::filesystem::path(study.folder.c_str()) / "settings"
+                                     / "scenariobuilder.dat";
     bool r = true;
     // If the source code below is changed, please change it in loadFromINIFile too
     if (std::filesystem::exists(filename))
+    {
         r = internalLoadFromINIFile(filename.string());
+    }
     else
     {
         pMap.clear();

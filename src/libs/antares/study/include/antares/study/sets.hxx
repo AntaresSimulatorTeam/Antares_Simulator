@@ -220,8 +220,10 @@ bool Sets<T>::loadFromFile(const std::filesystem::path& filename)
 
     // Loading the INI file
     if (!std::filesystem::exists(filename))
+    {
         // Error silently ignored
         return true;
+    }
 
     IniFile ini;
     if (ini.open(filename.string()))
@@ -286,8 +288,8 @@ bool Sets<T>::loadFromFile(const std::filesystem::path& filename)
                     continue;
                 }
 
-                logs.warning() << "sets: `" << filename.string() << "`: Invalid property `" << p->key
-                               << '\'';
+                logs.warning() << "sets: `" << filename.string() << "`: Invalid property `"
+                               << p->key << '\'';
             }
 
             // Add the new group

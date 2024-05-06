@@ -1211,8 +1211,7 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
             {
                 fs::path folder = stsFolder / "clusters" / area->id.c_str();
 
-                ret = area->shortTermStorage.createSTStorageClustersFromIniFile(folder)
-                      && ret;
+                ret = area->shortTermStorage.createSTStorageClustersFromIniFile(folder) && ret;
             }
         }
         else

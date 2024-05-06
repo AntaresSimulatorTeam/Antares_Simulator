@@ -21,15 +21,7 @@
 #ifndef __ANTARES_LIBS_STUDY_AREAS_H__
 #define __ANTARES_LIBS_STUDY_AREAS_H__
 
-#include <yuni/yuni.h>
-#include <yuni/core/string.h>
-#include <yuni/core/noncopyable.h>
-#include <stdlib.h>
-#include <antares/study/parameters/adq-patch-params.h>
-#include <antares/array/matrix.h>
-#include "../parts/parts.h"
 #include <filesystem>
-#include <vector>
 #include <set>
 #include <stdlib.h>
 #include <vector>
@@ -43,6 +35,7 @@
 #include "antares/study/filter.h"
 #include "antares/study/parts/parts.h"
 
+#include "../parts/parts.h"
 #include "constants.h"
 #include "links.h"
 #include "ui.h"
@@ -732,7 +725,10 @@ AreaLink* AreaAddLinkBetweenAreas(Area* area, Area* with, bool warning = true);
 ** \param folder The target folder
 ** \return A non-null value if the operation succeeded, 0 otherwise
 */
-bool AreaLinksLoadFromFolder(Study& s, AreaList* l, Area* area, const std::filesystem::path& folder);
+bool AreaLinksLoadFromFolder(Study& s,
+                             AreaList* l,
+                             Area* area,
+                             const std::filesystem::path& folder);
 
 /*!
 ** \brief Save interconnections of a given area into a folder (`input/areas/[area]/ntc`)

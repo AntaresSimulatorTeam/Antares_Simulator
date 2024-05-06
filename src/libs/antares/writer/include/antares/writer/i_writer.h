@@ -20,8 +20,6 @@
 */
 #pragma once
 
-#include <yuni/core/string.h>
-
 #include <filesystem>
 #include <memory>
 #include <stdexcept>
@@ -48,7 +46,8 @@ public:
     virtual void addEntryFromBuffer(const std::string& entryPath, Yuni::Clob& entryContent) = 0;
     virtual void addEntryFromBuffer(const std::string& entryPath, std::string& entryContent) = 0;
     virtual void addEntryFromFile(const std::filesystem::path& entryPath,
-                                  const std::filesystem::path& filePath) = 0;
+                                  const std::filesystem::path& filePath)
+      = 0;
 
     /*!
      * Waits for completion of every write operation previously appended.
@@ -59,10 +58,11 @@ public:
     virtual void finalize(bool verbose) = 0;
 };
 
-class NullResultWriter: public Solver::IResultWriter {
-    void addEntryFromBuffer(const std::string &, Yuni::Clob &) override;
-    void addEntryFromBuffer(const std::string &, std::string &) override;
-    void addEntryFromFile(const std::filesystem::path &, const std::filesystem::path &) override;
+class NullResultWriter: public Solver::IResultWriter
+{
+    void addEntryFromBuffer(const std::string&, Yuni::Clob&) override;
+    void addEntryFromBuffer(const std::string&, std::string&) override;
+    void addEntryFromFile(const std::filesystem::path&, const std::filesystem::path&) override;
     void flush() override;
     bool needsTheJobQueue() const override;
     void finalize(bool) override;

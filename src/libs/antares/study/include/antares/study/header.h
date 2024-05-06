@@ -22,11 +22,11 @@
 #define __ANTARES_LIBS_STUDY_HEADER_H__
 
 #include <ctime>
+#include <filesystem>
 
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
-#include <filesystem>
-#include <ctime>
+
 #include <antares/inifile/inifile.h>
 
 #include "version.h"
@@ -107,7 +107,7 @@ public:
      ** \param folder The folder where data are located
      ** \return The version of the study. `unknown` if not found
      */
-     static StudyVersion tryToFindTheVersion(const std::string& folder);
+    static StudyVersion tryToFindTheVersion(const std::string& folder);
 
 public:
     //! Caption of the study

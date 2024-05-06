@@ -163,12 +163,16 @@ static std::string readFile(const fs::path& filePath)
 {
     std::ifstream file(filePath, std::ios_base::binary | std::ios_base::in);
     if (!file.is_open())
+    {
         logErrorAndThrow(filePath.string() + ": file does not exist");
+    }
 
     using Iterator = std::istreambuf_iterator<char>;
     std::string content(Iterator{file}, Iterator{});
     if (!file)
+    {
         logErrorAndThrow("Read failed '" + filePath.string() + "'");
+    }
     return content;
 }
 

@@ -50,7 +50,9 @@ static bool prepareDirectoryHierarchy(const fs::path& root,
     fullPath.remove_filename(); // only create directories
 
     if (fs::exists(fullPath))
+    {
         return true;
+    }
 
     return fs::create_directories(fullPath);
 }
@@ -61,7 +63,9 @@ void ImmediateFileResultWriter::addEntryFromBuffer(const std::string& entryPath,
 {
     fs::path output;
     if (prepareDirectoryHierarchy(pOutputFolder, entryPath, output))
+    {
         IOFileSetContent(output.string(), entryContent);
+    }
 }
 
 // Write to file immediately, creating directories if needed
@@ -70,7 +74,9 @@ void ImmediateFileResultWriter::addEntryFromBuffer(const std::string& entryPath,
 {
     fs::path output;
     if (prepareDirectoryHierarchy(pOutputFolder, entryPath, output))
+    {
         IOFileSetContent(output.string(), entryContent);
+    }
 }
 
 void ImmediateFileResultWriter::addEntryFromFile(const fs::path& entryPath,
@@ -88,9 +94,13 @@ void ImmediateFileResultWriter::addEntryFromFile(const fs::path& entryPath,
     if (ec)
     {
         if (ec == std::errc::no_such_file_or_directory)
+        {
             logs.error() << filePath.string() << ": file does not exist";
+        }
         else
+        {
             logs.error() << "Error: " << ec.message();
+        }
     }
 }
 
@@ -113,9 +123,13 @@ void NullResultWriter::addEntryFromBuffer(const std::string&, Yuni::Clob&)
 }
 
 void NullResultWriter::addEntryFromBuffer(const std::string&, std::string&)
-{}
+{
+}
+
 void NullResultWriter::addEntryFromFile(const fs::path&, const fs::path&)
-{}
+{
+}
+
 void NullResultWriter::flush()
 {
 }

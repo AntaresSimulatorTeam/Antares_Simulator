@@ -186,7 +186,8 @@ bool Study::internalLoadFromFolder(const fs::path& path, const StudyLoadOptions&
     if (!fs::exists(path))
     {
         logs.error()
-          << path.string() << ": The directory does not exist (or not enough privileges to read the folder)";
+          << path.string()
+          << ": The directory does not exist (or not enough privileges to read the folder)";
         return false;
     }
 

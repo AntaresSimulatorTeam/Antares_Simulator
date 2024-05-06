@@ -19,10 +19,9 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <filesystem>
-#include <yuni/yuni.h>
-#include "antares/study/study.h"
 #include "antares/study/parts/thermal/ecoInput.h"
+
+#include <filesystem>
 
 #include <yuni/yuni.h>
 #include <yuni/core/math.h>
@@ -76,7 +75,12 @@ bool EconomicInputData::loadFromFolder(Study& study, const std::string& folder)
         fs::path filename = fs::path(folder) / "fuelCost.txt";
         if (fs::exists(filename))
         {
-            ret = fuelcost.loadFromCSVFile(filename.string(), 1, HOURS_PER_YEAR, Matrix<>::optImmediate, &dataBuffer) && ret;
+            ret = fuelcost.loadFromCSVFile(filename.string(),
+                                           1,
+                                           HOURS_PER_YEAR,
+                                           Matrix<>::optImmediate,
+                                           &dataBuffer)
+                  && ret;
             if (study.usedByTheSolver && study.parameters.derated)
             {
                 fuelcost.averageTimeseries();
@@ -86,7 +90,11 @@ bool EconomicInputData::loadFromFolder(Study& study, const std::string& folder)
         filename = fs::path(folder) / "CO2Cost.txt";
         if (fs::exists(filename))
         {
-            ret = co2cost.loadFromCSVFile(filename.string(), 1, HOURS_PER_YEAR, Matrix<>::optImmediate, &dataBuffer)
+            ret = co2cost.loadFromCSVFile(filename.string(),
+                                          1,
+                                          HOURS_PER_YEAR,
+                                          Matrix<>::optImmediate,
+                                          &dataBuffer)
                   && ret;
             if (study.usedByTheSolver && study.parameters.derated)
             {

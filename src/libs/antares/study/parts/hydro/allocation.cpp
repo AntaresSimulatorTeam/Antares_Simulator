@@ -167,7 +167,8 @@ void HydroAllocation::clear()
 #endif
 }
 
-bool HydroAllocation::loadFromFile(const AreaName& referencearea, const std::filesystem::path& filename)
+bool HydroAllocation::loadFromFile(const AreaName& referencearea,
+                                   const std::filesystem::path& filename)
 {
     clear();
 
