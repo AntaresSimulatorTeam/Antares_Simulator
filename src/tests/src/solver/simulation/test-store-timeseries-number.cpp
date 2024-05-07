@@ -69,7 +69,7 @@ BOOST_AUTO_TEST_CASE(BC_group_TestGroup_has_output_file)
 
     Benchmarking::DurationCollector durationCollector;
     auto resultWriter = resultWriterFactory(ResultFormat::legacyFilesDirectories,
-                                            working_tmp_dir.string(),
+                                            working_tmp_dir.string().c_str(),
                                             nullptr,
                                             durationCollector);
     fs::path bc_path = working_tmp_dir / "ts-numbers" / "bindingconstraints" / "TestGroup.txt";
@@ -95,7 +95,7 @@ BOOST_AUTO_TEST_CASE(BC_output_ts_numbers_file_for_each_group)
 
     Benchmarking::DurationCollector durationCollector;
     auto resultWriter = resultWriterFactory(ResultFormat::legacyFilesDirectories,
-                                            working_tmp_dir.string(),
+                                            working_tmp_dir.string().c_str(),
                                             nullptr,
                                             durationCollector);
 
@@ -124,7 +124,7 @@ BOOST_AUTO_TEST_CASE(BC_timeseries_numbers_store_values)
 
     Benchmarking::DurationCollector durationCollector;
     auto resultWriter = resultWriterFactory(ResultFormat::legacyFilesDirectories,
-                                            working_tmp_dir.string(),
+                                            working_tmp_dir.string().c_str(),
                                             nullptr,
                                             durationCollector);
 

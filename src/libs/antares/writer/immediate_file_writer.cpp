@@ -47,8 +47,7 @@ static bool prepareDirectoryHierarchy(const fs::path& root,
     fs::path fullPath = root / entryPath.relative_path();
     output = fullPath;
 
-    fs::path directory = fullPath;
-    directory.remove_filename();
+    fs::path directory = fullPath.parent_path();
     if (fs::exists(directory))
     {
         return true;
