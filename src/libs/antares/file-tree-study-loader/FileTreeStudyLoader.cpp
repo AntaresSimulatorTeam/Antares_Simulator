@@ -21,20 +21,22 @@
  */
 
 #include "antares/file-tree-study-loader/FileTreeStudyLoader.h"
-#include "antares/application/application.h"
+
+#include <cstring>
 #include <memory>
 #include <span>
-#include <cstring>
+
+#include "antares/application/application.h"
 
 namespace Antares
 {
-FileTreeStudyLoader::FileTreeStudyLoader(std::filesystem::path study_path)
-: study_path_{std::move(study_path)}
+FileTreeStudyLoader::FileTreeStudyLoader(std::filesystem::path study_path):
+    study_path_{std::move(study_path)}
 {
-
 }
 
-namespace {
+namespace
+{
 /**
  * @brief Prepares arguments for the Antares Solver application.
  *
@@ -48,7 +50,8 @@ namespace {
  * @param study_path A string_view representing the study path.
  * @return std::vector<std::string> A vector of strings containing the prepared arguments.
  */
-[[nodiscard]] std::vector<std::string> prepareArgs(std::span<char*> argv, std::string_view study_path)
+[[nodiscard]] std::vector<std::string> prepareArgs(std::span<char*> argv,
+                                                   std::string_view study_path)
 {
     using namespace std::literals::string_literals;
     std::string arg0{""s};

@@ -660,7 +660,9 @@ YString StudyCreateOutputPath(SimulationMode mode,
                               int64_t startTime)
 {
     if (fmt == ResultFormat::inMemory)
+    {
         return "no_output";
+    }
 
     auto suffix = getOutputSuffix(fmt);
 

@@ -21,11 +21,12 @@
  */
 
 #pragma once
+#include <filesystem>
+
+#include <antares/writer/i_writer.h>
+#include "antares/solver/misc/options.h"
 #include "antares/study-loader/IStudyLoader.h"
 #include "antares/study/load-options.h"
-#include "antares/solver/misc/options.h"
-#include <antares/writer/i_writer.h>
-#include <filesystem>
 
 namespace Antares
 {
@@ -38,7 +39,7 @@ namespace Antares
  *
  * @note This class inherits from the IStudyLoader interface.
  */
-class FileTreeStudyLoader : public IStudyLoader
+class FileTreeStudyLoader: public IStudyLoader
 {
 public:
     explicit FileTreeStudyLoader(std::filesystem::path study_path);

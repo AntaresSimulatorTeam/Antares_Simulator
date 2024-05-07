@@ -23,13 +23,15 @@
 #pragma once
 #include <antares/study/study.h>
 
-namespace Antares {
+namespace Antares
+{
 /**
  * @class IStudyLoader
  * @brief The IStudyLoader class is an interface for loading studies.
  * @details It declares the load method.
  */
-class IStudyLoader {
+class IStudyLoader
+{
 public:
     virtual ~IStudyLoader() = default;
     /**
@@ -38,4 +40,4 @@ public:
      */
     [[nodiscard]] virtual std::unique_ptr<Antares::Data::Study> load() const = 0;
 };
-}
+} // namespace Antares

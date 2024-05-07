@@ -71,11 +71,18 @@ public:
     void resetProcessPriority() const;
 
     void writeExectutionInfo();
-    Data::Study* study() const { return pStudy.get(); }
-    std::unique_ptr<Data::Study> acquireStudy() {
+
+    Data::Study* study() const
+    {
+        return pStudy.get();
+    }
+
+    std::unique_ptr<Data::Study> acquireStudy()
+    {
         return std::move(pStudy);
     }
-    private:
+
+private:
     /*!
     ** \brief Reset the log filename and open it
     */
