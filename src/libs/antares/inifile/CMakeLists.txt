@@ -12,10 +12,12 @@ add_library(inifile
 add_library(Antares::inifile ALIAS inifile)
 
 target_link_libraries(inifile
+        PUBLIC
+        yuni-static-core
         PRIVATE
         io
         logs
-        yuni-static-core
+        Boost::boost
 )
 
 target_include_directories(inifile
