@@ -28,7 +28,7 @@ using namespace Yuni;
 
 namespace Antares::Data::Load
 {
-Container::Container() : prepro(nullptr), series(tsNumbers, "load")
+Container::Container() : prepro(nullptr), series(tsNumbers)
 {
 }
 

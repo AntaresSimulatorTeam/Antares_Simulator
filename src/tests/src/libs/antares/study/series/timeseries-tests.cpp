@@ -42,7 +42,7 @@ struct Fixture
     Fixture(const Fixture&& f) = delete;
     Fixture& operator=(const Fixture& f) = delete;
     Fixture& operator=(const Fixture&& f) = delete;
-    Fixture() : ts(tsnum, "")
+    Fixture() : ts(tsnum)
     {
         ts.reset(1, HOURS_PER_YEAR);
         tsnum.resize(1, 1);
@@ -88,7 +88,8 @@ public:
     for (size_t idx = 0; int w : width)
     {
         // TimeSeries::TimeSeries does not exist, so we use pointers
-        ts[idx] = std::make_unique<TimeSeries>(tsnum, std::to_string(idx)); // ts[idx] is registered to tsnum here
+        ts[idx] = std::make_unique<TimeSeries>(tsnum); // ts[idx] is registered to tsnum here
+	tsnum.registerSeries(ts[idx].get(), std::to_string(idx));
         ts[idx]->reset(w, height);
         idx++;
     }

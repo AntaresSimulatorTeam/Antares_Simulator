@@ -52,7 +52,7 @@ class TimeSeries
 public:
     using TS = Matrix<double>;
 
-    explicit TimeSeries(Numbers& tsNumbers, std::string label);
+    explicit TimeSeries(Numbers& tsNumbers);
     /*!
      ** \brief Load series from a file
      **

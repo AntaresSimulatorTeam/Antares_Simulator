@@ -57,8 +57,8 @@ AreaLink::AreaLink() :
  from(nullptr),
  with(nullptr),
  parameters(fhlMax, HOURS_PER_YEAR),
- directCapacities(timeseriesNumbers, "direct-capacity"),
- indirectCapacities(timeseriesNumbers, "indirect-capacity"),
+ directCapacities(timeseriesNumbers),
+ indirectCapacities(timeseriesNumbers),
  useLoopFlow(false),
  usePST(false),
  useHurdlesCost(false),
@@ -73,6 +73,9 @@ AreaLink::AreaLink() :
  style(stPlain),
  linkWidth(1)
 {
+    timeseriesNumbers.registerSeries(&directCapacities, "direct-capacity");
+    timeseriesNumbers.registerSeries(&indirectCapacities, "indirect-capacity");
+
     directCapacities.reset();
     indirectCapacities.reset();
 }
