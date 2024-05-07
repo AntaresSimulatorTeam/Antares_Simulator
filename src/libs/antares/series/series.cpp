@@ -36,7 +36,7 @@ namespace Antares::Data
 {
 void TimeSeries::Numbers::registerSeries(const TimeSeries* s, std::string label)
 {
-    series[label] = std::move(s);
+    series[std::move(label)] = s;
 }
 
 // TODO[FOM] Code duplication
