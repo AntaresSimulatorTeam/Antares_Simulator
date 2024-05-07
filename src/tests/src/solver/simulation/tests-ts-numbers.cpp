@@ -369,7 +369,7 @@ BOOST_AUTO_TEST_CASE(check_intra_modal_on_hydro_max_power_time_series)
 
 	study->areas.resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
-	BOOST_CHECK(TimeSeriesNumbers::Generate(*study));
+	BOOST_CHECK(Antares::Solver::TimeSeriesNumbers::Generate(*study));
 
 	for (unsigned int year = 0; year < nbYears; year++)
 	{

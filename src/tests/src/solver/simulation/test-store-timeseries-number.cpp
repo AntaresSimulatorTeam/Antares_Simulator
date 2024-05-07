@@ -70,8 +70,8 @@ BOOST_AUTO_TEST_CASE(BC_group_TestGroup_has_output_file) {
     fs::path bc_path = working_tmp_dir / "ts-numbers" / "bindingconstraints" / "TestGroup.txt";
 
     initializeStudy(*study);
-    TimeSeriesNumbers::Generate(*study);
-    TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(*study, *resultWriter);
+    Antares::Solver::TimeSeriesNumbers::Generate(*study);
+    Antares::Solver::TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(*study, *resultWriter);
 
     bool file_exists = fs::exists(bc_path);
     BOOST_CHECK_EQUAL(file_exists, true);
@@ -92,9 +92,9 @@ BOOST_AUTO_TEST_CASE(BC_output_ts_numbers_file_for_each_group) {
                                               nullptr, nullDurationCollector);
 
     initializeStudy(*study);
-    TimeSeriesNumbers::Generate(*study);
+    Antares::Solver::TimeSeriesNumbers::Generate(*study);
 
-    TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(*study, *resultWriter);
+    Antares::Solver::TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(*study, *resultWriter);
 
     fs::path test1_path = working_tmp_dir / "ts-numbers" / "bindingconstraints" / "test1.txt";
     fs::path test2_path = working_tmp_dir / "ts-numbers" / "bindingconstraints" / "test2.txt";
@@ -118,7 +118,7 @@ BOOST_AUTO_TEST_CASE(BC_timeseries_numbers_store_values) {
                                               nullptr, nullDurationCollector);
 
     initializeStudy(*study);
-    TimeSeriesNumbers::Generate(*study);
+    Antares::Solver::TimeSeriesNumbers::Generate(*study);
     Matrix<uint32_t> series(2, 2);
     series[0][0] = 0;
     series[0][1] = 1;
@@ -126,7 +126,7 @@ BOOST_AUTO_TEST_CASE(BC_timeseries_numbers_store_values) {
     series[1][1] = 3;
     study->bindingConstraintsGroups["test1"]->timeseriesNumbers = series;
 
-    TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(*study, *resultWriter);
+    Antares::Solver::TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(*study, *resultWriter);
 
     fs::path test1_path = working_tmp_dir / "ts-numbers" / "bindingconstraints" / "test1.txt";
     BOOST_CHECK_EQUAL(fs::exists(test1_path), true);

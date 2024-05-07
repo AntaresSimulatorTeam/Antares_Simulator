@@ -74,6 +74,10 @@ std::optional<std::string> TimeSeriesNumbers::checkSeriesNumberOfColumnsConsiste
     return std::nullopt;
 }
 
+TimeSeries::TimeSeries(TimeSeriesNumbers& tsNumbers) : timeseriesNumbers(tsNumbers)
+{
+}
+
 bool TimeSeries::loadFromFile(const std::string& path,
                               const bool average)
 {
