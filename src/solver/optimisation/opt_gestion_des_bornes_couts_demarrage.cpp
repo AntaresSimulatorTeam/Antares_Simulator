@@ -19,14 +19,14 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
+#include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
+#include "antares/solver/simulation/sim_structure_donnees.h"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
+#include "antares/solver/simulation/simulation.h"
 
 #include "variables/VariableManagement.h"
 #include "variables/VariableManagerUtils.h"
-#include "antares/solver/simulation/simulation.h"
-#include "antares/solver/simulation/sim_structure_donnees.h"
-#include "antares/solver/simulation/sim_structure_probleme_economique.h"
-#include "antares/solver/optimisation/opt_fonctions.h"
 
 using namespace Yuni;
 
@@ -36,8 +36,8 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(
   const int DernierPdtDeLIntervalle)
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
-    int NombreDePasDeTempsPourUneOptimisation
-      = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+    int NombreDePasDeTempsPourUneOptimisation = problemeHebdo
+                                                  ->NombreDePasDeTempsPourUneOptimisation;
 
     std::vector<double*>& AdresseOuPlacerLaValeurDesVariablesOptimisees
       = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees;
@@ -50,15 +50,15 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(
     {
         for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
-            const PALIERS_THERMIQUES& PaliersThermiquesDuPays
-              = problemeHebdo->PaliersThermiquesDuPays[pays];
+            const PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo
+                                                                  ->PaliersThermiquesDuPays[pays];
 
             for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
             {
                 const PDISP_ET_COUTS_HORAIRES_PAR_PALIER& PuissanceDisponibleEtCout
                   = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[index];
-                const int palier
-                  = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+                const int palier = PaliersThermiquesDuPays
+                                     .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
                 const std::vector<int>& NombreMaxDeGroupesEnMarcheDuPalierThermique
                   = PuissanceDisponibleEtCout.NombreMaxDeGroupesEnMarcheDuPalierThermique;
                 const std::vector<int>& NombreMinDeGroupesEnMarcheDuPalierThermique
@@ -96,7 +96,9 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(
                 int t1 = pdtHebdo;
                 int t1moins1 = t1 - 1;
                 if (t1moins1 < 0)
+                {
                     t1moins1 = NombreDePasDeTempsPourUneOptimisation + t1moins1;
+                }
                 Xmax[var] = 0;
                 if (NombreMaxDeGroupesEnMarcheDuPalierThermique[t1moins1]
                       - NombreMaxDeGroupesEnMarcheDuPalierThermique[t1]

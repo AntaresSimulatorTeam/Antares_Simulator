@@ -38,6 +38,7 @@ struct VCardNonProportionalCostByDispatchablePlant
     {
         return "NP Cost by plant";
     }
+
     //! Unit
     static std::string Unit()
     {
@@ -96,9 +97,9 @@ struct VCardNonProportionalCostByDispatchablePlant
 */
 template<class NextT = Container::EndOfList>
 class NonProportionalCostByDispatchablePlant
- : public Variable::IVariable<NonProportionalCostByDispatchablePlant<NextT>,
-                              NextT,
-                              VCardNonProportionalCostByDispatchablePlant>
+    : public Variable::IVariable<NonProportionalCostByDispatchablePlant<NextT>,
+                                 NextT,
+                                 VCardNonProportionalCostByDispatchablePlant>
 {
 public:
     //! Type of the next static variable
@@ -125,23 +126,27 @@ public:
     {
         enum
         {
-            count
-            = ((VCardType::categoryDataLevel & CDataLevel && VCardType::categoryFileLevel & CFile)
-                 ? (NextType::template Statistics<CDataLevel, CFile>::count
-                    + VCardType::columnCount * ResultsType::count)
-                 : NextType::template Statistics<CDataLevel, CFile>::count),
+            count = ((VCardType::categoryDataLevel & CDataLevel
+                      && VCardType::categoryFileLevel & CFile)
+                       ? (NextType::template Statistics<CDataLevel, CFile>::count
+                          + VCardType::columnCount * ResultsType::count)
+                       : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
 
 public:
-    NonProportionalCostByDispatchablePlant() : pValuesForTheCurrentYear(NULL), pSize(0)
+    NonProportionalCostByDispatchablePlant():
+        pValuesForTheCurrentYear(NULL),
+        pSize(0)
     {
     }
 
     ~NonProportionalCostByDispatchablePlant()
     {
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+        {
             delete[] pValuesForTheCurrentYear[numSpace];
+        }
         delete[] pValuesForTheCurrentYear;
     }
 
@@ -163,12 +168,18 @@ public:
         {
             AncestorType::pResults.resize(pSize);
             for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
-                pValuesForTheCurrentYear[numSpace]
-                  = new VCardType::IntermediateValuesDeepType[pSize];
+            {
+                pValuesForTheCurrentYear[numSpace] = new VCardType::IntermediateValuesDeepType
+                  [pSize];
+            }
 
             for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+            {
                 for (unsigned int i = 0; i != pSize; ++i)
+                {
                     pValuesForTheCurrentYear[numSpace][i].initializeFromStudy(*study);
+                }
+            }
 
             for (unsigned int i = 0; i != pSize; ++i)
             {
@@ -179,7 +190,9 @@ public:
         else
         {
             for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+            {
                 pValuesForTheCurrentYear[numSpace] = nullptr;
+            }
 
             AncestorType::pResults.clear();
         }
@@ -214,7 +227,9 @@ public:
     {
         // Reset the values for the current year
         for (unsigned int i = 0; i != pSize; ++i)
+        {
             pValuesForTheCurrentYear[numSpace][i].reset();
+        }
 
         // Next variable
         NextType::yearBegin(year, numSpace);
@@ -305,13 +320,13 @@ public:
             const auto& thermal = results.data.area->thermal;
 
             // Write the data for the current year
-            for (auto& cluster : thermal.list.each_enabled())
+            for (auto& cluster: thermal.list.each_enabled())
             {
                 // Write the data for the current year
                 results.variableCaption = cluster->name(); // VCardType::Caption();
                 results.variableUnit = VCardType::Unit();
-                pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex].template buildAnnualSurveyReport<VCardType>(
-                  results, fileLevel, precision);
+                pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex]
+                  .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
             }
         }
     }

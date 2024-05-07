@@ -21,10 +21,13 @@
 #ifndef __ANTARES_LIBS_STUDY_HEADER_H__
 #define __ANTARES_LIBS_STUDY_HEADER_H__
 
+#include <ctime>
+
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
-#include <ctime>
+
 #include <antares/inifile/inifile.h>
+
 #include "version.h"
 
 //! Default author
@@ -61,6 +64,7 @@ public:
     {
         reset();
     }
+
     /*!
     ** \brief Destructor
     */
@@ -102,7 +106,7 @@ public:
      ** \param folder The folder where data are located
      ** \return The version of the study. `unknown` if not found
      */
-     static StudyVersion tryToFindTheVersion(const AnyString& folder);
+    static StudyVersion tryToFindTheVersion(const AnyString& folder);
 
 public:
     //! Caption of the study

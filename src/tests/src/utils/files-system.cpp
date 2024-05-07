@@ -62,8 +62,7 @@ void removeFolder(std::string& path, std::string& folder_name)
         try
         {
             fs::remove_all(folder_path);
-            std::cout << "Folder " + folder_name + " at " + folder_path.string()
-                           + " deleted.\n";
+            std::cout << "Folder " + folder_name + " at " + folder_path.string() + " deleted.\n";
         }
         catch (const fs::filesystem_error& e)
         {

@@ -19,8 +19,9 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <cstdlib>
 #include "antares/array/matrix.h"
+
+#include <cstdlib>
 
 using namespace Yuni;
 

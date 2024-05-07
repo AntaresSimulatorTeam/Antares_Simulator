@@ -43,7 +43,9 @@ void ATSP::cacheDestroy()
 void ATSP::cacheClear()
 {
     for (uint i = 0; i != pCacheLastValidIndex; ++i)
+    {
         pCacheMatrix[i].clear();
+    }
     pCacheMemoryUsed = sizeof(Matrix<>) * pArea.size();
     pCacheLastValidIndex = 0;
 }

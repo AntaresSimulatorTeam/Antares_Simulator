@@ -21,17 +21,17 @@
 #ifndef __SOLVER_SIMULATION_COMMON_ECONOMY_ADEQUACY_H__
 #define __SOLVER_SIMULATION_COMMON_ECONOMY_ADEQUACY_H__
 
-#include <yuni/yuni.h>
-#include <antares/study/study.h>
-#include "antares/solver/variable/variable.h"
-#include "antares/solver/optimisation/opt_fonctions.h"
-#include "antares/solver/variable/economy/all.h"
-#include <yuni/core/bind.h>
-#include "antares/solver/variable/economy/dispatchable-generation-margin.h" // for OP.MRG
-
-#include "antares/solver/simulation/solver.h" // for definition of type yearRandomNumbers
-
 #include <vector>
+
+#include <yuni/yuni.h>
+#include <yuni/core/bind.h>
+
+#include <antares/study/study.h>
+#include "antares/solver/optimisation/opt_fonctions.h"
+#include "antares/solver/simulation/solver.h" // for definition of type yearRandomNumbers
+#include "antares/solver/variable/economy/all.h"
+#include "antares/solver/variable/economy/dispatchable-generation-margin.h" // for OP.MRG
+#include "antares/solver/variable/variable.h"
 
 namespace Antares
 {
@@ -65,7 +65,9 @@ void BuildThermalPartOfWeeklyProblem(Data::Study& study,
 /*!
 ** \brief Prepare data from clusters in mustrun mode (eco+adq)
 */
-void PrepareDataFromClustersInMustrunMode(Data::Study& study, Data::Area::ScratchMap& scratchmap, uint year);
+void PrepareDataFromClustersInMustrunMode(Data::Study& study,
+                                          Data::Area::ScratchMap& scratchmap,
+                                          uint year);
 
 /*!
 ** \brief Get if the quadratic optimization should be used according
@@ -111,7 +113,6 @@ void computingHydroLevels(const Data::AreaList& areas,
                           bool remixWasRun,
                           bool computeAnyway = false);
 
-
 /*
 ** \brief Interpolates water values related to reservoir levels for outputs only
 **
@@ -134,8 +135,7 @@ void interpolateWaterValue(const Data::AreaList& areas,
 ** \param areas : the areas of study
 ** \param problem The weekly problem, from the solver
 */
-void updatingWeeklyFinalHydroLevel(const Data::AreaList& areas,
-                                   PROBLEME_HEBDO& problem);
+void updatingWeeklyFinalHydroLevel(const Data::AreaList& areas, PROBLEME_HEBDO& problem);
 
 /*
 ** \brief Updating the year final reservoir level, to be used as a start for the year.

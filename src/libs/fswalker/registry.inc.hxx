@@ -21,13 +21,14 @@
 #ifndef __ANTARES_FS_WALKER_REGISTRY_H__
 #define __ANTARES_FS_WALKER_REGISTRY_H__
 
+#include <vector>
+
 #include <yuni/yuni.h>
 #include <yuni/core/noncopyable.h>
-#include <vector>
 
 namespace FSWalker
 {
-class EventsRegistry : private Yuni::NonCopyable<EventsRegistry>
+class EventsRegistry: private Yuni::NonCopyable<EventsRegistry>
 {
 public:
     using OnDirectoryEventList = std::vector<OnDirectoryEvent>;
@@ -39,6 +40,7 @@ public:
     EventsRegistry()
     {
     }
+
     ~EventsRegistry();
     void initialize(const IExtension::Vector& exts, DispatchJobEvent& queue);
     void finalize();
@@ -72,13 +74,17 @@ inline EventsRegistry::~EventsRegistry()
 void EventsRegistry::finalize()
 {
     if (extensions.empty())
+    {
         return;
+    }
 
     for (uint i = 0; i != extensions.size(); ++i)
     {
         void* userdata = uniqueUserdata[i];
         if (!userdata)
+        {
             continue;
+        }
         auto& extension = *(extensions[i]);
 
         // release ressources

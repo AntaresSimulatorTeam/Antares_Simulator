@@ -60,13 +60,17 @@ class I_mtx_to_buffer_dumper
 public:
     I_mtx_to_buffer_dumper(const Matrix<T, ReadWriteT>* mtx,
                            std::string& data,
-                           PredicateT& predicate) :
-     mtx_(mtx), buffer_(data), predicate_(predicate), format_(nullptr)
+                           PredicateT& predicate):
+        mtx_(mtx),
+        buffer_(data),
+        predicate_(predicate),
+        format_(nullptr)
     {
     }
 
     void set_print_format(bool isDecimal, uint precision);
     virtual void run() = 0;
+
     ~I_mtx_to_buffer_dumper()
     {
         delete format_;
@@ -80,26 +84,28 @@ protected:
 };
 
 template<class T, class ReadWriteT, class PredicateT>
-class one_column__dumper : public I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>
+class one_column__dumper: public I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>
 {
 public:
-    one_column__dumper(const Matrix<T, ReadWriteT>* mtx, std::string& data, PredicateT& predicate) :
-     I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>(mtx, data, predicate)
+    one_column__dumper(const Matrix<T, ReadWriteT>* mtx, std::string& data, PredicateT& predicate):
+        I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>(mtx, data, predicate)
     {
     }
+
     void run() override;
 };
 
 template<class T, class ReadWriteT, class PredicateT>
-class multiple_columns__dumper : public I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>
+class multiple_columns__dumper: public I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>
 {
 public:
     multiple_columns__dumper(const Matrix<T, ReadWriteT>* mtx,
                              std::string& data,
-                             PredicateT& predicate) :
-     I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>(mtx, data, predicate)
+                             PredicateT& predicate):
+        I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>(mtx, data, predicate)
     {
     }
+
     void run() override;
 };
 

@@ -28,14 +28,16 @@ struct MaxHydroPowerData
     const int& NombreDePasDeTempsPourUneOptimisation;
     std::vector<int>& NumeroDeContrainteMaxEnergieHydraulique;
 };
+
 /*!
  * represent 'Max Hydraulic Power' constraint type
  */
-class MaxHydroPower : private ConstraintFactory
+class MaxHydroPower: private ConstraintFactory
 {
 public:
-    MaxHydroPower(ConstraintBuilder& builder, MaxHydroPowerData& data) :
-     ConstraintFactory(builder), data(data)
+    MaxHydroPower(ConstraintBuilder& builder, MaxHydroPowerData& data):
+        ConstraintFactory(builder),
+        data(data)
     {
     }
 

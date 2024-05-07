@@ -18,13 +18,14 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-# include "matrix-bypass-load.h"
-# include <yuni/core/system/stdint.h>
 #include <global_JIT_manager.h>
 
+#include <yuni/core/system/stdint.h>
+
+#include "matrix-bypass-load.h"
 
 enum
 {
-	//! A Hard-coded maximum filesize
-	filesizeHardLimit = 1536 * 1024 * 1024, // 1.5Go
+    //! A Hard-coded maximum filesize
+    filesizeHardLimit = 1536 * 1024 * 1024, // 1.5Go
 };

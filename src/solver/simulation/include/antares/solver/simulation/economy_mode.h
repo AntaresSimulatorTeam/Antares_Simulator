@@ -30,7 +30,7 @@ namespace Antares::Solver
 {
 void runSimulationInEconomicMode(Antares::Data::Study& study,
                                  const Settings& settings,
-                                 Benchmarking::IDurationCollector& durationCollector,
+                                 Benchmarking::DurationCollector& durationCollector,
                                  IResultWriter& resultWriter,
                                  Benchmarking::OptimizationInfo& info);
 }

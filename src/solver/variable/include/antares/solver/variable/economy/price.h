@@ -38,6 +38,7 @@ struct VCardPrice
     {
         return "MRG. PRICE";
     }
+
     //! Unit
     static std::string Unit()
     {
@@ -96,7 +97,7 @@ struct VCardPrice
 ** \brief Marginal Price
 */
 template<class NextT = Container::EndOfList>
-class Price : public Variable::IVariable<Price<NextT>, NextT, VCardPrice>
+class Price: public Variable::IVariable<Price<NextT>, NextT, VCardPrice>
 {
 public:
     //! Type of the next static variable
@@ -122,11 +123,11 @@ public:
     {
         enum
         {
-            count
-            = ((VCardType::categoryDataLevel & CDataLevel && VCardType::categoryFileLevel & CFile)
-                 ? (NextType::template Statistics<CDataLevel, CFile>::count
-                    + VCardType::columnCount * ResultsType::count)
-                 : NextType::template Statistics<CDataLevel, CFile>::count),
+            count = ((VCardType::categoryDataLevel & CDataLevel
+                      && VCardType::categoryFileLevel & CFile)
+                       ? (NextType::template Statistics<CDataLevel, CFile>::count
+                          + VCardType::columnCount * ResultsType::count)
+                       : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
 
@@ -146,7 +147,9 @@ public:
         // Intermediate values
         pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+        {
             pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);
+        }
 
         // Next
         NextType::initializeFromStudy(study);
@@ -229,8 +232,9 @@ public:
         // Marginal Price
         // Note: The marginal price provided by the solver is negative
         // (naming convention).
-        pValuesForTheCurrentYear[numSpace][state.hourInTheYear]
-          -= state.hourlyResults->CoutsMarginauxHoraires[state.hourInTheWeek];
+        pValuesForTheCurrentYear[numSpace][state.hourInTheYear] -= state.hourlyResults
+                                                                     ->CoutsMarginauxHoraires
+                                                                       [state.hourInTheWeek];
         // Next variable
         NextType::hourForEachArea(state, numSpace);
     }
@@ -255,8 +259,8 @@ public:
             // Write the data for the current year
             results.variableCaption = VCardType::Caption();
             results.variableUnit = VCardType::Unit();
-            pValuesForTheCurrentYear[numSpace].template buildAnnualSurveyReport<VCardType>(
-              results, fileLevel, precision);
+            pValuesForTheCurrentYear[numSpace]
+              .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
         }
     }
 

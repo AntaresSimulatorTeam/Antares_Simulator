@@ -19,27 +19,32 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
+#include "antares/inifile/inifile.h"
+
 #include <fstream>
 #include <sstream>
 #include <utility>
+
 #include <boost/algorithm/string.hpp>
 
-#include "antares/inifile/inifile.h"
-#include <antares/logs/logs.h>
 #include <antares/io/statistics.h>
+#include <antares/logs/logs.h>
 
 using namespace Yuni;
 
 namespace Antares
 {
 
-IniFile::Property::Property(const AnyString& key) : key(key), next(nullptr)
+IniFile::Property::Property(const AnyString& key):
+    key(key),
+    next(nullptr)
 {
     this->key.trim();
     this->key.toLower();
 }
 
-IniFile::Property::Property() : next(nullptr)
+IniFile::Property::Property():
+    next(nullptr)
 {
 }
 
@@ -56,12 +61,16 @@ inline void IniFile::Property::saveToStream(std::ostream& file, uint64_t& writte
 void IniFile::Section::saveToStream(std::ostream& file, uint64_t& written) const
 {
     if (!firstProperty)
+    {
         return;
+    }
     file << '[' << name << "]\n";
     written += 4 /* []\n\n */ + name.size();
 
     for (auto* property = firstProperty; property; property = property->next)
+    {
         property->saveToStream(file, written);
+    }
 
     file << '\n';
 }
@@ -81,11 +90,15 @@ IniFile::Section::~Section()
     }
 }
 
-IniFile::IniFile() : firstSection(nullptr), lastSection(nullptr)
+IniFile::IniFile():
+    firstSection(nullptr),
+    lastSection(nullptr)
 {
 }
 
-IniFile::IniFile(const AnyString& filename) : firstSection(nullptr), lastSection(nullptr)
+IniFile::IniFile(const AnyString& filename):
+    firstSection(nullptr),
+    lastSection(nullptr)
 {
     open(filename);
 }
@@ -142,7 +155,9 @@ void IniFile::clear()
 uint IniFile::Section::size() const
 {
     if (!firstProperty)
+    {
         return 0;
+    }
     uint count = 0;
     auto* p = firstProperty;
     do
@@ -157,9 +172,11 @@ bool startingSection(std::string line)
 {
     boost::trim(line);
     if (boost::starts_with(line, "[") && boost::ends_with(line, "]"))
+    {
         return true;
+    }
     return false;
-}
+} // namespace Antares
 
 std::string getSectionName(std::string line)
 {
@@ -171,7 +188,9 @@ std::string getSectionName(std::string line)
 bool isProperty(std::string line)
 {
     if (std::count(line.begin(), line.end(), '=') == 1)
+    {
         return true;
+    }
     return false;
 }
 
@@ -189,7 +208,9 @@ bool isComment(std::string line)
 {
     boost::trim_left(line);
     if (boost::starts_with(line, "#") || boost::starts_with(line, ";"))
+    {
         return true;
+    }
     return false;
 }
 
@@ -221,13 +242,17 @@ bool IniFile::readStream(std::istream& in_stream)
         }
 
         if (isComment(line) || isEmpty(line))
+        {
             continue;
+        }
 
         logs.error() << "Invalid INI line format : '" << line << "'";
         return false;
     }
     if (read)
+    {
         Statistics::HasReadFromDisk(read);
+    }
 
     return true;
 }
@@ -249,7 +274,9 @@ bool IniFile::open(const AnyString& filename, bool warnings)
     }
 
     if (warnings)
+    {
         logs.error() << "I/O error: " << filename << ": Impossible to read the file";
+    }
     return false;
 }
 
@@ -259,10 +286,14 @@ std::string IniFile::saveToString() const
     std::ostringstream ostream;
     // save all sections
     for (auto* section = firstSection; section; section = section->next)
+    {
         section->saveToStream(ostream, written);
+    }
 
     if (written != 0)
+    {
         Statistics::HasWrittenToDisk(written);
+    }
 
     return ostream.str();
 }
@@ -270,15 +301,20 @@ std::string IniFile::saveToString() const
 bool IniFile::save(const AnyString& filename) const
 {
     logs.debug() << "  :: writing `" << filename << '`';
-    
+
     std::ofstream f(filename.to<std::string>());
     if (f.good())
     {
         uint64_t written = 0;
         for (auto* section = firstSection; section; section = section->next)
+        {
             section->saveToStream(f, written);
+        }
+
         if (written != 0)
+        {
             Statistics::HasWrittenToDisk(written);
+        }
         return true;
     }
     else
@@ -293,7 +329,9 @@ IniFile::Property* IniFile::Section::find(const AnyString& key)
     for (auto* property = firstProperty; property; property = property->next)
     {
         if (property->key == key)
+        {
             return property;
+        }
     }
     return nullptr;
 }
@@ -303,7 +341,9 @@ const IniFile::Property* IniFile::Section::find(const AnyString& key) const
     for (auto* property = firstProperty; property; property = property->next)
     {
         if (property->key == key)
+        {
             return property;
+        }
     }
     return nullptr;
 }
@@ -313,7 +353,9 @@ IniFile::Section* IniFile::find(const AnyString& name)
     for (auto* section = firstSection; section; section = section->next)
     {
         if (section->name == name)
+        {
             return section;
+        }
     }
     return nullptr;
 }
@@ -323,7 +365,9 @@ const IniFile::Section* IniFile::find(const AnyString& name) const
     for (auto* section = firstSection; section; section = section->next)
     {
         if (section->name == name)
+        {
             return section;
+        }
     }
     return nullptr;
 }

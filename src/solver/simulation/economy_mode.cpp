@@ -20,14 +20,15 @@
  */
 
 #include "antares/solver/simulation/economy_mode.h"
-#include "antares/solver/simulation/solver.h"
+
 #include "antares/solver/simulation/economy.h"
+#include "antares/solver/simulation/solver.h"
 
 namespace Antares::Solver
 {
 void runSimulationInEconomicMode(Antares::Data::Study& study,
                                  const Settings& settings,
-                                 Benchmarking::IDurationCollector& durationCollector,
+                                 Benchmarking::DurationCollector& durationCollector,
                                  IResultWriter& resultWriter,
                                  Benchmarking::OptimizationInfo& info)
 {
@@ -39,10 +40,8 @@ void runSimulationInEconomicMode(Antares::Data::Study& study,
 
     if (!(settings.noOutput || settings.tsGeneratorsOnly))
     {
-        Benchmarking::Timer timer;
-        simulation.writeResults(/*synthesis:*/ true);
-        timer.stop();
-        durationCollector.addDuration("synthesis_export", timer.get_duration());
+        durationCollector("synthesis_export")
+          << [&simulation] { simulation.writeResults(/*synthesis:*/ true); };
 
         info = simulation.getOptimizationInfo();
     }

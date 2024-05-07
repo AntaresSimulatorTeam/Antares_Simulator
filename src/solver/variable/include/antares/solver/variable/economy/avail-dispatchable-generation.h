@@ -38,6 +38,7 @@ struct VCardAvailableDispatchGen
     {
         return "AVL DTG";
     }
+
     //! Unit
     static std::string Unit()
     {
@@ -97,7 +98,7 @@ struct VCardAvailableDispatchGen
 */
 template<class NextT = Container::EndOfList>
 class AvailableDispatchGen
- : public Variable::IVariable<AvailableDispatchGen<NextT>, NextT, VCardAvailableDispatchGen>
+    : public Variable::IVariable<AvailableDispatchGen<NextT>, NextT, VCardAvailableDispatchGen>
 {
 public:
     //! Type of the next static variable
@@ -123,11 +124,11 @@ public:
     {
         enum
         {
-            count
-            = ((VCardType::categoryDataLevel & CDataLevel && VCardType::categoryFileLevel & CFile)
-                 ? (NextType::template Statistics<CDataLevel, CFile>::count
-                    + VCardType::columnCount * ResultsType::count)
-                 : NextType::template Statistics<CDataLevel, CFile>::count),
+            count = ((VCardType::categoryDataLevel & CDataLevel
+                      && VCardType::categoryFileLevel & CFile)
+                       ? (NextType::template Statistics<CDataLevel, CFile>::count
+                          + VCardType::columnCount * ResultsType::count)
+                       : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
 
@@ -147,7 +148,9 @@ public:
         // Intermediate values
         pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+        {
             pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);
+        }
 
         // Next
         NextType::initializeFromStudy(study);
@@ -175,7 +178,9 @@ public:
     void simulationBegin()
     {
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+        {
             pValuesForTheCurrentYear[numSpace].reset();
+        }
 
         // Next
         NextType::simulationBegin();
@@ -191,13 +196,14 @@ public:
         // Somme de toutes les productions disponibles pour l'ensemble des
         // paliers thermiques (+must-run)
         pValuesForTheCurrentYear[numSpace].reset();
-        for (const auto& cluster : pArea->thermal.list.each_enabled())
+        for (const auto& cluster: pArea->thermal.list.each_enabled())
         {
             const auto& availableProduction = cluster->series.getColumn(year);
             for (unsigned int hour = 0; hour != cluster->series.timeSeries.height; ++hour)
+            {
                 pValuesForTheCurrentYear[numSpace].hour[hour] += availableProduction[hour];
+            }
         }
-
 
         // Next variable
         NextType::yearBegin(year, numSpace);
@@ -264,8 +270,8 @@ public:
             // Write the data for the current year
             results.variableCaption = VCardType::Caption();
             results.variableUnit = VCardType::Unit();
-            pValuesForTheCurrentYear[numSpace].template buildAnnualSurveyReport<VCardType>(
-              results, fileLevel, precision);
+            pValuesForTheCurrentYear[numSpace]
+              .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
         }
     }
 

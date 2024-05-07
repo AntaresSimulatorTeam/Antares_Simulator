@@ -24,8 +24,8 @@ namespace Antares
 {
 namespace Data
 {
-UnfeasibleProblemError::UnfeasibleProblemError(const std::string& message) :
- std::runtime_error(message)
+UnfeasibleProblemError::UnfeasibleProblemError(const std::string& message):
+    std::runtime_error(message)
 {
 }
 

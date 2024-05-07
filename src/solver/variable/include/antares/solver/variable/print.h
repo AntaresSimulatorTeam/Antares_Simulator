@@ -32,7 +32,8 @@ namespace Variable
 class PrintInfosStdCout final
 {
 public:
-    PrintInfosStdCout() : pIndent(0)
+    PrintInfosStdCout():
+        pIndent(0)
     {
     }
 
@@ -74,7 +75,9 @@ private:
         if (pIndent)
         {
             for (uint i = 0; i != pIndent; ++i)
+            {
                 pBuffer += "    ";
+            }
         }
     }
 

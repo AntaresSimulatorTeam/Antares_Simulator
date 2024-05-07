@@ -21,16 +21,17 @@
 
 #pragma once
 
-#include "../base_weekly_optimization.h"
-#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/solver/simulation/sim_structure_donnees.h"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/study/area/area.h"
+
+#include "../base_weekly_optimization.h"
 
 using Antares::Data::AreaList;
 
 namespace Antares::Solver::Optimization
 {
-class AdequacyPatchOptimization : public WeeklyOptimization
+class AdequacyPatchOptimization: public WeeklyOptimization
 {
 public:
     explicit AdequacyPatchOptimization(const Antares::Data::Study& study,
@@ -42,6 +43,7 @@ public:
 
     ~AdequacyPatchOptimization() override = default;
     void solve() override;
+
 private:
     const Antares::Data::Study& study_;
 };
