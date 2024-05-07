@@ -120,7 +120,7 @@ DataSeriesHydro::DataSeriesHydro() :
 {
     timeseriesNumbers.registerSeries(&ror, "ror");
     timeseriesNumbers.registerSeries(&storage, "storage");
-    timeSeriesNumbers.registerSeries(mingen, "mingen");
+    timeseriesNumbers.registerSeries(mingen, "mingen");
     timeseriesNumbersHydroMaxPower.registerSeries(maxHourlyGenPower, "max-geneneration-power");
     timeseriesNumbersHydroMaxPower.registerSeries(maxHourlyPumpPower, "max-pumping-power");
 
