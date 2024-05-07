@@ -52,7 +52,7 @@ class TimeSeries
 public:
     using TS = Matrix<double>;
 
-    explicit TimeSeries(Numbers& tsNumbers);
+    explicit TimeSeries(TimeSeriesNumbers& tsNumbers);
     /*!
      ** \brief Load series from a file
      **
