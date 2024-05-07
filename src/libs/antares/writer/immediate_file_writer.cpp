@@ -43,18 +43,18 @@ static bool prepareDirectoryHierarchy(const fs::path& root,
                                       const fs::path& entryPath,
                                       fs::path& output)
 {
-    fs::path fullPath = root / entryPath;
-
+    // Use relative path to remove root dir part
+    fs::path fullPath = root / entryPath.relative_path();
     output = fullPath;
 
-    fullPath.remove_filename(); // only create directories
-
-    if (fs::exists(fullPath))
+    fs::path directory = fullPath;
+    directory.remove_filename();
+    if (fs::exists(directory))
     {
         return true;
     }
 
-    return fs::create_directories(fullPath);
+    return fs::create_directories(directory);
 }
 
 // Write to file immediately, creating directories if needed
