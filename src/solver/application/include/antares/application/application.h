@@ -89,7 +89,7 @@ public:
     void runSimulationInAdequacyMode();
     void runSimulationInEconomicMode();
 
-    void onLogMessage(int level, const YString& message);
+    void onLogMessage(int level, const std::string& message);
 
     //! The settings given from the command line
     Settings pSettings;
@@ -114,7 +114,7 @@ public:
     IResultWriter::Ptr resultWriter = nullptr;
 
     void prepareWriter(const Antares::Data::Study& study,
-                       Benchmarking::IDurationCollector& duration_collector);
+                       Benchmarking::DurationCollector& duration_collector);
 
     void writeComment(Data::Study& study);
     void startSimulation(Data::StudyLoadOptions& options);

@@ -18,7 +18,9 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
+#include <filesystem>
 #include <cmath>
+
 #include "antares/solver/constraints-builder/cbuilder.h"
 #include "antares/solver/constraints-builder/grid.h"
 
@@ -345,36 +347,34 @@ bool CBuilder::saveCBuilderToFile(const String& filename) const
 
     if (filename == "")
     {
-        YString buffer;
+        std::filesystem::path path = std::filesystem::path(pStudy.folder.c_str())
+            / "settings" / "constraintbuilder.ini";
 
-        buffer.clear() << pStudy.folder << Yuni::IO::Separator << "settings" << Yuni::IO::Separator
-                       << "constraintbuilder.ini";
-        return ini.save(buffer);
+        return ini.save(path.string());
     }
 
     return ini.save(filename);
 }
 
-bool CBuilder::completeCBuilderFromFile(const String& filename)
+bool CBuilder::completeCBuilderFromFile(const std::string& filename)
 {
-    YString buffer;
+    std::filesystem::path path;
     if (filename == "")
     {
-        buffer.clear() << pStudy.folder << Yuni::IO::Separator << "settings" << Yuni::IO::Separator
-                       << "constraintbuilder.ini";
-        if (!IO::File::Exists(buffer))
+        path = std::filesystem::path(pStudy.folder.c_str()) / "settings" / "constraintbuilder.ini";
+        if (!IO::File::Exists(path.string()))
         {
             return false;
         }
     }
     else
     {
-        buffer = filename;
+        path = filename;
     }
 
     logs.info() << "Read data";
     IniFile ini;
-    if (ini.open(buffer))
+    if (ini.open(path.string()))
     {
         // logs.info() << "Reading " << filename;
         logs.info() << "Read data (INI file)";
@@ -392,11 +392,6 @@ bool CBuilder::completeCBuilderFromFile(const String& filename)
                     key = p->key;
                     key.toLower();
 
-                    if (key == "study")
-                    {
-                        pStudyFolder = p->value;
-                        continue;
-                    }
                     if (key == "prefix")
                     {
                         pPrefix = p->value;

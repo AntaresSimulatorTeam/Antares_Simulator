@@ -120,14 +120,14 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     std::exception_ptr loadingException;
     try
     {
-        if (study.loadFromFolder(pSettings.studyFolder, options))
+        pDurationCollector("study_loading") << [&]
         {
-            logs.info() << "The study is loaded.";
-            logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
-        }
-
-        timer.stop();
-        pDurationCollector.addDuration("study_loading", timer.get_duration());
+            if (study.loadFromFolder(pSettings.studyFolder, options))
+            {
+                logs.info() << "The study is loaded.";
+                logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
+            }
+        };
 
         if (study.areas.empty())
         {
@@ -335,7 +335,7 @@ void Application::prepare(int argc, char* argv[])
     startSimulation(options);
 }
 
-void Application::onLogMessage(int level, const Yuni::String& /*message*/)
+void Application::onLogMessage(int level, const std::string& /*message*/)
 {
     switch (level)
     {
@@ -424,7 +424,7 @@ void Application::resetLogFilename() const
 }
 
 void Application::prepareWriter(const Antares::Data::Study& study,
-                                Benchmarking::IDurationCollector& duration_collector)
+                                Benchmarking::DurationCollector& duration_collector)
 {
     ioQueueService = std::make_shared<Yuni::Job::QueueService>();
     ioQueueService->maximumThreadCount(1);
@@ -443,7 +443,6 @@ void Application::writeComment(Data::Study& study)
                                              pSettings.commentFile.c_str());
 
         pSettings.commentFile.clear();
-        pSettings.commentFile.shrink();
     }
 }
 
@@ -464,7 +463,6 @@ void Application::writeExectutionInfo()
     if (!pStudy)
         return;
 
-    // Last missing duration to get : measure of total simulation duration
     pTotalTimer.stop();
     pDurationCollector.addDuration("total", pTotalTimer.get_duration());
 
