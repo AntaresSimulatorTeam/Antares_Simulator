@@ -34,7 +34,7 @@ using namespace Yuni;
 
 namespace Antares::Data
 {
-void TimeSeriesNumbers::registerSeries(const TimeSeries* s)
+void TimeSeriesNumbers::registerSeries(const TimeSeries* s, std::string label)
 {
     series[std::move(label)] = s;
 }
