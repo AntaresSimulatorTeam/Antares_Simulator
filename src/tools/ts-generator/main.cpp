@@ -134,10 +134,10 @@ int main(int argc, char *argv[])
         Antares::logs.error() << ex.what();
     }
 
-    Benchmarking::NullDurationCollector nullDurationCollector;
+    Benchmarking::DurationCollector durationCollector;
 
     auto resultWriter = Solver::resultWriterFactory(
-            Data::ResultFormat::legacyFilesDirectories, study->folderOutput, nullptr, nullDurationCollector);
+            Data::ResultFormat::legacyFilesDirectories, study->folderOutput, nullptr, durationCollector);
 
     const auto thermalSavePath = std::filesystem::path("ts-generator") / "thermal";
 

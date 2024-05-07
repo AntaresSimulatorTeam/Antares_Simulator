@@ -29,15 +29,6 @@ inline bool Output::operator<(const Output& rhs) const
 {
     return not(title < rhs.title);
 }
-
-inline void Output::RetrieveListFromStudy(List& out, const Study::Ptr& study)
-{
-    if (!study)
-        out.clear();
-    else
-        RetrieveListFromStudy(out, *study);
-}
-
 } // namespace Data
 } // namespace Antares
 

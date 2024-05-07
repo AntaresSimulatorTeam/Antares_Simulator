@@ -188,7 +188,7 @@ std::shared_ptr<Antares::Data::BindingConstraint> CBuilder::addConstraint(const 
                                                           const double& secondMember)
 {
     // Create a new contraint
-    auto constraint = pStudy->bindingConstraints.add(name);
+    auto constraint = pStudy.bindingConstraints.add(name);
     const Data::BindingConstraint::Operator o = Data::BindingConstraint::StringToOperator(op);
     assert(o != Data::BindingConstraint::opUnknown);
     const Data::BindingConstraint::Type t = Data::BindingConstraint::StringToType(type);

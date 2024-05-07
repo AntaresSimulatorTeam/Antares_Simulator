@@ -21,6 +21,7 @@
 
 #include <yuni/yuni.h>
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
+#include "antares/solver/utils/basis_status.h"
 
 #include "antares/solver/simulation/simulation.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
@@ -296,8 +297,7 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
     Optimization::PROBLEME_SIMPLEXE_NOMME Probleme(ProblemeAResoudre->NomDesVariables,
                                                    ProblemeAResoudre->NomDesContraintes,
                                                    ProblemeAResoudre->VariablesEntieres,
-                                                   ProblemeAResoudre->StatutDesVariables,
-                                                   ProblemeAResoudre->StatutDesContraintes,
+                                                   ProblemeAResoudre->basisStatus,
                                                    problemeHebdo->NamedProblems,
                                                    problemeHebdo->solverLogs);
 

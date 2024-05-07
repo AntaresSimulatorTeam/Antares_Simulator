@@ -5,7 +5,8 @@ set(SRC_STUDY_PART_SERIES
         include/antares/series/series.h
         series.cpp
 )
-target_sources(series PUBLIC
+target_sources(series
+	PRIVATE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/antares/series/series.h>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/series.cpp>
 )

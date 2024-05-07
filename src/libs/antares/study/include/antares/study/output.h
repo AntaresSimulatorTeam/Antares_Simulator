@@ -54,10 +54,6 @@ public:
     ** \brief Retrieve the list of all available outputs
     */
     static void RetrieveListFromStudy(List& out, const Study& study);
-    /*!
-    ** \brief Retrieve the list of all available outputs
-    */
-    static void RetrieveListFromStudy(List& out, const Study::Ptr& study);
 
 public:
     //! \name Constructor

@@ -72,9 +72,9 @@ struct Fixture {
     std::filesystem::path working_tmp_dir = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
 };
 
-BOOST_FIXTURE_TEST_SUITE(BindingConstraintTests_Groups, Fixture)
+BOOST_AUTO_TEST_SUITE(BindingConstraintTests_Groups)
 
-BOOST_AUTO_TEST_CASE(WhenLoadingAConstraint_AGroupExists) {
+BOOST_FIXTURE_TEST_CASE(WhenLoadingAConstraint_AGroupExists, Fixture) {
     addConstraint("dummy_name", "dummy_group");
     const bool loading_ok = study->internalLoadBindingConstraints(options);
 
@@ -95,7 +95,7 @@ BOOST_AUTO_TEST_CASE(WhenLoadingAConstraint_AGroupExists) {
     BOOST_CHECK_EQUAL(constraint->group(), "dummy_group");
 }
 
-BOOST_AUTO_TEST_CASE(WhenLoadingsConstraints_AllGroupExists) {
+BOOST_FIXTURE_TEST_CASE(WhenLoadingsConstraints_AllGroupExists, Fixture) {
     addConstraint("dummy_name_1", "dummy_group_uno");
     addConstraint("dummy_name_2", "dummy_group_uno");
     addConstraint("dummy_name_3", "dummy_group_other");
@@ -110,7 +110,7 @@ BOOST_AUTO_TEST_CASE(WhenLoadingsConstraints_AllGroupExists) {
     BOOST_CHECK_EQUAL(study->bindingConstraintsGroups.size(), 2);
 }
 
-BOOST_AUTO_TEST_CASE(WhenLoadingsConstraints_AllGroupsNonEmpty) {
+BOOST_FIXTURE_TEST_CASE(WhenLoadingsConstraints_AllGroupsNonEmpty, Fixture) {
     addConstraint("dummy_name_1", "dummy_group_uno");
     addConstraint("dummy_name_2", "dummy_group_uno");
     addConstraint("dummy_name_3", "dummy_group_other");

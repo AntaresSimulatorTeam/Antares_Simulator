@@ -292,5 +292,5 @@ BOOST_AUTO_TEST_CASE(version_parsing)
     BOOST_CHECK(v == StudyVersion::unknown());
 
 }
-
 BOOST_AUTO_TEST_SUITE_END() //version
+
