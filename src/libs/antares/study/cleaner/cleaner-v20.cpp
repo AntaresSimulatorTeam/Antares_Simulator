@@ -38,7 +38,7 @@ template<class StringT>
 static void listOfFilesAnDirectoriesToKeepForArea(PathList& e,
                                                   PathList& p,
                                                   const Area* area,
-        StringT& buffer)
+                                                  StringT& buffer)
 {
     // ID of the current area
     const AreaName& id = area->id;
@@ -136,7 +136,7 @@ static void listOfFilesAnDirectoriesToKeepForArea(PathList& e,
         buffer.clear() << "input/thermal/clusters/" << id << "/list.ini";
         e.add(buffer);
 
-        for (auto& cluster : area->thermal.list.all())
+        for (auto& cluster: area->thermal.list.all())
         {
             buffer.clear() << "input/thermal/prepro/" << id << '/' << cluster->id();
             p.add(buffer);
@@ -166,7 +166,7 @@ static void listOfFilesAnDirectoriesToKeepForArea(PathList& e,
         buffer.clear() << "input/renewables/clusters/" << id << "/list.ini";
         e.add(buffer);
 
-        for (const auto& cluster : area->renewable.list.all())
+        for (const auto& cluster: area->renewable.list.all())
         {
             buffer.clear() << "input/renewables/series/" << id << '/' << cluster->id();
             p.add(buffer);
@@ -265,9 +265,9 @@ bool listOfFilesAnDirectoriesToKeep(StudyCleaningInfos* infos)
     infos->customExclude.words(":",
                                [&e](const AnyString& word)
                                {
-        e.add(word);
-        return true;
-    });
+                                   e.add(word);
+                                   return true;
+                               });
 
     // Post
     p.add("logs");
@@ -396,20 +396,20 @@ bool listOfFilesAnDirectoriesToKeep(StudyCleaningInfos* infos)
         ini.each(
           [&](const IniFile::Section& section)
           {
-            auto* property = section.firstProperty;
-            for (; property; property = property->next)
-            {
-                if (property->key == "id")
-                {
-                    v = property->value;
-                    v.toLower();
-                    buffer.clear() << "input/bindingconstraints/" << v << ".txt";
-                    e.add(buffer);
-                    // Go to the next binding constraint
-                    break;
-                }
-            }
-        });
+              auto* property = section.firstProperty;
+              for (; property; property = property->next)
+              {
+                  if (property->key == "id")
+                  {
+                      v = property->value;
+                      v.toLower();
+                      buffer.clear() << "input/bindingconstraints/" << v << ".txt";
+                      e.add(buffer);
+                      // Go to the next binding constraint
+                      break;
+                  }
+              }
+          });
     }
     else
     {

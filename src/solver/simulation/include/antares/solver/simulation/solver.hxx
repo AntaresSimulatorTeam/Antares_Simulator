@@ -58,32 +58,32 @@ public:
             std::vector<Variable::State>& pState,
             bool pYearByYear,
             Benchmarking::DurationCollector& durationCollector,
-            IResultWriter& resultWriter) :
-     simulation_(simulation),
-     y(pY),
-     yearFailed(pYearFailed),
-     isFirstPerformedYearOfASet(pIsFirstPerformedYearOfASet),
-     firstSetParallelWithAPerformedYearWasRun(pFirstSetParallelWithAPerformedYearWasRun),
-     numSpace(pNumSpace),
-     randomForParallelYears(pRandomForParallelYears),
-     performCalculations(pPerformCalculations),
-     study(pStudy),
-     state(pState),
-     yearByYear(pYearByYear),
-     pDurationCollector(durationCollector),
-     pResultWriter(resultWriter),
-    hydroManagement(study.areas,
-                    study.parameters,
-                    study.calendar,
-                    study.maxNbYearsInParallel,
-                    resultWriter)
+            IResultWriter& resultWriter):
+        simulation_(simulation),
+        y(pY),
+        yearFailed(pYearFailed),
+        isFirstPerformedYearOfASet(pIsFirstPerformedYearOfASet),
+        firstSetParallelWithAPerformedYearWasRun(pFirstSetParallelWithAPerformedYearWasRun),
+        numSpace(pNumSpace),
+        randomForParallelYears(pRandomForParallelYears),
+        performCalculations(pPerformCalculations),
+        study(pStudy),
+        state(pState),
+        yearByYear(pYearByYear),
+        pDurationCollector(durationCollector),
+        pResultWriter(resultWriter),
+        hydroManagement(study.areas,
+                        study.parameters,
+                        study.calendar,
+                        study.maxNbYearsInParallel,
+                        resultWriter)
     {
         hydroHotStart = (study.parameters.initialReservoirLevels.iniLevels == Data::irlHotStart);
         scratchmap = study.areas.buildScratchMap(numSpace);
     }
 
     yearJob(const yearJob&) = delete;
-    yearJob& operator =(const yearJob&) = delete;
+    yearJob& operator=(const yearJob&) = delete;
     ~yearJob() = default;
 
 private:
@@ -171,8 +171,10 @@ public:
 
             // 4 - Hydraulic ventilation
             pDurationCollector("hydro_ventilation") << [&] {
-                hydroManagement.makeVentilation(
-                  randomReservoirLevel, state[numSpace], y, scratchmap);
+                hydroManagement.makeVentilation(randomReservoirLevel,
+                                                state[numSpace],
+                                                y,
+                                                scratchmap);
             };
 
             // Updating the state
@@ -242,8 +244,8 @@ inline ISimulation<ImplementationType>::ISimulation(
   Data::Study& study,
   const ::Settings& settings,
   Benchmarking::DurationCollector& duration_collector,
-  IResultWriter& resultWriter) :
- ImplementationType(study, resultWriter),
+  IResultWriter& resultWriter):
+    ImplementationType(study, resultWriter),
     study(study),
     settings(settings),
     pNbYearsReallyPerformed(0),
@@ -490,13 +492,13 @@ void ISimulation<ImplementationType>::regenerateTimeSeries(uint year)
         {
             auto clusters = getAllClustersToGen(study.areas, pData.haveToRefreshTSThermal);
 #define SEP Yuni::IO::Separator
-            const std::string savePath
-              = std::string("ts-generator") + SEP + "thermal" + SEP + "mc-" + std::to_string(year);
+            const std::string savePath = std::string("ts-generator") + SEP + "thermal" + SEP + "mc-"
+                                         + std::to_string(year);
 #undef SEP
             generateThermalTimeSeries(study, clusters, pResultWriter, savePath);
 
             // apply the spinning if we generated some in memory clusters
-            for (auto* cluster : clusters)
+            for (auto* cluster: clusters)
                 cluster->calculationOfSpinning();
         }
     };
@@ -609,7 +611,7 @@ uint ISimulation<ImplementationType>::buildSetsOfParallelYears(
             if (set->nbPerformedYears > maxNbYearsPerformed)
             {
                 maxNbYearsPerformed = set->nbPerformedYears;
-        }
+            }
         }
         else
         {
@@ -685,7 +687,7 @@ void ISimulation<ImplementationType>::computeRandomNumbers(
   randomNumbers& randomForYears,
   std::vector<uint>& years,
   std::map<unsigned int, bool>& isYearPerformed,
-                                             MersenneTwister& randomHydroGenerator)
+  MersenneTwister& randomHydroGenerator)
 {
     auto& runtime = *study.runtime;
 
@@ -710,7 +712,7 @@ void ISimulation<ImplementationType>::computeRandomNumbers(
             // logs.info() << "   area : " << a << " :";
             const auto& area = *(study.areas.byIndex[a]);
 
-            for (auto& cluster : area.thermal.list.all())
+            for (auto& cluster: area.thermal.list.all())
             {
                 uint clusterIndex = cluster->areaWideIndex;
                 double thermalNoise = runtime.random[Data::seedThermalCosts].next();
@@ -729,67 +731,67 @@ void ISimulation<ImplementationType>::computeRandomNumbers(
           {
               // looking for the initial reservoir level (begining of the year)
               auto& min = area.hydro.reservoirLevel[Data::PartHydro::minimum];
-            auto& avg = area.hydro.reservoirLevel[Data::PartHydro::average];
-            auto& max = area.hydro.reservoirLevel[Data::PartHydro::maximum];
+              auto& avg = area.hydro.reservoirLevel[Data::PartHydro::average];
+              auto& max = area.hydro.reservoirLevel[Data::PartHydro::maximum];
 
-            // Month the reservoir level is initialized according to.
-            // This month number is given in the civil calendar, from january to december (0 is
-            // january).
-            int initResLevelOnMonth = area.hydro.initializeReservoirLevelDate;
+              // Month the reservoir level is initialized according to.
+              // This month number is given in the civil calendar, from january to december (0 is
+              // january).
+              int initResLevelOnMonth = area.hydro.initializeReservoirLevelDate;
 
-            // Conversion of the previous month into simulation calendar
-            int initResLevelOnSimMonth = study.calendar.mapping.months[initResLevelOnMonth];
+              // Conversion of the previous month into simulation calendar
+              int initResLevelOnSimMonth = study.calendar.mapping.months[initResLevelOnMonth];
 
-            // Previous month's first day in the year
-            int firstDayOfMonth = study.calendar.months[initResLevelOnSimMonth].daysYear.first;
+              // Previous month's first day in the year
+              int firstDayOfMonth = study.calendar.months[initResLevelOnSimMonth].daysYear.first;
 
-            double randomLevel = randomReservoirLevel(min[firstDayOfMonth],
-                                                                       avg[firstDayOfMonth],
-                                                                       max[firstDayOfMonth],
-                                                                       randomHydroGenerator);
+              double randomLevel = randomReservoirLevel(min[firstDayOfMonth],
+                                                        avg[firstDayOfMonth],
+                                                        max[firstDayOfMonth],
+                                                        randomHydroGenerator);
 
-            // Possibly update the intial level from scenario builder
-            if (study.parameters.useCustomScenario)
-            {
-                double levelFromScenarioBuilder = study.scenarioHydroLevels[areaIndex][y];
-                if (levelFromScenarioBuilder >= 0.)
-                {
-                    randomLevel = levelFromScenarioBuilder;
-            }
-            }
+              // Possibly update the intial level from scenario builder
+              if (study.parameters.useCustomScenario)
+              {
+                  double levelFromScenarioBuilder = study.scenarioHydroLevels[areaIndex][y];
+                  if (levelFromScenarioBuilder >= 0.)
+                  {
+                      randomLevel = levelFromScenarioBuilder;
+                  }
+              }
 
-            if (pHydroHotStart)
-            {
-                if (!isPerformed || !area.hydro.reservoirManagement)
-                {
-                    // This initial level should be unused, so -1, as impossible value, is
-                    // suitable.
-                    randomForYears.pYears[indexYear].pReservoirLevels[areaIndex] = -1.;
-                    areaIndex++;
-                    return; // Skipping the current area
-                }
+              if (pHydroHotStart)
+              {
+                  if (!isPerformed || !area.hydro.reservoirManagement)
+                  {
+                      // This initial level should be unused, so -1, as impossible value, is
+                      // suitable.
+                      randomForYears.pYears[indexYear].pReservoirLevels[areaIndex] = -1.;
+                      areaIndex++;
+                      return; // Skipping the current area
+                  }
 
-                if (!pFirstSetParallelWithAPerformedYearWasRun)
-                {
-                    randomForYears.pYears[indexYear].pReservoirLevels[areaIndex] = randomLevel;
-                }
-                // Else : means the start levels (multiple areas are affected) of a year are
-                // retrieved from a previous year and
-                //		  these levels are updated inside the year job (see year job).
-            }
-            else
-            {
-                // Current area's hydro starting (or initial) level computation
-                // (no matter if the year is performed or not, we always draw a random initial
-                // reservoir level to ensure the same results)
-                if (isPerformed)
-                {
-                    randomForYears.pYears[indexYear].pReservoirLevels[areaIndex] = randomLevel;
-            }
-            }
+                  if (!pFirstSetParallelWithAPerformedYearWasRun)
+                  {
+                      randomForYears.pYears[indexYear].pReservoirLevels[areaIndex] = randomLevel;
+                  }
+                  // Else : means the start levels (multiple areas are affected) of a year are
+                  // retrieved from a previous year and
+                  //		  these levels are updated inside the year job (see year job).
+              }
+              else
+              {
+                  // Current area's hydro starting (or initial) level computation
+                  // (no matter if the year is performed or not, we always draw a random initial
+                  // reservoir level to ensure the same results)
+                  if (isPerformed)
+                  {
+                      randomForYears.pYears[indexYear].pReservoirLevels[areaIndex] = randomLevel;
+                  }
+              }
 
-            areaIndex++;
-        }); // each area
+              areaIndex++;
+          }); // each area
 
         // ... Unsupplied and spilled energy costs noises (french : bruits sur la defaillance
         // positive et negatives) ... references to the random number generators
@@ -806,26 +808,26 @@ void ISimulation<ImplementationType>::computeRandomNumbers(
           {
               (void)area; // Avoiding warnings at compilation (unused variable) on linux
               if (isPerformed)
-            {
-                double randomNumber = randomUnsupplied();
-                randomForYears.pYears[indexYear].pUnsuppliedEnergy[areaIndex] = randomNumber;
-                randomForYears.pYears[indexYear].pSpilledEnergy[areaIndex] = randomNumber;
-                if (!SpilledEnergySeedIsDefault)
-                {
-                    randomForYears.pYears[indexYear].pSpilledEnergy[areaIndex] = randomSpilled();
-            }
-            }
-            else
-            {
-                randomUnsupplied();
-                if (!SpilledEnergySeedIsDefault)
-                {
-                    randomSpilled();
-            }
-            }
+              {
+                  double randomNumber = randomUnsupplied();
+                  randomForYears.pYears[indexYear].pUnsuppliedEnergy[areaIndex] = randomNumber;
+                  randomForYears.pYears[indexYear].pSpilledEnergy[areaIndex] = randomNumber;
+                  if (!SpilledEnergySeedIsDefault)
+                  {
+                      randomForYears.pYears[indexYear].pSpilledEnergy[areaIndex] = randomSpilled();
+                  }
+              }
+              else
+              {
+                  randomUnsupplied();
+                  if (!SpilledEnergySeedIsDefault)
+                  {
+                      randomSpilled();
+                  }
+              }
 
-            areaIndex++;
-        }); // each area
+              areaIndex++;
+          }); // each area
 
         // ... Hydro costs noises ...
         auto& randomHydro = study.runtime->random[Data::seedHydroCosts];
@@ -964,7 +966,7 @@ static inline void logPerformedYearsInAset(setOfParallelYears& set)
 
     std::string performedYearsToLog = "";
     std::ranges::for_each(set.yearsIndices,
-                          [&](uint const& y)
+                          [&](const uint& y)
                           {
                               if (set.isYearPerformed[y])
                               {
@@ -977,8 +979,8 @@ static inline void logPerformedYearsInAset(setOfParallelYears& set)
 
 template<class ImplementationType>
 void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
-                                         uint endYear,
-                                         std::vector<Variable::State>& state)
+                                                       uint endYear,
+                                                       std::vector<Variable::State>& state)
 {
     assert(endYear <= study.parameters.nbYears);
 
@@ -1053,16 +1055,16 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
               this,
               y,
               set_it->yearFailed,
-                                                                 set_it->isFirstPerformedYearOfASet,
-                                                                 pFirstSetParallelWithAPerformedYearWasRun,
-                                                                 numSpace,
-                                                                 randomForParallelYears,
-                                                                 performCalculations,
-                                                                 study,
-                                                                 state,
-                                                                 pYearByYear,
-                                                                 pDurationCollector,
-                                                                 pResultWriter);
+              set_it->isFirstPerformedYearOfASet,
+              pFirstSetParallelWithAPerformedYearWasRun,
+              numSpace,
+              randomForParallelYears,
+              performCalculations,
+              study,
+              state,
+              pYearByYear,
+              pDurationCollector,
+              pResultWriter);
             results.add(Concurrency::AddTask(*pQueueService, task));
         } // End loop over years of the current set of parallel years
 
@@ -1082,7 +1084,7 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
         }
 
         // On regarde si au moins une année du lot n'a pas trouvé de solution
-        for (auto& [year, failed] : set_it->yearFailed)
+        for (auto& [year, failed]: set_it->yearFailed)
         {
             // Si une année du lot d'années n'a pas trouvé de solution, on arrête tout
             if (failed)

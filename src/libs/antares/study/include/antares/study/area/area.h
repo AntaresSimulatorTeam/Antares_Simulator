@@ -47,7 +47,7 @@ struct CompareAreaName;
 /*!
 ** \brief Definition for a single area
 */
-class Area final : private Yuni::NonCopyable<Area>
+class Area final: private Yuni::NonCopyable<Area>
 {
 public:
     using NameSet = std::set<AreaName>;
@@ -313,7 +313,7 @@ public:
     //! Information for the UI
     AreaUI* ui = nullptr;
     //@}
-    
+
     //! \name Dynamic
     //@{
     /*!
@@ -372,7 +372,7 @@ bool saveAreaAdequacyPatchIniFile(const Area& area, const Yuni::Clob& buffer);
 ** printf("Area name : `%s`\n", (*(l->byIndex[2])).name);
 ** \endcode
 */
-class AreaList final : public Yuni::NonCopyable<AreaList>
+class AreaList final: public Yuni::NonCopyable<AreaList>
 {
 public:
     //! An iterator

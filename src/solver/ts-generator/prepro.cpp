@@ -20,12 +20,13 @@
 */
 
 #include <yuni/yuni.h>
-#include <yuni/io/file.h>
-#include <yuni/io/directory.h>
 #include <yuni/core/math.h>
-#include "antares/study/study.h"
-#include <antares/solver/ts-generator/prepro.h>
+#include <yuni/io/directory.h>
+#include <yuni/io/file.h>
+
 #include <antares/logs/logs.h>
+#include <antares/solver/ts-generator/prepro.h>
+#include "antares/study/study.h"
 
 using namespace Yuni;
 
@@ -33,8 +34,9 @@ using namespace Yuni;
 
 namespace Antares::Data
 {
-PreproAvailability::PreproAvailability(const YString& id, unsigned int unitCount) :
- id(id), unitCount(unitCount)
+PreproAvailability::PreproAvailability(const YString& id, unsigned int unitCount):
+    id(id),
+    unitCount(unitCount)
 {
 }
 
@@ -64,8 +66,11 @@ bool PreproAvailability::loadFromFolder(Study& study, const AnyString& folder)
     buffer.clear() << folder << SEP << "data.txt";
 
     // standard loading
-    return data.loadFromCSVFile(
-      buffer, preproAvailabilityMax, DAYS_PER_YEAR, Matrix<>::optFixedSize, &study.dataBuffer);
+    return data.loadFromCSVFile(buffer,
+                                preproAvailabilityMax,
+                                DAYS_PER_YEAR,
+                                Matrix<>::optFixedSize,
+                                &study.dataBuffer);
 }
 
 bool PreproAvailability::validate() const
@@ -201,10 +206,14 @@ bool PreproAvailability::normalizeAndCheckNPO()
     }
 
     if (errors >= maxErrors)
+    {
         logs.error() << id << ": too many errors. skipping (total: " << errors << ')';
+    }
 
     if (normalized)
+    {
         logs.info() << "  NPO max for entity '" << id << "' has been normalized";
+    }
 
     data.markAsModified();
     return (0 == errors);
