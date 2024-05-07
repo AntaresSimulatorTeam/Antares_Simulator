@@ -21,11 +21,13 @@
 #ifndef __ANTARES_LIBS_STUDY_OUTPUT_H__
 #define __ANTARES_LIBS_STUDY_OUTPUT_H__
 
-#include <yuni/yuni.h>
-#include <yuni/core/string.h>
+#include <functional>
 #include <map>
 #include <memory>
-#include <functional>
+
+#include <yuni/yuni.h>
+#include <yuni/core/string.h>
+
 #include "antares/study/study.h"
 
 namespace Antares

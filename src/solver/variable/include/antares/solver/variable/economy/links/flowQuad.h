@@ -38,6 +38,7 @@ struct VCardFlowQuad
     {
         return "FLOW QUAD.";
     }
+
     //! Unit
     static std::string Unit()
     {
@@ -87,7 +88,7 @@ struct VCardFlowQuad
 ** \brief Marginal FlowQuad
 */
 template<class NextT = Container::EndOfList>
-class FlowQuad : public Variable::IVariable<FlowQuad<NextT>, NextT, VCardFlowQuad>
+class FlowQuad: public Variable::IVariable<FlowQuad<NextT>, NextT, VCardFlowQuad>
 {
 public:
     //! Type of the next static variable
@@ -113,11 +114,11 @@ public:
     {
         enum
         {
-            count
-            = ((VCardType::categoryDataLevel & CDataLevel && VCardType::categoryFileLevel & CFile)
-                 ? (NextType::template Statistics<CDataLevel, CFile>::count
-                    + VCardType::columnCount * ResultsType::count)
-                 : NextType::template Statistics<CDataLevel, CFile>::count),
+            count = ((VCardType::categoryDataLevel & CDataLevel
+                      && VCardType::categoryFileLevel & CFile)
+                       ? (NextType::template Statistics<CDataLevel, CFile>::count
+                          + VCardType::columnCount * ResultsType::count)
+                       : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
 
@@ -165,10 +166,9 @@ public:
     void simulationEnd()
     {
         // Flow assessed over all MC years (linear)
-        (void)::memcpy(
-          pValuesForTheCurrentYear.hour,
-          transitMoyenInterconnexionsRecalculQuadratique[pLinkGlobalIndex].data(),
-          sizeof(double) * pNbHours);
+        (void)::memcpy(pValuesForTheCurrentYear.hour,
+                       transitMoyenInterconnexionsRecalculQuadratique[pLinkGlobalIndex].data(),
+                       sizeof(double) * pNbHours);
 
         // Compute all statistics for the current year (daily,weekly,monthly)
         pValuesForTheCurrentYear.computeStatisticsForTheCurrentYear();
@@ -260,8 +260,9 @@ public:
             // Write the data for the current year
             results.variableCaption = VCardType::Caption();
             results.variableUnit = VCardType::Unit();
-            pValuesForTheCurrentYear.template buildAnnualSurveyReport<VCardType>(
-              results, fileLevel, precision);
+            pValuesForTheCurrentYear.template buildAnnualSurveyReport<VCardType>(results,
+                                                                                 fileLevel,
+                                                                                 precision);
         }
     }
 

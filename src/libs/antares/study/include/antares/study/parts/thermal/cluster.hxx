@@ -89,6 +89,7 @@ class Into<Antares::Data::StatisticalLaw>
 {
 public:
     using TargetType = Antares::Data::StatisticalLaw;
+
     enum
     {
         valid = 1
@@ -131,6 +132,7 @@ class Into<Antares::Data::LocalTSGenerationBehavior>
 {
 public:
     using TargetType = Antares::Data::LocalTSGenerationBehavior;
+
     enum
     {
         valid = 1

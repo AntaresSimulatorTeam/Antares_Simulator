@@ -77,9 +77,13 @@ void LogDisplayErrorInfos(uint errors, uint warnings, const char* message, bool 
         else
         {
             if (errors)
+            {
                 logs.error() << "Found " << error << ": " << message;
+            }
             if (warnings)
+            {
                 logs.error() << "Found " << warning << ": " << message;
+            }
         }
     }
     else
@@ -91,9 +95,13 @@ void LogDisplayErrorInfos(uint errors, uint warnings, const char* message, bool 
         else
         {
             if (errors)
+            {
                 logs.info() << "Found " << error << ": " << message;
+            }
             if (warnings)
+            {
                 logs.info() << "Found " << warning << ": " << message;
+            }
         }
     }
 }

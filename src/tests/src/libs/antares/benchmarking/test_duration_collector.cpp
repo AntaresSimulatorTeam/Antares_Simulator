@@ -22,17 +22,19 @@
 #define BOOST_TEST_MODULE study
 #define BOOST_TEST_DYN_LINK
 #define WIN32_LEAN_AND_MEAN
+#include <thread>
+
 #include <boost/test/unit_test.hpp>
 
 #include <antares/benchmarking/DurationCollector.h>
 #include <antares/benchmarking/timer.h>
-#include <thread>
 
 BOOST_AUTO_TEST_SUITE(durationCollector)
 
 using namespace std::literals::chrono_literals;
 
 constexpr double threshold = 30;
+
 BOOST_AUTO_TEST_CASE(lambda)
 {
     Benchmarking::DurationCollector d;
@@ -57,11 +59,9 @@ BOOST_AUTO_TEST_CASE(exceptionHandling)
 {
     Benchmarking::DurationCollector d;
 
-    auto IShouldThrowAnInt = [&d]() {
-        d("test1") << [] { throw int(2); };
-    };
+    auto IShouldThrowAnInt = [&d]() { d("test1") << [] { throw int(2); }; };
 
-    BOOST_CHECK_THROW (IShouldThrowAnInt(), int);
+    BOOST_CHECK_THROW(IShouldThrowAnInt(), int);
 }
 
 BOOST_AUTO_TEST_CASE(addDuration)
@@ -76,4 +76,4 @@ BOOST_AUTO_TEST_CASE(addDuration)
     BOOST_CHECK_CLOSE((double)d.getTime("test1"), 100., threshold);
 }
 
-BOOST_AUTO_TEST_SUITE_END() //DurationCollector
+BOOST_AUTO_TEST_SUITE_END() // DurationCollector

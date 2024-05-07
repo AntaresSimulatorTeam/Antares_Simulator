@@ -21,16 +21,19 @@
 #ifndef __ANTARES_LIBS_STUDY_LINKS_H__
 #define __ANTARES_LIBS_STUDY_LINKS_H__
 
-#include <antares/solver/ts-generator/prepro.h>
-#include <antares/study/version.h>
+#include <set>
+
 #include <yuni/yuni.h>
 #include <yuni/core/noncopyable.h>
 #include <yuni/core/string.h>
-#include "../fwd.h"
+
 #include <antares/array/matrix.h>
 #include <antares/series/series.h>
+#include <antares/solver/ts-generator/prepro.h>
+#include <antares/study/version.h>
 #include <antares/writer/i_writer.h>
-#include <set>
+
+#include "../fwd.h"
 
 namespace Antares
 {

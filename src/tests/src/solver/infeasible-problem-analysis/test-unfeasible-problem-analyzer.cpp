@@ -22,48 +22,47 @@
 #define BOOST_TEST_MODULE unfeasible_problem_analyzer
 #define BOOST_TEST_DYN_LINK
 
-#include <boost/test/unit_test.hpp>
-#include <boost/test/data/test_case.hpp>
 #include <boost/test/data/dataset.hpp>
+#include <boost/test/data/test_case.hpp>
+#include <boost/test/unit_test.hpp>
 
+#include "antares/solver/infeasible-problem-analysis/constraint-slack-analysis.h"
 #include "antares/solver/infeasible-problem-analysis/unfeasible-pb-analyzer.h"
 #include "antares/solver/infeasible-problem-analysis/variables-bounds-consistency.h"
-#include "antares/solver/infeasible-problem-analysis/constraint-slack-analysis.h"
+
 #include "ortools/linear_solver/linear_solver.h"
 
 namespace bdata = boost::unit_test::data;
 
 using operations_research::MPSolver;
 
-using Antares::Optimization::VariablesBoundsConsistency;
-using Antares::Optimization::VariableBounds;
 using Antares::Optimization::ConstraintSlackAnalysis;
-using Antares::Optimization::UnfeasiblePbAnalyzer;
 using Antares::Optimization::UnfeasibilityAnalysis;
-
+using Antares::Optimization::UnfeasiblePbAnalyzer;
+using Antares::Optimization::VariableBounds;
+using Antares::Optimization::VariablesBoundsConsistency;
 
 bool variableEquals(const VariableBounds& lhs, const VariableBounds& rhs)
 {
-    return lhs.name == rhs.name &&
-        lhs.lowBound == rhs.lowBound &&
-        lhs.upBound == rhs.upBound;
+    return lhs.name == rhs.name && lhs.lowBound == rhs.lowBound && lhs.upBound == rhs.upBound;
 }
 
 /*!
  * Analysis mock, used to assess which step has been run by the analyzer
  */
-class AnalysisMock : public UnfeasibilityAnalysis
+class AnalysisMock: public UnfeasibilityAnalysis
 {
 public:
     AnalysisMock(bool shouldDetectCause, bool& hasRun, bool& hasPrinted):
-            shouldDetectCause_(shouldDetectCause),
-            hasRun_(hasRun),
-            hasPrinted_(hasPrinted)
-    {}
+        shouldDetectCause_(shouldDetectCause),
+        hasRun_(hasRun),
+        hasPrinted_(hasPrinted)
+    {
+    }
 
     ~AnalysisMock() override = default;
 
-    void run(operations_research::MPSolver *) override
+    void run(operations_research::MPSolver*) override
     {
         hasRun_ = true;
         hasDetectedInfeasibilityCause_ = shouldDetectCause_;
@@ -84,7 +83,6 @@ private:
     bool& hasRun_;
     bool& hasPrinted_;
 };
-
 
 BOOST_AUTO_TEST_SUITE(unfeasible_problem_analyzer)
 
@@ -139,7 +137,8 @@ BOOST_AUTO_TEST_CASE(analysis_should_detect_inconsistent_variable_bounds)
  * Creates a problem with 2 variables linked by 1 constraint:
  *  - Variable 1 must be greater than 1
  *  - Variable 2 must be lesser than -1
- *  - but if feasible is false, constraint enforces that variable 2 is greater than variable 1 --> infeasible
+ *  - but if feasible is false, constraint enforces that variable 2 is greater than variable 1 -->
+ * infeasible
  */
 std::unique_ptr<MPSolver> createProblem(const std::string& constraintName, bool feasible)
 {
@@ -149,10 +148,13 @@ std::unique_ptr<MPSolver> createProblem(const std::string& constraintName, bool 
     auto var2 = problem->MakeNumVar(-infinity, -1, "var2");
     auto constraint = problem->MakeRowConstraint(constraintName);
     constraint->SetBounds(0, infinity);
-    if (feasible) {
+    if (feasible)
+    {
         constraint->SetCoefficient(var1, 1);
         constraint->SetCoefficient(var2, -1);
-    } else {
+    }
+    else
+    {
         constraint->SetCoefficient(var1, -1);
         constraint->SetCoefficient(var2, 1);
     }
@@ -169,17 +171,17 @@ std::unique_ptr<MPSolver> createUnfeasibleProblem(const std::string& constraintN
     return createProblem(constraintName, false);
 }
 
-static const std::string validConstraintNames[] =
-{
-    "BC::hourly::hour<36>",
-    "BC::daily::day<67>",
-    "BC::weekly::week<12>",
-    "FictiveLoads::hour<25>",
-    "AreaHydroLevel::hour<8>",
+static const std::string validConstraintNames[] = {
+  "BC::hourly::hour<36>",
+  "BC::daily::day<67>",
+  "BC::weekly::week<12>",
+  "FictiveLoads::hour<25>",
+  "AreaHydroLevel::hour<8>",
 };
 
 BOOST_DATA_TEST_CASE(analysis_should_detect_unfeasible_constraint,
-                     bdata::make(validConstraintNames), constraintName)
+                     bdata::make(validConstraintNames),
+                     constraintName)
 {
     std::unique_ptr<MPSolver> unfeasibleProblem = createUnfeasibleProblem(constraintName);
     BOOST_CHECK(unfeasibleProblem->Solve() == MPSolver::INFEASIBLE);
@@ -199,7 +201,6 @@ BOOST_AUTO_TEST_CASE(analysis_should_ignore_ill_named_constraint)
     BOOST_CHECK(!analysis.hasDetectedInfeasibilityCause());
 }
 
-
 // TODO: this test should be improved by changing the API, the current interface does not allow
 //       to check that no constraint was identified...
 BOOST_AUTO_TEST_CASE(analysis_should_ignore_feasible_constraints)
@@ -209,8 +210,7 @@ BOOST_AUTO_TEST_CASE(analysis_should_ignore_feasible_constraints)
 
     ConstraintSlackAnalysis analysis;
     analysis.run(feasibleProblem.get());
-    BOOST_CHECK(analysis.hasDetectedInfeasibilityCause());  // Would expect false here instead?
+    BOOST_CHECK(analysis.hasDetectedInfeasibilityCause()); // Would expect false here instead?
 }
 
 BOOST_AUTO_TEST_SUITE_END()
-

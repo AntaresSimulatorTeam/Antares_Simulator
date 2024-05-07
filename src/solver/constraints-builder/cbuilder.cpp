@@ -18,15 +18,17 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include <filesystem>
-#include <cmath>
 
 #include "antares/solver/constraints-builder/cbuilder.h"
+
+#include <cmath>
+#include <filesystem>
+
 #include "antares/solver/constraints-builder/grid.h"
 
 using namespace Yuni;
 
-//#define SEP Yuni::IO::Separator
+// #define SEP Yuni::IO::Separator
 
 namespace Antares
 {
@@ -46,8 +48,11 @@ Yuni::String linkInfo::getName() const
 
 template class Graph::Grid<areaInfo>;
 
-CBuilder::CBuilder(Antares::Data::Study& study) :
- pPrefix(CB_PREFIX), pPrefixDelete(CB_PREFIX), pDelete(false), pStudy(study)
+CBuilder::CBuilder(Antares::Data::Study& study):
+    pPrefix(CB_PREFIX),
+    pPrefixDelete(CB_PREFIX),
+    pDelete(false),
+    pStudy(study)
 {
 }
 
@@ -71,7 +76,9 @@ uint Antares::CBuilder::cycleCount(linkInfo* lnkI)
 {
     uint n = 0;
     for (auto it = pMesh.begin(); it != pMesh.end(); it++)
+    {
         n += (uint)(std::count(it->begin(), it->end(), lnkI));
+    }
 
     return n;
 }
@@ -83,44 +90,41 @@ bool CBuilder::checkValidityOfNodalLoopFlow(linkInfo* linkInfo, size_t hour)
     for (uint tsIndex = 0; tsIndex < link->indirectCapacities.timeSeries.width; ++tsIndex)
     {
         if ((-1.0 * link->indirectCapacities[tsIndex][hour]
-                    > link->parameters[Data::fhlLoopFlow][hour])
-                || (link->directCapacities[tsIndex][hour]
-                    < link->parameters[Data::fhlLoopFlow][hour]))
+             > link->parameters[Data::fhlLoopFlow][hour])
+            || (link->directCapacities[tsIndex][hour] < link->parameters[Data::fhlLoopFlow][hour]))
         {
-            logs.error() << "Error on loop flow to NTC comparison validity at hour "
-                << hour + 1 << " for line " << linkInfo->getName();
+            logs.error() << "Error on loop flow to NTC comparison validity at hour " << hour + 1
+                         << " for line " << linkInfo->getName();
             return false;
         }
     }
     if (checkNodalLoopFlow) // check validity of loop flow values (sum = 0 at node)
     {
         double sum = 0.0;
-        for (auto* lnk : areaToLinks[link->from])
+        for (auto* lnk: areaToLinks[link->from])
         {
-            sum += link->from == lnk->ptr->from
-                ? -1 * lnk->ptr->parameters[Data::fhlLoopFlow][hour]
-                : lnk->ptr->parameters[Data::fhlLoopFlow][hour];
+            sum += link->from == lnk->ptr->from ? -1 * lnk->ptr->parameters[Data::fhlLoopFlow][hour]
+                                                : lnk->ptr->parameters[Data::fhlLoopFlow][hour];
         }
 
         if (sum != 0.0)
         {
             logs.error() << "Error on loop flow sum validity (!= 0) at hour " << hour + 1
-                << " on node " << link->from->id;
+                         << " on node " << link->from->id;
             return false;
         }
 
         sum = 0.0;
-        for (auto* lnk : areaToLinks[link->with])
+        for (auto* lnk: areaToLinks[link->with])
         {
-            sum += link->with == lnk->ptr->from
-                ? -1 * lnk->ptr->parameters[Data::fhlLoopFlow][hour]
-                : lnk->ptr->parameters[Data::fhlLoopFlow][hour];
+            sum += link->with == lnk->ptr->from ? -1 * lnk->ptr->parameters[Data::fhlLoopFlow][hour]
+                                                : lnk->ptr->parameters[Data::fhlLoopFlow][hour];
         }
 
         if (sum != 0.0)
         {
             logs.error() << "Error on loop flow sum validity (!= 0) at hour " << hour + 1
-                << " on node " << link->with->id;
+                         << " on node " << link->with->id;
             return false;
         }
     }
@@ -131,11 +135,10 @@ bool CBuilder::checkValidityOfNodalLoopFlow(linkInfo* linkInfo, size_t hour)
 bool CBuilder::checkLinkPhaseShift(linkInfo* linkInfo, size_t hour) const
 {
     if (Data::AreaLink* link = linkInfo->ptr;
-            link->parameters[Data::fhlPShiftMinus][hour]
-            > link->parameters[Data::fhlPShiftPlus][hour])
+        link->parameters[Data::fhlPShiftMinus][hour] > link->parameters[Data::fhlPShiftPlus][hour])
     {
         logs.error() << "Error on phase shift calendar validity at hour " << hour + 1
-            << " for line " << linkInfo->getName();
+                     << " for line " << linkInfo->getName();
         return false;
     }
     return true;
@@ -144,9 +147,10 @@ bool CBuilder::checkLinkPhaseShift(linkInfo* linkInfo, size_t hour) const
 void CBuilder::updateLinkPhaseShift(linkInfo* linkInfo, size_t hour) const
 {
     if (Data::AreaLink* link = linkInfo->ptr;
-            link->parameters[Data::fhlPShiftMinus][hour]
-            != link->parameters[Data::fhlPShiftPlus][hour])
+        link->parameters[Data::fhlPShiftMinus][hour] != link->parameters[Data::fhlPShiftPlus][hour])
+    {
         linkInfo->hasPShiftsEqual = false;
+    }
 }
 
 bool CBuilder::updateLinks()
@@ -171,22 +175,28 @@ bool CBuilder::updateLinks()
         linkInfo->avgImpedance = link->parameters[columnImpedance][0];
         for (size_t hour = 0; hour < HOURS_PER_YEAR - 1; hour++)
         {
-            if (link->parameters[columnImpedance][hour + 1] != link->parameters[columnImpedance][hour])
+            if (link->parameters[columnImpedance][hour + 1]
+                != link->parameters[columnImpedance][hour])
             {
                 impedances.insert(link->parameters[columnImpedance][hour + 1]);
             }
 
             // check validity of loopflow against NTC
             if (includeLoopFlow && !checkValidityOfNodalLoopFlow(linkInfo, hour))
+            {
                 return false;
+            }
 
             if (!includePhaseShift)
+            {
                 continue;
+            }
 
             updateLinkPhaseShift(linkInfo, hour);
             if (!checkLinkPhaseShift(linkInfo, hour))
+            {
                 return false;
-
+            }
         }
 
         linkInfo->nImpedanceChanges = (uint)impedances.size();
@@ -210,7 +220,6 @@ bool CBuilder::updateLinks()
         linkInfo->weight = linkInfo->getWeightWithImpedance();
     }
     return true;
-
 }
 
 bool CBuilder::update()
@@ -221,15 +230,19 @@ bool CBuilder::update()
     pMesh.clear();
 
     // Update impedances from study file and compute impedance changes
-    if(!updateLinks())
+    if (!updateLinks())
+    {
         return false;
+    }
 
     for (auto linkInfoIt = pLink.begin(); linkInfoIt != pLink.end(); linkInfoIt++)
     {
         if ((*linkInfoIt)->enabled
             && ((*linkInfoIt)->type
                 == Antares::Data::atAC /*|| (*linkInfoIt)->type == linkInfo::tyACPST*/))
+        {
             enabledACLines.push_back(*linkInfoIt);
+        }
     }
 
     if (enabledACLines.empty())
@@ -253,7 +266,9 @@ bool CBuilder::update()
 
     // build the set of loops which span the grid
     if (!_grid.buildMesh())
+    {
         return false;
+    }
 
     // create the constraints
     logs.info() << "Compute Mesh ";
@@ -280,7 +295,9 @@ bool CBuilder::runConstraintsBuilder(bool standalone)
 {
     // build the set of loops which span the grid
     if (!update())
+    {
         return false;
+    }
 
     // create the constraints
     logs.info() << "Write constraints ";
@@ -298,7 +315,9 @@ bool CBuilder::runConstraintsBuilder(bool standalone)
 bool CBuilder::deletePreviousConstraints()
 {
     if (pPrefixDelete.empty())
+    {
         return true;
+    }
 
     logs.info() << "Deleting previously built network constraints (with prefix  " << pPrefixDelete
                 << ")";
@@ -347,8 +366,8 @@ bool CBuilder::saveCBuilderToFile(const String& filename) const
 
     if (filename == "")
     {
-        std::filesystem::path path = std::filesystem::path(pStudy.folder.c_str())
-            / "settings" / "constraintbuilder.ini";
+        std::filesystem::path path = std::filesystem::path(pStudy.folder.c_str()) / "settings"
+                                     / "constraintbuilder.ini";
 
         return ini.save(path.string());
     }

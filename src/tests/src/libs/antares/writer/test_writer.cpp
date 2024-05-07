@@ -18,30 +18,31 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#define BOOST_TEST_MODULE test-writer tests
+#define BOOST_TEST_MODULE test - writer tests
 #define BOOST_TEST_DYN_LINK
-#include <boost/test/unit_test.hpp>
 #include <boost/test/data/test_case.hpp>
+#include <boost/test/unit_test.hpp>
 
 #include "yuni/job/queue/service.h"
+
+#include "antares/benchmarking/DurationCollector.h"
 #include "antares/writer/i_writer.h"
 #include "antares/writer/in_memory_writer.h"
 #include "antares/writer/writer_factory.h"
-#include "antares/benchmarking/DurationCollector.h"
+
 #include "files-system.h"
 
 extern "C"
 {
 #include <mz.h>
-#include <mz_zip.h>
 #include <mz_strm.h>
+#include <mz_zip.h>
 #include <mz_zip_rw.h>
 }
 
 using namespace Yuni::Job;
-using Benchmarking::DurationCollector;
-using Benchmarking::DurationCollector;
 using Antares::Solver::IResultWriter;
+using Benchmarking::DurationCollector;
 
 // Handles lifetime of necessary objects
 struct TestContext
@@ -62,34 +63,33 @@ std::shared_ptr<QueueService> createThreadPool(int size)
 std::string removeExtension(const std::string& name, const std::string& ext)
 {
     int length = name.size();
-    if (name.size() > ext.size() && name.substr(length - ext.size()) == ext) {
+    if (name.size() > ext.size() && name.substr(length - ext.size()) == ext)
+    {
         return name.substr(0, length - ext.size());
     }
     return name;
 }
 
-
-TestContext createContext(const std::filesystem::path zipPath, int threadCount, Antares::Data::ResultFormat fmt)
+TestContext createContext(const std::filesystem::path zipPath,
+                          int threadCount,
+                          Antares::Data::ResultFormat fmt)
 {
     auto threadPool = createThreadPool(threadCount);
-    std::unique_ptr<DurationCollector> durationCollector = std::make_unique<Benchmarking::DurationCollector>();
+    std::unique_ptr<DurationCollector>
+      durationCollector = std::make_unique<Benchmarking::DurationCollector>();
     std::string archiveName = zipPath.string();
-    auto writer = Antares::Solver::resultWriterFactory(
-            fmt,
-            removeExtension(zipPath.string(), ".zip"),
-            threadPool,
-            *durationCollector
-        );
-    return {
-        threadPool,
-        std::move(durationCollector),
-        writer
-    };
+    auto writer = Antares::Solver::resultWriterFactory(fmt,
+                                                       removeExtension(zipPath.string(), ".zip"),
+                                                       threadPool,
+                                                       *durationCollector);
+    return {threadPool, std::move(durationCollector), writer};
 }
 
 using ZipReaderHandle = void*;
 
-void checkZipContent(ZipReaderHandle handle, const std::string& path, const std::string& expectedContent)
+void checkZipContent(ZipReaderHandle handle,
+                     const std::string& path,
+                     const std::string& expectedContent)
 {
     BOOST_CHECK(mz_zip_reader_locate_entry(handle, path.c_str(), 0) == MZ_OK);
     BOOST_CHECK(mz_zip_reader_entry_open(handle) == MZ_OK);
@@ -122,7 +122,6 @@ BOOST_AUTO_TEST_CASE(test_zip)
     mz_zip_reader_close(readerHandle);
 }
 
-
 BOOST_AUTO_TEST_CASE(test_in_memory_concrete)
 {
     // Writer some content to test.zip, possibly from 2 threads
@@ -141,7 +140,6 @@ BOOST_AUTO_TEST_CASE(test_in_memory_concrete)
     BOOST_CHECK(map.at("folder/test") == content1);
     BOOST_CHECK(map.at("test-second-path") == content2);
 }
-
 
 BOOST_AUTO_TEST_CASE(test_in_memory_dyncast)
 {

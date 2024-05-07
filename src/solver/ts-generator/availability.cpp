@@ -19,16 +19,15 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
+#include <cmath>
 #include <sstream>
 #include <string>
-#include <cmath>
 
-#include <antares/study/study.h>
 #include <antares/logs/logs.h>
-#include <antares/writer/i_writer.h>
-
 #include <antares/solver/ts-generator/generator.h>
 #include <antares/solver/ts-generator/law.h>
+#include <antares/study/study.h>
+#include <antares/writer/i_writer.h>
 #include "antares/study/simulation.h"
 
 #define SEP Yuni::IO::Separator
@@ -37,17 +36,17 @@ constexpr double FAILURE_RATE_EQ_1 = 0.999;
 
 namespace Antares::TSGenerator
 {
-AvailabilityTSGeneratorData::AvailabilityTSGeneratorData(Data::ThermalCluster* source) :
- unitCount(source->unitCount),
- nominalCapacity(source->nominalCapacity),
- forcedVolatility(source->forcedVolatility),
- plannedVolatility(source->plannedVolatility),
- forcedLaw(source->forcedLaw),
- plannedLaw(source->plannedLaw),
- prepro(source->prepro),
- series(source->series.timeSeries),
- modulationCapacity(source->modulation[Data::thermalModulationCapacity]),
- name(source->name())
+AvailabilityTSGeneratorData::AvailabilityTSGeneratorData(Data::ThermalCluster* source):
+    unitCount(source->unitCount),
+    nominalCapacity(source->nominalCapacity),
+    forcedVolatility(source->forcedVolatility),
+    plannedVolatility(source->plannedVolatility),
+    forcedLaw(source->forcedLaw),
+    plannedLaw(source->plannedLaw),
+    prepro(source->prepro),
+    series(source->series.timeSeries),
+    modulationCapacity(source->modulation[Data::thermalModulationCapacity]),
+    name(source->name())
 {
 }
 
@@ -69,7 +68,11 @@ private:
 
     static constexpr int Log_size = 4000;
 
-    int durationGenerator(Data::StatisticalLaw law, int expec, double volat, double a, double b) const;
+    int durationGenerator(Data::StatisticalLaw law,
+                          int expec,
+                          double volat,
+                          double a,
+                          double b) const;
 
     template<class T>
     void prepareIndispoFromLaw(Data::StatisticalLaw law,
@@ -79,11 +82,12 @@ private:
                                const T& duration) const;
 };
 
-GeneratorTempData::GeneratorTempData(Data::Study& study, unsigned nbOfSeriesToGen) :
- derated(study.parameters.derated),
- nbOfSeriesToGen_(nbOfSeriesToGen),
- rndgenerator(study.runtime->random[Data::seedTsGenThermal])
-{}
+GeneratorTempData::GeneratorTempData(Data::Study& study, unsigned nbOfSeriesToGen):
+    derated(study.parameters.derated),
+    nbOfSeriesToGen_(nbOfSeriesToGen),
+    rndgenerator(study.runtime->random[Data::seedTsGenThermal])
+{
+}
 
 template<class T>
 void GeneratorTempData::prepareIndispoFromLaw(Data::StatisticalLaw law,
@@ -138,9 +142,12 @@ int GeneratorTempData::durationGenerator(Data::StatisticalLaw law,
                                          double b) const
 {
     if (volat == 0 || expec == 1)
+    {
         return expec;
+    }
 
     double rndnumber = rndgenerator.next();
+
     switch (law)
     {
     case Data::LawUniform:
@@ -160,7 +167,8 @@ int GeneratorTempData::durationGenerator(Data::StatisticalLaw law,
     return 0;
 }
 
-void GeneratorTempData::generateTS(const Data::Area& area, AvailabilityTSGeneratorData& cluster) const
+void GeneratorTempData::generateTS(const Data::Area& area,
+                                   AvailabilityTSGeneratorData& cluster) const
 {
     if (!cluster.prepro)
     {
@@ -174,7 +182,9 @@ void GeneratorTempData::generateTS(const Data::Area& area, AvailabilityTSGenerat
     assert(cluster.prepro);
 
     if (0 == cluster.unitCount || 0 == cluster.nominalCapacity)
+    {
         return;
+    }
 
     const auto& preproData = *(cluster.prepro);
 
@@ -230,10 +240,14 @@ void GeneratorTempData::generateTS(const Data::Area& area, AvailabilityTSGenerat
         lp[d] = POR[d] / (POR[d] + (PODOfTheDay) * (1. - POR[d]));
 
         if (0. < lf[d] && lf[d] < lp[d])
+        {
             lf[d] *= (1. - lp[d]) / (1. - lf[d]);
+        }
 
         if (0. < lp[d] && lp[d] < lf[d])
+        {
             lp[d] *= (1. - lf[d]) / (1. - lp[d]);
+        }
 
         double a = 0.;
         double b = 0.;
@@ -291,7 +305,9 @@ void GeneratorTempData::generateTS(const Data::Area& area, AvailabilityTSGenerat
         uint hour = 0;
 
         if (tsIndex > 1)
+        {
             dstSeries = cluster.series[tsIndex - 2];
+        }
 
         for (uint dayInTheYear = 0; dayInTheYear < DAYS_PER_YEAR; ++dayInTheYear)
         {
@@ -317,7 +333,9 @@ void GeneratorTempData::generateTS(const Data::Area& area, AvailabilityTSGenerat
                 for (int index = 1; index < Log_size; ++index)
                 {
                     if (cumul_retour == cible_retour)
+                    {
                         break;
+                    }
 
                     if (LOGP[(NOW + index) % Log_size] + cumul_retour >= cible_retour)
                     {
@@ -362,7 +380,9 @@ void GeneratorTempData::generateTS(const Data::Area& area, AvailabilityTSGenerat
                         cumul += last;
                         FOC = d;
                         if (A <= cumul)
+                        {
                             break;
+                        }
                     }
                 }
             }
@@ -375,9 +395,13 @@ void GeneratorTempData::generateTS(const Data::Area& area, AvailabilityTSGenerat
             {
                 int AUN_app = AUN;
                 if (stock >= 0 && stock <= AUN)
+                {
                     AUN_app -= stock;
+                }
                 if (stock > AUN)
+                {
                     AUN_app = 0;
+                }
 
                 last = PPOW[dayInTheYear][AUN_app];
                 A = rndgenerator.next();
@@ -387,12 +411,14 @@ void GeneratorTempData::generateTS(const Data::Area& area, AvailabilityTSGenerat
                     cumul = last;
                     for (int d = 1; d < AUN_app + 1; ++d)
                     {
-                        last
-                          = ((last * pp[dayInTheYear]) * ((double)(AUN_app + 1. - d))) / (double)d;
+                        last = ((last * pp[dayInTheYear]) * ((double)(AUN_app + 1. - d)))
+                               / (double)d;
                         cumul += last;
                         POC = d;
                         if (A <= cumul)
+                        {
                             break;
+                        }
                     }
                 }
             }
@@ -489,11 +515,21 @@ void GeneratorTempData::generateTS(const Data::Area& area, AvailabilityTSGenerat
             AUN = AUN - (PPO + PFO + MXO);
 
             if (PFO != 0 || MXO != 0)
-                FOD_reel = durationGenerator(
-                  f_law, FODOfTheDay, f_volatility, af[dayInTheYear], bf[dayInTheYear]);
+            {
+                FOD_reel = durationGenerator(f_law,
+                                             FODOfTheDay,
+                                             f_volatility,
+                                             af[dayInTheYear],
+                                             bf[dayInTheYear]);
+            }
             if (PPO != 0 || MXO != 0)
-                POD_reel = durationGenerator(
-                  p_law, PODOfTheDay, p_volatility, ap[dayInTheYear], bp[dayInTheYear]);
+            {
+                POD_reel = durationGenerator(p_law,
+                                             PODOfTheDay,
+                                             p_volatility,
+                                             ap[dayInTheYear],
+                                             bp[dayInTheYear]);
+            }
 
             assert(FUT < Log_size);
             if (PFO != 0)
@@ -530,7 +566,9 @@ void GeneratorTempData::generateTS(const Data::Area& area, AvailabilityTSGenerat
     }
 
     if (derated)
+    {
         cluster.series.averageTimeseries();
+    }
 }
 } // namespace
 
@@ -539,15 +577,20 @@ std::vector<Data::ThermalCluster*> getAllClustersToGen(const Data::AreaList& are
 {
     std::vector<Data::ThermalCluster*> clusters;
 
-    areas.each([&clusters, &globalThermalTSgeneration](const Data::Area& area) {
-        for (const auto& cluster : area.thermal.list.all())
-            if (cluster->doWeGenerateTS(globalThermalTSgeneration))
-                clusters.push_back(cluster.get());
-    });
+    areas.each(
+      [&clusters, &globalThermalTSgeneration](const Data::Area& area)
+      {
+          for (const auto& cluster: area.thermal.list.all())
+          {
+              if (cluster->doWeGenerateTS(globalThermalTSgeneration))
+              {
+                  clusters.push_back(cluster.get());
+              }
+          }
+      });
 
     return clusters;
 }
-
 
 void writeResultsToDisk(const Data::Study& study,
                         Solver::IResultWriter& writer,
@@ -555,7 +598,9 @@ void writeResultsToDisk(const Data::Study& study,
                         const std::string& savePath)
 {
     if (study.parameters.noOutput)
+    {
         return;
+    }
 
     std::string buffer;
     series.saveToBuffer(buffer, 0);
@@ -575,15 +620,15 @@ bool generateThermalTimeSeries(Data::Study& study,
     auto generator = GeneratorTempData(study, study.parameters.nbTimeSeriesThermal);
 
     // TODO VP: parallel
-    for (auto* cluster : clusters)
+    for (auto* cluster: clusters)
     {
         AvailabilityTSGeneratorData tsConfigData(cluster);
         generator.generateTS(*cluster->parentArea, tsConfigData);
 
         if (archive) // compatibilty with in memory
         {
-            std::string filePath
-              = savePath + SEP + cluster->parentArea->id + SEP + cluster->id() + ".txt";
+            std::string filePath = savePath + SEP + cluster->parentArea->id + SEP + cluster->id()
+                                   + ".txt";
             writeResultsToDisk(study, writer, cluster->series.timeSeries, filePath);
         }
     }

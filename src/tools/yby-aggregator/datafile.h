@@ -21,10 +21,11 @@
 #ifndef __STUDY_DATA_FILE_AGGREGATOR_DATA_FILE_H__
 #define __STUDY_DATA_FILE_AGGREGATOR_DATA_FILE_H__
 
-#include <yuni/yuni.h>
-#include <yuni/core/string.h>
 #include <memory>
 #include <set>
+
+#include <yuni/yuni.h>
+#include <yuni/core/string.h>
 
 class DataFile final
 {
@@ -38,8 +39,10 @@ public:
 
 public:
     template<class StringT, class StringT2>
-    DataFile(const StringT& data, const StringT2& time, uint i) :
-     index(i), dataLevel(data), timeLevel(time)
+    DataFile(const StringT& data, const StringT2& time, uint i):
+        index(i),
+        dataLevel(data),
+        timeLevel(time)
     {
     }
 

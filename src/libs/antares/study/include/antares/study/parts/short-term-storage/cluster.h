@@ -20,9 +20,11 @@
 */
 
 #pragma once
-#include <string>
 #include <memory>
+#include <string>
+
 #include <antares/inifile/inifile.h>
+
 #include "properties.h"
 #include "series.h"
 
@@ -44,6 +46,5 @@ public:
 
     std::shared_ptr<Series> series = std::make_shared<Series>();
     mutable Properties properties;
-
 };
 } // namespace Antares::Data::ShortTermStorage

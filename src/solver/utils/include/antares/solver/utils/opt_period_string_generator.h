@@ -36,10 +36,11 @@
 */
 
 #include "antares/solver/optimisation/opt_period_string_generator_base.h"
+
 // ------------------------------------
 // Daily optimization
 // ------------------------------------
-class OptDailyStringGenerator final : public OptPeriodStringGenerator
+class OptDailyStringGenerator final: public OptPeriodStringGenerator
 {
 public:
     OptDailyStringGenerator(unsigned int day, unsigned int week, unsigned int year);
@@ -54,7 +55,7 @@ private:
 // ------------------------------------
 // Weekly optimization
 // ------------------------------------
-class OptWeeklyStringGenerator final : public OptPeriodStringGenerator
+class OptWeeklyStringGenerator final: public OptPeriodStringGenerator
 {
 public:
     OptWeeklyStringGenerator(unsigned int week, unsigned int year);

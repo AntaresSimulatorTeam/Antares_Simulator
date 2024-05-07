@@ -21,19 +21,18 @@
 #ifndef __SOLVER_SIMULATION_SOLVER_H__
 #define __SOLVER_SIMULATION_SOLVER_H__
 
-#include <antares/study/study.h>
-#include <antares/logs/logs.h>
-#include <antares/benchmarking/DurationCollector.h>
-
 #include <yuni/core/string.h>
 #include <yuni/job/queue/service.h>
-#include "antares/solver/variable/state.h"
+
+#include <antares/benchmarking/DurationCollector.h>
+#include <antares/logs/logs.h>
+#include <antares/study/study.h>
+#include <antares/writer/writer_factory.h>
+#include "antares/solver/hydro/management/management.h"
 #include "antares/solver/misc/options.h"
 #include "antares/solver/simulation/solver.data.h"
 #include "antares/solver/simulation/solver_utils.h"
-#include "antares/solver/hydro/management/management.h"
-
-#include <antares/writer/writer_factory.h>
+#include "antares/solver/variable/state.h"
 
 namespace Antares::Solver::Simulation
 {
@@ -42,7 +41,7 @@ template<class Impl>
 class yearJob;
 
 template<class Impl>
-class ISimulation : public Impl
+class ISimulation: public Impl
 {
     friend class yearJob<Impl>;
 
@@ -136,7 +135,6 @@ private:
     ** \param endYear   The last MC year
     */
     void loopThroughYears(uint firstYear, uint endYear, std::vector<Variable::State>& state);
-
 
 private:
     //! Some temporary to avoid performing useless complex checks

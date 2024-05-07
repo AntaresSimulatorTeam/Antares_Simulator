@@ -19,12 +19,14 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <sstream>
-#include <iomanip>
-#include <string>
-#include <algorithm>
-#include <yuni/core/string/string.h>
 #include "antares/study/scenario-builder/scBuilderUtils.h"
+
+#include <algorithm>
+#include <iomanip>
+#include <sstream>
+#include <string>
+
+#include <yuni/core/string/string.h>
 
 namespace Antares::Data::ScenarioBuilder
 {
@@ -69,17 +71,21 @@ uint fromStringToTSnumber(const Yuni::String& value)
     }
 
     if (result_dbl < 0.)
+    {
         result = 0;
+    }
     else
     {
         if (result_dbl > maxTSnumber)
+        {
             result = maxTSnumber;
+        }
         else
+        {
             result = (uint)result_dbl;
+        }
     }
     return result;
 }
 
 } // namespace Antares::Data::ScenarioBuilder
-
-

@@ -21,19 +21,20 @@
 
 #pragma once
 
-#include "base_weekly_optimization.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
+
+#include "base_weekly_optimization.h"
 
 namespace Antares::Solver::Optimization
 {
-class DefaultWeeklyOptimization : public WeeklyOptimization
+class DefaultWeeklyOptimization: public WeeklyOptimization
 {
 public:
-  explicit DefaultWeeklyOptimization(const OptimizationOptions& options,
-                                     PROBLEME_HEBDO* problemeHebdo,
-                                     Antares::Data::AdequacyPatch::AdqPatchParams&,
-                                     uint numSpace,
-                                     IResultWriter& writer);
+    explicit DefaultWeeklyOptimization(const OptimizationOptions& options,
+                                       PROBLEME_HEBDO* problemeHebdo,
+                                       Antares::Data::AdequacyPatch::AdqPatchParams&,
+                                       uint numSpace,
+                                       IResultWriter& writer);
     ~DefaultWeeklyOptimization() override = default;
     void solve() override;
 };
