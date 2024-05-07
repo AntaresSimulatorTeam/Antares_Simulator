@@ -112,11 +112,11 @@ static void ConvertDailyTSintoHourlyTS(const Matrix<double>::ColumnType& dailyCo
 }
 
 DataSeriesHydro::DataSeriesHydro() :
-
-    storage(timeseriesNumbers, "storage"),
-    mingen(timeseriesNumbers, "mingen"),
-    maxHourlyGenPower(timeseriesNumbersHydroMaxPower, "max-geneneration-power"),
-    maxHourlyPumpPower(timeseriesNumbersHydroMaxPower, "max-pumping-power")
+    ror(timeseriesNumbers),
+    storage(timeseriesNumbers),
+    mingen(timeseriesNumbers),
+    maxHourlyGenPower(timeseriesNumbersHydroMaxPower),
+    maxHourlyPumpPower(timeseriesNumbersHydroMaxPower)
 {
     timeseriesNumbers.registerSeries(&ror, "ror");
     timeseriesNumbers.registerSeries(&storage, "storage");
