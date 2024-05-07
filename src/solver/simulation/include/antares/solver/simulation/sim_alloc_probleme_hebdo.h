@@ -20,8 +20,9 @@
 */
 #pragma once
 
-#include "antares/config/config.h"
 #include <antares/study/study.h>
+#include "antares/config/config.h"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 void SIM_AllocationProblemeDonneesGenerales(PROBLEME_HEBDO& problem,
                                             const Antares::Data::Study& study,
@@ -40,5 +41,5 @@ void SIM_AllocationConstraints(PROBLEME_HEBDO& problem,
                                unsigned NombreDePasDeTemps);
 
 void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
-                               const Antares::Data::Study& study,
-                               unsigned NombreDePasDeTemps);
+                       const Antares::Data::Study& study,
+                       unsigned NombreDePasDeTemps);

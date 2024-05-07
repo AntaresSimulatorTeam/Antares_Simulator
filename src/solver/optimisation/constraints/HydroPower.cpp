@@ -23,8 +23,8 @@
 
 void HydroPower::add(int pays)
 {
-    const int NombreDePasDeTempsPourUneOptimisation
-      = builder.data.NombreDePasDeTempsPourUneOptimisation;
+    const int NombreDePasDeTempsPourUneOptimisation = builder.data
+                                                        .NombreDePasDeTempsPourUneOptimisation;
     const auto& caracteristiquesHydrauliques = data.CaracteristiquesHydrauliques[pays];
     if (caracteristiquesHydrauliques.PresenceDHydrauliqueModulable
         && !caracteristiquesHydrauliques.TurbinageEntreBornes)
@@ -36,8 +36,7 @@ void HydroPower::add(int pays)
             const double pumpingRatio = caracteristiquesHydrauliques.PumpingRatio;
             for (int pdt = 0; pdt < NombreDePasDeTempsPourUneOptimisation; pdt++)
             {
-                builder
-                  .updateHourWithinWeek(pdt)
+                builder.updateHourWithinWeek(pdt)
                   .HydProd(pays, 1.0)
                   .Pumping(pays, -pumpingRatio)
                   .Overflow(pays, 1.0);
@@ -47,10 +46,7 @@ void HydroPower::add(int pays)
         {
             for (int pdt = 0; pdt < NombreDePasDeTempsPourUneOptimisation; pdt++)
             {
-                builder
-                  .updateHourWithinWeek(pdt)
-                  .HydProd(pays, 1.0)
-                  .Overflow(pays, 1.0);
+                builder.updateHourWithinWeek(pdt).HydProd(pays, 1.0).Overflow(pays, 1.0);
             }
         }
         data.NumeroDeContrainteEnergieHydraulique[pays] = builder.data.nombreDeContraintes;
@@ -63,5 +59,7 @@ void HydroPower::add(int pays)
         builder.build();
     }
     else
+    {
         data.NumeroDeContrainteEnergieHydraulique[pays] = -1;
+    }
 }

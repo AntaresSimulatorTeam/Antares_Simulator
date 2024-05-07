@@ -20,6 +20,7 @@
 */
 
 #include "antares/solver/optimisation/adequacy_patch_local_matching/adequacy_patch_weekly_optimization.h"
+
 #include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 #include "antares/study/fwd.h"
@@ -34,8 +35,9 @@ AdequacyPatchOptimization::AdequacyPatchOptimization(const Antares::Data::Study&
                                                      PROBLEME_HEBDO* problemeHebdo,
                                                      AdqPatchParams& adqPatchParams,
                                                      uint thread_number,
-                                                     IResultWriter& writer) :
-    WeeklyOptimization(options, problemeHebdo, adqPatchParams, thread_number, writer), study_(study)
+                                                     IResultWriter& writer):
+    WeeklyOptimization(options, problemeHebdo, adqPatchParams, thread_number, writer),
+    study_(study)
 {
 }
 
@@ -49,10 +51,14 @@ void AdequacyPatchOptimization::solve()
     {
         if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[pays]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
+        {
             problemeHebdo_->ResultatsHoraires[pays].ValeursHorairesDENS
-                = problemeHebdo_->ResultatsHoraires[pays].ValeursHorairesDeDefaillancePositive;
+              = problemeHebdo_->ResultatsHoraires[pays].ValeursHorairesDeDefaillancePositive;
+        }
         else
+        {
             std::ranges::fill(problemeHebdo_->ResultatsHoraires[pays].ValeursHorairesDENS, 0);
+        }
     }
 
     OPT_OptimisationHebdomadaire(options_, problemeHebdo_, adqPatchParams_, writer_);

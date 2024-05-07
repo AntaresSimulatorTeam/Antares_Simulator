@@ -20,6 +20,7 @@
 */
 
 #include "antares/solver/optimisation/constraints/Group1.h"
+
 AreaBalanceData Group1::GetAreaBalanceData()
 {
     return {.CorrespondanceCntNativesCntOptim = problemeHebdo_->CorrespondanceCntNativesCntOptim,
@@ -80,8 +81,8 @@ void Group1::BuildConstraints()
     auto bindingConstraintHourData = GetBindingConstraintHourData();
     BindingConstraintHour bindingConstraintHour(builder_, bindingConstraintHourData);
 
-    int nombreDePasDeTempsPourUneOptimisation
-      = problemeHebdo_->NombreDePasDeTempsPourUneOptimisation;
+    int nombreDePasDeTempsPourUneOptimisation = problemeHebdo_
+                                                  ->NombreDePasDeTempsPourUneOptimisation;
 
     for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
     {

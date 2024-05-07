@@ -20,8 +20,9 @@
  */
 
 #include "antares/solver/simulation/adequacy_mode.h"
-#include "antares/solver/simulation/solver.h"
+
 #include "antares/solver/simulation/adequacy.h"
+#include "antares/solver/simulation/solver.h"
 
 namespace Antares::Solver
 {
@@ -39,9 +40,8 @@ void runSimulationInAdequacyMode(Antares::Data::Study& study,
 
     if (!(settings.noOutput || settings.tsGeneratorsOnly))
     {
-        durationCollector("synthesis_export") << [&simulation] {
-            simulation.writeResults(/*synthesis:*/ true);
-        };
+        durationCollector("synthesis_export")
+          << [&simulation] { simulation.writeResults(/*synthesis:*/ true); };
 
         info = simulation.getOptimizationInfo();
     }

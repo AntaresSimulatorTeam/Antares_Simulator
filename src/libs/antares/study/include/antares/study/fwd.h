@@ -21,11 +21,13 @@
 #ifndef __ANTARES_LIBS_STUDY_FWD_H__
 #define __ANTARES_LIBS_STUDY_FWD_H__
 
+#include <map>
+
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
+
 #include "antares/antares/antares.h"
 #include "antares/antares/constants.h"
-#include <map>
 
 namespace Antares
 {
@@ -223,8 +225,6 @@ enum TimeSeriesType : unsigned int
     // ***********************************************************************
 }; // enum TimeSeries
 
-
-
 template<int T>
 struct TimeSeriesBitPatternIntoIndex;
 
@@ -236,6 +236,7 @@ struct TimeSeriesBitPatternIntoIndex<1>
         value = 0
     };
 };
+
 template<>
 struct TimeSeriesBitPatternIntoIndex<2>
 {
@@ -244,6 +245,7 @@ struct TimeSeriesBitPatternIntoIndex<2>
         value = 1
     };
 };
+
 template<>
 struct TimeSeriesBitPatternIntoIndex<4>
 {
@@ -252,6 +254,7 @@ struct TimeSeriesBitPatternIntoIndex<4>
         value = 2
     };
 };
+
 template<>
 struct TimeSeriesBitPatternIntoIndex<8>
 {
@@ -260,6 +263,7 @@ struct TimeSeriesBitPatternIntoIndex<8>
         value = 3
     };
 };
+
 template<>
 struct TimeSeriesBitPatternIntoIndex<16>
 {
@@ -268,6 +272,7 @@ struct TimeSeriesBitPatternIntoIndex<16>
         value = 4
     };
 };
+
 template<>
 struct TimeSeriesBitPatternIntoIndex<32>
 {
@@ -279,6 +284,7 @@ struct TimeSeriesBitPatternIntoIndex<32>
 
 template<int T>
 struct TimeSeriesToCStr;
+
 template<>
 struct TimeSeriesToCStr<1>
 {
@@ -287,6 +293,7 @@ struct TimeSeriesToCStr<1>
         return "load";
     }
 };
+
 template<>
 struct TimeSeriesToCStr<2>
 {
@@ -295,6 +302,7 @@ struct TimeSeriesToCStr<2>
         return "hydro";
     }
 };
+
 template<>
 struct TimeSeriesToCStr<4>
 {
@@ -303,6 +311,7 @@ struct TimeSeriesToCStr<4>
         return "wind";
     }
 };
+
 template<>
 struct TimeSeriesToCStr<8>
 {
@@ -311,6 +320,7 @@ struct TimeSeriesToCStr<8>
         return "thermal";
     }
 };
+
 template<>
 struct TimeSeriesToCStr<16>
 {
@@ -319,6 +329,7 @@ struct TimeSeriesToCStr<16>
         return "solar";
     }
 };
+
 template<>
 struct TimeSeriesToCStr<32>
 {
@@ -550,8 +561,6 @@ class TSNumberRules;
 class Sets;
 
 } // namespace Antares::Data::ScenarioBuilder
-
-
 
 namespace Benchmarking
 {

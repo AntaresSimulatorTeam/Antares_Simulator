@@ -21,8 +21,8 @@
 #ifndef __SOLVER_VARIABLE_INC_LINK_HXX__
 #define __SOLVER_VARIABLE_INC_LINK_HXX__
 
-#include "antares/solver/variable/endoflist.h" // For UNUSED_VARIABLE, should be somewhere else
 #include <antares/study/filter.h>
+#include "antares/solver/variable/endoflist.h" // For UNUSED_VARIABLE, should be somewhere else
 
 namespace Antares
 {

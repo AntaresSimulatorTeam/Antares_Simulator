@@ -38,12 +38,15 @@ struct Fixture
     Fixture(const Fixture&& f) = delete;
     Fixture& operator=(const Fixture& f) = delete;
     Fixture& operator=(const Fixture&& f) = delete;
-    Fixture() : ts(tsnum)
+
+    Fixture():
+        ts(tsnum)
     {
         ts.reset(1, HOURS_PER_YEAR);
         tsnum.resize(1, 1);
         tsnum[0][0] = 0;
     }
+
     TimeSeries ts;
     TimeSeries::numbers tsnum;
     std::string folder;
@@ -52,26 +55,31 @@ struct Fixture
     void fillColumnReverse(unsigned int idx);
 
     void fillTsnum();
-
 };
 
 void Fixture::fillColumn(unsigned int idx)
 {
     for (unsigned int i = 0; i < ts.timeSeries.height; i++)
+    {
         ts.timeSeries[idx][i] = i;
+    }
 }
 
 void Fixture::fillColumnReverse(unsigned int idx)
 {
     for (unsigned int i = 0; i < ts.timeSeries.height; i++)
+    {
         ts.timeSeries[idx][i] = HOURS_PER_YEAR - i;
+    }
 }
 
 void Fixture::fillTsnum()
 {
     tsnum.resize(1, ts.timeSeries.width);
     for (unsigned int i = 0; i < ts.timeSeries.width; i++)
+    {
         tsnum[0][i] = i;
+    }
 }
 
 // ==================
@@ -84,11 +92,15 @@ BOOST_FIXTURE_TEST_CASE(getSeriesIndex, Fixture)
 {
     tsnum.resize(1, 10);
     for (unsigned int i = 0; i < 10; i++)
+    {
         tsnum[0][i] = i;
+    }
 
     ts.resize(2, HOURS_PER_YEAR);
     for (unsigned int i = 0; i < 10; i++)
+    {
         BOOST_CHECK_EQUAL(ts.getSeriesIndex(i), i);
+    }
 }
 
 BOOST_FIXTURE_TEST_CASE(getCoefficientWidth1, Fixture)

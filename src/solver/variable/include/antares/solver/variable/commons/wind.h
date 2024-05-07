@@ -21,8 +21,8 @@
 #ifndef __SOLVER_VARIABLE_ECONOMY_TimeSeriesValuesWind_H__
 #define __SOLVER_VARIABLE_ECONOMY_TimeSeriesValuesWind_H__
 
-#include "antares/solver/variable/variable.h"
 #include "antares/solver/simulation/sim_extern_variables_globales.h"
+#include "antares/solver/variable/variable.h"
 
 namespace Antares
 {
@@ -39,6 +39,7 @@ struct VCardTimeSeriesValuesWind
     {
         return "WIND";
     }
+
     //! Unit
     static std::string Unit()
     {
@@ -98,7 +99,7 @@ struct VCardTimeSeriesValuesWind
 */
 template<class NextT = Container::EndOfList>
 class TimeSeriesValuesWind
- : public Variable::IVariable<TimeSeriesValuesWind<NextT>, NextT, VCardTimeSeriesValuesWind>
+    : public Variable::IVariable<TimeSeriesValuesWind<NextT>, NextT, VCardTimeSeriesValuesWind>
 {
 public:
     //! Type of the next static variable
@@ -124,11 +125,11 @@ public:
     {
         enum
         {
-            count
-            = ((VCardType::categoryDataLevel & CDataLevel && VCardType::categoryFileLevel & CFile)
-                 ? (NextType::template Statistics<CDataLevel, CFile>::count
-                    + VCardType::columnCount * ResultsType::count)
-                 : NextType::template Statistics<CDataLevel, CFile>::count),
+            count = ((VCardType::categoryDataLevel & CDataLevel
+                      && VCardType::categoryFileLevel & CFile)
+                       ? (NextType::template Statistics<CDataLevel, CFile>::count
+                          + VCardType::columnCount * ResultsType::count)
+                       : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
 
@@ -146,7 +147,9 @@ public:
 
         pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+        {
             pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);
+        }
 
         isRenewableGenerationAggregrated = study.parameters.renewableGeneration.isAggregated();
 
@@ -176,7 +179,9 @@ public:
     void simulationBegin()
     {
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+        {
             pValuesForTheCurrentYear[numSpace].reset();
+        }
         // Next
         NextType::simulationBegin();
     }
@@ -261,8 +266,8 @@ public:
             // Write the data for the current year
             results.variableCaption = VCardType::Caption();
             results.variableUnit = VCardType::Unit();
-            pValuesForTheCurrentYear[numSpace].template buildAnnualSurveyReport<VCardType>(
-              results, fileLevel, precision);
+            pValuesForTheCurrentYear[numSpace]
+              .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
         }
     }
 

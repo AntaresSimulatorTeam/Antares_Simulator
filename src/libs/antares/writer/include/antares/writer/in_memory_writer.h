@@ -20,18 +20,18 @@
 */
 #pragma once
 
+#include <map>
 #include <mutex>
 #include <string>
-#include <map>
 
 #include <yuni/core/string.h>
 
-#include "antares/writer/i_writer.h"
 #include <antares/benchmarking/DurationCollector.h>
+#include "antares/writer/i_writer.h"
 
 namespace Antares::Solver
 {
-class InMemoryWriter : public IResultWriter
+class InMemoryWriter: public IResultWriter
 {
 public:
     using MapType = std::map<std::string, std::string, std::less<>>;
@@ -44,6 +44,7 @@ public:
     bool needsTheJobQueue() const override;
     void finalize(bool verbose) override;
     const MapType& getMap() const;
+
 private:
     std::mutex pMapMutex;
     // minizip-ng requires a void* as a zip handle.
@@ -52,4 +53,3 @@ private:
     Benchmarking::DurationCollector& pDurationCollector;
 };
 } // namespace Antares::Solver
-

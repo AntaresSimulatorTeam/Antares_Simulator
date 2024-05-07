@@ -20,36 +20,29 @@
  */
 #include "antares/application/application.h"
 
-#include <antares/sys/policy.h>
-#include <antares/resources/resources.h>
-#include <antares/logs/hostinfo.h>
-#include <antares/antares/fatal-error.h>
-#include <antares/benchmarking/timer.h>
-
-#include <antares/exception/LoadingError.hpp>
-#include <antares/checks/checkLoadedInputData.h>
-#include <antares/study/version.h>
-#include <antares/writer/writer_factory.h>
-
-#include "antares/signal-handling/public.h"
-
-#include "antares/solver/misc/system-memory.h"
-#include "antares/solver/misc/write-command-line.h"
-
-#include "antares/solver/utils/ortools_utils.h"
-#include "antares/config/config.h"
-
-#include <antares/infoCollection/StudyInfoCollector.h>
-
 #include <yuni/datetime/timestamp.h>
 
-
-#include "antares/study/simulation.h"
+#include <antares/antares/fatal-error.h>
+#include <antares/benchmarking/timer.h>
+#include <antares/checks/checkLoadedInputData.h>
+#include <antares/exception/LoadingError.hpp>
+#include <antares/infoCollection/StudyInfoCollector.h>
+#include <antares/logs/hostinfo.h>
+#include <antares/resources/resources.h>
+#include <antares/study/version.h>
+#include <antares/sys/policy.h>
+#include <antares/writer/writer_factory.h>
 #include "antares/antares/version.h"
-#include "antares/solver/simulation/simulation.h"
+#include "antares/config/config.h"
 #include "antares/file-tree-study-loader/FileTreeStudyLoader.h"
-#include "antares/solver/simulation/economy_mode.h"
+#include "antares/signal-handling/public.h"
+#include "antares/solver/misc/system-memory.h"
+#include "antares/solver/misc/write-command-line.h"
 #include "antares/solver/simulation/adequacy_mode.h"
+#include "antares/solver/simulation/economy_mode.h"
+#include "antares/solver/simulation/simulation.h"
+#include "antares/solver/utils/ortools_utils.h"
+#include "antares/study/simulation.h"
 
 using namespace Antares::Check;
 
@@ -74,13 +67,13 @@ void Application::parseCommandLine(Data::StudyLoadOptions& options)
     auto ret = parser->operator()(pArgc, pArgv);
     switch (ret)
     {
-        case Yuni::GetOpt::ReturnCode::error:
-            throw Error::CommandLineArguments(parser->errors());
-        case Yuni::GetOpt::ReturnCode::help:
-            pStudy = nullptr;
-            return;
-        default:
-            break;
+    case Yuni::GetOpt::ReturnCode::error:
+        throw Error::CommandLineArguments(parser->errors());
+    case Yuni::GetOpt::ReturnCode::help:
+        pStudy = nullptr;
+        return;
+    default:
+        break;
     }
 }
 
@@ -107,7 +100,9 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
 
     // Name of the simulation
     if (!pSettings.simulationName.empty())
+    {
         study.simulationComments.name = pSettings.simulationName;
+    }
 
     // Force some options
     options.prepareOutput = !pSettings.noOutput;
@@ -168,7 +163,9 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
 
     // Name of the simulation (again, if the value has been overwritten)
     if (!pSettings.simulationName.empty())
+    {
         study.simulationComments.name = pSettings.simulationName;
+    }
 
     // Removing all callbacks, which are no longer needed
     logs.callback.clear();
@@ -201,7 +198,9 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
             // However, since we have warnings/errors, it allows to have a piece of
             // log when the unexpected happens.
             if (!study.parameters.noOutput)
+            {
                 study.importLogsToOutputFolder(*resultWriter);
+            }
             // empty line
             logs.info();
         }
@@ -211,14 +210,18 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     if (!pSettings.noOutput)
     {
         if (!study.checkForFilenameLimits(true))
+        {
             throw Error::InvalidFileName();
+        }
 
         writeComment(study);
     }
 
     // Runtime data dedicated for the solver
     if (!study.initializeRuntimeInfos())
+    {
         throw Error::RuntimeInfoInitialization();
+    }
 
     // Apply transformations needed by the solver only (and not the interface for example)
     study.performTransformationsBeforeLaunchingSimulation();
@@ -229,13 +232,13 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
 
 void Application::startSimulation(Data::StudyLoadOptions& options)
 {
-    // Starting !
-    #ifdef GIT_SHA1_SHORT_STRING
+// Starting !
+#ifdef GIT_SHA1_SHORT_STRING
     logs.checkpoint() << "Antares Solver v" << ANTARES_VERSION_STR << " (" << GIT_SHA1_SHORT_STRING
                       << ")";
-    #else
+#else
     logs.checkpoint() << "Antares Solver v" << ANTARES_VERSION_STR;
-    #endif
+#endif
     WriteHostInfoIntoLogs();
 
     WriteCommandLineIntoLogs(pArgc, pArgv);
@@ -254,7 +257,9 @@ void Application::startSimulation(Data::StudyLoadOptions& options)
 
     pStudy->initializeProgressMeter(pSettings.tsGeneratorsOnly);
     if (pSettings.noOutput)
+    {
         pSettings.displayProgression = false;
+    }
 
     if (pSettings.displayProgression)
     {
@@ -264,13 +269,17 @@ void Application::startSimulation(Data::StudyLoadOptions& options)
         pStudy->progression.start();
     }
     else
+    {
         logs.info() << "  The progression is disabled";
+    }
 }
+
 void Application::postParametersChecks() const
 { // Some more checks require the existence of pParameters, hence of a study.
     // Their execution is delayed up to this point.
-    checkOrtoolsUsage(
-      pParameters->unitCommitment.ucMode, pParameters->ortoolsUsed, pParameters->ortoolsSolver);
+    checkOrtoolsUsage(pParameters->unitCommitment.ucMode,
+                      pParameters->ortoolsUsed,
+                      pParameters->ortoolsSolver);
 
     checkSimplexRangeHydroPricing(pParameters->simplexOptimizationRange,
                                   pParameters->hydroPricing.hpMode);
@@ -281,13 +290,15 @@ void Application::postParametersChecks() const
     checkSimplexRangeHydroHeuristic(pParameters->simplexOptimizationRange, pStudy->areas);
 
     if (pParameters->adqPatchParams.enabled)
-        pParameters->adqPatchParams.checkAdqPatchParams(
-          pParameters->mode,
+    {
+        pParameters->adqPatchParams.checkAdqPatchParams(pParameters->mode,
                                                         pStudy->areas,
                                                         pParameters->include.hurdleCosts);
+    }
 
-    bool tsGenThermal
-      = (0 != (pParameters->timeSeriesToGenerate & Antares::Data::TimeSeriesType::timeSeriesThermal));
+    bool tsGenThermal = (0
+                         != (pParameters->timeSeriesToGenerate
+                             & Antares::Data::TimeSeriesType::timeSeriesThermal));
 
     checkMinStablePower(tsGenThermal, pStudy->areas);
 
@@ -355,7 +366,9 @@ void Application::execute()
 {
     // pStudy == nullptr e.g when the -h flag is given
     if (!pStudy)
+    {
         return;
+    }
 
     SystemMemoryLogger memoryReport;
     memoryReport.interval(1000 * 60 * 5); // 5 minutes
@@ -388,13 +401,20 @@ void Application::execute()
 
 void Application::runSimulationInEconomicMode()
 {
-    Solver::runSimulationInEconomicMode(
-      *pStudy, pSettings, pDurationCollector, *resultWriter, pOptimizationInfo);
+    Solver::runSimulationInEconomicMode(*pStudy,
+                                        pSettings,
+                                        pDurationCollector,
+                                        *resultWriter,
+                                        pOptimizationInfo);
 }
 
 void Application::runSimulationInAdequacyMode()
 {
-    Solver::runSimulationInAdequacyMode(*pStudy, pSettings, pDurationCollector, *resultWriter, pOptimizationInfo);
+    Solver::runSimulationInAdequacyMode(*pStudy,
+                                        pSettings,
+                                        pDurationCollector,
+                                        *resultWriter,
+                                        pOptimizationInfo);
 }
 
 void Application::resetLogFilename() const
@@ -406,7 +426,8 @@ void Application::resetLogFilename() const
     // Making sure that the folder
     if (!Yuni::IO::Directory::Create(logfile))
     {
-        throw FatalError(std::string("Impossible to create the log folder at ") + logfile.c_str() + ". Aborting now.");
+        throw FatalError(std::string("Impossible to create the log folder at ") + logfile.c_str()
+                         + ". Aborting now.");
     }
 
     // Date/time
@@ -429,8 +450,10 @@ void Application::prepareWriter(const Antares::Data::Study& study,
     ioQueueService = std::make_shared<Yuni::Job::QueueService>();
     ioQueueService->maximumThreadCount(1);
     ioQueueService->start();
-    resultWriter = resultWriterFactory(
-            study.parameters.resultFormat, study.folderOutput, ioQueueService, duration_collector);
+    resultWriter = resultWriterFactory(study.parameters.resultFormat,
+                                       study.folderOutput,
+                                       ioQueueService,
+                                       duration_collector);
 }
 
 void Application::writeComment(Data::Study& study)
@@ -439,8 +462,7 @@ void Application::writeComment(Data::Study& study)
 
     if (!pSettings.commentFile.empty())
     {
-        resultWriter->addEntryFromFile(study.buffer.c_str(),
-                                             pSettings.commentFile.c_str());
+        resultWriter->addEntryFromFile(study.buffer.c_str(), pSettings.commentFile.c_str());
 
         pSettings.commentFile.clear();
     }
@@ -455,13 +477,18 @@ static void logTotalTime(unsigned duration)
     d -= minutes;
     auto seconds = std::chrono::duration_cast<std::chrono::seconds>(d);
 
-    logs.info().appendFormat("Total simulation time: %02luh%02lum%02lus", hours.count(), minutes.count(), seconds.count());
+    logs.info().appendFormat("Total simulation time: %02luh%02lum%02lus",
+                             hours.count(),
+                             minutes.count(),
+                             seconds.count());
 }
 
 void Application::writeExectutionInfo()
 {
     if (!pStudy)
+    {
         return;
+    }
 
     pTotalTimer.stop();
     pDurationCollector.addDuration("total", pTotalTimer.get_duration());
@@ -470,7 +497,9 @@ void Application::writeExectutionInfo()
 
     // If no writer is available, we can't write
     if (!resultWriter)
+    {
         return;
+    }
 
     // Info collectors : they retrieve data from study and simulation
     Benchmarking::StudyInfoCollector study_info_collector(*pStudy);
@@ -499,7 +528,10 @@ Application::~Application()
         try
         {
             logs.info() << LOG_UI_SOLVER_DONE;
-        } catch (...) {}; //Catching log exception
+        }
+        catch (...)
+        {
+        }; // Catching log exception
 
         // Copy the log file if a result writer is available
         if (!pStudy->parameters.noOutput && resultWriter)
