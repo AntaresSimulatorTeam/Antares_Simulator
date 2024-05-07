@@ -121,7 +121,7 @@ public:
     uint areaWideIndex = (uint)-1;
 
     //! tsNumbers must be constructed before series
-    TimeSeries::Numbers tsNumbers;
+    TimeSeriesNumbers tsNumbers;
 
     //! Series
     TimeSeries series;

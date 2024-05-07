@@ -133,7 +133,7 @@ public:
     //@}
 
     //! Monte-Carlo
-    TimeSeries::Numbers timeseriesNumbers;
+    TimeSeriesNumbers timeseriesNumbers;
 
     //! \name Data
     //@{

@@ -69,7 +69,7 @@ public:
     //! Data for the pre-processor
     Data::Load::Prepro* prepro;
 
-    TimeSeries::Numbers tsNumbers;
+    TimeSeriesNumbers tsNumbers;
 
     /*! Data for time-series */
     TimeSeries series;

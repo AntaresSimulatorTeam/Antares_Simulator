@@ -34,7 +34,7 @@ using namespace Yuni;
 
 namespace Antares::Data
 {
-void TimeSeries::Numbers::registerSeries(const TimeSeries* s, std::string label)
+void TimeSeriesNumbers::registerSeries(const TimeSeries* s, std::string label)
 {
     series[std::move(label)] = s;
 }
@@ -61,7 +61,7 @@ static std::string errorMessage(const std::map<std::string, const TimeSeries*>& 
     return msg.str();
 }
 
-std::optional<std::string> TimeSeries::Numbers::checkSeriesNumberOfColumnsConsistency() const
+std::optional<std::string> TimeSeriesNumbers::checkSeriesNumberOfColumnsConsistency() const
 {
     std::vector<uint> width;
     for (const auto& [_, s] : series)
@@ -72,11 +72,6 @@ std::optional<std::string> TimeSeries::Numbers::checkSeriesNumberOfColumnsConsis
         return errorMessage(series);
     }
     return std::nullopt;
-}
-
-TimeSeries::TimeSeries(Numbers& tsNumbers, std::string label) : timeseriesNumbers(tsNumbers)
-{
-    tsNumbers.registerSeries(this, std::move(label));
 }
 
 bool TimeSeries::loadFromFile(const std::string& path,

@@ -48,7 +48,7 @@ struct Fixture
         tsnum.resize(1, 1);
         tsnum[0][0] = 0;
     }
-    TimeSeries::Numbers tsnum;
+    TimeSeriesNumbers tsnum;
     TimeSeries ts;
     std::string folder;
 
@@ -94,7 +94,7 @@ public:
     }
   }
 public:
-  TimeSeries::Numbers tsnum;
+  TimeSeriesNumbers tsnum;
 private:
   std::vector<std::unique_ptr<TimeSeries>> ts;
 };

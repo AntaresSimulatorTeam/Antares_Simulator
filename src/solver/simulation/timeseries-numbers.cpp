@@ -682,7 +682,7 @@ bool TimeSeriesNumbers::checkAllElementsIdenticalOrOne(std::vector<uint> w)
     return std::adjacent_find(w.begin(), first_one, std::not_equal_to<uint>()) == first_one;
 }
 
-using Checks = std::vector<std::pair<const Antares::Data::TimeSeries::Numbers*, std::string>>;
+using Checks = std::vector<std::pair<const Antares::Data::TimeSeriesNumbers*, std::string>>;
 
 static Checks buildChecksFromStudy(const AreaList& areas)
 {
