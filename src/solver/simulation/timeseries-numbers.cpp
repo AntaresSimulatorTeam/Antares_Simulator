@@ -687,17 +687,25 @@ using Checks = std::vector<std::pair<const Antares::Data::TimeSeriesNumbers*, st
 static Checks buildChecksFromStudy(const AreaList& areas)
 {
     Checks toCheck;
+
+    // LINKS
     for (const auto& [_, area] : areas)
     {
         const std::string areaID = area->id.to<std::string>();
         for (const auto& [_, link] : area->links)
         {
-            std::string areaID2 = link->with->id.to<std::string>();
+            const std::string areaID2 = link->with->id.to<std::string>();
             toCheck.push_back({&link->timeseriesNumbers, "link " + areaID + " / " + areaID2});
         }
-
-        toCheck.push_back({&area->hydro.series->timeseriesNumbers, "hydro " + areaID});
     }
+
+    // HYDRO
+    for (const auto& [_, area] : areas)
+    {
+        const std::string areaID = area->id.to<std::string>();
+	toCheck.push_back({&area->hydro.series->timeseriesNumbers, "hydro " + areaID});
+    }
+
     return toCheck;
 }
 
