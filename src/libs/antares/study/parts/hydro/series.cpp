@@ -120,9 +120,9 @@ DataSeriesHydro::DataSeriesHydro() :
 {
     timeseriesNumbers.registerSeries(&ror, "ror");
     timeseriesNumbers.registerSeries(&storage, "storage");
-    timeseriesNumbers.registerSeries(mingen, "mingen");
-    timeseriesNumbersHydroMaxPower.registerSeries(maxHourlyGenPower, "max-geneneration-power");
-    timeseriesNumbersHydroMaxPower.registerSeries(maxHourlyPumpPower, "max-pumping-power");
+    timeseriesNumbers.registerSeries(&mingen, "mingen");
+    timeseriesNumbersHydroMaxPower.registerSeries(&maxHourlyGenPower, "max-geneneration-power");
+    timeseriesNumbersHydroMaxPower.registerSeries(&maxHourlyPumpPower, "max-pumping-power");
 
     // Pmin was introduced in v8.6
     // The previous behavior was Pmin=0
