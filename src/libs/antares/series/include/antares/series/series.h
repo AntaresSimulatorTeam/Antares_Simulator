@@ -21,6 +21,9 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_COMMON_TIMESERIES_H__
 #define __ANTARES_LIBS_STUDY_PARTS_COMMON_TIMESERIES_H__
 
+#include <map>
+#include <string>
+#include <optional>
 #include <antares/array/matrix.h>
 
 namespace Antares::Data
@@ -32,20 +35,24 @@ namespace Antares::Data
  **  The goal is to handle indexing with the time series numbers: getCoefficient()
  **  and also providing a wrapper for all the Matrix<> functions such as resize()
  */
+class TimeSeries;
+
+struct TimeSeriesNumbers : public Matrix<uint32_t> // TODO[FOM] remove inheritance, it was added mostly to avoid breaking existing code
+{
+public:
+  void registerSeries(const TimeSeries* s, std::string label);
+  // Return a description of the error in case of inconsistent number of columns, std::nullopt otherwis
+  std::optional<std::string> checkSeriesNumberOfColumnsConsistency() const;
+private:
+  std::map<std::string, const TimeSeries*> series;
+};
+
 class TimeSeries
 {
 public:
-    struct Numbers : public Matrix<uint32_t> // TODO[FOM] remove inheritance, it was added mostly to avoid breaking existing code
-    {
-    public:
-        void registerSeries(const TimeSeries* s);
-        bool checkSeriesNumberOfColumnsConsistency() const;
-    private:
-        std::vector<const TimeSeries*> series;
-    };
     using TS = Matrix<double>;
 
-    explicit TimeSeries(Numbers& tsNumbers);
+    explicit TimeSeries(TimeSeriesNumbers& tsNumbers);
     /*!
      ** \brief Load series from a file
      **
@@ -91,7 +98,7 @@ public:
     uint64_t memoryUsage() const;
 
     TS timeSeries;
-    Numbers& timeseriesNumbers;
+    TimeSeriesNumbers& timeseriesNumbers;
 
     static const std::vector<double> emptyColumn; ///< used in getColumn if timeSeries empty
 };

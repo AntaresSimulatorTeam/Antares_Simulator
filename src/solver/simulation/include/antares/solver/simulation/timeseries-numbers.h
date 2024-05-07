@@ -28,7 +28,7 @@
 
 namespace Antares::Solver::TimeSeriesNumbers
 {
-bool CheckNumberOfColumns(const Data::Study& study);
+bool CheckNumberOfColumns(const Data::AreaList& areas);
 
 /*!
 ** \brief Generate all time-series numbers for a given set

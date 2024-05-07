@@ -24,6 +24,7 @@
 #include <yuni/io/directory.h>
 #include "antares/series/series.h"
 #include <algorithm>
+#include <sstream>
 #include <vector>
 
 using namespace Yuni;
@@ -33,9 +34,9 @@ using namespace Yuni;
 
 namespace Antares::Data
 {
-void TimeSeries::Numbers::registerSeries(const TimeSeries* s)
+void TimeSeriesNumbers::registerSeries(const TimeSeries* s, std::string label)
 {
-    series.push_back(s);
+    series[std::move(label)] = s;
 }
 
 // TODO[FOM] Code duplication
@@ -45,18 +46,36 @@ static bool checkAllElementsIdenticalOrOne(std::vector<uint> w)
     return std::adjacent_find(w.begin(), first_one, std::not_equal_to<uint>()) == first_one;
 }
 
-bool TimeSeries::Numbers::checkSeriesNumberOfColumnsConsistency() const
+static std::string errorMessage(const std::map<std::string, const TimeSeries*>& series)
 {
-    std::vector<uint> width;
-    for (const auto* s : series)
-        width.push_back(s->numberOfColumns());
-
-    return checkAllElementsIdenticalOrOne(width);
+    std::ostringstream msg;
+    auto isLast = [&series](std::size_t& idx)
+    {
+	idx++;
+        return idx == series.size();
+    };
+    for (std::size_t idx = 0; const auto& [label, s] : series)
+    {
+        msg << label << ": " << s->numberOfColumns() << (isLast(idx) ? "" : ", ");
+    }
+    return msg.str();
 }
 
-TimeSeries::TimeSeries(Numbers& tsNumbers) : timeseriesNumbers(tsNumbers)
+std::optional<std::string> TimeSeriesNumbers::checkSeriesNumberOfColumnsConsistency() const
 {
-    tsNumbers.registerSeries(this);
+    std::vector<uint> width;
+    for (const auto& [_, s] : series)
+        width.push_back(s->numberOfColumns());
+
+    if (!checkAllElementsIdenticalOrOne(width))
+    {
+        return errorMessage(series);
+    }
+    return std::nullopt;
+}
+
+TimeSeries::TimeSeries(TimeSeriesNumbers& tsNumbers) : timeseriesNumbers(tsNumbers)
+{
 }
 
 bool TimeSeries::loadFromFile(const std::string& path,

@@ -682,37 +682,47 @@ bool TimeSeriesNumbers::checkAllElementsIdenticalOrOne(std::vector<uint> w)
     return std::adjacent_find(w.begin(), first_one, std::not_equal_to<uint>()) == first_one;
 }
 
-bool TimeSeriesNumbers::CheckNumberOfColumns(const Study& study)
+using Checks = std::vector<std::pair<const Antares::Data::TimeSeriesNumbers*, std::string>>;
+
+static Checks buildChecksFromStudy(const AreaList& areas)
 {
-    std::map<const Antares::Data::TimeSeries::Numbers*, std::string> toCheck;
-    for (const auto& [_, area] : study.areas)
+    Checks toCheck;
+    for (const auto& [_, area] : areas)
     {
         const std::string areaID = area->id.to<std::string>();
         for (const auto& [_, link] : area->links)
         {
             std::string areaID2 = link->with->id.to<std::string>();
-            toCheck[&link->timeseriesNumbers] = "link " + areaID + " / " + areaID2;
+            toCheck.push_back({&link->timeseriesNumbers, "link " + areaID + " / " + areaID2});
         }
 
-        for (const auto& cluster : area->thermal.list.each_enabled())
-        {
-            const std::string clusterID = cluster->id();
-            toCheck[&cluster->tsNumbers] = "thermal cluster " + clusterID + " " + areaID;
-        }
-
-        toCheck[&area->hydro.series->timeseriesNumbers] = "hydro " + areaID;
+        toCheck.push_back({&area->hydro.series->timeseriesNumbers, "hydro " + areaID});
     }
+    return toCheck;
+}
 
+static bool performChecks(const Checks& toCheck)
+{
     bool ret = true;
     for (const auto& [tsNumber, context] : toCheck)
     {
-        if (!tsNumber->checkSeriesNumberOfColumnsConsistency())
+        const auto errorMessageMaybe = tsNumber->checkSeriesNumberOfColumnsConsistency();
+        if (errorMessageMaybe.has_value())
         {
-            logs.error() << "Inconsistent number of columns for " << context;
+            logs.error() << "Inconsistent number of columns for " << context << " (" << errorMessageMaybe.value() << ")";
             ret = false;
         }
     }
+    if (!ret)
+        logs.error() << "Please check that all series have the same number of columns or 1 column, or a combination of 1 column and the same number of columns";
+
     return ret;
+}
+
+bool TimeSeriesNumbers::CheckNumberOfColumns(const AreaList& areas)
+{
+    Checks toCheck = buildChecksFromStudy(areas);
+    return performChecks(toCheck);
 }
 
 bool TimeSeriesNumbers::Generate(Study& study)

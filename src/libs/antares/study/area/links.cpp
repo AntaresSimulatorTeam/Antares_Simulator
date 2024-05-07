@@ -73,6 +73,9 @@ AreaLink::AreaLink() :
  style(stPlain),
  linkWidth(1)
 {
+    timeseriesNumbers.registerSeries(&directCapacities, "direct-capacity");
+    timeseriesNumbers.registerSeries(&indirectCapacities, "indirect-capacity");
+
     directCapacities.reset();
     indirectCapacities.reset();
 }

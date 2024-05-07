@@ -67,7 +67,7 @@ public:
     //! Data for the pre-processor
     Data::Solar::Prepro* prepro;
 
-    TimeSeries::Numbers tsNumbers;
+    TimeSeriesNumbers tsNumbers;
 
     /*! Data for time-series */
     TimeSeries series;

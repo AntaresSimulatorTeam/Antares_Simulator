@@ -104,8 +104,8 @@ public:
 
     //@}
 
-    TimeSeries::Numbers timeseriesNumbers;
-    TimeSeries::Numbers timeseriesNumbersHydroMaxPower;
+    TimeSeriesNumbers timeseriesNumbers;
+    TimeSeriesNumbers timeseriesNumbersHydroMaxPower;
 
     /*!
     ** \brief Run-of-the-river - ROR (MW)
