@@ -682,7 +682,7 @@ bool TimeSeriesNumbers::checkAllElementsIdenticalOrOne(std::vector<uint> w)
     return std::adjacent_find(w.begin(), first_one, std::not_equal_to<uint>()) == first_one;
 }
 
-using Checks = std::map<const Antares::Data::TimeSeries::Numbers*, std::string>;
+using Checks = std::vector<std::pair<const Antares::Data::TimeSeries::Numbers*, std::string>>;
 
 static Checks buildChecksFromStudy(const AreaList& areas)
 {
@@ -693,16 +693,10 @@ static Checks buildChecksFromStudy(const AreaList& areas)
         for (const auto& [_, link] : area->links)
         {
             std::string areaID2 = link->with->id.to<std::string>();
-            toCheck[&link->timeseriesNumbers] = "link " + areaID + " / " + areaID2;
+            toCheck.push_back({&link->timeseriesNumbers, "link " + areaID + " / " + areaID2});
         }
 
-        for (const auto& cluster : area->thermal.list.each_enabled())
-        {
-            const std::string clusterID = cluster->id();
-            toCheck[&cluster->tsNumbers] = "thermal cluster " + clusterID + " " + areaID;
-        }
-
-        toCheck[&area->hydro.series->timeseriesNumbers] = "hydro " + areaID;
+        toCheck.push_back({&area->hydro.series->timeseriesNumbers, "hydro " + areaID});
     }
     return toCheck;
 }
