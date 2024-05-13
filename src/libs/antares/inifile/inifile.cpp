@@ -172,7 +172,7 @@ static bool startingSection(std::string line)
 {
     boost::trim(line);
     return line.starts_with("[") && line.ends_with("]");
-} // namespace Antares
+}
 
 static std::string getSectionName(std::string line)
 {
@@ -189,7 +189,6 @@ static bool isProperty(std::string line)
 static std::pair<std::string, std::string> getKeyValuePair(std::string line)
 {
     boost::trim(line);
-
     std::vector<std::string> splitLine;
     boost::split(splitLine, line, boost::is_any_of("="));
 
@@ -204,7 +203,7 @@ static bool isComment(std::string line)
 
 bool isEmpty(std::string line)
 {
-    boost::trim_left(line);
+    boost::trim(line);
     return line.empty();
 }
 
@@ -224,6 +223,12 @@ bool IniFile::readStream(std::istream& in_stream)
 
         if (isProperty(line))
         {
+            if (! currentSection) // Ensure the property is contained in a section
+            {
+                logs.error() << "Property '" << line << "' is not inside a section.";
+                return false;
+            }
+            
             std::pair<std::string, std::string> pair = getKeyValuePair(line);
             currentSection->add(pair.first, pair.second);
             continue;
@@ -234,7 +239,7 @@ bool IniFile::readStream(std::istream& in_stream)
             continue;
         }
 
-        logs.error() << "Invalid INI line format : '" << line << "'";
+        logs.error() << "INI content : unknown format for line '" << line << "'";
         return false;
     }
     if (read)
@@ -253,7 +258,7 @@ bool IniFile::open(const AnyString& filename, bool warnings)
 
     if (std::ifstream file(filePath); file.is_open())
     {
-        if (!readStream(file))
+        if (! readStream(file))
         {
             logs.error() << "Invalid INI file : " << filePath;
             return false;
