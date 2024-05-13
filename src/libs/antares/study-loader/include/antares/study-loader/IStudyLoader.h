@@ -21,10 +21,14 @@
  */
 
 #pragma once
-#include <antares/study/study.h>
 
 namespace Antares
 {
+
+namespace Data
+{
+class Study;
+}
 /**
  * @class IStudyLoader
  * @brief The IStudyLoader class is an interface for loading studies.
