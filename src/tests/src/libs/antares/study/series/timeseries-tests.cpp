@@ -44,7 +44,7 @@ struct Fixture
     Fixture& operator=(const Fixture&& f) = delete;
     Fixture() : ts(tsnum)
     {
-        ts.reset(HOURS_PER_YEAR);
+        ts.reset(1, HOURS_PER_YEAR);
         tsnum.reset(1);
         tsnum[0] = 0;
     }

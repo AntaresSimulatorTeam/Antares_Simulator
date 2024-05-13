@@ -86,7 +86,7 @@ template<class ClusterT>
 void ClusterList<ClusterT>::resizeAllTimeseriesNumbers(uint n) const
 {
     for (auto& c : allClusters_)
-        c->series.timeseriesNumbers.reset(1, n);
+        c->series.timeseriesNumbers.reset(n);
 }
 
 #define SEP IO::Separator
