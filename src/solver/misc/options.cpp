@@ -26,9 +26,9 @@
 #include <cassert>
 #include <limits>
 #include <string.h>
+#include <unistd.h>
 
 #include <yuni/yuni.h>
-#include <yuni/core/system/process.h>
 
 #include <antares/antares/constants.h>
 #include <antares/exception/AssertionError.hpp>
@@ -202,7 +202,7 @@ void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOption
         std::ofstream pidfile(optPID);
         if (pidfile.is_open())
         {
-            pidfile << Yuni::ProcessID();
+            pidfile << getpid();
         }
         else
         {
