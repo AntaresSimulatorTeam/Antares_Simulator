@@ -20,6 +20,7 @@
 */
 
 #include <cassert>
+#include <fstream>
 
 #include <yuni/io/file.h>
 
@@ -553,8 +554,8 @@ Area* AreaListAddFromNames(AreaList& list, const AnyString& name, const AnyStrin
 
 bool AreaList::loadListFromFile(const AnyString& filename)
 {
-    IO::File::Stream file;
-    if (!file.open(filename))
+    std::ifstream file(filename);
+    if (!file.is_open())
     {
         logs.error() << "I/O error: " << filename << ": Impossible to open the file";
         return false;
@@ -567,10 +568,9 @@ bool AreaList::loadListFromFile(const AnyString& filename)
     AreaName name;
     AreaName lname;
     // Each lines in the file
-    String buffer;
-    buffer.reserve(1024 /* to force the allocation */);
+    std::string buffer;
     uint line = 0;
-    while (file.readline(buffer))
+    while (std::getline(file, buffer))
     {
         ++line;
         // The area name
@@ -656,8 +656,8 @@ bool AreaList::saveListToFile(const AnyString& filename) const
     }
 
     // Writing data into the appropriate file
-    IO::File::Stream file;
-    if (file.openRW(filename))
+    std::ofstream file(filename);
+    if (file.is_open())
     {
         file << data;
         return true;
