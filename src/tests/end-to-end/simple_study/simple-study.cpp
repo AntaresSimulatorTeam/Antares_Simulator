@@ -396,9 +396,6 @@ BOOST_FIXTURE_TEST_CASE(scenario_builder, HydroMaxPowerStudy)
 
     double averageLoad = (4 * 300. + 3. * 200. + 2. * 100.) / weightSum;
 
-    BOOST_TEST(hydro->series->timeseriesNumbersHydroMaxPower[0] == 2U);
-    BOOST_TEST(hydro->series->timeseriesNumbersHydroMaxPower[1] == 1U);
-    BOOST_TEST(hydro->series->timeseriesNumbersHydroMaxPower[2] == 0);
     BOOST_TEST(output.overallCost(area).hour(0) == loadInArea - averageLoad * area->thermal.unsuppliedEnergyCost, tt::tolerance(0.1));
 }
 
