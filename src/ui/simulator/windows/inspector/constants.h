@@ -36,8 +36,8 @@ extern const unsigned int arrayClusterGroupCount;
 extern const wxChar* const arrayClusterGroup[];
 
 // Thermal laws
-extern const unsigned int thermalLawCount;
-extern const wxChar* const thermalLaws[];
+extern const unsigned int LawCount;
+extern const wxChar* const Laws[];
 
 // Thermal cost generation
 extern const unsigned int costgenerationCount;

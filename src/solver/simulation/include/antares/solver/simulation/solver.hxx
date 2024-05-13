@@ -491,8 +491,15 @@ void ISimulation<ImplementationType>::regenerateTimeSeries(uint year)
         if (refreshTSonCurrentYear)
         {
             auto clusters = getAllClustersToGen(study.areas, pData.haveToRefreshTSThermal);
+#define SEP Yuni::IO::Separator
+            const std::string savePath = std::string("ts-generator") + SEP + "thermal" + SEP + "mc-"
+                                         + std::to_string(year);
+#undef SEP
+            generateThermalTimeSeries(study, clusters, pResultWriter, savePath);
 
-            GenerateThermalTimeSeries(study, clusters, year, pResultWriter);
+            // apply the spinning if we generated some in memory clusters
+            for (auto* cluster: clusters)
+                cluster->calculationOfSpinning();
         }
     };
 }

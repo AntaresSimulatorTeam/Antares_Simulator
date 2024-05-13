@@ -23,6 +23,8 @@
 
 #include <yuni/yuni.h>
 
+#include <antares/series/series.h>
+#include <antares/solver/ts-generator/law.h>
 #include <antares/study/fwd.h>
 #include <antares/study/parameters.h>
 #include <antares/study/parts/thermal/cluster.h>
@@ -33,6 +35,28 @@
 
 namespace Antares::TSGenerator
 {
+class AvailabilityTSGeneratorData
+{
+public:
+    explicit AvailabilityTSGeneratorData(Data::ThermalCluster*);
+
+    const unsigned& unitCount;
+    const double& nominalCapacity;
+
+    const double& forcedVolatility;
+    const double& plannedVolatility;
+
+    Data::StatisticalLaw& forcedLaw;
+    Data::StatisticalLaw& plannedLaw;
+
+    Data::PreproAvailability* prepro;
+
+    Matrix<>& series;
+
+    Matrix<>::ColumnType& modulationCapacity;
+
+    const std::string& name;
+};
 
 void ResizeGeneratedTimeSeries(Data::AreaList& areas, Data::Parameters& params);
 
@@ -42,13 +66,14 @@ void ResizeGeneratedTimeSeries(Data::AreaList& areas, Data::Parameters& params);
 template<enum Data::TimeSeriesType T>
 bool GenerateTimeSeries(Data::Study& study, uint year, IResultWriter& writer);
 
-bool GenerateThermalTimeSeries(Data::Study& study,
-                               std::vector<Data::ThermalCluster*> clusters,
-                               uint year,
-                               Solver::IResultWriter& writer);
+bool generateThermalTimeSeries(Data::Study& study,
+                               const std::vector<Data::ThermalCluster*>& clusters,
+                               Solver::IResultWriter& writer,
+                               const std::string& savePath);
 
-std::vector<Data::ThermalCluster*> getAllClustersToGen(Data::AreaList& areas,
+std::vector<Data::ThermalCluster*> getAllClustersToGen(const Data::AreaList& areas,
                                                        bool globalThermalTSgeneration);
+
 /*!
 ** \brief Destroy all TS Generators
 */
