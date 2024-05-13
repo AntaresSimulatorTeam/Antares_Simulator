@@ -94,6 +94,7 @@ public:
                                               const std::string& reserveName);
     void InternalUnsatisfiedReserve(unsigned int variable, const std::string& reserveName);
     void InternalExcessReserve(unsigned int variable, const std::string& reserveName);
+    void NeedReserve(unsigned int variable, const std::string& reserveName);
     void NODU(unsigned int variable, const std::string& clusterName);
     void NumberStoppingDispatchableUnits(unsigned int variable, const std::string& clusterName);
     void NumberStartingDispatchableUnits(unsigned int variable, const std::string& clusterName);

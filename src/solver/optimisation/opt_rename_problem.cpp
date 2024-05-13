@@ -144,6 +144,11 @@ void VariableNamer::InternalExcessReserve(unsigned int variable, const std::stri
     SetThermalClusterReserveElementName(variable, "InternalExcessReserve", reserveName);
 }
 
+void VariableNamer::NeedReserve(unsigned int variable, const std::string& reserveName)
+{
+    SetThermalClusterReserveElementName(variable, "NeedReserve", reserveName);
+}
+
 void VariableNamer::NODU(unsigned int variable, const std::string& clusterName)
 {
     SetThermalClusterElementName(variable, "NODU", clusterName);

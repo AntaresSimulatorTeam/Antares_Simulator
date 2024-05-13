@@ -127,6 +127,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReservesThermi
                     variableManager.NeedReserve(reserveIndex, pdt) = areaReserveUp.need[pdt];
                     ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                       = VARIABLE_FIXE;
+                    variableNamer.NeedReserve(NombreDeVariables, areaReserveUp.reserveName);
                     NombreDeVariables++;
                 }
             }
@@ -203,6 +204,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReservesThermi
                     variableManager.NeedReserve(reserveIndex, pdt) = areaReserveDown.need[pdt];
                     ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                       = VARIABLE_BORNEE_DES_DEUX_COTES;
+                    variableNamer.NeedReserve(NombreDeVariables, areaReserveDown.reserveName);
                     NombreDeVariables++;
                 }
             }
