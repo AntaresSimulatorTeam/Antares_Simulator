@@ -35,6 +35,7 @@ set(TARGET_LIBS #No alias
         exception
         benchmarking
         antares-solver-variable
+        lps
 
         #study-loader
         #nothing

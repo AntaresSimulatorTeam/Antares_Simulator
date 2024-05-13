@@ -198,6 +198,7 @@ target_link_libraries(model_antares
         sirius_solver
         antares-solver-simulation
         Antares::benchmarking
+		Antares::lps
 		PRIVATE
 		infeasible_problem_analysis
 )
