@@ -35,6 +35,7 @@ BOOL WINAPI ConsoleHandler(DWORD dwType)
         signalCtrl_term(0);
         break;
     default:
+        break;
     }
     return TRUE;
 }
