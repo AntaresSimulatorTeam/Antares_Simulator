@@ -48,7 +48,7 @@ public:
   uint32_t& operator[](uint y);
 
   void clear();
-  void reset(uint w, uint h);
+  void reset(uint h);
 
   uint height() const;
 

@@ -44,8 +44,8 @@ struct Fixture
     Fixture& operator=(const Fixture&& f) = delete;
     Fixture() : ts(tsnum)
     {
-        ts.reset(1, HOURS_PER_YEAR);
-        tsnum.reset(1, 1);
+        ts.reset(HOURS_PER_YEAR);
+        tsnum.reset(1);
         tsnum[0] = 0;
     }
     TimeSeriesNumbers tsnum;
@@ -73,7 +73,7 @@ void Fixture::fillColumnReverse(unsigned int idx)
 
 void Fixture::fillTsnum()
 {
-    tsnum.reset(1, ts.timeSeries.width);
+    tsnum.reset(ts.timeSeries.width);
     for (unsigned int i = 0; i < ts.timeSeries.width; i++)
         tsnum[i] = i;
 }
@@ -108,7 +108,7 @@ BOOST_AUTO_TEST_SUITE(timeseries_tests)
 
 BOOST_FIXTURE_TEST_CASE(getSeriesIndex, Fixture)
 {
-    tsnum.reset(1, 10);
+    tsnum.reset(10);
     for (unsigned int i = 0; i < 10; i++)
         tsnum[i] = i;
 
@@ -192,7 +192,7 @@ BOOST_FIXTURE_TEST_CASE(getCoefficient_SingleColumn, Fixture)
     ts.resize(1, 2);
 
     // Here, we provide 2 time series numbers...
-    tsnum.reset(1, 2);
+    tsnum.reset(2);
     for (unsigned int i = 0; i < 2; i++)
         tsnum[i] = i;
 

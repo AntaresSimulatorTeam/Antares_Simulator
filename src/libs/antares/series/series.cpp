@@ -75,9 +75,9 @@ uint32_t& TimeSeriesNumbers::operator[](uint y)
     return tsNumbers[0][y];
 }
 
-void TimeSeriesNumbers::reset(uint w, uint h)
+void TimeSeriesNumbers::reset(uint h)
 {
-    tsNumbers.reset(w, h);
+    tsNumbers.reset(1, h);
 }
 
 namespace // anonymous

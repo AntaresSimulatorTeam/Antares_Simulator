@@ -60,7 +60,7 @@ BOOST_AUTO_TEST_CASE(BC_group_TestGroup_has_output_file) {
     study->parameters.storeTimeseriesNumbers = true;
 
     study->bindingConstraintsGroups.add("TestGroup");
-    study->bindingConstraintsGroups["TestGroup"]->timeseriesNumbers.reset(1, 1);
+    study->bindingConstraintsGroups["TestGroup"]->timeseriesNumbers.reset(1);
 
     auto working_tmp_dir = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
 
@@ -82,8 +82,8 @@ BOOST_AUTO_TEST_CASE(BC_output_ts_numbers_file_for_each_group) {
     study->parameters.storeTimeseriesNumbers = true;
     study->bindingConstraintsGroups.add("test1");
     study->bindingConstraintsGroups.add("test2");
-    study->bindingConstraintsGroups["test1"]->timeseriesNumbers.reset(1, 1);
-    study->bindingConstraintsGroups["test2"]->timeseriesNumbers.reset(1, 1);
+    study->bindingConstraintsGroups["test1"]->timeseriesNumbers.reset(1);
+    study->bindingConstraintsGroups["test2"]->timeseriesNumbers.reset(1);
 
     auto working_tmp_dir = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
 
@@ -109,7 +109,7 @@ BOOST_AUTO_TEST_CASE(BC_timeseries_numbers_store_values) {
     auto bc = std::make_shared<BindingConstraint>();
     bc->RHSTimeSeries().resize(10,10);
     group->add(bc);
-    study->bindingConstraintsGroups["test1"]->timeseriesNumbers.reset(1, 1);
+    study->bindingConstraintsGroups["test1"]->timeseriesNumbers.reset(1);
 
     auto working_tmp_dir = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
 
@@ -121,7 +121,7 @@ BOOST_AUTO_TEST_CASE(BC_timeseries_numbers_store_values) {
     Antares::Solver::TimeSeriesNumbers::Generate(*study);
 
     auto& tsNumbers = study->bindingConstraintsGroups["test1"]->timeseriesNumbers;
-    tsNumbers.reset(1, 2);
+    tsNumbers.reset(2);
     tsNumbers[0] = 0;
     tsNumbers[1] = 1;
 
