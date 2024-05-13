@@ -37,8 +37,8 @@ var searchData=
   ['aoperator_34',['AOperator',['../classAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1AOperator.html',1,'Antares::Toolbox::Filter::Operator']]],
   ['append_3c_20cstringt_2c_20antares_3a_3adata_3a_3acostgeneration_20_3e_35',['Append&lt; CStringT, Antares::Data::CostGeneration &gt;',['../classYuni_1_1Extension_1_1CString_1_1Append_3_01CStringT_00_01Antares_1_1Data_1_1CostGeneration_01_4.html',1,'Yuni::Extension::CString']]],
   ['append_3c_20cstringt_2c_20antares_3a_3adata_3a_3alocaltsgenerationbehavior_20_3e_36',['Append&lt; CStringT, Antares::Data::LocalTSGenerationBehavior &gt;',['../classYuni_1_1Extension_1_1CString_1_1Append_3_01CStringT_00_01Antares_1_1Data_1_1LocalTSGenerationBehavior_01_4.html',1,'Yuni::Extension::CString']]],
-  ['append_3c_20cstringt_2c_20antares_3a_3adata_3a_3athermallaw_20_3e_37',['Append&lt; CStringT, Antares::Data::ThermalLaw &gt;',['../classYuni_1_1Extension_1_1CString_1_1Append_3_01CStringT_00_01Antares_1_1Data_1_1ThermalLaw_01_4.html',1,'Yuni::Extension::CString']]],
-  ['application_38',['application',['../classAntares_1_1Solver_1_1Application.html',1,'Antares::Solver::Application'],['../classAntares_1_1Application.html',1,'Antares::Application']]],
+  ['append_3c_20cstringt_2c_20antares_3a_3adata_3a_3astatisticallaw_20_3e_37',['Append&lt; CStringT, Antares::Data::StatisticalLaw &gt;',['../classYuni_1_1Extension_1_1CString_1_1Append_3_01CStringT_00_01Antares_1_1Data_1_1StatisticalLaw_01_4.html',1,'Yuni::Extension::CString']]],
+  ['application_38',['application',['../classAntares_1_1Application.html',1,'Antares::Application'],['../classAntares_1_1Solver_1_1Application.html',1,'Antares::Solver::Application']]],
   ['applwnd_39',['ApplWnd',['../classAntares_1_1Forms_1_1ApplWnd.html',1,'Antares::Forms']]],
   ['applyactionsdialog_40',['ApplyActionsDialog',['../classAntares_1_1Window_1_1ApplyActionsDialog.html',1,'Antares::Window']]],
   ['area_41',['area',['../classAntares_1_1Component_1_1HTMLListbox_1_1Item_1_1Area.html',1,'Antares::Component::HTMLListbox::Item::Area'],['../classAntares_1_1Data_1_1Area.html',1,'Antares::Data::Area'],['../classAntares_1_1Toolbox_1_1InputSelector_1_1Area.html',1,'Antares::Toolbox::InputSelector::Area']]],
@@ -53,7 +53,7 @@ var searchData=
   ['arealinkstranscapanumberoftsretriever_50',['AreaLinksTransCapaNumberOfTSretriever',['../classAntares_1_1Solver_1_1AreaLinksTransCapaNumberOfTSretriever.html',1,'Antares::Solver']]],
   ['arealist_51',['AreaList',['../classAntares_1_1Data_1_1AreaList.html',1,'Antares::Data']]],
   ['areanumberoftsretriever_52',['AreaNumberOfTSretriever',['../classAntares_1_1Solver_1_1AreaNumberOfTSretriever.html',1,'Antares::Solver']]],
-  ['areas_53',['areas',['../classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1Analyzer_1_1Areas.html',1,'Antares::Component::Datagrid::Renderer::Analyzer::Areas'],['../classAntares_1_1Solver_1_1Variable_1_1Areas.html',1,'Antares::Solver::Variable::Areas&lt; NextT &gt;']]],
+  ['areas_53',['areas',['../classAntares_1_1Solver_1_1Variable_1_1Areas.html',1,'Antares::Solver::Variable::Areas&lt; NextT &gt;'],['../classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1Analyzer_1_1Areas.html',1,'Antares::Component::Datagrid::Renderer::Analyzer::Areas']]],
   ['areascratchpad_54',['AreaScratchpad',['../classAntares_1_1Data_1_1AreaScratchpad.html',1,'Antares::Data']]],
   ['areastrimming_55',['areasTrimming',['../classAntares_1_1Window_1_1Options_1_1areasTrimming.html',1,'Antares::Window::Options']]],
   ['areastrimminggrid_56',['areasTrimmingGrid',['../classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1areasTrimmingGrid.html',1,'Antares::Component::Datagrid::Renderer']]],
@@ -64,8 +64,9 @@ var searchData=
   ['assettypebutton_61',['assetTypeButton',['../classAntares_1_1Window_1_1assetTypeButton.html',1,'Antares::Window']]],
   ['atimeseries_62',['ATimeSeries',['../classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ATimeSeries.html',1,'Antares::Component::Datagrid::Renderer']]],
   ['atsp_63',['ATSP',['../classAntares_1_1ATSP.html',1,'Antares']]],
-  ['availabledispatchgen_64',['AvailableDispatchGen',['../classAntares_1_1Solver_1_1Variable_1_1Economy_1_1AvailableDispatchGen.html',1,'Antares::Solver::Variable::Economy']]],
-  ['average_65',['Average',['../structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average.html',1,'Antares::Solver::Variable::R::AllYears']]],
-  ['averagedata_66',['AverageData',['../classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1AverageData.html',1,'Antares::Solver::Variable::R::AllYears']]],
-  ['averageresults_67',['averageResults',['../classaverageResults.html',1,'']]]
+  ['availabilitytsgeneratordata_64',['AvailabilityTSGeneratorData',['../classAntares_1_1TSGenerator_1_1AvailabilityTSGeneratorData.html',1,'Antares::TSGenerator']]],
+  ['availabledispatchgen_65',['AvailableDispatchGen',['../classAntares_1_1Solver_1_1Variable_1_1Economy_1_1AvailableDispatchGen.html',1,'Antares::Solver::Variable::Economy']]],
+  ['average_66',['Average',['../structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average.html',1,'Antares::Solver::Variable::R::AllYears']]],
+  ['averagedata_67',['AverageData',['../classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1AverageData.html',1,'Antares::Solver::Variable::R::AllYears']]],
+  ['averageresults_68',['averageResults',['../classaverageResults.html',1,'']]]
 ];

@@ -301,8 +301,8 @@ var annotated_dup =
         [ "PartRenewable", "classAntares_1_1Data_1_1PartRenewable.html", "classAntares_1_1Data_1_1PartRenewable" ],
         [ "PartThermal", "classAntares_1_1Data_1_1PartThermal.html", "classAntares_1_1Data_1_1PartThermal" ],
         [ "Pollutant", "classAntares_1_1Data_1_1Pollutant.html", null ],
+        [ "PreproAvailability", "classAntares_1_1Data_1_1PreproAvailability.html", "classAntares_1_1Data_1_1PreproAvailability" ],
         [ "PreproHydro", "classAntares_1_1Data_1_1PreproHydro.html", "classAntares_1_1Data_1_1PreproHydro" ],
-        [ "PreproThermal", "classAntares_1_1Data_1_1PreproThermal.html", "classAntares_1_1Data_1_1PreproThermal" ],
         [ "RenewableCluster", "classAntares_1_1Data_1_1RenewableCluster.html", "classAntares_1_1Data_1_1RenewableCluster" ],
         [ "RenewableClusterList", "classAntares_1_1Data_1_1RenewableClusterList.html", "classAntares_1_1Data_1_1RenewableClusterList" ],
         [ "SetHandlerAreas", "classAntares_1_1Data_1_1SetHandlerAreas.html", null ],
@@ -802,7 +802,8 @@ var annotated_dup =
         [ "XCast", null, [
           [ "StudyData", "classAntares_1_1TSGenerator_1_1XCast_1_1StudyData.html", "classAntares_1_1TSGenerator_1_1XCast_1_1StudyData" ],
           [ "XCast", "classAntares_1_1TSGenerator_1_1XCast_1_1XCast.html", "classAntares_1_1TSGenerator_1_1XCast_1_1XCast" ]
-        ] ]
+        ] ],
+        [ "AvailabilityTSGeneratorData", "classAntares_1_1TSGenerator_1_1AvailabilityTSGeneratorData.html", null ]
       ] ],
       [ "UnitTests", null, [
         [ "Buffer", "classAntares_1_1UnitTests_1_1Buffer.html", null ],
@@ -1128,10 +1129,10 @@ var annotated_dup =
         [ "CString", null, [
           [ "Append< CStringT, Antares::Data::CostGeneration >", "classYuni_1_1Extension_1_1CString_1_1Append_3_01CStringT_00_01Antares_1_1Data_1_1CostGeneration_01_4.html", null ],
           [ "Append< CStringT, Antares::Data::LocalTSGenerationBehavior >", "classYuni_1_1Extension_1_1CString_1_1Append_3_01CStringT_00_01Antares_1_1Data_1_1LocalTSGenerationBehavior_01_4.html", null ],
-          [ "Append< CStringT, Antares::Data::ThermalLaw >", "classYuni_1_1Extension_1_1CString_1_1Append_3_01CStringT_00_01Antares_1_1Data_1_1ThermalLaw_01_4.html", null ],
+          [ "Append< CStringT, Antares::Data::StatisticalLaw >", "classYuni_1_1Extension_1_1CString_1_1Append_3_01CStringT_00_01Antares_1_1Data_1_1StatisticalLaw_01_4.html", null ],
           [ "Into< Antares::Data::CostGeneration >", "classYuni_1_1Extension_1_1CString_1_1Into_3_01Antares_1_1Data_1_1CostGeneration_01_4.html", null ],
           [ "Into< Antares::Data::LocalTSGenerationBehavior >", "classYuni_1_1Extension_1_1CString_1_1Into_3_01Antares_1_1Data_1_1LocalTSGenerationBehavior_01_4.html", null ],
-          [ "Into< Antares::Data::ThermalLaw >", "classYuni_1_1Extension_1_1CString_1_1Into_3_01Antares_1_1Data_1_1ThermalLaw_01_4.html", null ]
+          [ "Into< Antares::Data::StatisticalLaw >", "classYuni_1_1Extension_1_1CString_1_1Into_3_01Antares_1_1Data_1_1StatisticalLaw_01_4.html", null ]
         ] ]
       ] ]
     ] ],
@@ -1334,7 +1335,6 @@ var annotated_dup =
     [ "TRANSFER_BOUND_AND_LEVEL_FLEX_DOWN_EDGE", "structTRANSFER__BOUND__AND__LEVEL__FLEX__DOWN__EDGE.html", null ],
     [ "TRANSFER_BOUND_AND_LEVEL_FLEX_UP_EDGE", "structTRANSFER__BOUND__AND__LEVEL__FLEX__UP__EDGE.html", null ],
     [ "TRANSFER_BOUND_AND_LEVEL_MARKET_EDGE", "structTRANSFER__BOUND__AND__LEVEL__MARKET__EDGE.html", null ],
-    [ "TsGeneratorSettings", "structTsGeneratorSettings.html", "structTsGeneratorSettings" ],
     [ "TSNumbersPredicate", "structTSNumbersPredicate.html", null ],
     [ "UserData", "classUserData.html", null ],
     [ "VALEURS_DE_NTC_ET_RESISTANCES", "structVALEURS__DE__NTC__ET__RESISTANCES.html", null ],

@@ -8,7 +8,7 @@ var searchData=
   ['allocation_5',['allocation',['../classAntares_1_1Data_1_1PartHydro.html#abef4d91c29b2032f5a1a00e8a05265c3',1,'Antares::Data::PartHydro']]],
   ['allowquickselect_6',['allowQuickSelect',['../classAntares_1_1Window_1_1CalendarSelect.html#ad6c507074a11fd4b4731eaaa873c05a3',1,'Antares::Window::CalendarSelect']]],
   ['allowrangeselection_7',['allowRangeSelection',['../classAntares_1_1Window_1_1CalendarSelect.html#af8f550aed980359728d4201010bffd20',1,'Antares::Window::CalendarSelect']]],
-  ['allthermal_8',['allThermal',['../structTsGeneratorSettings.html#a44bda1a5bbdcfe6a1ec55864f01f5fca',1,'TsGeneratorSettings']]],
+  ['allthermal_8',['allThermal',['../classSettings.html#a2e7a45934ee6dab5510ee27a6ea1875c',1,'Settings']]],
   ['alreadyloaded_9',['alreadyLoaded',['../classJIT_1_1Informations.html#aa5d6792c070b958e4bf49436ea0fec90',1,'JIT::Informations']]],
   ['annual_10',['annual',['../classAntares_1_1Data_1_1Correlation.html#aadcd8a077118167d8797443f92d9e5a6',1,'Antares::Data::Correlation']]],
   ['application_11',['application',['../classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1LogEntry.html#a0c2c8c961a0178fe1582789b275276fd',1,'Antares::Component::Datagrid::Renderer::LogEntry']]],

@@ -1,5 +1,6 @@
 var NAVTREEINDEX14 =
 {
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProfitByPlant.html#a8e269a4ef1773ececaa424932039d1b2":[7,0,0,12,4,4,34,2],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Pumping.html":[7,0,0,12,4,4,36],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Pumping.html#a150e0c45103f5e688239f3e0b5a29c9c":[7,0,0,12,4,4,36,4],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Pumping.html#a4b63e9974883e15ff7b106592368d893":[7,0,0,12,4,4,36,2],
@@ -248,6 +249,5 @@ var NAVTREEINDEX14 =
 "classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html#ab2b82bea22aadb135da7facc9f484e12":[7,0,0,12,4,37,3],
 "classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html#ab58a9a11e3eaa7913dde703d90b132f0":[7,0,0,12,4,37,5],
 "classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html#ab7badf12c0f2c8bd9da330b602af896a":[7,0,0,12,4,37,2],
-"classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html#ac3fbad71dbaf7b2f1631b97274bde7aa":[7,0,0,12,4,37,8],
-"classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html#ad0f6dbc54dc792ebcd0ef0cdd0b1cd78":[7,0,0,12,4,37,9]
+"classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html#ac3fbad71dbaf7b2f1631b97274bde7aa":[7,0,0,12,4,37,8]
 };

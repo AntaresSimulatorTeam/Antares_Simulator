@@ -15,7 +15,7 @@ var searchData=
   ['thermalclusterproductionforyear_12',['thermalClusterProductionForYear',['../classAntares_1_1Solver_1_1Variable_1_1State.html#ad383755782fbb9dd952c648be9fa5356',1,'Antares::Solver::Variable::State']]],
   ['thermalclustersoperatingcost_13',['thermalClustersOperatingCost',['../classAntares_1_1Solver_1_1Variable_1_1ThermalState_1_1StateForAnArea.html#a0e7f417a8ed9da6465a5733a1f6364ff',1,'Antares::Solver::Variable::ThermalState::StateForAnArea']]],
   ['thermalclustersproductions_14',['thermalClustersProductions',['../classAntares_1_1Solver_1_1Variable_1_1ThermalState_1_1StateForAnArea.html#a69e64f3ddf551f791ca1cc8e5fe850a1',1,'Antares::Solver::Variable::ThermalState::StateForAnArea']]],
-  ['thermallisttogen_15',['thermalListToGen',['../structTsGeneratorSettings.html#a1ceeb4b01cdff76701bf73cbfc150cef',1,'TsGeneratorSettings']]],
+  ['thermallisttogen_15',['thermalListToGen',['../classSettings.html#adc99eb6ef85bd312b7e1cbf7ce588343',1,'Settings']]],
   ['thermalplanttotalcount_16',['thermalPlantTotalCount',['../classAntares_1_1Data_1_1StudyRuntimeInfos.html#a8414a385abaeb4403a900dfade7523a7',1,'Antares::Data::StudyRuntimeInfos']]],
   ['thermaltsrefresh_17',['thermalTSRefresh',['../classAntares_1_1Data_1_1StudyRuntimeInfos.html#a168022ca9dc58de1f91001cb54c96887',1,'Antares::Data::StudyRuntimeInfos']]],
   ['thresholddisplayviolations_18',['thresholdDisplayViolations',['../classAntares_1_1Data_1_1AdequacyPatch_1_1CurtailmentSharing.html#a74bfb141b03961aeebbcd14201a33734',1,'Antares::Data::AdequacyPatch::CurtailmentSharing']]],

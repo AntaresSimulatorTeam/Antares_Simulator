@@ -1,5 +1,10 @@
 var NAVTREEINDEX24 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Links_1_1Statistics.html":[7,0,0,12,4,13,0],
+"structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat.html":[7,0,0,12,4,14],
+"structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_010_01_4.html":[7,0,0,12,4,15],
+"structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_011_01_4.html":[7,0,0,12,4,16],
+"structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_012_01_4.html":[7,0,0,12,4,17],
 "structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_013_01_4.html":[7,0,0,12,4,18],
 "structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_014_01_4.html":[7,0,0,12,4,19],
 "structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_015_01_4.html":[7,0,0,12,4,20],
@@ -229,16 +234,13 @@ var NAVTREEINDEX24 =
 "structTRANSFER__BOUND__AND__LEVEL__FLEX__DOWN__EDGE.html":[7,0,225],
 "structTRANSFER__BOUND__AND__LEVEL__FLEX__UP__EDGE.html":[7,0,226],
 "structTRANSFER__BOUND__AND__LEVEL__MARKET__EDGE.html":[7,0,227],
-"structTSNumbersPredicate.html":[7,0,229],
+"structTSNumbersPredicate.html":[7,0,228],
 "structTestContext.html":[7,0,214],
 "structThermalClusterStudy.html":[7,0,219],
 "structThermalIniFile.html":[7,0,220],
 "structTimeSeriesFile.html":[7,0,224],
-"structTsGeneratorSettings.html":[7,0,228],
-"structTsGeneratorSettings.html#a1ceeb4b01cdff76701bf73cbfc150cef":[7,0,228,1],
-"structTsGeneratorSettings.html#a44bda1a5bbdcfe6a1ec55864f01f5fca":[7,0,228,0],
-"structVALEURS__DE__NTC__ET__RESISTANCES.html":[7,0,231],
-"structVARIABLES__DUALES__INTERCONNEXIONS.html":[7,0,234],
+"structVALEURS__DE__NTC__ET__RESISTANCES.html":[7,0,230],
+"structVARIABLES__DUALES__INTERCONNEXIONS.html":[7,0,233],
 "structcommonFixture.html":[7,0,53],
 "structsaveFixture.html":[7,0,195],
 "study_8hxx_source.html":[8,0,0,1,0,23,0,0,0,27],
@@ -247,7 +249,5 @@ var NAVTREEINDEX24 =
 "suffix-for-area-names_8h_source.html":[8,0,0,5,0,1,0,1,2],
 "suffix-for-area-names_8hxx_source.html":[8,0,0,5,0,1,0,1,3],
 "suffix-for-cluster-names_8h_source.html":[8,0,0,5,0,1,0,1,4],
-"suffix-for-cluster-names_8hxx_source.html":[8,0,0,5,0,1,0,1,5],
-"suffix-for-constraint-names_8h_source.html":[8,0,0,5,0,1,0,1,6],
-"suffix-for-constraint-names_8hxx_source.html":[8,0,0,5,0,1,0,1,7]
+"suffix-for-cluster-names_8hxx_source.html":[8,0,0,5,0,1,0,1,5]
 };

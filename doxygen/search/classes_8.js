@@ -43,7 +43,7 @@ var searchData=
   ['interpolatewatervaluepostprocesscmd_40',['InterpolateWaterValuePostProcessCmd',['../classAntares_1_1Solver_1_1Simulation_1_1InterpolateWaterValuePostProcessCmd.html',1,'Antares::Solver::Simulation']]],
   ['into_3c_20antares_3a_3adata_3a_3acostgeneration_20_3e_41',['Into&lt; Antares::Data::CostGeneration &gt;',['../classYuni_1_1Extension_1_1CString_1_1Into_3_01Antares_1_1Data_1_1CostGeneration_01_4.html',1,'Yuni::Extension::CString']]],
   ['into_3c_20antares_3a_3adata_3a_3alocaltsgenerationbehavior_20_3e_42',['Into&lt; Antares::Data::LocalTSGenerationBehavior &gt;',['../classYuni_1_1Extension_1_1CString_1_1Into_3_01Antares_1_1Data_1_1LocalTSGenerationBehavior_01_4.html',1,'Yuni::Extension::CString']]],
-  ['into_3c_20antares_3a_3adata_3a_3athermallaw_20_3e_43',['Into&lt; Antares::Data::ThermalLaw &gt;',['../classYuni_1_1Extension_1_1CString_1_1Into_3_01Antares_1_1Data_1_1ThermalLaw_01_4.html',1,'Yuni::Extension::CString']]],
+  ['into_3c_20antares_3a_3adata_3a_3astatisticallaw_20_3e_43',['Into&lt; Antares::Data::StatisticalLaw &gt;',['../classYuni_1_1Extension_1_1CString_1_1Into_3_01Antares_1_1Data_1_1StatisticalLaw_01_4.html',1,'Yuni::Extension::CString']]],
   ['intoutf8argstranslator_44',['IntoUTF8ArgsTranslator',['../classIntoUTF8ArgsTranslator.html',1,'']]],
   ['intramodalcell_45',['intraModalCell',['../classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1intraModalCell.html',1,'Antares::Component::Datagrid::Renderer']]],
   ['intramodalconsistencychecker_46',['IntraModalConsistencyChecker',['../classAntares_1_1Solver_1_1IntraModalConsistencyChecker.html',1,'Antares::Solver']]],

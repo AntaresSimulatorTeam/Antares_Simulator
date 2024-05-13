@@ -1,5 +1,10 @@
 var NAVTREEINDEX23 =
 {
+"structAntares_1_1Memory_1_1Stored.html":[7,0,0,39,1],
+"structAntares_1_1Optimization_1_1PROBLEME__SIMPLEXE__NOMME.html":[7,0,0,10,6],
+"structAntares_1_1Optimization_1_1VariableBounds.html":[7,0,0,10,11],
+"structAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html":[7,0,0,12,1,3],
+"structAntares_1_1Solver_1_1Simulation_1_1compareHydroCostsNoises.html":[7,0,0,12,3,5],
 "structAntares_1_1Solver_1_1Simulation_1_1optRuntimeData.html":[7,0,0,12,3,19],
 "structAntares_1_1Solver_1_1Simulation_1_1setOfParallelYears.html":[7,0,0,12,3,22],
 "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1OverallCost_1_1Statistics.html":[7,0,0,12,4,0,0,0],
@@ -244,10 +249,5 @@ var NAVTREEINDEX23 =
 "structAntares_1_1Solver_1_1Variable_1_1Empty.html":[7,0,0,12,4,9],
 "structAntares_1_1Solver_1_1Variable_1_1Empty.html#aeb65c5b0db0e215d8c875a5fffadc475":[7,0,0,12,4,9,0],
 "structAntares_1_1Solver_1_1Variable_1_1IVariable_1_1Statistics.html":[7,0,0,12,4,11,0],
-"structAntares_1_1Solver_1_1Variable_1_1Join_1_1Statistics.html":[7,0,0,12,4,12,0],
-"structAntares_1_1Solver_1_1Variable_1_1Links_1_1Statistics.html":[7,0,0,12,4,13,0],
-"structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat.html":[7,0,0,12,4,14],
-"structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_010_01_4.html":[7,0,0,12,4,15],
-"structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_011_01_4.html":[7,0,0,12,4,16],
-"structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_012_01_4.html":[7,0,0,12,4,17]
+"structAntares_1_1Solver_1_1Variable_1_1Join_1_1Statistics.html":[7,0,0,12,4,12,0]
 };

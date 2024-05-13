@@ -1,5 +1,6 @@
 var NAVTREEINDEX15 =
 {
+"classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html#ad0f6dbc54dc792ebcd0ef0cdd0b1cd78":[7,0,0,12,4,37,9],
 "classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html#ad402c65d36e0295eaf960a06ac40d863":[7,0,0,12,4,37,16],
 "classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html#af40d76b1764e10de48d2d4503749ee0f":[7,0,0,12,4,37,4],
 "classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html#af451c9a90804b3d23c26748542da9047":[7,0,0,12,4,37,6],
@@ -18,6 +19,7 @@ var NAVTREEINDEX15 =
 "classAntares_1_1Statistics_1_1LogsDumper.html":[7,0,0,13,0],
 "classAntares_1_1Statistics_1_1Updater.html":[7,0,0,13,1],
 "classAntares_1_1StudyUpdateLocker.html":[7,0,0,46],
+"classAntares_1_1TSGenerator_1_1AvailabilityTSGeneratorData.html":[7,0,0,15,2],
 "classAntares_1_1TSGenerator_1_1Predicate_1_1Load.html":[7,0,0,15,0,0],
 "classAntares_1_1TSGenerator_1_1Predicate_1_1Solar.html":[7,0,0,15,0,1],
 "classAntares_1_1TSGenerator_1_1Predicate_1_1Wind.html":[7,0,0,15,0,2],
@@ -247,7 +249,5 @@ var NAVTREEINDEX15 =
 "classAntares_1_1Toolbox_1_1Spotlight_1_1ItemArea.html#a8acc4cef981892fac4e1e4292c693a54":[7,0,0,14,5,0,0],
 "classAntares_1_1Toolbox_1_1Spotlight_1_1ItemConstraint.html":[7,0,0,14,5,1],
 "classAntares_1_1Toolbox_1_1Spotlight_1_1ItemConstraint.html#a020f7921656d6476aeae7b6929fa304f":[7,0,0,14,5,1,2],
-"classAntares_1_1Toolbox_1_1Spotlight_1_1ItemConstraint.html#a78f47fdf7277a5873f48f101764140c7":[7,0,0,14,5,1,1],
-"classAntares_1_1Toolbox_1_1Spotlight_1_1ItemConstraint.html#a91bfe46ef967713b61d662ea59ba0db4":[7,0,0,14,5,1,0],
-"classAntares_1_1UnitTests_1_1Buffer.html":[7,0,0,16,0]
+"classAntares_1_1Toolbox_1_1Spotlight_1_1ItemConstraint.html#a78f47fdf7277a5873f48f101764140c7":[7,0,0,14,5,1,1]
 };

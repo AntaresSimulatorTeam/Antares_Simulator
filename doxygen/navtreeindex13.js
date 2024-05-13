@@ -1,5 +1,6 @@
 var NAVTREEINDEX13 =
 {
+"classAntares_1_1Solver_1_1Simulation_1_1HydroLevelsUpdatePostProcessCmd.html":[7,0,0,12,3,13],
 "classAntares_1_1Solver_1_1Simulation_1_1ISimulation.html":[7,0,0,12,3,16],
 "classAntares_1_1Solver_1_1Simulation_1_1ISimulation.html#a0672927602d9cb0a18262b6f3352c8b8":[7,0,0,12,3,16,6],
 "classAntares_1_1Solver_1_1Simulation_1_1ISimulation.html#a2be5eb8d41a753544ee76677a61fe8d7":[7,0,0,12,3,16,3],
@@ -248,6 +249,5 @@ var NAVTREEINDEX13 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProfitByPlant.html":[7,0,0,12,4,4,34],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProfitByPlant.html#a51e384092f5e6524864eaccfd1c4471a":[7,0,0,12,4,4,34,4],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProfitByPlant.html#a55eee7f9b46c0d57256e7813b03f6309":[7,0,0,12,4,4,34,3],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProfitByPlant.html#a7dc7bb7ebf79b56da46e957a26209413":[7,0,0,12,4,4,34,1],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProfitByPlant.html#a8e269a4ef1773ececaa424932039d1b2":[7,0,0,12,4,4,34,2]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProfitByPlant.html#a7dc7bb7ebf79b56da46e957a26209413":[7,0,0,12,4,4,34,1]
 };
