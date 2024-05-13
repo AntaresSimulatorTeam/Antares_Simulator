@@ -121,6 +121,7 @@ BOOST_AUTO_TEST_CASE(BC_timeseries_numbers_store_values) {
     Antares::Solver::TimeSeriesNumbers::Generate(*study);
 
     auto& tsNumbers = study->bindingConstraintsGroups["test1"]->timeseriesNumbers;
+    tsNumbers.reset(1, 2);
     tsNumbers[0] = 0;
     tsNumbers[1] = 1;
 
