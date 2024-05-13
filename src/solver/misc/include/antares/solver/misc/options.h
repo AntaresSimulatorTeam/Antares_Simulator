@@ -22,9 +22,10 @@
 #define __SOLVER_MISC_GETOPT_H__
 
 #include <memory>
+
 #include <yuni/yuni.h>
-#include <yuni/core/string.h>
 #include <yuni/core/getopt.h>
+#include <yuni/core/string.h>
 
 #include <antares/study/study.h>
 
@@ -39,7 +40,7 @@ public:
     //! Name of the simulation
     Yuni::CString<150, false> simulationName;
     //! Comment file
-    YString commentFile;
+    std::string commentFile;
 
     //! Simplex optimizatio range
     Yuni::CString<32, false> simplexOptimRange;

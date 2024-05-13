@@ -40,5 +40,7 @@ void MaxPumping::add(int pays)
         builder.lessThan().build();
     }
     else
+    {
         data.NumeroDeContrainteMaxPompage[pays] = -1;
+    }
 }

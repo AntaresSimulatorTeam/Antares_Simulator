@@ -23,6 +23,7 @@
 //
 
 #include "antares/study/scenario-builder/HydroTSNumberData.h"
+
 #include "antares/study/scenario-builder/applyToMatrix.hxx"
 
 namespace Antares::Data::ScenarioBuilder
@@ -62,4 +63,4 @@ bool hydroTSNumberData::apply(Study& study)
     return ret;
 }
 
-}
+} // namespace Antares::Data::ScenarioBuilder

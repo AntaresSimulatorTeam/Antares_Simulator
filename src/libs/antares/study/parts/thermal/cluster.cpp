@@ -34,6 +34,7 @@
 #include <antares/logs/logs.h>
 #include <antares/solver/ts-generator/law.h>
 #include <antares/utils/utils.h>
+#include "antares/study/parts/thermal/cluster.h"
 #include "antares/study/study.h"
 
 using namespace Yuni;
@@ -478,6 +479,7 @@ void Data::ThermalCluster::reset()
     {
         prepro = new PreproAvailability(id(), unitCount);
     }
+
     prepro->reset();
     ecoInput.reset();
 }

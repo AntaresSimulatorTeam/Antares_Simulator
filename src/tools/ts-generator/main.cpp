@@ -169,7 +169,7 @@ int main(int argc, char* argv[])
     }
 
     study->initializeRuntimeInfos();
-    // Force the writing of generated TS into output/YYYYMMDD-HHSSeco/ts-generator/thermal
+    // Force the writing of generated TS into output/YYYYMMDD-HHSSeco/ts-generator/thermal[/mc-0]
     study->parameters.timeSeriesToArchive |= Antares::Data::timeSeriesThermal;
 
     try
@@ -181,12 +181,12 @@ int main(int argc, char* argv[])
         Antares::logs.error() << ex.what();
     }
 
-    Benchmarking::NullDurationCollector nullDurationCollector;
+    Benchmarking::DurationCollector durationCollector;
 
     auto resultWriter = Solver::resultWriterFactory(Data::ResultFormat::legacyFilesDirectories,
                                                     study->folderOutput,
                                                     nullptr,
-                                                    nullDurationCollector);
+                                                    durationCollector);
 
     const auto thermalSavePath = std::filesystem::path("ts-generator") / "thermal";
     const auto linksSavePath = std::filesystem::path("ts-generator") / "links";

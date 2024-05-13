@@ -163,6 +163,7 @@ int GeneratorTempData::durationGenerator(Data::StatisticalLaw law,
     }
 
     double rndnumber = rndgenerator.next();
+
     switch (law)
     {
     case Data::LawUniform:

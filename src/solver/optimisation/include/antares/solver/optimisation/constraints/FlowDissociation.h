@@ -30,16 +30,16 @@ struct FlowDissociationData
     const std::vector<int>& PaysExtremiteDeLInterconnexion;
 };
 
-
 /*!
  * represent 'Flow Dissociation' constraint type
  */
 
-class FlowDissociation : private ConstraintFactory
+class FlowDissociation: private ConstraintFactory
 {
 public:
-    FlowDissociation(ConstraintBuilder& builder, FlowDissociationData& data) :
-     ConstraintFactory(builder), data(data)
+    FlowDissociation(ConstraintBuilder& builder, FlowDissociationData& data):
+        ConstraintFactory(builder),
+        data(data)
     {
     }
 

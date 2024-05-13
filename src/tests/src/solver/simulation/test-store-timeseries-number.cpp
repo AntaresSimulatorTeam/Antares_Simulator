@@ -21,26 +21,28 @@
 //
 // Created by marechaljas on 15/03/23.
 //
-#define BOOST_TEST_MODULE store-timeseries-number
+#define BOOST_TEST_MODULE store - timeseries - number
 #define BOOST_TEST_DYN_LINK
 #define WIN32_LEAN_AND_MEAN
 
-
-#include <boost/test/unit_test.hpp>
+#include <files-system.h>
 #include <filesystem>
 #include <fstream>
-#include "antares/solver/simulation/timeseries-numbers.h"
-#include "antares/solver/simulation/BindingConstraintsTimeSeriesNumbersWriter.h"
-#include <files-system.h>
-#include <antares/writer/writer_factory.h>
-#include <antares/writer/result_format.h>
+
+#include <boost/test/unit_test.hpp>
+
 #include <antares/benchmarking/DurationCollector.h>
+#include <antares/writer/result_format.h>
+#include <antares/writer/writer_factory.h>
+#include "antares/solver/simulation/BindingConstraintsTimeSeriesNumbersWriter.h"
+#include "antares/solver/simulation/timeseries-numbers.h"
 
 using namespace Antares::Solver;
 using namespace Antares::Data;
 namespace fs = std::filesystem;
 
-void initializeStudy(Study &study) {
+void initializeStudy(Study& study)
+{
     study.parameters.derated = false;
 
     study.runtime = new StudyRuntimeInfos();
@@ -55,7 +57,8 @@ void initializeStudy(Study &study) {
     study.parameters.timeSeriesToRefresh = 0;
 }
 
-BOOST_AUTO_TEST_CASE(BC_group_TestGroup_has_output_file) {
+BOOST_AUTO_TEST_CASE(BC_group_TestGroup_has_output_file)
+{
     auto study = std::make_shared<Study>();
     study->parameters.storeTimeseriesNumbers = true;
 
@@ -64,9 +67,11 @@ BOOST_AUTO_TEST_CASE(BC_group_TestGroup_has_output_file) {
 
     auto working_tmp_dir = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
 
-    Benchmarking::NullDurationCollector nullDurationCollector;
-    auto resultWriter = resultWriterFactory(ResultFormat::legacyFilesDirectories, working_tmp_dir.string().c_str(),
-                                              nullptr, nullDurationCollector);
+    Benchmarking::DurationCollector durationCollector;
+    auto resultWriter = resultWriterFactory(ResultFormat::legacyFilesDirectories,
+                                            working_tmp_dir.string().c_str(),
+                                            nullptr,
+                                            durationCollector);
     fs::path bc_path = working_tmp_dir / "ts-numbers" / "bindingconstraints" / "TestGroup.txt";
 
     initializeStudy(*study);
@@ -77,7 +82,8 @@ BOOST_AUTO_TEST_CASE(BC_group_TestGroup_has_output_file) {
     BOOST_CHECK_EQUAL(file_exists, true);
 }
 
-BOOST_AUTO_TEST_CASE(BC_output_ts_numbers_file_for_each_group) {
+BOOST_AUTO_TEST_CASE(BC_output_ts_numbers_file_for_each_group)
+{
     auto study = std::make_shared<Study>();
     study->parameters.storeTimeseriesNumbers = true;
     study->bindingConstraintsGroups.add("test1");
@@ -87,9 +93,11 @@ BOOST_AUTO_TEST_CASE(BC_output_ts_numbers_file_for_each_group) {
 
     auto working_tmp_dir = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
 
-    Benchmarking::NullDurationCollector nullDurationCollector;
-    auto resultWriter = resultWriterFactory(ResultFormat::legacyFilesDirectories, working_tmp_dir.string().c_str(),
-                                              nullptr, nullDurationCollector);
+    Benchmarking::DurationCollector durationCollector;
+    auto resultWriter = resultWriterFactory(ResultFormat::legacyFilesDirectories,
+                                            working_tmp_dir.string().c_str(),
+                                            nullptr,
+                                            durationCollector);
 
     initializeStudy(*study);
     TimeSeriesNumbers::Generate(*study);
@@ -102,20 +110,23 @@ BOOST_AUTO_TEST_CASE(BC_output_ts_numbers_file_for_each_group) {
     BOOST_CHECK_EQUAL(fs::exists(test2_path), true);
 }
 
-BOOST_AUTO_TEST_CASE(BC_timeseries_numbers_store_values) {
+BOOST_AUTO_TEST_CASE(BC_timeseries_numbers_store_values)
+{
     auto study = std::make_shared<Study>();
     study->parameters.storeTimeseriesNumbers = true;
     auto group = study->bindingConstraintsGroups.add("test1");
     auto bc = std::make_shared<BindingConstraint>();
-    bc->RHSTimeSeries().resize(10,10);
+    bc->RHSTimeSeries().resize(10, 10);
     group->add(bc);
     study->bindingConstraintsGroups["test1"]->timeseriesNumbers.resize(1, 1);
 
     auto working_tmp_dir = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
 
-    Benchmarking::NullDurationCollector nullDurationCollector;
-    auto resultWriter = resultWriterFactory(ResultFormat::legacyFilesDirectories, working_tmp_dir.string().c_str(),
-                                              nullptr, nullDurationCollector);
+    Benchmarking::DurationCollector durationCollector;
+    auto resultWriter = resultWriterFactory(ResultFormat::legacyFilesDirectories,
+                                            working_tmp_dir.string().c_str(),
+                                            nullptr,
+                                            durationCollector);
 
     initializeStudy(*study);
     TimeSeriesNumbers::Generate(*study);
@@ -132,8 +143,8 @@ BOOST_AUTO_TEST_CASE(BC_timeseries_numbers_store_values) {
     BOOST_CHECK_EQUAL(fs::exists(test1_path), true);
     Matrix<uint32_t> out;
     out.loadFromCSVFile(test1_path.string());
-    BOOST_CHECK_EQUAL(series[0][0]+1, out[0][0]);
-    BOOST_CHECK_EQUAL(series[0][1]+1, out[0][1]);
-    BOOST_CHECK_EQUAL(series[1][0]+1, out[1][0]);
-    BOOST_CHECK_EQUAL(series[1][1]+1, out[1][1]);
+    BOOST_CHECK_EQUAL(series[0][0] + 1, out[0][0]);
+    BOOST_CHECK_EQUAL(series[0][1] + 1, out[0][1]);
+    BOOST_CHECK_EQUAL(series[1][0] + 1, out[1][0]);
+    BOOST_CHECK_EQUAL(series[1][1] + 1, out[1][1]);
 }

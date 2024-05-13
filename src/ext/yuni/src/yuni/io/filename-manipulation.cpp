@@ -305,7 +305,7 @@ void parent_path_impl(Clob& out, const AnyString& path, bool systemDependant)
 }
 
 template<class StringT>
-static inline void parent_path(StringT& out, const AnyString& path, bool systemDependant)
+static inline void ExtractFileNameImpl(StringT& out, const AnyString& path, bool systemDependant)
 {
     AnyString::size_type pos = (systemDependant)
                                  ? path.find_last_of(IO::Constant<char>::Separator)
@@ -318,12 +318,12 @@ static inline void parent_path(StringT& out, const AnyString& path, bool systemD
 
 void ExtractFileName(String& out, const AnyString& path, bool systemDependant)
 {
-    parent_path(out, path, systemDependant);
+    ExtractFileNameImpl(out, path, systemDependant);
 }
 
 void ExtractFileName(Clob& out, const AnyString& path, bool systemDependant)
 {
-    parent_path(out, path, systemDependant);
+    ExtractFileNameImpl(out, path, systemDependant);
 }
 
 template<class StringT>

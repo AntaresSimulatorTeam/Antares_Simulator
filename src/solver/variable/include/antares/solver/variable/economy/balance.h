@@ -21,8 +21,8 @@
 #ifndef __SOLVER_VARIABLE_ECONOMY_BALANCE_H__
 #define __SOLVER_VARIABLE_ECONOMY_BALANCE_H__
 
-#include "antares/solver/variable/variable.h"
 #include "antares/solver/simulation/sim_extern_variables_globales.h"
+#include "antares/solver/variable/variable.h"
 
 namespace Antares
 {
@@ -39,11 +39,13 @@ struct VCardBalance
     {
         return "BALANCE";
     }
+
     //! Unit
     static std::string Unit()
     {
         return "MWh";
     }
+
     //! The short description of the variable
     static std::string Description()
     {
@@ -96,7 +98,7 @@ struct VCardBalance
 ** \brief Marginal Balance
 */
 template<class NextT = Container::EndOfList>
-class Balance : public Variable::IVariable<Balance<NextT>, NextT, VCardBalance>
+class Balance: public Variable::IVariable<Balance<NextT>, NextT, VCardBalance>
 {
 public:
     //! Type of the next static variable
@@ -122,11 +124,11 @@ public:
     {
         enum
         {
-            count
-            = ((VCardType::categoryDataLevel & CDataLevel && VCardType::categoryFileLevel & CFile)
-                 ? (NextType::template Statistics<CDataLevel, CFile>::count
-                    + VCardType::columnCount * ResultsType::count)
-                 : NextType::template Statistics<CDataLevel, CFile>::count),
+            count = ((VCardType::categoryDataLevel & CDataLevel
+                      && VCardType::categoryFileLevel & CFile)
+                       ? (NextType::template Statistics<CDataLevel, CFile>::count
+                          + VCardType::columnCount * ResultsType::count)
+                       : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
 
@@ -146,7 +148,9 @@ public:
 
         pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+        {
             pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);
+        }
 
         bilanPays = nullptr;
         pInterco = nullptr;
@@ -241,15 +245,15 @@ public:
         while (pInterco[numSpace] >= 0)
         {
             bilanPays[numSpace] += state.ntc.ValeurDuFlux[pInterco[numSpace]];
-            pInterco[numSpace]
-              = state.problemeHebdo->IndexSuivantIntercoOrigine[pInterco[numSpace]];
+            pInterco[numSpace] = state.problemeHebdo
+                                   ->IndexSuivantIntercoOrigine[pInterco[numSpace]];
         }
         pInterco[numSpace] = state.problemeHebdo->IndexDebutIntercoExtremite[state.area->index];
         while (pInterco[numSpace] >= 0)
         {
             bilanPays[numSpace] -= state.ntc.ValeurDuFlux[pInterco[numSpace]];
-            pInterco[numSpace]
-              = state.problemeHebdo->IndexSuivantIntercoExtremite[pInterco[numSpace]];
+            pInterco[numSpace] = state.problemeHebdo
+                                   ->IndexSuivantIntercoExtremite[pInterco[numSpace]];
         }
 
         pValuesForTheCurrentYear[numSpace][state.hourInTheYear] = bilanPays[numSpace];
@@ -277,8 +281,8 @@ public:
             // Write the data for the current year
             results.variableCaption = VCardType::Caption();
             results.variableUnit = VCardType::Unit();
-            pValuesForTheCurrentYear[numSpace].template buildAnnualSurveyReport<VCardType>(
-              results, fileLevel, precision);
+            pValuesForTheCurrentYear[numSpace]
+              .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
         }
     }
 

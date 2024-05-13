@@ -21,8 +21,8 @@
 #ifndef __SOLVER_VARIABLE_ECONOMY_TimeSeriesValuesHydro_H__
 #define __SOLVER_VARIABLE_ECONOMY_TimeSeriesValuesHydro_H__
 
-#include "antares/solver/variable/variable.h"
 #include "antares/solver/simulation/sim_extern_variables_globales.h"
+#include "antares/solver/variable/variable.h"
 
 namespace Antares
 {
@@ -39,6 +39,7 @@ struct VCardTimeSeriesValuesHydro
     {
         return "H. ROR";
     }
+
     //! Unit
     static std::string Unit()
     {
@@ -98,7 +99,7 @@ struct VCardTimeSeriesValuesHydro
 */
 template<class NextT = Container::EndOfList>
 class TimeSeriesValuesHydro
- : public Variable::IVariable<TimeSeriesValuesHydro<NextT>, NextT, VCardTimeSeriesValuesHydro>
+    : public Variable::IVariable<TimeSeriesValuesHydro<NextT>, NextT, VCardTimeSeriesValuesHydro>
 {
 public:
     //! Type of the next static variable
@@ -124,11 +125,11 @@ public:
     {
         enum
         {
-            count
-            = ((VCardType::categoryDataLevel & CDataLevel && VCardType::categoryFileLevel & CFile)
-                 ? (NextType::template Statistics<CDataLevel, CFile>::count
-                    + VCardType::columnCount * ResultsType::count)
-                 : NextType::template Statistics<CDataLevel, CFile>::count),
+            count = ((VCardType::categoryDataLevel & CDataLevel
+                      && VCardType::categoryFileLevel & CFile)
+                       ? (NextType::template Statistics<CDataLevel, CFile>::count
+                          + VCardType::columnCount * ResultsType::count)
+                       : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
 
@@ -145,13 +146,17 @@ public:
 
         pFatalValues = new Matrix<>::ColumnType*[pNbYearsParallel];
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+        {
             pFatalValues[numSpace] = NULL;
+        }
 
         InitializeResultsFromStudy(AncestorType::pResults, study);
 
         pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+        {
             pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);
+        }
 
         // Next
         NextType::initializeFromStudy(study);
@@ -179,7 +184,9 @@ public:
     void simulationBegin()
     {
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+        {
             pValuesForTheCurrentYear[numSpace].reset();
+        }
         // Next
         NextType::simulationBegin();
     }
@@ -237,8 +244,8 @@ public:
 
     void hourForEachArea(State& state, unsigned int numSpace)
     {
-        pValuesForTheCurrentYear[numSpace][state.hourInTheYear]
-          = (*pFatalValues[numSpace])[state.hourInTheYear];
+        pValuesForTheCurrentYear[numSpace][state.hourInTheYear] = (*pFatalValues[numSpace])
+          [state.hourInTheYear];
         // Next variable
         NextType::hourForEachArea(state, numSpace);
     }
@@ -263,8 +270,8 @@ public:
             // Write the data for the current year
             results.variableCaption = VCardType::Caption();
             results.variableUnit = VCardType::Unit();
-            pValuesForTheCurrentYear[numSpace].template buildAnnualSurveyReport<VCardType>(
-              results, fileLevel, precision);
+            pValuesForTheCurrentYear[numSpace]
+              .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
         }
     }
 

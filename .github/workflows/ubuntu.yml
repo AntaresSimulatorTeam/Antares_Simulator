@@ -145,7 +145,7 @@ jobs:
 
     - name: Upload logs for failed tests
       if: ${{ failure() }}
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: test-log
         path: ${{ github.workspace }}/_build/Testing/Temporary/LastTest.log
@@ -286,13 +286,15 @@ jobs:
            rm -rf install
 
     - name: Installer archive upload push
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
+        name: targz
         path: _build/*.tar.gz
 
     - name: Installer deb upload push
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
+        name: deb
         path: _build/*.deb
 
 

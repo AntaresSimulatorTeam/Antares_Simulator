@@ -20,6 +20,7 @@
 */
 
 #include "antares/study/fwd.h"
+
 #include <algorithm>
 
 using namespace Yuni;
@@ -98,15 +99,21 @@ const char* SeedToID(SeedIndex seed)
 InitialReservoirLevels StringToInitialReservoirLevels(const AnyString& text)
 {
     if (!text)
+    {
         return irlUnknown;
+    }
 
     CString<24, false> s = text;
     s.trim();
     s.toLower();
     if (s == "cold start")
+    {
         return irlColdStart;
+    }
     if (s == "hot start")
+    {
         return irlHotStart;
+    }
 
     return irlUnknown;
 }
@@ -129,15 +136,21 @@ const char* InitialReservoirLevelsToCString(InitialReservoirLevels iniLevels)
 HydroHeuristicPolicy StringToHydroHeuristicPolicy(const AnyString& text)
 {
     if (!text)
+    {
         return hhpUnknown;
+    }
 
     CString<24, false> s = text;
     s.trim();
     s.toLower();
     if (s == "accommodate rule curves")
+    {
         return hhpAccommodateRuleCurves;
+    }
     if (s == "maximize generation")
+    {
         return hhpMaximizeGeneration;
+    }
 
     return hhpUnknown;
 }
@@ -160,15 +173,21 @@ const char* HydroHeuristicPolicyToCString(HydroHeuristicPolicy hhPolicy)
 HydroPricingMode StringToHydroPricingMode(const AnyString& text)
 {
     if (!text)
+    {
         return hpUnknown;
+    }
 
     CString<24, false> s = text;
     s.trim();
     s.toLower();
     if (s == "fast")
+    {
         return hpHeuristic;
+    }
     if (s == "accurate") // mixed integer linear problem
+    {
         return hpMILP;
+    }
 
     return hpUnknown;
 }
@@ -190,17 +209,25 @@ const char* HydroPricingModeToCString(HydroPricingMode hpm)
 PowerFluctuations StringToPowerFluctuations(const AnyString& text)
 {
     if (!text)
+    {
         return lssUnknown;
+    }
 
     CString<24, false> s = text;
     s.trim();
     s.toLower();
     if (s == "minimize ramping")
+    {
         return lssMinimizeRamping;
+    }
     if (s == "free modulations")
+    {
         return lssFreeModulations;
+    }
     if (s == "minimize excursions")
+    {
         return lssMinimizeExcursions;
+    }
 
     return lssUnknown;
 }
@@ -224,15 +251,21 @@ const char* PowerFluctuationsToCString(PowerFluctuations fluctuations)
 SheddingPolicy StringToSheddingPolicy(const AnyString& text)
 {
     if (!text)
+    {
         return shpUnknown;
+    }
 
     CString<24, false> s = text;
     s.trim();
     s.toLower();
     if (s == "shave peaks")
+    {
         return shpShavePeaks;
+    }
     if (s == "minimize duration")
+    {
         return shpMinimizeDuration;
+    }
 
     return shpUnknown;
 }
@@ -254,17 +287,25 @@ const char* SheddingPolicyToCString(SheddingPolicy strategy)
 UnitCommitmentMode StringToUnitCommitmentMode(const AnyString& text)
 {
     if (!text)
+    {
         return ucUnknown;
+    }
 
     CString<24, false> s = text;
     s.trim();
     s.toLower();
     if (s == "fast")
+    {
         return ucHeuristicFast;
+    }
     if (s == "accurate")
+    {
         return ucHeuristicAccurate;
+    }
     if (s == "milp") // mixed integer linear problem
+    {
         return ucMILP;
+    }
 
     return ucUnknown;
 }
@@ -288,21 +329,33 @@ const char* UnitCommitmentModeToCString(UnitCommitmentMode ucommitment)
 NumberOfCoresMode StringToNumberOfCoresMode(const AnyString& text)
 {
     if (!text)
+    {
         return ncUnknown;
+    }
 
     CString<24, false> s = text;
     s.trim();
     s.toLower();
     if (s == "minimum")
+    {
         return ncMin;
+    }
     if (s == "low")
+    {
         return ncLow;
+    }
     if (s == "medium")
+    {
         return ncAvg;
+    }
     if (s == "high")
+    {
         return ncHigh;
+    }
     if (s == "maximum")
+    {
         return ncMax;
+    }
 
     return ncUnknown;
 }
@@ -370,13 +423,21 @@ mpsExportStatus stringToMPSexportStatus(const AnyString& value)
     v.toLower();
     if (v == "both-optims"
         || v == "true") // Case "true" : for compatibily with older study versions
+    {
         return mpsExportStatus::EXPORT_BOTH_OPTIMS;
+    }
     if (v == "none" || v == "false") // Case "false" : for compatibily with older study versions
+    {
         return mpsExportStatus::NO_EXPORT;
+    }
     if (v == "optim-1")
+    {
         return mpsExportStatus::EXPORT_FIRST_OPTIM;
+    }
     if (v == "optim-2")
+    {
         return mpsExportStatus::EXPORT_SECOND_OPTIM;
+    }
 
     return mpsExportStatus::UNKNOWN_EXPORT;
 }
@@ -490,4 +551,3 @@ std::string styleToString(const StyleType& style)
 }
 
 } // namespace Antares::Data
-
