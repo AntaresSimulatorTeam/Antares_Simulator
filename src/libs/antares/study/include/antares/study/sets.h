@@ -263,22 +263,6 @@ public:
 
     T& operator[](uint i);
     const T& operator[](uint i) const;
-    /*
-                    void changeTextFile(YString filename) {
-                            if (IO::File::LoadFromFile(pFileContents, filename)) {
-                                    pFileContents = NULL;
-                            }
-                    }
-
-                    YString getFileContents() {
-                            if (pFileContents!=NULL) {
-                                    YString ret;
-                                    ret << pFileContents;
-                                    return ret;
-                            }
-                            else return NULL;
-                    }
-                    */
 
 private:
     //! All groups
