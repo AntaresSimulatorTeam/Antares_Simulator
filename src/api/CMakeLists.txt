@@ -34,7 +34,7 @@ target_link_libraries(solver_api
         Antares::study-loader
         Antares::file-tree-study-loader
         antares-solver-simulation
-²        PUBLIC
+        PUBLIC
         Antares::lps
 )
 install(DIRECTORY include/antares
