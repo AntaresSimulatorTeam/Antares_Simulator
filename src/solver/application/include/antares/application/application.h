@@ -72,11 +72,6 @@ public:
 
     void writeExectutionInfo();
 
-    Data::Study* study() const
-    {
-        return pStudy.get();
-    }
-
     std::unique_ptr<Data::Study> acquireStudy()
     {
         return std::move(pStudy);
