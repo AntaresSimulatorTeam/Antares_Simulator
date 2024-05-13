@@ -31,17 +31,6 @@
 using namespace Yuni;
 using namespace Antares;
 
-namespace // anonymous
-{
-struct TSNumbersPredicate
-{
-    uint32_t operator()(uint32_t value) const
-    {
-        return value + 1;
-    }
-};
-} // namespace
-
 #define SEP (IO::Separator)
 
 namespace
@@ -184,13 +173,12 @@ bool AreaLink::loadTimeSeries(const Study& study, const AnyString& folder)
 void AreaLink::storeTimeseriesNumbers(Solver::IResultWriter& writer) const
 {
     Clob path;
-    TSNumbersPredicate predicate;
     std::string buffer;
 
     path << "ts-numbers" << SEP << DIRECTORY_NAME_FOR_TRANSMISSION_CAPACITIES << SEP << from->id
          << SEP << with->id << ".txt";
 
-    timeseriesNumbers.saveToBuffer(buffer, 0, true, predicate, true);
+    timeseriesNumbers.saveToBuffer(buffer);
     writer.addEntryFromBuffer(path.c_str(), buffer);
 }
 

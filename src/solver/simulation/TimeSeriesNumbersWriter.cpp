@@ -48,7 +48,7 @@ namespace // anonymous
 
 // TODO : remove duplication
 static void genericStoreTimeseriesNumbers(Solver::IResultWriter& writer,
-                                          const Matrix<uint32_t>& timeseriesNumbers,
+                                          const Data::TimeSeriesNumbers& timeseriesNumbers,
                                           const std::string& id,
                                           const std::string& directory)
 {
@@ -57,12 +57,7 @@ static void genericStoreTimeseriesNumbers(Solver::IResultWriter& writer,
     path.replace_extension("txt");
 
     std::string buffer;
-    timeseriesNumbers.saveToBuffer(buffer,
-                                   0,         // precision
-                                   true,      // print_dimensions
-                                   predicate, // predicate
-                                   true);     // save even if all coeffs are zero
-
+    timeseriesNumbers.saveToBuffer(buffer);
     writer.addEntryFromBuffer(path.string(), buffer);
 }
 

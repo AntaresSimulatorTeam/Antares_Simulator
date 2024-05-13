@@ -25,6 +25,7 @@
 #pragma once
 
 #include "TSnumberData.h"
+#include <antares/series/series.h>
 
 namespace Antares::Data::ScenarioBuilder
 {

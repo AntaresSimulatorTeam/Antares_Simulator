@@ -45,8 +45,8 @@ struct Fixture
     Fixture() : ts(tsnum)
     {
         ts.reset(1, HOURS_PER_YEAR);
-        tsnum.resize(1, 1);
-        tsnum[0][0] = 0;
+        tsnum.reset(1, 1);
+        tsnum[0] = 0;
     }
     TimeSeriesNumbers tsnum;
     TimeSeries ts;
@@ -73,9 +73,9 @@ void Fixture::fillColumnReverse(unsigned int idx)
 
 void Fixture::fillTsnum()
 {
-    tsnum.resize(1, ts.timeSeries.width);
+    tsnum.reset(1, ts.timeSeries.width);
     for (unsigned int i = 0; i < ts.timeSeries.width; i++)
-        tsnum[0][i] = i;
+        tsnum[i] = i;
 }
 
 class FixtureMultipleTS
@@ -108,9 +108,9 @@ BOOST_AUTO_TEST_SUITE(timeseries_tests)
 
 BOOST_FIXTURE_TEST_CASE(getSeriesIndex, Fixture)
 {
-    tsnum.resize(1, 10);
+    tsnum.reset(1, 10);
     for (unsigned int i = 0; i < 10; i++)
-        tsnum[0][i] = i;
+        tsnum[i] = i;
 
     ts.resize(2, HOURS_PER_YEAR);
     for (unsigned int i = 0; i < 10; i++)
@@ -174,8 +174,8 @@ BOOST_FIXTURE_TEST_CASE(getCoefficientSpecificData, Fixture)
 {
     ts.resize(2, 2);
     fillTsnum();
-    tsnum[0][0] = 1;
-    tsnum[0][1] = 0;
+    tsnum[0] = 1;
+    tsnum[1] = 0;
     ts.timeSeries[0][0] = 12.5;
     ts.timeSeries[0][1] = 74.74;
     ts.timeSeries[1][0] = -57;
@@ -192,9 +192,9 @@ BOOST_FIXTURE_TEST_CASE(getCoefficient_SingleColumn, Fixture)
     ts.resize(1, 2);
 
     // Here, we provide 2 time series numbers...
-    tsnum.resize(1, 2);
+    tsnum.reset(1, 2);
     for (unsigned int i = 0; i < 2; i++)
-        tsnum[0][i] = i;
+        tsnum[i] = i;
 
     // ...but only one column
     ts.timeSeries[0][0] = 12.5;

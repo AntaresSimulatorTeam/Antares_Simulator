@@ -61,6 +61,47 @@ static std::string errorMessage(const std::map<std::string, const TimeSeries*>& 
     return msg.str();
 }
 
+uint TimeSeriesNumbers::height() const {
+    return tsNumbers.height;
+}
+
+uint32_t TimeSeriesNumbers::operator[](uint y) const
+{
+    return tsNumbers[0][y];
+}
+
+uint32_t& TimeSeriesNumbers::operator[](uint y)
+{
+    return tsNumbers[0][y];
+}
+
+void TimeSeriesNumbers::reset(uint w, uint h)
+{
+    tsNumbers.reset(w, h);
+}
+
+namespace // anonymous
+{
+struct TSNumbersPredicate
+{
+    uint32_t operator()(uint32_t value) const
+    {
+        return value + 1;
+    }
+};
+} // namespace
+
+void TimeSeriesNumbers::clear()
+{
+    tsNumbers.clear();
+}
+
+void TimeSeriesNumbers::saveToBuffer(std::string& data) const
+{
+    static TSNumbersPredicate predicate;
+    tsNumbers.saveToBuffer(data, 0, true, predicate, true);
+}
+
 std::optional<std::string> TimeSeriesNumbers::checkSeriesNumberOfColumnsConsistency() const
 {
     std::vector<uint> width;
@@ -123,7 +164,7 @@ uint32_t TimeSeries::getSeriesIndex(uint32_t year) const
     if (numberOfColumns() == 1)
         return 0;
 
-    return timeseriesNumbers[0][year];
+    return timeseriesNumbers[year];
 }
 
 double* TimeSeries::operator[](uint32_t index)

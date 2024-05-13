@@ -147,7 +147,7 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex)
 
 void State::initFromThermalClusterIndexProduction(const uint clusterAreaWideIndex)
 {
-    uint serieIndex = thermalCluster->series.timeseriesNumbers[0][this->year];
+    uint serieIndex = thermalCluster->series.timeseriesNumbers[this->year];
 
     if (thermal[area->index].thermalClustersProductions[clusterAreaWideIndex] > 0.)
     {
@@ -275,7 +275,7 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex)
         if (thermalClusterProduction <= 0.)
             continue;
 
-        uint serieIndex = currentCluster->series.timeseriesNumbers[0][this->year];
+        uint serieIndex = currentCluster->series.timeseriesNumbers[this->year];
         thermalClusterOperatingCostForYear[h]
           = thermalClusterProduction * currentCluster->getOperatingCost(serieIndex, h);
 

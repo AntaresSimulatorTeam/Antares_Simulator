@@ -155,7 +155,7 @@ void updatingAnnualFinalHydroLevel(const Data::AreaList& areas, PROBLEME_HEBDO& 
 */
 int retrieveAverageNTC(const Data::Study& study,
                        const Matrix<>& capacities,
-                       const Matrix<uint32_t>& tsNumbers,
+                       const Data::TimeSeriesNumbers& tsNumbers,
                        std::vector<double>& avg);
 
 void finalizeOptimizationStatistics(PROBLEME_HEBDO& problem,
