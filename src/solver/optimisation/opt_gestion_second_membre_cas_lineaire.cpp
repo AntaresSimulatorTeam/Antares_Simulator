@@ -361,7 +361,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
         }
     }
 
-    if (problemeHebdo->OptimisationAvecCoutsDeDemarrage)
+    if (problemeHebdo->OptimisationNotFastMode)
     {
         OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(
           problemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle);

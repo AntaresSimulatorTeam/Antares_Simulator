@@ -40,7 +40,7 @@ void PRunningUnits::add(int pays, int reserve, int cluster, int pdt, bool isUpRe
     }
     else
     {
-        builder.data.NbTermesContraintesPourLesReserves += 1;
+        builder.data.NbTermesContraintesPourLesReserves += 2;
         builder.data.nombreDeContraintes++;
     }
 }

@@ -116,7 +116,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     problem.solverLogs = study.parameters.solverLogs;
     problem.exportMPSOnError = Data::exportMPS(parameters.include.unfeasibleProblemBehavior);
 
-    problem.OptimisationAvecCoutsDeDemarrage
+    problem.OptimisationNotFastMode
       = (study.parameters.unitCommitment.ucMode
          != Antares::Data::UnitCommitmentMode::ucHeuristicFast);
 

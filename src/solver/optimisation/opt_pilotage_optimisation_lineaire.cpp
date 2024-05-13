@@ -71,7 +71,7 @@ bool OPT_PilotageOptimisationLineaire(const OptimizationOptions& options,
 
     OPT_MaxDesPmaxHydrauliques(problemeHebdo);
 
-    if (problemeHebdo->OptimisationAvecCoutsDeDemarrage)
+    if (problemeHebdo->OptimisationNotFastMode)
     {
         OPT_InitialiserNombreMinEtMaxDeGroupesCoutsDeDemarrage(problemeHebdo);
     }

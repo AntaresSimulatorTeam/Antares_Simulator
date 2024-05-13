@@ -524,7 +524,7 @@ struct PROBLEME_HEBDO
     bool OptimisationAuPasHebdomadaire = false;
     char TypeDeLissageHydraulique = PAS_DE_LISSAGE_HYDRAULIQUE;
     bool WaterValueAccurate = false;
-    bool OptimisationAvecCoutsDeDemarrage = false;
+    bool OptimisationNotFastMode = false;
     bool OptimisationAvecVariablesEntieres = false;
     uint32_t NombreDePays = 0;
     std::vector<const char*> NomsDesPays;
