@@ -22,7 +22,6 @@
 
 #include "antares/file-tree-study-loader/FileTreeStudyLoader.h"
 
-#include <cstring>
 #include <memory>
 #include <span>
 

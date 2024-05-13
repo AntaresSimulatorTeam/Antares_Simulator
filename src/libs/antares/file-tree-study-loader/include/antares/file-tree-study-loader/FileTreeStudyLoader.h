@@ -23,10 +23,7 @@
 #pragma once
 #include <filesystem>
 
-#include <antares/writer/i_writer.h>
-#include "antares/solver/misc/options.h"
 #include "antares/study-loader/IStudyLoader.h"
-#include "antares/study/load-options.h"
 
 namespace Antares
 {
