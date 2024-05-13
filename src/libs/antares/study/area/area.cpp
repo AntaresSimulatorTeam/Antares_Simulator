@@ -255,15 +255,15 @@ void Area::resizeAllTimeseriesNumbers(uint nbYears)
 {
     assert(hydro.series and "series must not be nullptr !");
 
-    load.series.timeseriesNumbers.reset(1, nbYears);
-    solar.series.timeseriesNumbers.reset(1, nbYears);
-    wind.series.timeseriesNumbers.reset(1, nbYears);
-    hydro.series->timeseriesNumbers.reset(1, nbYears);
-    hydro.series->timeseriesNumbersHydroMaxPower.reset(1, nbYears);
+    load.series.timeseriesNumbers.reset(nbYears);
+    solar.series.timeseriesNumbers.reset(nbYears);
+    wind.series.timeseriesNumbers.reset(nbYears);
+    hydro.series->timeseriesNumbers.reset(nbYears);
+    hydro.series->timeseriesNumbersHydroMaxPower.reset(nbYears);
     for (auto& namedLink : links)
     {
         AreaLink* link = namedLink.second;
-        link->timeseriesNumbers.reset(1, nbYears);
+        link->timeseriesNumbers.reset(nbYears);
     }
     thermal.resizeAllTimeseriesNumbers(nbYears);
     renewable.resizeAllTimeseriesNumbers(nbYears);
