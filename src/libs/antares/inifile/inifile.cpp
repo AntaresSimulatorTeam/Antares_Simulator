@@ -172,7 +172,7 @@ static bool startingSection(std::string line)
 {
     boost::trim(line);
     return line.starts_with("[") && line.ends_with("]");
-}
+} // namespace Antares
 
 static std::string getSectionName(std::string line)
 {
@@ -253,7 +253,7 @@ bool IniFile::open(const AnyString& filename, bool warnings)
 
     if (std::ifstream file(filePath); file.is_open())
     {
-        if (!readStream(file) && warnings)
+        if (!readStream(file))
         {
             logs.error() << "Invalid INI file : " << filePath;
             return false;
