@@ -26,7 +26,6 @@
 #include <cassert>
 #include <limits>
 #include <string.h>
-#include <unistd.h>
 
 #include <yuni/yuni.h>
 
