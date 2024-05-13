@@ -168,33 +168,25 @@ uint IniFile::Section::size() const
     return count;
 }
 
-bool startingSection(std::string line)
+static bool startingSection(std::string line)
 {
     boost::trim(line);
-    if (boost::starts_with(line, "[") && boost::ends_with(line, "]"))
-    {
-        return true;
-    }
-    return false;
-} // namespace Antares
+    return line.starts_with("[") && line.ends_with("]");
+}
 
-std::string getSectionName(std::string line)
+static std::string getSectionName(std::string line)
 {
     std::vector<std::string> splitLine;
     boost::split(splitLine, line, boost::is_any_of("[]"));
     return splitLine[1];
 }
 
-bool isProperty(std::string line)
+static bool isProperty(std::string line)
 {
-    if (std::count(line.begin(), line.end(), '=') == 1)
-    {
-        return true;
-    }
-    return false;
+    return std::ranges::count(line.begin(), line.end(), '=') == 1;
 }
 
-std::pair<std::string, std::string> getKeyValuePair(std::string line)
+static std::pair<std::string, std::string> getKeyValuePair(std::string line)
 {
     boost::trim(line);
 
@@ -204,14 +196,10 @@ std::pair<std::string, std::string> getKeyValuePair(std::string line)
     return std::make_pair(splitLine[0], splitLine[1]);
 }
 
-bool isComment(std::string line)
+static bool isComment(std::string line)
 {
     boost::trim_left(line);
-    if (boost::starts_with(line, "#") || boost::starts_with(line, ";"))
-    {
-        return true;
-    }
-    return false;
+    return line.starts_with("#") || line.starts_with(";");
 }
 
 bool isEmpty(std::string line)
