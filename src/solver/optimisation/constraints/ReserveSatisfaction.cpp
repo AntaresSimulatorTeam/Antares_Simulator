@@ -47,7 +47,21 @@ void ReserveSatisfaction::add(int pays, int reserve, int pdt, bool isUpReserve)
     }
     else
     {
-        builder.data.NbTermesContraintesPourLesReserves += 4;
+        CAPACITY_RESERVATION capacityReservation
+          = isUpReserve
+              ? data.areaReserves.thermalAreaReserves[pays].areaCapacityReservationsUp[reserve]
+              : data.areaReserves.thermalAreaReserves[pays].areaCapacityReservationsDown[reserve];
+
+        int nbTermes = 0;
+        for (size_t cluster = 0; cluster < capacityReservation.AllReservesParticipation.size();
+             cluster++)
+        {
+            if (capacityReservation.AllReservesParticipation[cluster].maxPower
+                != CLUSTER_NOT_PARTICIPATING)
+                nbTermes++;
+        }
+
+        builder.data.NbTermesContraintesPourLesReserves += 3 + nbTermes;
 
         builder.data.nombreDeContraintes += 1;
     }
