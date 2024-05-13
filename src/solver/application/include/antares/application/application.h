@@ -72,6 +72,10 @@ public:
 
     void writeExectutionInfo();
 
+    /**
+     * @brief /!\ Acquire the study. Leave Application object in an invalid state.
+     * @return The study
+     */
     std::unique_ptr<Data::Study> acquireStudy()
     {
         return std::move(pStudy);
