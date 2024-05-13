@@ -24,13 +24,9 @@
 
 #include "antares/antares/Enum.hpp"
 #include "antares/writer/i_writer.h"
-
-namespace Antares
-{
 struct PROBLEME_HEBDO;
 
 void OPT_ExportInterco(Antares::Solver::IResultWriter& writer, PROBLEME_HEBDO* problemeHebdo);
 void OPT_ExportAreaName(Antares::Solver::IResultWriter& writer,
                         const std::vector<const char*>& areaNames);
 void OPT_ExportStructures(PROBLEME_HEBDO* problemeHebdo, Antares::Solver::IResultWriter& writer);
-}
