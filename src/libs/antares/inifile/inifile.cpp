@@ -268,7 +268,7 @@ bool IniFile::open(const AnyString& filename, bool warnings)
     return false;
 }
 
-std::string IniFile::saveToString() const
+std::string IniFile::toString() const
 {
     uint64_t written = 0;
     std::ostringstream ostream;

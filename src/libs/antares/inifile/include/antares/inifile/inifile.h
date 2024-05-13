@@ -200,7 +200,7 @@ public:
     */
     bool save(const AnyString& filename) const;
 
-    std::string saveToString() const;
+    std::string toString() const;
 
     //! Get the last filename saved or loaded
     const std::string& filename() const;

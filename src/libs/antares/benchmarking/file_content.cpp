@@ -66,6 +66,6 @@ std::string FileContent::saveToBufferAsIni()
             section->add(key, value);
         }
     }
-    return ini.saveToString();
+    return ini.toString();
 }
 } // namespace Benchmarking
