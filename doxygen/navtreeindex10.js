@@ -1,5 +1,7 @@
 var NAVTREEINDEX10 =
 {
+"classAntares_1_1Data_1_1ThermalCluster.html#a4a5dde22643ed69a9f489dfd34b9a93a":[7,0,0,3,54,13],
+"classAntares_1_1Data_1_1ThermalCluster.html#a67ac1264f98779e79e5f4c3be02a1fe5":[7,0,0,3,54,29],
 "classAntares_1_1Data_1_1ThermalCluster.html#a7889efb33a0d010c6fe8c535a6680fb6":[7,0,0,3,54,33],
 "classAntares_1_1Data_1_1ThermalCluster.html#a7c751f7e0b479ff5fc82ae771c90e8f8":[7,0,0,3,54,41],
 "classAntares_1_1Data_1_1ThermalCluster.html#a7f3b8ff1963bca677d03bf2b1ff128a9":[7,0,0,3,54,35],
@@ -181,6 +183,8 @@ var NAVTREEINDEX10 =
 "classAntares_1_1ExtSource_1_1Handler_1_1BuildContext.html#ae636626919c90c5139c28d0a34b913d1":[7,0,0,6,0,0,0],
 "classAntares_1_1ExtSource_1_1Handler_1_1BuildContext.html#aea8f8f1d39614cfaaa1339206bdafee9":[7,0,0,6,0,0,3],
 "classAntares_1_1FatalError.html":[7,0,0,25],
+"classAntares_1_1FileTreeStudyLoader.html":[7,0,0,26],
+"classAntares_1_1FileTreeStudyLoader.html#aec874bace5d8216b2c11f0947d557019":[7,0,0,26,0],
 "classAntares_1_1Forms_1_1ApplWnd.html":[7,0,0,7,0],
 "classAntares_1_1Forms_1_1ApplWnd.html#a0302f49787d5b0f0c848598438024f3f":[7,0,0,7,0,27],
 "classAntares_1_1Forms_1_1ApplWnd.html#a04d6a7313bd189e19b40954a8030aa85":[7,0,0,7,0,36],
@@ -244,10 +248,6 @@ var NAVTREEINDEX10 =
 "classAntares_1_1Forms_1_1MainFormData.html#aeb45d2fff85bdd88de16c58f24515677":[7,0,0,7,7,8],
 "classAntares_1_1Forms_1_1MainFormData.html#afd414bf36c1add86e244509704550c59":[7,0,0,7,7,9],
 "classAntares_1_1Forms_1_1StudyDrop.html":[7,0,0,7,8],
-"classAntares_1_1GUILocker.html":[7,0,0,26],
-"classAntares_1_1Graph_1_1Edge.html":[7,0,0,8,0],
-"classAntares_1_1Graph_1_1Grid.html":[7,0,0,8,1],
-"classAntares_1_1Graph_1_1Grid.html#a048943416e662a22770d96033afe5b95":[7,0,0,8,1,2],
-"classAntares_1_1Graph_1_1Grid.html#a0f396c947841654d8ce748aa73e478f0":[7,0,0,8,1,8],
-"classAntares_1_1Graph_1_1Grid.html#a186d8796bbf5dc1ab8f3ec6e35a6a0d8":[7,0,0,8,1,3]
+"classAntares_1_1GUILocker.html":[7,0,0,27],
+"classAntares_1_1Graph_1_1Edge.html":[7,0,0,8,0]
 };

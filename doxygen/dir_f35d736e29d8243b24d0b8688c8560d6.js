@@ -8,6 +8,7 @@ var dir_f35d736e29d8243b24d0b8688c8560d6 =
     [ "correlation", "dir_aef4ffec0fc7155945a4149bf41af958.html", "dir_aef4ffec0fc7155945a4149bf41af958" ],
     [ "date", "dir_7b8037b01c904e47e6df8336b21c3e01.html", "dir_7b8037b01c904e47e6df8336b21c3e01" ],
     [ "exception", "dir_4e7c81b846eabaed625fc3ca4a916551.html", "dir_4e7c81b846eabaed625fc3ca4a916551" ],
+    [ "file-tree-study-loader", "dir_baedc17a71d879f5cfae3de32ec5631a.html", "dir_baedc17a71d879f5cfae3de32ec5631a" ],
     [ "include", "dir_c1b97a77b0778a14760957f38f2f3ae1.html", "dir_c1b97a77b0778a14760957f38f2f3ae1" ],
     [ "InfoCollection", "dir_a619623ecfb40f34563fb00311da1fd1.html", "dir_a619623ecfb40f34563fb00311da1fd1" ],
     [ "inifile", "dir_277fb58041675eee9065ef1bb52f0052.html", "dir_277fb58041675eee9065ef1bb52f0052" ],
@@ -23,6 +24,7 @@ var dir_f35d736e29d8243b24d0b8688c8560d6 =
     [ "series", "dir_ebc8c9594cd51ddaece1628dd1b84321.html", "dir_ebc8c9594cd51ddaece1628dd1b84321" ],
     [ "stdcxx", "dir_9ac70c255f4d84cbc977a7586db8d783.html", "dir_9ac70c255f4d84cbc977a7586db8d783" ],
     [ "study", "dir_ce980317fbc69b3f740ff45def79f52e.html", "dir_ce980317fbc69b3f740ff45def79f52e" ],
+    [ "study-loader", "dir_f9eda1b8d034eb2050930c0b08f0b64e.html", "dir_f9eda1b8d034eb2050930c0b08f0b64e" ],
     [ "sys", "dir_8060b849091d032e6bd1ec519f08a094.html", "dir_8060b849091d032e6bd1ec519f08a094" ],
     [ "utils", "dir_a6c8838202afb2f4d967027b3636f365.html", "dir_a6c8838202afb2f4d967027b3636f365" ],
     [ "writer", "dir_fbf1ff225a84ae76ebe1da6e7150b0cc.html", "dir_fbf1ff225a84ae76ebe1da6e7150b0cc" ]
