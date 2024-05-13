@@ -7,4 +7,4 @@ enum StatisticalLaw
     LawUniform,
     LawGeometric
 };
-}
+} // namespace Antares::Data

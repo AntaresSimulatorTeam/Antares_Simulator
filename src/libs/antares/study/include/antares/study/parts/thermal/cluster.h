@@ -21,19 +21,22 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_THERMAL_CLUSTER_H__
 #define __ANTARES_LIBS_STUDY_PARTS_THERMAL_CLUSTER_H__
 
-#include <yuni/yuni.h>
-#include <yuni/core/noncopyable.h>
-#include <antares/array/matrix.h>
-#include <antares/solver/ts-generator/law.h>
-#include "defines.h"
-#include "ecoInput.h"
-#include "../common/cluster.h"
-#include "../../fwd.h"
-#include "pollutant.h"
-#include <set>
 #include <map>
 #include <memory>
+#include <set>
 #include <vector>
+
+#include <yuni/yuni.h>
+#include <yuni/core/noncopyable.h>
+
+#include <antares/array/matrix.h>
+#include <antares/solver/ts-generator/law.h>
+
+#include "../../fwd.h"
+#include "../common/cluster.h"
+#include "defines.h"
+#include "ecoInput.h"
+#include "pollutant.h"
 
 namespace Antares
 {
@@ -64,7 +67,7 @@ enum class LocalTSGenerationBehavior
 /*!
 ** \brief A single thermal cluster
 */
-class ThermalCluster final : public Cluster, public std::enable_shared_from_this<ThermalCluster>
+class ThermalCluster final: public Cluster, public std::enable_shared_from_this<ThermalCluster>
 {
 public:
     enum ThermalDispatchableGroup
@@ -233,6 +236,7 @@ public:
 
     //! Mustrun
     bool mustrun = false;
+
     bool isMustRun() const
     {
         return mustrun;
@@ -255,7 +259,10 @@ public:
 
     struct DivModulation
     {
-        DivModulation() : value(0.0), isCalculated(false), isValidated(false)
+        DivModulation():
+            value(0.0),
+            isCalculated(false),
+            isValidated(false)
         {
         }
 
@@ -358,6 +365,7 @@ public:
         std::array<double, HOURS_PER_YEAR> marketBidCostTS;
         std::array<double, HOURS_PER_YEAR> marginalCostTS;
     };
+
     std::vector<CostsTimeSeries> costsTimeSeries;
 
     EconomicInputData ecoInput;

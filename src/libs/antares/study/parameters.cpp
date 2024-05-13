@@ -18,26 +18,27 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include <algorithm>
+#include "antares/study/parameters.h"
 
-#include <yuni/yuni.h>
-#include <cstdio>
+#include <algorithm>
 #include <cctype>
-#include <tuple>   // std::tuple
+#include <climits>
+#include <cstdio>
 #include <list>    // std::list
 #include <sstream> // std::stringstream
+#include <tuple>   // std::tuple
 
-#include "antares/study/parameters.h"
-#include "antares/antares/constants.h"
-#include <antares/inifile/inifile.h>
-#include <antares/logs/logs.h>
-#include "antares/study/load-options.h"
-#include <climits>
 #include <boost/algorithm/string/case_conv.hpp>
-#include "antares/solver/variable/economy/all.h"
+
+#include <yuni/yuni.h>
 
 #include <antares/exception/AssertionError.hpp>
+#include <antares/inifile/inifile.h>
+#include <antares/logs/logs.h>
 #include "antares/antares/Enum.hpp"
+#include "antares/antares/constants.h"
+#include "antares/solver/variable/economy/all.h"
+#include "antares/study/load-options.h"
 
 using namespace Yuni;
 
@@ -50,29 +51,49 @@ static bool ConvertCStrToListTimeSeries(const String& value, uint& v)
 {
     v = 0;
     if (!value)
+    {
         return true;
+    }
 
-    value.words(" ,;\t\r\n", [&](const AnyString& element) -> bool {
-        ShortString16 word(element);
-        word.toLower();
-        if (word == "load")
-            v |= timeSeriesLoad;
-        else if (word == "wind")
-            v |= timeSeriesWind;
-        else if (word == "hydro")
-            v |= timeSeriesHydro;
-        else if (word == "thermal")
-            v |= timeSeriesThermal;
-        else if (word == "solar")
-            v |= timeSeriesSolar;
-        else if (word == "renewables")
-            v |= timeSeriesRenewable;
-        else if (word == "ntc")
-            v |= timeSeriesTransmissionCapacities;
-        else if (word == "max-power")
-            v |= timeSeriesHydroMaxPower;
-        return true;
-    });
+    value.words(" ,;\t\r\n",
+                [&](const AnyString& element) -> bool
+                {
+                    ShortString16 word(element);
+                    word.toLower();
+                    if (word == "load")
+                    {
+                        v |= timeSeriesLoad;
+                    }
+                    else if (word == "wind")
+                    {
+                        v |= timeSeriesWind;
+                    }
+                    else if (word == "hydro")
+                    {
+                        v |= timeSeriesHydro;
+                    }
+                    else if (word == "thermal")
+                    {
+                        v |= timeSeriesThermal;
+                    }
+                    else if (word == "solar")
+                    {
+                        v |= timeSeriesSolar;
+                    }
+                    else if (word == "renewables")
+                    {
+                        v |= timeSeriesRenewable;
+                    }
+                    else if (word == "ntc")
+                    {
+                        v |= timeSeriesTransmissionCapacities;
+                    }
+                    else if (word == "max-power")
+                    {
+                        v |= timeSeriesHydroMaxPower;
+                    }
+                    return true;
+                });
     return true;
 }
 
@@ -145,9 +166,13 @@ static void ParametersSaveResultFormat(IniFile::Section* section, ResultFormat f
 bool StringToSimulationMode(SimulationMode& mode, CString<20, false> text)
 {
     if (!text)
+    {
         return false;
+    }
     if (text.size() == 1)
+    {
         return false;
+    }
 
     // Converting into lowercase
     text.toLower();
@@ -189,7 +214,8 @@ const char* SimulationModeToCString(SimulationMode mode)
     }
 }
 
-Parameters::Parameters() : noOutput(false)
+Parameters::Parameters():
+    noOutput(false)
 {
 }
 
@@ -217,7 +243,9 @@ void Parameters::resetSeeds()
     seed[seedTsGenWind] = s;
     // The same way for all others
     for (auto i = (uint)seedTsGenLoad; i != seedMax; ++i)
+    {
         seed[i] = (s += increment);
+    }
 }
 
 void Parameters::resetPlayedYears(uint nbOfYears)
@@ -357,47 +385,63 @@ static void ParametersSaveTimeSeries(IniFile::Section* s, const char* name, uint
     CString<60, false> v;
 
     if (value & timeSeriesLoad)
+    {
         v += "load";
+    }
     if (value & timeSeriesHydro)
     {
         if (not v.empty())
+        {
             v += ", ";
+        }
         v += "hydro";
     }
     if (value & timeSeriesWind)
     {
         if (not v.empty())
+        {
             v += ", ";
+        }
         v += "wind";
     }
     if (value & timeSeriesThermal)
     {
         if (not v.empty())
+        {
             v += ", ";
+        }
         v += "thermal";
     }
     if (value & timeSeriesSolar)
     {
         if (not v.empty())
+        {
             v += ", ";
+        }
         v += "solar";
     }
     if (value & timeSeriesRenewable)
     {
         if (not v.empty())
+        {
             v += ", ";
+        }
         v += "renewables";
     }
     if (value & timeSeriesTransmissionCapacities)
     {
         if (!v.empty())
+        {
             v += ", ";
+        }
         v += "ntc";
     }
     if (value & timeSeriesHydroMaxPower)
     {
         if (!v.empty())
+        {
             v += ", ";
+        }
         v += "max-power";
     }
     s->add(name, v);
@@ -414,22 +458,34 @@ static bool SGDIntLoadFamily_General(Parameters& d,
         return true;
     }
     if (key == "custom-scenario")
+    {
         return value.to<bool>(d.useCustomScenario);
+    }
 
     if (key == "derated")
+    {
         return value.to<bool>(d.derated);
+    }
 
     if (key == "first-month-in-year")
+    {
         return Date::StringToMonth(d.firstMonthInYear, value);
+    }
 
     if (key == "first.weekday")
+    {
         return Date::StringToDayOfTheWeek(d.firstWeekday, value);
+    }
 
     if (key == "geographic-trimming")
+    {
         return value.to<bool>(d.geographicTrimming);
+    }
 
     if (key == "generate")
+    {
         return ConvertCStrToListTimeSeries(value, d.timeSeriesToGenerate);
+    }
 
     if (key == "horizon")
     {
@@ -440,21 +496,33 @@ static bool SGDIntLoadFamily_General(Parameters& d,
 
     // Same time-series
     if (key == "intra-modal")
+    {
         return ConvertCStrToListTimeSeries(value, d.intraModal);
+    }
     // Same time-series
     if (key == "inter-modal")
+    {
         return ConvertCStrToListTimeSeries(value, d.interModal);
+    }
     if (key == "improveunitsstartup")
+    {
         return true; // value.to<bool>(d.improveUnitsStartup);
+    }
 
     if (key == "january.1st") // after 4.3
+    {
         return Date::StringToDayOfTheWeek(d.dayOfThe1stJanuary, value);
+    }
 
     if (key == "leapyear")
+    {
         return value.to(d.leapYear);
+    }
 
     if (key == "mode")
+    {
         return StringToSimulationMode(d.mode, value);
+    }
 
     if (key == "nbyears")
     {
@@ -468,47 +536,79 @@ static bool SGDIntLoadFamily_General(Parameters& d,
         return false;
     }
     if (key == "nbtimeseriesload")
+    {
         return value.to<uint>(d.nbTimeSeriesLoad);
+    }
     if (key == "nbtimeserieshydro")
+    {
         return value.to<uint>(d.nbTimeSeriesHydro);
+    }
     if (key == "nbtimeserieswind")
+    {
         return value.to<uint>(d.nbTimeSeriesWind);
+    }
     if (key == "nbtimeseriesthermal")
+    {
         return value.to<uint>(d.nbTimeSeriesThermal);
+    }
     if (key == "nbtimeseriessolar")
+    {
         return value.to<uint>(d.nbTimeSeriesSolar);
+    }
     if (key == "nbtimeserieslinks")
+    {
         return value.to<uint>(d.nbLinkTStoGenerate);
+    }
 
     // Interval values
     if (key == "refreshintervalload")
+    {
         return value.to<uint>(d.refreshIntervalLoad);
+    }
     if (key == "refreshintervalhydro")
+    {
         return value.to<uint>(d.refreshIntervalHydro);
+    }
     if (key == "refreshintervalwind")
+    {
         return value.to<uint>(d.refreshIntervalWind);
+    }
     if (key == "refreshintervalthermal")
+    {
         return value.to<uint>(d.refreshIntervalThermal);
+    }
     if (key == "refreshintervalsolar")
+    {
         return value.to<uint>(d.refreshIntervalSolar);
+    }
     // What timeSeries to refresh ?
     if (key == "refreshtimeseries")
+    {
         return ConvertCStrToListTimeSeries(value, d.timeSeriesToRefresh);
+    }
     // readonly
     if (key == "readonly")
+    {
         return value.to<bool>(d.readonly);
+    }
 
     if (key == "simulation.start")
     {
         uint day;
         if (not value.to(day))
+        {
             return false;
+        }
         if (day == 0)
+        {
             day = 1;
+        }
         else
         {
             if (day > 365)
+            {
                 day = 365;
+            }
             --day;
         }
         d.simulationDays.first = day;
@@ -518,76 +618,121 @@ static bool SGDIntLoadFamily_General(Parameters& d,
     {
         uint day;
         if (not value.to(day))
+        {
             return false;
+        }
         if (day == 0)
+        {
             day = 1;
+        }
         else if (day > 365)
+        {
             day = 365;
+        }
         d.simulationDays.end = day; // not included
         return true;
     }
 
     if (key == "thematic-trimming")
+    {
         return value.to<bool>(d.thematicTrimming);
+    }
 
     if (key == "user-playlist")
+    {
         return value.to<bool>(d.userPlaylist);
+    }
 
     if (key == "year-by-year")
+    {
         return value.to<bool>(d.yearByYear);
+    }
 
     return false;
 }
+
 static bool SGDIntLoadFamily_Input(Parameters& d,
                                    const String& key,
                                    const String& value,
                                    const String&)
 {
     if (key == "import")
+    {
         return ConvertCStrToListTimeSeries(value, d.exportTimeSeriesInInput);
+    }
 
     return false;
 }
+
 static bool SGDIntLoadFamily_Output(Parameters& d,
                                     const String& key,
                                     const String& value,
                                     const String&)
 {
     if (key == "archives")
+    {
         return ConvertCStrToListTimeSeries(value, d.timeSeriesToArchive);
+    }
     if (key == "storenewset")
+    {
         return value.to<bool>(d.storeTimeseriesNumbers);
+    }
     if (key == "synthesis")
+    {
         return value.to<bool>(d.synthesis);
+    }
     if (key == "hydro-debug")
+    {
         return value.to<bool>(d.hydroDebug);
+    }
     if (key == "result-format")
+    {
         return ConvertCStrToResultFormat(value, d.resultFormat);
+    }
     return false;
 }
+
 static bool SGDIntLoadFamily_Optimization(Parameters& d,
                                           const String& key,
                                           const String& value,
                                           const String&)
 {
     if (key == "include-constraints")
+    {
         return value.to<bool>(d.include.constraints);
+    }
     if (key == "include-hurdlecosts")
+    {
         return value.to<bool>(d.include.hurdleCosts);
+    }
     if (key == "include-loopflowfee") // backward compatibility
-        return true;                  // value.to<bool>(d.include.loopFlowFee);
+    {
+        return true; // value.to<bool>(d.include.loopFlowFee);
+    }
     if (key == "include-tc-minstablepower")
+    {
         return value.to<bool>(d.include.thermal.minStablePower);
+    }
     if (key == "include-tc-min-ud-time")
+    {
         return value.to<bool>(d.include.thermal.minUPTime);
+    }
     if (key == "include-dayahead")
+    {
         return value.to<bool>(d.include.reserve.dayAhead);
+    }
     if (key == "include-strategicreserve")
+    {
         return value.to<bool>(d.include.reserve.strategic);
+    }
     if (key == "include-spinningreserve")
+    {
         return value.to<bool>(d.include.reserve.spinning);
+    }
     if (key == "include-primaryreserve")
+    {
         return value.to<bool>(d.include.reserve.primary);
+    }
 
     if (key == "include-exportmps")
     {
@@ -602,7 +747,9 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
     }
 
     if (key == "include-exportstructure")
+    {
         return value.to<bool>(d.include.exportStructure);
+    }
     if (key == "include-unfeasible-problem-behavior")
     {
         bool result = true;
@@ -610,8 +757,8 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
 
         try
         {
-            d.include.unfeasibleProblemBehavior
-              = Enum::fromString<UnfeasibleProblemBehavior>(string);
+            d.include.unfeasibleProblemBehavior = Enum::fromString<UnfeasibleProblemBehavior>(
+              string);
         }
         catch (AssertionError& ex)
         {
@@ -644,6 +791,7 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
     }
     return false;
 }
+
 static bool SGDIntLoadFamily_AdqPatch(Parameters& d,
                                       const String& key,
                                       const String& value,
@@ -751,20 +899,26 @@ static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
     }
     // Renewable generation modelling
     if (key == "renewable-generation-modelling")
+    {
         return ConvertStringToRenewableGenerationModelling(value,
                                                            d.renewableGeneration.rgModelling);
+    }
 
     return false;
 }
+
 static bool SGDIntLoadFamily_AdvancedParameters(Parameters& d,
                                                 const String& key,
                                                 const String& value,
                                                 const String&)
 {
     if (key == "accuracy-on-correlation")
+    {
         return ConvertCStrToListTimeSeries(value, d.timeSeriesAccuracyOnCorrelation);
+    }
     return false;
 }
+
 static bool SGDIntLoadFamily_Playlist(Parameters& d,
                                       const String& key,
                                       const String& value,
@@ -776,12 +930,16 @@ static bool SGDIntLoadFamily_Playlist(Parameters& d,
         if (mode)
         {
             for (uint i = 0; i != d.nbYears; ++i)
+            {
                 d.yearsFilter[i] = true;
+            }
         }
         else
         {
             for (uint i = 0; i != d.nbYears; ++i)
+            {
                 d.yearsFilter[i] = false;
+            }
         }
         return true;
     }
@@ -791,7 +949,9 @@ static bool SGDIntLoadFamily_Playlist(Parameters& d,
         if (value.to<uint>(y))
         {
             if (y < d.nbYears)
+            {
                 d.yearsFilter[y] = true;
+            }
             return true;
         }
         return false;
@@ -802,7 +962,9 @@ static bool SGDIntLoadFamily_Playlist(Parameters& d,
         if (value.to<uint>(y))
         {
             if (y < d.nbYears)
+            {
                 d.yearsFilter[y] = false;
+            }
             return true;
         }
         return false;
@@ -859,18 +1021,18 @@ static bool SGDIntLoadFamily_Playlist(Parameters& d,
 
 static bool deprecatedVariable(std::string var)
 {
-    static const std::vector<std::string> STSGroups_legacy
-      = {"psp_open_level",      "psp_closed_level",      "pondage_level",
-         "battery_level",       "other1_level",          "other2_level",
-         "other3_level",        "other4_level",          "other5_level",
+    static const std::vector<std::string> STSGroups_legacy = {
+      "psp_open_level",      "psp_closed_level",      "pondage_level",
+      "battery_level",       "other1_level",          "other2_level",
+      "other3_level",        "other4_level",          "other5_level",
 
-         "psp_open_injection",  "psp_closed_injection",  "pondage_injection",
-         "battery_injection",   "other1_injection",      "other2_injection",
-         "other3_injection",    "other4_injection",      "other5_injection",
+      "psp_open_injection",  "psp_closed_injection",  "pondage_injection",
+      "battery_injection",   "other1_injection",      "other2_injection",
+      "other3_injection",    "other4_injection",      "other5_injection",
 
-         "psp_open_withdrawal", "psp_closed_withdrawal", "pondage_withdrawal",
-         "battery_withdrawal",  "other1_withdrawal",     "other2_withdrawal",
-         "other3_withdrawal",   "other4_withdrawal",     "other5_withdrawal"};
+      "psp_open_withdrawal", "psp_closed_withdrawal", "pondage_withdrawal",
+      "battery_withdrawal",  "other1_withdrawal",     "other2_withdrawal",
+      "other3_withdrawal",   "other4_withdrawal",     "other5_withdrawal"};
     boost::to_lower(var);
     return std::ranges::find(STSGroups_legacy, var) != STSGroups_legacy.end();
 }
@@ -907,6 +1069,7 @@ static bool SGDIntLoadFamily_VariablesSelection(Parameters& d,
     }
     return false;
 }
+
 static bool SGDIntLoadFamily_SeedsMersenneTwister(Parameters& d,
                                                   const String& key,
                                                   const String& value,
@@ -918,19 +1081,33 @@ static bool SGDIntLoadFamily_SeedsMersenneTwister(Parameters& d,
         {
             // This block is kept for compatibility with very old studies
             if (key == "seed_load")
+            {
                 return value.to<uint>(d.seed[seedTsGenLoad]);
+            }
             if (key == "seed_wind")
+            {
                 return value.to<uint>(d.seed[seedTsGenWind]);
+            }
             if (key == "seed_hydro")
+            {
                 return value.to<uint>(d.seed[seedTsGenHydro]);
+            }
             if (key == "seed_thermal")
+            {
                 return value.to<uint>(d.seed[seedTsGenThermal]);
+            }
             if (key == "seed_solar")
+            {
                 return value.to<uint>(d.seed[seedTsGenSolar]);
+            }
             if (key == "seed_links")
+            {
                 return value.to<uint>(d.seed[seedTsGenLinks]);
+            }
             if (key == "seed_timeseriesnumbers")
+            {
                 return value.to<uint>(d.seed[seedTimeseriesNumbers]);
+            }
         }
         else
         {
@@ -939,12 +1116,15 @@ static bool SGDIntLoadFamily_SeedsMersenneTwister(Parameters& d,
             for (uint sd = 0; sd != (uint)seedMax; ++sd)
             {
                 if (SeedToID((SeedIndex)sd) == key)
+                {
                     return value.to<uint>(d.seed[sd]);
+                }
             }
         }
     }
     return false;
 }
+
 static bool SGDIntLoadFamily_Legacy(Parameters& d,
                                     const String& key,
                                     const String& value,
@@ -955,33 +1135,51 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
 
     // Same time-series
     if (key == "correlateddraws")
+    {
         return ConvertCStrToListTimeSeries(value, d.intraModal);
+    }
     // Scenario builder
     if (key == "custom-ts-numbers")
+    {
         return value.to<bool>(d.useCustomScenario);
+    }
 
     if (key == "filtering" && version < StudyVersion(7, 1))
+    {
         return value.to<bool>(d.geographicTrimming);
+    }
 
     // Custom set
     if (key == "customset")
+    {
         return true; // value ignored
+    }
 
     if (key == "shedding-strategy") // Was never used
+    {
         return true;
+    }
 
     if (key == "day-ahead-reserve-management") // ignored since 8.4
+    {
         return true;
+    }
 
     if (key == "link-type") // ignored since 8.5.2
+    {
         return true;
+    }
 
     if (key == "adequacy-block-size") // ignored since 8.5
+    {
         return true;
+    }
 
     // deprecated but needed for testing old studies
     if (key == "include-split-exported-mps")
+    {
         return true;
+    }
 
     return false;
 }
@@ -1005,17 +1203,17 @@ bool Parameters::loadFromINI(const IniFile& ini,
       const String&,  // [in] Lowercase value, comes right to the '=' sign in the .ini file
       const String&); // [in] Raw value as writtent right to the '=' sign in the .ini file
 
-    static const std::map<String, Callback> sectionAssociatedToKeysProcess
-      = {{"general", &SGDIntLoadFamily_General},
-         {"input", &SGDIntLoadFamily_Input},
-         {"output", &SGDIntLoadFamily_Output},
-         {"optimization", &SGDIntLoadFamily_Optimization},
-         {"adequacy patch", &SGDIntLoadFamily_AdqPatch},
-         {"other preferences", &SGDIntLoadFamily_OtherPreferences},
-         {"advanced parameters", &SGDIntLoadFamily_AdvancedParameters},
-         {"playlist", &SGDIntLoadFamily_Playlist},
-         {"variables selection", &SGDIntLoadFamily_VariablesSelection},
-         {"seeds - mersenne twister", &SGDIntLoadFamily_SeedsMersenneTwister}};
+    static const std::map<String, Callback> sectionAssociatedToKeysProcess = {
+      {"general", &SGDIntLoadFamily_General},
+      {"input", &SGDIntLoadFamily_Input},
+      {"output", &SGDIntLoadFamily_Output},
+      {"optimization", &SGDIntLoadFamily_Optimization},
+      {"adequacy patch", &SGDIntLoadFamily_AdqPatch},
+      {"other preferences", &SGDIntLoadFamily_OtherPreferences},
+      {"advanced parameters", &SGDIntLoadFamily_AdvancedParameters},
+      {"playlist", &SGDIntLoadFamily_Playlist},
+      {"variables selection", &SGDIntLoadFamily_VariablesSelection},
+      {"seeds - mersenne twister", &SGDIntLoadFamily_SeedsMersenneTwister}};
 
     Callback handleAllKeysInSection;
     // Foreach section on the ini file...
@@ -1038,9 +1236,13 @@ bool Parameters::loadFromINI(const IniFile& ini,
         for (const IniFile::Property* p = section->firstProperty; p; p = p->next)
         {
             if (p->key.empty())
+            {
                 continue;
+            }
             if (!firstKeyLetterIsValid(p->key))
+            {
                 continue;
+            }
             // We convert the key and the value into the lower case format
             String value = p->value;
             value.toLower();
@@ -1084,10 +1286,14 @@ bool Parameters::loadFromINI(const IniFile& ini,
         logs.info() << "  forcing the simulation mode " << SimulationModeToCString(mode);
     }
     else
+    {
         logs.info() << "  simulation mode: " << SimulationModeToCString(mode);
+    }
 
     if (options.forceDerated)
+    {
         derated = true;
+    }
 
     // Define ortools parameters from options
     ortoolsUsed = options.ortoolsUsed;
@@ -1107,7 +1313,9 @@ bool Parameters::loadFromINI(const IniFile& ini,
 
     // Specific action before launching a simulation
     if (options.usedByTheSolver)
+    {
         prepareForSimulation(options);
+    }
 
     if (options.mpsToExport || options.namedProblems)
     {
@@ -1130,7 +1338,7 @@ void Parameters::fixRefreshIntervals()
                                             {refreshIntervalWind, timeSeriesWind, "wind"},
                                             {refreshIntervalThermal, timeSeriesThermal, "thermal"}};
 
-    for (const auto& [refreshInterval, ts, label] : timeSeriesToCheck)
+    for (const auto& [refreshInterval, ts, label]: timeSeriesToCheck)
     {
         if (ts & timeSeriesToRefresh && 0 == refreshInterval)
         {
@@ -1202,15 +1410,25 @@ void Parameters::fixBadValues()
     }
 
     if (!nbTimeSeriesLoad)
+    {
         nbTimeSeriesLoad = 1;
+    }
     if (!nbTimeSeriesThermal)
+    {
         nbTimeSeriesThermal = 1;
+    }
     if (!nbTimeSeriesHydro)
+    {
         nbTimeSeriesHydro = 1;
+    }
     if (!nbTimeSeriesWind)
+    {
         nbTimeSeriesWind = 1;
+    }
     if (!nbTimeSeriesSolar)
+    {
         nbTimeSeriesSolar = 1;
+    }
 }
 
 uint64_t Parameters::memoryUsage() const
@@ -1240,6 +1458,7 @@ std::vector<float> Parameters::getYearsWeight() const
 
     return result;
 }
+
 float Parameters::getYearsWeightSum() const
 {
     float result = 0.f;
@@ -1324,7 +1543,9 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
         for (uint i = 0; i < nbYears; ++i)
         {
             if (yearsFilter[i])
+            {
                 ++effectiveNbYears;
+            }
         }
         switch (effectiveNbYears)
         {
@@ -1405,7 +1626,9 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
     {
         // The year-by-year mode might have been requested from the command line
         if (options.forceYearByYear)
+        {
             yearByYear = true;
+        }
         break;
     }
     case SimulationMode::Unknown:
@@ -1435,15 +1658,25 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
     {
         // Removing `refresh`
         if (!(timeSeriesToGenerate & timeSeriesLoad))
+        {
             timeSeriesToRefresh &= ~timeSeriesLoad;
+        }
         if (!(timeSeriesToGenerate & timeSeriesSolar))
+        {
             timeSeriesToRefresh &= ~timeSeriesSolar;
+        }
         if (!(timeSeriesToGenerate & timeSeriesWind))
+        {
             timeSeriesToRefresh &= ~timeSeriesWind;
+        }
         if (!(timeSeriesToGenerate & timeSeriesHydro))
+        {
             timeSeriesToRefresh &= ~timeSeriesHydro;
+        }
         if (!(timeSeriesToGenerate & timeSeriesThermal))
+        {
             timeSeriesToRefresh &= ~timeSeriesThermal;
+        }
 
         // Force mode refresh if the timeseries must be regenerated
         if (timeSeriesToGenerate & timeSeriesLoad && !(timeSeriesToRefresh & timeSeriesLoad))
@@ -1480,42 +1713,78 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
     }
 
     if (mode == SimulationMode::Expansion)
+    {
         logs.info() << "  :: enabling expansion";
+    }
     if (yearByYear)
+    {
         logs.info() << "  :: enabling the 'year-by-year' mode";
+    }
     if (derated)
+    {
         logs.info() << "  :: enabling the 'derated' mode";
+    }
     if (userPlaylist)
+    {
         logs.info() << "  :: enabling the user playlist";
+    }
     if (thematicTrimming)
+    {
         logs.info() << "  :: enabling the user variable selection";
+    }
     if (useCustomScenario)
+    {
         logs.info() << "  :: enabling the custom build mode";
+    }
     if (geographicTrimming)
+    {
         logs.info() << "  :: enabling filtering by file";
+    }
 
     if (!include.constraints)
+    {
         logs.info() << "  :: ignoring binding constraints";
+    }
     if (!include.reserve.dayAhead)
+    {
         logs.info() << "  :: ignoring day ahead reserves";
+    }
     if (!include.reserve.primary)
+    {
         logs.info() << "  :: ignoring primary reserves";
+    }
     if (!include.reserve.strategic)
+    {
         logs.info() << "  :: ignoring strategic reserves";
+    }
     if (!include.reserve.spinning)
+    {
         logs.info() << "  :: ignoring spinning reserves";
+    }
     if (!include.thermal.minStablePower)
+    {
         logs.info() << "  :: ignoring min stable power for thermal clusters";
+    }
     if (!include.thermal.minUPTime)
+    {
         logs.info() << "  :: ignoring min up/down time for thermal clusters";
+    }
     if (include.exportMPS == mpsExportStatus::NO_EXPORT)
+    {
         logs.info() << "  :: ignoring export mps";
+    }
     if (!adqPatchParams.enabled)
+    {
         logs.info() << "  :: ignoring adequacy patch";
+    }
     if (!include.exportStructure)
+    {
         logs.info() << "  :: ignoring export structure";
+    }
     if (!include.hurdleCosts)
+    {
         logs.info() << "  :: ignoring hurdle costs";
+    }
 
     // Indicate ortools solver used
     if (ortoolsUsed)
@@ -1565,7 +1834,9 @@ void Parameters::saveToINI(IniFile& ini) const
         section->add("thematic-trimming", thematicTrimming);
         section->add("geographic-trimming", geographicTrimming);
         if (not activeRulesScenario.empty())
+        {
             section->add("active-rules-scenario", activeRulesScenario);
+        }
 
         // Time series
         ParametersSaveTimeSeries(section, "generate", timeSeriesToGenerate);
@@ -1602,7 +1873,9 @@ void Parameters::saveToINI(IniFile& ini) const
         section->add("synthesis", synthesis);
         section->add("storeNewSet", storeTimeseriesNumbers);
         if (hydroDebug)
+        {
             section->add("hydro-debug", hydroDebug);
+        }
         ParametersSaveTimeSeries(section, "archives", timeSeriesToArchive);
         ParametersSaveResultFormat(section, resultFormat);
     }
@@ -1666,8 +1939,9 @@ void Parameters::saveToINI(IniFile& ini) const
     {
         auto* section = ini.addSection("advanced parameters");
         // Accuracy on correlation
-        ParametersSaveTimeSeries(
-          section, "accuracy-on-correlation", timeSeriesAccuracyOnCorrelation);
+        ParametersSaveTimeSeries(section,
+                                 "accuracy-on-correlation",
+                                 timeSeriesAccuracyOnCorrelation);
     }
 
     // User's playlist
@@ -1678,7 +1952,9 @@ void Parameters::saveToINI(IniFile& ini) const
         for (uint i = 0; i != nbYears; ++i)
         {
             if (yearsFilter[i])
+            {
                 ++effNbYears;
+            }
             weightEnabled |= yearsWeight[i] != 1.f;
         }
 
@@ -1697,7 +1973,9 @@ void Parameters::saveToINI(IniFile& ini) const
                 for (uint i = 0; i != nbYears; ++i)
                 {
                     if (yearsFilter[i])
+                    {
                         section->add("playlist_year +", i);
+                    }
                 }
             }
             else
@@ -1705,7 +1983,9 @@ void Parameters::saveToINI(IniFile& ini) const
                 for (uint i = 0; i != nbYears; ++i)
                 {
                     if (!yearsFilter[i])
+                    {
                         section->add("playlist_year -", i);
+                    }
                 }
             }
 
@@ -1733,13 +2013,17 @@ void Parameters::saveToINI(IniFile& ini) const
             if (nb_selected_vars <= (nb_tot_vars / 2))
             {
                 section->add("selected_vars_reset", "false");
-                for (auto& name : variablesPrintInfo.namesOfEnabledVariables())
+                for (auto& name: variablesPrintInfo.namesOfEnabledVariables())
+                {
                     section->add("select_var +", name);
+                }
             }
             else
             {
-                for (auto& name : variablesPrintInfo.namesOfDisabledVariables())
+                for (auto& name: variablesPrintInfo.namesOfDisabledVariables())
+                {
                     section->add("select_var -", name);
+                }
             }
         }
     }
@@ -1748,7 +2032,9 @@ void Parameters::saveToINI(IniFile& ini) const
     {
         auto* section = ini.addSection("seeds - Mersenne Twister");
         for (uint sd = 0; sd != (uint)seedMax; ++sd)
+        {
             section->add(SeedToID((SeedIndex)sd), seed[sd]);
+        }
     }
 }
 
@@ -1759,7 +2045,9 @@ bool Parameters::loadFromFile(const AnyString& filename,
     // Loading the INI file
     IniFile ini;
     if (ini.open(filename))
+    {
         return loadFromINI(ini, version, options);
+    }
 
     // Error otherwise
     reset();

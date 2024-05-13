@@ -22,18 +22,18 @@
 #include <memory>
 #include <string>
 
-#include <antares/solver/ts-generator/generator.h>
-#include <antares/exception/LoadingError.hpp>
-#include <antares/study/header.h>
-#include <antares/study/study.h>
-#include <antares/logs/logs.h>
-#include <antares/utils/utils.h>
 #include <yuni/core/getopt.h>
 
 #include <antares/benchmarking/DurationCollector.h>
-#include <antares/writer/writer_factory.h>
-#include <antares/writer/result_format.h>
 #include <antares/checks/checkLoadedInputData.h>
+#include <antares/exception/LoadingError.hpp>
+#include <antares/logs/logs.h>
+#include <antares/solver/ts-generator/generator.h>
+#include <antares/study/header.h>
+#include <antares/study/study.h>
+#include <antares/utils/utils.h>
+#include <antares/writer/result_format.h>
+#include <antares/writer/writer_factory.h>
 
 using namespace Antares;
 
@@ -57,11 +57,22 @@ std::unique_ptr<Yuni::GetOpt::Parser> createTsGeneratorParser(Settings& settings
     auto parser = std::make_unique<Yuni::GetOpt::Parser>();
     parser->addParagraph("Antares Time Series generator\n");
 
-    parser->addFlag(settings.allThermal, ' ', "all-thermal", "Generate TS for all thermal clusters");
-    parser->addFlag(settings.thermalListToGen, ' ', "thermal", "Generate TS for a list of area IDs and thermal clusters IDs, usage:\n\t--thermal=\"areaID.clusterID;area2ID.clusterID\"");
+    parser->addFlag(settings.allThermal,
+                    ' ',
+                    "all-thermal",
+                    "Generate TS for all thermal clusters");
+    parser->addFlag(settings.thermalListToGen,
+                    ' ',
+                    "thermal",
+                    "Generate TS for a list of area IDs and thermal clusters IDs, "
+                    "usage:\n\t--thermal=\"areaID.clusterID;area2ID.clusterID\"");
 
     parser->addFlag(settings.allLinks, ' ', "all-links", "Generate TS capacities for all links");
-    parser->addFlag(settings.linksListToGen, ' ', "links", "Generate TS capacities for a list of 2 area IDs, usage:\n\t--links=\"areaID.area2ID;area3ID.area1ID\"");
+    parser->addFlag(settings.linksListToGen,
+                    ' ',
+                    "links",
+                    "Generate TS capacities for a list of 2 area IDs, "
+                    "usage:\n\t--links=\"areaID.area2ID;area3ID.area1ID\"");
 
     parser->remainingArguments(settings.studyFolder);
 
@@ -74,7 +85,7 @@ std::vector<Data::ThermalCluster*> getClustersToGen(Data::AreaList& areas,
     std::vector<Data::ThermalCluster*> clusters;
     const auto ids = splitStringIntoPairs(clustersToGen, ';', '.');
 
-    for (const auto& [areaID, clusterID] : ids)
+    for (const auto& [areaID, clusterID]: ids)
     {
         logs.info() << "Searching for area: " << areaID << " and cluster: " << clusterID;
 
@@ -98,13 +109,12 @@ std::vector<Data::ThermalCluster*> getClustersToGen(Data::AreaList& areas,
     return clusters;
 }
 
-TSGenerator::listOfLinks getLinksToGen(Data::AreaList& areas,
-                                       const std::string& linksToGen)
+TSGenerator::listOfLinks getLinksToGen(Data::AreaList& areas, const std::string& linksToGen)
 {
     TSGenerator::listOfLinks links;
     const auto ids = splitStringIntoPairs(linksToGen, ';', '.');
 
-    for (const auto& [areaFromID, areaWithID] : ids)
+    for (const auto& [areaFromID, areaWithID]: ids)
     {
         logs.info() << "Searching for link: " << areaFromID << "/" << areaWithID;
 
@@ -114,8 +124,8 @@ TSGenerator::listOfLinks getLinksToGen(Data::AreaList& areas,
             logs.warning() << "Link not found: " << areaFromID << "/" << areaWithID;
             continue;
         }
-        auto direction = (link->from->id == areaFromID) ? TSGenerator::linkDirection::direct :
-                    TSGenerator::linkDirection::indirect;
+        auto direction = (link->from->id == areaFromID) ? TSGenerator::linkDirection::direct
+                                                        : TSGenerator::linkDirection::indirect;
 
         links.emplace_back(link, direction);
     }
@@ -123,7 +133,7 @@ TSGenerator::listOfLinks getLinksToGen(Data::AreaList& areas,
     return links;
 }
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
     Settings settings;
 
@@ -162,16 +172,21 @@ int main(int argc, char *argv[])
     // Force the writing of generated TS into output/YYYYMMDD-HHSSeco/ts-generator/thermal
     study->parameters.timeSeriesToArchive |= Antares::Data::timeSeriesThermal;
 
-    try {
+    try
+    {
         Antares::Check::checkMinStablePower(true, study->areas);
-    } catch(Error::InvalidParametersForThermalClusters& ex) {
+    }
+    catch (Error::InvalidParametersForThermalClusters& ex)
+    {
         Antares::logs.error() << ex.what();
     }
 
     Benchmarking::NullDurationCollector nullDurationCollector;
 
-    auto resultWriter = Solver::resultWriterFactory(
-            Data::ResultFormat::legacyFilesDirectories, study->folderOutput, nullptr, nullDurationCollector);
+    auto resultWriter = Solver::resultWriterFactory(Data::ResultFormat::legacyFilesDirectories,
+                                                    study->folderOutput,
+                                                    nullptr,
+                                                    nullDurationCollector);
 
     const auto thermalSavePath = std::filesystem::path("ts-generator") / "thermal";
     const auto linksSavePath = std::filesystem::path("ts-generator") / "links";
@@ -179,25 +194,41 @@ int main(int argc, char *argv[])
     // THERMAL
     std::vector<Data::ThermalCluster*> clusters;
     if (settings.allThermal)
+    {
         clusters = TSGenerator::getAllClustersToGen(study->areas, true);
+    }
     else if (!settings.thermalListToGen.empty())
+    {
         clusters = getClustersToGen(study->areas, settings.thermalListToGen);
+    }
 
-    for (auto& c : clusters)
+    for (auto& c: clusters)
+    {
         logs.debug() << c->id();
+    }
 
     // LINKS
     TSGenerator::listOfLinks links;
     if (settings.allLinks)
+    {
         links = TSGenerator::getAllLinksToGen(study->areas);
+    }
     else if (!settings.linksListToGen.empty())
+    {
         links = getLinksToGen(study->areas, settings.linksListToGen);
+    }
 
-    for (auto& l : links)
+    for (auto& l: links)
+    {
         logs.debug() << l.first->getName();
+    }
 
-    bool ret = TSGenerator::generateThermalTimeSeries(*study, clusters, *resultWriter, thermalSavePath.string());
-    ret = TSGenerator::generateLinkTimeSeries(*study, links, *resultWriter, linksSavePath.string()) && ret;
+    bool ret = TSGenerator::generateThermalTimeSeries(*study,
+                                                      clusters,
+                                                      *resultWriter,
+                                                      thermalSavePath.string());
+    ret = TSGenerator::generateLinkTimeSeries(*study, links, *resultWriter, linksSavePath.string())
+          && ret;
 
     return !ret; // return 0 for success
 }
