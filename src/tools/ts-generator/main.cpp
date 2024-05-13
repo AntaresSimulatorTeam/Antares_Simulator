@@ -135,6 +135,8 @@ TSGenerator::listOfLinks getLinksToGen(Data::AreaList& areas, const std::string&
 
 int main(int argc, char* argv[])
 {
+    logs.applicationName("ts-generator");
+
     Settings settings;
 
     auto parser = createTsGeneratorParser(settings);
