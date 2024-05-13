@@ -21,9 +21,11 @@
 #ifndef __ANTARES_LIBS_DATE_DATE_H__
 #define __ANTARES_LIBS_DATE_DATE_H__
 
+#include <vector>
+
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
-#include <vector>
+
 #include "antares/study/fwd.h"
 
 namespace Antares
@@ -183,6 +185,7 @@ public:
     using ShortString12 = Yuni::CString<11, false>;
     //! Short string representation with maximum 8 characters
     using ShortString8 = Yuni::CString<7, false>;
+
     enum
     {
         //! The maximum number of hours in a year
@@ -329,10 +332,12 @@ public:
     ** \brief Default constructor
     */
     Calendar();
+
     //! Destructor
     ~Calendar()
     {
     }
+
     //@}
 
     /*!

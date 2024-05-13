@@ -20,15 +20,16 @@
 */
 #define BOOST_TEST_MODULE test save scenario - builder.dat
 #define BOOST_TEST_DYN_LINK
-#include <boost/test/unit_test.hpp>
-
-#include <string>
 #include <filesystem>
 #include <fstream>
+#include <string>
 
-#include <antares/study/study.h>
+#include <boost/test/unit_test.hpp>
+
 #include <antares/study/scenario-builder/rules.h>
 #include <antares/study/scenario-builder/sets.h>
+#include <antares/study/study.h>
+
 #include "area/files-helper.h"
 
 using namespace std;
@@ -46,10 +47,12 @@ class referenceScBuilderFile
 public:
     referenceScBuilderFile() = default;
     ~referenceScBuilderFile() = default;
+
     string path() const
     {
         return absolute_path_;
     }
+
     void write();
 
     void append(const string line);
@@ -69,7 +72,9 @@ void referenceScBuilderFile::write()
     ofstream file;
     file.open(absolute_path_);
     for (uint i = 0; i < content_.size(); ++i)
+    {
         file << content_[i] << endl;
+    }
     file << endl;
 }
 
@@ -107,12 +112,14 @@ struct commonFixture
     commonFixture(const commonFixture&& f) = delete;
     commonFixture& operator=(const commonFixture& f) = delete;
     commonFixture& operator=(const commonFixture&& f) = delete;
+
     commonFixture()
     {
         study = std::make_shared<Study>();
         // Set study parameters
         study->parameters.nbYears = 20;
-        study->parameters.timeSeriesToGenerate = 0; // No generated time-series, only ready made time-series
+        study->parameters.timeSeriesToGenerate = 0; // No generated time-series, only ready made
+                                                    // time-series
 
         // Add areas
         area_1 = study->areaAdd("Area 1");
@@ -193,7 +200,6 @@ struct commonFixture
         study->bindingConstraintsGroups.add("group2");
         study->bindingConstraintsGroups.add("group3");
 
-
         // Scenario builder initialization
         study->scenarioRules = new ScenarioBuilder::Sets();
         study->scenarioRules->setStudy(*study);
@@ -225,17 +231,20 @@ struct commonFixture
 // Scenario builder save fixture
 // ======================================
 
-struct saveFixture : public commonFixture
+struct saveFixture: public commonFixture
 {
-    saveFixture() : commonFixture()
+    saveFixture():
+        commonFixture()
     {
     }
+
     ~saveFixture();
     void saveScenarioBuilder();
 
     // Data members
-    std::string path_to_generated_file
-      = fs::current_path().append(generatedScBuilderFileName).string();
+    std::string path_to_generated_file = fs::current_path()
+                                           .append(generatedScBuilderFileName)
+                                           .string();
     referenceScBuilderFile referenceFile;
 };
 
@@ -260,7 +269,8 @@ BOOST_AUTO_TEST_SUITE(s)
 // Tests on Load
 // ====================
 BOOST_FIXTURE_TEST_CASE(
-  LOAD__on_area2_and_year_11_chosen_ts_number_is_6__generated_and_ref_sc_buider_files_are_identical, saveFixture)
+  LOAD__on_area2_and_year_11_chosen_ts_number_is_6__generated_and_ref_sc_buider_files_are_identical,
+  saveFixture)
 {
     my_rule->load.setTSnumber(area_2->index, 11, 6);
 
@@ -275,7 +285,8 @@ BOOST_FIXTURE_TEST_CASE(
 }
 
 BOOST_FIXTURE_TEST_CASE(
-  LOAD__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical, saveFixture)
+  LOAD__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical,
+  saveFixture)
 {
     my_rule->load.setTSnumber(area_3->index, 7, 2);
     my_rule->load.setTSnumber(area_2->index, 11, 6);
@@ -303,7 +314,8 @@ BOOST_FIXTURE_TEST_CASE(
 // Tests on Wind
 // ====================
 BOOST_FIXTURE_TEST_CASE(
-  WIND__on_area3_and_year_19_chosen_ts_number_is_17__generated_and_ref_sc_buider_files_are_identical, saveFixture)
+  WIND__on_area3_and_year_19_chosen_ts_number_is_17__generated_and_ref_sc_buider_files_are_identical,
+  saveFixture)
 {
     my_rule->wind.setTSnumber(area_3->index, 19, 17);
 
@@ -321,7 +333,8 @@ BOOST_FIXTURE_TEST_CASE(
 // Tests on Solar
 // ====================
 BOOST_FIXTURE_TEST_CASE(
-  SOLAR__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical, saveFixture)
+  SOLAR__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical,
+  saveFixture)
 {
     my_rule->solar.setTSnumber(area_1->index, 9, 9);
     my_rule->solar.setTSnumber(area_3->index, 18, 7);
@@ -343,7 +356,8 @@ BOOST_FIXTURE_TEST_CASE(
 // Tests on Hydro
 // =================
 BOOST_FIXTURE_TEST_CASE(
-  HYDRO__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical, saveFixture)
+  HYDRO__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical,
+  saveFixture)
 {
     my_rule->hydro.setTSnumber(area_2->index, 17, 12);
     my_rule->hydro.setTSnumber(area_3->index, 18, 7);
@@ -365,7 +379,8 @@ BOOST_FIXTURE_TEST_CASE(
 // Tests on Hydro Max Power
 // =================
 BOOST_FIXTURE_TEST_CASE(
-  HYDRO_POWER_CREDITS__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical, saveFixture)
+  HYDRO_POWER_CREDITS__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical,
+  saveFixture)
 {
     my_rule->hydroMaxPower.setTSnumber(area_2->index, 10, 7);
     my_rule->hydroMaxPower.setTSnumber(area_3->index, 4, 11);
@@ -387,7 +402,8 @@ BOOST_FIXTURE_TEST_CASE(
 // Tests on Thermal clusters
 // ===========================
 BOOST_FIXTURE_TEST_CASE(
-  THERMAL__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical, saveFixture)
+  THERMAL__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical,
+  saveFixture)
 {
     my_rule->thermal[area_3->index].setTSnumber(thCluster_31.get(), 5, 13);
     my_rule->thermal[area_1->index].setTSnumber(thCluster_11.get(), 19, 8);
@@ -410,7 +426,8 @@ BOOST_FIXTURE_TEST_CASE(
 // Tests on Renewable clusters
 // =============================
 BOOST_FIXTURE_TEST_CASE(
-  RENEWABLE_CLUSTERS__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical, saveFixture)
+  RENEWABLE_CLUSTERS__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical,
+  saveFixture)
 {
     my_rule->renewable[area_3->index].setTSnumber(rnCluster_32.get(), 5, 13);
     my_rule->renewable[area_2->index].setTSnumber(rnCluster_21.get(), 19, 8);
@@ -433,7 +450,8 @@ BOOST_FIXTURE_TEST_CASE(
 // Tests on Hydro levels
 // ========================
 BOOST_FIXTURE_TEST_CASE(
-  HYDRO_LEVEL__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical, saveFixture)
+  HYDRO_LEVEL__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical,
+  saveFixture)
 {
     my_rule->hydroLevels.setTSnumber(area_1->index, 9, 9);
     my_rule->hydroLevels.setTSnumber(area_3->index, 18, 7);
@@ -455,7 +473,8 @@ BOOST_FIXTURE_TEST_CASE(
 // Tests on Links NTC
 // ======================
 BOOST_FIXTURE_TEST_CASE(
-  LINKS_NTC__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical, saveFixture)
+  LINKS_NTC__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical,
+  saveFixture)
 {
     my_rule->linksNTC[area_1->index].setDataForLink(link_12, 5, 13);
     my_rule->linksNTC[area_1->index].setDataForLink(link_13, 19, 8);
@@ -475,7 +494,9 @@ BOOST_FIXTURE_TEST_CASE(
 }
 
 BOOST_FIXTURE_TEST_CASE(
-    BC__TS_number_for_many_years__generated_and_ref_sc_buider_files_are_identical, saveFixture) {
+  BC__TS_number_for_many_years__generated_and_ref_sc_buider_files_are_identical,
+  saveFixture)
+{
     my_rule->binding_constraints.setTSnumber("group1", 5, 20);
     my_rule->binding_constraints.setTSnumber("group2", 19, 1);
     my_rule->binding_constraints.setTSnumber("group3", 5, 43);
@@ -497,7 +518,8 @@ BOOST_FIXTURE_TEST_CASE(
 // Tests on All assets together
 // ================================
 BOOST_FIXTURE_TEST_CASE(
-  ALL_TOGETHER__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical, saveFixture)
+  ALL_TOGETHER__TS_number_for_many_areas_and_years__generated_and_ref_sc_buider_files_are_identical,
+  saveFixture)
 {
     my_rule->load.setTSnumber(area_2->index, 11, 6);
     my_rule->load.setTSnumber(area_3->index, 7, 2);

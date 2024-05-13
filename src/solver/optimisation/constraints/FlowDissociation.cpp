@@ -29,8 +29,8 @@ void FlowDissociation::add(int pdt, int interco)
         data.CorrespondanceCntNativesCntOptim[pdt].NumeroDeContrainteDeDissociationDeFlux[interco]
           = builder.data.nombreDeContraintes;
         const auto origin = builder.data.NomsDesPays[data.PaysOrigineDeLInterconnexion[interco]];
-        const auto destination
-          = builder.data.NomsDesPays[data.PaysExtremiteDeLInterconnexion[interco]];
+        const auto destination = builder.data
+                                   .NomsDesPays[data.PaysExtremiteDeLInterconnexion[interco]];
         ConstraintNamer namer(builder.data.NomDesContraintes);
         namer.UpdateTimeStep(builder.data.weekInTheYear * 168 + pdt);
         namer.FlowDissociation(builder.data.nombreDeContraintes, origin, destination);

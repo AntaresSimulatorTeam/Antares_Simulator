@@ -22,6 +22,7 @@
 #define __ANTARES_LIBS_STUDY_PARTS_HYDRO_PREPRO_H__
 
 #include <antares/array/matrix.h>
+
 #include "../../fwd.h"
 
 namespace Antares
@@ -77,8 +78,6 @@ public:
     */
     PreproHydro();
     //@}
-
-
 
     /*!
     ** \brief Reset all data to their default values

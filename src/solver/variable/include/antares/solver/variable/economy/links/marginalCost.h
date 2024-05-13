@@ -40,6 +40,7 @@ struct VCardMarginalCost
     {
         return "MARG. COST";
     }
+
     //! Unit
     static std::string Unit()
     {
@@ -93,7 +94,7 @@ struct VCardMarginalCost
 ** \brief Marginal MarginalCost
 */
 template<class NextT = Container::EndOfList>
-class MarginalCost : public Variable::IVariable<MarginalCost<NextT>, NextT, VCardMarginalCost>
+class MarginalCost: public Variable::IVariable<MarginalCost<NextT>, NextT, VCardMarginalCost>
 {
 public:
     //! Type of the next static variable
@@ -119,11 +120,11 @@ public:
     {
         enum
         {
-            count
-            = ((VCardType::categoryDataLevel & CDataLevel && VCardType::categoryFileLevel & CFile)
-                 ? (NextType::template Statistics<CDataLevel, CFile>::count
-                    + VCardType::columnCount * ResultsType::count)
-                 : NextType::template Statistics<CDataLevel, CFile>::count),
+            count = ((VCardType::categoryDataLevel & CDataLevel
+                      && VCardType::categoryFileLevel & CFile)
+                       ? (NextType::template Statistics<CDataLevel, CFile>::count
+                          + VCardType::columnCount * ResultsType::count)
+                       : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
 
@@ -144,7 +145,9 @@ public:
         // Intermediate values
         pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+        {
             pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);
+        }
 
         // Next
         NextType::initializeFromStudy(study);
@@ -230,15 +233,17 @@ public:
 
         // This value should be reset to zero if  (flow_lowerbound) < flow < (flow_upperbound) (with
         // signed values)
-        double flow
-          = state.problemeHebdo->ValeursDeNTC[state.hourInTheWeek].ValeurDuFlux[state.link->index];
+        double flow = state.problemeHebdo->ValeursDeNTC[state.hourInTheWeek]
+                        .ValeurDuFlux[state.link->index];
         double flow_lowerbound = -state.problemeHebdo->ValeursDeNTC[state.hourInTheWeek]
                                     .ValeurDeNTCExtremiteVersOrigine[state.link->index];
         double flow_upperbound = state.problemeHebdo->ValeursDeNTC[state.hourInTheWeek]
                                    .ValeurDeNTCOrigineVersExtremite[state.link->index];
 
         if (flow - 0.001 > flow_lowerbound && flow + 0.001 < flow_upperbound)
+        {
             pValuesForTheCurrentYear[numSpace][state.hourInTheYear] = 0.;
+        }
 
         // Next item in the list
         NextType::hourForEachLink(state, numSpace);
@@ -270,8 +275,8 @@ public:
             // Write the data for the current year
             results.variableCaption = VCardType::Caption();
             results.variableUnit = VCardType::Unit();
-            pValuesForTheCurrentYear[numSpace].template buildAnnualSurveyReport<VCardType>(
-              results, fileLevel, precision);
+            pValuesForTheCurrentYear[numSpace]
+              .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
         }
     }
 

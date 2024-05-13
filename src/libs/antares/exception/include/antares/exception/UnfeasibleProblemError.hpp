@@ -33,7 +33,7 @@ namespace Antares
 {
 namespace Data
 {
-class UnfeasibleProblemError : public std::runtime_error
+class UnfeasibleProblemError: public std::runtime_error
 {
 public:
     explicit UnfeasibleProblemError(const std::string& message);

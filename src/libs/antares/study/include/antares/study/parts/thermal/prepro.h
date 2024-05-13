@@ -21,11 +21,13 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_THERMAL_PREPRO_H__
 #define __ANTARES_LIBS_STUDY_PARTS_THERMAL_PREPRO_H__
 
-#include "cluster.h"
-#include <antares/array/matrix.h>
-#include "defines.h"
-#include "../../fwd.h"
 #include <memory>
+
+#include <antares/array/matrix.h>
+
+#include "../../fwd.h"
+#include "cluster.h"
+#include "defines.h"
 
 namespace Antares
 {
@@ -67,8 +69,6 @@ public:
     bool forceReload(bool reload) const;
 
     void markAsModified() const;
-
-
 
     /*!
     ** \brief Reset all values to their default ones

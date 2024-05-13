@@ -19,9 +19,11 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <sstream>
-#include <iomanip>
 #include "antares/study/scenario-builder/hydroLevelsData.h"
+
+#include <iomanip>
+#include <sstream>
+
 #include "antares/study/scenario-builder/scBuilderUtils.h"
 
 namespace Antares::Data::ScenarioBuilder
@@ -58,7 +60,9 @@ void hydroLevelsData::saveToINIFile(const Study& study, Yuni::IO::File::Stream& 
             const MatrixType::Type value = col[y];
             // Equals to zero means 'auto', which is the default mode
             if (std::isnan(value))
+            {
                 continue;
+            }
             assert(index < study.areas.size());
             value_into_string << value;
             file << prefix << study.areas.byIndex[index]->id << ',' << y << " = "
@@ -80,5 +84,3 @@ bool hydroLevelsData::apply(Study& study)
 }
 
 } // namespace Antares::Data::ScenarioBuilder
-
-

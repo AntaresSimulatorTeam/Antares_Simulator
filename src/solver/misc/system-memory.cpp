@@ -20,8 +20,10 @@
 */
 
 #include "antares/solver/misc/system-memory.h"
-#include <antares/logs/logs.h>
+
 #include <yuni/core/system/memory.h>
+
+#include <antares/logs/logs.h>
 
 using namespace Yuni;
 using namespace Antares;

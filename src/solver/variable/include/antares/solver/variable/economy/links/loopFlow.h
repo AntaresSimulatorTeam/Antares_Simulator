@@ -38,6 +38,7 @@ struct VCardLoopFlow
     {
         return "LOOP FLOW";
     }
+
     //! Unit
     static std::string Unit()
     {
@@ -87,7 +88,7 @@ struct VCardLoopFlow
 ** \brief LoopFlow
 */
 template<class NextT = Container::EndOfList>
-class LoopFlow : public Variable::IVariable<LoopFlow<NextT>, NextT, VCardLoopFlow>
+class LoopFlow: public Variable::IVariable<LoopFlow<NextT>, NextT, VCardLoopFlow>
 {
 public:
     //! Type of the next static variable
@@ -113,11 +114,11 @@ public:
     {
         enum
         {
-            count
-            = ((VCardType::categoryDataLevel & CDataLevel && VCardType::categoryFileLevel & CFile)
-                 ? (NextType::template Statistics<CDataLevel, CFile>::count
-                    + VCardType::columnCount * ResultsType::count)
-                 : NextType::template Statistics<CDataLevel, CFile>::count),
+            count = ((VCardType::categoryDataLevel & CDataLevel
+                      && VCardType::categoryFileLevel & CFile)
+                       ? (NextType::template Statistics<CDataLevel, CFile>::count
+                          + VCardType::columnCount * ResultsType::count)
+                       : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
 
@@ -257,8 +258,9 @@ public:
             // Write the data for the current year
             results.variableCaption = VCardType::Caption();
             results.variableUnit = VCardType::Unit();
-            pValuesForTheCurrentYear.template buildAnnualSurveyReport<VCardType>(
-              results, fileLevel, precision);
+            pValuesForTheCurrentYear.template buildAnnualSurveyReport<VCardType>(results,
+                                                                                 fileLevel,
+                                                                                 precision);
         }
     }
 
