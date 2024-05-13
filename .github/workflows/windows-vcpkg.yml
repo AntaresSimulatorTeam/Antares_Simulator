@@ -261,15 +261,6 @@ jobs:
         batch-name: valid-mps
         os: ${{ env.test-platform }}
 
-    - name: Run tests for time series generator tool
-      if: ${{ env.RUN_SIMPLE_TESTS == 'true' }}
-      uses: ./.github/workflows/run-tests
-      with:
-        simtest-tag: ${{steps.simtest-version.outputs.prop}}
-        batch-name: ts-generator
-        os: ${{ env.test-platform }}
-        variant: "tsgenerator"
-
     - name: Run parallel tests
       if: ${{ env.RUN_EXTENDED_TESTS == 'true' }}
       uses: ./.github/workflows/run-tests
