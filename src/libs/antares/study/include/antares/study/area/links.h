@@ -29,12 +29,11 @@
 
 #include <antares/array/matrix.h>
 #include <antares/series/series.h>
+#include <antares/solver/ts-generator/prepro.h>
+#include <antares/study/version.h>
 #include <antares/writer/i_writer.h>
 
 #include "../fwd.h"
-
-//! The minimal allowed value for hurdle costs when not null
-#define LINK_MINIMAL_HURDLE_COSTS_NOT_NULL 0.005
 
 namespace Antares
 {
@@ -70,7 +69,7 @@ public:
     ~AreaLink();
     //@}
 
-    bool loadTimeSeries(const Study& study, const AnyString& folder);
+    bool loadTimeSeries(const StudyVersion& version, const AnyString& folder);
 
     void storeTimeseriesNumbers(Solver::IResultWriter& writer) const;
 

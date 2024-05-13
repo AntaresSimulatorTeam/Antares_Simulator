@@ -42,7 +42,6 @@
 #include "thermal/cluster.h"
 #include "thermal/container.h"
 #include "thermal/defines.h"
-#include "thermal/prepro.h"
 
 // Renewable
 #include "renewable/cluster.h"

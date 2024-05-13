@@ -30,24 +30,18 @@
 #include <yuni/core/noncopyable.h>
 
 #include <antares/array/matrix.h>
+#include <antares/solver/ts-generator/law.h>
 
 #include "../../fwd.h"
 #include "../common/cluster.h"
 #include "defines.h"
 #include "ecoInput.h"
 #include "pollutant.h"
-#include "prepro.h"
 
 namespace Antares
 {
 namespace Data
 {
-enum ThermalLaw
-{
-    thermalLawUniform,
-    thermalLawGeometric
-};
-
 enum ThermalModulation
 {
     thermalModulationCost = 0,
@@ -299,9 +293,9 @@ public:
     double plannedVolatility = 0.;
 
     //! Law (ts-generator)
-    ThermalLaw forcedLaw = thermalLawUniform;
+    StatisticalLaw forcedLaw = LawUniform;
     //! Law (ts-generator)
-    ThermalLaw plannedLaw = thermalLawUniform;
+    StatisticalLaw plannedLaw = LawUniform;
 
     //! \name Costs
     //  Marginal (€/MWh)     MA
@@ -359,7 +353,7 @@ public:
     std::vector<double> PthetaInf;
 
     //! Data for the preprocessor
-    PreproThermal* prepro = nullptr;
+    PreproAvailability* prepro = nullptr;
 
     /*!
     ** \brief Production Cost, Market Bid Cost and Marginal Cost Matrixes - Per Hour and per Time
