@@ -56,11 +56,9 @@ namespace
     using namespace std::literals::string_literals;
     std::string arg0{""s};
     std::string arg1{study_path};
-    std::string arg2{"-s"s};
     argv[0] = arg0.data();
     argv[1] = arg1.data();
-    argv[2] = arg2.data();
-    return {std::move(arg0), std::move(arg1), std::move(arg2)};
+    return {std::move(arg0), std::move(arg1)};
 }
 } // namespace
 
@@ -68,7 +66,7 @@ std::unique_ptr<Antares::Data::Study> FileTreeStudyLoader::load() const
 {
     using namespace std::literals::string_literals;
     Antares::Solver::Application application;
-    constexpr unsigned int argc = 3;
+    constexpr unsigned int argc = 2;
     std::array<char*, argc> argv;
     auto keep_alive = prepareArgs(argv, study_path_.string());
     application.prepare(argc, argv.data());
