@@ -10,7 +10,7 @@ runs:
   - id: install-boost
     shell: bash
     run: |
-      source /opt/rh/gcc-toolset-10/enable || true
+      source /opt/rh/gcc-toolset-11/enable || true
       export LD_LIBRARY_PATH=/usr/lib64/openmpi/lib:$LD_LIBRARY_PATH
       export PATH=/usr/lib64/openmpi/bin:$PATH
       wget https://github.com/boostorg/boost/releases/download/boost-1.81.0/boost-1.81.0.tar.gz

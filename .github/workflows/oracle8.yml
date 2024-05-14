@@ -49,12 +49,6 @@ jobs:
       run: |
            git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git -b ${{ env.REF }} .
 
-    - run: |
-        ls .
-        ls ./.github
-        ls ./.github/workflows
-        ls ./.github/workflows/compile-boost
-
     - name: Compile boost
       uses: ./.github/workflows/compile-boost
       with:
