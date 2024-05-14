@@ -35,24 +35,12 @@ BindingConstraintsTimeSeriesNumbersWriter::BindingConstraintsTimeSeriesNumbersWr
 
 }
 
-namespace // anonymous
-{
-    struct TSNumbersPredicate
-    {
-        uint32_t operator()(uint32_t value) const
-        {
-            return value + 1;
-        }
-    };
-} // anonymous namespace
-
 // TODO : remove duplication
 static void genericStoreTimeseriesNumbers(Solver::IResultWriter& writer,
                                           const Data::TimeSeriesNumbers& timeseriesNumbers,
                                           const std::string& id,
                                           const std::string& directory)
 {
-    TSNumbersPredicate predicate;
     std::filesystem::path path = std::filesystem::path() / "ts-numbers" / directory.c_str() / id.c_str();
     path.replace_extension("txt");
 
