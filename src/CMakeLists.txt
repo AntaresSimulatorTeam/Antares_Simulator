@@ -58,6 +58,11 @@ if(${ANTARES_RC})
 	set (ANTARES_VERSION_TAG "-rc${ANTARES_RC}")
 endif()
 
+find_package(Boost REQUIRED)
+message(STATUS "Boost version: ${Boost_VERSION}")
+message(STATUS "Boost include dirs: ${Boost_INCLUDE_DIRS}")
+message(STATUS "Boost include dir: ${Boost_INCLUDE_DIR}")
+
 # git SHA-1
 find_package(Git QUIET)
 execute_process(COMMAND
