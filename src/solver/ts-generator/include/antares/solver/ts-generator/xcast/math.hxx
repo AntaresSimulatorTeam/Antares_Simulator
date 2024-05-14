@@ -20,10 +20,13 @@
 */
 
 #include <cmath>
+
 #include <yuni/yuni.h>
-#include <antares/study/study.h>
+
 #include <antares/logs/logs.h>
+#include <antares/study/study.h>
 #include "antares/solver/ts-generator/xcast/xcast.h"
+
 #include "constants.h"
 
 using namespace Yuni;
@@ -310,7 +313,9 @@ static float maxiDiffusion(float a, float b, float g, float d, int l, float t)
         float m = diffusion(a, b, g, d, l, t, x);
         float y = diffusion(a, b, g, d, l, t, maximum(a, b, g, d, l));
         if (y > m)
+        {
             m = y;
+        }
         if (a > 1.f)
         {
             x = (a - 1.f) / a;
@@ -318,7 +323,9 @@ static float maxiDiffusion(float a, float b, float g, float d, int l, float t)
             x *= b;
             y = diffusion(a, b, g, d, l, t, x);
             if (y > m)
+            {
                 m = y;
+            }
         }
         return m;
     }

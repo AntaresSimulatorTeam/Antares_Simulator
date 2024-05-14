@@ -20,7 +20,6 @@
 */
 #pragma once
 #include "antares/solver/optimisation/constraints/ConstraintBuilder.h"
-
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 
 struct CsrBindingConstraintHourData
@@ -32,14 +31,15 @@ struct CsrBindingConstraintHourData
     std::map<int, int>& numberOfConstraintCsrHourlyBinding;
 };
 
-class CsrBindingConstraintHour : private ConstraintFactory
+class CsrBindingConstraintHour: private ConstraintFactory
 {
 public:
-    CsrBindingConstraintHour(ConstraintBuilder& builder,
-                             CsrBindingConstraintHourData& data) :
-     ConstraintFactory(builder), data(data)
+    CsrBindingConstraintHour(ConstraintBuilder& builder, CsrBindingConstraintHourData& data):
+        ConstraintFactory(builder),
+        data(data)
     {
     }
+
     void add(int CntCouplante);
 
 private:

@@ -19,8 +19,9 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <antares/benchmarking/timer.h>
 #include <yuni/core/system/gettimeofday.h>
+
+#include <antares/benchmarking/timer.h>
 
 using namespace Yuni;
 

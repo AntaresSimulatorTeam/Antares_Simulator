@@ -1,6 +1,7 @@
 
 
 #include "antares/study/scenario-builder/HydroMaxPowerTSNumberData.h"
+
 #include "antares/study/scenario-builder/applyToMatrix.hxx"
 
 // ================================
@@ -11,7 +12,7 @@ namespace Antares::Data::ScenarioBuilder
 {
 uint hydroMaxPowerTSNumberData::get_tsGenCount(const Study& /* study */) const
 {
-    //This function must be overriden because it is inherited from abstract class
+    // This function must be overriden because it is inherited from abstract class
     return 0;
 }
 
@@ -36,8 +37,13 @@ bool hydroMaxPowerTSNumberData::apply(Study& study)
         const MatrixType::ColumnType& col = pTSNumberRules[areaIndex];
 
         logprefix.clear() << "Hydro Max Power: Area '" << area.name << "': ";
-        ret = ApplyToMatrixMaxPower(errors, logprefix, *area.hydro.series, col, tsGenCountHydroMaxPower) && ret;
+        ret = ApplyToMatrixMaxPower(errors,
+                                    logprefix,
+                                    *area.hydro.series,
+                                    col,
+                                    tsGenCountHydroMaxPower)
+              && ret;
     }
     return ret;
 }
-}
+} // namespace Antares::Data::ScenarioBuilder

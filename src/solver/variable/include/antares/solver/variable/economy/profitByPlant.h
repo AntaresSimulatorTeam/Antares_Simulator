@@ -38,6 +38,7 @@ struct VCardProfitByPlant
     {
         return "Profit by plant";
     }
+
     //! Unit
     static std::string Unit()
     {
@@ -92,7 +93,7 @@ struct VCardProfitByPlant
 **   the thermal dispatchable clusters
 */
 template<class NextT = Container::EndOfList>
-class ProfitByPlant : public Variable::IVariable<ProfitByPlant<NextT>, NextT, VCardProfitByPlant>
+class ProfitByPlant: public Variable::IVariable<ProfitByPlant<NextT>, NextT, VCardProfitByPlant>
 {
 public:
     //! Type of the next static variable
@@ -118,23 +119,27 @@ public:
     {
         enum
         {
-            count
-            = ((VCardType::categoryDataLevel & CDataLevel && VCardType::categoryFileLevel & CFile)
-                 ? (NextType::template Statistics<CDataLevel, CFile>::count
-                    + VCardType::columnCount * ResultsType::count)
-                 : NextType::template Statistics<CDataLevel, CFile>::count),
+            count = ((VCardType::categoryDataLevel & CDataLevel
+                      && VCardType::categoryFileLevel & CFile)
+                       ? (NextType::template Statistics<CDataLevel, CFile>::count
+                          + VCardType::columnCount * ResultsType::count)
+                       : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
 
 public:
-    ProfitByPlant() : pValuesForTheCurrentYear(nullptr), pNbClustersOfArea(0)
+    ProfitByPlant():
+        pValuesForTheCurrentYear(nullptr),
+        pNbClustersOfArea(0)
     {
     }
 
     ~ProfitByPlant()
     {
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+        {
             delete[] pValuesForTheCurrentYear[numSpace];
+        }
         delete[] pValuesForTheCurrentYear;
     }
 
@@ -156,12 +161,18 @@ public:
         {
             AncestorType::pResults.resize(pNbClustersOfArea);
             for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
-                pValuesForTheCurrentYear[numSpace]
-                  = new VCardType::IntermediateValuesDeepType[pNbClustersOfArea];
+            {
+                pValuesForTheCurrentYear[numSpace] = new VCardType::IntermediateValuesDeepType
+                  [pNbClustersOfArea];
+            }
 
             for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+            {
                 for (unsigned int i = 0; i != pNbClustersOfArea; ++i)
+                {
                     pValuesForTheCurrentYear[numSpace][i].initializeFromStudy(*study);
+                }
+            }
 
             for (unsigned int i = 0; i != pNbClustersOfArea; ++i)
             {
@@ -172,7 +183,9 @@ public:
         else
         {
             for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+            {
                 pValuesForTheCurrentYear[numSpace] = nullptr;
+            }
 
             AncestorType::pResults.clear();
         }
@@ -207,7 +220,9 @@ public:
     {
         // Reset the values for the current year
         for (unsigned int i = 0; i != pNbClustersOfArea; ++i)
+        {
             pValuesForTheCurrentYear[numSpace][i].reset();
+        }
 
         // Next variable
         NextType::yearBegin(year, numSpace);
@@ -265,10 +280,10 @@ public:
         uint hourInTheWeek = state.hourInTheWeek;
         uint hourInTheYear = state.hourInTheYear;
 
-        for (auto& cluster : area->thermal.list.each_enabled())
+        for (auto& cluster: area->thermal.list.each_enabled())
         {
-            double hourlyClusterProduction
-              = thermal[area->index].thermalClustersProductions[cluster->areaWideIndex];
+            double hourlyClusterProduction = thermal[area->index]
+                                               .thermalClustersProductions[cluster->areaWideIndex];
             double pMin = thermal[area->index].PMinOfClusters[cluster->areaWideIndex];
             uint tsIndex = cluster->series.timeseriesNumbers[0][state.year];
 
@@ -304,13 +319,13 @@ public:
             const auto& thermal = results.data.area->thermal;
 
             // Write the data for the current year
-            for (auto& cluster : thermal.list.each_enabled())
+            for (auto& cluster: thermal.list.each_enabled())
             {
                 // Write the data for the current year
                 results.variableCaption = cluster->name(); // VCardType::Caption();
                 results.variableUnit = VCardType::Unit();
-                pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex].template buildAnnualSurveyReport<VCardType>(
-                  results, fileLevel, precision);
+                pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex]
+                  .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
             }
         }
     }

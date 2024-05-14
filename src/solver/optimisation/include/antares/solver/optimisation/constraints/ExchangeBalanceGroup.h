@@ -23,7 +23,7 @@
 #include "ConstraintGroup.h"
 #include "ExchangeBalance.h"
 
-class ExchangeBalanceGroup : public ConstraintGroup
+class ExchangeBalanceGroup: public ConstraintGroup
 {
 public:
     using ConstraintGroup::ConstraintGroup;
