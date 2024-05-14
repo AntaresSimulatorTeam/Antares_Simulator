@@ -54,17 +54,9 @@ jobs:
           sudo apt-get install libboost-test-dev
           sudo apt-get install g++-10 gcc-10
 
-      - name: Read antares-deps version
-        id: antares-deps-version
-        uses: notiz-dev/github-action-json-property@release
-        with:
-          path: 'antares-deps-version.json'
-          prop_path: 'antares_deps_version'
-
       - name: Download pre-compiled librairies
         uses: ./.github/workflows/download-extract-precompiled-libraries-tgz
         with:
-          antares-deps-version: ${{steps.antares-deps-version.outputs.prop}}
           os: ${{matrix.os}}
           buildtype: Debug
           ortools-url: ${{env.ORTOOLS_URL}}
@@ -85,7 +77,6 @@ jobs:
 
       - name: Init submodule
         run: |
-          git submodule update --init src/antares-deps
           git submodule update --init --remote src/tests/resources/Antares_Simulator_Tests
 
       - name: Configure
@@ -96,7 +87,6 @@ jobs:
           -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
           -DCMAKE_CXX_COMPILER=/usr/bin/g++-10 \
           -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake \
-          -DDEPS_INSTALL_DIR=./rte-antares-deps-Debug \
           -DCODE_COVERAGE=ON \
           -DCMAKE_BUILD_TYPE=Debug \
           -DCMAKE_PREFIX_PATH="../install;${{ env.ORTOOLS_DIR }}/install" \
