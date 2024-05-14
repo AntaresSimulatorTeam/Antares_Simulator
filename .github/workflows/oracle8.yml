@@ -43,7 +43,7 @@ jobs:
     - name: Install libraries
       run: |
            dnf install -y epel-release git cmake wget rpm-build redhat-lsb-core
-           dnf install -y unzip libuuid-devel boost-test boost-devel gcc-toolset-11 zlib-devel
+           dnf install -y unzip libuuid-devel gcc-toolset-11 zlib-devel
 
     - name: Checkout
       run: |
@@ -64,7 +64,7 @@ jobs:
     - name: Init submodule
       run: |
            git config --global safe.directory '*'
-           git submodule update --init --remote src/antares-deps src/tests/resources/Antares_Simulator_Tests
+           git submodule update --init --remote src/antares-deps
 
     - name: Install dependencies
       run: |
@@ -77,6 +77,11 @@ jobs:
            dnf -y config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
            dnf -y install gh
 
+    - name: Compile boost
+      uses: ./.github/workflows/compile-boost
+      with:
+          prefix: ${{ github.workspace }}/boost_install
+
     - name: Configure
       run: |
            source /opt/rh/gcc-toolset-11/enable
@@ -85,12 +90,16 @@ jobs:
              -DBUILD_TESTING=ON \
              -DBUILD_TOOLS=ON \
              -DBUILD_UI=OFF \
-             -DCMAKE_PREFIX_PATH=${{ env.ORTOOLS_DIR }}/install
+             -DCMAKE_PREFIX_PATH=${{ env.ORTOOLS_DIR }}/install;${{ github.workspace }}/boost_install
 
     - name: Build
       run: |
            source /opt/rh/gcc-toolset-11/enable
            cmake --build _build --config Release -j$(nproc)
+
+    - name: Get tests data
+      run: |
+        git submodule update --init --remote src/tests/resources/Antares_Simulator_Tests
 
     - name: Run unit and end-to-end tests
       if: ${{ env.IS_PUSH == 'true' }}

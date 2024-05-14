@@ -1,0 +1,21 @@
+name: "Download and compile boost"
+description: "Download and compile boost"
+inputs:
+  prefix:
+    description: 'extra qualifiers'
+    required: true
+runs:
+  using: "composite"
+  steps: 
+  - id: install-boost
+    shell: bash
+    run: |
+      source /opt/rh/gcc-toolset-10/enable || true
+      export LD_LIBRARY_PATH=/usr/lib64/openmpi/lib:$LD_LIBRARY_PATH
+      export PATH=/usr/lib64/openmpi/bin:$PATH
+      wget https://github.com/boostorg/boost/releases/download/boost-1.81.0/boost-1.81.0.tar.gz
+      tar xvf boost-1.81.0.tar.gz
+      cd boost-1.81.0
+      ./bootstrap.sh --prefix=${{inputs.prefix}}/ --with-libraries=serialization,program_options,mpi
+      echo "using mpi ;" >> project-config.jam
+      ./b2 install
