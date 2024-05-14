@@ -33,18 +33,7 @@ inline bool IniFile::empty() const
     return not firstSection;
 }
 
-inline IniFile::Section::Section():
-    firstProperty(nullptr),
-    lastProperty(nullptr),
-    next(nullptr)
-{
-}
-
-inline IniFile::Section::Section(const AnyString& name):
-    name(name),
-    firstProperty(nullptr),
-    lastProperty(nullptr),
-    next(nullptr)
+inline IniFile::Section::Section(const AnyString& name): name(name)
 {
 }
 
@@ -61,7 +50,7 @@ IniFile::Property::Property(const AnyString& key, const U& value):
 
 inline bool IniFile::Section::empty() const
 {
-    return (NULL == firstProperty);
+    return !firstProperty
 }
 
 template<class U>

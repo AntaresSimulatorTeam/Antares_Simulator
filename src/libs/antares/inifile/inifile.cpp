@@ -295,13 +295,13 @@ bool IniFile::save(const AnyString& filename) const
 {
     logs.debug() << "  :: writing `" << filename << '`';
 
-    std::ofstream f(filename.to<std::string>());
-    if (f.good())
+    std::ofstream of(filename.to<std::string>());
+    if (of.good())
     {
         uint64_t written = 0;
         for (auto* section = firstSection; section; section = section->next)
         {
-            section->saveToStream(f, written);
+            section->saveToStream(of, written);
         }
 
         if (written != 0)
@@ -310,11 +310,9 @@ bool IniFile::save(const AnyString& filename) const
         }
         return true;
     }
-    else
-    {
-        logs.error() << "I/O error: " << filename << ": Impossible to write the file";
-        return false;
-    }
+
+    logs.error() << "I/O error: " << filename << ": Impossible to write the file";
+    return false;
 }
 
 IniFile::Property* IniFile::Section::find(const AnyString& key)

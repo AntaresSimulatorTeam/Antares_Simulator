@@ -66,7 +66,7 @@ public:
     class Section final
     {
     public:
-        Section();
+        Section() = default;
         explicit Section(const AnyString& name);
         ~Section();
 
@@ -149,11 +149,11 @@ public:
         //! The name of the section
         Yuni::ShortString256 name;
         //! The first property of the section
-        IniFile::Property* firstProperty;
+        IniFile::Property* firstProperty = nullptr;;
         //! The last property of the section
-        IniFile::Property* lastProperty;
+        IniFile::Property* lastProperty = nullptr;;
         //! The next section
-        Section* next;
+        Section* next = nullptr;
 
     }; // class Section
 
