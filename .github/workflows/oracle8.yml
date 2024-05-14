@@ -7,6 +7,7 @@ on:
     branches:
       - develop
       - dependabot/*
+      - feature/vcpkg-sirius-port
 
   schedule:
     - cron: '21 2 * * *'
