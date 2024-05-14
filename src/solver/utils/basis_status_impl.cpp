@@ -19,8 +19,10 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <vector>
 #include "basis_status_impl.h"
+
+#include <vector>
+
 #include "ortools/linear_solver/linear_solver.h"
 
 template<class SourceT>
@@ -36,19 +38,19 @@ static void transferBasis(std::vector<operations_research::MPSolver::BasisStatus
 
 namespace Antares::Optimization
 {
-  void BasisStatusImpl::setStartingBasis(operations_research::MPSolver* solver) const
-  {
+void BasisStatusImpl::setStartingBasis(operations_research::MPSolver* solver) const
+{
     solver->SetStartingLpBasis(StatutDesVariables, StatutDesContraintes);
-  }
+}
 
-  void BasisStatusImpl::extractBasis(const operations_research::MPSolver* solver)
-  {
+void BasisStatusImpl::extractBasis(const operations_research::MPSolver* solver)
+{
     transferBasis(StatutDesVariables, solver->variables());
     transferBasis(StatutDesContraintes, solver->constraints());
-  }
-
-  bool BasisStatusImpl::exists() const
-  {
-    return !StatutDesVariables.empty() && !StatutDesContraintes.empty();
-  }
 }
+
+bool BasisStatusImpl::exists() const
+{
+    return !StatutDesVariables.empty() && !StatutDesContraintes.empty();
+}
+} // namespace Antares::Optimization

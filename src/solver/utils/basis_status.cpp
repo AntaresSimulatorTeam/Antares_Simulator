@@ -20,11 +20,13 @@
 */
 
 #include <antares/solver/utils/basis_status.h>
+
 #include "basis_status_impl.h"
 
 namespace Antares::Optimization
 {
-BasisStatus::BasisStatus() : impl(std::make_unique<BasisStatusImpl>())
+BasisStatus::BasisStatus():
+    impl(std::make_unique<BasisStatusImpl>())
 {
 }
 

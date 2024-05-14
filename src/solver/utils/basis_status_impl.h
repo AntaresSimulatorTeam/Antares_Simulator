@@ -22,26 +22,28 @@
 #pragma once
 
 #include <vector>
+
 #include "ortools/linear_solver/linear_solver.h"
 
 namespace Test
 {
-    class BasisStatus;
+class BasisStatus;
 }
 
 namespace Antares::Optimization
 {
-class BasisStatusImpl {
+class BasisStatusImpl
+{
 private:
-  friend class BasisStatus;
-  friend class Test::BasisStatus; // For tests
+    friend class BasisStatus;
+    friend class Test::BasisStatus; // For tests
 
-  using Status = operations_research::MPSolver::BasisStatus;
-  std::vector<Status> StatutDesVariables;
-  std::vector<Status> StatutDesContraintes;
+    using Status = operations_research::MPSolver::BasisStatus;
+    std::vector<Status> StatutDesVariables;
+    std::vector<Status> StatutDesContraintes;
 
-  void setStartingBasis(operations_research::MPSolver* solver) const;
-  void extractBasis(const operations_research::MPSolver* solver);
-  bool exists() const;
+    void setStartingBasis(operations_research::MPSolver* solver) const;
+    void extractBasis(const operations_research::MPSolver* solver);
+    bool exists() const;
 };
-}
+} // namespace Antares::Optimization

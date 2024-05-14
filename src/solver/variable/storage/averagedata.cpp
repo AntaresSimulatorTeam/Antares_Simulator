@@ -19,15 +19,21 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <yuni/yuni.h>
-#include "antares/solver/variable/storage/intermediate.h"
 #include "antares/solver/variable/storage/averagedata.h"
+
+#include <yuni/yuni.h>
+
+#include "antares/solver/variable/storage/intermediate.h"
 
 using namespace Yuni;
 
 namespace Antares::Solver::Variable::R::AllYears
 {
-AverageData::AverageData() : hourly(nullptr), year(nullptr), nbYearsCapacity(0), allYears(0.)
+AverageData::AverageData():
+    hourly(nullptr),
+    year(nullptr),
+    nbYearsCapacity(0),
+    allYears(0.)
 {
 }
 
@@ -65,22 +71,26 @@ void AverageData::merge(unsigned int y, const IntermediateValues& rhs)
 
     // Average value for each hour throughout all years
     for (i = 0; i != maxHoursInAYear; ++i)
+    {
         hourly[i] += rhs.hour[i] * ratio;
+    }
     // Average value for each day throughout all years
     for (i = 0; i != maxDaysInAYear; ++i)
+    {
         daily[i] += rhs.day[i] * ratio;
+    }
     // Average value for each week throughout all years
     for (i = 0; i != maxWeeksInAYear; ++i)
+    {
         weekly[i] += rhs.week[i] * ratio;
+    }
     // Average value for each month throughout all years
     for (i = 0; i != maxMonths; ++i)
+    {
         monthly[i] += rhs.month[i] * ratio;
+    }
     // Average value throughout all years
     year[y] += rhs.year * ratio;
 }
 
 } // namespace Antares::Solver::Variable::R::AllYears
-
-
-
-

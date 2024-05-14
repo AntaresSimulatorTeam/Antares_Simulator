@@ -22,6 +22,7 @@
 // Created by marechaljas on 04/07/23.
 //
 #include "antares/study/scenario-builder/WindTSNumberData.h"
+
 #include "antares/study/scenario-builder/applyToMatrix.hxx"
 
 namespace Antares::Data::ScenarioBuilder
@@ -60,4 +61,4 @@ bool windTSNumberData::apply(/*const*/ Study& study)
     }
     return ret;
 }
-}
+} // namespace Antares::Data::ScenarioBuilder

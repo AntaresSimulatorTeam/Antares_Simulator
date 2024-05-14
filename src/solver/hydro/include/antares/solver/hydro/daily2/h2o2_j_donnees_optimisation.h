@@ -33,9 +33,10 @@ extern "C"
 }
 
 #endif
-#include "../daily/h2o_j_donnees_optimisation.h"
-#include <antares/study/study.h>
 #include <antares/mersenne-twister/mersenne-twister.h>
+#include <antares/study/study.h>
+
+#include "../daily/h2o_j_donnees_optimisation.h"
 
 #define LINFINI 1.e+80
 
@@ -53,10 +54,9 @@ typedef struct
 {
     int NombreDeVariables;
     std::vector<double> CoutLineaire;
-    std::vector<int> TypeDeVariable; /* Indicateur du type de variable, il ne doit prendre que les suivantes
-                                                        (voir le fichier spx_constantes_externes.h
-                            mais ne jamais utiliser les valeurs explicites des constantes):
-                                                        VARIABLE_FIXE                  ,
+    std::vector<int> TypeDeVariable; /* Indicateur du type de variable, il ne doit prendre que les
+                            suivantes (voir le fichier spx_constantes_externes.h mais ne jamais
+                            utiliser les valeurs explicites des constantes): VARIABLE_FIXE ,
                                                         VARIABLE_BORNEE_DES_DEUX_COTES ,
                                                         VARIABLE_BORNEE_INFERIEUREMENT ,
                                                         VARIABLE_BORNEE_SUPERIEUREMENT ,
@@ -98,11 +98,14 @@ typedef struct
                                   pas de solution
                                                           */
 
-    std::vector<int> PositionDeLaVariable; /* Vecteur a passer au Simplexe pour recuperer la base optimale */
-    std::vector<int> ComplementDeLaBase;   /* Vecteur a passer au Simplexe pour recuperer la base optimale */
-    std::vector<double> CoutsReduits;      /* Vecteur a passer au Simplexe pour recuperer les couts reduits */
-    std::vector<double> CoutsMarginauxDesContraintes; /* Vecteur a passer au Simplexe pour recuperer les couts
-                                             marginaux */
+    std::vector<int>
+      PositionDeLaVariable; /* Vecteur a passer au Simplexe pour recuperer la base optimale */
+    std::vector<int>
+      ComplementDeLaBase; /* Vecteur a passer au Simplexe pour recuperer la base optimale */
+    std::vector<double>
+      CoutsReduits; /* Vecteur a passer au Simplexe pour recuperer les couts reduits */
+    std::vector<double> CoutsMarginauxDesContraintes; /* Vecteur a passer au Simplexe pour recuperer
+                                             les couts marginaux */
 } PROBLEME_LINEAIRE_ETENDU_PARTIE_VARIABLE;
 
 /* Les correspondances des variables */
@@ -111,15 +114,15 @@ typedef struct
     std::vector<int> NumeroVar_Turbine; /* Turbines */
 
     std::vector<int> NumeroVar_niveauxFinJours; // Niveaux fin jours
-    int NumeroVar_waste;            // Waste
-    std::vector<int> NumeroVar_overflow;   // Deversements (ecarts journaliers entre niveaux et les 100 % du
-                               // reservoir)
-    std::vector<int> NumeroVar_deviations; // Deviations (ecarts journaliers entre turbin?s et cr?dits cibles
-                               // brutes)
-    std::vector<int> NumeroVar_violations; // Violations (ecarts journaliers entre niveaux et courbes guides sup
-                               // et inf)
-    int NumeroVar_deviationMax; // Deviation max sur le mois
-    int NumeroVar_violationMax; // Violation max sur le mois
+    int NumeroVar_waste;                        // Waste
+    std::vector<int> NumeroVar_overflow;   // Deversements (ecarts journaliers entre niveaux et les
+                                           // 100 % du reservoir)
+    std::vector<int> NumeroVar_deviations; // Deviations (ecarts journaliers entre turbin?s et
+                                           // cr?dits cibles brutes)
+    std::vector<int> NumeroVar_violations; // Violations (ecarts journaliers entre niveaux et
+                                           // courbes guides sup et inf)
+    int NumeroVar_deviationMax;            // Deviation max sur le mois
+    int NumeroVar_violationMax;            // Violation max sur le mois
 } CORRESPONDANCE_DES_VARIABLES_PB_ETENDU;
 
 /* Structure uniquement exploitee par l'optimisation (donc a ne pas acceder depuis l'exterieur) */
@@ -135,7 +138,8 @@ typedef struct
     std::vector<PROBLEME_LINEAIRE_ETENDU_PARTIE_FIXE> ProblemeLineaireEtenduPartieFixe;
     std::vector<PROBLEME_LINEAIRE_ETENDU_PARTIE_VARIABLE> ProblemeLineaireEtenduPartieVariable;
 
-    std::vector<PROBLEME_SPX*> ProblemeSpx; /* Il y en a 1 par reservoir. Un probleme couvre 1 mois */
+    std::vector<PROBLEME_SPX*>
+      ProblemeSpx; /* Il y en a 1 par reservoir. Un probleme couvre 1 mois */
 } PROBLEME_HYDRAULIQUE_ETENDU;
 
 namespace Antares::Constants
@@ -153,26 +157,32 @@ public:
     {
         return end_days_levels + noiseGenerator() * Constants::noiseAmplitude;
     }
+
     inline double get_overflow_cost() const
     {
         return overflow + noiseGenerator() * Constants::noiseAmplitude;
     }
+
     inline double get_deviations_cost() const
     {
         return deviations + noiseGenerator() * Constants::noiseAmplitude;
     }
+
     inline double get_violations_cost() const
     {
         return violations + noiseGenerator() * Constants::noiseAmplitude;
     }
+
     inline double get_waste_cost() const
     {
         return waste + noiseGenerator() * Constants::noiseAmplitude;
     }
+
     inline double get_deviationMax_cost() const
     {
         return deviationMax + noiseGenerator() * Constants::noiseAmplitude;
     }
+
     inline double get_violationMax_cost() const
     {
         return violationMax + noiseGenerator() * Constants::noiseAmplitude;

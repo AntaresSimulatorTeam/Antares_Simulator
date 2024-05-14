@@ -20,19 +20,19 @@
  */
 #pragma once
 
-#include <antares/study/study.h>
-#include <antares/study/load-options.h>
+#include <yuni/core/string.h>
+
 #include <antares/benchmarking/DurationCollector.h>
 #include <antares/benchmarking/timer.h>
+#include <antares/study/load-options.h>
+#include <antares/study/study.h>
+#include <antares/writer/i_writer.h>
 #include "antares/infoCollection/StudyInfoCollector.h"
 #include "antares/solver/misc/options.h"
 
-#include <antares/writer/i_writer.h>
-#include <yuni/core/string.h>
-
 namespace Antares::Solver
 {
-class Application final : public Yuni::IEventObserver<Application, Yuni::Policy::SingleThreaded>
+class Application final: public Yuni::IEventObserver<Application, Yuni::Policy::SingleThreaded>
 {
 public:
     //! \name Constructor & Destructor
@@ -71,6 +71,16 @@ public:
     void resetProcessPriority() const;
 
     void writeExectutionInfo();
+
+    /**
+     * @brief /!\ Acquire the study. Leave Application object in an invalid state.
+     * @return The study
+     */
+    std::unique_ptr<Data::Study> acquireStudy()
+    {
+        return std::move(pStudy);
+    }
+
 private:
     /*!
     ** \brief Reset the log filename and open it
@@ -90,7 +100,7 @@ private:
     //! The settings given from the command line
     Settings pSettings;
     //! The current Antares study
-    Antares::Data::Study::Ptr pStudy = nullptr;
+    std::unique_ptr<Antares::Data::Study> pStudy;
     //! General data related to the current study
     Antares::Data::Parameters* pParameters = nullptr;
     //! The total number of errors which have been generated
@@ -110,13 +120,13 @@ private:
     IResultWriter::Ptr resultWriter = nullptr;
 
     void prepareWriter(const Antares::Data::Study& study,
-                       Benchmarking::IDurationCollector& duration_collector);
+                       Benchmarking::DurationCollector& duration_collector);
 
     void writeComment(Data::Study& study);
     void startSimulation(Data::StudyLoadOptions& options);
     void handleOptions(const Data::StudyLoadOptions& options);
+    void parseCommandLine(Data::StudyLoadOptions& options);
     void handleParserReturn(Yuni::GetOpt::Parser* parser);
     void postParametersChecks() const;
 }; // class Application
 } // namespace Antares::Solver
-

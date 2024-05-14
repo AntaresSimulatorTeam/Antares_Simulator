@@ -7,7 +7,7 @@ set(SRC_GENERATORS
         include/antares/solver/ts-generator/generator.h
         include/antares/solver/ts-generator/generator.hxx
         generator.cpp
-        thermal.cpp
+        availability.cpp
         hydro.cpp
 )
 source_group("ts-generator" FILES ${SRC_GENERATORS})
@@ -20,6 +20,11 @@ set(SRC_XCAST
 	include/antares/solver/ts-generator/xcast/constants.h
 	include/antares/solver/ts-generator/xcast/studydata.h
 	include/antares/solver/ts-generator/xcast/studydata.hxx
+	include/antares/solver/ts-generator/law.h
+
+	prepro.cpp
+
+	include/antares/solver/ts-generator/prepro.h
 	xcast/studydata.cpp
 	xcast/gamma-euler.cpp
 	xcast/gamma-inc.cpp

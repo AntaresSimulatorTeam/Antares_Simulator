@@ -20,12 +20,13 @@
 */
 #pragma once
 
-#include <vector>
 #include <string>
+#include <vector>
 
-#include <antares/study/fwd.h>
 #include <yuni/core/string.h>
+
 #include <antares/inifile/inifile.h>
+#include <antares/study/fwd.h>
 
 namespace Antares::Data::AdequacyPatch
 {

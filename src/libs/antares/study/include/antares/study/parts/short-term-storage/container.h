@@ -20,8 +20,9 @@
 */
 
 #pragma once
-#include <string>
 #include <map>
+#include <string>
+
 #include "cluster.h"
 
 namespace Antares::Data::ShortTermStorage
@@ -38,7 +39,6 @@ public:
     std::size_t count() const;
     /// erase disabled cluster from the vector
     uint removeDisabledClusters();
-
 
     bool saveToFolder(const std::string& folder) const;
     bool saveDataSeriesToFolder(const std::string& folder) const;

@@ -22,15 +22,15 @@
 #define __ANTARES_LIBS_MEMORY_MEMORY_H__
 
 #include <yuni/yuni.h>
-#include <yuni/core/string.h>
 #include <yuni/core/bit/array.h>
+#include <yuni/core/string.h>
 
 namespace Antares
 {
 /*!
 ** \brief Custom memory allocator for managed pointers
 */
-class Memory final : public Yuni::Policy::ObjectLevelLockable<Memory>
+class Memory final: public Yuni::Policy::ObjectLevelLockable<Memory>
 {
 public:
     template<class T>

@@ -20,13 +20,13 @@
 */
 #pragma once
 
-#include "spx_definition_arguments.h"
-#include "spx_fonctions.h"
-
-#include <vector>
-#include <string>
 #include <algorithm>
 #include <iterator>
+#include <string>
+#include <vector>
+
+#include "spx_definition_arguments.h"
+#include "spx_fonctions.h"
 
 namespace Antares
 {
@@ -34,7 +34,7 @@ namespace Optimization
 {
 struct BasisStatus;
 
-struct PROBLEME_SIMPLEXE_NOMME : public PROBLEME_SIMPLEXE
+struct PROBLEME_SIMPLEXE_NOMME: public PROBLEME_SIMPLEXE
 {
 public:
     PROBLEME_SIMPLEXE_NOMME(const std::vector<std::string>& NomDesVariables,

@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2007-2024, RTE (https://www.rte-france.com)
  * See AUTHORS.txt
@@ -18,19 +19,29 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
-#ifndef __ANTARES_LIBS_STUDY_PARTS_THERMAL_PREPRO_HXX__
-#define __ANTARES_LIBS_STUDY_PARTS_THERMAL_PREPRO_HXX__
+
+#pragma once
 
 namespace Antares
 {
+
 namespace Data
 {
-inline uint64_t PreproThermal::memoryUsage() const
-{
-    return sizeof(PreproThermal);
+class Study;
 }
-
-} // namespace Data
+/**
+ * @class IStudyLoader
+ * @brief The IStudyLoader class is an interface for loading studies.
+ * @details It declares the load method.
+ */
+class IStudyLoader
+{
+public:
+    virtual ~IStudyLoader() = default;
+    /**
+     * @brief The load method is used to load a study.
+     * @return A shared pointer to a Study object.
+     */
+    [[nodiscard]] virtual std::unique_ptr<Antares::Data::Study> load() const = 0;
+};
 } // namespace Antares
-
-#endif // __ANTARES_LIBS_STUDY_PARTS_THERMAL_PREPRO_HXX__

@@ -22,12 +22,13 @@
 #define __ANTARES_SOLVER_TS_GENERATOR_XCAST_XCAST_H__
 
 #include <yuni/yuni.h>
-#include <antares/study/fwd.h>
+#include <yuni/core/noncopyable.h>
+
 #include <antares/mersenne-twister/mersenne-twister.h>
+#include <antares/study/fwd.h>
 #include <antares/study/progression/progression.h>
 #include <antares/writer/i_writer.h>
 #include "antares/solver/ts-generator/xcast/studydata.h"
-#include <yuni/core/noncopyable.h>
 
 using namespace Antares::Solver;
 
@@ -42,7 +43,7 @@ namespace XCast
 **
 ** \see predicate.hxx for specializations
 */
-class XCast final : private Yuni::NonCopyable<XCast>
+class XCast final: private Yuni::NonCopyable<XCast>
 {
 public:
     /*!

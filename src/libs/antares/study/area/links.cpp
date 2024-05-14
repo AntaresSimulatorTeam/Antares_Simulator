@@ -171,9 +171,9 @@ void AreaLink::overrideTransmissionCapacityAccordingToGlobalParameter(
     }
 }
 
-bool AreaLink::loadTimeSeries(const Study& study, const AnyString& folder)
+bool AreaLink::loadTimeSeries(const StudyVersion& version, const AnyString& folder)
 {
-    if (study.header.version < StudyVersion(8, 2))
+    if (version < StudyVersion(8, 2))
     {
         return linkLoadTimeSeries_for_version_below_810(folder);
     }
@@ -303,7 +303,7 @@ AreaLink* AreaAddLinkBetweenAreas(Area* area, Area* with, bool warning)
 
 namespace // anonymous
 {
-bool AreaLinksInternalLoadFromProperty(AreaLink& link, const String& key, const String& value)
+bool handleKey(Data::AreaLink& link, const String& key, const String& value)
 {
     if (key == "hurdles-cost")
     {
@@ -450,10 +450,25 @@ bool AreaLinksInternalLoadFromProperty(AreaLink& link, const String& key, const 
     return false;
 }
 
-void logLinkDataCheckError(const AreaLink& link, const String& msg, int hour)
+bool AreaLinksInternalLoadFromProperty(AreaLink& link, const String& key, const String& value)
+{
+    return handleKey(link, key, value);
+}
+
+[[noreturn]] void logLinkDataCheckError(const AreaLink& link, const String& msg, int hour)
 {
     logs.error() << "Link (" << link.from->name << "/" << link.with->name << "): Invalid values ("
                  << msg << ") for hour " << hour;
+    throw Antares::Error::ReadingStudy();
+}
+
+[[noreturn]] void logLinkDataCheckErrorDirectIndirect(const AreaLink& link,
+                                                      uint direct,
+                                                      uint indirect)
+{
+    logs.error() << "Link (" << link.from->name << "/" << link.with->name << "): Found " << direct
+                 << " direct TS " << " and " << indirect
+                 << " indirect TS, expected the same number";
     throw Antares::Error::ReadingStudy();
 }
 } // anonymous namespace
@@ -503,12 +518,18 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
         link.comments.clear();
         link.displayComments = true;
 
-        ret = link.loadTimeSeries(study, folder) && ret;
+        ret = link.loadTimeSeries(study.header.version, folder) && ret;
 
         // Checks on loaded link's data
         if (study.usedByTheSolver)
         {
             const uint nbDirectTS = link.directCapacities.timeSeries.width;
+            const uint nbIndirectTS = link.indirectCapacities.timeSeries.width;
+            if (nbDirectTS != nbIndirectTS)
+            {
+                logLinkDataCheckErrorDirectIndirect(link, nbDirectTS, nbIndirectTS);
+            }
+
             auto& directHurdlesCost = link.parameters[fhlHurdlesCostDirect];
             auto& indirectHurdlesCost = link.parameters[fhlHurdlesCostIndirect];
             auto& loopFlow = link.parameters[fhlLoopFlow];
@@ -526,12 +547,10 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
                     if (directCapacities[h] < 0.)
                     {
                         logLinkDataCheckError(link, "direct capacity < 0", h);
-                        return false;
                     }
                     if (directCapacities[h] < loopFlow[h])
                     {
                         logLinkDataCheckError(link, "direct capacity < loop flow", h);
-                        return false;
                     }
                 }
 
@@ -541,12 +560,10 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
                     if (indirectCapacities[h] < 0.)
                     {
                         logLinkDataCheckError(link, "indirect capacitity < 0", h);
-                        return false;
                     }
                     if (indirectCapacities[h] + loopFlow[h] < 0)
                     {
                         logLinkDataCheckError(link, "indirect capacity + loop flow < 0", h);
-                        return false;
                     }
                 }
             }
@@ -558,7 +575,6 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
                     logLinkDataCheckError(link,
                                           "hurdle costs direct + hurdle cost indirect < 0",
                                           h);
-                    return false;
                 }
             }
 
@@ -568,7 +584,6 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
                 if (PShiftPlus[h] < PShiftMinus[h])
                 {
                     logLinkDataCheckError(link, "phase shift plus < phase shift minus", h);
-                    return false;
                 }
             }
         }
