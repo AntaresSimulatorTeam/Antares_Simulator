@@ -152,7 +152,6 @@ bool DataSeriesHydro::loadGenerationTS(const AreaName& areaID,
         ret = loadTSfromFile(mingen.timeSeries, areaID, folder, "mingen.txt", HOURS_PER_YEAR)
               && ret;
     }
-
     return ret;
 }
 

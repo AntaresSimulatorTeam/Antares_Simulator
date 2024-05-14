@@ -370,7 +370,7 @@ void storeTSnumbersForIntraModal(const array<uint32_t, timeSeriesCount>& intramo
                                  AreaList& areas)
 {
     areas.each(
-      [&](Area& area)
+      [year, &isTSintramodal, &intramodal_draws](Area& area)
       {
           // -------------
           // Load ...
@@ -466,7 +466,7 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
                                            Study& study)
 {
     study.areas.each(
-      [&](Area& area)
+      [&study, &isTSintramodal, year](Area& area)
       {
           // -------------
           // Load ...

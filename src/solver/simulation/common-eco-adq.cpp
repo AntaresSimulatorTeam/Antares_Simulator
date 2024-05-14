@@ -240,7 +240,7 @@ void PrepareRandomNumbers(Data::Study& study,
 {
     uint indexArea = 0;
     study.areas.each(
-      [&](const Data::Area& area)
+      [&study, &problem, &randomForYear, &indexArea](const Data::Area& area)
       {
           double rnd = 0.;
 
