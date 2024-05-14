@@ -5,7 +5,7 @@ add_executable(test_constraint
 target_link_libraries(test_constraint
         PRIVATE
         test_utils_unit
-        Boost::boost Boost::disable_autolinking
+        antares-unit-test
         Antares::study
         )
 		
@@ -29,7 +29,7 @@ add_executable(test_groups
 target_link_libraries(test_groups
         PRIVATE
         test_utils_unit
-        Boost::boost Boost::disable_autolinking
+        antares-unit-test
         Antares::study
         )
 

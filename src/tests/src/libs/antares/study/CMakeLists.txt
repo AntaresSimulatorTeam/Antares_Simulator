@@ -15,7 +15,7 @@ target_sources(test-study PRIVATE test_study.cpp)
 target_link_libraries(test-study
         PRIVATE
         Antares::study
-        Boost::boost Boost::disable_autolinking
+        antares-unit-test
 )
 
 add_test(NAME test-study COMMAND test-study)

@@ -20,7 +20,7 @@ target_include_directories(thermal-price-definition
 
 target_link_libraries(thermal-price-definition
 						PRIVATE
-							Boost::boost Boost::disable_autolinking
+							antares-unit-test
 							checks
 							Antares::study
 							Antares::exception

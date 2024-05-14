@@ -60,7 +60,7 @@ target_link_libraries(tests-matrix-save
 						PRIVATE
 							matrix
 							yuni-static-core
-							Boost::boost Boost::disable_autolinking
+							antares-unit-test
 							antares-core
 )
 
@@ -96,7 +96,7 @@ target_link_libraries(tests-matrix-load
 						PRIVATE
 							matrix
 							yuni-static-core
-							Boost::boost Boost::disable_autolinking
+							antares-unit-test
 							antares-core
 )
 
@@ -111,7 +111,7 @@ set_property(TEST load-matrix PROPERTY LABELS unit)
 add_executable(test-utils test_utils.cpp)
 target_link_libraries(test-utils
 		PRIVATE
-		Boost::boost Boost::disable_autolinking
+		antares-unit-test
 		Antares::utils
 		yuni-static-core
 )

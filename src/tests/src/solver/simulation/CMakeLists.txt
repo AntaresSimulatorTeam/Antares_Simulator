@@ -20,7 +20,7 @@ target_include_directories(tests-ts-numbers
 target_link_libraries(tests-ts-numbers
 						PRIVATE
                             Antares::utils
-							Boost::boost Boost::disable_autolinking
+							antares-unit-test
 							model_antares
 							antares-solver-simulation
 							antares-solver-ts-generator
@@ -43,7 +43,7 @@ add_executable(test-store-timeseries-number ${SRC_STORE_TS})
 
 target_link_libraries(test-store-timeseries-number
 		PRIVATE
-		Boost::boost Boost::disable_autolinking
+		antares-unit-test
         test_utils_unit
 		antares-solver-simulation
 		Antares::study
@@ -71,7 +71,7 @@ add_executable(test-time_series ${SRC_STORE_TS})
 
 target_link_libraries(test-time_series
 		PRIVATE
-		Boost::boost Boost::disable_autolinking
+		antares-unit-test
         test_utils_unit
 		antares-solver-simulation
 		Antares::study

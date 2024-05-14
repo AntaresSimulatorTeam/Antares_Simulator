@@ -5,7 +5,7 @@ target_sources(test-writer PRIVATE test_writer.cpp)
 
 target_link_libraries(test-writer
 	PRIVATE
-		Boost::boost Boost::disable_autolinking
+		antares-unit-test
 		Antares::result_writer
 		test_utils_unit
 		MINIZIP::minizip-ng

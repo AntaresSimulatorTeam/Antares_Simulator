@@ -16,7 +16,7 @@ target_include_directories(test-sc-builder-file-read-line
 
 target_link_libraries(test-sc-builder-file-read-line
 						PRIVATE
-							Boost::boost Boost::disable_autolinking
+							antares-unit-test
 							model_antares
 )
 # Linux
@@ -50,7 +50,7 @@ target_include_directories(test-sc-builder-file-save
 
 target_link_libraries(test-sc-builder-file-save
   PRIVATE
-						Boost::boost Boost::disable_autolinking
+						antares-unit-test
 						model_antares
 )
 

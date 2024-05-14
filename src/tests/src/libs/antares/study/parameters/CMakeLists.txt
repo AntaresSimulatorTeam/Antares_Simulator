@@ -8,7 +8,7 @@ add_executable(parameters-tests ${SRC_PARAMETERS_TESTS})
 
 target_link_libraries(parameters-tests
                       PRIVATE
-                      Boost::boost Boost::disable_autolinking
+                      antares-unit-test
                       Antares::study
 )
 

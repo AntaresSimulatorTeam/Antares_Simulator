@@ -4,6 +4,12 @@ project(unit_tests_antares VERSION 1.0)
 
 find_package(Boost COMPONENTS unit_test_framework REQUIRED)
 
+# Interface library to facilitate addition of WIN32_LEAN_AND_MEAN flag
+add_library(antares-unit-test INTERFACE)
+target_link_libraries(antares-unit-test INTERFACE Boost::boost)
+target_compile_definitions(antares-unit-test INTERFACE $<$<BOOL:${WIN32}>:-DWIN32_LEAN_AND_MEAN>)
+
+
 # Make found targets globally available.
 if (Boost_FOUND)
     set_target_properties(Boost::unit_test_framework PROPERTIES IMPORTED_GLOBAL TRUE)

@@ -4,7 +4,7 @@ target_sources(test-unfeasible-problem-analyzer
 		test-unfeasible-problem-analyzer.cpp)
 target_link_libraries(test-unfeasible-problem-analyzer
 		PRIVATE
-		Boost::boost Boost::disable_autolinking
+		antares-unit-test
 		infeasible_problem_analysis
 		ortools::ortools
 )

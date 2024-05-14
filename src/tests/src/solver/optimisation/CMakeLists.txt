@@ -11,7 +11,7 @@ target_include_directories(${EXECUTABLE_NAME}
 
 target_link_libraries(${EXECUTABLE_NAME}
                       PRIVATE
-                      Boost::boost Boost::disable_autolinking
+                      antares-unit-test
                       model_antares
  					  array
 )

@@ -6,7 +6,7 @@ add_executable(test-hydro-reader ${SRC_HYDRO_READER})
 
 target_link_libraries(test-hydro-reader
 	PRIVATE
-	Boost::boost Boost::disable_autolinking
+	antares-unit-test
 	Antares::study
 	test_utils_unit
 )
@@ -29,7 +29,7 @@ add_executable(test-hydro-series ${SRC_HYDRO_SERIES})
 
 target_link_libraries(test-hydro-series
 	PRIVATE
-	Boost::boost Boost::disable_autolinking
+	antares-unit-test
 	Antares::study
 	test_utils_unit
 )

@@ -4,7 +4,7 @@ target_sources(test-concurrency PRIVATE test_concurrency.cpp)
 
 target_link_libraries(test-concurrency
 						PRIVATE
-							Boost::boost Boost::disable_autolinking
+							antares-unit-test
 							Antares::concurrency
 )
 
