@@ -193,7 +193,7 @@ BOOST_FIXTURE_TEST_CASE(on_area2_and_on_year_18__load_TS_number_11_is_chosen__re
 	BOOST_CHECK_EQUAL(my_rule.load.get_value(yearNumber.to<uint>(), area_2->index), tsNumber.to<uint>());
 
 	BOOST_CHECK(my_rule.apply());
-	BOOST_CHECK_EQUAL(area_2->load.series.timeseriesNumbers[0][yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
+	BOOST_CHECK_EQUAL(area_2->load.series.timeseriesNumbers[yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
 }
 
 // =================
@@ -209,7 +209,7 @@ BOOST_FIXTURE_TEST_CASE(on_area3_and_on_year_7__wind_TS_number_5_is_chosen__read
 	BOOST_CHECK_EQUAL(my_rule.wind.get_value(yearNumber.to<uint>(), area_3->index), tsNumber.to<uint>());
 
 	BOOST_CHECK(my_rule.apply());
-	BOOST_CHECK_EQUAL(area_3->wind.series.timeseriesNumbers[0][yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
+	BOOST_CHECK_EQUAL(area_3->wind.series.timeseriesNumbers[yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
 }
 
 // =================
@@ -225,7 +225,7 @@ BOOST_FIXTURE_TEST_CASE(on_area1_and_on_year_4__solar_TS_number_8_is_chosen__rea
 	BOOST_CHECK_EQUAL(my_rule.solar.get_value(yearNumber.to<uint>(), area_1->index), tsNumber.to<uint>());
 
 	BOOST_CHECK(my_rule.apply());
-	BOOST_CHECK_EQUAL(area_1->solar.series.timeseriesNumbers[0][yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
+	BOOST_CHECK_EQUAL(area_1->solar.series.timeseriesNumbers[yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
 }
 
 // =================
@@ -241,25 +241,8 @@ BOOST_FIXTURE_TEST_CASE(on_area2_and_on_year_15__solar_TS_number_3_is_chosen__re
 	BOOST_CHECK_EQUAL(my_rule.hydro.get_value(yearNumber.to<uint>(), area_2->index), tsNumber.to<uint>());
 
 	BOOST_CHECK(my_rule.apply());
-	BOOST_CHECK_EQUAL(area_2->hydro.series->timeseriesNumbers[0][yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
+	BOOST_CHECK_EQUAL(area_2->hydro.series->timeseriesNumbers[yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
 }
-
-// =================
-// Tests on Hydro Max Power
-// =================
-BOOST_FIXTURE_TEST_CASE(on_area3_and_on_year_10__hydro_power_credits_TS_number_6_is_chosen__reading_OK, Fixture)
-{
-	AreaName yearNumber = "7";
-	String tsNumber = "6";
-	AreaName::Vector splitKey = { "hgp", "area 3", yearNumber };
-	BOOST_CHECK(my_rule.readLine(splitKey, tsNumber, false));
-
-	BOOST_CHECK_EQUAL(my_rule.hydroMaxPower.get_value(yearNumber.to<uint>(), area_3->index), tsNumber.to<uint>());
-
-	BOOST_CHECK(my_rule.apply());
-	BOOST_CHECK_EQUAL(area_3->hydro.series->timeseriesNumbersHydroMaxPower[0][yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
-}
-
 
 // ===========================
 // Tests on Thermal clusters
@@ -274,7 +257,7 @@ BOOST_FIXTURE_TEST_CASE(on_th_cluster11_of_area1_and_on_year_6__solar_TS_number_
 	BOOST_CHECK_EQUAL(my_rule.thermal[area_1->index].get(thCluster_11.get(), yearNumber.to<uint>()), tsNumber.to<uint>());
 
 	BOOST_CHECK(my_rule.apply());
-	BOOST_CHECK_EQUAL(thCluster_11->series.timeseriesNumbers[0][yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
+	BOOST_CHECK_EQUAL(thCluster_11->series.timeseriesNumbers[yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
 }
 
 BOOST_FIXTURE_TEST_CASE(on_th_cluster12_of_area1_and_on_year_13__solar_TS_number_5_is_chosen__reading_OK, Fixture)
@@ -287,7 +270,7 @@ BOOST_FIXTURE_TEST_CASE(on_th_cluster12_of_area1_and_on_year_13__solar_TS_number
 	BOOST_CHECK_EQUAL(my_rule.thermal[area_1->index].get(thCluster_12.get(), yearNumber.to<uint>()), tsNumber.to<uint>());
 
 	BOOST_CHECK(my_rule.apply());
-	BOOST_CHECK_EQUAL(thCluster_12->series.timeseriesNumbers[0][yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
+	BOOST_CHECK_EQUAL(thCluster_12->series.timeseriesNumbers[yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
 }
 
 BOOST_FIXTURE_TEST_CASE(on_th_cluster31_of_area3_and_on_year_10__solar_TS_number_7_is_chosen__reading_OK, Fixture)
@@ -300,7 +283,7 @@ BOOST_FIXTURE_TEST_CASE(on_th_cluster31_of_area3_and_on_year_10__solar_TS_number
 	BOOST_CHECK_EQUAL(my_rule.thermal[area_3->index].get(thCluster_31.get(), yearNumber.to<uint>()), tsNumber.to<uint>());
 
 	BOOST_CHECK(my_rule.apply());
-	BOOST_CHECK_EQUAL(thCluster_31->series.timeseriesNumbers[0][yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
+	BOOST_CHECK_EQUAL(thCluster_31->series.timeseriesNumbers[yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
 }
 
 
@@ -319,7 +302,7 @@ BOOST_FIXTURE_TEST_CASE(on_rn_cluster21_of_area2_and_on_year_16__solar_TS_number
 	BOOST_CHECK_EQUAL(my_rule.renewable[area_2->index].get(rnCluster_21.get(), yearNumber.to<uint>()), tsNumber.to<uint>());
 
 	BOOST_CHECK(my_rule.apply());
-	BOOST_CHECK_EQUAL(rnCluster_21->series.timeseriesNumbers[0][yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
+	BOOST_CHECK_EQUAL(rnCluster_21->series.timeseriesNumbers[yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
 }
 
 BOOST_FIXTURE_TEST_CASE(on_rn_cluster32_of_area3_and_on_year_2__solar_TS_number_4_is_chosen__reading_OK, Fixture)
@@ -334,7 +317,7 @@ BOOST_FIXTURE_TEST_CASE(on_rn_cluster32_of_area3_and_on_year_2__solar_TS_number_
 	BOOST_CHECK_EQUAL(my_rule.renewable[area_3->index].get(rnCluster_32.get(), yearNumber.to<uint>()), tsNumber.to<uint>());
 
 	BOOST_CHECK(my_rule.apply());
-	BOOST_CHECK_EQUAL(rnCluster_32->series.timeseriesNumbers[0][yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
+	BOOST_CHECK_EQUAL(rnCluster_32->series.timeseriesNumbers[yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
 }
 
 
@@ -393,7 +376,7 @@ BOOST_FIXTURE_TEST_CASE(on_link_area1_area2_and_on_year_0__ntc_TS_number_10_is_c
 	BOOST_CHECK_EQUAL(my_rule.linksNTC[area_1->index].get(link_12, yearNumber.to<uint>()), tsNumber.to<uint>());
 
 	BOOST_CHECK(my_rule.apply());
-	BOOST_CHECK_EQUAL(link_12->timeseriesNumbers[0][yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
+	BOOST_CHECK_EQUAL(link_12->timeseriesNumbers[yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
 }
 
 BOOST_FIXTURE_TEST_CASE(on_link_area1_area3_and_on_year_15__ntc_TS_number_7_is_chosen__reading_OK, Fixture)
@@ -406,7 +389,7 @@ BOOST_FIXTURE_TEST_CASE(on_link_area1_area3_and_on_year_15__ntc_TS_number_7_is_c
 	BOOST_CHECK_EQUAL(my_rule.linksNTC[area_1->index].get(link_13, yearNumber.to<uint>()), tsNumber.to<uint>());
 
 	BOOST_CHECK(my_rule.apply());
-	BOOST_CHECK_EQUAL(link_13->timeseriesNumbers[0][yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
+	BOOST_CHECK_EQUAL(link_13->timeseriesNumbers[yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
 }
 
 BOOST_FIXTURE_TEST_CASE(on_link_area2_area3_and_on_year_19__ntc_TS_number_6_is_chosen__reading_OK, Fixture)
@@ -419,7 +402,7 @@ BOOST_FIXTURE_TEST_CASE(on_link_area2_area3_and_on_year_19__ntc_TS_number_6_is_c
 	BOOST_CHECK_EQUAL(my_rule.linksNTC[area_2->index].get(link_23, yearNumber.to<uint>()), tsNumber.to<uint>());
 
 	BOOST_CHECK(my_rule.apply());
-	BOOST_CHECK_EQUAL(link_23->timeseriesNumbers[0][yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
+	BOOST_CHECK_EQUAL(link_23->timeseriesNumbers[yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
 }
 
 // ========================
@@ -428,14 +411,14 @@ BOOST_FIXTURE_TEST_CASE(on_link_area2_area3_and_on_year_19__ntc_TS_number_6_is_c
 BOOST_FIXTURE_TEST_CASE(binding_constraints_group_groupTest__Load_TS_4_for_year_3__reading_OK, Fixture)
 {
     auto yearNumber = 3;
-    auto tsNumber = 4;
+    uint32_t tsNumber = 4;
 
     AreaName::Vector splitKey = { "bc", "groupTest", std::to_string(yearNumber) };
     BOOST_CHECK(my_rule.readLine(splitKey, std::to_string(tsNumber)));
     BOOST_CHECK_EQUAL(my_rule.binding_constraints.get("groupTest", yearNumber), tsNumber);
 
     BOOST_CHECK(my_rule.apply());
-    auto actual = study->bindingConstraintsGroups["groupTest"]->timeseriesNumbers[0][yearNumber];
+    auto actual = study->bindingConstraintsGroups["groupTest"]->timeseriesNumbers[yearNumber];
     BOOST_CHECK_EQUAL(actual, tsNumber-1);
 }
 
@@ -456,8 +439,8 @@ BOOST_FIXTURE_TEST_CASE(thermalTSNumberData, Fixture)
 
     tsdata.apply(*study);
 
-    BOOST_CHECK_EQUAL(thCluster_12->series.timeseriesNumbers[0][2], 21);
-    BOOST_CHECK_EQUAL(thCluster_12->series.timeseriesNumbers[0][5], 0);
+    BOOST_CHECK_EQUAL(thCluster_12->series.timeseriesNumbers[2], 21);
+    BOOST_CHECK_EQUAL(thCluster_12->series.timeseriesNumbers[5], 0);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

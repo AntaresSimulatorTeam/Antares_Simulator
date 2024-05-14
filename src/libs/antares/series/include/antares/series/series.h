@@ -37,13 +37,24 @@ namespace Antares::Data
  */
 class TimeSeries;
 
-struct TimeSeriesNumbers : public Matrix<uint32_t> // TODO[FOM] remove inheritance, it was added mostly to avoid breaking existing code
+class TimeSeriesNumbers
 {
 public:
   void registerSeries(const TimeSeries* s, std::string label);
   // Return a description of the error in case of inconsistent number of columns, std::nullopt otherwis
   std::optional<std::string> checkSeriesNumberOfColumnsConsistency() const;
+
+  uint32_t operator[](uint y) const;
+  uint32_t& operator[](uint y);
+
+  void clear();
+  void reset(uint h);
+
+  uint height() const;
+
+  void saveToBuffer(std::string& data) const;
 private:
+  Matrix<uint32_t> tsNumbers;
   std::map<std::string, const TimeSeries*> series;
 };
 

@@ -60,7 +60,7 @@ BOOST_AUTO_TEST_CASE(BC_group_TestGroup_has_output_file) {
     study->parameters.storeTimeseriesNumbers = true;
 
     study->bindingConstraintsGroups.add("TestGroup");
-    study->bindingConstraintsGroups["TestGroup"]->timeseriesNumbers.resize(1, 1);
+    study->bindingConstraintsGroups["TestGroup"]->timeseriesNumbers.reset(1);
 
     auto working_tmp_dir = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
 
@@ -82,8 +82,8 @@ BOOST_AUTO_TEST_CASE(BC_output_ts_numbers_file_for_each_group) {
     study->parameters.storeTimeseriesNumbers = true;
     study->bindingConstraintsGroups.add("test1");
     study->bindingConstraintsGroups.add("test2");
-    study->bindingConstraintsGroups["test1"]->timeseriesNumbers.resize(1, 1);
-    study->bindingConstraintsGroups["test2"]->timeseriesNumbers.resize(1, 1);
+    study->bindingConstraintsGroups["test1"]->timeseriesNumbers.reset(1);
+    study->bindingConstraintsGroups["test2"]->timeseriesNumbers.reset(1);
 
     auto working_tmp_dir = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
 
@@ -109,7 +109,7 @@ BOOST_AUTO_TEST_CASE(BC_timeseries_numbers_store_values) {
     auto bc = std::make_shared<BindingConstraint>();
     bc->RHSTimeSeries().resize(10,10);
     group->add(bc);
-    study->bindingConstraintsGroups["test1"]->timeseriesNumbers.resize(1, 1);
+    study->bindingConstraintsGroups["test1"]->timeseriesNumbers.reset(1);
 
     auto working_tmp_dir = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
 
@@ -119,12 +119,11 @@ BOOST_AUTO_TEST_CASE(BC_timeseries_numbers_store_values) {
 
     initializeStudy(*study);
     Antares::Solver::TimeSeriesNumbers::Generate(*study);
-    Matrix<uint32_t> series(2, 2);
-    series[0][0] = 0;
-    series[0][1] = 1;
-    series[1][0] = 42;
-    series[1][1] = 3;
-    study->bindingConstraintsGroups["test1"]->timeseriesNumbers = series;
+
+    auto& tsNumbers = study->bindingConstraintsGroups["test1"]->timeseriesNumbers;
+    tsNumbers.reset(2);
+    tsNumbers[0] = 0;
+    tsNumbers[1] = 1;
 
     Antares::Solver::TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(*study, *resultWriter);
 
@@ -132,8 +131,6 @@ BOOST_AUTO_TEST_CASE(BC_timeseries_numbers_store_values) {
     BOOST_CHECK_EQUAL(fs::exists(test1_path), true);
     Matrix<uint32_t> out;
     out.loadFromCSVFile(test1_path.string());
-    BOOST_CHECK_EQUAL(series[0][0]+1, out[0][0]);
-    BOOST_CHECK_EQUAL(series[0][1]+1, out[0][1]);
-    BOOST_CHECK_EQUAL(series[1][0]+1, out[1][0]);
-    BOOST_CHECK_EQUAL(series[1][1]+1, out[1][1]);
+    BOOST_CHECK_EQUAL(tsNumbers[0]+1, out[0][0]);
+    BOOST_CHECK_EQUAL(tsNumbers[1]+1, out[0][1]);
 }

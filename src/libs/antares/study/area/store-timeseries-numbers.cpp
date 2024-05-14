@@ -31,32 +31,16 @@ using namespace Yuni;
 
 namespace Antares::Data
 {
-namespace // anonymous
-{
-struct TSNumbersPredicate
-{
-    uint32_t operator()(uint32_t value) const
-    {
-        return value + 1;
-    }
-};
-} // anonymous namespace
-
 static void storeTSnumbers(Solver::IResultWriter& writer,
-                           const Matrix<uint32_t>& timeseriesNumbers,
+                           const TimeSeriesNumbers& timeseriesNumbers,
                            const String& id,
                            const String& directory)
 {
-    TSNumbersPredicate predicate;
     Clob path;
     path << "ts-numbers" << SEP << directory << SEP << id << ".txt";
 
     std::string buffer;
-    timeseriesNumbers.saveToBuffer(buffer,
-                                   0,         // precision
-                                   true,      // print_dimensions
-                                   predicate, // predicate
-                                   true);     // save even if all coeffs are zero
+    timeseriesNumbers.saveToBuffer(buffer);
 
     writer.addEntryFromBuffer(path.c_str(), buffer);
 }

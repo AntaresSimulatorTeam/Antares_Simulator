@@ -73,8 +73,7 @@ namespace Antares::Data {
 
     void BindingConstraintGroupRepository::resizeAllTimeseriesNumbers(unsigned int nb_years) {
         std::for_each(groups_.begin(), groups_.end(), [&](auto &group) {
-            group->timeseriesNumbers.clear();
-            group->timeseriesNumbers.reset(1, nb_years);
+            group->timeseriesNumbers.reset(nb_years);
         });
     }
 

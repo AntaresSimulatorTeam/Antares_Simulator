@@ -40,7 +40,7 @@ public:
 
 public:
     // Public data members
-    Matrix<uint32_t> timeseriesNumbers;
+    TimeSeriesNumbers timeseriesNumbers;
 
 private:
     std::set<std::shared_ptr<BindingConstraint>> constraints_;
