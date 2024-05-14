@@ -50,7 +50,7 @@ IniFile::Property::Property(const AnyString& key, const U& value):
 
 inline bool IniFile::Section::empty() const
 {
-    return !firstProperty
+    return !firstProperty;
 }
 
 template<class U>
