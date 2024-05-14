@@ -142,7 +142,7 @@ public:
     */
     TimeSeries maxHourlyPumpPower;
 
-    // Getters for generation (ror, storage and mingen) and 
+    // Getters for generation (ror, storage and mingen) and
     // max power (generation and pumping) number of TS
     uint TScount() const;
     void computeTSCount();

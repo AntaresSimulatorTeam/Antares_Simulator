@@ -20,13 +20,14 @@
 */
 
 #include <algorithm>
+
 #include <yuni/yuni.h>
 #include <yuni/io/file.h>
 
-#include <antares/study/parts/hydro/series.h>
 #include <antares/exception/LoadingError.hpp>
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
+#include <antares/study/parts/hydro/series.h>
 #include "antares/study/study.h"
 
 using namespace Yuni;
@@ -65,12 +66,12 @@ static void ConvertDailyTSintoHourlyTS(const Matrix<double>::ColumnType& dailyCo
     }
 }
 
-DataSeriesHydro::DataSeriesHydro() :
- ror(timeseriesNumbers),
- storage(timeseriesNumbers),
- mingen(timeseriesNumbers),
- maxHourlyGenPower(timeseriesNumbers),
- maxHourlyPumpPower(timeseriesNumbers)
+DataSeriesHydro::DataSeriesHydro():
+    ror(timeseriesNumbers),
+    storage(timeseriesNumbers),
+    mingen(timeseriesNumbers),
+    maxHourlyGenPower(timeseriesNumbers),
+    maxHourlyPumpPower(timeseriesNumbers)
 {
     timeseriesNumbers.registerSeries(&ror, "ror");
     timeseriesNumbers.registerSeries(&storage, "storage");
@@ -116,13 +117,11 @@ void DataSeriesHydro::reset()
 
 void DataSeriesHydro::computeTSCount()
 {
-   const std::vector<uint32_t> nbColumns({
-        storage.numberOfColumns(),
-        ror.numberOfColumns(),
-        mingen.numberOfColumns(),
-        maxHourlyGenPower.numberOfColumns(),
-        maxHourlyPumpPower.numberOfColumns()
-    });
+    const std::vector<uint32_t> nbColumns({storage.numberOfColumns(),
+                                           ror.numberOfColumns(),
+                                           mingen.numberOfColumns(),
+                                           maxHourlyGenPower.numberOfColumns(),
+                                           maxHourlyPumpPower.numberOfColumns()});
     TScount_ = *std::max_element(nbColumns.begin(), nbColumns.end());
 }
 
@@ -252,11 +251,11 @@ void DataSeriesHydro::resizeTSinDeratedMode(bool derated,
         mingen.averageTimeseries();
         TScount_ = 1;
 
-    if (studyVersion >= StudyVersion(9, 1))
-    {
-        maxHourlyGenPower.averageTimeseries();
-        maxHourlyPumpPower.averageTimeseries();
+        if (studyVersion >= StudyVersion(9, 1))
+        {
+            maxHourlyGenPower.averageTimeseries();
+            maxHourlyPumpPower.averageTimeseries();
+        }
     }
-}
 
 } // namespace Antares::Data

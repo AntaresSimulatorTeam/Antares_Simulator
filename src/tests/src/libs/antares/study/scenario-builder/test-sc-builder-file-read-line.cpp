@@ -92,9 +92,9 @@ struct Fixture
         area_2->wind.series.timeSeries.resize(nbReadyMadeTS, 1);
         area_3->wind.series.timeSeries.resize(nbReadyMadeTS, 1);
 
-		// Links
-		link_12 = AreaAddLinkBetweenAreas(area_1, area_2, false);
-		link_12->directCapacities.resize(15, 1);
+        // Links
+        link_12 = AreaAddLinkBetweenAreas(area_1, area_2, false);
+        link_12->directCapacities.resize(15, 1);
         // Solar : set the nb of ready made TS
         nbReadyMadeTS = 9;
         area_1->solar.series.timeSeries.resize(nbReadyMadeTS, 1);

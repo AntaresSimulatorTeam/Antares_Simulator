@@ -46,14 +46,14 @@ const map<TimeSeriesType, int> ts_to_tsIndex = {{timeSeriesLoad, 0},
                                                 {timeSeriesRenewable, 5},
                                                 {timeSeriesTransmissionCapacities, 6}};
 
-const map<TimeSeriesType, string> ts_to_tsTitle
-  = {{timeSeriesLoad, "load"},
-     {timeSeriesHydro, "hydro"},
-     {timeSeriesWind, "wind"},
-     {timeSeriesThermal, "thermal"},
-     {timeSeriesSolar, "solar"},
-     {timeSeriesRenewable, "renewable clusters"},
-     {timeSeriesTransmissionCapacities, "transmission capacities"}};
+const map<TimeSeriesType, string> ts_to_tsTitle = {{timeSeriesLoad, "load"},
+                                                   {timeSeriesHydro, "hydro"},
+                                                   {timeSeriesWind, "wind"},
+                                                   {timeSeriesThermal, "thermal"},
+                                                   {timeSeriesSolar, "solar"},
+                                                   {timeSeriesRenewable, "renewable clusters"},
+                                                   {timeSeriesTransmissionCapacities,
+                                                    "transmission capacities"}};
 
 void addInterModalTimeSeriesToMessage(const array<bool, timeSeriesCount>& isTSintermodal,
                                       std::string& interModalTsMsg)
@@ -239,12 +239,11 @@ bool checkIntraModalConsistency(array<uint, timeSeriesCount>& nbTimeseriesByMode
     ts_to_numberOfTSretrievers[timeSeriesHydro] = make_shared<HydroAreaNumberOfTSretriever>();
     ts_to_numberOfTSretrievers[timeSeriesWind] = make_shared<WindAreaNumberOfTSretriever>();
     ts_to_numberOfTSretrievers[timeSeriesSolar] = make_shared<SolarAreaNumberOfTSretriever>();
-    ts_to_numberOfTSretrievers[timeSeriesThermal]
-      = make_shared<ThermalAreaNumberOfTSretriever>();
-    ts_to_numberOfTSretrievers[timeSeriesRenewable]
-      = make_shared<RenewClustersAreaNumberOfTSretriever>();
-    ts_to_numberOfTSretrievers[timeSeriesTransmissionCapacities]
-      = make_shared<AreaLinksTransCapaNumberOfTSretriever>();
+    ts_to_numberOfTSretrievers[timeSeriesThermal] = make_shared<ThermalAreaNumberOfTSretriever>();
+    ts_to_numberOfTSretrievers[timeSeriesRenewable] = make_shared<
+      RenewClustersAreaNumberOfTSretriever>();
+    ts_to_numberOfTSretrievers[timeSeriesTransmissionCapacities] = make_shared<
+      AreaLinksTransCapaNumberOfTSretriever>();
 
     // Loop over TS kind and check intra-modal consistency
     mapTStoRetriever::iterator it = ts_to_numberOfTSretrievers.begin();
@@ -330,7 +329,8 @@ bool checkInterModalConsistencyForArea(const Area& area,
     {
         logs.error()
           << "Inter-modal correlation: time-series numbers of inter-modal modes in area '"
-          << area.name << "'" << " are not identical";
+          << area.name << "'"
+          << " are not identical";
 
         return false;
     }
@@ -416,10 +416,10 @@ void storeTSnumbersForIntraModal(const array<uint32_t, timeSeriesCount>& intramo
               area.hydro.series->timeseriesNumbers[year] = intramodal_draws[indexTS];
           }
 
-        // -------------
-        // Thermal ...
-        // -------------
-        indexTS = ts_to_tsIndex.at(timeSeriesThermal);
+          // -------------
+          // Thermal ...
+          // -------------
+          indexTS = ts_to_tsIndex.at(timeSeriesThermal);
 
           if (isTSintramodal[indexTS])
           {
@@ -516,10 +516,10 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
                 * area.hydro.series->TScount()));
           }
 
-        // -------------
-        // Thermal ...
-        // -------------
-        indexTS = ts_to_tsIndex.at(timeSeriesThermal);
+          // -------------
+          // Thermal ...
+          // -------------
+          indexTS = ts_to_tsIndex.at(timeSeriesThermal);
 
           for (auto& cluster: area.thermal.list.all())
           {
@@ -756,17 +756,17 @@ bool TimeSeriesNumbers::Generate(Study& study)
 
     const uint years = 1 + study.runtime->rangeLimits.year[rangeEnd];
 
-    const array<bool, timeSeriesCount> isTSintramodal
-      = {(bool)(timeSeriesLoad & parameters.intraModal),
-         (bool)(timeSeriesHydro & parameters.intraModal),
-         (bool)(timeSeriesWind & parameters.intraModal)
-           && parameters.renewableGeneration.isAggregated(),
-         (bool)(timeSeriesThermal & parameters.intraModal),
-         (bool)(timeSeriesSolar & parameters.intraModal)
-           && parameters.renewableGeneration.isAggregated(),
-         (bool)(timeSeriesRenewable & parameters.intraModal)
-           && parameters.renewableGeneration.isClusters(),
-         (bool)(timeSeriesTransmissionCapacities & parameters.intraModal)};
+    const array<bool, timeSeriesCount> isTSintramodal = {
+      (bool)(timeSeriesLoad & parameters.intraModal),
+      (bool)(timeSeriesHydro & parameters.intraModal),
+      (bool)(timeSeriesWind & parameters.intraModal)
+        && parameters.renewableGeneration.isAggregated(),
+      (bool)(timeSeriesThermal & parameters.intraModal),
+      (bool)(timeSeriesSolar & parameters.intraModal)
+        && parameters.renewableGeneration.isAggregated(),
+      (bool)(timeSeriesRenewable & parameters.intraModal)
+        && parameters.renewableGeneration.isClusters(),
+      (bool)(timeSeriesTransmissionCapacities & parameters.intraModal)};
 
     array<uint, timeSeriesCount> nbTimeseriesByMode;
 

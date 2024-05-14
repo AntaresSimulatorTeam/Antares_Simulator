@@ -32,24 +32,24 @@ using namespace Yuni;
 
 namespace Antares::Data
 {
-PartHydro::PartHydro() :
- interDailyBreakdown(0.),
- intraDailyModulation(2.),
- intermonthlyBreakdown(0),
- reservoirManagement(false),
- followLoadModulations(true),
- useWaterValue(false),
- hardBoundsOnRuleCurves(false),
- useHeuristicTarget(true),
- reservoirCapacity(0.),
- initializeReservoirLevelDate(0),
- useLeeway(false),
- powerToLevel(false),
- leewayLowerBound(1.),
- leewayUpperBound(1.),
- pumpingEfficiency(1.),
- prepro(nullptr),
- series(nullptr)
+PartHydro::PartHydro():
+    interDailyBreakdown(0.),
+    intraDailyModulation(2.),
+    intermonthlyBreakdown(0),
+    reservoirManagement(false),
+    followLoadModulations(true),
+    useWaterValue(false),
+    hardBoundsOnRuleCurves(false),
+    useHeuristicTarget(true),
+    reservoirCapacity(0.),
+    initializeReservoirLevelDate(0),
+    useLeeway(false),
+    powerToLevel(false),
+    leewayLowerBound(1.),
+    leewayUpperBound(1.),
+    pumpingEfficiency(1.),
+    prepro(nullptr),
+    series(nullptr)
 {
 }
 
