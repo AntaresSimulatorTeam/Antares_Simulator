@@ -36,43 +36,33 @@ namespace Antares
 {
 
 IniFile::Property::Property(const AnyString& key):
-    key(key),
-    next(nullptr)
+    key(key)
 {
     this->key.trim();
     this->key.toLower();
 }
 
-IniFile::Property::Property():
-    next(nullptr)
-{
-}
-
-IniFile::Property::~Property()
-{
-}
-
-inline void IniFile::Property::saveToStream(std::ostream& file, uint64_t& written) const
+inline void IniFile::Property::saveToStream(std::ostream& stream_out, uint64_t& written) const
 {
     written += key.size() + value.size() + 4;
-    file << key << " = " << value << '\n';
+    stream_out << key << " = " << value << '\n';
 }
 
-void IniFile::Section::saveToStream(std::ostream& file, uint64_t& written) const
+void IniFile::Section::saveToStream(std::ostream& stream_out, uint64_t& written) const
 {
     if (!firstProperty)
     {
         return;
     }
-    file << '[' << name << "]\n";
+    stream_out << '[' << name << "]\n";
     written += 4 /* []\n\n */ + name.size();
 
     for (auto* property = firstProperty; property; property = property->next)
     {
-        property->saveToStream(file, written);
+        property->saveToStream(stream_out, written);
     }
 
-    file << '\n';
+    stream_out << '\n';
 }
 
 IniFile::Section::~Section()
@@ -263,21 +253,26 @@ bool IniFile::open(const AnyString& filename, bool warnings)
     return false;
 }
 
-std::string IniFile::toString() const
+void IniFile::saveToStream(std::ostream& stream_out, uint64_t& written) const
 {
-    uint64_t written = 0;
-    std::ostringstream ostream;
-    // save all sections
     for (auto* section = firstSection; section; section = section->next)
     {
-        section->saveToStream(ostream, written);
+        section->saveToStream(stream_out, written);
     }
 
     if (written != 0)
     {
         Statistics::HasWrittenToDisk(written);
     }
+}
 
+std::string IniFile::toString() const
+{
+    uint64_t written = 0;
+    std::ostringstream ostream;
+
+    this->saveToStream(ostream, written);
+    
     return ostream.str();
 }
 
@@ -289,15 +284,7 @@ bool IniFile::save(const AnyString& filename) const
     if (of.good())
     {
         uint64_t written = 0;
-        for (auto* section = firstSection; section; section = section->next)
-        {
-            section->saveToStream(of, written);
-        }
-
-        if (written != 0)
-        {
-            Statistics::HasWrittenToDisk(written);
-        }
+        this->saveToStream(of, written);
         return true;
     }
 

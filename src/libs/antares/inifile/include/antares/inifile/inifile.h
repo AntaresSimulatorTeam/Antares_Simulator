@@ -42,11 +42,11 @@ public:
     class Property final
     {
     public:
-        Property();
+        Property() = default;
         explicit Property(const AnyString& key);
         template<class U>
         Property(const AnyString& key, const U& value);
-        ~Property();
+        ~Property() = default;
 
         void saveToStream(std::ostream& file, uint64_t& written) const;
 
@@ -56,7 +56,7 @@ public:
         //! Its associated value
         YString value;
         //! The next value
-        Property* next;
+        Property* next = nullptr;
     };
 
     /*!
@@ -200,6 +200,7 @@ public:
     ** \brief Save the entire INI into a file
     */
     bool save(const AnyString& filename) const;
+    void saveToStream(std::ostream&, uint64_t&) const;
 
     std::string toString() const;
 
