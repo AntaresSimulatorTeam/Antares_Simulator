@@ -382,24 +382,25 @@ bool Rules::readLine(const AreaName::Vector& splitKey, String value, bool update
     else if (kind_of_scenario == "h")
     {
         return readHydro(splitKey, value, updaterMode);
-        else if (kind_of_scenario == "s")
-        {
-            return readSolar(splitKey, value, updaterMode);
-        }
-        else if (kind_of_scenario == "hl")
-        {
-            return readHydroLevels(splitKey, value, updaterMode);
-        }
-        else if (kind_of_scenario == "ntc")
-        {
-            return readLink(splitKey, value, updaterMode);
-        }
-        else if (kind_of_scenario == "bc")
-        {
-            return readBindingConstraints(splitKey, value);
-        }
-        return false;
     }
+    else if (kind_of_scenario == "s")
+    {
+        return readSolar(splitKey, value, updaterMode);
+    }
+    else if (kind_of_scenario == "hl")
+    {
+        return readHydroLevels(splitKey, value, updaterMode);
+    }
+    else if (kind_of_scenario == "ntc")
+    {
+        return readLink(splitKey, value, updaterMode);
+    }
+    else if (kind_of_scenario == "bc")
+    {
+        return readBindingConstraints(splitKey, value);
+    }
+    return false;
+}
 
     bool Rules::apply()
     {

@@ -76,8 +76,8 @@ DataSeriesHydro::DataSeriesHydro():
     timeseriesNumbers.registerSeries(&ror, "ror");
     timeseriesNumbers.registerSeries(&storage, "storage");
     timeseriesNumbers.registerSeries(&mingen, "mingen");
-    timeseriesNumbersHydroMaxPower.registerSeries(&maxHourlyGenPower, "max-geneneration-power");
-    timeseriesNumbersHydroMaxPower.registerSeries(&maxHourlyPumpPower, "max-pumping-power");
+    timeseriesNumbers.registerSeries(&maxHourlyGenPower, "max-geneneration-power");
+    timeseriesNumbers.registerSeries(&maxHourlyPumpPower, "max-pumping-power");
 
     // Pmin was introduced in v8.6
     // The previous behavior was Pmin=0
@@ -257,5 +257,5 @@ void DataSeriesHydro::resizeTSinDeratedMode(bool derated,
             maxHourlyPumpPower.averageTimeseries();
         }
     }
-
+}
 } // namespace Antares::Data

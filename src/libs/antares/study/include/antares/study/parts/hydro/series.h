@@ -103,7 +103,7 @@ public:
 
     //@}
 
-    TimeSeries::Numbers timeseriesNumbers;
+    TimeSeriesNumbers timeseriesNumbers;
 
     /*!
     ** \brief Run-of-the-river - ROR (MW)
