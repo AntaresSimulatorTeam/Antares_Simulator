@@ -24,13 +24,12 @@
 
 #define WIN32_LEAN_AND_MEAN
 #define BOOST_TEST_MODULE binding_constraints
-#define BOOST_TEST_DYN_LINK
 
 #include <files-system.h>
 #include <filesystem>
 #include <fstream>
 
-#include <boost/test/unit_test.hpp>
+#include <boost/test/included/unit_test.hpp>
 
 #include <antares/study/study.h>
 #include "antares/study/area/area.h"

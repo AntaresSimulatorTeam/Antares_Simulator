@@ -22,14 +22,13 @@
 // Created by marechaljas on 28/06/23.
 //
 #define BOOST_TEST_MODULE binding_constraints_groups
-#define BOOST_TEST_DYN_LINK
 #define WIN32_LEAN_AND_MEAN
 #include <files-system.h>
 #include <filesystem>
 #include <fstream>
 #include <memory>
 
-#include <boost/test/unit_test.hpp>
+#include <boost/test/included/unit_test.hpp>
 
 #include "antares/study/study.h"
 
