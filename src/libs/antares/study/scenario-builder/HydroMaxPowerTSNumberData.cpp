@@ -36,7 +36,7 @@ bool hydroMaxPowerTSNumberData::apply(Study& study)
         const MatrixType::ColumnType& col = pTSNumberRules[areaIndex];
 
         logprefix.clear() << "Hydro Max Power: Area '" << area.name << "': ";
-        // ret = ApplyToMatrixMaxPower(errors, logprefix, *area.hydro.series, col, tsGenCountHydroMaxPower) && ret; // REMOVED IN A LATER PR
+        ret = ApplyToMatrixMaxPower(errors, logprefix, *area.hydro.series, col, tsGenCountHydroMaxPower) && ret;
     }
     return ret;
 }
