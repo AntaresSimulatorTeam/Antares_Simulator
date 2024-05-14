@@ -11,7 +11,7 @@ target_include_directories(${EXECUTABLE_NAME}
 
 target_link_libraries(${EXECUTABLE_NAME}
                       PRIVATE
-                      Boost::unit_test_framework
+                      Boost::boost Boost::disable_autolinking
                       ortools::ortools
                       Antares::solverUtils
 )

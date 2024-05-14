@@ -10,7 +10,7 @@ target_include_directories(test-folder-output
 
 target_link_libraries(test-folder-output
     				  PRIVATE
-					  Boost::unit_test_framework
+					  Boost::boost Boost::disable_autolinking
 				      Antares::study
 )
 

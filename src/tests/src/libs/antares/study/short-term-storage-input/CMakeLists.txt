@@ -16,7 +16,7 @@ target_include_directories(short-term-storage-input
 
 target_link_libraries(short-term-storage-input
 						PRIVATE
-							Boost::unit_test_framework
+							Boost::boost Boost::disable_autolinking
 							model_antares
 )
 # Linux

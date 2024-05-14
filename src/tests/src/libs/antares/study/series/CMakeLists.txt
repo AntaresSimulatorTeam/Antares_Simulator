@@ -8,7 +8,7 @@ add_executable(timeseries-tests ${SRC_TIMESERIES_TESTS})
 
 target_link_libraries(timeseries-tests
                       PRIVATE
-                      Boost::unit_test_framework
+                      Boost::boost Boost::disable_autolinking
                       Antares::series
 )
 

@@ -5,7 +5,7 @@ target_sources(${PROJ} PRIVATE test_duration_collector.cpp)
 target_link_libraries(${PROJ}
         PRIVATE
         Antares::benchmarking
-        Boost::unit_test_framework
+        Boost::boost Boost::disable_autolinking
 )
 
 add_test(NAME ${PROJ} COMMAND ${PROJ})

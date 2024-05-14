@@ -13,7 +13,7 @@ add_executable(tests-binding_constraints
 target_link_libraries(tests-binding_constraints
         PRIVATE
         test_utils
-        Boost::unit_test_framework
+        Boost::boost Boost::disable_autolinking
         model_antares
         antares-solver-simulation
         antares-solver-hydro
