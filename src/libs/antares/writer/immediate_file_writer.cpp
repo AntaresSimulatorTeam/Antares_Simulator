@@ -88,18 +88,18 @@ void ImmediateFileResultWriter::addEntryFromFile(const fs::path& entryPath,
     }
 
     std::error_code ec;
-    fs::copy(filePath, fullPath, ec);
+    try
+    {
+        fs::copy(filePath, fullPath, ec);
+    }
+    catch (const fs::filesystem_error& exc)
+    {
+        logs.error() << exc.what();
+    }
 
     if (ec)
     {
-        if (ec == std::errc::no_such_file_or_directory)
-        {
-            logs.error() << filePath.string() << ": file does not exist";
-        }
-        else
-        {
-            logs.error() << "Error: " << ec.message();
-        }
+        logs.error() << "Error: " << ec.message();
     }
 }
 
