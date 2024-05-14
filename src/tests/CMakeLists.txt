@@ -7,7 +7,7 @@ find_package(Boost COMPONENTS unit_test_framework REQUIRED)
 # Interface library to facilitate addition of WIN32_LEAN_AND_MEAN flag
 add_library(antares-unit-test INTERFACE)
 target_link_libraries(antares-unit-test INTERFACE Boost::boost)
-target_compile_definitions(antares-unit-test INTERFACE $<$<BOOL:${WIN32}>:-DWIN32_LEAN_AND_MEAN>)
+target_compile_definitions(antares-unit-test INTERFACE $<$<BOOL:${WIN32}>:WIN32_LEAN_AND_MEAN>)
 
 
 # Make found targets globally available.
