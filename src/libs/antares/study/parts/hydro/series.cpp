@@ -177,7 +177,7 @@ void DataSeriesHydro::buildHourlyMaxPowerFromDailyTS(
   const Matrix<double>::ColumnType& DailyMaxGenPower,
   const Matrix<double>::ColumnType& DailyMaxPumpPower)
 {
-    const uint count = TScount();
+    const uint count = 1;
 
     maxHourlyGenPower.reset(count, HOURS_PER_YEAR);
     maxHourlyPumpPower.reset(count, HOURS_PER_YEAR);
