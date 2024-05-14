@@ -145,16 +145,9 @@ public:
     // Getters for generation (ror, storage and mingen) and
     // max power (generation and pumping) number of TS
     uint TScount() const;
-    void computeTSCount();
 
     // Setting TS's when derated mode is on
     void resizeTSinDeratedMode(bool derated, StudyVersion version, bool useBySolver);
-
-private:
-    // The number of time-series about generation (ror, inflows (=storage), mingen)
-    // They all should have the same number of columns (width), as they each year receives a common
-    // TS number for all three.
-    uint TScount_ = 0;
 }; // class DataSeriesHydro
 } // namespace Data
 } // namespace Antares
