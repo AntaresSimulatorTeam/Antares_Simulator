@@ -16,6 +16,5 @@ runs:
       wget https://github.com/boostorg/boost/releases/download/boost-1.81.0/boost-1.81.0.tar.gz
       tar xvf boost-1.81.0.tar.gz
       cd boost-1.81.0
-      ./bootstrap.sh --prefix=${{inputs.prefix}}/ --with-libraries=serialization,program_options,mpi
-      echo "using mpi ;" >> project-config.jam
+      ./bootstrap.sh --prefix=${{inputs.prefix}}/ --with-libraries=test
       ./b2 install
