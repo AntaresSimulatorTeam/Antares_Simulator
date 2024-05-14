@@ -970,8 +970,6 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             ret = hydroSeries->LoadMaxPower(area.id, buffer) && ret;
         }
 
-        hydroSeries->computeTSCount();
-
         hydroSeries->resizeTSinDeratedMode(
             study.parameters.derated, studyVersion, study.usedByTheSolver);
     }

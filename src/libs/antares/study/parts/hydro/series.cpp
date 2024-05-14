@@ -94,8 +94,6 @@ void DataSeriesHydro::copyGenerationTS(const DataSeriesHydro& source)
     storage.timeSeries = source.storage.timeSeries;
     mingen.timeSeries = source.mingen.timeSeries;
 
-    TScount_ = source.TScount_;
-
     source.ror.unloadFromMemory();
     source.storage.unloadFromMemory();
     source.mingen.unloadFromMemory();
@@ -115,22 +113,10 @@ void DataSeriesHydro::reset()
     resizeTS(1);
 }
 
-void DataSeriesHydro::computeTSCount()
-{
-    const std::vector<uint32_t> nbColumns({storage.numberOfColumns(),
-                                           ror.numberOfColumns(),
-                                           mingen.numberOfColumns(),
-                                           maxHourlyGenPower.numberOfColumns(),
-                                           maxHourlyPumpPower.numberOfColumns()});
-    TScount_ = *std::max_element(nbColumns.begin(), nbColumns.end());
-}
-
 void DataSeriesHydro::resizeTS(uint nbSeries)
 {
     storage.reset(nbSeries, DAYS_PER_YEAR);
     ror.reset(nbSeries, HOURS_PER_YEAR);
-
-    TScount_ = nbSeries;
 }
 
 bool DataSeriesHydro::forceReload(bool reload) const
@@ -191,8 +177,10 @@ void DataSeriesHydro::buildHourlyMaxPowerFromDailyTS(
   const Matrix<double>::ColumnType& DailyMaxGenPower,
   const Matrix<double>::ColumnType& DailyMaxPumpPower)
 {
-    maxHourlyGenPower.reset(TScount_, HOURS_PER_YEAR);
-    maxHourlyPumpPower.reset(TScount_, HOURS_PER_YEAR);
+    const uint count = TScount();
+
+    maxHourlyGenPower.reset(count, HOURS_PER_YEAR);
+    maxHourlyPumpPower.reset(count, HOURS_PER_YEAR);
 
     ConvertDailyTSintoHourlyTS(DailyMaxGenPower, maxHourlyGenPower.timeSeries[0]);
     ConvertDailyTSintoHourlyTS(DailyMaxPumpPower, maxHourlyPumpPower.timeSeries[0]);
@@ -232,7 +220,13 @@ uint64_t DataSeriesHydro::memoryUsage() const
 
 uint DataSeriesHydro::TScount() const
 {
-    return TScount_;
+    const std::vector<uint32_t> nbColumns({storage.numberOfColumns(),
+                                           ror.numberOfColumns(),
+                                           mingen.numberOfColumns(),
+                                           maxHourlyGenPower.numberOfColumns(),
+                                           maxHourlyPumpPower.numberOfColumns()});
+
+    return *std::max_element(nbColumns.begin(), nbColumns.end());
 }
 
 void DataSeriesHydro::resizeTSinDeratedMode(bool derated,
@@ -249,7 +243,6 @@ void DataSeriesHydro::resizeTSinDeratedMode(bool derated,
     if (studyVersion >= StudyVersion(8, 6))
     {
         mingen.averageTimeseries();
-        TScount_ = 1;
 
         if (studyVersion >= StudyVersion(9, 1))
         {

@@ -377,7 +377,6 @@ BOOST_FIXTURE_TEST_CASE(scenario_builder, HydroMaxPowerStudy)
     TimeSeriesConfigurer genE(hydro->series->maxHourlyPumpPower.timeSeries);
     genP.setColumnCount(3).fillColumnWith(0, 100.).fillColumnWith(1, 200.).fillColumnWith(2, 300.);
     genE.setColumnCount(3).fillColumnWith(0, 0.).fillColumnWith(1, 0.).fillColumnWith(2, 0.);
-    area->hydro.series->computeTSCount();
 
     ScenarioBuilderRule scenarioBuilderRule(*study);
     scenarioBuilderRule.hydro().setTSnumber(area->index, 0, 3);
