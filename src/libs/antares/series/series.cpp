@@ -19,18 +19,19 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <yuni/yuni.h>
-#include <yuni/io/file.h>
-#include <yuni/io/directory.h>
 #include "antares/series/series.h"
+
 #include <algorithm>
 #include <sstream>
 #include <vector>
 
+#include <yuni/yuni.h>
+#include <yuni/io/directory.h>
+#include <yuni/io/file.h>
+
 using namespace Yuni;
 
 #define SEP IO::Separator
-
 
 namespace Antares::Data
 {
@@ -51,17 +52,18 @@ static std::string errorMessage(const std::map<std::string, const TimeSeries*>& 
     std::ostringstream msg;
     auto isLast = [&series](std::size_t& idx)
     {
-	idx++;
+        idx++;
         return idx == series.size();
     };
-    for (std::size_t idx = 0; const auto& [label, s] : series)
+    for (std::size_t idx = 0; const auto& [label, s]: series)
     {
         msg << label << ": " << s->numberOfColumns() << (isLast(idx) ? "" : ", ");
     }
     return msg.str();
 }
 
-uint TimeSeriesNumbers::height() const {
+uint TimeSeriesNumbers::height() const
+{
     return tsNumbers.height;
 }
 
@@ -87,15 +89,17 @@ void TimeSeriesNumbers::clear()
 
 void TimeSeriesNumbers::saveToBuffer(std::string& data) const
 {
-    const auto add1 = [](uint32_t x) { return x + 1;};
+    const auto add1 = [](uint32_t x) { return x + 1; };
     tsNumbers.saveToBuffer(data, 0, true, add1, true);
 }
 
 std::optional<std::string> TimeSeriesNumbers::checkSeriesNumberOfColumnsConsistency() const
 {
     std::vector<uint> width;
-    for (const auto& [_, s] : series)
+    for (const auto& [_, s]: series)
+    {
         width.push_back(s->numberOfColumns());
+    }
 
     if (!checkAllElementsIdenticalOrOne(width))
     {
@@ -104,19 +108,21 @@ std::optional<std::string> TimeSeriesNumbers::checkSeriesNumberOfColumnsConsiste
     return std::nullopt;
 }
 
-TimeSeries::TimeSeries(TimeSeriesNumbers& tsNumbers) : timeseriesNumbers(tsNumbers)
+TimeSeries::TimeSeries(TimeSeriesNumbers& tsNumbers):
+    timeseriesNumbers(tsNumbers)
 {
 }
 
-bool TimeSeries::loadFromFile(const std::string& path,
-                              const bool average)
+bool TimeSeries::loadFromFile(const std::string& path, const bool average)
 {
     bool ret = true;
     Matrix<>::BufferType dataBuffer;
     ret = timeSeries.loadFromCSVFile(path, 1, HOURS_PER_YEAR, &dataBuffer) && ret;
 
     if (average)
+    {
         timeSeries.averageTimeseries();
+    }
 
     timeseriesNumbers.clear();
 
@@ -151,7 +157,9 @@ uint32_t TimeSeries::getSeriesIndex(uint32_t year) const
 {
     // If the timeSeries only has one column, we have no choice but to use it.
     if (numberOfColumns() == 1)
+    {
         return 0;
+    }
 
     return timeseriesNumbers[year];
 }
@@ -159,7 +167,9 @@ uint32_t TimeSeries::getSeriesIndex(uint32_t year) const
 double* TimeSeries::operator[](uint32_t index)
 {
     if (timeSeries.width <= index)
+    {
         return nullptr;
+    }
     return timeSeries[index];
 }
 

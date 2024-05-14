@@ -22,8 +22,9 @@
 #define __ANTARES_LIBS_STUDY_PARTS_COMMON_TIMESERIES_H__
 
 #include <map>
-#include <string>
 #include <optional>
+#include <string>
+
 #include <antares/array/matrix.h>
 
 namespace Antares::Data
@@ -40,22 +41,24 @@ class TimeSeries;
 class TimeSeriesNumbers
 {
 public:
-  void registerSeries(const TimeSeries* s, std::string label);
-  // Return a description of the error in case of inconsistent number of columns, std::nullopt otherwis
-  std::optional<std::string> checkSeriesNumberOfColumnsConsistency() const;
+    void registerSeries(const TimeSeries* s, std::string label);
+    // Return a description of the error in case of inconsistent number of columns, std::nullopt
+    // otherwis
+    std::optional<std::string> checkSeriesNumberOfColumnsConsistency() const;
 
-  uint32_t operator[](uint y) const;
-  uint32_t& operator[](uint y);
+    uint32_t operator[](uint y) const;
+    uint32_t& operator[](uint y);
 
-  void clear();
-  void reset(uint h);
+    void clear();
+    void reset(uint h);
 
-  uint height() const;
+    uint height() const;
 
-  void saveToBuffer(std::string& data) const;
+    void saveToBuffer(std::string& data) const;
+
 private:
-  Matrix<uint32_t> tsNumbers;
-  std::map<std::string, const TimeSeries*> series;
+    Matrix<uint32_t> tsNumbers;
+    std::map<std::string, const TimeSeries*> series;
 };
 
 class TimeSeries
@@ -71,8 +74,7 @@ public:
      ** \param average used to average timeseries
      ** \return A non-zero value if the operation succeeded, 0 otherwise
      */
-    bool loadFromFile(const std::string& path,
-                      const bool average);
+    bool loadFromFile(const std::string& path, const bool average);
     /*!
      ** \brief Save time series to a file
      **

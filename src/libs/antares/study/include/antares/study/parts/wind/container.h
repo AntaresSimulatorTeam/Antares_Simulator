@@ -21,8 +21,9 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_WIND_CONTAINER_H__
 #define __ANTARES_LIBS_STUDY_PARTS_WIND_CONTAINER_H__
 
-#include "prepro.h"
 #include <antares/series/series.h>
+
+#include "prepro.h"
 
 namespace Antares
 {
@@ -71,7 +72,6 @@ public:
 
     /*! Data for time-series */
     TimeSeries series;
-
 
 }; // class Container
 

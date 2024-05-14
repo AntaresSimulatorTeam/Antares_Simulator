@@ -22,17 +22,19 @@
 // Created by marechaljas on 17/03/23.
 //
 
-#include "antares/solver/simulation/BindingConstraintsTimeSeriesNumbersWriter.h"
-#include "antares/study/binding_constraint/BindingConstraintGroupRepository.h"
 #include <cstdint>
 #include <filesystem>
 #include <utility>
 
-namespace Antares::Solver::Simulation {
-BindingConstraintsTimeSeriesNumbersWriter::BindingConstraintsTimeSeriesNumbersWriter(IResultWriter& writer)
-: writer_(writer)
-{
+#include "antares/solver/simulation/BindingConstraintsTimeSeriesNumbersWriter.h"
+#include "antares/study/binding_constraint/BindingConstraintGroupRepository.h"
 
+namespace Antares::Solver::Simulation
+{
+BindingConstraintsTimeSeriesNumbersWriter::BindingConstraintsTimeSeriesNumbersWriter(
+  IResultWriter& writer):
+    writer_(writer)
+{
 }
 
 // TODO : remove duplication
@@ -41,7 +43,8 @@ static void genericStoreTimeseriesNumbers(Solver::IResultWriter& writer,
                                           const std::string& id,
                                           const std::string& directory)
 {
-    std::filesystem::path path = std::filesystem::path() / "ts-numbers" / directory.c_str() / id.c_str();
+    std::filesystem::path path = std::filesystem::path() / "ts-numbers" / directory.c_str()
+                                 / id.c_str();
     path.replace_extension("txt");
 
     std::string buffer;
@@ -49,13 +52,15 @@ static void genericStoreTimeseriesNumbers(Solver::IResultWriter& writer,
     writer.addEntryFromBuffer(path.string(), buffer);
 }
 
-void BindingConstraintsTimeSeriesNumbersWriter::write(const Data::BindingConstraintGroupRepository &bindingConstraintGroupRepository) {
-    for (auto const& group: bindingConstraintGroupRepository) {
+void BindingConstraintsTimeSeriesNumbersWriter::write(
+  const Data::BindingConstraintGroupRepository& bindingConstraintGroupRepository)
+{
+    for (const auto& group: bindingConstraintGroupRepository)
+    {
         genericStoreTimeseriesNumbers(writer_,
                                       group->timeseriesNumbers,
                                       group->name(),
                                       "bindingconstraints");
     }
-
 }
-} // Simulation
+} // namespace Antares::Solver::Simulation

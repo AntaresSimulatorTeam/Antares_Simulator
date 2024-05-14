@@ -30,6 +30,7 @@ namespace Data
 namespace Solar
 {
 class Prepro;
+
 class Container
 {
 public:

@@ -23,8 +23,8 @@
 
 #define WIN32_LEAN_AND_MEAN
 
-#include <vector>
 #include <memory>
+#include <vector>
 
 #include <boost/test/unit_test.hpp>
 
@@ -42,12 +42,15 @@ struct Fixture
     Fixture(const Fixture&& f) = delete;
     Fixture& operator=(const Fixture& f) = delete;
     Fixture& operator=(const Fixture&& f) = delete;
-    Fixture() : ts(tsnum)
+
+    Fixture():
+        ts(tsnum)
     {
         ts.reset(1, HOURS_PER_YEAR);
         tsnum.reset(1);
         tsnum[0] = 0;
     }
+
     TimeSeriesNumbers tsnum;
     TimeSeries ts;
     std::string folder;
@@ -56,48 +59,55 @@ struct Fixture
     void fillColumnReverse(unsigned int idx);
 
     void fillTsnum();
-
 };
 
 void Fixture::fillColumn(unsigned int idx)
 {
     for (unsigned int i = 0; i < ts.timeSeries.height; i++)
+    {
         ts.timeSeries[idx][i] = i;
+    }
 }
 
 void Fixture::fillColumnReverse(unsigned int idx)
 {
     for (unsigned int i = 0; i < ts.timeSeries.height; i++)
+    {
         ts.timeSeries[idx][i] = HOURS_PER_YEAR - i;
+    }
 }
 
 void Fixture::fillTsnum()
 {
     tsnum.reset(ts.timeSeries.width);
     for (unsigned int i = 0; i < ts.timeSeries.width; i++)
+    {
         tsnum[i] = i;
+    }
 }
 
 class FixtureMultipleTS
 {
 public:
-  void init(const std::vector<int>& width)
-  {
-    const int height = 10; // Arbitrary
-    ts.resize(width.size());
-    for (size_t idx = 0; int w : width)
+    void init(const std::vector<int>& width)
     {
-        // TimeSeries::TimeSeries does not exist, so we use pointers
-        ts[idx] = std::make_unique<TimeSeries>(tsnum); // ts[idx] is registered to tsnum here
-	tsnum.registerSeries(ts[idx].get(), std::to_string(idx));
-        ts[idx]->reset(w, height);
-        idx++;
+        const int height = 10; // Arbitrary
+        ts.resize(width.size());
+        for (size_t idx = 0; int w: width)
+        {
+            // TimeSeries::TimeSeries does not exist, so we use pointers
+            ts[idx] = std::make_unique<TimeSeries>(tsnum); // ts[idx] is registered to tsnum here
+            tsnum.registerSeries(ts[idx].get(), std::to_string(idx));
+            ts[idx]->reset(w, height);
+            idx++;
+        }
     }
-  }
+
 public:
-  TimeSeriesNumbers tsnum;
+    TimeSeriesNumbers tsnum;
+
 private:
-  std::vector<std::unique_ptr<TimeSeries>> ts;
+    std::vector<std::unique_ptr<TimeSeries>> ts;
 };
 
 // ==================
@@ -110,11 +120,15 @@ BOOST_FIXTURE_TEST_CASE(getSeriesIndex, Fixture)
 {
     tsnum.reset(10);
     for (unsigned int i = 0; i < 10; i++)
+    {
         tsnum[i] = i;
+    }
 
     ts.resize(2, HOURS_PER_YEAR);
     for (unsigned int i = 0; i < 10; i++)
+    {
         BOOST_CHECK_EQUAL(ts.getSeriesIndex(i), i);
+    }
 }
 
 BOOST_FIXTURE_TEST_CASE(getCoefficientWidth1, Fixture)
@@ -194,7 +208,9 @@ BOOST_FIXTURE_TEST_CASE(getCoefficient_SingleColumn, Fixture)
     // Here, we provide 2 time series numbers...
     tsnum.reset(2);
     for (unsigned int i = 0; i < 2; i++)
+    {
         tsnum[i] = i;
+    }
 
     // ...but only one column
     ts.timeSeries[0][0] = 12.5;

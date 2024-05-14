@@ -19,11 +19,11 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <antares/writer/i_writer.h>
-#include <antares/study/study.h>
-#include <antares/logs/logs.h>
-
 #include "antares/study/area/store-timeseries-numbers.h"
+
+#include <antares/logs/logs.h>
+#include <antares/study/study.h>
+#include <antares/writer/i_writer.h>
 
 using namespace Yuni;
 
@@ -60,7 +60,6 @@ void storeTimeseriesNumbersForHydro(Solver::IResultWriter& writer, const Area& a
     storeTSnumbers(writer, area.hydro.series->timeseriesNumbers, area.id, "hydro");
 }
 
-
 void storeTimeseriesNumbersForHydroMaxPower(Solver::IResultWriter& writer, const Area& area)
 {
     storeTSnumbers(writer, area.hydro.series->timeseriesNumbersHydroMaxPower, area.id, "hgp");
@@ -81,14 +80,17 @@ void storeTimeseriesNumbersForRenewable(Solver::IResultWriter& writer, const Are
     area.renewable.list.storeTimeseriesNumbers(writer);
 }
 
-void storeTimeseriesNumbersForTransmissionCapacities(Solver::IResultWriter& writer, const Area& area)
+void storeTimeseriesNumbersForTransmissionCapacities(Solver::IResultWriter& writer,
+                                                     const Area& area)
 {
     // No links originating from this area
     // do not create an empty directory
     if (area.links.empty())
+    {
         return;
+    }
 
-    for (const auto& [key, value] : area.links)
+    for (const auto& [key, value]: area.links)
     {
         if (value == nullptr)
         {
@@ -96,8 +98,9 @@ void storeTimeseriesNumbersForTransmissionCapacities(Solver::IResultWriter& writ
             return;
         }
         else
+        {
             value->storeTimeseriesNumbers(writer);
+        }
     }
 }
 } // namespace Antares::Data
-
