@@ -13,12 +13,10 @@
       "platform": "windows"
     },
     {
-      "name": "boost-test",
-      "platform": "windows"
+      "name": "boost-test"
     },
     {
-      "name": "boost-algorithm",
-      "platform": "windows"
+      "name": "boost-algorithm"
     },
     {
       "name": "minizip-ng",
