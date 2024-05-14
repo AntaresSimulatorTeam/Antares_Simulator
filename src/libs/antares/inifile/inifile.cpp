@@ -215,13 +215,12 @@ bool IniFile::readStream(std::istream& in_stream)
 
         if (isProperty(line))
         {
-            if (! currentSection) // If a property not in a section, then skipped
+            // Note : if a property not in a section, it's simply skipped
+            if (currentSection)
             {
-                continue;
+                std::pair<std::string, std::string> pair = getKeyValuePair(line);
+                currentSection->add(pair.first, pair.second);;
             }
-            
-            std::pair<std::string, std::string> pair = getKeyValuePair(line);
-            currentSection->add(pair.first, pair.second);
             continue;
         }
 
