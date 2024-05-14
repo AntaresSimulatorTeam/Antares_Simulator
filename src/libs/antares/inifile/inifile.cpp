@@ -90,15 +90,7 @@ IniFile::Section::~Section()
     }
 }
 
-IniFile::IniFile():
-    firstSection(nullptr),
-    lastSection(nullptr)
-{
-}
-
-IniFile::IniFile(const AnyString& filename):
-    firstSection(nullptr),
-    lastSection(nullptr)
+IniFile::IniFile(const AnyString& filename)
 {
     open(filename);
 }

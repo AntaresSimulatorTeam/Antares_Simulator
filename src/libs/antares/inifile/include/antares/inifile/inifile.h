@@ -163,7 +163,7 @@ public:
     /*!
     ** \brief Default Constructor
     */
-    IniFile();
+    IniFile() = default;
     /*!
     ** \brief Load an INI file
     */
@@ -304,10 +304,8 @@ public:
     //@}
 
 public:
-    //! The first section
-    Section* firstSection;
-    //! The last section
-    Section* lastSection;
+    Section* firstSection = nullptr;
+    Section* lastSection = nullptr;
 
 private:
     /*!
