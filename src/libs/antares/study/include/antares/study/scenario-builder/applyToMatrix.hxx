@@ -89,17 +89,16 @@ bool ApplyToMatrix(uint& errors,
     bool ret = true;
 
     // In this case, m.height represents the total number of years
-    const uint nbYears = data.timeseriesNumbers.height;
+    const uint nbYears = data.timeseriesNumbers.height();
     // The matrix m has only one column
-    assert(data.timeseriesNumbers.width == 1);
-    typename Matrix<uint32_t>::ColumnType& target = data.timeseriesNumbers[0];
+    auto& target = data.timeseriesNumbers;
 
     for (uint y = 0; y != nbYears; ++y)
     {
         if (years[y] != 0)
         {
             // The new TS number
-            uint tsNum = years[y] - 1;
+            uint32_t tsNum = years[y] - 1;
 
             // When the TS-Generators are not used
             if (!CheckValidity(tsNum, data, tsGenMax))
@@ -138,10 +137,9 @@ bool ApplyToMatrixMaxPower(uint& errors,
     bool ret = true;
 
     // In this case, m.height represents the total number of years
-    const uint nbYears = data.timeseriesNumbersHydroMaxPower.height;
+    const uint nbYears = data.timeseriesNumbersHydroMaxPower.height();
     // The matrix m has only one column
-    assert(data.timeseriesNumbersHydroMaxPower.width == 1);
-    typename Matrix<uint32_t>::ColumnType& target = data.timeseriesNumbersHydroMaxPower[0];
+    auto& target = data.timeseriesNumbersHydroMaxPower;
 
     for (uint y = 0; y != nbYears; ++y)
     {

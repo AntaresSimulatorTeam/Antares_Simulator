@@ -34,17 +34,6 @@
 using namespace Yuni;
 using namespace Antares;
 
-namespace // anonymous
-{
-struct TSNumbersPredicate
-{
-    uint32_t operator()(uint32_t value) const
-    {
-        return value + 1;
-    }
-};
-} // namespace
-
 #define SEP (IO::Separator)
 
 namespace
@@ -76,6 +65,9 @@ AreaLink::AreaLink():
     style(stPlain),
     linkWidth(1)
 {
+    timeseriesNumbers.registerSeries(&directCapacities, "direct-capacity");
+    timeseriesNumbers.registerSeries(&indirectCapacities, "indirect-capacity");
+
     directCapacities.reset();
     indirectCapacities.reset();
 }
@@ -194,13 +186,12 @@ bool AreaLink::loadTimeSeries(const StudyVersion& version, const AnyString& fold
 void AreaLink::storeTimeseriesNumbers(Solver::IResultWriter& writer) const
 {
     Clob path;
-    TSNumbersPredicate predicate;
     std::string buffer;
 
     path << "ts-numbers" << SEP << DIRECTORY_NAME_FOR_TRANSMISSION_CAPACITIES << SEP << from->id
          << SEP << with->id << ".txt";
 
-    timeseriesNumbers.saveToBuffer(buffer, 0, true, predicate, true);
+    timeseriesNumbers.saveToBuffer(buffer);
     writer.addEntryFromBuffer(path.c_str(), buffer);
 }
 
@@ -532,7 +523,6 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
         // Checks on loaded link's data
         if (study.usedByTheSolver)
         {
-            // Short names for link's properties
             const uint nbDirectTS = link.directCapacities.timeSeries.width;
             const uint nbIndirectTS = link.indirectCapacities.timeSeries.width;
             if (nbDirectTS != nbIndirectTS)

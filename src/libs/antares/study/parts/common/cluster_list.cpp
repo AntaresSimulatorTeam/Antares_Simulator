@@ -30,17 +30,6 @@
 
 using namespace Yuni;
 
-namespace // anonymous
-{
-struct TSNumbersPredicate
-{
-    uint32_t operator()(uint32_t value) const
-    {
-        return value + 1;
-    }
-};
-} // namespace
-
 namespace Antares::Data
 {
 using namespace Antares;
@@ -95,7 +84,7 @@ void ClusterList<ClusterT>::resizeAllTimeseriesNumbers(uint n) const
 {
     for (auto& c: allClusters_)
     {
-        c->series.timeseriesNumbers.reset(1, n);
+        c->series.timeseriesNumbers.reset(n);
     }
 }
 
@@ -104,7 +93,6 @@ void ClusterList<ClusterT>::resizeAllTimeseriesNumbers(uint n) const
 template<class ClusterT>
 void ClusterList<ClusterT>::storeTimeseriesNumbers(Solver::IResultWriter& writer) const
 {
-    TSNumbersPredicate predicate;
     Clob path;
     std::string ts_content;
 
@@ -113,7 +101,7 @@ void ClusterList<ClusterT>::storeTimeseriesNumbers(Solver::IResultWriter& writer
         path.clear() << "ts-numbers" << SEP << typeID() << SEP << cluster->parentArea->id << SEP
                      << cluster->id() << ".txt";
         ts_content.clear(); // We must clear ts_content here, since saveToBuffer does not do it.
-        cluster->series.timeseriesNumbers.saveToBuffer(ts_content, 0, true, predicate, true);
+        cluster->series.timeseriesNumbers.saveToBuffer(ts_content);
         writer.addEntryFromBuffer(path.c_str(), ts_content);
     }
 }
