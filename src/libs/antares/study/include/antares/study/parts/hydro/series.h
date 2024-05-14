@@ -69,8 +69,6 @@ public:
     void markAsModified() const;
     //@}
 
-    void EqualizeGenerationTSsizes(Area& area, bool usedByTheSolver);
-
     // Loading hydro time series collection
     // Returned boolean : reading from file failed
     bool loadGenerationTS(const AreaName& areaID, const AnyString& folder, StudyVersion version);
@@ -105,10 +103,12 @@ public:
 
     //@}
 
+    TimeSeriesNumbers timeseriesNumbers;
+    TimeSeriesNumbers timeseriesNumbersHydroMaxPower;
+
     /*!
     ** \brief Run-of-the-river - ROR (MW)
     **
-
     ** (it was DAYS_PER_YEAR before 3.9)
     */
     TimeSeries ror;
@@ -143,10 +143,6 @@ public:
     */
     TimeSeries maxHourlyPumpPower;
 
-    // TS's number matrices for Generation and Maximum Power
-    Matrix<uint32_t> timeseriesNumbers;
-    Matrix<uint32_t> timeseriesNumbersHydroMaxPower;
-
     // Equalizing max generation and max pumping numbers of TS's
     void EqualizeMaxPowerTSsizes(Area& area);
 
@@ -155,6 +151,7 @@ public:
     // Getters for generation (ror, storage and mingen) and
     // max power (generation and pumping) number of TS
     uint TScount() const;
+    void computeTSCount();
     uint maxPowerTScount() const;
 
     void setMaxPowerTScount(uint count)
