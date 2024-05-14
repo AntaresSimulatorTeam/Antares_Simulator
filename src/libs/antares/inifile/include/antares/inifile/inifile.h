@@ -18,8 +18,7 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#ifndef __ANTARES_LIBS_INIFILE_INIFILE_H__
-#define __ANTARES_LIBS_INIFILE_INIFILE_H__
+#pragma once
 
 #include <optional>
 
@@ -195,6 +194,8 @@ public:
     */
     bool open(const AnyString& filename, bool warnings = true);
 
+    bool readStream(std::istream& in_stream);
+
     /*!
     ** \brief Save the entire INI into a file
     */
@@ -309,8 +310,6 @@ public:
     Section* lastSection;
 
 private:
-    bool readStream(std::istream& in_stream);
-
     /*!
     ** \brief The last filename used for loading/saving
     **
@@ -324,5 +323,3 @@ private:
 } // namespace Antares
 
 #include "inifile.hxx"
-
-#endif /* __ANTARES_LIBS_INIFILE_INIFILE_H__ */

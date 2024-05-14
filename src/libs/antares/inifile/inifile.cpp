@@ -223,7 +223,7 @@ bool IniFile::readStream(std::istream& in_stream)
 
         if (isProperty(line))
         {
-            if (! currentSection) // Ensure the property is contained in a section
+            if (! currentSection) // Ensures the property is contained in a section
             {
                 logs.error() << "Property '" << line << "' is not inside a section.";
                 return false;
