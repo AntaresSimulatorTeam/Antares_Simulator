@@ -24,9 +24,9 @@
 #include <yuni/core/system/suspend.h>
 #include <yuni/datetime/timestamp.h>
 #include <yuni/io/file.h>
+
 #ifdef YUNI_OS_WINDOWS
 #include <io.h>
-
 #include <yuni/core/system/windows.hdr.h>
 #else
 #include <sys/types.h>
@@ -34,15 +34,39 @@
 #endif
 #include <errno.h>
 
+#include <fstream>
+
 #include <antares/logs/logs.h>
 
 using namespace Yuni;
 using namespace Antares;
 
-enum
+namespace fs = std::filesystem;
+
+constexpr int retryTimeout = 35; // seconds
+
+void logErrorAndThrow [[noreturn]] (const std::string& errorMessage)
 {
-    retryTimeout = 35, // seconds
-};
+    Antares::logs.error() << errorMessage;
+    throw std::runtime_error(errorMessage);
+}
+
+std::string readFile(const fs::path& filePath)
+{
+    std::ifstream file(filePath, std::ios_base::binary | std::ios_base::in);
+    if (!file.is_open())
+    {
+        logErrorAndThrow(filePath.string() + ": file does not exist");
+    }
+
+    using Iterator = std::istreambuf_iterator<char>;
+    std::string content(Iterator{file}, Iterator{});
+    if (!file)
+    {
+        logErrorAndThrow("Read failed '" + filePath.string() + "'");
+    }
+    return content;
+}
 
 bool IOFileSetContent(const AnyString& filename, const AnyString& content)
 {

@@ -21,8 +21,9 @@
 #ifndef __LIBS_ANTARES_IO_FILE_H__
 #define __LIBS_ANTARES_IO_FILE_H__
 
-#include <yuni/yuni.h>
 #include <yuni/core/string.h>
+
+#include <filesystem>
 
 /*!
 ** \brief Reset the content of a file
@@ -30,5 +31,7 @@
 ** This routine will wait if there is not enough disk space
 */
 bool IOFileSetContent(const AnyString& filename, const AnyString& content);
+
+std::string readFile(const std::filesystem::path&);
 
 #endif // __LIBS_ANTARES_IO_FILE_H__

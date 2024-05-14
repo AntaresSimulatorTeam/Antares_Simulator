@@ -26,6 +26,7 @@
 #include <antares/benchmarking/timer.h>
 #include <antares/logs/logs.h>
 #include <antares/writer/in_memory_writer.h>
+#include <antares/io/file.h>
 
 namespace fs = std::filesystem;
 
@@ -39,11 +40,6 @@ namespace Antares::Solver
 
 namespace
 {
-void logErrorAndThrow [[noreturn]] (const std::string& errorMessage)
-{
-    Antares::logs.error() << errorMessage;
-    throw IOError(errorMessage);
-}
 
 template<class ContentT>
 void addToMap(InMemoryWriter::MapType& entries,
@@ -82,23 +78,6 @@ void InMemoryWriter::addEntryFromBuffer(const std::string& entryPath, Yuni::Clob
 void InMemoryWriter::addEntryFromBuffer(const std::string& entryPath, std::string& entryContent)
 {
     addToMap(pEntries, entryPath, entryContent, pMapMutex, pDurationCollector);
-}
-
-static std::string readFile(const fs::path& filePath)
-{
-    std::ifstream file(filePath, std::ios_base::binary | std::ios_base::in);
-    if (!file.is_open())
-    {
-        logErrorAndThrow(filePath.string() + ": file does not exist");
-    }
-
-    using Iterator = std::istreambuf_iterator<char>;
-    std::string content(Iterator{file}, Iterator{});
-    if (!file)
-    {
-        logErrorAndThrow("Read failed '" + filePath.string() + "'");
-    }
-    return content;
 }
 
 void InMemoryWriter::addEntryFromFile(const fs::path& entryPath, const fs::path& filePath)
