@@ -64,6 +64,7 @@ jobs:
         uses: ./.github/workflows/centos7.yml
         with:
           run-tests: ${{ inputs.run-tests }}
+          target_branch: ${{ inputs.target_branch }}
 
       oracle8:
         name: Release - oracle8
@@ -71,6 +72,7 @@ jobs:
         uses: ./.github/workflows/oracle8.yml
         with:
           run-tests: ${{ inputs.run-tests }}
+          target_branch: ${{ inputs.target_branch }}
 
       user_guide:
         name: User Guide
