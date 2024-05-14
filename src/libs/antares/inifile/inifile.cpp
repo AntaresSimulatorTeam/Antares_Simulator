@@ -215,10 +215,9 @@ bool IniFile::readStream(std::istream& in_stream)
 
         if (isProperty(line))
         {
-            if (! currentSection) // Ensures the property is contained in a section
+            if (! currentSection) // If a property not in a section, then skipped
             {
-                logs.error() << "Property '" << line << "' is not inside a section.";
-                return false;
+                continue;
             }
             
             std::pair<std::string, std::string> pair = getKeyValuePair(line);
