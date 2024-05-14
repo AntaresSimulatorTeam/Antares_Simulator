@@ -350,7 +350,8 @@ bool checkInterModalConsistencyForArea(const Area& area,
     {
         logs.error()
           << "Inter-modal correlation: time-series numbers of inter-modal modes in area '"
-          << area.name << "'" << " are not identical";
+          << area.name << "'"
+          << " are not identical";
 
         return false;
     }
@@ -390,7 +391,7 @@ void storeTSnumbersForIntraModal(const array<uint32_t, timeSeriesCount>& intramo
                                  AreaList& areas)
 {
     areas.each(
-      [&](Area& area)
+      [year, &isTSintramodal, &intramodal_draws](Area& area)
       {
           // -------------
           // Load ...
@@ -497,7 +498,7 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
                                            Study& study)
 {
     study.areas.each(
-      [&](Area& area)
+      [&study, &isTSintramodal, year](Area& area)
       {
           // -------------
           // Load ...
