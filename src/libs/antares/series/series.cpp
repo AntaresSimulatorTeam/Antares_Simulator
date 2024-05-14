@@ -80,17 +80,6 @@ void TimeSeriesNumbers::reset(uint h)
     tsNumbers.reset(1, h);
 }
 
-namespace // anonymous
-{
-struct TSNumbersPredicate
-{
-    uint32_t operator()(uint32_t value) const
-    {
-        return value + 1;
-    }
-};
-} // namespace
-
 void TimeSeriesNumbers::clear()
 {
     tsNumbers.clear();
@@ -98,8 +87,8 @@ void TimeSeriesNumbers::clear()
 
 void TimeSeriesNumbers::saveToBuffer(std::string& data) const
 {
-    static TSNumbersPredicate predicate;
-    tsNumbers.saveToBuffer(data, 0, true, predicate, true);
+    const auto add1 = [](uint32_t x) { return x + 1;};
+    tsNumbers.saveToBuffer(data, 0, true, add1, true);
 }
 
 std::optional<std::string> TimeSeriesNumbers::checkSeriesNumberOfColumnsConsistency() const
