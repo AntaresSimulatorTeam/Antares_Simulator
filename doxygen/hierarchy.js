@@ -336,6 +336,7 @@ var hierarchy =
       [ "Antares::Solver::Variable::Results< FirstDecoratorT, DecoratorForSpatialAggregateT >", "classAntares_1_1Solver_1_1Variable_1_1Results.html", null ]
     ] ],
     [ "Fixture", "structFixture.html", null ],
+    [ "FixtureMultipleTS", "classFixtureMultipleTS.html", null ],
     [ "FixtureStudyOnly", "structFixtureStudyOnly.html", null ],
     [ "FlowDissociationData", "structFlowDissociationData.html", null ],
     [ "Antares::Component::FrameShowData", "classAntares_1_1Component_1_1FrameShowData.html", null ],
@@ -1289,6 +1290,7 @@ var hierarchy =
     [ "Antares::Data::TimeSeriesBitPatternIntoIndex< 8 >", "structAntares_1_1Data_1_1TimeSeriesBitPatternIntoIndex_3_018_01_4.html", null ],
     [ "TimeSeriesConfigurer", "classTimeSeriesConfigurer.html", null ],
     [ "TimeSeriesFile", "structTimeSeriesFile.html", null ],
+    [ "Antares::Data::TimeSeriesNumbers", "classAntares_1_1Data_1_1TimeSeriesNumbers.html", null ],
     [ "Antares::Data::TimeSeriesToCStr< T >", "structAntares_1_1Data_1_1TimeSeriesToCStr.html", null ],
     [ "Antares::Data::TimeSeriesToCStr< 1 >", "structAntares_1_1Data_1_1TimeSeriesToCStr_3_011_01_4.html", null ],
     [ "Antares::Data::TimeSeriesToCStr< 16 >", "structAntares_1_1Data_1_1TimeSeriesToCStr_3_0116_01_4.html", null ],

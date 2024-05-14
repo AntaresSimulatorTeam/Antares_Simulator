@@ -9,5 +9,6 @@ var classAntares_1_1Data_1_1DataSeriesHydro =
     [ "maxHourlyPumpPower", "classAntares_1_1Data_1_1DataSeriesHydro.html#a9f6974064f28b7366db5b602b7d82d2e", null ],
     [ "mingen", "classAntares_1_1Data_1_1DataSeriesHydro.html#a20242c15ed354fc694cee9d0f393be20", null ],
     [ "ror", "classAntares_1_1Data_1_1DataSeriesHydro.html#a4bf8ff859c00e267dc3a871701dd5325", null ],
-    [ "storage", "classAntares_1_1Data_1_1DataSeriesHydro.html#a8b0f2bb769e0e067377916614b0f65ed", null ]
+    [ "storage", "classAntares_1_1Data_1_1DataSeriesHydro.html#a8b0f2bb769e0e067377916614b0f65ed", null ],
+    [ "timeseriesNumbers", "classAntares_1_1Data_1_1DataSeriesHydro.html#a93a0b52ec251f04201b93278b6e644b1", null ]
 ];

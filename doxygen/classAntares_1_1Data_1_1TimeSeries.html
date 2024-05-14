@@ -148,18 +148,15 @@ $(document).ready(function(){initNavTree('classAntares_1_1Data_1_1TimeSeries.htm
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:ae441db6e8b7f949c024bd9d5ba6f8a6a" id="r_ae441db6e8b7f949c024bd9d5ba6f8a6a"><td class="memItemLeft" align="right" valign="top"><a id="ae441db6e8b7f949c024bd9d5ba6f8a6a" name="ae441db6e8b7f949c024bd9d5ba6f8a6a"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>numbers</b> = <a class="el" href="classAntares_1_1Matrix.html">Matrix</a>&lt; uint32_t &gt;</td></tr>
-<tr class="separator:ae441db6e8b7f949c024bd9d5ba6f8a6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6f3f5e793e533198cd8ae5627d2318ab" id="r_a6f3f5e793e533198cd8ae5627d2318ab"><td class="memItemLeft" align="right" valign="top"><a id="a6f3f5e793e533198cd8ae5627d2318ab" name="a6f3f5e793e533198cd8ae5627d2318ab"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>TS</b> = <a class="el" href="classAntares_1_1Matrix.html">Matrix</a>&lt; double &gt;</td></tr>
 <tr class="separator:a6f3f5e793e533198cd8ae5627d2318ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ac9d631a0b5d0afe82817f17d1e986d0d" id="r_ac9d631a0b5d0afe82817f17d1e986d0d"><td class="memItemLeft" align="right" valign="top"><a id="ac9d631a0b5d0afe82817f17d1e986d0d" name="ac9d631a0b5d0afe82817f17d1e986d0d"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>TimeSeries</b> (<a class="el" href="classAntares_1_1Matrix.html">numbers</a> &amp;tsNumbers)</td></tr>
-<tr class="separator:ac9d631a0b5d0afe82817f17d1e986d0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3850c8f1621200b8be4765f7f24eafbf" id="r_a3850c8f1621200b8be4765f7f24eafbf"><td class="memItemLeft" align="right" valign="top"><a id="a3850c8f1621200b8be4765f7f24eafbf" name="a3850c8f1621200b8be4765f7f24eafbf"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>TimeSeries</b> (<a class="el" href="classAntares_1_1Data_1_1TimeSeriesNumbers.html">TimeSeriesNumbers</a> &amp;tsNumbers)</td></tr>
+<tr class="separator:a3850c8f1621200b8be4765f7f24eafbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a550e82e7d44d5dc13f4a70164a5b5da0" id="r_a550e82e7d44d5dc13f4a70164a5b5da0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1TimeSeries.html#a550e82e7d44d5dc13f4a70164a5b5da0">loadFromFile</a> (const std::string &amp;path, const bool average)</td></tr>
 <tr class="memdesc:a550e82e7d44d5dc13f4a70164a5b5da0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load series from a file.  <br /></td></tr>
 <tr class="separator:a550e82e7d44d5dc13f4a70164a5b5da0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -188,6 +185,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>reset</b> ()</td></tr
 <tr class="memitem:a8c9852ce8855a49cf4b8975f4e3d3001" id="r_a8c9852ce8855a49cf4b8975f4e3d3001"><td class="memItemLeft" align="right" valign="top"><a id="a8c9852ce8855a49cf4b8975f4e3d3001" name="a8c9852ce8855a49cf4b8975f4e3d3001"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>reset</b> (uint32_t width, uint32_t height)</td></tr>
 <tr class="separator:a8c9852ce8855a49cf4b8975f4e3d3001"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a979a48a707d1f6cf03004b5ab338ea6f" id="r_a979a48a707d1f6cf03004b5ab338ea6f"><td class="memItemLeft" align="right" valign="top"><a id="a979a48a707d1f6cf03004b5ab338ea6f" name="a979a48a707d1f6cf03004b5ab338ea6f"></a>
+uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>numberOfColumns</b> () const</td></tr>
+<tr class="separator:a979a48a707d1f6cf03004b5ab338ea6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ace9a21508d42697346216042b034e280" id="r_ace9a21508d42697346216042b034e280"><td class="memItemLeft" align="right" valign="top"><a id="ace9a21508d42697346216042b034e280" name="ace9a21508d42697346216042b034e280"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>unloadFromMemory</b> () const</td></tr>
 <tr class="separator:ace9a21508d42697346216042b034e280"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -218,9 +218,9 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a9a058e7e7986055de297402ba56380ed" id="r_a9a058e7e7986055de297402ba56380ed"><td class="memItemLeft" align="right" valign="top"><a id="a9a058e7e7986055de297402ba56380ed" name="a9a058e7e7986055de297402ba56380ed"></a>
 <a class="el" href="classAntares_1_1Matrix.html">TS</a>&#160;</td><td class="memItemRight" valign="bottom"><b>timeSeries</b></td></tr>
 <tr class="separator:a9a058e7e7986055de297402ba56380ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1a7b4888048d1015b53f84d02b7abe16" id="r_a1a7b4888048d1015b53f84d02b7abe16"><td class="memItemLeft" align="right" valign="top"><a id="a1a7b4888048d1015b53f84d02b7abe16" name="a1a7b4888048d1015b53f84d02b7abe16"></a>
-<a class="el" href="classAntares_1_1Matrix.html">numbers</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>timeseriesNumbers</b></td></tr>
-<tr class="separator:a1a7b4888048d1015b53f84d02b7abe16"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9cc0e90ae654015d90e61a90520bc147" id="r_a9cc0e90ae654015d90e61a90520bc147"><td class="memItemLeft" align="right" valign="top"><a id="a9cc0e90ae654015d90e61a90520bc147" name="a9cc0e90ae654015d90e61a90520bc147"></a>
+<a class="el" href="classAntares_1_1Data_1_1TimeSeriesNumbers.html">TimeSeriesNumbers</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>timeseriesNumbers</b></td></tr>
+<tr class="separator:a9cc0e90ae654015d90e61a90520bc147"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>

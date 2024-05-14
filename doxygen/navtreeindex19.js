@@ -1,5 +1,9 @@
 var NAVTREEINDEX19 =
 {
+"common_2dispatcher_2action_8hxx_source.html":[8,0,0,5,1,1,1],
+"common_2dispatcher_2settings_8h_source.html":[8,0,0,5,1,1,5],
+"common_2wx-wrapper_8h_source.html":[8,0,0,5,1,5],
+"common_8areasummary_8h_source.html":[8,0,0,5,2,1,1,1,1,1,1],
 "component_8hxx_source.html":[8,0,0,5,2,1,1,2,3],
 "concurrency_8h_source.html":[8,0,0,1,0,4,0,0,0,0],
 "config_8h_source.html":[8,0,0,5,2,3],
@@ -245,9 +249,5 @@ var NAVTREEINDEX19 =
 "dir_ae37ea7eae462dcdb74565e4530404f2.html":[8,0,0,1,0,12,0,0,0],
 "dir_ae3cd540350e6ca1210a5ba831e01cd8.html":[8,0,0,5,0,1,0,0,0,1],
 "dir_ae73bb7e32b3d1051c8a9b9ee6c4dc40.html":[8,0,0,1,0,27,0],
-"dir_aef4ffec0fc7155945a4149bf41af958.html":[8,0,0,1,0,5],
-"dir_af85d9e6ac8ce5cdd956b84177a9836a.html":[8,0,0,5,2,2,2],
-"dir_afc7c14ae171d28f17ac5a59ea66005a.html":[8,0,0,1,0,16],
-"dir_b04b5e199d91dde7fd19ef1b1d10921a.html":[8,0,0,1,0,23,0,0,0,5,3],
-"dir_b09317864ff00fe4ec2e03bb740a6340.html":[8,0,0,5,0,1,0,0,0,0]
+"dir_aef4ffec0fc7155945a4149bf41af958.html":[8,0,0,1,0,5]
 };

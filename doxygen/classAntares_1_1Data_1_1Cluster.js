@@ -11,5 +11,6 @@ var classAntares_1_1Data_1_1Cluster =
     [ "modulation", "classAntares_1_1Data_1_1Cluster.html#a0b959414068e894b6fcddeee6bac0c36", null ],
     [ "nominalCapacity", "classAntares_1_1Data_1_1Cluster.html#a1d7e1d8ddf0071df24ba61919ec60582", null ],
     [ "parentArea", "classAntares_1_1Data_1_1Cluster.html#ab593cef54f0e36411998fe057e82ce34", null ],
-    [ "series", "classAntares_1_1Data_1_1Cluster.html#ad00ce25790a04c8ee7c473fd6d1b1a8b", null ]
+    [ "series", "classAntares_1_1Data_1_1Cluster.html#ad00ce25790a04c8ee7c473fd6d1b1a8b", null ],
+    [ "tsNumbers", "classAntares_1_1Data_1_1Cluster.html#add89e71aa84e280956d2d0f463f80e37", null ]
 ];

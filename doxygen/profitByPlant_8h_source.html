@@ -414,7 +414,7 @@ $(document).ready(function(){initNavTree('profitByPlant_8h_source.html',''); ini
 <div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>            <span class="keywordtype">double</span> hourlyClusterProduction = thermal[area-&gt;index]</div>
 <div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>                                               .thermalClustersProductions[cluster-&gt;areaWideIndex];</div>
 <div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>            <span class="keywordtype">double</span> pMin = thermal[area-&gt;index].PMinOfClusters[cluster-&gt;areaWideIndex];</div>
-<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>            uint tsIndex = cluster-&gt;series.timeseriesNumbers[0][state.year];</div>
+<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>            uint tsIndex = cluster-&gt;series.timeseriesNumbers[state.year];</div>
 <div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span> </div>
 <div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span>            <span class="comment">// Thermal cluster profit</span></div>
 <div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span>            pValuesForTheCurrentYear[numSpace][cluster-&gt;areaWideIndex].<a class="code hl_variable" href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html#a49bfe1df7fe7547926b82e052f2e77be">hour</a>[hourInTheYear]</div>
