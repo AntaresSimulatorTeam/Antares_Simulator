@@ -25,12 +25,11 @@
 #ifndef YUNI_OS_WINDOWS
 #include <unistd.h>
 #else
-#include <yuni/core/system/windows.hdr.h>
 #include <yuni/core/string/wstring.h>
+#include <yuni/core/system/windows.hdr.h>
 #endif
-#include <unordered_set>
-
 #include <atomic>
+#include <unordered_set>
 
 //! Flag to determine whether we are in dry mode or not
 extern bool dry;

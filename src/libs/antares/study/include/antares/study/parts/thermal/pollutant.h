@@ -21,9 +21,9 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_THERMAL_POLLUTANT_H__
 #define __ANTARES_LIBS_STUDY_PARTS_THERMAL_POLLUTANT_H__
 
-#include <string>
 #include <array>
 #include <map>
+#include <string>
 
 namespace Antares::Data
 {
@@ -56,8 +56,8 @@ public:
 
     std::array<double, POLLUTANT_MAX> factors{0};
 
-}; //class Pollutant
+}; // class Pollutant
 
-} //namespace Antares::Data
+} // namespace Antares::Data
 
 #endif /* __ANTARES_LIBS_STUDY_PARTS_THERMAL_POLLUTANT_H__ */

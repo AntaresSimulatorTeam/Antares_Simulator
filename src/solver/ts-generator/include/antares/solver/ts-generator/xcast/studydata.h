@@ -22,8 +22,9 @@
 #define __ANTARES_SOLVER_TS_GENERATOR_XCAST_STUDY_DATA_H__
 
 #include <yuni/yuni.h>
-#include <antares/study/xcast/xcast.h>
+
 #include <antares/correlation/correlation.h>
+#include <antares/study/xcast/xcast.h>
 
 namespace Antares::TSGenerator::XCast
 {
@@ -95,9 +96,6 @@ private:
 }; // class StudyData
 
 } // namespace Antares::TSGenerator::XCast
-
-
-
 
 #include "studydata.hxx"
 

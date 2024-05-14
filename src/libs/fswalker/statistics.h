@@ -28,7 +28,11 @@ namespace FSWalker
 class Statistics
 {
 public:
-    Statistics() : fileCount(0), folderCount(0), bytesCopied(0), aborted(true)
+    Statistics():
+        fileCount(0),
+        folderCount(0),
+        bytesCopied(0),
+        aborted(true)
     {
     }
 

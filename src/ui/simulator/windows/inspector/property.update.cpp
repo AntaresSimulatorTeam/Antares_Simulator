@@ -36,6 +36,7 @@
 #include <antares/study/filter.h>
 #include <antares/study/scenario-builder/updater.hxx>
 #include <antares/study/area/constants.h>
+#include <antares/solver/ts-generator/law.h>
 #include "../message.h"
 #include "../../application/main/internal-ids.h"
 #include "property.cluster.update.h"
@@ -797,7 +798,7 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
             (*i)->marginalCost = d;
             (*i)->ComputeCostTimeSeries(); // update
         }
-        
+
         pFrame.delayApply();
         // Notify
         OnStudyThermalClusterCommonSettingsChanged();
@@ -976,15 +977,15 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
     if (name == "cluster.forcedlaw")
     {
         long index = value.GetLong();
-        Data::ThermalLaw law = Data::thermalLawUniform;
+        Data::StatisticalLaw law = Data::LawUniform;
 
         switch (index)
         {
         case 0:
-            law = Data::thermalLawUniform;
+            law = Data::LawUniform;
             break;
         case 1:
-            law = Data::thermalLawGeometric;
+            law = Data::LawGeometric;
             break;
         default:
             return false;
@@ -997,15 +998,15 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
     if (name == "cluster.plannedlaw")
     {
         long index = value.GetLong();
-        Data::ThermalLaw law = Data::thermalLawUniform;
+        Data::StatisticalLaw law = Data::LawUniform;
 
         switch (index)
         {
         case 0:
-            law = Data::thermalLawUniform;
+            law = Data::LawUniform;
             break;
         case 1:
-            law = Data::thermalLawGeometric;
+            law = Data::LawGeometric;
             break;
         default:
             return false;

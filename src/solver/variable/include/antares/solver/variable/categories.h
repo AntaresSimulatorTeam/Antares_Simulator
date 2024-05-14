@@ -273,6 +273,7 @@ struct MaxRowCount
         value = 0
     };
 };
+
 template<>
 struct MaxRowCount<hourly>
 {
@@ -281,6 +282,7 @@ struct MaxRowCount<hourly>
         value = maxHoursInAYear
     };
 };
+
 template<>
 struct MaxRowCount<daily>
 {
@@ -289,6 +291,7 @@ struct MaxRowCount<daily>
         value = maxDaysInAYear
     };
 };
+
 template<>
 struct MaxRowCount<weekly>
 {
@@ -297,6 +300,7 @@ struct MaxRowCount<weekly>
         value = maxWeeksInAYear
     };
 };
+
 template<>
 struct MaxRowCount<monthly>
 {

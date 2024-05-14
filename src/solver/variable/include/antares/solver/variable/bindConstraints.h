@@ -35,6 +35,7 @@ struct VCardAllBindingConstraints
     {
         return "Binding constraints";
     }
+
     //! Unit
     static std::string Unit()
     {
@@ -91,12 +92,12 @@ public:
     {
         enum
         {
-            count = NextType::template Statistics<CDataLevel, CFile>::count
+            count = NextType::template Statistics < CDataLevel,
+            CFile > ::count
         };
     };
 
 public:
-
     /*!
     ** \brief Retrieve the list of all individual variables
     **
@@ -115,7 +116,7 @@ public:
 
     BindingConstraints(BindingConstraints& other) = delete;
     BindingConstraints(BindingConstraints&& other) = delete;
-    BindingConstraints const& operator=(BindingConstraints&& other) = delete;
+    const BindingConstraints& operator=(BindingConstraints&& other) = delete;
 
     //! Destructor
     ~BindingConstraints() = default;

@@ -19,14 +19,18 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <yuni/yuni.h>
 #include "antares/solver/variable/storage/rawdata.h"
+
+#include <yuni/yuni.h>
 
 using namespace Yuni;
 
 namespace Antares::Solver::Variable::R::AllYears
 {
-RawData::RawData() : hourly(nullptr), year(nullptr), allYears(0.)
+RawData::RawData():
+    hourly(nullptr),
+    year(nullptr),
+    allYears(0.)
 {
 }
 
@@ -58,22 +62,26 @@ void RawData::merge(unsigned int y, const IntermediateValues& rhs)
     unsigned int i;
     // StdDeviation value for each hour throughout all years
     for (i = 0; i != maxHoursInAYear; ++i)
+    {
         hourly[i] += rhs.hour[i];
+    }
     // StdDeviation value for each day throughout all years
     for (i = 0; i != maxDaysInAYear; ++i)
+    {
         daily[i] += rhs.day[i];
+    }
     // StdDeviation value for each week throughout all years
     for (i = 0; i != maxWeeksInAYear; ++i)
+    {
         weekly[i] += rhs.week[i];
+    }
     // StdDeviation value for each month throughout all years
     for (i = 0; i != maxMonths; ++i)
+    {
         monthly[i] += rhs.month[i];
+    }
     // StdDeviation value throughout all years
     year[y] += rhs.year;
 }
 
 } // namespace Antares::Solver::Variable::R::AllYears
-
-
-
-

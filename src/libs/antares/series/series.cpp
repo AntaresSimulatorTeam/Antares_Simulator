@@ -19,23 +19,25 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <yuni/yuni.h>
-#include <yuni/io/file.h>
-#include <yuni/io/directory.h>
 #include "antares/series/series.h"
+
 #include <algorithm>
+#include <sstream>
 #include <vector>
+
+#include <yuni/yuni.h>
+#include <yuni/io/directory.h>
+#include <yuni/io/file.h>
 
 using namespace Yuni;
 
 #define SEP IO::Separator
 
-
 namespace Antares::Data
 {
-void TimeSeries::Numbers::registerSeries(const TimeSeries* s)
+void TimeSeriesNumbers::registerSeries(const TimeSeries* s, std::string label)
 {
-    series.push_back(s);
+    series[std::move(label)] = s;
 }
 
 // TODO[FOM] Code duplication
@@ -45,29 +47,82 @@ static bool checkAllElementsIdenticalOrOne(std::vector<uint> w)
     return std::adjacent_find(w.begin(), first_one, std::not_equal_to<uint>()) == first_one;
 }
 
-bool TimeSeries::Numbers::checkSeriesNumberOfColumnsConsistency() const
+static std::string errorMessage(const std::map<std::string, const TimeSeries*>& series)
+{
+    std::ostringstream msg;
+    auto isLast = [&series](std::size_t& idx)
+    {
+        idx++;
+        return idx == series.size();
+    };
+    for (std::size_t idx = 0; const auto& [label, s]: series)
+    {
+        msg << label << ": " << s->numberOfColumns() << (isLast(idx) ? "" : ", ");
+    }
+    return msg.str();
+}
+
+uint TimeSeriesNumbers::height() const
+{
+    return tsNumbers.height;
+}
+
+uint32_t TimeSeriesNumbers::operator[](uint y) const
+{
+    return tsNumbers[0][y];
+}
+
+uint32_t& TimeSeriesNumbers::operator[](uint y)
+{
+    return tsNumbers[0][y];
+}
+
+void TimeSeriesNumbers::reset(uint h)
+{
+    tsNumbers.reset(1, h);
+}
+
+void TimeSeriesNumbers::clear()
+{
+    tsNumbers.clear();
+}
+
+void TimeSeriesNumbers::saveToBuffer(std::string& data) const
+{
+    const auto add1 = [](uint32_t x) { return x + 1; };
+    tsNumbers.saveToBuffer(data, 0, true, add1, true);
+}
+
+std::optional<std::string> TimeSeriesNumbers::checkSeriesNumberOfColumnsConsistency() const
 {
     std::vector<uint> width;
-    for (const auto* s : series)
+    for (const auto& [_, s]: series)
+    {
         width.push_back(s->numberOfColumns());
+    }
 
-    return checkAllElementsIdenticalOrOne(width);
+    if (!checkAllElementsIdenticalOrOne(width))
+    {
+        return errorMessage(series);
+    }
+    return std::nullopt;
 }
 
-TimeSeries::TimeSeries(Numbers& tsNumbers) : timeseriesNumbers(tsNumbers)
+TimeSeries::TimeSeries(TimeSeriesNumbers& tsNumbers):
+    timeseriesNumbers(tsNumbers)
 {
-    tsNumbers.registerSeries(this);
 }
 
-bool TimeSeries::loadFromFile(const std::string& path,
-                              const bool average)
+bool TimeSeries::loadFromFile(const std::string& path, const bool average)
 {
     bool ret = true;
     Matrix<>::BufferType dataBuffer;
     ret = timeSeries.loadFromCSVFile(path, 1, HOURS_PER_YEAR, &dataBuffer) && ret;
 
     if (average)
+    {
         timeSeries.averageTimeseries();
+    }
 
     timeseriesNumbers.clear();
 
@@ -102,15 +157,19 @@ uint32_t TimeSeries::getSeriesIndex(uint32_t year) const
 {
     // If the timeSeries only has one column, we have no choice but to use it.
     if (numberOfColumns() == 1)
+    {
         return 0;
+    }
 
-    return timeseriesNumbers[0][year];
+    return timeseriesNumbers[year];
 }
 
 double* TimeSeries::operator[](uint32_t index)
 {
     if (timeSeries.width <= index)
+    {
         return nullptr;
+    }
     return timeSeries[index];
 }
 

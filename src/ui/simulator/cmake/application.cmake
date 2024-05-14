@@ -50,6 +50,8 @@ SET(SRC_APPLICATION
 		# Application
 		application/application.h
 		application/application.cpp
+        application/log_cleaner.h
+        application/log_cleaner.cpp
 		application/study.h
 		application/study.cpp
 

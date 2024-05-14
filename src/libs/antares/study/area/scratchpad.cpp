@@ -20,9 +20,11 @@
 */
 
 #include "antares/study/area/scratchpad.h"
+
+#include <limits>
+
 #include "antares/antares/antares.h"
 #include "antares/study/study.h"
-#include <limits>
 
 using namespace Yuni;
 
@@ -37,7 +39,9 @@ bool doWeHaveOnePositiveMaxDailyEnergy(const Matrix<double>& dailyPower,
         for (uint day = 0; day < DAYS_PER_YEAR; ++day)
         {
             if (dailyPower[tsNumber][day] * nbHoursAtPmaxPerDay[day] > 0.)
+            {
                 return true;
+            }
         }
     }
 
@@ -65,7 +69,9 @@ AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area) :
     uint nbMonthsPerYear = 12;
 
     for (uint i = 0; i != 168; ++i)
+    {
         dispatchableGenerationMargin[i] = 0;
+    }
 
     for (uint h = 0; h != HOURS_PER_YEAR; ++h)
     {
@@ -84,13 +90,17 @@ AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area) :
         {
             sum = 0.;
             for (w = 0; w != area.miscGen.width; ++w)
+            {
                 sum += area.miscGen[w][h];
+            }
             miscGenSum[h] = sum;
         }
         if (mode == Data::SimulationMode::Adequacy)
         {
             for (uint h = 0; h != area.miscGen.height; ++h)
+            {
                 miscGenSum[h] -= area.reserves[Data::fhrPrimaryReserve][h];
+            }
         }
     }
 
@@ -99,16 +109,16 @@ AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area) :
     //*******************************************************************************
     //   - This computation is done here, but we don't want it here.
     //     We want Scratchpad to shrink and even disappear.
-    //     So a possible solution to move this computation to some place else is to host 
-    //     these means TS in the hydro part of areas, and compute them right after 
+    //     So a possible solution to move this computation to some place else is to host
+    //     these means TS in the hydro part of areas, and compute them right after
     //     their the hourly TS (max power).
     //     Note that scratchpad instances are duplicated for multi-threading purpose,
     //     and that moving these TS elsewhere could create concurrency issues.
-    //     But these daily TS, once computed, are then only read (in daily.cpp 
+    //     But these daily TS, once computed, are then only read (in daily.cpp
     //     and when building the weekly optimization problem).
     //     Thus we don't have to fear such issues.
     //   - Besides, there is a performance problem here : for a given area, we compute
-    //     the max power daily means for each call to scratchpad constructor, that is 
+    //     the max power daily means for each call to scratchpad constructor, that is
     //     the same computation for each thread.
     //     This is another reason to move the computation from here.
     //*******************************************************************************
@@ -135,9 +145,10 @@ AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area) :
     bool hydroGenerationPermission = false;
 
     // ... Getting hydro max energy
-    auto const& dailyNbHoursAtGenPmax = area.hydro.dailyNbHoursAtGenPmax[0];
+    const auto& dailyNbHoursAtGenPmax = area.hydro.dailyNbHoursAtGenPmax[0];
 
-    hydroGenerationPermission = doWeHaveOnePositiveMaxDailyEnergy(meanMaxDailyGenPower.timeSeries, dailyNbHoursAtGenPmax);
+    hydroGenerationPermission = doWeHaveOnePositiveMaxDailyEnergy(meanMaxDailyGenPower.timeSeries,
+                                                                  dailyNbHoursAtGenPmax);
 
     // ---------------------
     // Hydro has inflows
@@ -146,7 +157,8 @@ AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area) :
     if (!area.hydro.prepro) // not in prepro mode
     {
         assert(area.hydro.series);
-        hydroHasInflows = MatrixTestForAtLeastOnePositiveValue(area.hydro.series->storage.timeSeries);
+        hydroHasInflows = MatrixTestForAtLeastOnePositiveValue(
+          area.hydro.series->storage.timeSeries);
     }
     else
     {
@@ -156,7 +168,9 @@ AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area) :
         auto& colMaxEnergy = m[PreproHydro::maximumEnergy];
 
         for (uint month = 0; month < nbMonthsPerYear; ++month)
+        {
             valueCol += colMaxEnergy[month] * (1. - colPowerOverWater[month]);
+        }
 
         hydroHasInflows = (valueCol > 0.);
     }
@@ -171,10 +185,11 @@ AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area) :
     // ===============
 
     //  Hydro max pumping energy
-    auto const& dailyNbHoursAtPumpPmax = area.hydro.dailyNbHoursAtPumpPmax[0];
+    const auto& dailyNbHoursAtPumpPmax = area.hydro.dailyNbHoursAtPumpPmax[0];
 
     //  If pumping energy is nil over the whole year, pumpHasMod is false, true otherwise.
-    pumpHasMod = doWeHaveOnePositiveMaxDailyEnergy(meanMaxDailyPumpPower.timeSeries, dailyNbHoursAtPumpPmax);
+    pumpHasMod = doWeHaveOnePositiveMaxDailyEnergy(meanMaxDailyPumpPower.timeSeries,
+                                                   dailyNbHoursAtPumpPmax);
 }
 
 void AreaScratchpad::CalculateMeanDailyMaxPowerMatrices(const Matrix<double>& hourlyMaxGenMatrix,
@@ -195,4 +210,3 @@ void AreaScratchpad::CalculateMeanDailyMaxPowerMatrices(const Matrix<double>& ho
   }
 }
 } // namespace Antares::Data
-

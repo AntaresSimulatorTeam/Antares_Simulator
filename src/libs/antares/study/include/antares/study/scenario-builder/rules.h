@@ -21,21 +21,24 @@
 #ifndef __LIBS_STUDY_SCENARIO_BUILDER_RULES_H__
 #define __LIBS_STUDY_SCENARIO_BUILDER_RULES_H__
 
-#include <yuni/yuni.h>
-#include <yuni/core/string.h>
-#include "../fwd.h"
-#include "TSnumberData.h"
-#include "ThermalTSNumberData.h"
-#include "hydroLevelsData.h"
-#include "NTCTSNumberData.h"
-#include "BindingConstraintsTSNumbersData.h"
-#include "RenewableTSNumberData.h"
-#include "solarTSNumberData.h"
-#include "HydroTSNumberData.h"
-#include "WindTSNumberData.h"
-#include "LoadTSNumberData.h"
 #include <map>
 #include <memory>
+
+#include <yuni/yuni.h>
+#include <yuni/core/string.h>
+
+#include "../fwd.h"
+#include "BindingConstraintsTSNumbersData.h"
+#include "HydroMaxPowerTSNumberData.h"
+#include "HydroTSNumberData.h"
+#include "LoadTSNumberData.h"
+#include "NTCTSNumberData.h"
+#include "RenewableTSNumberData.h"
+#include "TSnumberData.h"
+#include "ThermalTSNumberData.h"
+#include "WindTSNumberData.h"
+#include "hydroLevelsData.h"
+#include "solarTSNumberData.h"
 
 namespace Antares
 {
@@ -46,7 +49,7 @@ namespace ScenarioBuilder
 /*!
 ** \brief Rules for TS numbers, for all years and a single timeseries
 */
-class Rules final : private Yuni::NonCopyable<Rules>
+class Rules final: private Yuni::NonCopyable<Rules>
 {
 public:
     //! Smart pointer

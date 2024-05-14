@@ -25,8 +25,10 @@
 // ------------------------------------
 OptDailyStringGenerator::OptDailyStringGenerator(unsigned int day,
                                                  unsigned int week,
-                                                 unsigned int year) :
- day_(day), week_(week), year_(year)
+                                                 unsigned int year):
+    day_(day),
+    week_(week),
+    year_(year)
 {
 }
 
@@ -41,8 +43,9 @@ std::string OptDailyStringGenerator::to_string() const
 // ------------------------------------
 // Weekly optimization
 // ------------------------------------
-OptWeeklyStringGenerator::OptWeeklyStringGenerator(unsigned int week, unsigned int year) :
- week_(week), year_(year)
+OptWeeklyStringGenerator::OptWeeklyStringGenerator(unsigned int week, unsigned int year):
+    week_(week),
+    year_(year)
 {
 }
 

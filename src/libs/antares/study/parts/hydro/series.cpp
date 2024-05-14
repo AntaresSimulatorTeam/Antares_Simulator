@@ -22,10 +22,11 @@
 #include <algorithm>
 #include <yuni/yuni.h>
 #include <yuni/io/file.h>
-#include "antares/study/parts/hydro/series.h"
+
+#include <antares/study/parts/hydro/series.h>
+#include <antares/exception/LoadingError.hpp>
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
-#include <antares/exception/LoadingError.hpp>
 #include "antares/study/study.h"
 
 using namespace Yuni;
@@ -36,10 +37,10 @@ namespace Antares::Data
 {
 
 static bool loadTSfromFile(Matrix<double>& ts,
-                    const AreaName& areaID,
-                    const AnyString& folder,
-                    const std::string& filename,
-                    unsigned int height)
+                           const AreaName& areaID,
+                           const AnyString& folder,
+                           const std::string& filename,
+                           unsigned int height)
 {
     YString filePath;
     Matrix<>::BufferType fileContent;
@@ -71,6 +72,12 @@ DataSeriesHydro::DataSeriesHydro() :
  maxHourlyGenPower(timeseriesNumbers),
  maxHourlyPumpPower(timeseriesNumbers)
 {
+    timeseriesNumbers.registerSeries(&ror, "ror");
+    timeseriesNumbers.registerSeries(&storage, "storage");
+    timeseriesNumbers.registerSeries(&mingen, "mingen");
+    timeseriesNumbersHydroMaxPower.registerSeries(&maxHourlyGenPower, "max-geneneration-power");
+    timeseriesNumbersHydroMaxPower.registerSeries(&maxHourlyPumpPower, "max-pumping-power");
+
     // Pmin was introduced in v8.6
     // The previous behavior was Pmin=0
     // For compatibility reasons with existing studies, mingen, maxHourlyGenPower and
@@ -156,7 +163,10 @@ bool DataSeriesHydro::loadGenerationTS(const AreaName& areaID,
     bool ret = loadTSfromFile(ror.timeSeries, areaID, folder, "ror.txt", HOURS_PER_YEAR);
     ret = loadTSfromFile(storage.timeSeries, areaID, folder, "mod.txt", DAYS_PER_YEAR) && ret;
     if (studyVersion >= StudyVersion(8, 6))
-        ret = loadTSfromFile(mingen.timeSeries, areaID, folder, "mingen.txt", HOURS_PER_YEAR) && ret;
+    {
+        ret = loadTSfromFile(mingen.timeSeries, areaID, folder, "mingen.txt", HOURS_PER_YEAR)
+              && ret;
+    }
 
     return ret;
 }
@@ -168,7 +178,8 @@ bool DataSeriesHydro::LoadMaxPower(const AreaName& areaID, const AnyString& fold
     Matrix<>::BufferType fileContent;
 
     filepath.clear() << folder << SEP << areaID << SEP << "maxHourlyGenPower.txt";
-    ret = maxHourlyGenPower.timeSeries.loadFromCSVFile(filepath, 1, HOURS_PER_YEAR, &fileContent) && ret;
+    ret = maxHourlyGenPower.timeSeries.loadFromCSVFile(filepath, 1, HOURS_PER_YEAR, &fileContent)
+          && ret;
 
     filepath.clear() << folder << SEP << areaID << SEP << "maxHourlyPumpPower.txt";
     ret = maxHourlyPumpPower.timeSeries.loadFromCSVFile(filepath, 1, HOURS_PER_YEAR, &fileContent)
@@ -230,15 +241,18 @@ void DataSeriesHydro::resizeTSinDeratedMode(bool derated,
                                             bool usedBySolver)
 {
     if (!(derated && usedBySolver))
+    {
         return;
+    }
 
     ror.averageTimeseries();
     storage.averageTimeseries();
-    if (studyVersion >= StudyVersion(8,6))
+    if (studyVersion >= StudyVersion(8, 6))
+    {
         mingen.averageTimeseries();
-    TScount_ = 1;
+        TScount_ = 1;
 
-    if (studyVersion >= StudyVersion(9,1))
+    if (studyVersion >= StudyVersion(9, 1))
     {
         maxHourlyGenPower.averageTimeseries();
         maxHourlyPumpPower.averageTimeseries();
@@ -246,4 +260,3 @@ void DataSeriesHydro::resizeTSinDeratedMode(bool derated,
 }
 
 } // namespace Antares::Data
-

@@ -21,11 +21,11 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_HYDRO_TIMESERIES_H__
 #define __ANTARES_LIBS_STUDY_PARTS_HYDRO_TIMESERIES_H__
 
-#include <antares/series/series.h>
 #include <antares/array/matrix.h>
+#include <antares/series/series.h>
 #include <antares/study/version.h>
-#include "../../fwd.h"
 
+#include "../../fwd.h"
 
 namespace Antares
 {
@@ -77,7 +77,7 @@ public:
     bool LoadMaxPower(const AreaName& areaID, const AnyString& folder);
 
     void buildHourlyMaxPowerFromDailyTS(const Matrix<double>::ColumnType& DailyMaxGenPower,
-                                  const Matrix<double>::ColumnType& DailyMaxPumpPower);
+                                        const Matrix<double>::ColumnType& DailyMaxPumpPower);
 
     /*!
     ** \brief Save data series for hydro into a folder (`input/hydro/series`)
@@ -151,7 +151,6 @@ public:
     void resizeTSinDeratedMode(bool derated, StudyVersion version, bool useBySolver);
 
 private:
-    
     // The number of time-series about generation (ror, inflows (=storage), mingen)
     // They all should have the same number of columns (width), as they each year receives a common
     // TS number for all three.

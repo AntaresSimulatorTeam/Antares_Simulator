@@ -50,11 +50,6 @@
 
 #include <array>
 
-/*! Name of the app to use into logs */
-#define LOG_APPLICATION_NAME "antares"
-/*! Vendor */
-#define LOG_APPLICATION_VENDOR "RTE"
-
 const unsigned int HOURS_PER_DAY = 24;
 const unsigned int DAYS_PER_YEAR = 365;
 const unsigned int HOURS_PER_YEAR = 8760;

@@ -20,8 +20,9 @@
 */
 #pragma once
 
-#include "../../variable.h"
 #include "antares/study/binding_constraint/BindingConstraint.h"
+
+#include "../../variable.h"
 
 namespace Antares
 {
@@ -38,6 +39,7 @@ struct VCardBindingConstMarginCost
     {
         return "BC. MARG. COST";
     }
+
     //! Unit
     static std::string Unit()
     {
@@ -92,7 +94,7 @@ struct VCardBindingConstMarginCost
 */
 template<class NextT = Container::EndOfList>
 class BindingConstMarginCost
- : public Variable::IVariable<BindingConstMarginCost<NextT>, NextT, VCardBindingConstMarginCost>
+    : public Variable::IVariable<BindingConstMarginCost<NextT>, NextT, VCardBindingConstMarginCost>
 {
 public:
     //! Type of the next static variable
@@ -118,11 +120,11 @@ public:
     {
         enum
         {
-            count
-            = ((VCardType::categoryDataLevel & CDataLevel && VCardType::categoryFileLevel & CFile)
-                 ? (NextType::template Statistics<CDataLevel, CFile>::count
-                    + VCardType::columnCount * ResultsType::count)
-                 : NextType::template Statistics<CDataLevel, CFile>::count),
+            count = ((VCardType::categoryDataLevel & CDataLevel
+                      && VCardType::categoryFileLevel & CFile)
+                       ? (NextType::template Statistics<CDataLevel, CFile>::count
+                          + VCardType::columnCount * ResultsType::count)
+                       : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
 
@@ -132,7 +134,9 @@ public:
     ~BindingConstMarginCost()
     {
         if (pValuesForTheCurrentYear)
+        {
             delete[] pValuesForTheCurrentYear;
+        }
     }
 
     void initializeFromStudy(Data::Study& study)
@@ -145,8 +149,9 @@ public:
         // Intermediate values
         pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+        {
             pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);
-
+        }
 
         NextType::initializeFromStudy(study);
     }
@@ -184,7 +189,9 @@ public:
     void yearEnd(unsigned int year, unsigned int numSpace)
     {
         if (!isInitialized())
+        {
             return;
+        }
 
         // Compute statistics for the current year depending on
         // the BC type (hourly, daily, weekly)
@@ -226,7 +233,9 @@ public:
     void weekBegin(State& state)
     {
         if (!isInitialized())
+        {
             return;
+        }
 
         auto numSpace = state.numSpace;
         // For daily binding constraints, getting daily marginal price
@@ -256,8 +265,8 @@ public:
         case BindingConstraint::typeWeekly:
         {
             uint weekInTheYear = state.weekInTheYear;
-            double weeklyValue
-              = -state.problemeHebdo->ResultatsContraintesCouplantes[associatedBC_][0];
+            double weeklyValue = -state.problemeHebdo
+                                    ->ResultatsContraintesCouplantes[associatedBC_][0];
 
             pValuesForTheCurrentYear[numSpace].week[weekInTheYear] = weeklyValue;
 
@@ -281,14 +290,17 @@ public:
     void hourEnd(State& state, unsigned int hourInTheYear)
     {
         if (!isInitialized())
+        {
             return;
+        }
 
         auto numSpace = state.numSpace;
         if (associatedBC_->type() == Data::BindingConstraint::typeHourly)
         {
-            pValuesForTheCurrentYear[numSpace][hourInTheYear]
-              -= state.problemeHebdo->
-              ResultatsContraintesCouplantes[associatedBC_][state.hourInTheWeek];
+            pValuesForTheCurrentYear[numSpace][hourInTheYear] -= state.problemeHebdo
+                                                                   ->ResultatsContraintesCouplantes
+                                                                     [associatedBC_]
+                                                                     [state.hourInTheWeek];
         }
 
         NextType::hourEnd(state, hourInTheYear);
@@ -308,7 +320,9 @@ public:
       unsigned int numSpace) const
     {
         if (!(precision & associatedBC_->yearByYearFilter()))
+        {
             return;
+        }
 
         // Initializing external pointer on current variable non applicable status
         results.isCurrentVarNA[0] = isCurrentOutputNonApplicable(precision);
@@ -318,8 +332,8 @@ public:
             // Write the data for the current year
             results.variableCaption = getBindConstraintCaption();
             results.variableUnit = VCardType::Unit();
-            pValuesForTheCurrentYear[numSpace].template buildAnnualSurveyReport<VCardType>(
-              results, fileLevel, precision);
+            pValuesForTheCurrentYear[numSpace]
+              .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
         }
     }
 
@@ -331,7 +345,9 @@ public:
         // Building syntheses results
         // ------------------------------
         if (!(precision & associatedBC_->yearByYearFilter()))
+        {
             return;
+        }
 
         // And only if we match the current data level _and_ precision level
         if ((dataLevel & VCardType::categoryDataLevel) && (fileLevel & VCardType::categoryFileLevel)
@@ -341,8 +357,12 @@ public:
             results.isCurrentVarNA[0] = isCurrentOutputNonApplicable(precision);
             results.variableCaption = getBindConstraintCaption();
 
-            VariableAccessorType::template BuildSurveyReport<VCardType>(
-              results, AncestorType::pResults, dataLevel, fileLevel, precision, false);
+            VariableAccessorType::template BuildSurveyReport<VCardType>(results,
+                                                                        AncestorType::pResults,
+                                                                        dataLevel,
+                                                                        fileLevel,
+                                                                        precision,
+                                                                        false);
         }
     }
 
@@ -351,7 +371,8 @@ private:
     // ---------------
     std::string getBindConstraintCaption() const
     {
-        std::string mathOperator(Antares::Data::BindingConstraint::MathOperatorToCString(associatedBC_->operatorType()));
+        std::string mathOperator(
+          Antares::Data::BindingConstraint::MathOperatorToCString(associatedBC_->operatorType()));
         return std::string() + associatedBC_->name().c_str() + " (" + mathOperator + ")";
     }
 
