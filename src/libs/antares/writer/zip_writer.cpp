@@ -46,7 +46,7 @@ namespace Antares::Solver
 {
 
 static void logErrorAndThrow [[noreturn]] (const std::string& errorMessage)
-
+{
     logs.error() << errorMessage;
     throw std::runtime_error(errorMessage);
 }
