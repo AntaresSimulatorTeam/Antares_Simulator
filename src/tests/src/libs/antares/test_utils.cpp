@@ -89,7 +89,7 @@ BOOST_AUTO_TEST_CASE(test_transform_name_into_id)
     BOOST_CHECK(transformNameToId("!name") == "name");
 }
 
-BOOST_AUTO_TEST_CASE(yuni_abosulte_vs_std_absolute)
+BOOST_AUTO_TEST_CASE(yuni_absolute_vs_std_absolute)
 {
     fs::path pathToFile("abc.txt");
 
@@ -97,4 +97,20 @@ BOOST_AUTO_TEST_CASE(yuni_abosulte_vs_std_absolute)
     Yuni::IO::MakeAbsolute(yuniAbs, pathToFile.string());
 
     BOOST_CHECK_EQUAL(fs::absolute(pathToFile).string(), yuniAbs);
+}
+
+BOOST_AUTO_TEST_CASE(yuni_normalize_vs_std_lexically_normal)
+{
+    fs::path p1("a/./b/..");
+    fs::path p2("a/.///b/../");
+
+
+    Yuni::String yuniNorm;
+    Yuni::IO::Normalize(yuniNorm, p1.string());
+
+    BOOST_CHECK_EQUAL(p1.lexically_normal().string(), yuniNorm);
+
+    Yuni::IO::Normalize(yuniNorm, p2.string());
+
+    BOOST_CHECK_EQUAL(p2.lexically_normal().string(), yuniNorm);
 }
