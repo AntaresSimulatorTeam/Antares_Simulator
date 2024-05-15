@@ -15,6 +15,9 @@ on:
       run-tests:
         required: true
         type: string
+      target_branch:
+        required: true
+        type: string
 
 env:
   GITHUB_TOKEN: ${{ github.token }}

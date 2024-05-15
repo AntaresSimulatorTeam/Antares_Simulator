@@ -20,21 +20,24 @@
 */
 #pragma once
 #include "ConstraintBuilder.h"
+
 struct NbDispUnitsMinBoundSinceMinUpTimeData
 {
     const std::vector<PALIERS_THERMIQUES>& PaliersThermiquesDuPays;
     bool Simulation;
     std::vector<CORRESPONDANCES_DES_CONTRAINTES>& CorrespondanceCntNativesCntOptim;
 };
+
 /*!
  * represent 'Number of Dispatchable Units Min Bound Since Min Up Time' type
  */
-class NbDispUnitsMinBoundSinceMinUpTime : private ConstraintFactory
+class NbDispUnitsMinBoundSinceMinUpTime: private ConstraintFactory
 {
 public:
     NbDispUnitsMinBoundSinceMinUpTime(ConstraintBuilder& builder,
-                                      NbDispUnitsMinBoundSinceMinUpTimeData& data) :
-     ConstraintFactory(builder), data(data)
+                                      NbDispUnitsMinBoundSinceMinUpTimeData& data):
+        ConstraintFactory(builder),
+        data(data)
     {
     }
 

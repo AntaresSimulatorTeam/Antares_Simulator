@@ -48,7 +48,7 @@ BOOST_AUTO_TEST_SUITE(areas_operations)
 
 BOOST_AUTO_TEST_CASE(area_add)
 {
-    auto study = std::make_unique<Study>() ;
+    auto study = std::make_unique<Study>();
     const auto areaA = study->areaAdd("A");
     BOOST_CHECK(areaA != nullptr);
     BOOST_CHECK_EQUAL(areaA->name, "A");
@@ -69,10 +69,11 @@ BOOST_FIXTURE_TEST_CASE(area_delete, OneAreaStudy)
     BOOST_CHECK(study->areas.empty());
 }
 
-BOOST_AUTO_TEST_SUITE_END() //areas
+BOOST_AUTO_TEST_SUITE_END() // areas
 
 // Check that disabled objects are indeed removed from computations
 BOOST_AUTO_TEST_SUITE(remove_disabled)
+
 BOOST_FIXTURE_TEST_CASE(thermal_cluster_delete, OneAreaStudy)
 {
     auto disabledCluster = std::make_shared<ThermalCluster>(areaA);
@@ -86,8 +87,10 @@ BOOST_FIXTURE_TEST_CASE(thermal_cluster_delete, OneAreaStudy)
     areaA->thermal.list.addToCompleteList(enabledCluster);
 
     // Check that "Cluster1" isn't found
-    for (const auto& c : areaA->thermal.list.each_enabled())
+    for (const auto& c: areaA->thermal.list.each_enabled())
+    {
         BOOST_CHECK(c->name() != "Cluster1");
+    }
 }
 
 BOOST_FIXTURE_TEST_CASE(renewable_cluster_delete, OneAreaStudy)
@@ -103,21 +106,22 @@ BOOST_FIXTURE_TEST_CASE(renewable_cluster_delete, OneAreaStudy)
     areaA->renewable.list.addToCompleteList(enabledCluster);
 
     // Check that "Cluster1" isn't found
-    for (const auto& c : areaA->renewable.list.each_enabled())
+    for (const auto& c: areaA->renewable.list.each_enabled())
+    {
         BOOST_CHECK(c->name() != "Cluster1");
+    }
 }
 
 BOOST_FIXTURE_TEST_CASE(short_term_storage_delete, OneAreaStudy)
 {
     auto& sts = areaA->shortTermStorage.storagesByIndex;
 
-    auto addSTS = [&sts](std::string&& name,
-                         bool enabled)
+    auto addSTS = [&sts](std::string&& name, bool enabled)
     {
-      ShortTermStorage::STStorageCluster cluster;
-      cluster.properties.name = name;
-      cluster.properties.enabled = enabled;
-      sts.push_back(cluster);
+        ShortTermStorage::STStorageCluster cluster;
+        cluster.properties.name = name;
+        cluster.properties.enabled = enabled;
+        sts.push_back(cluster);
     };
 
     addSTS("Cluster1", true);
@@ -125,12 +129,10 @@ BOOST_FIXTURE_TEST_CASE(short_term_storage_delete, OneAreaStudy)
 
     auto findDisabledCluster = [&sts](std::string&& name)
     {
-      return std::find_if(sts.begin(),
-                          sts.end(),
-                          [&name](ShortTermStorage::STStorageCluster& c)
-                          {
-                              return c.properties.name == name;
-                          });
+        return std::find_if(sts.begin(),
+                            sts.end(),
+                            [&name](ShortTermStorage::STStorageCluster& c)
+                            { return c.properties.name == name; });
     };
 
     // Check that "Cluster1" and "Cluster2" are found
@@ -143,11 +145,11 @@ BOOST_FIXTURE_TEST_CASE(short_term_storage_delete, OneAreaStudy)
     BOOST_CHECK(findDisabledCluster("Cluster1") != sts.end());
     BOOST_CHECK(findDisabledCluster("Cluster2") == sts.end());
 
-    // operator<< doesn't exist for iterators, Boost can't generate output in case of failure, so we use BOOST_CHECK instead of BOOST_CHECK_EQUAL
+    // operator<< doesn't exist for iterators, Boost can't generate output in case of failure, so we
+    // use BOOST_CHECK instead of BOOST_CHECK_EQUAL
 }
 
 BOOST_AUTO_TEST_SUITE_END() // remove_disabled
-
 
 BOOST_AUTO_TEST_SUITE(thermal_clusters_operations)
 
@@ -213,13 +215,12 @@ BOOST_FIXTURE_TEST_CASE(renewable_cluster_add, OneAreaStudy)
     BOOST_CHECK(areaA->renewable.list.findInAll("WindCluster") == nullptr);
 }
 
-
 /*!
  * Study with:
  *  - one area named "A"
  *  - one renewable cluster named "WindCluster"
  */
-struct RenewableClusterStudy : public OneAreaStudy
+struct RenewableClusterStudy: public OneAreaStudy
 {
     RenewableClusterStudy()
     {
@@ -249,7 +250,7 @@ BOOST_FIXTURE_TEST_CASE(renewable_cluster_delete, RenewableClusterStudy)
     BOOST_CHECK(areaA->renewable.list.empty());
 }
 
-BOOST_AUTO_TEST_SUITE_END() //renewable clusters
+BOOST_AUTO_TEST_SUITE_END() // renewable clusters
 
 BOOST_AUTO_TEST_SUITE(studyVersion_class)
 
@@ -270,7 +271,7 @@ BOOST_AUTO_TEST_CASE(version_parsing)
 {
     StudyVersion v;
     v.fromString("7.2");
-    BOOST_CHECK(v == StudyVersion(7,2));
+    BOOST_CHECK(v == StudyVersion(7, 2));
     BOOST_CHECK(!v.fromString("abc"));
     BOOST_CHECK(v == StudyVersion::unknown());
     BOOST_CHECK(!v.fromString("a8.7"));
@@ -289,7 +290,5 @@ BOOST_AUTO_TEST_CASE(version_parsing)
     // 4.5 is not in the list of supported versions, thus failing
     BOOST_CHECK(!v.fromString("4.5"));
     BOOST_CHECK(v == StudyVersion::unknown());
-
 }
-
-BOOST_AUTO_TEST_SUITE_END() //version
+BOOST_AUTO_TEST_SUITE_END() // version

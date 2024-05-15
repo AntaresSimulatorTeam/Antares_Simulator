@@ -21,9 +21,9 @@
 #ifndef __SOLVER_VARIABLE_ECONOMY_PSP_H__
 #define __SOLVER_VARIABLE_ECONOMY_PSP_H__
 
-#include "antares/solver/variable/variable.h"
-#include "antares/solver/simulation/sim_extern_variables_globales.h"
 #include <antares/study/area/constants.h>
+#include "antares/solver/simulation/sim_extern_variables_globales.h"
+#include "antares/solver/variable/variable.h"
 
 namespace Antares
 {
@@ -40,6 +40,7 @@ struct VCardPSP
     {
         return "PSP";
     }
+
     //! Unit
     static std::string Unit()
     {
@@ -94,7 +95,7 @@ struct VCardPSP
 ** \brief Marginal PSP
 */
 template<class NextT = Container::EndOfList>
-class PSP : public Variable::IVariable<PSP<NextT>, NextT, VCardPSP>
+class PSP: public Variable::IVariable<PSP<NextT>, NextT, VCardPSP>
 {
 public:
     //! Type of the next static variable
@@ -120,11 +121,11 @@ public:
     {
         enum
         {
-            count
-            = ((VCardType::categoryDataLevel & CDataLevel && VCardType::categoryFileLevel & CFile)
-                 ? (NextType::template Statistics<CDataLevel, CFile>::count
-                    + VCardType::columnCount * ResultsType::count)
-                 : NextType::template Statistics<CDataLevel, CFile>::count),
+            count = ((VCardType::categoryDataLevel & CDataLevel
+                      && VCardType::categoryFileLevel & CFile)
+                       ? (NextType::template Statistics<CDataLevel, CFile>::count
+                          + VCardType::columnCount * ResultsType::count)
+                       : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
 
@@ -144,7 +145,9 @@ public:
         // Intermediate values
         pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+        {
             pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);
+        }
 
         // Next
         NextType::initializeFromStudy(study);
@@ -154,9 +157,11 @@ public:
     {
         // Copy raw values
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+        {
             (void)::memcpy(pValuesForTheCurrentYear[numSpace].hour,
                            area->miscGen.entry[Data::fhhPSP],
                            sizeof(double) * area->miscGen.height);
+        }
 
         // Next
         NextType::initializeFromArea(study, area);
@@ -210,8 +215,10 @@ public:
                         unsigned int nbYearsForCurrentSummary)
     {
         for (unsigned int numSpace = 0; numSpace < nbYearsForCurrentSummary; ++numSpace)
+        {
             AncestorType::pResults.merge(numSpaceToYear[numSpace],
                                          pValuesForTheCurrentYear[numSpace]);
+        }
 
         // Next variable
         NextType::computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
@@ -249,8 +256,8 @@ public:
             // Write the data for the current year
             results.variableCaption = VCardType::Caption();
             results.variableUnit = VCardType::Unit();
-            pValuesForTheCurrentYear[numSpace].template buildAnnualSurveyReport<VCardType>(
-              results, fileLevel, precision);
+            pValuesForTheCurrentYear[numSpace]
+              .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
         }
     }
 

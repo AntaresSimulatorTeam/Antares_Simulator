@@ -21,15 +21,18 @@
 #ifndef __STUDY_JOB_AGGREGATOR_PROGRESS_H__
 #define __STUDY_JOB_AGGREGATOR_PROGRESS_H__
 
-#include <yuni/thread/timer.h>
-#include <antares/logs/logs.h>
 #include <atomic>
 
-class Progress final : public Yuni::Thread::Timer
+#include <yuni/thread/timer.h>
+
+#include <antares/logs/logs.h>
+
+class Progress final: public Yuni::Thread::Timer
 {
 public:
     //! The threading policy
     using ThreadingPolicy = Yuni::Thread::Timer::ThreadingPolicy;
+
     //! Different states related to the progression
     enum State
     {

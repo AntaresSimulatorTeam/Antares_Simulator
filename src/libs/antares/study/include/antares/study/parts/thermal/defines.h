@@ -28,7 +28,7 @@ namespace Data
 // Forward declaration
 class ThermalCluster;
 class ThermalClusterList;
-class PreproThermal;
+class PreproAvailability;
 
 } // namespace Data
 } // namespace Antares

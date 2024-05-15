@@ -25,13 +25,15 @@
 /*!
  * represent 'PMaxDispatchableGeneration' Constraint type
  */
-class PMaxDispatchableGeneration : private ConstraintFactory
+class PMaxDispatchableGeneration: private ConstraintFactory
 {
 public:
-    PMaxDispatchableGeneration(ConstraintBuilder& builder, StartUpCostsData& data) :
-     ConstraintFactory(builder), data(data)
+    PMaxDispatchableGeneration(ConstraintBuilder& builder, StartUpCostsData& data):
+        ConstraintFactory(builder),
+        data(data)
     {
     }
+
     /*!
      * @brief Add variables to the constraint and update constraints Matrix
      * @param pays : area

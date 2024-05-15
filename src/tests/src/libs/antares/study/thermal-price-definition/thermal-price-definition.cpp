@@ -22,15 +22,16 @@
 
 #define WIN32_LEAN_AND_MEAN
 
-#include <boost/test/unit_test.hpp>
-#include <yuni/io/file.h>
 #include <filesystem>
 #include <fstream>
 
-#include <antares/study/study.h>
-#include <antares/exception/LoadingError.hpp>
+#include <boost/test/unit_test.hpp>
+
+#include <yuni/io/file.h>
 
 #include <antares/checks/checkLoadedInputData.h>
+#include <antares/exception/LoadingError.hpp>
+#include <antares/study/study.h>
 #include "antares/study/parts/thermal/cluster_list.h"
 
 using namespace Antares::Data;
@@ -73,7 +74,8 @@ struct ThermalIniFile
 
 struct TimeSeriesFile
 {
-    TimeSeriesFile(const std::string& name, std::size_t size) : name_(name)
+    TimeSeriesFile(const std::string& name, std::size_t size):
+        name_(name)
     {
         folder = temp_directory_path();
         std::ofstream outfile(folder / name, std::ofstream::out | std::ofstream::trunc);
@@ -89,7 +91,8 @@ struct TimeSeriesFile
         std::filesystem::remove(folder / name_);
     }
 
-    std::string getFolder() {
+    std::string getFolder()
+    {
         return folder.string();
     }
 
@@ -108,12 +111,13 @@ void fillThermalEconomicTimeSeries(ThermalCluster* c)
 // =================
 // The fixture
 // =================
-struct FixtureFull : private ThermalIniFile
+struct FixtureFull: private ThermalIniFile
 {
     FixtureFull(const FixtureFull& f) = delete;
     FixtureFull(const FixtureFull&& f) = delete;
     FixtureFull& operator=(const FixtureFull& f) = delete;
     FixtureFull& operator=(const FixtureFull&& f) = delete;
+
     FixtureFull()
     {
         area = study->areaAdd("area");
@@ -141,6 +145,7 @@ struct FixtureStudyOnly
 
 // Here, we need the "lightweight fixture"
 BOOST_AUTO_TEST_SUITE(EconomicInputData_loadFromFolder)
+
 BOOST_FIXTURE_TEST_CASE(EconomicInputData_loadFromFolder_OK, FixtureStudyOnly)
 {
     TimeSeriesFile fuelCostTSfile("fuelCost.txt", 8760);
@@ -150,7 +155,8 @@ BOOST_FIXTURE_TEST_CASE(EconomicInputData_loadFromFolder_OK, FixtureStudyOnly)
     BOOST_CHECK_EQUAL(eco.fuelcost[0][1432], 1);
 }
 
-BOOST_FIXTURE_TEST_CASE(EconomicInputData_loadFromFolder_failing_not_enough_values, FixtureStudyOnly)
+BOOST_FIXTURE_TEST_CASE(EconomicInputData_loadFromFolder_failing_not_enough_values,
+                        FixtureStudyOnly)
 {
     TimeSeriesFile fuelCostTSfile("fuelCost.txt", 80);
     EconomicInputData eco;
@@ -166,6 +172,7 @@ BOOST_FIXTURE_TEST_CASE(EconomicInputData_loadFromFolder_working_with_many_value
 BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(s)
+
 BOOST_FIXTURE_TEST_CASE(ThermalClusterList_loadFromFolder_basic, FixtureFull)
 {
     clusterList.loadFromFolder(*study, folder, area);
@@ -218,7 +225,8 @@ BOOST_FIXTURE_TEST_CASE(checkFuelAndCo2_checkColumnNumber_OK, FixtureFull)
     BOOST_CHECK_NO_THROW(Antares::Check::checkCO2CostColumnNumber(study->areas));
 }
 
-BOOST_FIXTURE_TEST_CASE(ThermalCluster_costGenManualCalculationOfMarketBidAndMarginalCostPerHour, FixtureFull)
+BOOST_FIXTURE_TEST_CASE(ThermalCluster_costGenManualCalculationOfMarketBidAndMarginalCostPerHour,
+                        FixtureFull)
 {
     clusterList.loadFromFolder(*study, folder, area);
     auto cluster = clusterList.findInAll("some cluster");
@@ -230,7 +238,9 @@ BOOST_FIXTURE_TEST_CASE(ThermalCluster_costGenManualCalculationOfMarketBidAndMar
     BOOST_CHECK_EQUAL(cluster->costsTimeSeries[0].marginalCostTS[6737], 23);
 }
 
-BOOST_FIXTURE_TEST_CASE(ThermalCluster_costGenTimeSeriesCalculationOfMarketBidAndMarginalCostPerHour, FixtureFull)
+BOOST_FIXTURE_TEST_CASE(
+  ThermalCluster_costGenTimeSeriesCalculationOfMarketBidAndMarginalCostPerHour,
+  FixtureFull)
 {
     TimeSeriesFile fuel("fuelCost.txt", 8760);
     TimeSeriesFile co2("CO2Cost.txt", 8760);

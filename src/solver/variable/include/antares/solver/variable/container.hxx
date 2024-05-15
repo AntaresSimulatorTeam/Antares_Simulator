@@ -21,10 +21,12 @@
 #ifndef __SOLVER_CONTAINER_CONTAINER_HXX__
 #define __SOLVER_CONTAINER_CONTAINER_HXX__
 
+#include <memory>
+
 #include <yuni/yuni.h>
 #include <yuni/core/static/types.h>
 
-#include <memory>
+#include "antares/solver/variable/surveyresults/reportbuilder.hxx"
 
 #define SEP Yuni::IO::Separator
 
@@ -135,8 +137,9 @@ inline void List<NextT>::computeSpatialAggregatesSummary(
   unsigned int nbYearsForCurrentSummary)
 {
     // Next variable
-    NextType::template computeSpatialAggregatesSummary(
-      allVars, numSpaceToYear, nbYearsForCurrentSummary);
+    NextType::template computeSpatialAggregatesSummary(allVars,
+                                                       numSpaceToYear,
+                                                       nbYearsForCurrentSummary);
 }
 
 template<class NextT>
@@ -263,7 +266,9 @@ void List<NextT>::buildSurveyReport(SurveyResults& results,
     // If the column index is still equals to 0, that would mean we have nothing
     // to do (there is no data to write)
     if (results.data.columnIndex > 0)
+    {
         results.saveToFile(dataLevel, fileLevel, precision);
+    }
 }
 
 template<class NextT>
@@ -290,7 +295,9 @@ void List<NextT>::buildAnnualSurveyReport(SurveyResults& results,
     // If the column index is still equals to 0, that would mean we have nothing
     // to do (there is no data to write)
     if (results.data.columnIndex > 0)
+    {
         results.saveToFile(dataLevel, fileLevel, precision);
+    }
 }
 
 template<class NextT>
@@ -322,7 +329,9 @@ void List<NextT>::exportSurveyResults(bool global,
         logs.checkpoint() << "Exporting the survey results...";
     }
     else
+    {
         logs.info() << "Exporting the annual results";
+    }
 
     auto survey = std::make_shared<SurveyResults>(*pStudy, output, writer);
 

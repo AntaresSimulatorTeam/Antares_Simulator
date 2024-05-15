@@ -788,7 +788,7 @@ void Job::displayGauge(const bool visible)
     }
 }
 
-void Job::onLogMessage(int level, const String& message)
+void Job::onLogMessage(int level, const std::string& message)
 {
     if (message.empty() or message[0] == ' ')
         return;

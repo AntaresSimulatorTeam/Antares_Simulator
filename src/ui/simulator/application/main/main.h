@@ -578,17 +578,13 @@ private:
 
     void internalFrameClose();
 
-    void evtOnCleanCurrentStudyFolder(wxCommandEvent& evt);
-
-    void evtOnCleanStudyFolder(wxCommandEvent& evt);
-
     void evtLaunchAnalyzer(wxCommandEvent& evt);
 
     void evtLaunchConstraintsBuilder(wxCommandEvent& evt);
 
     void onMouseMoved(wxMouseEvent& evt);
 
-    void onLogMessageDeferred(int level, const Yuni::String& message);
+    void onLogMessageDeferred(int level, const std::string& message);
     void onLogMessage(wxCommandEvent& evt);
 
     void onStudyLoaded();
@@ -693,7 +689,6 @@ private:
     Component::Notebook::Page* pageScBuilderLoad;
     Component::Notebook::Page* pageScBuilderThermal;
     Component::Notebook::Page* pageScBuilderHydro;
-    Component::Notebook::Page* pageScBuilderHydroMaxPower;
     Component::Notebook::Page* pageScBuilderWind;
     Component::Notebook::Page* pageScBuilderSolar;
     Component::Notebook::Page* pageScBuilderNTC;

@@ -19,13 +19,15 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <yuni/yuni.h>
-#include <yuni/io/file.h>
-#include <yuni/io/directory.h>
-#include <yuni/core/math.h>
-#include "antares/study/study.h"
 #include "antares/study/parts/thermal/ecoInput.h"
+
+#include <yuni/yuni.h>
+#include <yuni/core/math.h>
+#include <yuni/io/directory.h>
+#include <yuni/io/file.h>
+
 #include <antares/logs/logs.h>
+#include "antares/study/study.h"
 
 using namespace Yuni;
 
@@ -70,18 +72,31 @@ bool EconomicInputData::loadFromFolder(Study& study, const AnyString& folder)
         filename << folder << SEP << "fuelCost.txt";
         if (IO::File::Exists(filename))
         {
-            ret = fuelcost.loadFromCSVFile(filename, 1, HOURS_PER_YEAR, Matrix<>::optImmediate, &dataBuffer) && ret;
+            ret = fuelcost.loadFromCSVFile(filename,
+                                           1,
+                                           HOURS_PER_YEAR,
+                                           Matrix<>::optImmediate,
+                                           &dataBuffer)
+                  && ret;
             if (study.usedByTheSolver && study.parameters.derated)
+            {
                 fuelcost.averageTimeseries();
+            }
         }
 
         filename.clear() << folder << SEP << "CO2Cost.txt";
         if (IO::File::Exists(filename))
         {
-            ret = co2cost.loadFromCSVFile(filename, 1, HOURS_PER_YEAR, Matrix<>::optImmediate, &dataBuffer)
+            ret = co2cost.loadFromCSVFile(filename,
+                                          1,
+                                          HOURS_PER_YEAR,
+                                          Matrix<>::optImmediate,
+                                          &dataBuffer)
                   && ret;
             if (study.usedByTheSolver && study.parameters.derated)
+            {
                 co2cost.averageTimeseries();
+            }
         }
     }
 
