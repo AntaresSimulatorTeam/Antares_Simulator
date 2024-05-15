@@ -117,19 +117,6 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReservesThermi
                         }
                     }
                 }
-                if (Simulation)
-                {
-                    NombreDeVariables++;
-                }
-                else
-                {
-                    // Need
-                    variableManager.NeedReserve(reserveIndex, pdt) = areaReserveUp.need[pdt];
-                    ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
-                      = VARIABLE_FIXE;
-                    variableNamer.NeedReserve(NombreDeVariables, areaReserveUp.reserveName);
-                    NombreDeVariables++;
-                }
             }
             for (auto& areaReserveDown : areaReserves.areaCapacityReservationsDown)
             {
@@ -193,19 +180,6 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReservesThermi
                             clusterIndex++;
                         }
                     }
-                }
-                if (Simulation)
-                {
-                    NombreDeVariables++;
-                }
-                else
-                {
-                    // Need
-                    variableManager.NeedReserve(reserveIndex, pdt) = areaReserveDown.need[pdt];
-                    ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
-                      = VARIABLE_BORNEE_DES_DEUX_COTES;
-                    variableNamer.NeedReserve(NombreDeVariables, areaReserveDown.reserveName);
-                    NombreDeVariables++;
                 }
             }
         }

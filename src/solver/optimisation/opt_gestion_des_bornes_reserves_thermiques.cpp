@@ -51,36 +51,51 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireReservesThermiques(
               = problemeHebdo->PaliersThermiquesDuPays[pays];
             auto areaReserves = problemeHebdo->allReserves.thermalAreaReserves[pays];
 
-            int index = 0;
             for (const auto& areaReserveUp : areaReserves.areaCapacityReservationsUp)
             {
+                int var = CorrespondanceVarNativesVarOptim
+                            .internalUnsatisfiedReserveIndex[areaReserveUp.globalReserveIndex];
+                Xmin[var] = 0;
+                Xmax[var] = LINFINI_ANTARES;
+
+                var = CorrespondanceVarNativesVarOptim
+                        .internalExcessReserveIndex[areaReserveUp.globalReserveIndex];
+                Xmin[var] = 0;
+                Xmax[var] = LINFINI_ANTARES;
+
                 for (const auto& clusterReserveParticipation :
                      areaReserveUp.AllReservesParticipation)
                 {
                     if (clusterReserveParticipation.maxPower >= 0)
                     {
-                        int var = CorrespondanceVarNativesVarOptim
-                                    .clusterReserveUpParticipationIndex[index];
+                        var = CorrespondanceVarNativesVarOptim.clusterReserveParticipationIndex
+                                [clusterReserveParticipation.indexClusterParticipation];
                         Xmin[var] = 0;
                         Xmax[var] = LINFINI_ANTARES;
                     }
-                    index++;
                 }
             }
-            index = 0;
             for (const auto& areaReserveDown : areaReserves.areaCapacityReservationsUp)
             {
+                int var = CorrespondanceVarNativesVarOptim
+                            .internalUnsatisfiedReserveIndex[areaReserveDown.globalReserveIndex];
+                Xmin[var] = 0;
+                Xmax[var] = LINFINI_ANTARES;
+
+                var = CorrespondanceVarNativesVarOptim
+                        .internalExcessReserveIndex[areaReserveDown.globalReserveIndex];
+                Xmin[var] = 0;
+                Xmax[var] = LINFINI_ANTARES;
                 for (const auto& clusterReserveParticipation :
                      areaReserveDown.AllReservesParticipation)
                 {
                     if (clusterReserveParticipation.maxPower >= 0)
                     {
-                        int var = CorrespondanceVarNativesVarOptim
-                                    .clusterReserveUpParticipationIndex[index];
+                        var = CorrespondanceVarNativesVarOptim.clusterReserveParticipationIndex
+                                [clusterReserveParticipation.indexClusterParticipation];
                         Xmin[var] = 0;
                         Xmax[var] = LINFINI_ANTARES;
                     }
-                    index++;
                 }
             }
         }

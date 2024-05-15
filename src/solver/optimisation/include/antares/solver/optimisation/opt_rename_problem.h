@@ -94,7 +94,6 @@ public:
                                               const std::string& reserveName);
     void InternalUnsatisfiedReserve(unsigned int variable, const std::string& reserveName);
     void InternalExcessReserve(unsigned int variable, const std::string& reserveName);
-    void NeedReserve(unsigned int variable, const std::string& reserveName);
     void NODU(unsigned int variable, const std::string& clusterName);
     void NumberStoppingDispatchableUnits(unsigned int variable, const std::string& clusterName);
     void NumberStartingDispatchableUnits(unsigned int variable, const std::string& clusterName);
@@ -157,6 +156,7 @@ public:
     void NbDispUnitsMinBoundSinceMinUpTime(unsigned int constraint, const std::string& clusterName);
     void MinDownTime(unsigned int constraint, const std::string& clusterName);
     void PMaxReserve(unsigned int constraint, const std::string& clusterName, const std::string& reserveName);
+    void ParticipationOfRunningUnitsToReserve(unsigned int constraint, const std::string& clusterName, const std::string& reserveName);
     void POutCapacityThreasholdInf(unsigned int constraint, const std::string& clusterName);
     void POutCapacityThreasholdSup(unsigned int constraint, const std::string& clusterName);
     void ReserveSatisfaction(unsigned int constraint, const std::string& reserveName);

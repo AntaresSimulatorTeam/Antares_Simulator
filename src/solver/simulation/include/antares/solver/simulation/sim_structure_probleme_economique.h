@@ -49,7 +49,6 @@ struct CORRESPONDANCES_DES_VARIABLES
     std::vector<int> clusterReserveParticipationIndex;
     std::vector<int> internalUnsatisfiedReserveIndex;
     std::vector<int> internalExcessReserveIndex;
-    std::vector<int> needReserveIndex;
 
     std::vector<int> NumeroDeVariablesDeLaProdHyd;
 
@@ -97,6 +96,8 @@ struct CORRESPONDANCES_DES_CONTRAINTES
     std::vector<int> NumeroDeContrainteDesContraintesDeDureeMinDeMarche;
     std::vector<int> NumeroDeContrainteDesContraintesDeDureeMinDArret;
     std::vector<int> NumeroDeLaDeuxiemeContrainteDesContraintesDesGroupesQuiTombentEnPanne;
+
+    std::vector<int> NumeroDeContrainteDesContraintesDeBesoinEnReserves;
 
     std::vector<int> NumeroDeContrainteDesNiveauxPays;
 

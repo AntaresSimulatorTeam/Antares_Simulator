@@ -181,8 +181,6 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
           .assign(study.runtime->capacityReservationCount, 0);
         variablesMapping.internalExcessReserveIndex
           .assign(study.runtime->capacityReservationCount, 0);
-        variablesMapping.needReserveIndex
-            .assign(study.runtime->capacityReservationCount, 0);
 
         variablesMapping.NumeroDeVariableDuPalierThermique
           .assign(study.runtime->thermalPlantTotalCount, 0);
@@ -246,6 +244,10 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
         problem.CorrespondanceCntNativesCntOptim[k]
           .NumeroDeContrainteDesContraintesDeDureeMinDArret
           .assign(study.runtime->thermalPlantTotalCount, 0);
+
+        problem.CorrespondanceCntNativesCntOptim[k]
+          .NumeroDeContrainteDesContraintesDeBesoinEnReserves.assign(
+            study.runtime->capacityReservationCount, 0);
 
         problem.CorrespondanceCntNativesCntOptim[k]
           .NumeroDeLaDeuxiemeContrainteDesContraintesDesGroupesQuiTombentEnPanne

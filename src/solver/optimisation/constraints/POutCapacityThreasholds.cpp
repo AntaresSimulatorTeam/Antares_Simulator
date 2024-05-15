@@ -19,10 +19,7 @@ void POutCapacityThreasholds::add(int pays, int cluster, int pdt)
 
         // 17 bis (1) : l * M + Sum(P^on_re-) - P <= 0
         {
-            builder.updateHourWithinWeek(pdt)
-              .NumberOfDispatchableUnits(
-                globalClusterIdx, data.thermalClusters[pays].pminDUnGroupeDuPalierThermique[cluster])
-              .DispatchableProduction(globalClusterIdx, -1);
+            builder.updateHourWithinWeek(pdt);
 
             for (const auto& capacityReservation :
                  data.areaReserves.thermalAreaReserves[pays].areaCapacityReservationsDown)
@@ -35,10 +32,14 @@ void POutCapacityThreasholds::add(int pays, int cluster, int pdt)
                 }
             }
 
-            builder.lessThan();
-
             if (builder.NumberOfVariables() > 0)
             {
+                builder
+                  .NumberOfDispatchableUnits(
+                    globalClusterIdx,
+                    data.thermalClusters[pays].pminDUnGroupeDuPalierThermique[cluster])
+                  .DispatchableProduction(globalClusterIdx, -1)
+                  .lessThan();
                 ConstraintNamer namer(builder.data.NomDesContraintes);
                 const int hourInTheYear = builder.data.weekInTheYear * 168 + pdt;
                 namer.UpdateTimeStep(hourInTheYear);
@@ -46,16 +47,13 @@ void POutCapacityThreasholds::add(int pays, int cluster, int pdt)
                 namer.POutCapacityThreasholdInf(
                   builder.data.nombreDeContraintes,
                   data.thermalClusters[pays].NomsDesPaliersThermiques[cluster]);
+                builder.build();
             }
-            builder.build();
         }
 
          // 17 bis (2) : P - u * M + Sum(P^on_re+) <= 0
         {
-            builder.updateHourWithinWeek(pdt)
-              .DispatchableProduction(globalClusterIdx, 1)
-              .NumberOfDispatchableUnits(
-                globalClusterIdx, -data.thermalClusters[pays].PmaxDUnGroupeDuPalierThermique[cluster]);
+            builder.updateHourWithinWeek(pdt);
 
             for (const auto& capacityReservation :
                  data.areaReserves.thermalAreaReserves[pays].areaCapacityReservationsUp)
@@ -68,10 +66,14 @@ void POutCapacityThreasholds::add(int pays, int cluster, int pdt)
                 }
             }
 
-            builder.lessThan();
-
             if (builder.NumberOfVariables() > 0)
             {
+                builder.DispatchableProduction(globalClusterIdx, 1)
+                  .NumberOfDispatchableUnits(
+                    globalClusterIdx,
+                    -data.thermalClusters[pays].PmaxDUnGroupeDuPalierThermique[cluster])
+                  .lessThan()
+                  .build();
                 ConstraintNamer namer(builder.data.NomDesContraintes);
                 const int hourInTheYear = builder.data.weekInTheYear * 168 + pdt;
                 namer.UpdateTimeStep(hourInTheYear);
@@ -80,7 +82,6 @@ void POutCapacityThreasholds::add(int pays, int cluster, int pdt)
                   builder.data.nombreDeContraintes,
                   data.thermalClusters[pays].NomsDesPaliersThermiques[cluster]);
             }
-            builder.build();
         }
     }
     else

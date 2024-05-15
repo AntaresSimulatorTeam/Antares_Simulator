@@ -27,21 +27,18 @@ void PMaxReserve::add(int pays, int reserve, int cluster, int pdt, bool isUpRese
           .NumberOfDispatchableUnits(globalClusterIdx, -reserveParticipation.maxPower)
           .lessThan();
 
-        if (builder.NumberOfVariables() > 0)
-        {
-            ConstraintNamer namer(builder.data.NomDesContraintes);
-            const int hourInTheYear = builder.data.weekInTheYear * 168 + pdt;
-            namer.UpdateTimeStep(hourInTheYear);
-            namer.UpdateArea(builder.data.NomsDesPays[pays]);
-            namer.PMaxReserve(builder.data.nombreDeContraintes,
-                              reserveParticipation.clusterName,
-                              capacityReservation.reserveName);
-        }
+        ConstraintNamer namer(builder.data.NomDesContraintes);
+        const int hourInTheYear = builder.data.weekInTheYear * 168 + pdt;
+        namer.UpdateTimeStep(hourInTheYear);
+        namer.UpdateArea(builder.data.NomsDesPays[pays]);
+        namer.PMaxReserve(builder.data.nombreDeContraintes,
+                          reserveParticipation.clusterName,
+                          capacityReservation.reserveName);
         builder.build();
     }
     else
     {
-        builder.data.NbTermesContraintesPourLesReserves += 3;
+        builder.data.NbTermesContraintesPourLesReserves += 2;
         builder.data.nombreDeContraintes++;
     }
 }

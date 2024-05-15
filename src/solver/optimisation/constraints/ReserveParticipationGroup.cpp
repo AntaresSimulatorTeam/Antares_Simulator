@@ -35,7 +35,9 @@ ReserveData ReserveParticipationGroup::GetReserveDataFromProblemHebdo()
 {
     return {.Simulation = simulation_,
             .areaReserves = problemeHebdo_->allReserves,
-            .thermalClusters = problemeHebdo_->PaliersThermiquesDuPays};
+            .thermalClusters = problemeHebdo_->PaliersThermiquesDuPays,
+            .CorrespondanceCntNativesCntOptim = problemeHebdo_->CorrespondanceCntNativesCntOptim
+            };
 }
 
 /**

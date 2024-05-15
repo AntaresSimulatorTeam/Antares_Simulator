@@ -26,16 +26,13 @@ void PRunningUnits::add(int pays, int reserve, int cluster, int pdt, bool isUpRe
           .ClusterReserveParticipation(globalClusterIdx, -1.0)
           .equalTo();
 
-        if (builder.NumberOfVariables() > 0)
-        {
-            ConstraintNamer namer(builder.data.NomDesContraintes);
-            const int hourInTheYear = builder.data.weekInTheYear * 168 + pdt;
-            namer.UpdateTimeStep(hourInTheYear);
-            namer.UpdateArea(builder.data.NomsDesPays[pays]);
-            namer.PMaxReserve(builder.data.nombreDeContraintes,
-                              reserveParticipation.clusterName,
-                              capacityReservation.reserveName);
-        }
+        ConstraintNamer namer(builder.data.NomDesContraintes);
+        const int hourInTheYear = builder.data.weekInTheYear * 168 + pdt;
+        namer.UpdateTimeStep(hourInTheYear);
+        namer.UpdateArea(builder.data.NomsDesPays[pays]);
+        namer.ParticipationOfRunningUnitsToReserve(builder.data.nombreDeContraintes,
+                          reserveParticipation.clusterName,
+                          capacityReservation.reserveName);
         builder.build();
     }
     else

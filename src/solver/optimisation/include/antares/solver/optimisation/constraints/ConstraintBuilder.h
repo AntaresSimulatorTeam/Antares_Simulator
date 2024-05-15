@@ -116,11 +116,6 @@ public:
                                                   int offset = 0,
                                                   int delta = 0);
 
-    ConstraintBuilder& NeedReserve(unsigned int pays,
-                                   double coeff,
-                                   int offset = 0,
-                                   int delta = 0);
-
     ConstraintBuilder& InternalExcessReserve(unsigned int pays,
                                              double coeff,
                                              int offset = 0,
@@ -312,4 +307,5 @@ struct ReserveData
     bool Simulation;
     ALL_AREA_RESERVES& areaReserves;
     std::vector<PALIERS_THERMIQUES> thermalClusters;
+    std::vector<CORRESPONDANCES_DES_CONTRAINTES>& CorrespondanceCntNativesCntOptim;
 };

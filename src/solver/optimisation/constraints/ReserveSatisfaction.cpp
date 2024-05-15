@@ -2,24 +2,28 @@
 
 void ReserveSatisfaction::add(int pays, int reserve, int pdt, bool isUpReserve)
 {
+    CAPACITY_RESERVATION capacityReservation
+      = isUpReserve
+          ? data.areaReserves.thermalAreaReserves[pays].areaCapacityReservationsUp[reserve]
+          : data.areaReserves.thermalAreaReserves[pays].areaCapacityReservationsDown[reserve];
+
+    data.CorrespondanceCntNativesCntOptim[pdt]
+      .NumeroDeContrainteDesContraintesDeBesoinEnReserves[capacityReservation.globalReserveIndex]
+      = -1;
     if (!data.Simulation)
     {
         // 24
 
         // Sum(P_θ) = S + J^+ -J^-
         // P_θ : Participation power from cluster θ to the reserve res
-        // S : Internal reserve res need for the area
+        // S : Internal reserve res need for the area (second membre)
         // J^+ : Amount of internal excess reserve for the reserve res
         // J^- : Amount of internal unsatified reserve for the reserve res
 
         builder.updateHourWithinWeek(pdt);
 
-        CAPACITY_RESERVATION capacityReservation
-          = isUpReserve
-              ? data.areaReserves.thermalAreaReserves[pays].areaCapacityReservationsUp[reserve]
-              : data.areaReserves.thermalAreaReserves[pays].areaCapacityReservationsDown[reserve];
-
-        for (size_t cluster = 0; cluster < capacityReservation.AllReservesParticipation.size(); cluster++)
+        for (size_t cluster = 0; cluster < capacityReservation.AllReservesParticipation.size();
+             cluster++)
         {
             if (capacityReservation.AllReservesParticipation[cluster].maxPower != CLUSTER_NOT_PARTICIPATING)
                 builder.RunningClusterReserveParticipation(
@@ -27,31 +31,27 @@ void ReserveSatisfaction::add(int pays, int reserve, int pdt, bool isUpReserve)
                     .NumeroDuPalierDansLEnsembleDesPaliersThermiques[cluster],
                   1);
         }
-        builder.InternalUnsatisfiedReserve(capacityReservation.globalReserveIndex, 1);
-        builder.InternalExcessReserve(capacityReservation.globalReserveIndex, -1);
-        builder.NeedReserve(capacityReservation.globalReserveIndex, -1);
-
-        builder.equalTo();
 
         if (builder.NumberOfVariables() > 0)
         {
+            builder.InternalUnsatisfiedReserve(capacityReservation.globalReserveIndex, 1)
+              .InternalExcessReserve(capacityReservation.globalReserveIndex, -1)
+              .equalTo();
+            data.CorrespondanceCntNativesCntOptim[pdt]
+              .NumeroDeContrainteDesContraintesDeBesoinEnReserves[capacityReservation
+                                                                    .globalReserveIndex]
+              = builder.data.nombreDeContraintes;
             ConstraintNamer namer(builder.data.NomDesContraintes);
             const int hourInTheYear = builder.data.weekInTheYear * 168 + pdt;
             namer.UpdateTimeStep(hourInTheYear);
             namer.UpdateArea(builder.data.NomsDesPays[pays]);
-            namer.ReserveSatisfaction(
-              builder.data.nombreDeContraintes,
-              capacityReservation.reserveName);
+            namer.ReserveSatisfaction(builder.data.nombreDeContraintes,
+                                      capacityReservation.reserveName);
+            builder.build();
         }
-        builder.build();
     }
     else
     {
-        CAPACITY_RESERVATION capacityReservation
-          = isUpReserve
-              ? data.areaReserves.thermalAreaReserves[pays].areaCapacityReservationsUp[reserve]
-              : data.areaReserves.thermalAreaReserves[pays].areaCapacityReservationsDown[reserve];
-
         int nbTermes = 0;
         for (size_t cluster = 0; cluster < capacityReservation.AllReservesParticipation.size();
              cluster++)
@@ -61,8 +61,8 @@ void ReserveSatisfaction::add(int pays, int reserve, int pdt, bool isUpReserve)
                 nbTermes++;
         }
 
-        builder.data.NbTermesContraintesPourLesReserves += 3 + nbTermes;
+        builder.data.NbTermesContraintesPourLesReserves += nbTermes ? 2 + nbTermes : 0;
 
-        builder.data.nombreDeContraintes += 1;
+        builder.data.nombreDeContraintes += nbTermes ? 1 : 0;
     }
 }

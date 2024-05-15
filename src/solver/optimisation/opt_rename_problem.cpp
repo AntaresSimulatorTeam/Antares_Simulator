@@ -144,11 +144,6 @@ void VariableNamer::InternalExcessReserve(unsigned int variable, const std::stri
     SetThermalClusterReserveElementName(variable, "InternalExcessReserve", reserveName);
 }
 
-void VariableNamer::NeedReserve(unsigned int variable, const std::string& reserveName)
-{
-    SetThermalClusterReserveElementName(variable, "NeedReserve", reserveName);
-}
-
 void VariableNamer::NODU(unsigned int variable, const std::string& clusterName)
 {
     SetThermalClusterElementName(variable, "NODU", clusterName);
@@ -396,6 +391,13 @@ void ConstraintNamer::PMaxReserve(unsigned int constraint,
                                   const std::string& reserveName)
 {
     SetThermalClusterAndReserveElementName(constraint, "PMaxReserve", clusterName, reserveName);
+}
+
+void ConstraintNamer::ParticipationOfRunningUnitsToReserve(unsigned int constraint,
+                                  const std::string& clusterName,
+                                  const std::string& reserveName)
+{
+    SetThermalClusterAndReserveElementName(constraint, "ParticipationOfRunningUnitsToReserve", clusterName, reserveName);
 }
 
 void ConstraintNamer::POutCapacityThreasholdInf(unsigned int constraint,
