@@ -45,14 +45,12 @@ namespace fs = std::filesystem;
 namespace Antares::Solver
 {
 
-namespace
-{
-void logErrorAndThrow(const std::string& errorMessage)
-{
+static void logErrorAndThrow [[noreturn]] (const std::string& errorMessage)
+
     logs.error() << errorMessage;
-    throw IOError(errorMessage);
+    throw std::runtime_error(errorMessage);
 }
-} // namespace
+
 
 // Class ZipWriteJob
 template<class ContentT>

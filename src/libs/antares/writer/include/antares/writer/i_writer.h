@@ -30,15 +30,6 @@
 namespace Antares::Solver
 {
 
-/*!
- * A generic I/O exception that may be thrown by writer operations.
- */
-class IOError: public std::runtime_error
-{
-public:
-    using std::runtime_error::runtime_error;
-};
-
 class IResultWriter
 {
 public:
@@ -51,7 +42,7 @@ public:
 
     /*!
      * Waits for completion of every write operation previously appended.
-     * An IOError may be raised if any of those fails.
+     * A runtime error may be raised if any of those fails.
      */
     virtual void flush() = 0;
     virtual bool needsTheJobQueue() const = 0;
