@@ -21,6 +21,7 @@
 #pragma once
 
 #include <functional>
+
 #include "../common/cluster_list.h"
 #include "cluster.h"
 
@@ -32,7 +33,7 @@ namespace Data
 ** \brief List of clusters
 ** \ingroup thermalclusters
 */
-class ThermalClusterList : public ClusterList<ThermalCluster>
+class ThermalClusterList: public ClusterList<ThermalCluster>
 {
 public:
     std::string typeID() const override;
@@ -78,20 +79,20 @@ public:
     ** must be in mustrun mode
     */
     void enableMustrunForEveryone();
+
     //@}
 
     auto each_mustrun_and_enabled() const
     {
         return allClusters_ | std::views::filter(&ThermalCluster::isMustRun)
-                            | std::views::filter(&ThermalCluster::isEnabled);
+               | std::views::filter(&ThermalCluster::isEnabled);
     }
 
     auto each_enabled_and_not_mustrun() const
     {
         return allClusters_ | std::views::filter(&ThermalCluster::isEnabled)
-                            | std::views::filter(std::not_fn(&ThermalCluster::isMustRun));
+               | std::views::filter(std::not_fn(&ThermalCluster::isMustRun));
     }
-
 
     /*!
     ** \brief Ensure data for the prepro are initialized

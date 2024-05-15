@@ -25,29 +25,28 @@
 #include "load/container.h"
 
 // Solar
-#include "solar/prepro.h"
 #include "solar/container.h"
+#include "solar/prepro.h"
 
 // Hydro
-#include "hydro/prepro.h"
-#include "hydro/series.h"
 #include "hydro/container.h"
 #include "hydro/hydromaxtimeseriesreader.h"
+#include "hydro/prepro.h"
+#include "hydro/series.h"
 
 // Wind
-#include "wind/prepro.h"
 #include "wind/container.h"
+#include "wind/prepro.h"
 
 // Thermal
-#include "thermal/defines.h"
-#include "thermal/prepro.h"
 #include "thermal/cluster.h"
 #include "thermal/container.h"
+#include "thermal/defines.h"
 
 // Renewable
-#include "renewable/defines.h"
 #include "renewable/cluster.h"
 #include "renewable/container.h"
+#include "renewable/defines.h"
 
 // Short-term storage
 #include "short-term-storage/container.h"

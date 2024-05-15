@@ -22,9 +22,10 @@
 #pragma once
 
 #include <yuni/yuni.h> // for "uint" definition
+
+#include <antares/study/parameters/adq-patch-params.h>
 #include "antares/solver/simulation/sim_structure_donnees.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
-#include <antares/study/parameters/adq-patch-params.h>
 
 namespace Antares::Solver::Optimization
 {
@@ -33,12 +34,13 @@ class WeeklyOptimization
 public:
     virtual void solve() = 0;
     virtual ~WeeklyOptimization() = default;
-    static std::unique_ptr<WeeklyOptimization> create(const Antares::Data::Study& study,
-                                                      const OptimizationOptions& options,
-                                                      Antares::Data::AdequacyPatch::AdqPatchParams& adqPatchParams,
-                                                      PROBLEME_HEBDO* problemesHebdo,
-                                                      uint numSpace,
-                                                      IResultWriter& writer);
+    static std::unique_ptr<WeeklyOptimization> create(
+      const Antares::Data::Study& study,
+      const OptimizationOptions& options,
+      Antares::Data::AdequacyPatch::AdqPatchParams& adqPatchParams,
+      PROBLEME_HEBDO* problemesHebdo,
+      uint numSpace,
+      IResultWriter& writer);
 
 protected:
     explicit WeeklyOptimization(const OptimizationOptions& options,

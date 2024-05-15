@@ -38,6 +38,7 @@ struct VCardNbOfDispatchedUnits
     {
         return "NODU";
     }
+
     //! Unit
     static std::string Unit()
     {
@@ -102,7 +103,7 @@ struct VCardNbOfDispatchedUnits
 */
 template<class NextT = Container::EndOfList>
 class NbOfDispatchedUnits
- : public Variable::IVariable<NbOfDispatchedUnits<NextT>, NextT, VCardNbOfDispatchedUnits>
+    : public Variable::IVariable<NbOfDispatchedUnits<NextT>, NextT, VCardNbOfDispatchedUnits>
 {
 public:
     //! Type of the next static variable
@@ -128,11 +129,11 @@ public:
     {
         enum
         {
-            count
-            = ((VCardType::categoryDataLevel & CDataLevel && VCardType::categoryFileLevel & CFile)
-                 ? (NextType::template Statistics<CDataLevel, CFile>::count
-                    + VCardType::columnCount * ResultsType::count)
-                 : NextType::template Statistics<CDataLevel, CFile>::count),
+            count = ((VCardType::categoryDataLevel & CDataLevel
+                      && VCardType::categoryFileLevel & CFile)
+                       ? (NextType::template Statistics<CDataLevel, CFile>::count
+                          + VCardType::columnCount * ResultsType::count)
+                       : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
 
@@ -150,7 +151,9 @@ public:
 
         pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+        {
             pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);
+        }
 
         // Next
         NextType::initializeFromStudy(study);
@@ -200,8 +203,8 @@ public:
              i <= state.study.runtime->rangeLimits.hour[Data::rangeEnd];
              ++i)
         {
-            pValuesForTheCurrentYear[numSpace][i]
-              += state.thermalClusterDispatchedUnitsCountForYear[i];
+            pValuesForTheCurrentYear[numSpace][i] += state.thermalClusterDispatchedUnitsCountForYear
+                                                       [i];
         }
 
         // Next variable
@@ -269,8 +272,8 @@ public:
             // Write the data for the current year
             results.variableCaption = VCardType::Caption();
             results.variableUnit = VCardType::Unit();
-            pValuesForTheCurrentYear[numSpace].template buildAnnualSurveyReport<VCardType>(
-              results, fileLevel, precision);
+            pValuesForTheCurrentYear[numSpace]
+              .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
         }
     }
 

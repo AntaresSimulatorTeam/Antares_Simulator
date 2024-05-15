@@ -19,13 +19,15 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include <yuni/yuni.h>
-#include <yuni/io/file.h>
-#include <yuni/io/directory.h>
-#include "antares/study/study.h"
 #include "antares/study/parts/hydro/prepro.h"
+
+#include <yuni/yuni.h>
+#include <yuni/io/directory.h>
+#include <yuni/io/file.h>
+
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
+#include "antares/study/study.h"
 
 using namespace Antares;
 using namespace Yuni;
@@ -66,16 +68,22 @@ static bool PreproHydroLoadSettings(PreproHydro* h, const char* filename)
                 ret = t.to(h->intermonthlyCorrelation);
             }
             else
+            {
                 logs.error() << filename
                              << ": prepro/intermonthlyCorrelation: The property is missing";
+            }
         }
         else
+        {
             logs.error() << filename << ": [prepro]: The section is missing";
+        }
 
         return ret;
     }
     else
+    {
         logs.error() << filename << ": Impossible to open the file";
+    }
 
     return false;
 }
@@ -97,7 +105,9 @@ void PreproHydro::reset()
     // Expectation
     auto& col = data[expectation];
     for (uint i = 0; i != 12; ++i)
+    {
         col[i] = 0.;
+    }
 }
 
 void PreproHydro::copyFrom(const PreproHydro& rhs)
@@ -156,16 +166,22 @@ bool PreproHydro::loadFromFolder(Study& s, const AreaName& areaID, const char* f
         logs.error() << "Hydro: Prepro: `" << areaID
                      << "`: Intermonthly correlation value: The value must be between 0 and 1";
         if (intermonthlyCorrelation < 0.)
+        {
             intermonthlyCorrelation = 0.;
+        }
         else
+        {
             intermonthlyCorrelation = 1.;
+        }
     }
 
     buffer.clear() << folder << SEP << areaID << SEP << "energy.txt";
     ret = data.loadFromCSVFile(buffer, hydroPreproMax, 12, mtrxOption, &s.dataBuffer) && ret;
 
     if (JIT::enabled)
+    {
         return ret;
+    }
 
     // Checks
     {
@@ -174,8 +190,10 @@ bool PreproHydro::loadFromFolder(Study& s, const AreaName& areaID, const char* f
         {
             const double d = col[i];
             if (d < 0. || d > 1.)
+            {
                 logs.error() << "Hydro: Prepro: " << areaID
                              << ": invalid value for ROR (line: " << (i + 1) << ")";
+            }
         }
     }
 

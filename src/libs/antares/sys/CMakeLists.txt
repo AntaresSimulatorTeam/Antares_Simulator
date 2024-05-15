@@ -17,6 +17,7 @@ target_link_libraries(${PROJ}
         PUBLIC
         yuni-static-core
         PRIVATE
+	antares-core
         Antares::logs
         Antares::inifile
         Antares::config

@@ -21,7 +21,6 @@
 #define WIN32_LEAN_AND_MEAN
 #include "utils.h"
 
-
 void initializeStudy(Study::Ptr study)
 {
     study->parameters.reset();
@@ -50,14 +49,18 @@ std::shared_ptr<ThermalCluster> addClusterToArea(Area* area, const std::string& 
 
 void addScratchpadToEachArea(Study& study)
 {
-    for (auto& [_, area] : study.areas) {
-        for (unsigned int i = 0; i < study.maxNbYearsInParallel; ++i) {
+    for (auto& [_, area]: study.areas)
+    {
+        for (unsigned int i = 0; i < study.maxNbYearsInParallel; ++i)
+        {
             area->scratchpad.emplace_back(*study.runtime, *area);
         }
     }
 }
+
 // Name should be changed to setTSSize
-TimeSeriesConfigurer& TimeSeriesConfigurer::setColumnCount(unsigned int columnCount, unsigned rowCount)
+TimeSeriesConfigurer& TimeSeriesConfigurer::setColumnCount(unsigned int columnCount,
+                                                           unsigned rowCount)
 {
     ts_->resize(columnCount, rowCount);
     return *this;
@@ -69,18 +72,20 @@ TimeSeriesConfigurer& TimeSeriesConfigurer::fillColumnWith(unsigned int column, 
     return *this;
 }
 
-ThermalClusterConfig::ThermalClusterConfig(ThermalCluster* cluster) : cluster_(cluster), tsAvailablePowerConfig_(cluster_->series.timeSeries)
+ThermalClusterConfig::ThermalClusterConfig(ThermalCluster* cluster):
+    cluster_(cluster),
+    tsAvailablePowerConfig_(cluster_->series.timeSeries)
 {
 }
 
 ThermalClusterConfig& ThermalClusterConfig::setNominalCapacity(double nominalCapacity)
-{ 
+{
     cluster_->nominalCapacity = nominalCapacity;
     return *this;
 }
 
 ThermalClusterConfig& ThermalClusterConfig::setUnitCount(unsigned int unitCount)
-{ 
+{
     cluster_->unitCount = unitCount;
     return *this;
 }
@@ -93,13 +98,13 @@ ThermalClusterConfig& ThermalClusterConfig::setCosts(double cost)
 }
 
 ThermalClusterConfig& ThermalClusterConfig::setAvailablePowerNumberOfTS(unsigned int columnCount)
-{ 
+{
     tsAvailablePowerConfig_.setColumnCount(columnCount);
     return *this;
 }
 
 ThermalClusterConfig& ThermalClusterConfig::setAvailablePower(unsigned int column, double value)
-{ 
+{
     tsAvailablePowerConfig_.fillColumnWith(column, value);
     return *this;
 }
@@ -134,8 +139,8 @@ averageResults OutputRetriever::hydroStorage(Area* area)
 
 averageResults OutputRetriever::flow(AreaLink* link)
 {
-    // There is a problem here : 
-    //    we cannot easly retrieve the hourly flow for a link and a year : 
+    // There is a problem here :
+    //    we cannot easly retrieve the hourly flow for a link and a year :
     //    - Functions retrieveHourlyResultsForCurrentYear are not coded everywhere it should.
     //    - Even if those functions were correctly implemented, there is another problem :
     //      Each year results erase results of previous year, how can we retrieve results of year 1
@@ -149,13 +154,15 @@ averageResults OutputRetriever::flow(AreaLink* link)
 
 averageResults OutputRetriever::thermalGeneration(ThermalCluster* cluster)
 {
-    auto result = retrieveResultsForThermalCluster<Variable::Economy::VCardProductionByDispatchablePlant>(cluster);
+    auto result = retrieveResultsForThermalCluster<
+      Variable::Economy::VCardProductionByDispatchablePlant>(cluster);
     return averageResults((*result)[cluster->areaWideIndex].avgdata);
 }
 
 averageResults OutputRetriever::thermalNbUnitsON(ThermalCluster* cluster)
 {
-    auto result = retrieveResultsForThermalCluster<Variable::Economy::VCardNbOfDispatchedUnitsByPlant>(cluster);
+    auto result = retrieveResultsForThermalCluster<
+      Variable::Economy::VCardNbOfDispatchedUnitsByPlant>(cluster);
     return averageResults((*result)[cluster->areaWideIndex].avgdata);
 }
 
@@ -170,8 +177,7 @@ ScenarioBuilderRule::ScenarioBuilderRule(Study& study)
         study.parameters.useCustomScenario = true;
         study.parameters.activeRulesScenario = "Custom";
     }
- }
-
+}
 
 // =====================
 // Simulation handler
@@ -184,11 +190,10 @@ void SimulationHandler::create()
 
     simulation_ = std::make_shared<ISimulation<Economy>>(study_,
                                                          settings_,
-                                                         nullDurationCollector_,
+                                                         durationCollector_,
                                                          resultWriter_);
     SIM_AllocationTableaux(study_);
 }
-
 
 // =========================
 // Basic study builder
@@ -251,7 +256,10 @@ Area* StudyBuilder::addAreaToStudy(const std::string& areaName)
     return area;
 }
 
-std::shared_ptr<BindingConstraint> addBindingConstraints(Study& study, std::string name, std::string group) {
+std::shared_ptr<BindingConstraint> addBindingConstraints(Study& study,
+                                                         std::string name,
+                                                         std::string group)
+{
     auto bc = study.bindingConstraints.add(name);
     bc->group(group);
     auto g = study.bindingConstraintsGroups.add(group);

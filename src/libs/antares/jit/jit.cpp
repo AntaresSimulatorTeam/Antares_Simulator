@@ -19,36 +19,37 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
+#include "antares/jit/jit.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "antares/jit/jit.h"
 
 bool JIT::enabled = false;
 
 bool JIT::usedFromGUI = false;
 
-JIT::Informations::Informations() :
- alreadyLoaded(false),
- modified(false),
- loadDataIfNotAlreadyDone(false),
- options(0),
- minWidth(0),
- maxHeight(0),
- lastModification(0)
+JIT::Informations::Informations():
+    alreadyLoaded(false),
+    modified(false),
+    loadDataIfNotAlreadyDone(false),
+    options(0),
+    minWidth(0),
+    maxHeight(0),
+    lastModification(0)
 {
     estimatedSize[0] = 0;
     estimatedSize[1] = 0;
 }
 
-JIT::Informations::Informations(const Informations& rhs) :
- alreadyLoaded(true),
- modified(true),
- loadDataIfNotAlreadyDone(true),
- options(rhs.options),
- minWidth(rhs.minWidth),
- maxHeight(rhs.maxHeight),
- lastModification(0)
+JIT::Informations::Informations(const Informations& rhs):
+    alreadyLoaded(true),
+    modified(true),
+    loadDataIfNotAlreadyDone(true),
+    options(rhs.options),
+    minWidth(rhs.minWidth),
+    maxHeight(rhs.maxHeight),
+    lastModification(0)
 {
     estimatedSize[0] = 0;
     estimatedSize[1] = 0;
@@ -65,7 +66,9 @@ JIT::Informations* JIT::Reset(JIT::Informations* jit)
     // if changes, see JIT::Reset(jit, filename)
     // Allocate the structure if needed
     if (not jit)
+    {
         return new JIT::Informations();
+    }
 
     // Reset the `sourceFilename` if already set
     jit->sourceFilename.clear();

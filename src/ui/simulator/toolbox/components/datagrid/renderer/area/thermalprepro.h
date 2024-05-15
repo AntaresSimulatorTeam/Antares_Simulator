@@ -23,7 +23,7 @@
 
 #include "../../../../input/thermal-cluster.h"
 #include "../matrix.h"
-#include <antares/study/parts/thermal/prepro.h>
+#include <antares/solver/ts-generator/prepro.h>
 
 namespace Antares
 {
@@ -104,7 +104,7 @@ private:
     virtual void onStudyClosed() override;
 
 private:
-    Antares::Data::PreproThermal* pPreproThermal;
+    Antares::Data::PreproAvailability* pPreproAvailability = nullptr;
     Antares::Data::ThermalCluster* pCluster;
 
 }; // class ThermalClusterPrepro

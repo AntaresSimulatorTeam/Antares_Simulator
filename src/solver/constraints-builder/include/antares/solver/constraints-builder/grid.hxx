@@ -18,14 +18,14 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include "antares/solver/constraints-builder/grid.h"
-#include "antares/solver/constraints-builder/cbuilder.h"
 #include <algorithm>
-#include <utility>
-#include <algorithm>
+#include <list>
 #include <numeric>
 #include <stack>
-#include <list>
+#include <utility>
+
+#include "antares/solver/constraints-builder/cbuilder.h"
+#include "antares/solver/constraints-builder/grid.h"
 
 using namespace Yuni;
 
@@ -34,7 +34,8 @@ namespace Antares
 namespace Graph
 {
 template<class NodeT>
-Grid<NodeT>::Grid() : inf(0)
+Grid<NodeT>::Grid():
+    inf(0)
 {
 }
 
@@ -42,18 +43,22 @@ template<class NodeT>
 Grid<NodeT>::~Grid()
 {
     for (auto i = pEdgesList.begin(); i != pEdgesList.end(); i++)
+    {
         delete (*i);
+    }
     for (auto i = pNodesList.begin(); i != pNodesList.end(); i++)
+    {
         delete (*i);
+    }
 }
 
 template<class NodeT>
 typename Grid<NodeT>::NodeP Grid<NodeT>::addNode(NodeT& n, std::string id)
 {
-    auto nodeIT
-      = std::find_if(pNodesList.begin(), pNodesList.end(), [&id](const NodeP& nodeP) -> bool {
-            return nodeP->getName() == id;
-        });
+    auto nodeIT = std::find_if(pNodesList.begin(),
+                               pNodesList.end(),
+                               [&id](const NodeP& nodeP) -> bool
+                               { return nodeP->getName() == id; });
 
     if (nodeIT == pNodesList.end())
     {
@@ -93,7 +98,9 @@ typename Grid<NodeT>::EdgeP Grid<NodeT>::addEdge(NodeP n1, NodeP n2, long weight
         return newEdge;
     }
     else
+    {
         return edgePtr;
+    }
 }
 
 template<class NodeT>
@@ -150,8 +157,9 @@ void Grid<NodeT>::kruskal()
 
     // create temporary sorted vector of Link
     VectorEdgeP tempEdgesList = pEdgesList;
-    std::stable_sort(
-      tempEdgesList.begin(), tempEdgesList.end(), typename Graph::Edge<NodeT>::compareWeight());
+    std::stable_sort(tempEdgesList.begin(),
+                     tempEdgesList.end(),
+                     typename Graph::Edge<NodeT>::compareWeight());
 
     // algorithm
     for (auto i = tempEdgesList.begin(); i != tempEdgesList.end(); i++)
@@ -181,7 +189,9 @@ bool Grid<NodeT>::buildMesh()
     kruskal();
 
     if (pMinSpanningTree.empty())
+    {
         return false;
+    }
 
     // clear the spanning cycle base
     pMesh.clear();
@@ -194,7 +204,9 @@ bool Grid<NodeT>::buildMesh()
         // check if the link already belong to the skeleton
         if (std::find(pMinSpanningTree.begin(), pMinSpanningTree.end(), (*i))
             == pMinSpanningTree.end())
+        {
             linksToBeAdded.push_back(*i);
+        }
     }
 
     std::vector<EdgeIncidence> incidenceMatrix(linksToBeAdded.size());
@@ -219,17 +231,22 @@ bool Grid<NodeT>::buildMesh()
         {
             if (std::find(adjacentNodes.begin(), adjacentNodes.end(), v[j]->getOrigin())
                 == adjacentNodes.end())
+            {
                 adjacentNodes.push_back(v[j]->getOrigin());
+            }
             if (std::find(adjacentNodes.begin(), adjacentNodes.end(), v[j]->getDestination())
                 == adjacentNodes.end())
+            {
                 adjacentNodes.push_back(v[j]->getDestination());
+            }
 
-            EdgeP ei = polarisedDuplicate.findEdgeFromNodeNames(
-              v[j]->getOrigin()->getName() + "+", v[j]->getDestination()->getName() + "+");
+            EdgeP ei = polarisedDuplicate.findEdgeFromNodeNames(v[j]->getOrigin()->getName() + "+",
+                                                                v[j]->getDestination()->getName()
+                                                                  + "+");
 
             NodeP ni1 = polarisedDuplicate.findNodeFromName(v[j]->getOrigin()->getName() + "+");
-            NodeP ni2
-              = polarisedDuplicate.findNodeFromName(v[j]->getDestination()->getName() + "-");
+            NodeP ni2 = polarisedDuplicate.findNodeFromName(v[j]->getDestination()->getName()
+                                                            + "-");
 
             polarisedDuplicate.addEdge(ni1, ni2, ei->getWeight());
             polarisedDuplicate.removeEdge(ei);
@@ -303,29 +320,37 @@ bool Grid<NodeT>::getDuplicatedGrid(Grid<NodeT>& grid)
     for (typename VectorEdgeP::iterator e = pEdgesList.begin(); e != pEdgesList.end(); e++)
     {
         { //+
-            auto nodeOrigIT = std::find_if(
-              grid.pNodesList.begin(), grid.pNodesList.end(), [&e](const NodeP& nodeP) -> bool {
-                  return nodeP->getName() == (*e)->getOrigin()->getName() + "+";
-              });
+            auto nodeOrigIT = std::find_if(grid.pNodesList.begin(),
+                                           grid.pNodesList.end(),
+                                           [&e](const NodeP& nodeP) -> bool {
+                                               return nodeP->getName()
+                                                      == (*e)->getOrigin()->getName() + "+";
+                                           });
 
-            auto nodeDestIT = std::find_if(
-              grid.pNodesList.begin(), grid.pNodesList.end(), [&e](const NodeP& nodeP) -> bool {
-                  return nodeP->getName() == (*e)->getDestination()->getName() + "+";
-              });
+            auto nodeDestIT = std::find_if(grid.pNodesList.begin(),
+                                           grid.pNodesList.end(),
+                                           [&e](const NodeP& nodeP) -> bool {
+                                               return nodeP->getName()
+                                                      == (*e)->getDestination()->getName() + "+";
+                                           });
 
             grid.addEdge(*nodeOrigIT, *nodeDestIT, (*e)->getWeight());
         }
 
         { //-
-            auto nodeOrigIT = std::find_if(
-              grid.pNodesList.begin(), grid.pNodesList.end(), [&e](const NodeP& nodeP) -> bool {
-                  return nodeP->getName() == (*e)->getOrigin()->getName() + "-";
-              });
+            auto nodeOrigIT = std::find_if(grid.pNodesList.begin(),
+                                           grid.pNodesList.end(),
+                                           [&e](const NodeP& nodeP) -> bool {
+                                               return nodeP->getName()
+                                                      == (*e)->getOrigin()->getName() + "-";
+                                           });
 
-            auto nodeDestIT = std::find_if(
-              grid.pNodesList.begin(), grid.pNodesList.end(), [&e](const NodeP& nodeP) -> bool {
-                  return nodeP->getName() == (*e)->getDestination()->getName() + "-";
-              });
+            auto nodeDestIT = std::find_if(grid.pNodesList.begin(),
+                                           grid.pNodesList.end(),
+                                           [&e](const NodeP& nodeP) -> bool {
+                                               return nodeP->getName()
+                                                      == (*e)->getDestination()->getName() + "-";
+                                           });
 
             grid.addEdge(*nodeOrigIT, *nodeDestIT, (*e)->getWeight());
         }
@@ -352,15 +377,19 @@ bool Grid<NodeT>::cloneGrid(Grid<NodeT>& grid)
     for (typename VectorEdgeP::iterator e = pEdgesList.begin(); e != pEdgesList.end(); e++)
     {
         { //+
-            auto nodeOrigIT = std::find_if(
-              grid.pNodesList.begin(), grid.pNodesList.end(), [&e](const NodeP& nodeP) -> bool {
-                  return nodeP->getName() == (*e)->getOrigin()->getName();
-              });
+            auto nodeOrigIT = std::find_if(grid.pNodesList.begin(),
+                                           grid.pNodesList.end(),
+                                           [&e](const NodeP& nodeP) -> bool {
+                                               return nodeP->getName()
+                                                      == (*e)->getOrigin()->getName();
+                                           });
 
-            auto nodeDestIT = std::find_if(
-              grid.pNodesList.begin(), grid.pNodesList.end(), [&e](const NodeP& nodeP) -> bool {
-                  return nodeP->getName() == (*e)->getDestination()->getName();
-              });
+            auto nodeDestIT = std::find_if(grid.pNodesList.begin(),
+                                           grid.pNodesList.end(),
+                                           [&e](const NodeP& nodeP) -> bool {
+                                               return nodeP->getName()
+                                                      == (*e)->getDestination()->getName();
+                                           });
 
             grid.addEdge(*nodeOrigIT, *nodeDestIT, (*e)->getWeight());
         }
@@ -377,8 +406,10 @@ typename Grid<NodeT>::VectorEdgeP Grid<NodeT>::twoLevelPath(VectorNodeP vN)
     {
         SP = findShortestPath(findNodeFromName((*n)->getName() + "+"),
                               findNodeFromName((*n)->getName() + "-"));
-        length = std::accumulate(
-          SP.begin(), SP.end(), (long)0, typename Graph::Edge<NodeT>::addpWeight());
+        length = std::accumulate(SP.begin(),
+                                 SP.end(),
+                                 (long)0,
+                                 typename Graph::Edge<NodeT>::addpWeight());
         if (length < minLength)
         {
             minLength = length;
@@ -400,7 +431,7 @@ typename Grid<NodeT>::VectorEdgeP Grid<NodeT>::findShortestPath(NodeP node1, Nod
     std::map<NodeP, double> dist;
     std::map<NodeP, NodeP> prev;
 
-    //decorate to avoid warnings at compile
+    // decorate to avoid warnings at compile
     [[maybe_unused]] bool checkNode1(false), checkNode2(false);
     VectorNodeP nodes = pNodesList;
 
@@ -450,7 +481,9 @@ typename Grid<NodeT>::VectorEdgeP Grid<NodeT>::findShortestPath(NodeP node1, Nod
         for (auto i = adjency.at(u.first).begin(); i != adjency.at(u.first).end(); i++)
         {
             if (i->second == nullptr)
+            {
                 assert(0);
+            }
 
             if ((u.second + i->second->getWeight()) < dist[i->first])
             {

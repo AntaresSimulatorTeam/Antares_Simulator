@@ -22,108 +22,81 @@
 #define __SOLVER_VARIABLE_ECONOMY_ALL_H__
 
 #include "antares/solver/variable/variable.h"
-#include "../area.h"
-#include "../setofareas.h"
-#include "../bindConstraints.h"
 
-#include "price.h"
-#include "balance.h"
-#include "../commons/load.h"
-#include "../commons/wind.h"
+#include "../area.h"
+#include "../bindConstraints.h"
 #include "../commons/hydro.h"
-#include "../commons/rowBalance.h"
-#include "../commons/psp.h"
-#include "../commons/miscGenMinusRowPSP.h"
-#include "../commons/solar.h"
 #include "../commons/join.h"
+#include "../commons/load.h"
+#include "../commons/miscGenMinusRowPSP.h"
+#include "../commons/psp.h"
+#include "../commons/rowBalance.h"
+#include "../commons/solar.h"
 #include "../commons/spatial-aggregate.h"
+#include "../commons/wind.h"
+#include "../setofareas.h"
+#include "balance.h"
+#include "price.h"
 
 // For General values
+#include "avail-dispatchable-generation.h"
+#include "dispatchable-generation-margin.h"
 #include "dispatchableGeneration.h"
-#include "thermalAirPollutantEmissions.h"
-#include "renewableGeneration.h"
-#include "overallCost.h"
-#include "operatingCost.h"
-#include "nonProportionalCost.h"
-#include "nbOfDispatchedUnits.h"
-#include "hydrostorage.h"
-#include "pumping.h"
-#include "reservoirlevel.h"
-#include "inflow.h"
-#include "overflow.h"
-#include "waterValue.h"
-#include "hydroCost.h"
-#include "unsupliedEnergy.h"
 #include "domesticUnsuppliedEnergy.h"
-#include "localMatchingRuleViolations.h"
-#include "spilledEnergyAfterCSR.h"
 #include "dtgMarginAfterCsr.h"
-#include "spilledEnergy.h"
-
+#include "hydroCost.h"
+#include "hydrostorage.h"
+#include "inflow.h"
+#include "localMatchingRuleViolations.h"
 #include "lold.h"
 #include "lolp.h"
 #include "max-mrg.h"
-
-#include "avail-dispatchable-generation.h"
-#include "dispatchable-generation-margin.h"
+#include "nbOfDispatchedUnits.h"
+#include "nonProportionalCost.h"
+#include "operatingCost.h"
+#include "overallCost.h"
+#include "overflow.h"
+#include "pumping.h"
+#include "renewableGeneration.h"
+#include "reservoirlevel.h"
+#include "spilledEnergy.h"
+#include "spilledEnergyAfterCSR.h"
+#include "thermalAirPollutantEmissions.h"
+#include "unsupliedEnergy.h"
+#include "waterValue.h"
 
 // By thermal plant
-#include "productionByDispatchablePlant.h"
-#include "npCostByDispatchablePlant.h"
 #include "nbOfDispatchedUnitsByPlant.h"
+#include "npCostByDispatchablePlant.h"
+#include "productionByDispatchablePlant.h"
 #include "profitByPlant.h"
 
 // By RES plant
+#include "STSbyGroup.h"
+#include "STStorageCashFlowByCluster.h"
+#include "STStorageInjectionByCluster.h"
+#include "STStorageLevelsByCluster.h"
+#include "STStorageWithdrawalByCluster.h"
 #include "productionByRenewablePlant.h"
 
-#include "STSbyGroup.h"
-#include "STStorageInjectionByCluster.h"
-#include "STStorageWithdrawalByCluster.h"
-#include "STStorageLevelsByCluster.h"
-#include "STStorageCashFlowByCluster.h"
-
 // Output variables associated to links
-#include "links/flowLinear.h"
-#include "links/flowLinearAbs.h"
-#include "links/loopFlow.h"
-#include "links/flowQuad.h"
-#include "links/hurdleCosts.h"
-#include "links/congestionFee.h"
-#include "links/congestionFeeAbs.h"
-#include "links/marginalCost.h"
-#include "links/congestionProbability.h"
+#include "links.h"
 
 // Output variables associated to binding constraints
 #include "bindingConstraints/bindingConstraintsMarginalCost.h"
 
 namespace Antares::Solver::Variable::Economy
 {
-/*!
-** \brief All variables for a single link (economy)
-*/
-typedef FlowLinear             // Flow linear
-  <FlowLinearAbs               // Flow linear Abs
-   <LoopFlow                   // Loop flow
-    <FlowQuad                  // Flow Quad
-     <CongestionFee            // Congestion Fee
-      <CongestionFeeAbs        // Congestion Fee (Abs)
-       <MarginalCost           // Marginal Cost
-        <CongestionProbability // Congestion Probability (+/-)
-         <HurdleCosts          // Hurdle costs
-          <>>>>>>>>>
-    VariablePerLink;
-// forward declaration
-class Links;
 
 /*!
 ** \brief All variables for a single area (economy)
 */
-typedef                           // Prices
-  OverallCost                     // Overall Cost (Op. Cost + Unsupplied Eng.)
-  <OperatingCost                  // Operating Cost
-   <Price                         // Marginal price                                  // Thermal pollutants
-    <ThermalAirPollutantEmissions // Overall pollutant emissions(from all thermal dispatchable
-                                  // clusters) Production by thermal cluster
+typedef          // Prices
+  OverallCost    // Overall Cost (Op. Cost + Unsupplied Eng.)
+  <OperatingCost // Operating Cost
+   <Price        // Marginal price                                  // Thermal pollutants
+    <ThermalAirPollutantEmissions      // Overall pollutant emissions(from all thermal dispatchable
+                                       // clusters) Production by thermal cluster
      <ProductionByDispatchablePlant    // Energy generated by thermal dispatchable clusters
       <ProductionByRenewablePlant      // Energy generated by renewable clusters (must-run)
        <Balance                        // Nodal Energy Balance
@@ -146,13 +119,10 @@ typedef                           // Prices
                      <Overflows        // Hydraulic overflows
                       <WaterValue      // Water values
                        <HydroCost      // Hydro costs
-                        // <ShortTermStorageByGroup
-                        <STSbyGroup
-                        <STstorageInjectionByCluster
-                        <STstorageWithdrawalByCluster
-                        <STstorageLevelsByCluster
-                          <STstorageCashFlowByCluster
-                            <UnsupliedEnergy           // Unsuplied Energy
+                                       // <ShortTermStorageByGroup
+                        <STSbyGroup<STstorageInjectionByCluster<STstorageWithdrawalByCluster<
+                          STstorageLevelsByCluster<STstorageCashFlowByCluster<
+                            UnsupliedEnergy           // Unsuplied Energy
                             <DomesticUnsuppliedEnergy // Domestic Unsupplied Energy
                              <LMRViolations           // LMR Violations
                               <SpilledEnergy          // Spilled Energy
@@ -225,46 +195,46 @@ typedef // Prices
                                           WaterValue,
                                           Common::SpatialAggregate<
                                             HydroCost,
+                                            Common::SpatialAggregate<
+                                              UnsupliedEnergy,
                                               Common::SpatialAggregate<
-                                                UnsupliedEnergy,
+                                                DomesticUnsuppliedEnergy,
                                                 Common::SpatialAggregate<
-                                                  DomesticUnsuppliedEnergy,
+                                                  LMRViolations,
                                                   Common::SpatialAggregate<
-                                                    LMRViolations,
+                                                    SpilledEnergy,
                                                     Common::SpatialAggregate<
-                                                      SpilledEnergy,
+                                                      SpilledEnergyAfterCSR,
+                                                      // LOLD
                                                       Common::SpatialAggregate<
-                                                        SpilledEnergyAfterCSR,
-                                                        // LOLD
+                                                        LOLD,
                                                         Common::SpatialAggregate<
-                                                          LOLD,
+                                                          LOLP,
                                                           Common::SpatialAggregate<
-                                                            LOLP,
+                                                            AvailableDispatchGen,
                                                             Common::SpatialAggregate<
-                                                              AvailableDispatchGen,
+                                                              DispatchableGenMargin,
                                                               Common::SpatialAggregate<
-                                                                DispatchableGenMargin,
+                                                                DtgMarginCsr,
                                                                 Common::SpatialAggregate<
-                                                                  DtgMarginCsr,
+                                                                  Marge,
+
+                                                                  // Detail Prices
                                                                   Common::SpatialAggregate<
-                                                                    Marge,
+                                                                    NonProportionalCost, // MBO
+                                                                                         // 13/05/2014
+                                                                                         // -
+                                                                                         // refs:
+                                                                                         // #21
 
-                                                                    // Detail Prices
+                                                                    // Number Of Dispatched Units
                                                                     Common::SpatialAggregate<
-                                                                      NonProportionalCost, // MBO
-                                                                                           // 13/05/2014
-                                                                                           // -
-                                                                                           // refs:
-                                                                                           // #21
-
-                                                                      // Number Of Dispatched Units
-                                                                      Common::SpatialAggregate<
-                                                                        NbOfDispatchedUnits // MBO
-                                                                                            // 25/02/2016
-                                                                                            // -
-                                                                                            // refs:
-                                                                                            // #55
-                                                                        >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                                                      NbOfDispatchedUnits // MBO
+                                                                                          // 25/02/2016
+                                                                                          // -
+                                                                                          // refs:
+                                                                                          // #55
+                                                                      >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerSetOfAreas;
 
 typedef BindingConstMarginCost< // Marginal cost for a binding constraint
@@ -288,8 +258,5 @@ typedef Variable::Join<
 typedef Container::List<ItemList> AllVariables;
 
 } // namespace Antares::Solver::Variable::Economy
-
-// post include
-#include "links.h"
 
 #endif // __SOLVER_VARIABLE_ECONOMY_ALL_H__

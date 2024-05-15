@@ -25,7 +25,9 @@ void CsrBindingConstraintHour::add(int CntCouplante)
 {
     if (data.MatriceDesContraintesCouplantes[CntCouplante].TypeDeContrainteCouplante
         != CONTRAINTE_HORAIRE)
+    {
         return;
+    }
 
     int NbInterco = data.MatriceDesContraintesCouplantes[CntCouplante]
                       .NombreDInterconnexionsDansLaContrainteCouplante;
@@ -33,10 +35,10 @@ void CsrBindingConstraintHour::add(int CntCouplante)
 
     for (int Index = 0; Index < NbInterco; Index++)
     {
-        int Interco
-          = data.MatriceDesContraintesCouplantes[CntCouplante].NumeroDeLInterconnexion[Index];
-        double Poids
-          = data.MatriceDesContraintesCouplantes[CntCouplante].PoidsDeLInterconnexion[Index];
+        int Interco = data.MatriceDesContraintesCouplantes[CntCouplante]
+                        .NumeroDeLInterconnexion[Index];
+        double Poids = data.MatriceDesContraintesCouplantes[CntCouplante]
+                         .PoidsDeLInterconnexion[Index];
 
         if (data.originAreaMode[Interco] == Data::AdequacyPatch::physicalAreaInsideAdqPatch
             && data.extremityAreaMode[Interco] == Data::AdequacyPatch::physicalAreaInsideAdqPatch)

@@ -38,6 +38,7 @@ struct VCardHurdleCosts
     {
         return "HURDLE COST";
     }
+
     //! Unit
     static std::string Unit()
     {
@@ -91,7 +92,7 @@ struct VCardHurdleCosts
 ** \brief Marginal HurdleCosts
 */
 template<class NextT = Container::EndOfList>
-class HurdleCosts : public Variable::IVariable<HurdleCosts<NextT>, NextT, VCardHurdleCosts>
+class HurdleCosts: public Variable::IVariable<HurdleCosts<NextT>, NextT, VCardHurdleCosts>
 {
 public:
     //! Type of the next static variable
@@ -117,11 +118,11 @@ public:
     {
         enum
         {
-            count
-            = ((VCardType::categoryDataLevel & CDataLevel && VCardType::categoryFileLevel & CFile)
-                 ? (NextType::template Statistics<CDataLevel, CFile>::count
-                    + VCardType::columnCount * ResultsType::count)
-                 : NextType::template Statistics<CDataLevel, CFile>::count),
+            count = ((VCardType::categoryDataLevel & CDataLevel
+                      && VCardType::categoryFileLevel & CFile)
+                       ? (NextType::template Statistics<CDataLevel, CFile>::count
+                          + VCardType::columnCount * ResultsType::count)
+                       : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
 
@@ -142,7 +143,9 @@ public:
         // Intermediate values
         pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+        {
             pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);
+        }
 
         // Next
         NextType::initializeFromStudy(study);
@@ -163,7 +166,9 @@ public:
     void simulationBegin()
     {
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+        {
             pValuesForTheCurrentYear[numSpace].reset();
+        }
         // Next
         NextType::simulationBegin();
     }
@@ -229,10 +234,10 @@ public:
                                           .ValeurDeLoopFlowOrigineVersExtremite[state.link->index];
                 if (flowLinear - loopFlow > 0.)
                 {
-                    const double hurdleCostDirect
-                      = (flowLinear - loopFlow)
-                        * state.link->parameters
-                            .entry[Data::fhlHurdlesCostDirect][state.hourInTheYear];
+                    const double hurdleCostDirect = (flowLinear - loopFlow)
+                                                    * state.link->parameters
+                                                        .entry[Data::fhlHurdlesCostDirect]
+                                                              [state.hourInTheYear];
                     pValuesForTheCurrentYear[numSpace].hour[state.hourInTheYear]
                       += hurdleCostDirect;
                     // Incrementing annual system cost (to be printed in output in a separate file)
@@ -240,10 +245,10 @@ public:
                 }
                 else
                 {
-                    const double hurdleCostIndirect
-                      = -(flowLinear - loopFlow)
-                        * state.link->parameters
-                            .entry[Data::fhlHurdlesCostIndirect][state.hourInTheYear];
+                    const double hurdleCostIndirect = -(flowLinear - loopFlow)
+                                                      * state.link->parameters
+                                                          .entry[Data::fhlHurdlesCostIndirect]
+                                                                [state.hourInTheYear];
                     pValuesForTheCurrentYear[numSpace].hour[state.hourInTheYear]
                       += hurdleCostIndirect;
                     // Incrementing annual system cost (to be printed in output into a separate
@@ -255,10 +260,10 @@ public:
             {
                 if (flowLinear > 0.)
                 {
-                    const double hurdleCostDirect
-                      = flowLinear
-                        * state.link->parameters
-                            .entry[Data::fhlHurdlesCostDirect][state.hourInTheYear];
+                    const double hurdleCostDirect = flowLinear
+                                                    * state.link->parameters
+                                                        .entry[Data::fhlHurdlesCostDirect]
+                                                              [state.hourInTheYear];
                     pValuesForTheCurrentYear[numSpace].hour[state.hourInTheYear]
                       += hurdleCostDirect;
                     // Incrementing annual system cost (to be printed in output in a separate file)
@@ -266,10 +271,10 @@ public:
                 }
                 else
                 {
-                    const double hurdleCostIndirect
-                      = -flowLinear
-                        * state.link->parameters
-                            .entry[Data::fhlHurdlesCostIndirect][state.hourInTheYear];
+                    const double hurdleCostIndirect = -flowLinear
+                                                      * state.link->parameters
+                                                          .entry[Data::fhlHurdlesCostIndirect]
+                                                                [state.hourInTheYear];
                     pValuesForTheCurrentYear[numSpace].hour[state.hourInTheYear]
                       += hurdleCostIndirect;
                     // Incrementing annual system cost (to be printed in output into a separate
@@ -308,8 +313,8 @@ public:
             // Write the data for the current year
             results.variableCaption = VCardType::Caption();
             results.variableUnit = VCardType::Unit();
-            pValuesForTheCurrentYear[numSpace].template buildAnnualSurveyReport<VCardType>(
-              results, fileLevel, precision);
+            pValuesForTheCurrentYear[numSpace]
+              .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
         }
     }
 

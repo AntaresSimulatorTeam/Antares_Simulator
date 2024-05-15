@@ -21,8 +21,9 @@
 #ifndef __SOLVER_VARIABLE_SET_OF_AREAS_H__
 #define __SOLVER_VARIABLE_SET_OF_AREAS_H__
 
-#include "state.h"
 #include <antares/study/study.h>
+
+#include "state.h"
 
 namespace Antares
 {
@@ -37,6 +38,7 @@ struct VCardAllSetsOfAreas
     {
         return "Sets of Areas";
     }
+
     //! Unit
     static std::string Unit()
     {
@@ -95,7 +97,8 @@ public:
     {
         enum
         {
-            count = NextType::template Statistics<CDataLevel, CFile>::count
+            count = NextType::template Statistics < CDataLevel,
+            CFile > ::count
         };
     };
 

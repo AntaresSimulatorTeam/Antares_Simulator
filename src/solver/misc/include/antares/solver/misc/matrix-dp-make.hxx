@@ -46,7 +46,9 @@ T MatrixDPMake(U1& L, U2& A, U3& B, U4& C, uint size, T* temp, bool CIsIdentity)
         for (uint j = 0; j != size; ++j)
         {
             for (uint k = 0; k <= j; ++k)
+            {
                 B[j][k] = A[j][k];
+            }
         }
         // A est definie positive ou semi-dp: pas de redressement à faire et LtL = A
         return T(1);
@@ -54,7 +56,9 @@ T MatrixDPMake(U1& L, U2& A, U3& B, U4& C, uint size, T* temp, bool CIsIdentity)
 
     // Il faut trouver B definie positive et proche de A
     for (uint j = 0; j != size; ++j)
+    {
         B[j][j] = T(1);
+    }
 
     uint compteur = 0;
     do
@@ -67,7 +71,9 @@ T MatrixDPMake(U1& L, U2& A, U3& B, U4& C, uint size, T* temp, bool CIsIdentity)
                 for (uint j = 0; j != size; ++j)
                 {
                     for (uint k = 0; k < j; ++k)
+                    {
                         B[j][k] = A[j][k] * r + C[j][k] * (T(1) - r);
+                    }
                 }
             }
             else
@@ -75,7 +81,9 @@ T MatrixDPMake(U1& L, U2& A, U3& B, U4& C, uint size, T* temp, bool CIsIdentity)
                 for (uint j = 0; j != size; ++j)
                 {
                     for (uint k = 0; k < j; ++k)
+                    {
                         B[j][k] = A[j][k] * r; // + C[j][k] * (T(1) - r);
+                    }
                 }
             }
 
@@ -100,7 +108,9 @@ T MatrixDPMake(U1& L, U2& A, U3& B, U4& C, uint size, T* temp, bool CIsIdentity)
                     for (uint j = 0; j != size; ++j)
                     {
                         for (uint k = 0; k < j; ++k)
+                        {
                             B[j][k] = A[j][k] * rho + C[j][k] * (T(1) - rho);
+                        }
                     }
                 }
                 else
@@ -108,7 +118,9 @@ T MatrixDPMake(U1& L, U2& A, U3& B, U4& C, uint size, T* temp, bool CIsIdentity)
                     for (uint j = 0; j != size; ++j)
                     {
                         for (uint k = 0; k < j; ++k)
+                        {
                             B[j][k] = A[j][k] * rho; // + C[j][k] * (T(1) - rho);
+                        }
                     }
                 }
                 Cholesky<T>(L, B, size, temp);
@@ -118,7 +130,9 @@ T MatrixDPMake(U1& L, U2& A, U3& B, U4& C, uint size, T* temp, bool CIsIdentity)
 
         // avoid infinite loops
         if (++compteur > maxLoopCount) // si on n'a pas eu convergence C n'est pas valide
+        {
             return T(-1);
+        }
     } while (true);
 
     return rho;

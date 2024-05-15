@@ -23,6 +23,7 @@
 //
 
 #include "antares/study/scenario-builder/ThermalTSNumberData.h"
+
 #include "antares/study/scenario-builder/applyToMatrix.hxx"
 
 namespace Antares::Data::ScenarioBuilder
@@ -37,9 +38,8 @@ bool thermalTSNumberData::reset(const Study& study)
     //   solver or not.
     // WARNING: At this point, the variable pArea->thermal.list.size()
     //   might not be valid (because not really initialized yet)
-    uint clusterCount = (study.usedByTheSolver)
-                        ? (pArea->thermal.list.enabledCount())
-                        : pArea->thermal.list.allClustersCount();
+    uint clusterCount = (study.usedByTheSolver) ? (pArea->thermal.list.enabledCount())
+                                                : pArea->thermal.list.allClustersCount();
 
     // Resize
     pTSNumberRules.reset(clusterCount, nbYears);
@@ -54,18 +54,22 @@ void thermalTSNumberData::saveToINIFile(const Study& /* study */,
     prefix += get_prefix();
 
     if (!pArea)
+    {
         return;
+    }
 
-    for (auto& cluster : pArea->thermal.list.all())
+    for (auto& cluster: pArea->thermal.list.all())
     {
         for (uint year = 0; year != pTSNumberRules.height; ++year)
         {
             const uint val = get(cluster.get(), year);
             // Equals to zero means 'auto', which is the default mode
             if (!val)
+            {
                 continue;
-            file << prefix << pArea->id << "," << year << ','
-                 << cluster->id() << " = " << val << '\n';
+            }
+            file << prefix << pArea->id << "," << year << ',' << cluster->id() << " = " << val
+                 << '\n';
         }
     }
 }
@@ -76,7 +80,9 @@ void thermalTSNumberData::setTSnumber(const Antares::Data::ThermalCluster* clust
 {
     assert(cluster != nullptr);
     if (year < pTSNumberRules.height && cluster->areaWideIndex < pTSNumberRules.width)
+    {
         pTSNumberRules[cluster->areaWideIndex][year] = value;
+    }
 }
 
 bool thermalTSNumberData::apply(Study& study)
@@ -91,13 +97,14 @@ bool thermalTSNumberData::apply(Study& study)
     assert(pArea->index < study.areas.size());
     const Area& area = *(study.areas.byIndex[pArea->index]);
 
-    for (auto& cluster : area.thermal.list.each_enabled())
+    for (auto& cluster: area.thermal.list.each_enabled())
     {
         assert(cluster->areaWideIndex < pTSNumberRules.width);
         const auto& col = pTSNumberRules[cluster->areaWideIndex];
 
-        uint tsGenCount = cluster->tsGenBehavior == LocalTSGenerationBehavior::forceNoGen ?
-            cluster->series.timeSeries.width : get_tsGenCount(study);
+        uint tsGenCount = cluster->tsGenBehavior == LocalTSGenerationBehavior::forceNoGen
+                            ? cluster->series.timeSeries.width
+                            : get_tsGenCount(study);
 
         logprefix.clear() << "Thermal: area '" << area.name << "', cluster: '" << cluster->name()
                           << "': ";
@@ -114,4 +121,4 @@ uint thermalTSNumberData::get_tsGenCount(const Study& study) const
     bool tsGenThermal = (0 != (parameters.timeSeriesToGenerate & timeSeriesThermal));
     return tsGenThermal ? parameters.nbTimeSeriesThermal : 0u;
 }
-}
+} // namespace Antares::Data::ScenarioBuilder

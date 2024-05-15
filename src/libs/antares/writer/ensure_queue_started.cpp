@@ -24,10 +24,9 @@ namespace Antares
 {
 namespace Solver
 {
-EnsureQueueStartedIfNeeded::EnsureQueueStartedIfNeeded(
-  IResultWriter* writer,
-  std::shared_ptr<Yuni::Job::QueueService> qs) :
- qs(qs)
+EnsureQueueStartedIfNeeded::EnsureQueueStartedIfNeeded(IResultWriter* writer,
+                                                       std::shared_ptr<Yuni::Job::QueueService> qs):
+    qs(qs)
 {
     startQueue = !qs->started() && writer->needsTheJobQueue();
     if (startQueue)

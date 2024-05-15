@@ -22,6 +22,32 @@
 
 #include "antares/solver/variable/variable.h"
 
+namespace
+{
+inline std::vector<std::string> sortedUniqueGroups(
+  const std::vector<Antares::Data::ShortTermStorage::STStorageCluster>& storages)
+{
+    std::set<std::string> names;
+    for (const auto& cluster: storages)
+    {
+        names.insert(cluster.properties.groupName);
+    }
+    return {names.begin(), names.end()};
+}
+
+inline std::map<std::string, unsigned int> giveNumbersToGroups(
+  const std::vector<std::string>& groupNames)
+{
+    unsigned int groupNumber{0};
+    std::map<std::string, unsigned int> groupToNumbers;
+    for (const auto& name: groupNames)
+    {
+        groupToNumbers[name] = groupNumber++;
+    }
+    return groupToNumbers;
+}
+} // namespace
+
 namespace Antares::Solver::Variable::Economy
 {
 struct VCardSTSbyGroup
@@ -31,6 +57,7 @@ struct VCardSTSbyGroup
     {
         return "STS by group";
     }
+
     //! Unit
     static std::string Unit()
     {
@@ -88,7 +115,7 @@ struct VCardSTSbyGroup
 ** \brief Variables related to short term storage groups
 */
 template<class NextT = Container::EndOfList>
-class STSbyGroup : public Variable::IVariable<STSbyGroup<NextT>, NextT, VCardSTSbyGroup>
+class STSbyGroup: public Variable::IVariable<STSbyGroup<NextT>, NextT, VCardSTSbyGroup>
 {
 private:
     enum VariableType
@@ -122,23 +149,26 @@ public:
     {
         enum
         {
-            count
-            = ((VCardType::categoryDataLevel & CDataLevel && VCardType::categoryFileLevel & CFile)
-                 ? (NextType::template Statistics<CDataLevel, CFile>::count
-                    + VCardType::columnCount * ResultsType::count)
-                 : NextType::template Statistics<CDataLevel, CFile>::count),
+            count = ((VCardType::categoryDataLevel & CDataLevel
+                      && VCardType::categoryFileLevel & CFile)
+                       ? (NextType::template Statistics<CDataLevel, CFile>::count
+                          + VCardType::columnCount * ResultsType::count)
+                       : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
 
 public:
-    STSbyGroup() : pValuesForTheCurrentYear(nullptr)
+    STSbyGroup():
+        pValuesForTheCurrentYear(nullptr)
     {
     }
 
     ~STSbyGroup()
     {
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+        {
             delete[] pValuesForTheCurrentYear[numSpace];
+        }
         delete[] pValuesForTheCurrentYear;
     }
 
@@ -149,18 +179,8 @@ public:
         pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
 
         // Building the vector of group names the clusters belong to.
-        std::set<std::string> tmp_names;
-        for (const auto& cluster : area->shortTermStorage.storagesByIndex)
-            tmp_names.insert(cluster.properties.groupName);
-        groupNames_ = {tmp_names.begin(), tmp_names.end()};
-
-        // Giving a number to each group
-        unsigned int groupNumber{0};
-        for (const auto name : groupNames_)
-        {
-            groupToNumbers_[name] = groupNumber;
-            groupNumber++;
-        }
+        groupNames_ = sortedUniqueGroups(area->shortTermStorage.storagesByIndex);
+        groupToNumbers_ = giveNumbersToGroups(groupNames_);
 
         nbColumns_ = groupNames_.size() * NB_COLS_PER_GROUP;
 
@@ -169,12 +189,18 @@ public:
             AncestorType::pResults.resize(nbColumns_);
 
             for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
-                pValuesForTheCurrentYear[numSpace]
-                  = new VCardType::IntermediateValuesDeepType[nbColumns_];
+            {
+                pValuesForTheCurrentYear[numSpace] = new VCardType::IntermediateValuesDeepType
+                  [nbColumns_];
+            }
 
             for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+            {
                 for (unsigned int i = 0; i != nbColumns_; ++i)
+                {
                     pValuesForTheCurrentYear[numSpace][i].initializeFromStudy(*study);
+                }
+            }
 
             for (unsigned int i = 0; i != nbColumns_; ++i)
             {
@@ -253,8 +279,9 @@ public:
         //      - or we compute the average of the results of the n-th day over all MC years
         for (unsigned int numSpace = 0; numSpace < nbYearsForCurrentSummary; ++numSpace)
         {
-            VariableAccessorType::ComputeSummary(
-              pValuesForTheCurrentYear[numSpace], AncestorType::pResults, numSpaceToYear[numSpace]);
+            VariableAccessorType::ComputeSummary(pValuesForTheCurrentYear[numSpace],
+                                                 AncestorType::pResults,
+                                                 numSpaceToYear[numSpace]);
         }
 
         // Next variable
@@ -272,7 +299,7 @@ public:
         const auto& shortTermStorage = state.area->shortTermStorage;
 
         uint clusterIndex = 0;
-        for (const auto& cluster : shortTermStorage.storagesByIndex)
+        for (const auto& cluster: shortTermStorage.storagesByIndex)
         {
             unsigned int groupNumber = groupToNumbers_[cluster.properties.groupName];
             const auto& result = state.hourlyResults->ShortTermStorage[state.hourInTheWeek];
@@ -322,8 +349,9 @@ public:
 
     std::string caption(unsigned int column) const
     {
-        static const std::vector<std::string> VAR_POSSIBLE_KINDS
-          = {"INJECTION", "WITHDRAWAL", "LEVEL"};
+        static const std::vector<std::string> VAR_POSSIBLE_KINDS = {"INJECTION",
+                                                                    "WITHDRAWAL",
+                                                                    "LEVEL"};
         const std::string& groupName = groupNames_[column / NB_COLS_PER_GROUP];
         const std::string& variableKind = VAR_POSSIBLE_KINDS[column % NB_COLS_PER_GROUP];
         return groupName + "_" + variableKind;
@@ -352,14 +380,16 @@ public:
         results.isCurrentVarNA = AncestorType::isNonApplicable;
 
         if (!AncestorType::isPrinted[0])
+        {
             return;
+        }
 
         for (unsigned int column = 0; column < nbColumns_; column++)
         {
             results.variableCaption = caption(column);
             results.variableUnit = unit(column);
-            pValuesForTheCurrentYear[numSpace][column].template buildAnnualSurveyReport<VCardType>(
-              results, fileLevel, precision);
+            pValuesForTheCurrentYear[numSpace][column]
+              .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
         }
     }
 
@@ -371,7 +401,9 @@ public:
         // Building syntheses results
         // ------------------------------
         if (!AncestorType::isPrinted[0])
+        {
             return;
+        }
 
         // And only if we match the current data level _and_ precision level
         if ((dataLevel & VCardType::categoryDataLevel) && (fileLevel & VCardType::categoryFileLevel)
@@ -384,7 +416,11 @@ public:
                 results.variableCaption = caption(column);
                 results.variableUnit = unit(column);
                 AncestorType::pResults[column].template buildSurveyReport<ResultsType, VCardType>(
-                  results, AncestorType::pResults[column], dataLevel, fileLevel, precision);
+                  results,
+                  AncestorType::pResults[column],
+                  dataLevel,
+                  fileLevel,
+                  precision);
             }
         }
 

@@ -31,24 +31,28 @@ void BindingConstraintHour::add(int pdt, int cntCouplante)
       = data.MatriceDesContraintesCouplantes[cntCouplante];
 
     if (MatriceDesContraintesCouplantes.TypeDeContrainteCouplante != CONTRAINTE_HORAIRE)
+    {
         return;
+    }
 
     builder.updateHourWithinWeek(pdt);
     // Links
-    const int nbInterco
-      = MatriceDesContraintesCouplantes.NombreDInterconnexionsDansLaContrainteCouplante;
+    const int nbInterco = MatriceDesContraintesCouplantes
+                            .NombreDInterconnexionsDansLaContrainteCouplante;
     for (int index = 0; index < nbInterco; index++)
     {
         const int interco = MatriceDesContraintesCouplantes.NumeroDeLInterconnexion[index];
         const double poids = MatriceDesContraintesCouplantes.PoidsDeLInterconnexion[index];
         const int offset = MatriceDesContraintesCouplantes.OffsetTemporelSurLInterco[index];
-        builder.updateHourWithinWeek(pdt).NTCDirect(
-          interco, poids, offset, builder.data.NombreDePasDeTemps);
+        builder.updateHourWithinWeek(pdt).NTCDirect(interco,
+                                                    poids,
+                                                    offset,
+                                                    builder.data.NombreDePasDeTemps);
     }
 
     // Thermal clusters
-    const int nbClusters
-      = MatriceDesContraintesCouplantes.NombreDePaliersDispatchDansLaContrainteCouplante;
+    const int nbClusters = MatriceDesContraintesCouplantes
+                             .NombreDePaliersDispatchDansLaContrainteCouplante;
     for (int index = 0; index < nbClusters; index++)
     {
         const int pays = MatriceDesContraintesCouplantes.PaysDuPalierDispatch[index];
@@ -58,8 +62,10 @@ void BindingConstraintHour::add(int pdt, int cntCouplante)
         const double poids = MatriceDesContraintesCouplantes.PoidsDuPalierDispatch[index];
         const int offset = MatriceDesContraintesCouplantes.OffsetTemporelSurLePalierDispatch[index];
 
-        builder.updateHourWithinWeek(pdt).DispatchableProduction(
-          palier, poids, offset, builder.data.NombreDePasDeTemps);
+        builder.updateHourWithinWeek(pdt).DispatchableProduction(palier,
+                                                                 poids,
+                                                                 offset,
+                                                                 builder.data.NombreDePasDeTemps);
     }
 
     builder.SetOperator(MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante);

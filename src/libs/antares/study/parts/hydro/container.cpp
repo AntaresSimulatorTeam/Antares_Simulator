@@ -19,10 +19,11 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "antares/study/study.h"
 #include "antares/study/parts/hydro/container.h"
+
 #include <antares/inifile/inifile.h>
 #include "antares/study/parts/hydro/hydromaxtimeseriesreader.h"
+#include "antares/study/study.h"
 
 using namespace Antares;
 using namespace Yuni;
@@ -31,25 +32,24 @@ using namespace Yuni;
 
 namespace Antares::Data
 {
-PartHydro::PartHydro() :
- interDailyBreakdown(0.),
- intraDailyModulation(2.),
- intermonthlyBreakdown(0),
- reservoirManagement(false),
- followLoadModulations(true),
- useWaterValue(false),
- hardBoundsOnRuleCurves(false),
- useHeuristicTarget(true),
- reservoirCapacity(0.),
- initializeReservoirLevelDate(0),
- useLeeway(false),
- powerToLevel(false),
- leewayLowerBound(1.),
- leewayUpperBound(1.),
- pumpingEfficiency(1.),
- hydroModulable(false),
- prepro(nullptr),
- series(nullptr)
+PartHydro::PartHydro():
+    interDailyBreakdown(0.),
+    intraDailyModulation(2.),
+    intermonthlyBreakdown(0),
+    reservoirManagement(false),
+    followLoadModulations(true),
+    useWaterValue(false),
+    hardBoundsOnRuleCurves(false),
+    useHeuristicTarget(true),
+    reservoirCapacity(0.),
+    initializeReservoirLevelDate(0),
+    useLeeway(false),
+    powerToLevel(false),
+    leewayLowerBound(1.),
+    leewayUpperBound(1.),
+    pumpingEfficiency(1.),
+    prepro(nullptr),
+    series(nullptr)
 {
 }
 
@@ -97,9 +97,13 @@ void PartHydro::reset()
     // allocation.fromArea(<current area>, 1.); // Area::reset()
 
     if (prepro)
+    {
         prepro->reset();
+    }
     if (series)
+    {
         series->reset();
+    }
 }
 
 bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
@@ -146,7 +150,9 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
                   ret = area.hydro.LoadDailyMaxEnergy(folder, area.id) && ret;
 
                   if (enabledModeIsChanged)
+                  {
                       JIT::enabled = true; // Back to the previous loading mode.
+                  }
               }
               else
               {
@@ -161,26 +167,38 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
 
           buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
                          << "creditmodulations_" << area.id << '.' << study.inputExtension;
-          ret = area.hydro.creditModulation.loadFromCSVFile(
-                  buffer, 101, 2, Matrix<>::optFixedSize, &study.dataBuffer)
+          ret = area.hydro.creditModulation.loadFromCSVFile(buffer,
+                                                            101,
+                                                            2,
+                                                            Matrix<>::optFixedSize,
+                                                            &study.dataBuffer)
                 && ret;
 
           buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "reservoir_"
                          << area.id << '.' << study.inputExtension;
-          ret = area.hydro.reservoirLevel.loadFromCSVFile(
-                  buffer, 3, DAYS_PER_YEAR, Matrix<>::optFixedSize, &study.dataBuffer)
+          ret = area.hydro.reservoirLevel.loadFromCSVFile(buffer,
+                                                          3,
+                                                          DAYS_PER_YEAR,
+                                                          Matrix<>::optFixedSize,
+                                                          &study.dataBuffer)
                 && ret;
 
           buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "waterValues_"
                          << area.id << '.' << study.inputExtension;
-          ret = area.hydro.waterValues.loadFromCSVFile(
-                  buffer, 101, DAYS_PER_YEAR, Matrix<>::optFixedSize, &study.dataBuffer)
+          ret = area.hydro.waterValues.loadFromCSVFile(buffer,
+                                                       101,
+                                                       DAYS_PER_YEAR,
+                                                       Matrix<>::optFixedSize,
+                                                       &study.dataBuffer)
                 && ret;
 
           buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
                          << "inflowPattern_" << area.id << '.' << study.inputExtension;
-          ret = area.hydro.inflowPattern.loadFromCSVFile(
-                  buffer, 1, DAYS_PER_YEAR, Matrix<>::optFixedSize, &study.dataBuffer)
+          ret = area.hydro.inflowPattern.loadFromCSVFile(buffer,
+                                                         1,
+                                                         DAYS_PER_YEAR,
+                                                         Matrix<>::optFixedSize,
+                                                         &study.dataBuffer)
                 && ret;
 
           if (study.usedByTheSolver)
@@ -226,7 +244,9 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
 
     IniFile ini;
     if (not ini.open(buffer.clear() << folder << SEP << "hydro.ini"))
+    {
         return false;
+    }
 
     const char* const sectionName = "inter-daily-breakdown";
 
@@ -245,9 +265,13 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
 
                 Area* area = study.areas.find(id);
                 if (area)
+                {
                     ret = property->value.to<double>(area->hydro.interDailyBreakdown) && ret;
+                }
                 else
+                {
                     logs.warning() << buffer << ": `" << id << "`: Unknown area";
+                }
             }
         }
     }
@@ -277,7 +301,9 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
                     }
                 }
                 else
+                {
                     logs.warning() << buffer << ": `" << id << "`: Unknown area";
+                }
             }
         }
     }
@@ -294,9 +320,13 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
 
                 auto* area = study.areas.find(id);
                 if (area)
+                {
                     ret = property->value.to<bool>(area->hydro.reservoirManagement) && ret;
+                }
                 else
+                {
                     logs.warning() << buffer << ": `" << id << "`: Unknown area";
+                }
             }
         }
     }
@@ -322,7 +352,9 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
                     }
                 }
                 else
+                {
                     logs.warning() << buffer << ": `" << id << "`: Unknown area";
+                }
             }
         }
     }
@@ -332,13 +364,16 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
     // the study, because they are too small (< 1e-6). We cannot have reservoir management = yes and
     // capacity = 0 because of further division by capacity. reservoir management = no and capacity
     // = 0 is possible (no use of capacity further)
-    study.areas.each([&](Data::Area& area) {
-        if (area.hydro.reservoirCapacity < 1e-3 && area.hydro.reservoirManagement)
-        {
-            logs.error() << area.name << ": reservoir capacity not defined. Impossible to manage.";
-            ret = false && ret;
-        }
-    });
+    study.areas.each(
+      [&](Data::Area& area)
+      {
+          if (area.hydro.reservoirCapacity < 1e-3 && area.hydro.reservoirManagement)
+          {
+              logs.error() << area.name
+                           << ": reservoir capacity not defined. Impossible to manage.";
+              ret = false && ret;
+          }
+      });
 
     if ((section = ini.find("inter-monthly-breakdown")))
     {
@@ -361,7 +396,9 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
                     }
                 }
                 else
+                {
                     logs.warning() << buffer << ": `" << id << "`: Unknown area";
+                }
             }
         }
     }
@@ -377,9 +414,13 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
 
                 auto* area = study.areas.find(id);
                 if (area)
+                {
                     ret = property->value.to<bool>(area->hydro.followLoadModulations) && ret;
+                }
                 else
+                {
                     logs.warning() << buffer << ": `" << id << "`: Unknown area";
+                }
             }
         }
     }
@@ -395,9 +436,13 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
 
                 auto* area = study.areas.find(id);
                 if (area)
+                {
                     ret = property->value.to<bool>(area->hydro.useWaterValue) && ret;
+                }
                 else
+                {
                     logs.warning() << buffer << ": `" << id << "`: Unknown area";
+                }
             }
         }
     }
@@ -413,9 +458,13 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
 
                 auto* area = study.areas.find(id);
                 if (area)
+                {
                     ret = property->value.to<bool>(area->hydro.hardBoundsOnRuleCurves) && ret;
+                }
                 else
+                {
                     logs.warning() << buffer << ": `" << id << "`: Unknown area";
+                }
             }
         }
     }
@@ -431,9 +480,13 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
 
                 auto* area = study.areas.find(id);
                 if (area)
+                {
                     ret = property->value.to<bool>(area->hydro.useHeuristicTarget) && ret;
+                }
                 else
+                {
                     logs.warning() << buffer << ": `" << id << "`: Unknown area";
+                }
             }
         }
     }
@@ -449,9 +502,13 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
 
                 auto* area = study.areas.find(id);
                 if (area)
+                {
                     ret = property->value.to<bool>(area->hydro.powerToLevel) && ret;
+                }
                 else
+                {
                     logs.warning() << buffer << ": `" << id << "`: Unknown area";
+                }
             }
         }
     }
@@ -476,7 +533,9 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
                     }
                 }
                 else
+                {
                     logs.warning() << buffer << ": `" << id << "`: Unknown area";
+                }
             }
         }
     }
@@ -493,9 +552,13 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
 
                 auto* area = study.areas.find(id);
                 if (area)
+                {
                     ret = property->value.to<bool>(area->hydro.useLeeway) && ret;
+                }
                 else
+                {
                     logs.warning() << buffer << ": `" << id << "`: Unknown area";
+                }
             }
         }
     }
@@ -522,7 +585,9 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
                     }
                 }
                 else
+                {
                     logs.warning() << buffer << ": `" << id << "`: Unknown area";
+                }
             }
         }
     }
@@ -549,17 +614,23 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
                     }
                 }
                 else
+                {
                     logs.warning() << buffer << ": `" << id << "`: Unknown area";
+                }
             }
         }
     }
 
     // they are too small (< 1e-6). We cannot allow these areas to have reservoir management =
     // true.
-    study.areas.each([&](Data::Area& area) {
-        if (area.hydro.leewayLowerBound > area.hydro.leewayUpperBound)
-            logs.error() << area.id << ": Leeway lower bound greater than leeway upper bound.";
-        });
+    study.areas.each(
+      [&](Data::Area& area)
+      {
+          if (area.hydro.leewayLowerBound > area.hydro.leewayUpperBound)
+          {
+              logs.error() << area.id << ": Leeway lower bound greater than leeway upper bound.";
+          }
+      });
 
     if ((section = ini.find("pumping efficiency")))
     {
@@ -582,19 +653,23 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
                     }
                 }
                 else
+                {
                     logs.warning() << buffer << ": `" << id << "`: Unknown area";
+                }
             }
         }
     }
 
-    study.areas.each([&](Data::Area& area) {
-        if (not area.hydro.useHeuristicTarget && not area.hydro.useWaterValue)
-        {
-            logs.error() << area.name
-                         << " : use water value = no conflicts with use heuristic target = no";
-            ret = false && ret;
-        }
-    });
+    study.areas.each(
+      [&](Data::Area& area)
+      {
+          if (not area.hydro.useHeuristicTarget && not area.hydro.useWaterValue)
+          {
+              logs.error() << area.name
+                           << " : use water value = no conflicts with use heuristic target = no";
+              ret = false && ret;
+          }
+      });
 
     return ret;
 }
@@ -633,55 +708,73 @@ bool PartHydro::SaveToFolder(const AreaList& areas, const AnyString& folder)
     bool ret = true;
 
     // Add all alpha values for each area
-    areas.each([&](const Data::Area& area) {
-        s->add(area.id, area.hydro.interDailyBreakdown);
-        smod->add(area.id, area.hydro.intraDailyModulation);
-        sIMB->add(area.id, area.hydro.intermonthlyBreakdown);
-        sInitializeReservoirDate->add(area.id, area.hydro.initializeReservoirLevelDate);
-        sLeewayLow->add(area.id, area.hydro.leewayLowerBound);
-        sLeewayUp->add(area.id, area.hydro.leewayUpperBound);
-        spumpingEfficiency->add(area.id, area.hydro.pumpingEfficiency);
-        if (area.hydro.reservoirCapacity > 1e-6)
-            sreservoirCapacity->add(area.id, area.hydro.reservoirCapacity);
-        if (area.hydro.reservoirManagement)
-            sreservoir->add(area.id, true);
-        if (!area.hydro.followLoadModulations)
-            sFollowLoad->add(area.id, false);
-        if (area.hydro.useWaterValue)
-            sUseWater->add(area.id, true);
-        if (area.hydro.hardBoundsOnRuleCurves)
-            sHardBounds->add(area.id, true);
-        if (!area.hydro.useHeuristicTarget)
-            sUseHeuristic->add(area.id, false);
-        if (area.hydro.useLeeway)
-            sUseLeeway->add(area.id, true);
-        if (area.hydro.powerToLevel)
-            sPowerToLevel->add(area.id, true);
+    areas.each(
+      [&](const Data::Area& area)
+      {
+          s->add(area.id, area.hydro.interDailyBreakdown);
+          smod->add(area.id, area.hydro.intraDailyModulation);
+          sIMB->add(area.id, area.hydro.intermonthlyBreakdown);
+          sInitializeReservoirDate->add(area.id, area.hydro.initializeReservoirLevelDate);
+          sLeewayLow->add(area.id, area.hydro.leewayLowerBound);
+          sLeewayUp->add(area.id, area.hydro.leewayUpperBound);
+          spumpingEfficiency->add(area.id, area.hydro.pumpingEfficiency);
+          if (area.hydro.reservoirCapacity > 1e-6)
+          {
+              sreservoirCapacity->add(area.id, area.hydro.reservoirCapacity);
+          }
+          if (area.hydro.reservoirManagement)
+          {
+              sreservoir->add(area.id, true);
+          }
+          if (!area.hydro.followLoadModulations)
+          {
+              sFollowLoad->add(area.id, false);
+          }
+          if (area.hydro.useWaterValue)
+          {
+              sUseWater->add(area.id, true);
+          }
+          if (area.hydro.hardBoundsOnRuleCurves)
+          {
+              sHardBounds->add(area.id, true);
+          }
+          if (!area.hydro.useHeuristicTarget)
+          {
+              sUseHeuristic->add(area.id, false);
+          }
+          if (area.hydro.useLeeway)
+          {
+              sUseLeeway->add(area.id, true);
+          }
+          if (area.hydro.powerToLevel)
+          {
+              sPowerToLevel->add(area.id, true);
+          }
 
-        // max hours gen
-        buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "maxDailyGenEnergy_"
-                       << area.id << ".txt";
-        ret = area.hydro.dailyNbHoursAtGenPmax.saveToCSVFile(buffer, /*decimal*/ 2) && ret;
-        // max hours pump
-        buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "maxDailyPumpEnergy_"
-                       << area.id << ".txt";
-        ret = area.hydro.dailyNbHoursAtPumpPmax.saveToCSVFile(buffer, /*decimal*/ 2) && ret;
-        // credit modulations
-        buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
-                       << "creditmodulations_" << area.id << ".txt";
-        ret = area.hydro.creditModulation.saveToCSVFile(buffer, /*decimal*/ 2) && ret;
-        // inflow pattern
-        buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "inflowPattern_"
-                       << area.id << ".txt";
-        ret = area.hydro.inflowPattern.saveToCSVFile(buffer, /*decimal*/ 3) && ret;
-        // reservoir
-        buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "reservoir_"
-                       << area.id << ".txt";
-        ret = area.hydro.reservoirLevel.saveToCSVFile(buffer, /*decimal*/ 3) && ret;
-        buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "waterValues_"
-                       << area.id << ".txt";
-        ret = area.hydro.waterValues.saveToCSVFile(buffer, /*decimal*/ 2) && ret;
-    });
+          // max hours gen
+          buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
+                         << "maxDailyGenEnergy_" << area.id << ".txt";
+          ret = area.hydro.dailyNbHoursAtGenPmax.saveToCSVFile(buffer, /*decimal*/ 2) && ret;
+          // max hours pump
+          buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
+                         << "maxDailyPumpEnergy_" << area.id << ".txt";
+          ret = area.hydro.dailyNbHoursAtPumpPmax.saveToCSVFile(buffer, /*decimal*/ 2) && ret;
+          // credit modulations
+          buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
+                         << "creditmodulations_" << area.id << ".txt";
+          ret = area.hydro.creditModulation.saveToCSVFile(buffer, /*decimal*/ 2) && ret;
+          // inflow pattern
+          buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
+                         << "inflowPattern_" << area.id << ".txt";
+          ret = area.hydro.inflowPattern.saveToCSVFile(buffer, /*decimal*/ 3) && ret;
+          // reservoir
+          buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "reservoir_"
+                         << area.id << ".txt";
+          ret = area.hydro.reservoirLevel.saveToCSVFile(buffer, /*decimal*/ 3) && ret;
+          buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "waterValues_"
+                         << area.id << ".txt";
+          ret = area.hydro.waterValues.saveToCSVFile(buffer, /*decimal*/ 2) && ret;
+      });
 
     // Write the ini file
     buffer.clear() << folder << SEP << "hydro.ini";
@@ -699,9 +792,13 @@ bool PartHydro::forceReload(bool reload) const
     ret = dailyNbHoursAtPumpPmax.forceReload(reload) && ret;
 
     if (series)
+    {
         ret = series->forceReload(reload) && ret;
+    }
     if (prepro)
+    {
         ret = prepro->forceReload(reload) && ret;
+    }
 
     return ret;
 }
@@ -716,9 +813,13 @@ void PartHydro::markAsModified() const
     dailyNbHoursAtPumpPmax.markAsModified();
 
     if (series)
+    {
         series->markAsModified();
+    }
     if (prepro)
+    {
         prepro->markAsModified();
+    }
 }
 
 void PartHydro::copyFrom(const PartHydro& rhs)
@@ -790,15 +891,21 @@ bool PartHydro::LoadDailyMaxEnergy(const AnyString& folder, const AnyString& are
     filePath.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
                      << "maxDailyGenEnergy_" << areaid << ".txt";
 
-    ret = dailyNbHoursAtGenPmax.loadFromCSVFile(
-            filePath, 1, DAYS_PER_YEAR, Matrix<>::optFixedSize, &fileContent)
+    ret = dailyNbHoursAtGenPmax.loadFromCSVFile(filePath,
+                                                1,
+                                                DAYS_PER_YEAR,
+                                                Matrix<>::optFixedSize,
+                                                &fileContent)
           && ret;
 
     filePath.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
                      << "maxDailyPumpEnergy_" << areaid << ".txt";
 
-    ret = dailyNbHoursAtPumpPmax.loadFromCSVFile(
-            filePath, 1, DAYS_PER_YEAR, Matrix<>::optFixedSize, &fileContent)
+    ret = dailyNbHoursAtPumpPmax.loadFromCSVFile(filePath,
+                                                 1,
+                                                 DAYS_PER_YEAR,
+                                                 Matrix<>::optFixedSize,
+                                                 &fileContent)
           && ret;
 
     return ret;
@@ -841,11 +948,14 @@ void getWaterValue(const double& level /* format : in % of reservoir capacity */
     double levelDown = floor(level);
 
     if ((int)(levelUp) == (int)(levelDown))
+    {
         waterValueToReturn = waterValues[(int)(levelUp)][day];
+    }
     else
-        waterValueToReturn
-          = waterValues[(int)(levelUp)][day] * (level - levelDown)
-            + waterValues[(int)(levelDown)][day] * (levelUp - level);
+    {
+        waterValueToReturn = waterValues[(int)(levelUp)][day] * (level - levelDown)
+                             + waterValues[(int)(levelDown)][day] * (levelUp - level);
+    }
 }
 
 double getWeeklyModulation(const double& level /* format : in % of reservoir capacity */,
@@ -857,13 +967,16 @@ double getWeeklyModulation(const double& level /* format : in % of reservoir cap
     double levelUp = ceil(level);
     double levelDown = floor(level);
     if ((int)(levelUp) == (int)(levelDown))
+    {
         valueToReturn = creditMod[(int)(levelUp)][modType];
+    }
     else
+    {
         valueToReturn = creditMod[(int)(levelUp)][modType] * (level - levelDown)
                         + creditMod[(int)(levelDown)][modType] * (levelUp - level);
+    }
 
     return valueToReturn;
 }
 
 } // namespace Antares::Data
-
