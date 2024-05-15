@@ -57,10 +57,7 @@ void IniFile::Section::saveToStream(std::ostream& stream_out, uint64_t& written)
     stream_out << '[' << name << "]\n";
     written += 4 /* []\n\n */ + name.size();
 
-    for (auto* property = firstProperty; property; property = property->next)
-    {
-        property->saveToStream(stream_out, written);
-    }
+    each([&](const IniFile::Property& p) { p.saveToStream(stream_out, written); });
 
     stream_out << '\n';
 }
