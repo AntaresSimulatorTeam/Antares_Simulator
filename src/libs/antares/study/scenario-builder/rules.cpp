@@ -49,8 +49,6 @@ void Rules::saveToINIFile(Yuni::IO::File::Stream& file) const
         solar.saveToINIFile(study_, file);
         // hydro
         hydro.saveToINIFile(study_, file);
-        // hydroMaxPower
-        hydroMaxPower.saveToINIFile(study_, file);
         // wind
         wind.saveToINIFile(study_, file);
         // Thermal clusters, renewable clusters, links NTS : each area
@@ -75,7 +73,6 @@ bool Rules::reset()
     load.reset(study_);
     solar.reset(study_);
     hydro.reset(study_);
-    hydroMaxPower.reset(study_);
     wind.reset(study_);
 
     // Thermal
@@ -250,24 +247,6 @@ bool Rules::readHydro(const AreaName::Vector& splitKey, String value, bool updat
     return true;
 }
 
-bool Rules::readHydroMaxPower(const AreaName::Vector& splitKey,
-                              String tsNumberAsString,
-                              bool updaterMode)
-{
-    const uint year = splitKey[2].to<uint>();
-    const AreaName& areaname = splitKey[1];
-
-    const Data::Area* area = getArea(areaname, updaterMode);
-    if (!area)
-    {
-        return false;
-    }
-
-    uint tsNumber = fromStringToTSnumber(tsNumberAsString);
-    hydroMaxPower.setTSnumber(area->index, year, tsNumber);
-    return true;
-}
-
 bool Rules::readSolar(const AreaName::Vector& splitKey, String value, bool updaterMode)
 {
     const uint year = splitKey[2].to<uint>();
@@ -404,10 +383,6 @@ bool Rules::readLine(const AreaName::Vector& splitKey, String value, bool update
     {
         return readHydro(splitKey, value, updaterMode);
     }
-    else if (kind_of_scenario == "hgp")
-    {
-        return readHydroMaxPower(splitKey, value, updaterMode);
-    }
     else if (kind_of_scenario == "s")
     {
         return readSolar(splitKey, value, updaterMode);
@@ -427,63 +402,63 @@ bool Rules::readLine(const AreaName::Vector& splitKey, String value, bool update
     return false;
 }
 
-bool Rules::apply()
-{
-    bool returned_status = true;
-    if (pAreaCount)
+    bool Rules::apply()
     {
-        returned_status = load.apply(study_) && returned_status;
-        returned_status = solar.apply(study_) && returned_status;
-        returned_status = hydro.apply(study_) && returned_status;
-        returned_status = hydroMaxPower.apply(study_) && returned_status;
-        returned_status = wind.apply(study_) && returned_status;
-        for (uint i = 0; i != pAreaCount; ++i)
+        bool returned_status = true;
+        if (pAreaCount)
         {
-            returned_status = thermal[i].apply(study_) && returned_status;
-            returned_status = renewable[i].apply(study_) && returned_status;
-            returned_status = linksNTC[i].apply(study_) && returned_status;
+            returned_status = load.apply(study_) && returned_status;
+            returned_status = solar.apply(study_) && returned_status;
+            returned_status = hydro.apply(study_) && returned_status;
+            returned_status = wind.apply(study_) && returned_status;
+            for (uint i = 0; i != pAreaCount; ++i)
+            {
+                returned_status = thermal[i].apply(study_) && returned_status;
+                returned_status = renewable[i].apply(study_) && returned_status;
+                returned_status = linksNTC[i].apply(study_) && returned_status;
+            }
+            returned_status = hydroLevels.apply(study_) && returned_status;
+            returned_status = binding_constraints.apply(study_) && returned_status;
         }
-        returned_status = hydroLevels.apply(study_) && returned_status;
-        returned_status = binding_constraints.apply(study_) && returned_status;
+        else
+        {
+            returned_status = false;
+        }
+        return returned_status;
     }
-    else
+
+    void Rules::sendWarningsForDisabledClusters()
     {
-        returned_status = false;
-    }
-    return returned_status;
-}
-
-void Rules::sendWarningsForDisabledClusters()
-{
-    for (auto it = disabledClustersOnRuleActive.begin(); it != disabledClustersOnRuleActive.end();
-         it++)
-    {
-        std::vector<uint>& scenariiForCurrentCluster = it->second;
-        int nbScenariiForCluster = (int)scenariiForCurrentCluster.size();
-        std::vector<uint>::iterator itv = scenariiForCurrentCluster.begin();
-
-        // Listing the 10 first years for which the current cluster was given a specific TS number
-        // in the scenario builder.
-        // Note that this list of years size could be less then 10, but are at least 1.
-        std::string listYears = std::to_string(*itv);
-        itv++;
-        for (int year_count = 1; itv != scenariiForCurrentCluster.end() && year_count < 10;
-             itv++, year_count++)
+        for (auto it = disabledClustersOnRuleActive.begin();
+             it != disabledClustersOnRuleActive.end();
+             it++)
         {
-            listYears += ", " + std::to_string(*itv);
-        }
+            std::vector<uint>& scenariiForCurrentCluster = it->second;
+            int nbScenariiForCluster = (int)scenariiForCurrentCluster.size();
+            std::vector<uint>::iterator itv = scenariiForCurrentCluster.begin();
 
-        // Adding last scenario to the list
-        if (nbScenariiForCluster > 10)
-        {
-            listYears += ", ..., " + std::to_string(scenariiForCurrentCluster.back());
-        }
+            // Listing the 10 first years for which the current cluster was given a specific TS
+            // number in the scenario builder. Note that this list of years size could be less then
+            // 10, but are at least 1.
+            std::string listYears = std::to_string(*itv);
+            itv++;
+            for (int year_count = 1; itv != scenariiForCurrentCluster.end() && year_count < 10;
+                 itv++, year_count++)
+            {
+                listYears += ", " + std::to_string(*itv);
+            }
 
-        logs.warning()
-          << "Cluster " << it->first
-          << " not found: it may be disabled, though given TS numbers in sc builder for year(s) :";
-        logs.warning() << listYears;
+            // Adding last scenario to the list
+            if (nbScenariiForCluster > 10)
+            {
+                listYears += ", ..., " + std::to_string(scenariiForCurrentCluster.back());
+            }
+
+            logs.warning() << "Cluster " << it->first
+                           << " not found: it may be disabled, though given TS numbers in sc "
+                              "builder for year(s) :";
+            logs.warning() << listYears;
+        }
     }
-}
 
 } // namespace Antares::Data::ScenarioBuilder

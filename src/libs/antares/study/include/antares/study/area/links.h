@@ -134,6 +134,9 @@ public:
     Area* with;
     //@}
 
+    //! Monte-Carlo
+    TimeSeriesNumbers timeseriesNumbers;
+
     //! \name Data
     //@{
     /*!
@@ -143,9 +146,6 @@ public:
     Matrix<> parameters;
     TimeSeries directCapacities;
     TimeSeries indirectCapacities;
-
-    //! Monte-Carlo
-    Matrix<uint32_t> timeseriesNumbers;
 
     //! Flag for using loop flow
     bool useLoopFlow;

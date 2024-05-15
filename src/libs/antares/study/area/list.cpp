@@ -169,7 +169,7 @@ static bool AreaListSaveThermalDataToFile(const AreaList& list, const AnyString&
 
     IniFile::Section* s = ini.addSection("unserverdenergycost");
     list.each(
-      [&](const Data::Area& area)
+      [&s](const Data::Area& area)
       {
           // 0 values are skipped
           if (!Utils::isZero(area.thermal.unsuppliedEnergyCost))
@@ -180,7 +180,7 @@ static bool AreaListSaveThermalDataToFile(const AreaList& list, const AnyString&
 
     s = ini.addSection("spilledenergycost");
     list.each(
-      [&](const Data::Area& area)
+      [&s](const Data::Area& area)
       {
           // 0 values are skipped
           if (!Utils::isZero(area.thermal.spilledEnergyCost))
@@ -615,7 +615,7 @@ bool AreaList::loadListFromFile(const AnyString& filename)
 void AreaList::saveLinkListToBuffer(Yuni::Clob& buffer) const
 {
     each(
-      [&](const Data::Area& area)
+      [&buffer](const Data::Area& area)
       {
           buffer << area.id << '\n';
           auto end = area.links.end();
@@ -671,7 +671,7 @@ bool AreaList::preloadAndMarkAsModifiedAllInvalidatedAreas(uint* invalidateCount
     bool ret = true;
     uint count = 0;
     each(
-      [&](const Data::Area& area)
+      [&ret, &count](const Data::Area& area)
       {
           if (area.invalidateJIT)
           {
@@ -692,7 +692,7 @@ bool AreaList::preloadAndMarkAsModifiedAllInvalidatedAreas(uint* invalidateCount
 
 void AreaList::markAsModified() const
 {
-    each([&](const Data::Area& area) { area.markAsModified(); });
+    each([](const Data::Area& area) { area.markAsModified(); });
 }
 
 bool AreaList::saveToFolder(const AnyString& folder) const
@@ -775,7 +775,7 @@ bool AreaList::saveToFolder(const AnyString& folder) const
 
     // Save all areas
     each(
-      [&](const Data::Area& area)
+      [&ret, &buffer, &folder, this](const Data::Area& area)
       {
           logs.info() << "Exporting the area " << (area.index + 1) << '/' << areas.size() << ": "
                       << area.name;
@@ -955,8 +955,6 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         {
             buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "series";
             ret = hydroSeries->loadGenerationTS(area.id, buffer, studyVersion) && ret;
-
-            hydroSeries->EqualizeGenerationTSsizes(area, study.usedByTheSolver);
         }
 
         if (studyVersion < StudyVersion(9, 1))
@@ -972,20 +970,10 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         {
             buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "series";
             ret = hydroSeries->LoadMaxPower(area.id, buffer) && ret;
-
-            if (study.usedByTheSolver)
-            {
-                hydroSeries->EqualizeMaxPowerTSsizes(area);
-            }
-            else
-            {
-                hydroSeries->setHydroModulability(area);
-            }
         }
 
-        hydroSeries->resizeTSinDeratedMode(study.parameters.derated,
-                                           studyVersion,
-                                           study.usedByTheSolver);
+        hydroSeries->resizeTSinDeratedMode(
+            study.parameters.derated, studyVersion, study.usedByTheSolver);
     }
 
     // Wind
@@ -1050,7 +1038,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     }
 
     ini.each(
-      [&](const IniFile::Section& section)
+      [&area, &buffer](const IniFile::Section& section)
       {
           for (auto* p = section.firstProperty; p; p = p->next)
           {
@@ -1244,7 +1232,7 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
     // Load all nodes
     uint indx = 0;
     each(
-      [&](Data::Area& area)
+      [&options, &ret, &buffer, &indx, this](Data::Area& area)
       {
           // Progression
           options.logMessage.clear()
@@ -1359,7 +1347,7 @@ void AreaListEnsureDataSolarPrepro(AreaList* l)
     assert(l);
 
     l->each(
-      [&](Data::Area& area)
+      [](Data::Area& area)
       {
           if (!area.solar.prepro)
           {
@@ -1374,7 +1362,7 @@ void AreaListEnsureDataWindPrepro(AreaList* l)
     assert(l);
 
     l->each(
-      [&](Data::Area& area)
+      [](Data::Area& area)
       {
           if (!area.wind.prepro)
           {
@@ -1389,7 +1377,7 @@ void AreaListEnsureDataHydroTimeSeries(AreaList* l)
     assert(l);
 
     l->each(
-      [&](Data::Area& area)
+      [](Data::Area& area)
       {
           if (!area.hydro.series)
           {
@@ -1404,7 +1392,7 @@ void AreaListEnsureDataHydroPrepro(AreaList* l)
     assert(l);
 
     l->each(
-      [&](Data::Area& area)
+      [](Data::Area& area)
       {
           if (!area.hydro.prepro)
           {
@@ -1415,20 +1403,20 @@ void AreaListEnsureDataHydroPrepro(AreaList* l)
 
 void AreaListEnsureDataThermalPrepro(AreaList* l)
 {
-    l->each([&](Data::Area& area) { area.thermal.list.ensureDataPrepro(); });
+    l->each([](Data::Area& area) { area.thermal.list.ensureDataPrepro(); });
 }
 
 uint64_t AreaList::memoryUsage() const
 {
     uint64_t ret = sizeof(AreaList) + sizeof(Area**) * areas.size();
-    each([&](const Data::Area& area) { ret += area.memoryUsage(); });
+    each([&ret](const Data::Area& area) { ret += area.memoryUsage(); });
     return ret;
 }
 
 uint AreaList::areaLinkCount() const
 {
     uint ret = 0;
-    each([&](const Data::Area& area) { ret += (uint)area.links.size(); });
+    each([&ret](const Data::Area& area) { ret += (uint)area.links.size(); });
     return ret;
 }
 
@@ -1493,7 +1481,7 @@ bool AreaList::renameArea(const AreaName& oldid, const AreaName& newid, const Ar
 
     // We have to update all links connected to this area
     each(
-      [&](Data::Area& a)
+      [&oldid](Data::Area& a)
       {
           auto* link = a.findLinkByID(oldid);
           if (!link)
@@ -1530,7 +1518,7 @@ void AreaListDeleteLinkFromAreaPtr(AreaList* list, const Area* a)
     }
 
     list->each(
-      [&](Data::Area& area)
+      [&a](Data::Area& area)
       {
           if (!area.links.empty())
           {
@@ -1571,14 +1559,14 @@ void AreaList::resizeAllTimeseriesNumbers(uint n)
 {
     // Ask to resize the matrices dedicated to the sampled timeseries numbers
     // for each area
-    each([&](Data::Area& area) { area.resizeAllTimeseriesNumbers(n); });
+    each([n](Data::Area& area) { area.resizeAllTimeseriesNumbers(n); });
 }
 
 void AreaList::fixOrientationForAllInterconnections(
   BindingConstraintsRepository& bindingconstraints)
 {
     each(
-      [&](Data::Area& area)
+      [&bindingconstraints](Data::Area& area)
       {
           bool mustLoop;
           // for each link from this area
