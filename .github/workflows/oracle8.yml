@@ -90,7 +90,7 @@ jobs:
              -DBUILD_TESTING=ON \
              -DBUILD_TOOLS=ON \
              -DBUILD_UI=OFF \
-             -DCMAKE_PREFIX_PATH=${{ env.ORTOOLS_DIR }}/install;${{ github.workspace }}/boost_install \
+             -DCMAKE_PREFIX_PATH="${{ env.ORTOOLS_DIR }}/install;${{ github.workspace }}/boost_install" \
              -DCMAKE_FIND_DEBUG_MODE=True
 
     - name: Build
