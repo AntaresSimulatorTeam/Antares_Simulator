@@ -242,7 +242,7 @@ void PrepareRandomNumbers(Data::Study& study,
 {
     uint indexArea = 0;
     study.areas.each(
-      [&](const Data::Area& area)
+      [&study, &problem, &randomForYear, &indexArea](const Data::Area& area)
       {
           double rnd = 0.;
 
@@ -451,7 +451,7 @@ void BuildThermalPartOfWeeklyProblem(Data::Study& study,
 
 int retrieveAverageNTC(const Data::Study& study,
                        const Matrix<>& capacities,
-                       const Matrix<uint32_t>& tsNumbers,
+                       const Data::TimeSeriesNumbers& tsNumbers,
                        std::vector<double>& avg)
 {
     const auto& parameters = study.parameters;
@@ -471,7 +471,7 @@ int retrieveAverageNTC(const Data::Study& study,
             continue;
         }
 
-        uint32_t tsIndex = (width == 1) ? 0 : tsNumbers[0][y];
+        uint32_t tsIndex = (width == 1) ? 0 : tsNumbers[y];
         weightOfTS[tsIndex] += yearsWeight[y];
     }
 

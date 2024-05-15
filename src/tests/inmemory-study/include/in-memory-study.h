@@ -164,17 +164,14 @@ public:
     {
         return rules_->load;
     }
-
-    hydroMaxPowerTSNumberData& hydroMaxPower()
-    {
-        return rules_->hydroMaxPower;
-    }
-
     BindingConstraintsTSNumberData& bcGroup()
     {
         return rules_->binding_constraints;
     }
-
+    hydroTSNumberData& hydro()
+    {
+        return rules_->hydro;
+    }
 private:
     Rules::Ptr rules_;
 };

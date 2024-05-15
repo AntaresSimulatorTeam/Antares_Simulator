@@ -24,19 +24,16 @@
 #include <memory>
 
 #include <antares/array/matrix.h>
+#include <antares/solver/ts-generator/law.h>
+#include <antares/study/fwd.h>
+#include <antares/study/parts/thermal/defines.h>
 
-#include "../../fwd.h"
-#include "cluster.h"
-#include "defines.h"
-
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 /*!
 ** \brief Thermal
 */
-class PreproThermal
+class PreproAvailability
 {
 public:
     enum
@@ -54,16 +51,15 @@ public:
         //! NPO max (nombre maximal de groupes en maintenance)
         npoMax,
         // max
-        thermalPreproMax,
+        preproAvailabilityMax,
     };
 
-public:
     //! \name Constructor
     //@{
     /*!
     ** \brief Default constructor
     */
-    explicit PreproThermal(std::weak_ptr<const ThermalCluster> cluster);
+    explicit PreproAvailability(const YString& id, unsigned int unitCount);
     //@}
 
     bool forceReload(bool reload) const;
@@ -76,7 +72,7 @@ public:
     void reset();
 
     //! Copy data from another struct
-    void copyFrom(const PreproThermal& rhs);
+    void copyFrom(const PreproAvailability& rhs);
 
     /*!
     ** \brief Load settings for the thermal prepro from a folder
@@ -87,12 +83,17 @@ public:
     bool loadFromFolder(Study& study, const AnyString& folder);
 
     /*!
+    ** \brief Validate most settings against min/max rules
+    */
+    bool validate() const;
+
+    /*!
     ** \brief Save settings used by the thermal prepro to a folder
     **
     ** \param folder The targer folder
     ** \return A non-zero value if the operation succeeded, 0 otherwise
     */
-    bool saveToFolder(const AnyString& folder);
+    bool saveToFolder(const AnyString& folder) const;
 
     /*!
     ** \brief Get the amount of memory used by the class
@@ -110,12 +111,10 @@ public:
     // max x DAYS_PER_YEAR
     Matrix<> data;
     // Parent thermal cluster
-    std::weak_ptr<const ThermalCluster> itsThermalCluster;
-}; // class PreproThermal
+    YString id;
+    unsigned int unitCount;
+}; // class PreproAvailability
 
-} // namespace Data
-} // namespace Antares
-
-#include "prepro.hxx"
+} // namespace Antares::Data
 
 #endif // __ANTARES_LIBS_STUDY_PARTS_THERMAL_PREPRO_HXX__

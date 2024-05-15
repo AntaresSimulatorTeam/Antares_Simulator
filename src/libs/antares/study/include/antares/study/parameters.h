@@ -158,12 +158,6 @@ public:
     void fixGenRefreshForNTC();
 
     /*!
-    ** \brief Try to detect then fix TS generation/refresh parameters
-    *         for Hydro Max Power
-    */
-    void fixGenRefreshForHydroMaxPower();
-
-    /*!
     ** \brief Get the amount of memory used by the general data
     */
     uint64_t memoryUsage() const;
