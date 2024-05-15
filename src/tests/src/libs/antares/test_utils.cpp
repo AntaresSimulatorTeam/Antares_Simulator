@@ -26,6 +26,11 @@
 
 #include <antares/utils/utils.h>
 
+#include <yuni/io/file.h>
+#include <filesystem>
+
+namespace fs = std::filesystem;
+
 namespace
 {
 
@@ -82,4 +87,14 @@ BOOST_AUTO_TEST_CASE(test_transform_name_into_id)
     BOOST_CHECK(transformNameToId("NA!ME") == "na me");
     BOOST_CHECK(transformNameToId("name!") == "name");
     BOOST_CHECK(transformNameToId("!name") == "name");
+}
+
+BOOST_AUTO_TEST_CASE(yuni_abosulte_vs_std_absolute)
+{
+    fs::path pathToFile("abc.txt");
+
+    Yuni::String yuniAbs;
+    Yuni::IO::MakeAbsolute(yuniAbs, pathToFile.string());
+
+    BOOST_CHECK_EQUAL(fs::absolute(pathToFile).string(), yuniAbs);
 }
