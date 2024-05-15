@@ -147,31 +147,31 @@ uint IniFile::Section::size() const
     return count;
 }
 
-static bool startingSection(std::string line)
+static bool isStartingSection(std::string line)
 {
     boost::trim(line);
     return line.starts_with("[") && line.ends_with("]");
 }
 
-static std::string getSectionName(std::string line)
+static std::string getSectionName(const std::string& line)
 {
     std::vector<std::string> splitLine;
     boost::split(splitLine, line, boost::is_any_of("[]"));
     return splitLine[1];
 }
 
-static bool isProperty(std::string line)
+static bool isProperty(const std::string& line)
 {
     return std::ranges::count(line.begin(), line.end(), '=') == 1;
 }
 
-static std::pair<std::string, std::string> getKeyValuePair(std::string line)
+static IniFile::Property getProperty(std::string line)
 {
     boost::trim(line);
     std::vector<std::string> splitLine;
     boost::split(splitLine, line, boost::is_any_of("="));
 
-    return std::make_pair(splitLine[0], splitLine[1]);
+    return IniFile::Property(splitLine[0], splitLine[1]);
 }
 
 static bool isComment(std::string line)
@@ -194,7 +194,7 @@ bool IniFile::readStream(std::istream& in_stream)
     while (std::getline(in_stream, line))
     {
         read += line.size();
-        if (startingSection(line))
+        if (isStartingSection(line))
         {
             currentSection = addSection(getSectionName(line));
             continue;
@@ -205,8 +205,8 @@ bool IniFile::readStream(std::istream& in_stream)
             // Note : if a property not in a section, it's simply skipped
             if (currentSection)
             {
-                std::pair<std::string, std::string> pair = getKeyValuePair(line);
-                currentSection->add(pair.first, pair.second);;
+                IniFile::Property p = getProperty(line);
+                currentSection->add(p.key, p.value);
             }
             continue;
         }
@@ -252,10 +252,7 @@ bool IniFile::open(const AnyString& filename, bool warnings)
 
 void IniFile::saveToStream(std::ostream& stream_out, uint64_t& written) const
 {
-    for (auto* section = firstSection; section; section = section->next)
-    {
-        section->saveToStream(stream_out, written);
-    }
+    each([&](const IniFile::Section& s) {s.saveToStream(stream_out, written); });
 
     if (written != 0)
     {
