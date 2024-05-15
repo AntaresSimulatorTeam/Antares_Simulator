@@ -1,15 +1,5 @@
 var NAVTREEINDEX18 =
 {
-"classIProvider.html#a5b343392ab876cdf80bd72eb02ab6d2e":[7,0,121,5],
-"classIProvider.html#a6f576386b79db0494e2ba5972b56f267":[7,0,121,6],
-"classIProvider.html#a91ef3cad7783efa8b42d9e425859aef1":[7,0,121,4],
-"classIProvider.html#acc9f1395a860cabc5d232ea67213f696":[7,0,121,1],
-"classIProvider.html#ad85e769598271622ea04cf18eded8a58":[7,0,121,7],
-"classIProvider.html#ae183c87e26c164fa217db87fa1ea1d77":[7,0,121,9],
-"classIProvider.html#afe23d5d59fdc13c722ec9e2db9854f01":[7,0,121,2],
-"classI__MPS__writer.html":[7,0,118],
-"classIntoUTF8ArgsTranslator.html":[7,0,120],
-"classJIT.html":[7,0,122],
 "classJIT_1_1Informations.html":[7,0,122,0],
 "classJIT_1_1Informations.html#a0008cfdb31ed223ee90759a949a03245":[7,0,122,0,11],
 "classJIT_1_1Informations.html#a099cbe47c83c8ca89d0ca0e2685494ca":[7,0,122,0,0],
@@ -249,5 +239,15 @@ var NAVTREEINDEX18 =
 "common_2component_2panel_8h_source.html":[8,0,0,5,1,0,4],
 "common_2component_2spotlight_2mini-frame_8h_source.html":[8,0,0,5,1,0,3,3],
 "common_2component_2spotlight_2text_8h_source.html":[8,0,0,5,1,0,3,11],
-"common_2dispatcher_2action_8h_source.html":[8,0,0,5,1,1,0]
+"common_2dispatcher_2action_8h_source.html":[8,0,0,5,1,1,0],
+"common_2dispatcher_2action_8hxx_source.html":[8,0,0,5,1,1,1],
+"common_2dispatcher_2settings_8h_source.html":[8,0,0,5,1,1,5],
+"common_2wx-wrapper_8h_source.html":[8,0,0,5,1,5],
+"common_8areasummary_8h_source.html":[8,0,0,5,2,1,1,1,1,1,1],
+"component_8hxx_source.html":[8,0,0,5,2,1,1,2,3],
+"concurrency_8h_source.html":[8,0,0,1,0,4,0,0,0,0],
+"config_8h_source.html":[8,0,0,5,2,3],
+"congestionFeeAbs_8h_source.html":[8,0,0,2,10,0,0,0,0,2,1,1],
+"congestionFee_8h_source.html":[8,0,0,2,10,0,0,0,0,2,1,0],
+"congestionProbability_8h_source.html":[8,0,0,2,10,0,0,0,0,2,1,2]
 };

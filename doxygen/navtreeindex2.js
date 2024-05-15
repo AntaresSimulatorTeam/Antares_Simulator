@@ -1,6 +1,5 @@
 var NAVTREEINDEX2 =
 {
-"classAntares_1_1Action_1_1Settings_1_1SuffixConstraintName.html#ae5300d8565298628b308fb008f88c8b4":[7,0,0,0,1,2,6],
 "classAntares_1_1Action_1_1Settings_1_1SuffixPlantName.html":[7,0,0,0,1,3],
 "classAntares_1_1Action_1_1Settings_1_1SuffixPlantName.html#a3f4446cfdf546ff80eecd3cc5441ea30":[7,0,0,0,1,3,4],
 "classAntares_1_1Action_1_1Settings_1_1SuffixPlantName.html#a6624c501301c5679b6faecd2ae99a228":[7,0,0,0,1,3,7],
@@ -241,13 +240,14 @@ var NAVTREEINDEX2 =
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1BindingConstraint_1_1LinkWeights.html#ae94139097b0e718ecfba4f128b5d8648":[7,0,0,1,0,0,1,4,5],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1Cell.html":[7,0,0,1,0,0,9],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1Column.html":[7,0,0,1,0,0,13],
-"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ColumnHydroMaxPower.html":[7,0,0,1,0,0,14],
-"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ColumnNTC.html":[7,0,0,1,0,0,15],
-"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ColumnRenewableClusters.html":[7,0,0,1,0,0,16],
-"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1CommonClusterSummarySingleArea.html":[7,0,0,1,0,0,17],
-"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1CommonClusterSummarySingleArea.html#a515c915e741ba26d9028a2cc0c6c1d55":[7,0,0,1,0,0,17,9],
-"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1CommonClusterSummarySingleArea.html#a527b36915e53b2b113e53f4624be2491":[7,0,0,1,0,0,17,0],
-"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1CommonClusterSummarySingleArea.html#a673ad1afc71bad20c5062bd9d9e5f09e":[7,0,0,1,0,0,17,6],
-"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1CommonClusterSummarySingleArea.html#a6f0716d9d5f4707accca6c7952c2a325":[7,0,0,1,0,0,17,8],
-"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1CommonClusterSummarySingleArea.html#aa2f163155bade7ef33d9f128004fb376":[7,0,0,1,0,0,17,1]
+"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ColumnNTC.html":[7,0,0,1,0,0,14],
+"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ColumnRenewableClusters.html":[7,0,0,1,0,0,15],
+"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1CommonClusterSummarySingleArea.html":[7,0,0,1,0,0,16],
+"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1CommonClusterSummarySingleArea.html#a515c915e741ba26d9028a2cc0c6c1d55":[7,0,0,1,0,0,16,9],
+"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1CommonClusterSummarySingleArea.html#a527b36915e53b2b113e53f4624be2491":[7,0,0,1,0,0,16,0],
+"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1CommonClusterSummarySingleArea.html#a673ad1afc71bad20c5062bd9d9e5f09e":[7,0,0,1,0,0,16,6],
+"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1CommonClusterSummarySingleArea.html#a6f0716d9d5f4707accca6c7952c2a325":[7,0,0,1,0,0,16,8],
+"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1CommonClusterSummarySingleArea.html#aa2f163155bade7ef33d9f128004fb376":[7,0,0,1,0,0,16,1],
+"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1CommonClusterSummarySingleArea.html#ab28a481c6e942194a62696248c03b2d9":[7,0,0,1,0,0,16,3],
+"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1CommonClusterSummarySingleArea.html#ab33e2a38b7527a40be85a0be49676870":[7,0,0,1,0,0,16,4]
 };

@@ -23,6 +23,5 @@ var searchData=
   ['html_20',['html',['../classAntares_1_1Window_1_1StudyLogs_1_1LogFilenameInfo.html#ae28329248bdfe87db182500fa37a76cc',1,'Antares::Window::StudyLogs::LogFilenameInfo']]],
   ['hurdlecosts_21',['hurdleCosts',['../structAntares_1_1Data_1_1Parameters_1_1IncludeOptions.html#a7d8a25ee0fb5862708223cac004f4acf',1,'Antares::Data::Parameters::IncludeOptions']]],
   ['hydro_22',['hydro',['../classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules.html#a5a425a94217ea9b9d19676a64d080083',1,'Antares::Data::ScenarioBuilder::Rules']]],
-  ['hydrolevels_23',['hydroLevels',['../classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules.html#a6fabd8fce7bf8d521cdfa033a20f9adf',1,'Antares::Data::ScenarioBuilder::Rules']]],
-  ['hydromaxpower_24',['hydroMaxPower',['../classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules.html#a38950fbc6ec668484418ecdad971fc21',1,'Antares::Data::ScenarioBuilder::Rules']]]
+  ['hydrolevels_23',['hydroLevels',['../classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules.html#a6fabd8fce7bf8d521cdfa033a20f9adf',1,'Antares::Data::ScenarioBuilder::Rules']]]
 ];

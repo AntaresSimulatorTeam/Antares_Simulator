@@ -160,12 +160,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>copyMaxPowerTS</b> (c
 void&#160;</td><td class="memItemRight" valign="bottom"><b>reset</b> ()</td></tr>
 <tr class="memdesc:aea8f189d6acbbb0466c7486ae273d5cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reset all data, as if it were a new area. <br /></td></tr>
 <tr class="separator:aea8f189d6acbbb0466c7486ae273d5cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aea3addbb2a7cbdd0a860417efd956013" id="r_aea3addbb2a7cbdd0a860417efd956013"><td class="memItemLeft" align="right" valign="top"><a id="aea3addbb2a7cbdd0a860417efd956013" name="aea3addbb2a7cbdd0a860417efd956013"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>resizeGenerationTS</b> (uint nbSeries)</td></tr>
-<tr class="separator:aea3addbb2a7cbdd0a860417efd956013"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa5449e899f2c57f1a18790737beb3d3d" id="r_aa5449e899f2c57f1a18790737beb3d3d"><td class="memItemLeft" align="right" valign="top"><a id="aa5449e899f2c57f1a18790737beb3d3d" name="aa5449e899f2c57f1a18790737beb3d3d"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>resizeMaxPowerTS</b> (uint nbSeries)</td></tr>
-<tr class="separator:aa5449e899f2c57f1a18790737beb3d3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a616c1fd7dcb52246088125bf27dffba5" id="r_a616c1fd7dcb52246088125bf27dffba5"><td class="memItemLeft" align="right" valign="top"><a id="a616c1fd7dcb52246088125bf27dffba5" name="a616c1fd7dcb52246088125bf27dffba5"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>resizeTS</b> (uint nbSeries)</td></tr>
+<tr class="separator:a616c1fd7dcb52246088125bf27dffba5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6d199bab434a74b243a750ab35d3b452" id="r_a6d199bab434a74b243a750ab35d3b452"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1DataSeriesHydro.html#a6d199bab434a74b243a750ab35d3b452">forceReload</a> (bool reload=false) const</td></tr>
 <tr class="memdesc:a6d199bab434a74b243a750ab35d3b452"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load all data not already loaded.  <br /></td></tr>
 <tr class="separator:a6d199bab434a74b243a750ab35d3b452"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -190,9 +187,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>buildHourlyMaxPowerFr
 <a class="el" href="classAntares_1_1Data_1_1TimeSeriesNumbers.html">TimeSeriesNumbers</a>&#160;</td><td class="memItemRight" valign="bottom"><b>timeseriesNumbers</b></td></tr>
 <tr class="memdesc:a93a0b52ec251f04201b93278b6e644b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Try to estimate the amount of memory required for launching a simulation. <br /></td></tr>
 <tr class="separator:a93a0b52ec251f04201b93278b6e644b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a957e103951b2438908471ebb09eb53e6" id="r_a957e103951b2438908471ebb09eb53e6"><td class="memItemLeft" align="right" valign="top"><a id="a957e103951b2438908471ebb09eb53e6" name="a957e103951b2438908471ebb09eb53e6"></a>
-<a class="el" href="classAntares_1_1Data_1_1TimeSeriesNumbers.html">TimeSeriesNumbers</a>&#160;</td><td class="memItemRight" valign="bottom"><b>timeseriesNumbersHydroMaxPower</b></td></tr>
-<tr class="separator:a957e103951b2438908471ebb09eb53e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4bf8ff859c00e267dc3a871701dd5325" id="r_a4bf8ff859c00e267dc3a871701dd5325"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAntares_1_1Data_1_1TimeSeries.html">TimeSeries</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1DataSeriesHydro.html#a4bf8ff859c00e267dc3a871701dd5325">ror</a></td></tr>
 <tr class="memdesc:a4bf8ff859c00e267dc3a871701dd5325"><td class="mdescLeft">&#160;</td><td class="mdescRight">Run-of-the-river - ROR (MW)  <br /></td></tr>
 <tr class="separator:a4bf8ff859c00e267dc3a871701dd5325"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -212,24 +206,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>buildHourlyMaxPowerFr
 uint64_t&#160;</td><td class="memItemRight" valign="bottom"><b>memoryUsage</b> () const</td></tr>
 <tr class="memdesc:aa50e6dea0e8d7f8d071b5b292909da06"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the size (bytes) in memory occupied by a <code><a class="el" href="classAntares_1_1Data_1_1DataSeriesHydro.html" title="Data series (Hydro)">DataSeriesHydro</a></code> structure. <br /></td></tr>
 <tr class="separator:aa50e6dea0e8d7f8d071b5b292909da06"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abe2c8952eb5e4cf53d7e08ae04e3f251" id="r_abe2c8952eb5e4cf53d7e08ae04e3f251"><td class="memItemLeft" align="right" valign="top"><a id="abe2c8952eb5e4cf53d7e08ae04e3f251" name="abe2c8952eb5e4cf53d7e08ae04e3f251"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>EqualizeMaxPowerTSsizes</b> (<a class="el" href="classAntares_1_1Data_1_1Area.html">Area</a> &amp;area)</td></tr>
-<tr class="separator:abe2c8952eb5e4cf53d7e08ae04e3f251"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af9d86c71b4f9db9b10ab57cb87a6249f" id="r_af9d86c71b4f9db9b10ab57cb87a6249f"><td class="memItemLeft" align="right" valign="top"><a id="af9d86c71b4f9db9b10ab57cb87a6249f" name="af9d86c71b4f9db9b10ab57cb87a6249f"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setHydroModulability</b> (<a class="el" href="classAntares_1_1Data_1_1Area.html">Area</a> &amp;area) const</td></tr>
-<tr class="separator:af9d86c71b4f9db9b10ab57cb87a6249f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac19100162bc273064d4f906c0344c2c9" id="r_ac19100162bc273064d4f906c0344c2c9"><td class="memItemLeft" align="right" valign="top"><a id="ac19100162bc273064d4f906c0344c2c9" name="ac19100162bc273064d4f906c0344c2c9"></a>
 uint&#160;</td><td class="memItemRight" valign="bottom"><b>TScount</b> () const</td></tr>
 <tr class="separator:ac19100162bc273064d4f906c0344c2c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4fe2f51c7c243e09275e941f9a4b168c" id="r_a4fe2f51c7c243e09275e941f9a4b168c"><td class="memItemLeft" align="right" valign="top"><a id="a4fe2f51c7c243e09275e941f9a4b168c" name="a4fe2f51c7c243e09275e941f9a4b168c"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>computeTSCount</b> ()</td></tr>
-<tr class="separator:a4fe2f51c7c243e09275e941f9a4b168c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4c60454206d0af0f5b64b9867e59ad2c" id="r_a4c60454206d0af0f5b64b9867e59ad2c"><td class="memItemLeft" align="right" valign="top"><a id="a4c60454206d0af0f5b64b9867e59ad2c" name="a4c60454206d0af0f5b64b9867e59ad2c"></a>
-uint&#160;</td><td class="memItemRight" valign="bottom"><b>maxPowerTScount</b> () const</td></tr>
-<tr class="separator:a4c60454206d0af0f5b64b9867e59ad2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a880c9f31505b85411141fe68c76b8879" id="r_a880c9f31505b85411141fe68c76b8879"><td class="memItemLeft" align="right" valign="top"><a id="a880c9f31505b85411141fe68c76b8879" name="a880c9f31505b85411141fe68c76b8879"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setMaxPowerTScount</b> (uint count)</td></tr>
-<tr class="separator:a880c9f31505b85411141fe68c76b8879"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a84fe6dee3f6654f549cb9f414b4f8334" id="r_a84fe6dee3f6654f549cb9f414b4f8334"><td class="memItemLeft" align="right" valign="top"><a id="a84fe6dee3f6654f549cb9f414b4f8334" name="a84fe6dee3f6654f549cb9f414b4f8334"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>resizeTSinDeratedMode</b> (bool derated, <a class="el" href="classAntares_1_1Data_1_1StudyVersion.html">StudyVersion</a> version, bool useBySolver)</td></tr>
 <tr class="separator:a84fe6dee3f6654f549cb9f414b4f8334"><td class="memSeparator" colspan="2">&#160;</td></tr>

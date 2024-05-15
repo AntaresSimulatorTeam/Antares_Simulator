@@ -1,15 +1,5 @@
 var NAVTREEINDEX24 =
 {
-"structAntares_1_1Solver_1_1Variable_1_1Empty.html":[7,0,0,12,4,9],
-"structAntares_1_1Solver_1_1Variable_1_1Empty.html#aeb65c5b0db0e215d8c875a5fffadc475":[7,0,0,12,4,9,0],
-"structAntares_1_1Solver_1_1Variable_1_1IVariable_1_1Statistics.html":[7,0,0,12,4,11,0],
-"structAntares_1_1Solver_1_1Variable_1_1Join_1_1Statistics.html":[7,0,0,12,4,12,0],
-"structAntares_1_1Solver_1_1Variable_1_1Links_1_1Statistics.html":[7,0,0,12,4,13,0],
-"structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat.html":[7,0,0,12,4,14],
-"structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_010_01_4.html":[7,0,0,12,4,15],
-"structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_011_01_4.html":[7,0,0,12,4,16],
-"structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_012_01_4.html":[7,0,0,12,4,17],
-"structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_013_01_4.html":[7,0,0,12,4,18],
 "structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_014_01_4.html":[7,0,0,12,4,19],
 "structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_015_01_4.html":[7,0,0,12,4,20],
 "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average.html":[7,0,0,12,4,6,0,0],
@@ -249,5 +239,15 @@ var NAVTREEINDEX24 =
 "structsaveFixture.html":[7,0,196],
 "study_8hxx_source.html":[8,0,0,1,0,23,0,0,0,27],
 "studydata_8hxx_source.html":[8,0,0,2,8,0,0,0,0,0,4],
-"studylogs_8h_source.html":[8,0,0,5,2,2,31]
+"studylogs_8h_source.html":[8,0,0,5,2,2,31],
+"suffix-for-area-names_8h_source.html":[8,0,0,5,0,1,0,1,2],
+"suffix-for-area-names_8hxx_source.html":[8,0,0,5,0,1,0,1,3],
+"suffix-for-cluster-names_8h_source.html":[8,0,0,5,0,1,0,1,4],
+"suffix-for-cluster-names_8hxx_source.html":[8,0,0,5,0,1,0,1,5],
+"suffix-for-constraint-names_8h_source.html":[8,0,0,5,0,1,0,1,6],
+"suffix-for-constraint-names_8hxx_source.html":[8,0,0,5,0,1,0,1,7],
+"summary_8h_source.html":[8,0,0,5,2,1,1,1,1,4,0],
+"surveyresults_2surveyresults_8h_source.html":[8,0,0,2,10,0,0,0,0,4,2],
+"surveyresults_8h_source.html":[8,0,0,2,10,0,0,0,0,20],
+"system-memory_8h_source.html":[8,0,0,2,4,0,0,0,0,5]
 };
