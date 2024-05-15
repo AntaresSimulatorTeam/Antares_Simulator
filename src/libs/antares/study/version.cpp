@@ -29,7 +29,7 @@ using namespace Antares::Data;
 
 namespace
 {
-constexpr std::array supportedVersions{
+constexpr auto supportedVersions = std::to_array({
   StudyVersion(7, 0),
   StudyVersion(7, 1),
   StudyVersion(7, 2),
@@ -45,7 +45,7 @@ constexpr std::array supportedVersions{
   StudyVersion(9, 0),
   StudyVersion(9, 1)
   // Add new versions here
-};
+});
 
 /// Convert a unsigned into a StudyVersion, used for legacy version format (ex: 720)
 StudyVersion legacyVersionIntToVersion(unsigned version)
