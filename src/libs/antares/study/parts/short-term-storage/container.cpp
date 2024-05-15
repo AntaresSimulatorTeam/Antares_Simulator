@@ -56,7 +56,7 @@ bool STStorageInput::createSTStorageClustersFromIniFile(const fs::path& path)
         return true;
     }
 
-    logs.debug() << "  :: loading `" << pathIni.string() << "`";
+    logs.debug() << "  :: loading `" << pathIni << "`";
 
     for (auto* section = ini.firstSection; section; section = section->next)
     {

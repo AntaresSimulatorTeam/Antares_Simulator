@@ -288,7 +288,7 @@ bool Sets<T>::loadFromFile(const std::filesystem::path& filename)
                     continue;
                 }
 
-                logs.warning() << "sets: `" << filename.string() << "`: Invalid property `"
+                logs.warning() << "sets: `" << filename << "`: Invalid property `"
                                << p->key << '\'';
             }
 
