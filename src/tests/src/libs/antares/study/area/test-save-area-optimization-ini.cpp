@@ -51,7 +51,7 @@ struct Fixture
     Fixture():
         area(study->areaAdd("Area"))
     {
-        path_to_generated_file << fs::current_path().append(generatedIniFileName).string();
+        path_to_generated_file << fs::current_path().append(generatedIniFileName);
     }
 
     ~Fixture()
