@@ -35,7 +35,6 @@
 #include "antares/study/filter.h"
 #include "antares/study/parts/parts.h"
 
-#include "../parts/parts.h"
 #include "constants.h"
 #include "links.h"
 #include "ui.h"

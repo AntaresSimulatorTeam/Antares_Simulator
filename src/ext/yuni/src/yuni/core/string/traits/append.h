@@ -295,8 +295,6 @@ public:
     }
 };
 
-namespace fs = std::filesystem;
-
 // std::filesystem::path<>
 template<class CStringT>
 class Append<CStringT, std::filesystem::path> final
