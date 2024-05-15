@@ -96,7 +96,7 @@ BOOST_AUTO_TEST_CASE(yuni_absolute_vs_std_absolute)
     Yuni::String yuniAbs;
     Yuni::IO::MakeAbsolute(yuniAbs, pathToFile.string());
 
-    BOOST_CHECK_EQUAL(fs::absolute(pathToFile).string(), yuniAbs);
+    BOOST_CHECK(fs::absolute(pathToFile).string() == yuniAbs);
 }
 
 BOOST_AUTO_TEST_CASE(yuni_normalize_vs_std_lexically_normal)
@@ -108,9 +108,9 @@ BOOST_AUTO_TEST_CASE(yuni_normalize_vs_std_lexically_normal)
     Yuni::String yuniNorm;
     Yuni::IO::Normalize(yuniNorm, p1.string());
 
-    BOOST_CHECK_EQUAL(p1.lexically_normal().string(), yuniNorm);
+    BOOST_CHECK(p1.lexically_normal().string() == yuniNorm);
 
     Yuni::IO::Normalize(yuniNorm, p2.string());
 
-    BOOST_CHECK_EQUAL(p2.lexically_normal().string(), yuniNorm);
+    BOOST_CHECK(p2.lexically_normal().string() == yuniNorm);
 }
