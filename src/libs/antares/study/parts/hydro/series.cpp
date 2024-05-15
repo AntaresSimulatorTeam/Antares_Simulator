@@ -19,7 +19,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
-#include "antares/study/parts/hydro/series.h"
+#include <algorithm>
 
 #include <yuni/yuni.h>
 #include <yuni/io/file.h>
@@ -27,6 +27,7 @@
 #include <antares/exception/LoadingError.hpp>
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
+#include <antares/study/parts/hydro/series.h>
 #include "antares/study/study.h"
 
 using namespace Yuni;
@@ -35,62 +36,6 @@ using namespace Yuni;
 
 namespace Antares::Data
 {
-
-static void resizeTSNoDataLoss(TimeSeries& TSToResize, uint width)
-{
-    auto& ts = TSToResize.timeSeries;
-    ts.resizeWithoutDataLost(width, ts.height);
-    for (uint x = 1; x < width; ++x)
-    {
-        ts.pasteToColumn(x, ts[0]);
-    }
-}
-
-static uint EqualizeTSsize(TimeSeries& TScollection1,
-                           TimeSeries& TScollection2,
-                           const std::string& fatalErrorMsg,
-                           Area& area,
-                           unsigned int height1 = HOURS_PER_YEAR,
-                           unsigned int height2 = HOURS_PER_YEAR)
-{
-    const auto ts1Width = TScollection1.timeSeries.width;
-    const auto ts2Width = TScollection2.timeSeries.width;
-    const auto maxWidth = std::max(ts1Width, ts2Width);
-
-    if (ts1Width == 0 && ts2Width == 0)
-    {
-        TScollection1.reset(1, height1);
-        TScollection2.reset(1, height2);
-        return 1;
-    }
-
-    if (ts1Width == ts2Width)
-    {
-        return maxWidth;
-    }
-
-    if (ts1Width > 1 && ts2Width > 1)
-    {
-        logs.fatal() << fatalErrorMsg;
-        return 0;
-    }
-
-    // At this point, one TS collection size is > 1 and the other is of size 1.
-
-    // This following instruction to force reloading all area's TS when saving the study (GUI)
-    area.invalidateJIT = true;
-
-    if (ts1Width == 1)
-    {
-        resizeTSNoDataLoss(TScollection1, maxWidth);
-    }
-    if (ts2Width == 1)
-    {
-        resizeTSNoDataLoss(TScollection2, maxWidth);
-    }
-
-    return maxWidth;
-}
 
 static bool loadTSfromFile(Matrix<double>& ts,
                            const AreaName& areaID,
@@ -109,7 +54,7 @@ static void ConvertDailyTSintoHourlyTS(const Matrix<double>::ColumnType& dailyCo
 {
     uint hour = 0;
     uint day = 0;
-
+    
     while (hour < HOURS_PER_YEAR && day < DAYS_PER_YEAR)
     {
         for (uint i = 0; i < HOURS_PER_DAY; ++i)
@@ -125,14 +70,14 @@ DataSeriesHydro::DataSeriesHydro():
     ror(timeseriesNumbers),
     storage(timeseriesNumbers),
     mingen(timeseriesNumbers),
-    maxHourlyGenPower(timeseriesNumbersHydroMaxPower),
-    maxHourlyPumpPower(timeseriesNumbersHydroMaxPower)
+    maxHourlyGenPower(timeseriesNumbers),
+    maxHourlyPumpPower(timeseriesNumbers)
 {
     timeseriesNumbers.registerSeries(&ror, "ror");
     timeseriesNumbers.registerSeries(&storage, "storage");
     timeseriesNumbers.registerSeries(&mingen, "mingen");
-    timeseriesNumbersHydroMaxPower.registerSeries(&maxHourlyGenPower, "max-geneneration-power");
-    timeseriesNumbersHydroMaxPower.registerSeries(&maxHourlyPumpPower, "max-pumping-power");
+    timeseriesNumbers.registerSeries(&maxHourlyGenPower, "max-geneneration-power");
+    timeseriesNumbers.registerSeries(&maxHourlyPumpPower, "max-pumping-power");
 
     // Pmin was introduced in v8.6
     // The previous behavior was Pmin=0
@@ -149,8 +94,6 @@ void DataSeriesHydro::copyGenerationTS(const DataSeriesHydro& source)
     storage.timeSeries = source.storage.timeSeries;
     mingen.timeSeries = source.mingen.timeSeries;
 
-    generationTScount_ = source.generationTScount_;
-
     source.ror.unloadFromMemory();
     source.storage.unloadFromMemory();
     source.mingen.unloadFromMemory();
@@ -161,37 +104,19 @@ void DataSeriesHydro::copyMaxPowerTS(const DataSeriesHydro& source)
     maxHourlyGenPower.timeSeries = source.maxHourlyGenPower.timeSeries;
     maxHourlyPumpPower.timeSeries = source.maxHourlyPumpPower.timeSeries;
 
-    maxPowerTScount_ = source.maxPowerTScount_;
-
     source.maxHourlyGenPower.unloadFromMemory();
     source.maxHourlyPumpPower.unloadFromMemory();
 }
 
 void DataSeriesHydro::reset()
 {
-    resizeGenerationTS(1);
-    resizeMaxPowerTS(1);
+    resizeTS(1);
 }
 
-void DataSeriesHydro::computeTSCount()
-{
-    generationTScount_ = std::max(storage.numberOfColumns(), ror.numberOfColumns());
-}
-
-void DataSeriesHydro::resizeGenerationTS(uint nbSeries)
+void DataSeriesHydro::resizeTS(uint nbSeries)
 {
     storage.reset(nbSeries, DAYS_PER_YEAR);
     ror.reset(nbSeries, HOURS_PER_YEAR);
-
-    generationTScount_ = nbSeries;
-}
-
-void DataSeriesHydro::resizeMaxPowerTS(uint nbSeries)
-{
-    maxHourlyGenPower.reset(nbSeries, HOURS_PER_YEAR);
-    maxHourlyPumpPower.reset(nbSeries, HOURS_PER_YEAR);
-
-    maxPowerTScount_ = nbSeries;
 }
 
 bool DataSeriesHydro::forceReload(bool reload) const
@@ -227,8 +152,6 @@ bool DataSeriesHydro::loadGenerationTS(const AreaName& areaID,
         ret = loadTSfromFile(mingen.timeSeries, areaID, folder, "mingen.txt", HOURS_PER_YEAR)
               && ret;
     }
-
-    computeTSCount();
     return ret;
 }
 
@@ -246,8 +169,6 @@ bool DataSeriesHydro::LoadMaxPower(const AreaName& areaID, const AnyString& fold
     ret = maxHourlyPumpPower.timeSeries.loadFromCSVFile(filepath, 1, HOURS_PER_YEAR, &fileContent)
           && ret;
 
-    timeseriesNumbersHydroMaxPower.clear();
-
     return ret;
 }
 
@@ -255,10 +176,10 @@ void DataSeriesHydro::buildHourlyMaxPowerFromDailyTS(
   const Matrix<double>::ColumnType& DailyMaxGenPower,
   const Matrix<double>::ColumnType& DailyMaxPumpPower)
 {
-    maxPowerTScount_ = 1;
+    const uint count = 1;
 
-    maxHourlyGenPower.reset(maxPowerTScount_, HOURS_PER_YEAR);
-    maxHourlyPumpPower.reset(maxPowerTScount_, HOURS_PER_YEAR);
+    maxHourlyGenPower.reset(count, HOURS_PER_YEAR);
+    maxHourlyPumpPower.reset(count, HOURS_PER_YEAR);
 
     ConvertDailyTSintoHourlyTS(DailyMaxGenPower, maxHourlyGenPower.timeSeries[0]);
     ConvertDailyTSintoHourlyTS(DailyMaxPumpPower, maxHourlyPumpPower.timeSeries[0]);
@@ -296,33 +217,15 @@ uint64_t DataSeriesHydro::memoryUsage() const
            + maxHourlyGenPower.memoryUsage() + maxHourlyPumpPower.memoryUsage();
 }
 
-void DataSeriesHydro::EqualizeMaxPowerTSsizes(Area& area)
-{
-    std::string fatalErrorMsg = "Hydro Max Power: " + area.id.to<std::string>() + " : ";
-    fatalErrorMsg += "generation and pumping must have the same number of TS.";
-
-    maxPowerTScount_ = EqualizeTSsize(maxHourlyGenPower, maxHourlyPumpPower, fatalErrorMsg, area);
-
-    logs.info() << "  '" << area.id << "': The number of hydro max power (generation and pumping) "
-                << "TS were both set to : " << maxPowerTScount_;
-}
-
-void DataSeriesHydro::setHydroModulability(Area& area) const
-{
-    if (MatrixTestForAtLeastOnePositiveValue(maxHourlyGenPower.timeSeries))
-    {
-        area.hydro.hydroModulable = true;
-    }
-}
-
 uint DataSeriesHydro::TScount() const
 {
-    return generationTScount_;
-}
+    const std::vector<uint32_t> nbColumns({storage.numberOfColumns(),
+                                           ror.numberOfColumns(),
+                                           mingen.numberOfColumns(),
+                                           maxHourlyGenPower.numberOfColumns(),
+                                           maxHourlyPumpPower.numberOfColumns()});
 
-uint DataSeriesHydro::maxPowerTScount() const
-{
-    return maxPowerTScount_;
+    return *std::max_element(nbColumns.begin(), nbColumns.end());
 }
 
 void DataSeriesHydro::resizeTSinDeratedMode(bool derated,
@@ -339,15 +242,12 @@ void DataSeriesHydro::resizeTSinDeratedMode(bool derated,
     if (studyVersion >= StudyVersion(8, 6))
     {
         mingen.averageTimeseries();
-    }
-    generationTScount_ = 1;
 
-    if (studyVersion >= StudyVersion(9, 1))
-    {
-        maxHourlyGenPower.averageTimeseries();
-        maxHourlyPumpPower.averageTimeseries();
-        maxPowerTScount_ = 1;
+        if (studyVersion >= StudyVersion(9, 1))
+        {
+            maxHourlyGenPower.averageTimeseries();
+            maxHourlyPumpPower.averageTimeseries();
+        }
     }
 }
-
 } // namespace Antares::Data

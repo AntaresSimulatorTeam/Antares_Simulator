@@ -60,11 +60,6 @@ void storeTimeseriesNumbersForHydro(Solver::IResultWriter& writer, const Area& a
     storeTSnumbers(writer, area.hydro.series->timeseriesNumbers, area.id, "hydro");
 }
 
-void storeTimeseriesNumbersForHydroMaxPower(Solver::IResultWriter& writer, const Area& area)
-{
-    storeTSnumbers(writer, area.hydro.series->timeseriesNumbersHydroMaxPower, area.id, "hgp");
-}
-
 void storeTimeseriesNumbersForWind(Solver::IResultWriter& writer, const Area& area)
 {
     storeTSnumbers(writer, area.wind.series.timeseriesNumbers, area.id, "wind");

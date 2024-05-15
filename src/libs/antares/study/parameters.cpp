@@ -86,10 +86,6 @@ static bool ConvertCStrToListTimeSeries(const String& value, uint& v)
                     {
                         v |= timeSeriesTransmissionCapacities;
                     }
-                    else if (word == "max-power")
-                    {
-                        v |= timeSeriesHydroMaxPower;
-                    }
                     return true;
                 });
     return true;
@@ -433,14 +429,6 @@ static void ParametersSaveTimeSeries(IniFile::Section* s, const char* name, uint
             v += ", ";
         }
         v += "ntc";
-    }
-    if (value & timeSeriesHydroMaxPower)
-    {
-        if (!v.empty())
-        {
-            v += ", ";
-        }
-        v += "max-power";
     }
     s->add(name, v);
 }
@@ -1297,8 +1285,6 @@ bool Parameters::loadFromINI(const IniFile& ini,
 
     fixGenRefreshForNTC();
 
-    fixGenRefreshForHydroMaxPower();
-
     // Specific action before launching a simulation
     if (options.usedByTheSolver)
     {
@@ -1357,22 +1343,6 @@ void Parameters::fixGenRefreshForNTC()
         interModal &= ~timeSeriesTransmissionCapacities;
         logs.error() << "Inter-modal correlation is not available for transmission capacities. It "
                         "will be automatically disabled.";
-    }
-}
-
-void Parameters::fixGenRefreshForHydroMaxPower()
-{
-    if ((timeSeriesHydroMaxPower & timeSeriesToGenerate) != 0)
-    {
-        timeSeriesToGenerate &= ~timeSeriesHydroMaxPower;
-        logs.warning() << "Time-series generation is not available for hydro max power. It "
-                          "will be automatically disabled.";
-    }
-    if ((timeSeriesHydroMaxPower & timeSeriesToRefresh) != 0)
-    {
-        timeSeriesToRefresh &= ~timeSeriesHydroMaxPower;
-        logs.warning() << "Time-series refresh is not available for hydro max power. It will "
-                          "be automatically disabled.";
     }
 }
 
@@ -1617,8 +1587,7 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
 
     if (interModal == timeSeriesLoad || interModal == timeSeriesSolar
         || interModal == timeSeriesWind || interModal == timeSeriesHydro
-        || interModal == timeSeriesThermal || interModal == timeSeriesRenewable
-        || interModal == timeSeriesHydroMaxPower)
+        || interModal == timeSeriesThermal || interModal == timeSeriesRenewable)
     {
         // Only one timeseries in interModal correlation, which is the same than nothing
         interModal = 0;

@@ -56,8 +56,8 @@ public:
     */
     void reset();
 
-    void resizeGenerationTS(uint nbSeries);
-    void resizeMaxPowerTS(uint nbSeries);
+    // This method erases data
+    void resizeTS(uint nbSeries);
 
     /*!
     ** \brief Load all data not already loaded
@@ -104,7 +104,6 @@ public:
     //@}
 
     TimeSeriesNumbers timeseriesNumbers;
-    TimeSeriesNumbers timeseriesNumbersHydroMaxPower;
 
     /*!
     ** \brief Run-of-the-river - ROR (MW)
@@ -143,36 +142,12 @@ public:
     */
     TimeSeries maxHourlyPumpPower;
 
-    // Equalizing max generation and max pumping numbers of TS's
-    void EqualizeMaxPowerTSsizes(Area& area);
-
-    void setHydroModulability(Area& area) const;
-
     // Getters for generation (ror, storage and mingen) and
     // max power (generation and pumping) number of TS
     uint TScount() const;
-    void computeTSCount();
-    uint maxPowerTScount() const;
-
-    void setMaxPowerTScount(uint count)
-    {
-        maxPowerTScount_ = count;
-    }
 
     // Setting TS's when derated mode is on
     void resizeTSinDeratedMode(bool derated, StudyVersion version, bool useBySolver);
-
-private:
-    // The number of time-series about generation (ror, inflows (=storage), mingen)
-    // They all should have the same number of columns (width), as they each year receives a common
-    // TS number for all three.
-    uint generationTScount_ = 0;
-
-    // The number of time-series about max power (maxHourlyGenPower and maxHourlyPumpPower)
-    // They both should have the same number of columns (width), as they each year receives a common
-    // TS number for all three.
-    uint maxPowerTScount_ = 0;
-
 }; // class DataSeriesHydro
 } // namespace Data
 } // namespace Antares

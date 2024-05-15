@@ -366,7 +366,6 @@ BOOST_FIXTURE_TEST_CASE(basic, HydroMaxPowerStudy)
 
 BOOST_FIXTURE_TEST_CASE(scenario_builder, HydroMaxPowerStudy)
 {
-    hydro->series->setMaxPowerTScount(3U);
     setNumberMCyears(3);
 
     giveWeightToYear(4.f, 0);
@@ -380,9 +379,9 @@ BOOST_FIXTURE_TEST_CASE(scenario_builder, HydroMaxPowerStudy)
     genE.setColumnCount(3).fillColumnWith(0, 0.).fillColumnWith(1, 0.).fillColumnWith(2, 0.);
 
     ScenarioBuilderRule scenarioBuilderRule(*study);
-    scenarioBuilderRule.hydroMaxPower().setTSnumber(area->index, 0, 3);
-    scenarioBuilderRule.hydroMaxPower().setTSnumber(area->index, 1, 2);
-    scenarioBuilderRule.hydroMaxPower().setTSnumber(area->index, 2, 1);
+    scenarioBuilderRule.hydro().setTSnumber(area->index, 0, 3);
+    scenarioBuilderRule.hydro().setTSnumber(area->index, 1, 2);
+    scenarioBuilderRule.hydro().setTSnumber(area->index, 2, 1);
 
     simulation->create();
     simulation->run();
