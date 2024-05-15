@@ -6,6 +6,7 @@ on:
   push:
     branches:
       - develop
+      - fix/build-ol8
       - dependabot/*
 
   schedule:
