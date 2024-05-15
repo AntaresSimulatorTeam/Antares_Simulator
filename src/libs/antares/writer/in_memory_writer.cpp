@@ -84,7 +84,7 @@ void InMemoryWriter::addEntryFromFile(const fs::path& entryPath, const fs::path&
 {
     // Shamelessly copy-pasted from zip_writer.cpp
     // TODO refactor
-    std::string buffer = readFile(filePath);
+    std::string buffer = IO::readFile(filePath);
 
     addToMap(pEntries, entryPath.string(), buffer, pMapMutex, pDurationCollector);
 }

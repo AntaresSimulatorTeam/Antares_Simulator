@@ -63,7 +63,7 @@ void ImmediateFileResultWriter::addEntryFromBuffer(const std::string& entryPath,
     fs::path output;
     if (prepareDirectoryHierarchy(pOutputFolder, entryPath, output))
     {
-        IOFileSetContent(output.string(), entryContent);
+        IO::fileSetContent(output.string(), entryContent);
     }
 }
 
@@ -74,7 +74,7 @@ void ImmediateFileResultWriter::addEntryFromBuffer(const std::string& entryPath,
     fs::path output;
     if (prepareDirectoryHierarchy(pOutputFolder, entryPath, output))
     {
-        IOFileSetContent(output.string(), entryContent);
+        IO::fileSetContent(output.string(), entryContent);
     }
 }
 
