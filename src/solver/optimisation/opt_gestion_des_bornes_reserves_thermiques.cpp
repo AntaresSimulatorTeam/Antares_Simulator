@@ -68,6 +68,11 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireReservesThermiques(
                 {
                     if (clusterReserveParticipation.maxPower >= 0)
                     {
+                        var = CorrespondanceVarNativesVarOptim.runningClusterReserveParticipationIndex
+                                [clusterReserveParticipation.indexClusterParticipation];
+                        Xmin[var] = 0;
+                        Xmax[var] = LINFINI_ANTARES;
+
                         var = CorrespondanceVarNativesVarOptim.clusterReserveParticipationIndex
                                 [clusterReserveParticipation.indexClusterParticipation];
                         Xmin[var] = 0;
@@ -75,7 +80,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireReservesThermiques(
                     }
                 }
             }
-            for (const auto& areaReserveDown : areaReserves.areaCapacityReservationsUp)
+            for (const auto& areaReserveDown : areaReserves.areaCapacityReservationsDown)
             {
                 int var = CorrespondanceVarNativesVarOptim
                             .internalUnsatisfiedReserveIndex[areaReserveDown.globalReserveIndex];
@@ -91,6 +96,11 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireReservesThermiques(
                 {
                     if (clusterReserveParticipation.maxPower >= 0)
                     {
+                        var = CorrespondanceVarNativesVarOptim.runningClusterReserveParticipationIndex
+                                [clusterReserveParticipation.indexClusterParticipation];
+                        Xmin[var] = 0;
+                        Xmax[var] = LINFINI_ANTARES;
+
                         var = CorrespondanceVarNativesVarOptim.clusterReserveParticipationIndex
                                 [clusterReserveParticipation.indexClusterParticipation];
                         Xmin[var] = 0;
