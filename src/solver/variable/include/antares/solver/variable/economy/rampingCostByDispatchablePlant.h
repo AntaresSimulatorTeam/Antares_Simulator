@@ -42,7 +42,7 @@ struct VCardRampingCostByDispatchablePlant
     //! Caption
     static std::string Caption()
     {
-        return "RAMP COST by plant";
+        return "RAMP COST BY PLANT";
     }
     //! Unit
     static std::string Unit()
