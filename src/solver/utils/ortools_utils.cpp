@@ -242,7 +242,7 @@ std::string generateTempPath(const std::string& filename)
 {
     namespace fs = std::filesystem;
     std::ostringstream tmpPath;
-    tmpPath << fs::temp_directory_path() << Yuni::IO::SeparatorAsString << filename;
+    tmpPath << fs::temp_directory_path().string() << Yuni::IO::SeparatorAsString << filename;
     return tmpPath.str();
 }
 
