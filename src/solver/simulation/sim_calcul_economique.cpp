@@ -348,7 +348,7 @@ static void prepareBindingConstraint(PROBLEME_HEBDO& problem,
         auto* group = bcgroups[bc->group()];
         if (group)
         {
-            tsIndexForBc = group->timeseriesNumbers[0][problem.year];
+            tsIndexForBc = group->timeseriesNumbers[problem.year];
         }
 
         // If there is only one TS, always select it.

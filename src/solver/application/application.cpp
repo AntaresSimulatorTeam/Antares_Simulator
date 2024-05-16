@@ -34,6 +34,7 @@
 #include <antares/writer/writer_factory.h>
 #include "antares/antares/version.h"
 #include "antares/config/config.h"
+#include "antares/file-tree-study-loader/FileTreeStudyLoader.h"
 #include "antares/signal-handling/public.h"
 #include "antares/solver/misc/system-memory.h"
 #include "antares/solver/misc/write-command-line.h"
@@ -60,8 +61,9 @@ Application::Application()
     resetProcessPriority();
 }
 
-void Application::handleParserReturn(Yuni::GetOpt::Parser* parser)
+void Application::parseCommandLine(Data::StudyLoadOptions& options)
 {
+    auto parser = CreateParser(pSettings, options);
     auto ret = parser->operator()(pArgc, pArgv);
     switch (ret)
     {
@@ -90,234 +92,6 @@ void Application::handleOptions(const Data::StudyLoadOptions& options)
         pStudy = nullptr;
         return;
     }
-}
-
-void Application::startSimulation(Data::StudyLoadOptions& options)
-{
-// Starting !
-#ifdef GIT_SHA1_SHORT_STRING
-    logs.checkpoint() << "Antares Solver v" << ANTARES_VERSION_STR << " (" << GIT_SHA1_SHORT_STRING
-                      << ")";
-#else
-    logs.checkpoint() << "Antares Solver v" << ANTARES_VERSION_STR;
-#endif
-    WriteHostInfoIntoLogs();
-
-    WriteCommandLineIntoLogs(pArgc, pArgv);
-
-    logs.info() << "  :: log filename: " << logs.logfile();
-
-    logs.callback.connect(this, &Application::onLogMessage);
-
-    pStudy = std::make_shared<Antares::Data::Study>(true /* for the solver */);
-
-    pParameters = &(pStudy->parameters);
-
-    readDataForTheStudy(options);
-
-    postParametersChecks();
-
-    pStudy->initializeProgressMeter(pSettings.tsGeneratorsOnly);
-    if (pSettings.noOutput)
-    {
-        pSettings.displayProgression = false;
-    }
-
-    if (pSettings.displayProgression)
-    {
-        auto& filename = pStudy->buffer;
-        filename.clear() << "about-the-study" << Yuni::IO::Separator << "map";
-        pStudy->progression.saveToFile(filename, *resultWriter);
-        pStudy->progression.start();
-    }
-    else
-    {
-        logs.info() << "  The progression is disabled";
-    }
-}
-
-void Application::postParametersChecks() const
-{ // Some more checks require the existence of pParameters, hence of a study.
-    // Their execution is delayed up to this point.
-    checkOrtoolsUsage(pParameters->unitCommitment.ucMode,
-                      pParameters->optOptions.ortoolsUsed,
-                      pParameters->optOptions.ortoolsSolver);
-
-    checkSimplexRangeHydroPricing(pParameters->simplexOptimizationRange,
-                                  pParameters->hydroPricing.hpMode);
-
-    checkSimplexRangeUnitCommitmentMode(pParameters->simplexOptimizationRange,
-                                        pParameters->unitCommitment.ucMode);
-
-    checkSimplexRangeHydroHeuristic(pParameters->simplexOptimizationRange, pStudy->areas);
-
-    if (pParameters->adqPatchParams.enabled)
-    {
-        pParameters->adqPatchParams.checkAdqPatchParams(pParameters->mode,
-                                                        pStudy->areas,
-                                                        pParameters->include.hurdleCosts);
-    }
-
-    bool tsGenThermal = (0
-                         != (pParameters->timeSeriesToGenerate
-                             & Antares::Data::TimeSeriesType::timeSeriesThermal));
-
-    checkMinStablePower(tsGenThermal, pStudy->areas);
-
-    checkFuelCostColumnNumber(pStudy->areas);
-    checkCO2CostColumnNumber(pStudy->areas);
-}
-
-void Application::prepare(int argc, char* argv[])
-{
-    pArgc = argc;
-    pArgv = argv;
-
-    // Load the local policy settings
-    LocalPolicy::Open();
-    LocalPolicy::CheckRootPrefix(argv[0]);
-
-    Resources::Initialize(argc, argv);
-
-    // Options
-    Data::StudyLoadOptions options;
-    options.usedByTheSolver = true;
-
-    // Bind pSettings / options members to command line arguments
-    // Something like bind("--foo", options.foo);
-    // So that option.foo will be assigned <value>
-    // if the user provides --foo <value>.
-    // CAUTION
-    // The parser contains references to members of pSettings and options,
-    // don't de-allocate these.
-    auto parser = CreateParser(pSettings, options);
-    // Parse the command line arguments
-
-    handleParserReturn(parser.get());
-
-    handleOptions(options);
-
-    // Perform some checks
-    checkAndCorrectSettingsAndOptions(pSettings, options);
-
-    pSettings.checkAndSetStudyFolder(options.studyFolder);
-
-    checkStudyVersion(pSettings.studyFolder);
-
-    // Determine the log filename to use for this simulation
-    resetLogFilename();
-
-    startSimulation(options);
-}
-
-void Application::onLogMessage(int level, const std::string& /*message*/)
-{
-    switch (level)
-    {
-    case Yuni::Logs::Verbosity::Warning::level:
-        ++pWarningCount;
-        break;
-    case Yuni::Logs::Verbosity::Error::level:
-    case Yuni::Logs::Verbosity::Fatal::level:
-        ++pErrorCount;
-        break;
-    default:
-        break;
-    }
-}
-
-void Application::execute()
-{
-    // pStudy == nullptr e.g when the -h flag is given
-    if (!pStudy)
-    {
-        return;
-    }
-
-    SystemMemoryLogger memoryReport;
-    memoryReport.interval(1000 * 60 * 5); // 5 minutes
-    memoryReport.start();
-
-    pStudy->computePThetaInfForThermalClusters();
-
-    // Run the simulation
-    switch (pStudy->runtime->mode)
-    {
-    case Data::SimulationMode::Economy:
-    case Data::SimulationMode::Expansion:
-        runSimulationInEconomicMode();
-        break;
-    case Data::SimulationMode::Adequacy:
-        runSimulationInAdequacyMode();
-        break;
-    default:
-        break;
-    }
-    // TODO : make an interface class for ISimulation, check writer & queue before
-    // runSimulationIn<XXX>Mode()
-
-    // Importing Time-Series if asked
-    pStudy->importTimeseriesIntoInput();
-
-    // Stop the display of the progression
-    pStudy->progression.stop();
-}
-
-void Application::runSimulationInEconomicMode()
-{
-    Solver::runSimulationInEconomicMode(*pStudy,
-                                        pSettings,
-                                        pDurationCollector,
-                                        *resultWriter,
-                                        pOptimizationInfo);
-}
-
-void Application::runSimulationInAdequacyMode()
-{
-    Solver::runSimulationInAdequacyMode(*pStudy,
-                                        pSettings,
-                                        pDurationCollector,
-                                        *resultWriter,
-                                        pOptimizationInfo);
-}
-
-void Application::resetLogFilename() const
-{
-    // Assigning the log file
-    Yuni::String logfile;
-    logfile << pSettings.studyFolder << Yuni::IO::Separator << "logs";
-
-    // Making sure that the folder
-    if (!Yuni::IO::Directory::Create(logfile))
-    {
-        throw FatalError(std::string("Impossible to create the log folder at ") + logfile.c_str()
-                         + ". Aborting now.");
-    }
-
-    // Date/time
-    logfile << Yuni::IO::Separator << "solver-";
-    Yuni::DateTime::TimestampToString(logfile, "%Y%m%d-%H%M%S", 0, false);
-    logfile << ".log";
-
-    // Assigning the log filename
-    logs.logfile(logfile);
-
-    if (!logs.logfileIsOpened())
-    {
-        throw FatalError(std::string("Impossible to create the log file at ") + logfile.c_str());
-    }
-}
-
-void Application::prepareWriter(const Antares::Data::Study& study,
-                                Benchmarking::DurationCollector& duration_collector)
-{
-    ioQueueService = std::make_shared<Yuni::Job::QueueService>();
-    ioQueueService->maximumThreadCount(1);
-    ioQueueService->start();
-    resultWriter = resultWriterFactory(study.parameters.resultFormat,
-                                       study.folderOutput,
-                                       ioQueueService,
-                                       duration_collector);
 }
 
 void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
@@ -458,6 +232,230 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
 
     // alloc global vectors
     SIM_AllocationTableaux(study);
+}
+
+void Application::startSimulation(Data::StudyLoadOptions& options)
+{
+// Starting !
+#ifdef GIT_SHA1_SHORT_STRING
+    logs.checkpoint() << "Antares Solver v" << ANTARES_VERSION_STR << " (" << GIT_SHA1_SHORT_STRING
+                      << ")";
+#else
+    logs.checkpoint() << "Antares Solver v" << ANTARES_VERSION_STR;
+#endif
+    WriteHostInfoIntoLogs();
+
+    WriteCommandLineIntoLogs(pArgc, pArgv);
+
+    logs.info() << "  :: log filename: " << logs.logfile();
+
+    logs.callback.connect(this, &Application::onLogMessage);
+
+    pStudy = std::make_unique<Antares::Data::Study>(true /* for the solver */);
+
+    pParameters = &(pStudy->parameters);
+
+    readDataForTheStudy(options);
+
+    postParametersChecks();
+
+    pStudy->initializeProgressMeter(pSettings.tsGeneratorsOnly);
+    if (pSettings.noOutput)
+    {
+        pSettings.displayProgression = false;
+    }
+
+    if (pSettings.displayProgression)
+    {
+        auto& filename = pStudy->buffer;
+        filename.clear() << "about-the-study" << Yuni::IO::Separator << "map";
+        pStudy->progression.saveToFile(filename, *resultWriter);
+        pStudy->progression.start();
+    }
+    else
+    {
+        logs.info() << "  The progression is disabled";
+    }
+}
+
+void Application::postParametersChecks() const
+{ // Some more checks require the existence of pParameters, hence of a study.
+    // Their execution is delayed up to this point.
+    checkOrtoolsUsage(pParameters->unitCommitment.ucMode,
+                      pParameters->optOptions.ortoolsUsed,
+                      pParameters->optOptions.ortoolsSolver);
+
+    checkSimplexRangeHydroPricing(pParameters->simplexOptimizationRange,
+                                  pParameters->hydroPricing.hpMode);
+
+    checkSimplexRangeUnitCommitmentMode(pParameters->simplexOptimizationRange,
+                                        pParameters->unitCommitment.ucMode);
+
+    checkSimplexRangeHydroHeuristic(pParameters->simplexOptimizationRange, pStudy->areas);
+
+    if (pParameters->adqPatchParams.enabled)
+    {
+        pParameters->adqPatchParams.checkAdqPatchParams(pParameters->mode,
+                                                        pStudy->areas,
+                                                        pParameters->include.hurdleCosts);
+    }
+
+    bool tsGenThermal = (0
+                         != (pParameters->timeSeriesToGenerate
+                             & Antares::Data::TimeSeriesType::timeSeriesThermal));
+
+    checkMinStablePower(tsGenThermal, pStudy->areas);
+
+    checkFuelCostColumnNumber(pStudy->areas);
+    checkCO2CostColumnNumber(pStudy->areas);
+}
+
+void Application::prepare(int argc, char* argv[])
+{
+    pArgc = argc;
+    pArgv = argv;
+
+    // Load the local policy settings
+    LocalPolicy::Open();
+    LocalPolicy::CheckRootPrefix(argv[0]);
+
+    Resources::Initialize(argc, argv);
+
+    // Options
+    Data::StudyLoadOptions options;
+    options.usedByTheSolver = true;
+
+    // Bind pSettings / options members to command line arguments
+    // Something like bind("--foo", options.foo);
+    // So that option.foo will be assigned <value>
+    // if the user provides --foo <value>.
+    // CAUTION
+    // The parser contains references to members of pSettings and options,
+    // don't de-allocate these.
+
+    parseCommandLine(options);
+
+    handleOptions(options);
+
+    // Perform some checks
+    checkAndCorrectSettingsAndOptions(pSettings, options);
+
+    pSettings.checkAndSetStudyFolder(options.studyFolder);
+
+    checkStudyVersion(pSettings.studyFolder);
+
+    // Determine the log filename to use for this simulation
+    resetLogFilename();
+
+    startSimulation(options);
+}
+
+void Application::onLogMessage(int level, const std::string& /*message*/)
+{
+    switch (level)
+    {
+    case Yuni::Logs::Verbosity::Warning::level:
+        ++pWarningCount;
+        break;
+    case Yuni::Logs::Verbosity::Error::level:
+    case Yuni::Logs::Verbosity::Fatal::level:
+        ++pErrorCount;
+        break;
+    default:
+        break;
+    }
+}
+
+void Application::execute()
+{
+    // pStudy == nullptr e.g when the -h flag is given
+    if (!pStudy)
+    {
+        return;
+    }
+
+    SystemMemoryLogger memoryReport;
+    memoryReport.interval(1000 * 60 * 5); // 5 minutes
+    memoryReport.start();
+
+    pStudy->computePThetaInfForThermalClusters();
+
+    // Run the simulation
+    switch (pStudy->runtime->mode)
+    {
+    case Data::SimulationMode::Economy:
+    case Data::SimulationMode::Expansion:
+        runSimulationInEconomicMode();
+        break;
+    case Data::SimulationMode::Adequacy:
+        runSimulationInAdequacyMode();
+        break;
+    default:
+        break;
+    }
+    // TODO : make an interface class for ISimulation, check writer & queue before
+    // runSimulationIn<XXX>Mode()
+
+    // Importing Time-Series if asked
+    pStudy->importTimeseriesIntoInput();
+
+    // Stop the display of the progression
+    pStudy->progression.stop();
+}
+
+void Application::runSimulationInEconomicMode()
+{
+    Solver::runSimulationInEconomicMode(*pStudy,
+                                        pSettings,
+                                        pDurationCollector,
+                                        *resultWriter,
+                                        pOptimizationInfo);
+}
+
+void Application::runSimulationInAdequacyMode()
+{
+    Solver::runSimulationInAdequacyMode(*pStudy,
+                                        pSettings,
+                                        pDurationCollector,
+                                        *resultWriter,
+                                        pOptimizationInfo);
+}
+
+void Application::resetLogFilename() const
+{
+    // Assigning the log file
+    Yuni::String logfile;
+    logfile << pSettings.studyFolder << Yuni::IO::Separator << "logs";
+
+    // Making sure that the folder
+    if (!Yuni::IO::Directory::Create(logfile))
+    {
+        throw FatalError(std::string("Impossible to create the log folder at ") + logfile.c_str()
+                         + ". Aborting now.");
+    }
+
+    // Date/time
+    logfile << Yuni::IO::Separator << "solver-";
+    Yuni::DateTime::TimestampToString(logfile, "%Y%m%d-%H%M%S", 0, false);
+    logfile << ".log";
+
+    // Assigning the log filename
+    logs.logfile(logfile);
+
+    if (!logs.logfileIsOpened())
+    {
+        throw FatalError(std::string("Impossible to create the log file at ") + logfile.c_str());
+    }
+}
+
+void Application::prepareWriter(const Antares::Data::Study& study,
+                                Benchmarking::DurationCollector& duration_collector)
+{
+    ioQueueService = std::make_shared<Yuni::Job::QueueService>();
+    ioQueueService->maximumThreadCount(1);
+    ioQueueService->start();
+    resultWriter = resultWriterFactory(study.parameters.resultFormat,
+                                       study.folderOutput,
 }
 
 void Application::writeComment(Data::Study& study)

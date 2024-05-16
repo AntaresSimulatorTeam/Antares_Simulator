@@ -4,13 +4,10 @@ This is a list of all recent changes that came with new Antares Simulator featur
 ### Input 
 #### Hydro Maximum Generation/Pumping Power
 * For time series ![Migration diagram](migration.png "Migration diagram"), for more details, see [this Python script](migration.py)
-* In the existing file **settings/scenariobuilder.dat**, under **&lt;ruleset&gt;** section following properties added: **hgp,&lt;area&gt;,&lt;year&gt; = &lt;hgp-value&gt;**
-
 
 Regarding Hydro time-series, the scenario builder allows the user to choose, for a given year and area, a different time series whether we consider :
-- inflows, ROR and minimum generation
-- initial level
-- max power for generation and pumping
+- inflows, ROR and minimum generation, max pumping & generation (prefix "h")
+- initial level (prefix "hl")
 This implies that, inside one of the previous categories, the number of available time series is the same
 
 * [Logic changes](17-v91.md)
@@ -48,10 +45,8 @@ In file **settings/generaldata.ini**, in section `optimization` add properties `
 These parameters can also be set from the command-line respectively using `--xpress-parameters` or `--scip-parameters`. In this case command-line parameters override settings from `generaldata.ini`
 
 ### Output
-#### Hydro maximum generation/pumping power
-In existing directory `ts-numbers`, add sub-directory `hgp` containing TS numbers for hydro max pumping/generation, for each area.
-
 #### ST Storage
+
 - Output columns for ST storage are capitalized. For any STS group name my_group, 3 output columns are created : `MY_GROUP_INJECTION`, `MY_GROUP_WITHDRAWAL`, `MY_GROUP_LEVEL`.
 - If a group is empty, no column is produced.
 - There is now a variable number of columns in files values-XXX.txt, depending on the groups of ST storages provided by the user. Note that groups are case-insensitive, for example `battery`, `Battery` and `BATTERY` all represent the same group. If no ST storage exist for a given area, no variables associated to ST storages will be produced.
