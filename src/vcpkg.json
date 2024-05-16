@@ -1,6 +1,9 @@
 {
   "name": "antares-simulator",
   "version-string": "9.1.0",
+  "vcpkg-configuration": {
+    "overlay-triplets": [ "./triplets" ]
+  },
   "dependencies": [
     {
       "name": "wxwidgets",

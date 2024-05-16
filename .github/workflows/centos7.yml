@@ -106,6 +106,7 @@ jobs:
         -DCMAKE_C_COMPILER_LAUNCHER=ccache \
         -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
         -DCMAKE_TOOLCHAIN_FILE=$GITHUB_WORKSPACE/vcpkg/scripts/buildsystems/vcpkg.cmake \
+        -DVCPKG_TARGET_TRIPLET=x64-linux-release \
         -DDEPS_INSTALL_DIR=/rte-antares-deps-Release \
         -DCMAKE_BUILD_TYPE=Release \
         -DBUILD_TESTING=ON \

@@ -100,6 +100,7 @@ jobs:
         source /opt/rh/gcc-toolset-11/enable
         cmake -B _build -S src \
           -DCMAKE_TOOLCHAIN_FILE=$GITHUB_WORKSPACE/vcpkg/scripts/buildsystems/vcpkg.cmake \
+          -DVCPKG_TARGET_TRIPLET=x64-linux-release \
           -DCMAKE_BUILD_TYPE=Release \
           -DBUILD_TESTING=ON \
           -DBUILD_TOOLS=ON \
