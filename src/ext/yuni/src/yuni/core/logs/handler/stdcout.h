@@ -37,6 +37,7 @@ public:
     template<class LoggerT, class VerbosityType>
     void internalDecoratorWriteWL(LoggerT& logger, const AnyString& s) const
     {
+        using DecoratorsType = typename LoggerT::DecoratorsType;
         // Write the message to the std::cout/cerr
         if (VerbosityType::shouldUsesStdCerr)
         {
