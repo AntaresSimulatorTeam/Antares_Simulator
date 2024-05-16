@@ -64,7 +64,7 @@ void OPT_LiberationProblemesSimplexe(const OptimizationOptions& options, const P
               = (PROBLEME_SPX*)(ProblemeAResoudre->ProblemesSpx[numIntervalle]);
             auto solver = (MPSolver*)(ProblemeAResoudre->ProblemesSpx[numIntervalle]);
 
-            if (options.useOrtools && solver != NULL)
+            if (options.ortoolsUsed && solver)
             {
                 ORTOOLS_LibererProbleme(solver);
                 solver = NULL;

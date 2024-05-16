@@ -84,16 +84,27 @@ std::unique_ptr<GetOpt::Parser> CreateParser(Settings& settings,
 
     // add option for ortools use
     // --use-ortools
-    parser->addFlag(
-      options.ortoolsUsed, ' ', "use-ortools", "Use ortools library to launch solver");
+    parser->addFlag(options.optOptions.ortoolsUsed,
+                    ' ',
+                    "use-ortools",
+                    "Use ortools library to launch solver");
 
     //--ortools-solver
-    parser->add(options.ortoolsSolver,
+    parser->add(options.optOptions.ortoolsSolver,
                 ' ',
                 "ortools-solver",
                 "Ortools solver used for simulation (only available with use-ortools "
                 "option)\nAvailable solver list : "
                   + availableOrToolsSolversString());
+
+    //--xpress-parameters
+    parser->add(
+      options.optOptions.solverParameters,
+      ' ',
+      "solver-parameters",
+      "Set xpress solver specific parameters. The specified string must be wrapped into quotes: "
+      "--solver-parameters=\"param1 value1 param2 value2\". The syntax of parameters is solver "
+      "specfic, examples are given in Antares-Simulator online documentation.");
 
     parser->addParagraph("\nParameters");
     // --name
@@ -160,7 +171,7 @@ std::unique_ptr<GetOpt::Parser> CreateParser(Settings& settings,
                     "Export named constraints and variables in mps (both optim).");
 
     // --solver-logs
-    parser->addFlag(options.solverLogs, ' ', "solver-logs", "Print solver logs.");
+    parser->addFlag(options.optOptions.solverLogs, ' ', "solver-logs", "Print solver logs.");
 
     parser->addParagraph("\nMisc.");
     // --progress
@@ -232,7 +243,7 @@ void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOption
     }
 
     options.checkForceSimulationMode();
-    checkOrtoolsSolver(options);
+    checkOrtoolsSolver(options.optOptions);
 
     // PID
     if (!optPID.empty())
@@ -251,20 +262,19 @@ void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOption
     }
 }
 
-void checkOrtoolsSolver(Data::StudyLoadOptions& options)
+void checkOrtoolsSolver(const Antares::Solver::Optimization::OptimizationOptions& optOptions)
 {
-    if (options.ortoolsUsed)
+    if (optOptions.ortoolsUsed)
     {
+        const std::string& solverName = optOptions.ortoolsSolver;
         const std::list<std::string> availableSolverList = getAvailableOrtoolsSolverName();
 
         // Check if solver is available
-        bool found
-          = (std::find(
-               availableSolverList.begin(), availableSolverList.end(), options.ortoolsSolver)
-             != availableSolverList.end());
+        bool found = (std::find(availableSolverList.begin(), availableSolverList.end(), solverName)
+                      != availableSolverList.end());
         if (!found)
         {
-            throw Error::InvalidSolver(options.ortoolsSolver, availableOrToolsSolversString());
+            throw Error::InvalidSolver(optOptions.ortoolsSolver, availableOrToolsSolversString());
         }
     }
 }

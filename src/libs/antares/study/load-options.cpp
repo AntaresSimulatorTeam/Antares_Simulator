@@ -32,24 +32,21 @@
 
 namespace Antares
 {
-namespace Data
-{
-StudyLoadOptions::StudyLoadOptions() :
- nbYears(0),
- prepareOutput(false),
- loadOnlyNeeded(false),
- forceYearByYear(false),
- forceDerated(false),
- noTimeseriesImportIntoInput(false),
- simplexOptimizationRange(sorUnknown),
- mpsToExport(false),
- ignoreConstraints(false),
- forceMode(SimulationMode::Unknown),
- enableParallel(false),
- forceParallel(false),
- maxNbYearsInParallel(0),
- usedByTheSolver(false),
- ortoolsUsed(false)
+StudyLoadOptions::StudyLoadOptions():
+    nbYears(0),
+    prepareOutput(false),
+    loadOnlyNeeded(false),
+    forceYearByYear(false),
+    forceDerated(false),
+    noTimeseriesImportIntoInput(false),
+    simplexOptimizationRange(sorUnknown),
+    mpsToExport(false),
+    ignoreConstraints(false),
+    forceMode(SimulationMode::Unknown),
+    enableParallel(false),
+    forceParallel(false),
+    maxNbYearsInParallel(0),
+    usedByTheSolver(false)
 {
 }
 

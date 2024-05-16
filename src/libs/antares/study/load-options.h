@@ -29,6 +29,9 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
+
+#include <antares/optimization-options/options.h>
+
 #include "parameters.h"
 
 namespace Antares
@@ -71,8 +74,6 @@ public:
     bool mpsToExport;
     //! named problems
     bool namedProblems = false;
-    //! enable solver logs
-    bool solverLogs = false;
     //! Ignore all constraints
     bool ignoreConstraints;
     //! Simulation mode
@@ -88,10 +89,8 @@ public:
     //! A non-zero value if the data will be used for a simulation
     bool usedByTheSolver;
 
-    //! Force ortools use
-    bool ortoolsUsed;
-    //! THe solver name, sirius is the default
-    std::string ortoolsSolver = "sirius";
+    //! All options related to optimization
+    Antares::Solver::Optimization::OptimizationOptions optOptions;
 
     //! Temporary string for passing log message
     mutable Yuni::String logMessage;

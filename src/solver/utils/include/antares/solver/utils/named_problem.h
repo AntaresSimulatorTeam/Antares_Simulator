@@ -30,7 +30,6 @@ private:
     const std::vector<std::string>& NomDesVariables;
     const std::vector<std::string>& NomDesContraintes;
     bool useNamedProblems_;
-    bool solverLogs_;
 
 public:
     std::vector<BasisStatus>& StatutDesVariables;
@@ -63,11 +62,6 @@ public:
     bool IntegerVariable(size_t idx) const
     {
         return VariablesEntieres[idx];
-    }
-
-    bool SolverLogs() const
-    {
-        return solverLogs_;
     }
 };
 } // namespace Optimization

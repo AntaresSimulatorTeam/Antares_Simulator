@@ -27,8 +27,12 @@
 #ifndef __SOLVER_OPTIMISATION_FUNCTIONS_H__
 #define __SOLVER_OPTIMISATION_FUNCTIONS_H__
 
-#include "../config.h"
-#include "opt_structure_probleme_a_resoudre.h"
+#include <antares/optimization-options/options.h>
+#include <antares/writer/i_writer.h>
+#include "antares/config/config.h"
+#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
+#include "antares/study/parameters/adq-patch-params.h"
+
 #include "adequacy_patch_csr/hourly_csr_problem.h"
 #include "opt_period_string_generator_base.h"
 #include "antares/study/parameters/adq-patch-params.h"
