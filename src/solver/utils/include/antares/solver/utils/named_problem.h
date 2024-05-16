@@ -32,7 +32,7 @@ namespace Antares
 {
 namespace Optimization
 {
-struct BasisStatus;
+class BasisStatus;
 
 struct PROBLEME_SIMPLEXE_NOMME: public PROBLEME_SIMPLEXE
 {
