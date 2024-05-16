@@ -18,7 +18,7 @@ var searchData=
   ['hourinthesimulation_15',['hourInTheSimulation',['../classAntares_1_1Solver_1_1Variable_1_1State.html#a9adacb9422217747e9bde451736c0791',1,'Antares::Solver::Variable::State']]],
   ['hourintheweek_16',['hourInTheWeek',['../classAntares_1_1Solver_1_1Variable_1_1State.html#a99786f5083293932efe8934c74c0e1d7',1,'Antares::Solver::Variable::State']]],
   ['hourintheyear_17',['hourInTheYear',['../classAntares_1_1Solver_1_1Variable_1_1State.html#afc3a39910241f7d1a8e83c54e872a910',1,'Antares::Solver::Variable::State']]],
-  ['hours_18',['hours',['../classAntares_1_1Date_1_1Calendar.html#a05d56116c79a585b78bf7e1cd3eb93d7',1,'Antares::Date::Calendar::hours'],['../classAntares_1_1Date_1_1Calendar.html#a8b221ce735b7c3dc680d94bdbb4397fe',1,'Antares::Date::Calendar::hours'],['../classAntares_1_1Date_1_1Calendar.html#a27514840e5b34d4d3610906fce5cf194',1,'Antares::Date::Calendar::hours']]],
+  ['hours_18',['hours',['../classAntares_1_1Date_1_1Calendar.html#a68c6c680da98fc7cbbc856e0d7244b1c',1,'Antares::Date::Calendar::hours'],['../classAntares_1_1Date_1_1Calendar.html#a8b221ce735b7c3dc680d94bdbb4397fe',1,'Antares::Date::Calendar::hours'],['../classAntares_1_1Date_1_1Calendar.html#a27514840e5b34d4d3610906fce5cf194',1,'Antares::Date::Calendar::hours']]],
   ['hpmode_19',['hpMode',['../classAntares_1_1Data_1_1Parameters.html#a3125b12689425b06576bdc821f4a6bd9',1,'Antares::Data::Parameters']]],
   ['html_20',['html',['../classAntares_1_1Window_1_1StudyLogs_1_1LogFilenameInfo.html#ae28329248bdfe87db182500fa37a76cc',1,'Antares::Window::StudyLogs::LogFilenameInfo']]],
   ['hurdlecosts_21',['hurdleCosts',['../structAntares_1_1Data_1_1Parameters_1_1IncludeOptions.html#a7d8a25ee0fb5862708223cac004f4acf',1,'Antares::Data::Parameters::IncludeOptions']]],

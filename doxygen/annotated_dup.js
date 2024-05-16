@@ -1121,6 +1121,11 @@ var annotated_dup =
     [ "VariableManagement", null, [
       [ "VariableManager", "classVariableManagement_1_1VariableManager.html", null ]
     ] ],
+    [ "YAML", null, [
+      [ "convert< Monster >", "structYAML_1_1convert_3_01Monster_01_4.html", null ],
+      [ "convert< Power >", "structYAML_1_1convert_3_01Power_01_4.html", null ],
+      [ "convert< Vec3 >", "structYAML_1_1convert_3_01Vec3_01_4.html", null ]
+    ] ],
     [ "Yuni", null, [
       [ "Extension", null, [
         [ "CString", null, [
@@ -1193,6 +1198,10 @@ var annotated_dup =
     [ "ExchangeBalance", "classExchangeBalance.html", null ],
     [ "ExchangeBalanceData", "structExchangeBalanceData.html", null ],
     [ "ExchangeBalanceGroup", "classExchangeBalanceGroup.html", null ],
+    [ "ExprBaseVisitor", "classExprBaseVisitor.html", "classExprBaseVisitor" ],
+    [ "ExprLexer", "classExprLexer.html", null ],
+    [ "ExprParser", "classExprParser.html", "classExprParser" ],
+    [ "ExprVisitor", "classExprVisitor.html", "classExprVisitor" ],
     [ "fake_buffer_factory", "classfake__buffer__factory.html", null ],
     [ "FictitiousLoad", "classFictitiousLoad.html", "classFictitiousLoad" ],
     [ "FictitiousLoadData", "structFictitiousLoadData.html", null ],
@@ -1247,6 +1256,7 @@ var annotated_dup =
     [ "MinHydroPowerData", "structMinHydroPowerData.html", null ],
     [ "MinMaxHydroPowerGroup", "classMinMaxHydroPowerGroup.html", null ],
     [ "ModifiedINode", "classModifiedINode.html", "classModifiedINode" ],
+    [ "Monster", "structMonster.html", null ],
     [ "mpsWriterFactory", "classmpsWriterFactory.html", null ],
     [ "MyStudyFinder", "classMyStudyFinder.html", "classMyStudyFinder" ],
     [ "Namer", "classNamer.html", null ],
@@ -1277,6 +1287,7 @@ var annotated_dup =
     [ "PMaxDispatchableGeneration", "classPMaxDispatchableGeneration.html", "classPMaxDispatchableGeneration" ],
     [ "PMinDispatchableGeneration", "classPMinDispatchableGeneration.html", "classPMinDispatchableGeneration" ],
     [ "PMinMaxDispatchableGenerationGroup", "classPMinMaxDispatchableGenerationGroup.html", "classPMinMaxDispatchableGenerationGroup" ],
+    [ "Power", "structPower.html", null ],
     [ "PredicateIdentity", "structPredicateIdentity.html", null ],
     [ "ProblemConverter", "classProblemConverter.html", null ],
     [ "PROBLEME_ANTARES_A_RESOUDRE", "structPROBLEME__ANTARES__A__RESOUDRE.html", null ],
@@ -1338,5 +1349,6 @@ var annotated_dup =
     [ "VALEURS_DE_NTC_ET_RESISTANCES", "structVALEURS__DE__NTC__ET__RESISTANCES.html", null ],
     [ "Variable", "classVariable.html", null ],
     [ "VariableNamer", "classVariableNamer.html", null ],
-    [ "VARIABLES_DUALES_INTERCONNEXIONS", "structVARIABLES__DUALES__INTERCONNEXIONS.html", null ]
+    [ "VARIABLES_DUALES_INTERCONNEXIONS", "structVARIABLES__DUALES__INTERCONNEXIONS.html", null ],
+    [ "Vec3", "structVec3.html", null ]
 ];

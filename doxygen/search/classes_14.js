@@ -76,7 +76,8 @@ var searchData=
   ['vcardtimeseriesvalueswind_73',['VCardTimeSeriesValuesWind',['../structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesWind.html',1,'Antares::Solver::Variable::Economy']]],
   ['vcardunsupliedenergy_74',['VCardUnsupliedEnergy',['../structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardUnsupliedEnergy.html',1,'Antares::Solver::Variable::Economy']]],
   ['vcardwatervalue_75',['VCardWaterValue',['../structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue.html',1,'Antares::Solver::Variable::Economy']]],
-  ['vector_76',['vector',['../classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1Analyzer_1_1Areas_1_1Record_1_1Vector.html',1,'Antares::Component::Datagrid::Renderer::Analyzer::Areas::Record::Vector'],['../classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ConstraintsBuilder_1_1Links_1_1Record_1_1Vector.html',1,'Antares::Component::Datagrid::Renderer::ConstraintsBuilder::Links::Record::Vector']]],
-  ['ventilation_5fhydro_5fresults_5fby_5farea_77',['VENTILATION_HYDRO_RESULTS_BY_AREA',['../structAntares_1_1VENTILATION__HYDRO__RESULTS__BY__AREA.html',1,'Antares']]],
-  ['vgridhelper_78',['VGridHelper',['../classAntares_1_1Component_1_1Datagrid_1_1VGridHelper.html',1,'Antares::Component::Datagrid']]]
+  ['vec3_76',['Vec3',['../structVec3.html',1,'']]],
+  ['vector_77',['vector',['../classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1Analyzer_1_1Areas_1_1Record_1_1Vector.html',1,'Antares::Component::Datagrid::Renderer::Analyzer::Areas::Record::Vector'],['../classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1ConstraintsBuilder_1_1Links_1_1Record_1_1Vector.html',1,'Antares::Component::Datagrid::Renderer::ConstraintsBuilder::Links::Record::Vector']]],
+  ['ventilation_5fhydro_5fresults_5fby_5farea_78',['VENTILATION_HYDRO_RESULTS_BY_AREA',['../structAntares_1_1VENTILATION__HYDRO__RESULTS__BY__AREA.html',1,'Antares']]],
+  ['vgridhelper_79',['VGridHelper',['../classAntares_1_1Component_1_1Datagrid_1_1VGridHelper.html',1,'Antares::Component::Datagrid']]]
 ];
