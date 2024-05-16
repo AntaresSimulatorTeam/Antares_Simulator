@@ -10,7 +10,7 @@ set(SRC_LINK_PROPERTIES
 	test-save-link-properties.cpp
 )
 add_executable(test-save-link-properties ${SRC_LINK_PROPERTIES})
-
+add_compile_definitions(test-save-link-properties BOOST_TEST_DYN_LINK)
 target_include_directories(test-save-link-properties
 								PRIVATE
 									"${src_libs_antares_study}/include"
@@ -42,7 +42,7 @@ set(SRC_AREA_OPTIMIZATION
 	test-save-area-optimization-ini.cpp
 )
 add_executable(test-save-area-optimization-ini ${SRC_AREA_OPTIMIZATION})
-
+add_compile_definitions(test-save-area-optimization-ini BOOST_TEST_DYN_LINK)
 target_include_directories(test-save-area-optimization-ini
 								PRIVATE
 									"${src_libs_antares_study}/include"

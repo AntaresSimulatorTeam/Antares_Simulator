@@ -5,7 +5,7 @@ set(SRC_PARAMETERS_TESTS
 	parameters-tests.cpp
 )
 add_executable(parameters-tests ${SRC_PARAMETERS_TESTS})
-
+add_compile_definitions(parameters-tests BOOST_TEST_DYN_LINK)
 target_link_libraries(parameters-tests
                       PRIVATE
                       Boost::unit_test_framework

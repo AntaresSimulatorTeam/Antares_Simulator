@@ -9,7 +9,7 @@ set(SRC_THERM_PRICE_DEF
 	thermal-price-definition.cpp
 )
 add_executable(thermal-price-definition ${SRC_THERM_PRICE_DEF})
-
+add_compile_definitions(thermal-price-definition BOOST_TEST_DYN_LINK)
 target_include_directories(thermal-price-definition
 								PRIVATE
 									"${src_libs_antares_study}/parts/thermal"

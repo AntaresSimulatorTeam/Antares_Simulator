@@ -8,7 +8,7 @@ set(SRC_SC_BUILDER_READ
 	test-sc-builder-file-read-line.cpp
 )
 add_executable(test-sc-builder-file-read-line ${SRC_SC_BUILDER_READ})
-
+add_compile_definitions(test-sc-builder-file-read-line BOOST_TEST_DYN_LINK)
 target_include_directories(test-sc-builder-file-read-line
 								PRIVATE
 									"${src_libs_antares_study}/include"
@@ -40,7 +40,7 @@ set(SRC_SC_BUILDER_SAVE
 	"${src_tests_src_libs_antares_study}/area/files-helper.cpp"
 )
 add_executable(test-sc-builder-file-save ${SRC_SC_BUILDER_SAVE})
-
+add_compile_definitions(test-sc-builder-file-save BOOST_TEST_DYN_LINK)
 target_include_directories(test-sc-builder-file-save
 								PRIVATE
 									"${src_libs_antares_study}"

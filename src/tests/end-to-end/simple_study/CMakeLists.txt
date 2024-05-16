@@ -9,6 +9,7 @@ endif(MSVC)
 add_executable(tests-simple-study
         simple-study.cpp
 )
+add_compile_definitions(tests-simple-study BOOST_TEST_DYN_LINK)
 
 target_link_libraries(tests-simple-study
         PRIVATE

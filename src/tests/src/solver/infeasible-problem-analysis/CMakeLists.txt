@@ -1,4 +1,6 @@
 add_executable(test-unfeasible-problem-analyzer)
+add_compile_definitions(test-unfeasible-problem-analyzer BOOST_TEST_DYN_LINK)
+
 target_sources(test-unfeasible-problem-analyzer
 		PRIVATE
 		test-unfeasible-problem-analyzer.cpp)

@@ -2,7 +2,7 @@
 set(src_libs_antares_study "${CMAKE_SOURCE_DIR}/libs/antares/study")
 
 add_executable(test-folder-output study.cpp)
-
+add_executable(test-folder-output ${SRC_SC_BUILDER_READ})
 target_include_directories(test-folder-output
    						   PRIVATE
 						   "${src_libs_antares_study}"

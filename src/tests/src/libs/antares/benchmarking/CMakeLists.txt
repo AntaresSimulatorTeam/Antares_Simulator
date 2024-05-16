@@ -1,6 +1,7 @@
 set(PROJ test-duration-collector)
 
 add_executable(${PROJ})
+add_compile_definitions(${PROJ} BOOST_TEST_DYN_LINK)
 target_sources(${PROJ} PRIVATE test_duration_collector.cpp)
 target_link_libraries(${PROJ}
         PRIVATE

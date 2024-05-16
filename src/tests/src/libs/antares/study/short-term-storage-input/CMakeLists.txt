@@ -8,7 +8,7 @@ set(SRC_SC_BUILDER_READ
 	short-term-storage-input-output.cpp
 )
 add_executable(short-term-storage-input ${SRC_SC_BUILDER_READ})
-
+add_compile_definitions(short-term-storage-input BOOST_TEST_DYN_LINK)
 target_include_directories(short-term-storage-input
 								PRIVATE
 									"${src_libs_antares_study}/parts/short-term-storage"

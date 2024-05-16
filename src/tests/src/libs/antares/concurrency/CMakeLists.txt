@@ -1,5 +1,5 @@
 add_executable(test-concurrency)
-
+add_compile_definitions(test-concurrency BOOST_TEST_DYN_LINK)
 target_sources(test-concurrency PRIVATE test_concurrency.cpp)
 
 target_link_libraries(test-concurrency

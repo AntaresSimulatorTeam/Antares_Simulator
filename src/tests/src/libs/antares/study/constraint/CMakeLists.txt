@@ -1,7 +1,7 @@
 add_executable(test_constraint
         test_constraint.cpp
     )
-
+add_compile_definitions(test_constraint BOOST_TEST_DYN_LINK)
 target_link_libraries(test_constraint
         PRIVATE
         test_utils_unit
@@ -25,7 +25,7 @@ set_property(TEST test_constraint PROPERTY LABELS unit)
 add_executable(test_groups
         test_group.cpp
         )
-
+add_compile_definitions(test_groups BOOST_TEST_DYN_LINK)
 target_link_libraries(test_groups
         PRIVATE
         test_utils_unit

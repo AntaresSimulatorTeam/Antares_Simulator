@@ -3,7 +3,7 @@ set(SRC_HYDRO_READER
 	test-hydroreader-class.cpp)
 
 add_executable(test-hydro-reader ${SRC_HYDRO_READER})
-
+add_compile_definitions(test-hydro-reader BOOST_TEST_DYN_LINK)
 target_link_libraries(test-hydro-reader
 	PRIVATE
 	Boost::unit_test_framework
@@ -26,7 +26,7 @@ set(SRC_HYDRO_SERIES
 	test-hydro-series.cpp)
 
 add_executable(test-hydro-series ${SRC_HYDRO_SERIES})
-
+add_compile_definitions(test-hydro-series BOOST_TEST_DYN_LINK)
 target_link_libraries(test-hydro-series
 	PRIVATE
 	Boost::unit_test_framework

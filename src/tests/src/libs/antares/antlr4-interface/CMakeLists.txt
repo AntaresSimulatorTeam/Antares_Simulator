@@ -5,6 +5,7 @@ Set(SRCS test_antlr_interface.cpp
 
 set(execname "antlr-interface-test")
 add_executable(${execname}  ${SRCS})
+add_compile_definitions(${execname} BOOST_TEST_DYN_LINK)
 target_link_libraries(${execname}
                        PRIVATE
                        antlr-interface

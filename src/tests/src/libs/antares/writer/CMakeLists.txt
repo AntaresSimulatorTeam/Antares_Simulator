@@ -1,6 +1,6 @@
 # Zip writer
 add_executable(test-writer)
-
+add_compile_definitions(test-writer BOOST_TEST_DYN_LINK)
 target_sources(test-writer PRIVATE test_writer.cpp)
 
 target_link_libraries(test-writer
