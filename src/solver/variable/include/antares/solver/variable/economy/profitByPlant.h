@@ -289,7 +289,7 @@ public:
 
             // Thermal cluster profit
             pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex].hour[hourInTheYear]
-              = (hourlyClusterProduction - pMin)
+              = std::max((hourlyClusterProduction - cluster->PthetaInf[hourInTheYear]), 0.)
                 * (-areaMarginalCosts[hourInTheWeek]
                    - cluster->getMarginalCost(tsIndex, hourInTheYear));
         }
