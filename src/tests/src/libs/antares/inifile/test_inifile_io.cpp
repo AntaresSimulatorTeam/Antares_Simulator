@@ -13,6 +13,7 @@ struct ReadFromStreamFixture
 	std::string ini_content;
 	Antares::IniFile my_inifile;
 	Antares::IniFile::Section* section = nullptr;
+	Antares::IniFile::Property* property = nullptr;
 };
 
 BOOST_AUTO_TEST_SUITE(populating_inicontent_from_stream)
@@ -150,6 +151,27 @@ BOOST_FIXTURE_TEST_CASE(two_sections_wearing_same_name__both_are_created, ReadFr
 	BOOST_CHECK(nextSection);
 	BOOST_CHECK(nextSection->name = "section 1");
 	BOOST_CHECK(nextSection->find("key 2"));
+}
+
+BOOST_FIXTURE_TEST_CASE(checking_created_properties_content, ReadFromStreamFixture)
+{
+	ini_content += "[section 1]\n";
+	ini_content += "key 1 = value 1\n";
+	ini_content += "key 2 = value 2\n";
+	std::istringstream input_stream(ini_content);
+
+	BOOST_CHECK(my_inifile.readStream(input_stream));
+
+	section = my_inifile.find("section 1");
+	BOOST_CHECK(section);
+
+	property = section->find("key 1");
+	BOOST_CHECK(property);
+	BOOST_CHECK_EQUAL(property->value, "value 1");
+
+	property = section->find("key 2");
+	BOOST_CHECK(property);
+	BOOST_CHECK_EQUAL(property->value, "value 2");
 }
 
 BOOST_AUTO_TEST_SUITE_END()
