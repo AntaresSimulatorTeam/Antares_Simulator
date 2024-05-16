@@ -2,7 +2,7 @@
 set(src_libs_antares_study "${CMAKE_SOURCE_DIR}/libs/antares/study")
 
 add_executable(test-folder-output study.cpp)
-add_compile_definitions(test-folder-output BOOST_TEST_DYN_LINK)
+target_compile_definitions(test-folder-output PRIVATE BOOST_TEST_DYN_LINK)
 
 target_include_directories(test-folder-output
    						   PRIVATE

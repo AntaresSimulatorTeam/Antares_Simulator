@@ -51,7 +51,7 @@ set(SRC_TEST_MATRIX_SAVE
 	)
 
 add_executable(tests-matrix-save ${SRC_TEST_MATRIX_SAVE})
-add_compile_definitions(tests-matrix-save BOOST_TEST_DYN_LINK)
+target_compile_definitions(tests-matrix-save PRIVATE BOOST_TEST_DYN_LINK)
 target_include_directories(tests-matrix-save
 								PRIVATE
 									"${src_libs_antares}/array/include"
@@ -88,7 +88,7 @@ set(SRC_TEST_MATRIX_LOAD
 	)
 
 add_executable(tests-matrix-load ${SRC_TEST_MATRIX_LOAD})
-add_compile_definitions(tests-matrix-load BOOST_TEST_DYN_LINK)
+target_compile_definitions(tests-matrix-load PRIVATE BOOST_TEST_DYN_LINK)
 target_include_directories(tests-matrix-load
 								PRIVATE
 									"${src_libs_antares}/array/include"
@@ -118,7 +118,7 @@ set_property(TEST load-matrix PROPERTY LABELS unit)
 
 
 add_executable(test-utils test_utils.cpp)
-add_compile_definitions(test-utils BOOST_TEST_DYN_LINK)
+target_compile_definitions(test-utils PRIVATE BOOST_TEST_DYN_LINK)
 target_link_libraries(test-utils
 		PRIVATE
 		Boost::unit_test_framework

@@ -11,7 +11,7 @@ set(SRC_TS_NUMBERS
 	${src_solver_simulation}/include/antares/solver/simulation/ITimeSeriesNumbersWriter.h)
 
 add_executable(tests-ts-numbers tests-ts-numbers.cpp ${SRC_TS_NUMBERS})
-add_compile_definitions(tests-ts-numbers BOOST_TEST_DYN_LINK)
+target_compile_definitions(tests-ts-numbers PRIVATE BOOST_TEST_DYN_LINK)
 target_include_directories(tests-ts-numbers
 								PRIVATE
 									"${src_solver_simulation}"
@@ -40,7 +40,7 @@ set(SRC_STORE_TS
 		test-store-timeseries-number.cpp
 		)
 add_executable(test-store-timeseries-number ${SRC_STORE_TS})
-add_compile_definitions(test-store-timeseries-number BOOST_TEST_DYN_LINK)
+target_compile_definitions(test-store-timeseries-number PRIVATE BOOST_TEST_DYN_LINK)
 target_link_libraries(test-store-timeseries-number
 		PRIVATE
 		Boost::unit_test_framework
@@ -68,7 +68,7 @@ set(SRC_STORE_TS
 		test-time_series.cpp
 		)
 add_executable(test-time_series ${SRC_STORE_TS})
-add_compile_definitions(test-time_series BOOST_TEST_DYN_LINK)
+target_compile_definitions(test-time_series PRIVATE BOOST_TEST_DYN_LINK)
 target_link_libraries(test-time_series
 		PRIVATE
 		Boost::unit_test_framework

@@ -2,7 +2,7 @@ set(src_utils "${CMAKE_SOURCE_DIR}/solver/utils")
 
 set(EXECUTABLE_NAME tests-basis-status)
 add_executable(${EXECUTABLE_NAME} basis_status.cpp)
-add_compile_definitions(${EXECUTABLE_NAME} BOOST_TEST_DYN_LINK)
+target_compile_definitions(${EXECUTABLE_NAME} PRIVATE BOOST_TEST_DYN_LINK)
 
 target_include_directories(${EXECUTABLE_NAME}
 							PRIVATE

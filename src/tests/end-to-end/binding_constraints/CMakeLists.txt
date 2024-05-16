@@ -9,7 +9,7 @@ endif(MSVC)
 add_executable(tests-binding_constraints
         test_binding_constraints.cpp
     )
-add_compile_definitions(tests-binding_constraints BOOST_TEST_DYN_LINK)
+target_compile_definitions(tests-binding_constraints PRIVATE BOOST_TEST_DYN_LINK)
 
 target_link_libraries(tests-binding_constraints
         PRIVATE

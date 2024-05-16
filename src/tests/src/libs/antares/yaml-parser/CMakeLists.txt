@@ -5,7 +5,7 @@ Set(SRCS test_yaml_parser.cpp
 
 set(execname "yaml-parser-test")
 add_executable(${execname}  ${SRCS})
-add_compile_definitions(${execname} BOOST_TEST_DYN_LINK)
+target_compile_definitions(${execname} PRIVATE BOOST_TEST_DYN_LINK)
 target_link_libraries(${execname}
                        PRIVATE
                        yaml-cpp

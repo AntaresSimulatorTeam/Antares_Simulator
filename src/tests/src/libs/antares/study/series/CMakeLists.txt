@@ -5,7 +5,7 @@ set(SRC_TIMESERIES_TESTS
 	timeseries-tests.cpp
 )
 add_executable(timeseries-tests ${SRC_TIMESERIES_TESTS})
-add_compile_definitions(timeseries-tests BOOST_TEST_DYN_LINK)
+target_compile_definitions(timeseries-tests PRIVATE BOOST_TEST_DYN_LINK)
 target_link_libraries(timeseries-tests
                       PRIVATE
                       Boost::unit_test_framework

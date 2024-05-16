@@ -3,7 +3,7 @@ set(src_solver_optimisation "${CMAKE_SOURCE_DIR}/solver/optimisation")
 
 set(EXECUTABLE_NAME tests-adq-patch)
 add_executable(${EXECUTABLE_NAME} adequacy_patch.cpp)
-add_compile_definitions(${EXECUTABLE_NAME} BOOST_TEST_DYN_LINK)
+target_compile_definitions(${EXECUTABLE_NAME} PRIVATE BOOST_TEST_DYN_LINK)
 target_include_directories(${EXECUTABLE_NAME}
 							PRIVATE
 						   "${src_solver_optimisation}"

@@ -11,7 +11,7 @@ add_subdirectory(series)
 add_subdirectory(parameters)
 
 add_executable(test-study)
-add_compile_definitions(test-study BOOST_TEST_DYN_LINK)
+target_compile_definitions(test-study PRIVATE BOOST_TEST_DYN_LINK)
 target_sources(test-study PRIVATE test_study.cpp)
 target_link_libraries(test-study
         PRIVATE
