@@ -114,6 +114,44 @@ BOOST_FIXTURE_TEST_CASE(ill_formed_section_because_brace_missing___reading_strea
 	BOOST_CHECK(! my_inifile.readStream(input_stream));
 }
 
+BOOST_FIXTURE_TEST_CASE(many_sections, ReadFromStreamFixture)
+{
+	ini_content += "[section 1]\n";
+	ini_content += "key 1 = value 1\n";
+	ini_content += "[section 2]\n";
+	ini_content += "key 2 = value 2\n";
+	std::istringstream input_stream(ini_content);
+
+	BOOST_CHECK(my_inifile.readStream(input_stream));
+
+	section = my_inifile.find("section 1");
+	BOOST_CHECK(section);
+	BOOST_CHECK(section->find("key 1"));
+	section = my_inifile.find("section 2");
+	BOOST_CHECK(section);
+	BOOST_CHECK(section->find("key 2"));
+}
+
+BOOST_FIXTURE_TEST_CASE(two_sections_wearing_same_name, ReadFromStreamFixture)
+{
+	ini_content += "[section 1]\n";
+	ini_content += "key 1 = value 1\n";
+	ini_content += "[section 1]\n";
+	ini_content += "key 2 = value 2\n";
+	std::istringstream input_stream(ini_content);
+
+	BOOST_CHECK(my_inifile.readStream(input_stream));
+
+	section = my_inifile.find("section 1");
+	BOOST_CHECK(section);
+	BOOST_CHECK(section->find("key 1"));
+
+	Antares::IniFile::Section* nextSection = section->next;
+	BOOST_CHECK(nextSection);
+	BOOST_CHECK(nextSection->name = "section 1");
+	BOOST_CHECK(nextSection->find("key 2"));
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 
@@ -150,6 +188,23 @@ BOOST_FIXTURE_TEST_CASE(one_section_one_property, SavingToStreamFixture)
 
 	expected_stream_content += "[my section]\n";
 	expected_stream_content += "some key = some value\n\n";
+	BOOST_CHECK_EQUAL(output_stream.str(), expected_stream_content);
+}
+
+BOOST_FIXTURE_TEST_CASE(may_sections, SavingToStreamFixture)
+{
+	section = my_inifile.addSection("section 1");
+	section->add("key 1", "value 1");
+	section = my_inifile.addSection("section 2");
+	section->add("key 2", "value 2");
+
+	my_inifile.saveToStream(output_stream, written);
+
+	expected_stream_content += "[section 1]\n";
+	expected_stream_content += "key 1 = value 1\n";
+	expected_stream_content += "\n";
+	expected_stream_content += "[section 2]\n";
+	expected_stream_content += "key 2 = value 2\n\n";
 	BOOST_CHECK_EQUAL(output_stream.str(), expected_stream_content);
 }
 
