@@ -28,9 +28,6 @@ void checkOrtoolsUsage(Antares::Data::UnitCommitmentMode ucMode,
                        bool ortoolsUsed,
                        const std::string& solverName);
 
-void checkOrtoolsSolverSpecificParameters(
-  const Antares::Data::UnitCommitmentMode& ucMode,
-  const Antares::Solver::Optimization::OptimizationOptions& optOptions);
 
 void checkStudyVersion(const AnyString& optStudyFolder);
 

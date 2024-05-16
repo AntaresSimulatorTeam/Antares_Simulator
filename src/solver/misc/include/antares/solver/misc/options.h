@@ -78,6 +78,4 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings,
 void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOptions& options);
 
 void checkOrtoolsSolver(const Antares::Solver::Optimization::OptimizationOptions& optOptions);
-void checkOrtoolsSolverSpecificParameters(
-  const Antares::Solver::Optimization::OptimizationOptions& optOptions);
 #endif /* __SOLVER_MISC_GETOPT_H__ */
