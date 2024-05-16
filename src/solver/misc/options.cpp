@@ -96,20 +96,11 @@ std::unique_ptr<GetOpt::Parser> CreateParser(Settings& settings, StudyLoadOption
 
     //--xpress-parameters
     parser->add(
-      options.optOptions.solverParameters.xpress,
+      options.optOptions.solverParameters,
       ' ',
-      "xpress-parameters",
+      "solver-parameters",
       "Set xpress solver specific parameters. The specified string must be wrapped into quotes: "
-      "--xpress-parameters=\"param1 value1 param2 value2\". The syntax of parameters is solver "
-      "specfic, examples are given in Antares-Simulator online documentation.");
-
-    //--scip-parameters
-    parser->add(
-      options.optOptions.solverParameters.scip,
-      ' ',
-      "scip-parameters",
-      "Set scip solver specific parameters. The specified string must be wrapped into quotes: "
-      "--scip-parameters=\"param1 value1, param2 value2\". The syntax of parameters is solver "
+      "--solver-parameters=\"param1 value1 param2 value2\". The syntax of parameters is solver "
       "specfic, examples are given in Antares-Simulator online documentation.");
 
     parser->addParagraph("\nParameters");

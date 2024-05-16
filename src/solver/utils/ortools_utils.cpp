@@ -59,7 +59,7 @@ static void checkSetSolverSpecificParameters(bool status,
 static void TuneSolverSpecificOptions(
   MPSolver* solver,
   const std::string& solverName,
-  const Antares::Solver::Optimization::SolverParameters& solverParameters)
+  const std::string& solverParameters)
 {
     if (!solver)
     {
@@ -75,14 +75,14 @@ static void TuneSolverSpecificOptions(
     case MPSolver::XPRESS_LINEAR_PROGRAMMING:
     case MPSolver::XPRESS_MIXED_INTEGER_PROGRAMMING:
     {
-        specificParams = XPRESS_PARAMS + " " + solverParameters.xpress;
+        specificParams = XPRESS_PARAMS + " " + solverParameters;
         status = solver->SetSolverSpecificParametersAsString(specificParams);
         checkSetSolverSpecificParameters(status, solverName, specificParams);
         break;
     }
     case MPSolver::SCIP_MIXED_INTEGER_PROGRAMMING:
     {
-        specificParams = SCIP_PARAMS + ", " + solverParameters.scip;
+        specificParams = SCIP_PARAMS + ", " + solverParameters;
         status = solver->SetSolverSpecificParametersAsString(specificParams);
         checkSetSolverSpecificParameters(status, solverName, specificParams);
         break;

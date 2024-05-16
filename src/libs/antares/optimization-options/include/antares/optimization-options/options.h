@@ -25,43 +25,6 @@
 namespace Antares::Solver::Optimization
 {
 
-class SolverParameters
-{
-public:
-    std::string xpress;
-    std::string scip;
-
-    void overrideByOtherIfNotEmpty(const SolverParameters& other)
-    {
-        xpress = overrideParameterStringByOtherIfNotEmpty(xpress, other.xpress);
-        displayParameterString(xpress, "xpress");
-
-        scip = overrideParameterStringByOtherIfNotEmpty(scip, other.scip);
-        displayParameterString(scip, "scip");
-    }
-
-private:
-    static std::string overrideParameterStringByOtherIfNotEmpty(
-      const std::string& srcParameters,
-      const std::string& otherParameters)
-    {
-        if (!otherParameters.empty())
-        {
-            return otherParameters;
-        }
-        return srcParameters;
-    }
-
-    static void displayParameterString(const std::string& parameterString,
-                                       const std::string& solverName)
-    {
-        if (!parameterString.empty())
-        {
-            logs.info() << " " + solverName + " solver specific parameters: " << parameterString;
-        }
-    }
-};
-
 struct OptimizationOptions
 {
     //! Force ortools use
@@ -69,6 +32,6 @@ struct OptimizationOptions
     //! The solver name, sirius is the default
     std::string ortoolsSolver = "sirius";
     bool solverLogs = false;
-    SolverParameters solverParameters;
+    std::string solverParameters;
 };
 } // namespace Antares::Solver::Optimization

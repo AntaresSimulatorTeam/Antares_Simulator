@@ -768,18 +768,6 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
     {
         return value.to<bool>(d.optOptions.solverLogs);
     }
-
-    if (key == "scip-parameters")
-    {
-        d.optOptions.solverParameters.scip = value;
-        return true;
-    }
-
-    if (key == "xpress-parameters")
-    {
-        d.optOptions.solverParameters.xpress = value;
-        return true;
-    }
     return false;
 }
 
@@ -1314,12 +1302,10 @@ void Parameters::handleOptimizationOptions(const StudyLoadOptions& options)
     // Options only set from the command-line
     optOptions.ortoolsUsed = options.optOptions.ortoolsUsed;
     optOptions.ortoolsSolver = options.optOptions.ortoolsSolver;
+    optOptions.solverParameters = options.optOptions.solverParameters;
 
     // Options that can be set both in command-line and file
     optOptions.solverLogs = options.optOptions.solverLogs || optOptions.solverLogs;
-
-    // Command line arguments will override ini file parameters
-    optOptions.solverParameters.overrideByOtherIfNotEmpty(options.optOptions.solverParameters);
 }
 
 void Parameters::fixRefreshIntervals()
@@ -1880,8 +1866,6 @@ void Parameters::saveToINI(IniFile& ini) const
         section->add("include-unfeasible-problem-behavior",
                      Enum::toString(include.unfeasibleProblemBehavior));
         section->add("solver-logs", optOptions.solverLogs);
-        section->add("scip-parameters", optOptions.solverParameters.scip);
-        section->add("xpress-parameters", optOptions.solverParameters.xpress);
     }
 
     // Adequacy patch
