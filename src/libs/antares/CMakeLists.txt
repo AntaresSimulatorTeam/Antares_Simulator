@@ -32,6 +32,8 @@ if(WITH_ANTLR4)
   add_subdirectory(antlr-interface)
 endif()
 
+add_subdirectory(optimization-options)
+
 set(HEADERS
         include/antares/antares/antares.h
         include/antares/antares/constants.h

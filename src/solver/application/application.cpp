@@ -141,6 +141,10 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     {
         loadingException = std::current_exception();
     }
+
+    // For solver
+    study.parameters.optOptions = options.optOptions;
+
     // This settings can only be enabled from the solver
     // Prepare the output for the study
     study.prepareOutput();
@@ -278,8 +282,8 @@ void Application::postParametersChecks() const
 { // Some more checks require the existence of pParameters, hence of a study.
     // Their execution is delayed up to this point.
     checkOrtoolsUsage(pParameters->unitCommitment.ucMode,
-                      pParameters->ortoolsUsed,
-                      pParameters->ortoolsSolver);
+                      pParameters->optOptions.ortoolsUsed,
+                      pParameters->optOptions.ortoolsSolver);
 
     checkSimplexRangeHydroPricing(pParameters->simplexOptimizationRange,
                                   pParameters->hydroPricing.hpMode);
