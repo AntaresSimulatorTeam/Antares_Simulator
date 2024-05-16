@@ -1,7 +1,5 @@
 var NAVTREEINDEX18 =
 {
-"classIItem.html#adf02dbccf0532f56f1cf6d645e686bf6":[7,0,124,27],
-"classIItem.html#ae20ab3549e27c3aab6d0529009fb3ca1":[7,0,124,33],
 "classIItem.html#af7b03e30b6ad384d9b73d286ed8db1e2":[7,0,124,28],
 "classIItem.html#aff762346860ec05fe386566a9352245a":[7,0,124,35],
 "classIItem_1_1IPart.html":[7,0,124,0],
@@ -210,7 +208,7 @@ var NAVTREEINDEX18 =
 "classYuni_1_1Extension_1_1CString_1_1Into_3_01Antares_1_1Data_1_1CostGeneration_01_4.html":[7,0,29,0,0,3],
 "classYuni_1_1Extension_1_1CString_1_1Into_3_01Antares_1_1Data_1_1LocalTSGenerationBehavior_01_4.html":[7,0,29,0,0,4],
 "classYuni_1_1Extension_1_1CString_1_1Into_3_01Antares_1_1Data_1_1StatisticalLaw_01_4.html":[7,0,29,0,0,5],
-"class__name_8h_source.html":[8,0,0,1,0,23,0,0,0,0],
+"class__name_8h_source.html":[8,0,0,1,0,24,0,0,0,0],
 "classaverageResults.html":[7,0,41],
 "classbenchmark_1_1StudyList.html":[7,0,1,0],
 "classcheck__general_1_1check__interface.html":[7,0,3,0],
@@ -249,5 +247,7 @@ var NAVTREEINDEX18 =
 "classtolerances_1_1Win__tolerances.html":[7,0,25,2],
 "classunfeasible__problem_1_1behavior__flag.html":[7,0,26,0],
 "classunfeasible__problem_1_1unfeasible__problem.html":[7,0,26,1],
-"classunfeasible__problem_1_1weeks__in__year.html":[7,0,26,2]
+"classunfeasible__problem_1_1weeks__in__year.html":[7,0,26,2],
+"cleaner_8h_source.html":[8,0,0,1,0,25,0,0,0,10],
+"clipboard_8h_source.html":[8,0,0,5,2,1,0,0]
 };

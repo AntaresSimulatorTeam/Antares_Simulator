@@ -362,6 +362,7 @@ var annotated_dup =
         [ "InvalidParametersForThermalClusters", "classAntares_1_1Error_1_1InvalidParametersForThermalClusters.html", null ],
         [ "InvalidSimulationMode", "classAntares_1_1Error_1_1InvalidSimulationMode.html", null ],
         [ "InvalidSolver", "classAntares_1_1Error_1_1InvalidSolver.html", null ],
+        [ "InvalidSolverSpecificParameters", "classAntares_1_1Error_1_1InvalidSolverSpecificParameters.html", null ],
         [ "InvalidStudy", "classAntares_1_1Error_1_1InvalidStudy.html", null ],
         [ "InvalidVersion", "classAntares_1_1Error_1_1InvalidVersion.html", null ],
         [ "LoadingError", "classAntares_1_1Error_1_1LoadingError.html", null ],
@@ -468,7 +469,7 @@ var annotated_dup =
           [ "AdequacyPatchOptimization", "classAntares_1_1Solver_1_1Optimization_1_1AdequacyPatchOptimization.html", null ],
           [ "CsrQuadraticProblem", "classAntares_1_1Solver_1_1Optimization_1_1CsrQuadraticProblem.html", null ],
           [ "DefaultWeeklyOptimization", "classAntares_1_1Solver_1_1Optimization_1_1DefaultWeeklyOptimization.html", null ],
-          [ "OptimizationOptions", "structAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html", null ],
+          [ "OptimizationOptions", "structAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html", "structAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions" ],
           [ "WeeklyOptimization", "classAntares_1_1Solver_1_1Optimization_1_1WeeklyOptimization.html", null ]
         ] ],
         [ "Private", null, [

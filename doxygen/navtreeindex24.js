@@ -1,5 +1,10 @@
 var NAVTREEINDEX24 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardThermalAirPollutantEmissions.html#ab38b58b113854c3cd6268b940963cb0b":[7,0,0,12,4,4,102,1],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardThermalAirPollutantEmissions.html#af8e4d8b6a6407060fb314c2886542b94":[7,0,0,12,4,4,102,2],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardThermalAirPollutantEmissions_1_1Multiple.html":[7,0,0,12,4,4,102,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesHydro.html":[7,0,0,12,4,4,103],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesHydro.html#a72dcb8ce6f01f1d9008d68bb3b34bf7a":[7,0,0,12,4,4,103,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesHydro.html#a998646f4c3544ae0bb5b6a695eaf710d":[7,0,0,12,4,4,103,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesLoad.html":[7,0,0,12,4,4,104],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesLoad.html#a3f21b906233221ae4fb5291046cc42e7":[7,0,0,12,4,4,104,0],
@@ -244,10 +249,5 @@ var NAVTREEINDEX24 =
 "structRenewableClusterStudy.html":[7,0,199],
 "structSOLDE__MOYEN__DES__ECHANGES.html":[7,0,212],
 "structShortTermStorageLevelData.html":[7,0,209],
-"structShortTermStorage_1_1PROPERTIES.html":[7,0,18,0],
-"structShortTermStorage_1_1RESULTS.html":[7,0,18,1],
-"structSimplexResult.html":[7,0,210],
-"structStartUpCostsData.html":[7,0,213],
-"structStudyBuilder.html":[7,0,214],
-"structStudyFixture.html":[7,0,216]
+"structShortTermStorage_1_1PROPERTIES.html":[7,0,18,0]
 };

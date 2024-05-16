@@ -1,7 +1,5 @@
 var NAVTREEINDEX17 =
 {
-"classAntares_1_1Window_1_1OutputViewer_1_1Window.html#acaaec801fce09558ef938df9af5c9639":[7,0,0,17,3,6,1],
-"classAntares_1_1Window_1_1PerformerDialog.html":[7,0,0,17,45],
 "classAntares_1_1Window_1_1PerformerDialog.html#a40e6462e22994977dc01fca280fd6999":[7,0,0,17,45,3],
 "classAntares_1_1Window_1_1PerformerDialog.html#a4796034dd9ec75385e9a2771d3f82a86":[7,0,0,17,45,1],
 "classAntares_1_1Window_1_1PerformerDialog.html#a8f8a36650514d1ad39ff5a8734acdc92":[7,0,0,17,45,2],
@@ -249,5 +247,7 @@ var NAVTREEINDEX17 =
 "classIItem.html#acb1ab49561344ed5bd289c23491d7715":[7,0,124,10],
 "classIItem.html#acebf43ba0162c873ef24342a1c96fa61":[7,0,124,34],
 "classIItem.html#acf491e0eb198f49dcdd45d5047111a10":[7,0,124,12],
-"classIItem.html#ad392d236661618fd32bb871b5ad89532":[7,0,124,21]
+"classIItem.html#ad392d236661618fd32bb871b5ad89532":[7,0,124,21],
+"classIItem.html#adf02dbccf0532f56f1cf6d645e686bf6":[7,0,124,27],
+"classIItem.html#ae20ab3549e27c3aab6d0529009fb3ca1":[7,0,124,33]
 };

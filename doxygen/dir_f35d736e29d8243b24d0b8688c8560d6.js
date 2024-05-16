@@ -20,6 +20,7 @@ var dir_f35d736e29d8243b24d0b8688c8560d6 =
     [ "logs", "dir_afc7c14ae171d28f17ac5a59ea66005a.html", "dir_afc7c14ae171d28f17ac5a59ea66005a" ],
     [ "memory", "dir_8151ff04c252fc11dbcc2541bbcf115c.html", "dir_8151ff04c252fc11dbcc2541bbcf115c" ],
     [ "mersenne-twister", "dir_01daa5499a3d0d650df878715323f7b3.html", "dir_01daa5499a3d0d650df878715323f7b3" ],
+    [ "optimization-options", "dir_c404264aca842fd504159e4dfd782c25.html", "dir_c404264aca842fd504159e4dfd782c25" ],
     [ "paths", "dir_3ebd0c6b198e2534b75d9212614d1ade.html", "dir_3ebd0c6b198e2534b75d9212614d1ade" ],
     [ "resources", "dir_7f31de3c797197958df18663790f447e.html", "dir_7f31de3c797197958df18663790f447e" ],
     [ "series", "dir_ebc8c9594cd51ddaece1628dd1b84321.html", "dir_ebc8c9594cd51ddaece1628dd1b84321" ],

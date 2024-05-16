@@ -25,12 +25,13 @@ var searchData=
   ['optimalsolutioncost1_22',['optimalSolutionCost1',['../classAntares_1_1Solver_1_1Variable_1_1State.html#a27c6f9fcdb874788608955514a031919',1,'Antares::Solver::Variable::State']]],
   ['optimalsolutioncost2_23',['optimalSolutionCost2',['../classAntares_1_1Solver_1_1Variable_1_1State.html#aa80f17d2ebb0c6af1d49980d250be5fb',1,'Antares::Solver::Variable::State']]],
   ['options_24',['options',['../classJIT_1_1Informations.html#a780fcb2563580076b73605876976d8db',1,'JIT::Informations']]],
-  ['orderedareasandlinks_25',['orderedAreasAndLinks',['../classAntares_1_1Data_1_1UIRuntimeInfo.html#a3d51034ad302698935f211a050ad9e2a',1,'Antares::Data::UIRuntimeInfo']]],
-  ['orderedconstraint_26',['orderedConstraint',['../classAntares_1_1Data_1_1UIRuntimeInfo.html#a79e1b04e664a4f9ad917a2750b38a784',1,'Antares::Data::UIRuntimeInfo']]],
-  ['originalmustrunsum_27',['originalMustrunSum',['../classAntares_1_1Data_1_1AreaScratchpad.html#a9e8319ba3949322a1fa855f8454404d8',1,'Antares::Data::AreaScratchpad']]],
-  ['originalplant_28',['originalPlant',['../classAntares_1_1Action_1_1Context.html#a6d8c92307ea25f2bda321637d3a50993',1,'Antares::Action::Context']]],
-  ['ortoolssolver_29',['ortoolssolver',['../classAntares_1_1Data_1_1StudyLoadOptions.html#a2ea074504f09a865f976383e17b536c8',1,'Antares::Data::StudyLoadOptions::ortoolsSolver'],['../classAntares_1_1Data_1_1Parameters.html#a8ce1651d3202732be4d6066a7a054acc',1,'Antares::Data::Parameters::ortoolsSolver']]],
-  ['ortoolsused_30',['ortoolsused',['../classAntares_1_1Data_1_1StudyLoadOptions.html#a05295e6e14025681487d0be75bc8f41f',1,'Antares::Data::StudyLoadOptions::ortoolsUsed'],['../classAntares_1_1Data_1_1Parameters.html#aab3fe08daf40085b21ed216405b2b737',1,'Antares::Data::Parameters::ortoolsUsed']]],
-  ['output_31',['output',['../classAntares_1_1Data_1_1Sets_1_1Options.html#acb2a4d5e38b6f7d85c6b94d110d0ee55',1,'Antares::Data::Sets::Options::output'],['../classAntares_1_1Solver_1_1Variable_1_1Private_1_1SurveyResultsData.html#a8d4bef0c437f1e77a24b040eb2f1618a',1,'Antares::Solver::Variable::Private::SurveyResultsData::output'],['../classJobFileReader.html#adcd1aebb5c4217842478e104bbe4054c',1,'JobFileReader::output']]],
-  ['outputviewerid_32',['outputViewerID',['../classAntares_1_1Data_1_1Output.html#acc99b2ddfc30dc5d0cdc99929b83e544',1,'Antares::Data::Output']]]
+  ['optoptions_25',['optOptions',['../classAntares_1_1Data_1_1StudyLoadOptions.html#acea0e2cf0297b6aa5f357701bdf7e565',1,'Antares::Data::StudyLoadOptions']]],
+  ['orderedareasandlinks_26',['orderedAreasAndLinks',['../classAntares_1_1Data_1_1UIRuntimeInfo.html#a3d51034ad302698935f211a050ad9e2a',1,'Antares::Data::UIRuntimeInfo']]],
+  ['orderedconstraint_27',['orderedConstraint',['../classAntares_1_1Data_1_1UIRuntimeInfo.html#a79e1b04e664a4f9ad917a2750b38a784',1,'Antares::Data::UIRuntimeInfo']]],
+  ['originalmustrunsum_28',['originalMustrunSum',['../classAntares_1_1Data_1_1AreaScratchpad.html#a9e8319ba3949322a1fa855f8454404d8',1,'Antares::Data::AreaScratchpad']]],
+  ['originalplant_29',['originalPlant',['../classAntares_1_1Action_1_1Context.html#a6d8c92307ea25f2bda321637d3a50993',1,'Antares::Action::Context']]],
+  ['ortoolssolver_30',['ortoolsSolver',['../structAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html#a1b3d66ae8211fc0a17e451bbfd09d854',1,'Antares::Solver::Optimization::OptimizationOptions']]],
+  ['ortoolsused_31',['ortoolsUsed',['../structAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html#aa53e538badc0a91056f4378579854d7a',1,'Antares::Solver::Optimization::OptimizationOptions']]],
+  ['output_32',['output',['../classAntares_1_1Data_1_1Sets_1_1Options.html#acb2a4d5e38b6f7d85c6b94d110d0ee55',1,'Antares::Data::Sets::Options::output'],['../classAntares_1_1Solver_1_1Variable_1_1Private_1_1SurveyResultsData.html#a8d4bef0c437f1e77a24b040eb2f1618a',1,'Antares::Solver::Variable::Private::SurveyResultsData::output'],['../classJobFileReader.html#adcd1aebb5c4217842478e104bbe4054c',1,'JobFileReader::output']]],
+  ['outputviewerid_33',['outputViewerID',['../classAntares_1_1Data_1_1Output.html#acc99b2ddfc30dc5d0cdc99929b83e544',1,'Antares::Data::Output']]]
 ];

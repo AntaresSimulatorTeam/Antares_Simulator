@@ -1,5 +1,8 @@
 var NAVTREEINDEX23 =
 {
+"structAntares_1_1Data_1_1TimeSeriesToCStr_3_012_01_4.html":[7,0,0,3,68],
+"structAntares_1_1Data_1_1TimeSeriesToCStr_3_0132_01_4.html":[7,0,0,3,69],
+"structAntares_1_1Data_1_1TimeSeriesToCStr_3_014_01_4.html":[7,0,0,3,70],
 "structAntares_1_1Data_1_1TimeSeriesToCStr_3_018_01_4.html":[7,0,0,3,71],
 "structAntares_1_1Data_1_1WhoseNameContains.html":[7,0,0,3,76],
 "structAntares_1_1Date_1_1Calendar_1_1Settings.html":[7,0,0,4,0,0],
@@ -25,6 +28,8 @@ var NAVTREEINDEX23 =
 "structAntares_1_1Optimization_1_1PROBLEME__SIMPLEXE__NOMME.html":[7,0,0,10,6],
 "structAntares_1_1Optimization_1_1VariableBounds.html":[7,0,0,10,11],
 "structAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html":[7,0,0,12,1,3],
+"structAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html#a1b3d66ae8211fc0a17e451bbfd09d854":[7,0,0,12,1,3,0],
+"structAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html#aa53e538badc0a91056f4378579854d7a":[7,0,0,12,1,3,1],
 "structAntares_1_1Solver_1_1Simulation_1_1compareHydroCostsNoises.html":[7,0,0,12,3,5],
 "structAntares_1_1Solver_1_1Simulation_1_1optRuntimeData.html":[7,0,0,12,3,19],
 "structAntares_1_1Solver_1_1Simulation_1_1setOfParallelYears.html":[7,0,0,12,3,22],
@@ -244,10 +249,5 @@ var NAVTREEINDEX23 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSpilledEnergyAfterCSR.html":[7,0,0,12,4,4,96],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSpilledEnergyAfterCSR.html#a55ac137499bb34a2d5f4aa37674c2ab0":[7,0,0,12,4,4,96,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSpilledEnergyAfterCSR.html#adeaf9b4ccf90f428c622b74879731d75":[7,0,0,12,4,4,96,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardThermalAirPollutantEmissions.html":[7,0,0,12,4,4,102],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardThermalAirPollutantEmissions.html#ab38b58b113854c3cd6268b940963cb0b":[7,0,0,12,4,4,102,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardThermalAirPollutantEmissions.html#af8e4d8b6a6407060fb314c2886542b94":[7,0,0,12,4,4,102,2],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardThermalAirPollutantEmissions_1_1Multiple.html":[7,0,0,12,4,4,102,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesHydro.html":[7,0,0,12,4,4,103],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesHydro.html#a72dcb8ce6f01f1d9008d68bb3b34bf7a":[7,0,0,12,4,4,103,0]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardThermalAirPollutantEmissions.html":[7,0,0,12,4,4,102]
 };

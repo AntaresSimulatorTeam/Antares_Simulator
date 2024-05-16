@@ -203,6 +203,10 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>resetThresholdsAdqPat
 void&#160;</td><td class="memItemRight" valign="bottom"><b>resetAdqPatchParameters</b> ()</td></tr>
 <tr class="memdesc:a9ab2f1c99f02dd3ea8a2399b57455eed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reset to default all adequacy patch values. <br /></td></tr>
 <tr class="separator:a9ab2f1c99f02dd3ea8a2399b57455eed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad31a8eb85a65f29306b294dcba6f5ac6" id="r_ad31a8eb85a65f29306b294dcba6f5ac6"><td class="memItemLeft" align="right" valign="top"><a id="ad31a8eb85a65f29306b294dcba6f5ac6" name="ad31a8eb85a65f29306b294dcba6f5ac6"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>handleOptimizationOptions</b> (const <a class="el" href="classAntares_1_1Data_1_1StudyLoadOptions.html">StudyLoadOptions</a> &amp;options)</td></tr>
+<tr class="memdesc:ad31a8eb85a65f29306b294dcba6f5ac6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle priority between command-line option and configuration file. <br /></td></tr>
+<tr class="separator:ad31a8eb85a65f29306b294dcba6f5ac6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2ddb22d0ed8e33e0e4a60f335669c30a" id="r_a2ddb22d0ed8e33e0e4a60f335669c30a"><td class="memItemLeft" align="right" valign="top"><a id="a2ddb22d0ed8e33e0e4a60f335669c30a" name="a2ddb22d0ed8e33e0e4a60f335669c30a"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>fixBadValues</b> ()</td></tr>
 <tr class="memdesc:a2ddb22d0ed8e33e0e4a60f335669c30a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Try to detect then fix any bad value. <br /></td></tr>
@@ -493,30 +497,21 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>noOutput</b></td></tr
 <tr class="memitem:a3529236ec2bb5d120aca3a0fcba86123" id="r_a3529236ec2bb5d120aca3a0fcba86123"><td class="memItemLeft" align="right" valign="top"><a id="a3529236ec2bb5d120aca3a0fcba86123" name="a3529236ec2bb5d120aca3a0fcba86123"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>hydroDebug</b></td></tr>
 <tr class="separator:a3529236ec2bb5d120aca3a0fcba86123"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr><td colspan="2"><div class="groupHeader">Seeds</div></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader">Seeds</h2></td></tr>
 <tr class="memitem:a99837f44f11be16400a6fc3c5ecc397c" id="r_a99837f44f11be16400a6fc3c5ecc397c"><td class="memItemLeft" align="right" valign="top"><a id="a99837f44f11be16400a6fc3c5ecc397c" name="a99837f44f11be16400a6fc3c5ecc397c"></a>
 uint&#160;</td><td class="memItemRight" valign="bottom"><b>seed</b> [seedMax]</td></tr>
 <tr class="memdesc:a99837f44f11be16400a6fc3c5ecc397c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Seeds. <br /></td></tr>
 <tr class="separator:a99837f44f11be16400a6fc3c5ecc397c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader">Ortools configuration</h2></td></tr>
-<tr class="memitem:aab3fe08daf40085b21ed216405b2b737" id="r_aab3fe08daf40085b21ed216405b2b737"><td class="memItemLeft" align="right" valign="top"><a id="aab3fe08daf40085b21ed216405b2b737" name="aab3fe08daf40085b21ed216405b2b737"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>ortoolsUsed</b></td></tr>
-<tr class="memdesc:aab3fe08daf40085b21ed216405b2b737"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define if ortools is used. <br /></td></tr>
-<tr class="separator:aab3fe08daf40085b21ed216405b2b737"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8ce1651d3202732be4d6066a7a054acc" id="r_a8ce1651d3202732be4d6066a7a054acc"><td class="memItemLeft" align="right" valign="top"><a id="a8ce1651d3202732be4d6066a7a054acc" name="a8ce1651d3202732be4d6066a7a054acc"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>ortoolsSolver</b></td></tr>
-<tr class="memdesc:a8ce1651d3202732be4d6066a7a054acc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Ortool solver used for simulation. <br /></td></tr>
-<tr class="separator:a8ce1651d3202732be4d6066a7a054acc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afe01774c97e6557b8f3f3bcc6f55b99b" id="r_afe01774c97e6557b8f3f3bcc6f55b99b"><td class="memItemLeft" align="right" valign="top"><a id="afe01774c97e6557b8f3f3bcc6f55b99b" name="afe01774c97e6557b8f3f3bcc6f55b99b"></a>
 ResultFormat&#160;</td><td class="memItemRight" valign="bottom"><b>resultFormat</b> = legacyFilesDirectories</td></tr>
 <tr class="separator:afe01774c97e6557b8f3f3bcc6f55b99b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7d784baad6bc118f51185e828e2c2f03" id="r_a7d784baad6bc118f51185e828e2c2f03"><td class="memItemLeft" align="right" valign="top"><a id="a7d784baad6bc118f51185e828e2c2f03" name="a7d784baad6bc118f51185e828e2c2f03"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>namedProblems</b></td></tr>
 <tr class="separator:a7d784baad6bc118f51185e828e2c2f03"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7f0798a4eb22fd11674428130321d2ec" id="r_a7f0798a4eb22fd11674428130321d2ec"><td class="memItemLeft" align="right" valign="top"><a id="a7f0798a4eb22fd11674428130321d2ec" name="a7f0798a4eb22fd11674428130321d2ec"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>solverLogs</b></td></tr>
-<tr class="separator:a7f0798a4eb22fd11674428130321d2ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad30e975a01e24d4315e021672d73cae9" id="r_ad30e975a01e24d4315e021672d73cae9"><td class="memItemLeft" align="right" valign="top"><a id="ad30e975a01e24d4315e021672d73cae9" name="ad30e975a01e24d4315e021672d73cae9"></a>
+<a class="el" href="structAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html">Antares::Solver::Optimization::OptimizationOptions</a>&#160;</td><td class="memItemRight" valign="bottom"><b>optOptions</b></td></tr>
+<tr class="separator:ad30e975a01e24d4315e021672d73cae9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>General data for a study. </p>

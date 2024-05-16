@@ -1,7 +1,5 @@
 var NAVTREEINDEX15 =
 {
-"classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html#af40d76b1764e10de48d2d4503749ee0f":[7,0,0,12,4,37,4],
-"classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html#af451c9a90804b3d23c26748542da9047":[7,0,0,12,4,37,6],
 "classAntares_1_1Solver_1_1Variable_1_1ThermalState.html":[7,0,0,12,4,38],
 "classAntares_1_1Solver_1_1Variable_1_1ThermalState_1_1StateForAnArea.html":[7,0,0,12,4,38,0],
 "classAntares_1_1Solver_1_1Variable_1_1ThermalState_1_1StateForAnArea.html#a0e7f417a8ed9da6465a5733a1f6364ff":[7,0,0,12,4,38,0,2],
@@ -249,5 +247,7 @@ var NAVTREEINDEX15 =
 "classAntares_1_1Toolbox_1_1Spotlight_1_1ItemConstraint.html#a78f47fdf7277a5873f48f101764140c7":[7,0,0,14,5,1,1],
 "classAntares_1_1Toolbox_1_1Spotlight_1_1ItemConstraint.html#a91bfe46ef967713b61d662ea59ba0db4":[7,0,0,14,5,1,0],
 "classAntares_1_1UnitTests_1_1Buffer.html":[7,0,0,16,0],
-"classAntares_1_1UnitTests_1_1fakeLogger.html":[7,0,0,16,1]
+"classAntares_1_1UnitTests_1_1fakeLogger.html":[7,0,0,16,1],
+"classAntares_1_1WIP_1_1Locker.html":[7,0,0,18,0],
+"classAntares_1_1Window_1_1AboutBox.html":[7,0,0,17,8]
 };

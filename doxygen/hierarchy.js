@@ -1073,6 +1073,7 @@ var hierarchy =
         [ "Antares::Error::InvalidParametersForThermalClusters", "classAntares_1_1Error_1_1InvalidParametersForThermalClusters.html", null ],
         [ "Antares::Error::InvalidSimulationMode", "classAntares_1_1Error_1_1InvalidSimulationMode.html", null ],
         [ "Antares::Error::InvalidSolver", "classAntares_1_1Error_1_1InvalidSolver.html", null ],
+        [ "Antares::Error::InvalidSolverSpecificParameters", "classAntares_1_1Error_1_1InvalidSolverSpecificParameters.html", null ],
         [ "Antares::Error::InvalidStudy", "classAntares_1_1Error_1_1InvalidStudy.html", null ],
         [ "Antares::Error::InvalidVersion", "classAntares_1_1Error_1_1InvalidVersion.html", null ],
         [ "Antares::Error::NoAreaInsideAdqPatchMode", "classAntares_1_1Error_1_1NoAreaInsideAdqPatchMode.html", null ],
