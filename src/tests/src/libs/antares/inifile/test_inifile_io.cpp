@@ -128,6 +128,19 @@ struct SavingToStreamFixture
 
 BOOST_AUTO_TEST_SUITE(saving_inicontent_to_stream)
 
+BOOST_FIXTURE_TEST_CASE(ini_content_is_empty___out_stream_is_empty, SavingToStreamFixture)
+{
+	my_inifile.saveToStream(output_stream, written);
+	BOOST_CHECK_EQUAL(output_stream.str(), "");
+}
+
+BOOST_FIXTURE_TEST_CASE(one_empty_section___out_stream_is_empty, SavingToStreamFixture)
+{
+	section = my_inifile.addSection("my section");
+	my_inifile.saveToStream(output_stream, written);
+	BOOST_CHECK_EQUAL(output_stream.str(), "");
+}
+
 BOOST_FIXTURE_TEST_CASE(one_section_one_property, SavingToStreamFixture)
 {
 	section = my_inifile.addSection("my section");
