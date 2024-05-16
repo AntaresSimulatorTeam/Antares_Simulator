@@ -848,72 +848,74 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     {
         buffer.clear() << study.folderInput << SEP << "reserves" << SEP << area.id << SEP
                        << "reserves.ini";
-        if (!ini.open(buffer))
+        if (ini.open(buffer, false))
         {
-            logs.warning() << study.folderInput << SEP << "reserves" << SEP << area.id << SEP
-                           << "reserves.ini";
-            return false;
-        }
-        ini.each(
-          [&](const IniFile::Section& section)
-          {
-              if (area.allCapacityReservations.contains(section.name))
+            ini.each(
+              [&](const IniFile::Section& section)
               {
-                  logs.warning() << area.name << ": reserve name already exists for reserve "
-                                 << section.name;
-              }
-              else
-              {
-                  CapacityReservation tmpCapacityReservation;
-                  std::string file_name = AllCapacityReservations::toFilename(section.name);
-                  int type = -1;
-                  for (auto* p = section.firstProperty; p; p = p->next)
+                  if (area.allCapacityReservations.contains(section.name))
                   {
-                      CString<30, false> tmp;
-                      tmp = p->key;
-                      tmp.toLower();
+                      logs.warning() << area.name << ": reserve name already exists for reserve "
+                                     << section.name;
+                  }
+                  else
+                  {
+                      CapacityReservation tmpCapacityReservation;
+                      std::string file_name = AllCapacityReservations::toFilename(section.name);
+                      int type = -1;
+                      for (auto* p = section.firstProperty; p; p = p->next)
+                      {
+                          CString<30, false> tmp;
+                          tmp = p->key;
+                          tmp.toLower();
 
-                      if (tmp == "failure-cost")
-                      {
-                          if (!p->value.to<float>(tmpCapacityReservation.failureCost))
+                          if (tmp == "failure-cost")
                           {
-                              logs.warning() << area.name << ": invalid failure cost for reserve "
-                                             << section.name;
+                              if (!p->value.to<float>(tmpCapacityReservation.failureCost))
+                              {
+                                  logs.warning()
+                                    << area.name << ": invalid failure cost for reserve "
+                                    << section.name;
+                              }
                           }
-                      }
-                      else if (tmp == "spillage-cost")
-                      {
-                          if (!p->value.to<float>(tmpCapacityReservation.spillageCost))
+                          else if (tmp == "spillage-cost")
                           {
-                              logs.warning() << area.name << ": invalid spillage cost for reserve "
-                                             << section.name;
+                              if (!p->value.to<float>(tmpCapacityReservation.spillageCost))
+                              {
+                                  logs.warning()
+                                    << area.name << ": invalid spillage cost for reserve "
+                                    << section.name;
+                              }
                           }
-                      }
-                      else if (tmp == "type")
-                      {
-                          if (p->value == "up")
-                              type = 0;
-                          else if (p->value == "down")
-                              type = 1;
+                          else if (tmp == "type")
+                          {
+                              if (p->value == "up")
+                                  type = 0;
+                              else if (p->value == "down")
+                                  type = 1;
+                              else
+                                  logs.warning()
+                                    << area.name << ": invalid type for reserve " << section.name;
+                          }
                           else
                               logs.warning()
-                                << area.name << ": invalid type for reserve " << section.name;
+                                << area.name << ": invalid key " << tmp << " in file " << buffer;
                       }
+                      buffer.clear() << study.folderInput << SEP << "reserves" << SEP << area.id
+                                     << SEP << file_name << ".txt";
+                      ret = tmpCapacityReservation.need.loadFromFile(buffer, false) && ret;
+                      if (type == 0)
+                          area.allCapacityReservations.areaCapacityReservationsUp.emplace(
+                            section.name, tmpCapacityReservation);
+                      else if (type == 1)
+                          area.allCapacityReservations.areaCapacityReservationsDown.emplace(
+                            section.name, tmpCapacityReservation);
                       else
                           logs.warning()
-                            << area.name << ": invalid key " << tmp << " in file " << buffer;
+                            << area.name << ": invalid type for reserve " << section.name;
                   }
-                  buffer.clear() << study.folderInput << SEP << "reserves" << SEP << area.id << SEP
-                                 << file_name << ".txt";
-                  ret = tmpCapacityReservation.need.loadFromFile(buffer, false) && ret;
-                  if (type == 0)
-                      area.allCapacityReservations.areaCapacityReservationsUp.emplace(section.name, tmpCapacityReservation);
-                  else if (type == 1)
-                      area.allCapacityReservations.areaCapacityReservationsDown.emplace(section.name, tmpCapacityReservation);
-                  else
-                      logs.warning() << area.name << ": invalid type for reserve " << section.name;
-              }
-          });
+              });
+        }
     }
 
     // Solar

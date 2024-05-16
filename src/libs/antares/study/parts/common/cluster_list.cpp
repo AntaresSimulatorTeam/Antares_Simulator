@@ -272,7 +272,7 @@ template<class ClusterT>
 bool ClusterList<ClusterT>::loadReserveParticipations(Area& area, const AnyString& file)
 {
     IniFile ini;
-    if (!ini.open(file))
+    if (!ini.open(file, false))
         return false;
     ini.each(
       [&](const IniFile::Section& section)
