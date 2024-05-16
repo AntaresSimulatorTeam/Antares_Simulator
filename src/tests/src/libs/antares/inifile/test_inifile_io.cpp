@@ -132,7 +132,7 @@ BOOST_FIXTURE_TEST_CASE(many_sections, ReadFromStreamFixture)
 	BOOST_CHECK(section->find("key 2"));
 }
 
-BOOST_FIXTURE_TEST_CASE(two_sections_wearing_same_name__both_are_creeated, ReadFromStreamFixture)
+BOOST_FIXTURE_TEST_CASE(two_sections_wearing_same_name__both_are_created, ReadFromStreamFixture)
 {
 	ini_content += "[section 1]\n";
 	ini_content += "key 1 = value 1\n";
