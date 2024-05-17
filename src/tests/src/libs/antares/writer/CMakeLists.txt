@@ -11,5 +11,7 @@ target_link_libraries(test-writer
 		MINIZIP::minizip
 )
 
+set_target_properties(test-writer PROPERTIES FOLDER Unit-tests/test-writer)
+
 add_test(NAME writer COMMAND test-writer)
 set_tests_properties(writer PROPERTIES LABELS unit)
