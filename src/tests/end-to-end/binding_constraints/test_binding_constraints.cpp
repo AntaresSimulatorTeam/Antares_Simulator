@@ -21,7 +21,6 @@
 #include <list> // Fix for Boost < 1.67
 
 #define BOOST_TEST_MODULE test - end - to - end tests_binding_constraints
-#define BOOST_TEST_DYN_LINK
 #define WIN32_LEAN_AND_MEAN
 #include <boost/test/data/test_case.hpp>
 #include <boost/test/unit_test.hpp>
