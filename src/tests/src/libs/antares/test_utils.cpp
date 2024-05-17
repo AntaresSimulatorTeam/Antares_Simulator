@@ -98,16 +98,28 @@ BOOST_AUTO_TEST_CASE(yuni_absolute_vs_std_absolute)
     BOOST_CHECK(fs::absolute(pathToFile).string() == yuniAbs);
 }
 
-void static testLexicallyNormal(fs::path&& path)
+BOOST_AUTO_TEST_CASE(yuni_isabsolute_vs_std_isabsolute)
 {
-    Yuni::String yuniNorm;
-    Yuni::IO::Normalize(yuniNorm, path.string());
-    BOOST_CHECK(path.lexically_normal().string() == yuniNorm);
+    const auto helper = [](fs::path&& path)
+    {
+        BOOST_CHECK_MESSAGE(path.is_absolute() == Yuni::IO::IsAbsolute(path.c_str()), std::string("Checked failed for path ") + path.string());
+    };
+    helper(fs::path("/a/b/abc.txt"));
+    helper(fs::path("../a/b/abc.txt"));
+#ifdef YUNI_OS_WINDOWS
+    helper(fs::path("C:/a/b/abc.txt"));
+#endif
 }
 
 BOOST_AUTO_TEST_CASE(yuni_normalize_vs_std_lexically_normal)
 {
-    testLexicallyNormal(fs::path("a/./b/.."));
-    testLexicallyNormal(fs::path("a/.///b/../"));
+    const auto helper = [](fs::path&& path)
+    {
+        Yuni::String yuniNorm;
+        Yuni::IO::Normalize(yuniNorm, path.string());
+        BOOST_CHECK_MESSAGE(path.lexically_normal().string() == yuniNorm, std::string("Check failed for ") + path.string());
+    };
+    helper(fs::path("a/./b/.."));
+    helper(fs::path("a/.///b/../"));
 }
 
