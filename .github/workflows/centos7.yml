@@ -5,6 +5,7 @@ on:
     types: [created]
   push:
     branches:
+      - fix/boost-link
       - develop
       - dependabot/*
 
