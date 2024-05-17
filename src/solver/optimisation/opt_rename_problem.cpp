@@ -412,6 +412,16 @@ void ConstraintNamer::POutCapacityThreasholdSup(unsigned int constraint,
     SetThermalClusterElementName(constraint, "POutCapacityThreasholdSup", clusterName);
 }
 
+void ConstraintNamer::POutBoundMin(unsigned int constraint, const std::string& clusterName)
+{
+    SetThermalClusterElementName(constraint, "POutBoundMin", clusterName);
+}
+
+void ConstraintNamer::POutBoundMax(unsigned int constraint, const std::string& clusterName)
+{
+    SetThermalClusterElementName(constraint, "POutBoundMax", clusterName);
+}
+
 void ConstraintNamer::ReserveSatisfaction(unsigned int constraint, const std::string& reserveName)
 {
     SetThermalClusterReserveElementName(constraint, "ReserveSatisfaction", reserveName);

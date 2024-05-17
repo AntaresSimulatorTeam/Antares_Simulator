@@ -98,6 +98,8 @@ struct CORRESPONDANCES_DES_CONTRAINTES
     std::vector<int> NumeroDeLaDeuxiemeContrainteDesContraintesDesGroupesQuiTombentEnPanne;
 
     std::vector<int> NumeroDeContrainteDesContraintesDeBesoinEnReserves;
+    std::vector<int> NumeroDeContrainteDesContraintesDePuissanceMinDuPalier;
+    std::vector<int> NumeroDeContrainteDesContraintesDePuissanceMaxDuPalier;
 
     std::vector<int> NumeroDeContrainteDesNiveauxPays;
 

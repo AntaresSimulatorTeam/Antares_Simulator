@@ -80,6 +80,31 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
                     AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
                 }
             }
+
+            for (uint32_t cluster = 0;
+                 cluster < problemeHebdo->PaliersThermiquesDuPays[pays].NombreDePaliersThermiques;
+                 cluster++)
+            {
+                int cnt1 = CorrespondanceCntNativesCntOptim
+                            .NumeroDeContrainteDesContraintesDePuissanceMinDuPalier[cluster];
+                if (cnt1 >= 0)
+                {
+                    SecondMembre[cnt1] = problemeHebdo->PaliersThermiquesDuPays[pays]
+                                          .PuissanceDisponibleEtCout[cluster]
+                                          .PuissanceMinDuPalierThermiqueRef[pdtJour];
+                    AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt1] = nullptr;
+                }
+                
+                int cnt2 = CorrespondanceCntNativesCntOptim
+                            .NumeroDeContrainteDesContraintesDePuissanceMaxDuPalier[cluster];
+                if (cnt2 >= 0)
+                {
+                    SecondMembre[cnt2] = problemeHebdo->PaliersThermiquesDuPays[pays]
+                                          .PuissanceDisponibleEtCout[cluster]
+                                          .PuissanceDisponibleDuPalierThermiqueRef[pdtJour];
+                    AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt2] = nullptr;
+                }
+            }
         }
     }
 

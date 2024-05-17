@@ -1,23 +1,29 @@
-#include "antares/solver/optimisation/constraints/POutCapacityThreasholds.h"
+#include "antares/solver/optimisation/constraints/POutBounds.h"
 
-void POutCapacityThreasholds::add(int pays, int cluster, int pdt)
+void POutBounds::add(int pays, int cluster, int pdt)
 {
+    data.CorrespondanceCntNativesCntOptim[pdt]
+      .NumeroDeContrainteDesContraintesDePuissanceMinDuPalier[cluster]
+      = -1;
+    data.CorrespondanceCntNativesCntOptim[pdt]
+      .NumeroDeContrainteDesContraintesDePuissanceMaxDuPalier[cluster]
+      = -1;
+
     if (!data.Simulation)
     {
-        // 17 bis
-        // Power output remains within limits set by minimum stable power and maximum capacity threasholds
-        // l * M + Sum(P^on_re-) <= P <= u * M - Sum(P^on_re+) 
-        // l : minimum stable power output when running 
-        // u : maximum stable power output when running 
-        // M : number of running units in cluster θ 
-        // P^on_re- : Participation of running units in cluster θ to Down reserves 
-        // P^on_re+ : Participation of running units in cluster θ to Up reserves 
+        // 17 ter
+        // Power output is bounded by must-run commitments and power availability, reserves must fit within the bounds 
+        // P_down + Sum(P^on_re-) <= P <= P_up - Sum(P^on_re+)
+        // P^on_re- : Participation of running units in cluster θ to Down reserves
+        // P^on_re+ : Participation of running units in cluster θ to Up reserves
         // P : Power output from cluster θ
+        // P_down : Minimal power output demanded from cluster θ 
+        // P_up : Maximal power output from cluster θ
 
-        int globalClusterIdx = data.thermalClusters[pays]
-          .NumeroDuPalierDansLEnsembleDesPaliersThermiques[cluster];
+        int globalClusterIdx
+          = data.thermalClusters[pays].NumeroDuPalierDansLEnsembleDesPaliersThermiques[cluster];
 
-        // 17 bis (1) : l * M + Sum(P^on_re-) - P <= 0
+        // 17 ter (1) : Sum(P^on_re-) - P <= - P_down
         {
             builder.updateHourWithinWeek(pdt);
 
@@ -34,24 +40,24 @@ void POutCapacityThreasholds::add(int pays, int cluster, int pdt)
 
             if (builder.NumberOfVariables() > 0)
             {
-                builder
-                  .NumberOfDispatchableUnits(
-                    globalClusterIdx,
-                    data.thermalClusters[pays].pminDUnGroupeDuPalierThermique[cluster])
-                  .DispatchableProduction(globalClusterIdx, -1)
-                  .lessThan();
+                builder.DispatchableProduction(globalClusterIdx, -1).lessThan();
+                data.CorrespondanceCntNativesCntOptim[pdt]
+                  .NumeroDeContrainteDesContraintesDePuissanceMinDuPalier[cluster]
+                  = builder.data.nombreDeContraintes;
+                data.CorrespondanceCntNativesCntOptim[pdt]
+                  .NumeroDeContrainteDesContraintesDePuissanceMaxDuPalier[cluster]
+                  = builder.data.nombreDeContraintes;
                 ConstraintNamer namer(builder.data.NomDesContraintes);
                 const int hourInTheYear = builder.data.weekInTheYear * 168 + pdt;
                 namer.UpdateTimeStep(hourInTheYear);
                 namer.UpdateArea(builder.data.NomsDesPays[pays]);
-                namer.POutCapacityThreasholdInf(
-                  builder.data.nombreDeContraintes,
-                  data.thermalClusters[pays].NomsDesPaliersThermiques[cluster]);
+                namer.POutBoundMin(builder.data.nombreDeContraintes,
+                                   data.thermalClusters[pays].NomsDesPaliersThermiques[cluster]);
                 builder.build();
             }
         }
 
-         // 17 bis (2) : P - u * M + Sum(P^on_re+) <= 0
+        // 17 ter (2) : P + Sum(P^on_re+) <= P_up
         {
             builder.updateHourWithinWeek(pdt);
 
@@ -68,18 +74,19 @@ void POutCapacityThreasholds::add(int pays, int cluster, int pdt)
 
             if (builder.NumberOfVariables() > 0)
             {
-                builder.DispatchableProduction(globalClusterIdx, 1)
-                  .NumberOfDispatchableUnits(
-                    globalClusterIdx,
-                    -data.thermalClusters[pays].PmaxDUnGroupeDuPalierThermique[cluster])
-                  .lessThan();
+                builder.DispatchableProduction(globalClusterIdx, 1).lessThan();
+                data.CorrespondanceCntNativesCntOptim[pdt]
+                  .NumeroDeContrainteDesContraintesDePuissanceMinDuPalier[cluster]
+                  = builder.data.nombreDeContraintes;
+                data.CorrespondanceCntNativesCntOptim[pdt]
+                  .NumeroDeContrainteDesContraintesDePuissanceMaxDuPalier[cluster]
+                  = builder.data.nombreDeContraintes;
                 ConstraintNamer namer(builder.data.NomDesContraintes);
                 const int hourInTheYear = builder.data.weekInTheYear * 168 + pdt;
                 namer.UpdateTimeStep(hourInTheYear);
                 namer.UpdateArea(builder.data.NomsDesPays[pays]);
-                namer.POutCapacityThreasholdSup(
-                  builder.data.nombreDeContraintes,
-                  data.thermalClusters[pays].NomsDesPaliersThermiques[cluster]);
+                namer.POutBoundMax(builder.data.nombreDeContraintes,
+                                   data.thermalClusters[pays].NomsDesPaliersThermiques[cluster]);
                 builder.build();
             }
         }
@@ -109,8 +116,8 @@ void POutCapacityThreasholds::add(int pays, int cluster, int pdt)
             + countReservesFromCluster(
               data.areaReserves.thermalAreaReserves[pays].areaCapacityReservationsDown);
 
-        builder.data.NbTermesContraintesPourLesReserves += 2*(nbConstraintsToAdd+2);
+        builder.data.NbTermesContraintesPourLesReserves += 2 * (nbConstraintsToAdd + 1);
 
-        builder.data.nombreDeContraintes += 2*nbConstraintsToAdd;
+        builder.data.nombreDeContraintes += 2 * nbConstraintsToAdd;
     }
 }

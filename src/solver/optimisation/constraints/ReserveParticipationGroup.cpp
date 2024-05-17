@@ -112,6 +112,7 @@ void ReserveParticipationGroup::BuildConstraints()
     {
         auto data = GetReserveDataFromProblemHebdo();
         POutCapacityThreasholds pOutCapacityThreasholds(builder_, data);
+        POutBounds pOutBounds(builder_, data);
 
         for (int pdt = 0; pdt < problemeHebdo_->NombreDePasDeTempsPourUneOptimisation; pdt++)
         {
@@ -124,6 +125,9 @@ void ReserveParticipationGroup::BuildConstraints()
                 {
                     // 17 bis
                     pOutCapacityThreasholds.add(pays, cluster, pdt);
+
+                    // 17 ter
+                    pOutBounds.add(pays, cluster, pdt);
                 }
             }
         }
