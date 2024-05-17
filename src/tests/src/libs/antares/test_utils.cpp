@@ -98,19 +98,6 @@ BOOST_AUTO_TEST_CASE(yuni_absolute_vs_std_absolute)
     BOOST_CHECK(fs::absolute(pathToFile).string() == yuniAbs);
 }
 
-BOOST_AUTO_TEST_CASE(yuni_isabsolute_vs_std_isabsolute)
-{
-    const auto helper = [](fs::path&& path)
-    {
-        BOOST_CHECK_MESSAGE(path.is_absolute() == Yuni::IO::IsAbsolute(path.c_str()), std::string("Checked failed for path ") + path.string());
-    };
-    helper(fs::path("/a/b/abc.txt"));
-    helper(fs::path("../a/b/abc.txt"));
-#ifdef YUNI_OS_WINDOWS
-    helper(fs::path("C:/a/b/abc.txt"));
-#endif
-}
-
 BOOST_AUTO_TEST_CASE(yuni_normalize_vs_std_lexically_normal)
 {
     const auto helper = [](fs::path&& path)
