@@ -216,7 +216,7 @@ StudyVersion StudyHeader::tryToFindTheVersion(const std::string& folder)
     fs::path abspath = fs::absolute(folder);
     abspath = abspath.lexically_normal();
 
-    if (!fs::exists(abspath))
+    if (fs::exists(abspath))
     {
         abspath /= "study.antares";
         if (fs::exists(abspath))
