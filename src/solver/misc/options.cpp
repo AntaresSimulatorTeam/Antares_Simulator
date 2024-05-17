@@ -198,8 +198,7 @@ void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOption
     const auto& optPID = settings.PID;
     if (!optPID.empty())
     {
-        std::ofstream pidfile(optPID);
-        if (pidfile.is_open())
+        if (std::ofstream pidfile(optPID); pidfile.is_open())
         {
             pidfile << getpid();
         }
