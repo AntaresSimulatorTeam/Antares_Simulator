@@ -21,6 +21,8 @@
 #include <list> // Fix for Boost < 1.67
 
 #define BOOST_TEST_MODULE test - concurrency tests
+#define BOOST_TEST_DYN_LINK
+
 #include <boost/test/data/test_case.hpp>
 #include <boost/test/unit_test.hpp>
 
