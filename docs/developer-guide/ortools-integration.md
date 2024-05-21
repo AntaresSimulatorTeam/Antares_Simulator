@@ -32,7 +32,6 @@ These are the solver names and enum, defined in the [OR-Tools API](https://githu
 | `glpk`               | GLPK_MIXED_INTEGER_PROGRAMMING   | Free-to-use | [https://www.gnu.org/software/glpk](https://www.gnu.org/software/glpk)                                     |
 | `cbc`                | CBC_MIXED_INTEGER_PROGRAMMING    | Free-to-use | [https://github.com/coin-or/Cbc](https://github.com/coin-or/Cbc)                                           |
 | `highs`              | HIGHS_MIXED_INTEGER_PROGRAMMING  | Free-to-use | [https://highs.dev](https://highs.dev)                                                                     |
-| `sirius` [^1]        | SIRIUS_MIXED_INTEGER_PROGRAMMING | Free-to-use | [https://github.com/rte-france/sirius-solver](https://github.com/rte-france/sirius-solver)                 |
 | `gurobi`             | GUROBI_MIXED_INTEGER_PROGRAMMING | Commercial  | [https://www.gurobi.com](https://www.gurobi.com)                                                           |
 | `cplex`              | CPLEX_MIXED_INTEGER_PROGRAMMING  | Commercial  | [https://www.ibm.com/fr-fr/analytics/cplex-optimizer](https://www.ibm.com/fr-fr/analytics/cplex-optimizer) |
 | `xpress`             | XPRESS_MIXED_INTEGER_PROGRAMMING | Commercial  | [https://www.fico.com/en/products/fico-xpress-solver](https://www.fico.com/en/products/fico-xpress-solver) |
