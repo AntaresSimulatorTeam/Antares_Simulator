@@ -33,7 +33,7 @@ namespace R
 {
 namespace AllYears
 {
-template<class NextT = Empty, int FileFilter = Variable::Category::allFile>
+template<class NextT = Empty, int FileFilter = Variable::Category::FileLevel::allFile>
 struct Average: public NextT
 {
 public:
@@ -45,7 +45,7 @@ public:
         //! The count if item in the list
         count = 1 + NextT::count,
 
-        categoryFile = NextT::categoryFile | Variable::Category::allFile,
+        categoryFile = NextT::categoryFile | Variable::Category::FileLevel::allFile,
     };
 
     struct Data
@@ -95,7 +95,7 @@ protected:
                            int fileLevel,
                            int precision) const
     {
-        if (!(fileLevel & Category::id))
+        if (!(fileLevel & Category::FileLevel::id))
         {
             switch (precision)
             {
@@ -131,9 +131,9 @@ protected:
     template<class VCardT>
     void buildDigest(SurveyResults& report, int digestLevel, int dataLevel) const
     {
-        const bool isCluster = (VCardT::categoryFileLevel & Category::de)
-                               || (VCardT::categoryFileLevel & Category::de_res);
-        const bool isBindingConstraint = VCardT::categoryFileLevel & Category::bc;
+        const bool isCluster = (VCardT::categoryFileLevel & Category::FileLevel::de)
+                               || (VCardT::categoryFileLevel & Category::FileLevel::de_res);
+        const bool isBindingConstraint = VCardT::categoryFileLevel & Category::FileLevel::bc;
         const bool isDigest = digestLevel & Category::digestAllYears;
         if ((dataLevel & Category::DataLevel::area || dataLevel & Category::DataLevel::setOfAreas) && isDigest
             && !isCluster && !isBindingConstraint)

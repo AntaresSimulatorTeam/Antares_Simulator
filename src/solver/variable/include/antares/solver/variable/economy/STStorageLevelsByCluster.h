@@ -57,7 +57,7 @@ struct VCardSTstorageLevelsByCluster
         //! Data Level
         categoryDataLevel = Category::DataLevel::area,
         //! File level (provided by the type of the results)
-        categoryFileLevel = ResultsType::categoryFile & (Category::de_sts),
+        categoryFileLevel = ResultsType::categoryFile & (Category::FileLevel::de_sts),
         //! Precision (views)
         precision = Category::all,
         //! Indentation (GUI)

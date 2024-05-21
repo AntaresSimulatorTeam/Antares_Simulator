@@ -65,7 +65,7 @@ struct VCardBindingConstMarginCost
         //! Data Level
         categoryDataLevel = Category::DataLevel::bindingConstraint,
         //! File level (provided by the type of the results)
-        categoryFileLevel = ResultsType::categoryFile & (Category::bc),
+        categoryFileLevel = ResultsType::categoryFile & (Category::FileLevel::bc),
         //! Precision (views)
         precision = Category::all,
         //! Indentation (GUI)

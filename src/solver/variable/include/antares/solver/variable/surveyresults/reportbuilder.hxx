@@ -53,7 +53,7 @@ struct VariablesStatsByDataLevel
 {
     enum
     {
-        nextFileLevel = (CFile * 2 > (int)Category::maxFileLevel) ? 1 : CFile * 2,
+        nextFileLevel = (CFile * 2 > (int)Category::FileLevel::maxFileLevel) ? 1 : CFile * 2,
         currentVariableCount = NextT::template Statistics < CDataLevel,
         CFile > ::count,
         nextVariableCount = VariablesStatsByDataLevel < NextT,
@@ -66,7 +66,7 @@ struct VariablesStatsByDataLevel
 };
 
 template<class NextT, int CDataLevel>
-struct VariablesStatsByDataLevel<NextT, CDataLevel, Category::maxFileLevel>
+struct VariablesStatsByDataLevel<NextT, CDataLevel, Category::FileLevel::maxFileLevel>
 {
     enum
     {
@@ -79,7 +79,7 @@ struct BrowseAllVariables
 {
     enum
     {
-        nextFileLevel = (CFile * 2 > (int)Category::maxFileLevel) ? 1 : CFile * 2,
+        nextFileLevel = (CFile * 2 > (int)Category::FileLevel::maxFileLevel) ? 1 : CFile * 2,
         nextDataLevel = (CDataLevel * 2 > (int)Category::DataLevel::maxDataLevel) ? 1 : CDataLevel * 2,
         currentValue = NextT::template Statistics < CDataLevel,
         CFile > ::count,
@@ -103,19 +103,19 @@ struct BrowseAllVariables
 };
 
 template<class NextT>
-struct BrowseAllVariables<NextT, Category::DataLevel::maxDataLevel, Category::maxFileLevel>
+    struct BrowseAllVariables<NextT, Category::DataLevel::maxDataLevel, Category::FileLevel::maxFileLevel>
 {
     enum
     {
         maxValue = NextT::template Statistics < Category::DataLevel::maxDataLevel,
-        Category::maxFileLevel > ::count
+        Category::FileLevel::maxFileLevel > ::count
     };
 
     template<class L, class S>
     static void buildSurveyResults(const L& list, S& results)
     {
         // Exporting data for the current state
-        list.template buildSurveyResults<S, Category::DataLevel::maxDataLevel, Category::maxFileLevel>(
+        list.template buildSurveyResults<S, Category::DataLevel::maxDataLevel, Category::FileLevel::maxFileLevel>(
           results);
         // This is the final available state
     }
@@ -185,7 +185,7 @@ private:
 
 // Specialization for the final state (dummy)
 template<bool GlobalT, class NextT, int N>
-class SurveyReportBuilderFile<GlobalT, NextT, N, 2 * Category::maxFileLevel>
+class SurveyReportBuilderFile<GlobalT, NextT, N, 2 * Category::FileLevel::maxFileLevel>
 {
 public:
     using ListType = NextT;

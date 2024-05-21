@@ -64,7 +64,7 @@ struct VCardNbOfDispatchedUnitsByPlant
         //! Data Level
         categoryDataLevel = Category::DataLevel::area,
         //! File level (provided by the type of the results)
-        categoryFileLevel = ResultsType::categoryFile & (Category::de),
+        categoryFileLevel = ResultsType::categoryFile & (Category::FileLevel::de),
         //! Precision (views)
         precision = Category::all,
         //! Indentation (GUI)
