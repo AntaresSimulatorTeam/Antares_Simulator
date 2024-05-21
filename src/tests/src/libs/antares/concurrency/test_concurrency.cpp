@@ -58,7 +58,7 @@ class TestException
 {
 };
 
-BOOST_AUTO_TEST_SUITE(concurrency)
+BOOST_AUTO_TEST_SUITE(test_concurrency)
 
 BOOST_AUTO_TEST_CASE(test_throw)
 {
