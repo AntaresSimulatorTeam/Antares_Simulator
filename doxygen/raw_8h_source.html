@@ -180,7 +180,7 @@ $(document).ready(function(){initNavTree('raw_8h_source.html',''); initResizable
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>{</div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="keyword">namespace </span>AllYears</div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>{</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="keyword">template</span>&lt;<span class="keyword">class </span>NextT <span class="comment">/*= Empty*/</span>, <span class="keywordtype">int</span> FileFilter <span class="comment">/*= Variable::Category::allFile*/</span>&gt;</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="keyword">template</span>&lt;<span class="keyword">class </span>NextT <span class="comment">/*= Empty*/</span>, <span class="keywordtype">int</span> FileFilter <span class="comment">/*= Variable::Category::FileLevel::allFile*/</span>&gt;</div>
 <div class="foldopen" id="foldopen00043" data-start="{" data-end="};">
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw.html">   43</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw.html">Raw</a>: <span class="keyword">public</span> NextT</div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>{</div>
@@ -191,7 +191,7 @@ $(document).ready(function(){initNavTree('raw_8h_source.html',''); initResizable
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    {</div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw.html#a6b593cfd514ecc8955641b8e58e6c49ea187a27aba53df78c5fe51fcbaa12b0a2">   52</a></span>        <a class="code hl_enumvalue" href="structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw.html#a6b593cfd514ecc8955641b8e58e6c49ea187a27aba53df78c5fe51fcbaa12b0a2">count</a> = 1 + NextT::count,</div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        categoryFile = NextT::categoryFile | Variable::Category::allFile,</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        categoryFile = NextT::categoryFile | Variable::Category::FileLevel::allFile,</div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    };</div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
 <div class="foldopen" id="foldopen00057" data-start="{" data-end="};">
@@ -242,7 +242,7 @@ $(document).ready(function(){initNavTree('raw_8h_source.html',''); initResizable
 <div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>                           <span class="keywordtype">int</span> fileLevel,</div>
 <div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>                           <span class="keywordtype">int</span> precision)<span class="keyword"> const</span></div>
 <div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span><span class="keyword">    </span>{</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>        <span class="keywordflow">if</span> (fileLevel &amp; FileFilter &amp;&amp; !(fileLevel &amp; Category::id))</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>        <span class="keywordflow">if</span> (fileLevel &amp; FileFilter &amp;&amp; !(fileLevel &amp; Category::FileLevel::id))</div>
 <div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>        {</div>
 <div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>            <span class="keywordflow">switch</span> (precision)</div>
 <div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>            {</div>
