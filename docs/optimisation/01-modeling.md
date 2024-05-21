@@ -33,15 +33,8 @@ The following picture gives a functional view of all that is involved in steps (
 
 ![Antares_Process](../img/Antares_Process.jpg)
 
-<<<<<<<< HEAD:docs/user-guide/solver/05-model.md
-The number and the size of the individual problems to solve (a least-cost hydro-thermal unit-commitment and power 
-schedule, with an hourly resolution and throughout a week, over a large interconnected system) make optimization 
-sessions often computer-intensive. Note that the content of the blue "hydro energy manager" box appearing on the 
-previous figure, whose purpose is to deal with energy storage issues at the seasonal scale, is not detailed in the 
-present document but in the ["Heuristics"](06-heuristics.md#seasonal-hydro-pre-allocation) section.
-========
 The number and the size of the individual problems to solve (a least-cost hydro-thermal unit-commitment and power schedule, with an hourly resolution and throughout a week, over a large interconnected system) make optimization sessions often computer-intensive. Note that the content of the blue "hydro energy manager" box appearing on the previous figure, whose purpose is to deal with energy storage issues at the seasonal scale, is not detailed in the present document but in the ["Miscellaneous"](../reference-guide/08-miscellaneous.md#the-heuristic-for-seasonal-hydro-pre-allocation) section.
->>>>>>>> github/develop:docs/optimisation/01-modeling.md
+
 
 Depending on user-defined results accuracy requirements, various practical options allow to simplify either the formulation of the weekly UC & dispatch problems (e.g. do not account for constraints associated with operational reserves) or their resolution (i.e. find, for the native MILP, an approximate solution based on two successive LPs). For the sake of simplicity and clarity, the way these options are used to revise the primary problem formulation is not detailed hereafter. Likewise, many simplifications are introduced to keep notations as light as possible. This is why, for instance, the overall sum of load, wind power generation, solar power generation, run of the river generation, and all other kinds of so-called "must-run" generation is simply denoted "load" in the present document.
 
