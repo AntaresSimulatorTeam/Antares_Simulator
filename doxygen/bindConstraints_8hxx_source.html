@@ -177,7 +177,7 @@ $(document).ready(function(){initNavTree('bindConstraints_8hxx_source.html','');
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>                                                  <span class="keywordtype">int</span> fileLevel,</div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>                                                  <span class="keywordtype">int</span> precision)<span class="keyword"> const</span></div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="keyword"></span>{</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    <span class="keywordflow">if</span> (<span class="keywordtype">bool</span> bcDataLevel = dataLevel &amp; Category::bindingConstraint; !bcDataLevel)</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    <span class="keywordflow">if</span> (<span class="keywordtype">bool</span> bcDataLevel = dataLevel &amp; Category::DataLevel::bindingConstraint; !bcDataLevel)</div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    {</div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>        <span class="keywordflow">return</span>;</div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    }</div>
@@ -197,7 +197,7 @@ $(document).ready(function(){initNavTree('bindConstraints_8hxx_source.html','');
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>                                                        <span class="keywordtype">int</span> precision,</div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>                                                        uint numSpace)<span class="keyword"> const</span></div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="keyword"></span>{</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <span class="keywordflow">if</span> (<span class="keywordtype">bool</span> bcDataLevel = dataLevel &amp; Category::bindingConstraint; !bcDataLevel)</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <span class="keywordflow">if</span> (<span class="keywordtype">bool</span> bcDataLevel = dataLevel &amp; Category::DataLevel::bindingConstraint; !bcDataLevel)</div>
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    {</div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>        <span class="keywordflow">return</span>;</div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    }</div>
