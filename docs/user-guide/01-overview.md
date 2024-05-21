@@ -73,4 +73,4 @@ operation problems (one for each week of each Monte-Carlo year), assumed to be i
 Note that, however, dependency issues such as the management of hydro stock (or any other kind of energy storage
 facility) may bring a significant coupling between the successive problems, which needs to be addressed properly[^3].
 
-[^3]: See how *Antares* addresses stock dependency between successive problems [here](solver/06-heuristics.md#seasonal-hydro-pre-allocation).
+[^3]: See how *Antares* addresses stock dependency between successive problems [here](solver/06-hydro-heuristics.md#seasonal-hydro-pre-allocation).

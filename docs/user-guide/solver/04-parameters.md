@@ -308,7 +308,7 @@ These parameters are listed under the `[optimization]` section in the `.ini` fil
   Weekly optimization performs a more refined unit commitment, especially when [unit-commitment-mode](#unit-commitment-mode) 
   is set to `accurate`.
 
-> More information here: [The heuristic for seasonal hydro pre-allocation](06-heuristics.md#seasonal-hydro-pre-allocation)
+> More information here: [The heuristic for seasonal hydro pre-allocation](06-hydro-heuristics.md#seasonal-hydro-pre-allocation)
 
 ---
 #### transmission-capacities
