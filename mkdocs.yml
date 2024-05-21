@@ -42,7 +42,7 @@ nav:
         - 'Parameters': 'user-guide/solver/04-parameters.md'
         - 'Optimization model': 'user-guide/solver/05-model.md'
         - 'Hydro heuristics': 'user-guide/solver/06-hydro-heuristics.md'
-        - 'Thermal heuristics': 'user-guide/solver/07-thermal-heuristics.md'
+        - 'Thermal heuristics': 'user-guide/solver/07-thermal-heuristic.md'
         - 'Command-line instructions': 'user-guide/solver/08-command-line.md'
         - 'Optional features':
             - 'Multi-threading': 'user-guide/solver/optional-features/multi-threading.md'
