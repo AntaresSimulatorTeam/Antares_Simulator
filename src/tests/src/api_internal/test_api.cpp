@@ -76,3 +76,15 @@ BOOST_AUTO_TEST_CASE(result_failure_when_study_is_null)
 
     BOOST_CHECK(results.error);
 }
+
+//Test where data in problems are consistant with data in study
+BOOST_AUTO_TEST_CASE(result_contains_problems)
+{
+    Antares::API::APIInternal api;
+    auto study_loader = std::make_unique<InMemoryStudyLoader>();
+    auto results = api.run(*study_loader.get());
+
+    BOOST_CHECK(!results.antares_problems.empty());
+    BOOST_CHECK(!results.error);
+    BOOST_CHECK_EQUAL(results.antares_problems.weeklyProblems.size(), 52);
+}
