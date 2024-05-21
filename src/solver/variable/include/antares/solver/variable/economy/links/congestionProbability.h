@@ -57,7 +57,7 @@ struct VCardCongestionProbability
         //! Data Level
         categoryDataLevel = Category::link,
         //! File level (provided by the type of the results)
-        categoryFileLevel = ResultsType::categoryFile & (Category::va),
+        categoryFileLevel = ResultsType::categoryFile & (Category::FileLevel::va),
         //! Precision (views)
         precision = Category::all,
         //! Indentation (GUI)

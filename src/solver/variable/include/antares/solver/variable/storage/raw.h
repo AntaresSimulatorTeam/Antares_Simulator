@@ -39,7 +39,7 @@ namespace R
 {
 namespace AllYears
 {
-template<class NextT /*= Empty*/, int FileFilter /*= Variable::Category::allFile*/>
+template<class NextT /*= Empty*/, int FileFilter /*= Variable::Category::FileLevel::allFile*/>
 struct Raw: public NextT
 {
 public:
@@ -51,7 +51,7 @@ public:
         //! The count if item in the list
         count = 1 + NextT::count,
 
-        categoryFile = NextT::categoryFile | Variable::Category::allFile,
+        categoryFile = NextT::categoryFile | Variable::Category::FileLevel::allFile,
     };
 
     struct Data
@@ -99,7 +99,7 @@ protected:
                            int fileLevel,
                            int precision) const
     {
-        if (fileLevel & FileFilter && !(fileLevel & Category::id))
+        if (fileLevel & FileFilter && !(fileLevel & Category::FileLevel::id))
         {
             switch (precision)
             {

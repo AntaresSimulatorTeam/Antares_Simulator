@@ -234,7 +234,7 @@ void AllVariablesPrintInfo::computeMaxColumnsCountInReports()
 
     for (uint CDataLevel = 1; CDataLevel <= Category::maxDataLevel; CDataLevel *= 2)
     {
-        for (uint CFileLevel = 1; CFileLevel <= Category::maxFileLevel; CFileLevel *= 2)
+        for (uint CFileLevel = 1; CFileLevel <= Category::FileLevel::maxFileLevel; CFileLevel *= 2)
         {
             uint currentColumnsCount = 0;
             for (auto& [name, variable]: allVarsPrintInfo)

@@ -16,7 +16,7 @@
 ** Mozilla Public Licence 2.0 for more details.
 **
 ** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+* along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #ifndef __SOLVER_VARIABLE_CATEGORIES_H__
 #define __SOLVER_VARIABLE_CATEGORIES_H__
@@ -49,24 +49,24 @@ enum DataLevel
     allDataLevel = area | thermalAggregate | link | setOfAreas | bindingConstraint
 };
 
-enum File
+namespace FileLevel
 {
     //! Values of physical variables
-    va = 1,
+    constexpr uint8_t va = 1;
     //! Reference numbers
-    id = 2,
+    constexpr uint8_t id = 2;
     //! Detailed values regarding thermal generation
-    de = 4,
+    constexpr uint8_t de = 4;
     //! Detailed values regarding RES generation
-    de_res = 8,
+    constexpr uint8_t de_res = 8;
     //! Detailed values regarding binding constraints
-    bc = 16,
+    constexpr uint8_t bc = 16;
     //! Detailed values regarding short term storage
-    de_sts = 32,
+    constexpr uint8_t de_sts = 32;
     //! The maximum available value
-    maxFileLevel = 32,
+    constexpr uint8_t maxFileLevel = 32;
     //! All file level
-    allFile = va | id | de | de_res | bc | de_sts,
+    constexpr uint8_t allFile = va | id | de | de_res | bc | de_sts;
 };
 
 enum Precision
@@ -150,7 +150,7 @@ enum SpatialAggregatePostProcessing
 */
 static inline uint MaxDecimalPrecision(uint fileLevel)
 {
-    return (fileLevel != id) ? 2u : 0u;
+    return (fileLevel != FileLevel::id) ? 2u : 0u;
 }
 
 template<int Index, int Limit>
@@ -189,6 +189,7 @@ inline void FileLevelToStreamShort(StreamT& out, int fileLevel)
 {
     switch (fileLevel)
     {
+    using namespace FileLevel;
     case va:
         out += "va";
         break;
@@ -217,6 +218,7 @@ inline void FileLevelToStream(StreamT& out, int fileLevel)
 {
     switch (fileLevel)
     {
+    using namespace FileLevel;
     case va:
         out += "values";
         break;

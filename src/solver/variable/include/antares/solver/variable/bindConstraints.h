@@ -56,7 +56,7 @@ struct VCardAllBindingConstraints
         //! Data Level
         categoryDataLevel = Category::bindingConstraint,
         //! File level (provided by the type of the results)
-        categoryFileLevel = ResultsType::categoryFile & Category::bc,
+        categoryFileLevel = ResultsType::categoryFile & Category::FileLevel::bc,
         //! Indentation (GUI)
         nodeDepthForGUI = +1,
         //! Number of columns used by the variable (One ResultsType per column)

@@ -68,7 +68,7 @@ struct VCardTimeSeriesValuesWind
         //! Data Level
         categoryDataLevel = Category::area,
         //! File level (provided by the type of the results)
-        categoryFileLevel = ResultsType::categoryFile & (Category::id | Category::va),
+        categoryFileLevel = ResultsType::categoryFile & (Category::FileLevel::id | Category::FileLevel::va),
         //! Precision (views)
         precision = Category::all,
         //! Indentation (GUI)
