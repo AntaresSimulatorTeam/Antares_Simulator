@@ -31,23 +31,21 @@ namespace Variable
 {
 namespace Category
 {
-enum DataLevel
+namespace DataLevel
 {
     //! Data that belong to a single area
-    area = 1,
+    constexpr uint8_t area = 1;
     //! Data that belong to a thermal dispatchable cluster
-    thermalAggregate = 2,
+    constexpr uint8_t thermalAggregate = 2;
     //! Data that belong to a link
-    link = 4,
+    constexpr uint8_t link = 4;
     //! Data that belong to a set
-    setOfAreas = 8,
+    constexpr uint8_t setOfAreas = 8;
     // Data belonging to a binding constraint
-    bindingConstraint = 16,
+    constexpr uint8_t bindingConstraint = 16;
     //! The maximum available level
-    maxDataLevel = 16,
-    //! All data level
-    allDataLevel = area | thermalAggregate | link | setOfAreas | bindingConstraint
-};
+    constexpr uint8_t maxDataLevel = 16;
+}
 
 enum File
 {
@@ -167,6 +165,7 @@ inline void DataLevelToStream(StreamT& out, int dataLevel)
 {
     switch (dataLevel)
     {
+    using namespace DataLevel;
     case area:
         out += "area";
         break;

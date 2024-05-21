@@ -331,9 +331,9 @@ inline void IVariable<ChildT, NextT, VCardT>::buildDigest(SurveyResults& results
 {
     // Generate the Digest for the local results (areas part)
     if (VCardType::columnCount != 0
-        && (VCardType::categoryDataLevel & Category::setOfAreas
-            || VCardType::categoryDataLevel & Category::area
-            || VCardType::categoryDataLevel & Category::link))
+        && (VCardType::categoryDataLevel & Category::DataLevel::setOfAreas
+            || VCardType::categoryDataLevel & Category::DataLevel::area
+            || VCardType::categoryDataLevel & Category::DataLevel::link))
     {
         // Initializing pointer on variable non applicable and print stati arrays to beginning
         results.isPrinted = isPrinted;
