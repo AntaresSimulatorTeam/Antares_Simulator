@@ -64,7 +64,7 @@ struct VCardCongestionFeeAbs
     enum
     {
         //! Data Level
-        categoryDataLevel = Category::link,
+        categoryDataLevel = Category::DataLevel::link,
         //! File level (provided by the type of the results)
         categoryFileLevel = ResultsType::categoryFile & (Category::id | Category::va),
         //! Precision (views)

@@ -135,7 +135,7 @@ protected:
                                || (VCardT::categoryFileLevel & Category::de_res);
         const bool isBindingConstraint = VCardT::categoryFileLevel & Category::bc;
         const bool isDigest = digestLevel & Category::digestAllYears;
-        if ((dataLevel & Category::area || dataLevel & Category::setOfAreas) && isDigest
+        if ((dataLevel & Category::DataLevel::area || dataLevel & Category::DataLevel::setOfAreas) && isDigest
             && !isCluster && !isBindingConstraint)
         {
             assert(report.data.columnIndex < report.maxVariables && "Column index out of bounds");
