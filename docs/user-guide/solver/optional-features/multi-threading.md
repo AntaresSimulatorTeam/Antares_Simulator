@@ -50,7 +50,7 @@ simulation cores: **nn** reduced to **pp**
 
 Examples of reduction from an initial allowance of 12 cores are given hereafter. The reduced allowance is the size of the **smallest** bundle of parallel years between two consecutive "refresh" (it indicates the slowest point of the simulation [^23]). Note that RAM requirements displayed in the resources monitor are, contrariwise, assessed on the basis on the **largest** bundle of parallel years encountered in the simulation).
 
-![Reduced_Allowance](img/Reduced_Allowance.png)
+![Reduced_Allowance](Reduced_Allowance.png)
 
 The Table indicates either the refresh status (No) or the refresh span (the associated refresh status "yes" is implicit).
 
