@@ -968,20 +968,10 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         {
             buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "series";
             ret = hydroSeries->LoadMaxPower(area.id, buffer) && ret;
-
-            if (study.usedByTheSolver)
-            {
-                hydroSeries->EqualizeMaxPowerTSsizes(area);
-            }
-            else
-            {
-                hydroSeries->setHydroModulability(area);
-            }
         }
 
-        hydroSeries->resizeTSinDeratedMode(study.parameters.derated,
-                                           studyVersion,
-                                           study.usedByTheSolver);
+        hydroSeries->resizeTSinDeratedMode(
+            study.parameters.derated, studyVersion, study.usedByTheSolver);
     }
 
     // Wind

@@ -18,8 +18,9 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
+#include <list> // Fix for Boost < 1.67
+
 #define BOOST_TEST_MODULE test - end - to - end tests
-#define BOOST_TEST_DYN_LINK
 #include <boost/test/data/test_case.hpp>
 #include <boost/test/unit_test.hpp>
 
@@ -202,8 +203,8 @@ BOOST_FIXTURE_TEST_CASE(milp_two_mc_single_unit_single_scenario, StudyFixture)
     // Use OR-Tools / COIN for MILP
     auto& p = study->parameters;
     p.unitCommitment.ucMode = ucMILP;
-    p.ortoolsUsed = true;
-    p.ortoolsSolver = "coin";
+    p.optOptions.ortoolsUsed = true;
+    p.optOptions.ortoolsSolver = "coin";
 
     simulation->create();
     simulation->run();
@@ -231,8 +232,8 @@ BOOST_FIXTURE_TEST_CASE(milp_two_mc_two_unit_single_scenario, StudyFixture)
     // Use OR-Tools / COIN for MILP
     auto& p = study->parameters;
     p.unitCommitment.ucMode = ucMILP;
-    p.ortoolsUsed = true;
-    p.ortoolsSolver = "coin";
+    p.optOptions.ortoolsUsed = true;
+    p.optOptions.ortoolsSolver = "coin";
 
     simulation->create();
     simulation->run();
@@ -366,7 +367,6 @@ BOOST_FIXTURE_TEST_CASE(basic, HydroMaxPowerStudy)
 
 BOOST_FIXTURE_TEST_CASE(scenario_builder, HydroMaxPowerStudy)
 {
-    hydro->series->setMaxPowerTScount(3U);
     setNumberMCyears(3);
 
     giveWeightToYear(4.f, 0);
@@ -380,9 +380,9 @@ BOOST_FIXTURE_TEST_CASE(scenario_builder, HydroMaxPowerStudy)
     genE.setColumnCount(3).fillColumnWith(0, 0.).fillColumnWith(1, 0.).fillColumnWith(2, 0.);
 
     ScenarioBuilderRule scenarioBuilderRule(*study);
-    scenarioBuilderRule.hydroMaxPower().setTSnumber(area->index, 0, 3);
-    scenarioBuilderRule.hydroMaxPower().setTSnumber(area->index, 1, 2);
-    scenarioBuilderRule.hydroMaxPower().setTSnumber(area->index, 2, 1);
+    scenarioBuilderRule.hydro().setTSnumber(area->index, 0, 3);
+    scenarioBuilderRule.hydro().setTSnumber(area->index, 1, 2);
+    scenarioBuilderRule.hydro().setTSnumber(area->index, 2, 1);
 
     simulation->create();
     simulation->run();

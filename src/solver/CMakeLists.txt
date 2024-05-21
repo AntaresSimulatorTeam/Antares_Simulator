@@ -57,19 +57,20 @@ add_executable(antares-solver
 set_target_properties(antares-solver PROPERTIES OUTPUT_NAME ${exec_name})
 
 set(ANTARES_SOLVER_LIBS
-        Antares::args_helper
-        Antares::date
-        Antares::benchmarking
-        Antares::result_writer
-        Antares::sys
-        Antares::infoCollection
-        Antares::checks
-        Antares::misc
+	Antares::args_helper
+	Antares::date
+	Antares::benchmarking
+	Antares::result_writer
+	Antares::sys
+	Antares::infoCollection
+	Antares::checks
+	Antares::misc
+        Antares::optimization-options
         Antares::signal-handling
         Antares::locale
-        yuni-static-uuid
-        yuni-static-core
-        ${CMAKE_THREADS_LIBS_INIT}
+	yuni-static-uuid
+	yuni-static-core		
+	${CMAKE_THREADS_LIBS_INIT}
 )
 
 set(ANTARES_SOLVER_LIBS ${ANTARES_SOLVER_LIBS}

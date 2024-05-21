@@ -3,6 +3,14 @@ add_subdirectory(writer)
 add_subdirectory(study)
 add_subdirectory(benchmarking)
 
+if(WITH_YAMLCPP)
+    add_subdirectory(yaml-parser)
+endif()
+
+if(WITH_ANTLR4)
+    add_subdirectory(antlr4-interface)
+endif()
+
 set(src_libs_antares "${CMAKE_SOURCE_DIR}/libs/antares")
 
 # Adding a library embedding all Antares sources useful to test class Matrix

@@ -19,7 +19,6 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #define BOOST_TEST_MODULE test solver simulation things
-#define BOOST_TEST_DYN_LINK
 
 #define WIN32_LEAN_AND_MEAN
 
@@ -361,39 +360,6 @@ BOOST_AUTO_TEST_CASE(
     study->areas.resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
     BOOST_CHECK(not Generate(*study));
-}
-
-BOOST_AUTO_TEST_CASE(check_intra_modal_on_hydro_max_power_time_series)
-{
-    unsigned int nbYears = 3;
-    auto study = std::make_shared<Study>();
-    initializeStudy(study, nbYears);
-
-    study->parameters.intraModal |= timeSeriesHydroMaxPower;
-
-    unsigned int hydroMaxPowerTSsize = 3;
-
-    Area* area_1 = addAreaToStudy(study, "Area 1");
-    Area* area_2 = addAreaToStudy(study, "Area 2");
-    Area* area_3 = addAreaToStudy(study, "Area 3");
-
-    area_1->hydro.series->resizeMaxPowerTS(hydroMaxPowerTSsize);
-    area_2->hydro.series->resizeMaxPowerTS(hydroMaxPowerTSsize);
-    area_3->hydro.series->resizeMaxPowerTS(hydroMaxPowerTSsize);
-
-    study->areas.resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
-
-    BOOST_CHECK(Antares::Solver::TimeSeriesNumbers::Generate(*study));
-
-    for (unsigned int year = 0; year < nbYears; year++)
-    {
-        unsigned int ts_number_1 = area_1->hydro.series->timeseriesNumbersHydroMaxPower[year];
-        unsigned int ts_number_2 = area_2->hydro.series->timeseriesNumbersHydroMaxPower[year];
-        unsigned int ts_number_3 = area_3->hydro.series->timeseriesNumbersHydroMaxPower[year];
-
-        BOOST_CHECK_EQUAL(ts_number_1, ts_number_2);
-        BOOST_CHECK_EQUAL(ts_number_1, ts_number_3);
-    }
 }
 
 // =======================

@@ -19,7 +19,6 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #define BOOST_TEST_MODULE test read scenario - builder.dat
-#define BOOST_TEST_DYN_LINK
 
 #define WIN32_LEAN_AND_MEAN
 
@@ -92,6 +91,9 @@ struct Fixture
         area_2->wind.series.timeSeries.resize(nbReadyMadeTS, 1);
         area_3->wind.series.timeSeries.resize(nbReadyMadeTS, 1);
 
+        // Links
+        link_12 = AreaAddLinkBetweenAreas(area_1, area_2, false);
+        link_12->directCapacities.resize(15, 1);
         // Solar : set the nb of ready made TS
         nbReadyMadeTS = 9;
         area_1->solar.series.timeSeries.resize(nbReadyMadeTS, 1);
@@ -100,15 +102,9 @@ struct Fixture
 
         // Hydro : set the nb of ready made TS
         nbReadyMadeTS = 12;
-        area_1->hydro.series->resizeGenerationTS(nbReadyMadeTS);
-        area_2->hydro.series->resizeGenerationTS(nbReadyMadeTS);
-        area_3->hydro.series->resizeGenerationTS(nbReadyMadeTS);
-
-        // Hydro Max Power: set the nb of ready made TS
-        nbReadyMadeTS = 15;
-        area_1->hydro.series->resizeMaxPowerTS(nbReadyMadeTS);
-        area_2->hydro.series->resizeMaxPowerTS(nbReadyMadeTS);
-        area_3->hydro.series->resizeMaxPowerTS(nbReadyMadeTS);
+        area_1->hydro.series->resizeTS(nbReadyMadeTS);
+        area_2->hydro.series->resizeTS(nbReadyMadeTS);
+        area_3->hydro.series->resizeTS(nbReadyMadeTS);
 
         // Links
         link_12 = AreaAddLinkBetweenAreas(area_1, area_2, false);

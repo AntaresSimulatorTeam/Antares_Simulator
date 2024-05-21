@@ -4,12 +4,11 @@ toc_depth: 2
 
 # Antares Changelog
 
-[//]: # (TODO: put this in user guide? )
-
-## Next version 
+## Next version
 --------------------
 ### Improvements
 * STS groups are now "dynamic" : group names are no longer fixed by code, user is free to define these groups.
+* When XPRESS or SCIP solver is selected (using OR-Tools), solver specific parameters can be specified from the command-line (#1837)
 
 ## 9.0.0
 --------------------
