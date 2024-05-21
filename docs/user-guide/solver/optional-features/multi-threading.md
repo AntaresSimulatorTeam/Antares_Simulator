@@ -14,7 +14,7 @@ Provided that hardware resources are large enough, this mode may reduce signific
 
 To benefit from multi-threading, the simulation must be run in the following context:
 
-- The [parallel](../07-command-line.md#simulation) option must be enabled (it is disabled by default)
+- The [parallel](../08-command-line.md#simulation) option must be enabled (it is disabled by default)
 - The simulation [mode](../04-parameters.md#mode) must be either `Adequacy` or `Economy`
 
 When the "parallel" solver option is used, each Monte-Carlo year is dispatched in an individual process on the available CPU cores.
