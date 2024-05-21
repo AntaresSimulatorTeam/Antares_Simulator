@@ -108,7 +108,7 @@ template<class NextT>
     enum
     {
         maxValue = NextT::template Statistics < Category::DataLevel::maxDataLevel,
-        Category::maxFileLevel > ::count
+        Category::FileLevel::maxFileLevel > ::count
     };
 
     template<class L, class S>
