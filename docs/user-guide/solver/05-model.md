@@ -33,15 +33,7 @@ The following picture gives a functional view of all that is involved in steps (
 
 ![Antares_Process](../img/Antares_Process.jpg)
 
-<<<<<<<< HEAD:docs/user-guide/solver/05-model.md
-The number and the size of the individual problems to solve (a least-cost hydro-thermal unit-commitment and power 
-schedule, with an hourly resolution and throughout a week, over a large interconnected system) make optimization 
-sessions often computer-intensive. Note that the content of the blue "hydro energy manager" box appearing on the 
-previous figure, whose purpose is to deal with energy storage issues at the seasonal scale, is not detailed in the 
-present document but in the ["Heuristics"](06-heuristics.md#seasonal-hydro-pre-allocation) section.
-========
 The number and the size of the individual problems to solve (a least-cost hydro-thermal unit-commitment and power schedule, with an hourly resolution and throughout a week, over a large interconnected system) make optimization sessions often computer-intensive. Note that the content of the blue "hydro energy manager" box appearing on the previous figure, whose purpose is to deal with energy storage issues at the seasonal scale, is not detailed in the present document but in the ["Miscellaneous"](../reference-guide/08-miscellaneous.md#the-heuristic-for-seasonal-hydro-pre-allocation) section.
->>>>>>>> github/develop:docs/optimisation/01-modeling.md
 
 Depending on user-defined results accuracy requirements, various practical options allow to simplify either the formulation of the weekly UC & dispatch problems (e.g. do not account for constraints associated with operational reserves) or their resolution (i.e. find, for the native MILP, an approximate solution based on two successive LPs). For the sake of simplicity and clarity, the way these options are used to revise the primary problem formulation is not detailed hereafter. Likewise, many simplifications are introduced to keep notations as light as possible. This is why, for instance, the overall sum of load, wind power generation, solar power generation, run of the river generation, and all other kinds of so-called "must-run" generation is simply denoted "load" in the present document.
 
@@ -135,7 +127,6 @@ Note: Almost all variables of the system are defined twice (one value per state)
 
 ### Thermal units
 
-<<<<<<<< HEAD:docs/user-guide/solver/05-model.md
 | Notation                                                       | Explanation                                                                             |
 |----------------------------------------------------------------|-----------------------------------------------------------------------------------------|
 | $\theta \in \Theta_n$                                          | thermal clusters (sets of identical units) installed in node $n$                        |
@@ -157,29 +148,6 @@ Note: Almost all variables of the system are defined twice (one value per state)
 | $M_\theta^+ \in \mathbb{N}^T$                                  | number of units in cluster changing from state off to state on in cluster $\theta$      |
 | $M_\theta^- \in \mathbb{N}^T$                                  | number of units in cluster changing from state on to state off in cluster $\theta$      |
 | $M_\theta^{--} \in \mathbb{N}^T$                               | number of units in cluster changing from state on to state outage cluster $\theta$      |
-========
-| Notation                                                      | Explanation                                                                            |
-| ------------                                                  | -------------                                                                          |
-| $\theta \in \Theta_n$                                     | thermal clusters (sets of identical units) installed in node $n$                   |
-| $\Theta$                                                  | set of all thermal clusters of the power system $\Theta = \cup_{n\in N} \Theta_n$  |
-| $\overline{P}\_\theta \in \mathbb{R}^T_+$                 | maximum power output from cluster $\theta$, depends on units availability          |
-| $\underline{P}\_\theta \in \mathbb{R}^T_+$                | mimimum power output from cluster $\theta$, units availability allowing            |
-| $P_\theta \in \mathbb{R}^T_+$                             | power output from cluster $\theta$                                                 |
-| $\chi_\theta \in \mathbb{R}^T$                            | variable production cost from cluster $\theta$                                                 |
-| $\sigma_\theta^+ \in \mathbb{R}^T$                        | startup cost of a single unit in cluster $\theta$                                  |
-| $\tau_\theta \in \mathbb{R}^T$                            | running unit in $\theta$ : cost independent from output level (aka NoLoadHeatCost) |
-| $l_\theta \in \mathbb{R}_+$                               | unit in $\theta$ : minimum stable power output when running                        |
-| $u_\theta \in \mathbb{R}_+$                               | unit in $\theta$ : maximum net power output when running                           |
-| $\Delta_\theta^+ \in \lbrace 1,\dots, \|T\|\rbrace$       | unit in $\theta$ : minumum on time when running                                    |
-| $\Delta_\theta^- \in \lbrace 1,\dots, \|T\|\rbrace$        | unit in $\theta$ : minumum off time when not running                               |
-| $\Delta_\theta = \max(\Delta_\theta^-, \Delta_\theta^+) $ | duration above which both state changes are allowed                                    |
-| $M_\theta \in \mathbb{N}^T$                               | number of running units in cluster $\theta$                                        |
-| $\overline{M}_\theta \in \mathbb{N}^T$                    | maximum number of running units in cluster $\theta$                                |
-| $\underline{M}_\theta \in \mathbb{N}^T$                   | minimum number of running units in cluster $\theta$                                |
-| $M_\theta^+ \in \mathbb{N}^T$                             | number of units in cluster changing from state off to state on in cluster $\theta$ |
-| $M_\theta^- \in \mathbb{N}^T$                             | number of units in cluster changing from state on to state off in cluster $\theta$ |
-| $M_\theta^{--} \in \mathbb{N}^T$                                   | number of units in cluster changing from state on to state outage cluster $\theta$ |
->>>>>>>> github/develop:docs/optimisation/01-modeling.md
 
 ### Reservoir-type hydropower units (or other power storage facilities)
 
