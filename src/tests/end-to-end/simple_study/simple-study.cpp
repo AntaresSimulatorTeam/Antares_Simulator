@@ -21,7 +21,6 @@
 #include <list> // Fix for Boost < 1.67
 
 #define BOOST_TEST_MODULE test - end - to - end tests
-#define BOOST_TEST_DYN_LINK
 #include <boost/test/data/test_case.hpp>
 #include <boost/test/unit_test.hpp>
 
@@ -204,8 +203,8 @@ BOOST_FIXTURE_TEST_CASE(milp_two_mc_single_unit_single_scenario, StudyFixture)
     // Use OR-Tools / COIN for MILP
     auto& p = study->parameters;
     p.unitCommitment.ucMode = ucMILP;
-    p.ortoolsUsed = true;
-    p.ortoolsSolver = "coin";
+    p.optOptions.ortoolsUsed = true;
+    p.optOptions.ortoolsSolver = "coin";
 
     simulation->create();
     simulation->run();
@@ -233,8 +232,8 @@ BOOST_FIXTURE_TEST_CASE(milp_two_mc_two_unit_single_scenario, StudyFixture)
     // Use OR-Tools / COIN for MILP
     auto& p = study->parameters;
     p.unitCommitment.ucMode = ucMILP;
-    p.ortoolsUsed = true;
-    p.ortoolsSolver = "coin";
+    p.optOptions.ortoolsUsed = true;
+    p.optOptions.ortoolsSolver = "coin";
 
     simulation->create();
     simulation->run();

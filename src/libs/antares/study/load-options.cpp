@@ -40,8 +40,7 @@ StudyLoadOptions::StudyLoadOptions():
     enableParallel(false),
     forceParallel(false),
     maxNbYearsInParallel(0),
-    usedByTheSolver(false),
-    ortoolsUsed(false)
+    usedByTheSolver(false)
 {
 }
 
