@@ -41,13 +41,14 @@ nav:
         - 'Output files': 'user-guide/solver/03-outputs.md'
         - 'Parameters': 'user-guide/solver/04-parameters.md'
         - 'Optimization model': 'user-guide/solver/05-model.md'
-        - 'Heuristics': 'user-guide/solver/06-heuristics.md'
-        - 'Command-line instructions': 'user-guide/solver/07-command-line.md'
+        - 'Hydro heuristics': 'user-guide/solver/06-hydro-heuristics.md'
+        - 'Thermal heuristics': 'user-guide/solver/07-thermal-heuristics.md'
+        - 'Command-line instructions': 'user-guide/solver/08-command-line.md'
         - 'Optional features':
             - 'Multi-threading': 'user-guide/solver/optional-features/multi-threading.md'
             - 'Adequacy patch': 'user-guide/solver/optional-features/adequacy-patch.md'
             - 'Usage with FICO® Xpress Optimizer': 'user-guide/solver/optional-features/xpress.md'
-        - 'Appendix': 'user-guide/solver/08-appendix.md'
+        - 'Appendix': 'user-guide/solver/09-appendix.md'
     - 'Time-series generation':
         - 'Overview': 'user-guide/ts-generator/01-overview.md'
         - 'Input files': 'user-guide/ts-generator/02-inputs.md'
