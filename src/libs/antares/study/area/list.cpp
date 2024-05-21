@@ -70,7 +70,7 @@ static bool AreaListLoadThermalDataFromFile(AreaList& list, const Clob& filename
         for (IniFile::Property* p = section->firstProperty; p; p = p->next)
         {
             id.clear();
-            TransformNameIntoID(p->key, id);
+            id = transformNameIntoID(p->key);
             Area* area = list.find(id);
             if (area)
             {
@@ -118,7 +118,7 @@ static bool AreaListLoadThermalDataFromFile(AreaList& list, const Clob& filename
         for (IniFile::Property* p = section->firstProperty; p; p = p->next)
         {
             id.clear();
-            TransformNameIntoID(p->key, id);
+            id = transformNameIntoID(p->key);
             auto* area = list.find(id);
             if (area)
             {
@@ -402,15 +402,14 @@ AreaLink* AreaListAddLink(AreaList* l, const char area[], const char with[], boo
     {
         logs.debug() << "    . " << area << " -> " << with;
 
-        AreaName name;
         AreaName givenName = area;
-        TransformNameIntoID(givenName, name);
+        AreaName name = transformNameIntoID(givenName);
         Area* a = AreaListLFind(l, name.c_str());
         if (a)
         {
             givenName = with;
             name.clear();
-            TransformNameIntoID(givenName, name);
+            name = transformNameIntoID(givenName);
             Area* b = l->find(name);
             if (b && !a->findExistingLinkWith(*b))
             {
@@ -516,13 +515,10 @@ Area* AreaList::add(Area* a)
 Area* addAreaToListOfAreas(AreaList& list, const AnyString& name)
 {
     // Initializing names
-    AreaName cname;
-    AreaName lname;
-    cname = name;
-    TransformNameIntoID(cname, lname);
+    AreaName lname = transformNameIntoID(name);
 
     // Add the area
-    return AreaListAddFromNames(list, cname, lname);
+    return AreaListAddFromNames(list, name, lname);
 }
 
 Area* AreaListAddFromNames(AreaList& list, const AnyString& name, const AnyString& lname)
@@ -582,7 +578,7 @@ bool AreaList::loadListFromFile(const AnyString& filename)
         }
 
         lname.clear();
-        TransformNameIntoID(name, lname);
+        lname = transformNameIntoID(name);
         if (lname.empty())
         {
             logs.warning() << "ignoring invalid area name: `" << name << "`, " << filename
@@ -1262,8 +1258,7 @@ const Area* AreaList::find(const AreaName& id) const
 
 Area* AreaList::findFromName(const AreaName& name)
 {
-    AreaName id;
-    TransformNameIntoID(name, id);
+    AreaName id = transformNameIntoID(name);
     auto i = this->areas.find(id);
     return (i != this->areas.end()) ? i->second : nullptr;
 }
@@ -1294,8 +1289,7 @@ Area* AreaList::findFromPosition(const int x, const int y) const
 
 const Area* AreaList::findFromName(const AreaName& name) const
 {
-    AreaName id;
-    TransformNameIntoID(name, id);
+    AreaName id = transformNameIntoID(name);
     auto i = this->areas.find(id);
     return (i != this->areas.end()) ? i->second : nullptr;
 }
@@ -1435,8 +1429,7 @@ void Area::detachLinkFromItsPointer(const AreaLink* lnk)
 
 bool AreaList::renameArea(const AreaName& oldid, const AreaName& newName)
 {
-    AreaName newid;
-    TransformNameIntoID(newName, newid);
+    AreaName newid = transformNameIntoID(newName);
     return renameArea(oldid, newid, newName);
 }
 
@@ -1609,8 +1602,7 @@ void AreaList::fixOrientationForAllInterconnections(
 
 bool AreaList::remove(const AnyString& id)
 {
-    AreaName lname;
-    TransformNameIntoID(id, lname);
+    AreaName lname = transformNameIntoID(id);
 
     auto i = areas.find(lname);
     if (i != areas.end())

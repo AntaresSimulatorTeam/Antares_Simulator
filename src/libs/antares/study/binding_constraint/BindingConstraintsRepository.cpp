@@ -162,8 +162,7 @@ bool BindingConstraintsRepository::rename(BindingConstraint* bc, const AnyString
     {
         return true;
     }
-    ConstraintName id;
-    Antares::TransformNameIntoID(name, id);
+    ConstraintName id = Antares::transformNameIntoID(name);
     if (std::any_of(constraints_.begin(),
                     constraints_.end(),
                     [&id](auto constraint) { return constraint->id() == id; }))

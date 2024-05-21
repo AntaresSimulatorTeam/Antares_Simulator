@@ -690,12 +690,10 @@ YString StudyCreateOutputPath(SimulationMode mode,
         break;
     }
 
-    std::string idLabel;
     // Folder output
     if (not label.empty())
     {
-        TransformNameIntoID(label, idLabel);
-        folderOutput << '-' << idLabel;
+        folderOutput << '-' << transformNameIntoID(label);
     }
 
     std::string outpath = folderOutput + suffix;
@@ -1017,8 +1015,7 @@ bool Study::areaRename(Area* area, AreaName newName)
     newName = beautifyname;
 
     // Preparing the new area ID
-    AreaName newid;
-    TransformNameIntoID(newName, newid);
+    AreaName newid = transformNameIntoID(newName);
     if (newid.empty())
     {
         return false;
@@ -1099,8 +1096,7 @@ bool Study::clusterRename(Cluster* cluster, ClusterName newName)
     newName = beautifyname.c_str();
 
     // Preparing the new area ID
-    ClusterName newID;
-    TransformNameIntoID(newName, newID);
+    ClusterName newID = transformNameIntoID(newName);
     if (newID.empty())
     {
         logs.error() << "invalid id transformation";

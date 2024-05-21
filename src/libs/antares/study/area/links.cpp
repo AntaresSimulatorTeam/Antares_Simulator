@@ -497,8 +497,7 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const fs::pa
     for (auto* s = ini.firstSection; s; s = s->next)
     {
         // Getting the name of the area
-        String buffer;
-        TransformNameIntoID(s->name, buffer);
+        std::string buffer = transformNameIntoID(s->name);
 
         // Trying to find it
         Area* linkedWith = AreaListLFind(l, buffer.c_str());

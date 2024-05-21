@@ -55,9 +55,7 @@ bool STStorageCluster::loadFromSection(const IniFile::Section& section)
         return false;
     }
 
-    Yuni::CString<50, false> tmp;
-    TransformNameIntoID(properties.name, tmp);
-    id = tmp.to<std::string>();
+    id = transformNameIntoID(properties.name);
 
     return true;
 }
