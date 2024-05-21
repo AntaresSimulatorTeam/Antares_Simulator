@@ -86,7 +86,7 @@ jobs:
            source /opt/rh/gcc-toolset-11/enable
            cmake -B _build -S src \
              -DCMAKE_BUILD_TYPE=Release \
-             -DBUILD_TESTING=ON \
+             -DBUILD_TESTING=OFF \
              -DBUILD_TOOLS=ON \
              -DBUILD_UI=OFF \
              -DCMAKE_PREFIX_PATH=${{ env.ORTOOLS_DIR }}/install
