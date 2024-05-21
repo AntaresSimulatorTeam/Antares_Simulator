@@ -30,8 +30,7 @@ DefaultWeeklyOptimization::DefaultWeeklyOptimization(const OptimizationOptions& 
                                                      AdqPatchParams& adqPatchParams,
                                                      uint thread_number,
                                                      IResultWriter& writer,
-                                                     Simulation::ISimulationObserver& simulationObserver
-  ) :
+                                                     Simulation::ISimulationObserver& simulationObserver) :
  WeeklyOptimization(options, problemeHebdo, adqPatchParams, thread_number, writer, simulationObserver)
 {
 }

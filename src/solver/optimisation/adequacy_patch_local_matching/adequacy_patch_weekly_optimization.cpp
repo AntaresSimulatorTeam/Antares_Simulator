@@ -45,9 +45,9 @@ AdequacyPatchOptimization::AdequacyPatchOptimization(const Antares::Data::Study&
 
 void AdequacyPatchOptimization::solve()
 {
-    auto nullSimulationObserver = std::make_unique<Simulation::NullSimulationObserver>();
+    Simulation::NullSimulationObserver nullSimulationObserver;
     problemeHebdo_->adequacyPatchRuntimeData->AdequacyFirstStep = true;
-    OPT_OptimisationHebdomadaire(options_, problemeHebdo_, adqPatchParams_, writer_, *nullSimulationObserver);
+    OPT_OptimisationHebdomadaire(options_, problemeHebdo_, adqPatchParams_, writer_, nullSimulationObserver);
     problemeHebdo_->adequacyPatchRuntimeData->AdequacyFirstStep = false;
 
     for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; ++pays)
@@ -64,7 +64,7 @@ void AdequacyPatchOptimization::solve()
         }
     }
 
-    OPT_OptimisationHebdomadaire(options_, problemeHebdo_, adqPatchParams_, writer_, *nullSimulationObserver);
+    OPT_OptimisationHebdomadaire(options_, problemeHebdo_, adqPatchParams_, writer_, nullSimulationObserver);
 }
 
 } // namespace Antares::Solver::Optimization
