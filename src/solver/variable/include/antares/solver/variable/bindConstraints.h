@@ -54,7 +54,7 @@ struct VCardAllBindingConstraints
     enum
     {
         //! Data Level
-        categoryDataLevel = Category::bindingConstraint,
+        categoryDataLevel = Category::DataLevel::bindingConstraint,
         //! File level (provided by the type of the results)
         categoryFileLevel = ResultsType::categoryFile & Category::FileLevel::bc,
         //! Indentation (GUI)

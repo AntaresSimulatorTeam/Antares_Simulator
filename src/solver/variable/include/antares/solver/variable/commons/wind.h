@@ -66,7 +66,7 @@ struct VCardTimeSeriesValuesWind
     enum
     {
         //! Data Level
-        categoryDataLevel = Category::area,
+        categoryDataLevel = Category::DataLevel::area,
         //! File level (provided by the type of the results)
         categoryFileLevel = ResultsType::categoryFile & (Category::FileLevel::id | Category::FileLevel::va),
         //! Precision (views)
