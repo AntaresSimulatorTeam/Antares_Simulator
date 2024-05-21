@@ -1,7 +1,5 @@
 # Zip writer
-add_executable(test-writer)
-
-target_sources(test-writer PRIVATE test_writer.cpp)
+add_executable(test-writer test_writer.cpp)
 
 target_link_libraries(test-writer
 	PRIVATE
