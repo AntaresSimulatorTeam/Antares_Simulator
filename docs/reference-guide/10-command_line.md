@@ -41,7 +41,7 @@ _In all cases, arguments " –h" or "–help" can be used to get help_
 |-m, --mps-export | Export anonymous mps weekly or daily optimal UC+dispatch linear |
 |-s, --named-mps-problems | Export named mps weekly or daily optimal UC+dispatch linear |
 |--solver-logs | Print solver logs |
-|--solver-parameters | Set solver-specific parameters, for instance `--solver-parameters="param1 value1 param2 value2"`. Syntax is solver-dependent, and only supported for SCIP & XPRESS. |
+|--solver-parameters | Set solver-specific parameters, for instance `--solver-parameters="THREADS 1 PRESOLVE 1"` for XPRESS or `--solver-parameters="parallel/maxnthreads 1, lp/presolving TRUE"` for SCIP. Syntax is solver-dependent, and only supported for SCIP & XPRESS. |
 
 - Misc.
 
