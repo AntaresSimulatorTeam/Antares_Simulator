@@ -64,12 +64,18 @@ void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(
     writer.addEntryFromBuffer(filename, buffer);
 }
 
+namespace
+{
 void notifyProblemHebdo(const PROBLEME_HEBDO* problemeHebdo,
                         int optimizationNumber,
                         Solver::Simulation::ISimulationObserver& simulationObserver,
                         const OptPeriodStringGenerator* optPeriodStringGenerator)
 {
-    simulationObserver.notifyHebdoProblem(problemeHebdo, optimizationNumber, createMPSfilename(*optPeriodStringGenerator, optimizationNumber));
+    simulationObserver.notifyHebdoProblem(problemeHebdo,
+                                          optimizationNumber,
+                                          createMPSfilename(*optPeriodStringGenerator,
+                                                            optimizationNumber));
+}
 }
 
 bool runWeeklyOptimization(const OptimizationOptions& options,
