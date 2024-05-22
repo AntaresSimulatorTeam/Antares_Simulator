@@ -232,9 +232,9 @@ void AllVariablesPrintInfo::computeMaxColumnsCountInReports()
     // it contains, and incrementing a counter with as many columns as the current variable can take
     // up at most in a report.
 
-    for (uint CDataLevel = 1; CDataLevel <= Category::maxDataLevel; CDataLevel *= 2)
+    for (uint CDataLevel = 1; CDataLevel <= Category::DataLevel::maxDataLevel; CDataLevel *= 2)
     {
-        for (uint CFileLevel = 1; CFileLevel <= Category::maxFileLevel; CFileLevel *= 2)
+        for (uint CFileLevel = 1; CFileLevel <= Category::FileLevel::maxFileLevel; CFileLevel *= 2)
         {
             uint currentColumnsCount = 0;
             for (auto& [name, variable]: allVarsPrintInfo)
@@ -260,7 +260,7 @@ void AllVariablesPrintInfo::countSelectedAreaVars()
                                                 [](auto& p) {
                                                     return p.second.isPrinted()
                                                            && p.second.isPrintedOnDataLevel(
-                                                             Category::area);
+                                                             Category::DataLevel::area);
                                                 });
 }
 
@@ -271,7 +271,7 @@ void AllVariablesPrintInfo::countSelectedLinkVars()
                                                 [](auto& p) {
                                                     return p.second.isPrinted()
                                                            && p.second.isPrintedOnDataLevel(
-                                                             Category::link);
+                                                             Category::DataLevel::link);
                                                 });
 }
 

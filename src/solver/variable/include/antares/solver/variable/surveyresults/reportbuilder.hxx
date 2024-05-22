@@ -53,7 +53,7 @@ struct VariablesStatsByDataLevel
 {
     enum
     {
-        nextFileLevel = (CFile * 2 > (int)Category::maxFileLevel) ? 1 : CFile * 2,
+        nextFileLevel = (CFile * 2 > (int)Category::FileLevel::maxFileLevel) ? 1 : CFile * 2,
         currentVariableCount = NextT::template Statistics < CDataLevel,
         CFile > ::count,
         nextVariableCount = VariablesStatsByDataLevel < NextT,
@@ -66,7 +66,7 @@ struct VariablesStatsByDataLevel
 };
 
 template<class NextT, int CDataLevel>
-struct VariablesStatsByDataLevel<NextT, CDataLevel, Category::maxFileLevel>
+struct VariablesStatsByDataLevel<NextT, CDataLevel, Category::FileLevel::maxFileLevel>
 {
     enum
     {
@@ -79,8 +79,8 @@ struct BrowseAllVariables
 {
     enum
     {
-        nextFileLevel = (CFile * 2 > (int)Category::maxFileLevel) ? 1 : CFile * 2,
-        nextDataLevel = (CDataLevel * 2 > (int)Category::maxDataLevel) ? 1 : CDataLevel * 2,
+        nextFileLevel = (CFile * 2 > (int)Category::FileLevel::maxFileLevel) ? 1 : CFile * 2,
+        nextDataLevel = (CDataLevel * 2 > (int)Category::DataLevel::maxDataLevel) ? 1 : CDataLevel * 2,
         currentValue = NextT::template Statistics < CDataLevel,
         CFile > ::count,
         nextValue = BrowseAllVariables < NextT,
@@ -103,19 +103,19 @@ struct BrowseAllVariables
 };
 
 template<class NextT>
-struct BrowseAllVariables<NextT, Category::maxDataLevel, Category::maxFileLevel>
+    struct BrowseAllVariables<NextT, Category::DataLevel::maxDataLevel, Category::FileLevel::maxFileLevel>
 {
     enum
     {
-        maxValue = NextT::template Statistics < Category::maxDataLevel,
-        Category::maxFileLevel > ::count
+        maxValue = NextT::template Statistics < Category::DataLevel::maxDataLevel,
+        Category::FileLevel::maxFileLevel > ::count
     };
 
     template<class L, class S>
     static void buildSurveyResults(const L& list, S& results)
     {
         // Exporting data for the current state
-        list.template buildSurveyResults<S, Category::maxDataLevel, Category::maxFileLevel>(
+        list.template buildSurveyResults<S, Category::DataLevel::maxDataLevel, Category::FileLevel::maxFileLevel>(
           results);
         // This is the final available state
     }
@@ -185,7 +185,7 @@ private:
 
 // Specialization for the final state (dummy)
 template<bool GlobalT, class NextT, int N>
-class SurveyReportBuilderFile<GlobalT, NextT, N, 2 * Category::maxFileLevel>
+class SurveyReportBuilderFile<GlobalT, NextT, N, 2 * Category::FileLevel::maxFileLevel>
 {
 public:
     using ListType = NextT;
@@ -211,20 +211,20 @@ public:
     static void Run(const ListType& list, SurveyResults& results, unsigned int numSpace = 9999)
     {
         // Area - Thermal clusters - Links
-        if (CDataLevel & Category::area || CDataLevel & Category::link
-            || CDataLevel & Category::thermalAggregate)
+        if (CDataLevel & Category::DataLevel::area || CDataLevel & Category::DataLevel::link
+            || CDataLevel & Category::DataLevel::thermalAggregate)
         {
             RunForEachArea(list, results, numSpace);
         }
 
         // Set of Areas
-        if (CDataLevel & Category::setOfAreas)
+        if (CDataLevel & Category::DataLevel::setOfAreas)
         {
             RunForEachSetOfAreas(list, results, numSpace);
         }
 
         // Binding constraints level
-        if (CDataLevel & Category::bindingConstraint)
+        if (CDataLevel & Category::DataLevel::bindingConstraint)
         {
             RunForEachBindingConstraint(list, results, numSpace);
         }
@@ -242,11 +242,11 @@ public:
 
         // Digest file : areas part
         std::string digestBuffer;
-        list.buildDigest(results, Category::digestAllYears, Category::area);
+        list.buildDigest(results, Category::digestAllYears, Category::DataLevel::area);
         results.exportDigestAllYears(digestBuffer);
 
         // Degest file : districts part
-        list.buildDigest(results, Category::digestAllYears, Category::setOfAreas);
+        list.buildDigest(results, Category::digestAllYears, Category::DataLevel::setOfAreas);
         results.exportDigestAllYears(digestBuffer);
 
         // Digest: Flow linear (only if selected by user)
@@ -254,7 +254,7 @@ public:
         {
             logs.debug() << " . Digest, flow linear";
             results.data.matrix.fill(std::numeric_limits<double>::quiet_NaN());
-            list.buildDigest(results, Category::digestFlowLinear, Category::area);
+            list.buildDigest(results, Category::digestFlowLinear, Category::DataLevel::area);
             results.exportDigestMatrix("Links (FLOW LIN.)", digestBuffer);
         }
 
@@ -263,7 +263,7 @@ public:
         {
             logs.debug() << " . Digest, flow quad";
             results.data.matrix.fill(std::numeric_limits<double>::quiet_NaN());
-            list.buildDigest(results, Category::digestFlowQuad, Category::area);
+            list.buildDigest(results, Category::digestFlowQuad, Category::DataLevel::area);
             results.exportDigestMatrix("Links (FLOW QUAD.)", digestBuffer);
         }
         // THIS FILE IS DEPRECATED !!!
@@ -312,7 +312,7 @@ private:
             skipDirectory = skipDirectory || !selectedZonalVarsCount;
 
             // Generating the report for each area
-            if (CDataLevel & Category::area && !skipDirectory)
+            if (CDataLevel & Category::DataLevel::area && !skipDirectory)
             {
                 logs.info() << "Exporting results : " << area.name;
                 // The new output
@@ -323,12 +323,12 @@ private:
             }
 
             // Thermal clusters for the current area
-            if (CDataLevel & Category::thermalAggregate)
+            if (CDataLevel & Category::DataLevel::thermalAggregate)
             {
                 RunForEachThermalCluster(list, results, numSpace);
             }
             // Links
-            if (CDataLevel & Category::link && !area.links.empty())
+            if (CDataLevel & Category::DataLevel::link && !area.links.empty())
             {
                 RunForEachLink(list, results, numSpace);
             }
@@ -340,8 +340,8 @@ private:
                                          unsigned int numSpace)
     {
         // Only do something if there is at least one column to write somewhere
-        // See below: if (CDataLevel & Category::thermalAggregate)
-        if (VariablesStatsByDataLevel<NextT, Category::thermalAggregate>::count)
+        // See below: if (CDataLevel & Category::DataLevel::thermalAggregate)
+        if (VariablesStatsByDataLevel<NextT, Category::DataLevel::thermalAggregate>::count)
         {
             auto& area = *results.data.area;
             for (auto& cluster: area.thermal.list.each_enabled_and_not_mustrun())
@@ -371,7 +371,7 @@ private:
             return;
         }
 
-        int count_int = VariablesStatsByDataLevel<NextT, Category::link>::count;
+        int count_int = VariablesStatsByDataLevel<NextT, Category::DataLevel::link>::count;
         if (count_int)
         {
             auto& area = *results.data.area;
@@ -461,7 +461,7 @@ private:
         using namespace Yuni;
 
         // Generating the report for each binding constraint
-        if (CDataLevel & Category::bindingConstraint)
+        if (CDataLevel & Category::DataLevel::bindingConstraint)
         {
             logs.info() << "Exporting results : binding constraints";
             // The new output
@@ -474,7 +474,7 @@ private:
 }; // class SurveyReportBuilder
 
 template<bool GlobalT, class NextT>
-class SurveyReportBuilder<GlobalT, NextT, 2 * Category::maxDataLevel>
+class SurveyReportBuilder<GlobalT, NextT, 2 * Category::DataLevel::maxDataLevel>
 {
 public:
     using ListType = NextT;

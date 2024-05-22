@@ -36,10 +36,10 @@ namespace R
 {
 namespace AllYears
 {
-template<class NextT = Empty, int FileFilter = Variable::Category::allFile>
+template<class NextT = Empty, int FileFilter = Variable::Category::FileLevel::allFile>
 struct Raw;
 
-template<class NextT = Empty, int FileFilter = Variable::Category::allFile>
+template<class NextT = Empty, int FileFilter = Variable::Category::FileLevel::allFile>
 struct Or;
 
 } // namespace AllYears

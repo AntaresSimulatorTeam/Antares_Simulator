@@ -62,9 +62,9 @@ struct VCardProductionByRenewablePlant
     enum
     {
         //! Data Level
-        categoryDataLevel = Category::area,
+        categoryDataLevel = Category::DataLevel::area,
         //! File level (provided by the type of the results)
-        categoryFileLevel = ResultsType::categoryFile & (Category::de_res),
+        categoryFileLevel = ResultsType::categoryFile & (Category::FileLevel::de_res),
         //! Precision (views)
         precision = Category::all,
         //! Indentation (GUI)

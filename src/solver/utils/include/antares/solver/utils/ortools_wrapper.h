@@ -23,13 +23,16 @@
 
 #include <string>
 
+#include <antares/optimization-options/options.h>
+
 #include "named_problem.h"
 
 using namespace operations_research;
 
 MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
                            MPSolver* ProbSpx,
-                           bool keepBasis);
+                           bool keepBasis,
+                           const Antares::Solver::Optimization::OptimizationOptions& options);
 
 MPSolver* ORTOOLS_ConvertIfNeeded(const std::string& solverName,
                                   const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,

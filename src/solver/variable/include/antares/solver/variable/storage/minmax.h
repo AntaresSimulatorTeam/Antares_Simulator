@@ -50,7 +50,7 @@ public:
         //! The count if item in the list
         count = 1 + NextT::count,
 
-        categoryFile = NextT::categoryFile | Variable::Category::allFile,
+        categoryFile = NextT::categoryFile | Variable::Category::FileLevel::allFile,
     };
 
     //! Name of the filter
@@ -78,7 +78,7 @@ protected:
                            int fileLevel,
                            int precision) const
     {
-        if (fileLevel & Category::id)
+        if (fileLevel & Category::FileLevel::id)
         {
             switch (precision)
             {

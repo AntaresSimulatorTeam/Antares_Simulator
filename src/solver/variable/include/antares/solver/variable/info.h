@@ -415,9 +415,9 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
     static bool setClusterCaption(SurveyResults& results, int fileLevel, uint idx)
     {
         assert(results.data.area && "Area is NULL");
-        const bool thermal_details = fileLevel & Category::de;
-        const bool renewable_details = fileLevel & Category::de_res;
-        const bool st_storage_details = fileLevel & Category::de_sts;
+        const bool thermal_details = fileLevel & Category::FileLevel::de;
+        const bool renewable_details = fileLevel & Category::FileLevel::de_res;
+        const bool st_storage_details = fileLevel & Category::FileLevel::de_sts;
 
         std::array<bool, 3> kind_of_details = {thermal_details,
                                                renewable_details,
