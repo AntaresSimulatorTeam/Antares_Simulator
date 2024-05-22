@@ -88,6 +88,8 @@ TestContext createContext(const std::filesystem::path zipPath,
 
 using ZipReaderHandle = void*;
 
+BOOST_AUTO_TEST_SUITE(writer)
+
 void checkZipContent(ZipReaderHandle handle,
                      const std::string& path,
                      const std::string& expectedContent)
@@ -184,3 +186,5 @@ BOOST_AUTO_TEST_CASE(test_in_memory_sanitize_antislash)
     const auto& map = writer->getMap();
     BOOST_CHECK(map.at("folder/test") == content1);
 }
+
+BOOST_AUTO_TEST_SUITE_END()
