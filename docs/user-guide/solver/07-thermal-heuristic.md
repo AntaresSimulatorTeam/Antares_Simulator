@@ -42,7 +42,7 @@ The first resolution of the problem is then run, and provides hourly power outpu
 #### Step 2: fast mode heuristic
 In step 2, for each cluster, a parameter \\(\Delta_{adjust,\theta} = max(\Delta_\theta^+, \Delta_\theta^-)\\) is then calculated, which is the maximum of the minimum on and off durations. Hence, they are approximated to be of the same duration. For each week and each thermal cluster, the week is then divided in intervals of length \\(\Delta_{adjust,\theta}\\). The week is supposed to be cyclic (hour 1 is the timestep followin hour 168), just like in the weekly optimization problem solved by Antares. Within each interval, the NODU of the cluster is increased to the maximum value of \\(M_\{\theta, t}^{guide}\\) during this period. This process is run several time by shifting the intervals timestep by timestep until all the possible week splits have been performed. Finally, the solution which minimizes the number of adjustments of the NODU is used as the solution of step 2 \\(M_{\theta,t}^{heuristic}\\).
 
-![Step 2 of the "fast" thermal mode](thermal_heuristic_fast_step_2.png)
+![Step 2 of the "fast" thermal mode](img/thermal_heuristic_fast_step_2.png)
 <p style="text-align: center;"><em>Illustration of step 2 of the fast mode, with $\Delta_{adjust,\theta}$ equal to 2. Here, both solutions are acceptable as they involve 3 NODU adjustments.</em></p>
 
 #### Step 3: second resolution
