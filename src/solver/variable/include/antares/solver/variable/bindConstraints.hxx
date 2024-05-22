@@ -36,7 +36,7 @@ void BindingConstraints<NextT>::buildSurveyReport(SurveyResults& results,
                                                   int fileLevel,
                                                   int precision) const
 {
-    if (bool bcDataLevel = dataLevel & Category::bindingConstraint; !bcDataLevel)
+    if (bool bcDataLevel = dataLevel & Category::DataLevel::bindingConstraint; !bcDataLevel)
     {
         return;
     }
@@ -56,7 +56,7 @@ void BindingConstraints<NextT>::buildAnnualSurveyReport(SurveyResults& results,
                                                         int precision,
                                                         uint numSpace) const
 {
-    if (bool bcDataLevel = dataLevel & Category::bindingConstraint; !bcDataLevel)
+    if (bool bcDataLevel = dataLevel & Category::DataLevel::bindingConstraint; !bcDataLevel)
     {
         return;
     }

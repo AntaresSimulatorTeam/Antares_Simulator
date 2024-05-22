@@ -123,5 +123,7 @@ target_link_libraries(test-utils
 		Antares::utils
 		yuni-static-core
 )
+set_target_properties(test-utils PROPERTIES FOLDER Unit-tests/test-utils)
+
 add_test(NAME test-utils COMMAND test-utils)
 set_property(TEST test-utils PROPERTY LABELS unit)

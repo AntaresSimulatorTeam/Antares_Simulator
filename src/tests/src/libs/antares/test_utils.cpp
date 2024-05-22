@@ -46,6 +46,8 @@ constexpr auto beautifyYuni = beautify<Yuni::String>;
 
 } // namespace
 
+BOOST_AUTO_TEST_SUITE(utils)
+
 BOOST_AUTO_TEST_CASE(test_beautify_name_std)
 {
     // Just checking that both std and yuni strings have similar behaviours with UTF8 chars...
@@ -103,3 +105,4 @@ BOOST_AUTO_TEST_CASE(yuni_normalize_vs_std_lexically_normal)
     helper(fs::path("a/.///b/../"));
 }
 
+BOOST_AUTO_TEST_SUITE_END()

@@ -126,7 +126,7 @@ struct VCardProxy
     enum
     {
         //! Data Level
-        categoryDataLevel = Category::setOfAreas,
+        categoryDataLevel = Category::DataLevel::setOfAreas,
         //! File level (provided by the type of the results)
         categoryFileLevel = VCardOrigin::categoryFileLevel,
         //! Precision (views)
@@ -355,7 +355,7 @@ public:
     inline void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
     {
         // Generate the Digest for the local results (districts part)
-        if (VCardType::columnCount != 0 && (VCardType::categoryDataLevel & Category::setOfAreas))
+        if (VCardType::columnCount != 0 && (VCardType::categoryDataLevel & Category::DataLevel::setOfAreas))
         {
             // Initializing pointer on variable non applicable and print stati arrays to beginning
             results.isPrinted = AncestorType::isPrinted;
@@ -376,7 +376,7 @@ public:
                                       int precision,
                                       uint numSpace) const
     {
-        if (VCardType::columnCount != 0 && (VCardType::categoryDataLevel & Category::setOfAreas))
+        if (VCardType::columnCount != 0 && (VCardType::categoryDataLevel & Category::DataLevel::setOfAreas))
         {
             // Initializing pointer on variable non applicable and print stati arrays to beginning
             results.isPrinted = AncestorType::isPrinted;
