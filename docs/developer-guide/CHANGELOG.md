@@ -9,6 +9,53 @@ toc_depth: 2
 --------------------
 ## Improvements
 * Remove sc-builder prefix "hgp", use "h" instead for max hydro pumping & generation timeseries.
+* Add optimization options in OR-Tools / XPRESS (#1837)
+* Rationalize consistency checks on the number of columns (#2073)
+* Time Series generation refactor (#2045)
+* Create & forward declare BasisStatus struct, reduce build time (#2044)
+* Documentation reorganization and improvement (#2024) (#2023) (#2022)
+* Add doc for thermal heuristic (#2048)
+
+### Bugfixes
+* Change the formula used in thermal clusters profits (#2097) [ANT-1719]
+* Bug on GUI: double-click on study.antares doesn't work anymore (#2047) [ANT-1634]
+* Fix build error related to Boost Test < 1.67 on OL8 (#2094)
+
+### For developers
+* Update format-code.sh (#2027)
+* Update clang-format options and apply them (#2067)
+* FileTreeStudyLoader [ANT-1213] (#2058)
+* Yaml parser and Antlr4 integration (#1985)
+* Fix oracle 8 compilation related to boost test linking (#2101)
+* Fix enum deprecation warning for FileLevel (#2104)
+* Improve new release workflow (#2088), make "target branch" field mandatory (#2095)
+* Exclude src/ui from sonarQ analysis (#2087)
+* Graphviz presets (#2065)
+* Unit tests for parameters and generaldata.ini, remove limit on number of MC years (#2041)
+* Move Run X Mode in dedicated files (#2054)
+* Fix duplicate build for series/series.cpp (#2046)
+* Improve dependency requirements (#2009)
+
+### Code quality
+* Simplify code for timer (#2032)
+* Refactor Application (#2056)
+* Remove some Yuni Strings in solver (#2061)
+* Cleanup link variables includes (#2030)
+* Remove Study::Ptr variant for RetrieveListFromStudy and cbuilder (#2051) (#2052)
+* Add more explicit example on how to set solver parameters from command line (#2100)
+* Fix a few warnings emitted by clang-19 (#2099)
+* Remove Fixture Test Suite, use fixture test case (#2055)
+* Use std::atomic instead of std::mutex (#2082)
+* Use std::clamp for sc-builder's hydro levels (#2074)
+
+### Removed
+* Remove study cleaner tool (#2059)
+* Remove export target (#2053)
+* Remove unique_ptr passed by ref (#2086)
+* Remove dependency of Antares::logs to antares-core (#2083)
+* Remove unnecessary ".inc.hxx" files (#2031)
+* Remove deps-build Actions (#2043)
+* Remove unused logs.hxx (#2026)
 
 9.1.0-rc3
 --------------------
