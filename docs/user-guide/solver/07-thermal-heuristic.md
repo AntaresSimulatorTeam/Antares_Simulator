@@ -12,7 +12,7 @@ Please note that this content is only relevant in case the user chooses a linear
 
 The linearised resolution of the weekly adequacy problem[^1] is summarized in the diagram below:
 
-![Global diagram](img/global_diagram.png)
+![Global diagram](img/global_diagram.png){ .add-padding-and-white-bg }
 
 The general principle of the linear resolution is that two iterations of the weekly optimisation problem will be solved:
 - A first resolution in which integer variables are either linearised, or completely removed, depending on the "unit commitment mode" chosen (step 1).
