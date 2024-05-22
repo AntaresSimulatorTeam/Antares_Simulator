@@ -48,6 +48,11 @@ inline void IniFile::Property::saveToStream(std::ostream& stream_out, uint64_t& 
     stream_out << key << " = " << value << '\n';
 }
 
+void IniFile::Section::add(const Property property)
+{
+    add(property.key, property.value);
+}
+
 void IniFile::Section::saveToStream(std::ostream& stream_out, uint64_t& written) const
 {
     if (!firstProperty)
@@ -205,8 +210,7 @@ bool IniFile::readStream(std::istream& in_stream)
             // Note : if a property not in a section, it's simply skipped
             if (currentSection)
             {
-                IniFile::Property p = getProperty(line);
-                currentSection->add(p.key, p.value);
+                currentSection->add(getProperty(line));
             }
             continue;
         }
