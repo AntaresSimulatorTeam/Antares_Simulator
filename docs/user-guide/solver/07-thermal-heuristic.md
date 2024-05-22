@@ -12,7 +12,7 @@ Please note that this content is only relevant in case the user chooses a linear
 
 The linearised resolution of the weekly adequacy problem[^1] is summarized in the diagram below:
 
-![Global diagram](global_diagram.png)
+![Global diagram](img/global_diagram.png)
 
 The general principle of the linear resolution is that two iterations of the weekly optimisation problem will be solved:
 - A first resolution in which integer variables are either linearised, or completely removed, depending on the "unit commitment mode" chosen (step 1).
@@ -77,7 +77,7 @@ with \\(\sigma_\theta^+\\) the startup cost of a unit of cluster \\(\theta\\), a
 
 The smoothing heuristic may then choose to increase the NODU in certain clusters when it identifies that a shut-down/start-up sequence lasted shorter than duration d. The new NODU cannot exceed the maximum accepted NODU to respect the production plan, which is equal to \\(floor(\frac{P_\theta}{\underline{P_\theta}})\\).
 
-![Step 4: smoothing heuristic](thermal_smoothing_heuristic.png).
+![Step 4: smoothing heuristic](img/thermal_smoothing_heuristic.png).
 
 
 [^1]: The formulation of the weekly optimization problem is described in the ["Formulation of the optimisation problems"](01-modeling.md) section.
