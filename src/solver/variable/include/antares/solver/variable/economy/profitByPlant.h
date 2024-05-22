@@ -284,7 +284,6 @@ public:
         {
             double hourlyClusterProduction = thermal[area->index]
                                                .thermalClustersProductions[cluster->areaWideIndex];
-            double pMin = thermal[area->index].PMinOfClusters[cluster->areaWideIndex];
             uint tsIndex = cluster->series.timeseriesNumbers[state.year];
 
             // Thermal cluster profit
