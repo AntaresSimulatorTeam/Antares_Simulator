@@ -12,7 +12,7 @@ Please note that this content is only relevant in case the user chooses a linear
 
 The linearised resolution of the weekly adequacy problem[^1] is summarized in the diagram below:
 
-![Global diagram](global_diagram.png)
+![Global diagram](img/global_diagram.png){ .add-padding-and-white-bg }
 
 The general principle of the linear resolution is that two iterations of the weekly optimisation problem will be solved:
 - A first resolution in which integer variables are either linearised, or completely removed, depending on the "unit commitment mode" chosen (step 1).
@@ -42,7 +42,7 @@ The first resolution of the problem is then run, and provides hourly power outpu
 #### Step 2: fast mode heuristic
 In step 2, for each cluster, a parameter \\(\Delta_{adjust,\theta} = max(\Delta_\theta^+, \Delta_\theta^-)\\) is then calculated, which is the maximum of the minimum on and off durations. Hence, they are approximated to be of the same duration. For each week and each thermal cluster, the week is then divided in intervals of length \\(\Delta_{adjust,\theta}\\). The week is supposed to be cyclic (hour 1 is the timestep followin hour 168), just like in the weekly optimization problem solved by Antares. Within each interval, the NODU of the cluster is increased to the maximum value of \\(M_\{\theta, t}^{guide}\\) during this period. This process is run several time by shifting the intervals timestep by timestep until all the possible week splits have been performed. Finally, the solution which minimizes the number of adjustments of the NODU is used as the solution of step 2 \\(M_{\theta,t}^{heuristic}\\).
 
-![Step 2 of the "fast" thermal mode](thermal_heuristic_fast_step_2.png)
+![Step 2 of the "fast" thermal mode](img/thermal_heuristic_fast_step_2.png){ .add-padding-and-white-bg }
 <p style="text-align: center;"><em>Illustration of step 2 of the fast mode, with $\Delta_{adjust,\theta}$ equal to 2. Here, both solutions are acceptable as they involve 3 NODU adjustments.</em></p>
 
 #### Step 3: second resolution
@@ -77,7 +77,7 @@ with \\(\sigma_\theta^+\\) the startup cost of a unit of cluster \\(\theta\\), a
 
 The smoothing heuristic may then choose to increase the NODU in certain clusters when it identifies that a shut-down/start-up sequence lasted shorter than duration d. The new NODU cannot exceed the maximum accepted NODU to respect the production plan, which is equal to \\(floor(\frac{P_\theta}{\underline{P_\theta}})\\).
 
-![Step 4: smoothing heuristic](thermal_smoothing_heuristic.png).
+![Step 4: smoothing heuristic](img/thermal_smoothing_heuristic.png).
 
 
 [^1]: The formulation of the weekly optimization problem is described in the ["Formulation of the optimisation problems"](01-modeling.md) section.
