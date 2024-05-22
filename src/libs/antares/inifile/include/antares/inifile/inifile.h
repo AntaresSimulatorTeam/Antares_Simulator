@@ -149,9 +149,11 @@ public:
         //! The name of the section
         Yuni::ShortString256 name;
         //! The first property of the section
-        IniFile::Property* firstProperty = nullptr;;
+        IniFile::Property* firstProperty = nullptr;
+        ;
         //! The last property of the section
-        IniFile::Property* lastProperty = nullptr;;
+        IniFile::Property* lastProperty = nullptr;
+        ;
         //! The next section
         Section* next = nullptr;
 

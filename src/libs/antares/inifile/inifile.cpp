@@ -235,7 +235,7 @@ bool IniFile::open(const AnyString& filename, bool warnings)
 
     if (std::ifstream file(filePath); file.is_open())
     {
-        if (! readStream(file))
+        if (!readStream(file))
         {
             logs.error() << "Invalid INI file : " << filePath;
             return false;
@@ -252,7 +252,7 @@ bool IniFile::open(const AnyString& filename, bool warnings)
 
 void IniFile::saveToStream(std::ostream& stream_out, uint64_t& written) const
 {
-    each([&](const IniFile::Section& s) {s.saveToStream(stream_out, written); });
+    each([&](const IniFile::Section& s) { s.saveToStream(stream_out, written); });
 
     if (written != 0)
     {
@@ -266,7 +266,7 @@ std::string IniFile::toString() const
     std::ostringstream ostream;
 
     this->saveToStream(ostream, written);
-    
+
     return ostream.str();
 }
 
