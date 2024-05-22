@@ -158,10 +158,9 @@ template&lt;class U &gt; </td></tr>
 template&lt;class U &gt; </td></tr>
 <tr class="memitem:a4c3774c3e13b4e978899ee3fb1fac52e"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classAntares_1_1IniFile_1_1Property.html">Property</a> *&#160;</td><td class="memTemplItemRight" valign="bottom"><b>add</b> (const AnyString &amp;key, const std::optional&lt; U &gt; &amp;value)</td></tr>
 <tr class="separator:a4c3774c3e13b4e978899ee3fb1fac52e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4d5834e6f78b2e0649ec07c14beadc4f" id="r_a4d5834e6f78b2e0649ec07c14beadc4f"><td class="memTemplParams" colspan="2"><a id="a4d5834e6f78b2e0649ec07c14beadc4f" name="a4d5834e6f78b2e0649ec07c14beadc4f"></a>
-template&lt;class StreamT &gt; </td></tr>
-<tr class="memitem:a4d5834e6f78b2e0649ec07c14beadc4f"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>saveToStream</b> (StreamT &amp;file, uint64_t &amp;written) const</td></tr>
-<tr class="separator:a4d5834e6f78b2e0649ec07c14beadc4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a29b53e20a0812a6076922040115bcd26" id="r_a29b53e20a0812a6076922040115bcd26"><td class="memItemLeft" align="right" valign="top"><a id="a29b53e20a0812a6076922040115bcd26" name="a29b53e20a0812a6076922040115bcd26"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>saveToStream</b> (std::ostream &amp;file, uint64_t &amp;written) const</td></tr>
+<tr class="separator:a29b53e20a0812a6076922040115bcd26"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac9bf5c1ce938e0f3a109ae6ef56e3b82" id="r_ac9bf5c1ce938e0f3a109ae6ef56e3b82"><td class="memItemLeft" align="right" valign="top"><a id="ac9bf5c1ce938e0f3a109ae6ef56e3b82" name="ac9bf5c1ce938e0f3a109ae6ef56e3b82"></a>
 <a class="el" href="classAntares_1_1IniFile_1_1Property.html">Property</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>find</b> (const AnyString &amp;key)</td></tr>
 <tr class="separator:ac9bf5c1ce938e0f3a109ae6ef56e3b82"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -204,15 +203,15 @@ Yuni::ShortString256&#160;</td><td class="memItemRight" valign="bottom"><b>name<
 <tr class="memdesc:a354bdca991744fe7f37babad5252582e"><td class="mdescLeft">&#160;</td><td class="mdescRight">The name of the section. <br /></td></tr>
 <tr class="separator:a354bdca991744fe7f37babad5252582e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a54a9cef58b511847e5305eb914d4244f" id="r_a54a9cef58b511847e5305eb914d4244f"><td class="memItemLeft" align="right" valign="top"><a id="a54a9cef58b511847e5305eb914d4244f" name="a54a9cef58b511847e5305eb914d4244f"></a>
-<a class="el" href="classAntares_1_1IniFile_1_1Property.html">IniFile::Property</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>firstProperty</b></td></tr>
+<a class="el" href="classAntares_1_1IniFile_1_1Property.html">IniFile::Property</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>firstProperty</b> = nullptr</td></tr>
 <tr class="memdesc:a54a9cef58b511847e5305eb914d4244f"><td class="mdescLeft">&#160;</td><td class="mdescRight">The first property of the section. <br /></td></tr>
 <tr class="separator:a54a9cef58b511847e5305eb914d4244f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a24da621ee0b90b7324e7df9fdd919093" id="r_a24da621ee0b90b7324e7df9fdd919093"><td class="memItemLeft" align="right" valign="top"><a id="a24da621ee0b90b7324e7df9fdd919093" name="a24da621ee0b90b7324e7df9fdd919093"></a>
-<a class="el" href="classAntares_1_1IniFile_1_1Property.html">IniFile::Property</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>lastProperty</b></td></tr>
+<a class="el" href="classAntares_1_1IniFile_1_1Property.html">IniFile::Property</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>lastProperty</b> = nullptr</td></tr>
 <tr class="memdesc:a24da621ee0b90b7324e7df9fdd919093"><td class="mdescLeft">&#160;</td><td class="mdescRight">The last property of the section. <br /></td></tr>
 <tr class="separator:a24da621ee0b90b7324e7df9fdd919093"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8ae401359fd485910c7150c412f67f37" id="r_a8ae401359fd485910c7150c412f67f37"><td class="memItemLeft" align="right" valign="top"><a id="a8ae401359fd485910c7150c412f67f37" name="a8ae401359fd485910c7150c412f67f37"></a>
-<a class="el" href="classAntares_1_1IniFile_1_1Section.html">Section</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>next</b></td></tr>
+<a class="el" href="classAntares_1_1IniFile_1_1Section.html">Section</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>next</b> = nullptr</td></tr>
 <tr class="memdesc:a8ae401359fd485910c7150c412f67f37"><td class="mdescLeft">&#160;</td><td class="mdescRight">The next section. <br /></td></tr>
 <tr class="separator:a8ae401359fd485910c7150c412f67f37"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -251,12 +250,12 @@ template&lt;class CallbackT &gt; </div>
 <div class="line">    std::cout &lt;&lt; <span class="charliteral">&#39;\n&#39;</span>;</div>
 <div class="line"> });</div>
 <div class="line">}</div>
-<div class="ttc" id="aclassAntares_1_1IniFile_1_1Property_html"><div class="ttname"><a href="classAntares_1_1IniFile_1_1Property.html">Antares::IniFile::Property</a></div><div class="ttdoc">A single entry in an INI file.</div><div class="ttdef"><b>Definition</b> inifile.h:44</div></div>
-<div class="ttc" id="aclassAntares_1_1IniFile_1_1Section_html"><div class="ttname"><a href="classAntares_1_1IniFile_1_1Section.html">Antares::IniFile::Section</a></div><div class="ttdoc">A single section, with all its keys.</div><div class="ttdef"><b>Definition</b> inifile.h:69</div></div>
-<div class="ttc" id="aclassAntares_1_1IniFile_1_1Section_html_a354bdca991744fe7f37babad5252582e"><div class="ttname"><a href="classAntares_1_1IniFile_1_1Section.html#a354bdca991744fe7f37babad5252582e">Antares::IniFile::Section::name</a></div><div class="ttdeci">Yuni::ShortString256 name</div><div class="ttdoc">The name of the section.</div><div class="ttdef"><b>Definition</b> inifile.h:153</div></div>
-<div class="ttc" id="aclassAntares_1_1IniFile_html"><div class="ttname"><a href="classAntares_1_1IniFile.html">Antares::IniFile</a></div><div class="ttdoc">Data for an INI file.</div><div class="ttdef"><b>Definition</b> inifile.h:35</div></div>
-<div class="ttc" id="aclassAntares_1_1IniFile_html_a11e9d8225fe9565c07807aa44f24eafb"><div class="ttname"><a href="classAntares_1_1IniFile.html#a11e9d8225fe9565c07807aa44f24eafb">Antares::IniFile::open</a></div><div class="ttdeci">bool open(const AnyString &amp;filename, bool warnings=true)</div><div class="ttdoc">Load an INI file.</div><div class="ttdef"><b>Definition</b> inifile.cpp:256</div></div>
-<div class="ttc" id="aclassAntares_1_1IniFile_html_a2d6fd096ed353185ffb459562cd55c9b"><div class="ttname"><a href="classAntares_1_1IniFile.html#a2d6fd096ed353185ffb459562cd55c9b">Antares::IniFile::each</a></div><div class="ttdeci">void each(const CallbackT &amp;callback)</div><div class="ttdoc">Iterate through all sections.</div><div class="ttdef"><b>Definition</b> inifile.hxx:111</div></div>
+<div class="ttc" id="aclassAntares_1_1IniFile_1_1Property_html"><div class="ttname"><a href="classAntares_1_1IniFile_1_1Property.html">Antares::IniFile::Property</a></div><div class="ttdoc">A single entry in an INI file.</div><div class="ttdef"><b>Definition</b> inifile.h:43</div></div>
+<div class="ttc" id="aclassAntares_1_1IniFile_1_1Section_html"><div class="ttname"><a href="classAntares_1_1IniFile_1_1Section.html">Antares::IniFile::Section</a></div><div class="ttdoc">A single section, with all its keys.</div><div class="ttdef"><b>Definition</b> inifile.h:67</div></div>
+<div class="ttc" id="aclassAntares_1_1IniFile_1_1Section_html_a354bdca991744fe7f37babad5252582e"><div class="ttname"><a href="classAntares_1_1IniFile_1_1Section.html#a354bdca991744fe7f37babad5252582e">Antares::IniFile::Section::name</a></div><div class="ttdeci">Yuni::ShortString256 name</div><div class="ttdoc">The name of the section.</div><div class="ttdef"><b>Definition</b> inifile.h:150</div></div>
+<div class="ttc" id="aclassAntares_1_1IniFile_html"><div class="ttname"><a href="classAntares_1_1IniFile.html">Antares::IniFile</a></div><div class="ttdoc">Data for an INI file.</div><div class="ttdef"><b>Definition</b> inifile.h:34</div></div>
+<div class="ttc" id="aclassAntares_1_1IniFile_html_a11e9d8225fe9565c07807aa44f24eafb"><div class="ttname"><a href="classAntares_1_1IniFile.html#a11e9d8225fe9565c07807aa44f24eafb">Antares::IniFile::open</a></div><div class="ttdeci">bool open(const AnyString &amp;filename, bool warnings=true)</div><div class="ttdoc">Load an INI file.</div><div class="ttdef"><b>Definition</b> inifile.cpp:230</div></div>
+<div class="ttc" id="aclassAntares_1_1IniFile_html_a2d6fd096ed353185ffb459562cd55c9b"><div class="ttname"><a href="classAntares_1_1IniFile.html#a2d6fd096ed353185ffb459562cd55c9b">Antares::IniFile::each</a></div><div class="ttdeci">void each(const CallbackT &amp;callback)</div><div class="ttdoc">Iterate through all sections.</div><div class="ttdef"><b>Definition</b> inifile.hxx:100</div></div>
 </div><!-- fragment --> 
 </div>
 </div>

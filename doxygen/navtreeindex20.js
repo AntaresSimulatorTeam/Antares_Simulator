@@ -1,7 +1,5 @@
 var NAVTREEINDEX20 =
 {
-"dir_a59ae219a34974900c884375e57e8686.html":[8,0,0,2,5,0,0,0,0,1],
-"dir_a619623ecfb40f34563fb00311da1fd1.html":[8,0,0,1,0,11],
 "dir_a655e11fe3f477f26d90df2209763065.html":[8,0,0,5,2,2,0],
 "dir_a6c8838202afb2f4d967027b3636f365.html":[8,0,0,1,0,28],
 "dir_a8105e53224513a6872d62dd582a3fcf.html":[8,0,0,5,2,1,1,1,0,2],
@@ -170,15 +168,15 @@ var NAVTREEINDEX20 =
 "flowQuad_8h_source.html":[8,0,0,2,10,0,0,0,0,2,1,5],
 "fswalker_2statistics_8h_source.html":[8,0,0,1,1,4],
 "fswalker_8h_source.html":[8,0,0,1,1,1],
-"functions.html":[7,3,0],
 "functions.html":[7,3,0,0],
+"functions.html":[7,3,0],
 "functions_b.html":[7,3,0,1],
 "functions_c.html":[7,3,0,2],
 "functions_d.html":[7,3,0,3],
 "functions_e.html":[7,3,0,4],
 "functions_enum.html":[7,3,4],
-"functions_eval.html":[7,3,5,0],
 "functions_eval.html":[7,3,5],
+"functions_eval.html":[7,3,5,0],
 "functions_eval_b.html":[7,3,5,1],
 "functions_eval_c.html":[7,3,5,2],
 "functions_eval_d.html":[7,3,5,3],
@@ -249,5 +247,7 @@ var NAVTREEINDEX20 =
 "functions_type_m.html":[7,3,3,8],
 "functions_type_n.html":[7,3,3,9],
 "functions_type_o.html":[7,3,3,10],
-"functions_type_p.html":[7,3,3,11]
+"functions_type_p.html":[7,3,3,11],
+"functions_type_r.html":[7,3,3,12],
+"functions_type_s.html":[7,3,3,13]
 };
