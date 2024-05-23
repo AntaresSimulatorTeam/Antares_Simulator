@@ -7,7 +7,7 @@ set(ANTARES_VERSION_REVISION  5)
 
 # Beta release
 set(ANTARES_BETA 0)
-set(ANTARES_RC 1)
+set(ANTARES_RC 0)
 
 set(ANTARES_VERSION_YEAR      2024)
 
