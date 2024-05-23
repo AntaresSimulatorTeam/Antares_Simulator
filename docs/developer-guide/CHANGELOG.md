@@ -5,8 +5,13 @@ toc_depth: 2
 # Antares Changelog
 
 
-9.1.0-rc4
+9.1.0
 --------------------
+## New features
+* Scenarized & hourly values for hydro pumping and hydro generation. Previously this data was not scenarized and daily.
+* STS groups are now "dynamic" : group names are no longer fixed by code, user is free to define these groups.
+* When XPRESS or SCIP solver is selected (using OR-Tools), solver specific parameters can be specified from the command-line (#1837)
+
 ## Improvements
 * Remove sc-builder prefix "hgp", use "h" instead for max hydro pumping & generation timeseries.
 * Add optimization options in OR-Tools / XPRESS (#1837)
@@ -56,19 +61,6 @@ toc_depth: 2
 * Remove unnecessary ".inc.hxx" files (#2031)
 * Remove deps-build Actions (#2043)
 * Remove unused logs.hxx (#2026)
-
-9.1.0-rc3
---------------------
-## New features
-* STS groups are now "dynamic" : group names are no longer fixed by code, user is free to define these groups.
-* When XPRESS or SCIP solver is selected (using OR-Tools), solver specific parameters can be specified from the command-line (#1837)
-
-9.1.0-rc1
---------------------
-## New features
-* Scenarized & hourly values for hydro pumping and hydro generation. Previously this data was not scenarized and daily.
-
-## TODO
 
 9.0.0
 --------------------
