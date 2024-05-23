@@ -1,6 +1,4 @@
 
-set(src_libs_antares "${CMAKE_SOURCE_DIR}/libs/antares")
-
 add_executable(test_inifile_io	test_inifile_io.cpp)
 
 target_link_libraries(test_inifile_io

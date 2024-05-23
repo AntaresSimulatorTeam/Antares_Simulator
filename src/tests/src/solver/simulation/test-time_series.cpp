@@ -22,7 +22,6 @@
 // Created by marechaljas on 07/04/23.
 //
 #define BOOST_TEST_MODULE rhsTimeSeries
-#define BOOST_TEST_DYN_LINK
 #define WIN32_LEAN_AND_MEAN
 
 #include <files-system.h>

@@ -8,5 +8,7 @@ target_link_libraries(test-concurrency
 							Antares::concurrency
 )
 
+set_target_properties(test-concurrency PROPERTIES FOLDER Unit-tests/test-concurrency)
+
 add_test(NAME concurrency COMMAND test-concurrency)
 set_property(TEST concurrency PROPERTY LABELS unit)

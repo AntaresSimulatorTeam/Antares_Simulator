@@ -70,10 +70,11 @@ public:
 public:
     //! Data for the pre-processor
     Data::Load::Prepro* prepro;
+
+    TimeSeriesNumbers tsNumbers;
+
     /*! Data for time-series */
     TimeSeries series;
-
-    TimeSeries::numbers tsNumbers;
 
 }; // class Container
 

@@ -19,7 +19,6 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #define BOOST_TEST_MODULE test solver simulation things
-#define BOOST_TEST_DYN_LINK
 
 #define WIN32_LEAN_AND_MEAN
 
@@ -140,8 +139,8 @@ BOOST_AUTO_TEST_CASE(two_areas_with_5_ready_made_ts_on_load___check_intra_modal_
 
     // intra-modal for load : drawn TS numbers in all areas must be equal
     uint year = 0;
-    BOOST_CHECK_EQUAL(area_1->load.series.timeseriesNumbers[0][year],
-                      area_2->load.series.timeseriesNumbers[0][year]);
+    BOOST_CHECK_EQUAL(area_1->load.series.timeseriesNumbers[year],
+                      area_2->load.series.timeseriesNumbers[year]);
 }
 
 // =======================
@@ -206,10 +205,10 @@ BOOST_AUTO_TEST_CASE(
 
     // TS number checks
     uint year = 0;
-    BOOST_CHECK_EQUAL(thCluster_12->series.timeseriesNumbers[0][year],
-                      thCluster_11->series.timeseriesNumbers[0][year]);
-    BOOST_CHECK_EQUAL(thCluster_21->series.timeseriesNumbers[0][year],
-                      thCluster_11->series.timeseriesNumbers[0][year]);
+    BOOST_CHECK_EQUAL(thCluster_12->series.timeseriesNumbers[year],
+                      thCluster_11->series.timeseriesNumbers[year]);
+    BOOST_CHECK_EQUAL(thCluster_21->series.timeseriesNumbers[year],
+                      thCluster_11->series.timeseriesNumbers[year]);
 }
 
 BOOST_AUTO_TEST_CASE(
@@ -238,8 +237,8 @@ BOOST_AUTO_TEST_CASE(
 
     // TS number checks
     uint year = 0;
-    BOOST_CHECK_EQUAL(thCluster_21->series.timeseriesNumbers[0][year],
-                      thCluster_11->series.timeseriesNumbers[0][year]);
+    BOOST_CHECK_EQUAL(thCluster_21->series.timeseriesNumbers[year],
+                      thCluster_11->series.timeseriesNumbers[year]);
 }
 
 BOOST_AUTO_TEST_CASE(
@@ -298,10 +297,10 @@ BOOST_AUTO_TEST_CASE(
 
     // TS number checks
     uint year = 0;
-    BOOST_CHECK_EQUAL(rnCluster_12->series.timeseriesNumbers[0][year],
-                      rnCluster_11->series.timeseriesNumbers[0][year]);
-    BOOST_CHECK_EQUAL(rnCluster_21->series.timeseriesNumbers[0][year],
-                      rnCluster_11->series.timeseriesNumbers[0][year]);
+    BOOST_CHECK_EQUAL(rnCluster_12->series.timeseriesNumbers[year],
+                      rnCluster_11->series.timeseriesNumbers[year]);
+    BOOST_CHECK_EQUAL(rnCluster_21->series.timeseriesNumbers[year],
+                      rnCluster_11->series.timeseriesNumbers[year]);
 }
 
 BOOST_AUTO_TEST_CASE(
@@ -330,8 +329,8 @@ BOOST_AUTO_TEST_CASE(
 
     // TS number checks
     uint year = 0;
-    BOOST_CHECK_EQUAL(rnCluster_21->series.timeseriesNumbers[0][year],
-                      rnCluster_11->series.timeseriesNumbers[0][year]);
+    BOOST_CHECK_EQUAL(rnCluster_21->series.timeseriesNumbers[year],
+                      rnCluster_11->series.timeseriesNumbers[year]);
 }
 
 BOOST_AUTO_TEST_CASE(
@@ -361,39 +360,6 @@ BOOST_AUTO_TEST_CASE(
     study->areas.resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
     BOOST_CHECK(not Generate(*study));
-}
-
-BOOST_AUTO_TEST_CASE(check_intra_modal_on_hydro_max_power_time_series)
-{
-    unsigned int nbYears = 3;
-    auto study = std::make_shared<Study>();
-    initializeStudy(study, nbYears);
-
-    study->parameters.intraModal |= timeSeriesHydroMaxPower;
-
-    unsigned int hydroMaxPowerTSsize = 3;
-
-    Area* area_1 = addAreaToStudy(study, "Area 1");
-    Area* area_2 = addAreaToStudy(study, "Area 2");
-    Area* area_3 = addAreaToStudy(study, "Area 3");
-
-    area_1->hydro.series->resizeMaxPowerTS(hydroMaxPowerTSsize);
-    area_2->hydro.series->resizeMaxPowerTS(hydroMaxPowerTSsize);
-    area_3->hydro.series->resizeMaxPowerTS(hydroMaxPowerTSsize);
-
-    study->areas.resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
-
-    BOOST_CHECK(TimeSeriesNumbers::Generate(*study));
-
-    for (unsigned int year = 0; year < nbYears; year++)
-    {
-        unsigned int ts_number_1 = area_1->hydro.series->timeseriesNumbersHydroMaxPower[0][year];
-        unsigned int ts_number_2 = area_2->hydro.series->timeseriesNumbersHydroMaxPower[0][year];
-        unsigned int ts_number_3 = area_3->hydro.series->timeseriesNumbersHydroMaxPower[0][year];
-
-        BOOST_CHECK_EQUAL(ts_number_1, ts_number_2);
-        BOOST_CHECK_EQUAL(ts_number_1, ts_number_3);
-    }
 }
 
 // =======================
@@ -430,10 +396,10 @@ BOOST_AUTO_TEST_CASE(
 
     // TS number checks
     uint year = 0;
-    uint drawnTsNbForLoad = area->load.series.timeseriesNumbers[0][year];
-    BOOST_CHECK_EQUAL(area->wind.series.timeseriesNumbers[0][year], drawnTsNbForLoad);
-    BOOST_CHECK_EQUAL(thCluster_1->series.timeseriesNumbers[0][year], drawnTsNbForLoad);
-    BOOST_CHECK_EQUAL(thCluster_2->series.timeseriesNumbers[0][year], drawnTsNbForLoad);
+    uint drawnTsNbForLoad = area->load.series.timeseriesNumbers[year];
+    BOOST_CHECK_EQUAL(area->wind.series.timeseriesNumbers[year], drawnTsNbForLoad);
+    BOOST_CHECK_EQUAL(thCluster_1->series.timeseriesNumbers[year], drawnTsNbForLoad);
+    BOOST_CHECK_EQUAL(thCluster_2->series.timeseriesNumbers[year], drawnTsNbForLoad);
 }
 
 BOOST_AUTO_TEST_CASE(
@@ -466,10 +432,10 @@ BOOST_AUTO_TEST_CASE(
 
     // TS number checks
     uint year = 0;
-    uint drawnTsNbForLoad = area->load.series.timeseriesNumbers[0][year];
-    BOOST_CHECK_EQUAL(area->wind.series.timeseriesNumbers[0][year], drawnTsNbForLoad);
-    BOOST_CHECK_EQUAL(thCluster_1->series.timeseriesNumbers[0][year], drawnTsNbForLoad);
-    BOOST_CHECK_EQUAL(thCluster_2->series.timeseriesNumbers[0][year], drawnTsNbForLoad);
+    uint drawnTsNbForLoad = area->load.series.timeseriesNumbers[year];
+    BOOST_CHECK_EQUAL(area->wind.series.timeseriesNumbers[year], drawnTsNbForLoad);
+    BOOST_CHECK_EQUAL(thCluster_1->series.timeseriesNumbers[year], drawnTsNbForLoad);
+    BOOST_CHECK_EQUAL(thCluster_2->series.timeseriesNumbers[year], drawnTsNbForLoad);
 }
 
 BOOST_AUTO_TEST_CASE(
@@ -526,8 +492,8 @@ BOOST_AUTO_TEST_CASE(
 
     // TS number checks
     uint year = 0;
-    BOOST_CHECK_EQUAL(rnCluster_1->series.timeseriesNumbers[0][year],
-                      area->load.series.timeseriesNumbers[0][year]);
+    BOOST_CHECK_EQUAL(rnCluster_1->series.timeseriesNumbers[year],
+                      area->load.series.timeseriesNumbers[year]);
 }
 
 BOOST_AUTO_TEST_CASE(
@@ -624,12 +590,12 @@ BOOST_AUTO_TEST_CASE(load_wind_thermal_in_intra_and_inter_modal____check_all_ts_
     // - inside an area
     // - for all areas
     uint year = 0;
-    uint referenceLoadTsNumber = area_1->load.series.timeseriesNumbers[0][year];
-    BOOST_CHECK_EQUAL(area_2->load.series.timeseriesNumbers[0][year], referenceLoadTsNumber);
-    BOOST_CHECK_EQUAL(area_1->wind.series.timeseriesNumbers[0][year], referenceLoadTsNumber);
-    BOOST_CHECK_EQUAL(area_2->wind.series.timeseriesNumbers[0][year], referenceLoadTsNumber);
-    BOOST_CHECK_EQUAL(thCluster_area_1->series.timeseriesNumbers[0][year], referenceLoadTsNumber);
-    BOOST_CHECK_EQUAL(thCluster_area_2->series.timeseriesNumbers[0][year], referenceLoadTsNumber);
+    uint referenceLoadTsNumber = area_1->load.series.timeseriesNumbers[year];
+    BOOST_CHECK_EQUAL(area_2->load.series.timeseriesNumbers[year], referenceLoadTsNumber);
+    BOOST_CHECK_EQUAL(area_1->wind.series.timeseriesNumbers[year], referenceLoadTsNumber);
+    BOOST_CHECK_EQUAL(area_2->wind.series.timeseriesNumbers[year], referenceLoadTsNumber);
+    BOOST_CHECK_EQUAL(thCluster_area_1->series.timeseriesNumbers[year], referenceLoadTsNumber);
+    BOOST_CHECK_EQUAL(thCluster_area_2->series.timeseriesNumbers[year], referenceLoadTsNumber);
 }
 
 BOOST_AUTO_TEST_CASE(check_all_drawn_ts_numbers_are_bounded_between_0_and_nb_of_ts)
@@ -678,13 +644,13 @@ BOOST_AUTO_TEST_CASE(check_all_drawn_ts_numbers_are_bounded_between_0_and_nb_of_
     // TS number checks : each energy drawn ts numbers are up-bounded with the number of TS of the
     // related energy
     uint year = 0;
-    uint loadTsNumber = area->load.series.timeseriesNumbers[0][year];
-    uint windTsNumber = area->wind.series.timeseriesNumbers[0][year];
-    uint solarTsNumber = area->solar.series.timeseriesNumbers[0][year];
-    uint hydroTsNumber = area->hydro.series->timeseriesNumbers[0][year];
-    uint thermalTsNumber = thCluster->series.timeseriesNumbers[0][year];
+    uint loadTsNumber = area->load.series.timeseriesNumbers[year];
+    uint windTsNumber = area->wind.series.timeseriesNumbers[year];
+    uint solarTsNumber = area->solar.series.timeseriesNumbers[year];
+    uint hydroTsNumber = area->hydro.series->timeseriesNumbers[year];
+    uint thermalTsNumber = thCluster->series.timeseriesNumbers[year];
     auto binding_constraints_TS_number = study->bindingConstraintsGroups["dummy"]
-                                           ->timeseriesNumbers[0][year];
+                                           ->timeseriesNumbers[year];
 
     BOOST_CHECK(loadTsNumber < loadNumberOfTs);
     BOOST_CHECK(windTsNumber < windNumberOfTs);

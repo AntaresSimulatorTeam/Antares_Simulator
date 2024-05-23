@@ -62,9 +62,9 @@ struct VCardHurdleCosts
     enum
     {
         //! Data Level
-        categoryDataLevel = Category::link,
+        categoryDataLevel = Category::DataLevel::link,
         //! File level (provided by the type of the results)
-        categoryFileLevel = ResultsType::categoryFile & (Category::id | Category::va),
+        categoryFileLevel = ResultsType::categoryFile & (Category::FileLevel::id | Category::FileLevel::va),
         //! Precision (views)
         precision = Category::all,
         //! Indentation (GUI)
