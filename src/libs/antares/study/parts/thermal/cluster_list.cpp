@@ -564,10 +564,11 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
             ret = false;
         }
 
-        // Write the ini file
-        buffer.clear() << folder << SEP << "list.ini";
-        ret = ini.save(buffer) && ret;
     }
+
+    // Write the ini file
+    buffer.clear() << folder << SEP << "list.ini";
+    ret = ini.save(buffer) && ret;
 
     return ret;
 }
