@@ -10,14 +10,11 @@ toc_depth: 2
 ## New features
 * Scenarized & hourly values for hydro pumping and hydro generation. Previously this data was not scenarized and daily.
 * STS groups are now "dynamic" : group names are no longer fixed by code, user is free to define these groups.
-* When XPRESS or SCIP solver is selected (using OR-Tools), solver specific parameters can be specified from the command-line (#1837)
+* Add optimization options from command line in OR-Tools / XPRESS (#1837)
 
 ## Improvements
 * Remove sc-builder prefix "hgp", use "h" instead for max hydro pumping & generation timeseries.
-* Add optimization options in OR-Tools / XPRESS (#1837)
 * Rationalize consistency checks on the number of columns (#2073)
-* Time Series generation refactor (#2045)
-* Create & forward declare BasisStatus struct, reduce build time (#2044)
 * Documentation reorganization and improvement (#2024) (#2023) (#2022)
 * Add doc for thermal heuristic (#2048)
 
@@ -40,6 +37,8 @@ toc_depth: 2
 * Move Run X Mode in dedicated files (#2054)
 * Fix duplicate build for series/series.cpp (#2046)
 * Improve dependency requirements (#2009)
+* Time Series generation refactor (#2045)
+* Create & forward declare BasisStatus struct, reduce build time (#2044)
 
 ### Code quality
 * Simplify code for timer (#2032)
