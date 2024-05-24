@@ -30,8 +30,8 @@ SimulationResults PerformSimulation(std::filesystem::path study_path) noexcept
 {
     try {
         APIInternal api;
-        auto study_loader = std::make_unique<FileTreeStudyLoader>(study_path);
-        return api.run(*study_loader.get());
+        FileTreeStudyLoader study_loader(study_path);
+        return api.run(study_loader);
     } catch (const std::exception& e) {
         Antares::API::Error err{.reason = e.what()};
         return
