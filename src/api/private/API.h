@@ -21,9 +21,14 @@
 
 #pragma once
 #include <filesystem>
+
+#include <antares/study-loader/IStudyLoader.h>
 #include "antares/api/SimulationResults.h"
-#include "antares/study-loader/IStudyLoader.h"
-#include "antares/study/study.h"
+
+namespace Antares::Data
+{
+class Study;
+}
 
 namespace Antares::API
 {
@@ -34,17 +39,18 @@ namespace Antares::API
  */
 class APIInternal
 {
-
 public:
     /**
      * @brief The run method is used to run the simulation.
-     * @param study_loader A pointer to an IStudyLoader object. The IStudyLoader object is used to load the study that will be simulated.
+     * @param study_loader A pointer to an IStudyLoader object. The IStudyLoader object is used to
+     * load the study that will be simulated.
      * @return SimulationResults object which contains the results of the simulation.
      */
     SimulationResults run(const IStudyLoader& study_loader);
+
 private:
     std::shared_ptr<Antares::Data::Study> study_;
     SimulationResults execute() const;
 };
 
-} // namespace API
+} // namespace Antares::API
