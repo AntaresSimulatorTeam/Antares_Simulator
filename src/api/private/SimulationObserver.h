@@ -36,7 +36,9 @@ class SimulationObserver: public Solver::Simulation::ISimulationObserver
 {
 public:
     /**
-     * @brief The notifyHebdoProblem method is used to notify of a problem during the simulation.
+     * @brief Used to notify of a solver HEBDO_PROBLEM.
+     * HEBDO_PROBLEM is assumed to be properly constructed and valid in order to build
+     * LpsFromAntares properly
      * @param problemeHebdo A pointer to a PROBLEME_HEBDO object representing the problem.
      * @param optimizationNumber The number of the optimization.
      * @param name The name of the problem.
