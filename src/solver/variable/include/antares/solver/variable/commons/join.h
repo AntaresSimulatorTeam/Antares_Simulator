@@ -222,7 +222,7 @@ public:
     void weekForEachArea(State& state, unsigned int numSpace)
     {
         LeftType::weekForEachArea(state, numSpace);
-        RightType::weekForEachArea(state);
+        RightType::weekForEachArea(state, numSpace);
     }
 
     void weekEnd(State& state)
