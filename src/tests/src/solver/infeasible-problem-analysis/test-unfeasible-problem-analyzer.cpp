@@ -26,7 +26,7 @@
 */
 #define WIN32_LEAN_AND_MEAN
 #define BOOST_TEST_MODULE unfeasible_problem_analyzer
-#define BOOST_TEST_DYN_LINK
+
 
 #include <boost/test/unit_test.hpp>
 #include <boost/test/data/test_case.hpp>
