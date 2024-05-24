@@ -402,7 +402,8 @@ public:
         // ------------------------------
         if (!AncestorType::isPrinted[0])
         {
-            return;
+	     NextType::buildSurveyReport(results, dataLevel, fileLevel, precision);
+	     return;
         }
 
         // And only if we match the current data level _and_ precision level
