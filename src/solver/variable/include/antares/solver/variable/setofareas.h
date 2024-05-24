@@ -140,7 +140,7 @@ public:
                         unsigned int nbYearsForCurrentSummary);
 
     void hourBegin(unsigned int hourInTheYear);
-    void hourForEachArea(State& state);
+    void hourForEachArea(State& state, unsigned int numSpace);
     void hourForEachLink(State& state);
     void hourEnd(State& state, unsigned int hourInTheYear);
 

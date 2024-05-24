@@ -188,7 +188,7 @@ inline void SetsOfAreas<NextT>::weekEnd(State&)
 }
 
 template<class NextT>
-void SetsOfAreas<NextT>::hourForEachArea(State& state)
+void SetsOfAreas<NextT>::hourForEachArea(State& state, unsigned int)
 {
     (void)state;
 }

@@ -240,7 +240,7 @@ public:
     void hourForEachArea(State& state, unsigned int numSpace)
     {
         LeftType::hourForEachArea(state, numSpace);
-        RightType::hourForEachArea(state);
+        RightType::hourForEachArea(state, numSpace);
     }
 
     void hourForEachLink(State& state)

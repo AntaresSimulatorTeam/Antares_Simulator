@@ -306,10 +306,10 @@ public:
         NextType::hourBegin(hourInTheYear);
     }
 
-    void hourForEachArea(State& state)
+    void hourForEachArea(State& state, unsigned int numSpace)
     {
         // Next variable
-        NextType::hourForEachArea(state);
+        NextType::hourForEachArea(state, numSpace);
     }
 
     template<class V, class SetT>
