@@ -20,8 +20,8 @@
  */
 
 #pragma once
+#include <antares/solver/lps/LpsFromAntares.h>
 #include <antares/solver/simulation/ISimulationObserver.h>
-#include "antares/solver/lps/LpsFromAntares.h"
 
 namespace Antares::API
 {
@@ -29,7 +29,8 @@ namespace Antares::API
 /**
  * @class SimulationObserver
  * @brief The SimulationObserver class is used to observe the simulation.
- * @details It inherits from the ISimulationObserver interface and overrides the notifyHebdoProblem method.
+ * @details It inherits from the ISimulationObserver interface and overrides the notifyHebdoProblem
+ * method.
  */
 class SimulationObserver: public Solver::Simulation::ISimulationObserver
 {
@@ -49,9 +50,10 @@ public:
      * @return An LpsFromAntares object containing the linear programming problems.
      */
     Solver::LpsFromAntares&& acquireLps() noexcept;
+
 private:
     Solver::LpsFromAntares lps_;
     std::mutex mutex_;
 };
 
-} // namespace Api
+} // namespace Antares::API
