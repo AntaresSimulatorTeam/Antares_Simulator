@@ -86,7 +86,8 @@ struct VCardSTSbyGroup
         //! Data Level
         categoryDataLevel = Category::DataLevel::area,
         //! File level (provided by the type of the results)
-        categoryFileLevel = ResultsType::categoryFile & (Category::FileLevel::id | Category::FileLevel::va),
+        categoryFileLevel = ResultsType::categoryFile
+                            & (Category::FileLevel::id | Category::FileLevel::va),
         //! Precision (views)
         precision = Category::all,
         //! Indentation (GUI)
@@ -398,33 +399,31 @@ public:
                            int fileLevel,
                            int precision) const
     {
-        // Building syntheses results
+        // Building synthesis results
         // ------------------------------
-        if (!AncestorType::isPrinted[0])
-        {
-	     NextType::buildSurveyReport(results, dataLevel, fileLevel, precision);
-	     return;
-        }
 
-        // And only if we match the current data level _and_ precision level
-        if ((dataLevel & VCardType::categoryDataLevel) && (fileLevel & VCardType::categoryFileLevel)
-            && (precision & VCardType::precision))
+        if (AncestorType::isPrinted[0])
         {
-            results.isCurrentVarNA[0] = AncestorType::isNonApplicable[0];
-
-            for (unsigned int column = 0; column < nbColumns_; column++)
+            // And only if we match the current data level _and_ precision level
+            if ((dataLevel & VCardType::categoryDataLevel)
+                && (fileLevel & VCardType::categoryFileLevel) && (precision & VCardType::precision))
             {
-                results.variableCaption = caption(column);
-                results.variableUnit = unit(column);
-                AncestorType::pResults[column].template buildSurveyReport<ResultsType, VCardType>(
-                  results,
-                  AncestorType::pResults[column],
-                  dataLevel,
-                  fileLevel,
-                  precision);
+                results.isCurrentVarNA[0] = AncestorType::isNonApplicable[0];
+
+                for (unsigned int column = 0; column < nbColumns_; column++)
+                {
+                    results.variableCaption = caption(column);
+                    results.variableUnit = unit(column);
+                    AncestorType::pResults[column]
+                      .template buildSurveyReport<ResultsType, VCardType>(
+                        results,
+                        AncestorType::pResults[column],
+                        dataLevel,
+                        fileLevel,
+                        precision);
+                }
             }
         }
-
         // Ask to the next item in the static list to export its results as well
         NextType::buildSurveyReport(results, dataLevel, fileLevel, precision);
     }
