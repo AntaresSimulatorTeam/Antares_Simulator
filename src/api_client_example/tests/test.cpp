@@ -20,9 +20,6 @@
  */
 
 #define BOOST_TEST_MODULE test_client_api
-#define BOOST_TEST_DYN_LINK
-
-#define WIN32_LEAN_AND_MEAN
 
 #include <boost/test/unit_test.hpp>
 #include "API_client.h"
