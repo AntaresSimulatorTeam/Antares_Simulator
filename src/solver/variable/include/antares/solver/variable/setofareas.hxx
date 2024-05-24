@@ -144,7 +144,7 @@ inline void SetsOfAreas<NextT>::yearBegin(uint /*year*/, uint /* numSpace */)
 }
 
 template<class NextT>
-inline void SetsOfAreas<NextT>::yearEndBuild(State& /*state*/, uint /*year*/)
+inline void SetsOfAreas<NextT>::yearEndBuild(State& /*state*/, uint /*year*/, uint /*numSpace*/)
 {
     // Nothing to do here
 }

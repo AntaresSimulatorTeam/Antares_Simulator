@@ -139,6 +139,17 @@ public:
         }
     }
 
+    void simulationBegin()
+    {
+        NextType::simulationBegin();
+    }
+
+    void simulationEnd()
+    {
+        NextType::simulationEnd();
+    }
+
+
     void initializeFromStudy(Data::Study& study)
     {
         pNbYearsParallel = study.maxNbYearsInParallel;

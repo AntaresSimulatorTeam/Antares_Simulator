@@ -127,8 +127,13 @@ public:
     void computeSummary(std::map<unsigned int, unsigned int>& numSpaceToYear,
                         unsigned int nbYearsForCurrentSummary);
 
+    void simulationBegin();
+    void simulationEnd();
+
     void yearBegin(uint year, uint numSpace);
     void yearEnd(uint year, uint numSpace);
+
+    void yearEndBuild(State& state, uint year, uint numSpace);
 
     void weekBegin(State& state);
 
@@ -147,6 +152,12 @@ public:
                                  uint numSpace) const;
 
     uint64_t memoryUsage() const;
+
+    template<class V>
+    void yearEndSpatialAggregates(V&, uint, uint)
+    {
+        // do nothing
+    }
 
     template<class I>
     static void provideInformations(I& infos);

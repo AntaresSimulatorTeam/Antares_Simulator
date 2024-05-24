@@ -138,7 +138,7 @@ public:
         UNUSED_VARIABLE(numSpace);
     }
 
-    static void yearEndBuild(State&, unsigned int)
+    static void yearEndBuild(State&, unsigned int, unsigned int)
     {
     }
 

@@ -99,6 +99,30 @@ inline void BindingConstraints<NextT>::provideInformations(I& infos)
 }
 
 template<class NextT>
+void BindingConstraints<NextT>::simulationBegin()
+{
+    for (auto& bc : pBindConstraints)
+    {
+	bc.simulationBegin();
+    }
+}
+
+
+template<class NextT>
+void BindingConstraints<NextT>::simulationEnd()
+{
+    for (auto& bc : pBindConstraints)
+    {
+	bc.simulationEnd();
+    }
+}
+
+template<class NextT>
+void BindingConstraints<NextT>::yearEndBuild(State& state, uint year, uint numSpace)
+{
+}
+
+template<class NextT>
 void BindingConstraints<NextT>::initializeFromStudy(Data::Study& study)
 {
     const std::vector<std::shared_ptr<Data::BindingConstraint>>
