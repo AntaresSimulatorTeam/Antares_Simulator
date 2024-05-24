@@ -48,8 +48,8 @@ void SimulationObserver::notifyHebdoProblem(const PROBLEME_HEBDO* problemeHebdo,
 {
     if (optimizationNumber != 1) return; //We only care about first optimization
     Solver::HebdoProblemToLpsTranslator translator;
-    unsigned int const year = problemeHebdo->year + 1;
-    unsigned int const week = problemeHebdo->weekInTheYear + 1;
+    const unsigned int year = problemeHebdo->year + 1;
+    const unsigned int week = problemeHebdo->weekInTheYear + 1;
     //common_data and weekly_data computed before the mutex lock to prevent blocking the thread
     auto [common_data, weekly_data] = translate(problemeHebdo, name, translator, year, week);
     std::lock_guard lock(mutex_);
