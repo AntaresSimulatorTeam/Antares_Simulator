@@ -9,6 +9,9 @@ on:
       release_tag:
         description: "Release tag"
         required: true
+      target_branch:
+        description: "Target branch or full commit SHA"
+        required: true
       release_name:
         description: "Release name"
         required: true
@@ -29,12 +32,14 @@ jobs:
             env:
               GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               tag: ${{ github.event.inputs.release_tag }}
+              target: ${{ github.event.inputs.target_branch }}
               title: ${{ github.event.inputs.release_name }}
               tests: ${{ github.event.inputs.run-tests }}
               target_branch: ${{ github.event.inputs.target_branch }}
               latest: ${{ github.event.inputs.set_latest }}
             run: |
               gh release create "$tag" \
+                  --target="$target" \
                   --repo="$GITHUB_REPOSITORY" \
                   --title="$title" \
                   --notes="Run tests: $tests"\
