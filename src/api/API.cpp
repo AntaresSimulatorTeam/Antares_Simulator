@@ -50,7 +50,7 @@ SimulationResults APIInternal::run(const IStudyLoader& study_loader)
  * @brief The execute method is used to execute the simulation.
  * @return SimulationResults object which contains the results of the simulation.
  *
- * This method is a copy of Application::execute
+ * This method is initialy a copy of Application::execute with some modifications hence the apparent dupllication
  */
 SimulationResults APIInternal::execute() const
 {
