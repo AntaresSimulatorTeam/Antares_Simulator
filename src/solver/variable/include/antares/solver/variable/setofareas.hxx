@@ -213,7 +213,7 @@ inline void SetsOfAreas<NextT>::buildSurveyReport(SurveyResults& results,
                                                   int precision) const
 {
     int count_int = count;
-    bool setOfAreasDataLevel = dataLevel & Category::setOfAreas;
+    bool setOfAreasDataLevel = dataLevel & Category::DataLevel::setOfAreas;
     if (count_int && setOfAreasDataLevel)
     {
         pSetsOfAreas[results.data.setOfAreasIndex]->buildSurveyReport(results,
@@ -231,7 +231,7 @@ inline void SetsOfAreas<NextT>::buildAnnualSurveyReport(SurveyResults& results,
                                                         uint numSpace) const
 {
     int count_int = count;
-    bool setOfAreasDataLevel = dataLevel & Category::setOfAreas;
+    bool setOfAreasDataLevel = dataLevel & Category::DataLevel::setOfAreas;
     if (count_int && setOfAreasDataLevel)
     {
         pSetsOfAreas[results.data.setOfAreasIndex]->buildAnnualSurveyReport(results,
@@ -246,7 +246,7 @@ template<class NextT>
 void SetsOfAreas<NextT>::buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
 {
     int count_int = count;
-    bool setOfAreasDataLevel = dataLevel & Category::setOfAreas;
+    bool setOfAreasDataLevel = dataLevel & Category::DataLevel::setOfAreas;
     if (count_int && setOfAreasDataLevel)
     {
         // Reset

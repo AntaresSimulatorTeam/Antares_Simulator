@@ -21,6 +21,7 @@
 #ifndef __SOLVER_OPTIMISATION_FUNCTIONS_H__
 #define __SOLVER_OPTIMISATION_FUNCTIONS_H__
 
+#include <antares/optimization-options/options.h>
 #include <antares/writer/i_writer.h>
 #include "antares/config/config.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"

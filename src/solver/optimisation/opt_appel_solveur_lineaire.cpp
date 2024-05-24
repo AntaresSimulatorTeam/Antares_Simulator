@@ -119,7 +119,7 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
     {
         if (problemeHebdo->ReinitOptimisation)
         {
-            if (options.useOrtools && solver != nullptr)
+            if (options.ortoolsUsed && solver)
             {
                 ORTOOLS_LibererProbleme(solver);
             }
@@ -140,7 +140,7 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
             Probleme.BaseDeDepartFournie = UTILISER_LA_BASE_DU_PROBLEME_SPX;
 
             TimeMeasurement updateMeasure;
-            if (options.useOrtools)
+            if (options.ortoolsUsed)
             {
                 ORTOOLS_ModifierLeVecteurCouts(solver,
                                                ProblemeAResoudre->CoutLineaire.data(),
@@ -213,9 +213,9 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
 
     Probleme.NombreDeContraintesCoupes = 0;
 
-    if (options.useOrtools)
+    if (options.ortoolsUsed)
     {
-        solver = ORTOOLS_ConvertIfNeeded(options.solverName, &Probleme, solver);
+        solver = ORTOOLS_ConvertIfNeeded(options.ortoolsSolver, &Probleme, solver);
     }
     const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
 
@@ -223,17 +223,17 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
                                         problemeHebdo->exportMPSOnError,
                                         optimizationNumber,
                                         &Probleme,
-                                        options.useOrtools,
+                                        options.ortoolsUsed,
                                         solver);
 
     auto mps_writer = mps_writer_factory.create();
     mps_writer->runIfNeeded(writer, filename);
 
     TimeMeasurement measure;
-    if (options.useOrtools)
+    if (options.ortoolsUsed)
     {
         const bool keepBasis = (optimizationNumber == PREMIERE_OPTIMISATION);
-        solver = ORTOOLS_Simplexe(&Probleme, solver, keepBasis);
+        solver = ORTOOLS_Simplexe(&Probleme, solver, keepBasis, options);
         if (solver != nullptr)
         {
             ProblemeAResoudre->ProblemesSpx[NumIntervalle] = (void*)solver;
@@ -256,7 +256,7 @@ static SimplexResult OPT_TryToCallSimplex(const OptimizationOptions& options,
     {
         if (ProblemeAResoudre->ExistenceDUneSolution != SPX_ERREUR_INTERNE)
         {
-            if (options.useOrtools && solver != nullptr)
+            if (options.ortoolsUsed && solver)
             {
                 ORTOOLS_LibererProbleme(solver);
             }
@@ -298,7 +298,7 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
                                                    ProblemeAResoudre->VariablesEntieres,
                                                    ProblemeAResoudre->basisStatus,
                                                    problemeHebdo->NamedProblems,
-                                                   problemeHebdo->solverLogs);
+                                                   options.solverLogs);
 
     bool PremierPassage = true;
 
@@ -386,7 +386,7 @@ bool OPT_AppelDuSimplexe(const OptimizationOptions& options,
         Probleme.SetUseNamedProblems(true);
 
         auto MPproblem = std::shared_ptr<MPSolver>(
-          ProblemSimplexeNommeConverter(options.solverName, &Probleme).Convert());
+          ProblemSimplexeNommeConverter(options.ortoolsSolver, &Probleme).Convert());
 
         auto analyzer = makeUnfeasiblePbAnalyzer();
         analyzer->run(MPproblem.get());

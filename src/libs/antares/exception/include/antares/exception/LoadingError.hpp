@@ -130,7 +130,13 @@ public:
     explicit InvalidSolver(const std::string& solver, const std::string& availableSolverList);
 };
 
-class InvalidStudy: public LoadingError
+class InvalidSolverSpecificParameters : public LoadingError
+{
+public:
+    explicit InvalidSolverSpecificParameters(const std::string& solver, const std::string& specificParameters);
+};
+
+class InvalidStudy : public LoadingError
 {
 public:
     explicit InvalidStudy(const Yuni::String& study);

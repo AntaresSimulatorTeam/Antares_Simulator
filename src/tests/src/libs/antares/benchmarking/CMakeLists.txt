@@ -8,6 +8,8 @@ target_link_libraries(${PROJ}
         Boost::unit_test_framework
 )
 
+set_target_properties(${PROJ} PROPERTIES FOLDER Unit-tests/${PROJ})
+
 add_test(NAME ${PROJ} COMMAND ${PROJ})
 
 set_property(TEST ${PROJ} PROPERTY LABELS unit)

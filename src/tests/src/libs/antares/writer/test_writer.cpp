@@ -21,7 +21,6 @@
 #include <list> // Fix for Boost < 1.67
 
 #define BOOST_TEST_MODULE test - writer tests
-#define BOOST_TEST_DYN_LINK
 #include <boost/test/data/test_case.hpp>
 #include <boost/test/unit_test.hpp>
 
@@ -88,6 +87,8 @@ TestContext createContext(const std::filesystem::path zipPath,
 }
 
 using ZipReaderHandle = void*;
+
+BOOST_AUTO_TEST_SUITE(writer)
 
 void checkZipContent(ZipReaderHandle handle,
                      const std::string& path,
@@ -185,3 +186,5 @@ BOOST_AUTO_TEST_CASE(test_in_memory_sanitize_antislash)
     const auto& map = writer->getMap();
     BOOST_CHECK(map.at("folder/test") == content1);
 }
+
+BOOST_AUTO_TEST_SUITE_END()

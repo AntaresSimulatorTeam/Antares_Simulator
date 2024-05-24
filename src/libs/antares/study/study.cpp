@@ -751,9 +751,7 @@ void Study::saveAboutTheStudy(Solver::IResultWriter& resultWriter)
         Antares::IniFile ini;
         header.CopySettingsToIni(ini, false);
 
-        std::string writeBuffer;
-        ini.saveToString(writeBuffer);
-
+        std::string writeBuffer = ini.toString();
         resultWriter.addEntryFromBuffer(path.c_str(), writeBuffer);
     }
 

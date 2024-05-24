@@ -64,9 +64,9 @@ void Areas<NextT>::buildSurveyReport(SurveyResults& results,
                                      int precision) const
 {
     int count_int = count;
-    bool linkDataLevel = dataLevel & Category::link;
-    bool areaDataLevel = dataLevel & Category::area;
-    bool thermalAggregateDataLevel = dataLevel & Category::thermalAggregate;
+    bool linkDataLevel = dataLevel & Category::DataLevel::link;
+    bool areaDataLevel = dataLevel & Category::DataLevel::area;
+    bool thermalAggregateDataLevel = dataLevel & Category::DataLevel::thermalAggregate;
     if (count_int && (linkDataLevel || areaDataLevel || thermalAggregateDataLevel))
     {
         assert(results.data.area != NULL
@@ -76,7 +76,7 @@ void Areas<NextT>::buildSurveyReport(SurveyResults& results,
         auto& area = *results.data.area;
 
         // Filtering
-        if (0 == (dataLevel & Category::link)) // filter on all but links
+        if (0 == (dataLevel & Category::DataLevel::link)) // filter on all but links
         {
             switch (precision)
             {
@@ -126,9 +126,9 @@ void Areas<NextT>::buildAnnualSurveyReport(SurveyResults& results,
                                            uint numSpace) const
 {
     int count_int = count;
-    bool linkDataLevel = dataLevel & Category::link;
-    bool areaDataLevel = dataLevel & Category::area;
-    bool thermalAggregateDataLevel = dataLevel & Category::thermalAggregate;
+    bool linkDataLevel = dataLevel & Category::DataLevel::link;
+    bool areaDataLevel = dataLevel & Category::DataLevel::area;
+    bool thermalAggregateDataLevel = dataLevel & Category::DataLevel::thermalAggregate;
     if (count_int && (linkDataLevel || areaDataLevel || thermalAggregateDataLevel))
     {
         assert(results.data.area != NULL
@@ -137,7 +137,7 @@ void Areas<NextT>::buildAnnualSurveyReport(SurveyResults& results,
         auto& area = *results.data.area;
 
         // Filtering
-        if (0 == (dataLevel & Category::link)) // filter on all but links
+        if (0 == (dataLevel & Category::DataLevel::link)) // filter on all but links
         {
             switch (precision)
             {
@@ -191,7 +191,7 @@ void Areas<NextT>::buildDigest(SurveyResults& results, int digestLevel, int data
     int count_int = count;
     if (count_int)
     {
-        if (dataLevel & Category::area)
+        if (dataLevel & Category::DataLevel::area)
         {
             assert(pAreaCount == results.data.study.areas.size());
 

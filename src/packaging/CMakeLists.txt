@@ -73,6 +73,8 @@ set(TARGET_LIBS #No alias
         solver-lib
         sys
         signal-handling
+        antares-solver-variable-info
+        optimization-options
         resources
 
         #model_antares

@@ -4,8 +4,8 @@ on:
   workflow_dispatch:
     inputs:
       target_branch:
-        description: "Target branch or full commit SHA (default develop)"
-        default: "develop"
+        description: "Target branch or full commit SHA"
+        required: true
       release_tag:
         description: "Release tag"
         required: true
