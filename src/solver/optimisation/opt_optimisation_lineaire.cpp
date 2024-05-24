@@ -71,7 +71,7 @@ void notifyProblemHebdo(const PROBLEME_HEBDO* problemeHebdo,
                         Solver::Simulation::ISimulationObserver& simulationObserver,
                         const OptPeriodStringGenerator* optPeriodStringGenerator)
 {
-    simulationObserver.notifyHebdoProblem(problemeHebdo,
+    simulationObserver.notifyHebdoProblem(*problemeHebdo,
                                           optimizationNumber,
                                           createMPSfilename(*optPeriodStringGenerator,
                                                             optimizationNumber));

@@ -40,7 +40,7 @@ public:
      * @param optimizationNumber The number of the optimization.
      * @param name The name of the problem.
      */
-    void notifyHebdoProblem(const PROBLEME_HEBDO* problemeHebdo,
+    void notifyHebdoProblem(const PROBLEME_HEBDO& problemeHebdo,
                             int optimizationNumber,
                             std::string_view name) override;
 

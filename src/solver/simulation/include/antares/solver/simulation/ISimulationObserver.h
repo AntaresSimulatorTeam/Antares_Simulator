@@ -42,7 +42,7 @@ public:
      * @param optimizationNumber The number of the optimization.
      * @param name The name of the problem.
      */
-    virtual void notifyHebdoProblem(const PROBLEME_HEBDO* problemeHebdo,
+    virtual void notifyHebdoProblem(const PROBLEME_HEBDO& problemeHebdo,
                                     int optimizationNumber,
                                     std::string_view name)
       = 0;
@@ -57,7 +57,7 @@ class NullSimulationObserver : public ISimulationObserver
 {
 public:
     ~NullSimulationObserver() override = default;
-    void notifyHebdoProblem(const PROBLEME_HEBDO*, int, std::string_view) override
+    void notifyHebdoProblem(const PROBLEME_HEBDO&, int, std::string_view) override
     {
         //null object pattern
     }
