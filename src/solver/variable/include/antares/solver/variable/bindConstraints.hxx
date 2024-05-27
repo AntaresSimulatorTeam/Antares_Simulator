@@ -307,4 +307,13 @@ inline void BindingConstraints<NextT>::computeSpatialAggregateWith(O& out,
 {
     // keep empty
 }
+
+template<class NextT>
+template<class VCardToFindT>
+inline void BindingConstraints<NextT>::retrieveResultsForLink(
+  typename Storage<VCardToFindT>::ResultsType** result,
+  const Data::AreaLink* link)
+{
+    // keep empty
+}
 } // namespace Antares::Solver::Variable
