@@ -2,7 +2,7 @@
 // Created by marechaljas on 28/06/23.
 //
 #define BOOST_TEST_MODULE binding_constraints_groups
-#define BOOST_TEST_DYN_LINK
+
 #define WIN32_LEAN_AND_MEAN
 #include <boost/test/unit_test.hpp>
 #include <filesystem>

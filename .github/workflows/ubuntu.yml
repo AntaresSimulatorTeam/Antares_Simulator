@@ -10,19 +10,28 @@ on:
       - issue-*
       - release/*
       - doc/*
+      - dependabot/*
   schedule:
     - cron: '21 2 * * *'
   workflow_call:
     inputs:
       run-tests:
         required: true
-        type: boolean
+        type: string
+      target_branch:
+        required: true
+        type: string
 
 env:
   GITHUB_TOKEN: ${{ github.token }}
   IS_RELEASE: ${{ github.event_name == 'workflow_dispatch' }}
   RUN_SIMPLE_TESTS: ${{ github.event_name == 'push' || inputs.run-tests == 'true' }}
   RUN_EXTENDED_TESTS: ${{ github.event_name == 'schedule' || inputs.run-tests == 'true' }}
+  REF: ${{ inputs.target_branch =='' && github.ref || inputs.target_branch}}
+  VCPKG_ROOT: ${{ github.workspace }}/vcpkg
+  vcpkgPackages: yaml-cpp antlr4
+  triplet: x64-linux
+  WX_CONFIG: /usr/bin/wx-config
 
 jobs:
 
@@ -34,14 +43,38 @@ jobs:
 
     runs-on: ubuntu-20.04
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
-    
+
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
+      with:
+        ref: ${{ env.REF }}
 
     - name: ccache
       uses: hendrikmuhs/ccache-action@v1.2
       with:
           key: ${{ env.os }}
+
+
+    - name : Init VCPKG submodule
+      run: |
+          git submodule update --init vcpkg
+
+    # Restore both vcpkg and its artifacts from the GitHub cache service.
+    - name: Restore vcpkg and its artifacts.
+      uses: actions/cache@v4
+      with:
+        # The first path is the location of vcpkg (it contains the vcpkg executable and data files).
+        # The other paths starting with '!' are exclusions: they contain termporary files generated during the build of the installed packages.
+        path: |
+          ${{ env.VCPKG_ROOT }}
+          !${{ env.VCPKG_ROOT }}/buildtrees
+          !${{ env.VCPKG_ROOT }}/packages
+          !${{ env.VCPKG_ROOT }}/downloads
+        # The key is composed in a way that it gets properly invalidated: this must happen whenever vcpkg's Git commit id changes, or the list of packages changes. In this case a cache miss must happen and a new entry with a new key with be pushed to GitHub the cache service.
+        # The key includes: hash of the vcpkg.json file, the hash of the vcpkg Git commit id, and the used vcpkg's triplet. The vcpkg's commit id would suffice, but computing an hash out it does not harm.
+        # Note: given a key, the cache content is immutable. If a cache entry has been created improperly, in order the recreate the right content the key must be changed as well, and it must be brand new (i.e. not existing already).
+        key: |
+          ${{ hashFiles( 'vcpkg_manifest/vcpkg.json' ) }}-${{ hashFiles( '.git/modules/vcpkg/HEAD' )}}-${{ env.triplet }}
 
     - name: Install libraries
       run: |
@@ -49,6 +82,19 @@ jobs:
            sudo apt-get install uuid-dev libwxgtk3.0-gtk3-dev
            sudo apt-get install libboost-test-dev
            sudo apt-get install g++-10 gcc-10
+
+    - name: export wxWidgets script
+      shell: bash
+      run: |
+           export WX_CONFIG=${{env.WX_CONFIG}}
+
+    - name : Install deps with VCPKG
+      run: |
+          cd vcpkg
+          ./bootstrap-vcpkg.sh
+          vcpkg install ${{env.vcpkgPackages}} --triplet ${{env.triplet}}
+          rm -rf buildtrees packages downloads
+      shell: bash
 
     - name: Read antares-deps version
       id: antares-deps-version
@@ -72,7 +118,7 @@ jobs:
 
     - name: Set up Python
       id: setup-python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: '3.12'
 
@@ -85,11 +131,15 @@ jobs:
       run: |
           git submodule update --init src/antares-deps
           git submodule update --init --remote --recursive src/tests/resources/Antares_Simulator_Tests
+    
 
+    
     - name: Configure
       run: |
            cmake -B _build -S src \
            -DCMAKE_C_COMPILER_LAUNCHER=ccache \
+           -DVCPKG_ROOT="${{env.VCPKG_ROOT}}" \
+           -DVCPKG_TARGET_TRIPLET=${{ env.triplet }} \
            -DCMAKE_C_COMPILER=/usr/bin/gcc-10 \
            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
            -DCMAKE_CXX_COMPILER=/usr/bin/g++-10 \
@@ -138,7 +188,7 @@ jobs:
 
     - name: Upload logs for failed tests
       if: ${{ failure() }}
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: test-log
         path: ${{ github.workspace }}/_build/Testing/Temporary/LastTest.log
@@ -262,20 +312,22 @@ jobs:
            rm -rf install
 
     - name: Installer archive upload push
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
+        name: targz
         path: _build/*.tar.gz
 
     - name: Installer deb upload push
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
+        name: deb
         path: _build/*.deb
-      
-    
+
+
     - name: Publish assets
       if: ${{ env.IS_RELEASE == 'true' }}
       env:
         GITHUB_TOKEN: ${{ github.token }}
         tag: ${{ github.event.inputs.release_tag }}
       run: |
-        gh release upload "$tag" _build/*.tar.gz _build/*.deb           
+        gh release upload "$tag" _build/*.tar.gz _build/*.deb

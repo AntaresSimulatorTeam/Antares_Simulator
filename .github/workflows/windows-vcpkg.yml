@@ -10,19 +10,24 @@ on:
       - issue-*
       - release/*
       - doc/*
+      - dependabot/*
   schedule:
     - cron: '21 2 * * *'
   workflow_call:
     inputs:
       run-tests:
         required: true
-        type: boolean
+        type: string
+      target_branch:
+        required: true
+        type: string
 
 env:
   GITHUB_TOKEN: ${{ github.token }}
   IS_RELEASE: ${{ github.event_name == 'workflow_dispatch' }}
   RUN_SIMPLE_TESTS: ${{ github.event_name == 'push' || inputs.run-tests == 'true' }}
   RUN_EXTENDED_TESTS: ${{ github.event_name == 'schedule' || inputs.run-tests == 'true' }}
+  REF: ${{ inputs.target_branch =='' && github.ref || inputs.target_branch}}
 
 
 jobs:
@@ -32,16 +37,18 @@ jobs:
       # Indicates the location of the vcpkg as a Git submodule of the project repository.
       VCPKG_ROOT: ${{ github.workspace }}/vcpkg
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
-      RUN_EXTENDED_TESTS: ${{ github.event_name == 'schedule'}}
       os: windows-latest
       test-platform: windows-2022
-      vcpkgPackages: wxwidgets boost-test
+      vcpkgPackages: wxwidgets boost-test yaml-cpp antlr4
       triplet: x64-windows
 
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v3
+
+    - uses: actions/checkout@v4
+      with:
+        ref: ${{ env.REF }}
 
     - name: Config OR-Tools URL
       run: |
@@ -77,10 +84,10 @@ jobs:
 
     # Restore both vcpkg and its artifacts from the GitHub cache service.
     - name: Restore vcpkg and its artifacts.
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         # The first path is the location of vcpkg (it contains the vcpkg executable and data files).
-        # The other paths starting with '!' are exclusions: they contain termporary files generated during the build of the installed packages.
+        # The other paths starting with '!' are exclusions: they contain temporary files generated during the build of the installed packages.
         path: |
           ${{ env.VCPKG_ROOT }}
           !${{ env.VCPKG_ROOT }}/buildtrees
@@ -116,7 +123,7 @@ jobs:
         ortools-dir: ${{env.ORTOOLS_DIR}}
 
     - name: Setup Python 3.12
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       id: setup-python
       with:
         architecture: 'x64'
@@ -151,7 +158,7 @@ jobs:
     - name: Build
       shell: bash
       run: |
-           cmake --build _build --config Release -j2
+           cmake --build _build --config Release -j$(nproc)
     # simtest
     - name: Read simtest version
       id: simtest-version
@@ -183,7 +190,7 @@ jobs:
 
     - name: Upload build on failure
       if: ${{ failure() }}
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: MPS-diff
         path: ${{ github.workspace }}/src/tests/mps
@@ -304,7 +311,7 @@ jobs:
 
     - name: Upload NSIS log on failure
       if: ${{ failure() }}
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: NSISError.log
         path: _build/_CPack_Packages/win64/NSIS/NSISOutput.log
@@ -315,8 +322,9 @@ jobs:
            cpack -G ZIP
 
     - name: Installer upload
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
+        name: installer
         path: _build/${{env.NSIS_NAME}}
 
     - name: Publish assets
@@ -325,5 +333,5 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
         tag: ${{ github.event.inputs.release_tag }}
       run: |
-        gh release upload "$tag" _build/*.zip
+        gh release upload "$tag" _build/*.zip _build/*.exe
       shell: bash
