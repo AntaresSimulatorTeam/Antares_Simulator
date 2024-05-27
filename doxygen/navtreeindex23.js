@@ -1,6 +1,5 @@
 var NAVTREEINDEX23 =
 {
-"structAntares_1_1Data_1_1TimeSeriesToCStr_3_014_01_4.html":[7,0,0,3,70],
 "structAntares_1_1Data_1_1TimeSeriesToCStr_3_018_01_4.html":[7,0,0,3,71],
 "structAntares_1_1Data_1_1WhoseNameContains.html":[7,0,0,3,76],
 "structAntares_1_1Date_1_1Calendar_1_1Settings.html":[7,0,0,4,0,0],
@@ -249,5 +248,6 @@ var NAVTREEINDEX23 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSpilledEnergyAfterCSR.html#adeaf9b4ccf90f428c622b74879731d75":[7,0,0,12,4,4,96,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardThermalAirPollutantEmissions.html":[7,0,0,12,4,4,102],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardThermalAirPollutantEmissions.html#ab38b58b113854c3cd6268b940963cb0b":[7,0,0,12,4,4,102,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardThermalAirPollutantEmissions.html#af8e4d8b6a6407060fb314c2886542b94":[7,0,0,12,4,4,102,2]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardThermalAirPollutantEmissions.html#af8e4d8b6a6407060fb314c2886542b94":[7,0,0,12,4,4,102,2],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardThermalAirPollutantEmissions_1_1Multiple.html":[7,0,0,12,4,4,102,0]
 };

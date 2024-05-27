@@ -1,6 +1,5 @@
 var NAVTREEINDEX25 =
 {
-"structShortTermStorage_1_1RESULTS.html":[7,0,18,1],
 "structSimplexResult.html":[7,0,212],
 "structStartUpCostsData.html":[7,0,215],
 "structStudyBuilder.html":[7,0,216],

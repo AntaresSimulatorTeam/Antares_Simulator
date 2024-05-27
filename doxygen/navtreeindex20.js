@@ -1,6 +1,5 @@
 var NAVTREEINDEX20 =
 {
-"dir_a655e11fe3f477f26d90df2209763065.html":[8,0,0,5,2,2,0],
 "dir_a6c8838202afb2f4d967027b3636f365.html":[8,0,0,1,0,28],
 "dir_a8105e53224513a6872d62dd582a3fcf.html":[8,0,0,5,2,1,1,1,0,2],
 "dir_a8159c443681a6d092760e2cb820f877.html":[8,0,0,5,2,2,9,1],
@@ -249,5 +248,6 @@ var NAVTREEINDEX20 =
 "functions_type_o.html":[7,3,3,10],
 "functions_type_p.html":[7,3,3,11],
 "functions_type_r.html":[7,3,3,12],
-"functions_type_s.html":[7,3,3,13]
+"functions_type_s.html":[7,3,3,13],
+"functions_type_t.html":[7,3,3,14]
 };

@@ -1,6 +1,5 @@
 var NAVTREEINDEX21 =
 {
-"functions_type_t.html":[7,3,3,14],
 "functions_type_v.html":[7,3,3,15],
 "functions_u.html":[7,3,0,20],
 "functions_v.html":[7,3,0,21],
@@ -249,5 +248,6 @@ var NAVTREEINDEX21 =
 "namespaceLocalPolicy.html#aeee1fcbcea6a68643d0eb7929e246933":[6,0,0,5],
 "namespacemembers.html":[6,1,0],
 "namespacemembers_func.html":[6,1,1],
-"namespacemembers_type.html":[6,1,2]
+"namespacemembers_type.html":[6,1,2],
+"namespaces.html":[6,0]
 };

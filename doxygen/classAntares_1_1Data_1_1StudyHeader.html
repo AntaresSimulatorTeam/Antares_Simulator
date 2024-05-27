@@ -145,9 +145,9 @@ $(document).ready(function(){initNavTree('classAntares_1_1Data_1_1StudyHeader.ht
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:ac234ecac4e391781d7d7a5372f2830d4" id="r_ac234ecac4e391781d7d7a5372f2830d4"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1StudyHeader.html#ac234ecac4e391781d7d7a5372f2830d4">ReadVersionFromFile</a> (const AnyString &amp;filename, std::string &amp;<a class="el" href="classAntares_1_1Data_1_1StudyHeader.html#ab5ace17c779306b4e256beb53281c88f">version</a>)</td></tr>
-<tr class="memdesc:ac234ecac4e391781d7d7a5372f2830d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the version of a header.  <br /></td></tr>
-<tr class="separator:ac234ecac4e391781d7d7a5372f2830d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a680fd1975ad94a961a98ed34dcb5b6b3" id="r_a680fd1975ad94a961a98ed34dcb5b6b3"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1StudyHeader.html#a680fd1975ad94a961a98ed34dcb5b6b3">readVersionFromFile</a> (const std::filesystem::path &amp;filename, std::string &amp;<a class="el" href="classAntares_1_1Data_1_1StudyHeader.html#ab5ace17c779306b4e256beb53281c88f">version</a>)</td></tr>
+<tr class="memdesc:a680fd1975ad94a961a98ed34dcb5b6b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the version of a header.  <br /></td></tr>
+<tr class="separator:a680fd1975ad94a961a98ed34dcb5b6b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Constructor &amp; Destructor</h2></td></tr>
 <tr class="memitem:a3d4729a38cdfe5de876e24895a9a6dc5" id="r_a3d4729a38cdfe5de876e24895a9a6dc5"><td class="memItemLeft" align="right" valign="top"><a id="a3d4729a38cdfe5de876e24895a9a6dc5" name="a3d4729a38cdfe5de876e24895a9a6dc5"></a>
@@ -170,9 +170,9 @@ time_t&#160;</td><td class="memItemRight" valign="bottom"><b>dateLastSave</b></t
 Yuni::String&#160;</td><td class="memItemRight" valign="bottom"><b>author</b></td></tr>
 <tr class="memdesc:a1dde88024c6dc9b87cbe87dc806b428a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Author. <br /></td></tr>
 <tr class="separator:a1dde88024c6dc9b87cbe87dc806b428a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a399a9626b30d2fd481f6cb70b38f05ad" id="r_a399a9626b30d2fd481f6cb70b38f05ad"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classAntares_1_1Data_1_1StudyVersion.html">StudyVersion</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1StudyHeader.html#a399a9626b30d2fd481f6cb70b38f05ad">tryToFindTheVersion</a> (const AnyString &amp;folder)</td></tr>
-<tr class="memdesc:a399a9626b30d2fd481f6cb70b38f05ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Try to determine the version of a study.  <br /></td></tr>
-<tr class="separator:a399a9626b30d2fd481f6cb70b38f05ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abdfbf07cea3e7898f4f41aa023a55143" id="r_abdfbf07cea3e7898f4f41aa023a55143"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classAntares_1_1Data_1_1StudyVersion.html">StudyVersion</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1StudyHeader.html#abdfbf07cea3e7898f4f41aa023a55143">tryToFindTheVersion</a> (const std::string &amp;folder)</td></tr>
+<tr class="memdesc:abdfbf07cea3e7898f4f41aa023a55143"><td class="mdescLeft">&#160;</td><td class="mdescRight">Try to determine the version of a study.  <br /></td></tr>
+<tr class="separator:abdfbf07cea3e7898f4f41aa023a55143"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a147bd67a2671e4d250141c33bc5e97d4" id="r_a147bd67a2671e4d250141c33bc5e97d4"><td class="memItemLeft" align="right" valign="top"><a id="a147bd67a2671e4d250141c33bc5e97d4" name="a147bd67a2671e4d250141c33bc5e97d4"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>StudyHeader</b> ()</td></tr>
 <tr class="memdesc:a147bd67a2671e4d250141c33bc5e97d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor. <br /></td></tr>
@@ -237,8 +237,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>CopySettingsToIni</b>
 
 </div>
 </div>
-<a id="ac234ecac4e391781d7d7a5372f2830d4" name="ac234ecac4e391781d7d7a5372f2830d4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac234ecac4e391781d7d7a5372f2830d4">&#9670;&#160;</a></span>ReadVersionFromFile()</h2>
+<a id="a680fd1975ad94a961a98ed34dcb5b6b3" name="a680fd1975ad94a961a98ed34dcb5b6b3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a680fd1975ad94a961a98ed34dcb5b6b3">&#9670;&#160;</a></span>readVersionFromFile()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -247,9 +247,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>CopySettingsToIni</b>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">bool Antares::Data::StudyHeader::ReadVersionFromFile </td>
+          <td class="memname">bool Antares::Data::StudyHeader::readVersionFromFile </td>
           <td>(</td>
-          <td class="paramtype">const AnyString &amp;&#160;</td>
+          <td class="paramtype">const std::filesystem::path &amp;&#160;</td>
           <td class="paramname"><em>filename</em>, </td>
         </tr>
         <tr>
@@ -320,8 +320,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>CopySettingsToIni</b>
 
 </div>
 </div>
-<a id="a399a9626b30d2fd481f6cb70b38f05ad" name="a399a9626b30d2fd481f6cb70b38f05ad"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a399a9626b30d2fd481f6cb70b38f05ad">&#9670;&#160;</a></span>tryToFindTheVersion()</h2>
+<a id="abdfbf07cea3e7898f4f41aa023a55143" name="abdfbf07cea3e7898f4f41aa023a55143"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abdfbf07cea3e7898f4f41aa023a55143">&#9670;&#160;</a></span>tryToFindTheVersion()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -332,7 +332,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>CopySettingsToIni</b>
         <tr>
           <td class="memname"><a class="el" href="classAntares_1_1Data_1_1StudyVersion.html">StudyVersion</a> Antares::Data::StudyHeader::tryToFindTheVersion </td>
           <td>(</td>
-          <td class="paramtype">const AnyString &amp;&#160;</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>folder</em></td><td>)</td>
           <td></td>
         </tr>

@@ -1,6 +1,5 @@
 var NAVTREEINDEX18 =
 {
-"classIItem_1_1IPart.html":[7,0,124,0],
 "classIItem_1_1IPart.html#a56e3a54b583e40ed3f6d46289af3fd82":[7,0,124,0,1],
 "classIItem_1_1IPart.html#ad28234ed96ce8ffcbc38ce521cd906f5":[7,0,124,0,0],
 "classIItem_1_1Tag.html":[7,0,124,1],
@@ -249,5 +248,6 @@ var NAVTREEINDEX18 =
 "cleaner_8h_source.html":[8,0,0,1,0,25,0,0,0,10],
 "clipboard_8h_source.html":[8,0,0,5,2,1,0,0],
 "cluster-item_8h_source.html":[8,0,0,5,2,1,1,2,1,2],
-"cluster-order_8h_source.html":[8,0,0,5,2,1,1,2,0,0]
+"cluster-order_8h_source.html":[8,0,0,5,2,1,1,2,0,0],
+"color_8h_source.html":[8,0,0,5,0,0,0,0,3]
 };

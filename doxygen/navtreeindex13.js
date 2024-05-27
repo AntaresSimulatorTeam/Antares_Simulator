@@ -1,6 +1,5 @@
 var NAVTREEINDEX13 =
 {
-"classAntares_1_1Solver_1_1Simulation_1_1ISimulation.html#a4e621e06583f06088e59d02072b9d626":[7,0,0,12,3,16,7],
 "classAntares_1_1Solver_1_1Simulation_1_1ISimulation.html#a7ba42a043ab3c43a4aa8f6054521423d":[7,0,0,12,3,16,4],
 "classAntares_1_1Solver_1_1Simulation_1_1ISimulation.html#aa059fab98b888cc2cd4a4cd5445bee56":[7,0,0,12,3,16,0],
 "classAntares_1_1Solver_1_1Simulation_1_1ISimulation.html#aadfaa7b7a4158b05d21ed8f0fd86ad48":[7,0,0,12,3,16,1],
@@ -16,8 +15,8 @@ var NAVTREEINDEX13 =
 "classAntares_1_1Solver_1_1Simulation_1_1randomNumbers.html":[7,0,0,12,3,20],
 "classAntares_1_1Solver_1_1Simulation_1_1yearJob.html":[7,0,0,12,3,23],
 "classAntares_1_1Solver_1_1Simulation_1_1yearRandomNumbers.html":[7,0,0,12,3,24],
-"classAntares_1_1Solver_1_1SolarAreaNumberOfTSretriever.html":[7,0,0,12,19],
-"classAntares_1_1Solver_1_1ThermalAreaNumberOfTSretriever.html":[7,0,0,12,20],
+"classAntares_1_1Solver_1_1SolarAreaNumberOfTSretriever.html":[7,0,0,12,18],
+"classAntares_1_1Solver_1_1ThermalAreaNumberOfTSretriever.html":[7,0,0,12,19],
 "classAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1OverallCost.html":[7,0,0,12,4,0,0],
 "classAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1OverallCost.html#a69253ca6687ddb497e19441f46c3376c":[7,0,0,12,4,0,0,1],
 "classAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1OverallCost.html#a8f404b70ff65e628ab0b85bd5f834abe":[7,0,0,12,4,0,0,4],
@@ -249,5 +248,6 @@ var NAVTREEINDEX13 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Pumping.html#a150e0c45103f5e688239f3e0b5a29c9c":[7,0,0,12,4,4,36,4],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Pumping.html#a4b63e9974883e15ff7b106592368d893":[7,0,0,12,4,4,36,2],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Pumping.html#a60f93e4c40a22d9d9d6cedadc45d9bc3":[7,0,0,12,4,4,36,1],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Pumping.html#ad3e0cd98441cf1c568e038e2441f65aa":[7,0,0,12,4,4,36,3]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Pumping.html#ad3e0cd98441cf1c568e038e2441f65aa":[7,0,0,12,4,4,36,3],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1RenewableGeneration.html":[7,0,0,12,4,4,37]
 };

@@ -165,9 +165,9 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>addEntryFromB
 <tr class="memitem:aca94c5a66ef86d52da1e5538c13c518a" id="r_aca94c5a66ef86d52da1e5538c13c518a"><td class="memItemLeft" align="right" valign="top"><a id="aca94c5a66ef86d52da1e5538c13c518a" name="aca94c5a66ef86d52da1e5538c13c518a"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>addEntryFromBuffer</b> (const std::string &amp;entryPath, std::string &amp;entryContent)=0</td></tr>
 <tr class="separator:aca94c5a66ef86d52da1e5538c13c518a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae5b3b7e0bbf95c8f921783ee002483ef" id="r_ae5b3b7e0bbf95c8f921783ee002483ef"><td class="memItemLeft" align="right" valign="top"><a id="ae5b3b7e0bbf95c8f921783ee002483ef" name="ae5b3b7e0bbf95c8f921783ee002483ef"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>addEntryFromFile</b> (const std::string &amp;entryPath, const std::string &amp;filePath)=0</td></tr>
-<tr class="separator:ae5b3b7e0bbf95c8f921783ee002483ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab27ea9a36948886f43d6eb9bf8cbc15b" id="r_ab27ea9a36948886f43d6eb9bf8cbc15b"><td class="memItemLeft" align="right" valign="top"><a id="ab27ea9a36948886f43d6eb9bf8cbc15b" name="ab27ea9a36948886f43d6eb9bf8cbc15b"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>addEntryFromFile</b> (const std::filesystem::path &amp;entryPath, const std::filesystem::path &amp;filePath)=0</td></tr>
+<tr class="separator:ab27ea9a36948886f43d6eb9bf8cbc15b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a866bc43cd373dc27cf69ec3968737c8c" id="r_a866bc43cd373dc27cf69ec3968737c8c"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1IResultWriter.html#a866bc43cd373dc27cf69ec3968737c8c">flush</a> ()=0</td></tr>
 <tr class="separator:a866bc43cd373dc27cf69ec3968737c8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8e9f122870f79dada049faf51d8dc5d5" id="r_a8e9f122870f79dada049faf51d8dc5d5"><td class="memItemLeft" align="right" valign="top"><a id="a8e9f122870f79dada049faf51d8dc5d5" name="a8e9f122870f79dada049faf51d8dc5d5"></a>
@@ -200,7 +200,7 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>finalize</b> 
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Waits for completion of every write operation previously appended. An <a class="el" href="classAntares_1_1Solver_1_1IOError.html">IOError</a> may be raised if any of those fails. </p>
+<p>Waits for completion of every write operation previously appended. A runtime error may be raised if any of those fails. </p>
 
 <p>Implemented in <a class="el" href="classAntares_1_1Solver_1_1InMemoryWriter.html#ae79bc278d4eff373baf313ebb426361b">Antares::Solver::InMemoryWriter</a>, <a class="el" href="classAntares_1_1Solver_1_1ImmediateFileResultWriter.html#af331f4ce440c90a0b402f9dbd6c67629">Antares::Solver::ImmediateFileResultWriter</a>, and <a class="el" href="classAntares_1_1Solver_1_1ZipWriter.html#a1aada9478675d3a460f1561be42a140e">Antares::Solver::ZipWriter</a>.</p>
 

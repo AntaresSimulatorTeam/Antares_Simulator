@@ -167,8 +167,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:aa9403aaecd1e285a331840146de08b4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a89db18c2000344a721515a019b260bf0" id="r_a89db18c2000344a721515a019b260bf0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1InMemoryWriter.html#a89db18c2000344a721515a019b260bf0">addEntryFromBuffer</a> (const std::string &amp;entryPath, std::string &amp;entryContent) override</td></tr>
 <tr class="separator:a89db18c2000344a721515a019b260bf0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a36fa8909250b7a66322b53c7983d7188" id="r_a36fa8909250b7a66322b53c7983d7188"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1InMemoryWriter.html#a36fa8909250b7a66322b53c7983d7188">addEntryFromFile</a> (const std::string &amp;entryPath, const std::string &amp;filePath) override</td></tr>
-<tr class="separator:a36fa8909250b7a66322b53c7983d7188"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9edd0f1f4856037959fa62ba05002afe" id="r_a9edd0f1f4856037959fa62ba05002afe"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1InMemoryWriter.html#a9edd0f1f4856037959fa62ba05002afe">addEntryFromFile</a> (const std::filesystem::path &amp;entryPath, const std::filesystem::path &amp;filePath) override</td></tr>
+<tr class="separator:a9edd0f1f4856037959fa62ba05002afe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae79bc278d4eff373baf313ebb426361b" id="r_ae79bc278d4eff373baf313ebb426361b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1InMemoryWriter.html#ae79bc278d4eff373baf313ebb426361b">flush</a> () override</td></tr>
 <tr class="separator:ae79bc278d4eff373baf313ebb426361b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a51ddf72f2c825c32f3912f09c55eb405" id="r_a51ddf72f2c825c32f3912f09c55eb405"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1InMemoryWriter.html#a51ddf72f2c825c32f3912f09c55eb405">needsTheJobQueue</a> () const override</td></tr>
@@ -256,8 +256,8 @@ const MapType &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getMap
 
 </div>
 </div>
-<a id="a36fa8909250b7a66322b53c7983d7188" name="a36fa8909250b7a66322b53c7983d7188"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a36fa8909250b7a66322b53c7983d7188">&#9670;&#160;</a></span>addEntryFromFile()</h2>
+<a id="a9edd0f1f4856037959fa62ba05002afe" name="a9edd0f1f4856037959fa62ba05002afe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9edd0f1f4856037959fa62ba05002afe">&#9670;&#160;</a></span>addEntryFromFile()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -268,13 +268,13 @@ const MapType &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getMap
         <tr>
           <td class="memname">void Antares::Solver::InMemoryWriter::addEntryFromFile </td>
           <td>(</td>
-          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramtype">const std::filesystem::path &amp;&#160;</td>
           <td class="paramname"><em>entryPath</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramtype">const std::filesystem::path &amp;&#160;</td>
           <td class="paramname"><em>filePath</em>&#160;</td>
         </tr>
         <tr>
@@ -344,7 +344,7 @@ const MapType &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getMap
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Waits for completion of every write operation previously appended. An <a class="el" href="classAntares_1_1Solver_1_1IOError.html">IOError</a> may be raised if any of those fails. </p>
+<p>Waits for completion of every write operation previously appended. A runtime error may be raised if any of those fails. </p>
 
 <p>Implements <a class="el" href="classAntares_1_1Solver_1_1IResultWriter.html#a866bc43cd373dc27cf69ec3968737c8c">Antares::Solver::IResultWriter</a>.</p>
 

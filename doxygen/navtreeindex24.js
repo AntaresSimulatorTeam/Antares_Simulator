@@ -1,6 +1,5 @@
 var NAVTREEINDEX24 =
 {
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardThermalAirPollutantEmissions_1_1Multiple.html":[7,0,0,12,4,4,102,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesHydro.html":[7,0,0,12,4,4,103],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesHydro.html#a72dcb8ce6f01f1d9008d68bb3b34bf7a":[7,0,0,12,4,4,103,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesHydro.html#a998646f4c3544ae0bb5b6a695eaf710d":[7,0,0,12,4,4,103,1],
@@ -249,5 +248,6 @@ var NAVTREEINDEX24 =
 "structSOLDE__MOYEN__DES__ECHANGES.html":[7,0,214],
 "structSavingToStreamFixture.html":[7,0,205],
 "structShortTermStorageLevelData.html":[7,0,211],
-"structShortTermStorage_1_1PROPERTIES.html":[7,0,18,0]
+"structShortTermStorage_1_1PROPERTIES.html":[7,0,18,0],
+"structShortTermStorage_1_1RESULTS.html":[7,0,18,1]
 };

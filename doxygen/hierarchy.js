@@ -1087,7 +1087,6 @@ var hierarchy =
       ] ],
       [ "Antares::FatalError", "classAntares_1_1FatalError.html", null ],
       [ "Antares::Optimization::StringIsNotWellFormated", "classAntares_1_1Optimization_1_1StringIsNotWellFormated.html", null ],
-      [ "Antares::Solver::IOError", "classAntares_1_1Solver_1_1IOError.html", null ],
       [ "Antares::Solver::Initialization::Error::NoQueueService", "classAntares_1_1Solver_1_1Initialization_1_1Error_1_1NoQueueService.html", null ],
       [ "ConstraintBuilder::ConstraintBuilderInvalidOperator", "classConstraintBuilder_1_1ConstraintBuilderInvalidOperator.html", null ]
     ] ],
