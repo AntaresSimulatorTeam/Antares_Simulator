@@ -73,17 +73,17 @@ struct VCardPrice
         //! Indentation (GUI)
         static constexpr uint8_t nodeDepthForGUI =  +0,
         //! Decimal precision
-        decimal = 2,
+        static constexpr uint8_t decimal =  2,
         //! Number of columns used by the variable (One ResultsType per column)
         static constexpr uint8_t columnCount =  1,
         //! The Spatial aggregation
-        spatialAggregate = Category::spatialAggregateAverage,
-        spatialAggregateMode = Category::spatialAggregateEachYear,
-        spatialAggregatePostProcessing = Category::spatialAggregatePostProcessingPrice,
+        static constexpr uint8_t spatialAggregate =  Category::spatialAggregateAverage,
+        static constexpr uint8_t spatialAggregateMode =  Category::spatialAggregateEachYear,
+        static constexpr uint8_t spatialAggregatePostProcessing =  Category::spatialAggregatePostProcessingPrice,
         //! Intermediate values
-        hasIntermediateValues = 1,
+        static constexpr uint8_t hasIntermediateValues =  1,
         //! Can this variable be non applicable (0 : no, 1 : yes)
-        isPossiblyNonApplicable = 0,
+        static constexpr uint8_t isPossiblyNonApplicable =  0,
     };
 
     typedef IntermediateValues IntermediateValuesBaseType;

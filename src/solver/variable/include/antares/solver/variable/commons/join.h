@@ -69,15 +69,15 @@ struct VCardJoin
         //! Indentation (GUI)
         static constexpr uint8_t nodeDepthForGUI =  +0,
         //! Decimal precision
-        decimal = 0,
+        static constexpr uint8_t decimal =  0,
         //! Number of columns used by the variable (One ResultsType per column)
         static constexpr uint8_t columnCount =  0,
         //! The Spatial aggregation
-        spatialAggregate = Category::noSpatialAggregate,
-        spatialAggregateMode = Category::spatialAggregateEachYear,
-        spatialAggregatePostProcessing = 0,
+        static constexpr uint8_t spatialAggregate =  Category::noSpatialAggregate,
+        static constexpr uint8_t spatialAggregateMode =  Category::spatialAggregateEachYear,
+        static constexpr uint8_t spatialAggregatePostProcessing =  0,
         //! Intermediate values
-        hasIntermediateValues = 0,
+        static constexpr uint8_t hasIntermediateValues =  0,
     };
 
 }; // class VCard

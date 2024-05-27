@@ -93,17 +93,17 @@ struct VCardSTSbyGroup
         //! Indentation (GUI)
         static constexpr uint8_t nodeDepthForGUI =  +0,
         //! Decimal precision
-        decimal = 0,
+        static constexpr uint8_t decimal =  0,
         // Nb of columns occupied by this variable in year-by-year results
         static constexpr uint8_t columnCount =  Category::dynamicColumns,
         //! The Spatial aggregation
-        spatialAggregate = Category::spatialAggregateSum,
-        spatialAggregateMode = Category::spatialAggregateEachYear,
-        spatialAggregatePostProcessing = 0,
+        static constexpr uint8_t spatialAggregate =  Category::spatialAggregateSum,
+        static constexpr uint8_t spatialAggregateMode =  Category::spatialAggregateEachYear,
+        static constexpr uint8_t spatialAggregatePostProcessing =  0,
         //! Intermediate values
-        hasIntermediateValues = 1,
+        static constexpr uint8_t hasIntermediateValues =  1,
         //! Can this variable be non applicable (0 : no, 1 : yes)
-        isPossiblyNonApplicable = 0,
+        static constexpr uint8_t isPossiblyNonApplicable =  0,
     };
 
     typedef IntermediateValues IntermediateValuesDeepType;

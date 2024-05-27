@@ -134,18 +134,18 @@ struct VCardProxy
         //! Indentation (GUI)
         static constexpr uint8_t nodeDepthForGUI =  +0,
         //! Decimal precision
-        decimal = VCardOrigin::decimal,
+        static constexpr uint8_t decimal =  VCardOrigin::decimal,
         //! Number of columns used by the variable (One ResultsType per column)
         static constexpr uint8_t columnCount =  VCardOrigin::columnCount,
         //! The Spatial aggregation
-        spatialAggregate = Category::noSpatialAggregate,
-        spatialAggregateMode = Category::spatialAggregateEachYear,
-        spatialAggregatePostProcessing = 0,
+        static constexpr uint8_t spatialAggregate =  Category::noSpatialAggregate,
+        static constexpr uint8_t spatialAggregateMode =  Category::spatialAggregateEachYear,
+        static constexpr uint8_t spatialAggregatePostProcessing =  0,
 
         //! Intermediate values
-        hasIntermediateValues = 1,
+        static constexpr uint8_t hasIntermediateValues =  1,
         //! Can this variable be non applicable (0 : no, 1 : yes)
-        isPossiblyNonApplicable = VCardOrigin::isPossiblyNonApplicable,
+        static constexpr uint8_t isPossiblyNonApplicable =  VCardOrigin::isPossiblyNonApplicable,
     };
 
     struct Multiple

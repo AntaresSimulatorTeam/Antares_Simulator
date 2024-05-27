@@ -71,13 +71,13 @@ struct VCardBindingConstMarginCost
         //! Indentation (GUI)
         static constexpr uint8_t nodeDepthForGUI =  +0,
         //! Decimal precision
-        decimal = 2,
+        static constexpr uint8_t decimal =  2,
         //! Number of columns used by the variable
         static constexpr uint8_t columnCount =  1,
         //! Intermediate values
-        hasIntermediateValues = 1,
+        static constexpr uint8_t hasIntermediateValues =  1,
         //! Can this variable be non applicable (0 : no, 1 : yes)
-        isPossiblyNonApplicable = 1,
+        static constexpr uint8_t isPossiblyNonApplicable =  1,
     };
 
     typedef IntermediateValues IntermediateValuesBaseType;

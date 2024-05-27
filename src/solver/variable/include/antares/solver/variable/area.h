@@ -63,9 +63,9 @@ struct VCardAllAreas
         //! Number of columns used by the variable (One ResultsType per column)
         static constexpr uint8_t columnCount =  0,
         //! The Spatial aggregation
-        spatialAggregate = Category::noSpatialAggregate,
+        static constexpr uint8_t spatialAggregate =  Category::noSpatialAggregate,
         //! Intermediate values
-        hasIntermediateValues = 0,
+        static constexpr uint8_t hasIntermediateValues =  0,
     };
 
 }; // class VCard
