@@ -89,21 +89,21 @@ struct VCardSTSbyGroup
         static constexpr uint8_t categoryFileLevel =  ResultsType::categoryFile
                             & (Category::FileLevel::id | Category::FileLevel::va),
         //! Precision (views)
-        static constexpr uint8_t precision =  Category::all,
+        static constexpr uint8_t precision =   Category::all;
         //! Indentation (GUI)
-        static constexpr uint8_t nodeDepthForGUI =  +0,
+        static constexpr uint8_t nodeDepthForGUI =   +0;
         //! Decimal precision
-        static constexpr uint8_t decimal =  0,
+        static constexpr uint8_t decimal =   0;
         // Nb of columns occupied by this variable in year-by-year results
-        static constexpr uint8_t columnCount =  Category::dynamicColumns,
+        static constexpr uint8_t columnCount =   Category::dynamicColumns;
         //! The Spatial aggregation
-        static constexpr uint8_t spatialAggregate =  Category::spatialAggregateSum,
-        static constexpr uint8_t spatialAggregateMode =  Category::spatialAggregateEachYear,
-        static constexpr uint8_t spatialAggregatePostProcessing =  0,
+        static constexpr uint8_t spatialAggregate =   Category::spatialAggregateSum;
+        static constexpr uint8_t spatialAggregateMode =   Category::spatialAggregateEachYear;
+        static constexpr uint8_t spatialAggregatePostProcessing =   0;
         //! Intermediate values
-        static constexpr uint8_t hasIntermediateValues =  1,
+        static constexpr uint8_t hasIntermediateValues =   1;
         //! Can this variable be non applicable (0 : no, 1 : yes)
-        static constexpr uint8_t isPossiblyNonApplicable =  0,
+        static constexpr uint8_t isPossiblyNonApplicable =   0;
     };
 
     typedef IntermediateValues IntermediateValuesDeepType;

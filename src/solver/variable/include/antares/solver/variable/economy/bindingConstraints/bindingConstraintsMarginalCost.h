@@ -65,19 +65,19 @@ struct VCardBindingConstMarginCost
         //! Data Level
         categoryDataLevel = Category::DataLevel::bindingConstraint,
         //! File level (provided by the type of the results)
-        static constexpr uint8_t categoryFileLevel =  ResultsType::categoryFile & (Category::FileLevel::bc),
+        static constexpr uint8_t categoryFileLevel =   ResultsType::categoryFile & (Category::FileLevel::bc);
         //! Precision (views)
-        static constexpr uint8_t precision =  Category::all,
+        static constexpr uint8_t precision =   Category::all;
         //! Indentation (GUI)
-        static constexpr uint8_t nodeDepthForGUI =  +0,
+        static constexpr uint8_t nodeDepthForGUI =   +0;
         //! Decimal precision
-        static constexpr uint8_t decimal =  2,
+        static constexpr uint8_t decimal =   2;
         //! Number of columns used by the variable
-        static constexpr uint8_t columnCount =  1,
+        static constexpr uint8_t columnCount =   1;
         //! Intermediate values
-        static constexpr uint8_t hasIntermediateValues =  1,
+        static constexpr uint8_t hasIntermediateValues =   1;
         //! Can this variable be non applicable (0 : no, 1 : yes)
-        static constexpr uint8_t isPossiblyNonApplicable =  1,
+        static constexpr uint8_t isPossiblyNonApplicable =   1;
     };
 
     typedef IntermediateValues IntermediateValuesBaseType;
