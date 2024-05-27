@@ -183,7 +183,7 @@ public:
     void computeSpatialAggregateWith(O& out);
 
     template<class VCardSearchT, class O>
-    void computeSpatialAggregateWith(O& out, const Data::Area* area);
+    void computeSpatialAggregateWith(O& out, const Data::Area* area, uint numSpace);
 
     template<class VCardToFindT>
     const double* retrieveHourlyResultsForCurrentYear() const;

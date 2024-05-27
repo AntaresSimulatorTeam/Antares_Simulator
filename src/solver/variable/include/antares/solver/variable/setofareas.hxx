@@ -357,7 +357,9 @@ inline void SetsOfAreas<NextT>::computeSpatialAggregateWith(O&)
 
 template<class NextT>
 template<class SearchVCardT, class O>
-inline void SetsOfAreas<NextT>::computeSpatialAggregateWith(O& out, const Data::Area* area)
+inline void SetsOfAreas<NextT>::computeSpatialAggregateWith(O& out,
+                                                            const Data::Area* area,
+                                                            uint numSpace)
 {
     (void)out;
     (void)area;

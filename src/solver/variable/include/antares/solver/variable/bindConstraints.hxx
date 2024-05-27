@@ -280,5 +280,23 @@ template<class NextT>
 template<class V>
 void BindingConstraints<NextT>::simulationEndSpatialAggregates(V& allVars)
 {
+    // keep empty
 }
+
+template<class NextT>
+template<class V>
+void BindingConstraints<NextT>::computeSpatialAggregatesSummary(
+  V& allVars,
+  std::map<unsigned int, unsigned int>& numSpaceToYear,
+  unsigned int nbYearsForCurrentSummary)
+{
+    // keep empty
+}
+
+template<class NextT>
+void BindingConstraints<NextT>::beforeYearByYearExport(uint year, uint numSpace)
+{
+    // keep empty
+}
+
 } // namespace Antares::Solver::Variable

@@ -173,6 +173,13 @@ public:
     template<class V>
     void simulationEndSpatialAggregates(V& allVars);
 
+    template<class V>
+    void computeSpatialAggregatesSummary(V& allVars,
+                                         std::map<unsigned int, unsigned int>& numSpaceToYear,
+                                         unsigned int);
+
+    void beforeYearByYearExport(uint year, uint numSpace);
+
 private:
     // For each binding constraint, output variable static list associated.
     std::vector<NextType> pBindConstraints;
