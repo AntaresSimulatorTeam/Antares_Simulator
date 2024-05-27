@@ -80,4 +80,3 @@ jobs:
         uses: ./.github/workflows/build-userguide.yml
         with:
           run-tests: ${{ inputs.run-tests }}
-          target_branch: ${{ inputs.target_branch }}

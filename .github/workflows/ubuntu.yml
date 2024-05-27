@@ -120,6 +120,8 @@ jobs:
           cd src/api_client_example
            cmake -B _build -S . \
            -DCMAKE_C_COMPILER_LAUNCHER=ccache \
+           -DVCPKG_ROOT="${{env.VCPKG_ROOT}}" \
+           -DVCPKG_TARGET_TRIPLET=${{ env.triplet }} \
            -DCMAKE_C_COMPILER=/usr/bin/gcc-10 \
            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
            -DCMAKE_CXX_COMPILER=/usr/bin/g++-10 \
