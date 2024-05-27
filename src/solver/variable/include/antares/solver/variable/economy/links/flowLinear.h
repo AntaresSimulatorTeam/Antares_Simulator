@@ -62,7 +62,6 @@ struct VCardFlowLinear
     enum
     {
         //! Data Level
-        static constexpr uint8_t categoryDataLevel =  Category::DataLevel::link;
         //! File level (provided by the type of the results)
         static constexpr uint8_t categoryFileLevel =   ResultsType::categoryFile & (Category::FileLevel::id | Category::FileLevel::va);
         //! Precision (views)

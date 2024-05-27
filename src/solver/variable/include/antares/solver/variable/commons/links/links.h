@@ -61,28 +61,25 @@ struct VCardAllLinks
     //! The expecte results
     using ResultsType = Results<>;
 
-    enum
-    {
-        //! Data Level
-        static constexpr uint8_t categoryDataLevel =  Category::DataLevel::link;
-        //! File level (provided by the type of the results)
-        static constexpr uint8_t categoryFileLevel =   ResultsType::categoryFile;
-        //! Indentation (GUI)
-        static constexpr uint8_t nodeDepthForGUI =   +1;
-        //! Number of columns used by the variable (One ResultsType per column)
-        static constexpr uint8_t columnCount =   0;
-        //! The Spatial aggregation
-        static constexpr uint8_t spatialAggregate =   Category::spatialAggregateSum;
-        //! Intermediate values
-        static constexpr uint8_t hasIntermediateValues =   0;
-    };
+    //! Data Level
+    static constexpr uint8_t categoryDataLevel =  Category::DataLevel::link;
+    //! File level (provided by the type of the results)
+    static constexpr uint8_t categoryFileLevel =   ResultsType::categoryFile;
+    //! Indentation (GUI)
+    static constexpr uint8_t nodeDepthForGUI =   +1;
+    //! Number of columns used by the variable (One ResultsType per column)
+    static constexpr uint8_t columnCount =   0;
+    //! The Spatial aggregation
+    static constexpr uint8_t spatialAggregate =   Category::spatialAggregateSum;
+    //! Intermediate values
+    static constexpr uint8_t hasIntermediateValues =   0;
 
 }; // class VCard
 
 template<class VariablePerLink>
 class Links
 {
-public:
+    public:
     //! Type of the next static variable
     using NextType = VariablePerLink;
     //! VCard
