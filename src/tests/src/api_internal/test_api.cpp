@@ -20,34 +20,39 @@
  */
 
 #define BOOST_TEST_MODULE test api
-#define BOOST_TEST_DYN_LINK
 
 #define WIN32_LEAN_AND_MEAN
 
-#include <boost/test/unit_test.hpp>
 #include <filesystem>
+
+#include <boost/test/unit_test.hpp>
+
 #include "API.h"
 #include "in-memory-study.h"
 
-class InMemoryStudyLoader : public Antares::IStudyLoader
+class InMemoryStudyLoader: public Antares::IStudyLoader
 {
 public:
-    explicit InMemoryStudyLoader(bool success = true) : success_(success) {};
-    [[nodiscard]] std::unique_ptr<Antares::Data::Study> load() const override {
-        if (!success_) {
-        return nullptr;
-      }
-      StudyBuilder builder;
-      builder.addAreaToStudy("area1");
-      builder.addAreaToStudy("area2");
-      builder.study->initializeRuntimeInfos();
-      builder.study->parameters.resultFormat = ResultFormat::inMemory;
-      builder.study->prepareOutput();
-      return std::move(builder.study);
-    };
+    explicit InMemoryStudyLoader(bool success = true):
+        success_(success){};
+
+    [[nodiscard]] std::unique_ptr<Antares::Data::Study> load() const override
+    {
+        if (!success_)
+        {
+            return nullptr;
+        }
+        StudyBuilder builder;
+        builder.addAreaToStudy("area1");
+        builder.addAreaToStudy("area2");
+        builder.study->initializeRuntimeInfos();
+        builder.study->parameters.resultFormat = ResultFormat::inMemory;
+        builder.study->prepareOutput();
+        return std::move(builder.study);
+    }
+
     bool success_ = true;
 };
-
 
 BOOST_AUTO_TEST_CASE(simulation_path_points_to_results)
 {
@@ -55,7 +60,8 @@ BOOST_AUTO_TEST_CASE(simulation_path_points_to_results)
     auto study_loader = std::make_unique<InMemoryStudyLoader>();
     auto results = api.run(*study_loader.get());
     BOOST_CHECK_EQUAL(results.simulationPath, std::filesystem::path{"no_output"});
-    //Testing for "no_output" is a bit weird, but it's the only way to test this without actually running the simulation
+    // Testing for "no_output" is a bit weird, but it's the only way to test this without actually
+    // running the simulation
 }
 
 BOOST_AUTO_TEST_CASE(api_run_contains_antares_problem)
@@ -77,7 +83,7 @@ BOOST_AUTO_TEST_CASE(result_failure_when_study_is_null)
     BOOST_CHECK(results.error);
 }
 
-//Test where data in problems are consistant with data in study
+// Test where data in problems are consistant with data in study
 BOOST_AUTO_TEST_CASE(result_contains_problems)
 {
     Antares::API::APIInternal api;

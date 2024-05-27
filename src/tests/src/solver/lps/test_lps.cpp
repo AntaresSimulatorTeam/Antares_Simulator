@@ -20,11 +20,11 @@
  */
 
 #define BOOST_TEST_MODULE test translator
-#define BOOST_TEST_DYN_LINK
 
 #define WIN32_LEAN_AND_MEAN
 
 #include <boost/test/unit_test.hpp>
+
 #include <antares/solver/lps/LpsFromAntares.h>
 
 using namespace Antares::Solver;
@@ -58,16 +58,18 @@ BOOST_AUTO_TEST_CASE(lps_with_both_constant_and_weekly_data_is_not_empty)
     BOOST_CHECK(!lps.empty());
 }
 
-BOOST_AUTO_TEST_CASE(replace_const_data) {
-        LpsFromAntares lps;
-        ConstantDataFromAntares var;
-        var.VariablesCount = 42;
-        lps.setConstantData(var);
-        BOOST_CHECK(lps.constantProblemData.VariablesCount == 42);
+BOOST_AUTO_TEST_CASE(replace_const_data)
+{
+    LpsFromAntares lps;
+    ConstantDataFromAntares var;
+    var.VariablesCount = 42;
+    lps.setConstantData(var);
+    BOOST_CHECK(lps.constantProblemData.VariablesCount == 42);
 }
 
-//Add weekly data for week 1 year 1
-BOOST_AUTO_TEST_CASE(add_weekly_data_for_week_1_year_1) {
+// Add weekly data for week 1 year 1
+BOOST_AUTO_TEST_CASE(add_weekly_data_for_week_1_year_1)
+{
     LpsFromAntares lps;
     WeeklyDataFromAntares w;
     w.RHS.push_back(43);

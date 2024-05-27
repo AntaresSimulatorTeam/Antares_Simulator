@@ -20,7 +20,6 @@
  */
 
 #define BOOST_TEST_MODULE test - benchmarking
-#define BOOST_TEST_DYN_LINK
 #include <thread>
 
 #include <boost/test/unit_test.hpp>
