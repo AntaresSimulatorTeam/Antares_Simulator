@@ -298,6 +298,14 @@ public:
         NextType::hourBegin(hourInTheYear);
     }
 
+    template<class VCardToFindT>
+    void retrieveResultsForArea(typename Storage<VCardToFindT>::ResultsType** result,
+                                const Data::Area* area)
+    {
+        // Next variable
+        NextType::template retrieveResultsForArea<VCardToFindT>(result, area);
+    }
+
     void hourEnd(State& state, unsigned int hourInTheYear)
     {
         if (!isInitialized())
