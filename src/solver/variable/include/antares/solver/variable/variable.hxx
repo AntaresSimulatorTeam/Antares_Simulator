@@ -358,7 +358,7 @@ template<class ChildT, class NextT, class VCardT>
 inline uint64_t IVariable<ChildT, NextT, VCardT>::memoryUsage() const
 {
     uint64_t r = VariableAccessorType::Value(pResults);
-    if ((int)VCardT::columnCount != (int)Category::dynamicColumns)
+    if (VCardT::columnCount != (int)Category::dynamicColumns)
     {
         // Intermediate values
         if (VCardT::hasIntermediateValues)
