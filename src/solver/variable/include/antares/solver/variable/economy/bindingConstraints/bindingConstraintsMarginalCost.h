@@ -303,13 +303,13 @@ public:
                                 const Data::Area* area)
     {
         // Next variable
-        NextType::template retrieveResultsForArea<VCardToFindT>(result, area);
+        NextType::retrieveResultsForArea<VCardToFindT>(result, area);
     }
 
     template<class V>
     void simulationEndSpatialAggregates(V& allVars)
     {
-        NextType::template simulationEndSpatialAggregates<V>(allVars);
+        NextType::simulationEndSpatialAggregates<V>(allVars);
     }
 
     template<class V>
@@ -317,29 +317,29 @@ public:
                                          std::map<unsigned int, unsigned int>& numSpaceToYear,
                                          unsigned int nbYearsForCurrentSummary)
     {
-        NextType::template computeSpatialAggregatesSummary<V>(allVars,
-                                                              numSpaceToYear,
-                                                              nbYearsForCurrentSummary);
+        NextType::computeSpatialAggregatesSummary<V>(allVars,
+                                                     numSpaceToYear,
+                                                     nbYearsForCurrentSummary);
     }
 
     template<class SearchVCardT, class O>
     void computeSpatialAggregateWith(O& out, const Data::Area* area, uint numSpace)
     {
-        NextType::template computeSpatialAggregateWith<SearchVCardT, O>(out, area, numSpace);
+        NextType::computeSpatialAggregateWith<SearchVCardT, O>(out, area, numSpace);
     }
 
     template<class VCardToFindT>
     void retrieveResultsForLink(typename Storage<VCardToFindT>::ResultsType** result,
                                 const Data::AreaLink* link)
     {
-        NextType::template retrieveResultsForLink<VCardToFindT>(result, link);
+        NextType::retrieveResultsForLink<VCardToFindT>(result, link);
     }
 
     template<class VCardToFindT>
     void retrieveResultsForThermalCluster(typename Storage<VCardToFindT>::ResultsType** result,
                                           const Data::ThermalCluster* cluster)
     {
-        NextType::template retrieveResultsForThermalCluster<VCardToFindT>(result, cluster);
+        NextType::retrieveResultsForThermalCluster<VCardToFindT>(result, cluster);
     }
 
     void hourEnd(State& state, unsigned int hourInTheYear)
