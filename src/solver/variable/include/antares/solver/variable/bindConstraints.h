@@ -165,6 +165,14 @@ public:
     template<class I>
     static void provideInformations(I& infos);
 
+    template<class VCardToFindT>
+    void retrieveResultsForArea(typename Storage<VCardToFindT>::ResultsType** result,
+                                const Data::Area* area);
+    void buildDigest(SurveyResults&, int digestLevel, int dataLevel) const;
+
+    template<class V>
+    void simulationEndSpatialAggregates(V& allVars);
+
 private:
     // For each binding constraint, output variable static list associated.
     std::vector<NextType> pBindConstraints;

@@ -259,4 +259,26 @@ void BindingConstraints<NextT>::hourForEachArea(State&, unsigned int numSpace)
     // keep empty
 }
 
+template<class NextT>
+template<class VCardToFindT>
+inline void BindingConstraints<NextT>::retrieveResultsForArea(
+  typename Storage<VCardToFindT>::ResultsType** result,
+  const Data::Area* area)
+{
+    // keep empty
+}
+
+template<class NextT>
+void BindingConstraints<NextT>::buildDigest(SurveyResults& results,
+                                            int digestLevel,
+                                            int dataLevel) const
+{
+    // keep empty
+}
+
+template<class NextT>
+template<class V>
+void BindingConstraints<NextT>::simulationEndSpatialAggregates(V& allVars)
+{
+}
 } // namespace Antares::Solver::Variable
