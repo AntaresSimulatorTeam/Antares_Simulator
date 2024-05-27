@@ -306,6 +306,28 @@ public:
         NextType::template retrieveResultsForArea<VCardToFindT>(result, area);
     }
 
+    template<class V>
+    void simulationEndSpatialAggregates(V& allVars)
+    {
+        NextType::template simulationEndSpatialAggregates<V>(allVars);
+    }
+
+    template<class V>
+    void computeSpatialAggregatesSummary(V& allVars,
+                                         std::map<unsigned int, unsigned int>& numSpaceToYear,
+                                         unsigned int nbYearsForCurrentSummary)
+    {
+        NextType::template computeSpatialAggregatesSummary<V>(allVars,
+                                                              numSpaceToYear,
+                                                              nbYearsForCurrentSummary);
+    }
+
+    template<class SearchVCardT, class O>
+    void computeSpatialAggregateWith(O& out, const Data::Area* area, uint numSpace)
+    {
+        NextType::template computeSpatialAggregateWith<SearchVCardT, O>(out, area, numSpace);
+    }
+
     void hourEnd(State& state, unsigned int hourInTheYear)
     {
         if (!isInitialized())

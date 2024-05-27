@@ -248,6 +248,12 @@ public:
         assert(false);
     }
 
+    template<class SearchVCardT, class O>
+    static void computeSpatialAggregateWith(O&, const Data::Area*, uint numSpace)
+    {
+        assert(false);
+    }
+
     template<class VCardToFindT>
     const double* retrieveHourlyResultsForCurrentYear(uint) const
     {

@@ -273,7 +273,7 @@ inline void BindingConstraints<NextT>::retrieveResultsForArea(
 {
     for (uint i = 0; i != pBCcount; ++i)
     {
-        pBindConstraints[i].retrieveResultsForArea(result, area);
+        pBindConstraints[i].retrieveResultsForArea<VCardToFindT>(result, area);
     }
 }
 
@@ -294,7 +294,7 @@ void BindingConstraints<NextT>::simulationEndSpatialAggregates(V& allVars)
 {
     for (uint i = 0; i != pBCcount; ++i)
     {
-        pBindConstraints[i].simulationEndSpatialAggregates(allVars);
+        pBindConstraints[i].simulationEndSpatialAggregates<V>(allVars);
     }
 }
 
@@ -307,9 +307,9 @@ void BindingConstraints<NextT>::computeSpatialAggregatesSummary(
 {
     for (uint i = 0; i != pBCcount; ++i)
     {
-        pBindConstraints[i].computeSpatialAggregatesSummary(allVars,
-                                                            numSpaceToYear,
-                                                            nbYearsForCurrentSummary);
+        pBindConstraints[i].computeSpatialAggregatesSummary<V>(allVars,
+                                                               numSpaceToYear,
+                                                               nbYearsForCurrentSummary);
     }
 }
 
@@ -330,7 +330,7 @@ inline void BindingConstraints<NextT>::computeSpatialAggregateWith(O& out,
 {
     for (uint i = 0; i != pBCcount; ++i)
     {
-        pBindConstraints[i].computeSpatialAggregateWith(out, area, numSpace);
+        pBindConstraints[i].computeSpatialAggregateWith<SearchVCardT, O>(out, area, numSpace);
     }
 }
 
