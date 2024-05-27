@@ -365,13 +365,10 @@ enum SeedIndex
     seedMax,
 };
 
-enum
-{
     //! A default seed for random number generators
-    antaresSeedDefaultValue = 5489,
+constexpr unsigned antaresSeedDefaultValue = 5489;
     //! Increment for RNG (generators) with a different seed
-    antaresSeedIncrement = 1000000, // arbitrary value
-};
+constexpr unsigned antaresSeedIncrement = 1000000; // arbitrary value
 
 /*!
 ** \brief Convert a seed into a string
