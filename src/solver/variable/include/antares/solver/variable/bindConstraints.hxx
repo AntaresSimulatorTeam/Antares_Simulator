@@ -299,4 +299,12 @@ void BindingConstraints<NextT>::beforeYearByYearExport(uint year, uint numSpace)
     // keep empty
 }
 
+template<class NextT>
+template<class SearchVCardT, class O>
+inline void BindingConstraints<NextT>::computeSpatialAggregateWith(O& out,
+                                                                   const Data::Area* area,
+                                                                   uint numSpace)
+{
+    // keep empty
+}
 } // namespace Antares::Solver::Variable

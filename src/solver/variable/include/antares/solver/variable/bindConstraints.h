@@ -173,6 +173,8 @@ public:
     template<class V>
     void simulationEndSpatialAggregates(V& allVars);
 
+    template<class VCardSearchT, class O>
+    void computeSpatialAggregateWith(O& out, const Data::Area* area, uint numSpace);
     template<class V>
     void computeSpatialAggregatesSummary(V& allVars,
                                          std::map<unsigned int, unsigned int>& numSpaceToYear,
