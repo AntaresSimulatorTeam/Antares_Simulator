@@ -136,6 +136,9 @@ public:
     void yearEndBuild(State& state, uint year, uint numSpace);
 
     void weekBegin(State& state);
+    void weekEnd(State& state);
+    void weekForEachArea(State&, unsigned int numSpace);
+    void hourForEachArea(State&, unsigned int numSpace);
 
     void hourBegin(uint hourInTheYear);
     void hourEnd(State& state, uint hourInTheYear);

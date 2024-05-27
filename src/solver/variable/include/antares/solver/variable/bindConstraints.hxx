@@ -209,6 +209,15 @@ void BindingConstraints<NextT>::weekBegin(State& state)
 }
 
 template<class NextT>
+void BindingConstraints<NextT>::weekEnd(State& state)
+{
+    for (uint i = 0; i != pBCcount; ++i)
+    {
+        pBindConstraints[i].weekEnd(state);
+    }
+}
+
+template<class NextT>
 void BindingConstraints<NextT>::hourBegin(uint hourInTheYear)
 {
     for (uint i = 0; i != pBCcount; ++i)
@@ -236,6 +245,18 @@ uint64_t BindingConstraints<NextT>::memoryUsage() const
         result += pBindConstraints[i].memoryUsage();
     }
     return result;
+}
+
+template<class NextT>
+void BindingConstraints<NextT>::weekForEachArea(State&, unsigned int numSpace)
+{
+    // keep empty
+}
+
+template<class NextT>
+void BindingConstraints<NextT>::hourForEachArea(State&, unsigned int numSpace)
+{
+    // keep empty
 }
 
 } // namespace Antares::Solver::Variable
