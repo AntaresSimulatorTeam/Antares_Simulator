@@ -176,6 +176,10 @@ public:
     template<class VCardToFindT>
     void retrieveResultsForLink(typename Storage<VCardToFindT>::ResultsType** result,
                                 const Data::AreaLink* link);
+
+    template<class VCardToFindT>
+    void retrieveResultsForThermalCluster(typename Storage<VCardToFindT>::ResultsType** result,
+                                          const Data::ThermalCluster* cluster);
     template<class VCardSearchT, class O>
     void computeSpatialAggregateWith(O& out, const Data::Area* area, uint numSpace);
     template<class V>

@@ -316,4 +316,13 @@ inline void BindingConstraints<NextT>::retrieveResultsForLink(
 {
     // keep empty
 }
+
+template<class NextT>
+template<class VCardToFindT>
+inline void BindingConstraints<NextT>::retrieveResultsForThermalCluster(
+  typename Storage<VCardToFindT>::ResultsType** result,
+  const Data::ThermalCluster* cluster)
+{
+    // keep empty
+}
 } // namespace Antares::Solver::Variable
