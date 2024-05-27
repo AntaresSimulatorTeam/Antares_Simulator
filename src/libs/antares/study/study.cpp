@@ -46,6 +46,8 @@
 
 using namespace Yuni;
 
+namespace fs = std::filesystem;
+
 namespace Antares::Data
 {
 //! Clear then shrink a string
@@ -688,29 +690,23 @@ YString StudyCreateOutputPath(SimulationMode mode,
         break;
     }
 
-    // Temporary buffer
-    String buffer;
-    buffer.reserve(1024);
-
     // Folder output
     if (not label.empty())
     {
-        buffer.clear();
-        TransformNameIntoID(label, buffer);
-        folderOutput << '-' << buffer;
+        folderOutput << '-' << transformNameIntoID(label);
     }
 
-    buffer.clear() << folderOutput << suffix;
+    std::string outpath = folderOutput + suffix;
     // avoid creating the same output twice
-    if (IO::Exists(buffer))
+    if (fs::exists(outpath))
     {
-        String newpath;
+        std::string newpath;
         uint index = 1; // will start from 2
         do
         {
             ++index;
-            newpath.clear() << folderOutput << '-' << index << suffix;
-        } while (IO::Exists(newpath) and index < 2000);
+            newpath = folderOutput + '-' + std::to_string(index) + suffix;
+        } while (fs::exists(newpath) and index < 2000);
 
         folderOutput << '-' << index;
     }
@@ -1017,8 +1013,7 @@ bool Study::areaRename(Area* area, AreaName newName)
     newName = beautifyname;
 
     // Preparing the new area ID
-    AreaName newid;
-    TransformNameIntoID(newName, newid);
+    AreaName newid = transformNameIntoID(newName);
     if (newid.empty())
     {
         return false;
@@ -1099,8 +1094,7 @@ bool Study::clusterRename(Cluster* cluster, ClusterName newName)
     newName = beautifyname.c_str();
 
     // Preparing the new area ID
-    ClusterName newID;
-    TransformNameIntoID(newName, newID);
+    ClusterName newID = transformNameIntoID(newName);
     if (newID.empty())
     {
         logs.error() << "invalid id transformation";
@@ -1406,7 +1400,7 @@ void Study::markAsModified() const
     setsOfLinks.markAsModified();
 }
 
-void Study::relocate(AnyString newFolder)
+void Study::relocate(const std::string& newFolder)
 {
     folder = newFolder;
     folderInput.clear() << newFolder << SEP << "input";

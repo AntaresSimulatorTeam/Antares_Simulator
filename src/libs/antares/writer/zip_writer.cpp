@@ -18,11 +18,11 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
-#include "private/zip_writer.h"
+#include "zip_writer.h"
 
+#include <fstream>
+#include <iterator>
 #include <memory>
-
-#include <yuni/io/file.h> // Yuni::IO::File::LoadFromFile
 
 #include <antares/benchmarking/DurationCollector.h>
 #include <antares/benchmarking/timer.h>
@@ -40,17 +40,17 @@ extern "C"
 #include <sstream>
 #include <utility>
 
+namespace fs = std::filesystem;
+
 namespace Antares::Solver
 {
 
-namespace
-{
-void logErrorAndThrow(const std::string& errorMessage)
+static void logErrorAndThrow [[noreturn]] (const std::string& errorMessage)
 {
     logs.error() << errorMessage;
-    throw IOError(errorMessage);
+    throw std::runtime_error(errorMessage);
 }
-} // namespace
+
 
 // Class ZipWriteJob
 template<class ContentT>
@@ -157,29 +157,29 @@ void ZipWriter::addEntryFromBuffer(const std::string& entryPath, std::string& en
     addEntryFromBufferHelper<std::string>(entryPath, entryContent);
 }
 
-void ZipWriter::addEntryFromFile(const std::string& entryPath, const std::string& filePath)
+static std::string readFile(const fs::path& filePath)
+{
+    std::ifstream file(filePath, std::ios_base::binary | std::ios_base::in);
+    if (!file.is_open())
+    {
+        logErrorAndThrow(filePath.string() + ": file does not exist");
+    }
+
+    using Iterator = std::istreambuf_iterator<char>;
+    std::string content(Iterator{file}, Iterator{});
+    if (!file)
+    {
+        logErrorAndThrow("Read failed '" + filePath.string() + "'");
+    }
+    return content;
+}
+
+void ZipWriter::addEntryFromFile(const fs::path& entryPath, const fs::path& filePath)
 {
     // Read file into buffer immediately, write into archive async
-    Yuni::Clob buffer;
-    switch (Yuni::IO::File::LoadFromFile(buffer, filePath.c_str()))
-    {
-        using namespace Yuni::IO;
-    case errNone:
-        addEntryFromBufferHelper<Yuni::Clob>(entryPath, buffer);
-        break;
-    case errNotFound:
-        logErrorAndThrow(filePath + ": file does not exist");
-        break;
-    case errReadFailed:
-        logErrorAndThrow("Read failed '" + filePath + "'");
-        break;
-    case errMemoryLimit:
-        logErrorAndThrow("Size limit hit for file '" + filePath + "'");
-        break;
-    default:
-        logErrorAndThrow("Unhandled error");
-        break;
-    }
+    std::string buffer = readFile(filePath);
+
+    addEntryFromBufferHelper<std::string>(entryPath.string(), buffer);
 }
 
 bool ZipWriter::needsTheJobQueue() const

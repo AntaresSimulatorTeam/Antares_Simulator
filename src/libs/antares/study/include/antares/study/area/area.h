@@ -21,6 +21,7 @@
 #ifndef __ANTARES_LIBS_STUDY_AREAS_H__
 #define __ANTARES_LIBS_STUDY_AREAS_H__
 
+#include <filesystem>
 #include <set>
 #include <stdlib.h>
 #include <vector>
@@ -723,7 +724,10 @@ AreaLink* AreaAddLinkBetweenAreas(Area* area, Area* with, bool warning = true);
 ** \param folder The target folder
 ** \return A non-null value if the operation succeeded, 0 otherwise
 */
-bool AreaLinksLoadFromFolder(Study& s, AreaList* l, Area* area, const AnyString& folder);
+bool AreaLinksLoadFromFolder(Study& s,
+                             AreaList* l,
+                             Area* area,
+                             const std::filesystem::path& folder);
 
 /*!
 ** \brief Save interconnections of a given area into a folder (`input/areas/[area]/ntc`)

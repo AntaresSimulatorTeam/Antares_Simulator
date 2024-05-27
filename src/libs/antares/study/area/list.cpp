@@ -20,6 +20,7 @@
 */
 
 #include <cassert>
+#include <fstream>
 
 #include <yuni/io/file.h>
 
@@ -36,6 +37,8 @@
 #define SEP IO::Separator
 
 using namespace Yuni;
+
+namespace fs = std::filesystem;
 
 namespace Antares::Data
 {
@@ -67,7 +70,7 @@ static bool AreaListLoadThermalDataFromFile(AreaList& list, const Clob& filename
         for (IniFile::Property* p = section->firstProperty; p; p = p->next)
         {
             id.clear();
-            TransformNameIntoID(p->key, id);
+            id = transformNameIntoID(p->key);
             Area* area = list.find(id);
             if (area)
             {
@@ -115,7 +118,7 @@ static bool AreaListLoadThermalDataFromFile(AreaList& list, const Clob& filename
         for (IniFile::Property* p = section->firstProperty; p; p = p->next)
         {
             id.clear();
-            TransformNameIntoID(p->key, id);
+            id = transformNameIntoID(p->key);
             auto* area = list.find(id);
             if (area)
             {
@@ -399,15 +402,14 @@ AreaLink* AreaListAddLink(AreaList* l, const char area[], const char with[], boo
     {
         logs.debug() << "    . " << area << " -> " << with;
 
-        AreaName name;
         AreaName givenName = area;
-        TransformNameIntoID(givenName, name);
+        AreaName name = transformNameIntoID(givenName);
         Area* a = AreaListLFind(l, name.c_str());
         if (a)
         {
             givenName = with;
             name.clear();
-            TransformNameIntoID(givenName, name);
+            name = transformNameIntoID(givenName);
             Area* b = l->find(name);
             if (b && !a->findExistingLinkWith(*b))
             {
@@ -513,13 +515,10 @@ Area* AreaList::add(Area* a)
 Area* addAreaToListOfAreas(AreaList& list, const AnyString& name)
 {
     // Initializing names
-    AreaName cname;
-    AreaName lname;
-    cname = name;
-    TransformNameIntoID(cname, lname);
+    AreaName lname = transformNameIntoID(name);
 
     // Add the area
-    return AreaListAddFromNames(list, cname, lname);
+    return AreaListAddFromNames(list, name, lname);
 }
 
 Area* AreaListAddFromNames(AreaList& list, const AnyString& name, const AnyString& lname)
@@ -551,8 +550,8 @@ Area* AreaListAddFromNames(AreaList& list, const AnyString& name, const AnyStrin
 
 bool AreaList::loadListFromFile(const AnyString& filename)
 {
-    IO::File::Stream file;
-    if (!file.open(filename))
+    std::ifstream file(filename);
+    if (!file.is_open())
     {
         logs.error() << "I/O error: " << filename << ": Impossible to open the file";
         return false;
@@ -565,10 +564,9 @@ bool AreaList::loadListFromFile(const AnyString& filename)
     AreaName name;
     AreaName lname;
     // Each lines in the file
-    String buffer;
-    buffer.reserve(1024 /* to force the allocation */);
+    std::string buffer;
     uint line = 0;
-    while (file.readline(buffer))
+    while (std::getline(file, buffer))
     {
         ++line;
         // The area name
@@ -580,7 +578,7 @@ bool AreaList::loadListFromFile(const AnyString& filename)
         }
 
         lname.clear();
-        TransformNameIntoID(name, lname);
+        lname = transformNameIntoID(name);
         if (lname.empty())
         {
             logs.warning() << "ignoring invalid area name: `" << name << "`, " << filename
@@ -654,8 +652,8 @@ bool AreaList::saveListToFile(const AnyString& filename) const
     }
 
     // Writing data into the appropriate file
-    IO::File::Stream file;
-    if (file.openRW(filename))
+    std::ofstream file(filename);
+    if (file.is_open())
     {
         file << data;
         return true;
@@ -883,8 +881,8 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
 
     // Links
     {
-        buffer.clear() << study.folderInput << SEP << "links" << SEP << area.id;
-        ret = AreaLinksLoadFromFolder(study, list, &area, buffer) && ret;
+        fs::path folder = fs::path(study.folderInput.c_str()) / "links" / area.id.c_str();
+        ret = AreaLinksLoadFromFolder(study, list, &area, folder) && ret;
     }
 
     // UI
@@ -939,7 +937,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         // Allocation
         buffer.clear() << study.folderInput << SEP << "hydro" << SEP << "allocation" << SEP
                        << area.id << ".ini";
-        ret = area.hydro.allocation.loadFromFile(area.id, buffer) && ret;
+        ret = area.hydro.allocation.loadFromFile(area.id, buffer.c_str()) && ret;
 
         if (area.hydro.prepro) /* Hydro */
         {
@@ -1189,16 +1187,15 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
     if (studyVersion >= StudyVersion(8, 6))
     {
         logs.info() << "Loading short term storage clusters...";
-        buffer.clear() << pStudy.folderInput << SEP << "st-storage";
+        fs::path stsFolder = fs::path(pStudy.folderInput.c_str()) / "st-storage";
 
-        if (IO::Directory::Exists(buffer))
+        if (fs::exists(stsFolder))
         {
             for (const auto& [id, area]: areas)
             {
-                buffer.clear() << pStudy.folderInput << SEP << "st-storage" << SEP << "clusters"
-                               << SEP << area->id;
-                ret = area->shortTermStorage.createSTStorageClustersFromIniFile(buffer.c_str())
-                      && ret;
+                fs::path folder = stsFolder / "clusters" / area->id.c_str();
+
+                ret = area->shortTermStorage.createSTStorageClustersFromIniFile(folder) && ret;
             }
         }
         else
@@ -1261,8 +1258,7 @@ const Area* AreaList::find(const AreaName& id) const
 
 Area* AreaList::findFromName(const AreaName& name)
 {
-    AreaName id;
-    TransformNameIntoID(name, id);
+    AreaName id = transformNameIntoID(name);
     auto i = this->areas.find(id);
     return (i != this->areas.end()) ? i->second : nullptr;
 }
@@ -1293,8 +1289,7 @@ Area* AreaList::findFromPosition(const int x, const int y) const
 
 const Area* AreaList::findFromName(const AreaName& name) const
 {
-    AreaName id;
-    TransformNameIntoID(name, id);
+    AreaName id = transformNameIntoID(name);
     auto i = this->areas.find(id);
     return (i != this->areas.end()) ? i->second : nullptr;
 }
@@ -1434,8 +1429,7 @@ void Area::detachLinkFromItsPointer(const AreaLink* lnk)
 
 bool AreaList::renameArea(const AreaName& oldid, const AreaName& newName)
 {
-    AreaName newid;
-    TransformNameIntoID(newName, newid);
+    AreaName newid = transformNameIntoID(newName);
     return renameArea(oldid, newid, newName);
 }
 
@@ -1608,8 +1602,7 @@ void AreaList::fixOrientationForAllInterconnections(
 
 bool AreaList::remove(const AnyString& id)
 {
-    AreaName lname;
-    TransformNameIntoID(id, lname);
+    AreaName lname = transformNameIntoID(id);
 
     auto i = areas.find(lname);
     if (i != areas.end())

@@ -61,7 +61,7 @@ void Cluster::setName(const AnyString& newname)
 {
     pName = newname;
     pID.clear();
-    TransformNameIntoID(pName, pID);
+    pID = transformNameIntoID(pName);
 }
 
 #define SEP Yuni::IO::Separator

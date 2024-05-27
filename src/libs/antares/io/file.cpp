@@ -24,9 +24,9 @@
 #include <yuni/core/system/suspend.h>
 #include <yuni/datetime/timestamp.h>
 #include <yuni/io/file.h>
+
 #ifdef YUNI_OS_WINDOWS
 #include <io.h>
-
 #include <yuni/core/system/windows.hdr.h>
 #else
 #include <sys/types.h>
@@ -34,19 +34,43 @@
 #endif
 #include <errno.h>
 
+#include <fstream>
+
 #include <antares/logs/logs.h>
 
-using namespace Yuni;
-using namespace Antares;
+namespace fs = std::filesystem;
 
-enum
-{
-    retryTimeout = 35, // seconds
-};
+constexpr int retryTimeout = 35; // seconds
 
-bool IOFileSetContent(const AnyString& filename, const AnyString& content)
+namespace Antares::IO
 {
-    if (System::windows)
+
+static void logErrorAndThrow [[noreturn]] (const std::string& errorMessage)
+{
+    Antares::logs.error() << errorMessage;
+    throw std::runtime_error(errorMessage);
+}
+
+std::string readFile(const fs::path& filePath)
+{
+    std::ifstream file(filePath, std::ios_base::binary | std::ios_base::in);
+    if (!file.is_open())
+    {
+        logErrorAndThrow(filePath.string() + ": file does not exist");
+    }
+
+    using Iterator = std::istreambuf_iterator<char>;
+    std::string content(Iterator{file}, Iterator{});
+    if (!file)
+    {
+        logErrorAndThrow("Read failed '" + filePath.string() + "'");
+    }
+    return content;
+}
+
+bool fileSetContent(const std::string& filename, const std::string& content)
+{
+    if (Yuni::System::windows)
     {
         // On Windows,  there is still the hard limit to 256 chars even if the API allows more
         if (filename.size() >= 256)
@@ -67,17 +91,17 @@ bool IOFileSetContent(const AnyString& filename, const AnyString& content)
                                << " (probably not enough disk space).";
 
                 // Notification via the UI interface
-                String text;
-                DateTime::TimestampToString(text, "%H:%M");
+                Yuni::String text;
+                Yuni::DateTime::TimestampToString(text, "%H:%M");
                 logs.info() << "Not enough disk space since " << text << ". Waiting...";
                 // break;
             }
             // waiting a little...
-            Suspend(retryTimeout);
+            Yuni::Suspend(retryTimeout);
         }
         ++attempt;
 
-        IO::File::Stream out(filename, IO::OpenMode::write);
+        Yuni::IO::File::Stream out(filename, Yuni::IO::OpenMode::write);
         if (not out.opened())
         {
             switch (errno)
@@ -141,3 +165,5 @@ bool IOFileSetContent(const AnyString& filename, const AnyString& content)
 
     return false;
 }
+
+} // namespace Antares::IO
