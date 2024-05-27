@@ -342,7 +342,7 @@ inline void BindingConstraints<NextT>::retrieveResultsForLink(
 {
     for (uint i = 0; i != pBCcount; ++i)
     {
-        pBindConstraints[i].retrieveResultsForLink(result, link);
+        pBindConstraints[i].retrieveResultsForLink<VCardToFindT>(result, link);
     }
 }
 
@@ -354,7 +354,7 @@ inline void BindingConstraints<NextT>::retrieveResultsForThermalCluster(
 {
     for (uint i = 0; i != pBCcount; ++i)
     {
-        pBindConstraints[i].retrieveResultsForThermalCluster(result, cluster);
+        pBindConstraints[i].retrieveResultsForThermalCluster<VCardToFindT>(result, cluster);
     }
 }
 } // namespace Antares::Solver::Variable

@@ -328,6 +328,20 @@ public:
         NextType::template computeSpatialAggregateWith<SearchVCardT, O>(out, area, numSpace);
     }
 
+    template<class VCardToFindT>
+    void retrieveResultsForLink(typename Storage<VCardToFindT>::ResultsType** result,
+                                const Data::AreaLink* link)
+    {
+        NextType::template retrieveResultsForLink<VCardToFindT>(result, link);
+    }
+
+    template<class VCardToFindT>
+    void retrieveResultsForThermalCluster(typename Storage<VCardToFindT>::ResultsType** result,
+                                          const Data::ThermalCluster* cluster)
+    {
+        NextType::template retrieveResultsForThermalCluster<VCardToFindT>(result, cluster);
+    }
+
     void hourEnd(State& state, unsigned int hourInTheYear)
     {
         if (!isInitialized())
