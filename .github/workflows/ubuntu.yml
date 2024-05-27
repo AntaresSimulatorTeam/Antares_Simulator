@@ -28,10 +28,6 @@ env:
   RUN_SIMPLE_TESTS: ${{ github.event_name == 'push' || inputs.run-tests == 'true' }}
   RUN_EXTENDED_TESTS: ${{ github.event_name == 'schedule' || inputs.run-tests == 'true' }}
   REF: ${{ inputs.target_branch =='' && github.ref || inputs.target_branch}}
-  VCPKG_ROOT: ${{ github.workspace }}/vcpkg
-  vcpkgPackages: yaml-cpp antlr4 boost-test
-  triplet: x64-linux
-  WX_CONFIG: /usr/bin/wx-config
 
 jobs:
 
@@ -40,6 +36,8 @@ jobs:
     env:
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
       os: ubuntu-20.04
+      # Caching strategy of VCPKG dependencies
+      VCPKG_BINARY_SOURCES: "clear;files,${{ github.workspace }}/vcpkg_cache,readwrite"
 
     runs-on: ubuntu-20.04
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
@@ -49,51 +47,28 @@ jobs:
       with:
         ref: ${{ env.REF }}
 
+    - name: Install VCPKG
+      run: git submodule update --init vcpkg && ./vcpkg/bootstrap-vcpkg.sh -disableMetrics
+
+    - name: Restore vcpkg binary dir from cache
+      id: cache-vcpkg-binary
+      uses: actions/cache/restore@v4
+      with:
+        path: ${{ github.workspace }}/vcpkg_cache
+        key: vcpkg-cache-ubuntu-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
+        # Allows to restore a cache when deps have only partially changed (like adding a dependency)
+        restore-keys: vcpkg-cache-ubuntu-
+
     - name: ccache
       uses: hendrikmuhs/ccache-action@v1.2
       with:
           key: ${{ env.os }}
 
-
-    - name : Init VCPKG submodule
-      run: |
-          git submodule update --init vcpkg
-
-    # Restore both vcpkg and its artifacts from the GitHub cache service.
-    - name: Restore vcpkg and its artifacts.
-      uses: actions/cache@v4
-      with:
-        # The first path is the location of vcpkg (it contains the vcpkg executable and data files).
-        # The other paths starting with '!' are exclusions: they contain termporary files generated during the build of the installed packages.
-        path: |
-          ${{ env.VCPKG_ROOT }}
-          !${{ env.VCPKG_ROOT }}/buildtrees
-          !${{ env.VCPKG_ROOT }}/packages
-          !${{ env.VCPKG_ROOT }}/downloads
-        # The key is composed in a way that it gets properly invalidated: this must happen whenever vcpkg's Git commit id changes, or the list of packages changes. In this case a cache miss must happen and a new entry with a new key with be pushed to GitHub the cache service.
-        # The key includes: hash of the vcpkg.json file, the hash of the vcpkg Git commit id, and the used vcpkg's triplet. The vcpkg's commit id would suffice, but computing an hash out it does not harm.
-        # Note: given a key, the cache content is immutable. If a cache entry has been created improperly, in order the recreate the right content the key must be changed as well, and it must be brand new (i.e. not existing already).
-        key: |
-          ${{ hashFiles( 'vcpkg_manifest/vcpkg.json' ) }}-${{ hashFiles( '.git/modules/vcpkg/HEAD' )}}-${{ env.triplet }}
-
     - name: Install libraries
       run: |
-           sudo apt-get update
-           sudo apt-get install uuid-dev libwxgtk3.0-gtk3-dev
-           sudo apt-get install g++-10 gcc-10
-
-    - name: export wxWidgets script
-      shell: bash
-      run: |
-           export WX_CONFIG=${{env.WX_CONFIG}}
-
-    - name : Install deps with VCPKG
-      run: |
-          cd vcpkg
-          ./bootstrap-vcpkg.sh
-          vcpkg install ${{env.vcpkgPackages}} --triplet ${{env.triplet}}
-          rm -rf buildtrees packages downloads
-      shell: bash
+        sudo apt-get update
+        sudo apt-get install uuid-dev libwxgtk3.0-gtk3-dev
+        sudo apt-get install g++-10 gcc-10
 
     - name: Read antares-deps version
       id: antares-deps-version
@@ -130,30 +105,27 @@ jobs:
       run: |
           git submodule update --init src/antares-deps
           git submodule update --init --remote --recursive src/tests/resources/Antares_Simulator_Tests
-    
 
-    
     - name: Configure
       run: |
-           cmake -B _build -S src \
-           -DCMAKE_C_COMPILER_LAUNCHER=ccache \
-           -DVCPKG_ROOT="${{env.VCPKG_ROOT}}" \
-           -DVCPKG_TARGET_TRIPLET=${{ env.triplet }} \
-           -DCMAKE_C_COMPILER=/usr/bin/gcc-10 \
-           -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
-           -DCMAKE_CXX_COMPILER=/usr/bin/g++-10 \
-           -DDEPS_INSTALL_DIR=${{github.workspace}}/rte-antares-deps-Release \
-           -DCMAKE_BUILD_TYPE=Release \
-           -DBUILD_TESTING=ON \
-           -DBUILD_not_system=OFF \
-           -DBUILD_TOOLS=ON \
-           -DCMAKE_PREFIX_PATH=${{ env.ORTOOLS_DIR }}/install \
-           -DPython3_EXECUTABLE="${{ env.Python3_ROOT_DIR }}/bin/python"
+        cmake -B _build -S src \
+        -DCMAKE_C_COMPILER_LAUNCHER=ccache \
+        -DCMAKE_C_COMPILER=/usr/bin/gcc-10 \
+        -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
+        -DCMAKE_CXX_COMPILER=/usr/bin/g++-10 \
+        -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake \
+        -DVCPKG_TARGET_TRIPLET=x64-linux-release \
+        -DDEPS_INSTALL_DIR=${{github.workspace}}/rte-antares-deps-Release \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DBUILD_TESTING=ON \
+        -DBUILD_not_system=OFF \
+        -DBUILD_TOOLS=ON \
+        -DCMAKE_PREFIX_PATH=${{ env.ORTOOLS_DIR }}/install \
+        -DPython3_EXECUTABLE="${{ env.Python3_ROOT_DIR }}/bin/python"
 
     - name: Build
       run: |
              cmake --build _build -j$(nproc)
-
 
     # simtest
     - name: Read simtest version
@@ -355,3 +327,11 @@ jobs:
         tag: ${{ github.event.inputs.release_tag }}
       run: |
         gh release upload "$tag" _build/*.tar.gz _build/*.deb
+
+    - name: Cache vcpkg binary dir
+      if: always()
+      id: save-cache-vcpkg-binary
+      uses: actions/cache/save@v4
+      with:
+        path: ${{ github.workspace }}/vcpkg_cache
+        key: vcpkg-cache-ubuntu-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
