@@ -145,7 +145,7 @@ public:
     void hourEnd(State& state, unsigned int hourInTheYear);
 
     void weekBegin(State&);
-    void weekForEachArea(State&);
+    void weekForEachArea(State&, unsigned int numSpace);
     void weekEnd(State&);
 
     void buildSurveyReport(SurveyResults& results,

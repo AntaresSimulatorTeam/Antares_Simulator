@@ -176,7 +176,7 @@ inline void SetsOfAreas<NextT>::weekBegin(State&)
 }
 
 template<class NextT>
-inline void SetsOfAreas<NextT>::weekForEachArea(State&)
+inline void SetsOfAreas<NextT>::weekForEachArea(State&, unsigned int numSpace)
 {
     // Nothing to do here
 }
