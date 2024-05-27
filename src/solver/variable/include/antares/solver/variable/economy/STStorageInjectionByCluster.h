@@ -57,15 +57,15 @@ struct VCardSTstorageInjectionByCluster
         //! Data Level
         categoryDataLevel = Category::DataLevel::area,
         //! File level (provided by the type of the results)
-        categoryFileLevel = ResultsType::categoryFile & (Category::FileLevel::de_sts),
+        static constexpr uint8_t categoryFileLevel =  ResultsType::categoryFile & (Category::FileLevel::de_sts),
         //! Precision (views)
-        precision = Category::all,
+        static constexpr uint8_t precision =  Category::all,
         //! Indentation (GUI)
-        nodeDepthForGUI = +0,
+        static constexpr uint8_t nodeDepthForGUI =  +0,
         //! Decimal precision
         decimal = 0,
         //! Number of columns used by the variable
-        columnCount = Category::dynamicColumns,
+        static constexpr uint8_t columnCount =  Category::dynamicColumns,
         //! The Spatial aggregation
         spatialAggregate = Category::spatialAggregateSum,
         spatialAggregateMode = Category::spatialAggregateEachYear,

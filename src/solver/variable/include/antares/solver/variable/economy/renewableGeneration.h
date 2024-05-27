@@ -67,15 +67,15 @@ struct VCardRenewableGeneration
         //! Data Level
         categoryDataLevel = Category::DataLevel::area,
         //! File level (provided by the type of the results)
-        categoryFileLevel = ResultsType::categoryFile & (Category::FileLevel::id | Category::FileLevel::va),
+        static constexpr uint8_t categoryFileLevel =  ResultsType::categoryFile & (Category::FileLevel::id | Category::FileLevel::va),
         //! Precision (views)
-        precision = Category::all,
+        static constexpr uint8_t precision =  Category::all,
         //! Indentation (GUI)
-        nodeDepthForGUI = +0,
+        static constexpr uint8_t nodeDepthForGUI =  +0,
         //! Decimal precision
         decimal = 0,
         //! Number of columns used by the variable (One ResultsType per column)
-        columnCount = 9,
+        static constexpr uint8_t columnCount =  9,
         //! The Spatial aggregation
         spatialAggregate = Category::spatialAggregateSum,
         spatialAggregateMode = Category::spatialAggregateEachYear,

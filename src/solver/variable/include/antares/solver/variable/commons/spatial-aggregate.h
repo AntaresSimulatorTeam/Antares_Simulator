@@ -128,15 +128,15 @@ struct VCardProxy
         //! Data Level
         categoryDataLevel = Category::DataLevel::setOfAreas,
         //! File level (provided by the type of the results)
-        categoryFileLevel = VCardOrigin::categoryFileLevel,
+        static constexpr uint8_t categoryFileLevel =  VCardOrigin::categoryFileLevel,
         //! Precision (views)
-        precision = VCardOrigin::precision,
+        static constexpr uint8_t precision =  VCardOrigin::precision,
         //! Indentation (GUI)
-        nodeDepthForGUI = +0,
+        static constexpr uint8_t nodeDepthForGUI =  +0,
         //! Decimal precision
         decimal = VCardOrigin::decimal,
         //! Number of columns used by the variable (One ResultsType per column)
-        columnCount = VCardOrigin::columnCount,
+        static constexpr uint8_t columnCount =  VCardOrigin::columnCount,
         //! The Spatial aggregation
         spatialAggregate = Category::noSpatialAggregate,
         spatialAggregateMode = Category::spatialAggregateEachYear,

@@ -56,11 +56,11 @@ struct VCardAllBindingConstraints
         //! Data Level
         categoryDataLevel = Category::DataLevel::bindingConstraint,
         //! File level (provided by the type of the results)
-        categoryFileLevel = ResultsType::categoryFile & Category::FileLevel::bc,
+        static constexpr uint8_t categoryFileLevel =  ResultsType::categoryFile & Category::FileLevel::bc,
         //! Indentation (GUI)
-        nodeDepthForGUI = +1,
+        static constexpr uint8_t nodeDepthForGUI =  +1,
         //! Number of columns used by the variable (One ResultsType per column)
-        columnCount = 0,
+        static constexpr uint8_t columnCount =  0,
         //! The Spatial aggregation
         spatialAggregate = Category::noSpatialAggregate,
         //! Intermediate values

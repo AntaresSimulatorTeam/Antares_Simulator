@@ -65,15 +65,15 @@ struct VCardBindingConstMarginCost
         //! Data Level
         categoryDataLevel = Category::DataLevel::bindingConstraint,
         //! File level (provided by the type of the results)
-        categoryFileLevel = ResultsType::categoryFile & (Category::FileLevel::bc),
+        static constexpr uint8_t categoryFileLevel =  ResultsType::categoryFile & (Category::FileLevel::bc),
         //! Precision (views)
-        precision = Category::all,
+        static constexpr uint8_t precision =  Category::all,
         //! Indentation (GUI)
-        nodeDepthForGUI = +0,
+        static constexpr uint8_t nodeDepthForGUI =  +0,
         //! Decimal precision
         decimal = 2,
         //! Number of columns used by the variable
-        columnCount = 1,
+        static constexpr uint8_t columnCount =  1,
         //! Intermediate values
         hasIntermediateValues = 1,
         //! Can this variable be non applicable (0 : no, 1 : yes)

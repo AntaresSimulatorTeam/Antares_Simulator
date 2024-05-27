@@ -66,11 +66,11 @@ struct VCardAllLinks
         //! Data Level
         categoryDataLevel = Category::DataLevel::link,
         //! File level (provided by the type of the results)
-        categoryFileLevel = ResultsType::categoryFile,
+        static constexpr uint8_t categoryFileLevel =  ResultsType::categoryFile,
         //! Indentation (GUI)
-        nodeDepthForGUI = +1,
+        static constexpr uint8_t nodeDepthForGUI =  +1,
         //! Number of columns used by the variable (One ResultsType per column)
-        columnCount = 0,
+        static constexpr uint8_t columnCount =  0,
         //! The Spatial aggregation
         spatialAggregate = Category::spatialAggregateSum,
         //! Intermediate values

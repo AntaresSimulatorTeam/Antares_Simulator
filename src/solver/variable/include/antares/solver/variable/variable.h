@@ -70,7 +70,7 @@ public:
     enum
     {
         categoryDataLevel = VCardType::categoryDataLevel,
-        categoryFileLevel = VCardType::categoryFileLevel,
+        static constexpr uint8_t categoryFileLevel =  VCardType::categoryFileLevel,
     };
 
     template<int CDataLevel, int CFile>
