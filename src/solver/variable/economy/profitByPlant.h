@@ -303,10 +303,10 @@ public:
             auto* cluster = state.area->thermal.clusters[clusterIndex];
             double hourlyClusterProduction
               = thermal[area->index].thermalClustersProductions[clusterIndex];
-            double pMin = thermal[area->index].PMinOfClusters[clusterIndex];
+
             // Thermal cluster profit
             pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex].hour[hourInTheYear]
-              = (hourlyClusterProduction - pMin)
+              = std::max((hourlyClusterProduction - cluster->PthetaInf[hourInTheYear]), 0.)
                 * (-areaMarginalCosts[hourInTheWeek]
                    - cluster->marginalCost
                        * cluster->modulation[Data::thermalModulationCost][hourInTheYear]);
