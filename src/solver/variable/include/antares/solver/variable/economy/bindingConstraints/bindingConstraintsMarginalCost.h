@@ -350,11 +350,11 @@ public:
                 results.variableCaption = getBindConstraintCaption();
 
                 VariableAccessorType::template BuildSurveyReport<VCardType>(results,
-                    AncestorType::pResults,
-                    dataLevel,
-                    fileLevel,
-                    precision,
-                    false);
+                                                                            AncestorType::pResults,
+                                                                            dataLevel,
+                                                                            fileLevel,
+                                                                            precision,
+                                                                            false);
             }
         }
         NextType::buildSurveyReport(results, dataLevel, fileLevel, precision);
