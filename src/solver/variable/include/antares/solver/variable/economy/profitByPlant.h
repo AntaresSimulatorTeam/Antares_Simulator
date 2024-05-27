@@ -70,7 +70,7 @@ struct VCardProfitByPlant
     //! Decimal precision
     static constexpr uint8_t decimal =   0;
     //! Number of columns used by the variable
-    static constexpr uint8_t columnCount =   Category::dynamicColumns;
+    static constexpr int columnCount =    Category::dynamicColumns;
     //! The Spatial aggregation
     static constexpr uint8_t spatialAggregate =   Category::spatialAggregateSum;
     static constexpr uint8_t spatialAggregateMode =   Category::spatialAggregateEachYear;

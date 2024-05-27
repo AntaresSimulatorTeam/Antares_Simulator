@@ -68,7 +68,7 @@ struct VCardAllLinks
     //! Indentation (GUI)
     static constexpr uint8_t nodeDepthForGUI =   +1;
     //! Number of columns used by the variable (One ResultsType per column)
-    static constexpr uint8_t columnCount =   0;
+    static constexpr int columnCount =    0;
     //! The Spatial aggregation
     static constexpr uint8_t spatialAggregate =   Category::spatialAggregateSum;
     //! Intermediate values

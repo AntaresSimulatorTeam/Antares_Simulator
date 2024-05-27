@@ -69,7 +69,7 @@ struct VCardJoin
     //! Decimal precision
     static constexpr uint8_t decimal =   0;
     //! Number of columns used by the variable (One ResultsType per column)
-    static constexpr uint8_t columnCount =   0;
+    static constexpr int columnCount =    0;
     //! The Spatial aggregation
     static constexpr uint8_t spatialAggregate =   Category::noSpatialAggregate;
     static constexpr uint8_t spatialAggregateMode =   Category::spatialAggregateEachYear;

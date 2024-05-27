@@ -93,7 +93,7 @@ struct VCardSTSbyGroup
     //! Decimal precision
     static constexpr uint8_t decimal =   0;
     // Nb of columns occupied by this variable in year-by-year results
-    static constexpr uint8_t columnCount =   Category::dynamicColumns;
+    static constexpr int columnCount =    Category::dynamicColumns;
     //! The Spatial aggregation
     static constexpr uint8_t spatialAggregate =   Category::spatialAggregateSum;
     static constexpr uint8_t spatialAggregateMode =   Category::spatialAggregateEachYear;

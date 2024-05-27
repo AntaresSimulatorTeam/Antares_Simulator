@@ -63,7 +63,7 @@ struct VCardCongestionProbability
     //! Decimal precision
     static constexpr uint8_t decimal =   2;
     //! Number of columns used by the variable (One ResultsType per column)
-    static constexpr uint8_t columnCount =   2;
+    static constexpr int columnCount =    2;
     //! The Spatial aggregation
     static constexpr uint8_t spatialAggregate =   Category::spatialAggregateSum;
     static constexpr uint8_t spatialAggregateMode =   Category::spatialAggregateEachYear;

@@ -134,7 +134,7 @@ struct VCardProxy
     //! Decimal precision
     static constexpr uint8_t decimal =   VCardOrigin::decimal;
     //! Number of columns used by the variable (One ResultsType per column)
-    static constexpr uint8_t columnCount =   VCardOrigin::columnCount;
+    static constexpr int columnCount =    VCardOrigin::columnCount;
     //! The Spatial aggregation
     static constexpr uint8_t spatialAggregate =   Category::noSpatialAggregate;
     static constexpr uint8_t spatialAggregateMode =   Category::spatialAggregateEachYear;

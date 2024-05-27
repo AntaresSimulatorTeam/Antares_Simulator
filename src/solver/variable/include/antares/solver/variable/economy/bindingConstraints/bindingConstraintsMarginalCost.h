@@ -71,7 +71,7 @@ struct VCardBindingConstMarginCost
     //! Decimal precision
     static constexpr uint8_t decimal =   2;
     //! Number of columns used by the variable
-    static constexpr uint8_t columnCount =   1;
+    static constexpr int columnCount =    1;
     //! Intermediate values
     static constexpr uint8_t hasIntermediateValues =   1;
     //! Can this variable be non applicable (0 : no, 1 : yes)

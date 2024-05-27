@@ -70,7 +70,7 @@ struct VCardLOLP
     //! Decimal precision
     static constexpr uint8_t decimal =   2;
     //! Number of columns used by the variable (One ResultsType per column)
-    static constexpr uint8_t columnCount =   1;
+    static constexpr int columnCount =    1;
     //! The Spatial aggregation
     static constexpr uint8_t spatialAggregate =   Category::spatialAggregateOr;
     static constexpr uint8_t spatialAggregateMode =   Category::spatialAggregateEachYear;
