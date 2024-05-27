@@ -52,28 +52,25 @@ struct VCardAllAreas
     //! The expecte results
     typedef Results<> ResultsType;
 
-    enum
-    {
-        //! Data Level
-        static constexpr uint8_t categoryDataLevel =  Category::DataLevel::area;
-        //! File level (provided by the type of the results)
-        static constexpr uint8_t categoryFileLevel =   ResultsType::categoryFile & Category::FileLevel::de;
-        //! Indentation (GUI)
-        static constexpr uint8_t nodeDepthForGUI =   +1;
-        //! Number of columns used by the variable (One ResultsType per column)
-        static constexpr uint8_t columnCount =   0;
-        //! The Spatial aggregation
-        static constexpr uint8_t spatialAggregate =   Category::noSpatialAggregate;
-        //! Intermediate values
-        static constexpr uint8_t hasIntermediateValues =   0;
-    };
+    //! Data Level
+    static constexpr uint8_t categoryDataLevel =  Category::DataLevel::area;
+    //! File level (provided by the type of the results)
+    static constexpr uint8_t categoryFileLevel =   ResultsType::categoryFile & Category::FileLevel::de;
+    //! Indentation (GUI)
+    static constexpr uint8_t nodeDepthForGUI =   +1;
+    //! Number of columns used by the variable (One ResultsType per column)
+    static constexpr uint8_t columnCount =   0;
+    //! The Spatial aggregation
+    static constexpr uint8_t spatialAggregate =   Category::noSpatialAggregate;
+    //! Intermediate values
+    static constexpr uint8_t hasIntermediateValues =   0;
 
 }; // class VCard
 
 template<class NextT = Container::EndOfList>
 class Areas //: public Variable::IVariable<Areas<NextT>, NextT, VCardAllAreas>
 {
-public:
+    public:
     //! Type of the next static variable
     typedef NextT NextType;
     //! VCard
