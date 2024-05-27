@@ -188,28 +188,26 @@ public:
 
     void yearEnd(unsigned int year, unsigned int numSpace)
     {
-        if (!isInitialized())
+        if (isInitialized())
         {
-            return;
-        }
-
-        // Compute statistics for the current year depending on
-        // the BC type (hourly, daily, weekly)
-        using namespace Data;
-        switch (associatedBC_->type())
-        {
-        case BindingConstraint::typeHourly:
-            pValuesForTheCurrentYear[numSpace].computeAveragesForCurrentYearFromHourlyResults();
-            break;
-        case BindingConstraint::typeDaily:
-            pValuesForTheCurrentYear[numSpace].computeAveragesForCurrentYearFromDailyResults();
-            break;
-        case BindingConstraint::typeWeekly:
-            pValuesForTheCurrentYear[numSpace].computeAveragesForCurrentYearFromWeeklyResults();
-            break;
-        case BindingConstraint::typeUnknown:
-        case BindingConstraint::typeMax:
-            break;
+            // Compute statistics for the current year depending on
+            // the BC type (hourly, daily, weekly)
+            using namespace Data;
+            switch (associatedBC_->type())
+            {
+            case BindingConstraint::typeHourly:
+                pValuesForTheCurrentYear[numSpace].computeAveragesForCurrentYearFromHourlyResults();
+                break;
+            case BindingConstraint::typeDaily:
+                pValuesForTheCurrentYear[numSpace].computeAveragesForCurrentYearFromDailyResults();
+                break;
+            case BindingConstraint::typeWeekly:
+                pValuesForTheCurrentYear[numSpace].computeAveragesForCurrentYearFromWeeklyResults();
+                break;
+            case BindingConstraint::typeUnknown:
+            case BindingConstraint::typeMax:
+                break;
+            }
         }
 
         // Next variable
@@ -232,53 +230,52 @@ public:
 
     void weekBegin(State& state)
     {
-        if (!isInitialized())
+        if (isInitialized())
         {
-            return;
-        }
-
-        auto numSpace = state.numSpace;
-        // For daily binding constraints, getting daily marginal price
-        using namespace Data;
-        switch (associatedBC_->type())
-        {
-        case BindingConstraint::typeHourly:
-        case BindingConstraint::typeUnknown:
-        case BindingConstraint::typeMax:
-            return;
-
-        case BindingConstraint::typeDaily:
-        {
-            int dayInTheYear = state.weekInTheYear * 7;
-            for (int dayInTheWeek = 0; dayInTheWeek < 7; dayInTheWeek++)
+            auto numSpace = state.numSpace;
+            // For daily binding constraints, getting daily marginal price
+            using namespace Data;
+            switch (associatedBC_->type())
             {
-                pValuesForTheCurrentYear[numSpace].day[dayInTheYear]
-                  -= state.problemeHebdo
-                       ->ResultatsContraintesCouplantes[associatedBC_][dayInTheWeek];
+            case BindingConstraint::typeHourly:
+            case BindingConstraint::typeUnknown:
+            case BindingConstraint::typeMax:
+                break;
 
-                dayInTheYear++;
-            }
-            break;
-        }
-
-        // For weekly binding constraints, getting weekly marginal price
-        case BindingConstraint::typeWeekly:
-        {
-            uint weekInTheYear = state.weekInTheYear;
-            double weeklyValue = -state.problemeHebdo
-                                    ->ResultatsContraintesCouplantes[associatedBC_][0];
-
-            pValuesForTheCurrentYear[numSpace].week[weekInTheYear] = weeklyValue;
-
-            int dayInTheYear = state.weekInTheYear * 7;
-            for (int dayInTheWeek = 0; dayInTheWeek < 7; dayInTheWeek++)
+            case BindingConstraint::typeDaily:
             {
-                pValuesForTheCurrentYear[numSpace].day[dayInTheYear] = weeklyValue;
-                dayInTheYear++;
+                int dayInTheYear = state.weekInTheYear * 7;
+                for (int dayInTheWeek = 0; dayInTheWeek < 7; dayInTheWeek++)
+                {
+                    pValuesForTheCurrentYear[numSpace].day[dayInTheYear]
+                        -= state.problemeHebdo
+                        ->ResultatsContraintesCouplantes[associatedBC_][dayInTheWeek];
+
+                    dayInTheYear++;
+                }
+                break;
             }
-            break;
+
+            // For weekly binding constraints, getting weekly marginal price
+            case BindingConstraint::typeWeekly:
+            {
+                uint weekInTheYear = state.weekInTheYear;
+                double weeklyValue = -state.problemeHebdo
+                    ->ResultatsContraintesCouplantes[associatedBC_][0];
+
+                pValuesForTheCurrentYear[numSpace].week[weekInTheYear] = weeklyValue;
+
+                int dayInTheYear = state.weekInTheYear * 7;
+                for (int dayInTheWeek = 0; dayInTheWeek < 7; dayInTheWeek++)
+                {
+                    pValuesForTheCurrentYear[numSpace].day[dayInTheYear] = weeklyValue;
+                    dayInTheYear++;
+                }
+                break;
+            }
+            }
         }
-        }
+        NextType::weekBegin(state);
     }
 
     void hourBegin(unsigned int hourInTheYear)
@@ -289,18 +286,16 @@ public:
 
     void hourEnd(State& state, unsigned int hourInTheYear)
     {
-        if (!isInitialized())
+        if (isInitialized())
         {
-            return;
-        }
-
-        auto numSpace = state.numSpace;
-        if (associatedBC_->type() == Data::BindingConstraint::typeHourly)
-        {
-            pValuesForTheCurrentYear[numSpace][hourInTheYear] -= state.problemeHebdo
-                                                                   ->ResultatsContraintesCouplantes
-                                                                     [associatedBC_]
-                                                                     [state.hourInTheWeek];
+            auto numSpace = state.numSpace;
+            if (associatedBC_->type() == Data::BindingConstraint::typeHourly)
+            {
+                pValuesForTheCurrentYear[numSpace][hourInTheYear] -= state.problemeHebdo
+                    ->ResultatsContraintesCouplantes
+                    [associatedBC_]
+                [state.hourInTheWeek];
+            }
         }
 
         NextType::hourEnd(state, hourInTheYear);
@@ -335,6 +330,7 @@ public:
             pValuesForTheCurrentYear[numSpace]
               .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
         }
+
     }
 
     void buildSurveyReport(SurveyResults& results,
@@ -344,26 +340,25 @@ public:
     {
         // Building syntheses results
         // ------------------------------
-        if (!(precision & associatedBC_->yearByYearFilter()))
+        if (precision & associatedBC_->yearByYearFilter())
         {
-            return;
-        }
+            // And only if we match the current data level _and_ precision level
+            if ((dataLevel & VCardType::categoryDataLevel) && (fileLevel & VCardType::categoryFileLevel)
+                && (precision & VCardType::precision))
+            {
+                results.isPrinted = AncestorType::isPrinted;
+                results.isCurrentVarNA[0] = isCurrentOutputNonApplicable(precision);
+                results.variableCaption = getBindConstraintCaption();
 
-        // And only if we match the current data level _and_ precision level
-        if ((dataLevel & VCardType::categoryDataLevel) && (fileLevel & VCardType::categoryFileLevel)
-            && (precision & VCardType::precision))
-        {
-            results.isPrinted = AncestorType::isPrinted;
-            results.isCurrentVarNA[0] = isCurrentOutputNonApplicable(precision);
-            results.variableCaption = getBindConstraintCaption();
-
-            VariableAccessorType::template BuildSurveyReport<VCardType>(results,
-                                                                        AncestorType::pResults,
-                                                                        dataLevel,
-                                                                        fileLevel,
-                                                                        precision,
-                                                                        false);
+                VariableAccessorType::template BuildSurveyReport<VCardType>(results,
+                    AncestorType::pResults,
+                    dataLevel,
+                    fileLevel,
+                    precision,
+                    false);
+            }
         }
+        NextType::buildSurveyReport(results, dataLevel, fileLevel, precision);
     }
 
 private:
