@@ -63,7 +63,7 @@ struct VCardBindingConstMarginCost
     enum
     {
         //! Data Level
-        categoryDataLevel = Category::DataLevel::bindingConstraint,
+        static constexpr uint8_t categoryDataLevel =  Category::DataLevel::bindingConstraint;
         //! File level (provided by the type of the results)
         static constexpr uint8_t categoryFileLevel =   ResultsType::categoryFile & (Category::FileLevel::bc);
         //! Precision (views)

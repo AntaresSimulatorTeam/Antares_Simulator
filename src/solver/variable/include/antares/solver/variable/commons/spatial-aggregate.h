@@ -126,7 +126,7 @@ struct VCardProxy
     enum
     {
         //! Data Level
-        categoryDataLevel = Category::DataLevel::setOfAreas,
+        static constexpr uint8_t categoryDataLevel =  Category::DataLevel::setOfAreas;
         //! File level (provided by the type of the results)
         static constexpr uint8_t categoryFileLevel =   VCardOrigin::categoryFileLevel;
         //! Precision (views)

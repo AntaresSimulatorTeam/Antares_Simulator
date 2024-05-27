@@ -55,7 +55,7 @@ struct VCardCongestionProbability
     enum
     {
         //! Data Level
-        categoryDataLevel = Category::DataLevel::link,
+        static constexpr uint8_t categoryDataLevel =  Category::DataLevel::link;
         //! File level (provided by the type of the results)
         static constexpr uint8_t categoryFileLevel =   ResultsType::categoryFile & (Category::FileLevel::va);
         //! Precision (views)

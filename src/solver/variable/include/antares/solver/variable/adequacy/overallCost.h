@@ -64,7 +64,7 @@ struct VCardOverallCost
     enum
     {
         //! Data Level
-        categoryDataLevel = Category::DataLevel::area,
+        static constexpr uint8_t categoryDataLevel =  Category::DataLevel::area;
         //! File level (provided by the type of the results)
         static constexpr uint8_t categoryFileLevel =   ResultsType::categoryFile & (Category::FileLevel::id | Category::FileLevel::va);
         //! Precision (views)

@@ -69,7 +69,7 @@ public:
     // Default values
     enum
     {
-        categoryDataLevel = VCardType::categoryDataLevel,
+        static constexpr uint8_t categoryDataLevel =  VCardType::categoryDataLevel;
         static constexpr uint8_t categoryFileLevel =   VCardType::categoryFileLevel;
     };
 
