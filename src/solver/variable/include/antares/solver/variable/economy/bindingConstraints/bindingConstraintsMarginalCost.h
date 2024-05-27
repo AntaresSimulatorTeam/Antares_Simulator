@@ -330,7 +330,6 @@ public:
             pValuesForTheCurrentYear[numSpace]
               .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
         }
-
     }
 
     void buildSurveyReport(SurveyResults& results,
