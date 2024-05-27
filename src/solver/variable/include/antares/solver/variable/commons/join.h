@@ -116,8 +116,8 @@ public:
         enum
         {
             count = LeftType::template Statistics < CDataLevel,
-            CFile > ::count + RightType::template Statistics < CDataLevel,
-            CFile > ::count + BindConstType::template Statistics < CDataLevel,
+            CFile > ::count + (int)RightType::template Statistics < CDataLevel,
+            CFile > ::count + (int)BindConstType::template Statistics < CDataLevel,
             CFile > ::count,
         };
     };
