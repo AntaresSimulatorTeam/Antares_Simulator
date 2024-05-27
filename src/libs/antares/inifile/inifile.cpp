@@ -48,6 +48,11 @@ inline void IniFile::Property::saveToStream(std::ostream& stream_out, uint64_t& 
     stream_out << key << " = " << value << '\n';
 }
 
+void IniFile::Section::add(const Property& property)
+{
+    add(property.key, property.value);
+}
+
 void IniFile::Section::saveToStream(std::ostream& stream_out, uint64_t& written) const
 {
     if (!firstProperty)
@@ -205,8 +210,7 @@ bool IniFile::readStream(std::istream& in_stream)
             // Note : if a property not in a section, it's simply skipped
             if (currentSection)
             {
-                IniFile::Property p = getProperty(line);
-                currentSection->add(p.key, p.value);
+                currentSection->add(getProperty(line));
             }
             continue;
         }
@@ -235,7 +239,7 @@ bool IniFile::open(const AnyString& filename, bool warnings)
 
     if (std::ifstream file(filePath); file.is_open())
     {
-        if (!readStream(file))
+        if (! readStream(file))
         {
             logs.error() << "Invalid INI file : " << filePath;
             return false;
@@ -252,7 +256,7 @@ bool IniFile::open(const AnyString& filename, bool warnings)
 
 void IniFile::saveToStream(std::ostream& stream_out, uint64_t& written) const
 {
-    each([&](const IniFile::Section& s) { s.saveToStream(stream_out, written); });
+    each([&](const IniFile::Section& s) {s.saveToStream(stream_out, written); });
 
     if (written != 0)
     {
@@ -266,7 +270,7 @@ std::string IniFile::toString() const
     std::ostringstream ostream;
 
     this->saveToStream(ostream, written);
-
+    
     return ostream.str();
 }
 

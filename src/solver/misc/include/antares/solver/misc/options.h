@@ -36,6 +36,9 @@
 class Settings
 {
 public:
+    void checkAndSetStudyFolder(const std::string& folder);
+    void reset();
+
     //! Where is my study
     YString studyFolder;
     //! Name of the simulation
@@ -60,13 +63,8 @@ public:
     bool displayProgression = false;
 
     Yuni::String PID;
-
     bool forceZipOutput = false;
-
     Antares::Solver::Optimization::OptimizationOptions optOptions;
-
-    void checkAndSetStudyFolder(Yuni::String folder);
-    void reset();
 }; // class Settings
 
 /*!

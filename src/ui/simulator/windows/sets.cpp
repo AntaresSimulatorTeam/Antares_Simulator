@@ -581,7 +581,8 @@ void Sets::saveToStudy()
     pRichEdit->SaveFile(wxStringFromUTF8(pTempFile), wxRICHTEXT_TYPE_TEXT);
     // ... and reloading it
     // IO::File::LoadFromFile(study->simulation.comments, pTempFile);
-    study->setsOfAreas.loadFromFile(pTempFile);
+    std::filesystem::path p{pTempFile.c_str()};
+    study->setsOfAreas.loadFromFile(p);
 }
 
 bool Sets::initializeTemporaryFile()

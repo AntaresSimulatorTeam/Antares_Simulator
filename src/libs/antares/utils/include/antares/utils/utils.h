@@ -37,6 +37,8 @@ namespace Antares
 template<class StringT>
 void TransformNameIntoID(const AnyString& name, StringT& out);
 
+std::string transformNameIntoID(const std::string& name);
+
 /*!
 ** \brief Beautify a name, for renaming an area for example
 */

@@ -22,14 +22,12 @@
 #include "antares/solver/misc/options.h"
 
 #include <algorithm>
+#include <fstream>
 #include <cassert>
 #include <limits>
 #include <string.h>
 
 #include <yuni/yuni.h>
-#include <yuni/core/system/process.h>
-#include <yuni/io/directory.h>
-#include <yuni/io/file.h>
 
 #include <antares/antares/constants.h>
 #include <antares/exception/AssertionError.hpp>
@@ -40,17 +38,16 @@
 #include "antares/config/config.h"
 #include "antares/solver/utils/ortools_utils.h"
 
-using namespace Yuni;
 using namespace Antares;
 using namespace Antares::Data;
 
-std::unique_ptr<GetOpt::Parser> CreateParser(Settings& settings, StudyLoadOptions& options)
+std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoadOptions& options)
 {
     settings.reset();
 
-    auto parser = std::unique_ptr<GetOpt::Parser>(new GetOpt::Parser());
+    auto parser = std::unique_ptr<Yuni::GetOpt::Parser>(new Yuni::GetOpt::Parser());
 
-    parser->addParagraph(String() << "Antares Solver v" << ANTARES_VERSION_PUB_STR << "\n");
+    parser->addParagraph(Yuni::String() << "Antares Solver v" << ANTARES_VERSION_PUB_STR << "\n");
 
     // Simulation mode
     parser->addParagraph("Simulation");
@@ -210,10 +207,9 @@ void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOption
     const auto& optPID = settings.PID;
     if (!optPID.empty())
     {
-        IO::File::Stream pidfile;
-        if (pidfile.openRW(optPID))
+        if (std::ofstream pidfile(optPID); pidfile.is_open())
         {
-            pidfile << ProcessID();
+            pidfile << getpid();
         }
         else
         {
@@ -261,20 +257,6 @@ void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOption
     options.checkForceSimulationMode();
     checkOrtoolsSolver(options.optOptions);
 
-    // PID
-    if (!optPID.empty())
-    {
-        IO::File::Stream pidfile;
-        if (pidfile.openRW(optPID))
-        {
-            pidfile << ProcessID();
-        }
-        else
-        {
-            throw Error::WritingPID(optPID);
-        }
-    }
-
     // no-output and force-zip-output
     if (settings.noOutput && settings.forceZipOutput)
     {
@@ -299,7 +281,7 @@ void checkOrtoolsSolver(const Antares::Solver::Optimization::OptimizationOptions
     }
 }
 
-void Settings::checkAndSetStudyFolder(Yuni::String folder)
+void Settings::checkAndSetStudyFolder(const std::string& folder)
 {
     // The study folder
     if (folder.empty())
@@ -308,18 +290,17 @@ void Settings::checkAndSetStudyFolder(Yuni::String folder)
     }
 
     // Making the path absolute
-    String abspath;
-    IO::MakeAbsolute(abspath, folder);
-    IO::Normalize(folder, abspath);
+    std::filesystem::path abspath = std::filesystem::absolute(folder);
+    abspath = abspath.lexically_normal();
 
     // Checking if the path exists
-    if (!IO::Directory::Exists(folder))
+    if (!std::filesystem::exists(abspath))
     {
         throw Error::StudyFolderDoesNotExist(folder);
     }
 
     // Copying the result
-    studyFolder = folder;
+    studyFolder = abspath.string();
 }
 
 void Settings::reset()
