@@ -48,7 +48,7 @@ inline void IniFile::Property::saveToStream(std::ostream& stream_out, uint64_t& 
     stream_out << key << " = " << value << '\n';
 }
 
-void IniFile::Section::add(const Property property)
+void IniFile::Section::add(const Property& property)
 {
     add(property.key, property.value);
 }
