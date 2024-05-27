@@ -61,7 +61,7 @@ struct VariablesStatsByDataLevel
         nextFileLevel > ::count,
 
         //! Hpw many variables for this data level
-        count = currentVariableCount + nextVariableCount,
+        count = (int)currentVariableCount + (int)nextVariableCount,
     };
 };
 
