@@ -309,8 +309,8 @@ public:
     }
 
     template<class VCardToFindT>
-    void retrieveResultsForArea(typename Storage<VCardToFindT>::ResultsType** result,
-                                const Data::Area* area)
+    static void retrieveResultsForArea(typename Storage<VCardToFindT>::ResultsType** result,
+                                       const Data::Area* area)
     {
         // Next variable
         NextType::retrieveResultsForArea<VCardToFindT>(result, area);
@@ -322,15 +322,16 @@ public:
     }
 
     template<class V>
-    void simulationEndSpatialAggregates(V& allVars)
+    static void simulationEndSpatialAggregates(V& allVars)
     {
         NextType::simulationEndSpatialAggregates<V>(allVars);
     }
 
     template<class V>
-    void computeSpatialAggregatesSummary(V& allVars,
-                                         std::map<unsigned int, unsigned int>& numSpaceToYear,
-                                         unsigned int nbYearsForCurrentSummary)
+    static void computeSpatialAggregatesSummary(
+      V& allVars,
+      std::map<unsigned int, unsigned int>& numSpaceToYear,
+      unsigned int nbYearsForCurrentSummary)
     {
         NextType::computeSpatialAggregatesSummary<V>(allVars,
                                                      numSpaceToYear,
@@ -343,21 +344,22 @@ public:
     }
 
     template<class SearchVCardT, class O>
-    void computeSpatialAggregateWith(O& out, const Data::Area* area, uint numSpace)
+    static void computeSpatialAggregateWith(O& out, const Data::Area* area, uint numSpace)
     {
         NextType::computeSpatialAggregateWith<SearchVCardT, O>(out, area, numSpace);
     }
 
     template<class VCardToFindT>
-    void retrieveResultsForLink(typename Storage<VCardToFindT>::ResultsType** result,
-                                const Data::AreaLink* link)
+    static void retrieveResultsForLink(typename Storage<VCardToFindT>::ResultsType** result,
+                                       const Data::AreaLink* link)
     {
         NextType::retrieveResultsForLink<VCardToFindT>(result, link);
     }
 
     template<class VCardToFindT>
-    void retrieveResultsForThermalCluster(typename Storage<VCardToFindT>::ResultsType** result,
-                                          const Data::ThermalCluster* cluster)
+    static void retrieveResultsForThermalCluster(
+      typename Storage<VCardToFindT>::ResultsType** result,
+      const Data::ThermalCluster* cluster)
     {
         NextType::retrieveResultsForThermalCluster<VCardToFindT>(result, cluster);
     }
