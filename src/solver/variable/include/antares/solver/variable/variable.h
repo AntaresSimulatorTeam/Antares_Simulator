@@ -217,7 +217,7 @@ public:
     void yearEnd(uint year);
 
     template<class V>
-    void yearEndSpatialAggregates(V& allVars, uint year);
+    void yearEndSpatialAggregates(V& allVars, uint year, unsigned int numSpace);
 
     template<class V, class SetT>
     void yearEndSpatialAggregates(V& allVars, uint year, const SetT& set);

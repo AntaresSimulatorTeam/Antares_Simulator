@@ -130,7 +130,7 @@ public:
 
     void yearBegin(unsigned int year, unsigned int numSpace);
 
-    void yearEndBuild(State& state, unsigned int year);
+    void yearEndBuild(State& state, unsigned int year, unsigned int numSpace);
 
     void yearEnd(unsigned int year, unsigned int numSpace);
 
@@ -138,12 +138,12 @@ public:
                         unsigned int nbYearsForCurrentSummary);
 
     void hourBegin(unsigned int hourInTheYear);
-    void hourForEachArea(State& state);
+    void hourForEachArea(State& state, unsigned int numSpace);
     void hourForEachLink(State& state);
     void hourEnd(State& state, unsigned int hourInTheYear);
 
     void weekBegin(State&);
-    void weekForEachArea(State&);
+    void weekForEachArea(State&, unsigned int numSpace);
     void weekEnd(State&);
 
     void buildSurveyReport(SurveyResults& results,
@@ -181,7 +181,7 @@ public:
     void computeSpatialAggregateWith(O& out);
 
     template<class VCardSearchT, class O>
-    void computeSpatialAggregateWith(O& out, const Data::Area* area);
+    void computeSpatialAggregateWith(O& out, const Data::Area* area, uint numSpace);
 
     template<class VCardToFindT>
     const double* retrieveHourlyResultsForCurrentYear() const;

@@ -137,6 +137,17 @@ public:
         }
     }
 
+    void simulationBegin()
+    {
+        NextType::simulationBegin();
+    }
+
+    void simulationEnd()
+    {
+        NextType::simulationEnd();
+    }
+
+
     void initializeFromStudy(Data::Study& study)
     {
         pNbYearsParallel = study.maxNbYearsInParallel;
@@ -282,6 +293,72 @@ public:
         NextType::hourBegin(hourInTheYear);
     }
 
+    void hourForEachArea(State& state, unsigned int numSpace)
+    {
+        NextType::hourForEachArea(state, numSpace);
+    }
+
+    void weekForEachArea(State& state, unsigned int numSpace)
+    {
+        NextType::weekForEachArea(state, numSpace);
+    }
+
+    template<class VCardToFindT>
+    static void retrieveResultsForArea(typename Storage<VCardToFindT>::ResultsType** result,
+                                       const Data::Area* area)
+    {
+        // Next variable
+        NextType::template retrieveResultsForArea<VCardToFindT>(result, area);
+    }
+
+    void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
+    {
+        NextType::buildDigest(results, digestLevel, dataLevel);
+    }
+
+    template<class V>
+    static void simulationEndSpatialAggregates(V& allVars)
+    {
+        NextType::template simulationEndSpatialAggregates<V>(allVars);
+    }
+
+    template<class V>
+    static void computeSpatialAggregatesSummary(
+      V& allVars,
+      std::map<unsigned int, unsigned int>& numSpaceToYear,
+      unsigned int nbYearsForCurrentSummary)
+    {
+        NextType::template computeSpatialAggregatesSummary<V>(allVars,
+                                                              numSpaceToYear,
+                                                              nbYearsForCurrentSummary);
+    }
+
+    void beforeYearByYearExport(uint year, uint numSpace)
+    {
+        NextType::beforeYearByYearExport(year, numSpace);
+    }
+
+    template<class SearchVCardT, class O>
+    static void computeSpatialAggregateWith(O& out, const Data::Area* area, uint numSpace)
+    {
+        NextType::template computeSpatialAggregateWith<SearchVCardT, O>(out, area, numSpace);
+    }
+
+    template<class VCardToFindT>
+    static void retrieveResultsForLink(typename Storage<VCardToFindT>::ResultsType** result,
+                                       const Data::AreaLink* link)
+    {
+        NextType::template retrieveResultsForLink<VCardToFindT>(result, link);
+    }
+
+    template<class VCardToFindT>
+    static void retrieveResultsForThermalCluster(
+      typename Storage<VCardToFindT>::ResultsType** result,
+      const Data::ThermalCluster* cluster)
+    {
+        NextType::template retrieveResultsForThermalCluster<VCardToFindT>(result, cluster);
+    }
+
     void hourEnd(State& state, unsigned int hourInTheYear)
     {
         if (isInitialized())
@@ -289,10 +366,9 @@ public:
             auto numSpace = state.numSpace;
             if (associatedBC_->type() == Data::BindingConstraint::typeHourly)
             {
-                pValuesForTheCurrentYear[numSpace][hourInTheYear] -= state.problemeHebdo
-                    ->ResultatsContraintesCouplantes
-                    [associatedBC_]
-                [state.hourInTheWeek];
+                pValuesForTheCurrentYear[numSpace][hourInTheYear]
+                  -= state.problemeHebdo
+                       ->ResultatsContraintesCouplantes[associatedBC_][state.hourInTheWeek];
             }
         }
 
@@ -340,8 +416,8 @@ public:
         if (precision & associatedBC_->yearByYearFilter())
         {
             // And only if we match the current data level _and_ precision level
-            if ((dataLevel & VCardType::categoryDataLevel) && (fileLevel & VCardType::categoryFileLevel)
-                && (precision & VCardType::precision))
+            if ((dataLevel & VCardType::categoryDataLevel)
+                && (fileLevel & VCardType::categoryFileLevel) && (precision & VCardType::precision))
             {
                 results.isPrinted = AncestorType::isPrinted;
                 results.isCurrentVarNA[0] = isCurrentOutputNonApplicable(precision);

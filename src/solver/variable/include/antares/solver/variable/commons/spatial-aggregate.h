@@ -273,10 +273,10 @@ public:
         NextType::yearEndBuildForEachThermalCluster(state, year);
     }
 
-    void yearEndBuild(State& state, unsigned int year)
+    void yearEndBuild(State& state, unsigned int year, unsigned int numSpace)
     {
         // Next variable
-        NextType::yearEndBuild(state, year);
+        NextType::yearEndBuild(state, year, numSpace);
     }
 
     void yearEnd(uint year)
@@ -303,10 +303,10 @@ public:
         NextType::hourBegin(hourInTheYear);
     }
 
-    void hourForEachArea(State& state)
+    void hourForEachArea(State& state, unsigned int numSpace)
     {
         // Next variable
-        NextType::hourForEachArea(state);
+        NextType::hourForEachArea(state, numSpace);
     }
 
     template<class V, class SetT>

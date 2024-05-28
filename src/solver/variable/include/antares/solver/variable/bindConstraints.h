@@ -125,10 +125,18 @@ public:
     void computeSummary(std::map<unsigned int, unsigned int>& numSpaceToYear,
                         unsigned int nbYearsForCurrentSummary);
 
+    void simulationBegin();
+    void simulationEnd();
+
     void yearBegin(uint year, uint numSpace);
     void yearEnd(uint year, uint numSpace);
 
+    void yearEndBuild(State& state, uint year, uint numSpace);
+
     void weekBegin(State& state);
+    void weekEnd(State& state);
+    void weekForEachArea(State&, unsigned int numSpace);
+    void hourForEachArea(State&, unsigned int numSpace);
 
     void hourBegin(uint hourInTheYear);
     void hourEnd(State& state, uint hourInTheYear);
@@ -146,8 +154,38 @@ public:
 
     uint64_t memoryUsage() const;
 
+    template<class V>
+    void yearEndSpatialAggregates(V&, uint, uint)
+    {
+        // do nothing
+    }
+
     template<class I>
     static void provideInformations(I& infos);
+
+    template<class VCardToFindT>
+    void retrieveResultsForArea(typename Storage<VCardToFindT>::ResultsType** result,
+                                const Data::Area* area);
+    void buildDigest(SurveyResults&, int digestLevel, int dataLevel) const;
+
+    template<class V>
+    void simulationEndSpatialAggregates(V& allVars);
+
+    template<class VCardToFindT>
+    void retrieveResultsForLink(typename Storage<VCardToFindT>::ResultsType** result,
+                                const Data::AreaLink* link);
+
+    template<class VCardToFindT>
+    void retrieveResultsForThermalCluster(typename Storage<VCardToFindT>::ResultsType** result,
+                                          const Data::ThermalCluster* cluster);
+    template<class VCardSearchT, class O>
+    void computeSpatialAggregateWith(O& out, const Data::Area* area, uint numSpace);
+    template<class V>
+    void computeSpatialAggregatesSummary(V& allVars,
+                                         std::map<unsigned int, unsigned int>& numSpaceToYear,
+                                         unsigned int);
+
+    void beforeYearByYearExport(uint year, uint numSpace);
 
 private:
     // For each binding constraint, output variable static list associated.
