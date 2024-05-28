@@ -160,7 +160,7 @@ bool PreproHydro::loadFromFolder(Study& s, const AreaName& areaID, const char* f
     String& buffer = s.bufferLoadingTS;
 
     buffer.clear() << folder << SEP << areaID << SEP << "prepro.ini";
-    bool ret = (PreproHydroLoadSettings(this, buffer) ? true : false);
+    bool ret = PreproHydroLoadSettings(this, buffer);
     if (intermonthlyCorrelation < 0. || intermonthlyCorrelation > 1.)
     {
         logs.error() << "Hydro: Prepro: `" << areaID
