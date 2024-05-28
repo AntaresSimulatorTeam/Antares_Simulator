@@ -101,19 +101,18 @@ inline void BindingConstraints<NextT>::provideInformations(I& infos)
 template<class NextT>
 void BindingConstraints<NextT>::simulationBegin()
 {
-    for (auto& bc : pBindConstraints)
+    for (auto& bc: pBindConstraints)
     {
-	bc.simulationBegin();
+        bc.simulationBegin();
     }
 }
-
 
 template<class NextT>
 void BindingConstraints<NextT>::simulationEnd()
 {
-    for (auto& bc : pBindConstraints)
+    for (auto& bc: pBindConstraints)
     {
-	bc.simulationEnd();
+        bc.simulationEnd();
     }
 }
 
