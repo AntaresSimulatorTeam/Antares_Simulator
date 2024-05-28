@@ -169,7 +169,7 @@ public:
     /*!
     ** \brief Load an INI file
     */
-    explicit IniFile(const AnyString& filename);
+    explicit IniFile(const std::filesystem::path& filename);
     /*!
     ** \brief Destructor
     */

@@ -85,7 +85,7 @@ IniFile::Section::~Section()
     }
 }
 
-IniFile::IniFile(const AnyString& filename)
+IniFile::IniFile(const fs::path& filename)
 {
     open(filename);
 }
