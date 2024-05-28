@@ -365,9 +365,9 @@ enum SeedIndex
     seedMax,
 };
 
-    //! A default seed for random number generators
+//! A default seed for random number generators
 constexpr unsigned antaresSeedDefaultValue = 5489;
-    //! Increment for RNG (generators) with a different seed
+//! Increment for RNG (generators) with a different seed
 constexpr unsigned antaresSeedIncrement = 1000000; // arbitrary value
 
 /*!
