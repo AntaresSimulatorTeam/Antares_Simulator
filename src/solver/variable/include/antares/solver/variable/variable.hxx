@@ -156,7 +156,9 @@ inline void IVariable<ChildT, NextT, VCardT>::yearEnd(uint year)
 
 template<class ChildT, class NextT, class VCardT>
 template<class V>
-inline void IVariable<ChildT, NextT, VCardT>::yearEndSpatialAggregates(V& allVars, uint year, unsigned int numSpace)
+inline void IVariable<ChildT, NextT, VCardT>::yearEndSpatialAggregates(V& allVars,
+                                                                       uint year,
+                                                                       unsigned int numSpace)
 {
     // Next variable
     NextType::template yearEndSpatialAggregates(allVars, year, numSpace);

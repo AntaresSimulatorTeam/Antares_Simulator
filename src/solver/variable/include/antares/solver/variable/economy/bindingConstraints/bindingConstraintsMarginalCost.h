@@ -366,10 +366,9 @@ public:
             auto numSpace = state.numSpace;
             if (associatedBC_->type() == Data::BindingConstraint::typeHourly)
             {
-                pValuesForTheCurrentYear[numSpace][hourInTheYear] -= state.problemeHebdo
-                    ->ResultatsContraintesCouplantes
-                    [associatedBC_]
-                [state.hourInTheWeek];
+                pValuesForTheCurrentYear[numSpace][hourInTheYear]
+                  -= state.problemeHebdo
+                       ->ResultatsContraintesCouplantes[associatedBC_][state.hourInTheWeek];
             }
         }
 
@@ -417,8 +416,8 @@ public:
         if (precision & associatedBC_->yearByYearFilter())
         {
             // And only if we match the current data level _and_ precision level
-            if ((dataLevel & VCardType::categoryDataLevel) && (fileLevel & VCardType::categoryFileLevel)
-                && (precision & VCardType::precision))
+            if ((dataLevel & VCardType::categoryDataLevel)
+                && (fileLevel & VCardType::categoryFileLevel) && (precision & VCardType::precision))
             {
                 results.isPrinted = AncestorType::isPrinted;
                 results.isCurrentVarNA[0] = isCurrentOutputNonApplicable(precision);

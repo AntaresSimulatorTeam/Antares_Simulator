@@ -210,8 +210,8 @@ typedef Variable::Join<
   Variable::Areas<VariablesPerArea>,
   // Variables for each set of areas
   Variable::Join<Variable::SetsOfAreas<VariablesPerSetOfAreas>,
-  // Variables for each binding constraint
-  Variable::BindingConstraints<VariablesPerBindingConstraints>>>
+                 // Variables for each binding constraint
+                 Variable::BindingConstraints<VariablesPerBindingConstraints>>>
   ItemList;
 
 /*!
