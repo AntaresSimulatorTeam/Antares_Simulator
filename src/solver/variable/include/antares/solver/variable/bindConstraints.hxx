@@ -275,7 +275,7 @@ inline void BindingConstraints<NextT>::retrieveResultsForArea(
     // {
     //     pBindConstraints[i].retrieveResultsForArea<VCardToFindT>(result, area);
     // }
-    NextType template retrieveResultsForArea<VCardToFindT>(result, area);
+    NextType::template retrieveResultsForArea<VCardToFindT>(result, area);
 }
 
 template<class NextT>
@@ -283,10 +283,10 @@ void BindingConstraints<NextT>::buildDigest(SurveyResults& results,
                                             int digestLevel,
                                             int dataLevel) const
 {
-    for (uint i = 0; i != pBCcount; ++i)
-    {
-        pBindConstraints[i].buildDigest(results, digestLevel, dataLevel);
-    }
+    // for (uint i = 0; i != pBCcount; ++i)
+    // {
+    //     pBindConstraints[i].buildDigest(results, digestLevel, dataLevel);
+    // }
 }
 
 template<class NextT>
