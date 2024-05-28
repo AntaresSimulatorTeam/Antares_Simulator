@@ -250,21 +250,19 @@ uint64_t BindingConstraints<NextT>::memoryUsage() const
 template<class NextT>
 void BindingConstraints<NextT>::weekForEachArea(State& state, unsigned int numSpace)
 {
-    // for (uint i = 0; i != pBCcount; ++i)
-    // {
-    //     pBindConstraints[i].weekForEachArea(state, numSpace);
-    // }
-    NextType::weekForEachArea(state, numSpace);
+    for (uint i = 0; i != pBCcount; ++i)
+    {
+        pBindConstraints[i].weekForEachArea(state, numSpace);
+    }
 }
 
 template<class NextT>
 void BindingConstraints<NextT>::hourForEachArea(State& state, unsigned int numSpace)
 {
-    // for (uint i = 0; i != pBCcount; ++i)
-    // {
-    //     pBindConstraints[i].hourForEachArea(state, numSpace);
-    // }
-    NextType::hourForEachArea(state, numSpace);
+    for (uint i = 0; i != pBCcount; ++i)
+    {
+        pBindConstraints[i].hourForEachArea(state, numSpace);
+    }
 }
 
 template<class NextT>
@@ -273,11 +271,10 @@ inline void BindingConstraints<NextT>::retrieveResultsForArea(
   typename Storage<VCardToFindT>::ResultsType** result,
   const Data::Area* area)
 {
-    // for (uint i = 0; i != pBCcount; ++i)
-    // {
-    //     pBindConstraints[i].retrieveResultsForArea<VCardToFindT>(result, area);
-    // }
-    NextType::retrieveResultsForArea<VCardToFindT>(result, area);
+    for (uint i = 0; i != pBCcount; ++i)
+    {
+        pBindConstraints[i].retrieveResultsForArea<VCardToFindT>(result, area);
+    }
 }
 
 template<class NextT>
@@ -285,22 +282,20 @@ void BindingConstraints<NextT>::buildDigest(SurveyResults& results,
                                             int digestLevel,
                                             int dataLevel) const
 {
-    // for (uint i = 0; i != pBCcount; ++i)
-    // {
-    //     pBindConstraints[i].buildDigest(results, digestLevel, dataLevel);
-    // }
-    NextType::buildDigest(results, digestLevel, dataLevel);
+    for (uint i = 0; i != pBCcount; ++i)
+    {
+        pBindConstraints[i].buildDigest(results, digestLevel, dataLevel);
+    }
 }
 
 template<class NextT>
 template<class V>
 void BindingConstraints<NextT>::simulationEndSpatialAggregates(V& allVars)
 {
-    // for (uint i = 0; i != pBCcount; ++i)
-    // {
-    //     pBindConstraints[i].simulationEndSpatialAggregates<V>(allVars);
-    // }
-    NextType::simulationEndSpatialAggregates<V>(allVars);
+    for (uint i = 0; i != pBCcount; ++i)
+    {
+        pBindConstraints[i].simulationEndSpatialAggregates<V>(allVars);
+    }
 }
 
 template<class NextT>
@@ -310,23 +305,21 @@ void BindingConstraints<NextT>::computeSpatialAggregatesSummary(
   std::map<unsigned int, unsigned int>& numSpaceToYear,
   unsigned int nbYearsForCurrentSummary)
 {
-    // for (uint i = 0; i != pBCcount; ++i)
-    // {
-    //     pBindConstraints[i].computeSpatialAggregatesSummary<V>(allVars,
-    //                                                            numSpaceToYear,
-    //                                                            nbYearsForCurrentSummary);
-    // }
-    NextType::computeSpatialAggregatesSummary<V>(allVars, numSpaceToYear, nbYearsForCurrentSummary);
+    for (uint i = 0; i != pBCcount; ++i)
+    {
+        pBindConstraints[i].computeSpatialAggregatesSummary<V>(allVars,
+                                                               numSpaceToYear,
+                                                               nbYearsForCurrentSummary);
+    }
 }
 
 template<class NextT>
 void BindingConstraints<NextT>::beforeYearByYearExport(uint year, uint numSpace)
 {
-    // for (uint i = 0; i != pBCcount; ++i)
-    // {
-    //     pBindConstraints[i].beforeYearByYearExport(year, numSpace);
-    // }
-    NextType::beforeYearByYearExport(year, numSpace);
+    for (uint i = 0; i != pBCcount; ++i)
+    {
+        pBindConstraints[i].beforeYearByYearExport(year, numSpace);
+    }
 }
 
 template<class NextT>
@@ -335,11 +328,10 @@ inline void BindingConstraints<NextT>::computeSpatialAggregateWith(O& out,
                                                                    const Data::Area* area,
                                                                    uint numSpace)
 {
-    // for (uint i = 0; i != pBCcount; ++i)
-    // {
-    //     pBindConstraints[i].computeSpatialAggregateWith<SearchVCardT, O>(out, area, numSpace);
-    // }
-    NextType::computeSpatialAggregateWith<SearchVCardT, O>(out, area, numSpace);
+    for (uint i = 0; i != pBCcount; ++i)
+    {
+        pBindConstraints[i].computeSpatialAggregateWith<SearchVCardT, O>(out, area, numSpace);
+    }
 }
 
 template<class NextT>
@@ -348,11 +340,10 @@ inline void BindingConstraints<NextT>::retrieveResultsForLink(
   typename Storage<VCardToFindT>::ResultsType** result,
   const Data::AreaLink* link)
 {
-    // for (uint i = 0; i != pBCcount; ++i)
-    // {
-    //     pBindConstraints[i].retrieveResultsForLink<VCardToFindT>(result, link);
-    // }
-    NextType::retrieveResultsForLink<VCardToFindT>(result, link);
+    for (uint i = 0; i != pBCcount; ++i)
+    {
+        pBindConstraints[i].retrieveResultsForLink<VCardToFindT>(result, link);
+    }
 }
 
 template<class NextT>
@@ -361,10 +352,9 @@ inline void BindingConstraints<NextT>::retrieveResultsForThermalCluster(
   typename Storage<VCardToFindT>::ResultsType** result,
   const Data::ThermalCluster* cluster)
 {
-    // for (uint i = 0; i != pBCcount; ++i)
-    // {
-    //     pBindConstraints[i].retrieveResultsForThermalCluster<VCardToFindT>(result, cluster);
-    // }
-    NextType::retrieveResultsForThermalCluster<VCardToFindT>(result, cluster);
+    for (uint i = 0; i != pBCcount; ++i)
+    {
+        pBindConstraints[i].retrieveResultsForThermalCluster<VCardToFindT>(result, cluster);
+    }
 }
 } // namespace Antares::Solver::Variable

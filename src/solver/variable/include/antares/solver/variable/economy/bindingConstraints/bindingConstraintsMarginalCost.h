@@ -298,12 +298,27 @@ public:
         NextType::hourBegin(hourInTheYear);
     }
 
+    void hourForEachArea(State& state, unsigned int numSpace)
+    {
+        NextType::hourForEachArea(state, numSpace);
+    }
+
+    void weekForEachArea(State& state, unsigned int numSpace)
+    {
+        NextType::weekForEachArea(state, numSpace);
+    }
+
     template<class VCardToFindT>
     void retrieveResultsForArea(typename Storage<VCardToFindT>::ResultsType** result,
                                 const Data::Area* area)
     {
         // Next variable
         NextType::retrieveResultsForArea<VCardToFindT>(result, area);
+    }
+
+    void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
+    {
+        NextType::buildDigest(results, digestLevel, dataLevel);
     }
 
     template<class V>
@@ -320,6 +335,11 @@ public:
         NextType::computeSpatialAggregatesSummary<V>(allVars,
                                                      numSpaceToYear,
                                                      nbYearsForCurrentSummary);
+    }
+
+    void beforeYearByYearExport(uint year, uint numSpace)
+    {
+        NextType::beforeYearByYearExport(year, numSpace);
     }
 
     template<class SearchVCardT, class O>
