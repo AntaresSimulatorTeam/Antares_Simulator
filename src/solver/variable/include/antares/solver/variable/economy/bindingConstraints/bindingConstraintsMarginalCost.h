@@ -313,7 +313,7 @@ public:
                                        const Data::Area* area)
     {
         // Next variable
-        NextType::retrieveResultsForArea<VCardToFindT>(result, area);
+        NextType::template retrieveResultsForArea<VCardToFindT>(result, area);
     }
 
     void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
@@ -324,7 +324,7 @@ public:
     template<class V>
     static void simulationEndSpatialAggregates(V& allVars)
     {
-        NextType::simulationEndSpatialAggregates<V>(allVars);
+        NextType::template simulationEndSpatialAggregates<V>(allVars);
     }
 
     template<class V>
@@ -333,9 +333,9 @@ public:
       std::map<unsigned int, unsigned int>& numSpaceToYear,
       unsigned int nbYearsForCurrentSummary)
     {
-        NextType::computeSpatialAggregatesSummary<V>(allVars,
-                                                     numSpaceToYear,
-                                                     nbYearsForCurrentSummary);
+        NextType::template computeSpatialAggregatesSummary<V>(allVars,
+                                                              numSpaceToYear,
+                                                              nbYearsForCurrentSummary);
     }
 
     void beforeYearByYearExport(uint year, uint numSpace)
@@ -346,14 +346,14 @@ public:
     template<class SearchVCardT, class O>
     static void computeSpatialAggregateWith(O& out, const Data::Area* area, uint numSpace)
     {
-        NextType::computeSpatialAggregateWith<SearchVCardT, O>(out, area, numSpace);
+        NextType::template computeSpatialAggregateWith<SearchVCardT, O>(out, area, numSpace);
     }
 
     template<class VCardToFindT>
     static void retrieveResultsForLink(typename Storage<VCardToFindT>::ResultsType** result,
                                        const Data::AreaLink* link)
     {
-        NextType::retrieveResultsForLink<VCardToFindT>(result, link);
+        NextType::template retrieveResultsForLink<VCardToFindT>(result, link);
     }
 
     template<class VCardToFindT>
@@ -361,7 +361,7 @@ public:
       typename Storage<VCardToFindT>::ResultsType** result,
       const Data::ThermalCluster* cluster)
     {
-        NextType::retrieveResultsForThermalCluster<VCardToFindT>(result, cluster);
+        NextType::template retrieveResultsForThermalCluster<VCardToFindT>(result, cluster);
     }
 
     void hourEnd(State& state, unsigned int hourInTheYear)
