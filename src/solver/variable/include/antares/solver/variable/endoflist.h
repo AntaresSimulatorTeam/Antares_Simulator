@@ -165,12 +165,14 @@ public:
     }
 
     template<class V>
-    void computeSpatialAggregatesSummary(V&, std::map<unsigned int, unsigned int>&, unsigned int)
+    static void computeSpatialAggregatesSummary(V&,
+                                                std::map<unsigned int, unsigned int>&,
+                                                unsigned int)
     {
     }
 
     template<class V>
-    void simulationEndSpatialAggregates(V&)
+    static void simulationEndSpatialAggregates(V&)
     {
     }
 
