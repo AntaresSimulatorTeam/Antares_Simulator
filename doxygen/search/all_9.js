@@ -15,7 +15,7 @@ var searchData=
   ['jobshowmodalthendestroy_12',['JobShowModalThenDestroy',['../classAntares_1_1Private_1_1Dispatcher_1_1JobShowModalThenDestroy.html',1,'Antares::Private::Dispatcher']]],
   ['jobsimpledispatcher_13',['JobSimpleDispatcher',['../classAntares_1_1Private_1_1Dispatcher_1_1JobSimpleDispatcher.html',1,'Antares::Private::Dispatcher']]],
   ['jobthread_14',['JobThread',['../classAntares_1_1Toolbox_1_1Jobs_1_1JobThread.html',1,'Antares::Toolbox::Jobs']]],
-  ['join_15',['join',['../classAntares_1_1Solver_1_1Variable_1_1Join.html',1,'Antares::Solver::Variable::Join&lt; LeftT, RightT, BindConstT &gt;'],['../classAntares_1_1Concurrency_1_1FutureSet.html#a8cf68f6c1a66e76acaec9ce67cb20e5f',1,'Antares::Concurrency::FutureSet::join()']]],
+  ['join_15',['join',['../classAntares_1_1Solver_1_1Variable_1_1Join.html',1,'Antares::Solver::Variable::Join&lt; LeftT, RightT &gt;'],['../classAntares_1_1Concurrency_1_1FutureSet.html#a8cf68f6c1a66e76acaec9ce67cb20e5f',1,'Antares::Concurrency::FutureSet::join()']]],
   ['jsoncollector_16',['jsonCollector',['../classjson__collector_1_1jsonCollector.html',1,'json_collector']]],
   ['just_5fin_5ftime_5fmanager_17',['just_in_time_manager',['../classJIT_1_1just__in__time__manager.html',1,'JIT']]]
 ];

@@ -253,15 +253,23 @@ static void&#160;</td><td class="memItemRight" valign="bottom"><b>yearEndBuildPr
 <tr class="memitem:a97d99e3e1e33f11bec35f0ff71b6fe72" id="r_a97d99e3e1e33f11bec35f0ff71b6fe72"><td class="memItemLeft" align="right" valign="top"><a id="a97d99e3e1e33f11bec35f0ff71b6fe72" name="a97d99e3e1e33f11bec35f0ff71b6fe72"></a>
 static void&#160;</td><td class="memItemRight" valign="bottom"><b>yearEndBuildForEachThermalCluster</b> (<a class="el" href="classAntares_1_1Solver_1_1Variable_1_1State.html">State</a> &amp;state, uint year, uint numSpace)</td></tr>
 <tr class="separator:a97d99e3e1e33f11bec35f0ff71b6fe72"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad61338e02fbddabe981d00f9d3110574" id="r_ad61338e02fbddabe981d00f9d3110574"><td class="memItemLeft" align="right" valign="top"><a id="ad61338e02fbddabe981d00f9d3110574" name="ad61338e02fbddabe981d00f9d3110574"></a>
-static void&#160;</td><td class="memItemRight" valign="bottom"><b>yearEndBuild</b> (<a class="el" href="classAntares_1_1Solver_1_1Variable_1_1State.html">State</a> &amp;, unsigned int)</td></tr>
-<tr class="separator:ad61338e02fbddabe981d00f9d3110574"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab4e75467bd990f413dd49baeb654b016" id="r_ab4e75467bd990f413dd49baeb654b016"><td class="memItemLeft" align="right" valign="top"><a id="ab4e75467bd990f413dd49baeb654b016" name="ab4e75467bd990f413dd49baeb654b016"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>yearEndBuild</b> (<a class="el" href="classAntares_1_1Solver_1_1Variable_1_1State.html">State</a> &amp;, unsigned int, unsigned int)</td></tr>
+<tr class="separator:ab4e75467bd990f413dd49baeb654b016"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae658ca39cb6528f676aafd415c2c26c1" id="r_ae658ca39cb6528f676aafd415c2c26c1"><td class="memItemLeft" align="right" valign="top"><a id="ae658ca39cb6528f676aafd415c2c26c1" name="ae658ca39cb6528f676aafd415c2c26c1"></a>
 static void&#160;</td><td class="memItemRight" valign="bottom"><b>yearEnd</b> (unsigned int, unsigned int)</td></tr>
 <tr class="separator:ae658ca39cb6528f676aafd415c2c26c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a627a2219ef3910a13e97184f0de1df69" id="r_a627a2219ef3910a13e97184f0de1df69"><td class="memItemLeft" align="right" valign="top"><a id="a627a2219ef3910a13e97184f0de1df69" name="a627a2219ef3910a13e97184f0de1df69"></a>
 static void&#160;</td><td class="memItemRight" valign="bottom"><b>computeSummary</b> (std::map&lt; unsigned int, unsigned int &gt; &amp;numSpaceToYear, uint nbYearsForCurrentSummary)</td></tr>
 <tr class="separator:a627a2219ef3910a13e97184f0de1df69"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a34b4501dbb1d7b0eb381d7c47c0c04d5" id="r_a34b4501dbb1d7b0eb381d7c47c0c04d5"><td class="memTemplParams" colspan="2"><a id="a34b4501dbb1d7b0eb381d7c47c0c04d5" name="a34b4501dbb1d7b0eb381d7c47c0c04d5"></a>
+template&lt;class V &gt; </td></tr>
+<tr class="memitem:a34b4501dbb1d7b0eb381d7c47c0c04d5"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>computeSpatialAggregatesSummary</b> (V &amp;, std::map&lt; unsigned int, unsigned int &gt; &amp;, unsigned int)</td></tr>
+<tr class="separator:a34b4501dbb1d7b0eb381d7c47c0c04d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1813d6a40cf59a5153887858b010b299" id="r_a1813d6a40cf59a5153887858b010b299"><td class="memTemplParams" colspan="2"><a id="a1813d6a40cf59a5153887858b010b299" name="a1813d6a40cf59a5153887858b010b299"></a>
+template&lt;class V &gt; </td></tr>
+<tr class="memitem:a1813d6a40cf59a5153887858b010b299"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>simulationEndSpatialAggregates</b> (V &amp;)</td></tr>
+<tr class="separator:a1813d6a40cf59a5153887858b010b299"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad2095577da0070b9529343c04f92f550" id="r_ad2095577da0070b9529343c04f92f550"><td class="memItemLeft" align="right" valign="top"><a id="ad2095577da0070b9529343c04f92f550" name="ad2095577da0070b9529343c04f92f550"></a>
 static void&#160;</td><td class="memItemRight" valign="bottom"><b>weekBegin</b> (<a class="el" href="classAntares_1_1Solver_1_1Variable_1_1State.html">State</a> &amp;)</td></tr>
 <tr class="separator:ad2095577da0070b9529343c04f92f550"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -310,6 +318,10 @@ template&lt;class SearchVCardT , class O &gt; </td></tr>
 template&lt;class SearchVCardT , class O &gt; </td></tr>
 <tr class="memitem:a61d09b327f472d391cab1ef14a4542a6"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>computeSpatialAggregateWith</b> (O &amp;, const <a class="el" href="classAntares_1_1Data_1_1Area.html">Data::Area</a> *)</td></tr>
 <tr class="separator:a61d09b327f472d391cab1ef14a4542a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa64739004ef8abc5907f4d73fc3a1d6c" id="r_aa64739004ef8abc5907f4d73fc3a1d6c"><td class="memTemplParams" colspan="2"><a id="aa64739004ef8abc5907f4d73fc3a1d6c" name="aa64739004ef8abc5907f4d73fc3a1d6c"></a>
+template&lt;class SearchVCardT , class O &gt; </td></tr>
+<tr class="memitem:aa64739004ef8abc5907f4d73fc3a1d6c"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>computeSpatialAggregateWith</b> (O &amp;, const <a class="el" href="classAntares_1_1Data_1_1Area.html">Data::Area</a> *, uint numSpace)</td></tr>
+<tr class="separator:aa64739004ef8abc5907f4d73fc3a1d6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acf0435f6a8d908a3a7b3e3f6f06255e9" id="r_acf0435f6a8d908a3a7b3e3f6f06255e9"><td class="memTemplParams" colspan="2"><a id="acf0435f6a8d908a3a7b3e3f6f06255e9" name="acf0435f6a8d908a3a7b3e3f6f06255e9"></a>
 template&lt;class VCardToFindT , class O &gt; </td></tr>
 <tr class="memitem:acf0435f6a8d908a3a7b3e3f6f06255e9"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>retrieveResultsForArea</b> (O **, const <a class="el" href="classAntares_1_1Data_1_1Area.html">Data::Area</a> *)</td></tr>
@@ -339,14 +351,6 @@ template&lt;class V &gt; </td></tr>
 template&lt;class V , class SetT &gt; </td></tr>
 <tr class="memitem:a95fd700cc5e38a61890e663e0a961345"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>yearEndSpatialAggregates</b> (V &amp;, unsigned int, const SetT &amp;, uint numSpace)</td></tr>
 <tr class="separator:a95fd700cc5e38a61890e663e0a961345"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a331026bb0c4b3b8ec2dccce294622769" id="r_a331026bb0c4b3b8ec2dccce294622769"><td class="memTemplParams" colspan="2"><a id="a331026bb0c4b3b8ec2dccce294622769" name="a331026bb0c4b3b8ec2dccce294622769"></a>
-template&lt;class V &gt; </td></tr>
-<tr class="memitem:a331026bb0c4b3b8ec2dccce294622769"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>computeSpatialAggregatesSummary</b> (V &amp;, std::map&lt; unsigned int, unsigned int &gt; &amp;, unsigned int)</td></tr>
-<tr class="separator:a331026bb0c4b3b8ec2dccce294622769"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adb6fbe9793b44c37c7702f4429c3b4e5" id="r_adb6fbe9793b44c37c7702f4429c3b4e5"><td class="memTemplParams" colspan="2"><a id="adb6fbe9793b44c37c7702f4429c3b4e5" name="adb6fbe9793b44c37c7702f4429c3b4e5"></a>
-template&lt;class V &gt; </td></tr>
-<tr class="memitem:adb6fbe9793b44c37c7702f4429c3b4e5"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>simulationEndSpatialAggregates</b> (V &amp;)</td></tr>
-<tr class="separator:adb6fbe9793b44c37c7702f4429c3b4e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2a32acd45d4c986ecbe33b3901245d95" id="r_a2a32acd45d4c986ecbe33b3901245d95"><td class="memTemplParams" colspan="2"><a id="a2a32acd45d4c986ecbe33b3901245d95" name="a2a32acd45d4c986ecbe33b3901245d95"></a>
 template&lt;class V , class SetT &gt; </td></tr>
 <tr class="memitem:a2a32acd45d4c986ecbe33b3901245d95"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>simulationEndSpatialAggregates</b> (V &amp;, const SetT &amp;)</td></tr>

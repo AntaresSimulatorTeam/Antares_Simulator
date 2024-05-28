@@ -70,9 +70,6 @@ var hierarchy =
     [ "Test::BasisStatus", "classTest_1_1BasisStatus.html", null ],
     [ "Antares::Optimization::BasisStatusImpl", "classAntares_1_1Optimization_1_1BasisStatusImpl.html", null ],
     [ "unfeasible_problem.behavior_flag", "classunfeasible__problem_1_1behavior__flag.html", null ],
-    [ "BindConstT", null, [
-      [ "Antares::Solver::Variable::Join< LeftT, RightT, BindConstT >", "classAntares_1_1Solver_1_1Variable_1_1Join.html", null ]
-    ] ],
     [ "BindingConstraintData", "classBindingConstraintData.html", null ],
     [ "BindingConstraintDayData", "structBindingConstraintDayData.html", null ],
     [ "Antares::Data::BindingConstraintGroup", "classAntares_1_1Data_1_1BindingConstraintGroup.html", null ],
@@ -239,8 +236,8 @@ var hierarchy =
     [ "Antares::Date::DayInterval", "structAntares_1_1Date_1_1DayInterval.html", null ],
     [ "Antares::DebugData", "structAntares_1_1DebugData.html", null ],
     [ "Yuni::Default", null, [
-      [ "Antares::Solver::Variable::IVariable< Join< LeftT, RightT, BindConstT >, Yuni::Default, VCardJoin >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
-        [ "Antares::Solver::Variable::Join< LeftT, RightT, BindConstT >", "classAntares_1_1Solver_1_1Variable_1_1Join.html", null ]
+      [ "Antares::Solver::Variable::IVariable< Join< LeftT, RightT >, Yuni::Default, VCardJoin >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Join< LeftT, RightT >", "classAntares_1_1Solver_1_1Variable_1_1Join.html", null ]
       ] ]
     ] ],
     [ "DEMAND_FLEX_DOWN_POOL", "structDEMAND__FLEX__DOWN__POOL.html", null ],
@@ -688,7 +685,7 @@ var hierarchy =
       ] ]
     ] ],
     [ "LeftT", null, [
-      [ "Antares::Solver::Variable::Join< LeftT, RightT, BindConstT >", "classAntares_1_1Solver_1_1Variable_1_1Join.html", null ]
+      [ "Antares::Solver::Variable::Join< LeftT, RightT >", "classAntares_1_1Solver_1_1Variable_1_1Join.html", null ]
     ] ],
     [ "LEVEL_FLEX_DOWN_NODE", "structLEVEL__FLEX__DOWN__NODE.html", null ],
     [ "LEVEL_FLEX_UP_NODE", "structLEVEL__FLEX__UP__NODE.html", null ],
@@ -1050,7 +1047,7 @@ var hierarchy =
     [ "ShortTermStorage::RESULTS", "structShortTermStorage_1_1RESULTS.html", null ],
     [ "results_remover.results_remover", "classresults__remover_1_1results__remover.html", null ],
     [ "RightT", null, [
-      [ "Antares::Solver::Variable::Join< LeftT, RightT, BindConstT >", "classAntares_1_1Solver_1_1Variable_1_1Join.html", null ]
+      [ "Antares::Solver::Variable::Join< LeftT, RightT >", "classAntares_1_1Solver_1_1Variable_1_1Join.html", null ]
     ] ],
     [ "std::runtime_error", null, [
       [ "Antares::Data::AssertionError", "classAntares_1_1Data_1_1AssertionError.html", null ],
@@ -1197,7 +1194,7 @@ var hierarchy =
     [ "Antares::Solver::Variable::Economy::UnsupliedEnergy< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsupliedEnergy_1_1Statistics.html", null ],
     [ "Antares::Solver::Variable::Economy::WaterValue< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WaterValue_1_1Statistics.html", null ],
     [ "Antares::Solver::Variable::IVariable< ChildT, NextT, VCardT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1IVariable_1_1Statistics.html", null ],
-    [ "Antares::Solver::Variable::Join< LeftT, RightT, BindConstT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Join_1_1Statistics.html", null ],
+    [ "Antares::Solver::Variable::Join< LeftT, RightT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Join_1_1Statistics.html", null ],
     [ "Antares::Solver::Variable::Links< VariablePerLink >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Links_1_1Statistics.html", null ],
     [ "Antares::Solver::Variable::SetsOfAreas< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1SetsOfAreas_1_1Statistics.html", null ],
     [ "FSWalker::Statistics", "classFSWalker_1_1Statistics.html", null ],
