@@ -67,7 +67,7 @@ var NAVTREE =
         [ "Variables", "functions_vars.html", "functions_vars" ],
         [ "Typedefs", "functions_type.html", "functions_type" ],
         [ "Enumerations", "functions_enum.html", null ],
-        [ "Enumerator", "functions_eval.html", "functions_eval" ]
+        [ "Enumerator", "functions_eval.html", null ]
       ] ]
     ] ],
     [ "Files", "files.html", [
@@ -99,11 +99,11 @@ var NAVTREEINDEX =
 "classIItem_1_1IPart.html#a56e3a54b583e40ed3f6d46289af3fd82",
 "column_8h_source.html",
 "dir_a6c8838202afb2f4d967027b3636f365.html",
-"functions_type_v.html",
-"nbOfDispatchedUnitsByPlant_8h_source.html",
-"structAntares_1_1Data_1_1TimeSeriesToCStr_3_018_01_4.html",
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesValuesHydro.html",
-"structSimplexResult.html"
+"functions_vars_n.html",
+"opt__fonctions_8h_source.html",
+"structAntares_1_1Graph_1_1Edge_1_1compareWeight.html",
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue.html#a8f7833edaaf5c9915e08c0fe524c6fe0",
+"structVARIABLES__DUALES__INTERCONNEXIONS.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

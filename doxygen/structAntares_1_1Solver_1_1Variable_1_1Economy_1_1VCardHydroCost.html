@@ -134,6 +134,7 @@ $(document).ready(function(){initNavTree('structAntares_1_1Solver_1_1Variable_1_
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroCost-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">Antares::Solver::Variable::Economy::VCardHydroCost Struct Reference</div></div>
 </div><!--header-->
@@ -141,23 +142,6 @@ $(document).ready(function(){initNavTree('structAntares_1_1Solver_1_1Variable_1_
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:aca405ed64529d45c0ff30dae08ede19e" id="r_aca405ed64529d45c0ff30dae08ede19e"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom">{ <br />
-&#160;&#160;<a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroCost.html#aca405ed64529d45c0ff30dae08ede19ea79d7007b10b9886247a9525cc456e7f4">categoryDataLevel</a> = Category::DataLevel::area
-, <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroCost.html#aca405ed64529d45c0ff30dae08ede19eabc0b21152ac126069b7843a43e9ac198">categoryFileLevel</a> = ResultsType::categoryFile &amp; (Category::FileLevel::id | Category::FileLevel::va)
-, <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroCost.html#aca405ed64529d45c0ff30dae08ede19eaa6a05dc74603859f7375af7622925a1e">precision</a> = Category::all
-, <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroCost.html#aca405ed64529d45c0ff30dae08ede19ea4e144a34e62d605cf8145658e5bb6254">nodeDepthForGUI</a> = +0
-, <br />
-&#160;&#160;<a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroCost.html#aca405ed64529d45c0ff30dae08ede19ea6f9cbb8f24c8dfff79321f1e7273b0c7">decimal</a> = 0
-, <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroCost.html#aca405ed64529d45c0ff30dae08ede19ea29e563f8849c601e124fe26087eac1c8">columnCount</a> = 1
-, <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroCost.html#aca405ed64529d45c0ff30dae08ede19ea05bacb772d17dc4d44c6f5dbdc7d032c">spatialAggregate</a> = Category::spatialAggregateSum
-, <b>spatialAggregateMode</b> = Category::spatialAggregateEachYear
-, <br />
-&#160;&#160;<b>spatialAggregatePostProcessing</b> = 0
-, <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroCost.html#aca405ed64529d45c0ff30dae08ede19ea82b7bc82283cc8dc52490f50a688425b">hasIntermediateValues</a> = 1
-, <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroCost.html#aca405ed64529d45c0ff30dae08ede19ea413e14146b797c560f7e9cf08cae217d">isPossiblyNonApplicable</a> = 0
-<br />
- }</td></tr>
-<tr class="separator:aca405ed64529d45c0ff30dae08ede19e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8aa9f0ca24f11304ce8921a8ace69752" id="r_a8aa9f0ca24f11304ce8921a8ace69752"><td class="memItemLeft" align="right" valign="top"><a id="a8aa9f0ca24f11304ce8921a8ace69752" name="a8aa9f0ca24f11304ce8921a8ace69752"></a>
 typedef <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1Results.html">Results</a>&lt; <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average.html">R::AllYears::Average</a>&lt; <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html">R::AllYears::StdDeviation</a>&lt; <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Min.html">R::AllYears::Min</a>&lt; <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Max.html">R::AllYears::Max</a>&lt; &gt; &gt; &gt; &gt;, <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average.html">R::AllYears::Average</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>ResultsType</b></td></tr>
 <tr class="memdesc:a8aa9f0ca24f11304ce8921a8ace69752"><td class="mdescLeft">&#160;</td><td class="mdescRight">The expecte results. <br /></td></tr>
@@ -190,39 +174,76 @@ static std::string&#160;</td><td class="memItemRight" valign="bottom"><b>Unit</b
 static std::string&#160;</td><td class="memItemRight" valign="bottom"><b>Description</b> ()</td></tr>
 <tr class="memdesc:a65e966f0399b46a461cccd5a3d977e8a"><td class="mdescLeft">&#160;</td><td class="mdescRight">The short description of the variable. <br /></td></tr>
 <tr class="separator:a65e966f0399b46a461cccd5a3d977e8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr class="memitem:a2b7e18b12cd144ab4a6e10fabbabda05" id="r_a2b7e18b12cd144ab4a6e10fabbabda05"><td class="memItemLeft" align="right" valign="top"><a id="a2b7e18b12cd144ab4a6e10fabbabda05" name="a2b7e18b12cd144ab4a6e10fabbabda05"></a>
+static constexpr uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>categoryDataLevel</b> = Category::DataLevel::area</td></tr>
+<tr class="memdesc:a2b7e18b12cd144ab4a6e10fabbabda05"><td class="mdescLeft">&#160;</td><td class="mdescRight">Data Level. <br /></td></tr>
+<tr class="separator:a2b7e18b12cd144ab4a6e10fabbabda05"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2179e33d28932ca267a9cc013dbc4a8e" id="r_a2179e33d28932ca267a9cc013dbc4a8e"><td class="memItemLeft" align="right" valign="top">static constexpr uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardHydroCost.html#a2179e33d28932ca267a9cc013dbc4a8e">categoryFileLevel</a></td></tr>
+<tr class="memdesc:a2179e33d28932ca267a9cc013dbc4a8e"><td class="mdescLeft">&#160;</td><td class="mdescRight">File level (provided by the type of the results)  <br /></td></tr>
+<tr class="separator:a2179e33d28932ca267a9cc013dbc4a8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a93917fcdcd1d65645b9a9690591c7d8a" id="r_a93917fcdcd1d65645b9a9690591c7d8a"><td class="memItemLeft" align="right" valign="top"><a id="a93917fcdcd1d65645b9a9690591c7d8a" name="a93917fcdcd1d65645b9a9690591c7d8a"></a>
+static constexpr uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>precision</b> = Category::all</td></tr>
+<tr class="memdesc:a93917fcdcd1d65645b9a9690591c7d8a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Precision (views) <br /></td></tr>
+<tr class="separator:a93917fcdcd1d65645b9a9690591c7d8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a794e95e88c5287d34dbf29b8ece3df2a" id="r_a794e95e88c5287d34dbf29b8ece3df2a"><td class="memItemLeft" align="right" valign="top"><a id="a794e95e88c5287d34dbf29b8ece3df2a" name="a794e95e88c5287d34dbf29b8ece3df2a"></a>
+static constexpr uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>nodeDepthForGUI</b> = +0</td></tr>
+<tr class="memdesc:a794e95e88c5287d34dbf29b8ece3df2a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indentation (GUI) <br /></td></tr>
+<tr class="separator:a794e95e88c5287d34dbf29b8ece3df2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae4b2e0fa6b487a807a74e634e80bb9c3" id="r_ae4b2e0fa6b487a807a74e634e80bb9c3"><td class="memItemLeft" align="right" valign="top"><a id="ae4b2e0fa6b487a807a74e634e80bb9c3" name="ae4b2e0fa6b487a807a74e634e80bb9c3"></a>
+static constexpr uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>decimal</b> = 0</td></tr>
+<tr class="memdesc:ae4b2e0fa6b487a807a74e634e80bb9c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decimal precision. <br /></td></tr>
+<tr class="separator:ae4b2e0fa6b487a807a74e634e80bb9c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a39c9ba884ffc8d68fdef63cb5eb6c6b4" id="r_a39c9ba884ffc8d68fdef63cb5eb6c6b4"><td class="memItemLeft" align="right" valign="top"><a id="a39c9ba884ffc8d68fdef63cb5eb6c6b4" name="a39c9ba884ffc8d68fdef63cb5eb6c6b4"></a>
+static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><b>columnCount</b> = 1</td></tr>
+<tr class="memdesc:a39c9ba884ffc8d68fdef63cb5eb6c6b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of columns used by the variable (One ResultsType per column) <br /></td></tr>
+<tr class="separator:a39c9ba884ffc8d68fdef63cb5eb6c6b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abe23483049701327e679a4c48fbb7f23" id="r_abe23483049701327e679a4c48fbb7f23"><td class="memItemLeft" align="right" valign="top"><a id="abe23483049701327e679a4c48fbb7f23" name="abe23483049701327e679a4c48fbb7f23"></a>
+static constexpr uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>spatialAggregate</b> = Category::spatialAggregateSum</td></tr>
+<tr class="memdesc:abe23483049701327e679a4c48fbb7f23"><td class="mdescLeft">&#160;</td><td class="mdescRight">The Spatial aggregation. <br /></td></tr>
+<tr class="separator:abe23483049701327e679a4c48fbb7f23"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9f447b3985cd074820790fa3a948383b" id="r_a9f447b3985cd074820790fa3a948383b"><td class="memItemLeft" align="right" valign="top"><a id="a9f447b3985cd074820790fa3a948383b" name="a9f447b3985cd074820790fa3a948383b"></a>
+static constexpr uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>spatialAggregateMode</b> = Category::spatialAggregateEachYear</td></tr>
+<tr class="separator:a9f447b3985cd074820790fa3a948383b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7fca78dae3c3d538d374ccc4e701ea45" id="r_a7fca78dae3c3d538d374ccc4e701ea45"><td class="memItemLeft" align="right" valign="top"><a id="a7fca78dae3c3d538d374ccc4e701ea45" name="a7fca78dae3c3d538d374ccc4e701ea45"></a>
+static constexpr uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>spatialAggregatePostProcessing</b> = 0</td></tr>
+<tr class="separator:a7fca78dae3c3d538d374ccc4e701ea45"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad14634868537034098e44b73b12b87c4" id="r_ad14634868537034098e44b73b12b87c4"><td class="memItemLeft" align="right" valign="top"><a id="ad14634868537034098e44b73b12b87c4" name="ad14634868537034098e44b73b12b87c4"></a>
+static constexpr uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>hasIntermediateValues</b> = 1</td></tr>
+<tr class="memdesc:ad14634868537034098e44b73b12b87c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Intermediate values. <br /></td></tr>
+<tr class="separator:ad14634868537034098e44b73b12b87c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afbd3a478d907f1b22e0046d1c72e8ae5" id="r_afbd3a478d907f1b22e0046d1c72e8ae5"><td class="memItemLeft" align="right" valign="top"><a id="afbd3a478d907f1b22e0046d1c72e8ae5" name="afbd3a478d907f1b22e0046d1c72e8ae5"></a>
+static constexpr uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>isPossiblyNonApplicable</b> = 0</td></tr>
+<tr class="memdesc:afbd3a478d907f1b22e0046d1c72e8ae5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Can this variable be non applicable (0 : no, 1 : yes) <br /></td></tr>
+<tr class="separator:afbd3a478d907f1b22e0046d1c72e8ae5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Enumeration Documentation</h2>
-<a id="aca405ed64529d45c0ff30dae08ede19e" name="aca405ed64529d45c0ff30dae08ede19e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aca405ed64529d45c0ff30dae08ede19e">&#9670;&#160;</a></span>anonymous enum</h2>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a2179e33d28932ca267a9cc013dbc4a8e" name="a2179e33d28932ca267a9cc013dbc4a8e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2179e33d28932ca267a9cc013dbc4a8e">&#9670;&#160;</a></span>categoryFileLevel</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">anonymous enum</td>
+          <td class="memname">constexpr uint8_t Antares::Solver::Variable::Economy::VCardHydroCost::categoryFileLevel</td>
         </tr>
       </table>
-</div><div class="memdoc">
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="aca405ed64529d45c0ff30dae08ede19ea79d7007b10b9886247a9525cc456e7f4" name="aca405ed64529d45c0ff30dae08ede19ea79d7007b10b9886247a9525cc456e7f4"></a>categoryDataLevel&#160;</td><td class="fielddoc"><p>Data Level. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="aca405ed64529d45c0ff30dae08ede19eabc0b21152ac126069b7843a43e9ac198" name="aca405ed64529d45c0ff30dae08ede19eabc0b21152ac126069b7843a43e9ac198"></a>categoryFileLevel&#160;</td><td class="fielddoc"><p>File level (provided by the type of the results) </p>
-</td></tr>
-<tr><td class="fieldname"><a id="aca405ed64529d45c0ff30dae08ede19eaa6a05dc74603859f7375af7622925a1e" name="aca405ed64529d45c0ff30dae08ede19eaa6a05dc74603859f7375af7622925a1e"></a>precision&#160;</td><td class="fielddoc"><p>Precision (views) </p>
-</td></tr>
-<tr><td class="fieldname"><a id="aca405ed64529d45c0ff30dae08ede19ea4e144a34e62d605cf8145658e5bb6254" name="aca405ed64529d45c0ff30dae08ede19ea4e144a34e62d605cf8145658e5bb6254"></a>nodeDepthForGUI&#160;</td><td class="fielddoc"><p>Indentation (GUI) </p>
-</td></tr>
-<tr><td class="fieldname"><a id="aca405ed64529d45c0ff30dae08ede19ea6f9cbb8f24c8dfff79321f1e7273b0c7" name="aca405ed64529d45c0ff30dae08ede19ea6f9cbb8f24c8dfff79321f1e7273b0c7"></a>decimal&#160;</td><td class="fielddoc"><p>Decimal precision. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="aca405ed64529d45c0ff30dae08ede19ea29e563f8849c601e124fe26087eac1c8" name="aca405ed64529d45c0ff30dae08ede19ea29e563f8849c601e124fe26087eac1c8"></a>columnCount&#160;</td><td class="fielddoc"><p>Number of columns used by the variable (One ResultsType per column) </p>
-</td></tr>
-<tr><td class="fieldname"><a id="aca405ed64529d45c0ff30dae08ede19ea05bacb772d17dc4d44c6f5dbdc7d032c" name="aca405ed64529d45c0ff30dae08ede19ea05bacb772d17dc4d44c6f5dbdc7d032c"></a>spatialAggregate&#160;</td><td class="fielddoc"><p>The Spatial aggregation. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="aca405ed64529d45c0ff30dae08ede19ea82b7bc82283cc8dc52490f50a688425b" name="aca405ed64529d45c0ff30dae08ede19ea82b7bc82283cc8dc52490f50a688425b"></a>hasIntermediateValues&#160;</td><td class="fielddoc"><p>Intermediate values. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="aca405ed64529d45c0ff30dae08ede19ea413e14146b797c560f7e9cf08cae217d" name="aca405ed64529d45c0ff30dae08ede19ea413e14146b797c560f7e9cf08cae217d"></a>isPossiblyNonApplicable&#160;</td><td class="fielddoc"><p>Can this variable be non applicable (0 : no, 1 : yes) </p>
-</td></tr>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
 </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">= ResultsType::categoryFile</div>
+<div class="line">                                                 &amp; (Category::FileLevel::id</div>
+<div class="line">                                                    | Category::FileLevel::va)</div>
+</div><!-- fragment -->
+<p>File level (provided by the type of the results) </p>
 
 </div>
 </div>
