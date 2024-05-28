@@ -80,7 +80,8 @@ struct BrowseAllVariables
     enum
     {
         nextFileLevel = (CFile * 2 > (int)Category::FileLevel::maxFileLevel) ? 1 : CFile * 2,
-        nextDataLevel = (CDataLevel * 2 > (int)Category::DataLevel::maxDataLevel) ? 1 : CDataLevel * 2,
+        nextDataLevel = (CDataLevel * 2 > (int)Category::DataLevel::maxDataLevel) ? 1
+                                                                                  : CDataLevel * 2,
         currentValue = NextT::template Statistics < CDataLevel,
         CFile > ::count,
         nextValue = BrowseAllVariables < NextT,
@@ -103,7 +104,9 @@ struct BrowseAllVariables
 };
 
 template<class NextT>
-    struct BrowseAllVariables<NextT, Category::DataLevel::maxDataLevel, Category::FileLevel::maxFileLevel>
+struct BrowseAllVariables<NextT,
+                          Category::DataLevel::maxDataLevel,
+                          Category::FileLevel::maxFileLevel>
 {
     enum
     {
@@ -115,8 +118,9 @@ template<class NextT>
     static void buildSurveyResults(const L& list, S& results)
     {
         // Exporting data for the current state
-        list.template buildSurveyResults<S, Category::DataLevel::maxDataLevel, Category::FileLevel::maxFileLevel>(
-          results);
+        list.template buildSurveyResults<S,
+                                         Category::DataLevel::maxDataLevel,
+                                         Category::FileLevel::maxFileLevel>(results);
         // This is the final available state
     }
 };

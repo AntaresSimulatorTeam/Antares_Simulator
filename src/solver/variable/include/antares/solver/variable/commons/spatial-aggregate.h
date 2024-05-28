@@ -124,26 +124,26 @@ struct VCardProxy
       typename VCardOrigin::IntermediateValuesTypeForSpatialAg IntermediateValuesTypeForSpatialAg;
 
     //! Data Level
-    static constexpr uint8_t categoryDataLevel =  Category::DataLevel::setOfAreas;
+    static constexpr uint8_t categoryDataLevel = Category::DataLevel::setOfAreas;
     //! File level (provided by the type of the results)
-    static constexpr uint8_t categoryFileLevel =   VCardOrigin::categoryFileLevel;
+    static constexpr uint8_t categoryFileLevel = VCardOrigin::categoryFileLevel;
     //! Precision (views)
-    static constexpr uint8_t precision =   VCardOrigin::precision;
+    static constexpr uint8_t precision = VCardOrigin::precision;
     //! Indentation (GUI)
-    static constexpr uint8_t nodeDepthForGUI =   +0;
+    static constexpr uint8_t nodeDepthForGUI = +0;
     //! Decimal precision
-    static constexpr uint8_t decimal =   VCardOrigin::decimal;
+    static constexpr uint8_t decimal = VCardOrigin::decimal;
     //! Number of columns used by the variable (One ResultsType per column)
-    static constexpr int columnCount =    VCardOrigin::columnCount;
+    static constexpr int columnCount = VCardOrigin::columnCount;
     //! The Spatial aggregation
-    static constexpr uint8_t spatialAggregate =   Category::noSpatialAggregate;
-    static constexpr uint8_t spatialAggregateMode =   Category::spatialAggregateEachYear;
-    static constexpr uint8_t spatialAggregatePostProcessing =   0;
+    static constexpr uint8_t spatialAggregate = Category::noSpatialAggregate;
+    static constexpr uint8_t spatialAggregateMode = Category::spatialAggregateEachYear;
+    static constexpr uint8_t spatialAggregatePostProcessing = 0;
 
     //! Intermediate values
-    static constexpr uint8_t hasIntermediateValues =   1;
+    static constexpr uint8_t hasIntermediateValues = 1;
     //! Can this variable be non applicable (0 : no, 1 : yes)
-    static constexpr uint8_t isPossiblyNonApplicable =   VCardOrigin::isPossiblyNonApplicable;
+    static constexpr uint8_t isPossiblyNonApplicable = VCardOrigin::isPossiblyNonApplicable;
 
     struct Multiple
     {
@@ -352,7 +352,8 @@ public:
     inline void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
     {
         // Generate the Digest for the local results (districts part)
-        if (VCardType::columnCount != 0 && (VCardType::categoryDataLevel & Category::DataLevel::setOfAreas))
+        if (VCardType::columnCount != 0
+            && (VCardType::categoryDataLevel & Category::DataLevel::setOfAreas))
         {
             // Initializing pointer on variable non applicable and print stati arrays to beginning
             results.isPrinted = AncestorType::isPrinted;
@@ -373,7 +374,8 @@ public:
                                       int precision,
                                       uint numSpace) const
     {
-        if (VCardType::columnCount != 0 && (VCardType::categoryDataLevel & Category::DataLevel::setOfAreas))
+        if (VCardType::columnCount != 0
+            && (VCardType::categoryDataLevel & Category::DataLevel::setOfAreas))
         {
             // Initializing pointer on variable non applicable and print stati arrays to beginning
             results.isPrinted = AncestorType::isPrinted;

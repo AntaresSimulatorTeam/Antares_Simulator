@@ -59,23 +59,25 @@ struct VCardJoin
       ResultsType;
 
     //! Data Level
-    static constexpr uint8_t categoryDataLevel =  Category::DataLevel::area;
+    static constexpr uint8_t categoryDataLevel = Category::DataLevel::area;
     //! File level (provided by the type of the results)
-    static constexpr uint8_t categoryFileLevel =   ResultsType::categoryFile & (Category::FileLevel::id | Category::FileLevel::va);
+    static constexpr uint8_t categoryFileLevel = ResultsType::categoryFile
+                                                 & (Category::FileLevel::id
+                                                    | Category::FileLevel::va);
     //! Precision (views)
-    static constexpr uint8_t precision =   Category::all;
+    static constexpr uint8_t precision = Category::all;
     //! Indentation (GUI)
-    static constexpr uint8_t nodeDepthForGUI =   +0;
+    static constexpr uint8_t nodeDepthForGUI = +0;
     //! Decimal precision
-    static constexpr uint8_t decimal =   0;
+    static constexpr uint8_t decimal = 0;
     //! Number of columns used by the variable (One ResultsType per column)
-    static constexpr int columnCount =    0;
+    static constexpr int columnCount = 0;
     //! The Spatial aggregation
-    static constexpr uint8_t spatialAggregate =   Category::noSpatialAggregate;
-    static constexpr uint8_t spatialAggregateMode =   Category::spatialAggregateEachYear;
-    static constexpr uint8_t spatialAggregatePostProcessing =   0;
+    static constexpr uint8_t spatialAggregate = Category::noSpatialAggregate;
+    static constexpr uint8_t spatialAggregateMode = Category::spatialAggregateEachYear;
+    static constexpr uint8_t spatialAggregatePostProcessing = 0;
     //! Intermediate values
-    static constexpr uint8_t hasIntermediateValues =   0;
+    static constexpr uint8_t hasIntermediateValues = 0;
 
 }; // class VCard
 
