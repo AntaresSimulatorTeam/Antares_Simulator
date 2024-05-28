@@ -26,8 +26,6 @@
 
 #include "antares/solver/constraints-builder/grid.h"
 
-using namespace Yuni;
-
 namespace fs = std::filesystem;
 
 namespace Antares
