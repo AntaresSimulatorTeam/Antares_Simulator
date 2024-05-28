@@ -271,10 +271,11 @@ inline void BindingConstraints<NextT>::retrieveResultsForArea(
   typename Storage<VCardToFindT>::ResultsType** result,
   const Data::Area* area)
 {
-    for (uint i = 0; i != pBCcount; ++i)
-    {
-        pBindConstraints[i].retrieveResultsForArea<VCardToFindT>(result, area);
-    }
+    // for (uint i = 0; i != pBCcount; ++i)
+    // {
+    //     pBindConstraints[i].retrieveResultsForArea<VCardToFindT>(result, area);
+    // }
+    NextType template retrieveResultsForArea<VCardToFindT>(result, area);
 }
 
 template<class NextT>
