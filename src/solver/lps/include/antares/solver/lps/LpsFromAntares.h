@@ -38,7 +38,7 @@ struct WeeklyProblemId
 {
     unsigned int year = 0;
     unsigned int week = 0;
-    //Order of comparison is order of member declaration
+    // Order of comparison is order of member declaration
     auto operator<=>(const WeeklyProblemId& other) const = default;
 };
 
@@ -63,7 +63,7 @@ struct ConstantDataFromAntares
     // CoefficientsDeLaMatriceDesContraintes.size()
 
     std::vector<unsigned> VariablesType; // Variables entières ou biniaires
-    std::vector<unsigned> Mdeb;           // Indique dans les indices dans le vecteur IndicesColonnes qui
+    std::vector<unsigned> Mdeb; // Indique dans les indices dans le vecteur IndicesColonnes qui
     // correspondent au début de chaque ligne. Ex : Mdeb[3] = 8 et
     // Mdeb[4] = 13 -> Les termes IndicesColonnes[8] à
     // IndicesColonnes[12] correspondent à des Id de colonnes de la
@@ -113,7 +113,8 @@ using WeeklyDataByYearWeek = std::map<WeeklyProblemId, WeeklyDataFromAntares>;
 
 /**
  * @class LpsFromAntares
- * @brief The LpsFromAntares class is used to manage the constant and weekly data for Antares problems.
+ * @brief The LpsFromAntares class is used to manage the constant and weekly data for Antares
+ * problems.
  */
 class LpsFromAntares
 {
@@ -129,14 +130,8 @@ public:
      */
     void setConstantData(const ConstantDataFromAntares& data);
     /*
-     * @brief Replaces the constant data in the LpsFromAntares object.
-     * Move happens
-     */
-    void setConstantData(ConstantDataFromAntares&& data);
-    /*
      * @brief Adds weekly data to the LpsFromAntares object.
      */
-    void addWeeklyData(WeeklyProblemId id, WeeklyDataFromAntares&& data);
     void addWeeklyData(WeeklyProblemId id, const WeeklyDataFromAntares& data);
     /*
      * @brief Retrieves weekly data from the LpsFromAntares object.
@@ -151,4 +146,4 @@ public:
     WeeklyDataByYearWeek weeklyProblems;
 };
 
-}
+} // namespace Antares::Solver
