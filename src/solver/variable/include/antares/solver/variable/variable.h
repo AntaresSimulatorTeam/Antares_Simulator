@@ -66,12 +66,8 @@ public:
     //! Results
     typedef typename Storage<VCardT>::ResultsType StoredResultType;
 
-    // Default values
-    enum
-    {
-        categoryDataLevel = VCardType::categoryDataLevel,
-        categoryFileLevel = VCardType::categoryFileLevel,
-    };
+    static constexpr uint8_t categoryDataLevel = VCardType::categoryDataLevel;
+    static constexpr uint8_t categoryFileLevel = VCardType::categoryFileLevel;
 
     template<int CDataLevel, int CFile>
     struct Statistics
