@@ -236,7 +236,7 @@ bool IniFile::readStream(std::istream& in_stream)
 
 bool IniFile::open(const std::string& filename, bool warnings)
 {
-    fs::path filepath = std::string(filename);
+    fs::path filepath = filename;
     return open(filepath, warnings);
 }
 
