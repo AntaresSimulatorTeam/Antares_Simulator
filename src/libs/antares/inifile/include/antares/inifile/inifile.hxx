@@ -32,16 +32,14 @@ inline bool IniFile::empty() const
     return not firstSection;
 }
 
-inline IniFile::Section::Section(const AnyString& name):
-    name(name)
+inline IniFile::Section::Section(const AnyString& name): name(name)
 {
 }
 
 template<class U>
 IniFile::Property::Property(const AnyString& key, const U& value):
     key(key),
-    value(value),
-    next(nullptr)
+    value(value)
 {
     this->key.trim();
     this->key.toLower();

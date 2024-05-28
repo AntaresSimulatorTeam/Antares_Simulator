@@ -34,6 +34,8 @@
 using namespace Yuni;
 using namespace Antares;
 
+namespace fs = std::filesystem;
+
 #define SEP (IO::Separator)
 
 namespace
@@ -473,19 +475,18 @@ bool AreaLinksInternalLoadFromProperty(AreaLink& link, const String& key, const 
 }
 } // anonymous namespace
 
-bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyString& folder)
+bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const fs::path& folder)
 {
     // Assert
     assert(area);
 
     /* Initialize */
-    String buffer;
-    buffer << folder << SEP << "properties.ini";
+    fs::path path = folder / "properties.ini";
 
     IniFile ini;
-    if (!ini.open(buffer))
+    if (!ini.open(path.string()))
     {
-        return 0;
+        return false;
     }
 
     bool ret = true;
@@ -496,8 +497,7 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
     for (auto* s = ini.firstSection; s; s = s->next)
     {
         // Getting the name of the area
-        buffer.clear();
-        TransformNameIntoID(s->name, buffer);
+        std::string buffer = transformNameIntoID(s->name);
 
         // Trying to find it
         Area* linkedWith = AreaListLFind(l, buffer.c_str());
@@ -518,7 +518,7 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
         link.comments.clear();
         link.displayComments = true;
 
-        ret = link.loadTimeSeries(study.header.version, folder) && ret;
+        ret = link.loadTimeSeries(study.header.version, folder.string()) && ret;
 
         // Checks on loaded link's data
         if (study.usedByTheSolver)

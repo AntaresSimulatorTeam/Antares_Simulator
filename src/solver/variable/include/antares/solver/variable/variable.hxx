@@ -156,10 +156,12 @@ inline void IVariable<ChildT, NextT, VCardT>::yearEnd(uint year)
 
 template<class ChildT, class NextT, class VCardT>
 template<class V>
-inline void IVariable<ChildT, NextT, VCardT>::yearEndSpatialAggregates(V& allVars, uint year)
+inline void IVariable<ChildT, NextT, VCardT>::yearEndSpatialAggregates(V& allVars,
+                                                                       uint year,
+                                                                       unsigned int numSpace)
 {
     // Next variable
-    NextType::template yearEndSpatialAggregates(allVars, year);
+    NextType::template yearEndSpatialAggregates(allVars, year, numSpace);
 }
 
 template<class ChildT, class NextT, class VCardT>
@@ -358,7 +360,7 @@ template<class ChildT, class NextT, class VCardT>
 inline uint64_t IVariable<ChildT, NextT, VCardT>::memoryUsage() const
 {
     uint64_t r = VariableAccessorType::Value(pResults);
-    if ((int)VCardT::columnCount != (int)Category::dynamicColumns)
+    if (VCardT::columnCount != (int)Category::dynamicColumns)
     {
         // Intermediate values
         if (VCardT::hasIntermediateValues)

@@ -167,12 +167,13 @@ void HydroAllocation::clear()
 #endif
 }
 
-bool HydroAllocation::loadFromFile(const AreaName& referencearea, const AnyString& filename)
+bool HydroAllocation::loadFromFile(const AreaName& referencearea,
+                                   const std::filesystem::path& filename)
 {
     clear();
 
     IniFile ini;
-    if (IO::File::Exists(filename) && ini.open(filename))
+    if (std::filesystem::exists(filename) && ini.open(filename.string()))
     {
         if (!ini.empty())
         {

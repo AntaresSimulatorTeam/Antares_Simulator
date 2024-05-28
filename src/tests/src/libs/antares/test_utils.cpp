@@ -25,6 +25,11 @@
 
 #include <antares/utils/utils.h>
 
+#include <yuni/io/file.h>
+#include <filesystem>
+
+namespace fs = std::filesystem;
+
 namespace
 {
 
@@ -38,13 +43,6 @@ T beautify(const T& in)
 
 constexpr auto beautifyStd = beautify<std::string>;
 constexpr auto beautifyYuni = beautify<Yuni::String>;
-
-std::string transformNameToId(const AnyString& name)
-{
-    std::string res;
-    Antares::TransformNameIntoID(name, res);
-    return res;
-}
 
 } // namespace
 
@@ -80,9 +78,31 @@ BOOST_AUTO_TEST_CASE(test_string_conversion)
 
 BOOST_AUTO_TEST_CASE(test_transform_name_into_id)
 {
-    BOOST_CHECK(transformNameToId("NA!ME") == "na me");
-    BOOST_CHECK(transformNameToId("name!") == "name");
-    BOOST_CHECK(transformNameToId("!name") == "name");
+    BOOST_CHECK(Antares::transformNameIntoID("NA!ME") == "na me");
+    BOOST_CHECK(Antares::transformNameIntoID("name!") == "name");
+    BOOST_CHECK(Antares::transformNameIntoID("!name") == "name");
+}
+
+BOOST_AUTO_TEST_CASE(yuni_absolute_vs_std_absolute)
+{
+    fs::path pathToFile("abc.txt");
+
+    Yuni::String yuniAbs;
+    Yuni::IO::MakeAbsolute(yuniAbs, pathToFile.string());
+
+    BOOST_CHECK(fs::absolute(pathToFile).string() == yuniAbs);
+}
+
+BOOST_AUTO_TEST_CASE(yuni_normalize_vs_std_lexically_normal)
+{
+    const auto helper = [](fs::path&& path)
+    {
+        Yuni::String yuniNorm;
+        Yuni::IO::Normalize(yuniNorm, path.string());
+        BOOST_CHECK_MESSAGE(path.lexically_normal().string() == yuniNorm, std::string("Check failed for ") + path.string());
+    };
+    helper(fs::path("a/./b/.."));
+    helper(fs::path("a/.///b/../"));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

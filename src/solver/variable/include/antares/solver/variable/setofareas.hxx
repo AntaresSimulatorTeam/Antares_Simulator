@@ -144,7 +144,7 @@ inline void SetsOfAreas<NextT>::yearBegin(uint /*year*/, uint /* numSpace */)
 }
 
 template<class NextT>
-inline void SetsOfAreas<NextT>::yearEndBuild(State& /*state*/, uint /*year*/)
+inline void SetsOfAreas<NextT>::yearEndBuild(State& /*state*/, uint /*year*/, uint /*numSpace*/)
 {
     // Nothing to do here
 }
@@ -176,7 +176,7 @@ inline void SetsOfAreas<NextT>::weekBegin(State&)
 }
 
 template<class NextT>
-inline void SetsOfAreas<NextT>::weekForEachArea(State&)
+inline void SetsOfAreas<NextT>::weekForEachArea(State&, unsigned int /*numSpace*/)
 {
     // Nothing to do here
 }
@@ -188,7 +188,7 @@ inline void SetsOfAreas<NextT>::weekEnd(State&)
 }
 
 template<class NextT>
-void SetsOfAreas<NextT>::hourForEachArea(State& state)
+void SetsOfAreas<NextT>::hourForEachArea(State& state, unsigned int)
 {
     (void)state;
 }
@@ -357,10 +357,13 @@ inline void SetsOfAreas<NextT>::computeSpatialAggregateWith(O&)
 
 template<class NextT>
 template<class SearchVCardT, class O>
-inline void SetsOfAreas<NextT>::computeSpatialAggregateWith(O& out, const Data::Area* area)
+inline void SetsOfAreas<NextT>::computeSpatialAggregateWith(O& out,
+                                                            const Data::Area* area,
+                                                            uint numSpace)
 {
     (void)out;
     (void)area;
+    (void)numSpace;
     // pSetsOfAreas[area->index]->computeSpatialAggregateWith<SearchVCardT,O>(out);
 }
 
