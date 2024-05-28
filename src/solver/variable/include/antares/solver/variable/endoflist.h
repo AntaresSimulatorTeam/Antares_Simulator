@@ -253,6 +253,7 @@ public:
     template<class SearchVCardT, class O>
     static void computeSpatialAggregateWith(O&, const Data::Area*, uint numSpace)
     {
+        UNUSED_VARIABLE(numSpace);
         assert(false);
     }
 

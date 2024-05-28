@@ -176,7 +176,7 @@ inline void SetsOfAreas<NextT>::weekBegin(State&)
 }
 
 template<class NextT>
-inline void SetsOfAreas<NextT>::weekForEachArea(State&, unsigned int numSpace)
+inline void SetsOfAreas<NextT>::weekForEachArea(State&, unsigned int /*numSpace*/)
 {
     // Nothing to do here
 }
@@ -363,6 +363,7 @@ inline void SetsOfAreas<NextT>::computeSpatialAggregateWith(O& out,
 {
     (void)out;
     (void)area;
+    (void)numSpace;
     // pSetsOfAreas[area->index]->computeSpatialAggregateWith<SearchVCardT,O>(out);
 }
 

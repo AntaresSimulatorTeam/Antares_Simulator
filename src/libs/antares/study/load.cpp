@@ -29,6 +29,8 @@
 using namespace Yuni;
 using Antares::Constants::nbHoursInAWeek;
 
+namespace fs = std::filesystem;
+
 #define SEP IO::Separator
 
 namespace Antares
@@ -54,10 +56,10 @@ bool Study::internalLoadHeader(const String& path)
     return true;
 }
 
-bool Study::loadFromFolder(const AnyString& path, const StudyLoadOptions& options)
+bool Study::loadFromFolder(const std::string& path, const StudyLoadOptions& options)
 {
-    String normPath;
-    IO::Normalize(normPath, path);
+    fs::path normPath = path;
+    normPath = normPath.lexically_normal();
     return internalLoadFromFolder(normPath, options);
 }
 
@@ -175,13 +177,13 @@ void Study::parameterFiller(const StudyLoadOptions& options)
     reduceMemoryUsage();
 }
 
-bool Study::internalLoadFromFolder(const String& path, const StudyLoadOptions& options)
+bool Study::internalLoadFromFolder(const fs::path& path, const StudyLoadOptions& options)
 {
     // IO statistics
     Statistics::LogsDumper statisticsDumper;
 
     // Check if the path is correct
-    if (!IO::Directory::Exists(path))
+    if (!fs::exists(path))
     {
         logs.error()
           << path << ": The directory does not exist (or not enough privileges to read the folder)";
@@ -189,14 +191,14 @@ bool Study::internalLoadFromFolder(const String& path, const StudyLoadOptions& o
     }
 
     // Initialize all internal paths
-    relocate(path);
+    relocate(path.string());
 
     // Reserving enough space in buffer to avoid several calls to realloc
     this->dataBuffer.reserve(4 * 1024 * 1024); // For matrices, reserving 4Mo
     this->bufferLoadingTS.reserve(2096);
     assert(this->bufferLoadingTS.capacity() > 0);
 
-    if (!internalLoadIni(path, options))
+    if (!internalLoadIni(path.string(), options))
     {
         return false;
     }
@@ -381,6 +383,7 @@ private:
 
 bool Study::internalLoadSets()
 {
+    const fs::path path = fs::path(folderInput.c_str()) / "areas" / "sets.ini";
     // Set of areas
     logs.info();
     logs.info() << "Loading sets of areas...";
@@ -389,7 +392,7 @@ bool Study::internalLoadSets()
     buffer.clear() << folderInput << SEP << "areas" << SEP << "sets.ini";
 
     // Load the rules
-    if (setsOfAreas.loadFromFile(buffer))
+    if (setsOfAreas.loadFromFile(path))
     {
         // Apply the rules
         SetHandlerAreas handler(*this);

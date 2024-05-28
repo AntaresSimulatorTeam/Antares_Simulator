@@ -184,8 +184,7 @@ bool ClusterList<ClusterT>::rename(Data::ClusterName idToFind, Data::ClusterName
     boost::to_lower(idToFind);
 
     // The new ID
-    Data::ClusterName newID;
-    Antares::TransformNameIntoID(newName, newID);
+    Data::ClusterName newID = Antares::transformNameIntoID(newName);
 
     // Looking for the renewable clusters in the list
     auto* cluster_ptr = this->findInAll(idToFind);

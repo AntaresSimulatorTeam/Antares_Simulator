@@ -79,6 +79,8 @@ public:
         template<class U>
         Property* add(const AnyString& key, const std::optional<U>& value);
 
+        void add(const Property& property);
+
         void saveToStream(std::ostream& file, uint64_t& written) const;
 
         Property* find(const AnyString& key);
@@ -150,10 +152,8 @@ public:
         Yuni::ShortString256 name;
         //! The first property of the section
         IniFile::Property* firstProperty = nullptr;
-        ;
         //! The last property of the section
         IniFile::Property* lastProperty = nullptr;
-        ;
         //! The next section
         Section* next = nullptr;
 

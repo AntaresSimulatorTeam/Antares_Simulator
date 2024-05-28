@@ -62,13 +62,13 @@ bool Sets::loadFromStudy(Study& study)
     setStudy(study);
 
     // Loading from the INI file
-    String filename;
-    filename << study.folder << SEP << "settings" << SEP << "scenariobuilder.dat";
+    std::filesystem::path filename = std::filesystem::path(study.folder.c_str()) / "settings"
+                                     / "scenariobuilder.dat";
     bool r = true;
     // If the source code below is changed, please change it in loadFromINIFile too
-    if (IO::Exists(filename))
+    if (std::filesystem::exists(filename))
     {
-        r = internalLoadFromINIFile(filename);
+        r = internalLoadFromINIFile(filename.string());
     }
     else
     {

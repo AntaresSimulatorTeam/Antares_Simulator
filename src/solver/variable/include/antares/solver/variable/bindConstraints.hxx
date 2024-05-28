@@ -118,7 +118,7 @@ void BindingConstraints<NextT>::simulationEnd()
 }
 
 template<class NextT>
-void BindingConstraints<NextT>::yearEndBuild(State& state, uint year, uint numSpace)
+void BindingConstraints<NextT>::yearEndBuild(State& /*state*/, uint /*year*/, uint /*numSpace*/)
 {
 }
 
