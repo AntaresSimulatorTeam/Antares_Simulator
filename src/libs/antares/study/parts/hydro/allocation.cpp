@@ -24,8 +24,6 @@
 #include <antares/utils/utils.h>
 #include "antares/study/study.h"
 
-using namespace Yuni;
-
 namespace fs = std::filesystem;
 
 namespace Antares
@@ -204,7 +202,7 @@ bool HydroAllocation::saveToFile(const AnyString& filename) const
 {
     if (pValues.empty())
     {
-        IO::File::CreateEmptyFile(filename);
+        Yuni::IO::File::CreateEmptyFile(filename);
         return true;
     }
     else
@@ -212,7 +210,7 @@ bool HydroAllocation::saveToFile(const AnyString& filename) const
         IniFile ini;
         auto* s = ini.addSection("[allocation]");
         auto end = pValues.end();
-        CString<64, false> str;
+        Yuni::CString<64, false> str;
         for (auto i = pValues.begin(); i != end; ++i)
         {
             double v = i->second;
