@@ -46,7 +46,7 @@ static bool PreproHydroSaveSettings(PreproHydro* h, const char* filename)
     return ini.save(filename);
 }
 
-static bool PreproHydroLoadSettings(PreproHydro* h, const char* filename)
+static bool PreproHydroLoadSettings(PreproHydro* h, const std::string& filename)
 {
     IniFile ini;
     IniFile::Section* s;
@@ -160,7 +160,7 @@ bool PreproHydro::loadFromFolder(Study& s, const AreaName& areaID, const char* f
     String& buffer = s.bufferLoadingTS;
 
     buffer.clear() << folder << SEP << areaID << SEP << "prepro.ini";
-    bool ret = (PreproHydroLoadSettings(this, buffer.c_str()) ? true : false);
+    bool ret = (PreproHydroLoadSettings(this, buffer) ? true : false);
     if (intermonthlyCorrelation < 0. || intermonthlyCorrelation > 1.)
     {
         logs.error() << "Hydro: Prepro: `" << areaID

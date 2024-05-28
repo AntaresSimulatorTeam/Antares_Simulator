@@ -21,6 +21,7 @@
 
 #include "antares/inifile/inifile.h"
 
+#include <filesystem>
 #include <fstream>
 #include <sstream>
 #include <utility>
@@ -31,6 +32,8 @@
 #include <antares/logs/logs.h>
 
 using namespace Yuni;
+
+namespace fs = std::filesystem;
 
 namespace Antares
 {
@@ -231,17 +234,22 @@ bool IniFile::readStream(std::istream& in_stream)
     return true;
 }
 
-bool IniFile::open(const AnyString& filename, bool warnings)
+bool IniFile::open(const std::string& filename, bool warnings)
+{
+    fs::path p = std::string(filename);
+    return open(filename, warnings);
+}
+
+bool IniFile::open(const fs::path& filename, bool warnings)
 {
     clear();
     filename_ = filename; // storing filename for further use
-    std::string filePath = filename.to<std::string>();
 
-    if (std::ifstream file(filePath); file.is_open())
+    if (std::ifstream file(filename); file.is_open())
     {
         if (! readStream(file))
         {
-            logs.error() << "Invalid INI file : " << filePath;
+            logs.error() << "Invalid INI file : " << filename;
             return false;
         }
         return true;
@@ -270,7 +278,7 @@ std::string IniFile::toString() const
     std::ostringstream ostream;
 
     this->saveToStream(ostream, written);
-    
+
     return ostream.str();
 }
 
