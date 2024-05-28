@@ -21,13 +21,12 @@
 
 #include "antares/study/parts/hydro/allocation.h"
 
-#include <yuni/core/math.h>
-#include <yuni/io/file.h>
-
 #include <antares/utils/utils.h>
 #include "antares/study/study.h"
 
 using namespace Yuni;
+
+namespace fs = std::filesystem;
 
 namespace Antares
 {
@@ -168,12 +167,12 @@ void HydroAllocation::clear()
 }
 
 bool HydroAllocation::loadFromFile(const AreaName& referencearea,
-                                   const std::filesystem::path& filename)
+                                   const fs::path& filename)
 {
     clear();
 
     IniFile ini;
-    if (std::filesystem::exists(filename) && ini.open(filename.string()))
+    if (fs::exists(filename) && ini.open(filename))
     {
         if (!ini.empty())
         {

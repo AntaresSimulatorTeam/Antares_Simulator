@@ -226,7 +226,7 @@ bool Sets<T>::loadFromFile(const std::filesystem::path& filename)
     }
 
     IniFile ini;
-    if (ini.open(filename.string()))
+    if (ini.open(filename))
     {
         Yuni::String value;
 

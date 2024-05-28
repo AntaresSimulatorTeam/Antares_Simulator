@@ -484,7 +484,7 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const fs::pa
     fs::path path = folder / "properties.ini";
 
     IniFile ini;
-    if (!ini.open(path.string()))
+    if (!ini.open(path))
     {
         return false;
     }
