@@ -243,7 +243,7 @@ bool IniFile::open(const std::string& filename, bool warnings)
 bool IniFile::open(const fs::path& filename, bool warnings)
 {
     clear();
-    filename_ = filename; // storing filename for further use
+    filename_ = std::string(filename); // storing filename for further use
 
     if (std::ifstream file(filename); file.is_open())
     {
