@@ -60,6 +60,7 @@
 #include "spilledEnergyAfterCSR.h"
 #include "dtgMarginAfterCsr.h"
 #include "spilledEnergy.h"
+#include "reserveParticipationCost.h"
 
 #include "lold.h"
 #include "lolp.h"
@@ -73,6 +74,7 @@
 #include "npCostByDispatchablePlant.h"
 #include "nbOfDispatchedUnitsByPlant.h"
 #include "profitByPlant.h"
+#include "reserveParticipationCostByDispatchablePlant.h"
 
 // By RES plant
 #include "productionByRenewablePlant.h"
@@ -168,9 +170,11 @@ typedef                           // Prices
                                        <NbOfDispatchedUnitsByPlant // Number of Units Dispatched by
                                                                    // plant
                                         <ProfitByPlant
-                                         // Links
-                                         <Variable::Economy::Links // All links
-                                          >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                          <ReserveParticipationCost // Participation cost to the reserves
+                                            <ReserveParticipationCostByDispatchablePlant // Participation cost per cluster
+                                             // Links
+                                             <Variable::Economy::Links // All links
+                                              >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerArea;
 
 /*!
@@ -260,12 +264,14 @@ typedef // Prices
 
                                                                       // Number Of Dispatched Units
                                                                       Common::SpatialAggregate<
-                                                                        NbOfDispatchedUnits // MBO
+                                                                        NbOfDispatchedUnits, // MBO
                                                                                             // 25/02/2016
                                                                                             // -
                                                                                             // refs:
                                                                                             // #55
-                                                                        >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                                                        Common::
+                                                                          SpatialAggregate<ReserveParticipationCost
+                                                                        >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerSetOfAreas;
 
 typedef BindingConstMarginCost< // Marginal cost for a binding constraint

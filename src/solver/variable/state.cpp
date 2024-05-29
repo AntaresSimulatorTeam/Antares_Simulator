@@ -199,6 +199,21 @@ void State::initFromThermalClusterIndexProduction(const uint clusterAreaWideInde
         thermal[area->index].thermalClustersOperatingCost[clusterAreaWideIndex]
           += thermalCluster->fixedCost * newUnitCount;
 
+        // Reserves
+        if (unitCommitmentMode != Antares::Data::UnitCommitmentMode::ucHeuristicFast)
+        {
+            std::vector<std::string> clusterReserves = thermalCluster->listOfParticipatingReserves();
+            for (auto res : clusterReserves)
+            {
+                thermal[area->index].thermalClustersOperatingCost[clusterAreaWideIndex]
+                  += thermalCluster->isParticipatingInReserve(res) >= 0
+                       ? hourlyResults->ProductionThermique[hourInTheWeek]
+                             .ParticipationReservesDuPalier[thermalCluster->index]
+                           * thermalCluster->reserveCost(res)
+                       : 0;
+            }
+        }
+
         // Storing the new unit count for the next hour
         thermal[area->index].unitCountLastHour[clusterAreaWideIndex] = newUnitCount;
         thermal[area->index].productionLastHour[clusterAreaWideIndex] = p;
@@ -340,6 +355,36 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex)
 
     // Calculation of non linear and startup costs
     yearEndBuildThermalClusterCalculateStartupCosts(maxDurationON, ON_min, ON_opt, currentCluster);
+    // Calculation of reserve participation costs
+    yearEndBuildCalculateReserveParticipationCosts(currentCluster);
+}
+
+void State::yearEndBuildCalculateReserveParticipationCosts(
+  const Data::ThermalCluster* currentCluster)
+{
+    if (unitCommitmentMode != Antares::Data::UnitCommitmentMode::ucHeuristicFast)
+    {
+        uint startHourForCurrentYear = study.runtime->rangeLimits.hour[Data::rangeBegin];
+        uint endHourForCurrentYear
+          = startHourForCurrentYear + study.runtime->rangeLimits.hour[Data::rangeCount];
+
+        for (uint h = startHourForCurrentYear; h < endHourForCurrentYear; ++h)
+        {
+            std::vector<std::string> clusterReserves
+              = thermalCluster->listOfParticipatingReserves();
+            for (auto res : clusterReserves)
+            {
+                thermalClusterReserveParticipationCostForYear[h]
+                  += thermalCluster->isParticipatingInReserve(res)
+                      ? hourlyResults->ProductionThermique[hourInTheWeek]
+                            .ParticipationReservesDuPalier[thermalCluster->index]
+                          * thermalCluster->reserveCost(res)
+                      : 0;
+            }
+            thermalClusterOperatingCostForYear[h]
+              += thermalClusterReserveParticipationCostForYear[h];
+        }
+    }
 }
 
 void State::yearEndBuildThermalClusterCalculateStartupCosts(const uint& maxDurationON,

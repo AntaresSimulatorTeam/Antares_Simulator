@@ -449,6 +449,7 @@ struct RESERVE_JMOINS1
 struct PRODUCTION_THERMIQUE_OPTIMALE
 {
     std::vector<double> ProductionThermiqueDuPalier;
+    std::vector<double> ParticipationReservesDuPalier;
 
     std::vector<double> ProductionThermiqueDuPalierUp;
     std::vector<double> ProductionThermiqueDuPalierDown;
@@ -459,6 +460,12 @@ struct PRODUCTION_THERMIQUE_OPTIMALE
     std::vector<double> NombreDeGroupesQuiSArretentDuPalier;
 
     std::vector<double> NombreDeGroupesQuiTombentEnPanneDuPalier;
+};
+
+struct RESERVE_THERMIQUE
+{
+    std::vector<double> ValeursHorairesInternalUnsatisfied;
+    std::vector<double> ValeursHorairesInternalExcessReserve;
 };
 
 struct RESULTATS_HORAIRES
@@ -490,6 +497,7 @@ struct RESULTATS_HORAIRES
 
     std::vector<double> CoutsMarginauxHoraires;
     std::vector<PRODUCTION_THERMIQUE_OPTIMALE> ProductionThermique; // index is pdtHebdo
+    std::vector<RESERVE_THERMIQUE> ReserveThermique;
 
     std::vector<::ShortTermStorage::RESULTS> ShortTermStorage;
 };

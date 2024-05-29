@@ -72,6 +72,12 @@ struct AllCapacityReservations
         return std::nullopt;
     }
 
+    /// @brief Get the number of capacityReservations in the area
+    /// @return the number of capacityReservations in the area
+    size_t size(){
+        return areaCapacityReservationsUp.size() + areaCapacityReservationsDown.size();
+    }
+
     /// @brief Returns lower case, no space string
     /// @param name
     /// @return A string usable for file naming

@@ -1,27 +1,33 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
+** Copyright 2007-2023 RTE
+** Authors: Antares_Simulator Team
+**
+** This file is part of Antares_Simulator.
 **
 ** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
+** it under the terms of the GNU General Public License as published by
+** the Free Software Foundation, either version 3 of the License, or
 ** (at your option) any later version.
+**
+** There are special exceptions to the terms and conditions of the
+** license as they are applied to this software. View the full text of
+** the exceptions in file COPYING.txt in the directory of this software
+** distribution
 **
 ** Antares_Simulator is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
+** GNU General Public License for more details.
 **
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+** You should have received a copy of the GNU General Public License
+** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
+**
+** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __SOLVER_VARIABLE_ECONOMY_OverallCost_H__
-#define __SOLVER_VARIABLE_ECONOMY_OverallCost_H__
+#ifndef __SOLVER_VARIABLE_ECONOMY_ReserveParticipationCost_H__
+#define __SOLVER_VARIABLE_ECONOMY_ReserveParticipationCost_H__
 
-#include "antares/solver/variable/variable.h"
+#include "../variable.h"
 
 namespace Antares
 {
@@ -31,12 +37,12 @@ namespace Variable
 {
 namespace Economy
 {
-struct VCardOverallCost
+struct VCardReserveParticipationCost
 {
     //! Caption
     static std::string Caption()
     {
-        return "OV. COST";
+        return "RESERVE PARTICIPATION COST";
     }
     //! Unit
     static std::string Unit()
@@ -47,18 +53,23 @@ struct VCardOverallCost
     //! The short description of the variable
     static std::string Description()
     {
-        return "Overall Cost throughout all MC years";
+        return "Reserve Participation Cost throughout all MC years, of all the thermal dispatchable "
+               "clusters";
     }
 
     //! The expecte results
-    typedef Results<R::AllYears::Average< // The average values throughout all years
-                      >,
-                    R::AllYears::Average // Use these values for spatial cluster
+    typedef Results<R::AllYears::Average<        // The average values throughout all years
+                      R::AllYears::StdDeviation< // The standard deviation values throughout all
+                                                 // years
+                        R::AllYears::Min<        // The minimum values throughout all years
+                          R::AllYears::Max<      // The maximum values throughout all years
+                            >>>>,
+                    R::AllYears::Average // The
                     >
       ResultsType;
 
     //! The VCard to look for for calculating spatial aggregates
-    typedef VCardOverallCost VCardForSpatialAggregate;
+    typedef VCardReserveParticipationCost VCardForSpatialAggregate;
 
     enum
     {
@@ -92,19 +103,20 @@ struct VCardOverallCost
 }; // class VCard
 
 /*!
-** \brief C02 Average value of the overrall OverallCost emissions expected from all
+** \brief C02 Average value of the overrall OperatingCost emissions expected from all
 **   the thermal dispatchable clusters
 */
 template<class NextT = Container::EndOfList>
-class OverallCost : public Variable::IVariable<OverallCost<NextT>, NextT, VCardOverallCost>
+class ReserveParticipationCost
+ : public Variable::IVariable<ReserveParticipationCost<NextT>, NextT, VCardReserveParticipationCost>
 {
 public:
     //! Type of the next static variable
     typedef NextT NextType;
     //! VCard
-    typedef VCardOverallCost VCardType;
+    typedef VCardReserveParticipationCost VCardType;
     //! Ancestor
-    typedef Variable::IVariable<OverallCost<NextT>, NextT, VCardType> AncestorType;
+    typedef Variable::IVariable<ReserveParticipationCost<NextT>, NextT, VCardType> AncestorType;
 
     //! List of expected results
     typedef typename VCardType::ResultsType ResultsType;
@@ -131,7 +143,7 @@ public:
     };
 
 public:
-    ~OverallCost()
+    ~ReserveParticipationCost()
     {
         delete[] pValuesForTheCurrentYear;
     }
@@ -140,10 +152,8 @@ public:
     {
         pNbYearsParallel = study.maxNbYearsInParallel;
 
-        // Intermediate values
         InitializeResultsFromStudy(AncestorType::pResults, study);
 
-        // Intermediate values
         pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
             pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);
@@ -196,9 +206,8 @@ public:
              i <= state.study.runtime->rangeLimits.hour[Data::rangeEnd];
              ++i)
         {
-            pValuesForTheCurrentYear[numSpace][i] += state.thermalClusterOperatingCostForYear[i];
-            // Incrementing annual system cost (to be printed in output into a separate file)
-            state.annualSystemCost += state.thermalClusterOperatingCostForYear[i];
+            pValuesForTheCurrentYear[numSpace][i]
+              += state.thermalClusterReserveParticipationCostForYear[i];
         }
 
         // Next variable
@@ -242,47 +251,6 @@ public:
 
     void hourForEachArea(State& state, unsigned int numSpace)
     {
-        double costForSpilledOrUnsuppliedEnergy =
-          // Total UnsupliedEnergy emissions
-          (state.hourlyResults->ValeursHorairesDeDefaillancePositive[state.hourInTheWeek]
-           * state.area->thermal.unsuppliedEnergyCost)
-          + (state.hourlyResults->ValeursHorairesDeDefaillanceNegative[state.hourInTheWeek]
-             * state.area->thermal.spilledEnergyCost)
-          // Current hydro storage and pumping generation costs
-          + (state.hourlyResults->valeurH2oHoraire[state.hourInTheWeek]
-             * (state.hourlyResults->TurbinageHoraire[state.hourInTheWeek]
-                - state.area->hydro.pumpingEfficiency
-                    * state.hourlyResults->PompageHoraire[state.hourInTheWeek]));
-
-        for (const auto& thermalReserves : state.problemeHebdo->allReserves.thermalAreaReserves)
-        {
-            for (const auto& reserveUp : thermalReserves.areaCapacityReservationsUp)
-            {
-                costForSpilledOrUnsuppliedEnergy
-                  += state.hourlyResults->ReserveThermique[state.hourInTheWeek]
-                         .ValeursHorairesInternalUnsatisfied[reserveUp.globalReserveIndex]
-                       * reserveUp.failureCost
-                     + state.hourlyResults->ReserveThermique[state.hourInTheWeek]
-                           .ValeursHorairesInternalExcessReserve[reserveUp.globalReserveIndex]
-                         * reserveUp.spillageCost;
-            }
-            for (const auto& reserveDown : thermalReserves.areaCapacityReservationsDown)
-            {
-                costForSpilledOrUnsuppliedEnergy
-                  += state.hourlyResults->ReserveThermique[state.hourInTheWeek]
-                         .ValeursHorairesInternalUnsatisfied[reserveDown.globalReserveIndex]
-                       * reserveDown.failureCost
-                     + state.hourlyResults->ReserveThermique[state.hourInTheWeek]
-                           .ValeursHorairesInternalExcessReserve[reserveDown.globalReserveIndex]
-                         * reserveDown.spillageCost;
-            }
-        }
-
-        pValuesForTheCurrentYear[numSpace][state.hourInTheYear] += costForSpilledOrUnsuppliedEnergy;
-
-        // Incrementing annual system cost (to be printed in output into a separate file)
-        state.annualSystemCost += costForSpilledOrUnsuppliedEnergy;
-
         // Next variable
         NextType::hourForEachArea(state, numSpace);
     }
@@ -317,11 +285,11 @@ private:
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
     unsigned int pNbYearsParallel;
 
-}; // class OverallCost
+}; // class RampingCost
 
 } // namespace Economy
 } // namespace Variable
 } // namespace Solver
 } // namespace Antares
 
-#endif // __SOLVER_VARIABLE_ECONOMY_OverallCost_H__
+#endif // __SOLVER_VARIABLE_ECONOMY_ReserveParticipationCost_H__

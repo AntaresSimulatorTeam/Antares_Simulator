@@ -160,5 +160,15 @@ bool CompareClusterName::operator()(const Cluster* s1, const Cluster* s2) const
     return (s1->getFullName() < s2->getFullName());
 }
 
+std::vector<std::string> Cluster::listOfParticipatingReserves()
+{
+    std::vector<std::string> reserves;
+    for (auto reserve: clusterReservesParticipations)
+    {
+        reserves.push_back(reserve.first);
+    }
+    return reserves;
+}
+
 } // namespace Antares::Data
 

@@ -143,6 +143,9 @@ public:
     //! \brief Returns true if cluster participates in a reserve with this name
     bool isParticipatingInReserve(std::string name);
 
+    //! \brief Returns an array of all reserves the cluster is participating in
+    std::vector<std::string> listOfParticipatingReserves();
+
     //! \brief Returns max power for a reserve if participating, -1 otherwise
     float reserveMaxPower(std::string name);
 

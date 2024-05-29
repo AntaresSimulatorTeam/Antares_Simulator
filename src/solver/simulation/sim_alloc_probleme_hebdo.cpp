@@ -363,6 +363,8 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
     for (unsigned k = 0; k < nbPays; k++)
     {
         const uint nbPaliers = study.areas.byIndex[k]->thermal.list.enabledAndNotMustRunCount();
+        const uint nbReserveParticipations = study.areas.byIndex[k]->thermal.list.reserveParticipationsCount();
+        const uint nbReserves = study.areas.byIndex[k]->allCapacityReservations.size();
 
         problem.PaliersThermiquesDuPays[k].minUpDownTime.assign(nbPaliers, 0);
         problem.PaliersThermiquesDuPays[k].PminDuPalierThermiquePendantUneHeure
@@ -471,6 +473,7 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
 
         problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout.resize(nbPaliers);
         problem.ResultatsHoraires[k].ProductionThermique.resize(NombreDePasDeTemps);
+        problem.ResultatsHoraires[k].ReserveThermique.resize(NombreDePasDeTemps);
 
         for (unsigned j = 0; j < nbPaliers; ++j)
         {
@@ -507,6 +510,8 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
         {
             problem.ResultatsHoraires[k].ProductionThermique[j].ProductionThermiqueDuPalier
               .assign(nbPaliers, 0.);
+            problem.ResultatsHoraires[k].ProductionThermique[j].ParticipationReservesDuPalier
+              .assign(nbReserveParticipations, 0.);
             problem.ResultatsHoraires[k].ProductionThermique[j].ProductionThermiqueDuPalierUp
               .assign(nbPaliers, 0.);
             problem.ResultatsHoraires[k].ProductionThermique[j].ProductionThermiqueDuPalierDown
@@ -520,6 +525,12 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
             problem.ResultatsHoraires[k].ProductionThermique[j]
               .NombreDeGroupesQuiTombentEnPanneDuPalier
               .assign(nbPaliers, 0.);
+            problem.ResultatsHoraires[k]
+              .ReserveThermique[j]
+              .ValeursHorairesInternalUnsatisfied.assign(nbReserves, 0.);
+            problem.ResultatsHoraires[k]
+              .ReserveThermique[j]
+              .ValeursHorairesInternalExcessReserve.assign(nbReserves, 0.);
         }
         // Short term storage results
         const unsigned long nbShortTermStorage = study.areas.byIndex[k]->shortTermStorage.count();

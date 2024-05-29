@@ -116,6 +116,8 @@ private:
       const std::array<uint, Variable::maxHoursInAYear>& ON_opt,
       const Data::ThermalCluster* currentCluster);
 
+    void yearEndBuildCalculateReserveParticipationCosts(const Data::ThermalCluster* currentCluster);
+
     std::array<uint, Variable::maxHoursInAYear> computeEconomicallyOptimalNbClustersONforEachHour(
       const uint& maxDurationON,
       const std::array<uint, Variable::maxHoursInAYear>& ON_min,
@@ -190,6 +192,8 @@ public:
     double thermalClusterNonProportionalCostForYear[Variable::maxHoursInAYear];
     //! Minimum power of the cluster for the whole year
     double thermalClusterPMinOfTheClusterForYear[Variable::maxHoursInAYear];
+    //! Reserves participation cost of the thermal cluster for the whole year
+    double thermalClusterReserveParticipationCostForYear[Variable::maxHoursInAYear];
 
     double renewableClusterProduction;
 

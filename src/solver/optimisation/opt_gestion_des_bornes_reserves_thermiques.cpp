@@ -39,6 +39,9 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireReservesThermiques(
     std::vector<double>& Xmin = ProblemeAResoudre->Xmin;
     std::vector<double>& Xmax = ProblemeAResoudre->Xmax;
 
+    std::vector<double*>& AdresseOuPlacerLaValeurDesVariablesOptimisees
+      = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees;
+
     for (int pdtHebdo = PremierPdtDeLIntervalle, pdtJour = 0; pdtHebdo < DernierPdtDeLIntervalle;
          pdtHebdo++, pdtJour++)
     {
@@ -57,11 +60,21 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireReservesThermiques(
                             .internalUnsatisfiedReserveIndex[areaReserveUp.globalReserveIndex];
                 Xmin[var] = 0;
                 Xmax[var] = LINFINI_ANTARES;
+                double* adresseDuResultat1
+                  = &(problemeHebdo->ResultatsHoraires[pays]
+                        .ReserveThermique[pdtHebdo]
+                        .ValeursHorairesInternalUnsatisfied[areaReserveUp.globalReserveIndex]);
+                AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat1;
 
                 var = CorrespondanceVarNativesVarOptim
                         .internalExcessReserveIndex[areaReserveUp.globalReserveIndex];
                 Xmin[var] = 0;
                 Xmax[var] = LINFINI_ANTARES;
+                double* adresseDuResultat2
+                  = &(problemeHebdo->ResultatsHoraires[pays]
+                        .ReserveThermique[pdtHebdo]
+                        .ValeursHorairesInternalExcessReserve[areaReserveUp.globalReserveIndex]);
+                AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat2;
 
                 for (const auto& clusterReserveParticipation :
                      areaReserveUp.AllReservesParticipation)
@@ -72,11 +85,23 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireReservesThermiques(
                                 [clusterReserveParticipation.indexClusterParticipation];
                         Xmin[var] = 0;
                         Xmax[var] = LINFINI_ANTARES;
+                        double* adresseDuResultat3
+                          = &(problemeHebdo->ResultatsHoraires[pays]
+                                .ProductionThermique[pdtHebdo]
+                                .ParticipationReservesDuPalier[clusterReserveParticipation
+                                                                 .indexClusterParticipation]);
+                        AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat3;
 
                         var = CorrespondanceVarNativesVarOptim.clusterReserveParticipationIndex
                                 [clusterReserveParticipation.indexClusterParticipation];
                         Xmin[var] = 0;
                         Xmax[var] = LINFINI_ANTARES;
+                        double* adresseDuResultat4
+                          = &(problemeHebdo->ResultatsHoraires[pays]
+                                .ProductionThermique[pdtHebdo]
+                                .ParticipationReservesDuPalier[clusterReserveParticipation
+                                                                 .indexClusterParticipation]);
+                        AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat4;
                     }
                 }
             }
@@ -86,11 +111,22 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireReservesThermiques(
                             .internalUnsatisfiedReserveIndex[areaReserveDown.globalReserveIndex];
                 Xmin[var] = 0;
                 Xmax[var] = LINFINI_ANTARES;
+                double* adresseDuResultat1
+                  = &(problemeHebdo->ResultatsHoraires[pays]
+                        .ReserveThermique[pdtHebdo]
+                        .ValeursHorairesInternalUnsatisfied[areaReserveDown.globalReserveIndex]);
+                AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat1;
 
                 var = CorrespondanceVarNativesVarOptim
                         .internalExcessReserveIndex[areaReserveDown.globalReserveIndex];
                 Xmin[var] = 0;
                 Xmax[var] = LINFINI_ANTARES;
+                double* adresseDuResultat2
+                  = &(problemeHebdo->ResultatsHoraires[pays]
+                        .ReserveThermique[pdtHebdo]
+                        .ValeursHorairesInternalExcessReserve[areaReserveDown.globalReserveIndex]);
+                AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat2;
+
                 for (const auto& clusterReserveParticipation :
                      areaReserveDown.AllReservesParticipation)
                 {
@@ -100,11 +136,23 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireReservesThermiques(
                                 [clusterReserveParticipation.indexClusterParticipation];
                         Xmin[var] = 0;
                         Xmax[var] = LINFINI_ANTARES;
+                        double* adresseDuResultat3
+                          = &(problemeHebdo->ResultatsHoraires[pays]
+                                .ProductionThermique[pdtHebdo]
+                                .ParticipationReservesDuPalier[clusterReserveParticipation
+                                                                 .indexClusterParticipation]);
+                        AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat3;
 
                         var = CorrespondanceVarNativesVarOptim.clusterReserveParticipationIndex
                                 [clusterReserveParticipation.indexClusterParticipation];
                         Xmin[var] = 0;
                         Xmax[var] = LINFINI_ANTARES;
+                        double* adresseDuResultat4
+                          = &(problemeHebdo->ResultatsHoraires[pays]
+                                .ProductionThermique[pdtHebdo]
+                                .ParticipationReservesDuPalier[clusterReserveParticipation
+                                                                 .indexClusterParticipation]);
+                        AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat4;
                     }
                 }
             }

@@ -18,7 +18,7 @@ void ReserveSatisfaction::add(int pays, int reserve, int pdt, bool isUpReserve)
         // P_θ : Participation power from cluster θ to the reserve res
         // S : Internal reserve res need for the area (second membre)
         // J^+ : Amount of internal excess reserve for the reserve res
-        // J^- : Amount of internal unsatified reserve for the reserve res
+        // J^- : Amount of internal unsatisfied reserve for the reserve res
 
         builder.updateHourWithinWeek(pdt);
 
@@ -32,23 +32,20 @@ void ReserveSatisfaction::add(int pays, int reserve, int pdt, bool isUpReserve)
                   1);
         }
 
-        if (builder.NumberOfVariables() > 0)
-        {
-            builder.InternalUnsatisfiedReserve(capacityReservation.globalReserveIndex, 1)
-              .InternalExcessReserve(capacityReservation.globalReserveIndex, -1)
-              .equalTo();
-            data.CorrespondanceCntNativesCntOptim[pdt]
-              .NumeroDeContrainteDesContraintesDeBesoinEnReserves[capacityReservation
-                                                                    .globalReserveIndex]
-              = builder.data.nombreDeContraintes;
-            ConstraintNamer namer(builder.data.NomDesContraintes);
-            const int hourInTheYear = builder.data.weekInTheYear * 168 + pdt;
-            namer.UpdateTimeStep(hourInTheYear);
-            namer.UpdateArea(builder.data.NomsDesPays[pays]);
-            namer.ReserveSatisfaction(builder.data.nombreDeContraintes,
-                                      capacityReservation.reserveName);
-            builder.build();
-        }
+        builder.InternalUnsatisfiedReserve(capacityReservation.globalReserveIndex, 1)
+          .InternalExcessReserve(capacityReservation.globalReserveIndex, -1)
+          .equalTo();
+        data.CorrespondanceCntNativesCntOptim[pdt]
+          .NumeroDeContrainteDesContraintesDeBesoinEnReserves[capacityReservation
+                                                                .globalReserveIndex]
+          = builder.data.nombreDeContraintes;
+        ConstraintNamer namer(builder.data.NomDesContraintes);
+        const int hourInTheYear = builder.data.weekInTheYear * 168 + pdt;
+        namer.UpdateTimeStep(hourInTheYear);
+        namer.UpdateArea(builder.data.NomsDesPays[pays]);
+        namer.ReserveSatisfaction(builder.data.nombreDeContraintes,
+                                  capacityReservation.reserveName);
+        builder.build();
     }
     else
     {
@@ -61,8 +58,8 @@ void ReserveSatisfaction::add(int pays, int reserve, int pdt, bool isUpReserve)
                 nbTermes++;
         }
 
-        builder.data.NbTermesContraintesPourLesReserves += nbTermes ? 2 + nbTermes : 0;
+        builder.data.NbTermesContraintesPourLesReserves += 2 + nbTermes;
 
-        builder.data.nombreDeContraintes += nbTermes ? 1 : 0;
+        builder.data.nombreDeContraintes += 1;
     }
 }
