@@ -45,7 +45,7 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoad
 {
     settings.reset();
 
-    auto parser = std::make_unique<GetOpt::Parser>();
+    auto parser = std::make_unique<Yuni::GetOpt::Parser>();
 
     parser->addParagraph(Yuni::String() << "Antares Solver v" << ANTARES_VERSION_PUB_STR << "\n");
 
