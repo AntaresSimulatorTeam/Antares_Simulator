@@ -11,6 +11,14 @@ toc_depth: 2
 * STS groups are now "dynamic" : group names are no longer fixed by code, user is free to define these groups.
 * Add optimization options from command line in OR-Tools / XPRESS (#1837)
 
+8.8.5 (05/2024)
+--------------------
+
+### Bugfix
+- [UI] Fix opening a study from the file browser
+- Fix crash occurring when duplicate thermal clusters are present in a study (same name)
+- Fix formula for "PROFIT BY PLANT"
+
 8.8.4 (03/2024)
 --------------------
 ## Bugfix
@@ -301,7 +309,10 @@ toc_depth: 2
 * Named MPS: factorize variable & constraint namers (#1409)
 * Array, logs jit and correlation in makefile (#1410)
 
---------------------
+## v8.6.7
+### Bugfixes
+* Fix formula use in output var Profit by plant [ANT-1719] (https://github.com/AntaresSimulatorTeam/Antares_Simulator/pull/2097)
+
 ## v8.6.2 (08/2023)
 ### Bugfixes
 * Backport [v8.4.3](#v843-082023) changes
