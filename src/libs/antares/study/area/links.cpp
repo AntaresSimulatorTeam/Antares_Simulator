@@ -141,68 +141,51 @@ bool AreaLink::linkLoadTimeSeries_for_version_820_and_later(const AnyString& fol
 // and set a `valid` flag
 bool AreaLink::loadTSGenTimeSeries(const fs::path& folder)
 {
-    /* const std::string id_direct = std::string(from->id) + "/" + std::string(with->id); */
-    /* tsGenerationDirect.prepro = std::make_unique<Data::PreproAvailability>( */
-    /*   id_direct, */
-    /*   tsGenerationDirect.unitCount); */
+    const std::string idprepro = std::string(from->id) + "/" + std::string(with->id);
+    tsGeneration.prepro =
+        std::make_unique<Data::PreproAvailability>(idprepro, tsGeneration.unitCount);
 
-    /* const std::string id_indirect = std::string(with->id) + "/" + std::string(from->id); */
-    /* tsGenerationIndirect.prepro = std::make_unique<Data::PreproAvailability>( */
-    /*   id_indirect, */
-    /*   tsGenerationIndirect.unitCount); */
+    bool anyFileWasLoaded = false;
 
-    /* // file name without suffix, .txt for general infos and mod_direct/indirect.txt */
-    /* fs::path preproFile = folder / "prepro" / with->id.c_str(); */
+    // file name without suffix, .txt for general infos and mod_direct/indirect.txt
+    fs::path preproFile = folder / "prepro" / with->id.c_str();
 
-    /* // Prepro */
-    /* fs::path filepath = preproFile; */
-    /* filepath += ".txt"; */
+    // Prepro
+    fs::path filepath = preproFile;
+    filepath += ".txt";
+    if (fs::exists(filepath))
+    {
+        anyFileWasLoaded = true;
+        tsGeneration.valid = tsGeneration.prepro->data.loadFromCSVFile(
+                                     filepath.string(),
+                                     Antares::Data::PreproAvailability::preproAvailabilityMax,
+                                     DAYS_PER_YEAR)
+                                && tsGeneration.prepro->validate();
+    }
 
-    /* bool anyFileWasLoaded = false; */
-    /* if (fs::exists(filepath)) */
-    /* { */
-    /*     anyFileWasLoaded = true; */
-    /*     tsGenerationDirect.valid = tsGenerationDirect.prepro->data.loadFromCSVFile( */
-    /*                                  filepath.string(), */
-    /*                                  Antares::Data::PreproAvailability::preproAvailabilityMax, */
-    /*                                  DAYS_PER_YEAR) */
-    /*                                && tsGenerationDirect.prepro->validate(); */
-    /* } */
+    // Modulation
+    filepath = preproFile;
+    filepath += "_mod_direct.txt";
+    if (fs::exists(filepath))
+    {
+        anyFileWasLoaded = true;
+        tsGeneration.valid &= tsGeneration.modulationCapacityDirect
+                                      .loadFromCSVFile(filepath.string(), 1, HOURS_PER_YEAR);
+    }
 
-    /* filepath = preproFile; */
-    /* filepath += "_indirect.txt"; */
-    /* if (fs::exists(filepath)) */
-    /* { */
-    /*     anyFileWasLoaded = true; */
-    /*     tsGenerationIndirect.valid = tsGenerationIndirect.prepro->data.loadFromCSVFile( */
-    /*                                    filepath.string(), */
-    /*                                    Antares::Data::PreproAvailability::preproAvailabilityMax, */
-    /*                                    DAYS_PER_YEAR) */
-    /*                                  && tsGenerationIndirect.prepro->validate(); */
-    /* } */
+    filepath = preproFile;
+    filepath += "_mod_indirect.txt";
+    if (fs::exists(filepath))
+    {
+        anyFileWasLoaded = true;
+        tsGeneration.valid &= tsGeneration.modulationCapacityIndirect
+                                        .loadFromCSVFile(filepath.string(), 1, HOURS_PER_YEAR);
+    }
 
-    /* // Modulation */
-    /* filepath = preproFile; */
-    /* filepath += "_mod_direct.txt"; */
-    /* if (fs::exists(filepath)) */
-    /* { */
-    /*     anyFileWasLoaded = true; */
-    /*     tsGenerationDirect.valid &= tsGenerationDirect.modulationCapacity */
-    /*                                   .loadFromCSVFile(filepath.string(), 1, HOURS_PER_YEAR); */
-    /* } */
-
-    /* filepath = preproFile; */
-    /* filepath += "_mod_indirect.txt"; */
-    /* if (fs::exists(filepath)) */
-    /* { */
-    /*     anyFileWasLoaded = true; */
-    /*     tsGenerationIndirect.valid &= tsGenerationIndirect.modulationCapacity */
-    /*                                     .loadFromCSVFile(filepath.string(), 1, HOURS_PER_YEAR); */
-    /* } */
-    /* if (anyFileWasLoaded) */
-    /* { */
-    /*     return tsGenerationDirect.valid && tsGenerationIndirect.valid; */
-    /* } */
+    if (anyFileWasLoaded)
+    {
+        return tsGeneration.valid;
+    }
     return true;
 }
 
