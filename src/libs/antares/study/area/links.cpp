@@ -139,7 +139,7 @@ bool AreaLink::linkLoadTimeSeries_for_version_820_and_later(const AnyString& fol
 
 // This function is "lazy", it only loads files if they exist
 // and set a `valid` flag
-bool AreaLink::loadTSGenTimeSeries(const AnyString& folder)
+bool AreaLink::loadTSGenTimeSeries(const fs::path& folder)
 {
     const std::string id_direct = std::string(from->id) + "/" + std::string(with->id);
     tsGenerationDirect.prepro = std::make_unique<Data::PreproAvailability>(
@@ -728,7 +728,7 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const fs::pa
 
         if (loadTSGen)
         {
-            ret = link.loadTSGenTimeSeries(folder.string()) && ret;
+            ret = link.loadTSGenTimeSeries(folder) && ret;
         }
 
         // From the solver only
