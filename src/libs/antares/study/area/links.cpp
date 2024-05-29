@@ -141,67 +141,68 @@ bool AreaLink::linkLoadTimeSeries_for_version_820_and_later(const AnyString& fol
 // and set a `valid` flag
 bool AreaLink::loadTSGenTimeSeries(const fs::path& folder)
 {
-    const std::string id_direct = std::string(from->id) + "/" + std::string(with->id);
-    tsGenerationDirect.prepro = std::make_unique<Data::PreproAvailability>(
-      id_direct,
-      tsGenerationDirect.unitCount);
+    /* const std::string id_direct = std::string(from->id) + "/" + std::string(with->id); */
+    /* tsGenerationDirect.prepro = std::make_unique<Data::PreproAvailability>( */
+    /*   id_direct, */
+    /*   tsGenerationDirect.unitCount); */
 
-    const std::string id_indirect = std::string(with->id) + "/" + std::string(from->id);
-    tsGenerationIndirect.prepro = std::make_unique<Data::PreproAvailability>(
-      id_indirect,
-      tsGenerationIndirect.unitCount);
+    /* const std::string id_indirect = std::string(with->id) + "/" + std::string(from->id); */
+    /* tsGenerationIndirect.prepro = std::make_unique<Data::PreproAvailability>( */
+    /*   id_indirect, */
+    /*   tsGenerationIndirect.unitCount); */
 
-    fs::path preproFile = folder / "prepro" / with->id.c_str(); // file name without suffix
+    /* // file name without suffix, .txt for general infos and mod_direct/indirect.txt */
+    /* fs::path preproFile = folder / "prepro" / with->id.c_str(); */
 
-    // Prepro
-    fs::path filepath = preproFile;
-    filepath += "_direct.txt";
+    /* // Prepro */
+    /* fs::path filepath = preproFile; */
+    /* filepath += ".txt"; */
 
-    bool anyFileWasLoaded = false;
-    if (fs::exists(filepath))
-    {
-        anyFileWasLoaded = true;
-        tsGenerationDirect.valid = tsGenerationDirect.prepro->data.loadFromCSVFile(
-                                     filepath.string(),
-                                     Antares::Data::PreproAvailability::preproAvailabilityMax,
-                                     DAYS_PER_YEAR)
-                                   && tsGenerationDirect.prepro->validate();
-    }
+    /* bool anyFileWasLoaded = false; */
+    /* if (fs::exists(filepath)) */
+    /* { */
+    /*     anyFileWasLoaded = true; */
+    /*     tsGenerationDirect.valid = tsGenerationDirect.prepro->data.loadFromCSVFile( */
+    /*                                  filepath.string(), */
+    /*                                  Antares::Data::PreproAvailability::preproAvailabilityMax, */
+    /*                                  DAYS_PER_YEAR) */
+    /*                                && tsGenerationDirect.prepro->validate(); */
+    /* } */
 
-    filepath = preproFile;
-    filepath += "_indirect.txt";
-    if (fs::exists(filepath))
-    {
-        anyFileWasLoaded = true;
-        tsGenerationIndirect.valid = tsGenerationIndirect.prepro->data.loadFromCSVFile(
-                                       filepath.string(),
-                                       Antares::Data::PreproAvailability::preproAvailabilityMax,
-                                       DAYS_PER_YEAR)
-                                     && tsGenerationIndirect.prepro->validate();
-    }
+    /* filepath = preproFile; */
+    /* filepath += "_indirect.txt"; */
+    /* if (fs::exists(filepath)) */
+    /* { */
+    /*     anyFileWasLoaded = true; */
+    /*     tsGenerationIndirect.valid = tsGenerationIndirect.prepro->data.loadFromCSVFile( */
+    /*                                    filepath.string(), */
+    /*                                    Antares::Data::PreproAvailability::preproAvailabilityMax, */
+    /*                                    DAYS_PER_YEAR) */
+    /*                                  && tsGenerationIndirect.prepro->validate(); */
+    /* } */
 
-    // Modulation
-    filepath = preproFile;
-    filepath += "_mod_direct.txt";
-    if (fs::exists(filepath))
-    {
-        anyFileWasLoaded = true;
-        tsGenerationDirect.valid &= tsGenerationDirect.modulationCapacity
-                                      .loadFromCSVFile(filepath.string(), 1, HOURS_PER_YEAR);
-    }
+    /* // Modulation */
+    /* filepath = preproFile; */
+    /* filepath += "_mod_direct.txt"; */
+    /* if (fs::exists(filepath)) */
+    /* { */
+    /*     anyFileWasLoaded = true; */
+    /*     tsGenerationDirect.valid &= tsGenerationDirect.modulationCapacity */
+    /*                                   .loadFromCSVFile(filepath.string(), 1, HOURS_PER_YEAR); */
+    /* } */
 
-    filepath = preproFile;
-    filepath += "_mod_indirect.txt";
-    if (fs::exists(filepath))
-    {
-        anyFileWasLoaded = true;
-        tsGenerationIndirect.valid &= tsGenerationIndirect.modulationCapacity
-                                        .loadFromCSVFile(filepath.string(), 1, HOURS_PER_YEAR);
-    }
-    if (anyFileWasLoaded)
-    {
-        return tsGenerationDirect.valid && tsGenerationIndirect.valid;
-    }
+    /* filepath = preproFile; */
+    /* filepath += "_mod_indirect.txt"; */
+    /* if (fs::exists(filepath)) */
+    /* { */
+    /*     anyFileWasLoaded = true; */
+    /*     tsGenerationIndirect.valid &= tsGenerationIndirect.modulationCapacity */
+    /*                                     .loadFromCSVFile(filepath.string(), 1, HOURS_PER_YEAR); */
+    /* } */
+    /* if (anyFileWasLoaded) */
+    /* { */
+    /*     return tsGenerationDirect.valid && tsGenerationIndirect.valid; */
+    /* } */
     return true;
 }
 
@@ -569,14 +570,14 @@ bool handleTSGenKey_internal(const std::string& key,
 
 bool handleTSGenKey(Data::AreaLink& link, const std::string& key, const String& value)
 {
-    if (key.starts_with("tsgen_direct"))
-    {
-        return handleTSGenKey_internal(key, value, "tsgen_direct", link.tsGenerationDirect);
-    }
-    else if (key.starts_with("tsgen_indirect"))
-    {
-        return handleTSGenKey_internal(key, value, "tsgen_indirect", link.tsGenerationIndirect);
-    }
+    /* if (key.starts_with("tsgen_direct")) */
+    /* { */
+    /*     return handleTSGenKey_internal(key, value, "tsgen_direct", link.tsGenerationDirect); */
+    /* } */
+    /* else if (key.starts_with("tsgen_indirect")) */
+    /* { */
+    /*     return handleTSGenKey_internal(key, value, "tsgen_indirect", link.tsGenerationIndirect); */
+    /* } */
     return false;
 }
 

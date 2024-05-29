@@ -52,6 +52,7 @@ AvailabilityTSGeneratorData::AvailabilityTSGeneratorData(Data::ThermalCluster* s
 
 AvailabilityTSGeneratorData::AvailabilityTSGeneratorData(Data::LinkTsGeneration& source,
                                                          Data::TimeSeries& capacity,
+                                                         Matrix<>& modulation,
                                                          const std::string& areaDestName):
     unitCount(source.unitCount),
     nominalCapacity(source.nominalCapacity),
@@ -61,7 +62,7 @@ AvailabilityTSGeneratorData::AvailabilityTSGeneratorData(Data::LinkTsGeneration&
     plannedLaw(source.plannedLaw),
     prepro(source.prepro.get()),
     series(capacity.timeSeries),
-    modulationCapacity(source.modulationCapacity[0]),
+    modulationCapacity(modulation[0]),
     name(areaDestName)
 {
 }
@@ -615,11 +616,9 @@ listOfLinks getAllLinksToGen(Data::AreaList& areas)
     areas.each(
       [&links](const Data::Area& area)
       {
-          std::ranges::for_each(area.links,
-                                [&links](auto& l)
+          std::ranges::for_each(area.links, [&links](auto& l)
                                 {
-                                    links.emplace_back(l.second, linkDirection::direct);
-                                    links.emplace_back(l.second, linkDirection::indirect);
+                                    links.push_back(l.second);
                                 });
       });
 
@@ -680,25 +679,25 @@ bool generateLinkTimeSeries(Data::Study& study,
 
     auto generator = GeneratorTempData(study, study.parameters.nbLinkTStoGenerate);
 
-    for (const auto& [link, direction]: links)
+    for (const auto& link: links)
     {
         Data::TimeSeries ts(link->timeseriesNumbers);
         ts.resize(study.parameters.nbLinkTStoGenerate, HOURS_PER_YEAR);
 
-        auto& tsGenStruct = direction == linkDirection::direct ? link->tsGenerationDirect
-                                                               : link->tsGenerationIndirect;
+        auto& tsGenStruct = link->tsGeneration;
+
         if (!tsGenStruct.valid)
         {
             logs.error() << "Missing data for link " << link->from->id << "/" << link->with->id;
             return false;
         }
-        AvailabilityTSGeneratorData tsConfigData(tsGenStruct, ts, link->with->name);
 
-        generator.generateTS(*link->from, tsConfigData);
+        AvailabilityTSGeneratorData tsConfigDataDirect(tsGenStruct, ts, tsGenStruct.modulationCapacityDirect, link->with->name);
 
-        std::string capacityType = direction == linkDirection::direct ? "_direct" : "_indirect";
+        generator.generateTS(*link->from, tsConfigDataDirect);
+
         std::string filePath = savePath + SEP + link->from->id + SEP + link->with->id.c_str()
-                               + capacityType + ".txt";
+                               + "_direct.txt";
 
         writeResultsToDisk(study, writer, ts.timeSeries, filePath);
     }

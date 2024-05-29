@@ -209,8 +209,7 @@ public:
 
     friend struct CompareLinkName;
 
-    LinkTsGeneration tsGenerationDirect;
-    LinkTsGeneration tsGenerationIndirect;
+    LinkTsGeneration tsGeneration;
 
 }; // class AreaLink
 

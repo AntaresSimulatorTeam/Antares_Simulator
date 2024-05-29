@@ -128,7 +128,8 @@ struct LinkTsGeneration
 
     std::unique_ptr<Data::PreproAvailability> prepro;
 
-    Matrix<> modulationCapacity;
+    Matrix<> modulationCapacityDirect;
+    Matrix<> modulationCapacityIndirect;
 
     bool valid = false;
 };
