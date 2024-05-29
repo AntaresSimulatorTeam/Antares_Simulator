@@ -61,7 +61,7 @@ inline void IntermediateValues::buildAnnualSurveyReport(SurveyResults& report,
                                                         int fileLevel,
                                                         int precision) const
 {
-    if (!(fileLevel & Category::id))
+    if (!(fileLevel & Category::FileLevel::id))
     {
         switch (precision)
         {

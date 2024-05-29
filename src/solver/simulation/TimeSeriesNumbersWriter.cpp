@@ -37,35 +37,18 @@ BindingConstraintsTimeSeriesNumbersWriter::BindingConstraintsTimeSeriesNumbersWr
 {
 }
 
-namespace // anonymous
-{
-struct TSNumbersPredicate
-{
-    uint32_t operator()(uint32_t value) const
-    {
-        return value + 1;
-    }
-};
-} // anonymous namespace
-
 // TODO : remove duplication
 static void genericStoreTimeseriesNumbers(Solver::IResultWriter& writer,
-                                          const Matrix<uint32_t>& timeseriesNumbers,
+                                          const Data::TimeSeriesNumbers& timeseriesNumbers,
                                           const std::string& id,
                                           const std::string& directory)
 {
-    TSNumbersPredicate predicate;
     std::filesystem::path path = std::filesystem::path() / "ts-numbers" / directory.c_str()
                                  / id.c_str();
     path.replace_extension("txt");
 
     std::string buffer;
-    timeseriesNumbers.saveToBuffer(buffer,
-                                   0,         // precision
-                                   true,      // print_dimensions
-                                   predicate, // predicate
-                                   true);     // save even if all coeffs are zero
-
+    timeseriesNumbers.saveToBuffer(buffer);
     writer.addEntryFromBuffer(path.string(), buffer);
 }
 

@@ -19,7 +19,6 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #define BOOST_TEST_MODULE test save area optimization.ini
-#define BOOST_TEST_DYN_LINK
 
 #define WIN32_LEAN_AND_MEAN
 
@@ -51,7 +50,7 @@ struct Fixture
     Fixture():
         area(study->areaAdd("Area"))
     {
-        path_to_generated_file << fs::current_path().append(generatedIniFileName).string();
+        path_to_generated_file << fs::current_path().append(generatedIniFileName);
     }
 
     ~Fixture()

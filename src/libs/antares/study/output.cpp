@@ -21,9 +21,13 @@
 
 #include "antares/study/output.h"
 
+#include <filesystem>
+
 #include <yuni/io/directory/iterator.h>
 
 using namespace Yuni;
+
+namespace fs = std::filesystem;
 
 #define SEP IO::Separator
 
@@ -191,13 +195,12 @@ void Output::RetrieveListFromStudy(List& out, const Study& study)
 
     if (not study.folder.empty())
     {
-        String folder;
-        folder << study.folder << SEP << "output";
+        fs::path folder = fs::path(study.folder.c_str()) / "output";
 
-        if (IO::Directory::Exists(folder))
+        if (fs::exists(folder))
         {
             OutputFolderIterator iterator(out);
-            iterator.add(folder);
+            iterator.add(folder.string());
             iterator.start();
             iterator.wait(15000); // 15s - arbitrary
         }

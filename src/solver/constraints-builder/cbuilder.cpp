@@ -28,8 +28,6 @@
 
 using namespace Yuni;
 
-// #define SEP Yuni::IO::Separator
-
 namespace Antares
 {
 double linkInfo::getWeightWithImpedance() const
@@ -381,7 +379,7 @@ bool CBuilder::completeCBuilderFromFile(const std::string& filename)
     if (filename == "")
     {
         path = std::filesystem::path(pStudy.folder.c_str()) / "settings" / "constraintbuilder.ini";
-        if (!IO::File::Exists(path.string()))
+        if (!std::filesystem::exists(path))
         {
             return false;
         }

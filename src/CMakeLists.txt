@@ -185,6 +185,12 @@ message(STATUS "Build OR-Tools: ${BUILD_ORTOOLS}")
 option(BUILD_MINIZIP "Build minizip" OFF)
 message(STATUS "Build minizip: ${BUILD_MINIZIP}")
 
+option(WITH_ANTLR4 "With antlr4" OFF)
+message(STATUS "With antlr4: ${WITH_ANTLR4}")
+
+option(WITH_YAMLCPP "With yaml-cpp" OFF)
+message(STATUS "With yaml-cpp: ${WITH_YAMLCPP}")
+
 option(BUILD_MERSENNE_TWISTER_PYBIND11 "Build pybind11 bindings for Mersenne-Twister" OFF)
 if (${BUILD_MERSENNE_TWISTER_PYBIND11})
     find_package(pybind11 REQUIRED)
@@ -291,6 +297,7 @@ else ()
 		message (FATAL_ERROR "Minizip not found.")
 	endif ()
 endif ()
+
 
 #wxWidget not needed for all library find is done in ui CMakeLists.txt
 if (VCPKG_TOOLCHAIN AND NOT BUILD_wxWidgets) 

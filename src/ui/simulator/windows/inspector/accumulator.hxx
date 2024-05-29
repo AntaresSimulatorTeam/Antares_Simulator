@@ -1048,7 +1048,7 @@ struct PClusterLawForced
     }
     static wxString ConvertToString(const Type v)
     {
-        return (v < thermalLawCount) ? thermalLaws[v] : nullptr;
+        return (v < LawCount) ? Laws[v] : nullptr;
     }
 };
 
@@ -1061,7 +1061,7 @@ struct PClusterLawPlanned
     }
     static wxString ConvertToString(const Type v)
     {
-        return (v < thermalLawCount) ? thermalLaws[v] : nullptr;
+        return (v < LawCount) ? Laws[v] : nullptr;
     }
 };
 
