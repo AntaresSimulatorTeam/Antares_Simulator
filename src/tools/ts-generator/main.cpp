@@ -37,6 +37,8 @@
 
 using namespace Antares;
 
+namespace fs = std::filesystem;
+
 struct Settings
 {
     std::string studyFolder;
@@ -190,8 +192,8 @@ int main(int argc, char* argv[])
                                                     nullptr,
                                                     durationCollector);
 
-    const auto thermalSavePath = std::filesystem::path("ts-generator") / "thermal";
-    const auto linksSavePath = std::filesystem::path("ts-generator") / "links";
+    const auto thermalSavePath = fs::path("ts-generator") / "thermal";
+    const auto linksSavePath = fs::path("ts-generator") / "links";
 
     // THERMAL
     std::vector<Data::ThermalCluster*> clusters;
