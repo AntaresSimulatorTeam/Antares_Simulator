@@ -32,7 +32,6 @@ env:
   vcpkgPackages: yaml-cpp antlr4 boost-test boost-algorithm
   triplet: x64-linux
   WX_CONFIG: /usr/bin/wx-config
-  DEBIAN_FRONTEND: noninteractive
 
 jobs:
 
@@ -47,8 +46,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-        #with:
-        #  ref: ${{ env.REF }}
+        with:
+          ref: ${{ env.REF }}
 
       - run: |
           sudo apt-get update
@@ -156,8 +155,23 @@ jobs:
       - name: Build
         run: |
           cmake --build _build -j$(nproc)
-      
-      
+
+      - name: Run API tests
+        run: |
+          cmake --install _build --prefix antares_install
+          cd src/api_client_example
+           cmake -B _build -S . \
+           -DCMAKE_C_COMPILER_LAUNCHER=ccache \
+           -DCMAKE_C_COMPILER=/usr/bin/gcc-10 \
+           -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
+           -DCMAKE_CXX_COMPILER=/usr/bin/g++-10 \
+           -DCMAKE_BUILD_TYPE=Release \
+           -DBUILD_TESTING=ON \
+           -DCMAKE_PREFIX_PATH="${{github.workspace}}/install;${{ env.ORTOOLS_DIR }}/install;${{github.workspace}}/antares_install;${{github.workspace}}/rte-antares-deps-Release"
+            cmake --build _build -j$(nproc)
+           cd _build
+           ctest -C Release --output-on-failure
+
       # simtest
       - name: Read simtest version
         id: simtest-version
@@ -301,23 +315,6 @@ jobs:
           batch-name: long-tests-3
           os: ${{ env.os }}
 
-      - name: Run API tests
-        run: |
-          cmake --install _build --prefix antares_install
-          cd src/api_client_example
-           cmake -B _build -S . \
-           -DCMAKE_C_COMPILER_LAUNCHER=ccache \
-           -DCMAKE_C_COMPILER=/usr/bin/gcc-10 \
-           -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
-           -DCMAKE_CXX_COMPILER=/usr/bin/g++-10 \
-           -DCMAKE_BUILD_TYPE=Release \
-           -DBUILD_TESTING=ON \
-           -DCMAKE_PREFIX_PATH="${{github.workspace}}/install;${{ env.ORTOOLS_DIR }}/install;${{github.workspace}}/antares_install;${{github.workspace}}/rte-antares-deps-Release"
-            cmake --build _build -j$(nproc)
-           cd _build
-           ctest -C Release --output-on-failure
-
-
       - name: Installer .deb creation
         run: |
           cd _build
@@ -349,7 +346,6 @@ jobs:
         with:
           name: deb
           path: _build/*.deb
-
 
       - name: Publish assets
         if: ${{ env.IS_RELEASE == 'true' }}
