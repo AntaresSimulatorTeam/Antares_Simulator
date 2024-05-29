@@ -46,7 +46,7 @@ bool STStorageInput::createSTStorageClustersFromIniFile(const fs::path& path)
 {
     const fs::path pathIni = path / "list.ini";
     IniFile ini;
-    if (!ini.open(pathIni.string()))
+    if (!ini.open(pathIni))
     {
         return false;
     }

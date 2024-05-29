@@ -169,7 +169,7 @@ public:
     /*!
     ** \brief Load an INI file
     */
-    explicit IniFile(const AnyString& filename);
+    explicit IniFile(const std::filesystem::path& filename);
     /*!
     ** \brief Destructor
     */
@@ -194,7 +194,9 @@ public:
     ** \param filename Filename to load
     ** \return True if the operation succeeded, false otherwise
     */
-    bool open(const AnyString& filename, bool warnings = true);
+    bool open(const std::string& filename, bool warnings = true);
+
+    bool open(const std::filesystem::path& filename, bool warnings = true);
 
     bool readStream(std::istream& in_stream);
 
