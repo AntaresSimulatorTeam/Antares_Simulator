@@ -151,49 +151,52 @@ bool AreaLink::loadTSGenTimeSeries(const fs::path& folder)
       id_indirect,
       tsGenerationIndirect.unitCount);
 
-    String preproFolder;
-    preproFolder << folder << SEP << "prepro";
+    fs::path preproFile = folder / "prepro" / with->id.c_str(); // file name without suffix
 
     // Prepro
-    String filename;
-    filename.clear() << preproFolder << SEP << with->id << "_direct.txt";
+    fs::path filepath = preproFile;
+    filepath += "_direct.txt";
+
     bool anyFileWasLoaded = false;
-    if (std::filesystem::exists(filename.to<std::string>()))
+    if (fs::exists(filepath))
     {
         anyFileWasLoaded = true;
         tsGenerationDirect.valid = tsGenerationDirect.prepro->data.loadFromCSVFile(
-                                     filename,
+                                     filepath.string(),
                                      Antares::Data::PreproAvailability::preproAvailabilityMax,
                                      DAYS_PER_YEAR)
                                    && tsGenerationDirect.prepro->validate();
     }
 
-    filename.clear() << preproFolder << SEP << with->id << "_indirect.txt";
-    if (std::filesystem::exists(filename.to<std::string>()))
+    filepath = preproFile;
+    filepath += "_indirect.txt";
+    if (fs::exists(filepath))
     {
         anyFileWasLoaded = true;
         tsGenerationIndirect.valid = tsGenerationIndirect.prepro->data.loadFromCSVFile(
-                                       filename,
+                                       filepath.string(),
                                        Antares::Data::PreproAvailability::preproAvailabilityMax,
                                        DAYS_PER_YEAR)
                                      && tsGenerationIndirect.prepro->validate();
     }
 
     // Modulation
-    filename.clear() << preproFolder << SEP << with->id << "_mod_direct.txt";
-    if (std::filesystem::exists(filename.to<std::string>()))
+    filepath = preproFile;
+    filepath += "_mod_direct.txt";
+    if (fs::exists(filepath))
     {
         anyFileWasLoaded = true;
         tsGenerationDirect.valid &= tsGenerationDirect.modulationCapacity
-                                      .loadFromCSVFile(filename, 1, HOURS_PER_YEAR);
+                                      .loadFromCSVFile(filepath.string(), 1, HOURS_PER_YEAR);
     }
 
-    filename.clear() << preproFolder << SEP << with->id << "_mod_indirect.txt";
-    if (std::filesystem::exists(filename.to<std::string>()))
+    filepath = preproFile;
+    filepath += "_mod_indirect.txt";
+    if (fs::exists(filepath))
     {
         anyFileWasLoaded = true;
         tsGenerationIndirect.valid &= tsGenerationIndirect.modulationCapacity
-                                        .loadFromCSVFile(filename, 1, HOURS_PER_YEAR);
+                                        .loadFromCSVFile(filepath.string(), 1, HOURS_PER_YEAR);
     }
     if (anyFileWasLoaded)
     {
