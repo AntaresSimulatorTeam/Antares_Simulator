@@ -523,44 +523,37 @@ bool handleKey(Data::AreaLink& link, const String& key, const String& value)
     return false;
 }
 
-bool handleTSGenKey_internal(const std::string& key,
-                             const String& value,
-                             const std::string& prefix,
-                             Data::LinkTsGeneration& out)
+bool handleTSGenKey(Data::LinkTsGeneration& out,
+                    const std::string& key,
+                    const String& value)
 {
-    const auto checkPrefixed = [&prefix, &key](const std::string& s)
-    {
-        auto key_lowercase(key);
-        boost::to_lower(key_lowercase);
-        return key_lowercase == prefix + "_" + s;
-    };
 
-    if (checkPrefixed("unitcount"))
+    if (key == "unitcount")
     {
         return value.to<uint>(out.unitCount);
     }
 
-    if (checkPrefixed("nominalcapacity"))
+    if (key == "nominalcapacity")
     {
         return value.to<double>(out.nominalCapacity);
     }
 
-    if (checkPrefixed("law.planned"))
+    if (key == "law.planned")
     {
         return value.to(out.plannedLaw);
     }
 
-    if (checkPrefixed("law.forced"))
+    if (key == "law.forced")
     {
         return value.to(out.forcedLaw);
     }
 
-    if (checkPrefixed("volatility.planned"))
+    if (key == "volatility.planned")
     {
         return value.to(out.plannedVolatility);
     }
 
-    if (checkPrefixed("volatility.forced"))
+    if (key == "volatility.forced")
     {
         return value.to(out.forcedVolatility);
     }
@@ -568,22 +561,9 @@ bool handleTSGenKey_internal(const std::string& key,
     return false;
 }
 
-bool handleTSGenKey(Data::AreaLink& link, const std::string& key, const String& value)
-{
-    /* if (key.starts_with("tsgen_direct")) */
-    /* { */
-    /*     return handleTSGenKey_internal(key, value, "tsgen_direct", link.tsGenerationDirect); */
-    /* } */
-    /* else if (key.starts_with("tsgen_indirect")) */
-    /* { */
-    /*     return handleTSGenKey_internal(key, value, "tsgen_indirect", link.tsGenerationIndirect); */
-    /* } */
-    return false;
-}
-
 bool AreaLinksInternalLoadFromProperty(AreaLink& link, const String& key, const String& value)
 {
-    return handleKey(link, key, value) || handleTSGenKey(link, key, value);
+    return handleKey(link, key, value) || handleTSGenKey(link.tsGeneration, key, value);
 }
 
 [[noreturn]] void logLinkDataCheckError(const AreaLink& link, const String& msg, int hour)
