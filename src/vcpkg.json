@@ -10,8 +10,7 @@
       "platform": "windows"
     },
     {
-      "name": "boost-test",
-      "platform": "windows"
+      "name": "boost-test"
     },
     {
       "name": "boost-algorithm",
@@ -23,6 +22,12 @@
       "features": [
         "zlib"
       ]
+    },
+    {
+      "name": "yaml-cpp"
+    },
+    {
+      "name": "antlr4"
     }
   ]
 }
