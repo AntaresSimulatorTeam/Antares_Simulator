@@ -52,7 +52,7 @@ var searchData=
   ['ontoolbarsave_49',['onToolbarSave',['../classAntares_1_1Forms_1_1MainFormData.html#aeb45d2fff85bdd88de16c58f24515677',1,'Antares::Forms::MainFormData']]],
   ['ontoolbarwizard_50',['onToolbarWizard',['../classAntares_1_1Forms_1_1MainFormData.html#afd414bf36c1add86e244509704550c59',1,'Antares::Forms::MainFormData']]],
   ['onuiupdatemessage_51',['onUIUpdateMessage',['../classAntares_1_1Toolbox_1_1Jobs_1_1Job.html#a8070ec5642dcaf872f495088e14b5d24',1,'Antares::Toolbox::Jobs::Job']]],
-  ['open_52',['open',['../namespaceLocalPolicy.html#aeee1fcbcea6a68643d0eb7929e246933',1,'LocalPolicy::Open()'],['../classAntares_1_1IniFile.html#a11e9d8225fe9565c07807aa44f24eafb',1,'Antares::IniFile::open()']]],
+  ['open_52',['open',['../namespaceLocalPolicy.html#aeee1fcbcea6a68643d0eb7929e246933',1,'LocalPolicy::Open()'],['../classAntares_1_1IniFile.html#a36b611ee4924c2e02d293ddd22f59bf0',1,'Antares::IniFile::open()']]],
   ['openfile_53',['openfile',['../classMatrix__easy__to__fill.html#ae0d6125d2a7acc0e19130dc0f1903765',1,'Matrix_easy_to_fill::openFile()'],['../classAntares_1_1Matrix.html#af62c296aae8af6f8c976e4fbdc2186c6',1,'Antares::Matrix::openFile()']]],
   ['openstudyfolder_54',['openStudyFolder',['../classAntares_1_1Forms_1_1ApplWnd.html#abe5dac4011f19f4cf25c651c7e3e6488',1,'Antares::Forms::ApplWnd']]],
   ['operator_28_29_55',['operator()',['../classAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1AOperator.html#a7141901a5d1bd61bc44eba97a5f4035e',1,'Antares::Toolbox::Filter::Operator::AOperator']]],
