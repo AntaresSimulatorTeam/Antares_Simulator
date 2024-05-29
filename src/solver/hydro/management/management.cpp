@@ -117,12 +117,10 @@ double BetaVariable(double a, double b, MersenneTwister& random)
 HydroManagement::HydroManagement(const Data::AreaList& areas,
                                  const Data::Parameters& params,
                                  const Date::Calendar& calendar,
-                                 unsigned int maxNbYearsInParallel,
                                  Solver::IResultWriter& resultWriter):
     areas_(areas),
     calendar_(calendar),
     parameters_(params),
-    maxNbYearsInParallel_(maxNbYearsInParallel),
     resultWriter_(resultWriter)
 {
     // Ventilation results memory allocation

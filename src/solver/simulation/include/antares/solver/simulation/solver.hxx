@@ -75,7 +75,6 @@ public:
         hydroManagement(study.areas,
                         study.parameters,
                         study.calendar,
-                        study.maxNbYearsInParallel,
                         resultWriter)
     {
         hydroHotStart = (study.parameters.initialReservoirLevels.iniLevels == Data::irlHotStart);
