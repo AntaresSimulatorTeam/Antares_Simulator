@@ -86,10 +86,6 @@ static bool ConvertCStrToListTimeSeries(const String& value, uint& v)
                     {
                         v |= timeSeriesTransmissionCapacities;
                     }
-                    else if (word == "max-power")
-                    {
-                        v |= timeSeriesHydroMaxPower;
-                    }
                     return true;
                 });
     return true;
@@ -351,7 +347,6 @@ void Parameters::reset()
     include.exportMPS = mpsExportStatus::NO_EXPORT;
     include.exportStructure = false;
     namedProblems = false;
-    solverLogs = false;
 
     include.unfeasibleProblemBehavior = UnfeasibleProblemBehavior::ERROR_MPS;
 
@@ -361,9 +356,6 @@ void Parameters::reset()
 
     hydroDebug = false;
 
-    ortoolsUsed = false;
-    ortoolsSolver = "sirius";
-
     resultFormat = legacyFilesDirectories;
 
     // Adequacy patch parameters
@@ -371,6 +363,8 @@ void Parameters::reset()
 
     // Initialize all seeds
     resetSeeds();
+
+    optOptions = Antares::Solver::Optimization::OptimizationOptions();
 }
 
 bool Parameters::isTSGeneratedByPrepro(const TimeSeriesType ts) const
@@ -433,14 +427,6 @@ static void ParametersSaveTimeSeries(IniFile::Section* s, const char* name, uint
             v += ", ";
         }
         v += "ntc";
-    }
-    if (value & timeSeriesHydroMaxPower)
-    {
-        if (!v.empty())
-        {
-            v += ", ";
-        }
-        v += "max-power";
     }
     s->add(name, v);
 }
@@ -784,7 +770,7 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
 
     if (key == "solver-logs")
     {
-        return value.to<bool>(d.solverLogs);
+        return value.to<bool>(d.optOptions.solverLogs);
     }
     return false;
 }
@@ -1187,11 +1173,12 @@ bool firstKeyLetterIsValid(const String& name)
 }
 
 bool Parameters::loadFromINI(const IniFile& ini,
-                             StudyVersion& version,
+                             const StudyVersion& version,
                              const StudyLoadOptions& options)
 {
     // Reset inner data
     reset();
+
     // A temporary buffer, used for the values in lowercase
     using Callback = bool (*)(
       Parameters&,    // [out] Parameter object to load the data into
@@ -1291,12 +1278,9 @@ bool Parameters::loadFromINI(const IniFile& ini,
         derated = true;
     }
 
-    // Define ortools parameters from options
-    ortoolsUsed = options.ortoolsUsed;
-    ortoolsSolver = options.ortoolsSolver;
-
     namedProblems = options.namedProblems;
-    solverLogs = options.solverLogs || solverLogs;
+
+    handleOptimizationOptions(options);
 
     // Attempt to fix bad values if any
     fixBadValues();
@@ -1304,8 +1288,6 @@ bool Parameters::loadFromINI(const IniFile& ini,
     fixRefreshIntervals();
 
     fixGenRefreshForNTC();
-
-    fixGenRefreshForHydroMaxPower();
 
     // Specific action before launching a simulation
     if (options.usedByTheSolver)
@@ -1321,6 +1303,17 @@ bool Parameters::loadFromINI(const IniFile& ini,
     // We currently always returns true to not block any loading process
     // Anyway we already have reported all problems
     return true;
+}
+
+void Parameters::handleOptimizationOptions(const StudyLoadOptions& options)
+{
+    // Options only set from the command-line
+    optOptions.ortoolsUsed = options.optOptions.ortoolsUsed;
+    optOptions.ortoolsSolver = options.optOptions.ortoolsSolver;
+    optOptions.solverParameters = options.optOptions.solverParameters;
+
+    // Options that can be set both in command-line and file
+    optOptions.solverLogs = options.optOptions.solverLogs || optOptions.solverLogs;
 }
 
 void Parameters::fixRefreshIntervals()
@@ -1365,22 +1358,6 @@ void Parameters::fixGenRefreshForNTC()
         interModal &= ~timeSeriesTransmissionCapacities;
         logs.error() << "Inter-modal correlation is not available for transmission capacities. It "
                         "will be automatically disabled.";
-    }
-}
-
-void Parameters::fixGenRefreshForHydroMaxPower()
-{
-    if ((timeSeriesHydroMaxPower & timeSeriesToGenerate) != 0)
-    {
-        timeSeriesToGenerate &= ~timeSeriesHydroMaxPower;
-        logs.warning() << "Time-series generation is not available for hydro max power. It "
-                          "will be automatically disabled.";
-    }
-    if ((timeSeriesHydroMaxPower & timeSeriesToRefresh) != 0)
-    {
-        timeSeriesToRefresh &= ~timeSeriesHydroMaxPower;
-        logs.warning() << "Time-series refresh is not available for hydro max power. It will "
-                          "be automatically disabled.";
     }
 }
 
@@ -1625,8 +1602,7 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
 
     if (interModal == timeSeriesLoad || interModal == timeSeriesSolar
         || interModal == timeSeriesWind || interModal == timeSeriesHydro
-        || interModal == timeSeriesThermal || interModal == timeSeriesRenewable
-        || interModal == timeSeriesHydroMaxPower)
+        || interModal == timeSeriesThermal || interModal == timeSeriesRenewable)
     {
         // Only one timeseries in interModal correlation, which is the same than nothing
         interModal = 0;
@@ -1771,9 +1747,10 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
     }
 
     // Indicate ortools solver used
-    if (ortoolsUsed)
+    if (options.optOptions.ortoolsUsed)
     {
-        logs.info() << "  :: ortools solver " << ortoolsSolver << " used for problem resolution";
+        logs.info() << "  :: ortools solver " << options.optOptions.ortoolsSolver
+                    << " used for problem resolution";
     }
 
     // indicated that Problems will be named
@@ -1782,7 +1759,7 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
         logs.info() << "  :: The problems will contain named variables and constraints";
     }
     // indicated whether solver logs will be printed
-    logs.info() << "  :: Printing solver logs : " << (solverLogs ? "True" : "False");
+    logs.info() << "  :: Printing solver logs : " << (optOptions.solverLogs ? "True" : "False");
 }
 
 void Parameters::resetPlaylist(uint nbOfYears)
@@ -1897,7 +1874,7 @@ void Parameters::saveToINI(IniFile& ini) const
         // Unfeasible problem behavior
         section->add("include-unfeasible-problem-behavior",
                      Enum::toString(include.unfeasibleProblemBehavior));
-        section->add("solver-logs", solverLogs);
+        section->add("solver-logs", optOptions.solverLogs);
     }
 
     // Adequacy patch

@@ -349,6 +349,12 @@ void ISimulation<ImplementationType>::run()
         // for a single simulation
         study.resizeAllTimeseriesNumbers(1 + study.runtime->rangeLimits.year[Data::rangeEnd]);
         // Now, we will prepare the time-series numbers
+        if (not TimeSeriesNumbers::CheckNumberOfColumns(study.areas))
+        {
+            throw FatalError(
+              "Inconsistent number of time-series detected. Please check your input data.");
+        }
+
         if (not TimeSeriesNumbers::Generate(study))
         {
             throw FatalError("An unrecoverable error has occured. Can not continue.");
@@ -375,14 +381,15 @@ void ISimulation<ImplementationType>::run()
         logs.info() << " Starting the simulation";
         uint finalYear = 1 + study.runtime->rangeLimits.year[Data::rangeEnd];
         {
-            pDurationCollector("mc_years") << [&] { loopThroughYears(0, finalYear, state); };
+            pDurationCollector("mc_years")
+              << [finalYear, &state, this] { loopThroughYears(0, finalYear, state); };
         }
         // Destroy the TS Generators if any
         // It will export the time-series into the output in the same time
         TSGenerator::DestroyAll(study);
 
         // Post operations
-        pDurationCollector("post_processing") << [&] { ImplementationType::simulationEnd(); };
+        pDurationCollector("post_processing") << [this] { ImplementationType::simulationEnd(); };
 
         ImplementationType::variables.simulationEnd();
 
@@ -462,31 +469,31 @@ void ISimulation<ImplementationType>::regenerateTimeSeries(uint year)
     if (pData.haveToRefreshTSLoad && (year % pData.refreshIntervalLoad == 0))
     {
         pDurationCollector("tsgen_load")
-          << [&] { GenerateTimeSeries<Data::timeSeriesLoad>(study, year, pResultWriter); };
+          << [year, this] { GenerateTimeSeries<Data::timeSeriesLoad>(study, year, pResultWriter); };
     }
     // Solar
     if (pData.haveToRefreshTSSolar && (year % pData.refreshIntervalSolar == 0))
     {
-        pDurationCollector("tsgen_solar")
-          << [&] { GenerateTimeSeries<Data::timeSeriesSolar>(study, year, pResultWriter); };
+        pDurationCollector("tsgen_solar") << [year, this]
+        { GenerateTimeSeries<Data::timeSeriesSolar>(study, year, pResultWriter); };
     }
     // Wind
     if (pData.haveToRefreshTSWind && (year % pData.refreshIntervalWind == 0))
     {
         pDurationCollector("tsgen_wind")
-          << [&] { GenerateTimeSeries<Data::timeSeriesWind>(study, year, pResultWriter); };
+          << [year, this] { GenerateTimeSeries<Data::timeSeriesWind>(study, year, pResultWriter); };
     }
     // Hydro
     if (pData.haveToRefreshTSHydro && (year % pData.refreshIntervalHydro == 0))
     {
-        pDurationCollector("tsgen_hydro")
-          << [&] { GenerateTimeSeries<Data::timeSeriesHydro>(study, year, pResultWriter); };
+        pDurationCollector("tsgen_hydro") << [year, this]
+        { GenerateTimeSeries<Data::timeSeriesHydro>(study, year, pResultWriter); };
     }
 
     // Thermal
     const bool refreshTSonCurrentYear = (year % pData.refreshIntervalThermal == 0);
 
-    pDurationCollector("tsgen_thermal") << [&]
+    pDurationCollector("tsgen_thermal") << [refreshTSonCurrentYear, year, this]
     {
         if (refreshTSonCurrentYear)
         {
@@ -727,7 +734,8 @@ void ISimulation<ImplementationType>::computeRandomNumbers(
         // ... Reservoir levels ...
         uint areaIndex = 0;
         study.areas.each(
-          [&](Data::Area& area)
+          [&areaIndex, &indexYear, &randomForYears, &randomHydroGenerator, &y, &isPerformed, this](
+            Data::Area& area)
           {
               // looking for the initial reservoir level (begining of the year)
               auto& min = area.hydro.reservoirLevel[Data::PartHydro::minimum];

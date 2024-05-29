@@ -150,8 +150,6 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, Solver::IResu
 
     uint nbTimeseries = study.parameters.nbTimeSeriesHydro;
 
-    long cumul = 0;
-
     for (uint l = 0; l != nbTimeseries; ++l)
     {
         for (uint s = 0; s < DEM; ++s)
@@ -186,11 +184,6 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, Solver::IResu
 
             assert(l < series.ror.timeSeries.width);
             assert(not std::isnan(colPOW[realmonth]));
-
-            if (month == 0)
-            {
-                cumul = 0;
-            }
 
             double EnergieHydrauliqueTotaleMensuelle = 0;
 
@@ -271,8 +264,6 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, Solver::IResu
 
             assert(not std::isnan(monthlyStorage)
                    && "TS generator Hydro: NaN value detected in timeseries");
-
-            cumul += daysPerMonth;
         }
 
         ++progression;

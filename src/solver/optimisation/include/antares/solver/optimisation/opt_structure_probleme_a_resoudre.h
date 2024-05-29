@@ -31,15 +31,6 @@
 
 /*--------------------------------------------------------------------------------------*/
 
-namespace Antares::Solver::Optimization
-{
-struct OptimizationOptions
-{
-    bool useOrtools;
-    std::string solverName;
-};
-} // namespace Antares::Solver::Optimization
-
 /* Le probleme a resoudre */
 struct PROBLEME_ANTARES_A_RESOUDRE
 {

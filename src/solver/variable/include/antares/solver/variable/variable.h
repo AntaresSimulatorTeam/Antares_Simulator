@@ -66,12 +66,8 @@ public:
     //! Results
     typedef typename Storage<VCardT>::ResultsType StoredResultType;
 
-    // Default values
-    enum
-    {
-        categoryDataLevel = VCardType::categoryDataLevel,
-        categoryFileLevel = VCardType::categoryFileLevel,
-    };
+    static constexpr uint8_t categoryDataLevel = VCardType::categoryDataLevel;
+    static constexpr uint8_t categoryFileLevel = VCardType::categoryFileLevel;
 
     template<int CDataLevel, int CFile>
     struct Statistics
@@ -221,7 +217,7 @@ public:
     void yearEnd(uint year);
 
     template<class V>
-    void yearEndSpatialAggregates(V& allVars, uint year);
+    void yearEndSpatialAggregates(V& allVars, uint year, unsigned int numSpace);
 
     template<class V, class SetT>
     void yearEndSpatialAggregates(V& allVars, uint year, const SetT& set);

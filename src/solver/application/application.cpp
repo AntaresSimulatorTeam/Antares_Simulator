@@ -46,6 +46,8 @@
 
 using namespace Antares::Check;
 
+namespace fs = std::filesystem;
+
 namespace
 {
 void printSolvers()
@@ -141,6 +143,10 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     {
         loadingException = std::current_exception();
     }
+
+    // For solver
+    study.parameters.optOptions = options.optOptions;
+
     // This settings can only be enabled from the solver
     // Prepare the output for the study
     study.prepareOutput();
@@ -278,8 +284,8 @@ void Application::postParametersChecks() const
 { // Some more checks require the existence of pParameters, hence of a study.
     // Their execution is delayed up to this point.
     checkOrtoolsUsage(pParameters->unitCommitment.ucMode,
-                      pParameters->ortoolsUsed,
-                      pParameters->ortoolsSolver);
+                      pParameters->optOptions.ortoolsUsed,
+                      pParameters->optOptions.ortoolsSolver);
 
     checkSimplexRangeHydroPricing(pParameters->simplexOptimizationRange,
                                   pParameters->hydroPricing.hpMode);
@@ -417,30 +423,39 @@ void Application::runSimulationInAdequacyMode()
                                         pOptimizationInfo);
 }
 
+static std::string timeToString()
+{
+    using namespace std::chrono;
+    auto time = system_clock::to_time_t(system_clock::now());
+    std::tm local_time = *std::localtime(&time);
+
+    char time_buffer[256];
+    std::strftime(time_buffer, sizeof(time_buffer), "%Y%m%d-%H%M%S", &local_time);
+
+    std::string currentTime = time_buffer;
+
+    return currentTime;
+}
+
 void Application::resetLogFilename() const
 {
-    // Assigning the log file
-    Yuni::String logfile;
-    logfile << pSettings.studyFolder << Yuni::IO::Separator << "logs";
+    fs::path logfile = fs::path(pSettings.studyFolder.c_str()) / "logs";
 
-    // Making sure that the folder
-    if (!Yuni::IO::Directory::Create(logfile))
+    if (!fs::exists(logfile) && !fs::create_directory(logfile))
     {
-        throw FatalError(std::string("Impossible to create the log folder at ") + logfile.c_str()
+        throw FatalError(std::string("Impossible to create the log folder at ") + logfile.string()
                          + ". Aborting now.");
     }
 
-    // Date/time
-    logfile << Yuni::IO::Separator << "solver-";
-    Yuni::DateTime::TimestampToString(logfile, "%Y%m%d-%H%M%S", 0, false);
-    logfile << ".log";
+    logfile /= "solver-";               // append the filename
+    logfile += timeToString() + ".log"; // complete filename with timestamp and extension
 
     // Assigning the log filename
-    logs.logfile(logfile);
+    logs.logfile(logfile.string());
 
     if (!logs.logfileIsOpened())
     {
-        throw FatalError(std::string("Impossible to create the log file at ") + logfile.c_str());
+        throw FatalError(std::string("Impossible to create the log file at ") + logfile.string());
     }
 }
 

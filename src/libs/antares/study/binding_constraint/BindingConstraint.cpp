@@ -156,7 +156,7 @@ void BindingConstraint::name(const AnyString& newname)
 void BindingConstraint::pId(const AnyString& name)
 {
     pID.clear();
-    Antares::TransformNameIntoID(name, pID);
+    pID = transformNameIntoID(name);
 }
 
 void BindingConstraint::weight(const AreaLink* lnk, double w)

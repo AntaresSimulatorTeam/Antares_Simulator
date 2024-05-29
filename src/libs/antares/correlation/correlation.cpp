@@ -249,12 +249,12 @@ int InterAreaCorrelationLoadFromIniFile(Matrix<>* m, AreaList* l, IniFile* ini, 
     return 0;
 }
 
-int InterAreaCorrelationLoadFromFile(Matrix<>* m, AreaList* l, const char filename[])
+int InterAreaCorrelationLoadFromFile(Matrix<>* m, AreaList* l, const std::string& filename)
 {
     /* Asserts */
     assert(m);
     assert(l);
-    assert(filename);
+    assert(!filename.empty());
 
     InterAreaCorrelationResetMatrix(m, l);
     IniFile ini;

@@ -30,6 +30,7 @@
 
 #include <antares/date/date.h>
 #include <antares/inifile/inifile.h>
+#include <antares/optimization-options/options.h>
 #include <antares/study/UnfeasibleProblemBehavior.hpp>
 #include <antares/writer/result_format.h>
 #include "antares/antares/antares.h"
@@ -142,6 +143,11 @@ public:
     void resetAdqPatchParameters();
 
     /*!
+    ** \brief Handle priority between command-line option and configuration file
+    */
+    void handleOptimizationOptions(const StudyLoadOptions& options);
+
+    /*!
     ** \brief Try to detect then fix any bad value
     */
     void fixBadValues();
@@ -156,12 +162,6 @@ public:
     *         for NTC
     */
     void fixGenRefreshForNTC();
-
-    /*!
-    ** \brief Try to detect then fix TS generation/refresh parameters
-    *         for Hydro Max Power
-    */
-    void fixGenRefreshForHydroMaxPower();
 
     /*!
     ** \brief Get the amount of memory used by the general data
@@ -517,25 +517,20 @@ public:
     uint seed[seedMax];
     //@}
 
-    //! \name Ortools configuration
-    //@{
-    //! Define if ortools is used
-    bool ortoolsUsed;
-    //! Ortool solver used for simulation
-    std::string ortoolsSolver;
-    //@}
     // Format of results. Currently, only single files or zip archive are supported
     ResultFormat resultFormat = legacyFilesDirectories;
 
     // Naming constraints and variables in problems
     bool namedProblems;
 
-    // solver logs
-    bool solverLogs;
+    // All options related to optimization
+    Antares::Solver::Optimization::OptimizationOptions optOptions;
 
 private:
     //! Load data from an INI file
-    bool loadFromINI(const IniFile& ini, StudyVersion& version, const StudyLoadOptions& options);
+    bool loadFromINI(const IniFile& ini,
+                     const StudyVersion& version,
+                     const StudyLoadOptions& options);
 
     void resetPlayedYears(uint nbOfYears);
 

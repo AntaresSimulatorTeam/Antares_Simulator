@@ -31,43 +31,41 @@ namespace Variable
 {
 namespace Category
 {
-enum DataLevel
+namespace DataLevel
 {
-    //! Data that belong to a single area
-    area = 1,
-    //! Data that belong to a thermal dispatchable cluster
-    thermalAggregate = 2,
-    //! Data that belong to a link
-    link = 4,
-    //! Data that belong to a set
-    setOfAreas = 8,
-    // Data belonging to a binding constraint
-    bindingConstraint = 16,
-    //! The maximum available level
-    maxDataLevel = 16,
-    //! All data level
-    allDataLevel = area | thermalAggregate | link | setOfAreas | bindingConstraint
-};
+//! Data that belong to a single area
+constexpr uint8_t area = 1;
+//! Data that belong to a thermal dispatchable cluster
+constexpr uint8_t thermalAggregate = 2;
+//! Data that belong to a link
+constexpr uint8_t link = 4;
+//! Data that belong to a set
+constexpr uint8_t setOfAreas = 8;
+// Data belonging to a binding constraint
+constexpr uint8_t bindingConstraint = 16;
+//! The maximum available level
+constexpr uint8_t maxDataLevel = 16;
+} // namespace DataLevel
 
-enum File
+namespace FileLevel
 {
-    //! Values of physical variables
-    va = 1,
-    //! Reference numbers
-    id = 2,
-    //! Detailed values regarding thermal generation
-    de = 4,
-    //! Detailed values regarding RES generation
-    de_res = 8,
-    //! Detailed values regarding binding constraints
-    bc = 16,
-    //! Detailed values regarding short term storage
-    de_sts = 32,
-    //! The maximum available value
-    maxFileLevel = 32,
-    //! All file level
-    allFile = va | id | de | de_res | bc | de_sts,
-};
+//! Values of physical variables
+constexpr uint8_t va = 1;
+//! Reference numbers
+constexpr uint8_t id = 2;
+//! Detailed values regarding thermal generation
+constexpr uint8_t de = 4;
+//! Detailed values regarding RES generation
+constexpr uint8_t de_res = 8;
+//! Detailed values regarding binding constraints
+constexpr uint8_t bc = 16;
+//! Detailed values regarding short term storage
+constexpr uint8_t de_sts = 32;
+//! The maximum available value
+constexpr uint8_t maxFileLevel = 32;
+//! All file level
+constexpr uint8_t allFile = va | id | de | de_res | bc | de_sts;
+}; // namespace FileLevel
 
 enum Precision
 {
@@ -150,7 +148,7 @@ enum SpatialAggregatePostProcessing
 */
 static inline uint MaxDecimalPrecision(uint fileLevel)
 {
-    return (fileLevel != id) ? 2u : 0u;
+    return (fileLevel != FileLevel::id) ? 2u : 0u;
 }
 
 template<int Index, int Limit>
@@ -167,6 +165,7 @@ inline void DataLevelToStream(StreamT& out, int dataLevel)
 {
     switch (dataLevel)
     {
+        using namespace DataLevel;
     case area:
         out += "area";
         break;
@@ -189,6 +188,7 @@ inline void FileLevelToStreamShort(StreamT& out, int fileLevel)
 {
     switch (fileLevel)
     {
+        using namespace FileLevel;
     case va:
         out += "va";
         break;
@@ -217,6 +217,7 @@ inline void FileLevelToStream(StreamT& out, int fileLevel)
 {
     switch (fileLevel)
     {
+        using namespace FileLevel;
     case va:
         out += "values";
         break;

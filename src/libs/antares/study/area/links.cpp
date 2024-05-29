@@ -37,16 +37,7 @@
 using namespace Yuni;
 using namespace Antares;
 
-namespace // anonymous
-{
-struct TSNumbersPredicate
-{
-    uint32_t operator()(uint32_t value) const
-    {
-        return value + 1;
-    }
-};
-} // namespace
+namespace fs = std::filesystem;
 
 #define SEP (IO::Separator)
 
@@ -79,6 +70,9 @@ AreaLink::AreaLink():
     style(stPlain),
     linkWidth(1)
 {
+    timeseriesNumbers.registerSeries(&directCapacities, "direct-capacity");
+    timeseriesNumbers.registerSeries(&indirectCapacities, "indirect-capacity");
+
     directCapacities.reset();
     indirectCapacities.reset();
 }
@@ -262,13 +256,12 @@ bool AreaLink::loadTimeSeries(const StudyVersion& version, const AnyString& fold
 void AreaLink::storeTimeseriesNumbers(Solver::IResultWriter& writer) const
 {
     Clob path;
-    TSNumbersPredicate predicate;
     std::string buffer;
 
     path << "ts-numbers" << SEP << DIRECTORY_NAME_FOR_TRANSMISSION_CAPACITIES << SEP << from->id
          << SEP << with->id << ".txt";
 
-    timeseriesNumbers.saveToBuffer(buffer, 0, true, predicate, true);
+    timeseriesNumbers.saveToBuffer(buffer);
     writer.addEntryFromBuffer(path.c_str(), buffer);
 }
 
@@ -607,23 +600,18 @@ bool AreaLinksInternalLoadFromProperty(AreaLink& link, const String& key, const 
 }
 } // anonymous namespace
 
-bool AreaLinksLoadFromFolder(const Study& study,
-                             AreaList* l,
-                             Area* area,
-                             const AnyString& folder,
-                             bool loadTSGen)
+bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const fs::path& folder, bool loadTSGen)
 {
     // Assert
     assert(area);
 
     /* Initialize */
-    String buffer;
-    buffer << folder << SEP << "properties.ini";
+    fs::path path = folder / "properties.ini";
 
     IniFile ini;
-    if (!ini.open(buffer))
+    if (!ini.open(path))
     {
-        return 0;
+        return false;
     }
 
     bool ret = true;
@@ -634,8 +622,7 @@ bool AreaLinksLoadFromFolder(const Study& study,
     for (auto* s = ini.firstSection; s; s = s->next)
     {
         // Getting the name of the area
-        buffer.clear();
-        TransformNameIntoID(s->name, buffer);
+        std::string buffer = transformNameIntoID(s->name);
 
         // Trying to find it
         Area* linkedWith = AreaListLFind(l, buffer.c_str());
@@ -656,12 +643,11 @@ bool AreaLinksLoadFromFolder(const Study& study,
         link.comments.clear();
         link.displayComments = true;
 
-        ret = link.loadTimeSeries(study.header.version, folder) && ret;
+        ret = link.loadTimeSeries(study.header.version, folder.string()) && ret;
 
         // Checks on loaded link's data
         if (study.usedByTheSolver)
         {
-            // Short names for link's properties
             const uint nbDirectTS = link.directCapacities.timeSeries.width;
             const uint nbIndirectTS = link.indirectCapacities.timeSeries.width;
             if (nbDirectTS != nbIndirectTS)
@@ -742,7 +728,7 @@ bool AreaLinksLoadFromFolder(const Study& study,
 
         if (loadTSGen)
         {
-            ret = link.loadTSGenTimeSeries(folder) && ret;
+            ret = link.loadTSGenTimeSeries(folder.string()) && ret;
         }
 
         // From the solver only

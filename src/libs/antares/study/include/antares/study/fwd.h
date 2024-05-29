@@ -200,7 +200,7 @@ std::string styleToString(const StyleType& style);
 **
 ** These values are mainly used for mask bits
 */
-static const unsigned int timeSeriesCount = 8;
+static const unsigned int timeSeriesCount = 7;
 
 enum TimeSeriesType : unsigned int
 {
@@ -218,8 +218,6 @@ enum TimeSeriesType : unsigned int
     timeSeriesRenewable = 32,
     //! TimeSeries : Renewable
     timeSeriesTransmissionCapacities = 64,
-    //! TimeSeries : Hydro Max Power
-    timeSeriesHydroMaxPower = 128,
     // ***********************************************************************
     // Please update the constant timeSeriesCount if you add / remove an item
     // ***********************************************************************
@@ -369,13 +367,10 @@ enum SeedIndex
     seedMax,
 };
 
-enum
-{
-    //! A default seed for random number generators
-    antaresSeedDefaultValue = 5489,
-    //! Increment for RNG (generators) with a different seed
-    antaresSeedIncrement = 1000000, // arbitrary value
-};
+//! A default seed for random number generators
+constexpr unsigned antaresSeedDefaultValue = 5489;
+//! Increment for RNG (generators) with a different seed
+constexpr unsigned antaresSeedIncrement = 1000000; // arbitrary value
 
 /*!
 ** \brief Convert a seed into a string

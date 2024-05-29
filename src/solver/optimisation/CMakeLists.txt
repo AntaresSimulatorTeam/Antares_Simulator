@@ -192,11 +192,12 @@ else ()
     #set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS} /wd 4101") # unused local variable
 endif ()
 target_link_libraries(model_antares
-        PUBLIC
-        Antares::solverUtils
-        sirius_solver
-        antares-solver-simulation
-        Antares::benchmarking
+		PUBLIC
+		Antares::solverUtils
+		sirius_solver
+		antares-solver-simulation
+		Antares::benchmarking
+        Antares::optimization-options
 		PRIVATE
 		infeasible_problem_analysis
 )
