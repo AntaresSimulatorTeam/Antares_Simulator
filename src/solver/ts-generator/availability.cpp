@@ -692,13 +692,22 @@ bool generateLinkTimeSeries(Data::Study& study,
             return false;
         }
 
+        // DIRECT
         AvailabilityTSGeneratorData tsConfigDataDirect(tsGenStruct, ts, tsGenStruct.modulationCapacityDirect, link->with->name);
 
         generator.generateTS(*link->from, tsConfigDataDirect);
 
         std::string filePath = savePath + SEP + link->from->id + SEP + link->with->id.c_str()
                                + "_direct.txt";
+        writeResultsToDisk(study, writer, ts.timeSeries, filePath);
 
+        // INDIRECT
+        AvailabilityTSGeneratorData tsConfigDataIndirect(tsGenStruct, ts, tsGenStruct.modulationCapacityIndirect, link->with->name);
+
+        generator.generateTS(*link->from, tsConfigDataIndirect);
+
+        filePath = savePath + SEP + link->from->id + SEP + link->with->id.c_str()
+                               + "_indirect.txt";
         writeResultsToDisk(study, writer, ts.timeSeries, filePath);
     }
 

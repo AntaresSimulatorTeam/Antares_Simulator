@@ -126,10 +126,8 @@ TSGenerator::listOfLinks getLinksToGen(Data::AreaList& areas, const std::string&
             logs.warning() << "Link not found: " << areaFromID << "/" << areaWithID;
             continue;
         }
-        auto direction = (link->from->id == areaFromID) ? TSGenerator::linkDirection::direct
-                                                        : TSGenerator::linkDirection::indirect;
 
-        links.emplace_back(link, direction);
+        links.emplace_back(link);
     }
 
     return links;
@@ -224,7 +222,7 @@ int main(int argc, char* argv[])
 
     for (auto& l: links)
     {
-        logs.debug() << l.first->getName();
+        logs.debug() << l->getName();
     }
 
     bool ret = TSGenerator::generateThermalTimeSeries(*study,
