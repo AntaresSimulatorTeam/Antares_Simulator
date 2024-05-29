@@ -156,10 +156,12 @@ inline void IVariable<ChildT, NextT, VCardT>::yearEnd(uint year)
 
 template<class ChildT, class NextT, class VCardT>
 template<class V>
-inline void IVariable<ChildT, NextT, VCardT>::yearEndSpatialAggregates(V& allVars, uint year)
+inline void IVariable<ChildT, NextT, VCardT>::yearEndSpatialAggregates(V& allVars,
+                                                                       uint year,
+                                                                       unsigned int numSpace)
 {
     // Next variable
-    NextType::template yearEndSpatialAggregates(allVars, year);
+    NextType::template yearEndSpatialAggregates(allVars, year, numSpace);
 }
 
 template<class ChildT, class NextT, class VCardT>
@@ -331,9 +333,9 @@ inline void IVariable<ChildT, NextT, VCardT>::buildDigest(SurveyResults& results
 {
     // Generate the Digest for the local results (areas part)
     if (VCardType::columnCount != 0
-        && (VCardType::categoryDataLevel & Category::setOfAreas
-            || VCardType::categoryDataLevel & Category::area
-            || VCardType::categoryDataLevel & Category::link))
+        && (VCardType::categoryDataLevel & Category::DataLevel::setOfAreas
+            || VCardType::categoryDataLevel & Category::DataLevel::area
+            || VCardType::categoryDataLevel & Category::DataLevel::link))
     {
         // Initializing pointer on variable non applicable and print stati arrays to beginning
         results.isPrinted = isPrinted;
@@ -358,7 +360,7 @@ template<class ChildT, class NextT, class VCardT>
 inline uint64_t IVariable<ChildT, NextT, VCardT>::memoryUsage() const
 {
     uint64_t r = VariableAccessorType::Value(pResults);
-    if ((int)VCardT::columnCount != (int)Category::dynamicColumns)
+    if (VCardT::columnCount != (int)Category::dynamicColumns)
     {
         // Intermediate values
         if (VCardT::hasIntermediateValues)

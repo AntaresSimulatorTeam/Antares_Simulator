@@ -186,7 +186,7 @@ void InterAreaCorrelationResetMatrix(Matrix<>* m, AreaList* l);
 ** \param filename The filename to use to load values
 ** \return A non-zero value if the matrix has been loaded, 0 otherwise
 */
-int InterAreaCorrelationLoadFromFile(Matrix<>* m, AreaList* l, const char filename[]);
+int InterAreaCorrelationLoadFromFile(Matrix<>* m, AreaList* l, const std::string& filename);
 
 /*!
 ** \brief Save an inter-area correlation matrix to a file

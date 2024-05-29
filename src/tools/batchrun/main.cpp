@@ -45,6 +45,8 @@
 using namespace Yuni;
 using namespace Antares;
 
+namespace fs = std::filesystem;
+
 namespace // anonymous
 {
 class MyStudyFinder final: public Data::StudyFinder
@@ -233,10 +235,9 @@ int main(int argc, char* argv[])
         }
         else
         {
-            String tmp;
-            IO::MakeAbsolute(tmp, *optSolver);
-            IO::Normalize(solver, tmp);
-            if (not IO::File::Exists(solver))
+            std::string tmp = *optSolver;
+            fs::path solverPath = fs::absolute(tmp).lexically_normal();
+            if (!fs::exists(solverPath))
             {
                 logs.fatal() << "The solver has not been found. specify --solver=" << solver;
                 return EXIT_FAILURE;

@@ -62,7 +62,7 @@ bool BindingConstraintsTSNumberData::apply(Study& study)
     return std::all_of(
       rules_.begin(),
       rules_.end(),
-      [&study, this](const std::pair<std::string, MatrixType>& args)
+      [&study, this](const auto& args)
       {
           const auto& [groupName, tsNumbers] = args;
           auto group = study.bindingConstraintsGroups[groupName];
@@ -84,9 +84,8 @@ bool BindingConstraintsTSNumberData::reset(const Study& study)
                   study.bindingConstraintsGroups.end(),
                   [&](const auto& group)
                   {
-                      MatrixType& ts_numbers = rules_[group->name()];
-                      ts_numbers.resize(1, nbYears);
-                      ts_numbers.fillColumn(0, 0);
+                      auto& ts_numbers = rules_[group->name()];
+                      ts_numbers.reset(1, nbYears);
                   });
     return true;
 }

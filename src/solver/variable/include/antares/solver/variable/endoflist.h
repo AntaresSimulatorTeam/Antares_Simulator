@@ -138,7 +138,7 @@ public:
         UNUSED_VARIABLE(numSpace);
     }
 
-    static void yearEndBuild(State&, unsigned int)
+    static void yearEndBuild(State&, unsigned int, unsigned int)
     {
     }
 
@@ -165,12 +165,14 @@ public:
     }
 
     template<class V>
-    void computeSpatialAggregatesSummary(V&, std::map<unsigned int, unsigned int>&, unsigned int)
+    static void computeSpatialAggregatesSummary(V&,
+                                                std::map<unsigned int, unsigned int>&,
+                                                unsigned int)
     {
     }
 
     template<class V>
-    void simulationEndSpatialAggregates(V&)
+    static void simulationEndSpatialAggregates(V&)
     {
     }
 
@@ -245,6 +247,13 @@ public:
     template<class SearchVCardT, class O>
     static void computeSpatialAggregateWith(O&, const Data::Area*)
     {
+        assert(false);
+    }
+
+    template<class SearchVCardT, class O>
+    static void computeSpatialAggregateWith(O&, const Data::Area*, uint numSpace)
+    {
+        UNUSED_VARIABLE(numSpace);
         assert(false);
     }
 

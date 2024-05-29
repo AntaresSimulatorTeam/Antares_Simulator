@@ -48,7 +48,6 @@ PartHydro::PartHydro():
     leewayLowerBound(1.),
     leewayUpperBound(1.),
     pumpingEfficiency(1.),
-    hydroModulable(false),
     prepro(nullptr),
     series(nullptr)
 {

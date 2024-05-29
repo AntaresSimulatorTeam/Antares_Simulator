@@ -224,8 +224,7 @@ public:
     /*!
     ** \brief Load a rule set from an INI File
     */
-    template<class StringT>
-    bool loadFromFile(const StringT& filename);
+    bool loadFromFile(const std::filesystem::path& filename);
 
     template<class StringT>
     bool saveToFile(const StringT& filename) const;
@@ -264,22 +263,6 @@ public:
 
     T& operator[](uint i);
     const T& operator[](uint i) const;
-    /*
-                    void changeTextFile(YString filename) {
-                            if (IO::File::LoadFromFile(pFileContents, filename)) {
-                                    pFileContents = NULL;
-                            }
-                    }
-
-                    YString getFileContents() {
-                            if (pFileContents!=NULL) {
-                                    YString ret;
-                                    ret << pFileContents;
-                                    return ret;
-                            }
-                            else return NULL;
-                    }
-                    */
 
 private:
     //! All groups

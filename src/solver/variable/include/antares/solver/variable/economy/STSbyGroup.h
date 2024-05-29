@@ -81,29 +81,28 @@ struct VCardSTSbyGroup
     //! The VCard to look for for calculating spatial aggregates
     typedef VCardSTSbyGroup VCardForSpatialAggregate;
 
-    enum
-    {
-        //! Data Level
-        categoryDataLevel = Category::area,
-        //! File level (provided by the type of the results)
-        categoryFileLevel = ResultsType::categoryFile & (Category::id | Category::va),
-        //! Precision (views)
-        precision = Category::all,
-        //! Indentation (GUI)
-        nodeDepthForGUI = +0,
-        //! Decimal precision
-        decimal = 0,
-        // Nb of columns occupied by this variable in year-by-year results
-        columnCount = Category::dynamicColumns,
-        //! The Spatial aggregation
-        spatialAggregate = Category::spatialAggregateSum,
-        spatialAggregateMode = Category::spatialAggregateEachYear,
-        spatialAggregatePostProcessing = 0,
-        //! Intermediate values
-        hasIntermediateValues = 1,
-        //! Can this variable be non applicable (0 : no, 1 : yes)
-        isPossiblyNonApplicable = 0,
-    };
+    //! Data Level
+    static constexpr uint8_t categoryDataLevel = Category::DataLevel::area;
+    //! File level (provided by the type of the results)
+    static constexpr uint8_t categoryFileLevel = ResultsType::categoryFile
+                                                 & (Category::FileLevel::id
+                                                    | Category::FileLevel::va);
+    //! Precision (views)
+    static constexpr uint8_t precision = Category::all;
+    //! Indentation (GUI)
+    static constexpr uint8_t nodeDepthForGUI = +0;
+    //! Decimal precision
+    static constexpr uint8_t decimal = 0;
+    // Nb of columns occupied by this variable in year-by-year results
+    static constexpr int columnCount = Category::dynamicColumns;
+    //! The Spatial aggregation
+    static constexpr uint8_t spatialAggregate = Category::spatialAggregateSum;
+    static constexpr uint8_t spatialAggregateMode = Category::spatialAggregateEachYear;
+    static constexpr uint8_t spatialAggregatePostProcessing = 0;
+    //! Intermediate values
+    static constexpr uint8_t hasIntermediateValues = 1;
+    //! Can this variable be non applicable (0 : no, 1 : yes)
+    static constexpr uint8_t isPossiblyNonApplicable = 0;
 
     typedef IntermediateValues IntermediateValuesDeepType;
     typedef IntermediateValues* IntermediateValuesBaseType;
@@ -398,32 +397,31 @@ public:
                            int fileLevel,
                            int precision) const
     {
-        // Building syntheses results
+        // Building synthesis results
         // ------------------------------
-        if (!AncestorType::isPrinted[0])
-        {
-            return;
-        }
 
-        // And only if we match the current data level _and_ precision level
-        if ((dataLevel & VCardType::categoryDataLevel) && (fileLevel & VCardType::categoryFileLevel)
-            && (precision & VCardType::precision))
+        if (AncestorType::isPrinted[0])
         {
-            results.isCurrentVarNA[0] = AncestorType::isNonApplicable[0];
-
-            for (unsigned int column = 0; column < nbColumns_; column++)
+            // And only if we match the current data level _and_ precision level
+            if ((dataLevel & VCardType::categoryDataLevel)
+                && (fileLevel & VCardType::categoryFileLevel) && (precision & VCardType::precision))
             {
-                results.variableCaption = caption(column);
-                results.variableUnit = unit(column);
-                AncestorType::pResults[column].template buildSurveyReport<ResultsType, VCardType>(
-                  results,
-                  AncestorType::pResults[column],
-                  dataLevel,
-                  fileLevel,
-                  precision);
+                results.isCurrentVarNA[0] = AncestorType::isNonApplicable[0];
+
+                for (unsigned int column = 0; column < nbColumns_; column++)
+                {
+                    results.variableCaption = caption(column);
+                    results.variableUnit = unit(column);
+                    AncestorType::pResults[column]
+                      .template buildSurveyReport<ResultsType, VCardType>(
+                        results,
+                        AncestorType::pResults[column],
+                        dataLevel,
+                        fileLevel,
+                        precision);
+                }
             }
         }
-
         // Ask to the next item in the static list to export its results as well
         NextType::buildSurveyReport(results, dataLevel, fileLevel, precision);
     }

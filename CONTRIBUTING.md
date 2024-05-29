@@ -15,7 +15,7 @@ Antares Simulator team will be pleased to have developers join our project.
 
 You can find all the steps needed to build & install Antares Simulator in 
 the [documentation website](https://antares-simulator.readthedocs.io/)
-or [its sources](docs/build/0-Introduction.md).
+or [its sources](docs/developer-guide/0-Introduction.md).
 
 ### Branch names
 Currently, CI is run only for specific branch names:

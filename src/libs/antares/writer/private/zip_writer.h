@@ -83,7 +83,8 @@ public:
     virtual ~ZipWriter();
     void addEntryFromBuffer(const std::string& entryPath, Yuni::Clob& entryContent) override;
     void addEntryFromBuffer(const std::string& entryPath, std::string& entryContent) override;
-    void addEntryFromFile(const std::string& entryPath, const std::string& filePath) override;
+    void addEntryFromFile(const std::filesystem::path& entryPath,
+                          const std::filesystem::path& filePath) override;
     void flush() override;
     bool needsTheJobQueue() const override;
     void finalize(bool verbose) override;
