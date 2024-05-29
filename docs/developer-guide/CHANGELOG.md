@@ -4,13 +4,24 @@ toc_depth: 2
 
 # Antares Changelog
 
-
-9.1.0
+9.1.0 (06/2024)
 --------------------
 ## New features
 * Scenarized & hourly values for hydro pumping and hydro generation. Previously this data was not scenarized and daily.
 * STS groups are now "dynamic" : group names are no longer fixed by code, user is free to define these groups.
 * Add optimization options from command line in OR-Tools / XPRESS (#1837)
+
+8.8.4 (03/2024)
+--------------------
+## Bugfix
+* Adequacy patch CSR - fix DTG MRG (#1982)
+* Fix ts numbers for no gen clusters (#1969)
+* Remove unitcount limit for time series generation (#1960)
+
+8.8.3 (02/2024)
+--------------------
+## Bugfix
+* Fix an issue where depending on the platform the output archive could contain several entries of the same area and inrco files
 
 ## Improvements
 * Remove sc-builder prefix "hgp", use "h" instead for max hydro pumping & generation timeseries.
