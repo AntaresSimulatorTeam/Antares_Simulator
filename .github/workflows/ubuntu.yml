@@ -67,7 +67,6 @@ jobs:
         with:
           key: ${{ env.os }}
 
-
       - name: Init VCPKG submodule
         run: |
           git submodule update --init vcpkg
@@ -169,11 +168,7 @@ jobs:
            -DCMAKE_CXX_COMPILER=/usr/bin/g++-10 \
            -DCMAKE_BUILD_TYPE=Release \
            -DBUILD_TESTING=ON \
-           -DCMAKE_PREFIX_PATH="${{github.workspace}}/install;\
-            ${{ env.ORTOOLS_DIR }}/install;\
-            ${{github.workspace}}/antares_install;\
-            ${{github.workspace}}/rte-antares-deps-Release;\
-            ${{github.workspace}}/_build/vcpkg_installed/x64-linux"
+           -DCMAKE_PREFIX_PATH="${{github.workspace}}/install;${{ env.ORTOOLS_DIR }}/install;${{github.workspace}}/antares_install;${{github.workspace}}/rte-antares-deps-Release;${{github.workspace}}/_build/vcpkg_installed/x64-linux"
            cmake --build _build -j$(nproc)
            cd _build
            ctest -C Release --output-on-failure
