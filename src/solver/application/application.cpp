@@ -44,6 +44,7 @@
 #include "antares/solver/simulation/timeseries-numbers.h"
 #include "antares/solver/utils/ortools_utils.h"
 #include "antares/study/simulation.h"
+#include "antares/solver/simulation/apply-scenario.h"
 
 using namespace Antares::Check;
 
@@ -148,7 +149,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
         // ///!\ important
         if (study.parameters.useCustomScenario)
         {
-            ApplyCustomScenario(study);
+            Antares::Solver::ApplyCustomScenario(study);
         }
         /// faire le check de l'hydro ici
         //**fin*/
