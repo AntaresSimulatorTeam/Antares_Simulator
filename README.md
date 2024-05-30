@@ -29,14 +29,14 @@ In May 2018, RTE decided to release the project under the GPLv3 license.
 In January 2024, RTE, as the exclusive copyright owner, decided to switch from the GPLv3 to the MPLv2 license,
 starting with the 9.0 version of Antares Simulator.
 
-The GUI is deprecated in favor of [Antares Web](https://github.com/AntaresSimulatorTeam/AntaREST).
+The GUI is deprecated in favor of [Antares Web](https://antares-web.readthedocs.io).
 
 # Links:
 
 - Antares website:  https://antares-simulator.org
 - RTE web site : http://www.rte-france.com/
 - Doxygen code documentation: https://antaressimulatorteam.github.io/Antares_Simulator/doxygen
-- Antares Web: https://github.com/AntaresSimulatorTeam/AntaREST
+- Antares Web: https://antares-web.readthedocs.io
 
 # Installation
 
@@ -49,7 +49,7 @@ This software suite has been tested under:
 
 Antares Simulator is built using CMake.
 For installation instructions, please visit the [documentation website](https://antares-simulator.readthedocs.io/) 
-or [its sources](docs/build/0-Introduction.md).
+or [its sources](docs/developer-guide/0-Introduction.md).
 
 # Source Code Content
 

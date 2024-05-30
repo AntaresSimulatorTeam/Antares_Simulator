@@ -10,6 +10,7 @@ target_link_libraries(timeseries-tests
                       PRIVATE
                       Boost::unit_test_framework
                       Antares::series
+                      antares-solver-simulation
 )
 
 # Storing timeseries-tests under the folder Unit-tests in the IDE

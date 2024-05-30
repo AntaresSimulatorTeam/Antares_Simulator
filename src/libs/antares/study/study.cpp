@@ -1,23 +1,23 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 
 #include "antares/study/study.h"
 
@@ -45,6 +45,8 @@
 #include "antares/utils/utils.h"
 
 using namespace Yuni;
+
+namespace fs = std::filesystem;
 
 namespace Antares::Data
 {
@@ -659,6 +661,11 @@ YString StudyCreateOutputPath(SimulationMode mode,
                               const YString& label,
                               int64_t startTime)
 {
+    if (fmt == ResultFormat::inMemory)
+    {
+        return "no_output";
+    }
+
     auto suffix = getOutputSuffix(fmt);
 
     YString folderOutput;
@@ -683,29 +690,23 @@ YString StudyCreateOutputPath(SimulationMode mode,
         break;
     }
 
-    // Temporary buffer
-    String buffer;
-    buffer.reserve(1024);
-
     // Folder output
     if (not label.empty())
     {
-        buffer.clear();
-        TransformNameIntoID(label, buffer);
-        folderOutput << '-' << buffer;
+        folderOutput << '-' << transformNameIntoID(label);
     }
 
-    buffer.clear() << folderOutput << suffix;
+    std::string outpath = folderOutput + suffix;
     // avoid creating the same output twice
-    if (IO::Exists(buffer))
+    if (fs::exists(outpath))
     {
-        String newpath;
+        std::string newpath;
         uint index = 1; // will start from 2
         do
         {
             ++index;
-            newpath.clear() << folderOutput << '-' << index << suffix;
-        } while (IO::Exists(newpath) and index < 2000);
+            newpath = folderOutput + '-' + std::to_string(index) + suffix;
+        } while (fs::exists(newpath) and index < 2000);
 
         folderOutput << '-' << index;
     }
@@ -746,9 +747,7 @@ void Study::saveAboutTheStudy(Solver::IResultWriter& resultWriter)
         Antares::IniFile ini;
         header.CopySettingsToIni(ini, false);
 
-        std::string writeBuffer;
-        ini.saveToString(writeBuffer);
-
+        std::string writeBuffer = ini.toString();
         resultWriter.addEntryFromBuffer(path.c_str(), writeBuffer);
     }
 
@@ -1014,8 +1013,7 @@ bool Study::areaRename(Area* area, AreaName newName)
     newName = beautifyname;
 
     // Preparing the new area ID
-    AreaName newid;
-    TransformNameIntoID(newName, newid);
+    AreaName newid = transformNameIntoID(newName);
     if (newid.empty())
     {
         return false;
@@ -1096,8 +1094,7 @@ bool Study::clusterRename(Cluster* cluster, ClusterName newName)
     newName = beautifyname.c_str();
 
     // Preparing the new area ID
-    ClusterName newID;
-    TransformNameIntoID(newName, newID);
+    ClusterName newID = transformNameIntoID(newName);
     if (newID.empty())
     {
         logs.error() << "invalid id transformation";
@@ -1403,7 +1400,7 @@ void Study::markAsModified() const
     setsOfLinks.markAsModified();
 }
 
-void Study::relocate(AnyString newFolder)
+void Study::relocate(const std::string& newFolder)
 {
     folder = newFolder;
     folderInput.clear() << newFolder << SEP << "input";

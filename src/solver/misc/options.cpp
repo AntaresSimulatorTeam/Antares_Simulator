@@ -22,14 +22,12 @@
 #include "antares/solver/misc/options.h"
 
 #include <algorithm>
+#include <fstream>
 #include <cassert>
 #include <limits>
 #include <string.h>
 
 #include <yuni/yuni.h>
-#include <yuni/core/system/process.h>
-#include <yuni/io/directory.h>
-#include <yuni/io/file.h>
 
 #include <antares/antares/constants.h>
 #include <antares/exception/AssertionError.hpp>
@@ -40,17 +38,16 @@
 #include "antares/config/config.h"
 #include "antares/solver/utils/ortools_utils.h"
 
-using namespace Yuni;
 using namespace Antares;
 using namespace Antares::Data;
 
-std::unique_ptr<GetOpt::Parser> CreateParser(Settings& settings, StudyLoadOptions& options)
+std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoadOptions& options)
 {
     settings.reset();
 
-    auto parser = std::unique_ptr<GetOpt::Parser>(new GetOpt::Parser());
+    auto parser = std::unique_ptr<Yuni::GetOpt::Parser>(new Yuni::GetOpt::Parser());
 
-    parser->addParagraph(String() << "Antares Solver v" << ANTARES_VERSION_PUB_STR << "\n");
+    parser->addParagraph(Yuni::String() << "Antares Solver v" << ANTARES_VERSION_PUB_STR << "\n");
 
     // Simulation mode
     parser->addParagraph("Simulation");
@@ -81,18 +78,27 @@ std::unique_ptr<GetOpt::Parser> CreateParser(Settings& settings, StudyLoadOption
 
     // add option for ortools use
     // --use-ortools
-    parser->addFlag(options.ortoolsUsed,
+    parser->addFlag(options.optOptions.ortoolsUsed,
                     ' ',
                     "use-ortools",
                     "Use ortools library to launch solver");
 
     //--ortools-solver
-    parser->add(options.ortoolsSolver,
+    parser->add(options.optOptions.ortoolsSolver,
                 ' ',
                 "ortools-solver",
                 "Ortools solver used for simulation (only available with use-ortools "
                 "option)\nAvailable solver list : "
                   + availableOrToolsSolversString());
+
+    //--xpress-parameters
+    parser->add(
+      options.optOptions.solverParameters,
+      ' ',
+      "solver-parameters",
+      "Set xpress solver specific parameters. The specified string must be wrapped into quotes: "
+      "--solver-parameters=\"param1 value1 param2 value2\". The syntax of parameters is solver "
+      "specfic, examples are given in Antares-Simulator online documentation.");
 
     parser->addParagraph("\nParameters");
     // --name
@@ -165,7 +171,7 @@ std::unique_ptr<GetOpt::Parser> CreateParser(Settings& settings, StudyLoadOption
                     "Export named constraints and variables in mps (both optim).");
 
     // --solver-logs
-    parser->addFlag(options.solverLogs, ' ', "solver-logs", "Print solver logs.");
+    parser->addFlag(options.optOptions.solverLogs, ' ', "solver-logs", "Print solver logs.");
 
     parser->addParagraph("\nMisc.");
     // --progress
@@ -201,10 +207,9 @@ void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOption
     const auto& optPID = settings.PID;
     if (!optPID.empty())
     {
-        IO::File::Stream pidfile;
-        if (pidfile.openRW(optPID))
+        if (std::ofstream pidfile(optPID); pidfile.is_open())
         {
-            pidfile << ProcessID();
+            pidfile << getpid();
         }
         else
         {
@@ -250,21 +255,7 @@ void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOption
     }
 
     options.checkForceSimulationMode();
-    checkOrtoolsSolver(options);
-
-    // PID
-    if (!optPID.empty())
-    {
-        IO::File::Stream pidfile;
-        if (pidfile.openRW(optPID))
-        {
-            pidfile << ProcessID();
-        }
-        else
-        {
-            throw Error::WritingPID(optPID);
-        }
-    }
+    checkOrtoolsSolver(options.optOptions);
 
     // no-output and force-zip-output
     if (settings.noOutput && settings.forceZipOutput)
@@ -273,25 +264,24 @@ void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOption
     }
 }
 
-void checkOrtoolsSolver(Data::StudyLoadOptions& options)
+void checkOrtoolsSolver(const Antares::Solver::Optimization::OptimizationOptions& optOptions)
 {
-    if (options.ortoolsUsed)
+    if (optOptions.ortoolsUsed)
     {
+        const std::string& solverName = optOptions.ortoolsSolver;
         const std::list<std::string> availableSolverList = getAvailableOrtoolsSolverName();
 
         // Check if solver is available
-        bool found = (std::find(availableSolverList.begin(),
-                                availableSolverList.end(),
-                                options.ortoolsSolver)
+        bool found = (std::find(availableSolverList.begin(), availableSolverList.end(), solverName)
                       != availableSolverList.end());
         if (!found)
         {
-            throw Error::InvalidSolver(options.ortoolsSolver, availableOrToolsSolversString());
+            throw Error::InvalidSolver(optOptions.ortoolsSolver, availableOrToolsSolversString());
         }
     }
 }
 
-void Settings::checkAndSetStudyFolder(Yuni::String folder)
+void Settings::checkAndSetStudyFolder(const std::string& folder)
 {
     // The study folder
     if (folder.empty())
@@ -300,18 +290,17 @@ void Settings::checkAndSetStudyFolder(Yuni::String folder)
     }
 
     // Making the path absolute
-    String abspath;
-    IO::MakeAbsolute(abspath, folder);
-    IO::Normalize(folder, abspath);
+    std::filesystem::path abspath = std::filesystem::absolute(folder);
+    abspath = abspath.lexically_normal();
 
     // Checking if the path exists
-    if (!IO::Directory::Exists(folder))
+    if (!std::filesystem::exists(abspath))
     {
         throw Error::StudyFolderDoesNotExist(folder);
     }
 
     // Copying the result
-    studyFolder = folder;
+    studyFolder = abspath.string();
 }
 
 void Settings::reset()

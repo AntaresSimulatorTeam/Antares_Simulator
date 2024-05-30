@@ -34,16 +34,7 @@
 using namespace Yuni;
 using namespace Antares;
 
-namespace // anonymous
-{
-struct TSNumbersPredicate
-{
-    uint32_t operator()(uint32_t value) const
-    {
-        return value + 1;
-    }
-};
-} // namespace
+namespace fs = std::filesystem;
 
 #define SEP (IO::Separator)
 
@@ -76,6 +67,9 @@ AreaLink::AreaLink():
     style(stPlain),
     linkWidth(1)
 {
+    timeseriesNumbers.registerSeries(&directCapacities, "direct-capacity");
+    timeseriesNumbers.registerSeries(&indirectCapacities, "indirect-capacity");
+
     directCapacities.reset();
     indirectCapacities.reset();
 }
@@ -179,9 +173,9 @@ void AreaLink::overrideTransmissionCapacityAccordingToGlobalParameter(
     }
 }
 
-bool AreaLink::loadTimeSeries(const Study& study, const AnyString& folder)
+bool AreaLink::loadTimeSeries(const StudyVersion& version, const AnyString& folder)
 {
-    if (study.header.version < StudyVersion(8, 2))
+    if (version < StudyVersion(8, 2))
     {
         return linkLoadTimeSeries_for_version_below_810(folder);
     }
@@ -194,13 +188,12 @@ bool AreaLink::loadTimeSeries(const Study& study, const AnyString& folder)
 void AreaLink::storeTimeseriesNumbers(Solver::IResultWriter& writer) const
 {
     Clob path;
-    TSNumbersPredicate predicate;
     std::string buffer;
 
     path << "ts-numbers" << SEP << DIRECTORY_NAME_FOR_TRANSMISSION_CAPACITIES << SEP << from->id
          << SEP << with->id << ".txt";
 
-    timeseriesNumbers.saveToBuffer(buffer, 0, true, predicate, true);
+    timeseriesNumbers.saveToBuffer(buffer);
     writer.addEntryFromBuffer(path.c_str(), buffer);
 }
 
@@ -312,7 +305,7 @@ AreaLink* AreaAddLinkBetweenAreas(Area* area, Area* with, bool warning)
 
 namespace // anonymous
 {
-bool AreaLinksInternalLoadFromProperty(AreaLink& link, const String& key, const String& value)
+bool handleKey(Data::AreaLink& link, const String& key, const String& value)
 {
     if (key == "hurdles-cost")
     {
@@ -459,14 +452,21 @@ bool AreaLinksInternalLoadFromProperty(AreaLink& link, const String& key, const 
     return false;
 }
 
-void logLinkDataCheckError(const AreaLink& link, const String& msg, int hour)
+bool AreaLinksInternalLoadFromProperty(AreaLink& link, const String& key, const String& value)
+{
+    return handleKey(link, key, value);
+}
+
+[[noreturn]] void logLinkDataCheckError(const AreaLink& link, const String& msg, int hour)
 {
     logs.error() << "Link (" << link.from->name << "/" << link.with->name << "): Invalid values ("
                  << msg << ") for hour " << hour;
     throw Antares::Error::ReadingStudy();
 }
 
-void logLinkDataCheckErrorDirectIndirect(const AreaLink& link, uint direct, uint indirect)
+[[noreturn]] void logLinkDataCheckErrorDirectIndirect(const AreaLink& link,
+                                                      uint direct,
+                                                      uint indirect)
 {
     logs.error() << "Link (" << link.from->name << "/" << link.with->name << "): Found " << direct
                  << " direct TS " << " and " << indirect
@@ -475,19 +475,18 @@ void logLinkDataCheckErrorDirectIndirect(const AreaLink& link, uint direct, uint
 }
 } // anonymous namespace
 
-bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyString& folder)
+bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const fs::path& folder)
 {
     // Assert
     assert(area);
 
     /* Initialize */
-    String buffer;
-    buffer << folder << SEP << "properties.ini";
+    fs::path path = folder / "properties.ini";
 
     IniFile ini;
-    if (!ini.open(buffer))
+    if (!ini.open(path))
     {
-        return 0;
+        return false;
     }
 
     bool ret = true;
@@ -498,8 +497,7 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
     for (auto* s = ini.firstSection; s; s = s->next)
     {
         // Getting the name of the area
-        buffer.clear();
-        TransformNameIntoID(s->name, buffer);
+        std::string buffer = transformNameIntoID(s->name);
 
         // Trying to find it
         Area* linkedWith = AreaListLFind(l, buffer.c_str());
@@ -520,18 +518,16 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
         link.comments.clear();
         link.displayComments = true;
 
-        ret = link.loadTimeSeries(study, folder) && ret;
+        ret = link.loadTimeSeries(study.header.version, folder.string()) && ret;
 
         // Checks on loaded link's data
         if (study.usedByTheSolver)
         {
-            // Short names for link's properties
             const uint nbDirectTS = link.directCapacities.timeSeries.width;
             const uint nbIndirectTS = link.indirectCapacities.timeSeries.width;
             if (nbDirectTS != nbIndirectTS)
             {
                 logLinkDataCheckErrorDirectIndirect(link, nbDirectTS, nbIndirectTS);
-                return false;
             }
 
             auto& directHurdlesCost = link.parameters[fhlHurdlesCostDirect];
@@ -551,12 +547,10 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
                     if (directCapacities[h] < 0.)
                     {
                         logLinkDataCheckError(link, "direct capacity < 0", h);
-                        return false;
                     }
                     if (directCapacities[h] < loopFlow[h])
                     {
                         logLinkDataCheckError(link, "direct capacity < loop flow", h);
-                        return false;
                     }
                 }
 
@@ -566,12 +560,10 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
                     if (indirectCapacities[h] < 0.)
                     {
                         logLinkDataCheckError(link, "indirect capacitity < 0", h);
-                        return false;
                     }
                     if (indirectCapacities[h] + loopFlow[h] < 0)
                     {
                         logLinkDataCheckError(link, "indirect capacity + loop flow < 0", h);
-                        return false;
                     }
                 }
             }
@@ -583,7 +575,6 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
                     logLinkDataCheckError(link,
                                           "hurdle costs direct + hurdle cost indirect < 0",
                                           h);
-                    return false;
                 }
             }
 
@@ -593,7 +584,6 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
                 if (PShiftPlus[h] < PShiftMinus[h])
                 {
                     logLinkDataCheckError(link, "phase shift plus < phase shift minus", h);
-                    return false;
                 }
             }
         }

@@ -96,11 +96,7 @@ void BindingConstraintGroupRepository::resizeAllTimeseriesNumbers(unsigned int n
 {
     std::for_each(groups_.begin(),
                   groups_.end(),
-                  [&](auto& group)
-                  {
-                      group->timeseriesNumbers.clear();
-                      group->timeseriesNumbers.reset(1, nb_years);
-                  });
+                  [&](auto& group) { group->timeseriesNumbers.reset(nb_years); });
 }
 
 BindingConstraintGroup* BindingConstraintGroupRepository::operator[](const std::string& name) const

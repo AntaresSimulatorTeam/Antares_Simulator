@@ -24,6 +24,9 @@
 #include <antares/study/area/constants.h>
 #include <yuni/core/math.h>
 
+//! The minimal allowed value for hurdle costs when not null
+#define LINK_MINIMAL_HURDLE_COSTS_NOT_NULL 0.005
+
 using namespace Yuni;
 
 namespace Antares

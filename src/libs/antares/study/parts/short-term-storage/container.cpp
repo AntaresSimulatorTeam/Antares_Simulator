@@ -31,6 +31,8 @@
 
 #define SEP Yuni::IO::Separator
 
+namespace fs = std::filesystem;
+
 namespace Antares::Data::ShortTermStorage
 {
 bool STStorageInput::validate() const
@@ -40,9 +42,9 @@ bool STStorageInput::validate() const
                        [](auto& cluster) { return cluster.validate(); });
 }
 
-bool STStorageInput::createSTStorageClustersFromIniFile(const std::string& path)
+bool STStorageInput::createSTStorageClustersFromIniFile(const fs::path& path)
 {
-    const std::string pathIni(path + SEP + "list.ini");
+    const fs::path pathIni = path / "list.ini";
     IniFile ini;
     if (!ini.open(pathIni))
     {

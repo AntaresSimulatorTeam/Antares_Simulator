@@ -1,25 +1,24 @@
 /*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+ * Copyright 2007-2024, RTE (https://www.rte-france.com)
+ * See AUTHORS.txt
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of Antares-Simulator,
+ * Adequacy and Performance assessment for interconnected energy networks.
+ *
+ * Antares_Simulator is free software: you can redistribute it and/or modify
+ * it under the terms of the Mozilla Public Licence 2.0 as published by
+ * the Mozilla Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Antares_Simulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * Mozilla Public Licence 2.0 for more details.
+ *
+ * You should have received a copy of the Mozilla Public Licence 2.0
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ */
 #define BOOST_TEST_MODULE test read scenario - builder.dat
-#define BOOST_TEST_DYN_LINK
 
 #define WIN32_LEAN_AND_MEAN
 
@@ -92,6 +91,9 @@ struct Fixture
         area_2->wind.series.timeSeries.resize(nbReadyMadeTS, 1);
         area_3->wind.series.timeSeries.resize(nbReadyMadeTS, 1);
 
+        // Links
+        link_12 = AreaAddLinkBetweenAreas(area_1, area_2, false);
+        link_12->directCapacities.resize(15, 1);
         // Solar : set the nb of ready made TS
         nbReadyMadeTS = 9;
         area_1->solar.series.timeSeries.resize(nbReadyMadeTS, 1);
@@ -100,15 +102,9 @@ struct Fixture
 
         // Hydro : set the nb of ready made TS
         nbReadyMadeTS = 12;
-        area_1->hydro.series->resizeGenerationTS(nbReadyMadeTS);
-        area_2->hydro.series->resizeGenerationTS(nbReadyMadeTS);
-        area_3->hydro.series->resizeGenerationTS(nbReadyMadeTS);
-
-        // Hydro Max Power: set the nb of ready made TS
-        nbReadyMadeTS = 15;
-        area_1->hydro.series->resizeMaxPowerTS(nbReadyMadeTS);
-        area_2->hydro.series->resizeMaxPowerTS(nbReadyMadeTS);
-        area_3->hydro.series->resizeMaxPowerTS(nbReadyMadeTS);
+        area_1->hydro.series->resizeTS(nbReadyMadeTS);
+        area_2->hydro.series->resizeTS(nbReadyMadeTS);
+        area_3->hydro.series->resizeTS(nbReadyMadeTS);
 
         // Links
         link_12 = AreaAddLinkBetweenAreas(area_1, area_2, false);
@@ -194,7 +190,7 @@ BOOST_FIXTURE_TEST_CASE(on_area2_and_on_year_18__load_TS_number_11_is_chosen__re
                       tsNumber.to<uint>());
 
     BOOST_CHECK(my_rule.apply());
-    BOOST_CHECK_EQUAL(area_2->load.series.timeseriesNumbers[0][yearNumber.to<uint>()],
+    BOOST_CHECK_EQUAL(area_2->load.series.timeseriesNumbers[yearNumber.to<uint>()],
                       tsNumber.to<uint>() - 1);
 }
 
@@ -212,7 +208,7 @@ BOOST_FIXTURE_TEST_CASE(on_area3_and_on_year_7__wind_TS_number_5_is_chosen__read
                       tsNumber.to<uint>());
 
     BOOST_CHECK(my_rule.apply());
-    BOOST_CHECK_EQUAL(area_3->wind.series.timeseriesNumbers[0][yearNumber.to<uint>()],
+    BOOST_CHECK_EQUAL(area_3->wind.series.timeseriesNumbers[yearNumber.to<uint>()],
                       tsNumber.to<uint>() - 1);
 }
 
@@ -230,7 +226,7 @@ BOOST_FIXTURE_TEST_CASE(on_area1_and_on_year_4__solar_TS_number_8_is_chosen__rea
                       tsNumber.to<uint>());
 
     BOOST_CHECK(my_rule.apply());
-    BOOST_CHECK_EQUAL(area_1->solar.series.timeseriesNumbers[0][yearNumber.to<uint>()],
+    BOOST_CHECK_EQUAL(area_1->solar.series.timeseriesNumbers[yearNumber.to<uint>()],
                       tsNumber.to<uint>() - 1);
 }
 
@@ -248,29 +244,8 @@ BOOST_FIXTURE_TEST_CASE(on_area2_and_on_year_15__solar_TS_number_3_is_chosen__re
                       tsNumber.to<uint>());
 
     BOOST_CHECK(my_rule.apply());
-    BOOST_CHECK_EQUAL(area_2->hydro.series->timeseriesNumbers[0][yearNumber.to<uint>()],
+    BOOST_CHECK_EQUAL(area_2->hydro.series->timeseriesNumbers[yearNumber.to<uint>()],
                       tsNumber.to<uint>() - 1);
-}
-
-// =================
-// Tests on Hydro Max Power
-// =================
-BOOST_FIXTURE_TEST_CASE(
-  on_area3_and_on_year_10__hydro_power_credits_TS_number_6_is_chosen__reading_OK,
-  Fixture)
-{
-    AreaName yearNumber = "7";
-    String tsNumber = "6";
-    AreaName::Vector splitKey = {"hgp", "area 3", yearNumber};
-    BOOST_CHECK(my_rule.readLine(splitKey, tsNumber, false));
-
-    BOOST_CHECK_EQUAL(my_rule.hydroMaxPower.get_value(yearNumber.to<uint>(), area_3->index),
-                      tsNumber.to<uint>());
-
-    BOOST_CHECK(my_rule.apply());
-    BOOST_CHECK_EQUAL(
-      area_3->hydro.series->timeseriesNumbersHydroMaxPower[0][yearNumber.to<uint>()],
-      tsNumber.to<uint>() - 1);
 }
 
 // ===========================
@@ -289,7 +264,7 @@ BOOST_FIXTURE_TEST_CASE(
                       tsNumber.to<uint>());
 
     BOOST_CHECK(my_rule.apply());
-    BOOST_CHECK_EQUAL(thCluster_11->series.timeseriesNumbers[0][yearNumber.to<uint>()],
+    BOOST_CHECK_EQUAL(thCluster_11->series.timeseriesNumbers[yearNumber.to<uint>()],
                       tsNumber.to<uint>() - 1);
 }
 
@@ -306,7 +281,7 @@ BOOST_FIXTURE_TEST_CASE(
                       tsNumber.to<uint>());
 
     BOOST_CHECK(my_rule.apply());
-    BOOST_CHECK_EQUAL(thCluster_12->series.timeseriesNumbers[0][yearNumber.to<uint>()],
+    BOOST_CHECK_EQUAL(thCluster_12->series.timeseriesNumbers[yearNumber.to<uint>()],
                       tsNumber.to<uint>() - 1);
 }
 
@@ -323,7 +298,7 @@ BOOST_FIXTURE_TEST_CASE(
                       tsNumber.to<uint>());
 
     BOOST_CHECK(my_rule.apply());
-    BOOST_CHECK_EQUAL(thCluster_31->series.timeseriesNumbers[0][yearNumber.to<uint>()],
+    BOOST_CHECK_EQUAL(thCluster_31->series.timeseriesNumbers[yearNumber.to<uint>()],
                       tsNumber.to<uint>() - 1);
 }
 
@@ -346,7 +321,7 @@ BOOST_FIXTURE_TEST_CASE(
                       tsNumber.to<uint>());
 
     BOOST_CHECK(my_rule.apply());
-    BOOST_CHECK_EQUAL(rnCluster_21->series.timeseriesNumbers[0][yearNumber.to<uint>()],
+    BOOST_CHECK_EQUAL(rnCluster_21->series.timeseriesNumbers[yearNumber.to<uint>()],
                       tsNumber.to<uint>() - 1);
 }
 
@@ -366,7 +341,7 @@ BOOST_FIXTURE_TEST_CASE(
                       tsNumber.to<uint>());
 
     BOOST_CHECK(my_rule.apply());
-    BOOST_CHECK_EQUAL(rnCluster_32->series.timeseriesNumbers[0][yearNumber.to<uint>()],
+    BOOST_CHECK_EQUAL(rnCluster_32->series.timeseriesNumbers[yearNumber.to<uint>()],
                       tsNumber.to<uint>() - 1);
 }
 
@@ -433,8 +408,7 @@ BOOST_FIXTURE_TEST_CASE(on_link_area1_area2_and_on_year_0__ntc_TS_number_10_is_c
                       tsNumber.to<uint>());
 
     BOOST_CHECK(my_rule.apply());
-    BOOST_CHECK_EQUAL(link_12->timeseriesNumbers[0][yearNumber.to<uint>()],
-                      tsNumber.to<uint>() - 1);
+    BOOST_CHECK_EQUAL(link_12->timeseriesNumbers[yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
 }
 
 BOOST_FIXTURE_TEST_CASE(on_link_area1_area3_and_on_year_15__ntc_TS_number_7_is_chosen__reading_OK,
@@ -449,8 +423,7 @@ BOOST_FIXTURE_TEST_CASE(on_link_area1_area3_and_on_year_15__ntc_TS_number_7_is_c
                       tsNumber.to<uint>());
 
     BOOST_CHECK(my_rule.apply());
-    BOOST_CHECK_EQUAL(link_13->timeseriesNumbers[0][yearNumber.to<uint>()],
-                      tsNumber.to<uint>() - 1);
+    BOOST_CHECK_EQUAL(link_13->timeseriesNumbers[yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
 }
 
 BOOST_FIXTURE_TEST_CASE(on_link_area2_area3_and_on_year_19__ntc_TS_number_6_is_chosen__reading_OK,
@@ -465,8 +438,7 @@ BOOST_FIXTURE_TEST_CASE(on_link_area2_area3_and_on_year_19__ntc_TS_number_6_is_c
                       tsNumber.to<uint>());
 
     BOOST_CHECK(my_rule.apply());
-    BOOST_CHECK_EQUAL(link_23->timeseriesNumbers[0][yearNumber.to<uint>()],
-                      tsNumber.to<uint>() - 1);
+    BOOST_CHECK_EQUAL(link_23->timeseriesNumbers[yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
 }
 
 // ========================
@@ -476,14 +448,14 @@ BOOST_FIXTURE_TEST_CASE(binding_constraints_group_groupTest__Load_TS_4_for_year_
                         Fixture)
 {
     auto yearNumber = 3;
-    auto tsNumber = 4;
+    uint32_t tsNumber = 4;
 
     AreaName::Vector splitKey = {"bc", "groupTest", std::to_string(yearNumber)};
     BOOST_CHECK(my_rule.readLine(splitKey, std::to_string(tsNumber)));
     BOOST_CHECK_EQUAL(my_rule.binding_constraints.get("groupTest", yearNumber), tsNumber);
 
     BOOST_CHECK(my_rule.apply());
-    auto actual = study->bindingConstraintsGroups["groupTest"]->timeseriesNumbers[0][yearNumber];
+    auto actual = study->bindingConstraintsGroups["groupTest"]->timeseriesNumbers[yearNumber];
     BOOST_CHECK_EQUAL(actual, tsNumber - 1);
 }
 
@@ -504,8 +476,8 @@ BOOST_FIXTURE_TEST_CASE(thermalTSNumberData, Fixture)
 
     tsdata.apply(*study);
 
-    BOOST_CHECK_EQUAL(thCluster_12->series.timeseriesNumbers[0][2], 21);
-    BOOST_CHECK_EQUAL(thCluster_12->series.timeseriesNumbers[0][5], 0);
+    BOOST_CHECK_EQUAL(thCluster_12->series.timeseriesNumbers[2], 21);
+    BOOST_CHECK_EQUAL(thCluster_12->series.timeseriesNumbers[5], 0);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

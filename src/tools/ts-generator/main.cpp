@@ -18,6 +18,7 @@
 ** You should have received a copy of the Mozilla Public Licence 2.0
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
+#include <filesystem>
 #include <memory>
 #include <string>
 
@@ -34,9 +35,7 @@
 #include <antares/writer/result_format.h>
 #include <antares/writer/writer_factory.h>
 
-using namespace Antares;
-
-struct TsGeneratorSettings
+struct Settings
 {
     std::string studyFolder;
 
@@ -46,7 +45,7 @@ struct TsGeneratorSettings
     std::string thermalListToGen = "";
 };
 
-std::unique_ptr<Yuni::GetOpt::Parser> createTsGeneratorParser(TsGeneratorSettings& settings)
+std::unique_ptr<Yuni::GetOpt::Parser> createTsGeneratorParser(Settings& settings)
 {
     auto parser = std::make_unique<Yuni::GetOpt::Parser>();
     parser->addParagraph("Antares Time Series generator\n");
@@ -55,7 +54,6 @@ std::unique_ptr<Yuni::GetOpt::Parser> createTsGeneratorParser(TsGeneratorSetting
                     ' ',
                     "all-thermal",
                     "Generate TS for all thermal clusters");
-
     parser->addFlag(settings.thermalListToGen,
                     ' ',
                     "thermal",
@@ -75,7 +73,7 @@ std::vector<Data::ThermalCluster*> getClustersToGen(Data::AreaList& areas,
 
     for (const auto& [areaID, clusterID]: ids)
     {
-        logs.info() << "Generating ts for area: " << areaID << " and cluster: " << clusterID;
+        logs.info() << "Searching for area: " << areaID << " and cluster: " << clusterID;
 
         auto* area = areas.find(areaID);
         if (!area)
@@ -99,7 +97,7 @@ std::vector<Data::ThermalCluster*> getClustersToGen(Data::AreaList& areas,
 
 int main(int argc, char* argv[])
 {
-    TsGeneratorSettings settings;
+    Settings settings;
 
     auto parser = createTsGeneratorParser(settings);
     switch (auto ret = parser->operator()(argc, argv); ret)
@@ -132,7 +130,7 @@ int main(int argc, char* argv[])
     }
 
     study->initializeRuntimeInfos();
-    // Force the writing of generated TS into output/YYYYMMDD-HHSSeco/ts-generator/thermal/mc-0
+    // Force the writing of generated TS into output/YYYYMMDD-HHSSeco/ts-generator/thermal[/mc-0]
     study->parameters.timeSeriesToArchive |= Antares::Data::timeSeriesThermal;
 
     try
@@ -151,13 +149,15 @@ int main(int argc, char* argv[])
                                                     nullptr,
                                                     durationCollector);
 
-    std::vector<Data::ThermalCluster*> clusters;
+    const auto thermalSavePath = std::filesystem::path("ts-generator") / "thermal";
 
-    if (settings.thermalListToGen.empty())
+    // THERMAL
+    std::vector<Data::ThermalCluster*> clusters;
+    if (settings.allThermal)
     {
         clusters = TSGenerator::getAllClustersToGen(study->areas, true);
     }
-    else
+    else if (!settings.thermalListToGen.empty())
     {
         clusters = getClustersToGen(study->areas, settings.thermalListToGen);
     }
@@ -167,5 +167,10 @@ int main(int argc, char* argv[])
         logs.debug() << c->id();
     }
 
-    return !TSGenerator::GenerateThermalTimeSeries(*study, clusters, 0, *resultWriter);
+    bool ret = TSGenerator::generateThermalTimeSeries(*study,
+                                                      clusters,
+                                                      *resultWriter,
+                                                      thermalSavePath.string());
+
+    return !ret; // return 0 for success
 }

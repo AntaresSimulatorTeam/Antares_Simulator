@@ -87,6 +87,7 @@ jobs:
           -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
           -DCMAKE_CXX_COMPILER=/usr/bin/g++-10 \
           -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake \
+          -DVCPKG_TARGET_TRIPLET=x64-linux-release \
           -DCODE_COVERAGE=ON \
           -DCMAKE_BUILD_TYPE=Debug \
           -DCMAKE_PREFIX_PATH="../install;${{ env.ORTOOLS_DIR }}/install" \
