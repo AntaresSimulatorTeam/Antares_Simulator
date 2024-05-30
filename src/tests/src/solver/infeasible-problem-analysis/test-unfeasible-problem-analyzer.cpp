@@ -19,6 +19,7 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 #define WIN32_LEAN_AND_MEAN
+#define BOOST_TEST_MODULE unfeasible_problem_analyzer
 
 #include <boost/test/data/dataset.hpp>
 #include <boost/test/data/test_case.hpp>
