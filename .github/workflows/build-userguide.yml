@@ -62,6 +62,7 @@ jobs:
         echo "PDF_PATH_ASSET= [\"docs/pdf-doc-generation-with-sphinx/$PDF_NAME\"]" >> $GITHUB_ENV
 
     - name: user guide upload
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: pdf-reference-guide
