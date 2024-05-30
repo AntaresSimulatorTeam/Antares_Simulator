@@ -500,25 +500,6 @@ void Study::getNumberOfCores(const bool forceParallel, const uint nbYearsParalle
     // enabled.
     //		 Useful for RAM estimation.
     maxNbYearsInParallel_save = maxNbYearsInParallel;
-
-    // Here we answer the question (useful only if hydro hot start is asked) : do all sets of
-    // parallel years have the same size ?
-    if (parameters.initialReservoirLevels.iniLevels == Antares::Data::irlHotStart
-        && setsOfParallelYears.size() && maxNbYearsInParallel > 1)
-    {
-        uint currentSetSize = (uint)setsOfParallelYears[0].size();
-        if (setsOfParallelYears.size() > 1)
-        {
-            for (uint s = 1; s < setsOfParallelYears.size(); s++)
-            {
-                if (setsOfParallelYears[s].size() != currentSetSize)
-                {
-                    parameters.allSetsHaveSameSize = false;
-                    break;
-                }
-            }
-        }
-    } // End if hot start
 }
 
 bool Study::checkHydroHotStart()

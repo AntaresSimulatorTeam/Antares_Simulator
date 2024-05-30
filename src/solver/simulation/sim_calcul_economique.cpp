@@ -81,9 +81,6 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     problem.Expansion = (parameters.mode == Data::SimulationMode::Expansion);
     problem.firstWeekOfSimulation = false;
 
-    problem.hydroHotStart = (parameters.initialReservoirLevels.iniLevels
-                             == Antares::Data::irlHotStart);
-
     // gp adq : to be removed
     if (parameters.adqPatchParams.enabled)
     {
@@ -209,11 +206,6 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         }
 
         problem.previousSimulationFinalLevel[i] = -1.;
-
-        if (!problem.previousYearFinalLevels.empty())
-        {
-            problem.previousYearFinalLevels[i] = -1.;
-        }
 
         problem.CaracteristiquesHydrauliques[i].WeeklyWaterValueStateRegular = 0.;
 

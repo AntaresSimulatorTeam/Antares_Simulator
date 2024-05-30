@@ -576,7 +576,6 @@ struct PROBLEME_HEBDO
 
     bool YaDeLaReserveJmoins1 = false;
 
-    std::vector<double> previousYearFinalLevels;
     std::vector<ALL_MUST_RUN_GENERATION> AllMustRunGeneration;
 
     OptimizationStatistics optimizationStatistics[2];
@@ -586,7 +585,6 @@ struct PROBLEME_HEBDO
 
     /* Hydro management */
     std::vector<double> CoefficientEcretementPMaxHydraulique;
-    bool hydroHotStart = false;
     std::vector<double> previousSimulationFinalLevel;
 
     /* Results */
