@@ -61,12 +61,12 @@ BOOST_FIXTURE_TEST_CASE(reset, Fixture)
     BOOST_CHECK_EQUAL(p.simulationDays.first, 0);
     BOOST_CHECK_EQUAL(p.nbTimeSeriesThermal, 1);
     BOOST_CHECK_EQUAL(p.synthesis, true);
-    BOOST_CHECK_EQUAL(p.ortoolsSolver, "sirius");
+    BOOST_CHECK_EQUAL(p.optOptions.ortoolsSolver, "sirius");
 }
 
 BOOST_FIXTURE_TEST_CASE(loadValid, Fixture)
 {
-    options.ortoolsSolver = "xpress";
+    options.optOptions.ortoolsSolver = "xpress";
 
     writeValidFile();
     p.loadFromFile(path.string(), version, options);
@@ -74,7 +74,7 @@ BOOST_FIXTURE_TEST_CASE(loadValid, Fixture)
     BOOST_CHECK_EQUAL(p.nbYears, 5);
     BOOST_CHECK_EQUAL(p.seed[seedTsGenThermal], 5489);
     BOOST_CHECK_EQUAL(p.include.reserve.dayAhead, true);
-    BOOST_CHECK_EQUAL(p.ortoolsSolver, "xpress");
+    BOOST_CHECK_EQUAL(p.optOptions.ortoolsSolver, "xpress");
 }
 
 BOOST_FIXTURE_TEST_CASE(fixBadValue, Fixture)

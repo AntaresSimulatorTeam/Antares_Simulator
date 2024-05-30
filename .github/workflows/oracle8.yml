@@ -15,6 +15,9 @@ on:
       run-tests:
         required: true
         type: string
+      target_branch:
+        required: true
+        type: string
 
 env:
   GITHUB_TOKEN: ${{ github.token }}
@@ -139,15 +142,13 @@ jobs:
            cpack -G TGZ
 
     - name: Installer TGZ push
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v3
       with:
-        name: targz
         path: _build/*.tar.gz
 
     - name: Installer RPM push
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v3
       with:
-        name: rpm
         path: _build/*.rpm
 
     - name: Publish assets

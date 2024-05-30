@@ -26,9 +26,7 @@
 
 #include "antares/solver/constraints-builder/grid.h"
 
-using namespace Yuni;
-
-// #define SEP Yuni::IO::Separator
+namespace fs = std::filesystem;
 
 namespace Antares
 {
@@ -366,7 +364,7 @@ bool CBuilder::saveCBuilderToFile(const String& filename) const
 
     if (filename == "")
     {
-        std::filesystem::path path = std::filesystem::path(pStudy.folder.c_str()) / "settings"
+        fs::path path = fs::path(pStudy.folder.c_str()) / "settings"
                                      / "constraintbuilder.ini";
 
         return ini.save(path.string());
@@ -377,11 +375,11 @@ bool CBuilder::saveCBuilderToFile(const String& filename) const
 
 bool CBuilder::completeCBuilderFromFile(const std::string& filename)
 {
-    std::filesystem::path path;
+    fs::path path;
     if (filename == "")
     {
-        path = std::filesystem::path(pStudy.folder.c_str()) / "settings" / "constraintbuilder.ini";
-        if (!IO::File::Exists(path.string()))
+        path = fs::path(pStudy.folder.c_str()) / "settings" / "constraintbuilder.ini";
+        if (!fs::exists(path))
         {
             return false;
         }
@@ -393,7 +391,7 @@ bool CBuilder::completeCBuilderFromFile(const std::string& filename)
 
     logs.info() << "Read data";
     IniFile ini;
-    if (ini.open(path.string()))
+    if (ini.open(path))
     {
         // logs.info() << "Reading " << filename;
         logs.info() << "Read data (INI file)";

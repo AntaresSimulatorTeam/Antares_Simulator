@@ -55,6 +55,8 @@ class TestException
 {
 };
 
+BOOST_AUTO_TEST_SUITE(test_concurrency)
+
 BOOST_AUTO_TEST_CASE(test_throw)
 {
     auto threadPool = createThreadPool(1);
@@ -113,3 +115,5 @@ BOOST_AUTO_TEST_CASE(allow_to_use_function_object_pointer)
     future.get();
     BOOST_CHECK(functionObjectPtr->called);
 }
+
+BOOST_AUTO_TEST_SUITE_END()

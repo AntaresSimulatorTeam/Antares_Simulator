@@ -82,6 +82,13 @@ void TransformNameIntoID(const AnyString& name, std::string& out)
     out = yuniOut;
 }
 
+std::string transformNameIntoID(const std::string& name)
+{
+    std::string out;
+    TransformNameIntoID(name, out);
+    return out;
+}
+
 void BeautifyName(std::string& out, const std::string& oldname)
 {
     YString yuniOut;

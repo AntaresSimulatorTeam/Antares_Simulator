@@ -113,7 +113,6 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     problem.ExportMPS = study.parameters.include.exportMPS;
     problem.ExportStructure = study.parameters.include.exportStructure;
     problem.NamedProblems = study.parameters.namedProblems;
-    problem.solverLogs = study.parameters.solverLogs;
     problem.exportMPSOnError = Data::exportMPS(parameters.include.unfeasibleProblemBehavior);
 
     problem.OptimisationAvecCoutsDeDemarrage = (study.parameters.unitCommitment.ucMode
@@ -349,7 +348,7 @@ static void prepareBindingConstraint(PROBLEME_HEBDO& problem,
         auto* group = bcgroups[bc->group()];
         if (group)
         {
-            tsIndexForBc = group->timeseriesNumbers[0][problem.year];
+            tsIndexForBc = group->timeseriesNumbers[problem.year];
         }
 
         // If there is only one TS, always select it.

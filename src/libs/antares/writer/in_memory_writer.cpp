@@ -19,8 +19,16 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #include <algorithm>
+#include <fstream>
+#include <iterator>
 
-#include <yuni/io/file.h> // Yuni::IO::File::LoadFromFile
+#include <antares/benchmarking/DurationCollector.h>
+#include <antares/benchmarking/timer.h>
+#include <antares/logs/logs.h>
+#include <antares/writer/in_memory_writer.h>
+#include <antares/io/file.h>
+
+namespace fs = std::filesystem;
 
 #include <antares/benchmarking/DurationCollector.h>
 #include <antares/benchmarking/timer.h>
@@ -32,11 +40,6 @@ namespace Antares::Solver
 
 namespace
 {
-void logErrorAndThrow [[noreturn]] (const std::string& errorMessage)
-{
-    Antares::logs.error() << errorMessage;
-    throw IOError(errorMessage);
-}
 
 template<class ContentT>
 void addToMap(InMemoryWriter::MapType& entries,
@@ -77,27 +80,13 @@ void InMemoryWriter::addEntryFromBuffer(const std::string& entryPath, std::strin
     addToMap(pEntries, entryPath, entryContent, pMapMutex, pDurationCollector);
 }
 
-void InMemoryWriter::addEntryFromFile(const std::string& entryPath, const std::string& filePath)
+void InMemoryWriter::addEntryFromFile(const fs::path& entryPath, const fs::path& filePath)
 {
     // Shamelessly copy-pasted from zip_writer.cpp
     // TODO refactor
-    Yuni::Clob buffer;
-    switch (Yuni::IO::File::LoadFromFile(buffer, filePath.c_str()))
-    {
-        using namespace Yuni::IO;
-    case errNone:
-        addToMap(pEntries, entryPath, buffer, pMapMutex, pDurationCollector);
-        break;
-    // Since logErrorAndThrow does not return, we don't need 'break's here
-    case errNotFound:
-        logErrorAndThrow(filePath + ": file does not exist");
-    case errReadFailed:
-        logErrorAndThrow("Read failed '" + filePath + "'");
-    case errMemoryLimit:
-        logErrorAndThrow("Size limit hit for file '" + filePath + "'");
-    default:
-        logErrorAndThrow("Unhandled error");
-    }
+    std::string buffer = IO::readFile(filePath);
+
+    addToMap(pEntries, entryPath.string(), buffer, pMapMutex, pDurationCollector);
 }
 
 void InMemoryWriter::flush()
