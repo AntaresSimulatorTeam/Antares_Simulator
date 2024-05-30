@@ -1,12 +1,16 @@
 @PACKAGE_INIT@
 
 include(CMakeFindDependencyMacro)
-
-#In this order. Why? I don't really know, but it works.
-find_dependency(minizip)
-find_dependency(ortools)
-find_dependency(Boost)
-find_dependency(sirius_solver)
+find_dependency(ortools REQUIRED)
+find_dependency(minizip-ng)
+if (minizip-ng_FOUND)
+	add_library(MINIZIP::minizip ALIAS MINIZIP::minizip-ng)
+else ()
+	find_dependency(minizip)
+	if (NOT minizip_FOUND)
+		message (FATAL_ERROR "Minizip dependency (minizip or minizip-ng) not found.")
+	endif ()
+endif ()
 
 include("${CMAKE_CURRENT_LIST_DIR}/AntaresTargets.cmake")
 

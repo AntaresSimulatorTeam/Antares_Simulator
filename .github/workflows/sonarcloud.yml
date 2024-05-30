@@ -15,11 +15,25 @@ jobs:
     env:
       SONAR_SERVER_URL: "https://sonarcloud.io"
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
+      # Caching strategy of VCPKG dependencies
+      VCPKG_BINARY_SOURCES: "clear;files,${{ github.workspace }}/vcpkg_cache,readwrite"
 
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+
+      - name: Install VCPKG
+        run: git submodule update --init vcpkg && ./vcpkg/bootstrap-vcpkg.sh -disableMetrics
+
+      - name: Restore vcpkg binary dir from cache
+        id: cache-vcpkg-binary
+        uses: actions/cache/restore@v4
+        with:
+          path: ${{ github.workspace }}/vcpkg_cache
+          key: vcpkg-cache-ubuntu-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
+          # Allows to restore a cache when deps have only partially changed (like adding a dependency)
+          restore-keys: vcpkg-cache-ubuntu-
 
       - name: Config OR-Tools URL
         run: |
@@ -81,6 +95,8 @@ jobs:
           -DCMAKE_C_COMPILER=/usr/bin/gcc-10 \
           -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
           -DCMAKE_CXX_COMPILER=/usr/bin/g++-10 \
+          -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake \
+          -DVCPKG_TARGET_TRIPLET=x64-linux-release \
           -DDEPS_INSTALL_DIR=./rte-antares-deps-Debug \
           -DCODE_COVERAGE=ON \
           -DCMAKE_BUILD_TYPE=Debug \
@@ -109,3 +125,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: sonar-scanner --define sonar.host.url="${{ env.SONAR_SERVER_URL }}"
+
+      - name: Cache vcpkg binary dir
+        if: always()
+        id: save-cache-vcpkg-binary
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ github.workspace }}/vcpkg_cache
+          key: vcpkg-cache-ubuntu-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}

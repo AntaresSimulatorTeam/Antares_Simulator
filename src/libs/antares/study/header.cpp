@@ -239,7 +239,7 @@ StudyVersion StudyHeader::tryToFindTheVersion(const std::string& folder)
 bool StudyHeader::readVersionFromFile(const fs::path& filename, std::string& version)
 {
     IniFile ini;
-    if (ini.open(filename.string()))
+    if (ini.open(filename))
     {
         return internalFindVersionFromFile(ini, version);
     }

@@ -18,10 +18,7 @@
  * You should have received a copy of the Mozilla Public Licence 2.0
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
-#include <list> // Fix for Boost < 1.67
-
-#define BOOST_TEST_MODULE test-end-to-end tests
-#define BOOST_TEST_DYN_LINK
+#define BOOST_TEST_MODULE test - end - to - end tests
 #include <boost/test/data/test_case.hpp>
 #include <boost/test/unit_test.hpp>
 
