@@ -20,7 +20,6 @@
  */
 
 #define BOOST_TEST_MODULE test_api
-
 #define WIN32_LEAN_AND_MEAN
 
 #include <filesystem>
