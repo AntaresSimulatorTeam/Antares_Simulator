@@ -4,15 +4,70 @@ toc_depth: 2
 
 # Antares Changelog
 
+## Index by branch
+- [Branch 9.1.x](#910-062024)
+- [Branch 9.0.x](#branch-90x)
+- [Branch 8.8.x](#branch-88x-end-of-support-122025) (LTS)
+- [Branch 8.7.x](#branch-87x)
+- [Branch 8.6.x](#branch-86x-end-of-support-062025) (LTS)
+- [Branch 8.5.x](#branch-85x)
+- [Branch 8.4.x](#branch-84x)
 
-9.1.0
---------------------
-## New features
+LTS = long-term support, 2 years of support starting from the initial release date.
+
+## Older branches (1.x to 8.3.x)
+[Older branches](#older-branches)
+
+# Branch 9.1.x
+
+## 9.1.0 (06/2024)
+### New features
 * Scenarized & hourly values for hydro pumping and hydro generation. Previously this data was not scenarized and daily.
 * STS groups are now "dynamic" : group names are no longer fixed by code, user is free to define these groups.
 * Add optimization options from command line in OR-Tools / XPRESS (#1837)
+### TODO
+# Branch 9.0.x
 
-## Improvements
+## 9.0.0
+### License
+* Use licence MPL 2.0 instead of GPL3_WITH_RTE-Exceptions (#1812)
+
+### Improvements
+* Include overflow variable in HydroPower constraint (#1903)
+* Add total time logging at the end of the simulation (#1908)
+* Add STS level constraint to suspect list for infeasible problem analysis (#1891)
+
+### For developers
+* Use precompiled OR-Tools for Oracle Linux 8 CI (#1893)
+* Change version behavior to allow more flexibility (#1898)
+
+### Code quality
+* Use std::shared_ptr instead of indices for active binding constraints in results (#1887)
+* Fix a few compilation warnings (#1880)
+* Scratchpad numspace (#1749)
+
+### Tests
+* Fix invalid index causing segfault in `test-study` test (#1902)
+
+# Branch 8.8.x (end of support 12/2025)
+
+## 8.8.5 (05/2024)
+### Bugfix
+- [UI] Fix opening a study from the file browser
+- Fix crash occurring when duplicate thermal clusters are present in a study (same name)
+- Fix formula for "PROFIT BY PLANT"
+
+## 8.8.4 (03/2024)
+### Bugfix
+* Adequacy patch CSR - fix DTG MRG (#1982)
+* Fix ts numbers for no gen clusters (#1969)
+* Remove unitcount limit for time series generation (#1960)
+
+## 8.8.3 (02/2024)
+### Bugfix
+* Fix an issue where depending on the platform the output archive could contain several entries of the same area and inrco files
+
+### Improvements
 * Remove sc-builder prefix "hgp", use "h" instead for max hydro pumping & generation timeseries.
 * Rationalize consistency checks on the number of columns (#2073)
 * Documentation reorganization and improvement (#2024) (#2023) (#2022)
@@ -61,37 +116,12 @@ toc_depth: 2
 * Remove deps-build Actions (#2043)
 * Remove unused logs.hxx (#2026)
 
-9.0.0
---------------------
-### License
-* Use licence MPL 2.0 instead of GPL3_WITH_RTE-Exceptions (#1812)
-
-### Improvements
-* Include overflow variable in HydroPower constraint (#1903)
-* Add total time logging at the end of the simulation (#1908)
-* Add STS level constraint to suspect list for infeasible problem analysis (#1891)
-
-### For developers
-* Use precompiled OR-Tools for Oracle Linux 8 CI (#1893)
-* Change version behavior to allow more flexibility (#1898)
-
-### Code quality
-* Use std::shared_ptr instead of indices for active binding constraints in results (#1887)
-* Fix a few compilation warnings (#1880)
-* Scratchpad numspace (#1749)
-
-### Tests
-* Fix invalid index causing segfault in `test-study` test (#1902)
-
 ## 8.8.2
---------------------
-
 ### Bugfix
 * Fix segfault caused by uninitialized `cluster.series.timeseriesNumbers` (#1876). This bug was introduced in v8.8.1 by #1752
 * Bump OR-Tools from 9.5 to 9.8 (fix crash with XPRESS) (#1873)
 
 ## 8.8.1 (01/2024)
---------------------
 /!\ This version has known bugs, please use 8.8.2 instead.
 
 ### Bugfix
@@ -228,8 +258,21 @@ toc_depth: 2
 ### Misc
 * Schedule deps compile instead of develop merge (#1530)
 
+# Branch 8.7.x
+
+## 8.7.3 (02/2024)
+### Bugfix
+* Use OR-Tools v9.8-rte1.0 (performance improvements with OR-Tools + XPRESS)
+
+## 8.7.2 (11/2023)
+### Bugfix
+* Named MPS - fix duplicated "ranged" binding constraints (#1569)
+
+## 8.7.1 (11/2023)
+### Bugfix
+* Fix output variable PROFIT for thermal clusters (#1767)
+
 ## 8.7.0 (08/2023)
---------------------
 ### New Features
 * Binding constraint RHS scenarization (#1219)
 * Implement --mps-export command-line option (#1404)
@@ -289,8 +332,31 @@ toc_depth: 2
 * Fix critical code smells (#1412)
 * Named MPS: factorize variable & constraint namers (#1409)
 * Array, logs jit and correlation in makefile (#1410)
+# Branch 8.6.x (end of support 06/2025)
 
---------------------
+## v8.6.7 (05/2024)
+### Bugfixes
+* Fix formula use in output var Profit by plant [ANT-1719] (https://github.com/AntaresSimulatorTeam/Antares_Simulator/pull/2097)
+
+## v8.6.6 (03/2024)
+### Bugfixes
+* Adequacy patch CSR - fix DTG MRG (#1982)
+* Fix ts numbers for no gen clusters (#1969)
+* Remove unitcount limit for time series generation (#1960)
+
+## 8.6.5 (02/2024)
+### Bugfix
+* Use OR-Tools v9.8-rte1.0 (performance improvements with OR-Tools + XPRESS)
+
+# v8.6.4 (11/2023)
+## Bugfixes
+* Fix Oracle Linux minizip build + actually run zip unit tests (#1744)
+* Fix output variable PROFIT for thermal clusters (#1767)
+
+# v8.6.3 (10/2023)
+## Bugfixes
+* Increase file size limit from 80Mo to 80Go when reading file. Fix issue on Windows
+
 ## v8.6.2 (08/2023)
 ### Bugfixes
 * Backport [v8.4.3](#v843-082023) changes
@@ -335,6 +401,7 @@ toc_depth: 2
 
 ### For developers
 * Bumped OR-Tools 9.2 -> 9.5. CMake 3.18+ is required for build if building OR-Tools, and XPRESS 9.0 for execution (previously 8.13).
+# Branch 8.5.x
 
 ## v8.5.1 (08/2023)
 --------------------
@@ -357,6 +424,7 @@ toc_depth: 2
 ### Examples & documentation
 * Update docs to include CSR #1156
 * Fix examples studies (invalid v8.3.0 -> v8.5.0) #1136
+# Branch 8.4.x
 
 ## v8.4.3 (08/2023)
 --------------------
@@ -467,6 +535,8 @@ toc_depth: 2
 * @kathvargasr made their first contribution in #967
 
 **Full Changelog**: https://github.com/AntaresSimulatorTeam/Antares_Simulator/compare/v8.3.2..v8.4.0
+
+# Older branches
 
 ## v8.3.3 (12/2022)
 --------------------
