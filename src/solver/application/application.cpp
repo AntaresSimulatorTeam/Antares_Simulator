@@ -41,6 +41,7 @@
 #include "antares/solver/simulation/adequacy_mode.h"
 #include "antares/solver/simulation/economy_mode.h"
 #include "antares/solver/simulation/simulation.h"
+#include "antares/solver/simulation/timeseries-numbers.h"
 #include "antares/solver/utils/ortools_utils.h"
 #include "antares/study/simulation.h"
 
@@ -125,7 +126,32 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
                 logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
             }
         };
+        // Sampled time-series Numbers
+        // We will resize all matrix related to the time-series numbers
+        // This operation can be done once since the number of years is constant
+        // for a single simulation
+        study.resizeAllTimeseriesNumbers(1 + study.runtime->rangeLimits.year[Data::rangeEnd]);
+        // Now, we will prepare the time-series numbers
+        if (not Antares::Solver::TimeSeriesNumbers::CheckNumberOfColumns(study.areas))
+        {
+            throw FatalError(
+              "Inconsistent number of time-series detected. Please check your input data.");
+        }
 
+        // extraire ce code vers après le load des données
+        ///!\ important, generer pour ttes les zones, années et filiaires de prod (numero de TS)
+        ///(ttes les TS)
+        if (not Antares::Solver::TimeSeriesNumbers::Generate(study))
+        {
+            throw FatalError("An unrecoverable error has occured. Can not continue.");
+        }
+        // ///!\ important
+        if (study.parameters.useCustomScenario)
+        {
+            ApplyCustomScenario(study);
+        }
+        /// faire le check de l'hydro ici
+        //**fin*/
         if (study.areas.empty())
         {
             throw Error::NoAreas();
@@ -256,7 +282,7 @@ void Application::startSimulation(Data::StudyLoadOptions& options)
     pStudy = std::make_unique<Antares::Data::Study>(true /* for the solver */);
 
     pParameters = &(pStudy->parameters);
-
+    //
     readDataForTheStudy(options);
 
     postParametersChecks();

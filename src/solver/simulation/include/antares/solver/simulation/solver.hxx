@@ -342,28 +342,34 @@ void ISimulation<ImplementationType>::run()
 
         // For beauty
         logs.info();
+        // //**debut*/
 
-        // Sampled time-series Numbers
-        // We will resize all matrix related to the time-series numbers
-        // This operation can be done once since the number of years is constant
-        // for a single simulation
-        study.resizeAllTimeseriesNumbers(1 + study.runtime->rangeLimits.year[Data::rangeEnd]);
-        // Now, we will prepare the time-series numbers
-        if (not TimeSeriesNumbers::CheckNumberOfColumns(study.areas))
-        {
-            throw FatalError(
-              "Inconsistent number of time-series detected. Please check your input data.");
-        }
+        // // Sampled time-series Numbers
+        // // We will resize all matrix related to the time-series numbers
+        // // This operation can be done once since the number of years is constant
+        // // for a single simulation
+        // study.resizeAllTimeseriesNumbers(1 + study.runtime->rangeLimits.year[Data::rangeEnd]);
+        // // Now, we will prepare the time-series numbers
+        // if (not TimeSeriesNumbers::CheckNumberOfColumns(study.areas))
+        // {
+        //     throw FatalError(
+        //       "Inconsistent number of time-series detected. Please check your input data.");
+        // }
 
-        if (not TimeSeriesNumbers::Generate(study))
-        {
-            throw FatalError("An unrecoverable error has occured. Can not continue.");
-        }
-
-        if (study.parameters.useCustomScenario)
-        {
-            ApplyCustomScenario(study);
-        }
+        // // extraire ce code vers après le load des données
+        // ///!\ important, generer pour ttes les zones, années et filiaires de prod (numero de TS)
+        // ///(ttes les TS)
+        // if (not TimeSeriesNumbers::Generate(study))
+        // {
+        //     throw FatalError("An unrecoverable error has occured. Can not continue.");
+        // }
+        // // ///!\ important
+        // if (study.parameters.useCustomScenario)
+        // {
+        //     ApplyCustomScenario(study);
+        // }
+        // /// faire le check de l'hydro ici
+        // //**fin*/
 
         // Launching the simulation for all years
         logs.info() << "MC-Years : [" << (study.runtime->rangeLimits.year[Data::rangeBegin] + 1)
