@@ -100,21 +100,12 @@ jobs:
         run: |
           export WX_CONFIG=${{env.WX_CONFIG}}
 
-      - name: Install deps with VCPKG
-        run: |
-          cd vcpkg
-          ./bootstrap-vcpkg.sh
-          vcpkg install ${{env.vcpkgPackages}} --triplet ${{env.triplet}}
-          rm -rf buildtrees packages downloads
-        shell: bash
-
       - name: Read antares-deps version
         id: antares-deps-version
         uses: notiz-dev/github-action-json-property@release
         with:
           path: 'antares-deps-version.json'
           prop_path: 'antares_deps_version'
-
 
       - name: Config OR-Tools URL
         run: |
