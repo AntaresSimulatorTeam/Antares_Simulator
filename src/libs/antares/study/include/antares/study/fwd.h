@@ -382,14 +382,6 @@ const char* SeedToCString(SeedIndex seed);
 */
 const char* SeedToID(SeedIndex seed);
 
-// ... Initial reservoir levels ...
-enum InitialReservoirLevels
-{
-    irlColdStart = 0,
-    irlHotStart,
-    irlUnknown,
-};
-
 // ... Hydro heuristic policy ...
 enum HydroHeuristicPolicy
 {
