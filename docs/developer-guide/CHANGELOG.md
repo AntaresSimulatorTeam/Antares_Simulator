@@ -12,11 +12,9 @@ toc_depth: 2
 - [Branch 8.6.x](#branch-86x-end-of-support-062025) (LTS)
 - [Branch 8.5.x](#branch-85x)
 - [Branch 8.4.x](#branch-84x)
+- [Older branches](#older-branches)
 
 LTS = long-term support, 2 years of support starting from the initial release date.
-
-## Older branches (1.x to 8.3.x)
-[Older branches](#older-branches)
 
 # Branch 9.1.x
 
@@ -332,8 +330,8 @@ LTS = long-term support, 2 years of support starting from the initial release da
 * Fix critical code smells (#1412)
 * Named MPS: factorize variable & constraint namers (#1409)
 * Array, logs jit and correlation in makefile (#1410)
-# Branch 8.6.x (end of support 06/2025)
 
+# Branch 8.6.x (end of support 06/2025)
 ## v8.6.7 (05/2024)
 ### Bugfixes
 * Fix formula use in output var Profit by plant [ANT-1719] (https://github.com/AntaresSimulatorTeam/Antares_Simulator/pull/2097)
@@ -537,7 +535,6 @@ LTS = long-term support, 2 years of support starting from the initial release da
 **Full Changelog**: https://github.com/AntaresSimulatorTeam/Antares_Simulator/compare/v8.3.2..v8.4.0
 
 # Older branches
-
 ## v8.3.3 (12/2022)
 --------------------
 ### Bugfix
